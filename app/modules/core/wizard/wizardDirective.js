@@ -306,9 +306,7 @@
     }
 
     function setNextText() {
-      if (isFirstTab() && isFirstTime() && !isCustomerPartner() && !isFromPartnerLaunch()) {
-        vm.nextText = $translate.instant('firstTimeWizard.startTrial');
-      } else if (isFirstTab() && isFirstStep()) {
+      if ((isFirstTab() && isFirstTime() && !isCustomerPartner() && !isFromPartnerLaunch()) || (isFirstTab() && isFirstStep())) {
         vm.nextText = $translate.instant('firstTimeWizard.getStarted');
       } else if ((isLastStep() && !isFirstStep()) || (isFirstTime() && isLastTab() && isLastStep())) {
         vm.nextText = $translate.instant('common.finish');

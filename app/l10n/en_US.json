@@ -91,6 +91,9 @@
     "membersCountHeader": "Members"
   },
   "onboardModal": {
+    "spark": "Spark",
+    "webex": "WebEx",
+    "calling": "Calling",
     "onboardUsers": "Invite Users",
     "cancel": "Cancel",
     "clear": "Clear",
@@ -818,6 +821,9 @@
     "needHelp": "Need help? ",
     "needHelpExplain": "Search the knowledge base.",
     "planReview": "Plan Review",
+    "spark": "Spark",
+    "webex": "WebEx",
+    "calling": "Calling",
     "messaging": "Messaging",
     "conferencing": "Conferencing",
     "communications": "Communications",
@@ -1392,7 +1398,8 @@
     "subject": "Subject",
     "subjectContent": "Activate your Spark UC device",
     "message": "Message",
-    "expires": "Expires: {{date}}  <strong>({{timeLeft}} from now)</strong>",
+    "expires": "Expires: {{date}}",
+    "expiration": "({{timeLeft}} from now)",
     "clipboardFallback": "Press cmd+c to copy the text below.",
     "emailSuccess": "Email sent successfully.",
     "emailError": "Email unsuccessful."

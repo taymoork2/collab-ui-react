@@ -7,19 +7,22 @@
     <div class="col-sm-4">
       <div class="column-header">
         <i class="icon icon-circle-message"></i>
-        <h3 translate="firstTimeWizard.messaging"></h3>
+        <h3 ng-if="!planReview.gsxFeature" translate="firstTimeWizard.messaging"></h3>
+        <h3 ng-if="planReview.gsxFeature" translate="firstTimeWizard.spark"></h3>
       </div>
     </div>
     <div class="col-sm-4">
       <div class="column-header">
         <i class="icon icon-circle-group"></i>
-        <h3 translate="firstTimeWizard.conferencing"></h3>
+        <h3 ng-if="!planReview.gsxFeature" translate="firstTimeWizard.conferencing"></h3>
+        <h3 ng-if="planReview.gsxFeature" translate="firstTimeWizard.webex"></h3>
       </div>
     </div>
     <div class="col-sm-4">
       <div class="column-header">
         <i class="icon icon-circle-call"></i>
-        <h3 translate="firstTimeWizard.communications"></h3>
+        <h3 ng-if="!planReview.gsxFeature" translate="firstTimeWizard.communications"></h3>
+        <h3 ng-if="planReview.gsxFeature" translate="firstTimeWizard.calling"></h3>
       </div>
     </div>
   </div>

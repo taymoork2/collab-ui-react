@@ -2,8 +2,8 @@
 
 //TODO refactor this into OnboardCtrl, BulkUserCtrl, AssignServicesCtrl
 angular.module('Core')
-  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$window', 'Log', '$log', 'Authinfo', 'Storage', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils', 'Orgservice', 'TelephonyInfoService',
-    function ($scope, $state, $stateParams, $q, $window, Log, $log, Authinfo, Storage, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils, Orgservice, TelephonyInfoService) {
+  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$window', 'Log', '$log', 'Authinfo', 'Storage', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils', 'Orgservice', 'TelephonyInfoService', 'FeatureToggleService',
+    function ($scope, $state, $stateParams, $q, $window, Log, $log, Authinfo, Storage, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService) {
 
       $scope.hasAccount = Authinfo.hasAccount();
       $scope.usrlist = [];
@@ -26,6 +26,8 @@ angular.module('Core')
 
       $scope.isReset = false;
       $scope.isResetEnabled = false;
+
+      $scope.gsxFeature = false;
 
       // model can be removed after switching to controllerAs
       $scope.model = {
@@ -57,16 +59,11 @@ angular.module('Core')
       //***********************************************************************************/
 
       function activateDID() {
-        loadInternalNumberPool().then(
-          loadExternalNumberPool(),
-          function () {
+        $q.all([loadInternalNumberPool(), loadExternalNumberPool()])
+          .finally(function () {
+            assignDNForUserList();
             $scope.processing = false;
-          }
-        ).finally(function () {
-          assignDNForUserList();
-          $scope.processing = false;
-        });
-
+          });
       }
 
       function returnInternalNumberlist(pattern) {
@@ -75,7 +72,6 @@ angular.module('Core')
         } else {
           return $scope.internalNumberPool;
         }
-
       }
 
       function loadInternalNumberPool(pattern) {
@@ -91,7 +87,10 @@ angular.module('Core')
         return TelephonyInfoService.loadExternalNumberPool(pattern).then(function (externalNumberPool) {
           $scope.externalNumberPool = externalNumberPool;
         }).catch(function (response) {
-          $scope.externalNumberPool = [];
+          $scope.externalNumberPool = [{
+            uuid: 'none',
+            pattern: $translate.instant('directoryNumberPanel.none')
+          }];
           Notification.errorResponse(response, 'directoryNumberPanel.externalNumberPoolError');
         });
       }
@@ -109,6 +108,7 @@ angular.module('Core')
         }).catch(function (response) {
           $scope.isMapInProgress = false;
           $scope.isMapped = false;
+          $scope.isMapEnabled = true;
           $scope.externalNumberMapping = [];
           Notification.errorResponse(response, 'directoryNumberPanel.externalNumberMappingError');
         });
@@ -137,7 +137,6 @@ angular.module('Core')
         }).catch(function (response) {
           $scope.isResetInProgress = false;
           $scope.validateDnForUser();
-
         });
       }
 
@@ -167,10 +166,10 @@ angular.module('Core')
         };
         for (var i = 0; i < $scope.usrlist.length - 1; i++) {
           for (var j = i + 1; j < $scope.usrlist.length; j++) {
-            if (($scope.usrlist[i].assignedDn.pattern !== "None") && ($scope.usrlist[i].assignedDn.pattern === $scope.usrlist[j].assignedDn.pattern)) {
+            if (angular.isDefined($scope.usrlist[i].assignedDn) && angular.isDefined($scope.usrlist[j].assignedDn) && ($scope.usrlist[i].assignedDn.pattern !== "None") && ($scope.usrlist[i].assignedDn.pattern === $scope.usrlist[j].assignedDn.pattern)) {
               didDnDupe.dnDupe = true;
             }
-            if (($scope.usrlist[i].externalNumber.pattern !== "None") && ($scope.usrlist[i].externalNumber.pattern === $scope.usrlist[j].externalNumber.pattern)) {
+            if (angular.isDefined($scope.usrlist[i].externalNumber) && angular.isDefined($scope.usrlist[j].externalNumber) && ($scope.usrlist[i].externalNumber.pattern !== "None") && ($scope.usrlist[i].externalNumber.pattern === $scope.usrlist[j].externalNumber.pattern)) {
               didDnDupe.didDupe = true;
             }
             if (didDnDupe.dnDupe && didDnDupe.didDupe) {
@@ -263,6 +262,16 @@ angular.module('Core')
         userEnts = $scope.currentUser.entitlements;
         userLicenseIds = $scope.currentUser.licenseID;
       }
+
+      Userservice.getUser('me', function (data, status) {
+        FeatureToggleService.getFeaturesForUser(data.id, function (data, status) {
+          _.each(data.developer, function (element) {
+            if (element.key === 'gsxdemo' && element.val === 'true') {
+              $scope.gsxFeature = true;
+            }
+          });
+        });
+      });
 
       var populateConf = function () {
         if (userLicenseIds) {
