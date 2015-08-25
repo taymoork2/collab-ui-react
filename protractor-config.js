@@ -17,12 +17,13 @@ exports.config = {
     'platform': process.env.SAUCE_USERNAME ? 'Windows 7' : undefined,
     'tunnelIdentifier': process.env.SC_TUNNEL_IDENTIFIER,
     'name': 'wx2-admin-web-client',
+    'build': process.env.BUILD_NUMBER,
 
     'chromeOptions': {
       'args': ['--disable-extensions', '--start-fullscreen']
     },
     shardTestFiles: true,
-    maxInstances: process.env.MAX_INSTANCES ? process.env.MAX_INSTANCES : process.env.SAUCE_USERNAME ? 8 : 1
+    maxInstances: process.env.MAX_INSTANCES ? process.env.MAX_INSTANCES : process.env.SAUCE_USERNAME ? 5 : 1
   },
 
   // A base URL for your application under test. Calls to protractor.get()
