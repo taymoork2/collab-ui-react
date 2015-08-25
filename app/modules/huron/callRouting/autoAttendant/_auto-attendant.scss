@@ -7,10 +7,38 @@
 }
 
 .aa-number-tile {
-  height: 72px !important; // override .tile mixin from call-park
-  padding: 8px 8px !important; // override .tile mixin from call-park
+  height: 72px !important; /* override .tile mixin from call-park */
+  padding: 8px 8px !important; /* override .tile mixin from call-park */
   margin: 8px 8px 8px 0px;
   margin: 8px 8px 8px 0px !important;
+  @include tile;
+  .aa-number-name {
+    font-family: $brand-font-cisco-TT-Light;
+    font-size: 16px;
+    color: $brand-primary;
+    display: inline-block;
+    vertical-align: top;
+  }
+}
+
+.aa-landing-header-pad {
+  padding-bottom: 100px;
+}
+.aa-header-style {
+  width: 650px;
+  float: left;
+}
+
+.aa-template-header{
+  color: $brand-info;
+  margin-bottom: 1px;
+}
+
+.aa-template-tile {
+  padding: 8px 2px 8px 2px !important; // override .tile mixin from call-park
+  margin: 0px -2px 0px -2px !important;
+  width: 200px !important;
+  height: 160px !important;
   @include tile;
   .aa-number-name {
     font-family: $brand-font-cisco-TT-Light;
@@ -36,7 +64,7 @@
   }
 }
 
-// center tabs
+/* center tabs */
 .centered-pills {
   text-align: center;
   margin: 5px auto;
@@ -94,7 +122,7 @@ table.aa-menu-table {
 tr.aa-menu-has-error {
   border-style: solid;
   border-color: $brand-danger-light;
-  border-top-width: 3px; //thicker to cover header row
+  border-top-width: 3px; /* thicker to cover header row */
   border-right-width: 2px;
   border-bottom-width: 2px;
   border-left-width: 2px
