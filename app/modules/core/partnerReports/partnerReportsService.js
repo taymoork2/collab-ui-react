@@ -322,9 +322,12 @@
           graph.push(angular.copy(dataPoint));
         }
       } else if (time.value === 1) {
-        var dayOfWeek = moment.tz(mostRecent, timezone).format('e');
+        var dayOffset = moment.tz(mostRecent, timezone).format('e');
+        if (dayOffset >= 5) {
+          dayOffset = 7 - dayOffset;
+        }
         for (var x = 3; x >= 0; x--) {
-          dataPoint.modifiedDate = moment().startOf('week').subtract((7 - dayOfWeek) + (x * 7), 'day').format(dayFormat);
+          dataPoint.modifiedDate = moment().startOf('week').subtract(dayOffset + (x * 7), 'day').format(dayFormat);
           graph.push(angular.copy(dataPoint));
         }
       } else {
