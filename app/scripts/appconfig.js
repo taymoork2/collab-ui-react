@@ -959,12 +959,6 @@ angular
             }
           }
         })
-        .state('autoattendant.addAutoAttendant', {
-          parent: 'autoattendant.main',
-          templateUrl: 'modules/huron/callRouting/autoAttendant/addAutoAttendant.tpl.html',
-          controller: 'addAutoAttendantCtrl',
-          controllerAs: 'addAA'
-        })
         .state('autoattendant.aalanding', {
           parent: 'autoattendant',
           templateUrl: 'modules/huron/callRouting/autoAttendant/aaLanding.tpl.html',
