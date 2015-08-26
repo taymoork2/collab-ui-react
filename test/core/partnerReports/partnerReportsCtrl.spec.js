@@ -2,7 +2,6 @@
 
 describe('Controller: Partner Reports', function () {
   var controller, $scope, $q, $translate, PartnerReportService, GraphService, DonutChartService, DummyReportService;
-  var date = "March 17, 2015";
   var activeUsersSort = ['userName', 'orgName', 'numCalls', 'totalActivity'];
 
   var dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
@@ -62,7 +61,6 @@ describe('Controller: Partner Reports', function () {
         overallPopulation: 0
       }));
       spyOn(PartnerReportService, 'getCustomerList').and.returnValue($q.when(dummyCustomers));
-      spyOn(PartnerReportService, 'getMostRecentUpdate').and.returnValue(date);
       spyOn(PartnerReportService, 'getMediaQualityMetrics').and.returnValue($q.when(dummyMediaQualityGraphData));
       spyOn(PartnerReportService, 'getCallMetricsData').and.returnValue($q.when({
         data: dummycallMetricsData
@@ -136,7 +134,6 @@ describe('Controller: Partner Reports', function () {
         expect(controller.activeButton).toEqual([1, 2, 3]);
         expect(controller.mostActiveUsers).toEqual(dummyTableData);
 
-        expect(controller.recentUpdate).toEqual(date);
         expect(controller.customerOptions).toEqual(customerOptions);
         expect(controller.customerSelected).toEqual(customerOptions[0]);
         expect(controller.timeSelected).toEqual(controller.timeOptions[0]);
@@ -278,7 +275,6 @@ describe('Controller: Partner Reports', function () {
         overallPopulation: 0
       }));
       spyOn(PartnerReportService, 'getCustomerList').and.returnValue($q.when([]));
-      spyOn(PartnerReportService, 'getMostRecentUpdate').and.returnValue(undefined);
       spyOn(PartnerReportService, 'getMediaQualityMetrics').and.returnValue($q.when(dummyMediaQualityGraphData));
       spyOn(PartnerReportService, 'getCallMetricsData').and.returnValue($q.when({
         data: dummycallMetricsData

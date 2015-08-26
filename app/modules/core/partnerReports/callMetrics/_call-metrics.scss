@@ -4,17 +4,6 @@
   .graph-match {
     margin: 0 15px;
   }
-  .spinner-position {
-    position: relative;
-    top: -225px;
-
-    .icon-2x {
-      font-size: 4em;
-      position: absolute;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-  }
   .donut-hover-text {
     font-family: $font-family-sans-serif;
     font-size: 20px;

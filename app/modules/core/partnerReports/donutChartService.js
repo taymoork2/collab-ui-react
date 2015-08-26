@@ -13,22 +13,22 @@
       "align": "center",
       "size": "42",
       "text": 0,
-      "y": 150
+      "y": 112
     }, {
       "align": "center",
       "size": "16",
       "text": $translate.instant('callMetrics.totalCalls'),
-      "y": 200
+      "y": 162
     }, {
       "align": "center",
       "size": "30",
       "text": 0,
-      "y": 235
+      "y": 197
     }, {
       "align": "center",
       "size": "16",
       "text": $translate.instant('callMetrics.totalCallMinutes'),
-      "y": 270
+      "y": 232
     }];
     var callMetricsDiv = 'callMetricsDiv';
     var callMetricsBalloonText = '<div class="donut-hover-text">[[callCondition]]<br>[[numCalls]] ' + $translate.instant('callMetrics.calls') + ' ([[percents]]%)</div>';
@@ -75,11 +75,12 @@
         "percentPrecision": 0,
         "labelRadius": 25,
         "creditsPosition": "bottom-left",
-        "radius": "28%",
+        "radius": "30%",
         "outlineAlpha": 1,
         "allLabels": createLabels,
         "dataProvider": createDisplayData,
-        "labelsEnabled": labelsEnabled
+        "labelsEnabled": labelsEnabled,
+        "startDuration": 0
       });
     }
 

@@ -1,7 +1,6 @@
 .callRouter {
   &.callrouting-content {
     flex-direction: column;
-
     .partner-profile {
       height: 100vh;
       display: flex;
@@ -32,7 +31,8 @@
   }
   .form-wrapper {
     padding-left: 30px;
-    flex: 0 0 81%;
+    flex: 0 1 81%;
+    -ms-flex: 0 1 81%;
   }
   .popover {
     color: $gray-darkest;
@@ -74,7 +74,9 @@
 .custom-combobox {
     width: calc(100% - 20px);
     .dropdown-menu {
-      width: calc(100% - 20px);
+      min-width: calc(100% - 20px);
+      overflow-y: scroll;
+      max-height: 261px;
     }
     .has-error & .input-group-btn > .btn {
       box-shadow: 0 0 0 2px #f05d3b;

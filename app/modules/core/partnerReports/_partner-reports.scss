@@ -14,9 +14,7 @@
     .sync {
       position: relative;
       top: 17px;
-      padding-left: 15px;
-      font-family: $brand-font-cisco-TT-Extra-Light;
-      color: $gray-darker;
+      padding-left: 35px;
     }
     .report-filters {
       .filter-one {
@@ -29,7 +27,6 @@
       }
       a {
         width:100%;
-
         i {
           right: 5px;
         }
@@ -39,118 +36,142 @@
       }
     }
   }
-  .no-data-warning {
-    color: #f7c100;
-    padding-right: 5px;
+  .report-filter-link:first-of-type {
+    padding: 3px 16px 3px 0;
   }
-  .no-data {
+  .report-filter-link:last-of-type {
+    border-right: none;
+  }
+  .report-filter-link {
+    display: inline;
+    border-right: 1px solid $gray;
+    padding: 3px 16px;
+    .report-link {
+      font-family: $brand-font-cisco-TT-Light;
+      font-size: 14px;
+      padding: 0;
+      margin:0;
+      cursor: pointer;
+    }
+  }
+  .not-selected {
+    color: $brand-primary;
+  }
+  .selected-link {
     color: $gray-darkest;
-    font-family: $brand-font-cisco-TT-Light;
-    font-size: 16px;
-    text-align: center;
   }
-  .report-tabs-container {
-    padding: 5px;
+  .reports-container {
+    padding-left: 30px;
+    padding-right: 15px;
+  }
+  .report-space{
+    padding: 0 16px;
+    min-width: 650px;
+  }
+  .report-box {
     background-color: $brand-white;
-    .cstabs {
-      li, li:first-of-type, li:last-of-type {
-        a {
-          margin-top: 0;
-          background-color: $gray-lightest;
-          border-color: rgb(234, 235, 238);
-          padding-top: 10px;
-        }
-      }
-      li.active,
-      li.active:first-of-type,
-      li.active:last-of-type {
-        a {
-          background-color: $brand-white;
-        }
+    min-height: 570px;
+    min-width: 650px;
+    margin-bottom: 32px;
+    padding: 32px;
+    .no-data-warning {
+      color: #f7c100;
+      padding-right: 15px;
+    }
+    .no-data-center {
+      position: absolute;
+      z-index: 100;
+      height: 0;
+      top: 235px;
+      width: 100%;
+      .no-data {
+        color: $gray-darkest;
+        font-family: $brand-font-cisco-TT-Light;
+        font-size: 16px;
+        text-align: center;
+        margin: 0;
       }
     }
-    .tab-pane {
-      padding: 40px 30px 60px;
-      .report-description {
-        margin-bottom: 15px;
-        font-family: $brand-font-cisco-TT-Light;
-        font-size: 13px;
-        line-height: 18px;
-        color: $gray-darkest;
+    .spinner-position {
+      position: absolute;
+      z-index: 100;
+      top: 235px;
+      left: -3px;
+      width: 100%;
+      .icon-2x {
+        font-size: 4em;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%, -50%);
       }
-      .section-title {
-        font-family: $brand-font-cisco-TT-Light;
-        font-size: 22px;
-        color: $brand-primary;
-        text-align: left;
-        margin: 0 0 10px;
-      }
-      .sub-section-title {
-        font-family: $brand-font-cisco-TT-Light;
-        font-size: 18px;
-        color: $gray-darkest;
-        text-align: left;
-        margin-top: 40px;
-        margin-bottom: 15px;
-      }
-      .report-section {
-        min-width: 520px;
-        text-align: left;
-        width: 50%;
-        display: inline-block;
-        vertical-align: top;
-      }
-      .report-right {
-        padding-left: 30px;
-      }
-      .report-left {
-        padding-right: 30px;
-      }
-      .title-break {
-        margin-top: 0;
-        width: 100%;
-      }
-      .timechartDiv {
-        font-size: 11px;
-        height: 450px;
-        width: 100%;
-      }
-      .barchart {
-        font-size: 11px;
-        height: 450px;
-        width: 85%;
-        margin-left: auto;
-        margin-right: auto;
-      }
-
-      .table-bordered > thead > tr > th, .table-bordered > thead > tr > td {
-        border-bottom-width: 1px;
-      }
-
-      .horizontal-center {
-        text-align: center;
-      }
-      .vertical-center {
-        vertical-align: middle;
-      }
-      .bold {
-        font-weight: bold;
-      }
-      .pointer {
-        cursor: pointer;
-      }
-      .graph-text {
+    }
+    .report-description {
+      margin-bottom: 15px;
+      font-family: $brand-font-cisco-TT-Light;
+      font-size: 13px;
+      line-height: 18px;
+      color: $gray-darkest;
+      z-index: 100;
+      position: relative;
+    }
+    .section-title {
+      font-family: $brand-font-cisco-TT-Light;
+      font-size: 22px;
+      color: $brand-primary;
+      text-align: left;
+      margin: 0 0 10px;
+    }
+    .sub-section-title {
+      font-family: $brand-font-cisco-TT-Light;
+      font-size: 18px;
+      color: $gray-darkest;
+      text-align: left;
+      margin-top: 40px;
+      margin-bottom: 15px;
+    }
+    .title-break {
+      margin-top: 0;
+      width: 100%;
+    }
+    .timechartDiv {
+      font-size: 11px;
+      height: 380px;
+      width: 100%;
+    }
+    .barchart {
+      font-size: 11px;
+      height: 380px;
+      width: 75%;
+      margin-left: auto;
+      margin-right: auto;
+      z-index: 50;
+    }
+    .table-bordered > thead > tr > th, .table-bordered > thead > tr > td {
+      border-bottom-width: 1px;
+    }
+    .horizontal-center {
+      text-align: center;
+    }
+    .vertical-center {
+      vertical-align: middle;
+    }
+    .bold {
+      font-weight: bold;
+    }
+    .pointer {
+      cursor: pointer;
+    }
+    .graph-text {
+      font-family: $brand-font-cisco-TT-Regular;
+      font-size: 15px;
+      color: $gray-darkest;
+      text-align: left;
+      float: left;
+      .graph-number {
         font-family: $brand-font-cisco-TT-Regular;
-        font-size: 15px;
-        color: $gray-darkest;
+        font-size: 18px;
+        color: $brand-success;
         text-align: left;
-        float: left;
-        .graph-number {
-          font-family: $brand-font-cisco-TT-Regular;
-          font-size: 18px;
-          color: $brand-success;
-          text-align: left;
-        }
       }
     }
   }

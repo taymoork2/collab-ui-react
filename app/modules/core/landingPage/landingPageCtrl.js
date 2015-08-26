@@ -19,7 +19,7 @@ angular.module('Core')
         contentShared: 'refresh'
       };
 
-      $scope.currentDate = moment().subtract('months', 1).format('LL');
+      $scope.currentDate = moment().subtract(1, 'months').format('LL');
       var weekOf = $translate.instant('reports.weekOf');
 
       var todaysDate = new Date();

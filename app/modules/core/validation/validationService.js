@@ -13,7 +13,8 @@
       nonPrintable: nonPrintable,
       alertingName: alertingName,
       callForward: callForward,
-      numeric: numeric
+      numeric: numeric,
+      positiveNumber: positiveNumber
     };
 
     return factory;
@@ -41,6 +42,11 @@
     function numeric(viewValue, modelValue) {
       var value = modelValue || viewValue;
       return /^\d*$/.test(value);
+    }
+
+    function positiveNumber(viewValue, modelValue) {
+      var value = modelValue || viewValue;
+      return (angular.isString(value) && value.length === 0) || value > 0;
     }
   }
 })();
