@@ -114,7 +114,7 @@
             msgIndex = ind;
             obj.label = 'firstTimeWizard.spark';
             obj.description = 'firstTimeWizard.sparkStub';
-            obj.icon = 'icon-tools';
+            obj.icon = 'icon-spark';
           } else if (obj.name === 'serviceSetup') {
             callingIndex = ind;
             obj.label = 'firstTimeWizard.calling';
@@ -125,7 +125,7 @@
           name: 'webex',
           label: 'firstTimeWizard.webex',
           description: 'firstTimeWizard.webexStub',
-          icon: 'icon-tools',
+          icon: 'icon-webex',
           title: 'firstTimeWizard.webex',
           steps: [{
             name: 'init',
