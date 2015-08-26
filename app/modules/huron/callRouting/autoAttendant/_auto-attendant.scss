@@ -34,11 +34,35 @@
   margin-bottom: 1px;
 }
 
+#aa-template-tile1 {
+  padding: 8px 2px 8px 2px;
+  margin: 0px -2px 0px -2px;
+  width: 200px;
+  height: 160px;
+}
+
+#aa-template-tile2 {
+  padding: 8px 2px 8px 2px;
+  margin: 0px -2px 0px -2px;
+  width: 200px;
+  height: 160px;
+}
+
+#aa-template-tile3 {
+  padding: 8px 2px 8px 2px;
+  margin: 0px -2px 0px -2px;
+  width: 200px;
+  height: 160px;
+}
+
+#aa-template-tile4 {
+  padding: 8px 2px 8px 2px;
+  margin: 0px -2px 0px -2px;
+  width: 200px;
+  height: 160px;
+}
+
 .aa-template-tile {
-  padding: 8px 2px 8px 2px !important; // override .tile mixin from call-park
-  margin: 0px -2px 0px -2px !important;
-  width: 200px !important;
-  height: 160px !important;
   @include tile;
   .aa-number-name {
     font-family: $brand-font-cisco-TT-Light;
