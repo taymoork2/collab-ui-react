@@ -1,0 +1,17 @@
+<div class="aa-panel">
+  <div class="aa-panel-body">
+    <div class="aa-flex-row-centered">
+      <span class="aa-schedule-icon"></span>
+    </div>
+    <div class="aa-flex-row">
+      <h3 class="text-info" translate="{{ aaBuilder.getScheduleTitle() }}"></h3>
+      <span class="aa-edit-icon"></span>
+      <!-- todo: click to open schedule modal-->
+    </div>
+    <div name="demo" class="aa-flex-row">
+      <!--button type="button" class="btn btn-info" ng-click="aaBuilder.openHours = !aaBuilder.openHours">Open</button-->
+      <button type="button" class="btn btn-info" ng-click="aaBuilder.closedHours = !aaBuilder.closedHours">Closed</button>
+      <button type="button" class="btn btn-info" ng-click="aaBuilder.holidays = !aaBuilder.holidays">Holidays</button>
+    </div>
+  </div>
+</div>

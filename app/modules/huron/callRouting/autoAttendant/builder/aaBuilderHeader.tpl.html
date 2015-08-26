@@ -1,0 +1,25 @@
+<div class="page-header">
+    <div class="page-title aa-flex-row">
+      <a ui-sref="autoattendant.aalanding"><span class="aa-icon-arrow-back"></span></a>
+      <span class="title aa-nowrap" translate="Auto Attendant Builder"></span>
+    </div>
+</div>
+<div class="aa-flex-row-title">
+  <div class="aa-flex-row-item" id="aa-flex-row-item-header" ng-if="aaBuilderMain.ui.ceInfo.getName()">
+    <div class="aa-flex-row">
+      <h2 class="aa-nowrap"><strong>{{aaBuilderMain.ui.ceInfo.getName()}}</strong></h2>
+      <span class="aa-edit-icon"></span>  <!--todo: click edit icon to allow inline editing or to reopen name form-->
+    </div>
+    <div class="aa-flex-row" ng-if="aaBuilderMain.ui.ceInfo.getResources().length > 0">
+      <h2 class="aa-nowrap"><strong>{{aaBuilderMain.ui.ceInfo.getResources() | DisplayNumbers }}</strong></h2>
+    </div>
+  </div>
+  <div class="aa-flex-row-item-right" id="aa-flex-row-item-right-header" ng-if="aaBuilderMain.ui.ceInfo.getName()">
+    <div class="aa-tooltip-wrapper" tooltip-html-unsafe="{{aaBuilderMain.getSaveErrorMessages()}}" tooltip-trigger="mouseenter" tooltip-placement="top">
+      <button type="button" name="saveButton" class="btn btn-primary" ng-disabled="!aaBuilderMain.canSaveAA()" ng-click="aaBuilderMain.saveAARecords()" translate="common.save"></button>
+    </div>
+  </div>
+</div>
+<div class="row aa-flex-row" ng-if="aaBuilderMain.ui.ceInfo.getName()">
+  <div class="aa-flex-horizontal-line"></div>
+</div>
