@@ -41,7 +41,7 @@
   }
 
   /* @ngInject */
-  function WizardCtrl($scope, $rootScope, $controller, $translate, PromiseHook, $log, $modal, Authinfo, SessionStorage, $stateParams, $state) {
+  function WizardCtrl($scope, $rootScope, $controller, $translate, PromiseHook, $log, $modal, Authinfo, SessionStorage, $stateParams, $state, FeatureToggleService, Userservice) {
     var vm = this;
     vm.current = {};
     vm.currentTab = $stateParams.currentTab;
@@ -80,7 +80,16 @@
     vm.loadOverview = loadOverview;
     vm.showDoItLater = false;
 
-    init();
+    Userservice.getUser('me', function (data, status) {
+      FeatureToggleService.getFeaturesForUser(data.id, function (data, status) {
+        _.each(data.developer, function (element) {
+          if (element.key === 'gsxdemo' && element.val === 'true') {
+            $scope.gsxFeature = true;
+            init();
+          }
+        });
+      });
+    });
 
     function init() {
       if ($stateParams.currentTab) {
@@ -95,6 +104,36 @@
 
       setNextText();
       vm.isNextDisabled = false;
+
+      if ($scope.gsxFeature) {
+        var msgIndex = 0;
+        var callingIndex = 0;
+        $scope.tabs.forEach(function (obj, ind, arr) {
+          if (obj.name === 'messagingSetup') {
+            msgIndex = ind;
+            obj.label = 'firstTimeWizard.spark';
+            obj.description = 'firstTimeWizard.sparkStub';
+          } else if (obj.name === 'serviceSetup') {
+            callingIndex = ind;
+            obj.label = 'firstTimeWizard.calling';
+          }
+        });
+
+        $scope.tabs.splice(msgIndex + 1, 0, {
+          name: 'webex',
+          label: 'firstTimeWizard.webex',
+          description: 'firstTimeWizard.webexStub',
+          icon: 'icon-circle-webex',
+          title: 'firstTimeWizard.webex',
+          steps: [{
+            name: 'init',
+            template: 'modules/core/setupWizard/finish.tpl.html'
+          }]
+        });
+
+        var calling = $scope.tabs.splice(callingIndex, 1)[0];
+        $scope.tabs.splice(msgIndex + 1, 0, calling);
+      }
     }
 
     function getSteps() {

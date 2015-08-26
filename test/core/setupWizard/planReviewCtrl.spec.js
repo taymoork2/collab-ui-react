@@ -29,8 +29,13 @@ describe('Controller: PlanReviewCtrl', function () {
     getUserMe = getJSONFixture('core/json/users/me.json');
     getMyFeatureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
 
-    spyOn(Userservice, 'getUser').and.returnValue(getUserMe);
-    spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(getMyFeatureToggles);
+
+    spyOn(Userservice, 'getUser').and.callFake(function (uid, callback) {
+      callback(getUserMe, 200);
+    });
+    spyOn(FeatureToggleService, 'getFeaturesForUser').and.callFake(function (uid, callback) {
+      callback(getMyFeatureToggles, 200);
+    });
 
     controller = $controller('PlanReviewCtrl', {
       $scope: $scope

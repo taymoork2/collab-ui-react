@@ -44,6 +44,7 @@
         _.each(data.developer, function (element) {
           if (element.key === 'gsxdemo' && element.val === 'true') {
             vm.gsxFeature = true;
+            activate();
           }
         });
       });
@@ -83,6 +84,9 @@
       vm.confServices.services = Authinfo.getConferenceServices();
       if (vm.confServices.services) {
         angular.forEach(vm.confServices.services, function (service) {
+          if(vm.gsxFeature && service.label.indexOf('Meeting Center') != -1){
+            service.label = 'Meeting Center';
+          }
           if (service.license.isTrial) {
             vm.trialExists = true;
             vm.trialId = service.license.trialId;
@@ -95,7 +99,7 @@
       //check if the trial exists
       if (vm.trialExists) {
         vm.processing = true;
-        TrialService.getTrial(vm.trialId).then(function (trial) {
+          TrialService.getTrial(vm.trialId).then(function (trial) {
           populateTrialData(trial);
         }).finally(function () {
           vm.processing = false;
@@ -146,8 +150,6 @@
         }
       }
     }
-
-    activate();
     /////////////////
 
     function populateTrialData(trial) {
