@@ -2,10 +2,32 @@
 
 //TODO refactor this into OnboardCtrl, BulkUserCtrl, AssignServicesCtrl
 angular.module('Core')
-  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$window', 'Log', '$log', 'Authinfo', 'Storage', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils', 'Orgservice',
-    function ($scope, $state, $stateParams, $q, $window, Log, $log, Authinfo, Storage, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils, Orgservice) {
+  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$window', 'Log', '$log', 'Authinfo', 'Storage', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils', 'Orgservice', 'TelephonyInfoService', 'FeatureToggleService',
+    function ($scope, $state, $stateParams, $q, $window, Log, $log, Authinfo, Storage, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService) {
 
       $scope.hasAccount = Authinfo.hasAccount();
+      $scope.usrlist = [];
+      $scope.internalNumberPool = [];
+      $scope.externalNumberPool = [];
+      $scope.loadInternalNumberPool = loadInternalNumberPool;
+      $scope.loadExternalNumberPool = loadExternalNumberPool;
+      $scope.assignDNForUserList = assignDNForUserList;
+      $scope.assignMapUserList = assignMapUserList;
+      $scope.checkDidDnDupes = checkDidDnDupes;
+      $scope.returnInternalNumberlist = returnInternalNumberlist;
+      $scope.mapDidToDn = mapDidToDn;
+      $scope.resetDns = resetDns;
+      $scope.isMapped = false;
+      $scope.isMapInProgress = false;
+      $scope.isResetInProgress = false;
+      $scope.isMapEnabled = true;
+      $scope.processing = false;
+      $scope.PATTERN_LIMIT = 50;
+
+      $scope.isReset = false;
+      $scope.isResetEnabled = false;
+
+      $scope.gsxFeature = false;
 
       // model can be removed after switching to controllerAs
       $scope.model = {
@@ -17,6 +39,8 @@ angular.module('Core')
       $scope.strLastName = $translate.instant('usersPage.lastNamePlaceHolder');
       $scope.strEmailAddress = $translate.instant('usersPage.emailAddressPlaceHolder');
       var strNameAndEmailAdress = $translate.instant('usersPage.nameAndEmailAddress');
+      $scope.placeholder = $translate.instant('directoryNumberPanel.chooseNumber');
+      $scope.inputPlaceholder = $translate.instant('directoryNumberPanel.searchNumber');
       $scope.userInputOptions = [{
         label: $scope.strEmailAddress,
         value: 0,
@@ -28,6 +52,160 @@ angular.module('Core')
         name: 'radioOption',
         id: 'radioNamesAndEmail'
       }];
+
+      /****************************** Did to Dn Mapping START *******************************/
+      //***
+      //***
+      //***********************************************************************************/
+
+      function activateDID() {
+        $q.all([loadInternalNumberPool(), loadExternalNumberPool()])
+          .finally(function () {
+            assignDNForUserList();
+            $scope.processing = false;
+          });
+      }
+
+      function returnInternalNumberlist(pattern) {
+        if (pattern) {
+          loadInternalNumberPool(pattern);
+        } else {
+          return $scope.internalNumberPool;
+        }
+      }
+
+      function loadInternalNumberPool(pattern) {
+        return TelephonyInfoService.loadInternalNumberPool(pattern, $scope.PATTERN_LIMIT).then(function (internalNumberPool) {
+          $scope.internalNumberPool = internalNumberPool;
+        }).catch(function (response) {
+          $scope.internalNumberPool = [];
+          Notification.errorResponse(response, 'directoryNumberPanel.internalNumberPoolError');
+        });
+      }
+
+      function loadExternalNumberPool(pattern) {
+        return TelephonyInfoService.loadExternalNumberPool(pattern).then(function (externalNumberPool) {
+          $scope.externalNumberPool = externalNumberPool;
+        }).catch(function (response) {
+          $scope.externalNumberPool = [{
+            uuid: 'none',
+            pattern: $translate.instant('directoryNumberPanel.none')
+          }];
+          Notification.errorResponse(response, 'directoryNumberPanel.externalNumberPoolError');
+        });
+      }
+
+      function mapDidToDn() {
+        $scope.isMapInProgress = true;
+        $scope.isMapEnabled = false;
+        var count = $scope.usrlist.length;
+        TelephonyInfoService.loadExtPoolWithMapping(count).then(function (externalNumberMapping) {
+          $scope.externalNumberMapping = externalNumberMapping;
+          assignMapUserList(count, externalNumberMapping);
+          $scope.isMapped = true;
+          $scope.isMapInProgress = false;
+          $scope.validateDnForUser();
+        }).catch(function (response) {
+          $scope.isMapInProgress = false;
+          $scope.isMapped = false;
+          $scope.isMapEnabled = true;
+          $scope.externalNumberMapping = [];
+          Notification.errorResponse(response, 'directoryNumberPanel.externalNumberMappingError');
+        });
+      }
+
+      function assignDNForUserList() {
+        angular.forEach($scope.usrlist, function (user, index) {
+          user.assignedDn = $scope.internalNumberPool[index];
+        });
+
+        // don't select any DID on loading the page
+        angular.forEach($scope.usrlist, function (user, index) {
+          user.externalNumber = $scope.externalNumberPool[0];
+          user.didDnMapMsg = undefined;
+        });
+      }
+
+      function resetDns() {
+        $scope.isResetInProgress = true;
+        $scope.isResetEnabled = false;
+        loadInternalNumberPool().then(function () {
+          assignDNForUserList();
+          $scope.validateDnForUser();
+          $scope.isReset = true;
+          $scope.isResetInProgress = false;
+        }).catch(function (response) {
+          $scope.isResetInProgress = false;
+          $scope.validateDnForUser();
+        });
+      }
+
+      function assignMapUserList(count, externalNumberMappings) {
+
+        for (var i = 0; i < $scope.usrlist.length; i++) {
+          if (i <= externalNumberMappings.length - 1) {
+            if (externalNumberMappings[i].directoryNumber !== null) {
+              $scope.usrlist[i].externalNumber = externalNumberMappings[i];
+              $scope.usrlist[i].assignedDn = externalNumberMappings[i].directoryNumber;
+            } else {
+              $scope.usrlist[i].externalNumber = externalNumberMappings[i];
+              $scope.usrlist[i].didDnMapMsg = 'usersPage.noExtMappingAvail';
+            }
+          } else {
+            $scope.usrlist[i].externalNumber = $scope.externalNumberPool[0];
+            $scope.usrlist[i].didDnMapMsg = 'usersPage.noExternalNumberAvail';
+          }
+        }
+
+      }
+
+      function checkDidDnDupes() {
+        var didDnDupe = {
+          didDupe: false,
+          dnDupe: false
+        };
+        for (var i = 0; i < $scope.usrlist.length - 1; i++) {
+          for (var j = i + 1; j < $scope.usrlist.length; j++) {
+            if (angular.isDefined($scope.usrlist[i].assignedDn) && angular.isDefined($scope.usrlist[j].assignedDn) && ($scope.usrlist[i].assignedDn.pattern !== "None") && ($scope.usrlist[i].assignedDn.pattern === $scope.usrlist[j].assignedDn.pattern)) {
+              didDnDupe.dnDupe = true;
+            }
+            if (angular.isDefined($scope.usrlist[i].externalNumber) && angular.isDefined($scope.usrlist[j].externalNumber) && ($scope.usrlist[i].externalNumber.pattern !== "None") && ($scope.usrlist[i].externalNumber.pattern === $scope.usrlist[j].externalNumber.pattern)) {
+              didDnDupe.didDupe = true;
+            }
+            if (didDnDupe.dnDupe && didDnDupe.didDupe) {
+              break;
+            }
+          }
+          if (didDnDupe.dnDupe && didDnDupe.didDupe) {
+            break;
+          }
+        }
+        return didDnDupe;
+      }
+
+      $scope.isDnNotAvailable = function () {
+        for (var i = 0; i < $scope.usrlist.length; i++) {
+          if ($scope.usrlist[i].assignedDn === undefined) {
+            return true;
+          }
+        }
+        return false;
+      };
+
+      $scope.assignServicesSave = function () {
+        if ($scope.radioStates.commRadio) {
+          $scope.processing = true;
+          activateDID();
+          $state.go('users.add.services.dn');
+        } else {
+          onboardUsers(true);
+        }
+      };
+
+      /****************************** Did to Dn Mapping END *******************************/
+      //***
+      //***
+      //***********************************************************************************/
 
       function clearNameAndEmailFields() {
         $scope.model.firstName = '';
@@ -67,6 +245,13 @@ angular.module('Core')
       $scope.conferenceFeatures = [];
       $scope.communicationFeatures = [];
       $scope.licenses = [];
+      var convertSuccess = [];
+      var convertFailures = [];
+      var convertUsersCount = 0;
+      var convertStartTime = 0;
+      var convertCancelled = false;
+      var convertBacked = false;
+      var convertPending = false;
 
       $scope.messageFeatures.push(new ServiceFeature($translate.instant('onboardModal.freeMsg'), 0, 'msgRadio', new FakeLicense('freeTeamRoom')));
       $scope.conferenceFeatures.push(new ServiceFeature($translate.instant('onboardModal.freeConf'), 0, 'confRadio', new FakeLicense('freeConferencing')));
@@ -78,17 +263,31 @@ angular.module('Core')
         userLicenseIds = $scope.currentUser.licenseID;
       }
 
+      Userservice.getUser('me', function (data, status) {
+        FeatureToggleService.getFeaturesForUser(data.id, function (data, status) {
+          _.each(data.developer, function (element) {
+            if (element.key === 'gsxdemo' && element.val === 'true') {
+              $scope.gsxFeature = true;
+            }
+          });
+        });
+      });
+
       var populateConf = function () {
         if (userLicenseIds) {
+
           for (var ids in userLicenseIds) {
             var currentId = userLicenseIds[ids];
+
             for (var conf in $scope.confChk) {
               var currentConf = $scope.confChk[conf];
+
               if (currentConf.confFeature) {
                 if (currentConf.confFeature.license.licenseId === currentId) {
                   currentConf.confModel = true;
                 }
               }
+
               if (currentConf.cmrFeature) {
                 if (currentConf.cmrFeature.license.licenseId === currentId) {
                   currentConf.cmrModel = true;
@@ -116,22 +315,28 @@ angular.module('Core')
         }
       }
 
-      var generateConfChk = function (conf, cmr) {
+      var generateConfChk = function (confs, cmrs) {
         $scope.confChk = [];
-        for (var i in conf) {
+        for (var i in confs) {
           var temp = {
-            confFeature: conf[i],
+            confFeature: confs[i],
             confModel: false,
             confId: 'conf-' + i
           };
 
-          if (cmr !== null && conf[i].license.siteUrl !== undefined && cmr.license.siteUrl === conf[i].license.siteUrl) {
-            temp.cmrFeature = cmr;
-            temp.cmrModel = false;
-            temp.cmrId = 'cmr-' + i;
+          for (var j in cmrs) {
+            if (!_.isUndefined(cmrs[j]) && !_.isNull(cmrs[j]) && !_.isUndefined(confs[i].license.siteUrl)) {
+              if (_.isEqual(confs[i].license.siteUrl, cmrs[j].license.siteUrl) && _.isEqual(confs[i].license.billingServiceId, cmrs[j].license.billingServiceId)) {
+                temp.cmrFeature = cmrs[j];
+                temp.cmrModel = false;
+                temp.cmrId = 'cmr-' + j;
+              }
+            }
           }
+
           $scope.confChk.push(temp);
         }
+
         populateConf();
       };
 
@@ -185,9 +390,9 @@ angular.module('Core')
           $scope.messageFeatures = $scope.messageFeatures.concat(services.message);
         }
         if (services.conference) {
-          $scope.cmrFeature = Authinfo.getCmrServices();
+          $scope.cmrFeatures = Authinfo.getCmrServices();
           $scope.conferenceFeatures = $scope.conferenceFeatures.concat(services.conference);
-          generateConfChk($scope.conferenceFeatures, $scope.cmrFeature);
+          generateConfChk($scope.conferenceFeatures, $scope.cmrFeatures);
         }
         if (services.communication) {
           $scope.communicationFeatures = $scope.communicationFeatures.concat(services.communication);
@@ -245,6 +450,138 @@ angular.module('Core')
           field: 'displayName',
           displayName: $translate.instant('onboardModal.groupColHeader'),
           sortable: true
+        }]
+      };
+
+      var rowTemplate = '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}">' +
+        '<div ng-cell></div>' +
+        '</div>';
+
+      var headerRowTemplate = '<div ng-style="{ height: col.headerRowHeight }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngHeaderCell">' +
+        '<div ng-header-cell></div></div>';
+
+      var nameTemplate = '<div class="ngCellText"><span class="name-display-style">{{row.getProperty(col.field)}}</span>' +
+        '<span class="email-display-style">{{row.getProperty(\'address\')}}</span></div>';
+
+      var internalExtensionTemplate = '<div ng-show="row.entity.assignedDn !== undefined"> ' +
+        '<cs-select name="internalNumber" ' +
+        'ng-model="row.entity.assignedDn" options="internalNumberPool" ' +
+        'refresh-data-fn="returnInternalNumberlist(filter)" wait-time="0" ' +
+        'placeholder="placeholder" input-placeholder="inputPlaceholder" ' +
+        'labelfield="pattern" valuefield="uuid" required="true" filter="true"> </cs-select></div>' +
+        '<div ng-show="row.entity.assignedDn === undefined"> ' +
+        '<cs-select name="noInternalNumber" ' +
+        'ng-model="noExtInPool" labelfield="noExtInPool" is-disabled="true" > </cs-select>' +
+        '<span class="error">{{\'usersPage.noExtensionInPool\' | translate }}</span> </div> ';
+
+      var externalExtensionTemplate = '<div ng-show="row.entity.didDnMapMsg === undefined"> ' +
+        '<cs-select name="externalNumber" ' +
+        'ng-model="row.entity.externalNumber" options="externalNumberPool" ' +
+        'refresh-data-fn="loadExternalNumberPool(filter)" wait-time="0" ' +
+        'placeholder= "placeholder" input-placeholder="inputPlaceholder" ' +
+        'labelfield="pattern" valuefield="uuid" required="true" filter="true"> </cs-select></div> ' +
+        '<div ng-show="row.entity.didDnMapMsg !== undefined"> ' +
+        '<cs-select name="noExternalNumber" ' +
+        'ng-model="row.entity.externalNumber" options="externalNumberPool" class="select-warning"' +
+        'labelfield="pattern" valuefield="uuid" required="true" filter="true"> </cs-select>' +
+        '<span class="warning did-map-error">{{row.entity.didDnMapMsg | translate }}</span> </div> ';
+
+      $scope.noExtInPool = $translate.instant('usersPage.notApplicable');
+      $scope.noExternalNum = $translate.instant('usersPage.notApplicable');
+
+      $scope.$watch('model.userList', function (newVal, oldVal) {
+        if (newVal != oldVal) {
+          $scope.usrlist = $window.addressparser.parse($scope.model.userList);
+        }
+      });
+
+      // To differentiate the user list change made by map operation
+      //  and other manual/reset operation.
+      $scope.$watch('usrlist', function (newVal, oldVal) {
+        if ($scope.isMapped) {
+          $scope.isMapped = false;
+        } else {
+          $scope.isMapEnabled = true;
+        }
+
+        if ($scope.isReset) {
+          $scope.isReset = false;
+        } else {
+          $scope.isResetEnabled = true;
+        }
+      }, true);
+
+      $scope.$watch('radioStates.commRadio', function (newVal, oldVal) {
+        if (newVal != oldVal) {
+          if ($scope.radioStates.commRadio) {
+            $scope.$emit('wizardNextText', 'next');
+          } else {
+            $scope.$emit('wizardNextText', 'finish');
+          }
+        }
+      });
+
+      $scope.$watch('wizard.current.step', function (newVal, oldVal) {
+        if (angular.isDefined($scope.wizard) && $scope.wizard.current.step.name === 'assignServices') {
+          if ($scope.radioStates.commRadio) {
+            $scope.$emit('wizardNextText', 'next');
+          } else {
+            $scope.$emit('wizardNextText', 'finish');
+          }
+        } else if (angular.isDefined($scope.wizard) && $scope.wizard.current.step.name === 'assignDnAndDirectLines') {
+          $scope.isResetEnabled = false;
+          $scope.validateDnForUser();
+        }
+      });
+
+      $scope.validateDnForUser = function () {
+        if ($scope.isDnNotAvailable()) {
+          $scope.$emit('wizardNextButtonDisable', true);
+        } else {
+          $scope.$emit('wizardNextButtonDisable', false);
+        }
+      };
+
+      $scope.initGrid = function () {
+        $scope.isResetEnabled = false;
+        $scope.validateDnForUser();
+      };
+
+      $scope.addDnGridOptions = {
+        data: 'usrlist',
+        enableRowSelection: false,
+        multiSelect: false,
+        showFilter: false,
+        rowHeight: 55,
+        rowTemplate: rowTemplate,
+        headerRowHeight: 44,
+        headerRowTemplate: headerRowTemplate, // this is needed to get rid of vertical bars in header
+        useExternalSorting: false,
+        init: $scope.initGrid,
+
+        columnDefs: [{
+          field: 'name',
+          displayName: $translate.instant('usersPage.nameHeader'),
+          sortable: false,
+          cellTemplate: nameTemplate,
+          width: '42%',
+          height: 35
+
+        }, {
+          field: 'externalNumber',
+          displayName: $translate.instant('usersPage.directLineHeader'),
+          sortable: false,
+          cellTemplate: externalExtensionTemplate,
+          width: '33%',
+          height: 35
+
+        }, {
+          field: 'internalExtension',
+          displayName: $translate.instant('usersPage.extensionHeader'),
+          sortable: false,
+          cellTemplate: internalExtensionTemplate,
+          width: '25%',
+          height: 35
         }]
       };
 
@@ -321,15 +658,9 @@ angular.module('Core')
         var user = [];
         if ($scope.currentUser) {
           usersList = [];
-          var familyName, givenName;
-          if (angular.isDefined($scope.currentUser.name)) {
-            familyName = $scope.currentUser.name.familyName;
-            givenName = $scope.currentUser.name.givenName;
-          }
           var userObj = {
             'address': $scope.currentUser.userName,
-            'familyName': familyName,
-            'givenName': givenName
+            'name': $scope.currentUser.name
           };
           user.push(userObj);
           usersList.push(user);
@@ -461,6 +792,7 @@ angular.module('Core')
           invalidcount = 0;
           angular.element('#usersfield').tokenfield('setTokens', $scope.model.userList);
         }, 100);
+
       };
 
       $scope.addToUsersfield = function () {
@@ -522,7 +854,7 @@ angular.module('Core')
 
             if (numAddedUsers > 0) {
               var msg = 'Invited ' + numAddedUsers + ' users';
-              LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('inviteUsers'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), numAddedUsers);
+              LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('inviteUsers'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), numAddedUsers, null);
             }
 
             for (var i = 0; i < data.userResponse.length; i++) {
@@ -540,8 +872,22 @@ angular.module('Core')
                 if (data.userResponse[i].entitled && data.userResponse[i].entitled.indexOf(Config.entitlements.huron) !== -1) {
                   var userData = {
                     'email': data.userResponse[i].email,
-                    'name': data.userResponse[i].name
+                    'name': data.userResponse[i].name,
+                    'directoryNumber': "",
+                    'externalNumber': ""
                   };
+                  var userAndDnObj = $scope.usrlist.filter(function (user) {
+                    return (user.address == data.userResponse[i].email);
+                  });
+
+                  if ((userAndDnObj[0].assignedDn !== null) && userAndDnObj[0].assignedDn.pattern.length > 0) {
+                    userData.directoryNumber = userAndDnObj[0].assignedDn.pattern;
+                  }
+                  //with None as externalNumber pattern the CMI call fails
+                  if (userAndDnObj[0].externalNumber !== false && userAndDnObj[0].externalNumber.pattern !== "None") {
+                    userData.externalNumber = userAndDnObj[0].externalNumber.pattern;
+                  }
+
                   promise = HuronUser.create(data.userResponse[i].uuid, userData)
                     .catch(function (response) {
                       this.alertType = 'danger';
@@ -626,11 +972,7 @@ angular.module('Core')
             angular.element('#btnOnboard').button('reset');
             deferred.reject();
           }
-
-          if (isComplete) {
-            resetUsersfield();
-          }
-
+          //no need to clear tokens here since that is causing the options grid to blank during the finish process
         };
 
         if (angular.isArray(usersList) && usersList.length > 0) {
@@ -696,7 +1038,9 @@ angular.module('Core')
               isComplete = false;
             }
             $scope.results.resultList.push(userResult);
-            $scope.$dismiss();
+            if (method !== 'convertUser') {
+              $scope.$dismiss();
+            }
           }
 
           //concatenating the results in an array of strings for notify function
@@ -723,8 +1067,12 @@ angular.module('Core')
               Notification.notify(errors, 'error');
             }
           } else {
-            Notification.notify(successes, 'success');
-            Notification.notify(errors, 'error');
+            if (count_s > 0) {
+              convertSuccess.push.apply(convertSuccess, successes);
+            }
+            if (count_e > 0) {
+              convertFailures.push.apply(convertFailures, errors);
+            }
           }
 
         } else {
@@ -745,11 +1093,13 @@ angular.module('Core')
               error += ' ' + data;
             }
           }
-          Notification.notify([error], 'error');
-          isComplete = false;
           if (method !== 'convertUser') {
+            Notification.notify([error], 'error');
+            isComplete = false;
             angular.element('#btnOnboard').button('reset');
             angular.element('#btnSaveEnt').button('reset');
+          } else {
+            convertFailures.push(error);
           }
         }
 
@@ -758,7 +1108,24 @@ angular.module('Core')
             resetUsersfield();
           }
         } else {
-          $scope.$dismiss();
+          if ($scope.convertSelectedList.length > 0 && convertCancelled === false && convertBacked === false) {
+            convertUsersInBatch();
+          } else {
+            if (convertBacked === false) {
+              angular.element('#btnConvert').button('reset');
+              $scope.$dismiss();
+            } else {
+              $state.go('users.convert', {});
+            }
+            Notification.notify(convertSuccess, 'success');
+            Notification.notify(convertFailures, 'error');
+            var msg = 'Migrated ' + convertSuccess.length + ' users';
+            var migratedata = {
+              totalUsers: convertUsersCount,
+              successfullyConverted: convertSuccess.length
+            };
+            LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('convertUsers'), LogMetricsService.getEventAction('buttonClick'), 200, convertStartTime, convertSuccess.length, migratedata);
+          }
         }
 
       };
@@ -807,6 +1174,52 @@ angular.module('Core')
       };
       // Wizard hook for save button
       $scope.assignServicesNext = function () {
+        var deferred = $q.defer();
+
+        if ($scope.radioStates.commRadio) {
+          $scope.processing = true;
+          activateDID();
+          deferred.resolve();
+        } else {
+          return onboardUsers(true).then(function () {
+            if (angular.isDefined($scope.wizard)) {
+              $q.when($scope.wizard.nextTab()).then(function () {
+                deferred.reject();
+              });
+            } else {
+              deferred.resolve();
+            }
+          });
+        }
+        return deferred.promise;
+      };
+
+      $scope.getServicesNextText = function () {
+        if ($scope.radioStates.commRadio) {
+          return 'common.next';
+        } else {
+          return 'common.save';
+        }
+      };
+
+      // Wizard hook for modal save button
+      $scope.assignDnAndDirectLinesNext = function () {
+        var deferred = $q.defer();
+        var didDnDupes = checkDidDnDupes();
+        // check for DiD duplicates
+        if (didDnDupes.didDupe) {
+          Log.debug('Duplicate Direct Line entered.');
+          Notification.notify([$translate.instant('usersPage.duplicateDidFound')], 'error');
+          deferred.reject();
+          return deferred.promise;
+        }
+        // check for Dn duplicates
+        if (didDnDupes.dnDupe) {
+          Log.debug('Duplicate Internal Extension entered.');
+          Notification.notify([$translate.instant('usersPage.duplicateDnFound')], 'error');
+          deferred.reject();
+          return deferred.promise;
+        }
         return onboardUsers(true);
       };
 
@@ -858,21 +1271,50 @@ angular.module('Core')
       setEntitlementList();
       watchCheckboxes();
 
+      $scope.cancelConvert = function () {
+        if (convertPending === true) {
+          convertCancelled = true;
+        } else {
+          $scope.$dismiss();
+        }
+      };
+
+      $scope.processBackButton = function () {
+        if (convertPending === true) {
+          convertBacked = true;
+        } else {
+          $state.go('users.convert', {});
+        }
+      };
+
       $scope.saveConvertList = function () {
         $scope.convertSelectedList = $scope.convertGridOptions.$gridScope.selectedItems;
+        convertUsersCount = $scope.convertSelectedList.length;
         $scope.convertUsersFlow = true;
+        convertPending = false;
         $state.go('users.convert.services', {});
       };
 
       $scope.convertUsers = function () {
-        Userservice.migrateUsers($scope.convertSelectedList, function (data, status) {
-          var errorMessages = [];
-          var successMessages = [];
+        angular.element('#btnConvert').button('loading');
+        convertPending = true;
+        convertCancelled = false;
+        convertBacked = false;
+        convertSuccess = [];
+        convertFailures = [];
+        convertStartTime = moment();
+        convertUsersInBatch();
+      };
+
+      var convertUsersInBatch = function () {
+        var batch = $scope.convertSelectedList.slice(0, Config.batchSize);
+        $scope.convertSelectedList = $scope.convertSelectedList.slice(Config.batchSize);
+        Userservice.migrateUsers(batch, function (data, status) {
           var successMovedUsers = [];
 
           for (var i = 0; i < data.userResponse.length; i++) {
             if (data.userResponse[i].status !== 200) {
-              errorMessages.push(data.userResponse[i].email + ' could not be converted. Contact support for assistance converting this user.');
+              convertFailures.push(data.userResponse[i].email + $translate.instant('homePage.convertError'));
             } else {
               var user = {
                 'address': data.userResponse[i].email
@@ -891,9 +1333,25 @@ angular.module('Core')
             }
             Userservice.updateUsers(successMovedUsers, licenseList, entitleList, 'convertUser', entitleUserCallback);
           } else {
-            $scope.$dismiss();
+            if ($scope.convertSelectedList.length > 0 && convertCancelled === false && convertBacked === false) {
+              convertUsersInBatch();
+            } else {
+              if (convertBacked === false) {
+                angular.element('#btnConvert').button('reset');
+                $scope.$dismiss();
+              } else {
+                $state.go('users.convert', {});
+              }
+              Notification.notify(convertSuccess, 'success');
+              Notification.notify(convertFailures, 'error');
+              var msg = 'Migrated ' + convertSuccess.length + ' users';
+              var migratedata = {
+                totalUsers: convertUsersCount,
+                successfullyConverted: convertSuccess.length
+              };
+              LogMetricsService.logMetrics(msg, LogMetricsService.getEventType('convertUsers'), LogMetricsService.getEventAction('buttonClick'), 200, convertStartTime, convertSuccess.length, migratedata);
+            }
           }
-          Notification.notify(errorMessages, 'error');
         });
       };
 
@@ -957,7 +1415,7 @@ angular.module('Core')
       var isCsvValid = false;
       var cancelDeferred;
       var saveDeferred;
-      var MAX_USERS = 1000;
+      var MAX_USERS = 100;
 
       $scope.onFileSizeError = function () {
         Notification.notify([$translate.instant('firstTimeWizard.csvMaxSizeError')], 'error');

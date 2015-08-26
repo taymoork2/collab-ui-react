@@ -39,36 +39,42 @@ angular
         })
         .state('sidepanel', {
           abstract: true,
-          onEnter: ['$modal', '$state', '$previousState',
-            function ($modal, $state, $previousState) {
+          onEnter: /* @ngInject */ function ($modal, $state, $previousState) {
+            if ($state.sidepanel) {
+              $state.sidepanel.stopPreviousState = true;
+            } else {
               $previousState.memo(sidepanelMemo);
-              $state.sidepanel = $modal.open({
-                template: '<cs-sidepanel></cs-sidepanel>',
-                windowTemplateUrl: 'sidepanel/sidepanel-modal.tpl.html',
-                backdrop: false,
-                keyboard: false
-              });
-              $state.sidepanel.result.finally(function () {
+            }
+            $state.sidepanel = $modal.open({
+              template: '<cs-sidepanel></cs-sidepanel>',
+              windowTemplateUrl: 'sidepanel/sidepanel-modal.tpl.html',
+              backdrop: false,
+              keyboard: false
+            });
+            $state.sidepanel.result.finally(function () {
+              if (!this.stopPreviousState && !$state.modal) {
                 $state.sidepanel = null;
                 var previousState = $previousState.get(sidepanelMemo);
                 if (previousState) {
-                  return $previousState.go(sidepanelMemo);
+                  return $previousState.go(sidepanelMemo).then(function () {
+                    $previousState.forget(sidepanelMemo);
+                  });
                 }
-              });
-            }
-          ],
-          onExit: ['$state', '$previousState',
-            function ($state, $previousState) {
-              if ($state.sidepanel) {
-                $previousState.forget(sidepanelMemo);
-                $state.sidepanel.close();
               }
+            }.bind($state.sidepanel));
+          },
+          onExit: /* @ngInject */ function ($state, $previousState) {
+            if ($state.sidepanel) {
+              $state.sidepanel.dismiss();
             }
-          ]
+          }
         });
 
       $httpProvider.interceptors.push('TrackingIDInterceptor');
       $httpProvider.interceptors.push('ResponseInterceptor');
+
+      // See ... http://angular-translate.github.io/docs/#/guide/19_security
+      $translateProvider.useSanitizeValueStrategy('escape');
 
       $translateProvider.useStaticFilesLoader({
         prefix: 'l10n/',
@@ -90,30 +96,39 @@ angular
     function ($urlRouterProvider, $stateProvider) {
 
       // Modal States Enter and Exit functions
-      function modalOnEnter(size) {
+      function modalOnEnter(options) {
+        options = options || {};
         /* @ngInject */
         return function ($modal, $state, $previousState) {
-          $previousState.memo(modalMemo);
+          if ($state.modal) {
+            $state.modal.stopPreviousState = true;
+          } else {
+            $previousState.memo(modalMemo);
+          }
           $state.modal = $modal.open({
             template: '<div ui-view="modal"></div>',
-            size: size
+            size: options.size,
+            windowClass: options.windowClass,
+            backdrop: options.backdrop || true
           });
           $state.modal.result.finally(function () {
-            $state.modal = null;
-            var previousState = $previousState.get(modalMemo);
-            if (previousState) {
-              return $previousState.go(modalMemo);
+            if (!this.stopPreviousState) {
+              $state.modal = null;
+              var previousState = $previousState.get(modalMemo);
+              if (previousState) {
+                return $previousState.go(modalMemo).then(function () {
+                  $previousState.forget(modalMemo);
+                });
+              }
             }
-          });
+          }.bind($state.modal));
         };
       }
 
-      modalOnExit.$inject = ['$state', '$previousState'];
-
+      /* @ngInject */
       function modalOnExit($state, $previousState) {
         if ($state.modal) {
-          $previousState.forget(modalMemo);
-          $state.modal.close();
+          $state.modal.dismiss();
         }
       }
 
@@ -250,6 +265,13 @@ angular
             }
           }
         })
+        .state('users.add.services.dn', {
+          views: {
+            'usersAdd@users.add': {
+              templateUrl: 'modules/huron/users/assignDnAndDirectLinesModal.tpl.html'
+            }
+          }
+        })
         .state('users.convert', {
           parent: 'modalLarge',
           views: {
@@ -323,7 +345,7 @@ angular
             reloadToggle: false
           },
           data: {
-            displayName: 'Communication'
+            displayName: 'Communications'
           }
         })
         .state('user-overview.communication.directorynumber', {
@@ -587,6 +609,17 @@ angular
       /*
         devices redux
       */
+      .state('devices-cleanup', {
+        url: '/devices-cleanup',
+        templateUrl: 'modules/squared/devicesCleanup/cleanup.html',
+        controller: 'DevicesCleanupCtrl',
+        controllerAs: 'dc',
+        parent: 'main'
+      })
+
+      /*
+        devices redux
+      */
       .state('devices-redux', {
           url: '/devices-redux',
           templateUrl: 'modules/squared/devicesRedux/devices.html',
@@ -693,9 +726,43 @@ angular
             filter: null
           }
         })
-        .state('partnercustomers.list.preview', {
-          templateUrl: 'modules/core/customers/customerPreview/customerPreview.tpl.html',
-          controller: 'CustomerPreviewCtrl'
+        .state('customer-overview', {
+          parent: 'sidepanel',
+          views: {
+            'sidepanel@': {
+              controller: 'CustomerOverviewCtrl',
+              controllerAs: 'customerOverview',
+              templateUrl: 'modules/core/customers/customerOverview/customerOverview.tpl.html'
+            }
+          },
+          resolve: {
+            identityCustomer: /* @ngInject */ function ($stateParams, $q, Orgservice) {
+              var defer = $q.defer();
+              if ($stateParams.currentCustomer) {
+                Orgservice.getOrg(orgCallback, $stateParams.currentCustomer.customerOrgId);
+              }
+
+              return defer.promise;
+
+              function orgCallback(data, status) {
+                defer.resolve(data);
+              }
+            }
+          },
+          params: {
+            currentCustomer: {}
+          },
+          data: {
+            displayName: 'Overview'
+          }
+        })
+        .state('customer-overview.externalNumbers', {
+          controller: 'ExternalNumberDetailCtrl',
+          controllerAs: 'externalNumbers',
+          templateUrl: 'modules/huron/externalNumbers/externalNumberDetail.tpl.html',
+          data: {
+            displayName: 'Phone Numbers'
+          }
         })
         .state('modal', {
           abstract: true,
@@ -704,12 +771,24 @@ angular
         })
         .state('modalLarge', {
           abstract: true,
-          onEnter: modalOnEnter('lg'),
+          onEnter: modalOnEnter({
+            size: 'lg'
+          }),
           onExit: modalOnExit
         })
         .state('modalSmall', {
           abstract: true,
-          onEnter: modalOnEnter('sm'),
+          onEnter: modalOnEnter({
+            size: 'sm'
+          }),
+          onExit: modalOnExit
+        })
+        .state('modalFull', {
+          abstract: true,
+          onEnter: modalOnEnter({
+            windowClass: 'modal-full',
+            backdrop: 'static'
+          }),
           onExit: modalOnExit
         })
         .state('wizardmodal', {
@@ -720,7 +799,8 @@ angular
               $state.modal = $modal.open({
                 template: '<div ui-view="modal"></div>',
                 controller: 'ModalWizardCtrl',
-                windowTemplateUrl: 'modules/core/modal/wizardWindow.tpl.html'
+                windowTemplateUrl: 'modules/core/modal/wizardWindow.tpl.html',
+                backdrop: 'static'
               });
               $state.modal.result.finally(function () {
                 $state.modal = null;
@@ -771,6 +851,12 @@ angular
           data: {
             firstTimeSetup: false
           }
+        })
+        .state('trialExtInterest', {
+          url: '/trialExtInterest?eqp',
+          templateUrl: 'modules/squared/views/trialExtInterest.html',
+          controller: 'TrialExtInterestCtrl',
+          parent: 'main'
         });
     }
   ]);
@@ -795,6 +881,28 @@ angular
             'nav': {
               templateUrl: 'modules/huron/callRouting/callRoutingNav.tpl.html',
               controller: 'CallRoutingNavCtrl',
+              controllerAs: 'nav'
+            },
+            'main': {
+              template: '<div ui-view></div>'
+            }
+          }
+        })
+        .state('callrouterBase', {
+          abstract: true,
+          parent: 'main',
+          templateUrl: 'modules/huron/callRouter/callRouter.tpl.html'
+        })
+        .state('callRouter', {
+          url: '/callRouter',
+          parent: 'callrouterBase',
+          views: {
+            'header': {
+              templateUrl: 'modules/huron/callRouter/callRouterHeader.tpl.html'
+            },
+            'nav': {
+              templateUrl: 'modules/huron/callRouter/companyNumber.tpl.html',
+              controller: 'CallRouterCtrl',
               controllerAs: 'nav'
             },
             'main': {
@@ -850,6 +958,12 @@ angular
               controllerAs: 'aaMenu'
             }
           }
+        })
+        .state('autoattendant.aalanding', {
+          parent: 'autoattendant',
+          templateUrl: 'modules/huron/callRouting/autoAttendant/aaLanding.tpl.html',
+          controller: 'AutoAttendantLandingCtrl',
+          controllerAs: 'aaLanding'
         })
         .state('callpark', {
           url: '/callpark',
@@ -961,7 +1075,6 @@ angular
         })
         .state('didadd', {
           parent: 'modal',
-          url: '/didadd',
           params: {
             currentOrg: {},
             editMode: true
@@ -973,6 +1086,31 @@ angular
               controllerAs: 'didAdd'
             }
           }
+        })
+        .state('pstnSetup', {
+          parent: 'modalFull',
+          params: {
+            currentCustomer: {}
+          },
+          views: {
+            'modal@': {
+              template: '<div ui-view></div>',
+              controller: 'PstnSetup',
+              controllerAs: 'pstnSetup'
+            },
+            '@pstnSetup': {
+              templateUrl: 'modules/huron/pstnSetup/pstnProviders.tpl.html'
+            }
+          }
+        })
+        .state('pstnSetup.orderNumbers', {
+          templateUrl: 'modules/huron/pstnSetup/pstnNumbers.tpl.html'
+        })
+        .state('pstnSetup.review', {
+          templateUrl: 'modules/huron/pstnSetup/pstnReview.tpl.html'
+        })
+        .state('pstnSetup.nextSteps', {
+          templateUrl: 'modules/huron/pstnSetup/pstnNextSteps.tpl.html'
         });
     }
   ]);

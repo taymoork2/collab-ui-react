@@ -18,7 +18,6 @@ angular.module('Core')
         NOTE_NOT_EXPIRED = 99;
       $scope.load = true;
       $scope.currentDataPosition = 0;
-      $scope.trialPreviewActive = false;
       if ($state.params.filter) {
         $scope.activeFilter = $state.params.filter;
       } else {
@@ -465,29 +464,10 @@ angular.module('Core')
 
       $scope.showCustomerDetails = function (customer) {
         $scope.currentTrial = customer;
-        if ($scope.currentTrial.isSquaredUcOffer) {
-          updatePhoneNumberCount(customer.customerOrgId);
-        } else {
-          $scope.noOfPhoneNumbers = 0;
-        }
-        $state.go('partnercustomers.list.preview');
-      };
-
-      $scope.$on('DIDS_UPDATED', function () {
-        if ($scope.currentTrial !== null && $scope.currentTrial.customerOrgId !== null && $scope.currentTrial.isSquaredUcOffer) {
-          updatePhoneNumberCount($scope.currentTrial.customerOrgId);
-        }
-      });
-
-      function updatePhoneNumberCount(orgId) {
-        ExternalNumberPool.getAll(orgId).then(function (results) {
-          if (angular.isDefined(results) && angular.isDefined(results.length) && results.length >= 0) {
-            $scope.noOfPhoneNumbers = results.length;
-          }
-        }).catch(function () {
-          $scope.noOfPhoneNumbers = 0;
+        $state.go('customer-overview', {
+          currentCustomer: customer
         });
-      }
+      };
 
       $scope.sort = {
         by: 'customerName',
@@ -503,16 +483,6 @@ angular.module('Core')
           $scope.currentDataPosition++;
           $scope.load = false;
           getTrialsList($scope.currentDataPosition * Config.usersperpage + 1);
-        }
-      });
-
-      $rootScope.$on('$stateChangeSuccess', function () {
-        if ($state.includes('partnercustomers.list.preview.*')) {
-          $scope.trialPreviewActive = true;
-        } else if ($state.includes('partnercustomers.list.preview')) {
-          $scope.trialPreviewActive = true;
-        } else {
-          $scope.trialPreviewActive = false;
         }
       });
 
@@ -593,7 +563,7 @@ angular.module('Core')
       };
 
       if ($state.current.name === "partnercustomers.list") {
-        LogMetricsService.logMetrics('Partner in customers page', LogMetricsService.getEventType('partnerCustomersPage'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1);
+        LogMetricsService.logMetrics('Partner in customers page', LogMetricsService.getEventType('partnerCustomersPage'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
       }
     }
   ]);

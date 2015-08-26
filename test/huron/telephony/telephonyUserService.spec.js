@@ -35,6 +35,7 @@ describe('Service: HuronUser', function () {
         'firstName': '',
         'lastName': ''
       }).respond(200);
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/users/' + userUuid + '/directorynumbers').respond(200);
       HuronUser.update(userUuid, userData);
       $httpBackend.flush();
     });
@@ -49,7 +50,49 @@ describe('Service: HuronUser', function () {
         'firstName': userData.name.givenName,
         'lastName': userData.name.familyName
       }).respond(200);
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/users/' + userUuid + '/directorynumbers').respond(200);
       HuronUser.update(userUuid, userData);
+      $httpBackend.flush();
+    });
+  });
+
+  describe('add user', function () {
+    var userUuid, userData;
+    beforeEach(function () {
+      userUuid = '123';
+      userData = {
+        'email': 'test@gmail.com'
+      };
+    });
+
+    it('should default to empty firstName, lastName', function () {
+      $httpBackend.expectPOST(HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/users', {
+        'uuid': userUuid,
+        'userName': userData.email
+      }).respond(201);
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/users/' + userUuid + '/directorynumbers').respond(200);
+      $httpBackend.expectPOST(HuronConfig.getCmiUrl() + '/identity/users/otp').respond(201);
+      $httpBackend.expectPOST(HuronConfig.getEmailUrl() + '/email/userwelcome').respond(201);
+      HuronUser.create(userUuid, userData);
+      $httpBackend.flush();
+    });
+
+    it('should update firstName, lastName', function () {
+      userData.name = {
+        givenName: 'myFirstName',
+        familyName: 'myLastName'
+      };
+
+      $httpBackend.expectPOST(HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/users', {
+        'uuid': userUuid,
+        'userName': userData.email,
+        'firstName': userData.name.givenName,
+        'lastName': userData.name.familyName
+      }).respond(201);
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/users/' + userUuid + '/directorynumbers').respond(200);
+      $httpBackend.expectPOST(HuronConfig.getCmiUrl() + '/identity/users/otp').respond(201);
+      $httpBackend.expectPOST(HuronConfig.getEmailUrl() + '/email/userwelcome').respond(201);
+      HuronUser.create(userUuid, userData);
       $httpBackend.flush();
     });
   });

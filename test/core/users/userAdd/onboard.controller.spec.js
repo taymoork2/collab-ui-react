@@ -3,25 +3,56 @@
 'use strict';
 
 describe('OnboardCtrl: Ctrl', function () {
-  var controller, $scope, $timeout, GroupService, Notification, Userservice, Orgservice;
-
+  var controller, $scope, $timeout, GroupService, Notification, Userservice, $q, TelephonyInfoService, Orgservice, FeatureToggleService;
+  var internalNumbers;
+  var externalNumbers;
+  var externalNumberPool;
+  var externalNumberPoolMap;
+  var getUserMe;
+  var getMyFeatureToggles;
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$timeout_, _GroupService_, _Notification_, _Userservice_, _Orgservice_) {
+  beforeEach(inject(function ($rootScope, $controller, _$timeout_, _GroupService_, _Notification_, _Userservice_, _TelephonyInfoService_, _$q_, _Orgservice_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
     $timeout = _$timeout_;
+    $q = _$q_;
     GroupService = _GroupService_;
     Notification = _Notification_;
     Userservice = _Userservice_;
     Orgservice = _Orgservice_;
+    TelephonyInfoService = _TelephonyInfoService_;
+    FeatureToggleService = _FeatureToggleService_;
+    var current = {
+      step: {
+        name: 'fakeStep'
+      }
+    };
+    $scope.wizard = {};
+    $scope.wizard.current = current;
 
     spyOn(GroupService, 'getGroupList').and.callFake(function (callback) {
       callback({});
     });
+
+    internalNumbers = getJSONFixture('huron/json/internalNumbers/internalNumbers.json');
+    externalNumbers = getJSONFixture('huron/json/externalNumbers/externalNumbers.json');
+    externalNumberPool = getJSONFixture('huron/json/externalNumberPoolMap/externalNumberPool.json');
+    externalNumberPoolMap = getJSONFixture('huron/json/externalNumberPoolMap/externalNumberPoolMap.json');
+    getUserMe = getJSONFixture('core/json/users/me.json');
+    getMyFeatureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
+
     spyOn(Notification, 'notify');
     spyOn(Userservice, 'onboardLicenseUsers');
     spyOn(Orgservice, 'getUnlicensedUsers');
+
+    spyOn(TelephonyInfoService, 'getInternalNumberPool').and.returnValue(internalNumbers);
+    spyOn(TelephonyInfoService, 'loadInternalNumberPool').and.returnValue($q.when(internalNumbers));
+    spyOn(TelephonyInfoService, 'getExternalNumberPool').and.returnValue(externalNumbers);
+    spyOn(TelephonyInfoService, 'loadExternalNumberPool').and.returnValue($q.when(externalNumbers));
+    spyOn(TelephonyInfoService, 'loadExtPoolWithMapping').and.returnValue($q.when(externalNumberPoolMap));
+    spyOn(Userservice, 'getUser').and.returnValue(getUserMe);
+    spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(getMyFeatureToggles);
 
     controller = $controller('OnboardCtrl', {
       $scope: $scope
@@ -194,6 +225,70 @@ describe('OnboardCtrl: Ctrl', function () {
         expect(promise).toBeResolved();
       });
     });
+  });
+
+  describe('UserAdd DID and DN assignment', function () {
+    beforeEach(function () {
+      $scope.usrlist = [{
+        "name": "dntodid",
+        "address": "dntodid@gmail.com"
+      }, {
+        "name": "dntodid1",
+        "address": "dntodid1@gmail.com"
+      }];
+      $scope.radioStates.commRadio = 'true';
+      $scope.internalNumberPool = internalNumbers;
+      $scope.externalNumberPool = externalNumberPool;
+      $scope.$apply();
+
+    });
+    beforeEach(installPromiseMatchers);
+    it('mapDidToDn', function () {
+      $scope.mapDidToDn();
+      $scope.$apply();
+      expect($scope.externalNumberMapping.length).toEqual(2);
+      expect($scope.usrlist[0].externalNumber.pattern).toEqual('+14084744532');
+      expect($scope.usrlist[0].assignedDn).toEqual('4532');
+      expect($scope.usrlist[1].didDnMapMsg).toEqual('usersPage.noExtMappingAvail');
+
+    });
+    it('assignServicesNext', function () {
+
+      expect($scope.usrlist[0].externalNumber).not.toBeDefined();
+      expect($scope.usrlist[0].assignedDn).not.toBeDefined();
+      expect($scope.usrlist[1].externalNumber).not.toBeDefined();
+      expect($scope.usrlist[1].assignedDn).not.toBeDefined();
+      var promise = $scope.assignServicesNext();
+      $scope.$apply();
+      expect(promise).toBeResolved();
+      expect($scope.usrlist[0].externalNumber).toBeDefined();
+      expect($scope.usrlist[0].assignedDn.pattern).toEqual('4000');
+      expect($scope.usrlist[1].externalNumber).toBeDefined();
+      expect($scope.usrlist[1].assignedDn.pattern).toEqual('4001');
+    });
+
+    it('assignDNForUserList', function () {
+
+      var promise = $scope.assignDNForUserList();
+      $scope.$apply();
+      expect($scope.usrlist[0].externalNumber.pattern).toEqual('null');
+      expect($scope.usrlist[0].assignedDn.pattern).toEqual('4000');
+      expect($scope.usrlist[1].externalNumber.pattern).toEqual('null');
+      expect($scope.usrlist[1].assignedDn.pattern).toEqual('4001');
+
+    });
+
+    it('checkDidDnDupes', function () {
+
+      $scope.loadInternalNumberPool();
+      $scope.loadExternalNumberPool();
+      expect($scope.usrlist.length).toEqual(2);
+      $scope.assignDNForUserList();
+      var result = $scope.checkDidDnDupes();
+      $scope.$apply();
+      expect(result).toBeTruthy();
+    });
+
   });
 
 });

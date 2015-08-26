@@ -1,60 +1,66 @@
 'use strict';
 
 angular.module('Squared')
-  .service('LogService', ['$rootScope', '$http', 'Storage', 'Config', 'Log', 'Auth',
-    function ($rootScope, $http, Storage, Config, Log, Auth) {
+  .service('LogService', LogService);
 
-      return {
-        listLogs: function (userId, callback) {
-          var logsUrl = Config.getAdminServiceUrl() + 'logs/' + userId;
+/* @ngInject */
+function LogService($rootScope, $http, Storage, Config, Log, Auth) {
+  var service = {
+    listLogs: listLogs,
+    searchLogs: searchLogs,
+    downloadLog: downloadLog
+  };
 
-          $http.get(logsUrl)
-            .success(function (data, status) {
-              data = data || {};
-              data.success = true;
-              Log.debug('Retrieved logs for user: ' + userId);
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              //data = data || {};
-              // data.success = false;
-              // data.status = status;
-              callback(data, status);
-            });
-        },
+  return service;
 
-        searchLogs: function (searchInput, callback) {
-          var logsUrl = Config.getAdminServiceUrl() + 'logs?search=' + window.encodeURIComponent(searchInput);
+  function listLogs(userId, callback) {
+    var logsUrl = Config.getAdminServiceUrl() + 'logs/' + userId;
 
-          $http.get(logsUrl)
-            .success(function (data, status) {
-              data = data || {};
-              data.success = true;
-              Log.debug('Retrieved logs for search term: ' + searchInput);
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              callback(data, status);
-            });
-        },
+    $http.get(logsUrl)
+      .success(function (data, status) {
+        data = data || {};
+        data.success = true;
+        Log.debug('Retrieved logs for user: ' + userId);
+        callback(data, status);
+      })
+      .error(function (data, status) {
+        //data = data || {};
+        // data.success = false;
+        // data.status = status;
+        callback(data, status);
+      });
+  }
 
-        downloadLog: function (filename, callback) {
-          var logsUrl = Config.getAdminServiceUrl() + 'logs/';
-          var payload = {
-            file: filename
-          };
+  function searchLogs(searchInput, callback) {
+    var logsUrl = Config.getAdminServiceUrl() + 'logs?search=' + window.encodeURIComponent(searchInput);
 
-          $http.post(logsUrl, payload)
-            .success(function (data, status) {
-              data = data || {};
-              data.success = true;
-              Log.debug('Retrieved tempURL for log: ' + filename);
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              callback(data, status);
-            });
-        }
-      };
-    }
-  ]);
+    $http.get(logsUrl)
+      .success(function (data, status) {
+        data = data || {};
+        data.success = true;
+        Log.debug('Retrieved logs for search term: ' + searchInput);
+        callback(data, status);
+      })
+      .error(function (data, status) {
+        callback(data, status);
+      });
+  }
+
+  function downloadLog(filename, callback) {
+    var logsUrl = Config.getAdminServiceUrl() + 'logs/';
+    var payload = {
+      file: filename
+    };
+
+    $http.post(logsUrl, payload)
+      .success(function (data, status) {
+        data = data || {};
+        data.success = true;
+        Log.debug('Retrieved tempURL for log: ' + filename);
+        callback(data, status);
+      })
+      .error(function (data, status) {
+        callback(data, status);
+      });
+  }
+}

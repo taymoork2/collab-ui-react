@@ -178,6 +178,7 @@ angular.module('Core')
         helpUrl: 'https://support.ciscospark.com',
         ssoUrl: 'https://support.ciscospark.com/customer/portal/articles/1909112-sso-setup',
         rolesUrl: 'https://support.ciscospark.com/customer/portal/articles/1908564-overview-of-admin-roles',
+        supportUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt',
 
         usersperpage: 100,
         meetingsPerPage: 50,
@@ -238,13 +239,17 @@ angular.module('Core')
             desc: 'tabs.MediafusionDetailsTabDesc',
             state: 'mediafusionconnector',
             link: '#mediafusionconnector'
+          }, {
+            title: 'tabs.callRoutingTab',
+            state: 'callRouter',
+            link: '#callRouter'
           }]
         }, {
           tab: 'deviceTab',
           icon: 'icon-devices',
           title: 'tabs.deviceTab',
           state: 'devices',
-          link: '/devices'
+          link: '/devices-redux'
         }, {
           tab: 'reportTab',
           icon: 'icon-bars',
@@ -407,14 +412,21 @@ angular.module('Core')
           yellow: '#EBC31C',
           green: '#50D71D',
           brandSuccessDark: '#6ab140',
+          brandSuccess: "#7cc153",
           brandSuccessLight: '#99cf78',
           brandWhite: '#fff',
           grayDarkest: '#444',
           grayDarker: '#666',
+          grayDark: '#999',
+          gray: '#aaa',
           grayLight: '#ccc',
+          grayLighter: '#ddd',
           brandInfo: '#00c1aa',
           brandDanger: '#f05d3b',
-          brandWarning: '#f7c100'
+          brandWarning: '#f7c100',
+          dummyGray: '#ECECEC',
+          dummyGrayLight: '#F3F3F3',
+          dummyGrayLighter: '#FAFAFA'
         },
 
         confMap: {
@@ -502,6 +514,10 @@ angular.module('Core')
 
         getLocusServiceUrl: function () {
           return this.locusServiceUrl.integration;
+        },
+
+        getFeatureToggleUrl: function () {
+          return this.locusServiceUrl.prod;
         },
 
         getEnrollmentServiceUrl: function () {
@@ -741,9 +757,10 @@ angular.module('Core')
       };
 
       config.roleStates = {
-        Full_Admin: [
+        Full_Admin: [ // Customer Admin
           'overview',
           'users',
+          'callRouter',
           'user-overview',
           'device-overview',
           'devices2-overview',
@@ -756,16 +773,17 @@ angular.module('Core')
           'profile',
           'customerprofile',
           'support',
-          'editService'
+          'editService',
+          'trialExtInterest'
         ],
         Support: ['support', 'reports', 'billing'],
         WX2_User: ['overview', 'reports', 'support'],
         WX2_Support: ['overview', 'reports', 'support'],
         WX2_SquaredInviter: [],
+        PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile'],
+        PARTNER_USER: ['partnercustomers', 'customer-overview', 'trialAdd', 'trialEdit'],
+        CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
         User: [],
-        PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'partnerreports', 'trialAdd', 'trialEdit', 'profile'],
-        PARTNER_USER: ['partnercustomers', 'trialAdd', 'trialEdit'],
-        CUSTOMER_PARTNER: ['overview', 'partnercustomers'],
         Site_Admin: ['site-list'],
         Application: ['organizationAdd']
       };
@@ -791,6 +809,7 @@ angular.module('Core')
         'squared-fusion-uc': [
           'devices',
           'devices-redux',
+          'devices-cleanup',
           'devices2'
         ],
         'squared-team-member': [

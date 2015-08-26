@@ -1,9 +1,11 @@
 'use strict';
 
 describe('Controller: PlanReviewCtrl', function () {
-  var $scope, controller, $httpBackend, Config;
+  var $scope, controller, $httpBackend, Config, Userservice, FeatureToggleService;
+  var getUserMe, getMyFeatureToggles;
 
   beforeEach(module('Core'));
+  beforeEach(module('Huron'));
 
   var authInfo = {
     getOrgId: sinon.stub().returns('5632f806-ad09-4a26-a0c0-a49a13f38873'),
@@ -17,10 +19,19 @@ describe('Controller: PlanReviewCtrl', function () {
     $provide.value("Authinfo", authInfo);
   }));
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _Config_) {
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _Config_, _Userservice_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     Config = _Config_;
+    Userservice = _Userservice_;
+    FeatureToggleService = _FeatureToggleService_;
+
+    getUserMe = getJSONFixture('core/json/users/me.json');
+    getMyFeatureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
+
+    spyOn(Userservice, 'getUser').and.returnValue(getUserMe);
+    spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(getMyFeatureToggles);
+
     controller = $controller('PlanReviewCtrl', {
       $scope: $scope
     });

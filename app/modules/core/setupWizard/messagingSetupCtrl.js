@@ -37,8 +37,8 @@
     $scope.showMessengerInterop = false;
 
     var orgId = Authinfo.getOrgId();
-    AccountOrgService.getServices(orgId, null, function (data, status) {
-      if (status === 200) {
+    AccountOrgService.getServices(orgId, null)
+      .success(function (data, status) {
         var interopIndex = _.findIndex(data.entitlements, function (obj) {
           return obj.serviceId == 'messengerInterop';
         });
@@ -46,11 +46,10 @@
           vm.msgIntegration = true;
           msgIntFlag = true;
         }
-      }
-    });
+      });
 
-    AccountOrgService.getOrgSettings(orgId, function (data, status) {
-      if (status === 200) {
+    AccountOrgService.getOrgSettings(orgId)
+      .success(function (data, status) {
         var dataRetentionIndex = _.findIndex(data.settings, function (obj) {
           return obj.key == 'dataRetentionPeriodDays';
         });
@@ -61,50 +60,46 @@
           vm.selected = vm.options[selectedIndex];
           CurrentDataRetentionPeriod = data.settings[dataRetentionIndex].value;
         }
-      }
-    });
+      });
 
     $scope.$on('wizard-messenger-setup-event', function () {
 
       if (!_.isEmpty(vm.selected.value) && !CurrentDataRetentionPeriod) {
-        AccountOrgService.addOrgDataRetentionPeriodDays(orgId, vm.selected.value, function (data, status) {
-          if (status === 204) {
+        AccountOrgService.addOrgDataRetentionPeriodDays(orgId, vm.selected.value)
+          .success(function (data, status) {
             Notification.notify([$translate.instant('firstTimeWizard.messengerRetentionSuccess')], 'success');
-          } else {
+          })
+          .error(function (data, status) {
             Notification.notify([$translate.instant('firstTimeWizard.messengerRetentionError')], 'error');
-          }
-        });
+          });
       }
 
       if (!_.isEmpty(vm.selected.value) && CurrentDataRetentionPeriod && CurrentDataRetentionPeriod !== vm.selected.value) {
-        AccountOrgService.modifyOrgDataRetentionPeriodDays(orgId, vm.selected.value, function (data, status) {
-          if (status === 200) {
+        AccountOrgService.modifyOrgDataRetentionPeriodDays(orgId, vm.selected.value)
+          .success(function (data, status) {
             Notification.notify([$translate.instant('firstTimeWizard.messengerRetentionEditSuccess')], 'success');
-          } else {
+          })
+          .error(function (data, status) {
             Notification.notify([$translate.instant('firstTimeWizard.messengerRetentionEditError')], 'error');
-          }
-        });
+          });
       }
 
       if (vm.msgIntegration === true && msgIntFlag === false) {
-
-        AccountOrgService.addMessengerInterop(orgId, function (data, status) {
-          if (status === 204) {
+        AccountOrgService.addMessengerInterop(orgId)
+          .success(function (data, status) {
             Notification.notify([$translate.instant('firstTimeWizard.messengerEnableWebexSuccess')], 'success');
-          } else {
+          })
+          .error(function (data, status) {
             Notification.notify([$translate.instant('firstTimeWizard.messengerEnableWebexError')], 'error');
-          }
-        });
-
+          });
       } else if (vm.msgIntegration === false && msgIntFlag === true) {
-
-        AccountOrgService.deleteMessengerInterop(orgId, function (data, status) {
-          if (status === 204) {
+        AccountOrgService.deleteMessengerInterop(orgId)
+          .success(function (data, status) {
             Notification.notify([$translate.instant('firstTimeWizard.messengerDisableWebexError')], 'success');
-          } else {
+          })
+          .error(function (data, status) {
             Notification.notify([$translate.instant('firstTimeWizard.messengerDisableWebexError')], 'error');
-          }
-        });
+          });
       }
 
     });

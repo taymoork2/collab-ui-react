@@ -9,8 +9,7 @@ describe('ControllerWireing', function () {
     'EntitledServicesController',
     'CloudExtensionsCtrl',
     'SWUpgradeController',
-    'NotificationConfigController',
-    'StatusController'
+    'NotificationConfigController'
   ];
 
   beforeEach(inject(function ($injector) {

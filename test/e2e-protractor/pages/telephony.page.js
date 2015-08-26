@@ -53,9 +53,9 @@ var TelephonyPage = function () {
   this.externalNumber = element(by.css('.select-list[name="externalNumber"] a.select-toggle'));
   this.externalNumberOptionLast = element(by.css('.select-list[name="externalNumber"]')).all(by.repeater('option in csSelect.options')).last().element(by.tagName('a'));
 
-  this.callerIdDefault = element(by.css('label[for="callerIdDefault"]'));
-  this.callerIdCustom = element(by.css('label[for="callerIdOther"]'));
-  this.callerId = element(by.id('otherName'));
+  this.callerId = element(by.css('.select-list[name="callerIdSelection"] a.select-toggle'));
+  this.callerIdOptionFirst = element(by.css('.select-list[name="callerIdSelection"]')).all(by.repeater('option in csSelect.options')).first().element(by.tagName('a'));
+  this.callerIdOptionLast = element(by.css('.select-list[name="callerIdSelection"]')).all(by.repeater('option in csSelect.options')).last().element(by.tagName('a'));
 
   this.esnTail = element(by.id('esnTail'));
 
@@ -87,6 +87,11 @@ var TelephonyPage = function () {
   this.retrieveExternalNumber = function () {
     utils.wait(this.externalNumber);
     return this.externalNumber.evaluate('csSelect.selected.pattern');
+  };
+
+  this.retrieveCallerId = function () {
+    utils.wait(this.callerId);
+    return this.callerId.evaluate('csSelect.selected.label');
   };
 
   this.selectOption = function (dropdown, option) {

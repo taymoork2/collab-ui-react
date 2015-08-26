@@ -8,6 +8,10 @@
 
 .leader-board {
   padding: 30px;
+
+  .total-count {
+    color: $gray-dark;
+  }
 }
 
 .donut {
@@ -56,10 +60,6 @@
   font-size: 13px;
   color: $gray-darker;
   text-align: left;
-}
-
-.total-count {
-  color: $gray-dark;
 }
 
 .bucket-subtitle {

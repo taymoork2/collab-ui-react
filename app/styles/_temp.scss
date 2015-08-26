@@ -900,7 +900,6 @@ a:active.ftwNavLink {
 }
 
 .trialbar {
-  width: 160%;
   height: 6px;
 }
 
@@ -920,7 +919,7 @@ a:active.ftwNavLink {
   background-color: $progress-bar-success-bg;
 }
 
-.nav, .pagination, .carousel, .panel-title a {
+.pagination, .carousel, .panel-title a {
   cursor: pointer;
 }
 

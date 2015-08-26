@@ -27,9 +27,11 @@ var ReportsPage = function () {
   this.pageTitle = element(by.cssContainingText('span', 'Reports'));
   this.timeSelect = element(by.id('timeFilter'));
   this.customerSelect = element(by.id('customerFilter'));
+  this.allTypes = element(by.id('allReports'));
+  this.engagement = element(by.id('engagementReports'));
+  this.quality = element(by.id('qualityReports'));
 
   // active user
-  this.noActiveUserData = element(by.css('.active-user')).element(by.css('.no-data-center'));
   this.mostActiveButton = element(by.css('.most-active'));
   this.activeUsersTable = element(by.css('.active-users-table'));
   this.activeUsersTableContent = element.all(by.repeater('user in nav.mostActiveUsers'));
@@ -40,30 +42,32 @@ var ReportsPage = function () {
 
   // active user population
   this.activePopulationGraph = element(by.id('activeUserPopulationChart')).all(by.css('div')).first();
-  this.noActivePopulationData = element(by.css('.active-user-population')).element(by.css('.no-data-center'));
   this.activePopulationRefresh = element(by.id('activeUserPopulationRefreshDiv'));
   this.activePopulationDescription = '.active-user-population';
 
   // registered endpoints
   this.registeredEndpointsTable = element(by.css('.registeredEndpoints')).element(by.css('.table'));
-  this.noEndpointData = element(by.css('.registeredEndpoints')).element(by.css('.no-data-center'));
   this.noEndpointRefresh = element(by.id('endpointRefreshDiv'));
   this.endpointDescription = '.registeredEndpoints';
 
   // call metrics
   this.callMetricsGraph = element(by.id('callMetricsDiv')).all(by.css('div')).first();
-  this.noMetricsData = element(by.css('.call-metrics')).element(by.css('.no-data-center'));
   this.metricsRefresh = element(by.id('callMetricsRefreshDiv'));
+  this.metricsDescription = '.call-metrics';
 
   // media quality
   this.mediaQualityGraph = element(by.id('mediaQualityDiv')).all(by.css('div')).first();
-  this.noMediaData = element(by.css('.media-quality')).element(by.css('.no-data-center'));
   this.mediaRefresh = element(by.id('mediaQualityRefreshDiv'));
+  this.mediaDescription = '.media-quality';
 
-  this.verifyReportTab = function (tabName) {
-    expect(element(by.id(tabName.toLowerCase() + "Tab")).isPresent()).toBeTruthy();
-    expect(element(by.id(tabName.toLowerCase() + "Tab")).element(by.cssContainingText('h4', tabName)).isDisplayed()).toBeTruthy();
-    expect(element(by.id(tabName.toLowerCase() + "Report")).isPresent()).toBeTruthy();
+  this.scrollToElement = function (element) {
+    return element.getLocation().then(function (location) {
+      return browser.executeScript('window.scrollTo(0,' + (location.y + 100) + ');');
+    });
+  };
+
+  this.verifyNoData = function (section) {
+    utils.expectIsPresent(element(by.css(section)).element(by.css('.no-data-center')));
   };
 
   this.verifyOption = function (dropdown, option) {
@@ -91,7 +95,7 @@ var ReportsPage = function () {
   };
 
   this.verifyLegend = function (graph, text) {
-    utils.expectIsPresent(element(by.id(graph)).element(by.cssContainingText('text', text)));
+    utils.expectIsPresent(element(by.id(graph)).element(by.css('.amChartsLegend')).element(by.cssContainingText('tspan', text)));
   };
 
   this.getOption = function (select, text) {
@@ -100,6 +104,13 @@ var ReportsPage = function () {
 
   this.clickTab = function (tabName) {
     utils.click(element(by.id(tabName.toLowerCase() + "Tab")));
+  };
+
+  this.confirmCustomerInTable = function (customer, table, bool) {
+    var found = false;
+    return table.element(by.cssContainingText('.customer-data', customer)).isPresent(function (present) {
+      expect(present).toBe(bool);
+    });
   };
 
   this.verifyDescription = function (text, location, present) {

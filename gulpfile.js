@@ -952,7 +952,6 @@ gulp.task('e2e', function (done) {
       'e2e:setup',
       'sauce:start',
       'protractor',
-      'sauce:stop',
       done
     );
   } else {
@@ -1003,23 +1002,31 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
     messageLogger('Running End 2 End tests from all modules.');
   }
 
+  /*
+   * process.exit() instead of server.close()
+   * $.connect.serverClose() can't be relied on to end sockets
+   */
+  function exit(exitCode) {
+    if (args.sauce) {
+      $.run('./sauce/stop.sh').exec('', function () {
+        process.nextTick(function () {
+          process.exit(exitCode);
+        });
+      });
+    } else {
+      process.nextTick(function () {
+        process.exit(exitCode);
+      });
+    }
+  }
+
   return gulp.src(tests)
     .pipe(protractor(opts))
     .on('error', function (e) {
-      if (args.sauce) {
-        //stop on error because gulp-protractor exits the stream
-        gulp.src('')
-          .pipe($.shell('./sauce/stop.sh'));
-      }
-      if (!args.nosetup) {
-        $.connect.serverClose();
-      }
-      throw e;
+      exit(1);
     })
     .on('end', function () {
-      if (!args.nosetup) {
-        $.connect.serverClose();
-      }
+      exit(0);
     });
 });
 

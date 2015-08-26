@@ -1,25 +1,14 @@
 .active-user {
   min-width: 520px;
   position: relative;
-  padding-right: 15px;
   .header {
     margin: 0;
   }
   .graph-match {
     margin: 0 15px;
   }
-  .carousel-container {
-    margin-top: 20px;
-  }
-  .spinner-position {
-    position: relative;
-    top: -250px;
-  }
-  .active-user-status {
-    position: absolute;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  .active-table {
+    margin-bottom: 34px;
   }
   .most-active {
     font-family: $brand-font-cisco-TT-Regular;
@@ -27,6 +16,13 @@
     line-height: 18px;
     text-align: left;
     padding: 0;
+    color: $brand-primary;
+  }
+  .box-match {
+    top: -14px;
+    left: -12px;
+    position: relative;
+    height: 0;
   }
   .active-users-table {
     padding-bottom: 0;
@@ -36,42 +32,19 @@
     border-color: #878787;
     color: #878787;
   }
-  .carousel-btn:hover,
-  btn-none:focus,
-  .btn-none:hover {
+  .carousel-btn:hover, .btn-none:focus, .btn-none:hover {
     border-color: transparent;
   }
-  .no-data-center {
-    top: -275px;
-    left: 35%;
-    position: relative;
-    transform: translate(0%, 35%);
-    .no-data {
-      color: $gray-light;
-      font-family: $brand-font-cisco-TT-Light;
-      font-size: 46px;
-    }
-  }
-
   #activeUsersdiv{
     position: relative;
     overflow: visible !important;
-    top: -50px;
-
+    top: -25px;
     .amcharts-chart-div{
       overflow: visible !important;
-
       svg {
-        top: 55px !important;
         position: relative !important;
         overflow: visible !important;
       }
-    }
-    .amcharts-legend-div {
-      top: 60px !important;
-    }
-    .amcharts-balloon-div {
-      margin-top: 55px !important;
     }
   }
 }

@@ -12,7 +12,7 @@ describe('Fusion Page', function () {
   });
 
   it('should log in as admin', function () {
-    login.login('pbr-admin');
+    login.login('media-super-admin');
   });
 
   it('should navigate to the fusion page and display something', function () {
