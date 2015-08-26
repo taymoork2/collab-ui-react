@@ -132,6 +132,14 @@ var UsersPage = function () {
   this.conferenceLicenses = element(by.id('conference'));
   this.communicationLicenses = element(by.id('communication'));
 
+  this.internalNumber = element(by.css('.select-list[name="internalNumber"] a.select-toggle'));
+  this.internalNumberOptionFirst = element(by.css('.select-list[name="internalNumber"]')).all(by.repeater('option in csSelect.options')).first().element(by.tagName('a'));
+  this.internalNumberOptionLast = element(by.css('.select-list[name="internalNumber"]')).all(by.repeater('option in csSelect.options')).last().element(by.tagName('a'));
+  this.externalNumber = element(by.css('.select-list[name="externalNumber"] a.select-toggle'));
+  this.externalNumberOptionLast = element(by.css('.select-list[name="externalNumber"]')).all(by.repeater('option in csSelect.options')).last().element(by.tagName('a'));
+  this.mapDn = element(by.id('mapDn'));
+  this.addDnAndExtToUser = element(by.id('addDnAndExtToUserOptionButtons'));
+
   this.selectedRow = element(by.css('[ng-repeat="row in renderedRows"].selected'));
 
   this.assertSorting = function (nameToSort) {
@@ -151,6 +159,16 @@ var UsersPage = function () {
         });
       }
     });
+  };
+
+  this.retrieveInternalNumber = function () {
+    utils.wait(this.internalNumber);
+    return this.internalNumber.evaluate('csSelect.selected.pattern');
+  };
+
+  this.retrieveExternalNumber = function () {
+    utils.wait(this.externalNumber);
+    return this.externalNumber.evaluate('csSelect.selected.pattern');
   };
 
   this.clickOnUser = function () {

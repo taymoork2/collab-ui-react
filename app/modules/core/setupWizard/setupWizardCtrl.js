@@ -78,6 +78,10 @@ angular.module('Core')
             name: 'assignServices',
             template: 'modules/core/setupWizard/addUsers.assignServices.tpl.html',
             title: 'firstTimeWizard.assignServicesStep'
+          }, {
+            name: 'assignDnAndDirectLines',
+            template: 'modules/core/setupWizard/addUsers.assignDnAndDirectLines.tpl.html',
+            title: 'firstTimeWizard.assignDnAndDirectLines'
           }]
         }, {
           //   name: 'csv',

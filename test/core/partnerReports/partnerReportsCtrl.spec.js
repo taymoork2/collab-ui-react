@@ -1,24 +1,24 @@
 'use strict';
 
 describe('Controller: Partner Reports', function () {
-  var controller, $scope, $q, $translate, PartnerReportService, GraphService, DonutChartService;
-  var date = "March 17, 2015";
+  var controller, $scope, $q, $translate, PartnerReportService, GraphService, DonutChartService, DummyReportService;
   var activeUsersSort = ['userName', 'orgName', 'numCalls', 'totalActivity'];
+
+  var dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
   var dummyCustomers = getJSONFixture('core/json/partnerReports/customerResponse.json');
-  var dummyGraphData = getJSONFixture('core/json/partnerReports/dummyGraphData.json');
   var dummyTableData = getJSONFixture('core/json/partnerReports/dummyTableData.json');
-  var dummyMediaQualityGraphData = getJSONFixture('core/json/partnerReports/mediaQualityGraphData.json');
-  var dummycallMetricsData = getJSONFixture('core/json/partnerReports/callMetricsData.json');
-  var dummyPopulationData = [{
-    customerName: "Dummy Customer",
-    customerId: "dummyId",
-    percentage: 0
-  }];
+  var dummyGraphData = angular.copy(dummyData.activeUser.four);
+  var dummyMediaQualityGraphData = angular.copy(dummyData.mediaQuality.four);
+  var dummycallMetricsData = angular.copy(dummyData.callMetrics);
+  dummycallMetricsData.dummy = undefined;
+  var dummyPopulationData = angular.copy(dummyData.activeUserPopulation);
+  dummyPopulationData.colorOne = undefined;
+  dummyPopulationData.colorTwo = undefined;
+  dummyPopulationData.balloon = true;
 
   var validateService = {
     invalidate: function () {}
   };
-
   var customerOptions = [{
     value: 'a7cba512-7b62-4f0a-a869-725b413680e4',
     label: 'Test Org One'
@@ -29,7 +29,6 @@ describe('Controller: Partner Reports', function () {
     value: 'b7e25333-6750-4b17-841c-ce5124f8ddbb',
     label: 'Test Org Two'
   }];
-
   var endpointResponse = [{
     orgId: '6f631c7b-04e5-4dfe-b359-47d5fa9f4837',
     deviceRegistrationCountTrend: '4',
@@ -45,13 +44,14 @@ describe('Controller: Partner Reports', function () {
   beforeEach(module('Core'));
 
   describe('PartnerReportCtrl - Expected Responses', function () {
-    beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _PartnerReportService_, _GraphService_, _DonutChartService_) {
+    beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _PartnerReportService_, _GraphService_, _DonutChartService_, _DummyReportService_) {
       $scope = $rootScope.$new();
       $q = _$q_;
       $translate = _$translate_;
       PartnerReportService = _PartnerReportService_;
       GraphService = _GraphService_;
       DonutChartService = _DonutChartService_;
+      DummyReportService = _DummyReportService_;
 
       spyOn(PartnerReportService, 'getOverallActiveUserData').and.returnValue($q.when({}));
       spyOn(PartnerReportService, 'getActiveUserData').and.returnValue($q.when({
@@ -61,7 +61,6 @@ describe('Controller: Partner Reports', function () {
         overallPopulation: 0
       }));
       spyOn(PartnerReportService, 'getCustomerList').and.returnValue($q.when(dummyCustomers));
-      spyOn(PartnerReportService, 'getMostRecentUpdate').and.returnValue(date);
       spyOn(PartnerReportService, 'getMediaQualityMetrics').and.returnValue($q.when(dummyMediaQualityGraphData));
       spyOn(PartnerReportService, 'getCallMetricsData').and.returnValue($q.when({
         data: dummycallMetricsData
@@ -91,13 +90,20 @@ describe('Controller: Partner Reports', function () {
         invalidateSize: validateService.invalidate
       });
 
+      spyOn(DummyReportService, 'dummyActiveUserData').and.returnValue(dummyData.activeUser.one);
+      spyOn(DummyReportService, 'dummyActivePopulationData').and.returnValue(dummyData.activeUserPopulation);
+      spyOn(DummyReportService, 'dummyMediaQualityData').and.returnValue(dummyData.mediaQuality.one);
+      spyOn(DummyReportService, 'dummyCallMetricsData').and.returnValue(dummyData.callMetrics);
+      spyOn(DummyReportService, 'dummyEndpointData').and.returnValue(dummyData.endpoints);
+
       controller = $controller('PartnerReportCtrl', {
         $scope: $scope,
         $translate: $translate,
         $q: $q,
         PartnerReportService: PartnerReportService,
         GraphService: GraphService,
-        DonutChartService: DonutChartService
+        DonutChartService: DonutChartService,
+        DummyReportService: DummyReportService
       });
       $scope.$apply();
     }));
@@ -128,7 +134,6 @@ describe('Controller: Partner Reports', function () {
         expect(controller.activeButton).toEqual([1, 2, 3]);
         expect(controller.mostActiveUsers).toEqual(dummyTableData);
 
-        expect(controller.recentUpdate).toEqual(date);
         expect(controller.customerOptions).toEqual(customerOptions);
         expect(controller.customerSelected).toEqual(customerOptions[0]);
         expect(controller.timeSelected).toEqual(controller.timeOptions[0]);
@@ -270,7 +275,6 @@ describe('Controller: Partner Reports', function () {
         overallPopulation: 0
       }));
       spyOn(PartnerReportService, 'getCustomerList').and.returnValue($q.when([]));
-      spyOn(PartnerReportService, 'getMostRecentUpdate').and.returnValue(undefined);
       spyOn(PartnerReportService, 'getMediaQualityMetrics').and.returnValue($q.when(dummyMediaQualityGraphData));
       spyOn(PartnerReportService, 'getCallMetricsData').and.returnValue($q.when({
         data: dummycallMetricsData
@@ -290,6 +294,12 @@ describe('Controller: Partner Reports', function () {
       });
 
       spyOn(DonutChartService, 'createCallMetricsDonutChart');
+
+      spyOn(DummyReportService, 'dummyActiveUserData').and.returnValue(dummyData.activeUser.one);
+      spyOn(DummyReportService, 'dummyActivePopulationData').and.returnValue(dummyData.activeUserPopulation);
+      spyOn(DummyReportService, 'dummyMediaQualityData').and.returnValue(dummyData.mediaQuality.one);
+      spyOn(DummyReportService, 'dummyCallMetricsData').and.returnValue(dummyData.callMetrics);
+      spyOn(DummyReportService, 'dummyEndpointData').and.returnValue(dummyData.endpoints);
 
       controller = $controller('PartnerReportCtrl', {
         $scope: $scope,

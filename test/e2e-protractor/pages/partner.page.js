@@ -31,7 +31,8 @@ var PartnerHomePage = function () {
 
   this.dids = {
     one: utils.randomDid(),
-    two: utils.randomDid()
+    two: utils.randomDid(),
+    three: utils.randomDid()
   };
 
   this.getDidTokenClose = function (did) {
@@ -48,7 +49,6 @@ var PartnerHomePage = function () {
   this.startTrialWithSqUCButton = element(by.id('startTrial'));
   this.trialDoneButton = element(by.id('trialDone'));
   this.customerNameInput = element(by.id('customerName'));
-  this.didNumberSpan = element(by.id('didNumberSpan'));
   this.didAddModal = element(by.id('didAddModal'));
   this.addDidButton = element(by.id('addDidButton'));
   this.removeDidPanel = element(by.id('removeDidPanel'));
@@ -67,8 +67,6 @@ var PartnerHomePage = function () {
   this.newTrialRow = element(by.id(this.newTrial.customerName));
   this.newSqUCTrialRow = element(by.id(this.newSqUCTrial.customerName));
   this.editTrialForm = element(by.id('editTrialForm'));
-  this.editLink = element(by.id('editLink'));
-  this.editDidLink = element(by.id('editDidLink'));
   this.addTrialForm = element(by.id('addTrialForm'));
   this.cancelTrialButton = element(by.id('cancelNewTrialButton'));
   this.customerNameForm = element(by.id('customerNameForm'));
@@ -88,13 +86,13 @@ var PartnerHomePage = function () {
   this.noResultsAvailable = element(by.cssContainingText('span', 'No results available'));
   this.errorProcessing = element(by.cssContainingText('span', 'Error processing request'));
   this.selectRow = element(by.binding('row.entity'));
-  this.previewPanel = element(by.id('entire-slide'));
+  this.previewPanel = element(by.css('.customer-overview'));
   this.customerInfo = element(by.id('customer-info'));
   this.trialInfo = element(by.id('trial-info'));
   this.actionsButton = element(by.id(this.newTrial.customerName + 'ActionsButton'));
   this.launchCustomerButton = element(by.id(this.newTrial.customerName + 'LaunchCustomerButton')).element(by.tagName('a'));
   this.launchCustomerPanelButton = element(by.id('launchCustomer'));
-  this.exitPreviewButton = element(by.id('exitPreviewButton'));
+  this.exitPreviewButton = element(by.css('.panel-close'));
   this.partnerFilter = element(by.id('partnerFilter'));
   this.trialFilter = element(by.cssContainingText('.filter', 'Trial'));
   this.partnerEmail = element.all(by.binding('userName'));
@@ -107,6 +105,25 @@ var PartnerHomePage = function () {
 
   this.adminCustomerOrgId = element(by.css('div[orgid="' + this.csrole.adminOrgId + '"]'));
   this.regularCustomerOrgId = element(by.css('div[orgid="' + this.csrole.regularOrgId + '"]'));
+
+  this.termsOfTrialSection = element(by.cssContainingText('.section-title-row', 'Terms of Trial'));
+  this.termsActionButton = this.termsOfTrialSection.element(by.css('button.actions-button'));
+  this.editTermsButton = this.termsOfTrialSection.element(by.cssContainingText('a', 'Edit Terms of Trial'));
+
+  this.communicationSection = element(by.css('.external-number-overview .side-panel-section'));
+  this.communicationPhoneNumbers = element(by.cssContainingText('.feature', 'Phone Numbers'));
+  this.communicationPhoneNumbersCount = this.communicationPhoneNumbers.element(by.css('.feature-status'));
+
+  this.phoneNumbersSection = element(by.cssContainingText('.section-title-row', 'Phone Numbers'));
+  this.phoneNumbersActionButton = this.phoneNumbersSection.element(by.css('button.actions-button'));
+  this.addNumbersButton = this.phoneNumbersSection.element(by.cssContainingText('a', 'Add Numbers'));
+  this.phoneNumbersTab = element(by.css('.external-number-detail .tab-pane.active'));
+  this.phoneNumbersCount = this.phoneNumbersTab.element(by.css('.total-count'));
+  this.clickPhoneNumberDelete = function (number) {
+    utils.click(this.phoneNumbersTab.element(by.cssContainingText('.list-group-item', number)).element(by.css('.close')));
+  };
+  this.deleteNumberModal = element(by.cssContainingText('.modal-header', 'Delete Number'));
+  this.deleteNumberYes = element(by.buttonText('Yes'));
 
   this.assertDisabled = function (id) {
     expect(element(by.id(id)).isEnabled()).toBeFalsy();

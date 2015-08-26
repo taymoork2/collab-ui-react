@@ -115,6 +115,8 @@
     }
 
     function setInputNumberId(number) {
+      vm.inputNumber.id = number;
+      /*  workaround for Tropo-AA integration
       return DirectoryNumberService.query({
           customerId: Authinfo.getOrgId(),
           directoryNumberId: '',
@@ -127,6 +129,7 @@
             vm.inputNumber.id = '';
           }
         });
+        */
     }
 
     function resetInputNumber() {

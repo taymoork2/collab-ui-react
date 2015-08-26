@@ -4,7 +4,7 @@ request = require 'request'
 auth =
   'sqtest-admin':
     user: 'sqtest-admin@squared.example.com'
-    pass: 'C1sc0123!'
+    pass: 'P@ssword123'
     org:  '584cf4cd-eea7-4c8c-83ee-67d88fc6eab5'
 
   'pbr-admin':
@@ -59,7 +59,7 @@ auth =
 
   'non-trial-admin':
     user: 'pbr-test-admin@squared2webex.com'
-    pass: 'C1sc0123!'
+    pass: 'P@ssword123'
     org:  '4214d345-7caf-4e32-b015-34de878d1158'
 
   'invite-admin':
@@ -69,7 +69,7 @@ auth =
 
   'support-admin':
     user: 'sqtest-admin-support@squared.example.com'
-    pass: 'C1sc0123!'
+    pass: 'P@ssword123'
     org:  '584cf4cd-eea7-4c8c-83ee-67d88fc6eab5'
 
   'media-super-admin':
@@ -126,6 +126,9 @@ getSSOToken = (req, jar, creds, cb) ->
 
     cookie = _.find res.headers['set-cookie'], (c) ->
       c.indexOf('cisPRODAMAuthCookie') isnt -1
+
+    if not cookie
+      throw new Error 'Failed to retrieve a cookie with org credentials. Status: ' + res?.statusCode
 
     token = cookie.match(/cisPRODAMAuthCookie=(.*); Domain/)[1]
 

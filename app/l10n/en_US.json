@@ -6,6 +6,7 @@
   },
   "usersPage": {
     "assignServices": "Assign Services",
+    "assignDnAndDirectLines": "Assign Numbers",
     "inviteModalBtn": "Invite Users",
     "manageUsers": "Users",
     "subTitleAdd": "Manage users",
@@ -18,6 +19,7 @@
     "lastnameHeader": "Last Name",
     "displayNameHeader": "Display Name",
     "emailHeader": "Email",
+    "sipUri": "Cloud SIP URI",
     "actionHeader": "Actions",
     "invite": "Send Invites",
     "addedHeader": "ADDED",
@@ -33,6 +35,8 @@
     "active": "Active",
     "inactive": "",
     "validEmailInput": "Please enter valid user email(s).",
+    "duplicateDnFound": "Duplicate Internal Extension entered.",
+    "duplicateDidFound": "Duplicate Direct Line entered.",
     "noUsersInput": "No users were entered.",
     "csvBtnTitle": "Export to CSV",
     "csvFilename": "exported_users.csv",
@@ -71,7 +75,14 @@
     "convertUserError": "Failed to convert",
     "addtionalServiceSetupText": "Additional setup is required before this service can be enabled.",
     "addtionalServiceSetupConfirmation": "Are you sure you want to leave this window? You will lose your data.",
-    "setUpThisService": "Set up this service"
+    "setUpThisService": "Set up this service",
+    "nameHeader": "Name",
+    "directLineHeader": "Direct Line",
+    "extensionHeader": "Internal Extension",
+    "notApplicable": "N/A",
+    "noExtensionInPool": "No Extension in pool.",
+    "noExternalNumberAvail": "No DID available for mapping.",
+    "noExtMappingAvail": "No DID mapping available."
   },
   "groupsPage": {
     "manageGroups": "Groups",
@@ -80,6 +91,9 @@
     "membersCountHeader": "Members"
   },
   "onboardModal": {
+    "spark": "Spark",
+    "webex": "WebEx",
+    "calling": "Calling",
     "onboardUsers": "Invite Users",
     "cancel": "Cancel",
     "clear": "Clear",
@@ -199,6 +213,7 @@
   "index": {
     "welcome": "Welcome!",
     "feedback": "Feedback",
+    "support": "Help",
     "logout": "Sign Out",
     "appTitle": "Cloud Collaboration Management",
     "genericTitle": "Spark",
@@ -270,19 +285,20 @@
   "reportsPage": {
     "title": "ORGANIZATION REPORTS",
     "pageTitle": "Reports",
-    "sync": "Last sync",
-    "engagementTab": "Engagement",
-    "qualityTab": "Quality",
+    "all": "All",
+    "engagement": "Engagement",
+    "quality": "Quality",
     "avgEntitlements": "Entitlements",
     "avgCalls": "Average Calls",
     "avgConversations": "Average Conversations",
     "activeUsers": "Active Users",
     "noData": "No Data",
+    "noCustomerData": "No Data Available",
     "week": "Last Week",
     "week2": "last week",
     "month": "Last Month",
     "month2": "last month",
-    "threeMonths": "Last 3 Months",
+    "threeMonths": "Last Three Months",
     "threeMonths2": "last three months",
     "mostEngaged": "5 Most Engaged",
     "leastEngaged": "5 Least Engaged",
@@ -298,24 +314,23 @@
     "calls": "Calls",
     "customer": "Customer",
     "hideActiveUsers": "Hide Most Active Users",
-    "mostActiveUsers": "Most Active Users",
+    "mostActiveUsers": "Most Active Users in the {{time}}",
     "registeredUsers": "Registered Users",
     "showActiveUsers": "Show Most Active Users",
-    "squaredActivity": "Spark Activity",
+    "squaredActivity": "Total Activity",
     "user": "User",
     "users": "Users",
-    "description": "Active Users tracks the number of users who have made calls or used Spark Chat for {{customer}} compared to the number of registered users over the {{time}}.",
-    "mostActiveDescription": "During the {{time}}, these are the top most active users for {{customer}}."
+    "description": "An active user is defined as someone who has made or received a call using a device or has used the Spark application.  In this report you can compare the total number of registered users to the number of active users in the selected customer(s) over the {{time}}.",
+    "mostActiveDescription": "During the {{time}}, these are the most active users for {{customer}}."
   },
   "mediaQuality": {
-    "mediaQuality": "Media Quality",
-    "totalCalls": "Total Calls",
-    "excellent": "Excellent",
+    "mediaQuality": "Device Media Quality",
+    "totalCalls": "Total Minutes",
     "good": "Good",
     "fair": "Fair",
     "poor": "Poor",
-    "description": "Media quality provides a breakdown of the quality of all connected calls during the selected period. For more information about media quality, see the {knowledge base}.",
-    "mediaQualityGraphError": "There was an error while loading media quality data."
+    "description": "Media quality is determined by measuring the amount of packet loss that is reported by the registered devices during all calls that are longer than fifteen seconds in duration.",
+    "mediaQualityGraphError": "There was an error while loading call quality data for {{customer}}."
   },
   "callMetrics": {
     "calls": "Calls",
@@ -324,7 +339,7 @@
     "callConditionSuccessful": "Successful",
     "callMetrics": "Call Metrics",
     "callMetricsChartError": "There was an error while loading call metrics data for {{customer}}.",
-    "callMetricsDesc": "Call metrics show the total number of calls made, and the number of minutes those calls totaled during the selected period.  Call metrics also breaks down the percentage of calls that were successfully connected and had good or excellent media throughout the duration, the percentage of calls that were connected but had poor media quality, and the percentage of calls that failed to connect.",
+    "callMetricsDesc": "This chart displays the total number of calls made and the number of minutes spent on those calls over the {{time}}.  You are also able to determine the percentage of successful and failed calls for the selected customers.",
     "totalCalls": "Total Calls",
     "totalCallMinutes": "Total Call Minutes"
   },
@@ -335,13 +350,14 @@
     "totalRegistered": "Yesterday's Total",
     "trend": "Trend Over {{time}}",
     "registeredEndpointsError": "There was an error while loading registered endpoints for {{customer}}.",
-    "description": "Registered Endpoints tracks the number of new devices registered during the {{time}}."
+    "description": "A registered endpoint is any device that is connected to the network in the {{time}}.  The data presented here will help you determine device adoption trends and usage at a high level."
   },
   "activeUserPopulation": {
     "titleByCompany": "Active User Population by Company",
-    "description": "Across all your customers, {{percentage}}% of their employees have placed at least one advanced Spark call over the {{time}}. Here is how {{customer}} compares to that average.",
+    "description": "An active user is defined as someone who has made or received a call using a device or has used the Spark application.  User activity is the basis of measuring engagement.  This report allows you to measure how engaged your selected customers are compared to the average engagement across all your customers.",
     "averageLabel": "Average Engagement",
-    "acrossCustomers": "Across All Customers"
+    "acrossCustomers": "Across All Customers",
+    "loadingCustomer": "Sample Customer Data"
   },
   "profilePage": {
     "userProfile": "User Profile",
@@ -448,6 +464,7 @@
     "disable": "Disable",
     "cancel": "Cancel",
     "save": "Save",
+    "status": "Status",
     "ok": "Ok",
     "next": "Next",
     "close": "Close",
@@ -468,13 +485,23 @@
     "on": "On",
     "off": "Off",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "all": "All",
+    "pending": "Pending",
+    "apply": "Apply",
+    "unassigned": "Unassigned",
+    "modal": "Modal",
+    "add": "Add",
+    "and": "and",
+    "or": "or"
   },
   "notifications": {
     "success": "Success notifications",
     "error": "Error notifications",
     "successTotal": "{total, plural, one{# success} other{# successes}}",
-    "errorTotal": "{total, plural, one{# error} other{# errors}}"
+    "errorTotal": "{total, plural, one{# error} other{# errors}}",
+    "successDelete": "Successfully deleted {{item}}.",
+    "errorDelete": "Failed to delete {{item}}."
   },
   "time": {
     "seconds": "{time, plural, one{# second} other{# seconds}}",
@@ -502,6 +529,7 @@
     "nextBtn": "Next",
     "convertUsers": "Convert Unlicensed Users",
     "convertUsersText": "Convert employees of your organization who have signed up for Project Spark on their own with a company email address to a licensed user. Licensed users receive additional enterprise fatures, and are subject to your organization's policies and administration.<br><br>Selected users will receive an invitation to convert or change their email address to a non-company email address.",
+    "convertError": " could not be converted. Contact support for assistance converting this user.",
     "cancel": "Cancel",
     "emailAddress": "Email Address",
     "name": "Name",
@@ -684,6 +712,8 @@
     "activationDateHeader": "Activation Date",
     "addDeviceStep1": "Where will this device be installed?",
     "addDeviceStep1Desc": "It is recommended that you use the name of your conference room or shared space as it is shown in your company directory. The video address for this device will use this name. It will also be the easiest way to search for and find the device in the system later.",
+    "addDeviceStep2": "Your activation code has been created",
+    "addDeviceStep2Desc": "Once you use this activation code it will magically turn into a device and unicorns will sing.",
     "emptyDevices1": "Once you add a new device,",
     "emptyDevices2": "you'll see it listed here.",
     "deleteDevice": "Delete Device",
@@ -764,14 +794,14 @@
     "uploadCsvEmpty": "Please upload a valid CSV.",
     "csvFileTypeError": "Please upload a valid file type.",
     "csvMaxSizeError": "File size is above the maximum of 10 MB.",
-    "csvMaxLinesError": "The CSV contains more users than the maximum allowed. Please reduce the number of users to 1000 or less and upload the CSV again.",
+    "csvMaxLinesError": "The CSV contains more users than the maximum allowed. Please reduce the number of users to 100 or less and upload the CSV again.",
     "processCsvStep": "Processing CSV",
     "processing": "Processing...",
     "timeElapsed": "Time Elapsed:",
     "uploadResultStep": "Upload Result",
     "uploadErrorStep": "Upload Errors",
     "newUsers": "New users",
-    "existingUsers": "Existing users",
+    "existingUsers": "Updated users",
     "errorUsers": "Errors",
     "fixCsvErrors": "Fix Errors and Reload CSV",
     "totalProcessed": "Total records processed",
@@ -788,8 +818,12 @@
     "downloadSub": "Download CSV template",
     "downloadCSVTemplate": "Download CSV Template",
     "advancedSub": "Synchronize users from Active Directory.",
-    "needHelp": "Need help?",
+    "needHelp": "Need help? ",
+    "needHelpExplain": "Search the knowledge base.",
     "planReview": "Plan Review",
+    "spark": "Spark",
+    "webex": "WebEx",
+    "calling": "Calling",
     "messaging": "Messaging",
     "conferencing": "Conferencing",
     "communications": "Communications",
@@ -877,7 +911,11 @@
     "trial": "Trial {{number}}",
     "startYourTrial": "Start your new {{days}}-day trial.",
     "trialDaysRemaining": "{{days}} Days left in current trial.",
-    "messagingSetupPlaceholder": "Select retention time"
+    "messagingSetupPlaceholder": "Select retention time",
+    "assignDnAndDirectLines": "Assign Numbers",
+    "assignDnAndDirectlineDesc": "Please verify the extensions and direct lines that your users will be assigned. You may choose to use the last 4 digits of the direct line to match the user extension by pressing the Map Direct Line with Extension link below",
+    "mapDirectLineWithExt": "Map Direct Line With Extension",
+    "reset": "Reset"
   },
   "reports": {
     "title": "Reports",
@@ -1021,7 +1059,10 @@
     "errorUpdateCe": "Failed to update {{name}}: {{statusText}} ({{status}}).",
     "errorAddNumberInUse": "Failed to add number: {{number}} already in use.",
     "errorAddNumberInUseOtherAA": "Failed to add number: {{number}} already in use by {{name}}.",
-    "errorAddNumberNotFound": "Failed to add number: {{number}} not found."
+    "errorAddNumberNotFound": "Failed to add number: {{number}} not found.",
+    "landingDevelopmentLink": "AA Development Link",
+    "landingInformation": "Auto attendants allow you to create a custom greeting, recordings, and phone menus that handle inbound calls to your business.  Choose from the following common Auto Attendant layouts, or you can build your own.",
+    "landingTitle": "Auto Attendants"
   },
   "callPark": {
     "newCallPark": "New Call Park",
@@ -1071,6 +1112,7 @@
     "externalNumberLabel": "Direct Line",
     "externalNumberTooltip": "Use the direct line to reach this line from outside of the company.",
     "externalNumberPoolError": "Direct lines failed to load.",
+    "externalNumberMappingError": "Direct line Mappings failed to load.",
     "chooseNumber": "Choose a Number",
     "searchNumber": "Search for a number...",
     "addNewNumber": "Add a New Number",
@@ -1101,7 +1143,13 @@
   },
   "callerIdPanel": {
     "title": "Caller ID",
-    "description": "<small>Change the display name for calls from this line</small>"
+    "description": "<small>Change the display name for calls from this line</small>",
+    "directLine": "Direct Line",
+    "blockedCallerId": "Blocked Outbound Caller ID",
+    "blockedCallerIdDescription": "Caller will not see any caller ID or number",
+    "companyCallerId": "Company Caller ID",
+    "companyNumberLoadError": "Company numbers failed to load.",
+    "registerDeviceForCallerID": "Register your device to enable caller ID"
   },
   "sharedLinePanel": {
     "title": "Shared Line",
@@ -1130,6 +1178,38 @@
     "voicemailNote": "Note: Turning off voicemail could impact user's call forwarding settings",
     "disableVoicemailTitle": "Disable Voicemail",
     "disableVoicemailDialogue": "Disabling voicemail will permanently remove all of the user's voicemail messages.  Do you want to disable this user's voicemail?"
+  },
+  "externalNumberPanel": {
+    "phoneNumbers": "Phone Numbers",
+    "addNumbers": "Add Numbers",
+    "editNumbers": "Edit Phone Numbers",
+    "listError": "Failed to load phone number list.",
+    "deleteNumber": "Delete Number",
+    "deleteConfirmation": "Are you sure you want to delete {{pattern}}?",
+    "deleteWarning": "This cannot be reversed.  You will lose this number indefinitely.",
+    "allNumbers": "{count, plural, one{# Number} other{# Numbers}}",
+    "pendingNumbers": "{count, plural, one{# Pending Number} other{# Pending Numbers}}",
+    "unassignedNumbers": "{count, plural, one{# Unassigned Number} other{# Unassigned Numbers}}",
+    "searchResults": "{count, plural, one{# search result} other{# search results}}"
+  },
+  "pstnSetup": {
+    "setupService": "Set Up PSTN Service",
+    "setupNumbers": "Set Up PSTN Numbers",
+    "placeOrder": "Place Order",
+    "orderBlock": "Order Block Numbers",
+    "areaCode": "Area Code",
+    "quantity": "Quantity",
+    "reviewAndOrder": "Review and Place Order",
+    "package": "Package",
+    "adding": "Adding",
+    "newNumbers": "{count, plural, one{# New Number} other{# New Numbers}}",
+    "thankYou": "Thank you",
+    "setupSuccess": "You have set up the PSTN service successfully.",
+    "nextStep": "Next Step",
+    "notifyCustomer": "If you want to Notify customer:",
+    "addUsers": "If you want to Add users:",
+    "sendMessage": "Send Message",
+    "launchPortal": "Launch Compnay Portal"
   },
   "partnerHomePage": {
     "trialsHeading": "Active Trials",
@@ -1171,6 +1251,7 @@
     "activeUsersTitle": "Daily Active Users",
     "averageCallsTitle": "Average Calls Per User",
     "contentSharedTitle": "Files Shared",
+    "errGetPhoneNumberCount": "Failed to retrieve phone number count.",
     "invalidTrialLicenseCount": "Number of Licenses should be greater than 0 and less than 1000."
   },
   "trialModal": {
@@ -1224,13 +1305,14 @@
     "contactEmail": "Email",
     "contactPhone": "Phone",
     "launchButton": "Launch Customer Portal",
-    "edit": "Edit",
+    "edit": "Edit Terms of Trial",
     "trialTerms": "Terms of Trial",
-    "licenses": "Number of licenses",
+    "trialOverview": "Trial",
+    "licenses": "Number of Licenses",
     "duration": "Duration",
     "days": "Days",
     "dayTrial": "Day Trial",
-    "daysLeft": "day(s) left",
+    "daysLeft": "Day(s) left",
     "allTrials": "All",
     "activeTrials": "Active Trials",
     "expiring": "Trial Expiring",
@@ -1238,12 +1320,31 @@
     "unused": "unused licenses",
     "uploadNumbers": "Upload Numbers",
     "overPlan": "over plan limit",
-    "communication": "Communication",
     "phoneNumbers": "Phone Numbers",
     "none": "None"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
+  },
+  "callRouter": {
+    "popover": "Assign numbers for company routing and voicemail.",
+    "callerinfopopover": "Specify the default outbound Caller ID that can take an external or internal number.",
+    "title": "Manage company numbers and company caller ID",
+    "saveCallerIdSuccess": "Caller Id and number saved successfully.",
+    "saveCallerIdError": "Caller Id and number failed to save.",
+    "updateCallerIdSuccess": "Caller ID and number updated successfully",
+    "updateCallerIdError": "Caller ID and number failed to update.",
+    "companycallerID": "Company Caller ID",
+    "hide": "Hide",
+    "expand": "Expand"
+  },
+  "routingModal": {
+    "title": "Company Number",
+    "create": "Create",
+    "label": "Name",
+    "calleridnumber": "Number",
+    "companynumber": "Company Number",
+    "routeto": "Route To"
   },
   "didManageModal": {
     "title": "Manage Phone Numbers",
@@ -1275,6 +1376,17 @@
     "deviceStatusFailureMsg": "Failed to fetch device status",
     "deviceIpAddressFailureMsg": "Failed to fetch device IP"
   },
+  "deviceOverviewPage": {
+    "activationNoLongerNeeded": "If this activation is no longer needed:",
+    "activationInstructions": "To activate a device for {{room}}, use this activation code during the setup:",
+    "newDeviceActivation": "Activation code for new device:",
+    "ciscoSX10": "Cisco SX10",
+    "software": "Software",
+    "serial": "Serial",
+    "ipAddr": "IP Address",
+    "macAddr": "MAC Address",
+    "issues": "Issues"
+  },
   "generateActivationCodeModal": {
     "title": "Activation Code",
     "activateBody": "Plug in your new Cisco desk phone or TelePresence device and enter the activation code when you are prompted or use the device camera to scan the QR code.",
@@ -1286,7 +1398,8 @@
     "subject": "Subject",
     "subjectContent": "Activate your Spark UC device",
     "message": "Message",
-    "expires": "Expires: {{date}}  <strong>({{timeLeft}} from now)</strong>",
+    "expires": "Expires: {{date}}",
+    "expiration": "({{timeLeft}} from now)",
     "clipboardFallback": "Press cmd+c to copy the text below.",
     "emailSuccess": "Email sent successfully.",
     "emailError": "Email unsuccessful."
@@ -1333,6 +1446,31 @@
     "systemtype": "System Type",
     "metric": "Metrics",
     "action": "Action"
+  },
+  "thresholdListPage": {
+    "systemType": "System Type",
+    "system": "System",
+    "metricType": "Metric Type",
+    "thresholdName": "Threshold Name",
+    "genericEvent": "Generic Event",
+    "add": "Add",
+    "title": "Threshold Management",
+    "apply": "Apply",
+    "cancel": "Cancel",
+    "eventManagement": "Event Management",
+    "eventName": "Event Name",
+    "eventSeverity": "Event Severity"
+  },
+  "thresholdCardInfoPage": {
+    "thresholdDetails": "Threshold Details",
+    "thresholdRules": "Threshold Rules :",
+    "rule": "Rule : {{counter}}{{operator}}{{value}}",
+    "hostName": "HostName : {{hostName}}",
+    "Overridethreshold": "Override threshold",
+    "OverrideThreshold": "Override Threshold",
+    "thresholdName": "Threshold Name",
+    "systemType": "System Type",
+    "system": "System"
   },
   "faultPage": {
     "systemType": "System Type",
@@ -1589,6 +1727,21 @@
   "alarmsPage": {
     "alarms": "Alarms"
   },
+  "alarmsInfoCardPage": {
+    "details": "Alarm Details",
+    "name": "Alarm Name:",
+    "severity": "Alarm Severity:",
+    "description": "Alarm Description:",
+    "time": "Creation time:",
+    "events": "Events:"
+  },
+  "meetingInfoCard": {
+    "meetingNumber": "Meeting Number:",
+    "host": "Host:",
+    "duration": "Duration:",
+    "resource": "Resource:",
+    "site": "Site :"
+  },
   "eventsPage": {
     "events": "Events"
   },
@@ -1636,7 +1789,8 @@
     "nonPrintable": "This entry contains nonprintable characters.",
     "callForward": "Field can contain digits 0 to 9, *, #, X and +.",
     "specialCharacters": "This entry contains special characters.",
-    "numeric": "Field can contain digits 0 to 9."
+    "numeric": "Field can contain digits 0 to 9.",
+    "positiveNumber": "Must enter a positive number."
   },
   "CsdmStatus": {
     "Online": "Online",
@@ -1655,5 +1809,13 @@
         "message_with_description": "The device reported an unknown error. Error code is: {{errorCode}}. Description provided: {{description}}"
       }
     }
+  },
+  "trialExtInterest": {
+    "thank": "Thank you.",
+    "notifyPartnerSuccessMsg": "Your partner has been notified and will contact you soon.",
+    "invalidLink": "The link you clicked is invalid or you are not entitled to see the page.",
+    "invalidLinkNoParam": "Invalid link. no param",
+    "error": "Something went wrong.",
+    "notifyPartnerErrorMsg": "We're sorry, something went wrong while trying to notify your partner."
   }
 }

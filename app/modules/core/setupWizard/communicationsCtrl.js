@@ -13,8 +13,8 @@
     /*jshint validthis: true */
 
     var orgId = Authinfo.getOrgId();
-    AccountOrgService.getOrgSettings(orgId, function (data, status) {
-      if (status === 200) {
+    AccountOrgService.getOrgSettings(orgId)
+      .success(function (data, status) {
         var index = _.findIndex(data.settings, function (obj) {
           return obj.key == 'orgCloudSipUri';
         });
@@ -22,8 +22,7 @@
           vm.cloudSipUriField = data.settings[index].value.replace('.ciscospark.com', '');
           vm.cloudSipFlag = true;
         }
-      }
-    });
+      });
 
     Orgservice.getOrg(function (data, status) {
       if (data.success) {
@@ -32,18 +31,16 @@
     });
 
     $scope.$on('wizard-claim-sip-uri-event', function () {
-
       var orgId = Authinfo.getOrgId();
 
       if (!_.isEmpty(vm.cloudSipUriField) && !vm.cloudSipFlag) {
-
-        AccountOrgService.addOrgCloudSipUri(orgId, vm.cloudSipUriField, function (data, status) {
-          if (status === 204) {
+        AccountOrgService.addOrgCloudSipUri(orgId, vm.cloudSipUriField)
+          .success(function (data, status) {
             Notification.notify([$translate.instant('firstTimeWizard.cloudSipSuccess')], 'success');
-          } else {
+          })
+          .error(function (data, status) {
             Notification.notify([$translate.instant('firstTimeWizard.cloudSipError')], 'error');
-          }
-        });
+          });
       }
 
     });

@@ -72,6 +72,7 @@
     vm.isWizardModal = isWizardModal;
 
     vm.nextText = $translate.instant('common.next');
+    vm.isNextDisabled = false;
 
     vm.openTermsAndConditions = openTermsAndConditions;
     vm.closeModal = closeModal;
@@ -93,6 +94,7 @@
       vm.current.step = getSteps()[0];
 
       setNextText();
+      vm.isNextDisabled = false;
     }
 
     function getSteps() {
@@ -116,6 +118,7 @@
     function setStep(step) {
       vm.current.step = step;
       setNextText();
+      vm.isNextDisabled = false;
     }
 
     function getStepName() {
@@ -303,9 +306,7 @@
     }
 
     function setNextText() {
-      if (isFirstTab() && isFirstTime() && !isCustomerPartner() && !isFromPartnerLaunch()) {
-        vm.nextText = $translate.instant('firstTimeWizard.startTrial');
-      } else if (isFirstTab() && isFirstStep()) {
+      if ((isFirstTab() && isFirstTime() && !isCustomerPartner() && !isFromPartnerLaunch()) || (isFirstTab() && isFirstStep())) {
         vm.nextText = $translate.instant('firstTimeWizard.getStarted');
       } else if ((isLastStep() && !isFirstStep()) || (isFirstTime() && isLastTab() && isLastStep())) {
         vm.nextText = $translate.instant('common.finish');
@@ -315,6 +316,11 @@
         vm.nextText = $translate.instant('common.next');
       }
     }
+
+    $scope.$on('wizardNextButtonDisable', function (event, status) {
+      event.stopPropagation();
+      vm.isNextDisabled = status;
+    });
 
     function openTermsAndConditions() {
       var modalInstance = $modal.open({
@@ -338,6 +344,7 @@
         vm.nextText = $translate.instant('common.finish');
       }
     });
+
   }
 
   function crWizard() {

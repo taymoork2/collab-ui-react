@@ -1,14 +1,6 @@
 .active-user-population {
   position: relative;
   padding: 0 15px;
-
-  .spinner-position {
-    position: relative;
-  }
-  .description-div {
-    padding: 15px 0px 0px;
-    vertical-align: text-top;
-  }
   .percent-large {
     font-size: 25px;
     font-family: $brand-font-cisco-TT-Light;
@@ -23,62 +15,25 @@
     font-size: 20px;
     text-align: left;
   }
-
-  .no-data-center {
-    top: -250px;
-    left: 35%;
-    position: relative;
-    transform: translate(0%, 35%);
-
-    .no-data {
-      color: $gray-light;
-      font-family: $brand-font-cisco-TT-Light;
-      font-size: 46px;
-    }
-  }
-
-  span{
-    margin: 0;
-    padding: 0;
-  }
 }
-
-#activeUserPopulationRefreshDiv, .full-width{
-  width: 100%;
-}
-
 #activeUserPopulationDiv{
   position: relative;
   top: 2px;
 }
-
 #activeUserPopulationChart{
   overflow: visible !important;
   position: relative;
   top: -50px;
   height: 350px;
-
   .amcharts-chart-div{
     overflow: visible !important;
-
     svg {
-      height: 460px !important;
-      top: 50px !important;
+      top: 20px !important;
       overflow: visible !important;
+      position: relative !important;
     }
   } 
-
   .amcharts-balloon-div {
-    margin-top: 50px !important;
+    margin-top: 20px !important;
   }
-}
-
-#activeUserPopulationRefreshDiv {
-  height: 100%;
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }

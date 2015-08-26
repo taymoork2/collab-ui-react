@@ -1,0 +1,16 @@
+<cs-sp-section class="external-number-overview">
+  <div class="section-title-row">
+    <span class="section-name" translate="customerPage.communications"></span>
+  </div>
+  <div class="feature-list">
+    <ul>
+      <li class="feature">
+        <a ui-sref="customer-overview.externalNumbers">
+          <span class="feature-name" translate="customerPage.phoneNumbers"></span>
+          <span class="feature-status"><span ng-if="!externalNumberOverview.loading">{{externalNumberOverview.allNumbersCount}}</span><i class="icon icon-spinner" ng-if="externalNumberOverview.loading"></i></span>
+          <i class="feature-arrow"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+</cs-sp-section>

@@ -24,6 +24,7 @@
         uuid: 'none',
         pattern: ''
       },
+      esn: '',
       directoryNumbers: [],
       voicemail: 'Off',
       singleNumberReach: 'Off',
@@ -55,7 +56,8 @@
       getInternalNumberPool: getInternalNumberPool,
       loadInternalNumberPool: loadInternalNumberPool,
       getExternalNumberPool: getExternalNumberPool,
-      loadExternalNumberPool: loadExternalNumberPool
+      loadExternalNumberPool: loadExternalNumberPool,
+      loadExtPoolWithMapping: loadExtPoolWithMapping
     };
 
     return telephonyInfoService;
@@ -64,7 +66,7 @@
       Function to inspect dnUsage from Huron and change the display
       value to what UX team wants.
     **/
-    function getDnType(dnUsage, uuid) {
+    function getDnType(dnUsage) {
       return (dnUsage === 'Primary') ? 'Primary' : '';
     }
 
@@ -207,7 +209,7 @@
             var userDnList = [];
             for (var i = 0; i < userDnInfo.length; i++) {
               var userLine = {
-                'dnUsage': getDnType(userDnInfo[i].dnUsage, userDnInfo[i].directoryNumber.uuid),
+                'dnUsage': getDnType(userDnInfo[i].dnUsage),
                 'uuid': userDnInfo[i].directoryNumber.uuid,
                 'pattern': userDnInfo[i].directoryNumber.pattern,
                 'userDnUuid': userDnInfo[i].uuid,
@@ -215,6 +217,12 @@
                 'altDnPattern': '',
                 'dnSharedUsage': ''
               };
+
+              if (userLine.dnUsage === 'Primary') {
+                DirectoryNumber.getDirectoryNumberESN(userLine.uuid).then(function (lineEsn) {
+                  telephonyInfo.esn = lineEsn;
+                });
+              }
 
               // get External (alternate) number if exists
               DirectoryNumber.getAlternateNumbers(userLine.uuid).then(function (altNumList) {
@@ -273,14 +281,16 @@
       return angular.copy(internalNumberPool);
     }
 
-    function loadInternalNumberPool(pattern) {
+    function loadInternalNumberPool(pattern, limit) {
       var intNumPool = [];
       var patternQuery = pattern ? '%' + pattern + '%' : undefined;
+      var patternlimit = limit ? limit : undefined;
       return InternalNumberPoolService.query({
           customerId: Authinfo.getOrgId(),
           directorynumber: '',
           order: 'pattern',
-          pattern: patternQuery
+          pattern: patternQuery,
+          limit: patternlimit
         }).$promise
         .then(function (intPool) {
           for (var i = 0; i < intPool.length; i++) {
@@ -329,6 +339,31 @@
           if (telephonyInfo.alternateDirectoryNumber.uuid !== 'none') {
             externalNumberPool.push(telephonyInfo.alternateDirectoryNumber);
           }
+          return angular.copy(externalNumberPool);
+        }).catch(function (response) {
+          externalNumberPool = [];
+          return $q.reject(response);
+        });
+    }
+
+    function loadExtPoolWithMapping(count) {
+      return ExternalNumberPoolService.query({
+          customerId: Authinfo.getOrgId(),
+          directorynumber: '',
+          order: 'pattern',
+          automaptodn: true,
+          automaptodncount: count
+        }).$promise
+        .then(function (extPool) {
+          var extNumPool = extPool.map(function (extPoolValue) {
+            var dn = {
+              uuid: extPoolValue.uuid,
+              pattern: extPoolValue.pattern,
+              directoryNumber: extPoolValue.directoryNumber
+            };
+            return dn;
+          });
+          externalNumberPool = extNumPool;
           return angular.copy(externalNumberPool);
         }).catch(function (response) {
           externalNumberPool = [];

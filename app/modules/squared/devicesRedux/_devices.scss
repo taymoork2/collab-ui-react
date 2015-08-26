@@ -68,6 +68,8 @@
 /* widgets */
 
 .editable-input {
+  font-size: 26px;
+  font-family: "CiscoSansTT Extra Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
   i {
     cursor: pointer;
     color: #999;
@@ -93,5 +95,17 @@
     text-overflow: ellipsis;
     display: inline-block;
     max-width: 260px;
+  }
+}
+
+#addDeviceModal {
+  .device-added {
+    h3 {
+      color: #00c1aa;
+      margin: 10px 0;
+    }
+  }
+  .btn {
+    transition: none;
   }
 }

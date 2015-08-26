@@ -7,18 +7,19 @@
         <table>
           <tbody>
             <tr ng-if="deviceOverview.currentDevice.product">
-              <td style="font-weight: bold">
-                {{deviceOverview.currentDevice.product}}
-              </td>
-              <td>
+              <td style="font-weight: bold" colspan="2">
+                <span>
+                  {{deviceOverview.currentDevice.product}}
+                </span>
                 <img
-                  style="width: 60px; height: 60px"
+                  ng-if="deviceOverview.currentDevice.image"
                   ng-src="{{deviceOverview.currentDevice.image}}"
+                  style="width: 60px; height: 60px; padding-left: 10px"
                 />
               </td>
             </tr>
             <tr>
-              <td>Status</td>
+              <td translate="common.status"></td>
               <td>
                 <i
                   class="fa fa-circle device-status device-status"
@@ -28,21 +29,19 @@
               </td>
             </tr>
             <tr ng-show="deviceOverview.currentDevice.software">
-              <td>Software</td>
+              <td translate="deviceOverviewPage.software"></td>
               <td>{{deviceOverview.currentDevice.software}}</td>
             </tr>
             <tr ng-show="deviceOverview.currentDevice.ip">
-              <td>IP Address</td>
+              <td translate="deviceOverviewPage.ipAddr"></td>
               <td>{{deviceOverview.currentDevice.ip}}</td>
             </tr>
             <tr ng-show="deviceOverview.currentDevice.serial">
-              <td>Serial</td>
-              <td>
-                {{deviceOverview.currentDevice.serial}}
-              </td>
+              <td translate="deviceOverviewPage.serial"></td>
+              <td>{{deviceOverview.currentDevice.serial}}</td>
             </tr>
             <tr ng-show="deviceOverview.currentDevice.mac">
-              <td>MAC Address</td>
+              <td translate="deviceOverviewPage.macAddr"></td>
               <td>{{deviceOverview.currentDevice.mac}}</td>
             </tr>
           </tbody>
@@ -51,19 +50,13 @@
       <div
         class="feature-list activation-code-pane"
         ng-show="deviceOverview.currentDevice.needsActivation">
-        <p>
-          Activation code for new device:
-        </p>
-        <h3>
-          {{deviceOverview.currentDevice.readableActivationCode}}
-        </h3>
+        <p translate="deviceOverview.newDeviceActivation"></p>
+        <h3>{{deviceOverview.currentDevice.readableActivationCode}}</h3>
       </div>
     </cs-sp-section>
 
     <cs-sp-section ng-show="deviceOverview.currentDevice.hasIssues">
-      <div class="section-name" style="padding: 15px 0;">
-        Issues
-      </div>
+      <div class="section-name" style="padding: 15px 0;" translate="deviceOverview.issues"></div>
       <div>
         <div ng-repeat="event in deviceOverview.currentDevice.diagnosticsEvents" style="padding-bottom: 10px">
           <p>

@@ -5,7 +5,7 @@
     .module('Huron')
     .controller('ServiceSetupCtrl', ServiceSetupCtrl);
 
-  /* @ngInject */
+  /* @ngInject*/
   function ServiceSetupCtrl($q, $state, ServiceSetup, HttpUtils, Notification, Authinfo, $translate, HuronCustomer, ValidationService) {
     var vm = this;
     var DEFAULT_SITE_INDEX = '000001';

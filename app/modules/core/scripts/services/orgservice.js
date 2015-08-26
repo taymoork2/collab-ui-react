@@ -118,21 +118,11 @@ angular.module('Core')
           var orgUrl = Config.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/settings';
 
           var payload = {};
-          if (reportingSiteUrl !== '') {
-            payload['reportingSiteUrl'] = reportingSiteUrl;
-          }
-          if (reportingSiteDesc !== '') {
-            payload['reportingSiteDesc'] = reportingSiteDesc;
-          }
-          if (helpUrl !== '') {
-            payload['helpUrl'] = helpUrl;
-          }
-          if (isCiscoHelp !== '') {
-            payload['isCiscoHelp'] = isCiscoHelp;
-          }
-          if (isCiscoSupport !== '') {
-            payload['isCiscoSupport'] = isCiscoSupport;
-          }
+          payload['reportingSiteUrl'] = reportingSiteUrl || null;
+          payload['reportingSiteDesc'] = reportingSiteDesc || null;
+          payload['helpUrl'] = helpUrl || null;
+          payload['isCiscoHelp'] = isCiscoHelp;
+          payload['isCiscoSupport'] = isCiscoSupport;
 
           $http({
               method: 'PATCH',

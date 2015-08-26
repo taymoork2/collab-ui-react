@@ -3,7 +3,7 @@
 angular.module('Core').filter('capacityFilter', function ($filter) {
   return function (capacity, offerName) {
     if (capacity && offerName) {
-      return $filter('translate')(offerName) + " " + capacity;
+      return $filter('translate')(offerName);
     }
     return '';
   };

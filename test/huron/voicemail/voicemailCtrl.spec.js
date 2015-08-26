@@ -72,7 +72,7 @@ describe('Controller: VoicemailInfoCtrl', function () {
         $httpBackend.whenPUT(url).respond(200);
         controller.saveVoicemail();
         $httpBackend.flush();
-        expect(UserServiceCommon.update.calls.mostRecent().args[1].voicemail.dtmfAccessId).toEqual(telephonyInfoWithVoice.directoryNumbers[0].altDnPattern);
+        expect(UserServiceCommon.update.calls.mostRecent().args[1].voicemail.dtmfAccessId).toEqual(telephonyInfoWithVoice.esn);
       });
 
       it('should notify on error', function () {

@@ -29,6 +29,7 @@ angular.module('Core')
         'messageServices': null,
         'conferenceServices': null,
         'communicationServices': null,
+        'conferenceServicesWithoutSiteUrl': null,
         'cmrServices': null,
         'hasAccount': false,
         'email': null
@@ -186,13 +187,17 @@ angular.module('Core')
             var confLicenses = [];
             var commLicenses = [];
             var cmrLicenses = [];
+            var confLicensesWithoutSiteUrl = [];
             var accounts = data.accounts;
 
             if (accounts.length > 0) {
               authData.hasAccount = true;
             }
+
             for (var x = 0; x < accounts.length; x++) {
+
               var account = accounts[x];
+
               for (var l = 0; l < account.licenses.length; l++) {
                 var license = account.licenses[l];
                 var service = null;
@@ -214,6 +219,9 @@ angular.module('Core')
                   service = new ServiceFeature($translate.instant(Config.confMap[license.offerName], {
                     capacity: license.capacity
                   }), x + 1, 'confRadio', license);
+                  if (license.siteUrl) {
+                    confLicensesWithoutSiteUrl.push(service);
+                  }
                   confLicenses.push(service);
                   break;
                 case 'MESSAGING':
@@ -226,7 +234,7 @@ angular.module('Core')
                   break;
                 case 'CMR':
                   service = new ServiceFeature($translate.instant('onboardModal.cmr'), x + 1, 'cmrRadio', license);
-                  cmrLicenses = service;
+                  cmrLicenses.push(service);
                 }
               } //end for
             } //end for
@@ -241,6 +249,9 @@ angular.module('Core')
             }
             if (cmrLicenses.length !== 0) {
               authData.cmrServices = cmrLicenses;
+            }
+            if (confLicensesWithoutSiteUrl.length !== 0) {
+              authData.conferenceServicesWithoutSiteUrl = confLicensesWithoutSiteUrl;
             }
             $rootScope.$broadcast('AccountinfoUpdated');
           } //end if
@@ -283,6 +294,9 @@ angular.module('Core')
         },
         getCmrServices: function () {
           return authData.cmrServices;
+        },
+        getConferenceServicesWithoutSiteUrl: function () {
+          return authData.conferenceServicesWithoutSiteUrl;
         },
         getRoles: function () {
           return authData.roles;
