@@ -79,15 +79,16 @@
     vm.isCurrentTab = isCurrentTab;
     vm.loadOverview = loadOverview;
     vm.showDoItLater = false;
+    vm.gsxFeature = false;
 
     Userservice.getUser('me', function (data, status) {
       FeatureToggleService.getFeaturesForUser(data.id, function (data, status) {
         _.each(data.developer, function (element) {
           if (element.key === 'gsxdemo' && element.val === 'true') {
-            $scope.gsxFeature = true;
-            init();
+            vm.gsxFeature = true;
           }
         });
+        init();
       });
     });
 
@@ -105,7 +106,7 @@
       setNextText();
       vm.isNextDisabled = false;
 
-      if ($scope.gsxFeature) {
+      if (vm.gsxFeature) {
         var msgIndex = 0;
         var callingIndex = 0;
         $scope.tabs.forEach(function (obj, ind, arr) {
@@ -113,17 +114,18 @@
             msgIndex = ind;
             obj.label = 'firstTimeWizard.spark';
             obj.description = 'firstTimeWizard.sparkStub';
+            obj.icon = 'icon-tools';
           } else if (obj.name === 'serviceSetup') {
             callingIndex = ind;
             obj.label = 'firstTimeWizard.calling';
+            obj.icon = 'icon-tools';
           }
         });
-
         $scope.tabs.splice(msgIndex + 1, 0, {
           name: 'webex',
           label: 'firstTimeWizard.webex',
           description: 'firstTimeWizard.webexStub',
-          icon: 'icon-circle-webex',
+          icon: 'icon-tools',
           title: 'firstTimeWizard.webex',
           steps: [{
             name: 'init',

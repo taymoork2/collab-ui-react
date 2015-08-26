@@ -154,7 +154,10 @@
     "expires": "Expires",
     "editServices": "Edit services",
     "editServiceTitle": "Services Enabled for {{firstName}} {{lastName}}",
-    "siteUris": "Site Urls"
+    "siteUris": "Site Urls",
+    "webex": "Webex",
+    "spark": "Spark",
+    "calling": "Calling"
   },
   "messagingPanel": {
     "title": "Messaging"
