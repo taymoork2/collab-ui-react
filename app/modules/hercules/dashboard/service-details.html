@@ -8,20 +8,22 @@
     <!-- connectors -->
     <div class="feature-list">
       <ul>
-        <li class="feature" ng-repeat="connector in service.connectors" ng-class="{'list-item': !$first}">
-          <a ui-sref="cluster-details.hosts({clusterId: cluster.id, hostSerial: connector.host.serial})">
-            <i class="fa fa-circle status-icon" ng-class="connector.status"/>
-            <span class="feature-name">{{connector.host.host_name}}</span>
-            <span class="feature-status" translate="{{'hercules.status.' + (connector.state || 'unknown') }}"></span>
-            <i class="feature-arrow"></i>
-          </a>
-          <div class="clearfix status-info">
+        <div ng-repeat="connector in service.connectors">
+          <li class="feature" ng-class="{'list-item': !$first}">
+            <a ui-sref="cluster-details.hosts({clusterId: cluster.id, hostSerial: connector.host.serial})">
+              <i class="fa fa-circle status-icon" ng-class="connector.status"/>
+              <span class="feature-name">{{connector.host.host_name}}</span>
+              <span class="feature-status" translate="{{'hercules.status.' + (connector.state || 'unknown') }}"></span>
+              <i class="feature-arrow"></i>
+            </a>
+          </li>
+          <li class="clearfix status-info">
               Version: {{connector.version}}.
             <span ng-show="connector.software_upgrade_pending">
               Pending software upgrade to {{connector.software_upgrade_pending}}
             </span>
-          </div>
-        </li>
+          </li>
+        </div>
       </ul>
     </div>
     <div ng-hide="service.connectors.length" class="feature-list">

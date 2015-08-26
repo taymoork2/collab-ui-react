@@ -11,17 +11,19 @@
 
       <div class="feature-list">
         <ul>
-          <li class="feature" ng-repeat="service in host.services" ng-class="{'list-item': !$first}">
-            <a ui-sref="cluster-details.service({clusterId: cluster.id, serviceType: service.service_type})" ng-show="service.status">
-              <i class="fa fa-circle status-icon" ng-class="service.status"/>
-              <span class="feature-name">{{service.display_name}}</span>
-              <span class="feature-status" translate="{{'hercules.status.' + (service.state || 'unknown') }}"></span>
-              <i class="feature-arrow"></i>
-            </a>
-            <div class="clearfix status-info">
+          <div ng-repeat="service in host.services">
+            <li class="feature" ng-class="{'list-item': !$first}">
+              <a ui-sref="cluster-details.service({clusterId: cluster.id, serviceType: service.service_type})" ng-show="service.status">
+                <i class="fa fa-circle status-icon" ng-class="service.status"/>
+                <span class="feature-name">{{service.display_name}}</span>
+                <span class="feature-status" translate="{{'hercules.status.' + (service.state || 'unknown') }}"></span>
+                <i class="feature-arrow"></i>
+              </a>
+            </li>
+            <li class="clearfix status-info">
               Version: {{service.version}}
-            </div>
-          </li>
+            </li>
+          </div>
         </ul>
       </div>
 
