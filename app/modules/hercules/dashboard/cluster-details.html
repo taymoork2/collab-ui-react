@@ -18,28 +18,32 @@
       <div class="sw-upgrade clearfix">
         <div class="feature-list">
           <ul>
-            <li class="feature" ng-repeat="service in cluster.services" ng-class="{'list-item': !$first}">
-              <a ui-sref="cluster-details.service({clusterId: cluster.id, serviceType: service.service_type})" ng-show="service.state">
-                <i class="fa fa-circle status-icon" ng-class="service.status"/>
-                <span class="feature-name">{{service.display_name}}</span>
-                <span class="feature-status" translate="{{'hercules.status.' + service.state }}"></span>
-                <i class="feature-arrow"></i>
-              </a>
-              <div class="clearfix status-info">
-                <div ng-show="service.software_upgrade_available" style="color: #00c1aa">
-                  <i class="fa fa-cloud-upload" style="color: #00c1aa; margin-right: 2px;" />
-                  Software upgrade available.
+            <div ng-repeat="service in cluster.services">
+              <li class="feature" ng-class="{'list-item': !$first}">
+                <a ui-sref="cluster-details.service({clusterId: cluster.id, serviceType: service.service_type})" ng-show="service.state">
+                  <i class="fa fa-circle status-icon" ng-class="service.status"></i>
+                  <span class="feature-name">{{service.display_name}}</span>
+                  <span class="feature-status" translate="{{'hercules.status.' + service.state }}"></span>
+                  <i class="feature-arrow"></i>
+                </a>
+              </li>
+              <li>
+                <div class="status-info">
+                  <div ng-show="service.software_upgrade_available" style="color: #00c1aa">
+                    <i class="fa fa-cloud-upload" style="color: #00c1aa; margin-right: 2px;"></i>
+                    Software upgrade available.
+                  </div>
+                  <div class="clearfix" ng-show="service.alarm_count">
+                    <span ng-show="service.alarm_count==1">
+                      {{service.alarm_count}} reported alarm.
+                    </span>
+                    <span ng-hide="service.alarm_count==1">
+                      {{service.alarm_count}} reported alarms.
+                    </span>
+                  </div>
                 </div>
-                <div class="clearfix" ng-show="service.alarm_count">
-                  <span ng-show="service.alarm_count==1">
-                    {{service.alarm_count}} reported alarm.
-                  </span>
-                  <span ng-hide="service.alarm_count==1">
-                    {{service.alarm_count}} reported alarms.
-                  </span>
-                </div>
-              </div>
-            </li>
+              </li>
+            </div>
           </ul>
         </div>
       </div>
