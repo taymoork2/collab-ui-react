@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('WebExUserSettings').service(
-  'XmlApiConstsSvc', [
+angular.module('WebExXmlApi').service(
+  'WebExXmlApiConstsSvc', [
     function XmlApiConstants() {
       return {
         siteInfoRequest: "" +

@@ -1159,28 +1159,53 @@ angular
     }
   ]);
 
-angular
-  .module('WebExUserSettings')
-  .config(['$stateProvider',
-    function ($stateProvider) {
-      $stateProvider
-        .state('webexUserSettings', {
-          url: '/webexUserSettings',
-          templateUrl: 'modules/webex/userSettings/userSettings.tpl.html',
-          parent: 'main'
-        });
-    }
-  ]);
+angular.module('WebExUtils').config([
+  '$stateProvider',
+  function ($stateProvider) {
+    $stateProvider.state('webexUtils', {
+      parent: 'main'
+    });
+  }
+]);
 
-angular
-  .module('WebExUserSettings2')
-  .config(['$stateProvider',
-    function ($stateProvider) {
-      $stateProvider
-        .state('webexUserSettings2', {
-          url: '/webexUserSettings2',
-          templateUrl: 'modules/webex/userSettings/userSettings2.tpl.html',
-          parent: 'main'
-        });
-    }
-  ]);
+angular.module('WebExXmlApi').config([
+  '$stateProvider',
+  function ($stateProvider) {
+    $stateProvider.state('webExXmlApi', {
+      parent: 'main'
+    });
+  }
+]);
+
+angular.module('WebExSiteSettings').config([
+  '$stateProvider',
+  function ($stateProvider) {
+    $stateProvider.state('webexSiteSettings', {
+      url: '/webexSiteSettings',
+      templateUrl: 'modules/webex/siteSettigs/siteSettings.tpl.html',
+      parent: 'main'
+    });
+  }
+]);
+
+angular.module('WebExUserSettings').config([
+  '$stateProvider',
+  function ($stateProvider) {
+    $stateProvider.state('webexUserSettings', {
+      url: '/webexUserSettings',
+      templateUrl: 'modules/webex/userSettings/userSettings.tpl.html',
+      parent: 'main'
+    });
+  }
+]);
+
+angular.module('WebExUserSettings2').config([
+  '$stateProvider',
+  function ($stateProvider) {
+    $stateProvider.state('webexUserSettings2', {
+      url: '/webexUserSettings2',
+      templateUrl: 'modules/webex/userSettings/userSettings2.tpl.html',
+      parent: 'main'
+    });
+  }
+]);

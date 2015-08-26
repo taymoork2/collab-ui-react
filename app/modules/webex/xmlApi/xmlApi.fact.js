@@ -3,7 +3,7 @@
 
   /* global X2JS */
 
-  angular.module('WebExUserSettings').factory('XmlApiFact', [
+  angular.module('WebExXmlApi').factory('WebExXmlApiFact', [
     '$http',
     '$log',
     '$interpolate',
@@ -12,7 +12,7 @@
     '$rootScope',
     'Authinfo',
     'Storage',
-    'XmlApiConstsSvc',
+    'WebExXmlApiConstsSvc',
     function (
       $http,
       $log,
@@ -22,7 +22,7 @@
       $rootScope,
       Authinfo,
       Storage,
-      constants
+      xmlApiConstants
     ) {
       var _self = this;
       var x2js = new X2JS();
@@ -53,7 +53,7 @@
         getSiteInfo: function (xmlApiAccessInfo) {
           return $q(function (resolve, reject) {
             var xmlServerURL = xmlApiAccessInfo.xmlServerURL;
-            var xmlRequest = $interpolate(constants.siteInfoRequest)(xmlApiAccessInfo);
+            var xmlRequest = $interpolate(xmlApiConstants.siteInfoRequest)(xmlApiAccessInfo);
             _self.sendXMLApiReq(xmlServerURL, xmlRequest, resolve, reject);
           });
         }, //getSiteInfo()
@@ -61,7 +61,7 @@
         getUserInfo: function (xmlApiAccessInfo) {
           return $q(function (resolve, reject) {
             var xmlServerURL = xmlApiAccessInfo.xmlServerURL;
-            var xmlRequest = $interpolate(constants.userInfoRequest)(xmlApiAccessInfo);
+            var xmlRequest = $interpolate(xmlApiConstants.userInfoRequest)(xmlApiAccessInfo);
             _self.sendXMLApiReq(xmlServerURL, xmlRequest, resolve, reject);
           });
         }, //getUserInfo()
@@ -69,7 +69,7 @@
         getMeetingTypeInfo: function (xmlApiAccessInfo) {
           return $q(function (resolve, reject) {
             var xmlServerURL = xmlApiAccessInfo.xmlServerURL;
-            var xmlRequest = $interpolate(constants.meetingTypeInfoRequest)(xmlApiAccessInfo);
+            var xmlRequest = $interpolate(xmlApiConstants.meetingTypeInfoRequest)(xmlApiAccessInfo);
             _self.sendXMLApiReq(xmlServerURL, xmlRequest, resolve, reject);
           });
         }, //getMeetingTypeInfo()
@@ -82,7 +82,7 @@
             "userSettings=" + JSON.stringify(userSettings);
           $log.log(logMsg);
 
-          var xmlRequest = $interpolate(constants.updateUserSettings_1)(xmlApiAccessInfo);
+          var xmlRequest = $interpolate(xmlApiConstants.updateUserSettings_1)(xmlApiAccessInfo);
 
           logMsg = funcName + ": " + "\n" +
             "xmlRequest #1 =\n" + xmlRequest;
@@ -91,14 +91,14 @@
           for (var i = 0; i < userSettings.meetingTypes.length; i++) {
             var tmpMeetingTypesObj = {};
             tmpMeetingTypesObj.meetingType = userSettings.meetingTypes[i];
-            xmlRequest += $interpolate(constants.updateUserSettings_2)(tmpMeetingTypesObj);
+            xmlRequest += $interpolate(xmlApiConstants.updateUserSettings_2)(tmpMeetingTypesObj);
           }
 
           logMsg = funcName + ": " + "\n" +
             "xmlRequest #2 =\n" + xmlRequest;
           // $log.log(logMsg);
 
-          xmlRequest += $interpolate(constants.updateUserSettings_3)(userSettings);
+          xmlRequest += $interpolate(xmlApiConstants.updateUserSettings_3)(userSettings);
 
           logMsg = funcName + ": " + "\n" +
             "xmlRequest #3 =\n" + xmlRequest;
@@ -228,7 +228,7 @@
         getSessionTicketInfo: function (xmlApiAccessInfo) {
           return $q(function (resolve, reject) {
             var xmlServerURL = xmlApiAccessInfo.xmlServerURL;
-            var xmlRequest = $interpolate(constants.sessionTicketRequest)(xmlApiAccessInfo);
+            var xmlRequest = $interpolate(xmlApiConstants.sessionTicketRequest)(xmlApiAccessInfo);
             _self.sendXMLApiReq(xmlServerURL, xmlRequest, resolve, reject);
           });
         }, //getSessionTicketInfo()
@@ -372,7 +372,7 @@
         flushWafCache: function (xmlApiAccessInfo) {
           return $q(function (resolve, reject) {
             var xmlServerURL = xmlApiAccessInfo.xmlServerURL;
-            var xmlRequest = $interpolate(constants.flushWafCacheRequest)(xmlApiAccessInfo);
+            var xmlRequest = $interpolate(xmlApiConstants.flushWafCacheRequest)(xmlApiAccessInfo);
             _self.sendXMLApiReq(xmlServerURL, xmlRequest, resolve, reject);
           });
         }, //getSiteInfo()
@@ -412,7 +412,7 @@
             $log.log(logMsg);
           }
 
-          constants.replaceSets.forEach(function (replaceSet) {
+          xmlApiConstants.replaceSets.forEach(function (replaceSet) {
             bodySliceXml = bodySliceXml.replace(replaceSet.replaceThis, replaceSet.withThis);
           });
 

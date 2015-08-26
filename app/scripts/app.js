@@ -43,6 +43,11 @@ angular.module('Hercules', ['Core']);
 
 angular.module('Mediafusion', ['Core']);
 
+angular.module('WebExUtils', ['Core']);
+angular.module('WebExXmlApi', ['Core']);
+
+angular.module('WebExSiteSettings', ['Core']);
+
 angular.module('WebExUserSettings', ['Core']);
 angular.module('WebExUserSettings2', ['Core']);
 
@@ -52,6 +57,9 @@ angular.module('wx2AdminWebClientApp', [
   'Huron',
   'Hercules',
   'Mediafusion',
+  'WebExUtils',
+  'WebExXmlApi',
+  'WebExSiteSettings',
   'WebExUserSettings',
   'WebExUserSettings2',
 ]);
