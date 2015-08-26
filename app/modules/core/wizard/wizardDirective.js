@@ -118,7 +118,7 @@
           } else if (obj.name === 'serviceSetup') {
             callingIndex = ind;
             obj.label = 'firstTimeWizard.calling';
-            obj.icon = 'icon-tools';
+            obj.icon = 'icon-calls';
           }
         });
         $scope.tabs.splice(msgIndex + 1, 0, {
