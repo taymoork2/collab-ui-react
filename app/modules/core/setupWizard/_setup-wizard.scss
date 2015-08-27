@@ -371,21 +371,19 @@
 }
 
 .users-upload-results {
-  flex: 1;
   display: flex;
+  min-height: 600px;
   flex-direction: column;
   justify-content: center;
-
   .icon-check-mark-success {
     font-size: 100px;
     color: $gray-light;
     align-self: center;
     margin-bottom: 25px;
   }
-
   .results-container {
-    display: flex;
-
+    display: inline-flex;
+    min-height: 150px;
     .result {
       flex: 1;
       display: flex;
@@ -395,31 +393,30 @@
       background-color: $gray-lightest;
       min-height: 150px;
       position: relative;
-
       .action-link {
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
+        width: 200px;
+        text-align: center;
         .icon-error {
           color: $brand-danger;
           vertical-align: middle;
           margin-right: 5px;
+          position: relative;
+          top: -2px;
         }
       }
-
       & + .result {
         margin-left: 3px;
       }
-
       .total {
         font-size: 50px;
         line-height: 1;
       }
-
       &.disabled {
         color: $gray-light;
       }
-
       &.new-users:not(.disabled) .total {
         color: $brand-success;
       }
@@ -431,48 +428,69 @@
       }
     }
   }
-
   .results-total {
     align-self: center;
     margin: 20px 0;
   }
 
-  .grid {
-    border: 1px solid $gray-lightest;
-    overflow-x: hidden;
-    .ngCanvas {
-      width: 100%;
+  .table-header {
+    .table {
+      border-color: $gray-lightest;
     }
-    .ngRow {
-      width: 100%;
-    }
-    div[gridscrollbar] {
-      height: auto;
-    }
-    .ngHeaderCell {
+    .table-bordered > thead > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > th, .table-bordered > tbody > tr > td {
       background-color: $gray-lightest;
-      text-align: center;
+      color: $gray-darker;
+      height: 44px;
+      padding: 14px;
+      .heading-text {
+        text-align: center;
+        font-weight: bold;
+      }
     }
-    .selected .ngCellText {
-      color: $brand-white;
+  }
+  .table-body {
+    position: relative;
+    top: -1px;
+    .table {
+      border-width: 0px;
     }
-    .ngCellText {
+    .table-bordered > thead > tr > th, .table-bordered > thead > tr > td {
+      height: 0px;
+      padding: 0px;
+    }
+    .table-bordered > tbody > tr > th, .table-bordered > tbody > tr > td {
       color: $brand-danger;
+      height: 44px;
+      padding: 14px;
     }
-
-    display: flex;
-    flex-direction: column;
-    .gridStyle {
-      display: flex;
-      flex-direction: column;
-      .ngTopPanel {
-        width: 100% !important;
-      }
-      .ngViewport {
-        max-height: 307px;
-        height: auto !important;
-        width: 100% !important;
-      }
+  }
+  .error-table {
+    min-height: 46px;
+    max-height: 350px;
+    min-width: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-bottom: $gray-lightest solid 1px;
+    .table {
+      margin: 0;
     }
+    .table-bordered > thead > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > th, .table-bordered > tbody > tr > td {
+      border-bottom-width: 1px;
+      border-color: $gray-lightest;
+      border-right-color: $gray-lighter;
+      font-size: 15px;
+    }
+    .table-bordered > thead > tr:last-of-type > th, .table-bordered > thead > tr:last-of-type > td,
+      .table-bordered > tbody > tr:last-of-type > th, .table-bordered > tbody > tr:last-of-type > td {
+        border-bottom-width: 0px;
+        border-bottom-color: $brand-white;
+        border-right-color: $gray-lightest;
+      }
+    .table-bordered > thead > tr:first-of-type > th, .table-bordered > thead > tr:first-of-type > td,
+      .table-bordered > tbody > tr:first-of-type > th, .table-bordered > tbody > tr:first-of-type > td {
+        border-top-width: 0px;
+        border-top-color: $brand-white;
+        border-right-color: $gray-lighter;
+      }
   }
 }
