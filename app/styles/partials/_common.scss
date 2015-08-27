@@ -30,25 +30,6 @@ body {
   padding: 0;
 }
 
-.page-title {
-  font-family: $brand-font-cisco-TT-Thin;
-  margin: 0;
-  padding: 28px 0 28px 30px;
-
-  .title {
-    color: $brand-info;
-    font-size: 40px;
-    line-height: 40px;
-    margin: 0;
-    float: left;
-  }
-
-  small {
-    color: $gray-dark;
-    font-size: 22px;
-  }
-}
-
 .page-option-buttons {
   padding-top: 27px;
   float: right;
