@@ -17,6 +17,7 @@
     var dateFormat = "MMM DD, YYYY";
     var dayFormat = "MMM DD";
     var monthFormat = "MMMM";
+    var timezone = "Etc/GMT";
     var customerList = null;
 
     var overallPopulation = 0;
@@ -293,14 +294,14 @@
       } else {
         if (activeUserCustomerGraphs[customer.value] !== null && activeUserCustomerGraphs[customer.value] !== undefined && activeUserCustomerGraphs[customer.value].graphData.length > 0) {
           var customerData = activeUserCustomerGraphs[customer.value].graphData;
-          var graph = getDateBase(time, [Config.chartColors.brandSuccessLight, Config.chartColors.brandSuccessDark]);
+          var graph = getDateBase(time, [Config.chartColors.brandSuccessLight, Config.chartColors.brandSuccessDark], customerData[customerData.length - 1].date);
           return combineMatchingDates(graph, customerData);
         }
         return [];
       }
     }
 
-    function getDateBase(time, colors) {
+    function getDateBase(time, colors, mostRecent) {
       var graph = [];
       var dataPoint = {
         totalRegisteredUsers: 0,
@@ -321,8 +322,12 @@
           graph.push(angular.copy(dataPoint));
         }
       } else if (time.value === 1) {
+        var dayOffset = moment.tz(mostRecent, timezone).format('e');
+        if (dayOffset >= 5) {
+          dayOffset = 7 - dayOffset;
+        }
         for (var x = 3; x >= 0; x--) {
-          dataPoint.modifiedDate = moment().startOf('week').subtract(1 + (x * 7), 'day').format(dayFormat);
+          dataPoint.modifiedDate = moment().startOf('week').subtract(dayOffset + (x * 7), 'day').format(dayFormat);
           graph.push(angular.copy(dataPoint));
         }
       } else {
@@ -432,7 +437,7 @@
             });
 
             if (graph.length > 0) {
-              var graphBase = getDateBase(time, []);
+              var graphBase = getDateBase(time, [], graph[graph.length - 1].date);
               angular.forEach(graph, function (index) {
                 graphBase = combineQualityGraphs(graphBase, index);
               });

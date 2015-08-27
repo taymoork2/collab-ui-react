@@ -148,9 +148,5 @@ describe('Support flow', function () {
       utils.click(support.resendCustomerEmail);
       notifications.assertSuccess('Email to Customer sent successfully');
     });
-
-    it('should log out', function () {
-      navigation.logout();
-    });
   });
 });

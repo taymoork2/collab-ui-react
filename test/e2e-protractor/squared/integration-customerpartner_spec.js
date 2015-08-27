@@ -32,14 +32,14 @@ describe('CS Admin flow', function () {
 
     it('clicking on admin customer should enable/disable ability to launch appropriately', function () {
       utils.click(partner.adminCustomerOrgId);
-      utils.expectIsEnabled(partner.launchCustomerPanelButton);
-      utils.click(partner.exitPreviewButton);
+      utils.waitUntilEnabled(partner.launchCustomerPanelButton);
     });
 
     it('clicking on regular customer should enable/disable ability to launch appropriately', function () {
+      utils.click(partner.exitPreviewButton);
       utils.click(partner.customerNameHeader);
       utils.click(partner.regularCustomerOrgId);
-      utils.expectIsDisabled(partner.launchCustomerPanelButton);
+      utils.waitUntilDisabled(partner.launchCustomerPanelButton);
     });
 
   });
@@ -54,14 +54,6 @@ describe('CS Admin flow', function () {
 });
 
 describe('CS User flow', function () {
-
-  beforeEach(function () {
-    browser.ignoreSynchronization = true;
-  });
-
-  afterEach(function () {
-    browser.ignoreSynchronization = false;
-  });
 
   it('should just login', function () {
     login.login('customer-support-user', '#/partner/customers');
@@ -84,14 +76,14 @@ describe('CS User flow', function () {
 
     it('clicking on admin customer should enable/disable ability to launch appropriately', function () {
       utils.click(partner.adminCustomerOrgId);
-      utils.expectIsDisabled(partner.launchCustomerPanelButton);
-      utils.click(partner.exitPreviewButton);
+      utils.waitUntilDisabled(partner.launchCustomerPanelButton);
     });
 
     it('clicking on regular customer should enable/disable ability to launch appropriately', function () {
+      utils.click(partner.exitPreviewButton);
       utils.click(partner.customerNameHeader);
       utils.click(partner.regularCustomerOrgId);
-      utils.expectIsEnabled(partner.launchCustomerPanelButton);
+      utils.waitUntilEnabled(partner.launchCustomerPanelButton);
     });
 
   });
@@ -104,23 +96,9 @@ describe('CS User flow', function () {
   });
 
   describe('CS Regular User with no managed orgs flow', function () {
-
-    beforeEach(function () {
-      browser.ignoreSynchronization = true;
-    });
-
-    afterEach(function () {
-      browser.ignoreSynchronization = false;
-    });
-
     it('should show Unauthorized page after login', function () {
       login.loginUnauthorized('customer-regular-user');
     });
-
-    it('should log out', function () {
-      navigation.logout();
-    });
-
   });
 
 });

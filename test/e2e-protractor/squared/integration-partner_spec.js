@@ -211,11 +211,4 @@ describe('Partner flow', function () {
       utils.expectIsDisplayed(partner.contentSharedCount);
     });
   });
-
-  // Log Out
-  describe('Log Out', function () {
-    it('should log out', function () {
-      navigation.logout();
-    });
-  });
 });
