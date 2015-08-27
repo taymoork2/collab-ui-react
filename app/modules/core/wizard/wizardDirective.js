@@ -108,7 +108,7 @@
 
       if (vm.gsxFeature) {
         var msgIndex = 0;
-        var callingIndex = 0;
+        var callingIndex = -1;
         $scope.tabs.forEach(function (obj, ind, arr) {
           if (obj.name === 'messagingSetup') {
             msgIndex = ind;
@@ -133,8 +133,10 @@
           }]
         });
 
-        var calling = $scope.tabs.splice(callingIndex, 1)[0];
-        $scope.tabs.splice(msgIndex + 1, 0, calling);
+        if(callingIndex > -1){
+          var calling = $scope.tabs.splice(callingIndex, 1)[0];
+          $scope.tabs.splice(msgIndex + 1, 0, calling);
+        }
       }
     }
 
@@ -374,7 +376,9 @@
     }
 
     function hasDefaultButtons() {
-      return angular.isUndefined(vm.current.step.buttons);
+      if(vm.current.step)
+        return angular.isUndefined(vm.current.step.buttons);
+      return false;
     }
 
     $scope.$on('wizardNextText', function (event, action) {
