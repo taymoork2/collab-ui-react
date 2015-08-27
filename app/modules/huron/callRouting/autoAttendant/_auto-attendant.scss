@@ -73,6 +73,9 @@
     display: inline-block;
     vertical-align: top;
   }
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .aa-number-add-icon {
