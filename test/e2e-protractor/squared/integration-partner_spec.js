@@ -139,23 +139,23 @@ describe('Partner flow', function () {
       });
     });
 
-    // it('Launch customer portal via dropdown and display partner managing org in partner filter', function () {
-    //   var appWindow = browser.getWindowHandle();
+    it('Launch customer portal via dropdown and display partner managing org in partner filter', function () {
+      var appWindow = browser.getWindowHandle();
 
-    //   utils.click(partner.exitPreviewButton);
+      utils.click(partner.exitPreviewButton);
 
-    //   utils.click(partner.actionsButton);
-    //   utils.expectIsDisplayed(partner.launchCustomerButton);
-    //   utils.click(partner.launchCustomerButton);
-    //   utils.switchToNewWindow().then(function () {
+      utils.click(partner.actionsButton);
+      utils.expectIsDisplayed(partner.launchCustomerButton);
+      utils.click(partner.launchCustomerButton);
+      utils.switchToNewWindow().then(function () {
 
-    //     utils.expectIsDisplayed(navigation.tabs);
+        utils.expectIsDisplayed(navigation.tabs);
 
-    //     browser.close();
-    //     browser.switchTo().window(appWindow);
+        browser.close();
+        browser.switchTo().window(appWindow);
 
-    //   });
-    // });
+      });
+    });
 
   });
 
@@ -163,53 +163,53 @@ describe('Partner flow', function () {
     deleteTrialUtils.deleteOrg(orgId, accessToken);
   });
 
-  // describe('Partner launches its orgs portal', function () {
+  describe('Partner launches its orgs portal', function () {
 
-  //   it('should launch partners org view', function () {
-  //     var appWindow = browser.getWindowHandle();
+    it('should launch partners org view', function () {
+      var appWindow = browser.getWindowHandle();
 
-  //     utils.expectIsDisplayed(navigation.userInfoButton);
-  //     navigation.launchPartnerOrgPortal();
+      utils.expectIsDisplayed(navigation.userInfoButton);
+      navigation.launchPartnerOrgPortal();
 
-  //     utils.switchToNewWindow().then(function () {
+      utils.switchToNewWindow().then(function () {
 
-  //       navigation.expectDriverCurrentUrl('true');
-  //       utils.expectIsDisplayed(navigation.tabs);
+        navigation.expectDriverCurrentUrl('true');
+        utils.expectIsDisplayed(navigation.tabs);
 
-  //       navigation.expectDriverCurrentUrl('overview');
+        navigation.expectDriverCurrentUrl('overview');
 
-  //       browser.close();
-  //       browser.switchTo().window(appWindow);
+        browser.close();
+        browser.switchTo().window(appWindow);
 
-  //     });
-  //   });
+      });
+    });
 
-  // });
+  });
 
-  // describe('Partner landing page reports', function () {
+  describe('Partner landing page reports', function () {
 
-  //   it('should show the reports', function () {
-  //     navigation.clickHome();
-  //     utils.expectIsDisplayed(partner.entitlementsChart);
-  //     utils.expectIsDisplayed(partner.entitlementsCount);
-  //   });
+    it('should show the reports', function () {
+      navigation.clickHome();
+      utils.expectIsDisplayed(partner.entitlementsChart);
+      utils.expectIsDisplayed(partner.entitlementsCount);
+    });
 
-  //   it('should show active users chart', function () {
-  //     utils.click(partner.activeUsersTab);
-  //     utils.expectIsDisplayed(partner.activeUsersChart);
-  //     utils.expectIsDisplayed(partner.activeUsersCount);
-  //   });
+    it('should show active users chart', function () {
+      utils.click(partner.activeUsersTab);
+      utils.expectIsDisplayed(partner.activeUsersChart);
+      utils.expectIsDisplayed(partner.activeUsersCount);
+    });
 
-  //   it('should show average calls chart', function () {
-  //     utils.click(partner.averageCallsTab);
-  //     utils.expectIsDisplayed(partner.averageCallsChart);
-  //     utils.expectIsDisplayed(partner.averageCallsCount);
-  //   });
+    it('should show average calls chart', function () {
+      utils.click(partner.averageCallsTab);
+      utils.expectIsDisplayed(partner.averageCallsChart);
+      utils.expectIsDisplayed(partner.averageCallsCount);
+    });
 
-  //   it('should show content shared chart', function () {
-  //     utils.click(partner.contentSharedTab);
-  //     utils.expectIsDisplayed(partner.contentSharedChart);
-  //     utils.expectIsDisplayed(partner.contentSharedCount);
-  //   });
-  // });
+    it('should show content shared chart', function () {
+      utils.click(partner.contentSharedTab);
+      utils.expectIsDisplayed(partner.contentSharedChart);
+      utils.expectIsDisplayed(partner.contentSharedCount);
+    });
+  });
 });
