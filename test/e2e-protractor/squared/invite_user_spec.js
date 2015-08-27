@@ -125,8 +125,4 @@ describe('Squared Invite User Flow', function () {
     });
 
   });
-
-  it('should log out', function () {
-    navigation.logout();
-  });
 });

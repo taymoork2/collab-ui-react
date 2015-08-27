@@ -52,9 +52,5 @@ describe('Invite User and Check Buckets', function () {
         deleteUtils.deleteUser(addEmail);
       });
     });
-
-    it('should log out', function () {
-      navigation.logout();
-    });
   });
 });
