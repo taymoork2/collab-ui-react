@@ -60,7 +60,7 @@
   }
 }
 
-.callRouter-callerinfo.open {
+.callRouter-callerinfo.open-section {
    padding-top: 0;
    padding-bottom: 0;
 
@@ -74,7 +74,7 @@
 .custom-combobox {
     width: calc(100% - 20px);
     .dropdown-menu {
-      min-width: calc(100% - 20px);
+      min-width: calc(100% + 45px);
       overflow-y: scroll;
       max-height: 261px;
     }
