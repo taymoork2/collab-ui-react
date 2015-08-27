@@ -96,7 +96,11 @@ exports.wait = function (elem) {
 exports.waitUntilEnabled = function (elem) {
   return this.wait(elem).then(function () {
     return browser.wait(function () {
-      return elem.isEnabled();
+      return elem.isEnabled().then(function (isEnabled) {
+        return isEnabled;
+      }, function () {
+        return false;
+      });
     }, TIMEOUT, 'Waiting until enabled: ' + elem.locator());
   });
 };
@@ -104,7 +108,11 @@ exports.waitUntilEnabled = function (elem) {
 exports.waitUntilDisabled = function (elem) {
   return this.wait(elem).then(function () {
     return browser.wait(function () {
-      return elem.isEnabled() === false;
+      return elem.isEnabled().then(function (isEnabled) {
+        return !isEnabled;
+      }, function () {
+        return false;
+      });
     }, TIMEOUT, 'Waiting until disabled: ' + elem.locator());
   });
 };

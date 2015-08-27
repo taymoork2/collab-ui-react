@@ -69,7 +69,8 @@
     <div class="col-sm-4" ng-class="{'col-conf' : !planReview.confServices.isNewTrial, 'col-trial' : planReview.confServices.isNewTrial}">
       <div ng-if="planReview.confServices.isNewTrial" class="col-trial-header" translate="firstTimeWizard.startYourTrial" translate-values="{days: planReview.trial.trialPeriod}">
       </div>
-      <div class="item-conf" ng-repeat="(siteUrl,services) in planReview.sites">
+
+      <div ng-if="!planReview.gsxFeature" class="item-conf" ng-repeat="(siteUrl,services) in planReview.sites">
         {{siteUrl}}
         <div class="sub-item" ng-repeat="service in services">
           <div>
@@ -84,6 +85,22 @@
         <div ng-class="{'sub-line':!$last}">
         </div>
       </div>
+
+      <div ng-if="planReview.gsxFeature" class="item-conf" ng-repeat="(siteUrl,services) in planReview.sites">
+        <div ng-repeat="service in services">
+          <div>
+            {{service.label}}
+          </div>
+          <div class="quantity">
+            <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
+            <span class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial" translate-values="{number: service.license.volume}"></span>
+          </div>
+        </div>
+        <div ng-class="{'sub-line':!$last}">
+        </div>
+      </div>
+
+
     </div>
 
     <div class="col-sm-4" ng-class="{'col-paid' : !planReview.commServices.isNewTrial, 'col-trial' : planReview.commServices.isNewTrial}">

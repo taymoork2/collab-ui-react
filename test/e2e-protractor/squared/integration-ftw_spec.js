@@ -90,6 +90,5 @@ describe('First Time Wizard', function () {
   it('should close the first time wizard and log out', function () {
     utils.clickEscape();
     utils.expectIsNotDisplayed(wizard.wizard);
-    navigation.logout();
   });
 });

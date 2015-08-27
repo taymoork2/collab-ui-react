@@ -70,10 +70,6 @@ describe('Squared Add & Entitle User Flows', function () {
       utils.expectIsEnabled(users.deleteUserButton);
       utils.click(users.cancelButton);
     });
-
-    it('should log out', function () {
-      navigation.logout();
-    });
   });
 
 });
