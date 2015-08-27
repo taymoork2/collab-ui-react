@@ -36,10 +36,6 @@ describe('Trial Ext Interest Flow', function () {
       browser.get(trialExtInterestUrl + invalidQueryParam);
       utils.expectIsDisplayed(trialextinterest.notifyPartnerBadLink);
     });
-
-    it('should log out', function () {
-      navigation.logout();
-    });
   });
 
 });

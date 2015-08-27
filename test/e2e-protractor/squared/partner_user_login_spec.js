@@ -12,8 +12,4 @@ describe('Partner user', function () {
   it('should see customers tab', function () {
     utils.expectIsDisplayed(navigation.customersTab);
   });
-
-  it('should log out', function () {
-    navigation.logout();
-  });
 });

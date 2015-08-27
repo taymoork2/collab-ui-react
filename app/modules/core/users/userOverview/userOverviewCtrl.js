@@ -69,6 +69,9 @@
         if (getServiceDetails('CF')) {
           confState.detail = $translate.instant('onboardModal.paidConf');
         }
+        if (vm.gsxFeature) {
+          confState.detail = 'Meeting Center';
+        }
         vm.services.push(confState);
       }
       if (hasEntitlement('ciscouc')) {
@@ -77,6 +80,7 @@
         }
         vm.services.push(commState);
       }
+
       updateUserTitleCard();
     }
 
