@@ -40,8 +40,4 @@ describe('Devices flow', function () {
     utils.click(spaces.deleteButton);
     notifications.assertSuccess('deleted successfully');
   });
-
-  it('should log out', function () {
-    navigation.logout();
-  });
 });

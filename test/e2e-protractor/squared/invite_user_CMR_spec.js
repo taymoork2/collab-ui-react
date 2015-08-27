@@ -33,9 +33,6 @@ describe('CMR shown under Enterprise Edition', function () {
       utils.click(users.closeAddUsers);
       utils.expectIsNotDisplayed(users.manageDialog);
     });
-    it('should log out', function () {
-      navigation.logout();
-    });
   });
 
 });

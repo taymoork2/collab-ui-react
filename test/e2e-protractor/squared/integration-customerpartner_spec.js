@@ -116,11 +116,6 @@ describe('CS User flow', function () {
     it('should show Unauthorized page after login', function () {
       login.loginUnauthorized('customer-regular-user');
     });
-
-    it('should log out', function () {
-      navigation.logout();
-    });
-
   });
 
 });

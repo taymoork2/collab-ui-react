@@ -85,9 +85,5 @@ describe('Customer Admin Landing Page License Info', function () {
       utils.expectIsNotDisplayed(landing.installDeviceQuickLink);
       utils.expectIsNotDisplayed(landing.autoAttendantQuickLink);
     });
-
-    it('should log out', function () {
-      navigation.logout();
-    });
   });
 });
