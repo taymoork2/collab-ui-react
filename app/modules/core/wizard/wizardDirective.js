@@ -133,7 +133,7 @@
           }]
         });
 
-        if(callingIndex > -1){
+        if (callingIndex > -1) {
           var calling = $scope.tabs.splice(callingIndex, 1)[0];
           $scope.tabs.splice(msgIndex + 1, 0, calling);
         }
@@ -376,7 +376,7 @@
     }
 
     function hasDefaultButtons() {
-      if(vm.current.step)
+      if (vm.current.step)
         return angular.isUndefined(vm.current.step.buttons);
       return false;
     }
