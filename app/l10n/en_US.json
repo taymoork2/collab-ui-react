@@ -1071,7 +1071,9 @@
     "errorAddNumberNotFound": "Failed to add number: {{number}} not found.",
     "landingDevelopmentLink": "AA Development Link",
     "landingInformation": "Auto attendants allow you to create a custom greeting, recordings, and phone menus that handle inbound calls to your business.  Choose from the following common Auto Attendant layouts, or you can build your own.",
-    "landingTitle": "Auto Attendants"
+    "landingTitle": "Auto Attendants",
+    "landingAddAutoAttendant": "Create New",
+    "landingTemplateAutoAttendant": "Create from Template"
   },
   "callPark": {
     "newCallPark": "New Call Park",
