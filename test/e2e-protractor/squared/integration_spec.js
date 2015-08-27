@@ -50,12 +50,4 @@ describe('App flow', function () {
       utils.expectIsDisplayed(reports.contentShareSizes);
     });
   });
-
-  // Log Out
-  describe('Log Out', function () {
-    it('should log out', function () {
-      navigation.logout();
-    });
-  });
-
 });

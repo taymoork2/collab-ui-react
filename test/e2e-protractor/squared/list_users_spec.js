@@ -26,10 +26,4 @@ describe('List users flow', function () {
 
     utils.click(users.closeSidePanel);
   });
-
-  describe('logout', function () {
-    it('should log out', function () {
-      navigation.logout();
-    });
-  });
 });

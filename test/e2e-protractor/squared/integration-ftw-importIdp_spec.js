@@ -54,6 +54,5 @@ describe('First Time Wizard EE selfsign-sso', function () {
   it('should close the first time wizard and log out', function () {
     utils.clickEscape();
     utils.expectIsNotDisplayed(wizard.wizard);
-    navigation.logout();
   });
 });
