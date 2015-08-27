@@ -114,19 +114,19 @@ describe('Partner flow', function () {
         utils.expectIsDisplayed(wizard.leftNav);
         utils.expectIsDisplayed(wizard.mainView);
 
-        utils.expectTextToBeSet(wizard.mainviewTitle,'Plan Review');
+        utils.expectTextToBeSet(wizard.mainviewTitle, 'Plan Review');
         utils.click(wizard.beginBtn);
         utils.click(wizard.saveBtn);
 
-        utils.expectText(wizard.mainviewTitle, 'Enterprise Settings');
+        utils.expectTextToBeSet(wizard.mainviewTitle, 'Enterprise Settings');
         utils.click(wizard.nextBtn);
 
-        utils.expectText(wizard.mainviewTitle, 'Invite Users');
+        utils.expectTextToBeSet(wizard.mainviewTitle, 'Invite Users');
         utils.click(wizard.nextBtn);
         utils.click(wizard.finishBtn);
         notifications.clearNotifications();
 
-        utils.expectText(wizard.mainviewTitle, 'Get Started');
+        utils.expectTextToBeSet(wizard.mainviewTitle, 'Get Started');
         utils.click(wizard.finishBtn);
 
         navigation.expectDriverCurrentUrl('overview');
