@@ -114,8 +114,7 @@ describe('Partner flow', function () {
         utils.expectIsDisplayed(wizard.leftNav);
         utils.expectIsDisplayed(wizard.mainView);
 
-        browser.sleep(1000);
-        utils.expectText(wizard.mainviewTitle, 'Plan Review');
+        utils.expectTextToBeSet(wizard.mainviewTitle,'Plan Review');
         utils.click(wizard.beginBtn);
         utils.click(wizard.saveBtn);
 
