@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('UserPreviewCtrl', ['$scope', '$state', '$stateParams', '$translate', 'FeatureToggleService', 'Userservice',
-    function ($scope, $state, $stateParams, $translate, FeatureToggleService, Userservice) {
+  .controller('UserPreviewCtrl', ['$scope', '$state', '$stateParams', '$rootScope', '$translate', 'FeatureToggleService', 'Userservice',
+    function ($scope, $state, $stateParams, $rootScope, $translate, FeatureToggleService, Userservice) {
       $scope.service = 'ALL';
 
       $scope.gsxFeature = false;
@@ -27,7 +27,7 @@ angular.module('Core')
           $scope.gsxFeature
         ) {
           $state.current.data.displayName = $translate.instant('usersPreview.spark');
-          $state.reload();
+          $rootScope.$broadcast('displayNameUpdated');
         }
       };
 
