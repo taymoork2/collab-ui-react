@@ -11,6 +11,8 @@
     '$stateParams',
     'WebExUserSettingsFact',
     'Notification',
+    'FeatureToggleService',
+    'Userservice',
     function (
       $scope,
       $rootScope,
@@ -20,12 +22,15 @@
       $state,
       $stateParams,
       WebExUserSettingsFact,
-      Notification
+      Notification,
+      FeatureToggleService,
+      Userservice
     ) {
 
       // Update the breadcrumb with site url
       $state.current.data.displayName = $stateParams.site;
       $rootScope.$broadcast('displayNameUpdated');
+      this.gsxFeature = false;
 
       this.initPanel = function () {
         WebExUserSettingsFact.initPanel();
@@ -64,7 +69,20 @@
 
       this.userSettingsModel = WebExUserSettingsFact.initUserSettingsModel();
 
-      this.initPanel();
+      Userservice.getUser('me', function (data, status) {
+        FeatureToggleService.getFeaturesForUser(data.id, function (data, status) {
+          _.each(data.developer, function (element) {
+            if (element.key === 'gsxdemo' && element.val === 'true') {
+              that.gsxFeature = true;
+              that.defaultSystem = 1;
+              that.initPanel();
+            }
+          });
+        });
+      });
+
+      var that = this;
+      // this.initPanel();
     } // WebExUserSettingsCtrl()
   ]);
 })();
