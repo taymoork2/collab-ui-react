@@ -11,10 +11,13 @@ angular.module('WebExSiteSettings').service('WebExSiteSettingsSvc', [
 
       siteUrl: null,
       siteName: null,
+
       siteInfo: null,
       meetingTypesInfo: null,
+      settingPagesInfo: null,
 
-      setingPages: null,
+      commonSiteSettingPages: null,
+      centerSpecificSettingPages: null,
 
       sessionTypes: null,
 

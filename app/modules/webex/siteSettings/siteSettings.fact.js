@@ -103,23 +103,15 @@
               logMsg = funcName + ": " + "getInfoResult=" + JSON.stringify(getInfoResult);
               $log.log(logMsg);
 
-              webExSiteSettingsObj.siteInfo = WebExUtilsFact.validateXmlData(
-                "Site Info",
-                getInfoResult.siteInfoXml,
-                "<ns1:",
-                "</serv:bodyContent>"
-              );
+              webExSiteSettingsObj.siteInfo = WebExUtilsFact.validateSiteInfoXmlData(getInfoResult.siteInfoXml);
+              webExSiteSettingsObj.meetingTypesInfo = WebExUtilsFact.validateMeetingTypesInfoXmlData(getInfoResult.meetingTypesInfoXml);
+              webExSiteSettingsObj.settingPagesInfo = WebExUtilsFact.validateSettingPagesInfoXmlData(getInfoResult.settingPagesInfoXml);
 
-              webExSiteSettingsObj.meetingTypesInfo = WebExUtilsFact.validateXmlData(
-                "Meething Types Info",
-                getInfoResult.meetingTypesInfoXml,
-                "<mtgtype:",
-                "</serv:bodyContent>"
-              );
+              _this.processSiteInfo();
+              _this.processMeetingTypesInfo();
+              _this.processSettingPagesInfo();
 
               webExSiteSettingsObj.viewReady = true;
-
-              $log.log("HELLO!!!");
             }, // getSiteSettingsInfoXmlSuccess()
 
             function getSiteSettingsInfoXmlError(getInfoResult) {
@@ -132,13 +124,114 @@
           ); // _this.getSiteSettingsInfoXml().then()
         }, // getSiteSettingsInfo()
 
+        processSiteInfo: function () {
+          var siteInfoJson = webExSiteSettingsObj.siteInfo.bodyJson;
+          var siteServiceTypes = [].concat(siteInfoJson.ns1_siteInstance.ns1_metaData.ns1_serviceType);
+
+          siteServiceTypes.forEach(
+            function chkSiteServiceType(siteServiceType) {
+              if (siteServiceType == webExSiteSettingsObj.meetingCenter.label) {
+                webExSiteSettingsObj.meetingCenter.isSiteEnabled = true;
+              } else if (siteServiceType == webExSiteSettingsObj.eventCenter.label) {
+                webExSiteSettingsObj.eventCenter.isSiteEnabled = true;
+              } else if (siteServiceType == webExSiteSettingsObj.trainingCenter.label) {
+                webExSiteSettingsObj.trainingCenter.isSiteEnabled = true;
+              } else if (siteServiceType == webExSiteSettingsObj.supportCenter.label) {
+                webExSiteSettingsObj.supportCenter.isSiteEnabled = true;
+              }
+            } // chkSiteServiceType()
+          ); // siteServiceTypes.forEach()
+        }, // processSiteInfo()
+
+        processMeetingTypesInfo: function () {
+          var meetingTypesInfoJson = webExSiteSettingsObj.meetingTypesInfo.bodyJson;
+          var sessionTypes = [];
+
+          if (null != meetingTypesInfoJson.mtgtype_meetingType) { // non-empty meetingTypesInfoJson
+            var siteMeetingTypes = [].concat(meetingTypesInfoJson.mtgtype_meetingType);
+
+            siteMeetingTypes.forEach(
+              function chkSiteMeetingType(siteMeetingType) {
+                var siteMtgServiceTypeID = siteMeetingType.mtgtype_meetingTypeID;
+                var siteMtgProductCodePrefix = siteMeetingType.mtgtype_productCodePrefix;
+                var siteMtgDisplayName = siteMeetingType.mtgtype_displayName;
+                var siteMtgServiceTypes = [].concat(siteMeetingType.mtgtype_serviceTypes.mtgtype_serviceType);
+
+                var meetingCenterApplicable = false;
+                var trainingCenterApplicable = false;
+                var eventCenterApplicable = false;
+                var supportCenterApplicable = false;
+
+                siteMtgServiceTypes.forEach(
+                  function chkSiteMtgServiceType(siteMtgServiceType) {
+                    if (webExSiteSettingsObj.meetingCenter.serviceType == siteMtgServiceType) {
+                      meetingCenterApplicable = true;
+                    } else if (webExSiteSettingsObj.eventCenter.serviceType == siteMtgServiceType) {
+                      if ("AUO" != siteMtgProductCodePrefix) {
+                        eventCenterApplicable = true;
+                      }
+                    } else if (webExSiteSettingsObj.trainingCenter.serviceType == siteMtgServiceType) {
+                      if ("AUO" != siteMtgProductCodePrefix) {
+                        trainingCenterApplicable = true;
+                      }
+                    } else if (webExSiteSettingsObj.supportCenter.serviceType == siteMtgServiceType) {
+                      if (
+                        ("SMT" != siteMtgProductCodePrefix) &&
+                        ("AUO" != siteMtgProductCodePrefix)
+                      ) {
+                        supportCenterApplicable = true;
+                      }
+                    }
+                    if ("RAS" === siteMtgProductCodePrefix) {
+                      meetingCenterApplicable = false;
+                      trainingCenterApplicable = false;
+                      eventCenterApplicable = false;
+                      supportCenterApplicable = false;
+                    } //filter out RAS
+                  } // chkSiteMtgServiceType()
+                ); // siteMtgServiceTypes.forEach()
+
+                var sessionType = {
+                  id: "sessionType-" + siteMtgServiceTypeID,
+                  sessionTypeId: siteMtgServiceTypeID,
+                  sessionName: siteMtgProductCodePrefix,
+                  sessionDescription: siteMtgDisplayName,
+                  meetingCenterApplicable: meetingCenterApplicable,
+                  trainingCenterApplicable: trainingCenterApplicable,
+                  eventCenterApplicable: eventCenterApplicable,
+                  supportCenterApplicable: supportCenterApplicable,
+                  sessionEnabled: false
+                }; // sessionType
+
+                sessionTypes.push(sessionType);
+              } // chkSiteMeetingType()
+            ); // siteMeetingTypes.forEach()
+          } // // non-empty meetingTypesInfoJson()
+
+          webExSiteSettingsObj.sessionTypes = sessionTypes;
+        }, // processMeetingTypesInfo()
+
+        processSettingPagesInfo: function () {
+          var settingPagesInfoJson = null;
+
+          function setCommonSiteSettingPages() {
+            webExSiteSettingsObj.commonSiteSettingPages = null;
+          } // setCommonSiteSettingPages()
+
+          function setCenterSpecificSettingPages() {
+            webExSiteSettingsObj.centerSpecificSettingPages = null;
+          } // setCenterSpecificSettingPages()
+        }, // processSettingPagesInfo()
+
         getSiteSettingsInfoXml: function () {
           var siteInfoXml = WebExXmlApiFact.getSiteInfo(webExXmlApiInfoObj);
           var meetingTypesInfoXml = WebExXmlApiFact.getMeetingTypeInfo(webExXmlApiInfoObj);
+          var settingPagesInfoXml = WebExXmlApiFact.getSettingPagesInfo(webExXmlApiInfoObj);
 
           return $q.all({
             siteInfoXml: siteInfoXml,
-            meetingTypesInfoXml: meetingTypesInfoXml
+            meetingTypesInfoXml: meetingTypesInfoXml,
+            settingPagesInfoXml: settingPagesInfoXml
           });
         }, // getSiteSettingsInfoXml()
       }; // return

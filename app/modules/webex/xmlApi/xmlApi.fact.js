@@ -74,6 +74,10 @@
           });
         }, //getMeetingTypeInfo()
 
+        getSettingPagesInfo: function (xmlApiAccessInfo) {
+          return null;
+        }, // getSettingPagesInfo()
+
         updateUserSettings: function (xmlApiAccessInfo, userSettings) {
           var funcName = "updateUserSettings()";
           var logMsg = "";
@@ -287,7 +291,7 @@
                   }
                 }
               },
-              
+
               function getNewSessionTicketError(reason) {
                 funcName = "getNewSessionTicketError()";
                 logMsg = funcName + ": " + "ERROR - Failed to create a valid Session ticket for Site= " + wbxSiteName;
@@ -304,7 +308,7 @@
         getNewSessionTicket: function (wbxSiteName, wbxSiteUrl) {
           var funcName = "getNewSessionTicket()";
           var logMsg = "";
-          
+
           var _this = this;
           var defer = $q.defer();
           var xmlServerURL = "https://" + wbxSiteUrl + "/WBXService/XMLService";

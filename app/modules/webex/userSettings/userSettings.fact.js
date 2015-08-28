@@ -565,9 +565,9 @@
               var funcName = "getUserSettingsInfo().getUserSettingsInfoSuccess()";
               var logMsg = "";
 
-              webExUserSettingsModel.userInfo = WebExUtilsFact.validateUserSettingsXmlData(getInfoResult.userInfoXml);
-              webExUserSettingsModel.siteInfo = WebExUtilsFact.validateSiteSettingsXmlData(getInfoResult.siteInfoXml);
-              webExUserSettingsModel.meetingTypesInfo = WebExUtilsFact.validateMeetingTypesXmlData(getInfoResult.meetingTypesInfoXml);
+              webExUserSettingsModel.userInfo = WebExUtilsFact.validateUserInfoXmlData(getInfoResult.userInfoXml);
+              webExUserSettingsModel.siteInfo = WebExUtilsFact.validateSiteInfoXmlData(getInfoResult.siteInfoXml);
+              webExUserSettingsModel.meetingTypesInfo = WebExUtilsFact.validateMeetingTypesInfoXmlData(getInfoResult.meetingTypesInfoXml);
 
               if (
                 ("" === webExUserSettingsModel.userInfo.errId) &&

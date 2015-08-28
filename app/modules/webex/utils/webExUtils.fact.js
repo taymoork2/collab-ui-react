@@ -67,38 +67,42 @@
           return result;
         }, // validateXmlData()
 
-        validateUserSettingsXmlData: function (userSettingsXmlData) {
+        validateUserInfoXmlData: function (userInfoXml) {
           var userInfo = this.validateXmlData(
             "User Data",
-            userSettingsXmlData,
+            userInfoXml,
             "<use:",
             "</serv:bodyContent>"
           );
 
           return userInfo;
-        }, // validateUserSettingsXmlData()
+        }, // validateUserInfoXmlData()
 
-        validateSiteSettingsXmlData: function (siteSettingsXmlData) {
+        validateSiteInfoXmlData: function (siteInfoXml) {
           var siteInfo = this.validateXmlData(
             "Site Info",
-            siteSettingsXmlData,
+            siteInfoXml,
             "<ns1:",
             "</serv:bodyContent>"
           );
 
           return siteInfo;
-        }, // validateSiteSettingsXmlData()
+        }, // validateSiteInfoXmlData()
 
-        validateMeetingTypesXmlData: function (meetingTypesXmlData) {
+        validateMeetingTypesInfoXmlData: function (meetingTypesInfoXml) {
           var meetingTypesInfo = this.validateXmlData(
             "Meeting Types Info",
-            meetingTypesXmlData,
+            meetingTypesInfoXml,
             "<mtgtype:",
             "</serv:bodyContent>"
           );
 
           return meetingTypesInfo;
-        }, // validateMeetingTypesXmlData()
+        }, // validateMeetingTypesInfoXmlData()
+
+        validateSettingPagesInfoXmlData: function (settingPagesInfoXml) {
+          return null;
+        }, // validateSettingPagesInfoXmlData()
 
         getSiteName: function (siteUrl) {
           var index = siteUrl.indexOf(".");
