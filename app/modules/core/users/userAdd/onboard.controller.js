@@ -193,7 +193,7 @@ angular.module('Core')
       };
 
       $scope.assignServicesSave = function () {
-        if ($scope.radioStates.commRadio) {
+        if ($scope.radioStates.commRadio || $scope.entitlements.ciscoUC) {
           $scope.processing = true;
           activateDID();
           $state.go('users.add.services.dn');
@@ -523,7 +523,7 @@ angular.module('Core')
 
       $scope.$watch('wizard.current.step', function (newVal, oldVal) {
         if (angular.isDefined($scope.wizard) && $scope.wizard.current.step.name === 'assignServices') {
-          if ($scope.radioStates.commRadio) {
+          if ($scope.radioStates.commRadio || $scope.entitlements.ciscoUC) {
             $scope.$emit('wizardNextText', 'next');
           } else {
             $scope.$emit('wizardNextText', 'finish');
@@ -1176,7 +1176,7 @@ angular.module('Core')
       $scope.assignServicesNext = function () {
         var deferred = $q.defer();
 
-        if ($scope.radioStates.commRadio) {
+        if ($scope.radioStates.commRadio || $scope.entitlements.ciscoUC) {
           $scope.processing = true;
           activateDID();
           deferred.resolve();
@@ -1195,7 +1195,7 @@ angular.module('Core')
       };
 
       $scope.getServicesNextText = function () {
-        if ($scope.radioStates.commRadio) {
+        if ($scope.radioStates.commRadio || $scope.entitlements.ciscoUC) {
           return 'common.next';
         } else {
           return 'common.save';
@@ -1263,6 +1263,13 @@ angular.module('Core')
           } else if (newEntitlements !== oldEntitlements) {
             $scope.saveDisabled = false;
           }
+
+          if (changedKey === 'ciscoUC' && newEntitlements[changedKey]) {
+            $scope.$emit('wizardNextText', 'next');
+          } else if (changedKey === 'ciscoUC') {
+            $scope.$emit('wizardNextText', 'finish');
+          }
+
         });
       };
 
