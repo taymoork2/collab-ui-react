@@ -194,11 +194,6 @@ var UsersPage = function () {
     return element.all(by.cssContainingText('.col3', userEmail)).first();
   };
 
-  this.assertDisplayed = function (cssSelector, message) {
-    if (!message) return;
-    expect(element.all(by.cssContainingText(cssSelector, message)).first().isDisplayed()).toBeTruthy();
-  };
-
   this.assertEntitlementListSize = function (size) {
     element.all(by.repeater('key in entitlementsKeys')).then(function (items) {
       expect(items.length).toBe(size);
