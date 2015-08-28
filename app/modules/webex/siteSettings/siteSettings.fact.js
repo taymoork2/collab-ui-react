@@ -2,7 +2,6 @@
   'use strict';
 
   angular.module('WebExSiteSettings').factory('WebExSiteSettingsFact', [
-    '$scope',
     '$q',
     '$log',
     '$stateParams',
@@ -15,7 +14,6 @@
     'WebExSiteSettingsSvc',
     'Notification',
     function (
-      $scope,
       $q,
       $log,
       $stateParams,
@@ -46,7 +44,7 @@
             "siteUrl=" + siteUrl + "; " +
             "siteName=" + siteName;
           $log.log(logMsg);
-          
+
           webExSiteSettingsObj.siteUrl = siteUrl;
           webExSiteSettingsObj.siteName = siteName;
 
