@@ -157,7 +157,10 @@
     "expires": "Expires",
     "editServices": "Edit services",
     "editServiceTitle": "Services Enabled for {{firstName}} {{lastName}}",
-    "siteUris": "Site Urls"
+    "siteUris": "Site Urls",
+    "webex": "Webex",
+    "spark": "Spark",
+    "calling": "Calling"
   },
   "messagingPanel": {
     "title": "Messaging"
@@ -246,6 +249,7 @@
   },
   "organizationsPage": {
     "title": "MANAGE ORGANIZATIONS",
+    "organizations": "Organizations",
     "subTitleOrgs": "Organizations Tools",
     "exportBtn": "Export Users",
     "csvFilename": "users.csv",
@@ -825,8 +829,13 @@
     "needHelpExplain": "Search the knowledge base.",
     "planReview": "Plan Review",
     "spark": "Spark",
+    "sparkMsg": "Spark Messaging",
+    "sparkStub": "Set up Spark",
     "webex": "WebEx",
+    "webexMsg": "Webex Conferencing",
+    "webexStub": "Set up Webex",
     "calling": "Calling",
+    "callingMsg": "Cloud Calling",
     "messaging": "Messaging",
     "conferencing": "Conferencing",
     "communications": "Communications",
@@ -1650,7 +1659,7 @@
     "telephonyPrivilegesLabel": "Telephony",
     "callInTeleconfLabel": "Call-in teleconferencing",
     "tollOnlyLabel": "Toll",
-    "tollAndTollFreeLabel": "Toll & Toll free",
+    "tollAndTollFreeLabel": "Toll and Toll free",
     "teleconfViaGlobalCallinLabel": "Access to global call-in numbers",
     "callBackTeleconfLabel": "Call-back",
     "globalCallBackTeleconfLabel": "Global call-back",
