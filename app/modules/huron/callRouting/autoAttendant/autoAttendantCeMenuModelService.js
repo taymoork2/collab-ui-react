@@ -6,34 +6,6 @@
     .factory('AutoAttendantCeMenuModelService', AutoAttendantCeMenuModelService);
 
   //
-  // Data model derived from the AA Json data
-  //
-  // AAModel
-  //     aaRecord
-  //         callExperienceName
-  //         assignedResources[]
-  //         actionSets[]
-  //
-  //     aaResourceRecord
-  //         callExperienceName
-  //         assignedResources[]
-  //         callExperienceURL
-  //
-  function AARecord() {
-    this.callExperienceName = "";
-    this.assignedResources = [];
-    this.actionSets = [{
-      "name": "regularOpenActions",
-      "actions": []
-    }];
-  }
-
-  function AAModel() {
-    this.aaRecord = new AARecord();
-    this.aaRecords = [];
-  }
-
-  //
   // UI model:
   //
   // Customer
@@ -278,15 +250,8 @@
 
       newCeActionEntry: function (name, value) {
         return new Action(name, value);
-      },
-
-      newAAModel: function () {
-        return new AAModel();
-      },
-
-      newAARecord: function () {
-        return new AARecord();
       }
+
     };
 
     return service;

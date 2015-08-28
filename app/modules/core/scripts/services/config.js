@@ -762,7 +762,6 @@ angular.module('Core')
         Full_Admin: [ // Customer Admin
           'overview',
           'users',
-          'callRouter',
           'user-overview',
           'device-overview',
           'devices2-overview',
@@ -802,7 +801,8 @@ angular.module('Core')
           'paginggroups',
           'huntgroups',
           'didadd',
-          'newpartnerreports'
+          'newpartnerreports',
+          'callRouter'
         ],
         'squared-fusion-mgmt': [
           'fusion',

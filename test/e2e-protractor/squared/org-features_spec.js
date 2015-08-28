@@ -43,10 +43,5 @@ describe('Org Features tests', function () {
       utils.expectText(wizard.mainviewTitle, 'Plan Review');
       utils.expectIsNotPresent(wizard.serviceSetupTab);
     });
-
-    it('should log out', function () {
-      utils.clickEscape();
-      navigation.logout();
-    });
   });
 });
