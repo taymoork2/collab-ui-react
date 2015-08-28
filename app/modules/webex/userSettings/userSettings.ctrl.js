@@ -82,7 +82,6 @@
       });
 
       var that = this;
-      // this.initPanel();
     } // WebExUserSettingsCtrl()
   ]);
 })();
