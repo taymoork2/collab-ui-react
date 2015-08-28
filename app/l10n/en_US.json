@@ -1777,7 +1777,8 @@
     "siteName": "Site Name",
     "licenseCount": "License Count",
     "type": "Type",
-    "launchSite": "Launch Site Admin"
+    "siteSettings": "Configure Site",
+    "siteReports": "Reports"
   },
   "cloudExtensions": {
     "cloudExtensions": "Cloud Extensions",

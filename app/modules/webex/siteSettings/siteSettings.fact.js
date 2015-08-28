@@ -8,11 +8,11 @@
     '$translate',
     '$filter',
     'Authinfo',
-    'Notification',
     'WebExUtilsFact',
     'WebExXmlApiFact',
     'WebExXmlApiInfoSvc',
-    'WebexSiteSettingsSvc',
+    'WebExSiteSettingsSvc',
+    'Notification',
     function (
       $q,
       $log,
@@ -20,39 +20,44 @@
       $translate,
       $filter,
       Authinfo,
-      Notification,
       WebExUtilsFact,
       WebExXmlApiFact,
-      webExXmlApiInfo,
-      webExSiteSettingsModel
+      webExXmlApiInfoObj,
+      webExSiteSettingsObj,
+      Notification
     ) {
       return {
-        getSiteSettingsModel: function () {
-          return webExSiteSettingsModel;
-        }, // getSiteSettingsModel
+        getSiteSettingsObj: function () {
+          return webExSiteSettingsObj;
+        }, // getSiteSettingsObj
 
-        initSiteSettingsModel: function () {
-          var _self = this;
+        initSiteSettingsObj: function () {
+          var funcName = "initSiteSettingsObj()";
+          var logMsg = "";
 
-          var siteUrl = (!$stateParams.site) ? '' : $stateParams.site;
-          webExSiteSettingsModel.siteUrl = siteUrl;
+          $log.log(funcName);
 
-          var siteName = siteUrl.slice(0, siteUrl.indexof("."));
-          webExSiteSettingsModel.siteName = siteName;
+          var _this = this;
+          var siteUrl = "t30citest.webex.com";
+          // var siteUrl = (!$stateParams.site) ? '' : $stateParams.site;
+          var siteName = siteUrl.slice(0, siteUrl.indexOf("."));
 
-          _self.getSessionTicket(siteUrl).then(
+          webExSiteSettingsObj.siteUrl = siteUrl;
+          webExSiteSettingsObj.siteName = siteName;
+
+          _this.getSessionTicket(siteUrl).then(
             function getSessionTicketSuccess(sessionTicket) {
               var funcName = "initSiteSettingsModel().getSessionTicketSuccess()";
               var logMsg = "";
 
-              _self.initXmlApiInfo(
+              _this.initXmlApiInfo(
                 siteUrl,
                 siteName,
                 sessionTicket
               );
 
-              webExSiteSettingsModel.sessionTicketError = false;
-              _self.getSiteSettingPagesInfo();
+              webExSiteSettingsObj.sessionTicketError = false;
+              _this.getSiteSettingsInfo();
             }, // getSessionTicketSuccess()
 
             function getSessionTicketError(errId) {
@@ -62,10 +67,10 @@
               logMsg = funcName + ": " + "errId=" + errId;
               $log.log(logMsg);
             } // getSessionTicketError()
-          ); // getSessionTicket(siteUrl).then()
+          ); // _this.getSessionTicket().then()
 
-          return webExSiteSettingsModel;
-        }, // initSiteSettingsModel()
+          return webExSiteSettingsObj;
+        }, // initSiteSettingsObj
 
         getSessionTicket: function (webexSiteUrl) {
           return WebExXmlApiFact.getSessionTicket(webexSiteUrl);
@@ -76,114 +81,66 @@
           siteName,
           sessionTicket
         ) {
-          webExXmlApiInfo.xmlServerURL = "https://" + siteUrl + "/WBXService/XMLService";
-          webExXmlApiInfo.webexSiteName = siteName;
-          webExXmlApiInfo.webexAdminID = Authinfo.getPrimaryEmail();
-          webExXmlApiInfo.webexAdminSessionTicket = sessionTicket;
+          webExXmlApiInfoObj.xmlServerURL = "https://" + siteUrl + "/WBXService/XMLService";
+          webExXmlApiInfoObj.webexSiteName = siteName;
+          webExXmlApiInfoObj.webexAdminID = Authinfo.getPrimaryEmail();
+          webExXmlApiInfoObj.webexAdminSessionTicket = sessionTicket;
         }, // initXmlApiInfo()
 
-        getSiteSettingPagesInfo: function () {
-          var funcName = "getSiteSettingPagesInfo()";
+        getSiteSettingsInfo: function () {
+          var funcName = "getSiteSettingsInfo()";
           var logMsg = "";
 
           $log.log(funcName);
 
-          var _self = this;
+          var _this = this;
 
-          _self.getSiteSettingPagesInfoXml().then(
-            function getSiteSettingPagesInfoXmlSuccess(getInfoResult) {
-              var funcName = "getSiteSettingPagesInfoXmlSuccess()";
+          _this.getSiteSettingsInfoXml().then(
+            function getSiteSettingsInfoXmlSuccess(getInfoResult) {
+              var funcName = "getSiteSettingsInfoXmlSuccess()";
               var logMsg = "";
 
               logMsg = funcName + ": " + "getInfoResult=" + JSON.stringify(getInfoResult);
               $log.log(logMsg);
 
-              webExSiteSettingsModel.siteInfo = WebExUtilsFact.validateXmlData(
+              webExSiteSettingsObj.siteInfo = WebExUtilsFact.validateXmlData(
                 "Site Info",
                 getInfoResult.siteInfoXml,
                 "<ns1:",
                 "</serv:bodyContent>"
               );
 
-              webExSiteSettingsModel.meetingTypesInfo = WebExUtilsFact.validateXmlData(
+              webExSiteSettingsObj.meetingTypesInfo = WebExUtilsFact.validateXmlData(
                 "Meething Types Info",
                 getInfoResult.meetingTypesInfoXml,
                 "<mtgtype:",
                 "</serv:bodyContent>"
               );
 
-              webExSiteSettingsModel.viewReady = true;
-            }, // getSiteSettingPagesInfoXmlSuccess()
+              webExSiteSettingsObj.viewReady = true;
 
-            function getSiteSettingPagesInfoXmlError(getInfoResult) {
-              var funcName = "getSiteSettingPagesInfoXml()";
+              $log.log("HELLO!!!");
+            }, // getSiteSettingsInfoXmlSuccess()
+
+            function getSiteSettingsInfoXmlError(getInfoResult) {
+              var funcName = "getSiteSettingsInfoXmlError()";
               var logMsg = "";
 
               logMsg = funcName + ": " + "getInfoResult=" + JSON.stringify(getInfoResult);
               $log.log(logMsg);
-            } // getSiteSettingPagesInfoXmlError()
-          ); // getSettingPagesInfoXml().then()
-        }, // getSiteSettingPagesInfo()
+            } // getSiteSettingsInfoXmlError()
+          ); // _this.getSiteSettingsInfoXml().then()
+        }, // getSiteSettingsInfo()
 
-        getSiteSettingPagesInfoXml: function () {
-          var siteInfoXml = WebExXmlApiFact.getSiteInfo(webExXmlApiInfo);
-          var meetingTypesInfoXml = WebExXmlApiFact.getMeetingTypeInfo(webExXmlApiInfo);
+        getSiteSettingsInfoXml: function () {
+          var siteInfoXml = WebExXmlApiFact.getSiteInfo(webExXmlApiInfoObj);
+          var meetingTypesInfoXml = WebExXmlApiFact.getMeetingTypeInfo(webExXmlApiInfoObj);
 
           return $q.all({
             siteInfoXml: siteInfoXml,
             meetingTypesInfoXml: meetingTypesInfoXml
           });
-        },
-
-        /*
-        validateXmlData: function (
-          commentText,
-          infoXml,
-          startOfBodyStr,
-          endOfBodyStr
-        ) {
-          var funcName = "validateXmlData()";
-          var logMsg = "";
-                
-          var headerJson = WebExXmlApiFact.xml2JsonConvert(
-            commentText + " Header",
-            infoXml,
-            "<serv:header>",
-            "<serv:body>"
-          ).body;
-        
-          var bodyJson = {};
-          if ((null != startOfBodyStr) && (null != endOfBodyStr)) {
-            bodyJson = WebExXmlApiFact.xml2JsonConvert(
-              commentText,
-              infoXml,
-              startOfBodyStr,
-              endOfBodyStr
-            ).body;
-          }
-        
-          var errReason = "";
-          var errId = "";
-          if ("SUCCESS" != headerJson.serv_header.serv_response.serv_result) {
-            errReason = headerJson.serv_header.serv_response.serv_reason;
-            errId = headerJson.serv_header.serv_response.serv_exceptionID;
-        
-            logMsg = funcName + ": " + "ERROR!!!" + "\n" +
-              "headerJson=\n" + JSON.stringify(headerJson) + "\n" +
-              "errReason=\n" + errReason;
-            $log.log(logMsg);
-          }
-        
-          var result = {
-            headerJson: headerJson,
-            bodyJson: bodyJson,
-            errId: errId,
-            errReason: errReason
-          };
-        
-          return result;
-        }, // validateXmlData()
-        */
+        }, // getSiteSettingsInfoXml()
       }; // return
     } // function()
   ]);

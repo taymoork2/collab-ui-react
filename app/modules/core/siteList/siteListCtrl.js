@@ -36,9 +36,47 @@ angular.module('Core')
 
       var siteUrlTemplate =
         '<launch-site admin-email-param="{{siteList.siteLaunch.adminEmailParam}}"' +
-        'advanced-settings="{{siteList.siteLaunch.advancedSettings}}" user-email-param="{{siteList.siteLaunch.userEmailParam}}"' +
-        'webex-advanced-url="{{siteList.getWebexUrl(row.entity.license.siteUrl)}}">' +
+        '             advanced-settings="{{siteList.siteLaunch.advancedSettings}}"' +
+        '             user-email-param="{{siteList.siteLaunch.userEmailParam}}"' +
+        '             webex-advanced-url="{{siteList.getWebexUrl(row.entity.license.siteUrl)}}">' +
         '</launch-site>';
+
+      var siteSettingsTemplate =
+        '<div>' +
+        '  <a id="webex-site-settings" ui-sref="site-settings">' +
+        '    <p class="ngCellText">' +
+        '      <span name="webexSiteSettings"' +
+        '            id="webexSiteSettings">' +
+        '        <i class="fa fa-external-link fa-lg"></i>' +
+        '      </span>' +
+        '    </p>' +
+        '  </a>' +
+        '<div>';
+      /*
+      var siteSettingsTemplate =
+        '<div>' +
+        '  <a id="webex-site-settings" ui-sref="site-list.site-settings">' +
+        '    <p class="ngCellText">' +
+        '      <span name="webexSiteSettings"' +
+        '            id="webexSiteSettings">' +
+        '        <i class="fa fa-external-link fa-lg"></i>' +
+        '      </span>' +
+        '    </p>' +
+        '  </a>' +
+        '<div>';
+	  */
+      var siteReportsTemplate =
+        '<div>' +
+        '  <a id="webex-site-settings"' +
+        '     ui-sref="users.list">' +
+        '    <p class="ngCellText">' +
+        '      <span name="webexSiteSettings"' +
+        '            id="webexSiteSettings">' +
+        '        <i class="fa fa-external-link fa-lg"></i>' +
+        '      </span>' +
+        '    </p>' +
+        '  </a>' +
+        '<div>';
 
       vm.gridOptions = {
         data: 'siteList.gridData',
@@ -49,26 +87,58 @@ angular.module('Core')
         rowTemplate: rowTemplate,
         headerRowHeight: 44,
         useExternalSorting: true,
+        columnDefs: [],
+      };
 
-        columnDefs: [{
+      vm.gridOptions.columnDefs.push({
+        field: 'license.siteUrl',
+        displayName: $translate.instant('siteList.siteName'),
+        sortable: false
+      });
+
+      vm.gridOptions.columnDefs.push({
+        field: 'license.capacity',
+        displayName: $translate.instant('siteList.type'),
+        cellFilter: 'capacityFilter:row.entity.label',
+        sortable: false
+      });
+
+      vm.gridOptions.columnDefs.push({
+        field: 'license.volume',
+        displayName: $translate.instant('siteList.licenseCount'),
+        sortable: false
+      });
+
+      var iframeWebex = true;
+
+      if (!iframeWebex) {
+        vm.gridOptions.columnDefs.push({
           field: 'license.siteUrl',
-          displayName: $translate.instant('siteList.siteName'),
-          sortable: false
-        }, {
-          field: 'license.capacity',
-          displayName: $translate.instant('siteList.type'),
-          cellFilter: 'capacityFilter:row.entity.label',
-          sortable: false
-        }, {
-          field: 'license.volume',
-          displayName: $translate.instant('siteList.licenseCount'),
-          sortable: false
-        }, {
-          field: 'license.siteUrl',
-          displayName: $translate.instant('siteList.launchSite'),
+          displayName: $translate.instant('siteList.siteSettings'),
           sortable: false,
           cellTemplate: siteUrlTemplate
-        }]
-      };
+        });
+
+        vm.gridOptions.columnDefs.push({
+          field: 'license.siteUrl',
+          displayName: $translate.instant('siteList.siteReports'),
+          sortable: false,
+          cellTemplate: siteUrlTemplate
+        });
+      } else {
+        vm.gridOptions.columnDefs.push({
+          field: 'license.siteSettings',
+          displayName: $translate.instant('siteList.siteSettings'),
+          sortable: false,
+          cellTemplate: siteSettingsTemplate,
+        });
+
+        vm.gridOptions.columnDefs.push({
+          field: 'license.siteSettings',
+          displayName: $translate.instant('siteList.siteReports'),
+          sortable: false,
+          cellTemplate: siteReportsTemplate,
+        });
+      }
     }
   ]);

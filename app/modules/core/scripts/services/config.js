@@ -784,7 +784,11 @@ angular.module('Core')
         PARTNER_USER: ['partnercustomers', 'customer-overview', 'trialAdd', 'trialEdit'],
         CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
         User: [],
-        Site_Admin: ['site-list'],
+        Site_Admin: [
+          'site-list',
+          'site-settings'
+          // 'site-list.site-settings'
+        ],
         Application: ['organizationAdd']
       };
 

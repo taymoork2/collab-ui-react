@@ -544,6 +544,20 @@ angular
           controllerAs: 'siteList',
           parent: 'main'
         })
+        .state('site-settings', {
+          url: '/webexSiteSettings',
+          templateUrl: 'modules/webex/siteSettings/siteSettings.tpl.html',
+          controller: 'WebExSiteSettingsCtrl',
+          controllerAs: 'WebExSiteSettings',
+          parent: 'main'
+        })
+        /*
+        .state('site-list.site-settings', {
+          templateUrl: 'modules/webex/siteSettings/siteSettings.tpl.html',
+          controller: 'WebExUserSettings2Ctrl',
+          controllerAs: 'WebExUserSettings2'
+        })
+        */
         .state('templates', {
           url: '/templates',
           templateUrl: 'modules/squared/views/templates.html',
@@ -575,9 +589,7 @@ angular
           parent: 'main'
         })
 
-      /*
-        devices
-      */
+      /* devices */
       .state('devices', {
           url: '/devices',
           templateUrl: 'modules/squared/devices/devices.html',
