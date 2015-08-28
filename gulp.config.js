@@ -89,6 +89,7 @@ module.exports = function() {
         test + '/hercules/**/*.js',
         test + '/mediafusion/**/*.js',
         test + '/squared/**/*.js',
+        test + '/sunlight/**/*.js',
         '!' + test + '/e2e-protractor/**/*'
       ],
       e2e: {

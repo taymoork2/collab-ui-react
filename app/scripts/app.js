@@ -54,4 +54,7 @@ angular.module('wx2AdminWebClientApp', [
   'Mediafusion',
   'WebExUserSettings',
   'WebExUserSettings2',
+  'Sunlight'
 ]);
+
+angular.module('Sunlight', ['Core']);

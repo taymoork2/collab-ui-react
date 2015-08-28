@@ -113,6 +113,11 @@ var ReportsPage = function () {
     });
   };
 
+  this.assertDisplayed = function (cssSelector, message) {
+    if (!message) return;
+    expect(element.all(by.cssContainingText(cssSelector, message)).first().isDisplayed()).toBeTruthy();
+  };
+
   this.verifyDescription = function (text, location, present) {
     var div = element(by.css(location)).all(by.css('.report-description')).first();
 

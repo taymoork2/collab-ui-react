@@ -46,6 +46,7 @@ var UsersPage = function () {
   this.messagingService = element(by.css('#Messaging .feature-arrow'));
   this.communicationsService = element(by.css('#Communications .feature-arrow'));
   this.conferencingService = element(by.css('#Conferencing .feature-arrow'));
+  this.contactCenterService = element(by.css('#ContactCenter .feature-arrow'));
   this.serviceList = element.all(by.model('service in userOverview.services'));
 
   this.addUsers = element(by.id('addUsers'));
@@ -191,6 +192,11 @@ var UsersPage = function () {
 
   this.returnUser = function (userEmail) {
     return element.all(by.cssContainingText('.col3', userEmail)).first();
+  };
+
+  this.assertDisplayed = function (cssSelector, message) {
+    if (!message) return;
+    expect(element.all(by.cssContainingText(cssSelector, message)).first().isDisplayed()).toBeTruthy();
   };
 
   this.assertEntitlementListSize = function (size) {

@@ -3,7 +3,21 @@
 
   angular
     .module('Core')
-    .controller('UserOverviewCtrl', UserOverviewCtrl);
+    .controller('UserOverviewCtrl', UserOverviewCtrl)
+    .filter('removeSpaces', removeSpaces);
+
+  /**
+   * Filter function to remove spaces from a given String
+   * @returns {Function}
+   */
+  function removeSpaces() {
+    return function (string) {
+      if (!angular.isString(string)) {
+        return string;
+      }
+      return string.replace(/[\s]/g, '');
+    };
+  }
 
   /* @ngInject */
   function UserOverviewCtrl($scope, $stateParams, $translate, $http, Authinfo, Config, Utils, FeatureToggleService, Userservice) {
@@ -59,6 +73,13 @@
         detail: $translate.instant('onboardModal.freeConf')
       };
 
+      var contactCenterState = {
+        name: $translate.instant('onboardModal.contactCenter'),
+        icon: $translate.instant('onboardModal.contactCenter'),
+        state: 'user-overview.contactCenter',
+        detail: $translate.instant('onboardModal.freeContactCenter')
+      };
+
       if (hasEntitlement('squared-room-moderation') || !vm.hasAccount) {
         if (getServiceDetails('MS')) {
           msgState.detail = $translate.instant('onboardModal.paidMsg');
@@ -77,6 +98,14 @@
         }
         vm.services.push(commState);
       }
+
+      if (hasEntitlement('cloud-contact-center')) {
+        if (getServiceDetails('CC')) {
+          contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
+        }
+        vm.services.push(contactCenterState);
+      }
+
       updateUserTitleCard();
     }
 
