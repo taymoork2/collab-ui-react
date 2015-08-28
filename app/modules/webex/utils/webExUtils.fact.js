@@ -98,7 +98,14 @@
           );
 
           return meetingTypesInfo;
-        },
+        }, // validateMeetingTypesXmlData()
+
+        getSiteName: function (siteUrl) {
+          var index = siteUrl.indexOf(".");
+          var siteName = siteUrl.slice(0, index);
+
+          return siteName;
+        }, //getSiteName()
       };
     }
   ]);

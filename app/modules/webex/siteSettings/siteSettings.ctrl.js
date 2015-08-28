@@ -9,8 +9,8 @@
     '$filter',
     '$state',
     '$stateParams',
-    'Notification',
     'WebExSiteSettingsFact',
+    'Notification',
     function (
       $scope,
       $rootScope,
@@ -19,14 +19,31 @@
       $filter,
       $state,
       $stateParams,
-      Notification,
-      WebExSiteSettingsFact
+      WebExSiteSettingsFact,
+      Notification
     ) {
 
-      $log.log("Site Settings Index Page");
+      this.siteSettingsObj = WebExSiteSettingsFact.getSiteSettingsObj();
 
-      this.siteSettingsModel = WebExSiteSettingsFact.initSiteSettingsModel();
+      var funcName = "WebExSiteSettingsCtrl()";
+      var logMsg = "";
 
+      this.siteSettingsObj = WebExSiteSettingsFact.initSiteSettingsObj();
+
+      $scope.hello = "Hello Kitty is here!!!";
+      $scope.hello2 = "Hello Kitty loves Dear Daniel!!!";
+
+      logMsg = funcName + ": " + "\n" +
+        "viewReady=" + this.siteSettingsObj.viewReady + "; " +
+        "siteUrl=" + this.siteSettingsObj.siteUrl + "; " +
+        "siteName=" + this.siteSettingsObj.siteName;
+      $log.log(logMsg);
+
+      logMsg = funcName + ": " + "\n" +
+        "viewReady=" + this.siteSettingsObj.viewReady + "; " +
+        "siteUrl=" + this.siteSettingsObj.siteUrl + "; " +
+        "siteName=" + this.siteSettingsObj.siteName;
+      $log.log(logMsg);
     }
   ]);
 })();

@@ -497,7 +497,7 @@
 
           var _self = this;
           var webexSiteUrl = this.getSiteUrl();
-          var webexSiteName = this.getSiteName(webexSiteUrl);
+          var webexSiteName = WebExUtilsFact.getSiteName(webexSiteUrl);
 
           this.getSessionTicket(webexSiteUrl).then(
             function getSessionTicketSuccess(webexAdminSessionTicket) {
@@ -1014,8 +1014,7 @@
         getSiteName: function (siteUrl) {
           var index = siteUrl.indexOf(".");
           return siteUrl.slice(0, index);
-        }, //getSiteName
-
+        }, //getSiteName()
       }; // return
     } //WebExUserSettingsFact
   ]); // angular

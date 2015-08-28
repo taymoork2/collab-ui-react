@@ -240,7 +240,7 @@
           var wbxSiteName = wbxSiteUrl.slice(0, index);
           var ticketObj = null;
           var deferred = $q.defer();
-          var currView = this;
+          var _this = this;
           var getNewTicket = true;
 
           if (!$rootScope.sessionTickets) {
@@ -275,7 +275,7 @@
             logMsg = funcName + ": " + "No valid Session ticket in scope for Site= " + wbxSiteName + " will create new one for this site";
             $log.log(logMsg);
 
-            currView.getNewSessionTicket(wbxSiteName, wbxSiteUrl).then(
+            _this.getNewSessionTicket(wbxSiteName, wbxSiteUrl).then(
               function getNewSessionTicketSuccess(tik) {
                 funcName = "getNewSessionTicketSuccess()";
                 if ($rootScope.sessionTickets) {
@@ -287,6 +287,7 @@
                   }
                 }
               },
+              
               function getNewSessionTicketError(reason) {
                 funcName = "getNewSessionTicketError()";
                 logMsg = funcName + ": " + "ERROR - Failed to create a valid Session ticket for Site= " + wbxSiteName;
@@ -301,15 +302,18 @@
         }, //getSessionTicket()
 
         getNewSessionTicket: function (wbxSiteName, wbxSiteUrl) {
-          var currView = this;
-          var defer = $q.defer();
           var funcName = "getNewSessionTicket()";
           var logMsg = "";
+          
+          var _this = this;
+          var defer = $q.defer();
+          var xmlServerURL = "https://" + wbxSiteUrl + "/WBXService/XMLService";
+          var primaryEmail = Authinfo.getPrimaryEmail();
 
           var xmlApiAccessInfo = {
-            xmlServerURL: "https://" + wbxSiteUrl + "/WBXService/XMLService",
+            xmlServerURL: xmlServerURL,
             wbxSiteName: wbxSiteName,
-            webexAdminID: Authinfo.getPrimaryEmail(),
+            webexAdminID: primaryEmail,
             accessToken: $rootScope.token
           };
 
@@ -320,7 +324,7 @@
               logMsg = funcName + ".success()" + ": " + "\n" + "data=" + result;
               $log.log(logMsg);
 
-              var JsonData = currView.xml2JsonConvert("Authentication Data", result, "<serv:header", "</serv:message>");
+              var JsonData = _this.xml2JsonConvert("Authentication Data", result, "<serv:header", "</serv:message>");
               logMsg = funcName + ".success()" + ": " + "\n" + "JsonData=" + JSON.stringify(JsonData);
               $log.log(logMsg);
               result = JsonData.body.serv_header.serv_response.serv_result;
