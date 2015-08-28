@@ -549,15 +549,11 @@ angular
           templateUrl: 'modules/webex/siteSettings/siteSettings.tpl.html',
           controller: 'WebExSiteSettingsCtrl',
           controllerAs: 'WebExSiteSettings',
-          parent: 'main'
+          parent: 'main',
+          params: {
+            siteUrl: null
+          }
         })
-        /*
-        .state('site-list.site-settings', {
-          templateUrl: 'modules/webex/siteSettings/siteSettings.tpl.html',
-          controller: 'WebExUserSettings2Ctrl',
-          controllerAs: 'WebExUserSettings2'
-        })
-        */
         .state('templates', {
           url: '/templates',
           templateUrl: 'modules/squared/views/templates.html',

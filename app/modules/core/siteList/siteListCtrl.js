@@ -42,41 +42,32 @@ angular.module('Core')
         '</launch-site>';
 
       var siteSettingsTemplate =
-        '<div>' +
-        '  <a id="webex-site-settings" ui-sref="site-settings">' +
-        '    <p class="ngCellText">' +
-        '      <span name="webexSiteSettings"' +
-        '            id="webexSiteSettings">' +
-        '        <i class="fa fa-external-link fa-lg"></i>' +
-        '      </span>' +
-        '    </p>' +
-        '  </a>' +
-        '<div>';
-      /*
-      var siteSettingsTemplate =
-        '<div>' +
-        '  <a id="webex-site-settings" ui-sref="site-list.site-settings">' +
-        '    <p class="ngCellText">' +
-        '      <span name="webexSiteSettings"' +
-        '            id="webexSiteSettings">' +
-        '        <i class="fa fa-external-link fa-lg"></i>' +
-        '      </span>' +
-        '    </p>' +
-        '  </a>' +
-        '<div>';
-	  */
+        '<div>' + '\n' +
+        '  <a id="webex-site-settings"' + '\n' +
+        '     ui-sref="site-settings({siteUrl:row.entity.license.siteUrl})">' + '\n' +
+        '                             ' + '\n' +
+        '    <p class="ngCellText">' + '\n' +
+        '      <span name="webexSiteSettings"' + '\n' +
+        '            id="webexSiteSettings">' + '\n' +
+        '        <i class="fa fa-external-link fa-lg"></i>' + '\n' +
+        '      </span>' + '\n' +
+        '    </p>' + '\n' +
+        '  </a>' + '\n' +
+        '<div>' + '\n';
+
       var siteReportsTemplate =
-        '<div>' +
-        '  <a id="webex-site-settings"' +
-        '     ui-sref="users.list">' +
-        '    <p class="ngCellText">' +
-        '      <span name="webexSiteSettings"' +
-        '            id="webexSiteSettings">' +
-        '        <i class="fa fa-external-link fa-lg"></i>' +
-        '      </span>' +
-        '    </p>' +
-        '  </a>' +
-        '<div>';
+        '<div>' + '\n' +
+        '  <a id="webex-site-reportings"' + '\n' +
+        '     ui-sref="site-reportings">' + '\n' +
+        '                               ' + '\n' +
+        '    <p class="ngCellText">' + '\n' +
+        '      <span name="webexSiteReportings"' + '\n' +
+        '            id="webexSiteReportings">' + '\n' +
+        '        <i class="fa fa-external-link fa-lg"></i>' + '\n' +
+        '      </span>' + '\n' +
+        '    </p>' + '\n' +
+        '  </a>' + '\n' +
+        '<div>' + '\n';
 
       vm.gridOptions = {
         data: 'siteList.gridData',
@@ -115,29 +106,36 @@ angular.module('Core')
         vm.gridOptions.columnDefs.push({
           field: 'license.siteUrl',
           displayName: $translate.instant('siteList.siteSettings'),
-          sortable: false,
-          cellTemplate: siteUrlTemplate
+          cellTemplate: siteUrlTemplate,
+          sortable: false
         });
 
         vm.gridOptions.columnDefs.push({
-          field: 'license.siteUrl',
+          field: 'license.siteSettings',
           displayName: $translate.instant('siteList.siteReports'),
-          sortable: false,
-          cellTemplate: siteUrlTemplate
+          sortable: false
         });
       } else {
         vm.gridOptions.columnDefs.push({
           field: 'license.siteSettings',
           displayName: $translate.instant('siteList.siteSettings'),
-          sortable: false,
           cellTemplate: siteSettingsTemplate,
+          sortable: false
         });
 
+        /*
         vm.gridOptions.columnDefs.push({
           field: 'license.siteSettings',
           displayName: $translate.instant('siteList.siteReports'),
-          sortable: false,
           cellTemplate: siteReportsTemplate,
+          sortable: false
+        });
+        */
+        vm.gridOptions.columnDefs.push({
+          field: 'license.siteSettings',
+          displayName: $translate.instant('siteList.siteReports'),
+          cellTemplate: siteUrlTemplate,
+          sortable: false
         });
       }
     }

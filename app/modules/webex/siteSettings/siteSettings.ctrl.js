@@ -23,15 +23,14 @@
       Notification
     ) {
 
+      $scope.hello = "Hello Kitty is here!!!";
+      
       this.siteSettingsObj = WebExSiteSettingsFact.getSiteSettingsObj();
 
       var funcName = "WebExSiteSettingsCtrl()";
       var logMsg = "";
 
       this.siteSettingsObj = WebExSiteSettingsFact.initSiteSettingsObj();
-
-      $scope.hello = "Hello Kitty is here!!!";
-      $scope.hello2 = "Hello Kitty loves Dear Daniel!!!";
 
       logMsg = funcName + ": " + "\n" +
         "viewReady=" + this.siteSettingsObj.viewReady + "; " +

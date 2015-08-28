@@ -284,18 +284,6 @@ angular.module('Core')
           state: 'profile',
           link: '/profile'
         }, {
-          tab: 'webexUserSettingsTab',
-          icon: 'icon-tools',
-          title: 'webexUserSettings.webexUserSettingsTab',
-          state: 'webexUserSettings',
-          link: '/webexUserSettings'
-        }, {
-          tab: 'webexUserSettings2Tab',
-          icon: 'icon-tools',
-          title: 'webexUserSettings2.webexUserSettings2Tab',
-          state: 'webexUserSettings2',
-          link: '/webexUserSettings2'
-        }, {
           tab: 'developmentTab',
           icon: 'icon-tools',
           title: 'tabs.developmentTab',
@@ -787,7 +775,6 @@ angular.module('Core')
         Site_Admin: [
           'site-list',
           'site-settings'
-          // 'site-list.site-settings'
         ],
         Application: ['organizationAdd']
       };

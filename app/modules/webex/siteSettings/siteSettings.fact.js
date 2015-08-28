@@ -2,6 +2,7 @@
   'use strict';
 
   angular.module('WebExSiteSettings').factory('WebExSiteSettingsFact', [
+    '$scope',
     '$q',
     '$log',
     '$stateParams',
@@ -14,6 +15,7 @@
     'WebExSiteSettingsSvc',
     'Notification',
     function (
+      $scope,
       $q,
       $log,
       $stateParams,
@@ -33,15 +35,18 @@
 
         initSiteSettingsObj: function () {
           var funcName = "initSiteSettingsObj()";
-          var logMsg = "";
-
-          $log.log(funcName);
+          var logMsg = funcName;
 
           var _this = this;
-          var siteUrl = "t30citest.webex.com";
-          // var siteUrl = (!$stateParams.site) ? '' : $stateParams.site;
+
+          var siteUrl = (!$stateParams.siteUrl) ? '' : $stateParams.siteUrl;
           var siteName = siteUrl.slice(0, siteUrl.indexOf("."));
 
+          logMsg = funcName + ": " + "\n" +
+            "siteUrl=" + siteUrl + "; " +
+            "siteName=" + siteName;
+          $log.log(logMsg);
+          
           webExSiteSettingsObj.siteUrl = siteUrl;
           webExSiteSettingsObj.siteName = siteName;
 
@@ -56,7 +61,6 @@
                 sessionTicket
               );
 
-              webExSiteSettingsObj.sessionTicketError = false;
               _this.getSiteSettingsInfo();
             }, // getSessionTicketSuccess()
 
@@ -94,6 +98,8 @@
           $log.log(funcName);
 
           var _this = this;
+
+          webExSiteSettingsObj.sessionTicketError = false;
 
           _this.getSiteSettingsInfoXml().then(
             function getSiteSettingsInfoXmlSuccess(getInfoResult) {
@@ -182,6 +188,7 @@
                         supportCenterApplicable = true;
                       }
                     }
+
                     if ("RAS" === siteMtgProductCodePrefix) {
                       meetingCenterApplicable = false;
                       trainingCenterApplicable = false;
@@ -213,6 +220,9 @@
 
         processSettingPagesInfo: function () {
           var settingPagesInfoJson = null;
+
+          setCommonSiteSettingPages();
+          setCenterSpecificSettingPages();
 
           function setCommonSiteSettingPages() {
             webExSiteSettingsObj.commonSiteSettingPages = null;
