@@ -6,7 +6,7 @@
     .controller('TelephonyOverviewCtrl', TelephonyOverviewCtrl);
 
   /* @ngInject */
-  function TelephonyOverviewCtrl($stateParams, $state, $translate, TelephonyInfoService, FeatureToggleService, Userservice) {
+  function TelephonyOverviewCtrl($stateParams, $state, $rootScope, $translate, TelephonyInfoService, FeatureToggleService, Userservice) {
     /*jshint validthis: true */
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
@@ -42,7 +42,7 @@
         vm.gsxFeature
       ) {
         $state.$current.data.displayName = $translate.instant('usersPreview.calling');
-        $state.reload();
+        $rootScope.$broadcast('displayNameUpdated');
       }
     }
 

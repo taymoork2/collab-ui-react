@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('ConferencePreviewCtrl', ['$scope', '$state', '$stateParams', '$translate', 'Authinfo', 'FeatureToggleService', 'Userservice',
-    function ($scope, $state, $stateParams, $translate, Authinfo, FeatureToggleService, Userservice) {
+  .controller('ConferencePreviewCtrl', ['$scope', '$state', '$stateParams', '$rootScope', '$translate', 'Authinfo', 'FeatureToggleService', 'Userservice',
+    function ($scope, $state, $stateParams, $rootScope, $translate, Authinfo, FeatureToggleService, Userservice) {
       var vm = this;
       vm.gsxFeature = false;
 
@@ -25,7 +25,7 @@ angular.module('Core')
           vm.gsxFeature
         ) {
           $state.current.data.displayName = $translate.instant('usersPreview.webex');
-          $state.reload();
+          $rootScope.$broadcast('displayNameUpdated');
         }
 
         if ($stateParams.service) {
