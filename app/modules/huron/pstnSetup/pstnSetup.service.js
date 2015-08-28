@@ -5,21 +5,27 @@
     .factory('PstnSetupService', PstnSetupService);
 
   /* @ngInject */
-  function PstnSetupService($q, Authinfo, TerminusCustomerService, TerminusCustomerCarrierService, TerminusBlockOrderService, TerminusOrderService) {
-    var service = {
-      createCustomer: createCustomer,
-      getCustomer: getCustomer,
-      getCarrierId: getCarrierId,
-      orderBlock: orderBlock,
-      listPendingOrders: listPendingOrders,
-      getOrder: getOrder,
-      listPendingNumbers: listPendingNumbers
-    };
-
+  function PstnSetupService($q, Authinfo, TerminusCarrierService, TerminusCustomerService, TerminusCustomerCarrierService, TerminusBlockOrderService, TerminusOrderService) {
     var INTELEPEER = "INTELEPEER";
     var TATA = "TATA";
     var PSTN = "PSTN";
     var PENDING = "PENDING";
+
+    var service = {
+      createCustomer: createCustomer,
+      getCustomer: getCustomer,
+      listCarriers: listCarriers,
+      listCustomerCarriers: listCustomerCarriers,
+      getCarrierId: getCarrierId,
+      orderBlock: orderBlock,
+      listPendingOrders: listPendingOrders,
+      getOrder: getOrder,
+      listPendingNumbers: listPendingNumbers,
+      INTELEPEER: INTELEPEER,
+      TATA: TATA,
+      PSTN: PSTN,
+      PENDING: PENDING
+    };
 
     var billingAddress = {
       "billingName": "Cisco Systems",
@@ -47,11 +53,12 @@
 
     return service;
 
-    function createCustomer(uuid, name, partnerUuid) {
+    function createCustomer(uuid, name, pstnCarrierId, partnerUuid) {
       var payload = {
         "uuid": uuid,
         "name": name,
-        "reseller": partnerUuid || Authinfo.getOrgId(),
+        "pstnCarrierId": pstnCarrierId,
+        "resellerId": partnerUuid || Authinfo.getOrgId(),
         "billingAddress": billingAddress
       };
       return TerminusCustomerService.save({}, payload).$promise;
@@ -63,10 +70,18 @@
       }).$promise;
     }
 
-    function getCarrierId(customerId, carrierName) {
+    function listCarriers() {
+      return TerminusCarrierService.query().$promise;
+    }
+
+    function listCustomerCarriers(customerId) {
       return TerminusCustomerCarrierService.query({
         customerId: customerId
-      }).$promise.then(function (carriers) {
+      }).$promise;
+    }
+
+    function getCarrierId(customerId, carrierName) {
+      return listCustomerCarriers(customerId).then(function (carriers) {
         var matchingCarriers = carriers.filter(function (carrier) {
           return carrier.name === (carrierName || INTELEPEER);
         });
@@ -116,7 +131,9 @@
           var promise = getOrder(customerId, carrierOrder.uuid).then(function (order) {
             angular.forEach(order, function (value, key) {
               if (key != null && value.status === PENDING) {
-                pendingNumbers.push(value.number);
+                pendingNumbers.push({
+                  pattern: value.number
+                });
               }
             });
           });

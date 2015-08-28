@@ -6,13 +6,16 @@
       return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId', {}, {});
     })
     .factory('TerminusCustomerCarrierService', function ($resource, HuronConfig) {
-      return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/pstn/carriers/:carrierId', {}, {});
+      return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/carriers/:carrierId', {}, {});
     })
     .factory('TerminusBlockOrderService', function ($resource, HuronConfig) {
-      return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/pstn/carriers/:carrierId/did/block', {}, {});
+      return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/carriers/:carrierId/did/block', {}, {});
     })
     .factory('TerminusOrderService', function ($resource, HuronConfig) {
       return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/orders/:orderId', {}, {});
+    })
+    .factory('TerminusCarrierService', function ($resource, HuronConfig) {
+      return $resource(HuronConfig.getTerminusUrl() + '/carriers/:carrierId', {});
     });
 
 })();

@@ -2,10 +2,10 @@
   'use strict';
 
   angular.module('Huron')
-    .directive('hrPstnProviderCard', hrPstnProviderCard);
+    .directive('ucPstnProviderCard', ucPstnProviderCard);
 
   /* @ngInject */
-  function hrPstnProviderCard() {
+  function ucPstnProviderCard() {
     var directive = {
       restrict: 'AE',
       scope: {

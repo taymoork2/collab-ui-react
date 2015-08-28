@@ -5,14 +5,12 @@
     .controller('ExternalNumberDetailCtrl', ExternalNumberDetail);
 
   /* @ngInject */
-  function ExternalNumberDetail($stateParams, $translate, $q, ExternalNumberService, ModalService, ExternalNumberPool, Notification) {
+  function ExternalNumberDetail($stateParams, $translate, $q, ExternalNumberService, ModalService, ExternalNumberPool, PstnSetupService, Notification) {
     var vm = this;
     vm.currentCustomer = $stateParams.currentCustomer;
-    vm.refresh = false;
 
-    vm.allNumbers = ExternalNumberService.getAllNumbers() || [];
-    vm.pendingNumbers = [];
-    vm.unassignedNumbers = filterUnassignedNumbers() || [];
+    // Initialize arrays from service
+    getNumbers();
 
     // Initialize filtered arrays for translation directives
     vm.filteredAllNumbers = [];
@@ -31,28 +29,19 @@
     function listPhoneNumbers() {
       if (vm.currentCustomer && vm.currentCustomer.customerOrgId) {
         vm.refresh = true;
-        var promises = [];
-        var promise = ExternalNumberPool.getAll(vm.currentCustomer.customerOrgId).then(function (results) {
-          setAllNumbers(results);
-        }).catch(function (response) {
-          setAllNumbers([]);
-          Notification.errorResponse(response, 'externalNumberPanel.listError');
-        });
-        promises.push(promise);
-        // Add pending refresh
 
-        $q.all(promises).finally(function () {
-          vm.refresh = false;
-        });
+        ExternalNumberService.refreshNumbers(vm.currentCustomer.customerOrgId)
+          .catch(function (response) {
+            Notification.errorResponse(response, 'externalNumberPanel.listError');
+          })
+          .finally(function () {
+            getNumbers();
+          });
+
       } else {
-        setAllNumbers([]);
+        ExternalNumberService.clearNumbers();
+        getNumbers();
       }
-    }
-
-    function filterUnassignedNumbers() {
-      vm.unassignedNumbers = vm.allNumbers.filter(function (number) {
-        return number.directoryNumber === null;
-      });
     }
 
     function deleteNumber(number) {
@@ -72,7 +61,7 @@
             });
             _.remove(vm.allNumbers, number);
             ExternalNumberService.setAllNumbers(vm.allNumbers);
-            filterUnassignedNumbers();
+            getNumbers();
           }).catch(function (response) {
             Notification.errorResponse(response, 'notifications.errorDelete', {
               item: number.pattern
@@ -81,11 +70,11 @@
       });
     }
 
-    function setAllNumbers(allNumbers) {
-      allNumbers = allNumbers || [];
-      vm.allNumbers = allNumbers;
-      ExternalNumberService.setAllNumbers(allNumbers);
-      filterUnassignedNumbers();
+    function getNumbers() {
+      vm.allNumbers = ExternalNumberService.getAllNumbers();
+      vm.pendingNumbers = ExternalNumberService.getPendingNumbers();
+      vm.unassignedNumbers = ExternalNumberService.getUnassignedNumbers();
+      vm.refresh = false;
     }
   }
 })();

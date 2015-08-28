@@ -5,7 +5,7 @@
     .controller('ExternalNumberOverviewCtrl', ExternalNumberOverview);
 
   /* @ngInject */
-  function ExternalNumberOverview($scope, $stateParams, ExternalNumberService, ExternalNumberPool, Notification) {
+  function ExternalNumberOverview($scope, $stateParams, ExternalNumberService, Notification) {
     var vm = this;
     vm.currentCustomer = $stateParams.currentCustomer;
     vm.loading = true;
@@ -20,22 +20,21 @@
 
     function updatePhoneNumberCount() {
       if (vm.currentCustomer && vm.currentCustomer.customerOrgId) {
-        ExternalNumberPool.getAll(vm.currentCustomer.customerOrgId).then(function (results) {
-          setAllNumbers(results);
-        }).catch(function (response) {
-          setAllNumbers([]);
-          Notification.errorResponse(response, 'partnerHomePage.errGetPhoneNumberCount');
-        });
+        ExternalNumberService.refreshNumbers(vm.currentCustomer.customerOrgId)
+          .catch(function (response) {
+            Notification.errorResponse(response, 'partnerHomePage.errGetPhoneNumberCount');
+          })
+          .finally(function () {
+            getNumberCount();
+          });
       } else {
-        setAllNumbers([]);
+        ExternalNumberService.clearNumbers();
+        getNumberCount();
       }
     }
 
-    function setAllNumbers(allNumbers) {
-      allNumbers = allNumbers || [];
-      vm.allNumbers = allNumbers;
-      ExternalNumberService.setAllNumbers(allNumbers);
-      vm.allNumbersCount = allNumbers.length;
+    function getNumberCount() {
+      vm.allNumbersCount = ExternalNumberService.getAllNumbers().length;
       vm.loading = false;
     }
   }

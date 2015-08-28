@@ -1204,6 +1204,7 @@
     "searchResults": "{count, plural, one{# search result} other{# search results}}"
   },
   "pstnSetup": {
+    "setupPstn": "Setup PSTN",
     "setupService": "Set Up PSTN Service",
     "setupNumbers": "Set Up PSTN Numbers",
     "placeOrder": "Place Order",
@@ -1220,7 +1221,16 @@
     "notifyCustomer": "If you want to Notify customer:",
     "addUsers": "If you want to Add users:",
     "sendMessage": "Send Message",
-    "launchPortal": "Launch Compnay Portal"
+    "launchPortal": "Launch Company Portal",
+    "carrierListError": "Failed to retrieve carrier list for this customer.",
+    "orderNumbersPrompt": "Must add block numbers to proceed.",
+    "blockOrderError": "Failed to order {{quantity}} block number(s) with area code {{areaCode}}."
+  },
+  "intelepeerFeatures": {
+    "feature1": "Unlimited inbound/outbound calling to U.S. 50 states + Canada",
+    "feature2": "Carrier Port/Transfer Fee Included",
+    "feature3": "E911 Included",
+    "feature4": "Taxes & Fees Included in Price"
   },
   "partnerHomePage": {
     "trialsHeading": "Active Trials",

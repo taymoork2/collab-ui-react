@@ -2,11 +2,15 @@
   'use strict';
 
   angular.module('Huron')
-    .controller('PstnSetup', PstnSetup);
+    .controller('PstnSetupCtrl', PstnSetupCtrl);
 
   /* @ngInject */
-  function PstnSetup($scope, $translate, $state, ValidationService) {
+  function PstnSetupCtrl($scope, $q, $window, $translate, $state, $stateParams, PstnSetupService, ValidationService, Notification) {
     var vm = this;
+    vm.customerId = $stateParams.customerId;
+    vm.customerName = $stateParams.customerName;
+    vm.customerExists = false;
+    vm.loading = true;
     vm.model = {
       areaCode: '',
       quantity: ''
@@ -18,6 +22,8 @@
     vm.selectProvider = selectProvider;
     vm.notifyCustomer = notifyCustomer;
     vm.launchCustomerPortal = launchCustomerPortal;
+    vm.orderNumbers = orderNumbers;
+    vm.placeOrder = placeOrder;
 
     $scope.$watchCollection(function () {
       return vm.blockOrders;
@@ -27,36 +33,8 @@
       }, 0);
     });
 
-    vm.providers = [{
-      logoSrc: 'images/cisco_logo.png',
-      logoAlt: 'Tata',
-      title: 'Tata Trial',
-      features: [
-        'Who needs an API?',
-        'Pick me!'
-      ],
-      selectFn: selectTata
-    }, {
-      logoSrc: 'images/cisco_logo.png',
-      logoAlt: 'IntelePeer',
-      title: 'IntelePeer Pro6S',
-      features: [
-        'I need an API!',
-        'Feature two is special',
-        'Feature three is the best',
-        'Feature four could be here?',
-        'Feature five doesn\'t even exist yet'
-      ],
-      selectFn: selectIntelePeer
-    }];
-
-    vm.blockOrders = [{
-      areaCode: '123',
-      quantity: '5'
-    }, {
-      areaCode: '456',
-      quantity: '2'
-    }];
+    vm.providers = [];
+    vm.blockOrders = [];
 
     vm.fields = [{
       type: 'inline',
@@ -120,12 +98,16 @@
       }
     }];
 
+    init();
+
+    ////////////////////////
+
     function selectTata() {
-      $state.go('didadd', {});
+      $state.go('didadd');
     }
 
     function selectIntelePeer() {
-      $state.go('pstnSetup.orderNumbers', {});
+      $state.go('pstnSetup.orderNumbers');
     }
 
     function removeOrder(order) {
@@ -149,7 +131,102 @@
     }
 
     function launchCustomerPortal() {
-      //TODO do something
+      $window.open($state.href('login_swap', {
+        customerOrgId: vm.customerId,
+        customerOrgName: vm.customerName
+      }));
+    }
+
+    function init() {
+      PstnSetupService.listCustomerCarriers(vm.customerId)
+        .then(function (carriers) {
+          vm.customerExists = true;
+          return carriers;
+        })
+        .catch(function (response) {
+          //TODO uncomment when backend fixes status codes
+          // if (response && response.status === 404) {
+          return PstnSetupService.listCarriers();
+          // } else {
+          //   return $q.reject(response);
+          // }
+        })
+        .then(function (carriers) {
+          angular.forEach(carriers, initCarrier);
+        })
+        .catch(function (response) {
+          Notification.errorResponse(response, 'pstnSetup.carrierListError');
+        })
+        .finally(function () {
+          vm.loading = false;
+        });
+    }
+
+    function initCarrier(carrier) {
+      if (carrier.name === PstnSetupService.INTELEPEER) {
+        vm.providers.push({
+          uuid: carrier.uuid,
+          name: carrier.name,
+          logoSrc: 'images/carriers/logo_intelepeer.svg',
+          logoAlt: 'IntelePeer',
+          title: 'IntelePeer Pro6S',
+          features: [
+            $translate.instant('intelepeerFeatures.feature1'),
+            $translate.instant('intelepeerFeatures.feature2'),
+            $translate.instant('intelepeerFeatures.feature3'),
+            $translate.instant('intelepeerFeatures.feature4')
+          ],
+          selectFn: selectIntelePeer
+        });
+      } else if (carrier.name === PstnSetupService.TATA) {
+        vm.providers.push({
+          uuid: carrier.uuid,
+          name: carrier.name,
+          logoSrc: 'images/carriers/logo_tata_comm.svg',
+          logoAlt: 'Tata',
+          title: 'Tata Trial',
+          features: [],
+          selectFn: selectTata
+        });
+      }
+    }
+
+    function orderNumbers() {
+      if (vm.blockOrders.length === 0) {
+        Notification.error('pstnSetup.orderNumbersPrompt');
+      } else {
+        $state.go('pstnSetup.review');
+      }
+    }
+
+    function placeOrder() {
+      var customerPromise;
+      angular.element('#placeOrder').button('loading');
+      if (!vm.customerExists) {
+        customerPromise = PstnSetupService.createCustomer(vm.customerId, vm.customerName, vm.provider.uuid)
+          .catch(function (response) {
+            Notification.errorResponse(response);
+            return $q.reject(response);
+          });
+      }
+      $q.when(customerPromise).then(function () {
+        var promises = [];
+        angular.forEach(vm.blockOrders, function (blockOrder) {
+          var promise = PstnSetupService.orderBlock(vm.customerId, vm.provider.uuid, blockOrder.areaCode, blockOrder.quantity);
+          promise.catch(function (response) {
+            Notification.errorResponse(response, 'pstnSetup.blockOrderError', {
+              areaCode: this.areaCode,
+              quantity: this.quantity
+            });
+          }.bind(blockOrder));
+          promises.push(promise);
+        });
+        return $q.all(promises);
+      }).then(function () {
+        $state.go('pstnSetup.nextSteps');
+      }).finally(function () {
+        angular.element('#placeOrder').button('reset');
+      });
     }
   }
 })();
