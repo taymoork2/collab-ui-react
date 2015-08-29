@@ -1657,7 +1657,11 @@
     "OtherPrivilegesLabel": "Other Privileges",
     "advancedLinkLabel": "Advanced Settings"
   },
-  "webexSiteSettings": {},
+  "webexSiteSettings": {
+    "title": "Configure",
+    "titleCommonSiteSettings": "Common Site Settings",
+    "titleCentreSpecificSettings": "Centre-Specific Settings"
+  },
   "webexSiteSettingsLabels": {
     "siteSettingsIndexPageTitle": "Configure {{siteUrl}}",
     "commonSiteSettings": "Common Site Settings",
@@ -1688,7 +1692,10 @@
     "pageId_0024": "WebACD | Leave Message Form",
     "pageId_0025": "WebACD | Queues",
     "pageId_0026": "WebACD | Settings",
-    "pageId_xxxx": "Page name undefined"
+    "pageId_xxxx": "Page name undefined",
+    "pageId_cmr": "Cloud Collaboration Meeting Room",
+    "pageId_address": "Company Addresses",
+    "pageId_scheduler": "Default Scheduler Options"
   },
   "leaderBoard": {
     "actions": "Actions",
