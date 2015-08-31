@@ -438,7 +438,7 @@ angular.module('Core')
 
       $scope.tableOptions = {
         cursorcolor: Config.chartColors.gray,
-        cursorminheight: 75,
+        cursorminheight: 50,
         cursorborder: "0px",
         cursorwidth: "7px",
         railpadding: {
@@ -1537,21 +1537,20 @@ angular.module('Core')
           var responseMessage = data.message;
           if (status === 400) {
             responseMessage = $translate.instant('firstTimeWizard.csv400Error');
-          } else if (status === 401) {
-            responseMessage = $translate.instant('firstTimeWizard.csv401Error');
-          } else if (status === 403 || status === 404) {
-            responseMessage = $translate.instant('firstTimeWizard.csv403And404Error');
+          } else if (status === 403 || status === 401) {
+            responseMessage = $translate.instant('firstTimeWizard.csv401And403Error');
+          } else if (status === 404) {
+            responseMessage = $translate.instant('firstTimeWizard.csv404Error');
           } else if (status === 408) {
             responseMessage = $translate.instant('firstTimeWizard.csv408Error');
           } else if (status === 409) {
             responseMessage = $translate.instant('firstTimeWizard.csv409Error');
           } else if (status === 500) {
             responseMessage = $translate.instant('firstTimeWizard.csv500Error');
-          } else if (status === 502) {
-            responseMessage = $translate.instant('firstTimeWizard.csv502Error');
-          } else if (status === 503) {
-            responseMessage = $translate.instant('firstTimeWizard.csv503Error');
+          } else if (status === 502 || status === 503) {
+            responseMessage = $translate.instant('firstTimeWizard.csv502And503Error');
           }
+
           return responseMessage;
         }
 

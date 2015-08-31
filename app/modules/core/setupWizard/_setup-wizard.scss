@@ -411,8 +411,12 @@
         margin-left: 3px;
       }
       .total {
-        font-size: 50px;
+        font-size: 64px;
         line-height: 1;
+        font-family: "CiscoSansTT Thin";
+      }
+      .total-title {
+        margin: 0 0 5px;
       }
       &.disabled {
         color: $gray-light;
@@ -434,6 +438,8 @@
   }
 
   .table-header {
+    border: $gray-lighter solid 1px;
+    border-bottom: 0px;
     .table {
       border-color: $gray-lightest;
     }
@@ -449,10 +455,15 @@
     }
   }
   .table-body {
+    border: $gray-lighter solid 1px;
+    border-top: 0px;
     position: relative;
     top: -1px;
     .table {
       border-width: 0px;
+    }
+    .center {
+      text-align: center;
     }
     .table-bordered > thead > tr > th, .table-bordered > thead > tr > td {
       height: 0px;
@@ -466,11 +477,10 @@
   }
   .error-table {
     min-height: 46px;
-    max-height: 350px;
+    max-height: 353px;
     min-width: 400px;
     overflow-y: auto;
     overflow-x: hidden;
-    border-bottom: $gray-lightest solid 1px;
     .table {
       margin: 0;
     }
@@ -480,17 +490,22 @@
       border-right-color: $gray-lighter;
       font-size: 15px;
     }
+    .table-bordered > thead > tr > th:last-of-type, .table-bordered > thead > tr > td:last-of-type,
+      .table-bordered > tbody > tr > th:last-of-type, .table-bordered > tbody > tr > td:last-of-type {
+        border-right: none;
+      }
     .table-bordered > thead > tr:last-of-type > th, .table-bordered > thead > tr:last-of-type > td,
       .table-bordered > tbody > tr:last-of-type > th, .table-bordered > tbody > tr:last-of-type > td {
         border-bottom-width: 0px;
-        border-bottom-color: $brand-white;
-        border-right-color: $gray-lightest;
       }
-    .table-bordered > thead > tr:first-of-type > th, .table-bordered > thead > tr:first-of-type > td,
-      .table-bordered > tbody > tr:first-of-type > th, .table-bordered > tbody > tr:first-of-type > td {
-        border-top-width: 0px;
-        border-top-color: $brand-white;
+    .table-bordered > thead > tr > th:first-of-type, .table-bordered > thead > tr > td:first-of-type,
+      .table-bordered > tbody > tr > th:first-of-type, .table-bordered > tbody > tr > td:first-of-type {
         border-right-color: $gray-lighter;
+        border-left: none;
+      }
+    .table-bordered > thead > tr:first-of-type > th, .table-bordered > thead > tr > td,
+      .table-bordered > tbody > tr:first-of-type > th, .table-bordered > tbody > tr > td {
+        border-top-width: 0px;
       }
   }
 }
