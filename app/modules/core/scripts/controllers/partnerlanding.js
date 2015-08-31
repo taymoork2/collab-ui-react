@@ -35,7 +35,7 @@ angular.module('Core')
 
       $scope.openAddTrialModal = function () {
         $state.go('trialAdd.info').then(function () {
-          $state.modal.result.then(function () {
+          $state.modal.result.finally(function () {
             getTrialsList();
             getManagedOrgsList();
           });
@@ -47,7 +47,7 @@ angular.module('Core')
           showPartnerEdit: true,
           currentTrial: $scope.currentTrial
         }).then(function () {
-          $state.modal.result.then(function () {
+          $state.modal.result.finally(function () {
             getTrialsList();
             getManagedOrgsList();
           });
