@@ -22,7 +22,7 @@
       type: 'input',
       templateOptions: {
         label: $translate.instant('partnerHomePage.customerName'),
-        labelClass: 'col-xs-4',
+        labelClass: 'col-xs-4 columns',
         inputClass: 'col-xs-7',
         type: 'text',
         required: true,
@@ -34,7 +34,7 @@
       className: 'last-field',
       templateOptions: {
         label: $translate.instant('partnerHomePage.customerEmail'),
-        labelClass: 'col-xs-4',
+        labelClass: 'col-xs-4 columns',
         inputClass: 'col-xs-7',
         type: 'email',
         required: true
@@ -75,7 +75,7 @@
       templateOptions: {
         horizontal: true,
         label: $translate.instant('partnerHomePage.duration'),
-        labelClass: 'col-xs-4',
+        labelClass: 'col-xs-4 columns',
         inputClass: 'col-xs-7',
         options: [{
           label: $translate.instant('partnerHomePage.ninetyDays'),
@@ -97,7 +97,7 @@
       className: 'last-field',
       templateOptions: {
         label: $translate.instant('partnerHomePage.numberOfLicenses'),
-        labelClass: 'col-xs-4',
+        labelClass: 'col-xs-4 columns',
         inputClass: 'col-xs-3',
         type: 'number',
         required: true
