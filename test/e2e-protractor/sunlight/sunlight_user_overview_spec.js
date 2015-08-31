@@ -22,15 +22,6 @@ describe('Configuring Contact Center services per user', function () {
     login.login('contactcenter-admin', '#/users');
   });
 
-  it('should add a user', function () {
-    utils.click(users.addUsers);
-    utils.sendKeys(users.addUsersField, testUser);
-    utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
-    utils.click(users.nextButton);
-    utils.click(users.onboardButton);
-    notifications.assertSuccess('onboarded successfully');
-    utils.expectIsNotDisplayed(users.manageDialog);
-  });
 
   it('should show contact center service configuration page', function () {
     utils.searchAndClick(testUser);
