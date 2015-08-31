@@ -144,15 +144,18 @@
           return carriers;
         })
         .catch(function (response) {
-          //TODO uncomment when backend fixes status codes
-          // if (response && response.status === 404) {
-          return PstnSetupService.listCarriers();
-          // } else {
-          //   return $q.reject(response);
-          // }
+          if (response && response.status === 404) {
+            return PstnSetupService.listCarriers();
+          } else {
+            return $q.reject(response);
+          }
         })
         .then(function (carriers) {
           angular.forEach(carriers, initCarrier);
+          if (vm.customerExists && angular.isArray(vm.providers) && vm.providers.length === 1) {
+            selectProvider(vm.providers[0]);
+            return $state.go('pstnSetup.orderNumbers');
+          }
         })
         .catch(function (response) {
           Notification.errorResponse(response, 'pstnSetup.carrierListError');
@@ -178,17 +181,19 @@
           ],
           selectFn: selectIntelePeer
         });
-      } else if (carrier.name === PstnSetupService.TATA) {
-        vm.providers.push({
-          uuid: carrier.uuid,
-          name: carrier.name,
-          logoSrc: 'images/carriers/logo_tata_comm.svg',
-          logoAlt: 'Tata',
-          title: 'Tata Trial',
-          features: [],
-          selectFn: selectTata
-        });
       }
+      // TODO enable Tata at a later time
+      // else if (carrier.name === PstnSetupService.TATA) {
+      //   vm.providers.push({
+      //     uuid: carrier.uuid,
+      //     name: carrier.name,
+      //     logoSrc: 'images/carriers/logo_tata_comm.svg',
+      //     logoAlt: 'Tata',
+      //     title: 'Tata Trial',
+      //     features: [],
+      //     selectFn: selectTata
+      //   });
+      // }
     }
 
     function orderNumbers() {

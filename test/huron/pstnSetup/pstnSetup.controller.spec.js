@@ -66,8 +66,6 @@ describe('Controller: PstnSetupCtrl', function () {
       $scope.$apply();
       expect(controller.providers).toEqual([jasmine.objectContaining({
         name: PstnSetupService.INTELEPEER
-      }), jasmine.objectContaining({
-        name: PstnSetupService.TATA
       })]);
     });
 
@@ -118,18 +116,17 @@ describe('Controller: PstnSetupCtrl', function () {
 
   describe('placeOrder', function () {
     describe('when customer exists', function () {
+      it('should place orders and transition to nextSteps', function () {
+        controller.selectProvider(controller.providers[0]);
+        controller.blockOrders = blockOrders;
+        controller.placeOrder();
 
-    });
-    it('should place orders and transition to nextSteps', function () {
-      controller.selectProvider(controller.providers[0]);
-      controller.blockOrders = blockOrders;
-      controller.placeOrder();
-
-      expect($state.go).not.toHaveBeenCalled();
-      $scope.$apply();
-      expect(PstnSetupService.createCustomer).not.toHaveBeenCalled();
-      expect(PstnSetupService.orderBlock).toHaveBeenCalled();
-      expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps');
+        expect($state.go).not.toHaveBeenCalledWith('pstnSetup.nextSteps');
+        $scope.$apply();
+        expect(PstnSetupService.createCustomer).not.toHaveBeenCalled();
+        expect(PstnSetupService.orderBlock).toHaveBeenCalled();
+        expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps');
+      });
     });
 
     describe('when customer doesnt exist', function () {
@@ -148,7 +145,7 @@ describe('Controller: PstnSetupCtrl', function () {
         controller.blockOrders = blockOrders;
         controller.placeOrder();
 
-        expect($state.go).not.toHaveBeenCalled();
+        expect($state.go).not.toHaveBeenCalledWith('pstnSetup.nextSteps');
         $scope.$apply();
         expect(PstnSetupService.createCustomer).toHaveBeenCalled();
         expect(PstnSetupService.orderBlock).toHaveBeenCalled();
