@@ -7,7 +7,7 @@
     <h3 class="modal-title modal-title-wrap">{{trial.currentTrial.customerName}}</h3>
   </div>
   <div class="modal-body modal-body-white">
-    <div class="col-xs-9">
+    <div class="small-9 columns">
       <div class="progress">
         <div class="progress-bar" ng-class="{'danger-bar': trial.currentTrial.daysLeft <= 5, 'warning-bar': (trial.currentTrial.daysLeft < trial.currentTrial.duration/2), 'success-bar': (trial.currentTrial.daysLeft >= trial.currentTrial.duration/2)}" role="progressbar" aria-valuenow="{{trial.currentTrial.daysUsed}}" aria-valuemin="0" aria-valuemax="{{trial.currentTrial.duration}}" style="width: {{trial.currentTrial.percentUsed}}%;">
         </div>
@@ -23,24 +23,28 @@
         </div>
       </div>
     </div>
-    <div class="col-xs-3">
-        <span class="users-edit-modal trialHeading" translate="partnerHomePage.trialsNumUsers"></span>
-        <div class="license-count-modal">
-          <span >{{trial.currentTrial.usage}}/{{trial.currentTrial.licenses}}</span>
-        </div>
+    <div class="small-3 columns">
+      <span class="users-edit-modal trialHeading" translate="partnerHomePage.trialsNumUsers"></span>
+      <div class="license-count-modal">
+        <span>{{trial.currentTrial.usage}}/{{trial.currentTrial.licenses}}</span>
+      </div>
     </div>
   </div>
   <div class="modal-body">
     <h4 class="section-title" translate="partnerHomePage.customerInformation"></h4>
-    <div class="form-group">
-      <label class="col-xs-4 control-label" translate="partnerHomePage.name"></label>
-      <div class="col-xs-8">
+    <div class="row">
+      <div class="small-4 columns">
+        <label class="control-label right" translate="partnerHomePage.name"></label>
+      </div>
+      <div class="small-8 columns">
         <p class="form-control-static">{{trial.currentTrial.customerName}}</p>
       </div>
     </div>
-    <div class="form-group">
-      <label class="col-xs-4 control-label" translate="partnerHomePage.customerEmail"></label>
-      <div class="col-xs-8">
+    <div class="row">
+      <div class="small-4 columns">
+        <label class="control-label right" translate="partnerHomePage.customerEmail"></label>
+      </div>
+      <div class="small-8 columns">
         <p class="form-control-static">{{trial.currentTrial.customerEmail}}</p>
       </div>
     </div>
@@ -51,20 +55,24 @@
     </div>
     <h4 class="section-title" translate="partnerHomePage.termsOfTrial"></h4>
     <div ng-show="trial.editTerms && !trial.showPartnerEdit">
-      <div class="form-group">
-        <label class="col-xs-4 control-label" translate="partnerHomePage.duration"></label>
-        <div class="col-xs-8">
+      <div class="row">
+        <div class="small-4 columns">
+          <label class="control-label right" translate="partnerHomePage.duration"></label>
+        </div>
+        <div class="small-8 columns">
           <p class="form-control-static">{{trial.currentTrial.duration}} Days</p>
         </div>
       </div>
-      <div class="form-group">
-        <label class="col-xs-4 control-label" translate="partnerHomePage.numberOfLicenses"></label>
-        <div class="col-xs-8">
+      <div class="row">
+        <div class="small-4 columns">
+          <label class="control-label right" translate="partnerHomePage.numberOfLicenses"></label>
+        </div>
+        <div class="small-8 columns">
           <p class="form-control-static">{{trial.currentTrial.licenses}}</p>
         </div>
       </div>
     </div>
-    <div ng-show="!trial.editTerms || trial.showPartnerEdit">
+    <div class="row" ng-show="!trial.editTerms || trial.showPartnerEdit">
       <formly-form model="trial.currentTrial" fields="trial.trialTermsFields">
       </formly-form>
     </div>
@@ -75,8 +83,8 @@
         <span translate="partnerHomePage.cancel"></span>
       </button>
       <button id="saveUpdateButton" class="btn btn-primary" ng-click="trialForm.$setPristine(true); (trial.isSquaredUCEnabled() && !trial.disableSquaredUCCheckBox) ? trial.gotoAddNumber() : trial.editTrial();" ng-disabled="trialForm.$invalid" data-loading-text="<i class='icon icon-spinner'></i>">
-      <span ng-if="trial.disableSquaredUCCheckBox || !trial.isSquaredUCEnabled()" translate="common.save"></span>
-      <span ng-if="!trial.disableSquaredUCCheckBox && trial.isSquaredUCEnabled()" translate="common.next"></span>
+        <span ng-if="trial.disableSquaredUCCheckBox || !trial.isSquaredUCEnabled()" translate="common.save"></span>
+        <span ng-if="!trial.disableSquaredUCCheckBox && trial.isSquaredUCEnabled()" translate="common.next"></span>
       </button>
     </div>
   </div>
