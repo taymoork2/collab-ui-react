@@ -68,8 +68,4 @@ xdescribe('Org Entitlement flow', function () {
       utils.expectText(users.userListDisplayName, userName);
     });
   });
-
-  it('should log out', function () {
-    navigation.logout();
-  });
 });

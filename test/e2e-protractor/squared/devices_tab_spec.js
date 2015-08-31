@@ -24,8 +24,4 @@ describe('Devices tab check', function () {
   it('should see the devices tab', function () {
     utils.expectIsDisplayed(navigation.devicesTab);
   });
-
-  it('should log out', function () {
-    navigation.logout();
-  });
 });

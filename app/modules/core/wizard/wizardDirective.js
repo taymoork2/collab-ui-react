@@ -41,7 +41,7 @@
   }
 
   /* @ngInject */
-  function WizardCtrl($scope, $rootScope, $controller, $translate, PromiseHook, $log, $modal, Authinfo, SessionStorage, $stateParams, $state) {
+  function WizardCtrl($scope, $rootScope, $controller, $translate, PromiseHook, $log, $modal, Authinfo, SessionStorage, $stateParams, $state, FeatureToggleService, Userservice) {
     var vm = this;
     vm.current = {};
     vm.currentTab = $stateParams.currentTab;
@@ -79,8 +79,18 @@
     vm.isCurrentTab = isCurrentTab;
     vm.loadOverview = loadOverview;
     vm.showDoItLater = false;
+    vm.gsxFeature = false;
 
-    init();
+    Userservice.getUser('me', function (data, status) {
+      FeatureToggleService.getFeaturesForUser(data.id, function (data, status) {
+        _.each(data.developer, function (element) {
+          if (element.key === 'gsxdemo' && element.val === 'true') {
+            vm.gsxFeature = true;
+          }
+        });
+        init();
+      });
+    });
 
     function init() {
       if ($stateParams.currentTab) {
@@ -95,6 +105,39 @@
 
       setNextText();
       vm.isNextDisabled = false;
+
+      if (vm.gsxFeature) {
+        var msgIndex = 0;
+        var callingIndex = -1;
+        $scope.tabs.forEach(function (obj, ind, arr) {
+          if (obj.name === 'messagingSetup') {
+            msgIndex = ind;
+            obj.label = 'firstTimeWizard.spark';
+            obj.description = 'firstTimeWizard.sparkStub';
+            obj.icon = 'icon-spark';
+          } else if (obj.name === 'serviceSetup') {
+            callingIndex = ind;
+            obj.label = 'firstTimeWizard.calling';
+            obj.icon = 'icon-calls';
+          }
+        });
+        $scope.tabs.splice(msgIndex + 1, 0, {
+          name: 'webex',
+          label: 'firstTimeWizard.webex',
+          description: 'firstTimeWizard.webexStub',
+          icon: 'icon-webex',
+          title: 'firstTimeWizard.webex',
+          steps: [{
+            name: 'init',
+            template: 'modules/core/setupWizard/finish.tpl.html'
+          }]
+        });
+
+        if (callingIndex > -1) {
+          var calling = $scope.tabs.splice(callingIndex, 1)[0];
+          $scope.tabs.splice(msgIndex + 1, 0, calling);
+        }
+      }
     }
 
     function getSteps() {
@@ -333,7 +376,9 @@
     }
 
     function hasDefaultButtons() {
-      return angular.isUndefined(vm.current.step.buttons);
+      if (vm.current.step)
+        return angular.isUndefined(vm.current.step.buttons);
+      return false;
     }
 
     $scope.$on('wizardNextText', function (event, action) {
