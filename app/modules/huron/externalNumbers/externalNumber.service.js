@@ -5,7 +5,7 @@
     .factory('ExternalNumberService', ExternalNumberService);
 
   /* @ngInject */
-  function ExternalNumberService($q, ExternalNumberPool, PstnSetupService) {
+  function ExternalNumberService($q, ExternalNumberPool, PstnSetupService, FeatureToggleService) {
     var service = {
       refreshNumbers: refreshNumbers,
       clearNumbers: clearNumbers,
@@ -21,16 +21,21 @@
     return service;
 
     function refreshNumbers(customerId) {
-      return PstnSetupService.listPendingNumbers(customerId, PstnSetupService.INTELEPEER)
-        .then(function (numbers) {
-          pendingNumbers = numbers;
-        })
-        .catch(function (response) {
-          pendingNumbers = [];
-          if (!response || response.status !== 404) {
-            return $q.reject(response);
-          }
-        })
+      var pstnPromise;
+      if (FeatureToggleService.supportsPstnSetup()) {
+        pstnPromise = PstnSetupService.listPendingNumbers(customerId, PstnSetupService.INTELEPEER)
+          .then(function (numbers) {
+            pendingNumbers = numbers;
+          })
+          .catch(function (response) {
+            pendingNumbers = [];
+            if (!response || response.status !== 404) {
+              return $q.reject(response);
+            }
+          });
+      }
+
+      return $q.when(pstnPromise)
         .then(function () {
           return ExternalNumberPool.getAll(customerId)
             .then(function (numbers) {
