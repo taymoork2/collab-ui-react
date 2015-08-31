@@ -1,7 +1,3 @@
-  <div ng-if="!WebExSiteSettings.siteSettingsObj.viewReady  && !WebExSiteSettings.siteSettingsObj.hasLoadError">
-    <span>{{hello}}</span>
-  </div>
-    
   <div id="errSection"
        name="errSection"
        ng-if="WebExSiteSettings.siteSettingsObj.hasLoadError">
@@ -12,7 +8,7 @@
        ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
           
   	<div class="row">
-		<div class="col-md-12 content-view">  
+		  <div class="col-md-12 content-view">  
   			<div class="row support-row">
   				<div class="page-title col-xs-12">
    	 				<span class="title" translate="webexSiteSettings.title"></span>

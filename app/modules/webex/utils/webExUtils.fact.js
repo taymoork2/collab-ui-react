@@ -67,6 +67,17 @@
           return result;
         }, // validateXmlData()
 
+        validateSiteVersionXmlData: function (siteVersionXml) {
+          var siteVersion = this.validateXmlData(
+            "Site Version",
+            siteVersionXml,
+            "<ep:",
+            "</serv:bodyContent>"
+          );
+
+          return siteVersion;
+        }, // validateSiteVersionXmlData()
+
         validateUserInfoXmlData: function (userInfoXml) {
           var userInfo = this.validateXmlData(
             "User Data",

@@ -5,7 +5,7 @@ angular.module('WebExSiteSettings').service('WebExSiteSettingsSvc', [
     return {
       viewReady: false,
       hasLoadError: false,
-      sessionTicketErr: false,
+      sessionTicketError: false,
       allowRetry: false,
       errMsg: "",
 

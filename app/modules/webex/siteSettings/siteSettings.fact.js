@@ -38,7 +38,7 @@
           var _this = this;
 
           var siteUrl = (!$stateParams.siteUrl) ? '' : $stateParams.siteUrl;
-          var siteName = siteUrl.slice(0, siteUrl.indexOf("."));
+          var siteName = WebExUtilsFact.getSiteName(siteUrl);
 
           logMsg = funcName + ": " + "\n" +
             "siteUrl=" + siteUrl + "; " +
@@ -53,11 +53,12 @@
               var funcName = "initSiteSettingsModel().getSessionTicketSuccess()";
               var logMsg = "";
 
-              _this.initXmlApiInfo(
-                siteUrl,
-                siteName,
-                sessionTicket
-              );
+              webExSiteSettingsObj.sessionTicketError = false;
+
+              webExXmlApiInfoObj.xmlServerURL = "https://" + siteUrl + "/WBXService/XMLService";
+              webExXmlApiInfoObj.webexSiteName = siteName;
+              webExXmlApiInfoObj.webexAdminID = Authinfo.getPrimaryEmail();
+              webExXmlApiInfoObj.webexAdminSessionTicket = sessionTicket;
 
               _this.getSiteSettingsInfo();
             }, // getSessionTicketSuccess()
@@ -68,6 +69,8 @@
 
               logMsg = funcName + ": " + "errId=" + errId;
               $log.log(logMsg);
+
+              webExSiteSettingsObj.sessionTicketError = true;
             } // getSessionTicketError()
           ); // _this.getSessionTicket().then()
 
@@ -97,8 +100,6 @@
 
           var _this = this;
 
-          webExSiteSettingsObj.sessionTicketError = false;
-
           _this.getSiteSettingsInfoXml().then(
             function getSiteSettingsInfoXmlSuccess(getInfoResult) {
               var funcName = "getSiteSettingsInfoXmlSuccess()";
@@ -108,11 +109,11 @@
               $log.log(logMsg);
 
               webExSiteSettingsObj.siteInfo = WebExUtilsFact.validateSiteInfoXmlData(getInfoResult.siteInfoXml);
-              webExSiteSettingsObj.meetingTypesInfo = WebExUtilsFact.validateMeetingTypesInfoXmlData(getInfoResult.meetingTypesInfoXml);
+              // webExSiteSettingsObj.meetingTypesInfo = WebExUtilsFact.validateMeetingTypesInfoXmlData(getInfoResult.meetingTypesInfoXml);
               webExSiteSettingsObj.settingPagesInfo = WebExUtilsFact.validateSettingPagesInfoXmlData(getInfoResult.settingPagesInfoXml);
 
               _this.processSiteInfo();
-              _this.processMeetingTypesInfo();
+              // _this.processMeetingTypesInfo();
               _this.processSettingPagesInfo();
 
               webExSiteSettingsObj.viewReady = true;
@@ -147,6 +148,7 @@
           ); // siteServiceTypes.forEach()
         }, // processSiteInfo()
 
+        /*
         processMeetingTypesInfo: function () {
           var meetingTypesInfoJson = webExSiteSettingsObj.meetingTypesInfo.bodyJson;
           var sessionTypes = [];
@@ -215,6 +217,7 @@
 
           webExSiteSettingsObj.sessionTypes = sessionTypes;
         }, // processMeetingTypesInfo()
+        */
 
         processSettingPagesInfo: function () {
           var settingPagesInfoJson = null;
@@ -233,12 +236,12 @@
 
         getSiteSettingsInfoXml: function () {
           var siteInfoXml = WebExXmlApiFact.getSiteInfo(webExXmlApiInfoObj);
-          var meetingTypesInfoXml = WebExXmlApiFact.getMeetingTypeInfo(webExXmlApiInfoObj);
+          // var meetingTypesInfoXml = WebExXmlApiFact.getMeetingTypeInfo(webExXmlApiInfoObj);
           var settingPagesInfoXml = WebExXmlApiFact.getSettingPagesInfo(webExXmlApiInfoObj);
 
           return $q.all({
             siteInfoXml: siteInfoXml,
-            meetingTypesInfoXml: meetingTypesInfoXml,
+            // meetingTypesInfoXml: meetingTypesInfoXml,
             settingPagesInfoXml: settingPagesInfoXml
           });
         }, // getSiteSettingsInfoXml()

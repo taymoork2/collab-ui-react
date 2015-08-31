@@ -4,6 +4,20 @@ angular.module('WebExXmlApi').service(
   'WebExXmlApiConstsSvc', [
     function XmlApiConstants() {
       return {
+        siteVersionRequest: "" +
+          "<serv:message xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">" + "\n" +
+          "    <header>" + "\n" +
+          "        <securityContext>" + "\n" +
+          "            <siteName>{{webexSiteName}}</siteName>" + "\n" +
+          "            <webExID>{{webexAdminID}}</webExID>" + "\n" +
+          "            <sessionTicket>{{webexAdminSessionTicket}}</sessionTicket>" + "\n" +
+          "        </securityContext>" + "\n" +
+          "    </header>" + "\n" +
+          "    <body>" + "\n" +
+          "        <bodyContent xsi:type=\"java:com.webex.service.binding.ep.GetAPIVersion\" />" + "\n" +
+          "    </body>" + "\n" +
+          "</serv:message>" + "\n",
+
         siteInfoRequest: "" +
           "<serv:message xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">" + "\n" +
           "    <header>" + "\n" +
@@ -111,6 +125,12 @@ angular.module('WebExXmlApi').service(
           "</serv:message>",
 
         replaceSets: [{
+            replaceThis: /<ep:/g,
+            withThis: "<ep_"
+          }, {
+            replaceThis: /<\/ep:/g,
+            withThis: "</ep_"
+          }, {
             replaceThis: /<ns1:/g,
             withThis: "<ns1_"
           }, {

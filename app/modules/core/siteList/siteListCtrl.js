@@ -1,9 +1,13 @@
 'use strict';
 
 angular.module('Core')
-  .controller('SiteListCtrl', ['$translate', 'Authinfo', 'Config', '$log', '$scope', 'Userservice',
-    function ($translate, Authinfo, Config, $log, $scope, Userservice) {
+  .controller('SiteListCtrl', ['$q', '$translate', 'Authinfo', 'Config', '$log', '$scope', 'Userservice', 'WebExUtilsFact', 'WebExXmlApiFact', 'WebExXmlApiInfoSvc',
+    function ($q, $translate, Authinfo, Config, $log, $scope, Userservice, WebExUtilsFact, WebExXmlApiFact, webExXmlApiInfoObj) {
       var vm = this;
+
+      vm.getWebexUrl = function (url) {
+        return Config.getWebexAdvancedHomeUrl(url);
+      };
 
       vm.siteLaunch = {
         adminEmailParam: Authinfo.getPrimaryEmail(),
@@ -23,51 +27,54 @@ angular.module('Core')
       }
 
       vm.gridData = Authinfo.getConferenceServicesWithoutSiteUrl();
+      vm.showSiteLinks = false;
+      vm.iframeSupportedSite = false;
 
-      vm.getWebexUrl = function (url) {
-        return Config.getWebexAdvancedHomeUrl(url);
-      };
+      var siteUrl = vm.gridData[0].license.siteUrl;
+      var siteName = WebExUtilsFact.getSiteName(siteUrl);
 
+      $log.log("siteListCtrl(): siteUrl=" + siteUrl);
+
+      // Start of grid set up
       var rowTemplate =
-        '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell" ng-click="showUserDetails(row.entity)">' +
-        '<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }">&nbsp;</div>' +
-        '<div ng-cell></div>' +
-        '</div>';
+        '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell" ng-click="showUserDetails(row.entity)">' + '\n' +
+        '  <div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }">&nbsp;</div>' + '\n' +
+        '  <div ng-cell></div>' + '\n' +
+        '</div>' + '\n';
 
       var siteUrlTemplate =
-        '<launch-site admin-email-param="{{siteList.siteLaunch.adminEmailParam}}"' +
-        '             advanced-settings="{{siteList.siteLaunch.advancedSettings}}"' +
-        '             user-email-param="{{siteList.siteLaunch.userEmailParam}}"' +
-        '             webex-advanced-url="{{siteList.getWebexUrl(row.entity.license.siteUrl)}}">' +
-        '</launch-site>';
-
-      var siteSettingsTemplate =
-        '<div>' + '\n' +
-        '  <a id="webex-site-settings"' + '\n' +
-        '     ui-sref="site-settings({siteUrl:row.entity.license.siteUrl})">' + '\n' +
-        '                             ' + '\n' +
-        '    <p class="ngCellText">' + '\n' +
-        '      <span name="webexSiteSettings"' + '\n' +
-        '            id="webexSiteSettings">' + '\n' +
-        '        <i class="fa fa-external-link fa-lg"></i>' + '\n' +
-        '      </span>' + '\n' +
-        '    </p>' + '\n' +
-        '  </a>' + '\n' +
-        '<div>' + '\n';
+        '<div ng-if="siteList.showSiteLinks">' + '\n' +
+        '  <div ng-if="!siteList.iframeSupportedSite">' + '\n' +
+        '    <launch-site admin-email-param="{{siteList.siteLaunch.adminEmailParam}}"' + '\n' +
+        '                 advanced-settings="{{siteList.siteLaunch.advancedSettings}}"' + '\n' +
+        '                 user-email-param="{{siteList.siteLaunch.userEmailParam}}"' + '\n' +
+        '                 webex-advanced-url="{{siteList.getWebexUrl(row.entity.license.siteUrl)}}">' + '\n' +
+        '    </launch-site>' + '\n' +
+        '  </div>' + '\n' +
+        '  <div ng-if="siteList.iframeSupportedSite">' + '\n' +
+        '    <a id="webex-site-settings"' + '\n' +
+        '       ui-sref="site-settings({siteUrl:row.entity.license.siteUrl})">' + '\n' +
+        '                            ' + '\n' +
+        '      <p class="ngCellText">' + '\n' +
+        '        <span name="webexSiteSettings"' + '\n' +
+        '              id="webexSiteSettings">' + '\n' +
+        '          <i class="fa fa-external-link fa-lg"></i>' + '\n' +
+        '        </span>' + '\n' +
+        '      </p>' + '\n' +
+        '    </a>' + '\n' +
+        '  </div>' + '\n' +
+        '</div>' + '\n';
 
       var siteReportsTemplate =
-        '<div>' + '\n' +
-        '  <a id="webex-site-reportings"' + '\n' +
-        '     ui-sref="site-reportings">' + '\n' +
-        '                               ' + '\n' +
-        '    <p class="ngCellText">' + '\n' +
-        '      <span name="webexSiteReportings"' + '\n' +
-        '            id="webexSiteReportings">' + '\n' +
-        '        <i class="fa fa-external-link fa-lg"></i>' + '\n' +
-        '      </span>' + '\n' +
-        '    </p>' + '\n' +
-        '  </a>' + '\n' +
-        '<div>' + '\n';
+        '<div ng-if="siteList.showSiteLinks">' + '\n' +
+        '  <div ng-if="siteList.iframeSupportedSite">' + '\n' +
+        '    <launch-site admin-email-param="{{siteList.siteLaunch.adminEmailParam}}"' + '\n' +
+        '                 advanced-settings="{{siteList.siteLaunch.advancedSettings}}"' + '\n' +
+        '                 user-email-param="{{siteList.siteLaunch.userEmailParam}}"' + '\n' +
+        '                 webex-advanced-url="{{siteList.getWebexUrl(row.entity.license.siteUrl)}}">' + '\n' +
+        '    </launch-site>' + '\n' +
+        '  </div>' + '\n' +
+        '</div>' + '\n';
 
       vm.gridOptions = {
         data: 'siteList.gridData',
@@ -100,43 +107,86 @@ angular.module('Core')
         sortable: false
       });
 
-      var iframeWebex = true;
+      vm.gridOptions.columnDefs.push({
+        field: 'license.siteUrl',
+        displayName: $translate.instant('siteList.siteSettings'),
+        cellTemplate: siteUrlTemplate,
+        sortable: false
+      });
 
-      if (!iframeWebex) {
-        vm.gridOptions.columnDefs.push({
-          field: 'license.siteUrl',
-          displayName: $translate.instant('siteList.siteSettings'),
-          cellTemplate: siteUrlTemplate,
-          sortable: false
-        });
+      vm.gridOptions.columnDefs.push({
+        field: 'license.siteSettings',
+        displayName: $translate.instant('siteList.siteReports'),
+        cellTemplate: siteReportsTemplate,
+        sortable: false
+      });
+      // End of grid set up
 
-        vm.gridOptions.columnDefs.push({
-          field: 'license.siteSettings',
-          displayName: $translate.instant('siteList.siteReports'),
-          sortable: false
-        });
-      } else {
-        vm.gridOptions.columnDefs.push({
-          field: 'license.siteSettings',
-          displayName: $translate.instant('siteList.siteSettings'),
-          cellTemplate: siteSettingsTemplate,
-          sortable: false
-        });
+      // Start of site links set up
+      getSessionTicket().then(
+        function getSessionTicketSuccess(sessionTicket) {
+          $log.log("getSessionTicketSuccess()");
 
-        /*
-        vm.gridOptions.columnDefs.push({
-          field: 'license.siteSettings',
-          displayName: $translate.instant('siteList.siteReports'),
-          cellTemplate: siteReportsTemplate,
-          sortable: false
+          webExXmlApiInfoObj.xmlServerURL = "https://" + siteUrl + "/WBXService/XMLService";
+          webExXmlApiInfoObj.webexSiteName = siteName;
+          webExXmlApiInfoObj.webexAdminID = Authinfo.getPrimaryEmail();
+          webExXmlApiInfoObj.webexAdminSessionTicket = sessionTicket;
+
+          getSiteVersionXml().then(
+            function getSiteVersionInfoXmlSuccess(getInfoResult) {
+              var funcName = "getSiteVersionInfoXmlSuccess()";
+              var logMsg = "";
+
+              $log.log(funcName);
+
+              vm.iframeSupportedSite = iframeSupportedSiteVersionCheck(getInfoResult);
+              vm.showSiteLinks = true;
+            }, // getSiteVersionInfoXmlSuccess()
+
+            function getSiteVersionInfoXmlError(getInfoResult) {
+              $log.log("vm.getSiteVersionInfoXmlError()");
+
+              vm.showSiteLinks = true;
+            } // getSiteVersionInfoXmlError()
+          ); // vm.getSessionTicket(siteUrl).then()
+        }, // getSessionTicketSuccess()
+
+        function getSessionTicketError(errId) {
+          vm.showSiteLinks = true;
+        } // getSessionTicketError()
+      ); // vm.getSessionTicket(siteUrl).then()
+
+      function getSessionTicket() {
+        return WebExXmlApiFact.getSessionTicket(siteUrl);
+      } // getSessionTicket()
+
+      function getSiteVersionXml() {
+        var siteVersionXml = WebExXmlApiFact.getSiteVersion(webExXmlApiInfoObj);
+
+        return $q.all({
+          siteVersionXml: siteVersionXml
         });
-        */
-        vm.gridOptions.columnDefs.push({
-          field: 'license.siteSettings',
-          displayName: $translate.instant('siteList.siteReports'),
-          cellTemplate: siteUrlTemplate,
-          sortable: false
-        });
-      }
+      } // getSiteVersionXml()
+
+      function iframeSupportedSiteVersionCheck(getInfoResult) {
+        var siteVersionJsonObj = WebExUtilsFact.validateSiteVersionXmlData(getInfoResult.siteVersionXml);
+        var siteVersionJson = siteVersionJsonObj.bodyJson;
+        var iframeSupportedSiteVersion = false;
+
+        if ("" === siteVersionJsonObj.errId) {
+          var siteVersionStr = siteVersionJson.ep_apiVersion;
+          var index = "WebEx XML API V".length;
+          var siteVersion = siteVersionStr.slice(index);
+
+          $log.log("iframeSupportedSiteVersion(): siteVersion=" + siteVersion);
+
+          iframeSupportedSiteVersion = true;
+        }
+
+        $log.log("iframeSupportedSiteVersion(): iframeSupportedSiteVersion=" + iframeSupportedSiteVersion);
+
+        return iframeSupportedSiteVersion;
+      } // iframeSupportedSiteVersionCheck()
+      // End of site links set up
     }
   ]);

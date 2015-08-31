@@ -23,8 +23,6 @@
       Notification
     ) {
 
-      $scope.hello = "Hello Kitty is here!!!";
-
       this.siteSettingsObj = WebExSiteSettingsFact.getSiteSettingsObj();
 
       var funcName = "WebExSiteSettingsCtrl()";

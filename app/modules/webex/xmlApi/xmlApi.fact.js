@@ -50,6 +50,14 @@
       }; //sendXMLApiReq()
 
       return {
+        getSiteVersion: function (xmlApiAccessInfo) {
+          return $q(function (resolve, reject) {
+            var xmlServerURL = xmlApiAccessInfo.xmlServerURL;
+            var xmlRequest = $interpolate(xmlApiConstants.siteVersionRequest)(xmlApiAccessInfo);
+            _self.sendXMLApiReq(xmlServerURL, xmlRequest, resolve, reject);
+          });
+        }, // getSiteVersion()
+
         getSiteInfo: function (xmlApiAccessInfo) {
           return $q(function (resolve, reject) {
             var xmlServerURL = xmlApiAccessInfo.xmlServerURL;
