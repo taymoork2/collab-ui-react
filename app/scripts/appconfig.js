@@ -647,6 +647,40 @@ angular
           }
         })
 
+      /*
+        devices redux 2
+      */
+
+      .state('devices-redux2', {
+          abstract: true,
+          url: '/devices-redux2',
+          templateUrl: 'modules/squared/devicesRedux2/devices.html',
+          controller: 'DevicesReduxCtrl2',
+          controllerAs: 'devices',
+          parent: 'main'
+        })
+        .state('devices-redux2.search', {
+          url: '/search',
+          views: {
+            'rightPanel': {
+              templateUrl: 'modules/squared/devicesRedux2/list.html'
+            }
+          }
+        })
+        .state('devices-redux2.details', {
+          url: '/details',
+          views: {
+            'rightPanel': {
+              controllerAs: 'deviceDetails',
+              controller: 'DevicesReduxDetailsCtrl2',
+              templateUrl: 'modules/squared/devicesRedux2/details.html'
+            }
+          },
+          params: {
+            device: null
+          }
+        })
+
       .state('devices2', {
           url: '/devices2',
           templateUrl: 'modules/squared/devices2/devices2.html',
