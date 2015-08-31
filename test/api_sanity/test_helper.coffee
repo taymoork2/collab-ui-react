@@ -1,101 +1,101 @@
-_ = require 'lodash'
+_       = require 'lodash'
 request = require 'request'
 
 auth =
   'sqtest-admin':
     user: 'sqtest-admin@squared.example.com'
     pass: 'P@ssword123'
-    org: '584cf4cd-eea7-4c8c-83ee-67d88fc6eab5'
+    org:  '584cf4cd-eea7-4c8c-83ee-67d88fc6eab5'
 
   'pbr-admin':
     user: 'pbr-org-admin@squared2webex.com'
     pass: 'C1sc0123!'
-    org: '4214d345-7caf-4e32-b015-34de878d1158'
+    org:  '4214d345-7caf-4e32-b015-34de878d1158'
 
   'partner-admin':
     user: 'atlaspartneradmin@atlas.test.com'
     pass: 'C1sc0123!'
-    org: 'c054027f-c5bd-4598-8cd8-07c08163e8cd'
+    org:  'c054027f-c5bd-4598-8cd8-07c08163e8cd'
 
   'partner-reports':
     user: 'partner-admin@huron-int.com'
     pass: 'Cisco123!'
-    org: '21e30827-4c16-4fed-b025-e1342508c380'
+    org:  '21e30827-4c16-4fed-b025-e1342508c380'
 
   'partner-sales-user':
     user: 'phtest77+salesadmin@gmail.com'
     pass: 'C1sc0123!'
-    org: '7e268021-dc11-4728-b39d-9ba0e0abb5e0'
+    org:  '7e268021-dc11-4728-b39d-9ba0e0abb5e0'
 
   'partner-squc-admin':
     user: 'admin@ucpartner.e2e.huronalpha.com'
     pass: 'Cisco123!!'
-    org: '666a7b2f-f82e-4582-9672-7f22829e728d'
+    org:  '666a7b2f-f82e-4582-9672-7f22829e728d'
 
   'pbr-admin-test':
     user: 'pbr-org-admin-test@wx2.example.com'
     pass: 'C1sco123!'
-    org: '4214d345-7caf-4e32-b015-34de878d1158'
+    org:  '4214d345-7caf-4e32-b015-34de878d1158'
 
   'test-user':
     user: 'atlasmapservice+ll1@gmail.com'
     pass: 'C1sc0123!'
-    org: '75653d2f-1675-415c-aa5d-c027233f68fe'
+    org:  '75653d2f-1675-415c-aa5d-c027233f68fe'
 
   'huron-int1':
     user: 'admin@int1.huron-alpha.com'
     pass: 'Cisco123!'
-    org: '7e88d491-d6ca-4786-82ed-cbe9efb02ad2'
+    org:  '7e88d491-d6ca-4786-82ed-cbe9efb02ad2'
 
   'huron-e2e':
     user: 'admin@uc.e2e.huron-alpha.com'
     pass: 'Cisco123!'
-    org: '30fdb01e-0bb2-4ed4-97f4-84a2289bdc79'
+    org:  '30fdb01e-0bb2-4ed4-97f4-84a2289bdc79'
 
   'account-admin':
     user: 'phtest77+acc2@gmail.com'
     pass: 'C1sc0123!'
-    org: '58f01b76-2b3f-4c91-ad8a-e2af626fc7a5'
+    org:  '58f01b76-2b3f-4c91-ad8a-e2af626fc7a5'
 
   'non-trial-admin':
     user: 'pbr-test-admin@squared2webex.com'
     pass: 'P@ssword123'
-    org: '4214d345-7caf-4e32-b015-34de878d1158'
+    org:  '4214d345-7caf-4e32-b015-34de878d1158'
 
   'invite-admin':
     user: 'pbr-invite-user@squared2webex.com'
     pass: 'P@ssword123'
-    org: '4214d345-7caf-4e32-b015-34de878d1158'
+    org:  '4214d345-7caf-4e32-b015-34de878d1158'
 
   'support-admin':
     user: 'sqtest-admin-support@squared.example.com'
     pass: 'P@ssword123'
-    org: '584cf4cd-eea7-4c8c-83ee-67d88fc6eab5'
+    org:  '584cf4cd-eea7-4c8c-83ee-67d88fc6eab5'
 
   'media-super-admin':
     user: 'super-admin@mfusion1webex.com'
     pass: 'Mc23267!'
-    org: 'baab1ece-498c-452b-aea8-1a727413c818'
+    org:  'baab1ece-498c-452b-aea8-1a727413c818'
 
   'customer-support-admin':
     user: 'admin@csreptestdom.collaborate.com'
     pass: 'C1sc0123!'
-    org: 'c1e59258-29e1-42d7-bfa7-84ab26632b46'
+    org:  'c1e59258-29e1-42d7-bfa7-84ab26632b46'
 
   'customer-support-user':
     user: 'regUser1@csreptestdom.collaborate.com'
     pass: 'P@ssword123'
-    org: 'c1e59258-29e1-42d7-bfa7-84ab26632b46'
+    org:  'c1e59258-29e1-42d7-bfa7-84ab26632b46'
 
   'customer-regular-user':
     user: 'regUser2@csreptestdom.collaborate.com'
     pass: 'C1sc0123!'
-    org: 'c1e59258-29e1-42d7-bfa7-84ab26632b46'
+    org:  'c1e59258-29e1-42d7-bfa7-84ab26632b46'
 
   'multiple-subscription-user':
     user: 'int-esub-1@mailinator.com'
     pass: 'C1sc0123!'
-    org: '9d173ec9-198e-430d-9363-688a333bdee7'
+    org:  '9d173ec9-198e-430d-9363-688a333bdee7'
 
   'selfsign-sso-admin':
     user: 'phtest77+dontdeleteme@gmail.com'
@@ -105,12 +105,12 @@ auth =
   'mockcisco-support-user':
     user: 'phtest77+testbilling@gmail.com'
     pass: 'C1sc0123!'
-    org: 'd30a6828-dc35-4753-bab4-f9b468828688'
+    org:  'd30a6828-dc35-4753-bab4-f9b468828688'
 
   'contactcenter-admin':
     user: 'arunachaladmn@outlook.com'
     pass: 'Cisco@123'
-    org: '945a62e3-6b52-40c2-a8ce-0ab3e56a53f5'
+    org:  '945a62e3-6b52-40c2-a8ce-0ab3e56a53f5'
 
 clientId = 'C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec'
 clientSecret = 'c10c371b4641010a750073b3c8e65a7fff0567400d316055828d3c74925b0857'

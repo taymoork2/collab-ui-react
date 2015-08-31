@@ -1,14 +1,14 @@
 'use strict';
 
 describe('Controller: UserOverviewCtrl', function () {
-  var controller, $scope, $httpBackend, Config, Authinfo, Utils, Userservice, FeatureToggleService, $filter;
+  var controller, $scope, $httpBackend, Config, Authinfo, Utils, Userservice, FeatureToggleService;
 
   var $stateParams, currentUser, updatedUser, getUserMe, getMyFeatureToggles;
 
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _Config_, _Authinfo_, _Utils_, _Userservice_, _FeatureToggleService_, _$filter_) {
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _Config_, _Authinfo_, _Utils_, _Userservice_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     Config = _Config_;
@@ -16,7 +16,6 @@ describe('Controller: UserOverviewCtrl', function () {
     Utils = _Utils_;
     Userservice = _Userservice_;
     FeatureToggleService = _FeatureToggleService_;
-    $filter = _$filter_;
 
     currentUser = angular.copy(getJSONFixture('core/json/currentUser.json'));
     getUserMe = getJSONFixture('core/json/users/me.json');

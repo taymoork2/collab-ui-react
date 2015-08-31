@@ -22,7 +22,6 @@ describe('Configuring Contact Center services per user', function () {
     login.login('contactcenter-admin', '#/users');
   });
 
-
   it('should show contact center service configuration page', function () {
     utils.searchAndClick(testUser);
     utils.click(users.contactCenterService);
