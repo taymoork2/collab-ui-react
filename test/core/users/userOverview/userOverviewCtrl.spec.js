@@ -178,16 +178,4 @@ describe('Controller: UserOverviewCtrl', function () {
 
   });
 
-  describe('removeSpaces filter', function () {
-    it('should be able to remove spaces from String', function () {
-      var removeSpaces = $filter('removeSpaces');
-      expect(removeSpaces('Contact Center')).toBe('ContactCenter');
-    });
-
-    it('value should not change if filter applied on non String object', function () {
-      var removeSpaces = $filter('removeSpaces');
-      expect(removeSpaces(123)).toBe(123);
-    });
-  });
-
 });

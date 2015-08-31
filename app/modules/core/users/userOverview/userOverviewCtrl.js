@@ -3,21 +3,7 @@
 
   angular
     .module('Core')
-    .controller('UserOverviewCtrl', UserOverviewCtrl)
-    .filter('removeSpaces', removeSpaces);
-
-  /**
-   * Filter function to remove spaces from a given String
-   * @returns {Function}
-   */
-  function removeSpaces() {
-    return function (string) {
-      if (!angular.isString(string)) {
-        return string;
-      }
-      return string.replace(/[\s]/g, '');
-    };
-  }
+    .controller('UserOverviewCtrl', UserOverviewCtrl);
 
   /* @ngInject */
   function UserOverviewCtrl($scope, $stateParams, $translate, $http, Authinfo, Config, Utils, FeatureToggleService, Userservice) {
@@ -75,7 +61,7 @@
 
       var contactCenterState = {
         name: $translate.instant('onboardModal.contactCenter'),
-        icon: $translate.instant('onboardModal.contactCenter'),
+        icon: 'ContactCenter',
         state: 'user-overview.contactCenter',
         detail: $translate.instant('onboardModal.freeContactCenter')
       };
