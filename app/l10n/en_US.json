@@ -1695,6 +1695,7 @@
     "pageId_xxxx": "Page name undefined",
     "pageId_cmr": "Cloud Collaboration Meeting Room",
     "pageId_address": "Company Addresses",
+    "pageId_misc": "Miscellaneous",
     "pageId_scheduler": "Default Scheduler Options"
   },
   "leaderBoard": {

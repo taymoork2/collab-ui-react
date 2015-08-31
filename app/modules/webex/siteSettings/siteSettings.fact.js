@@ -226,7 +226,38 @@
           setCenterSpecificSettingPages();
 
           function setCommonSiteSettingPages() {
-            webExSiteSettingsObj.commonSiteSettingPages = null;
+            $log.log("setCommonSiteSettingPages START");
+            var siteName = webExSiteSettingsObj.siteName;
+            var siteUrl = webExSiteSettingsObj.siteUrl;
+            var commonSiteSettings = [];
+
+            //TODO: parse XML to get links
+            var commonSiteSetting = {
+              id: "cmr",
+              label: 'webexSiteSettingsLabels.pageId_cmr',
+              link: "https://" + siteUrl + "/admin",
+              enabled: true
+            };
+            commonSiteSettings.push(commonSiteSetting);
+
+            var commonSiteSetting2 = {
+              id: "address",
+              label: "webexSiteSettingsLabels.pageId_address",
+              link: "https://" + siteUrl + "/admin",
+              enabled: false
+            };
+            commonSiteSettings.push(commonSiteSetting2);
+
+            commonSiteSetting2 = {
+              id: "misc",
+              label: "webexSiteSettingsLabels.pageId_" + "misc",
+              link: "https://" + siteName + ".webex.com/adm3100/siteSettingCommon.do?siteurl=" + siteName,
+              enabled: true
+            };
+            commonSiteSettings.push(commonSiteSetting2);
+
+            webExSiteSettingsObj.commonSiteSettingPages = commonSiteSettings;
+            $log.log("setCommonSiteSettingPages END");
           } // setCommonSiteSettingPages()
 
           function setCenterSpecificSettingPages() {
