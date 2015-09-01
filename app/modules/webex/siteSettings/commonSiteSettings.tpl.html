@@ -6,7 +6,7 @@
 		<ul style="list-style-type:none">
 			<li ng-repeat="commonSiteSetting in WebExSiteSettings.siteSettingsObj.commonSiteSettingPages"
 			    ng-if="commonSiteSetting.enabled">
-                <a href={{commonSiteSetting.link}}><span translate={{commonSiteSetting.label}}></span></a>
+                <a href={{commonSiteSetting.link}} id={{commonSiteSetting.id}}><span translate={{commonSiteSetting.label}}></span></a>
             </li>
 		</ul> 
 	</div>
