@@ -74,7 +74,7 @@ angular
       $httpProvider.interceptors.push('ResponseInterceptor');
 
       // See ... http://angular-translate.github.io/docs/#/guide/19_security
-      $translateProvider.useSanitizeValueStrategy(null);
+      $translateProvider.useSanitizeValueStrategy('escapeParameters');
 
       $translateProvider.useStaticFilesLoader({
         prefix: 'l10n/',
