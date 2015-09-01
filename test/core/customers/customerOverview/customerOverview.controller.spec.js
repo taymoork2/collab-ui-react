@@ -14,6 +14,8 @@ describe('Controller: CustomerOverviewCtrl', function () {
     identityCustomer = {
       services: ['webex-squared', 'ciscouc']
     };
+    //Userservice = {};
+    //Authinfo = {};
     $stateParams = _$stateParams_;
     $stateParams.currentCustomer = currentCustomer;
     $state = _$state_;
@@ -29,7 +31,9 @@ describe('Controller: CustomerOverviewCtrl', function () {
 
     controller = $controller('CustomerOverviewCtrl', {
       $scope: $scope,
-      identityCustomer: identityCustomer
+      identityCustomer: identityCustomer,
+      Userservice: {},
+      Authinfo: {}
     });
 
     $scope.$apply();
