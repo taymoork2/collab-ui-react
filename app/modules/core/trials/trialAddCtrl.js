@@ -22,8 +22,8 @@
       type: 'input',
       templateOptions: {
         label: $translate.instant('partnerHomePage.customerName'),
-        labelClass: 'col-xs-4 columns',
-        inputClass: 'col-xs-7',
+        labelClass: 'small-4 columns',
+        inputClass: 'small-7 columns',
         type: 'text',
         required: true,
         maxlength: 50
@@ -34,8 +34,8 @@
       className: 'last-field',
       templateOptions: {
         label: $translate.instant('partnerHomePage.customerEmail'),
-        labelClass: 'col-xs-4 columns',
-        inputClass: 'col-xs-7',
+        labelClass: 'small-4 columns',
+        inputClass: 'small-7 columns',
         type: 'email',
         required: true
       }
@@ -48,7 +48,7 @@
       templateOptions: {
         label: $translate.instant('trials.collab'),
         id: 'squaredTrial',
-        class: 'col-xs-8 col-xs-offset-4'
+        class: 'small-8 small-offset-4 columns'
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
@@ -62,7 +62,7 @@
       templateOptions: {
         label: $translate.instant('trials.squaredUC'),
         id: 'squaredUCTrial',
-        class: 'col-xs-8 col-xs-offset-4'
+        class: 'small-8 small-offset-4 columns'
       },
       expressionProperties: {
         'hide': function () {
@@ -75,8 +75,8 @@
       templateOptions: {
         horizontal: true,
         label: $translate.instant('partnerHomePage.duration'),
-        labelClass: 'col-xs-4 columns',
-        inputClass: 'col-xs-7',
+        labelClass: 'small-4 columns',
+        inputClass: 'small-7 columns',
         options: [{
           label: $translate.instant('partnerHomePage.ninetyDays'),
           value: 90,
@@ -97,8 +97,8 @@
       className: 'last-field',
       templateOptions: {
         label: $translate.instant('partnerHomePage.numberOfLicenses'),
-        labelClass: 'col-xs-4 columns',
-        inputClass: 'col-xs-3',
+        labelClass: 'small-4 columns',
+        inputClass: 'small-3 columns',
         type: 'number',
         required: true
       },
