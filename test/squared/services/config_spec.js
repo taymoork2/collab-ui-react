@@ -16,6 +16,8 @@ describe('Config', function () {
   var intHost = 'int-admin.ciscospark.com';
   var cfeHost = 'cfe-admin.ciscospark.com';
 
+  var scope = encodeURIComponent('webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config Identity:Organization cloudMeetings:login webex-messenger:get_webextoken');
+
   var whenCalling = function (fn, arg) {
     var hosts = {
       development: devHost,
@@ -141,9 +143,9 @@ describe('Config', function () {
 
   it('should return correct oauth login url', function () {
     whenCalling('getOauthLoginUrl').expectUrlToBe({
-      development: 'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=webexsquare%3Aadmin%20ciscouc%3Aadmin%20Identity%3ASCIM%20Identity%3AConfig%20Identity%3AOrganization%20cloudMeetings%3Alogin&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000&state=random-string&service=spark',
-      integration: 'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=webexsquare%3Aadmin%20ciscouc%3Aadmin%20Identity%3ASCIM%20Identity%3AConfig%20Identity%3AOrganization%20cloudMeetings%3Alogin&redirect_uri=https%3A%2F%2Fint-admin.ciscospark.com%2F&state=random-string&service=spark',
-      production: 'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=webexsquare%3Aadmin%20ciscouc%3Aadmin%20Identity%3ASCIM%20Identity%3AConfig%20Identity%3AOrganization%20cloudMeetings%3Alogin&redirect_uri=https%3A%2F%2Fadmin.ciscospark.com%2F&state=random-string&service=spark'
+      development: 'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=' + scope + '&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000&state=random-string&service=spark',
+      integration: 'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=' + scope + '&redirect_uri=https%3A%2F%2Fint-admin.ciscospark.com%2F&state=random-string&service=spark',
+      production: 'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=' + scope + '&redirect_uri=https%3A%2F%2Fadmin.ciscospark.com%2F&state=random-string&service=spark'
     });
   });
 
@@ -164,7 +166,6 @@ describe('Config', function () {
   });
 
   it('should return correct access code url', function () {
-    var scope = 'webexsquare%3Aadmin%20ciscouc%3Aadmin%20Identity%3ASCIM%20Identity%3AConfig%20Identity%3AOrganization%20cloudMeetings%3Alogin';
     whenCalling('getOauthAccessCodeUrl', 'foo').expectUrlToBe({
       development: 'grant_type=refresh_token&refresh_token=foo&scope=' + scope,
       integration: 'grant_type=refresh_token&refresh_token=foo&scope=' + scope,
