@@ -144,11 +144,12 @@
           return carriers;
         })
         .catch(function (response) {
-          if (response && response.status === 404) {
-            return PstnSetupService.listCarriers();
-          } else {
-            return $q.reject(response);
-          }
+          //TODO uncomment after 404 fix
+          // if (response && response.status === 404) {
+          return PstnSetupService.listCarriers();
+          // } else {
+          //   return $q.reject(response);
+          // }
         })
         .then(function (carriers) {
           angular.forEach(carriers, initCarrier);
