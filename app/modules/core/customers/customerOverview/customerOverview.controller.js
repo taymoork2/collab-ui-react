@@ -23,7 +23,7 @@
         vm.currentCustomer.customerEmail = identityCustomer.email;
       }
     }
-
+ 
     function launchCustomerPortal() {
       var liclist = vm.currentCustomer.licenseList;
       var licIds = [];
