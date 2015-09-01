@@ -5,7 +5,7 @@
     .controller('TrialAddCtrl', TrialAddCtrl);
 
   /* @ngInject */
-  function TrialAddCtrl($scope, $state, $translate, $q, Authinfo, TrialService, HuronCustomer, Notification, Config, EmailService, ValidationService) {
+  function TrialAddCtrl($scope, $state, $translate, $q, Authinfo, TrialService, HuronCustomer, Notification, Config, EmailService, ValidationService, FeatureToggleService) {
     var vm = this;
 
     vm.nameError = false;
@@ -128,6 +128,7 @@
     vm.startTrial = startTrial;
     vm.isSquaredUCEnabled = isSquaredUCEnabled;
     vm.gotoAddNumber = gotoAddNumber;
+    vm.supportsPstnSetup = FeatureToggleService.supportsPstnSetup;
 
     function isOffersEmpty() {
       return !(vm.offers[Config.trials.collab] || vm.offers[Config.trials.squaredUC]);
@@ -139,6 +140,10 @@
 
     function gotoAddNumber() {
       $state.go('trialAdd.addNumbers');
+    }
+
+    function gotoNextSteps() {
+      $state.go('trialAdd.nextSteps');
     }
 
     function startTrial(keepModal) {
@@ -180,15 +185,20 @@
           }
         }).then(function () {
           angular.element('#startTrialButton').button('reset');
-          if (!keepModal) {
-            $state.modal.close();
-          }
+
           var successMessage = [$translate.instant('trialModal.addSuccess', {
             customerName: vm.model.customerName,
             licenseCount: vm.model.licenseCount,
             licenseDuration: vm.model.licenseDuration
           })];
           Notification.notify(successMessage, 'success');
+
+          if (FeatureToggleService.supportsPstnSetup()) {
+            gotoNextSteps();
+          } else if (!keepModal) {
+            $state.modal.close();
+          }
+
           return vm.model.customerOrgId;
         });
     }

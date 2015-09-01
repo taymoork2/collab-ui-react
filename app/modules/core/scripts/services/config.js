@@ -781,7 +781,7 @@ angular.module('Core')
         WX2_User: ['overview', 'reports', 'support'],
         WX2_Support: ['overview', 'reports', 'support'],
         WX2_SquaredInviter: [],
-        PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile'],
+        PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup'],
         PARTNER_USER: ['partnercustomers', 'customer-overview', 'trialAdd', 'trialEdit'],
         CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
         User: [],

@@ -32,7 +32,8 @@ angular.module('Core', [
   'formly',
   'formlyCisco',
   'cisco.ui',
-  'timer'
+  'timer',
+  'angular-nicescroll'
 ]);
 
 angular.module('Squared', ['Core']);

@@ -411,7 +411,7 @@ gulp.task('unsupported:build', function () {
  ********************************************/
 gulp.task('image-min', function () {
   messageLogger('Compressing images for dist');
-  gulp.src(config.build + '/**/*.{ico,png,jpg,gif}')
+  gulp.src(config.build + '/**/*.{ico,png,jpg,gif,svg}')
     .pipe($.imagemin({
       optimizationLevel: 5
     }))
