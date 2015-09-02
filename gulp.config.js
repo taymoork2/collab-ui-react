@@ -191,7 +191,7 @@ module.exports = function() {
       ' * <%= pkg.name %> v<%= pkg.version %> (<%= pkg.homepage %>)\n' +
       ' * Copyright ' + year + ' <%= pkg.author %>\n' +
       ' */\n' +
-      '',
+      ''
 
   };
 
