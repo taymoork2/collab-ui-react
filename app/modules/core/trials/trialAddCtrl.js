@@ -23,7 +23,7 @@
       templateOptions: {
         label: $translate.instant('partnerHomePage.customerName'),
         labelClass: 'small-4 columns',
-        inputClass: 'small-7 columns',
+        inputClass: 'small-7 columns left',
         type: 'text',
         required: true,
         maxlength: 50
@@ -35,7 +35,7 @@
       templateOptions: {
         label: $translate.instant('partnerHomePage.customerEmail'),
         labelClass: 'small-4 columns',
-        inputClass: 'small-7 columns',
+        inputClass: 'small-7 columns left',
         type: 'email',
         required: true
       }
@@ -76,7 +76,7 @@
         horizontal: true,
         label: $translate.instant('partnerHomePage.duration'),
         labelClass: 'small-4 columns',
-        inputClass: 'small-7 columns',
+        inputClass: 'small-7 columns left',
         options: [{
           label: $translate.instant('partnerHomePage.ninetyDays'),
           value: 90,
@@ -98,7 +98,7 @@
       templateOptions: {
         label: $translate.instant('partnerHomePage.numberOfLicenses'),
         labelClass: 'small-4 columns',
-        inputClass: 'small-3 columns',
+        inputClass: 'small-3 columns left',
         type: 'number',
         required: true
       },
