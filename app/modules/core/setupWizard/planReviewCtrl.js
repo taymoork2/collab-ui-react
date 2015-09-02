@@ -40,12 +40,10 @@
     vm.gsxFeature = false;
 
     Userservice.getUser('me', function (data, status) {
-      FeatureToggleService.getFeaturesForUser(data.id, function (data, status) {
-        _.each(data.developer, function (element) {
-          if (element.key === 'gsxdemo' && element.val === 'true') {
-            vm.gsxFeature = true;
-          }
-        });
+      FeatureToggleService.getFeaturesForUser(data.id, 'gsxdemo').then(function (value) {
+        vm.gsxFeature = value;
+      }).finally(function () {
+        activate();
       });
     });
 
@@ -83,6 +81,9 @@
       vm.confServices.services = Authinfo.getConferenceServices();
       if (vm.confServices.services) {
         angular.forEach(vm.confServices.services, function (service) {
+          if (vm.gsxFeature && service.label.indexOf('Meeting Center') != -1) {
+            service.label = 'Meeting Center';
+          }
           if (service.license.isTrial) {
             vm.trialExists = true;
             vm.trialId = service.license.trialId;
@@ -146,8 +147,6 @@
         }
       }
     }
-
-    activate();
     /////////////////
 
     function populateTrialData(trial) {

@@ -35,7 +35,7 @@ angular.module('Core')
 
       $scope.openAddTrialModal = function () {
         $state.go('trialAdd.info').then(function () {
-          $state.modal.result.then(function () {
+          $state.modal.result.finally(function () {
             getTrialsList();
             getManagedOrgsList();
           });
@@ -47,7 +47,7 @@ angular.module('Core')
           showPartnerEdit: true,
           currentTrial: $scope.currentTrial
         }).then(function () {
-          $state.modal.result.then(function () {
+          $state.modal.result.finally(function () {
             getTrialsList();
             getManagedOrgsList();
           });
@@ -267,7 +267,8 @@ angular.module('Core')
         '</button>' +
         '<ul class="dropdown-menu dropdown-primary" role="menu">' +
         '<li ng-show="row.entity.isAllowedToManage" id="{{row.entity.customerName}}LaunchCustomerButton"><a href="" ng-click="$event.stopPropagation(); closeActionsDropdown();" ui-sref="login_swap({customerOrgId: row.entity.customerOrgId, customerOrgName: row.entity.customerName})" target="_blank"><span translate="customerPage.launchButton"></span></a></li>' +
-        '<li ng-show="row.entity.isSquaredUcOffer" id="{{row.entity.customerName}}UploadNumbers"><a href="" ng-click="$event.stopPropagation(); closeActionsDropdown();" ui-sref="didadd({currentOrg: row.entity})"><span translate="customerPage.uploadNumbers"></span></a></li>' +
+        '<li cr-feature-toggle feature-show="pstnSetup" ng-show="row.entity.isSquaredUcOffer" id="{{row.entity.customerName}}PstnSetup"><a href="" ng-click="$event.stopPropagation(); closeActionsDropdown();" ui-sref="pstnSetup({customerId: row.entity.customerOrgId, customerName: row.entity.customerName})"><span translate="pstnSetup.setupPstn"></span></a></li>' +
+        '<li cr-feature-toggle feature-hide="pstnSetup" ng-show="row.entity.isSquaredUcOffer" id="{{row.entity.customerName}}UploadNumbers"><a href="" ng-click="$event.stopPropagation(); closeActionsDropdown();" ui-sref="didadd({currentOrg: row.entity})"><span translate="customerPage.uploadNumbers"></span></a></li>' +
         '</ul>' +
         '</span>';
 

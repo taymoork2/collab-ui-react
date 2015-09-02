@@ -40,8 +40,4 @@ describe('Convert Users', function () {
       utils.expectIsNotDisplayed(landing.btnConvert);
     });
   });
-
-  it('should log out', function () {
-    navigation.logout();
-  });
 });

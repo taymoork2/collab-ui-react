@@ -104,6 +104,7 @@
     vm.currentOrg = $stateParams.currentOrg;
     vm.emailNotifyTrialCustomer = emailNotifyTrialCustomer;
     vm.launchCustomerPortal = launchCustomerPortal;
+    vm.setupPstnService = setupPstnService;
 
     if ($stateParams.editMode === undefined || $stateParams.editMode === null) {
       editMode = false;
@@ -281,6 +282,15 @@
 
     function backtoStartTrial() {
       $state.go('trialAdd.info');
+    }
+
+    function setupPstnService() {
+      if (angular.isDefined($scope.trial)) {
+        $state.go('pstnSetup', {
+          customerId: $scope.trial.model.customerOrgId,
+          customerName: $scope.trial.model.customerName
+        });
+      }
     }
 
     function formatDidList(didList) {

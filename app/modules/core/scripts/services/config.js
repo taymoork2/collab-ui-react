@@ -4,6 +4,8 @@ angular.module('Core')
   .factory('Config', ['$location', 'Utils', '$filter',
     function ($location, Utils, $filter) {
 
+      var oauth2Scope = encodeURIComponent('webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config Identity:Organization cloudMeetings:login webex-messenger:get_webextoken');
+
       var getCurrentHostname = function () {
         return $location.host() || '';
       };
@@ -80,12 +82,12 @@ angular.module('Core')
           atlas: {
             id: 'C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec',
             secret: 'c10c371b4641010a750073b3c8e65a7fff0567400d316055828d3c74925b0857',
-            scope: 'webexsquare%3Aadmin%20ciscouc%3Aadmin%20Identity%3ASCIM%20Identity%3AConfig%20Identity%3AOrganization%20cloudMeetings%3Alogin'
+            scope: oauth2Scope
           },
           cfe: {
             id: 'C5469b72a6de8f8f0c5a23e50b073063ea872969fc74bb461d0ea0438feab9c03',
             secret: 'b485aae87723fc2c355547dce67bbe2635ff8052232ad812a689f2f9b9efa048',
-            scope: 'webexsquare%3Aadmin%20ciscouc%3Aadmin%20Identity%3ASCIM%20Identity%3AConfig%20Identity%3AOrganization'
+            scope: oauth2Scope
           }
         },
 
@@ -760,7 +762,6 @@ angular.module('Core')
         Full_Admin: [ // Customer Admin
           'overview',
           'users',
-          'callRouter',
           'user-overview',
           'device-overview',
           'devices2-overview',
@@ -780,7 +781,7 @@ angular.module('Core')
         WX2_User: ['overview', 'reports', 'support'],
         WX2_Support: ['overview', 'reports', 'support'],
         WX2_SquaredInviter: [],
-        PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile'],
+        PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup'],
         PARTNER_USER: ['partnercustomers', 'customer-overview', 'trialAdd', 'trialEdit'],
         CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
         User: [],
@@ -800,7 +801,8 @@ angular.module('Core')
           'paginggroups',
           'huntgroups',
           'didadd',
-          'newpartnerreports'
+          'newpartnerreports',
+          'callRouter'
         ],
         'squared-fusion-mgmt': [
           'fusion',

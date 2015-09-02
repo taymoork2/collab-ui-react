@@ -1099,12 +1099,13 @@ angular
         .state('pstnSetup', {
           parent: 'modalFull',
           params: {
-            currentCustomer: {}
+            customerId: {},
+            customerName: {}
           },
           views: {
             'modal@': {
               template: '<div ui-view></div>',
-              controller: 'PstnSetup',
+              controller: 'PstnSetupCtrl',
               controllerAs: 'pstnSetup'
             },
             '@pstnSetup': {

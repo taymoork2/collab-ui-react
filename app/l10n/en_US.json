@@ -154,7 +154,10 @@
     "expires": "Expires",
     "editServices": "Edit services",
     "editServiceTitle": "Services Enabled for {{firstName}} {{lastName}}",
-    "siteUris": "Site Urls"
+    "siteUris": "Site Urls",
+    "webex": "Webex",
+    "spark": "Spark",
+    "calling": "Calling"
   },
   "messagingPanel": {
     "title": "Messaging"
@@ -243,6 +246,7 @@
   },
   "organizationsPage": {
     "title": "MANAGE ORGANIZATIONS",
+    "organizations": "Organizations",
     "subTitleOrgs": "Organizations Tools",
     "exportBtn": "Export Users",
     "csvFilename": "users.csv",
@@ -810,6 +814,13 @@
     "csvInvalidRow": "Entry does not contain 6 columns",
     "processCsvResponseError": "Error reading response",
     "processCsvError": "Error processing user",
+    "csv400Error": "Unidentified error in the csv. Please verify the file and try again.",
+    "csv401And403Error": "Customer is not authorized to add or update this user.",
+    "csv404Error": "Server is unable to respond at this time. Please try again at a later time.",
+    "csv408Error": "Request timed out while waiting for a response.",
+    "csv409Error": "Request failed due to a processing conflict. Please verify the csv and try again.",
+    "csv500Error": "Internal server error.",
+    "csv502And503Error": "Server is temporarily unavailable. Please try again at a later time.",
     "resultRowHeader": "Row Number",
     "resultErrorHeader": "Error Message",
     "advanced": "Advanced",
@@ -822,8 +833,13 @@
     "needHelpExplain": "Search the knowledge base.",
     "planReview": "Plan Review",
     "spark": "Spark",
+    "sparkMsg": "Spark Messaging",
+    "sparkStub": "Set up Spark",
     "webex": "WebEx",
+    "webexMsg": "Webex Conferencing",
+    "webexStub": "Set up Webex",
     "calling": "Calling",
+    "callingMsg": "Cloud Calling",
     "messaging": "Messaging",
     "conferencing": "Conferencing",
     "communications": "Communications",
@@ -1195,6 +1211,7 @@
     "searchResults": "{count, plural, one{# search result} other{# search results}}"
   },
   "pstnSetup": {
+    "setupPstn": "Setup PSTN",
     "setupService": "Set Up PSTN Service",
     "setupNumbers": "Set Up PSTN Numbers",
     "placeOrder": "Place Order",
@@ -1211,7 +1228,16 @@
     "notifyCustomer": "If you want to Notify customer:",
     "addUsers": "If you want to Add users:",
     "sendMessage": "Send Message",
-    "launchPortal": "Launch Compnay Portal"
+    "launchPortal": "Launch Company Portal",
+    "carrierListError": "Failed to retrieve carrier list for this customer.",
+    "orderNumbersPrompt": "Must add block numbers to proceed.",
+    "blockOrderError": "Failed to order {{quantity}} block number(s) with area code {{areaCode}}."
+  },
+  "intelepeerFeatures": {
+    "feature1": "Unlimited inbound/outbound calling to U.S. 50 states + Canada",
+    "feature2": "Carrier Port/Transfer Fee Included",
+    "feature3": "E911 Included",
+    "feature4": "Taxes & Fees Included in Price"
   },
   "partnerHomePage": {
     "trialsHeading": "Active Trials",
@@ -1647,7 +1673,7 @@
     "telephonyPrivilegesLabel": "Telephony",
     "callInTeleconfLabel": "Call-in teleconferencing",
     "tollOnlyLabel": "Toll",
-    "tollAndTollFreeLabel": "Toll & Toll free",
+    "tollAndTollFreeLabel": "Toll and Toll free",
     "teleconfViaGlobalCallinLabel": "Access to global call-in numbers",
     "callBackTeleconfLabel": "Call-back",
     "globalCallBackTeleconfLabel": "Global call-back",

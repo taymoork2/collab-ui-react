@@ -25,12 +25,9 @@
     vm.isFusionCal = Authinfo.isFusionCal();
 
     Userservice.getUser('me', function (data, status) {
-      FeatureToggleService.getFeaturesForUser(data.id, function (data, status) {
-        _.each(data.developer, function (element) {
-          if (element.key === 'gsxdemo' && element.val === 'true') {
-            vm.gsxFeature = true;
-          }
-        });
+      FeatureToggleService.getFeaturesForUser(data.id, 'gsxdemo').then(function (value) {
+        vm.gsxFeature = value;
+      }).finally(function () {
         init();
       });
     });
@@ -69,6 +66,9 @@
         if (getServiceDetails('CF')) {
           confState.detail = $translate.instant('onboardModal.paidConf');
         }
+        if (vm.gsxFeature) {
+          confState.detail = 'Meeting Center';
+        }
         vm.services.push(confState);
       }
       if (hasEntitlement('ciscouc')) {
@@ -77,6 +77,7 @@
         }
         vm.services.push(commState);
       }
+
       updateUserTitleCard();
     }
 
