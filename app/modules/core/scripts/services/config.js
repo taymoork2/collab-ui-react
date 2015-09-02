@@ -774,7 +774,8 @@ angular.module('Core')
         User: [],
         Site_Admin: [
           'site-list',
-          'site-settings'
+          'site-settings',
+          'site-setting-iframe'
         ],
         Application: ['organizationAdd']
       };

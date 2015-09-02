@@ -47,6 +47,7 @@ angular.module('WebExUtils', ['Core']);
 angular.module('WebExXmlApi', ['Core']);
 
 angular.module('WebExSiteSettings', ['Core']);
+angular.module('WebExSiteSettingIframe', ['Core']);
 
 angular.module('WebExUserSettings', ['Core']);
 angular.module('WebExUserSettings2', ['Core']);
@@ -60,6 +61,7 @@ angular.module('wx2AdminWebClientApp', [
   'WebExUtils',
   'WebExXmlApi',
   'WebExSiteSettings',
+  'WebExSiteSettingIframe',
   'WebExUserSettings',
   'WebExUserSettings2',
 ]);

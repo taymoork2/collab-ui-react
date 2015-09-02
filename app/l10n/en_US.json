@@ -1692,11 +1692,11 @@
     "pageId_0024": "WebACD | Leave Message Form",
     "pageId_0025": "WebACD | Queues",
     "pageId_0026": "WebACD | Settings",
-    "pageId_xxxx": "Page name undefined",
     "pageId_cmr": "Cloud Collaboration Meeting Room",
     "pageId_address": "Company Addresses",
     "pageId_misc": "Miscellaneous",
-    "pageId_scheduler": "Default Scheduler Options"
+    "pageId_scheduler": "Default Scheduler Options",
+    "pageId_xxxx": "Page name undefined"
   },
   "leaderBoard": {
     "actions": "Actions",
@@ -1815,6 +1815,7 @@
     "licenseCount": "License Count",
     "type": "Type",
     "siteSettings": "Configure Site",
+    "siteSettingIframe": "Show iFrame",
     "siteReports": "Reports"
   },
   "cloudExtensions": {

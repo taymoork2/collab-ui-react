@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('WebExSiteSettings').controller('WebExSiteSettingsCtrl', [
+  angular.module('WebExSiteSettingIframe').controller('WebExSiteSettingIframeCtrl', [
     '$scope',
     '$rootScope',
     '$log',
@@ -9,7 +9,7 @@
     '$filter',
     '$state',
     '$stateParams',
-    'WebExSiteSettingsFact',
+    'WebExSiteSettingIframeFact',
     'Notification',
     function (
       $scope,
@@ -19,12 +19,12 @@
       $filter,
       $state,
       $stateParams,
-      WebExSiteSettingsFact,
+      WebExSiteSettingIframeFact,
       Notification
     ) {
 
-      this.siteSettingsObj = WebExSiteSettingsFact.getSiteSettingsObj();
-      this.siteSettingsObj = WebExSiteSettingsFact.initSiteSettingsObj();
+      this.siteSettingIframeObj = WebExSiteSettingIframeFact.getSiteSettingIframeObj();
+      this.siteSettingIframeObj = WebExSiteSettingIframeFact.initSiteSettingIframeObj();
     }
   ]);
 })();

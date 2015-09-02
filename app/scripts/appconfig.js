@@ -554,6 +554,17 @@ angular
             siteUrl: null
           }
         })
+        .state('site-setting-iframe', {
+          url: '/webexSiteSettingIframe',
+          templateUrl: 'modules/webex/siteSettingIframe/siteSettingIframe.tpl.html',
+          controller: 'WebExSiteSettingIframeCtrl',
+          controllerAs: 'WebExSiteSettingIframe',
+          parent: 'main',
+          params: {
+            siteUrl: null,
+            settingPageIframeUrl: null
+          }
+        })
         .state('templates', {
           url: '/templates',
           templateUrl: 'modules/squared/views/templates.html',
@@ -1329,6 +1340,17 @@ angular.module('WebExSiteSettings').config([
     $stateProvider.state('webexSiteSettings', {
       url: '/webexSiteSettings',
       templateUrl: 'modules/webex/siteSettigs/siteSettings.tpl.html',
+      parent: 'main'
+    });
+  }
+]);
+
+angular.module('WebExSiteSettingIframe').config([
+  '$stateProvider',
+  function ($stateProvider) {
+    $stateProvider.state('webexSiteSettingIframe', {
+      url: '/webexSiteSettingIframe',
+      templateUrl: 'modules/webex/siteSettigIframe/siteSettingIframe.tpl.html',
       parent: 'main'
     });
   }

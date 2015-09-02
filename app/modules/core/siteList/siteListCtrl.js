@@ -65,6 +65,22 @@ angular.module('Core')
         '  </div>' + '\n' +
         '</div>' + '\n';
 
+      var siteSettingIframeTemplate =
+        '<div ng-if="siteList.showSiteLinks">' + '\n' +
+        '  <div ng-if="siteList.iframeSupportedSite">' + '\n' +
+        '    <a id="webex-site-setting-iframe"' + '\n' +
+        '       ui-sref="site-setting-iframe({siteUrl:row.entity.license.siteUrl, settingPageIframeUrl:null})">' + '\n' +
+        '                            ' + '\n' +
+        '      <p class="ngCellText">' + '\n' +
+        '        <span name="webexSiteSettingIframe"' + '\n' +
+        '              id="webexSiteSettingIframe">' + '\n' +
+        '          <i class="fa fa-external-link fa-lg"></i>' + '\n' +
+        '        </span>' + '\n' +
+        '      </p>' + '\n' +
+        '    </a>' + '\n' +
+        '  </div>' + '\n' +
+        '</div>' + '\n';
+
       var siteReportsTemplate =
         '<div ng-if="siteList.showSiteLinks">' + '\n' +
         '  <div ng-if="siteList.iframeSupportedSite">' + '\n' +
@@ -114,8 +130,17 @@ angular.module('Core')
         sortable: false
       });
 
+      /*
       vm.gridOptions.columnDefs.push({
-        field: 'license.siteSettings',
+        field: 'license.siteUrl',
+        displayName: $translate.instant('siteList.siteSettingIframe'),
+        cellTemplate: siteSettingIframeTemplate,
+        sortable: false
+      });
+      */
+
+      vm.gridOptions.columnDefs.push({
+        field: 'license.siteReports',
         displayName: $translate.instant('siteList.siteReports'),
         cellTemplate: siteReportsTemplate,
         sortable: false
