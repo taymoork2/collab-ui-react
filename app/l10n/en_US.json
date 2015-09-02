@@ -1168,7 +1168,9 @@
     "blockedCallerIdDescription": "Caller will not see any caller ID or number",
     "companyCallerId": "Company Caller ID",
     "companyNumberLoadError": "Company numbers failed to load.",
-    "registerDeviceForCallerID": "Register your device to enable caller ID"
+    "customCallerId": "Custom",
+    "customName": "Custom Name",
+    "customNumber": "Custom Number"
   },
   "sharedLinePanel": {
     "title": "Shared Line",
