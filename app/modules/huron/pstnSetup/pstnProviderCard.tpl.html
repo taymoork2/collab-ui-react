@@ -6,7 +6,7 @@
     <h5 class="feature-title">{{::featureTitle}}</h5>
     <div ng-repeat="feature in featureList" class="feature">
       <i class="icon icon-check"></i>
-      <span class="feature-text">{{::feature}}</span>
+      <span class="feature-text" ng-bind-html="feature"></span>
     </div>
   </div>
   <div class="footer">
