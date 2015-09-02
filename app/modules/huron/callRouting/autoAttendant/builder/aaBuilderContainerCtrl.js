@@ -73,7 +73,7 @@
       vm.aaModel.aaName = aaName;
       if (angular.isUndefined(vm.aaModel.aaRecord)) {
         if (aaName === '') {
-          vm.aaModel.aaRecord = AutoAttendantCeMenuModelService.newAARecord();
+          vm.aaModel.aaRecord = AAModelService.newAARecord();
         } else {
           for (var i = 0; i < vm.aaModel.aaRecords.length; i++) {
             if (vm.aaModel.aaRecords[i].callExperienceName === aaName) {
