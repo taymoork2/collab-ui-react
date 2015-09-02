@@ -1112,6 +1112,42 @@ angular
         })
         .state('pstnSetup.nextSteps', {
           templateUrl: 'modules/huron/pstnSetup/pstnNextSteps.tpl.html'
+        })
+        .state('hurondetailsBase', {
+          abstract: true,
+          parent: 'main',
+          templateUrl: 'modules/huron/details/huronDetails.tpl.html'
+        })
+        .state('hurondetails', {
+          url: '/hurondetails',
+          parent: 'hurondetailsBase',
+          views: {
+            'nav': {
+              templateUrl: 'modules/huron/details/huronDetailsNav.tpl.html',
+              controller: 'HuronDetailsNavCtrl',
+              controllerAs: 'nav'
+            },
+            'main': {
+              template: '<div ui-view></div>'
+            }
+          }
+        })
+        .state('huronlines', {
+          url: '/lines',
+          parent: 'hurondetails',
+          templateUrl: 'modules/huron/lines/lineList.tpl.html',
+          controller: 'LinesListCtrl',
+          controllerAs: 'linesListCtrl'
+        })
+        .state('huronsettings', {
+          url: '/settings',
+          parent: 'hurondetails',
+          template: '<div>Under Construction</div>'
+        })
+        .state('huronfeatures', {
+          url: '/features',
+          parent: 'hurondetails',
+          template: '<div>Under Construction</div>'
         });
     }
   ]);

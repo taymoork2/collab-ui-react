@@ -185,6 +185,8 @@
     "addOrganizationTabDesc": "Add a new organization to this account",
     "fusionDetailsTab": "Connector Management",
     "fusionDetailsTabDesc": "Connector Management",
+    "huronLineDetailsTab": "Huron",
+    "huronLineDetailsTabDesc": "Huron Details",
     "MediafusionDetailsTab": "Media Service Management",
     "MediafusionDetailsTabDesc": "Media Service Management",
     "callRoutingTab": "Call Routing",
@@ -1841,5 +1843,25 @@
     "invalidLinkNoParam": "Invalid link. no param",
     "error": "Something went wrong.",
     "notifyPartnerErrorMsg": "We're sorry, something went wrong while trying to notify your partner."
+  },
+  "huronDetails": {
+    "title": "Huron",
+    "linesTitle": "Numbers",
+    "settingsTitle": "Settings",
+    "featuresTitle": "Features"
+  },
+  "linesPage": {
+    "manageLines": "Numbers",
+    "allLines": "All",
+    "unassignedLines": "Unassigned",
+    "assignedLines": "Assigned",
+    "csvBtnTitle": "Export to CSV",
+    "csvFilename": "exported_lines.csv",
+    "internalNumberHeader": "Internal Extensions",
+    "externalNumberHeader": "Phone Number",
+    "deviceHeader": "Devices",
+    "userEmailHeader": "User",
+    "actionHeader": "Actions",
+    "lineListError": "Error retrieving the line list. Please try reloading the page."
   }
 }
