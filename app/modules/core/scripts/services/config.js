@@ -811,6 +811,8 @@ angular.module('Core')
         'squared-fusion-uc': [
           'devices',
           'devices-redux',
+          'devices-redux2',
+          'devices-redux2-search',
           'devices-cleanup',
           'devices2'
         ],
