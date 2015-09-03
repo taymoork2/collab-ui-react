@@ -29,7 +29,7 @@
     vm.user = [{
       className: 'row',
       fieldGroup: [{
-        className: 'col-md-6',
+        className: 'small-6 columns',
         type: 'input',
         key: 'orgname',
         templateOptions: {
@@ -37,7 +37,7 @@
           required: true
         }
       }, {
-        className: 'col-md-6',
+        className: 'small-6 columns',
         type: 'custom-combobox',
         key: 'extnum',
         validators: {

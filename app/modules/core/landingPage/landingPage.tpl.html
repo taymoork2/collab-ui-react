@@ -1,6 +1,5 @@
-<div class="landing-page">
-  <div class="landing-content row">
-    <section class="analytics-charts col-sm-12 col-md-7 col-lg-8">
+  <div class="landing-content">
+    <section class="analytics-charts small-12 medium-7 large-8 column">
       <span ng-click="reloadReports(false)" class="overview-updated" id="time-click-div">
         <cr-reload-data id="homeRefreshData" last-updated-time="refreshTime"></cr-reload-data>
       </span>
@@ -40,9 +39,10 @@
       </section>
     </section>
 
-    <div class="widgets col-sm-12 col-md-5 col-lg-4 background-white">
-      <div class="row">
-        <section class="monitoring-panel col-sm-3 col-md-12" ng-show="setupNotDone()">
+    <section class="widgets small-12 medium-5 large-4 column">
+    <div class="row collapse">
+      <div class="small-12 columns background-white">
+        <section class="monitoring-panel small-3 medium-12 column" ng-show="setupNotDone()">
           <h4 class="monitoring-section" translate="homePage.notifications"></h4>
           <div class="notification-style">
             <span  class="badge badge-warning" translate="homePage.todo"></span>
@@ -54,19 +54,19 @@
         </section>
 
         <!-- TODO: To be removed when monitoring service is refactored-->
-        <section class="monitoring-panel col-sm-3 col-md-12">
+        <section class="monitoring-panel small-12 column">
           <h4 class="monitoring-section" translate="homePage.monitoring"></h4>
-          <div ng-repeat="health in healthMetrics">
-            <a ng-href="{{statusPageUrl}}" target="_blank">
-              <div ng-class="{true:'green', false:'red'}[health.status==='operational']" class="monitoring-cell" id="{{health.name}}">
+          <ul>
+          <li ng-repeat="health in healthMetrics">
+            <a ng-href="{{statusPageUrl}}" target="_blank" ng-class="{true:'green', false:'red'}[health.status==='operational']" class="monitoring-cell" id="{{health.name}}">
                 <i class="fa fa-circle"></i>&nbsp;&nbsp;<span>{{health.name}}</span>
-              </div>
             </a>
-          </div>
+          </li>
+          </ul>
         </section>
 
         <!-- TODO: Replacement for when monitoring service is refactored
-        <section class="monitoring-panel col-sm-4 col-md-12">
+        <section class="monitoring-panel small-4 medium-12">
           <h4 translate="homePage.monitoring">Monitoring</h4>
           <ul class="monitoring-list">
             <li class="monitoring-sections" ng-repeat="section in healthMetricsSections" ng-click="isCollapsed = !isCollapsed">
@@ -83,23 +83,32 @@
             </li>
           </ul>
         </section> -->
-        <!-- <section class="help col-sm-4 col-md-12" ng-controller="SupportCtrl">
+        <!-- <section class="help small-4 medium-12" ng-controller="SupportCtrl">
           <h4>Need Help?</h4>
           <p class="no-cases">There are no open cases</p>
           <button class="btn btn-sm btn-default">Open a Case</button>
         </section> -->
-        <section class="quick-links col-sm-3 col-md-12" ng-controller="QuikLinksCtrl">
+        <section class="quick-links small-12 column" ng-controller="QuikLinksCtrl">
           <h4 translate="homePage.quickLinksText"></h4>
-          <div class="list-group">
-
-            <a id="addUserQuickLink" href="" ui-sref="users.list({ showAddUsers: 'add' })" ng-if="isPageActive('users')" class="list-group-item" translate="homePage.addUserText"></a>
-            <a id="installDeviceQuickLink" ng-if="false" class="list-group-item" translate="homePage.installDeviceText"></a>
-            <a id="installDeviceSharedSpaceQuickLink" ui-sref="devices" ng-if="isPageActive('devices')" class="list-group-item" translate="homePage.installSharedSpaceText"></a>
-            <a id="autoAttendantQuickLink" ng-if="false" class="list-group-item" translate="homePage.autoAttendantText"></a>
-            <a id="deviceLogsQuickLink" ui-sref="support" ng-if="isPageActive('support')" class="list-group-item" translate="homePage.searchLogsText"></a>
-          </div>
+          <ul class="list-group">
+            <li ng-if="isPageActive('users')" >
+              <a id="addUserQuickLink" href="" ui-sref="users.list({ showAddUsers: 'add' })" class="list-group-item" translate="homePage.addUserText"></a>
+            </li>
+            <li ng-if="false">
+              <a id="installDeviceQuickLink" class="list-group-item" translate="homePage.installDeviceText"></a>
+            </li>
+            <li ng-if="isPageActive('devices')">
+              <a id="installDeviceSharedSpaceQuickLink" ui-sref="devices" class="list-group-item" translate="homePage.installSharedSpaceText"></a>
+            </li>
+            <li ng-if="false">
+              <a id="autoAttendantQuickLink" class="list-group-item" translate="homePage.autoAttendantText"></a>
+            </li>
+            <li ng-if="isPageActive('support')">
+              <a id="deviceLogsQuickLink" ui-sref="support" class="list-group-item" translate="homePage.searchLogsText"></a>
+            </li>
+          </ul>
         </section>
-        <section class="unlicensed-users col-md-12 col-sm-3" ng-controller="LicensesCtrl" ng-show="isAdmin()">
+        <section class="unlicensed-users small-12 column" ng-controller="LicensesCtrl" ng-show="isAdmin()">
           <div ng-if="isDomainClaimed()">
             <div class="users-info">
               <span class="number">{{licenses.unlicensed}}</span>
@@ -114,6 +123,6 @@
           <button id="convertButton" class="btn btn-sm btn-default" translate="homePage.convert" ng-click="openConvertModal()" ng-disabled="licenses.unlicensed === 0"></button>
         </section>
       </div>
-    </div>
+      </div>
+    </section>
   </div>
-</div>

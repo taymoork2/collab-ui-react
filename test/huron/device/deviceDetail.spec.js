@@ -8,7 +8,7 @@ describe('Controller: DeviceDetailCtrl', function () {
   };
 
   beforeEach(module('uc.device'));
-  beforeEach(module('ui.bootstrap'));
+  beforeEach(module('cisco.ui'));
   beforeEach(module('ui.router'));
   beforeEach(module('dialogs'));
   beforeEach(module('ngResource'));

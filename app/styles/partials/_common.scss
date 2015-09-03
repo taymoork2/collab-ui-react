@@ -10,7 +10,7 @@ body {
 }
 
 .app-container {
-  padding: 51px 0 0 0;
+  padding: 0;
 }
 
 .container {
@@ -21,6 +21,7 @@ body {
 
 .page-content-wrapper {
   padding-left: 0;
+
   //width: ~"calc(100% - 100px)";
 }
 
@@ -29,33 +30,12 @@ body {
   padding: 0;
 }
 
-.page-title {
-  font-family: $brand-font-cisco-TT-Thin;
-  margin: 0;
-  padding: 28px 0 28px 30px;
-
-  .title {
-    color: $brand-info;
-    font-size: 40px;
-    line-height: 40px;
-    margin: 0;
-    float: left
-  }
-
-  small {
-    color: $gray-dark;
-    font-size: 22px;
-  }
-}
-
 .page-option-buttons {
   padding-top: 27px;
   float: right;
 }
 
-.page-options-bar {
-
-}
+.page-options-bar {}
 
 .content-view {
   overflow-x: hidden;
@@ -74,13 +54,14 @@ body {
   overflow: hidden;
 
   .icon {
-      color: $brand-white;
-    }
+    color: $brand-white;
+  }
 }
 
 #export-icon .icon {
   line-height: 45px;
   color: $brand-info;
+  margin-right: 30px;
 }
 
 // Common ngGrid Styles
@@ -101,18 +82,22 @@ div[gridscrollbar] {
     display: none;
   }
 }
+
 @media print {
   body * {
-    display:none;
+    display: none;
   }
+
   #printSection, #printSection * {
-    display:block;
+    display: block;
   }
+
   #printSection {
-    position:absolute;
-    left:0;
-    top:0;
+    position: absolute;
+    left: 0;
+    top: 0;
   }
+
   .modal {
     overflow: hidden;
     background: none;
@@ -124,6 +109,7 @@ div[gridscrollbar] {
 }
 
 .grid {
+  flex: 1;
   position: relative;
 
   .grid-refresh {

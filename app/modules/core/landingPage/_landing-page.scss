@@ -1,26 +1,59 @@
 /******** Home page styles ********/
 
-.landing-page {
-  padding-left: 15px;
-}
-
-.landing-content {
-  padding-left: 15px;
-  padding-top: 15px;
-  padding-right: 30px;
-}
-
 // Analytics Charts
 .overview-updated {
   cursor: pointer;
   font-family: Arial;
   color: $gray-darker;
+  line-height: 40px;
+
+  @extend %ui-pl;
+
+  display: inline-block;
+
   .icon-refresh {
     font-size: 12px;
     color: $gray-darker;
     line-height: 24px;
     vertical-align: top;
   }
+}
+
+.overview-top {
+  width: 260px;
+  height: 65px;
+  position: absolute;
+  border-left: solid 1px #c0c0c0;
+  border-right: solid 1px #c0c0c0;
+  padding: 20px;
+}
+
+.overview-title {
+  height: 56px;
+  position: relative;
+}
+
+.overview-bottom {
+  width: 260px;
+  height: 56px;
+  position: relative;
+  background-color: #d8d8d8;
+  border-left: solid 1px #c0c0c0;
+  border-right: solid 1px #c0c0c0;
+  top: 64px;
+  padding-left: 25px;
+  padding-top: 15px;
+}
+
+.overview-top-content {
+  position: relative;
+  left: 44px;
+  font-size: 18px;
+}
+
+.overview-values {
+  font-size: 22px;
+  font-weight: bold;
 }
 
 .analytics-charts {
@@ -66,33 +99,36 @@
     padding-bottom: 7px;
     padding-top: 10px;
   }
+
   section {
     margin-bottom: 40px;
-
   }
 
   .widgets {
-    section {
-      padding-left: 20px;
-      padding-right: 20px;
-    }
+    section {}
   }
+
   .background-white {
     background-color: rgb(255, 255, 255);
   }
+
   .tab-reports {
     background-color: transparent;
   }
+
   .report {
     height: 250px;
   }
+
   .tab-report {
     background-color: rgba(255, 255, 255, 1);
     padding-top: 15px;
   }
+
   .tab-report {
     height: 300px;
   }
+
   .tab-report + .report-status {
     text-align: center;
     width: 100%;
@@ -100,34 +136,47 @@
     bottom: 200px;
     float: left;
   }
+
   .tab-reports .nav-tabs li .total {
     font-size: 24px;
   }
 }
 
 .monitoring-panel {
-  .badge{
+  .badge {
     width: 50px;
     font-size: 13px;
     font-weight: normal;
-    @include text-overflow();
+
+    @include text-overflow;
+  }
+
+  ul {
+    list-style-type: none;
+    font-size: 1rem;
+
+    @include vr-baseline(17px, 32px, $baseline: false);
+
+    @extend %ui-ml0;
+
+    margin-top: 2px;
   }
 }
 
 .notification-style {
-  display:flex;
+  display: flex;
   align-items: flex-start;
 }
 
 .notification-spacing {
   margin-left: 15px;
   font-size: 14px;
-  flex:1;
+  flex: 1;
 }
 
-@media (min-width: $screen-md-min) {
+@media #{$medium-up} {
   .widgets {
-    margin-top: 45px;
+    margin-top: 40px;
   }
 }
 
@@ -137,12 +186,15 @@
     padding-left: 0;
     font-size: 13px;
   }
+
   span {
     margin-left: 9px;
   }
+
   a.red:hover {
     color: $brand-danger;
   }
+
   a.yellow:hover {
     color: $brand-warning;
   }
@@ -152,9 +204,11 @@ i {
   .green & {
     color: $brand-success;
   }
+
   .red & {
     color: $brand-danger;
   }
+
   .yellow & {
     color: $brand-warning;
   }
@@ -164,6 +218,7 @@ span {
   .red & {
     color: $brand-danger;
   }
+
   .yellow & {
     color: $brand-warning;
   }
@@ -176,10 +231,12 @@ span {
 li.monitoring-cell {
   font-size: 10px;
   margin: 9px 0;
+
   .fa {
     font-size: 8px;
     margin-left: 2px;
   }
+
   span {
     margin-left: 11px;
   }
@@ -190,13 +247,10 @@ li.monitoring-cell {
 }
 
 .quick-links {
-  .list-group-item {
-    font-size: 13px;
-    color: $brand-primary;
-    padding: 5px 0;
-    border: none;
-    border-radius: 0;
-    background-color: transparent;
+  ul {
+    list-style-type: none;
+
+    @extend %ui-ml0;
   }
 }
 
@@ -205,20 +259,25 @@ li.monitoring-cell {
   padding: 20px 15px;
   border-bottom: 1px solid $gray-dark;
   font-family: $brand-font-cisco-TT-Extra-Light;
+
   section {
     min-height: 115px;
   }
+
   h3 {
     font-size: 21px;
     color: $gray-darker;
     margin-top: 5px;
   }
+
   p {
     font-family: $brand-font-cisco-TT-Extra-Light;
   }
+
   .progress {
     margin-bottom: 6px;
   }
+
   .btn {
     margin-top: 7px;
   }
@@ -228,18 +287,22 @@ li.monitoring-cell {
   .users-info {
     padding-top: 8px;
   }
+
   h3 {
     margin-top: 2px;
     margin-bottom: 16px;
   }
+
   span {
     display: inline-block;
   }
+
   .number {
     font-size: 40px;
     line-height: 35px;
     vertical-align: top;
   }
+
   .text {
     font-size: 14px;
     color: lighten($gray, 10%);
@@ -275,10 +338,12 @@ li.monitoring-cell {
   padding: 0;
   margin-top: 20px;
   margin-bottom: 14px;
+
   .device-item {
     display: inline-block;
     margin-right: 10px;
     font-size: 16px;
+
     .number {
       color: $brand-primary;
       font-weight: bold;
@@ -303,6 +368,7 @@ li.monitoring-cell {
     float: right;
     border-left: 1px solid $gray-dark;
   }
+
   .licenses,
   .unlicensed-users {
     margin-top: 0;
@@ -319,63 +385,82 @@ li.monitoring-cell {
     .col1 .ngCellText, .col2 .ngCellText, .col3 .ngCellText {
       padding-top: 11px;
     }
+
     .badge {
       width: 60px;
-      @include text-overflow();
+
+      @include text-overflow;
     }
+
     .align-center {
       text-align: center;
     }
+
     .badge-active {
       @extend .badge.badge-primary;
     }
-    @mixin badge-active-darker() {
+
+    @mixin badge-active-darker {
       background-color: $brand-primary-dark;
     }
+
     .badge-trial {
       @extend .badge.badge-warning;
     }
+
     .badge-disabled {
       background-color: $gray-lightest;
       color: $gray-lightest;
     }
-    @mixin badge-disabled-darker() {
+
+    @mixin badge-disabled-darker {
       background-color: $gray-lighter;
       color: $gray-lighter;
     }
+
     .free {
       color: $gray;
     }
-    @mixin free-white() {
+
+    @mixin free-white {
       color: $brand-white;
     }
+
     .free-disabled {
       color: $gray-lighter;
     }
-    @mixin free-disabled-darker() {
+
+    @mixin free-disabled-darker {
       color: $gray-light;
     }
+
     .red {
       color: $brand-danger;
     }
-    @mixin red-white() {
+
+    @mixin red-white {
       color: $brand-white;
     }
+
     &.selected {
       .badge-active {
         @include badge-active-darker;
       }
+
       .free {
         @include free-white;
       }
+
       .red {
         @include red-white;
       }
     }
+
     &:hover {
       .badge-disabled {
         @incluce badge-disabled-darker;
       }
+
       .free-disabled {
         @include free-disabled-darker;
       }
@@ -403,6 +488,7 @@ li.monitoring-cell {
 
 .reloaded-time:hover {
   color: $brand-primary;
+
   .icon-refresh {
     color: $brand-primary;
   }

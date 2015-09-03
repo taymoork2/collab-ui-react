@@ -4,18 +4,16 @@
 
   &:first-child {
     background: $brand-white;
-    padding: 20px 10px 10px 10px;
-    margin: 0px 0px 10px 20px;
   }
-  .panel,
-  .panel-group {
+  .content,
+  .accordion--navigation {
     margin: 0;
   }
-  .panel {
+  .content {
     margin-bottom: 5px;
     box-shadow: none;
   }
-  .panel-heading,.panel-heading:hover {
+  .accordion--navigation,.accordion--navigation:hover {
     border: 0;
     color: #333;
     background: white;
@@ -26,29 +24,38 @@
     box-shadow: none;
     outline: none;
   }
-  .panel-heading:hover a {
+  .accordion .accordion--navigation > a {
+    background: transparent;
+    border-color: transparent;
+    color: inherit;
+  }
+  .accordion--navigation:hover a {
     color: $brand-primary;
   }
-  .panel-body, .panel-group .panel-heading + .panel-collapse .panel-body {
+
+  .accordion--navigation span {
+    margin-left: 5px;
+  }
+  .accordion .accordion--navigation .content {
     border: 0;
     margin-top: 0;
     padding: 0px 0px 0px 106px;
   }
-  .panel-heading .badge.badge-custom-warn {
+  .accordion--navigation .badge.badge-custom-warn {
     width: 55px;
     color: white;
     padding-top: 6px;
     background: $brand-warning;
     font-size: 12px;
   }
-  .panel-heading .badge.badge-custom-info {
+  .accordion--navigation .badge.badge-custom-info {
     width: 55px;
     color: white;
     padding-top: 6px;
     background: $brand-primary;
     font-size: 12px;
   }
-  .panel-heading .badge.badge-custom-error {
+  .accordion--navigation .badge.badge-custom-error {
     width: 55px;
     color: white;
     padding-top: 6px;
@@ -63,7 +70,7 @@
   border-left: 17px solid transparent;
   border-right: 17px solid transparent;
   bottom: 100%;
-  right: 88px;
+  right: vr-adjust(66);
   border-bottom: 17px solid #FFF;
   margin-top: 0px;
   z-index: 1;
@@ -76,7 +83,7 @@
   border-left: 17px solid transparent;
   border-right: 17px solid transparent;
   bottom: 100%;
-  right: 88px;
+  right: vr-adjust(66);
   margin-top: 0px;
   z-index: 1;
   border-bottom: 17px solid $gray-lighter;

@@ -28,7 +28,7 @@
         cache: true
       }).then(function (data, status) {
         var contained = false;
-        _.each(data.developer, function (element) {
+        _.each(data.data.developer, function (element) {
           if (element.key === feature && element.val === 'true') {
             contained = true;
           }
