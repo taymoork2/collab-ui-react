@@ -210,7 +210,7 @@ exports.expectTokenInput = function (elem, value) {
       return false;
     });
   }, TIMEOUT, 'Waiting for token to contain value: ' + elem.locator());
-}
+};
 
 exports.click = function (elem, maxRetry) {
   return this.wait(elem).then(function () {

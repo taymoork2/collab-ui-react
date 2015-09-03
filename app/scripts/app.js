@@ -18,7 +18,7 @@ angular.module('Core', [
   'ngSanitize',
   'ngRoute',
   'ngMessages',
-  'ui.bootstrap',
+  // 'ui.bootstrap',
   'dialogs',
   'ngCsv',
   'ipCookie',
