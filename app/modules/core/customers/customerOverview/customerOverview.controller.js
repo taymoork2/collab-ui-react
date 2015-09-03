@@ -23,12 +23,12 @@
         vm.currentCustomer.customerEmail = identityCustomer.email;
       }
     }
- 
+
     function launchCustomerPortal() {
       var liclist = vm.currentCustomer.licenseList;
       var licIds = [];
       var i = 0;
-      if (liclist === undefined) {
+      if (angular.isUndefined(liclist)) {
         liclist = [];
       }
       for (i = 0; i < liclist.length; i++) {
@@ -36,14 +36,15 @@
         var licId = lic.licenseId;
         var lictype = lic.licenseType;
         var isConfType = lictype === "CONFERENCING";
-        var licHasSiteUrl = (lic.siteUrl !== undefined);
+        var licHasSiteUrl = (angular.isUndefined(lic.siteUrl) === false);
         if (licHasSiteUrl && isConfType) {
           licIds.push(licId);
         }
       }
       if (licIds.length > 0) {
-        var partnerEmailObjectArray = Authinfo.getEmail();
-        var partnerEmail = partnerEmailObjectArray[0].value;
+        //var partnerEmailObjectArray = Authinfo.getEmail();
+        //var partnerEmail = partnerEmailObjectArray[0].value;
+        var partnerEmail = Authinfo.getPrimaryEmail();
         var u = {
           'address': partnerEmail
         };
