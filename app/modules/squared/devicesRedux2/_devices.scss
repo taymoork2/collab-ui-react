@@ -1,12 +1,12 @@
-body {
-  background-color: white !important;
-}
-
-.content-view {
-  padding: 20px 30px;
-}
-
 .devices-redux2 {
+// body {
+//   background-color: white !important;
+// }
+
+// .content-view {
+//   padding: 20px 30px;
+// }
+
   h1 {
     padding-bottom: 30px;
   }
@@ -56,33 +56,33 @@ body {
       }
     }
   }
-}
 
-input:focus, a:focus {
-  outline: none !important;
-  box-shadow: none !important;
-  background-color: white !important;
-}
+  input:focus, a:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    background-color: white !important;
+  }
 
-.dr2-search {
-  input[type=text] {
-    border: 0;
-    border-bottom: 1px solid #ccc;
-  }
-  ul {
-    margin: 0;
-    padding-bottom: 60px;
-  }
-  li {
-    a {
-      color: #666;
+  .dr2-search {
+    input[type=text] {
+      border: 0;
+      border-bottom: 1px solid #ccc;
     }
-    cursor: pointer;
-    padding: 20px 0 10px 0;
-    list-style-type: none;
-    border-bottom: 1px solid #ddd;
-  }
-  li.active, input[type=text]:focus, input[type=text].active {
-    border-bottom: 3px solid #049fd9;
+    ul {
+      margin: 0;
+      padding-bottom: 60px;
+    }
+    li {
+      a {
+        color: #666;
+      }
+      cursor: pointer;
+      padding: 20px 0 10px 0;
+      list-style-type: none;
+      border-bottom: 1px solid #ddd;
+    }
+    li.active, input[type=text]:focus, input[type=text].active {
+      border-bottom: 3px solid #049fd9;
+    }
   }
 }
