@@ -247,7 +247,7 @@
       expressionProperties: {
         'hide': function ($viewValue, $modelValue, scope) {
           if (vm.callerIdInfo.callerIdSelection) {
-            return vm.callerIdInfo.callerIdSelection.value.externalCallerIdType !== 'Custom';
+            return vm.callerIdInfo.callerIdSelection.value.externalCallerIdType !== customCallerId_type;
           }
         }
       }
@@ -417,9 +417,6 @@
         if (callForwardSet === true) {
           if (typeof vm.directoryNumber.uuid !== 'undefined' && vm.directoryNumber.uuid !== '') {
             // line exists
-
-            vm.directoryNumber.externalCallerIdType = vm.callerIdInfo.callerIdSelection.value.externalCallerIdType;
-            vm.directoryNumber.companyNumber = companyNumberObj;
             var promise;
             var promises = [];
             if (vm.callerIdInfo.callerIdSelection.value.uuid) {
@@ -508,21 +505,18 @@
                           vm.directoryNumber.pattern = vm.telephonyInfo.currentDirectoryNumber.pattern;
                           vm.directoryNumber.altDnUuid = vm.telephonyInfo.alternateDirectoryNumber.uuid;
                           vm.directoryNumber.altDnPattern = vm.telephonyInfo.alternateDirectoryNumber.pattern;
-                        }).then(function () {
-                          return processSharedLineUsers().then(function () {
-                            if (vm.callerIdInfo.callerIdSelection.value.uuid) {
-                              companyNumberObj = {
-                                uuid: vm.callerIdInfo.callerIdSelection.value.uuid
-                              };
-                            }
-                            vm.directoryNumber.externalCallerIdType = vm.callerIdInfo.callerIdSelection.value.externalCallerIdType;
-                            vm.directoryNumber.companyNumber = companyNumberObj;
-                            if (vm.directoryNumber.externalCallerIdType == customCallerId_type) {
-                              vm.directoryNumber.customName = vm.callerIdInfo.customName;
-                              vm.directoryNumber.customNumber = vm.callerIdInfo.customNumber;
-                            }
-
-                          });
+                          if (vm.callerIdInfo.callerIdSelection.value.uuid) {
+                            companyNumberObj = {
+                              uuid: vm.callerIdInfo.callerIdSelection.value.uuid
+                            };
+                          }
+                          vm.directoryNumber.externalCallerIdType = vm.callerIdInfo.callerIdSelection.value.externalCallerIdType;
+                          vm.directoryNumber.companyNumber = companyNumberObj;
+                          if (vm.directoryNumber.externalCallerIdType == customCallerId_type) {
+                            vm.directoryNumber.customName = vm.callerIdInfo.customName;
+                            vm.directoryNumber.customNumber = vm.callerIdInfo.customNumber;
+                          }
+                          return processSharedLineUsers();
                         }).then(function () {
                           Notification.notify([$translate.instant('directoryNumberPanel.success')], 'success');
                           $state.go('user-overview.communication.directorynumber', {
@@ -615,6 +609,7 @@
               if (!directLineUserName) {
                 directLineUserName = name;
               }
+              vm.callerIdOptions.unshift(CallerId.constructCallerIdOption(directLine_label, directLine_type, directLineUserName, vm.telephonyInfo.alternateDirectoryNumber.pattern, null));
             }
             // Custom Caller ID
             vm.callerIdOptions.push(CallerId.constructCallerIdOption(custom_label, customCallerId_type, '', null));

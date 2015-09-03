@@ -196,7 +196,7 @@ describe('Controller: LineSettingsCtrl', function () {
       $scope.$apply();
       expect(CallerId.loadCompanyNumbers).toHaveBeenCalled();
       expect(Notification.errorResponse).not.toHaveBeenCalled();
-      expect(controller.callerIdOptions.length).toEqual(4);
+      expect(controller.callerIdOptions.length).toEqual(6);
     });
 
     it('should notify an error when loadCompanyNumbers fails', function () {
