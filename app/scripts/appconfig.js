@@ -94,6 +94,8 @@ angular
   .module('Squared')
   .config(['$urlRouterProvider', '$stateProvider',
     function ($urlRouterProvider, $stateProvider) {
+      var modalMemo = 'modalMemo';
+      var wizardmodalMemo = 'wizardmodalMemo';
 
       // Modal States Enter and Exit functions
       function modalOnEnter(options) {
@@ -131,9 +133,6 @@ angular
           $state.modal.dismiss();
         }
       }
-
-      var modalMemo = 'modalMemo';
-      var wizardmodalMemo = 'wizardmodalMemo';
 
       $stateProvider
         .state('activate', {

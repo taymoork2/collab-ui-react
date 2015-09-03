@@ -30,9 +30,9 @@ angular.module('Core')
         $rootScope.logArchiveLines = [];
       }
 
-      var enableLogging = function () {
+      function enableLogging() {
         return $rootScope.debug && !$location.search().disableLogging;
-      };
+      }
 
       Log.keepArchive = function (level, msg, data) {
         if ($rootScope.logArchiveLines.length >= logLinesToAttach) {

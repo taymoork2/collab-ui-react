@@ -14,7 +14,7 @@ angular.module('Hercules')
         };
       };
 
-      var createEmptyServicesAggregate = function (services) {
+      function createEmptyServicesAggregate(services) {
         return _.reduce(services, function (serviceAggregate, service) {
           serviceAggregate[service.connector_type] = {
             name: service.display_name,
@@ -27,7 +27,7 @@ angular.module('Hercules')
           };
           return serviceAggregate;
         }, {});
-      };
+      }
 
       var aggregateServiceStatus = function (clusterAggregate, cluster) {
         _.each(cluster.services, function (service) {

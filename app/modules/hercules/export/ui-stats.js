@@ -35,14 +35,14 @@ angular.module('Hercules').service('UiStats',
       return statuses;
     };
 
-    var initStats = function () {
+    function initStats() {
       $.each(statuses, function (i, s) {
         s.progress = 0;
         if (s.count === "0") {
           s.unselectable = true;
         }
       });
-    };
+    }
 
     var selectedStates = function () {
       var statusTypes = $.map(statuses, function (val, i) {

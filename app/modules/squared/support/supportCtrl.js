@@ -123,7 +123,7 @@ angular.module('Squared')
         changeSortIcon(type, icon);
       };
 
-      var changeSortIcon = function (logsSortBy, sortIcon) {
+      function changeSortIcon(logsSortBy, sortIcon) {
         $scope.logsSortBy = logsSortBy;
         if ($scope.reverseLogs === true) {
           $scope[sortIcon] = 'fa-sort-desc';
@@ -136,7 +136,7 @@ angular.module('Squared')
             $scope[sortIcons[otherIcon]] = 'fa-sort';
           }
         }
-      };
+      }
 
       var initializeTypeahead = function () {
         var scimSearchUrl = Config.getScimUrl() + '?count=10&attributes=name,userName&filter=userName%20sw%20%22';
@@ -220,7 +220,7 @@ angular.module('Squared')
         }
       };
 
-      var searchLogs = function (searchInput) {
+      function searchLogs(searchInput) {
         $scope.closeCallInfo();
         LogService.searchLogs(searchInput, function (data, status) {
           if (data.success) {
@@ -291,21 +291,21 @@ angular.module('Squared')
             })], 'error');
           }
         });
-      };
+      }
 
-      var checkValidityOfLocus = function (locus) {
+      function checkValidityOfLocus(locus) {
         if (!validateLocusId(locus)) {
           locus = '-NA-';
         }
         return locus;
-      };
+      }
 
-      var checkValidityOfCallStart = function (callstart) {
+      function checkValidityOfCallStart(callstart) {
         if (!validateCallStartTime(callstart)) {
           callstart = '-NA-';
         }
         return callstart;
-      };
+      }
 
       var getLogInfo = function (locusId, startTime) {
         $scope.getPending = true;
