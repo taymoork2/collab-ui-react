@@ -58,12 +58,16 @@
           e.attrs.value = '+' + value;
           e.attrs.label = value.replace(/(\d{1})(\d{3})(\d{3})(\d{4})/, "$1 ($2) $3-$4");
         }
+
       },
       createdtoken: function (e) {
         if (!validateDID(e.attrs.value)) {
           angular.element(e.relatedTarget).addClass('invalid');
           vm.invalidcount++;
         } else {
+          if (isDidAlreadyPresent(e.attrs.value)) {
+            angular.element(e.relatedTarget).addClass('invalid');
+          }
           DidService.addDid(e.attrs.value);
           if (!editMode && !firstValidDid) {
             firstValidDid = true;
@@ -71,14 +75,23 @@
           }
         }
         setPlaceholderText("");
-        vm.submitBtnStatus = vm.checkForInvalidTokens();
+        vm.submitBtnStatus = vm.checkForInvalidTokens() && vm.checkForDuplicates();
       },
       removedtoken: function (e) {
         DidService.removeDid(e.attrs.value);
         if (!validateDID(e.attrs.value)) {
           vm.invalidcount--;
         }
-        vm.submitBtnStatus = vm.checkForInvalidTokens();
+        vm.submitBtnStatus = vm.checkForInvalidTokens() && vm.checkForDuplicates();
+
+        $timeout(function () {
+          var dids = DidService.getDidList();
+          var tmpDids = dids.slice();
+          angular.forEach(tmpDids, function (did) {
+            DidService.removeDid(did);
+          });
+          $('#didAddField').tokenfield('setTokens', tmpDids.toString());
+        });
 
         //If this is the last token, put back placeholder text.
         var tokenElement = $("div", ".did-input").children(".token");
@@ -87,12 +100,14 @@
         }
       },
       editedtoken: function (e) {
+        DidService.removeDid(e.attrs.value);
         if (!validateDID(e.attrs.value)) {
           vm.invalidcount--;
         }
       }
     };
     vm.checkForInvalidTokens = checkForInvalidTokens;
+    vm.checkForDuplicates = checkForDuplicates;
     vm.submit = submit;
     vm.confirmSubmit = confirmSubmit;
     vm.goBackToAddNumber = goBackToAddNumber;
@@ -140,6 +155,25 @@
 
     activate();
     ////////////
+
+    function isDidAlreadyPresent(input) {
+      var dids = DidService.getDidList();
+      return dids.indexOf(input) >= 0;
+    }
+
+    function checkForDuplicates() {
+      var dids = DidService.getDidList();
+      var tmpDids = dids.slice();
+      var i = 0;
+      while (tmpDids.length > 0) {
+        var did = tmpDids.splice(0, 1);
+        if (tmpDids.indexOf(String(did)) >= 0) {
+          return false;
+        }
+        i++;
+      }
+      return true;
+    }
 
     function setPlaceholderText(text) {
       $('#didAddField-tokenfield').attr('placeholder', text);
@@ -245,7 +279,7 @@
           }).catch(function (response) {
             vm.errors.push({
               pattern: this,
-              message: Notification.processErrorResponse(response)
+              message: response.status === 409 ? $translate.instant('didManageModal.didAlreadyExist') : Notification.processErrorResponse(response)
             });
           }.bind(newDid));
           promises.push(addPromise);

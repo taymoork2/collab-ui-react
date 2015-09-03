@@ -36,12 +36,6 @@ describe('Controller: DidService', function () {
     expect(DidService.getDidList().length).toEqual(3);
   });
 
-  it('should not add duplicate dids', function () {
-    expect(DidService.getDidList().length).toEqual(4);
-    DidService.addDid('12223334444');
-    expect(DidService.getDidList().length).toEqual(4);
-  });
-
   it('didList should be empty when clearDidList is called', function () {
     expect(DidService.getDidList().length).toEqual(4);
     DidService.clearDidList();
