@@ -1180,7 +1180,7 @@
   },
   "singleNumberReachPanel": {
     "title": "Single Number Reach",
-    "description": "<small>Enables users to answer incoming calls to their extension to another number</small>",
+    "description": "Enables users to answer incoming calls to their extension to another number",
     "toggle": "Single Number Reach",
     "snrNote": "SNR can cover all the user's lines or limited to specific lines",
     "success": "Single Number Reach configuration saved successfully",
