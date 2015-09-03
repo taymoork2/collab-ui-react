@@ -214,22 +214,18 @@
         labelfield: 'label',
         valuefield: 'name'
       }
-      // expressionProperties: {
-      //   'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-      //     return !vm.hasDevice;
-      //   }
-      //}
     }, {
       key: 'customName',
       type: 'input',
       templateOptions: {
         required: 'required',
+        maxlength: 30,
         label: $translate.instant('callerIdPanel.customName')
       },
       expressionProperties: {
         'hide': function ($viewValue, $modelValue, scope) {
           if (vm.callerIdInfo.callerIdSelection) {
-            return vm.callerIdInfo.callerIdSelection.value.externalCallerIdType !== 'Custom';
+            return vm.callerIdInfo.callerIdSelection.value.externalCallerIdType !== customCallerId_type;
           }
         }
       }
@@ -256,7 +252,6 @@
         }
       }
     }];
-    ////////////
 
     function initNewForm() {
       if ($stateParams.directoryNumber === 'new' && vm.form) {
@@ -425,10 +420,8 @@
 
             vm.directoryNumber.externalCallerIdType = vm.callerIdInfo.callerIdSelection.value.externalCallerIdType;
             vm.directoryNumber.companyNumber = companyNumberObj;
-
             var promise;
             var promises = [];
-            // var companyNumberObj = null;
             if (vm.callerIdInfo.callerIdSelection.value.uuid) {
               companyNumberObj = {
                 uuid: vm.callerIdInfo.callerIdSelection.value.uuid
@@ -517,8 +510,6 @@
                           vm.directoryNumber.altDnPattern = vm.telephonyInfo.alternateDirectoryNumber.pattern;
                         }).then(function () {
                           return processSharedLineUsers().then(function () {
-                            // Update external caller ID on devices
-                            var companyNumberObj = null;
                             if (vm.callerIdInfo.callerIdSelection.value.uuid) {
                               companyNumberObj = {
                                 uuid: vm.callerIdInfo.callerIdSelection.value.uuid
@@ -624,7 +615,6 @@
               if (!directLineUserName) {
                 directLineUserName = name;
               }
-              vm.callerIdOptions.unshift(CallerId.constructCallerIdOption(directLine_label, directLine_type, directLineUserName, vm.telephonyInfo.alternateDirectoryNumber.pattern, null));
             }
             // Custom Caller ID
             vm.callerIdOptions.push(CallerId.constructCallerIdOption(custom_label, customCallerId_type, '', null));

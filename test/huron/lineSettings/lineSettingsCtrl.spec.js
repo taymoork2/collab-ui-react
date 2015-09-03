@@ -319,8 +319,6 @@ describe('Controller: LineSettingsCtrl', function () {
       SharedLineInfoService.updateLineEndpoint.and.returnValue($q.reject());
       controller.saveLineSettings();
       $scope.$apply();
-      // expect(SharedLineInfoService.updateLineEndpoint).toHaveBeenCalled();
-      // expect(Notification.errorResponse).toHaveBeenCalled();
     });
   });
 

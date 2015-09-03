@@ -79,7 +79,7 @@
     function getDirectoryNumber(uuid) {
       return DirectoryNumberService.get({
           customerId: Authinfo.getOrgId(),
-          directoryNumberId: uuid,
+          directoryNumberId: uuid
         }).$promise
         .then(function (data) {
           var dn = angular.copy(directoryNumberPayload);
