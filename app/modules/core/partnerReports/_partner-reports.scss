@@ -12,27 +12,26 @@
     @extend .row;
     @extend .page-header;
     .sync {
-      position: relative;
-      top: 17px;
       padding-left: 35px;
     }
     .report-filters {
+      padding: 25px 0 24px;
       .filter-one {
-        width: 160px;
-        margin: 5px;
+        // width: 160px;
+        // margin: 5px;
       }
       .filter-two {
-        width: 200px;
-        margin: 5px;
+        // width: 200px;
+        // margin: 5px;
       }
       a {
-        width:100%;
+        // width:100%;
         i {
-          right: 5px;
+          // right: 5px;
         }
       }
       .select-dropdown {
-        width: 100%;
+        // width: 100%;
       }
     }
   }
