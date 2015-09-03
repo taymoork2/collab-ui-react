@@ -1,18 +1,18 @@
-<div class="partner-profile">
+<div class="partner-profile small-12 columns">
   <!-- support form -->
   <form name="supportForm" novalidate>
     <div class="row">
 
       <!-- page title -->
-      <div class="col-xs-6">
+      <div class="columns small-6">
         <div class="page-title partner-page-title">
-          <span id="orgProfilePageTitle" class="title" translate="partnerProfile.title"></span>
+          <span id="orgProfilePageTitle" class="title-heading" translate="partnerProfile.title"></span>
         </div>
       </div>
 
       <!-- save / cancel button -->
-      <div class="col-xs-6 save-button">
-        <button id="orgProfileSaveBtn" ng-click="validation()" class="btn btn-primary pull-right" data-loading-text="<i class='icon icon-spinner'></i>"
+      <div class="columns small-6 save-button">
+        <button id="orgProfileSaveBtn" ng-click="validation()" class="btn btn-primary pull-right" data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>"
             ng-disabled="isBtnDisabled()">
           <span translate="partnerProfile.save"></span>
         </button>
@@ -24,16 +24,16 @@
 
     <!-- company name / account number -->
     <div class="row" id="companyInfoPanel">
-      <div class="col-xs-6">
+      <div class="columns small-7">
         <h2 translate="partnerProfile.companyInfo"></h2>
         <div class="form-group">
-          <!-- <div class="col-xs-4"> -->
+          <!-- <div class="columns small-4"> -->
             <label for="company-name" translate="partnerProfile.name"></label>
             <input class="form-control" name="test2" type="text" ng-model="companyName" disabled="true" id="company-name">
           <!-- </div> -->
         </div>
         <div class="form-group">
-          <!-- <div class="col-xs-4"> -->
+          <!-- <div class="columns small-4"> -->
             <label for="company-id" translate="partnerProfile.id"></label>
             <input id="company-id" class="form-control" type="text" disabled="true">
           <!-- </div> -->
@@ -43,7 +43,7 @@
 
     <!-- cisco rep -->
     <div class="row cisco-rep-panel" id="ciscoRepPanel" ng-show="rep !== null || partner !== null">
-      <div class="col-xs-12 form-section">
+      <div class="columns small-12 form-section">
         <h2 ng-if="isPartner" translate="partnerProfile.ciscoRep"></h2>
         <h2 ng-if="!isPartner" translate="customerProfile.supportContacts"></h2>
         <div class="form-spacing">
@@ -55,7 +55,7 @@
 
             <!-- grant cisco access checkbox -->
             <div class="row grant-row" ng-show="false">
-              <div class="col-xs-12">
+              <div class="columns small-12">
                 <cs-checkbox ckid="ckbox1" ng-model="cb.checkboxValue0" label="{{grant | translate}}"></cs-checkbox>
               </div>
             </div>
@@ -73,27 +73,28 @@
 
     <!-- support title / description -->
     <div class="row main-section" id="supportTitleAndDescPanel">
-      <div class="col-xs-7">
+      <div class="columns small-7">
         <h2 translate="partnerProfile.supportTitle"></h2>
         <div class="form-spacing">
           <span ng-if="!isPartner" translate="customerProfile.supportInfo" translate-values="{app : appType}"></span>
           <span ng-if="isPartner" translate="partnerProfile.supportInfo" translate-values="{app : appType}"></span>
+        </div>
       </div>
     </div>
 
     <!-- trouble ticket reporting location form -->
     <div class="row" id="troubleReportingPanel">
-      <div class="col-xs-12 form-section">
+      <div class="columns small-12 medium-7 form-section">
         <h3 translate="partnerProfile.supportSetup"></h3>
         <!-- partner problem reporting site form -->
         <div class="row optional-row" id="troubleReportingCiscoPanel">
-          <div class="col-xs-7">
+          <div class="columns small-12">
             <div class="row">
-              <div class="col-xs-2 radio-column">
+              <div class="columns small-2 radio-column">
                 <input type="radio" name="collabRadio3" id="collabRadio3" value="0" ng-model="problemSiteRadioValue" >
                 <span id="collabRadioLabel2" class="onboard-radio" ng-click="setProblemRadio(0)">{{collabRadio2.label}}</span>
               </div>
-              <div class="col-xs-10 default-link-row">
+              <div class="columns small-10 default-link-row">
                 <div class="partner-link">
                   <a href="" ng-click="sendFeedback()">
                     <span ng-if="!isManaged" translate="partnerProfile.ciscoProblem"></span>
@@ -110,13 +111,13 @@
 
     <!-- trouble reporting site url -->
     <div class="row" id="troubleReportingPartnerPanel">
-      <div class="col-xs-12 col-md-7">
+      <div class="columns small-12 medium-7">
         <div class="row">
-          <div class="col-xs-2 radio-column">
+          <div class="columns small-2 radio-column">
             <input type="radio" name="collabRadio" value="1" ng-model="problemSiteRadioValue" >
             <span id="troubleReportingPartnerPanelRadio" ng-click="setProblemRadio(1)" class="onboard-radio">{{collabRadio2.label}}</span>
           </div>
-          <div class="col-xs-10">
+          <div class="columns small-10">
             <div class="input-group" >
               <input type="text" id="partnerSupportUrl" class="form-control" placeholder="{{troubleUrl | translate}}" ng-model="supportUrl">
               <input type="text" id="partnerSupportText" class="form-control optional-row" placeholder="{{troubleText | translate}}" ng-model="supportText">
@@ -126,12 +127,12 @@
         <div class="form-section-last" id="helpPanel">
           <h3 translate="partnerProfile.helpFaq"></h3>
           <!-- partner help site form -->
-          <div class="row optional-row" id="helpCiscoPanel">
-            <div class="col-xs-2 radio-column">
+          <div class="row collapse optional-row" id="helpCiscoPanel">
+            <div class="columns small-2 radio-column">
               <input type="radio" value="0" ng-model="helpSiteRadioValue" >
               <span id="collabRadioLabel2" class="onboard-radio" ng-click="setHelpRadio(0)">{{collabRadio2.label}}</span>
             </div>
-            <div class="col-xs-10 default-link-row">
+            <div class="columns small-10 default-link-row">
               <a ng-href="{{profileHelpUrl}}" target="_blank">
                 <span ng-if="!isManaged" translate="partnerProfile.ciscoHelp"></span>
                 <span ng-if="isCiscoHelp && isManaged" translate="partnerProfile.ciscoHelp"></span>
@@ -142,11 +143,11 @@
 
         <!-- help site url form -->
         <div class="row" ng-click="setHelpRadio(1)" id="helpPartnerPanel">
-          <div class="col-xs-2 radio-column">
+          <div class="columns small-2 radio-column">
             <input type="radio" value="1" ng-model="helpSiteRadioValue">
             <span id="helpPartnerPanelRadio" class="onboard-radio">{{collabRadio2.label}}</span>
           </div>
-          <div class="col-xs-10">
+          <div class="columns small-10">
             <div class="input-group">
               <input type="text" id="partnerHelpUrl" name="testForm" class="form-control" placeholder="{{helpUrlText | translate}}" ng-model="helpUrl" required>
             </div>
@@ -154,7 +155,7 @@
         </div>
       </div>
     </div>
-      <div class="col-xs-12 col-md-4">
+      <div class="columns small-12 medium-5">
         <h5 translate="partnerProfile.matchingTix"></h5>
         <span translate="partnerProfile.matchingDescr"></span>
       </div>

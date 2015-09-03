@@ -3,7 +3,7 @@
           name="saveBtn2"
           class="btn-primary"
           translate="common.save"
-          data-loading-text="<i class='icon icon-spinner'></i>"
+          data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>"
           type="submit"
           ng-click="WebExUserSettings2.btnSave2(userSettingsView.form)"
           ng-disabled="WebExUserSettings2.userSettingsModel.disableSave2">
@@ -13,7 +13,7 @@
           name="resetBtn2"
           class="btn-default"
           translate="common.cancel"
-          data-loading-text="<i class='icon icon-spinner'></i>"
+          data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>"
           ng-click="WebExUserSettings2.btnReset2(userSettingsView.form)"
           ng-disabled="WebExUserSettings2.userSettingsModel.disableCancel2">
   </button>
@@ -48,7 +48,7 @@
                   class="btn btn-info wiz-onboard-btn"
                   ng-if="WebExUserSettings2.userSettingsModel.allowRetry"
                   ng-click="WebExUserSettings2.btnReload2()"
-                  data-loading-text="<i class='icon icon-spinner'></i>">
+                  data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>">
           </button>
         </div>
       </div>

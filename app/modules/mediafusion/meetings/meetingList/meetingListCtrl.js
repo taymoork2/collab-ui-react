@@ -108,7 +108,8 @@ angular.module('Mediafusion')
           "theme": "none",
           "fontFamily": "CiscoSansTT Thin",
           "backgroundAlpha": 0,
-          "marginLeft": 30,
+          'marginLeft': 16,
+          'marginRight': 16,
           "dataProvider": $scope.meetingChartInfo,
           "valueAxes": [{
             "gridAlpha": 0,

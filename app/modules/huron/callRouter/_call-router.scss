@@ -60,7 +60,7 @@
   }
 }
 
-.callRouter-callerinfo.open {
+.callRouter-callerinfo.open-section {
    padding-top: 0;
    padding-bottom: 0;
 
@@ -74,7 +74,7 @@
 .custom-combobox {
     width: calc(100% - 20px);
     .dropdown-menu {
-      min-width: calc(100% - 20px);
+      min-width: calc(100% + 45px);
       overflow-y: scroll;
       max-height: 261px;
     }
@@ -97,4 +97,37 @@
 .has-error .custom-combobox.open .input-group .form-control,.has-error .custom-combobox.open .input-group-btn>.btn,.has-error .custom-combobox.open .side-panel .button-container .input-group-btn>button,.side-panel .button-container .has-error .custom-combobox.open .input-group-btn>button,.has-error .custom-combobox .input-group .form-control:focus,.has-error .custom-combobox .input-group .form-control:focus+.input-group-btn>.btn,.has-error .custom-combobox .input-group .side-panel .button-container .form-control:focus+.input-group-btn>button,.side-panel .button-container .has-error .custom-combobox .input-group .form-control:focus+.input-group-btn>button {
     box-shadow: 0 0 0 3px #f4846a;
     border-color: transparent
+}
+
+.custom-combobox {
+  display:inline;
+}
+
+form[name="nav.callrouterform"] .validation {
+  position: absolute;
+  right: -68px;
+  top: 4px;
+}
+
+form[name="nav.callrouterform"] button[type="submit"] {
+  margin-left: 77px;
+  position: relative;
+  top: 6px;
+}
+
+.has-error .custom-combobox .input-group .form-control {
+  box-shadow: 0 0 0 3px #EF5E3C;
+  border-color: transparent;
+}
+
+.custom-combobox .input-group .form-control {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.custom-combobox .input-group .input-group-btn > .btn {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  z-index: 10000;
+  position: relative;
 }
