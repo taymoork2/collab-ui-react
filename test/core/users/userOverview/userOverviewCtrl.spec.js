@@ -1,25 +1,27 @@
 'use strict';
 
 describe('Controller: UserOverviewCtrl', function () {
-  var controller, $scope, $httpBackend, Config, Authinfo, Utils, Userservice, FeatureToggleService;
+  var controller, $scope, $httpBackend, $q, Config, Authinfo, Utils, Userservice, FeatureToggleService;
 
-  var $stateParams, currentUser, updatedUser, getUserMe, getMyFeatureToggles;
+  var $stateParams, currentUser, updatedUser, getUserMe;
 
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _Config_, _Authinfo_, _Utils_, _Userservice_, _FeatureToggleService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, $q, _Config_, _Authinfo_, _Utils_, _Userservice_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
+    $q = $q;
     Config = _Config_;
     Authinfo = _Authinfo_;
     Utils = _Utils_;
     Userservice = _Userservice_;
     FeatureToggleService = _FeatureToggleService_;
 
+    var deferred = $q.defer();
+    deferred.resolve('true');
     currentUser = angular.copy(getJSONFixture('core/json/currentUser.json'));
     getUserMe = getJSONFixture('core/json/users/me.json');
-    getMyFeatureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
     updatedUser = angular.copy(currentUser);
 
     $stateParams = {
@@ -30,9 +32,7 @@ describe('Controller: UserOverviewCtrl', function () {
     spyOn(Userservice, 'getUser').and.callFake(function (uid, callback) {
       callback(currentUser, 200);
     });
-    spyOn(FeatureToggleService, 'getFeaturesForUser').and.callFake(function (uid, callback) {
-      callback(getMyFeatureToggles, 200);
-    });
+    spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(deferred.promise);
 
     // eww
     var userUrl = Utils.sprintf(Config.getScimUrl(), [Authinfo.getOrgId()]) + '/' + currentUser.id;

@@ -152,6 +152,7 @@ module.exports = function() {
         vendor + '/bootstrap-cisco-ng/dist/cisco-ui-tpls.js',
         vendor + '/angular-wizard/dist/angular-wizard.js',
         vendor + '/ng-grid/build/ng-grid.js',
+        vendor + '/angular-nicescroll/angular-nicescroll.js',
         vendor + '/bootstrap-tokenfield/dist/bootstrap-tokenfield.js',
         vendor + '/moment-timezone/builds/moment-timezone-with-data-2010-2020.js',
         vendor + '/ng-clip/src/ngClip.js',

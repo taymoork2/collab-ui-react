@@ -3,22 +3,40 @@
   <div class="results-container">
     <div class="result new-users" ng-class="{disabled: model.numNewUsers === 0}">
       <div class="total">{{model.numNewUsers}}</div>
-      <h4 translate="firstTimeWizard.newUsers"></h4>
+      <h4 class="total-title" translate="firstTimeWizard.newUsers"></h4>
     </div>
     <div class="result existing-users" ng-class="{disabled: model.numExistingUsers === 0}">
       <div class="total">{{model.numExistingUsers}}</div>
-      <h4 translate="firstTimeWizard.existingUsers"></h4>
+      <h4 class="total-title" translate="firstTimeWizard.existingUsers"></h4>
     </div>
     <div class="result error-users" ng-class="{disabled: model.userErrorArray.length === 0}">
       <div class="total">{{model.userErrorArray.length}}</div>
-      <h4 translate="firstTimeWizard.errorUsers"></h4>
+      <h4 class="total-title" translate="firstTimeWizard.errorUsers"></h4>
       <div class="action-link" ng-if="model.userErrorArray.length > 0" ng-init="wizard.hasErrors=true;">
         <i class="icon icon-error"></i><a href ng-click="wizard.resetSubTab(1)" translate="firstTimeWizard.fixCsvErrors"></a>
       </div>
     </div>
   </div>
   <div class="results-total">{{model.numTotalUsers}} <span translate="firstTimeWizard.totalProcessed"></span></div>
-  <div class="grid" ng-if="model.userErrorArray.length > 0">
-    <div gridscrollbar class="gridStyle" ng-grid="gridOptions"></div>
+  <div class="error-table table-header" ng-if="model.userErrorArray.length > 0">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <td class="col-md-2"><div class="heading-text" translate='firstTimeWizard.resultRowHeader'></div></td>
+          <td class="col-md-10"><div class="heading-text" translate='firstTimeWizard.resultErrorHeader'></div></td>
+        </tr>
+      </thead>
+    </table>
+  </div>
+  <div ng-nicescroll nice-option="tableOptions" class="error-table table-body" ng-if="model.userErrorArray.length > 0">
+    <table id="errorTable" class="table table-bordered">
+      <thead><tr><td class="col-md-2"></td><td class="col-md-10"></td></tr></thead>
+      <tbody>
+        <tr ng-repeat="data in model.userErrorArray">
+          <td class="center col-md-2">{{data.row}}</td>
+          <td class="col-md-10">{{data.error}}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>

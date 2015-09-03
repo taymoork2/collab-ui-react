@@ -16,7 +16,8 @@ describe('Service: PstnSetupService', function () {
   var customerPayload = {
     uuid: customerId,
     name: "myCustomer",
-    reseller: partnerId,
+    pstnCarrierId: carrierId,
+    resellerId: partnerId,
     billingAddress: {
       "billingName": "Cisco Systems",
       "billingStreetNumber": "2200",
@@ -60,7 +61,7 @@ describe('Service: PstnSetupService', function () {
   it('should create a customer', function () {
     $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/customers', customerPayload).respond(201);
 
-    PstnSetupService.createCustomer(customerPayload.uuid, customerPayload.name, customerPayload.reseller);
+    PstnSetupService.createCustomer(customerPayload.uuid, customerPayload.name, customerPayload.pstnCarrierId, customerPayload.resellerId);
     $httpBackend.flush();
   });
 
@@ -71,8 +72,14 @@ describe('Service: PstnSetupService', function () {
     $httpBackend.flush();
   });
 
+  it('should retrieve available carriers', function () {
+    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/carriers').respond(200);
+    PstnSetupService.listCarriers();
+    $httpBackend.flush();
+  });
+
   it('should retrieve a customer\'s carrier', function () {
-    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/pstn/carriers').respond(customerCarrierList);
+    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/carriers').respond(customerCarrierList);
     var promise = PstnSetupService.getCarrierId(customerId, 'INTELEPEER');
     promise.then(function (value) {
       expect(value).toEqual('4f5f5bf7-0034-4ade-8b1c-db63777f062c');
@@ -81,7 +88,7 @@ describe('Service: PstnSetupService', function () {
   });
 
   it('should reject promise if carrier is not found', function () {
-    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/pstn/carriers').respond([]);
+    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/carriers').respond([]);
     var promise = PstnSetupService.getCarrierId(customerId, 'INTELEPEER');
     promise.then(function (response) {
       expect(response).toBeUndefined();
@@ -92,7 +99,7 @@ describe('Service: PstnSetupService', function () {
   });
 
   it('should make a block order', function () {
-    $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/pstn/carriers/' + carrierId + '/did/block', blockOrderPayload).respond(201);
+    $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/carriers/' + carrierId + '/did/block', blockOrderPayload).respond(201);
     PstnSetupService.orderBlock(customerId, carrierId, blockOrderPayload.npa, blockOrderPayload.quantity);
     $httpBackend.flush();
   });
@@ -120,7 +127,9 @@ describe('Service: PstnSetupService', function () {
     $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/orders/' + orderId).respond(customerOrder);
     var promise = PstnSetupService.listPendingNumbers(customerId, 'INTELEPEER');
     promise.then(function (numbers) {
-      expect(numbers).toContain('5125934450');
+      expect(numbers).toContain(jasmine.objectContaining({
+        pattern: '5125934450'
+      }));
     });
     $httpBackend.flush();
   });
