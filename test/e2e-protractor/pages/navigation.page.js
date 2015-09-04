@@ -36,19 +36,11 @@ var Navigation = function () {
 
   this.headerSearch = element(by.css('.header-search'));
   this.settingsMenu = element(by.css('.settings-menu .dropdown-toggle'));
+  this.planReview = element(by.cssContainingText('.settings-menu .dropdown-menu a', 'Plan Review'));
+  this.addUsers = element(by.cssContainingText('.settings-menu .dropdown-menu a', 'Invite Users'));
+  this.communication = element(by.cssContainingText('.settings-menu .dropdown-menu a', 'Communication'));
   this.userInfo = element(by.css('.user-info'));
-  this.dropdownItems = element.all(by.repeater('item in menuItems')).all(by.tagName('a'));
   this.launchPartnerButton = element(by.css('#launch-partner-btn a'));
-  this.addUsers = this.dropdownItems.filter(function (item) {
-    return item.getText().then(function (text) {
-      return text === 'Invite Users';
-    });
-  });
-  this.communication = this.dropdownItems.filter(function (item) {
-    return item.getText().then(function (text) {
-      return text === 'Communication';
-    });
-  });
 
   this.clickDevelopmentTab = function () {
     utils.click(this.developmentTab);
@@ -137,7 +129,7 @@ var Navigation = function () {
 
   this.clickFirstTimeWizard = function () {
     utils.click(this.settingsMenu);
-    utils.click(this.dropdownItems.get(0));
+    utils.click(this.planReview);
   };
 
   this.clickAddUsers = function () {
