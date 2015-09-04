@@ -3,9 +3,10 @@
     <button id="convertModalClose" type="button" class="close" ng-click="$parent.modal.close()">
       <span class="sr-only">Close</span>
     </button>
-    <h3 class="modal-title">
-      <span><span translate="hercules.serviceNames.{{selectedServiceId}}"/>: User Status Report</span>
-    </h3>
+    <h5 class="modal-title">
+      <rubbish translate="hercules.serviceNames.{{selectedServiceId}}"/>
+      : User Status Report
+    </h5>
   </div>
   <div class="modal-body">
     <div ng-show="loading" style="text-align: center; padding: 60px;">
@@ -14,7 +15,8 @@
     <div ng-hide="loading">
       <p>The exported report will be a comma separated list of users, their state, and associated details. </p>
       <p>Select which user states should be included in the report:</p>
-        <div ng-repeat="item in statusTypes" ng-hide="item.unselectable" style="margin-top: 15px;">
+
+      <div ng-repeat="item in statusTypes" ng-hide="item.unselectable" style="margin-top: 15px;">
           <span><cs-checkbox ng-click="selectedStateChanged()" ckid="{{item.stateType}}" ng-model="item.selected" label=""></cs-checkbox></span>
           <span ng-show="item.progress && exportingUserStatusReport">(<i class="icon icon-spinner" style="top:4px"/>Processing {{item.progress}} of {{item.count}}) users</span>
           <span ng-hide="item.progress && exportingUserStatusReport">{{item.count}} </span>
