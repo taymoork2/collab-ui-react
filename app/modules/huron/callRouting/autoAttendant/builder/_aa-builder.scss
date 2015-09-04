@@ -40,7 +40,7 @@
 .aa-flex-row-title {
   @extend .aa-flex-row-centered;
   min-height: 54px;
-  background-color: #fff;
+  background-color: $brand-white;
 }
 
 .aa-flex-row-item {
@@ -51,7 +51,7 @@
 }
 
 #aa-flex-row-item-header {
-  padding-left: 90px;
+  padding-left: 120px;
 }
 
 .aa-flex-row-item-right {
@@ -85,7 +85,7 @@
 .aa-icon-arrow-back {
   @extend .icon;
   @extend .icon-arrow-back;
-  @extend .icon-3x;
+  font-size: 40px;
   color: $brand-default;
   padding-right: 15px;
   &:hover {
@@ -113,13 +113,18 @@
   }
 }
 
-.aa-flex-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
+.aa-container {
   overflow: visible;
   padding: 0;
+  min-height: 1px;
+  align-items: center;
+}
+
+.aa-flex-container {
+  @extend .aa-container;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 
 .aa-panel {
@@ -133,7 +138,9 @@
 .aa-panel-body {
   @extend .panel-body;
   margin: 0px;
-  padding: 15px;
+  padding: 25px;
+  background-color: $brand-white;
+  border: 1px solid $brand-default;
   &:hover {
     border-color: $brand-primary;
   }

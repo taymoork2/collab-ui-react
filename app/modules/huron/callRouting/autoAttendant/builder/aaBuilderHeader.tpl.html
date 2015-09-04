@@ -1,17 +1,19 @@
 <div class="page-header">
     <div class="page-title aa-flex-row">
-      <a ui-sref="autoattendant.aalanding"><span class="aa-icon-arrow-back"></span></a>
-      <span class="title aa-nowrap" translate="Auto Attendant Builder"></span>
+      <a ui-sref="autoattendant.aalanding"><i class="aa-icon-arrow-back"></i></a>
+      <span class="title-heading aa-nowrap" translate="Auto Attendant Builder"></span>
     </div>
 </div>
 <div class="aa-flex-row-title">
   <div class="aa-flex-row-item" id="aa-flex-row-item-header" ng-if="aaBuilderMain.ui.ceInfo.getName()">
     <div class="aa-flex-row">
-      <h2 class="aa-nowrap"><strong>{{aaBuilderMain.ui.ceInfo.getName()}}</strong></h2>
-      <span class="aa-edit-icon"></span>  <!--todo: click edit icon to allow inline editing or to reopen name form-->
-    </div>
-    <div class="aa-flex-row" ng-if="aaBuilderMain.ui.ceInfo.getResources().length > 0">
-      <h2 class="aa-nowrap"><strong>{{aaBuilderMain.ui.ceInfo.getResources() | DisplayNumbers }}</strong></h2>
+        <a class="aa-flex-row-item" style="padding-right:40px;"><!--todo: click edit icon to allow inline editing or to reopen name form-->
+          <h2 class="aa-nowrap">{{aaBuilderMain.ui.ceInfo.getName()}}</h2>
+          <i class="aa-edit-icon"></i>
+        </a>
+        <div class="aa-flex-row-item" ng-if="aaBuilderMain.ui.ceInfo.getResources().length > 0" style="padding-left:40px;">
+          <h2 class="aa-nowrap">{{aaBuilderMain.ui.ceInfo.getResources() | DisplayNumbers }}</h2>
+        </div>
     </div>
   </div>
   <div class="aa-flex-row-item-right" id="aa-flex-row-item-right-header" ng-if="aaBuilderMain.ui.ceInfo.getName()">
