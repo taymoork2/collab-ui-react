@@ -237,7 +237,7 @@
 
     function getQuery(filter) {
       if (filter.value === 0) {
-        return '?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=true';
+        return '?&intervalCount=8&intervalType=day&spanCount=1&spanType=day&cache=true';
       } else if (filter.value === 1) {
         return '?&intervalCount=31&intervalType=day&spanCount=7&spanType=day&cache=true';
       } else {
@@ -322,10 +322,13 @@
           graph.push(angular.copy(dataPoint));
         }
       } else if (time.value === 1) {
-        var dayOffset = moment.tz(mostRecent, timezone).format('e');
+        var dayOffset = parseInt(moment.tz(mostRecent, timezone).format('e'));
         if (dayOffset >= 5) {
           dayOffset = 7 - dayOffset;
+        } else {
+          dayOffset = -dayOffset;
         }
+
         for (var x = 3; x >= 0; x--) {
           dataPoint.modifiedDate = moment().startOf('week').subtract(dayOffset + (x * 7), 'day').format(dayFormat);
           graph.push(angular.copy(dataPoint));
@@ -342,22 +345,15 @@
 
     function combineMatchingDates(graphData, customerData) {
       angular.forEach(customerData, function (dateData) {
-        var updated = false;
-
         if (graphData.length > 0) {
           for (var i = 0; i < graphData.length; i++) {
             if (graphData[i].modifiedDate.indexOf(dateData.modifiedDate) !== -1) {
               graphData[i].totalRegisteredUsers += dateData.totalRegisteredUsers;
               graphData[i].activeUsers += dateData.activeUsers;
               graphData[i].percentage = Math.round((graphData[i].activeUsers / graphData[i].totalRegisteredUsers) * 100);
-              updated = true;
               break;
             }
           }
-        }
-
-        if (!updated && dateData.length > 0) {
-          graphData.push(angular.copy(dateData));
         }
       });
 
