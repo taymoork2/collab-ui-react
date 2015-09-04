@@ -1,4 +1,4 @@
-<div id="fusion-root">
+<div id="fusion-root" style="padding-left: 10px; padding-right: 10px;">
 
   <!-- header -->
   <div class="page-header row">
@@ -40,19 +40,22 @@
         <hercules-fusion-welcome></hercules-fusion-welcome>
       </div>
 
-      <div ng-show="subscription.eventCount > 0 && !subscription.currentError && !shouldShowWelcomeScreen()" style="padding-bottom: 60px">
+      <div ng-show="subscription.eventCount > 0 && !subscription.currentError && !shouldShowWelcomeScreen()">
         <hercules-dashboard-info-panel> </hercules-dashboard-info-panel>
 
         <hercules-dashboard-header> </hercules-dashboard-header>
 
         <div class="row" ng-show="clusterLength() != 0">
-          <h3 style="padding-left: 20px">Cisco VCS Clusters: {{clusterLength()}}</h3>
-          <div class="grid" style="margin-right: -30px;">
-            
-            <div class="row" ng-repeat="cluster in clusters | toArray | orderBy:['needs_attention','-any_service_connectors_enabled','name']" ng-click="showClusterDetails(cluster)">
+          <h3 style="padding-left: 10px">Cisco VCS Clusters: {{clusterLength()}}</h3>
+
+          <div class="grid" style="margin-right: -30px; margin-left: -10px;">
+
+            <div class="row"
+                 ng-repeat="cluster in clusters | toArray | orderBy:['needs_attention','-any_service_connectors_enabled','name']"
+                 ng-click="showClusterDetails(cluster)">
               <div class="col-sm-4 col-xs-10">
                 <i class="icon icon-data icon-inverse-round" />
-                {{cluster.name}}
+                <span>{{cluster.name}}</span>
               </div>
               <div class="col-sm-4 col-xs-1">
                 <span ng-show="cluster.needs_attention" class="red">
@@ -80,9 +83,9 @@
 
         <div ng-show="clusterLength() == 0">
           <h3 style="padding-left: 20px">Cisco VCS Clusters</h3>
-          <h4 style="padding-left: 20px; color: #ccc">
+          <h5 style="padding-left: 20px; color: #ccc">
             No clusters connected to Spark
-          </h4>
+          </h5>
         </div>
       </div>
     </div>

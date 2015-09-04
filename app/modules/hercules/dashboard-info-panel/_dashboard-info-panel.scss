@@ -1,6 +1,7 @@
 .dashboard-info-panel {
   background: white;
   border: 1px solid $gray-lighter;
+  margin-bottom: 10px;
 
   &:first-child {
     background: $brand-white;
@@ -10,7 +11,6 @@
     margin: 0;
   }
   .content {
-    margin-bottom: 5px;
     box-shadow: none;
   }
   .accordion--navigation,.accordion--navigation:hover {
@@ -38,8 +38,8 @@
   }
   .accordion .accordion--navigation .content {
     border: 0;
-    margin-top: 0;
-    padding: 0px 0px 0px 106px;
+    margin-top: -10px;
+    padding: 0px 0px 0px 102px;
   }
   .accordion--navigation .badge.badge-custom-warn {
     width: 55px;
@@ -70,7 +70,7 @@
   border-left: 17px solid transparent;
   border-right: 17px solid transparent;
   bottom: 100%;
-  right: vr-adjust(66);
+  right: vr-adjust(58);
   border-bottom: 17px solid #FFF;
   margin-top: 0px;
   z-index: 1;
@@ -83,7 +83,7 @@
   border-left: 17px solid transparent;
   border-right: 17px solid transparent;
   bottom: 100%;
-  right: vr-adjust(66);
+  right: vr-adjust(58);
   margin-top: 0px;
   z-index: 1;
   border-bottom: 17px solid $gray-lighter;
