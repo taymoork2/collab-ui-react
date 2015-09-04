@@ -85,11 +85,8 @@
         vm.submitBtnStatus = vm.checkForInvalidTokens() && vm.checkForDuplicates();
 
         $timeout(function () {
-          var dids = DidService.getDidList();
-          var tmpDids = dids.slice();
-          angular.forEach(tmpDids, function (did) {
-            DidService.removeDid(did);
-          });
+          var tmpDids = DidService.getDidList().slice();
+          DidService.clearDidList();
           $('#didAddField').tokenfield('setTokens', tmpDids.toString());
         });
 
