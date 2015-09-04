@@ -88,6 +88,7 @@ describe('Partner flow', function () {
       utils.click(partner.termsActionButton);
       utils.click(partner.editTermsButton);
 
+      utils.expectIsDisplayed(partner.editTrialForm);
       utils.expectClass(partner.squaredTrialCheckbox, 'disabled');
 
       utils.click(partner.saveUpdateButton);

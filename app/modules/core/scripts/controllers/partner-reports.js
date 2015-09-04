@@ -194,8 +194,8 @@ angular.module('Core')
             'plotAreaBorderAlpha': 0,
             'plotAreaBorderColor': '#DDD',
             'marginTop': 20,
-            'marginRight': 20,
-            'marginLeft': 10,
+            'marginLeft': 16,
+            'marginRight': 16,
             'marginBottom': 10,
             'categoryField': 'date',
             'categoryAxis': {

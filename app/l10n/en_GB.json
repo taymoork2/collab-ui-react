@@ -428,7 +428,7 @@
     "launchBtn": "Launch",
     "convert": "Convert",
     "convertUsers": "Convert unlicensed users",
-    "convertUsersText": "Convert employees of your organisation who have signed up for Project Spark on their own with a company email address to licensed users. Licensed users receive additional enterprise features and are subject to your organisation's policies and administration.<br><br>Selected users will receive an invitation to convert or change their email address to a non-company email address.",
+    "convertUsersText": "Convert employees of your organisation who have signed up for Cisco Spark on their own with a company email address to licensed users. Licensed users receive additional enterprise features and are subject to your organisation's policies and administration.",
     "cancel": "Cancel",
     "emailAddress": "E-mail address",
     "name": "Name",

@@ -39,7 +39,7 @@ var LoginPage = function () {
     expect(browser.driver.findElement(by.css('.generic-error')).getText()).toContain(msg);
   };
 
-  this.loginButton = element(by.cssContainingText('span[role="button"]', 'Login'));
+  this.loginButton = element(by.cssContainingText('button[role="button"]', 'Login'));
 
   this.login = function (username, expectedUrl) {
     var bearer;

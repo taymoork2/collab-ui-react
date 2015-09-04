@@ -126,7 +126,7 @@ module.exports = function() {
         vendor + '/nicescroll/jquery.nicescroll.js',
         vendor + '/angular/angular.js',
         vendor + '/angular-animate/angular-animate.js',
-        vendor + '/angular-bootstrap/ui-bootstrap-tpls.js',
+        // vendor + '/angular-bootstrap/ui-bootstrap-tpls.js',
         vendor + '/angular-ui-utils/ui-utils.js',
         vendor + '/angular-cookie/angular-cookie.js',
         vendor + '/angular-cookies/angular-cookies.js',
@@ -149,7 +149,8 @@ module.exports = function() {
         vendor + '/api-check/dist/api-check.js',
         vendor + '/angular-formly/dist/formly.js',
         vendor + '/cisco-formly/dist/cisco-formly-tpls.js',
-        vendor + '/bootstrap-cisco-ng/dist/cisco-ui-tpls.js',
+        // vendor + '/bootstrap-cisco-ng/dist/cisco-ui-tpls.js',
+        vendor + '/cisco-ui/dist/js/cisco-ui.js',
         vendor + '/angular-wizard/dist/angular-wizard.js',
         vendor + '/ng-grid/build/ng-grid.js',
         vendor + '/angular-nicescroll/angular-nicescroll.js',
@@ -162,9 +163,15 @@ module.exports = function() {
         vendor + '/angular-timer/dist/angular-timer.js',
         vendor + '/humanize-duration/humanize-duration.js'
       ],
-      scss: [
-        vendor + '/bootstrap-cisco/scss/**/*.scss'
-      ],
+      scss: {
+        paths: [
+          './' + vendor + '/bootstrap-sass/assets/stylesheets',
+          './' + vendor + '/foundation/scss'
+        ],
+        files: [
+          vendor + '/cisco-ui/scss/**/*.scss'
+        ]
+      },
       css: [
         vendor + '/alertify.js/themes/alertify.core.css',
         vendor + '/alertify.js/themes/alertify.default.css',
@@ -173,11 +180,11 @@ module.exports = function() {
         vendor + '/animate.css/animate.css'
       ],
       fonts: [
-        vendor + '/bootstrap-cisco/dist/fonts/*',
+        vendor + '/cisco-ui/dist/fonts/*',
         vendor + '/font-awesome/fonts/*'
       ],
       images: [
-        vendor + '/bootstrap-cisco/dist/images/*'
+        vendor + '/cisco-ui/dist/images/*'
       ]
     },
 
@@ -185,7 +192,7 @@ module.exports = function() {
       ' * <%= pkg.name %> v<%= pkg.version %> (<%= pkg.homepage %>)\n' +
       ' * Copyright ' + year + ' <%= pkg.author %>\n' +
       ' */\n' +
-      '',
+      ''
 
   };
 

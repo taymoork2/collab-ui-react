@@ -67,7 +67,6 @@
           voicemailPayload.voicemail = {
             'dtmfAccessId': vm.telephonyInfo.esn
           };
-          voicemailPayload.userName = vm.currentUser.userName;
 
           updateVoicemail(voicemailPayload, result);
         } else {
