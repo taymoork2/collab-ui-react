@@ -1,8 +1,13 @@
 'use strict';
 
 /* @ngInject */
-function DevicesReduxCtrl2($scope, $state, $location, $rootScope, CsdmCodeService, CsdmDeviceService) {
+function DevicesReduxCtrl2($scope, $state, $location, $rootScope, CsdmCodeService, CsdmDeviceService, PagerUtil) {
   var vm = this;
+
+  vm.pager = new PagerUtil({
+    resultSize: 0,
+    pageSize: 2
+  });
 
   vm.filteredCodesAndDevices = [];
 
@@ -44,10 +49,16 @@ function DevicesReduxCtrl2($scope, $state, $location, $rootScope, CsdmCodeServic
     vm.filterOrSearchActive = vm.search || _.where(vm.filters, {
       checked: true
     }).length;
+    vm.pager.update({
+      resultSize: vm.filteredCodesAndDevices.matches.length
+    });
   };
 
   function reduceFn(result, device) {
-    var displayNameMatches = !vm.search || ~device.displayName.toLowerCase().indexOf(vm.search.toLowerCase());
+    var searchFields = ['displayName', 'software', 'serial', 'ip', 'mac'];
+    var someAttributeMatches = !vm.search || _.some(searchFields, function (field) {
+      return ~(device[field] || '').toLowerCase().indexOf(vm.search.toLowerCase());
+    });
     var filterMatches = _.chain(vm.filters)
       .where({
         checked: true
@@ -56,28 +67,15 @@ function DevicesReduxCtrl2($scope, $state, $location, $rootScope, CsdmCodeServic
         return filter.filter(device);
       })
       .value();
-    if (displayNameMatches && filterMatches) {
+    if (someAttributeMatches && filterMatches) {
       result.matches.push(device);
     }
     _.each(vm.filters, function (f) {
-      if (f.filter(device) && displayNameMatches) {
+      if (f.filter(device) && someAttributeMatches) {
         result.countPerFilter[f.label]++;
       }
     });
     return result;
-  }
-
-  function filterfn(device) {
-    var displayNameMatches = !vm.search || ~device.displayName.toLowerCase().indexOf(vm.search.toLowerCase());
-    var filterMatches = _.chain(vm.filters)
-      .where({
-        checked: true
-      })
-      .all(function (filter) {
-        return filter.filter(device);
-      })
-      .value();
-    return displayNameMatches && filterMatches;
   }
 
   vm.codesListSubscription = CsdmCodeService.subscribe(vm.updateCodesAndDevices, {
@@ -105,11 +103,13 @@ function DevicesReduxCtrl2($scope, $state, $location, $rootScope, CsdmCodeServic
     }
     vm.updateCodesAndDevices();
     transitionIfSearchOrFilterChanged();
+    this.pager.firstPage();
   };
 
   vm.searchChanged = function () {
     vm.updateCodesAndDevices();
     transitionIfSearchOrFilterChanged();
+    this.pager.firstPage();
   };
 
   function transitionIfSearchOrFilterChanged() {
@@ -137,7 +137,49 @@ function DevicesReduxDetailsCtrl2($stateParams, $state) {
   }
 }
 
+function PagerUtil() {
+  return function (opts) {
+
+    this.update = function (opts) {
+      opts = opts || {};
+      this.pageSize = opts.pageSize || this.pageSize;
+      this.resultSize = opts.resultSize || this.resultSize;
+
+      if (!this.currentPage) {
+        this.currentPage = this.resultSize ? 1 : 0;
+      }
+
+      this.pageCount = this.resultSize ? Math.floor(this.resultSize / this.pageSize) || 1 : (this.pageCount || 0);
+      this.currentPageSize = this.pageSize + (this.currentPage == this.pageCount ? (this.resultSize - (this.currentPage * this.pageSize)) || 0 : 0);
+      this.next = this.currentPage < this.pageCount;
+      this.prev = this.currentPage > 1;
+    };
+
+    this.nextPage = function () {
+      if (this.currentPage < this.pageCount) {
+        this.currentPage++;
+        this.update();
+      }
+    };
+
+    this.prevPage = function () {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+        this.update();
+      }
+    };
+
+    this.firstPage = function () {
+      this.currentPage = 1;
+      this.update();
+    };
+
+    this.update(opts);
+  };
+}
+
 angular
   .module('Squared')
+  .service('PagerUtil', PagerUtil)
   .controller('DevicesReduxCtrl2', DevicesReduxCtrl2)
   .controller('DevicesReduxDetailsCtrl2', DevicesReduxDetailsCtrl2);
