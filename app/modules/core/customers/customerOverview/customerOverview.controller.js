@@ -6,7 +6,7 @@
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($stateParams, $state, $window, $translate, identityCustomer, Config) {
+  function CustomerOverviewCtrl($stateParams, $state, $window, $translate, $log, $http, identityCustomer, Config, Userservice, Authinfo) {
     /*jshint validthis: true */
     var vm = this;
     vm.currentCustomer = $stateParams.currentCustomer;
@@ -25,6 +25,31 @@
     }
 
     function launchCustomerPortal() {
+      var liclist = vm.currentCustomer.licenseList;
+      var licIds = [];
+      var i = 0;
+      if (angular.isUndefined(liclist)) {
+        liclist = [];
+      }
+      for (i = 0; i < liclist.length; i++) {
+        var lic = liclist[i];
+        var licId = lic.licenseId;
+        var lictype = lic.licenseType;
+        var isConfType = lictype === "CONFERENCING";
+        var licHasSiteUrl = (angular.isUndefined(lic.siteUrl) === false);
+        if (licHasSiteUrl && isConfType) {
+          licIds.push(licId);
+        }
+      }
+      if (licIds.length > 0) {
+        //var partnerEmailObjectArray = Authinfo.getEmail();
+        //var partnerEmail = partnerEmailObjectArray[0].value;
+        var partnerEmail = Authinfo.getPrimaryEmail();
+        var u = {
+          'address': partnerEmail
+        };
+        Userservice.updateUsers([u], licIds, null, 'updateUserLicense', function () {});
+      }
       $window.open($state.href('login_swap', {
         customerOrgId: vm.currentCustomer.customerOrgId,
         customerOrgName: vm.currentCustomer.customerName

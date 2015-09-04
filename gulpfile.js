@@ -489,7 +489,8 @@ gulp.task('scss:build', ['clean:css'], function () {
     .pipe($.sourcemaps.init())
     .pipe($.plumber())
     .pipe($.sass({
-      outputStyle: 'compact'
+      outputStyle: 'compact',
+      includePaths: config.vendorFiles.scss.paths
     }))
     .on('error', errorLogger)
     .pipe($.autoprefixer({
@@ -755,7 +756,7 @@ gulp.task('browser-sync', function () {
   if (!args.dist) {
     gulp.watch([
       config.app + '/**/*.scss',
-      config.vendorFiles.scss
+      config.vendorFiles.scss.files
     ], [
       'scss:build'
     ]);
