@@ -9,7 +9,7 @@ angular.module('WebExSiteSettingIframe').service('WebExSiteSettingIframeSvc', [
       errMsg: "",
 
       siteUrl: null,
-      iframeUrl: null
+      settingPageIframeUrl: null
     }; // return
   } // WebExSiteSettingIframeModel
 ]);

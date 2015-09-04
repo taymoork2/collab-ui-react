@@ -1,7 +1,23 @@
+<p>siteUrl: {{siteUrl}}</p>
+<p>settingPageIframeUrl: {{settingPageIframeUrl}}</p>
+<p>iframeUrl: {{iframeUrl}}</p>
+<p>adminEmail: {{adminEmail}}</p>
+<p>locale: {{locale}}</p>
+
 <div id="webexSiteSettingIframe"
-     name="webexSiteSettingIframe"
-     ng-if="WebExSiteSettingIframe.siteSettingIframeObj.viewReady">
+     name="webexSiteSettingIframe">
      
-  <p>siteUrl: {{WebExSiteSettingIframe.siteSettingIframeObj.siteUrl}}</p>
-  <p>iframeUrl: {{WebExSiteSettingIframe.siteSettingIframeObj.iframeUrl}}</p>
+  <div>
+    <p>iframes stuff goes below...</p>
+    <hr>
+  </div>
+  
+  <div>
+    <iframe name="siteSettingIframe"
+            id="siteSettingIframe"
+            frameborder="0"
+            width="100%"
+            height="500">
+    </iframe>
+  </div>
 </div>
