@@ -79,7 +79,8 @@ fi
 
 # Install dependecies
 # bundle install
-npm update
+npm install gulp-protractor # temporary force install of a broken module
+npm install
 npm update -g bower
 bower cache clean
 bower install --force
