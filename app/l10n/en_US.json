@@ -797,7 +797,8 @@
     "uploadStep": "Upload CSV",
     "uploading": "Uploading...",
     "uploadInstruction": "You can add multiple users at a time by uploading one CSV file.  After you upload the CSV file, you can assign users their collaboration services.",
-    "uploadPrompt": "Drag and drop a CSV file or use the <label for='upload'>file browser</label>",
+    "uploadPrompt": "Drag and drop a CSV file or use the",
+    "fileBrowser": "file browser",
     "uploadCsvEmpty": "Please upload a valid CSV.",
     "csvFileTypeError": "Please upload a valid file type.",
     "csvMaxSizeError": "File size is above the maximum of 10 MB.",
@@ -1170,7 +1171,9 @@
     "blockedCallerIdDescription": "Caller will not see any caller ID or number",
     "companyCallerId": "Company Caller ID",
     "companyNumberLoadError": "Company numbers failed to load.",
-    "registerDeviceForCallerID": "Register your device to enable caller ID"
+    "customCallerId": "Custom",
+    "customName": "Custom Name",
+    "customNumber": "Custom Number"
   },
   "sharedLinePanel": {
     "title": "Shared Line",

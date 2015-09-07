@@ -54,7 +54,7 @@ angular.module('Mediafusion')
        * repective thresholdMetricService.
        * queryThresholdList should be populated.
        */
-      var getMetricsList = function (startAt) {
+      function getMetricsList(startAt) {
 
         var pageNo = startAt || 1;
         MetricsService.queryMetricsList(pageNo, function (data, status) {
@@ -76,7 +76,7 @@ angular.module('Mediafusion')
           }
 
         });
-      };
+      }
 
       getMetricsList();
 

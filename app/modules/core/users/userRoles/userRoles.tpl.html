@@ -32,7 +32,6 @@
 
           <div class="admin-roles-panel">
             <p><span class="edit-title" translate="rolesPanel.administratorRoles"></span></p>
-            <fieldset>
               <div class="admin-options" id="no-admin-options">
                 <cs-radio label="noAdmin.label" value="noAdmin.value" name="noAdmin.name" id="noAdmin.id" ng-click="clearCheckboxes();" ng-model="rolesObj.adminRadioValue"></cs-radio>
               </div>
@@ -41,7 +40,6 @@
                 <i tooltip-html-unsafe="<ul class='roles-tooltip'><li><i class='icon icon-check'></i>User Management</li><li><i class='icon icon-check'></i>Company Policy & Templates</li><li><i class='icon icon-check'></i>Analytics & Reports</li><li><i class='icon icon-check'></i>Support Metrics & Notifications</li><li><i class='icon icon-check'></i>Licenses & Upgrades</li><li><i class='icon icon-check'></i>Assign Roles</li></ul>" tooltip-placement="right" tooltip-trigger="mouseenter" class="icon icon-information role-information"></i>
               </div>
               <cs-radio label="partialAdmin.label" value="partialAdmin.value" name="partialAdmin.name" id="partialAdmin.id" ng-click="supportCheckboxes();" ng-model="rolesObj.adminRadioValue"></cs-radio>
-            </fieldset>
             <div ng-click="radioHandler()">
               <div class="admin-options" id="sales-admin-options" ng-show="isPartner()">
                 <cs-checkbox ckid="salesAdminCkbx" class="indent-checkbox" label="{{'rolesPanel.salesAdmin' | translate}}" ng-model="rolesObj.salesAdminValue"  ng-click="partialCheckboxes();" isdisabled="false"></cs-checkbox>

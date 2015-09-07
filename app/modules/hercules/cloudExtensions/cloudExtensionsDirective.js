@@ -48,7 +48,7 @@ angular
       });
 
       // Periodically update the user statuses from USS
-      var updateStatusForUser = function () {
+      function updateStatusForUser() {
         USSService.getStatusesForUser($scope.currentUser.id, function (err, activationStatus) {
           if (activationStatus && activationStatus.userStatuses) {
             _.forEach($scope.extensions, function (extension) {
@@ -59,16 +59,16 @@ angular
           }
           delayedUpdateStatusForUser();
         });
-      };
+      }
 
-      var delayedUpdateStatusForUser = function () {
+      function delayedUpdateStatusForUser() {
         if ($scope.stopDelayedUpdates) {
           return;
         }
         $scope.delayedUpdateTimer = $timeout(function () {
           updateStatusForUser();
         }, 3000);
-      };
+      }
 
       $scope.getStatus = function (status) {
         return USSService.decorateWithStatus(status);

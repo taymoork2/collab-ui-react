@@ -48,7 +48,7 @@ angular.module('Squared')
         });
       };
 
-      var getAllDevices = function () {
+      function getAllDevices() {
         SpacesService.listDevices(function (data, status) {
           if (data.success === true) {
             var devices = [];
@@ -92,11 +92,11 @@ angular.module('Squared')
             Log.error('Error getting rooms. Status: ' + status);
           }
         });
-      };
+      }
 
       getAllDevices();
 
-      var getDevicesStatus = function () {
+      function getDevicesStatus() {
         for (var i = 0; i < vm.roomData.length; i++) {
           if (vm.roomData[i].status !== 'Needs Activation') {
             SpacesService.getDeviceStatus(vm.roomData[i].deviceUuid, i, function (data, i, status) {
@@ -131,7 +131,7 @@ angular.module('Squared')
             });
           }
         }
-      };
+      }
 
       var rowTemplate = '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}" ng-click="sc.showDeviceDetails(row.entity)">' +
         '<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }"></div>' +
