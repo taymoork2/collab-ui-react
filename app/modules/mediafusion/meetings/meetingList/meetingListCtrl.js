@@ -486,22 +486,22 @@ angular.module('Mediafusion')
        * Utility method to create Day Start Time Stamp in 24 hours format for the input of MM/dd/yyyy
        */
       function createTimeStampForMonth(date) {
-          var startDate = date;
-          var endDate = date;
+        var startDate = date;
+        var endDate = date;
 
-          var modifiedDate = new Date(date);
-          startDate = modifiedDate.getMonth() + 1 + "/" + modifiedDate.getDate() + "/" + modifiedDate.getFullYear();
-          $scope.startTimeStamp = startDate + " ";
-          $scope.startTimeStamp = $scope.startTimeStamp + "00:00:00 %2B0000";
+        var modifiedDate = new Date(date);
+        startDate = modifiedDate.getMonth() + 1 + "/" + modifiedDate.getDate() + "/" + modifiedDate.getFullYear();
+        $scope.startTimeStamp = startDate + " ";
+        $scope.startTimeStamp = $scope.startTimeStamp + "00:00:00 %2B0000";
 
-          modifiedDate = updateDate(modifiedDate, 1);
-          endDate = modifiedDate.getMonth() + 1 + "/" + modifiedDate.getDate() + "/" + modifiedDate.getFullYear();
-          $scope.endTimeStamp = endDate + " ";
-          $scope.endTimeStamp = $scope.endTimeStamp + "00:00:00 %2B0000";
-        }
-        /**
-         * Utility method to create Time Stamp in 24 hours format for 2 types of inputs like 11am or 11:00am.
-         */
+        modifiedDate = updateDate(modifiedDate, 1);
+        endDate = modifiedDate.getMonth() + 1 + "/" + modifiedDate.getDate() + "/" + modifiedDate.getFullYear();
+        $scope.endTimeStamp = endDate + " ";
+        $scope.endTimeStamp = $scope.endTimeStamp + "00:00:00 %2B0000";
+      }
+      /**
+       * Utility method to create Time Stamp in 24 hours format for 2 types of inputs like 11am or 11:00am.
+       */
       function createTimeStamp(date, startTime, endTime) {
         var modifiedDate;
         var startDateFallsOnNext = date;
