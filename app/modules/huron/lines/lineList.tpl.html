@@ -5,21 +5,30 @@
       </cs-searchfilter>
     </div>
     <div class="col-xs-12 col-sm-5 col-md-5" ng-show="Utils.isAdminPage()">
-      <div class="page-option-buttons" ng-controller="LineExportCtrl">
-        <a id="export-btn" ng-csv="exportCSV()" filename="{{'linesPage.csvFilename' | translate}}" class="export-lines" ng-disabled="exportBtn.disabled">
-          <span id="export-icon" tooltip-placement="top" tooltip="{{'linesPage.csvBtnTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true"><i class="icon icon-content-share"></i></span>
-        </a>
-      </div><!-- end of page-option-buttons -->
+      <div class="page-option-buttons" ng-controller="LineExportCtrl as lineExportCtrl">
+        <div ng-if="!lineExportCtrl.exportBusy">
+          <a id="export-btn" ng-csv="lineExportCtrl.exportCSV()" filename="{{'linesPage.csvFilename' | translate}}" class="export-lines">
+            <span id="export-icon" tooltip-placement="top" tooltip="{{'linesPage.csvBtnTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true">
+              <i class="icon icon-content-share"></i>
+            </span>
+          </a>
+        </div>
+        <div ng-if="lineExportCtrl.exportBusy" >
+          <span id="export-icon" class="export-lines">
+            <i class="icon icon-spinner"></i>
+          </span>
+        </div>
+      </div>
     </div>
-  </div><!-- end of content-header -->
+  </div>
 
   <div id="linesListPanel" class="row grid content-body">
     <div gridscrollbar class="gridStyle col-md-12" ng-grid="linesListCtrl.gridOptions"></div>
     <div class="grid-refresh" ng-if="linesListCtrl.gridRefresh">
       <i class='icon icon-spinner icon-2x'></i>
     </div>
-  </div><!-- end of content-body -->
-</div><!-- end of line-line -->
+  </div>
+</div>
 
 <!--<div ng-class="{preview: linesListCtrl.userPreviewActive, details: linesListCtrl.userDetailsActive}" class="user-management">
   <div ui-view class="outer-details-div" id="entire-slide"></div>

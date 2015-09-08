@@ -4,8 +4,6 @@
   </ul>
   <ul class="nav nav-tabs navbar-right" role="tablist">
     <li role="presentation" ng-repeat="tab in nav.tabs" ui-sref-active="current active">
-      <!-- the nav in nav.tabs comes from controller: 'HuronDetailsNavCtrl', controllerAs: 'nav' in appconfig.js -->
-      <!-- the tabs in nav.tabs comes from huronDetailsNavCtrl.js -->
       <a class="nav-link" ui-sref="{{tab.state}}">{{tab.title | translate}}</a>
     </li>
   </ul>

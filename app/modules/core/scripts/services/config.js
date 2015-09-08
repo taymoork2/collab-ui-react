@@ -231,12 +231,12 @@ angular.module('Core')
             desc: 'tabs.conferencingDesc',
             state: 'site-list',
             link: '#site-list'
-          // Temporarily commented out Numbers tab until ready to expose.
-          // }, {
-          //   title: 'tabs.huronLineDetailsTab',
-          //   desc: 'tabs.huronLineDetailsTabDesc',
-          //   state: 'hurondetails',
-          //   link: '#hurondetails'
+              // Temporarily commented out Numbers tab until ready to expose.
+              // }, {
+              //   title: 'tabs.huronLineDetailsTab',
+              //   desc: 'tabs.huronLineDetailsTabDesc',
+              //   state: 'hurondetails',
+              //   link: '#hurondetails'
           }, {
             title: 'tabs.fusionDetailsTab',
             desc: 'tabs.fusionDetailsTabDesc',
@@ -812,7 +812,8 @@ angular.module('Core')
           'hurondetails',
           'huronlines',
           'huronsettings',
-          'huronfeatures'
+          'huronfeatures',
+          'organization'
         ],
         'squared-fusion-mgmt': [
           'fusion',

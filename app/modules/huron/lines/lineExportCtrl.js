@@ -1,29 +1,28 @@
 (function () {
   'use strict';
 
-  angular.module('Huron')
-    .controller('LineExportCtrl', ['$scope', '$rootScope', 'LineListService', 'Notification',
-      function ($scope, $rootScope, LineListService, Notification) {
+  angular
+    .module('Huron')
+    .controller('LineExportCtrl', LineExportCtrl);
 
-        $scope.exportBtn = {
-          disabled: false
-        };
+  /* @ngInject */
+  function LineExportCtrl($scope, $timeout, LineListService, Notification) {
+    var vm = this;
+    vm.exportBusy = false;
 
-        $scope.exportCSV = function () {
-          var promise = LineListService.exportCSV($scope);
-          promise.then(null, function (error) {
-            Notification.notify(Array.new(error), 'error');
-          });
-          return promise;
-        };
-
-        if ($rootScope.exporting === true) {
-          $scope.exportBtn.disabled = true;
-        }
-
-        $scope.$on('EXPORT_FINISHED', function () {
-          $scope.exportBtn.disabled = false;
+    vm.exportCSV = function () {
+      vm.exportBusy = true;
+      var promise = LineListService.exportCSV($scope);
+      promise
+        .catch(function (response) {
+          Notification.errorResponse(response, 'linesPage.lineListError');
+        })
+        .finally(function () {
+          $timeout(function () {
+            vm.exportBusy = false;
+          }, 300); // delay to give export icon time to transition between states reliably
         });
-      }
-    ]);
+      return promise;
+    };
+  }
 })();
