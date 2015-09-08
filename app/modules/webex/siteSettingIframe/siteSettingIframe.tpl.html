@@ -1,23 +1,62 @@
+
+<!--
 <p>siteUrl: {{siteUrl}}</p>
 <p>settingPageIframeUrl: {{settingPageIframeUrl}}</p>
 <p>iframeUrl: {{iframeUrl}}</p>
 <p>adminEmail: {{adminEmail}}</p>
 <p>locale: {{locale}}</p>
 
+<hr>
+-->
+
+<button id="secretIframeBtn"
+        name="secretIframeBtn"
+        style="display:none;"
+        onClick="document.getElementById('submitFormBtn').click();">
+            
+  Test1
+</button>
+
 <div id="webexSiteSettingIframe"
      name="webexSiteSettingIframe">
-     
-  <div>
-    <p>iframes stuff goes below...</p>
-    <hr>
-  </div>
   
   <div>
     <iframe name="siteSettingIframe"
             id="siteSettingIframe"
             frameborder="0"
             width="100%"
-            height="500">
+            height="700">
     </iframe>
   </div>
 </div>
+
+<form name="advancedSettings"
+      id="advancedSettings"
+      action="{{trustIframeUrl}}"
+      method="post"
+      target="siteSettingIframe">
+      
+  <input id="adminEmail"
+         type="hidden"
+         name="adminEmail"
+         ng-model="advancedSettings.adminEmail"
+         value="{{adminEmail}}" />
+         
+  <input id="userEmail"
+         type="hidden"
+         name="userEmail"
+         ng-model="advancedSettings.userEmail"
+         value="{{adminEmail}}" />
+         
+  <input id="locale"
+         type="hidden"
+         name="locale"
+         ng-model="advancedSettings.locale"
+         value="{{locale}}" />
+  
+  <button id="submitFormBtn"
+          type="submit"
+          style="background-color:#ff00ff;cursor:pointer;width:100px;display:none;"
+          onclick="this.parentElement.submit();">
+  </button>
+</form>
