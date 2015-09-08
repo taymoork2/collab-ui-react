@@ -63,7 +63,7 @@
 
 
         <!-- Start of Meeting Center -->
-        <div ng-if="WebExUserSettings.userSettingsModel.meetingCenter.isSiteEnabled && !WebExUserSettings.gsxFeature">
+        <div ng-if="WebExUserSettings.userSettingsModel.meetingCenter.isSiteEnabled">
           <p><b>{{WebExUserSettings.userSettingsModel.meetingCenter.label}}</b><p>
 
           <table id="MC"
@@ -215,86 +215,6 @@
                 </a>
               </li>
             </ul>
-          </div>
-        </div>
-<hr>
-        <div id="privLinkSection"
-             name="privLinkSection"
-             ng-if="WebExUserSettings.gsxFeature">
-          <div class="feature-list" ng-binding>
-
-
-            <div class="section-title-row">
-              <p class="feature feature-name">Personal Room</p>
-            </div>
-
-            <table class="table">
-              <tr>
-                <td>
-                  Room Name
-                </td>
-                <td>
-                  <input value="My personal room">
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  URL
-                </td>
-                <td>
-                  https://go.webex.com/meet/me
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  Host Pin
-                </td>
-                <td>
-                  1212
-                </td>
-              </tr>
-            </table>
-<hr>
-
-            <div class="section-title-row">
-              <p class="feature feature-name">Video System Addresses</p>
-            </div>
-
-            <table class="table table-hover">
-              <tr>
-                <th>
-                  System Name
-                </th>
-                <th>
-                  Video Address
-                </th>
-                <th>
-                  Default
-                </th>
-              </tr>
-              <tr>
-                <td>
-                  <input value="Desktop DX80">
-                </td>
-                <td>
-                  <input value="678987563@fumigation.com">
-                </td>
-                <td>
-                  <cs-radio name="WebExUserSettings.default" ng-model="WebExUserSettings.defaultSystem" value="1"></cs-radio>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <input value="Top of the Mark MX300">
-                </td>
-                <td>
-                  <input value="678987656@fumigation.com">
-                </td>
-                <td>
-                  <cs-radio name="WebExUserSettings.default" ng-model="WebExUserSettings.defaultSystem" value="0"></cs-radio>
-                </td>
-              </tr>
-            </table>
           </div>
         </div>
       </div>
