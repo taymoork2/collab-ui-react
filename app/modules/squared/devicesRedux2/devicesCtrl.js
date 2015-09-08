@@ -1,12 +1,12 @@
 'use strict';
 
 /* @ngInject */
-function DevicesReduxCtrl2($scope, $state, $location, $rootScope, CsdmCodeService, CsdmDeviceService, PagerUtil) {
+function DevicesReduxCtrl2($scope, $state, $location, $rootScope, CsdmCodeService, CsdmDeviceService, PagerUtil, AddDeviceModal) {
   var vm = this;
 
   vm.pager = new PagerUtil({
     resultSize: 0,
-    pageSize: 2
+    pageSize: 10
   });
 
   vm.filteredCodesAndDevices = [];
@@ -15,6 +15,11 @@ function DevicesReduxCtrl2($scope, $state, $location, $rootScope, CsdmCodeServic
     label: 'All',
     filter: function () {
       return true;
+    }
+  }, {
+    label: 'Has Issues',
+    filter: function (device) {
+      return device.hasIssues;
     }
   }, {
     label: 'Online',
@@ -38,6 +43,7 @@ function DevicesReduxCtrl2($scope, $state, $location, $rootScope, CsdmCodeServic
       .extend(CsdmDeviceService.getDeviceList())
       .extend(CsdmCodeService.getCodeList())
       .values()
+      .sortBy('displayName')
       .reduce(reduceFn, {
         matches: [],
         countPerFilter: _.reduce(vm.filters, function (initialCount, filter) {
@@ -112,6 +118,10 @@ function DevicesReduxCtrl2($scope, $state, $location, $rootScope, CsdmCodeServic
     this.pager.firstPage();
   };
 
+  vm.showAddDeviceDialog = function () {
+    AddDeviceModal.open();
+  };
+
   function transitionIfSearchOrFilterChanged() {
     if (vm.filteredCodesAndDevices.matches.length == 1) {
       return $state.go('devices-redux2.details', {
@@ -127,7 +137,7 @@ function DevicesReduxCtrl2($scope, $state, $location, $rootScope, CsdmCodeServic
 }
 
 /* @ngInject */
-function DevicesReduxDetailsCtrl2($stateParams, $state) {
+function DevicesReduxDetailsCtrl2($stateParams, $state, $window, RemDeviceModal, Utils, CsdmDeviceService, Authinfo, FeedbackService, XhrNotificationService) {
   var vm = this;
 
   if ($stateParams.device) {
@@ -135,6 +145,28 @@ function DevicesReduxDetailsCtrl2($stateParams, $state) {
   } else {
     $state.go('devices-redux2.search');
   }
+
+  vm.reportProblem = function () {
+    var feedbackId = Utils.getUUID();
+
+    return CsdmDeviceService.uploadLogs(vm.device.url, feedbackId, Authinfo.getPrimaryEmail())
+      .then(function () {
+        var appType = 'Atlas_' + $window.navigator.userAgent;
+        return FeedbackService.getFeedbackUrl(appType, feedbackId);
+      })
+      .then(function (res) {
+        $window.open(res.data.url, '_blank');
+      })
+      .catch(XhrNotificationService.notify);
+  };
+
+  vm.deleteDevice = function () {
+    RemDeviceModal
+      .open(vm.device)
+      .then(function () {
+        $state.go('devices-redux2.search');
+      });
+  };
 }
 
 function PagerUtil() {

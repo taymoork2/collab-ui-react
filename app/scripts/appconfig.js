@@ -455,6 +455,16 @@ angular
             site: {}
           }
         })
+        .state('user-overview.contactCenter', {
+          templateUrl: 'modules/sunlight/users/userOverview/sunlightUserOverview.tpl.html',
+          controller: 'SunlightUserOverviewCtrl',
+          data: {
+            displayName: 'Contact Center'
+          },
+          params: {
+            service: 'CONTACTCENTER'
+          }
+        })
         .state('user-overview.userProfile', {
           templateUrl: 'modules/core/users/userRoles/userRoles.tpl.html',
           controller: 'UserRolesCtrl',

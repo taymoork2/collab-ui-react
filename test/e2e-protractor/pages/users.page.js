@@ -47,6 +47,7 @@ var UsersPage = function () {
   this.messagingService = element(by.css('#Messaging .feature-arrow'));
   this.communicationsService = element(by.css('#Communications .feature-arrow'));
   this.conferencingService = element(by.css('#Conferencing .feature-arrow'));
+  this.contactCenterService = element(by.css('#ContactCenter .feature-arrow'));
   this.serviceList = element.all(by.model('service in userOverview.services'));
 
   this.addUsers = element(by.id('addUsers'));

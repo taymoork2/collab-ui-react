@@ -3,7 +3,7 @@
 
   /* @ngInject  */
   function CsdmDeviceService($http, $log, Authinfo, CsdmConfigService, CsdmCacheUpdater, CsdmConverter, CsdmCacheFactory) {
-    var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/devices';
+    var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/devices?checkOnline=true';
 
     var deviceCache = CsdmCacheFactory.create({
       remove: function (url) {

@@ -56,6 +56,13 @@
         detail: $translate.instant('onboardModal.freeConf')
       };
 
+      var contactCenterState = {
+        name: $translate.instant('onboardModal.contactCenter'),
+        icon: 'ContactCenter',
+        state: 'user-overview.contactCenter',
+        detail: $translate.instant('onboardModal.freeContactCenter')
+      };
+
       if (hasEntitlement('squared-room-moderation') || !vm.hasAccount) {
         if (getServiceDetails('MS')) {
           msgState.detail = $translate.instant('onboardModal.paidMsg');
@@ -76,6 +83,13 @@
           commState.detail = $translate.instant('onboardModal.paidComm');
         }
         vm.services.push(commState);
+      }
+
+      if (hasEntitlement('cloud-contact-center')) {
+        if (getServiceDetails('CC')) {
+          contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
+        }
+        vm.services.push(contactCenterState);
       }
 
       updateUserTitleCard();
