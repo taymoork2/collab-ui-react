@@ -9,7 +9,7 @@ var EC = protractor.ExpectedConditions;
 exports.searchField = element(by.id('searchFilter'));
 
 exports.randomId = function () {
-  return (Math.random() + 1).toString(36).slice(2, 12);
+  return (Math.random() + 1).toString(36).slice(2, 11);
 };
 
 exports.randomDid = function () {
@@ -84,7 +84,19 @@ exports.refresh = function () {
 
 // Utility functions to be used with animation effects
 // Will wait for element to be displayed before attempting to take action
-exports.wait = function (elem) {
+exports.wait = function (elem, fromArray) {
+  // If element is an array, fallback to custom isDisplayed check
+  if (elem instanceof protractor.ElementArrayFinder) {
+    return browser.wait(function () {
+      log('Waiting for element array to be displayed: ' + elem.locator());
+      return elem.first().isDisplayed().then(function (isDisplayed) {
+        return isDisplayed;
+      }, function () {
+        return false;
+      });
+    }, TIMEOUT, 'Waiting for element array to be displayed: ' + elem.locator());
+  }
+
   function logAndWait() {
     log('Waiting for element to be visible: ' + elem.locator());
     return EC.visibilityOf(elem)();
@@ -158,7 +170,10 @@ exports.expectIsNotPresent = function (elem) {
 exports.expectIsNotDisplayed = function (elem) {
   function logAndWait() {
     log('Waiting for element to be invisible: ' + elem.locator());
-    return EC.invisibilityOf(elem)();
+    return EC.invisibilityOf(elem)().thenCatch(function () {
+      // Handle stale element reference
+      return EC.stalenessOf(elem)();
+    });
   }
   browser.wait(logAndWait, TIMEOUT, 'Waiting for element not to be visible: ' + elem.locator());
 };
@@ -199,6 +214,7 @@ exports.expectValueToContain = function (elem, value) {
 };
 
 exports.expectInputValue = function (elem, value) {
+  this.wait(elem);
   this.expectValueToBeSet(elem.element(by.tagName('input')), value);
 };
 
@@ -236,6 +252,18 @@ exports.click = function (elem, maxRetry) {
       });
     }
     return deferred.promise;
+  });
+};
+
+exports.clickFirst = function (elem) {
+  return this.wait(elem).then(function () {
+    return exports.click(elem.first());
+  });
+};
+
+exports.clickLast = function (elem) {
+  return this.wait(elem).then(function () {
+    return exports.click(elem.last());
   });
 };
 
@@ -285,16 +313,12 @@ exports.expectNotText = function (elem, value) {
 };
 
 exports.expectCount = function (elems, count) {
-  elems.each(function (elem) {
-    utils.wait(elem);
-  });
+  this.wait(elems);
   expect(elems.count()).toEqual(count);
 };
 
 exports.expectCountToBeGreater = function (elems, num) {
-  elems.each(function (elem) {
-    utils.wait(elem);
-  });
+  this.wait(elems);
   elems.count().then(function (count) {
     expect(count > num);
   });
@@ -320,6 +344,7 @@ exports.clickEscape = function () {
 exports.expectSwitchState = function (elem, value) {
   return this.wait(elem).then(function () {
     return browser.wait(function () {
+      log('Waiting for element state to be value: ' + elem.locator() + ' ' + value);
       var input = elem.element(by.tagName('input'));
       return input.getAttribute('ng-model').then(function (ngModel) {
         return input.evaluate(ngModel).then(function (_value) {
@@ -335,6 +360,7 @@ exports.expectCheckbox = exports.expectSwitchState;
 exports.expectRadioSelected = function (elem) {
   return this.wait(elem).then(function () {
     return browser.wait(function () {
+      log('Waiting for radio to be selected: ' + elem.locator());
       var input = elem.element(by.tagName('input'));
       return input.getAttribute('ng-model').then(function (ngModel) {
         return input.evaluate(ngModel).then(function (model) {
@@ -444,6 +470,8 @@ exports.createHuronUser = function (name, name2) {
   this.click(users.nextButton);
   this.click(users.advancedCommunications);
   this.click(users.nextButton);
+  this.expectIsNotDisplayed(telephony.loadingSpinner);
+  browser.sleep(500); // TODO fix this with disabled button
   this.click(users.onboardButton);
   notifications.assertSuccess(name, 'onboarded successfully');
   this.expectIsNotDisplayed(users.manageDialog);

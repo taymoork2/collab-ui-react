@@ -4,6 +4,7 @@ var TelephonyPage = function () {
   this.communicationPanel = element(by.cssContainingText('.section-title-row', 'Lines'));
   this.lineConfigurationPanel = element(by.cssContainingText('.section-title-row', 'Line Configuration'));
   this.close = element(by.id('close-preview-button'));
+  this.loadingSpinner = element(by.css('.icon-spinner'));
 
   this.lineConfigurationActionButton = this.lineConfigurationPanel.element(by.css('button.actions-button'));
   this.removeButton = element(by.cssContainingText('a', 'Remove Line'));
@@ -22,7 +23,7 @@ var TelephonyPage = function () {
   this.voicemailTitle = element(by.cssContainingText('.section-title-row', 'Voicemail'));
   this.voicemailSwitch = element(by.css('label[for="enableVoicemail"]'));
 
-  this.directoryNumbers = element.all(by.repeater('directoryNumber in telephonyOverview.telephonyInfo.directoryNumbers track by directoryNumber.uuid')).all(by.tagName('a'));
+  this.directoryNumbers = element.all(by.css('.feature a[ui-sref="user-overview.communication.directorynumber({directoryNumber: directoryNumber})"]'));
   this.primary = element(by.cssContainingText('span', 'Primary'));
   this.voicemailFeature = element(by.cssContainingText('.feature a', 'Voicemail'));
   this.snrFeature = element(by.cssContainingText('.feature a', 'Single Number Reach'));
@@ -35,9 +36,9 @@ var TelephonyPage = function () {
   this.cancelDisassociation = element(by.css('.modal-template')).element(by.css('.btn-default'));
   this.disassociateLine = element(by.css('.modal-template')).element(by.css('.btn-danger'));
 
-  this.forwardNoneRadio = element(by.cssContainingText("span", "Do not forward calls"));
-  this.forwardAllRadio = element(by.cssContainingText("span", "Forward all calls"));
-  this.forwardBusyNoAnswerRadio = element(by.cssContainingText("span", "Forward calls when line is busy or away"));
+  this.forwardNoneRadio = element(by.cssContainingText("label", "Do not forward calls"));
+  this.forwardAllRadio = element(by.cssContainingText("label", "Forward all calls"));
+  this.forwardBusyNoAnswerRadio = element(by.cssContainingText("label", "Forward calls when line is busy or away"));
   this.forwardAll = element(by.css('cs-combobox[name="forwardAllCalls"]'));
   this.forwardBusyNoAnswer = element(by.css('cs-combobox[name="forwardNABCalls"]'));
   this.forwardExternalCalls = element(by.css('label[for="ckForwardExternalCalls"]'));
@@ -75,7 +76,7 @@ var TelephonyPage = function () {
   };
 
   this.selectSharedLineUser = function (user) {
-    var selected = element(by.id(user + '-AccordionGroup')).element(by.css('.accordion-toggle'));
+    var selected = element(by.id(user + '-AccordionGroup')).element(by.tagName('a'));
     utils.click(selected);
   };
 
@@ -95,7 +96,7 @@ var TelephonyPage = function () {
   };
 
   this.selectOption = function (dropdown, option) {
-    utils.click(dropdown.element(by.css('.input-group-btn')));
+    utils.click(dropdown.element(by.css('.combo-btn')));
     utils.click(dropdown.element(by.cssContainingText('a', option)));
   };
 
