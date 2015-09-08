@@ -443,7 +443,7 @@ angular.module('Core')
 
         defaultEntitlements: ['webex-squared', 'squared-call-initiation'],
 
-        batchSize: 20,
+        batchSize: 10,
 
         isDev: function () {
           var currentHostname = getCurrentHostname();
