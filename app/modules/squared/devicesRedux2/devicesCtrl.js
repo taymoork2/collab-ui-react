@@ -6,7 +6,7 @@ function DevicesReduxCtrl2($scope, $state, $location, $rootScope, CsdmCodeServic
 
   vm.pager = new PagerUtil({
     resultSize: 0,
-    pageSize: 2
+    pageSize: 10
   });
 
   vm.filteredCodesAndDevices = [];
@@ -15,6 +15,11 @@ function DevicesReduxCtrl2($scope, $state, $location, $rootScope, CsdmCodeServic
     label: 'All',
     filter: function () {
       return true;
+    }
+  }, {
+    label: 'Has Issues',
+    filter: function (device) {
+      return device.hasIssues;
     }
   }, {
     label: 'Online',
@@ -38,6 +43,7 @@ function DevicesReduxCtrl2($scope, $state, $location, $rootScope, CsdmCodeServic
       .extend(CsdmDeviceService.getDeviceList())
       .extend(CsdmCodeService.getCodeList())
       .values()
+      .sortBy('displayName')
       .reduce(reduceFn, {
         matches: [],
         countPerFilter: _.reduce(vm.filters, function (initialCount, filter) {

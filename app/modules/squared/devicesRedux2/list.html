@@ -22,14 +22,14 @@
       class="row result-row"
       ui-sref="devices-redux2.details({device: device})"
       ng-repeat="device in devices.filteredCodesAndDevices.matches | limitTo: ((devices.pager.currentPage * devices.pager.pageSize) + (devices.pager.currentPageSize - devices.pager.pageSize)) | limitTo: -devices.pager.currentPageSize">
-      <div class="large-6 columns">
+      <div class="small-6 columns">
         <i
           class="fa fa-circle"
           ng-class="device.cssColorClass"
         />
         {{device.displayName}}
       </div>
-      <div class="large-6 columns" style="text-align: right">
+      <div class="small-6 columns" style="text-align: right">
         {{device.product}}
       </div>
     </div>
