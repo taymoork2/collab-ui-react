@@ -71,7 +71,7 @@
 
       Userservice.getUser('me', function (data, status) {
 
-        FeatureToggleService.getFeaturesForUser(data.id, 'gsxdemo').then(function (value) {
+        FeatureToggleService.getFeatureForUser(data.id, 'gsxdemo').then(function (value) {
           that.gsxFeature = value;
           if (value) {
             that.defaultSystem = 1;

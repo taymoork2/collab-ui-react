@@ -8,25 +8,45 @@
   function FeatureToggleService($http, $q, Config, Authinfo) {
 
     var service = {
+      getUrl: getUrl,
+      getFeatureForUser: getFeatureForUser,
       getFeaturesForUser: getFeaturesForUser,
+      getFeaturesForOrg: getFeaturesForOrg,
       supportsPstnSetup: supportsPstnSetup
     };
 
     return service;
 
-    function getFeaturesForUser(uid, feature) {
-      if (!uid || !feature) {
+    function getUrl(isUid, uidOrOid) {
+      var url = Config.getFeatureToggleUrl();
+      url += '/locus/api/v1/features/';
+      url += isUid ? 'users/' : 'rules/';
+      url += uidOrOid;
+      return url;
+    }
+
+    function getFeaturesForUser(uid) {
+      if (!uid) {
         return $q(function (resolve, reject) {
-          reject((!uid ? 'uid' : 'feature') + ' is undefined');
+          reject('userId is undefined');
         });
       }
 
-      var server = Config.getFeatureToggleUrl();
-      var featureToggleURL = server + '/locus/api/v1/features/users/' + uid;
+      var url = getUrl(true, uid);
 
-      return $http.get(featureToggleURL, {
+      return $http.get(url, {
         cache: true
-      }).then(function (data, status) {
+      });
+    }
+
+    function getFeatureForUser(uid, feature) {
+      if (!feature) {
+        return $q(function (resolve, reject) {
+          reject('feature is undefined');
+        });
+      }
+
+      return getFeaturesForUser(uid).then(function (data, status) {
         var contained = false;
         _.each(data.data.developer, function (element) {
           if (element.key === feature && element.val === 'true') {
@@ -34,6 +54,20 @@
           }
         });
         return contained;
+      });
+    }
+
+    function getFeaturesForOrg(oid) {
+      if (!oid) {
+        return $q(function (resolve, reject) {
+          reject('orgId is undefined');
+        });
+      }
+
+      var url = getUrl(false, oid);
+
+      return $http.get(url, {
+        cache: true
       });
     }
 

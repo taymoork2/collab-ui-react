@@ -32,7 +32,7 @@ describe('Controller: UserOverviewCtrl', function () {
     spyOn(Userservice, 'getUser').and.callFake(function (uid, callback) {
       callback(currentUser, 200);
     });
-    spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(deferred.promise);
+    spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue(deferred.promise);
 
     // eww
     var userUrl = Utils.sprintf(Config.getScimUrl(), [Authinfo.getOrgId()]) + '/' + currentUser.id;

@@ -1,9 +1,17 @@
 {
   "developer": [{
-    "key": "gsxdemo",
+    "key": "android-add-guest-release",
+    "value": true,
     "val": "true",
-    "mutable": true,
-    "lastModified": "2015-08-20T18:33:59.912Z"
+    "mutable": false,
+    "lastModified": "2015-09-04T23:13:42.253Z"
+  }],
+  "entitlement": [{
+    "key": "call-initiation",
+    "value": false,
+    "val": "false",
+    "mutable": false,
+    "lastModified": "2015-09-04T23:13:42.252Z"
   }],
   "user": []
 }

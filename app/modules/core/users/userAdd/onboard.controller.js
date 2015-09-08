@@ -264,7 +264,7 @@ angular.module('Core')
       }
 
       Userservice.getUser('me', function (data, status) {
-        FeatureToggleService.getFeaturesForUser(data.id, 'gsxdemo').then(function (value) {
+        FeatureToggleService.getFeatureForUser(data.id, 'gsxdemo').then(function (value) {
           $scope.gsxFeature = value;
         }).finally(function () {
           activate();

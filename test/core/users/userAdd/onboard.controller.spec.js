@@ -52,7 +52,7 @@ describe('OnboardCtrl: Ctrl', function () {
     spyOn(TelephonyInfoService, 'loadExternalNumberPool').and.returnValue($q.when(externalNumbers));
     spyOn(TelephonyInfoService, 'loadExtPoolWithMapping').and.returnValue($q.when(externalNumberPoolMap));
     spyOn(Userservice, 'getUser').and.returnValue(getUserMe);
-    spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(getMyFeatureToggles);
+    spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue(getMyFeatureToggles);
 
     controller = $controller('OnboardCtrl', {
       $scope: $scope
