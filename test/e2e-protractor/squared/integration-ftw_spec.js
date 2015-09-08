@@ -23,27 +23,26 @@ describe('First Time Wizard', function () {
   });
 
   it('should load views according to left navigation clicks', function () {
-    wizard.clickPlanReview();
-    utils.expectText(wizard.mainviewTitle, 'Plan Review');
+    utils.expectTextToBeSet(wizard.mainviewTitle, 'Plan Review');
     wizard.clickEnterpriseSettings();
-    utils.expectText(wizard.mainviewTitle, 'Enterprise Settings');
+    utils.expectTextToBeSet(wizard.mainviewTitle, 'Enterprise Settings');
     wizard.clickAddUsers();
-    utils.expectText(wizard.mainviewTitle, 'Invite Users');
+    utils.expectTextToBeSet(wizard.mainviewTitle, 'Invite Users');
   });
 
   it('should complete custom sso provider flow', function () {
     wizard.clickPlanReview();
     utils.click(wizard.beginBtn);
     utils.click(wizard.saveBtn);
-    utils.expectText(wizard.mainviewTitle, 'Enterprise Settings');
-    utils.expectText(wizard.mainviewSubtitle, 'Single Sign-On');
+    utils.expectTextToBeSet(wizard.mainviewTitle, 'Enterprise Settings');
+    utils.expectTextToBeSet(wizard.mainviewSubtitle, 'Single Sign-On');
     utils.click(wizard.radiobuttons.last());
     utils.click(wizard.nextBtn);
-    utils.expectText(wizard.mainviewSubtitle, 'Export Directory Metadata');
+    utils.expectTextToBeSet(wizard.mainviewSubtitle, 'Export Directory Metadata');
     utils.click(wizard.nextBtn);
-    utils.expectText(wizard.mainviewSubtitle, 'Import IdP Metadata');
+    utils.expectTextToBeSet(wizard.mainviewSubtitle, 'Import IdP Metadata');
     utils.click(wizard.nextBtn);
-    utils.expectText(wizard.mainviewSubtitle, 'Test SSO Setup');
+    utils.expectTextToBeSet(wizard.mainviewSubtitle, 'Test SSO Setup');
     utils.click(wizard.finishBtn);
     utils.expectIsDisplayed(wizard.mainviewTitle);
   });
@@ -69,12 +68,12 @@ describe('First Time Wizard', function () {
     wizard.clickAddUsers();
     utils.click(wizard.radiobuttons.last());
     utils.click(wizard.nextBtn);
-    utils.expectText(wizard.mainviewSubtitle, 'Domain Entry');
+    utils.expectTextToBeSet(wizard.mainviewSubtitle, 'Domain Entry');
     utils.sendKeys(wizard.dirDomainInput, 'test_domain');
     utils.click(wizard.nextBtn);
-    utils.expectText(wizard.mainviewSubtitle, 'Install Directory Connector');
+    utils.expectTextToBeSet(wizard.mainviewSubtitle, 'Install Directory Connector');
     utils.click(wizard.nextBtn);
-    utils.expectText(wizard.mainviewSubtitle, 'Sync Status');
+    utils.expectTextToBeSet(wizard.mainviewSubtitle, 'Sync Status');
     utils.click(wizard.finishBtn);
     utils.clickEscape();
     utils.expectIsNotDisplayed(wizard.wizard);
