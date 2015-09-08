@@ -94,6 +94,8 @@ angular
   .module('Squared')
   .config(['$urlRouterProvider', '$stateProvider',
     function ($urlRouterProvider, $stateProvider) {
+      var modalMemo = 'modalMemo';
+      var wizardmodalMemo = 'wizardmodalMemo';
 
       // Modal States Enter and Exit functions
       function modalOnEnter(options) {
@@ -131,9 +133,6 @@ angular
           $state.modal.dismiss();
         }
       }
-
-      var modalMemo = 'modalMemo';
-      var wizardmodalMemo = 'wizardmodalMemo';
 
       $stateProvider
         .state('activate', {
@@ -454,6 +453,16 @@ angular
           params: {
             currentUser: {},
             site: {}
+          }
+        })
+        .state('user-overview.contactCenter', {
+          templateUrl: 'modules/sunlight/users/userOverview/sunlightUserOverview.tpl.html',
+          controller: 'SunlightUserOverviewCtrl',
+          data: {
+            displayName: 'Contact Center'
+          },
+          params: {
+            service: 'CONTACTCENTER'
           }
         })
         .state('user-overview.userProfile', {
