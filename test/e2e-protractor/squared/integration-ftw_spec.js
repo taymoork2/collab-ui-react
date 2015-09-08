@@ -23,7 +23,6 @@ describe('First Time Wizard', function () {
   });
 
   it('should load views according to left navigation clicks', function () {
-    wizard.clickPlanReview();
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Plan Review');
     wizard.clickEnterpriseSettings();
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Enterprise Settings');
