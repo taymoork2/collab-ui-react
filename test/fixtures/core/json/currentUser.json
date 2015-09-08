@@ -1,11 +1,12 @@
 {
   "id": "111",
   "userName": "CurrentUser",
-  "displayName": "Display Name",
   "entitlements": [
     "webex-squared",
     "squared-call-initiation"
   ],
+  "licenseID": [],
+  "addresses": [],
   "meta": {
     "organizationID": "222"
   }

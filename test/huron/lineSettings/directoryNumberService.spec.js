@@ -18,6 +18,10 @@ describe('Service: DirectoryNumber', function () {
     uuid: '',
     pattern: '',
     alertingName: '',
+    externalCallerIdType: '',
+    companyNumber: null,
+    customCallerIdName: '',
+    customCallerIdNumber: '',
     hasCustomAlertingName: false,
     callForwardAll: {
       voicemailEnabled: false,

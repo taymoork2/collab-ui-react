@@ -4,16 +4,16 @@
           class="btn-primary"
           translate="common.save"
           type="submit"
-          data-loading-text="<i class='icon icon-spinner'></i>"
+          data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>"
           ng-click="WebExUserSettings.btnSave(userSettingsView.form)"
           ng-disabled="WebExUserSettings.userSettingsModel.disableSave">
   </button>
-    
-  <button id="resetBtn" 
+
+  <button id="resetBtn"
           name="resetBtn"
           class="btn-default"
           translate="common.cancel"
-          data-loading-text="<i class='icon icon-spinner'></i>"
+          data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>"
           ng-click="WebExUserSettings.btnReset(userSettingsView.form)"
           ng-disabled="WebExUserSettings.userSettingsModel.disableCancel">
   </button>
@@ -25,50 +25,50 @@
       <div id="errSection"
            name="errSection"
            ng-if="WebExUserSettings.userSettingsModel.hasLoadError">
-         
+
         <div class="center">
           <div class="nodata-icon">
-            <span class="icon icon-circle-clock"></span> 
+            <span class="icon icon-circle-clock"></span>
           </div>
-          
+
           <div class="nodata-message">
             {{WebExUserSettings.userSettingsModel.errMsg}}
           </div>
-          
+
           <button id="cancelBtn"
                   name="cancelBtn"
                   translate="webexUserSettings.cancel"
                   class="btn btn-default wiz-onboard-btn"
                   ui-sref="user-overview.conferencing">
           </button>
-          
+
           <button id="reloadBtn"
                   name="reloadBtn"
                   translate="webexUserSettings.reload"
                   class="btn btn-info wiz-onboard-btn"
                   ng-if="WebExUserSettings.userSettingsModel.allowRetry"
                   ng-click="WebExUserSettings.btnReload()"
-                  data-loading-text="<i class='icon icon-spinner'></i>">
+                  data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>">
           </button>
         </div>
       </div>
-  
+
       <div id="webexUserSettingsPage"
            ng-if="WebExUserSettings.userSettingsModel.viewReady">
-           
+
         <h4 class="list-group-item-heading">
           &nbsp;
         </h4>
-        
-        
-  
+
+
+
         <!-- Start of Meeting Center -->
-        <div ng-if="WebExUserSettings.userSettingsModel.meetingCenter.isSiteEnabled">
+        <div ng-if="WebExUserSettings.userSettingsModel.meetingCenter.isSiteEnabled && !WebExUserSettings.gsxFeature">
           <p><b>{{WebExUserSettings.userSettingsModel.meetingCenter.label}}</b><p>
-          
+
           <table id="MC"
                  name="MC">
-  
+
             <tr valign="top"
                 ng-repeat="sessionType in WebExUserSettings.userSettingsModel.sessionTypes"
                 ng-if="sessionType.meetingCenterApplicable">
@@ -79,29 +79,29 @@
                              label={{sessionType.sessionName}}>
                 </cs-checkbox>
               </td>
-  
+
               <td width="15">
                 &nbsp;
               </td>
-  
+
               <td>
-                
-                
+
+
                 {{sessionType.sessionDescription}}
               </td>
             </tr>
           </table>
           <hr>
         </div>
-        
+
         <!-- End of Meeting Center -->
-  
+
         <!-- Start of Event Center -->
         <div ng-if="WebExUserSettings.userSettingsModel.eventCenter.isSiteEnabled">
           <p><b>{{WebExUserSettings.userSettingsModel.eventCenter.label}}</b></p>
           <table id="EC"
                  name="EC">
-  
+
             <tr valign="top"
                 ng-repeat="sessionType in WebExUserSettings.userSettingsModel.sessionTypes"
                 ng-if="sessionType.eventCenterApplicable">
@@ -112,29 +112,29 @@
                              label={{sessionType.sessionName}}>
                 </cs-checkbox>
               </td>
-  
+
               <td width="15">
                 &nbsp;
               </td>
-  
+
               <td>
-                
-                
+
+
                 {{sessionType.sessionDescription}}
               </td>
             </tr>
           </table>
           <hr>
         </div>
-        
+
         <!-- End of Event Center -->
-  
+
         <!-- Start of Support Center -->
         <div ng-if="WebExUserSettings.userSettingsModel.supportCenter.isSiteEnabled">
           <p><b>{{WebExUserSettings.userSettingsModel.supportCenter.label}}</p></b>
           <table id="SC"
                  name="SC">
-  
+
             <tr valign="top"
                 ng-repeat="sessionType in WebExUserSettings.userSettingsModel.sessionTypes"
                 ng-if="sessionType.supportCenterApplicable">
@@ -145,29 +145,29 @@
                              label={{sessionType.sessionName}}>
                 </cs-checkbox>
               </td>
-  
+
               <td width="15">
                 &nbsp;
               </td>
-  
+
               <td>
-                
-                
+
+
                 {{sessionType.sessionDescription}}
               </td>
             </tr>
           </table>
           <hr>
         </div>
-        
+
         <!-- End of Support Center -->
-  
+
         <!-- Start of Training Center -->
         <div ng-if="WebExUserSettings.userSettingsModel.trainingCenter.isSiteEnabled">
           <p><b>{{WebExUserSettings.userSettingsModel.trainingCenter.label}}</b></p>
           <table id="TC"
                  name="TC">
-  
+
             <tr valign="top"
                 ng-repeat="sessionType in WebExUserSettings.userSettingsModel.sessionTypes"
                 ng-if="sessionType.trainingCenterApplicable">
@@ -178,42 +178,123 @@
                              label={{sessionType.sessionName}}>
                 </cs-checkbox>
               </td>
-  
+
               <td width="15">
                 &nbsp;
               </td>
-  
+
               <td>
-                
-                
+
+
                 {{sessionType.sessionDescription}}
               </td>
             </tr>
           </table>
-           <hr>         
+           <hr>
         </div>
 
         <!-- End of Training Center -->
-  
+
         <div id="privLinkSection"
              name="privLinkSection"
              ng-if="!userSettingsView.form.$dirty">
+
 
           <div class="feature-list" ng-binding>
             <ul>
               <li class="feature">
                 <a id="webex-user-privs"
                    ui-sref="user-overview.conferencing.webex.webex2">
-                   
+
                   <span class="feature-name"
                         translate="webexUserSettingLabels.userPriviligesLabel"
                         ng-binding>
                   </span>
-                  
+
                   <i class="feature-arrow"></i>
                 </a>
               </li>
             </ul>
+          </div>
+        </div>
+<hr>
+        <div id="privLinkSection"
+             name="privLinkSection"
+             ng-if="WebExUserSettings.gsxFeature">
+          <div class="feature-list" ng-binding>
+
+
+            <div class="section-title-row">
+              <p class="feature feature-name">Personal Room</p>
+            </div>
+
+            <table class="table">
+              <tr>
+                <td>
+                  Room Name
+                </td>
+                <td>
+                  <input value="My personal room">
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  URL
+                </td>
+                <td>
+                  https://go.webex.com/meet/me
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Host Pin
+                </td>
+                <td>
+                  1212
+                </td>
+              </tr>
+            </table>
+<hr>
+
+            <div class="section-title-row">
+              <p class="feature feature-name">Video System Addresses</p>
+            </div>
+
+            <table class="table table-hover">
+              <tr>
+                <th>
+                  System Name
+                </th>
+                <th>
+                  Video Address
+                </th>
+                <th>
+                  Default
+                </th>
+              </tr>
+              <tr>
+                <td>
+                  <input value="Desktop DX80">
+                </td>
+                <td>
+                  <input value="678987563@fumigation.com">
+                </td>
+                <td>
+                  <cs-radio name="WebExUserSettings.default" ng-model="WebExUserSettings.defaultSystem" value="1"></cs-radio>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input value="Top of the Mark MX300">
+                </td>
+                <td>
+                  <input value="678987656@fumigation.com">
+                </td>
+                <td>
+                  <cs-radio name="WebExUserSettings.default" ng-model="WebExUserSettings.defaultSystem" value="0"></cs-radio>
+                </td>
+              </tr>
+            </table>
           </div>
         </div>
       </div>

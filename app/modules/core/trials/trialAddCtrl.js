@@ -5,7 +5,7 @@
     .controller('TrialAddCtrl', TrialAddCtrl);
 
   /* @ngInject */
-  function TrialAddCtrl($scope, $state, $translate, $q, Authinfo, TrialService, HuronCustomer, Notification, Config, EmailService, ValidationService) {
+  function TrialAddCtrl($scope, $state, $translate, $q, Authinfo, TrialService, HuronCustomer, Notification, Config, EmailService, ValidationService, FeatureToggleService) {
     var vm = this;
 
     vm.nameError = false;
@@ -22,8 +22,8 @@
       type: 'input',
       templateOptions: {
         label: $translate.instant('partnerHomePage.customerName'),
-        labelClass: 'col-xs-4',
-        inputClass: 'col-xs-7',
+        labelClass: 'small-4 columns',
+        inputClass: 'small-7 columns left',
         type: 'text',
         required: true,
         maxlength: 50
@@ -34,8 +34,8 @@
       className: 'last-field',
       templateOptions: {
         label: $translate.instant('partnerHomePage.customerEmail'),
-        labelClass: 'col-xs-4',
-        inputClass: 'col-xs-7',
+        labelClass: 'small-4 columns',
+        inputClass: 'small-7 columns left',
         type: 'email',
         required: true
       }
@@ -48,7 +48,7 @@
       templateOptions: {
         label: $translate.instant('trials.collab'),
         id: 'squaredTrial',
-        class: 'col-xs-8 col-xs-offset-4'
+        class: 'small-8 small-offset-4 columns'
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
@@ -62,7 +62,7 @@
       templateOptions: {
         label: $translate.instant('trials.squaredUC'),
         id: 'squaredUCTrial',
-        class: 'col-xs-8 col-xs-offset-4'
+        class: 'small-8 small-offset-4 columns'
       },
       expressionProperties: {
         'hide': function () {
@@ -75,8 +75,8 @@
       templateOptions: {
         horizontal: true,
         label: $translate.instant('partnerHomePage.duration'),
-        labelClass: 'col-xs-4',
-        inputClass: 'col-xs-7',
+        labelClass: 'small-4 columns',
+        inputClass: 'small-7 columns left',
         options: [{
           label: $translate.instant('partnerHomePage.ninetyDays'),
           value: 90,
@@ -97,8 +97,8 @@
       className: 'last-field',
       templateOptions: {
         label: $translate.instant('partnerHomePage.numberOfLicenses'),
-        labelClass: 'col-xs-4',
-        inputClass: 'col-xs-3',
+        labelClass: 'small-4 columns',
+        inputClass: 'small-3 columns left',
         type: 'number',
         required: true
       },
@@ -128,6 +128,7 @@
     vm.startTrial = startTrial;
     vm.isSquaredUCEnabled = isSquaredUCEnabled;
     vm.gotoAddNumber = gotoAddNumber;
+    vm.supportsPstnSetup = FeatureToggleService.supportsPstnSetup;
 
     function isOffersEmpty() {
       return !(vm.offers[Config.trials.collab] || vm.offers[Config.trials.squaredUC]);
@@ -139,6 +140,10 @@
 
     function gotoAddNumber() {
       $state.go('trialAdd.addNumbers');
+    }
+
+    function gotoNextSteps() {
+      $state.go('trialAdd.nextSteps');
     }
 
     function startTrial(keepModal) {
@@ -180,15 +185,20 @@
           }
         }).then(function () {
           angular.element('#startTrialButton').button('reset');
-          if (!keepModal) {
-            $state.modal.close();
-          }
+
           var successMessage = [$translate.instant('trialModal.addSuccess', {
             customerName: vm.model.customerName,
             licenseCount: vm.model.licenseCount,
             licenseDuration: vm.model.licenseDuration
           })];
           Notification.notify(successMessage, 'success');
+
+          if (FeatureToggleService.supportsPstnSetup()) {
+            gotoNextSteps();
+          } else if (!keepModal) {
+            $state.modal.close();
+          }
+
           return vm.model.customerOrgId;
         });
     }

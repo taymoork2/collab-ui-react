@@ -23,7 +23,7 @@
         disabled: true,
         label: $translate.instant('trials.collab'),
         id: 'squaredTrial',
-        class: 'col-xs-8 col-xs-offset-4'
+        class: 'small-8 small-offset-4 columns'
       }
     }, {
       key: 'SQUAREDUC',
@@ -32,7 +32,7 @@
       templateOptions: {
         label: $translate.instant('trials.squaredUC'),
         id: 'squaredUCTrial',
-        class: 'col-xs-8 col-xs-offset-4'
+        class: 'small-8 small-offset-4 columns'
       },
       expressionProperties: {
         'hide': function () {
@@ -48,8 +48,8 @@
       templateOptions: {
         horizontal: true,
         label: $translate.instant('partnerHomePage.duration'),
-        labelClass: 'col-xs-4',
-        inputClass: 'col-xs-7',
+        labelClass: 'small-4 columns',
+        inputClass: 'small-7 columns left',
         options: [{
           label: $translate.instant('partnerHomePage.ninetyDays'),
           value: 90,
@@ -69,8 +69,8 @@
       type: 'input',
       templateOptions: {
         label: $translate.instant('partnerHomePage.numberOfLicenses'),
-        labelClass: 'col-xs-4',
-        inputClass: 'col-xs-3',
+        labelClass: 'small-4 columns',
+        inputClass: 'small-3 columns left',
         type: 'number',
         required: true
       },

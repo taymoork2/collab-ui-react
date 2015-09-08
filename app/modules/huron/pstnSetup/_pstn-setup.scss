@@ -5,6 +5,13 @@
   > .modal-body {
     flex: 1 1 auto;
   }
+
+  .loading {
+    text-align: center;
+    .icon-spinner {
+      font-size: 75px;
+    }
+  }
 }
 
 .pstn-providers {

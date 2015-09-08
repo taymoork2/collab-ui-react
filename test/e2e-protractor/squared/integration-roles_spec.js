@@ -64,12 +64,9 @@ xdescribe('Org Entitlement flow', function () {
 
     roles.getDisplayName().then(function (userName) {
       utils.click(users.closeSidePanel);
-      utils.search(searchStr);
-      utils.expectText(users.userListDisplayName, userName);
+      utils.searchAndClick(searchStr);
+      utils.click(users.rolesChevron);
+      utils.expectValueToBeSet(roles.displayNameInput, userName);
     });
-  });
-
-  it('should log out', function () {
-    navigation.logout();
   });
 });

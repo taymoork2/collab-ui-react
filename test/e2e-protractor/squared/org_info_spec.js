@@ -22,8 +22,4 @@ describe('Org Info flow', function () {
     utils.expectIsNotDisplayed(manage.saveButton);
     utils.expectIsDisplayed(manage.refreshButton);
   });
-
-  it('should log out', function () {
-    navigation.logout();
-  });
 });

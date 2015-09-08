@@ -26,8 +26,4 @@ describe('Organization Permissions check', function () {
     navigation.clickDevelopmentTab();
     utils.expectIsNotDisplayed(navigation.orgAddTab);
   });
-
-  it('should log out', function () {
-    navigation.logout();
-  });
 });

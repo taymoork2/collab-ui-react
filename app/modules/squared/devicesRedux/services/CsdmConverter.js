@@ -48,27 +48,27 @@ angular.module('Squared').service('CsdmConverter',
       };
     }
 
-    var convertCodes = function (data) {
+    function convertCodes(data) {
       return _.mapValues(data, convertCode);
-    };
+    }
 
-    var convertDevices = function (data) {
+    function convertDevices(data) {
       return _.mapValues(data, convertDevice);
-    };
+    }
 
-    var convertDevice = function (data) {
+    function convertDevice(data) {
       return new Device(data);
-    };
+    }
 
-    var convertCode = function (data) {
+    function convertCode(data) {
       return new Code(data);
-    };
+    }
 
-    var getProduct = function (obj) {
+    function getProduct(obj) {
       return obj.product == 'UNKNOWN' ? '' : obj.product;
-    };
+    }
 
-    var getSoftware = function (obj) {
+    function getSoftware(obj) {
       return _.chain(getEvents(obj))
         .where({
           type: 'software',
@@ -77,9 +77,9 @@ angular.module('Squared').service('CsdmConverter',
         .pluck('description')
         .first()
         .value();
-    };
+    }
 
-    var getIp = function (obj) {
+    function getIp(obj) {
       return _.chain(getEvents(obj))
         .where({
           type: 'ip',
@@ -88,19 +88,19 @@ angular.module('Squared').service('CsdmConverter',
         .pluck('description')
         .first()
         .value();
-    };
+    }
 
-    var hasIssues = function (obj) {
+    function hasIssues(obj) {
       return obj.status && obj.status.level && obj.status.level != 'OK';
-    };
+    }
 
-    var getDiagnosticsEvents = function (obj) {
+    function getDiagnosticsEvents(obj) {
       return _.map(getNotOkEvents(obj), function (e) {
         return diagnosticsEventTranslated(e);
       });
-    };
+    }
 
-    var diagnosticsEventTranslated = function (e) {
+    function diagnosticsEventTranslated(e) {
       if (isTranslatable('CsdmStatus.errorCodes.' + e.type + '.type')) {
         return {
           type: translateOrDefault('CsdmStatus.errorCodes.' + e.type + '.type', e.type),
@@ -122,45 +122,45 @@ angular.module('Squared').service('CsdmConverter',
           })
         };
       }
-    };
+    }
 
-    var translateOrDefault = function (translateString, defaultValue) {
+    function translateOrDefault(translateString, defaultValue) {
       if (isTranslatable(translateString)) {
         return $translate.instant(translateString);
       } else {
         return defaultValue;
       }
-    };
+    }
 
-    var isTranslatable = function (key) {
+    function isTranslatable(key) {
       return $translate.instant(key) !== key;
-    };
+    }
 
-    var getNotOkEvents = function (obj) {
+    function getNotOkEvents(obj) {
       return _.reject(getEvents(obj), function (e) {
         return e.level == 'INFO' && (e.type == 'ip' || e.type == 'software');
       });
-    };
+    }
 
-    var getEvents = function (obj) {
+    function getEvents(obj) {
       return (obj.status && obj.status.events) || [];
-    };
+    }
 
-    var getNeedsActivation = function (obj) {
+    function getNeedsActivation(obj) {
       return obj.state == 'UNCLAIMED';
-    };
+    }
 
-    var getReadableActivationCode = function (obj) {
+    function getReadableActivationCode(obj) {
       if (obj.activationCode) {
         return obj.activationCode.match(/.{4}/g).join(' ');
       }
-    };
+    }
 
-    var getIsOnline = function (obj) {
+    function getIsOnline(obj) {
       return (obj.status || {}).connectionStatus == 'CONNECTED';
-    };
+    }
 
-    var getReadableState = function (obj) {
+    function getReadableState(obj) {
       if (hasIssues(obj)) {
         return t('CsdmStatus.issuesDetected');
       }
@@ -176,9 +176,9 @@ angular.module('Squared').service('CsdmConverter',
         }
       }
       return t('CsdmStatus.Unknown');
-    };
+    }
 
-    var getCssColorClass = function (obj) {
+    function getCssColorClass(obj) {
       if (hasIssues(obj)) {
         return 'device-status-red';
       }
@@ -194,11 +194,11 @@ angular.module('Squared').service('CsdmConverter',
         }
       }
       return 'device-status-yellow';
-    };
+    }
 
-    var t = function (key) {
+    function t(key) {
       return $translate.instant(key);
-    };
+    }
 
     return {
       convertCode: convertCode,

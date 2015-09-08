@@ -1,18 +1,18 @@
 'use strict';
 
 describe('Controller: ExternalNumberOverviewCtrl', function () {
-  var controller, $controller, $scope, $stateParams, $q, ExternalNumberService, ExternalNumberPool;
+  var controller, $controller, $scope, $stateParams, $q, ExternalNumberService, Notification;
 
   var externalNumbers;
 
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$stateParams_, _$q_, _ExternalNumberService_, _ExternalNumberPool_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$stateParams_, _$q_, _ExternalNumberService_, _Notification_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $stateParams = _$stateParams_;
     ExternalNumberService = _ExternalNumberService_;
-    ExternalNumberPool = _ExternalNumberPool_;
+    Notification = _Notification_;
     $q = _$q_;
 
     $stateParams.currentCustomer = {
@@ -25,7 +25,9 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
       'pattern': '456'
     }];
 
-    spyOn(ExternalNumberPool, 'getAll').and.returnValue($q.when(externalNumbers));
+    spyOn(ExternalNumberService, 'refreshNumbers').and.returnValue($q.when());
+    spyOn(ExternalNumberService, 'getAllNumbers').and.returnValue(externalNumbers);
+    spyOn(Notification, 'errorResponse');
 
     controller = $controller('ExternalNumberOverviewCtrl', {
       $scope: $scope
@@ -44,21 +46,24 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
     }, {
       'pattern': '000'
     }]);
-    ExternalNumberService.setAllNumbers(newNumbers);
+    ExternalNumberService.getAllNumbers.and.returnValue(newNumbers);
     $scope.$apply();
     expect(controller.allNumbersCount).toEqual(4);
   });
 
   it('should show 0 numbers on error', function () {
-    ExternalNumberPool.getAll.and.returnValue($q.reject());
+    ExternalNumberService.refreshNumbers.and.returnValue($q.reject());
+    ExternalNumberService.getAllNumbers.and.returnValue([]);
     controller = $controller('ExternalNumberOverviewCtrl', {
       $scope: $scope
     });
     $scope.$apply();
+    expect(Notification.errorResponse).toHaveBeenCalled();
     expect(controller.allNumbersCount).toEqual(0);
   });
 
   it('should show 0 numbers if no customer found', function () {
+    ExternalNumberService.getAllNumbers.and.callThrough();
     delete $stateParams.currentCustomer.customerOrgId;
     controller = $controller('ExternalNumberOverviewCtrl', {
       $scope: $scope

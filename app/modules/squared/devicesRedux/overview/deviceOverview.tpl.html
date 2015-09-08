@@ -50,13 +50,13 @@
       <div
         class="feature-list activation-code-pane"
         ng-show="deviceOverview.currentDevice.needsActivation">
-        <p translate="deviceOverview.newDeviceActivation"></p>
+        <p translate="deviceOverviewPage.newDeviceActivation"></p>
         <h3>{{deviceOverview.currentDevice.readableActivationCode}}</h3>
       </div>
     </cs-sp-section>
 
     <cs-sp-section ng-show="deviceOverview.currentDevice.hasIssues">
-      <div class="section-name" style="padding: 15px 0;" translate="deviceOverview.issues"></div>
+      <div class="section-name" style="padding: 15px 0;" translate="deviceOverviewPage.issues"></div>
       <div>
         <div ng-repeat="event in deviceOverview.currentDevice.diagnosticsEvents" style="padding-bottom: 10px">
           <p>

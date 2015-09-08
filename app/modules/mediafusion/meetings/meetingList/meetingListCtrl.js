@@ -108,7 +108,8 @@ angular.module('Mediafusion')
           "theme": "none",
           "fontFamily": "CiscoSansTT Thin",
           "backgroundAlpha": 0,
-          "marginLeft": 30,
+          'marginLeft': 16,
+          'marginRight': 16,
           "dataProvider": $scope.meetingChartInfo,
           "valueAxes": [{
             "gridAlpha": 0,
@@ -374,7 +375,7 @@ angular.module('Mediafusion')
        * repective MeetingListService.
        * queryMeetingsList should be populated.
        */
-      var getMeetingChartInfo = function () {
+      function getMeetingChartInfo() {
         MeetingListService.meetingChartInfo($scope.numberOfDays, $scope.durationType, $scope.latestDate, function (data, status) {
           if (data.success && data.meetingCounts.length > 0) {
             $scope.meetingChartInfo = data.meetingCounts;
@@ -479,12 +480,12 @@ angular.module('Mediafusion')
             Log.debug('Query existing meetings failed. Status: ' + status);
           }
         });
-      };
+      }
 
       /**
        * Utility method to create Day Start Time Stamp in 24 hours format for the input of MM/dd/yyyy
        */
-      var createTimeStampForMonth = function (date) {
+      function createTimeStampForMonth(date) {
         var startDate = date;
         var endDate = date;
 
@@ -497,11 +498,11 @@ angular.module('Mediafusion')
         endDate = modifiedDate.getMonth() + 1 + "/" + modifiedDate.getDate() + "/" + modifiedDate.getFullYear();
         $scope.endTimeStamp = endDate + " ";
         $scope.endTimeStamp = $scope.endTimeStamp + "00:00:00 %2B0000";
-      };
+      }
       /**
        * Utility method to create Time Stamp in 24 hours format for 2 types of inputs like 11am or 11:00am.
        */
-      var createTimeStamp = function (date, startTime, endTime) {
+      function createTimeStamp(date, startTime, endTime) {
         var modifiedDate;
         var startDateFallsOnNext = date;
         var endDateFallsOnNext = date;
@@ -536,20 +537,20 @@ angular.module('Mediafusion')
 
         //console.log("StartTimeStamp is : " + $scope.startTimeStamp);
         //console.log("EndTimeStamp is : " + $scope.endTimeStamp);
-      };
+      }
 
       /**
        * Updates day in Date.
        */
-      var updateDate = function (dateToBeUpdated, updateType) {
+      function updateDate(dateToBeUpdated, updateType) {
         dateToBeUpdated.setDate(dateToBeUpdated.getDate() + updateType);
         return dateToBeUpdated;
-      };
+      }
 
       /**
        * Populating Leader board data.
        */
-      var populateLeaderBoardInfo = function (index) {
+      function populateLeaderBoardInfo(index) {
         if ($scope.meetingChartInfo && $scope.meetingChartInfo.length > 0 && index >= 0 && $scope.meetingChartInfo[index].enterpriseMeetings !== null) {
           if ($scope.chartToDisplay == "enterpriseMeetings" || $scope.chartToDisplay == "allMeetings") {
             $scope.totalEnterpriseMeetings = $scope.meetingChartInfo[index].enterpriseMeetings;
@@ -565,19 +566,19 @@ angular.module('Mediafusion')
           $scope.totalCloudMeetings = "";
           $scope.totalCloudParticipants = "";
         }
-      };
+      }
 
       /**
        * Returns the number of days between 2 dates.
        */
-      var daysBetweenDates = function (fromDate, toDate) {
+      function daysBetweenDates(fromDate, toDate) {
         var oneDay = 1000 * 60 * 60 * 24;
         var fromDate_ms = fromDate.getTime();
         var toDate_ms = toDate.getTime();
         var differenceDate_ms = toDate_ms - fromDate_ms;
 
         return Math.round(differenceDate_ms / oneDay);
-      };
+      }
 
       getMeetingChartInfo();
 

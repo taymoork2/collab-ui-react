@@ -1,9 +1,10 @@
 'use strict';
 
-/* global protractor */
+/* global protractor, log */
 
 var config = require('./test.config.js');
 var request = require('request');
+var EC = protractor.ExpectedConditions;
 
 exports.searchField = element(by.id('searchFilter'));
 
@@ -84,19 +85,22 @@ exports.refresh = function () {
 // Utility functions to be used with animation effects
 // Will wait for element to be displayed before attempting to take action
 exports.wait = function (elem) {
-  return browser.wait(function () {
-    return elem.isDisplayed().then(function (isDisplayed) {
-      return isDisplayed;
-    }, function () {
-      return false;
-    });
-  }, TIMEOUT, 'Waiting for: ' + elem.locator());
+  function logAndWait() {
+    log('Waiting for element to be visible: ' + elem.locator());
+    return EC.visibilityOf(elem)();
+  }
+  return browser.wait(logAndWait, TIMEOUT, 'Waiting for element to be visible: ' + elem.locator());
 };
 
 exports.waitUntilEnabled = function (elem) {
   return this.wait(elem).then(function () {
     return browser.wait(function () {
-      return elem.isEnabled();
+      return elem.isEnabled().then(function (isEnabled) {
+        log('Waiting until element is enabled: ' + elem.locator() + ' ' + isEnabled);
+        return isEnabled;
+      }, function () {
+        return false;
+      });
     }, TIMEOUT, 'Waiting until enabled: ' + elem.locator());
   });
 };
@@ -104,7 +108,12 @@ exports.waitUntilEnabled = function (elem) {
 exports.waitUntilDisabled = function (elem) {
   return this.wait(elem).then(function () {
     return browser.wait(function () {
-      return elem.isEnabled() === false;
+      return elem.isEnabled().then(function (isEnabled) {
+        log('Waiting until element is disabled: ' + elem.locator() + ' ' + !isEnabled);
+        return !isEnabled;
+      }, function () {
+        return false;
+      });
     }, TIMEOUT, 'Waiting until disabled: ' + elem.locator());
   });
 };
@@ -147,29 +156,29 @@ exports.expectIsNotPresent = function (elem) {
 };
 
 exports.expectIsNotDisplayed = function (elem) {
-  browser.wait(function () {
-    return elem.isDisplayed().then(function (isDisplayed) {
-      return !isDisplayed;
-    }, function () {
-      return true;
-    });
-  }, TIMEOUT, 'Waiting for Not Displayed: ' + elem.locator());
+  function logAndWait() {
+    log('Waiting for element to be invisible: ' + elem.locator());
+    return EC.invisibilityOf(elem)();
+  }
+  browser.wait(logAndWait, TIMEOUT, 'Waiting for element not to be visible: ' + elem.locator());
 };
 
 exports.expectTextToBeSet = function (elem, text) {
   browser.wait(function () {
     return elem.getText().then(function (result) {
-      return result !== undefined && result !== null && result === text;
+      log('Waiting for element to have text set: ' + elem.locator() + ' ' + text);
+      return result !== undefined && result !== null && result.indexOf(text) > -1;
     }, function () {
       return false;
     });
-  }, TIMEOUT, 'Waiting for Text to be set: ' + elem.locator());
+  }, TIMEOUT, 'Waiting for Text to be set: ' + elem.locator() + ' ' + text);
 };
 
 exports.expectValueToBeSet = function (elem, value) {
   this.wait(elem);
   browser.wait(function () {
     return elem.getAttribute('value').then(function (result) {
+      log('Waiting for element to have value set: ' + elem.locator() + ' ' + value);
       return result !== undefined && result !== null && result === value;
     }, function () {
       return false;
@@ -181,6 +190,7 @@ exports.expectValueToContain = function (elem, value) {
   this.wait(elem);
   browser.wait(function () {
     return elem.getAttribute('value').then(function (result) {
+      log('Waiting for element to contain value: ' + elem.locator() + ' ' + value);
       return result !== undefined && result !== null && result.indexOf(value) > -1;
     }, function () {
       return false;
@@ -197,19 +207,27 @@ exports.expectTokenInput = function (elem, value) {
   var input = elem.all(by.tagName('input')).first();
   browser.wait(function () {
     return input.getAttribute('value').then(function (result) {
+      log('Waiting for token to contain value: ' + elem.locator() + ' ' + value);
       return result !== undefined && result !== null && result.indexOf(value) > -1;
     }, function () {
       return false;
     });
   }, TIMEOUT, 'Waiting for token to contain value: ' + elem.locator());
-}
+};
 
 exports.click = function (elem, maxRetry) {
+  function logAndWait() {
+    log('Waiting for element to be clickable: ' + elem.locator());
+    return EC.elementToBeClickable(elem)();
+  }
   return this.wait(elem).then(function () {
+    return browser.wait(logAndWait, TIMEOUT, 'Waiting for element to be clickable: ' + elem.locator());
+  }).then(function () {
     var deferred = protractor.promise.defer();
     if (typeof maxRetry === 'undefined') {
       maxRetry = 10;
     }
+    log('Click element: ' + elem.locator());
     if (maxRetry === 0) {
       return elem.click().then(deferred.fulfill, deferred.reject);
     } else {
@@ -239,12 +257,14 @@ exports.expectSelected = function (selected, state) {
 
 exports.clear = function (elem) {
   this.wait(elem).then(function () {
+    log('Clear element: ' + elem.locator());
     elem.clear();
   });
 };
 
 exports.sendKeys = function (elem, value) {
   this.wait(elem).then(function () {
+    log('Send keys to element: ' + elem.locator() + ' ' + value);
     elem.sendKeys(value);
   });
 };
@@ -265,12 +285,16 @@ exports.expectNotText = function (elem, value) {
 };
 
 exports.expectCount = function (elems, count) {
-  this.wait(elems);
+  elems.each(function (elem) {
+    utils.wait(elem);
+  });
   expect(elems.count()).toEqual(count);
 };
 
 exports.expectCountToBeGreater = function (elems, num) {
-  this.wait(elems);
+  elems.each(function (elem) {
+    utils.wait(elem);
+  });
   elems.count().then(function (count) {
     expect(count > num);
   });
@@ -283,6 +307,7 @@ exports.expectTruthy = function (elem) {
 exports.expectClass = function (elem, cls) {
   return this.wait(elem).then(function () {
     return elem.getAttribute('class').then(function (classes) {
+      log('Expect element to have class: ' + elem.locator() + ' ' + cls);
       return classes.split(' ').indexOf(cls) !== -1;
     });
   });
@@ -336,12 +361,12 @@ exports.search = function (query) {
   this.clear(this.searchField);
   if (query) {
     this.sendKeys(this.searchField, query);
-    this.expectIsDisplayed(element.all(by.cssContainingText('.ngGrid .ngRow span', query)).first());
+    this.expectIsDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', query)));
   }
 };
 
 exports.clickUser = function (query) {
-  return this.click(element.all(by.cssContainingText('.ngGrid .ngRow span', query)).first());
+  return this.click(element(by.cssContainingText('.ngGrid .ngRow span', query)));
 };
 
 exports.searchAndClick = function (query) {
@@ -350,7 +375,7 @@ exports.searchAndClick = function (query) {
 };
 
 exports.expectRowIsNotDisplayed = function (text) {
-  this.expectIsNotDisplayed(element.all(by.cssContainingText('.ngGrid .ngRow span', text)).first());
+  this.expectIsNotDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', text)));
 };
 
 exports.dumpConsoleErrors = function () {
@@ -463,3 +488,7 @@ exports.deleteUser = function (name, name2) {
     notifications.assertSuccess(name2, 'deleted successfully');
   }
 };
+
+exports.waitForModal = function () {
+  return this.wait(element(by.css('.modal-dialog')));
+}

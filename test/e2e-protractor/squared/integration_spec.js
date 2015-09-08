@@ -18,7 +18,7 @@ describe('App flow', function () {
     it('clicking on system health panel should open to status page in a new tab', function () {
       navigation.clickHome();
 
-      utils.expectAttribute(landing.monitoringRows.first(), 'href', 'http://status.ciscospark.com/');
+      utils.expectAttribute(landing.monitoringRows, 'href', 'http://status.ciscospark.com/');
 
       utils.expectIsDisplayed(landing.reloadedTime);
       utils.expectIsDisplayed(landing.refreshData);
@@ -50,12 +50,4 @@ describe('App flow', function () {
       utils.expectIsDisplayed(reports.contentShareSizes);
     });
   });
-
-  // Log Out
-  describe('Log Out', function () {
-    it('should log out', function () {
-      navigation.logout();
-    });
-  });
-
 });

@@ -17,10 +17,9 @@ describe('Org Features tests', function () {
 
     it('should not show Webex Messager Integration from the plan review', function () {
       navigation.clickFirstTimeWizard();
-      wizard.clickPlanReview();
-      utils.expectText(wizard.mainviewTitle, 'Plan Review');
+      utils.expectTextToBeSet(wizard.mainviewTitle, 'Plan Review');
       wizard.clickMessagingSetup();
-      utils.expectText(wizard.mainviewTitle, 'Messaging Setup');
+      utils.expectTextToBeSet(wizard.mainviewTitle, 'Messaging Setup');
       utils.expectIsNotPresent(wizard.messageInteropFeature);
     });
 
@@ -40,13 +39,8 @@ describe('Org Features tests', function () {
     it('should not show the Communications tab', function () {
       navigation.clickFirstTimeWizard();
       wizard.clickPlanReview();
-      utils.expectText(wizard.mainviewTitle, 'Plan Review');
+      utils.expectTextToBeSet(wizard.mainviewTitle, 'Plan Review');
       utils.expectIsNotPresent(wizard.serviceSetupTab);
-    });
-
-    it('should log out', function () {
-      utils.clickEscape();
-      navigation.logout();
     });
   });
 });

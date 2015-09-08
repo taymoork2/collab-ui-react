@@ -25,12 +25,9 @@
     vm.isFusionCal = Authinfo.isFusionCal();
 
     Userservice.getUser('me', function (data, status) {
-      FeatureToggleService.getFeaturesForUser(data.id, function (data, status) {
-        _.each(data.developer, function (element) {
-          if (element.key === 'gsxdemo' && element.val === 'true') {
-            vm.gsxFeature = true;
-          }
-        });
+      FeatureToggleService.getFeaturesForUser(data.id, 'gsxdemo').then(function (value) {
+        vm.gsxFeature = value;
+      }).finally(function () {
         init();
       });
     });
@@ -59,6 +56,13 @@
         detail: $translate.instant('onboardModal.freeConf')
       };
 
+      var contactCenterState = {
+        name: $translate.instant('onboardModal.contactCenter'),
+        icon: 'ContactCenter',
+        state: 'user-overview.contactCenter',
+        detail: $translate.instant('onboardModal.freeContactCenter')
+      };
+
       if (hasEntitlement('squared-room-moderation') || !vm.hasAccount) {
         if (getServiceDetails('MS')) {
           msgState.detail = $translate.instant('onboardModal.paidMsg');
@@ -69,6 +73,9 @@
         if (getServiceDetails('CF')) {
           confState.detail = $translate.instant('onboardModal.paidConf');
         }
+        if (vm.gsxFeature) {
+          confState.detail = 'Meeting Center';
+        }
         vm.services.push(confState);
       }
       if (hasEntitlement('ciscouc')) {
@@ -77,6 +84,14 @@
         }
         vm.services.push(commState);
       }
+
+      if (hasEntitlement('cloud-contact-center')) {
+        if (getServiceDetails('CC')) {
+          contactCenterState.detail = $translate.instant('onboardModal.paidContactCenter');
+        }
+        vm.services.push(contactCenterState);
+      }
+
       updateUserTitleCard();
     }
 

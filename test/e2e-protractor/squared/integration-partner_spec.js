@@ -88,13 +88,16 @@ describe('Partner flow', function () {
       utils.click(partner.termsActionButton);
       utils.click(partner.editTermsButton);
 
-      utils.expectClass(partner.squaredTrialCheckbox, 'disabled');
+      utils.waitForModal().then(function () {
+        utils.expectIsDisplayed(partner.editTrialForm);
+        utils.expectClass(partner.squaredTrialCheckbox, 'disabled');
 
-      utils.click(partner.saveUpdateButton);
-      notifications.assertSuccess(partner.newTrial.customerName, 'You have successfully edited a trial for');
+        utils.click(partner.saveUpdateButton);
+        notifications.assertSuccess(partner.newTrial.customerName, 'You have successfully edited a trial for');
 
-      utils.click(partner.trialFilter);
-      utils.expectIsDisplayed(partner.newTrialRow);
+        utils.click(partner.trialFilter);
+        utils.expectIsDisplayed(partner.newTrialRow);
+      });
     }, 60000);
 
   });
@@ -114,19 +117,19 @@ describe('Partner flow', function () {
         utils.expectIsDisplayed(wizard.leftNav);
         utils.expectIsDisplayed(wizard.mainView);
 
-        utils.expectText(wizard.mainviewTitle, 'Plan Review');
+        utils.expectTextToBeSet(wizard.mainviewTitle, 'Plan Review');
         utils.click(wizard.beginBtn);
         utils.click(wizard.saveBtn);
 
-        utils.expectText(wizard.mainviewTitle, 'Enterprise Settings');
+        utils.expectTextToBeSet(wizard.mainviewTitle, 'Enterprise Settings');
         utils.click(wizard.nextBtn);
 
-        utils.expectText(wizard.mainviewTitle, 'Invite Users');
+        utils.expectTextToBeSet(wizard.mainviewTitle, 'Invite Users');
         utils.click(wizard.nextBtn);
         utils.click(wizard.finishBtn);
         notifications.clearNotifications();
 
-        utils.expectText(wizard.mainviewTitle, 'Get Started');
+        utils.expectTextToBeSet(wizard.mainviewTitle, 'Get Started');
         utils.click(wizard.finishBtn);
 
         navigation.expectDriverCurrentUrl('overview');
@@ -209,13 +212,6 @@ describe('Partner flow', function () {
       utils.click(partner.contentSharedTab);
       utils.expectIsDisplayed(partner.contentSharedChart);
       utils.expectIsDisplayed(partner.contentSharedCount);
-    });
-  });
-
-  // Log Out
-  describe('Log Out', function () {
-    it('should log out', function () {
-      navigation.logout();
     });
   });
 });
