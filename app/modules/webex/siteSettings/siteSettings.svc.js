@@ -14,12 +14,26 @@ angular.module('WebExSiteSettings').service('WebExSiteSettingsSvc', [
 
       siteInfo: null,
       meetingTypesInfo: null,
+      // sessionTypesInfo: null,
       settingPagesInfo: null,
+
+      siteSettingsTableColumnLabel: {
+        settings: null,
+        common: null,
+        remoteAccess: null,
+        webACD: null,
+        meetingCenter: null,
+        eventCenter: null,
+        trainingCenter: null,
+        supportCenter: null,
+      },
+
+      additionalSiteSettingsLabel: null,
 
       commonSiteSettingPages: null,
       centerSpecificSettingPages: null,
-
-      sessionTypes: null,
+      settingPageTypeObjs: [],
+      emailAllHostsPageObj: null,
 
       meetingCenter: {
         id: "MC",

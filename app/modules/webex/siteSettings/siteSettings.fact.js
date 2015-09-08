@@ -36,6 +36,7 @@
           var logMsg = funcName;
 
           var _this = this;
+          var displayLabel = null;
 
           var siteUrl = (!$stateParams.siteUrl) ? '' : $stateParams.siteUrl;
           var siteName = WebExUtilsFact.getSiteName(siteUrl);
@@ -47,6 +48,26 @@
 
           webExSiteSettingsObj.siteUrl = siteUrl;
           webExSiteSettingsObj.siteName = siteName;
+
+          displayLabel = $translate.instant("webexSiteSettingsLabels.column_settings");
+          webExSiteSettingsObj.siteSettingsTableColumnLabel.settings = displayLabel;
+
+          displayLabel = $translate.instant("webexSiteSettingsLabels.column_common");
+          webExSiteSettingsObj.siteSettingsTableColumnLabel.common = displayLabel;
+
+          displayLabel = $translate.instant("webexSiteSettingsLabels.column_remoteAccess");
+          webExSiteSettingsObj.siteSettingsTableColumnLabel.remoteAccess = displayLabel;
+
+          displayLabel = $translate.instant("webexSiteSettingsLabels.column_webACD");
+          webExSiteSettingsObj.siteSettingsTableColumnLabel.webACD = displayLabel;
+
+          webExSiteSettingsObj.siteSettingsTableColumnLabel.meetingCenter = "Meeting Center";
+          webExSiteSettingsObj.siteSettingsTableColumnLabel.eventCenter = "Event Center";
+          webExSiteSettingsObj.siteSettingsTableColumnLabel.trainingCenter = "Training Center";
+          webExSiteSettingsObj.siteSettingsTableColumnLabel.supportCenter = "Support Center";
+
+          displayLabel = $translate.instant("webexSiteSettingsLabels.centerSpecificSettings");
+          webExSiteSettingsObj.additionalSiteSettingsLabel = displayLabel;
 
           _this.getSessionTicket(siteUrl).then(
             function getSessionTicketSuccess(sessionTicket) {
@@ -151,7 +172,7 @@
         /*
         processMeetingTypesInfo: function () {
           var meetingTypesInfoJson = webExSiteSettingsObj.meetingTypesInfo.bodyJson;
-          var sessionTypes = [];
+          var sessionTypesInfo = [];
 
           if (null != meetingTypesInfoJson.mtgtype_meetingType) { // non-empty meetingTypesInfoJson
             var siteMeetingTypes = [].concat(meetingTypesInfoJson.mtgtype_meetingType);
@@ -210,20 +231,196 @@
                   sessionEnabled: false
                 }; // sessionType
 
-                sessionTypes.push(sessionType);
+                sessionTypesInfo.push(sessionType);
               } // chkSiteMeetingType()
             ); // siteMeetingTypes.forEach()
           } // // non-empty meetingTypesInfoJson()
 
-          webExSiteSettingsObj.sessionTypes = sessionTypes;
+          webExSiteSettingsObj.sessionTypesInfo = sessionTypesInfo;
         }, // processMeetingTypesInfo()
         */
 
+        updateSettingsPageObjs: function (
+          pageId,
+          category,
+          settingPageUrl
+        ) {
+
+          var settingPageTypeObj = null;
+          var tmpId = "pageId_" + pageId;
+
+          webExSiteSettingsObj.settingPageTypeObjs.forEach(
+            function checkSettingPageTypeObj(tmpSettingPageTypeObj) {
+              if (tmpId == tmpSettingPageTypeObj.id) {
+                settingPageTypeObj = tmpSettingPageTypeObj;
+              }
+            } // checkSettingPageTypeObj()  
+          );
+
+          if (null == settingPageTypeObj) {
+            var labelId = "webexSiteSettingsLabels" + "." + tmpId;
+            var displayLabel = $translate.instant(labelId);
+
+            settingPageTypeObj = {
+              id: tmpId,
+              label: displayLabel,
+
+              commonSettingPage: {
+                id: pageId + "_common",
+                sref: null,
+              },
+
+              remoteAccessSettingPage: {
+                id: pageId + "_remoteAccess",
+                sref: null,
+              },
+
+              webACDSettingPage: {
+                id: pageId + "webACD",
+                sref: null,
+              },
+
+              emailAllHostsSettingPage: {
+                id: pageId + "_emailAllHosts",
+                sref: null,
+              },
+
+              meetingCenterSettingPage: {
+                id: pageId + "_meetingCenter",
+                sref: null,
+              },
+
+              eventCenterSettingPage: {
+                id: pageId + "_eventCenter",
+                sref: null,
+              },
+
+              trainingCenterSettingPage: {
+                id: pageId + "_trainingCenter",
+                sref: null,
+              },
+
+              supportCenterSettingPage: {
+                id: pageId + "_supportCenter",
+                sref: null,
+              },
+            };
+
+            if (pageId == "emailAllHosts") {
+              webExSiteSettingsObj.emailAllHostsObj = settingPageTypeObj;
+            } else {
+              webExSiteSettingsObj.settingPageTypeObjs.push(settingPageTypeObj);
+            }
+          }
+
+          var settingPageObj = null;
+
+          if ("common" == category) {
+            settingPageObj = settingPageTypeObj.commonSettingPage;
+          } else if ("remoteAccess" == category) {
+            settingPageObj = settingPageTypeObj.remoteAccessSettingPage;
+          } else if ("webACD" == category) {
+            settingPageObj = settingPageTypeObj.webACDSettingPage;
+          } else if ("meetingCenter" == category) {
+            settingPageObj = settingPageTypeObj.meetingCenterSettingPage;
+          } else if ("trainingCenter" == category) {
+            settingPageObj = settingPageTypeObj.trainingCenterSettingPage;
+          } else if ("eventCenter" == category) {
+            settingPageObj = settingPageTypeObj.eventCenterSettingPage;
+          } else if ("supportCenter" == category) {
+            settingPageObj = settingPageTypeObj.supportCenterSettingPage;
+          }
+
+          var iframeSref =
+            "site-setting-iframe({" +
+            "siteUrl:" + "'" + webExSiteSettingsObj.siteUrl + "'" + "," +
+            "settingPageIframeUrl:" + "'" + settingPageUrl + "'" +
+            "})";
+
+          settingPageObj.sref = iframeSref;
+        }, // updateSettingsPageObjs()
+
         processSettingPagesInfo: function () {
+          var _this = this;
           var settingPagesInfoJson = null;
 
           setCommonSiteSettingPages();
           setCenterSpecificSettingPages();
+          updateSettingTable();
+
+          function updateSettingTable() {
+            _this.updateSettingsPageObjs(
+              "emailAllHosts",
+              "common",
+              "/emailAllHosts"
+            );
+
+            _this.updateSettingsPageObjs(
+              "options",
+              "common",
+              "/options_common"
+            );
+
+            _this.updateSettingsPageObjs(
+              "options",
+              "remoteAccess",
+              "/options_remoteAccess"
+            );
+
+            _this.updateSettingsPageObjs(
+              "options",
+              "webACD",
+              "/options_webACD"
+            );
+
+            _this.updateSettingsPageObjs(
+              "options",
+              "meetingCenter",
+              "/options_meetingCenter"
+            );
+
+            _this.updateSettingsPageObjs(
+              "options",
+              "eventCenter",
+              "/options_eventCenter"
+            );
+
+            _this.updateSettingsPageObjs(
+              "options",
+              "trainingCenter",
+              "/options_trainingCenter"
+            );
+
+            _this.updateSettingsPageObjs(
+              "options",
+              "supportCenter",
+              "/options_supportCenter"
+            );
+
+            _this.updateSettingsPageObjs(
+              "forms",
+              "eventCenter",
+              "/forms_eventCenter"
+            );
+
+            _this.updateSettingsPageObjs(
+              "forms",
+              "supportCenter",
+              "/forms_supportCenter"
+            );
+
+            _this.updateSettingsPageObjs(
+              "forms",
+              "webACD",
+              "/forms_webACD"
+            );
+
+            webExSiteSettingsObj.settingPageTypeObjs.forEach(
+              function checkSettingPageTypeObj(tmpSettingPageTypeObj) {
+                $log.log("updateSettingTable(): " + JSON.stringify(tmpSettingPageTypeObj) + "\n");
+              }
+            );
+          } // updateSettingTable()
 
           function setCommonSiteSettingPages() {
             $log.log("setCommonSiteSettingPages START");

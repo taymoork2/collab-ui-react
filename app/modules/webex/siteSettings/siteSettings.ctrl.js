@@ -36,10 +36,10 @@
       $scope.webexAdvancedUrl = Config.getWebexAdvancedHomeUrl(this.siteSettingsObj.siteUrl);
       $scope.adminEmailParam = Authinfo.getPrimaryEmail();
       $scope.localeParam = $translate.use();
-      
+
       $scope.trustSrc = function (src) {
-          return $sce.trustAsResourceUrl(src);
-        }; // trustSrc()
+        return $sce.trustAsResourceUrl(src);
+      }; // trustSrc()
     }
   ]);
 })();
