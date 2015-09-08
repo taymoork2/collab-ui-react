@@ -24,7 +24,8 @@ module.exports = function(config) {
       'test/huron/**/*.js',
       'test/hercules/**/*.js',
       'test/mediafusion/**/*.js',
-      'test/squared/**/*.js', {
+      'test/squared/**/*.js',
+      'test/sunlight/**/*.js',{
         pattern: 'test/fixtures/**/*.json',
         watched: true,
         served: true,

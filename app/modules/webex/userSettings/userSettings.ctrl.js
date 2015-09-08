@@ -26,7 +26,7 @@
       FeatureToggleService,
       Userservice
     ) {
-
+      var that = this;
       // Update the breadcrumb with site url
       $state.current.data.displayName = $stateParams.site;
       $rootScope.$broadcast('displayNameUpdated');
@@ -80,8 +80,6 @@
           that.initPanel();
         });
       });
-
-      var that = this;
     } // WebExUserSettingsCtrl()
   ]);
 })();

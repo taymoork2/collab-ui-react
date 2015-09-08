@@ -1,4 +1,5 @@
 {
+  "-W016": false,
   "-W097": false,
   "bitwise": true,
   "camelcase": false,

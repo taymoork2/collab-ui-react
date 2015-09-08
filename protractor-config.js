@@ -33,6 +33,12 @@ exports.config = {
   onPrepare: function() {
     browser.ignoreSynchronization = true;
 
+    global.log = function (message) {
+      if (browser.params.log == 'true') {
+        console.log(message);
+      }
+    };
+
     var jasmineReporters = require('jasmine-reporters');
     jasmine.getEnv().addReporter(
       new jasmineReporters.JUnitXmlReporter({
