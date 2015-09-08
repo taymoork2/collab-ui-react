@@ -84,7 +84,7 @@ exports.refresh = function () {
 
 // Utility functions to be used with animation effects
 // Will wait for element to be displayed before attempting to take action
-exports.wait = function (elem, fromArray) {
+exports.wait = function (elem, timeout) {
   // If element is an array, fallback to custom isDisplayed check
   if (elem instanceof protractor.ElementArrayFinder) {
     return browser.wait(function () {
@@ -94,14 +94,14 @@ exports.wait = function (elem, fromArray) {
       }, function () {
         return false;
       });
-    }, TIMEOUT, 'Waiting for element array to be displayed: ' + elem.locator());
+    }, timeout || TIMEOUT, 'Waiting for element array to be displayed: ' + elem.locator());
   }
 
   function logAndWait() {
     log('Waiting for element to be visible: ' + elem.locator());
     return EC.visibilityOf(elem)();
   }
-  return browser.wait(logAndWait, TIMEOUT, 'Waiting for element to be visible: ' + elem.locator());
+  return browser.wait(logAndWait, timeout || TIMEOUT, 'Waiting for element to be visible: ' + elem.locator());
 };
 
 exports.waitUntilEnabled = function (elem) {
