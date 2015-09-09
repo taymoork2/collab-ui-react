@@ -50,8 +50,16 @@
   justify-content: center;
 }
 
-#aa-flex-row-item-header {
+#aa-header-row-content {
   padding-left: 120px;
+}
+
+#aa-header-row-name {
+  padding-right: 40px;
+}
+
+#aa-header-row-numbers {
+  padding-left: 40px;
 }
 
 .aa-flex-row-item-right {
@@ -61,12 +69,8 @@
   justify-content: right;
 }
 
-#aa-flex-row-item-right-header {
+#aa-header-row-save {
   padding-right: 15px;
-}
-
-#aa-flex-row-item-right-action {
-  padding-left: 40px;
 }
 
 .aa-edit-icon {
@@ -127,35 +131,40 @@
   justify-content: flex-end;
 }
 
+#aa-builder-actionsets {
+  min-height: 60vh;
+}
+
 .aa-panel {
   @extend .panel;
   margin: 0px;
   padding-left: 15px;
   padding-right: 15px;
   box-shadow: none;
-}
-
-.aa-panel-body {
-  @extend .panel-body;
-  margin: 0px;
-  padding: 25px;
-  background-color: $brand-white;
-  border: 1px solid $brand-default;
-  &:hover {
-    border-color: $brand-primary;
+  .text-info {
+    color: $brand-info;
   }
-}
-
-.aa-panel-round {
-  @extend .panel-body;
-  border: 2px solid $brand-default;
-  border-radius: 50%;
-  margin: 0px;
-  padding: 0px;
-  text-align: center;
-  vertical-align: middle;
-  &:hover {
-    border-color: $brand-primary;
+  .aa-panel-body {
+    @extend .panel-body;
+    margin: 0px;
+    padding: 25px;
+    background-color: $brand-white;
+    border: 1px solid $brand-default;
+    &:hover {
+      border-color: $brand-primary;
+    }
+  }
+  .aa-panel-round {
+    @extend .panel-body;
+    border: 2px solid $brand-default;
+    border-radius: 50%;
+    margin: 0px;
+    padding: 0px;
+    text-align: center;
+    vertical-align: middle;
+    &:hover {
+      border-color: $brand-primary;
+    }
   }
 }
 
@@ -168,13 +177,6 @@
     &:hover {
       cursor: pointer;
       color: $brand-primary;
-    }
-}
-
-.aa-panel-disabled {
-  background-color: #ddd;
-   &:hover {
-      border-color: transparent !important;
     }
 }
 

@@ -8,16 +8,16 @@
   /* @ngInject */
   function AABuilderScheduleInfoCtrl($scope) {
     $scope.openHours = {
-      title: 'Open Hours'
+      title: 'autoAttendant.scheduleOpen'
     };
     $scope.closedHours = {
-      title: 'Closed Hours'
+      title: 'autoAttendant.scheduleClosed'
     };
     $scope.holidays = {
-      title: 'Holidays'
+      title: 'autoAttendant.scheduleHolidays'
     };
 
-    /* todo: schedule model  */
+    /* schedule model  */
 
   }
 })();

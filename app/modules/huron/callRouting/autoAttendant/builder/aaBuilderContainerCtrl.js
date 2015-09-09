@@ -26,20 +26,14 @@
     vm.holidays = false;
     vm.holidayActions = {};
 
-    vm.hasNextStep = hasNextStep;
-
     /////////////////////
 
     function getScheduleTitle() {
-      if (vm.openHours && (!vm.closedHours && !vm.holidays)) {
-        return "Open 24 hours";
+      if (!vm.closedHours && !vm.holidays) {
+        return "autoAttendant.scheduleAllDay";
       }
 
-      return "Schedule";
-    }
-
-    function hasNextStep() {
-      return true;
+      return "autoAttendant.schedule";
     }
 
     function setOpenHourActions() {
@@ -62,12 +56,12 @@
     }
 
     function addAction(schedule, action) {
-      //var menuEntry = new CeMenuEntry();
-      //parseAction(menuEntry, ceActionArray[i]);
-      //menu.addEntry(menuEntry);
+
     }
 
-    function removeAction(schedule, action) {}
+    function removeAction(schedule, action) {
+
+    }
 
     function selectAA(aaName) {
       vm.aaModel.aaName = aaName;

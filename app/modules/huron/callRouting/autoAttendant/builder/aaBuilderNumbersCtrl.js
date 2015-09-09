@@ -22,21 +22,10 @@
       trigger: 'incomingCall'
     };
 
-    vm.aaNameDisabled = false;
-
-    vm.getAANameDisabled = getAANameDisabled;
-    vm.setAANameDisabled = setAANameDisabled;
     vm.addAAResourceFromInputNumber = addAAResourceFromInputNumber;
     vm.deleteAAResource = deleteAAResource;
-    vm.addAAName = addAAName;
 
     /////////////////////
-
-    function addAAName() {
-      if (angular.isDefined(vm.ui.ceInfo) && angular.isDefined(vm.ui.ceInfo.getName()) && vm.ui.ceInfo.getName().length > 0) {
-        AutoAttendantCeInfoModelService.setCeInfo(vm.aaModel.aaRecord, vm.ui.ceInfo);
-      }
-    }
 
     function addAAResourceFromInputNumber() {
       if (angular.isUndefined(vm.inputNumber) || vm.inputNumber.number === '') {
@@ -137,16 +126,6 @@
       AutoAttendantCeInfoModelService.setCeInfo(vm.aaModel.aaRecord, vm.ui.ceInfo);
     }
 
-    function getAANameDisabled() {
-      return vm.aaNameDisabled;
-    }
-
-    function setAANameDisabled(state) {
-      if (state !== true && state !== false) {
-        return;
-      }
-      vm.aaNameDisabled = state;
-    }
 
     function selectAA(aaName) {
       vm.aaModel.aaName = aaName;

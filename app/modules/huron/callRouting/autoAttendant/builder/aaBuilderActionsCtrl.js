@@ -6,27 +6,27 @@
     .controller('AABuilderActionsCtrl', AABuilderActionsCtrl);
 
   /* @ngInject */
-  function AABuilderActionsCtrl($scope, $controller) {
+  function AABuilderActionsCtrl($scope, $translate, $controller) {
 
     var vm = this;
 
     vm.templates = [{
-      title: 'Say Message',
+      title:  $translate.instant('autoAttendant.actionSayMessage'),
       controller: '',
       url: '',
       help: ''
     }, {
-      title: 'Phone Menu',
+      title:  $translate.instant('autoAttendant.actionPhoneMenu'),
       controller: 'AutoAttendantMainCtrl as aaMain',
       url: 'modules/huron/callRouting/autoAttendant/autoAttendantMenu.tpl.html',
       help: ''
     }, {
-      title: 'Route Call',
+      title:  $translate.instant('autoAttendant.actionRouteCall'),
       controller: '',
       url: '',
       help: ''
     }, {
-      title: 'End Call',
+      title:  $translate.instant('autoAttendant.actionEndCall'),
       controller: '',
       url: '',
       help: ''
