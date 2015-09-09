@@ -59,7 +59,7 @@ angular.module('Core')
         '      <p class="ngCellText">' + '\n' +
         '        <span name="webexSiteSettings"' + '\n' +
         '              id="webexSiteSettings">' + '\n' +
-        '          <i class="fa fa-external-link fa-lg"></i>' + '\n' +
+        '          <i class="icon-settings icon"></i>' + '\n' +
         '        </span>' + '\n' +
         '      </p>' + '\n' +
         '    </a>' + '\n' +
@@ -79,7 +79,7 @@ angular.module('Core')
         '      <p class="ngCellText">' + '\n' +
         '        <span name="webexSiteSettingIframe"' + '\n' +
         '              id="webexSiteSettingIframe">' + '\n' +
-        '          <i class="fa fa-external-link fa-lg"></i>' + '\n' +
+        '          <i class="icon-settings icon"></i>' + '\n' +
         '        </span>' + '\n' +
         '      </p>' + '\n' +
         '    </a>' + '\n' +
