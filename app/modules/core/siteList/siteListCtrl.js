@@ -72,6 +72,7 @@ angular.module('Core')
         '    <a id="webex-site-setting-iframe"' + '\n' +
         '       ui-sref="site-setting-iframe({' + '\n' +
         '         siteUrl:row.entity.license.siteUrl,' + '\n' +
+        '         settingPageId:\'pageId_xxxx\',' + '\n' +
         '         settingPageIframeUrl:\'/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage\'' + '\n' +
         '       })">' + '\n' +
         '           ' + '\n' +

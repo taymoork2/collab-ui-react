@@ -571,6 +571,7 @@ angular
           parent: 'main',
           params: {
             siteUrl: null,
+            settingPageId: null,
             settingPageIframeUrl: null
           }
         })

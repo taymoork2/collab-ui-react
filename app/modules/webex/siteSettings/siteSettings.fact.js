@@ -241,13 +241,13 @@
         */
 
         updateSettingsPageObjs: function (
-          pageId,
+          settingPageId,
           category,
           settingPageUrl
         ) {
 
           var settingPageTypeObj = null;
-          var tmpId = "pageId_" + pageId;
+          var tmpId = "pageId_" + settingPageId;
 
           webExSiteSettingsObj.settingPageTypeObjs.forEach(
             function checkSettingPageTypeObj(tmpSettingPageTypeObj) {
@@ -266,47 +266,47 @@
               label: displayLabel,
 
               commonSettingPage: {
-                id: pageId + "_common",
+                id: settingPageId + "_common",
                 sref: null,
               },
 
               remoteAccessSettingPage: {
-                id: pageId + "_remoteAccess",
+                id: settingPageId + "_remoteAccess",
                 sref: null,
               },
 
               webACDSettingPage: {
-                id: pageId + "webACD",
+                id: settingPageId + "_webACD",
                 sref: null,
               },
 
               emailAllHostsSettingPage: {
-                id: pageId + "_emailAllHosts",
+                id: settingPageId + "_emailAllHosts",
                 sref: null,
               },
 
               meetingCenterSettingPage: {
-                id: pageId + "_meetingCenter",
+                id: settingPageId + "_meetingCenter",
                 sref: null,
               },
 
               eventCenterSettingPage: {
-                id: pageId + "_eventCenter",
+                id: settingPageId + "_eventCenter",
                 sref: null,
               },
 
               trainingCenterSettingPage: {
-                id: pageId + "_trainingCenter",
+                id: settingPageId + "_trainingCenter",
                 sref: null,
               },
 
               supportCenterSettingPage: {
-                id: pageId + "_supportCenter",
+                id: settingPageId + "_supportCenter",
                 sref: null,
               },
             };
 
-            if (pageId == "emailAllHosts") {
+            if (settingPageId == "emailAllHosts") {
               webExSiteSettingsObj.emailAllHostsObj = settingPageTypeObj;
             } else {
               webExSiteSettingsObj.settingPageTypeObjs.push(settingPageTypeObj);
@@ -334,6 +334,7 @@
           var iframeSref =
             "site-setting-iframe({" +
             "siteUrl:" + "'" + webExSiteSettingsObj.siteUrl + "'" + "," +
+            "settingPageId:" + "'" + settingPageTypeObj.id + "'" + "," +
             "settingPageIframeUrl:" + "'" + settingPageUrl + "'" +
             "})";
 
