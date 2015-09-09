@@ -175,10 +175,8 @@ describe('Partner flow', function () {
 
       utils.switchToNewWindow().then(function () {
 
-        navigation.expectDriverCurrentUrl('true');
-        utils.expectIsDisplayed(navigation.tabs);
-
         navigation.expectDriverCurrentUrl('overview');
+        utils.expectIsDisplayed(navigation.tabs);
 
         browser.close();
         browser.switchTo().window(appWindow);
