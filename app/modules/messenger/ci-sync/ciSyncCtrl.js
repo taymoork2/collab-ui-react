@@ -87,19 +87,11 @@
     function setOrgAdmin() {
       $window.console.log('Setting to Org Admin');
       vm.adminType = vm.adminTypes.org;
-
-      // Disable inputs
-      //$('#toggleIsSyncing').attr('is-disabled', true);
-      //$('#toggleAuthRedirect').attr('disabled', true);
     }
 
     function setOpsAdmin() {
       $window.console.log('Setting to Ops Admin');
       vm.adminType = vm.adminTypes.ops;
-
-      // Enable inputs
-      //$('#toggleIsSyncing').removeAttr('is-disabled');
-      //$('#toggleAuthRedirect').removeAttr('disabled');
     }
   }
 })();
