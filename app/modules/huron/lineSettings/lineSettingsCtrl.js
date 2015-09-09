@@ -20,7 +20,7 @@
     vm.validations = {
       phoneNumber: function (viewValue, modelValue, scope) {
         var value = modelValue || viewValue;
-        return /^(\+?1?)?[\d]{10}$/.test(value);
+        return /^(\+?)?[\d]{10,11}$/.test(value);
       }
     };
 
@@ -206,7 +206,7 @@
       templateOptions: {
         options: [],
         labelfield: 'label',
-        valuefield: 'name'
+        valuefield: 'value'
       }
     }, {
       key: 'customName',
@@ -616,11 +616,11 @@
 
             // Set default caller ID
             if (hasDirectLine) {
-              vm.callerIdInfo.callerIdSelection = vm.callerIdOptions[0];
+              vm.callerIdInfo.callerIdSelection = CallerId.getCallerIdOption(vm.callerIdOptions, directLine_type);
             } else if (hasCompanyCallerID) {
-              vm.callerIdInfo.callerIdSelection = vm.callerIdOptions[vm.callerIdOptions.length - 3];
+              vm.callerIdInfo.callerIdSelection = CallerId.getCallerIdOption(vm.callerIdOptions, companyCallerId_type);
             } else {
-              vm.callerIdInfo.callerIdSelection = vm.callerIdOptions[vm.callerIdOptions.length - 1];
+              vm.callerIdInfo.callerIdSelection = CallerId.getCallerIdOption(vm.callerIdOptions, blockedCallerId_type);
             }
             if (!isNewLine) {
               // load the caller ID for the current line
@@ -1127,13 +1127,7 @@
 
     function assignedExternalNumberChange() {
       // Remove the direct line from caller ID options
-      var index = -1;
-      for (var i = 0, len = vm.callerIdOptions.length; i < len; i++) {
-        if (vm.callerIdOptions[i].value.externalCallerIdType === directLine_type) {
-          index = i;
-          break;
-        }
-      }
+      var index = CallerId.getCallerIdOptionIndex(vm.callerIdOptions, directLine_type);
       if (index > -1) {
         vm.callerIdOptions.splice(index, 1);
       }
@@ -1148,9 +1142,9 @@
       // Set the current caller ID selection
       if (vm.callerIdInfo.callerIdSelection.value.externalCallerIdType === directLine_type) {
         if (vm.assignedExternalNumber.uuid !== "none") {
-          vm.callerIdInfo.callerIdSelection = vm.callerIdOptions[0];
+          vm.callerIdInfo.callerIdSelection = CallerId.getCallerIdOption(vm.callerIdOptions, directLine_type);
         } else {
-          vm.callerIdInfo.callerIdSelection = vm.callerIdOptions[vm.callerIdOptions.length - 1];
+          vm.callerIdInfo.callerIdSelection = CallerId.getCallerIdOption(vm.callerIdOptions, blockedCallerId_type);
         }
       }
     }

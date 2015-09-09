@@ -13,6 +13,15 @@ describe('Controller: LineSettingsCtrl', function () {
   var sharedLineEndpoints = [];
   var selectedUsers = [];
   var userDevices = [];
+  var callerIdSelection = {
+    label: 'Direct Line',
+    value: {
+      externalCallerIdType: 'Direct Line',
+      name: 'John Doe',
+      pattern: '+12223334444',
+      uuid: ''
+    }
+  };
 
   var errorResponse = {
     message: 'error',
@@ -100,6 +109,7 @@ describe('Controller: LineSettingsCtrl', function () {
     spyOn(HuronUser, 'updateDtmfAccessId').and.returnValue($q.when());
     spyOn(ServiceSetup, 'listSites').and.returnValue($q.when([]));
     spyOn(CallerId, 'loadCompanyNumbers').and.returnValue($q.when(companyNumber));
+    spyOn(CallerId, 'getCallerIdOption').and.returnValue(callerIdSelection);
     spyOn(DeviceService, 'listDevices').and.returnValue($q.when(userDevices));
     //Sharedline
     spyOn(UserListService, 'listUsers').and.returnValue($q.when(userList));
@@ -133,15 +143,7 @@ describe('Controller: LineSettingsCtrl', function () {
       SharedLineInfoService: SharedLineInfoService
     });
 
-    controller.callerIdInfo.callerIdSelection = {
-      label: 'Direct Line',
-      value: {
-        externalCallerIdType: 'Direct Line',
-        name: 'John Doe',
-        pattern: '+12223334444',
-        uuid: ''
-      }
-    };
+    controller.callerIdInfo.callerIdSelection = callerIdSelection;
 
     $scope.$apply();
   }));
