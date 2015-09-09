@@ -3,7 +3,11 @@
 
   angular.module('Huron')
     .factory('TerminusCustomerService', function ($resource, HuronConfig) {
-      return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId', {}, {});
+      return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId', {}, {
+        update: {
+          method: 'PUT'
+        }
+      });
     })
     .factory('TerminusCustomerCarrierService', function ($resource, HuronConfig) {
       return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/carriers/:carrierId', {}, {});

@@ -1240,7 +1240,9 @@
     "launchPortal": "Launch Company Portal",
     "carrierListError": "Failed to retrieve carrier list for this customer.",
     "orderNumbersPrompt": "Must add block numbers to proceed.",
-    "blockOrderError": "Failed to order {{quantity}} block number(s) with area code {{areaCode}}."
+    "blockOrderError": "Failed to order {{quantity}} block number(s) with area code {{areaCode}}.",
+    "customerCreateError": "Failed to create customer with the carrier.",
+    "customerUpdateError": "Failed to update customer with the carrier."
   },
   "intelepeerFeatures": {
     "feature1": "Unlimited inbound/outbound calling to U.S. 50 states + Canada",
