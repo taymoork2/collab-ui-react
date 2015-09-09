@@ -15,7 +15,7 @@ describe('Voicemail', function () {
   });
 
   it('should cancel saving the disabled state', function () {
-    utils.expectText(telephony.voicemailStatus, 'On');
+    utils.expectTextToBeSet(telephony.voicemailStatus, 'On');
     utils.click(telephony.voicemailFeature);
     utils.expectSwitchState(telephony.voicemailSwitch, true);
     utils.expectIsDisplayed(telephony.voicemailTitle);
@@ -40,7 +40,7 @@ describe('Voicemail', function () {
     utils.expectSwitchState(telephony.voicemailSwitch, false);
 
     utils.clickLastBreadcrumb();
-    utils.expectText(telephony.voicemailStatus, 'Off');
+    utils.expectTextToBeSet(telephony.voicemailStatus, 'Off');
   });
 
   it('should cancel saving the enabled state', function () {
@@ -69,7 +69,7 @@ describe('Voicemail', function () {
     utils.expectSwitchState(telephony.voicemailSwitch, true);
 
     utils.clickLastBreadcrumb();
-    utils.expectText(telephony.voicemailStatus, 'On');
+    utils.expectTextToBeSet(telephony.voicemailStatus, 'On');
   });
 
   afterAll(function () {
