@@ -18,7 +18,7 @@
     var subscriptions = {};
     var subscriptionCount = 0;
     var activeSubscriptionsCount = 0;
-    var pollPromise, pollDelay = 5000;
+    var pollPromise, pollDelay = 30000;
 
     function poll() {
       $log.debug('polling', service);

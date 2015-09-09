@@ -94,11 +94,9 @@
               </div>
               <!-- disconnect -->
               <div ng-switch-when="disconnect" class="form-group">
-                <fieldset>
                   <cs-radio label="aaWelcome.disconnectBusy.label" value="aaWelcome.disconnectBusy.value" name="disconnectRadio" id="aaWelcome.disconnectBusy.id" ng-model="aaWelcome.welcomeDialogMenuEntry.actions[0].value" isdisabled="aaWelcome.disconnectBusy.isDisabled"></cs-radio>
                   <cs-radio label="aaWelcome.disconnectTone.label" value="aaWelcome.disconnectTone.value" name="disconnectRadio" id="aaWelcome.disconnectTone.id" ng-model="aaWelcome.welcomeDialogMenuEntry.actions[0].value" isdisabled="aaWelcome.disconnectTone.isDisabled"></cs-radio>
                   <cs-radio label="aaWelcome.disconnectNone.label" value="aaWelcome.disconnectNone.value" name="disconnectRadio" id="aaWelcome.disconnectNone.id" ng-model="aaWelcome.welcomeDialogMenuEntry.actions[0].value" isdisabled="aaWelcome.disconnectNone.isDisabled"></cs-radio>
-                </fieldset>
               </div>
               <div ng-switch-default></div>
               <div class="form-group">

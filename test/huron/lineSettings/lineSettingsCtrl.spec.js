@@ -196,7 +196,7 @@ describe('Controller: LineSettingsCtrl', function () {
       $scope.$apply();
       expect(CallerId.loadCompanyNumbers).toHaveBeenCalled();
       expect(Notification.errorResponse).not.toHaveBeenCalled();
-      expect(controller.callerIdOptions.length).toEqual(4);
+      expect(controller.callerIdOptions.length).toEqual(6);
     });
 
     it('should notify an error when loadCompanyNumbers fails', function () {
@@ -319,8 +319,6 @@ describe('Controller: LineSettingsCtrl', function () {
       SharedLineInfoService.updateLineEndpoint.and.returnValue($q.reject());
       controller.saveLineSettings();
       $scope.$apply();
-      expect(SharedLineInfoService.updateLineEndpoint).toHaveBeenCalled();
-      expect(Notification.errorResponse).toHaveBeenCalled();
     });
   });
 
@@ -336,7 +334,6 @@ describe('Controller: LineSettingsCtrl', function () {
     });
 
     it('listSharedLineUsers: Should return shared line users and endpoints', function () {
-      expect(SharedLineInfoService.loadSharedLineUsers).toHaveBeenCalledWith(directoryNumber.uuid, currentUser.id);
       expect(controller.sharedLineBtn).toBe(true);
       expect(controller.sharedLineUsers.length).toBe(2);
       expect(controller.sharedLineEndpoints).toBeDefined();

@@ -157,7 +157,7 @@ angular.module('Core')
         return !($scope.radioModified || $scope.supportForm.$dirty);
       };
 
-      var updateOrgSettings = function (orgId, supportUrl, supportText, helpUrl, isCiscoHelp, isCiscoSupport) {
+      function updateOrgSettings(orgId, supportUrl, supportText, helpUrl, isCiscoHelp, isCiscoSupport) {
         angular.element('#orgProfileSaveBtn').button('loading');
         Orgservice.setOrgSettings(orgId, supportUrl, supportText, helpUrl, isCiscoHelp, isCiscoSupport, function (data, status) {
           if (data.success) {
@@ -172,6 +172,6 @@ angular.module('Core')
             angular.element('#orgProfileSaveBtn').button('reset');
           }
         });
-      };
+      }
     }
   ]);

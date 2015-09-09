@@ -4,7 +4,7 @@
 angular.module('Core')
   .controller('AddUserCtrl', ['$scope', '$q', '$location', 'DirSyncService', 'Log', '$translate', 'Notification', 'UserListService', 'Storage', 'Utils', '$filter', 'Userservice', 'LogMetricsService', '$window', 'Config',
     function ($scope, $q, $location, DirSyncService, Log, $translate, Notification, UserListService, Storage, Utils, $filter, Userservice, LogMetricsService, $window, Config) {
-
+      var invalidcount = 0;
       $scope.options = {
         addUsers: 0
       };
@@ -334,15 +334,13 @@ angular.module('Core')
         setPlaceholder();
       };
 
-      var setPlaceholder = function () {
+      function setPlaceholder() {
         var placeholder = $filter('translate')('usersPage.userInput');
         angular.element('#usersfield-wiz-tokenfield').attr('placeholder', placeholder);
-      };
-
-      var invalidcount = 0;
+      }
 
       //email validation logic
-      var validateEmail = function (input) {
+      function validateEmail(input) {
         var emailregex = /\S+@\S+\.\S+/;
         var emailregexbrackets = /<\s*\S+@\S+\.\S+\s*>/;
         var emailregexquotes = /"\s*\S+@\S+\.\S+\s*"/;
@@ -357,28 +355,28 @@ angular.module('Core')
         }
 
         return valid;
-      };
+      }
 
       //placeholder logic
-      var checkPlaceholder = function () {
+      function checkPlaceholder() {
         if (angular.element('.token-label').length > 0) {
           angular.element('#usersfield-wiz-tokenfield').attr('placeholder', '');
         } else {
           setPlaceholder();
         }
-      };
+      }
 
-      var checkButtons = function () {
+      function checkButtons() {
         if (invalidcount > 0) {
           angular.element('#btnInvite').prop('disabled', true);
         } else {
           angular.element('#btnInvite').prop('disabled', false);
         }
-      };
+      }
 
-      var getUsersList = function () {
+      function getUsersList() {
         return $window.addressparser.parse(angular.element('#usersfield-wiz').tokenfield('getTokensList'));
-      };
+      }
 
       var resetUsersfield = function () {
         angular.element('#usersfield-wiz').tokenfield('setTokens', ' ');

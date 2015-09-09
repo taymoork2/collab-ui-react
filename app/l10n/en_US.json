@@ -111,6 +111,7 @@
     "messaging": "Messaging",
     "conferencing": "Conferencing",
     "communications": "Communications",
+    "contactCenter": "Contact Center",
     "entitlements": "User Entitlements",
     "saveBtn": "Save",
     "manageGroups": "Manage Groups",
@@ -120,9 +121,11 @@
     "freeMsg": "Free Spark Messaging",
     "freeConf": "Free 3 Party Spark Meet",
     "freeComm": "Free 1:1 Spark Call",
+    "freeContactCenter": "Free Chat, Email, Voice",
     "paidMsg": "Standard Team Rooms",
     "paidConf": "25 Party Meetings",
     "paidComm": "Advanced Spark Call",
+    "paidContactCenter": "Chat, Email, Voice",
     "freeSpark": "Free Spark Messaging",
     "enterpriseEdition": "Enterprise Edition",
     "meetingCenter": "Meeting Center {{capacity}}",
@@ -1168,7 +1171,9 @@
     "blockedCallerIdDescription": "Caller will not see any caller ID or number",
     "companyCallerId": "Company Caller ID",
     "companyNumberLoadError": "Company numbers failed to load.",
-    "registerDeviceForCallerID": "Register your device to enable caller ID"
+    "customCallerId": "Custom",
+    "customName": "Custom Name",
+    "customNumber": "Custom Number"
   },
   "sharedLinePanel": {
     "title": "Shared Line",
@@ -1389,7 +1394,8 @@
     "emailSuccessText": "Email successfully sent to customer.",
     "emailFailText": "Error sending email",
     "inputPlacehoder": "Enter phone numbers separated by commas",
-    "didFormatHelpText": "For example: 15556667777, +15556667777, 1-555-666-7777, +1 (555) 666-7777"
+    "didFormatHelpText": "For example: 15556667777, +15556667777, 1-555-666-7777, +1 (555) 666-7777",
+    "didAlreadyExist": "Phone number already exists."
   },
   "deviceDetailPage": {
     "deviceConfig": "Device Configuration",
@@ -1824,9 +1830,21 @@
     "NeedsActivation": "Needs Activation",
     "issuesDetected": "Issues Detected",
     "errorCodes": {
-      "tcpfallback": {
-        "type": "Potential Loss of Video Quality",
+      "tcpFallback": {
+        "type": "Potential loss of video quality",
         "message": "This device is communicating via the TCP protocol, which could cause higher latency and therefore reduced media streaming experience. If you are experiencing issues with your media streaming, you can try to open UDP port 33434 on your local firewall to aid media streaming issues."
+      },
+      "TemperatureCheck": {
+        "type": "High temperature",
+        "message": "The system temperature is high, this may cause a system shut down."
+      },
+      "OSDVideoOutput": {
+        "type": "No monitor connected",
+        "message": "Verify that the monitor is turned on and check the HDMI connection between the video endpoint and the monitor."
+      },
+      "noupgrade": {
+        "type": "System does not automatically update",
+        "message": "The system is set up to not receive automatic updates."
       },
       "unknown": {
         "type": "Unknown Error Occurred",

@@ -26,6 +26,7 @@ var UsersPage = function () {
   this.servicesPanel = element(by.cssContainingText('.section-title-row', 'Services'));
   this.servicesActionButton = this.servicesPanel.element(by.css('button.actions-button'));
   this.editServicesButton = element(by.cssContainingText('a', 'Edit services'));
+  this.editServicesModal = element(by.css('.edit-services'));
 
   this.servicesPanelCommunicationsCheckbox = element(by.css('.bucket-row-inner .indentedCheckbox'));
   this.listPanel = element(by.id('userslistpanel'));
@@ -46,6 +47,7 @@ var UsersPage = function () {
   this.messagingService = element(by.css('#Messaging .feature-arrow'));
   this.communicationsService = element(by.css('#Communications .feature-arrow'));
   this.conferencingService = element(by.css('#Conferencing .feature-arrow'));
+  this.contactCenterService = element(by.css('#ContactCenter .feature-arrow'));
   this.serviceList = element.all(by.model('service in userOverview.services'));
 
   this.addUsers = element(by.id('addUsers'));

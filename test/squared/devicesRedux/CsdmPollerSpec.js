@@ -40,7 +40,7 @@ describe('CsdmPoller', function () {
     expect(callback.callCount).toBe(1, 'callback');
 
     // perform the next callback after 5 secs
-    $timeout.flush(5500);
+    $timeout.flush(30500);
     expect(serviceCallCount).toBe(2);
     expect(callback.callCount).toBe(1, 'callback');
     defer.resolve();
@@ -48,7 +48,7 @@ describe('CsdmPoller', function () {
     expect(callback.callCount).toBe(2, 'callback');
 
     // trigger next poll, but cancel the subscription midway
-    $timeout.flush(5500);
+    $timeout.flush(30500);
     expect(serviceCallCount).toBe(3);
     expect(callback.callCount).toBe(2, 'callback');
 
@@ -61,7 +61,7 @@ describe('CsdmPoller', function () {
     expect(callback.callCount).toBe(2, 'callback');
 
     // should stopp polling since there are no active subscriptions
-    $timeout.flush(5500);
+    $timeout.flush(30500);
     expect(serviceCallCount).toBe(3);
   });
 
