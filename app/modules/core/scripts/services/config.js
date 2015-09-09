@@ -812,8 +812,7 @@ angular.module('Core')
           'hurondetails',
           'huronlines',
           'huronsettings',
-          'huronfeatures',
-          'organization'
+          'huronfeatures'
         ],
         'squared-fusion-mgmt': [
           'fusion',
