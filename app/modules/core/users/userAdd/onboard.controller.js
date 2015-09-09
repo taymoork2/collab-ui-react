@@ -717,6 +717,7 @@ angular.module('Core')
         $scope.$emit('wizardNextText', action);
       };
 
+      var invalidcount = 0;
       $scope.tokenfieldid = "usersfield";
       $scope.tokenplaceholder = $translate.instant('usersPage.userInput');
       $scope.tokenoptions = {
@@ -751,21 +752,18 @@ angular.module('Core')
         }
       };
 
-      var invalidcount = 0;
-      var startLog;
-
       var setPlaceholder = function (placeholder) {
         angular.element('.tokenfield.form-control #usersfield-tokenfield').attr('placeholder', placeholder);
       };
 
       //placeholder logic
-      var checkPlaceholder = function () {
+      function checkPlaceholder() {
         if (angular.element('.token-label').length > 0) {
           setPlaceholder('');
         } else {
           setPlaceholder($translate.instant('usersPage.userInput'));
         }
-      };
+      }
 
       var getUsersList = function () {
         return $window.addressparser.parse($scope.model.userList);
@@ -1004,7 +1002,7 @@ angular.module('Core')
         return deferred.promise;
       }
 
-      var entitleUserCallback = function (data, status, method) {
+      function entitleUserCallback(data, status, method) {
         $scope.results = {
           resultList: []
         };
@@ -1130,7 +1128,7 @@ angular.module('Core')
           }
         }
 
-      };
+      }
 
       //radio group
       $scope.entitlements = {};
@@ -1315,7 +1313,7 @@ angular.module('Core')
         convertUsersInBatch();
       };
 
-      var convertUsersInBatch = function () {
+      function convertUsersInBatch() {
         var batch = $scope.convertSelectedList.slice(0, Config.batchSize);
         $scope.convertSelectedList = $scope.convertSelectedList.slice(Config.batchSize);
         Userservice.migrateUsers(batch, function (data, status) {
@@ -1362,7 +1360,7 @@ angular.module('Core')
             }
           }
         });
-      };
+      }
 
       var getUnlicensedUsers = function () {
         Orgservice.getUnlicensedUsers(function (data) {

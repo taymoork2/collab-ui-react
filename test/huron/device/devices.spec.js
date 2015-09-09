@@ -4,7 +4,7 @@ xdescribe('Controller: DevicesCtrl', function () {
 
   var $scope, controller, $httpBackend, userEndpointService, HuronConfig;
 
-  beforeEach(module('ui.bootstrap'));
+  beforeEach(module('cisco.ui'));
   beforeEach(module('ui.router'));
   beforeEach(module('ngResource'));
   beforeEach(module('Huron'));

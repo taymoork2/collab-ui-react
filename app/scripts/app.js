@@ -18,7 +18,7 @@ angular.module('Core', [
   'ngSanitize',
   'ngRoute',
   'ngMessages',
-  'ui.bootstrap',
+  // 'ui.bootstrap',
   'dialogs',
   'ngCsv',
   'ipCookie',
@@ -55,4 +55,7 @@ angular.module('wx2AdminWebClientApp', [
   'Mediafusion',
   'WebExUserSettings',
   'WebExUserSettings2',
+  'Sunlight'
 ]);
+
+angular.module('Sunlight', ['Core']);

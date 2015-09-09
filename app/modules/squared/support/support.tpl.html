@@ -1,29 +1,29 @@
 <div class="row support-row">
-  <div class="page-title col-xs-12">
-    <span class="title" translate="supportPage.title"></span>
+  <div class="page-title columns small-12">
+    <span class="title-heading" translate="supportPage.title"></span>
   </div>
 </div>
-<div class="row support-row">
-  <div class="search-panel col-xs-12 col-md-8">
-      <div id="listLogs">
-        <span class="search-title" id="subtitleLogs" translate="supportPage.subtitleLogs">
-        </span>
-      </div>
-    <div class="search-panel-input">
-      <form role="form">
-        <div class="form-group">
-          <input class="form-control support_input" type="text" id="logsearchfield" ng-model="input.search" placeholder=''/>
+  <div class="columns small-12 medium-8">
+    <div class="search-panel columns small-12">
+        <div id="listLogs">
+          <span class="search-title" id="subtitleLogs" translate="supportPage.subtitleLogs">
+          </span>
         </div>
+      <div class="search-panel-input">
+        <form role="form">
+          <div class="form-group">
+            <input class="form-control support_input" type="text" id="logsearchfield" ng-model="input.search" placeholder=''/>
+          </div>
 
-        <div class="form-group search-button-log">
-          <button id="logSearchBtn" class="btn btn-primary pull-right" ng-click="getLogs()" data-loading-text="<i class='icon icon-spinner'></i>"><span translate="supportPage.listlogsbtn"></span></button>
-        </div>
-      </form>
+          <div class="form-group search-button-log">
+            <button id="logSearchBtn" class="btn btn-primary pull-right" ng-click="getLogs()" data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>"><span translate="supportPage.listlogsbtn"></span></button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
-  <div class="col-xs-12 col-md-4">
-    <div class="row support-row">
-      <div class="col-xs-12 support-card">
+  <div class="columns small-12 medium-4">
+      <div class="columns small-12 support-card">
         <div class="health-card" ng-show="healthyStatus === true" ng-click="toggleSystem()">
           <span class="icon icon-check healthy-check"></span>
           <span class="healthy" translate="supportPage.operational"></span>
@@ -41,10 +41,8 @@
             </a>
           </div>
         </section>
-      </div>
     </div>
-    <div class="row support-row">
-      <div class="col-xs-12 support-card">
+      <div class="columns small-12 support-card">
         <span class="support-info" translate="supportPage.supportResources"></span>
         <div class="display-link" ng-click="toggleSupport()" ng-show="showSupportDetails === false" href="">
           <span translate="supportPage.showDetails"></span>
@@ -66,14 +64,12 @@
           <p class="support-dsc"><a href="{{rolesUrl}}" target="_blank" translate="supportPage.roles"></a></p>
         </div>
       </div>
-    </div>
   </div>
-</div>
 
-<div id="logs-panel" class="col-md-12 col-sm-12">
+<div id="logs-panel" class="columns small-12">
   <div id="userSupport" class="customer-list">
-    <div class="page-header row">
-      <label ng-show="userLogs.length === 0 || !userLogs"><span id="noResults" translate="supportPage.noResults"></label>
+    <div class="page-header columns small-12">
+      <label ng-show="userLogs.length === 0 || !userLogs"><span id="noResults" translate="supportPage.noResults"></span></label>
       <div id="supportTable" gridscrollbar class="gridStyle col-md-12" ng-hide="callInfoActive" ng-grid="gridOptions"></div>
     </div>
   </div>

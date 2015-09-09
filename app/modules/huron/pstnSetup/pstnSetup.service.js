@@ -130,7 +130,7 @@
         angular.forEach(carrierOrders, function (carrierOrder) {
           var promise = getOrder(customerId, carrierOrder.uuid).then(function (order) {
             angular.forEach(order, function (value, key) {
-              if (key != null && value.status === PENDING) {
+              if (value.status === PENDING && value.number !== null) {
                 pendingNumbers.push({
                   pattern: value.number
                 });

@@ -71,7 +71,7 @@ var ReportsPage = function () {
   };
 
   this.verifyOption = function (dropdown, option) {
-    utils.wait(dropdown.element(by.css('.select-dropdown')));
+    utils.wait(dropdown.element(by.css('.dropdown-menu')));
     var opt = dropdown.all(by.cssContainingText('li', option)).first();
     expect(opt.isPresent()).toBeTruthy();
     expect(opt.isDisplayed()).toBeTruthy();
@@ -90,7 +90,7 @@ var ReportsPage = function () {
   };
 
   this.numOptions = function (dropdown) {
-    utils.wait(dropdown.element(by.css('.select-dropdown')));
+    utils.wait(dropdown.element(by.css('.dropdown-menu')));
     return dropdown.all(by.css('li')).count();
   };
 

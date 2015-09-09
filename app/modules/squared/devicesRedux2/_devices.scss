@@ -1,0 +1,83 @@
+.devices-redux2 {
+  padding: 20px 30px;
+  background-color: white !important;
+
+  h1 {
+    padding-bottom: 30px;
+  }
+  h2 {
+    padding: 20px 0;
+  }
+  .pane {
+    padding: 0 40px;
+  }
+  .details-header {
+    border-bottom: 1px solid #ccc;
+
+    button {
+      border: 0;
+      color: #666;
+      cursor: pointer;
+      background: transparent;
+    }
+    button[disabled], button[disabled]:hover {
+      color: #ccc;
+      cursor: default;
+    }
+    button:hover {
+      color: #049fd9;
+    }
+  }
+  .details-pane {
+    .row {
+      padding: 10px 0;
+      font-size: 0.875rem;
+    }
+  }
+  .result-pane {
+    padding-top: 20px;
+    .result-row {
+      cursor: pointer;
+      padding: 10px 0;
+      font-size: 0.875rem;
+      border-bottom: 3px solid white;
+
+      &:hover {
+        border-bottom: 3px solid #049fd9;
+      }
+
+      i {
+        padding-right: 10px;
+      }
+    }
+  }
+
+  input:focus, a:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    background-color: white !important;
+  }
+
+  .dr2-search {
+    input[type=text] {
+      border: 0;
+      border-bottom: 1px solid #ccc;
+    }
+    ul {
+      margin: 0;
+      padding-bottom: 60px;
+    }
+    li {
+      a {
+        color: #666;
+      }
+      cursor: pointer;
+      padding: 20px 0 10px 0;
+      list-style-type: none;
+      border-bottom: 1px solid #ddd;
+    }
+    li.active, input[type=text]:focus, input[type=text].active {
+      border-bottom: 3px solid #049fd9;
+    }
+  }
+}
