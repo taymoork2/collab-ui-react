@@ -21,11 +21,12 @@ describe('Call Forwarding', function () {
   });
 
   it('should show line configuration', function () {
-    utils.click(telephony.directoryNumbers.first());
+    utils.clickFirst(telephony.directoryNumbers);
     utils.expectIsDisplayed(telephony.internalNumber);
   });
 
   it('should save call forward all to an outside number', function () {
+    utils.expectRadioSelected(telephony.forwardBusyNoAnswerRadio);
     utils.click(telephony.forwardAllRadio);
     telephony.selectOption(telephony.forwardAll, dropdownVariables.addNew);
     telephony.setNumber(telephony.forwardAll, snrLine);
@@ -33,7 +34,7 @@ describe('Call Forwarding', function () {
     notifications.assertSuccess('Line configuration saved successfully');
 
     utils.clickLastBreadcrumb();
-    utils.click(telephony.directoryNumbers.first());
+    utils.clickFirst(telephony.directoryNumbers);
 
     utils.expectInputValue(telephony.forwardAll, snrLine);
   });
@@ -48,7 +49,7 @@ describe('Call Forwarding', function () {
     notifications.assertSuccess('Line configuration saved successfully');
 
     utils.clickLastBreadcrumb();
-    utils.click(telephony.directoryNumbers.first());
+    utils.clickFirst(telephony.directoryNumbers);
 
     utils.expectIsDisplayed(telephony.forwardAll);
     utils.expectIsNotDisplayed(telephony.forwardBusyNoAnswer);
@@ -56,6 +57,7 @@ describe('Call Forwarding', function () {
   });
 
   it('should save call forward busy/no answer to an outside number', function () {
+    utils.expectRadioSelected(telephony.forwardAllRadio);
     utils.click(telephony.forwardBusyNoAnswerRadio);
 
     utils.expectIsNotDisplayed(telephony.forwardAll);
@@ -68,7 +70,7 @@ describe('Call Forwarding', function () {
     notifications.assertSuccess('Line configuration saved successfully');
 
     utils.clickLastBreadcrumb();
-    utils.click(telephony.directoryNumbers.first());
+    utils.clickFirst(telephony.directoryNumbers);
 
     utils.expectIsNotDisplayed(telephony.forwardAll);
     utils.expectIsDisplayed(telephony.forwardBusyNoAnswer);
@@ -87,7 +89,7 @@ describe('Call Forwarding', function () {
     notifications.assertSuccess('Line configuration saved successfully');
 
     utils.clickLastBreadcrumb();
-    utils.click(telephony.directoryNumbers.first());
+    utils.clickFirst(telephony.directoryNumbers);
 
     utils.expectIsNotDisplayed(telephony.forwardAll);
     utils.expectIsDisplayed(telephony.forwardBusyNoAnswer);
@@ -96,6 +98,7 @@ describe('Call Forwarding', function () {
   });
 
   it('should save external call forwarding to an outside number', function () {
+    utils.expectRadioSelected(telephony.forwardBusyNoAnswerRadio);
     utils.click(telephony.forwardBusyNoAnswerRadio);
     utils.click(telephony.forwardExternalCalls);
 
@@ -105,7 +108,7 @@ describe('Call Forwarding', function () {
     notifications.assertSuccess('Line configuration saved successfully');
 
     utils.clickLastBreadcrumb();
-    utils.click(telephony.directoryNumbers.first());
+    utils.clickFirst(telephony.directoryNumbers);
 
     utils.expectInputValue(telephony.forwardExternalBusyNoAnswer, externalCFLine);
   });
@@ -121,12 +124,13 @@ describe('Call Forwarding', function () {
     notifications.assertSuccess('Line configuration saved successfully');
 
     utils.clickLastBreadcrumb();
-    utils.click(telephony.directoryNumbers.first());
+    utils.clickFirst(telephony.directoryNumbers);
 
     utils.expectInputValue(telephony.forwardExternalBusyNoAnswer, dropdownVariables.voicemail);
   });
 
   it('should save call forward none selection', function () {
+    utils.expectRadioSelected(telephony.forwardBusyNoAnswerRadio);
     utils.click(telephony.forwardNoneRadio);
     utils.expectIsNotDisplayed(telephony.forwardAll);
     utils.expectIsNotDisplayed(telephony.forwardBusyNoAnswer);
@@ -135,7 +139,7 @@ describe('Call Forwarding', function () {
     notifications.assertSuccess('Line configuration saved successfully');
 
     utils.clickLastBreadcrumb();
-    utils.click(telephony.directoryNumbers.first());
+    utils.clickFirst(telephony.directoryNumbers);
 
     utils.expectIsDisplayed(telephony.internalNumber);
     utils.expectIsNotDisplayed(telephony.forwardAll);

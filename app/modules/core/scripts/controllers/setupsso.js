@@ -132,7 +132,7 @@ angular.module('Core')
         });
       };
 
-      var deleteSSO = function () {
+      function deleteSSO() {
         var metaUrls = [];
         var metaUrl = null;
         var success = true;
@@ -167,9 +167,9 @@ angular.module('Core')
             })], 'error');
           }
         });
-      };
+      }
 
-      var reEnableSSO = function () {
+      function reEnableSSO() {
         var selfSigned = ($scope.options.SSOSelfSigned ? true : false);
         SSOService.importRemoteIdp($rootScope.fileContents, selfSigned, function (data, status) {
           if (data.success) {
@@ -184,9 +184,9 @@ angular.module('Core')
             })], 'error');
           }
         });
-      };
+      }
 
-      var postRemoteIdp = function () {
+      function postRemoteIdp() {
         var selfSigned = ($scope.options.SSOSelfSigned ? true : false);
         SSOService.importRemoteIdp($rootScope.fileContents, selfSigned, function (data, status) {
           if (data.success) {
@@ -201,9 +201,9 @@ angular.module('Core')
             })], 'error');
           }
         });
-      };
+      }
 
-      var patchRemoteIdp = function (metaUrl) {
+      function patchRemoteIdp(metaUrl) {
         SSOService.patchRemoteIdp(metaUrl, $rootScope.fileContents, function (data, status) {
           if (data.success) {
             Log.debug('Imported On-premise IdP Metadata. Status: ' + status);
@@ -217,7 +217,7 @@ angular.module('Core')
             })], 'error');
           }
         });
-      };
+      }
 
       $scope.openTest = function () {
         var entityId = null;

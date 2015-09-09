@@ -443,7 +443,7 @@ angular.module('Core')
 
         defaultEntitlements: ['webex-squared', 'squared-call-initiation'],
 
-        batchSize: 20,
+        batchSize: 10,
 
         isDev: function () {
           var currentHostname = getCurrentHostname();
@@ -811,6 +811,8 @@ angular.module('Core')
         'squared-fusion-uc': [
           'devices',
           'devices-redux',
+          'devices-redux2',
+          'devices-redux2-search',
           'devices-cleanup',
           'devices2'
         ],

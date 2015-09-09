@@ -15,7 +15,7 @@ angular.module('Core')
         });
       });
 
-      var init = function () {
+      function init() {
 
         if ($state.current &&
           $state.current.data &&
@@ -26,7 +26,7 @@ angular.module('Core')
           $state.current.data.displayName = $translate.instant('usersPreview.spark');
           $rootScope.$broadcast('displayNameUpdated');
         }
-      };
+      }
 
       if ($stateParams.service) {
         $scope.service = $stateParams.service;

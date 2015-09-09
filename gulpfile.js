@@ -709,7 +709,7 @@ gulp.task('browser-sync', function () {
   }
   var browser;
   var baseDir = args.dist ? config.dist : config.build;
-  var open = true;
+  var open = 'external';
   var ghostMode = {
     clicks: true,
     location: false,
@@ -946,6 +946,7 @@ gulp.task('karma-watch', ['karma-config-watch'], function (done) {
  * --nosetup            Runs tests without serving the app
  * --specs              Runs tests against specific files or modules
  * --build              Runs tests against the build directory
+ * --verbose            Runs tests with detailed console.log() messages
  *************************************************************************/
 gulp.task('e2e', function (done) {
   if (args.sauce) {
@@ -974,14 +975,17 @@ gulp.task('e2e', function (done) {
  * --specs=mediafusion      Runs only tests in test/mediafusion directory
  * --specs=filepath         Runs only tests in specified file
  * --build                  Runs tests against the build directory
+ * --verbose                Runs tests with detailed console.log() messages
  *************************************************************************/
 gulp.task('protractor', ['set-env', 'protractor:update'], function () {
   var debug = args.debug ? true : false;
   var opts = {
     configFile: 'protractor-config.js',
     noColor: false,
-    debug: debug
+    debug: debug,
+    args: ['--params.log', args.verbose ? 'true' : 'false']
   };
+
   var tests = [];
   if (args.specs) {
     var specs = args.specs;

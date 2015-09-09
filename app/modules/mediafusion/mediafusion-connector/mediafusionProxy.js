@@ -54,7 +54,7 @@ angular.module('Mediafusion')
         return !!pollCount;
       };
 
-      var togglePolling = function () {
+      function togglePolling() {
         if (pollCount <= 0) {
           $interval.cancel(pollPromise);
           pollInFlight = false;
@@ -67,9 +67,9 @@ angular.module('Mediafusion')
 
         if (pollPromise) $interval.cancel(pollPromise);
         pollPromise = $interval(poll, pollDelay, 1);
-      };
+      }
 
-      var poll = function (callback) {
+      function poll(callback) {
         clusterService.fetch(function (err, _clusters) {
           error = err;
           clusters = _clusters || [];
@@ -84,7 +84,7 @@ angular.module('Mediafusion')
         }, {
           squelchErrors: true
         });
-      };
+      }
 
       return {
         stopPolling: stop,

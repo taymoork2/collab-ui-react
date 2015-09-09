@@ -4,7 +4,7 @@ angular.module('Squared')
   .controller('TabsCtrl', ['Config', '$rootScope', '$scope', '$location', 'Log', 'Utils', '$filter', 'Auth', 'Authinfo',
     function (Config, $rootScope, $scope, $location, Log, Utils, $filter, Auth, Authinfo) {
 
-      var setNavigationTab = function () {
+      function setNavigationTab() {
         resetActiveTabState();
 
         for (var idx in $scope.tabs) {
@@ -22,13 +22,13 @@ angular.module('Squared')
             }
           }
         }
-      };
+      }
 
-      var resetActiveTabState = function () {
+      function resetActiveTabState() {
         for (var idx in $scope.tabs) {
           $scope.tabs[idx].isActive = false;
         }
-      };
+      }
 
       $scope.tabs = Authinfo.getTabs();
       setNavigationTab();

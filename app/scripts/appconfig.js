@@ -94,6 +94,8 @@ angular
   .module('Squared')
   .config(['$urlRouterProvider', '$stateProvider',
     function ($urlRouterProvider, $stateProvider) {
+      var modalMemo = 'modalMemo';
+      var wizardmodalMemo = 'wizardmodalMemo';
 
       // Modal States Enter and Exit functions
       function modalOnEnter(options) {
@@ -131,9 +133,6 @@ angular
           $state.modal.dismiss();
         }
       }
-
-      var modalMemo = 'modalMemo';
-      var wizardmodalMemo = 'wizardmodalMemo';
 
       $stateProvider
         .state('activate', {
@@ -456,6 +455,16 @@ angular
             site: {}
           }
         })
+        .state('user-overview.contactCenter', {
+          templateUrl: 'modules/sunlight/users/userOverview/sunlightUserOverview.tpl.html',
+          controller: 'SunlightUserOverviewCtrl',
+          data: {
+            displayName: 'Contact Center'
+          },
+          params: {
+            service: 'CONTACTCENTER'
+          }
+        })
         .state('user-overview.userProfile', {
           templateUrl: 'modules/core/users/userRoles/userRoles.tpl.html',
           controller: 'UserRolesCtrl',
@@ -644,6 +653,40 @@ angular
           },
           data: {
             displayName: 'Device Overview'
+          }
+        })
+
+      /*
+        devices redux 2
+      */
+
+      .state('devices-redux2', {
+          abstract: true,
+          url: '/devices-redux2',
+          templateUrl: 'modules/squared/devicesRedux2/devices.html',
+          controller: 'DevicesReduxCtrl2',
+          controllerAs: 'devices',
+          parent: 'main'
+        })
+        .state('devices-redux2.search', {
+          url: '/search',
+          views: {
+            'rightPanel': {
+              templateUrl: 'modules/squared/devicesRedux2/list.html'
+            }
+          }
+        })
+        .state('devices-redux2.details', {
+          url: '/details',
+          views: {
+            'rightPanel': {
+              controllerAs: 'deviceDetails',
+              controller: 'DevicesReduxDetailsCtrl2',
+              templateUrl: 'modules/squared/devicesRedux2/details.html'
+            }
+          },
+          params: {
+            device: null
           }
         })
 
