@@ -391,6 +391,17 @@ exports.search = function (query) {
   }
 };
 
+exports.searchForSingleResult = function (query) {
+  function logAndWait() {
+    log('Waiting for a single search result');
+    return EC.textToBePresentInElement(element(by.css('.searchinput span')), "1")();
+  }
+  this.expectIsNotDisplayed(element(by.css('.icon-spinner')));
+  this.sendKeys(this.searchField, query);
+  browser.wait(logAndWait, TIMEOUT, 'Waiting for a single search result');
+  this.expectIsDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', query)));
+}
+
 exports.clickUser = function (query) {
   return this.click(element(by.cssContainingText('.ngGrid .ngRow span', query)));
 };
