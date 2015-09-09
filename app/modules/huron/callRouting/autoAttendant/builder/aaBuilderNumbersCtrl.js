@@ -126,7 +126,6 @@
       AutoAttendantCeInfoModelService.setCeInfo(vm.aaModel.aaRecord, vm.ui.ceInfo);
     }
 
-
     function selectAA(aaName) {
       vm.aaModel.aaName = aaName;
       // angular.isUndefine(vm.aaModel.aaRecord);

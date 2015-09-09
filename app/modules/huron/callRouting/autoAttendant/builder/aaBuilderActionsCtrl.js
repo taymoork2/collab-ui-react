@@ -11,22 +11,22 @@
     var vm = this;
 
     vm.templates = [{
-      title:  $translate.instant('autoAttendant.actionSayMessage'),
+      title: $translate.instant('autoAttendant.actionSayMessage'),
       controller: '',
       url: '',
       help: ''
     }, {
-      title:  $translate.instant('autoAttendant.actionPhoneMenu'),
+      title: $translate.instant('autoAttendant.actionPhoneMenu'),
       controller: 'AutoAttendantMainCtrl as aaMain',
       url: 'modules/huron/callRouting/autoAttendant/autoAttendantMenu.tpl.html',
       help: ''
     }, {
-      title:  $translate.instant('autoAttendant.actionRouteCall'),
+      title: $translate.instant('autoAttendant.actionRouteCall'),
       controller: '',
       url: '',
       help: ''
     }, {
-      title:  $translate.instant('autoAttendant.actionEndCall'),
+      title: $translate.instant('autoAttendant.actionEndCall'),
       controller: '',
       url: '',
       help: ''
