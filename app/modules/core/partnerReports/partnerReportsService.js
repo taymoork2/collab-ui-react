@@ -323,7 +323,7 @@
         }
       } else if (time.value === 1) {
         var dayOffset = parseInt(moment.tz(mostRecent, timezone).format('e'));
-        if (dayOffset >= 5) {
+        if (dayOffset >= 4) {
           dayOffset = 7 - dayOffset;
         } else {
           dayOffset = -dayOffset;
