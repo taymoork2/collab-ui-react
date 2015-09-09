@@ -6,12 +6,12 @@ describe('First Time Wizard - CiscoUC Service Setup', function () {
   var pattern2 = parseInt(pattern) + 2;
 
   beforeAll(function () {
-    login.login('huron-e2e');
+    login.login('huron-int1');
   }, 120000);
 
   it('should open communication wizard', function () {
     navigation.clickCommunicationWizard();
-    utils.expectText(wizard.mainviewTitle, 'Unified Communications');
+    utils.expectTextToBeSet(wizard.mainviewTitle, 'Unified Communications');
     utils.expectIsDisplayed(servicesetup.timeZone);
     utils.expectIsDisplayed(servicesetup.steeringDigit);
     utils.expectIsDisplayed(servicesetup.siteSteeringDigit);
