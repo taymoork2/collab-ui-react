@@ -42,7 +42,7 @@
       $scope.adminEmail = Authinfo.getPrimaryEmail();
       $scope.locale = ("es_LA" == $translate.use()) ? "es_MX" : $translate.use();
       $scope.trustIframeUrl = $sce.trustAsResourceUrl($scope.iframeUrl);
-      $scope.indexPageSref = "site-settings({siteUrl:" + $scope.siteUrl + "})";
+      $scope.indexPageSref = "site-settings({siteUrl:'" + $scope.siteUrl + "'})";
 
       _this.logMsg = _this.funcName + ": " + "\n" +
         "siteUrl=" + $scope.siteUrl + "\n" +
