@@ -11,112 +11,17 @@
     <cs-tabset>
 
       <cs-tab>
-        <cs-tab-heading>Organization Info</cs-tab-heading>
+        <cs-tab-heading>Sync Status</cs-tab-heading>
         <div>
           <!-- BEGIN TAB CONTENT -->
 
           <div class="panel panel-primary">
             <div class="panel-heading">
-              <h3 class="panel-title">Organization Info</h3>
+              <h3 class="panel-title">Sync Status</h3>
             </div>
             <div class="panel-body">
 
               <!-- BEGIN PANEL CONTENT -->
-
-              <!-- BEGIN ORG INFO -->
-
-              <div class="bottom-padding col-md-5 float-left min-width-350">
-                <h3 class="margin-left-15px">Organization Info</h3>
-
-                <div ng-if="orgInfo.dataState.loading === orgInfo.org.dataStatus">
-                  <span class="icon icon-spinner"></span>
-                  Loading Org Data
-                </div>
-
-                <div ng-if="orgInfo.dataState.error === orgInfo.org.dataStatus">
-                  <span class="icon icon-warning"></span>
-                  <span>{{orgInfo.org.errorMsg}}</span>
-                </div>
-
-                <div ng-if="orgInfo.dataState.loaded === orgInfo.org.dataStatus">
-
-                  <form class="form-horizontal" role="form">
-                    <!-- Begin Input Form -->
-
-                    <div class="form-group">
-                      <label for="inputCompany" class="control-label">Company</label>
-                      <div class="">
-                        <p class="form-control-static">{{orgInfo.org.info.contactInfo.company}}</p>
-                      </div>
-                    </div>
-
-                    <div class="form-group">
-                      <label for="inputAddr1" class="control-label">Address</label>
-                      <div>
-                        <input type="text" ng-model="orgInfo.org.info.contactInfo.addr1" class="form-control">
-                      </div>
-                    </div>
-
-                    <div class="form-group">
-                      <label for="inputAddr2" class="control-label">Address cont'd</label>
-                      <div>
-                        <input type="text" ng-model="orgInfo.org.info.contactInfo.addr2" class="form-control">
-                      </div>
-                    </div>
-
-                    <div class="form-group">
-                      <label for="inputCity" class="control-label">City</label>
-                      <div>
-                        <input type="text" ng-model="orgInfo.org.info.contactInfo.city" class="form-control">
-                      </div>
-                    </div>
-
-                    <div class="form-group">
-                      <label for="inputState" class="control-label">State</label>
-                      <div>
-                        <input type="text" ng-model="orgInfo.org.info.contactInfo.state" class="form-control">
-                      </div>
-                    </div>
-
-                    <div class="form-group">
-                      <label for="inputCountry" class="control-label">Country</label>
-                      <div>
-                        <input type="text" ng-model="orgInfo.org.info.contactInfo.country" class="form-control">
-                      </div>
-                    </div>
-
-                    <div class="form-group">
-                      <label for="inputZip" class="control-label">Zip Code</label>
-                      <div>
-                        <input type="text" ng-model="orgInfo.org.info.contactInfo.zip" class="form-control">
-                      </div>
-                    </div>
-
-                    <div class="form-group">
-                      <label for="inputPhone" class="control-label">Phone</label>
-                      <div>
-                        <input type="text" ng-model="orgInfo.org.info.contactInfo.phone" class="form-control">
-                      </div>
-                    </div>
-
-                    <div class="form-group">
-                      <!-- <span class="col-sm-2"></span> -->
-                      <div class="col-md-3">
-                        <button type="submit" class="btn btn-primary" ng-click="orgInfo.setOrgInfo()">Save</button>
-                      </div>
-                      <!-- <span class="col-md-3"></span> -->
-                      <div>
-                        <button class="btn btn-warning" ng-click="orgInfo.refreshOrgInfo()">Reset</button>
-                      </div>
-                    </div>
-
-                    <!-- End Input Form -->
-                  </form>
-                </div>
-              </div>
-              <!-- END ORG INFO -->
-
-
 
               <!-- BEGIN CI SYNC -->
               <div ng-controller="CiSyncCtrl as sync">
@@ -128,20 +33,20 @@
                   </div>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-4 min-width-350">
                     <h3>Sync Status</h3>
 
-                    <formly-form model="sync.data" fields="sync.fields" ng-init="sync.windowReady()" style="min-width: 500px;">
+                    <formly-form model="sync.data" fields="sync.fields">
                     </formly-form>
 
                     <p class="control-label">Sync Status</p>
                     <!-- Ugly, but it seems the only way that works so far. Would be nice to find simpler way -->
-                    <cs-toggle-switch ng-if="sync.adminTypes.ops !== sync.adminType" ng-model="sync.data.isSyncing" toggle-id="toggleIsSyncing" name="toggleSyncing" class="on" is-disabled="true" size="small"></cs-toggle-switch>
+                    <cs-toggle-switch ng-if="sync.adminTypes.ops !== sync.adminType" ng-model="sync.data.isSyncing" toggle-id="toggleIsSyncing" name="toggleSyncing" class="no-click on" is-disabled="true" size="small"></cs-toggle-switch>
                     <cs-toggle-switch ng-if="sync.adminTypes.ops === sync.adminType" ng-model="sync.data.isSyncing" toggle-id="toggleIsSyncing" name="toggleSyncing" size="small"></cs-toggle-switch>
 
                     <p class="control-label">Authentication Redirect</p>
                     <!-- Ugly, but it seems the only way that works so far. Would be nice to find simpler way -->
-                    <cs-toggle-switch ng-if="sync.adminTypes.ops !== sync.adminType"  ng-model="sync.data.isAuthRedirect" toggle-id="toggleAuthRedirect" name="toggleAuth" class="on" is-disabled="true" size="small"></cs-toggle-switch>
+                    <cs-toggle-switch ng-if="sync.adminTypes.ops !== sync.adminType"  ng-model="sync.data.isAuthRedirect" toggle-id="toggleAuthRedirect" name="toggleAuth" class="no-click on" is-disabled="true" size="small"></cs-toggle-switch>
                     <cs-toggle-switch ng-if="sync.adminTypes.ops === sync.adminType"  ng-model="sync.data.isAuthRedirect" toggle-id="toggleAuthRedirect" name="toggleAuth" size="small"></cs-toggle-switch>
                 </div>
               </div>

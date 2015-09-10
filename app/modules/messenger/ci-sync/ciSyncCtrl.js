@@ -6,7 +6,7 @@
     .controller('CiSyncCtrl', CiSyncCtrl);
 
   /** @ngInject */
-  function CiSyncCtrl($window, CiService) {
+  function CiSyncCtrl(CiService) {
     // Interface ---------------------------------------------------------------
     var vm = this;
 
@@ -31,7 +31,8 @@
     });
 
     vm.data = {
-      messengerOrgName: CiService.orgName,
+      messengerOrgName: 'URDB-' + CiService.orgName,
+      messengerOrgId: 'URDB-' + CiService.orgId,
       linkDate: new Date('08/20/2015'),
       isAuthRedirect: false,
       isSyncing: false
@@ -43,6 +44,16 @@
       templateOptions: {
         type: '',
         label: 'Messenger Organization Name',
+        required: false,
+        disabled: true,
+        placeholder: ''
+      }
+    }, {
+      key: 'messengerOrgId',
+      type: 'input',
+      templateOptions: {
+        type: '',
+        label: 'Messenger Organization ID',
         required: false,
         disabled: true,
         placeholder: ''
@@ -60,13 +71,10 @@
     }];
 
     vm.init = init;
-    vm.windowReady = windowReady;
 
     // Event handlers
     vm.setOrgAdmin = setOrgAdmin;
     vm.setOpsAdmin = setOpsAdmin;
-
-    var domReady = false;
 
     vm.init();
 
@@ -77,20 +85,14 @@
     // CI Calls Inside
     function init() {
       vm.status = vm.statusOptions.on;
-    }
-
-    function windowReady() {
-      domReady = true;
       setOrgAdmin();
     }
 
     function setOrgAdmin() {
-      $window.console.log('Setting to Org Admin');
       vm.adminType = vm.adminTypes.org;
     }
 
     function setOpsAdmin() {
-      $window.console.log('Setting to Ops Admin');
       vm.adminType = vm.adminTypes.ops;
     }
   }

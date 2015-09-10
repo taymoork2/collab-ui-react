@@ -10,6 +10,7 @@
     // Interface ---------------------------------------------------------------
 
     var ciService = {
+      orgId: Authinfo.getOrgId(),
       orgName: Authinfo.getOrgName(),
       getCiOrgInfo: getCiOrgInfo,
       getCiAdmins: getCiAdmins,

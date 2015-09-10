@@ -30,6 +30,10 @@ $info-margin-top: 40px;
     }
   }
 
+  .no-click {
+    pointer-events: none;
+  }
+
   .control-label {
     font-weight: bold;
   }
