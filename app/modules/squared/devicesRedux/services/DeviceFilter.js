@@ -67,31 +67,31 @@ angular.module('Squared').service('DeviceFilter',
       }).count = _.filter(list, matchesSearch).length;
     };
 
-    var isActivationCode = function (item) {
+    function isActivationCode(item) {
       return item.needsActivation;
-    };
+    }
 
-    var hasIssues = function (item) {
+    function hasIssues(item) {
       return item.hasIssues;
-    };
+    }
 
-    var isOnline = function (item) {
+    function isOnline(item) {
       return item.isOnline;
-    };
+    }
 
-    var isOffline = function (item) {
+    function isOffline(item) {
       return !item.isOnline && !item.needsActivation;
-    };
+    }
 
-    var setCurrentSearch = function (search) {
+    function setCurrentSearch(search) {
       currentSearch = (search || '').toLowerCase();
-    };
+    }
 
-    var setCurrentFilter = function (filter) {
+    function setCurrentFilter(filter) {
       currentFilter = (filter || '').toLowerCase();
-    };
+    }
 
-    var getFilteredList = function (data) {
+    function getFilteredList(data) {
       arr.length = 0;
       updateFilters(data);
 
@@ -102,13 +102,13 @@ angular.module('Squared').service('DeviceFilter',
       });
 
       return arr;
-    };
+    }
 
-    var matchesSearch = function (item) {
+    function matchesSearch(item) {
       return (item.displayName || '').toLowerCase().indexOf(currentSearch || '') != -1;
-    };
+    }
 
-    var matchesFilter = function (item) {
+    function matchesFilter(item) {
       switch (currentFilter) {
       case 'all':
         return true;
@@ -123,7 +123,7 @@ angular.module('Squared').service('DeviceFilter',
       default:
         return true;
       }
-    };
+    }
 
     return {
       getFilters: getFilters,

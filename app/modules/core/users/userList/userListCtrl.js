@@ -63,7 +63,7 @@ angular.module('Core')
         }
       };
 
-      var isEntitled = function (ent) {
+      function isEntitled(ent) {
         if ($scope.currentUser && $scope.currentUser.entitlements) {
           for (var i = 0; i < $scope.currentUser.entitlements.length; i++) {
             var svc = $scope.currentUser.entitlements[i];
@@ -73,7 +73,7 @@ angular.module('Core')
           }
         }
         return false;
-      };
+      }
 
       $scope.isHuronUser = function (allEntitlements) {
         if (allEntitlements) {
@@ -196,7 +196,7 @@ angular.module('Core')
 
       };
 
-      var sendSparkWelcomeEmail = function (userEmail, userName) {
+      function sendSparkWelcomeEmail(userEmail, userName) {
         var userData = [{
           'address': userEmail,
           'name': userName
@@ -212,7 +212,7 @@ angular.module('Core')
           }
         });
 
-      };
+      }
 
       $scope.setDeactivateUser = function (deleteUserOrgId, deleteUserUuId, deleteUsername) {
         $state.go('users.delete', {

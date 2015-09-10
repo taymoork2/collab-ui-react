@@ -73,11 +73,11 @@ angular.module('Core')
         return false;
       };
 
-      var isOnlyCiscoState = function (state) {
+      function isOnlyCiscoState(state) {
         if (Config.ciscoOnly.indexOf(state) === -1 || (Config.ciscoOnly.indexOf(state) !== -1 && (authData.orgid === Config.ciscoOrgId || authData.orgid === Config.ciscoMockOrgId)))
           return true;
         return false;
-      };
+      }
 
       //update the tabs when Authinfo data has been populated.
       var initializeTabs = function () {

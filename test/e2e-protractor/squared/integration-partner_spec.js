@@ -88,13 +88,16 @@ describe('Partner flow', function () {
       utils.click(partner.termsActionButton);
       utils.click(partner.editTermsButton);
 
-      utils.expectClass(partner.squaredTrialCheckbox, 'disabled');
+      utils.waitForModal().then(function () {
+        utils.expectIsDisplayed(partner.editTrialForm);
+        utils.expectClass(partner.squaredTrialCheckbox, 'disabled');
 
-      utils.click(partner.saveUpdateButton);
-      notifications.assertSuccess(partner.newTrial.customerName, 'You have successfully edited a trial for');
+        utils.click(partner.saveUpdateButton);
+        notifications.assertSuccess(partner.newTrial.customerName, 'You have successfully edited a trial for');
 
-      utils.click(partner.trialFilter);
-      utils.expectIsDisplayed(partner.newTrialRow);
+        utils.click(partner.trialFilter);
+        utils.expectIsDisplayed(partner.newTrialRow);
+      });
     }, 60000);
 
   });
@@ -172,10 +175,8 @@ describe('Partner flow', function () {
 
       utils.switchToNewWindow().then(function () {
 
-        navigation.expectDriverCurrentUrl('true');
-        utils.expectIsDisplayed(navigation.tabs);
-
         navigation.expectDriverCurrentUrl('overview');
+        utils.expectIsDisplayed(navigation.tabs);
 
         browser.close();
         browser.switchTo().window(appWindow);

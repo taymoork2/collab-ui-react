@@ -21,8 +21,22 @@
     padding-bottom: 10px;
     padding-top: 10px;
   }
-  .table-half:first-of-type {
+  td {
+    border-color: $gray-dark;
     border-right: 1px solid $gray-dark;
+    color: $gray-dark;
+    .table-half:first-of-type {
+      border-right: 1px solid $gray-dark;
+    }
+    .positive {
+      color: $gray-dark;
+    }
+    .negative {
+      color: $gray-dark;
+    }
+  }
+  .td:last-of-type {
+    border-right: none;
   }
   .customer-data {
     text-overflow: ellipsis;
@@ -33,6 +47,8 @@
     border-color: #ECECEC;
     td {
       border-color: #ECECEC;
+      border-right: 1px solid #ECECEC;
+      border-top: 1px solid #ECECEC;
       color: #ECECEC;
       .table-half:first-of-type {
         border-right: 1px solid #ECECEC;
@@ -43,6 +59,9 @@
       .negative {
         color: #ECECEC;
       }
+    }
+    .td:last-of-type {
+      border-right: none;
     }
   }
 }

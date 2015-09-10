@@ -57,10 +57,10 @@ angular.module('Squared')
         });
       };
 
-      var updateDeviceList = function (codes, devices) {
+      function updateDeviceList(codes, devices) {
         vm.deviceData = devices.concat(codes);
         vm.totalResults = vm.deviceData.length;
-      };
+      }
 
       var getAllDevices = function () {
         vm.devices = [];

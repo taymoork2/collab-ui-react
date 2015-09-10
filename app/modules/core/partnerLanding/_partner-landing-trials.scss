@@ -1,0 +1,93 @@
+.trialsPanel {
+  padding: 15px;
+  background-color: $brand-white;
+  border-color: $list-group-border;
+  border-width: 1px;
+  .trial {
+    @extend %ui-mb;
+  }
+}
+
+.trials-refresh {
+  left: 50%;
+  position: relative;
+}
+
+#trialHeader {
+  border-bottom: 1px solid $gray-light;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: flex-end;
+  @extend %ui-pb;
+  @extend %ui-mb;
+}
+
+.trialRow {
+  display: flex;
+  align-items: center;
+}
+
+.trial-danger-text {
+  color: $brand-danger;
+}
+
+#expiredTrials {
+  padding-top: 30px;
+}
+
+.trialTitle {
+  font-family: $brand-font-cisco-TT-Extra-Light;
+  color: $navbar-inverse-link-disabled-color;
+  @extend %ui-pb;
+}
+
+.trialHeading {
+  font-family: $font-family-base;
+  font-weight: bold;
+  color: $gray-darker;
+  line-height: 1;
+}
+
+.expiredCustomer {
+  font-family: $font-family-base;
+  font-size: 13px;
+  line-height: 20px;
+  color: $brand-primary;
+  text-align: left;
+}
+
+.expired {
+  font-family: $font-family-base;
+  font-size: 13px;
+  line-height: 20px;
+  color: $btn-link-disabled-color;
+  text-align: right;
+}
+
+.trialCustomer {
+  font-family: $brand-font-cisco-TT-Regular;
+  color: $brand-primary;
+  text-align: left;
+  margin-bottom: -.5rem;
+}
+
+.trialLicense {
+  font-family: $font-family-base;
+  font-size: 13px;
+  color: $pagination-color;
+  text-align: right;
+  padding-top: 0px;
+  top: -3px;
+}
+
+.trialDays {
+  font-family: $font-family-base;
+  font-size: 13px;
+  color: $pagination-color;
+  text-align: right;
+  top: -3px;
+}
+
+.trialbar {
+  height: 6px;
+}

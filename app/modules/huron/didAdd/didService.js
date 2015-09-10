@@ -19,13 +19,11 @@
     /////////////////////
 
     function addDid(did) {
-      if (didList.indexOf(did) === -1) {
-        didList.push(did);
-      }
+      didList.push(did);
     }
 
     function removeDid(did) {
-      _.pull(didList, did);
+      didList.splice(didList.indexOf(String(did)), 1);
     }
 
     function getDidList() {

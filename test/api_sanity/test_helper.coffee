@@ -107,6 +107,11 @@ auth =
     pass: 'C1sc0123!'
     org:  'd30a6828-dc35-4753-bab4-f9b468828688'
 
+  'contactcenter-admin':
+    user: 'arunachaladmn@outlook.com'
+    pass: 'Cisco@123'
+    org:  '945a62e3-6b52-40c2-a8ce-0ab3e56a53f5'
+
 clientId = 'C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec'
 clientSecret = 'c10c371b4641010a750073b3c8e65a7fff0567400d316055828d3c74925b0857'
 

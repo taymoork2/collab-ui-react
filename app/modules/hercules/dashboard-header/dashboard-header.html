@@ -1,19 +1,19 @@
 <div>
-  <h3 style="padding-left: 20px">Services</h3>
+  <h3>Services</h3>
   <div class="dashboard-header row" ng-hide="noServicesEnabled">
-    <div class="col-sm-6 col-md-6 col-lg-4" ng-repeat="(type, service) in serviceAggregates.services">
+    <div class="small-6 xlarge-4 columns end" ng-repeat="(type, service) in serviceAggregates.services">
       <div class="item">
         <i ng-class="serviceIcon(service.service_id)" />
         <hercules-uc-config-button style="float: right" ng-show="service.type == 'c_ucmc'"></hercules-uc-config-button>
         <div class="content clearfix">
-          <h4><span translate="hercules.serviceNames.{{service.service_id}}"/></h4>
+          <h5 translate="hercules.serviceNames.{{service.service_id}}"/></h5>
           <div>
             <div>
-              Clusters: {{service.running}} running
-              <span class="error border-left" ng-show="service.needs_attention > 0">{{service.needs_attention}} needs attention</span>
+              <span>Clusters: {{service.running}} running</span>
+              <span class="red border-left" ng-show="service.needs_attention > 0">{{service.needs_attention}} needs attention</span>
             </div>
             <div>
-              Users: {{summary(service.service_id).activated}} activated
+              <span>Users: {{summary(service.service_id).activated}} activated</span>
               <span class="border-left" ng-show="summary(service.service_id).notActivated > 0"><span class="disabled">{{summary(service.service_id).notActivated}} pending</span></a></span>
               <span class="border-left" ng-show="summary(service.service_id).error > 0 && clusters && clusters.length > 0"><a href ng-click="showUserStatusesDialog(service.service_id)"><span class="error">{{summary(service.service_id).error}} in error</span></a></span>
               <span ng-show="summary(service.service_id).notActivated > 0 || summary(service.service_id).activated > 0 || summary(service.service_id).error > 0"
@@ -30,7 +30,7 @@
       </div>
     </div>
   </div>
-  <h4 style="padding-left: 20px; color: #ccc" ng-show="noServicesEnabled">
+  <h5 style="padding-left: 20px; color: #ccc" ng-show="noServicesEnabled">
     No services added
-  </h4>
+  </h5>
 </div>

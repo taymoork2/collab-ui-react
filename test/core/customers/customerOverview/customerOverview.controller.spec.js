@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: CustomerOverviewCtrl', function () {
-  var controller, $scope, $stateParams, $state, $window, $q, currentCustomer, identityCustomer;
+  var controller, $scope, $stateParams, $state, $window, $q, currentCustomer, identityCustomer, Userservice, Authinfo;
 
   beforeEach(module('Core'));
 
@@ -9,10 +9,29 @@ describe('Controller: CustomerOverviewCtrl', function () {
     $scope = $rootScope.$new();
     currentCustomer = {
       customerEmail: 'testuser@gmail.com',
-      customerOrgId: '123-456'
+      customerOrgId: '123-456',
+      licenseList: [{
+        licenseId: "MC_cfb817d0-ddfe-403d-a976-ada57d32a3d7_100_t30citest.webex.com",
+        offerName: "MC",
+        licenseType: "CONFERENCING",
+        siteUrl: "t30citest.webex.com"
+      }, {
+
+        licenseId: "ST_04b1c66d-9cb7-4280-bd0e-cfdb763fbdc6",
+        offerName: "ST",
+        licenseType: "STORAGE"
+      }]
     };
     identityCustomer = {
       services: ['webex-squared', 'ciscouc']
+    };
+    Userservice = {
+      updateUsers: function () {}
+    };
+    Authinfo = {
+      getPrimaryEmail: function () {
+        return "xyz123@gmail.com";
+      }
     };
     $stateParams = _$stateParams_;
     $stateParams.currentCustomer = currentCustomer;
@@ -26,10 +45,13 @@ describe('Controller: CustomerOverviewCtrl', function () {
     spyOn($state, 'go').and.returnValue($q.when());
     spyOn($state, 'href').and.callThrough();
     spyOn($window, 'open');
+    spyOn(Userservice, 'updateUsers');
 
     controller = $controller('CustomerOverviewCtrl', {
       $scope: $scope,
-      identityCustomer: identityCustomer
+      identityCustomer: identityCustomer,
+      Userservice: Userservice,
+      Authinfo: Authinfo
     });
 
     $scope.$apply();
@@ -66,6 +88,12 @@ describe('Controller: CustomerOverviewCtrl', function () {
         customerOrgId: controller.currentCustomer.customerOrgId,
         customerOrgName: controller.currentCustomer.customerName
       });
+    });
+
+    it('should call Userservice.updateUsers with correct license', function () {
+      expect(Userservice.updateUsers).toHaveBeenCalledWith([{
+        address: "xyz123@gmail.com"
+      }], ["MC_cfb817d0-ddfe-403d-a976-ada57d32a3d7_100_t30citest.webex.com"], null, 'updateUserLicense', jasmine.any(Function));
     });
 
     it('should call $window.open', function () {
