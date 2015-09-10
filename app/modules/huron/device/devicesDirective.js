@@ -9,7 +9,7 @@
     var directive = {
       restrict: 'EA',
       templateUrl: 'modules/huron/device/devicesOverview.tpl.html',
-      controller: 'DevicesCtrl',
+      controller: 'DevicesCtrlHuron',
       controllerAs: 'ucDevices'
     };
 
