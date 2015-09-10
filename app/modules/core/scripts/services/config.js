@@ -231,6 +231,12 @@ angular.module('Core')
             desc: 'tabs.conferencingDesc',
             state: 'site-list',
             link: '#site-list'
+              // Temporarily commented out Numbers tab until ready to expose.
+              // }, {
+              //   title: 'tabs.huronLineDetailsTab',
+              //   desc: 'tabs.huronLineDetailsTabDesc',
+              //   state: 'hurondetails',
+              //   link: '#hurondetails'
           }, {
             title: 'tabs.fusionDetailsTab',
             desc: 'tabs.fusionDetailsTabDesc',
@@ -443,7 +449,7 @@ angular.module('Core')
 
         defaultEntitlements: ['webex-squared', 'squared-call-initiation'],
 
-        batchSize: 20,
+        batchSize: 10,
 
         isDev: function () {
           var currentHostname = getCurrentHostname();
@@ -802,7 +808,11 @@ angular.module('Core')
           'huntgroups',
           'didadd',
           'newpartnerreports',
-          'callRouter'
+          'callRouter',
+          'hurondetails',
+          'huronlines',
+          'huronsettings',
+          'huronfeatures'
         ],
         'squared-fusion-mgmt': [
           'fusion',

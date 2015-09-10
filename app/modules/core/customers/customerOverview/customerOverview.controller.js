@@ -6,7 +6,7 @@
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($stateParams, $state, $window, $translate, $log, $http, identityCustomer, Config, Userservice, Authinfo) {
+  function CustomerOverviewCtrl($stateParams, $state, $window, $translate, $log, $http, identityCustomer, Config, Userservice, Authinfo, AccountOrgService) {
     /*jshint validthis: true */
     var vm = this;
     vm.currentCustomer = $stateParams.currentCustomer;
@@ -24,8 +24,7 @@
       }
     }
 
-    function launchCustomerPortal() {
-      var liclist = vm.currentCustomer.licenseList;
+    function collectLicenseIdsForWebexSites(liclist) {
       var licIds = [];
       var i = 0;
       if (angular.isUndefined(liclist)) {
@@ -41,14 +40,30 @@
           licIds.push(licId);
         }
       }
+      return licIds;
+    } //collectLicenses
+
+    function launchCustomerPortal() {
+      var liclist = vm.currentCustomer.licenseList;
+      var licIds = collectLicenseIdsForWebexSites(liclist);
+      var partnerEmail = Authinfo.getPrimaryEmail();
+      var u = {
+        'address': partnerEmail
+      };
       if (licIds.length > 0) {
-        //var partnerEmailObjectArray = Authinfo.getEmail();
-        //var partnerEmail = partnerEmailObjectArray[0].value;
-        var partnerEmail = Authinfo.getPrimaryEmail();
-        var u = {
-          'address': partnerEmail
-        };
         Userservice.updateUsers([u], licIds, null, 'updateUserLicense', function () {});
+      } else {
+        AccountOrgService.getAccount(vm.currentCustomer.customerOrgId).success(function (data) {
+          var d = data;
+          var len = d.accounts.length;
+          var i = 0;
+          for (i = 0; i < len; i++) {
+            var account = d.accounts[i];
+            var lics = account.licenses;
+            var licIds = collectLicenseIdsForWebexSites(lics);
+            Userservice.updateUsers([u], licIds, null, 'updateUserLicense', function () {});
+          }
+        });
       }
       $window.open($state.href('login_swap', {
         customerOrgId: vm.currentCustomer.customerOrgId,

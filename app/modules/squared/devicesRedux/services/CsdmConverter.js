@@ -161,9 +161,6 @@ angular.module('Squared').service('CsdmConverter',
     }
 
     function getReadableState(obj) {
-      if (hasIssues(obj)) {
-        return t('CsdmStatus.issuesDetected');
-      }
       switch (obj.state) {
       case 'UNCLAIMED':
         return t('CsdmStatus.NeedsActivation');
