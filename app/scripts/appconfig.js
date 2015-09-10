@@ -660,13 +660,22 @@ angular
         devices redux 2
       */
 
-      .state('devices-redux2', {
+      .state('main-redux', {
+          views: {
+            'main@': {
+              templateUrl: 'modules/squared/devicesRedux2/main-redux.html'
+            }
+          },
+          abstract: true,
+          sticky: true
+        })
+        .state('devices-redux2', {
           abstract: true,
           url: '/devices-redux2',
           templateUrl: 'modules/squared/devicesRedux2/devices.html',
           controller: 'DevicesReduxCtrl2',
           controllerAs: 'devices',
-          parent: 'main'
+          parent: 'main-redux'
         })
         .state('devices-redux2.search', {
           url: '/search',
