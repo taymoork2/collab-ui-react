@@ -96,12 +96,7 @@ angular.module('Core')
         }
       });
 
-      var getUserList = function (startAt) {
-        $scope.gridRefresh = true;
-        //clear currentUser if a new search begins
-        var startIndex = startAt || 0;
-        $scope.currentUser = null;
-
+      function getAdmins(startIndex) {
         //get the admin users
         UserListService.listUsers(startIndex, Config.usersperpage, $scope.sort.by, $scope.sort.order, function (data, status, searchStr) {
           if (data.success) {
@@ -120,37 +115,42 @@ angular.module('Core')
             Log.debug('Query existing users failed. Status: ' + status);
           }
         }, $scope.searchStr, true);
+      }
 
+      function getUsers(startIndex) {
         //get the users I am searching for
-        UserListService.listUsers(startIndex, Config.usersperpage, $scope.sort.by, $scope.sort.order, function (data, status, searchStr) {
-          $scope.gridRefresh = false;
-          if (data.success) {
-            $timeout(function () {
-              $scope.load = true;
-            });
-            if ($scope.searchStr === searchStr) {
-              Log.debug('Returning results from search=: ' + searchStr + '  current search=' + $scope.searchStr);
-              Log.debug('Returned data.', data.Resources);
-              // data.resources = getUserStatus(data.Resources);
+        UserListService.listUsers(startIndex, Config.usersperpage, $scope.sort.by, $scope.sort.order,
+          function (data, status, searchStr) {
+            $scope.gridRefresh = false;
+            if (data.success) {
+              $timeout(function () {
+                $scope.load = true;
+              });
+              if ($scope.searchStr === searchStr) {
+                Log.debug('Returning results from search=: ' + searchStr + '  current search=' + $scope.searchStr);
+                Log.debug('Returned data.', data.Resources);
+                // data.resources = getUserStatus(data.Resources);
 
-              $scope.placeholder.count = data.totalResults;
-              if (startIndex === 0) {
-                $scope.userList.allUsers = data.Resources;
+                $scope.placeholder.count = data.totalResults;
+                if (startIndex === 0) {
+                  $scope.userList.allUsers = data.Resources;
+                } else {
+                  $scope.userList.allUsers = $scope.userList.allUsers.concat(data.Resources);
+                }
+
+                $scope.setFilter($scope.activeFilter);
+
               } else {
-                $scope.userList.allUsers = $scope.userList.allUsers.concat(data.Resources);
+                Log.debug('Ignorning result from search=: ' + searchStr + '  current search=' + $scope.searchStr);
               }
-
-              $scope.setFilter($scope.activeFilter);
-
             } else {
-              Log.debug('Ignorning result from search=: ' + searchStr + '  current search=' + $scope.searchStr);
+              Log.debug('Query existing users failed. Status: ' + status);
+              Notification.notify([$translate.instant('usersPage.userListError')], 'error');
             }
-          } else {
-            Log.debug('Query existing users failed. Status: ' + status);
-            Notification.notify([$translate.instant('usersPage.userListError')], 'error');
-          }
-        }, $scope.searchStr);
+          }, $scope.searchStr);
+      }
 
+      function getPartners(startIndex) {
         UserListService.listPartners(Authinfo.getOrgId(), function (data, status, searchStr) {
           if (data.success) {
             $timeout(function () {
@@ -169,7 +169,9 @@ angular.module('Core')
             Log.debug('Query existing users failed. Status: ' + status);
           }
         });
+      }
 
+      function getOrg() {
         Orgservice.getOrg(function (data, status) {
           if (data.success) {
             $scope.org = data;
@@ -177,6 +179,18 @@ angular.module('Core')
             Log.debug('Get existing org failed. Status: ' + status);
           }
         });
+      }
+
+      var getUserList = function (startAt) {
+        var startIndex = startAt || 0;
+        $scope.gridRefresh = true;
+        //clear currentUser if a new search begins
+        $scope.currentUser = null;
+
+        getAdmins(startIndex);
+        getUsers(startIndex);
+        getPartners(startIndex);
+        getOrg();
       };
 
       $scope.resendInvitation = function (userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {
