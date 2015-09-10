@@ -11,6 +11,10 @@
       uuid: '',
       pattern: '',
       alertingName: '',
+      externalCallerIdType: '',
+      companyNumber: null,
+      customCallerIdName: '',
+      customCallerIdNumber: '',
       hasCustomAlertingName: false,
       callForwardAll: {
         voicemailEnabled: false,
@@ -82,11 +86,16 @@
           dn.uuid = data.uuid;
           dn.pattern = data.pattern;
           dn.alertingName = data.alertingName;
+          dn.externalCallerIdType = data.externalCallerIdType;
+          dn.companyNumber = data.companyNumber;
+          dn.customCallerIdName = data.customCallerIdName;
+          dn.customCallerIdNumber = data.customCallerIdNumber;
 
           dn.hasCustomAlertingName = data.hasCustomAlertingName;
           dn.callForwardAll.voicemailEnabled = data.callForwardAll.voicemailEnabled;
           if (typeof data.callForwardAll.destination !== 'undefined') {
             dn.callForwardAll.destination = data.callForwardAll.destination;
+
           }
 
           dn.callForwardBusy.intVoiceMailEnabled = data.callForwardBusy.intVoiceMailEnabled;

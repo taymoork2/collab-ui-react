@@ -103,10 +103,10 @@ angular.module('Mediafusion')
         }
       };
 
-      var serviceAndClusterNeedsAttention = function (service, cluster) {
+      function serviceAndClusterNeedsAttention(service, cluster) {
         cluster.needs_attention = true;
         service.needs_attention = true;
-      };
+      }
 
       var updateSoftwareUpgradeAvailableDetails = function (service, cluster) {
         if (cluster.provisioning_data) {
@@ -201,9 +201,9 @@ angular.module('Mediafusion')
         });
       };
 
-      var sortBySeverity = function (alarms) {
+      function sortBySeverity(alarms) {
         return _.sortBy(alarms, 'severity');
-      };
+      }
 
       var convertClusters = function (data) {
         var converted = _.map(data, function (origCluster) {

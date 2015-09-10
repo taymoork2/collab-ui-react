@@ -1,8 +1,8 @@
 'use strict';
 
 describe('Controller: PlanReviewCtrl', function () {
-  var $scope, controller, $httpBackend, Config, Userservice, FeatureToggleService;
-  var getUserMe, getMyFeatureToggles;
+  var $scope, controller, $httpBackend, $q, Config, Userservice, FeatureToggleService;
+  var getUserMe;
 
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
@@ -19,22 +19,22 @@ describe('Controller: PlanReviewCtrl', function () {
     $provide.value("Authinfo", authInfo);
   }));
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _Config_, _Userservice_, _FeatureToggleService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, $q, _Config_, _Userservice_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
+    $q = $q;
     Config = _Config_;
     Userservice = _Userservice_;
     FeatureToggleService = _FeatureToggleService_;
 
+    var deferred = $q.defer();
+    deferred.resolve('true');
     getUserMe = getJSONFixture('core/json/users/me.json');
-    getMyFeatureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
 
     spyOn(Userservice, 'getUser').and.callFake(function (uid, callback) {
       callback(getUserMe, 200);
     });
-    spyOn(FeatureToggleService, 'getFeaturesForUser').and.callFake(function (uid, callback) {
-      callback(getMyFeatureToggles, 200);
-    });
+    spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(deferred.promise);
 
     controller = $controller('PlanReviewCtrl', {
       $scope: $scope

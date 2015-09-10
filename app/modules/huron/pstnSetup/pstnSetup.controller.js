@@ -7,9 +7,10 @@
   /* @ngInject */
   function PstnSetupCtrl($scope, $q, $window, $translate, $state, $stateParams, PstnSetupService, ValidationService, Notification) {
     var vm = this;
+    var customerExists = false;
+    var hasCarriers = false;
     vm.customerId = $stateParams.customerId;
     vm.customerName = $stateParams.customerName;
-    vm.customerExists = false;
     vm.loading = true;
     vm.model = {
       areaCode: '',
@@ -140,19 +141,27 @@
     function init() {
       PstnSetupService.listCustomerCarriers(vm.customerId)
         .then(function (carriers) {
-          vm.customerExists = true;
-          return carriers;
+          customerExists = true;
+          if (angular.isArray(carriers) && carriers.length === 0) {
+            return PstnSetupService.listCarriers();
+          } else {
+            hasCarriers = true;
+            return carriers;
+          }
         })
         .catch(function (response) {
-          //TODO uncomment when backend fixes status codes
-          // if (response && response.status === 404) {
-          return PstnSetupService.listCarriers();
-          // } else {
-          //   return $q.reject(response);
-          // }
+          if (response && response.status === 404) {
+            return PstnSetupService.listCarriers();
+          } else {
+            return $q.reject(response);
+          }
         })
         .then(function (carriers) {
           angular.forEach(carriers, initCarrier);
+          if (customerExists && hasCarriers && angular.isArray(vm.providers) && vm.providers.length === 1) {
+            selectProvider(vm.providers[0]);
+            return $state.go('pstnSetup.orderNumbers');
+          }
         })
         .catch(function (response) {
           Notification.errorResponse(response, 'pstnSetup.carrierListError');
@@ -178,17 +187,19 @@
           ],
           selectFn: selectIntelePeer
         });
-      } else if (carrier.name === PstnSetupService.TATA) {
-        vm.providers.push({
-          uuid: carrier.uuid,
-          name: carrier.name,
-          logoSrc: 'images/carriers/logo_tata_comm.svg',
-          logoAlt: 'Tata',
-          title: 'Tata Trial',
-          features: [],
-          selectFn: selectTata
-        });
       }
+      // TODO enable Tata at a later time
+      // else if (carrier.name === PstnSetupService.TATA) {
+      //   vm.providers.push({
+      //     uuid: carrier.uuid,
+      //     name: carrier.name,
+      //     logoSrc: 'images/carriers/logo_tata_comm.svg',
+      //     logoAlt: 'Tata',
+      //     title: 'Tata Trial',
+      //     features: [],
+      //     selectFn: selectTata
+      //   });
+      // }
     }
 
     function orderNumbers() {
@@ -200,16 +211,28 @@
     }
 
     function placeOrder() {
-      var customerPromise;
+      var promise = $q.when();
       angular.element('#placeOrder').button('loading');
-      if (!vm.customerExists) {
-        customerPromise = PstnSetupService.createCustomer(vm.customerId, vm.customerName, vm.provider.uuid)
-          .catch(function (response) {
-            Notification.errorResponse(response);
-            return $q.reject(response);
-          });
+      if (!customerExists) {
+        promise = promise.then(function () {
+          return PstnSetupService.createCustomer(vm.customerId, vm.customerName, vm.provider.uuid);
+        }).then(function () {
+          customerExists = true;
+        }).catch(function (response) {
+          Notification.errorResponse(response, 'pstnSetup.customerCreateError');
+          return $q.reject(response);
+        });
+      } else if (!hasCarriers) {
+        promise = promise.then(function () {
+          return PstnSetupService.updateCustomerCarrier(vm.customerId, vm.provider.uuid);
+        }).then(function () {
+          hasCarriers = true;
+        }).catch(function (response) {
+          Notification.errorResponse(response, 'pstnSetup.customerUpdateError');
+          return $q.reject(response);
+        });
       }
-      $q.when(customerPromise).then(function () {
+      promise.then(function () {
         var promises = [];
         angular.forEach(vm.blockOrders, function (blockOrder) {
           var promise = PstnSetupService.orderBlock(vm.customerId, vm.provider.uuid, blockOrder.areaCode, blockOrder.quantity);

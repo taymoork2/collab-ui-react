@@ -234,7 +234,7 @@ angular.module('Squared')
         return count;
       };
 
-      var getCharts = function (response, type, divName, refreshDivName, refreshVarName, title, color, operation, yAxisTitle) {
+      function getCharts(response, type, divName, refreshDivName, refreshVarName, title, color, operation, yAxisTitle) {
         var avCount = 0;
         var shouldShowCursor = true;
         $scope[refreshVarName] = false;
@@ -266,7 +266,7 @@ angular.module('Squared')
           $('#' + refreshDivName).html('<h3>Error processing request</h3>');
           Log.debug('Query ' + type + ' metrics failed. Status: ' + status);
         }
-      };
+      }
 
       var capitalizeEachWord = function (str) {
         return str.replace(/\w\S*/g, function (txt) {
@@ -289,7 +289,7 @@ angular.module('Squared')
         }
       };
 
-      var makeFunnelChart = function (sdata, divName, metricName, title, color, operation) {
+      function makeFunnelChart(sdata, divName, metricName, title, color, operation) {
         formatData(sdata);
         AmCharts.makeChart(divName, {
           'type': 'funnel',
@@ -302,8 +302,8 @@ angular.module('Squared')
           'titleField': 'title',
           'plotAreaBorderAlpha': 0,
           'plotAreaBorderColor': '#DDDDDD',
-          'marginRight': 160,
-          'marginLeft': 15,
+          'marginLeft': 16,
+          'marginRight': 16,
           'labelPosition': 'right',
           'funnelAlpha': 0.9,
           'valueField': 'value',
@@ -339,9 +339,9 @@ angular.module('Squared')
             'color': '#555'
           },
         });
-      };
+      }
 
-      var makeTimeChart = function (sdata, divName, metricName, title, color, operation, shouldShowCursor, xAxisTitle, yAxisTitle) {
+      function makeTimeChart(sdata, divName, metricName, title, color, operation, shouldShowCursor, xAxisTitle, yAxisTitle) {
         if (sdata.length === 0) {
           formatDates(dummyChartVals);
           sdata = dummyChartVals;
@@ -406,8 +406,8 @@ angular.module('Squared')
           'plotAreaBorderAlpha': 0,
           'plotAreaBorderColor': '#ddd',
           'marginTop': 20,
-          'marginRight': 20,
-          'marginLeft': 10,
+          'marginLeft': 16,
+          'marginRight': 16,
           'marginBottom': 10,
           'categoryField': 'week',
           'categoryAxis': {
@@ -420,7 +420,7 @@ angular.module('Squared')
             'titleColor': '#666'
           }
         });
-      };
+      }
 
       $scope.manualReload(true);
 

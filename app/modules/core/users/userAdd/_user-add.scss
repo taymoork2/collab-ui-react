@@ -146,12 +146,11 @@
 }
 
 .service-title {
-  margin-bottom: 15px
+  margin-bottom: 15px;
 }
 
 .onboard-fieldset,
 .onboard-radio {
-  margin-top: 10px;
   margin-bottom: 10px;
 }
 
@@ -218,6 +217,7 @@
   float: left;
   min-height: 135px;
   min-width: 250px;
+
   label {
     margin-bottom: 0px;
   }
@@ -228,7 +228,7 @@
   margin-left: 30px;
   overflow: hidden;
   display: flex;
-  flex-wrap: wrap
+  flex-wrap: wrap;
 }
 
 .middle-bucket {
@@ -253,25 +253,32 @@
 .user-name-email-input {
   display: flex;
   align-items: center;
+
   .flex1 {
     flex: 1;
     margin-right: 5px;
   }
+
   .flex2 {
     flex: 2;
     margin-right: 5px;
   }
+
   .plus-icon {
     @extend .icon;
+
     @extend .icon-plus;
+
     border-radius: 50%;
     font-size: 25px;
     margin-left: 10px;
   }
+
   .plus-icon-inactive {
     color: $gray-lighter;
     background-color: $gray-lightest;
   }
+
   .plus-icon-active {
     cursor: pointer;
     color: $brand-white;
@@ -283,31 +290,37 @@
   US196818 | Atlas - Add User Modal Update
 -------------------------------------------------------------------*/
 
-
 .add-users, .edit-services {
   .modal-body {
     background-color: $brand-white;
     margin-bottom: 0;
     padding: 0;
+
     .loading {
       width: 100%;
       text-align: center;
       margin: 40px auto;
+
       &.ng-enter, &.ng-leave {
         transition: none;
       }
+
       /* starting animations for enter */
 
       &.ng-enter {}
+
       /* terminal animations for enter */
 
       &.ng-enter.ng-enter-active {}
+
       /* starting animations for leave */
 
       &.ng-leave {}
+
       /* terminal animations for leave */
 
       &.ng-leave.ng-leave-active {}
+
       .icon {
         font-size: 75px;
       }
@@ -318,11 +331,13 @@
 .onboard-users {
   .tokenfield.form-control, .tokenfield.form-control-static {
     width: 100% !important;
+
     input.token-input {
       margin-top: 0;
       padding: 6px;
     }
   }
+
   .wizard-main & {
     margin-left: 2px;
     margin-right: 2px;
@@ -332,10 +347,12 @@
 .collab-options {
   padding-bottom: 20px;
 }
+
 .collab-svc-radio {
   margin-top: 0;
   padding-top: 8px;
 }
+
 .adduser-input-desc {
   color: $gray-dark;
   font-family: $brand-font-extra-light;
@@ -348,61 +365,72 @@
   background-color: $brand-white;
   font-family: $brand-font-light;
   font-size: 14px;
+
   .bucket-column {
     flex: 1;
   }
+
   .bucket-column-inner {
     margin-right: 5px;
+
     &.last-column {
       margin-right: 0;
     }
+
     .bucket-row-header h3 {
       color: $gray-darkest;
       font-family: $brand-font-cisco-TT-Extra-Light;
       text-align: center;
     }
+
     .bucket-row-inner {
       background: $gray-lightest;
       margin-top: 5px;
       min-height: 150px;
       padding: 15px;
+
       &.top-row {
         min-height: 50px;
         padding: 11px 15px 0;
       }
+
       .cs-checkbox span:before {
         margin-top: -2px;
         margin-right: 12px;
       }
+
       .service-label {
         color: $gray-darkest;
       }
-    }
-    .bucket-row {
-      background: $gray-lightest;
-      min-height: 150px;
     }
     .onboard-radio {
       margin-top: 0;
       margin-bottom: 0;
     }
+
     .onboard-check {
       color: $brand-primary;
     }
+
     .warning-icon {
       @extend .icon;
+
       @extend .icon-warning;
+
       margin-top: -2px;
       margin-right: 12px;
       font-size: 15px;
       color: $brand-warning;
       float: left;
     }
+
     .service-check {
       margin-left: -6px;
     }
+
     .service-link-span-box {
       @extend .warning-icon;
+
       visibility: hidden;
     }
   }
@@ -412,13 +440,16 @@
   .title-separator-pipe {
     color: $gray-light;
   }
+
   .onboard-label {
     margin-bottom: 20px;
     margin-top: 10px;
   }
+
   #usersfield-tokenfield {
     font-family: $brand-font-cisco-TT-Extra-Light;
   }
+
   .wizard-main-title {
     color: $gray-darkest;
   }
@@ -429,8 +460,9 @@
   padding-left: 6px;
   padding-right: 6px;
 }
+
 .page-option-buttons {
-  padding-top: 20px;
+  padding-top: 25px;
   text-align: right;
   float: none;
 
@@ -438,14 +470,17 @@
     font-family: $brand-font-regular;
     font-size: 14px;
     text-align: right;
+
     &.primary {
       color: $brand-primary;
     }
+
     &.disabled {
       color: $gray;
       cursor: default;
     }
-    &:focus, &:active{
+
+    &:focus, &:active {
       outline: none;
       box-shadow: none;
     }
@@ -457,20 +492,20 @@
 }
 
 .did-map-spinner {
-    margin-bottom: -3px;
+  margin-bottom: -3px;
 }
 
-.addDnToUser{
-  .gridStyle{
-     margin-top: 20px;
-     margin-bottom: 5px;
-     border: solid;
-     border-color: $gray-light;
-     border-width: 1px;
-     padding-left: 0px;
-     padding-right: 0px;
-     height: calc(100vh - 370px);
-     width: 100%;
+.addDnToUser {
+  .gridStyle {
+    margin-top: 20px;
+    margin-bottom: 5px;
+    border: solid;
+    border-color: $gray-light;
+    border-width: 1px;
+    padding-left: 0px;
+    padding-right: 0px;
+    height: calc(100vh - 370px);
+    width: 100%;
 
     .ngTopPanel {
       width: 100% !important;
@@ -478,41 +513,54 @@
       border-bottom: 1px solid $gray-light;
       box-sizing: content-box;
     }
+
     .ngHeaderContainer {
       width: 100% !important;
     }
+
     .ngHeaderRow {
       width: 100%;
     }
+
     .ngHeaderCell {
       width: 100%;
     }
+
     .ngHeaderText {
       padding-left: 20px;
     }
+
     .ngViewport {
       width: 100% !important;
     }
+
     .ngCanvas {
       margin-top: 10px;
       width: 100% !important;
     }
+
     .ngRow {
-      border-width: 0px; /* affects borders around grid rows */
+      border-width: 0px;
+
+      /* affects borders around grid rows */
       width: 100%;
     }
+
     .ngRow:hover {
       background-color: transparent;
     }
+
     .ngCell {
       padding-top: 10px;
       padding-bottom: 10px;
     }
+
     .ngCellText {
       padding-top: 0px;
       padding-bottom: 0px;
       padding-left: 20px;
     }
+
     .name-display-style {
       font-size: 14px;
       color: $gray-darkest;
@@ -531,90 +579,106 @@
       margin-top: 0px;
       margin-bottom: 0px;
     }
+
     .error, .warning {
       font-family: Arial;
       font-size: 12px;
       text-align: left;
     }
   }
+
   .select-list {
-    padding-top:0px;
-    padding-left:0px;
+    padding-top: 0px;
+    padding-left: 0px;
   }
+
   .select-list.colt1 {
     width: 200px;
   }
+
   .select-list.colt2 {
     width: 90px;
     margin-left: auto;
     margin-right: auto;
   }
+
   .selected {
     a {
       background-color: transparent;
     }
+
     a .icon {
       background-color: transparent;
     }
   }
+
   .form-control.select-toggle {
     padding-top: 8px;
   }
-  .form-control[disabled].select-toggle  {
-      border: 1px solid $brand-danger;
-      background-color: transparent;
-      .icon-arrow-down {
-       &:after {
-          /*this is the X icon that appears when no DNs are available*/
-          content: $icon-error;
-          top: 0;
-          left: -12px;
-          position: absolute;
-          font-size: 18px;
-          line-height: 35px;
-          height: 17px;
-          width: 17px;
-          color: $brand-danger;
-        }
+
+  .form-control[disabled].select-toggle {
+    border: 1px solid $brand-danger;
+    background-color: transparent;
+
+    .icon-arrow-down {
+      &:after {
+        /*this is the X icon that appears when no DNs are available*/
+        content: $icon-error;
+        top: 0;
+        left: -12px;
+        position: absolute;
+        font-size: 18px;
+        line-height: 35px;
+        height: 17px;
+        width: 17px;
+        color: $brand-danger;
       }
+    }
   }
 
-  .select-warning .select-toggle  {
-      border: 1px solid $brand-warning-dark;
-      background-color: transparent;
-      .icon-arrow-down {
-       &:after {
-          /*this is the X icon that appears when no DNs are available*/
-          content: $icon-warning;
-          top: 0;
-          left: -12px;
-          position: absolute;
-          font-size: 18px;
-          line-height: 35px;
-          height: 17px;
-          width: 17px;
-          color: $brand-warning-dark;
-        }
+  .select-warning .select-toggle {
+    border: 1px solid $brand-warning-dark;
+    background-color: transparent;
+
+    .icon-arrow-down {
+      &:after {
+        /*this is the X icon that appears when no DNs are available*/
+        content: $icon-warning;
+        top: 0;
+        left: -12px;
+        position: absolute;
+        font-size: 18px;
+        line-height: 35px;
+        height: 17px;
+        width: 17px;
+        color: $brand-warning-dark;
       }
+    }
   }
+
   .icon-arrow-down {
     padding-top: 0;
   }
+
   .ngHeaderText.colt2 {
     text-align: center;
   }
+
   .ngCell.colt2 {
     overflow: visible;
     padding-left: 20px;
+
     .dropdown-menu {
       right: 25px;
       left: auto;
       top: 70%;
     }
   }
+
   .ngCell.colt1 {
     overflow: visible;
     padding-left: 20px;
+
     .dropdown-menu {
       top: 70%;
     }

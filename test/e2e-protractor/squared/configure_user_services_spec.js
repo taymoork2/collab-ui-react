@@ -17,6 +17,7 @@ describe('Configuring services per-user', function () {
 
   it('should add a user', function () {
     utils.click(users.addUsers);
+    utils.expectIsDisplayed(users.manageDialog);
     utils.sendKeys(users.addUsersField, testUser);
     utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
     utils.click(users.nextButton);
@@ -29,10 +30,14 @@ describe('Configuring services per-user', function () {
     utils.searchAndClick(testUser);
     utils.click(users.servicesActionButton);
     utils.click(users.editServicesButton);
-    utils.click(users.standardTeamRooms);
-    utils.expectCheckbox(users.standardTeamRooms, true);
-    utils.click(users.saveButton);
-    notifications.assertSuccess('entitled successfully');
+    utils.waitForModal().then(function () {
+      utils.expectIsDisplayed(users.editServicesModal);
+      utils.click(users.standardTeamRooms);
+      utils.expectCheckbox(users.standardTeamRooms, true);
+      utils.click(users.saveButton);
+      notifications.assertSuccess('entitled successfully');
+    });
+
   });
 
   it('should disable the Messenger interop entitlement', function () {

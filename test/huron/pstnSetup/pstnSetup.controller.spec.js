@@ -35,6 +35,7 @@ describe('Controller: PstnSetupCtrl', function () {
     spyOn(PstnSetupService, 'listCustomerCarriers').and.returnValue($q.when(customerCarrierList));
     spyOn(PstnSetupService, 'listCarriers').and.returnValue($q.when(carrierList));
     spyOn(PstnSetupService, 'createCustomer').and.returnValue($q.when());
+    spyOn(PstnSetupService, 'updateCustomerCarrier').and.returnValue($q.when());
     spyOn(PstnSetupService, 'orderBlock').and.returnValue($q.when());
     spyOn(Notification, 'errorResponse');
     spyOn(Notification, 'error');
@@ -66,13 +67,11 @@ describe('Controller: PstnSetupCtrl', function () {
       $scope.$apply();
       expect(controller.providers).toEqual([jasmine.objectContaining({
         name: PstnSetupService.INTELEPEER
-      }), jasmine.objectContaining({
-        name: PstnSetupService.TATA
       })]);
     });
 
     //TODO uncomment when /customers/<id>/carriers 404 is fixed
-    xit('should notify an error if customer carriers fail to load', function () {
+    it('should notify an error if customer carriers fail to load', function () {
       PstnSetupService.listCustomerCarriers.and.returnValue($q.reject());
       controller = $controller('PstnSetupCtrl', {
         $scope: $scope
@@ -118,18 +117,40 @@ describe('Controller: PstnSetupCtrl', function () {
 
   describe('placeOrder', function () {
     describe('when customer exists', function () {
+      it('should place orders and transition to nextSteps', function () {
+        controller.selectProvider(controller.providers[0]);
+        controller.blockOrders = blockOrders;
+        controller.placeOrder();
 
+        expect($state.go).not.toHaveBeenCalledWith('pstnSetup.nextSteps');
+        $scope.$apply();
+        expect(PstnSetupService.createCustomer).not.toHaveBeenCalled();
+        expect(PstnSetupService.updateCustomerCarrier).not.toHaveBeenCalled();
+        expect(PstnSetupService.orderBlock).toHaveBeenCalled();
+        expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps');
+      });
     });
-    it('should place orders and transition to nextSteps', function () {
-      controller.selectProvider(controller.providers[0]);
-      controller.blockOrders = blockOrders;
-      controller.placeOrder();
 
-      expect($state.go).not.toHaveBeenCalled();
-      $scope.$apply();
-      expect(PstnSetupService.createCustomer).not.toHaveBeenCalled();
-      expect(PstnSetupService.orderBlock).toHaveBeenCalled();
-      expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps');
+    describe('when customer exists without a carrier', function () {
+      beforeEach(function () {
+        PstnSetupService.listCustomerCarriers.and.returnValue($q.when([]));
+        controller = $controller('PstnSetupCtrl', {
+          $scope: $scope
+        });
+        $scope.$apply();
+      });
+      it('should update customer and then place orders and transition to nextSteps', function () {
+        controller.selectProvider(controller.providers[0]);
+        controller.blockOrders = blockOrders;
+        controller.placeOrder();
+
+        expect($state.go).not.toHaveBeenCalledWith('pstnSetup.nextSteps');
+        $scope.$apply();
+        expect(PstnSetupService.createCustomer).not.toHaveBeenCalled();
+        expect(PstnSetupService.updateCustomerCarrier).toHaveBeenCalled();
+        expect(PstnSetupService.orderBlock).toHaveBeenCalled();
+        expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps');
+      });
     });
 
     describe('when customer doesnt exist', function () {
@@ -148,9 +169,10 @@ describe('Controller: PstnSetupCtrl', function () {
         controller.blockOrders = blockOrders;
         controller.placeOrder();
 
-        expect($state.go).not.toHaveBeenCalled();
+        expect($state.go).not.toHaveBeenCalledWith('pstnSetup.nextSteps');
         $scope.$apply();
         expect(PstnSetupService.createCustomer).toHaveBeenCalled();
+        expect(PstnSetupService.updateCustomerCarrier).not.toHaveBeenCalled();
         expect(PstnSetupService.orderBlock).toHaveBeenCalled();
         expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps');
       });

@@ -3,12 +3,12 @@
 </div>
 
 <div class="container-fluid service-setup-container" ng-if="!squaredUcSetup.processing">
-  <form novalidate class="form-horizontal">
+  <form novalidate>
     <formly-form model="squaredUcSetup.model" fields="squaredUcSetup.fields" form="squaredUcSetup.form"></formly-form>
     <div class="form-group service-setup" ng-hide="!squaredUcSetup.hasVoicemailService">
       <label for="companyVoicemail" translate="serviceSetupModal.companyVoicemail"></label>
       <p translate="serviceSetupModal.companyVoicemailDescription"></p>
-      <div class="service-setup-company-voicemail">
+      <div class="service-setup-company-voicemail row full">
         <div class="col-xs-3">
           <cs-select
             id="companyVoicemail"

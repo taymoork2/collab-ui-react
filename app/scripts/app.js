@@ -18,7 +18,7 @@ angular.module('Core', [
   'ngSanitize',
   'ngRoute',
   'ngMessages',
-  'ui.bootstrap',
+  // 'ui.bootstrap',
   'dialogs',
   'ngCsv',
   'ipCookie',
@@ -38,7 +38,7 @@ angular.module('Core', [
 
 angular.module('Squared', ['Core']);
 
-angular.module('Huron', ['Core', 'uc.moh', 'uc.device', 'uc.callrouting', 'uc.didadd', 'uc.overview', 'uc.callrouter']);
+angular.module('Huron', ['Core', 'uc.moh', 'uc.device', 'uc.callrouting', 'uc.didadd', 'uc.overview', 'uc.callrouter', 'uc.hurondetails']);
 
 angular.module('Hercules', ['Core']);
 
@@ -49,6 +49,8 @@ angular.module('WebExUserSettings2', ['Core']);
 
 angular.module('Messenger', ['Core']);
 
+angular.module('Sunlight', ['Core']);
+
 angular.module('wx2AdminWebClientApp', [
   'Core',
   'Squared',
@@ -57,5 +59,6 @@ angular.module('wx2AdminWebClientApp', [
   'Mediafusion',
   'WebExUserSettings',
   'WebExUserSettings2',
-  'Messenger'
+  'Messenger',
+  'Sunlight'
 ]);

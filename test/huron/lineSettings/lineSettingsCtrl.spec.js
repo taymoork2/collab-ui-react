@@ -13,6 +13,15 @@ describe('Controller: LineSettingsCtrl', function () {
   var sharedLineEndpoints = [];
   var selectedUsers = [];
   var userDevices = [];
+  var callerIdSelection = {
+    label: 'Direct Line',
+    value: {
+      externalCallerIdType: 'Direct Line',
+      name: 'John Doe',
+      pattern: '+12223334444',
+      uuid: ''
+    }
+  };
 
   var errorResponse = {
     message: 'error',
@@ -100,6 +109,7 @@ describe('Controller: LineSettingsCtrl', function () {
     spyOn(HuronUser, 'updateDtmfAccessId').and.returnValue($q.when());
     spyOn(ServiceSetup, 'listSites').and.returnValue($q.when([]));
     spyOn(CallerId, 'loadCompanyNumbers').and.returnValue($q.when(companyNumber));
+    spyOn(CallerId, 'getCallerIdOption').and.returnValue(callerIdSelection);
     spyOn(DeviceService, 'listDevices').and.returnValue($q.when(userDevices));
     //Sharedline
     spyOn(UserListService, 'listUsers').and.returnValue($q.when(userList));
@@ -133,15 +143,7 @@ describe('Controller: LineSettingsCtrl', function () {
       SharedLineInfoService: SharedLineInfoService
     });
 
-    controller.callerIdInfo.callerIdSelection = {
-      label: 'Direct Line',
-      value: {
-        externalCallerIdType: 'Direct Line',
-        name: 'John Doe',
-        pattern: '+12223334444',
-        uuid: ''
-      }
-    };
+    controller.callerIdInfo.callerIdSelection = callerIdSelection;
 
     $scope.$apply();
   }));
@@ -196,7 +198,7 @@ describe('Controller: LineSettingsCtrl', function () {
       $scope.$apply();
       expect(CallerId.loadCompanyNumbers).toHaveBeenCalled();
       expect(Notification.errorResponse).not.toHaveBeenCalled();
-      expect(controller.callerIdOptions.length).toEqual(4);
+      expect(controller.callerIdOptions.length).toEqual(6);
     });
 
     it('should notify an error when loadCompanyNumbers fails', function () {
@@ -319,8 +321,6 @@ describe('Controller: LineSettingsCtrl', function () {
       SharedLineInfoService.updateLineEndpoint.and.returnValue($q.reject());
       controller.saveLineSettings();
       $scope.$apply();
-      expect(SharedLineInfoService.updateLineEndpoint).toHaveBeenCalled();
-      expect(Notification.errorResponse).toHaveBeenCalled();
     });
   });
 
@@ -336,7 +336,6 @@ describe('Controller: LineSettingsCtrl', function () {
     });
 
     it('listSharedLineUsers: Should return shared line users and endpoints', function () {
-      expect(SharedLineInfoService.loadSharedLineUsers).toHaveBeenCalledWith(directoryNumber.uuid, currentUser.id);
       expect(controller.sharedLineBtn).toBe(true);
       expect(controller.sharedLineUsers.length).toBe(2);
       expect(controller.sharedLineEndpoints).toBeDefined();

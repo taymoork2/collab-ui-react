@@ -111,6 +111,7 @@
     "messaging": "Messaging",
     "conferencing": "Conferencing",
     "communications": "Communications",
+    "contactCenter": "Contact Center",
     "entitlements": "User Entitlements",
     "saveBtn": "Save",
     "manageGroups": "Manage Groups",
@@ -120,9 +121,11 @@
     "freeMsg": "Free Spark Messaging",
     "freeConf": "Free 3 Party Spark Meet",
     "freeComm": "Free 1:1 Spark Call",
+    "freeContactCenter": "Free Chat, Email, Voice",
     "paidMsg": "Standard Team Rooms",
     "paidConf": "25 Party Meetings",
     "paidComm": "Advanced Spark Call",
+    "paidContactCenter": "Chat, Email, Voice",
     "freeSpark": "Free Spark Messaging",
     "enterpriseEdition": "Enterprise Edition",
     "meetingCenter": "Meeting Center {{capacity}}",
@@ -185,6 +188,8 @@
     "addOrganizationTabDesc": "Add a new organization to this account",
     "fusionDetailsTab": "Connector Management",
     "fusionDetailsTabDesc": "Connector Management",
+    "huronLineDetailsTab": "Huron",
+    "huronLineDetailsTabDesc": "Huron Details",
     "MediafusionDetailsTab": "Media Service Management",
     "MediafusionDetailsTabDesc": "Media Service Management",
     "callRoutingTab": "Call Routing",
@@ -532,7 +537,7 @@
     "convert": "Convert",
     "nextBtn": "Next",
     "convertUsers": "Convert Unlicensed Users",
-    "convertUsersText": "Convert employees of your organization who have signed up for Project Spark on their own with a company email address to a licensed user. Licensed users receive additional enterprise fatures, and are subject to your organization's policies and administration.<br><br>Selected users will receive an invitation to convert or change their email address to a non-company email address.",
+    "convertUsersText": "Convert employees of your organization who have signed up for Cisco Spark on their own with a company email address to a licensed user. Licensed users receive additional enterprise features, and are subject to your organization's policies and administration.",
     "convertError": " could not be converted. Contact support for assistance converting this user.",
     "cancel": "Cancel",
     "emailAddress": "Email Address",
@@ -794,7 +799,8 @@
     "uploadStep": "Upload CSV",
     "uploading": "Uploading...",
     "uploadInstruction": "You can add multiple users at a time by uploading one CSV file.  After you upload the CSV file, you can assign users their collaboration services.",
-    "uploadPrompt": "Drag and drop a CSV file or use the <label for='upload'>file browser</label>",
+    "uploadPrompt": "Drag and drop a CSV file or use the",
+    "fileBrowser": "file browser",
     "uploadCsvEmpty": "Please upload a valid CSV.",
     "csvFileTypeError": "Please upload a valid file type.",
     "csvMaxSizeError": "File size is above the maximum of 10 MB.",
@@ -1167,7 +1173,10 @@
     "blockedCallerIdDescription": "Caller will not see any caller ID or number",
     "companyCallerId": "Company Caller ID",
     "companyNumberLoadError": "Company numbers failed to load.",
-    "registerDeviceForCallerID": "Register your device to enable caller ID"
+    "customCallerId": "Custom",
+    "customName": "Custom Name",
+    "customNumber": "Custom Number",
+    "customNumberValidation": "Field can contain digits 0 to 9 and +. For example: +15556667777."
   },
   "sharedLinePanel": {
     "title": "Shared Line",
@@ -1180,7 +1189,7 @@
   },
   "singleNumberReachPanel": {
     "title": "Single Number Reach",
-    "description": "<small>Enables users to answer incoming calls to their extension to another number</small>",
+    "description": "Enables users to answer incoming calls to their extension to another number",
     "toggle": "Single Number Reach",
     "snrNote": "SNR can cover all the user's lines or limited to specific lines",
     "success": "Single Number Reach configuration saved successfully",
@@ -1231,7 +1240,9 @@
     "launchPortal": "Launch Company Portal",
     "carrierListError": "Failed to retrieve carrier list for this customer.",
     "orderNumbersPrompt": "Must add block numbers to proceed.",
-    "blockOrderError": "Failed to order {{quantity}} block number(s) with area code {{areaCode}}."
+    "blockOrderError": "Failed to order {{quantity}} block number(s) with area code {{areaCode}}.",
+    "customerCreateError": "Failed to create customer with the carrier.",
+    "customerUpdateError": "Failed to update customer with the carrier."
   },
   "intelepeerFeatures": {
     "feature1": "Unlimited inbound/outbound calling to U.S. 50 states + Canada",
@@ -1388,7 +1399,8 @@
     "emailSuccessText": "Email successfully sent to customer.",
     "emailFailText": "Error sending email",
     "inputPlacehoder": "Enter phone numbers separated by commas",
-    "didFormatHelpText": "For example: 15556667777, +15556667777, 1-555-666-7777, +1 (555) 666-7777"
+    "didFormatHelpText": "For example: 15556667777, +15556667777, 1-555-666-7777, +1 (555) 666-7777",
+    "didAlreadyExist": "Phone number already exists."
   },
   "deviceDetailPage": {
     "deviceConfig": "Device Configuration",
@@ -1823,9 +1835,21 @@
     "NeedsActivation": "Needs Activation",
     "issuesDetected": "Issues Detected",
     "errorCodes": {
-      "tcpfallback": {
-        "type": "Potential Loss of Video Quality",
+      "tcpFallback": {
+        "type": "Potential loss of video quality",
         "message": "This device is communicating via the TCP protocol, which could cause higher latency and therefore reduced media streaming experience. If you are experiencing issues with your media streaming, you can try to open UDP port 33434 on your local firewall to aid media streaming issues."
+      },
+      "TemperatureCheck": {
+        "type": "High temperature",
+        "message": "The system temperature is high, this may cause a system shut down."
+      },
+      "OSDVideoOutput": {
+        "type": "No monitor connected",
+        "message": "Verify that the monitor is turned on and check the HDMI connection between the video endpoint and the monitor."
+      },
+      "noupgrade": {
+        "type": "System does not automatically update",
+        "message": "The system is set up to not receive automatic updates."
       },
       "unknown": {
         "type": "Unknown Error Occurred",
@@ -1841,5 +1865,25 @@
     "invalidLinkNoParam": "Invalid link. no param",
     "error": "Something went wrong.",
     "notifyPartnerErrorMsg": "We're sorry, something went wrong while trying to notify your partner."
+  },
+  "huronDetails": {
+    "title": "Huron",
+    "linesTitle": "Numbers",
+    "settingsTitle": "Settings",
+    "featuresTitle": "Features"
+  },
+  "linesPage": {
+    "manageLines": "Numbers",
+    "allLines": "All",
+    "unassignedLines": "Unassigned",
+    "assignedLines": "Assigned",
+    "csvBtnTitle": "Export to CSV",
+    "csvFilename": "exported_lines.csv",
+    "internalNumberHeader": "Internal Extensions",
+    "externalNumberHeader": "Phone Number",
+    "deviceHeader": "Devices",
+    "userEmailHeader": "User",
+    "actionHeader": "Actions",
+    "lineListError": "Error retrieving the line list. Please try reloading the page."
   }
 }

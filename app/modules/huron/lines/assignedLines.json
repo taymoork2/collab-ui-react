@@ -1,0 +1,31 @@
+[{
+  "internalNumber": "1000",
+  "externalNumber": "+12145551000",
+  "device": "DX650",
+  "userName": "john.doe@familymart.com"
+}, {
+  "internalNumber": "1001",
+  "externalNumber": "+12145551001",
+  "device": "DX70",
+  "userName": "michael.doe@familymart.com"
+}, {
+  "internalNumber": "1002",
+  "externalNumber": "+12145551002",
+  "device": "DX80",
+  "userName": "amber.doe@familymart.com"
+}, {
+  "internalNumber": "1003",
+  "externalNumber": "+12145551003",
+  "device": "8841",
+  "userName": "jane.doe@familymart.com"
+}, {
+  "internalNumber": "1004",
+  "externalNumber": "+12145551004",
+  "device": "8845",
+  "userName": "adam.doe@familymart.com"
+}, {
+  "internalNumber": "1005",
+  "externalNumber": "+12145551005",
+  "device": "8861",
+  "userName": "jessica.doe@familymart.com"
+}]

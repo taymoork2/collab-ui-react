@@ -14,7 +14,7 @@
         </div>
         <div class="modal-footer">
             <button id="addDidDismissButton" class="btn btn-default" ng-click="$dismiss()" translate="common.cancel"></button>
-            <button id="addDidButton" class="btn btn-primary" ng-class="{'disabled': !didAdd.submitBtnStatus}" ng-click="didAdd.confirmSubmit()" translate="common.save"></button>
+            <button id="addDidButton" class="btn btn-primary" ng-disabled="!didAdd.submitBtnStatus" ng-click="!didAdd.submitBtnStatus || didAdd.confirmSubmit()" translate="common.save"></button>
         </div>
     </div>
     <div id="removeDidPanel" class="delete-numbers" ng-show="didAdd.deleteNumbers">
