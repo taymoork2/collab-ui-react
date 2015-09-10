@@ -1,21 +1,20 @@
+<div id="webexSiteSettings"
+     name="webexSiteSettings">
+          
+  <div class="page-header row">
+    <div class="page-title col-xs-12">
+      <span class="title-heading" translate="webexSiteSettings.title"></span>
+      <span class="search-title">{{WebExSiteSettings.siteSettingsObj.siteUrl}}</span>
+    </div>
+  </div>	
+  
   <div id="errSection"
        name="errSection"
        ng-if="WebExSiteSettings.siteSettingsObj.hasLoadError">
   </div>
     
-  <div id="webexSiteSettings"
-       name="webexSiteSettings"
+  <div class="content-view"
        ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
-          
-   <div class="page-header row">
-          <div class="page-title col-xs-12">
-            <span class="title-heading" translate="webexSiteSettings.title"></span>
-            <span class="search-title">{{WebExSiteSettings.siteSettingsObj.siteUrl}}</span>
-          </div>
-    </div>	
-  </div>
-  
-  <div class="content-view">
     <!--
     <div class="row support-row">
       <div ng-include="'modules/webex/siteSettings/commonSiteSettings.tpl.html'" class="col-xs-12 col-md-4"></div>
@@ -25,3 +24,4 @@
  	 		 
     <div ng-include="'modules/webex/siteSettings/siteSettingsTable.tpl.html'"></div> 
   </div>
+</div>
