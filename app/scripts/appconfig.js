@@ -1323,3 +1323,18 @@ angular
         });
     }
   ]);
+
+angular
+  .module('Messenger')
+  .config(['$stateProvider',
+    function ($stateProvider) {
+      $stateProvider
+        .state('messenger', {
+          parent: 'main',
+          url: '/messenger',
+          templateUrl: 'modules/messenger/ci-sync/orgInfo.tpl.html',
+          controller: 'OrgInfoCtrl',
+          controllerAs: 'orgInfo'
+        });
+    }
+  ]);

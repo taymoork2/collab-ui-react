@@ -47,6 +47,8 @@ angular.module('Mediafusion', ['Core']);
 angular.module('WebExUserSettings', ['Core']);
 angular.module('WebExUserSettings2', ['Core']);
 
+angular.module('Messenger', ['Core']);
+
 angular.module('wx2AdminWebClientApp', [
   'Core',
   'Squared',
@@ -55,4 +57,5 @@ angular.module('wx2AdminWebClientApp', [
   'Mediafusion',
   'WebExUserSettings',
   'WebExUserSettings2',
+  'Messenger'
 ]);
