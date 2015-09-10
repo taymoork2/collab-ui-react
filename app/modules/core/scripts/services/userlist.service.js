@@ -1,4 +1,4 @@
-(function() {
+(function () {
   'use strict';
   /* global $ */
 
@@ -10,7 +10,7 @@
   function UserListService($http, $rootScope, $location, $q, $filter, $compile, Storage, Config, Authinfo, Log, Utils, Auth) {
     var searchFilter = 'filter=active%20eq%20true%20and%20userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22';
     var attributes = 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID';
-    var scimUrl = Config.getScimUrl() + '?' + '&' + attributes;
+    var scimUrl = Config.getScimUrl(Authinfo.getOrgId()) + '?' + '&' + attributes;
     var ciscoOrgId = '1eb65fdf-9643-417f-9974-ad72cae0e10f';
 
     var service = {
@@ -23,8 +23,9 @@
     return service;
 
     ////////////////
+
     function listUsers(startIndex, count, sortBy, sortOrder, callback, searchStr, getAdmins) {
-      var listUrl = Utils.sprintf(scimUrl, [Authinfo.getOrgId()]);
+      var listUrl = scimUrl;
       var filter;
       var entitlement;
       var scimSearchUrl = null;
@@ -41,20 +42,20 @@
         if (typeof entitlement !== 'undefined' && entitlement !== null && searchStr !== '' && typeof (searchStr) !== 'undefined') {
           //It seems CI does not support 'ANDing' filters in this situation.
           filter = searchFilter + '%20and%20entitlements%20eq%20%22' + window.encodeURIComponent(entitlement) + '%22';
-          scimSearchUrl = Config.getScimUrl() + '?' + filter + '&' + attributes;
+          scimSearchUrl = Config.getScimUrl(Authinfo.getOrgId()) + '?' + filter + '&' + attributes;
           encodedSearchStr = window.encodeURIComponent(searchStr);
-          listUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId(), encodedSearchStr, encodedSearchStr, encodedSearchStr]);
+          listUrl = Utils.sprintf(scimSearchUrl, [encodedSearchStr, encodedSearchStr, encodedSearchStr]);
           searchStr = searchStr;
         } else if (searchStr !== '' && typeof (searchStr) !== 'undefined') {
           filter = searchFilter;
-          scimSearchUrl = Config.getScimUrl() + '?' + filter + '&' + attributes;
+          scimSearchUrl = Config.getScimUrl(Authinfo.getOrgId()) + '?' + filter + '&' + attributes;
           encodedSearchStr = window.encodeURIComponent(searchStr);
-          listUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId(), encodedSearchStr, encodedSearchStr, encodedSearchStr]);
+          listUrl = Utils.sprintf(scimSearchUrl, [encodedSearchStr, encodedSearchStr, encodedSearchStr]);
 
         } else if (typeof entitlement !== 'undefined' && entitlement !== null) {
           filter = 'filter=active%20eq%20%true%20and%20entitlements%20eq%20%22' + window.encodeURIComponent(entitlement);
-          scimSearchUrl = Config.getScimUrl() + '?' + filter + '&' + attributes;
-          listUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId()]);
+          scimSearchUrl = Config.getScimUrl(Authinfo.getOrgId()) + '?' + filter + '&' + attributes;
+          listUrl = scimSearchUrl;
         }
       }
 
@@ -88,17 +89,17 @@
           Log.debug('Callback with search=' + searchStr);
           callback(data, status, searchStr);
         })
-      .error(function (data, status) {
-        data = data || {};
-        data.success = false;
-        data.status = status;
-        callback(data, status, searchStr);
-        var description = null;
-        var errors = data.Errors;
-        if (errors) {
-          description = errors[0].description;
-        }
-      });
+        .error(function (data, status) {
+          data = data || {};
+          data.success = false;
+          data.status = status;
+          callback(data, status, searchStr);
+          var description = null;
+          var errors = data.Errors;
+          if (errors) {
+            description = errors[0].description;
+          }
+        });
     }
 
     function exportCSV(scope) {
@@ -178,23 +179,23 @@
           data.success = true;
           callback(data, status);
         })
-      .error(function (data, status) {
-        data = data || {};
-        data.success = false;
-        data.status = status;
-        callback(data, status);
-        var description = null;
-        var errors = data.Errors;
-        if (errors) {
-          description = errors[0].description;
-        }
-      });
+        .error(function (data, status) {
+          data = data || {};
+          data.success = false;
+          data.status = status;
+          callback(data, status);
+          var description = null;
+          var errors = data.Errors;
+          if (errors) {
+            description = errors[0].description;
+          }
+        });
     }
 
     function getUser(searchinput, callback) {
       var filter = 'filter=userName%20eq%20%22' + window.encodeURIComponent(searchinput) + '%22';
-      var scimSearchUrl = Config.getScimUrl() + '?' + filter + '&' + attributes;
-      var getUserUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId()]);
+      var scimSearchUrl = Config.getScimUrl(Authinfo.getOrgId()) + '?' + filter + '&' + attributes;
+      var getUserUrl = scimSearchUrl;
 
       $http.get(getUserUrl)
         .success(function (data, status) {
@@ -203,12 +204,12 @@
           Log.debug('Retrieved user successfully.');
           callback(data, status);
         })
-      .error(function (data, status) {
-        data = data || {};
-        data.success = false;
-        data.status = status;
-        callback(data, status);
-      });
+        .error(function (data, status) {
+          data = data || {};
+          data.success = false;
+          data.status = status;
+          callback(data, status);
+        });
     }
   }
 })();
