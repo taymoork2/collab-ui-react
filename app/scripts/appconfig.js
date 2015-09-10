@@ -577,8 +577,8 @@ angular
         .state('site-setting-iframe', {
           url: '/webexSiteSettingIframe',
           templateUrl: 'modules/webex/siteSettingIframe/siteSettingIframe.tpl.html',
-          controller: 'WebExSiteSettingIframeCtrl',
-          controllerAs: 'WebExSiteSettingIframe',
+          controller: 'ReportsCtrl',
+          controllerAs: 'reports',
           parent: 'main',
           params: {
             siteUrl: null,
