@@ -35,7 +35,9 @@
       if (getAdmins && listUrl.indexOf(adminFilter) === -1) {
         listUrl = listUrl + adminFilter;
       } else {
-        listUrl = listUrl + '&filter=active%20eq%20true';
+        // US8552: For organizations with too many users, don't load the user list
+        // searching a large org with too few characters 'xz' triggers an useful error.
+        listUrl = listUrl + '&filter=active%20eq%20true%20or%20displayName%20sw%20%22xz%22';
       }
 
       if (!getAdmins) {

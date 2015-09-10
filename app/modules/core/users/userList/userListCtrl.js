@@ -23,6 +23,7 @@ angular.module('Core')
         adminUsers: [],
         partnerUsers: []
       };
+      $scope.tooManyUsers = false;
 
       $scope.currentUser = null;
       $scope.popup = Notification.popup;
@@ -56,9 +57,11 @@ angular.module('Core')
         if ((filter === '') || (filter === 'all')) {
           $scope.gridData = $scope.userList.allUsers;
         } else if (filter === 'administrators') {
+          $scope.tooManyUsers = false;
           $scope.gridData = $scope.userList.adminUsers;
           $scope.searchStr = 'administrators';
         } else if (filter === 'partners') {
+          $scope.tooManyUsers = false;
           $scope.gridData = $scope.userList.partnerUsers;
         }
       };
@@ -122,6 +125,7 @@ angular.module('Core')
         UserListService.listUsers(startIndex, Config.usersperpage, $scope.sort.by, $scope.sort.order,
           function (data, status, searchStr) {
             $scope.gridRefresh = false;
+            $scope.tooManyUsers = false;
             if (data.success) {
               $timeout(function () {
                 $scope.load = true;
@@ -144,8 +148,22 @@ angular.module('Core')
                 Log.debug('Ignorning result from search=: ' + searchStr + '  current search=' + $scope.searchStr);
               }
             } else {
-              Log.debug('Query existing users failed. Status: ' + status);
-              Notification.notify([$translate.instant('usersPage.userListError')], 'error');
+              if (data.status === 403) {
+                var errors = data.Errors;
+                var tooManyUsers = !!errors && _.some(errors, {'errorCode': '100106'});
+              }
+
+              if (tooManyUsers) {
+                // clear out the current grid results
+                $scope.placeholder.count = 0;
+                $scope.userList.allUsers = [];
+                $scope.setFilter($scope.activeFilter);
+                // display search message
+                $scope.tooManyUsers = tooManyUsers;
+              } else {
+                Log.debug('Query existing users failed. Status: ' + status);
+                Notification.notify([$translate.instant('usersPage.userListError')], 'error');
+              }
             }
           }, $scope.searchStr);
       }

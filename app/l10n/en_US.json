@@ -69,6 +69,7 @@
     "ciscoucError": "{{email}} did not successfully onboard Unified Communications.",
     "messageError": "Message: {{message}}",
     "userListError": "Error retrieving the user list. Please try reloading the page.",
+    "tooManyUsersError": "Use the search input above to find users.",
     "emailSuccess": "Email sent successfully.",
     "emailError": "Error sending email.",
     "convertUserSuccess": "successfully converted.",
