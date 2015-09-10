@@ -9,14 +9,14 @@
         <div class="aa-flex-vertical-line"></div>
          <div ng-repeat="scheduleTitle in ['{{aaBuilder.getScheduleTitle()}}']" ng-include="'modules/huron/callRouting/autoAttendant/builder/aaBuilderSchedule.tpl.html'"></div>
         <div class="aa-flex-vertical-line"></div>
-    </div>
+      </div>
     </div>
     <div name="topLane3" class="small-4 columns aa-container"><!-- layout placeholder--></div>
   </div>
 
   <div name="aa-builder-actionsets" id="aa-builder-actionsets" class="row">
-
     <div name="bottomLane1" class="small-4 columns aa-container">
+      <!-- holds single schedule: open hours: open/closed/holiday, open/closed, or open/holiday -->
       <div ng-if="aaBuilder.closedHours || aaBuilder.holidays" class="aa-flex-container">
         <div class="aa-flex-horizontal-line-right"></div>
         <div class="aa-flex-vertical-line"></div>
@@ -27,31 +27,37 @@
       </div>
     </div>
     <div name="bottomLane2" class="small-4 columns aa-container">
+      <!-- holds multiple schedules -->
       <div class="aa-flex-container">
         <div ng-if="aaBuilder.closedHours || aaBuilder.holidays" class="aa-flex-horizontal-line"></div>
 
-        <div ng-if="(!aaBuilder.closedHours && !aaBuilder.holidays) || (aaBuilder.closedHours && aaBuilder.holidays)" class="aa-flex-vertical-line" ></div>
-        <aa-builder-schedule-info ng-if="(aaBuilder.closedHours && aaBuilder.holidays)" schedule="closedHours" ng-controller="AABuilderScheduleInfoCtrl as scheduleInfo"></aa-builder-schedule-info>
+        <!-- open hours only-->
+        <div ng-if="!aaBuilder.closedHours && !aaBuilder.holidays" ng-repeat-start="action in aaBuilder.openHourActions.entries" class="aa-flex-vertical-line"></div>
+        <aa-builder-actions ng-if="!aaBuilder.closedHours && !aaBuilder.holidays" ng-repeat-end="action in aaBuilder.openHourActions.entries" schedule="openHours" index="0"></aa-builder-actions>
 
-        <div ng-if="(!aaBuilder.closedHours && !aaBuilder.holidays)" ng-repeat-start="action in aaBuilder.openHourActions.entries" class="aa-flex-vertical-line"></div>
-        <aa-builder-actions ng-if="(!aaBuilder.closedHours && !aaBuilder.holidays)" ng-repeat-end="action in aaBuilder.openHourActions.entries" schedule="openHours" index="0"></aa-builder-actions>
-
-        <div ng-if="(aaBuilder.closedHours && aaBuilder.holidays)" class="aa-flex-vertical-line"></div>
+        <!-- closed hours: open/closed/holiday -->
+        <div ng-if="aaBuilder.closedHours && aaBuilder.holidays" class="aa-flex-vertical-line" ></div>
+        <aa-builder-schedule-info ng-if="aaBuilder.closedHours && aaBuilder.holidays" schedule="closedHours" ng-controller="AABuilderScheduleInfoCtrl as scheduleInfo"></aa-builder-schedule-info>
+        <div ng-if="aaBuilder.closedHours && aaBuilder.holidays" class="aa-flex-vertical-line"></div>
         <aa-builder-actions ng-if="aaBuilder.closedHours && aaBuilder.holidays" schedule="closedHours" index="0"></aa-builder-actions>
 
-        <div ng-if="(!aaBuilder.closedHours && !aaBuilder.holidays) || (aaBuilder.closedHours && aaBuilder.holidays)" class="aa-flex-vertical-spacer"></div>
+        <div class="aa-flex-vertical-spacer"></div>
       </div>
     </div>
     <div name="bottomLane3" class="small-4 columns aa-container">
+      <!-- holds multiple schedules -->
       <div ng-if="aaBuilder.closedHours || aaBuilder.holidays" class="aa-flex-container">
         <div class="aa-flex-horizontal-line-left"></div>
-
         <div class="aa-flex-vertical-line"></div>
+
+        <!-- holiday hours: open/closed/holiday or open/holiday -->
         <aa-builder-schedule-info ng-if="aaBuilder.holidays" schedule="holidays" ng-controller="AABuilderScheduleInfoCtrl as scheduleInfo"></aa-builder-schedule-info>
-        <aa-builder-schedule-info ng-if="aaBuilder.closedHours && !aaBuilder.holidays" schedule="closedHours" ng-controller="AABuilderScheduleInfoCtrl as scheduleInfo"></aa-builder-schedule-info>
-
-        <div class="aa-flex-vertical-line"></div>
+        <div ng-if="aaBuilder.holidays" class="aa-flex-vertical-line"></div>
         <aa-builder-actions ng-if="aaBuilder.holidays" schedule="holidays" index="0"></aa-builder-actions>
+
+        <!-- closed hours: open/closed -->
+        <aa-builder-schedule-info ng-if="aaBuilder.closedHours && !aaBuilder.holidays" schedule="closedHours" ng-controller="AABuilderScheduleInfoCtrl as scheduleInfo"></aa-builder-schedule-info>
+        <div ng-if="aaBuilder.closedHours && !aaBuilder.holidays" class="aa-flex-vertical-line"></div>
         <aa-builder-actions ng-if="aaBuilder.closedHours && !aaBuilder.holidays" schedule="closedHours" index="0"></aa-builder-actions>
 
         <div class="aa-flex-vertical-spacer"></div>
