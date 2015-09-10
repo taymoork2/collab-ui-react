@@ -31,6 +31,10 @@ describe('Service: PstnSetupService', function () {
     }
   };
 
+  var updatePayload = {
+    pstnCarrierId: carrierId
+  };
+
   var blockOrderPayload = {
     "npa": "555",
     "quantity": "20",
@@ -39,7 +43,6 @@ describe('Service: PstnSetupService', function () {
     "serviceStreetDirectional": "E",
     "serviceStreetName": "President George Bush",
     "serviceStreetSuffix": "Hwy",
-    "serviceAddressSub": "",
     "serviceCity": "Richardson",
     "serviceState": "TX",
     "serviceZip": "75082"
@@ -62,6 +65,13 @@ describe('Service: PstnSetupService', function () {
     $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/customers', customerPayload).respond(201);
 
     PstnSetupService.createCustomer(customerPayload.uuid, customerPayload.name, customerPayload.pstnCarrierId, customerPayload.resellerId);
+    $httpBackend.flush();
+  });
+
+  it('should update a customer\'s carrier', function () {
+    $httpBackend.expectPUT(HuronConfig.getTerminusUrl() + '/customers/' + customerId, updatePayload).respond(200);
+
+    PstnSetupService.updateCustomerCarrier(customerId, carrierId);
     $httpBackend.flush();
   });
 
