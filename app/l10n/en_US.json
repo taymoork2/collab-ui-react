@@ -1737,7 +1737,7 @@
     "pageId_siteInformation": "Site Information",
     "pageId_security": "Security",
     "pageId_scheduler": "Scheduler ",
-    "pageId_cmr": "Cloud Collaboration Meeting Room (CMR)",
+    "pageId_cmr": "Collaboration Meeting Room (CMR)",
     "pageId_mobile": "Mobile",
     "pageId_navigationBar": "Navigation Bar",
     "pageId_productivityTools": "Productivity Tools",
@@ -1754,7 +1754,8 @@
     "pageId_address": "Company Addresses",
     "pageId_misc": "Miscellaneous",
     "pageId_scheduler": "Default Scheduler Options",
-    "pageId_xxxx": "Page name undefined"
+    "pageId_underDevelopment": "Under Development",
+    "pageId_xxxx": "Undefined"
   },
   "leaderBoard": {
     "actions": "Actions",
