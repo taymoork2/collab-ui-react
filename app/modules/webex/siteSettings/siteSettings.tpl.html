@@ -7,26 +7,21 @@
        name="webexSiteSettings"
        ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
           
-  	<div class="row">
-      <div class="col-md-12 content-view">  
-        <div class="row support-row">
+   <div class="page-header row">
           <div class="page-title col-xs-12">
             <span class="title-heading" translate="webexSiteSettings.title"></span>
             <span class="search-title">{{WebExSiteSettings.siteSettingsObj.siteUrl}}</span>
           </div>
-        </div>
-			
-        <!--
-        <div class="row support-row">
-          <div ng-include="'modules/webex/siteSettings/commonSiteSettings.tpl.html'" class="col-xs-12 col-md-4"></div>
-          <div ng-include="'modules/webex/siteSettings/centreSpecificSettings.tpl.html'" class="col-xs-12 col-md-8"></div>	
-        </div>
-        -->
- 	 		 
-        <div class="row support-row">
-          <div ng-include="'modules/webex/siteSettings/siteSettingsTable.tpl.html'"></div> 
-        </div>
-      </div> 
     </div>	
- 	 
+  </div>
+  
+  <div class="content-view">
+    <!--
+    <div class="row support-row">
+      <div ng-include="'modules/webex/siteSettings/commonSiteSettings.tpl.html'" class="col-xs-12 col-md-4"></div>
+      <div ng-include="'modules/webex/siteSettings/centreSpecificSettings.tpl.html'" class="col-xs-12 col-md-8"></div>	
+    </div>
+    -->
+ 	 		 
+    <div ng-include="'modules/webex/siteSettings/siteSettingsTable.tpl.html'"></div> 
   </div>
