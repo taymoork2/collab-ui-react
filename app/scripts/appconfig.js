@@ -111,7 +111,7 @@ angular
             template: '<div ui-view="modal"></div>',
             size: options.size,
             windowClass: options.windowClass,
-            backdrop: options.backdrop || true
+            backdrop: options.backdrop || 'static'
           });
           $state.modal.result.finally(function () {
             if (!this.stopPreviousState) {
