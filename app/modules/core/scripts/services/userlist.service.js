@@ -79,13 +79,6 @@
         .success(function (data, status) {
           data = data || {};
           data.success = true;
-          // var activeUsers = [];
-          // for (var i = 0; i < data.Resources.length; i++) {
-          //   if (data.Resources[i].active === true) {
-          //     activeUsers.push(data.Resources[i]);
-          //   }
-          // }
-          // data.Resources = activeUsers;
           Log.debug('Callback with search=' + searchStr);
           callback(data, status, searchStr);
         })
