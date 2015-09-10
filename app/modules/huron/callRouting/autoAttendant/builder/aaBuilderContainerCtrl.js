@@ -3,18 +3,15 @@
 
   angular
     .module('uc.autoattendant')
-    .controller('AABuilderContainerCtrl', AABuilderContainerCtrl); /* was AutoAttendanMenuCtrl */
+    .controller('AABuilderContainerCtrl', AABuilderContainerCtrl);
 
   /* @ngInject */
-  function AABuilderContainerCtrl($scope, $stateParams, $translate, AutoAttendantCeInfoModelService,
-    AutoAttendantCeMenuModelService, AutoAttendantCeService, AAModelService, Notification) {
+  function AABuilderContainerCtrl($scope, $stateParams, AutoAttendantCeInfoModelService,
+    AutoAttendantCeMenuModelService, AutoAttendantCeService, AAModelService) {
 
     var vm = this;
     vm.aaModel = {};
-    vm.ui = {};
-    vm.ui.ceInfo = {};
 
-    vm.scheduleTitle = "";
     vm.getScheduleTitle = getScheduleTitle;
 
     vm.openHours = true;
@@ -63,48 +60,9 @@
 
     }
 
-    function selectAA(aaName) {
-      vm.aaModel.aaName = aaName;
-      if (angular.isUndefined(vm.aaModel.aaRecord)) {
-        if (aaName === '') {
-          vm.aaModel.aaRecord = AAModelService.newAARecord();
-        } else {
-          for (var i = 0; i < vm.aaModel.aaRecords.length; i++) {
-            if (vm.aaModel.aaRecords[i].callExperienceName === aaName) {
-              // vm.aaModel.aaRecord = angular.copy(vm.aaModel.aaRecords[i]);
-              AutoAttendantCeService.readCe(
-                vm.aaModel.aaRecords[i].callExperienceURL).then(
-                function (data) {
-                  vm.aaModel.aaRecord = data;
-
-                  // Workaround for reading the dn number: by copying it from aaRecords[i], until
-                  // dn number is officialy stored in ceDefintion.
-                  vm.aaModel.aaRecord.assignedResources = angular.copy(vm.aaModel.aaRecords[i].assignedResources);
-                },
-                function (response) {
-                  Notification.notify([$translate.instant('autoAttendant.errorReadCe', {
-                    name: aaName,
-                    statusText: response.statusText,
-                    status: response.status
-                  })], 'error');
-                });
-              return;
-            }
-          }
-        }
-      }
-    }
-
     function activate() {
       var aaName = $stateParams.aaName;
       vm.aaModel = AAModelService.getAAModel();
-      vm.ui = $scope.aa.modal;
-
-      vm.aaModel.dataReadyPromise.then(function (data) {
-        selectAA(aaName);
-      }, function (data) {
-        selectAA(aaName);
-      });
 
       setOpenHourActions();
       setClosedHourActions();
