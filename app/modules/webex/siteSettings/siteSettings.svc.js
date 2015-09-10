@@ -34,6 +34,7 @@ angular.module('WebExSiteSettings').service('WebExSiteSettingsSvc', [
       centerSpecificSettingPages: null,
       settingPageTypeObjs: [],
       emailAllHostsPageObj: null,
+      testIframeObj: null,
 
       meetingCenter: {
         id: "MC",

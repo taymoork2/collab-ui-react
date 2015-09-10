@@ -34,22 +34,15 @@
       _this.funcName = "WebExSiteSettingIframeCtrl()";
       _this.logMsg = "";
 
-      _this.siteUrl = $stateParams.siteUrl;
-      _this.settingPageId = $stateParams.settingPageId;
-      _this.settingPageTitle = $translate.instant("webexSiteSettingsLabels." + _this.settingPageId);
-      _this.settingPageIframeUrl = $stateParams.settingPageIframeUrl;
-      _this.iframeUrl = "https://" + $stateParams.siteUrl + $stateParams.settingPageIframeUrl;
-      _this.adminEmail = Authinfo.getPrimaryEmail();
-      _this.locale = ("es_LA" == $translate.use()) ? "es_MX" : $translate.use();
-
-      $scope.siteUrl = _this.siteUrl;
-      $scope.settingPageId = _this.settingPageId;
-      $scope.settingPageTitle = _this.settingPageTitle;
-      $scope.settingPageIframeUrl = _this.settingPageIframeUrl;
-      $scope.iframeUrl = _this.iframeUrl;
-      $scope.adminEmail = _this.adminEmail;
-      $scope.locale = _this.locale;
-      $scope.trustIframeUrl = $sce.trustAsResourceUrl(_this.iframeUrl);
+      $scope.siteUrl = $stateParams.siteUrl;
+      $scope.settingPageId = $stateParams.settingPageId;
+      $scope.settingPageTitle = $translate.instant("webexSiteSettingsLabels." + $scope.settingPageId);
+      $scope.settingPageIframeUrl = $stateParams.settingPageIframeUrl;
+      $scope.iframeUrl = "https://" + $stateParams.siteUrl + $stateParams.settingPageIframeUrl;
+      $scope.adminEmail = Authinfo.getPrimaryEmail();
+      $scope.locale = ("es_LA" == $translate.use()) ? "es_MX" : $translate.use();
+      $scope.trustIframeUrl = $sce.trustAsResourceUrl($scope.iframeUrl);
+      $scope.indexPageSref = "site-settings({siteUrl:'" + $scope.siteUrl + "'})";
 
       _this.logMsg = _this.funcName + ": " + "\n" +
         "siteUrl=" + $scope.siteUrl + "\n" +

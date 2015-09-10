@@ -245,6 +245,14 @@
           category,
           settingPageUrl
         ) {
+          var funcName = "updateSettingsPageObjs()";
+          var logMsg = "";
+
+          logMsg = funcName + ": " + "\n" +
+            "settingPageId=" + settingPageId + "\n" +
+            "category=" + category + "\n" +
+            "settingPageUrl=" + settingPageUrl;
+          $log.log(logMsg);
 
           var settingPageTypeObj = null;
           var tmpId = "pageId_" + settingPageId;
@@ -306,8 +314,13 @@
               },
             };
 
+            logMsg = funcName + ": " + "settingPageId=" + settingPageId;
+            $log.log(logMsg);
+
             if (settingPageId == "emailAllHosts") {
               webExSiteSettingsObj.emailAllHostsObj = settingPageTypeObj;
+            } else if (settingPageId == "underDevelopment") {
+              webExSiteSettingsObj.testIframeObj = settingPageTypeObj;
             } else {
               webExSiteSettingsObj.settingPageTypeObjs.push(settingPageTypeObj);
             }
@@ -345,11 +358,15 @@
           var _this = this;
           var settingPagesInfoJson = null;
 
-          setCommonSiteSettingPages();
-          setCenterSpecificSettingPages();
           updateSettingTable();
 
           function updateSettingTable() {
+            _this.updateSettingsPageObjs(
+              "underDevelopment",
+              "common",
+              "/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage"
+            );
+
             _this.updateSettingsPageObjs(
               "emailAllHosts",
               "common",
@@ -416,199 +433,14 @@
               "/forms_webACD"
             );
 
+            $log.log("updateSettingTable(): " + JSON.stringify(webExSiteSettingsObj.testIframeObj) + "\n");
+
             webExSiteSettingsObj.settingPageTypeObjs.forEach(
               function checkSettingPageTypeObj(tmpSettingPageTypeObj) {
                 $log.log("updateSettingTable(): " + JSON.stringify(tmpSettingPageTypeObj) + "\n");
               }
             );
           } // updateSettingTable()
-
-          function setCommonSiteSettingPages() {
-            $log.log("setCommonSiteSettingPages START");
-            var siteName = webExSiteSettingsObj.siteName;
-            var siteUrl = webExSiteSettingsObj.siteUrl;
-            var commonSiteSettings = [];
-
-            //TODO: parse XML to get links
-            var commonSiteSetting = {
-              id: "cmr",
-              label: 'webexSiteSettingsLabels.pageId_cmr',
-              link: "https://" + siteUrl + "/admin",
-              enabled: true
-            };
-            commonSiteSettings.push(commonSiteSetting);
-
-            var commonSiteSetting2 = {
-              id: "address",
-              label: "webexSiteSettingsLabels.pageId_address",
-              link: "https://" + siteUrl + "/admin",
-              enabled: false
-            };
-            commonSiteSettings.push(commonSiteSetting2);
-
-            commonSiteSetting2 = {
-              id: "misc",
-              label: "webexSiteSettingsLabels.pageId_" + "misc",
-              link: "https://" + siteName + ".webex.com/adm3100/siteSettingCommon.do?siteurl=" + siteName,
-              enabled: true
-            };
-            commonSiteSettings.push(commonSiteSetting2);
-
-            webExSiteSettingsObj.commonSiteSettingPages = commonSiteSettings;
-            $log.log("setCommonSiteSettingPages END");
-          } // setCommonSiteSettingPages()
-
-          function setCenterSpecificSettingPages() {
-            var centerSpecificSettings = [];
-            var centerSpecificSetting = null;
-            var pageId = null;
-            var displayLabel = null;
-
-            pageId = "0017";
-            displayLabel = "webexSiteSettingsLabels" + "." + "pageId_" + pageId;
-            centerSpecificSetting = {
-              id: "pageId_" + pageId,
-              label: $translate.instant(displayLabel),
-              iframeUrl: null,
-              meetingCenterApplicable: true,
-              eventCenterApplicable: false,
-              trainingCenterApplicable: true,
-              supportCenterApplicable: false
-            };
-            centerSpecificSettings.push(centerSpecificSetting);
-
-            pageId = "0018";
-            displayLabel = "webexSiteSettingsLabels" + "." + "pageId_" + pageId;
-            centerSpecificSetting = {
-              id: "pageId_" + pageId,
-              label: $translate.instant(displayLabel),
-              iframeUrl: null,
-              meetingCenterApplicable: false,
-              eventCenterApplicable: true,
-              trainingCenterApplicable: false,
-              supportCenterApplicable: true
-            };
-            centerSpecificSettings.push(centerSpecificSetting);
-
-            pageId = "0019";
-            displayLabel = "webexSiteSettingsLabels" + "." + "pageId_" + pageId;
-            centerSpecificSetting = {
-              id: "pageId_" + pageId,
-              label: $translate.instant(displayLabel),
-              iframeUrl: null,
-              meetingCenterApplicable: false,
-              eventCenterApplicable: true,
-              trainingCenterApplicable: true,
-              supportCenterApplicable: false
-            };
-            centerSpecificSettings.push(centerSpecificSetting);
-
-            pageId = "0020";
-            displayLabel = "webexSiteSettingsLabels" + "." + "pageId_" + pageId;
-            centerSpecificSetting = {
-              id: "pageId_" + pageId,
-              label: $translate.instant(displayLabel),
-              iframeUrl: null,
-              meetingCenterApplicable: false,
-              eventCenterApplicable: true,
-              trainingCenterApplicable: true,
-              supportCenterApplicable: true
-            };
-            centerSpecificSettings.push(centerSpecificSetting);
-
-            pageId = "0021";
-            displayLabel = "webexSiteSettingsLabels" + "." + "pageId_" + pageId;
-            centerSpecificSetting = {
-              id: "pageId_" + pageId,
-              label: $translate.instant(displayLabel),
-              iframeUrl: null,
-              meetingCenterApplicable: true,
-              eventCenterApplicable: false,
-              trainingCenterApplicable: false,
-              supportCenterApplicable: false
-            };
-            centerSpecificSettings.push(centerSpecificSetting);
-
-            pageId = "0021";
-            displayLabel = "webexSiteSettingsLabels" + "." + "pageId_" + pageId;
-            centerSpecificSetting = {
-              id: "pageId_" + pageId,
-              label: $translate.instant(displayLabel),
-              iframeUrl: null,
-              meetingCenterApplicable: true,
-              eventCenterApplicable: true,
-              trainingCenterApplicable: true,
-              supportCenterApplicable: true
-            };
-            centerSpecificSettings.push(centerSpecificSetting);
-
-            pageId = "0022";
-            displayLabel = "webexSiteSettingsLabels" + "." + "pageId_" + pageId;
-            centerSpecificSetting = {
-              id: "pageId_" + pageId,
-              label: $translate.instant(displayLabel),
-              iframeUrl: null,
-              meetingCenterApplicable: false,
-              eventCenterApplicable: true,
-              trainingCenterApplicable: false,
-              supportCenterApplicable: false
-            };
-            centerSpecificSettings.push(centerSpecificSetting);
-
-            pageId = "0023";
-            displayLabel = "webexSiteSettingsLabels" + "." + "pageId_" + pageId;
-            centerSpecificSetting = {
-              id: "pageId_" + pageId,
-              label: $translate.instant(displayLabel),
-              iframeUrl: null,
-              meetingCenterApplicable: true,
-              eventCenterApplicable: true,
-              trainingCenterApplicable: false,
-              supportCenterApplicable: true
-            };
-            centerSpecificSettings.push(centerSpecificSetting);
-
-            pageId = "0024";
-            displayLabel = "webexSiteSettingsLabels" + "." + "pageId_" + pageId;
-            centerSpecificSetting = {
-              id: "pageId_" + pageId,
-              label: $translate.instant(displayLabel),
-              iframeUrl: null,
-              meetingCenterApplicable: false,
-              eventCenterApplicable: true,
-              trainingCenterApplicable: false,
-              supportCenterApplicable: false
-            };
-            centerSpecificSettings.push(centerSpecificSetting);
-
-            pageId = "0025";
-            displayLabel = "webexSiteSettingsLabels" + "." + "pageId_" + pageId;
-            centerSpecificSetting = {
-              id: "pageId_" + pageId,
-              label: $translate.instant(displayLabel),
-              iframeUrl: null,
-              meetingCenterApplicable: false,
-              eventCenterApplicable: true,
-              trainingCenterApplicable: true,
-              supportCenterApplicable: true
-            };
-            centerSpecificSettings.push(centerSpecificSetting);
-
-            pageId = "0026";
-            displayLabel = "webexSiteSettingsLabels" + "." + "pageId_" + pageId;
-            centerSpecificSetting = {
-              id: "pageId_" + pageId,
-              label: $translate.instant(displayLabel),
-              iframeUrl: null,
-              meetingCenterApplicable: false,
-              eventCenterApplicable: false,
-              trainingCenterApplicable: false,
-              supportCenterApplicable: true
-            };
-            centerSpecificSettings.push(centerSpecificSetting);
-
-            webExSiteSettingsObj.centerSpecificSettingPages = centerSpecificSettings;
-          } // setCenterSpecificSettingPages()
         }, // processSettingPagesInfo()
 
         getSiteSettingsInfoXml: function () {

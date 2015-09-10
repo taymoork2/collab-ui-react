@@ -59,27 +59,7 @@ angular.module('Core')
         '      <p class="ngCellText">' + '\n' +
         '        <span name="webexSiteSettings"' + '\n' +
         '              id="webexSiteSettings">' + '\n' +
-        '          <i class="fa fa-external-link fa-lg"></i>' + '\n' +
-        '        </span>' + '\n' +
-        '      </p>' + '\n' +
-        '    </a>' + '\n' +
-        '  </div>' + '\n' +
-        '</div>' + '\n';
-
-      var siteSettingIframeTemplate =
-        '<div ng-if="siteList.showSiteLinks">' + '\n' +
-        '  <div ng-if="siteList.iframeSupportedSite">' + '\n' +
-        '    <a id="webex-site-setting-iframe"' + '\n' +
-        '       ui-sref="site-setting-iframe({' + '\n' +
-        '         siteUrl:row.entity.license.siteUrl,' + '\n' +
-        '         settingPageId:\'pageId_xxxx\',' + '\n' +
-        '         settingPageIframeUrl:\'/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage\'' + '\n' +
-        '       })">' + '\n' +
-        '           ' + '\n' +
-        '      <p class="ngCellText">' + '\n' +
-        '        <span name="webexSiteSettingIframe"' + '\n' +
-        '              id="webexSiteSettingIframe">' + '\n' +
-        '          <i class="fa fa-external-link fa-lg"></i>' + '\n' +
+        '          <i class="icon-settings icon"></i>' + '\n' +
         '        </span>' + '\n' +
         '      </p>' + '\n' +
         '    </a>' + '\n' +
@@ -136,13 +116,6 @@ angular.module('Core')
         field: 'license.siteUrl',
         displayName: $translate.instant('siteList.siteSettings'),
         cellTemplate: siteUrlTemplate,
-        sortable: false
-      });
-
-      vm.gridOptions.columnDefs.push({
-        field: 'license.siteUrl',
-        displayName: $translate.instant('siteList.siteSettingIframe'),
-        cellTemplate: siteSettingIframeTemplate,
         sortable: false
       });
 
