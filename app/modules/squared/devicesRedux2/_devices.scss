@@ -2,6 +2,10 @@
   padding: 20px 30px;
   background-color: white !important;
 
+  .needsActivation {
+    color: #aaa;
+  }
+
   h1 {
     padding-bottom: 30px;
   }
@@ -38,7 +42,7 @@
     padding-top: 20px;
     .result-row {
       cursor: pointer;
-      padding: 10px 0;
+      padding-top: 20px;
       font-size: 0.875rem;
       border-bottom: 3px solid white;
 
