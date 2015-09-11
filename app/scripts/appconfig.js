@@ -459,6 +459,7 @@ angular
         .state('user-overview.contactCenter', {
           templateUrl: 'modules/sunlight/users/userOverview/sunlightUserOverview.tpl.html',
           controller: 'SunlightUserOverviewCtrl',
+          controllerAs: 'SunlightUserOverview',
           data: {
             displayName: 'Contact Center'
           },

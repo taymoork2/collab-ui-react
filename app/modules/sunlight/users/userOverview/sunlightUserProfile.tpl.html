@@ -1,0 +1,22 @@
+<div class="section-title-row">
+  <span class="section-name" translate="contactCenter.contactCenterProfile"></span>
+</div>
+
+<div class="form-group">
+  <p translate="contactCenter.role"></p>
+  <cs-select id="sunlightUserProfile"
+             name="sunlightUserProfile"
+             ng-click="showSaveCancel()"
+             ng-model="SunlightUserOverview.roleSelected"
+             options="SunlightUserOverview.roles">
+  </cs-select>
+
+  <br>
+  <formly-form ng-keypress="showSaveCancel()"
+               model="SunlightUserOverview.aliasFormModel"
+               fields="SunlightUserOverview.alias">
+  </formly-form>
+</div>
+
+
+

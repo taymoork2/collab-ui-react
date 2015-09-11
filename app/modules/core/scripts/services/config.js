@@ -4,7 +4,7 @@ angular.module('Core')
   .factory('Config', ['$location', 'Utils', '$filter',
     function ($location, Utils, $filter) {
 
-      var oauth2Scope = encodeURIComponent('webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config Identity:Organization cloudMeetings:login webex-messenger:get_webextoken');
+      var oauth2Scope = encodeURIComponent('webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config Identity:Organization cloudMeetings:login webex-messenger:get_webextoken ccc_config:admin');
 
       var getCurrentHostname = function () {
         return $location.host() || '';
@@ -170,6 +170,13 @@ angular.module('Core')
         webexUrl: {
           siteAdminHomeUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminHomePage',
           siteAdminDeepUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage'
+        },
+
+        sunlightConfigServiceUrl: {
+          dev: 'https://config.de-ams.thunderhead.io/config/v1/',
+          integration: 'https://config.de-ams.thunderhead.io/config/v1/',
+          prod: 'https://config.de-ams.thunderhead.io/config/v1/',
+          cfe: 'https://config.de-ams.thunderhead.io/config/v1/'
         },
 
         scimSchemas: [
@@ -755,7 +762,12 @@ angular.module('Core')
 
         getOAuthClientRegistrationCredentials: function () {
           return Utils.Base64.encode(this.getClientId() + ':' + this.getClientSecret());
+        },
+
+        getSunlightConfigServuiceUrl: function () {
+          return this.sunlightConfigServiceUrl.dev;
         }
+
       };
 
       config.roleStates = {

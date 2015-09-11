@@ -47,6 +47,11 @@ var UsersPage = function () {
   this.communicationsService = element(by.css('#Communications .feature-arrow'));
   this.conferencingService = element(by.css('#Conferencing .feature-arrow'));
   this.contactCenterService = element(by.css('#ContactCenter .feature-arrow'));
+  this.contactCenterService = element(by.css('#ContactCenter .feature-arrow'));
+  this.sunlightChatChannel = element(by.css('label[for="sunlight-chat"]'));
+  this.sunlightEmailChannel = element(by.css('label[for="sunlight-email"]'));
+  this.sunlightVoiceChannel = element(by.css('label[for="sunlight-voice"]'));
+  this.sunlightUserOverviewSave = element(by.id('sunlight-user-overview-save'));
   this.serviceList = element.all(by.model('service in userOverview.services'));
 
   this.addUsers = element(by.id('addUsers'));

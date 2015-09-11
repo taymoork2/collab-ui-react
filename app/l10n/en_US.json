@@ -1827,5 +1827,28 @@
     "invalidLinkNoParam": "Invalid link. no param",
     "error": "Something went wrong.",
     "notifyPartnerErrorMsg": "We're sorry, something went wrong while trying to notify your partner."
+  },
+
+  "contactCenter": {
+    "channels": "Channels",
+    "contactCenterProfile": "Contact Center Profile",
+    "chat": "Chat",
+    "voice": "Voice",
+    "email": "Email",
+    "role": "Role",
+    "alias": "Alias",
+    "attributes": "Attributes",
+    "userRoles": {
+      "user": "User",
+      "supervisor": "Supervisor"
+    },
+    "successMessages": {
+      "userUpdateSuccessMessage": "Successfully updated user information for "
+    },
+    "failureMessages": {
+      "userUpdateFailureMessage": "Unable to update user information for ",
+      "userloadFailureMessage": "Unable to fetch user information for ",
+      "emptyAliasErrorMessage": "Alias can not be empty for "
+    }
   }
 }
