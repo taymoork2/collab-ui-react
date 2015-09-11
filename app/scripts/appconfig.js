@@ -1411,9 +1411,9 @@ angular
         .state('messenger', {
           parent: 'main',
           url: '/messenger',
-          templateUrl: 'modules/messenger/ci-sync/orgInfo.tpl.html',
-          controller: 'OrgInfoCtrl',
-          controllerAs: 'orgInfo'
+          templateUrl: 'modules/messenger/ci-sync/ciSync.tpl.html',
+          controller: 'CiSyncCtrl',
+          controllerAs: 'sync'
         });
     }
   ]);

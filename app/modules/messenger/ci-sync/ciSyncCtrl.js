@@ -6,9 +6,11 @@
     .controller('CiSyncCtrl', CiSyncCtrl);
 
   /** @ngInject */
-  function CiSyncCtrl(CiService) {
+  function CiSyncCtrl(Config, CiService) {
     // Interface ---------------------------------------------------------------
     var vm = this;
+
+    vm.title = 'Messenger CI Sync';
 
     vm.statusOptions = Object.freeze({
       on: {
@@ -86,6 +88,16 @@
     function init() {
       vm.status = vm.statusOptions.on;
       setOrgAdmin();
+
+      vm.ciData = CiService.getCiOrgInfo();
+
+      vm.ciAdmins = [];
+      CiService.getCiAdmins(vm.ciAdmins);
+
+      vm.ciUsers = [];
+      CiService.getCiNonAdmins(vm.ciUsers);
+
+      vm.dev = Config.isDev() && ('testAtlasMsgr' === CiService.orgName) ? true : false;
     }
 
     function setOrgAdmin() {
