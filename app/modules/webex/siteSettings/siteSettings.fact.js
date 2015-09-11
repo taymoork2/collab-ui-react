@@ -346,9 +346,9 @@
 
           var iframeSref =
             "site-setting-iframe({" +
-            "siteUrl:" + "'" + webExSiteSettingsObj.siteUrl + "'" + "," +
-            "settingPageId:" + "'" + settingPageTypeObj.id + "'" + "," +
-            "settingPageIframeUrl:" + "'" + settingPageUrl + "'" +
+            "  siteUrl:" + "'" + webExSiteSettingsObj.siteUrl + "'" + "," +
+            "  settingPageId:" + "'" + settingPageTypeObj.id + "'" + "," +
+            "  settingPageIframeUrl:" + "'" + settingPageUrl + "'" +
             "})";
 
           settingPageObj.sref = iframeSref;

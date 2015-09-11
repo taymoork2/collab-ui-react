@@ -34,15 +34,15 @@
       _this.funcName = "WebExSiteSettingIframeCtrl()";
       _this.logMsg = "";
 
+      $scope.indexPageSref = "site-settings({siteUrl:'" + $scope.siteUrl + "'})";
       $scope.siteUrl = $stateParams.siteUrl;
       $scope.settingPageId = $stateParams.settingPageId;
       $scope.settingPageTitle = $translate.instant("webexSiteSettingsLabels." + $scope.settingPageId);
       $scope.settingPageIframeUrl = $stateParams.settingPageIframeUrl;
       $scope.iframeUrl = "https://" + $stateParams.siteUrl + $stateParams.settingPageIframeUrl;
+      $scope.trustIframeUrl = $sce.trustAsResourceUrl($scope.iframeUrl);
       $scope.adminEmail = Authinfo.getPrimaryEmail();
       $scope.locale = ("es_LA" == $translate.use()) ? "es_MX" : $translate.use();
-      $scope.trustIframeUrl = $sce.trustAsResourceUrl($scope.iframeUrl);
-      $scope.indexPageSref = "site-settings({siteUrl:'" + $scope.siteUrl + "'})";
 
       _this.logMsg = _this.funcName + ": " + "\n" +
         "siteUrl=" + $scope.siteUrl + "\n" +
