@@ -856,7 +856,8 @@ angular.module('Core')
           'reports',
           'devices',
           'fusion',
-          'mediafusionconnector'
+          'mediafusionconnector',
+          'callRouter'
         ]
       };
 
