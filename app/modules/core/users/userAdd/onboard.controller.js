@@ -760,7 +760,7 @@ angular.module('Core')
         }
       };
 
-      function isEmailAlreadyPresent (input) {
+      function isEmailAlreadyPresent(input) {
         var inputEmail = getEmailAddress(input);
         if (inputEmail) {
           var userEmails = getTokenEmailArray();
@@ -770,20 +770,20 @@ angular.module('Core')
         }
       }
 
-      function getTokenEmailArray () {
+      function getTokenEmailArray() {
         var tokens = angular.element('#usersfield').tokenfield('getTokens');
         return tokens.map(function (token) {
           return getEmailAddress(token.value);
         });
       }
 
-      function getEmailAddress (input) {
+      function getEmailAddress(input) {
         var retString = "";
         input.split(" ").forEach(function (str) {
           if (str.indexOf("@") >= 0) {
             retString = str;
           }
-        })
+        });
         return retString;
       }
 
