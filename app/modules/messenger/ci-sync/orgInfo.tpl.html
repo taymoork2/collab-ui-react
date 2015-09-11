@@ -1,8 +1,10 @@
 <!-- BEGIN Messenger Tab -->
 <div class="container-org-info">
 
-  <div class="page-title row">
-    <span class="title">Messenger Administration</span>
+  <div class="page-header row full">
+    <div class="page-title">
+      <h2 class="title">{{orgInfo.title}}</h2>
+    </div>
   </div>
 
   <div class="content">
@@ -33,20 +35,20 @@
                   </div>
                 </div>
 
-                <div class="col-md-4 min-width-350">
-                    <h3>Sync Status</h3>
+                <div class="col-md-4 sync-stats">
+                    <h3 class="bottom-padding">Sync Status</h3>
 
                     <formly-form model="sync.data" fields="sync.fields">
                     </formly-form>
 
-                    <p class="control-label">Sync Status</p>
+                    <p>Sync Status</p>
                     <!-- Ugly, but it seems the only way that works so far. Would be nice to find simpler way -->
-                    <cs-toggle-switch ng-if="sync.adminTypes.ops !== sync.adminType" ng-model="sync.data.isSyncing" toggle-id="toggleIsSyncing" name="toggleSyncing" class="no-click on" is-disabled="true" size="small"></cs-toggle-switch>
+                    <cs-toggle-switch ng-if="sync.adminTypes.ops !== sync.adminType" ng-model="sync.data.isSyncing" toggle-id="toggleIsSyncing" name="toggleSyncing" class="no-click" is-disabled="true" size="small"></cs-toggle-switch>
                     <cs-toggle-switch ng-if="sync.adminTypes.ops === sync.adminType" ng-model="sync.data.isSyncing" toggle-id="toggleIsSyncing" name="toggleSyncing" size="small"></cs-toggle-switch>
 
-                    <p class="control-label">Authentication Redirect</p>
+                    <p>Authentication Redirect</p>
                     <!-- Ugly, but it seems the only way that works so far. Would be nice to find simpler way -->
-                    <cs-toggle-switch ng-if="sync.adminTypes.ops !== sync.adminType"  ng-model="sync.data.isAuthRedirect" toggle-id="toggleAuthRedirect" name="toggleAuth" class="no-click on" is-disabled="true" size="small"></cs-toggle-switch>
+                    <cs-toggle-switch ng-if="sync.adminTypes.ops !== sync.adminType"  ng-model="sync.data.isAuthRedirect" toggle-id="toggleAuthRedirect" name="toggleAuth" class="no-click" is-disabled="true" size="small"></cs-toggle-switch>
                     <cs-toggle-switch ng-if="sync.adminTypes.ops === sync.adminType"  ng-model="sync.data.isAuthRedirect" toggle-id="toggleAuthRedirect" name="toggleAuth" size="small"></cs-toggle-switch>
                 </div>
               </div>

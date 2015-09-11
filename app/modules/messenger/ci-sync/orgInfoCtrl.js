@@ -6,11 +6,12 @@
     .controller('OrgInfoCtrl', OrgInfoCtrl);
 
   /** @ngInject */
-  function OrgInfoCtrl($window, Config, CiService) {
+  function OrgInfoCtrl(Config, CiService) {
     // Interface ---------------------------------------------------------------
 
     var vm = this;
 
+    vm.title = 'Messenger Administration';
     vm.init = init;
 
     // Event handlers
