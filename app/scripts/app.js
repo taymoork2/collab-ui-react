@@ -52,6 +52,7 @@ angular.module('WebExSiteSettingIframe', ['Core']);
 
 angular.module('WebExUserSettings', ['Core']);
 angular.module('WebExUserSettings2', ['Core']);
+angular.module('WebExReports', ['Core']);
 
 angular.module('wx2AdminWebClientApp', [
   'Core',
@@ -65,7 +66,8 @@ angular.module('wx2AdminWebClientApp', [
   'WebExSiteSettingIframe',
   'WebExUserSettings',
   'WebExUserSettings2',
-  'Sunlight'
+  'Sunlight',
+  'WebExReports'
 ]);
 
 angular.module('Sunlight', ['Core']);

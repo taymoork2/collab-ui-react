@@ -75,6 +75,10 @@ angular.module('Core')
         '                 webex-advanced-url="{{siteList.getWebexUrl(row.entity.license.siteUrl)}}">' + '\n' +
         '    </launch-site>' + '\n' +
         '  </div>' + '\n' +
+        '  <div ng-if="!siteList.iframeSupportedSite">' + '\n' +
+        '     <a id="webex-reports-list-iframe"' + '\n' +
+        '         ui-sref="webex-reports({siteUrl:row.entity.license.siteUrl})"> hhhhhhhhhhhhhhht' + '\n' +
+        '  </div>' + '\n' +
         '</div>' + '\n';
 
       vm.gridOptions = {
@@ -187,6 +191,7 @@ angular.module('Core')
         $log.log("iframeSupportedSiteVersion(): iframeSupportedSiteVersion=" + iframeSupportedSiteVersion);
 
         return iframeSupportedSiteVersion;
+
       } // iframeSupportedSiteVersionCheck()
       // End of site links set up
     }
