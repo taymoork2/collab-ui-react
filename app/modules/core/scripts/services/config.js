@@ -823,6 +823,8 @@ angular.module('Core')
           'devices-redux',
           'devices-redux2',
           'devices-redux2-search',
+          'devices-redux3',
+          'devices-redux3-search',
           'devices-cleanup',
           'devices2'
         ],
@@ -856,7 +858,8 @@ angular.module('Core')
           'reports',
           'devices',
           'fusion',
-          'mediafusionconnector'
+          'mediafusionconnector',
+          'callRouter'
         ]
       };
 

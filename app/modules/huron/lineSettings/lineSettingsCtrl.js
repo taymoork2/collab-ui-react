@@ -426,7 +426,9 @@
               vm.directoryNumber.customCallerIdName = vm.callerIdInfo.customName;
               vm.directoryNumber.customCallerIdNumber = vm.callerIdInfo.customNumber;
             }
-            promise = processSharedLineUsers();
+            promise = processSharedLineUsers().then(function () {
+              return listSharedLineUsers(vm.directoryNumber.uuid);
+            });
             promises.push(promise);
 
             if (vm.telephonyInfo.currentDirectoryNumber.uuid !== vm.assignedInternalNumber.uuid) { // internal line              
@@ -512,7 +514,9 @@
                           vm.directoryNumber.pattern = vm.telephonyInfo.currentDirectoryNumber.pattern;
                           vm.directoryNumber.altDnUuid = vm.telephonyInfo.alternateDirectoryNumber.uuid;
                           vm.directoryNumber.altDnPattern = vm.telephonyInfo.alternateDirectoryNumber.pattern;
-                          return processSharedLineUsers();
+                          return processSharedLineUsers().then(function () {
+                            return listSharedLineUsers(vm.directoryNumber.uuid);
+                          });
                         }).then(function () {
                           Notification.notify([$translate.instant('directoryNumberPanel.success')], 'success');
                           $state.go('user-overview.communication.directorynumber', {

@@ -4,6 +4,14 @@
 .hurondetails {
   & .navbar {
     border-bottom: none;
+    display: block;
+    @include clearfix;
+    &-right {  /*constructs navbar-right*/
+      float: right;
+    }
+    &-left {  /*constructs navbar-left*/
+      float: left;
+    }
   }
   & .nav-tabs {
     /*overrides the standard appearence of nav-tabs*/
