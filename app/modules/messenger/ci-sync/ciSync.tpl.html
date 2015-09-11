@@ -1,8 +1,10 @@
-<!-- BEGIN Messenger Tab -->
-<div class="container-org-info">
+<!-- BEGIN CI Sync -->
+<div class="container-ci-sync">
 
-  <div class="page-title row">
-    <span class="title">Messenger Administration</span>
+  <div class="page-header row full">
+    <div class="page-title">
+      <h2 class="title">{{sync.title}}</h2>
+    </div>
   </div>
 
   <div class="content">
@@ -20,12 +22,10 @@
               <h3 class="panel-title">Sync Status</h3>
             </div>
             <div class="panel-body">
-
               <!-- BEGIN PANEL CONTENT -->
 
-              <!-- BEGIN CI SYNC -->
-              <div ng-controller="CiSyncCtrl as sync">
-                <div ng-if="orgInfo.dev">
+              <div>
+                <div ng-if="sync.dev">
                   <p>[DEBUG] Viewing as {{sync.adminType.label}}</p>
                   <div class="btn-group">
                     <button type="button" ng-click="sync.setOrgAdmin()" ng-disabled="sync.adminTypes.org === sync.adminType" class="btn btn-primary">{{sync.adminTypes.org.label}}</button>
@@ -33,24 +33,23 @@
                   </div>
                 </div>
 
-                <div class="col-md-4 min-width-350">
-                    <h3>Sync Status</h3>
+                <div class="col-md-4 sync-stats">
+                    <h3 class="bottom-padding">Sync Status</h3>
 
                     <formly-form model="sync.data" fields="sync.fields">
                     </formly-form>
 
-                    <p class="control-label">Sync Status</p>
+                    <p>Sync Status</p>
                     <!-- Ugly, but it seems the only way that works so far. Would be nice to find simpler way -->
-                    <cs-toggle-switch ng-if="sync.adminTypes.ops !== sync.adminType" ng-model="sync.data.isSyncing" toggle-id="toggleIsSyncing" name="toggleSyncing" class="no-click on" is-disabled="true" size="small"></cs-toggle-switch>
+                    <cs-toggle-switch ng-if="sync.adminTypes.ops !== sync.adminType" ng-model="sync.data.isSyncing" toggle-id="toggleIsSyncing" name="toggleSyncing" class="no-click" is-disabled="true" size="small"></cs-toggle-switch>
                     <cs-toggle-switch ng-if="sync.adminTypes.ops === sync.adminType" ng-model="sync.data.isSyncing" toggle-id="toggleIsSyncing" name="toggleSyncing" size="small"></cs-toggle-switch>
 
-                    <p class="control-label">Authentication Redirect</p>
+                    <p>Authentication Redirect</p>
                     <!-- Ugly, but it seems the only way that works so far. Would be nice to find simpler way -->
-                    <cs-toggle-switch ng-if="sync.adminTypes.ops !== sync.adminType"  ng-model="sync.data.isAuthRedirect" toggle-id="toggleAuthRedirect" name="toggleAuth" class="no-click on" is-disabled="true" size="small"></cs-toggle-switch>
+                    <cs-toggle-switch ng-if="sync.adminTypes.ops !== sync.adminType"  ng-model="sync.data.isAuthRedirect" toggle-id="toggleAuthRedirect" name="toggleAuth" class="no-click" is-disabled="true" size="small"></cs-toggle-switch>
                     <cs-toggle-switch ng-if="sync.adminTypes.ops === sync.adminType"  ng-model="sync.data.isAuthRedirect" toggle-id="toggleAuthRedirect" name="toggleAuth" size="small"></cs-toggle-switch>
                 </div>
               </div>
-              <!-- END CI SYNC -->
 
               <!-- END PANEL CONTENT -->
             </div>
@@ -60,7 +59,7 @@
         </div>
       </cs-tab>
 
-      <cs-tab ng-if="orgInfo.dev">
+      <cs-tab ng-if="sync.dev">
         <cs-tab-heading>Debug</cs-tab-heading>
         <div>
           <!-- BEGIN TAB CONTENT -->
@@ -70,13 +69,13 @@
             <span class="info-header">Info from CI</span>
 
             <ul>
-              <li class="data-item" ng-repeat="entry in orgInfo.ciData"><span class="data-key">{{entry.key}}:</span> {{entry.value}}</li>
+              <li class="data-item" ng-repeat="entry in sync.ciData"><span class="data-key">{{entry.key}}:</span> {{entry.value}}</li>
             </ul>
 
             <div class="sub-info indented">
               <span class="info-header">Admins</span>
 
-              <div ng-repeat="admin in orgInfo.ciAdmins">
+              <div ng-repeat="admin in sync.ciAdmins">
                 <ul>
                   <li class="data-item" ng-repeat="(key, value) in admin"><span class="data-key">{{key}}:</span> {{value}}</li>
                 </ul>
@@ -86,7 +85,7 @@
             <div class="sub-info indented">
               <span class="info-header">Users</span>
 
-              <div ng-repeat="user in orgInfo.ciUsers">
+              <div ng-repeat="user in sync.ciUsers">
                 <ul>
                   <li class="data-item" ng-repeat="(key, value) in user"><span class="data-key">{{key}}:</span> {{value}}</li>
                 </ul>
@@ -97,10 +96,10 @@
 
 
           <div class="info">
-            <span class="info-header">Info from WAPI (URDB)</span> <button class="btn btn-default" ng-click="orgInfo.refreshOrgInfo()">Refresh</button>
+            <span class="info-header">Info from WAPI (URDB)</span> <button class="btn btn-default" ng-click="sync.refreshOrgInfo()">Refresh</button>
 
             <ul>
-              <li class="data-item" ng-repeat="entry in orgInfo.org.info.orgInfo"><span class="data-key">{{entry.key}}:</span> {{entry.value}}</li>
+              <li class="data-item" ng-repeat="entry in sync.org.info.orgInfo"><span class="data-key">{{entry.key}}:</span> {{entry.value}}</li>
             </ul>
 
             <div class="sub-info indented">
@@ -108,7 +107,7 @@
 
               <div>
                 <ul>
-                  <li class="data-item" ng-repeat="entry in orgInfo.org.info.generalInfo"><span class="data-key">{{entry.key}}:</span> {{entry.value}}</li>
+                  <li class="data-item" ng-repeat="entry in sync.org.info.generalInfo"><span class="data-key">{{entry.key}}:</span> {{entry.value}}</li>
                 </ul>
               </div>
             </div>
@@ -118,7 +117,7 @@
 
               <div>
                 <ul>
-                  <li class="data-item" ng-repeat="policy in orgInfo.org.info.policies"><span class="data-key">{{policy.key}}:</span> {{policy.value}}</li>
+                  <li class="data-item" ng-repeat="policy in sync.org.info.policies"><span class="data-key">{{policy.key}}:</span> {{policy.value}}</li>
                 </ul>
               </div>
             </div>
@@ -128,7 +127,7 @@
 
               <div>
                 <ul>
-                  <li class="data-item" ng-repeat="entry in orgInfo.org.info.ext"><span class="data-key">{{entry.key}}:</span> {{entry.value}}</li>
+                  <li class="data-item" ng-repeat="entry in sync.org.info.ext"><span class="data-key">{{entry.key}}:</span> {{entry.value}}</li>
                 </ul>
               </div>
             </div>
@@ -144,4 +143,4 @@
   </div>
 
 </div>
-<!-- END Messenger Admin Page -->
+<!-- END CI Sync -->
