@@ -657,7 +657,7 @@ angular
         })
 
       /*
-        devices redux 2
+        devices redux 2 / 3
       */
 
       .state('main-redux', {
@@ -698,7 +698,41 @@ angular
             device: null
           }
         })
+        /* redux3 */
+        .state('devices-redux3', {
+          abstract: true,
+          url: '/devices-redux3',
+          templateUrl: 'modules/squared/devicesRedux3/devices.html',
+          controller: 'DevicesReduxCtrl3',
+          controllerAs: 'devices',
+          parent: 'main-redux'
+        })
+        .state('devices-redux3.search', {
+          url: '/search',
+          views: {
+            'leftPanel': {
+              templateUrl: 'modules/squared/devicesRedux3/list.html'
+            }
+          }
+        })
+        .state('devices-redux3.details', {
+          url: '/details',
+          views: {
+            'leftPanel': {
+              templateUrl: 'modules/squared/devicesRedux3/list.html'
+            },
+            'rightPanel': {
+              controllerAs: 'deviceDetails',
+              controller: 'DevicesReduxDetailsCtrl3',
+              templateUrl: 'modules/squared/devicesRedux3/details.html'
+            }
+          },
+          params: {
+            device: null
+          }
+        })
 
+      /* old devices */
       .state('devices2', {
           url: '/devices2',
           templateUrl: 'modules/squared/devices2/devices2.html',
