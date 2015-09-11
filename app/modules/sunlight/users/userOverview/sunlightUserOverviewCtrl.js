@@ -37,7 +37,7 @@
       key: 'alias',
       type: 'input',
       templateOptions: {
-        label: $translate.instant('contactCenter.alias'),
+        label: $translate.instant('contactCenterUserConfig.alias'),
         type: 'text',
         required: true,
         maxlength: 50
@@ -46,12 +46,12 @@
 
     /* User roles */
     vm.roles = [
-      $translate.instant('contactCenter.userRoles.user'),
-      $translate.instant('contactCenter.userRoles.supervisor')
+      $translate.instant('contactCenterUserConfig.userRoles.user'),
+      $translate.instant('contactCenterUserConfig.userRoles.supervisor')
     ];
 
     /* By default "User" role is selected for new user */
-    vm.roleSelected = $translate.instant('contactCenter.userRoles.user');
+    vm.roleSelected = $translate.instant('contactCenterUserConfig.userRoles.user');
 
 
     $scope.closePreview = function () {
@@ -72,7 +72,7 @@
       var updatedUserInfo = updatedUserData();
 
       if (!updatedUserInfo.alias) {
-        Notification.notify([$translate.instant('contactCenter.failureMessages.emptyAliasErrorMessage') + vm.currentUser.userName], 'error');
+        Notification.notify([$translate.instant('contactCenterUserConfig.failureMessages.emptyAliasErrorMessage') + vm.currentUser.userName], 'error');
         return;
       }
 
@@ -80,11 +80,11 @@
 
         if (data.success) {
           $scope.hideSaveCancel();
-          Notification.notify([$translate.instant('contactCenter.successMessages.userUpdateSuccessMessage') + vm.currentUser.userName], 'success');
+          Notification.notify([$translate.instant('contactCenterUserConfig.successMessages.userUpdateSuccessMessage') + vm.currentUser.userName], 'success');
 
         } else {
           Log.debug('Failed to save sunlight user information in sunlight config Service. Status: ' + status);
-          Notification.notify([$translate.instant('contactCenter.failureMessages.userUpdateFailureMessage') + vm.currentUser.userName], 'error');
+          Notification.notify([$translate.instant('contactCenterUserConfig.failureMessages.userUpdateFailureMessage') + vm.currentUser.userName], 'error');
         }
 
       });
@@ -100,7 +100,7 @@
           vm.mediaInfo[i].enabled = false;
         }
       }
-      vm.roleSelected = $translate.instant('contactCenter.userRoles.' + data.role);
+      vm.roleSelected = $translate.instant('contactCenterUserConfig.userRoles.' + data.role);
       vm.aliasFormModel.alias = data.alias;
       vm.currentUser.teamId = data.teamId;
     };
@@ -114,7 +114,7 @@
           $scope.setUserInfoView(vm.userData);
         } else {
           Log.debug('Failed to retrieve sunlight user information from sunlight config Service. Status: ' + status);
-          Notification.notify([$translate.instant('contactCenter.failureMessages.userloadFailureMessage') + vm.currentUser.userName], 'error');
+          Notification.notify([$translate.instant('contactCenterUserConfig.failureMessages.userloadFailureMessage') + vm.currentUser.userName], 'error');
         }
       });
 
@@ -130,7 +130,7 @@
       userData.attributes = [];
       userData.media = [];
 
-      if (vm.roleSelected === $translate.instant('contactCenter.userRoles.user')) {
+      if (vm.roleSelected === $translate.instant('contactCenterUserConfig.userRoles.user')) {
         userData.role = 'user';
       } else {
         userData.role = 'supervisor';

@@ -238,6 +238,12 @@ angular.module('Core')
             desc: 'tabs.conferencingDesc',
             state: 'site-list',
             link: '#site-list'
+              // Temporarily commented out Numbers tab until ready to expose.
+              // }, {
+              //   title: 'tabs.huronLineDetailsTab',
+              //   desc: 'tabs.huronLineDetailsTabDesc',
+              //   state: 'hurondetails',
+              //   link: '#hurondetails'
           }, {
             title: 'tabs.fusionDetailsTab',
             desc: 'tabs.fusionDetailsTabDesc',
@@ -450,7 +456,7 @@ angular.module('Core')
 
         defaultEntitlements: ['webex-squared', 'squared-call-initiation'],
 
-        batchSize: 20,
+        batchSize: 10,
 
         isDev: function () {
           var currentHostname = getCurrentHostname();
@@ -793,7 +799,7 @@ angular.module('Core')
         WX2_User: ['overview', 'reports', 'support'],
         WX2_Support: ['overview', 'reports', 'support'],
         WX2_SquaredInviter: [],
-        PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile'],
+        PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup'],
         PARTNER_USER: ['partnercustomers', 'customer-overview', 'trialAdd', 'trialEdit'],
         CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
         User: [],
@@ -814,7 +820,11 @@ angular.module('Core')
           'huntgroups',
           'didadd',
           'newpartnerreports',
-          'callRouter'
+          'callRouter',
+          'hurondetails',
+          'huronlines',
+          'huronsettings',
+          'huronfeatures'
         ],
         'squared-fusion-mgmt': [
           'fusion',
@@ -823,6 +833,8 @@ angular.module('Core')
         'squared-fusion-uc': [
           'devices',
           'devices-redux',
+          'devices-redux2',
+          'devices-redux2-search',
           'devices-cleanup',
           'devices2'
         ],

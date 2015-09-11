@@ -121,7 +121,7 @@
     "freeMsg": "Free Spark Messaging",
     "freeConf": "Free 3 Party Spark Meet",
     "freeComm": "Free 1:1 Spark Call",
-    "freeContactCenter": "Chat, Email, Voice",
+    "freeContactCenter": "Free Chat, Email, Voice",
     "paidMsg": "Standard Team Rooms",
     "paidConf": "25 Party Meetings",
     "paidComm": "Advanced Spark Call",
@@ -188,6 +188,8 @@
     "addOrganizationTabDesc": "Add a new organization to this account",
     "fusionDetailsTab": "Connector Management",
     "fusionDetailsTabDesc": "Connector Management",
+    "huronLineDetailsTab": "Huron",
+    "huronLineDetailsTabDesc": "Huron Details",
     "MediafusionDetailsTab": "Media Service Management",
     "MediafusionDetailsTabDesc": "Media Service Management",
     "callRoutingTab": "Call Routing",
@@ -535,7 +537,7 @@
     "convert": "Convert",
     "nextBtn": "Next",
     "convertUsers": "Convert Unlicensed Users",
-    "convertUsersText": "Convert employees of your organization who have signed up for Project Spark on their own with a company email address to a licensed user. Licensed users receive additional enterprise fatures, and are subject to your organization's policies and administration.<br><br>Selected users will receive an invitation to convert or change their email address to a non-company email address.",
+    "convertUsersText": "Convert employees of your organization who have signed up for Cisco Spark on their own with a company email address to a licensed user. Licensed users receive additional enterprise features, and are subject to your organization's policies and administration.",
     "convertError": " could not be converted. Contact support for assistance converting this user.",
     "cancel": "Cancel",
     "emailAddress": "Email Address",
@@ -797,7 +799,8 @@
     "uploadStep": "Upload CSV",
     "uploading": "Uploading...",
     "uploadInstruction": "You can add multiple users at a time by uploading one CSV file.  After you upload the CSV file, you can assign users their collaboration services.",
-    "uploadPrompt": "Drag and drop a CSV file or use the <label for='upload'>file browser</label>",
+    "uploadPrompt": "Drag and drop a CSV file or use the",
+    "fileBrowser": "file browser",
     "uploadCsvEmpty": "Please upload a valid CSV.",
     "csvFileTypeError": "Please upload a valid file type.",
     "csvMaxSizeError": "File size is above the maximum of 10 MB.",
@@ -817,6 +820,13 @@
     "csvInvalidRow": "Entry does not contain 6 columns",
     "processCsvResponseError": "Error reading response",
     "processCsvError": "Error processing user",
+    "csv400Error": "Unidentified error in the csv. Please verify the file and try again.",
+    "csv401And403Error": "Customer is not authorized to add or update this user.",
+    "csv404Error": "Server is unable to respond at this time. Please try again at a later time.",
+    "csv408Error": "Request timed out while waiting for a response.",
+    "csv409Error": "Request failed due to a processing conflict. Please verify the csv and try again.",
+    "csv500Error": "Internal server error.",
+    "csv502And503Error": "Server is temporarily unavailable. Please try again at a later time.",
     "resultRowHeader": "Row Number",
     "resultErrorHeader": "Error Message",
     "advanced": "Advanced",
@@ -1163,7 +1173,10 @@
     "blockedCallerIdDescription": "Caller will not see any caller ID or number",
     "companyCallerId": "Company Caller ID",
     "companyNumberLoadError": "Company numbers failed to load.",
-    "registerDeviceForCallerID": "Register your device to enable caller ID"
+    "customCallerId": "Custom",
+    "customName": "Custom Name",
+    "customNumber": "Custom Number",
+    "customNumberValidation": "Field can contain digits 0 to 9 and +. For example: +15556667777."
   },
   "sharedLinePanel": {
     "title": "Shared Line",
@@ -1176,7 +1189,7 @@
   },
   "singleNumberReachPanel": {
     "title": "Single Number Reach",
-    "description": "<small>Enables users to answer incoming calls to their extension to another number</small>",
+    "description": "Enables users to answer incoming calls to their extension to another number",
     "toggle": "Single Number Reach",
     "snrNote": "SNR can cover all the user's lines or limited to specific lines",
     "success": "Single Number Reach configuration saved successfully",
@@ -1207,6 +1220,7 @@
     "searchResults": "{count, plural, one{# search result} other{# search results}}"
   },
   "pstnSetup": {
+    "setupPstn": "Setup PSTN",
     "setupService": "Set Up PSTN Service",
     "setupNumbers": "Set Up PSTN Numbers",
     "placeOrder": "Place Order",
@@ -1223,7 +1237,18 @@
     "notifyCustomer": "If you want to Notify customer:",
     "addUsers": "If you want to Add users:",
     "sendMessage": "Send Message",
-    "launchPortal": "Launch Compnay Portal"
+    "launchPortal": "Launch Company Portal",
+    "carrierListError": "Failed to retrieve carrier list for this customer.",
+    "orderNumbersPrompt": "Must add block numbers to proceed.",
+    "blockOrderError": "Failed to order {{quantity}} block number(s) with area code {{areaCode}}.",
+    "customerCreateError": "Failed to create customer with the carrier.",
+    "customerUpdateError": "Failed to update customer with the carrier."
+  },
+  "intelepeerFeatures": {
+    "feature1": "Unlimited inbound/outbound calling to U.S. 50 states + Canada",
+    "feature2": "Carrier Port/Transfer Fee Included",
+    "feature3": "E911 Included",
+    "feature4": "Taxes & Fees Included in Price"
   },
   "partnerHomePage": {
     "trialsHeading": "Active Trials",
@@ -1374,7 +1399,8 @@
     "emailSuccessText": "Email successfully sent to customer.",
     "emailFailText": "Error sending email",
     "inputPlacehoder": "Enter phone numbers separated by commas",
-    "didFormatHelpText": "For example: 15556667777, +15556667777, 1-555-666-7777, +1 (555) 666-7777"
+    "didFormatHelpText": "For example: 15556667777, +15556667777, 1-555-666-7777, +1 (555) 666-7777",
+    "didAlreadyExist": "Phone number already exists."
   },
   "deviceDetailPage": {
     "deviceConfig": "Device Configuration",
@@ -1809,9 +1835,21 @@
     "NeedsActivation": "Needs Activation",
     "issuesDetected": "Issues Detected",
     "errorCodes": {
-      "tcpfallback": {
-        "type": "Potential Loss of Video Quality",
+      "tcpFallback": {
+        "type": "Potential loss of video quality",
         "message": "This device is communicating via the TCP protocol, which could cause higher latency and therefore reduced media streaming experience. If you are experiencing issues with your media streaming, you can try to open UDP port 33434 on your local firewall to aid media streaming issues."
+      },
+      "TemperatureCheck": {
+        "type": "High temperature",
+        "message": "The system temperature is high, this may cause a system shut down."
+      },
+      "OSDVideoOutput": {
+        "type": "No monitor connected",
+        "message": "Verify that the monitor is turned on and check the HDMI connection between the video endpoint and the monitor."
+      },
+      "noupgrade": {
+        "type": "System does not automatically update",
+        "message": "The system is set up to not receive automatic updates."
       },
       "unknown": {
         "type": "Unknown Error Occurred",
@@ -1828,8 +1866,7 @@
     "error": "Something went wrong.",
     "notifyPartnerErrorMsg": "We're sorry, something went wrong while trying to notify your partner."
   },
-
-  "contactCenter": {
+  "contactCenterUserConfig": {
     "channels": "Channels",
     "contactCenterProfile": "Contact Center Profile",
     "chat": "Chat",
@@ -1850,5 +1887,28 @@
       "userloadFailureMessage": "Unable to fetch user information for ",
       "emptyAliasErrorMessage": "Alias can not be empty for "
     }
+  },
+
+  "huronDetails": {
+    "title": "Huron",
+    "linesTitle": "Numbers",
+    "settingsTitle": "Settings",
+    "featuresTitle": "Features"
+  },
+
+  "linesPage": {
+    "manageLines": "Numbers",
+    "allLines": "All",
+    "unassignedLines": "Unassigned",
+    "assignedLines": "Assigned",
+    "csvBtnTitle": "Export to CSV",
+    "csvFilename": "exported_lines.csv",
+    "internalNumberHeader": "Internal Extensions",
+    "externalNumberHeader": "Phone Number",
+    "deviceHeader": "Devices",
+    "userEmailHeader": "User",
+    "actionHeader": "Actions",
+    "lineListError": "Error retrieving the line list. Please try reloading the page."
+
   }
 }

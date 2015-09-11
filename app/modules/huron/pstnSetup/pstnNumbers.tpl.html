@@ -7,13 +7,13 @@
     <section class="flex-2">
       <h4 translate="pstnSetup.orderBlock"></h4>
       <div class="modal-body">
-        <form name="pstnSetup.form" novalidate class="form-horizontal">
+        <form name="pstnSetup.form" novalidate class="form">
           <formly-form model="pstnSetup.model" fields="pstnSetup.fields" form="pstnSetup.form"></formly-form>
         </form>
       </div>
     </section>
     <section class="flex-1">
-      <h4><span>{{::pstnSetup.provider.title}}</span><span class="badge pull-right">{{pstnSetup.blockOrderTotals}}</span></h4>
+      <div class="provider-flex"><h4>{{::pstnSetup.provider.title}}</h4><span class="badge">{{pstnSetup.blockOrderTotals}}</span></div>
       <ul class="list-group">
         <li class="list-group-item list-token" ng-repeat="order in pstnSetup.blockOrders"><span>{{::'pstnSetup.areaCode' | translate}} {{::order.areaCode}}</span><span>{{::'pstnSetup.quantity' | translate}} {{::order.quantity}}</span><button type="button" class="close" ng-click="pstnSetup.removeOrder(order)"><span class="sr-only" translate="common.delete"></span></button></li>
       </ul>
@@ -21,6 +21,6 @@
   </div>
   <div class="modal-footer">
     <button class="btn btn-default" ui-sref="pstnSetup" translate="common.back"></button>
-    <button class="btn btn-primary" ui-sref="pstnSetup.review" translate="common.next"></button>
+    <button class="btn btn-primary" ng-click="pstnSetup.orderNumbers()" translate="common.next"></button>
   </div>
 </div>

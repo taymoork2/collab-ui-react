@@ -26,7 +26,7 @@
       FeatureToggleService,
       Userservice
     ) {
-
+      var that = this;
       // Update the breadcrumb with site url
       $state.current.data.displayName = $stateParams.site;
       $rootScope.$broadcast('displayNameUpdated');
@@ -70,18 +70,16 @@
       this.userSettingsModel = WebExUserSettingsFact.initUserSettingsModel();
 
       Userservice.getUser('me', function (data, status) {
-        FeatureToggleService.getFeaturesForUser(data.id, function (data, status) {
-          _.each(data.developer, function (element) {
-            if (element.key === 'gsxdemo' && element.val === 'true') {
-              that.gsxFeature = true;
-              that.defaultSystem = 1;
-              that.initPanel();
-            }
-          });
+
+        FeatureToggleService.getFeaturesForUser(data.id, 'gsxdemo').then(function (value) {
+          that.gsxFeature = value;
+          if (value) {
+            that.defaultSystem = 1;
+          }
+        }).finally(function () {
+          that.initPanel();
         });
       });
-
-      var that = this;
     } // WebExUserSettingsCtrl()
   ]);
 })();

@@ -5,21 +5,29 @@
     .factory('PstnSetupService', PstnSetupService);
 
   /* @ngInject */
-  function PstnSetupService($q, Authinfo, TerminusCustomerService, TerminusCustomerCarrierService, TerminusBlockOrderService, TerminusOrderService) {
-    var service = {
-      createCustomer: createCustomer,
-      getCustomer: getCustomer,
-      getCarrierId: getCarrierId,
-      orderBlock: orderBlock,
-      listPendingOrders: listPendingOrders,
-      getOrder: getOrder,
-      listPendingNumbers: listPendingNumbers
-    };
-
+  function PstnSetupService($q, Authinfo, TerminusCarrierService, TerminusCustomerService, TerminusCustomerCarrierService, TerminusBlockOrderService, TerminusOrderService) {
     var INTELEPEER = "INTELEPEER";
     var TATA = "TATA";
     var PSTN = "PSTN";
     var PENDING = "PENDING";
+    var QUEUED = "QUEUED";
+
+    var service = {
+      createCustomer: createCustomer,
+      updateCustomerCarrier: updateCustomerCarrier,
+      getCustomer: getCustomer,
+      listCarriers: listCarriers,
+      listCustomerCarriers: listCustomerCarriers,
+      getCarrierId: getCarrierId,
+      orderBlock: orderBlock,
+      listPendingOrders: listPendingOrders,
+      getOrder: getOrder,
+      listPendingNumbers: listPendingNumbers,
+      INTELEPEER: INTELEPEER,
+      TATA: TATA,
+      PSTN: PSTN,
+      PENDING: PENDING
+    };
 
     var billingAddress = {
       "billingName": "Cisco Systems",
@@ -39,7 +47,6 @@
       "serviceStreetDirectional": "E",
       "serviceStreetName": "President George Bush",
       "serviceStreetSuffix": "Hwy",
-      "serviceAddressSub": "",
       "serviceCity": "Richardson",
       "serviceState": "TX",
       "serviceZip": "75082"
@@ -47,14 +54,24 @@
 
     return service;
 
-    function createCustomer(uuid, name, partnerUuid) {
+    function createCustomer(uuid, name, pstnCarrierId, partnerUuid) {
       var payload = {
         "uuid": uuid,
         "name": name,
-        "reseller": partnerUuid || Authinfo.getOrgId(),
+        "pstnCarrierId": pstnCarrierId,
+        "resellerId": partnerUuid || Authinfo.getOrgId(),
         "billingAddress": billingAddress
       };
       return TerminusCustomerService.save({}, payload).$promise;
+    }
+
+    function updateCustomerCarrier(customerId, pstnCarrierId) {
+      var payload = {
+        "pstnCarrierId": pstnCarrierId
+      };
+      return TerminusCustomerService.update({
+        customerId: customerId
+      }, payload).$promise;
     }
 
     function getCustomer(customerId) {
@@ -63,10 +80,18 @@
       }).$promise;
     }
 
-    function getCarrierId(customerId, carrierName) {
+    function listCarriers() {
+      return TerminusCarrierService.query().$promise;
+    }
+
+    function listCustomerCarriers(customerId) {
       return TerminusCustomerCarrierService.query({
         customerId: customerId
-      }).$promise.then(function (carriers) {
+      }).$promise;
+    }
+
+    function getCarrierId(customerId, carrierName) {
+      return listCustomerCarriers(customerId).then(function (carriers) {
         var matchingCarriers = carriers.filter(function (carrier) {
           return carrier.name === (carrierName || INTELEPEER);
         });
@@ -98,7 +123,7 @@
     }
 
     function getOrder(customerId, orderId) {
-      return TerminusOrderService.get({
+      return TerminusOrderService.query({
         customerId: customerId,
         orderId: orderId
       }).$promise;
@@ -113,10 +138,12 @@
         });
         var promises = [];
         angular.forEach(carrierOrders, function (carrierOrder) {
-          var promise = getOrder(customerId, carrierOrder.uuid).then(function (order) {
-            angular.forEach(order, function (value, key) {
-              if (key != null && value.status === PENDING) {
-                pendingNumbers.push(value.number);
+          var promise = getOrder(customerId, carrierOrder.uuid).then(function (orderNumbers) {
+            angular.forEach(orderNumbers, function (orderNumber) {
+              if (orderNumber && orderNumber.number && (orderNumber.network === PENDING || orderNumber.network === QUEUED)) {
+                pendingNumbers.push({
+                  pattern: orderNumber.number
+                });
               }
             });
           });

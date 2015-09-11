@@ -1,0 +1,50 @@
+<div ng-show="devices.filterOrSearchActive">
+  <div class="details-header clearfix">
+    <div class="pull-right">
+      <button
+        ng-click="devices.pager.prevPage()"
+        ng-disabled="!devices.pager.prev">
+        <i class="fa fa-chevron-left" />
+      </button>
+      <span style="padding: 0 20px">
+        Page {{devices.pager.currentPage}} of {{devices.pager.pageCount}}
+      </span>
+      <button
+        ng-click="devices.pager.nextPage()"
+        ng-disabled="!devices.pager.next">
+        <i class="fa fa-chevron-right" />
+      </button>
+    </div>
+  </div>
+
+  <div class="result-pane" ng-if="devices.filteredCodesAndDevices.matches.length">
+    <div
+      class="row result-row"
+      ui-sref="devices-redux2.details({device: device})"
+      ng-repeat="device in devices.filteredCodesAndDevices.matches | limitTo: ((devices.pager.currentPage * devices.pager.pageSize) + (devices.pager.currentPageSize - devices.pager.pageSize)) | limitTo: -devices.pager.currentPageSize">
+      <div class="small-1 columns">
+        <i 
+          style="top: -3px"
+          class="icon icon-2x icon-circle-telepresence" 
+          ng-class="{'needsActivation': device.needsActivation}"
+        />
+      </div>
+      <div class="small-5 columns">
+        {{device.displayName}}
+      </div>
+      <div class="small-5 columns">
+        {{device.product || 'Needs Activation'}}
+      </div>
+      <div class="small-1 columns" style="text-align: right">
+        <i
+          class="fa fa-circle"
+          ng-class="device.cssColorClass"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div ng-if="!devices.filteredCodesAndDevices.matches.length">
+    <p style="text-align: center; padding: 40px;">No devices found...</p>
+  </div>
+</div>

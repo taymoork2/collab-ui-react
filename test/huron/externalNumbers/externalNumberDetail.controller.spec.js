@@ -29,8 +29,8 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
 
     modalDefer = $q.defer();
 
-    spyOn(ExternalNumberPool, 'getAll').and.returnValue($q.when(externalNumbers));
     spyOn(ExternalNumberService, 'getAllNumbers').and.returnValue(externalNumbers);
+    spyOn(ExternalNumberService, 'refreshNumbers').and.returnValue($q.when());
     spyOn(ExternalNumberPool, 'deletePool').and.returnValue($q.when());
     spyOn(ModalService, 'open').and.returnValue({
       result: modalDefer.promise
@@ -55,20 +55,23 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
     }, {
       'pattern': '000'
     }]);
-    ExternalNumberPool.getAll.and.returnValue($q.when(newNumbers));
+    ExternalNumberService.getAllNumbers.and.returnValue(newNumbers);
     controller.listPhoneNumbers();
     $scope.$apply();
     expect(controller.allNumbers.length).toEqual(4);
   });
 
   it('should show no numbers on error', function () {
-    ExternalNumberPool.getAll.and.returnValue($q.reject());
+    ExternalNumberService.refreshNumbers.and.returnValue($q.reject());
+    ExternalNumberService.getAllNumbers.and.returnValue([]);
     controller.listPhoneNumbers();
     $scope.$apply();
+    expect(Notification.errorResponse).toHaveBeenCalled();
     expect(controller.allNumbers).toEqual([]);
   });
 
   it('should show no numbers if no customer found', function () {
+    ExternalNumberService.getAllNumbers.and.callThrough();
     delete $stateParams.currentCustomer.customerOrgId;
     controller = $controller('ExternalNumberDetailCtrl', {
       $scope: $scope

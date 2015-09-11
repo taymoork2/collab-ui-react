@@ -71,7 +71,7 @@ var ReportsPage = function () {
   };
 
   this.verifyOption = function (dropdown, option) {
-    utils.wait(dropdown.element(by.css('.select-dropdown')));
+    utils.wait(dropdown.element(by.css('.dropdown-menu')));
     var opt = dropdown.all(by.cssContainingText('li', option)).first();
     expect(opt.isPresent()).toBeTruthy();
     expect(opt.isDisplayed()).toBeTruthy();
@@ -90,7 +90,7 @@ var ReportsPage = function () {
   };
 
   this.numOptions = function (dropdown) {
-    utils.wait(dropdown.element(by.css('.select-dropdown')));
+    utils.wait(dropdown.element(by.css('.dropdown-menu')));
     return dropdown.all(by.css('li')).count();
   };
 
@@ -111,11 +111,6 @@ var ReportsPage = function () {
     return table.element(by.cssContainingText('.customer-data', customer)).isPresent(function (present) {
       expect(present).toBe(bool);
     });
-  };
-
-  this.assertDisplayed = function (cssSelector, message) {
-    if (!message) return;
-    expect(element.all(by.cssContainingText(cssSelector, message)).first().isDisplayed()).toBeTruthy();
   };
 
   this.verifyDescription = function (text, location, present) {

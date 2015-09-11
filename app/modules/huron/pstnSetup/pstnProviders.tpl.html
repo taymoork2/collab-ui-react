@@ -4,8 +4,11 @@
     <h3 class="modal-title" translate="pstnSetup.setupService"></h3>
   </div>
   <div class="modal-body">
-    <div class="pstn-provider-cards">
-      <hr-pstn-provider-card ng-repeat="provider in pstnSetup.providers" logo-src="provider.logoSrc" logo-alt="provider.logoAlt" feature-title="provider.title" feature-list="provider.features" on-select="pstnSetup.selectProvider(provider);provider.selectFn()"></hr-pstn-provider-card>
+    <div class="loading" ng-if="pstnSetup.loading">
+      <i class="icon icon-spinner"></i>
+    </div>
+    <div class="pstn-provider-cards" ng-if="!pstnSetup.loading">
+      <uc-pstn-provider-card ng-repeat="provider in pstnSetup.providers" logo-src="provider.logoSrc" logo-alt="provider.logoAlt" feature-title="provider.title" feature-list="provider.features" on-select="pstnSetup.selectProvider(provider);provider.selectFn()"></uc-pstn-provider-card>
     </div>
 
   </div>

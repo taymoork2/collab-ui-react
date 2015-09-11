@@ -156,41 +156,18 @@ describe('Controller: DidAddCtrl', function () {
           controller.tokenmethods.createdtoken(element);
           expect(controller.invalidcount).toBeGreaterThan(0);
         });
-      });
 
-      describe('tokenmethods.removedtoken function', function () {
-        it('should exist', function () {
-          expect(controller.tokenmethods.removedtoken).toBeDefined();
-        });
-
-        it('submit button should be enabled when token count is > 1', function () {
+        it('should disable the submit button if duplicate records are found', function () {
           var element = {
             attrs: {
-              value: '+4444444444'
-            }
-          };
-          controller.tokenmethods.removedtoken(element);
-          expect(controller.submitBtnStatus).toBeTruthy();
-        });
-      });
-
-      describe('tokenmethods.editedtoken function', function () {
-        it('should exist', function () {
-          expect(controller.tokenmethods.editedtoken).toBeDefined();
-        });
-
-        it('should update the invalidcount when editedtoken is called', function () {
-          var element = {
-            attrs: {
-              value: '+44444DUDE44444'
+              value: '+51234567890'
             }
           };
           controller.tokenmethods.createdtoken(element);
-          expect(controller.invalidcount).toEqual(1);
+          expect(controller.submitBtnStatus).toBeTruthy();
+          controller.tokenmethods.createdtoken(element);
+          expect(controller.submitBtnStatus).toBeFalsy();
 
-          element.attrs.value = '4444444444';
-          controller.tokenmethods.editedtoken(element);
-          expect(controller.invalidcount).toEqual(0);
         });
       });
 

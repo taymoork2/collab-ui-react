@@ -193,7 +193,7 @@ angular.module('Core')
       };
 
       $scope.assignServicesSave = function () {
-        if ($scope.radioStates.commRadio) {
+        if ($scope.radioStates.commRadio || $scope.entitlements.ciscoUC) {
           $scope.processing = true;
           activateDID();
           $state.go('users.add.services.dn');
@@ -264,12 +264,10 @@ angular.module('Core')
       }
 
       Userservice.getUser('me', function (data, status) {
-        FeatureToggleService.getFeaturesForUser(data.id, function (data, status) {
-          _.each(data.developer, function (element) {
-            if (element.key === 'gsxdemo' && element.val === 'true') {
-              $scope.gsxFeature = true;
-            }
-          });
+        FeatureToggleService.getFeaturesForUser(data.id, 'gsxdemo').then(function (value) {
+          $scope.gsxFeature = value;
+        }).finally(function () {
+          activate();
         });
       });
 
@@ -436,22 +434,26 @@ angular.module('Core')
         id: 'collabRadio2'
       };
 
-      $scope.gridOptions = {
-        data: 'groups',
-        rowHeight: 44,
-        headerRowHeight: 44,
-        multiSelect: false,
-        sortInfo: {
-          fields: ['displayName'],
-          directions: ['asc']
+      $scope.tableOptions = {
+        cursorcolor: Config.chartColors.gray,
+        cursorminheight: 50,
+        cursorborder: "0px",
+        cursorwidth: "7px",
+        railpadding: {
+          top: 0,
+          right: 3,
+          left: 0,
+          bottom: 0
         },
-
-        columnDefs: [{
-          field: 'displayName',
-          displayName: $translate.instant('onboardModal.groupColHeader'),
-          sortable: true
-        }]
+        autohidemode: "leave"
       };
+
+      angular.element('.wizard-main-wrapper').bind('resize', function () {
+        var nice = $('#errorTable').getNiceScroll();
+        if (nice !== null && nice !== undefined) {
+          nice.resize();
+        }
+      });
 
       var rowTemplate = '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}">' +
         '<div ng-cell></div>' +
@@ -523,7 +525,7 @@ angular.module('Core')
 
       $scope.$watch('wizard.current.step', function (newVal, oldVal) {
         if (angular.isDefined($scope.wizard) && $scope.wizard.current.step.name === 'assignServices') {
-          if ($scope.radioStates.commRadio) {
+          if ($scope.radioStates.commRadio || $scope.entitlements.ciscoUC) {
             $scope.$emit('wizardNextText', 'next');
           } else {
             $scope.$emit('wizardNextText', 'finish');
@@ -715,6 +717,7 @@ angular.module('Core')
         $scope.$emit('wizardNextText', action);
       };
 
+      var invalidcount = 0;
       $scope.tokenfieldid = "usersfield";
       $scope.tokenplaceholder = $translate.instant('usersPage.userInput');
       $scope.tokenoptions = {
@@ -749,21 +752,18 @@ angular.module('Core')
         }
       };
 
-      var invalidcount = 0;
-      var startLog;
-
       var setPlaceholder = function (placeholder) {
         angular.element('.tokenfield.form-control #usersfield-tokenfield').attr('placeholder', placeholder);
       };
 
       //placeholder logic
-      var checkPlaceholder = function () {
+      function checkPlaceholder() {
         if (angular.element('.token-label').length > 0) {
           setPlaceholder('');
         } else {
           setPlaceholder($translate.instant('usersPage.userInput'));
         }
-      };
+      }
 
       var getUsersList = function () {
         return $window.addressparser.parse($scope.model.userList);
@@ -1002,7 +1002,7 @@ angular.module('Core')
         return deferred.promise;
       }
 
-      var entitleUserCallback = function (data, status, method) {
+      function entitleUserCallback(data, status, method) {
         $scope.results = {
           resultList: []
         };
@@ -1128,7 +1128,7 @@ angular.module('Core')
           }
         }
 
-      };
+      }
 
       //radio group
       $scope.entitlements = {};
@@ -1176,7 +1176,7 @@ angular.module('Core')
       $scope.assignServicesNext = function () {
         var deferred = $q.defer();
 
-        if ($scope.radioStates.commRadio) {
+        if ($scope.radioStates.commRadio || $scope.entitlements.ciscoUC) {
           $scope.processing = true;
           activateDID();
           deferred.resolve();
@@ -1195,7 +1195,7 @@ angular.module('Core')
       };
 
       $scope.getServicesNextText = function () {
-        if ($scope.radioStates.commRadio) {
+        if ($scope.radioStates.commRadio || $scope.entitlements.ciscoUC) {
           return 'common.next';
         } else {
           return 'common.save';
@@ -1263,6 +1263,13 @@ angular.module('Core')
           } else if (newEntitlements !== oldEntitlements) {
             $scope.saveDisabled = false;
           }
+
+          if (changedKey === 'ciscoUC' && newEntitlements[changedKey]) {
+            $scope.$emit('wizardNextText', 'next');
+          } else if (changedKey === 'ciscoUC') {
+            $scope.$emit('wizardNextText', 'finish');
+          }
+
         });
       };
 
@@ -1306,7 +1313,7 @@ angular.module('Core')
         convertUsersInBatch();
       };
 
-      var convertUsersInBatch = function () {
+      function convertUsersInBatch() {
         var batch = $scope.convertSelectedList.slice(0, Config.batchSize);
         $scope.convertSelectedList = $scope.convertSelectedList.slice(Config.batchSize);
         Userservice.migrateUsers(batch, function (data, status) {
@@ -1353,7 +1360,7 @@ angular.module('Core')
             }
           }
         });
-      };
+      }
 
       var getUnlicensedUsers = function () {
         Orgservice.getUnlicensedUsers(function (data) {
@@ -1520,12 +1527,34 @@ angular.module('Core')
               }
             }
           } else {
+            var responseMessage = getErrorResponse(data, status);
             for (var k = 0; k < params.length; k++) {
-              addUserError(params.startIndex + k + 1, $translate.instant('firstTimeWizard.processCsvError'));
+              addUserError(params.startIndex + k + 1, responseMessage);
             }
           }
 
           calculateProcessProgress();
+        }
+
+        function getErrorResponse(data, status) {
+          var responseMessage = data.message;
+          if (status === 400) {
+            responseMessage = $translate.instant('firstTimeWizard.csv400Error');
+          } else if (status === 403 || status === 401) {
+            responseMessage = $translate.instant('firstTimeWizard.csv401And403Error');
+          } else if (status === 404) {
+            responseMessage = $translate.instant('firstTimeWizard.csv404Error');
+          } else if (status === 408) {
+            responseMessage = $translate.instant('firstTimeWizard.csv408Error');
+          } else if (status === 409) {
+            responseMessage = $translate.instant('firstTimeWizard.csv409Error');
+          } else if (status === 500) {
+            responseMessage = $translate.instant('firstTimeWizard.csv500Error');
+          } else if (status === 502 || status === 503) {
+            responseMessage = $translate.instant('firstTimeWizard.csv502And503Error');
+          }
+
+          return responseMessage;
         }
 
         // Get license/entitlements
@@ -1609,27 +1638,6 @@ angular.module('Core')
       $scope.cancelProcessCsv = function () {
         cancelDeferred.resolve();
         saveDeferred.resolve();
-      };
-
-      $scope.gridOptions = {
-        data: 'model.userErrorArray',
-        multiSelect: false,
-        showFilter: false,
-        rowHeight: 44,
-        // rowTemplate: rowTemplate,
-        headerRowHeight: 44,
-        useExternalSorting: false,
-        enableRowSelection: false,
-
-        columnDefs: [{
-          field: 'row',
-          displayName: $translate.instant('firstTimeWizard.resultRowHeader'),
-          sortable: true,
-        }, {
-          field: 'error',
-          displayName: $translate.instant('firstTimeWizard.resultErrorHeader'),
-          sortable: true
-        }]
       };
     }
   ]);

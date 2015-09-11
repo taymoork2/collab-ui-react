@@ -35,7 +35,7 @@ angular.module('Core')
 
       $scope.openAddTrialModal = function () {
         $state.go('trialAdd.info').then(function () {
-          $state.modal.result.then(function () {
+          $state.modal.result.finally(function () {
             getTrialsList();
             getManagedOrgsList();
           });
@@ -47,7 +47,7 @@ angular.module('Core')
           showPartnerEdit: true,
           currentTrial: $scope.currentTrial
         }).then(function () {
-          $state.modal.result.then(function () {
+          $state.modal.result.finally(function () {
             getTrialsList();
             getManagedOrgsList();
           });
@@ -167,7 +167,7 @@ angular.module('Core')
         }
       }
 
-      var getTrialsList = function () {
+      function getTrialsList() {
         $scope.showTrialsRefresh = true;
         $scope.activeList = [];
         $scope.expiredList = [];
@@ -193,9 +193,9 @@ angular.module('Core')
             })], 'error');
           }
         });
-      };
+      }
 
-      var getManagedOrgsList = function () {
+      function getManagedOrgsList() {
         $scope.showManagedOrgsRefresh = true;
         $scope.managedOrgsList = [];
         PartnerService.getManagedOrgsList(function (data, status) {
@@ -215,7 +215,7 @@ angular.module('Core')
             })], 'error');
           }
         });
-      };
+      }
 
       $scope.closeActionsDropdown = function () {
         angular.element('.open').removeClass('open');
@@ -267,7 +267,8 @@ angular.module('Core')
         '</button>' +
         '<ul class="dropdown-menu dropdown-primary" role="menu">' +
         '<li ng-show="row.entity.isAllowedToManage" id="{{row.entity.customerName}}LaunchCustomerButton"><a href="" ng-click="$event.stopPropagation(); closeActionsDropdown();" ui-sref="login_swap({customerOrgId: row.entity.customerOrgId, customerOrgName: row.entity.customerName})" target="_blank"><span translate="customerPage.launchButton"></span></a></li>' +
-        '<li ng-show="row.entity.isSquaredUcOffer" id="{{row.entity.customerName}}UploadNumbers"><a href="" ng-click="$event.stopPropagation(); closeActionsDropdown();" ui-sref="didadd({currentOrg: row.entity})"><span translate="customerPage.uploadNumbers"></span></a></li>' +
+        '<li cr-feature-toggle feature-show="pstnSetup" ng-show="row.entity.isSquaredUcOffer" id="{{row.entity.customerName}}PstnSetup"><a href="" ng-click="$event.stopPropagation(); closeActionsDropdown();" ui-sref="pstnSetup({customerId: row.entity.customerOrgId, customerName: row.entity.customerName})"><span translate="pstnSetup.setupPstn"></span></a></li>' +
+        '<li cr-feature-toggle feature-hide="pstnSetup" ng-show="row.entity.isSquaredUcOffer" id="{{row.entity.customerName}}UploadNumbers"><a href="" ng-click="$event.stopPropagation(); closeActionsDropdown();" ui-sref="didadd({currentOrg: row.entity})"><span translate="customerPage.uploadNumbers"></span></a></li>' +
         '</ul>' +
         '</span>';
 
@@ -351,7 +352,7 @@ angular.module('Core')
         }]
       };
 
-      var setServiceSortOrder = function (license, licenses) {
+      function setServiceSortOrder(license, licenses) {
         if (!licenses || licenses.length === 0) {
           license.sortOrder = NO_LICENSE;
         } else {
@@ -367,7 +368,7 @@ angular.module('Core')
             license.sortOrder = NO_LICENSE;
           }
         }
-      };
+      }
 
       function serviceSort(a, b) {
         if (a.sortOrder === TRIAL && b.sortOrder === TRIAL) {
@@ -424,7 +425,7 @@ angular.module('Core')
         });
       }
 
-      var setNotesSortOrder = function (rowData) {
+      function setNotesSortOrder(rowData) {
         rowData.notes = {};
         if ($scope.isLicenseInfoAvailable(rowData.licenseList)) {
           if (rowData.status === 'CANCELED') {
@@ -452,7 +453,7 @@ angular.module('Core')
           rowData.notes.sortOrder = NOTE_NO_LICENSE;
           rowData.notes.text = $translate.instant('customerPage.licenseInfoNotAvailable');
         }
-      };
+      }
 
       function notesSort(a, b) {
         if (a.sortOrder === NOTE_NOT_EXPIRED && b.sortOrder === NOTE_NOT_EXPIRED) {
@@ -500,7 +501,7 @@ angular.module('Core')
         }
       };
 
-      var getLicense = function (licenses, licenseTypeField) {
+      function getLicense(licenses, licenseTypeField) {
         var offerNames;
         if (licenseTypeField === 'messaging') {
           offerNames = ['MS'];
@@ -520,23 +521,23 @@ angular.module('Core')
           }
         }
         return {};
-      };
+      }
 
       $scope.isLicenseInfoAvailable = function (licenses) {
         return angular.isArray(licenses) && licenses.length > 0;
       };
 
-      var isLicenseATrial = function (license) {
+      function isLicenseATrial(license) {
         return license && license.isTrial === true;
-      };
+      }
 
-      var isLicenseActive = function (license) {
+      function isLicenseActive(license) {
         return license && license.isTrial === false;
-      };
+      }
 
-      var isLicenseFree = function (license) {
+      function isLicenseFree(license) {
         return angular.isUndefined(license.isTrial);
-      };
+      }
 
       var getLicenseObj = function (rowData, licenseTypeField) {
         var license = null;

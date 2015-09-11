@@ -18,7 +18,7 @@ angular.module('Core', [
   'ngSanitize',
   'ngRoute',
   'ngMessages',
-  'ui.bootstrap',
+  // 'ui.bootstrap',
   'dialogs',
   'ngCsv',
   'ipCookie',
@@ -32,12 +32,13 @@ angular.module('Core', [
   'formly',
   'formlyCisco',
   'cisco.ui',
-  'timer'
+  'timer',
+  'angular-nicescroll'
 ]);
 
 angular.module('Squared', ['Core']);
 
-angular.module('Huron', ['Core', 'uc.moh', 'uc.device', 'uc.callrouting', 'uc.didadd', 'uc.overview', 'uc.callrouter']);
+angular.module('Huron', ['Core', 'uc.moh', 'uc.device', 'uc.callrouting', 'uc.didadd', 'uc.overview', 'uc.callrouter', 'uc.hurondetails']);
 
 angular.module('Hercules', ['Core']);
 

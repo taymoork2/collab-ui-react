@@ -64,18 +64,18 @@ angular.module('Mediafusion')
           .error(createErrorHandler('Unable to delete host', callback));
       };
 
-      var createSuccessCallback = function (callback) {
+      function createSuccessCallback(callback) {
         return function (data) {
           callback(null, data);
         };
-      };
+      }
 
-      var createErrorHandler = function (message, callback) {
+      function createErrorHandler(message, callback) {
         return function () {
           notification.notify(message, arguments);
           callback(arguments);
         };
-      };
+      }
 
       return {
         fetch: fetch,

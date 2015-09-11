@@ -5,6 +5,13 @@
   > .modal-body {
     flex: 1 1 auto;
   }
+
+  .loading {
+    text-align: center;
+    .icon-spinner {
+      font-size: 75px;
+    }
+  }
 }
 
 .pstn-providers {
@@ -85,23 +92,33 @@
   }
 
   .flex-2 {
-    flex: 2 1 auto;
+    flex: 2;
   }
 
   .flex-1 {
-    flex: 1 1 auto;
+    flex: 1;
     margin-left: 30px;
+  }
+
+  .provider-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .badge {
+      margin-bottom: 0;
+    }
   }
 
   .modal-body {
     margin: 0;
   }
 
-  .form-horizontal {
+  .form {
     width: 60%;
 
     .has-feedback .form-control-feedback {
-      right: 7px;
+      right: 4px;
     }
   }
 
@@ -112,10 +129,7 @@
       padding-bottom: calc((#{$input-height-base} - #{$font-size-base})/2);
       margin-right: 25px;
   }
-  .form-horizontal .form-group, .form-horizontal .formly-field-group {
-    margin-left: 0;
-    margin-right: 0;
-  }
+
 }
 
 .pstn-review {

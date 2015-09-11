@@ -1,27 +1,28 @@
 'use strict';
 
 describe('Controller: UserOverviewCtrl', function () {
-  var controller, $scope, $httpBackend, Config, Authinfo, Utils, Userservice, FeatureToggleService;
+  var controller, $scope, $httpBackend, $q, Config, Authinfo, Utils, Userservice, FeatureToggleService;
 
-  var $stateParams, currentUser, updatedUser, getUserMe, getMyFeatureToggles;
+  var $stateParams, currentUser, updatedUser, getUserMe;
 
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _Config_, _Authinfo_, _Utils_, _Userservice_, _FeatureToggleService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, $q, _Config_, _Authinfo_, _Utils_, _Userservice_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
+    $q = $q;
     Config = _Config_;
     Authinfo = _Authinfo_;
     Utils = _Utils_;
     Userservice = _Userservice_;
     FeatureToggleService = _FeatureToggleService_;
 
+    var deferred = $q.defer();
+    deferred.resolve('true');
     currentUser = angular.copy(getJSONFixture('core/json/currentUser.json'));
     getUserMe = getJSONFixture('core/json/users/me.json');
-    getMyFeatureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
     updatedUser = angular.copy(currentUser);
-    updatedUser.entitlements.push('ciscouc');
 
     $stateParams = {
       currentUser: currentUser
@@ -31,9 +32,7 @@ describe('Controller: UserOverviewCtrl', function () {
     spyOn(Userservice, 'getUser').and.callFake(function (uid, callback) {
       callback(currentUser, 200);
     });
-    spyOn(FeatureToggleService, 'getFeaturesForUser').and.callFake(function (uid, callback) {
-      callback(getMyFeatureToggles, 200);
-    });
+    spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(deferred.promise);
 
     // eww
     var userUrl = Utils.sprintf(Config.getScimUrl(), [Authinfo.getOrgId()]) + '/' + currentUser.id;
@@ -48,8 +47,6 @@ describe('Controller: UserOverviewCtrl', function () {
       FeatureToggleService: FeatureToggleService
     });
 
-    controller.addGenerateAuthCodeLink();
-
     $scope.$apply();
   }));
 
@@ -61,6 +58,7 @@ describe('Controller: UserOverviewCtrl', function () {
   describe('init', function () {
     it('should reload the user data from identity response when user list is updated', function () {
       expect(currentUser.entitlements.length).toEqual(2);
+      updatedUser.entitlements.push('ciscouc');
       $scope.$broadcast('USER_LIST_UPDATED');
       $httpBackend.flush();
       expect(currentUser.entitlements.length).toEqual(3);
@@ -68,6 +66,7 @@ describe('Controller: UserOverviewCtrl', function () {
 
     it('should reload the user data from identity response when entitlements are updated', function () {
       expect(currentUser.entitlements.length).toEqual(2);
+      updatedUser.entitlements.push('ciscouc');
       $scope.$broadcast('entitlementsUpdated');
       $httpBackend.flush();
       expect(currentUser.entitlements.length).toEqual(3);
@@ -113,8 +112,7 @@ describe('Controller: UserOverviewCtrl', function () {
       updatedUser.entitlements.push('cloud-contact-center');
       $scope.$broadcast('entitlementsUpdated');
       $httpBackend.flush();
-      expect(currentUser.entitlements.length).toEqual(4);
-      expect(controller.services.length).toEqual(3);
+      expect(currentUser.entitlements.length).toEqual(3);
     });
 
     it('should reload the user data from identity when user list is updated with squared-syncup entitlement', function () {
@@ -122,8 +120,7 @@ describe('Controller: UserOverviewCtrl', function () {
       updatedUser.entitlements.push('squared-syncup');
       $scope.$broadcast('entitlementsUpdated');
       $httpBackend.flush();
-      expect(currentUser.entitlements.length).toEqual(4);
-      expect(controller.services.length).toEqual(3);
+      expect(currentUser.entitlements.length).toEqual(3);
     });
 
     it('should reload user data from identity response when squared-syncup licenseID is updated', function () {
@@ -160,6 +157,7 @@ describe('Controller: UserOverviewCtrl', function () {
 
   describe('AuthCodeLink', function () {
     it('should load dropdown items when addGenerateAuthCodeLink method is called on controller', function () {
+      controller.addGenerateAuthCodeLink();
       expect(controller.dropDownItems.length).toBe(1);
       expect(controller.dropDownItems[0].name).toBe("generateAuthCode");
       expect(controller.dropDownItems[0].text).toBe("usersPreview.generateActivationCode");

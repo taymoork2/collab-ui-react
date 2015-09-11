@@ -74,7 +74,7 @@ angular
       $httpProvider.interceptors.push('ResponseInterceptor');
 
       // See ... http://angular-translate.github.io/docs/#/guide/19_security
-      $translateProvider.useSanitizeValueStrategy('escape');
+      $translateProvider.useSanitizeValueStrategy('escapeParameters');
 
       $translateProvider.useStaticFilesLoader({
         prefix: 'l10n/',
@@ -94,6 +94,8 @@ angular
   .module('Squared')
   .config(['$urlRouterProvider', '$stateProvider',
     function ($urlRouterProvider, $stateProvider) {
+      var modalMemo = 'modalMemo';
+      var wizardmodalMemo = 'wizardmodalMemo';
 
       // Modal States Enter and Exit functions
       function modalOnEnter(options) {
@@ -109,7 +111,7 @@ angular
             template: '<div ui-view="modal"></div>',
             size: options.size,
             windowClass: options.windowClass,
-            backdrop: options.backdrop || true
+            backdrop: options.backdrop || 'static'
           });
           $state.modal.result.finally(function () {
             if (!this.stopPreviousState) {
@@ -131,9 +133,6 @@ angular
           $state.modal.dismiss();
         }
       }
-
-      var modalMemo = 'modalMemo';
-      var wizardmodalMemo = 'wizardmodalMemo';
 
       $stateProvider
         .state('activate', {
@@ -658,6 +657,40 @@ angular
           }
         })
 
+      /*
+        devices redux 2
+      */
+
+      .state('devices-redux2', {
+          abstract: true,
+          url: '/devices-redux2',
+          templateUrl: 'modules/squared/devicesRedux2/devices.html',
+          controller: 'DevicesReduxCtrl2',
+          controllerAs: 'devices',
+          parent: 'main'
+        })
+        .state('devices-redux2.search', {
+          url: '/search',
+          views: {
+            'rightPanel': {
+              templateUrl: 'modules/squared/devicesRedux2/list.html'
+            }
+          }
+        })
+        .state('devices-redux2.details', {
+          url: '/details',
+          views: {
+            'rightPanel': {
+              controllerAs: 'deviceDetails',
+              controller: 'DevicesReduxDetailsCtrl2',
+              templateUrl: 'modules/squared/devicesRedux2/details.html'
+            }
+          },
+          params: {
+            device: null
+          }
+        })
+
       .state('devices2', {
           url: '/devices2',
           templateUrl: 'modules/squared/devices2/devices2.html',
@@ -1101,12 +1134,13 @@ angular
         .state('pstnSetup', {
           parent: 'modalFull',
           params: {
-            currentCustomer: {}
+            customerId: {},
+            customerName: {}
           },
           views: {
             'modal@': {
               template: '<div ui-view></div>',
-              controller: 'PstnSetup',
+              controller: 'PstnSetupCtrl',
               controllerAs: 'pstnSetup'
             },
             '@pstnSetup': {
@@ -1122,6 +1156,42 @@ angular
         })
         .state('pstnSetup.nextSteps', {
           templateUrl: 'modules/huron/pstnSetup/pstnNextSteps.tpl.html'
+        })
+        .state('hurondetailsBase', {
+          abstract: true,
+          parent: 'main',
+          templateUrl: 'modules/huron/details/huronDetails.tpl.html'
+        })
+        .state('hurondetails', {
+          url: '/hurondetails',
+          parent: 'hurondetailsBase',
+          views: {
+            'nav': {
+              templateUrl: 'modules/huron/details/huronDetailsNav.tpl.html',
+              controller: 'HuronDetailsNavCtrl',
+              controllerAs: 'nav'
+            },
+            'main': {
+              template: '<div ui-view></div>'
+            }
+          }
+        })
+        .state('huronlines', {
+          url: '/lines',
+          parent: 'hurondetails',
+          templateUrl: 'modules/huron/lines/lineList.tpl.html',
+          controller: 'LinesListCtrl',
+          controllerAs: 'linesListCtrl'
+        })
+        .state('huronsettings', {
+          url: '/settings',
+          parent: 'hurondetails',
+          template: '<div>Under Construction</div>'
+        })
+        .state('huronfeatures', {
+          url: '/features',
+          parent: 'hurondetails',
+          template: '<div>Under Construction</div>'
         });
     }
   ]);

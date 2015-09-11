@@ -26,6 +26,7 @@ var UsersPage = function () {
   this.servicesPanel = element(by.cssContainingText('.section-title-row', 'Services'));
   this.servicesActionButton = this.servicesPanel.element(by.css('button.actions-button'));
   this.editServicesButton = element(by.cssContainingText('a', 'Edit services'));
+  this.editServicesModal = element(by.css('.edit-services'));
 
   this.servicesPanelCommunicationsCheckbox = element(by.css('.bucket-row-inner .indentedCheckbox'));
   this.listPanel = element(by.id('userslistpanel'));

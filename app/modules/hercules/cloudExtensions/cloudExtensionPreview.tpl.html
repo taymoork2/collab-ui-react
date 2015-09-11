@@ -1,5 +1,5 @@
 <cs-sp-buttons ng-show="showButtons">
-  <button id="btn-save" class="btn-primary btn-save" translate="common.save" data-loading-text="<i class='icon icon-spinner'></i>" ng-click="updateEntitlement(extension.entitled)"></button>
+  <button id="btn-save" class="btn-primary btn-save" translate="common.save" data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>" ng-click="updateEntitlement(extension.entitled)"></button>
   <button id="btn-cancel" ng-disabled="saving" class="btn-default" translate="common.cancel" ng-click="resetEntitlement()"></button>
 </cs-sp-buttons>
 <cs-sp-container>
@@ -17,12 +17,12 @@
         <li class="feature">
           <span class="feature-name" translate="cloudExtensions.status"></span>
           <span ng-show="extension.entitled && extension.status"
-                class="feature-item"
-                ng-class="extension.entitled && extension.status ? extension.status.state : 'disabled'"
+                class="feature-status"
+                ng-class="extension.entitled && extension.status ? 'status-' + extension.status.state : 'disabled'"
                 translate="hercules.activationStatus.{{getStatus(extension.status)}}"></span>
           <span ng-hide="extension.status && extension.entitled"
-                ng-class="extension.entitled && extension.status ? extension.status.state : 'disabled'"
-                class="feature-item"
+                ng-class="extension.entitled && extension.status ? 'status-' + extension.status.state : 'disabled'"
+                class="feature-status"
                 translate="common.{{extension.entitled ? 'on' : 'off'}}"></span>
         </li>
         <li class="feature" ng-show="extension.entitled && extension.homedConnector">
@@ -32,13 +32,11 @@
           </span>
         </li>
       </ul>
-    </div>
-
-    <div ng-show="extension.entitled && extension.status && extension.status.state === 'error' && extension.status.description"
-         class="alert alert-danger"
-         role="alert"
-         style="margin-left: 0px; margin-right: 0px; margin-bottom: 0px;">
+      <span
+        ng-show="extension.entitled && extension.status && extension.status.state === 'error' && extension.status.description"
+        class="status-error">
       {{extension.status.description.defaultMessage}}
+    </span>
     </div>
 
   </cs-sp-section>
