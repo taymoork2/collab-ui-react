@@ -60,15 +60,16 @@ describe('Squared Add & Entitle User Flows', function () {
     });
 
     it('admin should type Yes to delete themselves', function () {
-      utils.searchAndClick(adminEmail);
-      utils.click(users.closeSidePanel);
+      // Need to search for a single search result first, otherwise
+      // Stale element when trying to click a user already visible
+      utils.searchForSingleResult(adminEmail);
       utils.click(users.userListAction);
       utils.click(users.deleteUserOption);
-      utils.expectIsDisplayed(users.deleteUserModal);
-      utils.expectIsDisabled(users.deleteUserButton);
-      utils.sendKeys(users.inputYes, 'yes');
-      utils.expectIsEnabled(users.deleteUserButton);
-      utils.click(users.cancelButton);
+      utils.waitForModal().then(function () {
+        utils.waitUntilDisabled(users.deleteUserButton);
+        utils.sendKeys(users.inputYes, 'yes');
+        utils.waitUntilEnabled(users.deleteUserButton);
+      });
     });
   });
 

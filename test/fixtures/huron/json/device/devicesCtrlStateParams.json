@@ -1,0 +1,42 @@
+{
+  "currentUser": {
+    "schemas": [
+      "urn:scim:schemas:core:1.0",
+      "urn:scim:schemas:extension:cisco:commonidentity:1.0"
+    ],
+    "userName": "pregoldtx1sl+2callwaiting1@gmail.com",
+    "emails": [{
+      "primary": true,
+      "type": "work",
+      "value": "pregoldtx1sl+2callwaiting1@gmail.com"
+    }],
+    "name": {
+      "givenName": "pregoldtx1sl",
+      "familyName": "2callwaiting1"
+    },
+    "entitlements": [
+      "squared-room-moderation",
+      "webex-messenger",
+      "ciscouc",
+      "squared-call-initiation",
+      "webex-squared",
+      "squared-syncup"
+    ],
+    "id": "6604225e-647f-4db3-a446-9417af9f7ba4",
+    "meta": {
+      "created": "2015-07-02T18:20:07.907Z",
+      "lastModified": "2015-07-05T05:39:13.271Z",
+      "version": "37421943431",
+      "location": "https://identity.webex.com/identity/scim/cd1500f6-ebd8-4009-a79f-9f43fa9bd898/v1/Users/6604225e-647f-4db3-a446-9417af9f7ba4",
+      "organizationID": "cd1500f6-ebd8-4009-a79f-9f43fa9bd898"
+    },
+    "displayName": "pregoldtx1sl+2callwaiting1@gmail.com",
+    "active": true,
+    "licenseID": [
+      "MS_a8dfd2ab-afd0-4313-98ed-f8cd20f0ec42",
+      "CF_6faba8d3-2d3c-450e-8e80-fbe3cc57d2d7",
+      "CO_88fed306-7866-42b7-a467-d0121a93ba06"
+    ],
+    "avatarSyncEnabled": false
+  }
+}

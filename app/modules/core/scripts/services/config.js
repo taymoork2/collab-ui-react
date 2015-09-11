@@ -231,6 +231,12 @@ angular.module('Core')
             desc: 'tabs.conferencingDesc',
             state: 'site-list',
             link: '#site-list'
+              // Temporarily commented out Numbers tab until ready to expose.
+              // }, {
+              //   title: 'tabs.huronLineDetailsTab',
+              //   desc: 'tabs.huronLineDetailsTabDesc',
+              //   state: 'hurondetails',
+              //   link: '#hurondetails'
           }, {
             title: 'tabs.fusionDetailsTab',
             desc: 'tabs.fusionDetailsTabDesc',
@@ -443,7 +449,7 @@ angular.module('Core')
 
         defaultEntitlements: ['webex-squared', 'squared-call-initiation'],
 
-        batchSize: 20,
+        batchSize: 10,
 
         isDev: function () {
           var currentHostname = getCurrentHostname();
@@ -474,11 +480,12 @@ angular.module('Core')
           }
         },
 
-        getScimUrl: function () {
+        getScimUrl: function (orgId) {
+          var params = [orgId];
           if (this.isCfe()) {
-            return this.scimUrl.cfe;
+            return Utils.sprintf(this.scimUrl.cfe, params);
           } else {
-            return this.scimUrl.spark;
+            return Utils.sprintf(this.scimUrl.spark, params);
           }
         },
 
@@ -802,7 +809,11 @@ angular.module('Core')
           'huntgroups',
           'didadd',
           'newpartnerreports',
-          'callRouter'
+          'callRouter',
+          'hurondetails',
+          'huronlines',
+          'huronsettings',
+          'huronfeatures'
         ],
         'squared-fusion-mgmt': [
           'fusion',
@@ -813,6 +824,8 @@ angular.module('Core')
           'devices-redux',
           'devices-redux2',
           'devices-redux2-search',
+          'devices-redux3',
+          'devices-redux3-search',
           'devices-cleanup',
           'devices2'
         ],
@@ -846,7 +859,8 @@ angular.module('Core')
           'reports',
           'devices',
           'fusion',
-          'mediafusionconnector'
+          'mediafusionconnector',
+          'callRouter'
         ]
       };
 

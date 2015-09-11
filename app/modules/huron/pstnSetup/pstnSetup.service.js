@@ -10,9 +10,11 @@
     var TATA = "TATA";
     var PSTN = "PSTN";
     var PENDING = "PENDING";
+    var QUEUED = "QUEUED";
 
     var service = {
       createCustomer: createCustomer,
+      updateCustomerCarrier: updateCustomerCarrier,
       getCustomer: getCustomer,
       listCarriers: listCarriers,
       listCustomerCarriers: listCustomerCarriers,
@@ -45,7 +47,6 @@
       "serviceStreetDirectional": "E",
       "serviceStreetName": "President George Bush",
       "serviceStreetSuffix": "Hwy",
-      "serviceAddressSub": "",
       "serviceCity": "Richardson",
       "serviceState": "TX",
       "serviceZip": "75082"
@@ -62,6 +63,15 @@
         "billingAddress": billingAddress
       };
       return TerminusCustomerService.save({}, payload).$promise;
+    }
+
+    function updateCustomerCarrier(customerId, pstnCarrierId) {
+      var payload = {
+        "pstnCarrierId": pstnCarrierId
+      };
+      return TerminusCustomerService.update({
+        customerId: customerId
+      }, payload).$promise;
     }
 
     function getCustomer(customerId) {
@@ -113,7 +123,7 @@
     }
 
     function getOrder(customerId, orderId) {
-      return TerminusOrderService.get({
+      return TerminusOrderService.query({
         customerId: customerId,
         orderId: orderId
       }).$promise;
@@ -128,11 +138,11 @@
         });
         var promises = [];
         angular.forEach(carrierOrders, function (carrierOrder) {
-          var promise = getOrder(customerId, carrierOrder.uuid).then(function (order) {
-            angular.forEach(order, function (value, key) {
-              if (value.status === PENDING && value.number !== null) {
+          var promise = getOrder(customerId, carrierOrder.uuid).then(function (orderNumbers) {
+            angular.forEach(orderNumbers, function (orderNumber) {
+              if (orderNumber && orderNumber.number && (orderNumber.network === PENDING || orderNumber.network === QUEUED)) {
                 pendingNumbers.push({
-                  pattern: value.number
+                  pattern: orderNumber.number
                 });
               }
             });

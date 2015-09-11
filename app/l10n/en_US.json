@@ -69,6 +69,7 @@
     "ciscoucError": "{{email}} did not successfully onboard Unified Communications.",
     "messageError": "Message: {{message}}",
     "userListError": "Error retrieving the user list. Please try reloading the page.",
+    "tooManyUsersError": "Use the search input above to find users.",
     "emailSuccess": "Email sent successfully.",
     "emailError": "Error sending email.",
     "convertUserSuccess": "successfully converted.",
@@ -188,6 +189,8 @@
     "addOrganizationTabDesc": "Add a new organization to this account",
     "fusionDetailsTab": "Connector Management",
     "fusionDetailsTabDesc": "Connector Management",
+    "huronLineDetailsTab": "Huron",
+    "huronLineDetailsTabDesc": "Huron Details",
     "MediafusionDetailsTab": "Media Service Management",
     "MediafusionDetailsTabDesc": "Media Service Management",
     "callRoutingTab": "Call Routing",
@@ -962,7 +965,7 @@
     "ContentShared": "Files Shared this Month",
     "AmountofContentShared": "GB of Content Shared this Month",
     "UserEngagement": "User Engagement",
-    "weekOf": "Week Starting",
+    "weekOf": "Week Ending",
     "numberOfCallsAxis": "Number of Calls (Total)",
     "numberOfRoomsAxis": "Number of Rooms (Avg.)",
     "numberActiveAxis": "Number of Active Users (Total)",
@@ -1173,7 +1176,8 @@
     "companyNumberLoadError": "Company numbers failed to load.",
     "customCallerId": "Custom",
     "customName": "Custom Name",
-    "customNumber": "Custom Number"
+    "customNumber": "Custom Number",
+    "customNumberValidation": "Field can contain digits 0 to 9 and +. For example: +15556667777."
   },
   "sharedLinePanel": {
     "title": "Shared Line",
@@ -1237,7 +1241,9 @@
     "launchPortal": "Launch Company Portal",
     "carrierListError": "Failed to retrieve carrier list for this customer.",
     "orderNumbersPrompt": "Must add block numbers to proceed.",
-    "blockOrderError": "Failed to order {{quantity}} block number(s) with area code {{areaCode}}."
+    "blockOrderError": "Failed to order {{quantity}} block number(s) with area code {{areaCode}}.",
+    "customerCreateError": "Failed to create customer with the carrier.",
+    "customerUpdateError": "Failed to update customer with the carrier."
   },
   "intelepeerFeatures": {
     "feature1": "Unlimited inbound/outbound calling to U.S. 50 states + Canada",
@@ -1860,5 +1866,25 @@
     "invalidLinkNoParam": "Invalid link. no param",
     "error": "Something went wrong.",
     "notifyPartnerErrorMsg": "We're sorry, something went wrong while trying to notify your partner."
+  },
+  "huronDetails": {
+    "title": "Huron",
+    "linesTitle": "Numbers",
+    "settingsTitle": "Settings",
+    "featuresTitle": "Features"
+  },
+  "linesPage": {
+    "manageLines": "Numbers",
+    "allLines": "All",
+    "unassignedLines": "Unassigned",
+    "assignedLines": "Assigned",
+    "csvBtnTitle": "Export to CSV",
+    "csvFilename": "exported_lines.csv",
+    "internalNumberHeader": "Internal Extensions",
+    "externalNumberHeader": "Phone Number",
+    "deviceHeader": "Devices",
+    "userEmailHeader": "User",
+    "actionHeader": "Actions",
+    "lineListError": "Error retrieving the line list. Please try reloading the page."
   }
 }
