@@ -210,7 +210,7 @@ angular
         .state('users.list', {
           url: '/users',
           templateUrl: 'modules/core/users/userList/userList.tpl.html',
-          controller: 'ListUsersCtrl',
+          controller: 'UserListCtrl',
           params: {
             showAddUsers: {}
           }

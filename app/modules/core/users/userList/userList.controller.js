@@ -3,10 +3,10 @@
 
   angular
     .module('Core')
-    .controller('ListUsersCtrl', ListUsersCtrl);
+    .controller('UserListCtrl', UserListCtrl);
 
   /* @ngInject */
-  function ListUsersCtrl($scope, $rootScope, $state, $location, $dialogs, $timeout, $translate, Userservice, UserListService, Log, Storage, Config, Notification, Orgservice, Authinfo, LogMetricsService, Utils, HuronUser) {
+  function UserListCtrl($scope, $rootScope, $state, $location, $dialogs, $timeout, $translate, Userservice, UserListService, Log, Storage, Config, Notification, Orgservice, Authinfo, LogMetricsService, Utils, HuronUser) {
     //Initialize data variables
     $scope.load = true;
     $scope.page = 1;
