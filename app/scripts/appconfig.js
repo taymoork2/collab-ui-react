@@ -210,7 +210,7 @@ angular
         .state('users.list', {
           url: '/users',
           templateUrl: 'modules/core/users/userList/userList.tpl.html',
-          controller: 'ListUsersCtrl',
+          controller: 'UserListCtrl',
           params: {
             showAddUsers: {}
           }
@@ -316,8 +316,7 @@ angular
           },
           resolve: {
             currentUser: /* @ngInject */ function ($http, $stateParams, Config, Utils, Authinfo) {
-              var scimUrl = Config.getScimUrl();
-              var userUrl = Utils.sprintf(scimUrl, [Authinfo.getOrgId()]) + '/' + $stateParams.currentUser.id;
+              var userUrl = Config.getScimUrl(Authinfo.getOrgId()) + '/' + $stateParams.currentUser.id;
 
               return $http.get(userUrl)
                 .then(function (response) {

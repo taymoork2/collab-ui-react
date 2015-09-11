@@ -128,8 +128,7 @@
     }
 
     function getCurrentUser() {
-      var scimUrl = Config.getScimUrl();
-      var userUrl = Utils.sprintf(scimUrl, [Authinfo.getOrgId()]) + '/' + vm.currentUser.id;
+      var userUrl = Config.getScimUrl(Authinfo.getOrgId()) + '/' + vm.currentUser.id;
 
       $http.get(userUrl)
         .then(function (response) {

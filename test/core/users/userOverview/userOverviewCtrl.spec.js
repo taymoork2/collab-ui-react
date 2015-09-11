@@ -35,7 +35,7 @@ describe('Controller: UserOverviewCtrl', function () {
     spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue(deferred.promise);
 
     // eww
-    var userUrl = Utils.sprintf(Config.getScimUrl(), [Authinfo.getOrgId()]) + '/' + currentUser.id;
+    var userUrl = Config.getScimUrl(Authinfo.getOrgId()) + '/' + currentUser.id;
     $httpBackend.whenGET(userUrl).respond(updatedUser);
 
     controller = $controller('UserOverviewCtrl', {

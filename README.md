@@ -113,10 +113,10 @@ Adding a simple page ("Hello World")
   Here is the recording and the presentation.
 
   PRESENTATION
-  http://10.89.58.222/collab-library/presentation/
+  http://collab-lib.cisco.com/collab-library/presentations/ui-best-practices/#/
 
-  PLAY RECORDING (1 hr 8 min 11 sec) 
-  https://cisco.webex.com/ciscosales/lsr.php?RCID=10b20fbacd884535bcbcffbf06d458d6 
+  PLAY RECORDING (1 hr 8 min 11 sec)
+  https://cisco.webex.com/ciscosales/lsr.php?RCID=10b20fbacd884535bcbcffbf06d458d6
 
 * clone the repo
 * add a folder under the `app/modules` directory
