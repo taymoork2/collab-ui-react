@@ -480,11 +480,12 @@ angular.module('Core')
           }
         },
 
-        getScimUrl: function () {
+        getScimUrl: function (orgId) {
+          var params = [orgId];
           if (this.isCfe()) {
-            return this.scimUrl.cfe;
+            return Utils.sprintf(this.scimUrl.cfe, params);
           } else {
-            return this.scimUrl.spark;
+            return Utils.sprintf(this.scimUrl.spark, params);
           }
         },
 
