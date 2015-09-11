@@ -3,20 +3,17 @@
 </div>
 
 <div class="form-group">
-  <p translate="contactCenterUserConfig.role"></p>
+  <label translate="contactCenterUserConfig.role"></label>
   <cs-select id="sunlightUserProfile"
              name="sunlightUserProfile"
              ng-click="showSaveCancel()"
              ng-model="SunlightUserOverview.roleSelected"
              options="SunlightUserOverview.roles">
   </cs-select>
-
   <br>
+  <label translate="contactCenterUserConfig.alias"></label>
   <formly-form ng-keypress="showSaveCancel()"
                model="SunlightUserOverview.aliasFormModel"
                fields="SunlightUserOverview.alias">
   </formly-form>
 </div>
-
-
-

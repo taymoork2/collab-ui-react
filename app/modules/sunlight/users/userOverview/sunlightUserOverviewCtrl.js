@@ -37,7 +37,6 @@
       key: 'alias',
       type: 'input',
       templateOptions: {
-        label: $translate.instant('contactCenterUserConfig.alias'),
         type: 'text',
         required: true,
         maxlength: 50
