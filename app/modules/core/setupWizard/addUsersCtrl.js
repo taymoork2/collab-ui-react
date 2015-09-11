@@ -2,12 +2,18 @@
 /* global moment, $:false */
 
 angular.module('Core')
-  .controller('AddUserCtrl', ['$scope', '$q', '$location', 'DirSyncService', 'Log', '$translate', 'Notification', 'UserListService', 'Storage', 'Utils', '$filter', 'Userservice', 'LogMetricsService', '$window', 'Config',
-    function ($scope, $q, $location, DirSyncService, Log, $translate, Notification, UserListService, Storage, Utils, $filter, Userservice, LogMetricsService, $window, Config) {
+  .controller('AddUserCtrl', ['$scope', '$q', '$location', 'DirSyncService', 'Log', '$translate', 'Notification', 'UserListService', 'Storage', 'Utils', '$filter', 'Userservice', 'LogMetricsService', '$window', 'Config', 'SyncService',
+    function ($scope, $q, $location, DirSyncService, Log, $translate, Notification, UserListService, Storage, Utils, $filter, Userservice, LogMetricsService, $window, Config, SyncService) {
       var invalidcount = 0;
       $scope.options = {
         addUsers: 0
       };
+
+      // Messeger User Sync Mode flag
+      $scope.isMsgrSyncMode = SyncService.isMessengerSync();
+      if ($scope.isMsgrSyncMode) {
+        $scope.options.addUsers = -1;
+      }
 
       $scope.syncSimple = {
         label: $translate.instant('firstTimeWizard.simple'),
@@ -30,6 +36,14 @@ angular.module('Core')
 
       $scope.initNext = function () {
         var deferred = $q.defer();
+
+        // Messenger Sync mode
+        if ($scope.isMsgrSyncMode) {
+          // this will make the initial "Next" button to stay in the locked down page
+          deferred.reject();
+          return deferred.promise;
+        }
+
         if (angular.isDefined($scope.options.addUsers) && angular.isDefined($scope.wizard) && angular.isFunction($scope.wizard.setSubTab)) {
           if ($scope.options.addUsers === 0) {
             $scope.wizard.setSubTab($scope.wizard.current.tab.subTabs[0]);
