@@ -1,0 +1,60 @@
+<div ng-if="devices.codesListSubscription.eventCount == 0 || devices.deviceListSubscription.eventCount == 0">
+  <div windowsize class="empty-devices col-md-12" style="height: {{windowHeight - 150}}px;">
+    <div class="empty-devices-content">
+      <i class="icon icon-2x icon-spinner" />
+    </div>
+  </div>
+</div>
+
+<div ng-if="devices.codesListSubscription.currentError || devices.deviceListSubscription.currentError">
+  <div class="error-spinner">
+    <i class="icon icon-2x icon-spinner" />
+  </div>
+</div>
+
+<div ng-if="devices.codesListSubscription.eventCount != 0 && devices.deviceListSubscription.eventCount != 0">
+  <div class="devices-redux3">
+    <div class="clearfix">
+      <h1>
+        Devices
+        <a 
+          href 
+          class="pull-right"
+          ng-click="devices.showAddDeviceDialog()"
+          style="padding-top: 20px; font-size: 1.5rem">
+          Add Device
+        </a>
+      </h1>
+    </div>
+    <div class="row">
+      <div class="large-6 columns pane">
+        <form class="dr2-search">
+          <input
+            type="text"
+            class="form-control"
+            ng-model="devices.search"
+            placeholder="Search for devices..."
+            ng-change="devices.searchChanged()"
+            ng-class="{'active': devices.search}"
+          />
+          <ul>
+            <li
+              ng-if="!filter.disabled"
+              ng-repeat="filter in devices.filters"
+              ng-class="{'active': filter.checked}"
+              ng-click="devices.filterChanged(filter)">
+              <a href>
+                {{filter.label}}
+                <span class="pull-right">
+                  {{devices.filteredCodesAndDevices.countPerFilter[filter.label]}}
+                </span>
+              </a>
+            </li>
+          </ul>
+        </form>
+        <div ui-view="leftPanel"></div>
+      </div>
+      <div class="large-6 columns pane" ui-view="rightPanel"></div>
+    </div>
+  </div>
+</div>
