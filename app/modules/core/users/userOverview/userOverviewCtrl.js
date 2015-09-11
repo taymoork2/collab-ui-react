@@ -139,6 +139,27 @@
         });
     }
 
+    function getUserFeatures() {
+      FeatureToggleService.getFeaturesForUser(vm.currentUser.id).then(function (data) {
+        vm.features = [];
+        if(!(data.data || data.data.developer)){
+          return;
+        }
+        var allFeatures = data.data.developer;
+        _.each(allFeatures, function (el) {
+          if (el.val !== 'false' && el.val !== '0') {
+            var newEl = {
+              key: el.key
+            };
+            if (el.val !== 'true') {
+              newEl.val = el.val;
+            }
+            vm.features.push(newEl);
+          }
+        });
+      });
+    }
+
     $scope.$on('USER_LIST_UPDATED', function () {
       getCurrentUser();
     });

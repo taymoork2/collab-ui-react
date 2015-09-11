@@ -310,13 +310,8 @@ angular.module('Core')
           subPages: [{
             title: 'tabs.organizationTab',
             desc: 'tabs.organizationTabDesc',
-            state: 'organization',
-            link: '#organization'
-          }, {
-            title: 'tabs.addOrganizationTab',
-            desc: 'tabs.addOrganizationTabDesc',
-            state: 'organizationAdd',
-            link: '#add-organization'
+            state: 'organizations',
+            link: '#organizations'
           }, {
             title: 'tabs.callRoutingTab',
             desc: 'tabs.callRoutingTabDesc',
@@ -507,6 +502,10 @@ angular.module('Core')
           } else {
             return this.adminServiceUrl.prod;
           }
+        },
+
+        getProdAdminServiceUrl: function () {
+          return this.adminServiceUrl.prod;
         },
 
         getCsdmServiceUrl: function () {
@@ -793,7 +792,7 @@ angular.module('Core')
         CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
         User: [],
         Site_Admin: ['site-list'],
-        Application: ['organizationAdd']
+        Application: ['organizationAdd', 'organizations', 'organization-overview', 'organization-features']
       };
 
       config.serviceStates = {

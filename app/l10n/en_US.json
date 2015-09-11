@@ -161,7 +161,8 @@
     "siteUris": "Site Urls",
     "webex": "Webex",
     "spark": "Spark",
-    "calling": "Calling"
+    "calling": "Calling",
+    "enabledBetaFeatures": "Enabled Beta Features"
   },
   "messagingPanel": {
     "title": "Messaging"
@@ -276,6 +277,7 @@
     "squaredUC": "Advanced Spark Call",
     "duration": "Trial Duration (days)",
     "ninetyDays": "90",
+    "search": "Search",
     "onehundredtwentyDays": "120",
     "onehundredeightyDays": "180",
     "numberOfLicenses": "Number of Licenses",
@@ -287,7 +289,9 @@
     "isPartner": "Is this organization a partner?",
     "beId": "BeID",
     "begeoId": "BegeoId",
-    "addSuccess": "An organization was successfully started for {{customerOrgName}} with {{licenseCount}} licenses for {{duration}} days."
+    "addSuccess": "An organization was successfully started for {{customerOrgName}} with {{licenseCount}} licenses for {{duration}} days.",
+    "manageBetaFeatures": "Manage Beta Features",
+    "betaFeatures": "Beta Features"
   },
   "templatesPage": {
     "title": "MANAGE TEMPLATES"
