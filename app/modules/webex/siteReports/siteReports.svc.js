@@ -2,10 +2,10 @@
 
 angular.module('WebExReports').service('reportService', function () {
 
-  var ReportsSection = function (sectionName, siteUrl, reportLink) {
+  var ReportsSection = function (sectionName, siteUrl, reportLinks) {
     this.section_name = sectionName;
     this.site_url = siteUrl;
-    this.report_link = reportLink;
+    this.report_links = reportLinks;
   };
   var Reports = function () {
     this.sections = [];
@@ -21,8 +21,8 @@ angular.module('WebExReports').service('reportService', function () {
 
     //get the reports list, for now hard code.
 
-    var sec1 = new ReportsSection("Section1", siteUrl, "/x/y/z");
-    var sec2 = new ReportsSection("Section2", siteUrl, "/u/y/z");
+    var sec1 = new ReportsSection("Section1", siteUrl, ["/x/y/z","/u/io/p"]);
+    var sec2 = new ReportsSection("Section2", siteUrl, ["/u/y/z","www.yahoo.com"]);
 
     var repts = new Reports();
     repts.setSections([sec1, sec2]);
