@@ -3,15 +3,7 @@
 describe('sunlightUserOverviewCtrl', function () {
   var controller, $scope, $state, $stateParams, SunlightConfigService, Notification, $translate, formlyValidationMessages, Log;
 
-  var odinUserInfo = {
-    "orgId": "deba1221-ab12-cd34-de56-abcdef123456",
-    "userId": "abcd1234-ab12-cd34-de56-abcdef123456",
-    "teamId": "dbca1001-ab12-cd34-de56-abcdef123454",
-    "role": "user",
-    "alias": "agent1",
-    "attributes": ["Bike", "CreditCard", "French"],
-    "media": ['chat', 'email']
-  };
+  var odinUserInfo = getJSONFixture('sunlight/json/sunlightTestUser.json');
 
   var mockSunlightConfigService = {
     updateUserInfoSucceeds: true,
@@ -77,30 +69,46 @@ describe('sunlightUserOverviewCtrl', function () {
   describe('SunlightUserOverviewCtrl', function () {
 
     it('should load the Sunlight User Info into scope', function () {
+      $scope.loadUserInformation($stateParams.currentUser.id);
       expect(controller.userData.media).toBe(odinUserInfo.media);
     });
 
     it('should fail to load the Sunlight User Info into scope', function () {
+      mockSunlightConfigService.getUserInfoSucceeds = false;
+      $scope.loadUserInformation($stateParams.currentUser.id);
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+      mockSunlightConfigService.getUserInfoSucceeds = true;
     });
 
     it('should return a successful status when the updateUserInfo operation succeeds', function () {
       controller.userData.media = ['chat'];
-      var response = $scope.updateUserInfo();
+      $scope.updateUserInfo($stateParams.currentUser.id);
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
     });
 
     it('should return a failure status when the updateUserInfo operation fails', function () {
-      var response = $scope.updateUserInfo();
+      mockSunlightConfigService.updateUserInfoSucceeds = false;
+      $scope.updateUserInfo($stateParams.currentUser.id);
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
     });
 
     it('should return a failure status when the updateUserInfo operation fails due to empty alias', function () {
-      //mockSunlightConfigService.updateUserInfoSucceeds = false;
-      //mockSunlightConfigService.getUserInfoSucceeds = true;
-      controller.userData.alias = '';
-      var response = $scope.updateUserInfo();
+      mockSunlightConfigService.updateUserInfoSucceeds = false;
+      controller.aliasFormModel.alias = undefined;
+      $scope.updateUserInfo($stateParams.currentUser.id);
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+    });
+
+    it('should return a successful status when the updateUserInfo with role as Supervisor operation succeeds', function () {
+      mockSunlightConfigService.updateUserInfoSucceeds = true;
+      odinUserInfo.role = 'supervisor';
+      $scope.updateUserInfo($stateParams.currentUser.id);
+      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+    });
+
+    it('should enable SaveCancel Button', function () {
+      $scope.showSaveCancel();
+      expect($scope.saveCancelEnabled).toBe(true);
     });
 
     it('should call the $state service with the user.list state when closePreview is called', function () {
