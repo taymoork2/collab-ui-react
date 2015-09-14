@@ -34,6 +34,17 @@
         return CustomerCommonService.get({
           customerId: Authinfo.getOrgId()
         }).$promise;
+      },
+
+      put: function (name) {
+        var customer = angular.copy(customerPayload);
+        customer.uuid = undefined;
+        customer.name = name;
+        customer.voicemail = undefined;
+
+        return CustomerCommonService.update({
+          customerId: Authinfo.getOrgId()
+        }, customer).$promise;
       }
     };
   }
