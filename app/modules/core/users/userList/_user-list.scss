@@ -52,6 +52,15 @@
   }
 }
 
+.too-many-users {
+  position: absolute;
+  top: 150px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: $gray-darker;
+}
+
 #addUsers {
   cursor: pointer;
   a {

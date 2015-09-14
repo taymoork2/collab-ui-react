@@ -1,42 +1,5 @@
 
-
-
-.main-redux .navi {
-  color: white;
-  background-color: #049fd9;
-  background-color: #383A41;
-  font-family: "CiscoSansTT Thin", "Helvetica Neue", Helvetica, Arial, sans-serif;
-
-  padding: 10px;
-
-  ul {
-    padding-top: 10px;
-    margin: 0;
-    i {
-      font-size: 22px;
-      padding: 15px;
-      line-height: 1.5;
-    }
-
-    i.active {
-      background-color: #3ca8e8;
-    }
-    li {
-      list-style-type: none;
-      padding: 10px 0;
-    }
-  }
-
-
-  a {
-    color: white;
-    font-family: "CiscoSansTT Light","Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-size: 14px;
-  }
-
-}
-
-.devices-redux2 {
+.devices-redux3 {
   background-color: white !important;
 
   .row {
@@ -156,7 +119,7 @@
       }
     }
   }
-  .devices-redux2 {
+  .devices-redux3 {
     padding: 5px 10px;
   }
 }
@@ -185,7 +148,7 @@
       display: none;
     }
   }
-  .devices-redux2 {
+  .devices-redux3 {
     padding: 100px 80px;
   }
 }

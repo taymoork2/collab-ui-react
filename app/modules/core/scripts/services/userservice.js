@@ -151,8 +151,8 @@ angular.module('Core')
         },
 
         getUser: function (userid, callback) {
-          var scimUrl = Config.getScimUrl() + '/' + userid;
-          var userUrl = Utils.sprintf(scimUrl, [Authinfo.getOrgId()]);
+          var scimUrl = Config.getScimUrl(Authinfo.getOrgId()) + '/' + userid;
+          var userUrl = scimUrl;
 
           $http.get(userUrl)
             .success(function (data, status) {
@@ -169,8 +169,7 @@ angular.module('Core')
         },
 
         updateUserProfile: function (userid, userData, callback) {
-          var scimUrl = Config.getScimUrl() + '/' + userid;
-          scimUrl = Utils.sprintf(scimUrl, [Authinfo.getOrgId()]);
+          var scimUrl = Config.getScimUrl(Authinfo.getOrgId()) + '/' + userid;
 
           if (userData) {
 
