@@ -130,6 +130,23 @@ exports.waitUntilDisabled = function (elem) {
   });
 };
 
+exports.waitForTextBoxValue = function (elem) {
+  return this.wait(elem).then(function () {
+    return browser.wait(function () {
+      return elem.getAttribute('value').then(function (text) {
+        log('Waiting until text box displays some text. Current text: ' + text);
+        if (text) {
+          return true;
+        } else {
+          return false;
+        }
+      }, function () {
+        return false;
+      });
+    }, TIMEOUT, 'Waiting text To be available: ' + elem.locator());
+  });
+};
+
 exports.expectIsDisplayed = function (elem) {
   this.wait(elem);
   expect(elem.isDisplayed()).toBeTruthy();

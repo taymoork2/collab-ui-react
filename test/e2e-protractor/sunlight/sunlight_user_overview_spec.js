@@ -6,10 +6,13 @@
 /* global browser */
 /* global expect */
 /* global protractor */
+// jshint devel:true
+// jshint undef:false
 
 describe('Configuring Contact Center services per user', function () {
   // We need to use an existing user since only they will have an activated profile'
-  var testUser = 'kalanka.arunanchal@outlook.com'
+  var testUser = 'kabru.sikkim@outlook.com';
+  var userAlias = "SunlightE2EUserAlias";
 
   afterEach(function () {
     utils.dumpConsoleErrors();
@@ -19,24 +22,27 @@ describe('Configuring Contact Center services per user', function () {
     login.login('contactcenter-admin', '#/users');
   });
 
-  it('should add a user', function () {
-    utils.click(users.addUsers);
-    utils.sendKeys(users.addUsersField, testUser);
-    utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
-    utils.click(users.nextButton);
-    utils.click(users.onboardButton);
-    notifications.assertSuccess('onboarded successfully');
-    utils.expectIsNotDisplayed(users.manageDialog);
-  });
-
-  it('should enable/disable chat, email and voice channel for the user', function () {
+  it('should be able to enable/disable chat, email and voice channel for the user, update role and alias', function () {
     utils.searchAndClick(testUser);
+    utils.expectIsDisplayed(users.contactCenterService);
+
     utils.click(users.contactCenterService);
+    utils.expectIsDisplayed(users.sunlightUserPanel);
+
+    utils.waitForTextBoxValue(users.sunlightUserAlias);
+
     utils.click(users.sunlightChatChannel);
     utils.click(users.sunlightEmailChannel);
     utils.click(users.sunlightVoiceChannel);
+
+    utils.clear(users.sunlightUserAlias);
+    utils.sendKeys(users.sunlightUserAlias, userAlias);
+
+    utils.click(users.sunlightUserRole);
+    utils.click(users.sunlightUserRoleFirstElement);
+
     utils.click(users.sunlightUserOverviewSave);
-    notifications.assertSuccess('Successfully updated the media channels for ' + testUser);
+    notifications.assertSuccess('Successfully updated user information for ' + testUser);
   });
 
 })

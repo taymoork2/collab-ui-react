@@ -52,7 +52,6 @@
     /* By default "User" role is selected for new user */
     vm.roleSelected = $translate.instant('contactCenterUserConfig.userRoles.user');
 
-
     $scope.closePreview = function () {
       $state.go('users.list');
     };
@@ -89,7 +88,7 @@
       });
     };
 
-    $scope.setUserInfoView = function(data) {
+    $scope.setUserInfoView = function (data) {
       $scope.hideSaveCancel();
 
       for (var i = 0; i < vm.mediaInfo.length; i++) {
@@ -142,6 +141,6 @@
       }
 
       return userData;
-    };
+    }
   }
 })();
