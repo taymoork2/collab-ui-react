@@ -5,14 +5,19 @@
   <div class="page-header row">
     <ul class="breadcrumbs">
       <li>
-        <a ui-sref="site-list">
+        <a id="siteListCrumb"
+           name="siteListCrumb"
+           ui-sref="site-list">
+           
           <span translate="siteList.conferencing"></span>
         </a>
       </li>
         
-   
       <li>
-        <a ui-sref={{indexPageSref}}>
+        <a id="indexPageCrumb"
+           name="indexPageCrumb"
+           ui-sref={{indexPageSref}}>
+           
           <span translate="webexSiteSettings.title"></span>&nbsp;{{siteUrl}}
         </a>
       </li>
