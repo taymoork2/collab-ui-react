@@ -5,6 +5,12 @@
 var config = require('./test.config.js');
 var request = require('request');
 var EC = protractor.ExpectedConditions;
+var path = require('path');
+var remote = require('../../../node_modules/gulp-protractor/node_modules/protractor/node_modules/selenium-webdriver/remote');
+
+exports.resolvePath = function (filePath) {
+  return path.resolve(__dirname, filePath);
+};
 
 exports.searchField = element(by.id('searchFilter'));
 
@@ -308,6 +314,7 @@ exports.sendKeys = function (elem, value) {
 exports.fileSendKeys = function (elem, value) {
   this.waitForPresence(elem).then(function () {
     log('Send file keys to element: ' + elem.locator() + ' ' + value);
+    browser.setFileDetector(new remote.FileDetector);
     elem.sendKeys(value);
   });
 };

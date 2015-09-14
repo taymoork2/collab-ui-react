@@ -1,9 +1,8 @@
 'use strict';
-var path = require('path');
 
 describe('Onboard Users using uploading CSV File', function () {
   var fileToUpload = './../data/sample.csv';
-  var absolutePath = path.resolve(__dirname, fileToUpload);
+  var absolutePath = utils.resolvePath(fileToUpload);
   var user = 'collabctg+234298674@gmail.com';
   beforeAll(function () {
     login.login('huron-e2e', '#/users');
