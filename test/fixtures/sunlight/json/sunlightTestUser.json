@@ -5,14 +5,5 @@
   "role": "user",
   "alias": "agent1",
   "attributes": ["Bike", "CreditCard", "French"],
-  "channels": [{
-    "name": "chat",
-    "enabled": false
-  }, {
-    "name": "email",
-    "enabled": false
-  }, {
-    "name": "voice",
-    "enabled": true
-  }]
+  "media": ["chat", "email"]
 }

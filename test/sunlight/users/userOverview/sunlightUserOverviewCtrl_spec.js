@@ -1,53 +1,47 @@
 'use strict';
 
 describe('sunlightUserOverviewCtrl', function () {
-  var controller, $scope, $state, $stateParams, SunlightConfigService, Notification, $translate;
+  var controller, $scope, $state, $stateParams, SunlightConfigService, Notification, $translate, formlyValidationMessages, Log;
 
-  var odinUserInfo = {
-    "orgId": "deba1221-ab12-cd34-de56-abcdef123456",
-    "userId": "abcd1234-ab12-cd34-de56-abcdef123456",
-    "teamId": "dbca1001-ab12-cd34-de56-abcdef123454",
-    "role": "user",
-    "alias": "agent1",
-    "attributes": ["Bike", "CreditCard", "French"],
-    "channels": [{
-      "name": "chat",
-      "enabled": false
-    }, {
-      "name": "email",
-      "enabled": false
-    }, {
-      "name": "voice",
-      "enabled": true
-    }]
-  };
+  var odinUserInfo = getJSONFixture('sunlight/json/sunlightTestUser.json');
 
   var mockSunlightConfigService = {
     updateUserInfoSucceeds: true,
     getUserInfoSucceeds: true,
-    getUserInfo: function (userId) {
-      if (mockSunlightConfigService.getUserInfoSucceeds) return odinUserInfo;
-      else return {};
+    getUserInfo: function (userId, callback) {
+      if (mockSunlightConfigService.getUserInfoSucceeds) {
+        odinUserInfo = odinUserInfo || {};
+        odinUserInfo.success = true;
+        callback(odinUserInfo, '200');
+      } else {
+        odinUserInfo.success = false;
+        callback(odinUserInfo, '500');
+      }
+
     },
-    updateUserInfo: function (channels) {
-      if (mockSunlightConfigService.updateUserInfoSucceeds) return {
-        "status": "success"
-      };
-      else return {
-        "status": "error"
-      };
+    updateUserInfo: function (userId, userData, callback) {
+      var result = {};
+      if (mockSunlightConfigService.updateUserInfoSucceeds) {
+        result.success = true;
+        callback(result, '200');
+      } else {
+        result.success = false;
+        callback(result, '500');
+      }
     }
   };
 
   beforeEach(module('Sunlight'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$state_, _SunlightConfigService_, _Notification_, _$translate_) {
+  beforeEach(inject(function ($rootScope, $controller, _$state_, _SunlightConfigService_, _Notification_, _$translate_, _formlyValidationMessages_, _Log_) {
     $scope = $rootScope.$new();
     SunlightConfigService = mockSunlightConfigService;
     Notification = _Notification_;
     $scope.getUserInfoSucceeds = true;
     $state = _$state_;
     $translate = _$translate_;
+    formlyValidationMessages = _formlyValidationMessages_;
+    Log = _Log_;
 
     $state.modal = jasmine.createSpyObj('modal', ['close']);
 
@@ -63,7 +57,9 @@ describe('sunlightUserOverviewCtrl', function () {
       $state: $state,
       $stateParams: $stateParams,
       SunlightConfigService: SunlightConfigService,
-      Notification: Notification
+      Notification: Notification,
+      formlyValidationMessages: formlyValidationMessages,
+      Log: Log
     });
 
     $scope.$apply();
@@ -73,20 +69,46 @@ describe('sunlightUserOverviewCtrl', function () {
   describe('SunlightUserOverviewCtrl', function () {
 
     it('should load the Sunlight User Info into scope', function () {
-      expect($scope.sunlightUserInfo.channels).toBe(odinUserInfo.channels);
+      $scope.loadUserInformation($stateParams.currentUser.id);
+      expect(controller.userData.media).toBe(odinUserInfo.media);
     });
 
-    it('should return a successful status when the updateUserChannel operation succeeds', function () {
-      var response = $scope.updateUserChannels('someone');
-      expect(response).toBe('success');
+    it('should fail to load the Sunlight User Info into scope', function () {
+      mockSunlightConfigService.getUserInfoSucceeds = false;
+      $scope.loadUserInformation($stateParams.currentUser.id);
+      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+      mockSunlightConfigService.getUserInfoSucceeds = true;
+    });
+
+    it('should return a successful status when the updateUserInfo operation succeeds', function () {
+      controller.userData.media = ['chat'];
+      $scope.updateUserInfo($stateParams.currentUser.id);
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
     });
 
-    it('should return a failure status when the updateUserChannel operation fails', function () {
+    it('should return a failure status when the updateUserInfo operation fails', function () {
       mockSunlightConfigService.updateUserInfoSucceeds = false;
-      var response = $scope.updateUserChannels('someone');
-      expect(response).toBe('error');
+      $scope.updateUserInfo($stateParams.currentUser.id);
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+    });
+
+    it('should return a failure status when the updateUserInfo operation fails due to empty alias', function () {
+      mockSunlightConfigService.updateUserInfoSucceeds = false;
+      controller.aliasFormModel.alias = undefined;
+      $scope.updateUserInfo($stateParams.currentUser.id);
+      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+    });
+
+    it('should return a successful status when the updateUserInfo with role as Supervisor operation succeeds', function () {
+      mockSunlightConfigService.updateUserInfoSucceeds = true;
+      odinUserInfo.role = 'supervisor';
+      $scope.updateUserInfo($stateParams.currentUser.id);
+      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+    });
+
+    it('should enable SaveCancel Button', function () {
+      $scope.showSaveCancel();
+      expect($scope.saveCancelEnabled).toBe(true);
     });
 
     it('should call the $state service with the user.list state when closePreview is called', function () {

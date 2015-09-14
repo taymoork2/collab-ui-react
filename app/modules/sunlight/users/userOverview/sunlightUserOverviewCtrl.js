@@ -65,7 +65,7 @@
     };
 
     /* Updates Sunlight user info in sunlight config service */
-    $scope.updateUserInfo = function () {
+    $scope.updateUserInfo = function (userId) {
 
       var updatedUserInfo = updatedUserData();
 
@@ -74,7 +74,7 @@
         return;
       }
 
-      SunlightConfigService.updateUserInfo(updatedUserInfo, vm.currentUser.id, function (data, status) {
+      SunlightConfigService.updateUserInfo(updatedUserInfo, userId, function (data, status) {
 
         if (data.success) {
           $scope.hideSaveCancel();
@@ -103,9 +103,8 @@
       vm.currentUser.teamId = data.teamId;
     };
 
-    $scope.loadUserInformation = function () {
-
-      SunlightConfigService.getUserInfo(vm.currentUser.id, function (data, status) {
+    $scope.loadUserInformation = function (userId) {
+      SunlightConfigService.getUserInfo(userId, function (data, status) {
 
         if (data.success) {
           vm.userData = data;
@@ -118,7 +117,7 @@
 
     };
 
-    $scope.loadUserInformation();
+    $scope.loadUserInformation(vm.currentUser.id);
 
     function updatedUserData() {
       var userData = {};
