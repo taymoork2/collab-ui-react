@@ -68,16 +68,23 @@ angular.module('Core')
 
       var siteReportsTemplate =
         '<div ng-if="siteList.showSiteLinks">' + '\n' +
-        '  <div ng-if="siteList.iframeSupportedSite">' + '\n' +
+        '  <div ng-if="!siteList.iframeSupportedSite">' + '\n' +
         '    <launch-site admin-email-param="{{siteList.siteLaunch.adminEmailParam}}"' + '\n' +
         '                 advanced-settings="{{siteList.siteLaunch.advancedSettings}}"' + '\n' +
         '                 user-email-param="{{siteList.siteLaunch.userEmailParam}}"' + '\n' +
         '                 webex-advanced-url="{{siteList.getWebexUrl(row.entity.license.siteUrl)}}">' + '\n' +
         '    </launch-site>' + '\n' +
         '  </div>' + '\n' +
-        '  <div ng-if="!siteList.iframeSupportedSite">' + '\n' +
+        '  <div ng-if="siteList.iframeSupportedSite">' + '\n' +
         '     <a id="webex-reports-list-iframe"' + '\n' +
-        '         ui-sref="webex-reports({siteUrl:row.entity.license.siteUrl})"> hhhhhhhhhhhhhhht' + '\n' +
+        '         ui-sref="webex-reports({siteUrl:row.entity.license.siteUrl})"> ' + '\n' +
+        '      <p class="ngCellText">' + '\n' +
+        '        <span name="webexReports"' + '\n' +
+        '              id="webexReports">' + '\n' +
+        '          <i class="icon-settings icon"></i>' + '\n' +
+        '        </span>' + '\n' +
+        '       </p>' + '\n' +
+        '     </a>' + '\n' +
         '  </div>' + '\n' +
         '</div>' + '\n';
 
