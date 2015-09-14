@@ -12,7 +12,6 @@
     '$sce',
     '$timeout',
     'Authinfo',
-    'WebExSiteSettingIframeFact',
     'Notification',
     function (
       $scope,
@@ -25,7 +24,6 @@
       $sce,
       $timeout,
       Authinfo,
-      WebExSiteSettingIframeFact,
       Notification
     ) {
 
@@ -40,6 +38,8 @@
       $scope.settingPageTitle = $translate.instant("webexSiteSettingsLabels." + $scope.settingPageId);
       $scope.settingPageIframeUrl = $stateParams.settingPageIframeUrl;
       $scope.iframeUrl = "https://" + $stateParams.siteUrl + $stateParams.settingPageIframeUrl;
+      
+      // iframe form needed info
       $scope.trustIframeUrl = $sce.trustAsResourceUrl($scope.iframeUrl);
       $scope.adminEmail = Authinfo.getPrimaryEmail();
       $scope.locale = ("es_LA" == $translate.use()) ? "es_MX" : $translate.use();
@@ -63,9 +63,6 @@
 
         0
       );
-
-      // _this.siteSettingIframeObj = WebExSiteSettingIframeFact.getSiteSettingIframeObj();
-      // _this.siteSettingIframeObj = WebExSiteSettingIframeFact.initSiteSettingIframeObj();
     } // function()
   ]); // angular.module().controller()
 })(); // function()

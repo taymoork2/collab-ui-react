@@ -8,8 +8,8 @@
   </iframe>
 </div>
 
-<form name="advancedSettings"
-      id="advancedSettings"
+<form name="iframeForm"
+      id="iframeForm"
       action="{{trustIframeUrl}}"
       method="post"
       target="iframeContainer">
@@ -17,19 +17,16 @@
   <input id="adminEmail"
          type="hidden"
          name="adminEmail"
-         ng-model="advancedSettings.adminEmail"
          value="{{adminEmail}}" />
          
   <input id="userEmail"
          type="hidden"
          name="userEmail"
-         ng-model="advancedSettings.userEmail"
          value="{{adminEmail}}" />
          
   <input id="locale"
          type="hidden"
          name="locale"
-         ng-model="advancedSettings.locale"
          value="{{locale}}" />
   
   <button id="submitFormBtn"
