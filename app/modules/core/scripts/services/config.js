@@ -485,11 +485,12 @@ angular.module('Core')
           }
         },
 
-        getScimUrl: function () {
+        getScimUrl: function (orgId) {
+          var params = [orgId];
           if (this.isCfe()) {
-            return this.scimUrl.cfe;
+            return Utils.sprintf(this.scimUrl.cfe, params);
           } else {
-            return this.scimUrl.spark;
+            return Utils.sprintf(this.scimUrl.spark, params);
           }
         },
 
@@ -828,6 +829,8 @@ angular.module('Core')
           'devices-redux',
           'devices-redux2',
           'devices-redux2-search',
+          'devices-redux3',
+          'devices-redux3-search',
           'devices-cleanup',
           'devices2'
         ],
@@ -861,7 +864,8 @@ angular.module('Core')
           'reports',
           'devices',
           'fusion',
-          'mediafusionconnector'
+          'mediafusionconnector',
+          'callRouter'
         ]
       };
 
