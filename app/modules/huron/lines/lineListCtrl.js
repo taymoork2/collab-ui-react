@@ -111,6 +111,7 @@
       rowTemplate: rowTemplate,
       headerRowHeight: gridRowHeight,
       useExternalSorting: false,
+      enableRowSelection: false,
 
       columnDefs: [{
         field: 'internalNumber',
