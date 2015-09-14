@@ -17,6 +17,10 @@
     return $resource(HuronConfig.getEmailUrl() + '/email/didadd', {}, {});
   })
 
+  .factory('DidDnListService', function ($resource, HuronConfig) {
+    return $resource('/modules/huron/lines/:filterType.json', {}, {});
+  })
+
   .factory('IdentityOTPService', function ($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/identity/users/otp', {}, {});
   })

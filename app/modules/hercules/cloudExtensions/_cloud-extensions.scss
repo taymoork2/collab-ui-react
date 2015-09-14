@@ -1,24 +1,19 @@
 .cloud-extensions {
 
-  .error {
+  .status-error {
     color: $brand-danger;
   }
 
-  .notActivated {
+  .status-notActivated {
     color: $gray-dark;
   }
 
-  .activated {
+  .status-activated {
     color: $brand-success;
   }
 
-  .deactivated {
+  .status-deactivated {
     color: $gray-dark;
-  }
-
-  .feature-item {
-    @extend .feature-status;
-    float: right;
   }
 
   .feature-icon-extension {

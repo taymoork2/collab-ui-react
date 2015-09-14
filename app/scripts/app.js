@@ -38,7 +38,7 @@ angular.module('Core', [
 
 angular.module('Squared', ['Core']);
 
-angular.module('Huron', ['Core', 'uc.moh', 'uc.device', 'uc.callrouting', 'uc.didadd', 'uc.overview', 'uc.callrouter']);
+angular.module('Huron', ['Core', 'uc.moh', 'uc.device', 'uc.callrouting', 'uc.didadd', 'uc.overview', 'uc.callrouter', 'uc.hurondetails']);
 
 angular.module('Hercules', ['Core']);
 
@@ -46,6 +46,10 @@ angular.module('Mediafusion', ['Core']);
 
 angular.module('WebExUserSettings', ['Core']);
 angular.module('WebExUserSettings2', ['Core']);
+
+angular.module('Messenger', ['Core']);
+
+angular.module('Sunlight', ['Core']);
 
 angular.module('wx2AdminWebClientApp', [
   'Core',
@@ -55,7 +59,6 @@ angular.module('wx2AdminWebClientApp', [
   'Mediafusion',
   'WebExUserSettings',
   'WebExUserSettings2',
+  'Messenger',
   'Sunlight'
 ]);
-
-angular.module('Sunlight', ['Core']);

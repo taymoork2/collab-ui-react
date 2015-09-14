@@ -1,0 +1,19 @@
+<div class="main-redux">
+  <div class="navi" ng-controller="TabsCtrl">
+    <div class="logo">
+      <img src="/images/cisco_logo_white.png" />
+    </div>
+    <div class="drop">
+      <i class="fa fa-bars burger" />
+      <ul>
+        <li ng-repeat="tab in tabs">
+          <a href="#{{tab.link}}">
+            <i class="icon {{tab.icon}}" ng-class="{'active': tab.isActive}" />
+            <span>{{tab.title}}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="cntnt" ui-view />
+</div>

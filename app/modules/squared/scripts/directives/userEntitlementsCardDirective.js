@@ -7,7 +7,7 @@ angular.module('Squared')
       return {
         restrict: 'AE',
         templateUrl: 'modules/squared/scripts/directives/views/userEntitlementsCard.tpl.html',
-        controller: 'ListUsersCtrl'
+        controller: 'UserListCtrl'
       };
     }
   ]);

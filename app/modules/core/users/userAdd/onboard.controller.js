@@ -724,14 +724,19 @@ angular.module('Core')
         delimiter: [',', ';'],
         createTokensOnBlur: true
       };
+      var isDuplicate = false;
       $scope.tokenmethods = {
         createtoken: function (e) {
           //Removing anything in brackets from user data
           var value = e.attrs.value.replace(/\s*\([^)]*\)\s*/g, ' ');
           e.attrs.value = value;
+          isDuplicate = false;
+          if (isEmailAlreadyPresent(e.attrs.value)) {
+            isDuplicate = true;
+          }
         },
         createdtoken: function (e) {
-          if (!validateEmail(e.attrs.value)) {
+          if (!validateEmail(e.attrs.value) || isDuplicate) {
             angular.element(e.relatedTarget).addClass('invalid');
             invalidcount++;
           }
@@ -744,13 +749,43 @@ angular.module('Core')
           }
         },
         removedtoken: function (e) {
-          if (!validateEmail(e.attrs.value)) {
-            invalidcount--;
-          }
-          wizardNextText();
-          checkPlaceholder();
+          // Reset the token list and validate all tokens
+          $timeout(function () {
+            invalidcount = 0;
+            angular.element('#usersfield').tokenfield('setTokens', $scope.model.userList);
+          }).then(function () {
+            wizardNextText();
+            checkPlaceholder();
+          });
         }
       };
+
+      function isEmailAlreadyPresent(input) {
+        var inputEmail = getEmailAddress(input);
+        if (inputEmail) {
+          var userEmails = getTokenEmailArray();
+          return userEmails.indexOf(inputEmail) >= 0;
+        } else {
+          return false;
+        }
+      }
+
+      function getTokenEmailArray() {
+        var tokens = angular.element('#usersfield').tokenfield('getTokens');
+        return tokens.map(function (token) {
+          return getEmailAddress(token.value);
+        });
+      }
+
+      function getEmailAddress(input) {
+        var retString = "";
+        input.split(" ").forEach(function (str) {
+          if (str.indexOf("@") >= 0) {
+            retString = str;
+          }
+        });
+        return retString;
+      }
 
       var setPlaceholder = function (placeholder) {
         angular.element('.tokenfield.form-control #usersfield-tokenfield').attr('placeholder', placeholder);
@@ -792,12 +827,11 @@ angular.module('Core')
           invalidcount = 0;
           angular.element('#usersfield').tokenfield('setTokens', $scope.model.userList);
         }, 100);
-
       };
 
       $scope.addToUsersfield = function () {
         if ($scope.model.userForm.$valid && $scope.model.userInfoValid) {
-          var userInfo = $scope.model.firstName + ' ' + $scope.model.lastName + '  ' + $scope.model.emailAddress;
+          var userInfo = $scope.model.firstName + ' ' + $scope.model.lastName + ' ' + $scope.model.emailAddress;
           angular.element('#usersfield').tokenfield('createToken', userInfo);
           clearNameAndEmailFields();
           angular.element('#firstName').focus();

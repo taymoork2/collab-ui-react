@@ -1,86 +1,125 @@
 'use strict';
 
-xdescribe('Controller: DevicesCtrl', function () {
+describe('Controller: DevicesCtrlHuron', function () {
+  var controller, $scope, $q, $stateParams, DeviceService, OtpService, Config, HttpUtils, currentDevice;
 
-  var $scope, controller, $httpBackend, userEndpointService, HuronConfig;
+  var stateParams = getJSONFixture('huron/json/device/devicesCtrlStateParams.json');
 
-  beforeEach(module('cisco.ui'));
-  beforeEach(module('ui.router'));
-  beforeEach(module('ngResource'));
   beforeEach(module('Huron'));
-  beforeEach(module('uc.device'));
 
-  var userDevicesCard = {
-    addGenerateAuthCodeLink: sinon.stub(),
-    removeGenerateAuthCodeLink: sinon.stub()
+  var deviceList = [];
+  deviceList.push(getJSONFixture('huron/json/device/devices/7a94bbdf-6df5-4240-ae68-b5fa9d25df51-With-Status.json'));
+
+  var userOverview = {
+    addGenerateAuthCodeLink: jasmine.createSpy(),
+    removeGenerateAuthCodeLink: jasmine.createSpy()
   };
 
-  var authInfo = {
-    getOrgId: sinon.stub().returns('1')
-  };
+  var emptyArray = [];
 
-  beforeEach(module(function ($provide) {
-    $provide.value("Authinfo", authInfo);
-  }));
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _DeviceService_, _OtpService_, _Config_, _HttpUtils_) {
+    $scope = _$rootScope_.$new();
+    $scope.userOverview = userOverview;
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _UserEndpointService_, _HuronConfig_) {
-    $scope = $rootScope.$new();
-    $httpBackend = _$httpBackend_;
-    HuronConfig = _HuronConfig_;
-    userEndpointService = _UserEndpointService_;
-    controller = $controller('DevicesCtrl', {
+    $q = _$q_;
+    $stateParams = _$stateParams_;
+    DeviceService = _DeviceService_;
+    OtpService = _OtpService_;
+    Config = _Config_;
+    HttpUtils = _HttpUtils_;
+
+    $stateParams.currentUser = stateParams.currentUser;
+
+    spyOn(DeviceService, 'loadDevices').and.returnValue($q.when(deviceList));
+    spyOn(DeviceService, 'setCurrentDevice').and.callFake(function (device) {
+      currentDevice = device;
+    });
+
+    spyOn(OtpService, 'loadOtps').and.returnValue($q.when(emptyArray));
+
+    spyOn(HttpUtils, 'setTrackingID').and.returnValue($q.when('TrackingID is set'));
+
+    controller = _$controller_('DevicesCtrlHuron', {
       $scope: $scope,
-      UserEndpointService: userEndpointService
     });
-    $scope.$parent.userDevicesCard = userDevicesCard;
-    $rootScope.$apply();
+
+    $scope.$apply();
   }));
 
-  afterEach(function () {
-    $httpBackend.verifyNoOutstandingExpectation();
-    $httpBackend.verifyNoOutstandingRequest();
+  it('should be created successfully', function () {
+    expect(controller).toBeDefined();
   });
 
-  describe('DevicesCtrl controller', function () {
-    it('should be created successfully', function () {
-      expect(controller).toBeDefined();
+  describe('activate() method', function () {
+
+    it('DeviceService.loadDevices() and OtpService.loadOtps() should only be called once', function () {
+      expect(DeviceService.loadDevices.calls.count()).toEqual(1);
+      expect(OtpService.loadOtps.calls.count()).toEqual(1);
     });
 
-    beforeEach(function () {
-      //devices requests
-      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/sipendpoints/a61d770c-0f00-4251-b599-a10d49399ddb').respond(200, getJSONFixture('huron/json/device/devices/a61d770c-0f00-4251-b599-a10d49399ddb.json'));
-      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/sipendpoints/7a94bbdf-6df5-4240-ae68-b5fa9d25df51').respond(200, getJSONFixture('huron/json/device/devices/7a94bbdf-6df5-4240-ae68-b5fa9d25df51.json'));
-      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/users/0515b4c0-c12f-45ac-8fbe-483f1c07956c/endpoints').respond(200, getJSONFixture('huron/json/device/devices.json'));
-
-      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/sipendpoints/a61d770c-0f00-4251-b599-a10d49399ddb?status=true').respond(200, getJSONFixture('huron/json/device/devices/a61d770c-0f00-4251-b599-a10d49399ddb-With-Status.json'));
-      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/sipendpoints/7a94bbdf-6df5-4240-ae68-b5fa9d25df51?status=true').respond(200, getJSONFixture('huron/json/device/devices/7a94bbdf-6df5-4240-ae68-b5fa9d25df51-With-Status.json'));
-
-      //otps request
-      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/common/customers/1/users/0515b4c0-c12f-45ac-8fbe-483f1c07956c/otp').respond(200, getJSONFixture('huron/json/device/otps.json'));
-
-      $scope.currentUser = getJSONFixture('huron/json/user/users/0515b4c0-c12f-45ac-8fbe-483f1c07956c.json');
-      $scope.$digest();
-      $httpBackend.flush();
+    it('broadcast [deviceDeactivated] event', function () {
+      $scope.$broadcast('deviceDeactivated');
+      $scope.$apply();
+      expect(DeviceService.loadDevices.calls.count()).toEqual(2);
+      expect(OtpService.loadOtps.calls.count()).toEqual(2);
     });
 
-    it('should populate vm.otps with 1 otp', function () {
-      expect(controller.otps.length).toEqual(1);
+    it('broadcast [otpGenerated] event', function () {
+      $scope.$broadcast('otpGenerated');
+      $scope.$apply();
+      expect(DeviceService.loadDevices.calls.count()).toEqual(2);
+      expect(OtpService.loadOtps.calls.count()).toEqual(2);
     });
 
-    it('should populate vm.devices with 2 devices', function () {
-      expect(controller.devices.length).toEqual(2);
+    it('broadcast [entitlementsUpdated] event', function () {
+      $scope.$broadcast('entitlementsUpdated');
+      $scope.$apply();
+      expect(DeviceService.loadDevices.calls.count()).toEqual(2);
+      expect(OtpService.loadOtps.calls.count()).toEqual(2);
     });
 
-    it('should populate the device status of the device', function () {
-      expect(controller.devices[0].deviceStatus.status).toEqual('Online');
-      expect(controller.devices[0].deviceStatus.ipAddress).toEqual('127.0.0.1');
+    it('should show OTP button if no devices', function () {
+      userOverview.removeGenerateAuthCodeLink.calls.reset();
+      DeviceService.loadDevices.and.returnValue($q.when(emptyArray));
+
+      $scope.$broadcast('deviceDeactivated');
+      $scope.$apply();
+
+      expect(controller.showGenerateOtpButton).toEqual(true);
+      expect($scope.userOverview.removeGenerateAuthCodeLink.calls.count()).toEqual(1);
     });
 
-    describe('after activate', function () {
-      it('should have showDeviceDetailPanel method defined', function () {
-        expect(controller.showDeviceDetailPanel).toBeDefined();
-      });
+    it('should not call activate when Huron entitlement is removed', function () {
+      DeviceService.loadDevices.calls.reset();
+      OtpService.loadOtps.calls.reset();
 
+      $stateParams.currentUser.entitlements = ["squared-room-moderation", "webex-messenger", "squared-call-initiation", "webex-squared", "squared-syncup"];
+      $scope.$broadcast('entitlementsUpdated');
+      $scope.$apply();
+
+      expect(DeviceService.loadDevices.calls.count()).toEqual(0);
+      expect(OtpService.loadOtps.calls.count()).toEqual(0);
+    });
+
+    it('should not call activate when currentUser is not defined', function () {
+      DeviceService.loadDevices.calls.reset();
+      OtpService.loadOtps.calls.reset();
+
+      $stateParams.currentUser = undefined;
+      $scope.$broadcast('entitlementsUpdated');
+      $scope.$apply();
+
+      expect(DeviceService.loadDevices.calls.count()).toEqual(0);
+      expect(OtpService.loadOtps.calls.count()).toEqual(0);
+    });
+
+  });
+
+  describe('showDeviceDetailPanel() method', function () {
+    it('should call DeviceService.setCurrentDevice', function () {
+      controller.showDeviceDetailPanel('currentDevice');
+      expect(currentDevice).toEqual('currentDevice');
     });
   });
+
 });
