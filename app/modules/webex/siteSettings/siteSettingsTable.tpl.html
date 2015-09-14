@@ -1,118 +1,149 @@
 <div class="search-panel">
   <div class="row support-row">
-    <table style="width:100%" 
-           border="1" 
-           BORDERCOLOR="DDDDDD" 
-           frame="void">
-           
+    <table>
       <tr valign="middle">
-        <td style="padding-bottom: 20px; padding-top: 20px" align="center">
+        <td>
           <b>{{WebExSiteSettings.siteSettingsObj.siteSettingsTableColumnLabel.settings}}</b>
         </td>
         
-        <td style="padding-bottom: 20px; padding-top: 20px" align="center">
-          <b>{{WebExSiteSettings.siteSettingsObj.siteSettingsTableColumnLabel.common}}</b>
+        <td>
+          <div align="center">
+            <b>{{WebExSiteSettings.siteSettingsObj.siteSettingsTableColumnLabel.common}}</b>
+          </div>
         </td>
         
-        <td style="padding-bottom: 20px; padding-top: 20px" align="center">
-          <b>{{WebExSiteSettings.siteSettingsObj.siteSettingsTableColumnLabel.meetingCenter}}</b>
+        <td>
+          <div align="center">
+            <b>{{WebExSiteSettings.siteSettingsObj.siteSettingsTableColumnLabel.meetingCenter}}</b>
+          </div>
         </td>
         
-        <td style="padding-bottom: 20px; padding-top: 20px" align="center">
-          <b>{{WebExSiteSettings.siteSettingsObj.siteSettingsTableColumnLabel.eventCenter}}</b>
+        <td>
+          <div align="center">
+            <b>{{WebExSiteSettings.siteSettingsObj.siteSettingsTableColumnLabel.eventCenter}}</b>
+          </div>
         </td>
         
-        <td style="padding-bottom: 20px; padding-top: 20px" align="center">
-          <b>{{WebExSiteSettings.siteSettingsObj.siteSettingsTableColumnLabel.trainingCenter}}</b>
+        <td>
+          <div align="center">
+            <b>{{WebExSiteSettings.siteSettingsObj.siteSettingsTableColumnLabel.trainingCenter}}</b>
+          </div>
         </td>
         
-        <td style="padding-bottom: 20px; padding-top: 20px" align="center">
-          <b>{{WebExSiteSettings.siteSettingsObj.siteSettingsTableColumnLabel.supportCenter}}</b>
+        <td>
+          <div align="center">
+            <b>{{WebExSiteSettings.siteSettingsObj.siteSettingsTableColumnLabel.supportCenter}}</b>
+          </div>
         </td>
         
-        <td style="padding-bottom: 20px; padding-top: 20px" align="center">
-          <b>{{WebExSiteSettings.siteSettingsObj.siteSettingsTableColumnLabel.remoteAccess}}</b>
+        <td>
+          <div align="center">
+            <b>{{WebExSiteSettings.siteSettingsObj.siteSettingsTableColumnLabel.remoteAccess}}</b>
+          </div>
         </td>
         
-        <td style="padding-bottom: 20px; padding-top: 20px" align="center">
-          <b>{{WebExSiteSettings.siteSettingsObj.siteSettingsTableColumnLabel.webACD}}</b>
+        <td>
+          <div align="center">
+            <b>{{WebExSiteSettings.siteSettingsObj.siteSettingsTableColumnLabel.webACD}}</b>
+          </div>
         </td>
       </tr>
       
       <tr valign="top"
           ng-repeat="settingPageTypeObj in WebExSiteSettings.siteSettingsObj.settingPageTypeObjs">
 
-        <td align="left">
+		<td>
           {{settingPageTypeObj.label}}
         </td>
 
-        <td align="center">
+		<td>
           <span ng-if="null != settingPageTypeObj.commonSettingPage.sref">
-            <a id={{settingPageTypeObj.commonSettingPage.id}}
-               ui-sref={{settingPageTypeObj.commonSettingPage.sref}}>
+		    <div align="center">
+              <a id={{settingPageTypeObj.commonSettingPage.id}}
+                 name={{settingPageTypeObj.commonSettingPage.id}}
+                 ui-sref={{settingPageTypeObj.commonSettingPage.sref}}>
           
-	            <i class="icon-settings icon"></i>
-            </a>
-	        </span>
+	            <i class="icon-settings icon ccolor-swatch brand-primary"></i>
+              </a>
+            </div>
+	      </span>
         </td>
 
-        <td align="center">
+		<td>
           <span ng-if="null != settingPageTypeObj.meetingCenterSettingPage.sref">
-            <a id={{settingPageTypeObj.meetingCenterSettingPage.id}}
-               ui-sref={{settingPageTypeObj.meetingCenterSettingPage.sref}}>
+		    <div align="center">
+              <a id={{settingPageTypeObj.meetingCenterSettingPage.id}}
+                 name={{settingPageTypeObj.meetingCenterSettingPage.id}}
+                 ui-sref={{settingPageTypeObj.meetingCenterSettingPage.sref}}>
 
-	            <i class="icon-settings icon"></i>
+	            <i class="icon-settings icon ccolor-swatch brand-primary"></i>
 	          </a>
+            </div>
           </span>
         </td>
 
-        <td align="center">
+		<td>
           <span ng-if="null != settingPageTypeObj.eventCenterSettingPage.sref">
-            <a id={{settingPageTypeObj.eventCenterSettingPage.id}}
-               ui-sref={{settingPageTypeObj.eventCenterSettingPage.sref}}>
+		    <div align="center">
+              <a id={{settingPageTypeObj.eventCenterSettingPage.id}}
+                 name={{settingPageTypeObj.eventCenterSettingPage.id}}
+                 ui-sref={{settingPageTypeObj.eventCenterSettingPage.sref}}>
 
-              <i class="icon-settings icon"></i>
-            </a>
+	            <i class="icon-settings icon ccolor-swatch brand-primary"></i>
+              </a>
+            </div>
           </span>
         </td>
 
-        <td align="center">
+		<td>
           <span ng-if="null != settingPageTypeObj.trainingCenterSettingPage.sref">
-            <a id={{settingPageTypeObj.trainingCenterSettingPage.id}}
-               ui-sref={{settingPageTypeObj.trainingCenterSettingPage.sref}}>
+		    <div align="center">
+              <a id={{settingPageTypeObj.trainingCenterSettingPage.id}}
+                 name={{settingPageTypeObj.trainingCenterSettingPage.id}}
+                 ui-sref={{settingPageTypeObj.trainingCenterSettingPage.sref}}>
 
-              <i class="icon-settings icon"></i>
-            </a>
+	            <i class="icon-settings icon ccolor-swatch brand-primary"></i>
+              </a>
+            </div>
           </span>
         </td>
 
-        <td align="center">
+		<td>
           <span ng-if="null != settingPageTypeObj.supportCenterSettingPage.sref">
-            <a id={{settingPageTypeObj.supportCenterSettingPage.id}}
-               ui-sref={{settingPageTypeObj.supportCenterSettingPage.sref}}>
+		    <div align="center">
+              <a id={{settingPageTypeObj.supportCenterSettingPage.id}}
+                 name={{settingPageTypeObj.trainingCenterSettingPage.id}}
+                 ui-sref={{settingPageTypeObj.supportCenterSettingPage.sref}}>
 
-              <i class="icon-settings icon"></i>
-            </a>
+	            <i class="icon-settings icon ccolor-swatch brand-primary"></i>
+              </a>
+            </div>
           </span>
         </td>
 
-        <td align="center">
+		<td>
           <span ng-if="null != settingPageTypeObj.remoteAccessSettingPage.sref">
-            <a id={{settingPageTypeObj.remoteAccessSettingPage.id}}
-               ui-sref={{settingPageTypeObj.remoteAccessSettingPage.sref}}>
+		    <div align="center">
+              <a id={{settingPageTypeObj.remoteAccessSettingPage.id}}
+                 name={{settingPageTypeObj.remoteAccessSettingPage.id}}
+                 ui-sref={{settingPageTypeObj.remoteAccessSettingPage.sref}}>
 
-              <i class="icon-settings icon"></i>
-            </a>
+	            <i class="icon-settings icon ccolor-swatch brand-primary"></i>
+              </a>
+            </div>
           </span>
         </td>
 
-        <td align="center">
+		<td>
           <span ng-if="null != settingPageTypeObj.webACDSettingPage.sref">
-            <a id={{settingPageTypeObj.webACDSettingPage.id}}
-               ui-sref={{settingPageTypeObj.webACDSettingPage.sref}}>
+		    <div align="center">
+              <a id={{settingPageTypeObj.webACDSettingPage.id}}
+                 name={{settingPageTypeObj.webACDSettingPage.id}}
+                 ui-sref={{settingPageTypeObj.webACDSettingPage.sref}}>
 
-              <i class="icon-settings icon"></i>
-            </a>
+	            <i class="icon-settings icon ccolor-swatch brand-primary"></i>
+              </a>
+		    </div>
           </span>
         </td>
       </tr>
