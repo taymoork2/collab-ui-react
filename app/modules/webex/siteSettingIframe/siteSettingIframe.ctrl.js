@@ -38,7 +38,7 @@
       $scope.settingPageTitle = $translate.instant("webexSiteSettingsLabels." + $scope.settingPageId);
       $scope.settingPageIframeUrl = $stateParams.settingPageIframeUrl;
       $scope.iframeUrl = "https://" + $stateParams.siteUrl + $stateParams.settingPageIframeUrl;
-      
+
       // iframe form needed info
       $scope.trustIframeUrl = $sce.trustAsResourceUrl($scope.iframeUrl);
       $scope.adminEmail = Authinfo.getPrimaryEmail();

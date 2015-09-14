@@ -53,6 +53,7 @@ angular.module('WebExSiteSettingIframe', ['Core']);
 angular.module('WebExUserSettings', ['Core']);
 angular.module('WebExUserSettings2', ['Core']);
 angular.module('WebExReports', ['Core']);
+angular.module('ReportIframe', ['Core']);
 
 angular.module('wx2AdminWebClientApp', [
   'Core',

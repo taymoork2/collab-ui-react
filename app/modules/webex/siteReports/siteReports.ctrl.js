@@ -33,6 +33,10 @@
       var y = 0;
       var z = x + y;
 
+      $scope.trustSrc = function (src) {
+        return $sce.trustAsResourceUrl(src);
+      }; // trustSrc()
+
     }
 
   ]);

@@ -1,3 +1,41 @@
 
 
-This is a test
+<div id="webexreportDiv"
+     name="webexreportDiv">
+          
+  <div class="page-header row">
+    <div class="page-title col-xs-12">
+      <span class="title-heading" translate="webexSiteSettings.title"></span>
+      <span class="search-title">{{WebExSiteSettings.siteSettingsObj.siteUrl}}</span>
+    </div>
+  </div>	
+  
+  <div id="errSection"
+       name="errSection"
+       ng-if="WebExSiteSettings.siteSettingsObj.hasLoadError">
+  </div>
+    
+  <div class="content-view"
+       ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
+    
+    <div ng-if="null != WebExSiteSettings.siteSettingsObj.testIframeObj">
+      <a ui-sref={{WebExSiteSettings.siteSettingsObj.testIframeObj.commonSettingPage.sref}}>
+        {{WebExSiteSettings.siteSettingsObj.testIframeObj.label}}	            
+      </a>
+      
+      <p>&nbsp;</p>
+    </div>
+     	 		 
+    <div ng-include="'modules/webex/siteSettings/siteSettingsTable.tpl.html'"></div> 
+    
+    <a href="" onClick="document.getElementById('hiddenButton').click();">
+      Other&nbsp;Settings&nbsp;<i class="fa fa-external-link fa-lg"></i>
+    </a>           
+  </div>
+</div>
+
+<form name="siteAdminLink" action="{{trustSrc(webexAdvancedUrl)}}" method="post" target="webexSiteAdmin">
+  <input id="adminEmail" type="hidden" name="adminEmail" ng-model="siteAdminLink.adminEmail" value="{{adminEmailParam}}" />
+  <input id="locale" type="hidden" name="locale" ng-model="siteAdminLink.locale" value="{{localeParam}}" />    
+  <button id="hiddenButton" type="submit" onclick="this.parentElement.submit();" style="background-color:#ff00ff;cursor:pointer;width:100px;display:none;">			
+</form>
