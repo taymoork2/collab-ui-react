@@ -18,21 +18,17 @@
   <div class="content-view"
        ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
     
-    <div ng-if="null != WebExSiteSettings.siteSettingsObj.testIframeObj">
-      <a ui-sref={{WebExSiteSettings.siteSettingsObj.testIframeObj.commonSettingPage.sref}}>
-        {{WebExSiteSettings.siteSettingsObj.testIframeObj.label}}	            
-      </a>
-      
-      <p>&nbsp;</p>
-    </div>
-     	 		 
-    <div ng-include="'modules/webex/siteSettings/siteSettingsTable.tpl.html'"></div> 
     
-    <a href="" onClick="document.getElementById('hiddenButton').click();">
-      Other&nbsp;Settings&nbsp;<i class="fa fa-external-link fa-lg"></i>
-    </a>           
+     	 		 
+    
   </div>
 </div>
+<div ng-repeat="sec in sections">hi
+    this is a section
+
+</div>
+
+
 
 <form name="siteAdminLink" action="{{trustSrc(webexAdvancedUrl)}}" method="post" target="webexSiteAdmin">
   <input id="adminEmail" type="hidden" name="adminEmail" ng-model="siteAdminLink.adminEmail" value="{{adminEmailParam}}" />

@@ -12,6 +12,9 @@ angular.module('WebExReports').service('reportService', function () {
     this.setSections = function (secs) {
       this.sections = secs;
     };
+    this.getSections = function () {
+      return this.sections;
+    };
   };
 
   this.getReports = function (siteUrl) {
@@ -23,6 +26,8 @@ angular.module('WebExReports').service('reportService', function () {
 
     var repts = new Reports();
     repts.setSections([sec1, sec2]);
+
+    return repts;
 
   };
 

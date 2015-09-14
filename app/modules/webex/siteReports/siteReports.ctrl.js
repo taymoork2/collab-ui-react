@@ -29,9 +29,9 @@
       Config
     ) {
 
-      var x = 5;
-      var y = 0;
-      var z = x + y;
+      var reports = reportService.getReports();
+      $log.log(reports);
+      $scope.sections = reports.getSections();
 
       $scope.trustSrc = function (src) {
         return $sce.trustAsResourceUrl(src);
