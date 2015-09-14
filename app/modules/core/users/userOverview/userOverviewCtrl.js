@@ -140,12 +140,12 @@
     }
 
     function getUserFeatures() {
-      FeatureToggleService.getFeaturesForUser(vm.currentUser.id).then(function (data) {
+      FeatureToggleService.getFeaturesForUser(vm.currentUser.id).then(function (response) {
         vm.features = [];
-        if(!(data.data || data.data.developer)){
+        if (!(response.data || response.data.developer)) {
           return;
         }
-        var allFeatures = data.data.developer;
+        var allFeatures = response.data.developer;
         _.each(allFeatures, function (el) {
           if (el.val !== 'false' && el.val !== '0') {
             var newEl = {
@@ -159,6 +159,8 @@
         });
       });
     }
+
+    getUserFeatures();
 
     $scope.$on('USER_LIST_UPDATED', function () {
       getCurrentUser();

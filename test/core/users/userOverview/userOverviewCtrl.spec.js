@@ -3,7 +3,7 @@
 describe('Controller: UserOverviewCtrl', function () {
   var controller, $scope, $httpBackend, $q, Config, Authinfo, Utils, Userservice, FeatureToggleService;
 
-  var $stateParams, currentUser, updatedUser, getUserMe;
+  var $stateParams, currentUser, updatedUser, getUserMe, getUserFeatures;
 
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
@@ -23,6 +23,11 @@ describe('Controller: UserOverviewCtrl', function () {
     currentUser = angular.copy(getJSONFixture('core/json/currentUser.json'));
     getUserMe = getJSONFixture('core/json/users/me.json');
     updatedUser = angular.copy(currentUser);
+    getUserFeatures = getJSONFixture('core/json/users/me/featureToggles.json');
+    var deferred2 = $q.defer();
+    deferred2.resolve({
+      data: getUserFeatures
+    });
 
     $stateParams = {
       currentUser: currentUser
@@ -33,6 +38,7 @@ describe('Controller: UserOverviewCtrl', function () {
       callback(currentUser, 200);
     });
     spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue(deferred.promise);
+    spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(deferred2.promise);
 
     // eww
     var userUrl = Config.getScimUrl(Authinfo.getOrgId()) + '/' + currentUser.id;
@@ -152,7 +158,6 @@ describe('Controller: UserOverviewCtrl', function () {
       $httpBackend.flush();
       expect(currentUser.licenseID.length).toEqual(1);
     });
-
   });
 
   describe('AuthCodeLink', function () {
