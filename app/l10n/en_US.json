@@ -34,7 +34,7 @@
     "nameAndEmailAddress": "Names and Email address",
     "active": "Active",
     "inactive": "",
-    "validEmailInput": "Please enter valid user email(s).",
+    "validEmailInput": "Unable to proceed. There are duplicate or invalid email addresses.",
     "duplicateDnFound": "Duplicate Internal Extension entered.",
     "duplicateDidFound": "Duplicate Direct Line entered.",
     "noUsersInput": "No users were entered.",
