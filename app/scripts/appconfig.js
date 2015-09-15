@@ -1445,3 +1445,18 @@ angular
         });
     }
   ]);
+
+angular
+  .module('Messenger')
+  .config(['$stateProvider',
+    function ($stateProvider) {
+      $stateProvider
+        .state('messenger', {
+          parent: 'main',
+          url: '/messenger',
+          templateUrl: 'modules/messenger/ci-sync/ciSync.tpl.html',
+          controller: 'CiSyncCtrl',
+          controllerAs: 'sync'
+        });
+    }
+  ]);

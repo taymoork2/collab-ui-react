@@ -61,8 +61,14 @@
                 Log.debug('No lines found.');
                 return;
               }
+              // header line for CSV file
+              var headerLine = {};
+              headerLine.internalNumber = "internalNumber";
+              headerLine.externalNumber = "externalNumber";
+              headerLine.userName = "userName";
+              exportedLines.push(headerLine);
 
-              // format data for export
+              // data to export for CSV file
               for (var i = 0; i < lines.length; i++) {
                 var exportedLine = {};
                 exportedLine.internalNumber = lines[i].internalNumber;
