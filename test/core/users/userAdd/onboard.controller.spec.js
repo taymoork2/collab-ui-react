@@ -3,7 +3,7 @@
 'use strict';
 
 describe('OnboardCtrl: Ctrl', function () {
-  var controller, $scope, $timeout, GroupService, Notification, Userservice, $q, TelephonyInfoService, Orgservice, FeatureToggleService;
+  var controller, $scope, $timeout, GroupService, Notification, Userservice, $q, TelephonyInfoService, Orgservice, FeatureToggleService, SyncService;
   var internalNumbers;
   var externalNumbers;
   var externalNumberPool;
@@ -12,8 +12,9 @@ describe('OnboardCtrl: Ctrl', function () {
   var getMyFeatureToggles;
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
+  beforeEach(module('Messenger'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$timeout_, _GroupService_, _Notification_, _Userservice_, _TelephonyInfoService_, _$q_, _Orgservice_, _FeatureToggleService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$timeout_, _GroupService_, _Notification_, _Userservice_, _TelephonyInfoService_, _$q_, _Orgservice_, _FeatureToggleService_, _SyncService_) {
     $scope = $rootScope.$new();
     $timeout = _$timeout_;
     $q = _$q_;
@@ -23,6 +24,7 @@ describe('OnboardCtrl: Ctrl', function () {
     Orgservice = _Orgservice_;
     TelephonyInfoService = _TelephonyInfoService_;
     FeatureToggleService = _FeatureToggleService_;
+    SyncService = _SyncService_;
     var current = {
       step: {
         name: 'fakeStep'
