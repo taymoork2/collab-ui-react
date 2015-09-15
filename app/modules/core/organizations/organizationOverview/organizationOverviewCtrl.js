@@ -3,8 +3,8 @@
 /* global $ */
 
 angular.module('Core')
-  .controller('OrganizationOverviewCtrl', ['$stateParams', '$rootScope', '$scope', '$state', '$location', 'Storage', 'Log', '$filter', 'Orgservice', 'Authinfo', 'UserListService', 'Notification', '$dialogs',
-    function ($stateParams, $rootScope, $scope, $state, $location, Storage, Log, $filter, Orgservice, Authinfo, UserListService, Notification, $dialogs) {
+  .controller('OrganizationOverviewCtrl', ['$stateParams', '$rootScope', '$scope', '$state', '$location', 'Storage', 'Log', '$filter', 'Orgservice', 'Authinfo', 'Notification', '$dialogs',
+    function ($stateParams, $rootScope, $scope, $state, $location, Storage, Log, $filter, Orgservice, Authinfo, Notification, $dialogs) {
 
       $scope.currentOrganization = $stateParams.currentOrganization;
 

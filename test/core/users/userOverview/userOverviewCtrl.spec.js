@@ -85,6 +85,10 @@ describe('Controller: UserOverviewCtrl', function () {
       expect(controller.titleCard).toEqual("Display Name");
     });
 
+    it('should set the title to displayName when user data is updated with displayName', function () {
+      expect(controller.features.length).toEqual(1);
+    });
+
     it('should reload the user data from identity response and set subTitleCard to title', function () {
       updatedUser.title = "Test";
       updatedUser.displayName = "Display Name";

@@ -6,7 +6,7 @@
     .controller('OrganizationFeaturesCtrl', OrganizationFeaturesCtrl);
 
   /* @ngInject */
-  function OrganizationFeaturesCtrl($stateParams, $rootScope, $scope, $state, $location, Storage, Log, $filter, Orgservice, Authinfo, UserListService, Notification, $dialogs) {
+  function OrganizationFeaturesCtrl($stateParams, $rootScope, $scope, $state, $location, Storage, Log, $filter, Orgservice, Authinfo, Notification, $dialogs) {
     var vm = this;
     vm.currentOrganization = $stateParams.currentOrganization;
     vm.options = [{
