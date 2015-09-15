@@ -34,7 +34,7 @@
     formlyValidationMessages.addStringMessage('required', vm.aliasMessages.required);
 
     vm.alias = [{
-      key: 'alias',
+      key: 'sunlightUserAlias',
       type: 'input',
       templateOptions: {
         type: 'text',
@@ -99,7 +99,7 @@
         }
       }
       vm.roleSelected = $translate.instant('contactCenterUserConfig.userRoles.' + data.role);
-      vm.aliasFormModel.alias = data.alias;
+      vm.aliasFormModel.sunlightUserAlias = data.alias;
       vm.currentUser.teamId = data.teamId;
     };
 
@@ -122,15 +122,15 @@
     function updatedUserData() {
       var userData = {};
 
-      userData.alias = vm.aliasFormModel.alias;
+      userData.alias = vm.aliasFormModel.sunlightUserAlias;
       userData.teamId = vm.currentUser.teamId;
       userData.attributes = [];
       userData.media = [];
 
-      if (vm.roleSelected === $translate.instant('contactCenterUserConfig.userRoles.user')) {
-        userData.role = 'user';
-      } else {
+      if (vm.roleSelected === $translate.instant('contactCenterUserConfig.userRoles.supervisor')) {
         userData.role = 'supervisor';
+      } else {
+        userData.role = 'user';
       }
 
       for (var i = 0; i < vm.mediaInfo.length; i++) {

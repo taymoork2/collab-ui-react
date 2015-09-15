@@ -9,7 +9,7 @@
     .service('SunlightConfigService', sunlightConfigService);
 
   function sunlightConfigService($http, $rootScope, Config) {
-    var sunlightUserConfigUrl = Config.getSunlightConfigServuiceUrl() + "user/";
+    var sunlightUserConfigUrl = Config.getSunlightConfigServuiceUrl() + "/user/";
     var service = {
       getUserInfo: getUserInfo,
       updateUserInfo: updateUserInfo

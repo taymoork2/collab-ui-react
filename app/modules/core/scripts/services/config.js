@@ -173,10 +173,9 @@ angular.module('Core')
         },
 
         sunlightConfigServiceUrl: {
-          dev: 'https://config.de-ams.thunderhead.io/config/v1/',
-          integration: 'https://config.de-ams.thunderhead.io/config/v1/',
-          prod: 'https://config.de-ams.thunderhead.io/config/v1/',
-          cfe: 'https://config.de-ams.thunderhead.io/config/v1/'
+          dev: 'https://config.integration-tx1.thunderhead.io/config/v1',
+          integration: 'https://config.integration-tx1.thunderhead.io/config/v1',
+          prod: 'https://config.integration-tx1.thunderhead.io/config/v1', //This will change to prod later in future
         },
 
         scimSchemas: [
@@ -772,7 +771,14 @@ angular.module('Core')
         },
 
         getSunlightConfigServuiceUrl: function () {
-          return this.sunlightConfigServiceUrl.dev;
+
+          if (this.isDev()) {
+            return this.sunlightConfigServiceUrl.dev;
+          } else if (this.isIntegration()) {
+            return this.sunlightConfigServiceUrl.integration;
+          } else {
+            return this.sunlightConfigServiceUrl.prod;
+          }
         }
 
       };

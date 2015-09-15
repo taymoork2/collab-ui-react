@@ -52,7 +52,7 @@ var UsersPage = function () {
   this.sunlightChatChannel = element(by.css('label[for="sunlight-chat"]'));
   this.sunlightEmailChannel = element(by.css('label[for="sunlight-email"]'));
   this.sunlightVoiceChannel = element(by.css('label[for="sunlight-voice"]'));
-  this.sunlightUserAlias = element(by.id('alias'));
+  this.sunlightUserAlias = element(by.id('sunlightUserAlias'));
   this.sunlightUserRole = element(by.id('sunlightUserRole'));
   this.sunlightUserRoleFirstElement = element(by.id('sunlightUserRole')).all(by.repeater('option in csSelect.options')).first();
   this.sunlightUserOverviewSave = element(by.id('sunlight-user-overview-save'));
