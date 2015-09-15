@@ -477,7 +477,8 @@
     overflow-y: auto;
     overflow-x: hidden;
     .table {
-      margin: 0;
+      margin-bottom: 0;
+      width: 100%;
     }
     .table-bordered > thead > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > th, .table-bordered > tbody > tr > td {
       border-bottom-width: 1px;
