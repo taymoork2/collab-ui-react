@@ -23,10 +23,11 @@
     
   </div>
 </div>
-<div ng-repeat="sec in sections">hi
-    this is a section
-    <h1> {{sec.section_name}} </h1>
-
+<div ng-repeat="sec in sections">
+    <h2> {{sec.section_name}} </h2>
+    <div ng-repeat="link in sec.report_links">
+       <a href="{{link}}">{{link}}</a>
+    </div>
 </div>
 
 
