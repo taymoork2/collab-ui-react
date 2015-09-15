@@ -117,19 +117,31 @@ Adding a simple page ("Hello World")
 
   PLAY RECORDING (1 hr 8 min 11 sec)
   https://cisco.webex.com/ciscosales/lsr.php?RCID=10b20fbacd884535bcbcffbf06d458d6
+  
+**1. Clone the repo**
 
-* clone the repo
-* add a folder under the `app/modules` directory
-* add a feature directory under the module directory you created
-* add a unit test folder for your module under `test/[your module]`
-* add functional test folder for your module under `test/e2e-protractor`
-* create a html template file to write `<span>{{hello}}</span>`
-* create the controller js file that writes "Hello World" to the scope: `$scope.hello = 'Hello World!';`
-* add a module to bootstrap to the app in: `app/scripts/app.js`
-* add a state for the route to your page in: `app/scripts/appconfig.js` for your module
+**2. Add a new module**
+* add new module folder:
+  * **+**`app/modules/hello-world`
+* add a feature directory to your module directory:
+  * **+**`.../hello-world/say-hello`
+* create a html template file to write `<span>{{hello}}</span>`:
+  * **+**`.../say-hello/say-hello.tpl.html`
+* create the controller that writes "Hello World" to the scope: `$scope.hello = 'Hello World!';`
+  * **+**`.../say-hello/say-hello.controller.js`
+* add an entry for the module for the app to bootstrap in: `app/scripts/app.js`
+* add a state for the route to your page in: `app/scripts/appconfig.js`
 * add a menu option by adding a tab to `config.js` -> tabs array under: `app/modules/core/scripts/services/config.js`
-* write unit tests and place them under: `test/[your module]`
-* write an end to end protractor test and place it under: `test/e2e-protractor/[your module]`
+
+**3. Add its unit and end-to-end tests**
+* add a unit test folder for your module:
+  * **+**`test/hello-world`
+* add a functional test folder for your module:
+  * **+**`test/e2e-protractor/hello-world`
+* write unit tests and place them in the new unit test folder
+* write an end to end protractor test and place it in the new e2e folder
+
+**4. Test and Run**
 * run the app using: `gulp serve`
 * you should see your new menu and when you click on it you should see the hello world page
 * test the app using `gulp e2e --specs=[your module]`, this will test your module
