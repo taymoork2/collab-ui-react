@@ -16,6 +16,12 @@
     <div class="grid-refresh" ng-if="gridRefresh">
       <i class='icon icon-spinner icon-2x'></i>
     </div>
+    <div class="start-search" ng-if="noSearchesYet">
+      <span class="h2" translate="organizationsPage.startSearching"></span>
+    </div>
+    <div class="start-search" ng-if="noSearchResults">
+      <span class="h2" translate="organizationsPage.noSearchResults"></span>
+    </div>
   </div>
 </div>
 <div ng-class="{preview: organizationsPreviewActive, details: organizationsDetailsActive}" class="org-management">

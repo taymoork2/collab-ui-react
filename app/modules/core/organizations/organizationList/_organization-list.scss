@@ -25,9 +25,19 @@
       outline: 0;
     }
   }
-  .searchinput {
+  /** todo: remove once Paul gives the ok */
+  .searchbox {
     float:none;
   }
+}
+
+.start-search {
+  position: absolute;
+  top: 150px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: $gray-darker;
 }
 
 .export-users {

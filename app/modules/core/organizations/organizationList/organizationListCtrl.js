@@ -13,6 +13,8 @@ angular.module('Core')
       $scope.searchStr = '';
       $scope.timeoutVal = 1000;
       $scope.timer = 0;
+      $scope.noSearchesYet = true;
+      $scope.noSearchResults = false;
 
       $scope.organizationPreviewActive = false;
       $scope.organizationDetailsActive = false;
@@ -33,6 +35,7 @@ angular.module('Core')
 
       var getOrgList = function (startAt) {
         $scope.gridRefresh = true;
+        $scope.noSearchesYet = false;
         var startIndex = startAt || 0;
 
         Orgservice.listOrgs($scope.searchStr, function (data, status) {
@@ -40,6 +43,7 @@ angular.module('Core')
           if (data.success) {
             $scope.gridData = data.organizations;
             $scope.placeholder.count = data.organizations.length;
+            $scope.noSearchResults = data.organizations.length === 0;
           } else {
             Log.debug('Get existing org failed. Status: ' + status);
           }
@@ -82,7 +86,7 @@ angular.module('Core')
         if ($scope.load) {
           $scope.currentDataPosition++;
           $scope.load = false;
-          getOrgList($scope.currentDataPosition * Config.usersperpage + 1);
+          getOrgList($scope.currentDataPosition * Config.orgsPerPage + 1);
         }
       });
 

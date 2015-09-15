@@ -183,6 +183,7 @@ angular.module('Core')
         supportUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt',
 
         usersperpage: 100,
+        orgsPerPage: 100,
         meetingsPerPage: 50,
         alarmsPerPage: 50,
         eventsPerPage: 50,

@@ -291,7 +291,9 @@
     "begeoId": "BegeoId",
     "addSuccess": "An organization was successfully started for {{customerOrgName}} with {{licenseCount}} licenses for {{duration}} days.",
     "manageBetaFeatures": "Manage Beta Features",
-    "betaFeatures": "Beta Features"
+    "betaFeatures": "Beta Features",
+    "startSearching": "To begin, search for an organization",
+    "noSearchResults": "Search yielded no results"
   },
   "templatesPage": {
     "title": "MANAGE TEMPLATES"
