@@ -1,0 +1,29 @@
+<div class="page-header">
+  <div class="page-title aa-flex-row">
+    <a ui-sref="autoattendant.aalanding">
+      <span class="aa-icon-arrow-back" aria-label="common.back"></span>
+    </a>
+    <span class="title-heading aa-nowrap" translate="autoAttendant.builderTitle"></span>
+  </div>
+</div>
+<div class="aa-flex-row-title">
+  <div class="aa-flex-row-item" id="aa-header-row-content" ng-if="aaBuilderMain.ui.ceInfo.getName()">
+    <div class="aa-flex-row">
+      <a class="aa-flex-row-item" id="aa-header-row-name"><!--todo: click edit icon to allow inline editing or to reopen name form-->
+        <h2 class="aa-nowrap">{{ aaBuilderMain.ui.ceInfo.getName() }}</h2>
+        <span class="aa-edit-icon" aria-label="common.edit"></span>
+      </a>
+      <div ng-if="aaBuilderMain.ui.ceInfo.getResources().length > 0" class="aa-flex-row-item" id="aa-header-row-numbers">
+        <h2 class="aa-nowrap">{{ aaBuilderMain.ui.ceInfo.getResources() | DisplayNumbers }}</h2>
+      </div>
+    </div>
+  </div>
+  <div class="aa-flex-row-item-right" id="aa-header-row-save" ng-if="aaBuilderMain.ui.ceInfo.getName()">
+    <div class="aa-tooltip-wrapper" tooltip-html-unsafe="{{aaBuilderMain.getSaveErrorMessages()}}" tooltip-trigger="mouseenter" tooltip-placement="top">
+      <button type="button" name="saveButton" class="btn btn-primary" ng-disabled="!aaBuilderMain.canSaveAA()" ng-click="aaBuilderMain.saveAARecords()" translate="common.save"></button>
+    </div>
+  </div>
+</div>
+<div class="row aa-flex-row" ng-if="aaBuilderMain.ui.ceInfo.getName()">
+  <div class="aa-flex-horizontal-line"></div>
+</div>

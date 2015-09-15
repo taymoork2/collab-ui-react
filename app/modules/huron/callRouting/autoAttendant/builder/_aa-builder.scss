@@ -1,0 +1,212 @@
+.aa-builder-header {
+  width: 92vw;
+  position:fixed;
+  top: 52px;
+  z-index: 100;
+ }
+
+.aa-nowrap {
+  white-space: nowrap;
+  margin: 0;
+  padding: 0;
+ }
+
+.aa-builder-container {
+  padding-top: 146px;
+}
+
+.aa-flex-row {
+  @extend .row;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.aa-flex-row-centered {
+  @extend .aa-flex-row;
+  justify-content: center;
+}
+
+.aa-flex-row-title {
+  @extend .aa-flex-row-centered;
+  min-height: 54px;
+  background-color: $brand-white;
+}
+
+.aa-flex-row-item {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: baseline;
+  justify-content: center;
+}
+
+#aa-header-row-content {
+  padding-left: 120px;
+}
+
+#aa-header-row-name {
+  padding-right: 40px;
+}
+
+#aa-header-row-numbers {
+  padding-left: 40px;
+}
+
+.aa-flex-row-item-right {
+  display: flex;
+  flex: 0 1 auto;
+  align-items: baseline;
+  justify-content: right;
+}
+
+#aa-header-row-save {
+  padding-right: 15px;
+}
+
+.aa-edit-icon {
+  @extend .icon;
+  @extend .icon-edit;
+  font-size: 22px;
+  color: $brand-default;
+  padding-left: 6px;
+  padding-top: 6px;
+  &:hover {
+    cursor: pointer;
+    color: $brand-primary;
+  }
+}
+
+.aa-icon-arrow-back {
+  @extend .icon;
+  @extend .icon-arrow-back;
+  font-size: 40px;
+  color: $brand-default;
+  padding-right: 15px;
+  &:hover {
+    cursor: pointer;
+    color: $brand-primary;
+  }
+}
+
+.aa-schedule-icon {
+  @extend .icon;
+  @extend .icon-settings;
+  @extend .icon-2x;
+  color: $brand-default;
+}
+
+.aa-help-icon {
+  @extend .icon;
+  @extend .icon-help;
+  font-size: 22px;
+  color: $brand-default;
+  padding-left: 4px;
+  &:hover {
+    cursor: pointer;
+    color: $brand-primary;
+  }
+}
+
+.aa-container {
+  overflow: visible;
+  padding: 0;
+  min-height: 1px;
+  align-items: center;
+}
+
+.aa-flex-container {
+  @extend .aa-container;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+#aa-builder-actionsets {
+  min-height: 60vh;
+}
+
+.aa-panel {
+  @extend .panel;
+  margin: 0px;
+  padding-left: 15px;
+  padding-right: 15px;
+  box-shadow: none;
+  .text-info {
+    color: $brand-info;
+  }
+  .aa-panel-body {
+    @extend .panel-body;
+    margin: 0px;
+    padding: 25px;
+    background-color: $brand-white;
+    border: 1px solid $brand-default;
+    &:hover {
+      border-color: $brand-primary;
+    }
+  }
+  .aa-panel-round {
+    @extend .panel-body;
+    border: 2px solid $brand-default;
+    border-radius: 50%;
+    margin: 0px;
+    padding: 0px;
+    text-align: center;
+    vertical-align: middle;
+    &:hover {
+      border-color: $brand-primary;
+    }
+  }
+}
+
+.aa-add-step-icon {
+    @extend .icon;
+    @extend .icon-plus;
+    font-size: 32px;
+    top: 1px;
+    color: $brand-default;
+    &:hover {
+      cursor: pointer;
+      color: $brand-primary;
+    }
+}
+
+.aa-flex-vertical-line {
+  border-left: 1px solid $brand-default;
+  min-height: 30px;
+  display: flex;
+  flex: 0 1 auto;
+}
+
+.aa-flex-vertical-spacer {
+  min-height: 30px;
+  display: flex;
+  flex: 0 1 auto;
+}
+
+.aa-flex-horizontal-line {
+  border-bottom: 1px solid $brand-default;
+  height: 1px;
+  width: 100%;
+  display: flex;
+  flex: 0 1 auto;
+}
+
+.aa-flex-horizontal-line-right {
+  border-bottom: 1px solid $brand-default;
+  height: 1px;
+  min-width: 50%;
+  display: flex;
+  flex: 0 1 auto;
+  align-self: flex-end;
+}
+
+.aa-flex-horizontal-line-left {
+  border-bottom: 1px solid $brand-default;
+  height: 1px;
+  min-width: 50%;
+  display: flex;
+  flex: 0 1 auto;
+  align-self: flex-start;
+}
