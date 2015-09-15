@@ -90,6 +90,7 @@ module.exports = function() {
         test + '/mediafusion/**/*.js',
         test + '/squared/**/*.js',
         test + '/sunlight/**/*.js',
+        test + '/webex/**/*.js',
         '!' + test + '/e2e-protractor/**/*'
       ],
       e2e: {

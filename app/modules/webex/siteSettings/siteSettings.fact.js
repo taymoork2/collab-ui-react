@@ -361,7 +361,7 @@
           updateSettingTable();
 
           function updateSettingTable() {
-        	/*
+            /*
             _this.updateSettingsPageObjs(
               "underDevelopment",
               "common",
