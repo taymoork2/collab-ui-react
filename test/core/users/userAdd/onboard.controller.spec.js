@@ -47,6 +47,7 @@ describe('OnboardCtrl: Ctrl', function () {
     spyOn(Notification, 'notify');
     spyOn(Userservice, 'onboardLicenseUsers');
     spyOn(Orgservice, 'getUnlicensedUsers');
+    spyOn(SyncService, 'isMessengerSync');
 
     spyOn(TelephonyInfoService, 'getInternalNumberPool').and.returnValue(internalNumbers);
     spyOn(TelephonyInfoService, 'loadInternalNumberPool').and.returnValue($q.when(internalNumbers));
