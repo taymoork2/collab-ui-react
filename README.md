@@ -138,8 +138,15 @@ Adding a simple page ("Hello World")
   * **+**`test/hello-world`
 * add a functional test folder for your module:
   * **+**`test/e2e-protractor/hello-world`
+* add the new test directories to `config.testFiles.spec` and `config.testFiles.e2e` in **gulp.config.js**:
+  * **+**`test + '/hello-world/**/*.js'`
+  * **+**`hello-world: e2e + '/hello-world/**/*_spec.js'`
 * write unit tests and place them in the new unit test folder
 * write an end to end protractor test and place it in the new e2e folder
+* **Testing Resources**
+  * https://docs.angularjs.org/guide/unit-testing
+  * http://www.pluralsight.com/courses/play-by-play-angular-testing-papa-bell
+  * http://www.bradoncode.com/tutorials/angularjs-unit-testing/ 
 
 **4. Test and Run**
 * run the app using: `gulp serve`
