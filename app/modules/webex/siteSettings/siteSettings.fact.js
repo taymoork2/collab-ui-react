@@ -361,11 +361,13 @@
           updateSettingTable();
 
           function updateSettingTable() {
+        	/*
             _this.updateSettingsPageObjs(
               "underDevelopment",
               "common",
               "/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage"
             );
+            */
 
             _this.updateSettingsPageObjs(
               "emailAllHosts",
@@ -376,7 +378,7 @@
             _this.updateSettingsPageObjs(
               "options",
               "common",
-              "/options_common"
+              "/adm3100/siteSettingCommon.do?siteurl=sjsite14"
             );
 
             _this.updateSettingsPageObjs(

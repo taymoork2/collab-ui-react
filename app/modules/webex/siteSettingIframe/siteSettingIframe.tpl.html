@@ -3,33 +3,38 @@
      name="webexSiteSettingIframe">
     
   <div class="page-header row">
-    <ul class="breadcrumbs">
-      <li>
-        <a id="siteListCrumb"
-           name="siteListCrumb"
-           ui-sref="site-list">
+    <div id="iframeBreadCrumbs"
+         name="iframeBreadCrumbs"
+         class="breadcrumb-container">
+         
+      <ul class="breadcrumbs">
+        <li>
+          <a id="siteListCrumb"
+             name="siteListCrumb"
+             ui-sref="site-list">
            
-          <span translate="siteList.conferencing"></span>
-        </a>
-      </li>
+            <span translate="siteList.conferencing"></span>
+          </a>
+        </li>
         
-      <li>
-        <a id="indexPageCrumb"
-           name="indexPageCrumb"
-           ui-sref={{indexPageSref}}>
+        <li>
+          <a id="indexPageCrumb"
+             name="indexPageCrumb"
+             ui-sref={{indexPageSref}}>
            
           <span translate="webexSiteSettings.title"></span>&nbsp;{{siteUrl}}
         </a>
-      </li>
+        </li>
         
-      <li class="current">
-        {{settingPageTitle}}
-      </li>
-    </ul>
+        <li class="current">
+          {{settingPageTitle}}
+        </li>
+      </ul>
 
-    <div class="page-title col-xs-12">
-      <span class="title-heading">{{settingPageTitle}}</span>
-      <span class="search-title">{{siteUrl}}</span>
+      <div class="page-title col-xs-12">
+        <span class="title-heading">{{settingPageTitle}}</span>
+        <span class="search-title">{{siteUrl}}</span>
+      </div>
     </div>
   </div>
 </div>
