@@ -149,7 +149,7 @@
     function startTrial(keepModal) {
       vm.nameError = false;
       vm.emailError = false;
-      vm.startTrialButtonLoad = true;
+      angular.element('#startTrialButton').button('loading');
 
       var offersList = [];
       for (var i in vm.offers) {
@@ -160,7 +160,7 @@
 
       return TrialService.startTrial(vm.model.customerName, vm.model.customerEmail, vm.model.licenseDuration, vm.model.licenseCount, vm.startDate, offersList)
         .catch(function (response) {
-          vm.startTrialButtonLoad = false;
+          angular.element('#startTrialButton').button('reset');
           Notification.notify([response.data.message], 'error');
           if ((response.data.message).indexOf('Org') > -1) {
             vm.nameError = true;
@@ -173,7 +173,7 @@
           if (offersList.indexOf(Config.trials.squaredUC) !== -1) {
             return HuronCustomer.create(response.data.customerOrgId, response.data.customerName, response.data.customerEmail)
               .catch(function (response) {
-                vm.startTrialButtonLoad = false;
+                angular.element('#startTrialButton').button('reset');
                 Notification.errorResponse(response, 'trialModal.squareducError');
                 return $q.reject(response);
               });
@@ -184,7 +184,7 @@
               });
           }
         }).then(function () {
-          vm.startTrialButtonLoad = false;
+          angular.element('#startTrialButton').button('reset');
 
           var successMessage = [$translate.instant('trialModal.addSuccess', {
             customerName: vm.model.customerName,

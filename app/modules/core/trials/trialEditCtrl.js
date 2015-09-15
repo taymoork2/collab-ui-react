@@ -133,7 +133,7 @@
     }
 
     function editTrial(keepModal) {
-      vm.saveUpdateButtonLoad = true;
+      angular.element('#saveUpdateButton').button('loading');
 
       var offersList = [];
       for (var i in vm.offers) {
@@ -144,7 +144,7 @@
 
       return TrialService.editTrial(vm.currentTrial.trialId, vm.currentTrial.duration, vm.currentTrial.licenses, vm.currentTrial.usage, vm.currentTrial.customerOrgId, offersList)
         .catch(function (response) {
-          vm.saveUpdateButtonLoad = false;
+          angular.element('#saveUpdateButton').button('reset');
           Notification.notify([response.data.message], 'error');
           return $q.reject();
         })
@@ -153,14 +153,14 @@
           if ((offersList.indexOf(Config.trials.squaredUC) !== -1) && !vm.disableSquaredUCCheckBox) {
             return HuronCustomer.create(response.data.customerOrgId, response.data.customerName, response.data.customerEmail)
               .catch(function () {
-                vm.saveUpdateButtonLoad = false;
+                angular.element('#saveUpdateButton').button('reset');
                 Notification.errorResponse(response, 'trialModal.squareducError');
                 return $q.reject();
               });
           }
         })
         .then(function () {
-          vm.saveUpdateButtonLoad = false;
+          angular.element('#saveUpdateButton').button('reset');
           angular.extend($stateParams.currentTrial, vm.currentTrial);
           var successMessage = [$translate.instant('trialModal.editSuccess', {
             customerName: vm.currentTrial.customerName,

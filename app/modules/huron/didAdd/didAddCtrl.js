@@ -347,28 +347,28 @@
 
     function startTrial() {
       if ($scope.trial && angular.isFunction($scope.trial.startTrial)) {
-        vm.startTrialLoad = true;
+        angular.element('#startTrial').button('loading');
         $q.when($scope.trial.startTrial(true)).then(function (customerId) {
           populateDidArrays();
           return submit(customerId);
         }).then(function () {
           return $state.go('trialAdd.nextSteps');
         }).catch(function () {
-          vm.startTrialLoad = false;
+          angular.element('#startTrial').button('reset');
         });
       }
     }
 
     function editTrial() {
       if ($scope.trial && angular.isFunction($scope.trial.editTrial)) {
-        vm.startTrialLoad = true;
+        angular.element('#startTrial').button('loading');
         $q.when($scope.trial.editTrial(true)).then(function (customerId) {
           populateDidArrays();
           return submit(customerId);
         }).then(function () {
           $state.modal.close();
         }).catch(function () {
-          vm.startTrialLoad = false;
+          angular.element('#startTrial').button('reset');
         });
       }
     }
