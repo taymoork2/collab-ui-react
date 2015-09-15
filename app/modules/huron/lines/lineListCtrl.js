@@ -113,7 +113,7 @@
       useExternalSorting: false,
       enableRowSelection: false,
       sortInfo: { // makes the sort arrow appear at grid load time
-        fields: ['internalNumber'],
+        fields: ['userName'],
         directions: ['asc']
       },
 
