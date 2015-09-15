@@ -9,6 +9,8 @@
   function AABuilderActionsCtrl($scope, $translate, $controller) {
 
     var vm = this;
+    vm.schedule = '';
+    vm.isNewStepFormOpen = false;
 
     vm.templates = [{
       title: $translate.instant('autoAttendant.actionSayMessage'),
@@ -46,8 +48,8 @@
 
     function getTemplateController() {
       var template = vm.template;
-      if (vm.template && vm.template.controller) {
-        return $controller(vm.template.controller, {
+      if (template && template.controller) {
+        return $controller(template.controller, {
           $scope: $scope
         });
       }

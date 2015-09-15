@@ -7,9 +7,12 @@ angular
       return {
         restrict: 'E',
         scope: {
-          schedule: '=',
+          schedule: '@',
         },
-        templateUrl: 'modules/huron/callRouting/autoAttendant/builder/aaBuilderScheduleInfo.tpl.html',
+        controller: 'AABuilderScheduleInfoCtrl',
+        controllerAs: 'scheduleInfo',
+        bindToController: true,
+        templateUrl: 'modules/huron/callRouting/autoAttendant/builder/aaBuilderScheduleInfo.tpl.html'
       };
     }
   ]);

@@ -67,12 +67,12 @@ describe('Controller: AABuilderMainCtrl', function () {
 
   });
 
-  describe('saveAAReords', function () {
+  describe('saveAARecords', function () {
 
     beforeEach(function () {
       spyOn(AutoAttendantCeService, 'createCe').and.returnValue($q.when(angular.copy(rawCeInfo)));
       spyOn(AutoAttendantCeService, 'updateCe').and.returnValue($q.when(angular.copy(rawCeInfo)));
-      spyOn(Notification, 'notify');
+      spyOn(Notification, 'success');
 
       aaModel.ceInfos = [];
       aaModel.aaRecords = [];
@@ -92,7 +92,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       var ceInfo = ce2CeInfo(rawCeInfo);
       expect(angular.equals(aaModel.ceInfos[0], ceInfo)).toEqual(true);
 
-      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+      expect(Notification.success).toHaveBeenCalled();
     });
 
     it('should update an existing aaRecord successfully', function () {
@@ -110,7 +110,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       var ceInfo = ce2CeInfo(rawCeInfo);
       expect(angular.equals(aaModel.ceInfos[0], ceInfo)).toEqual(true);
 
-      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+      expect(Notification.success).toHaveBeenCalled();
     });
   });
 });

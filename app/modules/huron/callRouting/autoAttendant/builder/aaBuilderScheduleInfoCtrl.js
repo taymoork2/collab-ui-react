@@ -6,16 +6,10 @@
     .controller('AABuilderScheduleInfoCtrl', AABuilderScheduleInfoCtrl);
 
   /* @ngInject */
-  function AABuilderScheduleInfoCtrl($scope) {
-    $scope.openHours = {
-      title: 'autoAttendant.scheduleOpen'
-    };
-    $scope.closedHours = {
-      title: 'autoAttendant.scheduleClosed'
-    };
-    $scope.holidays = {
-      title: 'autoAttendant.scheduleHolidays'
-    };
+  function AABuilderScheduleInfoCtrl() {
+
+    var vm = this;
+    vm.schedule = '';
 
     /* schedule model  */
 
