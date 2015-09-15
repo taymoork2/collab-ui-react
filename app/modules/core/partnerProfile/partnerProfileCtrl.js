@@ -158,10 +158,10 @@ angular.module('Core')
       };
 
       function updateOrgSettings(orgId, supportUrl, supportText, helpUrl, isCiscoHelp, isCiscoSupport) {
-        angular.element('#orgProfileSaveBtn').button('loading');
+        $scope.orgProfileSaveLoad = true;
         Orgservice.setOrgSettings(orgId, supportUrl, supportText, helpUrl, isCiscoHelp, isCiscoSupport, function (data, status) {
           if (data.success) {
-            angular.element('#orgProfileSaveBtn').button('reset');
+            $scope.orgProfileSaveLoad = false;
             Notification.notify([$translate.instant('partnerProfile.processing')], 'success');
           } else {
             var error = $translate.instant('errors.statusError', {
@@ -169,7 +169,7 @@ angular.module('Core')
             });
 
             Notification.notify(error, 'error');
-            angular.element('#orgProfileSaveBtn').button('reset');
+            $scope.orgProfileSaveLoad = false;
           }
         });
       }

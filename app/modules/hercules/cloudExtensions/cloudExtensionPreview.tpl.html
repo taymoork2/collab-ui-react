@@ -1,5 +1,5 @@
 <cs-sp-buttons ng-show="showButtons">
-  <button id="btn-save" class="btn-primary btn-save" translate="common.save" data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>" ng-click="updateEntitlement(extension.entitled)"></button>
+  <button id="btn-save" class="btn-primary btn-save" cs-btn loading="btn_saveLoad" translate="common.save" ng-click="updateEntitlement(extension.entitled)"></button>
   <button id="btn-cancel" ng-disabled="saving" class="btn-default" translate="common.cancel" ng-click="resetEntitlement()"></button>
 </cs-sp-buttons>
 <cs-sp-container>
