@@ -41,13 +41,29 @@
       }
     }
 
-    function isTypeValid(type) {
+    function isTypeValid(type, name) {
       if (angular.isUndefined(attrs.fileType) || (type && attrs.fileType.indexOf(type) > -1)) {
         return true;
       } else {
-        if (angular.isFunction(scope.fileTypeError)) {
+        if (isSuffixValid(name)) {
+          return true;
+        } else if (angular.isFunction(scope.fileTypeError)) {
           scope.fileTypeError();
         }
+        return false;
+      }
+    }
+
+    function isSuffixValid(name) {
+      if (angular.isString(name)) {
+        var nameParts = name.split('.');
+        var suffix = nameParts[nameParts.length - 1];
+        if (attrs.fileSuffix && attrs.fileSuffix.indexOf(suffix) > -1) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
         return false;
       }
     }
@@ -75,7 +91,7 @@
       reader.readAsText(file);
 
       function onLoad(loadEvent) {
-        if (checkSize(size) && isTypeValid(type)) {
+        if (checkSize(size) && isTypeValid(type, name)) {
           scope.$apply(function () {
             scope.file = loadEvent.target.result;
             scope.fileName = name;
