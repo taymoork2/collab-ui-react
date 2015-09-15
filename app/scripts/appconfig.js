@@ -569,10 +569,10 @@ angular
             }
           }
         })
-        .state('organizationAdd.info', {
+        .state('organization-overview.add.info', {
           templateUrl: 'modules/core/organizations/organizationAdd/organizationAdd.tpl.html'
         })
-        .state('organizationAdd.addNumbers', {
+        .state('organization-overview.add.addNumbers', {
           templateUrl: 'modules/core/organizations/organizationAdd/addNumbers.tpl.html',
           controller: 'DidAddCtrl',
           controllerAs: 'didAdd',

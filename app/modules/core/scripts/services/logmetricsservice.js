@@ -91,7 +91,7 @@ angular.module('Core')
             msg = "In trial DID page";
             eType = this.getEventType('trialDidPage');
             break;
-          case 'organizationAdd.info':
+          case 'organization-overview.add.info':
             msg = "In organization creation page";
             eType = this.getEventType('organizationPage');
             break;

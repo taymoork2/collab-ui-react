@@ -13,18 +13,7 @@
       top: 70%;
     }
   }
-  .btn-icon {
-    background: none;
-    border: none;
-    box-shadow: none;
-    width: 100%;
-    text-align: center;
-    &:hover, &:focus, &.active:focus {
-      border: none;
-      box-shadow: none;
-      outline: 0;
-    }
-  }
+
   /** todo: remove once Paul gives the ok */
   .searchbox {
     float:none;
@@ -38,28 +27,6 @@
   right: 0;
   text-align: center;
   color: $gray-darker;
-}
-
-.export-users {
-  color: $gray-dark;
-  font-size: 30px;
-  display: inline-block;
-  vertical-align: top;
-  padding-left: 20px;
-  margin-left: 10px;
-  border-left: solid 1px $gray-lighter;
-  cursor: pointer;
-  &:hover {
-    color: $brand-primary;
-    text-decoration: none;
-  }
-}
-
-#addUsers {
-  cursor: pointer;
-  a {
-    color: $gray-lightest;
-  }
 }
 
 .admin-name {

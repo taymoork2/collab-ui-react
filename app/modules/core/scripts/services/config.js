@@ -798,7 +798,7 @@ angular.module('Core')
         CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
         User: [],
         Site_Admin: ['site-list'],
-        Application: ['organizationAdd', 'organizations', 'organization-overview', 'organization-features']
+        Application: ['organizations', 'organization-overview']
       };
 
       config.serviceStates = {

@@ -85,7 +85,7 @@ describe('Controller: UserOverviewCtrl', function () {
       expect(controller.titleCard).toEqual("Display Name");
     });
 
-    it('should set the title to displayName when user data is updated with displayName', function () {
+    it('should read the features list on initialization', function () {
       expect(controller.features.length).toEqual(1);
     });
 

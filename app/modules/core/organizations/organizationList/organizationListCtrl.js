@@ -16,9 +16,6 @@ angular.module('Core')
       $scope.noSearchesYet = true;
       $scope.noSearchResults = false;
 
-      $scope.organizationPreviewActive = false;
-      $scope.organizationDetailsActive = false;
-
       $scope.sort = {
         by: 'name',
         order: 'ascending'

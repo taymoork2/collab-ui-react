@@ -1,14 +1,12 @@
 {
   "developer": [{
     "key": "android-add-guest-release",
-    "value": true,
     "val": "true",
     "mutable": false,
     "lastModified": "2015-09-04T23:13:42.253Z"
   }],
   "entitlement": [{
     "key": "call-initiation",
-    "value": false,
     "val": "false",
     "mutable": false,
     "lastModified": "2015-09-04T23:13:42.252Z"
