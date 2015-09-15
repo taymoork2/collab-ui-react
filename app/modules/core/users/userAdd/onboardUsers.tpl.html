@@ -1,4 +1,5 @@
 <form name="model.userForm" class="onboard-users">
+  <div ng-if="isMsgrSyncMode" class="msgrsync-desc-adduser" translate="firstTimeWizard.msgrSyncDesc"></div>
   <div class="user-input-option-radio-group">
     <cs-radiolist options="userInputOptions" ng-model="model.userInputOption" horizontal="true"></cs-radiolist>
   </div>
