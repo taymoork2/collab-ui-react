@@ -63,6 +63,7 @@
     "getJSONFixture": true,
     "enterpriseResource": true,
     "trialextinterest": true,
-    "orgprofile": true
+    "orgprofile": true,
+    "inviteusers": true
   }
 }

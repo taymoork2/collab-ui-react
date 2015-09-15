@@ -251,6 +251,11 @@ angular.module('Core')
             title: 'tabs.callRoutingTab',
             state: 'callRouter',
             link: '#callRouter'
+          }, {
+            title: 'Messenger',
+            desc: 'Messenger Administration',
+            state: 'messenger',
+            link: '#messenger'
           }]
         }, {
           tab: 'deviceTab',
@@ -867,6 +872,14 @@ angular.module('Core')
       config.allowedStates = ['unauthorized', 'csadmin'];
 
       config.ciscoOnly = ['billing'];
+
+      // Messenger Sep 2015: Temporarily hide new state so only developers can see it.
+      // This will be changed once the back-end service is operational.
+      if (config.isDev()) {
+        config.serviceStates['webex-messenger'] = [
+          'messenger'
+        ];
+      }
 
       return config;
     }

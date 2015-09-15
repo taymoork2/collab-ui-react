@@ -380,16 +380,24 @@ angular.module('Core')
           for (var i = 0; i < usersDataArray.length; i++) {
             var userEmail = usersDataArray[i].address.trim();
             var userName = usersDataArray[i].name.trim();
+            var displayName = usersDataArray[i].displayName;
             var user = {
               'email': null,
-              'name': null,
+              'name': {
+                'givenName': null,
+                'familyName': null,
+              },
               'userEntitlements': entitlements,
               'licenses': (licenses && licenses.length > i) ? licenses[i] : null
             };
             if (userEmail.length > 0) {
               user.email = userEmail;
               if (userName.length > 0 && userName !== false) {
-                user.name = userName;
+                user.name.givenName = userName.split(' ').slice(0, -1).join(' ');
+                user.name.familyName = userName.split(' ').slice(-1).join(' ');
+              }
+              if (displayName) {
+                user.displayName = displayName;
               }
               userData.users.push(user);
             }

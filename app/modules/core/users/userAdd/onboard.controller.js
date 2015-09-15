@@ -724,14 +724,19 @@ angular.module('Core')
         delimiter: [',', ';'],
         createTokensOnBlur: true
       };
+      var isDuplicate = false;
       $scope.tokenmethods = {
         createtoken: function (e) {
           //Removing anything in brackets from user data
           var value = e.attrs.value.replace(/\s*\([^)]*\)\s*/g, ' ');
           e.attrs.value = value;
+          isDuplicate = false;
+          if (isEmailAlreadyPresent(e.attrs.value)) {
+            isDuplicate = true;
+          }
         },
         createdtoken: function (e) {
-          if (!validateEmail(e.attrs.value)) {
+          if (!validateEmail(e.attrs.value) || isDuplicate) {
             angular.element(e.relatedTarget).addClass('invalid');
             invalidcount++;
           }
@@ -744,13 +749,43 @@ angular.module('Core')
           }
         },
         removedtoken: function (e) {
-          if (!validateEmail(e.attrs.value)) {
-            invalidcount--;
-          }
-          wizardNextText();
-          checkPlaceholder();
+          // Reset the token list and validate all tokens
+          $timeout(function () {
+            invalidcount = 0;
+            angular.element('#usersfield').tokenfield('setTokens', $scope.model.userList);
+          }).then(function () {
+            wizardNextText();
+            checkPlaceholder();
+          });
         }
       };
+
+      function isEmailAlreadyPresent(input) {
+        var inputEmail = getEmailAddress(input);
+        if (inputEmail) {
+          var userEmails = getTokenEmailArray();
+          return userEmails.indexOf(inputEmail) >= 0;
+        } else {
+          return false;
+        }
+      }
+
+      function getTokenEmailArray() {
+        var tokens = angular.element('#usersfield').tokenfield('getTokens');
+        return tokens.map(function (token) {
+          return getEmailAddress(token.value);
+        });
+      }
+
+      function getEmailAddress(input) {
+        var retString = "";
+        input.split(" ").forEach(function (str) {
+          if (str.indexOf("@") >= 0) {
+            retString = str;
+          }
+        });
+        return retString;
+      }
 
       var setPlaceholder = function (placeholder) {
         angular.element('.tokenfield.form-control #usersfield-tokenfield').attr('placeholder', placeholder);
@@ -792,12 +827,11 @@ angular.module('Core')
           invalidcount = 0;
           angular.element('#usersfield').tokenfield('setTokens', $scope.model.userList);
         }, 100);
-
       };
 
       $scope.addToUsersfield = function () {
         if ($scope.model.userForm.$valid && $scope.model.userInfoValid) {
-          var userInfo = $scope.model.firstName + ' ' + $scope.model.lastName + '  ' + $scope.model.emailAddress;
+          var userInfo = $scope.model.firstName + ' ' + $scope.model.lastName + ' ' + $scope.model.emailAddress;
           angular.element('#usersfield').tokenfield('createToken', userInfo);
           clearNameAndEmailFields();
           angular.element('#firstName').focus();
@@ -1422,7 +1456,7 @@ angular.module('Core')
       var isCsvValid = false;
       var cancelDeferred;
       var saveDeferred;
-      var MAX_USERS = 100;
+      var MAX_USERS = 250;
 
       $scope.onFileSizeError = function () {
         Notification.notify([$translate.instant('firstTimeWizard.csvMaxSizeError')], 'error');
@@ -1491,9 +1525,6 @@ angular.module('Core')
         saveDeferred = $q.defer();
         cancelDeferred = $q.defer();
 
-        var chunk = Config.batchSize;
-        var tempUserArray = [];
-        var tempLicenseArray = [];
         $scope.model.userErrorArray = [];
         $scope.model.numMaxUsers = userArray.length;
         $scope.model.processProgress = $scope.model.numTotalUsers = $scope.model.numNewUsers = $scope.model.numExistingUsers = 0;
@@ -1534,6 +1565,7 @@ angular.module('Core')
           }
 
           calculateProcessProgress();
+          params.resolve();
         }
 
         function getErrorResponse(data, status) {
@@ -1552,6 +1584,8 @@ angular.module('Core')
             responseMessage = $translate.instant('firstTimeWizard.csv500Error');
           } else if (status === 502 || status === 503) {
             responseMessage = $translate.instant('firstTimeWizard.csv502And503Error');
+          } else {
+            responseMessage = $translate.instant('firstTimeWizard.processCsvError');
           }
 
           return responseMessage;
@@ -1565,6 +1599,9 @@ angular.module('Core')
         } else {
           entitleList = getEntitlements('add');
         }
+        var communicationLicense = _.find(licenseList, function (license) {
+          return license.indexOf("CO_") === 0;
+        });
 
         function buildLicenseArray(internalExtension, directLine) {
           return licenseList.map(function (license) {
@@ -1584,15 +1621,21 @@ angular.module('Core')
           });
         }
 
-        function onboardCsvUsers(startIndex) {
-          if (tempUserArray.length > 0) {
-            Userservice.onboardLicenseUsers(tempUserArray, entitleList, tempLicenseArray, callback.bind({
-              startIndex: startIndex - tempUserArray.length + 1,
-              length: tempUserArray.length
-            }), cancelDeferred.promise);
-            tempUserArray = [];
-            tempLicenseArray = [];
-          }
+        function onboardCsvUsers(startIndex, userArray, licenseArray, csvPromise) {
+          return csvPromise.then(function () {
+            return $q(function (resolve, reject) {
+              if (userArray.length > 0) {
+                Userservice.onboardLicenseUsers(userArray, entitleList, licenseArray, callback.bind({
+                  startIndex: startIndex - userArray.length + 1,
+                  length: userArray.length,
+                  resolve: resolve
+                }), cancelDeferred.promise);
+              } else {
+                resolve();
+              }
+            });
+          });
+
         }
 
         function calculateProcessProgress() {
@@ -1611,23 +1654,33 @@ angular.module('Core')
 
         // Onboard users in chunks
         // Separate chunks on invalid rows
+        var csvChunk = communicationLicense ? 4 : 10; // Rate limit for Huron
+        var csvPromise = $q.when();
+        var tempUserArray = [];
+        var tempLicenseArray = [];
         for (var j = 0; j < userArray.length; j++) {
-          if (tempUserArray.length < chunk) {
+          if (tempUserArray.length < csvChunk) {
             if (userArray[j].length === 6) {
               tempUserArray.push({
                 address: userArray[j][3],
-                name: userArray[j][2]
+                name: userArray[j][0] + ' ' + userArray[j][1],
+                displayName: userArray[j][2]
               });
               tempLicenseArray.push(buildLicenseArray(userArray[j][4], userArray[j][5]));
             } else {
               addUserError(j + 1, $translate.instant('firstTimeWizard.csvInvalidRow'));
-              onboardCsvUsers(j - 1);
+              csvPromise = onboardCsvUsers(j - 1, tempUserArray, tempLicenseArray, csvPromise);
+              tempUserArray = [];
+              tempLicenseArray = [];
               continue;
             }
           }
-          if (tempUserArray.length === chunk || j === (userArray.length - 1)) {
-            onboardCsvUsers(j);
+          if (tempUserArray.length === csvChunk || j === (userArray.length - 1)) {
+            csvPromise = onboardCsvUsers(j, tempUserArray, tempLicenseArray, csvPromise);
+            tempUserArray = [];
+            tempLicenseArray = [];
           }
+
         }
 
         calculateProcessProgress();

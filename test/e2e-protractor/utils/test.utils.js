@@ -5,6 +5,12 @@
 var config = require('./test.config.js');
 var request = require('request');
 var EC = protractor.ExpectedConditions;
+var path = require('path');
+var remote = require('../../../node_modules/gulp-protractor/node_modules/protractor/node_modules/selenium-webdriver/remote');
+
+exports.resolvePath = function (filePath) {
+  return path.resolve(__dirname, filePath);
+};
 
 exports.searchField = element(by.id('searchFilter'));
 
@@ -102,6 +108,14 @@ exports.wait = function (elem, timeout) {
     return EC.visibilityOf(elem)();
   }
   return browser.wait(logAndWait, timeout || TIMEOUT, 'Waiting for element to be visible: ' + elem.locator());
+};
+
+exports.waitForPresence = function (elem) {
+  function logAndWait() {
+    log('Waiting for element to be present: ' + elem.locator());
+    return EC.presenceOf(elem)();
+  }
+  return browser.wait(logAndWait, TIMEOUT, 'Waiting for element to be present: ' + elem.locator());
 };
 
 exports.waitUntilEnabled = function (elem) {
@@ -293,6 +307,14 @@ exports.clear = function (elem) {
 exports.sendKeys = function (elem, value) {
   this.wait(elem).then(function () {
     log('Send keys to element: ' + elem.locator() + ' ' + value);
+    elem.sendKeys(value);
+  });
+};
+
+exports.fileSendKeys = function (elem, value) {
+  this.waitForPresence(elem).then(function () {
+    log('Send file keys to element: ' + elem.locator() + ' ' + value);
+    browser.setFileDetector(new remote.FileDetector);
     elem.sendKeys(value);
   });
 };
