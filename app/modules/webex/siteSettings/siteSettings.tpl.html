@@ -4,7 +4,20 @@
   <div class="page-header row">
     <div class="page-title col-xs-12">
       <span class="title-heading" translate="webexSiteSettings.title"></span>
-      <span class="search-title">{{WebExSiteSettings.siteSettingsObj.siteUrl}}</span>
+      
+      <span class="search-title">
+        {{WebExSiteSettings.siteSettingsObj.siteUrl}}
+      </span>
+      
+      <div class="search-title" 
+           ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
+           
+        <a href={{WebExSiteSettings.siteSettingsObj.emailAllHostsObj.commonSettingPage.sref}}
+           class="button secondary large">
+           
+          {{WebExSiteSettings.siteSettingsObj.emailAllHostsObj.label}}
+        </a>
+      </div>
     </div>
   </div>  
   
@@ -18,7 +31,7 @@
     
     <div ng-if="null != WebExSiteSettings.siteSettingsObj.testIframeObj">
       <a ui-sref={{WebExSiteSettings.siteSettingsObj.testIframeObj.commonSettingPage.sref}}>
-        {{WebExSiteSettings.siteSettingsObj.testIframeObj.label}}             
+        {{WebExSiteSettings.siteSettingsObj.testIframeObj.label}}
       </a>
       
       <p>&nbsp;</p>
@@ -30,7 +43,7 @@
     <a href="" 
        onClick="document.getElementById('hiddenButton').click();">
        
-      Other&nbsp;Settings&nbsp;<i class="fa fa-external-link fa-lg"></i>
+      Other&nbsp;Settings
     </a>           
   </div>
 </div>
