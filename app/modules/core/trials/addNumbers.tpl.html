@@ -13,7 +13,7 @@
         </div>
         <div class="modal-footer">
             <button class="btn btn-default" ng-click="didAdd.fromEditTrial ? didAdd.backtoEditTrial() : didAdd.backtoStartTrial();" translate="common.back"></button>
-            <button class="btn btn-primary" id="startTrial" ng-click="didAdd.fromEditTrial ? didAdd.editTrial() : didAdd.startTrial();" data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>" translate="partnerHomePage.startTrial"></button>
+            <button class="btn btn-primary" id="startTrial" cs-btn loading="{{didAdd.startTrialLoad}}" ng-click="didAdd.fromEditTrial ? didAdd.editTrial() : didAdd.startTrial();" translate="partnerHomePage.startTrial"></button>
         </div>
     </div>
 </div>
