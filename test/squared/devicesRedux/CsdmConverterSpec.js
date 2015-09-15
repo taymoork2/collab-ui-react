@@ -88,7 +88,7 @@ describe('CsdmConverterSpec', function () {
   }); // pass thru fields
 
   describe('readableState and cssColorClass', function () {
-    it('should convert device with issues to Has Issues and red', function () {
+    it('should convert device with issues red color but keep status', function () {
       var arr = [{
         state: 'CLAIMED',
         status: {
@@ -96,7 +96,7 @@ describe('CsdmConverterSpec', function () {
           connectionStatus: 'CONNECTED'
         }
       }];
-      expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.issuesDetected');
+      expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.Online');
       expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-red');
     });
 

@@ -38,7 +38,7 @@ angular.module('Core', [
 
 angular.module('Squared', ['Core']);
 
-angular.module('Huron', ['Core', 'uc.moh', 'uc.device', 'uc.callrouting', 'uc.didadd', 'uc.overview', 'uc.callrouter']);
+angular.module('Huron', ['Core', 'uc.moh', 'uc.device', 'uc.callrouting', 'uc.didadd', 'uc.overview', 'uc.callrouter', 'uc.hurondetails']);
 
 angular.module('Hercules', ['Core']);
 
@@ -50,10 +50,15 @@ angular.module('WebExXmlApi', ['Core']);
 angular.module('WebExSiteSettings', ['Core']);
 angular.module('WebExSiteSettingIframe', ['Core']);
 
-angular.module('WebExUserSettings', ['Core']);
-angular.module('WebExUserSettings2', ['Core']);
 angular.module('WebExReports', ['Core']);
 angular.module('ReportIframe', ['Core']);
+
+angular.module('WebExUserSettings', ['Core']);
+angular.module('WebExUserSettings2', ['Core']);
+
+angular.module('Messenger', ['Core']);
+
+angular.module('Sunlight', ['Core']);
 
 angular.module('wx2AdminWebClientApp', [
   'Core',
@@ -67,8 +72,7 @@ angular.module('wx2AdminWebClientApp', [
   'WebExSiteSettingIframe',
   'WebExUserSettings',
   'WebExUserSettings2',
-  'Sunlight',
-  'WebExReports'
+  'WebExReports',
+  'Messenger',
+  'Sunlight'
 ]);
-
-angular.module('Sunlight', ['Core']);

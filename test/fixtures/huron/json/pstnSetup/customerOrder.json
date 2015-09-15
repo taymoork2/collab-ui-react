@@ -1,7 +1,4 @@
-{
-  "5125934450": {
-    "number": "5125934450",
-    "status": "PENDING"
-  },
-  "url": "https://terminus.hptx1.huron-dev.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/orders/29c63c1f-83b0-42b9-98ee-85624e4c7409"
-}
+[{
+  "number": "5125934450",
+  "network": "PENDING"
+}]

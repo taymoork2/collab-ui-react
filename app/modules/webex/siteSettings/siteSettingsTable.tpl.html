@@ -2,47 +2,47 @@
   <div class="row support-row">
     <table>
       <tr valign="middle">
-        <td>
-          <b>{{WebExSiteSettings.siteSettingsObj.siteSettingsTableColumnLabel.settings}}</b>
+        <td width="30%">
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>{{WebExSiteSettings.siteSettingsObj.siteSettingsTableColumnLabel.settings}}</b>
         </td>
         
-        <td>
+        <td width="10%">
           <div align="center">
             <b>{{WebExSiteSettings.siteSettingsObj.siteSettingsTableColumnLabel.common}}</b>
           </div>
         </td>
         
-        <td>
+        <td width="10%">
           <div align="center">
             <b>{{WebExSiteSettings.siteSettingsObj.siteSettingsTableColumnLabel.meetingCenter}}</b>
           </div>
         </td>
         
-        <td>
+        <td width="10%">
           <div align="center">
             <b>{{WebExSiteSettings.siteSettingsObj.siteSettingsTableColumnLabel.eventCenter}}</b>
           </div>
         </td>
         
-        <td>
+        <td width="10%">
           <div align="center">
             <b>{{WebExSiteSettings.siteSettingsObj.siteSettingsTableColumnLabel.trainingCenter}}</b>
           </div>
         </td>
         
-        <td>
+        <td width="10%">
           <div align="center">
             <b>{{WebExSiteSettings.siteSettingsObj.siteSettingsTableColumnLabel.supportCenter}}</b>
           </div>
         </td>
         
-        <td>
+        <td width="10%">
           <div align="center">
             <b>{{WebExSiteSettings.siteSettingsObj.siteSettingsTableColumnLabel.remoteAccess}}</b>
           </div>
         </td>
         
-        <td>
+        <td width="10%">
           <div align="center">
             <b>{{WebExSiteSettings.siteSettingsObj.siteSettingsTableColumnLabel.webACD}}</b>
           </div>
@@ -53,20 +53,20 @@
           ng-repeat="settingPageTypeObj in WebExSiteSettings.siteSettingsObj.settingPageTypeObjs">
 
 		<td>
-          {{settingPageTypeObj.label}}
+		  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{settingPageTypeObj.label}}
         </td>
 
-		<td>
+        <td>
           <span ng-if="null != settingPageTypeObj.commonSettingPage.sref">
 		    <div align="center">
               <a id={{settingPageTypeObj.commonSettingPage.id}}
                  name={{settingPageTypeObj.commonSettingPage.id}}
                  ui-sref={{settingPageTypeObj.commonSettingPage.sref}}>
           
-	            <i class="icon-settings icon ccolor-swatch brand-primary"></i>
+	              <i class="icon-settings icon ccolor-swatch brand-primary"></i>
               </a>
             </div>
-	      </span>
+	        </span>
         </td>
 
 		<td>
@@ -76,13 +76,13 @@
                  name={{settingPageTypeObj.meetingCenterSettingPage.id}}
                  ui-sref={{settingPageTypeObj.meetingCenterSettingPage.sref}}>
 
-	            <i class="icon-settings icon ccolor-swatch brand-primary"></i>
-	          </a>
+	              <i class="icon-settings icon ccolor-swatch brand-primary"></i>
+	            </a>
             </div>
           </span>
         </td>
 
-		<td>
+	    <td>
           <span ng-if="null != settingPageTypeObj.eventCenterSettingPage.sref">
 		    <div align="center">
               <a id={{settingPageTypeObj.eventCenterSettingPage.id}}
@@ -102,7 +102,7 @@
                  name={{settingPageTypeObj.trainingCenterSettingPage.id}}
                  ui-sref={{settingPageTypeObj.trainingCenterSettingPage.sref}}>
 
-	            <i class="icon-settings icon ccolor-swatch brand-primary"></i>
+	              <i class="icon-settings icon ccolor-swatch brand-primary"></i>
               </a>
             </div>
           </span>
@@ -141,10 +141,10 @@
                  name={{settingPageTypeObj.webACDSettingPage.id}}
                  ui-sref={{settingPageTypeObj.webACDSettingPage.sref}}>
 
-	            <i class="icon-settings icon ccolor-swatch brand-primary"></i>
+	              <i class="icon-settings icon ccolor-swatch brand-primary"></i>
               </a>
-		    </div>
-          </span>
+	       </div>
+         </span>
         </td>
       </tr>
     </table> 

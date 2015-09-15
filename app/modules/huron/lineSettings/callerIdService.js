@@ -20,6 +20,8 @@
       getCompanyNumberList: getCompanyNumberList,
       getUserDnList: getUserDnList,
       constructCallerIdOption: constructCallerIdOption,
+      getCallerIdOption: getCallerIdOption,
+      getCallerIdOptionIndex: getCallerIdOptionIndex,
       listCompanyNumbers: listCompanyNumbers,
       getUserDn: getUserDn,
       listUserEndPoints: listUserEndPoints,
@@ -69,6 +71,26 @@
           uuid: uuid
         }
       };
+    }
+
+    function getCallerIdOption(callerIdOptions, callerIdType) {
+      var retOption;
+      callerIdOptions.forEach(function (option, index) {
+        if (option.value.externalCallerIdType === callerIdType) {
+          retOption = option;
+        }
+      });
+      return retOption;
+    }
+
+    function getCallerIdOptionIndex(callerIdOptions, callerIdType) {
+      var retIndex = -1;
+      callerIdOptions.forEach(function (option, index) {
+        if (option.value.externalCallerIdType === callerIdType) {
+          retIndex = index;
+        }
+      });
+      return retIndex;
     }
 
     function listCompanyNumbers() {
