@@ -13,7 +13,7 @@ describe('Contact Center Config Service', function () {
     sunlightConfigService = _SunlightConfigService_;
     $httpBackend = _$httpBackend_;
     Config = _Config_;
-    sunlightUserConfigUrl = Config.getSunlightConfigServuiceUrl() + "user/";
+    sunlightUserConfigUrl = Config.getSunlightConfigServuiceUrl() + "/user/";
   }));
 
   it('should get userInfo for a given user UID', function () {
