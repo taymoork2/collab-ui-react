@@ -182,7 +182,7 @@ describe('Controller: ServiceSetup', function () {
   describe('initNext', function () {
 
     it('should notify on success when not firstTimeSetup', function () {
-      controller.firstTimeSetup = false;
+      controller.hasSites = true;
       controller.pilotNumberSelected = externalNumberPool[0];
       //remove singlenumber range for it to pass
       controller.deleteInternalNumberRange(model.numberRanges[2]);
@@ -197,7 +197,7 @@ describe('Controller: ServiceSetup', function () {
     });
 
     it('should create site when firstTimeSetup', function () {
-      controller.firstTimeSetup = true;
+      controller.hasSites = false;
       controller.pilotNumberSelected = externalNumberPool[0];
       //remove singlenumber range for it to pass
       controller.deleteInternalNumberRange(model.numberRanges[2]);
@@ -212,7 +212,7 @@ describe('Controller: ServiceSetup', function () {
     });
 
     it('should notify error if createSite fails', function () {
-      controller.firstTimeSetup = true;
+      controller.hasSites = false;
       //remove singlenumber range for it to pass
       controller.deleteInternalNumberRange(model.numberRanges[2]);
       ServiceSetup.createSite.and.returnValue($q.reject());
