@@ -20,7 +20,7 @@
     <button id="cancelNewTrialButton" class="btn btn-default" ng-click="$dismiss()">
       <span translate="partnerHomePage.cancel"></span>
     </button>
-    <button type="button" id="startTrialButton" class="btn btn-primary" ng-click="trialForm.$setPristine(true); trial.isSquaredUCEnabled() && !trial.supportsPstnSetup() ? trial.gotoAddNumber() : trial.startTrial();" ng-disabled="trialForm.$invalid || trial.isOffersEmpty()" data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>">
+    <button type="button" id="startTrialButton" cs-btn loading="trial.startTrialButtonLoad" class="btn btn-primary" ng-click="trialForm.$setPristine(true); trial.isSquaredUCEnabled() && !trial.supportsPstnSetup() ? trial.gotoAddNumber() : trial.startTrial();" ng-disabled="trialForm.$invalid || trial.isOffersEmpty()">
       <span ng-hide="trial.isSquaredUCEnabled() && !trial.supportsPstnSetup()" translate="partnerHomePage.startTrial"></span>
       <span ng-show="trial.isSquaredUCEnabled() && !trial.supportsPstnSetup()" translate="common.next"></span>
     </button>
