@@ -15,20 +15,16 @@
   color: $gray-darkest;
 }
 
-table {
+.wx-table {
   width: auto;
   margin-bottom: 0;
 }
 
-table tbody tr {
+.wx-tr {
   border-top: 0;
 }
 
-table tbody tr td {
+.wx-td {
   padding-bottom: 0;
   padding-left: 0;
-}
-
-hr {
-  margin-top: 14px;
 }
