@@ -15,6 +15,7 @@
         var data = ConverterService.convertClusters(ConnectorMock.mockData());
         var defer = $q.defer();
         defer.resolve(data);
+        CsdmCacheUpdater.update(clusterCache, data);
         return defer.promise;
       }
 

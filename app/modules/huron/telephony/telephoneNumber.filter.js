@@ -11,15 +11,16 @@
       if (!number) {
         return '';
       }
-      var filteredNumber = number.replace(/\D/g, "");
 
-      switch (filteredNumber.length) {
-      case 10:
-        return filteredNumber.replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
-      case 11:
-        return filteredNumber.replace(/(\d{1})(\d{3})(\d{3})(\d{4})/, "$1 ($2) $3-$4");
-      default:
-        return filteredNumber;
+      var countryTelephoneNumberRegex = /(\+?\d{1})(\d{3})(\d{3})(\d{4})/;
+      var basicTelephoneNumberRegex = /(\d{3})(\d{3})(\d{4})/;
+
+      if (countryTelephoneNumberRegex.test(number)) {
+        return number.replace(countryTelephoneNumberRegex, "$1 ($2) $3-$4");
+      } else if (basicTelephoneNumberRegex.test(number)) {
+        return number.replace(basicTelephoneNumberRegex, "($1) $2-$3");
+      } else {
+        return number;
       }
     }
   }

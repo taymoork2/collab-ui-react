@@ -22,15 +22,24 @@
       class="row result-row"
       ui-sref="devices-redux2.details({device: device})"
       ng-repeat="device in devices.filteredCodesAndDevices.matches | limitTo: ((devices.pager.currentPage * devices.pager.pageSize) + (devices.pager.currentPageSize - devices.pager.pageSize)) | limitTo: -devices.pager.currentPageSize">
-      <div class="small-6 columns">
+      <div class="small-1 columns">
+        <i 
+          style="top: -3px"
+          class="icon icon-2x icon-circle-telepresence" 
+          ng-class="{'needsActivation': device.needsActivation}"
+        />
+      </div>
+      <div class="small-5 columns">
+        {{device.displayName}}
+      </div>
+      <div class="small-5 columns">
+        {{device.product || 'Needs Activation'}}
+      </div>
+      <div class="small-1 columns" style="text-align: right">
         <i
           class="fa fa-circle"
           ng-class="device.cssColorClass"
         />
-        {{device.displayName}}
-      </div>
-      <div class="small-6 columns" style="text-align: right">
-        {{device.product}}
       </div>
     </div>
   </div>

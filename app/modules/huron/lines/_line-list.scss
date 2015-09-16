@@ -1,0 +1,59 @@
+.line-list {
+  & .btn-actions {
+    float: right;
+    padding: 15px 30px;
+    text-align: center;
+  }
+  & .btn-icon {
+    background: none;
+    border: none;
+    box-shadow: none;
+    width: 100%;
+    text-align: center;
+    &:hover, &:focus, &.active:focus {
+      border: none;
+      box-shadow: none;
+      outline: 0;
+    }
+  }
+  & .content-header {
+    background: white;
+    border-bottom: 1px solid $gray-lightest;
+    padding-right: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  & .export-lines {
+    color: $gray-dark;
+    font-size: 24px;
+    display: inline-block;
+    vertical-align: top;
+    padding-left: 20px;
+    margin-left: 10px;
+    cursor: pointer;
+    &:hover {
+      color: $brand-primary;
+      text-decoration: none;
+    }
+  }
+  & .gridStyle {
+    height: calc(50vh);
+  }
+  & .ngGrid {
+    height: calc(90vh);
+    & .internalNumberColumn {
+      text-align: center;
+    }
+  }
+  & .page-option-buttons {
+    padding-top: 0;
+  }
+  & .searchbox {
+    .searchinput {
+      padding-left: 3px;  /*manual adjustment to make search icon line up with page title*/
+      > input {
+        background-color: inherit;
+      }
+    }
+  }
+}

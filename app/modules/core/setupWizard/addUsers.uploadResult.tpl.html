@@ -20,21 +20,28 @@
   <div class="results-total">{{model.numTotalUsers}} <span translate="firstTimeWizard.totalProcessed"></span></div>
   <div class="error-table table-header" ng-if="model.userErrorArray.length > 0">
     <table class="table table-bordered">
+      <colgroup>
+        <col class="medium-2">
+        <col class="medium-10">
+      </colgroup>
       <thead>
         <tr>
-          <td class="col-md-2"><div class="heading-text" translate='firstTimeWizard.resultRowHeader'></div></td>
-          <td class="col-md-10"><div class="heading-text" translate='firstTimeWizard.resultErrorHeader'></div></td>
+          <th translate='firstTimeWizard.resultRowHeader'></th>
+          <th translate='firstTimeWizard.resultErrorHeader'></th>
         </tr>
       </thead>
     </table>
   </div>
   <div ng-nicescroll nice-option="tableOptions" class="error-table table-body" ng-if="model.userErrorArray.length > 0">
     <table id="errorTable" class="table table-bordered">
-      <thead><tr><td class="col-md-2"></td><td class="col-md-10"></td></tr></thead>
+      <colgroup>
+        <col class="medium-2">
+        <col class="medium-10">
+      </colgroup>
       <tbody>
         <tr ng-repeat="data in model.userErrorArray">
-          <td class="center col-md-2">{{data.row}}</td>
-          <td class="col-md-10">{{data.error}}</td>
+          <td class="center">{{::data.row}}</td>
+          <td>{{::data.error}}</td>
         </tr>
       </tbody>
     </table>

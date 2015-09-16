@@ -15,9 +15,12 @@ describe('Advanced Spark Call Add User flow', function () {
     it('should uncheck Advanced Spark Call checkbox', function () {
       utils.click(users.servicesActionButton);
       utils.click(users.editServicesButton);
-      utils.click(users.advancedCommunications);
-      utils.click(users.saveButton);
-      notifications.assertSuccess('entitled successfully');
+      utils.waitForModal().then(function () {
+        utils.expectIsDisplayed(users.editServicesModal);
+        utils.click(users.advancedCommunications);
+        utils.click(users.saveButton);
+        notifications.assertSuccess('entitled successfully');
+      });
     });
     it('should not have communications visible', function () {
       utils.clickUser(inputEmail);
@@ -30,9 +33,12 @@ describe('Advanced Spark Call Add User flow', function () {
     it('should check Advanced Spark Call checkbox and close the preview panel', function () {
       utils.click(users.servicesActionButton);
       utils.click(users.editServicesButton);
-      utils.click(users.advancedCommunications);
-      utils.click(users.saveButton);
-      notifications.assertSuccess('entitled successfully');
+      utils.waitForModal().then(function () {
+        utils.expectIsDisplayed(users.editServicesModal);
+        utils.click(users.advancedCommunications);
+        utils.click(users.saveButton);
+        notifications.assertSuccess('entitled successfully');
+      });
     });
     it('should show the Communications service', function () {
       utils.clickUser(inputEmail);
@@ -42,7 +48,6 @@ describe('Advanced Spark Call Add User flow', function () {
     it('should have a line/directory number again', function () {
       utils.click(users.communicationsService);
       utils.expectIsDisplayed(telephony.communicationPanel);
-      utils.expectIsDisplayed(telephony.directoryNumbers.first());
       utils.expectCount(telephony.directoryNumbers, 1);
     });
     it('should have voicemail on', function () {
