@@ -488,16 +488,13 @@
       border-right: $gray-light solid 1px;
       font-size: 15px;
     }
-    .table-bordered > thead > tr > th:last-of-type, .table-bordered > thead > tr > td:last-of-type,
-      .table-bordered > tbody > tr > th:last-of-type, .table-bordered > tbody > tr > td:last-of-type {
+    .table-bordered > thead > tr > th:last-of-type, .table-bordered > tbody > tr > td:last-of-type {
         border-right: none;
       }
-    .table-bordered > thead > tr:last-of-type > th, .table-bordered > thead > tr:last-of-type > td,
-      .table-bordered > tbody > tr:last-of-type > th, .table-bordered > tbody > tr:last-of-type > td {
+    .table-bordered > thead > tr:last-of-type > th, .table-bordered > tbody > tr:last-of-type > td {
         border-bottom-width: 0px;
       }
-    .table-bordered > thead > tr > th:first-of-type, .table-bordered > thead > tr > td,
-      .table-bordered > tbody > tr > th:first-of-type, .table-bordered > tbody > tr > td {
+    .table-bordered > thead > tr > th, .table-bordered > tbody > tr > td {
         border-right: $gray-light solid 1px;
         border-left: none;
         border-top: none;
