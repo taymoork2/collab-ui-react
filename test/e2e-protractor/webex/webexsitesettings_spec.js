@@ -27,25 +27,25 @@ describe('WebEx site settings', function () {
     expect(sitesettings.webexSiteSettingsPanel.isPresent()).toBeTruthy();
   });
   
-  // click on the email all hosts button
+  // TODO: click on the email all hosts button
 
-  // wait for the email all hosts iframe page to appear
+  // TODO: wait for the email all hosts iframe page to appear
   
-  // click on the sites list page breadcrumb
+  // TODO: click on the sites list page breadcrumb
 
-  // wait for the site list page to appear
+  // TODO: wait for the site list page to appear
 
-  // click on the configure site cog
+  // TODO: click on the configure site cog
 
-  // wait for the settings index page to appear
+  // TODO: wait for the settings index page to appear
 
-  // click on the the settings index page breadcrumb
+  // TODO: click on the the settings index page breadcrumb
 
-  // wait for the settings index page to appear
+  // TODO: wait for the settings index page to appear
 
-  // click on the email all hosts button
+  // TODO: click on the email all hosts button
 
-  // wait for the email all hosts iframe page to appear
+  // TODO: wait for the email all hosts iframe page to appear
 
   xit('should pause', function () {
     browser.pause()
