@@ -69,7 +69,6 @@ describe('sunlightUserOverviewCtrl', function () {
   describe('SunlightUserOverviewCtrl', function () {
 
     it('should load the Sunlight User Info into scope', function () {
-      $scope.loadUserInformation($stateParams.currentUser.id);
       expect(controller.userData.media).toBe(odinUserInfo.media);
     });
 
