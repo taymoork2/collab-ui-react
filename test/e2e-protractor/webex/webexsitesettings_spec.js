@@ -17,15 +17,35 @@ describe('WebEx site settings', function () {
     navigation.expectCurrentUrl('/site-list');
   });
 
-  it('click on configure site', function () {
+  it('click on configure site cog', function () {
     utils.click(sitesettings.configureSite);
     navigation.expectCurrentUrl('/webexSiteSettings');
   });
 
-  it('wait for WebEx settings page to appear', function () {
+  it('wait for WebEx settings index page to appear', function () {
     sitesettings.waitForWebexSiteSettingsPanel();
     expect(sitesettings.webexSiteSettingsPanel.isPresent()).toBeTruthy();
   });
+  
+  // TODO: click on the email all hosts button
+
+  // TODO: wait for the email all hosts iframe page to appear
+  
+  // TODO: click on the sites list page breadcrumb
+
+  // TODO: wait for the site list page to appear
+
+  // TODO: click on the configure site cog
+
+  // TODO: wait for the settings index page to appear
+
+  // TODO: click on the the settings index page breadcrumb
+
+  // TODO: wait for the settings index page to appear
+
+  // TODO: click on the email all hosts button
+
+  // TODO: wait for the email all hosts iframe page to appear
 
   xit('should pause', function () {
     browser.pause()

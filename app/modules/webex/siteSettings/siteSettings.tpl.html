@@ -1,6 +1,12 @@
 <div id="webexSiteSettings"
      name="webexSiteSettings">
           
+  <div id="siteConfigBreadCrumbs" class="breadcrumb-container">
+    <ul class="breadcrumbs">
+      <li><a id="siteListCrumb" ng-href="#site-list" translate="siteList.conferencing" href="#siteListCrumb"></a></li>
+      <li class="current"><a>{{('webexSiteSettings.title' | translate) + ' '  + WebExSiteSettings.siteSettingsObj.siteUrl}}</a></li>
+    </ul>
+  </div>
   <div class="page-header row">
     <div class="page-title col-xs-12">
       <span class="title-heading" translate="webexSiteSettings.title"></span>
