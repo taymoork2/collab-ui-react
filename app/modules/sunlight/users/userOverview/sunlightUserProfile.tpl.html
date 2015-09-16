@@ -6,13 +6,13 @@
   <label translate="contactCenterUserConfig.role"></label>
   <cs-select id="sunlightUserRole"
              name="sunlightUserProfile"
-             ng-click="showSaveCancel()"
+             ng-click="SunlightUserOverview.showSaveCancel()"
              ng-model="SunlightUserOverview.roleSelected"
              options="SunlightUserOverview.roles">
   </cs-select>
   <br>
   <label translate="contactCenterUserConfig.alias"></label>
-  <formly-form ng-keypress="showSaveCancel()"
+  <formly-form ng-keypress="SunlightUserOverview.showSaveCancel()"
                model="SunlightUserOverview.aliasFormModel"
                fields="SunlightUserOverview.alias">
   </formly-form>

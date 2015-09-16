@@ -1,12 +1,12 @@
-<cs-sp-buttons  ng-show="saveCancelEnabled">
-  <button id="sunlight-user-overview-save" class="btn-primary" translate="common.save" ng-click="updateUserInfo(SunlightUserOverview.currentUser.id)"></button>
-  <button id="sunlight-user-overview-cancel"  translate="common.cancel" ng-click="setUserInfoView(SunlightUserOverview.userData)"></button>
+<cs-sp-buttons  ng-show="SunlightUserOverview.saveCancelEnabled">
+  <button id="sunlight-user-overview-save" class="btn-primary" translate="common.save" ng-click="SunlightUserOverview.updateUserInfo(SunlightUserOverview.currentUser.id)"></button>
+  <button id="sunlight-user-overview-cancel"  translate="common.cancel" ng-click="SunlightUserOverview.setUserInfoView(SunlightUserOverview.userData)"></button>
 </cs-sp-buttons>
 <cs-sp-container>
-  <cs-sp-section  class="ng-scope">
+  <cs-sp-section>
     <sunlight-user-channels></sunlight-user-channels>
   </cs-sp-section>
-  <cs-sp-section  class="ng-scope">
+  <cs-sp-section>
     <sunlight-user-profile></sunlight-user-profile>
   </cs-sp-section>
 </cs-sp-container>

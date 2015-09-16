@@ -775,7 +775,7 @@ angular.module('Core')
           return Utils.Base64.encode(this.getClientId() + ':' + this.getClientSecret());
         },
 
-        getSunlightConfigServuiceUrl: function () {
+        getSunlightConfigServiceUrl: function () {
 
           if (this.isDev()) {
             return this.sunlightConfigServiceUrl.dev;

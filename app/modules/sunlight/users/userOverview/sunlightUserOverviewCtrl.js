@@ -5,7 +5,7 @@
     .controller('SunlightUserOverviewCtrl', SunlightUserOverviewCtrl);
 
   /* @ngInject */
-  function SunlightUserOverviewCtrl($scope, $state, $stateParams, SunlightConfigService, Notification, $translate, formlyValidationMessages, Log) {
+  function SunlightUserOverviewCtrl($state, $stateParams, SunlightConfigService, Notification, $translate, formlyValidationMessages, Log) {
     /*jshint validthis: true */
 
     var vm = this;
@@ -50,22 +50,22 @@
     ];
 
     /* By default "User" role is selected for new user */
-    vm.roleSelected = $translate.instant('contactCenterUserConfig.userRoles.user');
+    vm.roleSelected = vm.roles[0];
 
-    $scope.closePreview = function () {
+    vm.closePreview = function () {
       $state.go('users.list');
     };
 
-    $scope.showSaveCancel = function () {
-      $scope.saveCancelEnabled = true;
+    vm.showSaveCancel = function () {
+      vm.saveCancelEnabled = true;
     };
 
-    $scope.hideSaveCancel = function () {
-      $scope.saveCancelEnabled = false;
+    vm.hideSaveCancel = function () {
+      vm.saveCancelEnabled = false;
     };
 
     /* Updates Sunlight user info in sunlight config service */
-    $scope.updateUserInfo = function (userId) {
+    vm.updateUserInfo = function (userId) {
 
       var updatedUserInfo = updatedUserData();
 
@@ -74,22 +74,21 @@
         return;
       }
 
-      SunlightConfigService.updateUserInfo(updatedUserInfo, userId, function (data, status) {
+      SunlightConfigService.updateUserInfo(updatedUserInfo, userId).then(function (data) {
 
-        if (data.success) {
-          $scope.hideSaveCancel();
-          Notification.notify([$translate.instant('contactCenterUserConfig.successMessages.userUpdateSuccessMessage') + vm.currentUser.userName], 'success');
+        vm.hideSaveCancel();
+        Notification.notify([$translate.instant('contactCenterUserConfig.successMessages.userUpdateSuccessMessage') + vm.currentUser.userName], 'success');
 
-        } else {
-          Log.debug('Failed to save sunlight user information in sunlight config Service. Status: ' + status);
-          Notification.notify([$translate.instant('contactCenterUserConfig.failureMessages.userUpdateFailureMessage') + vm.currentUser.userName], 'error');
-        }
+      }, function (data) {
+
+        Log.debug('Failed to save sunlight user information in sunlight config Service. Status: ' + status);
+        Notification.notify([$translate.instant('contactCenterUserConfig.failureMessages.userUpdateFailureMessage') + vm.currentUser.userName], 'error');
 
       });
     };
 
-    $scope.setUserInfoView = function (data) {
-      $scope.hideSaveCancel();
+    vm.setUserInfoView = function (data) {
+      vm.hideSaveCancel();
 
       for (var i = 0; i < vm.mediaInfo.length; i++) {
         if (data.media.lastIndexOf(vm.mediaInfo[i].name) !== -1) {
@@ -103,21 +102,19 @@
       vm.currentUser.teamId = data.teamId;
     };
 
-    $scope.loadUserInformation = function (userId) {
-      SunlightConfigService.getUserInfo(userId, function (data, status) {
+    vm.loadUserInformation = function (userId) {
 
-        if (data.success) {
-          vm.userData = data;
-          $scope.setUserInfoView(vm.userData);
-        } else {
-          Log.debug('Failed to retrieve sunlight user information from sunlight config Service. Status: ' + status);
-          Notification.notify([$translate.instant('contactCenterUserConfig.failureMessages.userloadFailureMessage') + vm.currentUser.userName], 'error');
-        }
+      SunlightConfigService.getUserInfo(userId).then(function (data) {
+        vm.userData = data;
+        vm.setUserInfoView(vm.userData);
+      }, function (data) {
+        Log.debug('Failed to retrieve sunlight user information from sunlight config Service. Status: ' + status);
+        Notification.notify([$translate.instant('contactCenterUserConfig.failureMessages.userloadFailureMessage') + vm.currentUser.userName], 'error');
       });
 
     };
 
-    $scope.loadUserInformation(vm.currentUser.id);
+    vm.loadUserInformation(vm.currentUser.id);
 
     function updatedUserData() {
       var userData = {};
