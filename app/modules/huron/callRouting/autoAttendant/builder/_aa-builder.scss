@@ -13,6 +13,8 @@
 
 .aa-builder-container {
   padding-top: 146px;
+  padding-bottom: 100% !important;
+  background-color: white;
 }
 
 .aa-flex-row {
@@ -26,7 +28,7 @@
 
 .aa-flex-row-centered {
   @extend .aa-flex-row;
-  justify-content: center;
+  justify-content: center !important; 
 }
 
 .aa-flex-row-title {
@@ -108,7 +110,24 @@
     color: $brand-primary;
   }
 }
+input[id="aaNameInput"]:focus {
+    border-bottom: 2px solid DarkGray !important;
+    -webkit-box-shadow: none;
+    background-color: white;
+  }
 
+.aa-add-detail {
+    font-size: 18px;
+    margin-left: 0px;
+    margin-right: 0px;
+    width: 600px !important;
+    font-family: $brand-font-extra-light;
+    text-align:center;
+    border: none !important;
+    border-bottom: 2px solid LightGray !important;
+    outline: none !important;
+    border-radius:0 !important;
+}
 .aa-container {
   overflow: visible;
   padding: 0;

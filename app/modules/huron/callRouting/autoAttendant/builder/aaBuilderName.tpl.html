@@ -1,0 +1,10 @@
+<div ng-controller="aaBuilderNameCtrl as nameCtrl">
+
+  <!--form novalidate name="addAutoDetailForm" id="addAutoDetailForm" class="form-horizontal"  -->
+  <form  id="nameForm" class="aa-flex-row-centered" ng-submit="submit()">
+    <input type="text" autofocus autocomplete="off" maxlength="64" class="aa-add-detail" ng-model="nameCtrl.ui.ceInfo.name" id="aaNameInput" name="aaName" placeholder="{{'autoAttendant.namePlaceholder' | translate }}"
+           />
+  </form>
+</div>
+
+

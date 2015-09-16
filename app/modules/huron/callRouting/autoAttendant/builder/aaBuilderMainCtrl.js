@@ -16,6 +16,8 @@
     vm.canSaveAA = canSaveAA;
     vm.getSaveErrorMessages = getSaveErrorMessages;
 
+    var aaName = {};
+
     /////////////////////
 
     function updateCeInfos(ceInfos, ceInfo) {
@@ -174,12 +176,17 @@
 
     function activate() {
       vm.aaModel = AAModelService.getAAModel();
-      vm.aaModel.aaRecord = undefined;
+
+      vm.aaModel.aaRecord = AAModelService.newAARecord();
+
       $scope.aa = {};
       $scope.aa.modal = {};
       vm.ui = $scope.aa.modal;
+      vm.ui.ceInfo = AutoAttendantCeInfoModelService.getCeInfo(vm.aaModel.aaRecord);
+
     }
 
     activate();
+
   }
 })();
