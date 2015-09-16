@@ -111,6 +111,11 @@
       rowTemplate: rowTemplate,
       headerRowHeight: gridRowHeight,
       useExternalSorting: false,
+      enableRowSelection: false,
+      sortInfo: { // makes the sort arrow appear at grid load time
+        fields: ['userName'],
+        directions: ['asc']
+      },
 
       columnDefs: [{
         field: 'internalNumber',

@@ -15,8 +15,7 @@ angular.module('Hercules').service('UserDetails',
     };
 
     var userUrl = function (userIds, orgId) {
-      var scimUrl = Config.getScimUrl() + "?filter=" + multipleUserFilter(userIds);
-      return Utils.sprintf(scimUrl, [orgId]);
+      return Config.getScimUrl(orgId) + "?filter=" + multipleUserFilter(userIds);
     };
 
     var getCSVColumnHeaders = function (serviceName) {

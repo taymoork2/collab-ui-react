@@ -15,6 +15,16 @@
   color: $gray-darkest;
 }
 
-.icon-wait:before {
-  content: "\e628";
+.wx-table {
+  width: auto;
+  margin-bottom: 0;
+}
+
+.wx-tr {
+  border-top: 0;
+}
+
+.wx-td {
+  padding-bottom: 0;
+  padding-left: 0;
 }
