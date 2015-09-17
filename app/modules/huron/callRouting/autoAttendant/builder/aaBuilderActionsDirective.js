@@ -8,9 +8,11 @@ angular
         restrict: 'E',
         transclude: true,
         scope: {
-          schedule: '=',
-          index: '='
+          schedule: '@'
         },
+        controller: 'AABuilderActionsCtrl',
+        controllerAs: 'actions',
+        bindToController: true,
         templateUrl: 'modules/huron/callRouting/autoAttendant/builder/aaBuilderActions.tpl.html'
       };
     }

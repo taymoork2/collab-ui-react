@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Onboard Users using uploading CSV File', function () {
+xdescribe('Onboard Users using uploading CSV File', function () {
   var fileToUpload = './../data/sample-squared.csv';
   var absolutePath = utils.resolvePath(fileToUpload);
   var user = 'collabctg+234298675@gmail.com';

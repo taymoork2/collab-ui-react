@@ -6,7 +6,7 @@
     .controller('AABuilderNumbersCtrl', AABuilderNumbersCtrl); /* was AutoAttendantGeneralCtrl */
 
   /* @ngInject */
-  function AABuilderNumbersCtrl($scope, $q, $stateParams, $translate, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, Authinfo, AutoAttendantCeService,
+  function AABuilderNumbersCtrl($scope, $q, $stateParams, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, Authinfo, AutoAttendantCeService,
     AAModelService, Notification) {
     var vm = this;
 
@@ -39,9 +39,9 @@
         return resource.getNumber() === vm.inputNumber.number;
       });
       if (isNumberInUse) {
-        Notification.notify([$translate.instant('autoAttendant.errorAddNumberInUse', {
+        Notification.error('autoAttendant.errorAddNumberInUse', {
           number: vm.inputNumber.number
-        })], 'error');
+        });
         return;
       }
 
@@ -56,10 +56,10 @@
         }
       });
       if (isNumberInUseOtherAA) {
-        Notification.notify([$translate.instant('autoAttendant.errorAddNumberInUseOtherAA', {
+        Notification.error('autoAttendant.errorAddNumberInUseOtherAA', {
           name: otherAAName,
           number: vm.inputNumber.number
-        })], 'error');
+        });
         return;
       }
 
@@ -67,9 +67,9 @@
       $q.all([setInputNumberId(vm.inputNumber.number)])
         .then(function (result) {
           if (vm.inputNumber.id === '') {
-            Notification.notify([$translate.instant('autoAttendant.errorAddNumberNotFound', {
+            Notification.error('autoAttendant.errorAddNumberNotFound', {
               number: vm.inputNumber.number
-            })], 'error');
+            });
             return;
           } else {
             // add new resource for this number
@@ -148,11 +148,11 @@
                   vm.ui.ceInfo = AutoAttendantCeInfoModelService.getCeInfo(vm.aaModel.aaRecord);
                 },
                 function (response) {
-                  Notification.notify([$translate.instant('autoAttendant.errorReadCe', {
+                  Notification.error('autoAttendant.errorReadCe', {
                     name: aaName,
                     statusText: response.statusText,
                     status: response.status
-                  })], 'error');
+                  });
                 }
               );
               return;
