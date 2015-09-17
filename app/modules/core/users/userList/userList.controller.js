@@ -284,7 +284,7 @@
     }
 
     function resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {
-      if (userStatus === 'pending') {
+      if (userStatus === 'pending' && !$scope.isHuronUser(entitlements)) {
         sendSparkWelcomeEmail(userEmail, userName);
       } else if ($scope.isHuronUser(entitlements) && !dirsyncEnabled) {
         HuronUser.sendWelcomeEmail(userEmail, userName, uuid, Authinfo.getOrgId(), false)

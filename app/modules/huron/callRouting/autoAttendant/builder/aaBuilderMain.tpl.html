@@ -1,0 +1,5 @@
+<div class="aa-builder-header" ng-include="'modules/huron/callRouting/autoAttendant/builder/aaBuilderHeader.tpl.html'"></div>
+
+<!-- ng-if="!aaBuilderMain.ui.ceInfo.getName()" todo: if no name, i.e. a brand new AA, load name page instead of the builder containter below-->
+
+<div class="aa-builder-container" ng-include="'modules/huron/callRouting/autoAttendant/builder/aaBuilderContainer.tpl.html'" ng-controller="AABuilderContainerCtrl as aaBuilder"></div>

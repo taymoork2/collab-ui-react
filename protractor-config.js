@@ -95,7 +95,7 @@ exports.config = {
     var UtilizationPage = require('./test/e2e-protractor/pages/utilization.page.js');
     var MeetingsPage = require('./test/e2e-protractor/pages/meetings.page.js');
     var TrialExtInterestPage = require('./test/e2e-protractor/pages/trialExtInterest.page.js');
-
+    var InviteUsers = require('./test/e2e-protractor/pages/inviteusers.page.js');
 
     global.notifications = new Notifications();
     global.navigation = new Navigation();
@@ -126,6 +126,7 @@ exports.config = {
     global.utilization = new UtilizationPage();
     global.meetings = new MeetingsPage();
     global.trialextinterest = new TrialExtInterestPage();
+    global.inviteusers = new InviteUsers();
 
     return browser.getCapabilities().then(function (capabilities) {
       if (capabilities.caps_.browserName === 'firefox') {

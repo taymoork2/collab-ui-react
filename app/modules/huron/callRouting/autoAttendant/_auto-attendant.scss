@@ -1,3 +1,5 @@
+@import 'builder/_aa-builder';
+
 .aa-validation .popover {
   white-space: nowrap;
 }
@@ -39,6 +41,7 @@
   margin: 0px -2px 0px -2px;
   width: 200px;
   height: 160px;
+  border-right: 0px;
 }
 
 #aa-template-tile2 {
@@ -46,6 +49,7 @@
   margin: 0px -2px 0px -2px;
   width: 200px;
   height: 160px;
+  border-right: 0px;
 }
 
 #aa-template-tile3 {
@@ -70,6 +74,9 @@
     color: $brand-primary;
     display: inline-block;
     vertical-align: top;
+  }
+  &:hover {
+    cursor: pointer;
   }
 }
 
