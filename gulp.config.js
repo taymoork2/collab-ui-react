@@ -88,6 +88,7 @@ module.exports = function() {
         test + '/huron/**/*.js',
         test + '/hercules/**/*.js',
         test + '/mediafusion/**/*.js',
+        test + '/messenger/**/*.js',
         test + '/squared/**/*.js',
         test + '/sunlight/**/*.js',
         '!' + test + '/e2e-protractor/**/*'

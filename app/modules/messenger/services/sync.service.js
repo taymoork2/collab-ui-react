@@ -9,27 +9,55 @@
   function SyncService() {
     // Interface ---------------------------------------------------------------
 
-    var syncService = {
+    var syncModes = {
+      messenger: {
+        on: {
+          text: 'enabled'
+        },
+        off: {
+          text: 'disabled'
+        }
+      },
+      dirsync: {
+        on: {
+          text: 'link_enabled'
+        },
+        off: {
+          text: 'link_disabled'
+        }
+      }
+    };
+
+    var service = {
       getSyncStatus: null,
       isDirSync: isDirSync,
       isMessengerSync: isMessengerSync,
-      syncMode: 'disabled'
+      setDirSyncMode: setDirSyncMode,
+      setMessengerSyncMode: setMessengerSyncMode,
+      syncMode: syncModes.messenger.off
     };
 
     // Return the service
-    return syncService;
+    return service;
 
     ////////////////////////////////////////////////////////////////////////////
 
     // Implementation ----------------------------------------------------------
 
-    function isMessengerSync() {
-      return ('enabled' === syncService.syncMode) ? true : false;
-    }
-
     function isDirSync() {
-      return ('link_enabled' === syncService.syncMode) ? true : false;
+      return (syncModes.dirsync.on === service.syncMode) ? true : false;
     }
 
+    function isMessengerSync() {
+      return (syncModes.messenger.on === service.syncMode) ? true : false;
+    }
+
+    function setDirSyncMode(isEnabled) {
+      service.syncMode = (isEnabled) ? syncModes.dirsync.on : syncModes.dirsync.off;
+    }
+
+    function setMessengerSyncMode(isEnabled) {
+      service.syncMode = (isEnabled) ? syncModes.messenger.on : syncModes.messenger.off;
+    }
   }
 })();
