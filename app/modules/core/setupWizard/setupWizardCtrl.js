@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('SetupWizardCtrl', ['$scope', 'Authinfo',
-    function ($scope, Authinfo) {
+  .controller('SetupWizardCtrl', ['$scope', 'Authinfo', 'FeatureToggleService',
+    function ($scope, Authinfo, FeatureToggleService) {
 
       $scope.tabs = [{
         name: 'planReview',
@@ -84,32 +84,6 @@ angular.module('Core')
             title: 'firstTimeWizard.assignDnAndDirectLines'
           }]
         }, {
-          //   name: 'csv',
-          //   title: 'firstTimeWizard.uploadStep',
-          //   controller: 'OnboardCtrl',
-          //   steps: [{
-          //     name: 'init',
-          //     template: 'modules/core/setupWizard/addUsers.init.tpl.html'
-          //   }, {
-          //     name: 'csvUpload',
-          //     template: 'modules/core/setupWizard/addUsers.uploadCsv.tpl.html',
-          //     title: 'firstTimeWizard.uploadStep'
-          //   }, {
-          //     name: 'csvServices',
-          //     template: 'modules/core/setupWizard/addUsers.assignServices.tpl.html',
-          //     title: 'firstTimeWizard.assignServicesStep'
-          //   }, {
-          //     name: 'csvProcessing',
-          //     template: 'modules/core/setupWizard/addUsers.processCsv.tpl.html',
-          //     title: 'firstTimeWizard.processCsvStep',
-          //     buttons: false
-          //   }, {
-          //     name: 'csvResult',
-          //     template: 'modules/core/setupWizard/addUsers.uploadResult.tpl.html',
-          //     title: 'firstTimeWizard.uploadResultStep',
-          //     buttons: 'modules/core/setupWizard/addUsers.csvResultButtons.tpl.html'
-          //   }]
-          // }, {
           name: 'advanced',
           title: 'firstTimeWizard.advanced',
           steps: [{
@@ -127,6 +101,43 @@ angular.module('Core')
           }]
         }]
       }];
+
+      FeatureToggleService.supportsCsvUpload().then(function (isSupported) {
+        if (isSupported) {
+          var csvSubTab = {
+            name: 'csv',
+            title: 'firstTimeWizard.uploadStep',
+            controller: 'OnboardCtrl',
+            steps: [{
+              name: 'init',
+              template: 'modules/core/setupWizard/addUsers.init.tpl.html'
+            }, {
+              name: 'csvUpload',
+              template: 'modules/core/setupWizard/addUsers.uploadCsv.tpl.html',
+              title: 'firstTimeWizard.uploadStep'
+            }, {
+              name: 'csvServices',
+              template: 'modules/core/setupWizard/addUsers.assignServices.tpl.html',
+              title: 'firstTimeWizard.assignServicesStep'
+            }, {
+              name: 'csvProcessing',
+              template: 'modules/core/setupWizard/addUsers.processCsv.tpl.html',
+              title: 'firstTimeWizard.processCsvStep',
+              buttons: false
+            }, {
+              name: 'csvResult',
+              template: 'modules/core/setupWizard/addUsers.uploadResult.tpl.html',
+              title: 'firstTimeWizard.uploadResultStep',
+              buttons: 'modules/core/setupWizard/addUsers.csvResultButtons.tpl.html'
+            }]
+          };
+
+          var userTab = _.findWhere($scope.tabs, {
+            name: 'addUsers'
+          });
+          userTab.subTabs.splice(1, 0, csvSubTab);
+        }
+      });
 
       if (Authinfo.isSquaredUC()) {
         $scope.tabs.splice(2, 1);
