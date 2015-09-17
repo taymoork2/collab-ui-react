@@ -594,8 +594,8 @@ angular
           parent: 'main',
           params: {
             siteUrl: null,
-            settingPageId: null,
-            settingPageIframeUrl: null
+            reportPageId: null,
+            reportPageIframeUrl: null
           }
         })
         .state('templates', {
