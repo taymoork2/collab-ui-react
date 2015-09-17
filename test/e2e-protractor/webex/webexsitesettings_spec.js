@@ -26,11 +26,11 @@ describe('WebEx site settings', function () {
     sitesettings.waitForWebexSiteSettingsPanel();
     expect(sitesettings.webexSiteSettingsPanel.isPresent()).toBeTruthy();
   });
-  
+
   // TODO: click on the email all hosts button
 
   // TODO: wait for the email all hosts iframe page to appear
-  
+
   // TODO: click on the sites list page breadcrumb
 
   // TODO: wait for the site list page to appear

@@ -6,8 +6,8 @@
 var SiteSettigsPage = function () {
 
   this.testAdmin = {
-    username: 'monika@mfs.com',
-    password: 'P@ssword123',
+    username: 'sjsite14@mailinator.com',
+    password: 'Cisco!23',
   };
   this.conferencing = element(by.css('a[href="#site-list"]'));
   this.configureSite = element(by.css('a[href="#/webexSiteSettings"]'));
