@@ -825,7 +825,7 @@
     "csv400Error": "Unidentified error in the csv. Please verify the file and try again.",
     "csv401And403Error": "Customer is not authorized to add or update this user.",
     "csv404Error": "Server is unable to respond at this time. Please try again at a later time.",
-    "csv408Error": "Request timed out while waiting for a response.",
+    "csv408Error": "Request timed out while waiting for a response. Please try again at a later time.",
     "csv409Error": "Request failed due to a processing conflict. Please verify the csv and try again.",
     "csv500Error": "Internal server error.",
     "csv502And503Error": "Server is temporarily unavailable. Please try again at a later time.",
