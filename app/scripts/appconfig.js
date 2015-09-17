@@ -1086,6 +1086,15 @@ angular
           controller: 'AutoAttendantLandingCtrl',
           controllerAs: 'aaLanding'
         })
+        .state('autoattendant.aabuilder', {
+          parent: 'main',
+          params: {
+            aaName: ''
+          },
+          templateUrl: 'modules/huron/callRouting/autoAttendant/builder/aaBuilderMain.tpl.html',
+          controller: 'AABuilderMainCtrl',
+          controllerAs: 'aaBuilderMain'
+        })
         .state('callpark', {
           url: '/callpark',
           parent: 'callrouting',
