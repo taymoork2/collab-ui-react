@@ -65,9 +65,9 @@
     };
 
     /* Updates Sunlight user info in sunlight config service */
-    vm.updateUserInfo = function (userId) {
+    vm.updateUserData = function (userId) {
 
-      var updatedUserInfo = updatedUserData();
+      var updatedUserInfo = getUpdatedUserData();
 
       if (!updatedUserInfo.alias) {
         Notification.notify([$translate.instant('contactCenterUserConfig.failureMessages.emptyAliasErrorMessage') + vm.currentUser.userName], 'error');
@@ -116,7 +116,7 @@
 
     vm.loadUserInformation(vm.currentUser.id);
 
-    function updatedUserData() {
+    function getUpdatedUserData() {
       var userData = {};
 
       userData.alias = vm.aliasFormModel.sunlightUserAlias;

@@ -13,7 +13,7 @@ describe('Contact Center Config Service', function () {
     sunlightConfigService = _SunlightConfigService_;
     $httpBackend = _$httpBackend_;
     Config = _Config_;
-    sunlightUserConfigUrl = Config.getSunlightConfigServuiceUrl() + "/user/";
+    sunlightUserConfigUrl = Config.getSunlightConfigServiceUrl() + "/user/";
     userData = getJSONFixture('sunlight/json/sunlightTestUser.json');
     userId = 'abcd1234-ab12-cd34-de56-abcdef123456';
     orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
