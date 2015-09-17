@@ -1,0 +1,40 @@
+<div class="aa-panel">
+
+  <div ng-show="!actions.template && !actions.isNewStepFormOpen" class="aa-panel-round" >
+    <a ng-click="actions.isNewStepFormOpen = !actions.isNewStepFormOpen"> <!--opens/toggles new step form -->
+      <span class="aa-add-step-icon" popover=" {{ 'autoAttendant.builderAddNewStep' | translate }} " popover-trigger="mouseenter" popover-animation="false" popover-placement="bottom" popover-append-to-body="false"></span>
+    </a>
+  </div>
+
+  <div ng-show="!actions.template && actions.isNewStepFormOpen" name="newStepForm" class="aa-panel-body">
+    <div class="aa-flex-row">
+      <div class="aa-flex-row-item">
+          <h3 class="text-info" translate="autoAttendant.builderNewStep"></h3>
+          <span class="aa-help-icon" aria-label="common.help"></span><!-- help tooltip -->
+      </div>
+      <div class="aa-flex-row-item-right" id="aa-flex-row-item-right-action">
+        <div class="aa-menu-delete-icon-md"> <!--closes/toggles new step form -->
+          <a ng-click="actions.isNewStepFormOpen = !actions.isNewStepFormOpen">
+            <span class="menu-delete-icon-md" aria-label="common.close"></span>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="aa-flex-row">
+        <select class="form-control" ng-model="actions.template" ng-options="option.title for option in actions.templates">
+          <option value="" disabled translate="autoAttendant.actionPlaceholder"></option>
+        </select>
+    </div>
+  </div>
+
+  <div ng-if="actions.template" class="aa-panel-body" name="actionForm">
+    <div class="aa-flex-row">
+      <h3 class="text-info" translate="{{actions.template.title}}"></h3>
+      <span class="aa-help-icon"></span><!-- help tooltip -->
+    </div>
+    <div class="aa-flex-row">
+      <div ng-controller="actions.getTemplateController" ng-include="actions.template.url"></div>
+    </div>
+  </div>
+
+</div>

@@ -1050,6 +1050,15 @@ angular
           controller: 'AutoAttendantLandingCtrl',
           controllerAs: 'aaLanding'
         })
+        .state('autoattendant.aabuilder', {
+          parent: 'main',
+          params: {
+            aaName: ''
+          },
+          templateUrl: 'modules/huron/callRouting/autoAttendant/builder/aaBuilderMain.tpl.html',
+          controller: 'AABuilderMainCtrl',
+          controllerAs: 'aaBuilderMain'
+        })
         .state('callpark', {
           url: '/callpark',
           parent: 'callrouting',
@@ -1441,6 +1450,21 @@ angular
           url: '/webexUserSettings2',
           templateUrl: 'modules/webex/userSettings/userSettings2.tpl.html',
           parent: 'main'
+        });
+    }
+  ]);
+
+angular
+  .module('Messenger')
+  .config(['$stateProvider',
+    function ($stateProvider) {
+      $stateProvider
+        .state('messenger', {
+          parent: 'main',
+          url: '/messenger',
+          templateUrl: 'modules/messenger/ci-sync/ciSync.tpl.html',
+          controller: 'CiSyncCtrl',
+          controllerAs: 'sync'
         });
     }
   ]);

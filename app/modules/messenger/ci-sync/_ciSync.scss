@@ -1,0 +1,43 @@
+.container-ci-sync {
+
+  .bottom-padding {
+    padding-bottom: 30px;
+  }
+
+  .content {
+    padding-left: 30px;
+    padding-right: 15px;
+  }
+
+  .indented {
+    margin-left: 50px;
+  }
+
+  .info {
+    .info-header {
+        font-family: "CiscoSansTT Thick", Helvetica;
+        font-size: 22px;
+    }
+
+    .data-item {
+        font-family: "Consolas", "Courier New";
+    }
+
+    .data-key {
+        font-weight: bold;
+    }
+  }
+
+  .no-click {
+    pointer-events: none;
+  }
+
+  .sub-info {
+    margin-top: 50px;
+  }
+
+  .sync-stats {
+    min-width: 350px;
+  }
+
+}

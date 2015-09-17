@@ -30,22 +30,22 @@
   "userName": "jessica.doe@familymart.com"
 }, {
   "internalNumber": "1006",
-  "externalNumber": "+12145551006",
+  "externalNumber": "",
   "device": "",
   "userName": ""
 }, {
   "internalNumber": "1007",
-  "externalNumber": "+12145551007",
-  "device": "",
-  "userName": ""
-}, {
-  "internalNumber": "1008",
   "externalNumber": "",
   "device": "",
   "userName": ""
 }, {
-  "internalNumber": "1009",
-  "externalNumber": "",
+  "internalNumber": "",
+  "externalNumber": "+12145551008",
+  "device": "",
+  "userName": ""
+}, {
+  "internalNumber": "",
+  "externalNumber": "+12145551009",
   "device": "",
   "userName": ""
 }, {
@@ -56,16 +56,6 @@
 }, {
   "internalNumber": "",
   "externalNumber": "+12145551011",
-  "device": "",
-  "userName": ""
-}, {
-  "internalNumber": "",
-  "externalNumber": "+12145551012",
-  "device": "",
-  "userName": ""
-}, {
-  "internalNumber": "",
-  "externalNumber": "+12145551013",
   "device": "",
   "userName": ""
 }]
