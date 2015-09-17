@@ -53,7 +53,7 @@ describe('Customer Admin Landing Page License Info', function () {
       utils.expectIsDisplayed(landing.unlicensedUsers);
     });
 
-    it('should display the right quick links', function () {
+    xit('should display the right quick links', function () {
       utils.expectIsDisplayed(landing.addUserQuickLink);
       utils.expectIsNotDisplayed(landing.installDeviceSharedSpaceQuickLink);
       utils.expectIsDisplayed(landing.deviceLogsQuickLink);
