@@ -19,7 +19,7 @@
   & .content-header {
     background: white;
     border-bottom: 1px solid $gray-lightest;
-    padding-right: 15px;
+    padding-right: 0px;
     padding-top: 10px;
     padding-bottom: 10px;
   }
@@ -31,10 +31,6 @@
     padding-left: 20px;
     margin-left: 10px;
     cursor: pointer;
-    &:hover {
-      color: $brand-primary;
-      text-decoration: none;
-    }
   }
   & .gridStyle {
     height: calc(50vh);

@@ -69,16 +69,16 @@
             newAaRecord.callExperienceURL = response.callExperienceURL;
             aaRecords.push(newAaRecord);
             vm.aaModel.ceInfos.push(AutoAttendantCeInfoModelService.getCeInfo(newAaRecord));
-            Notification.notify([$translate.instant('autoAttendant.successCreateCe', {
+            Notification.success('autoAttendant.successCreateCe', {
               name: aaRecord.callExperienceName
-            })], 'success');
+            });
           },
           function (response) {
-            Notification.notify([$translate.instant('autoAttendant.errorCreateCe', {
+            Notification.error('autoAttendant.errorCreateCe', {
               name: aaRecord.callExperienceName,
               statusText: response.statusText,
               status: response.status
-            })], 'error');
+            });
           }
         );
       } else {
@@ -92,16 +92,16 @@
             aaRecords[i].callExperienceName = aaRecord.callExperienceName;
             aaRecords[i].assignedResources = angular.copy(aaRecord.assignedResources);
             vm.aaModel.ceInfos[i] = AutoAttendantCeInfoModelService.getCeInfo(aaRecords[i]);
-            Notification.notify([$translate.instant('autoAttendant.successUpdateCe', {
+            Notification.success('autoAttendant.successUpdateCe', {
               name: aaRecord.callExperienceName
-            })], 'success');
+            });
           },
           function (response) {
-            Notification.notify([$translate.instant('autoAttendant.errorUpdateCe', {
+            Notification.error('autoAttendant.errorUpdateCe', {
               name: aaRecord.callExperienceName,
               statusText: response.statusText,
               status: response.status
-            })], 'error');
+            });
           }
         );
       }
@@ -179,6 +179,8 @@
 
       vm.aaModel.aaRecord = AAModelService.newAARecord();
 
+
+      /* $scope variables temporarily needed for integration with older templates */
       $scope.aa = {};
       $scope.aa.modal = {};
       vm.ui = $scope.aa.modal;
