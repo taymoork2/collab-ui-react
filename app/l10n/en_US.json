@@ -1088,7 +1088,21 @@
     "landingInformation": "Auto attendants allow you to create a custom greeting, recordings, and phone menus that handle inbound calls to your business.  Choose from the following common Auto Attendant layouts, or you can build your own.",
     "landingTitle": "Auto Attendants",
     "landingAddAutoAttendant": "Create New",
-    "landingTemplateAutoAttendant": "Create from Template"
+    "landingTemplateAutoAttendant": "Create from Template",
+    "builderTitle": "Auto Attendant Builder",
+    "builderAddNewStep": "Add New Step",
+    "builderNewStep": "New Step",
+    "builderNumbers": "Numbers",
+    "actionPlaceholder": "Choose Action",
+    "actionSayMessage": "Say Message",
+    "actionPhoneMenu": "Phone Menu",
+    "actionRouteCall": "Route Call",
+    "actionEndCall": "End Call",
+    "schedule": "Schedule",
+    "scheduleAllDay": "Open 24 hours",
+    "scheduleOpen": "Open Hours",
+    "scheduleClosed": "Closed Hours",
+    "scheduleHolidays": "Holidays"
   },
   "callPark": {
     "newCallPark": "New Call Park",

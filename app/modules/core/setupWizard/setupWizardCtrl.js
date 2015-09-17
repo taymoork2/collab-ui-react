@@ -84,32 +84,32 @@ angular.module('Core')
             title: 'firstTimeWizard.assignDnAndDirectLines'
           }]
         }, {
-          name: 'csv',
-          title: 'firstTimeWizard.uploadStep',
-          controller: 'OnboardCtrl',
-          steps: [{
-            name: 'init',
-            template: 'modules/core/setupWizard/addUsers.init.tpl.html'
-          }, {
-            name: 'csvUpload',
-            template: 'modules/core/setupWizard/addUsers.uploadCsv.tpl.html',
-            title: 'firstTimeWizard.uploadStep'
-          }, {
-            name: 'csvServices',
-            template: 'modules/core/setupWizard/addUsers.assignServices.tpl.html',
-            title: 'firstTimeWizard.assignServicesStep'
-          }, {
-            name: 'csvProcessing',
-            template: 'modules/core/setupWizard/addUsers.processCsv.tpl.html',
-            title: 'firstTimeWizard.processCsvStep',
-            buttons: false
-          }, {
-            name: 'csvResult',
-            template: 'modules/core/setupWizard/addUsers.uploadResult.tpl.html',
-            title: 'firstTimeWizard.uploadResultStep',
-            buttons: 'modules/core/setupWizard/addUsers.csvResultButtons.tpl.html'
-          }]
-        }, {
+          //   name: 'csv',
+          //   title: 'firstTimeWizard.uploadStep',
+          //   controller: 'OnboardCtrl',
+          //   steps: [{
+          //     name: 'init',
+          //     template: 'modules/core/setupWizard/addUsers.init.tpl.html'
+          //   }, {
+          //     name: 'csvUpload',
+          //     template: 'modules/core/setupWizard/addUsers.uploadCsv.tpl.html',
+          //     title: 'firstTimeWizard.uploadStep'
+          //   }, {
+          //     name: 'csvServices',
+          //     template: 'modules/core/setupWizard/addUsers.assignServices.tpl.html',
+          //     title: 'firstTimeWizard.assignServicesStep'
+          //   }, {
+          //     name: 'csvProcessing',
+          //     template: 'modules/core/setupWizard/addUsers.processCsv.tpl.html',
+          //     title: 'firstTimeWizard.processCsvStep',
+          //     buttons: false
+          //   }, {
+          //     name: 'csvResult',
+          //     template: 'modules/core/setupWizard/addUsers.uploadResult.tpl.html',
+          //     title: 'firstTimeWizard.uploadResultStep',
+          //     buttons: 'modules/core/setupWizard/addUsers.csvResultButtons.tpl.html'
+          //   }]
+          // }, {
           name: 'advanced',
           title: 'firstTimeWizard.advanced',
           steps: [{
