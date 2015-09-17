@@ -1,17 +1,15 @@
 $flagsImagePath: "../../images/" !default;
 
 .snr-panel {
-  .section-name {
-    float: left;
-    margin-right: 0;
-    width: 75%;
-  }
+  .section-title-row {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 
-  .toggle-switch {
-    float: right;
-    margin-bottom: 0;
-    margin-top: -5px;
-    text-align: right;
+    .toggle-switch {
+      margin-bottom: 0;
+    }
   }
 
   .snr-description {
