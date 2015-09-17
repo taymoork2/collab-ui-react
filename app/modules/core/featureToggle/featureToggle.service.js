@@ -12,7 +12,6 @@
     };
     var service = {
       getFeaturesForUser: getFeaturesForUser,
-      features: features,
       supports: supports,
       supportsPstnSetup: supportsPstnSetup,
       supportsCsvUpload: supportsCsvUpload
