@@ -87,7 +87,7 @@ angular.module('Squared')
       $scope.changeEntitlement = function (user) {
         Log.debug('Entitling user.', user);
         HttpUtils.setTrackingID().then(function () {
-          angular.element('#btn-save').button('loading');
+          $scope.btn_saveLoad = true;
           Userservice.updateUsers([{
             'address': user.userName,
             'name': user.name
@@ -117,7 +117,7 @@ angular.module('Squared')
                 entitleResult.type = 'error';
               }
               Notification.notify([entitleResult.msg], entitleResult.type);
-              angular.element('#btn-save').button('reset');
+              $scope.btn_saveLoad = false;
 
               var index = $scope.queryuserslist.map(function (element) {
                 return element.id;
@@ -141,7 +141,7 @@ angular.module('Squared')
                 type: 'error'
               };
               Notification.notify([entitleResult.msg], entitleResult.type);
-              angular.element('#btn-save').button('reset');
+              $scope.btn_saveLoad = false;
             }
           });
         });
