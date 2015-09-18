@@ -69,7 +69,7 @@ angular.module('Hercules')
       };
 
       $scope.shouldShowWelcomeScreen = function () {
-        return $scope.subscription.eventCount > 0 && !$scope.subscription.currentError && $scope.noServicesSelected && $scope.clusters.length === 0 && !$scope.startSetupClicked;
+        return $scope.subscription.eventCount > 0 && !$scope.subscription.currentError && $scope.noServicesSelected && _.size($scope.clusters) === 0 && !$scope.startSetupClicked;
       };
     }
   )
