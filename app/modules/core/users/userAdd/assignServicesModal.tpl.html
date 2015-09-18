@@ -15,12 +15,12 @@
 
   <div class="modal-footer" ng-if="!convertUsersFlow">
     <button type="button" id="btnBack" class="btn btn-default" ui-sref="users.add"><span translate="common.back"></span></button>
-    <button type="button" id="btnOnboard" cs-btn loading="{{btnOnboardLoading}}" class="btn btn-primary" ng-click="assignServicesSave()"><span translate="{{getServicesNextText()}}"></span></button>
+    <button type="button" id="btnOnboard" class="btn btn-primary" ng-click="assignServicesSave()" data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>"><span translate="{{getServicesNextText()}}"></span></button>
   </div>
 
   <div class="modal-footer" ng-if="convertUsersFlow">
     <button type="button" id="btnBack" class="btn btn-default" ng-click="processBackButton()"><span translate="common.back"></span></button>
-    <button type="button" id="btnConvert" cs-btn loading="{{btnConvertLoad}}" class="btn btn-primary" ng-click="convertUsers()"><span translate="common.save"></span></button>
+    <button type="button" id="btnConvert" class="btn btn-primary" ng-click="convertUsers()" data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>"><span translate="common.save"></span></button>
   </div>
 
 </div>

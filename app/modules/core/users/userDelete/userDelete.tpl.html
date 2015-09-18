@@ -15,7 +15,7 @@
     <button id="cancelButton" class="btn btn-default" ng-click="$dismiss();">
       <span translate="common.cancel"></span>
     </button>
-    <button id="deleteUserButton" cs-btn loading="{{deleteUserButtonLoad}}" class="btn btn-primary" ng-click="deactivateUser();">
+    <button id="deleteUserButton" class="btn btn-primary" ng-click="deactivateUser();" data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>">
       <span translate="usersPage.deleteUser"></span>
     </button>
   </div>
