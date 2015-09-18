@@ -108,7 +108,7 @@
         vm.userData = data;
         vm.setUserInfoView(vm.userData);
       }, function (data) {
-        Log.debug('Failed to retrieve sunlight user information from sunlight config Service. Status: ' + status);
+        Log.debug('Failed to retrieve sunlight user information from sunlight config Service with error : ' + JSON.stringify(data));
         Notification.notify([$translate.instant('contactCenterUserConfig.failureMessages.userloadFailureMessage') + vm.currentUser.userName], 'error');
       });
 
@@ -135,7 +135,6 @@
           userData.media.push(vm.mediaInfo[i].name);
         }
       }
-
       return userData;
     }
   }

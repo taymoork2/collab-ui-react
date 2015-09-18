@@ -33,7 +33,7 @@
           .error(function (data, status) {
             data = data || {};
             Log.error('Get userInfo call to Sunlight config service failed with status: ' + status);
-            deferred.reject('Get UserInfo failed ' + data);
+            deferred.reject('Get UserInfo call failed ' + JSON.stringify(data));
           });
       } else {
         Log.error('usedId cannot be null or undefined');
@@ -53,16 +53,16 @@
         $http.put(sunlightUserConfigUrl + userId, userData)
           .success(function (data, status) {
             data = data || {};
-            deferred.resolve(data);
+            deferred.resolve(status);
           })
           .error(function (data, status) {
             data = data || {};
             Log.error('Update userInfo call to Sunlight config service failed with status: ' + status);
-            deferred.reject('Update UserInfo call failed ' + data);
+            deferred.reject('Update UserInfo call failed ' + JSON.stringify(data));
           });
       } else {
-        Log.error('cannot be null or undefined');
-        deferred.reject('userId cannot be null');
+        Log.error('arguments passed cannot be null or undefined');
+        deferred.reject('arguments passed cannot be null or undefined');
       }
       return deferred.promise;
     }
