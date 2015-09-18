@@ -23,14 +23,12 @@ describe(' sunlightConfigService', function () {
   }));
 
   it('should get userInfo for a given userId', function () {
+
     $httpBackend.whenGET(sunlightUserConfigUrl + userId).respond(200, userData);
+
     sunlightConfigService.getUserInfo(userId).then(function (data) {
-      //console.log('userData is: ' + JSON.stringify(data));
       expect(data.orgId).toBe(orgId);
       expect(data.userId).toBe(userId);
-    }, function (data) {
-      //This block wont get executed
-      expect(data.orgId).toBe(undefined);
     });
     $httpBackend.flush();
 
@@ -38,10 +36,8 @@ describe(' sunlightConfigService', function () {
 
   it('should fail to get userInfo for a given userId when there is an http error', function () {
     $httpBackend.whenGET(sunlightUserConfigUrl + userId).respond(500, errorData);
-    sunlightConfigService.getUserInfo(userId).then(function (data) {
-      //this block wont get executed
-      expect(data.orgId).toBe(undefined);
-    }, function (data) {
+
+    sunlightConfigService.getUserInfo(userId).then(function (data) {}, function (data) {
       expect(data).toBe('Get UserInfo call failed ' + JSON.stringify(errorData));
     });
     $httpBackend.flush();
@@ -49,22 +45,18 @@ describe(' sunlightConfigService', function () {
   });
 
   it('should fail to get userInfo when userId is not defined', function () {
-    sunlightConfigService.getUserInfo(undefined).then(function (data) {
-      //this block will never get executed
-      expect(data.orgId).toBe(undefined);
-    }, function (data) {
+    sunlightConfigService.getUserInfo(undefined).then(function (data) {}, function (data) {
       expect(data).toBe('usedId cannot be null or undefined');
     });
   });
 
   it('should update userInfo in sunlight config service', function () {
     var userInfo = angular.copy(getJSONFixture('sunlight/json/sunlightTestUser.json'));
+
     $httpBackend.whenPUT(sunlightUserConfigUrl + userId).respond(200, {});
+
     sunlightConfigService.updateUserInfo(userInfo, userId).then(function (status) {
       expect(status).toBe(200);
-    }, function (data) {
-      //this block will never get executed
-      expect(data).toBe(undefined);
     });
     $httpBackend.flush();
   });

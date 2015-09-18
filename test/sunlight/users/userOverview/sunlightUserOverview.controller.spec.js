@@ -2,10 +2,7 @@
 
 describe('sunlightUserOverviewCtrl', function () {
   var controller, $scope, $state, $stateParams, Notification, $translate, formlyValidationMessages, Log;
-  var $q;
-  var sunlightConfigService;
-  var getUserInfoDeferred;
-  var updateUserInfoDeferred;
+  var $q, sunlightConfigService, getUserInfoDeferred, updateUserInfoDeferred;
   var userInfo = getJSONFixture('sunlight/json/sunlightTestUser.json');
 
   beforeEach(module('Sunlight'));
@@ -68,7 +65,7 @@ describe('sunlightUserOverviewCtrl', function () {
     expect(controller.userData.media).toBe(userInfo.media);
 
     controller.userData.media = ['chat'];
-    userInfo.role = 'user';
+    controller.roleSelected = 'User';
     controller.aliasFormModel.sunlightUserAlias = 'iAmSuperAgent';
     controller.updateUserData($stateParams.currentUser.id);
 
@@ -82,8 +79,6 @@ describe('sunlightUserOverviewCtrl', function () {
     $scope.$apply();
 
     controller.userData.media = ['chat'];
-    userInfo.role = 'user';
-    controller.aliasFormModel.sunlightUserAlias = 'iAmSuperAgent';
     controller.updateUserData($stateParams.currentUser.id);
 
     updateUserInfoDeferred.reject();
@@ -96,13 +91,9 @@ describe('sunlightUserOverviewCtrl', function () {
     getUserInfoDeferred.resolve(userInfo);
     $scope.$apply();
 
-    controller.userData.media = ['chat'];
-    userInfo.role = 'user';
-    controller.aliasFormModel.alias = undefined;
+    controller.aliasFormModel.sunlightUserAlias = undefined;
     controller.updateUserData($stateParams.currentUser.id);
 
-    updateUserInfoDeferred.reject();
-    $scope.$apply();
     expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
   });
 
@@ -110,9 +101,7 @@ describe('sunlightUserOverviewCtrl', function () {
     getUserInfoDeferred.resolve(userInfo);
     $scope.$apply();
 
-    controller.userData.media = ['chat'];
-    controller.aliasFormModel.sunlightUserAlias = 'iAmSuperAgent';
-    userInfo.role = 'supervisor';
+    controller.roleSelected = 'contactCenterUserConfig.userRoles.supervisor';
     controller.updateUserData($stateParams.currentUser.id);
 
     updateUserInfoDeferred.resolve(userInfo);
