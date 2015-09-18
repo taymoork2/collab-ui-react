@@ -33,9 +33,9 @@ describe('Controller: ReportsCtrl', function () {
     //$scope.$apply();
   }));
 
-  it('should call getReports in ReportsCtrl on reportService', function () {
-    //expect(reportService.getReports).toHaveBeenCalled();
-    expect(true).toBe(true);
-  });
+  //it('should call getReports in ReportsCtrl on reportService', function () {
+  //expect(reportService.getReports).toHaveBeenCalled();
+  //expect(true).toBe(true);
+  //});
 
 });
