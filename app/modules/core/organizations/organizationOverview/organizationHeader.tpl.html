@@ -1,11 +1,10 @@
 <cs-sp-header>
   <div class="header-info">
     <div class="header-info-wrap">
-      <a id="rolesChevron">
-        <i class="feature-arrow"></i>
-        <div class="header-title" title="">{{currentOrganization.displayName}}</div>
-        <div class="header-sub-info">Admin Email: {{currentOrganization.email}}</div>
-      </a>
+    <i class="feature-arrow"></i>
+    <div class="header-title">{{currentOrganization.displayName}}</div>
+    <div class="header-sub-info" ng-if="currentOrganization.email">Admin Email: {{currentOrganization.email}}</div>
+    <div class="header-sub-info">Org id: {{currentOrganization.id}}</div>
     </div>
   </div>
 </cs-sp-header>
