@@ -9,7 +9,7 @@
   function SyncService() {
     // Interface ---------------------------------------------------------------
 
-    var syncModes = {
+    var syncModes = Object.freeze({
       messenger: {
         on: {
           text: 'enabled'
@@ -26,7 +26,7 @@
           text: 'link_disabled'
         }
       }
-    };
+    });
 
     var service = {
       getSyncStatus: null,
@@ -45,11 +45,11 @@
     // Implementation ----------------------------------------------------------
 
     function isDirSync() {
-      return (syncModes.dirsync.on === service.syncMode) ? true : false;
+      return (syncModes.dirsync.on === service.syncMode);
     }
 
     function isMessengerSync() {
-      return (syncModes.messenger.on === service.syncMode) ? true : false;
+      return (syncModes.messenger.on === service.syncMode);
     }
 
     function setDirSyncMode(isEnabled) {
