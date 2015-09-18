@@ -16,6 +16,7 @@
       getFeaturesForUser: getFeaturesForUser,
       getFeaturesForOrg: getFeaturesForOrg,
       supports: supports,
+      supportsPstnSetup: supportsPstnSetup,
       supportsCsvUpload: supportsCsvUpload
     };
 
@@ -71,8 +72,9 @@
       var url = getUrl(false, oid);
 
       return $http.get(url, {
-        cache: true};
-      }
+        cache: true
+      });
+    }
 
     function supports(feature) {
       return $q(function (resolve, reject) {

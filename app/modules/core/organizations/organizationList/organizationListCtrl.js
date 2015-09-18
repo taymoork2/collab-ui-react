@@ -8,8 +8,8 @@ angular.module('Core')
       //Initialize variables
       $scope.load = true;
       $scope.page = 1;
-      $scope.status = null;
       $scope.currentDataPosition = 0;
+
       $scope.searchStr = '';
       $scope.timeoutVal = 1000;
       $scope.timer = 0;
