@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('Hercules')
-  .service('ServiceDescriptor', ['$http', 'ConfigService',
-    function ServiceDescriptor($http, config) {
+  .service('ServiceDescriptor', ['$http', 'ConfigService', 'Authinfo',
+    function ServiceDescriptor($http, config, Authinfo) {
       var services = function (callback) {
         $http
-          .get(config.getUrl() + '/services')
+          .get(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services')
           .success(function (data) {
             callback(null, data.fusion_services || []);
           })
@@ -38,7 +38,7 @@ angular.module('Hercules')
 
       var setServiceEnabled = function (serviceId, enabled, callback) {
         $http
-          .put(config.getUrl() + '/services/' + serviceId, {
+          .put(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
             enabled: enabled
           })
           .success(function () {

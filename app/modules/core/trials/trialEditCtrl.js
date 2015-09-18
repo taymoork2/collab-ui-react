@@ -5,7 +5,7 @@
     .controller('TrialEditCtrl', TrialEditCtrl);
 
   /* @ngInject */
-  function TrialEditCtrl($q, $state, $scope, $stateParams, $translate, Authinfo, TrialService, Notification, Config, HuronCustomer, ValidationService) {
+  function TrialEditCtrl($q, $state, $scope, $stateParams, $translate, Authinfo, TrialService, Notification, Config, HuronCustomer, ValidationService, FeatureToggleService) {
     var vm = this;
 
     vm.currentTrial = angular.copy($stateParams.currentTrial);
@@ -92,6 +92,7 @@
     vm.squaredUCOfferID = Config.trials.squaredUC;
     vm.isSquaredUCEnabled = isSquaredUCEnabled;
     vm.gotoAddNumber = gotoAddNumber;
+    vm.clickUpdateButton = clickUpdateButton;
 
     initializeOffers();
 
@@ -113,6 +114,20 @@
 
     function isSquaredUCEnabled() {
       return vm.offers[Config.trials.squaredUC];
+    }
+
+    function clickUpdateButton() {
+      if (isSquaredUCEnabled() && !vm.disableSquaredUCCheckBox) {
+        FeatureToggleService.supportsPstnSetup().then(function (isSupported) {
+          if (isSupported) {
+            editTrial();
+          } else {
+            gotoAddNumber();
+          }
+        });
+      } else {
+        editTrial();
+      }
     }
 
     function gotoAddNumber() {
