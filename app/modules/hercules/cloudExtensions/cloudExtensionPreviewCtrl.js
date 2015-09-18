@@ -49,7 +49,7 @@ angular.module('Hercules')
           entitlementName: $scope.entitlementNames[$stateParams.extensionId],
           entitlementState: entitled === true ? 'ACTIVE' : 'INACTIVE'
         }];
-        angular.element('#btn-save').button('loading');
+        $scope.btn_saveLoad = true;
 
         Userservice.updateUsers(user, null, entitlement, 'updateEntitlement', function (data) {
           var entitleResult = {
@@ -79,7 +79,7 @@ angular.module('Hercules')
             if (userStatus !== 200) {
               Notification.notify([entitleResult.msg], entitleResult.type);
             }
-            angular.element('#btn-save').button('reset');
+            $scope.btn_saveLoad = false;
 
           } else {
             entitleResult = {
@@ -87,7 +87,7 @@ angular.module('Hercules')
               type: 'error'
             };
             Notification.notify([entitleResult.msg], entitleResult.type);
-            angular.element('#btn-save').button('reset');
+            $scope.btn_saveLoad = false;
           }
           $scope.saving = false;
         });

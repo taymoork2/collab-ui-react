@@ -312,16 +312,16 @@ angular.module('Core')
       };
 
       $scope.syncNow = function () {
-        angular.element('#syncNowBtn').button('loading');
+        $scope.syncNowLoad = true;
         DirSyncService.syncUsers(500, function (data, status) {
           if (data.success) {
-            angular.element('#syncNowBtn').button('reset');
+            $scope.syncNowLoad = false;
             Log.debug('DirSync started successfully. Status: ' + status);
             Notification.notify([$translate.instant('dirsyncModal.dirsyncSuccess', {
               status: status
             })], 'success');
           } else {
-            angular.element('#syncNowBtn').button('reset');
+            $scope.syncNowLoad = false;
             Log.debug('Failed to start directory sync. Status: ' + status);
             Notification.notify([$translate.instant('dirsyncModal.dirsyncFailed', {
               status: status
@@ -445,7 +445,7 @@ angular.module('Core')
             }
             //Displaying notifications
             if (successes.length + errors.length === usersList.length) {
-              angular.element('#btnInvite').button('reset');
+              $scope.btnInviteLoad = false;
               Notification.notify(successes, 'success');
               Notification.notify(errors, 'error');
             }
@@ -455,7 +455,7 @@ angular.module('Core')
             var error = [$translate.instant('usersPage.errInvite', data)];
             Notification.notify(error, 'error');
             isComplete = false;
-            angular.element('#btnInvite').button('reset');
+            $scope.btnInviteLoad = false;
           }
 
           var msg = 'inviting ' + usersList.length + ' users...';
@@ -468,7 +468,7 @@ angular.module('Core')
         };
 
         if (typeof usersList !== 'undefined' && usersList.length > 0) {
-          angular.element('#btnInvite').button('loading');
+          $scope.btnInviteLoad = true;
 
           startLog = moment();
 
