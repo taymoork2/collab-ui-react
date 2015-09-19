@@ -19,20 +19,17 @@
   @extend .row;
   display: flex;
   flex-direction: row;
-  align-items: center;
   margin-left: 10px;
   margin-right: 10px;
 }
 
-.aa-flex-row-centered {
-  @extend .aa-flex-row;
+.aa-flex-row.centered {
   justify-content: center;
+  align-items: center;
 }
 
-.aa-flex-row-title {
-  @extend .aa-flex-row-centered;
-  min-height: 54px;
-  background-color: $brand-white;
+.aa-flex-row.schedule {
+  padding: 5px;
 }
 
 .aa-flex-row-item {
@@ -40,6 +37,11 @@
   flex: 1 1 auto;
   align-items: baseline;
   justify-content: center;
+}
+
+#aa-header-row {
+  min-height: 54px;
+  background-color: $brand-white;
 }
 
 #aa-header-row-content {
@@ -92,7 +94,7 @@
 
 .aa-schedule-icon {
   @extend .icon;
-  @extend .icon-settings;
+  @extend .icon-Clock;
   @extend .icon-2x;
   color: $brand-default;
 }
