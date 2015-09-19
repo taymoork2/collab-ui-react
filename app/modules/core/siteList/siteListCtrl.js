@@ -181,24 +181,35 @@ angular.module('Core')
       } // getSiteVersionXml()
 
       function iframeSupportedSiteVersionCheck(getInfoResult) {
-        var siteVersionJsonObj = WebExUtilsFact.validateSiteVersionXmlData(getInfoResult.siteVersionXml);
-        var siteVersionJson = siteVersionJsonObj.bodyJson;
+        var funcName = "iframeSupportedSiteVersionCheck()";
+
+        var logMsg = "";
+
         var iframeSupportedSiteVersion = false;
+        var siteVersionJsonObj = WebExUtilsFact.validateSiteVersionXmlData(getInfoResult.siteVersionXml);
 
-        if ("" === siteVersionJsonObj.errId) {
-          var siteVersionStr = siteVersionJson.ep_apiVersion;
-          var index = "WebEx XML API V".length;
-          var siteVersion = siteVersionStr.slice(index);
+        if ("" === siteVersionJsonObj.errId) { // got a good response
+          var siteVersionJson = siteVersionJsonObj.bodyJson;
+          var trainReleaseVersion = siteVersionJson.ep_trainReleaseVersion;
+          var trainReleaseOrder = siteVersionJson.ep_trainReleaseOrder;
 
-          $log.log("iframeSupportedSiteVersion(): siteVersion=" + siteVersion);
+          logMsg = funcName + ": " + "\n" +
+            "trainReleaseVersion=" + trainReleaseVersion + "\n" +
+            "trainReleaseOrder=" + trainReleaseOrder;
+          $log.log(logMsg);
 
-          iframeSupportedSiteVersion = true;
+          if (
+            (null != trainReleaseOrder) &&
+            (400 <= +trainReleaseOrder)
+          ) {
+
+            iframeSupportedSiteVersion = true;
+          }
         }
 
         $log.log("iframeSupportedSiteVersion(): iframeSupportedSiteVersion=" + iframeSupportedSiteVersion);
 
         return iframeSupportedSiteVersion;
-
       } // iframeSupportedSiteVersionCheck()
       // End of site links set up
     }
