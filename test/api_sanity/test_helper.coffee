@@ -14,7 +14,7 @@ auth =
 
   'partner-admin':
     user: 'atlaspartneradmin@atlas.test.com'
-    pass: 'C1sc0123!'
+    pass: 'P@ssword123'
     org:  'c054027f-c5bd-4598-8cd8-07c08163e8cd'
 
   'partner-reports':
