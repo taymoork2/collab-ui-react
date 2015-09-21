@@ -39,8 +39,9 @@ angular.module('Core')
 
         // Messenger Sync mode
         if ($scope.isMsgrSyncMode) {
-          // this will make the initial "Next" button to stay in the locked down page
-          deferred.reject();
+          // Move to the next tab as current tab is irrelevent
+          $scope.wizard.nextTab();
+
           return deferred.promise;
         }
 
