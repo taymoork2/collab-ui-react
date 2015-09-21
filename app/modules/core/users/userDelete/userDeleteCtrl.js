@@ -24,7 +24,7 @@ angular.module('Core')
       };
 
       function deleteSuccess() {
-        $scope.deleteUserButtonLoad = false;
+        angular.element('#deleteButton').button('reset');
         Notification.notify([$translate.instant('usersPage.deleteUserSuccess', {
           email: $scope.deleteUsername
         })], 'success');
@@ -52,7 +52,6 @@ angular.module('Core')
         var userData = {
           email: $scope.deleteUsername
         };
-        $scope.deleteUserButtonLoad = true;
         Log.debug('Deactivating user ' + $scope.deleteUsername);
         Userservice.deactivateUser(userData)
           .success(function (data, status) {
@@ -81,7 +80,7 @@ angular.module('Core')
               Notification.notify(error, 'error');
             }
             Notification.notify([error], 'error');
-            $scope.deleteUserButtonLoad = false;
+            angular.element('#deleteButton').button('reset');
           });
       };
     }

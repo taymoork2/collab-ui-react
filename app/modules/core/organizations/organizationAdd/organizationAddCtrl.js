@@ -173,7 +173,7 @@
     function startOrganization(keepModal) {
       vm.nameError = false;
       vm.emailError = false;
-      vm.startOrgLoad = true;
+      angular.element('#startOrganizationButton').button('loading');
 
       var offersList = [];
       for (var i in vm.offers) {
@@ -184,12 +184,12 @@
 
       return AccountService.createAccount(vm.model.customerOrgName, vm.model.customerAdminEmail, vm.model.partnerAdminEmail, vm.model.isPartner, vm.model.beId, vm.model.begeoId, vm.model.duration, vm.model.licenseCount, offersList, vm.startDate)
         .catch(function (response) {
-          vm.startOrgLoad = false;
+          angular.element('#startOrganizationButton').button('reset');
           Notification.notify([response.data.message], 'error');
           return $q.reject(response);
         })
         .then(function () {
-          vm.startOrgLoad = false;
+          angular.element('#startOrganizationButton').button('reset');
           var successMessage = [$translate.instant('organizationsPage.addSuccess', {
             customerOrgName: vm.model.customerOrgName,
             licenseCount: vm.model.licenseCount,

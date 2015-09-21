@@ -9,7 +9,7 @@
               <cr-reload-data id="partnerRefreshData" last-updated-time="refreshTime"></cr-reload-data>
             </span>
             <div class="columns small-6 right" dropdown is-open="db.isOpen">
-              <button id="customerDropdown" type="button" class="btn btn-white dropdown-toggle pull-right" ng-disabled="db.disabled">
+              <button id="customerDropdown" type="button" class="btn btn-white dropdown-toggle pull-right" ng-disabled="db.disabled" data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>">
               <span>{{currentSelection | translate}}</span><span class="caret"></span>
               </button>
               <ul class="dropdown-menu reports-customer-dropdown" role="menu">

@@ -667,7 +667,7 @@ angular.module('Core')
           user.push(userObj);
           usersList.push(user);
         }
-        $scope.btnSaveEntLoad = true;
+        angular.element('#btnSaveEnt').button('loading');
 
         Userservice.updateUsers(user, getAccountLicenseIds(), null, 'updateUserLicense', entitleUserCallback);
       };
@@ -972,7 +972,7 @@ angular.module('Core')
               }
               //Displaying notifications
               if (successes.length + errors.length === usersList.length) {
-                $scope.btnOnboardLoading = false;
+                angular.element('#btnOnboard').button('reset');
                 Notification.notify(successes, 'success');
                 Notification.notify(errors, 'error');
                 deferred.resolve();
@@ -1003,14 +1003,14 @@ angular.module('Core')
             }
             Notification.notify([error], 'error');
             isComplete = false;
-            $scope.btnOnboardLoading = false;
+            angular.element('#btnOnboard').button('reset');
             deferred.reject();
           }
           //no need to clear tokens here since that is causing the options grid to blank during the finish process
         };
 
         if (angular.isArray(usersList) && usersList.length > 0) {
-          $scope.btnOnboardLoading = true;
+          angular.element('#btnOnboard').button('loading');
 
           var i, temparray, chunk = Config.batchSize;
           for (i = 0; i < usersList.length; i += chunk) {
@@ -1095,8 +1095,8 @@ angular.module('Core')
           //Displaying notifications
           if (method !== 'convertUser') {
             if (successes.length + errors.length === usersList.length) {
-              $scope.btnOnboardLoading = false;
-              $scope.btnSaveEntLoad = false;
+              angular.element('#btnOnboard').button('reset');
+              angular.element('#btnSaveEnt').button('reset');
               Notification.notify(successes, 'success');
               Notification.notify(errors, 'error');
             }
@@ -1130,8 +1130,8 @@ angular.module('Core')
           if (method !== 'convertUser') {
             Notification.notify([error], 'error');
             isComplete = false;
-            $scope.btnOnboardLoading = false;
-            $scope.btnSaveEntLoad = false;
+            angular.element('#btnOnboard').button('reset');
+            angular.element('#btnSaveEnt').button('reset');
           } else {
             convertFailures.push(error);
           }
@@ -1146,7 +1146,7 @@ angular.module('Core')
             convertUsersInBatch();
           } else {
             if (convertBacked === false) {
-              $scope.btnConvertLoad = false;
+              angular.element('#btnConvert').button('reset');
               $scope.$dismiss();
             } else {
               $state.go('users.convert', {});
@@ -1337,7 +1337,7 @@ angular.module('Core')
       };
 
       $scope.convertUsers = function () {
-        $scope.btnConvertLoad = true;
+        angular.element('#btnConvert').button('loading');
         convertPending = true;
         convertCancelled = false;
         convertBacked = false;
@@ -1378,7 +1378,7 @@ angular.module('Core')
               convertUsersInBatch();
             } else {
               if (convertBacked === false) {
-                $scope.btnConvertLoad = false;
+                angular.element('#btnConvert').button('reset');
                 $scope.$dismiss();
               } else {
                 $state.go('users.convert', {});

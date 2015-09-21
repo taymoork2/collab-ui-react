@@ -212,7 +212,7 @@
 
     function placeOrder() {
       var promise = $q.when();
-      vm.placeOrderLoad = true;
+      angular.element('#placeOrder').button('loading');
       if (!customerExists) {
         promise = promise.then(function () {
           return PstnSetupService.createCustomer(vm.customerId, vm.customerName, vm.provider.uuid);
@@ -248,7 +248,7 @@
       }).then(function () {
         $state.go('pstnSetup.nextSteps');
       }).finally(function () {
-        vm.placeOrderLoad = false;
+        angular.element('#placeOrder').button('reset');
       });
     }
   }
