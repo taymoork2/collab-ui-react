@@ -91,7 +91,7 @@
         <section class="quick-links small-12 column" ng-controller="QuikLinksCtrl">
           <h4 translate="homePage.quickLinksText"></h4>
           <ul class="list-group">
-            <li ng-if="isPageActive('users')" >
+            <li ng-if="isPageActive('users')" cr-feature-toggle feature-hide="dirSync">
               <a id="addUserQuickLink" href="" ui-sref="users.list({ showAddUsers: 'add' })" class="list-group-item" translate="homePage.addUserText"></a>
             </li>
             <li ng-if="false">
