@@ -1669,7 +1669,7 @@ angular.module('Core')
                 uniqueEmails.push(email);
                 tempUserArray.push({
                   address: email,
-                  name: userArray[j][0] + ' ' + userArray[j][1],
+                  name: userArray[j][0] + NAME_DELIMITER + userArray[j][1],
                   displayName: userArray[j][2]
                 });
                 tempLicenseArray.push(buildLicenseArray(userArray[j][4], userArray[j][5]));
