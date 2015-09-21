@@ -288,6 +288,9 @@
 
     function loadInternalNumberPool(pattern) {
       TelephonyInfoService.loadInternalNumberPool(pattern).then(function (internalNumberPool) {
+        if (vm.directoryNumber.uuid) {
+          internalNumberPool.push(vm.directoryNumber);
+        }
         vm.internalNumberPool = internalNumberPool;
       }).catch(function (response) {
         vm.internalNumberPool = [];
