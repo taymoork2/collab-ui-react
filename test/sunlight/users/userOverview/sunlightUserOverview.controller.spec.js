@@ -39,7 +39,8 @@ describe('sunlightUserOverviewCtrl', function () {
     $state.modal = jasmine.createSpyObj('modal', ['close']);
 
     spyOn($state, 'go');
-    spyOn(Notification, 'notify');
+    spyOn(Notification, 'success');
+    spyOn(Notification, 'error');
 
     $stateParams = {
       currentUser: angular.copy(getJSONFixture('core/json/currentUser.json'))
@@ -66,7 +67,9 @@ describe('sunlightUserOverviewCtrl', function () {
     getUserInfoDeferred.reject(failureResponse);
     $scope.$apply();
     controller.loadUserInformation($stateParams.currentUser.id);
-    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+    expect(Notification.error).toHaveBeenCalledWith(jasmine.any(String), {
+      userId: 'CurrentUser'
+    });
   });
 
   it('should return a successful status when the updateUserInfo operation succeeds', function () {
@@ -81,7 +84,9 @@ describe('sunlightUserOverviewCtrl', function () {
 
     updateUserInfoDeferred.resolve(successResponse);
     $scope.$apply();
-    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+    expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
+      userId: 'CurrentUser'
+    });
   });
 
   it('should return a failure status when the updateUserInfo operation fails', function () {
@@ -92,7 +97,9 @@ describe('sunlightUserOverviewCtrl', function () {
     controller.updateUserData($stateParams.currentUser.id);
     updateUserInfoDeferred.reject(failureResponse);
     $scope.$apply();
-    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+    expect(Notification.error).toHaveBeenCalledWith(jasmine.any(String), {
+      userId: 'CurrentUser'
+    });
   });
 
   it('should return a failure status when the updateUserInfo operation fails due to empty alias', function () {
@@ -103,7 +110,9 @@ describe('sunlightUserOverviewCtrl', function () {
     controller.aliasFormModel.sunlightUserAlias = undefined;
     controller.updateUserData($stateParams.currentUser.id);
 
-    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+    expect(Notification.error).toHaveBeenCalledWith(jasmine.any(String), {
+      userId: 'CurrentUser'
+    });
   });
 
   it('should return a successful status when the updateUserInfo with role as Supervisor operation succeeds', function () {
@@ -115,7 +124,9 @@ describe('sunlightUserOverviewCtrl', function () {
 
     updateUserInfoDeferred.resolve(successResponse);
     $scope.$apply();
-    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+    expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
+      userId: 'CurrentUser'
+    });
   });
 
   it('should enable SaveCancel Button', function () {

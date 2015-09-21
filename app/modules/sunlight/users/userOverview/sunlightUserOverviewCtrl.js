@@ -71,24 +71,24 @@
       var updatedUserInfo = getUpdatedUserData();
 
       if (!updatedUserInfo.alias) {
-        Notification.notify([$translate.instant('contactCenterUserConfig.failureMessages.emptyAliasErrorMessage', {
+        Notification.error('contactCenterUserConfig.failureMessages.emptyAliasErrorMessage', {
           userId: vm.currentUser.userName
-        })], 'error');
+        });
         return;
       }
 
       SunlightConfigService.updateUserInfo(updatedUserInfo, userId)
         .then(function (response) {
           vm.hideSaveCancel();
-          Notification.notify([$translate.instant('contactCenterUserConfig.successMessages.userUpdateSuccessMessage', {
+          Notification.success('contactCenterUserConfig.successMessages.userUpdateSuccessMessage', {
             userId: vm.currentUser.userName
-          })], 'success');
+          });
 
         }, function (response) {
           Log.debug('Failed to save sunlight user information in sunlight config Service. Status: ' + response.status + ' statusText: ' + response.statusText);
-          Notification.notify([$translate.instant('contactCenterUserConfig.failureMessages.userUpdateFailureMessage', {
+          Notification.error('contactCenterUserConfig.failureMessages.userUpdateFailureMessage', {
             userId: vm.currentUser.userName
-          })], 'error');
+          });
         });
     };
 
@@ -117,9 +117,9 @@
 
         }, function (response) {
           Log.debug('Failed to retrieve sunlight user information from sunlight config Service with Status: ' + response.status + ' statusText: ' + response.statusText);
-          Notification.notify([$translate.instant('contactCenterUserConfig.failureMessages.userloadFailureMessage', {
+          Notification.error('contactCenterUserConfig.failureMessages.userloadFailureMessage', {
             userId: vm.currentUser.userName
-          })], 'error');
+          });
         });
     };
 
