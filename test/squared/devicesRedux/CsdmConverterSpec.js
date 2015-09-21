@@ -216,36 +216,28 @@ describe('CsdmConverterSpec', function () {
     it('has issues when status.level is not ok', function () {
       var arr = [{
         status: {
-          level: 'not_ok'
+          level: 'not_ok',
+          connectionStatus: 'CONNECTED'
         }
       }];
       expect(converter.convertDevices(arr)[0].hasIssues).toBeTruthy();
     });
 
-    it('has does not have issues when status.level is ok', function () {
+    it('has does not have issues when status.level is not ok and device is OFFLINE', function () {
       var arr = [{
         status: {
-          level: 'OK'
+          level: 'not_ok',
+          connectionStatus: 'OFFLINE'
         }
       }];
       expect(converter.convertDevices(arr)[0].hasIssues).toBeFalsy();
     });
-  });
-
-  describe("has issues", function () {
-    it('has issues when status.level is not ok', function () {
-      var arr = [{
-        status: {
-          level: 'not_ok'
-        }
-      }];
-      expect(converter.convertDevices(arr)[0].hasIssues).toBeTruthy();
-    });
 
     it('has does not have issues when status.level is ok', function () {
       var arr = [{
         status: {
-          level: 'OK'
+          level: 'OK',
+          connectionStatus: 'CONNECTED'
         }
       }];
       expect(converter.convertDevices(arr)[0].hasIssues).toBeFalsy();
