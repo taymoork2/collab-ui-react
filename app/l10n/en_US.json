@@ -1881,12 +1881,12 @@
       "supervisor": "Supervisor"
     },
     "successMessages": {
-      "userUpdateSuccessMessage": "Successfully updated user information for "
+      "userUpdateSuccessMessage": "Information is successfully saved for {{userId}}. "
     },
     "failureMessages": {
-      "userUpdateFailureMessage": "Unable to update user information for ",
-      "userloadFailureMessage": "Unable to fetch user information for ",
-      "emptyAliasErrorMessage": "Alias can not be empty for "
+      "userUpdateFailureMessage": "Unable to update information for {{userId}}.",
+      "userloadFailureMessage": "Unable to fetch information for {{userId}}.",
+      "emptyAliasErrorMessage": "Alias can not be empty"
     }
   },
 

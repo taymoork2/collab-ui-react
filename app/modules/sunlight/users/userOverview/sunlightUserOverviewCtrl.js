@@ -6,7 +6,8 @@
 
   /* @ngInject */
   function SunlightUserOverviewCtrl($state, $stateParams, SunlightConfigService, Notification, $translate, formlyValidationMessages, Log) {
-    /*jshint validthis: true */
+
+    /* jshint validthis: true */
 
     var vm = this;
 
@@ -70,21 +71,25 @@
       var updatedUserInfo = getUpdatedUserData();
 
       if (!updatedUserInfo.alias) {
-        Notification.notify([$translate.instant('contactCenterUserConfig.failureMessages.emptyAliasErrorMessage') + vm.currentUser.userName], 'error');
+        Notification.notify([$translate.instant('contactCenterUserConfig.failureMessages.emptyAliasErrorMessage', {
+          userId: vm.currentUser.userName
+        })], 'error');
         return;
       }
 
-      SunlightConfigService.updateUserInfo(updatedUserInfo, userId).then(function (data) {
+      SunlightConfigService.updateUserInfo(updatedUserInfo, userId)
+        .then(function (response) {
+          vm.hideSaveCancel();
+          Notification.notify([$translate.instant('contactCenterUserConfig.successMessages.userUpdateSuccessMessage', {
+            userId: vm.currentUser.userName
+          })], 'success');
 
-        vm.hideSaveCancel();
-        Notification.notify([$translate.instant('contactCenterUserConfig.successMessages.userUpdateSuccessMessage') + vm.currentUser.userName], 'success');
-
-      }, function (data) {
-
-        Log.debug('Failed to save sunlight user information in sunlight config Service. Status: ' + status);
-        Notification.notify([$translate.instant('contactCenterUserConfig.failureMessages.userUpdateFailureMessage') + vm.currentUser.userName], 'error');
-
-      });
+        }, function (response) {
+          Log.debug('Failed to save sunlight user information in sunlight config Service. Status: ' + response.status + ' statusText: ' + response.statusText);
+          Notification.notify([$translate.instant('contactCenterUserConfig.failureMessages.userUpdateFailureMessage', {
+            userId: vm.currentUser.userName
+          })], 'error');
+        });
     };
 
     vm.setUserInfoView = function (data) {
@@ -104,15 +109,18 @@
 
     vm.loadUserInformation = function (userId) {
 
-      SunlightConfigService.getUserInfo(userId).then(function (data) {
-        vm.userData = data;
-        vm.setUserInfoView(vm.userData);
+      SunlightConfigService.getUserInfo(userId)
+        .then(function (response) {
+          var data = response.data || {};
+          vm.userData = data;
+          vm.setUserInfoView(vm.userData);
 
-      }, function (data) {
-        Log.debug('Failed to retrieve sunlight user information from sunlight config Service with error : ' + JSON.stringify(data));
-        Notification.notify([$translate.instant('contactCenterUserConfig.failureMessages.userloadFailureMessage') + vm.currentUser.userName], 'error');
-      });
-
+        }, function (response) {
+          Log.debug('Failed to retrieve sunlight user information from sunlight config Service with Status: ' + response.status + ' statusText: ' + response.statusText);
+          Notification.notify([$translate.instant('contactCenterUserConfig.failureMessages.userloadFailureMessage', {
+            userId: vm.currentUser.userName
+          })], 'error');
+        });
     };
 
     vm.loadUserInformation(vm.currentUser.id);

@@ -4,6 +4,16 @@ describe('sunlightUserOverviewCtrl', function () {
   var controller, $scope, $state, $stateParams, Notification, $translate, formlyValidationMessages, Log;
   var $q, sunlightConfigService, getUserInfoDeferred, updateUserInfoDeferred;
   var userInfo = getJSONFixture('sunlight/json/sunlightTestUser.json');
+  var successResponse = {
+    'data': userInfo,
+    'status': 200,
+    'statusText': 'OK'
+  };
+
+  var failureResponse = {
+    'status': 500,
+    'statusText': 'Intenal Server Error'
+  };
 
   beforeEach(module('Sunlight'));
 
@@ -47,20 +57,20 @@ describe('sunlightUserOverviewCtrl', function () {
   }));
 
   it('should load the Sunlight userInfo', function () {
-    getUserInfoDeferred.resolve(userInfo);
+    getUserInfoDeferred.resolve(successResponse);
     $scope.$apply();
     expect(controller.userData.media).toBe(userInfo.media);
   });
 
   it('should fail to load the Sunlight userInfo when GET userInfo call to config service fails', function () {
-    getUserInfoDeferred.reject();
+    getUserInfoDeferred.reject(failureResponse);
     $scope.$apply();
     controller.loadUserInformation($stateParams.currentUser.id);
     expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
   });
 
   it('should return a successful status when the updateUserInfo operation succeeds', function () {
-    getUserInfoDeferred.resolve(userInfo);
+    getUserInfoDeferred.resolve(successResponse);
     $scope.$apply();
     expect(controller.userData.media).toBe(userInfo.media);
 
@@ -69,26 +79,25 @@ describe('sunlightUserOverviewCtrl', function () {
     controller.aliasFormModel.sunlightUserAlias = 'iAmSuperAgent';
     controller.updateUserData($stateParams.currentUser.id);
 
-    updateUserInfoDeferred.resolve(userInfo);
+    updateUserInfoDeferred.resolve(successResponse);
     $scope.$apply();
     expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
   });
 
   it('should return a failure status when the updateUserInfo operation fails', function () {
-    getUserInfoDeferred.resolve(userInfo);
+    getUserInfoDeferred.resolve(successResponse);
     $scope.$apply();
 
     controller.userData.media = ['chat'];
     controller.updateUserData($stateParams.currentUser.id);
-
-    updateUserInfoDeferred.reject();
+    updateUserInfoDeferred.reject(failureResponse);
     $scope.$apply();
     expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
   });
 
   it('should return a failure status when the updateUserInfo operation fails due to empty alias', function () {
 
-    getUserInfoDeferred.resolve(userInfo);
+    getUserInfoDeferred.resolve(successResponse);
     $scope.$apply();
 
     controller.aliasFormModel.sunlightUserAlias = undefined;
@@ -98,19 +107,19 @@ describe('sunlightUserOverviewCtrl', function () {
   });
 
   it('should return a successful status when the updateUserInfo with role as Supervisor operation succeeds', function () {
-    getUserInfoDeferred.resolve(userInfo);
+    getUserInfoDeferred.resolve(successResponse);
     $scope.$apply();
 
     controller.roleSelected = 'contactCenterUserConfig.userRoles.supervisor';
     controller.updateUserData($stateParams.currentUser.id);
 
-    updateUserInfoDeferred.resolve(userInfo);
+    updateUserInfoDeferred.resolve(successResponse);
     $scope.$apply();
     expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
   });
 
   it('should enable SaveCancel Button', function () {
-    getUserInfoDeferred.resolve(userInfo);
+    getUserInfoDeferred.resolve(successResponse);
     $scope.$apply();
 
     controller.showSaveCancel();
@@ -118,7 +127,7 @@ describe('sunlightUserOverviewCtrl', function () {
   });
 
   it('should call the $state service with the user.list state when closePreview is called', function () {
-    getUserInfoDeferred.resolve(userInfo);
+    getUserInfoDeferred.resolve(successResponse);
     $scope.$apply();
 
     controller.closePreview();

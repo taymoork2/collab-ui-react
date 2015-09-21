@@ -7,7 +7,7 @@
   <ul>
     <li ng-repeat="channel in SunlightUserOverview.mediaInfo" class="feature ccc-channel-feature" id="{{channel.name}}">
       <i class="feature-icon"></i>
-      <span class="feature-name">{{'contactCenterUserConfig.' + channel.name | translate}}</span>
+      <span class="feature-name">{{:: 'contactCenterUserConfig.' + channel.name | translate}}</span>
       <i class="feature-arrow">
         <cs-toggle-switch ng-click = "SunlightUserOverview.showSaveCancel()" ng-model="channel.enabled" toggle-id="{{'sunlight-' + channel.name}}"
                           name="{{channel.name}}" size="small">

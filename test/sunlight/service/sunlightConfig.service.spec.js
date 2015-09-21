@@ -26,9 +26,9 @@ describe(' sunlightConfigService', function () {
 
     $httpBackend.whenGET(sunlightUserConfigUrl + userId).respond(200, userData);
 
-    sunlightConfigService.getUserInfo(userId).then(function (data) {
-      expect(data.orgId).toBe(orgId);
-      expect(data.userId).toBe(userId);
+    sunlightConfigService.getUserInfo(userId).then(function (response) {
+      expect(response.data.orgId).toBe(orgId);
+      expect(response.data.userId).toBe(userId);
     });
     $httpBackend.flush();
 
@@ -37,8 +37,8 @@ describe(' sunlightConfigService', function () {
   it('should fail to get userInfo for a given userId when there is an http error', function () {
     $httpBackend.whenGET(sunlightUserConfigUrl + userId).respond(500, errorData);
 
-    sunlightConfigService.getUserInfo(userId).then(function (data) {}, function (data) {
-      expect(data).toBe('Get UserInfo call failed ' + JSON.stringify(errorData));
+    sunlightConfigService.getUserInfo(userId).then(function (response) {}, function (response) {
+      expect(response.status).toBe(500);
     });
     $httpBackend.flush();
 
@@ -55,8 +55,8 @@ describe(' sunlightConfigService', function () {
 
     $httpBackend.whenPUT(sunlightUserConfigUrl + userId).respond(200, {});
 
-    sunlightConfigService.updateUserInfo(userInfo, userId).then(function (status) {
-      expect(status).toBe(200);
+    sunlightConfigService.updateUserInfo(userInfo, userId).then(function (response) {
+      expect(response.status).toBe(200);
     });
     $httpBackend.flush();
   });
@@ -64,22 +64,11 @@ describe(' sunlightConfigService', function () {
   it('should fail to update userInfo in sunlight config service when there is an http error', function () {
     var userInfo = angular.copy(getJSONFixture('sunlight/json/sunlightTestUser.json'));
     $httpBackend.whenPUT(sunlightUserConfigUrl + userId).respond(500, errorData);
-    sunlightConfigService.updateUserInfo(userInfo, userId).then(function (status) {
-      //this block will never get executed
-      expect(status).toBe(undefined);
-    }, function (data) {
-      expect(data).toBe('Update UserInfo call failed ' + JSON.stringify(errorData));
+    sunlightConfigService.updateUserInfo(userInfo, userId).then(function (response) {}, function (response) {
+      expect(JSON.stringify(response.data)).toBe(JSON.stringify(errorData));
+      expect(response.status).toBe(500);
     });
     $httpBackend.flush();
-  });
-
-  it('should fail to update userInfo when userId or userData passed is not defined', function () {
-    sunlightConfigService.updateUserInfo(undefined, undefined).then(function (status) {
-      //this block will never get executed
-      expect(status).toBe(undefined);
-    }, function (data) {
-      expect(data).toBe('arguments passed cannot be null or undefined');
-    });
   });
 
 });
