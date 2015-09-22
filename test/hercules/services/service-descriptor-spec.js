@@ -5,7 +5,17 @@ describe('ServiceDescriptor', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   // instantiate service
-  var Service, $httpBackend;
+  var Service, $httpBackend, authinfo;
+
+  beforeEach(function () {
+    module(function ($provide) {
+      authinfo = {
+        getOrgId: sinon.stub()
+      };
+      authinfo.getOrgId.returns("12345");
+      $provide.value('Authinfo', authinfo);
+    });
+  });
 
   beforeEach(inject(function ($injector, _ServiceDescriptor_) {
     Service = _ServiceDescriptor_;
@@ -21,7 +31,7 @@ describe('ServiceDescriptor', function () {
 
   it('should fetch services', function (done) {
     $httpBackend
-      .when('GET', 'https://hercules-integration.wbx2.com/v1/services')
+      .when('GET', 'https://hercules-integration.wbx2.com/v1/organizations/12345/services')
       .respond({
         fusion_services: [{
           foo: 'bar',

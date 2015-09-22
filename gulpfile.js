@@ -117,6 +117,18 @@ gulp.task('dist', ['build'], function (done) {
   );
 });
 
+/*********************************************
+ * Installs configured TypeScript definitions
+ * Usage: gulp tsd
+ ********************************************/
+
+gulp.task('tsd', function (done) {
+  $.tsd({
+    command: 'reinstall',
+    config: './tsd.json'
+  }, done);
+});
+
 //============================================
 // CLEANING TASKS
 //============================================

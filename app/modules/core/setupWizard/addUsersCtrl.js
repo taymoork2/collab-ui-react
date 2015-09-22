@@ -36,7 +36,8 @@ angular.module('Core')
           } else if ($scope.options.addUsers === 1) {
             $scope.wizard.setSubTab($scope.wizard.current.tab.subTabs[1]);
           } else if ($scope.options.addUsers === 2) {
-            $scope.wizard.setSubTab($scope.wizard.current.tab.subTabs[2]);
+            var subTabIndex = $scope.wizard.current.tab.subTabs.length - 1; // may be 1 or 2 depending on csv
+            $scope.wizard.setSubTab($scope.wizard.current.tab.subTabs[subTabIndex]);
           }
           deferred.resolve();
         } else {

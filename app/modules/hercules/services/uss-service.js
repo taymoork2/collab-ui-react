@@ -1,32 +1,22 @@
 'use strict';
 
 angular.module('Hercules')
-  .service('USSService', ['$http', 'ConfigService',
-    function USSService($http, ConfigService) {
+  .service('USSService', ['$http', 'ConfigService', 'Authinfo',
+    function USSService($http, ConfigService, Authinfo) {
       var statusesParameterRequestString = function (serviceId, state, limit) {
         var statefilter = state ? "&state=" + state : "";
-        return 'serviceId=' + serviceId + statefilter + '&limit=' + limit;
+        return 'serviceId=' + serviceId + statefilter + '&limit=' + limit + '&orgId=' + Authinfo.getOrgId();
       };
       return {
         getStatusesForUser: function (userId, callback) {
           $http
-            .get(ConfigService.getUSSUrl() + '/userStatuses?userId=' + userId)
+            .get(ConfigService.getUSSUrl() + '/userStatuses?userId=' + userId + '&orgId=' + Authinfo.getOrgId())
             .success(function (data) {
               callback(null, {
                 userStatuses: _.filter(data.userStatuses, function (nugget) {
                   return nugget.entitled || (nugget.entitled === false && nugget.state != "deactivated");
                 })
               });
-            })
-            .error(function () {
-              callback(arguments, null);
-            });
-        },
-        pollCIForUser: function (userId, callback) {
-          $http
-            .post(ConfigService.getUSSUrl() + '/userStatuses/actions/refreshEntitlementsForUser/invoke/?userId=' + userId)
-            .success(function (data) {
-              callback(null, data);
             })
             .error(function () {
               callback(arguments, null);
@@ -73,7 +63,7 @@ angular.module('Hercules')
         },
         getStatusesSummary: function (callback) {
           $http
-            .get(ConfigService.getUSSUrl() + '/userStatuses/summary')
+            .get(ConfigService.getUSSUrl() + '/userStatuses/summary?orgId=' + Authinfo.getOrgId())
             .success(function (data) {
               callback(null, data);
             })

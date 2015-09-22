@@ -46,7 +46,7 @@
         <hercules-dashboard-header> </hercules-dashboard-header>
 
         <div class="row" ng-show="clusterLength() != 0">
-          <h3 style="padding-left: 10px">Cisco VCS Clusters: {{clusterLength()}}</h3>
+          <h3>Cisco VCS Clusters: {{clusterLength()}}</h3>
 
           <div class="grid" style="margin-right: -30px; margin-left: -10px;">
 
@@ -82,8 +82,8 @@
         </div>
 
         <div ng-show="clusterLength() == 0">
-          <h3 style="padding-left: 20px">Cisco VCS Clusters</h3>
-          <h5 style="padding-left: 20px; color: #ccc">
+          <h3>Cisco VCS Clusters</h3>
+          <h5 style="color: #ccc">
             No clusters connected to Spark
           </h5>
         </div>

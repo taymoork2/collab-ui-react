@@ -180,6 +180,10 @@
       $('#didAddField').tokenfield('createToken', pattern);
     }
 
+    function getInputTokens() {
+      return $('#didAddField').tokenfield('getTokens');
+    }
+
     function validateDID(input) {
       return /^\+([0-9]){10,12}$/.test(input);
     }
@@ -201,6 +205,14 @@
 
     function populateDidArrays() {
       var didList = getDIDList();
+
+      vm.tokenObjs = getInputTokens();
+      if (angular.isDefined(vm.tokenObjs) && angular.isArray(vm.tokenObjs) && vm.tokenObjs.length != didList.length) {
+        didList = [];
+        angular.forEach(vm.tokenObjs, function (input, index) {
+          didList.push(input.value);
+        });
+      }
 
       if (vm.didObjectsFromCmi.length > 0) {
         //look for DIDs that need to be removed

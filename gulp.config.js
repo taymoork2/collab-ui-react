@@ -162,7 +162,9 @@ module.exports = function() {
         vendor + '/d3/d3.min.js',
         vendor + '/jquery-csv/src/jquery.csv.js',
         vendor + '/angular-timer/dist/angular-timer.js',
-        vendor + '/humanize-duration/humanize-duration.js'
+        vendor + '/humanize-duration/humanize-duration.js',
+        vendor + '/angular-libphonenumber/dist/libphonenumber.js',
+        vendor + '/angular-libphonenumber/dist/angular-libphonenumber.js'
       ],
       scss: {
         paths: [
