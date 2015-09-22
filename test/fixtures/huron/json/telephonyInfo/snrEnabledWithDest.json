@@ -1,10 +1,11 @@
 {
   "snrInfo": {
     "singleNumberReachEnabled": true,
-    "destination": "555",
+    "destination": "+1 717-737-7488",
     "remoteDestinations": [{
       "uuid": "123456",
       "pattern": "555"
-    }]
+    }],
+    "answerTooLateTimer": "20000"
   }
 }
