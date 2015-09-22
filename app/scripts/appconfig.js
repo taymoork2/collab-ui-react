@@ -574,16 +574,16 @@ angular
 
         })
         .state('webex-reports-iframe', {
-          url: '/webexreports',
-          templateUrl: 'modules/webex/siteReports/siteReportsIframe.tpl.html',
+          url: '/iwebexreports',
+          templateUrl: 'modules/webex/siteReportsIframe/siteReportIframe.tpl.html',
           controller: 'ReportsIframeCtrl',
           controllerAs: 'reportsIframe',
-          parent: 'main',
-          params: {
-            siteUrl: null,
-            settingPageId: null,
-            settingPageIframeUrl: null
-          }
+          parent: 'main'
+            /* params: {
+               siteUrl: null,
+               settingPageId: null,
+               settingPageIframeUrl: null
+             }*/
 
         })
         .state('site-setting-iframe', {

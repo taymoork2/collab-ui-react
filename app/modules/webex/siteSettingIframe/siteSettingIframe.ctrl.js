@@ -13,6 +13,7 @@
     '$timeout',
     'Authinfo',
     'Notification',
+    'Config',
     function (
       $scope,
       $rootScope,
@@ -24,7 +25,8 @@
       $sce,
       $timeout,
       Authinfo,
-      Notification
+      Notification,
+      Config
     ) {
 
       var _this = this;

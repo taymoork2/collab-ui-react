@@ -31,8 +31,12 @@
 
       this.reportObject = reportService.initReportsObject();
 
+      $scope.reportPageId = "test13";
+
+      var advancedUrl = Config.getWebexAdvancedHomeUrl(this.reportObject.siteUrl);
+
       // for webex site cross launch: we probably don't need these three lines!
-      $scope.webexAdvancedUrl = $sce.trustAsResourceUrl(Config.getWebexAdvancedHomeUrl(this.reportObject.siteUrl));
+      $scope.webexAdvancedUrl = $sce.trustAsResourceUrl(advancedUrl);
       $scope.adminEmailParam = Authinfo.getPrimaryEmail();
       $scope.localeParam = $translate.use();
 

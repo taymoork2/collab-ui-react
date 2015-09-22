@@ -789,7 +789,9 @@ angular.module('Core')
           'site-list',
           'site-settings',
           'site-setting-iframe',
-          'webex-reports'
+          'webex-reports',
+          'webex-reports-iframe'
+
         ],
         Application: ['organizationAdd']
       };
