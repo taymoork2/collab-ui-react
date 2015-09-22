@@ -49,20 +49,28 @@
   }
   .result-pane {
     padding-top: 20px;
+    
     .result-row {
       cursor: pointer;
-      padding-top: 20px;
+      padding-top: 18px;
       font-size: 0.875rem;
       border-bottom: 3px solid white;
-
-      &:hover {
-        border-bottom: 3px solid #049fd9;
-      }
-
+      padding-bottom: 8px;
       i {
         padding-right: 10px;
       }
     }
+
+    .result-row.active {
+      background: $gray-lightest;
+    }
+
+  }
+
+  .no-results-matched-search {
+    padding: 10px;
+    text-align: center;
+    color: $brand-danger;
   }
 
   input:focus, a:focus {
@@ -71,15 +79,50 @@
     background-color: white !important;
   }
 
-  .dr2-search {
-    input[type=text] {
-      border: 0;
-      // border-bottom: 1px solid #ccc;
+  .devices-search {
+    form {
+      display: flex;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 8px;
+
+      .filter {
+        margin: 0 10px 2px 0;
+        padding: 1px 10px;
+        border-radius: 10px;
+        background: $brand-primary;
+        color: $gray-lightest;
+        white-space: nowrap;
+      }
+
+      .search-icon {
+        color: $gray;
+        padding-right: 10px;
+        cursor: search;
+      }
+
+      .clear-icon {
+        color: $gray;
+        cursor: pointer;
+      }
+
+      input[type=text] {
+        border: 0;
+        margin: 0;
+        padding: 0;
+      }
     }
+    form.active {
+      border-bottom: 3px solid $brand-primary;
+    }
+    form.no-match {
+      border-bottom: 3px solid $brand-danger;
+    }
+
     ul {
       margin: 0;
       padding-bottom: 60px;
     }
+
     li {
       a {
         color: #666;
@@ -88,9 +131,6 @@
       padding: 20px 0 10px 0;
       list-style-type: none;
       border-bottom: 1px solid #ddd;
-    }
-    li.active, input[type=text]:focus, input[type=text].active {
-      border-bottom: 3px solid #049fd9;
     }
   }
 }
