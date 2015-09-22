@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('WebExSiteSettingIframe').controller('WebExSiteSettingIframeCtrl', [
+  angular.module('WebExSiteSetting').controller('WebExSiteSettingCtrl', [
     '$scope',
     '$rootScope',
     '$log',
@@ -29,7 +29,7 @@
 
       var _this = this;
 
-      _this.funcName = "WebExSiteSettingIframeCtrl()";
+      _this.funcName = "WebExSiteSettingCtrl()";
       _this.logMsg = "";
 
       $scope.siteUrl = $stateParams.siteUrl;

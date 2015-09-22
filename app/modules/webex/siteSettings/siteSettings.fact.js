@@ -345,7 +345,7 @@
           }
 
           var iframeSref =
-            "site-setting-iframe({" +
+            "site-setting({" +
             "  siteUrl:" + "'" + webExSiteSettingsObj.siteUrl + "'" + "," +
             "  settingPageId:" + "'" + settingPageTypeObj.id + "'" + "," +
             "  settingPageIframeUrl:" + "'" + settingPageUrl + "'" +
