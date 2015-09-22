@@ -104,7 +104,7 @@ angular.module('Squared').service('CsdmConverter',
       if (isTranslatable('CsdmStatus.errorCodes.' + e.type + '.type')) {
         return {
           type: translateOrDefault('CsdmStatus.errorCodes.' + e.type + '.type', e.type),
-          message: translateOrDefault('CsdmStatus.errorCodes.' + e.type + '.message', e.description)
+          message: translateOrDefault('CsdmStatus.errorCodes.' + e.type + '.message', e.description, e.references)
         };
       } else if (e.description) {
         return {
@@ -124,9 +124,9 @@ angular.module('Squared').service('CsdmConverter',
       }
     }
 
-    function translateOrDefault(translateString, defaultValue) {
+    function translateOrDefault(translateString, defaultValue, parameters) {
       if (isTranslatable(translateString)) {
-        return $translate.instant(translateString);
+        return $translate.instant(translateString, parameters);
       } else {
         return defaultValue;
       }

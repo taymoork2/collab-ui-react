@@ -188,9 +188,12 @@ describe('CsdmConverterSpec', function () {
       var arr = [{
         status: {
           events: [{
-            type: 'tcpfallback',
+            type: 'mediaProtocol',
             level: 'warn',
-            description: 'tcpfallback_description'
+            description: 'tcpfallback_description',
+            references: {
+              mediaProtocol: 'TCP'
+            }
           }]
         }
       }];
