@@ -31,7 +31,7 @@ describe('Configuring Contact Center services per user', function () {
     utils.click(users.sunlightUserRole);
     utils.click(users.sunlightUserRoleFirstElement);
     utils.click(users.sunlightUserOverviewSave);
-    notifications.assertSuccess('Information is successfully saved for ' + testUser);
+    notifications.assertSuccess('Information has been updated successfully for user ' + testUser);
     utils.click(users.closeSidePanel);
   });
 

@@ -1901,12 +1901,12 @@
       "supervisor": "Supervisor"
     },
     "successMessages": {
-      "userUpdateSuccessMessage": "Information is successfully saved for {{userId}}. "
+      "userUpdateSuccessMessage": "Information has been updated successfully for user {{userId}}. "
     },
     "failureMessages": {
-      "userUpdateFailureMessage": "Unable to update information for {{userId}}.",
-      "userloadFailureMessage": "Unable to fetch information for {{userId}}.",
-      "emptyAliasErrorMessage": "Alias can not be empty"
+      "userUpdateFailureMessage": "Information cannot be updated currently for user {{userId}}.",
+      "userloadFailureMessage": "Information is currently not available for user {{userId}}.",
+      "emptyAliasErrorMessage": "User alias cannot be empty."
     }
   },
 
