@@ -32,8 +32,6 @@
       required: $translate.instant('common.invalidRequired')
     };
 
-    formlyValidationMessages.addStringMessage('required', vm.aliasMessages.required);
-
     vm.alias = [{
       key: 'sunlightUserAlias',
       type: 'input',
