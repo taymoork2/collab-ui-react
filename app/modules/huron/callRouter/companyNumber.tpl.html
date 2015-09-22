@@ -6,9 +6,9 @@
       <i class="dn-help-icon"></i>
     </span>
     <div class="form-wrapper">
-      <form name="nav.callrouterform" class="form-inline" collapse="nav.open" role="form">
+      <form name="nav.callrouterform" class="form-inline" novalidate collapse="nav.open" role="form">
         <formly-form model="nav.model" fields="nav.user">
-          <button type="submit" ng-disabled="nav.callrouterform.$invalid || nav.callrouterform.$pristine" class="btn btn-sm btn-primary" translate="common.save" ng-click= "nav.save()"></button>
+          <button type="submit" ng-disabled="nav.disableFn()" class="btn btn-sm btn-primary" translate="common.save" cs-btn loading="callrouterload" ng-click= "nav.save()"></button>
         </formly-form>
       </form>
     </div>

@@ -1401,6 +1401,8 @@
     "saveCallerIdError": "Caller Id and number failed to save.",
     "updateCallerIdSuccess": "Caller ID and number updated successfully",
     "updateCallerIdError": "Caller ID and number failed to update.",
+    "deleteCallerIdSuccess": "Caller ID and number deleted successfully.",
+    "deleteCallerIdError": "Caller ID and number failed to delete",
     "companycallerID": "Company Caller ID",
     "hide": "Hide",
     "expand": "Expand"
