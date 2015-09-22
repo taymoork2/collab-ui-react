@@ -41,6 +41,13 @@
       $scope.adminEmailParam = Authinfo.getPrimaryEmail();
       $scope.localeParam = $translate.use();
 
+      $scope.uiSref =
+        "webex-reports-iframe({" +
+        "  siteUrl:" + "'" + this.reportObject.siteUrl + "'" + "," +
+        "  reportPageId:" + "'" + $scope.reportPageId + "'" + "," +
+        "  reportPageIframeUrl:" + "'" + $scope.reportPageIframeUrl + "'" +
+        "})";
+
       $log.log("ReportsCtrl start");
       var reports = reportService.getReports();
 

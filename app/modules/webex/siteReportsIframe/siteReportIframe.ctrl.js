@@ -39,7 +39,7 @@
       $scope.reportPageId = $stateParams.reportPageId;
       $scope.reportPageTitle = $translate.instant("webexReportsLabels." + $scope.reportPageId);
       $scope.reportPageIframeUrl = $stateParams.reportPageIframeUrl;
-      $scope.iframeUrl = "https://" + $stateParams.siteUrl + $stateParams.reportPageIframeUrl;
+      $scope.iframeUrl = $stateParams.reportPageIframeUrl;
 
       $scope.webexAdvancedUrl = Config.getWebexAdvancedEditUrl($stateParams.siteUrl);
 
