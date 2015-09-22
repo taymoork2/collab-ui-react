@@ -1,0 +1,131 @@
+<h6 ng-if="calendarDetails.cluster">
+
+  <h4>
+    <div class="row">
+      <div class="small-10 columns">
+        {{calendarDetails.cluster.name}}
+        <small><a ui-sref="calendar-service.calendarClusterSettings({cluster:calendarDetails.cluster})">Settings</a></small>
+      </div>
+      <div class="small-2 columns">
+      </div>
+    </div>
+  </h4>
+
+
+  <h5>
+    Alarms
+  </h5>
+
+  <div ng-if="calendarDetails.selectedService.alarm_count">
+    <button class="button alert" ng-click="calendarDetails.showAlarms()">
+      {{calendarDetails.selectedService.alarm_count}} reported alarms
+    </button>
+
+
+  </div>
+
+  <div ng-if="!calendarDetails.selectedService.alarm_count">
+    No alarms reported
+  </div>
+
+  <h5>
+    <div class="row">
+      <div class="small-10 columns">
+        Software Upgrades
+      </div>
+      <div class="small-2 columns">
+
+      <span class="dropdown" on-toggle="dl.toggled(open)">
+        <a href class="dropdown-toggle">
+          <i class="icon icon-three-dots"/>
+        </a>
+        <ul class="dropdown-menu">
+          <li>
+            <a href>Schedule Upgrade</a>
+          </li>
+        </ul>
+      </span>
+
+      </div>
+    </div>
+  </h5>
+
+  <h6>
+  <div class="row">
+    <div class="col-sm-4 col-xs-1">
+      Current version
+    </div>
+    <div class="col-sm-4 col-xs-1">
+      {{calendarDetails.selectedService.connectors[0].version}}
+    </div>
+  </div>
+  <div ng-if="calendarDetails.selectedService.software_upgrade_available">
+    <div class="row">
+      <div class="col-sm-4 col-xs-2">
+        New version:
+      </div>
+      <div class="col-sm-4 col-xs-2">
+        {{calendarDetails.selectedService.not_approved_package.version}}
+      </div>
+    </div>
+    <div>
+      <button class="button secondary" ng-click="calendarDetails.upgrade()">Upgrade</button>
+    </div>
+  </div>
+  <div ng-if="!calendarDetails.selectedService.software_upgrade_available">
+    No new software available
+  </div>
+  </h6>
+
+  <h5>
+    Depending services
+  </h5>
+
+  <h6>
+  Management Connector
+  <span ng-show="calendarDetails.managementService.needs_attention" class="red">
+    <i class="fa fa-circle"/>
+    <span class="hidden-xs">Needs attention</span>
+  </span>
+  <span ng-show="calendarDetails.managementService.status !== 'needs_attention'" class="green">
+    <i class="fa fa-circle"/>
+    <span class="hidden-xs">Running</span>
+  </span>
+  </h6>
+
+  <h5>
+    <div class="row">
+      <div class="small-10 columns">
+        Running on hosts:
+      </div>
+      <div class="small-2 columns">
+        <span class="dropdown" on-toggle="dl.toggled(open)">
+          <a href class="dropdown-toggle">
+            <i class="icon icon-three-dots"/>
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <a href>Turn on Active-Active ?</a>
+            </li>
+          </ul>
+        </span>
+
+      </div>
+    </div>
+  </h5>
+
+  <h6>
+  <div ng-repeat="connector in calendarDetails.selectedService.connectors">
+    {{connector.host.host_name}}
+    <span ng-show="connector.status === 'needs_attention'" class="red">
+      <i class="fa fa-circle"/>
+      <span class="hidden-xs">Needs attention</span>
+    </span>
+  </div>
+  </h6>
+
+</div>
+
+<div ng-if="!calendarDetails.cluster">
+  No clusters...
+</div>

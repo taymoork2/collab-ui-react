@@ -24,6 +24,9 @@ angular.module('Core')
 
       Userservice.getUser('me', function (data, status) {
         if (data.success) {
+          if (data.id) {
+            Authinfo.setUserId(data.id);
+          }
           if (data.emails) {
             Authinfo.setEmail(data.emails);
           }
