@@ -39,8 +39,9 @@ angular.module('Core')
 
         // Messenger Sync mode
         if ($scope.isMsgrSyncMode) {
-          // Move to the next tab as current tab is irrelevent
+          // Move to the next tab as current tab is irrelevant
           $scope.wizard.nextTab();
+          deferred.reject();
 
           return deferred.promise;
         }
