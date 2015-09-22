@@ -710,9 +710,9 @@ angular
         .state('devices-redux4.details', {
           url: '/details',
           views: {
-            'leftPanel': {
-              templateUrl: 'modules/squared/devicesRedux4/list.html'
-            },
+            // 'leftPanel': {
+            //   templateUrl: 'modules/squared/devicesRedux4/list.html'
+            // },
             'rightPanel': {
               controllerAs: 'deviceDetails',
               controller: 'DevicesReduxDetailsCtrl4',

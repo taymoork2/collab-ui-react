@@ -1,29 +1,38 @@
 <div ng-show="devices.filterOrSearchActive">
 
   <div class="result-pane" ng-if="devices.filteredCodesAndDevices.matches.length">
-    <ul class="medium-block-grid-2 large-block-grid-4">
+    <ul class="small-block-grid-1 medium-block-grid-2 large-block-grid-4">
       <li
         ui-sref="devices-redux4.details({device: device})"
         ng-repeat="device in devices.filteredCodesAndDevices.matches | limitTo: ((devices.pager.currentPage * devices.pager.pageSize) + (devices.pager.currentPageSize - devices.pager.pageSize)) | limitTo: -devices.pager.currentPageSize">
-        <div style="display: flex">
-          <i 
-            style="top: -3px"
-            class="icon icon-2x icon-circle-telepresence" 
-            ng-class="{'needsActivation': device.needsActivation}"
-          />
-          <div class="ellipsis">
-            {{device.displayName}}
+        <div class="bg-container">
+          <div style="display: flex">
+            <i
+              class="icon icon-2x icon-circle-telepresence"
+              ng-class="{'needsActivation': device.needsActivation}"
+            />
+            <i
+              class="fa fa-circle overlay"
+              ng-class="device.cssColorClass"
+            />
+            <div class="ellipsis">
+              <h4 ng-bind-html="device.displayName | highlight:devices.search">
+
+              </h4>
+            </div>
           </div>
+
+<!--
+          <div class="ellipsis">
+            Status: <span ng-bind-html="device.readableState | highlight:devices.search"></span>
+          </div>
+ -->
+
+          <div class="ellipsis">
+            {{devices.deviceProps[device.filterMatch || 'readableState']}}: <span ng-bind-html="device[device.filterMatch || 'readableState'] | highlight:devices.search"></span>
+          </div>
+
         </div>
-<!--         <div class="small-5 columns ellipsis">
-          {{device.product || 'Needs Activation'}}
-        </div>
-        <div class="small-1 columns" style="text-align: right">
-          <i
-            class="fa fa-circle"
-            ng-class="device.cssColorClass"
-          />
-        </div> -->
       </li>
     </ul>
 
@@ -48,7 +57,4 @@
     <!-- end:pager -->
   </div>
 
-  <div ng-if="!devices.filteredCodesAndDevices.matches.length">
-    <p class="no-results-matched-search">No devices found...</p>
-  </div>
 </div>
