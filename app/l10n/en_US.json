@@ -184,7 +184,7 @@
     "billingTabDesc": "Engineering support/operations",
     "accountTab": "Account",
     "developmentTab": "Development",
-    "organizationTab": "Organization",
+    "organizationTab": "Manage Organizations",
     "organizationTabDesc": "Manage Organization Details, View Assigned Services, And Access Tools.",
     "addOrganizationTab": "Create an Organization",
     "addOrganizationTabDesc": "Add a new organization to this account",

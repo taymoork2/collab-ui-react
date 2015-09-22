@@ -6,7 +6,7 @@
     .controller('OrganizationFeaturesCtrl', OrganizationFeaturesCtrl);
 
   /* @ngInject */
-  function OrganizationFeaturesCtrl($stateParams, $rootScope, $scope, $state, $location, Storage, Log, $filter, Orgservice, Authinfo, Notification, $dialogs) {
+  function OrganizationFeaturesCtrl($stateParams, $rootScope, $scope, $state, Storage, Orgservice, Authinfo, Notification) {
     var vm = this;
     vm.currentOrganization = $stateParams.currentOrganization;
     vm.options = [{
@@ -18,7 +18,15 @@
       value: 0,
       name: 'featureToggle'
     }];
-    vm.selected = 1;
     vm.test = 'test';
+
+    function resetForm() {
+      $scope.orgFeatureToggles.form.$setPristine();
+      $scope.orgFeatureToggles.form.$setUntouched();
+    }
+
+    function updateToggles() {
+
+    }
   }
 })();
