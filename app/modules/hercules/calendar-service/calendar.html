@@ -2,8 +2,8 @@
 
   <div class="page-header">
 
-    <div class="page-title">
-      <div class="row full">
+    <div class="page-title" >
+      <div class="row full" >
 
         <div class="small-8 columns">
 
@@ -17,13 +17,11 @@
 
 
             <div class="small-6 columns">
-
+              <h5>
               <i class="icon icon-circle-user"/>
-
-              <span>Users: {{calendar.summary().activated}} activated
-              </span>
+              Users: {{calendar.summary().activated}} activated
               <span class="border-left" ng-show="calendar.summary().notActivated > 0">
-                <span class="disabled">{{calendar.summary().notActivated}} pending<
+                <span class="disabled">{{calendar.summary().notActivated}} pending
                 </span>
               </span>
               <span class="border-left" ng-show="calendar.summary().error > 0">
@@ -46,14 +44,14 @@
         </div>
 
         <div class="small-4 columns">
-          <h5>
-          <ul class="nav nav-tabs" role="tablist">
-            <li ui-sref-active="active"><a ui-sref="calendar-service.list">Resources</a></li>
-            <li ui-sref-active="active"><a ui-sref="calendar-service.settings">Settings</a></li>
-            <li ui-sref-active="active"><a ui-sref="calendar-service.about">About</a></li>
-          </ul>
-            </h5>
+            <ul class="nav nav-tabs" role="tablist">
+
+              <li ui-sref-active="active"><a ui-sref="calendar-service.list"><h5>Resources</h5></a></li>
+              <li ui-sref-active="active"><a ui-sref="calendar-service.settings"><h5>Settings</h5></a></li>
+              <li ui-sref-active="active"><a ui-sref="calendar-service.about"><h5>About</h5></a></li>
+            </ul>
         </div>
+
       </div>
     </div>
 

@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function CalendarController($modal, $scope, ClusterService, USSService, ConverterService) {
+  function CalendarController($modal, $scope, ClusterService, USSService, ConverterService, ServiceStatusSummaryService) {
     ClusterService.subscribe(angular.noop, {
       scope: $scope
     });
@@ -10,51 +10,20 @@
     var vm = this;
     vm.clusters = ClusterService.getClusters();
 
-    vm.calendarService = function (cluster) {
-      return _.find(cluster.services, {
-        service_type: "c_cal"
-      });
-    };
-
     vm.hasNoCalendarConnectors = function (cluster) {
-      return vm.calendarService(cluster).connectors.length === 0;
+      return ServiceStatusSummaryService.serviceFromCluster("c_cal", cluster).connectors.length === 0;
     };
 
     vm.softwareUpgradeAvailable = function (cluster) {
-      return vm.calendarService(cluster).software_upgrade_available;
+      return ServiceStatusSummaryService.serviceFromCluster("c_cal", cluster).software_upgrade_available;
     };
 
     vm.softwareVersionAvailable = function (cluster) {
-      return vm.calendarService(cluster).software_upgrade_available ? vm.calendarService(cluster).not_approved_package.version : "?";
+      return ServiceStatusSummaryService.serviceFromCluster("c_cal", cluster).software_upgrade_available ? ServiceStatusSummaryService.serviceFromCluster("c_cal", cluster).not_approved_package.version : "?";
     };
 
     vm.calendarAndManagementServiceStatus = function (cluster) {
-      var calendarService = _.find(cluster.services, {
-        service_type: "c_cal"
-      });
-      var managementService = _.find(cluster.services, {
-        service_type: "c_mgmt"
-      });
-      if (managementService === undefined || managementService.status === "needs_attention") {
-        return {
-          status: "alarm",
-          color: "red"
-        };
-      } else if (calendarService === undefined) {
-        return {
-          status: "unknown",
-          color: "grey"
-        };
-      } else if (calendarService.status === "running") {
-        return {
-          status: "running",
-          color: "green"
-        };
-      } else return {
-        status: calendarService.status,
-        color: "yellow"
-      };
-      //return (calendarService !== undefined && calendarService.status === "needs_attention") || (managementService !== undefined && managementService.status === "needs_attention");
+      return ServiceStatusSummaryService.status("c_cal", cluster);
     };
 
     // TODO: Rewrite USSService same way as ClusterService ?
@@ -98,11 +67,13 @@
 
   /* Based on notifiction-config-controller used in the old cluster view */
   /* @ngInject */
-  function CalendarServiceSettingsController($scope, $stateParams, NotificationConfigService, MailValidatorService, XhrNotificationService) {
+  function CalendarServiceSettingsController($stateParams, NotificationConfigService, MailValidatorService, XhrNotificationService) {
     var vm = this;
+
     vm.config = "";
+
     NotificationConfigService.read(function (err, config) {
-      $scope.loading = false;
+      vm.loading = false;
       if (err) return XhrNotificationService.notify(err);
       vm.config = config || {};
     });
@@ -110,23 +81,20 @@
 
     vm.writeConfig = function () {
       if (vm.config.wx2users && !MailValidatorService.isValidEmailCsv(vm.config.wx2users)) {
-        $scope.error = "Please enter a list of comma-separated email addresses";
+        vm.error = "Please enter a list of comma-separated email addresses";
       } else {
-        $scope.error = null;
-        $scope.saving = true;
-        NotificationConfigService.write($scope.config, function (err) {
-          $scope.saving = false;
+        vm.error = null;
+        vm.saving = true;
+        NotificationConfigService.write(vm.config, function (err) {
+          vm.saving = false;
           if (err) return XhrNotificationService.notify(err);
-          $scope.$parent.modal.close();
         });
-
       }
     };
-
   }
 
   /* @ngInject */
-  function CalendarDetailsController($modal, $scope, $stateParams, ClusterService) {
+  function CalendarDetailsController($modal, $stateParams, ClusterService) {
     var vm = this;
     vm.clusterId = $stateParams.cluster.id;
     vm.cluster = ClusterService.getClusters()[vm.clusterId];
