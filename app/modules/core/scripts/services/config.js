@@ -840,7 +840,8 @@ angular.module('Core')
         ],
         'squared-fusion-mgmt': [
           'fusion',
-          'cluster-details'
+          'cluster-details',
+          'calendar-service'
         ],
         'squared-fusion-uc': [
           'devices',

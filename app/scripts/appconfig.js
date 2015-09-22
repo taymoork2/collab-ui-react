@@ -1258,6 +1258,66 @@ angular
           controller: 'DashboardNextController',
           parent: 'main'
         })
+        .state('calendar-service', {
+          templateUrl: 'modules/hercules/calendar-service/calendar.html',
+          controller: 'CalendarController',
+          controllerAs: 'calendar',
+          parent: 'main',
+          url: '/services/calendar'
+        })
+        .state('calendar-service.list', {
+          url: '/list'
+        })
+        .state('calendar-service.details', {
+          views: {
+            'rightPane': {
+              controllerAs: 'calendarDetails',
+              controller: 'CalendarDetailsController',
+              templateUrl: 'modules/hercules/calendar-service/calendar-details.html'
+            }
+          },
+          params: {
+            cluster: null
+          }
+        })
+        .state('calendar-service.calendarClusterSettings', {
+          views: {
+            'rightPane': {
+              controllerAs: 'calendarClusterSettings',
+              controller: 'CalendarClusterSettingsController',
+              templateUrl: 'modules/hercules/calendar-service/calendar-cluster-settings.html'
+            }
+          },
+          params: {
+            cluster: null
+          }
+        })
+        .state('calendar-service.about', {
+          url: '/about',
+          views: {
+            'fullPane': {
+              templateUrl: 'modules/hercules/calendar-service/about.html'
+            }
+          }
+        })
+        .state('calendar-service.settings', {
+          url: '/settings',
+          views: {
+            'fullPane': {
+              controllerAs: 'calendarServiceSettings',
+              controller: 'CalendarServiceSettingsController',
+              templateUrl: 'modules/hercules/calendar-service/calendar-service-settings.html'
+            }
+          }
+        })
+        .state('calendar-service.resources', {
+          url: '/resources',
+          views: {
+            'fullPane': {
+              templateUrl: 'modules/hercules/calendar-service/resources.html'
+            }
+          }
+        })
         .state('cluster-details', {
           parent: 'sidepanel',
           views: {
