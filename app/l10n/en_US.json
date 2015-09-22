@@ -821,6 +821,7 @@
     "addMoreUsers": "Add more users",
     "skipAndFinish": "Skip Errors and Finish",
     "csvInvalidRow": "Entry does not contain 6 columns",
+    "csvDuplicateEmail": "Unable to process duplicate email address",
     "processCsvResponseError": "Error reading response",
     "processCsvError": "Error processing user",
     "csv400Error": "Unidentified error in the csv. Please verify the file and try again.",
@@ -1886,12 +1887,36 @@
     "error": "Something went wrong.",
     "notifyPartnerErrorMsg": "We're sorry, something went wrong while trying to notify your partner."
   },
+  "contactCenterUserConfig": {
+    "channels": "Channels",
+    "contactCenterProfile": "Contact Center Profile",
+    "chat": "Chat",
+    "voice": "Voice",
+    "email": "Email",
+    "role": "Role",
+    "alias": "Alias",
+    "attributes": "Attributes",
+    "userRoles": {
+      "user": "User",
+      "supervisor": "Supervisor"
+    },
+    "successMessages": {
+      "userUpdateSuccessMessage": "Information is successfully saved for {{userId}}. "
+    },
+    "failureMessages": {
+      "userUpdateFailureMessage": "Unable to update information for {{userId}}.",
+      "userloadFailureMessage": "Unable to fetch information for {{userId}}.",
+      "emptyAliasErrorMessage": "Alias can not be empty"
+    }
+  },
+
   "huronDetails": {
     "title": "Huron",
     "linesTitle": "Numbers",
     "settingsTitle": "Settings",
     "featuresTitle": "Features"
   },
+
   "linesPage": {
     "manageLines": "Numbers",
     "allLines": "All",
@@ -1905,5 +1930,6 @@
     "userEmailHeader": "User",
     "actionHeader": "Actions",
     "lineListError": "Error retrieving the line list. Please try reloading the page."
+
   }
 }
