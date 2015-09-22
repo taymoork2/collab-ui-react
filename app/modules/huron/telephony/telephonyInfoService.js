@@ -302,9 +302,7 @@
             intNumPool.push(dn);
           }
           internalNumberPool = intNumPool;
-          if (telephonyInfo.currentDirectoryNumber.uuid !== 'none') {
-            internalNumberPool.push(telephonyInfo.currentDirectoryNumber);
-          }
+
           return angular.copy(internalNumberPool);
         }).catch(function (response) {
           internalNumberPool = [];

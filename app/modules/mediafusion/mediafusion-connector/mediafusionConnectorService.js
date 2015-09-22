@@ -1,9 +1,13 @@
 'use strict';
 
 angular.module('Mediafusion')
-  .service('MediafusionClusterService', ['$http', '$location', 'MediafusionConnectorMock', 'MediafusionConverterService', 'MediafusionConfigService', 'XhrNotificationService',
-    function MediafusionClusterService($http, $location, mock, converter, config, notification) {
+  .service('MediafusionClusterService', ['$http', '$location', 'MediafusionConnectorMock', 'MediafusionConverterService', 'MediafusionConfigService', 'XhrNotificationService', 'Authinfo',
+    function MediafusionClusterService($http, $location, mock, converter, config, notification, Authinfo) {
       var lastClusterResponse = [];
+
+      function extractDataFromResponse(res) {
+        return res.data;
+      }
 
       var fetch = function (callback, opts) {
         var searchObject = $location.search();
@@ -26,7 +30,7 @@ angular.module('Mediafusion')
         }());
 
         $http
-          .get(config.getUrl() + '/clusters')
+          .get(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters')
           .success(function (data) {
             var converted = converter.convertClusters(data);
             lastClusterResponse = converted;
@@ -38,7 +42,7 @@ angular.module('Mediafusion')
       };
 
       var upgradeSoftware = function (clusterId, serviceType, callback, opts) {
-        var url = config.getUrl() + '/clusters/' + clusterId + '/services/' + serviceType + '/upgrade';
+        var url = config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/services/' + serviceType + '/upgrade';
 
         var errorCallback = (function () {
           if (opts && opts.squelchErrors) {
@@ -57,7 +61,7 @@ angular.module('Mediafusion')
       };
 
       var deleteHost = function (clusterId, serial, callback) {
-        var url = config.getUrl() + '/clusters/' + clusterId + '/hosts/' + serial;
+        var url = config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/hosts/' + serial;
         $http
           .delete(url)
           .success(callback)
@@ -77,10 +81,16 @@ angular.module('Mediafusion')
         };
       }
 
+      var getGroups = function () {
+        var url = config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/tags' + '?' + 'type=' + 'mf_group';
+        return $http.get(url).then(extractDataFromResponse);
+      };
+
       return {
         fetch: fetch,
         deleteHost: deleteHost,
-        upgradeSoftware: upgradeSoftware
+        upgradeSoftware: upgradeSoftware,
+        getGroups: getGroups
       };
     }
   ]);

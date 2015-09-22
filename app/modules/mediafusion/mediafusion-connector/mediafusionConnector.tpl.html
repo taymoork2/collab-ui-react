@@ -2,19 +2,17 @@
 
   <!-- header -->
   <div class="page-header row">
-    <div class="page-title clearfix">
-
-
+     <div class="page-title small-7 columns">
       <span class="title-heading" translate="mediaFusion.page_title" />
-      <div style="float: right; white-space: nowrap">
-        
-        <button 
-          style="width: 60px;"
-          class="btn btn-primary"
-          ng-click="showInfoPanel = !showInfoPanel">
-          <i class="fa fa-info" />
-        </button>
-      </div>
+    </div>
+    <div ng-hide="shouldShowWelcomeScreen()" class="small-5 columns page-option-buttons" style="white-space: nowrap">
+    <div style="border-right: solid 1px #dddddd; padding-right: 15px; margin-right: 33px; display: inline-block; white-space: nowrap">
+      <button 
+        class="btn btn-primary"
+        ng-click="showInfoPanel = !showInfoPanel">
+        <i class="fa fa-info" />
+      </button>
+    </div>
     </div>
   </div>
   
@@ -85,19 +83,20 @@
                 </span>
               </div>
                <div class="col-sm-2 col-xs-1" style="overflow: hidden">
-               
+                 &nbsp;
               </div>
               <div class="col-sm-3 col-xs-3" style="overflow: hidden">
-                <div class="col-md-1" style="top:-4px">0%  </div>
+                <div class="col-md-1" style="top:-4px">0%&nbsp;</div>
                 <div class="progress page-header col-md-8">
-                 <div class="progress-bar page-header " style="width:0%;"></div>
+                 &nbsp;&nbsp;<div class="progress-bar page-header " style="width:0%;"></div>
                 </div>
               </div>
               <div class="col-sm-1 col-xs-1" style="overflow: hidden">
+                <button id="actionsButton" type="button" class="actions-button btn-none dropdown-toggle" ng-class="dropdown-toggle" ng-click="$event.stopPropagation()">
+                  <i class="icon icon-three-dots"></i>
+                </button>
                 <div class="dropdown" class="connector-align-ellipses">
-                  <button id="actionsButton" type="button" data-toggle="dropdown" class="btn-icon btn-actions dropdown-toggle" ng-class="dropdown-toggle" ng-click="$event.stopPropagation()">
-                      <i class="icon icon-three-dots"></i>
-                  </button>
+                  
                   <ul class="dropdown-menu dropdown-primary" role="menu">
                     <li id="deleteConnectorAction">
                         <a data-toggle="modal" data-target="#deleteConnectorModal" ng-click="setDeleteConnector(cluster.hosts[0].host_name, cluster.hosts[0].serial, cluster.hosts[0].host_name)">
