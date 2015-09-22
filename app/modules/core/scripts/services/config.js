@@ -268,7 +268,7 @@ angular.module('Core')
           icon: 'icon-devices',
           title: 'tabs.deviceTab',
           state: 'devices',
-          link: '/devices-redux'
+          link: '/devices'
         }, {
           tab: 'reportTab',
           icon: 'icon-bars',
@@ -793,9 +793,6 @@ angular.module('Core')
           'overview',
           'users',
           'user-overview',
-          'device-overview',
-          'devices2-overview',
-          'device-overview-redux',
           'userprofile',
           'reports',
           'setupwizardmodal',
@@ -845,13 +842,9 @@ angular.module('Core')
         ],
         'squared-fusion-uc': [
           'devices',
-          'devices-redux',
+          'device-overview',
           'devices-redux2',
-          'devices-redux2-search',
-          'devices-redux3',
-          'devices-redux3-search',
-          'devices-cleanup',
-          'devices2'
+          'devices-redux3'
         ],
         'squared-team-member': [
           'organization'

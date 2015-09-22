@@ -2,6 +2,12 @@
 .devices-redux3 {
   background-color: white !important;
 
+  .ellipsis {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
   .row {
     margin: 0;
   }
@@ -13,12 +19,11 @@
   h1 {
     padding-bottom: 30px;
   }
+
   h2 {
     padding: 20px 0;
   }
-  .pane {
-    padding-right: 40px;
-  }
+
   .details-header {
     // border-bottom: 1px solid #ccc;
 
@@ -90,64 +95,13 @@
   }
 }
 
-
 @media (max-width: 600px) {
-  .main-redux .navi {
-    .burger {
-      top: 0;
-      right: 0;
-      padding: 20px;
-      cursor: pointer;
-      position: absolute;
-    }
-    ul {
-        top: 40px;
-        right: 0;
-        width: 200px;
-        z-index: 100;
-        position: absolute;
-        background-color: #383A41;
-    }
-    .drop {
-      ul {
-        display: none;
-      }
-    }
-    .drop:hover {
-      ul {
-        display: block;
-      }
-    }
-  }
   .devices-redux3 {
     padding: 5px 10px;
   }
 }
 
 @media (min-width: 600px) {
-  .main-redux {
-    .navi {
-      top: 0;
-      bottom: 0;
-      width: 200px;
-      position: absolute;
-      padding-top: 30px;
-      ul {
-        padding-top: 30px;
-      }
-    }
-    .cntnt {
-      margin-left: 200px;
-    }
-
-    .logo {
-      text-align: center;
-    }
-
-    .burger {
-      display: none;
-    }
-  }
   .devices-redux3 {
     padding: 100px 80px;
   }
