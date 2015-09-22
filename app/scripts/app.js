@@ -33,7 +33,8 @@ angular.module('Core', [
   'formlyCisco',
   'cisco.ui',
   'timer',
-  'angular-nicescroll'
+  'angular-nicescroll',
+  'cwill747.phonenumber'
 ]);
 
 angular.module('Squared', ['Core']);

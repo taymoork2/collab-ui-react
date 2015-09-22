@@ -112,6 +112,7 @@
     "orgprofile": true,
     "trialextinterest": true,
     "TIMEOUT": true,
-    "inviteusers": true
+    "inviteusers": true,
+    "phoneUtils": true
   }
 }

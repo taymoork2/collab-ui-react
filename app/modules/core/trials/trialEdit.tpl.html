@@ -82,9 +82,12 @@
       <button id="cancelTrialButton" class="btn btn-default" ng-click="$dismiss()">
         <span translate="partnerHomePage.cancel"></span>
       </button>
-      <button id="saveUpdateButton" class="btn btn-primary" ng-click="trialForm.$setPristine(true); (trial.isSquaredUCEnabled() && !trial.disableSquaredUCCheckBox) ? trial.gotoAddNumber() : trial.editTrial();" ng-disabled="trialForm.$invalid" data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>">
+      <button id="saveUpdateButton" class="btn btn-primary" ng-click="trialForm.$setPristine(true); trial.clickUpdateButton();" ng-disabled="trialForm.$invalid" data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>">
         <span ng-if="trial.disableSquaredUCCheckBox || !trial.isSquaredUCEnabled()" translate="common.save"></span>
-        <span ng-if="!trial.disableSquaredUCCheckBox && trial.isSquaredUCEnabled()" translate="common.next"></span>
+        <span ng-if="!trial.disableSquaredUCCheckBox && trial.isSquaredUCEnabled()">
+          <span cr-feature-toggle feature-show="pstnSetup" translate="common.save"></span>
+          <span cr-feature-toggle feature-hide="pstnSetup" translate="common.next"></span>
+        </span>
       </button>
     </div>
   </div>

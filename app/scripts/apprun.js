@@ -117,6 +117,10 @@ angular
         formlyValidationMessages.addStringMessage('url', urlMessage);
       });
 
+      $translate('common.invalidPhoneNumber').then(function (phoneNumberMessage) {
+        formlyValidationMessages.addStringMessage('phoneNumber', phoneNumberMessage);
+      });
+
       formlyValidationMessages.messages.minlength = getMinLengthMessage;
       formlyValidationMessages.messages.maxlength = getMaxLengthMessage;
 
