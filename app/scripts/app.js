@@ -33,7 +33,8 @@ angular.module('Core', [
   'formlyCisco',
   'cisco.ui',
   'timer',
-  'angular-nicescroll'
+  'angular-nicescroll',
+  'cwill747.phonenumber'
 ]);
 
 angular.module('Squared', ['Core']);
@@ -48,7 +49,7 @@ angular.module('WebExUtils', ['Core']);
 angular.module('WebExXmlApi', ['Core']);
 
 angular.module('WebExSiteSettings', ['Core']);
-angular.module('WebExSiteSettingIframe', ['Core']);
+angular.module('WebExSiteSetting', ['Core']);
 
 angular.module('WebExReports', ['Core']);
 angular.module('ReportIframe', ['Core']);
@@ -69,7 +70,7 @@ angular.module('wx2AdminWebClientApp', [
   'WebExUtils',
   'WebExXmlApi',
   'WebExSiteSettings',
-  'WebExSiteSettingIframe',
+  'WebExSiteSetting',
   'WebExUserSettings',
   'WebExUserSettings2',
   'WebExReports',

@@ -457,6 +457,7 @@ angular
         .state('user-overview.contactCenter', {
           templateUrl: 'modules/sunlight/users/userOverview/sunlightUserOverview.tpl.html',
           controller: 'SunlightUserOverviewCtrl',
+          controllerAs: 'SunlightUserOverview',
           data: {
             displayName: 'Contact Center'
           },
@@ -562,6 +563,18 @@ angular
             siteUrl: null
           }
         })
+        .state('site-setting', {
+          url: '/webexSiteSetting',
+          templateUrl: 'modules/webex/siteSetting/siteSetting.tpl.html',
+          controller: 'WebExSiteSettingCtrl',
+          controllerAs: 'WebExSiteSetting',
+          parent: 'main',
+          params: {
+            siteUrl: null,
+            settingPageLabel: null,
+            settingPageIframeUrl: null
+          }
+        })
         .state('webex-reports', {
           url: '/webexreports',
           templateUrl: 'modules/webex/siteReports/siteReports.tpl.html',
@@ -578,12 +591,12 @@ angular
           templateUrl: 'modules/webex/siteReportsIframe/siteReportIframe.tpl.html',
           controller: 'ReportsIframeCtrl',
           controllerAs: 'reportsIframe',
-          parent: 'main'
-            /* params: {
-               siteUrl: null,
-               settingPageId: null,
-               settingPageIframeUrl: null
-             }*/
+          parent: 'main',
+          params: {
+            siteUrl: null,
+            settingPageId: null,
+            settingPageIframeUrl: null
+          }
 
         })
         .state('site-setting-iframe', {
@@ -1471,70 +1484,6 @@ angular
         });
     }
   ]);
-
-/*
-angular.module('WebExUtils').config([
-  '$stateProvider',
-  function ($stateProvider) {
-    $stateProvider.state('webexUtils', {
-      parent: 'main'
-    });
-  }
-]);
-
-angular.module('WebExXmlApi').config([
-  '$stateProvider',
-  function ($stateProvider) {
-    $stateProvider.state('webExXmlApi', {
-      parent: 'main'
-    });
-  }
-]);
-
-angular.module('WebExSiteSettings').config([
-  '$stateProvider',
-  function ($stateProvider) {
-    $stateProvider.state('webexSiteSettings', {
-      url: '/webexSiteSettings',
-      templateUrl: 'modules/webex/siteSettigs/siteSettings.tpl.html',
-      parent: 'main'
-    });
-  }
-]);
-
-angular.module('WebExSiteSettingIframe').config([
-  '$stateProvider',
-  function ($stateProvider) {
-    $stateProvider.state('webexSiteSettingIframe', {
-      url: '/webexSiteSettingIframe',
-      templateUrl: 'modules/webex/siteSettigIframe/siteSettingIframe.tpl.html',
-      parent: 'main'
-    });
-  }
-]);
-
-angular.module('WebExUserSettings').config([
-  '$stateProvider',
-  function ($stateProvider) {
-    $stateProvider.state('webexUserSettings', {
-      url: '/webexUserSettings',
-      templateUrl: 'modules/webex/userSettings/userSettings.tpl.html',
-      parent: 'main'
-    });
-  }
-]);
-
-angular.module('WebExUserSettings2').config([
-  '$stateProvider',
-  function ($stateProvider) {
-    $stateProvider.state('webexUserSettings2', {
-      url: '/webexUserSettings2',
-      templateUrl: 'modules/webex/userSettings/userSettings2.tpl.html',
-      parent: 'main'
-    });
-  }
-]);
-*/
 
 angular
   .module('Messenger')

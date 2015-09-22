@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('WebExSiteSettingIframe').controller('WebExSiteSettingIframeCtrl', [
+  angular.module('WebExSiteSetting').controller('WebExSiteSettingCtrl', [
     '$scope',
     '$rootScope',
     '$log',
@@ -31,30 +31,37 @@
 
       var _this = this;
 
-      _this.funcName = "WebExSiteSettingIframeCtrl()";
+      _this.funcName = "WebExSiteSettingCtrl()";
       _this.logMsg = "";
 
+      _this.logMsg = _this.funcName + ": " + "\n" +
+        "stateParams=" + JSON.stringify($stateParams);
+      $log.log(_this.logMsg);
+
       $scope.siteUrl = $stateParams.siteUrl;
-      $scope.indexPageSref = "site-settings({siteUrl:'" + $stateParams.siteUrl + "'})";
-      $scope.settingPageId = $stateParams.settingPageId;
-      $scope.settingPageTitle = $translate.instant("webexSiteSettingsLabels." + $scope.settingPageId);
+      $scope.settingPageLabel = $stateParams.settingPageLabel;
       $scope.settingPageIframeUrl = $stateParams.settingPageIframeUrl;
-      $scope.iframeUrl = "https://" + $stateParams.siteUrl + $stateParams.settingPageIframeUrl;
+
+      $scope.siteSettingIndexPageTitle = $translate.instant(
+        "webexSiteSettingsLabels.siteSettingsIndexPageTitleFull", {
+          siteUrl: $scope.siteUrl
+        }
+      );
+      $scope.indexPageSref = "site-settings({siteUrl:'" + $stateParams.siteUrl + "'})";
 
       // for iframe request
-      $scope.trustIframeUrl = $sce.trustAsResourceUrl($scope.iframeUrl);
+      $scope.trustIframeUrl = $sce.trustAsResourceUrl($scope.settingPageIframeUrl);
       $scope.adminEmail = Authinfo.getPrimaryEmail();
       $scope.locale = ("es_LA" == $translate.use()) ? "es_MX" : $translate.use();
 
       _this.logMsg = _this.funcName + ": " + "\n" +
         "siteUrl=" + $scope.siteUrl + "\n" +
-        "settingPageId=" + $scope.settingPageId + "\n" +
-        "settingPageTitle=" + $scope.settingPageTitle + "\n" +
+        "siteSettingIndexPageTitle=" + $scope.siteSettingIndexPageTitle + "\n" +
+        "settingPageLabel=" + $scope.settingPageLabel + "\n" +
         "settingPageIframeUrl=" + $scope.settingPageIframeUrl + "\n" +
-        "iframeUrl=" + $scope.iframeUrl + "\n" +
+        "trustIframeUrl=" + $scope.trustIframeUrl + "\n" +
         "adminEmail=" + $scope.adminEmail + "\n" +
-        "locale=" + $scope.locale + "\n" +
-        "trustIframeUrl=" + $scope.trustIframeUrl;
+        "locale=" + $scope.locale;
       $log.log(_this.logMsg);
 
       $timeout(

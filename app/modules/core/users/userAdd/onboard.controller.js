@@ -2,8 +2,8 @@
 
 //TODO refactor this into OnboardCtrl, BulkUserCtrl, AssignServicesCtrl
 angular.module('Core')
-  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$window', 'Log', '$log', 'Authinfo', 'Storage', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils', 'Orgservice', 'TelephonyInfoService', 'FeatureToggleService',
-    function ($scope, $state, $stateParams, $q, $window, Log, $log, Authinfo, Storage, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService) {
+  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$window', 'Log', '$log', 'Authinfo', 'Storage', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils', 'Orgservice', 'TelephonyInfoService', 'FeatureToggleService', 'NAME_DELIMITER',
+    function ($scope, $state, $stateParams, $q, $window, Log, $log, Authinfo, Storage, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER) {
 
       $scope.hasAccount = Authinfo.hasAccount();
       $scope.usrlist = [];
@@ -831,7 +831,7 @@ angular.module('Core')
 
       $scope.addToUsersfield = function () {
         if ($scope.model.userForm.$valid && $scope.model.userInfoValid) {
-          var userInfo = $scope.model.firstName + ' ' + $scope.model.lastName + ' ' + $scope.model.emailAddress;
+          var userInfo = $scope.model.firstName + NAME_DELIMITER + $scope.model.lastName + ' ' + $scope.model.emailAddress;
           angular.element('#usersfield').tokenfield('createToken', userInfo);
           clearNameAndEmailFields();
           angular.element('#firstName').focus();
@@ -1658,16 +1658,31 @@ angular.module('Core')
         var csvPromise = $q.when();
         var tempUserArray = [];
         var tempLicenseArray = [];
+        var uniqueEmails = [];
         for (var j = 0; j < userArray.length; j++) {
           if (tempUserArray.length < csvChunk) {
+            // If we have the correct number of columns
             if (userArray[j].length === 6) {
-              tempUserArray.push({
-                address: userArray[j][3],
-                name: userArray[j][0] + ' ' + userArray[j][1],
-                displayName: userArray[j][2]
-              });
-              tempLicenseArray.push(buildLicenseArray(userArray[j][4], userArray[j][5]));
+              var email = userArray[j][3];
+              // If we haven't added this user yet
+              if (!_.contains(uniqueEmails, email)) {
+                uniqueEmails.push(email);
+                tempUserArray.push({
+                  address: email,
+                  name: userArray[j][0] + NAME_DELIMITER + userArray[j][1],
+                  displayName: userArray[j][2]
+                });
+                tempLicenseArray.push(buildLicenseArray(userArray[j][4], userArray[j][5]));
+              } else {
+                // Report a duplicate email and process the current temp array
+                addUserError(j + 1, $translate.instant('firstTimeWizard.csvDuplicateEmail'));
+                csvPromise = onboardCsvUsers(j - 1, tempUserArray, tempLicenseArray, csvPromise);
+                tempUserArray = [];
+                tempLicenseArray = [];
+                continue;
+              }
             } else {
+              // Report an invalid csv row and process the current temp array
               addUserError(j + 1, $translate.instant('firstTimeWizard.csvInvalidRow'));
               csvPromise = onboardCsvUsers(j - 1, tempUserArray, tempLicenseArray, csvPromise);
               tempUserArray = [];
@@ -1675,6 +1690,7 @@ angular.module('Core')
               continue;
             }
           }
+          // Process the current temp array if we've met the chunk size or is the last user in list
           if (tempUserArray.length === csvChunk || j === (userArray.length - 1)) {
             csvPromise = onboardCsvUsers(j, tempUserArray, tempLicenseArray, csvPromise);
             tempUserArray = [];

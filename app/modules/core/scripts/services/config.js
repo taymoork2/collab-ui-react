@@ -4,7 +4,7 @@ angular.module('Core')
   .factory('Config', ['$location', 'Utils', '$filter',
     function ($location, Utils, $filter) {
 
-      var oauth2Scope = encodeURIComponent('webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config Identity:Organization cloudMeetings:login webex-messenger:get_webextoken');
+      var oauth2Scope = encodeURIComponent('webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config Identity:Organization cloudMeetings:login webex-messenger:get_webextoken ccc_config:admin');
 
       var getCurrentHostname = function () {
         return $location.host() || '';
@@ -170,6 +170,12 @@ angular.module('Core')
         webexUrl: {
           siteAdminHomeUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminHomePage',
           siteAdminDeepUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage'
+        },
+
+        sunlightConfigServiceUrl: {
+          dev: 'https://config.integration-tx1.thunderhead.io/config/v1',
+          integration: 'https://config.integration-tx1.thunderhead.io/config/v1',
+          prod: 'https://config.integration-tx1.thunderhead.io/config/v1', //This will change to prod later in future
         },
 
         scimSchemas: [
@@ -755,7 +761,19 @@ angular.module('Core')
 
         getOAuthClientRegistrationCredentials: function () {
           return Utils.Base64.encode(this.getClientId() + ':' + this.getClientSecret());
+        },
+
+        getSunlightConfigServiceUrl: function () {
+
+          if (this.isDev()) {
+            return this.sunlightConfigServiceUrl.dev;
+          } else if (this.isIntegration()) {
+            return this.sunlightConfigServiceUrl.integration;
+          } else {
+            return this.sunlightConfigServiceUrl.prod;
+          }
         }
+
       };
 
       config.roleStates = {
@@ -791,7 +809,6 @@ angular.module('Core')
           'site-setting-iframe',
           'webex-reports',
           'webex-reports-iframe'
-
         ],
         Application: ['organizationAdd']
       };
