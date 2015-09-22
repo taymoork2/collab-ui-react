@@ -50,7 +50,10 @@
 
   -->
 
-<a ui-sref="webex-reports-iframe">test</a>
+<a ui-sref="webex-reports-iframe({siteUrl: $scope.siteUrl,
+                                  reportPageId: $scope.reportPageId, reportPageIframeUrl: $scope.reportPageIframeUrl})">
+                                  test
+</a>
 
 
 <form name="siteAdminLink" action="{{trustSrc(webexAdvancedUrl)}}" method="post" target="webexSiteAdmin">
