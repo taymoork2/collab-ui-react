@@ -4,7 +4,7 @@ angular.module('Mediafusion')
   .controller('mediafusionConnectorCtrl',
 
     /* @ngInject */
-    function ($scope, $state, $interval, $http, $modal, MediafusionProxy, Authinfo, Log, $translate) {
+    function ($scope, $state, $interval, $http, $modal, MediafusionProxy, Authinfo, Log, $translate, MediafusionClusterService) {
       $scope.loading = true;
       $scope.pollHasFailed = false;
       $scope.showInfoPanel = true;
@@ -73,8 +73,8 @@ angular.module('Mediafusion')
       });
 
       $scope.$watch(MediafusionProxy.getClusters, function (data) {
-        $scope.clusters = data.clusters || [];
-        $scope.pollHasFailed = data.error;
+          $scope.clusters = data.clusters || [];
+          $scope.pollHasFailed = data.error;
       }, true);
 
       $scope.$on('$destroy', function () {
@@ -90,7 +90,6 @@ angular.module('Mediafusion')
           });
         }
         $scope.showPreview = true;
-
       };
 
       $scope.setDeleteConnector = function (clusterId, serial, connectorName) {
