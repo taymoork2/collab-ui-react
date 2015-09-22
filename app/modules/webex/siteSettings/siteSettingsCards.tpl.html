@@ -1,0 +1,49 @@
+
+<div ng-repeat="settingCardObj in WebExSiteSettings.siteSettingsObj.settingCardObjs">
+  <div ng-if="0 < settingCardObj.pageObjs.length">
+  <cs-card class="cs-card medium">
+    <article>
+      <h4>{{settingCardObj.label}}</h4>
+      
+      <section>
+        <div ng-repeat="pageObj in settingCardObj.pageObjs">
+          <a id={{pageObj.id}}
+             name={{pageObj.id}}
+             ui-sref={{pageObj.uiSref}}>
+             
+            {{pageObj.label}}
+          </a>
+        </div>
+        
+        <div ng-if="'supportCenter' == settingCardObj.id">
+          <div ng-if="0 < settingCardObj.webACDObj.pageObjs.length">
+            <h5>{{settingCardObj.webACDObj.label}}</h5>
+            
+            <div ng-repeat="pageObj in settingCardObj.webACDObj.pageObjs">
+              <a id={{pageObj.id}}
+                 name={{pageObj.id}}
+                 ui-sref={{pageObj.uiSref}}>
+             
+                {{pageObj.label}}
+              </a>
+            </div>
+          </div>
+        
+          <div ng-if="0 < settingCardObj.remoteAccessObj.pageObjs.length">
+            <h5>{{settingCardObj.remoteAccessObj.label}}</h5>
+            
+            <div ng-repeat="pageObj in settingCardObj.remoteAccessObj.pageObjs">
+              <a id={{pageObj.id}}
+                 name={{pageObj.id}}
+                 ui-sref={{pageObj.uiSref}}>
+             
+                {{pageObj.label}}
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </article>
+  </cs-card>
+  </div>
+</div>

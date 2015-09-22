@@ -1,50 +1,43 @@
 
-<div id="webexSiteSettingIframe"
-     name="webexSiteSettingIframe">
-    
-  <div class="page-header row">
-    <div id="iframeBreadCrumbs"
-         name="iframeBreadCrumbs"
-         class="breadcrumb-container">
-         
-      <ul class="breadcrumbs">
-        <li>
-          <a id="siteListCrumb"
-             name="siteListCrumb"
-             ui-sref="site-list">
-           
-            <span translate="siteList.conferencing"></span>
-          </a>
-        </li>
-        
-        <li>
-          <a id="indexPageCrumb"
-             name="indexPageCrumb"
-             ui-sref={{indexPageSref}}>
-           
-          <span translate="webexSiteSettings.title"></span>&nbsp;{{siteUrl}}
-        </a>
-        </li>
-        
-        <li class="current">
-          {{settingPageTitle}}
-        </li>
-      </ul>
+<div id="webexSiteSetting"
+     name="webexSiteSetting">
 
-      <div class="page-title col-xs-12">
-        <span id={{settingPageId}}
-              name={{settingPageId}}
-              class="title-heading">
-          {{settingPageTitle}}
-        </span>
-        
-        <span class="search-title">
-          {{siteUrl}}
-        </span>
-      </div>
+  <div class="page-header row">
+    <div class="page-title col-xs-12">
+      <span class="title-heading">
+        {{settingPageLabel}}
+      </span>
     </div>
   </div>
+  
+  <div id="iframeBreadCrumbs"
+       name="iframeBreadCrumbs"
+       class="breadcrumb-container">
+         
+    <ul class="breadcrumbs">
+      <li>
+        <a id="siteListCrumb"
+           name="siteListCrumb"
+           ui-sref="site-list">
+         
+          <span translate="siteList.conferencing"></span>
+        </a>
+      </li>
+        
+      <li>
+        <a id="indexPageCrumb"
+           name="indexPageCrumb"
+           ui-sref={{indexPageSref}}>
+           
+          {{siteSettingIndexPageTitle}}
+        </a>
+      </li>
+        
+      <li class="current">
+        {{settingPageLabel}}
+      </li>
+    </ul>
+  </div>
+
+  <div ng-include="'modules/webex/iframeContainer/iframeContainer.tpl.html'"></div> 
 </div>
-
-<div ng-include="'modules/webex/iframeContainer/iframeContainer.tpl.html'"></div> 
-

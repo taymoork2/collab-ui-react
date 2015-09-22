@@ -1713,18 +1713,17 @@
     "OtherPrivilegesLabel": "Other Privileges",
     "advancedLinkLabel": "Advanced Settings"
   },
-  "webexSiteSettings": {
-    "title": "Configure"
-  },
   "webexSiteSettingsLabels": {
-    "siteSettingsIndexPageTitle": "Configure {{siteUrl}}",
-    "commonSiteSettings": "Common Site Settings",
-    "centerSpecificSettings": "Center - Specific Settings",
     "additionalSettings": "Additional Settings",
-    "column_settings": "Settings",
-    "column_common": "Common",
-    "column_remoteAccess": "Remote Access",
-    "column_webACD": "WebACD",
+    "siteSettingsIndexPageTitle": "Configure",
+    "siteSettingsIndexPageTitleFull": "Configure {{siteUrl}}",
+    "hostAccountsTitle": "HOST ACCOUNTS",
+    "activeTitle": "Active",
+    "availableTitle": "Available",
+    "siteInformationTitle": "Site Information",
+    "siteFeaturesTitle": "Site Features",
+    "emailAllHostsTitle": "Email All Hosts ",
+    "commonSettingsTitle": "Common Settings",
     "pageId_emailAllHosts": "Email All Hosts",
     "pageId_options": "Options",
     "pageId_siteInformation": "Site Information",
@@ -1871,7 +1870,6 @@
     "licenseCount": "License Count",
     "type": "Type",
     "siteSettings": "Configure Site",
-    "siteSettingIframe": "Show iFrame",
     "siteReports": "Reports"
   },
   "cloudExtensions": {

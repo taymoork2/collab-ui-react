@@ -562,6 +562,18 @@ angular
             siteUrl: null
           }
         })
+        .state('site-setting', {
+          url: '/webexSiteSetting',
+          templateUrl: 'modules/webex/siteSetting/siteSetting.tpl.html',
+          controller: 'WebExSiteSettingCtrl',
+          controllerAs: 'WebExSiteSetting',
+          parent: 'main',
+          params: {
+            siteUrl: null,
+            settingPageLabel: null,
+            settingPageIframeUrl: null
+          }
+        })
         .state('webex-reports', {
           url: '/webexreports',
           templateUrl: 'modules/webex/siteReports/siteReports.tpl.html',
@@ -583,19 +595,6 @@ angular
             siteUrl: null,
             settingPageId: null,
             settingPageIframeUrl: null
-          }
-
-        })
-        .state('site-setting', {
-          url: '/webexSiteSettingIframe',
-          templateUrl: 'modules/webex/siteSetting/siteSetting.tpl.html',
-          controller: 'WebExSiteSettingCtrl',
-          controllerAs: 'WebExSiteSetting',
-          parent: 'main',
-          params: {
-            siteUrl: null,
-            reportPageId: null,
-            reportPageIframeUrl: null
           }
         })
         .state('templates', {
