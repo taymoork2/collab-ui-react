@@ -1,7 +1,7 @@
 <div class="details-header">
 <!--   <div class="pull-right">
     <button
-      ui-sref="devices-redux3.details({
+      ui-sref="devices-redux4.details({
         device: devices.filteredCodesAndDevices.matches[devices.findDeviceIndex(deviceDetails.device) - 1]
       })"
       ng-disabled="devices.findDeviceIndex(deviceDetails.device) == 0">
@@ -14,7 +14,7 @@
       {{devices.filteredCodesAndDevices.matches.length}}
     </span>
     <button
-      ui-sref="devices-redux3.details({
+      ui-sref="devices-redux4.details({
         device: devices.filteredCodesAndDevices.matches[devices.findDeviceIndex(deviceDetails.device) + 1]
       })"
       ng-disabled="devices.findDeviceIndex(deviceDetails.device) == devices.filteredCodesAndDevices.matches.length - 1">

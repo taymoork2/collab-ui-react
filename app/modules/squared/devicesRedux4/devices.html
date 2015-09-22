@@ -1,4 +1,4 @@
-<div class="devices-redux3">
+<div class="devices-redux4">
   <div ng-if="devices.codesListSubscription.eventCount == 0 || devices.deviceListSubscription.eventCount == 0">
     <div style="padding: 100px; text-align: center;">
       <i class="icon icon-2x icon-spinner" />
@@ -72,8 +72,11 @@
             </li>
           </ul>
         </div>
-        <div ui-view="leftPanel"></div>
       </div>
+    </div>
+    <div class="row">
+      <div class="large-12 columns" ui-view="leftPanel"></div>
+
       <div class="large-6 columns pane" ui-view="rightPanel"></div>
     </div>
   </div>

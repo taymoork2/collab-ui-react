@@ -1,4 +1,4 @@
-.devices-redux3 {
+.devices-redux4 {
   background-color: white !important;
   min-height: 1000px;
 
@@ -49,6 +49,10 @@
   }
   .result-pane {
     padding-top: 20px;
+
+    li {
+      border: 1px solid $gray-lightest;
+    }
     
     .result-row {
       cursor: pointer;
@@ -136,13 +140,13 @@
 }
 
 @media (max-width: 600px) {
-  .devices-redux3 {
+  .devices-redux4 {
     padding: 5px 10px;
   }
 }
 
 @media (min-width: 600px) {
-  .devices-redux3 {
+  .devices-redux4 {
     padding: 100px 80px;
   }
 }

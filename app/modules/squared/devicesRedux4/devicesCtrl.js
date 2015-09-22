@@ -146,12 +146,12 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, CsdmCodeService
 
   function transitionIfSearchOrFilterChanged() {
     if (vm.filteredCodesAndDevices.matches.length == 1) {
-      return $state.go('devices-redux3.details', {
+      return $state.go('devices-redux4.details', {
         device: vm.filteredCodesAndDevices.matches[0]
       });
     }
     if (~$location.path().indexOf('/details')) {
-      return $state.go('devices-redux3.search');
+      return $state.go('devices-redux4.search');
     }
   }
 
@@ -165,7 +165,7 @@ function DevicesReduxDetailsCtrl($stateParams, $state, $window, RemDeviceModal, 
   if ($stateParams.device) {
     vm.device = $stateParams.device;
   } else {
-    $state.go('devices-redux3.search');
+    $state.go('devices-redux4.search');
   }
 
   vm.reportProblem = function () {
@@ -186,12 +186,12 @@ function DevicesReduxDetailsCtrl($stateParams, $state, $window, RemDeviceModal, 
     RemDeviceModal
       .open(vm.device)
       .then(function () {
-        $state.go('devices-redux3.search');
+        $state.go('devices-redux4.search');
       });
   };
 }
 
 angular
   .module('Squared')
-  .controller('DevicesReduxCtrl3', DevicesReduxCtrl)
-  .controller('DevicesReduxDetailsCtrl3', DevicesReduxDetailsCtrl);
+  .controller('DevicesReduxCtrl4', DevicesReduxCtrl)
+  .controller('DevicesReduxDetailsCtrl4', DevicesReduxDetailsCtrl);

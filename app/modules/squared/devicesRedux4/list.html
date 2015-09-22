@@ -1,0 +1,54 @@
+<div ng-show="devices.filterOrSearchActive">
+
+  <div class="result-pane" ng-if="devices.filteredCodesAndDevices.matches.length">
+    <ul class="medium-block-grid-2 large-block-grid-4">
+      <li
+        ui-sref="devices-redux4.details({device: device})"
+        ng-repeat="device in devices.filteredCodesAndDevices.matches | limitTo: ((devices.pager.currentPage * devices.pager.pageSize) + (devices.pager.currentPageSize - devices.pager.pageSize)) | limitTo: -devices.pager.currentPageSize">
+        <div style="display: flex">
+          <i 
+            style="top: -3px"
+            class="icon icon-2x icon-circle-telepresence" 
+            ng-class="{'needsActivation': device.needsActivation}"
+          />
+          <div class="ellipsis">
+            {{device.displayName}}
+          </div>
+        </div>
+<!--         <div class="small-5 columns ellipsis">
+          {{device.product || 'Needs Activation'}}
+        </div>
+        <div class="small-1 columns" style="text-align: right">
+          <i
+            class="fa fa-circle"
+            ng-class="device.cssColorClass"
+          />
+        </div> -->
+      </li>
+    </ul>
+
+    <!-- pager -->
+    <div class="details-header clearfix">
+      <div style="text-align: center">
+        <button
+          ng-click="devices.pager.prevPage()"
+          ng-disabled="!devices.pager.prev">
+          <i class="fa fa-chevron-left" />
+        </button>
+        <span style="padding: 0 20px">
+          Page {{devices.pager.currentPage}} of {{devices.pager.pageCount}}
+        </span>
+        <button
+          ng-click="devices.pager.nextPage()"
+          ng-disabled="!devices.pager.next">
+          <i class="fa fa-chevron-right" />
+        </button>
+      </div>
+    </div>
+    <!-- end:pager -->
+  </div>
+
+  <div ng-if="!devices.filteredCodesAndDevices.matches.length">
+    <p class="no-results-matched-search">No devices found...</p>
+  </div>
+</div>
