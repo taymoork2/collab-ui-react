@@ -1151,6 +1151,7 @@
     "internalNumberExtension": "Internal Extension",
     "internalNumberExtensionTooltip": "Use the internal extension to reach this line from within the company at the same site.",
     "internalNumberPoolError": "Internal extensions failed to load.",
+    "steeringDigitOverlapWarning": "First digit of Internal Extension overlaps with Outbound Dial Digit ({{steeringDigitInTranslation}}). Calls to this extension may experience delays.",
     "enterpriseSiteNumberLabel": "If your company uses site-to-site dialing:",
     "externalNumberLabel": "Direct Line",
     "externalNumberTooltip": "Use the direct line to reach this line from outside of the company.",
