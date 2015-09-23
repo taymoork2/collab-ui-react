@@ -31,10 +31,24 @@
 
       this.reportObject = reportService.initReportsObject();
 
+      $scope.reportPageId = "pageId_underDevelopment";
+      $scope.siteUrl = this.reportObject.siteUrl;
+
+      var advancedUrl = Config.getWebexAdvancedHomeUrl(this.reportObject.siteUrl);
+
       // for webex site cross launch: we probably don't need these three lines!
-      $scope.webexAdvancedUrl = $sce.trustAsResourceUrl(Config.getWebexAdvancedHomeUrl(this.reportObject.siteUrl));
+      $scope.reportPageIframeUrl = $sce.trustAsResourceUrl(advancedUrl);
       $scope.adminEmailParam = Authinfo.getPrimaryEmail();
       $scope.localeParam = $translate.use();
+
+      $scope.reportPageIframeUrl = $sce.trustAsResourceUrl("https://sjsite14.webex.com/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage");
+
+      $scope.uiSref =
+        "webex-reports-iframe({" +
+        "  siteUrl:" + "'" + this.reportObject.siteUrl + "'" + "," +
+        "  reportPageId:" + "'" + $scope.reportPageId + "'" + "," +
+        "  reportPageIframeUrl:" + "'" + $scope.reportPageIframeUrl + "'" +
+        "})";
 
       $log.log("ReportsCtrl start");
       var reports = reportService.getReports();

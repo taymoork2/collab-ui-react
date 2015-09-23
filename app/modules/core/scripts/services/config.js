@@ -806,8 +806,9 @@ angular.module('Core')
         Site_Admin: [
           'site-list',
           'site-settings',
-          'site-setting',
-          'webex-reports'
+          'site-setting-iframe',
+          'webex-reports',
+          'webex-reports-iframe'
         ],
         Application: ['organizationAdd']
       };

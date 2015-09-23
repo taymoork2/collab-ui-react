@@ -74,6 +74,7 @@ angular.module('wx2AdminWebClientApp', [
   'WebExUserSettings',
   'WebExUserSettings2',
   'WebExReports',
+  'ReportIframe',
   'Messenger',
   'Sunlight'
 ]);
