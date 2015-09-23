@@ -1727,6 +1727,7 @@
     "availableTitle": "Available",
     "emailAllHostsTitle": "EMAIL ALL HOSTS",
     "commonSettingsTitle": "Common Settings",
+    "commonSettingsNote": "These options can apply across centers.",
     "pageId_emailAllHosts": "Email All Hosts",
     "pageId_options": "Site Options",
     "pageId_siteInformation": "Site Information",

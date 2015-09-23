@@ -7,13 +7,19 @@
       <h4>{{settingCardObj.label}}</h4>
       
       <section>
+        <div ng-if="'common' == settingCardObj.id">
+          <span translate="webexSiteSettingsLabels.commonSettingsNote"></span>
+        </div>
+        
         <div ng-repeat="pageObj in settingCardObj.pageObjs">
-          <a id={{pageObj.id}}
-             name={{pageObj.id}}
-             ui-sref={{pageObj.uiSref}}>
+          <span>
+            <a id={{pageObj.id}}
+               name={{pageObj.id}}
+               ui-sref={{pageObj.uiSref}}>
              
-            {{pageObj.label}}
-          </a>
+              {{pageObj.label}}
+            </a>
+          </span>
         </div>
         
         <div ng-if="'supportCenter' == settingCardObj.id">
@@ -21,12 +27,14 @@
             <h5>{{settingCardObj.webACDObj.label}}</h5>
             
             <div ng-repeat="pageObj in settingCardObj.webACDObj.pageObjs">
-              <a id={{pageObj.id}}
-                 name={{pageObj.id}}
-                 ui-sref={{pageObj.uiSref}}>
+              <span>
+                <a id={{pageObj.id}}
+                   name={{pageObj.id}}
+                   ui-sref={{pageObj.uiSref}}>
              
-                {{pageObj.label}}
-              </a>
+                  {{pageObj.label}}
+                </a>
+              </span>
             </div>
           </div>
         
@@ -34,12 +42,14 @@
             <h5>{{settingCardObj.remoteAccessObj.label}}</h5>
             
             <div ng-repeat="pageObj in settingCardObj.remoteAccessObj.pageObjs">
-              <a id={{pageObj.id}}
-                 name={{pageObj.id}}
-                 ui-sref={{pageObj.uiSref}}>
+              <span>
+                <a id={{pageObj.id}}
+                   name={{pageObj.id}}
+                   ui-sref={{pageObj.uiSref}}>
              
-                {{pageObj.label}}
-              </a>
+                  {{pageObj.label}}
+                </a>
+              </span>
             </div>
           </div>
         </div>
