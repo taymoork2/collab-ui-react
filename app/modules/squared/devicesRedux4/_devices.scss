@@ -26,8 +26,8 @@
 
   button {
     border: 0;
-    color: #666;
     cursor: pointer;
+    color: $link-color;
     background: transparent;
   }
   button[disabled], button[disabled]:hover {
@@ -50,6 +50,11 @@
       font-size: 2.25rem;
     }
 
+    strong, strong span {
+      font-family: "CiscoSansTT Light","Helvetica Neue",Helvetica,Arial,sans-serif;
+      font-weight: 700;
+    }
+
     .row {
       padding: 10px 0;
       font-size: 0.875rem;
@@ -63,6 +68,15 @@
     .device-pager {
       text-align: center;
       padding: 20px;
+    }
+
+    .readable-activation-code {
+      padding-top: 20px;
+    }
+
+    .readable-activation-code, .readable-activation-code span {
+      font-size: 2rem;
+      color: $brand-primary;
     }
   }
   .result-pane {
@@ -189,6 +203,6 @@
 
 @media (min-width: 600px) {
   .devices-redux4 {
-    padding: 100px 80px;
+    padding: 60px 80px;
   }
 }

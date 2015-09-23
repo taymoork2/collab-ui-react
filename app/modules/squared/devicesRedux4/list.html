@@ -29,7 +29,10 @@
  -->
 
           <div class="ellipsis">
-            {{devices.deviceProps[device.filterMatch || 'readableState']}}: <span ng-bind-html="device[device.filterMatch || 'readableState'] | highlight:devices.search"></span>
+            {{devices.deviceProps[device.filterMatch || 'readableState']}}:
+            <span
+              ng-bind-html="device[device.filterMatch || 'readableState'] | highlight:devices.search">
+            </span>
           </div>
 
         </div>
