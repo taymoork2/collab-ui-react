@@ -20,6 +20,18 @@
     })
     .factory('TerminusCarrierService', function ($resource, HuronConfig) {
       return $resource(HuronConfig.getTerminusUrl() + '/carriers/:carrierId', {});
+    })
+    .factory('TerminusCarrierInventory', function ($resource, HuronConfig) {
+      return $resource(HuronConfig.getTerminusUrl() + '/carriers/:carrierId/did/inventory/count');
+    })
+    .factory('TerminusStateService', function ($resource) {
+      return $resource('modules/huron/pstnSetup/states.json', {}, {
+        query: {
+          method: 'GET',
+          isArray: true,
+          cache: true
+        }
+      });
     });
 
 })();
