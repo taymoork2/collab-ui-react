@@ -806,7 +806,7 @@ angular.module('Core')
         Site_Admin: [
           'site-list',
           'site-settings',
-          'site-setting-iframe',
+          'site-setting',
           'webex-reports',
           'webex-reports-iframe'
         ],
