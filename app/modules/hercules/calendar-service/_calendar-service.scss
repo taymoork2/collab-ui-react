@@ -1,0 +1,13 @@
+.calendar-service{
+  .content{
+    background-color:$brand-white;
+    margin-left: -0.5rem;
+    th{
+      font-weight:$font-weight-bold;
+      background-color: $brand-white;
+    }
+    h4{
+      margin-left:0.5rem;
+    }
+  }
+}
