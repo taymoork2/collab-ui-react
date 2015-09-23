@@ -117,6 +117,18 @@ gulp.task('dist', ['build'], function (done) {
   );
 });
 
+/*********************************************
+ * Installs configured TypeScript definitions
+ * Usage: gulp tsd
+ ********************************************/
+
+gulp.task('tsd', function (done) {
+  $.tsd({
+    command: 'reinstall',
+    config: './tsd.json'
+  }, done);
+});
+
 //============================================
 // CLEANING TASKS
 //============================================
@@ -1002,7 +1014,8 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
     // tests = 'test/e2e-protractor/**/*_spec.js';
     tests = [].concat(
       config.testFiles.e2e.squared,
-      config.testFiles.e2e.hercules
+      config.testFiles.e2e.hercules,
+      config.testFiles.e2e.sunlight
     );
     messageLogger('Running End 2 End tests from all modules.');
   }

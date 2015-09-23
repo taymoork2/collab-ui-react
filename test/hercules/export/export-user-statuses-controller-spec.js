@@ -5,8 +5,22 @@ describe('ExportUserStatusesController', function () {
 
   var Authinfo, service, controller, $scope, $httpBackend, UssService, UiStats;
 
-  beforeEach(inject(function (_$controller_, _$httpBackend_, _UiStats_) {
+  beforeEach(function () {
+    module(function ($provide) {
+      Authinfo = {
+        getServices: function () {
+          return [{
+            "ciName": "squared-fusion-cal",
+            "displayName": "myService"
+          }];
+        },
+        getOrgId: sinon.stub().returns("5632-f806-org")
+      };
+      $provide.value('Authinfo', Authinfo);
+    });
+  });
 
+  beforeEach(inject(function (_$controller_, _$httpBackend_, _UiStats_) {
     $httpBackend = _$httpBackend_;
     $httpBackend
       .when('GET', 'l10n/en_US.json')
@@ -17,16 +31,6 @@ describe('ExportUserStatusesController', function () {
     };
 
     UiStats = _UiStats_;
-
-    Authinfo = {
-      getServices: function () {
-        return [{
-          "ciName": "squared-fusion-cal",
-          "displayName": "myService"
-        }];
-      },
-      getOrgId: sinon.stub().returns("5632-f806-org")
-    };
 
     controller = _$controller_('ExportUserStatusesController', {
       Authinfo: Authinfo,
@@ -47,7 +51,7 @@ describe('ExportUserStatusesController', function () {
 
     $scope.selectedServiceId = "squared-fusion-cal";
 
-    var uss_request = "https://uss-integration.wbx2.com/uss/api/v1/userStatuses/summary";
+    var uss_request = "https://uss-integration.wbx2.com/uss/api/v1/userStatuses/summary?orgId=5632-f806-org";
     $httpBackend
       .when('GET', uss_request)
       .respond({
@@ -63,7 +67,7 @@ describe('ExportUserStatusesController', function () {
         }]
       });
 
-    uss_request = "https://uss-integration.wbx2.com/uss/api/v1/userStatuses?serviceId=squared-fusion-cal&limit=2000";
+    uss_request = "https://uss-integration.wbx2.com/uss/api/v1/userStatuses?serviceId=squared-fusion-cal&limit=2000&orgId=5632-f806-org";
     $httpBackend
       .when('GET', uss_request)
       .respond({
@@ -91,7 +95,7 @@ describe('ExportUserStatusesController', function () {
         }]
       });
 
-    var connectorRequest1 = "https://hercules-integration.wbx2.com/v1/connectors/c_cal@aaa";
+    var connectorRequest1 = "https://hercules-integration.wbx2.com/v1/organizations/5632-f806-org/connectors/c_cal@aaa";
     $httpBackend
       .when('GET', connectorRequest1)
       .respond({
@@ -147,7 +151,7 @@ describe('ExportUserStatusesController', function () {
         "provisioning": {}
       });
 
-    var connectorRequest2 = "https://hercules-integration.wbx2.com/v1/connectors/c_cal@bbb";
+    var connectorRequest2 = "https://hercules-integration.wbx2.com/v1/organizations/5632-f806-org/connectors/c_cal@bbb";
     $httpBackend
       .when('GET', connectorRequest2)
       .respond({

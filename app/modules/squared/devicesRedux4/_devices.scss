@@ -1,0 +1,152 @@
+.devices-redux4 {
+  background-color: white !important;
+  min-height: 1000px;
+
+  .ellipsis {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .row {
+    margin: 0;
+  }
+
+  .needsActivation {
+    color: #aaa;
+  }
+
+  h1 {
+    padding-bottom: 30px;
+  }
+
+  h2 {
+    padding: 20px 0;
+  }
+
+  .details-header {
+    // border-bottom: 1px solid #ccc;
+
+    button {
+      border: 0;
+      color: #666;
+      cursor: pointer;
+      background: transparent;
+    }
+    button[disabled], button[disabled]:hover {
+      color: #ccc;
+      cursor: default;
+    }
+    button:hover {
+      color: #049fd9;
+    }
+  }
+  .details-pane {
+    .row {
+      padding: 10px 0;
+      font-size: 0.875rem;
+    }
+  }
+  .result-pane {
+    padding-top: 20px;
+
+    li {
+      border: 1px solid $gray-lightest;
+    }
+    
+    .result-row {
+      cursor: pointer;
+      padding-top: 18px;
+      font-size: 0.875rem;
+      border-bottom: 3px solid white;
+      padding-bottom: 8px;
+      i {
+        padding-right: 10px;
+      }
+    }
+
+    .result-row.active {
+      background: $gray-lightest;
+    }
+
+  }
+
+  .no-results-matched-search {
+    padding: 10px;
+    text-align: center;
+    color: $brand-danger;
+  }
+
+  input:focus, a:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    background-color: white !important;
+  }
+
+  .devices-search {
+    form {
+      display: flex;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 8px;
+
+      .filter {
+        margin: 0 10px 2px 0;
+        padding: 1px 10px;
+        border-radius: 10px;
+        background: $brand-primary;
+        color: $gray-lightest;
+        white-space: nowrap;
+      }
+
+      .search-icon {
+        color: $gray;
+        padding-right: 10px;
+        cursor: search;
+      }
+
+      .clear-icon {
+        color: $gray;
+        cursor: pointer;
+      }
+
+      input[type=text] {
+        border: 0;
+        margin: 0;
+        padding: 0;
+      }
+    }
+    form.active {
+      border-bottom: 3px solid $brand-primary;
+    }
+    form.no-match {
+      border-bottom: 3px solid $brand-danger;
+    }
+
+    ul {
+      margin: 0;
+      padding-bottom: 60px;
+    }
+
+    li {
+      a {
+        color: #666;
+      }
+      cursor: pointer;
+      padding: 20px 0 10px 0;
+      list-style-type: none;
+      border-bottom: 1px solid #ddd;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .devices-redux4 {
+    padding: 5px 10px;
+  }
+}
+
+@media (min-width: 600px) {
+  .devices-redux4 {
+    padding: 100px 80px;
+  }
+}

@@ -1,10 +1,30 @@
 'use strict';
 
 angular.module('Core')
-  .service('Userservice', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Authinfo', 'Log', 'Auth', 'Utils', 'HuronUser', 'Notification',
-    function ($http, $rootScope, $location, Storage, Config, Authinfo, Log, Auth, Utils, HuronUser, Notification) {
+  .constant('NAME_DELIMITER', ' \u000B')
+  .service('Userservice', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Authinfo', 'Log', 'Auth', 'Utils', 'HuronUser', 'Notification', 'NAME_DELIMITER',
+    function ($http, $rootScope, $location, Storage, Config, Authinfo, Log, Auth, Utils, HuronUser, Notification, NAME_DELIMITER) {
 
       var userUrl = Config.getAdminServiceUrl();
+
+      function tokenParseFirstLastName(name) {
+        var givenName = null;
+        var familyName = null;
+
+        if (angular.isString(name) && name.length > 0) {
+          if (name.indexOf(NAME_DELIMITER) > -1) {
+            givenName = name.split(NAME_DELIMITER).slice(0, -1).join(' ').trim();
+            familyName = name.split(NAME_DELIMITER).slice(-1).join(' ').trim();
+          } else {
+            givenName = name.split(' ').slice(0, -1).join(' ').trim();
+            familyName = name.split(' ').slice(-1).join(' ').trim();
+          }
+        }
+        return {
+          'givenName': givenName,
+          'familyName': familyName
+        };
+      }
 
       function onboardUsers(userData, callback, cancelPromise) {
 
@@ -346,7 +366,7 @@ angular.module('Core')
 
           for (var i = 0; i < usersDataArray.length; i++) {
             var userEmail = usersDataArray[i].address.trim();
-            var userName = usersDataArray[i].name.trim();
+            var userName = usersDataArray[i].name;
 
             var user = {
               'email': null,
@@ -360,10 +380,7 @@ angular.module('Core')
 
             if (userEmail.length > 0) {
               user.email = userEmail;
-              if (userName.length > 0 && userName !== false) {
-                user.name.givenName = userName.split(' ').slice(0, -1).join(' ');
-                user.name.familyName = userName.split(' ').slice(-1).join(' ');
-              }
+              user.name = tokenParseFirstLastName(userName);
               userData.users.push(user);
             }
           }
@@ -377,17 +394,22 @@ angular.module('Core')
 
           for (var i = 0; i < usersDataArray.length; i++) {
             var userEmail = usersDataArray[i].address.trim();
-            var userName = usersDataArray[i].name.trim();
+            var userName = usersDataArray[i].name;
+            var displayName = usersDataArray[i].displayName;
             var user = {
               'email': null,
-              'name': null,
+              'name': {
+                'givenName': null,
+                'familyName': null,
+              },
               'userEntitlements': entitlements,
               'licenses': (licenses && licenses.length > i) ? licenses[i] : null
             };
             if (userEmail.length > 0) {
               user.email = userEmail;
-              if (userName.length > 0 && userName !== false) {
-                user.name = userName;
+              user.name = tokenParseFirstLastName(userName);
+              if (displayName) {
+                user.displayName = displayName;
               }
               userData.users.push(user);
             }

@@ -10,7 +10,7 @@
     // Interface ---------------------------------------------------------------
 
     // Internal data
-    var syncModes = {
+    var syncModes = Object.freeze({
       messenger: {
         on: {
           text: 'enabled'
@@ -27,7 +27,7 @@
           text: 'link_disabled'
         }
       }
-    };
+    });
 
     var msgrService = {
       protocol: 'http://',

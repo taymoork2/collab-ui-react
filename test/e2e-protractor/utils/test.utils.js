@@ -5,6 +5,12 @@
 var config = require('./test.config.js');
 var request = require('request');
 var EC = protractor.ExpectedConditions;
+var path = require('path');
+var remote = require('../../../node_modules/gulp-protractor/node_modules/protractor/node_modules/selenium-webdriver/remote');
+
+exports.resolvePath = function (filePath) {
+  return path.resolve(__dirname, filePath);
+};
 
 exports.searchField = element(by.id('searchFilter'));
 
@@ -99,9 +105,23 @@ exports.wait = function (elem, timeout) {
 
   function logAndWait() {
     log('Waiting for element to be visible: ' + elem.locator());
-    return EC.visibilityOf(elem)();
+    return EC.visibilityOf(elem)().thenCatch(function () {
+      // handle a possible stale element
+      return false;
+    });;
   }
   return browser.wait(logAndWait, timeout || TIMEOUT, 'Waiting for element to be visible: ' + elem.locator());
+};
+
+exports.waitForPresence = function (elem) {
+  function logAndWait() {
+    log('Waiting for element to be present: ' + elem.locator());
+    return EC.presenceOf(elem)().thenCatch(function () {
+      // handle a possible stale element
+      return false;
+    });;
+  }
+  return browser.wait(logAndWait, TIMEOUT, 'Waiting for element to be present: ' + elem.locator());
 };
 
 exports.waitUntilEnabled = function (elem) {
@@ -130,9 +150,27 @@ exports.waitUntilDisabled = function (elem) {
   });
 };
 
+exports.waitForTextBoxValue = function (elem) {
+  return this.wait(elem).then(function () {
+    return browser.wait(function () {
+      return elem.getAttribute('value').then(function (text) {
+        log('Waiting until text box displays some text. Current text: ' + text);
+        if (text) {
+          return true;
+        } else {
+          return false;
+        }
+      }, function () {
+        return false;
+      });
+    }, TIMEOUT, 'Waiting text To be available: ' + elem.locator());
+  });
+};
+
 exports.expectIsDisplayed = function (elem) {
-  this.wait(elem);
-  expect(elem.isDisplayed()).toBeTruthy();
+  this.wait(elem).then(function () {
+    expect(elem.isDisplayed()).toBeTruthy();
+  });
 };
 
 exports.expectAllDisplayed = function (elems) {
@@ -149,18 +187,21 @@ exports.expectAllNotDisplayed = function (elems) {
 };
 
 exports.expectIsDisabled = function (elem) {
-  this.wait(elem);
-  expect(elem.isEnabled()).toBeFalsy();
+  this.wait(elem).then(function () {
+    expect(elem.isEnabled()).toBeFalsy();
+  });
 };
 
 exports.expectIsEnabled = function (elem) {
-  this.wait(elem);
-  expect(elem.isEnabled()).toBeTruthy();
+  this.wait(elem).then(function () {
+    expect(elem.isEnabled()).toBeTruthy();
+  });
 };
 
 exports.expectIsPresent = function (elem) {
-  this.wait(elem);
-  expect(elem.isPresent()).toBeTruthy();
+  this.wait(elem).then(function () {
+    expect(elem.isPresent()).toBeTruthy();
+  });
 };
 
 exports.expectIsNotPresent = function (elem) {
@@ -234,7 +275,10 @@ exports.expectTokenInput = function (elem, value) {
 exports.click = function (elem, maxRetry) {
   function logAndWait() {
     log('Waiting for element to be clickable: ' + elem.locator());
-    return EC.elementToBeClickable(elem)();
+    return EC.elementToBeClickable(elem)().thenCatch(function () {
+      // handle a possible stale element
+      return false;
+    });
   }
   return this.wait(elem).then(function () {
     return browser.wait(logAndWait, TIMEOUT, 'Waiting for element to be clickable: ' + elem.locator());
@@ -268,8 +312,9 @@ exports.clickLast = function (elem) {
 };
 
 exports.isSelected = function (elem) {
-  this.wait(elem);
-  return elem.isSelected();
+  return this.wait(elem).then(function () {
+    return elem.isSelected();
+  });
 };
 
 exports.expectSelected = function (selected, state) {
@@ -297,30 +342,43 @@ exports.sendKeys = function (elem, value) {
   });
 };
 
+exports.fileSendKeys = function (elem, value) {
+  this.waitForPresence(elem).then(function () {
+    log('Send file keys to element: ' + elem.locator() + ' ' + value);
+    browser.setFileDetector(new remote.FileDetector);
+    elem.sendKeys(value);
+  });
+};
+
 exports.expectAttribute = function (elem, attr, value) {
-  this.wait(elem);
-  expect(elem.getAttribute(attr)).toEqual(value);
+  this.wait(elem).then(function () {
+    expect(elem.getAttribute(attr)).toEqual(value);
+  });
 };
 
 exports.expectText = function (elem, value) {
-  this.wait(elem);
-  expect(elem.getText()).toContain(value);
+  this.wait(elem).then(function () {
+    expect(elem.getText()).toContain(value);
+  });
 };
 
 exports.expectNotText = function (elem, value) {
-  this.wait(elem);
-  expect(elem.getText()).not.toContain(value);
+  this.wait(elem).then(function () {
+    expect(elem.getText()).not.toContain(value);
+  });
 };
 
 exports.expectCount = function (elems, count) {
-  this.wait(elems);
-  expect(elems.count()).toEqual(count);
+  this.wait(elems).then(function () {
+    expect(elems.count()).toEqual(count);
+  });
 };
 
 exports.expectCountToBeGreater = function (elems, num) {
-  this.wait(elems);
-  elems.count().then(function (count) {
-    expect(count > num);
+  this.wait(elems).then(function () {
+    return elems.count().then(function (count) {
+      expect(count > num);
+    });
   });
 };
 
@@ -394,7 +452,10 @@ exports.search = function (query) {
 exports.searchForSingleResult = function (query) {
   function logAndWait() {
     log('Waiting for a single search result');
-    return EC.textToBePresentInElement(element(by.css('.searchinput span')), "1")();
+    return EC.textToBePresentInElement(element(by.css('.searchinput span')), "1")().thenCatch(function () {
+      // handle a possible stale element
+      return false;
+    });;
   }
   this.expectIsNotDisplayed(element(by.css('.icon-spinner')));
   this.sendKeys(this.searchField, query);

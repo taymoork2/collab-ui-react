@@ -48,6 +48,14 @@ var UsersPage = function () {
   this.communicationsService = element(by.css('#Communications .feature-arrow'));
   this.conferencingService = element(by.css('#Conferencing .feature-arrow'));
   this.contactCenterService = element(by.css('#ContactCenter .feature-arrow'));
+  this.sunlightUserPanel = element(by.cssContainingText('.section-title-row', 'Channels'));
+  this.sunlightChatChannel = element(by.css('label[for="sunlight-chat"]'));
+  this.sunlightEmailChannel = element(by.css('label[for="sunlight-email"]'));
+  this.sunlightVoiceChannel = element(by.css('label[for="sunlight-voice"]'));
+  this.sunlightUserAlias = element(by.id('sunlightUserAlias'));
+  this.sunlightUserRole = element(by.id('sunlightUserRole'));
+  this.sunlightUserRoleFirstElement = element(by.id('sunlightUserRole')).all(by.repeater('option in csSelect.options')).first();
+  this.sunlightUserOverviewSave = element(by.id('sunlight-user-overview-save'));
   this.serviceList = element.all(by.model('service in userOverview.services'));
 
   this.addUsers = element(by.id('addUsers'));

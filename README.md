@@ -83,6 +83,13 @@ Setup the environment (If necessary)
 * Before pushing any code to jenkins, always use `git fetch upstream && git merge upstream/master`
 * After git pulls, run bower install and npm install to make sure to pull new dependencies.
 
+TypeScript Definitions
+-----------------
+* Run 'gulp tsd' to install configured TypeScript definitions from tsd.json
+* Definitions (*.d.ts files) are installed under typings directory.
+* Microsoft VSCode automatically detects definition files and provides IntelliSense support (https://code.visualstudio.com/Docs/languages/javascript)
+* Add new TypeScript definitions using tsd (TypeScript Definition manager) from DefinitelyTyped (https://github.com/DefinitelyTyped/tsd)
+
 Project structure
 -----------------
 

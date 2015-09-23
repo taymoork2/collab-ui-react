@@ -111,6 +111,8 @@
     "enterpriseResource": true,
     "orgprofile": true,
     "trialextinterest": true,
-    "TIMEOUT": true
+    "TIMEOUT": true,
+    "inviteusers": true,
+    "phoneUtils": true
   }
 }

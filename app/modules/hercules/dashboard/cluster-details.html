@@ -30,14 +30,13 @@
               <li>
                 <div class="status-info">
                   <div ng-show="service.software_upgrade_available" style="color: #00c1aa">
-                    <i class="fa fa-cloud-upload" style="color: #00c1aa; margin-right: 2px;"></i>
                     Software upgrade available.
                   </div>
                   <div class="clearfix" ng-show="service.alarm_count">
-                    <span ng-show="service.alarm_count==1">
+                    <span ng-show="service.alarm_count==1" class="feature-status">
                       {{service.alarm_count}} reported alarm.
                     </span>
-                    <span ng-hide="service.alarm_count==1">
+                    <span ng-hide="service.alarm_count==1" class="feature-status">
                       {{service.alarm_count}} reported alarms.
                     </span>
                   </div>
