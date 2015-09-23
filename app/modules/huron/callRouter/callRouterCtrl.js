@@ -9,7 +9,6 @@
   function CallRouterCtrl($scope, Config, Authinfo, RouterCompanyNumber, CallRouterService, ServiceSetup, Notification, $modal, $translate) {
     var vm = this;
     vm.save = save;
-    // vm.addNew = addNew;
     vm.model = {};
     vm.firstTimeCallerID = true;
     vm.btnDisabled = true;
@@ -52,7 +51,6 @@
         type: 'input',
         key: 'orgname',
         templateOptions: {
-          required: true,
           label: $translate.instant('routingModal.label'),
           onChange: getDisabledState
         },
@@ -76,7 +74,6 @@
           }
         },
         templateOptions: {
-          required: true,
           label: $translate.instant('routingModal.calleridnumber'),
           onChangeFn: getDisabledState,
           combo: true,
