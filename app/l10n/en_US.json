@@ -881,6 +881,7 @@
     "addUsersDescription": "Select a method to upload your users.",
     "addUsersSimple": "Invite Users | Simple",
     "addUsersAdvanced": "Invite Users | Advanced",
+    "msgrSyncDesc": "Your orgnization is currently in Messenger Sync Mode. Please onboard new users in the WebEx Messenger administration tool. Consult your Cisco customer representative to enable this screen.",
     "getStarted": "Get Started",
     "startTrial": "Start Trial",
     "doLater": "Do this later",
@@ -1252,11 +1253,17 @@
     "setupNumbers": "Set Up PSTN Numbers",
     "placeOrder": "Place Order",
     "orderBlock": "Order Block Numbers",
+    "state": "State",
+    "selectState": "Select state",
+    "searchStates": "Search states",
     "areaCode": "Area Code",
+    "selectAreaCode": "Select area code",
+    "searchAreaCodes": "Search area codes",
     "quantity": "Quantity",
     "reviewAndOrder": "Review and Place Order",
     "package": "Package",
     "adding": "Adding",
+    "numbers": "{count, plural, one{# number} other{# numbers}}",
     "newNumbers": "{count, plural, one{# New Number} other{# New Numbers}}",
     "thankYou": "Thank you",
     "setupSuccess": "You have set up the PSTN service successfully.",
@@ -1907,12 +1914,12 @@
       "supervisor": "Supervisor"
     },
     "successMessages": {
-      "userUpdateSuccessMessage": "Information is successfully saved for {{userId}}. "
+      "userUpdateSuccessMessage": "Information has been updated successfully for user {{userId}}. "
     },
     "failureMessages": {
-      "userUpdateFailureMessage": "Unable to update information for {{userId}}.",
-      "userloadFailureMessage": "Unable to fetch information for {{userId}}.",
-      "emptyAliasErrorMessage": "Alias can not be empty"
+      "userUpdateFailureMessage": "Information cannot be updated currently for user {{userId}}.",
+      "userloadFailureMessage": "Information is currently not available for user {{userId}}.",
+      "emptyAliasErrorMessage": "User alias cannot be empty."
     }
   },
 

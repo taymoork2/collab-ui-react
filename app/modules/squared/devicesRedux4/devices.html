@@ -15,8 +15,8 @@
     <div class="clearfix row">
       <h1>
         Devices
-        <a 
-          href 
+        <a
+          href
           class="pull-right"
           ng-click="devices.showAddDeviceDialog()"
           style="padding-top: 20px; font-size: 1.5rem">
@@ -33,10 +33,15 @@
           }">
             <i class="fa fa-search search-icon" />
 
-            <span 
+            <span
               ng-if="devices.currentFilter"
               class="filter">
               {{devices.currentFilter.label}}
+              <i
+                class="fa fa-times"
+                ng-click="devices.clearFilter()"
+                style="cursor: pointer; padding-left: 5px"
+              />
             </span>
 
             <input
@@ -51,8 +56,8 @@
               ng-keydown="devices.clearFilterIfNoSearch($event)"
             />
 
-            <i 
-              class="fa fa-times clear-icon" 
+            <i
+              class="fa fa-times clear-icon"
               ng-if="devices.search || devices.currentFilter"
               ng-click="devices.clearSearchAndFilter()"
             />
@@ -72,12 +77,16 @@
             </li>
           </ul>
         </div>
+        <div ng-if="!devices.filteredCodesAndDevices.matches.length">
+          <p class="no-results-matched-search">No devices found...</p>
+        </div>
       </div>
     </div>
     <div class="row">
       <div class="large-12 columns" ui-view="leftPanel"></div>
-
-      <div class="large-6 columns pane" ui-view="rightPanel"></div>
+    </div>
+    <div class="row">
+      <div class="large-6 columns" ui-view="rightPanel"></div>
     </div>
   </div>
 </div>

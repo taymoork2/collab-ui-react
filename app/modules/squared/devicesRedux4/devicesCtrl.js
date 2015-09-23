@@ -6,8 +6,18 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, CsdmCodeService
 
   vm.pager = new PagerUtil({
     resultSize: 0,
-    pageSize: 10
+    pageSize: 8
   });
+
+  vm.deviceProps = {
+    product: 'Product',
+    software: 'Software',
+    ip: 'IP',
+    serial: 'Serial',
+    mac: 'Mac',
+    readableActivationCode: 'Activation Code',
+    readableState: 'Status'
+  };
 
   vm.filteredCodesAndDevices = [];
 
@@ -61,10 +71,16 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, CsdmCodeService
   };
 
   function reduceFn(result, device) {
-    var searchFields = ['displayName', 'software', 'serial', 'ip', 'mac'];
+    var searchFields = ['displayName', 'software', 'serial', 'ip', 'mac', 'readableState', 'readableActivationCode', 'product'];
+
     var someAttributeMatches = !vm.search || _.some(searchFields, function (field) {
       return ~(device[field] || '').toLowerCase().indexOf(vm.search.toLowerCase());
     });
+
+    device.filterMatch = _.find(searchFields, function (field) {
+      return vm.search && field != 'displayName' && ~(device[field] || '').toLowerCase().indexOf(vm.search.toLowerCase());
+    });
+
     var filterMatches = _.chain(vm.filters)
       .where({
         checked: true
@@ -118,16 +134,17 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, CsdmCodeService
 
   vm.clearFilterIfNoSearch = function ($event) {
     if ($event.keyCode == 8 && !vm.search) {
-      if (vm.currentFilter) {
-        vm.currentFilter.checked = true;
-        vm.filterChanged(vm.currentFilter);
-      }
+      vm.clearFilter();
     }
   };
 
   vm.clearSearchAndFilter = function () {
     vm.search = undefined;
     vm.searchChanged();
+    vm.clearFilter();
+  };
+
+  vm.clearFilter = function () {
     if (vm.currentFilter) {
       vm.currentFilter.checked = true;
       vm.filterChanged(vm.currentFilter);
@@ -168,6 +185,13 @@ function DevicesReduxDetailsCtrl($stateParams, $state, $window, RemDeviceModal, 
     $state.go('devices-redux4.search');
   }
 
+  vm.deviceProps = {
+    software: 'Software',
+    ip: 'IP',
+    serial: 'Serial',
+    mac: 'Mac'
+  };
+
   vm.reportProblem = function () {
     var feedbackId = Utils.getUUID();
 
@@ -191,7 +215,18 @@ function DevicesReduxDetailsCtrl($stateParams, $state, $window, RemDeviceModal, 
   };
 }
 
+function HighlightFilter() {
+  return function (input, term) {
+    if (input && term) {
+      var regex = new RegExp('(' + term + ')', 'gi');
+      return input.replace(regex, "<span class='hl'>$1</span>");
+    }
+    return input;
+  };
+}
+
 angular
   .module('Squared')
+  .filter('highlight', HighlightFilter)
   .controller('DevicesReduxCtrl4', DevicesReduxCtrl)
   .controller('DevicesReduxDetailsCtrl4', DevicesReduxDetailsCtrl);

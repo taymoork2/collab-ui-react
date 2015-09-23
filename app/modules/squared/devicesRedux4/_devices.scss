@@ -12,6 +12,10 @@
     margin: 0;
   }
 
+  .hl {
+    background: $brand-success-light;
+  }
+
   .needsActivation {
     color: #aaa;
   }
@@ -20,40 +24,92 @@
     padding-bottom: 30px;
   }
 
-  h2 {
-    padding: 20px 0;
+  button {
+    border: 0;
+    cursor: pointer;
+    color: $link-color;
+    background: transparent;
+  }
+  button[disabled], button[disabled]:hover {
+    color: #ccc;
+    cursor: default;
+    background: transparent;
+  }
+  button:hover {
+    color: #049fd9;
+    background: transparent;
   }
 
-  .details-header {
-    // border-bottom: 1px solid #ccc;
 
-    button {
-      border: 0;
-      color: #666;
-      cursor: pointer;
-      background: transparent;
-    }
-    button[disabled], button[disabled]:hover {
-      color: #ccc;
-      cursor: default;
-    }
-    button:hover {
-      color: #049fd9;
-    }
-  }
   .details-pane {
+    h2 {
+      padding: 0 0 20px 0;
+    }
+
+    h2, h2 span {
+      font-size: 2.25rem;
+    }
+
+    strong, strong span {
+      font-family: "CiscoSansTT Light","Helvetica Neue",Helvetica,Arial,sans-serif;
+      font-weight: 700;
+    }
+
     .row {
       padding: 10px 0;
       font-size: 0.875rem;
+    }
+    .details-container {
+      border: 1px solid $gray-lightest;
+      padding: 20px;
+      margin-top: 40px;
+    }
+
+    .device-pager {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .readable-activation-code {
+      padding-top: 20px;
+    }
+
+    .readable-activation-code, .readable-activation-code span {
+      font-size: 2rem;
+      color: $brand-primary;
     }
   }
   .result-pane {
     padding-top: 20px;
 
-    li {
+    .bg-container {
+      padding: 20px;
+      position: relative;
       border: 1px solid $gray-lightest;
+
+      h4 {
+        padding-left: 20px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+
+      h4, h4 span {
+        font-size: 1.25rem;
+      }
+
+      .overlay {
+        position: absolute;
+        left: 40px;
+        top: 38px;
+        opacity: .5;
+      }
     }
-    
+
+    .bg-container:hover {
+      cursor: pointer;
+      background: #fafafa;
+    }
+
     .result-row {
       cursor: pointer;
       padding-top: 18px;
@@ -91,7 +147,7 @@
 
       .filter {
         margin: 0 10px 2px 0;
-        padding: 1px 10px;
+        padding: 1px 10px 2px;
         border-radius: 10px;
         background: $brand-primary;
         color: $gray-lightest;
@@ -134,7 +190,7 @@
       cursor: pointer;
       padding: 20px 0 10px 0;
       list-style-type: none;
-      border-bottom: 1px solid #ddd;
+      border-bottom: 1px solid #eee;
     }
   }
 }
@@ -147,6 +203,6 @@
 
 @media (min-width: 600px) {
   .devices-redux4 {
-    padding: 100px 80px;
+    padding: 60px 80px;
   }
 }
