@@ -17,7 +17,7 @@ describe('Configuring Contact Center services per user', function () {
     login.login('contactcenter-admin', '#/users');
   });
 
-  it('should toggle media channel for the user and update alias, Role and then save', function () {
+  it('should toggle media channel for the user and save', function () {
     utils.clickUser(testUser);
     utils.expectIsDisplayed(users.contactCenterService);
     utils.click(users.contactCenterService);
@@ -26,13 +26,23 @@ describe('Configuring Contact Center services per user', function () {
     utils.click(users.sunlightChatChannel);
     utils.click(users.sunlightEmailChannel);
     utils.click(users.sunlightVoiceChannel);
+    utils.click(users.sunlightUserOverviewSave);
+    notifications.assertSuccess('Information has been updated successfully for user ' + testUser);
+  });
+
+  it('should change user alias and save', function () {
     utils.clear(users.sunlightUserAlias);
     utils.sendKeys(users.sunlightUserAlias, userAlias);
+    utils.click(users.sunlightUserRole);
+    utils.click(users.sunlightUserOverviewSave);
+    notifications.assertSuccess('Information has been updated successfully for user ' + testUser);
+  });
+
+  it('should change user role to USER and save', function () {
     utils.click(users.sunlightUserRole);
     utils.click(users.sunlightUserRoleFirstElement);
     utils.click(users.sunlightUserOverviewSave);
     notifications.assertSuccess('Information has been updated successfully for user ' + testUser);
-    utils.click(users.closeSidePanel);
   });
 
 });
