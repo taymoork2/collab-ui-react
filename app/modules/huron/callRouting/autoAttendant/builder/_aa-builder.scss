@@ -13,8 +13,6 @@
 
 .aa-builder-container {
   padding-top: 146px;
-  padding-bottom: 100% !important;
-  background-color: white;
 }
 
 .aa-flex-row {
@@ -26,9 +24,9 @@
   margin-right: 10px;
 }
 
-.aa-flex-row-centered {
+.aa-flex-row.centered {
   @extend .aa-flex-row;
-  justify-content: center !important; 
+  justify-content: center;
 }
 
 .aa-flex-row-title {
@@ -110,23 +108,35 @@
     color: $brand-primary;
   }
 }
-input[id="aaNameInput"]:focus {
-    border-bottom: 2px solid DarkGray !important;
-    -webkit-box-shadow: none;
-    background-color: white;
-  }
+.aa-flex-name-item {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
 
-.aa-add-detail {
-    font-size: 18px;
+#aa-name-detail {
+    font-size: 2rem;
     margin-left: 0px;
     margin-right: 0px;
-    width: 600px !important;
+    width: 50vw;
     font-family: $brand-font-extra-light;
     text-align:center;
-    border: none !important;
-    border-bottom: 2px solid LightGray !important;
-    outline: none !important;
-    border-radius:0 !important;
+    border: none;
+    border-bottom: 1px solid $brand-primary;
+    outline: none;
+    border-radius:0;
+    background-color: transparent;
+    &:focus {
+      border: none;
+      outline: none;
+      font-family: $brand-font-cisco-TT-Light;
+      border-bottom: 1px solid $brand-primary-darker;
+      -webkit-box-shadow: none;
+      background-color: transparent;
+  }
+
 }
 .aa-container {
   overflow: visible;

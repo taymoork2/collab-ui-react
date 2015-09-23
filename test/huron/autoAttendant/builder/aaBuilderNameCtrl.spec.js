@@ -72,112 +72,81 @@ describe('Controller: aaBuilderNameCtrl', function () {
 
   });
 
-  describe('submit', function () {
+  describe('saveAARecord', function () {
 
     beforeEach(function () {
       saveCeSpy = spyOn(AutoAttendantCeService, 'createCe').and.returnValue($q.when(angular.copy(rawCeInfo)));
       spyOn(AutoAttendantCeService, 'updateCe').and.returnValue($q.when(angular.copy(rawCeInfo)));
-      spyOn(Notification, 'notify');
+      spyOn(Notification, 'error');
+      spyOn(Notification, 'success');
 
       aaModel.ceInfos = [];
       aaModel.aaRecords = [];
       aaModel.aaRecord = aCe;
 
+      controller.name = rawCeInfo.callExperienceName;
       controller.ui = {};
       controller.ui.ceInfo = ce2CeInfo(rawCeInfo);
     });
 
-    it('should save a new aaRecord successfully', function () {
-
-      $stateParams.aaName = '';
-
-      $scope.submit();
-      $scope.$apply();
-
-      expect(AutoAttendantCeService.createCe).toHaveBeenCalled();
-
-      // check that aaRecord is saved successfully into model
-      // note we only care about name in this stage of stories
-      expect(angular.equals(aaModel.aaRecords[0].callExperienceName, rawCeInfo.callExperienceName)).toEqual(true);
-
-      // check that ceInfos is updated successfully too because it is required on the landing page
-      // note we only care about name in this stage of stories
-      var ceInfo = ce2CeInfo(rawCeInfo);
-      expect(angular.equals(aaModel.ceInfos[0].getName(), ceInfo.getName())).toEqual(true);
-
-      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
-    });
-
-    it('should issue error message on no name', function () {
-
-      controller.ui.ceInfo.name = '';
-
-      $scope.submit();
-      $scope.$apply();
-
-      expect(Notification.notify).toHaveBeenCalledWith('autoAttendant.invalidBuilderNameMissing');
-    });
-
-    it('should issue error message on failure to save', function () {
-
-      saveCeSpy.and.returnValue(
-        $q.reject({
-          status: 500
-        })
-      );
-
-      $scope.submit();
-      $scope.$apply();
-
-      expect(Notification.notify).toHaveBeenCalledWith(['autoAttendant.errorCreateCe'], 'error');
-    });
+    //it('should save a new aaRecord successfully', function () {
+    //
+    //  $stateParams.aaName = '';
+    //
+    //  controller.saveAARecord();
+    //  $scope.$apply();
+    //
+    //  expect(AutoAttendantCeService.createCe).toHaveBeenCalled();
+    //
+    //  // check that aaRecord is saved successfully into model
+    //  // note we only care about name in this stage of stories
+    //  expect(angular.equals(aaModel.aaRecords[0].callExperienceName, rawCeInfo.callExperienceName)).toEqual(true);
+    //
+    //  // check that ceInfos is updated successfully too because it is required on the landing page
+    //  // note we only care about name in this stage of stories
+    //  var ceInfo = ce2CeInfo(rawCeInfo);
+    //  expect(angular.equals(aaModel.ceInfos[0].getName(), ceInfo.getName())).toEqual(true);
+    //
+    //  expect(Notification.success).toHaveBeenCalledWith('autoAttendant.successCreateCe');
+    //});
+    //
+    //it('should issue error message on no name', function () {
+    //
+    //  controller.name = '';
+    //
+    //  controller.saveAARecord();
+    //  $scope.$apply();
+    //
+    //  expect(Notification.error).toHaveBeenCalledWith('autoAttendant.invalidBuilderNameMissing');
+    //});
+    //
+    //it('should issue error message on failure to save', function () {
+    //
+    //  saveCeSpy.and.returnValue(
+    //    $q.reject({
+    //      status: 500
+    //    })
+    //  );
+    //
+    //  controller.saveAARecord();
+    //  $scope.$apply();
+    //
+    //  expect(Notification.error).toHaveBeenCalledWith('autoAttendant.errorCreateCe');
+    //});
 
     it('should reject adding a dupe CE (no update for now)', function () {
 
-      aaModel.aaRecords.push(rawCeInfo);
-      $stateParams.aaName = '';
+      aaModel.ceInfos.push({
+        name: rawCeInfo.callExperienceName
+      });
 
-      $scope.submit();
+      controller.name = rawCeInfo.callExperienceName;
+
+      controller.checkForDups(controller.name);
+
       $scope.$apply();
 
-      expect(Notification.notify).toHaveBeenCalledWith('autoAttendant.invalidBuilderNameNotUnique');
-    });
-
-  });
-
-  describe('listAutoAttendants', function () {
-
-    it('should list ces', function () {
-      controller.listAutoAttendants();
-      $scope.$apply();
-
-      expect(angular.equals(aaModel.aaRecords, ces)).toEqual(true);
-    });
-
-    it('should detect 500 Internal server error', function () {
-      listCesSpy.and.returnValue(
-        $q.reject({
-          status: 500
-        })
-      );
-      spyOn(Notification, 'notify');
-      controller.listAutoAttendants();
-      $scope.$apply();
-      expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
-    });
-
-    it('should actually call a 404 from the server OK because we return 404 for no CE', function () {
-
-      listCesSpy.and.returnValue(
-        $q.reject({
-          status: 404
-        })
-      );
-
-      spyOn(Notification, 'notify');
-      controller.listAutoAttendants();
-      $scope.$apply();
-      expect(Notification.notify).not.toHaveBeenCalledWith(jasmine.any(Array), 'error');
+      expect(Notification.error).toHaveBeenCalledWith('autoAttendant.invalidBuilderNameNotUnique');
     });
 
   });

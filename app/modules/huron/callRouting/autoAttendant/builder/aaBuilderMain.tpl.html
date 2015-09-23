@@ -1,12 +1,14 @@
 <div class="aa-builder-header" ng-include="'modules/huron/callRouting/autoAttendant/builder/aaBuilderHeader.tpl.html'"></div>
 
-<div class="aa-builder-container"  ng-if="!aaBuilderMain.ui.ceInfo.getName()">
-  <div ng-include="'modules/huron/callRouting/autoAttendant/builder/aaBuilderName.tpl.html'" ng-controller= "aaBuilderNameCtrl as nameCtrl">
+<div class="aa-builder-container aa-flex-row centered"  ng-if="!aaBuilderMain.ui.ceInfo.name">
+  <span ng-include="'modules/huron/callRouting/autoAttendant/builder/aaBuilderName.tpl.html'">
+  </span>
+
+</div>
+
+<div ng-if="aaBuilderMain.ui.ceInfo.getName()">
+<span class="aa-builder-container" ng-include="'modules/huron/callRouting/autoAttendant/builder/aaBuilderContainer.tpl.html'" ng-controller="AABuilderContainerCtrl as aaBuilder"></span>
+</div>
   </div>
-</div>
 
-
-<div ng-if="aaBuilderMain.aaModel.ceInfo.getName()">
-<div class="aa-builder-container" ng-include="'modules/huron/callRouting/autoAttendant/builder/aaBuilderContainer.tpl.html'" ng-controller="AABuilderContainerCtrl as aaBuilder"></div>
-</div>
 
