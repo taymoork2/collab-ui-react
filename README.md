@@ -21,7 +21,7 @@ Technology
 * Build process is built and run with Gulp.js
 
 Contribute
-----------
+-----------
 
 We use pull requests, and consequentially the forking model.  To make a contribution, you will need to fork this repository, make some changes, and then create a pull request with your changes.
 
