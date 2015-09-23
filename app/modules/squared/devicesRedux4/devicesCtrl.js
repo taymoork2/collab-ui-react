@@ -6,7 +6,7 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, CsdmCodeService
 
   vm.pager = new PagerUtil({
     resultSize: 0,
-    pageSize: 12
+    pageSize: 8
   });
 
   vm.deviceProps = {
@@ -134,16 +134,17 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, CsdmCodeService
 
   vm.clearFilterIfNoSearch = function ($event) {
     if ($event.keyCode == 8 && !vm.search) {
-      if (vm.currentFilter) {
-        vm.currentFilter.checked = true;
-        vm.filterChanged(vm.currentFilter);
-      }
+      vm.clearFilter();
     }
   };
 
   vm.clearSearchAndFilter = function () {
     vm.search = undefined;
     vm.searchChanged();
+    vm.clearFilter();
+  };
+
+  vm.clearFilter = function () {
     if (vm.currentFilter) {
       vm.currentFilter.checked = true;
       vm.filterChanged(vm.currentFilter);
@@ -185,12 +186,10 @@ function DevicesReduxDetailsCtrl($stateParams, $state, $window, RemDeviceModal, 
   }
 
   vm.deviceProps = {
-    product: 'Product',
     software: 'Software',
     ip: 'IP',
     serial: 'Serial',
-    mac: 'Mac',
-    readableActivationCode: 'Activation Code'
+    mac: 'Mac'
   };
 
   vm.reportProblem = function () {

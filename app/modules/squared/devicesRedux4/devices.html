@@ -37,6 +37,11 @@
               ng-if="devices.currentFilter"
               class="filter">
               {{devices.currentFilter.label}}
+              <i
+                class="fa fa-times"
+                ng-click="devices.clearFilter()"
+                style="cursor: pointer; padding-left: 5px"
+              />
             </span>
 
             <input
