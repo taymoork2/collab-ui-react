@@ -28,7 +28,7 @@ We use pull requests, and consequentially the forking model.  To make a contribu
 1. From this web page, click **Fork** at the upper-right hand corner of the page
 2. Select your username (e.g. @zzatking)
 3. After your new fork is created, you'll want to pull the fork to your local environment, and add the upstream and jenkins remotes:
- - `git clone git@sqbu-github.cisco.com:username/wx2-admin-web-client`*
+ - `git clone git@sqbu-github.cisco.com:username/wx2-admin-web-client`
  - `git remote add upstream git@sqbu-github.cisco.com:WebExSquared/wx2-admin-web-client`
  - `git remote add jenkins ssh://username@sqbu-jenkins.cisco.com:2022/wx2-admin-web-client`
 
