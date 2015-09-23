@@ -875,6 +875,7 @@
     "addUsersDescription": "Select a method to upload your users.",
     "addUsersSimple": "Invite Users | Simple",
     "addUsersAdvanced": "Invite Users | Advanced",
+    "msgrSyncDesc": "Your orgnization is currently in Messenger Sync Mode. Please onboard new users in the WebEx Messenger administration tool. Consult your Cisco customer representative to enable this screen.",
     "getStarted": "Get Started",
     "startTrial": "Start Trial",
     "doLater": "Do this later",
@@ -1856,9 +1857,9 @@
     "NeedsActivation": "Needs Activation",
     "issuesDetected": "Issues Detected",
     "errorCodes": {
-      "tcpFallback": {
+      "mediaProtocol": {
         "type": "Potential loss of video quality",
-        "message": "This device is communicating via the TCP protocol, which could cause higher latency and therefore reduced media streaming experience. If you are experiencing issues with your media streaming, you can try to open UDP port 33434 on your local firewall to aid media streaming issues."
+        "message": "This device is communicating via the {{mediaProtocol}} protocol, which could cause higher latency and therefore reduced media streaming experience. If you are experiencing issues with your media streaming, you can try to open UDP port 33434 on your local firewall to aid media streaming issues."
       },
       "TemperatureCheck": {
         "type": "High temperature",

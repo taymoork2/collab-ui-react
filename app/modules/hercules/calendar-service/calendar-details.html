@@ -16,17 +16,18 @@
     Alarms
   </h5>
 
+  <h6>
   <div ng-if="calendarDetails.selectedService.alarm_count">
     <button class="button alert" ng-click="calendarDetails.showAlarms()">
       {{calendarDetails.selectedService.alarm_count}} reported alarms
     </button>
-
-
   </div>
+
 
   <div ng-if="!calendarDetails.selectedService.alarm_count">
     No alarms reported
   </div>
+  </h6>
 
   <h5>
     <div class="row">

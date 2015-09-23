@@ -58,7 +58,7 @@ angular.module('Squared')
 
       vm.showDeviceDetails = function (device) {
         vm.currentDevice = device; // fixme: modals depend on state set here
-        $state.go('device-overview-redux', {
+        $state.go('device-overview', {
           currentDevice: device
         });
       };

@@ -67,7 +67,9 @@
         link: function ($scope, $element, $attr) {
           $scope.$watch($attr.focusOn, function (_focusVal) {
             $timeout(function () {
-              var noop = _focusVal ? $element.focus() : $element.blur();
+              if (_focusVal) {
+                $element.focus();
+              }
             });
           });
         }
