@@ -79,7 +79,7 @@ Setup the environment (If necessary)
 ------------------------------------
 
 * Run `./setup.sh` (found in the root directory) or, if it fails:
-  * Install node.js version <= v4.1.1 (for npm): http://nodejs.org/download/
+  * Install node.js version <= v0.10.28 (for npm): http://nodejs.org/download/
 * Run package managers in the cloned project to pull dependencies:
 * `npm install && bower install`
 * Launch the app: `gulp serve`
