@@ -82,7 +82,6 @@ Setup the environment (If necessary)
   * Install node.js version <= v4.1.1 (for npm): http://nodejs.org/download/
 * Run package managers in the cloned project to pull dependencies:
 * `npm install && bower install`
-  * If you get *Please try running this command again as root/Administrator* then run it as `sudo npm dependency`
 * Launch the app: `gulp serve`
   * If you get *Error: 'libsass' bindings not found. Try reinstalling 'node-sass'?* Then run
     * `rm -rf node_modules` and `npm install`. You may need to reinstall some dependencies afterwards.
