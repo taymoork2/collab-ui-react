@@ -6,16 +6,25 @@
     .factory('CiService', CiService);
 
   /** @ngInject */
-  function CiService($rootScope, Authinfo, UserListService) {
+  function CiService($q, $rootScope, Authinfo, UserListService, Userservice) {
     // Interface ---------------------------------------------------------------
 
+    // Internal storage
+    var userId = null;
+    var users = null;
+    var partnerAdmins = null;
+
     var ciService = {
-      orgId: Authinfo.getOrgId(),
-      orgName: Authinfo.getOrgName(),
-      getCiOrgInfo: getCiOrgInfo,
       getCiAdmins: getCiAdmins,
-      getCiNonAdmins: getCiNonAdmins
+      getCiNonAdmins: getCiNonAdmins,
+      getCiOrgInfo: getCiOrgInfo,
+      getUserId: getUserId,
+      isLoggedInToPartnerPortal: isLoggedInToPartnerPortal,
+      isPartnerAdmin: isPartnerAdmin
     };
+
+    // Init data
+    init();
 
     // Return the service
     return ciService;
@@ -23,6 +32,11 @@
     ////////////////////////////////////////////////////////////////////////////
 
     // Implementation ----------------------------------------------------------
+
+    function init() {
+      getUserId();
+      getPartnerAdmins();
+    }
 
     function getCiOrgInfo() {
       return [{
@@ -37,6 +51,9 @@
       }, {
         key: 'Primary Email',
         value: Authinfo.getPrimaryEmail()
+      }, {
+        key: 'Is Cisco?',
+        value: Authinfo.isCisco()
       }, {
         key: 'Roles',
         value: Authinfo.getRoles()
@@ -78,6 +95,28 @@
       getUsers(false, nonAdmins);
     }
 
+    function getPartnerAdmins() {
+      var defer = $q.defer();
+
+      // Cache result
+      if (null === partnerAdmins) {
+        UserListService.listPartners(Authinfo.getOrgId(), function (response) {
+          if (response.success) {
+            partnerAdmins = response.partners;
+            defer.resolve(partnerAdmins);
+          } else {
+            var error = 'Failed getting parter list. Response: ' + JSON.stringify(response);
+            window.console.error(error);
+            defer.reject(error);
+          }
+        });
+      } else {
+        defer.resolve(partnerAdmins);
+      }
+
+      return defer.promise;
+    }
+
     function getUsers(getAdmins, receivedUsers) {
       UserListService.listUsers(0, 20, null, null, function (data, status, searchStr) {
         var i = 0;
@@ -87,6 +126,7 @@
 
           for (i = 0; i < users.length; i++) {
             var user = users[i];
+
             receivedUsers.push({
               userName: user.userName,
               DisplayName: user.displayName,
@@ -106,6 +146,63 @@
           }
         }
       }, '', getAdmins);
+    }
+
+    function getUserId() {
+      var defer = $q.defer();
+
+      // Cache result
+      if (null === userId) {
+        Userservice.getUser('me', function (data, status) {
+          if (data.success && data.id) {
+            userId = data.id;
+            defer.resolve(userId);
+          } else {
+            defer.reject('Error getting logged in user ID: Status ' + status + ': ' + JSON.stringify(data));
+          }
+        });
+      } else {
+        defer.resolve(userId);
+      }
+
+      return defer.promise;
+    }
+
+    function isLoggedInToPartnerPortal() {
+      return Authinfo.getRoles().indexOf('PARTNER_ADMIN') > -1;
+    }
+
+    function isPartnerAdmin() {
+      var defer = $q.defer();
+
+      // Get user ID, then check if it's in the partner admin list
+      getUserId()
+        .then(function (userId) {
+          getPartnerAdmins()
+            .then(function (admins) {
+              var partnerFound = false;
+
+              // Check for user ID in admin list
+              for (var partner in admins) {
+                if (userId === admins[partner].id) {
+                  partnerFound = true;
+                  break;
+                }
+              }
+
+              defer.resolve(partnerFound);
+            }, function (errorMsg) {
+              var error = 'Error checking if user is a partner admin: ' + errorMsg;
+              window.console.error(error);
+              defer.reject(error);
+            });
+        }, function (errorMsg) {
+          var error = 'Error checking if user is a partner admin: ' + errorMsg;
+          window.console.error(error);
+          defer.reject(error);
+        });
+
+      return defer.promise;
     }
   }
 })();

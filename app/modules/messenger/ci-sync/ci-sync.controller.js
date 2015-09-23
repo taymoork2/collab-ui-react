@@ -6,11 +6,9 @@
     .controller('CiSyncCtrl', CiSyncCtrl);
 
   /** @ngInject */
-  function CiSyncCtrl(Config, CiService) {
+  function CiSyncCtrl(Authinfo, Config, CiService, SyncService) {
     // Interface ---------------------------------------------------------------
     var vm = this;
-
-    vm.title = 'Messenger CI Sync';
 
     vm.statusOptions = Object.freeze({
       on: {
@@ -32,10 +30,19 @@
       }
     });
 
-    vm.data = {
-      messengerOrgName: 'URDB-' + CiService.orgName,
-      messengerOrgId: 'URDB-' + CiService.orgId,
-      linkDate: new Date('08/20/2015'),
+    // Public
+    vm.title = 'Messenger CI Sync';
+    vm.isDirSync = false;
+    vm.status = vm.statusOptions.on;
+    vm.ciAdmins = [];
+    vm.ciUsers = [];
+    vm.ciData = CiService.getCiOrgInfo();
+    vm.dev = Config.isDev() && ('testAtlasMsgr' === Authinfo.getOrgName());
+
+    vm.syncInfo = {
+      messengerOrgName: 'Unknown',
+      messengerOrgId: 'Unknown',
+      linkDate: 'Unknown',
       isAuthRedirect: false,
       isSyncing: false
     };
@@ -64,7 +71,7 @@
       key: 'linkDate',
       type: 'input',
       templateOptions: {
-        type: 'date',
+        type: 'input',
         label: 'CI Link Date',
         required: false,
         disabled: true,
@@ -75,8 +82,11 @@
     vm.init = init;
 
     // Event handlers
+    vm.isDirSync = SyncService.isDirSync;
     vm.setOrgAdmin = setOrgAdmin;
     vm.setOpsAdmin = setOpsAdmin;
+    vm.refreshStatus = refreshStatus;
+    vm.updateSync = updateSync;
 
     vm.init();
 
@@ -86,18 +96,43 @@
 
     // CI Calls Inside
     function init() {
-      vm.status = vm.statusOptions.on;
       setOrgAdmin();
-
       vm.ciData = CiService.getCiOrgInfo();
-
-      vm.ciAdmins = [];
       CiService.getCiAdmins(vm.ciAdmins);
-
-      vm.ciUsers = [];
       CiService.getCiNonAdmins(vm.ciUsers);
+      getSyncStatus();
 
-      vm.dev = Config.isDev() && ('testAtlasMsgr' === CiService.orgName) ? true : false;
+      // Check for Partner Admin (Ops Admin) vs. Full Admin (Org Admin)
+      checkUserType();
+    }
+
+    function checkUserType() {
+      CiService.isPartnerAdmin()
+        .then(function (isPartnerAdmin) {
+          if (isPartnerAdmin) {
+            setOpsAdmin();
+          }
+        }, function (errorMsg) {
+          window.console.error('Error checking if user is a partner admin: ' + errorMsg);
+        });
+    }
+
+    function getSyncStatus() {
+      SyncService.getSyncStatus()
+        .then(function (status) {
+          // Update data from service
+          vm.syncInfo.messengerOrgId = status.urdbOrgId;
+          vm.syncInfo.messengerOrgName = status.urdbOrgName;
+          vm.syncInfo.linkDate = status.linkDate;
+          vm.syncInfo.isSyncing = SyncService.isSyncing();
+          vm.syncInfo.isAuthRedirect = status.authRedirect;
+        }, function (errorMsg) {
+          window.console.error('Error getting CI sync status: ' + errorMsg);
+        });
+    }
+
+    function refreshStatus() {
+      getSyncStatus();
     }
 
     function setOrgAdmin() {
@@ -106,6 +141,14 @@
 
     function setOpsAdmin() {
       vm.adminType = vm.adminTypes.ops;
+    }
+
+    function updateSync() {
+      // Double-check that they are ops for security
+      if (vm.adminTypes.ops === vm.adminType) {
+        // SyncService must turn the syncing boolean into the full mode
+        SyncService.updateSync(vm.syncInfo.isSyncing, vm.syncInfo.isAuthRedirect);
+      }
     }
   }
 })();
