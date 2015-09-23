@@ -34,7 +34,9 @@ angular.module('Core')
       var siteUrl = vm.gridData[0].license.siteUrl;
       var siteName = WebExUtilsFact.getSiteName(siteUrl);
 
-      $log.log("siteListCtrl(): siteUrl=" + siteUrl);
+      var logMsg = "siteListCtrl(): " + "\n" +
+        "vm.gridData[0]=" + JSON.stringify(vm.gridData[0]);
+      $log.log(logMsg);
 
       // Start of grid set up
       var rowTemplate =
@@ -44,6 +46,11 @@ angular.module('Core')
         '</div>' + '\n';
 
       var siteUrlTemplate =
+        '<div ng-if="!siteList.showSiteLinks">' + '\n' +
+        '  <p class="ngCellText">' + '\n' +
+        '    <i class="icon-spinner icon"></i>' + '\n' +
+        '  </p>' + '\n' +
+        '</div>' + '\n' +
         '<div ng-if="siteList.showSiteLinks">' + '\n' +
         '  <div ng-if="!siteList.iframeSupportedSite">' + '\n' +
         '    <launch-site admin-email-param="{{siteList.siteLaunch.adminEmailParam}}"' + '\n' +

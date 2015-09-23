@@ -7,24 +7,24 @@
     '$stateParams',
     '$translate',
     '$filter',
+    'Orgservice',
     'Authinfo',
     'WebExUtilsFact',
     'WebExXmlApiFact',
     'WebExXmlApiInfoSvc',
     'WebExSiteSettingsSvc',
-    'Notification',
     function (
       $q,
       $log,
       $stateParams,
       $translate,
       $filter,
+      Orgservice,
       Authinfo,
       WebExUtilsFact,
       WebExXmlApiFact,
       webExXmlApiInfoObj,
-      webExSiteSettingsObj,
-      Notification
+      webExSiteSettingsObj
     ) {
       return {
         getSiteSettingsObj: function () {
@@ -111,6 +111,28 @@
 
           var _this = this;
 
+          Orgservice.getValidLicenses().then(
+            function getValidLicensesSuccess(licenses) {
+              var funcName = "getValidLicensesSuccess()";
+              var logMsg = "";
+
+              logMsg = funcName + ": " + "\n" +
+                "licenses=" + JSON.stringify(licenses);
+              $log.log(logMsg);
+
+              _this.updateLicenseInfo(licenses);
+            },
+
+            function getValidLicensesError(info) {
+              var funcName = "getValidLicensesError()";
+              var logMsg = "";
+
+              logMsg = funcName + ": " + "\n" +
+                "info=" + JSON.stringify(info);
+              $log.log(logMsg);
+            }
+          ); // Orgservice.getValidLicenses().then()
+
           _this.getSiteSettingsInfoXml().then(
             function getSiteSettingsInfoXmlSuccess(getInfoResult) {
               var funcName = "getSiteSettingsInfoXmlSuccess()";
@@ -130,7 +152,7 @@
               _this.updateDisplayInfo();
 
               webExSiteSettingsObj.viewReady = true;
-            }, // getSiteSettingsInfoXmlSuccess()
+            },
 
             function getSiteSettingsInfoXmlError(getInfoResult) {
               var funcName = "getSiteSettingsInfoXmlError()";
@@ -141,6 +163,37 @@
             } // getSiteSettingsInfoXmlError()
           ); // _this.getSiteSettingsInfoXml().then()
         }, // getSiteSettingsInfo()
+
+        updateLicenseInfo: function (licenses) {
+          var funcName = "updateLicenseInfo()";
+          var logMsg = "";
+
+          var updateDone = false;
+
+          licenses.forEach(
+            function checkLicense(license) {
+              if (
+                (!updateDone) &&
+                ("CONFERENCING" == license.licenseType) &&
+                (0 <= license.licenseId.indexOf(webExSiteSettingsObj.siteUrl))
+              ) {
+
+                var licenseCapacity = license.capacity;
+                var licenseUsage = license.usage;
+                var licensesAvailable = licenseCapacity - licenseUsage;
+
+                webExSiteSettingsObj.siteInfoCardObj.licensesTotal.count = licenseCapacity;
+                webExSiteSettingsObj.siteInfoCardObj.licensesAvailable.count = licensesAvailable;
+
+                updateDone = true;
+              }
+            } // checkLicense()
+          ); // licenses.forEach()
+
+          logMsg = funcName + ":" + "\n" +
+            "siteInfoCardObj=" + JSON.stringify(webExSiteSettingsObj.siteInfoCardObj);
+          $log.log(logMsg);
+        }, // updateLicenseInfo()
 
         processSiteInfo: function () {
           var siteInfoJson = webExSiteSettingsObj.siteInfo.bodyJson;
@@ -254,6 +307,61 @@
               "/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage"
             );
 
+            // common settings
+            addPage(
+              "common",
+              "cmr",
+              "/common_cmr"
+            );
+
+            addPage(
+              "common",
+              "companyAddress",
+              "/common_companyAddress"
+            );
+
+            addPage(
+              "common",
+              "disclaimers",
+              "/common_disclaimer"
+            );
+
+            addPage(
+              "common",
+              "emailTemplates",
+              "/common_emailTemplate"
+            );
+
+            addPage(
+              "common",
+              "mobile",
+              "/common_mobile"
+            );
+
+            addPage(
+              "common",
+              "navigationCustomization",
+              "/common_navigationCustomization"
+            );
+
+            addPage(
+              "common",
+              "productivityTools",
+              "/common_productivityTools"
+            );
+
+            addPage(
+              "common",
+              "scheduler",
+              "/common_scheduler"
+            );
+
+            addPage(
+              "common",
+              "security",
+              "/common_security"
+            );
+
             addPage(
               "common",
               "options",
@@ -262,14 +370,52 @@
 
             addPage(
               "common",
-              "siteInformation",
-              "/common_siteInformation"
+              "teleconfPrivileges",
+              "/common_teleconfPrivileges"
+            );
+
+            // meeting center
+            addPage(
+              "meetingCenter",
+              "navigationCustomization",
+              "/meetingCenter_navigationCustomization"
+            );
+
+            addPage(
+              "meetingCenter",
+              "schedTemplates",
+              "/common_schedTemplates"
             );
 
             addPage(
               "meetingCenter",
               "options",
               "/meetingCenter_options"
+            );
+
+            // event center
+            addPage(
+              "eventCenter",
+              "defaultOptions",
+              "/eventCenter_defaultOptions"
+            );
+
+            addPage(
+              "eventCenter",
+              "navigationCustomization",
+              "/eventCenter_navigationCustomization"
+            );
+
+            addPage(
+              "eventCenter",
+              "reassignment",
+              "/eventCenter_reassignment"
+            );
+
+            addPage(
+              "eventCenter",
+              "registrationForm",
+              "/eventCenter_registrationForm"
             );
 
             addPage(
@@ -280,8 +426,57 @@
 
             addPage(
               "eventCenter",
-              "forms",
-              "/eventCenter_forms"
+              "schedTemplates",
+              "/eventCenter_schedTemplates"
+            );
+            // event center
+            addPage(
+              "eventCenter",
+              "defaultOptions",
+              "/eventCenter_defaultOptions"
+            );
+
+            addPage(
+              "eventCenter",
+              "navigationCustomization",
+              "/eventCenter_navigationCustomization"
+            );
+
+            addPage(
+              "eventCenter",
+              "reassignment",
+              "/eventCenter_reassignment"
+            );
+
+            addPage(
+              "eventCenter",
+              "registrationForm",
+              "/eventCenter_registrationForm"
+            );
+
+            addPage(
+              "eventCenter",
+              "options",
+              "/eventCenter_options"
+            );
+
+            addPage(
+              "eventCenter",
+              "schedTemplates",
+              "/eventCenter_schedTemplates"
+            );
+
+            // training center
+            addPage(
+              "trainingCenter",
+              "navigationCustomization",
+              "/trainingCenter_navigationCustomization"
+            );
+
+            addPage(
+              "trainingCenter",
+              "schedTemplates",
+              "/trainingCenter_schedTemplates"
             );
 
             addPage(
@@ -290,10 +485,23 @@
               "/trainingCenter_options"
             );
 
+            // support center
             addPage(
               "supportCenter",
-              "options",
-              "/supportCenter_options"
+              "branding",
+              "/supportCenter_branding"
+            );
+
+            addPage(
+              "supportCenter",
+              "csrPref",
+              "/supportCenter_csrPref"
+            );
+
+            addPage(
+              "supportCenter",
+              "customerPref",
+              "/supportCenter_customerPref"
             );
 
             addPage(
@@ -303,9 +511,28 @@
             );
 
             addPage(
-              "remoteAccess",
-              "options",
-              "/remoteAccess_options"
+              "supportCenter",
+              "navigationCustomization",
+              "/supportCenter_navigationCustomization"
+            );
+
+            addPage(
+              "supportCenter",
+              "promotion",
+              "/supportCenter_promotion"
+            );
+
+            // webacd
+            addPage(
+              "webACD",
+              "forms",
+              "/webACD_forms"
+            );
+
+            addPage(
+              "webACD",
+              "queues",
+              "/webACD_settingss"
             );
 
             addPage(
@@ -314,10 +541,17 @@
               "/webACD_options"
             );
 
+            // remote accedss
             addPage(
-              "webACD",
-              "forms",
-              "/webACD_forms"
+              "remoteAccess",
+              "groups",
+              "/remoteAccess_groups"
+            );
+
+            addPage(
+              "remoteAccess",
+              "settings",
+              "/remoteAccess_settings"
             );
           } // updateSettingTable()
 

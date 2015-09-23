@@ -1,7 +1,8 @@
 
 <div ng-repeat="settingCardObj in WebExSiteSettings.siteSettingsObj.settingCardObjs">
-  <div ng-if="0 < settingCardObj.pageObjs.length">
-  <cs-card class="cs-card medium">
+  <cs-card class="cs-card medium"
+           ng-if="0 < settingCardObj.pageObjs.length">
+           
     <article>
       <h4>{{settingCardObj.label}}</h4>
       
@@ -45,5 +46,4 @@
       </section>
     </article>
   </cs-card>
-  </div>
 </div>

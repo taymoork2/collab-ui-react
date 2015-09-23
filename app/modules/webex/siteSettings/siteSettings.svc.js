@@ -62,13 +62,11 @@ angular.module('WebExSiteSettings').service('WebExSiteSettingsSvc', [
 
         licensesTotal: {
           id: "licensesTotal",
-          label: null,
           count: 0
         },
 
         licensesAvailable: {
           id: "licensesAvailable",
-          label: null,
           count: 0
         },
 
@@ -85,9 +83,9 @@ angular.module('WebExSiteSettings').service('WebExSiteSettingsSvc', [
         label: "Meeting Center",
         pageObjs: null,
       }, {
-        id: "eventCenter",
-        label: "Event Center",
-        pageObjs: null,
+        id: "trainingCenter",
+        label: "Training Center",
+        pageObjs: null
       }, {
         id: "supportCenter",
         label: "Support Center",
@@ -105,9 +103,9 @@ angular.module('WebExSiteSettings').service('WebExSiteSettingsSvc', [
           pageObjs: null
         },
       }, {
-        id: "trainingCenter",
-        label: "Training Center",
-        pageObjs: null
+        id: "eventCenter",
+        label: "Event Center",
+        pageObjs: null,
       }, ], // settingCardObjs
 
       categoryObjs: [{

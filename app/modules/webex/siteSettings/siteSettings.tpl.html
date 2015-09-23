@@ -1,48 +1,84 @@
 <div id="webexSiteSettings"
-     name="webexSiteSettings"
-     ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
+     name="webexSiteSettings">
 
-  <div class="page-header row">
-    <div class="page-title col-xs-12">
-      <span class="title-heading">{{WebExSiteSettings.siteSettingsObj.pageTitle}}</span>
+  <div class="page-header row full">
+    <div class="page-title col-xs-12 title-heading">
+      <div class="title-heading">
+        {{WebExSiteSettings.siteSettingsObj.pageTitle}}
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      
+        <a class="button"
+           ui-sref={{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.pageObj.uiSref}}
+           ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
+           
+          <b>{{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.label}}</b>
+        </a>
+      </div>
     </div>
+    <!--
+    <table align="left">
+      <tr>
+        <td valign="top" align="left">
+          <div class="page-title col-xs-12 title-heading">
+            <div class="title-heading">
+              {{WebExSiteSettings.siteSettingsObj.pageTitle}}
+            </div>
+          </div>
+        </td>
+          
+        <td valign="middle" align="right">               
+          <a class="button"
+             ui-sref={{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.pageObj.uiSref}}
+             ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
+           
+            <b>{{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.label}}</b>
+          </a>
+        </td>
+      </tr>
+    </table>
+    -->
   </div>  
   
-  <!-- breadcrumb -->
-  <div id="siteConfigBreadCrumbs" class="breadcrumb-container">
-    <ul class="breadcrumbs">
-      <li>
-        <a id="siteListCrumb" ng-href="#site-list" translate="siteList.conferencing" href="#siteListCrumb"></a>
-      </li>
+  <cs-container>
+    <!-- breadcrumbs -->
+    <div id="siteConfigBreadCrumbs"
+         class="breadcrumb-container">
+         
+      <ul class="breadcrumbs">
+        <li>
+          <a id="siteListCrumb"
+             ng-href="#site-list"
+             translate="siteList.conferencing"
+             href="#siteListCrumb">
+          </a>
+        </li>
       
-      <li class="current">
-        {{WebExSiteSettings.siteSettingsObj.pageTitleFull}}
-      </li>
-    </ul>
-  </div>
+        <li class="current">
+          {{WebExSiteSettings.siteSettingsObj.pageTitleFull}}
+        </li>
+      </ul>
+    </div>
+    
+    <div ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
+      <!-- Info card -->
+      <div ng-include="'modules/webex/siteSettings/siteInfoCard.tpl.html'"></div>
   
-  <!-- Email All Hosts button -->
-  <div class="row" align="right">
-    <a class="button secondary large"
-       ui-sref={{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.pageObj.uiSref}}>
-           
-      {{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.pageObj.label}}
-    </a>
-  </div>
-
-  <div ng-include="'modules/webex/siteSettings/siteInfoCard.tpl.html'"></div>
+      <!-- Setting cards -->
+      <div ng-include="'modules/webex/siteSettings/siteSettingsCards.tpl.html'"></div> 
   
-  <div ng-include="'modules/webex/siteSettings/siteSettingsCards.tpl.html'"></div> 
-  
-  <div class=row>
-    <a href="" 
-       onClick="document.getElementById('hiddenButton').click();">
-       
-      Other&nbsp;Settings
-    </a>
-  </div>
+      <!-- WebEx site admin cross launch -->
+      <div class=row>
+        <a href="" 
+           onClick="document.getElementById('hiddenButton').click();">
+     
+          Other&nbsp;Settings
+        </a>
+      </div>
+    </div>
+  </cs-container>
 </div>
 
+<!-- WebEx site admin cross launch form -->
 <form name="siteAdminLink" 
       action="{{webexAdvancedUrl}}" 
       method="post" 

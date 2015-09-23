@@ -8,20 +8,116 @@
       </header>
       
       <section>
-        <div class="service-type">
-          <div class="left-side">
-            <h3>
-              <i class="icon icon-webex"></i>
-              Left Side
-            </h3>
-          </div>
+        <table width="100%">
+          <tr>
+            <td valign="middle">
+              <h3>
+                <i class="icon icon-webex"></i>&nbsp;WebEx
+              </h3>
+            </td>
+            
+            <td valign="middle" width="18%">
+              HOST ACCOUNTS<br>
+              {{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.licensesTotal.count}}<br>
+              <span translate="webexSiteSettingsLabels.activeTitle"></span>
+            </td>
+            
+            <td valign="middle" width="18%">
+              &nbsp;<br>
+              {{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.licensesAvailable.count}}<br>
+              <span translate="webexSiteSettingsLabels.availableTitle"></span>
+            </td>
+            
+            <td valign="middle" width="18%">
+              &nbsp;<br>
+              <a href="">
+                <i class="icon icon-circle-webex"></i><br>
+                <span translate="webexSiteSettingsLabels.pageId_siteInformation"></span>
+              </a>
+            </td>
+            
+            <td valign="middle" width="18%">
+              &nbsp;<br>
+              <a href="">
+                <i class="icon icon-circle-star"></i><br>
+                <span translate="webexSiteSettingsLabels.pageId_siteInformation"></span>
+              </a>
+            </td>
+          </tr>
+        </table>
+        <!-- 
+        <cs-card class="cs-card small">
+          <article>
+            <section>
+              <p>
+                &nbsp;<br>
+                <i class="icon icon-webex"></i>WebEx<br>
+                &nbsp;
+              </p>
+            </section>
+          </article>
+        </cs-card>
+        
+        <cs-card class="cs-card small">
+          <article>
+            <section>
+              <p>
+                HOST ACCOUNTS<br>
+                {{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.licensesTotal.count}}<br>
+                Active
+              </p>
+            </section>
+          </article>
+        </cs-card>
+        
+        <cs-card class="cs-card small">
+          <article>
+            <section>
+              <p>
+                &nbsp;<br>
+                {{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.licensesAvailable.count}}<br>
+                Available
+              </p>
+            </section>
+          </article>
+        </cs-card>
+        
+        <cs-card class="cs-card small">
+          <article>
+            <section>
+              <p>
+                &nbsp;<br>
+                &nbsp;<br>
+                &nbsp;
+              </p>
+            </section>
+          </article>
+        </cs-card>
+        
+        <cs-card class="cs-card small">
+          <article>
+            <section>
+              <p>
+                &nbsp;<br>
+                &nbsp;<br>
+                &nbsp;
+              </p>
+            </section>
+          </article>
+        </cs-card>
+        -->
+        
+        <!-- 
+        <h2>
+          <i class="icon icon-webex"></i>WebEx
           
-          <div class="right-side">
-            <h3>
-              Right Side
-            </h3>
-          </div>
-        </div>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          {{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.licensesTotal.count}}
+          
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          {{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.licensesAvailable.count}}
+        </h2>
+        -->
       </section>
     </article>
   </cs-card>
