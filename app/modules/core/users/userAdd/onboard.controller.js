@@ -1585,6 +1585,8 @@ angular.module('Core')
             responseMessage = $translate.instant('firstTimeWizard.csv500Error');
           } else if (status === 502 || status === 503) {
             responseMessage = $translate.instant('firstTimeWizard.csv502And503Error');
+          } else if (status === -1) {
+            responseMessage = $translate.instant('firstTimeWizard.csvCancelledError');
           } else {
             responseMessage = $translate.instant('firstTimeWizard.processCsvError');
           }
