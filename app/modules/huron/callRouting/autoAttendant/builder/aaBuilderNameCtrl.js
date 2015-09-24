@@ -1,6 +1,3 @@
-/**
- * Created by chris on 8/24/15.
- */
 (function () {
   'use strict';
 
@@ -9,7 +6,7 @@
     .controller('aaBuilderNameCtrl', AutoAttendantNameBuilderCtrl);
 
   /* @ngInject */
-  function AutoAttendantNameBuilderCtrl($scope, $translate, AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeService, AAModelService, Notification) {
+  function AutoAttendantNameBuilderCtrl($scope, AAUiModelService, AutoAttendantCeInfoModelService,  AAModelService, Notification) {
 
     var vm = this;
     vm.aaModel = {};
@@ -17,7 +14,14 @@
     vm.ui = {};
     vm.saveAARecord = saveAARecord;
 
+    // exposed checkNameEntry and saveUiModel for unit tests
+    vm.checkNameEntry = checkNameEntry;
+    vm.saveUiModel = saveUiModel;
+
     var name = "";
+    var aaBuilderMainCtrl_saveAARecords;
+
+    /////////////////////
 
     function saveAARecord() {
 
@@ -27,7 +31,7 @@
 
       saveUiModel();
 
-      $scope.saveAARecords();
+      aaBuilderMainCtrl_saveAARecords();
 
     }
 
@@ -51,10 +55,9 @@
 
     }
 
-
     function checkNameEntry(aaNameToTest) {
       if (angular.isUndefined(aaNameToTest) || aaNameToTest.length === 0) {
-        Notification.error($translate.instant('autoAttendant.invalidBuilderNameMissing'));
+        Notification.error('autoAttendant.invalidBuilderNameMissing');
         return false;
       }
 
@@ -75,7 +78,7 @@
       });
 
       if (isNameInUse) {
-        Notification.error($translate.instant('autoAttendant.invalidBuilderNameNotUnique'));
+        Notification.error('autoAttendant.invalidBuilderNameNotUnique');
         return true;
       }
 
@@ -90,6 +93,9 @@
       vm.aaModel.aaRecord = AAModelService.newAARecord();
 
       vm.ui = AAUiModelService.getCeInfo();
+
+      aaBuilderMainCtrl_saveAARecords = $scope.saveAARecords;
+
     }
 
     activate();

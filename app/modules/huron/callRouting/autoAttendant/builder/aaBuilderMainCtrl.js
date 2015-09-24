@@ -5,6 +5,9 @@
     .module('uc.autoattendant')
     .controller('AABuilderMainCtrl', AABuilderMainCtrl); /* was AutoAttendantMainCtrl */
 
+
+
+
   /* @ngInject */
   function AABuilderMainCtrl($scope, $translate, $stateParams, AAModelService, AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeService, Notification) {
     var vm = this;
@@ -19,7 +22,6 @@
     var aaName = {};
 
     $scope.saveAARecords = saveAARecords;
-
 
     /////////////////////
 
@@ -72,16 +74,11 @@
             newAaRecord.callExperienceURL = response.callExperienceURL;
             aaRecords.push(newAaRecord);
             vm.aaModel.ceInfos.push(AutoAttendantCeInfoModelService.getCeInfo(newAaRecord));
-            Notification.notify([$translate.instant('autoAttendant.successCreateCe', {
-              name: aaRecord.callExperienceName
-            })], 'success');
+            Notification.success('autoAttendant.successCreateCe');
+
           },
           function (response) {
-            Notification.notify([$translate.instant('autoAttendant.errorCreateCe', {
-              name: aaRecord.callExperienceName,
-              statusText: response.statusText,
-              status: response.status
-            })], 'error');
+            Notification.error('autoAttendant.errorCreateCe');
           }
         );
       } else {
@@ -95,16 +92,11 @@
             aaRecords[i].callExperienceName = aaRecord.callExperienceName;
             aaRecords[i].assignedResources = angular.copy(aaRecord.assignedResources);
             vm.aaModel.ceInfos[i] = AutoAttendantCeInfoModelService.getCeInfo(aaRecords[i]);
-            Notification.notify([$translate.instant('autoAttendant.successUpdateCe', {
-              name: aaRecord.callExperienceName
-            })], 'success');
+            Notification.success('autoAttendant.successUpdateCe');
+
           },
           function (response) {
-            Notification.notify([$translate.instant('autoAttendant.errorUpdateCe', {
-              name: aaRecord.callExperienceName,
-              statusText: response.statusText,
-              status: response.status
-            })], 'error');
+            Notification.error('autoAttendant.errorUpdateCe');
           }
         );
       }
@@ -131,7 +123,6 @@
           return record.callExperienceName === vm.ui.ceInfo.getName();
         });
         if (isNameInUse) {
-
 
           vm.errorMessages.push($translate.instant('autoAttendant.invalidNameNotUnique'));
           canSave = false;
@@ -177,9 +168,7 @@
 
     function getSaveErrorMessages() {
 
-
       var messages = vm.errorMessages.join('<br>');
-
 
       return messages;
     }
@@ -189,10 +178,6 @@
 
       vm.aaModel.aaRecord = AAModelService.newAARecord();
 
-      //$scope.aa = {};
-      //$scope.aa.modal = {};
-      //vm.ui = $scope.aa.modal;
-      //vm.ui.ceInfo = AutoAttendantCeInfoModelService.getCeInfo(vm.aaModel.aaRecord);
       vm.ui = AAUiModelService.getCeInfo();
       vm.ui.ceInfo = {};
       vm.ui.ceInfo.name = "";
