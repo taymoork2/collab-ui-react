@@ -33,8 +33,8 @@ describe('Controller: CallRouterCtrl', function () {
     }];
 
     spyOn(RouterCompanyNumber, 'listCompanyNumbers').and.returnValue($q.when(companyNumbers));
-    spyOn(RouterCompanyNumber, 'updateCompanyNumber').and.returnValue($q.when(companyNumbers));
-    spyOn(RouterCompanyNumber, 'deleteCompanyNumber').and.returnValue($q.when(companyNumbers));
+    spyOn(RouterCompanyNumber, 'updateCompanyNumber').and.returnValue($q.when());
+    spyOn(RouterCompanyNumber, 'deleteCompanyNumber').and.returnValue($q.when());
 
     spyOn(Notification, 'notify');
     spyOn(Notification, 'errorResponse');
@@ -57,7 +57,7 @@ describe('Controller: CallRouterCtrl', function () {
     controller.callrouterform = {
       $dirty: false
     };
-    // controller.callrouterform.$dirty = false;
+
     expect(controller.disableFn()).toBeTruthy();
 
   });
@@ -85,7 +85,7 @@ describe('Controller: CallRouterCtrl', function () {
   });
 
   it('should update Company number', function () {
-    controller.model.orgname = "JP_002";
+    controller.model.orgname = "Org_002";
     controller.model.extnum = "+19233344456";
     controller.save();
     $scope.$apply();
@@ -95,7 +95,7 @@ describe('Controller: CallRouterCtrl', function () {
   });
 
   it('should notify error when update fails', function () {
-    controller.model.orgname = "JP_002";
+    controller.model.orgname = "Org_002";
     controller.model.extnum = "+19233344456";
     RouterCompanyNumber.updateCompanyNumber.and.returnValue($q.reject());
     controller.save();
