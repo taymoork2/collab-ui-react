@@ -88,6 +88,7 @@ module.exports = function() {
         test + '/huron/**/*.js',
         test + '/hercules/**/*.js',
         test + '/mediafusion/**/*.js',
+        test + '/messenger/**/*.js',
         test + '/squared/**/*.js',
         test + '/sunlight/**/*.js',
         '!' + test + '/e2e-protractor/**/*'
@@ -97,7 +98,8 @@ module.exports = function() {
         huron: e2e + '/huron/**/*_spec.js',
         mediafusion: e2e + '/mediafusion/**/*_spec.js',
         squared: e2e + '/squared/**/*_spec.js',
-        webex: e2e + '/webex/**/*_spec.js'
+        webex: e2e + '/webex/**/*_spec.js',
+        sunlight: e2e + '/sunlight/**/*_spec.js'
       }
     },
 

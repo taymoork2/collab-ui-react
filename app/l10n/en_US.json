@@ -751,6 +751,17 @@
       "status": "Status",
       "alarms": "Alarms"
     },
+    "clusters": {
+      "deregister": "Deregister Cluster",
+      "deregisterCancel": "Cancel",
+      "deregisterAreYouSure": "Are you sure you want to deregister {{clusterName}}?",
+      "deregisterCausesHeader": "When you deregister this cluster:",
+      "deregisterCausesListItem1": "The Calendar Service will be turned off for all users homed on this cluster.",
+      "deregisterCausesListItem2": "All the configuration in the Cloud and on the Expressway cluster will be removed.",
+      "deregisterCausesListItem3": "Users on this cluster will be moved to another cluster, if possible.",
+      "deregisterErrorGeneric": "Unable to deregister cluster. {{errorMessage}}",
+      "deregisterErrorNoDeregisterSupport": "Unable to deregister cluster. The current cluster software does not support cluster deregistration."
+    },
     "status": {
       "unknown": "Status unknown",
       "not_configured": "Not configured",
@@ -875,6 +886,7 @@
     "addUsersDescription": "Select a method to upload your users.",
     "addUsersSimple": "Invite Users | Simple",
     "addUsersAdvanced": "Invite Users | Advanced",
+    "msgrSyncDesc": "Your orgnization is currently in Messenger Sync Mode. Please onboard new users in the WebEx Messenger administration tool. Consult your Cisco customer representative to enable this screen.",
     "getStarted": "Get Started",
     "startTrial": "Start Trial",
     "doLater": "Do this later",
@@ -1246,11 +1258,17 @@
     "setupNumbers": "Set Up PSTN Numbers",
     "placeOrder": "Place Order",
     "orderBlock": "Order Block Numbers",
+    "state": "State",
+    "selectState": "Select state",
+    "searchStates": "Search states",
     "areaCode": "Area Code",
+    "selectAreaCode": "Select area code",
+    "searchAreaCodes": "Search area codes",
     "quantity": "Quantity",
     "reviewAndOrder": "Review and Place Order",
     "package": "Package",
     "adding": "Adding",
+    "numbers": "{count, plural, one{# number} other{# numbers}}",
     "newNumbers": "{count, plural, one{# New Number} other{# New Numbers}}",
     "thankYou": "Thank you",
     "setupSuccess": "You have set up the PSTN service successfully.",
@@ -1394,6 +1412,8 @@
     "saveCallerIdError": "Caller Id and number failed to save.",
     "updateCallerIdSuccess": "Caller ID and number updated successfully",
     "updateCallerIdError": "Caller ID and number failed to update.",
+    "deleteCallerIdSuccess": "Caller ID and number deleted successfully.",
+    "deleteCallerIdError": "Caller ID and number failed to delete",
     "companycallerID": "Company Caller ID",
     "hide": "Hide",
     "expand": "Expand"
@@ -1856,9 +1876,9 @@
     "NeedsActivation": "Needs Activation",
     "issuesDetected": "Issues Detected",
     "errorCodes": {
-      "tcpFallback": {
+      "mediaProtocol": {
         "type": "Potential loss of video quality",
-        "message": "This device is communicating via the TCP protocol, which could cause higher latency and therefore reduced media streaming experience. If you are experiencing issues with your media streaming, you can try to open UDP port 33434 on your local firewall to aid media streaming issues."
+        "message": "This device is communicating via the {{mediaProtocol}} protocol, which could cause higher latency and therefore reduced media streaming experience. If you are experiencing issues with your media streaming, you can try to open UDP port 33434 on your local firewall to aid media streaming issues."
       },
       "TemperatureCheck": {
         "type": "High temperature",
@@ -1887,12 +1907,36 @@
     "error": "Something went wrong.",
     "notifyPartnerErrorMsg": "We're sorry, something went wrong while trying to notify your partner."
   },
+  "contactCenterUserConfig": {
+    "channels": "Channels",
+    "contactCenterProfile": "Contact Center Profile",
+    "chat": "Chat",
+    "voice": "Voice",
+    "email": "Email",
+    "role": "Role",
+    "alias": "Alias",
+    "attributes": "Attributes",
+    "userRoles": {
+      "user": "User",
+      "supervisor": "Supervisor"
+    },
+    "successMessages": {
+      "userUpdateSuccessMessage": "Information has been updated successfully for user {{userId}}. "
+    },
+    "failureMessages": {
+      "userUpdateFailureMessage": "Information cannot be updated currently for user {{userId}}.",
+      "userloadFailureMessage": "Information is currently not available for user {{userId}}.",
+      "emptyAliasErrorMessage": "User alias cannot be empty."
+    }
+  },
+
   "huronDetails": {
     "title": "Huron",
     "linesTitle": "Numbers",
     "settingsTitle": "Settings",
     "featuresTitle": "Features"
   },
+
   "linesPage": {
     "manageLines": "Numbers",
     "allLines": "All",
@@ -1906,5 +1950,6 @@
     "userEmailHeader": "User",
     "actionHeader": "Actions",
     "lineListError": "Error retrieving the line list. Please try reloading the page."
+
   }
 }

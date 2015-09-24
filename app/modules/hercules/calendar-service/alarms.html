@@ -1,0 +1,52 @@
+<div class="modal-header">
+  <div class="modal-title">
+    Alarms
+  </div>
+</div>
+
+<div class="modal-body">
+  <div ng-repeat="connector in alarmsDialog.connectors">
+    <div ng-show="connector.alarms.length > 0">
+      Host {{connector.host.host_name}} reports {{connector.alarms.length}} alarms:
+      <div ng-show="connector.alarms.length > 0" ng-repeat="alarm in connector.alarms">
+
+        <div class="{{alarmsDialog.colorFromSeverity(alarm)}}">
+
+          <div class="row">
+          <div class="small-2 column">
+            Title:
+          </div>
+          <div class="small-10 column">
+            {{alarm.title}}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="small-2 column">
+            Severity:
+          </div>
+          <div class="small-10 column">
+            {{alarm.severity}}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="small-2 column">
+            Description:
+          </div>
+          <div class="small-10 column">
+            {{alarm.description}}
+          </div>
+        </div>
+          <br>
+          </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button ng-click="alarmsDialog.cancel()">Cancel</button>
+  <button ng-click="alarmsDialog.ok()">ok</button>
+</div>
