@@ -33,6 +33,7 @@
         remoteDestinations: null,
         singleNumberReachEnabled: false
       },
+      steeringDigit: '',
       siteSteeringDigit: '',
       siteCode: '',
       hasCustomerVoicemail: undefined
@@ -75,6 +76,7 @@
         ServiceSetup.listSites().then(function () {
           if (ServiceSetup.sites.length !== 0) {
             ServiceSetup.getSite(ServiceSetup.sites[0].uuid).then(function (site) {
+              telephonyInfo.steeringDigit = site.steeringDigit;
               telephonyInfo.siteSteeringDigit = site.siteSteeringDigit;
               telephonyInfo.siteCode = site.siteCode;
             });

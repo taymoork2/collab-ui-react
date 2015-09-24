@@ -751,6 +751,17 @@
       "status": "Status",
       "alarms": "Alarms"
     },
+    "clusters": {
+      "deregister": "Deregister Cluster",
+      "deregisterCancel": "Cancel",
+      "deregisterAreYouSure": "Are you sure you want to deregister {{clusterName}}?",
+      "deregisterCausesHeader": "When you deregister this cluster:",
+      "deregisterCausesListItem1": "The Calendar Service will be turned off for all users homed on this cluster.",
+      "deregisterCausesListItem2": "All the configuration in the Cloud and on the Expressway cluster will be removed.",
+      "deregisterCausesListItem3": "Users on this cluster will be moved to another cluster, if possible.",
+      "deregisterErrorGeneric": "Unable to deregister cluster. {{errorMessage}}",
+      "deregisterErrorNoDeregisterSupport": "Unable to deregister cluster. The current cluster software does not support cluster deregistration."
+    },
     "status": {
       "unknown": "Status unknown",
       "not_configured": "Not configured",
@@ -1153,6 +1164,7 @@
     "internalNumberExtension": "Internal Extension",
     "internalNumberExtensionTooltip": "Use the internal extension to reach this line from within the company at the same site.",
     "internalNumberPoolError": "Internal extensions failed to load.",
+    "steeringDigitOverlapWarning": "First digit of Internal Extension overlaps with Outbound Dial Digit ({{steeringDigitInTranslation}}).",
     "enterpriseSiteNumberLabel": "If your company uses site-to-site dialing:",
     "externalNumberLabel": "Direct Line",
     "externalNumberTooltip": "Use the direct line to reach this line from outside of the company.",
@@ -1403,6 +1415,8 @@
     "saveCallerIdError": "Caller Id and number failed to save.",
     "updateCallerIdSuccess": "Caller ID and number updated successfully",
     "updateCallerIdError": "Caller ID and number failed to update.",
+    "deleteCallerIdSuccess": "Caller ID and number deleted successfully.",
+    "deleteCallerIdError": "Caller ID and number failed to delete",
     "companycallerID": "Company Caller ID",
     "hide": "Hide",
     "expand": "Expand"

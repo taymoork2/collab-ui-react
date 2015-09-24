@@ -18,6 +18,9 @@
     .factory('TerminusOrderService', function ($resource, HuronConfig) {
       return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/orders/:orderId', {}, {});
     })
+    .factory('TerminusNumberService', function ($resource, HuronConfig) {
+      return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/dids/:did', {}, {});
+    })
     .factory('TerminusCarrierService', function ($resource, HuronConfig) {
       return $resource(HuronConfig.getTerminusUrl() + '/carriers/:carrierId', {});
     })

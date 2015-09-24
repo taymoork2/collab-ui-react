@@ -237,12 +237,11 @@ angular.module('Core')
             desc: 'tabs.conferencingDesc',
             state: 'site-list',
             link: '#site-list'
-              // Temporarily commented out Numbers tab until ready to expose.
-              // }, {
-              //   title: 'tabs.huronLineDetailsTab',
-              //   desc: 'tabs.huronLineDetailsTabDesc',
-              //   state: 'hurondetails',
-              //   link: '#hurondetails'
+          }, {
+            title: 'tabs.huronLineDetailsTab',
+            desc: 'tabs.huronLineDetailsTabDesc',
+            state: 'hurondetails',
+            link: '#hurondetails'
           }, {
             title: 'tabs.fusionDetailsTab',
             desc: 'tabs.fusionDetailsTabDesc',
@@ -253,10 +252,6 @@ angular.module('Core')
             desc: 'tabs.MediafusionDetailsTabDesc',
             state: 'mediafusionconnector',
             link: '#mediafusionconnector'
-          }, {
-            title: 'tabs.callRoutingTab',
-            state: 'callRouter',
-            link: '#callRouter'
           }, {
             title: 'Messenger',
             desc: 'Messenger Administration',
@@ -878,7 +873,8 @@ angular.module('Core')
           'devices',
           'fusion',
           'mediafusionconnector',
-          'callRouter'
+          'callRouter',
+          'hurondetails'
         ]
       };
 
