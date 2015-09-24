@@ -11,7 +11,9 @@ describe('FusionWelcomeDirective', function () {
   }));
 
   it('replaces the element with the appropriate content when no clusters fused', function () {
-    $scope.clusters = [];
+    $scope.clusterLength = function () {
+      return 0;
+    };
     var element = $compile("<hercules-fuse-not-performed>")($scope);
     $scope.$digest();
     expect(element.find('#fuseNotPerformedAction').hasClass('ng-hide')).toBe(false);
@@ -19,11 +21,9 @@ describe('FusionWelcomeDirective', function () {
   });
 
   it('replaces the element with the appropriate content when there are clusters fused', function () {
-    $scope.clusters = [{
-      "id": "d5b78711-b132-11e4-8a66-005056000340",
-      "cluster_type": "c_mgmt",
-      "name": "gwydlvm340"
-    }];
+    $scope.clusterLength = function () {
+      return 1;
+    };
     var element = $compile("<hercules-fuse-not-performed>")($scope);
     $scope.$digest();
     expect(element.find('#fuseNotPerformedAction').hasClass('ng-hide')).toBe(true);
