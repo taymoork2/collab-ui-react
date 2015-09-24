@@ -570,6 +570,7 @@ angular
           controllerAs: 'WebExSiteSetting',
           parent: 'main',
           params: {
+            panelId: null,
             siteUrl: null,
             settingPageLabel: null,
             settingPageIframeUrl: null

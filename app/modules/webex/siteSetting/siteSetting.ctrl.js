@@ -38,6 +38,7 @@
         "stateParams=" + JSON.stringify($stateParams);
       $log.log(_this.logMsg);
 
+      $scope.panelId = $stateParams.panelId;
       $scope.siteUrl = $stateParams.siteUrl;
       $scope.settingPageLabel = $stateParams.settingPageLabel;
       $scope.settingPageIframeUrl = $stateParams.settingPageIframeUrl;

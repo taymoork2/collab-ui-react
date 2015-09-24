@@ -567,6 +567,7 @@
             var pageLabel = $translate.instant("webexSiteSettingsLabels.pageId_" + pageId);
             var uiSref =
               "site-setting({" +
+              "  panelId:" + "'" + categoryId + "-" + pageId + "'" + "," +
               "  siteUrl:" + "'" + webExSiteSettingsObj.siteUrl + "'" + "," +
               "  settingPageLabel:" + "'" + pageLabel + "'" + "," +
               "  settingPageIframeUrl:" + "'" + "https://" + webExSiteSettingsObj.siteUrl + iframeUrl + "'" +
@@ -650,7 +651,6 @@
                 if ("common" == settingCardObj.id) {
                   settingCardObj.label = $translate.instant("webexSiteSettingsLabels.commonSettingsTitle");
                 } else if ("supportCenter" == settingCardObj.id) {
-                  // TODO
                   var webACDCardId = settingCardObj.webACDObj.id;
                   var webACDCategoryObj = getCategoryObj(webACDCardId);
                   settingCardObj.webACDObj.pageObjs = webACDCategoryObj.pageObjs;
