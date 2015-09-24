@@ -2,31 +2,34 @@
 
   <div class="page-header">
     <div class="page-title">
-      <h1 class="title-heading">argh!</h1>
+      <span class="title-heading">Calendar Service</span>
 
-      <h5>
+      <span>
         <i class="icon icon-circle-user"/>
         {{calendar.summary.activated}} activated |
         {{calendar.summary.notActivated}} pending |
         {{calendar.summary.error}} needs attention
-      </h5>
-
-      <h5 ng-show="calendar.summary.notActivated > 0 || calendar.summary.activated > 0 || calendar.summary.error > 0"
-                class="export-users-statuses-icon"
-                tooltip-pacement="top"
-                tooltip="User Status Report"
-                tooltip-animation="false"
-                tooltip-append-to-body="true">
-            <i class="icon icon-content-share" ng-click="calendar.openUserStatusReportModal()"></i>
-      </h5>
+      </span>
 
 
-      <ul class="nav nav-tabs" role="tablist">
-        <li ui-sref-active="active"><a ui-sref="calendar-service.list"><h5>Resources</h5></a></li>
-        <li ui-sref-active="active"><a ui-sref="calendar-service.settings"><h5>Settings</h5></a></li>
-        <li ui-sref-active="active"><a ui-sref="calendar-service.about"><h5>About</h5></a></li>
+      <span class="menu">
+
+        <a ui-sref-active="active" ui-sref="calendar-service.list">Resources</a>
+        <a ui-sref-active="active" ui-sref="calendar-service.settings">Settings</a>
+        <a ui-sref-active="active" ui-sref="calendar-service.about">About</a>
+      </span>
+
+
+      <!--
+      <span class="menu">
+
+      <ul role="tablist">
+        <li ui-sref-active="active"><a ui-sref="calendar-service.list">Resources</a></li>
+        <li ui-sref-active="active"><a ui-sref="calendar-service.settings">Settings</a></li>
+        <li ui-sref-active="active"><a ui-sref="calendar-service.about">About</a></li>
       </ul>
-
+      </span>
+-->
 
     </div>
   </div>
