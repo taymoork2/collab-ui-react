@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function CalendarController($modal, $scope, ClusterService, USSService, ConverterService, ServiceStatusSummaryService) {
+  function CalendarController($modal, $scope, ClusterService, USSService2, ConverterService, ServiceStatusSummaryService) {
     ClusterService.subscribe(angular.noop, {
       scope: $scope
     });
@@ -26,25 +26,14 @@
       return ServiceStatusSummaryService.status("c_cal", cluster);
     };
 
-    // TODO: Rewrite USSService same way as ClusterService ?
-    USSService.getStatusesSummary(function (err, userStatusesSummary) {
-      userStatusesSummary = userStatusesSummary || {};
-      //console.log("userStatusesSummary:", userStatusesSummary);
+    function extractSummaryForAService(res) {
+      var userStatusesSummary = res || {};
+      vm.summary = _.find(userStatusesSummary, {
+        serviceId: "squared-fusion-cal"
+      });
+    }
 
-      vm.summary = function () {
-        var summary = null;
-        if (userStatusesSummary) {
-          summary = _.find(userStatusesSummary.summary, {
-            serviceId: "c_cal"
-          });
-        }
-        return summary || {
-          activated: 0,
-          notActivated: 0,
-          error: 0
-        };
-      };
-    });
+    USSService2.getStatusesSummary().then(extractSummaryForAService);
 
     // TODO: Fix up the userStatusesReport modal because it now uses the same as the "old" cluster view.
     // TODO: Use controllerAs etc. as in the other popups...

@@ -1,6 +1,6 @@
 <div class="custom-combobox">
 	<div class="input-group" cs-custom-combobox-toggle>
-	  <input type="text" id="{{::id}}" name="{{::name}}" class="form-control" ng-model="value" custom-combo-search ng-required="required" formly-custom-validation="options.validators" ng-maxlength="{{::maxLength}}">
+	  <input type="text" id="{{::id}}" name="{{::name}}" class="form-control" ng-model="value" custom-combo-search on-change-fn="onChangeFn()" ng-required="required" formly-custom-validation="options.validators" ng-maxlength="{{::maxLength}}">
 	  <div class="input-group-btn">
 	    <button type="button" class="btn btn-default"><i class="icon icon-arrow-down"></i></button>
 	  </div>

@@ -1,9 +1,51 @@
-<div class="shared-spaces">
+<div class="calendar-service">
+
+  <div class="page-header">
+    <div class="page-title">
+      <span class="title-heading">Calendar Service</span>
+
+      <span>
+        <i class="icon icon-circle-user"/>
+        {{calendar.summary.activated}} activated |
+        {{calendar.summary.notActivated}} pending |
+        {{calendar.summary.error}} needs attention
+      </span>
+
+
+      <span class="menu">
+
+        <a ui-sref-active="active" ui-sref="calendar-service.list">Resources</a>
+        <a ui-sref-active="active" ui-sref="calendar-service.settings">Settings</a>
+        <a ui-sref-active="active" ui-sref="calendar-service.about">About</a>
+      </span>
+
+
+      <!--
+      <span class="menu">
+
+      <ul role="tablist">
+        <li ui-sref-active="active"><a ui-sref="calendar-service.list">Resources</a></li>
+        <li ui-sref-active="active"><a ui-sref="calendar-service.settings">Settings</a></li>
+        <li ui-sref-active="active"><a ui-sref="calendar-service.about">About</a></li>
+      </ul>
+      </span>
+-->
+
+    </div>
+  </div>
+
+
+
+
+
+
+
+<!--
 
   <div class="page-header">
 
-    <div class="page-title" >
-      <div class="row full" >
+    <div class="page-title">
+      <div class="row full">
 
         <div class="small-8 columns">
 
@@ -17,26 +59,21 @@
 
 
             <div class="small-6 columns">
-              <h5>
+
               <i class="icon icon-circle-user"/>
-              Users: {{calendar.summary().activated}} activated
-              <span class="border-left" ng-show="calendar.summary().notActivated > 0">
-                <span class="disabled">{{calendar.summary().notActivated}} pending
-                </span>
-              </span>
-              <span class="border-left" ng-show="calendar.summary().error > 0">
-                <span class="error">{{calendar.summary().error}} in error
-                </span>
-              </span>
-              <span Xng-show="calendar.summary().notActivated > 0 || calendar.summary().activated > 0 || calendar.summary().error > 0"
-                    class="export-users-statuses-icon"
-                    tooltip-pacement="top"
-                    tooltip="User Status Report"
-                    tooltip-animation="false"
-                    tooltip-append-to-body="true">
+              {{calendar.summary.activated}} activated |
+              {{calendar.summary.notActivated}} pending |
+              {{calendar.summary.error}} needs attention
+
+              <span
+                Xng-show="calendar.summary.notActivated > 0 || calendar.summary.activated > 0 || calendar.summary.error > 0"
+                class="export-users-statuses-icon"
+                tooltip-pacement="top"
+                tooltip="User Status Report"
+                tooltip-animation="false"
+                tooltip-append-to-body="true">
                 <i class="icon icon-content-share" ng-click="calendar.openUserStatusReportModal()"></i>
               </span>
-              </h5>
 
             </div>
           </div>
@@ -44,12 +81,12 @@
         </div>
 
         <div class="small-4 columns">
-            <ul class="nav nav-tabs" role="tablist">
+          <ul class="nav nav-tabs" role="tablist">
 
-              <li ui-sref-active="active"><a ui-sref="calendar-service.list"><h5>Resources</h5></a></li>
-              <li ui-sref-active="active"><a ui-sref="calendar-service.settings"><h5>Settings</h5></a></li>
-              <li ui-sref-active="active"><a ui-sref="calendar-service.about"><h5>About</h5></a></li>
-            </ul>
+            <li ui-sref-active="active"><a ui-sref="calendar-service.list"><h5>Resources</h5></a></li>
+            <li ui-sref-active="active"><a ui-sref="calendar-service.settings"><h5>Settings</h5></a></li>
+            <li ui-sref-active="active"><a ui-sref="calendar-service.about"><h5>About</h5></a></li>
+          </ul>
         </div>
 
       </div>
@@ -57,8 +94,9 @@
 
   </div>
 
+  -->
 
-  <div ui-view="fullPane" style="background:white" class="page-body">
+  <div ui-view="fullPane" class="content">
 
     <div class="row">
 
@@ -67,30 +105,35 @@
           Expressway Clusters
           <hr>
         </h4>
-        <div class="row">
-          <div class="small-6 column">Display Name</div>
-          <div class="small-6 column">Status</div>
-        </div>
 
-        <div class="row" ng-repeat="(url,cluster) in calendar.clusters"
-             ui-sref="calendar-service.details({cluster:cluster})">
-          <div class="small-6 column">
-            {{cluster.name}}
-          </div>
-
-          <div class="small-6 column">
-            <span class="{{calendar.calendarAndManagementServiceStatus(cluster).color}}">
+        <table>
+          <thead>
+          <tr>
+            <th>Display Name</th>
+            <th>Status</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr ng-repeat="(url,cluster) in calendar.clusters"
+              ui-sref="calendar-service.details({cluster:cluster})">
+            <td>
+              {{cluster.name}}
+            </td>
+            <td>
+              <span class="{{calendar.calendarAndManagementServiceStatus(cluster).color}}">
               <i class="fa fa-circle"/>
               <span class="hidden-xs">{{calendar.calendarAndManagementServiceStatus(cluster).status}}</span>
             </span>
-            &nbsp;
             <span ng-show="calendar.softwareUpgradeAvailable(cluster)" style="color: #3ca8e8">
               <!--<i class="fa fa-cloud-upload"/>-->
               <span class="hidden-xs">Upgrades</span>
             </span>
-          </div>
+            </td>
+          </tr>
 
-        </div>
+          </tbody>
+        </table>
+
       </div>
 
       <div class="large-6 columns" ui-view="rightPane">

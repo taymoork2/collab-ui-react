@@ -5,7 +5,7 @@
     .factory('PstnSetupService', PstnSetupService);
 
   /* @ngInject */
-  function PstnSetupService($q, Authinfo, TerminusCarrierService, TerminusCustomerService, TerminusCustomerCarrierService, TerminusBlockOrderService, TerminusOrderService, TerminusCarrierInventory) {
+  function PstnSetupService($q, Authinfo, TerminusCarrierService, TerminusCustomerService, TerminusCustomerCarrierService, TerminusBlockOrderService, TerminusOrderService, TerminusCarrierInventory, TerminusNumberService) {
     var INTELEPEER = "INTELEPEER";
     var TATA = "TATA";
     var PSTN = "PSTN";
@@ -24,6 +24,7 @@
       listPendingOrders: listPendingOrders,
       getOrder: getOrder,
       listPendingNumbers: listPendingNumbers,
+      deleteNumber: deleteNumber,
       INTELEPEER: INTELEPEER,
       TATA: TATA,
       PSTN: PSTN,
@@ -162,6 +163,13 @@
           return pendingNumbers;
         });
       });
+    }
+
+    function deleteNumber(customerId, number) {
+      return TerminusNumberService.delete({
+        customerId: customerId,
+        did: number
+      }).$promise;
     }
 
   }
