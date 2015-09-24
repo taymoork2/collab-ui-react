@@ -56,41 +56,41 @@
         filter: true
       },
       controller: function ($scope, CallRouter) {
-        CallRouter.loadExternalNumberPool('').then(function (data) {
-          vm.options = data;
-          if (data.directoryNumber == null) {
-            $scope.to.options = data;
-          }
-        });
-      }
-    }, {
-      key: 'route',
-      type: 'select',
-      templateOptions: {
-        label: $translate.instant('routingModal.routeto'),
-        placeholder: 'Select Route',
-        options: [],
-        labelfield: 'fullName',
-        valuefield: 'userName',
-        filter: true
-      },
-      controller: function ($scope, CallRouter) {
-        CallRouter.listUsers('', 'object').then(function (data) {
-          angular.forEach(data, function (value, key) {
-            if (value.firstName && value.lastName) {
-              value.fullName = value.firstName + ' ' + value.lastName;
-            } else if (value.lastName) {
-              value.fullName = value.lastName;
-            } else {
-              value.fullName = value.userName;
-            }
-            if (key === data.length - 1) {
+          CallRouter.loadExternalNumberPool('').then(function (data) {
+            vm.options = data;
+            if (data.directoryNumber == null) {
               $scope.to.options = data;
             }
           });
+        }
+        // }, {
+        //   key: 'route',
+        //   type: 'select',
+        //   templateOptions: {
+        //     label: $translate.instant('routingModal.routeto'),
+        //     placeholder: 'Select Route',
+        //     options: [],
+        //     labelfield: 'fullName',
+        //     valuefield: 'userName',
+        //     filter: true
+        // },
+        // controller: function ($scope, CallRouter) {
+        //   CallRouter.listUsers('', 'object').then(function (data) {
+        //     angular.forEach(data, function (value, key) {
+        //       if (value.firstName && value.lastName) {
+        //         value.fullName = value.firstName + ' ' + value.lastName;
+        //       } else if (value.lastName) {
+        //         value.fullName = value.lastName;
+        //       } else {
+        //         value.fullName = value.userName;
+        //       }
+        //       if (key === data.length - 1) {
+        //         $scope.to.options = data;
+        //       }
+        //     });
 
-        });
-      }
+      //   });
+      // }
 
     }];
   }

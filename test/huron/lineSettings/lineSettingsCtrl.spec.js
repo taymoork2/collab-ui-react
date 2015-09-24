@@ -569,4 +569,25 @@ describe('Controller: LineSettingsCtrl', function () {
       expect(controller.saveDisabled()).toBeTruthy();
     });
   });
+
+  describe('checkDnOverlapsSteeringDigit', function () {
+    it('should return true when assignedInternalNumber starts with 9', function () {
+      TelephonyInfoService.getTelephonyInfo.and.returnValue(telephonyInfoVoiceOnly);
+      controller.init();
+      $scope.$apply();
+      controller.assignedInternalNumber.pattern = '9876';
+      expect(controller.assignedInternalNumber.pattern).toEqual('9876');
+      expect(controller.telephonyInfo.steeringDigit).toEqual('9');
+      expect(controller.checkDnOverlapsSteeringDigit()).toBeTruthy();
+    });
+    it('should return false when assignedInternalNumber starts with something other than 9', function () {
+      TelephonyInfoService.getTelephonyInfo.and.returnValue(telephonyInfoVoiceOnly);
+      controller.init();
+      $scope.$apply();
+      controller.assignedInternalNumber.pattern = '1234';
+      expect(controller.assignedInternalNumber.pattern).toEqual('1234');
+      expect(controller.telephonyInfo.steeringDigit).toEqual('9');
+      expect(controller.checkDnOverlapsSteeringDigit()).toBeFalsy();
+    });
+  });
 });
