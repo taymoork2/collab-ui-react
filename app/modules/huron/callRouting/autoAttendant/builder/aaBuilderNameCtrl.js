@@ -21,13 +21,18 @@
 
     function saveAARecord() {
 
-      vm.aaModel.aaRecord.callExperienceName = vm.name;
-
       if (!checkNameEntry(vm.name)) {
         return;
       }
 
-      // Until the backend supports the adding of records with only a name we need to mock up a phone number.
+      saveUiModel();
+
+      $scope.saveAARecords();
+
+    }
+
+    function saveUiModel() {
+      vm.aaModel.aaRecord.callExperienceName = vm.name;
 
       vm.aaModel.aaRecord.assignedResources = [{
         "id": parseInt(Math.random() * 10000000, 10),
@@ -38,34 +43,14 @@
       vm.aaModel.aaRecord.actionSets = [];
       vm.aaModel.aaRecord.actionSets.push({});
 
-      var ceUrlPromise = AutoAttendantCeService.createCe(vm.aaModel.aaRecord);
-      ceUrlPromise.then(
-        function (response) {
-          // create successfully
+      vm.ui.ceInfo = AutoAttendantCeInfoModelService.getCeInfo(vm.aaModel.aaRecord);
 
-          Notification.success($translate.instant('autoAttendant.successCreateCe', {
-            name: vm.aaModel.aaRecord.callExperienceName
-          }));
-
-          vm.aaModel.aaRecords.push(vm.aaModel.aaRecord);
-
-          vm.aaModel.ceInfos.push(AutoAttendantCeInfoModelService.getCeInfo(vm.aaModel.aaRecord));
-
-          vm.aaModel.ceInfo = AutoAttendantCeInfoModelService.getCeInfo(vm.aaModel.aaRecord);
-
-          vm.ui.ceInfo = AutoAttendantCeInfoModelService.getCeInfo(vm.aaModel.aaRecord);
-
-        },
-        function (response) {
-          Notification.error($translate.instant('autoAttendant.errorCreateCe', {
-            name: vm.aaModel.aaRecord.callExperienceName,
-            statusText: response.statusText,
-            status: response.status
-          }));
-        }
-      );
+      if (angular.isDefined(vm.ui.ceInfo) && angular.isDefined(vm.ui.ceInfo.getName()) && vm.ui.ceInfo.getName().length > 0) {
+        AutoAttendantCeInfoModelService.setCeInfo(vm.aaModel.aaRecord, vm.ui.ceInfo);
+      }
 
     }
+
 
     function checkNameEntry(aaNameToTest) {
       if (angular.isUndefined(aaNameToTest) || aaNameToTest.length === 0) {
@@ -85,7 +70,6 @@
 
       // AA name unique on create
       var isNameInUse;
-
       isNameInUse = vm.aaModel.ceInfos.some(function (record) {
         return record.name === aaNameToTest;
       });
@@ -106,7 +90,6 @@
       vm.aaModel.aaRecord = AAModelService.newAARecord();
 
       vm.ui = AAUiModelService.getCeInfo();
-
     }
 
     activate();
