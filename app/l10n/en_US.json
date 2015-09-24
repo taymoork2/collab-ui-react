@@ -1725,7 +1725,7 @@
     "hostAccountsTitle": "HOST ACCOUNTS",
     "activeTitle": "Active",
     "availableTitle": "Available",
-    "emailAllHostsTitle": "EMAIL ALL HOSTS",
+    "emailAllHostsTitle": "EMAIL&nbsp;ALL&nbsp;HOSTS",
     "commonSettingsTitle": "Common Settings",
     "commonSettingsNote": "These options can apply across centers.",
     "pageId_emailAllHosts": "Email All Hosts",

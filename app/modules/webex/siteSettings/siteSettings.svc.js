@@ -51,8 +51,6 @@ angular.module('WebExSiteSettings').service('WebExSiteSettingsSvc', [
 
       emailAllHostsBtnObj: {
         id: "emailAllHostsBtn",
-        label: null,
-
         pageObj: null,
       }, // emailAllHostsBtnObj
 

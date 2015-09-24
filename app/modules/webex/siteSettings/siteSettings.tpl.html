@@ -2,41 +2,20 @@
      name="webexSiteSettings">
 
   <div class="page-header row full">
-    <div class="page-title col-xs-12 title-heading">
+    <div class="page-title small-10 columns">
       <div class="title-heading">
         {{WebExSiteSettings.siteSettingsObj.pageTitle}}
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      
-        <a class="button"
-           ui-sref={{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.pageObj.uiSref}}
-           ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
-           
-          <b>{{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.label}}</b>
-        </a>
       </div>
     </div>
-    <!--
-    <table align="left">
-      <tr>
-        <td valign="top" align="left">
-          <div class="page-title col-xs-12 title-heading">
-            <div class="title-heading">
-              {{WebExSiteSettings.siteSettingsObj.pageTitle}}
-            </div>
-          </div>
-        </td>
-          
-        <td valign="middle" align="right">               
-          <a class="button"
-             ui-sref={{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.pageObj.uiSref}}
-             ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
+    
+    <div class="page-title small-2 columns">
+      <a class="button large"
+         ui-sref={{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.pageObj.uiSref}}
+         ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
            
-            <b>{{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.label}}</b>
-          </a>
-        </td>
-      </tr>
-    </table>
-    -->
+        <span translate="webexSiteSettingsLabels.emailAllHostsTitle"></span>
+      </a>
+    </div>
   </div>  
   
   <cs-container>
