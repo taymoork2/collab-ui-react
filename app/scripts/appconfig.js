@@ -570,7 +570,8 @@ angular
           controllerAs: 'WebExSiteSetting',
           parent: 'main',
           params: {
-            panelId: null,
+            categoryId: null,
+            webexPageId: null,
             siteUrl: null,
             settingPageLabel: null,
             settingPageIframeUrl: null
@@ -585,26 +586,12 @@ angular
           params: {
             siteUrl: null
           }
-
         })
         .state('webex-reports-iframe', {
           url: '/iwebexreports',
           templateUrl: 'modules/webex/siteReportsIframe/siteReportIframe.tpl.html',
           controller: 'ReportsIframeCtrl',
           controllerAs: 'reportsIframe',
-          parent: 'main',
-          params: {
-            siteUrl: null,
-            reportPageId: null,
-            reportPageIframeUrl: null
-          }
-
-        })
-        .state('site-setting-iframe', {
-          url: '/webexSiteSettingIframe',
-          templateUrl: 'modules/webex/siteSettingIframe/siteSettingIframe.tpl.html',
-          controller: 'WebExSiteSettingIframeCtrl',
-          controllerAs: 'WebExSiteSettingIframe',
           parent: 'main',
           params: {
             siteUrl: null,

@@ -38,31 +38,34 @@
         "stateParams=" + JSON.stringify($stateParams);
       $log.log(_this.logMsg);
 
-      $scope.panelId = $stateParams.panelId;
       $scope.siteUrl = $stateParams.siteUrl;
-      $scope.settingPageLabel = $stateParams.settingPageLabel;
-      $scope.settingPageIframeUrl = $stateParams.settingPageIframeUrl;
+      $scope.categoryId = $stateParams.categoryId;
+      $scope.webexPageId = $stateParams.webexPageId;
 
-      $scope.siteSettingIndexPageTitle = $translate.instant(
+      $scope.siteSettingId = $stateParams.categoryId + "-" + $stateParams.webexPageId;
+      $scope.siteSettingLabel = "webexSiteSettingsLabels.pageId_" + $stateParams.webexPageId;
+
+      $scope.siteSettingsSref = "site-settings({siteUrl:'" + $stateParams.siteUrl + "'})";
+      $scope.siteSettingsPageTitle = $translate.instant(
         "webexSiteSettingsLabels.siteSettingsIndexPageTitleFull", {
           siteUrl: $scope.siteUrl
         }
       );
-      $scope.indexPageSref = "site-settings({siteUrl:'" + $stateParams.siteUrl + "'})";
 
       // for iframe request
-      $scope.trustIframeUrl = $sce.trustAsResourceUrl($scope.settingPageIframeUrl);
+      $scope.trustIframeUrl = $sce.trustAsResourceUrl($stateParams.settingPageIframeUrl);
       $scope.adminEmail = Authinfo.getPrimaryEmail();
       $scope.locale = ("es_LA" == $translate.use()) ? "es_MX" : $translate.use();
 
       _this.logMsg = _this.funcName + ": " + "\n" +
-        "siteUrl=" + $scope.siteUrl + "\n" +
-        "siteSettingIndexPageTitle=" + $scope.siteSettingIndexPageTitle + "\n" +
-        "settingPageLabel=" + $scope.settingPageLabel + "\n" +
-        "settingPageIframeUrl=" + $scope.settingPageIframeUrl + "\n" +
+        "siteSettingId=" + $scope.siteSettingId + "\n" +
+        "siteSettingLabel=" + $scope.siteSettingLabel + "\n" +
+        "trustIframeUrl=" + $scope.trustIframeUrl + "\n" +
         "trustIframeUrl=" + $scope.trustIframeUrl + "\n" +
         "adminEmail=" + $scope.adminEmail + "\n" +
-        "locale=" + $scope.locale;
+        "locale=" + $scope.locale + "\n" +
+        "siteSettingsSref=" + $scope.siteSettingsSref + "\n" +
+        "siteSettingsPageTitle=" + $scope.siteSettingsPageTitle;
       $log.log(_this.logMsg);
 
       $timeout(

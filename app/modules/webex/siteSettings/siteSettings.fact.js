@@ -567,7 +567,8 @@
             var pageLabel = $translate.instant("webexSiteSettingsLabels.pageId_" + pageId);
             var uiSref =
               "site-setting({" +
-              "  panelId:" + "'" + categoryId + "-" + pageId + "'" + "," +
+              "  categoryId:" + "'" + categoryId + "'" + "," +
+              "  webexPageId:" + "'" + pageId + "'" + "," +
               "  siteUrl:" + "'" + webExSiteSettingsObj.siteUrl + "'" + "," +
               "  settingPageLabel:" + "'" + pageLabel + "'" + "," +
               "  settingPageIframeUrl:" + "'" + "https://" + webExSiteSettingsObj.siteUrl + iframeUrl + "'" +

@@ -1,11 +1,13 @@
 
-<div id={{panelId}}
-     name={{panelId}}>
+<div id="siteSetting"
+     name="siteSetting">
 
   <div class="page-header row full">
     <div class="page-title col-xs-12">
-      <div class="title-heading">
-        {{settingPageLabel}}
+      <div id={{siteSettingId}}
+           name= {{siteSettingId}}
+           class="title-heading"
+           translate={{siteSettingLabel}}>
       </div>
     </div>
   </div>
@@ -29,9 +31,9 @@
         <li>
           <a id="indexPageCrumb"
              name="indexPageCrumb"
-             ui-sref={{indexPageSref}}>
+             ui-sref={{siteSettingsSref}}>
            
-            {{siteSettingIndexPageTitle}}
+            {{siteSettingsPageTitle}}
           </a>
         </li>
         
