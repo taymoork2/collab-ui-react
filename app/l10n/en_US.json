@@ -83,7 +83,8 @@
     "notApplicable": "N/A",
     "noExtensionInPool": "No Extension in pool.",
     "noExternalNumberAvail": "No DID available for mapping.",
-    "noExtMappingAvail": "No DID mapping available."
+    "noExtMappingAvail": "No DID mapping available.",
+    "tooManyResultsError": "Search returned too many results.  Please narrow your search criteria."
   },
   "groupsPage": {
     "manageGroups": "Groups",

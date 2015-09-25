@@ -169,11 +169,14 @@
               Log.debug('Ignorning result from search=: ' + searchStr + '  current search=' + $scope.searchStr);
             }
           } else {
-            var tooManyUsers;
+            var tooManyUsers, tooManyResults;
             if (data.status === 403) {
               var errors = data.Errors;
               tooManyUsers = !!errors && _.some(errors, {
                 'errorCode': '100106'
+              });
+              tooManyResults = !!errors && _.some(errors, {
+                'errorCode': '200045'
               });
             }
 
@@ -184,6 +187,10 @@
               $scope.setFilter($scope.activeFilter);
               // display search message
               $scope.tooManyUsers = tooManyUsers;
+            } else if (tooManyResults) {
+              Log.debug('Query existing users yielded too many search results. Status: ' + status);
+              Notification.notify([$translate.instant('usersPage.tooManyResultsError')], 'error');
+
             } else {
               Log.debug('Query existing users failed. Status: ' + status);
               Notification.notify([$translate.instant('usersPage.userListError')], 'error');
