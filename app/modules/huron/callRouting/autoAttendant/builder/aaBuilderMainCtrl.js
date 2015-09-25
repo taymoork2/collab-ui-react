@@ -19,8 +19,6 @@
     vm.canSaveAA = canSaveAA;
     vm.getSaveErrorMessages = getSaveErrorMessages;
 
-    var aaName = {};
-
     $scope.saveAARecords = saveAARecords;
 
     /////////////////////
