@@ -3,36 +3,38 @@
   <div class="result-pane" ng-if="devices.filteredCodesAndDevices.matches.length">
     <ul class="small-block-grid-1 medium-block-grid-2 large-block-grid-4">
       <li
-        ui-sref="devices-redux4.details({device: device})"
+        ng-click="devices.expandDevice(device)"
         ng-repeat="device in devices.filteredCodesAndDevices.matches | limitTo: ((devices.pager.currentPage * devices.pager.pageSize) + (devices.pager.currentPageSize - devices.pager.pageSize)) | limitTo: -devices.pager.currentPageSize">
         <div class="bg-container">
           <div style="display: flex">
             <i
+              ng-if="device.type != 'group'"
               class="icon icon-2x icon-circle-telepresence"
               ng-class="{'needsActivation': device.needsActivation}"
             />
             <i
+              ng-if="device.type == 'group'"
+              class="icon icon-2x icon-circle-more"
+            />
+            <i
               class="fa fa-circle overlay"
+              ng-if="device.type != 'group'"
               ng-class="device.cssColorClass"
             />
             <div class="ellipsis">
-              <h4 ng-bind-html="device.displayName | highlight:devices.search">
-
-              </h4>
+              <h4 ng-bind-html="device.displayName | highlight:devices.search"></h4>
             </div>
           </div>
 
-<!--
-          <div class="ellipsis">
-            Status: <span ng-bind-html="device.readableState | highlight:devices.search"></span>
-          </div>
- -->
-
-          <div class="ellipsis">
+          <div class="ellipsis" style="padding-top: 15px" ng-if="device.type != 'group'">
             {{devices.deviceProps[device.filterMatch || 'readableState']}}:
             <span
               ng-bind-html="device[device.filterMatch || 'readableState'] | highlight:devices.search">
             </span>
+          </div>
+
+          <div class="ellipsis" style="padding-top: 15px" ng-if="device.type == 'group'">
+            Devices in group: {{device.count}}
           </div>
 
         </div>
