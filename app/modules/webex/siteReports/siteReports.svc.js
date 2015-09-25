@@ -24,11 +24,32 @@ angular.module('WebExReports').service('reportService', [
     Notification
   ) {
 
+    var UIsref = function (theUrl, rid, siteUrl) {
+      this.siteUrl = siteUrl;
+      this.reportPageId = rid;
+      this.reportPageIframeUrl = theUrl;
+      this.toUIsrefString = function () {
+        return "webex-reports-iframe({" +
+          "  siteUrl:" + "'" + this.siteUrl + "'" + "," +
+          "  reportPageId:" + "'" + this.reportPageId + "'" + "," +
+          "  reportPageIframeUrl:" + "'https://" + this.siteUrl + this.reportPageIframeUrl + "'" +
+          "})";
+      };
+      this.uisrefString = this.toUIsrefString();
+    };
+
     var ReportsSection = function (sectionName, siteUrl, reportLinks) {
+      var self = this;
       this.section_name = sectionName;
       this.site_url = siteUrl;
       this.report_links = reportLinks;
+      //We have to rewrite this with the actual uirefs with proper reportids
+      //right now I've hardcoded as reportID.
+      this.uisrefs = self.report_links.map(function (thelink) {
+        return new UIsref(thelink, "ReportID", self.site_url);
+      });
     };
+
     var Reports = function () {
       this.sections = [];
       this.setSections = function (secs) {

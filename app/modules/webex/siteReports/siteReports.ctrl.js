@@ -51,7 +51,7 @@
         "})";
 
       $log.log("ReportsCtrl start");
-      var reports = reportService.getReports();
+      var reports = reportService.getReports(this.reportObject.siteUrl);
 
       if (!angular.isUndefined(reports)) {
         //$log.log(angular.toJson(reports));
