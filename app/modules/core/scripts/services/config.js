@@ -4,7 +4,7 @@ angular.module('Core')
   .factory('Config', ['$location', 'Utils', '$filter',
     function ($location, Utils, $filter) {
 
-      var oauth2Scope = encodeURIComponent('webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config Identity:Organization cloudMeetings:login webex-messenger:get_webextoken');
+      var oauth2Scope = encodeURIComponent('webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config Identity:Organization cloudMeetings:login webex-messenger:get_webextoken ccc_config:admin');
 
       var getCurrentHostname = function () {
         return $location.host() || '';
@@ -172,6 +172,12 @@ angular.module('Core')
           siteAdminDeepUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage'
         },
 
+        sunlightConfigServiceUrl: {
+          dev: 'https://config.integration-tx1.thunderhead.io/config/v1',
+          integration: 'https://config.integration-tx1.thunderhead.io/config/v1',
+          prod: 'https://config.integration-tx1.thunderhead.io/config/v1', //This will change to prod later in future
+        },
+
         scimSchemas: [
           'urn:scim:schemas:core:1.0',
           'urn:scim:schemas:extension:cisco:commonidentity:1.0'
@@ -231,12 +237,11 @@ angular.module('Core')
             desc: 'tabs.conferencingDesc',
             state: 'site-list',
             link: '#site-list'
-              // Temporarily commented out Numbers tab until ready to expose.
-              // }, {
-              //   title: 'tabs.huronLineDetailsTab',
-              //   desc: 'tabs.huronLineDetailsTabDesc',
-              //   state: 'hurondetails',
-              //   link: '#hurondetails'
+          }, {
+            title: 'tabs.huronLineDetailsTab',
+            desc: 'tabs.huronLineDetailsTabDesc',
+            state: 'hurondetails',
+            link: '#hurondetails'
           }, {
             title: 'tabs.fusionDetailsTab',
             desc: 'tabs.fusionDetailsTabDesc',
@@ -248,10 +253,6 @@ angular.module('Core')
             state: 'mediafusionconnector',
             link: '#mediafusionconnector'
           }, {
-            title: 'tabs.callRoutingTab',
-            state: 'callRouter',
-            link: '#callRouter'
-          }, {
             title: 'Messenger',
             desc: 'Messenger Administration',
             state: 'messenger',
@@ -262,7 +263,7 @@ angular.module('Core')
           icon: 'icon-devices',
           title: 'tabs.deviceTab',
           state: 'devices',
-          link: '/devices-redux'
+          link: '/devices'
         }, {
           tab: 'reportTab',
           icon: 'icon-bars',
@@ -767,7 +768,19 @@ angular.module('Core')
 
         getOAuthClientRegistrationCredentials: function () {
           return Utils.Base64.encode(this.getClientId() + ':' + this.getClientSecret());
+        },
+
+        getSunlightConfigServiceUrl: function () {
+
+          if (this.isDev()) {
+            return this.sunlightConfigServiceUrl.dev;
+          } else if (this.isIntegration()) {
+            return this.sunlightConfigServiceUrl.integration;
+          } else {
+            return this.sunlightConfigServiceUrl.prod;
+          }
         }
+
       };
 
       config.roleStates = {
@@ -775,9 +788,6 @@ angular.module('Core')
           'overview',
           'users',
           'user-overview',
-          'device-overview',
-          'devices2-overview',
-          'device-overview-redux',
           'userprofile',
           'reports',
           'setupwizardmodal',
@@ -822,17 +832,15 @@ angular.module('Core')
         ],
         'squared-fusion-mgmt': [
           'fusion',
-          'cluster-details'
+          'cluster-details',
+          'calendar-service'
         ],
         'squared-fusion-uc': [
           'devices',
-          'devices-redux',
+          'device-overview',
           'devices-redux2',
-          'devices-redux2-search',
           'devices-redux3',
-          'devices-redux3-search',
-          'devices-cleanup',
-          'devices2'
+          'devices-redux4'
         ],
         'squared-team-member': [
           'organization'
@@ -865,7 +873,8 @@ angular.module('Core')
           'devices',
           'fusion',
           'mediafusionconnector',
-          'callRouter'
+          'callRouter',
+          'hurondetails'
         ]
       };
 

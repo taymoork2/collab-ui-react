@@ -8,7 +8,7 @@
 /* global landing */
 /* global utils */
 
-describe('Customer Admin Landing Page License Info', function () {
+xdescribe('Customer Admin Landing Page License Info', function () {
   afterEach(function () {
     utils.dumpConsoleErrors();
   });

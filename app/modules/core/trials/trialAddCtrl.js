@@ -128,7 +128,21 @@
     vm.startTrial = startTrial;
     vm.isSquaredUCEnabled = isSquaredUCEnabled;
     vm.gotoAddNumber = gotoAddNumber;
-    vm.supportsPstnSetup = FeatureToggleService.supportsPstnSetup;
+    vm.clickStartTrial = clickStartTrial;
+
+    function clickStartTrial() {
+      if (isSquaredUCEnabled()) {
+        if (FeatureToggleService.supportsPstnSetup().then(function (isSupported) {
+            if (isSupported) {
+              startTrial();
+            } else {
+              gotoAddNumber();
+            }
+          }));
+      } else {
+        startTrial();
+      }
+    }
 
     function isOffersEmpty() {
       return !(vm.offers[Config.trials.collab] || vm.offers[Config.trials.squaredUC]);
@@ -193,8 +207,12 @@
           })];
           Notification.notify(successMessage, 'success');
 
-          if (FeatureToggleService.supportsPstnSetup()) {
-            gotoNextSteps();
+          if (offersList.indexOf(Config.trials.squaredUC) !== -1) {
+            FeatureToggleService.supportsPstnSetup().then(function (isSupported) {
+              if (isSupported) {
+                gotoNextSteps();
+              }
+            });
           } else if (!keepModal) {
             $state.modal.close();
           }

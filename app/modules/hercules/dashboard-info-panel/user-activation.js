@@ -10,7 +10,7 @@
         var updateSummary = function () {
           var userActivationNotComplete = false;
           var servicesWithUserErrors = false;
-          if ($scope.clusters && $scope.clusters.length !== 0 && $scope.services && $scope.services.enabledOnly && $scope.services.enabledOnly.length !== 0) {
+          if ($scope.clusters && $scope.clusterLength() !== 0 && $scope.services && $scope.services.enabledOnly && $scope.services.enabledOnly.length !== 0) {
             $scope.xsummary = _.map($scope.services.enabledOnly, function (service) {
               var summaryForService = _.find(statusSummary, function (summary) {
                 return service.service_id == summary.serviceId;

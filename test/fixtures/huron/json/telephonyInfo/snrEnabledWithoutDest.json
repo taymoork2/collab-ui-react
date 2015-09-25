@@ -1,0 +1,7 @@
+{
+  "snrInfo": {
+    "singleNumberReachEnabled": true,
+    "destination": "+1 717-737-7488",
+    "answerTooLateTimer": "20000"
+  }
+}

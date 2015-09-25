@@ -104,15 +104,34 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, CsdmCodeService
       if (filter.checked) {
         if (filter != f) {
           f.checked = false;
-          f.disabled = true;
+        } else {
+          vm.currentFilter = f;
         }
       } else {
-        f.disabled = false;
+        vm.currentFilter = undefined;
       }
     });
     vm.updateCodesAndDevices();
     transitionIfSearchOrFilterChanged();
     this.pager.firstPage();
+  };
+
+  vm.clearFilterIfNoSearch = function ($event) {
+    if ($event.keyCode == 8 && !vm.search) {
+      if (vm.currentFilter) {
+        vm.currentFilter.checked = true;
+        vm.filterChanged(vm.currentFilter);
+      }
+    }
+  };
+
+  vm.clearSearchAndFilter = function () {
+    vm.search = undefined;
+    vm.searchChanged();
+    if (vm.currentFilter) {
+      vm.currentFilter.checked = true;
+      vm.filterChanged(vm.currentFilter);
+    }
   };
 
   vm.searchChanged = function () {

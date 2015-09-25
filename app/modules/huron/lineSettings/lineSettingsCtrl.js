@@ -42,6 +42,7 @@
     vm.saveDisabled = saveDisabled;
     vm.callerIdOptions = [];
     vm.assignedExternalNumberChange = assignedExternalNumberChange;
+    vm.checkDnOverlapsSteeringDigit = checkDnOverlapsSteeringDigit;
     // The following are for externalCallerIdType in DB, no translation needed
     var directLine_type = 'Direct Line';
     var blockedCallerId_type = 'Blocked Outbound Caller ID';
@@ -288,6 +289,9 @@
 
     function loadInternalNumberPool(pattern) {
       TelephonyInfoService.loadInternalNumberPool(pattern).then(function (internalNumberPool) {
+        if (vm.directoryNumber.uuid) {
+          internalNumberPool.push(vm.directoryNumber);
+        }
         vm.internalNumberPool = internalNumberPool;
       }).catch(function (response) {
         vm.internalNumberPool = [];
@@ -1151,6 +1155,18 @@
           vm.callerIdInfo.callerIdSelection = CallerId.getCallerIdOption(vm.callerIdOptions, blockedCallerId_type);
         }
       }
+    }
+
+    // Check to see if the currently selected directory number's first digit is
+    // the same as the company steering digit.
+    function checkDnOverlapsSteeringDigit() {
+      var overlaps = false;
+      var dnFirstCharacter = vm.assignedInternalNumber.pattern.charAt(0);
+      var steeringDigit = vm.telephonyInfo.steeringDigit;
+      if (dnFirstCharacter === steeringDigit) {
+        overlaps = true;
+      }
+      return overlaps;
     }
 
     init();

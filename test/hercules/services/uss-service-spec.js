@@ -3,8 +3,18 @@
 describe('Service: USSService', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var $httpBackend, Service;
+  var $httpBackend, Service, authinfo;
   var rootPath = 'https://uss-integration.wbx2.com/uss/api/v1/';
+
+  beforeEach(function () {
+    module(function ($provide) {
+      authinfo = {
+        getOrgId: sinon.stub()
+      };
+      authinfo.getOrgId.returns("456");
+      $provide.value('Authinfo', authinfo);
+    });
+  });
 
   beforeEach(inject(function (_$httpBackend_, _USSService_) {
     Service = _USSService_;
@@ -21,7 +31,7 @@ describe('Service: USSService', function () {
 
   it('should fetch and return data from the correct backend', function () {
     $httpBackend
-      .when('GET', rootPath + 'userStatuses?userId=123')
+      .when('GET', rootPath + 'userStatuses?userId=123&orgId=456')
       .respond({
         "userStatuses": [{
           "userId": "123",
@@ -64,7 +74,7 @@ describe('Service: USSService', function () {
 
   it('should do the jazz', function () {
     $httpBackend
-      .when('GET', rootPath + 'userStatuses?userId=123')
+      .when('GET', rootPath + 'userStatuses?userId=123&orgId=456')
       .respond({
         "userStatuses": [{
           "userId": "123",
@@ -84,7 +94,7 @@ describe('Service: USSService', function () {
 
   it('should return error status if unable to fetch data from backend', function () {
     $httpBackend
-      .when('GET', rootPath + 'userStatuses?userId=123')
+      .when('GET', rootPath + 'userStatuses?userId=123&orgId=456')
       .respond(500);
 
     var callback = sinon.stub();
@@ -95,37 +105,9 @@ describe('Service: USSService', function () {
     expect(callback.args[0][0]).toBeTruthy();
   });
 
-  it('should refresh CI status for user', function () {
-    $httpBackend
-      .when('POST', rootPath + 'userStatuses/actions/refreshEntitlementsForUser/invoke/?userId=123')
-      .respond({});
-
-    var callback = sinon.stub();
-    Service.pollCIForUser('123', callback);
-    $httpBackend.flush();
-
-    expect(callback.callCount).toBe(1);
-    expect(callback.args[0][0]).toBeFalsy();
-    expect(callback.args[0][1]).toBeTruthy();
-  });
-
-  it('should set error when CI refresh fails', function () {
-    $httpBackend
-      .when('POST', rootPath + 'userStatuses/actions/refreshEntitlementsForUser/invoke/?userId=123')
-      .respond(500);
-
-    var callback = sinon.stub();
-    Service.pollCIForUser('123', callback);
-    $httpBackend.flush();
-
-    expect(callback.callCount).toBe(1);
-    expect(callback.args[0][0]).toBeTruthy();
-    expect(callback.args[0][1]).toBeFalsy();
-  });
-
   it('should return userStatuses summary', function () {
     $httpBackend
-      .when('GET', rootPath + 'userStatuses/summary')
+      .when('GET', rootPath + 'userStatuses/summary?orgId=456')
       .respond({});
 
     var callback = sinon.stub();
@@ -139,7 +121,7 @@ describe('Service: USSService', function () {
 
   it('should set error when userStatuses summary fails', function () {
     $httpBackend
-      .when('GET', rootPath + 'userStatuses/summary')
+      .when('GET', rootPath + 'userStatuses/summary?orgId=456')
       .respond(500);
 
     var callback = sinon.stub();
@@ -153,7 +135,7 @@ describe('Service: USSService', function () {
 
   it('should return userStatuses in getStatuses', function () {
     $httpBackend
-      .when('GET', rootPath + 'userStatuses?serviceId=squared-fusion-cal&state=error&limit=20')
+      .when('GET', rootPath + 'userStatuses?serviceId=squared-fusion-cal&state=error&limit=20&orgId=456')
       .respond({});
 
     var callback = sinon.stub();
@@ -167,7 +149,7 @@ describe('Service: USSService', function () {
 
   it('should set error when userStatuses get fails', function () {
     $httpBackend
-      .when('GET', rootPath + 'userStatuses?serviceId=squared-fusion-cal&state=error&limit=20')
+      .when('GET', rootPath + 'userStatuses?serviceId=squared-fusion-cal&state=error&limit=20&orgId=456')
       .respond(500);
 
     var callback = sinon.stub();

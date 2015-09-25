@@ -647,7 +647,8 @@
             currentSite.timeZone = currentSite.timeZone.value;
             promise = ServiceSetup.createSite(currentSite).then(function () {
               var promises = [];
-              if (vm.pilotNumberSelected) {
+              // Check for voicemailService before updating voicemailpilot number on common/customer
+              if (vm.hasVoicemailService && vm.pilotNumberSelected) {
                 promises.push(ServiceSetup.updateCustomerVoicemailPilotNumber({
                   voicemail: {
                     pilotNumber: vm.pilotNumberSelected.pattern
@@ -656,7 +657,7 @@
                   errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.voicemailUpdateError'));
                 }));
               }
-              if (vm.model.site.timeZone !== DEFAULT_TZ.value) {
+              if (vm.hasVoicemailService && vm.model.site.timeZone !== DEFAULT_TZ.value) {
                 promises.push(ServiceSetup.updateVoicemailTimezone(vm.model.site.timeZone.timezoneid, vm.objectId)
                   .catch(function (response) {
                     errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.timezoneUpdateError'));
@@ -668,7 +669,7 @@
               errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.siteError'));
             });
             deferreds.push(promise);
-          } else if (vm.pilotNumberSelected && vm.pilotNumberSelected.pattern !== vm.model.site.voicemailPilotNumber) {
+          } else if (vm.hasVoicemailService && vm.pilotNumberSelected && vm.pilotNumberSelected.pattern !== vm.model.site.voicemailPilotNumber) {
             promise = ServiceSetup.updateCustomerVoicemailPilotNumber({
               voicemail: {
                 pilotNumber: vm.pilotNumberSelected.pattern
