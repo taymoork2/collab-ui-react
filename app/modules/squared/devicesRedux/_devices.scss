@@ -114,3 +114,16 @@
     transition: none;
   }
 }
+
+.device-status-red {
+  color: $brand-danger;
+}
+.device-status-yellow {
+  color: $brand-warning;
+}
+.device-status-green {
+  color: $brand-success;
+}
+.device-status-gray {
+  color: $gray;
+}

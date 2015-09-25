@@ -36,7 +36,7 @@
     vm.trialExists = false;
     vm.trialDaysRemaining = 0;
     vm.trialUsedPercentage = 0;
-    vm.processing = false;
+    vm.isInitialized = false; // invert the logic and initialize to false so the template doesn't flicker before spinner
     vm.gsxFeature = false;
 
     Userservice.getUser('me', function (data, status) {
@@ -95,12 +95,13 @@
       }
       //check if the trial exists
       if (vm.trialExists) {
-        vm.processing = true;
         TrialService.getTrial(vm.trialId).then(function (trial) {
           populateTrialData(trial);
         }).finally(function () {
-          vm.processing = false;
+          vm.isInitialized = true;
         });
+      } else {
+        vm.isInitialized = true;
       }
 
       vm.cmrServices.services = Authinfo.getCmrServices();

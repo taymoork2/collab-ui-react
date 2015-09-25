@@ -49,11 +49,11 @@ describe('Service: PstnSetupService', function () {
 
     spyOn(PstnSetupService, 'listPendingNumbers').and.returnValue($q.when(pendingNumbers));
     spyOn(ExternalNumberPool, 'getAll').and.returnValue($q.when(externalNumbers));
-    spyOn(FeatureToggleService, 'supportsPstnSetup').and.returnValue(true);
+    spyOn(FeatureToggleService, 'supportsPstnSetup').and.returnValue($q.when(true));
   }));
 
   it('should only retrieve external numbers if feature is disabled', function () {
-    FeatureToggleService.supportsPstnSetup.and.returnValue(false);
+    FeatureToggleService.supportsPstnSetup.and.returnValue($q.when(false));
 
     var promise = ExternalNumberService.refreshNumbers();
 

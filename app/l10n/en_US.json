@@ -487,6 +487,7 @@
     "language": "Language",
     "selectLanguage": "Select a language",
     "select": "Select",
+    "invalidPhoneNumber": "Incorrect Phone Number",
     "invalidRequired": "This field is required.",
     "invalidEmail": "This is not a valid Email Address.",
     "invalidUrl": "This is not a valid URL.",
@@ -750,6 +751,17 @@
       "status": "Status",
       "alarms": "Alarms"
     },
+    "clusters": {
+      "deregister": "Deregister Cluster",
+      "deregisterCancel": "Cancel",
+      "deregisterAreYouSure": "Are you sure you want to deregister {{clusterName}}?",
+      "deregisterCausesHeader": "When you deregister this cluster:",
+      "deregisterCausesListItem1": "The Calendar Service will be turned off for all users homed on this cluster.",
+      "deregisterCausesListItem2": "All the configuration in the Cloud and on the Expressway cluster will be removed.",
+      "deregisterCausesListItem3": "Users on this cluster will be moved to another cluster, if possible.",
+      "deregisterErrorGeneric": "Unable to deregister cluster. {{errorMessage}}",
+      "deregisterErrorNoDeregisterSupport": "Unable to deregister cluster. The current cluster software does not support cluster deregistration."
+    },
     "status": {
       "unknown": "Status unknown",
       "not_configured": "Not configured",
@@ -819,16 +831,19 @@
     "totalProcessed": "Total records processed",
     "addMoreUsers": "Add more users",
     "skipAndFinish": "Skip Errors and Finish",
-    "csvInvalidRow": "Entry does not contain 6 columns",
-    "processCsvResponseError": "Error reading response",
-    "processCsvError": "Error processing user",
+    "csvInvalidRow": "Row contains an incorrect number of columns.  Please verify the row contains six columns and try again.",
+    "csvRequiredEmail": "The \"User ID/Email\" field is required. Please provide a valid email address and try again.",
+    "csvDuplicateEmail": "Skipped due to duplicate email address.",
+    "processCsvResponseError": "An error has occurred while reading the response. Please try again.",
+    "processCsvError": "Unidentified error while processing the user. Please try again.",
     "csv400Error": "Unidentified error in the csv. Please verify the file and try again.",
     "csv401And403Error": "Customer is not authorized to add or update this user.",
     "csv404Error": "Server is unable to respond at this time. Please try again at a later time.",
-    "csv408Error": "Request timed out while waiting for a response.",
+    "csv408Error": "Request timed out while waiting for a response. Please try again at a later time.",
     "csv409Error": "Request failed due to a processing conflict. Please verify the csv and try again.",
-    "csv500Error": "Internal server error.",
+    "csv500Error": "Request failed due to a server error. Please try again.",
     "csv502And503Error": "Server is temporarily unavailable. Please try again at a later time.",
+    "csvCancelledError": "Skipped due to canceled request.",
     "resultRowHeader": "Row Number",
     "resultErrorHeader": "Error Message",
     "advanced": "Advanced",
@@ -873,6 +888,7 @@
     "addUsersDescription": "Select a method to upload your users.",
     "addUsersSimple": "Invite Users | Simple",
     "addUsersAdvanced": "Invite Users | Advanced",
+    "msgrSyncDesc": "Your orgnization is currently in Messenger Sync Mode. Please onboard new users in the WebEx Messenger administration tool. Consult your Cisco customer representative to enable this screen.",
     "getStarted": "Get Started",
     "startTrial": "Start Trial",
     "doLater": "Do this later",
@@ -1150,6 +1166,7 @@
     "internalNumberExtension": "Internal Extension",
     "internalNumberExtensionTooltip": "Use the internal extension to reach this line from within the company at the same site.",
     "internalNumberPoolError": "Internal extensions failed to load.",
+    "steeringDigitOverlapWarning": "First digit of Internal Extension overlaps with Outbound Dial Digit ({{steeringDigitInTranslation}}).",
     "enterpriseSiteNumberLabel": "If your company uses site-to-site dialing:",
     "externalNumberLabel": "Direct Line",
     "externalNumberTooltip": "Use the direct line to reach this line from outside of the company.",
@@ -1207,13 +1224,16 @@
   },
   "singleNumberReachPanel": {
     "title": "Single Number Reach",
-    "description": "Enables users to answer incoming calls to their extension to another number",
+    "description": "Single Number Reach (SNR) enables you to have incoming calls ring the extension and other lines that you specify here at the same time.",
+    "description2": "Turn on Single Number Reach and specify the lines that you want to ring at the same time.",
+    "snrRemoteDestinationNumber": "When the line is called, the following phone number will ring at the same time:",
+    "snrRemoteDestinationNumberPlaceholder": "Enter Number",
+    "snrWaitSeconds": "Indicate how long you want all lines to ring before the call is forwarded to your work voicemail.",
     "toggle": "Single Number Reach",
-    "snrNote": "SNR can cover all the user's lines or limited to specific lines",
+    "snrSeconds": "Seconds",
     "success": "Single Number Reach configuration saved successfully",
     "removeSuccess": "Single Number Reach configuration removed successfully",
-    "error": "Single Number Reach configuration failed.",
-    "placeholder": "Enter SNR Number"
+    "error": "Single Number Reach configuration failed."
   },
   "voicemailPanel": {
     "success": "Voicemail configuration saved successfully",
@@ -1243,11 +1263,17 @@
     "setupNumbers": "Set Up PSTN Numbers",
     "placeOrder": "Place Order",
     "orderBlock": "Order Block Numbers",
+    "state": "State",
+    "selectState": "Select state",
+    "searchStates": "Search states",
     "areaCode": "Area Code",
+    "selectAreaCode": "Select area code",
+    "searchAreaCodes": "Search area codes",
     "quantity": "Quantity",
     "reviewAndOrder": "Review and Place Order",
     "package": "Package",
     "adding": "Adding",
+    "numbers": "{count, plural, one{# number} other{# numbers}}",
     "newNumbers": "{count, plural, one{# New Number} other{# New Numbers}}",
     "thankYou": "Thank you",
     "setupSuccess": "You have set up the PSTN service successfully.",
@@ -1391,6 +1417,8 @@
     "saveCallerIdError": "Caller Id and number failed to save.",
     "updateCallerIdSuccess": "Caller ID and number updated successfully",
     "updateCallerIdError": "Caller ID and number failed to update.",
+    "deleteCallerIdSuccess": "Caller ID and number deleted successfully.",
+    "deleteCallerIdError": "Caller ID and number failed to delete",
     "companycallerID": "Company Caller ID",
     "hide": "Hide",
     "expand": "Expand"
@@ -1853,9 +1881,9 @@
     "NeedsActivation": "Needs Activation",
     "issuesDetected": "Issues Detected",
     "errorCodes": {
-      "tcpFallback": {
+      "mediaProtocol": {
         "type": "Potential loss of video quality",
-        "message": "This device is communicating via the TCP protocol, which could cause higher latency and therefore reduced media streaming experience. If you are experiencing issues with your media streaming, you can try to open UDP port 33434 on your local firewall to aid media streaming issues."
+        "message": "This device is communicating via the {{mediaProtocol}} protocol, which could cause higher latency and therefore reduced media streaming experience. If you are experiencing issues with your media streaming, you can try to open UDP port 33434 on your local firewall to aid media streaming issues."
       },
       "TemperatureCheck": {
         "type": "High temperature",
@@ -1884,12 +1912,36 @@
     "error": "Something went wrong.",
     "notifyPartnerErrorMsg": "We're sorry, something went wrong while trying to notify your partner."
   },
+  "contactCenterUserConfig": {
+    "channels": "Channels",
+    "contactCenterProfile": "Contact Center Profile",
+    "chat": "Chat",
+    "voice": "Voice",
+    "email": "Email",
+    "role": "Role",
+    "alias": "Alias",
+    "attributes": "Attributes",
+    "userRoles": {
+      "user": "User",
+      "supervisor": "Supervisor"
+    },
+    "successMessages": {
+      "userUpdateSuccessMessage": "Information has been updated successfully for user {{userId}}. "
+    },
+    "failureMessages": {
+      "userUpdateFailureMessage": "Information cannot be updated currently for user {{userId}}.",
+      "userloadFailureMessage": "Information is currently not available for user {{userId}}.",
+      "emptyAliasErrorMessage": "User alias cannot be empty."
+    }
+  },
+
   "huronDetails": {
     "title": "Huron",
     "linesTitle": "Numbers",
     "settingsTitle": "Settings",
     "featuresTitle": "Features"
   },
+
   "linesPage": {
     "manageLines": "Numbers",
     "allLines": "All",
@@ -1903,5 +1955,6 @@
     "userEmailHeader": "User",
     "actionHeader": "Actions",
     "lineListError": "Error retrieving the line list. Please try reloading the page."
+
   }
 }

@@ -2,12 +2,18 @@
 /* global moment, $:false */
 
 angular.module('Core')
-  .controller('AddUserCtrl', ['$scope', '$q', '$location', 'DirSyncService', 'Log', '$translate', 'Notification', 'UserListService', 'Storage', 'Utils', '$filter', 'Userservice', 'LogMetricsService', '$window', 'Config',
-    function ($scope, $q, $location, DirSyncService, Log, $translate, Notification, UserListService, Storage, Utils, $filter, Userservice, LogMetricsService, $window, Config) {
+  .controller('AddUserCtrl', ['$scope', '$q', '$location', 'DirSyncService', 'Log', '$translate', 'Notification', 'UserListService', 'Storage', 'Utils', '$filter', 'Userservice', 'LogMetricsService', '$window', 'Config', 'SyncService',
+    function ($scope, $q, $location, DirSyncService, Log, $translate, Notification, UserListService, Storage, Utils, $filter, Userservice, LogMetricsService, $window, Config, SyncService) {
       var invalidcount = 0;
       $scope.options = {
         addUsers: 0
       };
+
+      // Messeger User Sync Mode flag
+      $scope.isMsgrSyncMode = SyncService.isMessengerSync();
+      if ($scope.isMsgrSyncMode) {
+        $scope.options.addUsers = -1;
+      }
 
       $scope.syncSimple = {
         label: $translate.instant('firstTimeWizard.simple'),
@@ -30,13 +36,24 @@ angular.module('Core')
 
       $scope.initNext = function () {
         var deferred = $q.defer();
+
+        // Messenger Sync mode
+        if ($scope.isMsgrSyncMode) {
+          // Move to the next tab as current tab is irrelevant
+          $scope.wizard.nextTab();
+          deferred.reject();
+
+          return deferred.promise;
+        }
+
         if (angular.isDefined($scope.options.addUsers) && angular.isDefined($scope.wizard) && angular.isFunction($scope.wizard.setSubTab)) {
           if ($scope.options.addUsers === 0) {
             $scope.wizard.setSubTab($scope.wizard.current.tab.subTabs[0]);
-            // } else if ($scope.options.addUsers === 1) {
-            //   $scope.wizard.setSubTab($scope.wizard.current.tab.subTabs[1]);
-          } else if ($scope.options.addUsers === 2) {
+          } else if ($scope.options.addUsers === 1) {
             $scope.wizard.setSubTab($scope.wizard.current.tab.subTabs[1]);
+          } else if ($scope.options.addUsers === 2) {
+            var subTabIndex = $scope.wizard.current.tab.subTabs.length - 1; // may be 1 or 2 depending on csv
+            $scope.wizard.setSubTab($scope.wizard.current.tab.subTabs[subTabIndex]);
           }
           deferred.resolve();
         } else {

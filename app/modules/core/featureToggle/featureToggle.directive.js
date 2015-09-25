@@ -20,19 +20,22 @@
     return directive;
 
     function link(scope, element, attrs) {
+      // defaults not to show until FeatureToggleService returns the inverse
       scope.show = false;
-      scope.hide = false;
+      scope.hide = true;
       var showFeature = attrs.featureShow;
       var hideFeature = attrs.featureHide;
 
-      if (showFeature === 'pstnSetup') {
-        scope.show = FeatureToggleService.supportsPstnSetup();
+      if (showFeature) {
+        FeatureToggleService.supports(showFeature).then(function (value) {
+          scope.show = value;
+        });
       }
-      if (hideFeature === 'pstnSetup') {
-        scope.hide = FeatureToggleService.supportsPstnSetup();
+      if (hideFeature) {
+        FeatureToggleService.supports(hideFeature).then(function (value) {
+          scope.hide = value;
+        });
       }
-
-      //TODO add a generic FeatureToggleService.isEnabled(feature)
 
       attrs.ngIf = function () {
         return (showFeature && scope.show) || (hideFeature && !scope.hide);

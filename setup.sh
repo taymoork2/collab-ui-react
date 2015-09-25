@@ -25,13 +25,15 @@ echo "$PATH" | grep -q '/usr/local/bin' && echo "Global NPM path is set" || set_
 # fi
 
 # Check if brew is installed, otherwise install it
-brew --version > /dev/null 2>&1
-BREW_RET=$?
-if [ $BREW_RET -ne 0 ]; then
-    echo "BREW not found, installing:"
-    ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
-else
-    echo "BREW is already installed"
+if [ "`uname`" = "Darwin" ]; then
+  brew --version > /dev/null 2>&1
+  BREW_RET=$?
+  if [ $BREW_RET -ne 0 ]; then
+      echo "BREW not found, installing:"
+      ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
+  else
+      echo "BREW is already installed"
+  fi
 fi
 
 # Check and install npm

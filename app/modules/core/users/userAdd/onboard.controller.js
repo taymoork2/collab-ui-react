@@ -2,9 +2,10 @@
 
 //TODO refactor this into OnboardCtrl, BulkUserCtrl, AssignServicesCtrl
 angular.module('Core')
-  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$window', 'Log', '$log', 'Authinfo', 'Storage', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils', 'Orgservice', 'TelephonyInfoService', 'FeatureToggleService',
-    function ($scope, $state, $stateParams, $q, $window, Log, $log, Authinfo, Storage, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService) {
+  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$window', 'Log', '$log', 'Authinfo', 'Storage', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils', 'Orgservice', 'TelephonyInfoService', 'FeatureToggleService', 'NAME_DELIMITER', 'SyncService',
+    function ($scope, $state, $stateParams, $q, $window, Log, $log, Authinfo, Storage, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, SyncService) {
 
+      $scope.isMsgrSyncMode = SyncService.isMessengerSync();
       $scope.hasAccount = Authinfo.hasAccount();
       $scope.usrlist = [];
       $scope.internalNumberPool = [];
@@ -831,7 +832,7 @@ angular.module('Core')
 
       $scope.addToUsersfield = function () {
         if ($scope.model.userForm.$valid && $scope.model.userInfoValid) {
-          var userInfo = $scope.model.firstName + ' ' + $scope.model.lastName + ' ' + $scope.model.emailAddress;
+          var userInfo = $scope.model.firstName + NAME_DELIMITER + $scope.model.lastName + ' ' + $scope.model.emailAddress;
           angular.element('#usersfield').tokenfield('createToken', userInfo);
           clearNameAndEmailFields();
           angular.element('#firstName').focus();
@@ -1584,6 +1585,8 @@ angular.module('Core')
             responseMessage = $translate.instant('firstTimeWizard.csv500Error');
           } else if (status === 502 || status === 503) {
             responseMessage = $translate.instant('firstTimeWizard.csv502And503Error');
+          } else if (status === -1) {
+            responseMessage = $translate.instant('firstTimeWizard.csvCancelledError');
           } else {
             responseMessage = $translate.instant('firstTimeWizard.processCsvError');
           }
@@ -1658,24 +1661,43 @@ angular.module('Core')
         var csvPromise = $q.when();
         var tempUserArray = [];
         var tempLicenseArray = [];
+        var uniqueEmails = [];
+        var processingError;
         for (var j = 0; j < userArray.length; j++) {
+          processingError = false;
+          // If we haven't met the chunk size, process the next user
           if (tempUserArray.length < csvChunk) {
-            if (userArray[j].length === 6) {
-              tempUserArray.push({
-                address: userArray[j][3],
-                name: userArray[j][0] + ' ' + userArray[j][1],
-                displayName: userArray[j][2]
-              });
-              tempLicenseArray.push(buildLicenseArray(userArray[j][4], userArray[j][5]));
-            } else {
+            var userRow = userArray[j];
+            // Validate content in the row
+            if (userRow.length !== 6) {
+              // Report incorrect number of columns
+              processingError = true;
               addUserError(j + 1, $translate.instant('firstTimeWizard.csvInvalidRow'));
-              csvPromise = onboardCsvUsers(j - 1, tempUserArray, tempLicenseArray, csvPromise);
-              tempUserArray = [];
-              tempLicenseArray = [];
-              continue;
+            } else if (!userRow[3]) {
+              // Report required field is missing
+              processingError = true;
+              addUserError(j + 1, $translate.instant('firstTimeWizard.csvRequiredEmail'));
+            } else if (_.contains(uniqueEmails, userRow[3])) {
+              // Report a duplicate email
+              processingError = true;
+              addUserError(j + 1, $translate.instant('firstTimeWizard.csvDuplicateEmail'));
+            } else {
+              uniqueEmails.push(userRow[3]);
+              tempUserArray.push({
+                address: userRow[3],
+                name: userRow[0] + NAME_DELIMITER + userRow[1],
+                displayName: userRow[2]
+              });
+              tempLicenseArray.push(buildLicenseArray(userRow[4], userRow[5]));
             }
           }
-          if (tempUserArray.length === csvChunk || j === (userArray.length - 1)) {
+          // Onboard all the previous users in the temp array if there was an error processing a row
+          if (processingError) {
+            csvPromise = onboardCsvUsers(j - 1, tempUserArray, tempLicenseArray, csvPromise);
+            tempUserArray = [];
+            tempLicenseArray = [];
+          } else if (tempUserArray.length === csvChunk || j === (userArray.length - 1)) {
+            // Onboard the current temp array if we've met the chunk size or is the last user in list
             csvPromise = onboardCsvUsers(j, tempUserArray, tempLicenseArray, csvPromise);
             tempUserArray = [];
             tempLicenseArray = [];

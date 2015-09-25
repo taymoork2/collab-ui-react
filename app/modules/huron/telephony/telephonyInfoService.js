@@ -33,6 +33,7 @@
         remoteDestinations: null,
         singleNumberReachEnabled: false
       },
+      steeringDigit: '',
       siteSteeringDigit: '',
       siteCode: '',
       hasCustomerVoicemail: undefined
@@ -75,6 +76,7 @@
         ServiceSetup.listSites().then(function () {
           if (ServiceSetup.sites.length !== 0) {
             ServiceSetup.getSite(ServiceSetup.sites[0].uuid).then(function (site) {
+              telephonyInfo.steeringDigit = site.steeringDigit;
               telephonyInfo.siteSteeringDigit = site.siteSteeringDigit;
               telephonyInfo.siteCode = site.siteCode;
             });
@@ -185,6 +187,7 @@
             if (remoteDestinationInfo !== null && remoteDestinationInfo !== undefined && remoteDestinationInfo.length > 0) {
               snrInfo.singleNumberReachEnabled = true;
               snrInfo.destination = remoteDestinationInfo[0].destination;
+              snrInfo.answerTooLateTimer = remoteDestinationInfo[0].answerTooLateTimer;
             } else {
               snrInfo.singleNumberReachEnabled = false;
             }
@@ -301,9 +304,7 @@
             intNumPool.push(dn);
           }
           internalNumberPool = intNumPool;
-          if (telephonyInfo.currentDirectoryNumber.uuid !== 'none') {
-            internalNumberPool.push(telephonyInfo.currentDirectoryNumber);
-          }
+
           return angular.copy(internalNumberPool);
         }).catch(function (response) {
           internalNumberPool = [];
