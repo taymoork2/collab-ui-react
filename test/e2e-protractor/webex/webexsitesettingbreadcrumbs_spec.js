@@ -22,7 +22,7 @@ describe('WebEx site settings', function () {
     navigation.expectCurrentUrl('/webexSiteSettings');
   });
 
-  it('wait for WebEx settings settings page to appear', function () {
+  it('wait for WebEx settings index page to appear', function () {
     sitesettings.waitForWebexSiteSettingsPanel();
     expect(sitesettings.webexSiteSettingsPanel.isPresent()).toBeTruthy();
   });
@@ -32,9 +32,9 @@ describe('WebEx site settings', function () {
     navigation.expectCurrentUrl('/webexSiteSetting');
   });
 
-  it('wait for WebEx email all hosts page to appear', function () {
-    sitesettings.waitForWebexSiteSettingPanel();
-    expect(sitesettings.webexEmailAllHostsId.isPresent()).toBeTruthy();
+  it('wait for WebEx setting page to appear with bread crumbs', function () {
+    sitesettings.waitForSiteSettingBreadCrumbs();
+    expect(sitesettings.siteSettingBreadCrumbs.isPresent()).toBeTruthy();
   });
 
   it('Click on site settings bread crumb', function () {
@@ -47,7 +47,20 @@ describe('WebEx site settings', function () {
     expect(sitesettings.webexSiteSettingsPanel.isPresent()).toBeTruthy();
   });
 
-  // TODO: additional tests to click on various setting page links on the site settings page
+  it('click on email all hosts button (2nd time)', function () {
+    utils.click(sitesettings.emailAllHostsBtn);
+    navigation.expectCurrentUrl('/webexSiteSetting');
+  });
+
+  it('wait for WebEx setting page to appear with bread crumbs (2nd time)', function () {
+    sitesettings.waitForSiteSettingBreadCrumbs();
+    expect(sitesettings.siteSettingBreadCrumbs.isPresent()).toBeTruthy();
+  });
+
+  it('Click on site list bread crumb', function () {
+    utils.click(sitesettings.siteListCrumb);
+    navigation.expectCurrentUrl('/site-list');
+  });
 
   // it('should pause', function () {
   //   browser.pause()
