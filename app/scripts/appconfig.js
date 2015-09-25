@@ -290,6 +290,13 @@ angular
             }
           }
         })
+        .state('users.convert.services.dn', {
+          views: {
+            'usersConvert@users.convert': {
+              templateUrl: 'modules/huron/users/assignDnAndDirectLinesModal.tpl.html'
+            }
+          }
+        })
         .state('editService', {
           parent: 'modalLarge',
           views: {

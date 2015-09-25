@@ -19,8 +19,8 @@
   </div>
 
   <div class="modal-footer" ng-if="convertUsersFlow">
-    <button type="button" id="btnBack" class="btn btn-default" ng-click="processBackButton()"><span translate="common.back"></span></button>
-    <button type="button" id="btnConvert" class="btn btn-primary" ng-click="convertUsers()" data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>"><span translate="common.save"></span></button>
+    <button type="button" id="btnBack" class="btn btn-default" ng-click="goToConvertUsers()"><span translate="common.back"></span></button>
+    <button type="button" id="btnConvert" class="btn btn-primary" ng-click="convertUsersNext()" data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>"><span translate="{{getServicesNextText()}}"></span></button>
   </div>
 
 </div>

@@ -1321,12 +1321,42 @@ angular.module('Core')
         }
       };
 
-      $scope.processBackButton = function () {
+      $scope.goToConvertUsers = function () {
         if (convertPending === true) {
           convertBacked = true;
         } else {
           $state.go('users.convert', {});
         }
+      };
+
+      $scope.assignDNForConvertUsers = function () {
+        var deferred = $q.defer();
+        var didDnDupes = checkDidDnDupes();
+        // check for DiD duplicates
+        if (didDnDupes.didDupe) {
+          Log.debug('Duplicate Direct Line entered.');
+          Notification.notify([$translate.instant('usersPage.duplicateDidFound')], 'error');
+          deferred.reject();
+          return deferred.promise;
+        }
+        // check for Dn duplicates
+        if (didDnDupes.dnDupe) {
+          Log.debug('Duplicate Internal Extension entered.');
+          Notification.notify([$translate.instant('usersPage.duplicateDnFound')], 'error');
+          deferred.reject();
+          return deferred.promise;
+        }
+
+        // copy numbers to convertSelectedList
+        angular.forEach($scope.usrlist, function (user, index) {
+          var userArray = $scope.convertSelectedList.filter(function (selectedUser) {
+            return user.address === selectedUser.userName;
+          });
+          userArray[0].assignedDn = user.assignedDn;
+          userArray[0].externalNumber = user.externalNumber;
+        });
+
+        return $scope.convertUsers();
       };
 
       $scope.saveConvertList = function () {
@@ -1335,6 +1365,35 @@ angular.module('Core')
         $scope.convertUsersFlow = true;
         convertPending = false;
         $state.go('users.convert.services', {});
+      };
+
+      $scope.convertUsersNext = function () {
+        $scope.usrlist = [];
+        angular.forEach($scope.convertSelectedList, function (selectedUser, index) {
+          var user = {};
+          var givenName = "";
+          var familyName = "";
+          if (angular.isDefined(selectedUser.name)) {
+            if (angular.isDefined(selectedUser.name.givenName)) {
+              givenName = selectedUser.name.givenName;
+            }
+            if (angular.isDefined(selectedUser.name.familyName)) {
+              familyName = selectedUser.name.familyName;
+            }
+          }
+          if (angular.isDefined(givenName) || angular.isDefined(familyName)) {
+            user.name = givenName + ' ' + familyName;
+          }
+          user.address = selectedUser.userName;
+          $scope.usrlist.push(user);
+        });
+        if ($scope.radioStates.commRadio || $scope.entitlements.ciscoUC) {
+          $scope.processing = true;
+          activateDID();
+          $state.go('users.convert.services.dn');
+        } else {
+          $scope.convertUsers();
+        }
       };
 
       $scope.convertUsers = function () {
@@ -1361,6 +1420,11 @@ angular.module('Core')
               var user = {
                 'address': data.userResponse[i].email
               };
+              var userArray = batch.filter(function (batchObj) {
+                return user.address === batchObj.userName;
+              });
+              user.assignedDn = userArray[0].assignedDn;
+              user.externalNumber = userArray[0].externalNumber;
               successMovedUsers.push(user);
             }
           }
