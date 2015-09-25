@@ -12,23 +12,23 @@ describe('WebEx site settings', function () {
     navigation.clickServicesTab();
   });
 
-  it('click on conferencing tab', function () {
+  it('click on conferencing option', function () {
     utils.click(sitesettings.conferencing);
     navigation.expectCurrentUrl('/site-list');
   });
 
-  it('click on configure site', function () {
+  it('click on configure site cog', function () {
     utils.click(sitesettings.configureSite);
     navigation.expectCurrentUrl('/webexSiteSettings');
   });
 
   it('wait for WebEx settings page to appear with bread crumbs', function () {
-    sitesettings.waitForSiteConfigBreadCrumbsPanel();
-    expect(sitesettings.siteConfigBreadCrumbs.isPresent()).toBeTruthy();
+    sitesettings.waitForSiteSettingsBreadCrumbs();
+    expect(sitesettings.siteSettingsBreadCrumbs.isPresent()).toBeTruthy();
   });
 
-  it('Click on site list (first) bread crumb link', function () {
-    utils.click(sitesettings.siteConfigFirstCrumb);
+  it('Click on site list (first) bread crumb', function () {
+    utils.click(sitesettings.siteListCrumb);
     navigation.expectCurrentUrl('/site-list');
   });
 
