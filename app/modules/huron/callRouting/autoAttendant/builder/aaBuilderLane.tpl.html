@@ -1,0 +1,13 @@
+<div class="aa-flex-container">
+  <div class="aa-flex-vertical-line"></div>
+  <div class="aa-panel">
+    <div class="aa-panel-round">
+      <a ng-click="aaLane.addAction(-1)">
+        <span class="aa-add-step-icon" popover=" {{ 'autoAttendant.builderAddNewStep' | translate }} " popover-trigger="mouseenter" popover-animation="false" popover-placement="bottom" popover-append-to-body="false"></span>
+      </a>
+    </div>
+  </div>
+</div>
+<div ng-repeat="action in aaLane.uiModel[aaLane.schedule].entries">
+  <aa-builder-actions aa-schedule="{{aaLane.schedule}}" aa-index="$index" aa-add-action="aaLane.addAction(index)"></aa-builder-actions>
+</div>

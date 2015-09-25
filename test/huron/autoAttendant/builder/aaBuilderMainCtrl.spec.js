@@ -2,7 +2,7 @@
 
 describe('Controller: AABuilderMainCtrl', function () {
   var controller, Notification, AutoAttendantCeService;
-  var AAModelService, AutoAttendantCeInfoModelService;
+  var AAUiModelService, AAModelService, AutoAttendantCeInfoModelService;
   var $rootScope, $scope, $q, $translate, $stateParams;
 
   var ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
@@ -41,7 +41,7 @@ describe('Controller: AABuilderMainCtrl', function () {
   beforeEach(module('Huron'));
 
   beforeEach(inject(function (_$rootScope_, _$q_, _$stateParams_, $controller, _$translate_, _Notification_,
-    _AutoAttendantCeInfoModelService_, _AAModelService_, _AutoAttendantCeService_) {
+    _AutoAttendantCeInfoModelService_, _AAUiModelService_, _AAModelService_, _AutoAttendantCeService_) {
     $rootScope = _$rootScope_;
     $q = _$q_;
     $scope = $rootScope;
@@ -50,15 +50,21 @@ describe('Controller: AABuilderMainCtrl', function () {
     };
     $translate = _$translate_;
     $stateParams = _$stateParams_;
+    AAUiModelService = _AAUiModelService_;
     AAModelService = _AAModelService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AutoAttendantCeService = _AutoAttendantCeService_;
     Notification = _Notification_;
 
+    aaModel.dataReadyPromise = $q(function () {});
+    $stateParams.name = '';
+
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
+    spyOn(AAUiModelService, 'initUiModel');
 
     controller = $controller('AABuilderMainCtrl', {
-      $scope: $scope
+      $scope: $scope,
+      $stateParams: $stateParams
     });
     $scope.$apply();
   }));

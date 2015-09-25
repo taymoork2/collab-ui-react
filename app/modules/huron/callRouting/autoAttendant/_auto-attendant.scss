@@ -240,6 +240,11 @@ a.dropdown-toggle:focus {
   }
 }
 
+.aa-menu-delete-icon-md-rightmost {
+  @extend .aa-menu-delete-icon-md;
+  margin-left: auto;
+}
+
 .aa-tooltip-wrapper {
   display: inline-block;
 }
