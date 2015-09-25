@@ -8,7 +8,7 @@
   <div class="page-header row">
     <div class="page-title col-xs-12">
       <!-- <span class="title-heading" translate="webexSiteSettings.title"></span> -->
-      <span class="search-title"><h2>Reports333</h2></span>
+      <span class="search-title"><h2>Reports</h2></span>
     </div>
   </div>	
   
@@ -26,12 +26,29 @@
   </div>
 </div>
 <div ng-repeat="sec in sections">
-    <h2> {{sec.section_name}} </h2>
+    <!-- <h2> {{sec.section_name}} </h2> -->
     <div ng-repeat="link in sec.report_links">
-       <a href="{{link}}">{{link}}</a>
+       <!-- <a href="{{link}}">{{link}}</a> -->
     </div>
 
 </div>
+
+<div ng-repeat="sec in sections">
+  <cs-card class="cs-card medium">
+    <article>
+       <h4>{{sec.section_name}}</h4>
+
+       <section>
+
+
+       </section>
+
+    </article>
+
+  </cs-card>
+</div>
+
+
 
 <!--
         .state('webex-reports-iframe', {

@@ -40,11 +40,15 @@ angular.module('WebExReports').service('reportService', [
     };
     this.getReports = function (siteUrl) {
       //get the reports list, for now hard code.
-      var sec1 = new ReportsSection("Section1", siteUrl, ["/x/y/z", "/u/io/p"]);
-      var sec2 = new ReportsSection("Section2", siteUrl, ["/u/y/z", "www.yahoo.com"]);
+      var common_reports = new ReportsSection("common_reports", siteUrl, ["/x/y/z", "/u/io/p"]);
+      var event_center = new ReportsSection("event_center", siteUrl, ["/u/y/z", "www.yahoo.com"]);
+      var support_center = new ReportsSection("support_center", siteUrl, ["/u/y/z", "www.yahoo.com"]);
+      var training_center = new ReportsSection("training_center", siteUrl, ["/u/y/z", "www.yahoo.com"]);
 
       var repts = new Reports();
-      repts.setSections([sec1, sec2]);
+      repts.setSections([common_reports, event_center,
+        support_center, training_center
+      ]);
       return repts;
     };
 
