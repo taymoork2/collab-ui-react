@@ -328,6 +328,9 @@ angular.module('Core')
         isInitialized: function () {
           return authData.isInitialized;
         },
+        isAppAdmin: function () {
+          return this.hasRole('Application');
+        },
         isAdmin: function () {
           return this.hasRole('Full_Admin') || this.hasRole('PARTNER_ADMIN');
         },

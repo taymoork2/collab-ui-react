@@ -85,8 +85,8 @@ describe('Controller: UserOverviewCtrl', function () {
       expect(controller.titleCard).toEqual("Display Name");
     });
 
-    it('should read the features list on initialization', function () {
-      expect(controller.features.length).toEqual(1);
+    it('should not set features list by default', function () {
+      expect(controller.features).toBeUndefined();
     });
 
     it('should reload the user data from identity response and set subTitleCard to title', function () {

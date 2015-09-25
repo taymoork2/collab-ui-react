@@ -140,6 +140,11 @@
     }
 
     function getUserFeatures() {
+      // to see user features, you must either be a support member or a team member
+      if (!canQueryUserFeatures()) {
+        return;
+      }
+
       FeatureToggleService.getFeaturesForUser(vm.currentUser.id).then(function (response) {
         vm.features = [];
         if (!(response.data || response.data.developer)) {
@@ -158,6 +163,10 @@
           }
         });
       });
+    }
+
+    function canQueryUserFeatures() {
+      return Authinfo.isSquaredTeamMember() || Authinfo.isAppAdmin();
     }
 
     getUserFeatures();

@@ -28,5 +28,8 @@
     function updateToggles() {
 
     }
+
+    vm.resetForm = resetForm;
+    vm.updateToggles = updateToggles;
   }
 })();
