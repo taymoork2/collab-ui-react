@@ -45,9 +45,8 @@
     var deleteCluster = function (clusterId) {
       var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
       return $http.delete(url).then(function () {
-        var cluster = clusterCache[clusterId];
-        if (cluster) {
-          clusterCache.remove(clusterId);
+        if (clusterCache[clusterId]) {
+          delete clusterCache[clusterId];
         }
       });
     };
