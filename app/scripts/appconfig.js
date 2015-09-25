@@ -570,10 +570,11 @@ angular
           controllerAs: 'WebExSiteSetting',
           parent: 'main',
           params: {
-            categoryId: null,
+            cardId: null,
+            cardLabel: null,
             webexPageId: null,
+            webexPageLabel: null,
             siteUrl: null,
-            settingPageLabel: null,
             settingPageIframeUrl: null
           }
         })

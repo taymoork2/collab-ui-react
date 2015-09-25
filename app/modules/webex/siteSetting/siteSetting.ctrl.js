@@ -38,23 +38,20 @@
         "stateParams=" + JSON.stringify($stateParams);
       $log.log(_this.logMsg);
 
-      $scope.siteUrl = $stateParams.siteUrl;
-      $scope.categoryId = $stateParams.categoryId;
-      $scope.webexPageId = $stateParams.webexPageId;
+      $scope.siteSettingId = ((null === $stateParams.cardId) || ("" === $stateParams.cardId)) ? $stateParams.webexPageId : $stateParams.cardId + "-" + $stateParams.webexPageId;
+      $scope.siteSettingLabel = ((null === $stateParams.cardLabel) || ("" === $stateParams.cardLabel)) ? $stateParams.webexPageLabel : $stateParams.cardLabel + " | " + $stateParams.webexPageLabel;
 
-      $scope.siteSettingId = $stateParams.categoryId + "-" + $stateParams.webexPageId;
-      $scope.siteSettingLabel = "webexSiteSettingsLabels.pageId_" + $stateParams.webexPageId;
-
-      $scope.siteSettingsSref = "site-settings({siteUrl:'" + $stateParams.siteUrl + "'})";
-      $scope.siteSettingsPageTitle = $translate.instant(
+      $scope.siteSettingsBreadcrumbUiSref = "site-settings({siteUrl:'" + $stateParams.siteUrl + "'})";
+      $scope.siteSettingsBreadcrumbLabel = $translate.instant(
         "webexSiteSettingsLabels.siteSettingsIndexPageTitleFull", {
-          siteUrl: $scope.siteUrl
+          siteUrl: $stateParams.siteUrl
         }
       );
 
       // for iframe request
       $scope.trustIframeUrl = $sce.trustAsResourceUrl($stateParams.settingPageIframeUrl);
       $scope.adminEmail = Authinfo.getPrimaryEmail();
+      $scope.authToken = $rootScope.token;
       $scope.locale = ("es_LA" == $translate.use()) ? "es_MX" : $translate.use();
 
       _this.logMsg = _this.funcName + ": " + "\n" +
@@ -63,9 +60,11 @@
         "trustIframeUrl=" + $scope.trustIframeUrl + "\n" +
         "trustIframeUrl=" + $scope.trustIframeUrl + "\n" +
         "adminEmail=" + $scope.adminEmail + "\n" +
+        "authToken=" + $scope.authToken + "\n" +
         "locale=" + $scope.locale + "\n" +
-        "siteSettingsSref=" + $scope.siteSettingsSref + "\n" +
-        "siteSettingsPageTitle=" + $scope.siteSettingsPageTitle;
+        "siteSettingsBreadcrumbUiSref=" + $scope.siteSettingsBreadcrumbUiSref + "\n" +
+        "siteSettingsBreadcrumbLabel=" + $scope.siteSettingsBreadcrumbLabel + "\n" +
+        "webexPageBreadcrumbLabel=" + $scope.webexPageBreadcrumbLabel;
       $log.log(_this.logMsg);
 
       $timeout(

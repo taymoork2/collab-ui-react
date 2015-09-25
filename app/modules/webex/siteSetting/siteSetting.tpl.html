@@ -4,10 +4,11 @@
 
   <div class="page-header row full">
     <div class="page-title col-xs-12">
-      <div id={{siteSettingId}}
-           name= {{siteSettingId}}
-           class="title-heading"
-           translate={{siteSettingLabel}}>
+      <div class="title-heading"
+           id={{siteSettingId}}
+           name= {{siteSettingId}}>
+           
+        {{siteSettingLabel}}
       </div>
     </div>
   </div>
@@ -31,16 +32,17 @@
         <li>
           <a id="siteSettingsCrumb"
              name="siteSettingsCrumb"
-             ui-sref={{siteSettingsSref}}>
+             ui-sref={{siteSettingsBreadcrumbUiSref}}>
            
-            {{siteSettingsPageTitle}}
+            {{siteSettingsBreadcrumbLabel}}
           </a>
         </li>
         
-        <li id="siteSettingCrumb"
-            name="siteSettingCrumb"
-            class="current"
-            translate={{siteSettingLabel}}>
+        <li class="current"
+            id="siteSettingCrumb"
+            name="siteSettingCrumb">
+            
+          {{siteSettingLabel}}
         </li>
       </ul>
     </div>

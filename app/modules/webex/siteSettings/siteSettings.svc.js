@@ -69,7 +69,7 @@ angular.module('WebExSiteSettings').service('WebExSiteSettingsSvc', [
         },
 
         siteInfoPageObj: null,
-        siteFeaturesPageObj: null,
+        siteFeaturesPageObj: null
       }, // siteInfoCardObj
 
       settingCardObjs: [{

@@ -31,12 +31,12 @@ angular.module('Core')
       vm.iframeSupportedSite = false;
       vm.webExSessionTicket = null;
 
+      var logMsg = "siteListCtrl(): " + "\n" +
+        "vm.gridData=" + JSON.stringify(vm.gridData);
+      $log.log(logMsg);
+
       var siteUrl = vm.gridData[0].license.siteUrl;
       var siteName = WebExUtilsFact.getSiteName(siteUrl);
-
-      var logMsg = "siteListCtrl(): " + "\n" +
-        "vm.gridData[0]=" + JSON.stringify(vm.gridData[0]);
-      $log.log(logMsg);
 
       // Start of grid set up
       var rowTemplate =

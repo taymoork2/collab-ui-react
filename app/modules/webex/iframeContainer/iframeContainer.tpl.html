@@ -13,18 +13,23 @@
       target="webexIframeContainer">
       
   <input id="adminEmail"
-         type="hidden"
          name="adminEmail"
+         type="hidden"
          value="{{adminEmail}}" />
          
   <input id="userEmail"
-         type="hidden"
          name="userEmail"
+         type="hidden"
          value="{{adminEmail}}" />
          
-  <input id="locale"
+  <input id="Authorization"
+         name="Authorization"
          type="hidden"
+         value="{{authToken}}" />
+  
+  <input id="locale"
          name="locale"
+         type="hidden"
          value="{{locale}}" />
   
   <button id="submitFormBtn"
