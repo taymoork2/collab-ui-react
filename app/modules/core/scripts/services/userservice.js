@@ -112,29 +112,16 @@ angular.module('Core')
                       }
 
                       promises.push(HuronUser.create(user.uuid, userObj)
-                        .then(function () {
-                          this.alertType = 'success';
-                          this.message = $translate.instant('usersPage.onboardSuccess', userResult);
-                        }.bind(userResult)).catch(function (response) {
+                        .catch(function (response) {
                           this.alertType = 'danger';
                           this.message = Notification.processErrorResponse(response, 'usersPage.ciscoucError', this);
                         }.bind(userResult)));
 
                     } else if (user.unentitled && user.unentitled.indexOf(Config.entitlements.huron) !== -1) {
                       promises.push(HuronUser.delete(user.uuid)
-                        .then(function () {
-                          this.alertType = 'success';
-                          this.message = $translate.instant('usersPage.deleteUserSuccess', {
-                            email: user.email
-                          });
-                        }.bind(userResult)).catch(function (response) {
+                        .catch(function (response) {
                           // If the user does not exist in Squared UC do not report an error
                           if (response.status !== 404) {
-                            this.alertType = 'success';
-                            this.message = $translate.instant('usersPage.deleteUserSuccess', {
-                              email: user.email
-                            });
-                          } else {
                             this.alertType = 'danger';
                             this.message = Notification.processErrorResponse(response, 'usersPage.deleteUserError', this);
                           }
@@ -145,19 +132,15 @@ angular.module('Core')
 
                   $q.all(promises).finally(function () {
                     //concatenating the results in an array of strings for notify function
-                    var successes = [];
                     var errors = [];
 
                     for (var idx in resultList) {
-                      if (resultList[idx].alertType === 'success') {
-                        successes.push(resultList[idx].message);
-                      } else {
+                      if (resultList[idx].alertType === 'danger') {
                         errors.push(resultList[idx].message);
                       }
                     }
                     //Displaying notifications
-                    if (successes.length + errors.length === data.userResponse.length) {
-                      Notification.notify(successes, 'success');
+                    if (errors.length > 0) {
                       Notification.notify(errors, 'error');
                     }
 

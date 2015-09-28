@@ -1330,21 +1330,18 @@ angular.module('Core')
       };
 
       $scope.assignDNForConvertUsers = function () {
-        var deferred = $q.defer();
         var didDnDupes = checkDidDnDupes();
         // check for DiD duplicates
         if (didDnDupes.didDupe) {
           Log.debug('Duplicate Direct Line entered.');
           Notification.notify([$translate.instant('usersPage.duplicateDidFound')], 'error');
-          deferred.reject();
-          return deferred.promise;
+          return;
         }
         // check for Dn duplicates
         if (didDnDupes.dnDupe) {
           Log.debug('Duplicate Internal Extension entered.');
           Notification.notify([$translate.instant('usersPage.duplicateDnFound')], 'error');
-          deferred.reject();
-          return deferred.promise;
+          return;
         }
 
         // copy numbers to convertSelectedList
@@ -1368,27 +1365,28 @@ angular.module('Core')
       };
 
       $scope.convertUsersNext = function () {
-        $scope.usrlist = [];
-        angular.forEach($scope.convertSelectedList, function (selectedUser, index) {
-          var user = {};
-          var givenName = "";
-          var familyName = "";
-          if (angular.isDefined(selectedUser.name)) {
-            if (angular.isDefined(selectedUser.name.givenName)) {
-              givenName = selectedUser.name.givenName;
-            }
-            if (angular.isDefined(selectedUser.name.familyName)) {
-              familyName = selectedUser.name.familyName;
-            }
-          }
-          if (angular.isDefined(givenName) || angular.isDefined(familyName)) {
-            user.name = givenName + ' ' + familyName;
-          }
-          user.address = selectedUser.userName;
-          $scope.usrlist.push(user);
-        });
         if ($scope.radioStates.commRadio || $scope.entitlements.ciscoUC) {
           $scope.processing = true;
+          // Copying selected users to user list
+          $scope.usrlist = [];
+          angular.forEach($scope.convertSelectedList, function (selectedUser, index) {
+            var user = {};
+            var givenName = "";
+            var familyName = "";
+            if (angular.isDefined(selectedUser.name)) {
+              if (angular.isDefined(selectedUser.name.givenName)) {
+                givenName = selectedUser.name.givenName;
+              }
+              if (angular.isDefined(selectedUser.name.familyName)) {
+                familyName = selectedUser.name.familyName;
+              }
+            }
+            if (angular.isDefined(givenName) || angular.isDefined(familyName)) {
+              user.name = givenName + ' ' + familyName;
+            }
+            user.address = selectedUser.userName;
+            $scope.usrlist.push(user);
+          });
           activateDID();
           $state.go('users.convert.services.dn');
         } else {
