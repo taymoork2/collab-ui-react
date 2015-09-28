@@ -662,11 +662,22 @@
     function initCallForward() {
       if (vm.directoryNumber.callForwardAll.voicemailEnabled === 'true' || vm.directoryNumber.callForwardAll.destination !== null) {
         vm.cfModel.forward = 'all';
-      } else if ((vm.directoryNumber.callForwardAll.voicemailEnabled === 'false' && vm.directoryNumber.callForwardAll.destination === null && vm.directoryNumber.callForwardBusy.voicemailEnabled === 'false' && vm.directoryNumber.callForwardBusy.intVoiceMailEnabled === 'false' &&
-          vm.directoryNumber.callForwardBusy.destination === null && vm.directoryNumber.callForwardBusy.intDestination === null && vm.directoryNumber.callForwardNoAnswer.voicemailEnabled === 'false' && vm.directoryNumber.callForwardNoAnswer.intVoiceMailEnabled === 'false' &&
-          vm.directoryNumber.callForwardNoAnswer.destination === null && vm.directoryNumber.callForwardNoAnswer.intDestination === null) || (vm.telephonyInfo.voicemail !== 'On' && (vm.directoryNumber.callForwardBusy.intDestination === null || vm.directoryNumber.callForwardBusy.intDestination === undefined) &&
-          (vm.directoryNumber.callForwardBusy.destination === null || vm.directoryNumber.callForwardBusy.destination === undefined))) {
-          vm.cfModel.forward = 'none';
+      } else if ((vm.directoryNumber.callForwardAll.voicemailEnabled === 'false' &&
+          vm.directoryNumber.callForwardAll.destination === null &&
+          vm.directoryNumber.callForwardBusy.voicemailEnabled === 'false' &&
+          vm.directoryNumber.callForwardBusy.intVoiceMailEnabled === 'false' &&
+          vm.directoryNumber.callForwardBusy.destination === null &&
+          vm.directoryNumber.callForwardBusy.intDestination === null &&
+          vm.directoryNumber.callForwardNoAnswer.voicemailEnabled === 'false' &&
+          vm.directoryNumber.callForwardNoAnswer.intVoiceMailEnabled === 'false' &&
+          vm.directoryNumber.callForwardNoAnswer.destination === null &&
+          vm.directoryNumber.callForwardNoAnswer.intDestination === null) ||
+        (vm.telephonyInfo.voicemail !== 'On' &&
+          (vm.directoryNumber.callForwardBusy.intDestination === null ||
+            vm.directoryNumber.callForwardBusy.intDestination === undefined) &&
+          (vm.directoryNumber.callForwardBusy.destination === null ||
+            vm.directoryNumber.callForwardBusy.destination === undefined))) {
+        vm.cfModel.forward = 'none';
       } else {
         vm.cfModel.forward = 'busy';
         if (vm.directoryNumber.callForwardBusy.voicemailEnabled !== vm.directoryNumber.callForwardBusy.intVoiceMailEnabled ||
