@@ -32,7 +32,7 @@
       this.reportObject = reportService.initReportsObject();
 
       $scope.reportPageId = "pageId_underDevelopment";
-      $scope.siteUrl = this.reportObject.siteUrl;
+      $scope.siteUrl = $stateParams.siteUrl; //this.reportObject.siteUrl;
 
       var advancedUrl = Config.getWebexAdvancedHomeUrl(this.reportObject.siteUrl);
 
@@ -41,11 +41,11 @@
       $scope.adminEmailParam = Authinfo.getPrimaryEmail();
       $scope.localeParam = $translate.use();
 
-      $scope.reportPageIframeUrl = $sce.trustAsResourceUrl("https://sjsite14.webex.com/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage");
+      $scope.reportPageIframeUrl = $sce.trustAsResourceUrl("https://jpallapa-mac.webex.com/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage");
 
       $scope.uiSref =
         "webex-reports-iframe({" +
-        "  siteUrl:" + "'" + this.reportObject.siteUrl + "'" + "," +
+        "  siteUrl:" + "'" + $scope.siteUrl + "'" + "," +
         "  reportPageId:" + "'" + $scope.reportPageId + "'" + "," +
         "  reportPageIframeUrl:" + "'" + $scope.reportPageIframeUrl + "'" +
         "})";

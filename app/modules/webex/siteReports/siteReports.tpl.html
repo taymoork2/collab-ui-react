@@ -1,5 +1,3 @@
-
-
 <div id="webexreportDiv"
      name="webexreportDiv">
 
@@ -11,6 +9,17 @@
       <span class="search-title"><h2>Reports</h2></span>
     </div>
   </div>	
+
+  <div id="webexReportBreadCrumbs" class="breadcrumb-container">
+    <ul class="breadcrumbs">
+      <li><a id="webexReportCrumb" ui-sref="site-list" translate="siteList.conferencing"></a></li>
+      <li class="current"><a>{{siteUrl + ' '  + ('webexSiteReports.title' | translate)}}</a></li>
+    </ul>
+  </div>
+
+<!--   <div id="webexReportBreadCrumbs" class="breadcrumb-container">
+    <cs-breadcrumbs displayname-property="data.displayName"></cs-breadcrumbs>
+  </div> -->
   
   <div id="errSection"
        name="errSection"
@@ -79,7 +88,7 @@
 
   -->
 
-<a ui-sref="{{uiSref}}">
+<a id="siteAdminReportsLink" ui-sref="{{uiSref}}">
                                   test
 </a>
 

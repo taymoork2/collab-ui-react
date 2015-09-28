@@ -586,6 +586,9 @@ angular
           parent: 'main',
           params: {
             siteUrl: null
+          },
+          data: {
+            displayName: 'Reports Page1'
           }
         })
         .state('webex-reports-iframe', {
@@ -598,6 +601,9 @@ angular
             siteUrl: null,
             reportPageId: null,
             reportPageIframeUrl: null
+          },
+          data: {
+            displayName: 'Reports Page2'
           }
         })
         .state('templates', {
