@@ -190,7 +190,6 @@
             } else if (tooManyResults) {
               Log.debug('Query existing users yielded too many search results. Status: ' + status);
               Notification.notify([$translate.instant('usersPage.tooManyResultsError')], 'error');
-
             } else {
               Log.debug('Query existing users failed. Status: ' + status);
               Notification.notify([$translate.instant('usersPage.userListError')], 'error');
