@@ -3,9 +3,9 @@
 
   angular
     .module('uc.autoattendant')
-    .controller('AASayCtrl', AASayCtrl);
+    .controller('AASayMessageCtrl', AASayMessageCtrl);
 
-  function AASayCtrl($scope, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService) {
+  function AASayMessageCtrl($scope, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService) {
 
     var vm = this;
 

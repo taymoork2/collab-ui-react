@@ -12,8 +12,8 @@
 
     vm.templates = [{
       title: $translate.instant('autoAttendant.actionSayMessage'),
-      controller: 'AASayCtrl as aaSay',
-      url: 'modules/huron/callRouting/autoAttendant/aaSay.tpl.html',
+      controller: 'AASayMessageCtrl as aaSay',
+      url: 'modules/huron/callRouting/autoAttendant/aaSayMessage.tpl.html',
       help: ''
     }, {
       title: $translate.instant('autoAttendant.actionPhoneMenu'),

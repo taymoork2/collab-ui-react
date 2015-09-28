@@ -18,7 +18,7 @@
     /////////////////////
 
     function getScheduleTitle() {
-      if (!vm.closedHours && !vm.holidays) {
+      if (!vm.ui.isClosedHours && !vm.ui.isHolidays) {
         return "autoAttendant.scheduleAllDay";
       }
 

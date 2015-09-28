@@ -15,6 +15,9 @@
     vm.saveAARecords = saveAARecords;
     vm.canSaveAA = canSaveAA;
     vm.getSaveErrorMessages = getSaveErrorMessages;
+    vm.selectAA = selectAA;
+    vm.populateUiModel = populateUiModel;
+    vm.saveUiModel = saveUiModel;
 
     /////////////////////
 
@@ -39,21 +42,48 @@
 
     }
 
+    function populateUiModel() {
+      vm.ui.ceInfo = AutoAttendantCeInfoModelService.getCeInfo(vm.aaModel.aaRecord);
+
+      vm.ui.openHours = vm.ui.openHours || AutoAttendantCeMenuModelService.getCombinedMenu(vm.aaModel.aaRecord, 'openHours');
+      vm.ui.closedHours = vm.ui.closedHours || AutoAttendantCeMenuModelService.getCombinedMenu(vm.aaModel.aaRecord, 'closedHours');
+      vm.ui.holidays = vm.ui.holidays || AutoAttendantCeMenuModelService.getCombinedMenu(vm.aaModel.aaRecord, 'holidays');
+      vm.ui.isOpenHours = true;
+      if (!angular.isDefined(vm.ui.openHours)) {
+        vm.ui.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+        vm.ui.openHours.setType('MENU_WELCOME');
+      }
+      vm.ui.isClosedHours = false;
+      vm.ui.isHolidays = false;
+      if (angular.isDefined(vm.ui.closedHours) && vm.ui.closedHours.entries.length > 0) {
+        vm.ui.isClosedHours = true;
+      } else {
+        vm.ui.closedHours = AutoAttendantCeMenuModelService.newCeMenu();
+        vm.ui.closedHours.setType('MENU_WELCOME');
+      }
+      if (angular.isDefined(vm.ui.holidays) && vm.ui.holidays.entries.length > 0) {
+        vm.ui.isHolidays = true;
+      } else {
+        vm.ui.holidays = AutoAttendantCeMenuModelService.newCeMenu();
+        vm.ui.holidays.setType('MENU_WELCOME');
+      }
+    }
+
     function saveUiModel() {
       if (angular.isDefined(vm.ui.ceInfo) && angular.isDefined(vm.ui.ceInfo.getName()) && vm.ui.ceInfo.getName().length > 0) {
         AutoAttendantCeInfoModelService.setCeInfo(vm.aaModel.aaRecord, vm.ui.ceInfo);
       }
-      if (vm.ui.openHoursFlag && angular.isDefined(vm.ui.openHours)) {
+      if (vm.ui.isOpenHours && angular.isDefined(vm.ui.openHours)) {
         AutoAttendantCeMenuModelService.updateCombinedMenu(vm.aaModel.aaRecord, 'openHours', vm.ui.openHours);
       }
-      if (vm.ui.closedHoursFlag && angular.isDefined(vm.ui.closedHours)) {
+      if (vm.ui.isClosedHours && angular.isDefined(vm.ui.closedHours)) {
         AutoAttendantCeMenuModelService.updateCombinedMenu(vm.aaModel.aaRecord, 'closedHours', vm.ui.closedHours);
       } else {
         vm.ui.closedHours = AutoAttendantCeMenuModelService.newCeMenu();
         vm.ui.closedHours.setType('MENU_WELCOME');
         AutoAttendantCeMenuModelService.updateCombinedMenu(vm.aaModel.aaRecord, 'closedHours', vm.ui.closedHours);
       }
-      if (vm.ui.holidaysFlag && angular.isDefined(vm.ui.holidays)) {
+      if (vm.ui.isHolidays && angular.isDefined(vm.ui.holidays)) {
         AutoAttendantCeMenuModelService.updateCombinedMenu(vm.aaModel.aaRecord, 'holidays', vm.ui.holidays);
       } else {
         vm.ui.holidays = AutoAttendantCeMenuModelService.newCeMenu();
@@ -131,63 +161,7 @@
     }
 
     function canSaveAA() {
-      vm.errorMessages = [];
-      if (angular.isUndefined(vm.ui.ceInfo)) {
-        return false;
-      }
-
       var canSave = true;
-
-      // AA name is missing
-      if (angular.isUndefined(vm.ui.ceInfo.getName()) || vm.ui.ceInfo.getName().length === 0) {
-        vm.errorMessages.push($translate.instant('autoAttendant.invalidNameMissing'));
-        canSave = false;
-      } else if ($stateParams.aaName === '') {
-        // AA name unique on create
-        var isNameInUse = false;
-        isNameInUse = vm.aaModel.aaRecords.some(function(record) {
-          return record.callExperienceName === vm.ui.ceInfo.getName();
-        });
-        if (isNameInUse) {
-          vm.errorMessages.push($translate.instant('autoAttendant.invalidNameNotUnique'));
-          canSave = false;
-        }
-      }
-
-      // Custom present but not configured
-      var menuEntry;
-      if (vm.ui.showCustomMenu && angular.isDefined(vm.ui.customMenu)) {
-        menuEntry = vm.ui.customMenu.entries[0];
-        if (angular.isUndefined(menuEntry) || !menuEntry.isConfigured) {
-          vm.errorMessages.push($translate.instant('autoAttendant.invalidCustomMenuIncomplete'));
-          canSave = false;
-        }
-      }
-
-      // Menu present but not configured
-      if (vm.ui.showOptionMenu && angular.isDefined(vm.ui.optionMenu)) {
-        menuEntry = vm.ui.optionMenu.headers[0]; // annoucement
-        if (angular.isUndefined(menuEntry) || !menuEntry.isConfigured) {
-          vm.errorMessages.push($translate.instant('autoAttendant.invalidMenuAnnoucementMissing'));
-          canSave = false;
-        }
-        menuEntry = vm.ui.optionMenu.headers[1]; //invalid input
-        if (angular.isUndefined(menuEntry) || !menuEntry.isConfigured) {
-          vm.errorMessages.push($translate.instant('autoAttendant.invalidMenuDefaultMissing'));
-          canSave = false;
-        }
-
-        // at least one menu option is required
-        var isOneMenuOptionConfigured = false;
-        isOneMenuOptionConfigured = vm.ui.optionMenu.entries.some(function(entry) {
-          return angular.isDefined(entry) && entry.isConfigured;
-        });
-        if (!isOneMenuOptionConfigured) {
-          vm.errorMessages.push($translate.instant('autoAttendant.invalidMenuMinimumOption'));
-          canSave = false;
-        }
-      }
-
       return canSave;
     }
 
@@ -214,30 +188,7 @@
                   // dn number is officialy stored in ceDefintion.
                   vm.aaModel.aaRecord.assignedResources = angular.copy(vm.aaModel.aaRecords[i].assignedResources);
                   //
-
-                  vm.ui.ceInfo = AutoAttendantCeInfoModelService.getCeInfo(vm.aaModel.aaRecord);
-                  vm.ui.openHours = vm.ui.openHours || AutoAttendantCeMenuModelService.getCombinedMenu(vm.aaModel.aaRecord, 'openHours');
-                  vm.ui.closedHours = vm.ui.closedHours || AutoAttendantCeMenuModelService.getCombinedMenu(vm.aaModel.aaRecord, 'closedHours');
-                  vm.ui.holidays = vm.ui.holidays || AutoAttendantCeMenuModelService.getCombinedMenu(vm.aaModel.aaRecord, 'holidays');
-                  vm.ui.openHoursFlag = true;
-                  if (!angular.isDefined(vm.ui.openHours)) {
-                    vm.ui.openHours = AutoAttendantCeMenuModelService.newCeMenu();
-                    vm.ui.openHours.setType('MENU_WELCOME');
-                  }
-                  vm.ui.closedHoursFlag = false;
-                  vm.ui.holidaysFlag = false;
-                  if (angular.isDefined(vm.ui.closedHours) && vm.ui.closedHours.entries.length > 0) {
-                    vm.ui.closedHoursFlag = true;
-                  } else {
-                    vm.ui.closedHours = AutoAttendantCeMenuModelService.newCeMenu();
-                    vm.ui.closedHours.setType('MENU_WELCOME');
-                  }
-                  if (angular.isDefined(vm.ui.holidays) && vm.ui.holidays.entries.length > 0) {
-                    vm.ui.holidaysFlag = true;
-                  } else {
-                    vm.ui.holidays = AutoAttendantCeMenuModelService.newCeMenu();
-                    vm.ui.holidays.setType('MENU_WELCOME');
-                  }
+                  vm.populateUiModel();
                 },
                 function(response) {
                   Notification.error('autoAttendant.errorReadCe', {
@@ -252,30 +203,7 @@
           }
         }
       }
-      vm.ui.ceInfo = AutoAttendantCeInfoModelService.getCeInfo(vm.aaModel.aaRecord);
-
-      vm.ui.openHours = vm.ui.openHours || AutoAttendantCeMenuModelService.getCombinedMenu(vm.aaModel.aaRecord, 'openHours');
-      vm.ui.closedHours = vm.ui.closedHours || AutoAttendantCeMenuModelService.getCombinedMenu(vm.aaModel.aaRecord, 'closedHours');
-      vm.ui.holidays = vm.ui.holidays || AutoAttendantCeMenuModelService.getCombinedMenu(vm.aaModel.aaRecord, 'holidays');
-      vm.ui.openHoursFlag = true;
-      if (!angular.isDefined(vm.ui.openHours)) {
-        vm.ui.openHours = AutoAttendantCeMenuModelService.newCeMenu();
-        vm.ui.openHours.setType('MENU_WELCOME');
-      }
-      vm.ui.closedHoursFlag = false;
-      vm.ui.holidaysFlag = false;
-      if (angular.isDefined(vm.ui.closedHours) && vm.ui.closedHours.entries.length > 0) {
-        vm.ui.closedHoursFlag = true;
-      } else {
-        vm.ui.closedHours = AutoAttendantCeMenuModelService.newCeMenu();
-        vm.ui.closedHours.setType('MENU_WELCOME');
-      }
-      if (angular.isDefined(vm.ui.holidays) && vm.ui.holidays.entries.length > 0) {
-        vm.ui.holidaysFlag = true;
-      } else {
-        vm.ui.holidays = AutoAttendantCeMenuModelService.newCeMenu();
-        vm.ui.holidays.setType('MENU_WELCOME');
-      }
+      vm.populateUiModel();
     }
 
     function activate() {

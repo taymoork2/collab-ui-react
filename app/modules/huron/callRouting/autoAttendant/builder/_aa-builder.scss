@@ -175,6 +175,19 @@
   }
 }
 
+.aa-action-delete {
+  margin-left: auto;
+  .menu-delete-icon-md {
+    @extend .icon;
+    @extend .icon-close;
+    font-size: 20px;
+    &:hover {
+      cursor: pointer;
+      color: $brand-primary;
+    }
+  }
+}
+
 .aa-flex-vertical-line {
   border-left: 1px solid $brand-default;
   min-height: 30px;
