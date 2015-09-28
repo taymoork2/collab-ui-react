@@ -25,14 +25,28 @@
     function activate() {
       HttpUtils.setTrackingID().then(function () {
         if (vm.otp === 'new') {
-          return OtpService.generateOtp(vm.userName).then(function (otpObj) {
+          OtpService.generateOtp(vm.userName).then(function (otpObj) {
             vm.otp = otpObj;
             vm.timeLeft = moment(vm.otp.expiresOn).fromNow(true);
-            vm.qrCodeUrl = OtpService.getQrCodeUrl(otpObj.code);
+            return vm.otp.code;
           });
         } else {
           vm.timeLeft = moment(vm.otp.expiresOn).fromNow(true);
-          vm.qrCodeUrl = OtpService.getQrCodeUrl(vm.otp.code);
+          return vm.otp.code;
+        }
+
+      })
+      .then(function (code) {
+        if (code !== '' && code !== undefined) {
+          OtpService.getQrCodeUrl(code).then(function (qrcode) {
+            var arrayData = '';
+            for (var i in Object.keys(qrcode)) {
+              if (qrcode.hasOwnProperty(i)) {
+                arrayData += qrcode[i];
+              }
+            }
+            vm.qrCodeUrl = arrayData;
+          });
         }
       });
     }

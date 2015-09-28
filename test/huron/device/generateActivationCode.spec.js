@@ -2,11 +2,10 @@
 
 describe('Controller: GenerateActivationCodeCtrl', function () {
   var controller, $scope, $state, $httpBackend, HuronConfig, ActivationCodeEmailService, Notification;
-
   beforeEach(module('Huron'));
 
   var OtpService = {
-    getQrCodeUrl: sinon.stub(),
+    getQrCodeUrl: sinon.stub().fulfills(getJSONFixture('huron/json/device/otps/qrcode.json')),
     generateOtp: sinon.stub().fulfills(getJSONFixture('huron/json/device/otps/0001000200030004.json'))
   };
 
