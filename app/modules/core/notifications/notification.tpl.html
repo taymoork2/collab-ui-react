@@ -1,9 +1,0 @@
-<div class="panel panel-{{type}} notification-panel">
-  <div class="panel-heading panel-notification-heading">
-    <h3 class="panel-title">
-      <i class="icon" ng-class="{'icon-error': type === 'danger', 'icon-check': type === 'success'}"></i><span translate="{{getTitle()}}"></span><i id="notifications-cancel" class="icon icon-close pull-right" ng-click="close(index)"></i>
-    </h3>
-  </div>
-  <div class="panel-body panel-{{type}}-body" ng-transclude>
-  </div>
-</div>
