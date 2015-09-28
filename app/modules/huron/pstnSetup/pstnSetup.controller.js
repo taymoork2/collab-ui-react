@@ -5,7 +5,7 @@
     .controller('PstnSetupCtrl', PstnSetupCtrl);
 
   /* @ngInject */
-  function PstnSetupCtrl($scope, $q, $window, $translate, $state, $stateParams, PstnSetupService, ValidationService, Notification) {
+  function PstnSetupCtrl($scope, $q, $window, $translate, $state, $stateParams, PstnSetupService, ValidationService, Notification, TerminusStateService) {
     var vm = this;
     var customerExists = false;
     var hasCarriers = false;
@@ -13,9 +13,11 @@
     vm.customerName = $stateParams.customerName;
     vm.loading = true;
     vm.model = {
+      state: '',
       areaCode: '',
       quantity: ''
     };
+    vm.areaCodeOptions = [];
     vm.blockOrders = [];
     vm.blockOrderTotals = 0;
 
@@ -41,24 +43,51 @@
       type: 'inline',
       templateOptions: {
         fields: [{
-          type: 'input',
+          type: 'select',
+          key: 'state',
+          templateOptions: {
+            label: $translate.instant('pstnSetup.state'),
+            options: [],
+            labelfield: 'name',
+            valuefield: 'abbreviation',
+            onChangeFn: getStateInventory,
+            placeholder: $translate.instant('pstnSetup.selectState'),
+            inputPlaceholder: $translate.instant('pstnSetup.searchStates'),
+            filter: true
+          },
+          controller: /* @ngInject */ function ($scope) {
+            TerminusStateService.query().$promise.then(function (states) {
+              $scope.to.options = states;
+            });
+          }
+        }, {
+          type: 'select',
           key: 'areaCode',
           id: 'areaCode',
           templateOptions: {
             label: $translate.instant('pstnSetup.areaCode'),
-            type: 'text'
+            options: [],
+            labelfield: 'code',
+            valuefield: 'code',
+            placeholder: $translate.instant('pstnSetup.selectAreaCode'),
+            inputPlaceholder: $translate.instant('pstnSetup.searchAreaCodes'),
+            filter: true
           },
-          validators: {
-            numeric: {
-              expression: ValidationService.numeric,
-              message: function () {
-                return $translate.instant('validation.numeric');
-              }
-            }
+          controller: /* @ngInject */ function ($scope) {
+            $scope.$watchCollection(function () {
+              return vm.areaCodeOptions;
+            }, function (newAreaCodes) {
+              newAreaCodes = newAreaCodes || [];
+              $scope.to.options = _.sortBy(newAreaCodes, 'code');
+            });
+            $scope.$watch(function () {
+              return vm.model.areaCode;
+            }, function (newAreaCode) {
+              $scope.to.helpText = $translate.instant('pstnSetup.numbers', {
+                count: (newAreaCode && newAreaCode.count) ? newAreaCode.count : 0
+              }, 'messageformat');
+            });
           }
-        }, {
-          noFormControl: true,
-          template: '<div class="label-height-offset">' + $translate.instant('common.and') + '</div>'
         }, {
           type: 'input',
           key: 'quantity',
@@ -79,11 +108,11 @@
           type: 'button',
           key: 'addBtn',
           templateOptions: {
-            btnClass: 'btn-primary',
+            btnClass: 'btn-primary label-height-offset',
             label: $translate.instant('common.add'),
             onClick: function (options, scope) {
               vm.blockOrders.push({
-                areaCode: scope.model.areaCode,
+                areaCode: scope.model.areaCode.code,
                 quantity: scope.model.quantity
               });
               resetForm();
@@ -116,7 +145,7 @@
     }
 
     function resetForm() {
-      vm.model.areaCode = vm.model.quantity = '';
+      vm.model.quantity = '';
       if (vm.form) {
         vm.form.$setPristine();
         vm.form.$setUntouched();
@@ -136,6 +165,14 @@
         customerOrgId: vm.customerId,
         customerOrgName: vm.customerName
       }));
+    }
+
+    function getStateInventory() {
+      PstnSetupService.getCarrierInventory(vm.provider.uuid, vm.model.state.abbreviation)
+        .then(function (response) {
+          vm.areaCodeOptions = response.areaCodes;
+          vm.model.areaCode = '';
+        });
     }
 
     function init() {

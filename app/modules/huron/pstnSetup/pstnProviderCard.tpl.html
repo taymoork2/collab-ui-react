@@ -1,15 +1,19 @@
-<div class="pstn-provider-card">
-  <div class="logo">
+<cs-card class="cs-card medium header-border pstn-provider-card">
+  <article>
+  <header class="align-center">
     <img ng-src="{{::logoSrc}}" alt="{{::logoAlt}}">
-  </div>
-  <div class="features">
-    <h5 class="feature-title">{{::featureTitle}}</h5>
-    <div ng-repeat="feature in featureList" class="feature">
-      <i class="icon icon-check"></i>
-      <span class="feature-text" ng-bind-html="feature"></span>
+  </header>
+  <section>
+    <h4>{{::featureTitle}}</h4>
+    <div class="card-checkbox">
+      <div ng-repeat="feature in featureList" class="feature">
+        <i class="icon icon-check"></i>
+        <span class="feature-text" ng-bind-html="feature"></span>
+      </div>
     </div>
-  </div>
-  <div class="footer">
+  </section>
+  <footer>
     <button class="btn btn-info" ng-click="onSelect()" translate="common.select"></button>
-  </div>
-</div>
+  </footer>
+  </article>
+</cs-card>

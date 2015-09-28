@@ -7,7 +7,7 @@
     <div class="loading" ng-if="pstnSetup.loading">
       <i class="icon icon-spinner"></i>
     </div>
-    <div class="pstn-provider-cards" ng-if="!pstnSetup.loading">
+    <div class="cs-card-block" ng-if="!pstnSetup.loading">
       <uc-pstn-provider-card ng-repeat="provider in pstnSetup.providers" logo-src="provider.logoSrc" logo-alt="provider.logoAlt" feature-title="provider.title" feature-list="provider.features" on-select="pstnSetup.selectProvider(provider);provider.selectFn()"></uc-pstn-provider-card>
     </div>
 

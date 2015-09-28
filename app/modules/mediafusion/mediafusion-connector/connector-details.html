@@ -19,7 +19,7 @@
               Cluster
             </div>
             <div class="col-sm-6">
-              <input class="form-control" type="text" id="sm" ng-model="selectedCluster" typeahead="cluster for cluster in clusters | filter:$viewValue | limitTo:8">
+              <input class="form-control" type="text" id="sm" ng-model="displayName" typeahead="group.displayName for group in groups | filter:$viewValue | limitTo:8" typeahead-on-select="selectGroup($item)" placeholder="Assign Cluster">  
             </div>
         </div> 
       </div>    

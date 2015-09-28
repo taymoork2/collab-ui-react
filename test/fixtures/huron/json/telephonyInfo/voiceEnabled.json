@@ -24,6 +24,7 @@
   "singleNumberReach": "Off",
   "siteCode": "100",
   "siteSteeringDigit": "8",
+  "steeringDigit": "9",
   "snrInfo": {
     "destination": null,
     "remoteDestinations": [],

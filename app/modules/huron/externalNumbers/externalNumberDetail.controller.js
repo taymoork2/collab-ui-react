@@ -5,7 +5,7 @@
     .controller('ExternalNumberDetailCtrl', ExternalNumberDetail);
 
   /* @ngInject */
-  function ExternalNumberDetail($stateParams, $translate, $q, ExternalNumberService, ModalService, ExternalNumberPool, PstnSetupService, Notification) {
+  function ExternalNumberDetail($stateParams, $translate, $q, ExternalNumberService, ModalService, PstnSetupService, Notification) {
     var vm = this;
     vm.currentCustomer = $stateParams.currentCustomer;
 
@@ -54,7 +54,7 @@
         dismiss: $translate.instant('common.no'),
         type: 'danger'
       }).result.then(function () {
-        return ExternalNumberPool.deletePool(vm.currentCustomer.customerOrgId, number.uuid)
+        return ExternalNumberService.deleteNumber(vm.currentCustomer.customerOrgId, number)
           .then(function () {
             Notification.success('notifications.successDelete', {
               item: number.pattern

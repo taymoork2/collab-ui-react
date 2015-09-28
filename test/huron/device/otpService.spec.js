@@ -93,8 +93,10 @@ describe('Service: OtpService', function () {
       expect(OtpService.convertExpiryTime).toBeDefined();
     });
 
-    it('should return the correct time zone conversion (America/Los_Angeles)', function () {
-      expect(OtpService.convertExpiryTime('2015-01-23 03:16:43.327', 'America/Los_Angeles')).toEqual('01/23/15 3:16AM');
+    it('should return the correct local browser time zone conversion', function () {
+      var expiryTime = '2015-09-28 20:23:15.13';
+      var utcTimeToLocal = moment.utc(expiryTime).local().format('MM/DD/YY h:mmA');
+      expect(OtpService.convertExpiryTime(expiryTime)).toEqual(utcTimeToLocal);
     });
   });
 

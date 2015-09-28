@@ -1,0 +1,37 @@
+.ccc-channel-feature {
+  flex: 1;
+  display: flex;
+  line-height: $feature-line-height;
+  padding: 0 $side-panel-padding;
+  margin: 0 #{-$side-panel-padding};
+  .feature-icon {
+    @extend .icon;
+    font-size: 1.7rem;
+    margin-right: 13px;
+    line-height: $feature-line-height;
+    &:before {
+      content: $icon-cisco-logo;
+      line-height: $feature-line-height;
+    }
+  }
+}
+
+.feature-icon {
+
+  #chat & {
+    &:before {
+      content: $icon-circle-message;
+    }
+  }
+  #voice & {
+    &:before {
+      content: $icon-circle-call;
+    }
+  }
+  #email & {
+    &:before {
+      content: $icon-circle-email;
+    }
+  }
+
+}
