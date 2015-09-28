@@ -10,7 +10,6 @@
     // Interface ---------------------------------------------------------------
 
     // Internal storage
-    var userId = null;
     var users = null;
     var partnerAdmins = null;
 
@@ -18,7 +17,6 @@
       getCiAdmins: getCiAdmins,
       getCiNonAdmins: getCiNonAdmins,
       getCiOrgInfo: getCiOrgInfo,
-      getUserId: getUserId,
       isLoggedInToPartnerPortal: isLoggedInToPartnerPortal,
       isPartnerAdmin: isPartnerAdmin
     };
@@ -34,7 +32,6 @@
     // Implementation ----------------------------------------------------------
 
     function init() {
-      getUserId();
       getPartnerAdmins();
     }
 
@@ -48,6 +45,9 @@
       }, {
         key: 'Email',
         value: Authinfo.getEmail()
+      }, {
+        key: 'User ID',
+        value: Authinfo.getUserId()
       }, {
         key: 'Primary Email',
         value: Authinfo.getPrimaryEmail()
@@ -148,26 +148,6 @@
       }, '', getAdmins);
     }
 
-    function getUserId() {
-      var defer = $q.defer();
-
-      // Cache result
-      if (null === userId) {
-        Userservice.getUser('me', function (data, status) {
-          if (data.success && data.id) {
-            userId = data.id;
-            defer.resolve(userId);
-          } else {
-            defer.reject('Error getting logged in user ID: Status ' + status + ': ' + JSON.stringify(data));
-          }
-        });
-      } else {
-        defer.resolve(userId);
-      }
-
-      return defer.promise;
-    }
-
     function isLoggedInToPartnerPortal() {
       return Authinfo.getRoles().indexOf('PARTNER_ADMIN') > -1;
     }
@@ -175,27 +155,20 @@
     function isPartnerAdmin() {
       var defer = $q.defer();
 
-      // Get user ID, then check if it's in the partner admin list
-      getUserId()
-        .then(function (userId) {
-          getPartnerAdmins()
-            .then(function (admins) {
-              var partnerFound = false;
+      // Check if user ID is in the partner admin list
+      getPartnerAdmins()
+        .then(function (admins) {
+          var partnerFound = false;
 
-              // Check for user ID in admin list
-              for (var partner in admins) {
-                if (userId === admins[partner].id) {
-                  partnerFound = true;
-                  break;
-                }
-              }
+          // Check for user ID in admin list
+          for (var partner in admins) {
+            if (Authinfo.getUserId() === admins[partner].id) {
+              partnerFound = true;
+              break;
+            }
+          }
 
-              defer.resolve(partnerFound);
-            }, function (errorMsg) {
-              var error = 'Error checking if user is a partner admin: ' + errorMsg;
-              window.console.error(error);
-              defer.reject(error);
-            });
+          defer.resolve(partnerFound);
         }, function (errorMsg) {
           var error = 'Error checking if user is a partner admin: ' + errorMsg;
           window.console.error(error);

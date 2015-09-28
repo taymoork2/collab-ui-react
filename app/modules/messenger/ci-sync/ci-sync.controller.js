@@ -83,10 +83,10 @@
 
     // Event handlers
     vm.isDirSync = SyncService.isDirSync;
+    vm.patchSync = patchSync;
+    vm.refreshStatus = refreshStatus;
     vm.setOrgAdmin = setOrgAdmin;
     vm.setOpsAdmin = setOpsAdmin;
-    vm.refreshStatus = refreshStatus;
-    vm.updateSync = updateSync;
 
     vm.init();
 
@@ -120,19 +120,19 @@
     function getSyncStatus() {
       SyncService.getSyncStatus()
         .then(function (status) {
-          // Update data from service
-          vm.syncInfo.messengerOrgId = status.urdbOrgId;
-          vm.syncInfo.messengerOrgName = status.urdbOrgName;
-          vm.syncInfo.linkDate = status.linkDate;
-          vm.syncInfo.isSyncing = SyncService.isSyncing();
-          vm.syncInfo.isAuthRedirect = status.authRedirect;
+          vm.syncInfo = status;
         }, function (errorMsg) {
           window.console.error('Error getting CI sync status: ' + errorMsg);
         });
     }
 
     function refreshStatus() {
-      getSyncStatus();
+      SyncService.refreshSyncStatus()
+        .then(function (status) {
+          vm.syncInfo = status;
+        }, function (errorMsg) {
+          window.console.error('Error REFRESHING CI sync status: ' + errorMsg);
+        });
     }
 
     function setOrgAdmin() {
@@ -143,11 +143,11 @@
       vm.adminType = vm.adminTypes.ops;
     }
 
-    function updateSync() {
+    function patchSync() {
       // Double-check that they are ops for security
       if (vm.adminTypes.ops === vm.adminType) {
         // SyncService must turn the syncing boolean into the full mode
-        SyncService.updateSync(vm.syncInfo.isSyncing, vm.syncInfo.isAuthRedirect);
+        SyncService.patchSync(vm.syncInfo.isSyncing, vm.syncInfo.isAuthRedirect);
       }
     }
   }
