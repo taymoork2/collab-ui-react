@@ -113,16 +113,16 @@ angular.module('Core')
       };
 
       $scope.syncNow = function () {
-        angular.element('#syncNowBtn').button('loading');
+        $scope.syncNowLoad = true;
         DirSyncService.syncUsers(500, function (data, status) {
           if (data.success) {
-            angular.element('#syncNowBtn').button('reset');
+            $scope.syncNowLoad = false;
             Log.debug('DirSync started successfully. Status: ' + status);
             Notification.notify([$translate.instant('dirsyncModal.dirsyncSuccess', {
               status: status
             })], 'success');
           } else {
-            angular.element('#syncNowBtn').button('reset');
+            $scope.syncNowLoad = false;
             Log.debug('Failed to start directory sync. Status: ' + status);
             Notification.notify([$translate.instant('dirsyncModal.dirsyncFailed', {
               status: status

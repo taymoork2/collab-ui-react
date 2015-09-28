@@ -152,6 +152,15 @@
         background: $brand-primary;
         color: $gray-lightest;
         white-space: nowrap;
+
+        i {
+          cursor: pointer;
+          padding-left: 5px
+        }
+      }
+
+      .displayNamefilter {
+        background: $brand-info;
       }
 
       .search-icon {

@@ -309,7 +309,7 @@
         } else {
           Log.debug('Resending failed. Status: ' + status);
           Notification.notify([$translate.instant('usersPage.emailError')], 'error');
-          angular.element('#btnSave').button('reset');
+          $scope.btnSaveLoad = false;
         }
       });
     }
