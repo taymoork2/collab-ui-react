@@ -54,7 +54,7 @@
       //host: '127.0.0.1',
       port: 8080,
       api: '/admin-service/messenger/admin/api/v1/orgs/' + Authinfo.getOrgId() + '/cisync/'
-      //api: '/admin-service/messenger/admin/api/v1/orgs/2d23d582-5830-4bab-9d98-3e428d790e58/cisync/'
+        //api: '/admin-service/messenger/admin/api/v1/orgs/2d23d582-5830-4bab-9d98-3e428d790e58/cisync/'
     };
 
     var serviceUrl = msgrService.protocol + msgrService.host + ':' + msgrService.port + msgrService.api;

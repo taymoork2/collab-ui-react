@@ -6,9 +6,11 @@
     .controller('CiSyncCtrl', CiSyncCtrl);
 
   /** @ngInject */
-  function CiSyncCtrl(Authinfo, Config, CiService, SyncService) {
+  function CiSyncCtrl($translate, Authinfo, Config, CiService, SyncService) {
     // Interface ---------------------------------------------------------------
     var vm = this;
+
+    var translatePrefix = 'messengerCiSync.';
 
     vm.statusOptions = Object.freeze({
       on: {
@@ -31,13 +33,18 @@
     });
 
     // Public
-    vm.title = 'Messenger CI Sync';
     vm.isDirSync = false;
     vm.status = vm.statusOptions.on;
     vm.ciAdmins = [];
     vm.ciUsers = [];
     vm.ciData = CiService.getCiOrgInfo();
     vm.dev = Config.isDev() && ('testAtlasMsgr' === Authinfo.getOrgName());
+
+    // Translated text
+    vm.refresh = $translate.instant(translatePrefix + 'refresh');
+    vm.syncStatusTooltip = $translate.instant(translatePrefix + 'syncStatusTooltip');
+    vm.authRedirectTooltip = $translate.instant(translatePrefix + 'authRedirectTooltip');
+    vm.patchSyncButtonText = $translate.instant(translatePrefix + 'patchSyncButtonText');
 
     vm.syncInfo = {
       messengerOrgName: 'Unknown',

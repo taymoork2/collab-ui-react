@@ -258,8 +258,8 @@ angular.module('Core')
             state: 'callRouter',
             link: '#callRouter'
           }, {
-            title: 'Messenger',
-            desc: 'Messenger Administration',
+            title: 'tabs.messengerTab',
+            desc: 'tabs.messengerTabDesc',
             state: 'messenger',
             link: '#messenger'
           }]
