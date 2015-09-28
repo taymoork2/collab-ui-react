@@ -74,5 +74,8 @@ describe('Controller: ReportsCtrl', function () {
   it('scope should contain admin email', function () {
     expect($scope.adminEmailParam).toEqual("mojoco@webex.com");
   });
+  it('scope should contain the site url', function () {
+    expect($scope.siteUrl).toEqual("go.webex.com");
+  });
 
 });
