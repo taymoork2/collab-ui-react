@@ -266,15 +266,10 @@
   })
 
   .factory('HermesQRCodeService', function ($resource, HuronConfig) {
-    return $resource(HuronConfig.getOcelotUrl() + '/:getqrima/encoded', {
+    return $resource(HuronConfig.getEmailUrl() + '/:getqrima/encoded', {
       getqrima: 'getqrimage',
       oneTimePassword: '@oneTimePassword'
-    }, {
-      'query': {
-        method: 'GET',
-        isArray: false
-      }
-    });
+    }, {});
   });
 
 })();

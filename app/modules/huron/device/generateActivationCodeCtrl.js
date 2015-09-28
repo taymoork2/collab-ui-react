@@ -21,34 +21,35 @@
     vm.activateEmail = activateEmail;
     vm.sendActivationCodeEmail = sendActivationCodeEmail;
     vm.clipboardFallback = clipboardFallback;
+    vm.setQRCode = setQRCode;
 
     function activate() {
       HttpUtils.setTrackingID().then(function () {
         if (vm.otp === 'new') {
-          OtpService.generateOtp(vm.userName).then(function (otpObj) {
+          return OtpService.generateOtp(vm.userName).then(function (otpObj) {
             vm.otp = otpObj;
             vm.timeLeft = moment(vm.otp.expiresOn).fromNow(true);
-            return vm.otp.code;
+            setQRCode(vm.otp.code);
           });
         } else {
           vm.timeLeft = moment(vm.otp.expiresOn).fromNow(true);
-          return vm.otp.code;
-        }
-
-      })
-      .then(function (code) {
-        if (code !== '' && code !== undefined) {
-          OtpService.getQrCodeUrl(code).then(function (qrcode) {
-            var arrayData = '';
-            for (var i in Object.keys(qrcode)) {
-              if (qrcode.hasOwnProperty(i)) {
-                arrayData += qrcode[i];
-              }
-            }
-            vm.qrCodeUrl = arrayData;
-          });
+          setQRCode(vm.otp.code);
         }
       });
+    }
+
+    function setQRCode(code) {
+      if (angular.isDefined(code) && angular.toString(code).length > 0) {
+        OtpService.getQrCodeUrl(code).then(function (qrcode) {
+          var arrayData = '';
+          for (var i in Object.keys(qrcode)) {
+            if (qrcode.hasOwnProperty(i)) {
+              arrayData += qrcode[i];
+            }
+          }
+          vm.qrCodeUrl = arrayData;
+        });
+      }
     }
 
     function activateEmail() {

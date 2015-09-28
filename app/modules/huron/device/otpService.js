@@ -71,12 +71,10 @@
     }
 
     function getQrCodeUrl(activationCode) {
-      return HermesQRCodeService.query({
+      return HermesQRCodeService.get({
           oneTimePassword: activationCode
         })
-        .$promise.then(function (response) {
-          return response;
-        });
+        .$promise;
     }
 
   }
