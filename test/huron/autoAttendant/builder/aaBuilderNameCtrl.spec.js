@@ -90,7 +90,10 @@ describe('Controller: aaBuilderNameCtrl', function () {
       controller.ui.ceInfo = ce2CeInfo(rawCeInfo);
     });
 
-    /*it('should save a new aaRecord successfully', function () {
+    /*  Commented out as code references AutoAttendant.saveAARecords()
+     *
+     *
+    it('should save a new aaRecord successfully', function () {
 
       $stateParams.aaName = '';
 
@@ -110,7 +113,9 @@ describe('Controller: aaBuilderNameCtrl', function () {
 
       expect(Notification.success).toHaveBeenCalledWith('autoAttendant.successCreateCe');
     });
-*/
+
+    *** */
+
     it('should issue error message on no name', function () {
 
       controller.checkNameEntry("");
@@ -128,7 +133,11 @@ describe('Controller: aaBuilderNameCtrl', function () {
 
     });
 
-    /*  it('should issue error message on failure to save', function () {
+    /*  Commented out as code references AutoAttendant.saveAARecords()
+     *
+     *
+    
+    it('should issue error message on failure to save', function () {
 
       saveCeSpy.and.returnValue(
         $q.reject({
@@ -141,7 +150,8 @@ describe('Controller: aaBuilderNameCtrl', function () {
 
       expect(Notification.error).toHaveBeenCalledWith('autoAttendant.errorCreateCe');
     });
-*/
+    **** */
+
     it('should reject adding a dupe CE (no update for now)', function () {
 
       aaModel.ceInfos.push({
@@ -167,17 +177,6 @@ describe('Controller: aaBuilderNameCtrl', function () {
 
       expect(AutoAttendantCeInfoModelService.setCeInfo).toHaveBeenCalled();
     });
-    it('should not have called setCeInfo', function () {
-
-      controller.name = "";
-
-      controller.saveUiModel();
-
-      $scope.$apply();
-
-      expect(AutoAttendantCeInfoModelService.setCeInfo).not.toHaveBeenCalled();
-    });
-
   });
 
 });
