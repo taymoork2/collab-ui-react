@@ -1220,9 +1220,16 @@ angular
           url: '/services/calendar'
         })
         .state('calendar-service.list', {
+          views: {
+            'fullPane': {
+              templateUrl: 'modules/hercules/calendar-service/calendar-list.html',
+              controller: 'CalendarController',
+              controllerAs: 'calendar'
+            }
+          },
           url: '/list'
         })
-        .state('calendar-service.details', {
+        .state('calendar-service.list.details', {
           views: {
             'rightPane': {
               controllerAs: 'calendarDetails',
@@ -1234,16 +1241,11 @@ angular
             cluster: null
           }
         })
-        .state('calendar-service.calendarClusterSettings', {
+        .state('calendar-service.list.details.cluster-settings', {
           views: {
-            'rightPane': {
-              controllerAs: 'calendarClusterSettings',
-              controller: 'CalendarClusterSettingsController',
-              templateUrl: 'modules/hercules/calendar-service/calendar-cluster-settings.html'
+            'details-pane': {
+              templateUrl: 'modules/hercules/calendar-service/cluster-settings.html'
             }
-          },
-          params: {
-            cluster: null
           }
         })
         .state('calendar-service.about', {
@@ -1264,15 +1266,8 @@ angular
             }
           }
         })
-        .state('calendar-service.resources', {
-          url: '/resources',
-          views: {
-            'fullPane': {
-              templateUrl: 'modules/hercules/calendar-service/resources.html'
-            }
-          }
-        })
-        .state('cluster-details', {
+
+      .state('cluster-details', {
           parent: 'sidepanel',
           views: {
             'sidepanel@': {
