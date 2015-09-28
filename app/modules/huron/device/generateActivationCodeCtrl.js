@@ -16,7 +16,7 @@
         // subject: $translate.instant('generateActivationCodeModal.subjectContent'),
         // message: ''
     };
-    vm.qrCodeUrl = '';
+    vm.qrCode = '';
     vm.timeLeft = '';
     vm.activateEmail = activateEmail;
     vm.sendActivationCodeEmail = sendActivationCodeEmail;
@@ -47,7 +47,7 @@
               arrayData += qrcode[i];
             }
           }
-          vm.qrCodeUrl = arrayData;
+          vm.qrCode = arrayData;
         });
       }
     }
