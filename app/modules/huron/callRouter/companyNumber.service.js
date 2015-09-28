@@ -53,18 +53,19 @@
       }, data).$promise;
     }
 
-    function listUsers() {
-      return UserServiceCommon.query({
-        customerId: Authinfo.getOrgId()
-      }).$promise;
+    function deleteCompanyNumber(data, companyNumberId) {
+      return CallRouterService.delete({
+        customerId: Authinfo.getOrgId(),
+        companyNumberId: companyNumberId
+      }, data).$promise;
     }
 
     return {
       loadExternalNumberPool: loadExternalNumberPool,
       listCompanyNumbers: listCompanyNumbers,
-      listUsers: listUsers,
       saveCompanyNumber: saveCompanyNumber,
-      updateCompanyNumber: updateCompanyNumber
+      updateCompanyNumber: updateCompanyNumber,
+      deleteCompanyNumber: deleteCompanyNumber
     };
   }
 

@@ -14,7 +14,7 @@ auth =
 
   'partner-admin':
     user: 'atlaspartneradmin@atlas.test.com'
-    pass: 'C1sc0123!'
+    pass: 'P@ssword123'
     org:  'c054027f-c5bd-4598-8cd8-07c08163e8cd'
 
   'partner-reports':
@@ -108,9 +108,9 @@ auth =
     org:  'd30a6828-dc35-4753-bab4-f9b468828688'
 
   'contactcenter-admin':
-    user: 'arunachaladmn@outlook.com'
+    user: 'sikkimadmn@outlook.com'
     pass: 'Cisco@123'
-    org:  '945a62e3-6b52-40c2-a8ce-0ab3e56a53f5'
+    org:  '021fffdc-dd5e-49ca-b9d6-013445e3c3ae'
 
 clientId = 'C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec'
 clientSecret = 'c10c371b4641010a750073b3c8e65a7fff0567400d316055828d3c74925b0857'
@@ -154,7 +154,7 @@ getAuthCode = (req, creds, cb) ->
       response_type: 'code'
       redirect_uri: 'urn:ietf:wg:oauth:2.0:oob'
       client_id: clientId
-      scope: 'webexsquare:admin Identity:SCIM Identity:Config Identity:Organization'
+      scope: 'webexsquare:admin Identity:SCIM Identity:Config Identity:Organization ccc_config:admin'
       realm: '/' + creds.org
       state: rand_str
 

@@ -674,6 +674,7 @@
     "addUsers": "Add users",
     "addUsersSimple": "Add users | Simple",
     "addUsersAdvanced": "Add users | Advanced",
+    "msgrSyncDesc": "Your orgnization is currently in Messenger Sync Mode. Please onboard new users in the WebEx Messenger administration tool. Consult your Cisco customer representative to enable this screen.",
     "getStarted": "Get started",
     "chooseSync": "Choose sync",
     "cancelBtn": "Cancel",

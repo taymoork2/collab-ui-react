@@ -13,11 +13,11 @@ angular.module('Core')
 
         if (angular.isString(name) && name.length > 0) {
           if (name.indexOf(NAME_DELIMITER) > -1) {
-            givenName = name.split(NAME_DELIMITER).slice(0, -1).join(' ');
-            familyName = name.split(NAME_DELIMITER).slice(-1).join(' ');
+            givenName = name.split(NAME_DELIMITER).slice(0, -1).join(' ').trim();
+            familyName = name.split(NAME_DELIMITER).slice(-1).join(' ').trim();
           } else {
-            givenName = name.split(' ').slice(0, -1).join(' ');
-            familyName = name.split(' ').slice(-1).join(' ');
+            givenName = name.split(' ').slice(0, -1).join(' ').trim();
+            familyName = name.split(' ').slice(-1).join(' ').trim();
           }
         }
         return {
@@ -366,7 +366,7 @@ angular.module('Core')
 
           for (var i = 0; i < usersDataArray.length; i++) {
             var userEmail = usersDataArray[i].address.trim();
-            var userName = usersDataArray[i].name.trim();
+            var userName = usersDataArray[i].name;
 
             var user = {
               'email': null,
@@ -394,7 +394,7 @@ angular.module('Core')
 
           for (var i = 0; i < usersDataArray.length; i++) {
             var userEmail = usersDataArray[i].address.trim();
-            var userName = usersDataArray[i].name.trim();
+            var userName = usersDataArray[i].name;
             var displayName = usersDataArray[i].displayName;
             var user = {
               'email': null,

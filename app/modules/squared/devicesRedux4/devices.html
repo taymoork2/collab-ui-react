@@ -1,0 +1,102 @@
+<div class="devices-redux4">
+  <div ng-if="devices.codesListSubscription.eventCount == 0 || devices.deviceListSubscription.eventCount == 0">
+    <div style="padding: 100px; text-align: center;">
+      <i class="icon icon-2x icon-spinner" />
+    </div>
+  </div>
+
+  <div ng-if="devices.codesListSubscription.currentError || devices.deviceListSubscription.currentError">
+    <div class="error-spinner">
+      <i class="icon icon-2x icon-spinner" />
+    </div>
+  </div>
+
+  <div ng-if="devices.codesListSubscription.eventCount != 0 && devices.deviceListSubscription.eventCount != 0">
+    <div class="clearfix row">
+      <h1>
+        Devices
+        <a
+          href
+          class="pull-right"
+          ng-click="devices.showAddDeviceDialog()"
+          style="padding-top: 20px; font-size: 1.5rem">
+          Add Device
+        </a>
+      </h1>
+    </div>
+    <div class="row">
+      <div class="large-6 columns pane" style="padding-bottom: 30px;">
+        <div class="devices-search">
+          <form ng-class="{
+            'active': devices.currentFilter || devices.search || devices.inputActive,
+            'no-match': (devices.currentFilter || devices.search) && !devices.filteredCodesAndDevices.matches.length
+          }">
+            <i class="fa fa-search search-icon" />
+
+            <span
+              ng-if="devices.currentFilter"
+              class="filter">
+              {{devices.currentFilter.label}}
+              <i
+                class="fa fa-times"
+                ng-click="devices.clearFilter()"
+                ng-if="!devices.displayNameFilter"
+              />
+            </span>
+
+            <span
+              ng-if="devices.displayNameFilter"
+              class="filter displayNamefilter">
+              {{devices.displayNameFilter}}
+              <i
+                class="fa fa-times"
+                ng-click="devices.clearDisplayNameFilter()"
+              />
+            </span>
+
+            <input
+              type="text"
+              class="form-control"
+              ng-model="devices.search"
+              focus-on="devices.currentFilter"
+              ng-blur="devices.inputActive=false"
+              ng-focus="devices.inputActive=true"
+              placeholder="Search for devices..."
+              ng-change="devices.refreshResults()"
+              ng-keydown="devices.clearFilterIfNoSearch($event)"
+            />
+
+            <i
+              class="fa fa-times clear-icon"
+              ng-if="devices.search || devices.currentFilter"
+              ng-click="devices.clearSearchAndFilter()"
+            />
+
+          </form>
+          <ul ng-if="!devices.currentFilter && !devices.search">
+            <li
+              ng-repeat="filter in devices.filters"
+              ng-class="{'active': filter.checked}"
+              ng-click="devices.filterChanged(filter)">
+              <a href>
+                {{filter.label}}
+                <span class="pull-right">
+                  {{devices.filteredCodesAndDevices.countPerFilter[filter.label]}}
+                </span>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div ng-if="!devices.filteredCodesAndDevices.matches.length">
+          <p class="no-results-matched-search">No devices found...</p>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="large-12 columns" ui-view="leftPanel"></div>
+    </div>
+    <div class="row">
+      <div class="large-6 columns" ui-view="rightPanel"></div>
+    </div>
+  </div>
+</div>

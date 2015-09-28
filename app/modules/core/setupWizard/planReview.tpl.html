@@ -1,8 +1,8 @@
-<div class="loading" ng-if="planReview.processing">
+<div class="loading" ng-if="!planReview.isInitialized">
   <i class="icon icon-spinner"></i>
 </div>
 
-<div class="wizard-plan-review container-fluid" ng-if="!planReview.processing">
+<div class="wizard-plan-review container-fluid" ng-if="planReview.isInitialized">
   <div class="row">
     <div class="col-sm-4">
       <div class="column-header">

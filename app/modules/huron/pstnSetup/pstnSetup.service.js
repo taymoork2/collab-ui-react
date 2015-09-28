@@ -5,7 +5,7 @@
     .factory('PstnSetupService', PstnSetupService);
 
   /* @ngInject */
-  function PstnSetupService($q, Authinfo, TerminusCarrierService, TerminusCustomerService, TerminusCustomerCarrierService, TerminusBlockOrderService, TerminusOrderService) {
+  function PstnSetupService($q, Authinfo, TerminusCarrierService, TerminusCustomerService, TerminusCustomerCarrierService, TerminusBlockOrderService, TerminusOrderService, TerminusCarrierInventory, TerminusNumberService) {
     var INTELEPEER = "INTELEPEER";
     var TATA = "TATA";
     var PSTN = "PSTN";
@@ -17,12 +17,14 @@
       updateCustomerCarrier: updateCustomerCarrier,
       getCustomer: getCustomer,
       listCarriers: listCarriers,
+      getCarrierInventory: getCarrierInventory,
       listCustomerCarriers: listCustomerCarriers,
       getCarrierId: getCarrierId,
       orderBlock: orderBlock,
       listPendingOrders: listPendingOrders,
       getOrder: getOrder,
       listPendingNumbers: listPendingNumbers,
+      deleteNumber: deleteNumber,
       INTELEPEER: INTELEPEER,
       TATA: TATA,
       PSTN: PSTN,
@@ -90,6 +92,13 @@
       }).$promise;
     }
 
+    function getCarrierInventory(carrierId, state) {
+      return TerminusCarrierInventory.get({
+        carrierId: carrierId,
+        state: state
+      }).$promise;
+    }
+
     function getCarrierId(customerId, carrierName) {
       return listCustomerCarriers(customerId).then(function (carriers) {
         var matchingCarriers = carriers.filter(function (carrier) {
@@ -154,6 +163,13 @@
           return pendingNumbers;
         });
       });
+    }
+
+    function deleteNumber(customerId, number) {
+      return TerminusNumberService.delete({
+        customerId: customerId,
+        did: number
+      }).$promise;
     }
 
   }
