@@ -99,16 +99,16 @@
   display:inline;
 }
 
-form[name="nav.callrouterform"] .validation {
+form[name="callRouterCtrl.callrouterform"] .validation {
   position: absolute;
   right: -68px;
   top: 4px;
 }
 
-form[name="nav.callrouterform"] button[type="submit"] {
+form[name="callRouterCtrl.callrouterform"] button[type="submit"] {
   margin-left: 77px;
   position: relative;
-  top: 6px;
+  top: 8px;
 }
 
 .has-error .custom-combobox .input-group .form-control {
@@ -126,4 +126,5 @@ form[name="nav.callrouterform"] button[type="submit"] {
   border-bottom-left-radius: 0;
   z-index: 10000;
   position: relative;
+  height: 29px; // Equals to input field
 }
