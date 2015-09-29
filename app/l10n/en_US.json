@@ -1196,7 +1196,8 @@
     "forwardBusy": "When line is busy, send calls to:",
     "forwardNoAnswer": "When there is no answer, send calls to:",
     "forwardExternal": "Forward external calls differently",
-    "addNew": "Add New"
+    "addNew": "Add New",
+    "forwardVoicemailDisabled": "Call Forwarding is set to Voicemail, which is currently disabled. Please update the Call Forwarding settings."
   },
   "callerIdPanel": {
     "title": "Caller ID",
