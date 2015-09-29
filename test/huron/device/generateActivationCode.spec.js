@@ -1,13 +1,8 @@
 'use strict';
 
 describe('Controller: GenerateActivationCodeCtrl', function () {
-  var controller, $scope, $state, $httpBackend, HuronConfig, ActivationCodeEmailService, Notification;
+  var controller, $scope, $state, $httpBackend, HuronConfig, ActivationCodeEmailService, Notification, HttpUtils, OtpService, $q;
   beforeEach(module('Huron'));
-
-  var OtpService = {
-    getQrCodeUrl: sinon.stub().fulfills(getJSONFixture('huron/json/device/otps/qrcode.json')),
-    generateOtp: sinon.stub().fulfills(getJSONFixture('huron/json/device/otps/0001000200030004.json'))
-  };
 
   var stateParams = {
     currentUser: {
@@ -20,23 +15,32 @@ describe('Controller: GenerateActivationCodeCtrl', function () {
     sinon.spy(Notification, "notify");
   }));
 
-  beforeEach(inject(function ($rootScope, $controller, _$state_, _$httpBackend_, _HuronConfig_, _ActivationCodeEmailService_, _Notification_) {
+  beforeEach(inject(function ($rootScope, $controller, _$state_, _$httpBackend_, _HuronConfig_, _ActivationCodeEmailService_, _Notification_, _HttpUtils_, _OtpService_, _$q_) {
     $scope = $rootScope.$new();
     $state = _$state_;
     $httpBackend = _$httpBackend_;
     Notification = _Notification_;
     HuronConfig = _HuronConfig_;
     ActivationCodeEmailService = _ActivationCodeEmailService_;
+    HttpUtils = _HttpUtils_;
+    OtpService = _OtpService_;
+    $q = _$q_;
 
     $state.modal = jasmine.createSpyObj('modal', ['close']);
 
     controller = $controller('GenerateActivationCodeCtrl', {
       $scope: $scope,
       $state: $state,
-      $stateParams: stateParams,
-      OtpService: OtpService
+      $stateParams: stateParams
     });
     controller.showEmail = false;
+    spyOn(HttpUtils, 'setTrackingID').and.returnValue('TrackingID is set');
+    spyOn(OtpService, 'getQrCodeUrl').and.returnValue($q.when(getJSONFixture('huron/json/device/otps/qrcode.json')));
+    spyOn(OtpService, 'generateOtp').and.returnValue($q.when(getJSONFixture('huron/json/device/otps/0001000200030004.json')));
+
+    controller.otp = {
+      code: 'old'
+    };
     $rootScope.$apply();
   }));
 
@@ -53,6 +57,10 @@ describe('Controller: GenerateActivationCodeCtrl', function () {
     describe('after activate', function () {
       it('should have an otp object defined', function () {
         expect(controller.otp).toBeDefined();
+      });
+
+      it('should have an qrCode defined', function () {
+        expect(controller.qrCode).toEqual('FAKEIMAGE');
       });
 
       describe('activateEmail function', function () {

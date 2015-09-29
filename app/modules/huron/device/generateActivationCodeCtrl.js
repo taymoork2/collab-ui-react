@@ -21,7 +21,6 @@
     vm.activateEmail = activateEmail;
     vm.sendActivationCodeEmail = sendActivationCodeEmail;
     vm.clipboardFallback = clipboardFallback;
-    vm.setQRCode = setQRCode;
 
     function activate() {
       HttpUtils.setTrackingID().then(function () {
