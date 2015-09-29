@@ -3,7 +3,8 @@
 angular.module('Core')
   .constant('NAME_DELIMITER', ' \u000B')
   .service('Userservice', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Authinfo', 'Log', 'Auth', 'Utils', 'HuronUser', 'Notification', 'NAME_DELIMITER',
-    function ($http, $rootScope, $location, Storage, Config, Authinfo, Log, Auth, Utils, HuronUser, Notification, NAME_DELIMITER) {
+    '$translate', '$q',
+    function ($http, $rootScope, $location, Storage, Config, Authinfo, Log, Auth, Utils, HuronUser, Notification, NAME_DELIMITER, $translate, $q) {
 
       var userUrl = Config.getAdminServiceUrl();
 
@@ -61,13 +62,16 @@ angular.module('Core')
               var user = {
                 'email': userEmail,
                 'userEntitlements': entitlements,
-                'userLicenses': userLicenses
+                'userLicenses': userLicenses,
+                'assignedDn': usersDataArray[i].assignedDn,
+                'externalNumber': usersDataArray[i].externalNumber
               };
               userData.users.push(user);
             }
           }
-          if (userData.users.length > 0) {
 
+          if (userData.users.length > 0) {
+            var resultList = [];
             $http({
                 method: 'PATCH',
                 url: userUrl + 'organization/' + Authinfo.getOrgId() + '/users',
@@ -75,49 +79,80 @@ angular.module('Core')
               })
               .success(function (data, status) {
                 data = data || {};
-                // This code is being added temporarily to add/remove users from Squared UC
-                // Discussions are ongoing concerning how these common functions should be
-                // integrated.
-                if (data.userResponse[0].entitled && data.userResponse[0].entitled.indexOf(Config.entitlements.huron) !== -1) {
-                  var userData = {
-                    'email': data.userResponse[0].email,
-                    'name': usersDataArray[0].name
-                  };
-                  HuronUser.create(data.userResponse[0].uuid, userData)
-                    .then(function () {
-                      data.success = true;
-                      callback(data, status, method);
-                    }).catch(function (response) {
-                      // Notify Huron error
-                      Notification.errorResponse(response);
+                // Huron user onboarding
+                if (angular.isDefined(data.userResponse) && angular.isArray(data.userResponse) && data.userResponse.length > 0) {
+                  var promises = [];
+                  angular.forEach(data.userResponse, function (user, index) {
+                    var userResult = {
+                      email: user.email,
+                      alertType: null
+                    };
 
-                      // Callback entitlement success
-                      data.success = true;
-                      callback(data, status, method);
-                    });
-                } else {
-                  if (data.userResponse[0].unentitled && data.userResponse[0].unentitled.indexOf(Config.entitlements.huron) !== -1) {
-                    HuronUser.delete(data.userResponse[0].uuid)
-                      .then(function () {
-                        data.success = true;
-                        callback(data, status, method);
-                      }, function (response) {
-                        // If the user does not exist in Squared UC do not report an error
-                        if (response.status !== 404) {
-                          // Notify Huron error
-                          Notification.errorResponse(response);
-                        }
+                    // This code is being added temporarily to add/remove users from Squared UC
+                    // Discussions are ongoing concerning how these common functions should be
+                    // integrated.
+                    if (user.entitled && user.entitled.indexOf(Config.entitlements.huron) !== -1) {
+                      var userObj = {
+                        'email': user.email,
+                        'name': user.name,
+                        'directoryNumber': "",
+                        'externalNumber': ""
+                      };
 
-                        // Callback entitlement success
-                        data.success = true;
-                        callback(data, status, method);
+                      var userAndDnObj = userData.users.filter(function (user) {
+                        return (user.email == userObj.email);
                       });
-                  } else {
+
+                      if ((userAndDnObj[0].assignedDn !== null) && userAndDnObj[0].assignedDn.pattern.length > 0) {
+                        userObj.directoryNumber = userAndDnObj[0].assignedDn.pattern;
+                      }
+                      //with None as externalNumber pattern the CMI call fails
+                      if (userAndDnObj[0].externalNumber !== false && userAndDnObj[0].externalNumber.pattern !== "None") {
+                        userObj.externalNumber = userAndDnObj[0].externalNumber.pattern;
+                      }
+
+                      promises.push(HuronUser.create(user.uuid, userObj)
+                        .catch(function (response) {
+                          this.alertType = 'danger';
+                          this.message = Notification.processErrorResponse(response, 'usersPage.ciscoucError', this);
+                        }.bind(userResult)));
+
+                    } else if (user.unentitled && user.unentitled.indexOf(Config.entitlements.huron) !== -1) {
+                      promises.push(HuronUser.delete(user.uuid)
+                        .catch(function (response) {
+                          // If the user does not exist in Squared UC do not report an error
+                          if (response.status !== 404) {
+                            this.alertType = 'danger';
+                            this.message = Notification.processErrorResponse(response, 'usersPage.deleteUserError', this);
+                          }
+                        }.bind(userResult)));
+                    }
+                    resultList.push(userResult);
+                  }); // end of foreach
+
+                  $q.all(promises).finally(function () {
+                    //concatenating the results in an array of strings for notify function
+                    var errors = [];
+
+                    for (var idx in resultList) {
+                      if (resultList[idx].alertType === 'danger') {
+                        errors.push(resultList[idx].message);
+                      }
+                    }
+                    //Displaying notifications
+                    if (errors.length > 0) {
+                      Notification.notify(errors, 'error');
+                    }
+
+                    $rootScope.$broadcast('Userservice::updateUsers');
+
+                    // callback to entitlement handle function
                     data.success = true;
                     callback(data, status, method);
-                  }
-                  $rootScope.$broadcast('Userservice::updateUsers');
-                }
+
+                  });
+
+                } // end of if
               })
               .error(function (data, status) {
                 data = data || {};
