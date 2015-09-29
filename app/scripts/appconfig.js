@@ -1275,6 +1275,9 @@ angular
         .state('pstnSetup.orderNumbers', {
           templateUrl: 'modules/huron/pstnSetup/pstnNumbers.tpl.html'
         })
+        .state('pstnSetup.swivelNumbers', {
+          templateUrl: 'modules/huron/pstnSetup/pstnSwivelNumbers.tpl.html'
+        })
         .state('pstnSetup.review', {
           templateUrl: 'modules/huron/pstnSetup/pstnReview.tpl.html'
         })
