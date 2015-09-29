@@ -1,0 +1,42 @@
+<div class="row">
+
+  <div class="large-6 columns">
+    <h4>
+      Expressway Clusters
+      <hr>
+    </h4>
+
+    <table>
+      <thead>
+      <tr>
+        <th>Display Name</th>
+        <th>Status</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="(url,cluster) in calendar.clusters"
+          ui-sref="calendar-service.list.details({cluster:cluster})">
+        <td>
+          {{cluster.name}}
+        </td>
+        <td>
+              <span class="{{calendar.calendarAndManagementServiceStatus(cluster).color}}">
+              <i class="fa fa-circle"/>
+              <span class="hidden-xs">{{calendar.calendarAndManagementServiceStatus(cluster).status}}</span>
+            </span>
+            <span ng-show="calendar.softwareUpgradeAvailable(cluster)" style="color: #3ca8e8">
+              <!--<i class="fa fa-cloud-upload"/>-->
+              <span class="hidden-xs">Upgrades</span>
+            </span>
+        </td>
+      </tr>
+
+      </tbody>
+    </table>
+
+  </div>
+
+  <div class="large-6 columns" ui-view="rightPane">
+
+  </div>
+</div>
