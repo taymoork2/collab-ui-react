@@ -41,7 +41,8 @@
       $scope.adminEmailParam = Authinfo.getPrimaryEmail();
       $scope.localeParam = $translate.use();
 
-      $scope.reportPageIframeUrl = $sce.trustAsResourceUrl("https://sjsite14.webex.com/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage");
+      var reportPageUrl = "https://" + $scope.siteUrl  + "/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage";
+      $scope.reportPageIframeUrl = $sce.trustAsResourceUrl(reportPageUrl);
 
       $scope.uiSref =
         "webex-reports-iframe({" +
