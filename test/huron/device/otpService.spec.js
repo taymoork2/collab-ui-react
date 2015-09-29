@@ -102,7 +102,7 @@ describe('Service: OtpService', function () {
 
   describe('getQrCodeUrl function', function () {
     beforeEach(function () {
-      $httpBackend.expectGET(HuronConfig.getOcelotUrl() + '/getqrimage/encoded?oneTimePassword=23232323232').respond(200, getJSONFixture('huron/json/device/otps/qrcode.json'));
+      $httpBackend.expectGET(HuronConfig.getEmailUrl() + '/getqrimage/encoded?oneTimePassword=23232323232').respond(200, getJSONFixture('huron/json/device/otps/qrcode.json'));
     });
 
     it('should generate a qrImage', function () {
