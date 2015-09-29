@@ -27,7 +27,7 @@ describe('WebEx site settings', function () {
     expect(sitesettings.webexReportBreadCrumbs.isPresent()).toBeTruthy();
   });
 
-  it('click site admin reports link', function(){
+  it('click site admin reports link', function () {
     utils.click(sitesettings.siteAdminReportsLink);
     navigation.expectCurrentUrl('/iwebexreports');
   });

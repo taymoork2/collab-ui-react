@@ -18,4 +18,8 @@ describe('Service: reportService', function () {
 
   }));
 
+  // it("reportService should be defined", function () {
+  //   expect(reportService).toBeDefined();
+  // });
+
 });

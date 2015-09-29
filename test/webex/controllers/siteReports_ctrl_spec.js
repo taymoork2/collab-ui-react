@@ -12,6 +12,9 @@ describe('Controller: ReportsCtrl', function () {
     //$scope = $rootScope.$new();
     $scope = {};
     $controller = _$controller_;
+    $stateParams = {
+      'siteUrl': 'go.webex.com'
+    };
 
     reportService = {
 
@@ -58,6 +61,7 @@ describe('Controller: ReportsCtrl', function () {
 
     var controller = $controller('ReportsCtrl', {
       $scope: $scope,
+      $stateParams: $stateParams,
       $translate: $translate,
       Authinfo: Authinfo,
       $sce: $sce,
