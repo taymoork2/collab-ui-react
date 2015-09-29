@@ -135,82 +135,88 @@ angular.module('Core')
       // End of grid set up
 
       // Start of site links set up
-      getSessionTicket().then(
-        function getSessionTicketSuccess(sessionTicket) {
-          $log.log("getSessionTicketSuccess()");
+      WebExUtilsFact.isSiteSupportsIframe(siteUrl).then(function (iFrame) {
+        vm.iframeSupportedSite = iFrame;
+        vm.showSiteLinks = true;
+      });
+      /**
+            getSessionTicket().then(
+              function getSessionTicketSuccess(sessionTicket) {
+                $log.log("getSessionTicketSuccess()");
 
-          webExXmlApiInfoObj.xmlServerURL = "https://" + siteUrl + "/WBXService/XMLService";
-          webExXmlApiInfoObj.webexSiteName = siteName;
-          webExXmlApiInfoObj.webexAdminID = Authinfo.getPrimaryEmail();
-          webExXmlApiInfoObj.webexAdminSessionTicket = sessionTicket;
+                webExXmlApiInfoObj.xmlServerURL = "https://" + siteUrl + "/WBXService/XMLService";
+                webExXmlApiInfoObj.webexSiteName = siteName;
+                webExXmlApiInfoObj.webexAdminID = Authinfo.getPrimaryEmail();
+                webExXmlApiInfoObj.webexAdminSessionTicket = sessionTicket;
 
-          getSiteVersionXml().then(
-            function getSiteVersionInfoXmlSuccess(getInfoResult) {
-              var funcName = "getSiteVersionInfoXmlSuccess()";
+                getSiteVersionXml().then(
+                  function getSiteVersionInfoXmlSuccess(getInfoResult) {
+                    var funcName = "getSiteVersionInfoXmlSuccess()";
+                    var logMsg = "";
+
+                    $log.log(funcName);
+
+                    vm.iframeSupportedSite = iframeSupportedSiteVersionCheck(getInfoResult);
+                    vm.showSiteLinks = true;
+                  }, // getSiteVersionInfoXmlSuccess()
+
+                  function getSiteVersionInfoXmlError(getInfoResult) {
+                    $log.log("vm.getSiteVersionInfoXmlError()");
+
+                    vm.showSiteLinks = true;
+                  } // getSiteVersionInfoXmlError()
+                ); // vm.getSessionTicket(siteUrl).then()
+              }, // getSessionTicketSuccess()
+
+              function getSessionTicketError(errId) {
+                vm.showSiteLinks = true;
+              } // getSessionTicketError()
+            ); // vm.getSessionTicket(siteUrl).then()
+
+            function getSessionTicket() {
+              return WebExXmlApiFact.getSessionTicket(siteUrl);
+            } // getSessionTicket()
+
+            function getSiteVersionXml() {
+              var siteVersionXml = WebExXmlApiFact.getSiteVersion(webExXmlApiInfoObj);
+
+              return $q.all({
+                siteVersionXml: siteVersionXml
+              });
+            } // getSiteVersionXml()
+
+            function iframeSupportedSiteVersionCheck(getInfoResult) {
+              var funcName = "iframeSupportedSiteVersionCheck()";
+
               var logMsg = "";
 
-              $log.log(funcName);
+              var iframeSupportedSiteVersion = false;
+              var siteVersionJsonObj = WebExUtilsFact.validateSiteVersionXmlData(getInfoResult.siteVersionXml);
 
-              vm.iframeSupportedSite = iframeSupportedSiteVersionCheck(getInfoResult);
-              vm.showSiteLinks = true;
-            }, // getSiteVersionInfoXmlSuccess()
+              if ("" === siteVersionJsonObj.errId) { // got a good response
+                var siteVersionJson = siteVersionJsonObj.bodyJson;
+                var trainReleaseVersion = siteVersionJson.ep_trainReleaseVersion;
+                var trainReleaseOrder = siteVersionJson.ep_trainReleaseOrder;
 
-            function getSiteVersionInfoXmlError(getInfoResult) {
-              $log.log("vm.getSiteVersionInfoXmlError()");
+                logMsg = funcName + ": " + "\n" +
+                  "trainReleaseVersion=" + trainReleaseVersion + "\n" +
+                  "trainReleaseOrder=" + trainReleaseOrder;
+                $log.log(logMsg);
 
-              vm.showSiteLinks = true;
-            } // getSiteVersionInfoXmlError()
-          ); // vm.getSessionTicket(siteUrl).then()
-        }, // getSessionTicketSuccess()
+                if (
+                  (null != trainReleaseOrder) &&
+                  (400 <= +trainReleaseOrder)
+                ) {
 
-        function getSessionTicketError(errId) {
-          vm.showSiteLinks = true;
-        } // getSessionTicketError()
-      ); // vm.getSessionTicket(siteUrl).then()
+                  iframeSupportedSiteVersion = true;
+                }
+              }
 
-      function getSessionTicket() {
-        return WebExXmlApiFact.getSessionTicket(siteUrl);
-      } // getSessionTicket()
+              $log.log("iframeSupportedSiteVersion(): iframeSupportedSiteVersion=" + iframeSupportedSiteVersion);
 
-      function getSiteVersionXml() {
-        var siteVersionXml = WebExXmlApiFact.getSiteVersion(webExXmlApiInfoObj);
-
-        return $q.all({
-          siteVersionXml: siteVersionXml
-        });
-      } // getSiteVersionXml()
-
-      function iframeSupportedSiteVersionCheck(getInfoResult) {
-        var funcName = "iframeSupportedSiteVersionCheck()";
-
-        var logMsg = "";
-
-        var iframeSupportedSiteVersion = false;
-        var siteVersionJsonObj = WebExUtilsFact.validateSiteVersionXmlData(getInfoResult.siteVersionXml);
-
-        if ("" === siteVersionJsonObj.errId) { // got a good response
-          var siteVersionJson = siteVersionJsonObj.bodyJson;
-          var trainReleaseVersion = siteVersionJson.ep_trainReleaseVersion;
-          var trainReleaseOrder = siteVersionJson.ep_trainReleaseOrder;
-
-          logMsg = funcName + ": " + "\n" +
-            "trainReleaseVersion=" + trainReleaseVersion + "\n" +
-            "trainReleaseOrder=" + trainReleaseOrder;
-          $log.log(logMsg);
-
-          if (
-            (null != trainReleaseOrder) &&
-            (400 <= +trainReleaseOrder)
-          ) {
-
-            iframeSupportedSiteVersion = true;
-          }
-        }
-
-        $log.log("iframeSupportedSiteVersion(): iframeSupportedSiteVersion=" + iframeSupportedSiteVersion);
-
-        return iframeSupportedSiteVersion;
-      } // iframeSupportedSiteVersionCheck()
+              return iframeSupportedSiteVersion;
+            } // iframeSupportedSiteVersionCheck()
+            **/
       // End of site links set up
     }
   ]);
