@@ -18,7 +18,7 @@ describe('WebEx site settings', function () {
   });
 
   it('click on configure site cog', function () {
-    utils.click(sitesettings.configureSite);
+    utils.click(sitesettings.configureSJSITE14);
     navigation.expectCurrentUrl('/webexSiteSettings');
   });
 

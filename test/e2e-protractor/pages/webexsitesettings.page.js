@@ -12,6 +12,7 @@ var SiteSettigsPage = function () {
 
   this.conferencing = element(by.css('a[href="#site-list"]'));
   this.configureSite = element(by.css('a[href="#/webexSiteSettings"]'));
+  this.configureSJSITE14 = element(by.id("sjsite14.webex.com_webex-site-settings"));
   this.emailAllHostsBtn = element(by.id('emailAllHostsBtn'));
   this.siteReports = element(by.css('#webex-reports-list-iframe'));
   this.webexSiteSettingsPanel = element(by.css('#webexSiteSettings'));
