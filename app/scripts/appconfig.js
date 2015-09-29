@@ -586,7 +586,7 @@ angular
           parent: 'main',
           params: {
             siteUrl: null
-          }
+          },
           data: {
             displayName: 'Reports Page1'
           }
