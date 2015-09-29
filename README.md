@@ -79,12 +79,10 @@ Setup the environment (If necessary)
 ------------------------------------
 
 * Run `./setup.sh` (found in the root directory) or, if it fails:
-  * Install node.js version <= v0.10.28 (for npm): http://nodejs.org/download/
+  * Install node.js version <= v0.12.x (for npm): http://nodejs.org/download/
 * Run package managers in the cloned project to pull dependencies:
 * `npm install && bower install`
 * Launch the app: `gulp serve`
-  * If you get *Error: 'libsass' bindings not found. Try reinstalling 'node-sass'?* Then run
-    * `rm -rf node_modules` and `npm install`. You may need to reinstall some dependencies afterwards.
 * Before pushing any code to jenkins, always use `git fetch upstream && git merge upstream/master`
 * After git pulls, run bower install and npm install to make sure to pull new dependencies.
 
