@@ -12,7 +12,8 @@
       setAllNumbers: setAllNumbers,
       getAllNumbers: getAllNumbers,
       getPendingNumbers: getPendingNumbers,
-      getUnassignedNumbers: getUnassignedNumbers
+      getUnassignedNumbers: getUnassignedNumbers,
+      deleteNumber: deleteNumber
     };
     var allNumbers = [];
     var pendingNumbers = [];
@@ -46,6 +47,17 @@
         .catch(function (response) {
           clearNumbers();
           return $q.reject(response);
+        });
+    }
+
+    function deleteNumber(customerId, number) {
+      return FeatureToggleService.supportsPstnSetup()
+        .then(function (isSupported) {
+          if (isSupported) {
+            return PstnSetupService.deleteNumber(customerId, number.pattern);
+          } else {
+            return ExternalNumberPool.deletePool(customerId, number.uuid);
+          }
         });
     }
 

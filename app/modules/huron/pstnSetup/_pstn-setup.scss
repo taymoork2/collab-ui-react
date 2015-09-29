@@ -18,64 +18,36 @@
   .modal-body {
     margin-bottom: 30px;
   }
-  .pstn-provider-cards {
-    display: flex;
-    flex-wrap: wrap;
-    align-content: flex-start;
+  .cs-card-block {
     justify-content: center;
-    padding: 10px;
   }
+}
 
-  .pstn-provider-card {
-    width: calc(33.3333% - 20px);
-    background-color: $brand-white;
-    border-radius: 5px;
-    margin: 10px;
+.pstn-provider-card {
+  /* Discuss and integrate into toolkit */
+  .cs-card-block &.cs-card > article {
     display: flex;
     flex-direction: column;
-
-    .logo {
-      height: 55px;
-      padding: 7.5px;
+    section {
+      flex: 1;
+    }
+    footer {
       text-align: center;
-      border-bottom: 1px solid $gray-lighter;
-      img {
-        height: 40px;
-        width: 235px;
-      }
     }
-
-    .features {
-      flex: 1 1 auto;
-      padding: 0 20px;
-      .feature-title {
-        font-family: $brand-font-light;
-        font-size: 18px;
-        color: $gray-darkest;
-        text-align: center;
-        margin-top: 18px;
-        margin-bottom: 30px;
-      }
-      .feature {
-        display: flex;
-      }
-      .icon-check {
-        font-size: 24px;
-        color: $brand-success;
-      }
-      .feature-text {
-        font-family: $brand-font-light;
-        font-size: 18px;
-        line-height: 24px;
-        color: $gray-darkest;
-      }
-    }
-
-    .footer {
-      text-align: center;
-      margin-top: 40px;
-      margin-bottom: 30px;
-    }
+  }
+  h4 {
+    text-align: center;
+  }
+  .feature {
+    display: flex;
+  }
+  .icon-check {
+    font-size: 24px;
+    color: $brand-success;
+  }
+  .feature-text {
+    font-size: 18px;
+    line-height: 24px;
   }
 }
 
@@ -114,20 +86,24 @@
     margin: 0;
   }
 
-  .form {
-    width: 60%;
-
-    .has-feedback .form-control-feedback {
+  .form .has-feedback .form-control-feedback {
       right: 4px;
-    }
+  }
+
+  .form-inline.formly-field-select {
+    flex: 1;
   }
 
   .formly-field-inline {
-    align-items: flex-end;
+    align-items: flex-start;
   }
   .label-height-offset {
-      padding-bottom: calc((#{$input-height-base} - #{$font-size-base})/2);
-      margin-right: 25px;
+    margin-top: #{$form-label-line-height}em;
+  }
+  .text-label-height-offset {
+    @extend .label-height-offset;
+    padding-top: calc((#{$input-height-base} - #{$base-line-height-ratio}em)/2);
+    margin-right: 25px;
   }
 
 }

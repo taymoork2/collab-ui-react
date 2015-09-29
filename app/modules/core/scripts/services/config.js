@@ -237,12 +237,11 @@ angular.module('Core')
             desc: 'tabs.conferencingDesc',
             state: 'site-list',
             link: '#site-list'
-              // Temporarily commented out Numbers tab until ready to expose.
-              // }, {
-              //   title: 'tabs.huronLineDetailsTab',
-              //   desc: 'tabs.huronLineDetailsTabDesc',
-              //   state: 'hurondetails',
-              //   link: '#hurondetails'
+          }, {
+            title: 'tabs.huronLineDetailsTab',
+            desc: 'tabs.huronLineDetailsTabDesc',
+            state: 'hurondetails',
+            link: '#hurondetails'
           }, {
             title: 'tabs.fusionDetailsTab',
             desc: 'tabs.fusionDetailsTabDesc',
@@ -254,10 +253,6 @@ angular.module('Core')
             state: 'mediafusionconnector',
             link: '#mediafusionconnector'
           }, {
-            title: 'tabs.callRoutingTab',
-            state: 'callRouter',
-            link: '#callRouter'
-          }, {
             title: 'Messenger',
             desc: 'Messenger Administration',
             state: 'messenger',
@@ -268,7 +263,7 @@ angular.module('Core')
           icon: 'icon-devices',
           title: 'tabs.deviceTab',
           state: 'devices',
-          link: '/devices-redux'
+          link: '/devices'
         }, {
           tab: 'reportTab',
           icon: 'icon-bars',
@@ -781,9 +776,6 @@ angular.module('Core')
           'overview',
           'users',
           'user-overview',
-          'device-overview',
-          'devices2-overview',
-          'device-overview-redux',
           'userprofile',
           'reports',
           'setupwizardmodal',
@@ -834,17 +826,15 @@ angular.module('Core')
         ],
         'squared-fusion-mgmt': [
           'fusion',
-          'cluster-details'
+          'cluster-details',
+          'calendar-service'
         ],
         'squared-fusion-uc': [
           'devices',
-          'devices-redux',
+          'device-overview',
           'devices-redux2',
-          'devices-redux2-search',
           'devices-redux3',
-          'devices-redux3-search',
-          'devices-cleanup',
-          'devices2'
+          'devices-redux4'
         ],
         'squared-team-member': [
           'organization'
@@ -877,7 +867,8 @@ angular.module('Core')
           'devices',
           'fusion',
           'mediafusionconnector',
-          'callRouter'
+          'callRouter',
+          'hurondetails'
         ]
       };
 

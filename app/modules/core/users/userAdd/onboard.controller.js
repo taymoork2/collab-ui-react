@@ -2,9 +2,10 @@
 
 //TODO refactor this into OnboardCtrl, BulkUserCtrl, AssignServicesCtrl
 angular.module('Core')
-  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$window', 'Log', '$log', 'Authinfo', 'Storage', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils', 'Orgservice', 'TelephonyInfoService', 'FeatureToggleService', 'NAME_DELIMITER',
-    function ($scope, $state, $stateParams, $q, $window, Log, $log, Authinfo, Storage, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER) {
+  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$window', 'Log', '$log', 'Authinfo', 'Storage', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils', 'Orgservice', 'TelephonyInfoService', 'FeatureToggleService', 'NAME_DELIMITER', 'SyncService',
+    function ($scope, $state, $stateParams, $q, $window, Log, $log, Authinfo, Storage, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, SyncService) {
 
+      $scope.isMsgrSyncMode = SyncService.isMessengerSync();
       $scope.hasAccount = Authinfo.hasAccount();
       $scope.usrlist = [];
       $scope.internalNumberPool = [];
@@ -667,7 +668,7 @@ angular.module('Core')
           user.push(userObj);
           usersList.push(user);
         }
-        angular.element('#btnSaveEnt').button('loading');
+        $scope.btnSaveEntLoad = true;
 
         Userservice.updateUsers(user, getAccountLicenseIds(), null, 'updateUserLicense', entitleUserCallback);
       };
@@ -972,7 +973,7 @@ angular.module('Core')
               }
               //Displaying notifications
               if (successes.length + errors.length === usersList.length) {
-                angular.element('#btnOnboard').button('reset');
+                $scope.btnOnboardLoading = false;
                 Notification.notify(successes, 'success');
                 Notification.notify(errors, 'error');
                 deferred.resolve();
@@ -1003,14 +1004,14 @@ angular.module('Core')
             }
             Notification.notify([error], 'error');
             isComplete = false;
-            angular.element('#btnOnboard').button('reset');
+            $scope.btnOnboardLoading = false;
             deferred.reject();
           }
           //no need to clear tokens here since that is causing the options grid to blank during the finish process
         };
 
         if (angular.isArray(usersList) && usersList.length > 0) {
-          angular.element('#btnOnboard').button('loading');
+          $scope.btnOnboardLoading = true;
 
           var i, temparray, chunk = Config.batchSize;
           for (i = 0; i < usersList.length; i += chunk) {
@@ -1095,8 +1096,8 @@ angular.module('Core')
           //Displaying notifications
           if (method !== 'convertUser') {
             if (successes.length + errors.length === usersList.length) {
-              angular.element('#btnOnboard').button('reset');
-              angular.element('#btnSaveEnt').button('reset');
+              $scope.btnOnboardLoading = false;
+              $scope.btnSaveEntLoad = false;
               Notification.notify(successes, 'success');
               Notification.notify(errors, 'error');
             }
@@ -1130,8 +1131,8 @@ angular.module('Core')
           if (method !== 'convertUser') {
             Notification.notify([error], 'error');
             isComplete = false;
-            angular.element('#btnOnboard').button('reset');
-            angular.element('#btnSaveEnt').button('reset');
+            $scope.btnOnboardLoading = false;
+            $scope.btnSaveEntLoad = false;
           } else {
             convertFailures.push(error);
           }
@@ -1146,7 +1147,7 @@ angular.module('Core')
             convertUsersInBatch();
           } else {
             if (convertBacked === false) {
-              angular.element('#btnConvert').button('reset');
+              $scope.btnConvertLoad = false;
               $scope.$dismiss();
             } else {
               $state.go('users.convert', {});
@@ -1337,7 +1338,7 @@ angular.module('Core')
       };
 
       $scope.convertUsers = function () {
-        angular.element('#btnConvert').button('loading');
+        $scope.btnConvertLoad = true;
         convertPending = true;
         convertCancelled = false;
         convertBacked = false;
@@ -1378,7 +1379,7 @@ angular.module('Core')
               convertUsersInBatch();
             } else {
               if (convertBacked === false) {
-                angular.element('#btnConvert').button('reset');
+                $scope.btnConvertLoad = false;
                 $scope.$dismiss();
               } else {
                 $state.go('users.convert', {});
@@ -1584,6 +1585,8 @@ angular.module('Core')
             responseMessage = $translate.instant('firstTimeWizard.csv500Error');
           } else if (status === 502 || status === 503) {
             responseMessage = $translate.instant('firstTimeWizard.csv502And503Error');
+          } else if (status === -1) {
+            responseMessage = $translate.instant('firstTimeWizard.csvCancelledError');
           } else {
             responseMessage = $translate.instant('firstTimeWizard.processCsvError');
           }
@@ -1659,39 +1662,42 @@ angular.module('Core')
         var tempUserArray = [];
         var tempLicenseArray = [];
         var uniqueEmails = [];
+        var processingError;
         for (var j = 0; j < userArray.length; j++) {
+          processingError = false;
+          // If we haven't met the chunk size, process the next user
           if (tempUserArray.length < csvChunk) {
-            // If we have the correct number of columns
-            if (userArray[j].length === 6) {
-              var email = userArray[j][3];
-              // If we haven't added this user yet
-              if (!_.contains(uniqueEmails, email)) {
-                uniqueEmails.push(email);
-                tempUserArray.push({
-                  address: email,
-                  name: userArray[j][0] + NAME_DELIMITER + userArray[j][1],
-                  displayName: userArray[j][2]
-                });
-                tempLicenseArray.push(buildLicenseArray(userArray[j][4], userArray[j][5]));
-              } else {
-                // Report a duplicate email and process the current temp array
-                addUserError(j + 1, $translate.instant('firstTimeWizard.csvDuplicateEmail'));
-                csvPromise = onboardCsvUsers(j - 1, tempUserArray, tempLicenseArray, csvPromise);
-                tempUserArray = [];
-                tempLicenseArray = [];
-                continue;
-              }
-            } else {
-              // Report an invalid csv row and process the current temp array
+            var userRow = userArray[j];
+            // Validate content in the row
+            if (userRow.length !== 6) {
+              // Report incorrect number of columns
+              processingError = true;
               addUserError(j + 1, $translate.instant('firstTimeWizard.csvInvalidRow'));
-              csvPromise = onboardCsvUsers(j - 1, tempUserArray, tempLicenseArray, csvPromise);
-              tempUserArray = [];
-              tempLicenseArray = [];
-              continue;
+            } else if (!userRow[3]) {
+              // Report required field is missing
+              processingError = true;
+              addUserError(j + 1, $translate.instant('firstTimeWizard.csvRequiredEmail'));
+            } else if (_.contains(uniqueEmails, userRow[3])) {
+              // Report a duplicate email
+              processingError = true;
+              addUserError(j + 1, $translate.instant('firstTimeWizard.csvDuplicateEmail'));
+            } else {
+              uniqueEmails.push(userRow[3]);
+              tempUserArray.push({
+                address: userRow[3],
+                name: userRow[0] + NAME_DELIMITER + userRow[1],
+                displayName: userRow[2]
+              });
+              tempLicenseArray.push(buildLicenseArray(userRow[4], userRow[5]));
             }
           }
-          // Process the current temp array if we've met the chunk size or is the last user in list
-          if (tempUserArray.length === csvChunk || j === (userArray.length - 1)) {
+          // Onboard all the previous users in the temp array if there was an error processing a row
+          if (processingError) {
+            csvPromise = onboardCsvUsers(j - 1, tempUserArray, tempLicenseArray, csvPromise);
+            tempUserArray = [];
+            tempLicenseArray = [];
+          } else if (tempUserArray.length === csvChunk || j === (userArray.length - 1)) {
+            // Onboard the current temp array if we've met the chunk size or is the last user in list
             csvPromise = onboardCsvUsers(j, tempUserArray, tempLicenseArray, csvPromise);
             tempUserArray = [];
             tempLicenseArray = [];

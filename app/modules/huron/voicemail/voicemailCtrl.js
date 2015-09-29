@@ -6,11 +6,12 @@
     .controller('VoicemailInfoCtrl', VoicemailInfoCtrl);
 
   /* @ngInject */
-  function VoicemailInfoCtrl($scope, $stateParams, $translate, $modal, UserServiceCommon, TelephonyInfoService, Notification, HttpUtils) {
+  function VoicemailInfoCtrl($scope, $stateParams, $translate, $modal, $q, UserServiceCommon, TelephonyInfoService, Notification, HttpUtils, LineSettings, DirectoryNumber) {
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.saveVoicemail = saveVoicemail;
     vm.reset = reset;
+    vm.directoryNumber = DirectoryNumber.getNewDirectoryNumber();
 
     init();
 
@@ -48,6 +49,8 @@
     }
 
     function saveVoicemail() {
+      var promise;
+      var promises = [];
       var voicemailPayload = {
         'services': [],
         'voicemail': {}
@@ -79,6 +82,32 @@
                 vm.telephonyInfo.services.splice(j, 1);
               }
             }
+            // update the cfwdall and cfwNAB to voicemail enabled 'f' in case they are set to true
+            for (var num in vm.telephonyInfo.directoryNumbers) {
+              var dn = vm.telephonyInfo.directoryNumbers[num];
+              if (dn.uuid !== null) {
+                DirectoryNumber.getDirectoryNumber(dn.uuid).then(function (dn) {
+                  vm.directoryNumber = dn;
+                  vm.directoryNumber.callForwardAll.voicemailEnabled = false;
+                  vm.directoryNumber.callForwardBusy.voicemailEnabled = false;
+                  vm.directoryNumber.callForwardBusy.intVoiceMailEnabled = false;
+                  vm.directoryNumber.callForwardNoAnswer.voicemailEnabled = false;
+                  vm.directoryNumber.callForwardNoAnswer.intVoiceMailEnabled = false;
+                  vm.directoryNumber.callForwardNotRegistered.voicemailEnabled = false;
+                  vm.directoryNumber.callForwardNotRegistered.intVoiceMailEnabled = false;
+                  promise = LineSettings.updateLineSettings(vm.directoryNumber);
+                  promises.push(promise);
+                });
+              }
+            }
+            $q.all(promises)
+              .then(function () {
+                Notification.notify([$translate.instant('directoryNumberPanel.success')], 'success');
+              })
+              .catch(function (response) {
+                Notification.errorResponse(response, 'directoryNumberPanel.error');
+              });
+
             updateVoicemail(voicemailPayload, result);
           }, function () {
             vm.reset();
