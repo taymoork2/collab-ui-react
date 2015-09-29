@@ -187,6 +187,7 @@
                 var licensesAvailable = licenseVolume - licenseUsage;
 
                 webExSiteSettingsObj.siteInfoCardObj.licensesTotal.count = licenseVolume;
+                webExSiteSettingsObj.siteInfoCardObj.licensesUsage.count = licenseUsage;
                 webExSiteSettingsObj.siteInfoCardObj.licensesAvailable.count = licensesAvailable;
 
                 updateDone = true;

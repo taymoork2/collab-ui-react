@@ -31,12 +31,13 @@
     ) {
 
       this.siteSettingsObj = WebExSiteSettingsFact.getSiteSettingsObj();
-      this.siteSettingsObj = WebExSiteSettingsFact.initSiteSettingsObj();
 
       // for webex site cross launch 
-      $scope.webexAdvancedUrl = $sce.trustAsResourceUrl(Config.getWebexAdvancedHomeUrl(this.siteSettingsObj.siteUrl));
+      $scope.webexAdvancedUrl = $sce.trustAsResourceUrl(Config.getWebexAdvancedHomeUrl($stateParams.siteUrl));
       $scope.adminEmailParam = Authinfo.getPrimaryEmail();
-      $scope.localeParam = $translate.use();
+      $scope.locale = ("es_LA" == $translate.use()) ? "es_MX" : $translate.use();
+
+      this.siteSettingsObj = WebExSiteSettingsFact.initSiteSettingsObj();
     }
   ]);
 })();

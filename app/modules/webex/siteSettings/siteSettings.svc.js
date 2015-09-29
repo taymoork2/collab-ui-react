@@ -63,6 +63,11 @@ angular.module('WebExSiteSettings').service('WebExSiteSettingsSvc', [
           count: 0
         },
 
+        licensesUsage: {
+          id: "licensesUsage",
+          count: 0
+        },
+
         licensesAvailable: {
           id: "licensesAvailable",
           count: 0

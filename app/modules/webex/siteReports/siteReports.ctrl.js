@@ -41,7 +41,7 @@
       $scope.adminEmailParam = Authinfo.getPrimaryEmail();
       $scope.localeParam = $translate.use();
 
-      var reportPageUrl = "https://" + $scope.siteUrl  + "/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage";
+      var reportPageUrl = "https://" + $scope.siteUrl + "/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage";
       $scope.reportPageIframeUrl = $sce.trustAsResourceUrl(reportPageUrl);
 
       $scope.uiSref =
