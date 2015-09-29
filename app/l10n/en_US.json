@@ -189,8 +189,8 @@
     "addOrganizationTabDesc": "Add a new organization to this account",
     "fusionDetailsTab": "Connector Management",
     "fusionDetailsTabDesc": "Connector Management",
-    "huronLineDetailsTab": "Huron",
-    "huronLineDetailsTabDesc": "Huron Details",
+    "huronLineDetailsTab": "Communication",
+    "huronLineDetailsTabDesc": "Communication Details",
     "MediafusionDetailsTab": "Media Service Management",
     "MediafusionDetailsTabDesc": "Media Service Management",
     "callRoutingTab": "Call Routing",
@@ -1196,7 +1196,8 @@
     "forwardBusy": "When line is busy, send calls to:",
     "forwardNoAnswer": "When there is no answer, send calls to:",
     "forwardExternal": "Forward external calls differently",
-    "addNew": "Add New"
+    "addNew": "Add New",
+    "forwardVoicemailDisabled": "Call Forwarding is set to Voicemail, which is currently disabled. Please update the Call Forwarding settings."
   },
   "callerIdPanel": {
     "title": "Caller ID",
@@ -1934,7 +1935,7 @@
   },
 
   "huronDetails": {
-    "title": "Huron",
+    "title": "Communication",
     "linesTitle": "Numbers",
     "settingsTitle": "Settings",
     "featuresTitle": "Features"
