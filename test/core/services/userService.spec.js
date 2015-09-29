@@ -60,19 +60,16 @@ describe('User Service', function () {
       }
     }];
     $httpBackend.expectPATCH(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/users').respond(201, {
-      status: 200,
+      status: 201,
       userResponse: [{
         email: "dntodid@gmail.com",
         entitled: ["ciscouc"]
-      }, {
-        email: "dntodid1@gmail.com",
-        entitled: ["ciscouc"]
       }]
     });
-    $httpBackend.when('POST', HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/users').respond(201);
-    $httpBackend.when('GET', HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/users/directorynumbers').respond(200);
-    $httpBackend.when('POST', HuronConfig.getCmiUrl() + '/identity/users/otp').respond(201);
-    $httpBackend.when('POST', HuronConfig.getEmailUrl() + '/email/userwelcome').respond(201);
+    $httpBackend.expectPOST(HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/users').respond(201);
+    $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/users/directorynumbers').respond(200);
+    $httpBackend.expectPOST(HuronConfig.getCmiUrl() + '/identity/users/otp').respond(201);
+    $httpBackend.expectPOST(HuronConfig.getEmailUrl() + '/email/userwelcome').respond(201);
     Userservice.updateUsers(users);
     $httpBackend.flush();
     expect(rootScope.$broadcast).toHaveBeenCalledWith('Userservice::updateUsers');
