@@ -1789,7 +1789,11 @@
     "pageId_xxxx": "Undefined"
   },
   "webexSiteReports": {
-    "title": "Reports"
+    "title": "Reports",
+    "common_reports": "Common Reports",
+    "training_center": "Training Center",
+    "event_center": "Event Center",
+    "support_center": "Support Center"
   },
   "webexReportsLabels": {
     "pageId_xxxx": "Undefined",

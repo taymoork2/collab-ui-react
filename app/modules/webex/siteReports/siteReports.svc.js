@@ -43,6 +43,7 @@ angular.module('WebExReports').service('reportService', [
       this.section_name = sectionName;
       this.site_url = siteUrl;
       this.report_links = reportLinks;
+      this.section_name_translated = $translate.instant("webexSiteReports." + this.section_name);
       //We have to rewrite this with the actual uirefs with proper reportids
       //right now I've hardcoded as reportID.
       this.uisrefs = self.report_links.map(function (thelink) {
