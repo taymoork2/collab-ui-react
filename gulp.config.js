@@ -166,7 +166,8 @@ module.exports = function() {
         vendor + '/humanize-duration/humanize-duration.js',
         vendor + '/angular-libphonenumber/dist/libphonenumber.js',
         vendor + '/angular-libphonenumber/dist/angular-libphonenumber.js',
-        vendor + '/angularjs-toaster/toaster.js'
+        vendor + '/angularjs-toaster/toaster.js',
+        vendor + '/ng-file-upload/ng-file-upload.js'
       ],
       scss: {
         paths: [

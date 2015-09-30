@@ -18,6 +18,7 @@ angular.module('Core', [
   'ngSanitize',
   'ngRoute',
   'ngMessages',
+  'ngFileUpload',
   // 'ui.bootstrap',
   'dialogs',
   'ngCsv',

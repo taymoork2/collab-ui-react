@@ -114,25 +114,18 @@ angular.module('Core')
           });
         },
 
-        setOrgSettings: function (orgId, reportingSiteUrl, reportingSiteDesc, helpUrl, isCiscoHelp, isCiscoSupport, callback) {
-          var orgUrl = Config.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/settings';
-
-          var payload = {};
-          payload['reportingSiteUrl'] = reportingSiteUrl || null;
-          payload['reportingSiteDesc'] = reportingSiteDesc || null;
-          payload['helpUrl'] = helpUrl || null;
-          payload['isCiscoHelp'] = isCiscoHelp;
-          payload['isCiscoSupport'] = isCiscoSupport;
+        setOrgSettings: function (orgId, settings, callback) {
+          var orgUrl = Config.getAdminServiceUrl() + 'organizations/' + orgId + '/settings';
 
           $http({
               method: 'PATCH',
               url: orgUrl,
-              data: payload
+              data: settings
             })
             .success(function (data, status) {
               data = data || {};
               data.success = true;
-              Log.debug('Posted orgSettings: ' + payload);
+              Log.debug('Posted orgSettings: ' + settings);
               callback(data, status);
             })
             .error(function (data, status) {
