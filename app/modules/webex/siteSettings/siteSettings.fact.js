@@ -367,12 +367,19 @@
               "/common_security"
             );
 
+            /*
             addPage(
               "common",
               "options",
               "/adm3100/siteSettingCommon.do?siteurl=sjsite14"
             );
-
+            */
+            addPage(
+              "common",
+              "options",
+              "/wbxadmin/siteSettingCommon.do?siteurl=sjsite14"
+            );
+            
             addPage(
               "common",
               "teleconfPrivileges",
@@ -389,7 +396,7 @@
             addPage(
               "meetingCenter",
               "schedTemplates",
-              "/common_schedTemplates"
+              "/meetingCenter_schedTemplates"
             );
 
             addPage(
