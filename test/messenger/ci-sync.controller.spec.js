@@ -5,6 +5,7 @@
     var ctrl;
 
     beforeEach(function () {
+      module('Huron');
       module('Messenger');
 
       inject(function ($controller) {
