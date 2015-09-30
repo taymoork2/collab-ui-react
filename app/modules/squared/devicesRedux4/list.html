@@ -1,45 +1,83 @@
 <div ng-show="devices.filterOrSearchActive">
 
   <div class="result-pane" ng-if="devices.filteredCodesAndDevices.matches.length">
+
+    <div ng-repeat="item in [{key: 'rooms', name: 'Rooms'},{key: 'devices', name: 'Devices'}]">
+      <div ng-if="devices.filteredCodesAndDevices[item.key].length">
+        <strong>{{item.name}}</strong>
+          <ul class="small-block-grid-1 medium-block-grid-2 large-block-grid-3">
+            <li
+              ng-click="devices.expandDevice(device)"
+              ng-repeat="device in devices.filteredCodesAndDevices[item.key] | limitTo: ((devices.pager.currentPage * devices.pager.pageSize) + (devices.pager.currentPageSize - devices.pager.pageSize)) | limitTo: -devices.pager.currentPageSize">
+              <div class="bg-container">
+                <div style="display: flex; align-items: center;">
+                  <i
+                    ng-if="device.type != 'group'"
+                    class="icon icon-3x icon-circle-telepresence"
+                    ng-class="{'needsActivation': device.needsActivation}"
+                  />
+                  <i
+                    ng-if="device.type == 'group'"
+                    class="icon icon-3x icon-circle-more"
+                  />
+                  <i
+                    class="overlay"
+                    ng-if="device.type != 'group'"
+                    ng-class="device.cssColorClass"
+                  />
+                  <div class="ellipsis card-items">
+                    <h4 class="ellipsis" ng-bind-html="device.displayName | highlight:devices.search"></h4>
+                    <div class="ellipsis" ng-if="device.type != 'group'">
+                      {{devices.deviceProps[device.filterMatch || 'readableState']}}:
+                      <span ng-bind-html="device[device.filterMatch || 'readableState'] | highlight:devices.search"></span>
+                    </div>
+                    <div class="ellipsis" ng-if="device.type == 'group'">
+                      Matches {{device.count}} devices
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+      </div>
+    </div>
+
+<!--     
     <ul class="small-block-grid-1 medium-block-grid-2 large-block-grid-3">
       <li
         ng-click="devices.expandDevice(device)"
         ng-repeat="device in devices.filteredCodesAndDevices.matches | limitTo: ((devices.pager.currentPage * devices.pager.pageSize) + (devices.pager.currentPageSize - devices.pager.pageSize)) | limitTo: -devices.pager.currentPageSize">
         <div class="bg-container">
-          <div style="display: flex">
+          <div style="display: flex; align-items: center;">
             <i
               ng-if="device.type != 'group'"
-              class="icon icon-2x icon-circle-telepresence"
+              class="icon icon-3x icon-circle-telepresence"
               ng-class="{'needsActivation': device.needsActivation}"
             />
             <i
               ng-if="device.type == 'group'"
-              class="icon icon-2x icon-circle-more"
+              class="icon icon-3x icon-circle-more"
             />
             <i
-              class="fa fa-circle overlay"
+              class="overlay"
               ng-if="device.type != 'group'"
               ng-class="device.cssColorClass"
             />
-            <div class="ellipsis">
-              <h4 ng-bind-html="device.displayName | highlight:devices.search"></h4>
+            <div class="ellipsis card-items">
+              <h4 class="ellipsis" ng-bind-html="device.displayName | highlight:devices.search"></h4>
+              <div class="ellipsis" ng-if="device.type != 'group'">
+                {{devices.deviceProps[device.filterMatch || 'readableState']}}:
+                <span ng-bind-html="device[device.filterMatch || 'readableState'] | highlight:devices.search"></span>
+              </div>
+              <div class="ellipsis" ng-if="device.type == 'group'">
+                Devices in group: {{device.count}}
+              </div>
             </div>
           </div>
-
-          <div class="ellipsis" style="padding-top: 15px" ng-if="device.type != 'group'">
-            {{devices.deviceProps[device.filterMatch || 'readableState']}}:
-            <span
-              ng-bind-html="device[device.filterMatch || 'readableState'] | highlight:devices.search">
-            </span>
-          </div>
-
-          <div class="ellipsis" style="padding-top: 15px" ng-if="device.type == 'group'">
-            Devices in group: {{device.count}}
-          </div>
-
         </div>
       </li>
-    </ul>
+    </ul> 
+-->
 
     <div class="more-pager">
       Showing {{devices.pager.pageSize > devices.pager.resultSize ? devices.pager.resultSize : devices.pager.pageSize}} of {{devices.pager.resultSize}}
@@ -51,25 +89,6 @@
       </a>
     </div>
 
-    <!-- pager -->
-<!--     <div class="details-header clearfix">
-      <div style="text-align: center">
-        <button
-          ng-click="devices.pager.prevPage()"
-          ng-disabled="!devices.pager.prev">
-          <i class="fa fa-chevron-left" />
-        </button>
-        <span style="padding: 0 20px">
-          Page {{devices.pager.currentPage}} of {{devices.pager.pageCount}}
-        </span>
-        <button
-          ng-click="devices.pager.nextPage()"
-          ng-disabled="!devices.pager.next">
-          <i class="fa fa-chevron-right" />
-        </button>
-      </div>
-    </div> -->
-    <!-- end:pager -->
   </div>
 
 </div>

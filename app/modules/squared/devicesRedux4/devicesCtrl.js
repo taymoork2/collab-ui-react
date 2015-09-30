@@ -59,6 +59,8 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, CsdmCodeService
       .values()
       .sortBy(displayNameSorter)
       .reduce(reduceFn, {
+        rooms: [],
+        devices: [],
         matches: [],
         countPerFilter: _.reduce(vm.filters, function (initialCount, filter) {
           initialCount[filter.label] = 0;
@@ -67,18 +69,22 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, CsdmCodeService
       })
       .value();
 
-    var rooms = _.chain(vm.filteredCodesAndDevices.matches)
-      .countBy('displayName')
-      .pick(function (val) {
-        return val > 1;
-      })
-      .value();
+    if (!vm.displayNameFilter) {
+      var rooms = _.chain(vm.filteredCodesAndDevices.matches)
+        .countBy('displayName')
+        .pick(function (val) {
+          return val > 1;
+        })
+        .value();
 
-    if (!vm.search && !vm.displayNameFilter) {
-      vm.filteredCodesAndDevices.matches = _.chain(vm.filteredCodesAndDevices.matches)
+      vm.filteredCodesAndDevices.devices = _.chain(vm.filteredCodesAndDevices.matches)
         .filter(function (device) {
           return !rooms[device.displayName];
         })
+        .sortBy(displayNameSorter)
+        .value();
+
+      vm.filteredCodesAndDevices.rooms = _.chain({})
         .extend(_.map(rooms, function (count, displayName) {
           return {
             displayName: displayName,
@@ -88,6 +94,8 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, CsdmCodeService
         }))
         .sortBy(displayNameSorter)
         .value();
+    } else {
+      vm.filteredCodesAndDevices.devices = vm.filteredCodesAndDevices.matches;
     }
 
     vm.filterOrSearchActive = vm.search || _.where(vm.filters, {
@@ -97,6 +105,7 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, CsdmCodeService
     vm.pager.update({
       resultSize: vm.filteredCodesAndDevices.matches.length
     });
+
   };
 
   function reduceFn(result, device) {
