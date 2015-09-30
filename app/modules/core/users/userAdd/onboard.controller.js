@@ -2,8 +2,8 @@
 
 //TODO refactor this into OnboardCtrl, BulkUserCtrl, AssignServicesCtrl
 angular.module('Core')
-  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$window', 'Log', '$log', 'Authinfo', 'Storage', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils', 'Orgservice', 'TelephonyInfoService', 'FeatureToggleService', 'NAME_DELIMITER', 'SyncService',
-    function ($scope, $state, $stateParams, $q, $window, Log, $log, Authinfo, Storage, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, SyncService) {
+  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$http', '$window', 'Log', '$log', 'Authinfo', 'Storage', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils', 'Orgservice', 'TelephonyInfoService', 'FeatureToggleService', 'NAME_DELIMITER', 'SyncService',
+    function ($scope, $state, $stateParams, $q, $http, $window, Log, $log, Authinfo, Storage, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, SyncService) {
 
       $scope.isMsgrSyncMode = SyncService.isMessengerSync();
       $scope.hasAccount = Authinfo.hasAccount();
@@ -516,10 +516,13 @@ angular.module('Core')
 
       $scope.$watch('radioStates.commRadio', function (newVal, oldVal) {
         if (newVal != oldVal) {
-          if ($scope.radioStates.commRadio) {
-            $scope.$emit('wizardNextText', 'next');
-          } else {
-            $scope.$emit('wizardNextText', 'finish');
+          // Do not change wizard text when configuring bulk user services
+          if (angular.isDefined($scope.wizard) && !($scope.wizard.current.step.name === 'csvServices' || $scope.wizard.current.step.name === 'dirsyncServices')) {
+            if ($scope.radioStates.commRadio) {
+              $scope.$emit('wizardNextText', 'next');
+            } else {
+              $scope.$emit('wizardNextText', 'finish');
+            }
           }
         }
       });
@@ -1584,6 +1587,32 @@ angular.module('Core')
       // Wizard hook
       $scope.csvProcessingNext = csvSave;
 
+      $scope.initBulkMetric = initBulkMetric;
+      $scope.sendBulkMetric = sendBulkMetric;
+
+      var bulkStartLog = moment();
+
+      function initBulkMetric() {
+        bulkStartLog = moment();
+      }
+
+      function sendBulkMetric() {
+        var eType = LogMetricsService.getEventType('bulkCsvUsers');
+        if ($scope.options) {
+          if ($scope.options.addUsers == 1) {
+            eType = LogMetricsService.getEventType('bulkCsvUsers');
+          } else if ($scope.options.addUsers == 2) {
+            eType = LogMetricsService.getEventType('bulkDirSyncUsers');
+          }
+        }
+        var data = {
+          'newUsersCount': $scope.model.numNewUsers || 0,
+          'updatedUsersCount': $scope.model.numExistingUsers || 0,
+          'errorUsersCount': angular.isArray($scope.model.userErrorArray) ? $scope.model.userErrorArray.length : 0
+        };
+        LogMetricsService.logMetrics('Finished bulk processing', eType, LogMetricsService.getEventAction('buttonClick'), 200, bulkStartLog, 1, data);
+      }
+
       function csvSave() {
         saveDeferred = $q.defer();
         cancelDeferred = $q.defer();
@@ -1599,6 +1628,16 @@ angular.module('Core')
           });
         }
 
+        function addUserErrorWithTrackingID(row, errorMsg) {
+          if (angular.isDefined($http.defaults.headers.common) && angular.isDefined($http.defaults.headers.common.TrackingID)) {
+            if (angular.isString(errorMsg) && errorMsg.length > 0 && !_.endsWith(errorMsg, '.')) {
+              errorMsg += '.';
+            }
+            errorMsg += ' TrackingID: ' + $http.defaults.headers.common.TrackingID;
+          }
+          addUserError(row, _.trim(errorMsg));
+        }
+
         function callback(data, status) {
           /*jshint validthis:true */
           var params = this;
@@ -1612,18 +1651,18 @@ angular.module('Core')
                     $scope.model.numNewUsers++;
                   }
                 } else {
-                  addUserError(params.startIndex + index + 1, user.message);
+                  addUserErrorWithTrackingID(params.startIndex + index + 1, getErrorResponse(user.message, user.status));
                 }
               });
             } else {
               for (var i = 0; i < params.length; i++) {
-                addUserError(params.startIndex + i + 1, $translate.instant('firstTimeWizard.processCsvResponseError'));
+                addUserErrorWithTrackingID(params.startIndex + i + 1, $translate.instant('firstTimeWizard.processCsvResponseError'));
               }
             }
           } else {
             var responseMessage = getErrorResponse(data, status);
             for (var k = 0; k < params.length; k++) {
-              addUserError(params.startIndex + k + 1, responseMessage);
+              addUserErrorWithTrackingID(params.startIndex + k + 1, responseMessage);
             }
           }
 
@@ -1632,14 +1671,14 @@ angular.module('Core')
         }
 
         function getErrorResponse(data, status) {
-          var responseMessage = data.message;
+          var responseMessage;
           if (status === 400) {
             responseMessage = $translate.instant('firstTimeWizard.csv400Error');
           } else if (status === 403 || status === 401) {
             responseMessage = $translate.instant('firstTimeWizard.csv401And403Error');
           } else if (status === 404) {
             responseMessage = $translate.instant('firstTimeWizard.csv404Error');
-          } else if (status === 408) {
+          } else if (status === 408 || status == 504) {
             responseMessage = $translate.instant('firstTimeWizard.csv408Error');
           } else if (status === 409) {
             responseMessage = $translate.instant('firstTimeWizard.csv409Error');

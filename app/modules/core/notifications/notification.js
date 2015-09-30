@@ -62,13 +62,13 @@
       if (response && angular.isFunction(response.headers)) {
         var trackingId = response.headers('TrackingID');
         if (trackingId) {
-          if (!errorMsg.endsWith('.')) {
+          if (errorMsg.length > 0 && !_.endsWith(errorMsg, '.')) {
             errorMsg += '.';
           }
           errorMsg += ' TrackingID: ' + trackingId;
         }
       }
-      return errorMsg;
+      return _.trim(errorMsg);
     }
 
     function confirmation(message) {
