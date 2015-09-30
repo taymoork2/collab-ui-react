@@ -70,10 +70,23 @@
 .aa-edit-icon {
   @extend .icon;
   @extend .icon-edit;
-  font-size: 22px;
+  font-size: 1.5rem;
   color: $brand-default;
-  padding-left: 6px;
-  padding-top: 6px;
+  padding-left: .25rem;
+  padding-top: .25rem;
+  &:hover {
+    cursor: pointer;
+    color: $brand-primary;
+  }
+}
+
+.aa-trash-icon {
+  @extend .icon;
+  @extend .icon-trash;
+  font-size: 1.5rem;
+  color: $brand-default;
+  padding-left: .25rem;
+  padding-top: .25rem;
   &:hover {
     cursor: pointer;
     color: $brand-primary;

@@ -23,60 +23,84 @@
   }
 }
 
-.aa-landing-header-pad {
-  padding-bottom: 100px;
-}
-.aa-header-style {
-  width: 650px;
-  float: left;
+article header.aa-header.compact {
+  @include vr-spacing(pl, 1);
+  @include vr-spacing(pr, 1);
+  @include vr-spacing(pt, .25);
+  @include vr-spacing(pb, .25);
 }
 
-.aa-template-header{
+section.aa-card {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: .5rem;
+  padding-bottom: 0;
+  .aa-card-resource {
+    @include vr-spacing(pt, .25);
+  }
+  .aa-card-toolbar {
+    float: right;
+    padding-bottom: .25rem;
+  }
+  &:hover {
+    cursor: pointer;
+    background-color: $gray-lightest;
+  }
+}
+
+.aa-landing-header-pad {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.aa-template-header {
   color: $brand-info;
   margin-bottom: 1px;
 }
 
-#aa-template-tile1 {
-  padding: 8px 2px 8px 2px;
-  margin: 0px -2px 0px -2px;
-  width: 200px;
-  height: 160px;
-  border-right: 0px;
-}
-
-#aa-template-tile2 {
-  padding: 8px 2px 8px 2px;
-  margin: 0px -2px 0px -2px;
-  width: 200px;
-  height: 160px;
-  border-right: 0px;
-}
-
-#aa-template-tile3 {
-  padding: 8px 2px 8px 2px;
-  margin: 0px -2px 0px -2px;
-  width: 200px;
-  height: 160px;
-}
-
-#aa-template-tile4 {
-  padding: 8px 2px 8px 2px;
-  margin: 0px -2px 0px -2px;
-  width: 200px;
-  height: 160px;
-}
-
 .aa-template-tile {
-  @include tile;
-  .aa-number-name {
-    font-family: $brand-font-cisco-TT-Light;
-    font-size: 16px;
-    color: $brand-primary;
-    display: inline-block;
-    vertical-align: top;
+  padding: 0;
+  width: 13rem;
+  height: 13rem;
+  .aa-template-tile-section {
+    &:hover {
+      cursor: pointer;
+      background-color: $gray-lightest;
+    }
   }
-  &:hover {
-    cursor: pointer;
+  .aa-icon-block {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-top: 1.5rem;
+    padding-bottom: 0
+  }
+  .aa-schedule-icon {
+      @extend .icon;
+      @extend .icon-Clock;
+      font-size: 1.5em;
+      text-align: center;
+      color: $brand-default;
+  }
+  .aa-audio-icon {
+    @extend .icon;
+    @extend .icon-Audio;
+    font-size: 1.5em;
+    text-align: center;
+    color: $brand-default;
+  }
+  .aa-headset-icon {
+    @extend .icon;
+    @extend .icon-Headset;
+    font-size: 1.5em;
+    text-align: center;
+    color: $brand-default;
+  }
+  .aa-playlist-icon {
+    @extend .icon;
+    @extend .icon-Playlist;
+    font-size: 1.5em;
+    text-align: center;
+    color: $brand-default;
   }
 }
 
