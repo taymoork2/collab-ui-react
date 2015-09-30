@@ -121,7 +121,7 @@ module.exports = function() {
         vendor + '/amcharts/dist/amcharts/serial.js',
         vendor + '/amcharts/dist/amcharts/funnel.js',
         vendor + '/typeahead.js/dist/typeahead.bundle.js',
-        vendor + '/lodash/dist/lodash.compat.js',
+        vendor + '/lodash/lodash.min.js',
         vendor + '/draggable/draggable.min.js',
         vendor + '/moment/moment.js',
         vendor + '/base64/base64.js',

@@ -9,7 +9,7 @@ refuteError = (err) ->
 assertStatusCode = (status, res) ->
   assert.equal status, res.statusCode, "Expected status #{status} but was #{res.statusCode}. Response: #{res.body}"
 
-describe 'squared api ( jkuiros@cisco.com ) -',  ->
+describe 'squared api -',  ->
 
   describe 'pbr-admin', ->
 
