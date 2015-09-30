@@ -9,6 +9,12 @@ var SiteSettigsPage = function () {
     username: 'sjsite14@mailinator.com',
     password: 'Cisco!23',
   };
+  
+  this.testAdmin2 = {
+    username: 'monika@mfs.com',
+    password: 'P@ssword123',
+  }
+  
 
   this.conferencing = element(by.css('a[href="#site-list"]'));
   this.configureSite = element(by.css('a[href="#/webexSiteSettings"]'));
@@ -33,6 +39,14 @@ var SiteSettigsPage = function () {
 
   this.waitForWebexSiteSettingsPanel = function () {
     browser.driver.wait(this.isWebexSiteSettingsPanelPresent, TIMEOUT);
+  };
+  
+  this.isSiteSettingsXLaunchIconPresent = function () {
+	return browser.driver.isElementPresent(by.id('webexSiteAdminLink'));
+  };
+  
+  this.waitSiteSettingsXLaunchIcon = function () {
+	return browser.wait(this.isSiteSettingsXLaunchIconPresent, TIMEOUT);
   };
 
   this.isSiteSettingsBreadCrumbsPresent = function () {
