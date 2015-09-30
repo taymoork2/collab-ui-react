@@ -42,8 +42,8 @@
 
                     <p tooltip-placement="top" tooltip="{{sync.syncStatusTooltip}}" translate="messengerCiSync.syncStatusHeading"></p>
                     <!-- Ugly, but it seems the only way that works so far. Would be nice to find simpler way -->
-                    <cs-toggle-switch ng-if="sync.adminTypes.ops !== sync.adminType" ng-model="sync.syncInfo.isSyncing" toggle-id="toggleIsSyncing" name="toggleSyncing" class="no-click" is-disabled="true" size="small"></cs-toggle-switch>
-                    <cs-toggle-switch ng-if="sync.adminTypes.ops === sync.adminType" ng-model="sync.syncInfo.isSyncing" toggle-id="toggleIsSyncing" name="toggleSyncing" size="small"></cs-toggle-switch>
+                    <cs-toggle-switch ng-if="sync.adminTypes.ops !== sync.adminType" ng-model="sync.syncInfo.isSyncEnabled" toggle-id="toggleIsSyncing" name="toggleSyncing" class="no-click" is-disabled="true" size="small"></cs-toggle-switch>
+                    <cs-toggle-switch ng-if="sync.adminTypes.ops === sync.adminType" ng-model="sync.syncInfo.isSyncEnabled" toggle-id="toggleIsSyncing" name="toggleSyncing" size="small"></cs-toggle-switch>
 
                     <p tooltip-placement="bottom" tooltip="{{sync.authRedirectTooltip}}" translate="messengerCiSync.authRedirectHeading"></p>
                     <!-- Ugly, but it seems the only way that works so far. Would be nice to find simpler way -->

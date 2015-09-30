@@ -51,7 +51,7 @@
       messengerOrgId: 'Unknown',
       linkDate: 'Unknown',
       isAuthRedirect: false,
-      isSyncing: false
+      isSyncEnabled: false
     };
 
     vm.fields = [{
@@ -154,7 +154,12 @@
       // Double-check that they are ops for security
       if (vm.adminTypes.ops === vm.adminType) {
         // SyncService must turn the syncing boolean into the full mode
-        SyncService.patchSync(vm.syncInfo.isSyncing, vm.syncInfo.isAuthRedirect);
+        SyncService.patchSync(vm.syncInfo.isSyncEnabled, vm.syncInfo.isAuthRedirect)
+          .then(function (successMsg) {
+            window.console.log('Successful PATCH to CI Sync');
+          }, function (errorMsg) {
+            window.console.error('Error during PATCH to CI Sync: ' + errorMsg);
+          });
       }
     }
   }
