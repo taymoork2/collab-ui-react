@@ -840,7 +840,8 @@ angular.module('Core')
           'device-overview',
           'devices-redux2',
           'devices-redux3',
-          'devices-redux4'
+          'devices-redux4',
+          'devices-redux5'
         ],
         'squared-team-member': [
           'organization'
