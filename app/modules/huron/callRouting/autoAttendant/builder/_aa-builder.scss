@@ -166,8 +166,8 @@
 .aa-add-step-icon {
   @extend .icon;
   @extend .icon-plus;
-  font-size: 32px;
-  top: 1px;
+  font-size: 2rem;
+  top: 0.0625rem;
   color: $brand-default;
   &:hover {
     cursor: pointer;
@@ -175,12 +175,12 @@
   }
 }
 
-.aa-action-delete {
+.aa-action-delete-icon {
   margin-left: auto;
   .menu-delete-icon-md {
     @extend .icon;
     @extend .icon-close;
-    font-size: 20px;
+    font-size: 1.25rem;
     &:hover {
       cursor: pointer;
       color: $brand-primary;
@@ -228,7 +228,7 @@
 }
 
 .aa-new-step-info {
-  max-width: 300px;
-  margin-top: 10px;
-  margin-bottom: 30px;
+  max-width: 18.75rem;
+  margin-top: 0.625rem;
+  margin-bottom: 1.875rem;
 }

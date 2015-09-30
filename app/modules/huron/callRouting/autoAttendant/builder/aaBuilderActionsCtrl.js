@@ -41,7 +41,6 @@
     }
 
     function getTemplateController() {
-      var template = vm.template;
       if (vm.template && vm.template.controller) {
         return $controller(vm.template.controller, {
           $scope: $scope
