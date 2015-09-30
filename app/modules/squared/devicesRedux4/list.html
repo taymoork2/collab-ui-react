@@ -1,7 +1,7 @@
 <div ng-show="devices.filterOrSearchActive">
 
   <div class="result-pane" ng-if="devices.filteredCodesAndDevices.matches.length">
-    <ul class="small-block-grid-1 medium-block-grid-2 large-block-grid-4">
+    <ul class="small-block-grid-1 medium-block-grid-2 large-block-grid-3">
       <li
         ng-click="devices.expandDevice(device)"
         ng-repeat="device in devices.filteredCodesAndDevices.matches | limitTo: ((devices.pager.currentPage * devices.pager.pageSize) + (devices.pager.currentPageSize - devices.pager.pageSize)) | limitTo: -devices.pager.currentPageSize">
@@ -41,8 +41,18 @@
       </li>
     </ul>
 
+    <div class="more-pager">
+      Showing {{devices.pager.pageSize > devices.pager.resultSize ? devices.pager.resultSize : devices.pager.pageSize}} of {{devices.pager.resultSize}}
+      <span ng-if="devices.pager.pageSize < devices.pager.resultSize">&mdash;</span>
+      <a href
+        ng-click="devices.pager.increasePageSize()"
+        ng-if="devices.pager.pageSize < devices.pager.resultSize">
+        Load more...
+      </a>
+    </div>
+
     <!-- pager -->
-    <div class="details-header clearfix">
+<!--     <div class="details-header clearfix">
       <div style="text-align: center">
         <button
           ng-click="devices.pager.prevPage()"
@@ -58,7 +68,7 @@
           <i class="fa fa-chevron-right" />
         </button>
       </div>
-    </div>
+    </div> -->
     <!-- end:pager -->
   </div>
 

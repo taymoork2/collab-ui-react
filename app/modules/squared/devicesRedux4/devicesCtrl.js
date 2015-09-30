@@ -3,10 +3,13 @@
 /* @ngInject */
 function DevicesReduxCtrl($scope, $state, $location, $rootScope, CsdmCodeService, CsdmDeviceService, PagerUtil, AddDeviceModal) {
   var vm = this;
+  var pageSize = 18;
+
+  $('body').css('background', 'white');
 
   vm.pager = new PagerUtil({
     resultSize: 0,
-    pageSize: 16
+    pageSize: pageSize
   });
 
   vm.deviceProps = {

@@ -1,6 +1,5 @@
 .devices-redux4 {
   background-color: white !important;
-  min-height: 1000px;
 
   .ellipsis {
     overflow: hidden;
@@ -66,8 +65,11 @@
     }
 
     .device-pager {
-      text-align: center;
-      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      .pr {
+        text-align: right;
+      }
     }
 
     .readable-activation-code {
@@ -81,6 +83,11 @@
   }
   .result-pane {
     padding-top: 20px;
+
+    .more-pager, .more-pager * {
+      font-size: 1rem;
+      text-align: center;
+    }
 
     .bg-container {
       padding: 20px;
@@ -201,17 +208,5 @@
       list-style-type: none;
       border-bottom: 1px solid #eee;
     }
-  }
-}
-
-@media (max-width: 600px) {
-  .devices-redux4 {
-    padding: 5px 10px;
-  }
-}
-
-@media (min-width: 600px) {
-  .devices-redux4 {
-    padding: 60px 80px;
   }
 }
