@@ -16,7 +16,7 @@
         // subject: $translate.instant('generateActivationCodeModal.subjectContent'),
         // message: ''
     };
-    vm.qrCodeUrl = '';
+    vm.qrCode = '';
     vm.timeLeft = '';
     vm.activateEmail = activateEmail;
     vm.sendActivationCodeEmail = sendActivationCodeEmail;
@@ -28,13 +28,27 @@
           return OtpService.generateOtp(vm.userName).then(function (otpObj) {
             vm.otp = otpObj;
             vm.timeLeft = moment(vm.otp.expiresOn).fromNow(true);
-            vm.qrCodeUrl = OtpService.getQrCodeUrl(otpObj.code);
+            setQRCode(vm.otp.code);
           });
         } else {
           vm.timeLeft = moment(vm.otp.expiresOn).fromNow(true);
-          vm.qrCodeUrl = OtpService.getQrCodeUrl(vm.otp.code);
+          setQRCode(vm.otp.code);
         }
       });
+    }
+
+    function setQRCode(code) {
+      if (angular.isString(code) && code.length > 0) {
+        OtpService.getQrCodeUrl(code).then(function (qrcode) {
+          var arrayData = '';
+          for (var i in Object.keys(qrcode)) {
+            if (qrcode.hasOwnProperty(i)) {
+              arrayData += qrcode[i];
+            }
+          }
+          vm.qrCode = arrayData;
+        });
+      }
     }
 
     function activateEmail() {

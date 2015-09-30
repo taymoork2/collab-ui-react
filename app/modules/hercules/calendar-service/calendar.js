@@ -2,12 +2,12 @@
   'use strict';
 
   /* @ngInject */
-  function CalendarController($modal, $scope, ClusterService, USSService2, ConverterService, ServiceStatusSummaryService) {
+  function CalendarController($state, $modal, $scope, ClusterService, USSService2, ConverterService, ServiceStatusSummaryService) {
     ClusterService.subscribe(angular.noop, {
       scope: $scope
     });
-
     var vm = this;
+
     vm.clusters = ClusterService.getClusters();
 
     vm.hasNoCalendarConnectors = function (cluster) {

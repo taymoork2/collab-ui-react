@@ -290,6 +290,13 @@ angular
             }
           }
         })
+        .state('users.convert.services.dn', {
+          views: {
+            'usersConvert@users.convert': {
+              templateUrl: 'modules/huron/users/assignDnAndDirectLinesModal.tpl.html'
+            }
+          }
+        })
         .state('editService', {
           parent: 'modalLarge',
           views: {
@@ -942,28 +949,6 @@ angular
             }
           }
         })
-        .state('callrouterBase', {
-          abstract: true,
-          parent: 'main',
-          templateUrl: 'modules/huron/callRouter/callRouter.tpl.html'
-        })
-        .state('callRouter', {
-          url: '/callRouter',
-          parent: 'callrouterBase',
-          views: {
-            'header': {
-              templateUrl: 'modules/huron/callRouter/callRouterHeader.tpl.html'
-            },
-            'nav': {
-              templateUrl: 'modules/huron/callRouter/companyNumber.tpl.html',
-              controller: 'CallRouterCtrl',
-              controllerAs: 'nav'
-            },
-            'main': {
-              template: '<div ui-view></div>'
-            }
-          }
-        })
         .state('autoattendant', {
           url: '/autoattendant',
           abstract: false,
@@ -1203,9 +1188,10 @@ angular
           controllerAs: 'linesListCtrl'
         })
         .state('huronsettings', {
-          url: '/settings',
           parent: 'hurondetails',
-          template: '<div>Under Construction</div>'
+          templateUrl: 'modules/huron/callRouter/companyNumber.tpl.html',
+          controller: 'CallRouterCtrl',
+          controllerAs: 'callRouterCtrl'
         })
         .state('huronfeatures', {
           url: '/features',
@@ -1234,9 +1220,16 @@ angular
           url: '/services/calendar'
         })
         .state('calendar-service.list', {
+          views: {
+            'fullPane': {
+              templateUrl: 'modules/hercules/calendar-service/calendar-list.html',
+              controller: 'CalendarController',
+              controllerAs: 'calendar'
+            }
+          },
           url: '/list'
         })
-        .state('calendar-service.details', {
+        .state('calendar-service.list.details', {
           views: {
             'rightPane': {
               controllerAs: 'calendarDetails',
@@ -1248,16 +1241,11 @@ angular
             cluster: null
           }
         })
-        .state('calendar-service.calendarClusterSettings', {
+        .state('calendar-service.list.details.cluster-settings', {
           views: {
-            'rightPane': {
-              controllerAs: 'calendarClusterSettings',
-              controller: 'CalendarClusterSettingsController',
-              templateUrl: 'modules/hercules/calendar-service/calendar-cluster-settings.html'
+            'details-pane': {
+              templateUrl: 'modules/hercules/calendar-service/cluster-settings.html'
             }
-          },
-          params: {
-            cluster: null
           }
         })
         .state('calendar-service.about', {
@@ -1278,15 +1266,8 @@ angular
             }
           }
         })
-        .state('calendar-service.resources', {
-          url: '/resources',
-          views: {
-            'fullPane': {
-              templateUrl: 'modules/hercules/calendar-service/resources.html'
-            }
-          }
-        })
-        .state('cluster-details', {
+
+      .state('cluster-details', {
           parent: 'sidepanel',
           views: {
             'sidepanel@': {
