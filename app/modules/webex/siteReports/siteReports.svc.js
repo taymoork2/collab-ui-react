@@ -90,9 +90,9 @@ angular.module('WebExReports').service('reportService', [
       //use the above 4 lists to gather all the UISrefs
       [
         [common_reports_pageids, common_reports],
-        [event_center_pageids, event_center],
         [support_center_pageids, support_center],
-        [training_center_pageids, training_center]
+        [training_center_pageids, training_center],
+        [event_center_pageids, event_center]
       ].forEach(function (xs) {
         var pageids = xs[0];
         var section = xs[1];
@@ -102,8 +102,8 @@ angular.module('WebExReports').service('reportService', [
       });
 
       var repts = new Reports();
-      repts.setSections([common_reports, event_center,
-        support_center, training_center
+      repts.setSections([common_reports, support_center,
+        training_center, event_center
       ]);
       return repts;
     };
