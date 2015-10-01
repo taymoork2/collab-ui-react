@@ -121,6 +121,10 @@ angular.module('Core')
               if (typeof (orgSettingsObj.allowCustomerLogos) !== 'undefined') {
                 $scope.allowCustomerLogos = orgSettingsObj.allowCustomerLogos;
               }
+
+              if (typeof (orgSettingsObj.logoUrl) !== 'undefined') {
+                $scope.logoUrl = orgSettingsObj.logoUrl;
+              }
             } else {
               Log.debug('No orgSettings found for org: ' + data.id);
             }
@@ -128,7 +132,7 @@ angular.module('Core')
           } else {
             Log.debug('Get existing org failed. Status: ' + status);
           }
-        }, orgId);
+        }, orgId, true);
       };
 
       $scope.init();
@@ -260,6 +264,7 @@ angular.module('Core')
           }
         }, 3000);
         // Automatically start using the custom logo
+        BrandService.resetCdnLogo(Authinfo.getOrgId());
         $scope.usePartnerLogo = false;
         $scope.toggleLogo(false);
       }

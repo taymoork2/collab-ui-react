@@ -14,6 +14,7 @@
       'useCustomLogo': useCustomLogo,
       'enableCustomerLogos': enableCustomerLogos,
       'disableCustomerLogos': disableCustomerLogos,
+      'resetCdnLogo': resetCdnLogo,
       'upload': upload
     };
     return service;
@@ -40,7 +41,7 @@
             Log.debug('Get existing org failed. Status: ' + status);
             reject();
           }
-        }, orgId);
+        }, orgId, true);
       });
     }
 
@@ -65,12 +66,6 @@
         'allowCustomerLogos': true
       };
 
-      // Temporary, when enabling customer logos always start with partnerLogo
-      // TODO: Fix admin-service PATCH issues dealing with orgSettings
-      _.extend(settings, {
-        'usePartnerLogo': true
-      });
-
       Orgservice.setOrgSettings(orgId, settings, notify);
     }
 
@@ -78,12 +73,6 @@
       var settings = {
         'allowCustomerLogos': false
       };
-
-      // Temporary, when disabling customer logos always switch to partnerLogo
-      // TODO: Fix admin-service PATCH issues dealing with orgSettings
-      _.extend(settings, {
-        'usePartnerLogo': true
-      });
 
       Orgservice.setOrgSettings(orgId, settings, notify);
     }
@@ -100,8 +89,15 @@
       }
     }
 
+    function resetCdnLogo(orgId) {
+      var purgeCDNUrl = Config.getAdminServiceUrl() + 'organizations/' + orgId + '/logo/purgeFromCDN';
+
+      return $http.post(purgeCDNUrl);
+    }
+
     function upload(orgId, file) {
       var uploadUrl = Config.getAdminServiceUrl() + 'organizations/' + orgId + '/logo/uploadUrl';
+
       return $http.get(uploadUrl).then(function (response) {
         return Upload.http({
           url: response.data.tempURL,
