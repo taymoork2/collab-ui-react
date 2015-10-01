@@ -140,7 +140,7 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, $window, CsdmCo
   };
 
   function transitionIfSearchOrFilterChanged() {
-    if (vm.groupedDevices.count + vm.deviceList == 1) {
+    if (vm.groupedDevices.count + vm.deviceList.length == 1) {
       return $state.go('devices-redux5.details', {
         device: vm.deviceList[0] || vm.groupedDevices.device
       });
@@ -157,20 +157,18 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, $window, CsdmCo
   vm.exportToCsv = function () {
     var fields = ['cisUuid', 'displayName', 'needsActivation', 'readableState', 'readableActivationCode', 'ip', 'mac', 'serial', 'software'];
     var csv = fields.join(';') + '\r\n';
-
     var devices = _.chain(vm.groupedDevices.groups)
       .pluck('devices')
       .flatten()
       .concat(vm.deviceList)
       .value();
-
     _.each(devices, function (item) {
       _.each(fields, function (field) {
         csv += (item[field] || '') + ';';
       });
       csv += '\r\n';
     });
-    $window.open('data:text/csv;charset=utf-8,' + $window.encodeURIComponent(csv));
+    $window.location = 'data:text/csv;charset=utf-8,' + $window.encodeURIComponent(csv);
   };
 
   vm.updateCodesAndDevices();

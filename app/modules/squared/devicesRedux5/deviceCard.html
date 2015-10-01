@@ -10,11 +10,11 @@
     />
     <i
       ng-if="device.type == 'group'"
-      class="icon icon-3x icon-circle-more"
+      class="icon icon-3x icon-circle-group"
     />
     <i
       class="overlay"
-      ng-if="device.type != 'group'"
+      ng-if="device.type != 'group' && !device.needsActivation"
       ng-class="device.cssColorClass"
     />
     <div class="ellipsis card-items">
