@@ -68,6 +68,7 @@ angular.module('WebExReports').service('reportService', [
       var event_center = new ReportsSection("event_center", siteUrl, ["/u/y/z", "www.yahoo.com"]);
       var support_center = new ReportsSection("support_center", siteUrl, ["/u/y/z", "www.yahoo.com"]);
       var training_center = new ReportsSection("training_center", siteUrl, ["/u/y/z", "www.yahoo.com"]);
+      var remote_access = new ReportsSection("remote_access", siteUrl, ["/u/y/z", "www.yahoo.com"]);
 
       var uisrefsArray = [];
       var common_reports_pageids = ["meeting_in_progess", "meeting_usage", "recording_usage",
@@ -95,12 +96,22 @@ angular.module('WebExReports').service('reportService', [
         "attendee"
       ];
 
-      //use the above 4 lists to gather all the UISrefs
+      /**
+      "remote_access_computer_usage": "Remote Access Computer Usage",
+          "remote_access_csrs_usage": "Remote Access Csrs Usage",
+          "remote_access_computer_tracking": "Remote Access Computer Tracking",
+      */
+      var remote_access_pageids = ["remote_access_computer_usage",
+        "remote_access_csrs_usage", "remote_access_computer_tracking"
+      ];
+
+      //use the above 5 lists to gather all the UISrefs
       [
         [common_reports_pageids, common_reports],
         [support_center_pageids, support_center],
         [training_center_pageids, training_center],
-        [event_center_pageids, event_center]
+        [event_center_pageids, event_center],
+        [remote_access_pageids, remote_access]
       ].forEach(function (xs) {
         var pageids = xs[0];
         var section = xs[1];
@@ -111,7 +122,7 @@ angular.module('WebExReports').service('reportService', [
 
       var repts = new Reports();
       repts.setSections([common_reports, support_center,
-        training_center, event_center
+        training_center, event_center, remote_access
       ]);
       return repts;
     };

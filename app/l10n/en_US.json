@@ -1853,6 +1853,8 @@
     "training_center": "Training Center",
     "event_center": "Event Center",
     "support_center": "Support Center",
+    "remote_access": "Remote Access",
+
     "meeting_in_progess": "Meetings In Progess",
     "meeting_usage": "Meeting Usage",
     "recordings_storage_usage": "Recordings Storage Usage",
@@ -1870,12 +1872,15 @@
     "event_center_held_events": "Held Events",
     "event_center_report_template": "Report Templates",
 
-    "support_center_support_sessions" : "Support Sessions",
-    "support_center_call_volume" : "Call Volume",
-    "support_center_csr_activity" : "CSR Activity",
-    "support_center_url_referral" : "URL Referral",
-    "support_center_allocation_queue" : "Allocation Queue",
- 
+    "support_center_support_sessions": "Support Sessions",
+    "support_center_call_volume": "Call Volume",
+    "support_center_csr_activity": "CSR Activity",
+    "support_center_url_referral": "URL Referral",
+    "support_center_allocation_queue": "Allocation Queue",
+
+    "remote_access_computer_usage": "Computer Usage",
+    "remote_access_csrs_usage": "CSR Report",
+    "remote_access_computer_tracking": "Computer Tracking",
 
     "storage_utilization": "Storage Utilization",
     "programs_events_recordings": "Programs Events Recordings",
@@ -1894,9 +1899,7 @@
     "webacd_csr_activity": "Webacd Csr Activity",
     "webacd_url_referal": "Webacd Url Referal",
     "webacd_allocation_queue": "Webacd Allocation Queue",
-    "remote_access_computer_usage": "Remote Access Computer Usage",
-    "remote_access_csrs_usage": "Remote Access Csrs Usage",
-    "remote_access_computer_tracking": "Remote Access Computer Tracking",
+
     "usage": "Usage",
 
     "recorded_session_access": "Recorded Session Access",
