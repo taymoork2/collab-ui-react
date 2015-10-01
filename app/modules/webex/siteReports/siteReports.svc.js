@@ -75,17 +75,17 @@ angular.module('WebExReports').service('reportService', [
       ];
 
       var event_center_pageids = ["event_center_overview",
-        "event_center_site_summary", 
+        "event_center_site_summary",
         "event_center_scheduled_events",
         "event_center_held_events",
         "event_center_report_template"
       ];
 
-      var support_center_pageids = ["session_query_tool", "call_volume", "csr_activity", "url_referal",
-        "allocation_queue", "webacd_session_query_tool", "webacd_call_volume",
-        "webacd_csr_volume", "webacd_csr_activity", "webacd_url_referal",
-        "webacd_allocation_queue", "remote_access_computer_usage",
-        "remote_access_csrs_usage", "remote_access_computer_tracking"
+      var support_center_pageids = ["support_center_support_sessions",
+        "support_center_call_volume",
+        "support_center_csr_activity",
+        "support_center_url_referral",
+        "support_center_allocation_queue"
       ];
 
       var training_center_pageids = ["training_usage",

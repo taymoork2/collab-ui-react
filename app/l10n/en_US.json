@@ -1870,6 +1870,13 @@
     "event_center_held_events": "Held Events",
     "event_center_report_template": "Report Templates",
 
+    "support_center_support_sessions" : "Support Sessions",
+    "support_center_call_volume" : "Call Volume",
+    "support_center_csr_activity" : "CSR Activity",
+    "support_center_url_referral" : "URL Referral",
+    "support_center_allocation_queue" : "Allocation Queue",
+ 
+
     "storage_utilization": "Storage Utilization",
     "programs_events_recordings": "Programs Events Recordings",
     "summary": "Summary",
