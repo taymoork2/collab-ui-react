@@ -58,8 +58,17 @@
                 i {
                     font-size: rem(48);
                 }
-
             }
+            .overview-label {
+                color: $gray;
+            }
+            i {
+       			cursor: pointer;
+        		color: $text-color;
+       			&:hover {
+          			color: $brand-primary;
+        		}
+        	}
         }
     }
 }
