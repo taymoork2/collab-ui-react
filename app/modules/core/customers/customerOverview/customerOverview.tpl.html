@@ -67,7 +67,49 @@
 
     <uc-external-number-overview ng-if="customerOverview.isSquaredUC"></uc-external-number-overview>
 
-    <button ng-disabled="!customerOverview.currentCustomer.isAllowedToManage" id="launchCustomer" class="btn btn-lg btn-primary center" translate="customerPage.launchButton" ng-click="customerOverview.launchCustomerPortal()"></button>
+    <button id="launchCustomer" class="btn btn-lg btn-primary text-center launchCustomer"
+      ng-disabled="!customerOverview.currentCustomer.isAllowedToManage" translate="customerPage.launchButton"
+      ng-click="customerOverview.launchCustomerPortal()">
+    </button>
 
+    <cs-sp-section>
+      <div class="feature-list">
+        <ul>
+          <li class="feature">
+            <span class="feature-name"
+              translate="customerPage.partnerLogo">
+            </span>
+
+            <span class="feature-details" ng-if="customerOverview.usePartnerLogo"
+              translate="common.enabled">
+            </span>
+            <span class="feature-details" ng-if="!customerOverview.usePartnerLogo"
+              translate="common.disabled">
+            </span>
+          </li>
+          <li class="feature">
+            <span class="feature-name" translate="customerPage.logoOverride"></span>
+
+            <span class="feature-details" ng-if="customerOverview.logoOverride"
+              translate="common.enabled">
+            </span>
+            <span class="feature-details" ng-if="!customerOverview.logoOverride"
+              translate="common.disabled">
+            </span>
+          </li>
+
+          <li class="feature" ng-if="!customerOverview.logoOverride">
+            <label class="cs-checkbox" for="allowCustomerLogo">
+              <input type="checkbox" ng-model="customerOverview.allowCustomerLogos" id="allowCustomerLogo"
+                ng-change="customerOverview.toggleAllowCustomerLogos(customerOverview.allowCustomerLogos)">
+              <span></span>
+            </label>
+            <span translate="customerPage.allowCustomerLogo"
+              translate-values="{customerName: '{{customerOverview.currentCustomer.customerName}}'}">
+            </span>
+          </li>
+        </ul>
+      </div>
+    </cs-sp-section>
   </cs-sp-container>
 </div>

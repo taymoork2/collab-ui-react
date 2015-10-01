@@ -93,6 +93,7 @@ angular.module('Squared').service('CsdmConverter',
     }
 
     function hasIssues(obj) {
+      // return obj.status && obj.status.level && obj.status.level != 'OK';
       return getIsOnline(obj) && obj.status && obj.status.level && obj.status.level != 'OK';
     }
 

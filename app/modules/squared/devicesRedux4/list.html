@@ -2,7 +2,7 @@
 
   <div class="result-pane" ng-if="devices.filteredCodesAndDevices.matches.length">
 
-    <div ng-repeat="item in [{key: 'rooms', name: 'Rooms'},{key: 'devices', name: 'Devices'}]">
+    <div ng-repeat="item in [{key: 'rooms', name: 'Rooms'},{key: 'devices', name: 'Device Details'}]">
       <div ng-if="devices.filteredCodesAndDevices[item.key].length">
         <strong>{{item.name}}</strong>
           <ul class="small-block-grid-1 medium-block-grid-2 large-block-grid-3">
@@ -32,7 +32,7 @@
                       <span ng-bind-html="device[device.filterMatch || 'readableState'] | highlight:devices.search"></span>
                     </div>
                     <div class="ellipsis" ng-if="device.type == 'group'">
-                      Matches {{device.count}} devices
+                      {{device.count}} devices
                     </div>
                   </div>
                 </div>

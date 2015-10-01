@@ -1,13 +1,21 @@
 (function () {
   'use strict';
 
-  /* global alertify */
-
   angular.module('Core')
+    .config(toastrConfig)
     .service('Notification', NotificationFn);
 
   /* @ngInject */
-  function NotificationFn($translate, $q) {
+  function toastrConfig(toasterConfig) {
+    toasterConfig['tap-to-dismiss'] = false;
+    toasterConfig['time-out'] = 0;
+    toasterConfig['position-class'] = 'toast-bottom-right';
+    toasterConfig['close-button'] = true;
+    toasterConfig['body-output-type'] = 'trustedHtml';
+  }
+
+  /* @ngInject */
+  function NotificationFn($translate, $q, toaster, $timeout, AlertService) {
     return {
       success: success,
       error: error,
@@ -36,12 +44,12 @@
         return;
       }
       type = (type == 'success') ? type : 'error';
-      alertify.log(notifications.join('<br/>'), type, type == 'success' ? 3000 : 0);
+      toaster.pop(type, null, notifications.join('<br/>'), type == 'success' ? 3000 : 0);
     }
 
     function errorResponse(response, errorKey, errorParams) {
       var errorMsg = processErrorResponse(response, errorKey, errorParams);
-      alertify.log(errorMsg.trim(), 'error', 0);
+      toaster.pop('error', null, errorMsg.trim(), 0);
     }
 
     function processErrorResponse(response, errorKey, errorParams) {
@@ -74,21 +82,29 @@
     function confirmation(message) {
       var deferred = $q.defer();
 
-      alertify.set({
-        labels: {
-          ok: $translate.instant('common.yes'),
-          cancel: $translate.instant('common.no')
-        },
-        buttonReverse: true,
+      //TODO
+      /* //Update when AngularJS-Toaster 0.4.16 is released
+      AlertService.setDeferred(deferred);
+      AlertService.setMessage(message);
+      toaster.pop({
+        type: 'warning',
+        body: 'cs-confirmation',
+        bodyOutputType: 'directive'
       });
+      */
 
-      alertify.confirm(message, function (e) {
-        if (e) {
+      toaster.pop('warning', null, message + '<br/> <div class="clearfix"><button type="button" class="btn btn-danger ui-ml notification-yes right">' + $translate.instant('common.yes') + '</button>' + '<button type="button" class="btn btn-default right notification-no">' + $translate.instant('common.no') + '</button></div>');
+      $timeout(function () {
+        angular.element('.notification-yes').on('click', function () {
+          toaster.clear('*');
           deferred.resolve();
-        } else {
+        });
+
+        angular.element('.notification-no').on('click', function () {
+          toaster.clear('*');
           deferred.reject();
-        }
-      });
+        });
+      }, 0);
 
       return deferred.promise;
     }
