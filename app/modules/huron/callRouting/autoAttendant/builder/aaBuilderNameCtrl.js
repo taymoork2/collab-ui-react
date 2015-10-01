@@ -6,7 +6,7 @@
     .controller('aaBuilderNameCtrl', AutoAttendantNameBuilderCtrl);
 
   /* @ngInject */
-  function AutoAttendantNameBuilderCtrl($scope, AAUiModelService, AutoAttendantCeInfoModelService,  AAModelService, Notification) {
+  function AutoAttendantNameBuilderCtrl($scope, AAUiModelService, AutoAttendantCeInfoModelService, AAModelService, Notification) {
 
     var vm = this;
     vm.aaModel = {};
@@ -38,11 +38,7 @@
     function saveUiModel() {
       vm.aaModel.aaRecord.callExperienceName = vm.name;
 
-      vm.aaModel.aaRecord.assignedResources = [{
-        "id": parseInt(Math.random() * 10000000, 10),
-        "type": "directoryNumber",
-        "trigger": "incomingCall"
-      }];
+      vm.aaModel.aaRecord.assignedResources = [];
 
       vm.aaModel.aaRecord.actionSets = [];
       vm.aaModel.aaRecord.actionSets.push({});

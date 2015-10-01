@@ -5,9 +5,6 @@
     .module('uc.autoattendant')
     .controller('AABuilderMainCtrl', AABuilderMainCtrl); /* was AutoAttendantMainCtrl */
 
-
-
-
   /* @ngInject */
   function AABuilderMainCtrl($scope, $translate, $stateParams, AAModelService, AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeService, Notification) {
     var vm = this;
@@ -72,11 +69,17 @@
             newAaRecord.callExperienceURL = response.callExperienceURL;
             aaRecords.push(newAaRecord);
             vm.aaModel.ceInfos.push(AutoAttendantCeInfoModelService.getCeInfo(newAaRecord));
-            Notification.success('autoAttendant.successCreateCe');
+            Notification.success('autoAttendant.successCreateCe', {
+              name: aaRecord.callExperienceName
+            });
 
           },
           function (response) {
-            Notification.error('autoAttendant.errorCreateCe');
+            Notification.error('autoAttendant.errorCreateCe', {
+              name: aaRecord.callExperienceName,
+              statusText: response.statusText,
+              status: response.status
+            });
           }
         );
       } else {
@@ -90,11 +93,17 @@
             aaRecords[i].callExperienceName = aaRecord.callExperienceName;
             aaRecords[i].assignedResources = angular.copy(aaRecord.assignedResources);
             vm.aaModel.ceInfos[i] = AutoAttendantCeInfoModelService.getCeInfo(aaRecords[i]);
-            Notification.success('autoAttendant.successUpdateCe');
+            Notification.success('autoAttendant.successUpdateCe', {
+              name: aaRecord.callExperienceName
+            });
 
           },
           function (response) {
-            Notification.error('autoAttendant.errorUpdateCe');
+            Notification.error('autoAttendant.errorUpdateCe', {
+              name: aaRecord.callExperienceName,
+              statusText: response.statusText,
+              status: response.status
+            });
           }
         );
       }
@@ -172,6 +181,10 @@
     }
 
     function activate() {
+      /* $scope variables temporarily needed for integration with older templates */
+      $scope.aa = {};
+      $scope.aa.modal = {};
+
       vm.aaModel = AAModelService.getAAModel();
 
       vm.aaModel.aaRecord = AAModelService.newAARecord();

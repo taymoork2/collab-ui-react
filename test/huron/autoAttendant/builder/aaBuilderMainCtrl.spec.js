@@ -92,7 +92,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       var ceInfo = ce2CeInfo(rawCeInfo);
       expect(angular.equals(aaModel.ceInfos[0], ceInfo)).toEqual(true);
 
-      expect(Notification.success).toHaveBeenCalledWith('autoAttendant.successCreateCe');
+      expect(Notification.success).toHaveBeenCalledWith('autoAttendant.successCreateCe', jasmine.any(Object));
     });
 
     it('should update an existing aaRecord successfully', function () {
@@ -110,7 +110,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       var ceInfo = ce2CeInfo(rawCeInfo);
       expect(angular.equals(aaModel.ceInfos[0], ceInfo)).toEqual(true);
 
-      expect(Notification.success).toHaveBeenCalledWith('autoAttendant.successUpdateCe');
+      expect(Notification.success).toHaveBeenCalledWith('autoAttendant.successUpdateCe', jasmine.any(Object));
     });
 
   });
