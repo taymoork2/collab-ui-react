@@ -264,6 +264,7 @@ angular.module('Core')
           }
         }, 3000);
         // Automatically start using the custom logo
+        BrandService.resetCdnLogo(Authinfo.getOrgId());
         $scope.usePartnerLogo = false;
         $scope.toggleLogo(false);
       }

@@ -14,6 +14,7 @@
       'useCustomLogo': useCustomLogo,
       'enableCustomerLogos': enableCustomerLogos,
       'disableCustomerLogos': disableCustomerLogos,
+      'resetCdnLogo': resetCdnLogo,
       'upload': upload
     };
     return service;
@@ -100,8 +101,15 @@
       }
     }
 
+    function resetCdnLogo(orgId) {
+      var purgeCDNUrl = Config.getAdminServiceUrl() + 'organizations/' + orgId + '/logo/purgeFromCDN';
+
+      return $http.post(purgeCDNUrl);
+    }
+
     function upload(orgId, file) {
       var uploadUrl = Config.getAdminServiceUrl() + 'organizations/' + orgId + '/logo/uploadUrl';
+
       return $http.get(uploadUrl).then(function (response) {
         return Upload.http({
           url: response.data.tempURL,
