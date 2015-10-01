@@ -101,13 +101,23 @@ describe('Service: OtpService', function () {
   });
 
   describe('getQrCodeUrl function', function () {
-    it('should exist', function () {
-      expect(OtpService.getQrCodeUrl).toBeDefined();
+    beforeEach(function () {
+      $httpBackend.expectGET(HuronConfig.getEmailUrl() + '/getqrimage/encoded?oneTimePassword=23232323232').respond(200, getJSONFixture('huron/json/device/otps/qrcode.json'));
     });
 
-    it('should return the correct url', function () {
-      expect(OtpService.getQrCodeUrl('0001000200030004')).toEqual(HuronConfig.getOcelotUrl() + '/getqrimage?oneTimePassword=0001000200030004');
+    it('should generate a qrImage', function () {
+
+      OtpService.getQrCodeUrl('23232323232').then(function (data) {
+        var arrayData = '';
+        for (var i in Object.keys(data)) {
+
+          if (data.hasOwnProperty(i)) {
+            arrayData += data[i];
+          }
+        }
+        expect(arrayData).toEqual('FAKEIMAGE');
+      });
+      $httpBackend.flush();
     });
   });
-
 });

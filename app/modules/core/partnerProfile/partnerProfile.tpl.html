@@ -63,10 +63,83 @@
 
           <div ng-if="!isPartner && partner !== null">
             <h3 translate="customerProfile.partnerAdmin"></h3>
-              <span class="rep-info">{{partner.name.givenName | translate}} {{partner.name.familyName | translate}}</span>
-              <span class="rep-info" translate="parter.displayName"></span>
-              <span class="rep-info" translate="partner.userName"></span>
+              <span class="rep-info">{{partner.displayName}}</span>
+              <span class="rep-info">{{partner.userName}}</span>
             </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- branding logo upload -->
+    <div ng-if="isPartner || allowCustomerLogos">
+      <div class="row" id="brandingLogoPanel">
+        <div class="small-7 columns">
+          <h2 translate="partnerProfile.brandingTitle"></h2>
+          <div class="form-spacing">
+            <span ng-if="!isPartner" translate="customerProfile.brandingInfo"></span>
+            <span ng-if="isPartner" translate="partnerProfile.brandingInfo"></span>
+          </div>
+        </div>
+      </div>
+      <div class="row form-spacing">
+        <div class="small-12 medium-7 columns">
+          <div class="row">
+            <div class="small-2 columns">
+              <label class="cs-radio" for="partnerLogoRadio">
+                <input type="radio" id="partnerLogoRadio" ng-model="usePartnerLogo" ng-value="true"
+                  ng-change="toggleLogo(usePartnerLogo)">
+                <span></span>
+              </label>
+            </div>
+            <div class="small-10 columns">
+              <span ng-if="isPartner" translate="partnerProfile.useCiscoLogo"></span>
+              <span ng-if="!isPartner" translate="customerProfile.usePartnerLogo"
+                translate-values="{partnerName: '{{partner.displayName}}'}"></span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="small-2 columns">
+                <label class="cs-radio" for="customLogoRadio">
+                  <input type="radio" id="customLogoRadio" ng-model="usePartnerLogo" ng-value="false"
+                    ng-change="toggleLogo(usePartnerLogo)">
+                  <span></span>
+                </label>
+            </div>
+            <div class="small-8 columns">
+              <div class="drop-box" ngf-drop="upload($file, $event)" ng-model="logoFile"
+                ngf-drag-over-class="dragover" ngf-validate="{{logoCriteria}}">
+                <img class="thumbnail" alt="" ngf-src="logoFile" ng-hide="logoError"/>
+                <p class="vertical-align text-center" translate="partnerProfile.logoPlaceholder" ng-hide="logoFile"></p>
+              </div>
+            </div>
+            <div class="small-2 columns">
+              <div class="button secondary" name="file" accept="image/png" ngf-select="upload($file, $event)"
+               ng-model="logoFile" ngf-validate="{{logoCriteria}}">
+                <span translate="partnerProfile.chooseFile"></span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="small-8 columns small-offset-2">
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Hide this control for now. There is an issue with orgSettings being reliable -->
+      <div class="row form-spacing" ng-if="false">
+        <div class="small-12 medium-7 columns">
+          <div class="row" ng-if="isPartner">
+            <div class="small-2 columns">
+              <label class="cs-checkbox" for="allowCustomerLogo">
+                <input type="checkbox" id="allowCustomerLogo" ng-model="allowCustomerLogos"
+                  ng-change="toggleAllowCustomerLogos(allowCustomerLogos)">
+                <span></span>
+              </label>
+            </div>
+            <div class="small-10 columns">
+              <span translate="partnerProfile.allowCustomerLogo"></span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -120,7 +193,7 @@
           <div class="columns small-10">
             <div class="input-group" >
               <input type="text" id="partnerSupportUrl" class="form-control" placeholder="{{troubleUrl | translate}}" ng-model="supportUrl">
-              <textarea rows="7" id="partnerSupportText" class="form-control optional-row" placeholder="{{troubleText | translate}}" ng-model="supportText"> 
+              <textarea rows="7" id="partnerSupportText" class="form-control optional-row" placeholder="{{troubleText | translate}}" ng-model="supportText">
               </textarea>
             </div>
           </div>

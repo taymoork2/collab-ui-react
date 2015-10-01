@@ -3,21 +3,23 @@
 'use strict';
 
 describe('OnboardCtrl: Ctrl', function () {
-  var controller, $scope, $timeout, GroupService, Notification, Userservice, $q, TelephonyInfoService, Orgservice, FeatureToggleService, SyncService;
+  var controller, $scope, $timeout, GroupService, Notification, Userservice, $q, TelephonyInfoService, Orgservice, FeatureToggleService, SyncService, $state;
   var internalNumbers;
   var externalNumbers;
   var externalNumberPool;
   var externalNumberPoolMap;
   var getUserMe;
+  var getMigrateUsers;
   var getMyFeatureToggles;
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
   beforeEach(module('Messenger'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$timeout_, _GroupService_, _Notification_, _Userservice_, _TelephonyInfoService_, _$q_, _Orgservice_, _FeatureToggleService_, _SyncService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$timeout_, _GroupService_, _Notification_, _Userservice_, _TelephonyInfoService_, _$q_, _Orgservice_, _FeatureToggleService_, _SyncService_, _$state_) {
     $scope = $rootScope.$new();
     $timeout = _$timeout_;
     $q = _$q_;
+    $state = _$state_;
     GroupService = _GroupService_;
     Notification = _Notification_;
     Userservice = _Userservice_;
@@ -36,12 +38,14 @@ describe('OnboardCtrl: Ctrl', function () {
     spyOn(GroupService, 'getGroupList').and.callFake(function (callback) {
       callback({});
     });
+    spyOn($state, 'go');
 
     internalNumbers = getJSONFixture('huron/json/internalNumbers/internalNumbers.json');
     externalNumbers = getJSONFixture('huron/json/externalNumbers/externalNumbers.json');
     externalNumberPool = getJSONFixture('huron/json/externalNumberPoolMap/externalNumberPool.json');
     externalNumberPoolMap = getJSONFixture('huron/json/externalNumberPoolMap/externalNumberPoolMap.json');
     getUserMe = getJSONFixture('core/json/users/me.json');
+    getMigrateUsers = getJSONFixture('core/json/users/migrate.json');
     getMyFeatureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
 
     spyOn(Notification, 'notify');
@@ -55,10 +59,12 @@ describe('OnboardCtrl: Ctrl', function () {
     spyOn(TelephonyInfoService, 'loadExternalNumberPool').and.returnValue($q.when(externalNumbers));
     spyOn(TelephonyInfoService, 'loadExtPoolWithMapping').and.returnValue($q.when(externalNumberPoolMap));
     spyOn(Userservice, 'getUser').and.returnValue(getUserMe);
-    spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue(getMyFeatureToggles);
+    spyOn(Userservice, 'migrateUsers').and.returnValue(getMigrateUsers);
+    spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(getMyFeatureToggles);
 
     controller = $controller('OnboardCtrl', {
-      $scope: $scope
+      $scope: $scope,
+      $state: $state
     });
 
     $scope.$apply();
@@ -239,6 +245,19 @@ describe('OnboardCtrl: Ctrl', function () {
         "name": "dntodid1",
         "address": "dntodid1@gmail.com"
       }];
+      $scope.convertSelectedList = [{
+        "name": {
+          "givenName": "dntodid",
+          "familyName": ""
+        },
+        "userName": "dntodid@gmail.com"
+      }, {
+        "name": {
+          "givenName": "dntodid1",
+          "familyName": ""
+        },
+        "userName": "dntodid1@gmail.com"
+      }];
       $scope.radioStates.commRadio = 'true';
       $scope.internalNumberPool = internalNumbers;
       $scope.externalNumberPool = externalNumberPool;
@@ -279,6 +298,22 @@ describe('OnboardCtrl: Ctrl', function () {
       expect($scope.usrlist[1].externalNumber.pattern).toEqual('null');
       expect($scope.usrlist[1].assignedDn.pattern).toEqual('4001');
 
+    });
+
+    it('convertUsersNext', function () {
+
+      $scope.convertUsersNext();
+      $scope.$apply();
+      expect($state.go).toHaveBeenCalledWith("users.convert.services.dn");
+      expect($scope.usrlist[0].assignedDn.pattern).toEqual('4000');
+      expect($scope.usrlist[1].assignedDn.pattern).toEqual('4001');
+    });
+
+    it('assignDNForConvertUsers', function () {
+
+      $scope.assignDNForConvertUsers();
+      $scope.$apply();
+      expect(Userservice.migrateUsers).toHaveBeenCalled();
     });
 
     it('checkDidDnDupes', function () {

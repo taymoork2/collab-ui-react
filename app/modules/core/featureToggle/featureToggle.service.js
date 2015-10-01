@@ -82,7 +82,7 @@
         if (feature === features.pstnSetup) {
           return resolve(Authinfo.getOrgId() === '666a7b2f-f82e-4582-9672-7f22829e728d');
         } else if (feature === features.csvUpload) {
-          return resolve(Authinfo.getOrgId() === '151d02da-33a2-45aa-9467-bdaebbaeee76');
+          return resolve(true);
         }
         // else {
         //TODO first check user features

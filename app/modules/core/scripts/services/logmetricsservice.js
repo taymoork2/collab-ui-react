@@ -42,7 +42,10 @@ angular.module('Core')
           customerAccountPage: 'CUSTOMERACCOUNTPAGE',
           customerInviteUsersPage: 'CUSTOMERINVITEUSERSPAGE',
           userOnboardEmailSent: 'USERONBOARDEMAILSENT',
-          convertUsers: 'CONVERTUSERS'
+          convertUsers: 'CONVERTUSERS',
+          bulkUsers: 'BULKUSERS',
+          bulkCsvUsers: 'BULKCSVUSERS',
+          bulkDirSyncUsers: 'BULKDIRSYNCUSERS'
         },
 
         getEventAction: function (eAction) {
@@ -60,15 +63,13 @@ angular.module('Core')
 
           if (eType !== undefined && eAction !== undefined) {
             var endLog = moment();
-            var timeDiff = moment(endLog, 'DD/MM/YYYY HH:mm:ss').diff(moment(startLog, 'DD/MM/YYYY HH:mm:ss'));
-            var elapsedTime = moment().milliseconds(timeDiff).milliseconds();
+            var elapsedTime = moment(endLog, 'DD/MM/YYYY HH:mm:ss').diff(moment(startLog, 'DD/MM/YYYY HH:mm:ss'));
 
             events[0] = new LogMetricEvent(eAction, eType, status, elapsedTime, units, data);
             var logsMetricEvent = {
               metrics: events
             };
             Log.debug(logsMetricEvent);
-
             if (Config.isProd()) {
               $http.post(metricUrl, logsMetricEvent);
             }
