@@ -202,9 +202,9 @@ angular.module('Core')
 
       $scope.toggleLogo = _.debounce(function (value) {
         if (value) {
-          BrandService.usePartnerLogo(orgId);
+          BrandService.usePartnerLogo(orgId, $scope.isPartner);
         } else {
-          BrandService.useCustomLogo(orgId);
+          BrandService.useCustomLogo(orgId, $scope.isPartner);
         }
       }, 2000, {
         'leading': true,

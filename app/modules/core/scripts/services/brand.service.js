@@ -6,7 +6,7 @@
     .factory('BrandService', BrandService);
 
   /* @ngInject */
-  function BrandService($http, $q, Authinfo, Config, Log, Orgservice, Upload) {
+  function BrandService($http, $q, $translate, Authinfo, Config, Log, Notification, Orgservice, Upload) {
 
     var service = {
       'getSettings': getSettings,
@@ -44,40 +44,36 @@
       });
     }
 
-    function usePartnerLogo(orgId) {
+    function usePartnerLogo(orgId, isPartner) {
       var settings = {
         'usePartnerLogo': true
       };
 
       // Temporary, don't let Partner org set global allowCustomerLogos
       // TODO: Fix admin-service PATCH issues dealing with orgSettings
-      if (orgId === Authinfo.getOrgId()) {
+      if (isPartner) {
         _.extend(settings, {
           'allowCustomerLogos': false
         });
       }
 
-      Orgservice.setOrgSettings(orgId, settings, function (data, status) {
-        return data;
-      });
+      Orgservice.setOrgSettings(orgId, settings, notify);
     }
 
-    function useCustomLogo(orgId) {
+    function useCustomLogo(orgId, isPartner) {
       var settings = {
         'usePartnerLogo': false
       };
       //
       // Temporary, don't let Partner org set global allowCustomerLogos
       // TODO: Fix admin-service PATCH issues dealing with orgSettings
-      if (orgId === Authinfo.getOrgId()) {
+      if (isPartner) {
         _.extend(settings, {
           'allowCustomerLogos': false
         });
       }
 
-      Orgservice.setOrgSettings(orgId, settings, function (data, status) {
-        return data;
-      });
+      Orgservice.setOrgSettings(orgId, settings, notify);
     }
 
     function enableCustomerLogos(orgId) {
@@ -85,9 +81,13 @@
         'allowCustomerLogos': true
       };
 
-      Orgservice.setOrgSettings(orgId, settings, function (data, status) {
-        return data;
+      // Temporary, when enabling customer logos always start with partnerLogo
+      // TODO: Fix admin-service PATCH issues dealing with orgSettings
+      _.extend(settings, {
+        'usePartnerLogo': true
       });
+
+      Orgservice.setOrgSettings(orgId, settings, notify);
     }
 
     function disableCustomerLogos(orgId) {
@@ -95,9 +95,25 @@
         'allowCustomerLogos': false
       };
 
-      Orgservice.setOrgSettings(orgId, settings, function (data, status) {
-        return data;
+      // Temporary, when disabling customer logos always switch to partnerLogo
+      // TODO: Fix admin-service PATCH issues dealing with orgSettings
+      _.extend(settings, {
+        'usePartnerLogo': true
       });
+
+      Orgservice.setOrgSettings(orgId, settings, notify);
+    }
+
+    function notify(data, status) {
+      if (data.success) {
+        Notification.notify([$translate.instant('partnerProfile.processing')], 'success');
+      } else {
+        var error = $translate.instant('errors.statusError', {
+          status: status
+        });
+
+        Notification.notify(error, 'error');
+      }
     }
 
     function upload(orgId, file) {
