@@ -57,7 +57,7 @@
       _this.logMsg = _this.funcName + ": " + "\n" +
         "siteSettingId=" + $scope.siteSettingId + "\n" +
         "siteSettingLabel=" + $scope.siteSettingLabel + "\n" +
-        "trustIframeUrl=" + $scope.trustIframeUrl + "\n" +
+        "settingPageIframeUrl=" + $stateParams.settingPageIframeUrl + "\n" +
         "trustIframeUrl=" + $scope.trustIframeUrl + "\n" +
         "adminEmail=" + $scope.adminEmail + "\n" +
         "authToken=" + $scope.authToken + "\n" +

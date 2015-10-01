@@ -25,14 +25,12 @@
         var funcName = "validateXmlData()";
         var logMsg = "";
 
-        /*
         logMsg = funcName + ": " + "\n" +
           "commentText=" + commentText + "\n" +
           "infoXml=\n" + infoXml + "\n" +
           "startOfBodyStr=" + startOfBodyStr + "\n" +
           "endOfBodyStr=" + endOfBodyStr;
-        $log.log(logMsg);
-        */
+        // $log.log(logMsg);
 
         var headerJson = WebExXmlApiFact.xml2JsonConvert(
           commentText + " Header",
@@ -117,9 +115,16 @@
         return meetingTypesInfo;
       }; // validateMeetingTypesInfoXmlData()
 
-      obj.validateSettingPagesInfoXmlData = function (settingPagesInfoXml) {
-        return null;
-      }; // validateSettingPagesInfoXmlData()
+      obj.validateAdminPagesInfoXmlData = function (adminPagesInfoXml) {
+        var adminPagesInfo = this.validateXmlData(
+          "Admin Pages Info",
+          adminPagesInfoXml,
+          "<ns1:",
+          "</serv:bodyContent>"
+        );
+
+        return adminPagesInfo;
+      }; // validateAdminPagesInfoXmlData()
 
       obj.getSiteName = function (siteUrl) {
         var index = siteUrl.indexOf(".");

@@ -139,11 +139,11 @@
               var logMsg = "";
 
               logMsg = funcName + ": " + "getInfoResult=" + JSON.stringify(getInfoResult);
-              $log.log(logMsg);
+              // $log.log(logMsg);
 
               // webExSiteSettingsObj.siteInfo = WebExUtilsFact.validateSiteInfoXmlData(getInfoResult.siteInfoXml);
               // webExSiteSettingsObj.meetingTypesInfo = WebExUtilsFact.validateMeetingTypesInfoXmlData(getInfoResult.meetingTypesInfoXml);
-              webExSiteSettingsObj.settingPagesInfo = WebExUtilsFact.validateSettingPagesInfoXmlData(getInfoResult.settingPagesInfoXml);
+              webExSiteSettingsObj.settingPagesInfo = WebExUtilsFact.validateAdminPagesInfoXmlData(getInfoResult.settingPagesInfoXml);
 
               // _this.processSiteInfo();
               // _this.processMeetingTypesInfo();
@@ -297,7 +297,40 @@
           var logMsg = "";
 
           var _this = this;
-          var settingPagesInfoJson = null;
+          var siteAdminNavUrls = webExSiteSettingsObj.settingPagesInfo.bodyJson.ns1_siteAdminNavUrl;
+
+          logMsg = funcName + ": " + "\n" +
+            "siteAdminNavUrls.length=" + siteAdminNavUrls.length;
+          $log.log(logMsg);
+
+          siteAdminNavUrls.forEach(
+            function processSiteAdminNavUrl(siteAdminNavUrl) {
+              logMsg = funcName + ": " +
+                "siteAdminNavUrl=" + "\n" +
+                JSON.stringify(siteAdminNavUrl);
+              // $log.log(logMsg);
+
+              var category = siteAdminNavUrl.ns1_category;
+              var pageId = siteAdminNavUrl.ns1_navItemId;
+              var iframeUrl = siteAdminNavUrl.ns1_url;
+              iframeUrl = iframeUrl.replace('wbxadmin', 'adm3100');
+
+              logMsg = funcName + ": " + "\n" +
+                "category=" + category + "\n" +
+                "pageId=" + pageId + "\n" +
+                "iframeUrl=" + iframeUrl;
+              $log.log(logMsg);
+
+              /*
+              addPage(
+                category,
+                pageId,
+                iframeUrl
+              );
+              */
+              // $log.log(logMsg);
+            } // processSiteAdminNavUrl()
+          ); // siteAdminNavUrls.forEach()
 
           updateSettingTable();
 
@@ -311,7 +344,7 @@
             addPage(
               "emailAllHosts",
               "emailAllHosts",
-              "/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage"
+              "https://sjsite14.webex.com/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage"
             );
 
             addPage(
@@ -347,12 +380,6 @@
 
             addPage(
               "common",
-              "emailTemplates",
-              "/common_emailTemplate"
-            );
-
-            addPage(
-              "common",
               "mobile",
               "/common_mobile"
             );
@@ -375,37 +402,31 @@
               "/common_scheduler"
             );
 
+            /*
             addPage(
               "common",
               "security",
               "/common_security"
             );
+            */
+            addPage(
+              "common",
+              "security",
+              "https://sjsite14.webex.com/wbxadmin/siteSettingCommon.do?siteurl=sjsite14"
+            );
 
             addPage(
               "common",
               "options",
-              "/adm3100/siteSettingCommon.do?siteurl=sjsite14"
+              "https://sjsite14.webex.com/adm3100/siteSettingCommon.do?siteurl=sjsite14"
             );
             /*
             addPage(
               "common",
               "options",
-              "/wbxadmin/siteSettingCommon.do?siteurl=sjsite14"
+              "https://sjsite14.webex.com/wbxadmin/siteSettingCommon.do?siteurl=sjsite14"
             );
             */
-
-            /*
-            addPage(
-              "common",
-              "teleconfPrivileges",
-              "/common_teleconfPrivileges"
-            );
-            */
-            addPage(
-              "common",
-              "teleconfPrivileges",
-              "/wbxadmin/siteSettingCommon.do?siteurl=sjsite14"
-            );
 
             // meeting center
             addPage(
@@ -429,7 +450,7 @@
             // event center
             addPage(
               "eventCenter",
-              "defaultOptions",
+              "options",
               "/eventCenter_defaultOptions"
             );
 
@@ -558,7 +579,7 @@
             iframeUrl
           ) {
 
-            var funcName = "processSettingPagesInfo().addPage()";
+            var funcName = "addPage()";
             var logMsg = "";
 
             var indexPageLabelId = "webexSiteSettingsLabels.indexPageLabel_" + categoryId + "_" + pageId;
@@ -586,30 +607,54 @@
               uiSref: null
             };
 
+            var categoryFound = false;
             webExSiteSettingsObj.categoryObjs.forEach(
               function checkCategoryObj(categoryObj) {
-                if (categoryId == categoryObj.id) {
-                  var okToAdd = true;
+                if (
+                  (!categoryFound) &&
+                  (categoryId == categoryObj.id)
+                ) {
+
+                  categoryFound = true;
+
+                  var currPageObj = null;
                   var pageObjs = categoryObj.pageObjs;
 
                   pageObjs.forEach(
                     function checkPageObj(pageObj) {
                       if (newPageObj.id == pageObj.id) {
-                        okToAdd = false;
+                        currPageObj = pageObj;
                       }
                     } // checkPageObj()
-                  );
+                  ); // pageObjs.forEach()
 
-                  logMsg = funcName + ": " +
-                    "okToAdd=" + okToAdd;
-                  $log.log(logMsg);
-
-                  if (okToAdd) {
+                  if (null == currPageObj) {
                     pageObjs.push(newPageObj);
+
+                    logMsg = funcName + ": " +
+                      "New page obj added";
+                    $log.log(logMsg);
+                  } else {
+                    currPageObj.id = newPageObj.id;
+                    currPageObj.pageId = newPageObj.pageId;
+                    currPageObj.label = newPageObj.label;
+                    currPageObj.iframeUrl = newPageObj.iframeUrl;
+                    currPageObj.iframePageLabel = newPageObj.iframePageLabel;
+                    currPageObj.uiSref = newPageObj.uiSref;
+
+                    logMsg = funcName + ": " +
+                      "Existing page obj updated";
+                    $log.log(logMsg);
                   }
                 }
               } // checkCategoryObj()
-            ); // categoryObj.pageObjs.forEach()
+            ); // categoryObjs.forEach()
+
+            if (!categoryFound) {
+              logMsg = funcName + ": " +
+                categoryId + " cannot be processed!!!";
+              $log.log(logMsg);
+            }
           } // addPage()
         }, // processSettingPagesInfo()
 
@@ -627,6 +672,8 @@
             webExSiteSettingsObj.emailAllHostsBtnObj.label = $translate.instant("webexSiteSettingsLabels.emailAllHostsBtnTitle");
 
             var categoryObj = getCategoryObj("emailAllHosts");
+            // var categoryObj = getCategoryObj("EMAIL");
+
             setUiSref(
               categoryObj.pageObjs,
               "",
@@ -728,7 +775,7 @@
                   "  webexPageId:" + "'" + pageObj.pageId + "'" + "," +
                   "  webexPageLabel:" + "'" + pageObj.label + "'" + "," +
                   "  siteUrl:" + "'" + webExSiteSettingsObj.siteUrl + "'" + "," +
-                  "  settingPageIframeUrl:" + "'" + "https://" + webExSiteSettingsObj.siteUrl + pageObj.iframeUrl + "'" +
+                  "  settingPageIframeUrl:" + "'" + pageObj.iframeUrl + "'" +
                   "})";
 
                 pageObj.uiSref = uiSref;
@@ -743,12 +790,12 @@
             var result = null;
 
             webExSiteSettingsObj.categoryObjs.forEach(
-              function checkCardObj(categoryObj) {
+              function checkCategoryObj(categoryObj) {
                 if (categoryId == categoryObj.id) {
                   result = categoryObj;
                 }
-              } // checkPageObj()
-            );
+              } // checkCategoryObj()
+            ); // webExSiteSettingsObj.categoryObjs.forEach()
 
             logMsg = funcName + ": " + "\n" +
               "categoryId=" + categoryId + "\n" +
@@ -760,12 +807,15 @@
         }, // updateDisplayInfo()
 
         getSiteSettingsInfoXml: function () {
-          var siteInfoXml = WebExXmlApiFact.getSiteInfo(webExXmlApiInfoObj);
+          // var siteInfoXml = WebExXmlApiFact.getSiteInfo(webExXmlApiInfoObj);
           // var meetingTypesInfoXml = WebExXmlApiFact.getMeetingTypeInfo(webExXmlApiInfoObj);
-          var settingPagesInfoXml = WebExXmlApiFact.getSettingPagesInfo(webExXmlApiInfoObj);
+          var settingPagesInfoXml = WebExXmlApiFact.getAdminPagesInfo(
+            true,
+            webExXmlApiInfoObj
+          );
 
           return $q.all({
-            siteInfoXml: siteInfoXml,
+            // siteInfoXml: siteInfoXml,
             // meetingTypesInfoXml: meetingTypesInfoXml,
             settingPagesInfoXml: settingPagesInfoXml
           });

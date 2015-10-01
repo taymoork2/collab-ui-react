@@ -140,6 +140,15 @@ angular.module('WebExSiteSettings').service('WebExSiteSettingsSvc', [
       }, {
         id: "remoteAccess",
         pageObjs: []
+      }, {
+        id: "EMAIL",
+        pageObjs: []
+      }, {
+        id: "CommonSettings",
+        pageObjs: []
+      }, {
+        id: "MC",
+        pageObjs: []
       }, ], // categoryObjs
     }; // return
   } // WebExSiteSettingsModel

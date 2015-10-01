@@ -64,6 +64,38 @@ angular.module('WebExXmlApi').service(
           "    </body>" + "\n" +
           "</serv:message>" + "\n",
 
+        settingPagesInfoRequest: "" +
+          "<serv:message xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">" + "\n" +
+          "    <header>" + "\n" +
+          "        <securityContext>" + "\n" +
+          "            <siteName>{{webexSiteName}}</siteName>" + "\n" +
+          "            <webExID>{{webexAdminID}}</webExID>" + "\n" +
+          "            <sessionTicket>{{webexAdminSessionTicket}}</sessionTicket>" + "\n" +
+          "        </securityContext>" + "\n" +
+          "    </header>" + "\n" +
+          "    <body>" + "\n" +
+          "        <bodyContent xsi:type=\"java:com.webex.service.binding.site.GetSiteAdminNavUrl\">" + "\n" +
+          "          <type>siteConfig</type>" + "\n" +
+          "        </bodyContent>" + "\n" +
+          "    </body>" + "\n" +
+          "</serv:message>" + "\n",
+
+        reportPagesInfoRequest: "" +
+          "<serv:message xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">" + "\n" +
+          "    <header>" + "\n" +
+          "        <securityContext>" + "\n" +
+          "            <siteName>{{webexSiteName}}</siteName>" + "\n" +
+          "            <webExID>{{webexAdminID}}</webExID>" + "\n" +
+          "            <sessionTicket>{{webexAdminSessionTicket}}</sessionTicket>" + "\n" +
+          "        </securityContext>" + "\n" +
+          "    </header>" + "\n" +
+          "    <body>" + "\n" +
+          "        <bodyContent xsi:type=\"java:com.webex.service.binding.site.GetSiteAdminNavUrl\">" + "\n" +
+          "          <type>report</type>" + "\n" +
+          "        </bodyContent>" + "\n" +
+          "    </body>" + "\n" +
+          "</serv:message>" + "\n",
+
         updateUserSettings_1: "" +
           "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "\n" +
           "<serv:message xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" + "\n" +

@@ -82,9 +82,15 @@
           });
         }, //getMeetingTypeInfo()
 
-        getSettingPagesInfo: function (xmlApiAccessInfo) {
-          return null;
-        }, // getSettingPagesInfo()
+        getAdminPagesInfo: function (getConfig, xmlApiAccessInfo) {
+          var requestTemplate = (getConfig) ? xmlApiConstants.settingPagesInfoRequest : xmlApiConstants.reportPagesInfoRequest;
+
+          return $q(function (resolve, reject) {
+            var xmlServerURL = xmlApiAccessInfo.xmlServerURL;
+            var xmlRequest = $interpolate(requestTemplate)(xmlApiAccessInfo);
+            _self.sendXMLApiReq(xmlServerURL, xmlRequest, resolve, reject);
+          });
+        }, // getAdminPagesInfo()
 
         updateUserSettings: function (xmlApiAccessInfo, userSettings) {
           var funcName = "updateUserSettings()";
@@ -393,7 +399,13 @@
           });
         }, //getSiteInfo()
 
-        xml2JsonConvert: function (commentText, xmlData, startOfBodyStr, endOfBodyStr) {
+        xml2JsonConvert: function (
+          commentText,
+          xmlData,
+          startOfBodyStr,
+          endOfBodyStr
+        ) {
+
           var funcName = "xml2JsonConvert()";
           var logMsg = "";
 
@@ -409,7 +421,7 @@
           logMsg = funcName + ": " + commentText + "\n" +
             "startOfBodyIndex=" + startOfBodyIndex + "\n" +
             "endOfBodyIndex=" + endOfBodyIndex;
-          $log.log(logMsg);
+          // $log.log(logMsg);
 
           var bodySliceXml = "";
           if (
@@ -417,6 +429,7 @@
             (0 <= endOfBodyIndex) &&
             (startOfBodyIndex <= endOfBodyIndex)
           ) {
+
             bodySliceXml = (startOfBodyIndex < endOfBodyIndex) ? xmlData.slice(startOfBodyIndex, endOfBodyIndex) : xmlData.slice(startOfBodyIndex);
           } else {
             logMsg = funcName + ": " + commentText + "; " + "ERROR!" + "\n" +
@@ -446,7 +459,7 @@
 
           logMsg = funcName + ": " + commentText + "\n" +
             "fullBodyJson=\n" + JSON.stringify(fullBodyJson);
-          $log.log(logMsg);
+          // $log.log(logMsg);
 
           return fullBodyJson;
         }, // xml2JsonConvert()
