@@ -6,7 +6,7 @@
       <ul class="small-block-grid-1 medium-block-grid-2 large-block-grid-3">
         <li
           ng-click="devices.expandDevice(device)"
-          ng-repeat="device in group.devices | limitTo: group.pageSize">
+          ng-repeat="device in group.devices">
           <div ng-include="'modules/squared/devicesRedux5/deviceCard.html'"></div>
         </li>
       </ul>
@@ -15,17 +15,36 @@
 
   <div ng-if="devices.deviceList.length">
     <strong>
-      <a href>Matches in device details ({{devices.deviceList.length}})</a>
+      <div ng-if="devices.groupedDevices.count">
+        <i 
+          class="fa" 
+          ng-class="{
+            'fa-caret-right': !devices.toggleDevicesPane, 
+            'fa-caret-down': devices.toggleDevicesPane
+          }" 
+          style="padding-right: 10px" 
+        />
+        <a href ng-click="devices.toggleDevicesPane = !devices.toggleDevicesPane">
+          Devices ({{devices.deviceList.length}})
+        </a>
+      </div>
+      <div ng-if="!devices.groupedDevices.count">
+        Devices ({{devices.deviceList.length}})
+      </div>
     </strong>
-    <ul 
-      nxxg-if="devices.deviceList.length == devices.groupedDevices.count"
-      class="small-block-grid-1 medium-block-grid-2 large-block-grid-3">
-      <li
-        ng-click="devices.expandDevice(device)"
-        ng-repeat="device in devices.deviceList | limitTo: 12">
-        <div ng-include="'modules/squared/devicesRedux5/deviceCard.html'"></div>
-      </li>
-    </ul>
+    <div ng-if="devices.toggleDevicesPane || !devices.groupedDevices.count">
+      <ul 
+        class="small-block-grid-1 medium-block-grid-2 large-block-grid-3">
+        <li
+          ng-click="devices.expandDevice(device)"
+          ng-repeat="device in devices.deviceList | limitTo: devices.pageSize">
+          <div ng-include="'modules/squared/devicesRedux5/deviceCard.html'"></div>
+        </li>
+      </ul>
+      <div class="more-pager" ng-if="devices.pageSize < devices.deviceList.length">
+        <a href ng-click="devices.pageSize = devices.pageSize + devices.defaultPageSize">Load more</a>
+      </div>
+    </div>
   </div>
 
 </div>

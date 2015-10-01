@@ -749,7 +749,7 @@ angular
         .state('devices-redux5.details', {
           url: '/details',
           views: {
-            'rightPanel': {
+            'leftPanel': {
               controllerAs: 'deviceDetails',
               controller: 'DevicesReduxDetailsCtrl5',
               templateUrl: 'modules/squared/devicesRedux5/details.html'

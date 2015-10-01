@@ -1,9 +1,8 @@
 'use strict';
 
 /* @ngInject */
-function DevicesReduxCtrl($scope, $state, $location, $rootScope, CsdmCodeService, CsdmDeviceService, AddDeviceModal) {
+function DevicesReduxCtrl($scope, $state, $location, $rootScope, $window, CsdmCodeService, CsdmDeviceService, AddDeviceModal) {
   var vm = this;
-  var pageSize = 18;
 
   $('body').css('background', 'white');
 
@@ -18,13 +17,19 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, CsdmCodeService
   };
 
   vm.deviceList = [];
+  vm.defaultPageSize = 18;
+  vm.pageSize = vm.defaultPageSize;
 
   vm.groups = [{
-    pageSize: 6,
+    displayName: 'Devices with problems',
+    matches: function (device) {
+      return device.hasIssues && !vm.search;
+    }
+  }, {
     displayName: 'Rooms',
     matches: function (device) {
       return device.type == 'group';
-    },
+    }
   }];
 
   vm.groupedDevices = {};
@@ -32,68 +37,14 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, CsdmCodeService
   vm.updateCodesAndDevices = function () {
     vm.deviceList.length = 0;
 
-    var allCodesAndDevices = _.chain({})
+    var groups = _.chain({})
       .extend(CsdmDeviceService.getDeviceList())
       .extend(CsdmCodeService.getCodeList())
       .values()
-      .value();
-
-    var rooms = _.chain(allCodesAndDevices)
-      .countBy('displayName')
-      .pick(function (val) {
-        return val > 1;
-      })
-      .value();
-
-    var roomsAndDevices = _.chain(allCodesAndDevices)
-      .filter(function (device) {
-        return !rooms[device.displayName];
-      })
-      .concat(_.map(rooms, function (count, displayName) {
-        return {
-          count: count,
-          type: 'group',
-          displayName: displayName
-        };
-      }))
-      .sortBy(displayNameSorter)
-      .value();
-
-    var groups = _.chain(roomsAndDevices)
-      .reduce(function (result, device) {
-        var searchFields = ['displayName', 'software', 'serial', 'ip', 'mac', 'readableState', 'readableActivationCode', 'product'];
-        var someAttributeMatches = !vm.search || _.some(searchFields, function (field) {
-          return ~(device[field] || '').toLowerCase().indexOf(vm.search.toLowerCase());
-        });
-        device.filterMatch = _.find(searchFields, function (field) {
-          return vm.search && field != 'displayName' && ~(device[field] || '').toLowerCase().indexOf(vm.search.toLowerCase());
-        });
-        if (someAttributeMatches) {
-          var found = _.find(vm.groups, function (group) {
-            if (group.matches(device)) {
-              result[group.displayName].push(device);
-              return true;
-            }
-          });
-          if (!found) {
-            vm.deviceList.push(device);
-          }
-        }
-        return result;
-      }, _.reduce(vm.groups, function (memo, group) {
-        memo[group.displayName] = [];
-        return memo;
-      }, {}))
-      .map(function (devices, displayName) {
-        return _.chain(vm.groups)
-          .find({
-            displayName: displayName
-          })
-          .extend({
-            devices: devices
-          })
-          .value();
-      })
+      .groupBy('displayName')
+      .map(groupAsDeviceOrRoom)
+      .reduce(bfFilterFn, {})
+      .map(extendWithDisplayNameFromFilter)
       .value();
 
     vm.groupedDevices.groups = groups;
@@ -107,6 +58,56 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, CsdmCodeService
       .flatten()
       .first()
       .value();
+
+    function extendWithDisplayNameFromFilter(devices, displayName) {
+      return _.chain(vm.groups)
+        .find({
+          displayName: displayName
+        })
+        .extend({
+          devices: devices
+        })
+        .value();
+    }
+
+    function bfFilterFn(result, device) {
+      var searchFields = ['displayName', 'software', 'serial', 'ip', 'mac', 'readableState', 'readableActivationCode', 'product'];
+      var someAttributeMatches = !vm.search || _.some(searchFields, function (field) {
+        return ~(device[field] || '').toLowerCase().indexOf(vm.search.toLowerCase());
+      });
+      device.filterMatch = _.find(searchFields, function (field) {
+        return vm.search && field != 'displayName' && ~(device[field] || '').toLowerCase().indexOf(vm.search.toLowerCase());
+      });
+      if (someAttributeMatches) {
+        var found = _.find(vm.groups, function (group) {
+          if (group.matches(device)) {
+            if (!result[group.displayName]) {
+              result[group.displayName] = [];
+            }
+            result[group.displayName].push(device);
+            return true;
+          }
+        });
+        if (!found) {
+          vm.deviceList.push(device);
+        }
+      }
+      return result;
+    }
+
+    function groupAsDeviceOrRoom(devices, displayName) {
+      if (devices.length == 1) {
+        return devices[0];
+      } else {
+        return {
+          type: 'group',
+          devices: devices,
+          count: devices.length,
+          displayName: displayName
+        };
+      }
+    }
+
   };
 
   vm.codesListSubscription = CsdmCodeService.subscribe(vm.updateCodesAndDevices, {
@@ -117,32 +118,13 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, CsdmCodeService
     scope: $scope
   });
 
-  vm.findDeviceIndex = function (device) {
-    // return device ? _.findIndex(vm.filteredCodesAndDevices.matches, {
-    //   url: device.url
-    // }) : -1;
-  };
-
-  vm.clearFilterIfNoSearch = function ($event) {
-    if ($event.keyCode == 8 && !vm.search) {
-      vm.clearDisplayNameFilter();
-    }
-  };
-
-  vm.clearSearchAndFilter = function () {
+  vm.clearSearch = function () {
     vm.search = undefined;
     vm.refreshResults();
-    vm.clearDisplayNameFilter();
-  };
-
-  vm.clearDisplayNameFilter = function () {
-    if (vm.displayNameFilter) {
-      vm.displayNameFilter = undefined;
-      vm.refreshResults();
-    }
   };
 
   vm.refreshResults = function () {
+    vm.pageSize = vm.defaultPageSize;
     vm.updateCodesAndDevices();
     transitionIfSearchOrFilterChanged();
   };
@@ -158,9 +140,9 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, CsdmCodeService
   };
 
   function transitionIfSearchOrFilterChanged() {
-    if (vm.groupedDevices.count == 1) {
+    if (vm.groupedDevices.count + vm.deviceList == 1) {
       return $state.go('devices-redux5.details', {
-        device: vm.groupedDevices.device
+        device: vm.deviceList[0] || vm.groupedDevices.device
       });
     }
     if (~$location.path().indexOf('/details')) {
@@ -171,6 +153,25 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, CsdmCodeService
   function displayNameSorter(p) {
     return ((p && p.displayName) || '').toLowerCase();
   }
+
+  vm.exportToCsv = function () {
+    var fields = ['cisUuid', 'displayName', 'needsActivation', 'readableState', 'readableActivationCode', 'ip', 'mac', 'serial', 'software'];
+    var csv = fields.join(';') + '\r\n';
+
+    var devices = _.chain(vm.groupedDevices.groups)
+      .pluck('devices')
+      .flatten()
+      .concat(vm.deviceList)
+      .value();
+
+    _.each(devices, function (item) {
+      _.each(fields, function (field) {
+        csv += (item[field] || '') + ';';
+      });
+      csv += '\r\n';
+    });
+    $window.open('data:text/csv;charset=utf-8,' + $window.encodeURIComponent(csv));
+  };
 
   vm.updateCodesAndDevices();
 }
@@ -213,6 +214,7 @@ function DevicesReduxDetailsCtrl($stateParams, $state, $window, RemDeviceModal, 
         $state.go('devices-redux5.search');
       });
   };
+
 }
 
 function HighlightFilter() {
