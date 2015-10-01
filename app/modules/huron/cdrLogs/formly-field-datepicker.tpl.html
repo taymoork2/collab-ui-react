@@ -1,0 +1,11 @@
+<cs-datepicker 
+	class="cdr-datepicker"
+	id="{{::options.key}}"
+	formly-dynamic-name="options.key"
+	formly-custom-validation="options.validators"
+	aria-describedby="{{id}}_description"
+	ng-required="options.templateOptions.required"
+	ng-disabled="options.templateOptions.disabled"
+	ng-model="model[options.key]"
+	placeholder="{{::options.templateOptions.placeholder}}">
+</cs-datepicker>

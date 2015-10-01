@@ -920,6 +920,13 @@ angular
   .config(['$stateProvider',
     function ($stateProvider) {
       $stateProvider
+        .state('cdrsupport', {
+          url: '/cdrsupport',
+          templateUrl: 'modules/huron/cdrLogs/cdrlogs.tpl.html',
+          controller: 'CdrLogsCtrl',
+          controllerAs: 'cdr',
+          parent: 'main'
+        })
         .state('callroutingBase', {
           abstract: true,
           parent: 'main',
