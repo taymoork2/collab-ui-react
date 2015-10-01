@@ -121,6 +121,10 @@ angular.module('Core')
               if (typeof (orgSettingsObj.allowCustomerLogos) !== 'undefined') {
                 $scope.allowCustomerLogos = orgSettingsObj.allowCustomerLogos;
               }
+
+              if (typeof (orgSettingsObj.logoUrl) !== 'undefined') {
+                $scope.logoUrl = orgSettingsObj.logoUrl;
+              }
             } else {
               Log.debug('No orgSettings found for org: ' + data.id);
             }
