@@ -41,14 +41,17 @@
 <div ng-repeat="sec in sections">
   <cs-card class="cs-card medium">
     <article>
+      <header>
        <h4>
             {{sec.section_name_translated}}
             <!-- <span translate="{{sec.section_name}}"></span> -->
-            <br>
             
+
        </h4>
+      </header> 
 
        <section>
+        <div class="card-checkbox">
           <div ng-repeat="sref in sec.uisrefs">
             <span>
                  <a id="{{sref.reportPageId}}"
@@ -57,8 +60,9 @@
                     {{sref.reportPageId_translated}}
                     <!-- <span translate="{{sref.reportPageId}}"></span>  -->           
                  </a>
-          </span>  
+            </span>  
           </div>
+        </div>  
        </section>
 
     </article>
