@@ -6,7 +6,7 @@
     .controller('CiSyncCtrl', CiSyncCtrl);
 
   /** @ngInject */
-  function CiSyncCtrl($translate, Authinfo, Config, CiService, SyncService) {
+  function CiSyncCtrl($translate, Authinfo, Config, Log, CiService, SyncService) {
     // Interface ---------------------------------------------------------------
     var vm = this;
 
@@ -128,7 +128,7 @@
             setOpsAdmin();
           }
         }, function (errorMsg) {
-          window.console.error('Failed checking if user is a partner admin: ' + errorMsg);
+          Log.error('Failed checking if user is a partner admin: ' + errorMsg);
         });
     }
 
@@ -142,7 +142,7 @@
         }, function (errorMsg) {
           var error = 'Failed getting CI sync status: ' + errorMsg;
           vm.errorMsg = error;
-          window.console.error(error);
+          Log.error(error);
           vm.dataStatus = vm.dataStates.error;
         });
     }
@@ -153,12 +153,12 @@
       SyncService.refreshSyncStatus()
         .then(function (status) {
           vm.syncInfo = status;
-          window.console.log('CI Sync status refreshed');
+          Log.info('CI Sync status refreshed');
           vm.dataStatus = vm.dataStates.loaded;
         }, function (errorMsg) {
           var error = 'Failed refreshing CI sync status: ' + errorMsg;
           vm.errorMsg = error;
-          window.console.error(error);
+          Log.error(error);
           vm.dataStatus = vm.dataStates.error;
         });
     }
@@ -177,9 +177,9 @@
         // SyncService must turn the syncing boolean into the full mode
         SyncService.patchSync(vm.syncInfo.isSyncEnabled, vm.syncInfo.isAuthRedirect)
           .then(function (successMsg) {
-            window.console.log('CI Sync updated');
+            Log.info('CI Sync updated');
           }, function (errorMsg) {
-            window.console.error('Failed updating CI Sync: ' + errorMsg);
+            Log.error('Failed updating CI Sync: ' + errorMsg);
           });
       }
     }

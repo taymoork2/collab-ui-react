@@ -6,7 +6,7 @@
     .factory('CiService', CiService);
 
   /** @ngInject */
-  function CiService($q, $rootScope, Authinfo, UserListService, Userservice) {
+  function CiService($q, $rootScope, Authinfo, Log, UserListService, Userservice) {
     // Interface ---------------------------------------------------------------
 
     // Internal storage
@@ -106,7 +106,7 @@
             defer.resolve(partnerAdmins);
           } else {
             var error = 'Failed getting parter list. Response: ' + JSON.stringify(response);
-            window.console.error(error);
+            Log.error(error);
             defer.reject(error);
           }
         });
@@ -142,7 +142,7 @@
 
           for (i = 0; i < errors.length; i++) {
             var error = errors[i];
-            window.console.error('Error ' + (i + 1) + ': Code ' + error.code + '; Error Code ' + error.errorCode + ': "' + error.description + '"');
+            Log.error('Error ' + (i + 1) + ': Code ' + error.code + '; Error Code ' + error.errorCode + ': "' + error.description + '"');
           }
         }
       }, '', getAdmins);
@@ -171,7 +171,7 @@
           defer.resolve(partnerFound);
         }, function (errorMsg) {
           var error = 'Error checking if user is a partner admin: ' + errorMsg;
-          window.console.error(error);
+          Log.error(error);
           defer.reject(error);
         });
 

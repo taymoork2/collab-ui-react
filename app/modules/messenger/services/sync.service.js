@@ -6,7 +6,7 @@
     .factory('SyncService', SyncService);
 
   /** @ngInject */
-  function SyncService($http, $q, Authinfo) {
+  function SyncService($http, $q, Authinfo, Log) {
     // Interface ---------------------------------------------------------------
 
     // Internal data
@@ -169,7 +169,7 @@
         syncMode = syncModes.dirsync.on;
         break;
       default:
-        window.console.error('SyncService::parseSyncMode(): Invalid sync mode \'' + syncString + '\'. Setting to Messenger Sync Mode OFF.');
+        Log.error('SyncService::parseSyncMode(): Invalid sync mode \'' + syncString + '\'. Setting to Messenger Sync Mode OFF.');
       }
 
       return syncMode;
