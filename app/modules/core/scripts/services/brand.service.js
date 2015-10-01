@@ -44,34 +44,18 @@
       });
     }
 
-    function usePartnerLogo(orgId, isPartner) {
+    function usePartnerLogo(orgId) {
       var settings = {
         'usePartnerLogo': true
       };
 
-      // Temporary, don't let Partner org set global allowCustomerLogos
-      // TODO: Fix admin-service PATCH issues dealing with orgSettings
-      if (isPartner) {
-        _.extend(settings, {
-          'allowCustomerLogos': false
-        });
-      }
-
       Orgservice.setOrgSettings(orgId, settings, notify);
     }
 
-    function useCustomLogo(orgId, isPartner) {
+    function useCustomLogo(orgId) {
       var settings = {
         'usePartnerLogo': false
       };
-      //
-      // Temporary, don't let Partner org set global allowCustomerLogos
-      // TODO: Fix admin-service PATCH issues dealing with orgSettings
-      if (isPartner) {
-        _.extend(settings, {
-          'allowCustomerLogos': false
-        });
-      }
 
       Orgservice.setOrgSettings(orgId, settings, notify);
     }
