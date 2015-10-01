@@ -120,7 +120,7 @@
             setOpsAdmin();
           }
         }, function (errorMsg) {
-          window.console.error('Error checking if user is a partner admin: ' + errorMsg);
+          window.console.error('Failed checking if user is a partner admin: ' + errorMsg);
         });
     }
 
@@ -129,7 +129,7 @@
         .then(function (status) {
           vm.syncInfo = status;
         }, function (errorMsg) {
-          window.console.error('Error getting CI sync status: ' + errorMsg);
+          window.console.error('Failed getting CI sync status: ' + errorMsg);
         });
     }
 
@@ -137,8 +137,9 @@
       SyncService.refreshSyncStatus()
         .then(function (status) {
           vm.syncInfo = status;
+          window.console.log('CI Sync status refreshed');
         }, function (errorMsg) {
-          window.console.error('Error REFRESHING CI sync status: ' + errorMsg);
+          window.console.error('Failed refreshing CI sync status: ' + errorMsg);
         });
     }
 
@@ -156,9 +157,9 @@
         // SyncService must turn the syncing boolean into the full mode
         SyncService.patchSync(vm.syncInfo.isSyncEnabled, vm.syncInfo.isAuthRedirect)
           .then(function (successMsg) {
-            window.console.log('Successful PATCH to CI Sync');
+            window.console.log('CI Sync updated');
           }, function (errorMsg) {
-            window.console.error('Error during PATCH to CI Sync: ' + errorMsg);
+            window.console.error('Failed updating CI Sync: ' + errorMsg);
           });
       }
     }
