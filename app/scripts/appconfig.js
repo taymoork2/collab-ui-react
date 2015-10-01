@@ -730,10 +730,38 @@ angular
             device: null
           }
         })
-
-      /*
-        end: devices redux prototypes
-      */
+        .state('devices-redux5', {
+          abstract: true,
+          url: '/devices-redux5',
+          templateUrl: 'modules/squared/devicesRedux5/devices.html',
+          controller: 'DevicesReduxCtrl5',
+          controllerAs: 'devices',
+          parent: 'main-redux'
+        })
+        .state('devices-redux5.search', {
+          url: '/search',
+          views: {
+            'leftPanel': {
+              templateUrl: 'modules/squared/devicesRedux5/list.html'
+            }
+          }
+        })
+        .state('devices-redux5.details', {
+          url: '/details',
+          views: {
+            'rightPanel': {
+              controllerAs: 'deviceDetails',
+              controller: 'DevicesReduxDetailsCtrl5',
+              templateUrl: 'modules/squared/devicesRedux5/details.html'
+            }
+          },
+          params: {
+            device: null
+          }
+        })
+        /*
+          end: devices redux prototypes
+        */
 
       .state('partneroverview', {
           parent: 'partner',
