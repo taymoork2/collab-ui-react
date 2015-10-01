@@ -13,10 +13,6 @@
       });
     });
 
-    it('should have correct title', function () {
-      expect(ctrl.title).toBe('Messenger CI Sync');
-    });
-
     it('should initialize as viewed from an Org Admin', function () {
       expect(ctrl.adminType).toBe(ctrl.adminTypes.org);
     });

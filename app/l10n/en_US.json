@@ -217,7 +217,9 @@
     "alarmsTab": "Alarms",
     "alarmsTabDesc": "Alarm Management",
     "eventsTab": "Events",
-    "eventsTabDesc": "Event Management"
+    "eventsTabDesc": "Event Management",
+    "messengerTab": "Messenger",
+    "messengerTabDesc": "Messenger Administration"
   },
   "index": {
     "welcome": "Welcome!",
@@ -1932,5 +1934,16 @@
     "actionHeader": "Actions",
     "lineListError": "Error retrieving the line list. Please try reloading the page."
 
+  },
+
+  "messengerCiSync": {
+    "authRedirectHeading": "Authentication Redirect",
+    "authRedirectTooltip": "Is authentication redirected through Common Identity instead of CAS?",
+    "orgAdminButtonText": "Org Admin",
+    "pageTitle": "Messenger CI Sync",
+    "patchSyncButtonText": "Update",
+    "refresh": "Refresh",
+    "syncStatusHeading": "Sync Status",
+    "syncStatusTooltip": "Is syncing active between Messenger and Common Identity?"
   }
 }

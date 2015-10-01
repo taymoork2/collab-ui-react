@@ -5,11 +5,7 @@ angular.module('Core')
   .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$window', 'Log', '$log', 'Authinfo', 'Storage', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils', 'Orgservice', 'TelephonyInfoService', 'FeatureToggleService', 'NAME_DELIMITER', 'SyncService',
     function ($scope, $state, $stateParams, $q, $window, Log, $log, Authinfo, Storage, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, SyncService) {
 
-      if (Config.isDev()) {
-        $scope.isMsgrSyncMode = SyncService.isSyncing() && SyncService.isMessengerSync();
-      } else {
-        $scope.isMsgrSyncMode = false;
-      }
+      $scope.isMsgrSyncMode = SyncService.isSyncEnabled() && SyncService.isMessengerSync();
 
       $scope.hasAccount = Authinfo.hasAccount();
       $scope.usrlist = [];

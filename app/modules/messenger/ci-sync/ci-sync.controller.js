@@ -6,9 +6,17 @@
     .controller('CiSyncCtrl', CiSyncCtrl);
 
   /** @ngInject */
-  function CiSyncCtrl(Authinfo, Config, CiService, SyncService) {
+  function CiSyncCtrl($translate, Authinfo, Config, CiService, SyncService) {
     // Interface ---------------------------------------------------------------
     var vm = this;
+
+    var translatePrefix = 'messengerCiSync.';
+
+    vm.dataStates = Object.freeze({
+      loading: 1,
+      loaded: 2,
+      error: 3
+    });
 
     vm.statusOptions = Object.freeze({
       on: {
@@ -31,7 +39,8 @@
     });
 
     // Public
-    vm.title = 'Messenger CI Sync';
+    vm.dataStatus = vm.dataStates.loading;
+    vm.errorMsg = '';
     vm.isDirSync = false;
     vm.status = vm.statusOptions.on;
     vm.ciAdmins = [];
@@ -39,12 +48,18 @@
     vm.ciData = CiService.getCiOrgInfo();
     vm.dev = Config.isDev() && ('testAtlasMsgr' === Authinfo.getOrgName());
 
+    // Translated text
+    vm.refresh = $translate.instant(translatePrefix + 'refresh');
+    vm.syncStatusTooltip = $translate.instant(translatePrefix + 'syncStatusTooltip');
+    vm.authRedirectTooltip = $translate.instant(translatePrefix + 'authRedirectTooltip');
+    vm.patchSyncButtonText = $translate.instant(translatePrefix + 'patchSyncButtonText');
+
     vm.syncInfo = {
       messengerOrgName: 'Unknown',
       messengerOrgId: 'Unknown',
       linkDate: 'Unknown',
       isAuthRedirect: false,
-      isSyncing: false
+      isSyncEnabled: false
     };
 
     vm.fields = [{
@@ -113,25 +128,38 @@
             setOpsAdmin();
           }
         }, function (errorMsg) {
-          window.console.error('Error checking if user is a partner admin: ' + errorMsg);
+          window.console.error('Failed checking if user is a partner admin: ' + errorMsg);
         });
     }
 
     function getSyncStatus() {
+      vm.dataStatus = vm.dataStates.loading;
+
       SyncService.getSyncStatus()
         .then(function (status) {
           vm.syncInfo = status;
+          vm.dataStatus = vm.dataStates.loaded;
         }, function (errorMsg) {
-          window.console.error('Error getting CI sync status: ' + errorMsg);
+          var error = 'Failed getting CI sync status: ' + errorMsg;
+          vm.errorMsg = error;
+          window.console.error(error);
+          vm.dataStatus = vm.dataStates.error;
         });
     }
 
     function refreshStatus() {
+      vm.dataStatus = vm.dataStates.loading;
+
       SyncService.refreshSyncStatus()
         .then(function (status) {
           vm.syncInfo = status;
+          window.console.log('CI Sync status refreshed');
+          vm.dataStatus = vm.dataStates.loaded;
         }, function (errorMsg) {
-          window.console.error('Error REFRESHING CI sync status: ' + errorMsg);
+          var error = 'Failed refreshing CI sync status: ' + errorMsg;
+          vm.errorMsg = error;
+          window.console.error(error);
+          vm.dataStatus = vm.dataStates.error;
         });
     }
 
@@ -147,7 +175,12 @@
       // Double-check that they are ops for security
       if (vm.adminTypes.ops === vm.adminType) {
         // SyncService must turn the syncing boolean into the full mode
-        SyncService.patchSync(vm.syncInfo.isSyncing, vm.syncInfo.isAuthRedirect);
+        SyncService.patchSync(vm.syncInfo.isSyncEnabled, vm.syncInfo.isAuthRedirect)
+          .then(function (successMsg) {
+            window.console.log('CI Sync updated');
+          }, function (errorMsg) {
+            window.console.error('Failed updating CI Sync: ' + errorMsg);
+          });
       }
     }
   }

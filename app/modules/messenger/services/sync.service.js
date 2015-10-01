@@ -45,16 +45,24 @@
 
     var msgrService = {
       protocol: 'http://',
-      // Ned's IPs
+
+      // TODO: remove when production is up
       //host: '10.129.24.45',
       //host: '192.168.0.6',
-      host: 'localhost',
+      //host: 'localhost',
+      //host: 'gspbt1adm001.webex.com',
 
       // Default
-      //host: '127.0.0.1',
+      host: '127.0.0.1',
       port: 8080,
+
+      // TODO: cleanup when production is up
       api: '/admin-service/messenger/admin/api/v1/orgs/' + Authinfo.getOrgId() + '/cisync/'
-      //api: '/admin-service/messenger/admin/api/v1/orgs/2d23d582-5830-4bab-9d98-3e428d790e58/cisync/'
+        //api: '/admin-service/messenger/admin/api/v1/orgs/2d23d582-5830-4bab-9d98-3e428d790e58/cisync'
+        //api: '/admin-service/messenger/admin/api/v1/orgs/e805fc73-ad2b-4cef-9ea1-70f070db96a2/cisync/'
+        //api: '/admin-service/messenger/admin/api/v1/orgs/47a4ef6b-f6d0-4c5d-8ffd-9d6a8c94738c/cisync/'
+        //api: '/admin-service/messenger/admin/api/v1/orgs/7c63761c-4d85-4daf-b241-aa63c192ec64/cisync/'
+        //api: '/admin-service/messenger/admin/api/v1/orgs/2d446615-164b-4d81-b1a2-7bddb64279bb/cisync/'
     };
 
     var serviceUrl = msgrService.protocol + msgrService.host + ':' + msgrService.port + msgrService.api;
@@ -63,7 +71,7 @@
       getSyncStatus: getSyncStatus,
       isDirSync: isDirSync,
       isMessengerSync: isMessengerSync,
-      isSyncing: isSyncing,
+      isSyncEnabled: isSyncEnabled,
       patchSync: patchSync,
       refreshSyncStatus: function () {
         shouldFetch = true;
@@ -82,12 +90,17 @@
 
     // Private fetch to service
     function fetchSyncStatus() {
-      return $http.get(serviceUrl).then(function (response) {
-        shouldFetch = false;
-        return setSyncStatus(response.data);
-      }, function (error) {
-        return 'SyncService::fetchSyncStatus(): Failed fetching CI Sync status from service. Status ' + error.status + '; ' + error.config.method + ' \'' + error.config.url + '\'';
-      });
+      var defer = $q.defer();
+
+      $http.get(serviceUrl)
+        .then(function (response) {
+          shouldFetch = false;
+          defer.resolve(setSyncStatus(response.data));
+        }, function (response) {
+          defer.reject('GET Status ' + response.status + '; Full response: ' + JSON.stringify(response.data));
+        });
+
+      return defer.promise;
     }
 
     function setSyncStatus(status) {
@@ -106,7 +119,7 @@
         messengerOrgId: syncStatus.messengerOrgId,
         linkDate: syncStatus.linkDate,
         isAuthRedirect: syncStatus.isAuthRedirect,
-        isSyncing: isSyncing()
+        isSyncEnabled: isSyncEnabled()
       };
     }
 
@@ -118,7 +131,7 @@
           .then(function (status) {
             defer.resolve(getSimplifiedStatus(syncStatus));
           }, function (errorMsg) {
-            defer.reject('Error getting CI Sync status: ' + errorMsg);
+            defer.reject(errorMsg);
           });
       } else {
         defer.resolve(getSimplifiedStatus(syncStatus));
@@ -135,7 +148,7 @@
       return (syncModes.messenger.on === syncStatus.syncMode || syncModes.messenger.off === syncStatus.syncMode);
     }
 
-    function isSyncing() {
+    function isSyncEnabled() {
       return (syncModes.messenger.on === syncStatus.syncMode || syncModes.dirsync.on === syncStatus.syncMode);
     }
 
@@ -170,30 +183,28 @@
       syncStatus.syncMode = (isEnabled) ? syncModes.messenger.on : syncModes.messenger.off;
     }
 
-    function patchSync(isSyncing, isAuthRedirect) {
+    function patchSync(isSyncEnabled, isAuthRedirect) {
       var defer = $q.defer();
 
       // Update sync mode
       if (isDirSync()) {
-        setDirSyncMode(isSyncing);
+        setDirSyncMode(isSyncEnabled);
       } else {
-        setMessengerSyncMode(isSyncing);
+        setMessengerSyncMode(isSyncEnabled);
       }
+
+      syncStatus.isAuthRedirect = isAuthRedirect;
 
       var params = {
         ciSyncMode: syncStatus.syncMode.text,
-        authRedirect: isAuthRedirect
+        authRedirect: syncStatus.isAuthRedirect
       };
 
-      $http.patch(serviceUrl, params)
-        .success(function (data, status, headers, config) {
-          defer.resolve(status);
-        })
-        .error(function (data, status, headers, config) {
-          var error = 'Failed PATCH to ' + serviceUrl + ' with params: ' + JSON.stringify(params) + '; status ' + status;
-          window.console.error(error);
-          defer.reject(error);
-        });
+      $http.patch(serviceUrl, params).then(function (response) {
+        defer.resolve('PATCH Status ' + response.status);
+      }, function (response) {
+        defer.reject('PATCH Status ' + response.status + '; URL \'' + serviceUrl + '\'; Full response: ' + JSON.stringify(response.data));
+      });
 
       return defer.promise;
     }
