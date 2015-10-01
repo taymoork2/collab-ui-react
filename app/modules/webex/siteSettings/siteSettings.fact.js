@@ -313,7 +313,7 @@
               "emailAllHosts",
               "/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage"
             );
-            
+
             addPage(
               "siteInfo",
               "siteInformation",
@@ -561,24 +561,28 @@
             var funcName = "processSettingPagesInfo().addPage()";
             var logMsg = "";
 
-            var indexPageTitleId = "webexSiteSettingsLabels.indexPageTitle_" + categoryId + "_" + pageId;
-            var pageLabel = $translate.instant(indexPageTitleId);
-            // var pageLabel = $translate.instant("webexSiteSettingsLabels.pageId_" + pageId);
+            var indexPageLabelId = "webexSiteSettingsLabels.indexPageLabel_" + categoryId + "_" + pageId;
+            var indexPageLabel = $translate.instant(indexPageLabelId);
+
+            var iframePageLabelId = "webexSiteSettingsLabels.iframePageLabel_" + categoryId + "_" + pageId;
+            var iframePageLabel = $translate.instant(iframePageLabelId);
 
             logMsg = funcName + ": " + "\n" +
               "categoryId=" + categoryId + "\n" +
               "pageId=" + pageId + "\n" +
               "iframeUrl=" + iframeUrl + "\n" +
-              "indexPageTitleId=" + indexPageTitleId + "\n" +
-              "pageLabel=" + pageLabel;
+              "indexPageLabelId=" + indexPageLabelId + "\n" +
+              "indexPageLabel=" + indexPageLabel + "\n" +
+              "iframePageLabelId=" + indexPageLabelId + "\n" +
+              "iframePageLabel=" + indexPageLabel;
             $log.log(logMsg);
 
             var newPageObj = {
               id: categoryId + "_" + pageId,
               pageId: pageId,
-              label: pageLabel,
+              label: indexPageLabel,
               iframeUrl: iframeUrl,
-              iframePageTitle: null,
+              iframePageLabel: iframePageLabel,
               uiSref: null
             };
 
@@ -633,9 +637,9 @@
           } // updateEmailAllHostsBtnObj()
 
           function updateSiteInfoCardObj() {
-        	var funcName = "updateSiteInfoCardObj()";
-        	var logMsg = "";
-        	
+            var funcName = "updateSiteInfoCardObj()";
+            var logMsg = "";
+
             webExSiteSettingsObj.siteInfoCardObj.label = webExSiteSettingsObj.siteUrl;
 
             var categoryObj = getCategoryObj("siteInfo");
@@ -654,11 +658,11 @@
                 }
               } // checkPageObj()
             ); // categoryObj.pageObjs.forEach()
-            
+
             logMsg = funcName + ": " + "\n" +
               "siteInfoPageObj=" + JSON.stringify(webExSiteSettingsObj.siteInfoCardObj.siteInfoPageObj);
             $log.log(logMsg);
-            
+
             logMsg = funcName + ": " + "\n" +
               "siteFeaturePageObj=" + JSON.stringify(webExSiteSettingsObj.siteInfoCardObj.siteFeaturePageObj);
             $log.log(logMsg);
