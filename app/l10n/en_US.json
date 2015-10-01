@@ -1857,6 +1857,13 @@
     "meeting_usage": "Meeting Usage",
     "recordings_storage_usage": "Recordings Storage Usage",
     "recording_usage": "Recording Usage",
+
+    "training_usage": "Training Usage",
+    "registration": "Registration",
+    "recording": "Recording",
+    "coupon": "Coupon",
+    "attendee": "Attendee",
+
     "storage_utilization": "Storage Utilization",
     "programs_events_recordings": "Programs Events Recordings",
     "summary": "Summary",
@@ -1878,7 +1885,7 @@
     "remote_access_csrs_usage": "Remote Access Csrs Usage",
     "remote_access_computer_tracking": "Remote Access Computer Tracking",
     "usage": "Usage",
-    "registration": "Registration",
+
     "recorded_session_access": "Recorded Session Access",
     "coupon_usage": "Coupon Usage",
     "training_record_attendee": "Training Record Attendee",

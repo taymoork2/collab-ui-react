@@ -82,9 +82,12 @@ angular.module('WebExReports').service('reportService', [
         "webacd_allocation_queue", "remote_access_computer_usage",
         "remote_access_csrs_usage", "remote_access_computer_tracking"
       ];
-      var training_center_pageids = ["usage", "registration", "recorded_session_access",
-        "coupon_usage", "training_record_attendee",
-        "access_anywhere_usage"
+
+      var training_center_pageids = ["training_usage",
+        "registration",
+        "recording",
+        "coupon",
+        "attendee"
       ];
 
       //use the above 4 lists to gather all the UISrefs
