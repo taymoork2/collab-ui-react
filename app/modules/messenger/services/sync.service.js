@@ -57,8 +57,8 @@
       port: 8080,
 
       // TODO: cleanup when production is up
-      //api: '/admin-service/messenger/admin/api/v1/orgs/' + Authinfo.getOrgId() + '/cisync/'
-      api: '/admin-service/messenger/admin/api/v1/orgs/2d23d582-5830-4bab-9d98-3e428d790e58/cisync'
+      api: '/admin-service/messenger/admin/api/v1/orgs/' + Authinfo.getOrgId() + '/cisync/'
+        //api: '/admin-service/messenger/admin/api/v1/orgs/2d23d582-5830-4bab-9d98-3e428d790e58/cisync'
         //api: '/admin-service/messenger/admin/api/v1/orgs/e805fc73-ad2b-4cef-9ea1-70f070db96a2/cisync/'
         //api: '/admin-service/messenger/admin/api/v1/orgs/47a4ef6b-f6d0-4c5d-8ffd-9d6a8c94738c/cisync/'
         //api: '/admin-service/messenger/admin/api/v1/orgs/7c63761c-4d85-4daf-b241-aa63c192ec64/cisync/'
@@ -96,9 +96,9 @@
         .then(function (response) {
           shouldFetch = false;
           defer.resolve(setSyncStatus(response.data));
-      }, function (response) {
-        defer.reject('GET Status ' + response.status + '; Full response: ' + JSON.stringify(response.data));
-      });
+        }, function (response) {
+          defer.reject('GET Status ' + response.status + '; Full response: ' + JSON.stringify(response.data));
+        });
 
       return defer.promise;
     }

@@ -12,6 +12,12 @@
 
     var translatePrefix = 'messengerCiSync.';
 
+    vm.dataStates = Object.freeze({
+      loading: 1,
+      loaded: 2,
+      error: 3
+    });
+
     vm.statusOptions = Object.freeze({
       on: {
         badgeClass: 'badge-primary',
@@ -33,6 +39,8 @@
     });
 
     // Public
+    vm.dataStatus = vm.dataStates.loading;
+    vm.errorMsg = '';
     vm.isDirSync = false;
     vm.status = vm.statusOptions.on;
     vm.ciAdmins = [];
@@ -125,21 +133,33 @@
     }
 
     function getSyncStatus() {
+      vm.dataStatus = vm.dataStates.loading;
+
       SyncService.getSyncStatus()
         .then(function (status) {
           vm.syncInfo = status;
+          vm.dataStatus = vm.dataStates.loaded;
         }, function (errorMsg) {
-          window.console.error('Failed getting CI sync status: ' + errorMsg);
+          var error = 'Failed getting CI sync status: ' + errorMsg;
+          vm.errorMsg = error;
+          window.console.error(error);
+          vm.dataStatus = vm.dataStates.error;
         });
     }
 
     function refreshStatus() {
+      vm.dataStatus = vm.dataStates.loading;
+
       SyncService.refreshSyncStatus()
         .then(function (status) {
           vm.syncInfo = status;
           window.console.log('CI Sync status refreshed');
+          vm.dataStatus = vm.dataStates.loaded;
         }, function (errorMsg) {
-          window.console.error('Failed refreshing CI sync status: ' + errorMsg);
+          var error = 'Failed refreshing CI sync status: ' + errorMsg;
+          vm.errorMsg = error;
+          window.console.error(error);
+          vm.dataStatus = vm.dataStates.error;
         });
     }
 

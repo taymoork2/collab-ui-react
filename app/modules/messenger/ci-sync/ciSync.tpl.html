@@ -25,7 +25,18 @@
             <div class="panel-body">
               <!-- BEGIN PANEL CONTENT -->
 
-              <div>
+              <div ng-if="sync.dataStates.loading === sync.dataStatus">
+                <span class="icon icon-spinner"></span>
+                Loading CI Sync Status
+              </div>
+
+              <div ng-if="sync.dataStates.error === sync.dataStatus">
+                <span class="icon icon-warning"></span>
+                <span>{{sync.errorMsg}}</span>
+                <p><span class="icon icon-refresh" ng-click="sync.refreshStatus()" tooltip="{{sync.refresh}}">Refresh</span></p>
+              </div>
+
+              <div ng-if="sync.dataStates.loaded === sync.dataStatus">
                 <div ng-if="sync.dev">
                   <p>[DEBUG] Viewing as {{sync.adminType.label}}</p>
                   <div class="btn-group">
