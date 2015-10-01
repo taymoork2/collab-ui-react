@@ -14,11 +14,12 @@ angular.module('WebExSiteSettings').service('WebExSiteSettingsSvc', [
       siteUrl: null,
       siteName: null,
 
-      siteInfo: null,
-      meetingTypesInfo: null,
+      // siteInfo: null,
+      // meetingTypesInfo: null,
       // sessionTypesInfo: null,
       settingPagesInfo: null,
 
+      /*
       siteStatus: {
         meetingCenter: {
           id: "MC",
@@ -48,6 +49,7 @@ angular.module('WebExSiteSettings').service('WebExSiteSettingsSvc', [
           isSiteEnabled: false
         }, // supportCenter
       }, // siteStatus
+      */
 
       emailAllHostsBtnObj: {
         id: "emailAllHostsBtn",

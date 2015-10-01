@@ -45,9 +45,12 @@
                   &nbsp;
                 </div>
                 
-                <a href="">
+                <a id={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteInfoPageObj.id}}
+                   name={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteInfoPageObj.id}}
+                   ui-sref={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteInfoPageObj.uiSref}}>
+
                   <i class="icon icon-circle-webex"></i><br>
-                  <span translate="webexSiteSettingsLabels.pageId_siteInformation"></span>
+                  {{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteInfoPageObj.label}}
                 </a>
               </div>
               
@@ -56,64 +59,17 @@
                   &nbsp;
                 </div>
                 
-                <a href="">
+                <a id={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.id}}
+                   name={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.id}}
+                   ui-sref={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.uiSref}}>
+
                   <i class="icon icon-circle-star"></i><br>
-                  <span translate="webexSiteSettingsLabels.pageId_siteFeatures"></span>
+                  {{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.label}}
                 </a>
               </div>
             </div>
           </div>
         </div>
-        <!-- 
-        <table width="100%">
-          <tr>
-            <td valign="middle">
-              <h3>
-                <i class="icon icon-webex"></i>&nbsp;<b>WebEx</b>
-              </h3>
-            </td>
-            
-            <td valign="middle" width="18%">
-              <div align="center">
-                HOST ACCOUNTS<br>
-                {{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.licensesUsage.count}}<br>
-                <span translate="webexSiteSettingsLabels.activeTitle"></span>
-              </div>
-            </td>
-            
-            <td valign="middle" width="18%">
-              <div align="center">
-                &nbsp;<br>
-                
-                {{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.licensesAvailable.count}}<br>
-                <span translate="webexSiteSettingsLabels.availableTitle"></span>
-              </div>
-            </td>
-            
-            <td valign="middle" width="18%">
-              <div align="center">
-                &nbsp;<br>
-                
-                <a href="">
-                  <i class="icon icon-circle-webex"></i><br>
-                  <span translate="webexSiteSettingsLabels.pageId_siteInformation"></span>
-                </a>
-              </div>
-            </td>
-            
-            <td valign="middle" width="18%">
-              <div align="center">
-                &nbsp;<br>
-                
-                <a href="">
-                  <i class="icon icon-circle-star"></i><br>
-                  <span translate="webexSiteSettingsLabels.pageId_siteFeatures"></span>
-                </a>
-              </div>
-            </td>
-          </tr>
-        </table>
-        -->
       </section>
     </article>
   </cs-card>

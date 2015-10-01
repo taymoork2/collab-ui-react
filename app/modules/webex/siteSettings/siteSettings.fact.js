@@ -141,11 +141,11 @@
               logMsg = funcName + ": " + "getInfoResult=" + JSON.stringify(getInfoResult);
               $log.log(logMsg);
 
-              webExSiteSettingsObj.siteInfo = WebExUtilsFact.validateSiteInfoXmlData(getInfoResult.siteInfoXml);
+              // webExSiteSettingsObj.siteInfo = WebExUtilsFact.validateSiteInfoXmlData(getInfoResult.siteInfoXml);
               // webExSiteSettingsObj.meetingTypesInfo = WebExUtilsFact.validateMeetingTypesInfoXmlData(getInfoResult.meetingTypesInfoXml);
               webExSiteSettingsObj.settingPagesInfo = WebExUtilsFact.validateSettingPagesInfoXmlData(getInfoResult.settingPagesInfoXml);
 
-              _this.processSiteInfo();
+              // _this.processSiteInfo();
               // _this.processMeetingTypesInfo();
               _this.processSettingPagesInfo();
 
@@ -200,6 +200,7 @@
           $log.log(logMsg);
         }, // updateLicenseInfo()
 
+        /*
         processSiteInfo: function () {
           var siteInfoJson = webExSiteSettingsObj.siteInfo.bodyJson;
           var siteServiceTypes = [].concat(siteInfoJson.ns1_siteInstance.ns1_metaData.ns1_serviceType);
@@ -218,6 +219,7 @@
             } // chkSiteServiceType()
           ); // siteServiceTypes.forEach()
         }, // processSiteInfo()
+        */
 
         /*
         processMeetingTypesInfo: function () {
@@ -311,6 +313,18 @@
               "emailAllHosts",
               "/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage"
             );
+            
+            addPage(
+              "siteInfo",
+              "siteInformation",
+              "/siteInfo_siteInformation"
+            );
+
+            addPage(
+              "siteInfo",
+              "siteFeatures",
+              "/siteInfo_siteFeatures"
+            );
 
             // common settings
             addPage(
@@ -367,23 +381,30 @@
               "/common_security"
             );
 
-            /*
             addPage(
               "common",
               "options",
               "/adm3100/siteSettingCommon.do?siteurl=sjsite14"
             );
-            */
+            /*
             addPage(
               "common",
               "options",
               "/wbxadmin/siteSettingCommon.do?siteurl=sjsite14"
             );
-            
+            */
+
+            /*
             addPage(
               "common",
               "teleconfPrivileges",
               "/common_teleconfPrivileges"
+            );
+            */
+            addPage(
+              "common",
+              "teleconfPrivileges",
+              "/wbxadmin/siteSettingCommon.do?siteurl=sjsite14"
             );
 
             // meeting center
@@ -405,42 +426,6 @@
               "/meetingCenter_options"
             );
 
-            // event center
-            addPage(
-              "eventCenter",
-              "defaultOptions",
-              "/eventCenter_defaultOptions"
-            );
-
-            addPage(
-              "eventCenter",
-              "navigationCustomization",
-              "/eventCenter_navigationCustomization"
-            );
-
-            addPage(
-              "eventCenter",
-              "reassignment",
-              "/eventCenter_reassignment"
-            );
-
-            addPage(
-              "eventCenter",
-              "registrationForm",
-              "/eventCenter_registrationForm"
-            );
-
-            addPage(
-              "eventCenter",
-              "options",
-              "/eventCenter_options"
-            );
-
-            addPage(
-              "eventCenter",
-              "schedTemplates",
-              "/eventCenter_schedTemplates"
-            );
             // event center
             addPage(
               "eventCenter",
@@ -576,20 +561,24 @@
             var funcName = "processSettingPagesInfo().addPage()";
             var logMsg = "";
 
-            var pageLabel = $translate.instant("webexSiteSettingsLabels.pageId_" + pageId);
+            var indexPageTitleId = "webexSiteSettingsLabels.indexPageTitle_" + categoryId + "_" + pageId;
+            var pageLabel = $translate.instant(indexPageTitleId);
+            // var pageLabel = $translate.instant("webexSiteSettingsLabels.pageId_" + pageId);
 
             logMsg = funcName + ": " + "\n" +
               "categoryId=" + categoryId + "\n" +
               "pageId=" + pageId + "\n" +
               "iframeUrl=" + iframeUrl + "\n" +
+              "indexPageTitleId=" + indexPageTitleId + "\n" +
               "pageLabel=" + pageLabel;
             $log.log(logMsg);
 
             var newPageObj = {
               id: categoryId + "_" + pageId,
-              label: pageLabel,
               pageId: pageId,
+              label: pageLabel,
               iframeUrl: iframeUrl,
+              iframePageTitle: null,
               uiSref: null
             };
 
@@ -631,7 +620,7 @@
           updateSettingCardObjs();
 
           function updateEmailAllHostsBtnObj() {
-            webExSiteSettingsObj.emailAllHostsBtnObj.label = $translate.instant("webexSiteSettingsLabels.emailAllHostsTitle");
+            webExSiteSettingsObj.emailAllHostsBtnObj.label = $translate.instant("webexSiteSettingsLabels.emailAllHostsBtnTitle");
 
             var categoryObj = getCategoryObj("emailAllHosts");
             setUiSref(
@@ -644,6 +633,9 @@
           } // updateEmailAllHostsBtnObj()
 
           function updateSiteInfoCardObj() {
+        	var funcName = "updateSiteInfoCardObj()";
+        	var logMsg = "";
+        	
             webExSiteSettingsObj.siteInfoCardObj.label = webExSiteSettingsObj.siteUrl;
 
             var categoryObj = getCategoryObj("siteInfo");
@@ -655,13 +647,21 @@
 
             categoryObj.pageObjs.forEach(
               function checkPageObj(pageObj) {
-                if (pageObj.pageId == "siteInfo") {
+                if (pageObj.pageId == "siteInformation") {
                   webExSiteSettingsObj.siteInfoCardObj.siteInfoPageObj = pageObj;
                 } else if (pageObj.pageId == "siteFeatures") {
                   webExSiteSettingsObj.siteInfoCardObj.siteFeaturePageObj = pageObj;
                 }
               } // checkPageObj()
             ); // categoryObj.pageObjs.forEach()
+            
+            logMsg = funcName + ": " + "\n" +
+              "siteInfoPageObj=" + JSON.stringify(webExSiteSettingsObj.siteInfoCardObj.siteInfoPageObj);
+            $log.log(logMsg);
+            
+            logMsg = funcName + ": " + "\n" +
+              "siteFeaturePageObj=" + JSON.stringify(webExSiteSettingsObj.siteInfoCardObj.siteFeaturePageObj);
+            $log.log(logMsg);
           } // updateSiteInfoCardObj()
 
           function updateSettingCardObjs() {
@@ -673,7 +673,7 @@
                 var cardId = settingCardObj.id;
 
                 if ("common" == settingCardObj.id) {
-                  settingCardObj.label = $translate.instant("webexSiteSettingsLabels.commonSettingsTitle");
+                  settingCardObj.label = $translate.instant("webexSiteSettingsLabels.commonSettingsCardTitle");
                 } else if ("supportCenter" == settingCardObj.id) {
                   var webACDCategoryObj = getCategoryObj(settingCardObj.webACDObj.id);
                   setUiSref(
