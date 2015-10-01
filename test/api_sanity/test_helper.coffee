@@ -39,7 +39,7 @@ auth =
 
   'test-user':
     user: 'atlasmapservice+ll1@gmail.com'
-    pass: 'C1sc0123!'
+    pass: 'P@ssword123'
     org:  '75653d2f-1675-415c-aa5d-c027233f68fe'
 
   'huron-int1':

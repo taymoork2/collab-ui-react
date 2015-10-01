@@ -42,6 +42,15 @@
         .then(extractDataFromResponse);
     };
 
+    var deleteCluster = function (clusterId) {
+      var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
+      return $http.delete(url).then(function () {
+        if (clusterCache[clusterId]) {
+          delete clusterCache[clusterId];
+        }
+      });
+    };
+
     var deleteHost = function (clusterId, serial) {
       var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/hosts/' + serial;
       return $http.delete(url).then(function () {
@@ -70,6 +79,7 @@
       getClusters: getClusters,
       getConnector: getConnector,
       upgradeSoftware: upgradeSoftware,
+      deleteCluster: deleteCluster,
       subscribe: clusterPoller.subscribe
     };
   }

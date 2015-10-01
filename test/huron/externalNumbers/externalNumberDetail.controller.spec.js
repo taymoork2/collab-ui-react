@@ -1,19 +1,18 @@
 'use strict';
 
 describe('Controller: ExternalNumberDetailCtrl', function () {
-  var controller, $controller, $scope, $stateParams, $q, ModalService, ExternalNumberService, ExternalNumberPool, Notification;
+  var controller, $controller, $scope, $stateParams, $q, ModalService, ExternalNumberService, Notification;
 
   var externalNumbers, modalDefer;
 
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$stateParams_, _$q_, _ModalService_, _ExternalNumberService_, _ExternalNumberPool_, _Notification_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$stateParams_, _$q_, _ModalService_, _ExternalNumberService_, _Notification_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $stateParams = _$stateParams_;
     ModalService = _ModalService_;
     ExternalNumberService = _ExternalNumberService_;
-    ExternalNumberPool = _ExternalNumberPool_;
     Notification = _Notification_;
     $q = _$q_;
 
@@ -31,7 +30,7 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
 
     spyOn(ExternalNumberService, 'getAllNumbers').and.returnValue(externalNumbers);
     spyOn(ExternalNumberService, 'refreshNumbers').and.returnValue($q.when());
-    spyOn(ExternalNumberPool, 'deletePool').and.returnValue($q.when());
+    spyOn(ExternalNumberService, 'deleteNumber').and.returnValue($q.when());
     spyOn(ModalService, 'open').and.returnValue({
       result: modalDefer.promise
     });
@@ -90,7 +89,7 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
   });
 
   it('should notify error when delete fails', function () {
-    ExternalNumberPool.deletePool.and.returnValue($q.reject());
+    ExternalNumberService.deleteNumber.and.returnValue($q.reject());
     controller.deleteNumber(externalNumbers[0]);
     modalDefer.resolve();
     $scope.$apply();

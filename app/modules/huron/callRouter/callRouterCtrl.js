@@ -9,20 +9,38 @@
   function CallRouterCtrl($scope, Config, Authinfo, RouterCompanyNumber, CallRouterService, ServiceSetup, Notification, $modal, $translate) {
     var vm = this;
     vm.save = save;
-    vm.addNew = addNew;
     vm.model = {};
     vm.firstTimeCallerID = true;
+    vm.btnDisabled = true;
 
     vm.validations = {
       phoneNumber: function (viewValue, modelValue, scope) {
-        var value = modelValue || viewValue;
-        var vLength = value.length;
-        if (vLength === 10) {
-          value = '+1' + value;
-        } else if (vLength === 11) {
-          value = '+' + value;
+        var value = null;
+        if (modelValue || viewValue) {
+          value = (modelValue || viewValue);
         }
-        return /^(\+1)?[0-9]{10}$/.test(value);
+        if (value) {
+          var vLength = value.length;
+          if (vLength === 10) {
+            value = '+1' + value;
+          } else if (vLength === 11) {
+            value = '+' + value;
+          }
+
+          return /^(\+?)?[\d]{10,11}$/.test(value);
+
+        } else {
+          return true;
+        }
+
+      }
+    };
+
+    vm.disableFn = function () {
+      if ((vm.model.extnum === '' || angular.isUndefined(vm.model.extnum)) && (vm.model.orgname === '' || angular.isUndefined(vm.model.orgname))) {
+        return false;
+      } else {
+        return (!vm.callrouterform.$dirty) || (vm.callrouterform.$dirty && vm.callrouterform.$invalid);
       }
     };
 
@@ -34,7 +52,14 @@
         key: 'orgname',
         templateOptions: {
           label: $translate.instant('routingModal.label'),
-          required: true
+          onChange: getDisabledState
+        },
+        expressionProperties: {
+          'templateOptions.required': function () {
+            if (vm.model.extnum !== "" && angular.isDefined(vm.model.extnum)) {
+              return true;
+            }
+          }
         }
       }, {
         className: 'small-6 columns',
@@ -50,7 +75,16 @@
         },
         templateOptions: {
           label: $translate.instant('routingModal.calleridnumber'),
-          required: true
+          onChangeFn: getDisabledState,
+          combo: true,
+          searchableCombo: true
+        },
+        expressionProperties: {
+          'templateOptions.required': function () {
+            if (vm.model.orgname !== "" && angular.isDefined(vm.model.orgname)) {
+              return true;
+            }
+          }
         },
         controller: function ($scope, RouterCompanyNumber) {
           RouterCompanyNumber.loadExternalNumberPool('').then(function (data) {
@@ -60,6 +94,22 @@
         }
       }]
     }];
+
+    function getDisabledState() {
+      if (vm.firstTimeCallerID) {
+        if (vm.model.orgname !== "" && angular.isDefined(vm.model.extnum) && vm.model.extnum !== "" && vm.callrouterform.$valid) {
+          vm.btnDisabled = false;
+        } else {
+          vm.btnDisabled = true;
+        }
+      } else {
+        if ((vm.model.orgname === "" && (vm.model.extnum === "" || angular.isUndefined(vm.model.extnum))) || (vm.model.orgname !== "" && angular.isDefined(vm.model.extnum) && vm.model.extnum !== "" && vm.callrouterform.$valid)) {
+          vm.btnDisabled = false;
+        } else {
+          vm.btnDisabled = true;
+        }
+      }
+    }
 
     function init() {
       RouterCompanyNumber.listCompanyNumbers().then(function (companyNumbers) {
@@ -106,27 +156,39 @@
         };
       }
       if (vm.firstTimeCallerID) {
-        RouterCompanyNumber.saveCompanyNumber(data).then(function (data) {
-          Notification.notify([$translate.instant('callRouter.saveCallerIdSuccess')], 'success');
-        }).catch(function (response) {
-          Notification.errorResponse(response, 'callRouter.saveCallerIdError');
-        });
+        if (vm.model.orgname !== "" && vm.model.extnum !== "") {
+          RouterCompanyNumber.saveCompanyNumber(data).then(function (data) {
+            Notification.notify([$translate.instant('callRouter.saveCallerIdSuccess')], 'success');
+            init();
+          }).catch(function (response) {
+            Notification.errorResponse(response, 'callRouter.saveCallerIdError');
+          });
+        }
       } else {
-        RouterCompanyNumber.updateCompanyNumber(data, vm.uuid).then(function (data) {
-          Notification.notify([$translate.instant('callRouter.updateCallerIdSuccess')], 'success');
-        }).catch(function (response) {
-          Notification.errorResponse(response, 'callRouter.updateCallerIdError');
-        });
+        if ((vm.model.orgname !== "" && angular.isDefined(vm.model.orgname)) && (vm.model.extnum !== "" && angular.isDefined(vm.model.extnum))) {
+          RouterCompanyNumber.updateCompanyNumber(data, vm.uuid).then(function (data) {
+            Notification.notify([$translate.instant('callRouter.updateCallerIdSuccess')], 'success');
+          }).catch(function (response) {
+            Notification.errorResponse(response, 'callRouter.updateCallerIdError');
+          });
+        } else if ((vm.model.orgname === "" || angular.isUndefined(vm.model.orgname)) && (vm.model.extnum === "" || angular.isUndefined(vm.model.extnum))) {
+          RouterCompanyNumber.deleteCompanyNumber(data, vm.uuid).then(function (data) {
+            vm.firstTimeCallerID = true;
+            vm.model.orgname = Authinfo.getOrgName();
+            Notification.notify([$translate.instant('callRouter.deleteCallerIdSuccess')], 'success');
+          }).catch(function (response) {
+            Notification.errorResponse(response, 'callRouter.deleteCallerIdError');
+          });
+        }
       }
-
     }
 
-    function addNew() {
-      var modalInstance = $modal.open({
-        templateUrl: 'modules/huron/callRouter/companyNumber/companyNumber.html',
-        controller: 'companyNumber'
-      });
-    }
+    // function addNew() {
+    //   var modalInstance = $modal.open({
+    //     templateUrl: 'modules/huron/callRouter/companyNumber/companyNumber.html',
+    //     controller: 'companyNumber'
+    //   });
+    // }
 
     init();
 

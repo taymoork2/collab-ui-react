@@ -3,7 +3,7 @@ assert  = require 'assert'
 request = require 'request'
 helper  = require './test_helper'
 
-describe 'hercules api ( stimurbe@cisco.com ) -',  ->
+describe 'hercules api -',  ->
 
   before (done) ->
     helper.getBearerToken 'pbr-admin', (@bearer) =>
