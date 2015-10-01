@@ -1939,6 +1939,7 @@
   "messengerCiSync": {
     "authRedirectHeading": "Authentication Redirect",
     "authRedirectTooltip": "Is authentication redirected through Common Identity instead of CAS?",
+    "loading": "Loading CI Sync Status",
     "orgAdminButtonText": "Org Admin",
     "pageTitle": "Messenger CI Sync",
     "patchSyncButtonText": "Update",
