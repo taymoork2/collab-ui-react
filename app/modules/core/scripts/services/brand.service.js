@@ -41,7 +41,7 @@
             Log.debug('Get existing org failed. Status: ' + status);
             reject();
           }
-        }, orgId);
+        }, orgId, true);
       });
     }
 
@@ -66,12 +66,6 @@
         'allowCustomerLogos': true
       };
 
-      // Temporary, when enabling customer logos always start with partnerLogo
-      // TODO: Fix admin-service PATCH issues dealing with orgSettings
-      _.extend(settings, {
-        'usePartnerLogo': true
-      });
-
       Orgservice.setOrgSettings(orgId, settings, notify);
     }
 
@@ -79,12 +73,6 @@
       var settings = {
         'allowCustomerLogos': false
       };
-
-      // Temporary, when disabling customer logos always switch to partnerLogo
-      // TODO: Fix admin-service PATCH issues dealing with orgSettings
-      _.extend(settings, {
-        'usePartnerLogo': true
-      });
 
       Orgservice.setOrgSettings(orgId, settings, notify);
     }
