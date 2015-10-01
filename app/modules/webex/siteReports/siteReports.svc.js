@@ -70,7 +70,7 @@ angular.module('WebExReports').service('reportService', [
       var training_center = new ReportsSection("training_center", siteUrl, ["/u/y/z", "www.yahoo.com"]);
 
       var uisrefsArray = [];
-      var common_reports_pageids = ["meeting_in_progess", "meeting_usage", "recordings_storage_usage",
+      var common_reports_pageids = ["meeting_in_progess", "meeting_usage", "recording_usage",
         "storage_utilization"
       ];
       var event_center_pageids = ["programs_events_recordings", "summary", "scheduled_events_dashboard",
