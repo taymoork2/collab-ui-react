@@ -1,30 +1,30 @@
 <div class="details-pane">
 
-  <div>
-    <h2 style="display: flex">
+  <h2 style="display: flex; align-items: center">
+    <i
+      class="icon icon-2x icon-circle-unlock"
+      ng-if="deviceDetails.device.type != 'group' && deviceDetails.device.needsActivation"
+    />
+    <i
+      class="icon icon-2x icon-circle-telepresence"
+      ng-if="deviceDetails.device.type != 'group' && !deviceDetails.device.needsActivation"
+    />
+    <i
+      class="icon icon-2x icon-circle-group"
+      ng-if="deviceDetails.device.type == 'group'"
+    />
+
+    <div
+      class="ellipsis"
+      style="flex-grow: 2"
+      ng-bind-html="deviceDetails.device.displayName | highlight:devices.search">
+    </div>
+    <a href ui-sref="devices-redux5.search">
       <i
-        class="icon icon-circle-unlock"
-        ng-if="deviceDetails.device.needsActivation"
-        style="padding-right: 20px; padding-top: 7px;"
+        class="icon icon-back"
       />
-      <i
-        class="icon icon-circle-telepresence"
-        ng-if="!deviceDetails.device.needsActivation"
-        style="padding-right: 20px; padding-top: 7px;"
-      />
-      <div
-        class="ellipsis"
-        style="flex-grow: 2"
-        ng-bind-html="deviceDetails.device.displayName | highlight:devices.search">
-      </div>
-      <a href ui-sref="devices-redux5.search">
-        <i
-          class="icon icon-back"
-          style="padding-right: 20px; padding-top: 7px;"
-        />
-      </a>
-    </h2>
-  </div>
+    </a>
+  </h2>
 
   <div ng-switch on="deviceDetails.device.type">
     <div ng-switch-when="group">
@@ -44,7 +44,7 @@
     <div ng-switch-default>
 
       <!-- device / code -->
-      
+
       <strong
          ng-bind-html="deviceDetails.device.product | highlight:devices.search">
       </strong>
@@ -89,12 +89,12 @@
 
       <div style="padding-top: 20px;">
         <div class="row" ng-show="deviceDetails.device[key]" ng-repeat="(key, name) in deviceDetails.deviceProps">
-          <div 
+          <div
             class="small-3 columns">
             {{name}}:
           </div>
-          <div 
-            class="small-9 columns ellipsis" 
+          <div
+            class="small-9 columns ellipsis"
             ng-bind-html="deviceDetails.device[key] | highlight:devices.search">
           </div>
         </div>
