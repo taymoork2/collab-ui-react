@@ -119,10 +119,13 @@
     function upload(orgId, file) {
       var uploadUrl = Config.getAdminServiceUrl() + 'organizations/' + orgId + '/logo/uploadUrl';
       return $http.get(uploadUrl).then(function (response) {
-        return Upload.upload({
+        return Upload.http({
           url: response.data.tempURL,
           method: 'PUT',
-          file: file
+          headers: {
+            'Content-Type': 'image/png'
+          },
+          data: file
         });
       });
     }
