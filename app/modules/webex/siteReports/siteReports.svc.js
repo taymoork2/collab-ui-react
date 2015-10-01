@@ -73,9 +73,14 @@ angular.module('WebExReports').service('reportService', [
       var common_reports_pageids = ["meeting_in_progess", "meeting_usage", "recording_usage",
         "storage_utilization"
       ];
-      var event_center_pageids = ["programs_events_recordings", "summary", "scheduled_events_dashboard",
-        "held_events_dashboard", "event_center_report_template"
+
+      var event_center_pageids = ["event_center_overview",
+        "event_center_site_summary", 
+        "event_center_scheduled_events",
+        "event_center_held_events",
+        "event_center_report_template"
       ];
+
       var support_center_pageids = ["session_query_tool", "call_volume", "csr_activity", "url_referal",
         "allocation_queue", "webacd_session_query_tool", "webacd_call_volume",
         "webacd_csr_volume", "webacd_csr_activity", "webacd_url_referal",
