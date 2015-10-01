@@ -1,0 +1,30 @@
+<script type="text/ng-template" id="newFeatureModal.html">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()">
+      <span class="sr-only">Close</span>
+    </button>
+    <h5 class="modal-title" translate="huronDetails.newFeatureModal.title"></h5>
+  </div>
+  <div class="huron-new-feature-modal">
+    <button ng-repeat="feature in features" class="huron-feature-option" ng-click="ok(feature.code)">
+
+      <div class="row medium-4">
+        <span class="feature-icon-circle feature-icon-color-{{feature.code | translate}}">
+          {{feature.code | translate}}
+        </span>
+      </div>
+
+      <div class="huron-feature-label">
+        <strong>
+          {{feature.label | translate}}
+        </strong>
+      </div>
+
+      <div class="huron-feature-description">
+        <small>
+          {{feature.description | translate}}
+        </small>
+      </div>
+    </button>
+  </div>
+</script>

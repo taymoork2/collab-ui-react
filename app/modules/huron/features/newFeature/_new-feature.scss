@@ -1,0 +1,72 @@
+.no-features-available {
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+  color: $gray-dark;
+  background: $brand-white;
+  align-items: center;
+  justify-content: center;
+
+  & div {
+    padding-top: rem-calc(10px);
+  }
+}
+
+.huron-new-feature-modal {  // The modal body.
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: rem-calc(0px) rem-calc(20px) rem-calc(20px) rem-calc(20px);
+
+  & button {   // The button options in the body.
+    color: $gray-darkest;
+    background-color: $gray-lightest;
+    margin: rem-calc(2px);
+    border-style: hidden;
+    width: rem-calc(250px);
+    height: rem-calc(220px);
+    padding: rem-calc(20px) rem-calc(10px) rem-calc(20px) rem-calc(20px);
+    &:hover {
+      background-color: $gray-light;
+    }
+  }
+}
+
+.feature-icon-circle {      // Icon in the option.
+  position: relative;
+  top: rem-calc(10%);
+  font-size: $font-size-h3;
+  background: $brand-white;
+  border-radius: 50%;
+  width: rem-calc(60px);
+  height: rem-calc(60px);
+  padding: rem-calc(10px);
+}
+
+.feature-icon-color-AA {
+  color: $brand-primary;
+}
+.feature-icon-color-HG {
+  color: purple;
+}
+.feature-icon-color-CP {
+  color: $brand-danger;
+}
+
+.huron-feature-label {
+  position: relative;
+  top: rem-calc(10%);
+  color: $brand-info;
+  font-size: $font-size-h5;
+  width: 100%;
+  margin-top: rem-calc(20px);
+  padding-top: rem-calc(10px);
+}
+
+.huron-feature-description {
+  position: relative;
+  top: rem-calc(10%);
+  width: 100%;
+  text-align: left;
+  margin-top: rem-calc(20px);
+}

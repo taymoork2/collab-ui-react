@@ -1,0 +1,18 @@
+<div class="no-features-available" ng-controller="NewFeatureCtrl">
+
+  <div class="row columns medium-4"
+       translate="huronDetails.featuresNotYetConfiguredPage.nothingToSee"></div>
+
+  <div class="row columns medium-12">
+    <h2 translate="huronDetails.featuresNotYetConfiguredPage.letsCustomize"></h2>
+  </div>
+
+  <div class="row columns medium-4">
+    <button class="button info" ng-click="open()">NEW</button>
+  </div>
+
+  <uc-new-feature-modal></uc-new-feature-modal>
+
+  <!--TODO: Below will go away after Setup Assistant skeleton is in place -->
+  {{feature}}
+</div>
