@@ -881,7 +881,8 @@ angular.module('Core')
           'fusion',
           'mediafusionconnector',
           'callRouter',
-          'hurondetails'
+          'hurondetails',
+          'cdrsupport'
         ]
       };
 

@@ -121,51 +121,45 @@
       return '{"fquery":{"query":{"query_string":{"query":"dataParam.' + callType + ':(\\"' + device + '\\")"}},"_cache":true}}';
     }
 
-    function secondaryQuery(server, newCdrArray, cdrArray) {
-      var sessionIds = extractUniqueIds(newCdrArray);
-      var uniqueSessionIds = extractUniqueIds(cdrArray);
+    function secondaryQuery(server, cdrArray) {
+      var sessionIds = extractUniqueIds(cdrArray);
       var promises = [];
 
-      if (sessionIds.sort().join(',') != uniqueSessionIds.sort().join(',')) {
-        var queryElement = '{"fquery":{"query":{"query_string":{"query":"';
-        for (var i = 0; i < sessionIds.length; i++) {
-          queryElement += 'dataParam.localSessionID:(\\"' + sessionIds[i] + '\\") OR dataParam.remoteSessionID:(\\"' + sessionIds[i] + '\\")';
-          if (i + 1 < sessionIds.length) {
-            queryElement += ' OR ';
-          }
+      var queryElement = '{"fquery":{"query":{"query_string":{"query":"';
+      for (var i = 0; i < sessionIds.length; i++) {
+        queryElement += 'dataParam.localSessionID:(\\"' + sessionIds[i] + '\\") OR dataParam.remoteSessionID:(\\"' + sessionIds[i] + '\\")';
+        if (i + 1 < sessionIds.length) {
+          queryElement += ' OR ';
         }
-        queryElement += '"}},"_cache":true}}';
-
-        var headers = {
-          Authorization: 'Basic ' + btoa('huron:4Jd7w6%6~8yB7r4m'),
-          Accept: 'application/json, text/plain, */*',
-          'Content-type': 'application/x-ww-form-urlencoded',
-          server: server.url,
-          qs: '{"query": {"filtered": {"query": {"bool": {"should": [' + generateHosts() + ']} },"filter": {"bool": {"should":[' + queryElement + ']}}}},"size": 2000,"sort": [{"@timestamp": {"order": "desc"}}]}'
-        };
-
-        cdrArray = JSON.parse(JSON.stringify(newCdrArray));
-
-        var proxyQuery = proxy(headers).then(function (response) {
-            if (!angular.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
-              newCdrArray = [];
-              for (var i = 0; i < response.hits.hits.length; i++) {
-                newCdrArray.push(response.hits.hits[i]._source);
-              }
-              // promises.push(secondaryQuery(server, newCdrArray, cdrArray));
-              groupCdrsIntoCalls(newCdrArray);
-            }
-            return;
-          },
-          function (response) {
-            Log.debug('Failed to retrieve cdr data from ' + server.name + ' server. Status: ' + response.status);
-            Notification.notify([$translate.instant('cdrLogs.cdrRecursiveError', {
-              server: server.name
-            })], 'error');
-            return;
-          });
-        promises.push(proxyQuery);
       }
+      queryElement += '"}},"_cache":true}}';
+
+      var headers = {
+        Authorization: 'Basic ' + btoa('huron:4Jd7w6%6~8yB7r4m'),
+        Accept: 'application/json, text/plain, */*',
+        'Content-type': 'application/x-ww-form-urlencoded',
+        server: server.url,
+        qs: '{"query": {"filtered": {"query": {"bool": {"should": [' + generateHosts() + ']} },"filter": {"bool": {"should":[' + queryElement + ']}}}},"size": 2000,"sort": [{"@timestamp": {"order": "desc"}}]}'
+      };
+
+      var proxyQuery = proxy(headers).then(function (response) {
+        if (!angular.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
+          var newCdrArray = [];
+          for (var i = 0; i < response.hits.hits.length; i++) {
+            newCdrArray.push(response.hits.hits[i]._source);
+          }
+          groupCdrsIntoCalls(newCdrArray);
+        }
+        return;
+      },
+      function (response) {
+        Log.debug('Failed to retrieve cdr data from ' + server.name + ' server. Status: ' + response.status);
+        Notification.notify([$translate.instant('cdrLogs.cdrRecursiveError', {
+          server: server.name
+        })], 'error');
+        return;
+      });
+      promises.push(proxyQuery);
 
       return $q.all(promises).then(function () {
         return;
