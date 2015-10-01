@@ -41,7 +41,16 @@
         placeholder: $translate.instant('singleNumberReachPanel.snrRemoteDestinationNumberPlaceholder'),
         inputClass: 'col-sm-12',
         maxlength: 24,
-        required: true
+        required: true,
+        options: [{
+          name: $translate.instant('singleNumberReachPanel.unitedStates'),
+          code: 'us',
+          number: '1'
+        }, {
+          name: $translate.instant('singleNumberReachPanel.austrailia'),
+          code: 'au',
+          number: '61'
+        }]
       }
     }];
 
@@ -122,9 +131,19 @@
       init();
     }
 
+    /*
+     * Temporary function until the country select can be changed to send the unformatted number
+     */
+    function removePhoneNumberFormatting(number) {
+      if (!number && !angular.isString(number)) {
+        return number;
+      }
+      return number.replace(/[-\s]/g, "");
+    }
+
     function createRemoteDestinationInfo(user, destination, answerTooLateTimer) {
       var rdBean = {
-        'destination': destination.phoneNumber,
+        'destination': removePhoneNumberFormatting(destination.phoneNumber),
         'name': 'RD-' + getRandomString(),
         'autoAssignRemoteDestinationProfile': true,
         'answerTooLateTimer': answerTooLateTimer
@@ -178,7 +197,7 @@
 
     function updateRemoteDestinationInfo(user, destination, answerTooLateTimer) {
       var rdBean = {
-        'destination': destination.phoneNumber,
+        'destination': removePhoneNumberFormatting(destination.phoneNumber),
         'answerTooLateTimer': answerTooLateTimer
       };
       var result = {
