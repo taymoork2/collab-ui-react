@@ -6,7 +6,7 @@
     .controller('AABuilderMainCtrl', AABuilderMainCtrl); /* was AutoAttendantMainCtrl */
 
   /* @ngInject */
-  function AABuilderMainCtrl($scope, $translate, $stateParams, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeService, Notification) {
+  function AABuilderMainCtrl($scope, $translate, $stateParams, AAModelService, AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeService, Notification) {
     var vm = this;
     vm.aaModel = {};
     vm.ui = {};
@@ -15,6 +15,8 @@
     vm.saveAARecords = saveAARecords;
     vm.canSaveAA = canSaveAA;
     vm.getSaveErrorMessages = getSaveErrorMessages;
+
+    $scope.saveAARecords = saveAARecords;
 
     /////////////////////
 
@@ -70,6 +72,7 @@
             Notification.success('autoAttendant.successCreateCe', {
               name: aaRecord.callExperienceName
             });
+
           },
           function (response) {
             Notification.error('autoAttendant.errorCreateCe', {
@@ -93,6 +96,7 @@
             Notification.success('autoAttendant.successUpdateCe', {
               name: aaRecord.callExperienceName
             });
+
           },
           function (response) {
             Notification.error('autoAttendant.errorUpdateCe', {
@@ -106,6 +110,7 @@
     }
 
     function canSaveAA() {
+
       vm.errorMessages = [];
       if (angular.isUndefined(vm.ui.ceInfo)) {
         return false;
@@ -115,6 +120,7 @@
 
       // AA name is missing
       if (angular.isUndefined(vm.ui.ceInfo.getName()) || vm.ui.ceInfo.getName().length === 0) {
+
         vm.errorMessages.push($translate.instant('autoAttendant.invalidNameMissing'));
         canSave = false;
       } else if ($stateParams.aaName === '') {
@@ -124,6 +130,7 @@
           return record.callExperienceName === vm.ui.ceInfo.getName();
         });
         if (isNameInUse) {
+
           vm.errorMessages.push($translate.instant('autoAttendant.invalidNameNotUnique'));
           canSave = false;
         }
@@ -167,21 +174,28 @@
     }
 
     function getSaveErrorMessages() {
+
       var messages = vm.errorMessages.join('<br>');
 
       return messages;
     }
 
     function activate() {
-      vm.aaModel = AAModelService.getAAModel();
-      vm.aaModel.aaRecord = undefined;
-
       /* $scope variables temporarily needed for integration with older templates */
       $scope.aa = {};
       $scope.aa.modal = {};
-      vm.ui = $scope.aa.modal;
+
+      vm.aaModel = AAModelService.getAAModel();
+
+      vm.aaModel.aaRecord = AAModelService.newAARecord();
+
+      vm.ui = AAUiModelService.getCeInfo();
+      vm.ui.ceInfo = {};
+      vm.ui.ceInfo.name = "";
+
     }
 
     activate();
+
   }
 })();

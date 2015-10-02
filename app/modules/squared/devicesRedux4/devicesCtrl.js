@@ -69,7 +69,7 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, CsdmCodeService
       })
       .value();
 
-    if (!vm.displayNameFilter) {
+    if (!vm.search && !vm.displayNameFilter) {
       var rooms = _.chain(vm.filteredCodesAndDevices.matches)
         .countBy('displayName')
         .pick(function (val) {

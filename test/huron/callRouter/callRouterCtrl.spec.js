@@ -25,7 +25,7 @@ describe('Controller: CallRouterCtrl', function () {
       "name": "Atlas_Test_JP003",
       "pattern": "+12292292299",
       "uuid": "46a00f3b-07d3-4180-82a2-22ff7dba40e5",
-      "url": "https://cmi.hptx1.huron-dev.com/api/v1/voice/customers/909df552-e36d-4889-b9be-ccac895575aa/companynumbers/46a00f3b-07d3-4180-82a2-22ff7dba40e5",
+      "url": "https://cmi.huron-int.com/api/v1/voice/customers/909df552-e36d-4889-b9be-ccac895575aa/companynumbers/46a00f3b-07d3-4180-82a2-22ff7dba40e5",
       "links": [{
         "rel": "voice",
         "href": "/api/v1/voice/customers/909df552-e36d-4889-b9be-ccac895575aa/companynumbers/46a00f3b-07d3-4180-82a2-22ff7dba40e5"

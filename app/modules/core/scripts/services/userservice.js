@@ -103,11 +103,11 @@ angular.module('Core')
                         return (user.email == userObj.email);
                       });
 
-                      if ((userAndDnObj[0].assignedDn !== null) && userAndDnObj[0].assignedDn.pattern.length > 0) {
+                      if (angular.isDefined(userAndDnObj[0].assignedDn) && (userAndDnObj[0].assignedDn !== null) && userAndDnObj[0].assignedDn.pattern.length > 0) {
                         userObj.directoryNumber = userAndDnObj[0].assignedDn.pattern;
                       }
                       //with None as externalNumber pattern the CMI call fails
-                      if (userAndDnObj[0].externalNumber !== false && userAndDnObj[0].externalNumber.pattern !== "None") {
+                      if (angular.isDefined(userAndDnObj[0].externalNumber) && userAndDnObj[0].externalNumber !== false && userAndDnObj[0].externalNumber.pattern !== "None") {
                         userObj.externalNumber = userAndDnObj[0].externalNumber.pattern;
                       }
 
