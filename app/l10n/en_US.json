@@ -1236,7 +1236,9 @@
     "snrSeconds": "Seconds",
     "success": "Single Number Reach configuration saved successfully",
     "removeSuccess": "Single Number Reach configuration removed successfully",
-    "error": "Single Number Reach configuration failed."
+    "error": "Single Number Reach configuration failed.",
+    "unitedStates": "United States of America",
+    "austrailia": "Austrailia"
   },
   "voicemailPanel": {
     "success": "Voicemail configuration saved successfully",
