@@ -4,7 +4,7 @@ describe('Controller: CdrService', function () {
   beforeEach(module('uc.cdrlogsupport'));
   beforeEach(module('Huron'));
 
-  var $httpBackend, $q, CdrService, proxyQueryService, Notification;
+  var $httpBackend, $q, CdrService, Notification;
 
   var proxyResponse = getJSONFixture('huron/json/cdrLogs/proxyResponse.json');
 
@@ -17,9 +17,8 @@ describe('Controller: CdrService', function () {
     'hitSize': 1
   };
 
-  beforeEach(inject(function (_$httpBackend_, _$q_, _CdrService_, _proxyQueryService_, _Notification_) {
+  beforeEach(inject(function (_$httpBackend_, _$q_, _CdrService_, _Notification_) {
     CdrService = _CdrService_;
-    proxyQueryService = _proxyQueryService_;
     Notification = _Notification_;
     $q = _$q_;
     $httpBackend = _$httpBackend_;
@@ -37,7 +36,6 @@ describe('Controller: CdrService', function () {
   });
 
   it('should return elastic search data from all servers', function () {
-    spyOn(proxyQueryService, 'esQuery').and.callThrough();
     $httpBackend.whenGET('http://localhost:8080').respond(proxyResponse);
 
     CdrService.query(model).then(function (response) {
