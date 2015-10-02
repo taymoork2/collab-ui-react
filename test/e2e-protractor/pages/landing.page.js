@@ -68,11 +68,11 @@ var LandingPage = function () {
     return element.all(by.cssContainingText('.ngGrid .ngRow span', query)).first();
   }
 
-  this.nMaxLangs = 20;
+  var nMaxLangs = 20;
 
   this.clickLang = function (index) {
     var list = element.all(by.id('languageSelector option'));
-    expect(list.count()).toBe(this.nMaxLangs);
+    expect(list.count()).toBe(nMaxLangs);
 
     list.get(index).getText().then(function (text) {
       console.log("Selecting language " + text);
@@ -81,7 +81,7 @@ var LandingPage = function () {
     utils.click(list.get(index));
   };
 
-  this.selectLanguageRange = function (nStart, nEnd) {
+  this.expectSelectLanguageRange = function (nStart, nEnd) {
     for (var i = nStart; i < nEnd; i++) {
       utils.click(this.serviceSetup);
       utils.click(this.languageSelector);
