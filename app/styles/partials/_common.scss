@@ -126,3 +126,9 @@ a[href="http://www.amcharts.com/javascript-charts/"] {
 .indent-checkbox {
   margin-left: 30px;
 }
+
+.vertical-align {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}

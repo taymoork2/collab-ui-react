@@ -1,0 +1,34 @@
+<div class="device-card">
+  <div style="display: flex; align-items: center;">
+    <i
+      ng-if="device.type != 'group' && device.needsActivation"
+      class="icon icon-3x icon-circle-unlock"
+    />
+    <i
+      ng-if="device.type != 'group' && !device.needsActivation"
+      class="icon icon-3x icon-circle-telepresence"
+    />
+    <i
+      ng-if="device.type == 'group'"
+      class="icon icon-3x icon-circle-group"
+    />
+    <i
+      class="overlay"
+      ng-if="device.type != 'group' && !device.needsActivation"
+      ng-class="device.cssColorClass"
+    />
+    <div class="ellipsis card-items">
+      <h4 class="ellipsis" ng-bind-html="device.displayName | highlight:devices.search"></h4>
+      <div class="ellipsis" ng-if="device.type != 'group' && !device.needsActivation">
+        {{devices.deviceProps[device.filterMatch || 'readableState']}}:
+        <span ng-bind-html="device[device.filterMatch || 'readableState'] | highlight:devices.search"></span>
+      </div>
+      <div class="ellipsis" ng-if="device.type != 'group' && device.needsActivation">
+        <span ng-bind-html="device[device.filterMatch || 'readableActivationCode'] | highlight:devices.search"></span>
+      </div>
+      <div class="ellipsis" ng-if="device.type == 'group'">
+        {{device.count}} devices
+      </div>
+    </div>
+  </div>
+</div>

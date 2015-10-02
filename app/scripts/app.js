@@ -18,6 +18,7 @@ angular.module('Core', [
   'ngSanitize',
   'ngRoute',
   'ngMessages',
+  'ngFileUpload',
   // 'ui.bootstrap',
   'dialogs',
   'ngCsv',
@@ -34,7 +35,8 @@ angular.module('Core', [
   'cisco.ui',
   'timer',
   'angular-nicescroll',
-  'cwill747.phonenumber'
+  'cwill747.phonenumber',
+  'toaster'
 ]);
 
 angular.module('Squared', ['Core']);

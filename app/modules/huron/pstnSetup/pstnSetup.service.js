@@ -5,7 +5,7 @@
     .factory('PstnSetupService', PstnSetupService);
 
   /* @ngInject */
-  function PstnSetupService($q, Authinfo, TerminusCarrierService, TerminusCustomerService, TerminusCustomerCarrierService, TerminusBlockOrderService, TerminusOrderService, TerminusCarrierInventory, TerminusNumberService) {
+  function PstnSetupService($q, Authinfo, TerminusCarrierService, TerminusCustomerService, TerminusCustomerCarrierService, TerminusBlockOrderService, TerminusOrderService, TerminusCarrierInventoryCount, TerminusNumberService) {
     var INTELEPEER = "INTELEPEER";
     var TATA = "TATA";
     var PSTN = "PSTN";
@@ -93,7 +93,7 @@
     }
 
     function getCarrierInventory(carrierId, state) {
-      return TerminusCarrierInventory.get({
+      return TerminusCarrierInventoryCount.get({
         carrierId: carrierId,
         state: state
       }).$promise;

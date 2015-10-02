@@ -6,22 +6,22 @@ var assertDisplayed = function (cssSelector, message) {
 };
 
 var Notifications = function () {
-  var alert = element(by.css('.alertify-log'));
-  this.errorAlert = element(by.css('.alertify-log-error'));
-  this.successAlert = element(by.css('.alertify-log-success'));
+  var alert = element(by.css('.toast .toast-close-button'));
+  this.errorAlert = element(by.css('.toast-error .toast-close-button'));
+  this.successAlert = element(by.css('.toast-success .toast-close-button'));
 
   this.assertError = function (msg1, msg2) {
     utils.wait(this.errorAlert).then(function () {
-      assertDisplayed('.alertify-log-error', msg1);
-      assertDisplayed('.alertify-log-error', msg2);
+      assertDisplayed('.toast-error', msg1);
+      assertDisplayed('.toast-error', msg2);
       this.errorAlert.click();
     }.bind(this));
   };
 
   this.assertSuccess = function (msg1, msg2) {
     utils.wait(this.successAlert).then(function () {
-      assertDisplayed('.alertify-log-success', msg1);
-      assertDisplayed('.alertify-log-success', msg2);
+      assertDisplayed('.toast-success', msg1);
+      assertDisplayed('.toast-success', msg2);
       this.successAlert.click();
     }.bind(this));
   };

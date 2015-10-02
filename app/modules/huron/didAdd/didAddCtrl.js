@@ -240,7 +240,7 @@
     }
 
     function restoreDeletedDids() {
-      _(vm.deletedDids).each(function (deletedDid) {
+      _.forEach(vm.deletedDids, function (deletedDid) {
         addToTokenField(deletedDid.pattern);
       });
       vm.deletedDids = [];
@@ -268,7 +268,7 @@
 
       var promises = [];
       if (vm.deletedDids.length > 0) {
-        _(vm.deletedDids).each(function (delDid) {
+        _.forEach(vm.deletedDids, function (delDid) {
           var deletePromise = ExternalNumberPool.deletePool(customerId ? customerId : vm.currentOrg.customerOrgId, delDid.uuid).then(function (response) {
             vm.deletedCount++;
           }).catch(function (response) {
@@ -282,7 +282,7 @@
       }
 
       if (vm.newDids.length > 0) {
-        _(vm.newDids).each(function (newDid) {
+        _.forEach(vm.newDids, function (newDid) {
           var addPromise = ExternalNumberPool.create(customerId ? customerId : vm.currentOrg.customerOrgId, newDid).then(function (response) {
             vm.addedCount++;
           }).catch(function (response) {
@@ -302,7 +302,7 @@
 
         if (vm.errors.length > 0) {
           var errorMsgs = [];
-          _(vm.errors).each(function (error) {
+          _.forEach(vm.errors, function (error) {
             errorMsgs.push("Number: " + error.pattern + " " + error.message);
           });
           Notification.notify(errorMsgs, 'error');
@@ -339,7 +339,7 @@
     function formatDidList(didList) {
       var formattedDids = [];
       if (angular.isDefined(didList) && angular.isDefined(didList.length) && didList.length > 0) {
-        _(didList).each(function (number) {
+        _.forEach(didList, function (number) {
           formattedDids.push(formatPhoneNumbers(number.pattern));
         });
       }

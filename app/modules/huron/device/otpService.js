@@ -6,7 +6,7 @@
     .factory('OtpService', OtpService);
 
   /* @ngInject */
-  function OtpService($rootScope, Authinfo, UserOTPService, HuronUser, HuronConfig) {
+  function OtpService($rootScope, Authinfo, UserOTPService, HuronUser, HuronConfig, HermesQRCodeService) {
 
     var service = {
       loadOtps: loadOtps,
@@ -71,7 +71,10 @@
     }
 
     function getQrCodeUrl(activationCode) {
-      return HuronConfig.getOcelotUrl() + '/getqrimage?oneTimePassword=' + activationCode;
+      return HermesQRCodeService.get({
+          oneTimePassword: activationCode
+        })
+        .$promise;
     }
 
   }

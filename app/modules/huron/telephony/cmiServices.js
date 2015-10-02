@@ -263,6 +263,13 @@
 
   .factory('TimeZoneService', function ($resource) {
     return $resource('modules/huron/serviceSetup/timeZones.json', {}, {});
+  })
+
+  .factory('HermesQRCodeService', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getEmailUrl() + '/:getqrima/encoded', {
+      getqrima: 'getqrimage',
+      oneTimePassword: '@oneTimePassword'
+    }, {});
   });
 
 })();

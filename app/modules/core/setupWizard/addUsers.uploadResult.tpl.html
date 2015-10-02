@@ -1,4 +1,4 @@
-<div class="users-upload-results" ng-init="wizard.hasErrors=false;">
+<div class="users-upload-results" ng-init="wizard.hasErrors=false; sendBulkMetric();">
   <i ng-if="model.userErrorArray.length === 0" class="icon icon-check-mark-success"></i>
   <div class="results-container">
     <div class="result new-users" ng-class="{disabled: model.numNewUsers === 0}">

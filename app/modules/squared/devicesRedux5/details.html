@@ -1,0 +1,126 @@
+<div class="details-pane">
+
+  <h2 style="display: flex; align-items: center">
+    <i
+      class="icon icon-2x icon-circle-unlock"
+      ng-if="deviceDetails.device.type != 'group' && deviceDetails.device.needsActivation"
+    />
+    <i
+      class="icon icon-2x icon-circle-telepresence"
+      ng-if="deviceDetails.device.type != 'group' && !deviceDetails.device.needsActivation"
+    />
+    <i
+      class="icon icon-2x icon-circle-group"
+      ng-if="deviceDetails.device.type == 'group'"
+    />
+
+    <div
+      class="ellipsis"
+      style="flex-grow: 2"
+      ng-bind-html="deviceDetails.device.displayName | highlight:devices.search">
+    </div>
+    <a href ui-sref="devices-redux5.search">
+      <i
+        class="icon icon-back"
+      />
+    </a>
+  </h2>
+
+  <div ng-switch on="deviceDetails.device.type">
+    <div ng-switch-when="group">
+
+      <!-- room -->
+
+      <strong style="padding-bottom: 20px; display: block">Devices In Room</strong>
+      <ul class="small-block-grid-1 medium-block-grid-2 large-block-grid-3">
+        <li
+          ng-click="devices.expandDevice(device)"
+          ng-repeat="device in deviceDetails.device.devices">
+          <div ng-include="'modules/squared/devicesRedux5/deviceCard.html'"></div>
+        </li>
+      </ul>
+
+    </div>
+    <div ng-switch-default>
+
+      <!-- device / code -->
+
+      <strong
+         ng-bind-html="deviceDetails.device.product | highlight:devices.search">
+      </strong>
+
+      <div style="display: flex; align-items: center; padding-bottom: 40px;">
+        <img
+          ng-if="deviceDetails.device.image"
+          ng-src="{{deviceDetails.device.image}}"
+          style="width: 220px; padding-right: 10px"
+        />
+        <div>
+          <div>
+            <i
+              style="padding-right: 10px"
+              class="fa fa-circle device-status"
+              ng-class="deviceDetails.device.cssColorClass"
+            />
+            <span ng-bind-html="deviceDetails.device.readableState | highlight:devices.search"></span>
+          </div>
+          <div>
+            <button
+              class="btn btn-default"
+              style="padding-left: 0"
+              ng-click="deviceDetails.deleteDevice()">
+              {{deviceDetails.device.needsActivation ? 'Delete activation code...' : 'Delete device...'}}
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="readable-activation-code"
+        ng-show="deviceDetails.device.readableActivationCode"
+        ng-bind-html="deviceDetails.device.readableActivationCode | highlight:devices.search">
+      </div>
+
+      <strong
+        ng-if="!deviceDetails.device.readableActivationCode">
+         Details
+      </strong>
+
+      <div style="padding-top: 20px;">
+        <div class="row" ng-show="deviceDetails.device[key]" ng-repeat="(key, name) in deviceDetails.deviceProps">
+          <div
+            class="small-3 columns">
+            {{name}}:
+          </div>
+          <div
+            class="small-9 columns ellipsis"
+            ng-bind-html="deviceDetails.device[key] | highlight:devices.search">
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 40px; text-align: right;" ng-if="!deviceDetails.device.needsActivation">
+        <button
+          class="btn btn-default"
+          ng-if="!deviceDetails.device.needsActivation"
+          sq-click-promise="deviceDetails.reportProblem()">
+          Report Problem
+        </button>
+      </div>
+
+      <div ng-show="deviceDetails.device.hasIssues" class="device-issues">
+        <strong>Issues</strong>
+        <div ng-repeat="event in deviceDetails.device.diagnosticsEvents">
+          <p>
+            <i class="fa fa-circle device-status-red"></i>
+            {{event.type}}
+          </p>
+          <p>{{event.message}}</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
