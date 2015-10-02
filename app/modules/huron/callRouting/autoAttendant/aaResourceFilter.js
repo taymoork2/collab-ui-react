@@ -1,41 +1,41 @@
 'use strict';
 
 angular.module('uc.autoattendant')
-  .filter('DisplayPreferredResource', function () {
+  .filter('preferredAAResource', function () {
     return function (resources) {
       if (!angular.isArray(resources) || angular.isUndefined(resources[0])) {
         return "";
       }
-
       // todo: priority for display is (1) E164 number, (2) extension, (3) from another AA
-
+      // for now returns first number
       return resources[0].getNumber();
     };
   })
-  .filter('DisplayMoreResource', function () {
+  .filter('moreAAResources', function ($translate) {
     return function (resources) {
       if (!angular.isArray(resources) || angular.isUndefined(resources[0])) {
         return "";
       }
 
       if (resources.length > 1) {
-        return "+" + (resources.length - 1) + " more";
+
+        return $translate.instant('autoAttendant.resourceCountPlusMore', {
+          count: resources.length - 1
+        });
       }
 
       return "";
     };
   })
-  .filter('DisplayAllResource', function () {
+  .filter('allAAResources', function () {
     return function (resources) {
       if (!angular.isArray(resources) || angular.isUndefined(resources[0])) {
         return "";
       }
 
       if (resources.length > 0) {
-
-        //todo: return all resources formatted
-
-        return "All";
+        var resourcesHtml = resources.join('<br>');
+        return resourcesHtml;
       }
 
       return "";

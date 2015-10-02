@@ -1,15 +1,15 @@
-<div ng-repeat="ceInfo in aaLanding.aaModel.ceInfos" class="cs-card small header-background" style="margin-top: .5rem; margin-bottom: .5rem;"  ui-sref="autoattendant.aabuilder({ aaName: ceInfo.getName() })" ng-click="aaLanding.aaModel.aaName=ceInfo.getName()">
-    <article>
-        <header class="aa-header compact">
-           <h4>{{ceInfo.getName()}}</h4>
-        </header>
-        <section class="aa-card">
-            <h4 class="aa-card-resource">{{ceInfo.getResources() | DisplayPreferredResource}}</h4>
-            <h5 style="min-height: 1.5rem">{{ceInfo.getResources() | DisplayMoreResource}}</h5>
-          <div class="aa-card-toolbar">
-            <span class="aa-edit-icon" aria-label="common.edit"></span>
-            <span class="aa-trash-icon" aria-label="common.delete" ng-click="aaLanding.deleteAA(ceInfo); $event.stopPropagation();"></span>
-          </div>
-        </section>
-    </article>
-  </div>
+<div class="cs-card small header-background">
+  <article ui-sref="autoattendant.aabuilder({ aaName: ceInfo.getName() })" ng-click="aaLanding.aaModel.aaName=ceInfo.getName()">
+      <header class="aa-card-header compact">
+         <h4 class="aa-header-name">{{ceInfo.getName()}}</h4>
+      </header>
+      <section class="aa-card-section" >
+          <h4 class="aa-card-resource">{{ceInfo.getResources() | preferredAAResource}}</h4>
+          <h5 class="aa-card-more-resource">{{ceInfo.getResources() | moreAAResources}}</h5>
+        <div class="aa-card-toolbar">
+          <span class="aa-edit-icon" aria-label="common.edit"></span>
+          <span class="aa-trash-icon" aria-label="common.delete" ng-click="aaLanding.deleteAA(ceInfo); $event.stopPropagation();"></span>
+        </div>
+      </section>
+  </article>
+</div>

@@ -6,7 +6,7 @@
     .controller('AALandingCtrl', AALandingCtrl);
 
   /* @ngInject */
-  function AALandingCtrl($q, $translate, AutoAttendantCeService, AutoAttendantCeInfoModelService,
+  function AALandingCtrl($q, AutoAttendantCeService, AutoAttendantCeInfoModelService,
     AutoAttendantCeMenuModelService, AAModelService, Notification, DirectoryNumberService, Authinfo) {
     var vm = this;
     vm.aaModel = {};
@@ -88,8 +88,6 @@
             var resources = vm.aaModel.aaRecords[i].assignedResources;
             for (var j = 0; j < resources.length; j++) {
               promises[promises.length] = setDirectoryNumber(resources[j]);
-              // For testapp:
-              // resources[j].setNumber(SystemService.getResourceValue(resources[j].getId()));
             }
           }
           $q.all(promises).then(
