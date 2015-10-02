@@ -1945,6 +1945,7 @@
     "patchSyncButtonText": "Update",
     "refresh": "Refresh",
     "syncStatusHeading": "Sync Status",
-    "syncStatusTooltip": "Is syncing active between Messenger and Common Identity?"
+    "syncStatusTooltip": "Is syncing active between Messenger and Common Identity?",
+    "unauthorized": "Not authorized to view this state"
   }
 }

@@ -6,7 +6,7 @@
     .controller('CiSyncCtrl', CiSyncCtrl);
 
   /** @ngInject */
-  function CiSyncCtrl($translate, Authinfo, Config, Log, Notification, CiService, SyncService) {
+  function CiSyncCtrl($q, $translate, Authinfo, Config, Log, Notification, CiService, SyncService) {
     // Interface ---------------------------------------------------------------
     var vm = this;
 
@@ -35,10 +35,14 @@
       },
       ops: {
         label: 'OPS Admin'
+      },
+      unknown: {
+        label: 'Unauthorized User'
       }
     });
 
     // Public
+    vm.adminType = vm.adminTypes.unknown;
     vm.dataStatus = vm.dataStates.loading;
     vm.errorMsg = '';
     vm.isDirSync = false;
@@ -97,7 +101,10 @@
     vm.init = init;
 
     // Event handlers
+    vm.authorized = authorized;
     vm.isDirSync = SyncService.isDirSync;
+    vm.isOrgAdmin = isOrgAdmin;
+    vm.isOpsAdmin = isOpsAdmin;
     vm.patchSync = patchSync;
     vm.refreshStatus = refreshStatus;
     vm.setOrgAdmin = setOrgAdmin;
@@ -111,25 +118,63 @@
 
     // CI Calls Inside
     function init() {
-      setOrgAdmin();
-      vm.ciData = CiService.getCiOrgInfo();
-      CiService.getCiAdmins(vm.ciAdmins);
-      CiService.getCiNonAdmins(vm.ciUsers);
-      getSyncStatus();
-
       // Check for Partner Admin (Ops Admin) vs. Full Admin (Org Admin)
-      checkUserType();
+      checkUserType()
+        .then(function() {
+          if (authorized()) {
+            vm.ciData = CiService.getCiOrgInfo();
+            CiService.getCiAdmins(vm.ciAdmins);
+            CiService.getCiNonAdmins(vm.ciUsers);
+            getSyncStatus();
+          }
+        }, function(errorMsg) {
+          Log.error('Failed checking user type: ' + errorMsg);
+        });
+    }
+
+    function authorized() {
+      return (isOrgAdmin() || isOpsAdmin());
+    }
+
+    function isOrgAdmin() {
+      return (vm.adminTypes.org === vm.adminType);
+    }
+
+    function isOpsAdmin() {
+      return (vm.adminTypes.ops === vm.adminType);
     }
 
     function checkUserType() {
-      CiService.isPartnerAdmin()
-        .then(function (isPartnerAdmin) {
-          if (isPartnerAdmin) {
-            setOpsAdmin();
+      var defer = $q.defer();
+
+      // All users must meet these requirements at minimum:
+      // -CI Roles: contains id_full_admin
+      // -CI Entitlements: webex-squared AND webex-messenger
+      CiService.hasEntitlements(['webex-squared', 'webex-messenger'])
+        .then(function(has) {
+          if (has) {
+            // Must have full admin role
+            CiService.hasRole('id_full_admin')
+              .then(function(has) {
+                if (has) {
+                  // TODO Check if Customer Success admin
+                  if (false) {
+                    setOpsAdmin();
+                  } else {
+                    setOrgAdmin();
+                  }
+
+                  defer.resolve();
+                }
+              }, function(errorMsg) {
+                defer.reject('Failed getting user roles: ' + errorMsg);
+              });
           }
-        }, function (errorMsg) {
-          Log.error('Failed checking if user is a partner admin: ' + errorMsg);
+        }, function(errorMsg) {
+          defer.reject('Failed getting user entitlements: ' + errorMsg);
         });
+
+      return defer.promise;
     }
 
     function getSyncStatus() {

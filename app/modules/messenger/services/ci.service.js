@@ -10,6 +10,7 @@
     // Interface ---------------------------------------------------------------
 
     // Internal storage
+    var user = null;
     var users = null;
     var partnerAdmins = null;
 
@@ -17,6 +18,12 @@
       getCiAdmins: getCiAdmins,
       getCiNonAdmins: getCiNonAdmins,
       getCiOrgInfo: getCiOrgInfo,
+      getEntitlements: getEntitlements,
+      getRoles: getRoles,
+      getUser: getUser,
+      hasEntitlement: hasEntitlement,
+      hasEntitlements: hasEntitlements,
+      hasRole: hasRole,
       isLoggedInToPartnerPortal: isLoggedInToPartnerPortal,
       isPartnerAdmin: isPartnerAdmin
     };
@@ -95,6 +102,32 @@
       getUsers(false, nonAdmins);
     }
 
+    function getEntitlements() {
+      var defer = $q.defer();
+
+      getUser()
+        .then(function(user) {
+          defer.resolve(user.entitlements);
+        }, function(errorMsg) {
+          defer.reject('Failed getting user entitlements: ' + errorMsg);
+        });
+
+      return defer.promise;
+    }
+
+    function getRoles() {
+      var defer = $q.defer();
+
+      getUser()
+        .then(function(user) {
+          defer.resolve(user.roles);
+        }, function(errorMsg) {
+          defer.reject('Failed getting user roles: ' + errorMsg);
+        });
+
+      return defer.promise;
+    }
+
     function getPartnerAdmins() {
       var defer = $q.defer();
 
@@ -117,6 +150,25 @@
       return defer.promise;
     }
 
+    function getUser() {
+      var defer = $q.defer();
+
+      if (null === user) {
+        Userservice.getUser('me', function (data, status) {
+          if (data.success) {
+            user = data;
+            defer.resolve(data);
+          } else {
+            defer.reject('Getting user info failed: ' + status);
+          }
+        });
+      } else {
+        defer.resolve(user);
+      }
+
+      return defer.promise;
+    }
+
     function getUsers(getAdmins, receivedUsers) {
       UserListService.listUsers(0, 20, null, null, function (data, status, searchStr) {
         var i = 0;
@@ -133,8 +185,8 @@
               id: user.id,
               status: user.userStatus,
               created: user.meta.created,
-              entitlements: user.entitlements,
-              roles: user.roles
+              ci_entitlements: user.entitlements,
+              ci_roles: user.roles
             });
           }
         } else {
@@ -146,6 +198,56 @@
           }
         }
       }, '', getAdmins);
+    }
+
+    function hasEntitlement(entitlement) {
+      var defer = $q.defer();
+
+      getEntitlements()
+        .then(function(entitlements) {
+          defer.resolve(entitlements.indexOf(entitlement) > -1);
+        }, function(errorMsg) {
+          defer.reject('Failed getting user entitlements: ' + errorMsg);
+        });
+
+      return defer.promise;
+    }
+
+    function hasEntitlements(requestedEntitlements) {
+      var defer = $q.defer();
+
+      getEntitlements()
+        .then(function(entitlements) {
+          var result = true;
+
+          for (var entitlement in requestedEntitlements) {
+            entitlement = requestedEntitlements[entitlement];
+
+            if (entitlements.indexOf(entitlement) < 0) {
+              result = false;
+              break;
+            }
+          }
+
+          defer.resolve(result);
+        }, function(errorMsg) {
+          defer.reject('Failed getting user entitlements: ' + errorMsg);
+        });
+
+      return defer.promise;
+    }
+
+    function hasRole(role) {
+      var defer = $q.defer();
+
+      getRoles()
+        .then(function(roles) {
+          defer.resolve(roles.indexOf(role) > -1);
+        }, function(errorMsg) {
+          defer.reject(errorMsg);
+        });
+
+      return defer.promise;
     }
 
     function isLoggedInToPartnerPortal() {
