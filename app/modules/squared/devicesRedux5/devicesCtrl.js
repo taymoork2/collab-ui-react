@@ -13,7 +13,8 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, $window, CsdmCo
     serial: 'Serial',
     mac: 'Mac',
     readableActivationCode: 'Activation Code',
-    readableState: 'Status'
+    readableState: 'Status',
+    diagnosticsEvent: 'Event'
   };
 
   vm.deviceList = [];
@@ -41,9 +42,15 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, $window, CsdmCo
       .extend(CsdmDeviceService.getDeviceList())
       .extend(CsdmCodeService.getCodeList())
       .values()
+      // filter based on search
+      .map(filterOnSearchQuery)
+      .compact()
+      // create rooms of devices with equal names
       .groupBy('displayName')
-      .map(groupAsDeviceOrRoom)
-      .reduce(bfFilterFn, {})
+      .map(createRooms)
+      .flatten()
+      // group devices
+      .reduce(groupDevices, {})
       .map(extendWithDisplayNameFromFilter)
       .value();
 
@@ -70,42 +77,66 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, $window, CsdmCo
         .value();
     }
 
-    function bfFilterFn(result, device) {
-      var searchFields = ['displayName', 'software', 'serial', 'ip', 'mac', 'readableState', 'readableActivationCode', 'product'];
-      var someAttributeMatches = !vm.search || _.some(searchFields, function (field) {
-        return ~(device[field] || '').toLowerCase().indexOf(vm.search.toLowerCase());
-      });
-      device.filterMatch = _.find(searchFields, function (field) {
-        return vm.search && field != 'displayName' && ~(device[field] || '').toLowerCase().indexOf(vm.search.toLowerCase());
-      });
-      if (someAttributeMatches) {
-        var found = _.find(vm.groups, function (group) {
-          if (group.matches(device)) {
-            if (!result[group.displayName]) {
-              result[group.displayName] = [];
-            }
-            result[group.displayName].push(device);
-            return true;
-          }
-        });
-        if (!found) {
-          vm.deviceList.push(device);
+    function filterOnSearchQuery(device) {
+      var searchFields = [
+        'displayName',
+        'software',
+        'serial',
+        'ip',
+        'mac',
+        'readableState',
+        'readableActivationCode',
+        'product',
+        'diagnosticsEvent'
+      ];
+
+      device.diagnosticsEvent = _.pluck(device.diagnosticsEvents, 'type')[0];
+
+      var attributeMatches = !vm.search || _.find(searchFields, function (field) {
+        if (~(device[field] || '').toLowerCase().indexOf(vm.search.toLowerCase())) {
+          if (field != 'displayName') device.filterMatch = field;
+          return true;
         }
+      });
+
+      if (attributeMatches) {
+        return device;
+      }
+    }
+
+    function groupDevices(result, device) {
+      var found = _.find(vm.groups, function (group) {
+        if (group.matches(device)) {
+          if (!result[group.displayName]) {
+            result[group.displayName] = [];
+          }
+          result[group.displayName].push(device);
+          return true;
+        }
+      });
+      if (!found) {
+        vm.deviceList.push(device);
       }
       return result;
     }
 
-    function groupAsDeviceOrRoom(devices, displayName) {
-      if (devices.length == 1) {
-        return devices[0];
-      } else {
-        return {
-          type: 'group',
-          devices: devices,
-          count: devices.length,
-          displayName: displayName
-        };
+    function createRooms(devices, displayName) {
+      if (devices.length == 1) return devices[0];
+
+      function matchesDisplayName(device) {
+        return ~device.displayName.toLowerCase().indexOf(vm.search.toLowerCase());
       }
+
+      if (vm.search && !_.all(devices, matchesDisplayName)) {
+        return devices;
+      }
+
+      return {
+        type: 'group',
+        devices: devices,
+        count: devices.length,
+        displayName: displayName
+      };
     }
 
   };

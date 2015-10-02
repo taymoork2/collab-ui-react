@@ -8,12 +8,16 @@ angular.module('Core')
 
       return {
 
-        getOrg: function (callback, oid) {
+        getOrg: function (callback, oid, disableCache) {
           var scomUrl = null;
           if (oid) {
             scomUrl = Config.getScomUrl() + '/' + oid;
           } else {
             scomUrl = Config.getScomUrl() + '/' + Authinfo.getOrgId();
+          }
+
+          if (disableCache) {
+            scomUrl = scomUrl + '?disableCache=true';
           }
 
           $http.get(scomUrl)
