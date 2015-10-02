@@ -9,7 +9,10 @@
       </form>
     </div>
     <div class="cdrDisplay">
-      <h2 class="cdr-title" translate="cdrLogs.callsSubtitle" ng-if="cdr.gridData.length > 0"></h2>
+      <h2 class="cdr-title" translate="cdrLogs.callsSubtitle"></h2>
+      <div class="spinner-position" ng-if="cdr.gridData === null">
+        <i class='icon icon-spinner icon-2x'></i>
+      </div>
       <cs-accordion close-others="true">
         <cs-accordion-group ng-repeat="call in cdr.gridData" display-status="{{cdr.statusAvalibility(call)}}" show-caret="true">
           <cs-accordion-heading>

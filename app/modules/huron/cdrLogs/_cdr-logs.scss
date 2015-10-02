@@ -2,65 +2,66 @@
   .cdr-content {
     padding: 30px;
     background-color: $brand-white;
+    min-height: vr-adjust(450);
     .cdr-title {
       font-family: $brand-font-cisco-TT-Light;
       color: $brand-primary;
       text-align: left;
     }
     .cdr-accordion-title {
-      margin: 0 0 10px;
+      margin: 0 0 rem-calc(10);
     }
     .searchUpdateForm {
       position: relative;
-      top: -20px;
-      margin-bottom: 10px;
-      width: 650px;
-      height: 275px;
+      top: rem-calc(-20);
+      margin-bottom: rem-calc(10);
+      width: rem-calc(650);
+      height: vr-adjust(275);
       .upload-radio {
-        margin-left: 30px;
+        margin-left: rem-calc(30);
       }
       .form-button {
         display: inline-flex;
-        margin: 20px 0 0 20px;
+        margin: rem-calc(20) 0 0 rem-calc(20);
         .search-button {
-          height: 40px;
+          height: vr-adjust(40);
         }
       }
       .cs-radio > span {
         font-family: $brand-font-cisco-TT-Light;
-        font-size: 22px;
+        font-size: rem-calc(22);
         color: $brand-primary;
         text-align: left;
-        margin: 0 0 10px;
+        margin: 0 0 rem-calc(10);
       }
       .control-label {
         cursor: default;
-        min-width: 75px;
+        min-width: rem-calc(75);
         display: inline-flex;
-        margin-right: 10px;
+        margin-right: rem-calc(10);
       }
       .search-indent {
-        margin-left: 30px;
+        margin-left: rem-calc(30);
       }
       .hitsize {
         display: block;
-        margin-top: 20px;
+        margin-top: rem-calc(20);
       }
       .search-display {
         display: inline-flex;
       }
       .search-display, .hitsize {
         margin-bottom: 0;
-        height:20px;
+        height:vr-adjust(20) ;
         .form-radio {
-          margin-bottom: 10px;
+          margin-bottom: rem-calc(10);
         }
         .formly-input-wrapper {
           display: inline-flex;
-          margin-right: 10px;
+          margin-right: rem-calc(10);
           input {
-            width: 210px;
-            margin-bottom: 10px;
+            width: rem-calc(210);
+            margin-bottom: rem-calc(10);
           }
         }
         .cdr-datepicker {
@@ -72,26 +73,26 @@
             }
           }
           .cs-datepicker {
-            top: 32px;
-            left: 0px;
+            top: rem-calc(32);
+            left: 0;
           }
         }
       }
       .upload-display {
-        margin: 20px;
+        margin: rem-calc(20);
         .formly-input-wrapper {
           display: inline-flex;
-          margin-right: 10px;
+          margin-right: rem-calc(10);
           input {
-            width: 300px;
-            margin-bottom: 10px;
+            width: rem-calc(300);
+            margin-bottom: rem-calc(10);
           }
         }
       }
     }
     .cdrTable {
-      max-height: 200px;
-      min-width: 1400px;
+      max-height: vr-adjust(200);
+      min-width: rem-calc(1400);
       .table-bordered {
         table-layout: fixed;
         margin-bottom: 0;
@@ -105,10 +106,10 @@
           border-right: none;
         }
         .table-width-one {
-          width: 150px;
+          width: rem-calc(150);
         }
         .table-width-two {
-          width: 75px;
+          width: rem-calc(75);
         }
         .center {
           text-align: center;
@@ -117,9 +118,9 @@
     }
     .table-body {
       position: relative;
-      top: -1px;
-      border-bottom: 1px solid $gray-dark;
-      margin-bottom: 20px;
+      top: rem-calc(-1);
+      border-bottom: rem-calc(1) solid $gray-dark;
+      margin-bottom: rem-calc(20);
       overflow: auto;
       .table-bordered {
         border-bottom: none;
@@ -134,7 +135,17 @@
     }
     .session-id {
       display: inline-flex;
-      width: 325px;
+      width: rem-calc(325);
+    }
+  }
+  .spinner-position {
+    position: relative;
+    width: 100%;
+    .icon-2x {
+      font-size: 4em;
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
   }
 }

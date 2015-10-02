@@ -143,22 +143,22 @@
       };
 
       var proxyQuery = proxy(headers).then(function (response) {
-        if (!angular.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
-          var newCdrArray = [];
-          for (var i = 0; i < response.hits.hits.length; i++) {
-            newCdrArray.push(response.hits.hits[i]._source);
+          if (!angular.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
+            var newCdrArray = [];
+            for (var i = 0; i < response.hits.hits.length; i++) {
+              newCdrArray.push(response.hits.hits[i]._source);
+            }
+            groupCdrsIntoCalls(newCdrArray);
           }
-          groupCdrsIntoCalls(newCdrArray);
-        }
-        return;
-      },
-      function (response) {
-        Log.debug('Failed to retrieve cdr data from ' + server.name + ' server. Status: ' + response.status);
-        Notification.notify([$translate.instant('cdrLogs.cdrRecursiveError', {
-          server: server.name
-        })], 'error');
-        return;
-      });
+          return;
+        },
+        function (response) {
+          Log.debug('Failed to retrieve cdr data from ' + server.name + ' server. Status: ' + response.status);
+          Notification.notify([$translate.instant('cdrLogs.cdrRecursiveError', {
+            server: server.name
+          })], 'error');
+          return;
+        });
       promises.push(proxyQuery);
 
       return $q.all(promises).then(function () {

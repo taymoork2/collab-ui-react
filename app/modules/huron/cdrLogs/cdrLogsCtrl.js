@@ -335,7 +335,7 @@
           btnClass: 'btn btn-primary search-button',
           label: $translate.instant('cdrLogs.search'),
           onClick: function (options, scope) {
-            vm.gridData = [];
+            vm.gridData = null;
             CdrService.query(scope.model).then(function (response) {
               vm.selectedCDR = null;
               vm.gridData = response;
@@ -447,7 +447,6 @@
 
           $('#cdrtable' + index).niceScroll({
             cursorcolor: Config.chartColors.gray,
-            cursorminheight: 10,
             cursorborder: "0px",
             cursorwidth: "7px",
             railpadding: {
