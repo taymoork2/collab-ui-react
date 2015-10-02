@@ -120,14 +120,14 @@
     function init() {
       // Check for Partner Admin (Ops Admin) vs. Full Admin (Org Admin)
       checkUserType()
-        .then(function() {
+        .then(function () {
           if (authorized()) {
             vm.ciData = CiService.getCiOrgInfo();
             CiService.getCiAdmins(vm.ciAdmins);
             CiService.getCiNonAdmins(vm.ciUsers);
             getSyncStatus();
           }
-        }, function(errorMsg) {
+        }, function (errorMsg) {
           Log.error('Failed checking user type: ' + errorMsg);
         });
     }
@@ -151,11 +151,11 @@
       // -CI Roles: contains id_full_admin
       // -CI Entitlements: webex-squared AND webex-messenger
       CiService.hasEntitlements(['webex-squared', 'webex-messenger'])
-        .then(function(has) {
+        .then(function (has) {
           if (has) {
             // Must have full admin role
             CiService.hasRole('id_full_admin')
-              .then(function(has) {
+              .then(function (has) {
                 if (has) {
                   // TODO Check if Customer Success admin
                   if (false) {
@@ -166,11 +166,11 @@
 
                   defer.resolve();
                 }
-              }, function(errorMsg) {
+              }, function (errorMsg) {
                 defer.reject('Failed getting user roles: ' + errorMsg);
               });
           }
-        }, function(errorMsg) {
+        }, function (errorMsg) {
           defer.reject('Failed getting user entitlements: ' + errorMsg);
         });
 

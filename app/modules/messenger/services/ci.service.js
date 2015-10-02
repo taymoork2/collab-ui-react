@@ -106,9 +106,9 @@
       var defer = $q.defer();
 
       getUser()
-        .then(function(user) {
+        .then(function (user) {
           defer.resolve(user.entitlements);
-        }, function(errorMsg) {
+        }, function (errorMsg) {
           defer.reject('Failed getting user entitlements: ' + errorMsg);
         });
 
@@ -119,9 +119,9 @@
       var defer = $q.defer();
 
       getUser()
-        .then(function(user) {
+        .then(function (user) {
           defer.resolve(user.roles);
-        }, function(errorMsg) {
+        }, function (errorMsg) {
           defer.reject('Failed getting user roles: ' + errorMsg);
         });
 
@@ -204,9 +204,9 @@
       var defer = $q.defer();
 
       getEntitlements()
-        .then(function(entitlements) {
+        .then(function (entitlements) {
           defer.resolve(entitlements.indexOf(entitlement) > -1);
-        }, function(errorMsg) {
+        }, function (errorMsg) {
           defer.reject('Failed getting user entitlements: ' + errorMsg);
         });
 
@@ -217,7 +217,7 @@
       var defer = $q.defer();
 
       getEntitlements()
-        .then(function(entitlements) {
+        .then(function (entitlements) {
           var result = true;
 
           for (var entitlement in requestedEntitlements) {
@@ -230,7 +230,7 @@
           }
 
           defer.resolve(result);
-        }, function(errorMsg) {
+        }, function (errorMsg) {
           defer.reject('Failed getting user entitlements: ' + errorMsg);
         });
 
@@ -241,9 +241,9 @@
       var defer = $q.defer();
 
       getRoles()
-        .then(function(roles) {
+        .then(function (roles) {
           defer.resolve(roles.indexOf(role) > -1);
-        }, function(errorMsg) {
+        }, function (errorMsg) {
           defer.reject(errorMsg);
         });
 
