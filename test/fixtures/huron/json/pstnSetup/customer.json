@@ -12,5 +12,5 @@
     "billingState": "TX",
     "billingZip": "75082"
   },
-  "url": "https://terminus.hptx1.huron-dev.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f"
+  "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f"
 }
