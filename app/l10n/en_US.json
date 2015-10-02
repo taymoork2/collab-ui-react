@@ -1796,6 +1796,44 @@
     "indexPageLabel_RA_remote_options": "Options",
     "indexPageLabel_RA_remote_groups": "Groups",
 
+    "settingPageLabel_EMAIL_send_email_to_all": "Email All Hosts",
+
+    "settingPageLabel_siteInfo_siteInformation": "Site Information",
+    "settingPageLabel_siteInfo_siteFeatures": "Site Features",
+
+    "settingPageLabel_CommonSettings_productivity": "Productivity Tools",
+    "settingPageLabel_CommonSettings_address": "Company Addresses",
+    "settingPageLabel_CommonSettings_disclaimer": "Disclaimers",
+    "settingPageLabel_CommonSettings_session_type": "Session Types",
+    "settingPageLabel_CommonSettings_user_priv": "User Privileges",
+    "settingPageLabel_CommonSettings_scheduler": "Scheduler ",
+    "settingPageLabel_CommonSettings_common_options": "Site Options",
+    "settingPageLabel_CommonSettings_mobile": "Mobile",
+    "settingPageLabel_CommonSettings_cmr": "Collaboration Meeting Room (CMR)",
+    "settingPageLabel_CommonSettings_security": "Security",
+    "settingPageLabel_CommonSettings_navigation": "Navigation Customization",
+    "settingPageLabel_CommonSettings_email_template": "Email Template",
+    "settingPageLabel_CommonSettings_site_info": "Site Information",
+
+    "settingPageLabel_MC_mc_options": "Meeting Center Options",
+
+    "settingPageLabel_TC_tc_options": "Test Center Options",
+
+    "settingPageLabel_EC_ec_options": "Event Center Options",
+    "settingPageLabel_EC_host_reassign": "Event Center Host Reassignment",
+    "settingPageLabel_EC_required_fields": "Event Center Required Fields",
+
+    "settingPageLabel_SC_sc_options": "Support Center Options",
+    "settingPageLabel_SC_forms": "Support Center Forms",
+    "settingPageLabel_SC_branding": "Support Center Branding",
+
+    "settingPageLabel_WebACD_webacd_settings": "Web ACD Settings",
+    "settingPageLabel_WebACD_webacd_queues": "Web ACD Queues",
+    "settingPageLabel_WebACD_webacd_forms": "Web ACD Leave Message Forms",
+
+    "settingPageLabel_RA_remote_options": "Remote Access Options",
+    "settingPageLabel_RA_remote_groups": "Remote Access Groups",
+
     "pageId_underDevelopment": "Under Development",
     "pageId_xxxx": "Undefined"
   },

@@ -79,41 +79,6 @@ angular.module('WebExSiteSettings').service('WebExSiteSettingsSvc', [
         siteFeaturesPageObj: null
       }, // siteInfoCardObj
 
-      /*
-      settingCardObjs: [{
-        id: "common",
-        label: null,
-        pageObjs: null,
-      }, {
-        id: "meetingCenter",
-        label: "Meeting Center",
-        pageObjs: null,
-      }, {
-        id: "trainingCenter",
-        label: "Training Center",
-        pageObjs: null
-      }, {
-        id: "supportCenter",
-        label: "Support Center",
-        pageObjs: null,
-
-        webACDObj: {
-          id: "webACD",
-          label: "WebACD",
-          pageObjs: null
-        },
-
-        remoteAccessObj: {
-          id: "remoteAccess",
-          label: "Remote Access",
-          pageObjs: null
-        },
-      }, {
-        id: "eventCenter",
-        label: "Event Center",
-        pageObjs: null,
-      }, ], // settingCardObjs
-      */
       settingCardObjs: [{
         id: "CommonSettings",
         label: null,
@@ -149,31 +114,7 @@ angular.module('WebExSiteSettings').service('WebExSiteSettingsSvc', [
       }, ], // settingCardObjs
 
       categoryObjs: [{
-        id: "emailAllHosts",
-        pageObjs: []
-      }, {
         id: "siteInfo",
-        pageObjs: []
-      }, {
-        id: "common",
-        pageObjs: []
-      }, {
-        id: "meetingCenter",
-        pageObjs: []
-      }, {
-        id: "eventCenter",
-        pageObjs: []
-      }, {
-        id: "supportCenter",
-        pageObjs: []
-      }, {
-        id: "trainingCenter",
-        pageObjs: []
-      }, {
-        id: "webACD",
-        pageObjs: []
-      }, {
-        id: "remoteAccess",
         pageObjs: []
       }, {
         id: "EMAIL",
@@ -199,7 +140,7 @@ angular.module('WebExSiteSettings').service('WebExSiteSettingsSvc', [
       }, {
         id: "WebACD",
         pageObjs: []
-      }, ], // categoryObjs
+      }], // categoryObjs
     }; // return
   } // WebExSiteSettingsModel
 ]);

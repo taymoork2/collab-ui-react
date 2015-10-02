@@ -351,223 +351,6 @@
               "siteFeatures",
               "https://sjsite14.webex.com/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage"
             );
-
-            /*
-            addPage(
-              "emailAllHosts",
-              "emailAllHosts",
-              "https://sjsite14.webex.com/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage"
-            );
-
-            // common settings
-            addPage(
-              "common",
-              "cmr",
-              "/common_cmr"
-            );
-
-            addPage(
-              "common",
-              "companyAddress",
-              "/common_companyAddress"
-            );
-
-            addPage(
-              "common",
-              "disclaimers",
-              "/common_disclaimer"
-            );
-
-            addPage(
-              "common",
-              "mobile",
-              "/common_mobile"
-            );
-
-            addPage(
-              "common",
-              "navigationCustomization",
-              "/common_navigationCustomization"
-            );
-
-            addPage(
-              "common",
-              "productivityTools",
-              "/common_productivityTools"
-            );
-
-            addPage(
-              "common",
-              "scheduler",
-              "/common_scheduler"
-            );
-
-            // addPage(
-            //   "common",
-            //   "security",
-            //   "/common_security"
-            // );
-            addPage(
-              "common",
-              "security",
-              "https://sjsite14.webex.com/wbxadmin/siteSettingCommon.do?siteurl=sjsite14"
-            );
-
-            addPage(
-              "common",
-              "options",
-              "https://sjsite14.webex.com/adm3100/siteSettingCommon.do?siteurl=sjsite14"
-            );
-            // addPage(
-            //   "common",
-            //   "options",
-            //   "https://sjsite14.webex.com/wbxadmin/siteSettingCommon.do?siteurl=sjsite14"
-            // );
-
-            // meeting center
-            addPage(
-              "meetingCenter",
-              "navigationCustomization",
-              "/meetingCenter_navigationCustomization"
-            );
-
-            addPage(
-              "meetingCenter",
-              "schedTemplates",
-              "/meetingCenter_schedTemplates"
-            );
-
-            addPage(
-              "meetingCenter",
-              "options",
-              "/meetingCenter_options"
-            );
-
-            // event center
-            addPage(
-              "eventCenter",
-              "options",
-              "/eventCenter_defaultOptions"
-            );
-
-            addPage(
-              "eventCenter",
-              "navigationCustomization",
-              "/eventCenter_navigationCustomization"
-            );
-
-            addPage(
-              "eventCenter",
-              "reassignment",
-              "/eventCenter_reassignment"
-            );
-
-            addPage(
-              "eventCenter",
-              "registrationForm",
-              "/eventCenter_registrationForm"
-            );
-
-            addPage(
-              "eventCenter",
-              "options",
-              "/eventCenter_options"
-            );
-
-            addPage(
-              "eventCenter",
-              "schedTemplates",
-              "/eventCenter_schedTemplates"
-            );
-
-            // training center
-            addPage(
-              "trainingCenter",
-              "navigationCustomization",
-              "/trainingCenter_navigationCustomization"
-            );
-
-            addPage(
-              "trainingCenter",
-              "schedTemplates",
-              "/trainingCenter_schedTemplates"
-            );
-
-            addPage(
-              "trainingCenter",
-              "options",
-              "/trainingCenter_options"
-            );
-
-            // support center
-            addPage(
-              "supportCenter",
-              "branding",
-              "/supportCenter_branding"
-            );
-
-            addPage(
-              "supportCenter",
-              "csrPref",
-              "/supportCenter_csrPref"
-            );
-
-            addPage(
-              "supportCenter",
-              "customerPref",
-              "/supportCenter_customerPref"
-            );
-
-            addPage(
-              "supportCenter",
-              "forms",
-              "/supportCenter_forms"
-            );
-
-            addPage(
-              "supportCenter",
-              "navigationCustomization",
-              "/supportCenter_navigationCustomization"
-            );
-
-            addPage(
-              "supportCenter",
-              "promotion",
-              "/supportCenter_promotion"
-            );
-
-            // webacd
-            addPage(
-              "webACD",
-              "forms",
-              "/webACD_forms"
-            );
-
-            addPage(
-              "webACD",
-              "queues",
-              "/webACD_settingss"
-            );
-
-            addPage(
-              "webACD",
-              "options",
-              "/webACD_options"
-            );
-
-            // remote accedss
-            addPage(
-              "remoteAccess",
-              "groups",
-              "/remoteAccess_groups"
-            );
-
-            addPage(
-              "remoteAccess",
-              "settings",
-              "/remoteAccess_settings"
-            );
-            */
           } // updateSettingTable()
 
           function addPage(
@@ -579,30 +362,32 @@
             var funcName = "addPage()";
             var logMsg = "";
 
-            var indexPageLabelId = "webexSiteSettingsLabels.indexPageLabel_" + categoryId + "_" + pageId;
+            var webexPageId = categoryId + "_" + pageId;
+            var indexPageLabelId = "webexSiteSettingsLabels.indexPageLabel_" + webexPageId;
             var indexPageLabel = $translate.instant(indexPageLabelId);
 
-            var iframePageLabelId = "webexSiteSettingsLabels.iframePageLabel_" + categoryId + "_" + pageId;
+            var iframePageLabelId = "webexSiteSettingsLabels.iframePageLabel_" + webexPageId;
             var iframePageLabel = $translate.instant(iframePageLabelId);
 
-            logMsg = funcName + ": " + "\n" +
-              "categoryId=" + categoryId + "\n" +
-              "pageId=" + pageId + "\n" +
-              "iframeUrl=" + iframeUrl + "\n" +
-              "indexPageLabelId=" + indexPageLabelId + "\n" +
-              "indexPageLabel=" + indexPageLabel + "\n" +
-              "iframePageLabelId=" + indexPageLabelId + "\n" +
-              "iframePageLabel=" + indexPageLabel;
-            $log.log(logMsg);
+            var uiSref =
+              "site-setting({" +
+              "  siteUrl: " + "'" + webExSiteSettingsObj.siteUrl + "'" + "," +
+              "  webexPageId: " + "'" + webexPageId + "'" + "," +
+              "  settingPageIframeUrl: " + "'" + iframeUrl + "'" +
+              "})";
 
             var newPageObj = {
-              id: categoryId + "_" + pageId,
+              id: webexPageId,
               pageId: pageId,
               label: indexPageLabel,
               iframeUrl: iframeUrl,
               iframePageLabel: iframePageLabel,
-              uiSref: null
+              uiSref: uiSref
             };
+
+            logMsg = funcName + ": " + "\n" +
+              "newPageObj=" + JSON.stringify(newPageObj);
+            $log.log(logMsg);
 
             var categoryFound = false;
             webExSiteSettingsObj.categoryObjs.forEach(
@@ -667,17 +452,7 @@
 
           function updateEmailAllHostsBtnObj() {
             webExSiteSettingsObj.emailAllHostsBtnObj.label = $translate.instant("webexSiteSettingsLabels.emailAllHostsBtnTitle");
-
-            // var categoryObj = getCategoryObj("emailAllHosts");
-            var categoryObj = getCategoryObj("EMAIL");
-
-            setUiSref(
-              categoryObj.pageObjs,
-              "",
-              ""
-            );
-
-            webExSiteSettingsObj.emailAllHostsBtnObj.pageObj = categoryObj.pageObjs[0];
+            webExSiteSettingsObj.emailAllHostsBtnObj.pageObj = getCategoryObj("EMAIL").pageObjs[0];
           } // updateEmailAllHostsBtnObj()
 
           function updateSiteInfoCardObj() {
@@ -686,14 +461,7 @@
 
             webExSiteSettingsObj.siteInfoCardObj.label = webExSiteSettingsObj.siteUrl;
 
-            var categoryObj = getCategoryObj("siteInfo");
-            setUiSref(
-              categoryObj.pageObjs,
-              "",
-              ""
-            );
-
-            categoryObj.pageObjs.forEach(
+            getCategoryObj("siteInfo").pageObjs.forEach(
               function checkPageObj(pageObj) {
                 if (pageObj.pageId == "siteInformation") {
                   webExSiteSettingsObj.siteInfoCardObj.siteInfoPageObj = pageObj;
@@ -701,7 +469,7 @@
                   webExSiteSettingsObj.siteInfoCardObj.siteFeaturePageObj = pageObj;
                 }
               } // checkPageObj()
-            ); // categoryObj.pageObjs.forEach()
+            ); // getCategoryObj("siteInfo").pageObjs.forEach()
 
             logMsg = funcName + ": " + "\n" +
               "siteInfoPageObj=" + JSON.stringify(webExSiteSettingsObj.siteInfoCardObj.siteInfoPageObj);
@@ -723,32 +491,11 @@
                 if ("CommonSettings" == settingCardObj.id) {
                   settingCardObj.label = $translate.instant("webexSiteSettingsLabels.commonSettingsCardTitle");
                 } else if ("SC" == settingCardObj.id) {
-                  var webACDCategoryObj = getCategoryObj(settingCardObj.webACDObj.id);
-                  setUiSref(
-                    webACDCategoryObj.pageObjs,
-                    settingCardObj.id,
-                    settingCardObj.label
-                  );
-
-                  var remoteAccessCategoryObj = getCategoryObj(settingCardObj.remoteAccessObj.id);
-                  setUiSref(
-                    remoteAccessCategoryObj.pageObjs,
-                    settingCardObj.id,
-                    settingCardObj.label
-                  );
-
-                  settingCardObj.webACDObj.pageObjs = webACDCategoryObj.pageObjs;
-                  settingCardObj.remoteAccessObj.pageObjs = remoteAccessCategoryObj.pageObjs;
+                  settingCardObj.webACDObj.pageObjs = getCategoryObj(settingCardObj.webACDObj.id).pageObjs;
+                  settingCardObj.remoteAccessObj.pageObjs = getCategoryObj(settingCardObj.remoteAccessObj.id).pageObjs;
                 }
 
-                var categoryObj = getCategoryObj(cardId);
-                setUiSref(
-                  categoryObj.pageObjs,
-                  settingCardObj.id,
-                  settingCardObj.label
-                );
-
-                settingCardObj.pageObjs = categoryObj.pageObjs;
+                settingCardObj.pageObjs = getCategoryObj(cardId).pageObjs;
 
                 logMsg = funcName + ": " + "\n" +
                   "settingCardObj=" + JSON.stringify(settingCardObj);

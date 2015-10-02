@@ -38,10 +38,10 @@
         "stateParams=" + JSON.stringify($stateParams);
       $log.log(_this.logMsg);
 
-      $scope.siteSettingId = ((null === $stateParams.cardId) || ("" === $stateParams.cardId)) ? $stateParams.webexPageId : $stateParams.cardId + "-" + $stateParams.webexPageId;
-      $scope.siteSettingLabel = ((null === $stateParams.cardLabel) || ("" === $stateParams.cardLabel)) ? $stateParams.webexPageLabel : $stateParams.cardLabel + " | " + $stateParams.webexPageLabel;
+      $scope.siteSettingId = $stateParams.webexPageId;
+      $scope.siteSettingLabel = $translate.instant("webexSiteSettingsLabels.settingPageLabel_" + $stateParams.webexPageId);
 
-      $scope.siteSettingsBreadcrumbUiSref = "site-settings({siteUrl:'" + $stateParams.siteUrl + "'})";
+      $scope.siteSettingsBreadcrumbUiSref = "site-settings({siteUrl:" + "'" + $stateParams.siteUrl + "'" + "})";
       $scope.siteSettingsBreadcrumbLabel = $translate.instant(
         "webexSiteSettingsLabels.siteSettingsIndexPageTitleFull", {
           siteUrl: $stateParams.siteUrl
@@ -63,8 +63,7 @@
         "authToken=" + $scope.authToken + "\n" +
         "locale=" + $scope.locale + "\n" +
         "siteSettingsBreadcrumbUiSref=" + $scope.siteSettingsBreadcrumbUiSref + "\n" +
-        "siteSettingsBreadcrumbLabel=" + $scope.siteSettingsBreadcrumbLabel + "\n" +
-        "webexPageBreadcrumbLabel=" + $scope.webexPageBreadcrumbLabel;
+        "siteSettingsBreadcrumbLabel=" + $scope.siteSettingsBreadcrumbLabel;
       $log.log(_this.logMsg);
 
       $timeout(
