@@ -41,9 +41,14 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, $window, CsdmCo
       .extend(CsdmDeviceService.getDeviceList())
       .extend(CsdmCodeService.getCodeList())
       .values()
+      // filter based on search
+      .map(filterOnSearchQuery)
+      .compact()
+      // create rooms of devices with equal names
       .groupBy('displayName')
-      .map(groupAsDeviceOrRoom)
-      .reduce(bfFilterFn, {})
+      .map(createRooms)
+      // group devices
+      .reduce(groupDevices, {})
       .map(extendWithDisplayNameFromFilter)
       .value();
 
@@ -70,7 +75,7 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, $window, CsdmCo
         .value();
     }
 
-    function bfFilterFn(result, device) {
+    function filterOnSearchQuery(device) {
       var searchFields = ['displayName', 'software', 'serial', 'ip', 'mac', 'readableState', 'readableActivationCode', 'product'];
       var someAttributeMatches = !vm.search || _.some(searchFields, function (field) {
         return ~(device[field] || '').toLowerCase().indexOf(vm.search.toLowerCase());
@@ -79,23 +84,27 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, $window, CsdmCo
         return vm.search && field != 'displayName' && ~(device[field] || '').toLowerCase().indexOf(vm.search.toLowerCase());
       });
       if (someAttributeMatches) {
-        var found = _.find(vm.groups, function (group) {
-          if (group.matches(device)) {
-            if (!result[group.displayName]) {
-              result[group.displayName] = [];
-            }
-            result[group.displayName].push(device);
-            return true;
+        return device;
+      }
+    }
+
+    function groupDevices(result, device) {
+      var found = _.find(vm.groups, function (group) {
+        if (group.matches(device)) {
+          if (!result[group.displayName]) {
+            result[group.displayName] = [];
           }
-        });
-        if (!found) {
-          vm.deviceList.push(device);
+          result[group.displayName].push(device);
+          return true;
         }
+      });
+      if (!found) {
+        vm.deviceList.push(device);
       }
       return result;
     }
 
-    function groupAsDeviceOrRoom(devices, displayName) {
+    function createRooms(devices, displayName) {
       if (devices.length == 1) {
         return devices[0];
       } else {
