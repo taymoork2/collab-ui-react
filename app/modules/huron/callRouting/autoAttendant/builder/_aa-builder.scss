@@ -175,9 +175,9 @@
   }
 }
 
-.aa-action-delete-icon {
+.aa-action-delete {
   margin-left: auto;
-  .menu-delete-icon-md {
+  .aa-action-delete-icon {
     @extend .icon;
     @extend .icon-close;
     font-size: 1.25rem;

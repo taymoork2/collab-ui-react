@@ -1,10 +1,11 @@
-(function () {
+(function() {
   'use strict';
 
   angular
     .module('uc.autoattendant')
     .controller('AASayMessageCtrl', AASayMessageCtrl);
 
+  /* @ngInject */
   function AASayMessageCtrl($scope, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService) {
 
     var vm = this;
