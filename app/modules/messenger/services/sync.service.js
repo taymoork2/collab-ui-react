@@ -97,7 +97,14 @@
           shouldFetch = false;
           defer.resolve(setSyncStatus(response.data));
         }, function (response) {
-          defer.reject('GET Status ' + response.status + '; Full response: ' + JSON.stringify(response.data));
+          var baseError = 'Get Status ' + response.status;
+
+          // TODO: remove excessive checking once Msgr Admin Service returns consistent errors
+          if (response.data && response.data.error && response.data.error.message) {
+            defer.reject(baseError + '; Message: ' + response.data.error.message);
+          } else {
+            defer.reject(baseError);
+          }
         });
 
       return defer.promise;

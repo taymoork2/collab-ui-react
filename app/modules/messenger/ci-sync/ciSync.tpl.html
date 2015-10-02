@@ -33,7 +33,7 @@
               <div ng-if="sync.dataStates.error === sync.dataStatus">
                 <span class="icon icon-warning"></span>
                 <span>{{sync.errorMsg}}</span>
-                <p><span class="icon icon-refresh" ng-click="sync.refreshStatus()" tooltip="{{sync.refresh}}"><span translate="messengerCiSync.refresh"></span></p>
+                <p class="down-10"><span class="icon icon-refresh" ng-click="sync.refreshStatus()" tooltip="{{sync.refresh}}"><span class="right-5" translate="messengerCiSync.refresh"></span></p>
               </div>
 
               <div ng-if="sync.dataStates.loaded === sync.dataStatus">

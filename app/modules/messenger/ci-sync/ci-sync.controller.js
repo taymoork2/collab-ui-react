@@ -6,7 +6,7 @@
     .controller('CiSyncCtrl', CiSyncCtrl);
 
   /** @ngInject */
-  function CiSyncCtrl($translate, Authinfo, Config, Log, CiService, SyncService) {
+  function CiSyncCtrl($translate, Authinfo, Config, Log, Notification, CiService, SyncService) {
     // Interface ---------------------------------------------------------------
     var vm = this;
 
@@ -140,10 +140,13 @@
           vm.syncInfo = status;
           vm.dataStatus = vm.dataStates.loaded;
         }, function (errorMsg) {
-          var error = 'Failed getting CI sync status: ' + errorMsg;
-          vm.errorMsg = error;
-          Log.error(error);
+          var baseError = 'Failed getting CI sync status';
+          var fullError = baseError + ': ' + errorMsg;
+
           vm.dataStatus = vm.dataStates.error;
+          vm.errorMsg = baseError;
+          Log.error(fullError);
+          Notification.error(fullError);
         });
     }
 
@@ -153,22 +156,26 @@
       SyncService.refreshSyncStatus()
         .then(function (status) {
           vm.syncInfo = status;
-          Log.info('CI Sync status refreshed');
           vm.dataStatus = vm.dataStates.loaded;
         }, function (errorMsg) {
-          var error = 'Failed refreshing CI sync status: ' + errorMsg;
-          vm.errorMsg = error;
-          Log.error(error);
+          var baseError = 'Failed refreshing CI Sync status';
+          var fullError = baseError + ': ' + errorMsg;
+
           vm.dataStatus = vm.dataStates.error;
+          vm.errorMsg = baseError;
+          Log.error(fullError);
+          Notification.error(fullError);
         });
     }
 
     function setOrgAdmin() {
       vm.adminType = vm.adminTypes.org;
+      Notification.success('User set as ORG Admin');
     }
 
     function setOpsAdmin() {
       vm.adminType = vm.adminTypes.ops;
+      Notification.success('User set as OPS Admin');
     }
 
     function patchSync() {
@@ -177,9 +184,9 @@
         // SyncService must turn the syncing boolean into the full mode
         SyncService.patchSync(vm.syncInfo.isSyncEnabled, vm.syncInfo.isAuthRedirect)
           .then(function (successMsg) {
-            Log.info('CI Sync updated');
+            Notification.success('CI Sync updated');
           }, function (errorMsg) {
-            Log.error('Failed updating CI Sync: ' + errorMsg);
+            Notification.error('Failed updating CI Sync: ' + errorMsg);
           });
       }
     }
