@@ -13,7 +13,8 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, $window, CsdmCo
     serial: 'Serial',
     mac: 'Mac',
     readableActivationCode: 'Activation Code',
-    readableState: 'Status'
+    readableState: 'Status',
+    diagnosticsEvent: 'Event'
   };
 
   vm.deviceList = [];
@@ -47,6 +48,7 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, $window, CsdmCo
       // create rooms of devices with equal names
       .groupBy('displayName')
       .map(createRooms)
+      .flatten()
       // group devices
       .reduce(groupDevices, {})
       .map(extendWithDisplayNameFromFilter)
@@ -76,14 +78,28 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, $window, CsdmCo
     }
 
     function filterOnSearchQuery(device) {
-      var searchFields = ['displayName', 'software', 'serial', 'ip', 'mac', 'readableState', 'readableActivationCode', 'product'];
-      var someAttributeMatches = !vm.search || _.some(searchFields, function (field) {
-        return ~(device[field] || '').toLowerCase().indexOf(vm.search.toLowerCase());
+      var searchFields = [
+        'displayName',
+        'software',
+        'serial',
+        'ip',
+        'mac',
+        'readableState',
+        'readableActivationCode',
+        'product',
+        'diagnosticsEvent'
+      ];
+
+      device.diagnosticsEvent = _.pluck(device.diagnosticsEvents, 'type')[0];
+
+      var attributeMatches = !vm.search || _.find(searchFields, function (field) {
+        if (~(device[field] || '').toLowerCase().indexOf(vm.search.toLowerCase())) {
+          if (field != 'displayName') device.filterMatch = field;
+          return true;
+        }
       });
-      device.filterMatch = _.find(searchFields, function (field) {
-        return vm.search && field != 'displayName' && ~(device[field] || '').toLowerCase().indexOf(vm.search.toLowerCase());
-      });
-      if (someAttributeMatches) {
+
+      if (attributeMatches) {
         return device;
       }
     }
@@ -105,16 +121,22 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, $window, CsdmCo
     }
 
     function createRooms(devices, displayName) {
-      if (devices.length == 1) {
-        return devices[0];
-      } else {
-        return {
-          type: 'group',
-          devices: devices,
-          count: devices.length,
-          displayName: displayName
-        };
+      if (devices.length == 1) return devices[0];
+
+      function matchesDisplayName(device) {
+        return ~device.displayName.toLowerCase().indexOf(vm.search.toLowerCase());
       }
+
+      if (vm.search && !_.all(devices, matchesDisplayName)) {
+        return devices;
+      }
+
+      return {
+        type: 'group',
+        devices: devices,
+        count: devices.length,
+        displayName: displayName
+      };
     }
 
   };

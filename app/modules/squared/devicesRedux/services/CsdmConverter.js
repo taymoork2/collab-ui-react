@@ -98,9 +98,12 @@ angular.module('Squared').service('CsdmConverter',
     }
 
     function getDiagnosticsEvents(obj) {
-      return _.map(getNotOkEvents(obj), function (e) {
-        return diagnosticsEventTranslated(e);
-      });
+      if (hasIssues(obj)) {
+        return _.map(getNotOkEvents(obj), function (e) {
+          return diagnosticsEventTranslated(e);
+        });
+      }
+      return [];
     }
 
     function diagnosticsEventTranslated(e) {
