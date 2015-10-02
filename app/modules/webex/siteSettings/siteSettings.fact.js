@@ -326,7 +326,6 @@
                 pageId,
                 iframeUrl
               );
-              // $log.log(logMsg);
             } // processSiteAdminNavUrl()
           ); // siteAdminNavUrls.forEach()
 
