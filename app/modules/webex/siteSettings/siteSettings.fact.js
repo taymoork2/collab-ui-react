@@ -52,7 +52,7 @@
             "siteName=" + siteName + "\n" +
             "pageTitle=" + pageTitle + "\n" +
             "pageTitleFull=" + pageTitleFull;
-          $log.log(logMsg);
+          // $log.log(logMsg);
 
           webExSiteSettingsObj.siteUrl = siteUrl;
           webExSiteSettingsObj.siteName = siteName;
@@ -107,7 +107,7 @@
           var funcName = "getSiteSettingsInfo()";
           var logMsg = "";
 
-          $log.log(funcName);
+          // $log.log(funcName);
 
           var _this = this;
 
@@ -118,7 +118,7 @@
 
               logMsg = funcName + ": " + "\n" +
                 "licenses=" + JSON.stringify(licenses);
-              $log.log(logMsg);
+              // $log.log(logMsg);
 
               _this.updateLicenseInfo(licenses);
             },
@@ -197,7 +197,7 @@
 
           logMsg = funcName + ":" + "\n" +
             "siteInfoCardObj=" + JSON.stringify(webExSiteSettingsObj.siteInfoCardObj);
-          $log.log(logMsg);
+          // $log.log(logMsg);
         }, // updateLicenseInfo()
 
         /*
@@ -319,7 +319,7 @@
                 "category=" + category + "\n" +
                 "pageId=" + pageId + "\n" +
                 "iframeUrl=" + iframeUrl;
-              $log.log(logMsg);
+              // $log.log(logMsg);
 
               addPage(
                 category,
@@ -332,25 +332,19 @@
 
           updateSettingTable();
 
+          /*
           webExSiteSettingsObj.categoryObjs.forEach(
             function checkCategoryObj(categoryObj) {
               $log.log("processSettingPagesInfo(): categoryObj=" + "\n" + JSON.stringify(categoryObj));
             } // checkCategoryObj()
           );
+          */
 
           function updateSettingTable() {
-            /*
-            addPage(
-              "emailAllHosts",
-              "emailAllHosts",
-              "https://sjsite14.webex.com/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage"
-            );
-            */
-
             addPage(
               "siteInfo",
               "siteInformation",
-              "https://sjsite14.webex.com/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage"
+              "https://sjsite14.webex.com/adm3100/homepage.do?siteurl=sjsite14"
             );
 
             addPage(
@@ -360,6 +354,12 @@
             );
 
             /*
+            addPage(
+              "emailAllHosts",
+              "emailAllHosts",
+              "https://sjsite14.webex.com/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage"
+            );
+
             // common settings
             addPage(
               "common",
