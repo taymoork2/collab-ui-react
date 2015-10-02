@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: CustomerOverviewCtrl', function () {
-  var controller, $scope, $stateParams, $state, $window, $q, currentCustomer, identityCustomer, Userservice, Authinfo;
+  var controller, $scope, $stateParams, $state, $window, $q, currentCustomer, identityCustomer, Userservice, Authinfo, BrandService;
 
   beforeEach(module('Core'));
 
@@ -31,8 +31,15 @@ describe('Controller: CustomerOverviewCtrl', function () {
     Authinfo = {
       getPrimaryEmail: function () {
         return "xyz123@gmail.com";
+      },
+      getOrgId: function () {
+        return '1A2B3C4D';
       }
     };
+    BrandService = {
+      getSettings: function () {}
+    };
+
     $stateParams = _$stateParams_;
     $stateParams.currentCustomer = currentCustomer;
     $state = _$state_;
@@ -46,12 +53,14 @@ describe('Controller: CustomerOverviewCtrl', function () {
     spyOn($state, 'href').and.callThrough();
     spyOn($window, 'open');
     spyOn(Userservice, 'updateUsers');
+    spyOn(BrandService, 'getSettings').and.returnValue($q.when({}));
 
     controller = $controller('CustomerOverviewCtrl', {
       $scope: $scope,
       identityCustomer: identityCustomer,
       Userservice: Userservice,
-      Authinfo: Authinfo
+      Authinfo: Authinfo,
+      BrandService: BrandService
     });
 
     $scope.$apply();

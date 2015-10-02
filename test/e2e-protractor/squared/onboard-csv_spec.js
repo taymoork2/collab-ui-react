@@ -1,6 +1,6 @@
 'use strict';
 
-xdescribe('Onboard Users using uploading CSV File', function () {
+describe('Onboard Users using uploading CSV File', function () {
   var fileToUpload = './../data/sample-squared.csv';
   var absolutePath = utils.resolvePath(fileToUpload);
   var user = 'collabctg+234298675@gmail.com';
@@ -24,7 +24,6 @@ xdescribe('Onboard Users using uploading CSV File', function () {
 
   it('should land to assign services section', function () {
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Assign Services');
-    //utils.click(inviteusers.advancedSparkCall);
     utils.click(inviteusers.nextButton);
   });
 

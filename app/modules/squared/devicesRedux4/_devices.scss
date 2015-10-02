@@ -1,6 +1,5 @@
 .devices-redux4 {
   background-color: white !important;
-  min-height: 1000px;
 
   .ellipsis {
     overflow: hidden;
@@ -40,6 +39,10 @@
     background: transparent;
   }
 
+  strong, strong span {
+    font-family: "CiscoSansTT Light","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-weight: 700;
+  }
 
   .details-pane {
     h2 {
@@ -50,24 +53,21 @@
       font-size: 2.25rem;
     }
 
-    strong, strong span {
-      font-family: "CiscoSansTT Light","Helvetica Neue",Helvetica,Arial,sans-serif;
-      font-weight: 700;
-    }
-
     .row {
       padding: 10px 0;
       font-size: 0.875rem;
     }
     .details-container {
-      border: 1px solid $gray-lightest;
       padding: 20px;
       margin-top: 40px;
     }
 
     .device-pager {
-      text-align: center;
-      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      .pr {
+        text-align: right;
+      }
     }
 
     .readable-activation-code {
@@ -82,26 +82,56 @@
   .result-pane {
     padding-top: 20px;
 
+    strong {
+      padding: 10px 0 20px 0;
+      display: block;
+      color: gray;
+      text-transform: uppercase;
+    }
+
+    .more-pager {
+      padding-top: 40px;
+    }
+
+    .more-pager, .more-pager * {
+      font-size: 1rem;
+      text-align: center;
+    }
+
     .bg-container {
       padding: 20px;
       position: relative;
-      border: 1px solid $gray-lightest;
 
-      h4 {
+      .card-items > * {
         padding-left: 20px;
-        text-overflow: ellipsis;
-        overflow: hidden;
       }
 
       h4, h4 span {
-        font-size: 1.25rem;
+        font-family: "CiscoSansTT Light","Helvetica Neue",Helvetica,Arial,sans-serif;
+        font-weight: 700;
+        font-size: 1rem;
       }
 
       .overlay {
         position: absolute;
-        left: 40px;
-        top: 38px;
-        opacity: .5;
+        left: 50px;
+        top: 20px;
+        border-radius: 50px;
+        height: 16px;
+        width: 16px;
+        border: 3px solid white;
+      }
+      .device-status-red {
+        background-color: $brand-danger;
+      }
+      .device-status-yellow {
+        background-color: $brand-warning;
+      }
+      .device-status-green {
+        background-color: $brand-success;
+      }
+      .device-status-gray {
+        background-color: $gray;
       }
     }
 
@@ -201,17 +231,5 @@
       list-style-type: none;
       border-bottom: 1px solid #eee;
     }
-  }
-}
-
-@media (max-width: 600px) {
-  .devices-redux4 {
-    padding: 5px 10px;
-  }
-}
-
-@media (min-width: 600px) {
-  .devices-redux4 {
-    padding: 60px 80px;
   }
 }

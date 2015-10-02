@@ -34,35 +34,35 @@ angular.module('Squared').service('DeviceFilter',
     };
 
     var updateFilters = function (list) {
-      _(filters).find({
+      _.find(filters, {
           filterValue: 'codes'
         }).count = _.chain(list)
         .filter(isActivationCode)
         .filter(matchesSearch)
         .value().length;
 
-      _(filters).find({
+      _.find(filters, {
           filterValue: 'issues'
         }).count = _.chain(list)
         .filter(hasIssues)
         .filter(matchesSearch)
         .value().length;
 
-      _(filters).find({
+      _.find(filters, {
           filterValue: 'online'
         }).count = _.chain(list)
         .filter(isOnline)
         .filter(matchesSearch)
         .value().length;
 
-      _(filters).find({
+      _.find(filters, {
           filterValue: 'offline'
         }).count = _.chain(list)
         .filter(isOffline)
         .filter(matchesSearch)
         .value().length;
 
-      _(filters).find({
+      _.find(filters, {
         filterValue: 'all'
       }).count = _.filter(list, matchesSearch).length;
     };
