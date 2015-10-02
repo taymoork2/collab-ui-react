@@ -9,9 +9,9 @@
   function HuronDetailsNavCtrl($scope, $state, Config) {
     var vm = this;
     vm.tabs = [{
-      title: 'huronDetails.linesTitle',
-      state: 'huronlines'
-    }, {
+      //   title: 'huronDetails.linesTitle',
+      //   state: 'huronlines'
+      // }, {
       title: 'huronDetails.settingsTitle',
       state: 'huronsettings'
         // Temporarily commented out until "Features" tab is needed
@@ -23,7 +23,7 @@
     init();
 
     function init() {
-      $state.go("huronlines"); // sets the initial content page to load when this nav controller is loaded
+      $state.go("huronsettings"); // sets the initial content page to load when this nav controller is loaded
     }
   }
 })();

@@ -83,7 +83,8 @@
     "notApplicable": "N/A",
     "noExtensionInPool": "No Extension in pool.",
     "noExternalNumberAvail": "No DID available for mapping.",
-    "noExtMappingAvail": "No DID mapping available."
+    "noExtMappingAvail": "No DID mapping available.",
+    "tooManyResultsError": "Search returned too many results.  Please narrow your search criteria."
   },
   "groupsPage": {
     "manageGroups": "Groups",
@@ -189,8 +190,8 @@
     "addOrganizationTabDesc": "Add a new organization to this account",
     "fusionDetailsTab": "Connector Management",
     "fusionDetailsTabDesc": "Connector Management",
-    "huronLineDetailsTab": "Huron",
-    "huronLineDetailsTabDesc": "Huron Details",
+    "huronLineDetailsTab": "Communication",
+    "huronLineDetailsTabDesc": "Communication Details",
     "MediafusionDetailsTab": "Media Service Management",
     "MediafusionDetailsTabDesc": "Media Service Management",
     "callRoutingTab": "Call Routing",
@@ -495,6 +496,8 @@
     "invalidMaxLength": "This entry is too long. Maximum length is {{max}}.",
     "on": "On",
     "off": "Off",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
     "yes": "Yes",
     "no": "No",
     "all": "All",
@@ -751,6 +754,17 @@
       "status": "Status",
       "alarms": "Alarms"
     },
+    "clusters": {
+      "deregister": "Deregister Cluster",
+      "deregisterCancel": "Cancel",
+      "deregisterAreYouSure": "Are you sure you want to deregister {{clusterName}}?",
+      "deregisterCausesHeader": "When you deregister this cluster:",
+      "deregisterCausesListItem1": "The Calendar Service will be turned off for all users homed on this cluster.",
+      "deregisterCausesListItem2": "All the configuration in the Cloud and on the Expressway cluster will be removed.",
+      "deregisterCausesListItem3": "Users on this cluster will be moved to another cluster, if possible.",
+      "deregisterErrorGeneric": "Unable to deregister cluster. {{errorMessage}}",
+      "deregisterErrorNoDeregisterSupport": "Unable to deregister cluster. The current cluster software does not support cluster deregistration."
+    },
     "status": {
       "unknown": "Status unknown",
       "not_configured": "Not configured",
@@ -807,7 +821,7 @@
     "uploadCsvEmpty": "Please upload a valid CSV.",
     "csvFileTypeError": "Please upload a valid file type.",
     "csvMaxSizeError": "File size is above the maximum of 10 MB.",
-    "csvMaxLinesError": "The CSV contains more users than the maximum allowed. Please reduce the number of users to 100 or less and upload the CSV again.",
+    "csvMaxLinesError": "The CSV contains more users than the maximum allowed. Please reduce the number of users to 250 or less and upload the CSV again.",
     "processCsvStep": "Processing CSV",
     "processing": "Processing...",
     "timeElapsed": "Time Elapsed:",
@@ -820,17 +834,19 @@
     "totalProcessed": "Total records processed",
     "addMoreUsers": "Add more users",
     "skipAndFinish": "Skip Errors and Finish",
-    "csvInvalidRow": "Entry does not contain 6 columns",
-    "csvDuplicateEmail": "Unable to process duplicate email address",
-    "processCsvResponseError": "Error reading response",
-    "processCsvError": "Error processing user",
+    "csvInvalidRow": "Row contains an incorrect number of columns.  Please verify the row contains six columns and try again.",
+    "csvRequiredEmail": "The \"User ID/Email\" field is required. Please provide a valid email address and try again.",
+    "csvDuplicateEmail": "Skipped due to duplicate email address.",
+    "processCsvResponseError": "An error has occurred while reading the response. Please try again.",
+    "processCsvError": "Unidentified error while processing the user. Please try again.",
     "csv400Error": "Unidentified error in the csv. Please verify the file and try again.",
     "csv401And403Error": "Customer is not authorized to add or update this user.",
     "csv404Error": "Server is unable to respond at this time. Please try again at a later time.",
     "csv408Error": "Request timed out while waiting for a response. Please try again at a later time.",
     "csv409Error": "Request failed due to a processing conflict. Please verify the csv and try again.",
-    "csv500Error": "Internal server error.",
+    "csv500Error": "Request failed due to a server error. Please try again.",
     "csv502And503Error": "Server is temporarily unavailable. Please try again at a later time.",
+    "csvCancelledError": "Skipped due to canceled request.",
     "resultRowHeader": "Row Number",
     "resultErrorHeader": "Error Message",
     "advanced": "Advanced",
@@ -875,6 +891,7 @@
     "addUsersDescription": "Select a method to upload your users.",
     "addUsersSimple": "Invite Users | Simple",
     "addUsersAdvanced": "Invite Users | Advanced",
+    "msgrSyncDesc": "Your orgnization is currently in Messenger Sync Mode. Please onboard new users in the WebEx Messenger administration tool. Consult your Cisco customer representative to enable this screen.",
     "getStarted": "Get Started",
     "startTrial": "Start Trial",
     "doLater": "Do this later",
@@ -1151,6 +1168,7 @@
     "internalNumberExtension": "Internal Extension",
     "internalNumberExtensionTooltip": "Use the internal extension to reach this line from within the company at the same site.",
     "internalNumberPoolError": "Internal extensions failed to load.",
+    "steeringDigitOverlapWarning": "First digit of Internal Extension overlaps with Outbound Dial Digit ({{steeringDigitInTranslation}}).",
     "enterpriseSiteNumberLabel": "If your company uses site-to-site dialing:",
     "externalNumberLabel": "Direct Line",
     "externalNumberTooltip": "Use the direct line to reach this line from outside of the company.",
@@ -1182,7 +1200,8 @@
     "forwardBusy": "When line is busy, send calls to:",
     "forwardNoAnswer": "When there is no answer, send calls to:",
     "forwardExternal": "Forward external calls differently",
-    "addNew": "Add New"
+    "addNew": "Add New",
+    "forwardVoicemailDisabled": "Call Forwarding is set to Voicemail, which is currently disabled. Please update the Call Forwarding settings."
   },
   "callerIdPanel": {
     "title": "Caller ID",
@@ -1247,11 +1266,17 @@
     "setupNumbers": "Set Up PSTN Numbers",
     "placeOrder": "Place Order",
     "orderBlock": "Order Block Numbers",
+    "state": "State",
+    "selectState": "Select state",
+    "searchStates": "Search states",
     "areaCode": "Area Code",
+    "selectAreaCode": "Select area code",
+    "searchAreaCodes": "Search area codes",
     "quantity": "Quantity",
     "reviewAndOrder": "Review and Place Order",
     "package": "Package",
     "adding": "Adding",
+    "numbers": "{count, plural, one{# number} other{# numbers}}",
     "newNumbers": "{count, plural, one{# New Number} other{# New Numbers}}",
     "thankYou": "Thank you",
     "setupSuccess": "You have set up the PSTN service successfully.",
@@ -1382,7 +1407,10 @@
     "uploadNumbers": "Upload Numbers",
     "overPlan": "over plan limit",
     "phoneNumbers": "Phone Numbers",
-    "none": "None"
+    "none": "None",
+    "partnerLogo": "Partner Logo",
+    "logoOverride": "Customer Logo Override",
+    "allowCustomerLogo": "Enable Customer Logo for {{customerName}}"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
@@ -1395,6 +1423,8 @@
     "saveCallerIdError": "Caller Id and number failed to save.",
     "updateCallerIdSuccess": "Caller ID and number updated successfully",
     "updateCallerIdError": "Caller ID and number failed to update.",
+    "deleteCallerIdSuccess": "Caller ID and number deleted successfully.",
+    "deleteCallerIdError": "Caller ID and number failed to delete",
     "companycallerID": "Company Caller ID",
     "hide": "Hide",
     "expand": "Expand"
@@ -1743,6 +1773,11 @@
     "supportSetup": "Problem Reports",
     "save": "Save",
     "processing": "This may take a few minutes to process...",
+    "brandingInfo": "If you want to display your own branding in addition to Cisco Spark, upload your logo below. Also, if you would like to allow all your customers to use their own logo you can check the checkbox.",
+    "allowCustomerLogo": "Enable all customers to use their own logo",
+    "useCiscoLogo": "Use Cisco Spark logo",
+    "logoPlaceholder": "Drag and drop your logo here",
+    "chooseFile": "Choose File",
     "supportInfo": "If you are providing support for your users, enter your support information below. This information will surface in the Support menu of the Spark application.",
     "supportOptions": "Cisco Support Options",
     "yourSupportOptions": "Your Support Options",
@@ -1754,6 +1789,7 @@
     "matchingTix": "Matching Problem Reports",
     "matchingDescr": "To match problem reports with the logs that are uploaded to the Cloud Collaboration Management tool, you can enter the string “%%logID%%” (without quotes) into the URL, which will get substituted with the actual logID for each problem report submitted by your users. For example: http://www.example.com/reportproblem?yourLogIDParameter=%%logID%%. This is optional, and may require special configuration within your problem report ticketing system.",
     "forExample": "For example: http://www.acme.com/reportproblem?id=%%logID%%",
+    "brandingTitle": "Customize Branding",
     "supportTitle": "Support Setup",
     "companyInfo": "Company Information",
     "cancel": "Cancel",
@@ -1774,7 +1810,18 @@
   "customerProfile": {
     "supportContacts": "Support Contacts",
     "partnerAdmin": "Partner Administrators",
+    "brandingInfo": "If you want to display your own branding in addition to Cisco Spark, upload your logo below.",
+    "usePartnerLogo": "Use the same logo in use by {{partnerName}}",
     "supportInfo": "If you are providing support for your users, enter your support paramaters below. These parameters will be displayed under Support Options in the Spark application;"
+  },
+  "fileUpload": {
+    "uploading": "Uploading File",
+    "success": "File Uploaded Successfully",
+    "errorUnknown": "File Not Uploaded: unknown upload error",
+    "errorFileType": "File Not Uploaded: incorrect file type",
+    "errorFilePNG": "The uploaded file must be a PNG file",
+    "errorDimensions": "File Not Uploaded: incorrect file dimensions",
+    "errorWidthHeight": "The uploaded file must be width: {{width}} height: {{height}}"
   },
   "utilizationPage": {
     "entResUtilization": "Enterprise Resources Utilization",
@@ -1902,17 +1949,17 @@
       "supervisor": "Supervisor"
     },
     "successMessages": {
-      "userUpdateSuccessMessage": "Information is successfully saved for {{userId}}. "
+      "userUpdateSuccessMessage": "Information has been updated successfully for user {{userId}}. "
     },
     "failureMessages": {
-      "userUpdateFailureMessage": "Unable to update information for {{userId}}.",
-      "userloadFailureMessage": "Unable to fetch information for {{userId}}.",
-      "emptyAliasErrorMessage": "Alias can not be empty"
+      "userUpdateFailureMessage": "Information cannot be updated currently for user {{userId}}.",
+      "userloadFailureMessage": "Information is currently not available for user {{userId}}.",
+      "emptyAliasErrorMessage": "User alias cannot be empty."
     }
   },
 
   "huronDetails": {
-    "title": "Huron",
+    "title": "Communication",
     "linesTitle": "Numbers",
     "settingsTitle": "Settings",
     "featuresTitle": "Features"

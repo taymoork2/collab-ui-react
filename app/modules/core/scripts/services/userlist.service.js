@@ -8,7 +8,7 @@
 
   /* @ngInject */
   function UserListService($http, $rootScope, $location, $q, $filter, $compile, Storage, Config, Authinfo, Log, Utils, Auth) {
-    var searchFilter = 'filter=active%20eq%20true%20and%20userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22';
+    var searchFilter = 'filter=active%20eq%20true%20and%20userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22%20or%20displayName%20sw%20%22%s%22';
     var attributes = 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID';
     var scimUrl = Config.getScimUrl(Authinfo.getOrgId()) + '?' + '&' + attributes;
     var ciscoOrgId = '1eb65fdf-9643-417f-9974-ad72cae0e10f';
@@ -46,13 +46,13 @@
           filter = searchFilter + '%20and%20entitlements%20eq%20%22' + window.encodeURIComponent(entitlement) + '%22';
           scimSearchUrl = Config.getScimUrl(Authinfo.getOrgId()) + '?' + filter + '&' + attributes;
           encodedSearchStr = window.encodeURIComponent(searchStr);
-          listUrl = Utils.sprintf(scimSearchUrl, [encodedSearchStr, encodedSearchStr, encodedSearchStr]);
+          listUrl = Utils.sprintf(scimSearchUrl, [encodedSearchStr, encodedSearchStr, encodedSearchStr, encodedSearchStr]);
           searchStr = searchStr;
         } else if (searchStr !== '' && typeof (searchStr) !== 'undefined') {
           filter = searchFilter;
           scimSearchUrl = Config.getScimUrl(Authinfo.getOrgId()) + '?' + filter + '&' + attributes;
           encodedSearchStr = window.encodeURIComponent(searchStr);
-          listUrl = Utils.sprintf(scimSearchUrl, [encodedSearchStr, encodedSearchStr, encodedSearchStr]);
+          listUrl = Utils.sprintf(scimSearchUrl, [encodedSearchStr, encodedSearchStr, encodedSearchStr, encodedSearchStr]);
 
         } else if (typeof entitlement !== 'undefined' && entitlement !== null) {
           filter = 'filter=active%20eq%20%true%20and%20entitlements%20eq%20%22' + window.encodeURIComponent(entitlement);

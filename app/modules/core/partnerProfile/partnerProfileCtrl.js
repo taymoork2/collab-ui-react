@@ -1,12 +1,16 @@
 'use strict';
 
 angular.module('Core')
-  .controller('PartnerProfileCtrl', ['$scope', 'Authinfo', 'Notification', '$stateParams', 'UserListService', 'Orgservice', 'Log', 'Config', '$window', 'Utils', 'FeedbackService', '$translate',
-    function ($scope, Authinfo, Notification, $stateParams, UserListService, Orgservice, Log, Config, $window, Utils, FeedbackService, $translate) {
+  .controller('PartnerProfileCtrl', ['$scope', '$modal', 'Authinfo', 'Notification', '$stateParams', 'UserListService', 'Orgservice', 'Log', 'Config', '$window', 'Utils', 'FeedbackService', '$translate', '$timeout', 'BrandService',
+    function ($scope, $modal, Authinfo, Notification, $stateParams, UserListService, Orgservice, Log, Config, $window, Utils, FeedbackService, $translate, $timeout, BrandService) {
+      var orgId = Authinfo.getOrgId();
 
       // toggles api calls, show/hides divs based on customer or partner profile
       $scope.isPartner = Authinfo.isPartner();
       $scope.appType = 'Squared';
+      $scope.usePartnerLogo = true;
+      $scope.allowCustomerLogos = false;
+      $scope.progress = 0;
 
       $scope.profileHelpUrl = 'https://support.ciscospark.com';
 
@@ -19,6 +23,13 @@ angular.module('Core')
       $scope.helpSiteInfo = {
         cisco: 0,
         ext: 1
+      };
+
+      $scope.logoCriteria = {
+        'pattern': '.png',
+        'width': {
+          min: '100'
+        }
       };
 
       $scope.sendFeedback = function () {
@@ -40,7 +51,7 @@ angular.module('Core')
       // ci api calls will go in here
       $scope.init = function () {
         $scope.rep = null; // cs admin rep
-        $scope.partner = null;
+        $scope.partner = {};
         $scope.radioModified = false;
 
         $scope.companyName = Authinfo.getOrgName();
@@ -54,7 +65,9 @@ angular.module('Core')
         $scope.isCiscoSupport = false;
         $scope.isCiscoHelp = false;
 
-        UserListService.listPartners(Authinfo.getOrgId(), function (data) {
+        $scope.logoError = null;
+
+        UserListService.listPartners(orgId, function (data) {
           for (var partner in data.partners) {
             var currentPartner = data.partners[partner];
             if (!$scope.isPartner && currentPartner.userName.indexOf('@cisco.com') === -1) {
@@ -100,6 +113,18 @@ angular.module('Core')
               if (typeof (orgSettingsObj.isCiscoHelp) !== 'undefined') {
                 $scope.isCiscoHelp = orgSettingsObj.isCiscoHelp;
               }
+
+              if (typeof (orgSettingsObj.usePartnerLogo) === 'boolean') {
+                $scope.usePartnerLogo = orgSettingsObj.usePartnerLogo;
+              }
+
+              if (typeof (orgSettingsObj.allowCustomerLogos) !== 'undefined') {
+                $scope.allowCustomerLogos = orgSettingsObj.allowCustomerLogos;
+              }
+
+              if (typeof (orgSettingsObj.logoUrl) !== 'undefined') {
+                $scope.logoUrl = orgSettingsObj.logoUrl;
+              }
             } else {
               Log.debug('No orgSettings found for org: ' + data.id);
             }
@@ -107,7 +132,7 @@ angular.module('Core')
           } else {
             Log.debug('Get existing org failed. Status: ' + status);
           }
-        }, Authinfo.getOrgId());
+        }, orgId, true);
       };
 
       $scope.init();
@@ -127,10 +152,15 @@ angular.module('Core')
         if (!error) {
           var isCiscoHelp = $scope.isManaged ? $scope.isCiscoHelp : ($scope.helpSiteRadioValue === 0);
           var isCiscoSupport = $scope.isManaged ? $scope.isCiscoSupport : ($scope.problemSiteRadioValue === 0);
+          var settings = {
+            'reportingSiteUrl': $scope.supportUrl || null,
+            'reportingSiteDesc': $scope.supportText || null,
+            'helpUrl': $scope.helpUrl || null,
+            'isCiscoHelp': isCiscoHelp,
+            'isCiscoSupport': isCiscoSupport
+          };
 
-          updateOrgSettings(Authinfo.getOrgId(), $scope.supportUrl,
-            $scope.supportText, $scope.helpUrl,
-            isCiscoHelp, isCiscoSupport);
+          updateOrgSettings(orgId, settings);
         } else {
           Notification.notify([$translate.instant('partnerProfile.orgSettingsError')], 'error');
         }
@@ -157,11 +187,11 @@ angular.module('Core')
         return !($scope.radioModified || $scope.supportForm.$dirty);
       };
 
-      function updateOrgSettings(orgId, supportUrl, supportText, helpUrl, isCiscoHelp, isCiscoSupport) {
-        angular.element('#orgProfileSaveBtn').button('loading');
-        Orgservice.setOrgSettings(orgId, supportUrl, supportText, helpUrl, isCiscoHelp, isCiscoSupport, function (data, status) {
+      function updateOrgSettings(orgId, settings) {
+        $scope.orgProfileSaveLoad = true;
+        Orgservice.setOrgSettings(orgId, settings, function (data, status) {
           if (data.success) {
-            angular.element('#orgProfileSaveBtn').button('reset');
+            $scope.orgProfileSaveLoad = false;
             Notification.notify([$translate.instant('partnerProfile.processing')], 'success');
           } else {
             var error = $translate.instant('errors.statusError', {
@@ -169,9 +199,82 @@ angular.module('Core')
             });
 
             Notification.notify(error, 'error');
-            angular.element('#orgProfileSaveBtn').button('reset');
+            $scope.orgProfileSaveLoad = false;
           }
         });
+      }
+
+      $scope.toggleLogo = _.debounce(function (value) {
+        if (value) {
+          BrandService.usePartnerLogo(orgId);
+        } else {
+          BrandService.useCustomLogo(orgId);
+        }
+      }, 2000, {
+        'leading': true,
+        'trailing': false
+      });
+
+      $scope.toggleAllowCustomerLogos = _.debounce(function (value) {
+        if (value) {
+          BrandService.enableCustomerLogos(orgId);
+        } else {
+          BrandService.disableCustomerLogos(orgId);
+        }
+      }, 2000, {
+        'leading': true,
+        'trailing': false
+      });
+
+      $scope.upload = function (file, event) {
+        openModal('sm');
+        if (validateLogo(file)) {
+          $scope.progress = 0;
+          BrandService.upload(orgId, file)
+            .then(uploadSuccess, uploadError, uploadProgress);
+        }
+      };
+
+      // TODO: Refactor to use appconfig states
+      function openModal(size) {
+        $scope.uploadModal = $modal.open({
+          scope: $scope,
+          templateUrl: 'modules/core/partnerProfile/brandingUpload.tpl.html',
+          size: size
+        });
+      }
+
+      function validateLogo(logo) {
+        var error = logo.$error;
+        if (error === 'maxWidth' || error === 'minWidth') {
+          $scope.logoError = 'dimensions';
+        } else {
+          $scope.logoError = logo.$error;
+        }
+
+        if (logo && !logo.$error) {
+          return true;
+        }
+      }
+
+      function uploadSuccess(response) {
+        $timeout(function () {
+          if ($scope.uploadModal) {
+            $scope.uploadModal.close();
+          }
+        }, 3000);
+        // Automatically start using the custom logo
+        BrandService.resetCdnLogo(Authinfo.getOrgId());
+        $scope.usePartnerLogo = false;
+        $scope.toggleLogo(false);
+      }
+
+      function uploadError(error) {
+        $scope.logoError = 'unknown';
+      }
+
+      function uploadProgress(evt) {
+        $scope.progress = parseInt(100.0 * evt.loaded / evt.total);
       }
     }
   ]);

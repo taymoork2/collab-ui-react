@@ -20,8 +20,10 @@
     labelfield="pattern"
     valuefield="uuid"
     required="true"
+    ng-class="{'warning': lineSettings.checkDnOverlapsSteeringDigit()}"
     filter="true">
   </cs-select>
+  <div ng-if="lineSettings.checkDnOverlapsSteeringDigit()" class="dn-warning-text">{{'directoryNumberPanel.steeringDigitOverlapWarning' | translate: { steeringDigitInTranslation: lineSettings.telephonyInfo.steeringDigit } }}</div>
   <div class="esn-number-field">
     <p>
       {{'directoryNumberPanel.enterpriseSiteNumberLabel' | translate }}&nbsp;

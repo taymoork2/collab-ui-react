@@ -480,8 +480,14 @@ td a {
   opacity: 0.01;
   -moz-opacity: 0.01;
   filter: alpha(opacity=0);
-  width: 105px;
   display: inline;
+  top: 0px;
+  left: 0px;
+  cursor: default;
+}
+
+#fileToUploadBtn {
+  cursor: default;
 }
 
 .fileholder {

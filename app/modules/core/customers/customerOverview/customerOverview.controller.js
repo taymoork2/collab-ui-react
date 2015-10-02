@@ -6,22 +6,51 @@
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($stateParams, $state, $window, $translate, $log, $http, identityCustomer, Config, Userservice, Authinfo, AccountOrgService) {
+  function CustomerOverviewCtrl($stateParams, $state, $window, $translate, $log, $http, identityCustomer, Config, Userservice, Authinfo, AccountOrgService, BrandService) {
     /*jshint validthis: true */
     var vm = this;
+    var customerOrgId = $stateParams.currentCustomer.customerOrgId;
+
     vm.currentCustomer = $stateParams.currentCustomer;
 
     vm.launchCustomerPortal = launchCustomerPortal;
     vm.openEditTrialModal = openEditTrialModal;
     vm.getDaysLeft = getDaysLeft;
     vm.isSquaredUC = isSquaredUC();
+    vm.usePartnerLogo = true;
+    vm.allowCustomerLogos = false;
+    vm.logoOverride = false;
 
     initCustomer();
+    getLogoSettings();
+
+    vm.toggleAllowCustomerLogos = _.debounce(function (value) {
+      if (value) {
+        BrandService.enableCustomerLogos(customerOrgId);
+      } else {
+        BrandService.disableCustomerLogos(customerOrgId);
+      }
+    }, 2000, {
+      'leading': true,
+      'trailing': false
+    });
 
     function initCustomer() {
       if (angular.isUndefined(vm.currentCustomer.customerEmail)) {
         vm.currentCustomer.customerEmail = identityCustomer.email;
       }
+    }
+
+    function getLogoSettings() {
+      BrandService.getSettings(Authinfo.getOrgId())
+        .then(function (settings) {
+          vm.logoOverride = settings.allowCustomerLogos;
+        });
+      BrandService.getSettings($stateParams.currentCustomer.customerOrgId)
+        .then(function (settings) {
+          vm.usePartnerLogo = settings.usePartnerLogo;
+          vm.allowCustomerLogos = settings.allowCustomerLogos;
+        });
     }
 
     function collectLicenseIdsForWebexSites(liclist) {

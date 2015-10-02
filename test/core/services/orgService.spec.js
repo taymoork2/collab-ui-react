@@ -180,7 +180,7 @@ describe('orgService', function () {
     };
     var reportingSiteUrl = 'http://example.com';
     httpBackend.when('PATCH', Config.getAdminServiceUrl() + 'organizations/' + orgId + '/settings', payload).respond(200, {});
-    Orgservice.setOrgSettings(orgId, payload.reportingSiteUrl, payload.reportingSiteDesc, payload.helpUrl, payload.isCiscoHelp, payload.isCiscoSupport, callback);
+    Orgservice.setOrgSettings(orgId, payload, callback);
     httpBackend.flush();
     expect(callback.callCount).toBe(1);
     expect(callback.args[0][0].success).toBe(true);
@@ -198,7 +198,7 @@ describe('orgService', function () {
     };
     var reportingSiteUrl = 'http://example.com';
     httpBackend.when('PATCH', Config.getAdminServiceUrl() + 'organizations/' + orgId + '/settings', payload).respond(500, {});
-    Orgservice.setOrgSettings(orgId, payload.reportingSiteUrl, payload.reportingSiteDesc, payload.helpUrl, payload.isCiscoHelp, payload.isCiscoSupport, callback);
+    Orgservice.setOrgSettings(orgId, payload, callback);
     httpBackend.flush();
     expect(callback.callCount).toBe(1);
     expect(callback.args[0][0].success).toBe(false);

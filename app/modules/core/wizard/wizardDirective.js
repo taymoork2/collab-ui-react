@@ -34,7 +34,7 @@
 
       // If we need to wait for a promise, make the button spin
       if (promises.length > 0) {
-        angular.element('#wizardNext').button('loading');
+        scope['wizard'].wizardNextLoad = true;
       }
       return $q.all(promises);
     }
@@ -80,6 +80,7 @@
     vm.loadOverview = loadOverview;
     vm.showDoItLater = false;
     vm.gsxFeature = false;
+    vm.wizardNextLoad = false;
 
     Userservice.getUser('me', function (data, status) {
       FeatureToggleService.getFeaturesForUser(data.id, 'gsxdemo').then(function (value) {
@@ -279,7 +280,7 @@
           updateStep();
         }
       }).finally(function () {
-        angular.element('#wizardNext').button('reset');
+        vm.wizardNextLoad = false;
       });
 
       //if(getTab()==='enterpriseSetting'){

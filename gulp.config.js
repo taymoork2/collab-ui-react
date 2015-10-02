@@ -88,6 +88,7 @@ module.exports = function() {
         test + '/huron/**/*.js',
         test + '/hercules/**/*.js',
         test + '/mediafusion/**/*.js',
+        test + '/messenger/**/*.js',
         test + '/squared/**/*.js',
         test + '/sunlight/**/*.js',
         '!' + test + '/e2e-protractor/**/*'
@@ -120,7 +121,7 @@ module.exports = function() {
         vendor + '/amcharts/dist/amcharts/serial.js',
         vendor + '/amcharts/dist/amcharts/funnel.js',
         vendor + '/typeahead.js/dist/typeahead.bundle.js',
-        vendor + '/lodash/dist/lodash.compat.js',
+        vendor + '/lodash/lodash.min.js',
         vendor + '/draggable/draggable.min.js',
         vendor + '/moment/moment.js',
         vendor + '/base64/base64.js',
@@ -164,7 +165,9 @@ module.exports = function() {
         vendor + '/angular-timer/dist/angular-timer.js',
         vendor + '/humanize-duration/humanize-duration.js',
         vendor + '/angular-libphonenumber/dist/libphonenumber.js',
-        vendor + '/angular-libphonenumber/dist/angular-libphonenumber.js'
+        vendor + '/angular-libphonenumber/dist/angular-libphonenumber.js',
+        vendor + '/angularjs-toaster/toaster.js',
+        vendor + '/ng-file-upload/ng-file-upload.js'
       ],
       scss: {
         paths: [

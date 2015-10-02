@@ -204,6 +204,8 @@ describe('CsdmConverterSpec', function () {
     it('should show unknown error occured when not in translate file and no description', function () {
       var arr = [{
         status: {
+          level: 'omg',
+          connectionStatus: 'CONNECTED',
           events: [{
             type: 'foo',
             level: 'warn'
