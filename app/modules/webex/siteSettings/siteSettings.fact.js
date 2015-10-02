@@ -321,13 +321,11 @@
                 "iframeUrl=" + iframeUrl;
               $log.log(logMsg);
 
-              /*
               addPage(
                 category,
                 pageId,
                 iframeUrl
               );
-              */
               // $log.log(logMsg);
             } // processSiteAdminNavUrl()
           ); // siteAdminNavUrls.forEach()
@@ -341,24 +339,27 @@
           );
 
           function updateSettingTable() {
+            /*
             addPage(
               "emailAllHosts",
               "emailAllHosts",
               "https://sjsite14.webex.com/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage"
             );
+            */
 
             addPage(
               "siteInfo",
               "siteInformation",
-              "/siteInfo_siteInformation"
+              "https://sjsite14.webex.com/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage"
             );
 
             addPage(
               "siteInfo",
               "siteFeatures",
-              "/siteInfo_siteFeatures"
+              "https://sjsite14.webex.com/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage"
             );
 
+            /*
             // common settings
             addPage(
               "common",
@@ -402,13 +403,11 @@
               "/common_scheduler"
             );
 
-            /*
-            addPage(
-              "common",
-              "security",
-              "/common_security"
-            );
-            */
+            // addPage(
+            //   "common",
+            //   "security",
+            //   "/common_security"
+            // );
             addPage(
               "common",
               "security",
@@ -420,13 +419,11 @@
               "options",
               "https://sjsite14.webex.com/adm3100/siteSettingCommon.do?siteurl=sjsite14"
             );
-            /*
-            addPage(
-              "common",
-              "options",
-              "https://sjsite14.webex.com/wbxadmin/siteSettingCommon.do?siteurl=sjsite14"
-            );
-            */
+            // addPage(
+            //   "common",
+            //   "options",
+            //   "https://sjsite14.webex.com/wbxadmin/siteSettingCommon.do?siteurl=sjsite14"
+            // );
 
             // meeting center
             addPage(
@@ -571,6 +568,7 @@
               "settings",
               "/remoteAccess_settings"
             );
+            */
           } // updateSettingTable()
 
           function addPage(
@@ -671,8 +669,8 @@
           function updateEmailAllHostsBtnObj() {
             webExSiteSettingsObj.emailAllHostsBtnObj.label = $translate.instant("webexSiteSettingsLabels.emailAllHostsBtnTitle");
 
-            var categoryObj = getCategoryObj("emailAllHosts");
-            // var categoryObj = getCategoryObj("EMAIL");
+            // var categoryObj = getCategoryObj("emailAllHosts");
+            var categoryObj = getCategoryObj("EMAIL");
 
             setUiSref(
               categoryObj.pageObjs,
@@ -723,9 +721,9 @@
               function updateSettingCardObj(settingCardObj) {
                 var cardId = settingCardObj.id;
 
-                if ("common" == settingCardObj.id) {
+                if ("CommonSettings" == settingCardObj.id) {
                   settingCardObj.label = $translate.instant("webexSiteSettingsLabels.commonSettingsCardTitle");
-                } else if ("supportCenter" == settingCardObj.id) {
+                } else if ("SC" == settingCardObj.id) {
                   var webACDCategoryObj = getCategoryObj(settingCardObj.webACDObj.id);
                   setUiSref(
                     webACDCategoryObj.pageObjs,

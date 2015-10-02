@@ -79,6 +79,7 @@ angular.module('WebExSiteSettings').service('WebExSiteSettingsSvc', [
         siteFeaturesPageObj: null
       }, // siteInfoCardObj
 
+      /*
       settingCardObjs: [{
         id: "common",
         label: null,
@@ -109,6 +110,40 @@ angular.module('WebExSiteSettings').service('WebExSiteSettingsSvc', [
         },
       }, {
         id: "eventCenter",
+        label: "Event Center",
+        pageObjs: null,
+      }, ], // settingCardObjs
+      */
+      settingCardObjs: [{
+        id: "CommonSettings",
+        label: null,
+        pageObjs: null,
+      }, {
+        id: "MC",
+        label: "Meeting Center",
+        pageObjs: null,
+      }, {
+        id: "TC",
+        label: "Training Center",
+        pageObjs: null
+      }, {
+        id: "SC",
+        label: "Support Center",
+        pageObjs: null,
+
+        webACDObj: {
+          id: "WebACD",
+          label: "WebACD",
+          pageObjs: null
+        },
+
+        remoteAccessObj: {
+          id: "RA",
+          label: "Remote Access",
+          pageObjs: null
+        },
+      }, {
+        id: "EC",
         label: "Event Center",
         pageObjs: null,
       }, ], // settingCardObjs
@@ -148,6 +183,21 @@ angular.module('WebExSiteSettings').service('WebExSiteSettingsSvc', [
         pageObjs: []
       }, {
         id: "MC",
+        pageObjs: []
+      }, {
+        id: "EC",
+        pageObjs: []
+      }, {
+        id: "SC",
+        pageObjs: []
+      }, {
+        id: "TC",
+        pageObjs: []
+      }, {
+        id: "RA",
+        pageObjs: []
+      }, {
+        id: "WebACD",
         pageObjs: []
       }, ], // categoryObjs
     }; // return
