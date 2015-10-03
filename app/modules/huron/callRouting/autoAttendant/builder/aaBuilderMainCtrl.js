@@ -1,4 +1,4 @@
-(function() {
+(function () {
   'use strict';
 
   angular
@@ -114,7 +114,7 @@
       if (i === aaRecords.length) {
         var ceUrlPromise = AutoAttendantCeService.createCe(_aaRecord);
         ceUrlPromise.then(
-          function(response) {
+          function (response) {
             // create successfully
             var newAaRecord = {};
             newAaRecord.callExperienceName = aaRecord.callExperienceName;
@@ -126,7 +126,7 @@
               name: aaRecord.callExperienceName
             });
           },
-          function(response) {
+          function (response) {
             Notification.error('autoAttendant.errorCreateCe', {
               name: aaRecord.callExperienceName,
               statusText: response.statusText,
@@ -140,7 +140,7 @@
           _aaRecord);
 
         updateResponsePromise.then(
-          function(response) {
+          function (response) {
             // update successfully
             aaRecords[i].callExperienceName = aaRecord.callExperienceName;
             aaRecords[i].assignedResources = angular.copy(aaRecord.assignedResources);
@@ -149,7 +149,7 @@
               name: aaRecord.callExperienceName
             });
           },
-          function(response) {
+          function (response) {
             Notification.error('autoAttendant.errorUpdateCe', {
               name: aaRecord.callExperienceName,
               statusText: response.statusText,
@@ -181,7 +181,7 @@
             if (vm.aaModel.aaRecords[i].callExperienceName === aaName) {
               // vm.aaModel.aaRecord = angular.copy(vm.aaModel.aaRecords[i]);
               AutoAttendantCeService.readCe(vm.aaModel.aaRecords[i].callExperienceURL).then(
-                function(data) {
+                function (data) {
                   vm.aaModel.aaRecord = data;
 
                   // Workaround for reading the dn number: by copying it from aaRecords[i], until
@@ -190,7 +190,7 @@
                   //
                   vm.populateUiModel();
                 },
-                function(response) {
+                function (response) {
                   Notification.error('autoAttendant.errorReadCe', {
                     name: aaName,
                     statusText: response.statusText,
@@ -213,9 +213,9 @@
       AAUiModelService.initUiModel();
       vm.ui = AAUiModelService.getUiModel();
 
-      vm.aaModel.dataReadyPromise.then(function(data) {
+      vm.aaModel.dataReadyPromise.then(function (data) {
         selectAA(aaName);
-      }, function(data) {
+      }, function (data) {
         selectAA(aaName);
       });
     }
