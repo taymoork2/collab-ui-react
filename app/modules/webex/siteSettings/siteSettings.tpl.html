@@ -41,11 +41,14 @@
     </div>
     
     <div ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
-      <!-- Info card -->
-      <div ng-include="'modules/webex/siteSettings/siteInfoCard.tpl.html'"></div>
+      <cs-card-layout>
+        <!-- Info card -->
+        <!--
+        <div ng-include="'modules/webex/siteSettings/siteInfoCard.tpl.html'"></div>
   
-      <!-- Setting cards -->
-      <div ng-include="'modules/webex/siteSettings/siteSettingsCards.tpl.html'"></div> 
+        <!-- Setting cards -->
+        <div ng-include="'modules/webex/siteSettings/siteSettingsCards.tpl.html'"></div> 
+      </cs-card-layout>
     </div>
     
     <!-- WebEx site admin cross launch -->
