@@ -33,7 +33,7 @@
 
         logMsg = funcName + ": " + "xmlRequest=" + "\n" +
           xmlRequest;
-        $log.log(logMsg);
+        // $log.log(logMsg);
 
         $http({
           url: xmlServerURL,
