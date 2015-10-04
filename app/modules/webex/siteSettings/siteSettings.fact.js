@@ -107,8 +107,6 @@
           var funcName = "getSiteSettingsInfo()";
           var logMsg = "";
 
-          // $log.log(funcName);
-
           var _this = this;
 
           Orgservice.getValidLicenses().then(
@@ -174,7 +172,7 @@
             function checkLicense(license) {
               logMsg = funcName + ": " + "\n" +
                 "license=" + JSON.stringify(license);
-              $log.log(logMsg);
+              // $log.log(logMsg);
 
               if (
                 (!updateDone) &&
@@ -313,7 +311,6 @@
               var category = siteAdminNavUrl.ns1_category;
               var pageId = siteAdminNavUrl.ns1_navItemId;
               var iframeUrl = siteAdminNavUrl.ns1_url;
-              iframeUrl = iframeUrl.replace('wbxadmin', 'adm3100');
 
               logMsg = funcName + ": " + "\n" +
                 "category=" + category + "\n" +
@@ -369,6 +366,7 @@
             var iframePageLabelId = "webexSiteSettingsLabels.iframePageLabel_" + webexPageId;
             var iframePageLabel = $translate.instant(iframePageLabelId);
 
+            iframeUrl = iframeUrl.replace('wbxadmin', 'adm3100');
             var uiSref =
               "site-setting({" +
               "  siteUrl: " + "'" + webExSiteSettingsObj.siteUrl + "'" + "," +
@@ -381,7 +379,6 @@
               pageId: pageId,
               label: indexPageLabel,
               iframeUrl: iframeUrl,
-              iframePageLabel: iframePageLabel,
               uiSref: uiSref
             };
 
@@ -421,7 +418,6 @@
                     currPageObj.pageId = newPageObj.pageId;
                     currPageObj.label = newPageObj.label;
                     currPageObj.iframeUrl = newPageObj.iframeUrl;
-                    currPageObj.iframePageLabel = newPageObj.iframePageLabel;
                     currPageObj.uiSref = newPageObj.uiSref;
 
                     logMsg = funcName + ": " +
@@ -499,33 +495,10 @@
 
                 logMsg = funcName + ": " + "\n" +
                   "settingCardObj=" + JSON.stringify(settingCardObj);
-                $log.log(logMsg);
+                // $log.log(logMsg);
               } // updateSettingCardObj()
             ); // webExSiteSettingsObj.settingCardObjs.forEach()
           } // updateSettingCardObjs()
-
-          function setUiSref(
-            pageObjs,
-            cardId,
-            cardLabel
-          ) {
-
-            pageObjs.forEach(
-              function updatePageObj(pageObj) {
-                var uiSref =
-                  "site-setting({" +
-                  "  cardId:" + "'" + cardId + "'" + "," +
-                  "  cardLabel:" + "'" + cardLabel + "'" + "," +
-                  "  webexPageId:" + "'" + pageObj.pageId + "'" + "," +
-                  "  webexPageLabel:" + "'" + pageObj.label + "'" + "," +
-                  "  siteUrl:" + "'" + webExSiteSettingsObj.siteUrl + "'" + "," +
-                  "  settingPageIframeUrl:" + "'" + pageObj.iframeUrl + "'" +
-                  "})";
-
-                pageObj.uiSref = uiSref;
-              } // updatePageObj()
-            ); // pageObjs.forEach()
-          } // updatePageObjsUiSref()
 
           function getCategoryObj(categoryId) {
             var funcName = "updateDisplayInfo().getCategoryObj()";
@@ -544,14 +517,14 @@
             logMsg = funcName + ": " + "\n" +
               "categoryId=" + categoryId + "\n" +
               "categoryObj=" + JSON.stringify(result);
-            $log.log(logMsg);
+            // $log.log(logMsg);
 
             return result;
           } // getCategoryObj()
         }, // updateDisplayInfo()
 
         getSiteSettingsInfoXml: function () {
-          // var siteInfoXml = WebExXmlApiFact.getSiteInfo(webExXmlApiInfoObj);
+          var siteInfoXml = WebExXmlApiFact.getSiteInfo(webExXmlApiInfoObj);
           // var meetingTypesInfoXml = WebExXmlApiFact.getMeetingTypeInfo(webExXmlApiInfoObj);
           var settingPagesInfoXml = WebExXmlApiFact.getAdminPagesInfo(
             true,
