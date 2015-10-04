@@ -1057,7 +1057,6 @@
     "description": "Description",
     "descriptionPlaceholder": "Enter Description",
     "action": "Action",
-    "actionPlaceholder": "Choose Action",
     "numberPlaceholder": "Enter Number",
     "key": "Key",
     "keyPlaceholder": "Choose Key",
@@ -1111,17 +1110,21 @@
     "builderTitle": "Auto Attendant Builder",
     "builderAddNewStep": "Add New Step",
     "builderNewStep": "New Step",
+    "builderNewStepInfo": "You can add actions here to add to your Auto Attendant.  Create as many as you want, and link them all together.",
+    "builderNewStepChoiceHelp": "Say Message - Play an uninterruptible recording to the caller",
     "builderNumbers": "Numbers",
-    "actionPlaceholder": "Choose Action",
+    "actionPlaceholder": "Choose Action...",
     "actionSayMessage": "Say Message",
     "actionPhoneMenu": "Phone Menu",
-    "actionRouteCall": "Route Call",
+    "actionRouteCall": "Transfer Call",
     "actionEndCall": "End Call",
     "schedule": "Schedule",
     "scheduleAllDay": "Open 24 hours",
     "scheduleOpen": "Open Hours",
     "scheduleClosed": "Closed Hours",
-    "scheduleHolidays": "Holidays"
+    "scheduleHolidays": "Holidays",
+    "invalidBuilderNameMissing": "Enter an Auto Attendant Name.",
+    "invalidBuilderNameNotUnique": "This Auto Attendant Name is already in use. Please enter a unique Auto Attendant Name."
   },
   "callPark": {
     "newCallPark": "New Call Park",
@@ -1235,7 +1238,9 @@
     "snrSeconds": "Seconds",
     "success": "Single Number Reach configuration saved successfully",
     "removeSuccess": "Single Number Reach configuration removed successfully",
-    "error": "Single Number Reach configuration failed."
+    "error": "Single Number Reach configuration failed.",
+    "unitedStates": "United States of America",
+    "austrailia": "Austrailia"
   },
   "voicemailPanel": {
     "success": "Voicemail configuration saved successfully",

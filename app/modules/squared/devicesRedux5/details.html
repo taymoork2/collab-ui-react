@@ -113,8 +113,8 @@
         <strong>Issues</strong>
         <div ng-repeat="event in deviceDetails.device.diagnosticsEvents">
           <p>
-            <i class="fa fa-circle device-status-red"></i>
-            {{event.type}}
+            <i class="fa fa-circle device-status-red" />
+            <span ng-bind-html="event.type | highlight:devices.search" />
           </p>
           <p>{{event.message}}</p>
         </div>
