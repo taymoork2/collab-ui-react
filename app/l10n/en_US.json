@@ -1122,7 +1122,9 @@
     "scheduleAllDay": "Open 24 hours",
     "scheduleOpen": "Open Hours",
     "scheduleClosed": "Closed Hours",
-    "scheduleHolidays": "Holidays"
+    "scheduleHolidays": "Holidays",
+    "invalidBuilderNameMissing": "Enter an Auto Attendant Name.",
+    "invalidBuilderNameNotUnique": "This Auto Attendant Name is already in use. Please enter a unique Auto Attendant Name."
   },
   "callPark": {
     "newCallPark": "New Call Park",

@@ -19,6 +19,8 @@
     vm.populateUiModel = populateUiModel;
     vm.saveUiModel = saveUiModel;
 
+    $scope.saveAARecords = saveAARecords;
+
     /////////////////////
 
     function updateCeInfos(ceInfos, ceInfo) {
@@ -94,7 +96,7 @@
 
     function saveAARecords() {
 
-      saveUiModel();
+      vm.saveUiModel();
 
       var aaRecords = vm.aaModel.aaRecords;
       var aaRecord = vm.aaModel.aaRecord;
@@ -125,6 +127,7 @@
             Notification.success('autoAttendant.successCreateCe', {
               name: aaRecord.callExperienceName
             });
+
           },
           function (response) {
             Notification.error('autoAttendant.errorCreateCe', {
@@ -148,6 +151,7 @@
             Notification.success('autoAttendant.successUpdateCe', {
               name: aaRecord.callExperienceName
             });
+
           },
           function (response) {
             Notification.error('autoAttendant.errorUpdateCe', {
@@ -166,6 +170,7 @@
     }
 
     function getSaveErrorMessages() {
+
       var messages = vm.errorMessages.join('<br>');
 
       return messages;
@@ -207,6 +212,7 @@
     }
 
     function activate() {
+
       var aaName = $stateParams.aaName;
       vm.aaModel = AAModelService.getAAModel();
       vm.aaModel.aaRecord = undefined;
@@ -221,5 +227,6 @@
     }
 
     activate();
+
   }
 })();

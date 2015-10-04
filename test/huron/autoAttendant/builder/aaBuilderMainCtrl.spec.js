@@ -81,7 +81,8 @@ describe('Controller: AABuilderMainCtrl', function () {
       spyOn(AutoAttendantCeService, 'createCe').and.returnValue($q.when(angular.copy(rawCeInfo)));
       spyOn(AutoAttendantCeService, 'updateCe').and.returnValue($q.when(angular.copy(rawCeInfo)));
       spyOn(Notification, 'success');
-
+      spyOn(Notification, 'error');
+      spyOn($scope.vm, 'saveUiModel');
       aaModel.ceInfos = [];
       aaModel.aaRecords = [];
       aaModel.aaRecord = aCe;
@@ -100,7 +101,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       var ceInfo = ce2CeInfo(rawCeInfo);
       expect(angular.equals(aaModel.ceInfos[0], ceInfo)).toEqual(true);
 
-      expect(Notification.success).toHaveBeenCalled();
+      expect(Notification.success).toHaveBeenCalledWith('autoAttendant.successCreateCe', jasmine.any(Object));
     });
 
     it('should update an existing aaRecord successfully', function () {
@@ -118,8 +119,9 @@ describe('Controller: AABuilderMainCtrl', function () {
       var ceInfo = ce2CeInfo(rawCeInfo);
       expect(angular.equals(aaModel.ceInfos[0], ceInfo)).toEqual(true);
 
-      expect(Notification.success).toHaveBeenCalled();
+      expect(Notification.success).toHaveBeenCalledWith('autoAttendant.successUpdateCe', jasmine.any(Object));
     });
+
   });
 
   describe('selectAA', function () {
@@ -224,10 +226,10 @@ describe('Controller: AABuilderMainCtrl', function () {
       $scope.vm.aaModel = {};
       $scope.vm.aaModel.aaRecord = {};
       $scope.vm.ui = {};
+      $scope.vm.ui.ceInfo = ce2CeInfo(rawCeInfo);
     });
 
     it('should write UI CeInfo into model', function () {
-      $scope.vm.ui.ceInfo = ce2CeInfo(rawCeInfo);
       controller.saveUiModel();
 
       expect(AutoAttendantCeInfoModelService.setCeInfo).toHaveBeenCalledWith($scope.vm.aaModel.aaRecord, $scope.vm.ui.ceInfo);
