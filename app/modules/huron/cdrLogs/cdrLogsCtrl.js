@@ -18,10 +18,10 @@
     vm.selectedCDR = null;
     vm.model = {
       'searchUpload': SEARCH,
-      'startTime': getTimeWithOffset(0),
-      'endTime': getTimeWithOffset(0),
-      'startDate': getDateWithOffset(1),
-      'endDate': getDateWithOffset(0),
+      'startTime': moment().format(timeFormat),
+      'endTime': moment().format(timeFormat),
+      'startDate': moment().subtract(1, 'days').format(dateFormat),
+      'endDate': moment().format(dateFormat),
       'hitSize': 50
     };
 
@@ -360,10 +360,10 @@
           onClick: function (options, scope) {
             vm.model = {
               'searchUpload': SEARCH,
-              'startTime': getTimeWithOffset(0),
-              'endTime': getTimeWithOffset(0),
-              'startDate': getDateWithOffset(1),
-              'endDate': getDateWithOffset(0),
+              'startTime': moment().format(timeFormat),
+              'endTime': moment().format(timeFormat),
+              'startDate': moment().subtract(1, 'days').format(dateFormat),
+              'endDate': moment().format(dateFormat),
               'hitSize': 50
             };
             vm.searchAndUploadForm.$setPristine();
@@ -401,14 +401,6 @@
     vm.statusAvalibility = statusAvalibility;
     vm.getAccordionHeader = getAccordionHeader;
     vm.selectCDR = selectCDR;
-
-    function getTimeWithOffset(offset) {
-      return moment().subtract(offset, 'minutes').format(timeFormat);
-    }
-
-    function getDateWithOffset(offset) {
-      return moment().subtract(offset, 'days').format(dateFormat);
-    }
 
     function statusAvalibility(cdrArray) {
       // returns danger if both the calling and called cause codes for each cdr in the array is in the errorStatus array

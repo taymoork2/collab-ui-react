@@ -7,11 +7,20 @@
   /* @ngInject */
   function CdrService($translate, $http, $q, Notification, Log) {
     var proxyData = [];
+    var LOCAL = 'localSessionID';
+    var REMOTE = 'remoteSessionID';
     var callingDevice = 'calling_deviceName';
     var calledDevice = 'called_deviceName';
     var callingNumber = 'calling_partyNumber';
     var calledNumber = 'called_partyNumber';
+    var emptyId = "00000000000000000000000000000000";
     var serverHosts = ['SME-01', 'SME-02', 'CMS-01', 'CMS-02'];
+
+    var baseHeaders = {
+      Authorization: 'Basic ' + btoa('huron:4Jd7w6%6~8yB7r4m'),
+      Accept: 'application/json, text/plain, */*',
+      'Content-type': 'application/x-ww-form-urlencoded'
+    };
 
     var servers = [{
       name: "TX1",
@@ -50,16 +59,16 @@
 
       var devicesQuery = [];
       var device = null;
-      if (model.callingPartyDevice !== undefined) {
+      if (angular.isDefined(model.callingPartyDevice)) {
         devicesQuery.push(deviceQuery(callingDevice, model.callingPartyDevice));
       }
-      if (model.calledPartyDevice !== undefined) {
+      if (angular.isDefined(model.calledPartyDevice)) {
         devicesQuery.push(deviceQuery(calledDevice, model.calledPartyDevice));
       }
-      if (model.callingPartyNumber !== undefined) {
+      if (angular.isDefined(model.callingPartyNumber)) {
         devicesQuery.push(deviceQuery(callingNumber, model.callingPartyDevice));
       }
-      if (model.calledPartyNumber !== undefined) {
+      if (angular.isDefined(model.calledPartyNumber)) {
         devicesQuery.push(deviceQuery(calledNumber, model.calledPartyNumber));
       }
 
@@ -73,13 +82,9 @@
 
       var promises = [];
       angular.forEach(servers, function (item, index, array) {
-        var headers = {
-          Authorization: 'Basic ' + btoa('huron:4Jd7w6%6~8yB7r4m'),
-          Accept: 'application/json, text/plain, */*',
-          'Content-type': 'application/x-ww-form-urlencoded',
-          server: item.url,
-          qs: jsQuery
-        };
+        var headers = angular.copy(baseHeaders);
+        headers.server = item.url;
+        headers.qs = jsQuery;
 
         var results = [];
         var proxyPromise = proxy(headers).then(function (response) {
@@ -134,13 +139,9 @@
       }
       queryElement += '"}},"_cache":true}}';
 
-      var headers = {
-        Authorization: 'Basic ' + btoa('huron:4Jd7w6%6~8yB7r4m'),
-        Accept: 'application/json, text/plain, */*',
-        'Content-type': 'application/x-ww-form-urlencoded',
-        server: server.url,
-        qs: '{"query": {"filtered": {"query": {"bool": {"should": [' + generateHosts() + ']} },"filter": {"bool": {"should":[' + queryElement + ']}}}},"size": 2000,"sort": [{"@timestamp": {"order": "desc"}}]}'
-      };
+      var headers = angular.copy(baseHeaders);
+      headers.server = server.url;
+      headers.qs = '{"query": {"filtered": {"query": {"bool": {"should": [' + generateHosts() + ']} },"filter": {"bool": {"should":[' + queryElement + ']}}}},"size": 2000,"sort": [{"@timestamp": {"order": "desc"}}]}';
 
       var proxyQuery = proxy(headers).then(function (response) {
           if (!angular.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
@@ -173,10 +174,10 @@
       var uniqueIds = [];
 
       for (var i = 0; i < cdrArray.length; i++) {
-        if (uniqueIds.indexOf(cdrArray[i].dataParam.localSessionID) < 0 && cdrArray[i].dataParam.localSessionID != "00000000000000000000000000000000") {
+        if (uniqueIds.indexOf(cdrArray[i].dataParam.localSessionID) < 0 && cdrArray[i].dataParam.localSessionID !== emptyId) {
           uniqueIds.push(cdrArray[i].dataParam.localSessionID);
         }
-        if (uniqueIds.indexOf(cdrArray[i].dataParam.remoteSessionID) < 0 && cdrArray[i].dataParam.remoteSessionID != "00000000000000000000000000000000") {
+        if (uniqueIds.indexOf(cdrArray[i].dataParam.remoteSessionID) < 0 && cdrArray[i].dataParam.remoteSessionID !== emptyId) {
           uniqueIds.push(cdrArray[i].dataParam.remoteSessionID);
         }
       }
@@ -190,10 +191,10 @@
         cdrArray.splice(0, 1);
         for (var i = 0; i < cdrArray.length; i++) {
           for (var j = 0; j < call.length; j++) {
-            if ((call[j].dataParam.localSessionID == cdrArray[i].dataParam['localSessionID'] && '00000000000000000000000000000000' != cdrArray[i].dataParam['localSessionID']) ||
-              (call[j].dataParam.remoteSessionID == cdrArray[i].dataParam['remoteSessionID'] && '00000000000000000000000000000000' != cdrArray[i].dataParam['remoteSessionID']) ||
-              (call[j].dataParam.localSessionID == cdrArray[i].dataParam['remoteSessionID'] && '00000000000000000000000000000000' != cdrArray[i].dataParam['remoteSessionID']) ||
-              (call[j].dataParam.remoteSessionID == cdrArray[i].dataParam['localSessionID'] && '00000000000000000000000000000000' != cdrArray[i].dataParam['localSessionID'])) {
+            if ((call[j].dataParam.localSessionID === cdrArray[i].dataParam[LOCAL] && emptyId !== cdrArray[i].dataParam[LOCAL]) ||
+              (call[j].dataParam.remoteSessionID === cdrArray[i].dataParam[REMOTE] && emptyId !== cdrArray[i].dataParam[REMOTE]) ||
+              (call[j].dataParam.localSessionID === cdrArray[i].dataParam[REMOTE] && emptyId !== cdrArray[i].dataParam[REMOTE]) ||
+              (call[j].dataParam.remoteSessionID === cdrArray[i].dataParam[LOCAL] && emptyId !== cdrArray[i].dataParam[LOCAL])) {
 
               call.push(cdrArray[i]);
               cdrArray.splice(i, 1);
@@ -219,7 +220,7 @@
         tempArray.push(call[0]);
         call.splice(0, 1);
         for (var i = 0; i < call.length; i++) {
-          if (call[i].dataParam.localSessionID == tempArray[0].dataParam.localSessionID && call[i].dataParam.remoteSessionID == tempArray[0].dataParam.remoteSessionID || call[i].dataParam.remoteSessionID == tempArray[0].dataParam.localSessionID && call[i].dataParam.localSessionID == tempArray[0].dataParam.remoteSessionID) {
+          if (call[i].dataParam.localSessionID === tempArray[0].dataParam.localSessionID && call[i].dataParam.remoteSessionID === tempArray[0].dataParam.remoteSessionID || call[i].dataParam.remoteSessionID === tempArray[0].dataParam.localSessionID && call[i].dataParam.localSessionID === tempArray[0].dataParam.remoteSessionID) {
             tempArray.push(call[i]);
             call.splice(i, 1);
             if (call.length > 0) {
