@@ -1294,6 +1294,33 @@ angular
             }
           }
         })
+        .state('call-service', {
+          templateUrl: 'modules/hercules/call-service/call.html',
+          controller: 'CallController',
+          controllerAs: 'call',
+          parent: 'main',
+          url: '/services/call'
+        })
+        .state('call-service.list', {
+          views: {
+            'fullPane': {
+              templateUrl: 'modules/hercules/call-service/call-list.html',
+              controller: 'CallController',
+              controllerAs: 'call'
+            }
+          },
+          url: '/list'
+        })
+        .state('call-service.settings', {
+          url: '/settings',
+          views: {
+            'fullPane': {
+              controllerAs: 'callServiceSettings',
+              controller: 'CallServiceSettingsController',
+              templateUrl: 'modules/hercules/call-service/call-service-settings.html'
+            }
+          }
+        })
 
       .state('cluster-details', {
           parent: 'sidepanel',
