@@ -955,6 +955,13 @@ angular
   .config(['$stateProvider',
     function ($stateProvider) {
       $stateProvider
+        .state('cdrsupport', {
+          url: '/cdrsupport',
+          templateUrl: 'modules/huron/cdrLogs/cdrlogs.tpl.html',
+          controller: 'CdrLogsCtrl',
+          controllerAs: 'cdr',
+          parent: 'main'
+        })
         .state('callroutingBase', {
           abstract: true,
           parent: 'main',
@@ -1318,6 +1325,14 @@ angular
               controllerAs: 'callServiceSettings',
               controller: 'CallServiceSettingsController',
               templateUrl: 'modules/hercules/call-service/call-service-settings.html'
+            }
+          }
+        })
+        .state('call-service.about', {
+          url: '/services/call/about',
+          views: {
+            'fullPane': {
+              templateUrl: 'modules/hercules/call-service/about.html'
             }
           }
         })

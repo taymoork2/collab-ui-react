@@ -359,6 +359,11 @@ angular.module('Core')
             state: 'newpartnerreports',
             link: '#partner/newreports'
           }, {
+            title: 'tabs.cdrTab',
+            desc: 'tabs.cdrLogsTabDesc',
+            state: 'cdrsupport',
+            link: '#cdrsupport'
+          }, {
             title: 'tabs.entResUtilizationTab',
             desc: 'tabs.entResUtilizationTabDesc',
             state: 'utilization',
@@ -829,7 +834,8 @@ angular.module('Core')
           'hurondetails',
           'huronlines',
           'huronsettings',
-          'huronfeatures'
+          'huronfeatures',
+          'cdrsupport'
         ],
         'squared-fusion-mgmt': [
           'fusion',
@@ -877,7 +883,8 @@ angular.module('Core')
           'fusion',
           'mediafusionconnector',
           'callRouter',
-          'hurondetails'
+          'hurondetails',
+          'cdrsupport'
         ]
       };
 
