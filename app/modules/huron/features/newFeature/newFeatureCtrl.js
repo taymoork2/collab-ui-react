@@ -17,9 +17,9 @@
         controller: 'NewFeatureModalCtrl'
       });
       modalInstance.result.then(function (selectedFeature) {
-        $scope.feature = selectedFeature;
+        vm.feature = selectedFeature;
       }, function () {
-        $scope.feature = '';
+        vm.feature = '';
       });
     }
   }

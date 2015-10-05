@@ -7,12 +7,14 @@
   /* @ngInject */
   function ListFeaturesCtrl($scope, $state, ListFeaturesService) {
 
-    var featureList = [];
+    var vm = $scope;
+    vm.featureList = [];
+
     ListFeaturesService.listFeatures().then(function handleFeatures(list) {
       if (list.length === 0)
         $state.go("huronnewfeature");
       else
-        featureList = list;
+        vm.featureList = list;
     });
   }
 })();
