@@ -560,6 +560,56 @@ angular
           controllerAs: 'siteList',
           parent: 'main'
         })
+        .state('site-settings', {
+          url: '/webexSiteSettings',
+          templateUrl: 'modules/webex/siteSettings/siteSettings.tpl.html',
+          controller: 'WebExSiteSettingsCtrl',
+          controllerAs: 'WebExSiteSettings',
+          parent: 'main',
+          params: {
+            siteUrl: null
+          }
+        })
+        .state('site-setting', {
+          url: '/webexSiteSetting',
+          templateUrl: 'modules/webex/siteSetting/siteSetting.tpl.html',
+          controller: 'WebExSiteSettingCtrl',
+          controllerAs: 'WebExSiteSetting',
+          parent: 'main',
+          params: {
+            siteUrl: null,
+            webexPageId: null,
+            settingPageIframeUrl: null
+          }
+        })
+        .state('webex-reports', {
+          url: '/webexreports',
+          templateUrl: 'modules/webex/siteReports/siteReports.tpl.html',
+          controller: 'ReportsCtrl',
+          controllerAs: 'reports',
+          parent: 'main',
+          params: {
+            siteUrl: null
+          },
+          data: {
+            displayName: 'Reports Page1'
+          }
+        })
+        .state('webex-reports-iframe', {
+          url: '/iwebexreports',
+          templateUrl: 'modules/webex/siteReportsIframe/siteReportIframe.tpl.html',
+          controller: 'ReportsIframeCtrl',
+          controllerAs: 'reportsIframe',
+          parent: 'main',
+          params: {
+            siteUrl: null,
+            reportPageId: null,
+            reportPageIframeUrl: null
+          },
+          data: {
+            displayName: 'Reports Page2'
+          }
+        })
         .state('templates', {
           url: '/templates',
           templateUrl: 'modules/squared/views/templates.html',
@@ -955,6 +1005,13 @@ angular
   .config(['$stateProvider',
     function ($stateProvider) {
       $stateProvider
+        .state('cdrsupport', {
+          url: '/cdrsupport',
+          templateUrl: 'modules/huron/cdrLogs/cdrlogs.tpl.html',
+          controller: 'CdrLogsCtrl',
+          controllerAs: 'cdr',
+          parent: 'main'
+        })
         .state('callroutingBase', {
           abstract: true,
           parent: 'main',
@@ -1294,6 +1351,41 @@ angular
             }
           }
         })
+        .state('call-service', {
+          templateUrl: 'modules/hercules/call-service/call.html',
+          controller: 'CallController',
+          controllerAs: 'call',
+          parent: 'main',
+          url: '/services/call'
+        })
+        .state('call-service.list', {
+          views: {
+            'fullPane': {
+              templateUrl: 'modules/hercules/call-service/call-list.html',
+              controller: 'CallController',
+              controllerAs: 'call'
+            }
+          },
+          url: '/list'
+        })
+        .state('call-service.settings', {
+          url: '/settings',
+          views: {
+            'fullPane': {
+              controllerAs: 'callServiceSettings',
+              controller: 'CallServiceSettingsController',
+              templateUrl: 'modules/hercules/call-service/call-service-settings.html'
+            }
+          }
+        })
+        .state('call-service.about', {
+          url: '/services/call/about',
+          views: {
+            'fullPane': {
+              templateUrl: 'modules/hercules/call-service/about.html'
+            }
+          }
+        })
 
       .state('cluster-details', {
           parent: 'sidepanel',
@@ -1462,32 +1554,6 @@ angular
           params: {
             cconnectorId: {}
           }
-        });
-    }
-  ]);
-
-angular
-  .module('WebExUserSettings')
-  .config(['$stateProvider',
-    function ($stateProvider) {
-      $stateProvider
-        .state('webexUserSettings', {
-          url: '/webexUserSettings',
-          templateUrl: 'modules/webex/userSettings/userSettings.tpl.html',
-          parent: 'main'
-        });
-    }
-  ]);
-
-angular
-  .module('WebExUserSettings2')
-  .config(['$stateProvider',
-    function ($stateProvider) {
-      $stateProvider
-        .state('webexUserSettings2', {
-          url: '/webexUserSettings2',
-          templateUrl: 'modules/webex/userSettings/userSettings2.tpl.html',
-          parent: 'main'
         });
     }
   ]);

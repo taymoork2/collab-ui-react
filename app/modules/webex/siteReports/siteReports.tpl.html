@@ -1,0 +1,103 @@
+<div id="webexreportDiv"
+     name="webexreportDiv">
+
+   
+          
+  <div class="page-header row full">
+    <div class="page-title small-10 columns">
+      <div class="title-heading">
+         <span class="title-heading" translate="webexSiteReports.title"></span>
+      </div>   
+    </div>
+  </div>	
+
+  <div id="webexReportBreadCrumbs" class="breadcrumb-container">
+    <ul class="breadcrumbs">
+      <li><a id="webexReportCrumb" ui-sref="site-list" translate="siteList.conferencing"></a></li>
+      <li class="current"><a>{{siteUrl + ' '  + ('webexSiteReports.title' | translate)}}</a></li>
+    </ul>
+  </div>
+
+<!--   <div id="webexReportBreadCrumbs" class="breadcrumb-container">
+    <cs-breadcrumbs displayname-property="data.displayName"></cs-breadcrumbs>
+  </div> -->
+  
+  <div id="errSection"
+       name="errSection"
+       ng-if="WebExSiteSettings.siteSettingsObj.hasLoadError">
+  </div>
+    
+  <div class="content-view"
+       ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
+    
+    
+     	 		 
+    
+  </div>
+</div>
+
+<cs-container>
+
+<div ng-repeat="sec in sections">
+  <cs-card class="cs-card medium">
+    <article>
+      <header>
+       <h4>
+            {{sec.section_name_translated}}
+            <!-- <span translate="{{sec.section_name}}"></span> -->
+            
+
+       </h4>
+      </header> 
+
+       <section>
+        <div class="card-checkbox">
+          <div ng-repeat="sref in sec.uisrefs">
+            <span>
+                 <a id="{{sref.reportPageId}}"
+                    name="{{sref.reportPageId}}"
+                    ui-sref="{{sref.uisrefString}}">
+                    {{sref.reportPageId_translated}}
+                    <!-- <span translate="{{sref.reportPageId}}"></span>  -->           
+                 </a>
+            </span>  
+          </div>
+        </div>  
+       </section>
+
+    </article>
+
+  </cs-card>
+</div>
+
+</cs-container>
+
+
+
+<!--
+        .state('webex-reports-iframe', {
+          url: '/iwebexreports',
+          templateUrl: 'modules/webex/siteReports/siteReportsIframe.tpl.html',
+          controller: 'ReportsIframeCtrl',
+          controllerAs: 'reportsIframe',
+          parent: 'main',
+          params: {
+            siteUrl: null,
+            settingPageId: null,
+            settingPageIframeUrl: null
+          }
+
+        })
+
+  -->
+
+<a id="siteAdminReportsLink" ui-sref="{{uiSref}}">
+                                  test
+</a>
+
+
+<form name="siteAdminLink" action="{{trustSrc(webexAdvancedUrl)}}" method="post" target="webexSiteAdmin">
+  <input id="adminEmail" type="hidden" name="adminEmail" ng-model="siteAdminLink.adminEmail" value="{{adminEmailParam}}" />
+  <input id="locale" type="hidden" name="locale" ng-model="siteAdminLink.locale" value="{{localeParam}}" />    
+  <button id="hiddenButton" type="submit" onclick="this.parentElement.submit();" style="background-color:#ff00ff;cursor:pointer;width:100px;display:none;">			
+</form>

@@ -89,6 +89,9 @@
     vm.getUserList = getUserList;
     vm.init = init;
 
+    // Flag to disable and add "loading" animation to Save button while line settings being saved
+    vm.saveInProcess = false;
+
     vm.disassociateSharedLineUser = disassociateSharedLineUser;
     ////////////
 
@@ -413,6 +416,8 @@
       //variable to set ESN for voicemail if the primary has changed
       var esn = vm.telephonyInfo.esn;
       var companyNumberObj = null;
+      vm.saveInProcess = true; // Set flag for "Save" button behavior
+
       HttpUtils.setTrackingID().then(function () {
         var callForwardSet = processCallForward();
         if (callForwardSet === true) {
@@ -489,10 +494,12 @@
                     }
                   });
                 Notification.notify([$translate.instant('directoryNumberPanel.success')], 'success');
+                vm.saveInProcess = false; // Set flag for "Save" button behavior
                 resetForm();
               })
               .catch(function (response) {
                 Notification.errorResponse(response, 'directoryNumberPanel.error');
+                vm.saveInProcess = false; // Set flag for "Save" button behavior
               });
           } else { // new line
             SharedLineInfoService.getUserLineCount(vm.currentUser.id)
@@ -527,6 +534,7 @@
                           $state.go('user-overview.communication.directorynumber', {
                             directoryNumber: vm.directoryNumber
                           });
+                          vm.saveInProcess = false; // Set flag for "Save" button behavior
                         });
                     });
                 } else {
@@ -534,7 +542,7 @@
                     user: name
                   })], 'error');
                   $state.go('user-overview.communication');
-
+                  vm.saveInProcess = false; // Set flag for "Save" button behavior
                 }
               })
               .catch(function (response) {
