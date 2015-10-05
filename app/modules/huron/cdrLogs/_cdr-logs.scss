@@ -69,6 +69,7 @@
           .cs-datapicker-normal {
             input {
               margin-bottom: 0;
+              margin-left: rem-calc(5);
               width: 80%;
             }
           }
@@ -76,7 +77,15 @@
             top: rem-calc(32);
             left: 0;
           }
+          .validation {
+            left: rem-calc(27);
+            top: rem-calc(7);
+            width: 10%;
+          }
         }
+      }
+      .has-error > .cdr-datepicker > cs-datepicker > .cs-datapicker-normal {
+        border: rem-calc(2) solid #f05d3b;
       }
       .upload-display {
         margin: rem-calc(20);

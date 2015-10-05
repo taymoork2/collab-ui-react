@@ -811,7 +811,7 @@ angular.module('Core')
         PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup'],
         PARTNER_USER: ['partnercustomers', 'customer-overview', 'trialAdd', 'trialEdit'],
         CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
-        User: ['cdrsupport'],
+        User: [],
         Site_Admin: ['site-list'],
         Application: ['organizationAdd']
       };

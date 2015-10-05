@@ -6,7 +6,7 @@
     .controller('CdrLogsCtrl', CdrLogsCtrl);
 
   /* @ngInject */
-  function CdrLogsCtrl($scope, $translate, $timeout, Config, formlyValidationMessages, formlyConfig, CdrService) {
+  function CdrLogsCtrl($scope, $translate, $timeout, Config, formlyValidationMessages, CdrService) {
     var vm = this;
     var SEARCH = "SEARCH";
     var UPLOAD = "UPLOAD";
@@ -16,13 +16,16 @@
 
     vm.gridData = [];
     vm.selectedCDR = null;
+    vm.model = {
+      'searchUpload': SEARCH,
+      'startTime': getTimeWithOffset(0),
+      'endTime': getTimeWithOffset(0),
+      'startDate': getDateWithOffset(1),
+      'endDate': getDateWithOffset(0),
+      'hitSize': 50
+    };
 
     formlyValidationMessages.addStringMessage('required', $translate.instant('cdrLogs.required'));
-    formlyConfig.setType({
-      name: 'cs-datepicker',
-      templateUrl: 'modules/huron/cdrLogs/formly-field-datepicker.tpl.html',
-      wrapper: ['ciscoWrapper']
-    });
 
     var validations = {
       callingNumber: function (viewValue, modelValue, scope) {
@@ -72,6 +75,7 @@
         if (!angular.isUndefined(scope.fields[9].formControl)) {
           scope.fields[9].formControl.$validate();
         }
+        vm.searchAndUploadForm.$setDirty();
         return true;
       },
       endDate: function (viewValue, modelValue, scope) {
@@ -80,6 +84,8 @@
         if (!angular.isUndefined(scope.fields[7].formControl)) {
           scope.fields[7].formControl.$validate();
         }
+        vm.searchAndUploadForm.$setDirty();
+        scope.showError = moment(value).format() < moment(scope.model.startDate).format();
         return moment(value).format() >= moment(scope.model.startDate).format();
       },
       hitSize: function (viewValue, modelValue, scope) {
@@ -133,18 +139,13 @@
       },
       hideUpload: function (viewValue, modelValue, scope) {
         return scope.model.searchUpload !== UPLOAD;
+      },
+      searchDisabled: function (viewValue, modelValue, scope) {
+        return vm.searchAndUploadForm.$invalid || vm.searchAndUploadForm.$pristine;
       }
     };
 
     vm.fields = [{
-      model: {
-        'searchUpload': SEARCH,
-        'startTime': getTimeWithOffset(0),
-        'endTime': getTimeWithOffset(0),
-        'startDate': getDateWithOffset(1),
-        'endDate': getDateWithOffset(0),
-        'hitSize': 50
-      },
       fieldGroup: [{
         key: 'searchRadio',
         type: 'radio',
@@ -275,7 +276,7 @@
         }
       }, {
         key: 'startDate',
-        type: 'cs-datepicker',
+        type: 'datepicker',
         className: 'search-display search-indent',
         validators: {
           time: {
@@ -284,6 +285,7 @@
           }
         },
         templateOptions: {
+          inputClass: 'cdr-datepicker',
           label: $translate.instant('cdrLogs.startDate'),
           required: true,
           placeholder: $translate.instant('cdrLogs.dateExample')
@@ -293,7 +295,7 @@
         }
       }, {
         key: 'endDate',
-        type: 'cs-datepicker',
+        type: 'datepicker',
         className: 'search-display',
         validators: {
           time: {
@@ -302,6 +304,7 @@
           }
         },
         templateOptions: {
+          inputClass: 'cdr-datepicker',
           label: $translate.instant('cdrLogs.endDate'),
           required: true,
           placeholder: $translate.instant('cdrLogs.dateExample')
@@ -344,7 +347,8 @@
           }
         },
         expressionProperties: {
-          'hide': expression.hideSearch
+          'hide': expression.hideSearch,
+          'templateOptions.disabled': expression.searchDisabled
         }
       }, {
         key: 'reset',
@@ -354,7 +358,7 @@
           btnClass: 'btn btn-primary search-button',
           label: $translate.instant('cdrLogs.reset'),
           onClick: function (options, scope) {
-            vm.fields[0].model = {
+            vm.model = {
               'searchUpload': SEARCH,
               'startTime': getTimeWithOffset(0),
               'endTime': getTimeWithOffset(0),
@@ -362,6 +366,7 @@
               'endDate': getDateWithOffset(0),
               'hitSize': 50
             };
+            vm.searchAndUploadForm.$setPristine();
           }
         },
         expressionProperties: {

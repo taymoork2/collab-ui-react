@@ -8,13 +8,12 @@ describe('Controller: CdrLogsCtrl', function () {
   var callLegs = getJSONFixture('huron/json/cdrLogs/callLegs.json');
   var statusResponse = ['primary', 'danger'];
 
-  beforeEach(inject(function ($rootScope, $controller, _$translate_, _$timeout_, _Config_, _formlyValidationMessages_, _formlyConfig_, _CdrService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$translate_, _$timeout_, _Config_, _formlyValidationMessages_, _CdrService_) {
     var $scope = $rootScope.$new();
     translate = _$translate_;
     timeout = _$timeout_;
     Config = _Config_;
     formlyValidationMessages = _formlyValidationMessages_;
-    formlyConfig = _formlyConfig_;
     CdrService = _CdrService_;
 
     controller = $controller('CdrLogsCtrl', {
@@ -23,7 +22,6 @@ describe('Controller: CdrLogsCtrl', function () {
       timeout: timeout,
       Config: Config,
       formlyValidationMessages: formlyValidationMessages,
-      formlyConfig: formlyConfig,
       CdrService: CdrService
     });
 
