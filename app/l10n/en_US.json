@@ -1479,7 +1479,7 @@
     "none": "None",
     "partnerLogo": "Partner Logo",
     "logoOverride": "Customer Logo Override",
-    "allowCustomerLogo": "Enable Customer Logo for {{customerName}}"
+    "allowCustomerLogo": "Enable Customer Logo for {{customer}}"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
@@ -2033,7 +2033,7 @@
     "supportContacts": "Support Contacts",
     "partnerAdmin": "Partner Administrators",
     "brandingInfo": "If you want to display your own branding in addition to Cisco Spark, upload your logo below.",
-    "usePartnerLogo": "Use the same logo in use by {{partnerName}}",
+    "usePartnerLogo": "Use the same logo in use by {{partner}}",
     "supportInfo": "If you are providing support for your users, enter your support paramaters below. These parameters will be displayed under Support Options in the Spark application;"
   },
   "fileUpload": {
