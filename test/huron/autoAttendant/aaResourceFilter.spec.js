@@ -6,8 +6,8 @@ describe('Filter: aaResourceFilter', function () {
   var filterMore;
   var filterAll;
 
-  var cesWithNumbers = getJSONFixture('huron/json/autoAttendant/callExperiencesWithNumbers.json');
-  var ceInfosWithNumbers = [];
+  var ceDefinitions = getJSONFixture('huron/json/autoAttendant/callExperiencesWithNumbers.json');
+  var ceInfos = [];
 
   var AutoAttendantCeInfoModelService;
   var successSpy;
@@ -30,6 +30,15 @@ describe('Filter: aaResourceFilter', function () {
     return _ceInfo;
   }
 
+  function getTestCeInfo(testName) {
+    for (var i = 0; i < ceInfos.length; i++) {
+      var _ceInfo = ceInfos[i];
+      if (testName === _ceInfo.name) {
+        return _ceInfo;
+      }
+    }
+  }
+
   beforeEach(module('uc.autoattendant'));
   beforeEach(module('Huron'));
 
@@ -37,20 +46,70 @@ describe('Filter: aaResourceFilter', function () {
     filterPreferred = preferredAAResourceFilter;
     filterMore = moreAAResourcesFilter;
     filterAll = allAAResourcesFilter;
-
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
   }));
 
   beforeEach(function () {
-    var ceInfos = [];
-    for (var i = 0; i < cesWithNumbers.length; i++) {
-      var _ceInfo = ce2CeInfo(cesWithNumbers[i]);
-      ceInfos[i] = _ceInfo;
+    var _ceInfos = [];
+    for (var i = 0; i < ceDefinitions.length; i++) {
+      var _ceInfo = ce2CeInfo(ceDefinitions[i]);
+      _ceInfos.push(_ceInfo);
     }
-    ceInfosWithNumbers = ceInfos;
+    ceInfos = _ceInfos;
   });
 
-  it('should do something here', function () {
+  it('should return empty preferred resource', function () {
+    var _ceInfo0 = getTestCeInfo("Test AA0");
+    expect(_ceInfo0.getName()).toBe("Test AA0");
+
+    expect(filterPreferred(_ceInfo0)).toBe("");
+  });
+
+  it('should return one preferred resource', function () {
+    var _ceInfo1 = getTestCeInfo("Test AA1"); //1111
+    expect(filterPreferred(_ceInfo1)).toBe("1111");
+
+    var _ceInfo2 = getTestCeInfo("Test AA2"); //2221
+    expect(filterPreferred(_ceInfo2)).toBe("2221");
+
+    var _ceInfo3 = getTestCeInfo("Test AA3"); //3331
+    expect(filterPreferred(_ceInfo3)).toBe("3331");
+  });
+
+  it('should return empty +more resource count', function () {
+    var _ceInfo0 = getTestCeInfo("Test AA0");
+    expect(_ceInfo0.getName()).toBe("Test AA0");
+    expect(filterMore(_ceInfo0)).toBe("");
+
+    var _ceInfo1 = getTestCeInfo("Test AA1");
+    expect(_ceInfo1.getName()).toBe("Test AA1");
+    expect(filterMore(_ceInfo1)).toBe("");
+
+  });
+
+  it('should return correct +more resource count', function () {
+    var _ceInfo2 = getTestCeInfo("Test AA2"); //+1more
+    expect(filterMore(_ceInfo2)).toBeDefined();
+
+    var _ceInfo3 = getTestCeInfo("Test AA3"); //+2more
+    expect(filterMore(_ceInfo3)).toBeDefined();
+  });
+
+  it('should return empty resources', function () {
+    var _ceInfo0 = getTestCeInfo("Test AA0");
+    expect(_ceInfo0.getName()).toBe("Test AA0");
+    expect(filterAll(_ceInfo0)).toBe("");
+  });
+
+  it('should return all resources', function () {
+    var _ceInfo1 = getTestCeInfo("Test AA1"); // 1
+    expect(filterAll(_ceInfo1)).not.toContain("<br>");
+
+    var _ceInfo2 = getTestCeInfo("Test AA2"); // 2
+    expect(filterAll(_ceInfo2)).toContain("<br>");
+
+    var _ceInfo3 = getTestCeInfo("Test AA3"); // 3
+    expect(filterAll(_ceInfo3)).toContain("<br>");
 
   });
 

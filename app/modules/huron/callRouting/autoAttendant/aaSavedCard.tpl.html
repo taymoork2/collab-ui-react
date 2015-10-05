@@ -4,8 +4,8 @@
          <h4 class="aa-header-name">{{ceInfo.getName()}}</h4>
       </header>
       <section class="aa-card-section" >
-          <h4 class="aa-card-resource">{{ceInfo.getResources() | preferredAAResource}}</h4>
-          <h5 class="aa-card-more-resource">{{ceInfo.getResources() | moreAAResources}}</h5>
+          <h4 class="aa-card-resource">{{ceInfo | preferredAAResource}}</h4>
+          <h5 class="aa-card-more-resource">{{ceInfo | moreAAResources}}</h5>
         <div class="aa-card-toolbar">
           <span class="aa-edit-icon" aria-label="common.edit"></span>
           <span class="aa-trash-icon" aria-label="common.delete" ng-click="aaLanding.deleteAA(ceInfo); $event.stopPropagation();"></span>

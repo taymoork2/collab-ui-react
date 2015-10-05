@@ -1,13 +1,9 @@
 <div class="aa-builder-header" ng-include="'modules/huron/callRouting/autoAttendant/builder/aaBuilderHeader.tpl.html'"></div>
 
+<div ng-if="!aaBuilderMain.ui.ceInfo.name">
+  <span ng-include="'modules/huron/callRouting/autoAttendant/builder/aaBuilderName.tpl.html'"></span>
+</div>
 
-  <span ng-if="!aaBuilderMain.ui.ceInfo.name">
-    <span ng-include="'modules/huron/callRouting/autoAttendant/builder/aaBuilderName.tpl.html'"></span>
-  </span>
-
-  <span ng-if="aaBuilderMain.ui.ceInfo.name">
-  <div class="aa-builder-container">
-    <span ng-include="'modules/huron/callRouting/autoAttendant/builder/aaBuilderContainer.tpl.html'" ng-controller="AABuilderContainerCtrl as aaBuilder"></span>
-    </div
-  </span>
-
+<div ng-if="aaBuilderMain.ui.ceInfo.name" class="aa-builder-container">
+  <span ng-include="'modules/huron/callRouting/autoAttendant/builder/aaBuilderContainer.tpl.html'" ng-controller="AABuilderContainerCtrl as aaBuilder"></span>
+</div>

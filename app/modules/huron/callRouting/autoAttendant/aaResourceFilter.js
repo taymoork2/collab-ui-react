@@ -2,7 +2,11 @@
 
 angular.module('uc.autoattendant')
   .filter('preferredAAResource', function () {
-    return function (resources) {
+    return function (ceInfo) {
+      if (angular.isUndefined(ceInfo)) {
+        return "";
+      }
+      var resources = ceInfo.getResources();
       if (!angular.isArray(resources) || angular.isUndefined(resources[0])) {
         return "";
       }
@@ -12,7 +16,11 @@ angular.module('uc.autoattendant')
     };
   })
   .filter('moreAAResources', function ($translate) {
-    return function (resources) {
+    return function (ceInfo) {
+      if (angular.isUndefined(ceInfo)) {
+        return "";
+      }
+      var resources = ceInfo.getResources();
       if (!angular.isArray(resources) || angular.isUndefined(resources[0])) {
         return "";
       }
@@ -28,7 +36,11 @@ angular.module('uc.autoattendant')
     };
   })
   .filter('allAAResources', function () {
-    return function (resources) {
+    return function (ceInfo) {
+      if (angular.isUndefined(ceInfo)) {
+        return "";
+      }
+      var resources = ceInfo.getResources();
       if (!angular.isArray(resources) || angular.isUndefined(resources[0])) {
         return "";
       }
