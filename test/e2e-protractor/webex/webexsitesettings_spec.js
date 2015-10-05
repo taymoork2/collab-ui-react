@@ -27,24 +27,14 @@ describe('WebEx site settings', function () {
     expect(sitesettings.webexSiteSettingsPanel.isPresent()).toBeTruthy();
   });
 
-  it('click on email all hosts button', function () {
-    utils.click(sitesettings.emailAllHostsBtn);
+  it('click on common settings site options link', function () {
+    utils.click(sitesettings.configureCommonSiteOptionsLink);
     navigation.expectCurrentUrl('/webexSiteSetting');
   });
 
-  it('wait for WebEx email all hosts page to appear', function () {
+  it('wait for common settings site options page to appear', function () {
     sitesettings.waitForWebexSiteSettingPanel();
-    expect(sitesettings.webexEmailAllHostsId.isPresent()).toBeTruthy();
-  });
-
-  it('Click on site settings bread crumb', function () {
-    utils.click(sitesettings.siteSettingsCrumb);
-    navigation.expectCurrentUrl('/webexSiteSettings');
-  });
-
-  it('wait for WebEx settings index page to appear (2rd time)', function () {
-    sitesettings.waitForWebexSiteSettingsPanel();
-    expect(sitesettings.webexSiteSettingsPanel.isPresent()).toBeTruthy();
+    expect(sitesettings.webexCommonSiteOptionsId.isPresent()).toBeTruthy();
   });
 
   // TODO: additional tests to click on various setting page links on the site settings page

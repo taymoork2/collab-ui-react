@@ -27,8 +27,8 @@ describe('WebEx site settings', function () {
     expect(sitesettings.webexSiteSettingsPanel.isPresent()).toBeTruthy();
   });
 
-  it('click on email all hosts button', function () {
-    utils.click(sitesettings.emailAllHostsBtn);
+  it('click on common settings site options link', function () {
+    utils.click(sitesettings.configureCommonSiteOptionsLink);
     navigation.expectCurrentUrl('/webexSiteSetting');
   });
 
@@ -47,8 +47,8 @@ describe('WebEx site settings', function () {
     expect(sitesettings.webexSiteSettingsPanel.isPresent()).toBeTruthy();
   });
 
-  it('click on email all hosts button (2nd time)', function () {
-    utils.click(sitesettings.emailAllHostsBtn);
+  it('click on common settings site options link', function () {
+    utils.click(sitesettings.configureCommonSiteOptionsLink);
     navigation.expectCurrentUrl('/webexSiteSetting');
   });
 
