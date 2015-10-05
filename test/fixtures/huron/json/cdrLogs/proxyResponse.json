@@ -1,42 +1,4 @@
 {
-  "took": 66,
-  "timed_out": false,
-  "_shards": {
-    "total": 161,
-    "successful": 155,
-    "failed": 6,
-    "failures": [{
-      "index": ".kibana",
-      "shard": 0,
-      "status": 400,
-      "reason": "RemoteTransportException[[es-data-08-hptx1-internal][inet[/192.168.91.124:9300]][indices:data/read/search[phase/query]]]; nested: SearchParseException[[.kibana][0]: query[filtered(id:cdr.cdr (+id:cdr.cdr +(eventSource.hostname:\"sme 01\")) (+id:cdr.cdr +(eventSource.hostname:\"sme 02\")) (+id:cdr.cdr +(eventSource.hostname:\"cms 01\")) (+id:cdr.cdr +(eventSource.hostname:\"cms 02\")))->BooleanFilter(+cache(@timestamp:[1443591612000 TO 1443678012000]))],from[-1],size[1]: Parse Failure [Failed to parse source [{\"query\": {\"filtered\": {\"query\": {\"bool\": {\"should\": [{\"query_string\":{\"query\":\"id:CDR.CDR\"}},{\"query_string\":{\"query\":\"id:CDR.CDR AND eventSource.hostname:\\\"SME-01\\\"\"}},{\"query_string\":{\"query\":\"id:CDR.CDR AND eventSource.hostname:\\\"SME-02\\\"\"}},{\"query_string\":{\"query\":\"id:CDR.CDR AND eventSource.hostname:\\\"CMS-01\\\"\"}},{\"query_string\":{\"query\":\"id:CDR.CDR AND eventSource.hostname:\\\"CMS-02\\\"\"}}]}},\"filter\": {\"bool\": {\"must\": [{\"range\": {\"@timestamp\":{\"from\":1443591612000,\"to\":1443678012000}}}]}}} },\"size\": 1,\"sort\": [{\"@timestamp\": {\"order\": \"desc\"}}]}]]]; nested: SearchParseException[[.kibana][0]: query[filtered(id:cdr.cdr (+id:cdr.cdr +(eventSource.hostname:\"sme 01\")) (+id:cdr.cdr +(eventSource.hostname:\"sme 02\")) (+id:cdr.cdr +(eventSource.hostname:\"cms 01\")) (+id:cdr.cdr +(eventSource.hostname:\"cms 02\")))->BooleanFilter(+cache(@timestamp:[1443591612000 TO 1443678012000]))],from[-1],size[1]: Parse Failure [No mapping found for [@timestamp] in order to sort on]]; "
-    }, {
-      "index": "kibana-int",
-      "shard": 0,
-      "status": 400,
-      "reason": "RemoteTransportException[[es-data-06-hptx1-internal][inet[/192.168.91.122:9300]][indices:data/read/search[phase/query]]]; nested: SearchParseException[[kibana-int][0]: query[filtered(id:cdr.cdr (+id:cdr.cdr +(eventSource.hostname:\"sme 01\")) (+id:cdr.cdr +(eventSource.hostname:\"sme 02\")) (+id:cdr.cdr +(eventSource.hostname:\"cms 01\")) (+id:cdr.cdr +(eventSource.hostname:\"cms 02\")))->BooleanFilter(+cache(@timestamp:[1443591612000 TO 1443678012000]))],from[-1],size[1]: Parse Failure [Failed to parse source [{\"query\": {\"filtered\": {\"query\": {\"bool\": {\"should\": [{\"query_string\":{\"query\":\"id:CDR.CDR\"}},{\"query_string\":{\"query\":\"id:CDR.CDR AND eventSource.hostname:\\\"SME-01\\\"\"}},{\"query_string\":{\"query\":\"id:CDR.CDR AND eventSource.hostname:\\\"SME-02\\\"\"}},{\"query_string\":{\"query\":\"id:CDR.CDR AND eventSource.hostname:\\\"CMS-01\\\"\"}},{\"query_string\":{\"query\":\"id:CDR.CDR AND eventSource.hostname:\\\"CMS-02\\\"\"}}]}},\"filter\": {\"bool\": {\"must\": [{\"range\": {\"@timestamp\":{\"from\":1443591612000,\"to\":1443678012000}}}]}}} },\"size\": 1,\"sort\": [{\"@timestamp\": {\"order\": \"desc\"}}]}]]]; nested: SearchParseException[[kibana-int][0]: query[filtered(id:cdr.cdr (+id:cdr.cdr +(eventSource.hostname:\"sme 01\")) (+id:cdr.cdr +(eventSource.hostname:\"sme 02\")) (+id:cdr.cdr +(eventSource.hostname:\"cms 01\")) (+id:cdr.cdr +(eventSource.hostname:\"cms 02\")))->BooleanFilter(+cache(@timestamp:[1443591612000 TO 1443678012000]))],from[-1],size[1]: Parse Failure [No mapping found for [@timestamp] in order to sort on]]; "
-    }, {
-      "index": "kibana-int",
-      "shard": 1,
-      "status": 400,
-      "reason": "RemoteTransportException[[es-data-03-hptx1-internal][inet[/192.168.91.87:9300]][indices:data/read/search[phase/query]]]; nested: SearchParseException[[kibana-int][1]: query[filtered(id:cdr.cdr (+id:cdr.cdr +(eventSource.hostname:\"sme 01\")) (+id:cdr.cdr +(eventSource.hostname:\"sme 02\")) (+id:cdr.cdr +(eventSource.hostname:\"cms 01\")) (+id:cdr.cdr +(eventSource.hostname:\"cms 02\")))->BooleanFilter(+cache(@timestamp:[1443591612000 TO 1443678012000]))],from[-1],size[1]: Parse Failure [Failed to parse source [{\"query\": {\"filtered\": {\"query\": {\"bool\": {\"should\": [{\"query_string\":{\"query\":\"id:CDR.CDR\"}},{\"query_string\":{\"query\":\"id:CDR.CDR AND eventSource.hostname:\\\"SME-01\\\"\"}},{\"query_string\":{\"query\":\"id:CDR.CDR AND eventSource.hostname:\\\"SME-02\\\"\"}},{\"query_string\":{\"query\":\"id:CDR.CDR AND eventSource.hostname:\\\"CMS-01\\\"\"}},{\"query_string\":{\"query\":\"id:CDR.CDR AND eventSource.hostname:\\\"CMS-02\\\"\"}}]}},\"filter\": {\"bool\": {\"must\": [{\"range\": {\"@timestamp\":{\"from\":1443591612000,\"to\":1443678012000}}}]}}} },\"size\": 1,\"sort\": [{\"@timestamp\": {\"order\": \"desc\"}}]}]]]; nested: SearchParseException[[kibana-int][1]: query[filtered(id:cdr.cdr (+id:cdr.cdr +(eventSource.hostname:\"sme 01\")) (+id:cdr.cdr +(eventSource.hostname:\"sme 02\")) (+id:cdr.cdr +(eventSource.hostname:\"cms 01\")) (+id:cdr.cdr +(eventSource.hostname:\"cms 02\")))->BooleanFilter(+cache(@timestamp:[1443591612000 TO 1443678012000]))],from[-1],size[1]: Parse Failure [No mapping found for [@timestamp] in order to sort on]]; "
-    }, {
-      "index": "kibana-int",
-      "shard": 2,
-      "status": 400,
-      "reason": "RemoteTransportException[[es-data-05-hptx1-internal][inet[/192.168.91.84:9300]][indices:data/read/search[phase/query]]]; nested: SearchParseException[[kibana-int][2]: query[filtered(id:cdr.cdr (+id:cdr.cdr +(eventSource.hostname:\"sme 01\")) (+id:cdr.cdr +(eventSource.hostname:\"sme 02\")) (+id:cdr.cdr +(eventSource.hostname:\"cms 01\")) (+id:cdr.cdr +(eventSource.hostname:\"cms 02\")))->BooleanFilter(+cache(@timestamp:[1443591612000 TO 1443678012000]))],from[-1],size[1]: Parse Failure [Failed to parse source [{\"query\": {\"filtered\": {\"query\": {\"bool\": {\"should\": [{\"query_string\":{\"query\":\"id:CDR.CDR\"}},{\"query_string\":{\"query\":\"id:CDR.CDR AND eventSource.hostname:\\\"SME-01\\\"\"}},{\"query_string\":{\"query\":\"id:CDR.CDR AND eventSource.hostname:\\\"SME-02\\\"\"}},{\"query_string\":{\"query\":\"id:CDR.CDR AND eventSource.hostname:\\\"CMS-01\\\"\"}},{\"query_string\":{\"query\":\"id:CDR.CDR AND eventSource.hostname:\\\"CMS-02\\\"\"}}]}},\"filter\": {\"bool\": {\"must\": [{\"range\": {\"@timestamp\":{\"from\":1443591612000,\"to\":1443678012000}}}]}}} },\"size\": 1,\"sort\": [{\"@timestamp\": {\"order\": \"desc\"}}]}]]]; nested: SearchParseException[[kibana-int][2]: query[filtered(id:cdr.cdr (+id:cdr.cdr +(eventSource.hostname:\"sme 01\")) (+id:cdr.cdr +(eventSource.hostname:\"sme 02\")) (+id:cdr.cdr +(eventSource.hostname:\"cms 01\")) (+id:cdr.cdr +(eventSource.hostname:\"cms 02\")))->BooleanFilter(+cache(@timestamp:[1443591612000 TO 1443678012000]))],from[-1],size[1]: Parse Failure [No mapping found for [@timestamp] in order to sort on]]; "
-    }, {
-      "index": "kibana-int",
-      "shard": 3,
-      "status": 400,
-      "reason": "RemoteTransportException[[es-data-07-hptx1-internal][inet[/192.168.91.123:9300]][indices:data/read/search[phase/query]]]; nested: SearchParseException[[kibana-int][3]: query[filtered(id:cdr.cdr (+id:cdr.cdr +(eventSource.hostname:\"sme 01\")) (+id:cdr.cdr +(eventSource.hostname:\"sme 02\")) (+id:cdr.cdr +(eventSource.hostname:\"cms 01\")) (+id:cdr.cdr +(eventSource.hostname:\"cms 02\")))->BooleanFilter(+cache(@timestamp:[1443591612000 TO 1443678012000]))],from[-1],size[1]: Parse Failure [Failed to parse source [{\"query\": {\"filtered\": {\"query\": {\"bool\": {\"should\": [{\"query_string\":{\"query\":\"id:CDR.CDR\"}},{\"query_string\":{\"query\":\"id:CDR.CDR AND eventSource.hostname:\\\"SME-01\\\"\"}},{\"query_string\":{\"query\":\"id:CDR.CDR AND eventSource.hostname:\\\"SME-02\\\"\"}},{\"query_string\":{\"query\":\"id:CDR.CDR AND eventSource.hostname:\\\"CMS-01\\\"\"}},{\"query_string\":{\"query\":\"id:CDR.CDR AND eventSource.hostname:\\\"CMS-02\\\"\"}}]}},\"filter\": {\"bool\": {\"must\": [{\"range\": {\"@timestamp\":{\"from\":1443591612000,\"to\":1443678012000}}}]}}} },\"size\": 1,\"sort\": [{\"@timestamp\": {\"order\": \"desc\"}}]}]]]; nested: SearchParseException[[kibana-int][3]: query[filtered(id:cdr.cdr (+id:cdr.cdr +(eventSource.hostname:\"sme 01\")) (+id:cdr.cdr +(eventSource.hostname:\"sme 02\")) (+id:cdr.cdr +(eventSource.hostname:\"cms 01\")) (+id:cdr.cdr +(eventSource.hostname:\"cms 02\")))->BooleanFilter(+cache(@timestamp:[1443591612000 TO 1443678012000]))],from[-1],size[1]: Parse Failure [No mapping found for [@timestamp] in order to sort on]]; "
-    }, {
-      "index": "kibana-int",
-      "shard": 4,
-      "status": 400,
-      "reason": "RemoteTransportException[[es-data-01-hptx1-internal][inet[/192.168.91.85:9300]][indices:data/read/search[phase/query]]]; nested: SearchParseException[[kibana-int][4]: query[filtered(id:cdr.cdr (+id:cdr.cdr +(eventSource.hostname:\"sme 01\")) (+id:cdr.cdr +(eventSource.hostname:\"sme 02\")) (+id:cdr.cdr +(eventSource.hostname:\"cms 01\")) (+id:cdr.cdr +(eventSource.hostname:\"cms 02\")))->BooleanFilter(+cache(@timestamp:[1443591612000 TO 1443678012000]))],from[-1],size[1]: Parse Failure [Failed to parse source [{\"query\": {\"filtered\": {\"query\": {\"bool\": {\"should\": [{\"query_string\":{\"query\":\"id:CDR.CDR\"}},{\"query_string\":{\"query\":\"id:CDR.CDR AND eventSource.hostname:\\\"SME-01\\\"\"}},{\"query_string\":{\"query\":\"id:CDR.CDR AND eventSource.hostname:\\\"SME-02\\\"\"}},{\"query_string\":{\"query\":\"id:CDR.CDR AND eventSource.hostname:\\\"CMS-01\\\"\"}},{\"query_string\":{\"query\":\"id:CDR.CDR AND eventSource.hostname:\\\"CMS-02\\\"\"}}]}},\"filter\": {\"bool\": {\"must\": [{\"range\": {\"@timestamp\":{\"from\":1443591612000,\"to\":1443678012000}}}]}}} },\"size\": 1,\"sort\": [{\"@timestamp\": {\"order\": \"desc\"}}]}]]]; nested: SearchParseException[[kibana-int][4]: query[filtered(id:cdr.cdr (+id:cdr.cdr +(eventSource.hostname:\"sme 01\")) (+id:cdr.cdr +(eventSource.hostname:\"sme 02\")) (+id:cdr.cdr +(eventSource.hostname:\"cms 01\")) (+id:cdr.cdr +(eventSource.hostname:\"cms 02\")))->BooleanFilter(+cache(@timestamp:[1443591612000 TO 1443678012000]))],from[-1],size[1]: Parse Failure [No mapping found for [@timestamp] in order to sort on]]; "
-    }]
-  },
   "hits": {
     "total": 3788,
     "max_score": null,
@@ -184,8 +146,7 @@
         "hostAddress": "192.168.91.66",
         "portAddress": "52160",
         "indexName": "huron-event-192.168.91.66:52160-ccm"
-      },
-      "sort": [1443634746969]
+      }
     }]
   }
 }
