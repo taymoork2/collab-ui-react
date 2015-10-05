@@ -1913,7 +1913,9 @@
     "cloudExtensions": "Cloud Extensions",
     "enableService": "Activate service for this user",
     "status": "Status",
-    "host": "Host"
+    "host": "Host",
+    "sipUri": "Enterprise SIP URI",
+    "enterpriseDn": "Enterprise DN"
   },
   "validation": {
     "nonPrintable": "This entry contains nonprintable characters.",

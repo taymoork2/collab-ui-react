@@ -7,17 +7,23 @@ angular.module('Hercules')
       var isEntitled = function (ent) {
         return $stateParams.currentUser.entitlements && $stateParams.currentUser.entitlements.indexOf(ent) > -1 ? true : false;
       };
+
+      var sipUri = _.find($scope.currentUser.sipAddresses, {type: "enterprise"});
+      var enterpriseDn = _.find($scope.currentUser.phoneNumbers, {type: "work"});
+
       $scope.callServiceAware = {
         id: 'squared-fusion-uc',
         name: 'squaredFusionUC',
-        entitled: isEntitled('squared-fusion-uc')
+        entitled: isEntitled('squared-fusion-uc'),
+        sipUri: sipUri ? sipUri.value : null
       };
       $scope.callServiceConnect = {
         id: 'squared-fusion-ec',
         name: 'squaredFusionEC',
         entitled: isEntitled('squared-fusion-ec'),
         orgEntitled: Authinfo.isFusionEC(),
-        huronEntitled: isEntitled('ciscouc')
+        huronEntitled: isEntitled('ciscouc'),
+        enterpriseDn: enterpriseDn ? enterpriseDn.value : null
       };
 
       $scope.$watch('callServiceAware.entitled', function (newVal, oldVal) {
@@ -125,6 +131,22 @@ angular.module('Hercules')
 
       $scope.getStatus = function (status) {
         return USSService.decorateWithStatus(status);
+      };
+
+      var findEnterpriseSipUri = function () {
+        USSService.getStatusesForUser($scope.currentUser.id, function (err, activationStatus) {
+          if (!activationStatus || !activationStatus.userStatuses) {
+            return;
+          }
+          $scope.callServiceAware.status = _.find(activationStatus.userStatuses, function (status) {
+            return $scope.callServiceAware.id === status.serviceId;
+          });
+          if ($scope.callServiceAware.status && $scope.callServiceAware.status.connectorId) {
+            ClusterService.getConnector($scope.callServiceAware.status.connectorId).then(function (connector) {
+              $scope.callServiceAware.homedConnector = connector;
+            });
+          }
+        });
       };
     }
   ]);
