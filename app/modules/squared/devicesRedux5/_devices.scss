@@ -1,6 +1,33 @@
 .devices-redux5 {
   background-color: white !important;
 
+  .tag-container {
+    padding-top: 10px;
+    > span {
+      margin-right: 5px;
+      border-radius: 8px;
+      padding: 2px 4px 3px 10px;
+      background-color: $gray-lightest;
+    }
+    i:hover {
+      cursor: pointer;
+      color: $link-color;
+    }
+    input[type=text] {
+      border: 0;
+      margin: 0;
+      padding: 0;
+      display: inline;
+      border-bottom: 1px solid $brand-primary;
+      width: 100px;
+      border-radius: 0;
+      transition: initial;
+    }
+    a {
+      font-size: .7rem;
+    }
+  }
+
   .device-card {
 
     &:hover {
@@ -55,7 +82,7 @@
   }
 
   .hl {
-    background: $brand-success-light;
+    background: lighten($brand-success, 30%);
   }
 
   .needsActivation {
@@ -88,13 +115,22 @@
   }
 
   .details-pane {
-    padding-top: 40px;
+    padding-top: 20px;
+
+    strong {
+      padding-bottom: 30px;
+      display: block;
+    }
+    .para {
+      padding-bottom: 60px;
+      .row:first-child { 
+        padding-top: 0; 
+      }
+    }
+    .para > .row {
+    }
 
     .device-issues {
-      strong {
-        padding: 20px 0;
-        display: block;
-      }
       i {
         padding-right: 10px;
       }
