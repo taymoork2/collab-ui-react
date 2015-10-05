@@ -41,7 +41,7 @@
             return;
           }
           angular.forEach(logs, function (log) {
-            if (log.status == LOG_SUCCESS) {
+            if (log.status === LOG_SUCCESS) {
               addLogList(log);
               removePolling(log.trackingId);
             } else {
@@ -63,7 +63,7 @@
         var length = logEntry.events.length;
         for (var i = 0; i < length; i++) {
           var event = logEntry.events[i];
-          if (event.status == EVT_SUCCESS) {
+          if (event.status === EVT_SUCCESS) {
             log.uri = event.uri;
             log.name = event.date;
             dlc.logList.push(log);
@@ -79,7 +79,7 @@
       var length = dlc.logList.length;
       for (var i = 0; i < length; i++) {
         var log = dlc.logList[i];
-        if (log.trackingId == trackingId) {
+        if (log.trackingId === trackingId) {
           return log;
         }
       }
@@ -101,7 +101,7 @@
       //verify tracking Id is not already polling
       for (var i = 0; i < length; i++) {
         poll = pollingList[i];
-        if (poll.trackingId == trackingId) {
+        if (poll.trackingId === trackingId) {
           return;
         }
       }
@@ -122,7 +122,7 @@
       var poll;
       for (var i = 0; i < length; i++) {
         poll = pollingList[i];
-        if (poll.trackingId == trackingId) {
+        if (poll.trackingId === trackingId) {
           if (angular.isDefined(poll.intervalId)) {
             $interval.cancel(poll.intervalId);
           }
