@@ -23,6 +23,32 @@ angular.module('WebExReports').service('reportService', [
     webExXmlApiInfoObj,
     Notification
   ) {
+      var self = this;
+
+      var event_center_pageids = ["event_center_overview",
+        "event_center_site_summary",
+        "event_center_scheduled_events",
+        "event_center_held_events",
+        "event_center_report_template"
+      ];
+
+      var support_center_pageids = ["support_center_support_sessions",
+        "support_center_call_volume",
+        "support_center_csr_activity",
+        "support_center_url_referral",
+        "support_center_allocation_queue"
+      ];
+
+      var training_center_pageids = ["training_usage",
+        "registration",
+        "recording",
+        "coupon",
+        "attendee"
+      ];
+
+      var remote_access_pageids = ["remote_access_computer_usage",
+        "remote_access_csrs_usage", "remote_access_computer_tracking"
+      ];
 
     var UIsref = function (theUrl, rid, siteUrl) {
       this.siteUrl = siteUrl;
@@ -75,35 +101,6 @@ angular.module('WebExReports').service('reportService', [
         "storage_utilization"
       ];
 
-      var event_center_pageids = ["event_center_overview",
-        "event_center_site_summary",
-        "event_center_scheduled_events",
-        "event_center_held_events",
-        "event_center_report_template"
-      ];
-
-      var support_center_pageids = ["support_center_support_sessions",
-        "support_center_call_volume",
-        "support_center_csr_activity",
-        "support_center_url_referral",
-        "support_center_allocation_queue"
-      ];
-
-      var training_center_pageids = ["training_usage",
-        "registration",
-        "recording",
-        "coupon",
-        "attendee"
-      ];
-
-      /**
-      "remote_access_computer_usage": "Remote Access Computer Usage",
-          "remote_access_csrs_usage": "Remote Access Csrs Usage",
-          "remote_access_computer_tracking": "Remote Access Computer Tracking",
-      */
-      var remote_access_pageids = ["remote_access_computer_usage",
-        "remote_access_csrs_usage", "remote_access_computer_tracking"
-      ];
 
       //use the above 5 lists to gather all the UISrefs
       [
@@ -157,6 +154,18 @@ angular.module('WebExReports').service('reportService', [
           webExXmlApiInfoObj.webexAdminID = Authinfo.getPrimaryEmail();
           webExXmlApiInfoObj.webexAdminSessionTicket = sessionTicket;
 
+          var navInfoDef = self.getNaviationInfo();
+
+          navInfoDef.then(function (result) {
+            var resultString = JSON.stringify(result);
+            $log.log("Result is ----**** " + resultString);
+
+            var y = WebExUtilsFact.validateAdminPagesInfoXmlData(result.reportPagesInfoXml);
+
+            $log.log("Validated Result is ==== " + JSON.stringify(y.bodyJson));
+
+          });
+
           // what is purpose of this???
           //_this.getSiteSettingsInfo();
         }, // getSessionTicketSuccess()
@@ -174,5 +183,19 @@ angular.module('WebExReports').service('reportService', [
 
       return reportsObject;
     }; //end initReportsObject
+
+    this.getNaviationInfo = function () {
+      var reportPagesInfoXml = WebExXmlApiFact.getAdminPagesInfo(
+        false,
+        webExXmlApiInfoObj
+      );
+
+      return $q.all({
+        // siteInfoXml: siteInfoXml,
+        // meetingTypesInfoXml: meetingTypesInfoXml,
+        reportPagesInfoXml: reportPagesInfoXml
+      });
+    };
+
   } //end top level service function 
 ]);
