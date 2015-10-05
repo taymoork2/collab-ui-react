@@ -417,8 +417,8 @@ angular
           }
         })
         .state('user-overview.cloudExtension-squared-fusion-uc', {
-          templateUrl: 'modules/hercules/cloudExtensions/cloudExtensionPreview.tpl.html',
-          controller: 'CloudExtensionPreviewCtrl',
+          templateUrl: 'modules/hercules/cloudExtensions/callServicePreview.tpl.html',
+          controller: 'CallServicePreviewCtrl',
           data: {
             displayName: 'Call Service'
           },

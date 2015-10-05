@@ -794,17 +794,31 @@
       "squared-fusion-uc": "Call Service",
       "squared-fusion-cal": "Calendar Service",
       "squared-fusion-media": "Media Service",
-      "contact-center-context": "Context Center Service"
+      "contact-center-context": "Context Center Service",
+      "squared-fusion-ec": "Call Service Connect"
     },
     "serviceDescriptions": {
       "squared-fusion-uc": "Effortlessly share your desktop with Spark while you are on your work phone. Answer your work phone or call your coworkers from Spark.",
       "squared-fusion-cal": "Collaborate instantly. Just add @spark to an invitation to create a Spark room for your meeting. Add @webex to attach your WebEx CMR.",
       "squared-fusion-media": "",
-      "contact-center-context": ""
+      "contact-center-context": "",
+      "squared-fusion-ec": ""
     },
     "errors": {
       "enableServiceEntitlementFailure": "Failed! Your organization is missing entitlements that are needed to add the {{serviceName}}. Contact your support representative to fix the issue.",
       "enableServiceFailure": "Adding the {{serviceName}} failed."
+    },
+    "cloudExtensions": {
+      "serviceNames": {
+        "squared-fusion-uc": "Aware",
+        "squared-fusion-cal": "Calendar Service",
+        "squared-fusion-ec": "Connect"
+      },
+      "serviceDescriptions": {
+        "squared-fusion-uc": "Users can share their desktop in their Cisco Spark client while on their work phone.",
+        "squared-fusion-cal": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
+        "squared-fusion-ec": "Users can answer their work phone or call colleagues from Cisco Spark."
+      }
     }
   },
   "firstTimeWizard": {
