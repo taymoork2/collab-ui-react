@@ -48,6 +48,7 @@
       filterValue: 'partners',
       count: 0
     }];
+    $scope.dirsyncEnabled = false;
 
     // Functions
     $scope.setFilter = setFilter;
@@ -222,6 +223,7 @@
       Orgservice.getOrg(function (data, status) {
         if (data.success) {
           $scope.org = data;
+          $scope.dirsyncEnabled = data.dirsyncEnabled;
         } else {
           Log.debug('Get existing org failed. Status: ' + status);
         }

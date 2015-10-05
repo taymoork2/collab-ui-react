@@ -417,8 +417,8 @@ angular
           }
         })
         .state('user-overview.cloudExtension-squared-fusion-uc', {
-          templateUrl: 'modules/hercules/cloudExtensions/cloudExtensionPreview.tpl.html',
-          controller: 'CloudExtensionPreviewCtrl',
+          templateUrl: 'modules/hercules/cloudExtensions/callServicePreview.tpl.html',
+          controller: 'CallServicePreviewCtrl',
           data: {
             displayName: 'Call Service'
           },
@@ -1005,6 +1005,13 @@ angular
   .config(['$stateProvider',
     function ($stateProvider) {
       $stateProvider
+        .state('cdrsupport', {
+          url: '/cdrsupport',
+          templateUrl: 'modules/huron/cdrLogs/cdrlogs.tpl.html',
+          controller: 'CdrLogsCtrl',
+          controllerAs: 'cdr',
+          parent: 'main'
+        })
         .state('callroutingBase', {
           abstract: true,
           parent: 'main',
@@ -1295,17 +1302,17 @@ angular
           controller: 'CalendarController',
           controllerAs: 'calendar',
           parent: 'main',
-          url: '/services/calendar'
+          abstract: true
         })
         .state('calendar-service.list', {
+          url: '/services/calendar',
           views: {
             'fullPane': {
               templateUrl: 'modules/hercules/calendar-service/calendar-list.html',
               controller: 'CalendarController',
               controllerAs: 'calendar'
             }
-          },
-          url: '/list'
+          }
         })
         .state('calendar-service.list.details', {
           views: {
@@ -1327,7 +1334,7 @@ angular
           }
         })
         .state('calendar-service.about', {
-          url: '/about',
+          url: '/services/calendar/about',
           views: {
             'fullPane': {
               templateUrl: 'modules/hercules/calendar-service/about.html'
@@ -1335,12 +1342,39 @@ angular
           }
         })
         .state('calendar-service.settings', {
-          url: '/settings',
+          url: '/services/calendar/settings',
           views: {
             'fullPane': {
               controllerAs: 'calendarServiceSettings',
               controller: 'CalendarServiceSettingsController',
               templateUrl: 'modules/hercules/calendar-service/calendar-service-settings.html'
+            }
+          }
+        })
+        .state('call-service', {
+          templateUrl: 'modules/hercules/call-service/call.html',
+          controller: 'CallController',
+          controllerAs: 'call',
+          parent: 'main',
+          url: '/services/call'
+        })
+        .state('call-service.list', {
+          views: {
+            'fullPane': {
+              templateUrl: 'modules/hercules/call-service/call-list.html',
+              controller: 'CallController',
+              controllerAs: 'call'
+            }
+          },
+          url: '/list'
+        })
+        .state('call-service.settings', {
+          url: '/settings',
+          views: {
+            'fullPane': {
+              controllerAs: 'callServiceSettings',
+              controller: 'CallServiceSettingsController',
+              templateUrl: 'modules/hercules/call-service/call-service-settings.html'
             }
           }
         })
