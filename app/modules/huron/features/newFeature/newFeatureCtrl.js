@@ -8,6 +8,7 @@
   /* @ngInject */
   function NewFeatureCtrl($scope, $modal) {
     var vm = $scope;
+    vm.feature = '';
     vm.open = openModal;
 
     function openModal() {
@@ -17,6 +18,8 @@
       });
       modalInstance.result.then(function (selectedFeature) {
         $scope.feature = selectedFeature;
+      }, function () {
+        $scope.feature = '';
       });
     }
   }

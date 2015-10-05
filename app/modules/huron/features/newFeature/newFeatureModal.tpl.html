@@ -6,7 +6,7 @@
     <h5 class="modal-title" translate="huronDetails.newFeatureModal.title"></h5>
   </div>
   <div class="huron-new-feature-modal">
-    <button ng-repeat="feature in features" class="huron-feature-option" ng-click="ok(feature.code)">
+    <button ng-repeat="feature in features" class="huron-feature-option" ng-click="ok((feature.code | translate))">
 
       <div class="row medium-4">
         <span class="feature-icon-circle feature-icon-color-{{feature.code | translate}}">

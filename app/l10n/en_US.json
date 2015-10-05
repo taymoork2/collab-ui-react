@@ -2193,12 +2193,12 @@
     "settingsTitle": "Settings",
     "featuresTitle": "Features",
 
-    "featuresNotYetConfiguredPage" : {
+    "featuresNotYetConfiguredPage": {
       "nothingToSee": "Nothing here to see yet.",
       "letsCustomize": "Let's customize the calling experience"
     },
 
-    "newFeatureModal" : {
+    "newFeatureModal": {
       "title": "Create New Feature",
       "AA": {
         "code": "AA",
