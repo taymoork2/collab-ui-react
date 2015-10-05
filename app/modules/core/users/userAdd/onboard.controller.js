@@ -1585,7 +1585,7 @@ angular.module('Core')
       };
 
       // Wizard hook
-      $scope.csvProcessingNext = csvSave;
+      $scope.csvProcessingNext = bulkSave;
 
       $scope.initBulkMetric = initBulkMetric;
       $scope.sendBulkMetric = sendBulkMetric;
@@ -1613,7 +1613,7 @@ angular.module('Core')
         LogMetricsService.logMetrics('Finished bulk processing', eType, LogMetricsService.getEventAction('buttonClick'), 200, bulkStartLog, 1, data);
       }
 
-      function csvSave() {
+      function bulkSave() {
         saveDeferred = $q.defer();
         cancelDeferred = $q.defer();
 
@@ -1656,7 +1656,7 @@ angular.module('Core')
               });
             } else {
               for (var i = 0; i < params.length; i++) {
-                addUserErrorWithTrackingID(params.startIndex + i + 1, $translate.instant('firstTimeWizard.processCsvResponseError'));
+                addUserErrorWithTrackingID(params.startIndex + i + 1, $translate.instant('firstTimeWizard.processBulkResponseError'));
               }
             }
           } else {
@@ -1673,23 +1673,23 @@ angular.module('Core')
         function getErrorResponse(data, status) {
           var responseMessage;
           if (status === 400) {
-            responseMessage = $translate.instant('firstTimeWizard.csv400Error');
+            responseMessage = $translate.instant('firstTimeWizard.bulk400Error');
           } else if (status === 403 || status === 401) {
-            responseMessage = $translate.instant('firstTimeWizard.csv401And403Error');
+            responseMessage = $translate.instant('firstTimeWizard.bulk401And403Error');
           } else if (status === 404) {
-            responseMessage = $translate.instant('firstTimeWizard.csv404Error');
+            responseMessage = $translate.instant('firstTimeWizard.bulk404Error');
           } else if (status === 408 || status == 504) {
-            responseMessage = $translate.instant('firstTimeWizard.csv408Error');
+            responseMessage = $translate.instant('firstTimeWizard.bulk408Error');
           } else if (status === 409) {
-            responseMessage = $translate.instant('firstTimeWizard.csv409Error');
+            responseMessage = $translate.instant('firstTimeWizard.bulk409Error');
           } else if (status === 500) {
-            responseMessage = $translate.instant('firstTimeWizard.csv500Error');
+            responseMessage = $translate.instant('firstTimeWizard.bulk500Error');
           } else if (status === 502 || status === 503) {
-            responseMessage = $translate.instant('firstTimeWizard.csv502And503Error');
+            responseMessage = $translate.instant('firstTimeWizard.bulk502And503Error');
           } else if (status === -1) {
-            responseMessage = $translate.instant('firstTimeWizard.csvCancelledError');
+            responseMessage = $translate.instant('firstTimeWizard.bulkCancelledError');
           } else {
-            responseMessage = $translate.instant('firstTimeWizard.processCsvError');
+            responseMessage = $translate.instant('firstTimeWizard.processBulkError');
           }
 
           return responseMessage;
@@ -1814,6 +1814,65 @@ angular.module('Core')
       $scope.cancelProcessCsv = function () {
         cancelDeferred.resolve();
         saveDeferred.resolve();
+      };
+
+      // Bulk DirSync Onboarding logic
+      // Wizard hooks
+      $scope.dirsyncProcessingNext = bulkSave;
+
+      $scope.installConnectorNext = function () {
+        return FeatureToggleService.supportsDirSync().then(function (dirSyncEnabled) {
+          return $q(function (resolve, reject) {
+            if (dirSyncEnabled) {
+              // getStatus() is in the parent scope - AddUserCtrl
+              if (angular.isFunction($scope.getStatus)) {
+                $scope.getStatus();
+                resolve();
+              } else {
+                reject();
+              }
+            } else {
+              $scope.dirsyncStatus = $translate.instant('firstTimeWizard.syncNotConfigured');
+              $scope.numUsersInSync = '';
+              $scope.dirsyncUserCountText = '';
+              resolve();
+            }
+          });
+
+        });
+      };
+
+      $scope.syncStatusNext = function () {
+        var deferred = $q.defer();
+
+        if (!$scope.wizard.isLastStep()) {
+          // load synced users to userArray
+          // userList and useNameList are in the parent scope - AddUserCtrl
+          userArray = [];
+          if ($scope.userList && $scope.userList.length > 0) {
+            userArray = $scope.userList.map(function (user, idx) {
+              var userData = [];
+              userData.push($scope.useNameList[idx].firstName);
+              userData.push($scope.useNameList[idx].lastName);
+              userData.push(user.Name);
+              userData.push(user.Email);
+              userData.push(''); // No Directory Number
+              userData.push(''); // No Direct Line
+              return userData;
+            });
+          }
+
+          if (userArray.length === 0) {
+            Notification.error('firstTimeWizard.uploadDirSyncEmpty');
+            deferred.reject();
+          } else {
+            deferred.resolve();
+          }
+        } else {
+          deferred.resolve();
+        }
+
+        return deferred.promise;
       };
     }
   ]);

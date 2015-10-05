@@ -1,39 +1,13 @@
-.calendar-service{
-  .content{
-    background-color:$brand-white;
+.calendar-service {
+  .content {
+    background-color: $brand-white;
     margin-left: -0.5rem;
-    th{
-      font-weight:$font-weight-bold;
+    th {
+      font-weight: $font-weight-bold;
       background-color: $brand-white;
     }
-    h4{
-      margin-left:0.5rem;
-    }
-  }
-  .title-heading{
-    margin-right:1rem;
-  }
-  .page-header{
-    .menu{
-      position:absolute;
-      right:0px;
-      bottom:24px;
-      a{
-        color:$brand-default;
-        border-bottom: 2px solid $brand-default;
-        padding-bottom: 24px;
-        margin-right: 1rem;
-      }
-      a.active,a:hover{
-        color:$brand-primary;
-        border-bottom: 3px solid $brand-primary;
-        padding-bottom: 23px;
-        margin-right: 1rem;
-        box-shadow:none;
-      }
-    }
-    .page-title{
-      position:relative;
+    h4 {
+      margin-left: 0.5rem;
     }
   }
 }

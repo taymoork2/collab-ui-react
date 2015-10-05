@@ -5,10 +5,11 @@
     .service('FeatureToggleService', FeatureToggleService);
 
   /* @ngInject */
-  function FeatureToggleService($http, $q, Config, Authinfo) {
+  function FeatureToggleService($http, $q, Config, Authinfo, Orgservice) {
     var features = {
       pstnSetup: 'pstnSetup',
-      csvUpload: 'csvUpload'
+      csvUpload: 'csvUpload',
+      dirSync: 'dirSync'
     };
     var service = {
       getUrl: getUrl,
@@ -17,7 +18,8 @@
       getFeaturesForOrg: getFeaturesForOrg,
       supports: supports,
       supportsPstnSetup: supportsPstnSetup,
-      supportsCsvUpload: supportsCsvUpload
+      supportsCsvUpload: supportsCsvUpload,
+      supportsDirSync: supportsDirSync
     };
 
     return service;
@@ -83,6 +85,10 @@
           return resolve(Authinfo.getOrgId() === '666a7b2f-f82e-4582-9672-7f22829e728d');
         } else if (feature === features.csvUpload) {
           return resolve(true);
+        } else if (feature === features.dirSync) {
+          supportsDirSync().then(function (enabled) {
+            return resolve(enabled);
+          });
         }
         // else {
         //TODO first check user features
@@ -99,6 +105,20 @@
 
     function supportsCsvUpload() {
       return supports(features.csvUpload);
+    }
+
+    function supportsDirSync() {
+      var deferred = $q.defer();
+      Orgservice.getOrgCacheOption(function (data, status) {
+        if (data.success) {
+          deferred.resolve(data.dirsyncEnabled);
+        } else {
+          deferred.reject(status);
+        }
+      }, null, {
+        cache: true
+      });
+      return deferred.promise;
     }
   }
 })();
