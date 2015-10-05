@@ -955,6 +955,13 @@ angular
   .config(['$stateProvider',
     function ($stateProvider) {
       $stateProvider
+        .state('cdrsupport', {
+          url: '/cdrsupport',
+          templateUrl: 'modules/huron/cdrLogs/cdrlogs.tpl.html',
+          controller: 'CdrLogsCtrl',
+          controllerAs: 'cdr',
+          parent: 'main'
+        })
         .state('callroutingBase', {
           abstract: true,
           parent: 'main',
@@ -1291,6 +1298,33 @@ angular
               controllerAs: 'calendarServiceSettings',
               controller: 'CalendarServiceSettingsController',
               templateUrl: 'modules/hercules/calendar-service/calendar-service-settings.html'
+            }
+          }
+        })
+        .state('call-service', {
+          templateUrl: 'modules/hercules/call-service/call.html',
+          controller: 'CallController',
+          controllerAs: 'call',
+          parent: 'main',
+          url: '/services/call'
+        })
+        .state('call-service.list', {
+          views: {
+            'fullPane': {
+              templateUrl: 'modules/hercules/call-service/call-list.html',
+              controller: 'CallController',
+              controllerAs: 'call'
+            }
+          },
+          url: '/list'
+        })
+        .state('call-service.settings', {
+          url: '/settings',
+          views: {
+            'fullPane': {
+              controllerAs: 'callServiceSettings',
+              controller: 'CallServiceSettingsController',
+              templateUrl: 'modules/hercules/call-service/call-service-settings.html'
             }
           }
         })

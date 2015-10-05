@@ -474,20 +474,31 @@ td a {
   height: 30px;
 }
 
-#fileToUploadTextHolder,
+#fileToUploadTextHolder {
+  position: absolute;
+  opacity: 0.01;
+  -moz-opacity: 0.01;
+  filter: alpha(opacity=0);
+  display: inline;
+  cursor: pointer;
+  width: 162px;
+  height: 31px;
+}
+
 #fileToUploadBtnHolder {
   position: absolute;
   opacity: 0.01;
   -moz-opacity: 0.01;
   filter: alpha(opacity=0);
   display: inline;
-  top: 0px;
-  left: 0px;
-  cursor: default;
+  cursor: pointer;
+  width: 91px;
+  height: 35px;
+  z-index: 1;
 }
 
-#fileToUploadBtn {
-  cursor: default;
+input[type="file"]::-webkit-file-upload-button{
+  cursor: pointer;
 }
 
 .fileholder {
