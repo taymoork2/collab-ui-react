@@ -1,6 +1,9 @@
 .no-features-available {
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  overflow-y: auto;
+  flex: 1;
   height: 80vh;
   color: $gray-dark;
   background: $brand-white;
@@ -24,7 +27,7 @@
     margin: rem-calc(2px);
     border-style: hidden;
     width: rem-calc(250px);
-    height: rem-calc(220px);
+    height: vr-adjust(220px);
     padding: rem-calc(20px) rem-calc(10px) rem-calc(20px) rem-calc(20px);
     &:hover {
       background-color: $gray-light;
@@ -39,7 +42,7 @@
   background: $brand-white;
   border-radius: 50%;
   width: rem-calc(60px);
-  height: rem-calc(60px);
+  height: vr-adjust(60px);
   padding: rem-calc(10px);
 }
 
