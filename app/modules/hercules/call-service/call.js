@@ -7,7 +7,6 @@
       scope: $scope
     });
     var vm = this;
-    console.log("call")
     vm.clusters = ClusterService.getClusters();
 
     vm.hasNoCalendarConnectors = function (cluster) {
@@ -41,7 +40,6 @@
   /* @ngInject */
   function CallServiceSettingsController($stateParams, NotificationConfigService, MailValidatorService, XhrNotificationService) {
     var vm = this;
-    console.log("CallServiceSettingsController")
     vm.config = "";
   }
 
