@@ -237,12 +237,11 @@ angular.module('Core')
             desc: 'tabs.conferencingDesc',
             state: 'site-list',
             link: '#site-list'
-              // Temporarily commented out Numbers tab until ready to expose.
-              // }, {
-              //   title: 'tabs.huronLineDetailsTab',
-              //   desc: 'tabs.huronLineDetailsTabDesc',
-              //   state: 'hurondetails',
-              //   link: '#hurondetails'
+          }, {
+            title: 'tabs.huronLineDetailsTab',
+            desc: 'tabs.huronLineDetailsTabDesc',
+            state: 'hurondetails',
+            link: '#hurondetails'
           }, {
             title: 'tabs.fusionDetailsTab',
             desc: 'tabs.fusionDetailsTabDesc',
@@ -387,7 +386,8 @@ angular.module('Core')
           fusion_uc: 'squared-fusion-uc',
           fusion_cal: 'squared-fusion-cal',
           mediafusion: 'squared-fusion-media',
-          fusion_mgmt: 'squared-fusion-mgmt'
+          fusion_mgmt: 'squared-fusion-mgmt',
+          fusion_ec: 'squared-fusion-ec'
         },
 
         trials: {
@@ -845,7 +845,8 @@ angular.module('Core')
           'device-overview',
           'devices-redux2',
           'devices-redux3',
-          'devices-redux4'
+          'devices-redux4',
+          'devices-redux5'
         ],
         'squared-team-member': [
           'organization'
@@ -881,7 +882,8 @@ angular.module('Core')
           'devices',
           'fusion',
           'mediafusionconnector',
-          'callRouter'
+          'callRouter',
+          'hurondetails'
         ]
       };
 

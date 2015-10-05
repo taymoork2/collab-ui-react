@@ -22,7 +22,7 @@ angular.module('Hercules')
 
       var filterAllExceptManagement = function (services) {
         return _.filter(services, function (service) {
-          return service.connector_type != 'c_mgmt' && service.connector_type != 'mf_mgmt';
+          return service.connector_type != 'c_mgmt' && service.connector_type != 'mf_mgmt' && service.service_id != 'squared-fusion-ec';
         });
       };
 

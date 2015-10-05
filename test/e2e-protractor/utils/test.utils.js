@@ -13,6 +13,7 @@ exports.resolvePath = function (filePath) {
 };
 
 exports.searchField = element(by.id('searchFilter'));
+exports.searchbox = element(by.css('.searchbox'));
 
 exports.randomId = function () {
   return (Math.random() + 1).toString(36).slice(2, 11);
@@ -442,6 +443,7 @@ exports.findDirectoryNumber = function (message, lineNumber) {
 };
 
 exports.search = function (query) {
+  this.click(this.searchbox);
   this.clear(this.searchField);
   if (query) {
     this.sendKeys(this.searchField, query);
@@ -452,12 +454,13 @@ exports.search = function (query) {
 exports.searchForSingleResult = function (query) {
   function logAndWait() {
     log('Waiting for a single search result');
-    return EC.textToBePresentInElement(element(by.css('.searchinput span')), "1")().thenCatch(function () {
+    return EC.textToBePresentInElement(element(by.css('.searchfilter li:first-child .count')), "1")().thenCatch(function () {
       // handle a possible stale element
       return false;
     });;
   }
   this.expectIsNotDisplayed(element(by.css('.icon-spinner')));
+  this.click(this.searchbox);
   this.sendKeys(this.searchField, query);
   browser.wait(logAndWait, TIMEOUT, 'Waiting for a single search result');
   this.expectIsDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', query)));

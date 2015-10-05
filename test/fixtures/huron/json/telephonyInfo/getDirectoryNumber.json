@@ -1,0 +1,38 @@
+{
+  "uuid": "785da217-9597-427b-b8fe-4e31f56928d1",
+  "pattern": "1072",
+  "hasCustomAlertingName": "false",
+  "alertingName": "currentUser1@gmail.com",
+  "alternateNumbers": {
+    "enterpriseNumber": {
+      "pattern": "81001110",
+      "uuid": "271a303e-81c8-489d-9607-18d9ebc0c726"
+    },
+    "externalNumber": {
+      "pattern": "+15556661110",
+      "uuid": "799ad842-b526-4a55-a6eb-8270f300a110"
+    }
+  },
+  "callForwardAll": {
+    "voicemailEnabled": "true",
+    "destination": null
+  },
+  "callForwardBusy": {
+    "intVoiceMailEnabled": "true",
+    "voicemailEnabled": "true",
+    "intDestination": null,
+    "destination": null
+  },
+  "callForwardNoAnswer": {
+    "intVoiceMailEnabled": "true",
+    "voicemailEnabled": "true",
+    "intDestination": null,
+    "destination": null
+  },
+  "callForwardNotRegistered": {
+    "intVoiceMailEnabled": "true",
+    "voicemailEnabled": "true",
+    "intDestination": null,
+    "destination": null
+  }
+}

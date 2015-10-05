@@ -14,22 +14,12 @@ describe('Service: AAUiModelService', function () {
 
   });
 
-  describe('getCeMenus', function () {
-    it('should return the same model object that was set earlier using setAAUiModel', function () {
-      var aaUiModel = {};
-      AAUiModelService.setCeMenus('openhour', aaUiModel);
+  describe('getUiModel', function () {
+    it('should return the same object that was stored into the model', function () {
+      AAUiModelService.initUiModel();
+      var aaUiModel = AAUiModelService.getUiModel();
       aaUiModel.ui = {};
-      var aaUiModel2 = AAUiModelService.getCeMenus('openhour');
-      expect(angular.isDefined(aaUiModel2.ui)).toEqual(true);
-    });
-  });
-
-  describe('getCeInfo', function () {
-    it('should return the same model object that was set earlier using setCeInfo', function () {
-      var aaUiModel = {};
-      AAUiModelService.setCeInfo(aaUiModel);
-      aaUiModel.ui = {};
-      var aaUiModel2 = AAUiModelService.getCeInfo();
+      var aaUiModel2 = AAUiModelService.getUiModel();
       expect(angular.isDefined(aaUiModel2.ui)).toEqual(true);
     });
   });

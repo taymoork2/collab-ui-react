@@ -290,6 +290,13 @@ angular
             }
           }
         })
+        .state('users.convert.services.dn', {
+          views: {
+            'usersConvert@users.convert': {
+              templateUrl: 'modules/huron/users/assignDnAndDirectLinesModal.tpl.html'
+            }
+          }
+        })
         .state('editService', {
           parent: 'modalLarge',
           views: {
@@ -410,8 +417,8 @@ angular
           }
         })
         .state('user-overview.cloudExtension-squared-fusion-uc', {
-          templateUrl: 'modules/hercules/cloudExtensions/cloudExtensionPreview.tpl.html',
-          controller: 'CloudExtensionPreviewCtrl',
+          templateUrl: 'modules/hercules/cloudExtensions/callServicePreview.tpl.html',
+          controller: 'CallServicePreviewCtrl',
           data: {
             displayName: 'Call Service'
           },
@@ -710,9 +717,9 @@ angular
         .state('devices-redux4.details', {
           url: '/details',
           views: {
-            'leftPanel': {
-              templateUrl: 'modules/squared/devicesRedux4/list.html'
-            },
+            // 'leftPanel': {
+            //   templateUrl: 'modules/squared/devicesRedux4/list.html'
+            // },
             'rightPanel': {
               controllerAs: 'deviceDetails',
               controller: 'DevicesReduxDetailsCtrl4',
@@ -723,10 +730,38 @@ angular
             device: null
           }
         })
-
-      /*
-        end: devices redux prototypes
-      */
+        .state('devices-redux5', {
+          abstract: true,
+          url: '/devices-redux5',
+          templateUrl: 'modules/squared/devicesRedux5/devices.html',
+          controller: 'DevicesReduxCtrl5',
+          controllerAs: 'devices',
+          parent: 'main-redux'
+        })
+        .state('devices-redux5.search', {
+          url: '/search',
+          views: {
+            'leftPanel': {
+              templateUrl: 'modules/squared/devicesRedux5/list.html'
+            }
+          }
+        })
+        .state('devices-redux5.details', {
+          url: '/details',
+          views: {
+            'leftPanel': {
+              controllerAs: 'deviceDetails',
+              controller: 'DevicesReduxDetailsCtrl5',
+              templateUrl: 'modules/squared/devicesRedux5/details.html'
+            }
+          },
+          params: {
+            device: null
+          }
+        })
+        /*
+          end: devices redux prototypes
+        */
 
       .state('partneroverview', {
           parent: 'partner',
@@ -935,28 +970,6 @@ angular
             'nav': {
               templateUrl: 'modules/huron/callRouting/callRoutingNav.tpl.html',
               controller: 'CallRoutingNavCtrl',
-              controllerAs: 'nav'
-            },
-            'main': {
-              template: '<div ui-view></div>'
-            }
-          }
-        })
-        .state('callrouterBase', {
-          abstract: true,
-          parent: 'main',
-          templateUrl: 'modules/huron/callRouter/callRouter.tpl.html'
-        })
-        .state('callRouter', {
-          url: '/callRouter',
-          parent: 'callrouterBase',
-          views: {
-            'header': {
-              templateUrl: 'modules/huron/callRouter/callRouterHeader.tpl.html'
-            },
-            'nav': {
-              templateUrl: 'modules/huron/callRouter/companyNumber.tpl.html',
-              controller: 'CallRouterCtrl',
               controllerAs: 'nav'
             },
             'main': {
@@ -1203,9 +1216,10 @@ angular
           controllerAs: 'linesListCtrl'
         })
         .state('huronsettings', {
-          url: '/settings',
           parent: 'hurondetails',
-          template: '<div>Under Construction</div>'
+          templateUrl: 'modules/huron/callRouter/companyNumber.tpl.html',
+          controller: 'CallRouterCtrl',
+          controllerAs: 'callRouterCtrl'
         })
         .state('huronfeatures', {
           url: '/features',
@@ -1231,12 +1245,19 @@ angular
           controller: 'CalendarController',
           controllerAs: 'calendar',
           parent: 'main',
-          url: '/services/calendar'
+          abstract: true
         })
         .state('calendar-service.list', {
-          url: '/list'
+          url: '/services/calendar',
+          views: {
+            'fullPane': {
+              templateUrl: 'modules/hercules/calendar-service/calendar-list.html',
+              controller: 'CalendarController',
+              controllerAs: 'calendar'
+            }
+          }
         })
-        .state('calendar-service.details', {
+        .state('calendar-service.list.details', {
           views: {
             'rightPane': {
               controllerAs: 'calendarDetails',
@@ -1248,20 +1269,15 @@ angular
             cluster: null
           }
         })
-        .state('calendar-service.calendarClusterSettings', {
+        .state('calendar-service.list.details.cluster-settings', {
           views: {
-            'rightPane': {
-              controllerAs: 'calendarClusterSettings',
-              controller: 'CalendarClusterSettingsController',
-              templateUrl: 'modules/hercules/calendar-service/calendar-cluster-settings.html'
+            'details-pane': {
+              templateUrl: 'modules/hercules/calendar-service/cluster-settings.html'
             }
-          },
-          params: {
-            cluster: null
           }
         })
         .state('calendar-service.about', {
-          url: '/about',
+          url: '/services/calendar/about',
           views: {
             'fullPane': {
               templateUrl: 'modules/hercules/calendar-service/about.html'
@@ -1269,7 +1285,7 @@ angular
           }
         })
         .state('calendar-service.settings', {
-          url: '/settings',
+          url: '/services/calendar/settings',
           views: {
             'fullPane': {
               controllerAs: 'calendarServiceSettings',
@@ -1278,15 +1294,8 @@ angular
             }
           }
         })
-        .state('calendar-service.resources', {
-          url: '/resources',
-          views: {
-            'fullPane': {
-              templateUrl: 'modules/hercules/calendar-service/resources.html'
-            }
-          }
-        })
-        .state('cluster-details', {
+
+      .state('cluster-details', {
           parent: 'sidepanel',
           views: {
             'sidepanel@': {

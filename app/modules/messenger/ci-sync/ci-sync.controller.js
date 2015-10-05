@@ -11,6 +11,9 @@
     var vm = this;
 
     var translatePrefix = 'messengerCiSync.';
+    var fullAdminRole = 'id_full_admin';
+    var customerSuccessRole = 'webex-messenger.customer_success';
+    var requiredEntitlements = ['webex-squared', 'webex-messenger'];
 
     vm.dataStates = Object.freeze({
       loading: 1,
@@ -31,13 +34,13 @@
 
     vm.adminTypes = Object.freeze({
       org: {
-        label: 'ORG Admin'
+        label: $translate.instant(translatePrefix + 'labelOrgAdmin')
       },
       ops: {
-        label: 'OPS Admin'
+        label: $translate.instant(translatePrefix + 'labelOpsAdmin')
       },
       unknown: {
-        label: 'Unauthorized User'
+        label: $translate.instant(translatePrefix + 'labelUnauthorizedUser')
       }
     });
 
@@ -71,7 +74,7 @@
       type: 'input',
       templateOptions: {
         type: '',
-        label: 'Messenger Organization Name',
+        label: $translate.instant(translatePrefix + 'labelOrgName'),
         required: false,
         disabled: true,
         placeholder: ''
@@ -81,7 +84,7 @@
       type: 'input',
       templateOptions: {
         type: '',
-        label: 'Messenger Organization ID',
+        label: $translate.instant(translatePrefix + 'labelOrgId'),
         required: false,
         disabled: true,
         placeholder: ''
@@ -91,7 +94,7 @@
       type: 'input',
       templateOptions: {
         type: 'input',
-        label: 'CI Link Date',
+        label: $translate.instant(translatePrefix + 'labelCILinkDate'),
         required: false,
         disabled: true,
         placeholder: ''
@@ -150,15 +153,15 @@
       // All users must meet these requirements at minimum:
       // -CI Roles: contains id_full_admin
       // -CI Entitlements: webex-squared AND webex-messenger
-      CiService.hasEntitlements(['webex-squared', 'webex-messenger'])
+      CiService.hasEntitlements(requiredEntitlements)
         .then(function (has) {
           if (has) {
             // Must have full admin role
-            CiService.hasRole('id_full_admin')
+            CiService.hasRole(fullAdminRole)
               .then(function (has) {
                 if (has) {
                   // Check if Customer Success admin
-                  if (CiService.hasRole('webex-messenger.customer_success')) {
+                  if (CiService.hasRole(customerSuccessRole)) {
                     setOpsAdmin();
                   } else {
                     setOrgAdmin();
@@ -191,7 +194,7 @@
           vm.dataStatus = vm.dataStates.error;
           vm.errorMsg = baseError;
           Log.error(fullError);
-          Notification.error(fullError);
+          Notification.error($translate.instant(translatePrefix + 'getFailed'));
         });
     }
 
@@ -209,18 +212,16 @@
           vm.dataStatus = vm.dataStates.error;
           vm.errorMsg = baseError;
           Log.error(fullError);
-          Notification.error(fullError);
+          Notification.error($translate.instant(translatePrefix + 'refreshFailed'));
         });
     }
 
     function setOrgAdmin() {
       vm.adminType = vm.adminTypes.org;
-      Notification.success('User set as ORG Admin');
     }
 
     function setOpsAdmin() {
       vm.adminType = vm.adminTypes.ops;
-      Notification.success('User set as OPS Admin');
     }
 
     function patchSync() {
@@ -229,9 +230,9 @@
         // SyncService must turn the syncing boolean into the full mode
         SyncService.patchSync(vm.syncInfo.isSyncEnabled, vm.syncInfo.isAuthRedirect)
           .then(function (successMsg) {
-            Notification.success('CI Sync updated');
+            Notification.success($translate.instant(translatePrefix + 'patchSuccessful'));
           }, function (errorMsg) {
-            Notification.error('Failed updating CI Sync: ' + errorMsg);
+            Notification.error($translate.instant(translatePrefix + 'patchFailed'));
           });
       }
     }

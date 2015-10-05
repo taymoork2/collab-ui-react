@@ -1,5 +1,5 @@
 .partner-profile {
-  padding-left: 40px; 
+  padding-left: 40px;
   .partner-page-title {
     margin-bottom: 30px;
   }
@@ -145,5 +145,28 @@
 
   .cisco-rep-panel {
     margin-bottom: 40px;
+  }
+
+  .drop-box {
+      padding: 5px;
+      height: 150px;
+      background-color: $brand-white;
+      border: 1px solid $gray-light;
+      border-radius: 3px;
+      color: $gray-light;
+
+      &.dragover {
+        border-color: $brand-primary;
+      }
+
+      &.dragover-error {
+        border-color: $brand-danger;
+      }
+    }
+
+  .thumbnail {
+    float: left;
+    max-width: 50%;
+    max-height: 100%;
   }
 }

@@ -371,6 +371,9 @@ angular.module('Core')
         isFusionCal: function () {
           return isEntitled(Config.entitlements.fusion_cal);
         },
+        isFusionEC: function () {
+          return isEntitled(Config.entitlements.fusion_ec);
+        },
         hasAccount: function () {
           return authData.hasAccount;
         },

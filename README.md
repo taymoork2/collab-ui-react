@@ -21,7 +21,7 @@ Technology
 * Build process is built and run with Gulp.js
 
 Contribute
-----------
+-----------
 
 We use pull requests, and consequentially the forking model.  To make a contribution, you will need to fork this repository, make some changes, and then create a pull request with your changes.
 
@@ -32,6 +32,9 @@ We use pull requests, and consequentially the forking model.  To make a contribu
  - `git remote add upstream git@sqbu-github.cisco.com:WebExSquared/wx2-admin-web-client`
  - `git remote add jenkins ssh://username@sqbu-jenkins.cisco.com:2022/wx2-admin-web-client`
 
+**Note*: If you get a Permission Denied (publickey) then follow these directions in Generating SSH Keys
+ `https://help.github.com/articles/generating-ssh-keys/`
+ 
 When you're making changes to your fork, you'll push to your fork with `git push origin master`, and your pull request will get automatically updated with the latest pushes you've made.
 
 When your pull request gets approved by someone, this means you're able to push to jenkins with `git push jenkins master`. Clicking the "Merge" button will not merge into master since we used gated builds. This means that Jenkins is the only one who is capable of pushing to master to ensure our repository stays clean.
@@ -76,7 +79,7 @@ Setup the environment (If necessary)
 ------------------------------------
 
 * Run `./setup.sh` (found in the root directory) or, if it fails:
-* install node.js version <= v0.10.28 (for npm): http://nodejs.org/download/
+  * Install node.js version <= v0.12.x (for npm): http://nodejs.org/download/
 * Run package managers in the cloned project to pull dependencies:
 * `npm install && bower install`
 * Launch the app: `gulp serve`

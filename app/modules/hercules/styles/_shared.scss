@@ -1,0 +1,41 @@
+.hercules {
+
+  background-color: $brand-white;
+
+  .page-header {
+    .title-heading {
+      margin-right: 1rem;
+    }
+    .menu {
+      position: absolute;
+      right: 0;
+      bottom: 24px;
+      a {
+        color: $brand-default;
+        border-bottom: 2px solid $brand-default;
+        padding-bottom: 24px;
+        margin-right: 1rem;
+      }
+      a.active, a:hover {
+        color: $brand-primary;
+        border-bottom: 3px solid $brand-primary;
+        padding-bottom: 23px;
+        margin-right: 1rem;
+        box-shadow: none;
+      }
+    }
+    .page-title {
+      position: relative;
+    }
+  }
+}
+
+/**
+ Work around the extra col-md-12 class in views/main.tpl.html
+ */
+.hercules {
+  margin: {
+    right: -0.5rem;
+    left: -0.5rem;
+  };
+}

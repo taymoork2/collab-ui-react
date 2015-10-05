@@ -206,28 +206,33 @@ angular.module('Mediafusion')
       }
 
       var convertClusters = function (data) {
-        var converted = _.map(data, function (origCluster) {
-          var cluster = _.cloneDeep(origCluster);
-          _.each(cluster.services, function (service) {
-            updateServiceStatus(service, cluster);
-            updateSoftwareUpgradeAvailableDetails(service, cluster);
-            checkSoftwareUpgradePending(service, cluster);
-          });
-          updateClusterNameIfNotSet(cluster);
-          updateHostStatus(cluster);
+        return _.chain(data)
+          .filter(function (cluster) {
+            return cluster.cluster_type == 'mf_mgmt';
+          })
+          .map(function (cluster) {
+            _.each(cluster.services, function (service) {
+              updateServiceStatus(service, cluster);
+              updateSoftwareUpgradeAvailableDetails(service, cluster);
+              checkSoftwareUpgradePending(service, cluster);
+            });
+            updateClusterNameIfNotSet(cluster);
+            updateHostStatus(cluster);
 
-          cluster.services = _.sortBy(cluster.services, 'display_name');
-          cluster.services = _.sortBy(cluster.services, function (obj) {
-            if (obj.status == 'needs_attention') return 1;
-            if (obj.status == 'disabled') return 3;
-            return 2;
-          });
+            cluster.services = _.sortBy(cluster.services, 'display_name');
+            cluster.services = _.sortBy(cluster.services, function (obj) {
+              if (obj.status == 'needs_attention') return 1;
+              if (obj.status == 'disabled') return 3;
+              return 2;
+            });
 
-          return cluster;
-        });
-        return _.sortBy(converted, function (obj) {
-          return !obj.needs_attention;
-        });
+            return cluster;
+          })
+          .indexBy('id')
+          .sortBy(function (obj) {
+            return obj.needs_attention;
+          })
+          .value();
       };
 
       return {

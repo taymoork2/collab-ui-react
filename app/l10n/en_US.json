@@ -83,7 +83,8 @@
     "notApplicable": "N/A",
     "noExtensionInPool": "No Extension in pool.",
     "noExternalNumberAvail": "No DID available for mapping.",
-    "noExtMappingAvail": "No DID mapping available."
+    "noExtMappingAvail": "No DID mapping available.",
+    "tooManyResultsError": "Search returned too many results.  Please narrow your search criteria."
   },
   "groupsPage": {
     "manageGroups": "Groups",
@@ -189,8 +190,8 @@
     "addOrganizationTabDesc": "Add a new organization to this account",
     "fusionDetailsTab": "Connector Management",
     "fusionDetailsTabDesc": "Connector Management",
-    "huronLineDetailsTab": "Huron",
-    "huronLineDetailsTabDesc": "Huron Details",
+    "huronLineDetailsTab": "Communication",
+    "huronLineDetailsTabDesc": "Communication Details",
     "MediafusionDetailsTab": "Media Service Management",
     "MediafusionDetailsTabDesc": "Media Service Management",
     "callRoutingTab": "Call Routing",
@@ -497,6 +498,8 @@
     "invalidMaxLength": "This entry is too long. Maximum length is {{max}}.",
     "on": "On",
     "off": "Off",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
     "yes": "Yes",
     "no": "No",
     "all": "All",
@@ -668,7 +671,7 @@
     "domain": "Domain",
     "defaultPlaceholder": "Default",
     "domainDesc": "Identify the Active Directory domain you will be syncing.",
-    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Download </a> and Install the Cisco Directory Connector in your enterprise.",
+    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Download </a> and Install the Cisco Cloud Connector in your enterprise.",
     "installStep2": "2. Configure the Active Directory synchronization agreement.",
     "installStep3": "3. Test the synchronization agreement.",
     "nextSteps": "Press the Next button when you're ready to verify that identity information is being synchronized.",
@@ -753,6 +756,17 @@
       "status": "Status",
       "alarms": "Alarms"
     },
+    "clusters": {
+      "deregister": "Deregister Cluster",
+      "deregisterCancel": "Cancel",
+      "deregisterAreYouSure": "Are you sure you want to deregister {{clusterName}}?",
+      "deregisterCausesHeader": "When you deregister this cluster:",
+      "deregisterCausesListItem1": "The Calendar Service will be turned off for all users homed on this cluster.",
+      "deregisterCausesListItem2": "All the configuration in the Cloud and on the Expressway cluster will be removed.",
+      "deregisterCausesListItem3": "Users on this cluster will be moved to another cluster, if possible.",
+      "deregisterErrorGeneric": "Unable to deregister cluster. {{errorMessage}}",
+      "deregisterErrorNoDeregisterSupport": "Unable to deregister cluster. The current cluster software does not support cluster deregistration."
+    },
     "status": {
       "unknown": "Status unknown",
       "not_configured": "Not configured",
@@ -782,17 +796,31 @@
       "squared-fusion-uc": "Call Service",
       "squared-fusion-cal": "Calendar Service",
       "squared-fusion-media": "Media Service",
-      "contact-center-context": "Context Center Service"
+      "contact-center-context": "Context Center Service",
+      "squared-fusion-ec": "Call Service Connect"
     },
     "serviceDescriptions": {
       "squared-fusion-uc": "Effortlessly share your desktop with Spark while you are on your work phone. Answer your work phone or call your coworkers from Spark.",
       "squared-fusion-cal": "Collaborate instantly. Just add @spark to an invitation to create a Spark room for your meeting. Add @webex to attach your WebEx CMR.",
       "squared-fusion-media": "",
-      "contact-center-context": ""
+      "contact-center-context": "",
+      "squared-fusion-ec": ""
     },
     "errors": {
       "enableServiceEntitlementFailure": "Failed! Your organization is missing entitlements that are needed to add the {{serviceName}}. Contact your support representative to fix the issue.",
       "enableServiceFailure": "Adding the {{serviceName}} failed."
+    },
+    "cloudExtensions": {
+      "serviceNames": {
+        "squared-fusion-uc": "Aware",
+        "squared-fusion-cal": "Calendar Service",
+        "squared-fusion-ec": "Connect"
+      },
+      "serviceDescriptions": {
+        "squared-fusion-uc": "Users can share their desktop in their Cisco Spark client while on their work phone.",
+        "squared-fusion-cal": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
+        "squared-fusion-ec": "Users can answer their work phone or call colleagues from Cisco Spark."
+      }
     }
   },
   "firstTimeWizard": {
@@ -809,7 +837,7 @@
     "uploadCsvEmpty": "Please upload a valid CSV.",
     "csvFileTypeError": "Please upload a valid file type.",
     "csvMaxSizeError": "File size is above the maximum of 10 MB.",
-    "csvMaxLinesError": "The CSV contains more users than the maximum allowed. Please reduce the number of users to 100 or less and upload the CSV again.",
+    "csvMaxLinesError": "The CSV contains more users than the maximum allowed. Please reduce the number of users to 250 or less and upload the CSV again.",
     "processCsvStep": "Processing CSV",
     "processing": "Processing...",
     "timeElapsed": "Time Elapsed:",
@@ -818,23 +846,31 @@
     "newUsers": "New users",
     "existingUsers": "Updated users",
     "errorUsers": "Errors",
-    "fixCsvErrors": "Fix Errors and Reload CSV",
+    "fixBulkErrors": "Fix Errors and reload users",
     "totalProcessed": "Total records processed",
     "addMoreUsers": "Add more users",
     "skipAndFinish": "Skip Errors and Finish",
-    "csvInvalidRow": "Entry does not contain 6 columns",
-    "csvDuplicateEmail": "Unable to process duplicate email address",
-    "processCsvResponseError": "Error reading response",
-    "processCsvError": "Error processing user",
-    "csv400Error": "Unidentified error in the csv. Please verify the file and try again.",
-    "csv401And403Error": "Customer is not authorized to add or update this user.",
-    "csv404Error": "Server is unable to respond at this time. Please try again at a later time.",
-    "csv408Error": "Request timed out while waiting for a response. Please try again at a later time.",
-    "csv409Error": "Request failed due to a processing conflict. Please verify the csv and try again.",
-    "csv500Error": "Internal server error.",
-    "csv502And503Error": "Server is temporarily unavailable. Please try again at a later time.",
+    "csvInvalidRow": "Row contains an incorrect number of columns.  Please verify the row contains six columns and try again.",
+    "csvRequiredEmail": "The \"User ID/Email\" field is required. Please provide a valid email address and try again.",
+    "csvDuplicateEmail": "Skipped due to duplicate email address.",
+    "processBulkResponseError": "An error has occurred while reading the response. Please try again.",
+    "processBulkError": "Unidentified error while processing the user. Please try again.",
+    "bulk400Error": "Unidentified error in the user list. Please verify the user list and try again.",
+    "bulk401And403Error": "Customer is not authorized to add or update this user.",
+    "bulk404Error": "Server is unable to respond at this time. Please try again at a later time.",
+    "bulk408Error": "Request timed out while waiting for a response. Please try again at a later time.",
+    "bulk409Error": "Request failed due to a processing conflict. Please verify the user list and try again.",
+    "bulk500Error": "Request failed due to a server error. Please try again.",
+    "bulk502And503Error": "Server is temporarily unavailable. Please try again at a later time.",
+    "bulkCancelledError": "Skipped due to canceled request.",
     "resultRowHeader": "Row Number",
     "resultErrorHeader": "Error Message",
+    "uploadDirSyncEmpty": "Please upload users from the directory server.",
+    "dirsyncMaxLinesError": "The directory contains more users than the maximum allowed. Please reduce the number of users to 250 or less.",
+    "dirSyncStatus": "Sync Status",
+    "processDirSyncStep": "Processing Directory Sync",
+    "dirSyncResultStep": "Directory Sync Result",
+    "runDirSyncAgain": "Sync Again",
     "advanced": "Advanced",
     "simpleSub": "All you need are users' email addresses.",
     "uploadSub": "Best method for adding many users at the same time.",
@@ -899,11 +935,12 @@
     "domain": "Domain",
     "defaultPlaceholder": "Default",
     "domainDesc": "Identify the Active Directory domain you will be syncing.",
-    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Download </a> and Install the Cisco Directory Connector in your enterprise.",
+    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Download </a> and Install the Cisco Cloud Connector in your enterprise.",
     "installStep2": "2. Configure the Active Directory synchronization agreement.",
     "installStep3": "3. Test the synchronization agreement.",
     "nextSteps": "Press the Next button when you're ready to verify that identity information is being synchronized.",
     "results": "Results",
+    "syncNotConfigured": "Directory Sync is not enabled. See previous step for setup instructions.",
     "syncAgreementText": "users in sync agreement",
     "cloudSipSuccess": "Successfully added Cloud SIP URI.",
     "cloudSipError": "Failed to add Cloud SIP URI.",
@@ -1043,7 +1080,6 @@
     "description": "Description",
     "descriptionPlaceholder": "Enter Description",
     "action": "Action",
-    "actionPlaceholder": "Choose Action",
     "numberPlaceholder": "Enter Number",
     "key": "Key",
     "keyPlaceholder": "Choose Key",
@@ -1097,17 +1133,21 @@
     "builderTitle": "Auto Attendant Builder",
     "builderAddNewStep": "Add New Step",
     "builderNewStep": "New Step",
+    "builderNewStepInfo": "You can add actions here to add to your Auto Attendant.  Create as many as you want, and link them all together.",
+    "builderNewStepChoiceHelp": "Say Message - Play an uninterruptible recording to the caller",
     "builderNumbers": "Numbers",
-    "actionPlaceholder": "Choose Action",
+    "actionPlaceholder": "Choose Action...",
     "actionSayMessage": "Say Message",
     "actionPhoneMenu": "Phone Menu",
-    "actionRouteCall": "Route Call",
+    "actionRouteCall": "Transfer Call",
     "actionEndCall": "End Call",
     "schedule": "Schedule",
     "scheduleAllDay": "Open 24 hours",
     "scheduleOpen": "Open Hours",
     "scheduleClosed": "Closed Hours",
-    "scheduleHolidays": "Holidays"
+    "scheduleHolidays": "Holidays",
+    "invalidBuilderNameMissing": "Enter an Auto Attendant Name.",
+    "invalidBuilderNameNotUnique": "This Auto Attendant Name is already in use. Please enter a unique Auto Attendant Name."
   },
   "callPark": {
     "newCallPark": "New Call Park",
@@ -1153,6 +1193,7 @@
     "internalNumberExtension": "Internal Extension",
     "internalNumberExtensionTooltip": "Use the internal extension to reach this line from within the company at the same site.",
     "internalNumberPoolError": "Internal extensions failed to load.",
+    "steeringDigitOverlapWarning": "First digit of Internal Extension overlaps with Outbound Dial Digit ({{steeringDigitInTranslation}}).",
     "enterpriseSiteNumberLabel": "If your company uses site-to-site dialing:",
     "externalNumberLabel": "Direct Line",
     "externalNumberTooltip": "Use the direct line to reach this line from outside of the company.",
@@ -1184,7 +1225,8 @@
     "forwardBusy": "When line is busy, send calls to:",
     "forwardNoAnswer": "When there is no answer, send calls to:",
     "forwardExternal": "Forward external calls differently",
-    "addNew": "Add New"
+    "addNew": "Add New",
+    "forwardVoicemailDisabled": "Call Forwarding is set to Voicemail, which is currently disabled. Please update the Call Forwarding settings."
   },
   "callerIdPanel": {
     "title": "Caller ID",
@@ -1219,7 +1261,9 @@
     "snrSeconds": "Seconds",
     "success": "Single Number Reach configuration saved successfully",
     "removeSuccess": "Single Number Reach configuration removed successfully",
-    "error": "Single Number Reach configuration failed."
+    "error": "Single Number Reach configuration failed.",
+    "unitedStates": "United States of America",
+    "austrailia": "Austrailia"
   },
   "voicemailPanel": {
     "success": "Voicemail configuration saved successfully",
@@ -1249,11 +1293,17 @@
     "setupNumbers": "Set Up PSTN Numbers",
     "placeOrder": "Place Order",
     "orderBlock": "Order Block Numbers",
+    "state": "State",
+    "selectState": "Select state",
+    "searchStates": "Search states",
     "areaCode": "Area Code",
+    "selectAreaCode": "Select area code",
+    "searchAreaCodes": "Search area codes",
     "quantity": "Quantity",
     "reviewAndOrder": "Review and Place Order",
     "package": "Package",
     "adding": "Adding",
+    "numbers": "{count, plural, one{# number} other{# numbers}}",
     "newNumbers": "{count, plural, one{# New Number} other{# New Numbers}}",
     "thankYou": "Thank you",
     "setupSuccess": "You have set up the PSTN service successfully.",
@@ -1384,7 +1434,10 @@
     "uploadNumbers": "Upload Numbers",
     "overPlan": "over plan limit",
     "phoneNumbers": "Phone Numbers",
-    "none": "None"
+    "none": "None",
+    "partnerLogo": "Partner Logo",
+    "logoOverride": "Customer Logo Override",
+    "allowCustomerLogo": "Enable Customer Logo for {{customerName}}"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
@@ -1397,6 +1450,8 @@
     "saveCallerIdError": "Caller Id and number failed to save.",
     "updateCallerIdSuccess": "Caller ID and number updated successfully",
     "updateCallerIdError": "Caller ID and number failed to update.",
+    "deleteCallerIdSuccess": "Caller ID and number deleted successfully.",
+    "deleteCallerIdError": "Caller ID and number failed to delete",
     "companycallerID": "Company Caller ID",
     "hide": "Hide",
     "expand": "Expand"
@@ -1745,6 +1800,11 @@
     "supportSetup": "Problem Reports",
     "save": "Save",
     "processing": "This may take a few minutes to process...",
+    "brandingInfo": "If you want to display your own branding in addition to Cisco Spark, upload your logo below. Also, if you would like to allow all your customers to use their own logo you can check the checkbox.",
+    "allowCustomerLogo": "Enable all customers to use their own logo",
+    "useCiscoLogo": "Use Cisco Spark logo",
+    "logoPlaceholder": "Drag and drop your logo here",
+    "chooseFile": "Choose File",
     "supportInfo": "If you are providing support for your users, enter your support information below. This information will surface in the Support menu of the Spark application.",
     "supportOptions": "Cisco Support Options",
     "yourSupportOptions": "Your Support Options",
@@ -1756,6 +1816,7 @@
     "matchingTix": "Matching Problem Reports",
     "matchingDescr": "To match problem reports with the logs that are uploaded to the Cloud Collaboration Management tool, you can enter the string “%%logID%%” (without quotes) into the URL, which will get substituted with the actual logID for each problem report submitted by your users. For example: http://www.example.com/reportproblem?yourLogIDParameter=%%logID%%. This is optional, and may require special configuration within your problem report ticketing system.",
     "forExample": "For example: http://www.acme.com/reportproblem?id=%%logID%%",
+    "brandingTitle": "Customize Branding",
     "supportTitle": "Support Setup",
     "companyInfo": "Company Information",
     "cancel": "Cancel",
@@ -1776,7 +1837,18 @@
   "customerProfile": {
     "supportContacts": "Support Contacts",
     "partnerAdmin": "Partner Administrators",
+    "brandingInfo": "If you want to display your own branding in addition to Cisco Spark, upload your logo below.",
+    "usePartnerLogo": "Use the same logo in use by {{partnerName}}",
     "supportInfo": "If you are providing support for your users, enter your support paramaters below. These parameters will be displayed under Support Options in the Spark application;"
+  },
+  "fileUpload": {
+    "uploading": "Uploading File",
+    "success": "File Uploaded Successfully",
+    "errorUnknown": "File Not Uploaded: unknown upload error",
+    "errorFileType": "File Not Uploaded: incorrect file type",
+    "errorFilePNG": "The uploaded file must be a PNG file",
+    "errorDimensions": "File Not Uploaded: incorrect file dimensions",
+    "errorWidthHeight": "The uploaded file must be width: {{width}} height: {{height}}"
   },
   "utilizationPage": {
     "entResUtilization": "Enterprise Resources Utilization",
@@ -1843,7 +1915,9 @@
     "cloudExtensions": "Cloud Extensions",
     "enableService": "Activate service for this user",
     "status": "Status",
-    "host": "Host"
+    "host": "Host",
+    "sipUri": "Enterprise SIP URI",
+    "enterpriseDn": "Enterprise DN"
   },
   "validation": {
     "nonPrintable": "This entry contains nonprintable characters.",
@@ -1904,17 +1978,17 @@
       "supervisor": "Supervisor"
     },
     "successMessages": {
-      "userUpdateSuccessMessage": "Information is successfully saved for {{userId}}. "
+      "userUpdateSuccessMessage": "Information has been updated successfully for user {{userId}}. "
     },
     "failureMessages": {
-      "userUpdateFailureMessage": "Unable to update information for {{userId}}.",
-      "userloadFailureMessage": "Unable to fetch information for {{userId}}.",
-      "emptyAliasErrorMessage": "Alias can not be empty"
+      "userUpdateFailureMessage": "Information cannot be updated currently for user {{userId}}.",
+      "userloadFailureMessage": "Information is currently not available for user {{userId}}.",
+      "emptyAliasErrorMessage": "User alias cannot be empty."
     }
   },
 
   "huronDetails": {
-    "title": "Huron",
+    "title": "Communication",
     "linesTitle": "Numbers",
     "settingsTitle": "Settings",
     "featuresTitle": "Features"
@@ -1939,11 +2013,21 @@
   "messengerCiSync": {
     "authRedirectHeading": "Authentication Redirect",
     "authRedirectTooltip": "Is authentication redirected through Common Identity instead of CAS?",
+    "getFailed": "Failed getting CI Sync status",
+    "labelCILinkDate": "CI Link Date",
+    "labelOrgAdmin": "ORG Admin",
+    "labelOrgId": "Messenger Organization ID",
+    "labelOrgName": "Messenger Organization Name",
+    "labelOpsAdmin": "OPS Admin",
+    "labelUnauthorizedUser": "Unauthorized User",
     "loading": "Loading CI Sync Status",
     "orgAdminButtonText": "Org Admin",
     "pageTitle": "Messenger CI Sync",
+    "patchFailed": "Failed updating CI Sync",
+    "patchSuccessful": "CI Sync updated",
     "patchSyncButtonText": "Update",
     "refresh": "Refresh",
+    "refreshFailed": "Failed refreshing CI Sync status",
     "syncStatusHeading": "Sync Status",
     "syncStatusTooltip": "Is syncing active between Messenger and Common Identity?",
     "unauthorized": "Not authorized to view this state"

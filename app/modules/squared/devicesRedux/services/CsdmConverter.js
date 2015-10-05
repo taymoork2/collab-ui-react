@@ -27,7 +27,9 @@ angular.module('Squared').service('CsdmConverter',
       this.image = (function () {
         switch (obj.product) {
         case "Cisco TelePresence SX10":
-          return "images/devices/cisco_sx10.png";
+          return "images/devices-hi/sx10.png";
+        case "Cisco TelePresence SX20":
+          return "images/devices-hi/sx20.png";
         }
       }());
     }
@@ -91,13 +93,17 @@ angular.module('Squared').service('CsdmConverter',
     }
 
     function hasIssues(obj) {
+      // return obj.status && obj.status.level && obj.status.level != 'OK';
       return getIsOnline(obj) && obj.status && obj.status.level && obj.status.level != 'OK';
     }
 
     function getDiagnosticsEvents(obj) {
-      return _.map(getNotOkEvents(obj), function (e) {
-        return diagnosticsEventTranslated(e);
-      });
+      if (hasIssues(obj)) {
+        return _.map(getNotOkEvents(obj), function (e) {
+          return diagnosticsEventTranslated(e);
+        });
+      }
+      return [];
     }
 
     function diagnosticsEventTranslated(e) {
