@@ -22,10 +22,10 @@
                 <div translate="webexSiteSettingsLabels.hostAccountsTitle"></div>
                 
                 <div class="overview-count">
-                  {{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.licensesUsage.count}}<br>
+                  {{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.licensesUsage.count}}
                 </div>
                 
-                <span class="overview-label" translate="webexSiteSettingsLabels.activeTitle"></span>
+                <div translate="webexSiteSettingsLabels.activeTitle"></div>
               </div>
                 
               <div class="text-center">
@@ -34,38 +34,54 @@
                 </div>
                 
                 <div class="overview-count">
-                  {{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.licensesAvailable.count}}<br>
+                  {{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.licensesAvailable.count}}
                 </div>
                   
-                <span class="overview-label" translate="webexSiteSettingsLabels.availableTitle"></span>
+                <div translate="webexSiteSettingsLabels.availableTitle"></div>
               </div>
                 
-              <div class="overview-icon text-center">
+              <div class="text-center">
                 <div>
                   &nbsp;
                 </div>
                 
-                <a id={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteInfoPageObj.id}}
-                   name={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteInfoPageObj.id}}
-                   ui-sref={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteInfoPageObj.uiSref}}>
-
-                  <i class="icon icon-circle-webex"></i><br>
-                  {{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteInfoPageObj.label}}
-                </a>
+                <div>
+                  <a ui-sref={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteInfoPageObj.uiSref}}>
+                    <i class="icon icon-circle-webex"></i>
+                  </a>
+                </div>
+                
+                <div>
+                  <a id={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteInfoPageObj.id}}
+                     name={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteInfoPageObj.id}}
+                     ui-sref={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteInfoPageObj.uiSref}}>
+                    
+                    <div>
+                      {{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteInfoPageObj.label}}
+                    </div>
+                  </a>
+                </div>
               </div>
               
-              <div class="overview-icon text-center">
+              <div class="text-center">
                 <div>
                   &nbsp;
                 </div>
                 
-                <a id={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.id}}
-                   name={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.id}}
-                   ui-sref={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.uiSref}}>
-
-                  <i class="icon icon-circle-star"></i><br>
-                  {{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.label}}
-                </a>
+                <div>
+                  <a ui-sref={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.uiSref}}>
+                    <i class="icon icon-circle-star"></i>
+                  </a>
+                </div>
+                
+                <div>
+                  <a id={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.id}}
+                     name={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.id}}
+                     ui-sref={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.uiSref}}>
+                  
+                    {{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.label}}                  
+                  </a>
+                </div>
               </div>
             </div>
           </div>
