@@ -340,13 +340,13 @@
             addPage(
               "siteInfo",
               "siteInformation",
-              "https://sjsite14.webex.com/adm3100/homepage.do?siteurl=sjsite14"
+              ""
             );
 
             addPage(
               "siteInfo",
               "siteFeatures",
-              "https://sjsite14.webex.com/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage"
+              ""
             );
           } // updateSettingTable()
 
@@ -524,7 +524,7 @@
         }, // updateDisplayInfo()
 
         getSiteSettingsInfoXml: function () {
-          var siteInfoXml = WebExXmlApiFact.getSiteInfo(webExXmlApiInfoObj);
+          // var siteInfoXml = WebExXmlApiFact.getSiteInfo(webExXmlApiInfoObj);
           // var meetingTypesInfoXml = WebExXmlApiFact.getMeetingTypeInfo(webExXmlApiInfoObj);
           var settingPagesInfoXml = WebExXmlApiFact.getAdminPagesInfo(
             true,
