@@ -8,8 +8,12 @@ angular.module('Hercules')
         return $stateParams.currentUser.entitlements && $stateParams.currentUser.entitlements.indexOf(ent) > -1 ? true : false;
       };
 
-      var sipUri = _.find($scope.currentUser.sipAddresses, {type: "enterprise"});
-      var enterpriseDn = _.find($scope.currentUser.phoneNumbers, {type: "work"});
+      var sipUri = _.find($scope.currentUser.sipAddresses, {
+        type: "enterprise"
+      });
+      var enterpriseDn = _.find($scope.currentUser.phoneNumbers, {
+        type: "work"
+      });
 
       $scope.callServiceAware = {
         id: 'squared-fusion-uc',
