@@ -7,35 +7,23 @@
 
   function AAUiModelService() {
 
-    var ceMenus = [];
-    var ceInfo = {};
+    var model = {};
 
     var service = {
-      getCeMenus: getCeMenus,
-      setCeMenus: setCeMenus,
-      getCeInfo: getCeInfo,
-      setCeInfo: setCeInfo
+      getUiModel: getUiModel,
+      initUiModel: initUiModel
     };
 
     return service;
 
     /////////////////////
 
-    function getCeMenus(scheduleName) {
-      return ceMenus[scheduleName];
+    function getUiModel() {
+      return model;
     }
 
-    function setCeMenus(scheduleName, model) {
-      ceMenus[scheduleName] = model;
+    function initUiModel() {
+      model = {};
     }
-
-    function getCeInfo() {
-      return ceInfo;
-    }
-
-    function setCeInfo(model) {
-      ceInfo = model;
-    }
-
   }
 })();

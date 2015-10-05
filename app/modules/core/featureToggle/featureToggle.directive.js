@@ -26,14 +26,14 @@
       var showFeature = attrs.featureShow;
       var hideFeature = attrs.featureHide;
 
-      if (showFeature) {
-        FeatureToggleService.supports(showFeature).then(function (value) {
-          scope.show = value;
-        });
-      }
       if (hideFeature) {
         FeatureToggleService.supports(hideFeature).then(function (value) {
           scope.hide = value;
+        });
+      }
+      if (showFeature) {
+        FeatureToggleService.supports(showFeature).then(function (value) {
+          scope.show = value;
         });
       }
 
