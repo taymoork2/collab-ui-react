@@ -157,8 +157,8 @@
             CiService.hasRole('id_full_admin')
               .then(function (has) {
                 if (has) {
-                  // TODO Check if Customer Success admin
-                  if (false) {
+                  // Check if Customer Success admin
+                  if (CiService.hasRole('webex-messenger.customer_success')) {
                     setOpsAdmin();
                   } else {
                     setOrgAdmin();
