@@ -1245,17 +1245,17 @@ angular
           controller: 'CalendarController',
           controllerAs: 'calendar',
           parent: 'main',
-          url: '/services/calendar'
+          abstract: true
         })
         .state('calendar-service.list', {
+          url: '/services/calendar',
           views: {
             'fullPane': {
               templateUrl: 'modules/hercules/calendar-service/calendar-list.html',
               controller: 'CalendarController',
               controllerAs: 'calendar'
             }
-          },
-          url: '/list'
+          }
         })
         .state('calendar-service.list.details', {
           views: {
@@ -1277,7 +1277,7 @@ angular
           }
         })
         .state('calendar-service.about', {
-          url: '/about',
+          url: '/services/calendar/about',
           views: {
             'fullPane': {
               templateUrl: 'modules/hercules/calendar-service/about.html'
@@ -1285,7 +1285,7 @@ angular
           }
         })
         .state('calendar-service.settings', {
-          url: '/settings',
+          url: '/services/calendar/settings',
           views: {
             'fullPane': {
               controllerAs: 'calendarServiceSettings',
