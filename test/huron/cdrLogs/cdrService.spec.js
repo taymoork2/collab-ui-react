@@ -5,7 +5,7 @@ describe('Controller: CdrService', function () {
   beforeEach(module('Huron'));
 
   var $httpBackend, $q, CdrService, Notification;
-  var timezone = "Etc/GMT";
+
   var proxyResponse = getJSONFixture('huron/json/cdrLogs/proxyResponse.json');
 
   var model = {
@@ -15,6 +15,18 @@ describe('Controller: CdrService', function () {
     'startDate': '2015-09-29',
     'endDate': '2015-09-30',
     'hitSize': 1
+  };
+
+  var formDate = function (date, time) {
+    var returnDate = moment(date);
+    if (time.substring(9, 10).toLowerCase() === 'p') {
+      returnDate.hours(parseInt(time.substring(0, 2)) + 12);
+    } else {
+      returnDate.hours(parseInt(time.substring(0, 2)));
+    }
+    returnDate.minutes(parseInt(time.substring(3, 5)));
+    returnDate.seconds(parseInt(time.substring(6, 8)));
+    return returnDate.utc().format();
   };
 
   beforeEach(inject(function (_$httpBackend_, _$q_, _CdrService_, _Notification_) {
@@ -46,6 +58,6 @@ describe('Controller: CdrService', function () {
   });
 
   it('should return a date from a yyyy-mm-dd and hh:mm:ss', function () {
-    expect(CdrService.formDate(model.startDate, model.startTime).tz(timezone).format()).toEqual('2015-09-29T21:16:06+00:00');
+    expect(CdrService.formDate(model.startDate, model.startTime).format()).toEqual(formDate(model.startDate, model.startTime));
   });
 });
