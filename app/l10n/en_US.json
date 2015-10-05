@@ -1818,6 +1818,159 @@
     "OtherPrivilegesLabel": "Other Privileges",
     "advancedLinkLabel": "Advanced Settings"
   },
+  "webexSiteSettingsLabels": {
+    "siteSettingsIndexPageTitle": "Configure",
+    "siteSettingsIndexPageTitleFull": "Configure {{siteUrl}}",
+    "hostAccountsTitle": "HOST ACCOUNTS",
+    "activeTitle": "Active",
+    "availableTitle": "Available",
+    "emailAllHostsBtnTitle": "EMAIL&nbsp;ALL&nbsp;HOSTS",
+    "commonSettingsCardTitle": "Common Settings",
+    "commonSettingsCardNote": "These settings apply across centers.",
+
+    "indexPageLabel_EMAIL_send_email_to_all": "Email All Hosts",
+
+    "indexPageLabel_siteInfo_siteInformation": "Site Information",
+    "indexPageLabel_siteInfo_siteFeatures": "Site Features",
+
+    "indexPageLabel_CommonSettings_productivity": "Productivity Tools",
+    "indexPageLabel_CommonSettings_address": "Company Addresses",
+    "indexPageLabel_CommonSettings_disclaimer": "Disclaimers",
+    "indexPageLabel_CommonSettings_session_type": "Session Types",
+    "indexPageLabel_CommonSettings_user_priv": "User Privileges",
+    "indexPageLabel_CommonSettings_scheduler": "Scheduler",
+    "indexPageLabel_CommonSettings_common_options": "Site Options",
+    "indexPageLabel_CommonSettings_mobile": "Mobile",
+    "indexPageLabel_CommonSettings_cmr": "Collaboration Meeting Room (CMR)",
+    "indexPageLabel_CommonSettings_security": "Security",
+    "indexPageLabel_CommonSettings_navigation": "Navigation Customization",
+    "indexPageLabel_CommonSettings_email_template": "Email Template",
+    "indexPageLabel_CommonSettings_site_info": "Site Information",
+
+    "indexPageLabel_MC_mc_options": "Site Options",
+
+    "indexPageLabel_TC_tc_options": "Site Options",
+
+    "indexPageLabel_EC_ec_options": "Site Options",
+    "indexPageLabel_EC_host_reassign": "Reassignment",
+    "indexPageLabel_EC_required_fields": "Registration Form",
+
+    "indexPageLabel_SC_sc_options": "Default Options",
+    "indexPageLabel_SC_forms": "Forms",
+    "indexPageLabel_SC_branding": "Branding",
+
+    "indexPageLabel_WebACD_webacd_settings": "Settings",
+    "indexPageLabel_WebACD_webacd_queues": "Queues",
+    "indexPageLabel_WebACD_webacd_forms": "Forms",
+
+    "indexPageLabel_RA_remote_options": "Settings",
+    "indexPageLabel_RA_remote_groups": "Groups",
+
+    "settingPageLabel_EMAIL_send_email_to_all": "Email All Hosts",
+
+    "settingPageLabel_siteInfo_siteInformation": "Site Overview",
+    "settingPageLabel_siteInfo_siteFeatures": "Site Overview",
+
+    "settingPageLabel_CommonSettings_productivity": "Productivity Tools",
+    "settingPageLabel_CommonSettings_address": "Company Addresses",
+    "settingPageLabel_CommonSettings_disclaimer": "Disclaimers",
+    "settingPageLabel_CommonSettings_session_type": "Session Types",
+    "settingPageLabel_CommonSettings_user_priv": "User Privileges",
+    "settingPageLabel_CommonSettings_scheduler": "Common Settings",
+    "settingPageLabel_CommonSettings_common_options": "Common Settings",
+    "settingPageLabel_CommonSettings_mobile": "Common Settings",
+    "settingPageLabel_CommonSettings_cmr": "Common Settings",
+    "settingPageLabel_CommonSettings_security": "Common Settings",
+    "settingPageLabel_CommonSettings_navigation": "Common Settings",
+    "settingPageLabel_CommonSettings_email_template": "Email Template",
+    "settingPageLabel_CommonSettings_site_info": "Site Information",
+
+    "settingPageLabel_MC_mc_options": "Meeting Center Settings",
+
+    "settingPageLabel_TC_tc_options": "Training Center Settings",
+
+    "settingPageLabel_EC_ec_options": "Event Center Settings",
+    "settingPageLabel_EC_host_reassign": "Event Center Reassignment",
+    "settingPageLabel_EC_required_fields": "Event Center Registration Form",
+
+    "settingPageLabel_SC_sc_options": "Support Center Settings",
+    "settingPageLabel_SC_forms": "Support Center Forms",
+    "settingPageLabel_SC_branding": "Support Center Branding",
+
+    "settingPageLabel_WebACD_webacd_settings": "WebACD Settings",
+    "settingPageLabel_WebACD_webacd_queues": "WebACD Queues",
+    "settingPageLabel_WebACD_webacd_forms": "WebACD Leave Message Forms",
+
+    "settingPageLabel_RA_remote_options": "Remote Access Settings",
+    "settingPageLabel_RA_remote_groups": "Remote Access Groups",
+
+    "pageId_underDevelopment": "Under Development",
+    "pageId_xxxx": "Undefined"
+  },
+  "webexSiteReports": {
+    "title": "Reports",
+    "common_reports": "Common Reports",
+    "training_center": "Training Center",
+    "event_center": "Event Center",
+    "support_center": "Support Center",
+    "remote_access": "Remote Access",
+
+    "meeting_in_progess": "Meetings In Progess",
+    "meeting_usage": "Meeting Usage",
+    "recordings_storage_usage": "Recordings Storage Usage",
+    "recording_usage": "Recording Usage",
+
+    "training_usage": "Training Usage",
+    "registration": "Registration",
+    "recording": "Recording",
+    "coupon": "Coupon",
+    "attendee": "Attendee",
+
+    "event_center_overview": "Overview",
+    "event_center_site_summary": "Site Summary",
+    "event_center_scheduled_events": "Scheduled Events",
+    "event_center_held_events": "Held Events",
+    "event_center_report_template": "Report Templates",
+
+    "support_center_support_sessions": "Support Sessions",
+    "support_center_call_volume": "Call Volume",
+    "support_center_csr_activity": "CSR Activity",
+    "support_center_url_referral": "URL Referral",
+    "support_center_allocation_queue": "Allocation Queue",
+
+    "remote_access_computer_usage": "Computer Usage",
+    "remote_access_csrs_usage": "CSR Report",
+    "remote_access_computer_tracking": "Computer Tracking",
+
+    "storage_utilization": "Storage Utilization",
+    "programs_events_recordings": "Programs Events Recordings",
+    "summary": "Summary",
+    "scheduled_events_dashboard": "Scheduled Events Dashboard",
+    "held_events_dashboard": "Held Events Dashboard",
+
+    "session_query_tool": "Session Query Tool",
+    "call_volume": "Call Volume",
+    "csr_activity": "Csr Activity",
+    "url_referal": "Url Referal",
+    "allocation_queue": "Allocation Queue",
+    "webacd_session_query_tool": "Webacd Session Query Tool",
+    "webacd_call_volume": "Webacd Call Volume",
+    "webacd_csr_volume": "Webacd Csr Volume",
+    "webacd_csr_activity": "Webacd Csr Activity",
+    "webacd_url_referal": "Webacd Url Referal",
+    "webacd_allocation_queue": "Webacd Allocation Queue",
+
+    "usage": "Usage",
+
+    "recorded_session_access": "Recorded Session Access",
+    "coupon_usage": "Coupon Usage",
+    "training_record_attendee": "Training Record Attendee",
+    "access_anywhere_usage": "Access Anywhere Usage"
+  },
+  "webexReportsLabels": {
+    "pageId_xxxx": "Undefined",
+    "pageId_underDevelopment": "Under Development"
+  },
   "leaderBoard": {
     "actions": "Actions",
     "licenseUsage": "License Usage",
@@ -1951,7 +2104,8 @@
     "siteName": "Site Name",
     "licenseCount": "License Count",
     "type": "Type",
-    "launchSite": "Launch Site Admin"
+    "siteSettings": "Configure Site",
+    "siteReports": "Reports"
   },
   "cloudExtensions": {
     "cloudExtensions": "Cloud Extensions",
