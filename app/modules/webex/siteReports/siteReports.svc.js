@@ -23,32 +23,32 @@ angular.module('WebExReports').service('reportService', [
     webExXmlApiInfoObj,
     Notification
   ) {
-      var self = this;
+    var self = this;
 
-      var event_center_pageids = ["event_center_overview",
-        "event_center_site_summary",
-        "event_center_scheduled_events",
-        "event_center_held_events",
-        "event_center_report_template"
-      ];
+    var event_center_pageids = ["event_center_overview",
+      "event_center_site_summary",
+      "event_center_scheduled_events",
+      "event_center_held_events",
+      "event_center_report_template"
+    ];
 
-      var support_center_pageids = ["support_center_support_sessions",
-        "support_center_call_volume",
-        "support_center_csr_activity",
-        "support_center_url_referral",
-        "support_center_allocation_queue"
-      ];
+    var support_center_pageids = ["support_center_support_sessions",
+      "support_center_call_volume",
+      "support_center_csr_activity",
+      "support_center_url_referral",
+      "support_center_allocation_queue"
+    ];
 
-      var training_center_pageids = ["training_usage",
-        "registration",
-        "recording",
-        "coupon",
-        "attendee"
-      ];
+    var training_center_pageids = ["training_usage",
+      "registration",
+      "recording",
+      "coupon",
+      "attendee"
+    ];
 
-      var remote_access_pageids = ["remote_access_computer_usage",
-        "remote_access_csrs_usage", "remote_access_computer_tracking"
-      ];
+    var remote_access_pageids = ["remote_access_computer_usage",
+      "remote_access_csrs_usage", "remote_access_computer_tracking"
+    ];
 
     var UIsref = function (theUrl, rid, siteUrl) {
       this.siteUrl = siteUrl;
@@ -100,7 +100,6 @@ angular.module('WebExReports').service('reportService', [
       var common_reports_pageids = ["meeting_in_progess", "meeting_usage", "recording_usage",
         "storage_utilization"
       ];
-
 
       //use the above 5 lists to gather all the UISrefs
       [
