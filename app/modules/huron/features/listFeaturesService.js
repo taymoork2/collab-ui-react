@@ -5,7 +5,7 @@
     .factory('ListFeaturesService', ListFeaturesService);
 
   /* @ngInject */
-  function ListFeaturesService($q) {
+  function ListFeaturesService(Authinfo, FeatureHuntGroupServiceV2, $q) {
     var service = {
       listFeatures: listFeatures
     };
@@ -15,7 +15,13 @@
     return service;
 
     function listFeatures() {
-      //TODO: Temporary implementation to mock HTTP JSON response.
+      //////////////////////////////////////////////////////////
+      //   return FeatureHuntGroupServiceV2.query({           //
+      //     customerId: Authinfo.getOrgId(),                 //
+      //   }).$promise                                        //
+      //////////////////////////////////////////////////////////
+
+      // Temporary implementation to mock backend. Will be replaced with above code once API is ready.
       var asyncResponse = $q.defer();
       asyncResponse.resolve(featureList);
       return asyncResponse.promise;
