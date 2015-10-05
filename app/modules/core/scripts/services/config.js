@@ -382,7 +382,8 @@ angular.module('Core')
           fusion_uc: 'squared-fusion-uc',
           fusion_cal: 'squared-fusion-cal',
           mediafusion: 'squared-fusion-media',
-          fusion_mgmt: 'squared-fusion-mgmt'
+          fusion_mgmt: 'squared-fusion-mgmt',
+          fusion_ec: 'squared-fusion-ec'
         },
 
         trials: {

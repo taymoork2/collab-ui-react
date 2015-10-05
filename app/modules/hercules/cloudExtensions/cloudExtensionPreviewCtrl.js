@@ -9,7 +9,7 @@ angular.module('Hercules')
       };
       $scope.currentUser = $stateParams.currentUser;
       var isEntitled = function () {
-        return $stateParams.currentUser.entitlements.indexOf($stateParams.extensionId) > -1 ? true : false;
+        return $stateParams.currentUser.entitlements && $stateParams.currentUser.entitlements.indexOf($stateParams.extensionId) > -1 ? true : false;
       };
       $scope.extension = {
         id: $stateParams.extensionId,
@@ -59,6 +59,9 @@ angular.module('Hercules')
           if (data.success) {
             var userStatus = data.userResponse[0].status;
             if (userStatus === 200) {
+              if (!$stateParams.currentUser.entitlements) {
+                $stateParams.currentUser.entitlements = [];
+              }
               $stateParams.currentUser.entitlements.push($stateParams.extensionId);
               $scope.showButtons = false;
               if (entitled) {

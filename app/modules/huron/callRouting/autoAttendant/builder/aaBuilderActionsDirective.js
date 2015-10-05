@@ -6,13 +6,13 @@ angular
     function () {
       return {
         restrict: 'E',
-        transclude: true,
         scope: {
-          schedule: '@'
+          schedule: '@aaSchedule',
+          index: '=aaIndex',
+          addAction: '&aaAddAction'
         },
         controller: 'AABuilderActionsCtrl',
         controllerAs: 'actions',
-        bindToController: true,
         templateUrl: 'modules/huron/callRouting/autoAttendant/builder/aaBuilderActions.tpl.html'
       };
     }

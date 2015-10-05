@@ -36,19 +36,10 @@
     }
 
     function saveUiModel() {
-      vm.aaModel.aaRecord.callExperienceName = vm.name;
-
-      vm.aaModel.aaRecord.assignedResources = [];
-
-      vm.aaModel.aaRecord.actionSets = [];
-      vm.aaModel.aaRecord.actionSets.push({});
-
-      vm.ui.ceInfo = AutoAttendantCeInfoModelService.getCeInfo(vm.aaModel.aaRecord);
-
+      vm.ui.ceInfo.name = vm.name;
       if (angular.isDefined(vm.ui.ceInfo) && angular.isDefined(vm.ui.ceInfo.getName()) && vm.ui.ceInfo.getName().length > 0) {
         AutoAttendantCeInfoModelService.setCeInfo(vm.aaModel.aaRecord, vm.ui.ceInfo);
       }
-
     }
 
     function checkNameEntry(aaNameToTest) {
@@ -84,11 +75,7 @@
     function activate() {
 
       vm.aaModel = AAModelService.getAAModel();
-
-      vm.aaModel.aaRecord = {};
-      vm.aaModel.aaRecord = AAModelService.newAARecord();
-
-      vm.ui = AAUiModelService.getCeInfo();
+      vm.ui = AAUiModelService.getUiModel();
 
       aaBuilderMainCtrl_saveAARecords = $scope.saveAARecords;
 

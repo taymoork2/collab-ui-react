@@ -1,15 +1,15 @@
 .aa-builder-header {
   width: 92vw;
-  position:fixed;
+  position: fixed;
   top: 52px;
   z-index: 100;
- }
+}
 
 .aa-nowrap {
   white-space: nowrap;
   margin: 0;
   padding: 0;
- }
+}
 
 .aa-builder-container {
   padding-top: 146px;
@@ -175,6 +175,7 @@
 
 .aa-panel {
   @extend .panel;
+  display: inline-block;
   margin: 0px;
   padding-left: 15px;
   padding-right: 15px;
@@ -207,15 +208,28 @@
 }
 
 .aa-add-step-icon {
+  @extend .icon;
+  @extend .icon-plus;
+  font-size: 2rem;
+  top: 0.0625rem;
+  color: $brand-default;
+  &:hover {
+    cursor: pointer;
+    color: $brand-primary;
+  }
+}
+
+.aa-action-delete {
+  margin-left: auto;
+  .aa-action-delete-icon {
     @extend .icon;
-    @extend .icon-plus;
-    font-size: 32px;
-    top: 1px;
-    color: $brand-default;
+    @extend .icon-close;
+    font-size: 1.25rem;
     &:hover {
       cursor: pointer;
       color: $brand-primary;
     }
+  }
 }
 
 .aa-flex-vertical-line {
@@ -255,4 +269,10 @@
   display: flex;
   flex: 0 1 auto;
   align-self: flex-start;
+}
+
+.aa-new-step-info {
+  max-width: 18.75rem;
+  margin-top: 0.625rem;
+  margin-bottom: 1.875rem;
 }

@@ -31,10 +31,10 @@ describe('CS Admin flow', function () {
     });
 
     it('clicking on admin customer should enable/disable ability to launch appropriately', function () {
-      utils.wait(partner.adminCustomerOrgId, 55000);
+      utils.wait(partner.adminCustomerOrgId, 75000);
       utils.click(partner.adminCustomerOrgId);
       utils.waitUntilEnabled(partner.launchCustomerPanelButton);
-    }, 60000); // managedOrgs API performance is terrible
+    }, 80000); // managedOrgs API performance is terrible
 
     it('clicking on regular customer should enable/disable ability to launch appropriately', function () {
       utils.click(partner.exitPreviewButton);
@@ -76,10 +76,10 @@ describe('CS User flow', function () {
     });
 
     it('clicking on admin customer should enable/disable ability to launch appropriately', function () {
-      utils.wait(partner.adminCustomerOrgId, 55000);
+      utils.wait(partner.adminCustomerOrgId, 75000);
       utils.click(partner.adminCustomerOrgId);
       utils.waitUntilDisabled(partner.launchCustomerPanelButton);
-    }, 60000); // managedOrgs API performance is terrible
+    }, 80000); // managedOrgs API performance is terrible
 
     it('clicking on regular customer should enable/disable ability to launch appropriately', function () {
       utils.click(partner.exitPreviewButton);

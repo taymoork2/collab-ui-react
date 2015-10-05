@@ -8,35 +8,39 @@
   //
   // UI model:
   //
-  // Customer
-  //     CEInfo[]
-  //         CEInfo
-  //             name
-  //             Resources[]
-  //                 Resource
-  //                     id: uuid
-  //                     trigger: 'inComing', 'outGoing'
-  //                     type: 'directoryNumber'
-  //                     number: 'E164'
-  //             Menu
+  // CeInfo
+  //     name: String
+  //     resources: CeInfoResource[]
+  //     ceUrl: String
   //
-  // Menu
-  //     menuEntry
-  //         description
-  //         type
-  //         username
-  //         password
-  //         url
-  //         headers[]
-  //             action
-  //                 name
-  //                 value
-  //                 description
-  //         entries[]
-  //             action
-  //                 name
-  //                 value
-  //                 description
+  // CeInfoResource
+  //     id: String // uuid
+  //     trigger: String // 'inComing', 'outGoing'
+  //     type: String // 'directoryNumber'
+  //     number: String // '<E164>', '<DN>'
+  //
+  //
+  // CeMenu
+  //     type: String
+  //     headers: CeMenuEntry[]
+  //     entries: CeMenuEntry[]
+  //
+  // CeMenuEntry
+  //     description: String
+  //     type: String
+  //
+  //     key: String
+  //     actions: Action[]
+  //     timeout: String
+  //
+  //     username: String
+  //     password: String
+  //     url: String
+  //
+  // Action
+  //     name: String
+  //     value: String
+  //     description: String
   //
   function Action(name, value) {
     this.name = name;
@@ -216,6 +220,18 @@
     this.entries.push(entry);
   };
 
+  CeMenu.prototype.addEntryAt = function (index, entry) {
+    this.entries.splice(index, 0, entry);
+  };
+
+  CeMenu.prototype.deleteEntryAt = function (index) {
+    this.entries.splice(index, 1);
+  };
+
+  CeMenu.prototype.getEntryAt = function (index) {
+    return this.entries[index];
+  };
+
   function MainMenu() {
     this.description = '';
     this.prompts = {};
@@ -237,7 +253,9 @@
       getWelcomeMenu: getWelcomeMenu,
       getCustomMenu: getCustomMenu,
       getOptionMenu: getOptionMenu,
+      getCombinedMenu: getCombinedMenu,
       updateMenu: updateMenu,
+      updateCombinedMenu: updateCombinedMenu,
       deleteMenu: deleteMenu,
 
       newCeMenu: function () {
@@ -507,6 +525,27 @@
       }
 
       return undefined;
+    }
+
+    function getCombinedMenu(ceRecord, actionSetName) {
+
+      var welcomeMenu = getWelcomeMenu(ceRecord, actionSetName);
+      var optionMenu = getOptionMenu(ceRecord, actionSetName);
+      if (angular.isDefined(welcomeMenu) && angular.isDefined(optionMenu)) {
+        welcomeMenu.addEntry(optionMenu);
+      }
+      return welcomeMenu;
+    }
+
+    function updateCombinedMenu(ceRecord, actionSetName, aaCombinedMenu) {
+      updateMenu(ceRecord, actionSetName, aaCombinedMenu);
+      if (aaCombinedMenu.length > 0) {
+        if (aaCombinedMenu[aaCombinedMenu.length - 1].getType() === 'MENU_OPTION') {
+          updateMenu(ceRecord, actionSetName, aaCombinedMenu[aaCombinedMenu.length - 1]);
+        } else {
+          deleteMenu(ceRecord, actionSetName, 'MENU_OPTION');
+        }
+      }
     }
 
     /*
