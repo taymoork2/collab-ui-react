@@ -20,12 +20,12 @@
   }
 
   & div {
-    @include vr-spacing(pt, .5);
+    @include vr-spacing(pt, 1);
   }
 }
 
 .new-huron-feature-button {
-  background-color: $brand-info-dark;
+  background-color: $brand-info;
   font-size: $font-size-h5;
   font-weight: bold;
   width: rem-calc(110);
@@ -49,7 +49,7 @@
     @include vr-spacing(mh, .125);
     border-style: hidden;
     width: rem-calc(278);
-    height: vr-adjust(300);
+    height: vr-adjust(315);
     @include vr-spacing(p, 0);
 
     &:hover {
@@ -59,8 +59,7 @@
 }
 
 .feature-icon-container {
-  position: absolute;
-  top: 10%;
+  @include vr-spacing(pt, 2.5);
   width: 100%;
 }
 
@@ -68,6 +67,7 @@
   font-family: $brand-font-cisco-TT-Extra-Light;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 0;
   justify-content: center;
   font-size: $font-size-h1;
   background: $brand-white;
@@ -80,24 +80,25 @@
 .feature-icon-color-AA {
   color: $brand-primary;
 }
+
 .feature-icon-color-HG {
-  color: purple;
+  color: $color-eggplant;
 }
 .feature-icon-color-CP {
   color: $brand-danger;
 }
 
 .feature-label-container {
-  position: absolute;
-  top: 45%;
+  @include vr-spacing(pt, 2);
+  color: $brand-info-light;
   width: 100%;
 }
 
 .feature-description-container {
-  position: absolute;
-  top: 55%;
+  @include vr-spacing(pt, 2);
   width: 100%;
-  @include vr-spacing(p, 1.5);
+  @include vr-spacing(ph, 1.5);
+  @include vr-spacing(pb, 1.5);
 }
 
 
