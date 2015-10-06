@@ -8,6 +8,9 @@
   /* @ngInject */
   function HuronDetailsNavCtrl($scope, $state, Config) {
     var vm = this;
+    vm.title = 'huronDetails.title';
+    vm.back = false;
+
     vm.tabs = [{
       title: 'huronDetails.featuresTitle',
       state: 'huronfeatures'

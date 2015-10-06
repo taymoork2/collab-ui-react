@@ -18,31 +18,38 @@
 .huron-new-feature-modal {  // The modal body.
   display: flex;
   flex-direction: row;
-  align-items: center;
-  padding: rem-calc(0) rem-calc(20) rem-calc(20) rem-calc(20);
+  padding: rem-calc(0) rem-calc(30) rem-calc(30) rem-calc(30);
 
-  & button {                // The button options in the body.
+  & button {               // The button options in the body.
+    position: relative;
     color: $gray-darkest;
     background-color: $gray-lightest;
     margin: rem-calc(2);
     border-style: hidden;
-    width: rem-calc(250);
-    height: vr-adjust(220);
-    padding: rem-calc(20) rem-calc(10) rem-calc(20) rem-calc(20);
+    width: rem-calc(278);
+    height: vr-adjust(300);
+    padding: 0;
     &:hover {
       background-color: $gray-light;
     }
   }
 }
 
-.feature-icon-circle {      // Icon in the option.
-  position: relative;
-  top: rem-calc(10);
-  font-size: $font-size-h3;
+.feature-icon-container {
+  position: absolute;
+  top: 10%;
+  width: 100%;
+}
+
+.feature-icon-circle {    // Icon in the option.
+  margin-left: auto;
+  margin-right: auto;
+  justify-content: center;
+  font-size: $font-size-h1;
   background: $brand-white;
   border-radius: 50%;
-  width: rem-calc(60);
-  height: vr-adjust(60);
+  width: rem-calc(78);
+  height: rem-calc(78);
   padding: rem-calc(10);
 }
 
@@ -56,20 +63,15 @@
   color: $brand-danger;
 }
 
-.huron-feature-label {
-  position: relative;
-  top: rem-calc(10);
-  color: $brand-info;
-  font-size: $font-size-h5;
+.feature-label-container {
+  position: absolute;
+  top: 45%;
   width: 100%;
-  margin-top: rem-calc(20);
-  padding-top: rem-calc(10);
 }
 
-.huron-feature-description {
-  position: relative;
-  top: rem-calc(10);
+.feature-description-container {
+  position: absolute;
+  top: 55%;
   width: 100%;
-  text-align: left;
-  margin-top: rem-calc(20);
+  padding: rem-calc(25);
 }

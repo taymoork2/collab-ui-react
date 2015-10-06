@@ -3,28 +3,23 @@
     <button type="button" class="close" ng-click="cancel()">
       <span class="sr-only">Close</span>
     </button>
-    <h5 class="modal-title" translate="huronDetails.newFeatureModal.title"></h5>
+    <h3 class="modal-title" translate="huronDetails.newFeatureModal.title"></h3>
   </div>
   <div class="huron-new-feature-modal">
-    <button ng-repeat="feature in features" class="huron-feature-option" ng-click="ok((feature.code | translate))">
-
-      <div class="row medium-4">
-        <span class="feature-icon-circle feature-icon-color-{{feature.code | translate}}">
-          {{feature.code | translate}}
-        </span>
+    <button ng-repeat="feature in features" ng-click="ok((feature.code | translate))">
+      <div class="feature-icon-container">
+        <label class="feature-icon-circle feature-icon-color-{{feature.code | translate}}">
+            {{feature.code | translate}}
+        </label>
       </div>
 
-      <div class="huron-feature-label">
-        <strong>
-          {{feature.label | translate}}
-        </strong>
-      </div>
+      <h4 class="info-color feature-label-container">
+        <strong>{{feature.label | translate}}</strong>
+      </h4>
 
-      <div class="huron-feature-description">
-        <small>
-          {{feature.description | translate}}
-        </small>
-      </div>
+      <p class="feature-description-container text-left">
+        {{feature.description | translate}}
+      </p>
     </button>
   </div>
 </script>

@@ -5,7 +5,7 @@
     .controller('ListFeaturesCtrl', ListFeaturesCtrl);
 
   /* @ngInject */
-  function ListFeaturesCtrl($scope, $state, ListFeaturesService) {
+  function ListFeaturesCtrl($scope, $state, Notification, ListFeaturesService) {
 
     var vm = $scope;
     vm.featureList = [];
@@ -15,6 +15,9 @@
         $state.go("huronnewfeature");
       else
         vm.featureList = list;
+    }).catch(function (response) {
+      vm.featureList = [];
+      Notification.errorResponse(response, 'huronDetails.featureListingError');
     });
   }
 })();

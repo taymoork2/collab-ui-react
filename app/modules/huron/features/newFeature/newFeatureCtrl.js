@@ -14,7 +14,8 @@
     function openModal() {
       var modalInstance = $modal.open({
         templateUrl: 'newFeatureModal.html',
-        controller: 'NewFeatureModalCtrl'
+        controller: 'NewFeatureModalCtrl',
+        size: 'lg'
       });
       modalInstance.result.then(function (selectedFeature) {
         vm.feature = selectedFeature;
