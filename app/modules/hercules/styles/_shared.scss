@@ -2,6 +2,11 @@
 
   background-color: $brand-white;
 
+  .cs-card {
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+  }
+
   .page-header {
     .title-heading {
       margin-right: 1rem;
@@ -40,7 +45,7 @@
     }
     h5 {
       padding-bottom:0.1rem;
-      padding-top:0.1rem;
+      padding-top:0.5rem;
     }
 
   }

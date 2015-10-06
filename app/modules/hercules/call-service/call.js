@@ -36,22 +36,39 @@
 
   }
 
+  /* @ngInject */
+  function DisableConfirmController(ServiceDescriptor, $modalInstance, serviceId) {
+    var modalVm = this;
+    modalVm.serviceId = serviceId;
+    modalVm.serviceIconClass = ServiceDescriptor.serviceIcon(serviceId);
+
+    modalVm.ok = function () {
+      $modalInstance.close();
+    };
+    modalVm.cancel = function () {
+      $modalInstance.dismiss();
+    };
+  }
+
   /* Based on notifiction-config-controller used in the old cluster view */
   /* @ngInject */
-  function CallServiceSettingsController(ServiceDescriptor, Authinfo, USSService2, $stateParams, NotificationConfigService, MailValidatorService, XhrNotificationService) {
+  function CallServiceSettingsController($scope, $modal, ServiceDescriptor, Authinfo, USSService2, $stateParams, NotificationConfigService, MailValidatorService, XhrNotificationService) {
     var vm = this;
     vm.config = "";
 
-    // check squared-fusion-ec setting in whatever api...
-    vm.squaredFusionEc = true; // read initial value
+    vm.serviceEnabled = false;
+
+    vm.squaredFusionEc = false;
+    ServiceDescriptor.isServiceEnabled("squared-fusion-ec", function (a, b) {
+      vm.squaredFusionEc = b;
+    });
+
+    ServiceDescriptor.isServiceEnabled("squared-fusion-uc", function (a, b) {
+      vm.serviceEnabled = b;
+    });
 
     vm.toggleEc = function () {
-      //console.log("squaredFusionEc is ", vm.squaredFusionEc)
-
-      ServiceDescriptor.setServiceEnabled("squared-fusion-ec", vm.squaredFusionEc, function (a, b) {
-        //console.log("setting fusion-ec result:", a);
-        //console.log("setting fusion-ec result:", b);
-      });
+      ServiceDescriptor.setServiceEnabled("squared-fusion-ec", vm.squaredFusionEc, function (a, b) {});
     };
 
     vm.loading = true;
@@ -59,13 +76,9 @@
       vm.loading = false;
       vm.sipDomain = res.sipDomain;
       vm.org = res || {};
+    }, function (err) {
+      //  if (err) return notification.notify(err);
     });
-
-    ServiceDescriptor.services(function (a, b) {
-      //console.log("RES", a);
-      //console.log("res2", b);
-    });
-
     //UssService.getOrg(Authinfo.getOrgId(), function (err, org) {
     //  $scope.loading = false;
     //  if (err) return notification.notify(err);
@@ -74,15 +87,14 @@
     //});
 
     vm.updateSipDomain = function () {
-      vm.error = null;
+      vm.sipError = null;
       vm.savingSip = true;
+
       USSService2.updateOrg(vm.org).then(function (res) {
         vm.savingSip = false;
-        //console.log("After saving ",res);
-      }, function (res) {
+      }, function (err) {
         vm.savingSip = false;
-        //console.log("ERROR",res)
-        vm.error = "SIP domain was invalid. Please enter a valid SIP domain or IP address.";
+        vm.sipError = "SIP domain was invalid. Please enter a valid SIP domain or IP address.";
       });
       //$scope.error = null;
       //$scope.saving = true;
@@ -115,18 +127,40 @@
 
     vm.writeConfig = function () {
       if (vm.config.wx2users && !MailValidatorService.isValidEmailCsv(vm.config.wx2users)) {
-        vm.error = "Please enter a list of comma-separated email addresses";
+        vm.emailError = "Please enter a list of comma-separated email addresses";
       } else {
-        vm.error = null;
+        vm.emailError = null;
         vm.savingEmail = true;
         NotificationConfigService.write(vm.config, function (err) {
           vm.savingEmail = false;
           if (err) {
-            //console.log("Error:", err);
             return XhrNotificationService.notify(err);
           }
         });
       }
+    };
+
+    vm.disableService = function (serviceId) {
+      ServiceDescriptor.setServiceEnabled(serviceId, false, function (error) {
+        //console.log("ERROR disabling service:", error);
+      });
+      vm.serviceEnabled = false;
+    };
+
+    vm.confirmDisable = function (serviceId) {
+      $modal.open({
+        templateUrl: "modules/hercules/call-service/confirm-disable.html",
+        controller: DisableConfirmController,
+        controllerAs: "disableConfirmDialog",
+        resolve: {
+          serviceId: function () {
+            return serviceId;
+          }
+        }
+      }).result.then(function () {
+        vm.disableService(serviceId);
+        //TODO: should go to a new page after deactivate the service !!!
+      });
     };
 
   }
@@ -134,6 +168,7 @@
   angular
     .module('Hercules')
     .controller('CallController', CallController)
-    .controller('CallServiceSettingsController', CallServiceSettingsController);
+    .controller('CallServiceSettingsController', CallServiceSettingsController)
+    .controller('DisableConfirmController', DisableConfirmController);
 
 }());

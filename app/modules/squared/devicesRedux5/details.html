@@ -31,7 +31,9 @@
 
       <!-- room -->
 
-      <strong style="padding-bottom: 20px; display: block">Devices In Room</strong>
+      <strong style="padding-bottom: 20px; display: block">
+        Devices In Room
+      </strong>
       <ul class="small-block-grid-1 medium-block-grid-2 large-block-grid-3">
         <li
           ng-click="devices.expandDevice(device)"
@@ -49,7 +51,7 @@
          ng-bind-html="deviceDetails.device.product | highlight:devices.search">
       </strong>
 
-      <div style="display: flex; align-items: center; padding-bottom: 40px;">
+      <div class="para" style="display: flex; align-items: center;">
         <img
           ng-if="deviceDetails.device.image"
           ng-src="{{deviceDetails.device.image}}"
@@ -64,14 +66,29 @@
             />
             <span ng-bind-html="deviceDetails.device.readableState | highlight:devices.search"></span>
           </div>
-          <div>
-            <button
-              class="btn btn-default"
-              style="padding-left: 0"
-              ng-click="deviceDetails.deleteDevice()">
-              {{deviceDetails.device.needsActivation ? 'Delete activation code...' : 'Delete device...'}}
-              </span>
-            </button>
+          <div class="tag-container">
+            <span 
+              ng-repeat="tag in devices.tags.listTags(deviceDetails.device.url)">
+              <span ng-bind-html="tag | highlight:devices.search" />
+              <i 
+                class="fa fa-times" 
+                ng-click="devices.tags.removeTag(deviceDetails.device.url, tag)"
+              />
+            </span>
+            <a href 
+              ng-hide="devices.tags.isAdding"
+              ng-click="devices.tags.isAdding = !devices.tags.isAdding">
+              Add tag
+            </a>
+            <input 
+              type="text" 
+              placeholder="Enter tag..."
+              ng-model="devices.tags.newTag"
+              ng-show="devices.tags.isAdding"
+              focus-on="devices.tags.isAdding"
+              ng-blur="devices.tags.isAdding = false"
+              ng-keyup="devices.tags.createTag(deviceDetails.device.url, $event)"
+            />
           </div>
         </div>
       </div>
@@ -82,12 +99,25 @@
         ng-bind-html="deviceDetails.device.readableActivationCode | highlight:devices.search">
       </div>
 
+      <div ng-show="deviceDetails.device.hasIssues" class="device-issues">
+        <strong>Issues</strong>
+        <div class="para">
+          <div ng-repeat="event in deviceDetails.device.diagnosticsEvents">
+            <p>
+              <i class="fa fa-circle device-status-red" />
+              <span ng-bind-html="event.type | highlight:devices.search" />
+            </p>
+            <p>{{event.message}}</p>
+          </div>
+        </div>
+      </div>
+
       <strong
         ng-if="!deviceDetails.device.readableActivationCode">
          Details
       </strong>
 
-      <div style="padding-top: 20px;">
+      <div class="para">
         <div class="row" ng-show="deviceDetails.device[key]" ng-repeat="(key, name) in deviceDetails.deviceProps">
           <div
             class="small-3 columns">
@@ -100,25 +130,21 @@
         </div>
       </div>
 
-      <div style="margin-top: 40px; text-align: right;" ng-if="!deviceDetails.device.needsActivation">
+      <span ng-if="!deviceDetails.device.needsActivation">
         <button
           class="btn btn-default"
           ng-if="!deviceDetails.device.needsActivation"
           sq-click-promise="deviceDetails.reportProblem()">
           Report Problem
         </button>
-      </div>
+      </span>
 
-      <div ng-show="deviceDetails.device.hasIssues" class="device-issues">
-        <strong>Issues</strong>
-        <div ng-repeat="event in deviceDetails.device.diagnosticsEvents">
-          <p>
-            <i class="fa fa-circle device-status-red" />
-            <span ng-bind-html="event.type | highlight:devices.search" />
-          </p>
-          <p>{{event.message}}</p>
-        </div>
-      </div>
+      <button
+        class="btn btn-default"
+        ng-click="deviceDetails.deleteDevice()">
+        {{deviceDetails.device.needsActivation ? 'Delete activation code...' : 'Delete device...'}}
+        </span>
+      </button>
 
     </div>
   </div>

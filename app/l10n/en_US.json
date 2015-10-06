@@ -220,7 +220,9 @@
     "alarmsTab": "Alarms",
     "alarmsTabDesc": "Alarm Management",
     "eventsTab": "Events",
-    "eventsTabDesc": "Event Management"
+    "eventsTabDesc": "Event Management",
+    "messengerTab": "Messenger",
+    "messengerTabDesc": "Messenger Administration"
   },
   "index": {
     "welcome": "Welcome!",
@@ -1481,7 +1483,7 @@
     "none": "None",
     "partnerLogo": "Partner Logo",
     "logoOverride": "Customer Logo Override",
-    "allowCustomerLogo": "Enable Customer Logo for {{customerName}}"
+    "allowCustomerLogo": "Enable Customer Logo for {{customer}}"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
@@ -1863,7 +1865,7 @@
 
     "indexPageLabel_WebACD_webacd_settings": "Settings",
     "indexPageLabel_WebACD_webacd_queues": "Queues",
-    "indexPageLabel_WebACD_webacd_forms": "Forms",
+    "indexPageLabel_WebACD_webacd_form": "Forms",
 
     "indexPageLabel_RA_remote_options": "Settings",
     "indexPageLabel_RA_remote_groups": "Groups",
@@ -1901,7 +1903,7 @@
 
     "settingPageLabel_WebACD_webacd_settings": "WebACD Settings",
     "settingPageLabel_WebACD_webacd_queues": "WebACD Queues",
-    "settingPageLabel_WebACD_webacd_forms": "WebACD Leave Message Forms",
+    "settingPageLabel_WebACD_webacd_form": "WebACD Leave Message Forms",
 
     "settingPageLabel_RA_remote_options": "Remote Access Settings",
     "settingPageLabel_RA_remote_groups": "Remote Access Groups",
@@ -2035,7 +2037,7 @@
     "supportContacts": "Support Contacts",
     "partnerAdmin": "Partner Administrators",
     "brandingInfo": "If you want to display your own branding in addition to Cisco Spark, upload your logo below.",
-    "usePartnerLogo": "Use the same logo in use by {{partnerName}}",
+    "usePartnerLogo": "Use the same logo in use by {{partner}}",
     "supportInfo": "If you are providing support for your users, enter your support paramaters below. These parameters will be displayed under Support Options in the Spark application;"
   },
   "fileUpload": {
@@ -2206,5 +2208,28 @@
     "actionHeader": "Actions",
     "lineListError": "Error retrieving the line list. Please try reloading the page."
 
+  },
+
+  "messengerCiSync": {
+    "authRedirectHeading": "Authentication Redirect",
+    "authRedirectTooltip": "Is authentication redirected through Common Identity instead of CAS?",
+    "getFailed": "Failed getting CI Sync status",
+    "labelCILinkDate": "CI Link Date",
+    "labelOrgAdmin": "ORG Admin",
+    "labelOrgId": "Messenger Organization ID",
+    "labelOrgName": "Messenger Organization Name",
+    "labelOpsAdmin": "OPS Admin",
+    "labelUnauthorizedUser": "Unauthorized User",
+    "loading": "Loading CI Sync Status",
+    "orgAdminButtonText": "Org Admin",
+    "pageTitle": "Messenger CI Sync",
+    "patchFailed": "Failed updating CI Sync",
+    "patchSuccessful": "CI Sync updated",
+    "patchSyncButtonText": "Update",
+    "refresh": "Refresh",
+    "refreshFailed": "Failed refreshing CI Sync status",
+    "syncStatusHeading": "Sync Status",
+    "syncStatusTooltip": "Is syncing active between Messenger and Common Identity?",
+    "unauthorized": "Not authorized to view this state"
   }
 }

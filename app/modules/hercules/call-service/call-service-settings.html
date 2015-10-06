@@ -19,12 +19,18 @@
       Effortlessly share your desktop with Spark while you are on your work phone.
       </p>
 
+      <p>
+        On by default
+      </p>
+
       <h5>
         Connect
+      </h5>
+      <p>
         <span class="switch small right">
           <input ng-click="callServiceSettings.toggleEc()" ng-model="callServiceSettings.squaredFusionEc" id="checkboxSquaredFusionEc" type="checkbox">
         </span>
-      </h5>
+      </p>
 
       <p>
         Answer your work phone or call your coworkers from Spark.
@@ -34,17 +40,15 @@
 
       <h5>Sip domain</h5>
 
-        <form ng-submit="callServiceSettings.updateSipDomain()">
         <input type="text"
                ng-disabled="saving"
                ng-blur="callServiceSettings.updateSipDomain()"
-               placeholder="SIP domain or static host name / IP address, for example, yourdomain.com)"
+               placeholder="SIP domain or static host name / IP address, for example, yourdomain.com"
                class="form-control"
                id="sipDomain" type="text" ng-model="callServiceSettings.org.sipDomain"/>
-        </form>
 
-      <div ng-show="callServiceSettings.error" class="alert alert-danger" style="margin: 0 10px 10px 10px">
-        {{callServiceSettings.error}}
+      <div ng-show="callServiceSettings.sipError" class="alert alert-danger">
+        <small class="error">{{callServiceSettings.sipError}}</small>
       </div>
 
       <button ng-disabled="callServiceSettings.loading || callServiceSettings.savingSip" id="convertActionButton" class="btn-primary"
@@ -84,16 +88,14 @@
       </p>
 
 
-      <form>
       <textarea ng-disabled="saving"
                 placeholder="Separate multiple email addresses by commas, for example, foo@yourdomain.com, bar@yourdomain.com, ..."
                 class="form-control"
                 id="wx2_users"
                 type="text"
                 ng-model="callServiceSettings.config.wx2users"></textarea>
-      </form>
-      <div ng-show="callServiceSettings.error" class="alert alert-danger" style="margin: 0 10px 10px 10px">
-        {{callServiceSettings.error}}
+      <div ng-show="callServiceSettings.emailError" class="alert alert-danger">
+        <small class="error">{{callServiceSettings.emailError}}</small>
       </div>
 
       <button ng-disabled="callServiceSettings.loading || callServiceSettings.savingEmail" id="convertActionButton"
@@ -119,7 +121,9 @@
         Additional steps to remove the service from your on premise devices are required.
         See doumentation for guideance and further instructions.
       </p>
-      <button class="btn-danger">DEACTIVATE</button>
+      <button ng-show="callServiceSettings.serviceEnabled"
+              class="btn-danger"
+              ng-click="callServiceSettings.confirmDisable('squared-fusion-uc')">DEACTIVATE</button>
 
       <p>
         Go to Help Central for help uninstalling a Hybrid Service.
