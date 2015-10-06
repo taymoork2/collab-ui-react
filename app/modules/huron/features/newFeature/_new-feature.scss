@@ -20,7 +20,7 @@
   }
 
   & div {
-    padding-top: rem-calc(10);
+    @include vr-spacing(pt, .5);
   }
 }
 
@@ -37,17 +37,21 @@
 .huron-new-feature-modal {  // The modal body.
   display: flex;
   flex-direction: row;
-  padding: rem-calc(0) rem-calc(30) rem-calc(30) rem-calc(30);
+  @include vr-spacing(pt, 0);
+  @include vr-spacing(pr, 2);
+  @include vr-spacing(pb, 2);
+  @include vr-spacing(pl, 2);
 
   & button {               // The button options in the body.
     position: relative;
     color: $gray-darkest;
     background-color: $gray-lightest;
-    margin: rem-calc(2);
+    @include vr-spacing(mh, .125);
     border-style: hidden;
     width: rem-calc(278);
     height: vr-adjust(300);
-    padding: 0;
+    @include vr-spacing(p, 0);
+
     &:hover {
       background-color: $gray-light;
     }
@@ -60,7 +64,7 @@
   width: 100%;
 }
 
-.feature-icon-circle {    // Icon in the option.
+.feature-icon-circle {      // Icon in the option.
   font-family: $brand-font-cisco-TT-Extra-Light;
   margin-left: auto;
   margin-right: auto;
@@ -70,7 +74,7 @@
   border-radius: 50%;
   width: rem-calc(78);
   height: rem-calc(78);
-  padding: rem-calc(10);
+  @include vr-spacing(pt, .5);
 }
 
 .feature-icon-color-AA {
@@ -93,7 +97,7 @@
   position: absolute;
   top: 55%;
   width: 100%;
-  padding: rem-calc(25);
+  @include vr-spacing(p, 1.5);
 }
 
 
