@@ -40,17 +40,15 @@
 
       <h5>Sip domain</h5>
 
-        <form ng-submit="callServiceSettings.updateSipDomain()">
         <input type="text"
                ng-disabled="saving"
                ng-blur="callServiceSettings.updateSipDomain()"
-               placeholder="SIP domain or static host name / IP address, for example, yourdomain.com)"
+               placeholder="SIP domain or static host name / IP address, for example, yourdomain.com"
                class="form-control"
                id="sipDomain" type="text" ng-model="callServiceSettings.org.sipDomain"/>
-        </form>
 
-      <div ng-show="callServiceSettings.error" class="alert alert-danger" style="margin: 0 10px 10px 10px">
-        {{callServiceSettings.error}}
+      <div ng-show="callServiceSettings.sipError" class="alert alert-danger">
+        <small class="error">{{callServiceSettings.sipError}}</small>
       </div>
 
       <button ng-disabled="callServiceSettings.loading || callServiceSettings.savingSip" id="convertActionButton" class="btn-primary"
@@ -90,16 +88,14 @@
       </p>
 
 
-      <form>
       <textarea ng-disabled="saving"
                 placeholder="Separate multiple email addresses by commas, for example, foo@yourdomain.com, bar@yourdomain.com, ..."
                 class="form-control"
                 id="wx2_users"
                 type="text"
                 ng-model="callServiceSettings.config.wx2users"></textarea>
-      </form>
-      <div ng-show="callServiceSettings.error" class="alert alert-danger" style="margin: 0 10px 10px 10px">
-        {{callServiceSettings.error}}
+      <div ng-show="callServiceSettings.emailError" class="alert alert-danger">
+        <small class="error">{{callServiceSettings.emailError}}</small>
       </div>
 
       <button ng-disabled="callServiceSettings.loading || callServiceSettings.savingEmail" id="convertActionButton"

@@ -87,13 +87,14 @@
     //});
 
     vm.updateSipDomain = function () {
-      vm.error = null;
+      vm.sipError = null;
       vm.savingSip = true;
+
       USSService2.updateOrg(vm.org).then(function (res) {
         vm.savingSip = false;
       }, function (err) {
         vm.savingSip = false;
-        vm.error = "SIP domain was invalid. Please enter a valid SIP domain or IP address.";
+        vm.sipError = "SIP domain was invalid. Please enter a valid SIP domain or IP address.";
       });
       //$scope.error = null;
       //$scope.saving = true;
@@ -126,14 +127,13 @@
 
     vm.writeConfig = function () {
       if (vm.config.wx2users && !MailValidatorService.isValidEmailCsv(vm.config.wx2users)) {
-        vm.error = "Please enter a list of comma-separated email addresses";
+        vm.emailError = "Please enter a list of comma-separated email addresses";
       } else {
-        vm.error = null;
+        vm.emailError = null;
         vm.savingEmail = true;
         NotificationConfigService.write(vm.config, function (err) {
           vm.savingEmail = false;
           if (err) {
-            //console.log("Error:", err);
             return XhrNotificationService.notify(err);
           }
         });
