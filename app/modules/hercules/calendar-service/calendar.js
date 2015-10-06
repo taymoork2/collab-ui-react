@@ -2,11 +2,13 @@
   'use strict';
 
   /* @ngInject */
-  function CalendarController($state, $modal, $scope, ClusterService, USSService2, ConverterService, ServiceStatusSummaryService) {
+  function CalendarController(FmsNotificationService, $state, $modal, $scope, ClusterService, USSService2, ConverterService, ServiceStatusSummaryService) {
     ClusterService.subscribe(angular.noop, {
       scope: $scope
     });
     var vm = this;
+
+    FmsNotificationService.refresh();
 
     vm.clusters = ClusterService.getClusters();
 
