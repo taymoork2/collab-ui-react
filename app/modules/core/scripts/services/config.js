@@ -812,7 +812,7 @@ angular.module('Core')
           'webex-reports',
           'webex-reports-iframe'
         ],
-        Application: ['organizationAdd', 'organization-overview']
+        Application: ['organizations', 'organization-overview']
       };
 
       config.serviceStates = {
