@@ -1861,7 +1861,7 @@
 
     "indexPageLabel_WebACD_webacd_settings": "Settings",
     "indexPageLabel_WebACD_webacd_queues": "Queues",
-    "indexPageLabel_WebACD_webacd_forms": "Forms",
+    "indexPageLabel_WebACD_webacd_form": "Forms",
 
     "indexPageLabel_RA_remote_options": "Settings",
     "indexPageLabel_RA_remote_groups": "Groups",
@@ -1899,7 +1899,7 @@
 
     "settingPageLabel_WebACD_webacd_settings": "WebACD Settings",
     "settingPageLabel_WebACD_webacd_queues": "WebACD Queues",
-    "settingPageLabel_WebACD_webacd_forms": "WebACD Leave Message Forms",
+    "settingPageLabel_WebACD_webacd_form": "WebACD Leave Message Forms",
 
     "settingPageLabel_RA_remote_options": "Remote Access Settings",
     "settingPageLabel_RA_remote_groups": "Remote Access Groups",
