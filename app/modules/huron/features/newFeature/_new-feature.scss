@@ -59,6 +59,8 @@
 }
 
 .feature-icon-container {
+  position: absolute;
+  top: 0;
   @include vr-spacing(pt, 2.5);
   width: 100%;
 }
@@ -89,6 +91,8 @@
 }
 
 .feature-label-container {
+  position: absolute;
+  top: vr-adjust(118);
   @include vr-spacing(pt, 2);
   color: $brand-info-light;
   width: 100%;
@@ -96,6 +100,8 @@
 
 .feature-description-container {
   @include vr-spacing(pt, 2);
+  position: absolute;
+  top: vr-adjust(178);
   width: 100%;
   @include vr-spacing(ph, 1.5);
   @include vr-spacing(pb, 1.5);
