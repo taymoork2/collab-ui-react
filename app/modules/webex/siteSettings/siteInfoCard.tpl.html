@@ -1,0 +1,95 @@
+
+  <cs-card class="cs-card full header-background">
+    <article>
+      <header>
+        <h4>
+          {{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.label}}
+        </h4>
+      </header>
+      
+      <section>
+        <div class="configure-card">
+          <div class="left-side">
+            <div class="service-name">
+              <i class="icon icon-webex" />
+              <span>&nbsp;WebEx</span>
+            </div>
+          </div>
+          
+          <div class="right-side">
+            <div class="configure-content">
+              <div class="text-center">
+                <div translate="webexSiteSettingsLabels.hostAccountsTitle"></div>
+                
+                <div class="overview-count">
+                  {{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.licensesUsage.count}}
+                </div>
+                
+                <div>
+                  <span translate="webexSiteSettingsLabels.activeTitle"></span>
+                </div>
+              </div>
+                
+              <div class="text-center">
+                <div>
+                  &nbsp;
+                </div>
+                
+                <div class="overview-count">
+                  {{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.licensesAvailable.count}}
+                </div>
+                  
+                <div>
+                  <span translate="webexSiteSettingsLabels.availableTitle"></span>
+                </div>
+              </div>
+                
+              <div class="text-center">
+                <div>
+                  &nbsp;
+                </div>
+                
+                <a id="siteInfo-siteInformation"
+                   name="siteInfo-siteInformation"
+                   ui-sref={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteInfoPageObj.uiSref}}>
+                   
+                  <i class="icon icon-circle-webex"></i>
+                </a>
+                
+                <a id={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteInfoPageObj.id}}
+                   name={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteInfoPageObj.id}}
+                   ui-sref={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteInfoPageObj.uiSref}}>
+                    
+                  <span>
+                    {{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteInfoPageObj.label}}
+                  </span>
+                </a>
+              </div>
+              
+              <div class="text-center">
+                <div>
+                  &nbsp;
+                </div>
+                
+                <a id="siteInfo-siteFeatures"
+                   name="siteInfo-siteFeatures"
+                   ui-sref={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.uiSref}}>
+                   
+                  <i class="icon icon-circle-star"></i>
+                </a>
+                
+                <a id={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.id}}
+                   name={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.id}}
+                   ui-sref={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.uiSref}}>
+                  
+                  <span>
+                    {{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.label}}                  
+                  </span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </article>
+  </cs-card>

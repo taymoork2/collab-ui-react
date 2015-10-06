@@ -270,6 +270,10 @@
       getqrima: 'getqrimage',
       oneTimePassword: '@oneTimePassword'
     }, {});
+  })
+
+  .factory('DeviceLogApiService', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/users/:userId/phones/:sipEndpointId/commands/logs', {}, {});
   });
 
 })();

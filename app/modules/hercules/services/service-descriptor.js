@@ -49,6 +49,20 @@ angular.module('Hercules')
           });
       };
 
+      var isServiceEnabled = function (serviceId, callback) {
+        $http
+          .get(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services')
+          .success(function (data) {
+            var service = _.find(data.fusion_services, {
+              service_id: serviceId
+            });
+            callback(null, service.enabled);
+          })
+          .error(function () {
+            callback(arguments);
+          });
+      };
+
       var serviceIcon = function (serviceId) {
         if (!serviceId) {
           return 'icon icon-circle-question';
@@ -72,6 +86,7 @@ angular.module('Hercules')
         filterEnabledServices: filterEnabledServices,
         filterAllExceptManagement: filterAllExceptManagement,
         isFusionEnabled: isFusionEnabled,
+        isServiceEnabled: isServiceEnabled,
         setServiceEnabled: setServiceEnabled,
         serviceIcon: serviceIcon
       };

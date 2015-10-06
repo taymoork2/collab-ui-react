@@ -1,0 +1,69 @@
+@CHARSET "UTF-8";
+
+.siteindex-panel {
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-color: #999999;
+  background-color: #ffffff;
+}
+
+.configure-card{
+    display: flex;
+    justify-content: space-around;
+    height: 100%;
+    width: 100%;
+    div {
+        &.left-side {
+            border-right: 1px solid $gray-lighter;
+            @include vr-spacing(mv, 1.5);
+            @include vr-spacing(pv, 2);
+            @include vr-spacing(ph, 1.5, 1px);
+             width:  33%;
+            .service-name {
+                display: flex;
+                align-items: center;
+                span {
+                    font-size: rem(36);
+                    font-family: $brand-font-thin;
+                }
+                i {
+                    font-size: rem(48);
+                }
+            }
+        }
+        &.right-side {
+            width: 67%;
+            display: flex;
+            flex-direction: column;
+            @include vr-spacing(pv, 1.5);
+            @include vr-spacing(ph, 1);
+            .overview-title {
+                color: $brand-primary;
+                font-family: $brand-font-light;
+            }
+            .overview-count {
+                @include vr-spacing(pt, 1);
+                font-size: rem(48);
+                line-height: 1;
+                color: $brand-info;
+                display: flex;
+                flex-direction: column;
+            }
+            i {
+                @include vr-spacing(pt, 1);
+                font-size: rem(48);
+                line-height: 1;
+                display: flex;
+                flex-direction: column;
+                cursor: pointer;
+                color: $text-color;
+                &:hover {
+                  color: $anchor-font-color-hover;
+                }
+            }
+            .overview-label {
+                color: $gray;
+            }
+        }
+    }
+}

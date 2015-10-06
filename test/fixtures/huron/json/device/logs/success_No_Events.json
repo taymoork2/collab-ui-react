@@ -1,0 +1,11 @@
+[{
+  "trackingId": "43755d54-73ce-44bd-99ce-e4aed22c5284",
+  "initiatorId": "admin@int2.huron-alpha.com",
+  "status": "sent",
+  "commandType": "epLogs",
+  "payload": "{\"requestType\":\"sendReport\",\"initiator\":\"admin@int2.huron-alpha.com\",\"ticketId\":null,\"trackingId\":\"43755d54-73ce-44bd-99ce-e4aed22c5284\",\"reportType\":\"prt\",\"links\":[]}",
+  "ticketId": "",
+  "results": null,
+  "events": [],
+  "links": []
+}]

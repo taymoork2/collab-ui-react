@@ -2,6 +2,11 @@
 
   background-color: $brand-white;
 
+  .cs-card {
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+  }
+
   .page-header {
     .title-heading {
       margin-right: 1rem;
@@ -27,6 +32,22 @@
     .page-title {
       position: relative;
     }
+  }
+/**
+  Preliminary styling of subpages to get margins
+  */
+  .subpage {
+    padding:20px;
+    h4 {
+      padding-bottom:0.5rem;
+      padding-top:0.5rem;
+
+    }
+    h5 {
+      padding-bottom:0.1rem;
+      padding-top:0.5rem;
+    }
+
   }
 }
 
