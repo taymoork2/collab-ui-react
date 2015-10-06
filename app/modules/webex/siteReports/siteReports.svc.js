@@ -76,7 +76,7 @@ angular.module('WebExReports').service('reportService', [
 
     var getFullURLGivenNavInfoAndPageId = function (navInfo, pageid) {
       var navItemId = pageid_to_navItemId_mapping[pageid];
-      if(angular.isUndefined(navItemId)){
+      if (angular.isUndefined(navItemId)) {
         return undefined;
       }
       var filterByNavItemId = function (navElement) {
@@ -88,7 +88,7 @@ angular.module('WebExReports').service('reportService', [
       };
       var navItems = navInfo.ns1_siteAdminNavUrl.filter(filterByNavItemId);
       var navItem = navItems[0]; //assume one and only one item returned
-      if(angular.isUndefined(navItem)){
+      if (angular.isUndefined(navItem)) {
         $log.log("YUTR: navItem is undefined");
       }
       return navItem.ns1_url;
@@ -104,7 +104,7 @@ angular.module('WebExReports').service('reportService', [
         return "webex-reports-iframe({" +
           "  siteUrl:" + "'" + this.siteUrl + "'" + "," +
           "  reportPageId:" + "'" + this.reportPageId + "'" + "," +
-          "  reportPageIframeUrl:" + "'https://" + this.siteUrl + this.reportPageIframeUrl + "'" +
+          "  reportPageIframeUrl:" + "' " + this.reportPageIframeUrl + "'" +
           "})";
       };
       this.uisrefString = this.toUIsrefString();
@@ -158,7 +158,7 @@ angular.module('WebExReports').service('reportService', [
           var theUrl = "www.yahoo.com";
           if (mapJsonDefined) {
             var tempUrl = getFullURLGivenNavInfoAndPageId(mapJson.bodyJson, rid);
-            if(angular.isDefined(tempUrl)){
+            if (angular.isDefined(tempUrl)) {
               theUrl = tempUrl;
             }
           }
