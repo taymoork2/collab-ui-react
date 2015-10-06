@@ -154,24 +154,33 @@
       // -CI Roles: contains id_full_admin
       // -CI Entitlements: webex-squared AND webex-messenger
       CiService.hasEntitlements(requiredEntitlements)
-        .then(function (has) {
-          if (has) {
+        .then(function (hasEntitlements) {
+          if (hasEntitlements) {
             // Must have full admin role
             CiService.hasRole(fullAdminRole)
-              .then(function (has) {
-                if (has) {
+              .then(function (hasRole) {
+                if (hasRole) {
                   // Check if Customer Success admin
-                  if (CiService.hasRole(customerSuccessRole)) {
-                    setOpsAdmin();
-                  } else {
-                    setOrgAdmin();
-                  }
+                  CiService.hasRole(customerSuccessRole)
+                    .then(function(hasRole) {
+                      if (hasRole) {
+                        setOpsAdmin();
+                      } else {
+                        setOrgAdmin();
+                      }
 
-                  defer.resolve();
+                      defer.resolve();
+                    }, function(errorMsg) {
+                      defer.reject(errorMsg);
+                    });
+                } else {
+                  defer.reject('User lacks required full admin role to view this content');
                 }
               }, function (errorMsg) {
                 defer.reject('Failed getting user roles: ' + errorMsg);
               });
+          } else {
+            defer.reject('User lacks required entitlements to view this content');
           }
         }, function (errorMsg) {
           defer.reject('Failed getting user entitlements: ' + errorMsg);
