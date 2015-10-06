@@ -1,14 +1,17 @@
 <div class="no-features-available" ng-controller="NewFeatureCtrl">
 
-  <div class="row columns medium-4"
-       translate="huronDetails.featuresNotYetConfiguredPage.nothingToSee"></div>
-
-  <div class="row columns medium-12">
-    <h2 translate="huronDetails.featuresNotYetConfiguredPage.letsCustomize"></h2>
+  <div>
+    <h4 class="nothing-to-see"
+       translate="huronDetails.featuresNotYetConfiguredPage.nothingToSee"></h4>
   </div>
 
-  <div class="row columns medium-4">
-    <button class="button info" ng-click="open()">New</button>
+  <div>
+    <h1 class="lets-customize"
+        translate="huronDetails.featuresNotYetConfiguredPage.letsCustomize"></h1>
+  </div>
+
+  <div>
+    <button class="new-huron-feature-button" ng-click="open()">New</button>
   </div>
 
   <uc-new-feature-modal></uc-new-feature-modal>

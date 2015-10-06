@@ -1,3 +1,4 @@
+//////////// No features available yet page ///////////////
 .no-features-available {
   display: flex;
   flex-direction: column;
@@ -10,10 +11,28 @@
   align-items: center;
   justify-content: center;
 
+  .nothing-to-see {
+    color: $gray-dark;
+  }
+
+  .lets-customize {
+    color: $gray-darker;
+  }
+
   & div {
     padding-top: rem-calc(10);
   }
 }
+
+.new-huron-feature-button {
+  background-color: $brand-info-dark;
+  font-size: $font-size-h5;
+  font-weight: bold;
+  width: rem-calc(110);
+  height: rem-calc(40);
+}
+
+////////// Create new feature modal ///////////////
 
 .huron-new-feature-modal {  // The modal body.
   display: flex;
@@ -76,3 +95,5 @@
   width: 100%;
   padding: rem-calc(25);
 }
+
+

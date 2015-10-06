@@ -8,7 +8,7 @@
   <div class="huron-new-feature-modal">
     <button ng-repeat="feature in features" ng-click="ok((feature.code | translate))">
       <div class="feature-icon-container">
-        <label class="feature-icon-circle feature-icon-color-{{feature.code | translate}}">
+        <label class="feature-icon-circle feature-icon-color-{{feature.cssClass}}">
             {{feature.code | translate}}
         </label>
       </div>
