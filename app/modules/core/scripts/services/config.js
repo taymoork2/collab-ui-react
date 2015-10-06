@@ -184,8 +184,8 @@ angular.module('Core')
         ],
 
         helpUrl: 'https://support.ciscospark.com',
-        ssoUrl: 'https://support.ciscospark.com/customer/portal/articles/1909112-sso-setup',
-        rolesUrl: 'https://support.ciscospark.com/customer/portal/articles/1908564-overview-of-admin-roles',
+        ssoUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt/content?filterID=contentstatus[published]~category[security]',
+        rolesUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt/content?filterID=contentstatus[published]~category[getting-started]',
         supportUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt',
 
         usersperpage: 100,
