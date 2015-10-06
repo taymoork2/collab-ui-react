@@ -7,22 +7,24 @@
     '$stateParams',
     '$translate',
     '$filter',
-    'XmlApiFact',
-    'WebexUserSettingsSvc',
-    'XmlApiInfoSvc',
     'Authinfo',
     'Notification',
+    'WebExUtilsFact',
+    'WebExXmlApiFact',
+    'WebexUserSettingsSvc',
+    'WebExXmlApiInfoSvc',
     function (
       $q,
       $log,
       $stateParams,
       $translate,
       $filter,
-      XmlApiFact,
-      userSettingsModel,
-      xmlApiInfo,
       Authinfo,
-      Notification
+      Notification,
+      WebExUtilsFact,
+      WebExXmlApiFact,
+      webExUserSettingsModel,
+      webExXmlApiInfo
     ) {
       return {
         /**
@@ -55,100 +57,43 @@
           return $stateParams.currentUser.name.familyName;
         }, // getFamilyName()
 
-        validateXmlData: function (
-          commentText,
-          infoXml,
-          startOfBodyStr,
-          endOfBodyStr
-        ) {
-          var funcName = "validateXmlData()";
-          var logMsg = "";
-
-          /*
-          logMsg = funcName + ": " + "\n" +
-            "commentText=" + commentText + "\n" +
-            "infoXml=\n" + infoXml + "\n" +
-            "startOfBodyStr=" + startOfBodyStr + "\n" +
-            "endOfBodyStr=" + endOfBodyStr;
-          $log.log(logMsg);
-          */
-
-          var headerJson = XmlApiFact.xml2JsonConvert(
-            commentText + " Header",
-            infoXml,
-            "<serv:header>",
-            "<serv:body>"
-          ).body;
-
-          var bodyJson = {};
-          if ((null != startOfBodyStr) && (null != endOfBodyStr)) {
-            bodyJson = XmlApiFact.xml2JsonConvert(
-              commentText,
-              infoXml,
-              startOfBodyStr,
-              endOfBodyStr
-            ).body;
-          }
-
-          var errReason = "";
-          var errId = "";
-          if ("SUCCESS" != headerJson.serv_header.serv_response.serv_result) {
-            errReason = headerJson.serv_header.serv_response.serv_reason;
-            errId = headerJson.serv_header.serv_response.serv_exceptionID;
-
-            logMsg = funcName + ": " + "ERROR!!!" + "\n" +
-              "headerJson=\n" + JSON.stringify(headerJson) + "\n" +
-              "errReason=\n" + errReason;
-            $log.log(logMsg);
-          }
-
-          var result = {
-            headerJson: headerJson,
-            bodyJson: bodyJson,
-            errId: errId,
-            errReason: errReason
-          };
-
-          return result;
-        }, // validateXmlData()
-
         //pmrRequiresMeetingCenterPROorSTD
 
         getUserSettingsModel: function () {
-          return userSettingsModel;
+          return webExUserSettingsModel;
         }, // getUserSettingsModel()
 
         initUserSettingsModel: function () {
-          userSettingsModel.viewReady = false;
-          userSettingsModel.hasLoadError = false;
-          userSettingsModel.allowRetry = false;
-          userSettingsModel.sessionTicketErr = false;
-          userSettingsModel.disableCancel = false;
-          userSettingsModel.disableCancel2 = false;
-          userSettingsModel.disableSave = false;
-          userSettingsModel.disableSave2 = false;
+          webExUserSettingsModel.viewReady = false;
+          webExUserSettingsModel.hasLoadError = false;
+          webExUserSettingsModel.allowRetry = false;
+          webExUserSettingsModel.sessionTicketErr = false;
+          webExUserSettingsModel.disableCancel = false;
+          webExUserSettingsModel.disableCancel2 = false;
+          webExUserSettingsModel.disableSave = false;
+          webExUserSettingsModel.disableSave2 = false;
 
-          userSettingsModel.trainingCenter.handsOnLabAdmin.label = $translate.instant("webexUserSettingLabels.handsOnLabAdminLabel");
+          webExUserSettingsModel.trainingCenter.handsOnLabAdmin.label = $translate.instant("webexUserSettingLabels.handsOnLabAdminLabel");
 
-          userSettingsModel.eventCenter.optimizeBandwidthUsage.label = $translate.instant("webexUserSettingLabels.optimizeBandwidthUsageLabel");
+          webExUserSettingsModel.eventCenter.optimizeBandwidthUsage.label = $translate.instant("webexUserSettingLabels.optimizeBandwidthUsageLabel");
 
-          userSettingsModel.otherPrivilegesSection.label = $translate("webexUserSettingLabels.OtherPrivilegesLabel");
-          userSettingsModel.pmr.label = $translate.instant("webexUserSettingLabels.pmrLabel");
-          userSettingsModel.videoSettings.label = $translate.instant("webexUserSettingLabels.videoSettingsLabel");
-          userSettingsModel.videoSettings.hiQualVideo.label = $translate.instant("webexUserSettingLabels.hiQualVideoLabel");
-          userSettingsModel.videoSettings.hiQualVideo.hiDefVideo.label = $translate.instant("webexUserSettingLabels.hiDefVideoLabel");
+          webExUserSettingsModel.otherPrivilegesSection.label = $translate("webexUserSettingLabels.OtherPrivilegesLabel");
+          webExUserSettingsModel.pmr.label = $translate.instant("webexUserSettingLabels.pmrLabel");
+          webExUserSettingsModel.videoSettings.label = $translate.instant("webexUserSettingLabels.videoSettingsLabel");
+          webExUserSettingsModel.videoSettings.hiQualVideo.label = $translate.instant("webexUserSettingLabels.hiQualVideoLabel");
+          webExUserSettingsModel.videoSettings.hiQualVideo.hiDefVideo.label = $translate.instant("webexUserSettingLabels.hiDefVideoLabel");
 
-          userSettingsModel.telephonyPriviledge.label = $translate.instant("webexUserSettingLabels.telephonyPrivilegesLabel");
-          userSettingsModel.telephonyPriviledge.callInTeleconf.label = $translate.instant("webexUserSettingLabels.callInTeleconfLabel");
-          userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].label = $translate.instant("webexUserSettingLabels.tollOnlyLabel");
-          userSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].label = $translate.instant("webexUserSettingLabels.tollAndTollFreeLabel");
-          userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallIn.label = $translate.instant("webexUserSettingLabels.teleconfViaGlobalCallinLabel");
-          userSettingsModel.telephonyPriviledge.callInTeleconf.teleCLIAuthEnabled.label = $translate.instant("webexUserSettingLabels.teleCLIAuthEnabledLabel");
-          userSettingsModel.telephonyPriviledge.callBackTeleconf.label = $translate.instant("webexUserSettingLabels.callBackTeleconfLabel");
-          userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.label = $translate.instant("webexUserSettingLabels.globalCallBackTeleconfLabel");
-          userSettingsModel.telephonyPriviledge.integratedVoIP.label = $translate.instant("webexUserSettingLabels.integratedVoIPLaabel");
+          webExUserSettingsModel.telephonyPriviledge.label = $translate.instant("webexUserSettingLabels.telephonyPrivilegesLabel");
+          webExUserSettingsModel.telephonyPriviledge.callInTeleconf.label = $translate.instant("webexUserSettingLabels.callInTeleconfLabel");
+          webExUserSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[0].label = $translate.instant("webexUserSettingLabels.tollOnlyLabel");
+          webExUserSettingsModel.telephonyPriviledge.callInTeleconf.callInTollTypes[1].label = $translate.instant("webexUserSettingLabels.tollAndTollFreeLabel");
+          webExUserSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallIn.label = $translate.instant("webexUserSettingLabels.teleconfViaGlobalCallinLabel");
+          webExUserSettingsModel.telephonyPriviledge.callInTeleconf.teleCLIAuthEnabled.label = $translate.instant("webexUserSettingLabels.teleCLIAuthEnabledLabel");
+          webExUserSettingsModel.telephonyPriviledge.callBackTeleconf.label = $translate.instant("webexUserSettingLabels.callBackTeleconfLabel");
+          webExUserSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.label = $translate.instant("webexUserSettingLabels.globalCallBackTeleconfLabel");
+          webExUserSettingsModel.telephonyPriviledge.integratedVoIP.label = $translate.instant("webexUserSettingLabels.integratedVoIPLaabel");
 
-          return userSettingsModel;
+          return webExUserSettingsModel;
         }, // initUserSettingsModel()
 
         initXmlApiInfo: function (
@@ -156,11 +101,11 @@
           webexSiteName,
           webexAdminSessionTicket
         ) {
-          xmlApiInfo.xmlServerURL = "https://" + webexSiteUrl + "/WBXService/XMLService";
-          xmlApiInfo.webexSiteName = webexSiteName;
-          xmlApiInfo.webexAdminID = Authinfo.getPrimaryEmail();
-          xmlApiInfo.webexAdminSessionTicket = webexAdminSessionTicket;
-          xmlApiInfo.webexUserId = $stateParams.currentUser.userName;
+          webExXmlApiInfo.xmlServerURL = "https://" + webexSiteUrl + "/WBXService/XMLService";
+          webExXmlApiInfo.webexSiteName = webexSiteName;
+          webExXmlApiInfo.webexAdminID = Authinfo.getPrimaryEmail();
+          webExXmlApiInfo.webexAdminSessionTicket = webexAdminSessionTicket;
+          webExXmlApiInfo.webexUserId = $stateParams.currentUser.userName;
         }, // initXmlApiInfo()
 
         //returns true if pro or std meeting center or both are checked.
@@ -196,28 +141,28 @@
           var funcName = "updateUserSettingsModelPart1()";
           var logMsg = null;
 
-          var userInfoJson = userSettingsModel.userInfo.bodyJson;
-          var siteInfoJson = userSettingsModel.siteInfo.bodyJson;
-          var meetingTypesInfoJson = userSettingsModel.meetingTypesInfo.bodyJson;
+          var userInfoJson = webExUserSettingsModel.userInfo.bodyJson;
+          var siteInfoJson = webExUserSettingsModel.siteInfo.bodyJson;
+          var meetingTypesInfoJson = webExUserSettingsModel.meetingTypesInfo.bodyJson;
 
           // Start of center status update
           var siteServiceTypes = [].concat(siteInfoJson.ns1_siteInstance.ns1_metaData.ns1_serviceType);
 
-          userSettingsModel.meetingCenter.isSiteEnabled = false;
-          userSettingsModel.eventCenter.isSiteEnabled = false;
-          userSettingsModel.trainingCenter.isSiteEnabled = false;
-          userSettingsModel.supportCenter.isSiteEnabled = false;
+          webExUserSettingsModel.meetingCenter.isSiteEnabled = false;
+          webExUserSettingsModel.eventCenter.isSiteEnabled = false;
+          webExUserSettingsModel.trainingCenter.isSiteEnabled = false;
+          webExUserSettingsModel.supportCenter.isSiteEnabled = false;
 
           siteServiceTypes.forEach(
             function chkSiteServiceType(siteServiceType) {
-              if (siteServiceType == userSettingsModel.meetingCenter.label) {
-                userSettingsModel.meetingCenter.isSiteEnabled = true;
-              } else if (siteServiceType == userSettingsModel.eventCenter.label) {
-                userSettingsModel.eventCenter.isSiteEnabled = true;
-              } else if (siteServiceType == userSettingsModel.trainingCenter.label) {
-                userSettingsModel.trainingCenter.isSiteEnabled = true;
-              } else if (siteServiceType == userSettingsModel.supportCenter.label) {
-                userSettingsModel.supportCenter.isSiteEnabled = true;
+              if (siteServiceType == webExUserSettingsModel.meetingCenter.label) {
+                webExUserSettingsModel.meetingCenter.isSiteEnabled = true;
+              } else if (siteServiceType == webExUserSettingsModel.eventCenter.label) {
+                webExUserSettingsModel.eventCenter.isSiteEnabled = true;
+              } else if (siteServiceType == webExUserSettingsModel.trainingCenter.label) {
+                webExUserSettingsModel.trainingCenter.isSiteEnabled = true;
+              } else if (siteServiceType == webExUserSettingsModel.supportCenter.label) {
+                webExUserSettingsModel.supportCenter.isSiteEnabled = true;
               }
             } // chkSiteServiceType()
           ); // siteServiceTypes.forEach()
@@ -242,17 +187,17 @@
 
                 siteMtgServiceTypes.forEach(
                   function chkSiteMtgServiceType(siteMtgServiceType) {
-                    if (userSettingsModel.meetingCenter.serviceType == siteMtgServiceType) {
+                    if (webExUserSettingsModel.meetingCenter.serviceType == siteMtgServiceType) {
                       meetingCenterApplicable = true;
-                    } else if (userSettingsModel.eventCenter.serviceType == siteMtgServiceType) {
+                    } else if (webExUserSettingsModel.eventCenter.serviceType == siteMtgServiceType) {
                       if ("AUO" != siteMtgProductCodePrefix) {
                         eventCenterApplicable = true;
                       }
-                    } else if (userSettingsModel.trainingCenter.serviceType == siteMtgServiceType) {
+                    } else if (webExUserSettingsModel.trainingCenter.serviceType == siteMtgServiceType) {
                       if ("AUO" != siteMtgProductCodePrefix) {
                         trainingCenterApplicable = true;
                       }
-                    } else if (userSettingsModel.supportCenter.serviceType == siteMtgServiceType) {
+                    } else if (webExUserSettingsModel.supportCenter.serviceType == siteMtgServiceType) {
                       if (
                         ("SMT" != siteMtgProductCodePrefix) &&
                         ("AUO" != siteMtgProductCodePrefix)
@@ -287,7 +232,7 @@
             ); // siteMeetingTypes.forEach()
           }
 
-          userSettingsModel.sessionTypes = sessionTypes;
+          webExUserSettingsModel.sessionTypes = sessionTypes;
           var enabledSessionTypesIDs = [].concat(userInfoJson.use_meetingTypes.use_meetingType);
 
           /*
@@ -298,7 +243,7 @@
 
           enabledSessionTypesIDs.forEach(
             function chkEnabledSessionTypeID(enabledSessionTypeID) { // loop through user's enabled session type
-              userSettingsModel.sessionTypes.forEach(function (sessionType) {
+              webExUserSettingsModel.sessionTypes.forEach(function (sessionType) {
                 var sessionTypeId = sessionType.sessionTypeId;
 
                 /*
@@ -311,7 +256,7 @@
                 if (sessionType.sessionTypeId == enabledSessionTypeID) {
                   sessionType.sessionEnabled = true;
                 }
-              }); // userSettingsModel.sessionTypes.forEach()
+              }); // webExUserSettingsModel.sessionTypes.forEach()
             } // chkEnabledSessionTypeID()
           ); // enabledSessionTypesIDs.forEach()
           // End of Session Types update
@@ -321,66 +266,66 @@
           var funcName = "updateUserSettingsModelPart2()";
           var logMsg = null;
 
-          var userInfoJson = userSettingsModel.userInfo.bodyJson;
-          var siteInfoJson = userSettingsModel.siteInfo.bodyJson;
-          var meetingTypesInfoJson = userSettingsModel.meetingTypesInfo.bodyJson;
+          var userInfoJson = webExUserSettingsModel.userInfo.bodyJson;
+          var siteInfoJson = webExUserSettingsModel.siteInfo.bodyJson;
+          var meetingTypesInfoJson = webExUserSettingsModel.meetingTypesInfo.bodyJson;
 
           // Start of Telephony privileges
-          userSettingsModel.telephonyPriviledge.hybridAudio.isSiteEnabled = (
+          webExUserSettingsModel.telephonyPriviledge.hybridAudio.isSiteEnabled = (
             "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_hybridTeleconference
           ) ? true : false;
-          $log.log("Hybrid audio = " + userSettingsModel.telephonyPriviledge.hybridAudio.isSiteEnabled);
+          $log.log("Hybrid audio = " + webExUserSettingsModel.telephonyPriviledge.hybridAudio.isSiteEnabled);
 
-          userSettingsModel.telephonyPriviledge.telephonyType.isWebExAudio = (siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_isTSPUsingTelephonyAPI == "false" && //not TSP audio
+          webExUserSettingsModel.telephonyPriviledge.telephonyType.isWebExAudio = (siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_isTSPUsingTelephonyAPI == "false" && //not TSP audio
             siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_meetingPlace.ns1_persistentTSP == "false") ? true : false; // not MP audio
-          $log.log("WebEx audio = " + userSettingsModel.telephonyPriviledge.telephonyType.isWebExAudio);
+          $log.log("WebEx audio = " + webExUserSettingsModel.telephonyPriviledge.telephonyType.isWebExAudio);
 
-          userSettingsModel.telephonyPriviledge.telephonyType.isTspAudio = (siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_isTSPUsingTelephonyAPI == "true") ? true : false;
-          $log.log("TSP audio = " + userSettingsModel.telephonyPriviledge.telephonyType.isTspAudio);
+          webExUserSettingsModel.telephonyPriviledge.telephonyType.isTspAudio = (siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_isTSPUsingTelephonyAPI == "true") ? true : false;
+          $log.log("TSP audio = " + webExUserSettingsModel.telephonyPriviledge.telephonyType.isTspAudio);
 
           // Start of call-in teleconf
-          userSettingsModel.telephonyPriviledge.callInTeleconf.toll.isSiteEnabled = (
+          webExUserSettingsModel.telephonyPriviledge.callInTeleconf.toll.isSiteEnabled = (
             "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_callInTeleconferencing
           ) ? true : false;
 
-          userSettingsModel.telephonyPriviledge.callInTeleconf.toll.value = (
+          webExUserSettingsModel.telephonyPriviledge.callInTeleconf.toll.value = (
             "true" == userInfoJson.use_privilege.use_teleConfCallIn
           ) ? true : false;
 
-          userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.isSiteEnabled = (
+          webExUserSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.isSiteEnabled = (
             "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_tollFreeCallinTeleconferencing
           ) ? true : false;
 
-          userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value = (
+          webExUserSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value = (
             "true" == userInfoJson.use_privilege.use_teleConfTollFreeCallIn
           ) ? true : false;
 
-          userSettingsModel.telephonyPriviledge.callInTeleconf.value = (
-            (userSettingsModel.telephonyPriviledge.callInTeleconf.toll.value) ||
-            (userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value)
+          webExUserSettingsModel.telephonyPriviledge.callInTeleconf.value = (
+            (webExUserSettingsModel.telephonyPriviledge.callInTeleconf.toll.value) ||
+            (webExUserSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value)
           ) ? true : false;
 
-          if (userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value) {
-            userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType = 2;
-          } else if (userSettingsModel.telephonyPriviledge.callInTeleconf.toll.value) {
-            userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType = 1;
+          if (webExUserSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value) {
+            webExUserSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType = 2;
+          } else if (webExUserSettingsModel.telephonyPriviledge.callInTeleconf.toll.value) {
+            webExUserSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType = 1;
           } else {
-            userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType = 0;
+            webExUserSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType = 0;
           }
 
-          userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallIn.isSiteEnabled = (
+          webExUserSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallIn.isSiteEnabled = (
             "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_intlCallInTeleconferencing
           ) ? true : false;
 
-          userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallIn.value = (
+          webExUserSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallIn.value = (
             "true" == userInfoJson.use_privilege.use_teleConfCallInInternational
           ) ? true : false;
 
-          userSettingsModel.telephonyPriviledge.callInTeleconf.teleCLIAuthEnabled.isSiteEnabled = (
+          webExUserSettingsModel.telephonyPriviledge.callInTeleconf.teleCLIAuthEnabled.isSiteEnabled = (
             "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_teleCLIAuthEnabled
           ) ? true : false;
 
-          userSettingsModel.telephonyPriviledge.callInTeleconf.teleCLIAuthEnabled.value = (
+          webExUserSettingsModel.telephonyPriviledge.callInTeleconf.teleCLIAuthEnabled.value = (
             "true" == userInfoJson.use_privilege.use_teleCLIAuthEnabled
           ) ? true : false;
 
@@ -389,52 +334,52 @@
             "ns1_tollFreeCallinTeleconferencing=" + siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_tollFreeCallinTeleconferencing + "\n" +
             "use_teleConfCallIn=" + userInfoJson.use_privilege.use_teleConfCallIn + "\n" +
             "use_teleConfTollFreeCallIn=" + userInfoJson.use_privilege.use_teleConfTollFreeCallIn + "\n" +
-            "toll.isSiteEnabled=" + userSettingsModel.telephonyPriviledge.callInTeleconf.toll.isSiteEnabled + "\n" +
-            "toll.value=" + userSettingsModel.telephonyPriviledge.callInTeleconf.toll.value + "\n" +
-            "tollFree.isSiteEnabled=" + userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.isSiteEnabled + "\n" +
-            "tollFree.value=" + userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value + "\n" +
-            "callInTeleconf=" + userSettingsModel.telephonyPriviledge.callInTeleconf.value + "\n" +
-            "callInTeleconf.selectedCallInTollType=" + userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType;
+            "toll.isSiteEnabled=" + webExUserSettingsModel.telephonyPriviledge.callInTeleconf.toll.isSiteEnabled + "\n" +
+            "toll.value=" + webExUserSettingsModel.telephonyPriviledge.callInTeleconf.toll.value + "\n" +
+            "tollFree.isSiteEnabled=" + webExUserSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.isSiteEnabled + "\n" +
+            "tollFree.value=" + webExUserSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value + "\n" +
+            "callInTeleconf=" + webExUserSettingsModel.telephonyPriviledge.callInTeleconf.value + "\n" +
+            "callInTeleconf.selectedCallInTollType=" + webExUserSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType;
           $log.log(logMsg);
           // End of call-in teleconf
 
-          userSettingsModel.telephonyPriviledge.callBackTeleconf.isSiteEnabled = (
+          webExUserSettingsModel.telephonyPriviledge.callBackTeleconf.isSiteEnabled = (
             "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_callBackTeleconferencing
           ) ? true : false;
 
-          userSettingsModel.telephonyPriviledge.callBackTeleconf.value = (
+          webExUserSettingsModel.telephonyPriviledge.callBackTeleconf.value = (
             "true" == userInfoJson.use_privilege.use_teleConfCallOut
           ) ? true : false;
 
-          userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.isSiteEnabled = (
+          webExUserSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.isSiteEnabled = (
             "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_intlCallBackTeleconferencing
           ) ? true : false;
 
-          userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.value = (
+          webExUserSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.value = (
             "true" == userInfoJson.use_privilege.use_teleConfCallOutInternational
           ) ? true : false;
 
-          userSettingsModel.telephonyPriviledge.otherTeleconfServices.isSiteEnabled = (
+          webExUserSettingsModel.telephonyPriviledge.otherTeleconfServices.isSiteEnabled = (
             "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_supportOtherTypeTeleconf
           ) ? true : false;
 
-          userSettingsModel.telephonyPriviledge.otherTeleconfServices.value = (
+          webExUserSettingsModel.telephonyPriviledge.otherTeleconfServices.value = (
             "true" == userInfoJson.use_privilege.use_otherTelephony
           ) ? true : false;
 
-          userSettingsModel.telephonyPriviledge.otherTeleconfServices.label = siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_otherTeleServiceName;
+          webExUserSettingsModel.telephonyPriviledge.otherTeleconfServices.label = siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_otherTeleServiceName;
 
-          userSettingsModel.telephonyPriviledge.integratedVoIP.isSiteEnabled = (
+          webExUserSettingsModel.telephonyPriviledge.integratedVoIP.isSiteEnabled = (
             "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_internetPhone
           ) ? true : false;
 
-          userSettingsModel.telephonyPriviledge.integratedVoIP.value = (
+          webExUserSettingsModel.telephonyPriviledge.integratedVoIP.value = (
             "true" == userInfoJson.use_privilege.use_voiceOverIp
           ) ? true : false;
 
           logMsg = funcName + ": " + "\n" +
-            "integratedVoIP.isSiteEnabled=" + userSettingsModel.telephonyPriviledge.integratedVoIP.isSiteEnabled + "\n" +
-            "integratedVoIP.value=" + userSettingsModel.telephonyPriviledge.integratedVoIP.value;
+            "integratedVoIP.isSiteEnabled=" + webExUserSettingsModel.telephonyPriviledge.integratedVoIP.isSiteEnabled + "\n" +
+            "integratedVoIP.value=" + webExUserSettingsModel.telephonyPriviledge.integratedVoIP.value;
           $log.log(logMsg);
           // End of Telephony privileges
         }, // updateUserSettingsModelPart2()
@@ -443,92 +388,92 @@
           var funcName = "updateUserSettingsModelPart3()";
           var logMsg = null;
 
-          var userInfoJson = userSettingsModel.userInfo.bodyJson;
-          var siteInfoJson = userSettingsModel.siteInfo.bodyJson;
-          var meetingTypesInfoJson = userSettingsModel.meetingTypesInfo.bodyJson;
+          var userInfoJson = webExUserSettingsModel.userInfo.bodyJson;
+          var siteInfoJson = webExUserSettingsModel.siteInfo.bodyJson;
+          var meetingTypesInfoJson = webExUserSettingsModel.meetingTypesInfo.bodyJson;
 
           //console.log("HERE -------");
           var enablePMRSiteLevel = siteInfoJson.ns1_siteInstance.ns1_siteCommonOptions.ns1_enablePersonalMeetingRoom;
           //console.log("ENABLE PMR SITE LEVEL=" + enablePMRSiteLevel);
-          userSettingsModel.pmr.isSiteEnabled = (
+          webExUserSettingsModel.pmr.isSiteEnabled = (
             "true" == enablePMRSiteLevel
           ) ? true : false;
 
-          userSettingsModel.pmr.value = (
+          webExUserSettingsModel.pmr.value = (
             "true" == userInfoJson.use_privilege.use_isEnablePMR
           ) ? true : false;
-          $log.log("PMR = " + userSettingsModel.pmr.value);
+          $log.log("PMR = " + webExUserSettingsModel.pmr.value);
 
-          userSettingsModel.cmr.value = (
+          webExUserSettingsModel.cmr.value = (
             "true" == userInfoJson.use_privilege.use_isEnableCET
           ) ? true : false;
-          $log.log("CMR = " + userSettingsModel.cmr.value);
+          $log.log("CMR = " + webExUserSettingsModel.cmr.value);
 
           // Start of Video privileges
-          userSettingsModel.videoSettings.hiQualVideo.isSiteEnabled = (
+          webExUserSettingsModel.videoSettings.hiQualVideo.isSiteEnabled = (
             "true" == siteInfoJson.ns1_siteInstance.ns1_video.ns1_HQvideo
           ) ? true : false;
 
-          userSettingsModel.videoSettings.hiQualVideo.value = (
+          webExUserSettingsModel.videoSettings.hiQualVideo.value = (
             "true" == userInfoJson.use_privilege.use_HQvideo
           ) ? true : false;
 
-          if (!userSettingsModel.videoSettings.hiQualVideo.isSiteEnabled) {
-            userSettingsModel.videoSettings.hiQualVideo.hiDefVideo.isSiteEnabled = false;
+          if (!webExUserSettingsModel.videoSettings.hiQualVideo.isSiteEnabled) {
+            webExUserSettingsModel.videoSettings.hiQualVideo.hiDefVideo.isSiteEnabled = false;
           } else {
-            userSettingsModel.videoSettings.hiQualVideo.hiDefVideo.isSiteEnabled = (
+            webExUserSettingsModel.videoSettings.hiQualVideo.hiDefVideo.isSiteEnabled = (
               "true" == siteInfoJson.ns1_siteInstance.ns1_video.ns1_HDvideo
             ) ? true : false;
           }
 
-          userSettingsModel.videoSettings.hiQualVideo.hiDefVideo.value = (
+          webExUserSettingsModel.videoSettings.hiQualVideo.hiDefVideo.value = (
             "true" == userInfoJson.use_privilege.use_HDvideo
           ) ? true : false;
           // End of Video privileges
 
           // Start of Event Center
-          userSettingsModel.eventCenter.optimizeBandwidthUsage.isSiteEnabled = (
+          webExUserSettingsModel.eventCenter.optimizeBandwidthUsage.isSiteEnabled = (
             ("true" == siteInfoJson.ns1_siteInstance.ns1_supportedServices.ns1_eventCenter.ns1_optimizeAttendeeBandwidthUsage)
           ) ? true : false;
 
-          userSettingsModel.eventCenter.optimizeBandwidthUsage.value = (
+          webExUserSettingsModel.eventCenter.optimizeBandwidthUsage.value = (
             "true" == userInfoJson.use_eventCenter.use_optimizeAttendeeBandwidthUsage
           ) ? true : false;
           // End of Event Center
 
           // Start of Training Center privileges
-          userSettingsModel.trainingCenter.handsOnLabAdmin.isSiteEnabled = (
+          webExUserSettingsModel.trainingCenter.handsOnLabAdmin.isSiteEnabled = (
             ("true" == siteInfoJson.ns1_siteInstance.ns1_tools.ns1_handsOnLab)
           ) ? true : false;
 
-          userSettingsModel.trainingCenter.handsOnLabAdmin.value = (
+          webExUserSettingsModel.trainingCenter.handsOnLabAdmin.value = (
             "true" == userInfoJson.use_privilege.use_labAdmin
           ) ? true : false;
           // End of Training Center privileges
         }, // updateUserSettingsModelPart3()
 
         getUserInfoXml: function () {
-          var xmlData = XmlApiFact.getUserInfo(xmlApiInfo);
+          var xmlData = WebExXmlApiFact.getUserInfo(webExXmlApiInfo);
 
           return $q.all(xmlData);
         }, // getUserInfoXml()
 
         getSiteInfoXml: function () {
-          var xmlData = XmlApiFact.getSiteInfo(xmlApiInfo);
+          var xmlData = WebExXmlApiFact.getSiteInfo(webExXmlApiInfo);
 
           return $q.all(xmlData);
         }, // getSiteInfoXml()
 
         getMeetingTypeInfoXml: function () {
-          var xmlData = XmlApiFact.getMeetingTypeInfo(xmlApiInfo);
+          var xmlData = WebExXmlApiFact.getMeetingTypeInfo(webExXmlApiInfo);
 
           return $q.all(xmlData);
         }, // getMeetingTypeInfoXml()
 
         getUserSettingsInfoXml: function () {
-          var userInfoXml = XmlApiFact.getUserInfo(xmlApiInfo);
-          var siteInfoXml = XmlApiFact.getSiteInfo(xmlApiInfo);
-          var meetingTypesInfoXml = XmlApiFact.getMeetingTypeInfo(xmlApiInfo);
+          var userInfoXml = WebExXmlApiFact.getUserInfo(webExXmlApiInfo);
+          var siteInfoXml = WebExXmlApiFact.getSiteInfo(webExXmlApiInfo);
+          var meetingTypesInfoXml = WebExXmlApiFact.getMeetingTypeInfo(webExXmlApiInfo);
 
           return $q.all({
             userInfoXml: userInfoXml,
@@ -552,7 +497,7 @@
 
           var _self = this;
           var webexSiteUrl = this.getSiteUrl();
-          var webexSiteName = this.getSiteName(webexSiteUrl);
+          var webexSiteName = WebExUtilsFact.getSiteName(webexSiteUrl);
 
           this.getSessionTicket(webexSiteUrl).then(
             function getSessionTicketSuccess(webexAdminSessionTicket) {
@@ -565,7 +510,7 @@
                 webexAdminSessionTicket
               );
 
-              userSettingsModel.sessionTicketErr = false;
+              webExUserSettingsModel.sessionTicketErr = false;
 
               _self.getUserSettingsInfo();
             }, // getSessionTicketSuccess()
@@ -588,10 +533,10 @@
               );
 
               logMsg = funcName + ": " + "\n" +
-                "hasLoadError=" + userSettingsModel.hasLoadError + "\n" +
-                "errMsg=" + userSettingsModel.errMsg + "\n" +
-                "allowRetry=" + userSettingsModel.allowRetry + "\n" +
-                "sessionTicketErr=" + userSettingsModel.sessionTicketErr;
+                "hasLoadError=" + webExUserSettingsModel.hasLoadError + "\n" +
+                "errMsg=" + webExUserSettingsModel.errMsg + "\n" +
+                "allowRetry=" + webExUserSettingsModel.allowRetry + "\n" +
+                "sessionTicketErr=" + webExUserSettingsModel.sessionTicketErr;
               $log.log(logMsg);
             } // getSessionTicketError
           ); // WebExUserSettingsFact.getSessionTicket().then()
@@ -604,8 +549,8 @@
           logMsg = funcName + ": " + "START";
           $log.log(logMsg);
 
-          userSettingsModel.disableSave = true;
-          userSettingsModel.disableSave2 = true;
+          webExUserSettingsModel.disableSave = true;
+          webExUserSettingsModel.disableSave2 = true;
 
           angular.element('#reloadBtn').button('loading');
           angular.element('#reloadBtn2').button('loading');
@@ -620,39 +565,22 @@
               var funcName = "getUserSettingsInfo().getUserSettingsInfoSuccess()";
               var logMsg = "";
 
-              userSettingsModel.userInfo = _self.validateXmlData(
-                "User Data",
-                getInfoResult.userInfoXml,
-                "<use:",
-                "</serv:bodyContent>"
-              );
-
-              userSettingsModel.siteInfo = _self.validateXmlData(
-                "Site Info",
-                getInfoResult.siteInfoXml,
-                "<ns1:",
-                "</serv:bodyContent>"
-              );
-
-              userSettingsModel.meetingTypesInfo = _self.validateXmlData(
-                "Meeting Types Info",
-                getInfoResult.meetingTypesInfoXml,
-                "<mtgtype:",
-                "</serv:bodyContent>"
-              );
+              webExUserSettingsModel.userInfo = WebExUtilsFact.validateUserInfoXmlData(getInfoResult.userInfoXml);
+              webExUserSettingsModel.siteInfo = WebExUtilsFact.validateSiteInfoXmlData(getInfoResult.siteInfoXml);
+              webExUserSettingsModel.meetingTypesInfo = WebExUtilsFact.validateMeetingTypesInfoXmlData(getInfoResult.meetingTypesInfoXml);
 
               if (
-                ("" === userSettingsModel.userInfo.errId) &&
-                ("" === userSettingsModel.siteInfo.errId) &&
-                ("" === userSettingsModel.meetingTypesInfo.errId)
+                ("" === webExUserSettingsModel.userInfo.errId) &&
+                ("" === webExUserSettingsModel.siteInfo.errId) &&
+                ("" === webExUserSettingsModel.meetingTypesInfo.errId)
               ) {
 
                 _self.updateUserSettingsModelPart1();
                 _self.updateUserSettingsModelPart2();
                 _self.updateUserSettingsModelPart3();
 
-                userSettingsModel.hasLoadError = false;
-                userSettingsModel.viewReady = true; // only set this after the model has finished being updated
+                webExUserSettingsModel.hasLoadError = false;
+                webExUserSettingsModel.viewReady = true; // only set this after the model has finished being updated
 
                 angular.element('#reloadBtn').button('reset');
                 angular.element('#reloadBtn2').button('reset');
@@ -663,21 +591,21 @@
                 }
               } else { // has invalid xml data
                 logMsg = funcName + ": " + "\n" +
-                  "userInfo.errId=" + userSettingsModel.userInfo.errId + "\n" +
-                  "userInfo.errReason=" + userSettingsModel.userInfo.errReason + "\n" +
-                  "siteInfo.errId=" + userSettingsModel.siteInfo.errId + "\n" +
-                  "siteInfo.errReason=" + userSettingsModel.siteInfo.errReason + "\n" +
-                  "meetingTypesInfo.errId=" + userSettingsModel.meetingTypesInfo.errId + "\n" +
-                  "meetingTypesInfo.errReason=" + userSettingsModel.meetingTypesInfo.errReason;
+                  "userInfo.errId=" + webExUserSettingsModel.userInfo.errId + "\n" +
+                  "userInfo.errReason=" + webExUserSettingsModel.userInfo.errReason + "\n" +
+                  "siteInfo.errId=" + webExUserSettingsModel.siteInfo.errId + "\n" +
+                  "siteInfo.errReason=" + webExUserSettingsModel.siteInfo.errReason + "\n" +
+                  "meetingTypesInfo.errId=" + webExUserSettingsModel.meetingTypesInfo.errId + "\n" +
+                  "meetingTypesInfo.errReason=" + webExUserSettingsModel.meetingTypesInfo.errReason;
                 $log.log(logMsg);
 
                 var errId = "";
-                if ("" !== userSettingsModel.userInfo.errId) {
-                  errId = userSettingsModel.userInfo.errId;
-                } else if ("" !== userSettingsModel.siteInfo.errId) {
-                  errId = userSettingsModel.siteInfo.errId;
+                if ("" !== webExUserSettingsModel.userInfo.errId) {
+                  errId = webExUserSettingsModel.userInfo.errId;
+                } else if ("" !== webExUserSettingsModel.siteInfo.errId) {
+                  errId = webExUserSettingsModel.siteInfo.errId;
                 } else {
-                  errId = userSettingsModel.meetingTypesInfo.errId;
+                  errId = webExUserSettingsModel.meetingTypesInfo.errId;
                 }
 
                 _self.setLoadingErrorDisplay(
@@ -688,15 +616,15 @@
                 );
 
                 logMsg = funcName + ": " + "\n" +
-                  "hasLoadError=" + userSettingsModel.hasLoadError + "\n" +
-                  "errMsg=" + userSettingsModel.errMsg + "\n" +
-                  "allowRetry=" + userSettingsModel.allowRetry + "\n" +
-                  "sessionTicketErr=" + userSettingsModel.sessionTicketErr;
+                  "hasLoadError=" + webExUserSettingsModel.hasLoadError + "\n" +
+                  "errMsg=" + webExUserSettingsModel.errMsg + "\n" +
+                  "allowRetry=" + webExUserSettingsModel.allowRetry + "\n" +
+                  "sessionTicketErr=" + webExUserSettingsModel.sessionTicketErr;
                 $log.log(logMsg);
               } // has invalid xml data
 
-              userSettingsModel.disableSave = false;
-              userSettingsModel.disableSave2 = false;
+              webExUserSettingsModel.disableSave = false;
+              webExUserSettingsModel.disableSave2 = false;
             }, // getUserSettingsInfoXmlSuccess()
 
             function getUserSettingsInfoXmlError(getInfoResult) {
@@ -713,8 +641,8 @@
                 form
               );
 
-              userSettingsModel.disableSave = false;
-              userSettingsModel.disableSave2 = false;
+              webExUserSettingsModel.disableSave = false;
+              webExUserSettingsModel.disableSave2 = false;
             } // getUserSettingsInfoXmlError()
           ); // WebExUserSettingsFact.getUserSettingsInfoXml()
         }, // getUserSettingsInfo()
@@ -725,11 +653,11 @@
           allowRetry,
           form
         ) {
-          userSettingsModel.errMsg = this.getErrMsg(errId, null);
-          userSettingsModel.viewReady = false;
-          userSettingsModel.hasLoadError = true;
-          userSettingsModel.sessionTicketErr = sessionTicketErr;
-          userSettingsModel.allowRetry = allowRetry;
+          webExUserSettingsModel.errMsg = this.getErrMsg(errId, null);
+          webExUserSettingsModel.viewReady = false;
+          webExUserSettingsModel.hasLoadError = true;
+          webExUserSettingsModel.sessionTicketErr = sessionTicketErr;
+          webExUserSettingsModel.allowRetry = allowRetry;
 
           angular.element('#reloadBtn').button('reset');
           angular.element('#reloadBtn2').button('reset');
@@ -744,12 +672,12 @@
           var funcName = "updateUserSettings()";
           var logMsg = "";
 
-          userSettingsModel.disableCancel = true;
+          webExUserSettingsModel.disableCancel = true;
 
           angular.element('#saveBtn').button('loading');
 
           var _self = this;
-          var useSupportedServices = userSettingsModel.userInfo.bodyJson.use_supportedServices;
+          var useSupportedServices = webExUserSettingsModel.userInfo.bodyJson.use_supportedServices;
 
           var userSettings = {
             meetingTypes: [],
@@ -761,7 +689,7 @@
           };
 
           // go through the session types
-          userSettingsModel.sessionTypes.forEach(
+          webExUserSettingsModel.sessionTypes.forEach(
             function chkSessionType(sessionType) {
               if (sessionType.sessionEnabled) {
                 userSettings.meetingTypes.push(sessionType.sessionTypeId);
@@ -772,24 +700,24 @@
                 if (userSettings.salesCenter === "false") userSettings.salesCenter = sessionType.salesCenterApplicable ? "true" : "false";
               }
             } // chkSessionType()
-          ); // userSettingsModel.sessionTypes.forEach()
+          ); // webExUserSettingsModel.sessionTypes.forEach()
 
           //so this is true if he has PMR but does not have PRO or STD.
           var blockDueToPMR = _self.isUserLevelPMREnabled() &&
-            !_self.hasProOrStdMeetingCenter(userSettingsModel.sessionTypes);
+            !_self.hasProOrStdMeetingCenter(webExUserSettingsModel.sessionTypes);
           $log.log("DURE blockDueToPMR=" + blockDueToPMR);
           if (blockDueToPMR) {
 
             angular.element('#saveBtn').button('reset');
             angular.element('#saveBtn2').button('reset');
-            userSettingsModel.disableCancel = false;
-            userSettingsModel.disableCancel2 = false;
+            webExUserSettingsModel.disableCancel = false;
+            webExUserSettingsModel.disableCancel2 = false;
             var errMessage = $translate.instant("webexUserSettings.mustHavePROorSTDifPMRenabled");
             Notification.notify([errMessage], 'error');
             return;
           }
 
-          XmlApiFact.updateUserSettings(xmlApiInfo, userSettings).then(
+          WebExXmlApiFact.updateUserSettings(webExXmlApiInfo, userSettings).then(
             function updateUserSettingsSuccess(result) {
               _self.processUpdateResponse(
                 form,
@@ -809,94 +737,94 @@
           var funcName = "updateUserSettings2()";
           var logMsg = "";
 
-          userSettingsModel.disableCancel2 = true;
+          webExUserSettingsModel.disableCancel2 = true;
 
           angular.element('#saveBtn2').button('loading');
 
-          switch (userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType) {
+          switch (webExUserSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType) {
           case 1:
-            userSettingsModel.telephonyPriviledge.callInTeleconf.toll.value = true;
-            userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value = false;
+            webExUserSettingsModel.telephonyPriviledge.callInTeleconf.toll.value = true;
+            webExUserSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value = false;
             break;
 
           case 2:
-            userSettingsModel.telephonyPriviledge.callInTeleconf.toll.value = true;
-            userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value = true;
+            webExUserSettingsModel.telephonyPriviledge.callInTeleconf.toll.value = true;
+            webExUserSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value = true;
             break;
 
           default:
-            userSettingsModel.telephonyPriviledge.callInTeleconf.toll.value = false;
-            userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value = false;
+            webExUserSettingsModel.telephonyPriviledge.callInTeleconf.toll.value = false;
+            webExUserSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value = false;
             break;
           } // switch()
 
           logMsg = funcName + ": " + "\n" +
-            "selectedCallInTollType=" + userSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType + "\n" +
-            "toll.value=" + userSettingsModel.telephonyPriviledge.callInTeleconf.toll.value + "\n" +
-            "tollFree.value=" + userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value;
+            "selectedCallInTollType=" + webExUserSettingsModel.telephonyPriviledge.callInTeleconf.selectedCallInTollType + "\n" +
+            "toll.value=" + webExUserSettingsModel.telephonyPriviledge.callInTeleconf.toll.value + "\n" +
+            "tollFree.value=" + webExUserSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value;
 
           var _self = this;
 
-          xmlApiInfo.tollSiteEnabled = userSettingsModel.telephonyPriviledge.callInTeleconf.toll.isSiteEnabled;
-          xmlApiInfo.toll = userSettingsModel.telephonyPriviledge.callInTeleconf.toll.value;
+          webExXmlApiInfo.tollSiteEnabled = webExUserSettingsModel.telephonyPriviledge.callInTeleconf.toll.isSiteEnabled;
+          webExXmlApiInfo.toll = webExUserSettingsModel.telephonyPriviledge.callInTeleconf.toll.value;
 
-          xmlApiInfo.tollFreeSiteEnabled = userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.isSiteEnabled;
-          xmlApiInfo.tollFree = userSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value;
+          webExXmlApiInfo.tollFreeSiteEnabled = webExUserSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.isSiteEnabled;
+          webExXmlApiInfo.tollFree = webExUserSettingsModel.telephonyPriviledge.callInTeleconf.tollFree.value;
 
-          xmlApiInfo.teleconfViaGlobalCallInSiteEnabled = userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallIn.isSiteEnabled;
-          xmlApiInfo.teleconfViaGlobalCallIn = userSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallIn.value;
+          webExXmlApiInfo.teleconfViaGlobalCallInSiteEnabled = webExUserSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallIn.isSiteEnabled;
+          webExXmlApiInfo.teleconfViaGlobalCallIn = webExUserSettingsModel.telephonyPriviledge.callInTeleconf.teleconfViaGlobalCallIn.value;
 
-          xmlApiInfo.teleCLIAuthEnabledSiteEnabled = userSettingsModel.telephonyPriviledge.callInTeleconf.teleCLIAuthEnabled.isSiteEnabled;
-          xmlApiInfo.teleCLIAuthEnabled = userSettingsModel.telephonyPriviledge.callInTeleconf.teleCLIAuthEnabled.value;
+          webExXmlApiInfo.teleCLIAuthEnabledSiteEnabled = webExUserSettingsModel.telephonyPriviledge.callInTeleconf.teleCLIAuthEnabled.isSiteEnabled;
+          webExXmlApiInfo.teleCLIAuthEnabled = webExUserSettingsModel.telephonyPriviledge.callInTeleconf.teleCLIAuthEnabled.value;
 
-          xmlApiInfo.callBackTeleconfSiteEnabled = userSettingsModel.telephonyPriviledge.callBackTeleconf.isSiteEnabled;
-          xmlApiInfo.callBackTeleconf = userSettingsModel.telephonyPriviledge.callBackTeleconf.value;
+          webExXmlApiInfo.callBackTeleconfSiteEnabled = webExUserSettingsModel.telephonyPriviledge.callBackTeleconf.isSiteEnabled;
+          webExXmlApiInfo.callBackTeleconf = webExUserSettingsModel.telephonyPriviledge.callBackTeleconf.value;
 
-          xmlApiInfo.globalCallBackTeleconfSiteEnabled = userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.isSiteEnabled;
-          xmlApiInfo.globalCallBackTeleconf = userSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.value;
+          webExXmlApiInfo.globalCallBackTeleconfSiteEnabled = webExUserSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.isSiteEnabled;
+          webExXmlApiInfo.globalCallBackTeleconf = webExUserSettingsModel.telephonyPriviledge.callBackTeleconf.globalCallBackTeleconf.value;
 
-          xmlApiInfo.otherTelephonySiteEnabled = userSettingsModel.telephonyPriviledge.otherTeleconfServices.isSiteEnabled;
-          xmlApiInfo.otherTelephony = userSettingsModel.telephonyPriviledge.otherTeleconfServices.value;
+          webExXmlApiInfo.otherTelephonySiteEnabled = webExUserSettingsModel.telephonyPriviledge.otherTeleconfServices.isSiteEnabled;
+          webExXmlApiInfo.otherTelephony = webExUserSettingsModel.telephonyPriviledge.otherTeleconfServices.value;
 
-          xmlApiInfo.integratedVoIPSiteEnabled = userSettingsModel.telephonyPriviledge.integratedVoIP.isSiteEnabled;
-          xmlApiInfo.integratedVoIP = userSettingsModel.telephonyPriviledge.integratedVoIP.value;
+          webExXmlApiInfo.integratedVoIPSiteEnabled = webExUserSettingsModel.telephonyPriviledge.integratedVoIP.isSiteEnabled;
+          webExXmlApiInfo.integratedVoIP = webExUserSettingsModel.telephonyPriviledge.integratedVoIP.value;
 
-          xmlApiInfo.isEnablePMRSiteEnabled = userSettingsModel.pmr.isSiteEnabled;
-          xmlApiInfo.isEnablePMR = userSettingsModel.pmr.value;
+          webExXmlApiInfo.isEnablePMRSiteEnabled = webExUserSettingsModel.pmr.isSiteEnabled;
+          webExXmlApiInfo.isEnablePMR = webExUserSettingsModel.pmr.value;
 
-          xmlApiInfo.hiQualVideoSitenEnabled = userSettingsModel.videoSettings.hiQualVideo.isSiteEnabled;
-          xmlApiInfo.hiQualVideo = userSettingsModel.videoSettings.hiQualVideo.value;
+          webExXmlApiInfo.hiQualVideoSitenEnabled = webExUserSettingsModel.videoSettings.hiQualVideo.isSiteEnabled;
+          webExXmlApiInfo.hiQualVideo = webExUserSettingsModel.videoSettings.hiQualVideo.value;
 
-          xmlApiInfo.hiDefVideoSiteEnabled = userSettingsModel.videoSettings.hiQualVideo.hiDefVideo.isSiteEnabled;
-          xmlApiInfo.hiDefVideo = userSettingsModel.videoSettings.hiQualVideo.hiDefVideo.value;
+          webExXmlApiInfo.hiDefVideoSiteEnabled = webExUserSettingsModel.videoSettings.hiQualVideo.hiDefVideo.isSiteEnabled;
+          webExXmlApiInfo.hiDefVideo = webExUserSettingsModel.videoSettings.hiQualVideo.hiDefVideo.value;
 
-          xmlApiInfo.eventCenterSiteEnabled = userSettingsModel.eventCenter.isSiteEnabled;
-          xmlApiInfo.optimizeBandwidthUsageSiteEnabled = userSettingsModel.eventCenter.optimizeBandwidthUsage.isSiteEnabled;
-          xmlApiInfo.optimizeBandwidthUsage = userSettingsModel.eventCenter.optimizeBandwidthUsage.value;
+          webExXmlApiInfo.eventCenterSiteEnabled = webExUserSettingsModel.eventCenter.isSiteEnabled;
+          webExXmlApiInfo.optimizeBandwidthUsageSiteEnabled = webExUserSettingsModel.eventCenter.optimizeBandwidthUsage.isSiteEnabled;
+          webExXmlApiInfo.optimizeBandwidthUsage = webExUserSettingsModel.eventCenter.optimizeBandwidthUsage.value;
 
-          xmlApiInfo.trainingCenterSiteEnabled = userSettingsModel.trainingCenter.isSiteEnabled;
-          xmlApiInfo.handsOnLabAdminSiteEnabled = userSettingsModel.trainingCenter.handsOnLabAdmin.isSiteEnabled;
-          xmlApiInfo.handsOnLabAdmin = userSettingsModel.trainingCenter.handsOnLabAdmin.value;
+          webExXmlApiInfo.trainingCenterSiteEnabled = webExUserSettingsModel.trainingCenter.isSiteEnabled;
+          webExXmlApiInfo.handsOnLabAdminSiteEnabled = webExUserSettingsModel.trainingCenter.handsOnLabAdmin.isSiteEnabled;
+          webExXmlApiInfo.handsOnLabAdmin = webExUserSettingsModel.trainingCenter.handsOnLabAdmin.value;
 
           var okToUpdate = true;
           var notificationMsg;
-          if ((userSettingsModel.pmr.value === true) && (userSettingsModel.cmr.value === true) && (userSettingsModel.telephonyPriviledge.callInTeleconf.value === false)) {
+          if ((webExUserSettingsModel.pmr.value === true) && (webExUserSettingsModel.cmr.value === true) && (webExUserSettingsModel.telephonyPriviledge.callInTeleconf.value === false)) {
             notificationMsg = $translate.instant("webexUserSettings.pmrErrorTelephonyPrivileges");
             _self.notifyError(notificationMsg);
             okToUpdate = false;
           }
 
-          if ((userSettingsModel.pmr.value === true) && (userSettingsModel.cmr.value === true) &&
-            userSettingsModel.telephonyPriviledge.telephonyType.isWebExAudio &&
-            !userSettingsModel.telephonyPriviledge.hybridAudio.isSiteEnabled) {
+          if ((webExUserSettingsModel.pmr.value === true) && (webExUserSettingsModel.cmr.value === true) &&
+            webExUserSettingsModel.telephonyPriviledge.telephonyType.isWebExAudio &&
+            !webExUserSettingsModel.telephonyPriviledge.hybridAudio.isSiteEnabled) {
             notificationMsg = $translate.instant("webexUserSettings.pmrErrorHybridAudio");
-            userSettingsModel.pmr.value = false; //un-check the PMR option
+            webExUserSettingsModel.pmr.value = false; //un-check the PMR option
             _self.notifyError(notificationMsg);
             okToUpdate = false;
           }
 
           if (okToUpdate) {
-            XmlApiFact.updateUserSettings2(xmlApiInfo).then(
+            WebExXmlApiFact.updateUserSettings2(webExXmlApiInfo).then(
               function updateUserSettings2Success(result) {
                 _self.processUpdateResponse(
                   form,
@@ -917,7 +845,7 @@
           var updateStatus = "error";
           Notification.notify([notificationMsg], updateStatus);
           angular.element('#saveBtn2').button('reset');
-          userSettingsModel.disableCancel2 = false;
+          webExUserSettingsModel.disableCancel2 = false;
         },
 
         processUpdateResponse: function (
@@ -936,7 +864,7 @@
           $log.log(logMsg);
           */
 
-          var resultJson = this.validateXmlData(
+          var resultJson = WebExUtilsFact.validateXmlData(
             "Update user settings2 result",
             result,
             null,
@@ -953,7 +881,7 @@
           // verify whether the update request completed without error
           if ("" === resultJson.errId) {
             if (flushWaf) {
-              XmlApiFact.flushWafCache(xmlApiInfo).then(
+              WebExXmlApiFact.flushWafCache(webExXmlApiInfo).then(
                 function flushWafCacheSuccess(result) { //success
                   $log.log("Flush success");
                 }, // flushWafCacheSuccess()
@@ -977,8 +905,8 @@
           angular.element('#saveBtn').button('reset');
           angular.element('#saveBtn2').button('reset');
 
-          userSettingsModel.disableCancel = false;
-          userSettingsModel.disableCancel2 = false;
+          webExUserSettingsModel.disableCancel = false;
+          webExUserSettingsModel.disableCancel2 = false;
 
           Notification.notify([notificationMsg], updateStatus);
         }, // processUpdateResponse()
@@ -994,8 +922,8 @@
           angular.element('#saveBtn').button('reset');
           angular.element('#saveBtn2').button('reset');
 
-          userSettingsModel.disableCancel = false;
-          userSettingsModel.disableCancel2 = false;
+          webExUserSettingsModel.disableCancel = false;
+          webExUserSettingsModel.disableCancel2 = false;
 
           var errMsg = this.getErrMsg(null, null);
           Notification.notify([errMsg], 'error');
@@ -1038,7 +966,7 @@
           } else if ("110055" == errId) {
             var sessionTypeName = "???";
 
-            userSettingsModel.sessionTypes.forEach(
+            webExUserSettingsModel.sessionTypes.forEach(
               function chkSessionType(sessionType) {
                 logMsg = funcName + ": " + "\n" +
                   "sessionType=" + JSON.stringify(sessionType);
@@ -1048,7 +976,7 @@
                   sessionTypeName = sessionType.sessionDescription;
                 }
               } // chkSessionType()
-            ); // userSettingsModel.sessionTypes.forEach()
+            ); // webExUserSettingsModel.sessionTypes.forEach()
 
             logMsg = funcName + ": " + "\n" +
               "errId=" + errId + "\n" +
@@ -1073,7 +1001,7 @@
         }, // getErrMsg()
 
         getSessionTicket: function (webexSiteUrl) {
-          return XmlApiFact.getSessionTicket(webexSiteUrl);
+          return WebExXmlApiFact.getSessionTicket(webexSiteUrl);
         }, //getSessionTicket()
 
         getSiteUrl: function () {
@@ -1086,8 +1014,7 @@
         getSiteName: function (siteUrl) {
           var index = siteUrl.indexOf(".");
           return siteUrl.slice(0, index);
-        }, //getSiteName
-
+        }, //getSiteName()
       }; // return
     } //WebExUserSettingsFact
   ]); // angular

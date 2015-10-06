@@ -133,6 +133,10 @@ angular.module('Core')
             Log.debug('Get existing org failed. Status: ' + status);
           }
         }, orgId, true);
+
+        BrandService.getLogoUrl(orgId).then(function (logoUrl) {
+          $scope.tempLogoUrl = logoUrl;
+        });
       };
 
       $scope.init();

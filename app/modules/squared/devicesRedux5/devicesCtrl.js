@@ -1,10 +1,26 @@
 'use strict';
 
 /* @ngInject */
-function DevicesReduxCtrl($scope, $state, $location, $rootScope, $window, CsdmCodeService, CsdmDeviceService, AddDeviceModal) {
+function DevicesReduxCtrl($scope, $state, $location, $rootScope, $window, CsdmCodeService, CsdmDeviceService, AddDeviceModal, TagService) {
   var vm = this;
 
   $('body').css('background', 'white');
+
+  vm.tags = {
+    listTags: function (id) {
+      return TagService.list(id);
+    },
+    createTag: function (id, $event) {
+      var tag = _.trim(vm.tags.newTag);
+      if ($event.keyCode == 13 && tag) {
+        TagService.add(id, tag);
+        vm.tags.newTag = undefined;
+      }
+    },
+    removeTag: function (id, tag) {
+      TagService.remove(id, tag);
+    }
+  };
 
   vm.deviceProps = {
     product: 'Product',
@@ -14,7 +30,8 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, $window, CsdmCo
     mac: 'Mac',
     readableActivationCode: 'Activation Code',
     readableState: 'Status',
-    diagnosticsEvent: 'Event'
+    diagnosticsEvent: 'Event',
+    tags: 'Tags'
   };
 
   vm.deviceList = [];
@@ -42,6 +59,8 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, $window, CsdmCo
       .extend(CsdmDeviceService.getDeviceList())
       .extend(CsdmCodeService.getCodeList())
       .values()
+      // include tags
+      .map(addTags)
       // filter based on search
       .map(filterOnSearchQuery)
       .compact()
@@ -66,6 +85,11 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, $window, CsdmCo
       .first()
       .value();
 
+    function addTags(device) {
+      device.tags = TagService.list(device.url).join(', ');
+      return device;
+    }
+
     function extendWithDisplayNameFromFilter(devices, displayName) {
       return _.chain(vm.groups)
         .find({
@@ -87,7 +111,8 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, $window, CsdmCo
         'readableState',
         'readableActivationCode',
         'product',
-        'diagnosticsEvent'
+        'diagnosticsEvent',
+        'tags'
       ];
 
       device.diagnosticsEvent = _.pluck(device.diagnosticsEvents, 'type')[0];
@@ -256,8 +281,45 @@ function HighlightFilter() {
   };
 }
 
+function TagService($window) {
+  var id = '___tags';
+
+  var rawTags = $window.localStorage.getItem(id);
+  var tags = rawTags ? JSON.parse(rawTags) : {};
+
+  function writeTags() {
+    $window.localStorage.setItem(id, JSON.stringify(tags));
+  }
+
+  function list(id) {
+    tags[id] = tags[id] || [];
+    return tags[id];
+  }
+
+  function add(id, tag) {
+    tags[id] = tags[id] || [];
+    if (!_.includes(tags[id], tag)) {
+      tags[id].push(tag);
+    }
+    writeTags();
+  }
+
+  function remove(id, tag) {
+    tags[id] = tags[id] || [];
+    tags[id] = _.without(tags[id], tag);
+    writeTags();
+  }
+
+  return {
+    add: add,
+    list: list,
+    remove: remove
+  };
+}
+
 angular
   .module('Squared')
+  .service('TagService', TagService)
   .filter('highlight', HighlightFilter)
   .controller('DevicesReduxCtrl5', DevicesReduxCtrl)
   .controller('DevicesReduxDetailsCtrl5', DevicesReduxDetailsCtrl);

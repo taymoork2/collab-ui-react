@@ -3,7 +3,7 @@
 
   /* global X2JS */
 
-  angular.module('WebExUserSettings').factory('XmlApiFact', [
+  angular.module('WebExXmlApi').factory('WebExXmlApiFact', [
     '$http',
     '$log',
     '$interpolate',
@@ -12,7 +12,7 @@
     '$rootScope',
     'Authinfo',
     'Storage',
-    'XmlApiConstsSvc',
+    'WebExXmlApiConstsSvc',
     function (
       $http,
       $log,
@@ -22,7 +22,7 @@
       $rootScope,
       Authinfo,
       Storage,
-      constants
+      xmlApiConstants
     ) {
       var _self = this;
       var x2js = new X2JS();
@@ -33,7 +33,7 @@
 
         logMsg = funcName + ": " + "xmlRequest=" + "\n" +
           xmlRequest;
-        $log.log(logMsg);
+        // $log.log(logMsg);
 
         $http({
           url: xmlServerURL,
@@ -50,10 +50,18 @@
       }; //sendXMLApiReq()
 
       return {
+        getSiteVersion: function (xmlApiAccessInfo) {
+          return $q(function (resolve, reject) {
+            var xmlServerURL = xmlApiAccessInfo.xmlServerURL;
+            var xmlRequest = $interpolate(xmlApiConstants.siteVersionRequest)(xmlApiAccessInfo);
+            _self.sendXMLApiReq(xmlServerURL, xmlRequest, resolve, reject);
+          });
+        }, // getSiteVersion()
+
         getSiteInfo: function (xmlApiAccessInfo) {
           return $q(function (resolve, reject) {
             var xmlServerURL = xmlApiAccessInfo.xmlServerURL;
-            var xmlRequest = $interpolate(constants.siteInfoRequest)(xmlApiAccessInfo);
+            var xmlRequest = $interpolate(xmlApiConstants.siteInfoRequest)(xmlApiAccessInfo);
             _self.sendXMLApiReq(xmlServerURL, xmlRequest, resolve, reject);
           });
         }, //getSiteInfo()
@@ -61,7 +69,7 @@
         getUserInfo: function (xmlApiAccessInfo) {
           return $q(function (resolve, reject) {
             var xmlServerURL = xmlApiAccessInfo.xmlServerURL;
-            var xmlRequest = $interpolate(constants.userInfoRequest)(xmlApiAccessInfo);
+            var xmlRequest = $interpolate(xmlApiConstants.userInfoRequest)(xmlApiAccessInfo);
             _self.sendXMLApiReq(xmlServerURL, xmlRequest, resolve, reject);
           });
         }, //getUserInfo()
@@ -69,10 +77,20 @@
         getMeetingTypeInfo: function (xmlApiAccessInfo) {
           return $q(function (resolve, reject) {
             var xmlServerURL = xmlApiAccessInfo.xmlServerURL;
-            var xmlRequest = $interpolate(constants.meetingTypeInfoRequest)(xmlApiAccessInfo);
+            var xmlRequest = $interpolate(xmlApiConstants.meetingTypeInfoRequest)(xmlApiAccessInfo);
             _self.sendXMLApiReq(xmlServerURL, xmlRequest, resolve, reject);
           });
         }, //getMeetingTypeInfo()
+
+        getAdminPagesInfo: function (getConfig, xmlApiAccessInfo) {
+          var requestTemplate = (getConfig) ? xmlApiConstants.settingPagesInfoRequest : xmlApiConstants.reportPagesInfoRequest;
+
+          return $q(function (resolve, reject) {
+            var xmlServerURL = xmlApiAccessInfo.xmlServerURL;
+            var xmlRequest = $interpolate(requestTemplate)(xmlApiAccessInfo);
+            _self.sendXMLApiReq(xmlServerURL, xmlRequest, resolve, reject);
+          });
+        }, // getAdminPagesInfo()
 
         updateUserSettings: function (xmlApiAccessInfo, userSettings) {
           var funcName = "updateUserSettings()";
@@ -82,7 +100,7 @@
             "userSettings=" + JSON.stringify(userSettings);
           $log.log(logMsg);
 
-          var xmlRequest = $interpolate(constants.updateUserSettings_1)(xmlApiAccessInfo);
+          var xmlRequest = $interpolate(xmlApiConstants.updateUserSettings_1)(xmlApiAccessInfo);
 
           logMsg = funcName + ": " + "\n" +
             "xmlRequest #1 =\n" + xmlRequest;
@@ -91,14 +109,14 @@
           for (var i = 0; i < userSettings.meetingTypes.length; i++) {
             var tmpMeetingTypesObj = {};
             tmpMeetingTypesObj.meetingType = userSettings.meetingTypes[i];
-            xmlRequest += $interpolate(constants.updateUserSettings_2)(tmpMeetingTypesObj);
+            xmlRequest += $interpolate(xmlApiConstants.updateUserSettings_2)(tmpMeetingTypesObj);
           }
 
           logMsg = funcName + ": " + "\n" +
             "xmlRequest #2 =\n" + xmlRequest;
           // $log.log(logMsg);
 
-          xmlRequest += $interpolate(constants.updateUserSettings_3)(userSettings);
+          xmlRequest += $interpolate(xmlApiConstants.updateUserSettings_3)(userSettings);
 
           logMsg = funcName + ": " + "\n" +
             "xmlRequest #3 =\n" + xmlRequest;
@@ -228,7 +246,7 @@
         getSessionTicketInfo: function (xmlApiAccessInfo) {
           return $q(function (resolve, reject) {
             var xmlServerURL = xmlApiAccessInfo.xmlServerURL;
-            var xmlRequest = $interpolate(constants.sessionTicketRequest)(xmlApiAccessInfo);
+            var xmlRequest = $interpolate(xmlApiConstants.sessionTicketRequest)(xmlApiAccessInfo);
             _self.sendXMLApiReq(xmlServerURL, xmlRequest, resolve, reject);
           });
         }, //getSessionTicketInfo()
@@ -240,7 +258,7 @@
           var wbxSiteName = wbxSiteUrl.slice(0, index);
           var ticketObj = null;
           var deferred = $q.defer();
-          var currView = this;
+          var _this = this;
           var getNewTicket = true;
 
           if (!$rootScope.sessionTickets) {
@@ -275,7 +293,7 @@
             logMsg = funcName + ": " + "No valid Session ticket in scope for Site= " + wbxSiteName + " will create new one for this site";
             $log.log(logMsg);
 
-            currView.getNewSessionTicket(wbxSiteName, wbxSiteUrl).then(
+            _this.getNewSessionTicket(wbxSiteName, wbxSiteUrl).then(
               function getNewSessionTicketSuccess(tik) {
                 funcName = "getNewSessionTicketSuccess()";
                 if ($rootScope.sessionTickets) {
@@ -287,6 +305,7 @@
                   }
                 }
               },
+
               function getNewSessionTicketError(reason) {
                 funcName = "getNewSessionTicketError()";
                 logMsg = funcName + ": " + "ERROR - Failed to create a valid Session ticket for Site= " + wbxSiteName;
@@ -301,15 +320,18 @@
         }, //getSessionTicket()
 
         getNewSessionTicket: function (wbxSiteName, wbxSiteUrl) {
-          var currView = this;
-          var defer = $q.defer();
           var funcName = "getNewSessionTicket()";
           var logMsg = "";
 
+          var _this = this;
+          var defer = $q.defer();
+          var xmlServerURL = "https://" + wbxSiteUrl + "/WBXService/XMLService";
+          var primaryEmail = Authinfo.getPrimaryEmail();
+
           var xmlApiAccessInfo = {
-            xmlServerURL: "https://" + wbxSiteUrl + "/WBXService/XMLService",
+            xmlServerURL: xmlServerURL,
             wbxSiteName: wbxSiteName,
-            webexAdminID: Authinfo.getPrimaryEmail(),
+            webexAdminID: primaryEmail,
             accessToken: $rootScope.token
           };
 
@@ -320,7 +342,7 @@
               logMsg = funcName + ".success()" + ": " + "\n" + "data=" + result;
               $log.log(logMsg);
 
-              var JsonData = currView.xml2JsonConvert("Authentication Data", result, "<serv:header", "</serv:message>");
+              var JsonData = _this.xml2JsonConvert("Authentication Data", result, "<serv:header", "</serv:message>");
               logMsg = funcName + ".success()" + ": " + "\n" + "JsonData=" + JSON.stringify(JsonData);
               $log.log(logMsg);
               result = JsonData.body.serv_header.serv_response.serv_result;
@@ -372,12 +394,18 @@
         flushWafCache: function (xmlApiAccessInfo) {
           return $q(function (resolve, reject) {
             var xmlServerURL = xmlApiAccessInfo.xmlServerURL;
-            var xmlRequest = $interpolate(constants.flushWafCacheRequest)(xmlApiAccessInfo);
+            var xmlRequest = $interpolate(xmlApiConstants.flushWafCacheRequest)(xmlApiAccessInfo);
             _self.sendXMLApiReq(xmlServerURL, xmlRequest, resolve, reject);
           });
         }, //getSiteInfo()
 
-        xml2JsonConvert: function (commentText, xmlData, startOfBodyStr, endOfBodyStr) {
+        xml2JsonConvert: function (
+          commentText,
+          xmlData,
+          startOfBodyStr,
+          endOfBodyStr
+        ) {
+
           var funcName = "xml2JsonConvert()";
           var logMsg = "";
 
@@ -393,7 +421,7 @@
           logMsg = funcName + ": " + commentText + "\n" +
             "startOfBodyIndex=" + startOfBodyIndex + "\n" +
             "endOfBodyIndex=" + endOfBodyIndex;
-          $log.log(logMsg);
+          // $log.log(logMsg);
 
           var bodySliceXml = "";
           if (
@@ -401,6 +429,7 @@
             (0 <= endOfBodyIndex) &&
             (startOfBodyIndex <= endOfBodyIndex)
           ) {
+
             bodySliceXml = (startOfBodyIndex < endOfBodyIndex) ? xmlData.slice(startOfBodyIndex, endOfBodyIndex) : xmlData.slice(startOfBodyIndex);
           } else {
             logMsg = funcName + ": " + commentText + "; " + "ERROR!" + "\n" +
@@ -412,7 +441,7 @@
             $log.log(logMsg);
           }
 
-          constants.replaceSets.forEach(function (replaceSet) {
+          xmlApiConstants.replaceSets.forEach(function (replaceSet) {
             bodySliceXml = bodySliceXml.replace(replaceSet.replaceThis, replaceSet.withThis);
           });
 
@@ -430,7 +459,7 @@
 
           logMsg = funcName + ": " + commentText + "\n" +
             "fullBodyJson=\n" + JSON.stringify(fullBodyJson);
-          $log.log(logMsg);
+          // $log.log(logMsg);
 
           return fullBodyJson;
         }, // xml2JsonConvert()

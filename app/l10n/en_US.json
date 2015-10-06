@@ -181,6 +181,8 @@
     "supportTab": "Support",
     "logsTab": "Logs",
     "logsTabDesc": "View user logs",
+    "cdrTab": "Device Logs",
+    "cdrLogsTabDesc": "View device logs",
     "billingTab": "Order Provisioning",
     "billingTabDesc": "Engineering support/operations",
     "accountTab": "Account",
@@ -462,6 +464,48 @@
     "downloadLogFailed": "Failed to download log",
     "callflowResultsFailed": "Failed to download the callflow results corresponding to logFile",
     "status": "Status"
+  },
+  "cdrLogs": {
+    "title": "Device Support",
+    "searchForm": "Search Form",
+    "search": "Search",
+    "reset": "Reset",
+    "number": "Number:",
+    "device": "Device:",
+    "callingParty": "Calling Party",
+    "calledParty": "Called Party",
+    "startTime": "Start Time:",
+    "endTime": "End Time:",
+    "timeExample": "hh:mm:ss AM/PM",
+    "startDate": "Start Date:",
+    "endDate": "End Date:",
+    "dateExample": "Choose a Date",
+    "size": "Size Per Server:",
+    "uploadFile": "Upload CDR File",
+    "uploadDescription": "Option TBA",
+    "upload": "Upload",
+    "cdrAccordionHeader": "{{firstTimestamp}} - Number of CDR's: {{numberOfCdrs}} - Total Duration: {{totalDuration}} seconds",
+    "timeStamp": "Time Stamp",
+    "callingDeviceName": "Calling Device Name",
+    "callingPartyNumber": "Calling Party Number",
+    "callingCause": "Calling Cause",
+    "calledDeviceName": "Called Device Name",
+    "calledPartyNumber": "Called Party Number",
+    "calledCause": "Called Cause",
+    "duration": "Duration",
+    "callsSubtitle": "Call List",
+    "sessionIds": "Session Ids",
+    "cdrTableTitle": "CDRs Generated During Call",
+    "cdrRetrievalError": "Error encountered while retrieving CDR records from {{server}}.",
+    "cdrRecursiveError": "Record size requested too large to retrieve all related CDR data from {{server}}.  To retrieve data from {{server}} lower the 'Size Per Server' count and resubmit.",
+    "required": "This field is required.",
+    "invalidDate": "End date should be the same day as, or any day after, the start date.",
+    "invalidTime": "Entered time is invalid.  Please follow the 'hh:mm:ss AM/PM' format.  If 'AM/PM' is ommited, then it will be assumed that 24-hour time is being used.",
+    "invalidTimeTwo": "End Time should not be equal to or earlier than the Start Time.",
+    "phoneNumberError": "Please enter a valid phone number using the numbers [0-9].",
+    "phoneNumberErrorTwo": "Calling Party Number and Called Party Number should not match.",
+    "deviceNameError": "Calling Party Device and Called Party Device should not match.",
+    "hitSizeError": "The request size per server should be between 1 and 50."
   },
   "billingPage": {
     "title": "Order Provisioning",
@@ -1441,7 +1485,7 @@
     "none": "None",
     "partnerLogo": "Partner Logo",
     "logoOverride": "Customer Logo Override",
-    "allowCustomerLogo": "Enable Customer Logo for {{customerName}}"
+    "allowCustomerLogo": "Enable Customer Logo for {{customer}}"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
@@ -1780,6 +1824,159 @@
     "OtherPrivilegesLabel": "Other Privileges",
     "advancedLinkLabel": "Advanced Settings"
   },
+  "webexSiteSettingsLabels": {
+    "siteSettingsIndexPageTitle": "Configure",
+    "siteSettingsIndexPageTitleFull": "Configure {{siteUrl}}",
+    "hostAccountsTitle": "HOST ACCOUNTS",
+    "activeTitle": "Active",
+    "availableTitle": "Available",
+    "emailAllHostsBtnTitle": "EMAIL&nbsp;ALL&nbsp;HOSTS",
+    "commonSettingsCardTitle": "Common Settings",
+    "commonSettingsCardNote": "These settings apply across centers.",
+
+    "indexPageLabel_EMAIL_send_email_to_all": "Email All Hosts",
+
+    "indexPageLabel_siteInfo_siteInformation": "Site Information",
+    "indexPageLabel_siteInfo_siteFeatures": "Site Features",
+
+    "indexPageLabel_CommonSettings_productivity": "Productivity Tools",
+    "indexPageLabel_CommonSettings_address": "Company Addresses",
+    "indexPageLabel_CommonSettings_disclaimer": "Disclaimers",
+    "indexPageLabel_CommonSettings_session_type": "Session Types",
+    "indexPageLabel_CommonSettings_user_priv": "User Privileges",
+    "indexPageLabel_CommonSettings_scheduler": "Scheduler",
+    "indexPageLabel_CommonSettings_common_options": "Site Options",
+    "indexPageLabel_CommonSettings_mobile": "Mobile",
+    "indexPageLabel_CommonSettings_cmr": "Collaboration Meeting Room (CMR)",
+    "indexPageLabel_CommonSettings_security": "Security",
+    "indexPageLabel_CommonSettings_navigation": "Navigation Customization",
+    "indexPageLabel_CommonSettings_email_template": "Email Template",
+    "indexPageLabel_CommonSettings_site_info": "Site Information",
+
+    "indexPageLabel_MC_mc_options": "Site Options",
+
+    "indexPageLabel_TC_tc_options": "Site Options",
+
+    "indexPageLabel_EC_ec_options": "Site Options",
+    "indexPageLabel_EC_host_reassign": "Reassignment",
+    "indexPageLabel_EC_required_fields": "Registration Form",
+
+    "indexPageLabel_SC_sc_options": "Default Options",
+    "indexPageLabel_SC_forms": "Forms",
+    "indexPageLabel_SC_branding": "Branding",
+
+    "indexPageLabel_WebACD_webacd_settings": "Settings",
+    "indexPageLabel_WebACD_webacd_queues": "Queues",
+    "indexPageLabel_WebACD_webacd_form": "Forms",
+
+    "indexPageLabel_RA_remote_options": "Settings",
+    "indexPageLabel_RA_remote_groups": "Groups",
+
+    "settingPageLabel_EMAIL_send_email_to_all": "Email All Hosts",
+
+    "settingPageLabel_siteInfo_siteInformation": "Site Overview",
+    "settingPageLabel_siteInfo_siteFeatures": "Site Overview",
+
+    "settingPageLabel_CommonSettings_productivity": "Productivity Tools",
+    "settingPageLabel_CommonSettings_address": "Company Addresses",
+    "settingPageLabel_CommonSettings_disclaimer": "Disclaimers",
+    "settingPageLabel_CommonSettings_session_type": "Session Types",
+    "settingPageLabel_CommonSettings_user_priv": "User Privileges",
+    "settingPageLabel_CommonSettings_scheduler": "Common Settings",
+    "settingPageLabel_CommonSettings_common_options": "Common Settings",
+    "settingPageLabel_CommonSettings_mobile": "Common Settings",
+    "settingPageLabel_CommonSettings_cmr": "Common Settings",
+    "settingPageLabel_CommonSettings_security": "Common Settings",
+    "settingPageLabel_CommonSettings_navigation": "Common Settings",
+    "settingPageLabel_CommonSettings_email_template": "Email Template",
+    "settingPageLabel_CommonSettings_site_info": "Site Information",
+
+    "settingPageLabel_MC_mc_options": "Meeting Center Settings",
+
+    "settingPageLabel_TC_tc_options": "Training Center Settings",
+
+    "settingPageLabel_EC_ec_options": "Event Center Settings",
+    "settingPageLabel_EC_host_reassign": "Event Center Reassignment",
+    "settingPageLabel_EC_required_fields": "Event Center Registration Form",
+
+    "settingPageLabel_SC_sc_options": "Support Center Settings",
+    "settingPageLabel_SC_forms": "Support Center Forms",
+    "settingPageLabel_SC_branding": "Support Center Branding",
+
+    "settingPageLabel_WebACD_webacd_settings": "WebACD Settings",
+    "settingPageLabel_WebACD_webacd_queues": "WebACD Queues",
+    "settingPageLabel_WebACD_webacd_form": "WebACD Leave Message Forms",
+
+    "settingPageLabel_RA_remote_options": "Remote Access Settings",
+    "settingPageLabel_RA_remote_groups": "Remote Access Groups",
+
+    "pageId_underDevelopment": "Under Development",
+    "pageId_xxxx": "Undefined"
+  },
+  "webexSiteReports": {
+    "title": "Reports",
+    "common_reports": "Common Reports",
+    "training_center": "Training Center",
+    "event_center": "Event Center",
+    "support_center": "Support Center",
+    "remote_access": "Remote Access",
+
+    "meeting_in_progess": "Meetings In Progess",
+    "meeting_usage": "Meeting Usage",
+    "recordings_storage_usage": "Recordings Storage Usage",
+    "recording_usage": "Recording Usage",
+
+    "training_usage": "Training Usage",
+    "registration": "Registration",
+    "recording": "Recording",
+    "coupon": "Coupon",
+    "attendee": "Attendee",
+
+    "event_center_overview": "Overview",
+    "event_center_site_summary": "Site Summary",
+    "event_center_scheduled_events": "Scheduled Events",
+    "event_center_held_events": "Held Events",
+    "event_center_report_template": "Report Templates",
+
+    "support_center_support_sessions": "Support Sessions",
+    "support_center_call_volume": "Call Volume",
+    "support_center_csr_activity": "CSR Activity",
+    "support_center_url_referral": "URL Referral",
+    "support_center_allocation_queue": "Allocation Queue",
+
+    "remote_access_computer_usage": "Computer Usage",
+    "remote_access_csrs_usage": "CSR Report",
+    "remote_access_computer_tracking": "Computer Tracking",
+
+    "storage_utilization": "Storage Utilization",
+    "programs_events_recordings": "Programs Events Recordings",
+    "summary": "Summary",
+    "scheduled_events_dashboard": "Scheduled Events Dashboard",
+    "held_events_dashboard": "Held Events Dashboard",
+
+    "session_query_tool": "Session Query Tool",
+    "call_volume": "Call Volume",
+    "csr_activity": "Csr Activity",
+    "url_referal": "Url Referal",
+    "allocation_queue": "Allocation Queue",
+    "webacd_session_query_tool": "Webacd Session Query Tool",
+    "webacd_call_volume": "Webacd Call Volume",
+    "webacd_csr_volume": "Webacd Csr Volume",
+    "webacd_csr_activity": "Webacd Csr Activity",
+    "webacd_url_referal": "Webacd Url Referal",
+    "webacd_allocation_queue": "Webacd Allocation Queue",
+
+    "usage": "Usage",
+
+    "recorded_session_access": "Recorded Session Access",
+    "coupon_usage": "Coupon Usage",
+    "training_record_attendee": "Training Record Attendee",
+    "access_anywhere_usage": "Access Anywhere Usage"
+  },
+  "webexReportsLabels": {
+    "pageId_xxxx": "Undefined",
+    "pageId_underDevelopment": "Under Development"
+  },
   "leaderBoard": {
     "actions": "Actions",
     "licenseUsage": "License Usage",
@@ -1792,7 +1989,7 @@
     "communicationDesc": "Basic external calling and full Unified Communications enabled for your organization.",
     "conferencingTitle": "Conferencing",
     "conferencingSubtitle": "Meeting Center",
-    "conferencingDesc": "Join up to 8 colleagues in a Team Room Sync-ups or many more in a WebEx Meeting Center."
+    "conferencingDesc": "Join up to 25 colleagues in a Team Room Sync-up or many more in a WebEx Meeting Center."
   },
   "partnerProfile": {
     "link": "Partner Profile",
@@ -1842,7 +2039,7 @@
     "supportContacts": "Support Contacts",
     "partnerAdmin": "Partner Administrators",
     "brandingInfo": "If you want to display your own branding in addition to Cisco Spark, upload your logo below.",
-    "usePartnerLogo": "Use the same logo in use by {{partnerName}}",
+    "usePartnerLogo": "Use the same logo in use by {{partner}}",
     "supportInfo": "If you are providing support for your users, enter your support paramaters below. These parameters will be displayed under Support Options in the Spark application;"
   },
   "fileUpload": {
@@ -1913,7 +2110,8 @@
     "siteName": "Site Name",
     "licenseCount": "License Count",
     "type": "Type",
-    "launchSite": "Launch Site Admin"
+    "siteSettings": "Configure Site",
+    "siteReports": "Reports"
   },
   "cloudExtensions": {
     "cloudExtensions": "Cloud Extensions",

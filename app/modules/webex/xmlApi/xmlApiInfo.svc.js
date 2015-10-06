@@ -1,13 +1,13 @@
 'use strict';
 
-angular.module('WebExUserSettings')
-  .service('XmlApiInfoSvc', [
-    function XmlApiInfo() {
+angular.module('WebExXmlApi')
+  .service('WebExXmlApiInfoSvc', [
+    function WebExXmlApiInfo() {
       return {
         xmlServerURL: "",
         webexAdminID: "",
         webexSessionTicket: "",
         webexUserId: ""
       }; // return
-    } // XmlApiInfo()
+    } // WebExXmlApiInfo()
   ]); // service()

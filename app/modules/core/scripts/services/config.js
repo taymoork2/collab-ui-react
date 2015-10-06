@@ -299,18 +299,6 @@ angular.module('Core')
           state: 'profile',
           link: '/profile'
         }, {
-          tab: 'webexUserSettingsTab',
-          icon: 'icon-tools',
-          title: 'webexUserSettings.webexUserSettingsTab',
-          state: 'webexUserSettings',
-          link: '/webexUserSettings'
-        }, {
-          tab: 'webexUserSettings2Tab',
-          icon: 'icon-tools',
-          title: 'webexUserSettings2.webexUserSettings2Tab',
-          state: 'webexUserSettings2',
-          link: '/webexUserSettings2'
-        }, {
           tab: 'developmentTab',
           icon: 'icon-tools',
           title: 'tabs.developmentTab',
@@ -354,6 +342,11 @@ angular.module('Core')
             desc: 'New Reports',
             state: 'newpartnerreports',
             link: '#partner/newreports'
+          }, {
+            title: 'tabs.cdrTab',
+            desc: 'tabs.cdrLogsTabDesc',
+            state: 'cdrsupport',
+            link: '#cdrsupport'
           }, {
             title: 'tabs.entResUtilizationTab',
             desc: 'tabs.entResUtilizationTabDesc',
@@ -808,8 +801,14 @@ angular.module('Core')
         PARTNER_USER: ['partnercustomers', 'customer-overview', 'trialAdd', 'trialEdit'],
         CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
         User: [],
-        Site_Admin: ['site-list'],
-        Application: ['organizations', 'organization-overview']
+        Site_Admin: [
+          'site-list',
+          'site-settings',
+          'site-setting',
+          'webex-reports',
+          'webex-reports-iframe'
+        ],
+        Application: ['organizationAdd', 'organization-overview']
       };
 
       config.serviceStates = {
@@ -829,12 +828,14 @@ angular.module('Core')
           'hurondetails',
           'huronlines',
           'huronsettings',
-          'huronfeatures'
+          'huronfeatures',
+          'cdrsupport'
         ],
         'squared-fusion-mgmt': [
           'fusion',
           'cluster-details',
-          'calendar-service'
+          'calendar-service',
+          'call-service'
         ],
         'squared-fusion-uc': [
           'devices',
@@ -876,7 +877,8 @@ angular.module('Core')
           'fusion',
           'mediafusionconnector',
           'callRouter',
-          'hurondetails'
+          'hurondetails',
+          'cdrsupport'
         ]
       };
 

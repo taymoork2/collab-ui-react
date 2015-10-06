@@ -1,0 +1,52 @@
+
+<div id="siteSetting"
+     name="siteSetting">
+
+  <div class="page-header row full">
+    <div class="page-title col-xs-12">
+      <div class="title-heading"
+           id={{siteSettingId}}
+           name= {{siteSettingId}}>
+           
+        {{siteSettingLabel}}
+      </div>
+    </div>
+  </div>
+  
+  <cs-container>
+    <!-- breadcrumbs -->
+    <div id="siteSettingBreadCrumbs"
+         name="siteSettingBreadCrumbs"
+         class="breadcrumb-container">
+         
+      <ul class="breadcrumbs">
+        <li>
+          <a id="siteListCrumb"
+             name="siteListCrumb"
+             ui-sref="site-list">
+         
+            <span translate="siteList.conferencing"></span>
+          </a>
+        </li>
+        
+        <li>
+          <a id="siteSettingsCrumb"
+             name="siteSettingsCrumb"
+             ui-sref={{siteSettingsBreadcrumbUiSref}}>
+           
+            {{siteSettingsBreadcrumbLabel}}
+          </a>
+        </li>
+        
+        <li class="current"
+            id="siteSettingCrumb"
+            name="siteSettingCrumb">
+            
+          {{siteSettingLabel}}
+        </li>
+      </ul>
+    </div>
+  
+    <div ng-include="'modules/webex/iframeContainer/iframeContainer.tpl.html'"></div> 
+  </cs-container>
+</div>
