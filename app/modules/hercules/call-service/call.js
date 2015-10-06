@@ -42,16 +42,13 @@
     var vm = this;
     vm.config = "";
 
-    // check squared-fusion-ec setting in whatever api...
-    vm.squaredFusionEc = true; // read initial value
+    vm.squaredFusionEc = false;
+    ServiceDescriptor.isServiceEnabled("squared-fusion-ec", function (a, b) {
+      vm.squaredFusionEc = b;
+    });
 
     vm.toggleEc = function () {
-      //console.log("squaredFusionEc is ", vm.squaredFusionEc)
-
-      ServiceDescriptor.setServiceEnabled("squared-fusion-ec", vm.squaredFusionEc, function (a, b) {
-        //console.log("setting fusion-ec result:", a);
-        //console.log("setting fusion-ec result:", b);
-      });
+      ServiceDescriptor.setServiceEnabled("squared-fusion-ec", vm.squaredFusionEc, function (a, b) {});
     };
 
     vm.loading = true;
@@ -59,13 +56,9 @@
       vm.loading = false;
       vm.sipDomain = res.sipDomain;
       vm.org = res || {};
+    }, function (err) {
+      //  if (err) return notification.notify(err);
     });
-
-    ServiceDescriptor.services(function (a, b) {
-      //console.log("RES", a);
-      //console.log("res2", b);
-    });
-
     //UssService.getOrg(Authinfo.getOrgId(), function (err, org) {
     //  $scope.loading = false;
     //  if (err) return notification.notify(err);
@@ -78,10 +71,8 @@
       vm.savingSip = true;
       USSService2.updateOrg(vm.org).then(function (res) {
         vm.savingSip = false;
-        //console.log("After saving ",res);
-      }, function (res) {
+      }, function (err) {
         vm.savingSip = false;
-        //console.log("ERROR",res)
         vm.error = "SIP domain was invalid. Please enter a valid SIP domain or IP address.";
       });
       //$scope.error = null;

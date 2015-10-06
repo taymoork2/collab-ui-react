@@ -85,8 +85,9 @@
   }
 
   /* @ngInject */
-  function CalendarDetailsController($modal, $stateParams, ClusterService) {
+  function CalendarDetailsController($state, $modal, $stateParams, ClusterService) {
     var vm = this;
+    vm.state = $state;
     vm.clusterId = $stateParams.cluster.id;
     vm.cluster = ClusterService.getClusters()[vm.clusterId];
     //console.log("cluster", vm.cluster);
