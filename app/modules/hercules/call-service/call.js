@@ -36,15 +36,36 @@
 
   }
 
+
+  /* @ngInject */
+  function DisableConfirmController(ServiceDescriptor, $modalInstance, serviceId) {
+    var modalVm = this;
+    modalVm.serviceId = serviceId;
+    modalVm.serviceIconClass = ServiceDescriptor.serviceIcon(serviceId);
+
+    modalVm.ok = function () {
+      $modalInstance.close();
+    };
+    modalVm.cancel = function () {
+      $modalInstance.dismiss();
+    };
+  }
+
   /* Based on notifiction-config-controller used in the old cluster view */
   /* @ngInject */
-  function CallServiceSettingsController(ServiceDescriptor, Authinfo, USSService2, $stateParams, NotificationConfigService, MailValidatorService, XhrNotificationService) {
+  function CallServiceSettingsController($scope, $modal, ServiceDescriptor, Authinfo, USSService2, $stateParams, NotificationConfigService, MailValidatorService, XhrNotificationService) {
     var vm = this;
     vm.config = "";
+
+    vm.serviceEnabled = false;
 
     vm.squaredFusionEc = false;
     ServiceDescriptor.isServiceEnabled("squared-fusion-ec", function (a, b) {
       vm.squaredFusionEc = b;
+    });
+
+    ServiceDescriptor.isServiceEnabled("squared-fusion-uc", function (a, b) {
+      vm.serviceEnabled = b;
     });
 
     vm.toggleEc = function () {
@@ -120,11 +141,35 @@
       }
     };
 
+    vm.disableService = function (serviceId) {
+      ServiceDescriptor.setServiceEnabled(serviceId, false, function (error){
+        //console.log("ERROR disabling service:", error);
+      });
+      vm.serviceEnabled = false;
+    }
+
+    vm.confirmDisable = function (serviceId) {
+      $modal.open({
+        templateUrl: "modules/hercules/call-service/confirm-disable.html",
+        controller: DisableConfirmController,
+        controllerAs: "disableConfirmDialog",
+        resolve: {
+          serviceId: function () {
+            return serviceId;
+          }
+        }
+      }).result.then(function () {
+        vm.disableService(serviceId);
+        //TODO: should go to a new page after deactivate the service !!!
+      });
+    };
+
   }
 
   angular
     .module('Hercules')
     .controller('CallController', CallController)
-    .controller('CallServiceSettingsController', CallServiceSettingsController);
+    .controller('CallServiceSettingsController', CallServiceSettingsController)
+    .controller('DisableConfirmController', DisableConfirmController);
 
 }());

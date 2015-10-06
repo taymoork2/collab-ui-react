@@ -125,7 +125,9 @@
         Additional steps to remove the service from your on premise devices are required.
         See doumentation for guideance and further instructions.
       </p>
-      <button class="btn-danger">DEACTIVATE</button>
+      <button ng-show="callServiceSettings.serviceEnabled"
+              class="btn-danger"
+              ng-click="callServiceSettings.confirmDisable('squared-fusion-uc')">DEACTIVATE</button>
 
       <p>
         Go to Help Central for help uninstalling a Hybrid Service.
