@@ -184,8 +184,8 @@ angular.module('Core')
         ],
 
         helpUrl: 'https://support.ciscospark.com',
-        ssoUrl: 'https://support.ciscospark.com/customer/portal/articles/1909112-sso-setup',
-        rolesUrl: 'https://support.ciscospark.com/customer/portal/articles/1908564-overview-of-admin-roles',
+        ssoUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt/content?filterID=contentstatus[published]~category[security]',
+        rolesUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt/content?filterID=contentstatus[published]~category[getting-started]',
         supportUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt',
 
         usersperpage: 100,
@@ -254,8 +254,12 @@ angular.module('Core')
             state: 'mediafusionconnector',
             link: '#mediafusionconnector'
           }, {
-            title: 'Messenger',
-            desc: 'Messenger Administration',
+            title: 'tabs.callRoutingTab',
+            state: 'callRouter',
+            link: '#callRouter'
+          }, {
+            title: 'tabs.messengerTab',
+            desc: 'tabs.messengerTabDesc',
             state: 'messenger',
             link: '#messenger'
           }]
@@ -859,6 +863,9 @@ angular.module('Core')
           'events',
           'mediafusionconnector',
           'connector-details'
+        ],
+        'webex-messenger': [
+          'messenger'
         ]
       };
 
@@ -886,14 +893,6 @@ angular.module('Core')
       config.allowedStates = ['unauthorized', 'csadmin'];
 
       config.ciscoOnly = ['billing'];
-
-      // Messenger Sep 2015: Temporarily hide new state so only developers can see it.
-      // This will be changed once the back-end service is operational.
-      if (config.isDev()) {
-        config.serviceStates['webex-messenger'] = [
-          'messenger'
-        ];
-      }
 
       return config;
     }

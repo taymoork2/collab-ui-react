@@ -15,7 +15,8 @@ angular.module('Core')
       });
 
       // Messeger User Sync Mode flag
-      $scope.isMsgrSyncMode = SyncService.isMessengerSync();
+      $scope.isMsgrSyncMode = SyncService.isSyncEnabled() && SyncService.isMessengerSync();
+
       if ($scope.isMsgrSyncMode) {
         $scope.options.addUsers = -1;
       }

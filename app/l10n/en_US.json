@@ -221,7 +221,9 @@
     "alarmsTab": "Alarms",
     "alarmsTabDesc": "Alarm Management",
     "eventsTab": "Events",
-    "eventsTabDesc": "Event Management"
+    "eventsTabDesc": "Event Management",
+    "messengerTab": "Messenger",
+    "messengerTabDesc": "Messenger Administration"
   },
   "index": {
     "welcome": "Welcome!",
@@ -2210,5 +2212,28 @@
     "actionHeader": "Actions",
     "lineListError": "Error retrieving the line list. Please try reloading the page."
 
+  },
+
+  "messengerCiSync": {
+    "authRedirectHeading": "Authentication Redirect",
+    "authRedirectTooltip": "Is authentication redirected through Common Identity instead of CAS?",
+    "getFailed": "Failed getting CI Sync status",
+    "labelCILinkDate": "CI Link Date",
+    "labelOrgAdmin": "ORG Admin",
+    "labelOrgId": "Messenger Organization ID",
+    "labelOrgName": "Messenger Organization Name",
+    "labelOpsAdmin": "OPS Admin",
+    "labelUnauthorizedUser": "Unauthorized User",
+    "loading": "Loading CI Sync Status",
+    "orgAdminButtonText": "Org Admin",
+    "pageTitle": "Messenger CI Sync",
+    "patchFailed": "Failed updating CI Sync",
+    "patchSuccessful": "CI Sync updated",
+    "patchSyncButtonText": "Update",
+    "refresh": "Refresh",
+    "refreshFailed": "Failed refreshing CI Sync status",
+    "syncStatusHeading": "Sync Status",
+    "syncStatusTooltip": "Is syncing active between Messenger and Common Identity?",
+    "unauthorized": "Not authorized to view this state"
   }
 }
