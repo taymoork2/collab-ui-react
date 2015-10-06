@@ -100,11 +100,12 @@ angular.module('WebExReports').service('reportService', [
       this.reportPageId_translated = $translate.instant("webexSiteReports." +
         rid);
       this.reportPageIframeUrl = theUrl;
+      this.modifiedUrl = this.reportPageIframeUrl.replace('wbxadmin', 'adm3100');
       this.toUIsrefString = function () {
         return "webex-reports-iframe({" +
           "  siteUrl:" + "'" + this.siteUrl + "'" + "," +
           "  reportPageId:" + "'" + this.reportPageId + "'" + "," +
-          "  reportPageIframeUrl:" + "' " + this.reportPageIframeUrl + "'" +
+          "  reportPageIframeUrl:" + "'" + this.modifiedUrl + "'" +
           "})";
       };
       this.uisrefString = this.toUIsrefString();
