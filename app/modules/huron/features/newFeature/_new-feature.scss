@@ -74,7 +74,7 @@
   border-radius: 50%;
   width: rem-calc(78);
   height: rem-calc(78);
-  @include vr-spacing(pt, .5);
+  @include vr-spacing(p, .625);
 }
 
 .feature-icon-color-AA {
