@@ -36,7 +36,6 @@
 
   }
 
-
   /* @ngInject */
   function DisableConfirmController(ServiceDescriptor, $modalInstance, serviceId) {
     var modalVm = this;
@@ -142,11 +141,11 @@
     };
 
     vm.disableService = function (serviceId) {
-      ServiceDescriptor.setServiceEnabled(serviceId, false, function (error){
+      ServiceDescriptor.setServiceEnabled(serviceId, false, function (error) {
         //console.log("ERROR disabling service:", error);
       });
       vm.serviceEnabled = false;
-    }
+    };
 
     vm.confirmDisable = function (serviceId) {
       $modal.open({
