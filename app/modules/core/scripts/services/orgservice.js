@@ -160,7 +160,34 @@ angular.module('Core')
                 callback(data, status);
               });
           });
+        },
+
+        getOrgCacheOption: function (callback, oid, config) {
+          var scomUrl = null;
+          if (oid) {
+            scomUrl = Config.getScomUrl() + '/' + oid;
+          } else {
+            scomUrl = Config.getScomUrl() + '/' + Authinfo.getOrgId();
+          }
+
+          if (!config) {
+            config = {};
+          }
+
+          $http.get(scomUrl, config)
+            .success(function (data, status) {
+              data = data || {};
+              data.success = true;
+              callback(data, status);
+            })
+            .error(function (data, status) {
+              data = data || {};
+              data.success = false;
+              data.status = status;
+              callback(data, status);
+            });
         }
+
       };
     }
   ]);

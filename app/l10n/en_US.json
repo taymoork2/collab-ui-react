@@ -180,6 +180,8 @@
     "supportTab": "Support",
     "logsTab": "Logs",
     "logsTabDesc": "View user logs",
+    "cdrTab": "Device Logs",
+    "cdrLogsTabDesc": "View device logs",
     "billingTab": "Order Provisioning",
     "billingTabDesc": "Engineering support/operations",
     "accountTab": "Account",
@@ -457,6 +459,48 @@
     "callflowResultsFailed": "Failed to download the callflow results corresponding to logFile",
     "status": "Status"
   },
+  "cdrLogs": {
+    "title": "Device Support",
+    "searchForm": "Search Form",
+    "search": "Search",
+    "reset": "Reset",
+    "number": "Number:",
+    "device": "Device:",
+    "callingParty": "Calling Party",
+    "calledParty": "Called Party",
+    "startTime": "Start Time:",
+    "endTime": "End Time:",
+    "timeExample": "hh:mm:ss AM/PM",
+    "startDate": "Start Date:",
+    "endDate": "End Date:",
+    "dateExample": "Choose a Date",
+    "size": "Size Per Server:",
+    "uploadFile": "Upload CDR File",
+    "uploadDescription": "Option TBA",
+    "upload": "Upload",
+    "cdrAccordionHeader": "{{firstTimestamp}} - Number of CDR's: {{numberOfCdrs}} - Total Duration: {{totalDuration}} seconds",
+    "timeStamp": "Time Stamp",
+    "callingDeviceName": "Calling Device Name",
+    "callingPartyNumber": "Calling Party Number",
+    "callingCause": "Calling Cause",
+    "calledDeviceName": "Called Device Name",
+    "calledPartyNumber": "Called Party Number",
+    "calledCause": "Called Cause",
+    "duration": "Duration",
+    "callsSubtitle": "Call List",
+    "sessionIds": "Session Ids",
+    "cdrTableTitle": "CDRs Generated During Call",
+    "cdrRetrievalError": "Error encountered while retrieving CDR records from {{server}}.",
+    "cdrRecursiveError": "Record size requested too large to retrieve all related CDR data from {{server}}.  To retrieve data from {{server}} lower the 'Size Per Server' count and resubmit.",
+    "required": "This field is required.",
+    "invalidDate": "End date should be the same day as, or any day after, the start date.",
+    "invalidTime": "Entered time is invalid.  Please follow the 'hh:mm:ss AM/PM' format.  If 'AM/PM' is ommited, then it will be assumed that 24-hour time is being used.",
+    "invalidTimeTwo": "End Time should not be equal to or earlier than the Start Time.",
+    "phoneNumberError": "Please enter a valid phone number using the numbers [0-9].",
+    "phoneNumberErrorTwo": "Calling Party Number and Called Party Number should not match.",
+    "deviceNameError": "Calling Party Device and Called Party Device should not match.",
+    "hitSizeError": "The request size per server should be between 1 and 50."
+  },
   "billingPage": {
     "title": "Order Provisioning",
     "sendCustomer": "Resend Customer Email",
@@ -669,7 +713,7 @@
     "domain": "Domain",
     "defaultPlaceholder": "Default",
     "domainDesc": "Identify the Active Directory domain you will be syncing.",
-    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Download </a> and Install the Cisco Directory Connector in your enterprise.",
+    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Download </a> and Install the Cisco Cloud Connector in your enterprise.",
     "installStep2": "2. Configure the Active Directory synchronization agreement.",
     "installStep3": "3. Test the synchronization agreement.",
     "nextSteps": "Press the Next button when you're ready to verify that identity information is being synchronized.",
@@ -794,17 +838,31 @@
       "squared-fusion-uc": "Call Service",
       "squared-fusion-cal": "Calendar Service",
       "squared-fusion-media": "Media Service",
-      "contact-center-context": "Context Center Service"
+      "contact-center-context": "Context Center Service",
+      "squared-fusion-ec": "Call Service Connect"
     },
     "serviceDescriptions": {
       "squared-fusion-uc": "Effortlessly share your desktop with Spark while you are on your work phone. Answer your work phone or call your coworkers from Spark.",
       "squared-fusion-cal": "Collaborate instantly. Just add @spark to an invitation to create a Spark room for your meeting. Add @webex to attach your WebEx CMR.",
       "squared-fusion-media": "",
-      "contact-center-context": ""
+      "contact-center-context": "",
+      "squared-fusion-ec": ""
     },
     "errors": {
       "enableServiceEntitlementFailure": "Failed! Your organization is missing entitlements that are needed to add the {{serviceName}}. Contact your support representative to fix the issue.",
       "enableServiceFailure": "Adding the {{serviceName}} failed."
+    },
+    "cloudExtensions": {
+      "serviceNames": {
+        "squared-fusion-uc": "Aware",
+        "squared-fusion-cal": "Calendar Service",
+        "squared-fusion-ec": "Connect"
+      },
+      "serviceDescriptions": {
+        "squared-fusion-uc": "Users can share their desktop in their Cisco Spark client while on their work phone.",
+        "squared-fusion-cal": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
+        "squared-fusion-ec": "Users can answer their work phone or call colleagues from Cisco Spark."
+      }
     }
   },
   "firstTimeWizard": {
@@ -830,25 +888,31 @@
     "newUsers": "New users",
     "existingUsers": "Updated users",
     "errorUsers": "Errors",
-    "fixCsvErrors": "Fix Errors and Reload CSV",
+    "fixBulkErrors": "Fix Errors and reload users",
     "totalProcessed": "Total records processed",
     "addMoreUsers": "Add more users",
     "skipAndFinish": "Skip Errors and Finish",
     "csvInvalidRow": "Row contains an incorrect number of columns.  Please verify the row contains six columns and try again.",
     "csvRequiredEmail": "The \"User ID/Email\" field is required. Please provide a valid email address and try again.",
     "csvDuplicateEmail": "Skipped due to duplicate email address.",
-    "processCsvResponseError": "An error has occurred while reading the response. Please try again.",
-    "processCsvError": "Unidentified error while processing the user. Please try again.",
-    "csv400Error": "Unidentified error in the csv. Please verify the file and try again.",
-    "csv401And403Error": "Customer is not authorized to add or update this user.",
-    "csv404Error": "Server is unable to respond at this time. Please try again at a later time.",
-    "csv408Error": "Request timed out while waiting for a response. Please try again at a later time.",
-    "csv409Error": "Request failed due to a processing conflict. Please verify the csv and try again.",
-    "csv500Error": "Request failed due to a server error. Please try again.",
-    "csv502And503Error": "Server is temporarily unavailable. Please try again at a later time.",
-    "csvCancelledError": "Skipped due to canceled request.",
+    "processBulkResponseError": "An error has occurred while reading the response. Please try again.",
+    "processBulkError": "Unidentified error while processing the user. Please try again.",
+    "bulk400Error": "Unidentified error in the user list. Please verify the user list and try again.",
+    "bulk401And403Error": "Customer is not authorized to add or update this user.",
+    "bulk404Error": "Server is unable to respond at this time. Please try again at a later time.",
+    "bulk408Error": "Request timed out while waiting for a response. Please try again at a later time.",
+    "bulk409Error": "Request failed due to a processing conflict. Please verify the user list and try again.",
+    "bulk500Error": "Request failed due to a server error. Please try again.",
+    "bulk502And503Error": "Server is temporarily unavailable. Please try again at a later time.",
+    "bulkCancelledError": "Skipped due to canceled request.",
     "resultRowHeader": "Row Number",
     "resultErrorHeader": "Error Message",
+    "uploadDirSyncEmpty": "Please upload users from the directory server.",
+    "dirsyncMaxLinesError": "The directory contains more users than the maximum allowed. Please reduce the number of users to 250 or less.",
+    "dirSyncStatus": "Sync Status",
+    "processDirSyncStep": "Processing Directory Sync",
+    "dirSyncResultStep": "Directory Sync Result",
+    "runDirSyncAgain": "Sync Again",
     "advanced": "Advanced",
     "simpleSub": "All you need are users' email addresses.",
     "uploadSub": "Best method for adding many users at the same time.",
@@ -913,11 +977,12 @@
     "domain": "Domain",
     "defaultPlaceholder": "Default",
     "domainDesc": "Identify the Active Directory domain you will be syncing.",
-    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Download </a> and Install the Cisco Directory Connector in your enterprise.",
+    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Download </a> and Install the Cisco Cloud Connector in your enterprise.",
     "installStep2": "2. Configure the Active Directory synchronization agreement.",
     "installStep3": "3. Test the synchronization agreement.",
     "nextSteps": "Press the Next button when you're ready to verify that identity information is being synchronized.",
     "results": "Results",
+    "syncNotConfigured": "Directory Sync is not enabled. See previous step for setup instructions.",
     "syncAgreementText": "users in sync agreement",
     "cloudSipSuccess": "Successfully added Cloud SIP URI.",
     "cloudSipError": "Failed to add Cloud SIP URI.",
@@ -1796,7 +1861,7 @@
 
     "indexPageLabel_WebACD_webacd_settings": "Settings",
     "indexPageLabel_WebACD_webacd_queues": "Queues",
-    "indexPageLabel_WebACD_webacd_forms": "Forms",
+    "indexPageLabel_WebACD_webacd_form": "Forms",
 
     "indexPageLabel_RA_remote_options": "Settings",
     "indexPageLabel_RA_remote_groups": "Groups",
@@ -1834,7 +1899,7 @@
 
     "settingPageLabel_WebACD_webacd_settings": "WebACD Settings",
     "settingPageLabel_WebACD_webacd_queues": "WebACD Queues",
-    "settingPageLabel_WebACD_webacd_forms": "WebACD Leave Message Forms",
+    "settingPageLabel_WebACD_webacd_form": "WebACD Leave Message Forms",
 
     "settingPageLabel_RA_remote_options": "Remote Access Settings",
     "settingPageLabel_RA_remote_groups": "Remote Access Groups",
@@ -1918,7 +1983,7 @@
     "communicationDesc": "Basic external calling and full Unified Communications enabled for your organization.",
     "conferencingTitle": "Conferencing",
     "conferencingSubtitle": "Meeting Center",
-    "conferencingDesc": "Join up to 8 colleagues in a Team Room Sync-ups or many more in a WebEx Meeting Center."
+    "conferencingDesc": "Join up to 25 colleagues in a Team Room Sync-up or many more in a WebEx Meeting Center."
   },
   "partnerProfile": {
     "link": "Partner Profile",
@@ -2046,7 +2111,9 @@
     "cloudExtensions": "Cloud Extensions",
     "enableService": "Activate service for this user",
     "status": "Status",
-    "host": "Host"
+    "host": "Host",
+    "sipUri": "Enterprise SIP URI",
+    "enterpriseDn": "Enterprise DN"
   },
   "validation": {
     "nonPrintable": "This entry contains nonprintable characters.",

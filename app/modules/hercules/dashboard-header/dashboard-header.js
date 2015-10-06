@@ -33,7 +33,7 @@
         };
 
         $scope.$watch('services', function (_services) {
-          services = _services.enabledOnly;
+          services = _services.allExceptManagement;
           $scope.noServicesEnabled = !services || services.length === 0;
           updateServiceAggregates();
         });
