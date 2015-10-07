@@ -25,6 +25,11 @@ angular.module('WebExReports').service('reportService', [
   ) {
     var self = this;
 
+    var common_reports_pageids = ["meeting_in_progess", "meeting_usage",
+      "recording_usage",
+      "storage_utilization"
+    ];
+
     var event_center_pageids = ["event_center_overview",
       "event_center_site_summary",
       "event_center_scheduled_events",
@@ -50,17 +55,57 @@ angular.module('WebExReports').service('reportService', [
       "remote_access_csrs_usage", "remote_access_computer_tracking"
     ];
 
+    var pageid_to_navItemId_mapping = {
+      "meeting_in_progess": "meetings_in_progress",
+      "meeting_usage": "meeting_usage",
+      "recording_usage": "recording_storage_usage",
+      "storage_utilization": "storage_utilization_by_user",
+      "event_center_overview": "ec_report_summary",
+      "support_center_call_volume": "sc_call_volume",
+      "remote_access_computer_tracking": "sc_computer_tracking",
+      "remote_access_computer_usage": "sc_computer_usage",
+      "support_center_csr_activity": "sc_csr_activity",
+      "remote_access_csrs_usage": "sc_csrs_usage_report",
+      "support_center_support_sessions": "sc_session_query_tool",
+      "coupon": "tc_coupon_usage",
+      "recording": "tc_recorded_session_access_report",
+      "registration": "tc_registration_report",
+      "attendee": "tc_training_report_attendee",
+      "training_usage": "tc_usage"
+    };
+
+    var getFullURLGivenNavInfoAndPageId = function (navInfo, pageid) {
+      var navItemId = pageid_to_navItemId_mapping[pageid];
+      if (angular.isUndefined(navItemId)) {
+        return undefined;
+      }
+      var filterByNavItemId = function (navElement) {
+        var returnValue = false;
+        if (navElement.ns1_navItemId === navItemId) {
+          returnValue = true;
+        }
+        return returnValue;
+      };
+      var navItems = navInfo.ns1_siteAdminNavUrl.filter(filterByNavItemId);
+      var navItem = navItems[0]; //assume one and only one item returned
+      if (angular.isUndefined(navItem)) {
+        $log.log("YUTR: navItem is undefined");
+      }
+      return navItem.ns1_url;
+    };
+
     var UIsref = function (theUrl, rid, siteUrl) {
       this.siteUrl = siteUrl;
       this.reportPageId = rid;
       this.reportPageId_translated = $translate.instant("webexSiteReports." +
         rid);
       this.reportPageIframeUrl = theUrl;
+      this.modifiedUrl = this.reportPageIframeUrl.replace('wbxadmin', 'adm3100');
       this.toUIsrefString = function () {
         return "webex-reports-iframe({" +
           "  siteUrl:" + "'" + this.siteUrl + "'" + "," +
           "  reportPageId:" + "'" + this.reportPageId + "'" + "," +
-          "  reportPageIframeUrl:" + "'https://" + this.siteUrl + this.reportPageIframeUrl + "'" +
+          "  reportPageIframeUrl:" + "'" + this.modifiedUrl + "'" +
           "})";
       };
       this.uisrefString = this.toUIsrefString();
@@ -88,7 +133,7 @@ angular.module('WebExReports').service('reportService', [
         return this.sections;
       };
     };
-    this.getReports = function (siteUrl) {
+    this.getReports = function (siteUrl, mapJson) {
       //get the reports list, for now hard code.
       var common_reports = new ReportsSection("common_reports", siteUrl, ["/x/y/z", "/u/io/p"]);
       var event_center = new ReportsSection("event_center", siteUrl, ["/u/y/z", "www.yahoo.com"]);
@@ -97,9 +142,8 @@ angular.module('WebExReports').service('reportService', [
       var remote_access = new ReportsSection("remote_access", siteUrl, ["/u/y/z", "www.yahoo.com"]);
 
       var uisrefsArray = [];
-      var common_reports_pageids = ["meeting_in_progess", "meeting_usage", "recording_usage",
-        "storage_utilization"
-      ];
+
+      var mapJsonDefined = angular.isDefined(mapJson);
 
       //use the above 5 lists to gather all the UISrefs
       [
@@ -112,7 +156,14 @@ angular.module('WebExReports').service('reportService', [
         var pageids = xs[0];
         var section = xs[1];
         section.uisrefs = pageids.map(function (rid) {
-          return new UIsref("www.yahoo.com", rid, siteUrl);
+          var theUrl = "www.yahoo.com";
+          if (mapJsonDefined) {
+            var tempUrl = getFullURLGivenNavInfoAndPageId(mapJson.bodyJson, rid);
+            if (angular.isDefined(tempUrl)) {
+              theUrl = tempUrl;
+            }
+          }
+          return new UIsref(theUrl, rid, siteUrl);
         });
       });
 
@@ -140,6 +191,7 @@ angular.module('WebExReports').service('reportService', [
 
       reportsObject["siteUrl"] = siteUrl;
       reportsObject["siteName"] = siteName;
+      reportsObject["viewReady"] = false;
 
       WebExXmlApiFact.getSessionTicket(siteUrl).then(
         function getSessionTicketSuccess(sessionTicket) {
@@ -162,6 +214,12 @@ angular.module('WebExReports').service('reportService', [
             var y = WebExUtilsFact.validateAdminPagesInfoXmlData(result.reportPagesInfoXml);
 
             $log.log("Validated Result is ==== " + JSON.stringify(y.bodyJson));
+
+            reportsObject["mapJson"] = y;
+
+            var rpts = self.getReports(siteUrl, y);
+            reportsObject["reports"] = rpts;
+            reportsObject["viewReady"] = true;
 
           });
 

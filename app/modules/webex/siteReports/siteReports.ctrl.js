@@ -31,6 +31,8 @@
 
       this.reportObject = reportService.initReportsObject();
 
+      $scope.reportObject = this.reportObject;
+
       $scope.reportPageId = "pageId_underDevelopment";
       $scope.siteUrl = $stateParams.siteUrl; //this.reportObject.siteUrl;
 
