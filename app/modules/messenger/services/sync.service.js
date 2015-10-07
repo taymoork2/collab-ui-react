@@ -97,17 +97,54 @@
           shouldFetch = false;
           defer.resolve(setSyncStatus(response.data));
         }, function (response) {
-          var baseError = 'Get Status ' + response.status;
+          var status = parseHttpStatus(response.status);
+
+          var baseError = 'GET: ' + status;
+          var fullError = baseError;
 
           // TODO: remove excessive checking once Msgr Admin Service returns consistent errors
           if (response.data && response.data.error && response.data.error.message) {
-            defer.reject(baseError + '; Message: ' + response.data.error.message);
-          } else {
-            defer.reject(baseError);
+            fullError += '; Message: ' + response.data.error.message;
           }
+
+          Log.error('SyncService::fetchSyncStatus(): ' + fullError);
+
+          defer.reject({
+            status: status,
+            message: fullError
+          });
         });
 
       return defer.promise;
+    }
+
+    function parseHttpStatus(status) {
+      var result = '';
+
+      // Normalize edge cases for parsing
+      if (status < 100) {
+        status = 0;
+      }
+
+      switch (status) {
+      case 0:
+        result = 'Connection down; no response';
+        break;
+      case 401:
+        result = '401 Unauthorized';
+        break;
+      case 404:
+        result = '404 Not Found';
+        break;
+      case 500:
+        result = '500 Server Error';
+        break;
+      default:
+        result = 'Unknown';
+        break;
+      }
+
+      return result;
     }
 
     function setSyncStatus(status) {
@@ -137,8 +174,8 @@
         fetchSyncStatus()
           .then(function (status) {
             defer.resolve(getSimplifiedStatus(syncStatus));
-          }, function (errorMsg) {
-            defer.reject(errorMsg);
+          }, function (errorObj) {
+            defer.reject(errorObj);
           });
       } else {
         defer.resolve(getSimplifiedStatus(syncStatus));
@@ -193,6 +230,9 @@
     function patchSync(isSyncEnabled, isAuthRedirect) {
       var defer = $q.defer();
 
+      // Deep copy to prevent only reference copy
+      var previousSettings = JSON.parse(JSON.stringify(syncStatus));
+
       // Update sync mode
       if (isDirSync()) {
         setDirSyncMode(isSyncEnabled);
@@ -210,7 +250,25 @@
       $http.patch(serviceUrl, params).then(function (response) {
         defer.resolve('PATCH Status ' + response.status);
       }, function (response) {
-        defer.reject('PATCH Status ' + response.status + '; URL \'' + serviceUrl + '\'; Full response: ' + JSON.stringify(response.data));
+        var status = parseHttpStatus(response.status);
+
+        var baseError = 'PATCH: ' + status;
+        var fullError = baseError;
+
+        // TODO: remove excessive checking once Msgr Admin Service returns consistent errors
+        if (response.data && response.data.error && response.data.error.message) {
+          fullError += '; Message: ' + response.data.error.message;
+        }
+
+        Log.error('SyncService::patchSync(): ' + fullError);
+
+        // Reset to previous settings
+        syncStatus = previousSettings;
+
+        defer.reject({
+          status: status,
+          message: fullError
+        });
       });
 
       return defer.promise;

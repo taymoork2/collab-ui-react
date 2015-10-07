@@ -158,19 +158,19 @@
           if (hasEntitlements) {
             // Must have full admin role
             CiService.hasRole(fullAdminRole)
-              .then(function (hasRole) {
-                if (hasRole) {
+              .then(function (hasAdminRole) {
+                if (hasAdminRole) {
                   // Check if Customer Success admin
                   CiService.hasRole(customerSuccessRole)
-                    .then(function(hasRole) {
-                      if (hasRole) {
+                    .then(function (hasCSRole) {
+                      if (hasCSRole) {
                         setOpsAdmin();
                       } else {
                         setOrgAdmin();
                       }
 
                       defer.resolve();
-                    }, function(errorMsg) {
+                    }, function (errorMsg) {
                       defer.reject(errorMsg);
                     });
                 } else {
@@ -193,17 +193,16 @@
       vm.dataStatus = vm.dataStates.loading;
 
       SyncService.getSyncStatus()
-        .then(function (status) {
-          vm.syncInfo = status;
+        .then(function (syncStatusObj) {
+          vm.syncInfo = syncStatusObj;
           vm.dataStatus = vm.dataStates.loaded;
-        }, function (errorMsg) {
-          var baseError = 'Failed getting CI sync status';
-          var fullError = baseError + ': ' + errorMsg;
-
+        }, function (errorObj) {
           vm.dataStatus = vm.dataStates.error;
-          vm.errorMsg = baseError;
-          Log.error(fullError);
-          Notification.error($translate.instant(translatePrefix + 'getFailed'));
+          var error = 'Failed getting CI Sync status; Detail: ' + errorObj.message;
+
+          vm.errorMsg = error;
+          Log.error(error);
+          Notification.error(error);
         });
     }
 
@@ -214,14 +213,13 @@
         .then(function (status) {
           vm.syncInfo = status;
           vm.dataStatus = vm.dataStates.loaded;
-        }, function (errorMsg) {
-          var baseError = 'Failed refreshing CI Sync status';
-          var fullError = baseError + ': ' + errorMsg;
-
+        }, function (errorObj) {
           vm.dataStatus = vm.dataStates.error;
-          vm.errorMsg = baseError;
-          Log.error(fullError);
-          Notification.error($translate.instant(translatePrefix + 'refreshFailed'));
+          var error = 'Failed refreshing CI Sync status; Detail: ' + errorObj.message;
+
+          vm.errorMsg = error;
+          Log.error(error);
+          Notification.error(error);
         });
     }
 
@@ -240,8 +238,14 @@
         SyncService.patchSync(vm.syncInfo.isSyncEnabled, vm.syncInfo.isAuthRedirect)
           .then(function (successMsg) {
             Notification.success($translate.instant(translatePrefix + 'patchSuccessful'));
-          }, function (errorMsg) {
-            Notification.error($translate.instant(translatePrefix + 'patchFailed'));
+          }, function (errorObj) {
+            var error = 'Failed updating CI Sync status; Detail: ' + errorObj.message;
+
+            Log.error(error);
+            Notification.error(error);
+
+            // Reset to previous state
+            getSyncStatus();
           });
       }
     }
