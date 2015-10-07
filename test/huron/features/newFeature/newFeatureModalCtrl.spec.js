@@ -20,10 +20,10 @@ describe('Controller: NewFeatureModalCtrl', function () {
   }));
 
   it("has features data for AA, HG and CP with l10n key.", function () {
-    expect($scope.features.length).toEqual(3);
-    expect($scope.features[0].code).toEqual("huronDetails.newFeatureModal.AA.code");
-    expect($scope.features[1].code).toEqual("huronDetails.newFeatureModal.HG.code");
-    expect($scope.features[2].code).toEqual("huronDetails.newFeatureModal.CP.code");
+    expect($scope.features.length).toEqual(2);
+    expect($scope.features[0].code).toEqual("autoAttendant.code");
+    expect($scope.features[1].code).toEqual("huntGroup.code");
+    //expect($scope.features[2].code).toEqual("callPark.code");
   });
 
   it("ok function call results in closing the Modal with the value chosen.", function () {

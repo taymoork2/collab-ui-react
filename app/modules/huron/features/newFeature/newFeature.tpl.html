@@ -1,21 +1,14 @@
-<div class="no-features-available" ng-controller="NewFeatureCtrl">
+<div class="no-features-available">
+
+  <div class="h4 nothing-to-see"
+       translate="huronDetails.featuresNotYetConfiguredPage.nothingToSee"></div>
+
+  <div class="h1 lets-customize"
+       translate="huronDetails.featuresNotYetConfiguredPage.letsCustomize"></div>
 
   <div>
-    <h4 class="nothing-to-see"
-       translate="huronDetails.featuresNotYetConfiguredPage.nothingToSee"></h4>
+    <button class="button info large" ng-click="open()"
+            translate="huronDetails.newFeatureButtonText"></button>
   </div>
 
-  <div>
-    <h1 class="lets-customize"
-        translate="huronDetails.featuresNotYetConfiguredPage.letsCustomize"></h1>
-  </div>
-
-  <div>
-    <button class="new-huron-feature-button" ng-click="open()">New</button>
-  </div>
-
-  <uc-new-feature-modal></uc-new-feature-modal>
-
-  <!--TODO: Below will go away after Setup Assistant skeleton is in place -->
-  {{feature}}
-</div>
+ </div>

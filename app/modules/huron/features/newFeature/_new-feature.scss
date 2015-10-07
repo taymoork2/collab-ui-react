@@ -24,14 +24,6 @@
   }
 }
 
-.new-huron-feature-button {
-  background-color: $brand-info;
-  font-size: $font-size-h5;
-  font-weight: bold;
-  width: rem-calc(110);
-  height: rem-calc(40);
-}
-
 ////////// Create new feature modal ///////////////
 
 .huron-new-feature-modal {  // The modal body.
@@ -43,13 +35,15 @@
   @include vr-spacing(pl, 2);
 
   & button {               // The button options in the body.
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    flex: 1;
     color: $gray-darkest;
     background-color: $gray-lightest;
-    @include vr-spacing(mh, .125);
     border-style: hidden;
-    width: rem-calc(278);
-    height: vr-adjust(315);
+    @include vr-spacing(mr, .125);
     @include vr-spacing(p, 0);
 
     &:hover {
@@ -59,10 +53,7 @@
 }
 
 .feature-icon-container {
-  position: absolute;
-  top: 0;
   @include vr-spacing(pt, 2.5);
-  width: 100%;
 }
 
 .feature-icon-circle {      // Icon in the option.
@@ -80,31 +71,23 @@
 }
 
 .feature-icon-color-AA {
-  color: $brand-primary;
+  color: $color-primary;
 }
 
 .feature-icon-color-HG {
   color: $color-eggplant;
 }
 .feature-icon-color-CP {
-  color: $brand-danger;
+  color: $color-alerts;
 }
 
 .feature-label-container {
-  position: absolute;
-  top: vr-adjust(118);
   @include vr-spacing(pt, 2);
-  color: $brand-info-light;
-  width: 100%;
+  color: $color-people-light;
 }
 
 .feature-description-container {
   @include vr-spacing(pt, 2);
-  position: absolute;
-  top: vr-adjust(178);
-  width: 100%;
   @include vr-spacing(ph, 1.5);
   @include vr-spacing(pb, 1.5);
 }
-
-

@@ -11,21 +11,23 @@
     var vm = $scope;
 
     vm.features = [{
-      cssClass: 'AA',
-      code: 'huronDetails.newFeatureModal.AA.code',
-      label: 'huronDetails.newFeatureModal.AA.label',
-      description: 'huronDetails.newFeatureModal.AA.description'
-    }, {
-      cssClass: 'HG',
-      code: 'huronDetails.newFeatureModal.HG.code',
-      label: 'huronDetails.newFeatureModal.HG.label',
-      description: 'huronDetails.newFeatureModal.HG.description'
-    }, {
-      cssClass: 'CP',
-      code: 'huronDetails.newFeatureModal.CP.code',
-      label: 'huronDetails.newFeatureModal.CP.label',
-      description: 'huronDetails.newFeatureModal.CP.description'
-    }];
+        cssClass: 'AA',
+        code: 'autoAttendant.code',
+        label: 'autoAttendant.title',
+        description: 'autoAttendant.modalDescription'
+      }, {
+        cssClass: 'HG',
+        code: 'huntGroup.code',
+        label: 'huntGroup.title',
+        description: 'huntGroup.modalDescription'
+      }
+      //  , {
+      //  cssClass: 'CP',
+      //  code: 'callPark.code',
+      //  label: 'callPark.title',
+      //  description: 'callPark.modalDescription'
+      //}
+    ];
 
     vm.ok = ok;
     vm.cancel = cancel;
