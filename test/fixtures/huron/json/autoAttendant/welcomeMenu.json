@@ -18,6 +18,10 @@
           "description": "Operator",
           "destination": "1111"
         }
+      }, {
+        "disconnect": {
+          "treatment": "none"
+        }
       }]
     }]
   },

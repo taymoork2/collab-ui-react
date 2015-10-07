@@ -72,14 +72,13 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     });
   });
 
-  describe('updateMenu', function () {
-    it('should be able to update an ceRecord with welcomeMenu', function () {
+  describe('updateCombinedMenu', function () {
+    it('should be able to update a ceRecord with welcomeMenu', function () {
       var _ceRecord = angular.copy(ceInfos[0]);
       _ceRecord.callExperienceName = 'AA Welcome';
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcome, 'regularOpenActions');
-      var success = AutoAttendantCeMenuModelService.updateMenu(_ceRecord, 'regularOpenActions', _welcomeMenu);
+      var success = AutoAttendantCeMenuModelService.updateCombinedMenu(_ceRecord, 'regularOpenActions', _welcomeMenu);
       expect(angular.equals(_ceRecord, ceWelcome)).toBe(true);
-      expect(success).toBe(true);
     });
   });
 
