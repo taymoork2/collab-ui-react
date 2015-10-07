@@ -263,3 +263,16 @@
   margin-top: 0.625rem;
   margin-bottom: 1.875rem;
 }
+
+.aa-endcall-icon {
+  @extend .icon;
+  @extend .icon-phone;
+  font-size: 3rem;
+  color: $brand-default;
+  -ms-transform: rotate(125deg);
+  -webkit-transform: rotate(125deg); 
+  transform: rotate(125deg);
+  @extend .icon-2x;
+  color: $brand-default;
+}
+
