@@ -1281,7 +1281,16 @@ angular
         .state('huronfeatures', {
           url: '/features',
           parent: 'hurondetails',
-          template: '<div>Under Construction</div>'
+          controller: 'ListFeaturesCtrl',
+          controllerAs: 'listFeaturesCtrl',
+          templateUrl: 'modules/huron/features/listFeatures.tpl.html',
+        })
+        .state('huronnewfeature', {
+          url: '/newfeature',
+          parent: 'hurondetails',
+          controller: 'NewFeatureCtrl',
+          controllerAs: 'newFeatureCtrl',
+          templateUrl: 'modules/huron/features/newFeature/newFeature.tpl.html',
         });
     }
   ]);

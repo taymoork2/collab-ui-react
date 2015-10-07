@@ -1079,10 +1079,12 @@
     "huntGroupsTitle": "Hunt Groups"
   },
   "autoAttendant": {
+    "code": "AA",
     "title": "Auto Attendant",
     "addAutoAttendant": "New Auto Attendant",
     "deleteAutoAttendant": "Delete Auto Attendant",
     "information": "Auto attendants allow you to create custom menus, annoucements and call flows to handle incoming calls to your business.",
+    "modalDescription": "Auto attendants play customized prompts and provide callers with menu options for routing their calls through your system.",
     "general": "General",
     "schedule": "Schedule",
     "holidayDates": "Holiday Dates",
@@ -1196,6 +1198,9 @@
     "invalidBuilderNameNotUnique": "This Auto Attendant Name is already in use. Please enter a unique Auto Attendant Name."
   },
   "callPark": {
+    "code": "CP",
+    "title": "Call Parking",
+    "modalDescription": "Call parks allow call recipients to place a call on hold so that it can be retrieved from another device.",
     "newCallPark": "New Call Park",
     "callParkInformation": "Call Park information",
     "information1": "The Call Park feature allows you to place a call on hold, so it can be retrieved from another phone in the system. If you are on an active call at your phone, you can park the call to a call park extension by pressing the Park softkey or the Call Park button. Someone on another phone in your system can then dial the call park extension to retrieve the call.",
@@ -2191,7 +2196,20 @@
     "title": "Communication",
     "linesTitle": "Numbers",
     "settingsTitle": "Settings",
-    "featuresTitle": "Features"
+    "featuresTitle": "Features",
+    "featureListingError": "Failed to retrieve the feature list.",
+    "newFeatureButtonText": "New",
+    "newFeatureModalTitle": "Create New Feature",
+    "featuresNotYetConfiguredPage": {
+      "nothingToSee": "Nothing here to see yet.",
+      "letsCustomize": "Let's customize the calling experience"
+    }
+  },
+
+  "huntGroup": {
+    "code": "HG",
+    "title": "Hunt Group",
+    "modalDescription": "Hunt groups (or line hunting) allow you to customize the distribution of incoming phone calls to users' phone lines in a specific order."
   },
 
   "linesPage": {
