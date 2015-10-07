@@ -66,7 +66,16 @@ angular.module('Core')
         subTabs: []
       }];
 
-      fillAddUserSteps().then(function () {
+      $scope.isDirSyncEnabled = false;
+      FeatureToggleService.supportsDirSync().then(function (dirSyncEnabled) {
+        $scope.isDirSyncEnabled = dirSyncEnabled;
+      }).finally(function () {
+        init();
+      });
+
+      function init() {
+        setupAddUserSubTabs();
+
         if (Authinfo.isSquaredUC()) {
           $scope.tabs.splice(2, 1);
           $scope.tabs.splice(1, 0, {
@@ -125,132 +134,127 @@ angular.module('Core')
             });
           });
         }
-      });
+      }
 
-      function fillAddUserSteps() {
+      function setupAddUserSubTabs() {
         var userTab = _.findWhere($scope.tabs, {
           name: 'addUsers'
         });
         var simpleSubTab, advancedSubTab, csvSubTab;
-        var deferred = $q.defer();
 
-        FeatureToggleService.supportsDirSync().then(function (dirSyncEnabled) {
-          if (!dirSyncEnabled) {
-            simpleSubTab = {
-              name: 'simple',
-              title: 'firstTimeWizard.simple',
+        if (!$scope.isDirSyncEnabled) {
+          simpleSubTab = {
+            name: 'simple',
+            title: 'firstTimeWizard.simple',
+            controller: 'OnboardCtrl',
+            steps: [{
+              name: 'init',
+              template: 'modules/core/setupWizard/addUsers.init.tpl.html'
+            }, {
+              name: 'manualEntry',
+              template: 'modules/core/setupWizard/addUsers.manualEntry.tpl.html',
+              title: 'firstTimeWizard.manualEntryStep'
+            }, {
+              name: 'assignServices',
+              template: 'modules/core/setupWizard/addUsers.assignServices.tpl.html',
+              title: 'firstTimeWizard.assignServicesStep'
+            }, {
+              name: 'assignDnAndDirectLines',
+              template: 'modules/core/setupWizard/addUsers.assignDnAndDirectLines.tpl.html',
+              title: 'firstTimeWizard.assignDnAndDirectLines'
+            }]
+          };
+          userTab.subTabs.push(simpleSubTab);
+
+          advancedSubTab = {
+            name: 'advanced',
+            title: 'firstTimeWizard.advanced',
+            controller: 'OnboardCtrl',
+            steps: [{
+              name: 'init',
+              template: 'modules/core/setupWizard/addUsers.init.tpl.html'
+            }, {
+              name: 'domainEntry',
+              template: 'modules/core/setupWizard/addUsers.domainEntry.tpl.html'
+            }, {
+              name: 'installConnector',
+              template: 'modules/core/setupWizard/addUsers.installConnector.tpl.html'
+            }, {
+              name: 'syncStatus',
+              template: 'modules/core/setupWizard/addUsers.syncStatus.tpl.html',
+              title: 'firstTimeWizard.dirSyncStatus'
+            }]
+          };
+          userTab.subTabs.push(advancedSubTab);
+        } else {
+          advancedSubTab = {
+            name: 'advanced',
+            title: 'firstTimeWizard.advanced',
+            controller: 'OnboardCtrl',
+            steps: [{
+              name: 'init',
+              template: 'modules/core/setupWizard/addUsers.init.tpl.html'
+            }, {
+              name: 'domainEntry',
+              template: 'modules/core/setupWizard/addUsers.domainEntry.tpl.html'
+            }, {
+              name: 'installConnector',
+              template: 'modules/core/setupWizard/addUsers.installConnector.tpl.html'
+            }, {
+              name: 'syncStatus',
+              template: 'modules/core/setupWizard/addUsers.syncStatus.tpl.html',
+              title: 'firstTimeWizard.dirSyncStatus'
+            }, {
+              name: 'dirsyncServices',
+              template: 'modules/core/setupWizard/addUsers.assignServices.tpl.html',
+              title: 'firstTimeWizard.assignServicesStep'
+            }, {
+              name: 'dirsyncProcessing',
+              template: 'modules/core/setupWizard/addUsers.processCsv.tpl.html',
+              title: 'firstTimeWizard.processDirSyncStep',
+              buttons: false
+            }, {
+              name: 'dirsyncResult',
+              template: 'modules/core/setupWizard/addUsers.uploadResult.tpl.html',
+              title: 'firstTimeWizard.dirSyncResultStep',
+              buttons: 'modules/core/setupWizard/addUsers.dirSyncResultButtons.tpl.html'
+            }]
+          };
+          userTab.subTabs.push(advancedSubTab);
+        }
+
+        FeatureToggleService.supportsCsvUpload().then(function (isSupported) {
+          if (isSupported) {
+            csvSubTab = {
+              name: 'csv',
+              title: 'firstTimeWizard.uploadStep',
               controller: 'OnboardCtrl',
               steps: [{
                 name: 'init',
                 template: 'modules/core/setupWizard/addUsers.init.tpl.html'
               }, {
-                name: 'manualEntry',
-                template: 'modules/core/setupWizard/addUsers.manualEntry.tpl.html',
-                title: 'firstTimeWizard.manualEntryStep'
+                name: 'csvUpload',
+                template: 'modules/core/setupWizard/addUsers.uploadCsv.tpl.html',
+                title: 'firstTimeWizard.uploadStep'
               }, {
-                name: 'assignServices',
+                name: 'csvServices',
                 template: 'modules/core/setupWizard/addUsers.assignServices.tpl.html',
                 title: 'firstTimeWizard.assignServicesStep'
               }, {
-                name: 'assignDnAndDirectLines',
-                template: 'modules/core/setupWizard/addUsers.assignDnAndDirectLines.tpl.html',
-                title: 'firstTimeWizard.assignDnAndDirectLines'
-              }]
-            };
-            userTab.subTabs.push(simpleSubTab);
-
-            advancedSubTab = {
-              name: 'advanced',
-              title: 'firstTimeWizard.advanced',
-              controller: 'OnboardCtrl',
-              steps: [{
-                name: 'init',
-                template: 'modules/core/setupWizard/addUsers.init.tpl.html'
-              }, {
-                name: 'domainEntry',
-                template: 'modules/core/setupWizard/addUsers.domainEntry.tpl.html'
-              }, {
-                name: 'installConnector',
-                template: 'modules/core/setupWizard/addUsers.installConnector.tpl.html'
-              }, {
-                name: 'syncStatus',
-                template: 'modules/core/setupWizard/addUsers.syncStatus.tpl.html',
-                title: 'firstTimeWizard.dirSyncStatus'
-              }]
-            };
-            userTab.subTabs.push(advancedSubTab);
-          } else {
-            advancedSubTab = {
-              name: 'advanced',
-              title: 'firstTimeWizard.advanced',
-              controller: 'OnboardCtrl',
-              steps: [{
-                name: 'init',
-                template: 'modules/core/setupWizard/addUsers.init.tpl.html'
-              }, {
-                name: 'domainEntry',
-                template: 'modules/core/setupWizard/addUsers.domainEntry.tpl.html'
-              }, {
-                name: 'installConnector',
-                template: 'modules/core/setupWizard/addUsers.installConnector.tpl.html'
-              }, {
-                name: 'syncStatus',
-                template: 'modules/core/setupWizard/addUsers.syncStatus.tpl.html',
-                title: 'firstTimeWizard.dirSyncStatus'
-              }, {
-                name: 'dirsyncServices',
-                template: 'modules/core/setupWizard/addUsers.assignServices.tpl.html',
-                title: 'firstTimeWizard.assignServicesStep'
-              }, {
-                name: 'dirsyncProcessing',
+                name: 'csvProcessing',
                 template: 'modules/core/setupWizard/addUsers.processCsv.tpl.html',
-                title: 'firstTimeWizard.processDirSyncStep',
+                title: 'firstTimeWizard.processCsvStep',
                 buttons: false
               }, {
-                name: 'dirsyncResult',
+                name: 'csvResult',
                 template: 'modules/core/setupWizard/addUsers.uploadResult.tpl.html',
-                title: 'firstTimeWizard.dirSyncResultStep',
-                buttons: 'modules/core/setupWizard/addUsers.dirSyncResultButtons.tpl.html'
+                title: 'firstTimeWizard.uploadResultStep',
+                buttons: 'modules/core/setupWizard/addUsers.csvResultButtons.tpl.html'
               }]
             };
-            userTab.subTabs.push(advancedSubTab);
+            userTab.subTabs.splice(1, 0, csvSubTab);
           }
-
-          FeatureToggleService.supportsCsvUpload().then(function (isSupported) {
-            if (isSupported) {
-              csvSubTab = {
-                name: 'csv',
-                title: 'firstTimeWizard.uploadStep',
-                controller: 'OnboardCtrl',
-                steps: [{
-                  name: 'init',
-                  template: 'modules/core/setupWizard/addUsers.init.tpl.html'
-                }, {
-                  name: 'csvUpload',
-                  template: 'modules/core/setupWizard/addUsers.uploadCsv.tpl.html',
-                  title: 'firstTimeWizard.uploadStep'
-                }, {
-                  name: 'csvServices',
-                  template: 'modules/core/setupWizard/addUsers.assignServices.tpl.html',
-                  title: 'firstTimeWizard.assignServicesStep'
-                }, {
-                  name: 'csvProcessing',
-                  template: 'modules/core/setupWizard/addUsers.processCsv.tpl.html',
-                  title: 'firstTimeWizard.processCsvStep',
-                  buttons: false
-                }, {
-                  name: 'csvResult',
-                  template: 'modules/core/setupWizard/addUsers.uploadResult.tpl.html',
-                  title: 'firstTimeWizard.uploadResultStep',
-                  buttons: 'modules/core/setupWizard/addUsers.csvResultButtons.tpl.html'
-                }]
-              };
-              userTab.subTabs.splice(1, 0, csvSubTab);
-            }
-            deferred.resolve(dirSyncEnabled);
-          });
         });
-        return deferred.promise;
       }
 
     }

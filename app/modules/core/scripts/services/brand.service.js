@@ -10,6 +10,7 @@
 
     var service = {
       'getSettings': getSettings,
+      'getLogoUrl': getLogoUrl,
       'usePartnerLogo': usePartnerLogo,
       'useCustomLogo': useCustomLogo,
       'enableCustomerLogos': enableCustomerLogos,
@@ -45,6 +46,14 @@
       });
     }
 
+    function getLogoUrl(orgId) {
+      var downloadUrl = Config.getAdminServiceUrl() + 'organizations/' + orgId + '/logo/downloadUrl';
+
+      return $http.get(downloadUrl).then(function (response) {
+        return response.data.tempURL;
+      });
+    }
+
     function usePartnerLogo(orgId) {
       var settings = {
         'usePartnerLogo': true
@@ -77,18 +86,6 @@
       Orgservice.setOrgSettings(orgId, settings, notify);
     }
 
-    function notify(data, status) {
-      if (data.success) {
-        Notification.notify([$translate.instant('partnerProfile.processing')], 'success');
-      } else {
-        var error = $translate.instant('errors.statusError', {
-          status: status
-        });
-
-        Notification.notify(error, 'error');
-      }
-    }
-
     function resetCdnLogo(orgId) {
       var purgeCDNUrl = Config.getAdminServiceUrl() + 'organizations/' + orgId + '/logo/purgeFromCDN';
 
@@ -109,5 +106,18 @@
         });
       });
     }
+
+    function notify(data, status) {
+      if (data.success) {
+        Notification.notify([$translate.instant('partnerProfile.processing')], 'success');
+      } else {
+        var error = $translate.instant('errors.statusError', {
+          status: status
+        });
+
+        Notification.notify(error, 'error');
+      }
+    }
+
   }
 })();

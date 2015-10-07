@@ -28,8 +28,8 @@ angular.module('Squared').service('CsdmConverter',
         switch (obj.product) {
         case "Cisco TelePresence SX10":
           return "images/devices-hi/sx10.png";
-        case "Cisco TelePresence SX20":
-          return "images/devices-hi/sx20.png";
+        default:
+          return "images/devices-hi/unknown.png";
         }
       }());
     }

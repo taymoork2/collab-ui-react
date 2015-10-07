@@ -6,37 +6,29 @@
       <hr>
     </h4>
 
-    <table>
-      <thead>
-      <tr>
-        <th>Display Name</th>
-        <th>Status</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr ng-repeat="(url,cluster) in calendar.clusters"
-          ui-sref="calendar-service.list.details({cluster:cluster})">
-        <td>
-          {{cluster.name}}
-        </td>
-        <td>
-              <span class="{{calendar.calendarAndManagementServiceStatus(cluster).color}}">
+    <cs-card class="full" id="{{$index}}" ng-repeat="(url,cluster) in calendar.clusters" ui-sref="calendar-service.list.details({cluster:cluster})">
+      <article ng-class="{'gray' : calendar.state.includes('calendar-service.list.details') && calendar.state.params.cluster.id == cluster.id}">
+        <header>
+          <h5>
+            <i class="icon icon-data icon-inverse-round"/>
+            {{cluster.name}}
+          </h5>
+        </header>
+        <section>
+          <p>
+            <span class="{{calendar.calendarAndManagementServiceStatus(cluster).color}}">
               <i class="fa fa-circle"/>
               <span class="hidden-xs">{{calendar.calendarAndManagementServiceStatus(cluster).status}}</span>
             </span>
             <span ng-show="calendar.softwareUpgradeAvailable(cluster)" style="color: #3ca8e8">
-              <!--<i class="fa fa-cloud-upload"/>-->
               <span class="hidden-xs">Upgrades</span>
             </span>
-        </td>
-      </tr>
-
-      </tbody>
-    </table>
-
-  </div>
-
-  <div class="large-6 columns" ui-view="rightPane">
+          </p>
+        </section>
+      </article>
+    </cs-card>
 
   </div>
+
+  <div class="large-6 columns" ui-view="rightPane"></div>
 </div>

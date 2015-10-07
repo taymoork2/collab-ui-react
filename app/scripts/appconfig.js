@@ -1378,6 +1378,14 @@ angular
             }
           }
         })
+        .state('call-service.about', {
+          url: '/services/call/about',
+          views: {
+            'fullPane': {
+              templateUrl: 'modules/hercules/call-service/about.html'
+            }
+          }
+        })
 
       .state('cluster-details', {
           parent: 'sidepanel',

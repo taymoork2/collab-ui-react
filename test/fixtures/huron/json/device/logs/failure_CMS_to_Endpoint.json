@@ -1,0 +1,18 @@
+[{
+  "ticketId": "abcd",
+  "trackingId": "124",
+  "userName": "joe@company.com",
+  "status": "failed",
+  "commandType": "epLog",
+  "events": [{
+    "event": "command init",
+    "date": "Jul 2, 2015 : 21:43:21 CST",
+    "trackingId": "updm_124",
+    "status": "continue"
+  }, {
+    "event": "command sent",
+    "date": "Jul 2, 2015 : 21:43:32 CST",
+    "trackingId": "cms_124",
+    "status": "failed"
+  }]
+}]

@@ -94,7 +94,7 @@
             <div class="small-10 columns">
               <span ng-if="isPartner" translate="partnerProfile.useCiscoLogo"></span>
               <span ng-if="!isPartner" translate="customerProfile.usePartnerLogo"
-                translate-values="{partnerName: '{{partner.displayName}}'}"></span>
+                translate-value-partner="{{partner.displayName}}"></span>
             </div>
           </div>
           <div class="row">
@@ -109,7 +109,7 @@
               <div class="drop-box" ngf-drop="upload($file, $event)" ng-model="logoFile"
                 ngf-drag-over-class="dragover" ngf-validate="{{logoCriteria}}">
                 <img class="thumbnail" alt="newLogo" ngf-src="logoFile" ng-hide="logoError"/>
-                <img class="thumbnail" alt="currentLogo" ng-src="{{logoUrl}}" ng-if="!logoFile"
+                <img class="thumbnail" alt="currentLogo" ng-src="{{tempLogoUrl}}" ng-if="!logoFile && tempLogoUrl"
                   onerror="this.style.display='none'"/>
                 <p class="vertical-align text-center" translate="partnerProfile.logoPlaceholder" ng-hide="logoFile"></p>
               </div>
