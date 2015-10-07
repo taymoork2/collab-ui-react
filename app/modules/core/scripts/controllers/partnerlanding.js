@@ -162,7 +162,6 @@ angular.module('Core')
 
           dataObj.notes = {};
           setNotesSortOrder(dataObj);
-
           list.push(dataObj);
         }
       }
@@ -185,6 +184,8 @@ angular.module('Core')
               Log.debug('No trial records found');
             }
             $scope.totalTrials = $scope.trialsList.length;
+            $scope.setFilter('all');
+
           } else {
             Log.debug('Failed to retrieve trial information. Status: ' + status);
             $scope.getPending = false;
