@@ -1,0 +1,47 @@
+[{
+  "callExperienceName": "Test AA0",
+  "callExperienceURL": "https://ces.hitest.huron-dev.com/api/v1/customers/6662df48-b367-4c1e-9c3c-aa408aaa79a1/callExperiences/a",
+  "assignedResources": []
+}, {
+  "callExperienceName": "Test AA1",
+  "callExperienceURL": "https://ces.hitest.huron-dev.com/api/v1/customers/6662df48-b367-4c1e-9c3c-aa408aaa79a1/callExperiences/b",
+  "assignedResources": [{
+    "id": "1111",
+    "type": "directoryNumber",
+    "trigger": "incomingCall",
+    "number": "1111"
+  }]
+}, {
+  "callExperienceName": "Test AA2",
+  "callExperienceURL": "https://ces.hitest.huron-dev.com/api/v1/customers/6662df48-b367-4c1e-9c3c-aa408aaa79a1/callExperiences/c",
+  "assignedResources": [{
+    "id": "2221",
+    "type": "directoryNumber",
+    "trigger": "incomingCall",
+    "number": "2221"
+  }, {
+    "id": "2222",
+    "type": "directoryNumber",
+    "trigger": "incomingCall",
+    "number": "2222"
+  }]
+}, {
+  "callExperienceName": "Test AA3",
+  "callExperienceURL": "https://ces.hitest.huron-dev.com/api/v1/customers/6662df48-b367-4c1e-9c3c-aa408aaa79a1/callExperiences/d",
+  "assignedResources": [{
+    "id": "3331",
+    "type": "directoryNumber",
+    "trigger": "incomingCall",
+    "number": "3331"
+  }, {
+    "id": "3332",
+    "type": "directoryNumber",
+    "trigger": "incomingCall",
+    "number": "3332"
+  }, {
+    "id": "3333",
+    "type": "directoryNumber",
+    "trigger": "incomingCall",
+    "number": "3333"
+  }]
+}]

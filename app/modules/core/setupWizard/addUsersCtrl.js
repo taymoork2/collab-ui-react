@@ -2,12 +2,24 @@
 /* global moment, $:false */
 
 angular.module('Core')
-  .controller('AddUserCtrl', ['$scope', '$q', '$location', 'DirSyncService', 'Log', '$translate', 'Notification', 'UserListService', 'Storage', 'Utils', '$filter', 'Userservice', 'LogMetricsService', '$window', 'Config',
-    function ($scope, $q, $location, DirSyncService, Log, $translate, Notification, UserListService, Storage, Utils, $filter, Userservice, LogMetricsService, $window, Config) {
+  .controller('AddUserCtrl', ['$scope', '$q', '$location', 'DirSyncService', 'Log', '$translate', 'Notification', 'UserListService', 'Storage', 'Utils', '$filter', 'Userservice', 'LogMetricsService', '$window', 'Config', 'SyncService', 'FeatureToggleService',
+    function ($scope, $q, $location, DirSyncService, Log, $translate, Notification, UserListService, Storage, Utils, $filter, Userservice, LogMetricsService, $window, Config, SyncService, FeatureToggleService) {
       var invalidcount = 0;
       $scope.options = {
         addUsers: 0
       };
+      FeatureToggleService.supportsDirSync().then(function (dirSyncEnabled) {
+        if (dirSyncEnabled) {
+          $scope.options.addUsers = 2;
+        }
+      });
+
+      // Messeger User Sync Mode flag
+      $scope.isMsgrSyncMode = SyncService.isSyncEnabled() && SyncService.isMessengerSync();
+
+      if ($scope.isMsgrSyncMode) {
+        $scope.options.addUsers = -1;
+      }
 
       $scope.syncSimple = {
         label: $translate.instant('firstTimeWizard.simple'),
@@ -30,18 +42,36 @@ angular.module('Core')
 
       $scope.initNext = function () {
         var deferred = $q.defer();
+
+        // Messenger Sync mode
+        if ($scope.isMsgrSyncMode) {
+          // Move to the next tab as current tab is irrelevant
+          $scope.wizard.nextTab();
+          deferred.reject();
+
+          return deferred.promise;
+        }
+
         if (angular.isDefined($scope.options.addUsers) && angular.isDefined($scope.wizard) && angular.isFunction($scope.wizard.setSubTab)) {
+          var simpleSubTab = _.findWhere($scope.wizard.current.tab.subTabs, {
+            name: 'simple'
+          });
+          var csvSubTab = _.findWhere($scope.wizard.current.tab.subTabs, {
+            name: 'csv'
+          });
+          var advancedSubTab = _.findWhere($scope.wizard.current.tab.subTabs, {
+            name: 'advanced'
+          });
           if ($scope.options.addUsers === 0) {
-            $scope.wizard.setSubTab($scope.wizard.current.tab.subTabs[0]);
-            // } else if ($scope.options.addUsers === 1) {
-            //   $scope.wizard.setSubTab($scope.wizard.current.tab.subTabs[1]);
+            $scope.wizard.setSubTab(simpleSubTab);
+          } else if ($scope.options.addUsers === 1) {
+            $scope.wizard.setSubTab(csvSubTab);
           } else if ($scope.options.addUsers === 2) {
-            $scope.wizard.setSubTab($scope.wizard.current.tab.subTabs[1]);
+            $scope.wizard.setSubTab(advancedSubTab);
           }
           deferred.resolve();
         } else {
           deferred.reject();
-
         }
         return deferred.promise;
       };
@@ -62,7 +92,7 @@ angular.module('Core')
         }
       }
 
-      $scope.numUsersInSync = '0';
+      $scope.numUsersInSync = 0;
       $scope.domainExists = true;
       $scope.domain = '';
       $scope.dirsyncStatus = '';
@@ -268,6 +298,8 @@ angular.module('Core')
         $scope.dirsyncStatus = '';
         $scope.numUsersInSync = 0;
         $scope.userList = [];
+        $scope.useNameList = [];
+        $scope.dirsyncUserCountText = '';
 
         DirSyncService.getDirSyncStatus(function (data, status) {
           if (data.success) {
@@ -289,15 +321,34 @@ angular.module('Core')
             Log.debug('Retrieved user list successfully. Status: ' + status);
             if (data) {
               $scope.numUsersInSync = data.totalResults;
+              $scope.dirsyncUserCountText = $translate.instant('firstTimeWizard.syncAgreementText');
 
               for (var i = 0; i < data.totalResults; i++) {
                 var userArrObj = {
                   Email: null,
                   Name: null
                 };
+                var userNameObj = {
+                  firstName: null,
+                  lastName: null
+                };
                 userArrObj.Email = data.Resources[i].userName;
-                userArrObj.Name = data.Resources[i].displayName;
+                if (data.Resources[i].name) {
+                  if (data.Resources[i].name.givenName) {
+                    userArrObj.Name = data.Resources[i].name.givenName;
+                    userNameObj.firstName = data.Resources[i].name.givenName;
+                  }
+                  if (data.Resources[i].name.familyName) {
+                    userArrObj.Name += ' ' + data.Resources[i].name.familyName;
+                    userNameObj.lastName = data.Resources[i].name.familyName;
+                  }
+                  userArrObj.Name = _.trim(userArrObj.Name);
+                }
+                if (!userArrObj.Name) {
+                  userArrObj.Name = data.Resources[i].displayName;
+                }
                 $scope.userList.push(userArrObj);
+                $scope.useNameList.push(userNameObj);
               }
             }
           } else {
@@ -311,16 +362,16 @@ angular.module('Core')
       };
 
       $scope.syncNow = function () {
-        angular.element('#syncNowBtn').button('loading');
+        $scope.syncNowLoad = true;
         DirSyncService.syncUsers(500, function (data, status) {
           if (data.success) {
-            angular.element('#syncNowBtn').button('reset');
+            $scope.syncNowLoad = false;
             Log.debug('DirSync started successfully. Status: ' + status);
             Notification.notify([$translate.instant('dirsyncModal.dirsyncSuccess', {
               status: status
             })], 'success');
           } else {
-            angular.element('#syncNowBtn').button('reset');
+            $scope.syncNowLoad = false;
             Log.debug('Failed to start directory sync. Status: ' + status);
             Notification.notify([$translate.instant('dirsyncModal.dirsyncFailed', {
               status: status
@@ -444,7 +495,7 @@ angular.module('Core')
             }
             //Displaying notifications
             if (successes.length + errors.length === usersList.length) {
-              angular.element('#btnInvite').button('reset');
+              $scope.btnInviteLoad = false;
               Notification.notify(successes, 'success');
               Notification.notify(errors, 'error');
             }
@@ -454,7 +505,7 @@ angular.module('Core')
             var error = [$translate.instant('usersPage.errInvite', data)];
             Notification.notify(error, 'error');
             isComplete = false;
-            angular.element('#btnInvite').button('reset');
+            $scope.btnInviteLoad = false;
           }
 
           var msg = 'inviting ' + usersList.length + ' users...';
@@ -467,7 +518,7 @@ angular.module('Core')
         };
 
         if (typeof usersList !== 'undefined' && usersList.length > 0) {
-          angular.element('#btnInvite').button('loading');
+          $scope.btnInviteLoad = true;
 
           startLog = moment();
 

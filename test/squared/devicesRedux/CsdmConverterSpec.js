@@ -88,7 +88,7 @@ describe('CsdmConverterSpec', function () {
   }); // pass thru fields
 
   describe('readableState and cssColorClass', function () {
-    it('should convert device with issues to Has Issues and red', function () {
+    it('should convert device with issues red color but keep status', function () {
       var arr = [{
         state: 'CLAIMED',
         status: {
@@ -96,7 +96,7 @@ describe('CsdmConverterSpec', function () {
           connectionStatus: 'CONNECTED'
         }
       }];
-      expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.issuesDetected');
+      expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.Online');
       expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-red');
     });
 
@@ -188,9 +188,12 @@ describe('CsdmConverterSpec', function () {
       var arr = [{
         status: {
           events: [{
-            type: 'tcpfallback',
+            type: 'mediaProtocol',
             level: 'warn',
-            description: 'tcpfallback_description'
+            description: 'tcpfallback_description',
+            references: {
+              mediaProtocol: 'TCP'
+            }
           }]
         }
       }];
@@ -201,6 +204,8 @@ describe('CsdmConverterSpec', function () {
     it('should show unknown error occured when not in translate file and no description', function () {
       var arr = [{
         status: {
+          level: 'omg',
+          connectionStatus: 'CONNECTED',
           events: [{
             type: 'foo',
             level: 'warn'
@@ -216,36 +221,28 @@ describe('CsdmConverterSpec', function () {
     it('has issues when status.level is not ok', function () {
       var arr = [{
         status: {
-          level: 'not_ok'
+          level: 'not_ok',
+          connectionStatus: 'CONNECTED'
         }
       }];
       expect(converter.convertDevices(arr)[0].hasIssues).toBeTruthy();
     });
 
-    it('has does not have issues when status.level is ok', function () {
+    it('has does not have issues when status.level is not ok and device is OFFLINE', function () {
       var arr = [{
         status: {
-          level: 'OK'
+          level: 'not_ok',
+          connectionStatus: 'OFFLINE'
         }
       }];
       expect(converter.convertDevices(arr)[0].hasIssues).toBeFalsy();
     });
-  });
-
-  describe("has issues", function () {
-    it('has issues when status.level is not ok', function () {
-      var arr = [{
-        status: {
-          level: 'not_ok'
-        }
-      }];
-      expect(converter.convertDevices(arr)[0].hasIssues).toBeTruthy();
-    });
 
     it('has does not have issues when status.level is ok', function () {
       var arr = [{
         status: {
-          level: 'OK'
+          level: 'OK',
+          connectionStatus: 'CONNECTED'
         }
       }];
       expect(converter.convertDevices(arr)[0].hasIssues).toBeFalsy();

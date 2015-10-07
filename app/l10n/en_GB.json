@@ -674,6 +674,7 @@
     "addUsers": "Add users",
     "addUsersSimple": "Add users | Simple",
     "addUsersAdvanced": "Add users | Advanced",
+    "msgrSyncDesc": "Your orgnization is currently in Messenger Sync Mode. Please onboard new users in the WebEx Messenger administration tool. Consult your Cisco customer representative to enable this screen.",
     "getStarted": "Get started",
     "chooseSync": "Choose sync",
     "cancelBtn": "Cancel",
@@ -742,7 +743,7 @@
     "ContentShared": "Files Shared this Month",
     "AmountofContentShared": "GB of Data Shared this Month",
     "UserEngagement": "User Engagement",
-    "weekOf": "Week Starting",
+    "weekOf": "Week Ending",
     "numberOfCallsAxis": "Number of Calls (Total)",
     "numberOfRoomsAxis": "Number of Rooms (Avg.)",
     "numberActiveAxis": "Number of Active Users (Total)",
@@ -1261,7 +1262,7 @@
     "communicationDesc": "Basic external calling and full Unified Communications enabled for your organisation.",
     "conferencingTitle": "Conferencing",
     "conferencingSubtitle": "Meeting centre",
-    "conferencingDesc": "Join up to 8 colleagues in Team Room Sync-ups or many more at a WebEx Meeting Centre."
+    "conferencingDesc": "Join up to 25 colleagues in Team Room Sync-up or many more at a WebEx Meeting Centre."
   },
   "partnerProfile": {
     "link": "Partner profile",

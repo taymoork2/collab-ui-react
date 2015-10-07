@@ -128,7 +128,21 @@
     vm.startTrial = startTrial;
     vm.isSquaredUCEnabled = isSquaredUCEnabled;
     vm.gotoAddNumber = gotoAddNumber;
-    vm.supportsPstnSetup = FeatureToggleService.supportsPstnSetup;
+    vm.clickStartTrial = clickStartTrial;
+
+    function clickStartTrial() {
+      if (isSquaredUCEnabled()) {
+        if (FeatureToggleService.supportsPstnSetup().then(function (isSupported) {
+            if (isSupported) {
+              startTrial();
+            } else {
+              gotoAddNumber();
+            }
+          }));
+      } else {
+        startTrial();
+      }
+    }
 
     function isOffersEmpty() {
       return !(vm.offers[Config.trials.collab] || vm.offers[Config.trials.squaredUC]);
@@ -149,7 +163,9 @@
     function startTrial(keepModal) {
       vm.nameError = false;
       vm.emailError = false;
-      angular.element('#startTrialButton').button('loading');
+      if (!isSquaredUCEnabled()) {
+        vm.startTrialButtonLoad = true;
+      }
 
       var offersList = [];
       for (var i in vm.offers) {
@@ -160,7 +176,7 @@
 
       return TrialService.startTrial(vm.model.customerName, vm.model.customerEmail, vm.model.licenseDuration, vm.model.licenseCount, vm.startDate, offersList)
         .catch(function (response) {
-          angular.element('#startTrialButton').button('reset');
+          vm.startTrialButtonLoad = false;
           Notification.notify([response.data.message], 'error');
           if ((response.data.message).indexOf('Org') > -1) {
             vm.nameError = true;
@@ -173,7 +189,7 @@
           if (offersList.indexOf(Config.trials.squaredUC) !== -1) {
             return HuronCustomer.create(response.data.customerOrgId, response.data.customerName, response.data.customerEmail)
               .catch(function (response) {
-                angular.element('#startTrialButton').button('reset');
+                vm.startTrialButtonLoad = false;
                 Notification.errorResponse(response, 'trialModal.squareducError');
                 return $q.reject(response);
               });
@@ -184,7 +200,7 @@
               });
           }
         }).then(function () {
-          angular.element('#startTrialButton').button('reset');
+          vm.startTrialButtonLoad = false;
 
           var successMessage = [$translate.instant('trialModal.addSuccess', {
             customerName: vm.model.customerName,
@@ -193,8 +209,12 @@
           })];
           Notification.notify(successMessage, 'success');
 
-          if (FeatureToggleService.supportsPstnSetup()) {
-            gotoNextSteps();
+          if (offersList.indexOf(Config.trials.squaredUC) !== -1) {
+            FeatureToggleService.supportsPstnSetup().then(function (isSupported) {
+              if (isSupported) {
+                gotoNextSteps();
+              }
+            });
           } else if (!keepModal) {
             $state.modal.close();
           }

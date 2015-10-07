@@ -27,7 +27,9 @@ angular.module('Squared').service('CsdmConverter',
       this.image = (function () {
         switch (obj.product) {
         case "Cisco TelePresence SX10":
-          return "images/devices/cisco_sx10.png";
+          return "images/devices-hi/sx10.png";
+        default:
+          return "images/devices-hi/unknown.png";
         }
       }());
     }
@@ -91,20 +93,24 @@ angular.module('Squared').service('CsdmConverter',
     }
 
     function hasIssues(obj) {
-      return obj.status && obj.status.level && obj.status.level != 'OK';
+      // return obj.status && obj.status.level && obj.status.level != 'OK';
+      return getIsOnline(obj) && obj.status && obj.status.level && obj.status.level != 'OK';
     }
 
     function getDiagnosticsEvents(obj) {
-      return _.map(getNotOkEvents(obj), function (e) {
-        return diagnosticsEventTranslated(e);
-      });
+      if (hasIssues(obj)) {
+        return _.map(getNotOkEvents(obj), function (e) {
+          return diagnosticsEventTranslated(e);
+        });
+      }
+      return [];
     }
 
     function diagnosticsEventTranslated(e) {
       if (isTranslatable('CsdmStatus.errorCodes.' + e.type + '.type')) {
         return {
           type: translateOrDefault('CsdmStatus.errorCodes.' + e.type + '.type', e.type),
-          message: translateOrDefault('CsdmStatus.errorCodes.' + e.type + '.message', e.description)
+          message: translateOrDefault('CsdmStatus.errorCodes.' + e.type + '.message', e.description, e.references)
         };
       } else if (e.description) {
         return {
@@ -124,9 +130,9 @@ angular.module('Squared').service('CsdmConverter',
       }
     }
 
-    function translateOrDefault(translateString, defaultValue) {
+    function translateOrDefault(translateString, defaultValue, parameters) {
       if (isTranslatable(translateString)) {
-        return $translate.instant(translateString);
+        return $translate.instant(translateString, parameters);
       } else {
         return defaultValue;
       }
@@ -161,9 +167,6 @@ angular.module('Squared').service('CsdmConverter',
     }
 
     function getReadableState(obj) {
-      if (hasIssues(obj)) {
-        return t('CsdmStatus.issuesDetected');
-      }
       switch (obj.state) {
       case 'UNCLAIMED':
         return t('CsdmStatus.NeedsActivation');

@@ -17,6 +17,10 @@
     return $resource(HuronConfig.getEmailUrl() + '/email/didadd', {}, {});
   })
 
+  .factory('DidDnListService', function ($resource, HuronConfig) {
+    return $resource('/modules/huron/lines/:filterType.json', {}, {});
+  })
+
   .factory('IdentityOTPService', function ($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/identity/users/otp', {}, {});
   })
@@ -259,6 +263,17 @@
 
   .factory('TimeZoneService', function ($resource) {
     return $resource('modules/huron/serviceSetup/timeZones.json', {}, {});
+  })
+
+  .factory('HermesQRCodeService', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getEmailUrl() + '/:getqrima/encoded', {
+      getqrima: 'getqrimage',
+      oneTimePassword: '@oneTimePassword'
+    }, {});
+  })
+
+  .factory('DeviceLogApiService', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/users/:userId/phones/:sipEndpointId/commands/logs', {}, {});
   });
 
 })();

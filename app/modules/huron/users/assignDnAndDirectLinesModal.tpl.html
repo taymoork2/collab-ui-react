@@ -16,9 +16,14 @@
     <cr-assign-dns-to-users ng-if="!processing"></cr-assign-dns-to-users>
   </div>
 
-  <div class="modal-footer">
+  <div class="modal-footer" ng-if="!convertUsersFlow">
     <button type="button" id="btnBack" class="btn btn-default" ui-sref="users.add.services"><span translate="common.back"></span></button>
-    <button type="button" id="btnOnboard" class="btn btn-primary" ng-disabled="isDnNotAvailable()" ng-click="assignDnAndDirectLinesNext()" data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>"><span translate="common.finish"></span></button>
+    <button type="button" cs-btn id="btnOnboard" class="btn btn-primary" ng-disabled="isDnNotAvailable()" ng-click="assignDnAndDirectLinesNext()" loading="btnOnboardLoading"><span translate="common.finish"></span></button>
+  </div>
+
+  <div class="modal-footer" ng-if="convertUsersFlow">
+    <button type="button" id="btnBack" class="btn btn-default" ui-sref="users.convert.services"><span translate="common.back"></span></button>
+    <button type="button" id="btnConvert" class="btn btn-primary" cs-btn loading="btnConvertLoad" ng-disabled="isDnNotAvailable()" ng-click="assignDNForConvertUsers()" ><span translate="common.finish"></span></button>
   </div>
 
 </div>

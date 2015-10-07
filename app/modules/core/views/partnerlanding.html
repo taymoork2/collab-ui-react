@@ -9,7 +9,7 @@
               <cr-reload-data id="partnerRefreshData" last-updated-time="refreshTime"></cr-reload-data>
             </span>
             <div class="columns small-6 right" dropdown is-open="db.isOpen">
-              <button id="customerDropdown" type="button" class="btn btn-white dropdown-toggle pull-right" ng-disabled="db.disabled" data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>">
+              <button id="customerDropdown" type="button" class="btn btn-white dropdown-toggle pull-right" ng-disabled="db.disabled">
               <span>{{currentSelection | translate}}</span><span class="caret"></span>
               </button>
               <ul class="dropdown-menu reports-customer-dropdown" role="menu">
@@ -76,26 +76,26 @@
 
     <section class = "columns small-12 medium-5 large-4">
       <section id="activeTrials" class="trialTitle">
-          <span class="">{{'partnerHomePage.trialsHeading' | translate}}</span>
+          <span class="h4">{{'partnerHomePage.trialsHeading' | translate}}</span>
           <button id="trialAddButton" class="btn btn-info btn right" translate="partnerHomePage.addTrial" ng-click="openAddTrialModal()"></button>
       </section>
 
       <section class="trialsPanel">
         <div id="trialHeader" class="row collapse">
           <div class="columns small-7 trialHeading">
-            <span translate="partnerHomePage.trialsCustomerName"></span>
+            <span class="small" translate="partnerHomePage.trialsCustomerName"></span>
           </div>
           <div class="columns small-3 trialHeading trials-heading-spacing">
-            <span translate="partnerHomePage.trialsEndDate"></span>
+            <span class="small" translate="partnerHomePage.trialsEndDate"></span>
           </div>
           <div class="columns small-2 trialHeading trials-heading-spacing">
-            <span translate="partnerHomePage.trialsNumUsers"></span>
+            <span class="small" translate="partnerHomePage.trialsNumUsers"></span>
           </div>
         </div>
         <div id="trials-refresh" class="trials-refresh" ng-show="showTrialsRefresh">
           <i class='icon icon-spinner'></i>
         </div>
-        <div ng-repeat="trial in activeList | orderBy: 'daysLeft' | limitTo: displayRows">
+        <div class="trial" ng-repeat="trial in activeList | orderBy: 'daysLeft' | limitTo: displayRows">
           <div class="row">
             <div class="columns small-12">
               <div class="trialCustomer ellipsis-trials" id="{{trial.customerName}}" ng-click="setTrial(trial); openEditTrialModal();" orgId="{{trial.customerOrgId}}" trialId="{{trial.trialId}}">
@@ -106,13 +106,13 @@
             </div>
           </div>
           <div class="row trialRow collapse">
-            <div class="columns small-8">
+            <div class="columns small-9">
               <div class="trialbar">
                 <progressbar max="trial.duration" value="trial.daysUsed" type="{{getProgressStatus(trial)}}"></progressbar>
               </div>
             </div>
-            <div class="columns small-2 trialDays">
-              <span ng-class="{'trial-danger-text': trial.daysLeft <= 5}">{{getDaysLeft(trial.daysLeft)}}</span>
+            <div class="columns small-1 trialDays">
+              <span ng-class="{'trial-danger-text': trial.daysLeft <= 5}">{{trial.daysLeft}}</span>
             </div>
             <div class="columns small-2 trialLicense">
               <span>{{trial.usage}}</span>/<span>{{trial.licenses}}</span>
@@ -129,7 +129,7 @@
         <div ng-show="showExpired">
           <div id="expiredTrials" class="row">
             <div class="col-xs-10 col-sm-10 col-md-10">
-              <span class="trialTitle">{{'partnerHomePage.expiredHeading' | translate}}</span>
+              <span class="trialTitle h5">{{'partnerHomePage.expiredHeading' | translate}}</span>
             </div>
           </div>
 

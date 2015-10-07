@@ -3,19 +3,20 @@
 describe('Service: ClusterService', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var $httpBackend, $location, Service, converter, notification;
-  var rootPath = 'https://hercules-integration.wbx2.com/v1';
+  var $httpBackend, $location, Service, converter, authinfo;
+  var rootPath = 'https://hercules-integration.wbx2.com/v1/organizations/orgId';
 
   beforeEach(function () {
     module(function ($provide) {
       converter = {
         convertClusters: sinon.stub()
       };
-      notification = {
-        notify: sinon.stub()
+      authinfo = {
+        getOrgId: sinon.stub()
       };
+      authinfo.getOrgId.returns("orgId");
       $provide.value('ConverterService', converter);
-      $provide.value('XhrNotificationService', notification);
+      $provide.value('Authinfo', authinfo);
     });
   });
 
@@ -134,8 +135,6 @@ describe('Service: ClusterService', function () {
         rootPath + '/clusters/clusterid/hosts/serial'
       )
       .respond(500);
-
-    expect(notification.notify.callCount).toBe(0);
 
     var callback = sinon.stub();
     Service.deleteHost('clusterid', 'serial').then(undefined, callback);

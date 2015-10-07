@@ -21,8 +21,6 @@
     var pollPromise, pollDelay = 30000;
 
     function poll() {
-      $log.debug('polling', service);
-
       function notifyAll(err, devices) {
         _.forEach(subscriptions, function (subscription) {
           subscription.doIt(err, devices);

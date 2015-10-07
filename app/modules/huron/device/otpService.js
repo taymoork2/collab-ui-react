@@ -6,7 +6,7 @@
     .factory('OtpService', OtpService);
 
   /* @ngInject */
-  function OtpService($rootScope, Authinfo, UserOTPService, HuronUser, HuronConfig) {
+  function OtpService($rootScope, Authinfo, UserOTPService, HuronUser, HuronConfig, HermesQRCodeService) {
 
     var service = {
       loadOtps: loadOtps,
@@ -32,7 +32,7 @@
                 code: otps[i].activationCode,
                 friendlyCode: hyphenateOtp(otps[i].activationCode),
                 expiresOn: otps[i].expires.time,
-                friendlyExpiresOn: convertExpiryTime(otps[i].expires.time, 'America/Los_Angeles'),
+                friendlyExpiresOn: convertExpiryTime(otps[i].expires.time),
                 valid: otps[i].expires.status
               };
 
@@ -50,7 +50,7 @@
           code: data.password,
           friendlyCode: hyphenateOtp(data.password),
           expiresOn: data.expiresOn,
-          friendlyExpiresOn: convertExpiryTime(data.expiresOn, 'America/Los_Angeles'),
+          friendlyExpiresOn: convertExpiryTime(data.expiresOn),
           valid: 'valid'
         };
         $rootScope.$broadcast("otpGenerated");
@@ -66,12 +66,15 @@
       }
     }
 
-    function convertExpiryTime(expiryTime, timezone) {
-      return moment.tz(expiryTime, timezone).format('MM/DD/YY h:mmA');
+    function convertExpiryTime(expiryTime) {
+      return moment.utc(expiryTime).local().format('MM/DD/YY h:mmA');
     }
 
     function getQrCodeUrl(activationCode) {
-      return HuronConfig.getOcelotUrl() + '/getqrimage?oneTimePassword=' + activationCode;
+      return HermesQRCodeService.get({
+          oneTimePassword: activationCode
+        })
+        .$promise;
     }
 
   }

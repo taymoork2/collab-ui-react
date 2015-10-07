@@ -5,16 +5,19 @@
     .controller('PstnSetupCtrl', PstnSetupCtrl);
 
   /* @ngInject */
-  function PstnSetupCtrl($scope, $q, $window, $translate, $state, $stateParams, PstnSetupService, ValidationService, Notification) {
+  function PstnSetupCtrl($scope, $q, $window, $translate, $state, $stateParams, PstnSetupService, ValidationService, Notification, TerminusStateService) {
     var vm = this;
+    var customerExists = false;
+    var hasCarriers = false;
     vm.customerId = $stateParams.customerId;
     vm.customerName = $stateParams.customerName;
-    vm.customerExists = false;
     vm.loading = true;
     vm.model = {
+      state: '',
       areaCode: '',
       quantity: ''
     };
+    vm.areaCodeOptions = [];
     vm.blockOrders = [];
     vm.blockOrderTotals = 0;
 
@@ -40,24 +43,51 @@
       type: 'inline',
       templateOptions: {
         fields: [{
-          type: 'input',
+          type: 'select',
+          key: 'state',
+          templateOptions: {
+            label: $translate.instant('pstnSetup.state'),
+            options: [],
+            labelfield: 'name',
+            valuefield: 'abbreviation',
+            onChangeFn: getStateInventory,
+            placeholder: $translate.instant('pstnSetup.selectState'),
+            inputPlaceholder: $translate.instant('pstnSetup.searchStates'),
+            filter: true
+          },
+          controller: /* @ngInject */ function ($scope) {
+            TerminusStateService.query().$promise.then(function (states) {
+              $scope.to.options = states;
+            });
+          }
+        }, {
+          type: 'select',
           key: 'areaCode',
           id: 'areaCode',
           templateOptions: {
             label: $translate.instant('pstnSetup.areaCode'),
-            type: 'text'
+            options: [],
+            labelfield: 'code',
+            valuefield: 'code',
+            placeholder: $translate.instant('pstnSetup.selectAreaCode'),
+            inputPlaceholder: $translate.instant('pstnSetup.searchAreaCodes'),
+            filter: true
           },
-          validators: {
-            numeric: {
-              expression: ValidationService.numeric,
-              message: function () {
-                return $translate.instant('validation.numeric');
-              }
-            }
+          controller: /* @ngInject */ function ($scope) {
+            $scope.$watchCollection(function () {
+              return vm.areaCodeOptions;
+            }, function (newAreaCodes) {
+              newAreaCodes = newAreaCodes || [];
+              $scope.to.options = _.sortBy(newAreaCodes, 'code');
+            });
+            $scope.$watch(function () {
+              return vm.model.areaCode;
+            }, function (newAreaCode) {
+              $scope.to.helpText = $translate.instant('pstnSetup.numbers', {
+                count: (newAreaCode && newAreaCode.count) ? newAreaCode.count : 0
+              }, 'messageformat');
+            });
           }
-        }, {
-          noFormControl: true,
-          template: '<div class="label-height-offset">' + $translate.instant('common.and') + '</div>'
         }, {
           type: 'input',
           key: 'quantity',
@@ -78,11 +108,11 @@
           type: 'button',
           key: 'addBtn',
           templateOptions: {
-            btnClass: 'btn-primary',
+            btnClass: 'btn-primary label-height-offset',
             label: $translate.instant('common.add'),
             onClick: function (options, scope) {
               vm.blockOrders.push({
-                areaCode: scope.model.areaCode,
+                areaCode: scope.model.areaCode.code,
                 quantity: scope.model.quantity
               });
               resetForm();
@@ -115,7 +145,7 @@
     }
 
     function resetForm() {
-      vm.model.areaCode = vm.model.quantity = '';
+      vm.model.quantity = '';
       if (vm.form) {
         vm.form.$setPristine();
         vm.form.$setUntouched();
@@ -137,23 +167,35 @@
       }));
     }
 
+    function getStateInventory() {
+      PstnSetupService.getCarrierInventory(vm.provider.uuid, vm.model.state.abbreviation)
+        .then(function (response) {
+          vm.areaCodeOptions = response.areaCodes;
+          vm.model.areaCode = '';
+        });
+    }
+
     function init() {
       PstnSetupService.listCustomerCarriers(vm.customerId)
         .then(function (carriers) {
-          vm.customerExists = true;
-          return carriers;
+          customerExists = true;
+          if (angular.isArray(carriers) && carriers.length === 0) {
+            return PstnSetupService.listCarriers();
+          } else {
+            hasCarriers = true;
+            return carriers;
+          }
         })
         .catch(function (response) {
-          //TODO uncomment after 404 fix
-          // if (response && response.status === 404) {
-          return PstnSetupService.listCarriers();
-          // } else {
-          //   return $q.reject(response);
-          // }
+          if (response && response.status === 404) {
+            return PstnSetupService.listCarriers();
+          } else {
+            return $q.reject(response);
+          }
         })
         .then(function (carriers) {
           angular.forEach(carriers, initCarrier);
-          if (vm.customerExists && angular.isArray(vm.providers) && vm.providers.length === 1) {
+          if (customerExists && hasCarriers && angular.isArray(vm.providers) && vm.providers.length === 1) {
             selectProvider(vm.providers[0]);
             return $state.go('pstnSetup.orderNumbers');
           }
@@ -206,16 +248,28 @@
     }
 
     function placeOrder() {
-      var customerPromise;
-      angular.element('#placeOrder').button('loading');
-      if (!vm.customerExists) {
-        customerPromise = PstnSetupService.createCustomer(vm.customerId, vm.customerName, vm.provider.uuid)
-          .catch(function (response) {
-            Notification.errorResponse(response);
-            return $q.reject(response);
-          });
+      var promise = $q.when();
+      vm.placeOrderLoad = true;
+      if (!customerExists) {
+        promise = promise.then(function () {
+          return PstnSetupService.createCustomer(vm.customerId, vm.customerName, vm.provider.uuid);
+        }).then(function () {
+          customerExists = true;
+        }).catch(function (response) {
+          Notification.errorResponse(response, 'pstnSetup.customerCreateError');
+          return $q.reject(response);
+        });
+      } else if (!hasCarriers) {
+        promise = promise.then(function () {
+          return PstnSetupService.updateCustomerCarrier(vm.customerId, vm.provider.uuid);
+        }).then(function () {
+          hasCarriers = true;
+        }).catch(function (response) {
+          Notification.errorResponse(response, 'pstnSetup.customerUpdateError');
+          return $q.reject(response);
+        });
       }
-      $q.when(customerPromise).then(function () {
+      promise.then(function () {
         var promises = [];
         angular.forEach(vm.blockOrders, function (blockOrder) {
           var promise = PstnSetupService.orderBlock(vm.customerId, vm.provider.uuid, blockOrder.areaCode, blockOrder.quantity);
@@ -231,7 +285,7 @@
       }).then(function () {
         $state.go('pstnSetup.nextSteps');
       }).finally(function () {
-        angular.element('#placeOrder').button('reset');
+        vm.placeOrderLoad = false;
       });
     }
   }

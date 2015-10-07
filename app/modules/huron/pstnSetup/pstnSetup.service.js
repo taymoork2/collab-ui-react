@@ -5,22 +5,26 @@
     .factory('PstnSetupService', PstnSetupService);
 
   /* @ngInject */
-  function PstnSetupService($q, Authinfo, TerminusCarrierService, TerminusCustomerService, TerminusCustomerCarrierService, TerminusBlockOrderService, TerminusOrderService) {
+  function PstnSetupService($q, Authinfo, TerminusCarrierService, TerminusCustomerService, TerminusCustomerCarrierService, TerminusBlockOrderService, TerminusOrderService, TerminusCarrierInventoryCount, TerminusNumberService) {
     var INTELEPEER = "INTELEPEER";
     var TATA = "TATA";
     var PSTN = "PSTN";
     var PENDING = "PENDING";
+    var QUEUED = "QUEUED";
 
     var service = {
       createCustomer: createCustomer,
+      updateCustomerCarrier: updateCustomerCarrier,
       getCustomer: getCustomer,
       listCarriers: listCarriers,
+      getCarrierInventory: getCarrierInventory,
       listCustomerCarriers: listCustomerCarriers,
       getCarrierId: getCarrierId,
       orderBlock: orderBlock,
       listPendingOrders: listPendingOrders,
       getOrder: getOrder,
       listPendingNumbers: listPendingNumbers,
+      deleteNumber: deleteNumber,
       INTELEPEER: INTELEPEER,
       TATA: TATA,
       PSTN: PSTN,
@@ -45,7 +49,6 @@
       "serviceStreetDirectional": "E",
       "serviceStreetName": "President George Bush",
       "serviceStreetSuffix": "Hwy",
-      "serviceAddressSub": "",
       "serviceCity": "Richardson",
       "serviceState": "TX",
       "serviceZip": "75082"
@@ -64,6 +67,15 @@
       return TerminusCustomerService.save({}, payload).$promise;
     }
 
+    function updateCustomerCarrier(customerId, pstnCarrierId) {
+      var payload = {
+        "pstnCarrierId": pstnCarrierId
+      };
+      return TerminusCustomerService.update({
+        customerId: customerId
+      }, payload).$promise;
+    }
+
     function getCustomer(customerId) {
       return TerminusCustomerService.get({
         customerId: customerId
@@ -77,6 +89,13 @@
     function listCustomerCarriers(customerId) {
       return TerminusCustomerCarrierService.query({
         customerId: customerId
+      }).$promise;
+    }
+
+    function getCarrierInventory(carrierId, state) {
+      return TerminusCarrierInventoryCount.get({
+        carrierId: carrierId,
+        state: state
       }).$promise;
     }
 
@@ -113,7 +132,7 @@
     }
 
     function getOrder(customerId, orderId) {
-      return TerminusOrderService.get({
+      return TerminusOrderService.query({
         customerId: customerId,
         orderId: orderId
       }).$promise;
@@ -128,11 +147,11 @@
         });
         var promises = [];
         angular.forEach(carrierOrders, function (carrierOrder) {
-          var promise = getOrder(customerId, carrierOrder.uuid).then(function (order) {
-            angular.forEach(order, function (value, key) {
-              if (value.status === PENDING && value.number !== null) {
+          var promise = getOrder(customerId, carrierOrder.uuid).then(function (orderNumbers) {
+            angular.forEach(orderNumbers, function (orderNumber) {
+              if (orderNumber && orderNumber.number && (orderNumber.network === PENDING || orderNumber.network === QUEUED)) {
                 pendingNumbers.push({
-                  pattern: value.number
+                  pattern: orderNumber.number
                 });
               }
             });
@@ -144,6 +163,13 @@
           return pendingNumbers;
         });
       });
+    }
+
+    function deleteNumber(customerId, number) {
+      return TerminusNumberService.delete({
+        customerId: customerId,
+        did: number
+      }).$promise;
     }
 
   }

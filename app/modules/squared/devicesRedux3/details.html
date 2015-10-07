@@ -1,0 +1,91 @@
+<div class="details-header">
+<!--   <div class="pull-right">
+    <button
+      ui-sref="devices-redux3.details({
+        device: devices.filteredCodesAndDevices.matches[devices.findDeviceIndex(deviceDetails.device) - 1]
+      })"
+      ng-disabled="devices.findDeviceIndex(deviceDetails.device) == 0">
+      <i class="fa fa-chevron-left" />
+    </button>
+    <span style="padding: 0 20px">
+      Device
+      {{devices.findDeviceIndex(deviceDetails.device) + 1}}
+      of
+      {{devices.filteredCodesAndDevices.matches.length}}
+    </span>
+    <button
+      ui-sref="devices-redux3.details({
+        device: devices.filteredCodesAndDevices.matches[devices.findDeviceIndex(deviceDetails.device) + 1]
+      })"
+      ng-disabled="devices.findDeviceIndex(deviceDetails.device) == devices.filteredCodesAndDevices.matches.length - 1">
+      <i class="fa fa-chevron-right" />
+    </button>
+  </div>
+</div> -->
+
+<div class="row">
+  <h2>
+    <img
+      class="small-2 columns"
+      ng-if="deviceDetails.device.image"
+      ng-src="{{deviceDetails.device.image}}"
+      style="width: 60px; height: 60px; padding-right: 10px"
+    />
+    <div class="small-10 columns">
+      {{deviceDetails.device.displayName}}
+    </div>
+  </h2>
+</div>
+
+<div class="details-pane">
+  <div class="row" ng-show="deviceDetails.device.readableState">
+    <div class="small-6 columns">Status</div>
+    <div class="small-6 columns">
+      <i
+        class="fa fa-circle device-status"
+        ng-class="deviceDetails.device.cssColorClass"
+      />
+      {{deviceDetails.device.readableState}}
+    </div>
+  </div>
+  <div class="row" ng-show="deviceDetails.device.product">
+    <div class="small-6 columns">Product</div>
+    <div class="small-6 columns ellipsis">{{deviceDetails.device.product}}</div>
+  </div>
+  <div class="row" ng-show="deviceDetails.device.software">
+    <div class="small-6 columns">Software</div>
+    <div class="small-6 columns ellipsis">{{deviceDetails.device.software}}</div>
+  </div>
+  <div class="row" ng-show="deviceDetails.device.ip">
+    <div class="small-6 columns">IP</div>
+    <div class="small-6 columns ellipsis">{{deviceDetails.device.ip}}</div>
+  </div>
+  <div class="row" ng-show="deviceDetails.device.serial">
+    <div class="small-6 columns">Serial</div>
+    <div class="small-6 columns ellipsis">{{deviceDetails.device.serial}}</div>
+  </div>
+  <div class="row" ng-show="deviceDetails.device.mac">
+    <div class="small-6 columns">Mac</div>
+    <div class="small-6 columns ellipsis">{{deviceDetails.device.mac}}</div>
+  </div>
+  <div class="row" ng-show="deviceDetails.device.readableActivationCode">
+    <div class="small-6 columns">Activation Code</div>
+    <div class="small-6 columns ellipsis">{{deviceDetails.device.readableActivationCode}}</div>
+  </div>
+</div>
+
+<div style="margin-top: 40px; text-align: right;">
+  <button
+    ng-click="deviceDetails.deleteDevice()"
+    class="btn btn-primary">
+    Delete
+    </span>
+  </button>
+
+  <button
+    class="btn btn-primary"
+    ng-if="!deviceDetails.device.needsActivation"
+    sq-click-promise="deviceDetails.reportProblem()">
+    Report Problem
+  </button>
+</div>

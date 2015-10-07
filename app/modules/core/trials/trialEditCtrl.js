@@ -5,7 +5,7 @@
     .controller('TrialEditCtrl', TrialEditCtrl);
 
   /* @ngInject */
-  function TrialEditCtrl($q, $state, $scope, $stateParams, $translate, Authinfo, TrialService, Notification, Config, HuronCustomer, ValidationService) {
+  function TrialEditCtrl($q, $state, $scope, $stateParams, $translate, Authinfo, TrialService, Notification, Config, HuronCustomer, ValidationService, FeatureToggleService) {
     var vm = this;
 
     vm.currentTrial = angular.copy($stateParams.currentTrial);
@@ -92,6 +92,7 @@
     vm.squaredUCOfferID = Config.trials.squaredUC;
     vm.isSquaredUCEnabled = isSquaredUCEnabled;
     vm.gotoAddNumber = gotoAddNumber;
+    vm.clickUpdateButton = clickUpdateButton;
 
     initializeOffers();
 
@@ -115,6 +116,20 @@
       return vm.offers[Config.trials.squaredUC];
     }
 
+    function clickUpdateButton() {
+      if (isSquaredUCEnabled() && !vm.disableSquaredUCCheckBox) {
+        FeatureToggleService.supportsPstnSetup().then(function (isSupported) {
+          if (isSupported) {
+            editTrial();
+          } else {
+            gotoAddNumber();
+          }
+        });
+      } else {
+        editTrial();
+      }
+    }
+
     function gotoAddNumber() {
       $state.go('trialEdit.addNumbers', {
         fromEditTrial: true,
@@ -133,7 +148,7 @@
     }
 
     function editTrial(keepModal) {
-      angular.element('#saveUpdateButton').button('loading');
+      vm.saveUpdateButtonLoad = true;
 
       var offersList = [];
       for (var i in vm.offers) {
@@ -144,7 +159,7 @@
 
       return TrialService.editTrial(vm.currentTrial.trialId, vm.currentTrial.duration, vm.currentTrial.licenses, vm.currentTrial.usage, vm.currentTrial.customerOrgId, offersList)
         .catch(function (response) {
-          angular.element('#saveUpdateButton').button('reset');
+          vm.saveUpdateButtonLoad = false;
           Notification.notify([response.data.message], 'error');
           return $q.reject();
         })
@@ -153,14 +168,14 @@
           if ((offersList.indexOf(Config.trials.squaredUC) !== -1) && !vm.disableSquaredUCCheckBox) {
             return HuronCustomer.create(response.data.customerOrgId, response.data.customerName, response.data.customerEmail)
               .catch(function () {
-                angular.element('#saveUpdateButton').button('reset');
+                vm.saveUpdateButtonLoad = false;
                 Notification.errorResponse(response, 'trialModal.squareducError');
                 return $q.reject();
               });
           }
         })
         .then(function () {
-          angular.element('#saveUpdateButton').button('reset');
+          vm.saveUpdateButtonLoad = false;
           angular.extend($stateParams.currentTrial, vm.currentTrial);
           var successMessage = [$translate.instant('trialModal.editSuccess', {
             customerName: vm.currentTrial.customerName,

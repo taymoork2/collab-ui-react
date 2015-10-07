@@ -6,7 +6,7 @@
     .controller('ServiceSetupCtrl', ServiceSetupCtrl);
 
   /* @ngInject*/
-  function ServiceSetupCtrl($q, $state, ServiceSetup, HttpUtils, Notification, Authinfo, $translate, HuronCustomer, ValidationService) {
+  function ServiceSetupCtrl($q, $state, ServiceSetup, HttpUtils, Notification, Authinfo, $translate, HuronCustomer, ValidationService, ExternalNumberPool) {
     var vm = this;
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
@@ -57,6 +57,9 @@
 
     vm.firstTimeSetup = $state.current.data.firstTimeSetup;
     vm.hasVoicemailService = false;
+    vm.hasVoiceService = false;
+    vm.hasSites = false;
+    vm.customer = undefined;
 
     vm.validations = {
       greaterThan: function (viewValue, modelValue, scope) {
@@ -74,10 +77,8 @@
         if (angular.isUndefined(scope.model.endNumber) || scope.model.endNumber === "") {
           // trigger validation on endNumber field
           scope.fields[2].formControl.$validate();
-          return true;
-        } else {
-          return value <= scope.model.endNumber;
         }
+        return true;
       },
       rangeOverlap: function (viewValue, modelValue, scope) {
         var value = modelValue || viewValue;
@@ -186,7 +187,7 @@
         },
         expressionProperties: {
           'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-            return !vm.firstTimeSetup;
+            return vm.hasSites;
           }
         }
       }, {
@@ -200,7 +201,7 @@
         },
         expressionProperties: {
           'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-            return !vm.firstTimeSetup;
+            return vm.hasSites;
           }
         }
       }, {
@@ -216,7 +217,7 @@
         },
         expressionProperties: {
           'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-            return !vm.firstTimeSetup;
+            return vm.hasSites;
           }
         }
       }]
@@ -400,9 +401,12 @@
     function initServiceSetup() {
       var errors = [];
       return HuronCustomer.get().then(function (customer) {
+        vm.customer = customer;
         angular.forEach(customer.links, function (service) {
           if (service.rel === 'voicemail') {
             vm.hasVoicemailService = true;
+          } else if (service.rel === 'voice') {
+            vm.hasVoiceService = true;
           }
         });
       }).then(function () {
@@ -418,38 +422,47 @@
           if (ServiceSetup.sites.length !== 0) {
             return ServiceSetup.getSite(ServiceSetup.sites[0].uuid).then(function (site) {
               vm.firstTimeSetup = false;
+              vm.hasSites = true;
 
               vm.model.site.steeringDigit = site.steeringDigit;
               vm.model.site.siteSteeringDigit = site.siteSteeringDigit;
               vm.model.site.siteCode = site.siteCode;
-              // get voicemail pilot number
-              if (vm.hasVoicemailService) {
-                return ServiceSetup.getVoicemailPilotNumber().then(function (voicemail) {
-                  // if the pilotNumber == customer org uuid, then voicemail is not set
-                  if (voicemail.pilotNumber === Authinfo.getOrgId()) {
-                    vm.externalNumberPool = [];
-                    vm.model.site.voicemailPilotNumber = undefined;
-                    vm.pilotNumberSelected = undefined;
-                  } else {
-                    vm.model.site.voicemailPilotNumber = voicemail.pilotNumber;
-                    vm.pilotNumberSelected = {
-                      uuid: voicemail.name,
-                      pattern: voicemail.pilotNumber
-                    };
-                  }
-                }).catch(function (response) {
-                  vm.externalNumberPool = [];
-                  vm.pilotNumberSelected = undefined;
-                  Notification.errorResponse(response, 'serviceSetupModal.voicemailGetError');
-                });
-              }
+
             });
           } else {
-            if (vm.hasVoicemailService) {
-              return loadExternalNumberPool();
-            }
+            vm.hasSites = false;
+          }
+        }).catch(function (response) {
+          if (response.status === 404) {
+            vm.hasSites = false;
           }
         });
+      }).then(function () {
+        // get voicemail pilot number
+        if (vm.hasVoicemailService) {
+          return ServiceSetup.getVoicemailPilotNumber().then(function (voicemail) {
+            // if the pilotNumber == customer org uuid, then voicemail is not set
+            if (voicemail.pilotNumber === Authinfo.getOrgId()) {
+              vm.externalNumberPool = [];
+              vm.model.site.voicemailPilotNumber = undefined;
+              vm.pilotNumberSelected = undefined;
+            } else {
+              vm.model.site.voicemailPilotNumber = voicemail.pilotNumber;
+              vm.pilotNumberSelected = {
+                uuid: voicemail.name,
+                pattern: voicemail.pilotNumber
+              };
+            }
+          }).catch(function (response) {
+            vm.externalNumberPool = [];
+            vm.pilotNumberSelected = undefined;
+            Notification.errorResponse(response, 'serviceSetupModal.voicemailGetError');
+          });
+        }
+      }).then(function () {
+        if (vm.hasVoicemailService) {
+          return loadExternalNumberPool();
+        }
       });
     }
 
@@ -516,6 +529,13 @@
         });
 
         if (vm.model.displayNumberRanges.length === 0) {
+          vm.model.displayNumberRanges.push({
+            beginNumber: DEFAULT_FROM,
+            endNumber: DEFAULT_TO
+          });
+        }
+      }).catch(function (response) {
+        if (response.status === 404) {
           vm.model.displayNumberRanges.push({
             beginNumber: DEFAULT_FROM,
             endNumber: DEFAULT_TO
@@ -597,71 +617,92 @@
         var errors = [];
         var promise;
         var currentSite;
-        if (vm.firstTimeSetup) {
-          if (vm.pilotNumberSelected) {
-            vm.model.site.voicemailPilotNumber = vm.pilotNumberSelected.pattern;
-          } else {
-            delete vm.model.site.voicemailPilotNumber;
-          }
-          currentSite = angular.copy(vm.model.site);
-          currentSite.timeZone = currentSite.timeZone.value;
-          promise = ServiceSetup.createSite(currentSite).then(function () {
-            var promises = [];
+        var voicePromise = $q.when(true);
+
+        if (!vm.hasVoiceService) {
+          voicePromise = HuronCustomer.put(vm.customer.name)
+            .catch(function (response) {
+              vm.hasVoiceService = false;
+              errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.customerPutError'));
+            })
+            .then(function (customer) {
+              if (vm.model.site.voicemailPilotNumber) {
+                return ExternalNumberPool.create(Authinfo.getOrgId(), vm.model.site.voicemailPilotNumber).catch(function (response) {
+                  errors.push(Notification.processErrorResponse(response));
+                });
+              }
+            });
+        }
+
+        return voicePromise.then(function () {
+          if (!vm.hasSites) {
             if (vm.pilotNumberSelected) {
-              promises.push(ServiceSetup.updateCustomerVoicemailPilotNumber({
-                voicemail: {
-                  pilotNumber: vm.pilotNumberSelected.pattern
-                }
-              }).catch(function (response) {
-                errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.voicemailUpdateError'));
-              }));
+              vm.model.site.voicemailPilotNumber = vm.pilotNumberSelected.pattern;
+            } else {
+              delete vm.model.site.voicemailPilotNumber;
             }
-            if (vm.model.site.timeZone !== DEFAULT_TZ.value) {
-              promises.push(ServiceSetup.updateVoicemailTimezone(vm.model.site.timeZone.timezoneid, vm.objectId)
-                .catch(function (response) {
-                  errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.timezoneUpdateError'));
+            currentSite = angular.copy(vm.model.site);
+            currentSite.timeZone = currentSite.timeZone.value;
+            promise = ServiceSetup.createSite(currentSite).then(function () {
+              var promises = [];
+              // Check for voicemailService before updating voicemailpilot number on common/customer
+              if (vm.hasVoicemailService && vm.pilotNumberSelected) {
+                promises.push(ServiceSetup.updateCustomerVoicemailPilotNumber({
+                  voicemail: {
+                    pilotNumber: vm.pilotNumberSelected.pattern
+                  }
+                }).catch(function (response) {
+                  errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.voicemailUpdateError'));
                 }));
-            }
-            return $q.all(promises);
-          }).catch(function (response) {
-            vm.firstTimeSetup = true;
-            errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.siteError'));
-          });
-          deferreds.push(promise);
-        } else if (vm.pilotNumberSelected && vm.pilotNumberSelected.pattern !== vm.model.site.voicemailPilotNumber) {
-          promise = ServiceSetup.updateCustomerVoicemailPilotNumber({
-            voicemail: {
-              pilotNumber: vm.pilotNumberSelected.pattern
-            }
-          }).catch(function (response) {
-            errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.voicemailUpdateError'));
-          });
-          deferreds.push(promise);
-        }
-
-        if (angular.isArray(vm.model.displayNumberRanges)) {
-          angular.forEach(vm.model.displayNumberRanges, function (internalNumberRange) {
-            if (angular.isUndefined(internalNumberRange.uuid)) {
-              promise = ServiceSetup.createInternalNumberRange(internalNumberRange)
-                .catch(function (response) {
-                  var error = Notification.processErrorResponse(response, 'serviceSetupModal.extensionAddError', {
-                    extension: this.name
-                  });
-                  errors.push(error);
-                }.bind(internalNumberRange));
-              deferreds.push(promise);
-            }
-          });
-        }
-
-        return $q.all(deferreds).then(function () {
-          if (errors.length > 0) {
-            Notification.notify(errors, 'error');
-            return $q.reject('Site/extension create failed.');
-          } else {
-            Notification.notify([$translate.instant('serviceSetupModal.saveSuccess')], 'success');
+              }
+              if (vm.hasVoicemailService && vm.model.site.timeZone !== DEFAULT_TZ.value) {
+                promises.push(ServiceSetup.updateVoicemailTimezone(vm.model.site.timeZone.timezoneid, vm.objectId)
+                  .catch(function (response) {
+                    errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.timezoneUpdateError'));
+                  }));
+              }
+              return $q.all(promises);
+            }).catch(function (response) {
+              vm.hasSites = false;
+              errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.siteError'));
+            });
+            deferreds.push(promise);
+          } else if (vm.hasVoicemailService && vm.pilotNumberSelected && vm.pilotNumberSelected.pattern !== vm.model.site.voicemailPilotNumber) {
+            promise = ServiceSetup.updateCustomerVoicemailPilotNumber({
+              voicemail: {
+                pilotNumber: vm.pilotNumberSelected.pattern
+              }
+            }).catch(function (response) {
+              errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.voicemailUpdateError'));
+            });
+            deferreds.push(promise);
           }
+
+          if (angular.isArray(vm.model.displayNumberRanges)) {
+            angular.forEach(vm.model.displayNumberRanges, function (internalNumberRange) {
+              if (angular.isUndefined(internalNumberRange.uuid)) {
+                promise = ServiceSetup.createInternalNumberRange(internalNumberRange)
+                  .catch(function (response) {
+                    var error = Notification.processErrorResponse(response, 'serviceSetupModal.extensionAddError', {
+                      extension: this.name
+                    });
+                    errors.push(error);
+                  }.bind(internalNumberRange));
+                deferreds.push(promise);
+              }
+            });
+          }
+
+          return $q.all(deferreds).then(function () {
+            if (errors.length > 0) {
+              Notification.notify(errors, 'error');
+              return $q.reject('Site/extension create failed.');
+            } else {
+              Notification.notify([$translate.instant('serviceSetupModal.saveSuccess')], 'success');
+            }
+          });
         });
+
       }
     }
 

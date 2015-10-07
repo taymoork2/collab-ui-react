@@ -111,7 +111,7 @@ angular
             template: '<div ui-view="modal"></div>',
             size: options.size,
             windowClass: options.windowClass,
-            backdrop: options.backdrop || true
+            backdrop: options.backdrop || 'static'
           });
           $state.modal.result.finally(function () {
             if (!this.stopPreviousState) {
@@ -210,7 +210,7 @@ angular
         .state('users.list', {
           url: '/users',
           templateUrl: 'modules/core/users/userList/userList.tpl.html',
-          controller: 'ListUsersCtrl',
+          controller: 'UserListCtrl',
           params: {
             showAddUsers: {}
           }
@@ -290,6 +290,13 @@ angular
             }
           }
         })
+        .state('users.convert.services.dn', {
+          views: {
+            'usersConvert@users.convert': {
+              templateUrl: 'modules/huron/users/assignDnAndDirectLinesModal.tpl.html'
+            }
+          }
+        })
         .state('editService', {
           parent: 'modalLarge',
           views: {
@@ -316,8 +323,7 @@ angular
           },
           resolve: {
             currentUser: /* @ngInject */ function ($http, $stateParams, Config, Utils, Authinfo) {
-              var scimUrl = Config.getScimUrl();
-              var userUrl = Utils.sprintf(scimUrl, [Authinfo.getOrgId()]) + '/' + $stateParams.currentUser.id;
+              var userUrl = Config.getScimUrl(Authinfo.getOrgId()) + '/' + $stateParams.currentUser.id;
 
               return $http.get(userUrl)
                 .then(function (response) {
@@ -411,8 +417,8 @@ angular
           }
         })
         .state('user-overview.cloudExtension-squared-fusion-uc', {
-          templateUrl: 'modules/hercules/cloudExtensions/cloudExtensionPreview.tpl.html',
-          controller: 'CloudExtensionPreviewCtrl',
+          templateUrl: 'modules/hercules/cloudExtensions/callServicePreview.tpl.html',
+          controller: 'CallServicePreviewCtrl',
           data: {
             displayName: 'Call Service'
           },
@@ -458,6 +464,7 @@ angular
         .state('user-overview.contactCenter', {
           templateUrl: 'modules/sunlight/users/userOverview/sunlightUserOverview.tpl.html',
           controller: 'SunlightUserOverviewCtrl',
+          controllerAs: 'SunlightUserOverview',
           data: {
             displayName: 'Contact Center'
           },
@@ -553,6 +560,56 @@ angular
           controllerAs: 'siteList',
           parent: 'main'
         })
+        .state('site-settings', {
+          url: '/webexSiteSettings',
+          templateUrl: 'modules/webex/siteSettings/siteSettings.tpl.html',
+          controller: 'WebExSiteSettingsCtrl',
+          controllerAs: 'WebExSiteSettings',
+          parent: 'main',
+          params: {
+            siteUrl: null
+          }
+        })
+        .state('site-setting', {
+          url: '/webexSiteSetting',
+          templateUrl: 'modules/webex/siteSetting/siteSetting.tpl.html',
+          controller: 'WebExSiteSettingCtrl',
+          controllerAs: 'WebExSiteSetting',
+          parent: 'main',
+          params: {
+            siteUrl: null,
+            webexPageId: null,
+            settingPageIframeUrl: null
+          }
+        })
+        .state('webex-reports', {
+          url: '/webexreports',
+          templateUrl: 'modules/webex/siteReports/siteReports.tpl.html',
+          controller: 'ReportsCtrl',
+          controllerAs: 'reports',
+          parent: 'main',
+          params: {
+            siteUrl: null
+          },
+          data: {
+            displayName: 'Reports Page1'
+          }
+        })
+        .state('webex-reports-iframe', {
+          url: '/iwebexreports',
+          templateUrl: 'modules/webex/siteReportsIframe/siteReportIframe.tpl.html',
+          controller: 'ReportsIframeCtrl',
+          controllerAs: 'reportsIframe',
+          parent: 'main',
+          params: {
+            siteUrl: null,
+            reportPageId: null,
+            reportPageIframeUrl: null
+          },
+          data: {
+            displayName: 'Reports Page2'
+          }
+        })
         .state('templates', {
           url: '/templates',
           templateUrl: 'modules/squared/views/templates.html',
@@ -585,12 +642,13 @@ angular
         })
 
       /*
-        devices
+        devices redux
       */
+
       .state('devices', {
           url: '/devices',
-          templateUrl: 'modules/squared/devices/devices.html',
-          controller: 'SpacesCtrl',
+          templateUrl: 'modules/squared/devicesRedux/devices.html',
+          controller: 'DevicesCtrlRedux',
           controllerAs: 'sc',
           parent: 'main'
         })
@@ -598,53 +656,11 @@ angular
           parent: 'sidepanel',
           views: {
             'sidepanel@': {
-              controller: 'DeviceOverviewCtrl',
-              controllerAs: 'deviceOverview',
-              templateUrl: 'modules/squared/deviceOverview/deviceOverview.tpl.html'
-            },
-            'header@device-overview': {
-              templateUrl: 'modules/squared/deviceOverview/deviceHeader.tpl.html'
-            }
-          },
-          params: {
-            currentDevice: {},
-            querydeviceslist: {}
-          },
-          data: {
-            displayName: ''
-          }
-        })
-
-      /*
-        devices redux
-      */
-      .state('devices-cleanup', {
-        url: '/devices-cleanup',
-        templateUrl: 'modules/squared/devicesCleanup/cleanup.html',
-        controller: 'DevicesCleanupCtrl',
-        controllerAs: 'dc',
-        parent: 'main'
-      })
-
-      /*
-        devices redux
-      */
-      .state('devices-redux', {
-          url: '/devices-redux',
-          templateUrl: 'modules/squared/devicesRedux/devices.html',
-          controller: 'DevicesCtrlRedux',
-          controllerAs: 'sc',
-          parent: 'main'
-        })
-        .state('device-overview-redux', {
-          parent: 'sidepanel',
-          views: {
-            'sidepanel@': {
               controller: 'DeviceOverviewCtrlRedux',
               controllerAs: 'deviceOverview',
               templateUrl: 'modules/squared/devicesRedux/overview/deviceOverview.tpl.html'
             },
-            'header@device-overview-redux': {
+            'header@device-overview': {
               templateUrl: 'modules/squared/devicesRedux/overview/deviceHeader.tpl.html'
             }
           },
@@ -657,16 +673,25 @@ angular
         })
 
       /*
-        devices redux 2
+        devices redux prototypes
       */
 
-      .state('devices-redux2', {
+      .state('main-redux', {
+          views: {
+            'main@': {
+              templateUrl: 'modules/squared/devicesRedux2/main-redux.html'
+            }
+          },
+          abstract: true,
+          sticky: true
+        })
+        .state('devices-redux2', {
           abstract: true,
           url: '/devices-redux2',
           templateUrl: 'modules/squared/devicesRedux2/devices.html',
           controller: 'DevicesReduxCtrl2',
           controllerAs: 'devices',
-          parent: 'main'
+          parent: 'main-redux'
         })
         .state('devices-redux2.search', {
           url: '/search',
@@ -690,34 +715,105 @@ angular
           }
         })
 
-      .state('devices2', {
-          url: '/devices2',
-          templateUrl: 'modules/squared/devices2/devices2.html',
-          controller: 'Devices2Ctrl',
-          controllerAs: 'dc',
-          parent: 'main'
+      .state('devices-redux3', {
+          abstract: true,
+          url: '/devices-redux3',
+          templateUrl: 'modules/squared/devicesRedux3/devices.html',
+          controller: 'DevicesReduxCtrl3',
+          controllerAs: 'devices',
+          parent: 'main-redux'
         })
-        .state('devices2-overview', {
-          parent: 'sidepanel',
+        .state('devices-redux3.search', {
+          url: '/search',
           views: {
-            'sidepanel@': {
-              controller: 'Devices2OverviewCtrl',
-              controllerAs: 'devices2Overview',
-              templateUrl: 'modules/squared/deviceOverview2/devices2Overview.tpl.html'
+            'leftPanel': {
+              templateUrl: 'modules/squared/devicesRedux3/list.html'
+            }
+          }
+        })
+        .state('devices-redux3.details', {
+          url: '/details',
+          views: {
+            'leftPanel': {
+              templateUrl: 'modules/squared/devicesRedux3/list.html'
             },
-            'header@devices2-overview': {
-              templateUrl: 'modules/squared/deviceOverview2/devices2Header.tpl.html'
+            'rightPanel': {
+              controllerAs: 'deviceDetails',
+              controller: 'DevicesReduxDetailsCtrl3',
+              templateUrl: 'modules/squared/devicesRedux3/details.html'
             }
           },
           params: {
-            currentEntity: {},
-            querydeviceslist: {}
-          },
-          data: {
-            displayName: ''
+            device: null
           }
         })
-        .state('partneroverview', {
+
+      .state('devices-redux4', {
+          abstract: true,
+          url: '/devices-redux4',
+          templateUrl: 'modules/squared/devicesRedux4/devices.html',
+          controller: 'DevicesReduxCtrl4',
+          controllerAs: 'devices',
+          parent: 'main-redux'
+        })
+        .state('devices-redux4.search', {
+          url: '/search',
+          views: {
+            'leftPanel': {
+              templateUrl: 'modules/squared/devicesRedux4/list.html'
+            }
+          }
+        })
+        .state('devices-redux4.details', {
+          url: '/details',
+          views: {
+            // 'leftPanel': {
+            //   templateUrl: 'modules/squared/devicesRedux4/list.html'
+            // },
+            'rightPanel': {
+              controllerAs: 'deviceDetails',
+              controller: 'DevicesReduxDetailsCtrl4',
+              templateUrl: 'modules/squared/devicesRedux4/details.html'
+            }
+          },
+          params: {
+            device: null
+          }
+        })
+        .state('devices-redux5', {
+          abstract: true,
+          url: '/devices-redux5',
+          templateUrl: 'modules/squared/devicesRedux5/devices.html',
+          controller: 'DevicesReduxCtrl5',
+          controllerAs: 'devices',
+          parent: 'main-redux'
+        })
+        .state('devices-redux5.search', {
+          url: '/search',
+          views: {
+            'leftPanel': {
+              templateUrl: 'modules/squared/devicesRedux5/list.html'
+            }
+          }
+        })
+        .state('devices-redux5.details', {
+          url: '/details',
+          views: {
+            'leftPanel': {
+              controllerAs: 'deviceDetails',
+              controller: 'DevicesReduxDetailsCtrl5',
+              templateUrl: 'modules/squared/devicesRedux5/details.html'
+            }
+          },
+          params: {
+            device: null
+          }
+        })
+        /*
+          end: devices redux prototypes
+        */
+
+      .state('partneroverview', {
           parent: 'partner',
           url: '/overview',
           templateUrl: 'modules/core/views/partnerlanding.html',
@@ -909,6 +1005,13 @@ angular
   .config(['$stateProvider',
     function ($stateProvider) {
       $stateProvider
+        .state('cdrsupport', {
+          url: '/cdrsupport',
+          templateUrl: 'modules/huron/cdrLogs/cdrlogs.tpl.html',
+          controller: 'CdrLogsCtrl',
+          controllerAs: 'cdr',
+          parent: 'main'
+        })
         .state('callroutingBase', {
           abstract: true,
           parent: 'main',
@@ -924,28 +1027,6 @@ angular
             'nav': {
               templateUrl: 'modules/huron/callRouting/callRoutingNav.tpl.html',
               controller: 'CallRoutingNavCtrl',
-              controllerAs: 'nav'
-            },
-            'main': {
-              template: '<div ui-view></div>'
-            }
-          }
-        })
-        .state('callrouterBase', {
-          abstract: true,
-          parent: 'main',
-          templateUrl: 'modules/huron/callRouter/callRouter.tpl.html'
-        })
-        .state('callRouter', {
-          url: '/callRouter',
-          parent: 'callrouterBase',
-          views: {
-            'header': {
-              templateUrl: 'modules/huron/callRouter/callRouterHeader.tpl.html'
-            },
-            'nav': {
-              templateUrl: 'modules/huron/callRouter/companyNumber.tpl.html',
-              controller: 'CallRouterCtrl',
               controllerAs: 'nav'
             },
             'main': {
@@ -1005,8 +1086,17 @@ angular
         .state('autoattendant.aalanding', {
           parent: 'autoattendant',
           templateUrl: 'modules/huron/callRouting/autoAttendant/aaLanding.tpl.html',
-          controller: 'AutoAttendantLandingCtrl',
+          controller: 'AALandingCtrl',
           controllerAs: 'aaLanding'
+        })
+        .state('autoattendant.aabuilder', {
+          parent: 'main',
+          params: {
+            aaName: ''
+          },
+          templateUrl: 'modules/huron/callRouting/autoAttendant/builder/aaBuilderMain.tpl.html',
+          controller: 'AABuilderMainCtrl',
+          controllerAs: 'aaBuilderMain'
         })
         .state('callpark', {
           url: '/callpark',
@@ -1155,6 +1245,43 @@ angular
         })
         .state('pstnSetup.nextSteps', {
           templateUrl: 'modules/huron/pstnSetup/pstnNextSteps.tpl.html'
+        })
+        .state('hurondetailsBase', {
+          abstract: true,
+          parent: 'main',
+          templateUrl: 'modules/huron/details/huronDetails.tpl.html'
+        })
+        .state('hurondetails', {
+          url: '/hurondetails',
+          parent: 'hurondetailsBase',
+          views: {
+            'nav': {
+              templateUrl: 'modules/huron/details/huronDetailsNav.tpl.html',
+              controller: 'HuronDetailsNavCtrl',
+              controllerAs: 'nav'
+            },
+            'main': {
+              template: '<div ui-view></div>'
+            }
+          }
+        })
+        .state('huronlines', {
+          url: '/lines',
+          parent: 'hurondetails',
+          templateUrl: 'modules/huron/lines/lineList.tpl.html',
+          controller: 'LinesListCtrl',
+          controllerAs: 'linesListCtrl'
+        })
+        .state('huronsettings', {
+          parent: 'hurondetails',
+          templateUrl: 'modules/huron/callRouter/companyNumber.tpl.html',
+          controller: 'CallRouterCtrl',
+          controllerAs: 'callRouterCtrl'
+        })
+        .state('huronfeatures', {
+          url: '/features',
+          parent: 'hurondetails',
+          template: '<div>Under Construction</div>'
         });
     }
   ]);
@@ -1170,7 +1297,97 @@ angular
           controller: 'DashboardNextController',
           parent: 'main'
         })
-        .state('cluster-details', {
+        .state('calendar-service', {
+          templateUrl: 'modules/hercules/calendar-service/calendar.html',
+          controller: 'CalendarController',
+          controllerAs: 'calendar',
+          parent: 'main',
+          abstract: true
+        })
+        .state('calendar-service.list', {
+          url: '/services/calendar',
+          views: {
+            'fullPane': {
+              templateUrl: 'modules/hercules/calendar-service/calendar-list.html',
+              controller: 'CalendarController',
+              controllerAs: 'calendar'
+            }
+          }
+        })
+        .state('calendar-service.list.details', {
+          views: {
+            'rightPane': {
+              controllerAs: 'calendarDetails',
+              controller: 'CalendarDetailsController',
+              templateUrl: 'modules/hercules/calendar-service/calendar-details.html'
+            }
+          },
+          params: {
+            cluster: null
+          }
+        })
+        .state('calendar-service.list.details.cluster-settings', {
+          views: {
+            'details-pane': {
+              templateUrl: 'modules/hercules/calendar-service/cluster-settings.html'
+            }
+          }
+        })
+        .state('calendar-service.about', {
+          url: '/services/calendar/about',
+          views: {
+            'fullPane': {
+              templateUrl: 'modules/hercules/calendar-service/about.html'
+            }
+          }
+        })
+        .state('calendar-service.settings', {
+          url: '/services/calendar/settings',
+          views: {
+            'fullPane': {
+              controllerAs: 'calendarServiceSettings',
+              controller: 'CalendarServiceSettingsController',
+              templateUrl: 'modules/hercules/calendar-service/calendar-service-settings.html'
+            }
+          }
+        })
+        .state('call-service', {
+          templateUrl: 'modules/hercules/call-service/call.html',
+          controller: 'CallController',
+          controllerAs: 'call',
+          parent: 'main',
+          url: '/services/call'
+        })
+        .state('call-service.list', {
+          views: {
+            'fullPane': {
+              templateUrl: 'modules/hercules/call-service/call-list.html',
+              controller: 'CallController',
+              controllerAs: 'call'
+            }
+          },
+          url: '/list'
+        })
+        .state('call-service.settings', {
+          url: '/settings',
+          views: {
+            'fullPane': {
+              controllerAs: 'callServiceSettings',
+              controller: 'CallServiceSettingsController',
+              templateUrl: 'modules/hercules/call-service/call-service-settings.html'
+            }
+          }
+        })
+        .state('call-service.about', {
+          url: '/services/call/about',
+          views: {
+            'fullPane': {
+              templateUrl: 'modules/hercules/call-service/about.html'
+            }
+          }
+        })
+
+      .state('cluster-details', {
           parent: 'sidepanel',
           views: {
             'sidepanel@': {
@@ -1342,27 +1559,16 @@ angular
   ]);
 
 angular
-  .module('WebExUserSettings')
+  .module('Messenger')
   .config(['$stateProvider',
     function ($stateProvider) {
       $stateProvider
-        .state('webexUserSettings', {
-          url: '/webexUserSettings',
-          templateUrl: 'modules/webex/userSettings/userSettings.tpl.html',
-          parent: 'main'
-        });
-    }
-  ]);
-
-angular
-  .module('WebExUserSettings2')
-  .config(['$stateProvider',
-    function ($stateProvider) {
-      $stateProvider
-        .state('webexUserSettings2', {
-          url: '/webexUserSettings2',
-          templateUrl: 'modules/webex/userSettings/userSettings2.tpl.html',
-          parent: 'main'
+        .state('messenger', {
+          parent: 'main',
+          url: '/messenger',
+          templateUrl: 'modules/messenger/ci-sync/ciSync.tpl.html',
+          controller: 'CiSyncCtrl',
+          controllerAs: 'sync'
         });
     }
   ]);

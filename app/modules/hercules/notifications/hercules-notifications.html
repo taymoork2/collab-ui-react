@@ -1,0 +1,21 @@
+<div class="hercules-notifications">
+  <!-- Bell -->
+  <a ng-click="notificationController.showNotifications = !notificationController.showNotifications">
+    <i class="fa fa-bell" />
+  </a>
+
+  <!-- Bubble with amount of notifications. If there are none (length == 0) it doesn't get shown -->
+  <span class="amountBubble" ng-if="notificationController.status.count > 0">
+      <span class="">{{notificationController.status.count}}</span>
+  </span>
+
+  <!-- List of notifications -->
+  <ul class="entries" ng-show="notificationController.showNotifications && notificationController.status.count > 0">
+    <span ng-repeat="type in notificationController.status.types">
+      <li class="notif" ng-repeat="(id,notification) in type.notifications">
+        <span class="badge-wrapper label notification-{{notification.type}}">{{notification.type}} <!--<span class="badge badge-custom-warn {{notification.type}}"></span>--></span>
+        <div class="notif-wrapper"><ng-include src="notification.template"></ng-include></div>
+      </li>
+    </span>
+  </ul>
+</div>

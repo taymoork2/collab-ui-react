@@ -88,8 +88,10 @@ module.exports = function() {
         test + '/huron/**/*.js',
         test + '/hercules/**/*.js',
         test + '/mediafusion/**/*.js',
+        test + '/messenger/**/*.js',
         test + '/squared/**/*.js',
         test + '/sunlight/**/*.js',
+        test + '/webex/**/*.js',
         '!' + test + '/e2e-protractor/**/*'
       ],
       e2e: {
@@ -97,7 +99,8 @@ module.exports = function() {
         huron: e2e + '/huron/**/*_spec.js',
         mediafusion: e2e + '/mediafusion/**/*_spec.js',
         squared: e2e + '/squared/**/*_spec.js',
-        webex: e2e + '/webex/**/*_spec.js'
+        webex: e2e + '/webex/**/*_spec.js',
+        sunlight: e2e + '/sunlight/**/*_spec.js'
       }
     },
 
@@ -119,7 +122,7 @@ module.exports = function() {
         vendor + '/amcharts/dist/amcharts/serial.js',
         vendor + '/amcharts/dist/amcharts/funnel.js',
         vendor + '/typeahead.js/dist/typeahead.bundle.js',
-        vendor + '/lodash/dist/lodash.compat.js',
+        vendor + '/lodash/lodash.min.js',
         vendor + '/draggable/draggable.min.js',
         vendor + '/moment/moment.js',
         vendor + '/base64/base64.js',
@@ -161,7 +164,11 @@ module.exports = function() {
         vendor + '/d3/d3.min.js',
         vendor + '/jquery-csv/src/jquery.csv.js',
         vendor + '/angular-timer/dist/angular-timer.js',
-        vendor + '/humanize-duration/humanize-duration.js'
+        vendor + '/humanize-duration/humanize-duration.js',
+        vendor + '/angular-libphonenumber/dist/libphonenumber.js',
+        vendor + '/angular-libphonenumber/dist/angular-libphonenumber.js',
+        vendor + '/angularjs-toaster/toaster.js',
+        vendor + '/ng-file-upload/ng-file-upload.js'
       ],
       scss: {
         paths: [

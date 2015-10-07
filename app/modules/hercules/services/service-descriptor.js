@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('Hercules')
-  .service('ServiceDescriptor', ['$http', 'ConfigService',
-    function ServiceDescriptor($http, config) {
+  .service('ServiceDescriptor', ['$http', 'ConfigService', 'Authinfo',
+    function ServiceDescriptor($http, config, Authinfo) {
       var services = function (callback) {
         $http
-          .get(config.getUrl() + '/services')
+          .get(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services')
           .success(function (data) {
             callback(null, data.fusion_services || []);
           })
@@ -22,7 +22,7 @@ angular.module('Hercules')
 
       var filterAllExceptManagement = function (services) {
         return _.filter(services, function (service) {
-          return service.connector_type != 'c_mgmt' && service.connector_type != 'mf_mgmt';
+          return service.connector_type != 'c_mgmt' && service.connector_type != 'mf_mgmt' && service.service_id != 'squared-fusion-ec';
         });
       };
 
@@ -38,11 +38,25 @@ angular.module('Hercules')
 
       var setServiceEnabled = function (serviceId, enabled, callback) {
         $http
-          .put(config.getUrl() + '/services/' + serviceId, {
+          .put(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
             enabled: enabled
           })
           .success(function () {
             callback(null);
+          })
+          .error(function () {
+            callback(arguments);
+          });
+      };
+
+      var isServiceEnabled = function (serviceId, callback) {
+        $http
+          .get(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services')
+          .success(function (data) {
+            var service = _.find(data.fusion_services, {
+              service_id: serviceId
+            });
+            callback(null, service.enabled);
           })
           .error(function () {
             callback(arguments);
@@ -72,6 +86,7 @@ angular.module('Hercules')
         filterEnabledServices: filterEnabledServices,
         filterAllExceptManagement: filterAllExceptManagement,
         isFusionEnabled: isFusionEnabled,
+        isServiceEnabled: isServiceEnabled,
         setServiceEnabled: setServiceEnabled,
         serviceIcon: serviceIcon
       };

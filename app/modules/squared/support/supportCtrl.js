@@ -139,8 +139,7 @@ angular.module('Squared')
       }
 
       var initializeTypeahead = function () {
-        var scimSearchUrl = Config.getScimUrl() + '?count=10&attributes=name,userName&filter=userName%20sw%20%22';
-        var suggestUsersUrl = Utils.sprintf(scimSearchUrl, [Authinfo.getOrgId()]);
+        var suggestUsersUrl = Config.getScimUrl(Authinfo.getOrgId()) + '?count=10&attributes=name,userName&filter=userName%20sw%20%22';
         var engine = new Bloodhound({
           datumTokenizer: Bloodhound.tokenizers.obj.whitespace('userName'),
           queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -198,7 +197,7 @@ angular.module('Squared')
         $scope.closeCallInfo();
         $('#logsearchfield').typeahead('close');
         $scope.userLogs = [];
-        angular.element('#logSearchBtn').button('loading');
+        $scope.logSearchBtnLoad = true;
         //check whether email address or uuid was enetered
         var searchInput = $('#logsearchfield').val();
         if (searchInput) {
@@ -208,7 +207,7 @@ angular.module('Squared')
           $('#noResults').text([$filter('translate')('supportPage.noResults')]);
           Log.debug('Search input cannot be empty.');
           Notification.notify([$filter('translate')('supportPage.errEmptyinput')], 'error');
-          angular.element('#logSearchBtn').button('reset');
+          $scope.logSearchBtnLoad = false;
         }
       };
 
@@ -273,18 +272,18 @@ angular.module('Squared')
                   orgId: data.metadataList[index].orgId
                 };
                 $scope.userLogs.push(log);
-                angular.element('#logSearchBtn').button('reset');
+                $scope.logSearchBtnLoad = false;
                 $('#logs-panel').show();
               }
             } else {
               $('#noResults').text([$filter('translate')('supportPage.noResults')]);
-              angular.element('#logSearchBtn').button('reset');
+              $scope.logSearchBtnLoad = false;
               $('#logs-panel').show();
             }
           } else {
             $('#noResults').text([$filter('translate')('supportPage.noResults')]);
             $('#logs-panel').show();
-            angular.element('#logSearchBtn').button('reset');
+            $scope.logSearchBtnLoad = false;
             Log.debug('Failed to retrieve user logs. Status: ' + status);
             Notification.notify([$translate.instant('supportPage.errLogQuery', {
               status: status

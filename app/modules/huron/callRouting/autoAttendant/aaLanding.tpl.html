@@ -1,27 +1,27 @@
-<div>
-  <h2 translate="autoAttendant.landingTitle"></h2>
+<div class="aa-landing">
+  <div class="row">
+    <div class="small-12 columns">
+      <h3 translate="autoAttendant.landingTitle"></h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="small-12 columns">
+      <h5 class="text-muted" translate="autoAttendant.landingInformation"></h5>
+    </div>
+  </div>
+  <div class="row cs-card-layout">
+    <!--div class="small-9 columns aa-header-style">
+      <h4 class="aa-template-header" translate="autoAttendant.landingTemplateAutoAttendant"></h4>
+      <span class="aa-template-tile" id="aa-template-tile1">Placeholder1</span>
+      <span class="aa-template-tile" id="aa-template-tile2">Placeholder2</span>
+      <span class="aa-template-tile" id="aa-template-tile3">Placeholder3</span>
+    </div-->
+    <div class="small-3 columns">
+      <h4 class="aa-template-header" translate="autoAttendant.landingAddAutoAttendant"></h4>
+      <aa-new-card-custom></aa-new-card-custom>
+    </div>
+  </div>
+  <div class="row cs-card-layout">
+    <aa-saved-card ng-repeat="ceInfo in aaLanding.aaModel.ceInfos"></aa-saved-card>
+  </div>
 </div>
-
-<div class="col-md-12 aa-landing-header-pad">
-  <h3 translate="autoAttendant.landingInformation"><small></small></h3>
-</div>
-
-
-<div class="col-md-9 aa-header-style">
-
-  <h4 class="aa-template-header">
-    <span translate="autoAttendant.landingTemplateAutoAttendant"></span>
-  </h4>
-  <span class="aa-template-tile" id="aa-template-tile1">Placeholder1</span>
-  <span class="aa-template-tile" id="aa-template-tile2">Placeholder2</span>
-  <span class="aa-template-tile" id="aa-template-tile3">Placeholder3</span>
-
-</div>
-<div class="col-md-3">
-  <h4 class="aa-template-header">
-    <span translate="autoAttendant.landingAddAutoAttendant"></span>
-  </h4>
-
-  <span class="aa-template-tile" id="aa-template-tile4">Placeholder4</span>
-</div>
-

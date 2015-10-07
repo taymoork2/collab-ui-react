@@ -1,0 +1,40 @@
+
+<iframe name="webexIframeContainer"
+        id="webexIframeContainer"
+        frameborder="0"
+        width="100%"
+        height="600">
+</iframe>
+
+<form name="iframeForm"
+      id="iframeForm"
+      action="{{trustIframeUrl}}"
+      method="post"
+      target="webexIframeContainer">
+      
+  <input id="adminEmail"
+         name="adminEmail"
+         type="hidden"
+         value="{{adminEmail}}" />
+         
+  <input id="userEmail"
+         name="userEmail"
+         type="hidden"
+         value="{{adminEmail}}" />
+         
+  <input id="Authorization"
+         name="authorization"
+         type="hidden"
+         value="{{authToken}}" />
+  
+  <input id="locale"
+         name="locale"
+         type="hidden"
+         value="{{locale}}" />
+  
+  <button id="submitFormBtn"
+          type="submit"
+          style="background-color:#ff00ff;cursor:pointer;width:100px;display:none;"
+          onclick="this.parentElement.submit();">
+  </button>
+</form>

@@ -7,9 +7,9 @@
     </div>
     <div class="small-5 columns" ng-show="Utils.isAdminPage()">
       <div class="page-option-buttons" ng-controller="ExportUsersCtrl">
-        <button id="addUsers" class="btn btn-lg btn-info add-button" ui-sref="users.add" translate="usersPage.inviteUsers"></button>
-          <a id="export-btn" ng-csv="exportCSV()" filename="{{'usersPage.csvFilename' | translate}}" class="export-users" ng-disabled="exportBtn.disabled">
-            <span id="export-icon" tooltip-placement="top" tooltip="{{'usersPage.csvBtnTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true"><i class="icon icon-content-share"></i></span>
+        <button id="addUsers" ng-disabled="dirsyncEnabled" class="button large info" ui-sref="users.add" translate="usersPage.inviteUsers"></button>
+        <a id="export-btn" ng-csv="exportCSV()" filename="{{'usersPage.csvFilename' | translate}}" class="export-users" ng-disabled="exportBtn.disabled">
+          <span id="export-icon" tooltip-placement="top" tooltip="{{'usersPage.csvBtnTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true"><i class="icon icon-content-share"></i></span>
         </a>
       </div>
     </div>
@@ -18,6 +18,9 @@
     <div gridscrollbar class="gridStyle col-md-12" ng-grid="gridOptions"></div>
     <div class="grid-refresh" ng-if="gridRefresh">
       <i class='icon icon-spinner icon-2x'></i>
+    </div>
+    <div class="too-many-users" ng-if="tooManyUsers">
+      <span class="h2" translate="usersPage.tooManyUsersError"></span>
     </div>
   </div>
 </div>

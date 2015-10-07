@@ -1,6 +1,13 @@
 .devices-redux2 {
-  padding: 20px 30px;
   background-color: white !important;
+
+  .row {
+    margin: 0;
+  }
+
+  .needsActivation {
+    color: #aaa;
+  }
 
   h1 {
     padding-bottom: 30px;
@@ -9,10 +16,10 @@
     padding: 20px 0;
   }
   .pane {
-    padding: 0 40px;
+    padding-right: 40px;
   }
   .details-header {
-    border-bottom: 1px solid #ccc;
+    // border-bottom: 1px solid #ccc;
 
     button {
       border: 0;
@@ -38,7 +45,7 @@
     padding-top: 20px;
     .result-row {
       cursor: pointer;
-      padding: 10px 0;
+      padding-top: 20px;
       font-size: 0.875rem;
       border-bottom: 3px solid white;
 
@@ -61,7 +68,7 @@
   .dr2-search {
     input[type=text] {
       border: 0;
-      border-bottom: 1px solid #ccc;
+      // border-bottom: 1px solid #ccc;
     }
     ul {
       margin: 0;

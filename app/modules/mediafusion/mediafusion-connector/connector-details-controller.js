@@ -4,7 +4,7 @@ angular.module('Mediafusion')
   .controller('ConnectorDetailsController',
 
     /* @ngInject */
-    function ($scope, $state, $stateParams, MediafusionProxy) {
+    function ($scope, $state, $stateParams, MediafusionProxy, MediafusionClusterService) {
       $scope.visibleAlarm = {};
       $scope.clusters = [];
       $scope.selectedCluster = '';
@@ -17,5 +17,9 @@ angular.module('Mediafusion')
         }
       }, true);
 
+      $scope.groups = MediafusionClusterService.getGroups();
+      $scope.selectGroup = function (group) {
+        $scope.displayName = group.displayName;
+      };
     }
   );

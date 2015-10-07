@@ -192,6 +192,14 @@
   }
 }
 
+.msgrsync-desc {
+  color: $gray-darker;
+  font-size: 18px;
+  background-color: $brand-danger-light;
+  margin-right: 200px;
+  padding-bottom: 5px;
+}
+
 .add-user-container {
   .title-desc {
     color: $gray-darker;
@@ -273,8 +281,8 @@
     .service-setup-company-voicemail {
       margin-top: 15px;
 
-      .col-xs-3 {
-        padding-left: 0;
+      .select-dropdown {
+        width: 230px;
       }
     }
 
@@ -395,16 +403,14 @@
       position: relative;
       .action-link {
         position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 200px;
-        text-align: center;
+        left: 0;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         .icon-error {
           color: $brand-danger;
-          vertical-align: middle;
           margin-right: 5px;
-          position: relative;
-          top: -2px;
         }
       }
       & + .result {
@@ -438,24 +444,22 @@
   }
 
   .table-header {
-    border: $gray-lighter solid 1px;
+    border: $gray-light solid 1px;
     border-bottom: 0px;
     .table {
       border-color: $gray-lightest;
     }
-    .table-bordered > thead > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > th, .table-bordered > tbody > tr > td {
+    .table-bordered > thead > tr > th {
       background-color: $gray-lightest;
       color: $gray-darker;
       height: 44px;
       padding: 14px;
-      .heading-text {
-        text-align: center;
-        font-weight: bold;
-      }
+      text-align: center;
+      font-weight: bold;
     }
   }
   .table-body {
-    border: $gray-lighter solid 1px;
+    border: $gray-light solid 1px;
     border-top: 0px;
     position: relative;
     top: -1px;
@@ -465,47 +469,43 @@
     .center {
       text-align: center;
     }
-    .table-bordered > thead > tr > th, .table-bordered > thead > tr > td {
-      height: 0px;
-      padding: 0px;
-    }
-    .table-bordered > tbody > tr > th, .table-bordered > tbody > tr > td {
+    .table-bordered > tbody > tr > td {
       color: $brand-danger;
       height: 44px;
       padding: 14px;
     }
+    .table-bordered > tbody > tr {
+      border-top: none;
+      border-bottom: $gray-lighter solid 1px;
+    }
+    .table-bordered > tbody > tr:last-of-type {
+      border-bottom: none;
+    }
   }
   .error-table {
     min-height: 46px;
-    max-height: 353px;
+    max-height: 360px;
     min-width: 400px;
     overflow-y: auto;
     overflow-x: hidden;
     .table {
-      margin: 0;
+      margin-bottom: 0;
     }
     .table-bordered > thead > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > th, .table-bordered > tbody > tr > td {
       border-bottom-width: 1px;
-      border-color: $gray-lightest;
-      border-right-color: $gray-lighter;
+      border-right: $gray-light solid 1px;
       font-size: 15px;
     }
-    .table-bordered > thead > tr > th:last-of-type, .table-bordered > thead > tr > td:last-of-type,
-      .table-bordered > tbody > tr > th:last-of-type, .table-bordered > tbody > tr > td:last-of-type {
+    .table-bordered > thead > tr > th:last-of-type, .table-bordered > tbody > tr > td:last-of-type {
         border-right: none;
       }
-    .table-bordered > thead > tr:last-of-type > th, .table-bordered > thead > tr:last-of-type > td,
-      .table-bordered > tbody > tr:last-of-type > th, .table-bordered > tbody > tr:last-of-type > td {
+    .table-bordered > thead > tr:last-of-type > th, .table-bordered > tbody > tr:last-of-type > td {
         border-bottom-width: 0px;
       }
-    .table-bordered > thead > tr > th:first-of-type, .table-bordered > thead > tr > td:first-of-type,
-      .table-bordered > tbody > tr > th:first-of-type, .table-bordered > tbody > tr > td:first-of-type {
-        border-right-color: $gray-lighter;
+    .table-bordered > thead > tr > th, .table-bordered > tbody > tr > td {
+        border-right: $gray-light solid 1px;
         border-left: none;
-      }
-    .table-bordered > thead > tr:first-of-type > th, .table-bordered > thead > tr > td,
-      .table-bordered > tbody > tr:first-of-type > th, .table-bordered > tbody > tr > td {
-        border-top-width: 0px;
+        border-top: none;
       }
   }
 }

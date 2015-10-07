@@ -1,0 +1,32 @@
+<div class="modal-header">
+  <div class="modal-title">
+    Add/Remove Cloud Extension Services  </div>
+</div>
+
+<div class="modal-body">
+  <p>
+  You are about to remove the following Cloud Extension services for your organization:
+    </p>
+  <p>
+    <i class="{{disableConfirmDialog.serviceIconClass}}"></i>
+    <span translate="hercules.serviceNames.{{disableConfirmDialog.serviceId}}"></span>
+  </p>
+
+  <p>
+  If you click Confirm, for each service you remove:
+  All of your users will have the service deactivated.
+  Your Cisco VCS will uninstall the service connector.
+  Data for the service connector will be deleted.
+  If your Cisco VCS has no other services installed,
+  you will need to deregister it.
+    </p>
+  <p>
+  Log in and deregister from Applications > Cloud Extensions > Connector Management.
+</p>
+
+</div>
+
+<div class="modal-footer">
+  <button ng-click="disableConfirmDialog.cancel()">Cancel</button>
+  <button ng-click="disableConfirmDialog.ok()">ok</button>
+</div>

@@ -14,6 +14,7 @@ angular.module('Core')
       // AngularJS will instantiate a singleton by calling "new" on this function
       var authData = {
         'username': null,
+        'userId': null,
         'orgname': null,
         'orgid': null,
         'addUserEnabled': null,
@@ -155,6 +156,7 @@ angular.module('Core')
         },
         clear: function () {
           authData.username = null;
+          authData.userId = null;
           authData.orgname = null;
           authData.orgid = null;
           authData.addUserEnabled = null;
@@ -265,6 +267,12 @@ angular.module('Core')
         getUserName: function () {
           return authData.username;
         },
+        setUserId: function (id) {
+          authData.userId = id;
+        },
+        getUserId: function () {
+          return authData.userId;
+        },
         getUserEntitlements: function () {
           return authData.entitlements;
         },
@@ -362,6 +370,9 @@ angular.module('Core')
         },
         isFusionCal: function () {
           return isEntitled(Config.entitlements.fusion_cal);
+        },
+        isFusionEC: function () {
+          return isEntitled(Config.entitlements.fusion_ec);
         },
         hasAccount: function () {
           return authData.hasAccount;

@@ -18,10 +18,7 @@
             </a>
           </li>
           <li class="clearfix status-info">
-              Version: {{connector.version}}.
-            <span ng-show="connector.software_upgrade_pending">
-              Pending software upgrade to {{connector.software_upgrade_pending}}
-            </span>
+            Version: {{connector.version}}. <span ng-show="connector.software_upgrade_pending" class="feature-status">Pending software upgrade to {{connector.software_upgrade_pending}}.</span>
           </li>
         </div>
       </ul>

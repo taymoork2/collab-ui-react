@@ -4,7 +4,7 @@ angular.module('Core')
   .factory('Config', ['$location', 'Utils', '$filter',
     function ($location, Utils, $filter) {
 
-      var oauth2Scope = encodeURIComponent('webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config Identity:Organization cloudMeetings:login webex-messenger:get_webextoken');
+      var oauth2Scope = encodeURIComponent('webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config Identity:Organization cloudMeetings:login webex-messenger:get_webextoken ccc_config:admin');
 
       var getCurrentHostname = function () {
         return $location.host() || '';
@@ -172,14 +172,20 @@ angular.module('Core')
           siteAdminDeepUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage'
         },
 
+        sunlightConfigServiceUrl: {
+          dev: 'https://config.integration-tx1.thunderhead.io/config/v1',
+          integration: 'https://config.integration-tx1.thunderhead.io/config/v1',
+          prod: 'https://config.integration-tx1.thunderhead.io/config/v1', //This will change to prod later in future
+        },
+
         scimSchemas: [
           'urn:scim:schemas:core:1.0',
           'urn:scim:schemas:extension:cisco:commonidentity:1.0'
         ],
 
         helpUrl: 'https://support.ciscospark.com',
-        ssoUrl: 'https://support.ciscospark.com/customer/portal/articles/1909112-sso-setup',
-        rolesUrl: 'https://support.ciscospark.com/customer/portal/articles/1908564-overview-of-admin-roles',
+        ssoUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt/content?filterID=contentstatus[published]~category[security]',
+        rolesUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt/content?filterID=contentstatus[published]~category[getting-started]',
         supportUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt',
 
         usersperpage: 100,
@@ -232,6 +238,11 @@ angular.module('Core')
             state: 'site-list',
             link: '#site-list'
           }, {
+            title: 'tabs.huronLineDetailsTab',
+            desc: 'tabs.huronLineDetailsTabDesc',
+            state: 'hurondetails',
+            link: '#hurondetails'
+          }, {
             title: 'tabs.fusionDetailsTab',
             desc: 'tabs.fusionDetailsTabDesc',
             state: 'fusion',
@@ -245,13 +256,18 @@ angular.module('Core')
             title: 'tabs.callRoutingTab',
             state: 'callRouter',
             link: '#callRouter'
+          }, {
+            title: 'tabs.messengerTab',
+            desc: 'tabs.messengerTabDesc',
+            state: 'messenger',
+            link: '#messenger'
           }]
         }, {
           tab: 'deviceTab',
           icon: 'icon-devices',
           title: 'tabs.deviceTab',
           state: 'devices',
-          link: '/devices-redux'
+          link: '/devices'
         }, {
           tab: 'reportTab',
           icon: 'icon-bars',
@@ -285,18 +301,6 @@ angular.module('Core')
           title: 'tabs.accountTab',
           state: 'profile',
           link: '/profile'
-        }, {
-          tab: 'webexUserSettingsTab',
-          icon: 'icon-tools',
-          title: 'webexUserSettings.webexUserSettingsTab',
-          state: 'webexUserSettings',
-          link: '/webexUserSettings'
-        }, {
-          tab: 'webexUserSettings2Tab',
-          icon: 'icon-tools',
-          title: 'webexUserSettings2.webexUserSettings2Tab',
-          state: 'webexUserSettings2',
-          link: '/webexUserSettings2'
         }, {
           tab: 'developmentTab',
           icon: 'icon-tools',
@@ -347,6 +351,11 @@ angular.module('Core')
             state: 'newpartnerreports',
             link: '#partner/newreports'
           }, {
+            title: 'tabs.cdrTab',
+            desc: 'tabs.cdrLogsTabDesc',
+            state: 'cdrsupport',
+            link: '#cdrsupport'
+          }, {
             title: 'tabs.entResUtilizationTab',
             desc: 'tabs.entResUtilizationTabDesc',
             state: 'utilization',
@@ -370,7 +379,8 @@ angular.module('Core')
           fusion_uc: 'squared-fusion-uc',
           fusion_cal: 'squared-fusion-cal',
           mediafusion: 'squared-fusion-media',
-          fusion_mgmt: 'squared-fusion-mgmt'
+          fusion_mgmt: 'squared-fusion-mgmt',
+          fusion_ec: 'squared-fusion-ec'
         },
 
         trials: {
@@ -443,7 +453,7 @@ angular.module('Core')
 
         defaultEntitlements: ['webex-squared', 'squared-call-initiation'],
 
-        batchSize: 20,
+        batchSize: 10,
 
         isDev: function () {
           var currentHostname = getCurrentHostname();
@@ -474,11 +484,12 @@ angular.module('Core')
           }
         },
 
-        getScimUrl: function () {
+        getScimUrl: function (orgId) {
+          var params = [orgId];
           if (this.isCfe()) {
-            return this.scimUrl.cfe;
+            return Utils.sprintf(this.scimUrl.cfe, params);
           } else {
-            return this.scimUrl.spark;
+            return Utils.sprintf(this.scimUrl.spark, params);
           }
         },
 
@@ -755,7 +766,19 @@ angular.module('Core')
 
         getOAuthClientRegistrationCredentials: function () {
           return Utils.Base64.encode(this.getClientId() + ':' + this.getClientSecret());
+        },
+
+        getSunlightConfigServiceUrl: function () {
+
+          if (this.isDev()) {
+            return this.sunlightConfigServiceUrl.dev;
+          } else if (this.isIntegration()) {
+            return this.sunlightConfigServiceUrl.integration;
+          } else {
+            return this.sunlightConfigServiceUrl.prod;
+          }
         }
+
       };
 
       config.roleStates = {
@@ -763,9 +786,6 @@ angular.module('Core')
           'overview',
           'users',
           'user-overview',
-          'device-overview',
-          'devices2-overview',
-          'device-overview-redux',
           'userprofile',
           'reports',
           'setupwizardmodal',
@@ -785,7 +805,13 @@ angular.module('Core')
         PARTNER_USER: ['partnercustomers', 'customer-overview', 'trialAdd', 'trialEdit'],
         CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
         User: [],
-        Site_Admin: ['site-list'],
+        Site_Admin: [
+          'site-list',
+          'site-settings',
+          'site-setting',
+          'webex-reports',
+          'webex-reports-iframe'
+        ],
         Application: ['organizationAdd']
       };
 
@@ -802,19 +828,26 @@ angular.module('Core')
           'huntgroups',
           'didadd',
           'newpartnerreports',
-          'callRouter'
+          'callRouter',
+          'hurondetails',
+          'huronlines',
+          'huronsettings',
+          'huronfeatures',
+          'cdrsupport'
         ],
         'squared-fusion-mgmt': [
           'fusion',
-          'cluster-details'
+          'cluster-details',
+          'calendar-service',
+          'call-service'
         ],
         'squared-fusion-uc': [
           'devices',
-          'devices-redux',
+          'device-overview',
           'devices-redux2',
-          'devices-redux2-search',
-          'devices-cleanup',
-          'devices2'
+          'devices-redux3',
+          'devices-redux4',
+          'devices-redux5'
         ],
         'squared-team-member': [
           'organization'
@@ -830,6 +863,9 @@ angular.module('Core')
           'events',
           'mediafusionconnector',
           'connector-details'
+        ],
+        'webex-messenger': [
+          'messenger'
         ]
       };
 
@@ -846,7 +882,10 @@ angular.module('Core')
           'reports',
           'devices',
           'fusion',
-          'mediafusionconnector'
+          'mediafusionconnector',
+          'callRouter',
+          'hurondetails',
+          'cdrsupport'
         ]
       };
 

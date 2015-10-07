@@ -2,7 +2,7 @@
 
 describe('Directive: ucSingleNumberReach', function () {
   var $compile, $rootScope, TelephonyInfoService;
-  var telephonyInfoWithSnr = getJSONFixture('huron/json/telephonyInfo/snrEnabled.json');
+  var telephonyInfoWithSnr = getJSONFixture('huron/json/telephonyInfo/snrEnabledWithDest.json');
 
   beforeEach(module('wx2AdminWebClientApp'));
 

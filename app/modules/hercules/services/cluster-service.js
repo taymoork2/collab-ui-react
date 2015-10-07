@@ -2,8 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function ClusterService($q, $http, $location, CsdmPoller, CsdmCacheUpdater, ConnectorMock, ConverterService, ConfigService, XhrNotificationService) {
-    var lastClusterResponse = [];
+  function ClusterService($q, $http, $location, CsdmPoller, CsdmCacheUpdater, ConnectorMock, ConverterService, ConfigService, Authinfo) {
     var clusterCache = {};
 
     function extractDataFromResponse(res) {
@@ -15,6 +14,7 @@
         var data = ConverterService.convertClusters(ConnectorMock.mockData());
         var defer = $q.defer();
         defer.resolve(data);
+        CsdmCacheUpdater.update(clusterCache, data);
         return defer.promise;
       }
 
@@ -25,7 +25,7 @@
       }
 
       return $http
-        .get(ConfigService.getUrl() + '/clusters')
+        .get(ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters')
         .then(extractDataFromResponse)
         .then(ConverterService.convertClusters)
         .then(_.partial(CsdmCacheUpdater.update, clusterCache));
@@ -36,14 +36,23 @@
     };
 
     var upgradeSoftware = function (clusterId, serviceType) {
-      var url = ConfigService.getUrl() + '/clusters/' + clusterId + '/services/' + serviceType + '/upgrade';
+      var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/services/' + serviceType + '/upgrade';
       return $http
         .post(url, '{}')
         .then(extractDataFromResponse);
     };
 
+    var deleteCluster = function (clusterId) {
+      var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
+      return $http.delete(url).then(function () {
+        if (clusterCache[clusterId]) {
+          delete clusterCache[clusterId];
+        }
+      });
+    };
+
     var deleteHost = function (clusterId, serial) {
-      var url = ConfigService.getUrl() + '/clusters/' + clusterId + '/hosts/' + serial;
+      var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/hosts/' + serial;
       return $http.delete(url).then(function () {
         var cluster = clusterCache[clusterId];
         if (cluster && cluster.hosts) {
@@ -58,7 +67,7 @@
     };
 
     var getConnector = function (connectorId) {
-      var url = ConfigService.getUrl() + '/connectors/' + connectorId;
+      var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/connectors/' + connectorId;
       return $http.get(url).then(extractDataFromResponse);
     };
 
@@ -70,6 +79,7 @@
       getClusters: getClusters,
       getConnector: getConnector,
       upgradeSoftware: upgradeSoftware,
+      deleteCluster: deleteCluster,
       subscribe: clusterPoller.subscribe
     };
   }

@@ -3,10 +3,10 @@
 
   angular
     .module('uc.device')
-    .controller('DevicesCtrl', DevicesCtrl);
+    .controller('DevicesCtrlHuron', DevicesCtrlHuron);
 
   /* @ngInject */
-  function DevicesCtrl($scope, $q, $stateParams, DeviceService, OtpService, Config, HttpUtils) {
+  function DevicesCtrlHuron($scope, $q, $stateParams, DeviceService, OtpService, Config, HttpUtils) {
     var vm = this;
     vm.devices = [];
     vm.otps = [];
@@ -15,9 +15,6 @@
     vm.showDeviceDetailPanel = showDeviceDetailPanel;
 
     function activate() {
-      if (!vm.currentUser) {
-        return;
-      }
 
       HttpUtils.setTrackingID().then(function () {
         var promises = [];
@@ -42,9 +39,9 @@
             }
 
             if (vm.devices.length > 0 && vm.otps.length === 0) {
-              $scope.$parent.userOverview.addGenerateAuthCodeLink();
+              $scope.userOverview.addGenerateAuthCodeLink();
             } else {
-              $scope.$parent.userOverview.removeGenerateAuthCodeLink();
+              $scope.userOverview.removeGenerateAuthCodeLink();
             }
           });
       });
@@ -70,15 +67,6 @@
       return false;
     }
 
-    $scope.$watch('currentUser', function (newUser) {
-      if (newUser) {
-        vm.showGenerateOtpButton = false;
-        if (isHuronEnabled()) {
-          activate();
-        }
-      }
-    });
-
     $scope.$on('deviceDeactivated', function () {
       if (isHuronEnabled()) {
         activate();
@@ -97,7 +85,9 @@
       }
     });
 
-    activate();
+    if (isHuronEnabled()) {
+      activate();
+    }
 
   }
 })();

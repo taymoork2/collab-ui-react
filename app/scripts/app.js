@@ -18,6 +18,7 @@ angular.module('Core', [
   'ngSanitize',
   'ngRoute',
   'ngMessages',
+  'ngFileUpload',
   // 'ui.bootstrap',
   'dialogs',
   'ngCsv',
@@ -33,19 +34,34 @@ angular.module('Core', [
   'formlyCisco',
   'cisco.ui',
   'timer',
-  'angular-nicescroll'
+  'angular-nicescroll',
+  'cwill747.phonenumber',
+  'toaster'
 ]);
 
 angular.module('Squared', ['Core']);
 
-angular.module('Huron', ['Core', 'uc.moh', 'uc.device', 'uc.callrouting', 'uc.didadd', 'uc.overview', 'uc.callrouter']);
+angular.module('Huron', ['Core', 'uc.moh', 'uc.device', 'uc.callrouting', 'uc.didadd', 'uc.overview', 'uc.callrouter', 'uc.hurondetails', 'uc.cdrlogsupport']);
 
 angular.module('Hercules', ['Core']);
 
 angular.module('Mediafusion', ['Core']);
 
+angular.module('WebExUtils', ['Core']);
+angular.module('WebExXmlApi', ['Core']);
+
+angular.module('WebExSiteSettings', ['Core']);
+angular.module('WebExSiteSetting', ['Core']);
+
+angular.module('WebExReports', ['Core']);
+angular.module('ReportIframe', ['Core']);
+
 angular.module('WebExUserSettings', ['Core']);
 angular.module('WebExUserSettings2', ['Core']);
+
+angular.module('Messenger', ['Core']);
+
+angular.module('Sunlight', ['Core']);
 
 angular.module('wx2AdminWebClientApp', [
   'Core',
@@ -53,9 +69,14 @@ angular.module('wx2AdminWebClientApp', [
   'Huron',
   'Hercules',
   'Mediafusion',
+  'WebExUtils',
+  'WebExXmlApi',
+  'WebExSiteSettings',
+  'WebExSiteSetting',
   'WebExUserSettings',
   'WebExUserSettings2',
+  'WebExReports',
+  'ReportIframe',
+  'Messenger',
   'Sunlight'
 ]);
-
-angular.module('Sunlight', ['Core']);

@@ -16,12 +16,11 @@ describe('Shared Line', function () {
   });
 
   it('should have a primary directory number', function () {
-    utils.expectIsDisplayed(telephony.directoryNumbers.first());
     utils.expectCount(telephony.directoryNumbers, 1);
   });
 
   it('should show directory number select', function () {
-    utils.click(telephony.directoryNumbers.first());
+    utils.clickFirst(telephony.directoryNumbers);
     utils.expectIsDisplayed(telephony.internalNumber);
   });
 
