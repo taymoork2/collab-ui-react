@@ -53,7 +53,7 @@
           return resolve(true);
         } else if (feature === features.dirSync) {
           supportsDirSync().then(function (enabled) {
-            return resolve(enabled);
+            return resolve(enabled && Authinfo.getOrgId() === '4e2befa3-9d82-4fdf-ad31-bb862133f078');
           });
         }
         // else {
