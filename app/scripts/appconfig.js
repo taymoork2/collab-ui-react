@@ -1086,7 +1086,7 @@ angular
         .state('autoattendant.aalanding', {
           parent: 'autoattendant',
           templateUrl: 'modules/huron/callRouting/autoAttendant/aaLanding.tpl.html',
-          controller: 'AutoAttendantLandingCtrl',
+          controller: 'AALandingCtrl',
           controllerAs: 'aaLanding'
         })
         .state('autoattendant.aabuilder', {
