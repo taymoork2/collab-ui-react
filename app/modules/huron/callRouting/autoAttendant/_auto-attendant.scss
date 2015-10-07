@@ -292,6 +292,7 @@ section.aa-card-section {
   padding-bottom: 0;
   .aa-card-resource {
     @include vr-spacing(pt, .25);
+    min-height: 2rem;
   }
   .aa-card-more-resource {
     min-height: 1.5rem;
