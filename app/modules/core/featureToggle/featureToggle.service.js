@@ -47,34 +47,33 @@
     }
 
     function getFeatureForUser(uid, feature) {
-      if (!feature) {
-        return $q(function (resolve, reject) {
+      return $q(function (resolve, reject) {
+        if (!feature) {
           reject('feature is undefined');
-        });
-      }
-
-      return getFeaturesForUser(uid).then(function (data, status) {
-        var contained = false;
-        _.each(data.data.developer, function (element) {
-          if (element.key === feature && element.val === 'true') {
-            contained = true;
-          }
-        });
-        return contained;
+        } else {
+          resolve(getFeaturesForUser(uid).then(function (response) {
+            var contained = false;
+            _.each(response.data.developer, function (element) {
+              if (element.key === feature && element.val === 'true') {
+                contained = true;
+              }
+            });
+            return contained;
+          }));
+        }
       });
     }
 
     function getFeaturesForOrg(oid) {
-      if (!oid) {
-        return $q(function (resolve, reject) {
+      return $q(function (resolve, reject) {
+        if (!oid) {
           reject('orgId is undefined');
-        });
-      }
-
-      var url = getUrl(false, oid);
-
-      return $http.get(url, {
-        cache: true
+        } else {
+          var url = getUrl(false, oid);
+          resolve($http.get(url, {
+            cache: true
+          }));
+        }
       });
     }
 
