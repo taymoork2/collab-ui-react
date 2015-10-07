@@ -2,11 +2,13 @@
   'use strict';
 
   /* @ngInject */
-  function CalendarController(FmsNotificationService, $state, $modal, $scope, ClusterService, USSService2, ConverterService, ServiceStatusSummaryService) {
+  function CalendarController(FmsNotificationService, $state, $modal, $scope, ClusterService, USSService2, ConverterService,
+    ServiceStatusSummaryService) {
     ClusterService.subscribe(angular.noop, {
       scope: $scope
     });
     var vm = this;
+    vm.state = $state;
 
     FmsNotificationService.refresh();
 
@@ -21,7 +23,8 @@
     };
 
     vm.softwareVersionAvailable = function (cluster) {
-      return ServiceStatusSummaryService.serviceFromCluster("c_cal", cluster).software_upgrade_available ? ServiceStatusSummaryService.serviceFromCluster("c_cal", cluster).not_approved_package.version : "?";
+      return ServiceStatusSummaryService.serviceFromCluster("c_cal", cluster).software_upgrade_available ? ServiceStatusSummaryService.serviceFromCluster(
+        "c_cal", cluster).not_approved_package.version : "?";
     };
 
     vm.calendarAndManagementServiceStatus = function (cluster) {
