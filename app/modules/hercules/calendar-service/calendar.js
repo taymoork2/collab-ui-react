@@ -1,4 +1,4 @@
-(function() {
+(function () {
   'use strict';
 
   /* @ngInject */
@@ -14,20 +14,20 @@
 
     vm.clusters = ClusterService.getClusters();
 
-    vm.hasNoCalendarConnectors = function(cluster) {
+    vm.hasNoCalendarConnectors = function (cluster) {
       return ServiceStatusSummaryService.serviceFromCluster("c_cal", cluster).connectors.length === 0;
     };
 
-    vm.softwareUpgradeAvailable = function(cluster) {
+    vm.softwareUpgradeAvailable = function (cluster) {
       return ServiceStatusSummaryService.serviceFromCluster("c_cal", cluster).software_upgrade_available;
     };
 
-    vm.softwareVersionAvailable = function(cluster) {
+    vm.softwareVersionAvailable = function (cluster) {
       return ServiceStatusSummaryService.serviceFromCluster("c_cal", cluster).software_upgrade_available ? ServiceStatusSummaryService.serviceFromCluster(
         "c_cal", cluster).not_approved_package.version : "?";
     };
 
-    vm.calendarAndManagementServiceStatus = function(cluster) {
+    vm.calendarAndManagementServiceStatus = function (cluster) {
       return ServiceStatusSummaryService.status("c_cal", cluster);
     };
 
@@ -42,7 +42,7 @@
 
     // TODO: Fix up the userStatusesReport modal because it now uses the same as the "old" cluster view.
     // TODO: Use controllerAs etc. as in the other popups...
-    vm.openUserStatusReportModal = function() {
+    vm.openUserStatusReportModal = function () {
       $scope.selectedServiceId = "squared-fusion-cal";
       $scope.modal = $modal.open({
         scope: $scope,
@@ -66,20 +66,20 @@
 
     vm.config = "";
 
-    NotificationConfigService.read(function(err, config) {
+    NotificationConfigService.read(function (err, config) {
       vm.loading = false;
       if (err) return XhrNotificationService.notify(err);
       vm.config = config || {};
     });
     vm.cluster = $stateParams.cluster;
 
-    vm.writeConfig = function() {
+    vm.writeConfig = function () {
       if (vm.config.wx2users && !MailValidatorService.isValidEmailCsv(vm.config.wx2users)) {
         vm.error = "Please enter a list of comma-separated email addresses";
       } else {
         vm.error = null;
         vm.saving = true;
-        NotificationConfigService.write(vm.config, function(err) {
+        NotificationConfigService.write(vm.config, function (err) {
           vm.saving = false;
           if (err) return XhrNotificationService.notify(err);
         });
@@ -103,22 +103,22 @@
     //console.log("selected service ", vm.selectedService);
     //console.log("managementService ", vm.managementService);
 
-    vm.upgrade = function() {
+    vm.upgrade = function () {
       $modal.open({
         templateUrl: "modules/hercules/calendar-service/software-upgrade.html",
         controller: SoftwareUpgradeController,
         controllerAs: "softwareUpgrade"
-      }).result.then(function() {
+      }).result.then(function () {
         //console.log("Starting upgrade dialog...");
       });
     };
 
-    vm.showAlarms = function() {
+    vm.showAlarms = function () {
       $modal.open({
         templateUrl: "modules/hercules/calendar-service/alarms.html",
         controller: AlarmsController,
         controllerAs: "alarmsDialog"
-      }).result.then(function() {
+      }).result.then(function () {
         //console.log("Starting alarms dialog...");
       });
     };
@@ -128,10 +128,10 @@
       var modalVm = this;
       modalVm.newVersion = vm.selectedService.not_approved_package.version;
       modalVm.oldVersion = vm.selectedService.connectors[0].version;
-      modalVm.ok = function() {
+      modalVm.ok = function () {
         $modalInstance.close();
       };
-      modalVm.cancel = function() {
+      modalVm.cancel = function () {
         $modalInstance.dismiss();
       };
       modalVm.clusterName = vm.cluster.name;
@@ -143,7 +143,7 @@
       var alarmsVm = this;
       alarmsVm.connectors = vm.selectedService.connectors;
 
-      alarmsVm.colorFromSeverity = function(alarm) {
+      alarmsVm.colorFromSeverity = function (alarm) {
         if (alarm.severity === "error") {
           return "red";
         } else if (alarm.severity === "critical") {
@@ -154,10 +154,10 @@
       };
 
       //console.log("AlarmsDialog", alarmsVm.connectors);
-      alarmsVm.ok = function() {
+      alarmsVm.ok = function () {
         $modalInstance.close();
       };
-      alarmsVm.cancel = function() {
+      alarmsVm.cancel = function () {
         $modalInstance.dismiss();
       };
     }
