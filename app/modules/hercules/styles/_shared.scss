@@ -8,6 +8,26 @@
     .gray {
       background-color: #EEE;
     }
+    .overlay {
+      position: absolute;
+      left: 25px;
+      top: 5px;
+      border-radius: 50px;
+      height: 12px;
+      width: 12px;
+      border: 6px solid white;
+    }
+    .alarm {
+      border-color: red;
+    }
+
+    .attention {
+      border-color: #F5A623;
+    }
+
+    .ok {
+      border-color: green;
+    }
   }
 
   .page-header {
