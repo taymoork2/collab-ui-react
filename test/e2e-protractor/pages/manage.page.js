@@ -1,6 +1,7 @@
 'use strict';
 
 var ManagePage = function () {
+  this.orgTitle = element(by.id('organizationTitle'));
   this.displayName = element(by.id('displayName'));
   this.estimatedSize = element(by.id('estimatedSize'));
   this.totalUsers = element(by.id('totalUsers'));
