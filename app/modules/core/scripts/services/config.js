@@ -833,6 +833,7 @@ angular.module('Core')
           'huronlines',
           'huronsettings',
           'huronfeatures',
+          'huronnewfeature',
           'cdrsupport'
         ],
         'squared-fusion-mgmt': [
