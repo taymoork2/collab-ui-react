@@ -1,9 +1,12 @@
 .hercules {
 
+  .content {
+    border-right:1px solid #EEE;
+  }
   background-color: $brand-white;
 
-  .cs-card {
-    margin-bottom: 0.5rem;
+  .cluster-card {
+    margin: 0.5rem;
     cursor: pointer;
     .gray {
       background-color: #EEE;
