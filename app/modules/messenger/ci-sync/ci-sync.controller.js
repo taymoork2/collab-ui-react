@@ -54,6 +54,7 @@
     vm.ciUsers = [];
     vm.ciData = CiService.getCiOrgInfo();
     vm.dev = Config.isDev() && ('testAtlasMsgr' === Authinfo.getOrgName());
+    vm.orgAdminUrl = 'https://wapi.webexconnect.com/wbxconnect/acs/widgetserver/mashkit/apps/standalone.html?app=WBX.base.orgadmin';
 
     // Translated text
     vm.refresh = $translate.instant(translatePrefix + 'refresh');
@@ -131,7 +132,9 @@
             getSyncStatus();
           }
         }, function (errorMsg) {
-          Log.error('Failed checking user type: ' + errorMsg);
+          var error = 'User authorization failed: ' + errorMsg;
+          Notification.error(error);
+          Log.error(error);
         });
     }
 
@@ -171,19 +174,20 @@
 
                       defer.resolve();
                     }, function (errorMsg) {
-                      defer.reject(errorMsg);
+                      setOrgAdmin();
+                      defer.reject('Failed checking if user has Customer Success Admin CI Role: ' + errorMsg);
                     });
                 } else {
-                  defer.reject('User lacks required full admin role to view this content');
+                  defer.reject('User lacks required Full Admin CI role to view this content');
                 }
               }, function (errorMsg) {
-                defer.reject('Failed getting user roles: ' + errorMsg);
+                defer.reject('Failed checking CI user roles: ' + errorMsg);
               });
           } else {
-            defer.reject('User lacks required entitlements to view this content');
+            defer.reject('User lacks required CI entitlements to view this content: ' + requiredEntitlements);
           }
         }, function (errorMsg) {
-          defer.reject('Failed getting user entitlements: ' + errorMsg);
+          defer.reject('Failed checking user entitlements from CI: ' + errorMsg);
         });
 
       return defer.promise;

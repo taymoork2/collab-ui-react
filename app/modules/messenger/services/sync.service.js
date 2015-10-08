@@ -128,7 +128,7 @@
 
       switch (status) {
       case 0:
-        result = 'Connection down; no response';
+        result = 'Can\'t connect to service';
         break;
       case 401:
         result = '401 Unauthorized';
@@ -263,7 +263,7 @@
         Log.error('SyncService::patchSync(): ' + fullError);
 
         // Reset to previous settings
-        syncStatus = previousSettings;
+        syncStatus = JSON.parse(JSON.stringify(previousSettings));
 
         defer.reject({
           status: status,
