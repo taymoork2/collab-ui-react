@@ -92,12 +92,12 @@ angular.module('Mediafusion')
         };
 
         var url = config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/assigned_property_sets';
-        return $http.post(url, clusterAssignedPropertySet).then(extractDataFromResponse);
+        return $http.post(url, clusterAssignedPropertySet);
       };
 
       var removeGroupAssignment = function (clusterId, propertySetId) {
-        var url = config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/assigned_property_sets' + propertySetId;
-        return $http.delete(url).then(extractDataFromResponse);
+        var url = config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/assigned_property_sets/' + propertySetId;
+        return $http.delete(url);
       };
 
       return {
