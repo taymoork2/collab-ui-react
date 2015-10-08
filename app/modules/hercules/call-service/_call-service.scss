@@ -1,14 +1,4 @@
 
-.centered-text-block {
-  width:100%;
-  height:300px;
-  text-align:center;
-  //vertical-align:middle;
-  color:#DDD;
-  font-size: x-large;
-  padding:20%;
-}
-
 .call-service-clusters {
   tr {
     border-top:0px;
@@ -19,7 +9,7 @@
     padding:0px;
   }
   .active {
-    background-color:#EEE;
+    background-color:#F7F7F7;
   }
   .content {
 
@@ -29,11 +19,12 @@
     .icon {
       float:right;
       margin-right:10px;
+      margin-top:5px;
     }
     .overlay {
       position: absolute;
       left: 20px;
-      top: 10px;
+      top: 15px;
       border-radius: 50px;
       height: 12px;
       width: 12px;
@@ -51,23 +42,7 @@
       border-color: green;
     }
   }
-
 }
-
-.call-service {
-  .content {
-    background-color: $brand-white;
-    margin-left: -0.5rem;
-    th {
-      font-weight: $font-weight-bold;
-      background-color: $brand-white;
-    }
-    h4 {
-      margin-left: 0.5rem;
-    }
-  }
-}
-
 
 .details-view {
   padding:0.5rem;
@@ -125,6 +100,16 @@
 
     }
 }
+
+.calendar-sub.subpage{
+  padding:{
+    top:1.5rem !important;
+    bottom: 5rem !important;
+    left:2.5rem !important;
+    right:0.5rem !important;
+  }
+}
+
 .cal-mail-form{
   display: block;
   //border: 2px solid rgba(0,0,0,0.75);
@@ -186,11 +171,4 @@
 }
 
 
-.calendar-sub.subpage{
-  padding:{
-    top:1.5rem !important;
-    bottom: 5rem !important;
-    left:2.5rem !important;
-    right:0.5rem !important;
-  }
-}
+
