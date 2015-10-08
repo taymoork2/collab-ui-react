@@ -20,16 +20,15 @@ angular.module('Mediafusion')
 
       $scope.groups = MediafusionClusterService.getGroups();
 
-
       $scope.onSelect = function ($item, $model, $label) {
         $log.log("$scope.groups :", $scope.groups);
         //var groupList = $scope.groups.value;
         //$log.log("$groupList :", groupList);
-        $scope.currentPropertySetId = _.chain(scope.groups)
+        $scope.currentPropertySetId = _.chain($scope.groups)
           .filter(function (group) {
             $log.log('group :', group);
             $log.log('group value :', group.value);
-            $log.log('group name :', group.value["name"]); 
+            $log.log('group name :', group.value["name"]);
             return group.value.name == $scope.displayName;
           })
           .pluck('id')
