@@ -833,6 +833,7 @@ angular.module('Core')
           'huronlines',
           'huronsettings',
           'huronfeatures',
+          'huronnewfeature',
           'cdrsupport'
         ],
         'squared-fusion-mgmt': [
@@ -844,6 +845,7 @@ angular.module('Core')
         'squared-fusion-uc': [
           'devices',
           'device-overview',
+          'devices-redux',
           'devices-redux2',
           'devices-redux3',
           'devices-redux4',

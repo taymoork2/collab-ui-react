@@ -1,39 +1,167 @@
 (function () {
   'use strict';
 
+  // TODO: Don't like this linking to routing name...
+  var serviceType2RouteName = function (serviceType) {
+    switch (serviceType) {
+    case 'c_cal':
+      return "calendar-service";
+    case 'c_ucmc':
+      return "call-service";
+    default:
+      //console.error("serviceType " + serviceType + " not supported in this controller");
+      return "";
+    }
+  };
+
+  var serviceType2ServiceId = function (serviceType) {
+    switch (serviceType) {
+    case 'c_cal':
+      return "squared-fusion-cal";
+    case 'c_ucmc':
+      return "squared-fusion-uc";
+    default:
+      //console.error("serviceType " + serviceType + " not supported in this controller");
+      return "";
+    }
+  };
+
   /* @ngInject */
-  function CallController($state, $modal, $scope, ClusterService, USSService2, ConverterService, ServiceStatusSummaryService) {
+  function CallController(FmsNotificationService, ServiceDescriptor, $stateParams, $state, $modal, $scope, ClusterService, USSService2, ConverterService, ServiceStatusSummaryService) {
     ClusterService.subscribe(angular.noop, {
       scope: $scope
     });
+
+    FmsNotificationService.refresh();
     var vm = this;
+    vm.state = $state;
+    vm.currentServiceType = $state.current.data.serviceType;
+    vm.currentServiceId = serviceType2ServiceId(vm.currentServiceType);
+
+    //TODO: Don't like this linking to routes...
+    vm.route = serviceType2RouteName(vm.currentServiceType);
+
     vm.clusters = ClusterService.getClusters();
 
+    vm.startSetupClicked = false;
+    vm.startSetup = function () {
+      vm.startSetupClicked = true;
+    };
+
+    vm.serviceEnabled = false;
+    ServiceDescriptor.isServiceEnabled(serviceType2ServiceId(vm.currentServiceType), function (a, b) {
+      vm.serviceEnabled = b;
+    });
+
     vm.hasNoCalendarConnectors = function (cluster) {
-      return ServiceStatusSummaryService.serviceFromCluster("c_ucmc", cluster).connectors.length === 0;
+      return ServiceStatusSummaryService.serviceFromCluster(vm.currentServiceType, cluster).connectors.length === 0;
     };
 
     vm.softwareUpgradeAvailable = function (cluster) {
-      return ServiceStatusSummaryService.serviceFromCluster("c_ucmc", cluster).software_upgrade_available;
+      return ServiceStatusSummaryService.serviceFromCluster(vm.currentServiceType, cluster).software_upgrade_available;
     };
 
     vm.softwareVersionAvailable = function (cluster) {
-      return ServiceStatusSummaryService.serviceFromCluster("c_ucmc", cluster).software_upgrade_available ? ServiceStatusSummaryService.serviceFromCluster("c_ucmc", cluster).not_approved_package.version : "?";
+      return ServiceStatusSummaryService.serviceFromCluster(vm.currentServiceType, cluster).software_upgrade_available ? ServiceStatusSummaryService.serviceFromCluster("c_ucmc", cluster).not_approved_package.version : "?";
     };
 
-    vm.callAndManagementServiceStatus = function (cluster) {
-      return ServiceStatusSummaryService.status("c_ucmc", cluster);
+    vm.selectedServiceAndManagementServiceStatus = function (cluster) {
+      return ServiceStatusSummaryService.status(vm.currentServiceType, cluster);
     };
 
     function extractSummaryForAService(res) {
       var userStatusesSummary = res || {};
       vm.summary = _.find(userStatusesSummary, {
-        serviceId: "squared-fusion-uc"
+        serviceId: serviceType2ServiceId(vm.currentServiceType)
       });
     }
 
     USSService2.getStatusesSummary().then(extractSummaryForAService);
+  }
 
+  /* @ngInject */
+  function CallClusterSettingsController($stateParams) {
+    var vm = this;
+    vm.cluster = $stateParams.cluster;
+  }
+
+  /* @ngInject */
+  function CallDetailsController($state, $modal, $stateParams, ClusterService) {
+    var vm = this;
+    vm.state = $state;
+    vm.clusterId = $stateParams.cluster.id;
+    vm.serviceType = $stateParams.serviceType;
+
+    vm.cluster = ClusterService.getClusters()[vm.clusterId];
+
+    vm.selectedService = _.find(vm.cluster.services, {
+      service_type: vm.serviceType
+    });
+    vm.managementService = _.find(vm.cluster.services, {
+      service_type: "c_mgmt"
+    });
+    //console.log("selected service ", vm.selectedService);
+
+    //TODO: Don't like this linking to routes...
+    vm.route = serviceType2RouteName(vm.serviceType);
+
+    vm.upgrade = function () {
+      $modal.open({
+        templateUrl: "modules/hercules/calendar-service/software-upgrade.html",
+        controller: SoftwareUpgradeController,
+        controllerAs: "softwareUpgrade"
+      }).result.then(function () {
+        //console.log("Starting upgrade dialog...");
+      });
+    };
+
+    vm.showAlarms = function () {
+      $modal.open({
+        templateUrl: "modules/hercules/calendar-service/alarms.html",
+        controller: AlarmsController,
+        controllerAs: "alarmsDialog"
+      }).result.then(function () {
+        //console.log("Starting alarms dialog...");
+      });
+    };
+
+    /* @ngInject */
+    function SoftwareUpgradeController($modalInstance) {
+      var modalVm = this;
+      modalVm.newVersion = vm.selectedService.not_approved_package.version;
+      modalVm.oldVersion = vm.selectedService.connectors[0].version;
+      modalVm.ok = function () {
+        $modalInstance.close();
+      };
+      modalVm.cancel = function () {
+        $modalInstance.dismiss();
+      };
+      modalVm.clusterName = vm.cluster.name;
+      //console.log("SoftwareUpgradeController", modalVm.clusterName);
+    }
+
+    /* @ngInject */
+    function AlarmsController($modalInstance) {
+      var alarmsVm = this;
+      alarmsVm.connectors = vm.selectedService.connectors;
+
+      alarmsVm.colorFromSeverity = function (alarm) {
+        if (alarm.severity === "error") {
+          return "red";
+        } else if (alarm.severity === "critical") {
+          return "orange";
+        } else {
+          return "black";
+        }
+      };
+
+      alarmsVm.ok = function () {
+        $modalInstance.close();
+      };
+      alarmsVm.cancel = function () {
+        $modalInstance.dismiss();
+      };
+    }
   }
 
   /* @ngInject */
@@ -50,20 +178,22 @@
     };
   }
 
-  /* Based on notifiction-config-controller used in the old cluster view */
   /* @ngInject */
   function CallServiceSettingsController($scope, $modal, ServiceDescriptor, Authinfo, USSService2, $stateParams, NotificationConfigService, MailValidatorService, XhrNotificationService) {
     var vm = this;
     vm.config = "";
-
     vm.serviceEnabled = false;
+    vm.serviceType = $stateParams.serviceType;
+    vm.serviceId = serviceType2ServiceId(vm.serviceType);
+
+    //console.log("Settingscontroller stateparams:", $stateParams)
 
     vm.squaredFusionEc = false;
     ServiceDescriptor.isServiceEnabled("squared-fusion-ec", function (a, b) {
       vm.squaredFusionEc = b;
     });
 
-    ServiceDescriptor.isServiceEnabled("squared-fusion-uc", function (a, b) {
+    ServiceDescriptor.isServiceEnabled(vm.serviceId, function (a, b) {
       vm.serviceEnabled = b;
     });
 
@@ -168,6 +298,8 @@
   angular
     .module('Hercules')
     .controller('CallController', CallController)
+    .controller('CallDetailsController', CallDetailsController)
+    .controller('CallClusterSettingsController', CallClusterSettingsController)
     .controller('CallServiceSettingsController', CallServiceSettingsController)
     .controller('DisableConfirmController', DisableConfirmController);
 

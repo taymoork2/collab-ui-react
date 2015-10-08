@@ -1,5 +1,8 @@
 @import 'builder/_aa-builder';
 
+/*** old UI styles TO BE REMOVED ***/
+/* if using any of these older styles, please move to new section for UX 12.x and beyond */
+
 .aa-validation .popover {
   white-space: nowrap;
 }
@@ -20,63 +23,6 @@
     color: $brand-primary;
     display: inline-block;
     vertical-align: top;
-  }
-}
-
-.aa-landing-header-pad {
-  padding-bottom: 100px;
-}
-.aa-header-style {
-  width: 650px;
-  float: left;
-}
-
-.aa-template-header{
-  color: $brand-info;
-  margin-bottom: 1px;
-}
-
-#aa-template-tile1 {
-  padding: 8px 2px 8px 2px;
-  margin: 0px -2px 0px -2px;
-  width: 200px;
-  height: 160px;
-  border-right: 0px;
-}
-
-#aa-template-tile2 {
-  padding: 8px 2px 8px 2px;
-  margin: 0px -2px 0px -2px;
-  width: 200px;
-  height: 160px;
-  border-right: 0px;
-}
-
-#aa-template-tile3 {
-  padding: 8px 2px 8px 2px;
-  margin: 0px -2px 0px -2px;
-  width: 200px;
-  height: 160px;
-}
-
-#aa-template-tile4 {
-  padding: 8px 2px 8px 2px;
-  margin: 0px -2px 0px -2px;
-  width: 200px;
-  height: 160px;
-}
-
-.aa-template-tile {
-  @include tile;
-  .aa-number-name {
-    font-family: $brand-font-cisco-TT-Light;
-    font-size: 16px;
-    color: $brand-primary;
-    display: inline-block;
-    vertical-align: top;
-  }
-  &:hover {
-    cursor: pointer;
   }
 }
 
@@ -264,3 +210,101 @@ a.dropdown-toggle:focus {
 .aa-tooltip .tooltip.top {
   border-top-color: transparent !important;
 }
+
+/**** begin styles for UX 12.x and beyond ****/
+
+.aa-landing {
+  margin-top: 1.5rem;
+  margin-left: 1.5rem;
+}
+
+.aa-template-header {
+  color: $brand-info;
+  margin-bottom: 1px;
+}
+
+.aa-template-card {
+  padding: 0;
+  width: 13rem;
+  height: 13rem;
+  .aa-template-card-section {
+    &:hover {
+      cursor: pointer;
+      background-color: $gray-lightest;
+    }
+  }
+  .aa-icon-container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-top: 1.5rem;
+    padding-bottom: 0
+  }
+  .aa-schedule-icon {
+    @extend .icon;
+    @extend .icon-Clock;
+    font-size: 1.5em;
+    text-align: center;
+    color: $brand-default;
+  }
+  .aa-audio-icon {
+    @extend .icon;
+    @extend .icon-Audio;
+    font-size: 1.5em;
+    text-align: center;
+    color: $brand-default;
+  }
+  .aa-headset-icon {
+    @extend .icon;
+    @extend .icon-Headset;
+    font-size: 1.5em;
+    text-align: center;
+    color: $brand-default;
+  }
+  .aa-playlist-icon {
+    @extend .icon;
+    @extend .icon-Playlist;
+    font-size: 1.5em;
+    text-align: center;
+    color: $brand-default;
+  }
+}
+
+/*** begin styles for saved AA cards ***/
+
+/* pending any toolkit chnages and integration of styles especially those overridden, ie @include vr-spacing */
+
+article header.aa-card-header.compact {
+  @include vr-spacing(pl, 1);
+  @include vr-spacing(pr, 1);
+  @include vr-spacing(pt, .25);
+  @include vr-spacing(pb, .25);
+  .aa-header-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+section.aa-card-section {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: .5rem;
+  padding-bottom: 0;
+  .aa-card-resource {
+    @include vr-spacing(pt, .25);
+    min-height: 2rem;
+  }
+  .aa-card-more-resource {
+    min-height: 1.5rem;
+  }
+  .aa-card-toolbar {
+    float: right;
+    padding-bottom: .25rem;
+  }
+  &:hover {
+    cursor: pointer;
+    background-color: $gray-lightest;
+  }
+}
+
+/*** end styles for saved AA cards ***/
