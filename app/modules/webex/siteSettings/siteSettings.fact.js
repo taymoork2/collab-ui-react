@@ -513,7 +513,7 @@
 
             // iframeUrl = iframeUrl.replace('wbxadmin', 'adm3100');
             var uiSref =
-              "site-setting({" +
+              "site-settings.site-setting({" +
               "  siteUrl: " + "'" + _this.webExSiteSettingsObj.siteUrl + "'" + "," +
               "  webexPageId: " + "'" + webexPageId + "'" + "," +
               "  settingPageIframeUrl: " + "'" + iframeUrl + "'" +
