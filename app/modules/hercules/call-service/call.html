@@ -1,20 +1,51 @@
-<div class="hercules">
+<div ng-show="call.serviceEnabled || call.startSetupClicked">
 
-  <div class="page-header">
-    <div class="page-title">
-      <span class="title-heading">Call Service</span>
+  <div class="hercules">
 
-      <span class="menu">
+    <div class="page-header">
+      <div class="page-title">
+        <span translate="hercules.serviceNames.{{call.currentServiceId}}" class="title-heading">
+        </span>
 
-        <a ui-sref-active="active" ui-sref="call-service.list">Resources</a>
-        <a ui-sref-active="active" ui-sref="call-service.settings">Settings</a>
-        <a ui-sref-active="active" ui-sref="call-service.about">About</a>
-      </span>
+        <hercules-notifications></hercules-notifications>
+
+        <span>
+          <i class="icon icon-circle-user"/>
+          {{call.summary.activated}} activated |
+          {{call.summary.notActivated}} pending |
+          {{call.summary.error}} needs attention
+        </span>
+
+        <span class="menu">
+
+          <a ui-sref-active="active" ui-sref="{{call.route}}.list">Resources</a>
+          <a ui-sref-active="active" ui-sref="{{call.route}}.settings({serviceType:call.currentServiceType})">Settings</a>
+          <a ui-sref-active="active" ui-sref="{{call.route}}.about">About</a>
+        </span>
+
+      </div>
+    </div>
+
+    <div ui-view="fullPane" class="content">
 
     </div>
-  </div>
-
-  <div ui-view="fullPane" class="content">
 
   </div>
 </div>
+
+
+<div ng-hide="call.serviceEnabled || call.startSetupClicked" class="content">
+  <div class="fusion-welcome">
+    <h3>Extend the cloud to your premises</h3>
+
+    <p>Connect your Cisco VCS to the Collaboration Cloud to add this service.</p>
+    <br>
+
+    <p>Read the general Cloud Extensions and specific Service pre-requisites and click Start Setup.</p>
+    <button class="btn btn-info" ng-click="call.startSetup()">
+      Start Setup
+    </button>
+  </div>
+</div>
+
+
