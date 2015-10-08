@@ -1,6 +1,6 @@
 {
-  "ceWelcome": {
-    "callExperienceName": "AA Welcome",
+  "ceCombined": {
+    "callExperienceName": "AA Combined",
     "assignedResources": [{
       "trigger": "incomingCall",
       "type": "directoryNumber",
@@ -18,11 +18,15 @@
           "description": "Operator",
           "destination": "1111"
         }
+      }, {
+        "disconnect": {
+          "treatment": "none"
+        }
       }]
     }]
   },
 
-  "welcomeMenu": {
+  "combinedMenu": {
     "type": "MENU_WELCOME",
     "headers": [],
     "entries": [{

@@ -350,8 +350,16 @@
         }
         menuEntry.addAction(action);
       } else if (angular.isDefined(inAction.disconnect)) {
-        // don't add disconnect to UI model
-        return;
+        action = new Action('disconnect', '');
+        if (angular.isDefined(inAction.disconnect.treatment)) {
+          action.setValue(inAction.disconnect.treatment);
+        } else {
+          action.setValue('none');
+        }
+        if (angular.isDefined(inAction.disconnect.description)) {
+          action.setDescription(inAction.disconnect.description);
+        }
+        menuEntry.addAction(action);
       } else if (angular.isDefined(inAction.routeToDialed)) {
         action = new Action('routeToDialed', '');
         if (angular.isDefined(inAction.routeToDialed.description)) {
@@ -525,10 +533,23 @@
 
       var welcomeMenu = getWelcomeMenu(ceRecord, actionSetName);
       var optionMenu = getOptionMenu(ceRecord, actionSetName);
-      if (angular.isDefined(welcomeMenu) && angular.isDefined(optionMenu)) {
-        welcomeMenu.addEntry(optionMenu);
+      if (angular.isDefined(welcomeMenu)) {
+        if (angular.isDefined(optionMenu)) {
+          welcomeMenu.addEntry(optionMenu);
+        }
+        // remove the disconnect action because we manually add it to the UI
+        var entries = welcomeMenu.entries;
+        if (entries.length > 0) {
+          var lastMenuEntry = entries[entries.length - 1];
+          if (angular.isDefined(lastMenuEntry.actions) && lastMenuEntry.actions.length > 0) {
+            var action = lastMenuEntry.actions[0];
+            if (action.name === 'disconnect') {
+              entries = entries.pop();
+            }
+          }
+        }
+        return welcomeMenu;
       }
-      return welcomeMenu;
     }
 
     function addDisconnectAction(actions) {

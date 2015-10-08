@@ -28,6 +28,11 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     }]
   };
 
+  // Combined menu
+  var combmenu = getJSONFixture('huron/json/autoAttendant/combinedMenu.json');
+  var ceCombined = combmenu.ceCombined;
+  var combinedMenu = combmenu.combinedMenu;
+
   // Option menu
   var omenu = getJSONFixture('huron/json/autoAttendant/optionMenu.json');
   var ceOption = omenu.ceOption;
@@ -73,12 +78,23 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   });
 
   describe('updateCombinedMenu', function () {
-    it('should be able to update a ceRecord with welcomeMenu', function () {
+    it('should be able to update a ceRecord with combinedMenu', function () {
+      var _ceRecord = angular.copy(ceInfos[0]);
+      _ceRecord.callExperienceName = 'AA Combined';
+      var _combinedMenu = AutoAttendantCeMenuModelService.getCombinedMenu(ceCombined, 'regularOpenActions');
+      var success = AutoAttendantCeMenuModelService.updateCombinedMenu(_ceRecord, 'regularOpenActions', _combinedMenu);
+      expect(angular.equals(_ceRecord, ceCombined)).toBe(true);
+    });
+  });
+
+  describe('updateMenu', function () {
+    it('should be able to update an ceRecord with welcomeMenu', function () {
       var _ceRecord = angular.copy(ceInfos[0]);
       _ceRecord.callExperienceName = 'AA Welcome';
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcome, 'regularOpenActions');
-      var success = AutoAttendantCeMenuModelService.updateCombinedMenu(_ceRecord, 'regularOpenActions', _welcomeMenu);
+      var success = AutoAttendantCeMenuModelService.updateMenu(_ceRecord, 'regularOpenActions', _welcomeMenu);
       expect(angular.equals(_ceRecord, ceWelcome)).toBe(true);
+      expect(success).toBe(true);
     });
   });
 
