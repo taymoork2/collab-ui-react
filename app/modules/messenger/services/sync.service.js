@@ -233,7 +233,7 @@
       var defer = $q.defer();
 
       // Deep copy to prevent only reference copy
-      var previousSettings = JSON.parse(JSON.stringify(syncStatus));
+      var previousSettings = _.clone(syncStatus);
 
       // Update sync mode
       if (isDirSync()) {
@@ -265,7 +265,7 @@
         Log.error('SyncService::patchSync(): ' + fullError);
 
         // Reset to previous settings
-        syncStatus = JSON.parse(JSON.stringify(previousSettings));
+        syncStatus = previousSettings;
 
         defer.reject({
           status: status,
