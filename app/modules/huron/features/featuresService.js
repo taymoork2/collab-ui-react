@@ -2,10 +2,10 @@
   'use strict';
 
   angular.module('uc.hurondetails')
-    .factory('ListFeaturesService', ListFeaturesService);
+    .factory('FeaturesService', FeaturesService);
 
   /* @ngInject */
-  function ListFeaturesService(Authinfo, FeatureHuntGroupServiceV2, $q) {
+  function FeaturesService(Authinfo, FeatureHuntGroupServiceV2, $q) {
     var service = {
       listFeatures: listFeatures
     };

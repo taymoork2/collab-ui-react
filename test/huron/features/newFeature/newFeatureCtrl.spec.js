@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: NewFeatureCtrl', function () {
+describe('Controller: FeatureCtrl', function () {
 
   beforeEach(module('Huron'));
 
@@ -25,27 +25,22 @@ describe('Controller: NewFeatureCtrl', function () {
     $scope = $rootScope.$new();
     $modal = _$modal_;
 
-    controller = $controller('NewFeatureCtrl', {
-      $scope: $scope,
+    controller = $controller('FeaturesCtrl', {
       $modal: $modal
     });
 
     spyOn($modal, 'open').and.returnValue(fakeModal);
   }));
 
-  it("$scope.feature is set empty when NewFeatureCtrl is initialized.", function () {
-    expect($scope.feature).toEqual("");
-  });
-
-  it("$scope.feature is set by NewFeatureCtrl when input provided from Modal dialog.", function () {
-    $scope.open();
+  it("FeatureCtrl.feature is set by NewFeatureCtrl when input provided from Modal dialog.", function () {
+    controller.newFeature();
     fakeModal.close("AA");
-    expect($scope.feature).toEqual("AA");
+    expect(controller.feature).toEqual("AA");
   });
 
-  it("$scope.feature is set empty by NewFeatureCtrl when Modal dialog dismissed.", function () {
-    $scope.open();
+  it("FeatureCtrl.feature is set empty by NewFeatureCtrl when Modal dialog dismissed.", function () {
+    controller.newFeature();
     fakeModal.dismiss('cancel');
-    expect($scope.feature).toEqual("");
+    expect(controller.feature).toEqual("");
   });
 });

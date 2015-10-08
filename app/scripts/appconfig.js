@@ -528,23 +528,59 @@ angular
           templateUrl: 'modules/core/groups/groupPreview/groupPreview.tpl.html',
           controller: 'GroupPreviewCtrl'
         })
-        .state('organization', {
-          url: '/organization',
-          templateUrl: 'modules/core/organizations/organizationOverview/organizationOverview.tpl.html',
-          controller: 'OrganizationOverviewCtrl',
+        .state('organizations', {
+          url: '/organizations',
+          templateUrl: 'modules/core/organizations/organizationList/organizationList.tpl.html',
+          controller: 'ListOrganizationsCtrl',
           parent: 'main'
         })
-        .state('organizationAdd', {
-          url: '/add-organization',
-          templateUrl: 'modules/core/organizations/organizationAdd/organizationAdd.tpl.html',
-          controller: 'OrganizationAddCtrl',
-          controllerAs: 'orgAdd',
-          parent: 'main'
+        .state('organization-overview', {
+          parent: 'sidepanel',
+          views: {
+            'sidepanel@': {
+              controller: 'OrganizationOverviewCtrl',
+              controllerAs: 'orgOverview',
+              templateUrl: 'modules/core/organizations/organizationOverview/organizationOverview.tpl.html'
+            },
+            'header@organization-overview': {
+              templateUrl: 'modules/core/organizations/organizationOverview/organizationHeader.tpl.html'
+            }
+          },
+          params: {
+            currentOrganization: null
+          },
+          data: {
+            displayName: 'Overview'
+          }
         })
-        .state('organizationAdd.info', {
+        .state('organization-overview.features', {
+          templateUrl: 'modules/core/organizations/organizationFeatures/organizationFeatures.tpl.html',
+          controller: 'OrganizationFeaturesCtrl',
+          controllerAs: 'features',
+          params: {
+            reloadToggle: false
+          },
+          data: {
+            displayName: 'Beta Features'
+          }
+        })
+        .state('organization-overview.add', {
+          parent: 'modalLarge',
+          views: {
+            'modal@': {
+              controller: 'OrganizationAddCtrl',
+              controllerAs: 'orgAdd',
+              template: '<div ui-view="orgAdd"></div>'
+            },
+            'orgAdd@organization-overview.add': {
+              templateUrl: 'modules/core/organizations/organizationAdd/organizationAdd.tpl.html'
+            }
+          }
+        })
+        .state('organization-overview.add.info', {
           templateUrl: 'modules/core/organizations/organizationAdd/organizationAdd.tpl.html'
         })
-        .state('organizationAdd.addNumbers', {
+        .state('organization-overview.add.addNumbers', {
           templateUrl: 'modules/core/organizations/organizationAdd/addNumbers.tpl.html',
           controller: 'DidAddCtrl',
           controllerAs: 'didAdd',
@@ -781,14 +817,13 @@ angular
         })
         .state('devices-redux5', {
           abstract: true,
-          url: '/devices-redux5',
           templateUrl: 'modules/squared/devicesRedux5/devices.html',
           controller: 'DevicesReduxCtrl5',
           controllerAs: 'devices',
           parent: 'main-redux'
         })
         .state('devices-redux5.search', {
-          url: '/search',
+          url: '/devices-redux',
           views: {
             'leftPanel': {
               templateUrl: 'modules/squared/devicesRedux5/list.html'
@@ -796,7 +831,7 @@ angular
           }
         })
         .state('devices-redux5.details', {
-          url: '/details',
+          url: '/devices-redux/details',
           views: {
             'leftPanel': {
               controllerAs: 'deviceDetails',
@@ -1272,6 +1307,7 @@ angular
           controllerAs: 'linesListCtrl'
         })
         .state('huronsettings', {
+          url: '/settings',
           parent: 'hurondetails',
           templateUrl: 'modules/huron/callRouter/companyNumber.tpl.html',
           controller: 'CallRouterCtrl',
@@ -1280,16 +1316,9 @@ angular
         .state('huronfeatures', {
           url: '/features',
           parent: 'hurondetails',
-          controller: 'ListFeaturesCtrl',
-          controllerAs: 'listFeaturesCtrl',
-          templateUrl: 'modules/huron/features/listFeatures.tpl.html',
-        })
-        .state('huronnewfeature', {
-          url: '/newfeature',
-          parent: 'hurondetails',
-          controller: 'NewFeatureCtrl',
-          controllerAs: 'newFeatureCtrl',
-          templateUrl: 'modules/huron/features/newFeature/newFeature.tpl.html',
+          controller: 'FeaturesCtrl',
+          controllerAs: 'featuresCtrl',
+          templateUrl: 'modules/huron/features/features.tpl.html',
         });
     }
   ]);
@@ -1306,9 +1335,12 @@ angular
           parent: 'main'
         })
         .state('calendar-service', {
-          templateUrl: 'modules/hercules/calendar-service/calendar.html',
-          controller: 'CalendarController',
-          controllerAs: 'calendar',
+          templateUrl: 'modules/hercules/call-service/call.html',
+          controller: 'CallController',
+          controllerAs: 'call',
+          data: {
+            serviceType: "c_cal"
+          },
           parent: 'main',
           abstract: true
         })
@@ -1316,28 +1348,29 @@ angular
           url: '/services/calendar',
           views: {
             'fullPane': {
-              templateUrl: 'modules/hercules/calendar-service/calendar-list.html',
-              controller: 'CalendarController',
-              controllerAs: 'calendar'
+              templateUrl: 'modules/hercules/call-service/call-list.html',
+              controller: 'CallController',
+              controllerAs: 'call'
             }
           }
         })
         .state('calendar-service.list.details', {
           views: {
             'rightPane': {
-              controllerAs: 'calendarDetails',
-              controller: 'CalendarDetailsController',
-              templateUrl: 'modules/hercules/calendar-service/calendar-details.html'
+              controllerAs: 'callDetails',
+              controller: 'CallDetailsController',
+              templateUrl: 'modules/hercules/call-service/call-details.html'
             }
           },
           params: {
-            cluster: null
+            cluster: null,
+            serviceType: "c_cal"
           }
         })
         .state('calendar-service.list.details.cluster-settings', {
           views: {
             'details-pane': {
-              templateUrl: 'modules/hercules/calendar-service/cluster-settings.html'
+              templateUrl: 'modules/hercules/call-service/cluster-settings.html'
             }
           }
         })
@@ -1345,7 +1378,7 @@ angular
           url: '/services/calendar/about',
           views: {
             'fullPane': {
-              templateUrl: 'modules/hercules/calendar-service/about.html'
+              templateUrl: 'modules/hercules/call-service/calendar-about.html'
             }
           }
         })
@@ -1353,44 +1386,72 @@ angular
           url: '/services/calendar/settings',
           views: {
             'fullPane': {
-              controllerAs: 'calendarServiceSettings',
-              controller: 'CalendarServiceSettingsController',
-              templateUrl: 'modules/hercules/calendar-service/calendar-service-settings.html'
+              controllerAs: 'callServiceSettings',
+              controller: 'CallServiceSettingsController',
+              templateUrl: 'modules/hercules/call-service/calendar-service-settings.html'
             }
+          },
+          params: {
+            serviceType: "c_cal"
           }
         })
         .state('call-service', {
           templateUrl: 'modules/hercules/call-service/call.html',
           controller: 'CallController',
           controllerAs: 'call',
+          data: {
+            serviceType: "c_ucmc"
+          },
           parent: 'main',
-          url: '/services/call'
         })
         .state('call-service.list', {
+          url: '/services/call',
           views: {
             'fullPane': {
               templateUrl: 'modules/hercules/call-service/call-list.html',
               controller: 'CallController',
               controllerAs: 'call'
             }
+          }
+        })
+        .state('call-service.list.details', {
+          views: {
+            'rightPane': {
+              controllerAs: 'callDetails',
+              controller: 'CallDetailsController',
+              templateUrl: 'modules/hercules/call-service/call-details.html'
+            }
           },
-          url: '/list'
+          params: {
+            cluster: null,
+            serviceType: "c_ucmc"
+          }
+        })
+        .state('call-service.list.details.cluster-settings', {
+          views: {
+            'details-pane': {
+              templateUrl: 'modules/hercules/call-service/cluster-settings.html'
+            }
+          }
         })
         .state('call-service.settings', {
-          url: '/settings',
+          url: '/services/call/settings',
           views: {
             'fullPane': {
               controllerAs: 'callServiceSettings',
               controller: 'CallServiceSettingsController',
               templateUrl: 'modules/hercules/call-service/call-service-settings.html'
             }
+          },
+          params: {
+            serviceType: "c_ucmc"
           }
         })
         .state('call-service.about', {
           url: '/services/call/about',
           views: {
             'fullPane': {
-              templateUrl: 'modules/hercules/call-service/about.html'
+              templateUrl: 'modules/hercules/call-service/call-about.html'
             }
           }
         })

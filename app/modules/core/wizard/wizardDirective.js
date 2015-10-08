@@ -79,76 +79,51 @@
     vm.isCurrentTab = isCurrentTab;
     vm.loadOverview = loadOverview;
     vm.showDoItLater = false;
-    vm.gsxFeature = false;
     vm.wizardNextLoad = false;
 
-    Userservice.getUser('me', function (data, status) {
-      FeatureToggleService.getFeaturesForUser(data.id, 'gsxdemo').then(function (value) {
-        vm.gsxFeature = value;
-      }).finally(function () {
+    // initialize tab for ng-controller
+    init();
+
+    // If tabs change (feature support in SetupWizard) and a step is not defined, re-initialize
+    $scope.$watchCollection('tabs', function (tabs) {
+      if (tabs && tabs.length > 0 && angular.isUndefined(vm.current.step)) {
         init();
-      });
+      }
     });
 
-    function init() {
+    function initCurrent() {
       if ($stateParams.currentTab) {
-        var tabIndex = _.findIndex(getTabs(), function (t) {
-          return t.name === $stateParams.currentTab;
+        vm.current.tab = _.findWhere(getTabs(), {
+          name: $stateParams.currentTab
         });
-        vm.current.tab = getTabs()[tabIndex];
       } else {
         vm.current.tab = getTabs()[0];
       }
-      vm.current.step = getSteps()[0];
+      var steps = getSteps();
+      if (steps.length > 0) {
+        vm.current.step = steps[0];
+      }
+    }
 
+    function init() {
+      initCurrent();
       setNextText();
       vm.isNextDisabled = false;
-
-      if (vm.gsxFeature) {
-        var msgIndex = 0;
-        var callingIndex = -1;
-        $scope.tabs.forEach(function (obj, ind, arr) {
-          if (obj.name === 'messagingSetup') {
-            msgIndex = ind;
-            obj.label = 'firstTimeWizard.spark';
-            obj.description = 'firstTimeWizard.sparkStub';
-            obj.icon = 'icon-spark';
-          } else if (obj.name === 'serviceSetup') {
-            callingIndex = ind;
-            obj.label = 'firstTimeWizard.calling';
-            obj.icon = 'icon-calls';
-          }
-        });
-        $scope.tabs.splice(msgIndex + 1, 0, {
-          name: 'webex',
-          label: 'firstTimeWizard.webex',
-          description: 'firstTimeWizard.webexStub',
-          icon: 'icon-webex',
-          title: 'firstTimeWizard.webex',
-          steps: [{
-            name: 'init',
-            template: 'modules/core/setupWizard/finish.tpl.html'
-          }]
-        });
-
-        if (callingIndex > -1) {
-          var calling = $scope.tabs.splice(callingIndex, 1)[0];
-          $scope.tabs.splice(msgIndex + 1, 0, calling);
-        }
-      }
     }
 
     function getSteps() {
       var tab = getTab();
-      if (tab.steps) {
+      if (angular.isArray(tab.steps)) {
         return tab.steps;
-      } else if (tab.subTabs) {
+      } else if (angular.isArray(tab.subTabs) && tab.subTabs.length > 0) {
         for (var i = 0; i < tab.subTabs.length; i++) {
           if (angular.isUndefined(getSubTab()) || tab.subTabs[i] === getSubTab()) {
             vm.current.subTab = tab.subTabs[i];
             return tab.subTabs[i].steps;
           }
         }
+      } else {
+        return [];
       }
     }
 
