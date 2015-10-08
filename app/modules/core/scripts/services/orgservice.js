@@ -162,6 +162,27 @@ angular.module('Core')
           });
         },
 
+        listOrgs: function (filter, callback) {
+          if (!filter || filter.length <= 3) {
+            callback('error', 100);
+            return;
+          }
+          var orgUrl = Config.getProdAdminServiceUrl() + 'organizationstemp?displayName=' + filter;
+
+          $http.get(orgUrl)
+            .success(function (data, status) {
+              data = data || {};
+              data.success = true;
+              callback(data, status);
+            })
+            .error(function (data, status) {
+              data = data || {};
+              data.success = false;
+              data.status = status;
+              callback(data, status);
+            });
+        },
+
         getOrgCacheOption: function (callback, oid, config) {
           var scomUrl = null;
           if (oid) {
@@ -187,7 +208,6 @@ angular.module('Core')
               callback(data, status);
             });
         }
-
       };
     }
   ]);

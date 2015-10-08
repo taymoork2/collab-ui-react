@@ -25,7 +25,7 @@
     vm.isFusionCal = Authinfo.isFusionCal();
 
     Userservice.getUser('me', function (data, status) {
-      FeatureToggleService.getFeaturesForUser(data.id, 'gsxdemo').then(function (value) {
+      FeatureToggleService.getFeatureForUser(data.id, 'gsxdemo').then(function (value) {
         vm.gsxFeature = value;
       }).finally(function () {
         init();
@@ -138,6 +138,38 @@
           init();
         });
     }
+
+    function getUserFeatures() {
+      // to see user features, you must either be a support member or a team member
+      if (!canQueryUserFeatures()) {
+        return;
+      }
+
+      FeatureToggleService.getFeaturesForUser(vm.currentUser.id).then(function (response) {
+        vm.features = [];
+        if (!(response.data || response.data.developer)) {
+          return;
+        }
+        var allFeatures = response.data.developer;
+        _.each(allFeatures, function (el) {
+          if (el.val !== 'false' && el.val !== '0') {
+            var newEl = {
+              key: el.key
+            };
+            if (el.val !== 'true') {
+              newEl.val = el.val;
+            }
+            vm.features.push(newEl);
+          }
+        });
+      });
+    }
+
+    function canQueryUserFeatures() {
+      return Authinfo.isSquaredTeamMember() || Authinfo.isAppAdmin();
+    }
+
+    getUserFeatures();
 
     $scope.$on('USER_LIST_UPDATED', function () {
       getCurrentUser();

@@ -528,23 +528,59 @@ angular
           templateUrl: 'modules/core/groups/groupPreview/groupPreview.tpl.html',
           controller: 'GroupPreviewCtrl'
         })
-        .state('organization', {
-          url: '/organization',
-          templateUrl: 'modules/core/organizations/organizationOverview/organizationOverview.tpl.html',
-          controller: 'OrganizationOverviewCtrl',
+        .state('organizations', {
+          url: '/organizations',
+          templateUrl: 'modules/core/organizations/organizationList/organizationList.tpl.html',
+          controller: 'ListOrganizationsCtrl',
           parent: 'main'
         })
-        .state('organizationAdd', {
-          url: '/add-organization',
-          templateUrl: 'modules/core/organizations/organizationAdd/organizationAdd.tpl.html',
-          controller: 'OrganizationAddCtrl',
-          controllerAs: 'orgAdd',
-          parent: 'main'
+        .state('organization-overview', {
+          parent: 'sidepanel',
+          views: {
+            'sidepanel@': {
+              controller: 'OrganizationOverviewCtrl',
+              controllerAs: 'orgOverview',
+              templateUrl: 'modules/core/organizations/organizationOverview/organizationOverview.tpl.html'
+            },
+            'header@organization-overview': {
+              templateUrl: 'modules/core/organizations/organizationOverview/organizationHeader.tpl.html'
+            }
+          },
+          params: {
+            currentOrganization: null
+          },
+          data: {
+            displayName: 'Overview'
+          }
         })
-        .state('organizationAdd.info', {
+        .state('organization-overview.features', {
+          templateUrl: 'modules/core/organizations/organizationFeatures/organizationFeatures.tpl.html',
+          controller: 'OrganizationFeaturesCtrl',
+          controllerAs: 'features',
+          params: {
+            reloadToggle: false
+          },
+          data: {
+            displayName: 'Beta Features'
+          }
+        })
+        .state('organization-overview.add', {
+          parent: 'modalLarge',
+          views: {
+            'modal@': {
+              controller: 'OrganizationAddCtrl',
+              controllerAs: 'orgAdd',
+              template: '<div ui-view="orgAdd"></div>'
+            },
+            'orgAdd@organization-overview.add': {
+              templateUrl: 'modules/core/organizations/organizationAdd/organizationAdd.tpl.html'
+            }
+          }
+        })
+        .state('organization-overview.add.info', {
           templateUrl: 'modules/core/organizations/organizationAdd/organizationAdd.tpl.html'
         })
-        .state('organizationAdd.addNumbers', {
+        .state('organization-overview.add.addNumbers', {
           templateUrl: 'modules/core/organizations/organizationAdd/addNumbers.tpl.html',
           controller: 'DidAddCtrl',
           controllerAs: 'didAdd',

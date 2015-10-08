@@ -209,7 +209,9 @@ angular.module('Core')
           var scimUrl = Config.getScimUrl(Authinfo.getOrgId()) + '/' + userid;
           var userUrl = scimUrl;
 
-          $http.get(userUrl)
+          $http.get(userUrl, {
+              cache: true
+            })
             .success(function (data, status) {
               data = data || {};
               data.success = true;

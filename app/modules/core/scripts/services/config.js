@@ -189,6 +189,7 @@ angular.module('Core')
         supportUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt',
 
         usersperpage: 100,
+        orgsPerPage: 100,
         meetingsPerPage: 50,
         alarmsPerPage: 50,
         eventsPerPage: 50,
@@ -308,13 +309,8 @@ angular.module('Core')
           subPages: [{
             title: 'tabs.organizationTab',
             desc: 'tabs.organizationTabDesc',
-            state: 'organization',
-            link: '#organization'
-          }, {
-            title: 'tabs.addOrganizationTab',
-            desc: 'tabs.addOrganizationTabDesc',
-            state: 'organizationAdd',
-            link: '#add-organization'
+            state: 'organizations',
+            link: '#organizations'
           }, {
             title: 'tabs.callRoutingTab',
             desc: 'tabs.callRoutingTabDesc',
@@ -511,6 +507,10 @@ angular.module('Core')
           } else {
             return this.adminServiceUrl.prod;
           }
+        },
+
+        getProdAdminServiceUrl: function () {
+          return this.adminServiceUrl.prod;
         },
 
         getCsdmServiceUrl: function () {
@@ -812,7 +812,7 @@ angular.module('Core')
           'webex-reports',
           'webex-reports-iframe'
         ],
-        Application: ['organizationAdd']
+        Application: ['organizations', 'organization-overview']
       };
 
       config.serviceStates = {
