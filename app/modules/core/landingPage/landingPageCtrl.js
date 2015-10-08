@@ -3,8 +3,8 @@
 /* global AmCharts, moment */
 
 angular.module('Core')
-  .controller('LandingPageCtrl', ['$scope', '$rootScope', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'CannedDataService', '$state',
-    function ($scope, $rootScope, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, CannedDataService, $state) {
+  .controller('LandingPageCtrl', ['$scope', '$rootScope', '$timeout', 'Orgservice', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'CannedDataService', '$state',
+    function ($scope, $rootScope, $timeout, Orgservice, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, CannedDataService, $state) {
 
       $scope.isAdmin = false;
       var callsChart, conversationsChart, contentSharedChart;
@@ -245,6 +245,51 @@ angular.module('Core')
         });
       };
 
+      var getHealthTotal = function () {
+        ReportsService.healthMonitor(function (data, status) {
+          var totalSuccess = 0;
+          var totalWarning = 0;
+          var totalDanger = 0;
+
+          for (var i = 0; i < data.components.length; i++) {
+            var health = data.components[i].status;
+
+            if (health == 'operational') {
+              totalSuccess += 1;
+            } else if (health == 'degraded performance' || health == 'partial outage') {
+              totalWarning += 1;
+            } else if (health == 'major outage') {
+              totalDanger += 1;
+            }
+          }
+
+          if (totalSuccess == data.components.length) {
+            $scope.healthStatus = 'success';
+          } else if (totalDanger !== 0) {
+            $scope.healthStatus = 'danger';
+          } else if (totalWarning > 0) {
+            $scope.healthStatus = 'warning';
+          }
+        });
+      };
+
+      var getOrgInfo = function () {
+        Orgservice.getOrg(function (data, status) {
+          if (data.ssoEnabled) {
+            $scope.sso = true;
+          } else {
+            $scope.sso = false;
+          }
+
+          if (data.dirsyncEnabled) {
+            $scope.dirsync = true;
+          } else {
+            $scope.dirsync = false;
+          }
+
+        });
+      };
+
       $scope.inviteUsers = function () {
         var dlg = $dialogs.create('modules/squared/views/quicksetup_dialog.html', 'quicksetupDialogCtrl');
         dlg.result.then(function () {
@@ -254,6 +299,8 @@ angular.module('Core')
 
       $scope.isAdmin = Auth.isUserAdmin();
       getHealthMetrics();
+      getHealthTotal();
+      getOrgInfo();
 
       $scope.$on('AuthinfoUpdated', function () {
         $scope.isAdmin = Auth.isUserAdmin();

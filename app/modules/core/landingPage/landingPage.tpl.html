@@ -54,7 +54,7 @@
         </section>
 
         <!-- TODO: To be removed when monitoring service is refactored-->
-        <section class="monitoring-panel small-12 column">
+       <!--  <section class="monitoring-panel small-12 column">
           <h4 class="monitoring-section" translate="homePage.monitoring"></h4>
           <ul>
           <li ng-repeat="health in healthMetrics">
@@ -62,8 +62,42 @@
                 <i class="fa fa-circle"></i>&nbsp;&nbsp;<span>{{health.name}}</span>
             </a>
           </li>
+          </ul> 
+        </section> -->
+
+        <section class="monitoring-panel small-12 column">
+          <h4 class="monitoring-section">Status</h4>
+          <ul>
+          <li ng-if="healthStatus == 'success'">
+            <a ng-href="{{statusPageUrl}}" target="_blank" ng-class="'green'" class="monitoring-cell">
+              <i class="fa fa-circle green"></i>&nbsp;&nbsp;<span>Spark</span>
+            </a>
+          </li>
+          <li ng-if="healthStatus == 'danger'">
+            <a ng-href="{{statusPageUrl}}" target="_blank" class="monitoring-cell">
+              <i class="fa fa-circle red"></i>&nbsp;&nbsp;<span>Spark</span>
+            </a>
+          </li>
+          <li ng-if="healthStatus == 'warning'">
+            <a ng-href="{{statusPageUrl}}" target="_blank" class="monitoring-cell">
+              <i class="fa fa-circle yellow"></i>&nbsp;&nbsp;<span>Spark</span>
+            </a>
+          </li>
+          <li ng-if="sso" target="_blank" ng-class="'green'">
+              <i class="fa fa-circle"></i>&nbsp;&nbsp;<span>SSO</span>
+          </li>
+          <li ng-if="!sso" target="_blank">
+             <i class="fa fa-circle red"></i>&nbsp;&nbsp;<span>SSO</span>
+          </li>
+           <li ng-if="dirsync" target="_blank" ng-class="'green'">
+              <i class="fa fa-circle"></i>&nbsp;&nbsp;<span>Directory Sync</span>
+          </li>
+          <li ng-if="!dirsync" target="_blank">
+             <i class="fa fa-circle red"></i>&nbsp;&nbsp;<span>Directory Sync</span>
+          </li>
           </ul>
         </section>
+
 
         <!-- TODO: Replacement for when monitoring service is refactored
         <section class="monitoring-panel small-4 medium-12">
