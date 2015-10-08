@@ -101,6 +101,12 @@
     });
   })
 
+  .factory('FeatureHuntGroupServiceV2', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/features/huntgroups', {}, {
+      customerId: '@customerId'
+    });
+  })
+
   .factory('UserServiceVoice', function ($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/users/:userId', {
       customerId: '@customerId',
