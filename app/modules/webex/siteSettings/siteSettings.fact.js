@@ -511,7 +511,7 @@
             var iframePageLabelId = "webexSiteSettingsLabels.iframePageLabel_" + webexPageId;
             var iframePageLabel = $translate.instant(iframePageLabelId);
 
-            iframeUrl = iframeUrl.replace('wbxadmin', 'adm3100');
+            // iframeUrl = iframeUrl.replace('wbxadmin', 'adm3100');
             var uiSref =
               "site-setting({" +
               "  siteUrl: " + "'" + _this.webExSiteSettingsObj.siteUrl + "'" + "," +
