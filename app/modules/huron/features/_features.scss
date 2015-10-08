@@ -1,0 +1,109 @@
+.features{
+
+  &.features-content {
+    min-height: 100vh;
+    background-color: $brand-white;
+    @include vr-spacing(p, 1.5);
+  }
+}
+
+.feature-header {
+  display : flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  background-color: $brand-white;
+}
+
+.new-feature-button {
+  @include vr-spacing(mr, 0.375)
+}
+
+.cards-block{
+
+  @include vr-spacing(pt, 1.5);
+
+  .cs-card article {
+    height : rem-calc(195);
+  }
+  .cs-card article section {
+    display : flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .card-action-btn{
+    //font-size: 1.25rem;
+    @include vr-spacing(pt, 0.3);
+    @include vr-spacing(pb, 0);
+    @include vr-spacing(ph, 0);
+  }
+  .card-section {
+    flex : 0 1 auto;
+    align-self : auto;
+    display : block;
+    font-family: $brand-font-regular;//cisco sans light
+    font-size: rem-calc(16);
+    @include vr-spacing(pl, 1.4);
+    @include vr-spacing(pt, 0.8);
+    line-height: rem-calc(24);
+  }
+
+  .card-members {
+    color : $gray-dark;
+    font-family: $brand-font-regular;
+    font-size: rem-calc(16);
+    @include vr-spacing(pl, 1.4);
+    @include vr-spacing(pt, 0.875);
+  }
+
+  .card-footer {
+    width : 100%;
+    display : flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    @include vr-spacing(pb, 0.5);
+  }
+
+  .card-icon-div {
+    @include vr-spacing(pr, 1);
+    @include vr-spacing(pb, 0.2);
+  }
+
+  .card-icon {
+    display : block;
+    height : 2rem;
+    width : 2rem;
+    border-radius: 50%;
+    font-size: $font-size-h5;
+    background-color: $gray-lightest;
+    //@include vr-spacing(p, 0.37);
+    padding : 7px 6px 6px 6px;
+  }
+}
+
+.card-icon-color-AA{
+  color: $color-primary;
+}
+.card-icon-color-HG{
+  color:  $color-eggplant;
+}
+.card-icon-color-CP{
+  color: $color-alerts;
+}
+
+.spinner-icon{
+  height: 70vh;
+  display : flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+

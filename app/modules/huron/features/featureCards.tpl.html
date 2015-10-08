@@ -1,0 +1,39 @@
+<div class="cs-card-block cards-block">
+  <cs-card ng-repeat="huronFeature in huronFeaturesNavCtrl.listOfFeatures"
+           class="header-background {{ huronFeaturesNavCtrl.cardColors[huronFeature.filterValue] }}">
+    <article>
+      <header>
+        <div>
+          <p class="h5 left"> {{huronFeature.cardName}} </p>
+          <span class="pull-right" dropdown>
+            <button class="actions-button btn-none dropdown-toggle card-action-btn ">
+              <i class="icon icon-three-dots"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-primary actions-services" role="menu">
+              <li><a><span
+                ng-click="huronFeaturesNavCtrl.editHuronFeature((huronFeature))"
+                translate="huronFeatureDetails.editAction"></span></a></li>
+              <li><a><span
+                ng-click="huronFeaturesNavCtrl.deleteHuronFeature((huronFeature))"
+                translate="huronFeatureDetails.deleteAction"></span></a></li>
+            </ul></span>
+        </div>
+      </header>
+      <section>
+        <div>
+          <span class="card-section" ng-if="(huronFeature.numbers.length <= 2)"
+                ng-repeat="number in huronFeature.numbers">{{number}}</span>
+          <span class="card-section" ng-if="(huronFeature.numbers.length > 2)">{{huronFeature.numbers.length + ' '+ ('huronFeatureDetails.numbers' | translate)}}</span>
+        </div>
+        <!--<i class="icon icon-circle"></i>-->
+        <div class="card-footer">
+          <div class="left"><span ng-if="(huronFeature.filterValue === 'HG')" class="card-members left">
+                {{huronFeature.membersCount + ('huronFeatureDetails.members' | translate)}}</span></div>
+          <div class="right card-icon-div ">
+            <span class="card-icon card-icon-color-{{huronFeature.filterValue}}">{{huronFeature.featureName | translate}}</span>
+          </div>
+        </div>
+      </section>
+    </article>
+  </cs-card>
+</div>

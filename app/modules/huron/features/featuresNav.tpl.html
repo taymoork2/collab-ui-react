@@ -1,0 +1,16 @@
+<div class = "features features-content">
+  <!--Show Spinner Icon until controller received data from back-end-->
+  <div class = "spinner-icon" ng-if="!huronFeaturesNavCtrl.isFeaturePresent">
+    <i class='icon icon-spinner icon-2x'></i>
+  </div>
+ <!-- Show Cards whenever data is received by controller-->
+
+  <div class = "feature-header" ng-if="huronFeaturesNavCtrl.isFeaturePresent">
+    <span class="open-panel">
+      <cs-searchfilter filters="huronFeaturesNavCtrl.filters" set-filter-fn="huronFeaturesNavCtrl.setFilter(filter.filterValue)" search-item-fn="huronFeaturesNavCtrl.searchData(searchStr)" placeholder-text="{{huronFeaturesNavCtrl.placeholder.name}}" hide-count="true">
+      </cs-searchfilter></span>
+    <span><button type="button" class="button info new-feature-button" ng-click="huronFeaturesNavCtrl.openModal()">New</button></span>
+  </div>
+  <feature-cards></feature-cards>
+</div>
+

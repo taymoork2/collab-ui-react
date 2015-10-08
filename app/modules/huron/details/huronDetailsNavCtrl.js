@@ -22,7 +22,7 @@
     init();
 
     function init() {
-      $state.go("huronsettings"); // sets the initial content page to load when this nav controller is loaded
+      $state.go("huronfeatures"); // sets the initial content page to load when this nav controller is loaded
     }
   }
 })();

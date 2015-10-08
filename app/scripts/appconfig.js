@@ -1274,6 +1274,7 @@ angular
         })
         .state('huronsettings', {
           parent: 'hurondetails',
+          url: '/settings',
           templateUrl: 'modules/huron/callRouter/companyNumber.tpl.html',
           controller: 'CallRouterCtrl',
           controllerAs: 'callRouterCtrl'
@@ -1281,9 +1282,9 @@ angular
         .state('huronfeatures', {
           url: '/features',
           parent: 'hurondetails',
-          controller: 'ListFeaturesCtrl',
-          controllerAs: 'listFeaturesCtrl',
-          templateUrl: 'modules/huron/features/listFeatures.tpl.html',
+          templateUrl: 'modules/huron/features/featuresNav.tpl.html',
+          controller: 'HuronFeaturesNavCtrl',
+          controllerAs: 'huronFeaturesNavCtrl'
         })
         .state('huronnewfeature', {
           url: '/newfeature',
@@ -1291,6 +1292,20 @@ angular
           controller: 'NewFeatureCtrl',
           controllerAs: 'newFeatureCtrl',
           templateUrl: 'modules/huron/features/newFeature/newFeature.tpl.html',
+        })
+        .state('huronfeatures.deleteHuntGroup', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'HuntGroupDeleteCtrl',
+              controllerAs: 'huntGroupDeleteCtrl',
+              templateUrl: 'modules/huron/features/huntGroup/huntGroupDeleteModal.tpl.html'
+            }
+          },
+          params: {
+            deleteHuntGroupName: null,
+            deleteHuntGroupId: null
+          }
         });
     }
   ]);
