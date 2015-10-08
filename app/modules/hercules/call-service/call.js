@@ -79,7 +79,7 @@
     vm.state = $state;
     vm.currentServiceType = $state.current.data.serviceType;
     vm.currentServiceId = serviceType2ServiceId(vm.currentServiceType);
-
+    vm.selectedRow = -1;
     //TODO: Don't like this linking to routes...
     vm.route = serviceType2RouteName(vm.currentServiceType);
 
@@ -95,8 +95,13 @@
       vm.serviceEnabled = b;
     });
 
-    vm.hasNoCalendarConnectors = function (cluster) {
-      return ServiceStatusSummaryService.serviceFromCluster(vm.currentServiceType, cluster).connectors.length === 0;
+    vm.hasNoConnectors = function (cluster) {
+      var serviceInfo = ServiceStatusSummaryService.serviceFromCluster(vm.currentServiceType, cluster);
+      if (serviceInfo === undefined) {
+        return true;
+      } else {
+        return serviceInfo.connectors.length === 0;
+      }
     };
 
     vm.softwareUpgradeAvailable = function (cluster) {
@@ -246,7 +251,8 @@
       vm.serviceEnabled = b;
     });
 
-    vm.toggleEc = function () {
+    vm.storeEc = function () {
+      //console.log("store ec", vm.squaredFusionEc)
       ServiceDescriptor.setServiceEnabled("squared-fusion-ec", vm.squaredFusionEc, function (a, b) {});
     };
 

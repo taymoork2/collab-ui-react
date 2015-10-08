@@ -20,20 +20,23 @@
         Effortlessly share your desktop with Spark while you are on your work phone.
       </p>
 
-      <p>
+      <p style="color:#CCC">
         On by default
       </p>
 
       <h6>
         Connect
+        <span class="switch small right">
+          <cs-toggle-switch ng-click="callServiceSettings.storeEc()" ng-model="callServiceSettings.squaredFusionEc" toggle-id="squaredFusionEc-toggler" size="small"></cs-toggle-switch>
+        </span>
       </h6>
 
-      <p>
-        <span class="switch small right">
-          <input ng-click="callServiceSettings.toggleEc()" ng-model="callServiceSettings.squaredFusionEc"
-                 id="checkboxSquaredFusionEc" type="checkbox">
-        </span>
-      </p>
+      <!--
+      <span class="switch small right">
+        <input ng-click="callServiceSettings.toggleEc()" ng-model="callServiceSettings.squaredFusionEc"
+               id="checkboxSquaredFusionEc" type="checkbox">
+      </span>
+      -->
 
       <p>
         Answer your work phone or call your coworkers from Spark.
