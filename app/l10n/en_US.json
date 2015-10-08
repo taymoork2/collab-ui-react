@@ -2211,7 +2211,21 @@
   "messengerCiSync": {
     "authRedirectHeading": "Authentication Redirect",
     "authRedirectTooltip": "Is authentication redirected through Common Identity instead of CAS?",
-    "getFailed": "Failed getting CI Sync status",
+    "errorAuthFailed": "User authorization failed: ",
+    "errorFailedCheckingCIEntitlements": "Failed checking user entitlements from CI: ",
+    "errorFailedCheckingCIRoles": "Failed checking CI user roles: ",
+    "errorFailedCheckingCustSuccessRole": "Failed checking if user has Customer Success Admin CI Role: ",
+    "errorFailedGettingCISyncStatus": "Failed getting CI Sync status; Detail: ",
+    "errorFailedRefreshingCISyncStatus": "Failed refreshing CI Sync status; Detail: ",
+    "errorFailedUpdatingCISync": "Failed updating CI Sync status; Detail: ",
+    "errorLacksEntitlements": "User lacks required CI entitlements to view this content: ",
+    "errorLacksFullAdmin": "User lacks required Full Admin CI role to view this content",
+    "errorUnauthoredToView": "Unauthorized to view this content",
+    "http0": "Can't connect to service",
+    "http401": "401 Unauthorized",
+    "http404": "404 Not Found",
+    "http500": "500 Server Error",
+    "httpUnknown": " Unknown HTTP Error",
     "labelCILinkDate": "CI Link Date",
     "labelOrgAdmin": "ORG Admin",
     "labelOrgId": "Messenger Organization ID",
@@ -2221,13 +2235,10 @@
     "loading": "Loading CI Sync Status",
     "orgAdminLinkText": "Login to Webex Messenger OrgAdmin",
     "pageTitle": "Messenger CI Sync",
-    "patchFailed": "Failed updating CI Sync",
     "patchSuccessful": "CI Sync updated successfully",
     "patchSyncButtonText": "Update",
     "refresh": "Refresh",
-    "refreshFailed": "Failed refreshing CI Sync status",
     "syncStatusHeading": "Sync Status",
-    "syncStatusTooltip": "Is syncing active between Messenger and Common Identity?",
-    "unauthorized": "Not authorized to view this state"
+    "syncStatusTooltip": "Is syncing active between Messenger and Common Identity?"
   }
 }

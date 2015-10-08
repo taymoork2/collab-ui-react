@@ -6,10 +6,12 @@
     .factory('SyncService', SyncService);
 
   /** @ngInject */
-  function SyncService($http, $q, Authinfo, Log) {
+  function SyncService($http, $q, $translate, Authinfo, Log) {
     // Interface ---------------------------------------------------------------
 
     // Internal data
+    var translatePrefix = 'messengerCiSync.';
+
     var syncModes = Object.freeze({
       messenger: {
         on: {
@@ -128,19 +130,19 @@
 
       switch (status) {
       case 0:
-        result = 'Can\'t connect to service';
+        result = $translate.instant(translatePrefix + 'http0');
         break;
       case 401:
-        result = '401 Unauthorized';
+        result = $translate.instant(translatePrefix + 'http401');
         break;
       case 404:
-        result = '404 Not Found';
+        result = $translate.instant(translatePrefix + 'http404');
         break;
       case 500:
-        result = '500 Server Error';
+        result = $translate.instant(translatePrefix + 'http500');
         break;
       default:
-        result = 'Unknown';
+        result = $translate.instant(translatePrefix + 'httpUnknown');
         break;
       }
 

@@ -132,7 +132,7 @@
             getSyncStatus();
           }
         }, function (errorMsg) {
-          var error = 'User authorization failed: ' + errorMsg;
+          var error = $translate.instant(translatePrefix + 'errorAuthFailed') + errorMsg;
           Notification.error(error);
           Log.error(error);
         });
@@ -158,37 +158,39 @@
       // -CI Entitlements: webex-squared AND webex-messenger
       CiService.hasEntitlements(requiredEntitlements)
         .then(function (hasEntitlements) {
-          if (hasEntitlements) {
-            // Must have full admin role
-            CiService.hasRole(fullAdminRole)
-              .then(function (hasAdminRole) {
-                if (hasAdminRole) {
-                  // Check if Customer Success admin
-                  CiService.hasRole(customerSuccessRole)
-                    .then(function (hasCSRole) {
-                      if (hasCSRole) {
-                        setOpsAdmin();
-                      } else {
-                        setOrgAdmin();
-                      }
+            if (hasEntitlements) {
+              // Must have full admin role
+              CiService.hasRole(fullAdminRole)
+                .then(function (hasAdminRole) {
+                    if (hasAdminRole) {
+                      // Check if Customer Success admin
+                      CiService.hasRole(customerSuccessRole)
+                        .then(function (hasCSRole) {
+                          if (hasCSRole) {
+                            setOpsAdmin();
+                          } else {
+                            setOrgAdmin();
+                          }
 
-                      defer.resolve();
-                    }, function (errorMsg) {
-                      setOrgAdmin();
-                      defer.reject('Failed checking if user has Customer Success Admin CI Role: ' + errorMsg);
-                    });
-                } else {
-                  defer.reject('User lacks required Full Admin CI role to view this content');
-                }
-              }, function (errorMsg) {
-                defer.reject('Failed checking CI user roles: ' + errorMsg);
-              });
-          } else {
-            defer.reject('User lacks required CI entitlements to view this content: ' + requiredEntitlements);
-          }
-        }, function (errorMsg) {
-          defer.reject('Failed checking user entitlements from CI: ' + errorMsg);
-        });
+                          defer.resolve();
+                        }, function (errorMsg) {
+                          setOrgAdmin();
+                          defer.reject($translate.instant(translatePrefix + 'errorFailedCheckingCustSuccessRole') + errorMsg);
+                        });
+                    } else {
+                      defer.reject($translate.instant(translatePrefix + 'errorLacksFullAdmin'));
+                    }
+                  },
+                  function (errorMsg) {
+                    defer.reject($translate.instant(translatePrefix + 'errorFailedCheckingCIRoles') + errorMsg);
+                  });
+            } else {
+              defer.reject($translate.instant(translatePrefix + 'errorLacksEntitlements') + requiredEntitlements);
+            }
+          },
+          function (errorMsg) {
+            defer.reject($translate.instant(translatePrefix + 'errorFailedCheckingCIEntitlements') + errorMsg);
+          });
 
       return defer.promise;
     }
@@ -202,7 +204,7 @@
           vm.dataStatus = vm.dataStates.loaded;
         }, function (errorObj) {
           vm.dataStatus = vm.dataStates.error;
-          var error = 'Failed getting CI Sync status; Detail: ' + errorObj.message;
+          var error = $translate.instant(translatePrefix + 'errorFailedGettingCISyncStatus') + errorObj.message;
 
           vm.errorMsg = error;
           Log.error(error);
@@ -219,7 +221,7 @@
           vm.dataStatus = vm.dataStates.loaded;
         }, function (errorObj) {
           vm.dataStatus = vm.dataStates.error;
-          var error = 'Failed refreshing CI Sync status; Detail: ' + errorObj.message;
+          var error = $translate.instant(translatePrefix + 'errorFailedRefreshingCISyncStatus') + errorObj.message;
 
           vm.errorMsg = error;
           Log.error(error);
@@ -243,7 +245,7 @@
           .then(function (successMsg) {
             Notification.success($translate.instant(translatePrefix + 'patchSuccessful'));
           }, function (errorObj) {
-            var error = 'Failed updating CI Sync status; Detail: ' + errorObj.message;
+            var error = $translate.instant(translatePrefix + 'errorFailedUpdatingCISync') + errorObj.message;
 
             Log.error(error);
             Notification.error(error);
