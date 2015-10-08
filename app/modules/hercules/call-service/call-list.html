@@ -1,42 +1,35 @@
 <div class="row">
 
-  <div class="large-6 columns">
+  <div class="large-4 columns">
     <h4>
       Expressway Clusters
       <hr>
     </h4>
 
-    <table>
-      <thead>
-      <tr>
-        <th>Display Name</th>
-        <th>Status</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr ng-repeat="(url,cluster) in call.clusters"
-          ui-sref="call-service.list.details({cluster:cluster})">
-        <td>
-          {{cluster.name}}
-        </td>
-        <td>
-              <span class="{{call.callAndManagementServiceStatus(cluster).color}}">
+    <cs-card class="full" id="{{$index}}" ng-repeat="(url,cluster) in call.clusters" ui-sref="{{call.route}}.list.details({cluster:cluster, serviceType: call.currentServiceType})">
+      <article ng-class="{'gray' : call.state.includes('{{call.route}}.list.details') && call.state.params.cluster.id == cluster.id}">
+        <header>
+          <h5>
+            <i class="icon icon-data icon-inverse-round"/>
+            {{cluster.name}}
+          </h5>
+        </header>
+        <section>
+          <p>
+            <span class="{{call.selectedServiceAndManagementServiceStatus(cluster).color}}">
               <i class="fa fa-circle"/>
               <span class="hidden-xs">{{calendar.calendarAndManagementServiceStatus(cluster).status}}</span>
             </span>
             <span ng-show="call.softwareUpgradeAvailable(cluster)" style="color: #3ca8e8">
-              <!--<i class="fa fa-cloud-upload"/>-->
               <span class="hidden-xs">Upgrades</span>
             </span>
-        </td>
-      </tr>
-
-      </tbody>
-    </table>
-
-  </div>
-
-  <div class="large-6 columns" ui-view="rightPane">
+          </p>
+        </section>
+      </article>
+    </cs-card>
 
   </div>
+
+  <div class="large-8 columns" ui-view="rightPane"></div>
 </div>
+
