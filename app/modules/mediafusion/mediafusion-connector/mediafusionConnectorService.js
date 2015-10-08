@@ -82,7 +82,8 @@ angular.module('Mediafusion')
       }
 
       var getGroups = function () {
-        var url = config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/tags' + '?' + 'type=' + 'mf_group';
+        //var url = config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/tags' + '?' + 'type=' + 'mf_group';
+        var url = config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets' + '?' + 'type=' + 'mf.group';
         return $http.get(url).then(extractDataFromResponse);
       };
 

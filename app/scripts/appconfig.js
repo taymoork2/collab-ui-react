@@ -1542,7 +1542,8 @@ angular
             displayName: 'Overview'
           },
           params: {
-            connectorId: {}
+            connectorId: {},
+            groupName: {}
           }
         })
         .state('connector-details.alarms', {
