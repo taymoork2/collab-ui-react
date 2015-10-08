@@ -1,96 +1,36 @@
-<div class="org-panel" ng-init="init()">
-  <div>
-    <div class="panel panel-default org-panel">
-      <div class="panel-heading panel-heading-default">
-        <div id="orgTitle">
-          <h3 class="panel-title panel-title-default">
-            <strong translate="organizationsPage.orgDetails"></strong>
-          </h3>
-        </div>
+<div ui-view="header"></div>
+<cs-sp-container>
+  <cs-sp-section>
+  <div class="row">
+     <div class="small-6 columns" translate="organizationsPage.dirSync"></div>
+     <div class="small-6 columns">
+        <label for="{{svc}}">{{currentOrganization.dirsyncEnabled}}</label>
       </div>
-
-      <div class="panel-body">
-        <form role="form">
-          <div>
-
-            <div>
-
-              <div class="form-group profile-text-input">
-                <label for="displayName" style="width: 150px;" translate="organizationsPage.displayName"></label>
-                <input class="form-control profile-input" type="text" id="displayName" ng-model="org.displayName" value="{{org.displayName}}"/>
-              </div>
-
-              <div class="form-group profile-text-input">
-                <label for="services" style="width: 150px; vertical-align: top" translate="organizationsPage.services"></label>
-                <div class="profile-input">
-                  <ul ng-repeat="svc in svcs">
-                    <li>{{svc}}</li>
-                  </ul>
-                </div>
-              </div>
-
-              <div class="form-group profile-text-input">
-                <label for="estimatedSize" style="width: 150px;" translate="organizationsPage.estimatedSize"></label>
-                <input class="form-control profile-input" type="text" id="estimatedSize" ng-model="org.estimatedSize" value="{{org.estimatedSize}}"/>
-              </div>
-
-              <div class="form-group profile-text-input">
-                <label for="domains" style="width: 150px;" translate="organizationsPage.domains"></label>
-                <input class="form-control profile-input" type="text" id="domains" value="{{orgDomains}}" disabled/>
-              </div>
-
-              <div class="form-group profile-text-input">
-                <label for="orgAdmins" style="width: 150px;" translate="organizationsPage.orgAdmins"></label>
-                <input class="form-control profile-input" type="text" id="orgAdmins" value="{{org.email}}" disabled/>
-              </div>
-
-              <div class="form-group profile-text-input">
-                <label for="totalUsers" style="width: 150px;" translate="organizationsPage.totalUsers"></label>
-                <input class="form-control profile-input" type="text" id="totalUsers" value="{{totalUsers}}" disabled/>
-              </div>
-
-              <div class="form-group">
-                <label for="dirSync" style="width: 150px;" translate="organizationsPage.dirSync"></label>
-                <input type="checkbox" id="dirSync" value="{{org.dirsyncEnabled}}" disabled/>
-              </div>
-
-              <div class="form-group">
-                <label for="sso" style="width: 150px;" translate="organizationsPage.sso"></label>
-                <input type="checkbox" id="sso" value="{{org.ssoEnabled}}" disabled/>
-              </div>
-
-            </div>
-            <div>
-              <button id="btn-save" style="display:none" class="btn btn-primary pull-right" ng-click="updateOrg()" data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>"><span translate="organizationsPage.update"></span></button>
-            </div>
-            <div>
-              <button id="btnReset" class="btn btn-primary pull-right" ng-click="resetOrg()" data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>"><span translate="organizationsPage.reset"></span></button>
-            </div>
+    </div>
+    <div class="row">
+     <div class="small-6 columns" translate="organizationsPage.sso"></div>
+     <div class="small-6 columns">
+        <label for="{{svc}}">{{currentOrganization.ssoEnabled}}</label>
+      </div>
+  </div>
+  </cs-sp-section>
+  <cs-sp-section>
+    <form role="form">
+      <div>
+        <div class="form-group profile-text-input">
+          <label for="services" style="width: 150px; vertical-align: top" translate="organizationsPage.services"></label>
+          <div class="profile-input org-overview-list">
+            <ul ng-repeat="svc in currentOrganization.selfSubscribeServices">
+              <li>{{svc}}</li>
+            </ul>
           </div>
         </div>
-      </form>
-    </div>
-  </div>
-</div>
-</div>
-
-<div class=" panel panel-default org-panel">
-  <div class="panel-heading panel-heading-default">
-    <div id="org-tools">
-      <h3 class="panel-title panel-title-default">
-        <strong id="subTitleOrgs" translate="organizationsPage.subTitleOrgs" ng-click="globalExport()"></strong>
-      </h3>
-    </div>
-  </div>
-
-  <div class="panel-body">
-    <div id="btncover"></div>
-      <button type="button" id="geb-wrapper" class="btn btn-default" ng-csv="exportCSV()" filename="{{ 'organizationsPage.csvFilename' | translate }}" ng-disabled="exportBtn.disabled">
-        <div id="global-export-btn" ng-disabled="exportBtn.disabled"><span ng-bind-html="exportBtn.title"></span>
-        </div>
+      </div>
+    </form>
+    <div>
+      <button id="btnReset" class="btn btn-primary centered" ng-click="manageFeatures()">
+        <span translate="organizationsPage.manageBetaFeatures"></span>
       </button>
-      <button ng-hide= "!org.ssoEnabled" id="btnSSO" class="btn btn-primary pull-right" ng-click="enableSSO()"><span translate="ssoModal.btnTitle"></span></button>
-      <button ng-hide= "!org.ssoEnabled" id="btnDirSync" class="btn btn-primary pull-right" ng-click="popupDirsync()"><span translate="dirsyncModal.btnTitle"></span></button>
-  </div>
-</div>
-
+    </div>
+  </cs-sp-section>
+</cs-sp-container>

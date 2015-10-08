@@ -25,7 +25,7 @@ describe('Support flow', function () {
       utils.expectIsDisplayed(navigation.devicesTab);
       utils.expectIsDisplayed(navigation.reportsTab);
       utils.expectIsDisplayed(navigation.supportTab);
-      utils.expectIsDisplayed(navigation.developmentTab);
+      // utils.expectIsDisplayed(navigation.developmentTab);
     });
 
     it('should not display billing tab when support tab is clicked', function () {

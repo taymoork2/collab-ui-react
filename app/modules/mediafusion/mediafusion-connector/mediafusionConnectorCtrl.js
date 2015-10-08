@@ -86,7 +86,8 @@ angular.module('Mediafusion')
         $scope.connectorId = connector.id;
         if ($scope.showPreview) {
           $state.go('connector-details', {
-            connectorId: connector.id
+            connectorId: connector.id,
+            groupName: connector.properties["mf.group.displayName"]
           });
         }
         $scope.showPreview = true;

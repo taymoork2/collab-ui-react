@@ -1,0 +1,25 @@
+<form role="form" name="orgFeatureToggles.form">
+  <cs-sp-buttons ng-show="orgFeatureToggles.form.$dirty">
+    <button id="saveButton" class="btn-primary" translate="common.save" ng-click="features.updateToggles()" type="submit" ></button>
+    <button id="cancelButton" class="btn-default" translate="common.cancel" ng-click="features.resetForm()"></button>
+  </cs-sp-buttons>
+  <cs-sp-container>
+    <cs-sp-section>
+      <div>
+        <div class="form-group profile-text-input">
+          <label for="services" style="width: 150px; vertical-align: top" translate="organizationsPage.betaFeatures"></label>
+          <div class="profile-input org-overview-list">
+            <div class="row" ng-repeat="svc in features.currentOrganization.selfSubscribeServices | orderBy:'svc'">
+              <div class="small-10 columns">
+                <label for="{{svc}}">{{svc}}</label>
+              </div>
+              <div class="small-2 columns">
+                <cs-toggle-switch ng-model="toggle.button1" toggle-id="{{svc}}" name="{{svc}}" size="small"></cs-toggle-switch>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </cs-sp-section>
+  </cs-sp-container>
+</form>

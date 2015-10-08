@@ -34,7 +34,7 @@ describe('Controller: PlanReviewCtrl', function () {
     spyOn(Userservice, 'getUser').and.callFake(function (uid, callback) {
       callback(getUserMe, 200);
     });
-    spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(deferred.promise);
+    spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue(deferred.promise);
 
     controller = $controller('PlanReviewCtrl', {
       $scope: $scope

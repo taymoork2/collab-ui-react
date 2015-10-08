@@ -77,10 +77,8 @@
         if (angular.isUndefined(scope.model.endNumber) || scope.model.endNumber === "") {
           // trigger validation on endNumber field
           scope.fields[2].formControl.$validate();
-          return true;
-        } else {
-          return value <= scope.model.endNumber;
         }
+        return true;
       },
       rangeOverlap: function (viewValue, modelValue, scope) {
         var value = modelValue || viewValue;

@@ -8,16 +8,15 @@
   /* @ngInject */
   function HuronDetailsNavCtrl($scope, $state, Config) {
     var vm = this;
+    vm.title = 'huronDetails.title';
+    vm.back = false;
+
     vm.tabs = [{
-      //   title: 'huronDetails.linesTitle',
-      //   state: 'huronlines'
-      // }, {
+      title: 'huronDetails.featuresTitle',
+      state: 'huronfeatures'
+    }, {
       title: 'huronDetails.settingsTitle',
       state: 'huronsettings'
-        // Temporarily commented out until "Features" tab is needed
-        // }, {
-        //   title: 'huronDetails.featuresTitle',
-        //   state: 'huronfeatures'
     }];
 
     init();
