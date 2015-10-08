@@ -79,7 +79,7 @@
     vm.state = $state;
     vm.currentServiceType = $state.current.data.serviceType;
     vm.currentServiceId = serviceType2ServiceId(vm.currentServiceType);
-    vm.selectedRow=-1;
+    vm.selectedRow = -1;
     //TODO: Don't like this linking to routes...
     vm.route = serviceType2RouteName(vm.currentServiceType);
 
