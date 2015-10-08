@@ -38,9 +38,11 @@
 
 <cs-container>
 
+
+
 <div ng-if="reportObject.viewReady">
- <div ng-repeat="sec in reportObject.reports.sections">
-  <cs-card class="cs-card medium">
+<cs-card-layout>
+  <cs-card class="cs-card medium"  ng-repeat="sec in reportObject.reports.sections">
     <article>
       <header>
        <h4>
@@ -69,8 +71,12 @@
     </article>
 
   </cs-card>
+  </cs-card-layout>
  </div>
+
+
 </div>
+
 
 </cs-container>
 
