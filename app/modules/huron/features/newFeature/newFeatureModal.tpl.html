@@ -1,0 +1,23 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="cancel()">
+    <span class="sr-only">Close</span>
+  </button>
+  <h3 class="modal-title" translate="huronDetails.newFeatureModalTitle"></h3>
+</div>
+<div class="huron-new-feature-modal">
+  <button ng-repeat="feature in features" ng-click="ok((feature.code | translate))">
+    <div class="feature-icon-container">
+      <label class="feature-icon-circle feature-icon-color-{{feature.cssClass}}">
+          {{feature.code | translate}}
+      </label>
+    </div>
+
+    <h4 class="feature-label-container">
+      <strong>{{feature.label | translate}}</strong>
+    </h4>
+
+    <p class="feature-description-container text-left">
+      {{feature.description | translate}}
+    </p>
+  </button>
+</div>

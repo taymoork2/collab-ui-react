@@ -112,7 +112,7 @@ describe('Controller: WizardCtrl', function () {
 
     spyOn($state, 'go');
     spyOn(Userservice, 'getUser').and.returnValue(getUserMe);
-    spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(getMyFeatureToggles);
+    spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue(getMyFeatureToggles);
 
     controller = $controller('WizardCtrl', {
       $scope: $scope,

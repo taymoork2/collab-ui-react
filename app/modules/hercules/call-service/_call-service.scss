@@ -11,3 +11,108 @@
     }
   }
 }
+
+.calendar-sub{
+  min-height: 100vh;
+  min-height: calc(100vh - 150px);
+
+    .row{
+      margin-right: 2rem;
+      margin-bottom: 1rem;
+
+        p{
+          margin-bottom: 1rem;
+        }
+        p:last-child{
+          margin-bottom: 0;
+        }
+        h5{
+          color: $brand-primary;
+          margin-bottom: .25rem;
+        }
+        button{
+          margin-top: .25rem;
+        }
+        .button.large{
+          padding:{
+            left: 3rem;
+            right: 3rem;
+          }
+          margin:{
+            left: 0 !important;
+            right: 0;
+          }
+        }
+        .alert{
+          margin-bottom: 2rem;
+        }
+
+    }
+}
+.cal-mail-form{
+  display: block;
+  //border: 2px solid rgba(0,0,0,0.75);
+  border: 1px solid rgba(0,0,0,0.25);
+  border-radius: 3px;
+  padding: .3rem;
+
+    input, input:focus, input[type="text"]:focus{
+      border: none !important;
+      box-shadow: none !important;
+      border-color: none !important;
+      transition: none !important;
+    }
+    #existing-mails{
+        .token-label{
+          display: inline-block;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          margin-right: .3rem;
+          margin-bottom: .3rem;
+          cursor: pointer;
+          padding:{
+            left:.75rem;
+            right:1.75rem;
+            top:.3rem;
+            bottom:.3rem;
+          }
+          color:white !important;
+          vertical-align: top;
+          line-height: 1;
+          background-color: $brand-primary;
+          border-radius: 2px;
+
+          position: relative;
+
+            .del{
+              display: block;
+              width: .75rem;
+              height: .75rem;
+              color: white;
+              position: absolute;
+              right: .25rem;
+              top:.3rem;
+            }
+        }
+        .token-label.alert{
+          margin-left: 0 !important;
+          margin-right: .3rem !important;
+          margin-bottom: .3rem !important;
+          background-color: $brand-danger;
+        }
+        .token-label:hover{
+          background-color: $brand-primary-dark;
+        }
+        .token-label.alert:hover{
+          background-color: $brand-danger;
+        }
+    }
+}
+.calendar-sub.subpage{
+  padding:{
+    top:1.5rem !important;
+    bottom: 2rem !important;
+    left:2.5rem !important;
+    right:0.5rem !important;
+  }
+}

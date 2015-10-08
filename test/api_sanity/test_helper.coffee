@@ -74,7 +74,7 @@ auth =
 
   'media-super-admin':
     user: 'super-admin@mfusion1webex.com'
-    pass: 'Mc23267!'
+    pass: 'C1sc0123!'
     org:  'baab1ece-498c-452b-aea8-1a727413c818'
 
   'customer-support-admin':
