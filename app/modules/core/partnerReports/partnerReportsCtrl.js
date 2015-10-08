@@ -68,6 +68,17 @@
     }];
     vm.timeSelected = vm.timeOptions[0];
 
+    vm.webexOptions = [{
+      value: 0,
+      label: 'wbx1.com'
+    },{
+      value: 1,
+      label: 'wbx2.com'
+    }]
+
+    vm.webexSelected = vm.webexOptions[0];
+
+
     vm.show = function(showEngagement,showQuality,showWebexReports){
       vm.showEngagement = showEngagement;
       vm.showQuality = showQuality;

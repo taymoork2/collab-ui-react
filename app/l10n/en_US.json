@@ -320,7 +320,7 @@
     "highQuality": "5 Highest Quality",
     "leastQuality": "5 Lowest Quality",
     "customerLoadError": "There was an error while loading the customer list.",
-    "webex": "Webex"
+    "webex": "Webex Reports"
   },
   "activeUsers": {
     "active": "Active",

@@ -18,7 +18,7 @@
         <div class="report-filter-link">
           <a id="webexReports" class="report-link" ng-click="nav.show(false,false,true);" translate="reportsPage.webex"
             ng-class="{'selected-link': nav.showWebexReports, 'not-selected': !nav.showWebexReports}"></a>
-          <cs-select ng-if="nav.showWebexReports" class="filter-one" name="timeFilter" ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.updateReports()" is-disabled="nav.customersSet()"></cs-select>
+          <cs-select ng-if="nav.showWebexReports" class="filter-one" name="timeFilter" ng-model="nav.webexSelected" options="nav.webexOptions" on-change-fn="nav.updateWebexReports()"></cs-select>
         </div>
 
       </div>
