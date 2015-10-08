@@ -25,6 +25,7 @@
 
     vm.showEngagement = true;
     vm.showQuality = true;
+    vm.showWebexReports = true;
 
     vm.activeUsersRefresh = REFRESH;
     vm.activeUserPopulationRefresh = REFRESH;
@@ -66,6 +67,12 @@
       description: $translate.instant('reportsPage.threeMonths2')
     }];
     vm.timeSelected = vm.timeOptions[0];
+
+    vm.show = function(showEngagement,showQuality,showWebexReports){
+      vm.showEngagement = showEngagement;
+      vm.showQuality = showQuality;
+      vm.showWebexReports = showWebexReports;
+    }
 
     vm.customersSet = function () {
       return vm.customerSelected === null;

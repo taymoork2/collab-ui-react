@@ -1,23 +1,29 @@
 <div class="partner-reports">
   <div class="reports-header row page-header">
-    <div class="page-title columns medium-6">
+    <div class="page-title columns medium-8">
       <h2 class="title-heading" translate="reportsPage.pageTitle"></h2>
-      <span class="sync">
+      <div class="sync">
         <div class="report-filter-link">
-          <a id="allReports" class="report-link" ng-click="nav.showEngagement = true; nav.showQuality = true;" translate="reportsPage.all"
-            ng-class="{'selected-link': nav.showEngagement === true && nav.showQuality === true, 'not-selected': nav.showEngagement === false || nav.showQuality === false}"></a>
+          <a id="allReports" class="report-link" ng-click="nav.show(true,true,true)" translate="reportsPage.all"
+            ng-class="{'selected-link': (nav.showEngagement && nav.showQuality && nav.showWebexReports), 'not-selected': !(nav.showEngagement || nav.showQuality || nav.showWebexReports)}"></a>
         </div>
         <div class="report-filter-link">
-          <a id="engagementReports" class="report-link" ng-click="nav.showEngagement = true; nav.showQuality = false;" translate="reportsPage.engagement"
-            ng-class="{'selected-link': nav.showEngagement === true && nav.showQuality === false, 'not-selected': !(nav.showEngagement === true && nav.showQuality === false)}"></a>
+          <a id="engagementReports" class="report-link" ng-click="nav.show(true,false,false);" translate="reportsPage.engagement"
+            ng-class="{'selected-link': nav.showEngagement, 'not-selected': !nav.showEngagement}"></a>
         </div>
         <div class="report-filter-link">
-          <a id="qualityReports" class="report-link" ng-click="nav.showEngagement = false; nav.showQuality = true;" translate="reportsPage.quality"
-            ng-class="{'selected-link': nav.showEngagement === false && nav.showQuality === true, 'not-selected': !(nav.showEngagement === false && nav.showQuality === true)}"></a>
+          <a id="qualityReports" class="report-link" ng-click="nav.show(false,true,false)" translate="reportsPage.quality"
+            ng-class="{'selected-link': nav.showQuality, 'not-selected': !nav.showQuality}"></a>
         </div>
-      </span>
+        <div class="report-filter-link">
+          <a id="webexReports" class="report-link" ng-click="nav.show(false,false,true);" translate="reportsPage.webex"
+            ng-class="{'selected-link': nav.showWebexReports, 'not-selected': !nav.showWebexReports}"></a>
+          <cs-select ng-if="nav.showWebexReports" class="filter-one" name="timeFilter" ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.updateReports()" is-disabled="nav.customersSet()"></cs-select>
+        </div>
+
+      </div>
     </div>
-    <div class="columns medium-6 report-filters">
+    <div class="columns medium-4 report-filters">
       <div class="row">
         <div class="large-4 large-offset-3 columns">
           <cs-select class="filter-one" id="timeFilter" name="timeFilter" ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.updateReports()" is-disabled="nav.customersSet()"></cs-select>
