@@ -1,28 +1,23 @@
 <div class="row">
 
   <div class="large-4 columns">
-    <h4>
-      Expressway Clusters
-      <hr>
-    </h4>
 
     <cs-card class="full" id="{{$index}}" ng-repeat="(url,cluster) in call.clusters" ui-sref="{{call.route}}.list.details({cluster:cluster, serviceType: call.currentServiceType})">
       <article ng-class="{'gray' : call.state.includes('{{call.route}}.list.details') && call.state.params.cluster.id == cluster.id}">
         <header>
           <h5>
             <i class="icon icon-data icon-inverse-round"/>
+            <i class="overlay" ng-class="{ok: call.selectedServiceAndManagementServiceStatus(cluster).color == 'green',attention: call.selectedServiceAndManagementServiceStatus(cluster).color == 'yellow', alarm: call.selectedServiceAndManagementServiceStatus(cluster).color == 'red'}"/>
             {{cluster.name}}
           </h5>
         </header>
         <section>
           <p>
-            <span class="{{call.selectedServiceAndManagementServiceStatus(cluster).color}}">
-              <i class="fa fa-circle"/>
-              <span class="hidden-xs">{{calendar.calendarAndManagementServiceStatus(cluster).status}}</span>
-            </span>
-            <span ng-show="call.softwareUpgradeAvailable(cluster)" style="color: #3ca8e8">
-              <span class="hidden-xs">Upgrades</span>
-            </span>
+            <span ng-if="call.selectedServiceAndManagementServiceStatus(cluster).status == 'running'">Running</span>
+            <span ng-if="call.selectedServiceAndManagementServiceStatus(cluster).status == 'alarm'">Alarm</span>
+            <span ng-if="call.selectedServiceAndManagementServiceStatus(cluster).status == 'needs_attention'">Needs attention</span>
+            <span ng-if="call.selectedServiceAndManagementServiceStatus(cluster).status == 'disabled'">Disabled</span>
+            <span ng-show="call.softwareUpgradeAvailable(cluster)">, Upgrades</span>
           </p>
         </section>
       </article>

@@ -845,6 +845,7 @@ angular.module('Core')
         'squared-fusion-uc': [
           'devices',
           'device-overview',
+          'devices-redux',
           'devices-redux2',
           'devices-redux3',
           'devices-redux4',
