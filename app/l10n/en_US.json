@@ -2275,5 +2275,20 @@
     "syncStatusHeading": "Sync Status",
     "syncStatusTooltip": "Is syncing active between Messenger and Common Identity?",
     "unauthorized": "Not authorized to view this state"
+  },
+  "huronHuntGroup": {
+    "title": "Create Hunt Group",
+    "namePlaceholder": "Name the Hunt Group",
+    "nameHint": "This hunt group name will also be the name callers see on their device (i.e. alerting name)",
+    "numberPlaceholder": "Select Hunt Group Numbers",
+    "numberHint": "When this number is called, this hunt group is activated",
+    "methodTitle": "Select Hunting Method",
+    "methodHint": "This defines which member gets the call first.",
+    "memberPlaceholder": "Select Hunt Group Members",
+    "memberHint": "These are the users who pickup the hunt group calls",
+    "fallbackPlaceholder": "Enter Fallback Destination",
+    "fallbackHint": "This is where the call goes if it was not answered by this hunt group",
+    "voiceCheckLabel": "Send call directly to voicemail",
+    "createGroupLabel": "CREATE HUNT GROUP"
   }
 }
