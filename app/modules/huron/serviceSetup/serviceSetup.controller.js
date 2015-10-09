@@ -342,9 +342,16 @@
               }
             },
             controller: /* @ngInject */ function ($scope) {
-              if ($scope.formOptions.formState.formIndex === 0 && vm.firstTimeSetup) {
-                $scope.to.btnClass = 'btn-sm btn-link hide-delete';
-              }
+              $scope.$watchCollection(function () {
+                return vm.model.displayNumberRanges;
+              }, function (displayNumberRanges) {
+                if ((vm.firstTimeSetup && displayNumberRanges.length === 1) || (!vm.firstTimeSetup && displayNumberRanges.length === 1 && angular.isDefined($scope.model.uuid))) {
+                  $scope.to.btnClass = 'btn-sm btn-link hide-delete';
+                } else if (displayNumberRanges.length > 1 && angular.isDefined($scope.model.uuid) && ((displayNumberRanges.length) - 1) !== 1) {
+                  $scope.to.btnClass = 'btn-sm btn-link';
+                }
+              });
+
             }
           }]
         }]
