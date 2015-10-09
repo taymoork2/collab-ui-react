@@ -613,7 +613,11 @@
     "notifications": "Notifications",
     "todo": "To-do",
     "setUpYourTrial": "Set up Advanced Spark Call to start your trial.",
-    "beginTrial": "Begin Trial"
+    "beginTrial": "Begin Trial",
+    "status": "Status",
+    "spark": "Spark",
+    "sso": "SSO",
+    "dirsync": "Directory Sync"
   },
   "inviteModal": {
     "title": "Service Entitlement",

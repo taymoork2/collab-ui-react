@@ -53,51 +53,22 @@
           </div>
         </section>
 
-        <!-- TODO: To be removed when monitoring service is refactored-->
-       <!--  <section class="monitoring-panel small-12 column">
-          <h4 class="monitoring-section" translate="homePage.monitoring"></h4>
-          <ul>
-          <li ng-repeat="health in healthMetrics">
-            <a ng-href="{{statusPageUrl}}" target="_blank" ng-class="{true:'green', false:'red'}[health.status==='operational']" class="monitoring-cell" id="{{health.name}}">
-                <i class="fa fa-circle"></i>&nbsp;&nbsp;<span>{{health.name}}</span>
-            </a>
-          </li>
-          </ul> 
-        </section> -->
-
         <section class="monitoring-panel small-12 column">
-          <h4 class="monitoring-section">Status</h4>
+          <h4 class="monitoring-section" translate="homePage.status"></h4>
           <ul>
-          <li ng-if="healthStatus == 'success'">
-            <a ng-href="{{statusPageUrl}}" target="_blank" ng-class="'green'" class="monitoring-cell">
-              <i class="fa fa-circle green"></i>&nbsp;&nbsp;<span>Spark</span>
-            </a>
-          </li>
-          <li ng-if="healthStatus == 'danger'">
+          <li ng-class="{'success':'green'}[healthStatus]">
             <a ng-href="{{statusPageUrl}}" target="_blank" class="monitoring-cell">
-              <i class="fa fa-circle red"></i>&nbsp;&nbsp;<span>Spark</span>
+              <i class="fa fa-circle" ng-class="{'warning':'yellow','danger':'red'}[healthStatus]"></i><span translate="homePage.spark"></span>
             </a>
           </li>
-          <li ng-if="healthStatus == 'warning'">
-            <a ng-href="{{statusPageUrl}}" target="_blank" class="monitoring-cell">
-              <i class="fa fa-circle yellow"></i>&nbsp;&nbsp;<span>Spark</span>
-            </a>
+          <li target="_blank" ng-class="{'green': sso}">
+              <i class="fa fa-circle" ng-class="{'red': !sso}"></i><span translate="homePage.sso"></span>
           </li>
-          <li ng-if="sso" target="_blank" ng-class="'green'">
-              <i class="fa fa-circle"></i>&nbsp;&nbsp;<span>SSO</span>
-          </li>
-          <li ng-if="!sso" target="_blank">
-             <i class="fa fa-circle red"></i>&nbsp;&nbsp;<span>SSO</span>
-          </li>
-           <li ng-if="dirsync" target="_blank" ng-class="'green'">
-              <i class="fa fa-circle"></i>&nbsp;&nbsp;<span>Directory Sync</span>
-          </li>
-          <li ng-if="!dirsync" target="_blank">
-             <i class="fa fa-circle red"></i>&nbsp;&nbsp;<span>Directory Sync</span>
+           <li target="_blank" ng-class="{'green': dirsync}">
+              <i class="fa fa-circle" ng-class="{'red': !dirsync}"></i><span translate="homePage.dirsync"></span>
           </li>
           </ul>
         </section>
-
 
         <!-- TODO: Replacement for when monitoring service is refactored
         <section class="monitoring-panel small-4 medium-12">

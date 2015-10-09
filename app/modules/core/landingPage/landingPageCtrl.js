@@ -234,40 +234,25 @@ angular.module('Core')
         }
       };
 
-      var getHealthMetrics = function () {
-        ReportsService.healthMonitor(function (data, status) {
-          if (data.success) {
-            $scope.healthMetrics = data.components;
-            $scope.isCollapsed = true;
-          } else {
-            Log.debug('Query active users metrics failed. Status: ' + status);
-          }
-        });
-      };
+      // var getHealthMetrics = function () {
+      //   ReportsService.healthMonitor(function (data, status) {
+      //     if (data.success) {
+      //       $scope.healthMetrics = data.components;
+      //       $scope.isCollapsed = true;
+      //     } else {
+      //       Log.debug('Query active users metrics failed. Status: ' + status);
+      //     }
+      //   });
+      // };
 
       var getHealthTotal = function () {
-        ReportsService.healthMonitor(function (data, status) {
-          var totalSuccess = 0;
-          var totalWarning = 0;
-          var totalDanger = 0;
+        ReportsService.getHealthStatus(function (data, status) {
 
-          for (var i = 0; i < data.components.length; i++) {
-            var health = data.components[i].status;
-
-            if (health == 'operational') {
-              totalSuccess += 1;
-            } else if (health == 'degraded performance' || health == 'partial outage') {
-              totalWarning += 1;
-            } else if (health == 'major outage') {
-              totalDanger += 1;
-            }
-          }
-
-          if (totalSuccess == data.components.length) {
+          if (data.totalSuccess === data.components.length) {
             $scope.healthStatus = 'success';
-          } else if (totalDanger !== 0) {
+          } else if (data.totalDanger !== 0) {
             $scope.healthStatus = 'danger';
-          } else if (totalWarning > 0) {
+          } else if (data.totalWarning > 0) {
             $scope.healthStatus = 'warning';
           }
         });
@@ -275,17 +260,12 @@ angular.module('Core')
 
       var getOrgInfo = function () {
         Orgservice.getOrg(function (data, status) {
-          if (data.ssoEnabled) {
-            $scope.sso = true;
-          } else {
-            $scope.sso = false;
+          if (status != 200) {
+            throw new Error("Incorrect status value");
           }
 
-          if (data.dirsyncEnabled) {
-            $scope.dirsync = true;
-          } else {
-            $scope.dirsync = false;
-          }
+          $scope.sso = data.ssoEnabled || false;
+          $scope.dirsync = data.dirsyncEnabled || false;
 
         });
       };
@@ -298,7 +278,7 @@ angular.module('Core')
       };
 
       $scope.isAdmin = Auth.isUserAdmin();
-      getHealthMetrics();
+      // getHealthMetrics();
       getHealthTotal();
       getOrgInfo();
 

@@ -57,7 +57,8 @@ function ReportsService($http, $rootScope, $location, Storage, Config, Log, Auth
     getAllMetrics: getAllMetrics,
     getLogInfo: getLogInfo,
     getCallSummary: getCallSummary,
-    healthMonitor: healthMonitor
+    healthMonitor: healthMonitor,
+    getHealthStatus: getHealthStatus
   };
 
   return service;
@@ -272,6 +273,33 @@ function ReportsService($http, $rootScope, $location, Storage, Config, Log, Auth
         data = data || {};
         data.success = true;
         Log.debug('Callback for healthMonitor');
+        callback(data, status);
+      })
+      .error(function (data, status) {
+        callback(data, status);
+      });
+  }
+
+  function getHealthStatus(callback) {
+    var i = 0, totalSuccess = 0, totalWarning = 0, totalDanger = 0;
+    $http.get(healthUrl)
+      .success(function (data, status) {
+
+        for (i = 0; i < data.components.length; i++) {
+          var health = data.components[i].status;
+
+          if (health === 'operational') {
+            totalSuccess += 1;
+          } else if (health === 'degraded performance' || health === 'partial outage') {
+            totalWarning += 1;
+          } else if (health === 'major outage') {
+            totalDanger += 1;
+          }
+        }
+        data.totalSuccess = totalSuccess;
+        data.totalWarning = totalWarning;
+        data.totalDanger = totalDanger;
+
         callback(data, status);
       })
       .error(function (data, status) {
