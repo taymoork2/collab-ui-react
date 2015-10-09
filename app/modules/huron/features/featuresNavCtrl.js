@@ -137,6 +137,7 @@
 
       }, function (response) {
         Log.warn('Could fetch huntGroups for customer with Id:', customerId);
+        vm.pageState = 'showFeatures';
         //Notify the user that retrieval of hunt groups list has been failed
         Notification.error('huntGroupDetails.failedToLoadHuntGroups');
       });
@@ -191,7 +192,7 @@
     };
 
     var isFeatureListEmpty = function () {
-      if (vm.listOfFeatures.length === 0) {
+      if (vm.pageState !== 'showFeatures' && vm.listOfFeatures.length === 0 ) {
         vm.pageState = 'NewFeature';
       }
     };
@@ -201,7 +202,7 @@
       vm.listOfFeatures.splice(vm.listOfFeatures.indexOf(huntGroupToBeDeleted), 1);
       listOfAllFeatures.splice(listOfAllFeatures.indexOf(huntGroupToBeDeleted), 1);
       huntGroupToBeDeleted = {};
-      if (listOfAllFeatures.length === 0 && vm.listOfFeatures.length === 0) {
+      if (vm.listOfFeatures.length === 0) {
         vm.pageState = "NewFeature";
       }
       if (vm.filterText) {
@@ -229,7 +230,7 @@
       getListOfAutoAttendants();
       getListOfHuntGroups();
       getListOfCallParks();
-      $timeout(isFeatureListEmpty, 1000);
+      $timeout(isFeatureListEmpty, 1200);
     }
     init();
   }
