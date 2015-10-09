@@ -158,35 +158,35 @@
       // Customer Success Admin     --> Ops Admin
       // Non-Customer Success Admin --> must have webex-squared AND webex-messenger CI entitlements
       CiService.hasRole(fullAdminRole)
-        .then(function(hasAdminRole) {
+        .then(function (hasAdminRole) {
           if (hasAdminRole) {
             // Now check for Customer Success Admin or not
             CiService.hasRole(customerSuccessRole)
-              .then(function(hasCSRole) {
+              .then(function (hasCSRole) {
                 if (hasCSRole) {
                   setOpsAdmin();
                   defer.resolve();
                 } else {
                   // Not a Customer Success Admin, must have entitlements
                   CiService.hasEntitlements(requiredEntitlements)
-                    .then(function(hasEntitlements) {
+                    .then(function (hasEntitlements) {
                       if (hasEntitlements) {
                         setOrgAdmin();
                         defer.resolve();
                       } else {
                         defer.reject($translate.instant(translatePrefix + 'errorLacksEntitlements') + requiredEntitlements);
                       }
-                    }, function(errorMsg) {
+                    }, function (errorMsg) {
                       defer.reject($translate.instant(translatePrefix + 'errorFailedCheckingCIEntitlements') + errorMsg);
                     });
                 }
-              }, function(errorMsg) {
+              }, function (errorMsg) {
                 defer.reject($translate.instant(translatePrefix + 'errorFailedCheckingCustSuccessRole') + errorMsg);
               });
           } else {
             defer.reject($translate.instant(translatePrefix + 'errorLacksFullAdmin'));
           }
-        }, function(errorMsg) {
+        }, function (errorMsg) {
           defer.reject($translate.instant(translatePrefix + 'errorFailedCheckingCIRoles') + errorMsg);
         });
 
