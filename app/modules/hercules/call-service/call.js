@@ -262,7 +262,7 @@
   }
 
   /* @ngInject */
-  function CallServiceSettingsController($scope, $modal, ServiceDescriptor, Authinfo, USSService2, $stateParams, NotificationConfigService, MailValidatorService, XhrNotificationService) {
+  function CallServiceSettingsController($scope, $modal, ServiceDescriptor, Authinfo, USSService2, $stateParams, NotificationConfigService, MailValidatorService, XhrNotificationService, CertService) {
     var vm = this;
     vm.config = "";
     vm.serviceEnabled = false;
@@ -271,11 +271,20 @@
 
     enableEmailValidation();
 
-    //console.log("Settingscontroller stateparams:", $stateParams)
+    var readCerts = function () {
+      CertService.getCerts(Authinfo.getOrgId()).then(function (res) {
+        vm.certificates = res || [];
+      }, function (err) {
+        return XhrNotificationService.notify(err);
+      });
+    };
 
     vm.squaredFusionEc = false;
     ServiceDescriptor.isServiceEnabled("squared-fusion-ec", function (a, b) {
       vm.squaredFusionEc = b;
+      //if (vm.squaredFusionEc) {
+      readCerts();
+      //}
     });
 
     ServiceDescriptor.isServiceEnabled(vm.serviceId, function (a, b) {
@@ -285,6 +294,9 @@
     vm.storeEc = function () {
       //console.log("store ec", vm.squaredFusionEc)
       ServiceDescriptor.setServiceEnabled("squared-fusion-ec", vm.squaredFusionEc, function (a, b) {});
+      if (vm.squaredFusionEc) {
+        readCerts();
+      }
     };
 
     vm.loading = true;
@@ -378,6 +390,17 @@
         vm.disableService(serviceId);
         //TODO: should go to a new page after deactivate the service !!!
       });
+    };
+
+    vm.uploadCert = function (file, event) {
+      if (!file) {
+        return;
+      }
+      CertService.uploadCert(Authinfo.getOrgId(), file).then(readCerts, XhrNotificationService.notify);
+    };
+
+    vm.deleteCert = function (certId) {
+      CertService.deleteCert(certId).then(readCerts, XhrNotificationService.notify);
     };
 
   }
