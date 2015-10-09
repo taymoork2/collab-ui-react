@@ -69,12 +69,11 @@
   };
 
   /* @ngInject */
-  function CallController(FmsNotificationService, ServiceDescriptor, $stateParams, $state, $modal, $scope, ClusterService, USSService2, ConverterService, ServiceStatusSummaryService) {
+  function CallController(NotificationService, FmsNotificationService, ServiceDescriptor, $stateParams, $state, $modal, $scope, ClusterService, USSService2, ConverterService, ServiceStatusSummaryService) {
     ClusterService.subscribe(angular.noop, {
       scope: $scope
     });
 
-    FmsNotificationService.refresh();
     var vm = this;
     vm.state = $state;
     vm.currentServiceType = $state.current.data.serviceType;
@@ -84,6 +83,9 @@
     vm.route = serviceType2RouteName(vm.currentServiceType);
 
     vm.clusters = ClusterService.getClusters();
+    vm.clusterLength = _.size(vm.clusters);
+
+    FmsNotificationService.refresh();
 
     vm.startSetupClicked = false;
     vm.startSetup = function () {
@@ -93,9 +95,18 @@
     vm.serviceEnabled = false;
     ServiceDescriptor.isServiceEnabled(serviceType2ServiceId(vm.currentServiceType), function (a, b) {
       vm.serviceEnabled = b;
+      if (!b) {
+        NotificationService.addNotification(
+          'todo',
+          'serviceNotEnabled',
+          1,
+          'modules/hercules/notifications/service-not-enabled.html', {});
+      } else {
+        NotificationService.removeNotification('todo', 'serviceNotEnabled');
+      }
     });
 
-    vm.hasNoConnectors = function (cluster) {
+    vm.serviceNotInstalled = function (cluster) {
       var serviceInfo = ServiceStatusSummaryService.serviceFromCluster(vm.currentServiceType, cluster);
       if (serviceInfo === undefined) {
         return true;
@@ -138,7 +149,7 @@
   }
 
   /* @ngInject */
-  function CallDetailsController($state, $modal, $stateParams, ClusterService) {
+  function CallDetailsController(XhrNotificationService, ServiceDescriptor, ServiceStatusSummaryService, $state, $modal, $stateParams, ClusterService) {
     var vm = this;
     vm.state = $state;
     vm.clusterId = $stateParams.cluster.id;
@@ -156,6 +167,15 @@
 
     //TODO: Don't like this linking to routes...
     vm.route = serviceType2RouteName(vm.serviceType);
+
+    vm.serviceNotInstalled = function () {
+      var serviceInfo = ServiceStatusSummaryService.serviceFromCluster(vm.serviceType, vm.cluster);
+      if (serviceInfo === undefined) {
+        return true;
+      } else {
+        return serviceInfo.connectors.length === 0;
+      }
+    };
 
     vm.upgrade = function () {
       $modal.open({
@@ -176,6 +196,17 @@
         //console.log("Starting alarms dialog...");
       });
     };
+
+    /*
+    vm.enableService = function (serviceId) {
+      ServiceDescriptor.setServiceEnabled(serviceId, true, function (error) {
+        XhrNotificationService.notify("Problems enabling the service")
+        //console.log("ERROR disabling service:", error);
+      });
+      console.log("activate service")
+      vm.serviceEnabled = true;
+    };
+    */
 
     /* @ngInject */
     function SoftwareUpgradeController($modalInstance) {
@@ -327,6 +358,7 @@
 
     vm.disableService = function (serviceId) {
       ServiceDescriptor.setServiceEnabled(serviceId, false, function (error) {
+        XhrNotificationService.notify("Problems disabling the service");
         //console.log("ERROR disabling service:", error);
       });
       vm.serviceEnabled = false;
