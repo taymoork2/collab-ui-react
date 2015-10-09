@@ -922,6 +922,7 @@
     "csvInvalidRow": "Row contains an incorrect number of columns.  Please verify the row contains six columns and try again.",
     "csvRequiredEmail": "The \"User ID/Email\" field is required. Please provide a valid email address and try again.",
     "csvDuplicateEmail": "Skipped due to duplicate email address.",
+    "bulkInvalidDID": "The \"Direct Line\" field contains an invalid number.  Please fix and try again.",
     "processBulkResponseError": "An error has occurred while reading the response. Please try again.",
     "processBulkError": "Unidentified error while processing the user. Please try again.",
     "bulk400Error": "Unidentified error in the user list. Please verify the user list and try again.",

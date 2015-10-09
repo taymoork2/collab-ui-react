@@ -61,6 +61,11 @@
     color: $brand-white;
     display: flex;
     align-items: center;
+
+    &.invalid-token {
+      background-color: $brand-danger;
+    }
+
     span {
       flex: 1;
       font-size: 16px;
