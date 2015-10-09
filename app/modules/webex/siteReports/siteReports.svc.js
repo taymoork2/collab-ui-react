@@ -93,8 +93,12 @@ angular.module('WebExReports').service('reportService', [
       return reversedMap;
     };
 
-    var pageid_to_navItemId_mapping_reversed = reverseMapping(pageid_to_navItemId_mapping);
+    this.reverseMapping = reverseMapping;
 
+    var pageid_to_navItemId_mapping_reversed = reverseMapping(pageid_to_navItemId_mapping);
+    this.pageid_to_navItemId_mapping_reversed = pageid_to_navItemId_mapping_reversed;
+
+    //TODO: remove
     var getFullURLGivenNavInfoAndPageId = function (navInfo, pageid) {
       var navItemId = pageid_to_navItemId_mapping[pageid];
       if (angular.isUndefined(navItemId)) {
@@ -127,6 +131,8 @@ angular.module('WebExReports').service('reportService', [
       return navItems;
     };
 
+    this.getNavItemsByCategoryName = getNavItemsByCategoryName;
+
     var UIsref = function (theUrl, rid, siteUrl) {
       this.siteUrl = siteUrl;
       this.reportPageId = rid;
@@ -144,6 +150,10 @@ angular.module('WebExReports').service('reportService', [
       this.uisrefString = this.toUIsrefString();
     };
 
+    this.instantiateUIsref = function (theUrl, rid, siteUrl) {
+      return new UIsref(theUrl, rid, siteUrl);
+    };
+
     var getUISrefs = function (navItems, siteUrl) {
       var toUisref = function (ni) {
         var navItemId = ni.ns1_navItemId;
@@ -153,6 +163,8 @@ angular.module('WebExReports').service('reportService', [
       };
       return navItems.map(toUisref);
     };
+
+    this.getUISrefs = getUISrefs;
 
     var ReportsSection = function (sectionName, siteUrl, reportLinks, categoryName) {
       var self = this;
@@ -208,7 +220,7 @@ angular.module('WebExReports').service('reportService', [
         if (mapJsonDefined) {
           var navItemsFilteredByCategoryName = getNavItemsByCategoryName(mapJson.bodyJson,
             category_Name);
-          section.uisrefs = getUISrefs(navItemsFilteredByCategoryName);
+          section.uisrefs = getUISrefs(navItemsFilteredByCategoryName, siteUrl);
         }
         // section.uisrefs = pageids.map(function (rid) {
         //   var theUrl = "www.yahoo.com";
