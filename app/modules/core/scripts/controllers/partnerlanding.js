@@ -184,7 +184,7 @@ angular.module('Core')
               Log.debug('No trial records found');
             }
             $scope.totalTrials = $scope.trialsList.length;
-            $scope.setFilter('all');
+            $scope.setFilter($scope.activeFilter);
 
           } else {
             Log.debug('Failed to retrieve trial information. Status: ' + status);
