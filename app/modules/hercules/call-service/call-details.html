@@ -1,5 +1,7 @@
-<div class="hercules details-view">
+<div class="hercules typography-airy small-margin">
 
+
+  <div ng-hide="callDetails.serviceNotInstalled()">
   <h4>
     {{callDetails.cluster.name}}
     <small><a
@@ -89,7 +91,12 @@
     No clusters...
   </p></div>
 
-
+  </div>
+  <div ng-show="callDetails.serviceNotInstalled()">
+    <div class="centered-info-pane">
+      Service is not installed on this cluster
+    </div>
+  </div>
 </div>
 
 

@@ -18,6 +18,7 @@
       getCustomer: getCustomer,
       listCarriers: listCarriers,
       getCarrierInventory: getCarrierInventory,
+      isCarrierSwivel: isCarrierSwivel,
       listCustomerCarriers: listCustomerCarriers,
       getCarrierId: getCarrierId,
       orderBlock: orderBlock,
@@ -97,6 +98,20 @@
         carrierId: carrierId,
         state: state
       }).$promise;
+    }
+
+    function isCarrierSwivel(customerId) {
+      return listCustomerCarriers(customerId).then(function (carriers) {
+        if (angular.isArray(carriers)) {
+          var carrier = _.findWhere(carriers, {
+            name: TATA
+          });
+          if (carrier) {
+            return true;
+          }
+        }
+        return false;
+      });
     }
 
     function getCarrierId(customerId, carrierName) {

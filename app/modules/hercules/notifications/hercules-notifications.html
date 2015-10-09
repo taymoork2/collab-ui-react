@@ -5,9 +5,9 @@
   </a>
 
   <!-- Bubble with amount of notifications. If there are none (length == 0) it doesn't get shown -->
-  <span class="amountBubble" ng-if="notificationController.status.count > 0">
+  <div class="amountBubble" ng-if="notificationController.status.count > 0">
       <span class="">{{notificationController.status.count}}</span>
-  </span>
+  </div>
 
   <!-- List of notifications -->
   <ul class="entries" ng-show="notificationController.showNotifications && notificationController.status.count > 0">
