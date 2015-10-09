@@ -1046,6 +1046,23 @@ angular
           controllerAs: 'cdr',
           parent: 'main'
         })
+        .state('cdr-overview', {
+          parent: 'sidepanel',
+          views: {
+            'sidepanel@': {
+              controller: 'CdrOverviewCtrl',
+              controllerAs: 'cdrpanel',
+              templateUrl: 'modules/huron/cdrLogs/cdrOverview/cdrOverview.tpl.html'
+            }
+          },
+          params: {
+            cdrData: {},
+            call: []
+          },
+          data: {
+            displayName: 'Advanced CDR Report'
+          }
+        })
         .state('callroutingBase', {
           abstract: true,
           parent: 'main',

@@ -48,6 +48,7 @@
     "partner": true,
     "landing": true,
     "support": true,
+    "cdr": true,
     "activate": true,
     "download": true,
     "meetings": true,
