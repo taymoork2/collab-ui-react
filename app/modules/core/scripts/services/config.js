@@ -167,6 +167,12 @@ angular.module('Core')
           prod: 'https://uss-a.wbx2.com/'
         },
 
+        certsUrl: {
+          dev: 'https://certs-integration.wbx2.com/',
+          integration: 'https://certs-integration.wbx2.com/',
+          prod: 'https://certs-a.wbx2.com/'
+        },
+
         webexUrl: {
           siteAdminHomeUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminHomePage',
           siteAdminDeepUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage'
@@ -738,6 +744,10 @@ angular.module('Core')
 
         getUssUrl: function () {
           return this.ussUrl[this.getEnv()] || this.ussUrl.prod;
+        },
+
+        getCertsUrl: function () {
+          return this.certsUrl[this.getEnv()] || this.certsUrl.prod;
         },
 
         getDefaultEntitlements: function () {

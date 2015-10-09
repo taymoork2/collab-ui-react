@@ -1,4 +1,4 @@
-.pstn-providers, .pstn-numbers, .pstn-review, .pstn-next-steps {
+.pstn-providers, .pstn-numbers, .pstn-swivel-numbers, .pstn-review, .pstn-next-steps {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
@@ -35,6 +35,10 @@
       text-align: center;
     }
   }
+  header img {
+    height: rem-calc(40px);
+    width: rem-calc(235px);
+  }
   h4 {
     text-align: center;
   }
@@ -48,6 +52,14 @@
   .feature-text {
     font-size: 18px;
     line-height: 24px;
+  }
+}
+
+.pstn-swivel-numbers {
+  .flex-space-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 }
 
