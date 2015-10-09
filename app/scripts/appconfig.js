@@ -597,7 +597,7 @@ angular
           parent: 'main'
         })
         .state('site-settings', {
-          url: '/webexSiteSettings',
+          url: 'site_settings',
           templateUrl: 'modules/webex/siteSettings/siteSettings.tpl.html',
           controller: 'WebExSiteSettingsCtrl',
           controllerAs: 'WebExSiteSettings',
@@ -606,8 +606,7 @@ angular
             siteUrl: null
           }
         })
-        .state('site-setting', {
-          url: '/webexSiteSetting',
+        .state('site-settings.site-setting', {
           templateUrl: 'modules/webex/siteSetting/siteSetting.tpl.html',
           controller: 'WebExSiteSettingCtrl',
           controllerAs: 'WebExSiteSetting',
@@ -1308,6 +1307,7 @@ angular
           controllerAs: 'linesListCtrl'
         })
         .state('huronsettings', {
+          url: '/settings',
           parent: 'hurondetails',
           templateUrl: 'modules/huron/callRouter/companyNumber.tpl.html',
           controller: 'CallRouterCtrl',
@@ -1316,16 +1316,9 @@ angular
         .state('huronfeatures', {
           url: '/features',
           parent: 'hurondetails',
-          controller: 'ListFeaturesCtrl',
-          controllerAs: 'listFeaturesCtrl',
-          templateUrl: 'modules/huron/features/listFeatures.tpl.html',
-        })
-        .state('huronnewfeature', {
-          url: '/newfeature',
-          parent: 'hurondetails',
-          controller: 'NewFeatureCtrl',
-          controllerAs: 'newFeatureCtrl',
-          templateUrl: 'modules/huron/features/newFeature/newFeature.tpl.html',
+          controller: 'FeaturesCtrl',
+          controllerAs: 'featuresCtrl',
+          templateUrl: 'modules/huron/features/features.tpl.html',
         });
     }
   ]);

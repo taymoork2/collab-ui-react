@@ -27,7 +27,6 @@
     </div>
 
     <div ui-view="fullPane" class="content">
-
     </div>
 
   </div>
@@ -35,17 +34,18 @@
 
 
 <div ng-hide="call.serviceEnabled || call.startSetupClicked" class="content">
-  <div class="fusion-welcome">
-    <h3>Extend the cloud to your premises</h3>
+    <div class="centered-info-pane">
+      <h4>Extend the cloud to your premises</h4>
 
-    <p>Connect your Cisco VCS to the Collaboration Cloud to add this service.</p>
-    <br>
+      <p>Connect your Cisco VCS to the Collaboration Cloud to add this service.</p>
+      <p>Read the general Cloud Extensions and specific Service pre-requisites and click Start Setup.</p>
 
-    <p>Read the general Cloud Extensions and specific Service pre-requisites and click Start Setup.</p>
-    <button class="btn btn-info" ng-click="call.startSetup()">
-      Start Setup
-    </button>
-  </div>
+      <br>
+
+      <button class="btn btn-info" ng-click="call.startSetup()">
+        Start Setup
+      </button>
+    </div>
 </div>
 
 

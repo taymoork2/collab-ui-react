@@ -1,7 +1,29 @@
 <div class="row">
 
-  <div class="large-4 columns">
+  <div class="medium-4 columns">
 
+    <table class="call-service-clusters">
+      <tr ng-repeat="(url,cluster) in call.clusters"
+          ui-sref="{{call.route}}.list.details({cluster:cluster, serviceType: call.currentServiceType})">
+        <td ng-hide="call.hasNoConnectors(cluster)">
+          <div class="content"
+               ng-class="{'active':call.selectedRow === $index}"
+               ng-click="call.selectedRow = $index">
+          <i class="icon icon-data icon-inverse-round" style="float:left"/>
+          <i class="overlay" ng-class="{ok: call.selectedServiceAndManagementServiceStatus(cluster).color == 'green',attention: call.selectedServiceAndManagementServiceStatus(cluster).color == 'yellow', alarm: call.selectedServiceAndManagementServiceStatus(cluster).color == 'red'}"/>
+          <b>{{cluster.name}}</b>
+          <br>
+          <span ng-if="call.selectedServiceAndManagementServiceStatus(cluster).status == 'running'">Running</span>
+          <span ng-if="call.selectedServiceAndManagementServiceStatus(cluster).status == 'alarm'">Alarm</span>
+          <span ng-if="call.selectedServiceAndManagementServiceStatus(cluster).status == 'needs_attention'">Needs attention</span>
+          <span ng-if="call.selectedServiceAndManagementServiceStatus(cluster).status == 'disabled'">Disabled</span>
+          <span ng-show="call.softwareUpgradeAvailable(cluster)">, Upgrades</span>
+        </div>
+        </td>
+      </tr>
+
+    </table>
+    <!--
     <cs-card class="full" id="{{$index}}" ng-repeat="(url,cluster) in call.clusters" ui-sref="{{call.route}}.list.details({cluster:cluster, serviceType: call.currentServiceType})">
       <article ng-class="{'gray' : call.state.includes('{{call.route}}.list.details') && call.state.params.cluster.id == cluster.id}">
         <header>
@@ -22,9 +44,17 @@
         </section>
       </article>
     </cs-card>
-
+  -->
   </div>
 
-  <div class="large-8 columns" ui-view="rightPane"></div>
+  <div class="medium-8 columns" ui-view="rightPane">
+
+    <div class="centered-info-pane">
+      <br>
+      <p>
+        Select a cluster in the left meny to see details for that cluster.
+      </p>
+    </div>
+  </div>
 </div>
 
