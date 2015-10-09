@@ -1,0 +1,29 @@
+<div>
+	<div class="section-title-row">
+        <span class="section-name" translate="deviceDetailPage.logTitle"></span>
+        <span class="actions-menu dropdown pull-right">
+          <button class="actions-button btn-none dropdown-toggle">
+            <i class="icon icon-three-dots"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-primary actions-services">
+            <li><a translate="deviceDetailPage.retrieveLogBttn" ng-click="ucDeviceLog.retrieveLog()"></a></li>
+          </ul>
+        </span>
+    </div>
+    <div id="deviceLogMain" ng-show="!ucDeviceLog.active">
+    	<p translate="deviceDetailPage.retrieveLogInstructions"></p>
+    	<div class="text-center device-log-button">
+    		<button type="button" translate="deviceDetailPage.retrieveLogBttn" class="button secondary" ng-click="ucDeviceLog.retrieveLog()"></button>
+    	</div>
+    </div>
+    <div id="deviceLogList" ng-show="ucDeviceLog.active && !ucDeviceLog.isPolling()">
+    	<li ng-repeat="log in ucDeviceLog.logList">
+        <p>{{log.name}}</p>
+      </li>
+    </div>
+    <div id="deviceLogWait" ng-show="ucDeviceLog.active && ucDeviceLog.isPolling()">
+    	<div class="report-status text-center">
+   			<i class='icon icon-spinner icon-2x' ></i>
+		</div>
+    </div>
+</div>

@@ -1566,7 +1566,10 @@
     "deactivateDevice": "Deactivate Device",
     "deactivateBody": "This action cannot be undone.  Are you sure you want to deactivate this device?",
     "deviceStatusFailureMsg": "Failed to fetch device status",
-    "deviceIpAddressFailureMsg": "Failed to fetch device IP"
+    "deviceIpAddressFailureMsg": "Failed to fetch device IP",
+    "logTitle": "Logs",
+    "retrieveLogBttn": "Retrieve Latest Log",
+    "retrieveLogInstructions":"Retrieve the latest log file from the device."
   },
   "deviceOverviewPage": {
     "activationNoLongerNeeded": "If this activation is no longer needed:",
