@@ -113,6 +113,7 @@
     "trialextinterest": true,
     "TIMEOUT": true,
     "inviteusers": true,
-    "phoneUtils": true
+    "phoneUtils": true,
+    "jstz": true
   }
 }
