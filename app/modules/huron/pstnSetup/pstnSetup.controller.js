@@ -142,7 +142,8 @@
     };
     vm.tokenmethods = {
       createtoken: createToken,
-      createdtoken: createdToken
+      createdtoken: createdToken,
+      edittoken: editToken
     };
     vm.validateSwivelNumbers = validateSwivelNumbers;
 
@@ -150,8 +151,15 @@
 
     ////////////////////////
 
+    function editToken(e) {
+      // If invalid token, show the label text in the edit input
+      if (e.attrs.invalid) {
+        e.attrs.value = e.attrs.label;
+      }
+    }
+
     function createToken(e) {
-      var tokenNumber = e.attrs.value;
+      var tokenNumber = e.attrs.label;
       e.attrs.value = TelephoneNumberService.getDIDValue(tokenNumber);
       e.attrs.label = TelephoneNumberService.getDIDLabel(tokenNumber);
 
@@ -197,7 +205,7 @@
         invalid: true
       });
       if (invalid) {
-        Notification.error('pstnSetup.invalidNumber');
+        Notification.error('pstnSetup.invalidNumberPrompt');
       } else if (tokens.length === 0) {
         Notification.error('pstnSetup.orderNumbersPrompt');
       } else {

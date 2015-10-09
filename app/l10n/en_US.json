@@ -1373,7 +1373,7 @@
     "launchPortal": "Launch Company Portal",
     "carrierListError": "Failed to retrieve carrier list for this customer.",
     "orderNumbersPrompt": "Must add numbers to proceed.",
-    "invalidNumber": "Please fix invalid number(s) before proceeding.",
+    "invalidNumberPrompt": "Please fix invalid number(s) before proceeding.",
     "duplicateNumber": "{{number}} is a duplicate number.",
     "blockOrderError": "Failed to order {{quantity}} block number(s) with area code {{areaCode}}.",
     "swivelAddError": "Failed to add {{number}}.",
