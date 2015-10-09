@@ -282,9 +282,9 @@
     vm.squaredFusionEc = false;
     ServiceDescriptor.isServiceEnabled("squared-fusion-ec", function (a, b) {
       vm.squaredFusionEc = b;
-      //if (vm.squaredFusionEc) {
-      readCerts();
-      //}
+      if (vm.squaredFusionEc) {
+        readCerts();
+      }
     });
 
     ServiceDescriptor.isServiceEnabled(vm.serviceId, function (a, b) {
@@ -293,7 +293,14 @@
 
     vm.storeEc = function () {
       //console.log("store ec", vm.squaredFusionEc)
-      ServiceDescriptor.setServiceEnabled("squared-fusion-ec", vm.squaredFusionEc, function (a, b) {});
+      ServiceDescriptor.setServiceEnabled("squared-fusion-ec", vm.squaredFusionEc,
+        function (err) {
+          // TODO: fix this callback crap!
+          if (err) {
+            XhrNotificationService.notify("Failed to enable Aware");
+          }
+        }
+      );
       if (vm.squaredFusionEc) {
         readCerts();
       }
@@ -399,10 +406,30 @@
       CertService.uploadCert(Authinfo.getOrgId(), file).then(readCerts, XhrNotificationService.notify);
     };
 
-    vm.deleteCert = function (certId) {
-      CertService.deleteCert(certId).then(readCerts, XhrNotificationService.notify);
+    vm.confirmCertDelete = function (cert) {
+      $modal.open({
+        templateUrl: "modules/hercules/call-service/confirm-certificate-delete.html",
+        controller: ConfirmCertificateDeleteController,
+        controllerAs: "confirmCertificateDelete",
+        resolve: {
+          cert: function () {
+            return cert;
+          }
+        }
+      }).result.then(readCerts);
     };
+  }
 
+  /* @ngInject */
+  function ConfirmCertificateDeleteController(CertService, $modalInstance, XhrNotificationService, cert) {
+    var vm = this;
+    vm.cert = cert;
+    vm.remove = function () {
+      CertService.deleteCert(vm.cert.certId).then($modalInstance.close, XhrNotificationService.notify);
+    };
+    vm.cancel = function () {
+      $modalInstance.dismiss();
+    };
   }
 
   angular
