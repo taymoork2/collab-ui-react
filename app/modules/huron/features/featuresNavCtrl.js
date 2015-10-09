@@ -213,8 +213,7 @@
       var modalInstance = $modal.open({
         templateUrl: 'modules/huron/features/newFeature/newFeatureModal.tpl.html',
         controller: 'NewFeatureModalCtrl',
-        controllerAs: 'newFeatureModalCtrl',
-        size: 'lg'
+        controllerAs: 'newFeatureModalCtrl'
       });
 
       /* Goto the corresponding Set up Assistant controller
