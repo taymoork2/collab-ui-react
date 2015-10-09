@@ -2,11 +2,11 @@
 
   <div class="medium-4 columns">
 
-    <table class="call-service-clusters">
+    <table class="hercules-cluster-table tiny-vertical-marker">
       <tr ng-repeat="(url,cluster) in call.clusters"
           ui-sref="{{call.route}}.list.details({cluster:cluster, serviceType: call.currentServiceType})">
         <td>
-          <div class="content"
+          <div class="cell-content"
                ng-hide="call.serviceNotInstalled(cluster)"
                ng-class="{'active':call.selectedRow === $index}"
                ng-click="call.selectedRow = $index">
@@ -72,7 +72,8 @@
 
 <div ng-show="call.clusterLength === 0" class="row">
   <div class="centered-info-pane">
-    There are no clusters
+    No clusters registered.
+    You need to register Cisco VCS for Cloud Extensions.
   </div>
 </div>
 

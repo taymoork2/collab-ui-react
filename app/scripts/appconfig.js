@@ -1378,7 +1378,7 @@ angular
           url: '/services/calendar/about',
           views: {
             'fullPane': {
-              templateUrl: 'modules/hercules/call-service/calendar-about.html'
+              templateUrl: 'modules/hercules/call-service/call-about.html'
             }
           }
         })

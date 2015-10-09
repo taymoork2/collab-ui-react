@@ -26,7 +26,7 @@
       </div>
     </div>
 
-    <div ui-view="fullPane" class="content">
+    <div ui-view="fullPane" class="small-padding-top">
     </div>
 
   </div>
@@ -35,14 +35,12 @@
 
 <div ng-hide="call.serviceEnabled || call.startSetupClicked" class="content">
     <div class="centered-info-pane">
-      <h4>Extend the cloud to your premises</h4>
 
-      <p>Add correct text here.</p>
-      <p>
-        <strike>Connect your Cisco VCS to the Collaboration Cloud to add this service.
-        Read the general Cloud Extensions and specific Service pre-requisites and click Start Setup.
-        </strike>
-      </p>
+      <p translate="hercules.serviceNames.{{call.currentServiceId}}"></p>
+      <b>Not enabled</b>
+
+      <br>
+      <p>You need to enable this service. Follow the notification wizard.</p>
 
       <br>
 
