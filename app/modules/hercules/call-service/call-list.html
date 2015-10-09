@@ -20,7 +20,7 @@
             <span ng-if="call.selectedServiceAndManagementServiceStatus(cluster).status == 'disabled'">Disabled</span>
             <span ng-show="call.softwareUpgradeAvailable(cluster)">, Upgrades</span>
           </div>
-          <div class="content"
+          <div class="cell-content"
                ng-show="call.serviceNotInstalled(cluster)"
                ng-class="{'active':call.selectedRow === $index}"
                ng-click="call.selectedRow = $index">

@@ -4,24 +4,25 @@
 
     <div class="page-header">
       <div class="page-title">
+
         <span translate="hercules.serviceNames.{{call.currentServiceId}}" class="title-heading">
         </span>
 
+        <!-- TODO: Seems to be problems with positioning with narrow screen -->
         <hercules-notifications></hercules-notifications>
 
-        <span>
+        <div>
           <i class="icon icon-circle-user"/>
           {{call.summary.activated}} activated |
           {{call.summary.notActivated}} pending |
           {{call.summary.error}} needs attention
-        </span>
+        </div>
 
-        <span class="menu">
-
+        <div class="menu">
           <a ui-sref-active="active" ui-sref="{{call.route}}.list">Resources</a>
           <a ui-sref-active="active" ui-sref="{{call.route}}.settings({serviceType:call.currentServiceType})">Settings</a>
           <a ui-sref-active="active" ui-sref="{{call.route}}.about">About</a>
-        </span>
+        </div>
 
       </div>
     </div>
