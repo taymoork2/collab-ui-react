@@ -197,8 +197,8 @@ angular.module('WebExReports').service('reportService', [
       //use the above 5 lists to gather all the UISrefs
       [
         [common_reports_pageids, common_reports],
-        [support_center_pageids, support_center],
         [training_center_pageids, training_center],
+        [support_center_pageids, support_center],
         [event_center_pageids, event_center],
         [remote_access_pageids, remote_access]
       ].forEach(function (xs) {
@@ -223,8 +223,8 @@ angular.module('WebExReports').service('reportService', [
       });
 
       var repts = new Reports();
-      repts.setSections([common_reports, support_center,
-        training_center, event_center, remote_access
+      repts.setSections([common_reports, training_center, support_center,
+        event_center, remote_access
       ]);
       return repts;
     };
