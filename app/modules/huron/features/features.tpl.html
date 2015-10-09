@@ -1,10 +1,10 @@
-<div ng-switch on="huronFeaturesNavCtrl.pageState" class = "features features-content">
+<div ng-switch on="huronFeaturesCtrl.pageState" class = "features features-content">
 
   <!--Show Create New Feature Page if no features exists-->
   <div ng-switch-when="NewFeature" class="no-features-available">
     <div class="h4 nothing-to-see" translate="huronDetails.featuresNotYetConfiguredPage.nothingToSee"></div>
     <div class="h1 lets-customize" translate="huronDetails.featuresNotYetConfiguredPage.letsCustomize"></div>
-    <div><button class="button info large" ng-click="huronFeaturesNavCtrl.openModal()" translate="huronDetails.newFeatureButtonText"></button></div>
+    <div><button class="button info large" ng-click="huronFeaturesCtrl.openModal()" translate="huronDetails.newFeatureButtonText"></button></div>
   </div>
 
   <!--Show Spinner Icon until controller receives data from back-end-->
@@ -14,9 +14,9 @@
   <div ng-switch-when="showFeatures">
     <div class="feature-header">
       <span class="open-panel">
-        <cs-searchfilter filters="huronFeaturesNavCtrl.filters" set-filter-fn="huronFeaturesNavCtrl.setFilter(filter.filterValue)" search-item-fn="huronFeaturesNavCtrl.searchData(searchStr)" placeholder-text="{{huronFeaturesNavCtrl.placeholder.name}}" hide-count="true">
+        <cs-searchfilter filters="huronFeaturesCtrl.filters" set-filter-fn="huronFeaturesCtrl.setFilter(filter.filterValue)" search-item-fn="huronFeaturesNavCtrl.searchData(searchStr)" placeholder-text="{{huronFeaturesNavCtrl.placeholder.name}}" hide-count="true">
           </cs-searchfilter></span>
-      <span><button type="button" class="button info new-feature-button" ng-click="huronFeaturesNavCtrl.openModal()">New</button></span>
+      <span><button type="button" class="button info new-feature-button" ng-click="huronFeaturesCtrl.openModal()">New</button></span>
     </div>
     <feature-cards></feature-cards>
   </div>

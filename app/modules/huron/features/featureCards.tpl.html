@@ -1,6 +1,6 @@
 <div class="cs-card-block cards-block">
-  <cs-card ng-repeat="huronFeature in huronFeaturesNavCtrl.listOfFeatures"
-           class="header-background {{ huronFeaturesNavCtrl.cardColors[huronFeature.filterValue] }}">
+  <cs-card ng-repeat="huronFeature in huronFeaturesCtrl.listOfFeatures"
+           class="header-background {{ huronFeaturesCtrl.cardColors[huronFeature.filterValue] }}">
     <article>
       <header>
         <div>
@@ -11,10 +11,10 @@
             </button>
             <ul class="dropdown-menu dropdown-primary actions-services" role="menu">
               <li><a><span
-                ng-click="huronFeaturesNavCtrl.editHuronFeature((huronFeature))"
+                ng-click="huronFeaturesCtrl.editHuronFeature((huronFeature))"
                 translate="huronFeatureDetails.editAction"></span></a></li>
               <li><a><span
-                ng-click="huronFeaturesNavCtrl.deleteHuronFeature((huronFeature))"
+                ng-click="huronFeaturesCtrl.deleteHuronFeature((huronFeature))"
                 translate="huronFeatureDetails.deleteAction"></span></a></li>
             </ul></span>
         </div>

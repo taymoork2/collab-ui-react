@@ -3,12 +3,12 @@
 
   angular
     .module('uc.hurondetails')
-    .controller('HuronFeaturesNavCtrl', HuronFeaturesNavCtrl);
+    .controller('HuronFeaturesCtrl', HuronFeaturesCtrl);
 
   /* jshint validthis: true */
 
   /* @ngInject */
-  function HuronFeaturesNavCtrl($scope, $state, $filter, $timeout, $modal, Authinfo, HuntGroupService, Log, Notification) {
+  function HuronFeaturesCtrl($scope, $state, $filter, $timeout, $modal, Authinfo, HuntGroupService, Log, Notification) {
 
     var vm = this;
     vm.filters = [];

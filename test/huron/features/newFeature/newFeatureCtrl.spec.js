@@ -32,7 +32,7 @@ describe('Controller: FeatureCtrl', function () {
     Log = _Log_;
     Notification = _Notification_;
 
-    controller = $controller('HuronFeaturesNavCtrl', {
+    controller = $controller('HuronFeaturesCtrl', {
       $scope: $scope,
       $modal: $modal,
       $state: $state,
