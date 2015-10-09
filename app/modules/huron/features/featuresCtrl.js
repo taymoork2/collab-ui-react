@@ -30,8 +30,7 @@
       var modalInstance = $modal.open({
         templateUrl: 'modules/huron/features/newFeature/newFeatureModal.tpl.html',
         controller: 'NewFeatureModalCtrl',
-        controllerAs: 'newFeatureModalCtrl',
-        size: 'lg'
+        controllerAs: 'newFeatureModalCtrl'
       });
       modalInstance.result.then(function (selectedFeature) {
         vm.feature = selectedFeature;

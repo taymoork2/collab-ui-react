@@ -6,6 +6,7 @@ angular.module('Hercules')
 
       var baseHerculesUrl = Config.getHerculesUrl();
       var baseUssUrl = Config.getUssUrl();
+      var baseCertsUrl = Config.getCertsUrl();
 
       var getOverriddenUrl = function (queryParam) {
         var regex = new RegExp(queryParam + "=([^&]*)");
@@ -30,9 +31,18 @@ angular.module('Hercules')
           return baseUssUrl + 'uss/api/v1';
         }
       };
+      var getCertsUrl = function () {
+        var overriddenUrl = getOverriddenUrl('certs-url');
+        if (overriddenUrl) {
+          return overriddenUrl;
+        } else {
+          return baseCertsUrl + 'certificate/api/v1';
+        }
+      };
       return {
         getUrl: getUrl,
-        getUSSUrl: getUSSUrl
+        getUSSUrl: getUSSUrl,
+        getCertsUrl: getCertsUrl
       };
     }
   ]);

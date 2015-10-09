@@ -597,7 +597,7 @@ angular
           parent: 'main'
         })
         .state('site-settings', {
-          url: '/webexSiteSettings',
+          url: 'site_settings',
           templateUrl: 'modules/webex/siteSettings/siteSettings.tpl.html',
           controller: 'WebExSiteSettingsCtrl',
           controllerAs: 'WebExSiteSettings',
@@ -606,8 +606,7 @@ angular
             siteUrl: null
           }
         })
-        .state('site-setting', {
-          url: '/webexSiteSetting',
+        .state('site-settings.site-setting', {
           templateUrl: 'modules/webex/siteSetting/siteSetting.tpl.html',
           controller: 'WebExSiteSettingCtrl',
           controllerAs: 'WebExSiteSetting',
