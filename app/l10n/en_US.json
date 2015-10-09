@@ -2218,7 +2218,7 @@
     "errorFailedGettingCISyncStatus": "Failed getting CI Sync status; Detail: ",
     "errorFailedRefreshingCISyncStatus": "Failed refreshing CI Sync status; Detail: ",
     "errorFailedUpdatingCISync": "Failed updating CI Sync status; Detail: ",
-    "errorLacksEntitlements": "User lacks required CI entitlements to view this content: ",
+    "errorLacksEntitlements": "User lacks required CI entitlements or CI Customer Success Admin Role to view this content: ",
     "errorLacksFullAdmin": "User lacks required Full Admin CI role to view this content",
     "errorUnauthoredToView": "Unauthorized to view this content",
     "http0": "Can't connect to service",
