@@ -28,12 +28,7 @@ describe('App flow', function () {
     it('clicking on orgs tab should change the view', function () {
       navigation.clickOrganization();
 
-      utils.expectIsDisplayed(manage.displayName);
-      utils.expectIsDisplayed(manage.estimatedSize);
-      utils.expectIsDisplayed(manage.totalUsers);
-      utils.expectIsDisplayed(manage.enableSSO);
-      utils.expectIsNotDisplayed(manage.saveButton);
-      utils.expectIsDisplayed(manage.refreshButton);
+      utils.expectIsDisplayed(manage.orgTitle);
     });
 
     it('clicking on reports tab should change the view', function () {

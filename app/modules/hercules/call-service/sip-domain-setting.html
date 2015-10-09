@@ -1,0 +1,22 @@
+<h5>SIP Domain</h5>
+
+<input type="text"
+       ng-disabled="saving"
+       ng-blur="callServiceSettings.updateSipDomain()"
+       placeholder="SIP domain or static host name / IP address, for example, yourdomain.com"
+       class="form-control"
+       id="sipDomain" type="text" ng-model="callServiceSettings.org.sipDomain"/>
+
+<div ng-show="callServiceSettings.sipError" class="alert alert-danger">
+  <small class="error">{{callServiceSettings.sipError}}</small>
+</div>
+
+<button ng-disabled="callServiceSettings.loading || callServiceSettings.savingSip" id="convertActionButton" class="btn-primary"
+        ng-click="callServiceSettings.updateSipDomain()">
+        <span ng-hide="callServiceSettings.savingSip">
+          Save
+        </span>
+        <span ng-show="callServiceSettings.savingSip">
+          <i class="icon icon-spinner"/>
+        </span>
+</button>

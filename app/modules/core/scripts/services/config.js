@@ -167,6 +167,12 @@ angular.module('Core')
           prod: 'https://uss-a.wbx2.com/'
         },
 
+        certsUrl: {
+          dev: 'https://certs-integration.wbx2.com/',
+          integration: 'https://certs-integration.wbx2.com/',
+          prod: 'https://certs-a.wbx2.com/'
+        },
+
         webexUrl: {
           siteAdminHomeUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminHomePage',
           siteAdminDeepUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage'
@@ -189,6 +195,7 @@ angular.module('Core')
         supportUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt',
 
         usersperpage: 100,
+        orgsPerPage: 100,
         meetingsPerPage: 50,
         alarmsPerPage: 50,
         eventsPerPage: 50,
@@ -308,13 +315,8 @@ angular.module('Core')
           subPages: [{
             title: 'tabs.organizationTab',
             desc: 'tabs.organizationTabDesc',
-            state: 'organization',
-            link: '#organization'
-          }, {
-            title: 'tabs.addOrganizationTab',
-            desc: 'tabs.addOrganizationTabDesc',
-            state: 'organizationAdd',
-            link: '#add-organization'
+            state: 'organizations',
+            link: '#organizations'
           }, {
             title: 'tabs.callRoutingTab',
             desc: 'tabs.callRoutingTabDesc',
@@ -511,6 +513,10 @@ angular.module('Core')
           } else {
             return this.adminServiceUrl.prod;
           }
+        },
+
+        getProdAdminServiceUrl: function () {
+          return this.adminServiceUrl.prod;
         },
 
         getCsdmServiceUrl: function () {
@@ -740,6 +746,10 @@ angular.module('Core')
           return this.ussUrl[this.getEnv()] || this.ussUrl.prod;
         },
 
+        getCertsUrl: function () {
+          return this.certsUrl[this.getEnv()] || this.certsUrl.prod;
+        },
+
         getDefaultEntitlements: function () {
           return this.defaultEntitlements;
         },
@@ -812,7 +822,7 @@ angular.module('Core')
           'webex-reports',
           'webex-reports-iframe'
         ],
-        Application: ['organizationAdd']
+        Application: ['organizations', 'organization-overview']
       };
 
       config.serviceStates = {
@@ -833,6 +843,7 @@ angular.module('Core')
           'huronlines',
           'huronsettings',
           'huronfeatures',
+          'huronnewfeature',
           'cdrsupport'
         ],
         'squared-fusion-mgmt': [
@@ -844,6 +855,7 @@ angular.module('Core')
         'squared-fusion-uc': [
           'devices',
           'device-overview',
+          'devices-redux',
           'devices-redux2',
           'devices-redux3',
           'devices-redux4',

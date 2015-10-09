@@ -14,7 +14,7 @@
     vm.gsxFeature = false;
 
     Userservice.getUser('me', function (data, status) {
-      FeatureToggleService.getFeaturesForUser(data.id, 'gsxdemo').then(function (value) {
+      FeatureToggleService.getFeatureForUser(data.id, 'gsxdemo').then(function (value) {
         vm.gsxFeature = value;
       }).finally(function () {
         activate();

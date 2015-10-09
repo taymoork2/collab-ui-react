@@ -3,26 +3,25 @@
 /* global $ */
 
 angular.module('Core')
-  .controller('OrganizationOverviewCtrl', ['$rootScope', '$scope', '$state', '$location', 'Storage', 'Log', '$filter', 'Orgservice', 'Authinfo', 'UserListService', 'Notification', '$dialogs',
-    function ($rootScope, $scope, $state, $location, Storage, Log, $filter, Orgservice, Authinfo, UserListService, Notification, $dialogs) {
+  .controller('OrganizationOverviewCtrl', ['$stateParams', '$rootScope', '$scope', '$state', '$location', 'Storage', 'Log', '$filter', 'Orgservice', 'Authinfo', 'Notification', '$dialogs',
+    function ($stateParams, $rootScope, $scope, $state, $location, Storage, Log, $filter, Orgservice, Authinfo, Notification, $dialogs) {
 
-      $scope.orgName = Authinfo.getOrgName();
+      $scope.currentOrganization = $stateParams.currentOrganization;
 
-      var getorgInfo = function () {
-        Orgservice.getOrg(function (data, status) {
+      var getOrgInfo = function () {
+        Orgservice.getAdminOrg(function (data, status) {
           if (data.success) {
             $scope.org = data;
             if (data.services) {
               $scope.svcs = data.services;
             }
-
           } else {
             Log.debug('Get existing org failed. Status: ' + status);
           }
-        });
+        }, $scope.currentOrganization.id, true);
       };
 
-      getorgInfo();
+      getOrgInfo();
 
       //Making sure the search field is cleared
       $('#search-input').val('');
@@ -41,45 +40,12 @@ angular.module('Core')
         $('#btncover').show();
       }
 
-      $scope.$on('EXPORT_FINISHED', function () {
-        $scope.exportBtn.disabled = false;
-      });
-
-      $scope.exportCSV = function () {
-        var promise = UserListService.exportCSV($scope);
-        promise.then(null, function (error) {
-          Notification.notify(Array.new(error), 'error');
-        });
-
-        return promise;
-      };
-
       $scope.$on('AuthinfoUpdated', function () {
-        getorgInfo();
+        getOrgInfo();
       });
 
-      $scope.resetOrg = function () {
-        getorgInfo();
-      };
-
-      $scope.enableSSO = function () {
-        var dlg = $dialogs.create('modules/core/organizations/organizationOverview/setupsso.html', 'setupSSODialogCtrl');
-        dlg.result.then(function () {
-
-        });
-      };
-
-      $scope.popupDirsync = function () {
-        var dlg = $dialogs.create('modules/core/organizations/organizationOverview/setupdirsync.html', 'setupDirSyncDialogCtrl');
-        dlg.result.then(function () {
-
-        });
-      };
-
-      $scope.openAddOrganizationModal = function () {
-        $state.go('organizationAdd.info').then(function () {
-          $state.modal.result.then(function () {});
-        });
+      $scope.manageFeatures = function () {
+        $state.go('organization-overview.features');
       };
     }
   ]);

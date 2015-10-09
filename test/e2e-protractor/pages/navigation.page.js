@@ -8,8 +8,8 @@ var Navigation = function () {
   this.homeTab = element(by.css('li.overviewTab > a'));
   this.usersTab = element(by.css('li.userTab > a'));
   this.accountTab = element(by.css('li.accountTab > a'));
-  this.orgTab = element(by.css('a[href="#organization"]'));
-  this.orgAddTab = element(by.css('a[href="#add-organization"]'));
+  this.orgTab = element(by.css('a[href="#organizations"]'));
+  this.orgAddTab = element(by.css('#addOrganizations'));
   this.callRoutingTab = element(by.css('a[href="#callrouting"]'));
   this.fusionTab = element(by.css('a[href="#fusion"]'));
   this.reportsTab = element(by.css('li.reportTab > a'));
@@ -69,7 +69,7 @@ var Navigation = function () {
   this.clickOrganization = function () {
     this.clickDevelopmentTab();
     utils.click(this.orgTab);
-    this.expectCurrentUrl('/organization');
+    this.expectCurrentUrl('/organizations');
   };
 
   this.clickCustomers = function () {
