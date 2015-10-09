@@ -10,7 +10,7 @@ describe('Organization Permissions check', function () {
   });
 
   it('should verify that the organization creation link is visible', function () {
-    navigation.clickDevelopmentTab();
+    navigation.clickOrganization();
     utils.expectIsDisplayed(navigation.orgAddTab);
   });
 
@@ -24,6 +24,6 @@ describe('Organization Permissions check', function () {
 
   it('should verify that the organization creation link is not visible', function () {
     navigation.clickDevelopmentTab();
-    utils.expectIsNotDisplayed(navigation.orgAddTab);
+    utils.expectIsNotDisplayed(navigation.orgTab);
   });
 });

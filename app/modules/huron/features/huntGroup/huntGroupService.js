@@ -78,6 +78,7 @@
 
       var successResponse = {
         'data': successResponseData,
+        //'data' : emptyData,
         'status': 200,
         'statusText': 'OK'
       };

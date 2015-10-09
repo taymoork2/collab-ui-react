@@ -1,10 +1,10 @@
-<div class="hercules subpage">
+<div class="hercules subpage calendar-sub">
   <div class="row">
     <div class="large-6 columns">
 
-      <h4>
+      <h5>
         Feature Settings
-      </h4>
+      </h5>
 
       <p>
         Specify the Call Service features to enable or disable.
@@ -12,61 +12,41 @@
         It can not be turned of, as it is a pre-requisite of the other features.
       </p>
 
-      <h5>
+      <h6>
         Aware
-      </h5>
-      <p>
-      Effortlessly share your desktop with Spark while you are on your work phone.
-      </p>
+      </h6>
 
       <p>
+        Effortlessly share your desktop with Spark while you are on your work phone.
+      </p>
+
+      <p style="color:#CCC">
         On by default
       </p>
 
-      <h5>
+      <h6>
         Connect
-      </h5>
-      <p>
         <span class="switch small right">
-          <input ng-click="callServiceSettings.toggleEc()" ng-model="callServiceSettings.squaredFusionEc" id="checkboxSquaredFusionEc" type="checkbox">
+          <cs-toggle-switch ng-click="callServiceSettings.storeEc()" ng-model="callServiceSettings.squaredFusionEc" toggle-id="squaredFusionEc-toggler" size="small"></cs-toggle-switch>
         </span>
-      </p>
+      </h6>
+
+      <!--
+      <span class="switch small right">
+        <input ng-click="callServiceSettings.toggleEc()" ng-model="callServiceSettings.squaredFusionEc"
+               id="checkboxSquaredFusionEc" type="checkbox">
+      </span>
+      -->
 
       <p>
         Answer your work phone or call your coworkers from Spark.
       </p>
 
+      <div ng-include src="'modules/hercules/call-service/sip-domain-setting.html'"></div>
 
-
-      <h5>Sip domain</h5>
-
-        <input type="text"
-               ng-disabled="saving"
-               ng-blur="callServiceSettings.updateSipDomain()"
-               placeholder="SIP domain or static host name / IP address, for example, yourdomain.com"
-               class="form-control"
-               id="sipDomain" type="text" ng-model="callServiceSettings.org.sipDomain"/>
-
-      <div ng-show="callServiceSettings.sipError" class="alert alert-danger">
-        <small class="error">{{callServiceSettings.sipError}}</small>
-      </div>
-
-      <button ng-disabled="callServiceSettings.loading || callServiceSettings.savingSip" id="convertActionButton" class="btn-primary"
-              ng-click="callServiceSettings.updateSipDomain()">
-        <span ng-hide="callServiceSettings.savingSip">
-          Save
-        </span>
-        <span ng-show="callServiceSettings.savingSip">
-          <i class="icon icon-spinner"/>
-        </span>
-      </button>
-
-      <hr/>
-
-
-      <h4>
+      <h5>
         Certificates for encrypted SIP calls
-      </h4>
+      </h5>
 
       <p>
         Use certificates provided from Cisco Collaboration default trust list (Cert Service) for the encrypted SIP
@@ -78,57 +58,9 @@
 
     <div class="large-6 columns">
 
-      <h4>
-        Email notifications
-      </h4>
+      <div ng-include src="'modules/hercules/call-service/email-notification-setting.html'"></div>
 
-      <p>
-        Here we need a new text that tells you something useful.
-        I.e. Add email adresses to receive email notifications about Service impacting Alarms and Software Upgrades.
-      </p>
-
-
-      <textarea ng-disabled="saving"
-                placeholder="Separate multiple email addresses by commas, for example, foo@yourdomain.com, bar@yourdomain.com, ..."
-                class="form-control"
-                id="wx2_users"
-                type="text"
-                ng-model="callServiceSettings.config.wx2users"></textarea>
-      <div ng-show="callServiceSettings.emailError" class="alert alert-danger">
-        <small class="error">{{callServiceSettings.emailError}}</small>
-      </div>
-
-      <button ng-disabled="callServiceSettings.loading || callServiceSettings.savingEmail" id="convertActionButton"
-              class="btn-primary"
-              ng-click="callServiceSettings.writeConfig()">
-        <span ng-hide="callServiceSettings.savingEmail">
-          Save
-        </span>
-        <span ng-show="callServiceSettings.savingEmail">
-          <i class="icon icon-spinner"/>
-        </span>
-      </button>
-
-      <hr/>
-
-      <h4>
-        Deactivate Service
-      </h4>
-
-      <p>
-        Deactivating a service (requires another confirm step) will remove any service related functionality from your
-        users.
-        Additional steps to remove the service from your on premise devices are required.
-        See doumentation for guideance and further instructions.
-      </p>
-      <button ng-show="callServiceSettings.serviceEnabled"
-              class="btn-danger"
-              ng-click="callServiceSettings.confirmDisable('squared-fusion-uc')">DEACTIVATE</button>
-
-      <p>
-        Go to Help Central for help uninstalling a Hybrid Service.
-      </p>
-
+      <div ng-include src="'modules/hercules/call-service/deactivate-service-setting.html'"></div>
 
     </div>
   </div>

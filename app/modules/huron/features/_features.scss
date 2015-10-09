@@ -107,3 +107,27 @@
 }
 
 
+.no-features-available {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  overflow-y: auto;
+  flex: 1;
+  height: 80vh;
+  color: $gray-dark;
+  background: $brand-white;
+  align-items: center;
+  justify-content: center;
+
+  .nothing-to-see {
+    color: $gray-dark;
+  }
+
+  .lets-customize {
+    color: $gray-darker;
+  }
+
+  & div {
+    @include vr-spacing(pt, 1);
+  }
+}

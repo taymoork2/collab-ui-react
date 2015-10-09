@@ -29,8 +29,6 @@ angular.module('Core')
       $scope.isReset = false;
       $scope.isResetEnabled = false;
 
-      $scope.gsxFeature = false;
-
       // model can be removed after switching to controllerAs
       $scope.model = {
         userInputOption: 0,
@@ -264,14 +262,6 @@ angular.module('Core')
         userEnts = $scope.currentUser.entitlements;
         userLicenseIds = $scope.currentUser.licenseID;
       }
-
-      Userservice.getUser('me', function (data, status) {
-        FeatureToggleService.getFeaturesForUser(data.id, 'gsxdemo').then(function (value) {
-          $scope.gsxFeature = value;
-        }).finally(function () {
-          activate();
-        });
-      });
 
       var populateConf = function () {
         if (userLicenseIds) {

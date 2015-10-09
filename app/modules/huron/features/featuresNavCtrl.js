@@ -8,7 +8,7 @@
   /* jshint validthis: true */
 
   /* @ngInject */
-  function HuronFeaturesNavCtrl($scope, $state, $translate, $filter, $modal, Authinfo, HuntGroupService, Log, Notification) {
+  function HuronFeaturesNavCtrl($scope, $state, $translate, $filter, $timeout, $modal, Authinfo, HuntGroupService, Log, Notification) {
 
     var vm = this;
     vm.filters = [];
@@ -18,15 +18,16 @@
     vm.setFilter = setFilter;
     vm.listOfFeatures = [];
     vm.openModal = openModal;
+    vm.pageState = 'Loading';
     var listOfAllFeatures = [];
     var listOfHuntGroups = [];
     var listOfAutoAttendants = [];
     var listOfCallParks = [];
     var huntGroupToBeDeleted = {};
-    vm.isFeaturePresent = false;
     vm.placeholder = {
       'name': 'Search'
     };
+
     /* This common format is used to layout cards for AA, HG, CP */
     var commonDataFormatForCards = {
       'cardName': '',
@@ -97,8 +98,9 @@
        and concatenate listOfAutoAttendants with listOfFeatures
        */
 
-      /* Set 'isFeaturePresent' to true if they are any AA's received from back end
-       By Setting flag to true, will disable the spinner and shows the corresponding cards */
+      /*
+        Set vm.pageState to 'showFeatures' if any AA's are received
+       */
 
       vm.listOfFeatures = vm.listOfFeatures.concat(listOfAutoAttendants);
 
@@ -114,20 +116,21 @@
 
       var customerId = Authinfo.getOrgId();
       HuntGroupService.getListOfHuntGroups(customerId).then(function (response) {
-        var huntGroupData = response.data;
-        if (huntGroupData.items.length > 0)
-          vm.isFeaturePresent = true;
 
-        angular.forEach(huntGroupData.items, function (huntGroup) {
-          commonDataFormatForCards.cardName = huntGroup.name;
-          commonDataFormatForCards.numbers = huntGroup.numbers;
-          commonDataFormatForCards.membersCount = huntGroup.memberCount;
-          commonDataFormatForCards.huntGroupId = huntGroup.uuid;
-          commonDataFormatForCards.featureName = 'huronFeatureDetails.hg';
-          commonDataFormatForCards.filterValue = 'HG';
-          listOfHuntGroups.push(commonDataFormatForCards);
-          commonDataFormatForCards = {};
-        });
+        var huntGroupData = response.data;
+        if (huntGroupData.items.length > 0) {
+          vm.pageState = 'showFeatures';
+          angular.forEach(huntGroupData.items, function (huntGroup) {
+            commonDataFormatForCards.cardName = huntGroup.name;
+            commonDataFormatForCards.numbers = huntGroup.numbers;
+            commonDataFormatForCards.membersCount = huntGroup.memberCount;
+            commonDataFormatForCards.huntGroupId = huntGroup.uuid;
+            commonDataFormatForCards.featureName = 'huronFeatureDetails.hg';
+            commonDataFormatForCards.filterValue = 'HG';
+            listOfHuntGroups.push(commonDataFormatForCards);
+            commonDataFormatForCards = {};
+          });
+        }
 
         vm.listOfFeatures = vm.listOfFeatures.concat(listOfHuntGroups);
         listOfAllFeatures = listOfAllFeatures.concat(listOfHuntGroups);
@@ -143,12 +146,12 @@
     /* This is a Dummy implementation of this function*/
     var getListOfCallParks = function () {
 
-      /* Get list of CallParks code may go here
-       If Get List of call parks back-end call is successful just stub out the listOfCallParks array
-       and concatenate listOfCallParks with listOfFeatures*/
-
-      /* Set 'isFeaturePresent' to true if they are any CP's received from back end
-      By Setting flag to true, will disable the spinner and shows the corresponding card */
+      /*
+        1. Get list of CallParks code may go here
+        2. If Get List of call parks back-end call is successful just stub out the listOfCallParks array
+           and concatenate listOfCallParks with listOfFeatures
+        3. Set vm.pageState to 'showFeatures' when any CP's are received by controller
+       */
 
       vm.listOfFeatures = vm.listOfFeatures.concat(listOfCallParks);
 
@@ -159,6 +162,7 @@
       listOfAllFeatures = listOfAllFeatures.concat(listOfCallParks);
     };
 
+    //Commenting out the code in this function to keep jshint happy
     vm.editHuronFeature = function (feature) {
       //if (feature.filterValue === 'AA') {
       //  //Call  AutoAttendant Edit Controller
@@ -188,7 +192,7 @@
 
     var isFeatureListEmpty = function () {
       if (vm.listOfFeatures.length === 0) {
-        $state.go("huronnewfeature");
+        vm.pageState = 'NewFeature';
       }
     };
 
@@ -197,6 +201,9 @@
       vm.listOfFeatures.splice(vm.listOfFeatures.indexOf(huntGroupToBeDeleted), 1);
       listOfAllFeatures.splice(listOfAllFeatures.indexOf(huntGroupToBeDeleted), 1);
       huntGroupToBeDeleted = {};
+      if (listOfAllFeatures.length === 0 && vm.listOfFeatures.length === 0) {
+        vm.pageState = "NewFeature";
+      }
       if (vm.filterText) {
         searchData(vm.filterText);
       }
@@ -223,9 +230,7 @@
       getListOfAutoAttendants();
       getListOfHuntGroups();
       getListOfCallParks();
-      setTimeout(function () {
-        isFeatureListEmpty();
-      }, 1000);
+      $timeout(isFeatureListEmpty, 1000);
     }
     init();
   }

@@ -21,30 +21,33 @@ angular.module('Mediafusion')
       $scope.groups = MediafusionClusterService.getGroups();
 
       $scope.onSelect = function ($item, $model, $label) {
-        $log.log("$scope.groups :", $scope.groups);
-        //var groupList = $scope.groups.value;
-        //$log.log("$groupList :", groupList);
-        $scope.currentPropertySetId = _.chain($scope.groups)
+        $scope.currentPropertySet = _.chain($scope.groups)
           .filter(function (group) {
-            $log.log('group :', group);
-            $log.log('group value :', group.value);
-            $log.log('group name :', group.value["name"]);
-            return group.value.name == $scope.displayName;
+            //$log.log('group length :', group.value.length);
+            angular.forEach(group.value, function (item) {
+              //$log.log("id :", item.id); 
+              //$log.log("name :", item.name); 
+              if (angular.equals(item.name, $scope.displayName)) {
+                //$log.log("match found");
+                $scope.currentPropertySetId = item.id;
+                return group.value;
+              }
+            });
           })
-          .pluck('id')
-          .compact()
-          .first()
           .value();
 
+        //$log.log("currentPropertySet: ", $scope.currentPropertySet);
+        //$log.log("currentPropertySetId: ", $scope.currentPropertySetId);
+        //$log.log('selected group name :', $item.name);
+        //$log.log('selected group id :', $item.id);
+        //$log.log('selected properties :', $item.properties);
+        //$log.log('selected properties value:', $item.properties["mf.group.displayName"]);
+
         $scope.displayName = $item.name;
-        $log.log('selected group name :', $item.name);
-        $log.log('selected group id :', $item.id);
-        $log.log('selected properties :', $item.properties);
-        $log.log('selected properties value:', $item.properties["mf.group.displayName"]);
-        $log.log("currentPropertySetId: ", $scope.currentPropertySetId);
-        MediafusionClusterService.updateGroupAssignment($stateParams.connectorId, $item.id);
-
+        var promise = MediafusionClusterService.removeGroupAssignment($stateParams.connectorId, $scope.currentPropertySetId);
+        promise.finally(function () {
+          MediafusionClusterService.updateGroupAssignment($stateParams.connectorId, $item.id);
+        });
       };
-
     }
   );
