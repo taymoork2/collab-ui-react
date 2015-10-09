@@ -8,7 +8,7 @@
   /* jshint validthis: true */
 
   /* @ngInject */
-  function HuronFeaturesNavCtrl($scope, $state, $translate, $filter, $timeout, $modal, Authinfo, HuntGroupService, Log, Notification) {
+  function HuronFeaturesNavCtrl($scope, $state, $filter, $timeout, $modal, Authinfo, HuntGroupService, Log, Notification) {
 
     var vm = this;
     vm.filters = [];
@@ -192,7 +192,7 @@
     };
 
     var isFeatureListEmpty = function () {
-      if (vm.pageState !== 'showFeatures' && vm.listOfFeatures.length === 0 ) {
+      if (vm.pageState !== 'showFeatures' && vm.listOfFeatures.length === 0) {
         vm.pageState = 'NewFeature';
       }
     };
