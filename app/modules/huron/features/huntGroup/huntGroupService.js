@@ -6,7 +6,7 @@
     .service('HuntGroupService', huntGroupService);
 
   /* ngInject */
-  function huntGroupService($http, $q, Config) {
+  function huntGroupService($http, $q, HuronConfig) {
 
     /* jshint validthis: true */
 
@@ -15,6 +15,8 @@
       deleteHuntGroup: deleteHuntGroup
     };
     return service;
+
+    //HuronConfig.getCmiV2Url()
 
     /*
      TODO: When Back-End gets ready
@@ -25,9 +27,9 @@
 
     function getListOfHuntGroups(customerId) {
 
-      //return $http.get('https://huron.com/api/v2/customers/' + customerId + '/features/huntgroups/)
+      //return $http.get(HuronConfig.getCmiV2Url()+'/customers/'+customerId+'/features/huntgroups')
       var successResponseData = {
-        'url': 'https://huron.com/api/v2/customers/123/features/huntgroups',
+        'url': HuronConfig.getCmiV2Url() + '/customers/' + customerId + '/features/huntgroups',
         'items': [{
           'uuid': 'abcd1234-abcd-abcd-abcddef123456',
           'name': 'Technical Support',
@@ -72,7 +74,7 @@
       };
 
       var emptyData = {
-        'url': 'https://huron.com/api/v2/customers/123/features/huntgroups',
+        'url': HuronConfig.getCmiV2Url() + '/customers/' + customerId + '/features/huntgroups',
         'items': []
       };
 
@@ -89,13 +91,13 @@
       };
 
       var deferred = $q.defer();
-      deferred.resolve(successResponse);
+      //deferred.resolve(successResponse);
       //deferred.reject(failureResponse);
       return deferred.promise;
     }
 
     function deleteHuntGroup(customerId, huntGroupId) {
-      //return $http.delete('https://huron.com/api/v2/customers/' + customerId + '/features/huntgroups/' + huntGroupId)
+      //return $http.delete(HuronConfig.getCmiV2Url()+'/customers/'+customerId+'/features/huntgroups' + huntGroupId)
       var successResponse = {
         'status': 200,
         'statusText': 'OK'
@@ -108,7 +110,7 @@
 
       //returning deferred promise untill back-ends gets ready
       var deferred = $q.defer();
-      deferred.resolve(successResponse);
+      //deferred.resolve(successResponse);
       //deferred.reject(failureResponse);
       return deferred.promise;
     }

@@ -116,14 +116,13 @@
 
       var customerId = Authinfo.getOrgId();
       HuntGroupService.getListOfHuntGroups(customerId).then(function (response) {
-
         var huntGroupData = response.data;
         if (huntGroupData.items.length > 0) {
           vm.pageState = 'showFeatures';
           angular.forEach(huntGroupData.items, function (huntGroup) {
             commonDataFormatForCards.cardName = huntGroup.name;
             commonDataFormatForCards.numbers = huntGroup.numbers;
-            commonDataFormatForCards.membersCount = huntGroup.memberCount;
+            commonDataFormatForCards.memberCount = huntGroup.memberCount;
             commonDataFormatForCards.huntGroupId = huntGroup.uuid;
             commonDataFormatForCards.featureName = 'huronFeatureDetails.hg';
             commonDataFormatForCards.filterValue = 'HG';
@@ -131,10 +130,8 @@
             commonDataFormatForCards = {};
           });
         }
-
         vm.listOfFeatures = vm.listOfFeatures.concat(listOfHuntGroups);
         listOfAllFeatures = listOfAllFeatures.concat(listOfHuntGroups);
-
       }, function (response) {
         Log.warn('Could fetch huntGroups for customer with Id:', customerId);
         vm.pageState = 'showFeatures';
@@ -230,7 +227,7 @@
       getListOfAutoAttendants();
       getListOfHuntGroups();
       getListOfCallParks();
-      $timeout(isFeatureListEmpty, 1200);
+      $timeout(isFeatureListEmpty, 1000);
     }
     init();
   }
