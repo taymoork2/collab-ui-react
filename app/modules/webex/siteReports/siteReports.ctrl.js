@@ -53,13 +53,13 @@
         "  reportPageIframeUrl:" + "'" + $scope.reportPageIframeUrl + "'" +
         "})";
 
-      $log.log("ReportsCtrl start");
-      var reports = reportService.getReports(this.reportObject.siteUrl);
+      // $log.log("ReportsCtrl start");
+      // var reports = reportService.getReports(this.reportObject.siteUrl);
 
-      if (!angular.isUndefined(reports)) {
-        //$log.log(angular.toJson(reports));
-        $scope.sections = reports.getSections();
-      }
+      // if (!angular.isUndefined(reports)) {
+      //   //$log.log(angular.toJson(reports));
+      //   $scope.sections = reports.getSections();
+      // }
 
       $scope.trustSrc = function (src) {
         return $sce.trustAsResourceUrl(src);

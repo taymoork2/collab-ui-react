@@ -17,10 +17,9 @@
           'fuseNotPerformed',
           1,
           'modules/hercules/notifications/fuse-not-performed.html', {});
+      } else {
+        NotificationService.removeNotification('todo', 'fuseNotPerformed');
       }
-      //else {
-      //  NotificationService.removeNotification('todo', 'fuseNotPerformed');
-      //}
 
       NotificationService.addNotification(
         'alert',

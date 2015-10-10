@@ -69,12 +69,11 @@
   };
 
   /* @ngInject */
-  function CallController(FmsNotificationService, ServiceDescriptor, $stateParams, $state, $modal, $scope, ClusterService, USSService2, ConverterService, ServiceStatusSummaryService) {
+  function CallController(NotificationService, FmsNotificationService, ServiceDescriptor, $stateParams, $state, $modal, $scope, ClusterService, USSService2, ConverterService, ServiceStatusSummaryService) {
     ClusterService.subscribe(angular.noop, {
       scope: $scope
     });
 
-    FmsNotificationService.refresh();
     var vm = this;
     vm.state = $state;
     vm.currentServiceType = $state.current.data.serviceType;
@@ -84,6 +83,9 @@
     vm.route = serviceType2RouteName(vm.currentServiceType);
 
     vm.clusters = ClusterService.getClusters();
+    vm.clusterLength = _.size(vm.clusters);
+
+    FmsNotificationService.refresh();
 
     vm.startSetupClicked = false;
     vm.startSetup = function () {
@@ -93,9 +95,18 @@
     vm.serviceEnabled = false;
     ServiceDescriptor.isServiceEnabled(serviceType2ServiceId(vm.currentServiceType), function (a, b) {
       vm.serviceEnabled = b;
+      if (!b) {
+        NotificationService.addNotification(
+          'todo',
+          'serviceNotEnabled',
+          1,
+          'modules/hercules/notifications/service-not-enabled.html', {});
+      } else {
+        NotificationService.removeNotification('todo', 'serviceNotEnabled');
+      }
     });
 
-    vm.hasNoConnectors = function (cluster) {
+    vm.serviceNotInstalled = function (cluster) {
       var serviceInfo = ServiceStatusSummaryService.serviceFromCluster(vm.currentServiceType, cluster);
       if (serviceInfo === undefined) {
         return true;
@@ -138,7 +149,7 @@
   }
 
   /* @ngInject */
-  function CallDetailsController($state, $modal, $stateParams, ClusterService) {
+  function CallDetailsController(XhrNotificationService, ServiceDescriptor, ServiceStatusSummaryService, $state, $modal, $stateParams, ClusterService) {
     var vm = this;
     vm.state = $state;
     vm.clusterId = $stateParams.cluster.id;
@@ -156,6 +167,15 @@
 
     //TODO: Don't like this linking to routes...
     vm.route = serviceType2RouteName(vm.serviceType);
+
+    vm.serviceNotInstalled = function () {
+      var serviceInfo = ServiceStatusSummaryService.serviceFromCluster(vm.serviceType, vm.cluster);
+      if (serviceInfo === undefined) {
+        return true;
+      } else {
+        return serviceInfo.connectors.length === 0;
+      }
+    };
 
     vm.upgrade = function () {
       $modal.open({
@@ -176,6 +196,17 @@
         //console.log("Starting alarms dialog...");
       });
     };
+
+    /*
+    vm.enableService = function (serviceId) {
+      ServiceDescriptor.setServiceEnabled(serviceId, true, function (error) {
+        XhrNotificationService.notify("Problems enabling the service")
+        //console.log("ERROR disabling service:", error);
+      });
+      console.log("activate service")
+      vm.serviceEnabled = true;
+    };
+    */
 
     /* @ngInject */
     function SoftwareUpgradeController($modalInstance) {
@@ -231,7 +262,7 @@
   }
 
   /* @ngInject */
-  function CallServiceSettingsController($scope, $modal, ServiceDescriptor, Authinfo, USSService2, $stateParams, NotificationConfigService, MailValidatorService, XhrNotificationService) {
+  function CallServiceSettingsController($scope, $modal, ServiceDescriptor, Authinfo, USSService2, $stateParams, NotificationConfigService, MailValidatorService, XhrNotificationService, CertService) {
     var vm = this;
     vm.config = "";
     vm.serviceEnabled = false;
@@ -240,11 +271,20 @@
 
     enableEmailValidation();
 
-    //console.log("Settingscontroller stateparams:", $stateParams)
+    var readCerts = function () {
+      CertService.getCerts(Authinfo.getOrgId()).then(function (res) {
+        vm.certificates = res || [];
+      }, function (err) {
+        return XhrNotificationService.notify(err);
+      });
+    };
 
     vm.squaredFusionEc = false;
     ServiceDescriptor.isServiceEnabled("squared-fusion-ec", function (a, b) {
       vm.squaredFusionEc = b;
+      if (vm.squaredFusionEc) {
+        readCerts();
+      }
     });
 
     ServiceDescriptor.isServiceEnabled(vm.serviceId, function (a, b) {
@@ -253,7 +293,17 @@
 
     vm.storeEc = function () {
       //console.log("store ec", vm.squaredFusionEc)
-      ServiceDescriptor.setServiceEnabled("squared-fusion-ec", vm.squaredFusionEc, function (a, b) {});
+      ServiceDescriptor.setServiceEnabled("squared-fusion-ec", vm.squaredFusionEc,
+        function (err) {
+          // TODO: fix this callback crap!
+          if (err) {
+            XhrNotificationService.notify("Failed to enable Aware");
+          }
+        }
+      );
+      if (vm.squaredFusionEc) {
+        readCerts();
+      }
     };
 
     vm.loading = true;
@@ -327,6 +377,7 @@
 
     vm.disableService = function (serviceId) {
       ServiceDescriptor.setServiceEnabled(serviceId, false, function (error) {
+        XhrNotificationService.notify("Problems disabling the service");
         //console.log("ERROR disabling service:", error);
       });
       vm.serviceEnabled = false;
@@ -348,6 +399,37 @@
       });
     };
 
+    vm.uploadCert = function (file, event) {
+      if (!file) {
+        return;
+      }
+      CertService.uploadCert(Authinfo.getOrgId(), file).then(readCerts, XhrNotificationService.notify);
+    };
+
+    vm.confirmCertDelete = function (cert) {
+      $modal.open({
+        templateUrl: "modules/hercules/call-service/confirm-certificate-delete.html",
+        controller: ConfirmCertificateDeleteController,
+        controllerAs: "confirmCertificateDelete",
+        resolve: {
+          cert: function () {
+            return cert;
+          }
+        }
+      }).result.then(readCerts);
+    };
+  }
+
+  /* @ngInject */
+  function ConfirmCertificateDeleteController(CertService, $modalInstance, XhrNotificationService, cert) {
+    var vm = this;
+    vm.cert = cert;
+    vm.remove = function () {
+      CertService.deleteCert(vm.cert.certId).then($modalInstance.close, XhrNotificationService.notify);
+    };
+    vm.cancel = function () {
+      $modalInstance.dismiss();
+    };
   }
 
   angular

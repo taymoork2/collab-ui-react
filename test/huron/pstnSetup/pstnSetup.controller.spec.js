@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: PstnSetupCtrl', function () {
-  var controller, $controller, $scope, $q, $window, $state, $stateParams, PstnSetupService, Notification;
+  var controller, $controller, $scope, $q, $window, $state, $stateParams, PstnSetupService, ExternalNumberPool, Notification;
 
   var carrierList = getJSONFixture('huron/json/pstnSetup/carrierList.json');
   var customer = getJSONFixture('huron/json/pstnSetup/customer.json');
@@ -17,9 +17,17 @@ describe('Controller: PstnSetupCtrl', function () {
     quantity: '10'
   }];
 
+  var swivelNumberTokens = [{
+    "value": "+12223334444",
+    "label": "1 (222) 333-4444"
+  }, {
+    "value": "+15556667777",
+    "label": "1 (555) 666-7777"
+  }];
+
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _$window_, _$state_, _$stateParams_, _PstnSetupService_, _Notification_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _$window_, _$state_, _$stateParams_, _PstnSetupService_, _ExternalNumberPool_, _Notification_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
@@ -27,6 +35,7 @@ describe('Controller: PstnSetupCtrl', function () {
     $state = _$state_;
     $stateParams = _$stateParams_;
     PstnSetupService = _PstnSetupService_;
+    ExternalNumberPool = _ExternalNumberPool_;
     Notification = _Notification_;
 
     $stateParams.customerId = customer.uuid;
@@ -37,6 +46,7 @@ describe('Controller: PstnSetupCtrl', function () {
     spyOn(PstnSetupService, 'createCustomer').and.returnValue($q.when());
     spyOn(PstnSetupService, 'updateCustomerCarrier').and.returnValue($q.when());
     spyOn(PstnSetupService, 'orderBlock').and.returnValue($q.when());
+    spyOn(ExternalNumberPool, 'create').and.returnValue($q.when());
     spyOn(Notification, 'errorResponse');
     spyOn(Notification, 'error');
     spyOn($state, 'go');
@@ -67,10 +77,11 @@ describe('Controller: PstnSetupCtrl', function () {
       $scope.$apply();
       expect(controller.providers).toEqual([jasmine.objectContaining({
         name: PstnSetupService.INTELEPEER
+      }), jasmine.objectContaining({
+        name: PstnSetupService.TATA
       })]);
     });
 
-    //TODO uncomment when /customers/<id>/carriers 404 is fixed
     it('should notify an error if customer carriers fail to load', function () {
       PstnSetupService.listCustomerCarriers.and.returnValue($q.reject());
       controller = $controller('PstnSetupCtrl', {
@@ -149,6 +160,17 @@ describe('Controller: PstnSetupCtrl', function () {
         expect(PstnSetupService.createCustomer).not.toHaveBeenCalled();
         expect(PstnSetupService.updateCustomerCarrier).toHaveBeenCalled();
         expect(PstnSetupService.orderBlock).toHaveBeenCalled();
+        expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps');
+      });
+
+      it('should create numbers directly when using a swivel carrier', function () {
+        controller.selectProvider(controller.providers[1]);
+        controller.swivelTokens = swivelNumberTokens;
+        controller.placeOrder();
+        $scope.$apply();
+
+        expect(ExternalNumberPool.create).toHaveBeenCalled();
+        expect(ExternalNumberPool.create.calls.count()).toEqual(2);
         expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps');
       });
     });
