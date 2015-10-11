@@ -669,7 +669,7 @@
         }, // updateDisplayInfo()
 
         getSiteSettingsInfoXml: function () {
-          // var siteInfoXml = WebExXmlApiFact.getSiteInfo(webExXmlApiInfoObj);
+          var siteInfoXml = WebExXmlApiFact.getSiteInfo(webExXmlApiInfoObj);
           // var meetingTypesInfoXml = WebExXmlApiFact.getMeetingTypeInfo(webExXmlApiInfoObj);
           var settingPagesInfoXml = WebExXmlApiFact.getAdminPagesInfo(
             true,
