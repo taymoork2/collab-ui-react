@@ -7,7 +7,7 @@ describe('Features Controller', function () {
 
   var featureCtrl, $rootScope, $scope, $modal, $q, $state, $translate, $filter, $timeout, Authinfo, HuntGroupService, Log, Notification;
 
-  var getListOfHuntGroupsDeferred, deleteHuntGroupDeferred;
+  var getListOfHuntGroupsDeferred;
 
   var listOfHGs = {
     'url': 'https://test-hg.com/api/v2/customers/123/features/huntgroups',
@@ -74,7 +74,7 @@ describe('Features Controller', function () {
 
   beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _HuntGroupService_, _Log_, _Notification_) {
     $rootScope = _$rootScope_;
-    $scope = $rootScope.$new();
+    $scope = _$rootScope_.$new();
     $modal = _$modal_;
     $state = _$state_;
     $filter = _$filter_;
@@ -87,11 +87,9 @@ describe('Features Controller', function () {
 
     //create mock deferred object which will be used to return promises
     getListOfHuntGroupsDeferred = $q.defer();
-    deleteHuntGroupDeferred = $q.defer();
 
     //Using a Jasmine Spy to return a promise when methods of the HuntGroupService are called
     spyOn(HuntGroupService, 'getListOfHuntGroups').and.returnValue(getListOfHuntGroupsDeferred.promise);
-    spyOn(HuntGroupService, 'deleteHuntGroup').and.returnValue(deleteHuntGroupDeferred.promise);
 
     spyOn($state, 'go');
     spyOn(Notification, 'success');
@@ -192,7 +190,7 @@ describe('Features Controller', function () {
     getListOfHuntGroupsDeferred.resolve(getHGListSuccessResp(listOfHGs));
     $scope.$apply();
     $timeout.flush();
-    featureCtrl.searchData('Technical Support');
+    featureCtrl.searchData(huntGroups[0].cardName);
     expect(featureCtrl.listOfFeatures).toEqual([huntGroups[0]]);
   });
 });
