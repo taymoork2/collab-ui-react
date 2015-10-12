@@ -807,15 +807,16 @@
       "alarms": "Alarms"
     },
     "clusters": {
-      "deregister": "Deregister Cluster",
+      "deregister": "Deregister",
       "deregisterCancel": "Cancel",
-      "deregisterAreYouSure": "Are you sure you want to deregister {{clusterName}}?",
-      "deregisterCausesHeader": "When you deregister this cluster:",
-      "deregisterCausesListItem1": "The Calendar Service will be turned off for all users homed on this cluster.",
-      "deregisterCausesListItem2": "All the configuration in the Cloud and on the Expressway cluster will be removed.",
-      "deregisterCausesListItem3": "Users on this cluster will be moved to another cluster, if possible.",
-      "deregisterErrorGeneric": "Unable to deregister cluster. {{errorMessage}}",
-      "deregisterErrorNoDeregisterSupport": "Unable to deregister cluster. The current cluster software does not support cluster deregistration."
+      "deregisterConfirm": "Confirm",
+      "deregisterHeader": "Confirm Deregistration",
+      "deregisterAreYouSure": "You are about to deregister {{clusterName}} from Cisco Collaboration Cloud.",
+      "deregisterCausesListItem1": "This system will no longer be used for hybrid services.",
+      "deregisterCausesListItem2": "All connectors and related configuration will be removed from {{clusterName}}.",
+      "deregisterCausesListItem3": "If the system is in a cluster, you do not need to deregister the other peers. This will happen automatically.",
+      "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}",
+      "deregisterErrorNoDeregisterSupport": "Unable to deregister {{clusterName}}. The current software version does not support cluster deregistration."
     },
     "status": {
       "unknown": "Status unknown",
@@ -858,7 +859,9 @@
     },
     "errors": {
       "enableServiceEntitlementFailure": "Failed! Your organization is missing entitlements that are needed to add the {{serviceName}}. Contact your support representative to fix the issue.",
-      "enableServiceFailure": "Adding the {{serviceName}} failed."
+      "enableServiceFailure": "Adding the {{serviceName}} failed.",
+      "sipDomainInvalid": "SIP domain was invalid. Please enter a valid SIP domain or IP address",
+      "invalidEmail": "Please enter a list of comma-separated email addresses"
     },
     "cloudExtensions": {
       "serviceNames": {
@@ -1350,6 +1353,7 @@
     "setupNumbers": "Set Up PSTN Numbers",
     "placeOrder": "Place Order",
     "orderBlock": "Order Block Numbers",
+    "manualAdd": "Manually Add New Numbers",
     "state": "State",
     "selectState": "Select state",
     "searchStates": "Search states",
@@ -1360,8 +1364,9 @@
     "reviewAndOrder": "Review and Place Order",
     "package": "Package",
     "adding": "Adding",
+    "numbersTitle": "Numbers",
     "numbers": "{count, plural, one{# number} other{# numbers}}",
-    "newNumbers": "{count, plural, one{# New Number} other{# New Numbers}}",
+    "newNumbers": "{{count}} New",
     "thankYou": "Thank you",
     "setupSuccess": "You have set up the PSTN service successfully.",
     "nextStep": "Next Step",
@@ -1370,8 +1375,12 @@
     "sendMessage": "Send Message",
     "launchPortal": "Launch Company Portal",
     "carrierListError": "Failed to retrieve carrier list for this customer.",
-    "orderNumbersPrompt": "Must add block numbers to proceed.",
+    "orderNumbersPrompt": "Must add numbers to proceed.",
+    "invalidNumberPrompt": "Please fix invalid number(s) before proceeding.",
+    "duplicateNumber": "{{number}} is a duplicate number.",
     "blockOrderError": "Failed to order {{quantity}} block number(s) with area code {{areaCode}}.",
+    "swivelAddError": "Failed to add {{number}}.",
+    "swivelDuplicateError": "Failed to add {{number}}. Number already exists.",
     "customerCreateError": "Failed to create customer with the carrier.",
     "customerUpdateError": "Failed to update customer with the carrier."
   },
@@ -1380,6 +1389,13 @@
     "feature2": "Carrier Port/Transfer Fee Included",
     "feature3": "E911 Included",
     "feature4": "Taxes & Fees Included in Price"
+  },
+  "tataFeatures": {
+    "feature1": "1 DID or TFN per user",
+    "feature2": "Unlimited calling to U.S. 50 states + Canada",
+    "feature3": "Port/Carrier Transfer cancellation or expedite",
+    "feature4": "Caller ID name delivery and registration",
+    "feature5": "E911 Services and Toll Free vanity lookup"
   },
   "partnerHomePage": {
     "trialsHeading": "Active Trials",

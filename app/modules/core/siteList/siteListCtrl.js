@@ -30,7 +30,8 @@ angular.module('Core')
       vm.gridData.forEach(
         function initGrid(grid) {
           grid.showSiteLink = false;
-          grid.iframeSupportedSite = false;
+          grid.isIframeSupported = false;
+          grid.isAdminReportEnabled = false;
           grid.webExSessionTicket = null;
 
           var logMsg = "siteListCtrl(): " + "\n" +
@@ -53,14 +54,14 @@ angular.module('Core')
         '  </p>' + '\n' +
         '</div>' + '\n' +
         '<div ng-if="row.entity.showSiteLinks">' + '\n' +
-        '  <div ng-if="!row.entity.iframeSupportedSite">' + '\n' +
+        '  <div ng-if="!row.entity.isIframeSupported">' + '\n' +
         '    <launch-site admin-email-param="{{siteList.siteLaunch.adminEmailParam}}"' + '\n' +
         '                 advanced-settings="{{siteList.siteLaunch.advancedSettings}}"' + '\n' +
         '                 user-email-param="{{siteList.siteLaunch.userEmailParam}}"' + '\n' +
         '                 webex-advanced-url="{{siteList.getWebexUrl(row.entity.license.siteUrl)}}">' + '\n' +
         '    </launch-site>' + '\n' +
         '  </div>' + '\n' +
-        '  <div ng-if="row.entity.iframeSupportedSite">' + '\n' +
+        '  <div ng-if="row.entity.isIframeSupported">' + '\n' +
         '    <a id="{{row.entity.license.siteUrl}}_webex-site-settings"' + '\n' +
         '       ui-sref="site-settings({siteUrl:row.entity.license.siteUrl})">' + '\n' +
         '      <p class="ngCellText">' + '\n' +
@@ -75,7 +76,7 @@ angular.module('Core')
 
       var siteReportsTemplate =
         '<div ng-if="row.entity.showSiteLinks">' + '\n' +
-        '  <div ng-if="row.entity.iframeSupportedSite">' + '\n' +
+        '  <div ng-if="row.entity.isIframeSupported && row.entity.isAdminReportEnabled">' + '\n' +
         '     <a id="webex-reports-list-iframe"' + '\n' +
         '         ui-sref="webex-reports({siteUrl:row.entity.license.siteUrl})"> ' + '\n' +
         '      <p class="ngCellText">' + '\n' +
@@ -142,16 +143,22 @@ angular.module('Core')
           var siteUrl = grid.license.siteUrl;
 
           WebExUtilsFact.isSiteSupportsIframe(siteUrl).then(
-            function isSiteSupportsIframeSuccess(iFrame) {
+            function isSiteSupportsIframeSuccess(result) {
               var funcName = "isSiteSupportsIframeSuccess()";
               var logMsg = "";
 
-              grid.iframeSupportedSite = iFrame;
+              logMsg = funcName + ": " + "\n" +
+                "result=" + JSON.stringify(result);
+              $log.log(logMsg);
+
+              grid.isIframeSupported = result.isIframeSupported;
+              grid.isAdminReportEnabled = result.isAdminReportEnabled;
               grid.showSiteLinks = true;
 
               logMsg = funcName + ": " + "\n" +
                 "siteUrl=" + siteUrl + "\n" +
-                "iframeSupportedSite=" + grid.iframeSupportedSite + "\n" +
+                "isIframeSupported=" + grid.isIframeSupported + "\n" +
+                "isAdminReportEnabled=" + grid.isAdminReportEnabled + "\n" +
                 "showSiteLinks=" + grid.showSiteLinks;
               $log.log(logMsg);
             }, // isSiteSupportsIframeSuccess()
@@ -160,62 +167,18 @@ angular.module('Core')
               var funcName = "isSiteSupportsIframeError()";
               var logMsg = "";
 
-              grid.iframeSupportedSite = false;
+              grid.isIframeSupported = false;
+              grid.isAdminReportEnabled = false;
               grid.showSiteLinks = true;
 
               logMsg = funcName + ": " + "\n" +
-                "response=" + JSON.stringify(response) + "\n" +
-                "siteUrl=" + siteUrl + "\n" +
-                "iframeSupportedSite=" + grid.iframeSupportedSite + "\n" +
-                "showSiteLinks=" + grid.showSiteLinks;
+                "response=" + JSON.stringify(response);
               $log.log(logMsg);
             } // isSiteSupportsIframeError()
           ); // WebExUtilsFact.isSiteSupportsIframe().then
         } // processGrid()
       ); // vm.gridData.forEach()
 
-      function getSessionTicket(siteUrl) {
-        return WebExXmlApiFact.getSessionTicket(siteUrl);
-      } // getSessionTicket()
-
-      function getSiteVersionXml() {
-        var siteVersionXml = WebExXmlApiFact.getSiteVersion(webExXmlApiInfoObj);
-
-        return $q.all({
-          siteVersionXml: siteVersionXml
-        });
-      } // getSiteVersionXml()
-
-      function iframeSupportedSiteVersionCheck(getInfoResult) {
-        var funcName = "iframeSupportedSiteVersionCheck()";
-        var logMsg = "";
-
-        var iframeSupportedSiteVersion = false;
-        var siteVersionJsonObj = WebExUtilsFact.validateSiteVersionXmlData(getInfoResult.siteVersionXml);
-
-        if ("" === siteVersionJsonObj.errId) { // got a good response
-          var siteVersionJson = siteVersionJsonObj.bodyJson;
-          var trainReleaseVersion = siteVersionJson.ep_trainReleaseVersion;
-          var trainReleaseOrder = siteVersionJson.ep_trainReleaseOrder;
-
-          logMsg = funcName + ": " + "\n" +
-            "trainReleaseVersion=" + trainReleaseVersion + "\n" +
-            "trainReleaseOrder=" + trainReleaseOrder;
-          $log.log(logMsg);
-
-          if (
-            (null != trainReleaseOrder) &&
-            (400 <= +trainReleaseOrder)
-          ) {
-
-            iframeSupportedSiteVersion = true;
-          }
-        }
-
-        $log.log("iframeSupportedSiteVersion(): iframeSupportedSiteVersion=" + iframeSupportedSiteVersion);
-
-        return iframeSupportedSiteVersion;
-      } // iframeSupportedSiteVersionCheck()
       // End of site links set up
     }
   ]);

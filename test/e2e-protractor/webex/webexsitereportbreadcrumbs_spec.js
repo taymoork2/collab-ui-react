@@ -23,7 +23,7 @@ describe('WebEx site settings', function () {
   });
 
   it('wait for WebEx reports page to appear with bread crumbs', function () {
-    sitesettings.waitForWebexReportBreadCrumbs();
+    utils.wait(sitesettings.webexReportBreadCrumbs);
     expect(sitesettings.webexReportBreadCrumbs.isPresent()).toBeTruthy();
   });
 
@@ -33,7 +33,7 @@ describe('WebEx site settings', function () {
   });
 
   it('wait for WebEx reports iframe page to appear with bread crumbs', function () {
-    sitesettings.waitForWebexReportIFrameBreadCrumbs();
+    utils.wait(sitesettings.webexReportIFrameBreadCrumbs);
     expect(sitesettings.webexReportIFrameBreadCrumbs.isPresent()).toBeTruthy();
   });
 
@@ -43,7 +43,7 @@ describe('WebEx site settings', function () {
   });
 
   it('wait for WebEx reports page to appear with bread crumbs', function () {
-    sitesettings.waitForWebexReportBreadCrumbs();
+    utils.wait(sitesettings.webexReportBreadCrumbs);
     expect(sitesettings.webexReportBreadCrumbs.isPresent()).toBeTruthy();
   });
 

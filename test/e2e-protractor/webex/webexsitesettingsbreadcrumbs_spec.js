@@ -19,11 +19,11 @@ describe('WebEx site settings', function () {
 
   it('click on configure site cog', function () {
     utils.click(sitesettings.configureSJSITE14);
-    navigation.expectCurrentUrl('/webexSiteSettings');
+    navigation.expectCurrentUrl(sitesettings.siteSettingsUrl);
   });
 
   it('wait for WebEx settings page to appear with bread crumbs', function () {
-    sitesettings.waitForSiteSettingsBreadCrumbs();
+    utils.wait(sitesettings.siteSettingsBreadCrumbs);
     expect(sitesettings.siteSettingsBreadCrumbs.isPresent()).toBeTruthy();
   });
 

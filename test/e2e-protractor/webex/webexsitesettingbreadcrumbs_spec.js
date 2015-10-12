@@ -19,41 +19,41 @@ describe('WebEx site settings', function () {
 
   it('click on configure site cog', function () {
     utils.click(sitesettings.configureSJSITE14);
-    navigation.expectCurrentUrl('/webexSiteSettings');
+    navigation.expectCurrentUrl(sitesettings.siteSettingsUrl);
   });
 
   it('wait for WebEx settings index page to appear', function () {
-    sitesettings.waitForWebexSiteSettingsPanel();
+    utils.wait(sitesettings.webexSiteSettingsPanel);
     expect(sitesettings.webexSiteSettingsPanel.isPresent()).toBeTruthy();
   });
 
   it('click on common settings site options link', function () {
     utils.click(sitesettings.configureCommonSiteOptionsLink);
-    navigation.expectCurrentUrl('/webexSiteSetting');
+    navigation.expectCurrentUrl(sitesettings.siteSettingsUrl);
   });
 
   it('wait for WebEx setting page to appear with bread crumbs', function () {
-    sitesettings.waitForSiteSettingBreadCrumbs();
+    utils.wait(sitesettings.siteSettingBreadCrumbs);
     expect(sitesettings.siteSettingBreadCrumbs.isPresent()).toBeTruthy();
   });
 
   it('Click on site settings bread crumb', function () {
     utils.click(sitesettings.siteSettingsCrumb);
-    navigation.expectCurrentUrl('/webexSiteSettings');
+    navigation.expectCurrentUrl(sitesettings.siteSettingsUrl);
   });
 
   it('wait for WebEx settings index page to appear (2rd time)', function () {
-    sitesettings.waitForWebexSiteSettingsPanel();
+    utils.wait(sitesettings.webexSiteSettingsPanel);
     expect(sitesettings.webexSiteSettingsPanel.isPresent()).toBeTruthy();
   });
 
   it('click on common settings site options link', function () {
     utils.click(sitesettings.configureCommonSiteOptionsLink);
-    navigation.expectCurrentUrl('/webexSiteSetting');
+    navigation.expectCurrentUrl(sitesettings.siteSettingsUrl);
   });
 
   it('wait for WebEx setting page to appear with bread crumbs (2nd time)', function () {
-    sitesettings.waitForSiteSettingBreadCrumbs();
+    utils.wait(sitesettings.siteSettingBreadCrumbs);
     expect(sitesettings.siteSettingBreadCrumbs.isPresent()).toBeTruthy();
   });
 
