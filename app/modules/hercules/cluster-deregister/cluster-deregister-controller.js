@@ -9,6 +9,10 @@
       'hercules.clusters.deregisterAreYouSure', {
         clusterName: cluster.name
       });
+    vm.deregisterCausesListItem2 = $translate.instant(
+      'hercules.clusters.deregisterCausesListItem2', {
+        clusterName: cluster.name
+      });
     vm.saving = false;
     vm.deregister = function () {
       vm.saving = true;
@@ -18,15 +22,13 @@
           $modalInstance.close();
           vm.saving = false;
         }, function (err) {
-          if (err.status === 409) {
-            vm.error = $translate.instant(
-              'hercules.clusters.deregisterErrorNoDeregisterSupport');
-          } else {
-            vm.error = $translate.instant(
-              'hercules.clusters.deregisterErrorGeneric', {
+          vm.error = $translate.instant(
+            err.status === 409
+              ? 'hercules.clusters.deregisterErrorNoDeregisterSupport'
+              : 'hercules.clusters.deregisterErrorGeneric', {
+              clusterName: cluster.name,
                 errorMessage: XhrNotificationService.getMessages(err).join(', ')
-              });
-          }
+            });
           vm.saving = false;
         });
       return false;
