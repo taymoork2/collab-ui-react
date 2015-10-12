@@ -8,7 +8,7 @@ angular.module('Mediafusion')
       $scope.visibleAlarm = {};
       $scope.clusters = [];
       $scope.selectedCluster = '';
-      $scope.displayName = $stateParams.groupName;
+      $scope.displayName = '';
       $scope.$watch(MediafusionProxy.getClusters, function (data) {
         $scope.connector = _.find(data.clusters || [], function (c) {
           return c.id == $stateParams.connectorId;
@@ -17,6 +17,10 @@ angular.module('Mediafusion')
           $state.sidepanel.close();
         }
       }, true);
+
+      if (!angular.equals($stateParams.groupName, {})) {
+        $scope.displayName = $stateParams.groupName;
+      }
 
       //$scope.groups = MediafusionClusterService.getGroups();
       var groupResponse = MediafusionClusterService.getGroups();
