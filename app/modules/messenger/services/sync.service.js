@@ -72,7 +72,10 @@
     var service = {
       getSyncStatus: getSyncStatus,
       isDirSync: isDirSync,
+      isDirSyncEnabled: isDirSyncEnabled,
+      isDirSyncNoFetch: isDirSyncNoFetch,
       isMessengerSync: isMessengerSync,
+      isMessengerSyncEnabled: isMessengerSyncEnabled,
       isSyncEnabled: isSyncEnabled,
       patchSync: patchSync,
       refreshSyncStatus: function () {
@@ -91,6 +94,7 @@
     // Implementation ----------------------------------------------------------
 
     // Private fetch to service
+    // Can be time-expensive, so try to limit calls
     function fetchSyncStatus() {
       var defer = $q.defer();
 
@@ -100,20 +104,18 @@
           defer.resolve(setSyncStatus(response.data));
         }, function (response) {
           var status = parseHttpStatus(response.status);
+          var error = 'GET: ' + status;
 
-          var baseError = 'GET: ' + status;
-          var fullError = baseError;
-
-          // TODO: remove excessive checking once Msgr Admin Service returns consistent errors
-          if (response.data && response.data.error && response.data.error.message) {
-            fullError += '; Message: ' + response.data.error.message;
+          // Filter odd status' like -1, 0, etc.
+          if (response.status >= 100) {
+            error += '; Message: ' + response.data.error.message;
           }
 
-          Log.error('SyncService::fetchSyncStatus(): ' + fullError);
+          Log.error('SyncService::fetchSyncStatus(): ' + error);
 
           defer.reject({
             status: status,
-            message: fullError
+            message: error
           });
         });
 
@@ -165,10 +167,13 @@
         messengerOrgId: syncStatus.messengerOrgId,
         linkDate: syncStatus.linkDate,
         isAuthRedirect: syncStatus.isAuthRedirect,
-        isSyncEnabled: isSyncEnabled()
+        isSyncEnabled: syncModes.messenger.on === syncStatus.syncMode || syncModes.dirsync.on === syncStatus.syncMode
       };
     }
 
+    // Since fetchSyncStatus() can be time-expensive,
+    // cache result. Generally, only fetch on initialization,
+    // and during an explicit Refresh request by the user
     function getSyncStatus() {
       var defer = $q.defer();
 
@@ -187,15 +192,74 @@
     }
 
     function isDirSync() {
+      var defer = $q.defer();
+
+      getSyncStatus()
+        .then(function () {
+          defer.resolve(syncModes.dirsync.on === syncStatus.syncMode || syncModes.dirsync.off === syncStatus.syncMode);
+        }, function (errorObj) {
+          defer.reject(errorObj.message);
+        });
+
+      return defer.promise;
+    }
+
+    function isDirSyncEnabled() {
+      var defer = $q.defer();
+
+      getSyncStatus()
+        .then(function () {
+          defer.resolve(isDirSync() && isSyncEnabled());
+        }, function (errorObj) {
+          defer.reject(errorObj.message);
+        });
+
+      return defer.promise;
+    }
+
+    // Optimized to prevent stack overflow,
+    // as the Ci Sync Template calls this many times as part of GUI
+    function isDirSyncNoFetch() {
       return (syncModes.dirsync.on === syncStatus.syncMode || syncModes.dirsync.off === syncStatus.syncMode);
     }
 
     function isMessengerSync() {
-      return (syncModes.messenger.on === syncStatus.syncMode || syncModes.messenger.off === syncStatus.syncMode);
+      var defer = $q.defer();
+
+      getSyncStatus()
+        .then(function () {
+          defer.resolve(syncModes.messenger.on === syncStatus.syncMode || syncModes.messenger.off === syncStatus.syncMode);
+        }, function (errorObj) {
+          defer.reject(errorObj.message);
+        });
+
+      return defer.promise;
+    }
+
+    function isMessengerSyncEnabled() {
+      var defer = $q.defer();
+
+      getSyncStatus()
+        .then(function () {
+          defer.resolve(isMessengerSync() && isSyncEnabled());
+        }, function (errorObj) {
+          defer.reject(errorObj.message);
+        });
+
+      return defer.promise;
     }
 
     function isSyncEnabled() {
-      return (syncModes.messenger.on === syncStatus.syncMode || syncModes.dirsync.on === syncStatus.syncMode);
+      var defer = $q.defer();
+
+      getSyncStatus()
+        .then(function () {
+          defer.resolve(syncModes.messenger.on === syncStatus.syncMode || syncModes.dirsync.on === syncStatus.syncMode);
+        }, function (errorObj) {
+          defer.reject(errorObj.message);
+        });
+
+      return defer.promise;
     }
 
     function parseSyncMode(syncString) {
@@ -253,23 +317,22 @@
         defer.resolve('PATCH Status ' + response.status);
       }, function (response) {
         var status = parseHttpStatus(response.status);
+          var error = 'PATCH: ' + status;
 
-        var baseError = 'PATCH: ' + status;
-        var fullError = baseError;
+          // Filter odd status' like -1, 0, etc.
+          if (response.status >= 100) {
+            error += '; Message: ' + response.data.error.message;
+          }
 
-        // TODO: remove excessive checking once Msgr Admin Service returns consistent errors
-        if (response.data && response.data.error && response.data.error.message) {
-          fullError += '; Message: ' + response.data.error.message;
-        }
 
-        Log.error('SyncService::patchSync(): ' + fullError);
+        Log.error('SyncService::patchSync(): ' + error);
 
         // Reset to previous settings
         syncStatus = previousSettings;
 
         defer.reject({
           status: status,
-          message: fullError
+          message: error
         });
       });
 

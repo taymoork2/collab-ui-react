@@ -4,13 +4,13 @@
 angular.module('Core')
   .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$http', '$window', 'Log', '$log', 'Authinfo', 'Storage', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils', 'Orgservice', 'TelephonyInfoService', 'FeatureToggleService', 'NAME_DELIMITER', 'SyncService',
     function ($scope, $state, $stateParams, $q, $http, $window, Log, $log, Authinfo, Storage, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, SyncService) {
-
-      $scope.isMsgrSyncMode = SyncService.isSyncEnabled() && SyncService.isMessengerSync();
-
       $scope.hasAccount = Authinfo.hasAccount();
       $scope.usrlist = [];
       $scope.internalNumberPool = [];
       $scope.externalNumberPool = [];
+      $scope.isMsgrSyncEnabled = false;
+
+      $scope.getMessengerSyncStatus = getMessengerSyncStatus;
       $scope.loadInternalNumberPool = loadInternalNumberPool;
       $scope.loadExternalNumberPool = loadExternalNumberPool;
       $scope.assignDNForUserList = assignDNForUserList;
@@ -216,6 +216,15 @@ angular.module('Core')
         $scope.model.userInfoValid = false;
       }
 
+      function getMessengerSyncStatus() {
+        SyncService.isMessengerSyncEnabled()
+          .then(function (isIt) {
+            $scope.isMsgrSyncEnabled = isIt;
+          }, function (errorMsg) {
+            Log.error(errorMsg);
+          });
+      }
+
       function ServiceFeature(label, value, name, license) {
         this.label = label;
         this.value = value;
@@ -263,6 +272,10 @@ angular.module('Core')
       if ($scope.currentUser) {
         userEnts = $scope.currentUser.entitlements;
         userLicenseIds = $scope.currentUser.licenseID;
+      }
+
+      if (null !== Authinfo.getOrgId()) {
+        getMessengerSyncStatus();
       }
 
       Userservice.getUser('me', function (data, status) {

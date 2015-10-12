@@ -68,7 +68,7 @@
                     <input class="button warning" type="submit" value="{{sync.patchSyncButtonText}}" ng-if="sync.adminTypes.ops === sync.adminType" ng-click="sync.patchSync()">
                     <br/>
                     <br/>
-                    <a ng-if="!sync.isDirSync()" href="{{sync.orgAdminUrl}}" target="_blank" translate="messengerCiSync.orgAdminLinkText"></a>
+                    <a ng-if="!sync.isDirSyncNoFetch()" href="{{sync.orgAdminUrl}}" target="_blank" translate="messengerCiSync.orgAdminLinkText"></a>
                 </div>
               </div>
 
