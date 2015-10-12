@@ -11,10 +11,12 @@
     vm.title = 'huronDetails.title';
     vm.back = false;
 
-    vm.tabs = [{
-      title: 'huronDetails.featuresTitle',
-      state: 'huronfeatures'
-    }, {
+    vm.tabs = [
+    //  {
+    //  title: 'huronDetails.featuresTitle',
+    //  state: 'huronfeatures'
+    //},
+      {
       title: 'huronDetails.settingsTitle',
       state: 'huronsettings'
     }];
@@ -22,7 +24,7 @@
     init();
 
     function init() {
-      $state.go("huronfeatures"); // sets the initial content page to load when this nav controller is loaded
+      $state.go("huronsettings"); // sets the initial content page to load when this nav controller is loaded
     }
   }
 })();
