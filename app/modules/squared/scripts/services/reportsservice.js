@@ -4,7 +4,7 @@ angular.module('Squared')
   .service('ReportsService', ReportsService);
 
 /* @ngInject */
-function ReportsService($http, $rootScope, $location, Storage, Config, Log, Authinfo, Auth) {
+function ReportsService($http, $q, $rootScope, $location, Storage, Config, Log, Authinfo, Auth) {
   var apiUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/';
 
   var callMetricsUrl = 'reports/stats/callUsage';
@@ -280,30 +280,38 @@ function ReportsService($http, $rootScope, $location, Storage, Config, Log, Auth
       });
   }
 
-  function getHealthStatus(callback) {
-    var i = 0, totalSuccess = 0, totalWarning = 0, totalDanger = 0;
-    $http.get(healthUrl)
-      .success(function (data, status) {
+  function getHealthStatus() {
+    var totalSuccess = 0,
+      totalWarning = 0,
+      totalDanger = 0;
 
-        for (i = 0; i < data.components.length; i++) {
-          var health = data.components[i].status;
+    return $http.get(healthUrl)
+      .then(function (response) {
+        var length = response.data.components.length;
+        var healthStatus;
 
+        for (var i = 0; i < length; i++) {
+          var health = response.data.components[i].status;
           if (health === 'operational') {
             totalSuccess += 1;
-          } else if (health === 'degraded performance' || health === 'partial outage') {
+          } else if (health === 'degraded_performance' || health === 'partial_outage') {
             totalWarning += 1;
-          } else if (health === 'major outage') {
+          } else if (health === 'major_outage') {
             totalDanger += 1;
           }
         }
-        data.totalSuccess = totalSuccess;
-        data.totalWarning = totalWarning;
-        data.totalDanger = totalDanger;
 
-        callback(data, status);
-      })
-      .error(function (data, status) {
-        callback(data, status);
+        if (totalSuccess === length) {
+          healthStatus = 'success';
+        } else if (totalDanger !== 0) {
+          healthStatus = 'danger';
+        } else if (totalWarning > 0) {
+          healthStatus = 'warning';
+        }
+
+        return healthStatus;
+      }, function (error) {
+        return error;
       });
   }
 }

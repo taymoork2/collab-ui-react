@@ -234,39 +234,25 @@ angular.module('Core')
         }
       };
 
-      // var getHealthMetrics = function () {
-      //   ReportsService.healthMonitor(function (data, status) {
-      //     if (data.success) {
-      //       $scope.healthMetrics = data.components;
-      //       $scope.isCollapsed = true;
-      //     } else {
-      //       Log.debug('Query active users metrics failed. Status: ' + status);
-      //     }
-      //   });
-      // };
-
       var getHealthTotal = function () {
-        ReportsService.getHealthStatus(function (data, status) {
-
-          if (data.totalSuccess === data.components.length) {
-            $scope.healthStatus = 'success';
-          } else if (data.totalDanger !== 0) {
-            $scope.healthStatus = 'danger';
-          } else if (data.totalWarning > 0) {
-            $scope.healthStatus = 'warning';
-          }
-        });
+        ReportsService.getHealthStatus()
+          .then(function (status) {
+            $scope.healthStatus = status;
+          });
       };
 
       var getOrgInfo = function () {
         Orgservice.getOrg(function (data, status) {
-          if (status != 200) {
-            throw new Error("Incorrect status value");
+          try {
+            if (status !== 200) {
+              throw new Error("Query active users metrics failed. Status: " + status);
+            }
+            $scope.test = data;
+            $scope.sso = data.ssoEnabled || false;
+            $scope.dirsync = data.dirsyncEnabled || false;
+          } catch (error) {
+            Log.debug('Error: ' + error);
           }
-
-          $scope.sso = data.ssoEnabled || false;
-          $scope.dirsync = data.dirsyncEnabled || false;
-
         });
       };
 
@@ -278,7 +264,6 @@ angular.module('Core')
       };
 
       $scope.isAdmin = Auth.isUserAdmin();
-      // getHealthMetrics();
       getHealthTotal();
       getOrgInfo();
 

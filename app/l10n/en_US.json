@@ -616,8 +616,8 @@
     "beginTrial": "Begin Trial",
     "status": "Status",
     "spark": "Spark",
-    "sso": "SSO",
-    "dirsync": "Directory Sync"
+    "sso": "Single Sign On (SSO)",
+    "dirsync": "Directory Synchronization"
   },
   "inviteModal": {
     "title": "Service Entitlement",
