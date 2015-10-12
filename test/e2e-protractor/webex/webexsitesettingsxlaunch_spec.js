@@ -18,7 +18,7 @@ describe('WebEx site settings', function () {
   });
 
   it('wait for webex cross-launch icon', function () {
-    sitesettings.waitSiteSettingsXLaunchIcon();
+    utils.wait(sitesettings.xLaunchSiteAdminIcon);
   });
 
   // TODO: additional tests to click on various setting page links on the site settings page
