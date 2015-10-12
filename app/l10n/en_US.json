@@ -807,15 +807,16 @@
       "alarms": "Alarms"
     },
     "clusters": {
-      "deregister": "Deregister Cluster",
+      "deregister": "Deregister",
       "deregisterCancel": "Cancel",
-      "deregisterAreYouSure": "Are you sure you want to deregister {{clusterName}}?",
-      "deregisterCausesHeader": "When you deregister this cluster:",
-      "deregisterCausesListItem1": "The Calendar Service will be turned off for all users homed on this cluster.",
-      "deregisterCausesListItem2": "All the configuration in the Cloud and on the Expressway cluster will be removed.",
-      "deregisterCausesListItem3": "Users on this cluster will be moved to another cluster, if possible.",
-      "deregisterErrorGeneric": "Unable to deregister cluster. {{errorMessage}}",
-      "deregisterErrorNoDeregisterSupport": "Unable to deregister cluster. The current cluster software does not support cluster deregistration."
+      "deregisterConfirm": "Confirm",
+      "deregisterHeader": "Confirm Deregistration",
+      "deregisterAreYouSure": "You are about to deregister {{clusterName}} from Cisco Collaboration Cloud.",
+      "deregisterCausesListItem1": "This system will no longer be used for hybrid services.",
+      "deregisterCausesListItem2": "All connectors and related configuration will be removed from {{clusterName}}.",
+      "deregisterCausesListItem3": "If the system is in a cluster, you do not need to deregister the other peers. This will happen automatically.",
+      "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}",
+      "deregisterErrorNoDeregisterSupport": "Unable to deregister {{clusterName}}. The current software version does not support cluster deregistration."
     },
     "status": {
       "unknown": "Status unknown",
