@@ -48,7 +48,7 @@ describe('HuntGroup DeleteCtrl', function () {
 
     $stateParams = {
       deleteHuntGroupName: 'Technical Support',
-      deleteHuntGroupId: 2
+      deleteHuntGroupId: 123
     };
 
     hgDeleteCtrl = $controller('HuntGroupDeleteCtrl', {
@@ -76,7 +76,9 @@ describe('HuntGroup DeleteCtrl', function () {
     hgDeleteCtrl.deleteHuntGroup();
     deleteHGDeferred.resolve(successResponse);
     $scope.$apply();
-    expect(Notification.success).toHaveBeenCalledWith(jasmine.any(Array));
+    expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
+      huntGroupName: $stateParams.deleteHuntGroupName
+    });
   });
 
   it('should give the an error notification when hunt group deletion fails', function () {

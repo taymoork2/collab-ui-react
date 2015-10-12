@@ -21,9 +21,9 @@
           $scope.$dismiss();
         }
         $rootScope.$broadcast('HUNT_GROUP_DELETED');
-        Notification.success([$translate.instant('huntGroupDetails.deleteHuntGroupSuccessText', {
+        Notification.success('huntGroupDetails.deleteHuntGroupSuccessText', {
           huntGroupName: vm.deleteHuntGroupName
-        })]);
+        });
       }, function (response) {
         if (angular.isFunction($scope.$dismiss)) {
           $scope.$dismiss();
