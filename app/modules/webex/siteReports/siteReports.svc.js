@@ -55,6 +55,9 @@ angular.module('WebExReports').service('reportService', [
       "remote_access_csrs_usage", "remote_access_computer_tracking"
     ];
 
+    //This can be used for translations
+    //Actually reverse mapping should be used for
+    //translations.
     var pageid_to_navItemId_mapping = {
       "meeting_in_progess": "meetings_in_progress",
       "meeting_usage": "meeting_usage",
@@ -74,6 +77,28 @@ angular.module('WebExReports').service('reportService', [
       "training_usage": "tc_usage"
     };
 
+    var reverseMapping = function (mapping) {
+      var keys = [];
+      for (var key in mapping) {
+        if (mapping.hasOwnProperty(key)) {
+          keys.push(key);
+        }
+      }
+      var reversedMap = {};
+      for (var i in keys) {
+        var k = keys[i];
+        var v = mapping[k];
+        reversedMap[v] = k;
+      }
+      return reversedMap;
+    };
+
+    this.reverseMapping = reverseMapping;
+
+    var pageid_to_navItemId_mapping_reversed = reverseMapping(pageid_to_navItemId_mapping);
+    this.pageid_to_navItemId_mapping_reversed = pageid_to_navItemId_mapping_reversed;
+
+    //TODO: remove
     var getFullURLGivenNavInfoAndPageId = function (navInfo, pageid) {
       var navItemId = pageid_to_navItemId_mapping[pageid];
       if (angular.isUndefined(navItemId)) {
@@ -94,13 +119,27 @@ angular.module('WebExReports').service('reportService', [
       return navItem.ns1_url;
     };
 
+    var getNavItemsByCategoryName = function (navInfo, categoryName) {
+      var filterByCategoryName = function (navElement) {
+        var returnValue = false;
+        if (navElement.ns1_category === categoryName) {
+          returnValue = true;
+        }
+        return returnValue;
+      };
+      var navItems = navInfo.ns1_siteAdminNavUrl.filter(filterByCategoryName);
+      return navItems;
+    };
+
+    this.getNavItemsByCategoryName = getNavItemsByCategoryName;
+
     var UIsref = function (theUrl, rid, siteUrl) {
       this.siteUrl = siteUrl;
       this.reportPageId = rid;
       this.reportPageId_translated = $translate.instant("webexSiteReports." +
         rid);
       this.reportPageIframeUrl = theUrl;
-      // this.reportPageIframeUrl = theUrl.replace('wbxadmin', 'adm3100');
+      this.modifiedUrl = this.reportPageIframeUrl;
       this.toUIsrefString = function () {
         return "webex-reports-iframe({" +
           "  siteUrl:" + "'" + this.siteUrl + "'" + "," +
@@ -111,11 +150,28 @@ angular.module('WebExReports').service('reportService', [
       this.uisrefString = this.toUIsrefString();
     };
 
-    var ReportsSection = function (sectionName, siteUrl, reportLinks) {
+    this.instantiateUIsref = function (theUrl, rid, siteUrl) {
+      return new UIsref(theUrl, rid, siteUrl);
+    };
+
+    var getUISrefs = function (navItems, siteUrl) {
+      var toUisref = function (ni) {
+        var navItemId = ni.ns1_navItemId;
+        var theUrl = ni.ns1_url;
+        var pageId = pageid_to_navItemId_mapping_reversed[navItemId];
+        return new UIsref(theUrl, pageId, siteUrl);
+      };
+      return navItems.map(toUisref);
+    };
+
+    this.getUISrefs = getUISrefs;
+
+    var ReportsSection = function (sectionName, siteUrl, reportLinks, categoryName) {
       var self = this;
       this.section_name = sectionName;
       this.site_url = siteUrl;
       this.report_links = reportLinks;
+      this.category_Name = categoryName;
       this.section_name_translated = $translate.instant("webexSiteReports." + this.section_name);
       //We have to rewrite this with the actual uirefs with proper reportids
       //right now I've hardcoded as reportID.
@@ -135,11 +191,16 @@ angular.module('WebExReports').service('reportService', [
     };
     this.getReports = function (siteUrl, mapJson) {
       //get the reports list, for now hard code.
-      var common_reports = new ReportsSection("common_reports", siteUrl, ["/x/y/z", "/u/io/p"]);
-      var event_center = new ReportsSection("event_center", siteUrl, ["/u/y/z", "www.yahoo.com"]);
-      var support_center = new ReportsSection("support_center", siteUrl, ["/u/y/z", "www.yahoo.com"]);
-      var training_center = new ReportsSection("training_center", siteUrl, ["/u/y/z", "www.yahoo.com"]);
-      var remote_access = new ReportsSection("remote_access", siteUrl, ["/u/y/z", "www.yahoo.com"]);
+      var common_reports = new ReportsSection("common_reports", siteUrl, ["/x/y/z", "/u/io/p"],
+        "CommonReports");
+      var event_center = new ReportsSection("event_center", siteUrl, ["/u/y/z", "www.yahoo.com"],
+        "EC");
+      var support_center = new ReportsSection("support_center", siteUrl, ["/u/y/z", "www.yahoo.com"],
+        "SC");
+      var training_center = new ReportsSection("training_center", siteUrl, ["/u/y/z", "www.yahoo.com"],
+        "TC");
+      var remote_access = new ReportsSection("remote_access", siteUrl, ["/u/y/z", "www.yahoo.com"],
+        "RA");
 
       var uisrefsArray = [];
 
@@ -148,28 +209,34 @@ angular.module('WebExReports').service('reportService', [
       //use the above 5 lists to gather all the UISrefs
       [
         [common_reports_pageids, common_reports],
-        [support_center_pageids, support_center],
         [training_center_pageids, training_center],
+        [support_center_pageids, support_center],
         [event_center_pageids, event_center],
         [remote_access_pageids, remote_access]
       ].forEach(function (xs) {
         var pageids = xs[0];
         var section = xs[1];
-        section.uisrefs = pageids.map(function (rid) {
-          var theUrl = "www.yahoo.com";
-          if (mapJsonDefined) {
-            var tempUrl = getFullURLGivenNavInfoAndPageId(mapJson.bodyJson, rid);
-            if (angular.isDefined(tempUrl)) {
-              theUrl = tempUrl;
-            }
-          }
-          return new UIsref(theUrl, rid, siteUrl);
-        });
+        var category_Name = section.category_Name;
+        if (mapJsonDefined) {
+          var navItemsFilteredByCategoryName = getNavItemsByCategoryName(mapJson.bodyJson,
+            category_Name);
+          section.uisrefs = getUISrefs(navItemsFilteredByCategoryName, siteUrl);
+        }
+        // section.uisrefs = pageids.map(function (rid) {
+        //   var theUrl = "www.yahoo.com";
+        //   if (mapJsonDefined) {
+        //     var tempUrl = getFullURLGivenNavInfoAndPageId(mapJson.bodyJson, rid);
+        //     if (angular.isDefined(tempUrl)) {
+        //       theUrl = tempUrl;
+        //     }
+        //   }
+        //   return new UIsref(theUrl, rid, siteUrl);
+        // });
       });
 
       var repts = new Reports();
-      repts.setSections([common_reports, support_center,
-        training_center, event_center, remote_access
+      repts.setSections([common_reports, training_center, support_center,
+        event_center, remote_access
       ]);
       return repts;
     };

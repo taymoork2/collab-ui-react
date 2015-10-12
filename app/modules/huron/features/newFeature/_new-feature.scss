@@ -1,31 +1,3 @@
-//////////// No features available yet page ///////////////
-.no-features-available {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  overflow-y: auto;
-  flex: 1;
-  height: 80vh;
-  color: $gray-dark;
-  background: $brand-white;
-  align-items: center;
-  justify-content: center;
-
-  .nothing-to-see {
-    color: $gray-dark;
-  }
-
-  .lets-customize {
-    color: $gray-darker;
-  }
-
-  & div {
-    @include vr-spacing(pt, 1);
-  }
-}
-
-////////// Create new feature modal ///////////////
-
 .huron-new-feature-modal {  // The modal body.
   display: flex;
   flex-direction: row;
@@ -38,7 +10,6 @@
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    justify-content: center;
     flex: 1;
     color: $gray-darkest;
     background-color: $gray-lightest;

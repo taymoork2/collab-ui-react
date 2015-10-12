@@ -1,33 +1,44 @@
 .hercules {
-
   background-color: $brand-white;
 
-  .cs-card {
-    margin-bottom: 0.5rem;
-    cursor: pointer;
-    .gray {
-      background-color: #EEE;
+  .typography-airy {
+    h5{
+      color: $brand-primary;
+      margin-bottom: .25rem;
+      margin-top: .5rem;
     }
-    .overlay {
-      position: absolute;
-      left: 25px;
-      top: 5px;
-      border-radius: 50px;
-      height: 12px;
-      width: 12px;
-      border: 6px solid white;
+    p:first-line{
+      margin-bottom: 1rem;
     }
-    .alarm {
-      border-color: red;
+    p:last-child{
+      margin-bottom: 1rem;
     }
+    hr{
+      margin-top:0.3rem;
+      margin-bottom:0.3rem;
+    }
+  }
 
-    .attention {
-      border-color: #F5A623;
-    }
+  .large-margin {
+    padding-left:2rem;
+    padding-right:2rem;
+    padding-top:1rem;
+    padding-bottom:1rem;
+  }
 
-    .ok {
-      border-color: green;
-    }
+  .small-margin {
+    padding-left:1rem;
+    padding-right:1rem;
+    padding-top:0.5rem;
+    padding-bottom:0.3rem;
+  }
+
+  .small-padding-top {
+    border-top:1px solid $brand-white;
+  }
+
+  .tiny-vertical-marker {
+    border-right: 1px solid #CCC;
   }
 
   .page-header {
@@ -56,23 +67,23 @@
       position: relative;
     }
   }
-/**
-  Preliminary styling of subpages to get margins
-  */
-  .subpage {
-    padding:20px;
-    h4 {
-      padding-bottom:0.5rem;
-      padding-top:0.5rem;
 
-    }
-    h5 {
-      padding-bottom:0.1rem;
-      padding-top:0.5rem;
-    }
+  .centered-info-pane {
+    background-color: $brand-white;
+    width:100%;
+    height:100%;
+    text-align:center;
+    color:#CCC;
+    padding:20%;
+  }
 
+  .full-height {
+    min-height: 100vh;
+    min-height: calc(100vh - 150px);
   }
 }
+
+
 
 /**
  Work around the extra col-md-12 class in views/main.tpl.html

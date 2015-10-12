@@ -513,7 +513,7 @@
 
             // iframeUrl = iframeUrl.replace('wbxadmin', 'adm3100');
             var uiSref =
-              "site-setting({" +
+              "site-settings.site-setting({" +
               "  siteUrl: " + "'" + _this.webExSiteSettingsObj.siteUrl + "'" + "," +
               "  webexPageId: " + "'" + webexPageId + "'" + "," +
               "  settingPageIframeUrl: " + "'" + iframeUrl + "'" +
@@ -669,7 +669,7 @@
         }, // updateDisplayInfo()
 
         getSiteSettingsInfoXml: function () {
-          // var siteInfoXml = WebExXmlApiFact.getSiteInfo(webExXmlApiInfoObj);
+          var siteInfoXml = WebExXmlApiFact.getSiteInfo(webExXmlApiInfoObj);
           // var meetingTypesInfoXml = WebExXmlApiFact.getMeetingTypeInfo(webExXmlApiInfoObj);
           var settingPagesInfoXml = WebExXmlApiFact.getAdminPagesInfo(
             true,

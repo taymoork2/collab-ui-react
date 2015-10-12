@@ -4,13 +4,15 @@
 
 <p>
   Deactivating a service (requires another confirm step) will remove any service related functionality from your
-  users.
-  Additional steps to remove the service from your on premise devices are required.
-  See doumentation for guideance and further instructions.
+  users. Additional steps to remove the service from your on premise devices are required.
+  See documentation for guidance and further instructions.
 </p>
 <button ng-show="callServiceSettings.serviceEnabled"
-        class="button alert large"
-        ng-click="callServiceSettings.confirmDisable(callServiceSettings.serviceId)">DEACTIVATE</button>
+        class="button alert"
+        ng-click="callServiceSettings.confirmDisable(callServiceSettings.serviceId)">Deactivate
+</button>
 <p>
-  Go to Help Central for help uninstalling a Hybrid Service.
+<p>
+  Go to <a href="http://www.cisco.com/go/hybrid-services-calendar" target="_blank">Help Central</a> for help
+  uninstalling a Hybrid Service.
 </p>

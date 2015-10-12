@@ -1,96 +1,103 @@
-<h4>
-      {{callDetails.cluster.name}}
-      <small><a ui-sref="{{callDetails.route}}.list.details.cluster-settings({cluster:callDetails.cluster, serviceType: callDetails.serviceType})">Settings</a>
-      </small>
-    </div>
+<div class="hercules typography-airy small-margin">
+
+
+  <div ng-hide="callDetails.serviceNotInstalled()">
+  <h4>
+    {{callDetails.cluster.name}}
+    <small><a
+      ui-sref="{{callDetails.route}}.list.details.cluster-settings({cluster:callDetails.cluster, serviceType: callDetails.serviceType})">Settings</a>
+    </small>
     <div class="right">
       <a ng-show="callDetails.state.includes('call-service.list.details.cluster-settings')"
          ui-sref="call-service.list.details({cluster:callDetails.cluster})"><i class="icon icon-close"/></a>
     </div>
-  </div>
-</h4>
-
-<hr/>
-
-<div ui-view="details-pane">
-  <h5>
-    Alarms
-  </h5>
-  <p ng-if="callDetails.selectedService.alarm_count">
-    <button class="btn btn-danger" ng-click="callDetails.showAlarms()">
-      {{callDetails.selectedService.alarm_count}} reported alarms
-    </button>
-  </p>
-
-  <p ng-if="!callDetails.selectedService.alarm_count">
-    No alarms reported
-  </p>
+  </h4>
 
   <hr/>
 
-  <h5>Software Upgrades
-  <span class="right">
-    <div class="dropdown" on-toggle="dl.toggled(open)">
-      <a href class="dropdown-toggle">
-        <i class="icon icon-three-dots"/>
-      </a>
-      <ul class="dropdown-menu">
-        <li>
-          <a href>Schedule Upgrade</a>
-        </li>
-      </ul>
+
+  <div ui-view="details-pane">
+    <h5>
+      Alarms
+    </h5>
+
+    <p ng-if="callDetails.selectedService.alarm_count">
+      <button class="btn btn-danger" ng-click="callDetails.showAlarms()">
+        {{callDetails.selectedService.alarm_count}} reported alarms
+      </button>
+    </p>
+
+    <p ng-if="!callDetails.selectedService.alarm_count">
+      No alarms reported
+    </p>
+
+    <h5>Software Upgrades
+      <span class="right">
+        <div class="dropdown" on-toggle="dl.toggled(open)">
+          <a href class="dropdown-toggle">
+            <i class="icon icon-three-dots"/>
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <a href>Schedule Upgrade</a>
+            </li>
+          </ul>
+        </div>
+      </span>
+    </h5>
+
+    <p>
+      Current version: {{callDetails.selectedService.connectors[0].version}}
+    </p>
+
+    <div ng-if="callDetails.selectedService.software_upgrade_available">
+      <p>
+        New version: {{callDetails.selectedService.not_approved_package.version}}
+      </p>
+        <button class="button secondary" ng-click="callDetails.upgrade()">Upgrade</button>
     </div>
-  </span>
-  </h5>
-
-
-  <p>Current version: {{callDetails.selectedService.connectors[0].version}}
-  </p>
-
-  <div ng-if="callDetails.selectedService.software_upgrade_available">
-    <p>
-      New version: {{callDetails.selectedService.not_approved_package.version}}
+    <p ng-if="!callDetails.selectedService.software_upgrade_available">
+      No new software available
     </p>
+
+    <h5>
+      Depending services
+    </h5>
+
     <p>
-      <button class="button secondary" ng-click="callDetails.upgrade()">Upgrade</button>
+      Management Connector
+
+    <span ng-show="callDetails.managementService.needs_attention" class="red">
+      <i class="fa fa-circle"/>
+      <span class="hidden-xs">Needs attention</span>
+    </span>
     </p>
+
+    <h5>
+      Running on hosts:
+    </h5>
+
+      <p ng-repeat="connector in callDetails.selectedService.connectors">
+        {{connector.host.host_name}}
+
+        <span ng-show="connector.status === 'needs_attention'" class="red">
+          <i class="fa fa-circle"/>
+          <span class="hidden-xs">Needs attention</span>
+        </span>
+      </p>
   </div>
-  <p ng-if="!callDetails.selectedService.software_upgrade_available">
-    No new software available
-  </p>
 
-  <hr/>
+  <p ng-if="!callDetails.cluster">
+    No clusters...
+  </p></div>
 
-  <h5>
-    Depending services
-  </h5>
-
-  <p ng-show="callDetails.managementService.needs_attention" class="red">
-  <p class="hidden-xs">Management Connector Needs attention</p>
-  </p>
-
-  <hr/>
-
-  <h5>
-    Running on hosts:
-  </h5>
-
-  <p ng-repeat="connector in callDetails.selectedService.connectors">
-    {{connector.host.host_name}}
-  <p ng-show="connector.status === 'needs_attention'" class="red">
-    <i class="fa fa-circle"/>
-    <span class="hidden-xs">Needs attention</span>
-  </p>
-  </p>
-
+  </div>
+  <div ng-show="callDetails.serviceNotInstalled()">
+    <div class="centered-info-pane">
+      Service is not installed on this cluster
+    </div>
+  </div>
 </div>
-
-<p ng-if="!callDetails.cluster">
-  No clusters...
-</p></div>
-
-
-
 
 
 

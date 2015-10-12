@@ -69,21 +69,23 @@
   };
 
   /* @ngInject */
-  function CallController(FmsNotificationService, ServiceDescriptor, $stateParams, $state, $modal, $scope, ClusterService, USSService2, ConverterService, ServiceStatusSummaryService) {
+  function CallController(NotificationService, FmsNotificationService, ServiceDescriptor, $stateParams, $state, $modal, $scope, ClusterService, USSService2, ConverterService, ServiceStatusSummaryService) {
     ClusterService.subscribe(angular.noop, {
       scope: $scope
     });
 
-    FmsNotificationService.refresh();
     var vm = this;
     vm.state = $state;
     vm.currentServiceType = $state.current.data.serviceType;
     vm.currentServiceId = serviceType2ServiceId(vm.currentServiceType);
-
+    vm.selectedRow = -1;
     //TODO: Don't like this linking to routes...
     vm.route = serviceType2RouteName(vm.currentServiceType);
 
     vm.clusters = ClusterService.getClusters();
+    vm.clusterLength = _.size(vm.clusters);
+
+    FmsNotificationService.refresh();
 
     vm.startSetupClicked = false;
     vm.startSetup = function () {
@@ -93,10 +95,24 @@
     vm.serviceEnabled = false;
     ServiceDescriptor.isServiceEnabled(serviceType2ServiceId(vm.currentServiceType), function (a, b) {
       vm.serviceEnabled = b;
+      if (!b) {
+        NotificationService.addNotification(
+          'todo',
+          'serviceNotEnabled',
+          1,
+          'modules/hercules/notifications/service-not-enabled.html', {});
+      } else {
+        NotificationService.removeNotification('todo', 'serviceNotEnabled');
+      }
     });
 
-    vm.hasNoCalendarConnectors = function (cluster) {
-      return ServiceStatusSummaryService.serviceFromCluster(vm.currentServiceType, cluster).connectors.length === 0;
+    vm.serviceNotInstalled = function (cluster) {
+      var serviceInfo = ServiceStatusSummaryService.serviceFromCluster(vm.currentServiceType, cluster);
+      if (serviceInfo === undefined) {
+        return true;
+      } else {
+        return serviceInfo.connectors.length === 0;
+      }
     };
 
     vm.softwareUpgradeAvailable = function (cluster) {
@@ -133,7 +149,7 @@
   }
 
   /* @ngInject */
-  function CallDetailsController($state, $modal, $stateParams, ClusterService) {
+  function CallDetailsController(XhrNotificationService, ServiceDescriptor, ServiceStatusSummaryService, $state, $modal, $stateParams, ClusterService) {
     var vm = this;
     vm.state = $state;
     vm.clusterId = $stateParams.cluster.id;
@@ -151,6 +167,15 @@
 
     //TODO: Don't like this linking to routes...
     vm.route = serviceType2RouteName(vm.serviceType);
+
+    vm.serviceNotInstalled = function () {
+      var serviceInfo = ServiceStatusSummaryService.serviceFromCluster(vm.serviceType, vm.cluster);
+      if (serviceInfo === undefined) {
+        return true;
+      } else {
+        return serviceInfo.connectors.length === 0;
+      }
+    };
 
     vm.upgrade = function () {
       $modal.open({
@@ -171,6 +196,17 @@
         //console.log("Starting alarms dialog...");
       });
     };
+
+    /*
+    vm.enableService = function (serviceId) {
+      ServiceDescriptor.setServiceEnabled(serviceId, true, function (error) {
+        XhrNotificationService.notify("Problems enabling the service")
+        //console.log("ERROR disabling service:", error);
+      });
+      console.log("activate service")
+      vm.serviceEnabled = true;
+    };
+    */
 
     /* @ngInject */
     function SoftwareUpgradeController($modalInstance) {
@@ -226,7 +262,7 @@
   }
 
   /* @ngInject */
-  function CallServiceSettingsController($scope, $modal, ServiceDescriptor, Authinfo, USSService2, $stateParams, NotificationConfigService, MailValidatorService, XhrNotificationService) {
+  function CallServiceSettingsController($modal, ServiceDescriptor, Authinfo, USSService2, $stateParams, NotificationConfigService, MailValidatorService, XhrNotificationService, CertService, Notification) {
     var vm = this;
     vm.config = "";
     vm.serviceEnabled = false;
@@ -235,19 +271,39 @@
 
     enableEmailValidation();
 
-    //console.log("Settingscontroller stateparams:", $stateParams)
+    var readCerts = function () {
+      CertService.getCerts(Authinfo.getOrgId()).then(function (res) {
+        vm.certificates = res || [];
+      }, function (err) {
+        return XhrNotificationService.notify(err);
+      });
+    };
 
     vm.squaredFusionEc = false;
     ServiceDescriptor.isServiceEnabled("squared-fusion-ec", function (a, b) {
       vm.squaredFusionEc = b;
+      if (vm.squaredFusionEc) {
+        readCerts();
+      }
     });
 
     ServiceDescriptor.isServiceEnabled(vm.serviceId, function (a, b) {
       vm.serviceEnabled = b;
     });
 
-    vm.toggleEc = function () {
-      ServiceDescriptor.setServiceEnabled("squared-fusion-ec", vm.squaredFusionEc, function (a, b) {});
+    vm.storeEc = function () {
+      //console.log("store ec", vm.squaredFusionEc)
+      ServiceDescriptor.setServiceEnabled("squared-fusion-ec", vm.squaredFusionEc,
+        function (err) {
+          // TODO: fix this callback crap!
+          if (err) {
+            XhrNotificationService.notify("Failed to enable Aware");
+          }
+        }
+      );
+      if (vm.squaredFusionEc) {
+        readCerts();
+      }
     };
 
     vm.loading = true;
@@ -258,34 +314,16 @@
     }, function (err) {
       //  if (err) return notification.notify(err);
     });
-    //UssService.getOrg(Authinfo.getOrgId(), function (err, org) {
-    //  $scope.loading = false;
-    //  if (err) return notification.notify(err);
-    //  console.log("vm",vm)
-    //  vm.org = org || {};
-    //});
 
     vm.updateSipDomain = function () {
-      vm.sipError = null;
       vm.savingSip = true;
 
       USSService2.updateOrg(vm.org).then(function (res) {
         vm.savingSip = false;
       }, function (err) {
         vm.savingSip = false;
-        vm.sipError = "SIP domain was invalid. Please enter a valid SIP domain or IP address.";
+        Notification.error("hercules.errors.sipDomainInvalid");
       });
-      //$scope.error = null;
-      //$scope.saving = true;
-      //ussService.updateOrg($scope.org, function (err) {
-      //  $scope.saving = false;
-      //  if (err) {
-      //    $scope.error = "SIP domain was invalid. Please enter a valid SIP domain or IP address.";
-      //  } else {
-      //    $scope.$parent.modal.close();
-      //  }
-      //});
-
     };
 
     //
@@ -297,7 +335,6 @@
     NotificationConfigService.read(function (err, config) {
       vm.loading = false;
       if (err) {
-        //console.log("Error:", err);
         return XhrNotificationService.notify(err);
       }
       vm.config = config || {};
@@ -306,9 +343,8 @@
 
     vm.writeConfig = function () {
       if (vm.config.wx2users && !MailValidatorService.isValidEmailCsv(vm.config.wx2users)) {
-        vm.emailError = "Please enter a list of comma-separated email addresses";
+        Notification.error("hercules.errors.invalidEmail");
       } else {
-        vm.emailError = null;
         vm.savingEmail = true;
         NotificationConfigService.write(vm.config, function (err) {
           vm.savingEmail = false;
@@ -321,7 +357,7 @@
 
     vm.disableService = function (serviceId) {
       ServiceDescriptor.setServiceEnabled(serviceId, false, function (error) {
-        //console.log("ERROR disabling service:", error);
+        XhrNotificationService.notify(error);
       });
       vm.serviceEnabled = false;
     };
@@ -342,6 +378,37 @@
       });
     };
 
+    vm.uploadCert = function (file, event) {
+      if (!file) {
+        return;
+      }
+      CertService.uploadCert(Authinfo.getOrgId(), file).then(readCerts, XhrNotificationService.notify);
+    };
+
+    vm.confirmCertDelete = function (cert) {
+      $modal.open({
+        templateUrl: "modules/hercules/call-service/confirm-certificate-delete.html",
+        controller: ConfirmCertificateDeleteController,
+        controllerAs: "confirmCertificateDelete",
+        resolve: {
+          cert: function () {
+            return cert;
+          }
+        }
+      }).result.then(readCerts);
+    };
+  }
+
+  /* @ngInject */
+  function ConfirmCertificateDeleteController(CertService, $modalInstance, XhrNotificationService, cert) {
+    var vm = this;
+    vm.cert = cert;
+    vm.remove = function () {
+      CertService.deleteCert(vm.cert.certId).then($modalInstance.close, XhrNotificationService.notify);
+    };
+    vm.cancel = function () {
+      $modalInstance.dismiss();
+    };
   }
 
   angular

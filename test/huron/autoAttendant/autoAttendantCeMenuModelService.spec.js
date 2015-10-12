@@ -28,6 +28,11 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     }]
   };
 
+  // Combined menu
+  var combmenu = getJSONFixture('huron/json/autoAttendant/combinedMenu.json');
+  var ceCombined = combmenu.ceCombined;
+  var combinedMenu = combmenu.combinedMenu;
+
   // Option menu
   var omenu = getJSONFixture('huron/json/autoAttendant/optionMenu.json');
   var ceOption = omenu.ceOption;
@@ -69,6 +74,16 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     it('should return customMenu from parsing ceCustom', function () {
       var _customMenu = AutoAttendantCeMenuModelService.getCustomMenu(ceCustom, 'regularOpenActions');
       expect(angular.equals(_customMenu, customMenu)).toBe(true);
+    });
+  });
+
+  describe('updateCombinedMenu', function () {
+    it('should be able to update a ceRecord with combinedMenu', function () {
+      var _ceRecord = angular.copy(ceInfos[0]);
+      _ceRecord.callExperienceName = 'AA Combined';
+      var _combinedMenu = AutoAttendantCeMenuModelService.getCombinedMenu(ceCombined, 'regularOpenActions');
+      var success = AutoAttendantCeMenuModelService.updateCombinedMenu(_ceRecord, 'regularOpenActions', _combinedMenu);
+      expect(angular.equals(_ceRecord, ceCombined)).toBe(true);
     });
   });
 

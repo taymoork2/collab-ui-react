@@ -1,18 +1,13 @@
 .hercules-notifications{
-  display: block;
-  position: relative;
-  top: 0px;
-  left: 0px;
-
-  display: block;
   z-index: 999;
-  min-width: 2rem;
+  position:relative;
+  padding-right:0.5rem;
 
   a,a:hover,a:active{
     color: #ddd;
-    position: relative;
-    top: 0px;
-    left: 0px;
+    //position: relative;
+    //top: 0px;
+    //left: 0px;
   }
   .fa-bell {
     font-size: 20px;

@@ -405,7 +405,9 @@
         if (angular.isUndefined(ceActionArray[i].runActionsOnInput) && angular.isUndefined(ceActionArray[i].runCustomActions)) {
           var menuEntry = new CeMenuEntry();
           parseAction(menuEntry, ceActionArray[i]);
-          menu.addEntry(menuEntry);
+          if (menuEntry.actions.length > 0) {
+            menu.addEntry(menuEntry);
+          }
         }
       }
 
@@ -531,10 +533,30 @@
 
       var welcomeMenu = getWelcomeMenu(ceRecord, actionSetName);
       var optionMenu = getOptionMenu(ceRecord, actionSetName);
-      if (angular.isDefined(welcomeMenu) && angular.isDefined(optionMenu)) {
-        welcomeMenu.addEntry(optionMenu);
+      if (angular.isDefined(welcomeMenu)) {
+        if (angular.isDefined(optionMenu)) {
+          welcomeMenu.addEntry(optionMenu);
+        }
+        // remove the disconnect action because we manually add it to the UI
+        var entries = welcomeMenu.entries;
+        if (entries.length > 0) {
+          var lastMenuEntry = entries[entries.length - 1];
+          if (angular.isDefined(lastMenuEntry.actions) && lastMenuEntry.actions.length > 0) {
+            var action = lastMenuEntry.actions[0];
+            if (action.name === 'disconnect') {
+              entries = entries.pop();
+            }
+          }
+        }
+        return welcomeMenu;
       }
-      return welcomeMenu;
+    }
+
+    function addDisconnectAction(actions) {
+      actions.push({});
+      actions[actions.length - 1]['disconnect'] = {
+        "treatment": "none"
+      };
     }
 
     function updateCombinedMenu(ceRecord, actionSetName, aaCombinedMenu) {
@@ -545,6 +567,11 @@
         } else {
           deleteMenu(ceRecord, actionSetName, 'MENU_OPTION');
         }
+      }
+      // manually add a disconnect action to each defined actionSet
+      var actionSet = getActionSet(ceRecord, actionSetName);
+      if (actionSet.actions.length > 0) {
+        addDisconnectAction(actionSet.actions);
       }
     }
 

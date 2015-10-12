@@ -1,0 +1,20 @@
+<div>
+
+  <div ng-if="featuresCtrl.featuresAvailable()">
+    <b> Under construction:</b>
+    This page will list the features as cards when it is available.
+  </div>
+
+  <div ng-if="!featuresCtrl.featuresAvailable()" class="no-features-available">
+    <div class="h4 nothing-to-see"
+         translate="huronDetails.featuresNotYetConfiguredPage.nothingToSee"></div>
+
+    <div class="h1 lets-customize"
+         translate="huronDetails.featuresNotYetConfiguredPage.letsCustomize"></div>
+
+    <div><button class="button info large" ng-click="featuresCtrl.newFeature()"
+                 translate="huronDetails.newFeatureButtonText"></button>
+    </div>
+  </div>
+
+</div>

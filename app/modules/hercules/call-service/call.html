@@ -4,30 +4,30 @@
 
     <div class="page-header">
       <div class="page-title">
+
         <span translate="hercules.serviceNames.{{call.currentServiceId}}" class="title-heading">
         </span>
 
+        <!-- TODO: Seems to be problems with positioning with narrow screen -->
         <hercules-notifications></hercules-notifications>
 
-        <span>
+        <div>
           <i class="icon icon-circle-user"/>
           {{call.summary.activated}} activated |
           {{call.summary.notActivated}} pending |
           {{call.summary.error}} needs attention
-        </span>
+        </div>
 
-        <span class="menu">
-
+        <div class="menu">
           <a ui-sref-active="active" ui-sref="{{call.route}}.list">Resources</a>
           <a ui-sref-active="active" ui-sref="{{call.route}}.settings({serviceType:call.currentServiceType})">Settings</a>
           <a ui-sref-active="active" ui-sref="{{call.route}}.about">About</a>
-        </span>
+        </div>
 
       </div>
     </div>
 
-    <div ui-view="fullPane" class="content">
-
+    <div ui-view="fullPane" class="small-padding-top">
     </div>
 
   </div>
@@ -35,17 +35,20 @@
 
 
 <div ng-hide="call.serviceEnabled || call.startSetupClicked" class="content">
-  <div class="fusion-welcome">
-    <h3>Extend the cloud to your premises</h3>
+    <div class="centered-info-pane">
 
-    <p>Connect your Cisco VCS to the Collaboration Cloud to add this service.</p>
-    <br>
+      <p translate="hercules.serviceNames.{{call.currentServiceId}}"></p>
+      <b>Not enabled</b>
 
-    <p>Read the general Cloud Extensions and specific Service pre-requisites and click Start Setup.</p>
-    <button class="btn btn-info" ng-click="call.startSetup()">
-      Start Setup
-    </button>
-  </div>
+      <br>
+      <p>You need to enable this service. Follow the notification wizard.</p>
+
+      <br>
+
+      <button class="btn btn-info" ng-click="call.startSetup()">
+        Start Setup
+      </button>
+    </div>
 </div>
 
 

@@ -6,26 +6,27 @@
 
 <div class="modal-body">
   <p>
-  You are about to remove the following Cloud Extension services for your organization:
-  <br><br>
-  <i class="{{disableConfirmDialog.serviceIconClass}}"></i>
-  <span translate="hercules.serviceNames.{{disableConfirmDialog.serviceId}}"></span>
+    You are about to remove the following Hybrid Service for your organization:
   </p>
-  <br>
-  <p>
-  If you click Confirm, all of your users will have the service deactivated.
-  <strike>Your Cisco VCS will uninstall the service connector.
-  Data for the service connector will be deleted.
-  If your Cisco VCS has no other services installed,
-  you will need to deregister it.</strike>
-    </p>
-  <p>
-  Log in and deregister from Applications > Cloud Extensions > Connector Management.
-</p>
 
+  <p>
+    <i class="{{disableConfirmDialog.serviceIconClass}}"></i>
+    <span translate="hercules.serviceNames.{{disableConfirmDialog.serviceId}}"></span>
+  </p>
+  <p>
+    If you click Confirm:
+  </p>
+  <ul>
+    <li>All of your users will have the service deactivated.</li>
+    <li>Your Cisco Expressway will uninstall the service connector.</li>
+    <li>Data for the service connector will be deleted.</li>
+  </ul>
+  <p>If your Cisco Expressway has no other services installed, you will need to deregister it.
+    Log in and deregister from Applications > Hybrid Services > Connector Management.
+  </p>
 </div>
 
 <div class="modal-footer">
-  <button ng-click="disableConfirmDialog.cancel()">Cancel</button>
-  <button ng-click="disableConfirmDialog.ok()">Confirm</button>
+  <button ng-click="disableConfirmDialog.cancel()" class="button">Cancel</button>
+  <button ng-click="disableConfirmDialog.ok()" class="button alert">Confirm</button>
 </div>
