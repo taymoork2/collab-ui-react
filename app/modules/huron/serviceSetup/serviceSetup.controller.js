@@ -342,21 +342,19 @@
                 if (vm.model.displayNumberRanges.length === 3 && !vm.firstTimeSetup && angular.isDefined(scope.model.uuid)) {
                   vm.model.displayNumberRanges.length = vm.model.displayNumberRanges.length - 1;
                   scope.to.btnClass = 'btn-sm btn-link hide-delete';
-                } 
+                }
               }
             },
             controller: /* @ngInject */ function ($scope) {
               $scope.$watchCollection(function () {
                 return vm.model.displayNumberRanges;
               }, function (displayNumberRanges) {
-                if ((vm.firstTimeSetup && displayNumberRanges.length === 1) || (!vm.firstTimeSetup && displayNumberRanges.length === 1 && angular.isDefined($scope.model.uuid))) {
+                if (displayNumberRanges.length === 1 || (displayNumberRanges.length === 2 && angular.isUndefined($scope.model.uuid))) {
                   $scope.to.btnClass = 'btn-sm btn-link hide-delete';
                 } else if (displayNumberRanges.length > 2 && angular.isUndefined($scope.model.uuid)) {
-                    $scope.to.btnClass = 'btn-sm btn-link';
-                  } else if (displayNumberRanges.length === 2 && angular.isUndefined($scope.model.uuid)) {
-                    $scope.to.btnClass = 'btn-sm btn-link hide-delete';
-                    } 
-                 });
+                  $scope.to.btnClass = 'btn-sm btn-link';
+                }
+              });
             }
           }]
         }]
