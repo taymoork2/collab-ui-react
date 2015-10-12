@@ -262,7 +262,7 @@
   }
 
   /* @ngInject */
-  function CallServiceSettingsController($scope, $modal, ServiceDescriptor, Authinfo, USSService2, $stateParams, NotificationConfigService, MailValidatorService, XhrNotificationService, CertService) {
+  function CallServiceSettingsController($modal, ServiceDescriptor, Authinfo, USSService2, $stateParams, NotificationConfigService, MailValidatorService, XhrNotificationService, CertService, Notification) {
     var vm = this;
     vm.config = "";
     vm.serviceEnabled = false;
@@ -314,34 +314,16 @@
     }, function (err) {
       //  if (err) return notification.notify(err);
     });
-    //UssService.getOrg(Authinfo.getOrgId(), function (err, org) {
-    //  $scope.loading = false;
-    //  if (err) return notification.notify(err);
-    //  console.log("vm",vm)
-    //  vm.org = org || {};
-    //});
 
     vm.updateSipDomain = function () {
-      vm.sipError = null;
       vm.savingSip = true;
 
       USSService2.updateOrg(vm.org).then(function (res) {
         vm.savingSip = false;
       }, function (err) {
         vm.savingSip = false;
-        vm.sipError = "SIP domain was invalid. Please enter a valid SIP domain or IP address.";
+        Notification.error("hercules.errors.sipDomainInvalid");
       });
-      //$scope.error = null;
-      //$scope.saving = true;
-      //ussService.updateOrg($scope.org, function (err) {
-      //  $scope.saving = false;
-      //  if (err) {
-      //    $scope.error = "SIP domain was invalid. Please enter a valid SIP domain or IP address.";
-      //  } else {
-      //    $scope.$parent.modal.close();
-      //  }
-      //});
-
     };
 
     //
@@ -353,7 +335,6 @@
     NotificationConfigService.read(function (err, config) {
       vm.loading = false;
       if (err) {
-        //console.log("Error:", err);
         return XhrNotificationService.notify(err);
       }
       vm.config = config || {};
@@ -362,9 +343,8 @@
 
     vm.writeConfig = function () {
       if (vm.config.wx2users && !MailValidatorService.isValidEmailCsv(vm.config.wx2users)) {
-        vm.emailError = "Please enter a list of comma-separated email addresses";
+        Notification.error("hercules.errors.invalidEmail");
       } else {
-        vm.emailError = null;
         vm.savingEmail = true;
         NotificationConfigService.write(vm.config, function (err) {
           vm.savingEmail = false;
@@ -377,8 +357,7 @@
 
     vm.disableService = function (serviceId) {
       ServiceDescriptor.setServiceEnabled(serviceId, false, function (error) {
-        XhrNotificationService.notify("Problems disabling the service");
-        //console.log("ERROR disabling service:", error);
+        XhrNotificationService.notify(error);
       });
       vm.serviceEnabled = false;
     };
