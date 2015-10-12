@@ -21,6 +21,13 @@
 }
 
 .devices-redux {
+  .message-container {
+    padding: 50px;
+    text-align: center;
+    img {
+      width: 200px;
+    }
+  }
   .add-device-modal .alert {
     border: 0;
     padding: 15px;
