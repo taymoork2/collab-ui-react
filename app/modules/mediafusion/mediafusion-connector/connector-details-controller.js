@@ -18,21 +18,28 @@ angular.module('Mediafusion')
         }
       }, true);
 
-      $scope.groups = MediafusionClusterService.getGroups();
+      //$scope.groups = MediafusionClusterService.getGroups();
+      var groupResponse = MediafusionClusterService.getGroups();
+      groupResponse.then(function () {
+        _.chain(groupResponse)
+          .filter(function (group) {
+            $scope.groups = group.value;
+          })
+          .value();
+        //$log.log("List of groups:", $scope.groups);
+      });
 
       $scope.onSelect = function ($item, $model, $label) {
         $scope.currentPropertySet = _.chain($scope.groups)
           .filter(function (group) {
-            //$log.log('group length :', group.value.length);
-            angular.forEach(group.value, function (item) {
-              //$log.log("id :", item.id); 
-              //$log.log("name :", item.name); 
-              if (angular.equals(item.name, $scope.displayName)) {
-                //$log.log("match found");
-                $scope.currentPropertySetId = item.id;
-                return group.value;
-              }
-            });
+            //$log.log('group  :', group);
+            //$log.log("id :", group.id); 
+            //$log.log("name :", group.name); 
+            if (angular.equals(group.name, $scope.displayName)) {
+              //$log.log("match found for group name");
+              $scope.currentPropertySetId = group.id;
+              return group;
+            }
           })
           .value();
 
