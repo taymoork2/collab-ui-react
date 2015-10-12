@@ -8,7 +8,7 @@
     .factory('Orgservice', Orgservice);
 
   /* @ngInject */
-  function Orgservice($http, $rootScope, $location, $q, Storage, Config, Authinfo, Log, Auth) {
+  function Orgservice($http, $location, $q, $rootScope, Auth, Authinfo, Config, Log, Storage) {
     var service = {
       'getOrg': getOrg,
       'getAdminOrg': getAdminOrg,
@@ -41,6 +41,14 @@
         .success(function (data, status) {
           data = data || {};
           data.success = true;
+
+          if (_.isEmpty(data.orgSettings)) {
+            data.orgSettings = {};
+            Log.debug('No orgSettings found for org: ' + data.id);
+          } else {
+            data.orgSettings = JSON.parse(_.last(data.orgSettings));
+          }
+
           callback(data, status);
         })
         .error(function (data, status) {
@@ -135,26 +143,34 @@
       });
     }
 
+    /**
+     * Get the latest orgSettings, merge with new settings, and PATCH the org
+     */
     function setOrgSettings(orgId, settings, callback) {
       var orgUrl = Config.getAdminServiceUrl() + 'organizations/' + orgId + '/settings';
 
-      $http({
-          method: 'PATCH',
-          url: orgUrl,
-          data: settings
-        })
-        .success(function (data, status) {
-          data = data || {};
-          data.success = true;
-          Log.debug('Posted orgSettings: ' + settings);
-          callback(data, status);
-        })
-        .error(function (data, status) {
-          data = data || {};
-          data.success = false;
-          data.status = status;
-          callback(data, status);
-        });
+      getOrg(function (orgData, orgStatus) {
+        var orgSettings = orgData.orgSettings;
+        _.assign(orgSettings, settings);
+
+        $http({
+            method: 'PATCH',
+            url: orgUrl,
+            data: orgSettings
+          })
+          .success(function (data, status) {
+            data = data || {};
+            data.success = true;
+            Log.debug('PATCHed orgSettings: ' + orgSettings);
+            callback(data, status);
+          })
+          .error(function (data, status) {
+            data = data || {};
+            data.success = false;
+            data.status = status;
+            callback(data, status);
+          });
+      }, orgId, true);
     }
 
     function createOrg(enc, callback) {
