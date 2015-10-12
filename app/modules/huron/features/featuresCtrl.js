@@ -199,7 +199,7 @@
       vm.listOfFeatures.splice(vm.listOfFeatures.indexOf(huntGroupToBeDeleted), 1);
       listOfAllFeatures.splice(listOfAllFeatures.indexOf(huntGroupToBeDeleted), 1);
       huntGroupToBeDeleted = {};
-      if (vm.listOfFeatures.length === 0) {
+      if (listOfAllFeatures.length === 0) {
         vm.pageState = "NewFeature";
       }
       if (vm.filterText) {

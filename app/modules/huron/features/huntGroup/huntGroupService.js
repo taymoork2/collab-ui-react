@@ -29,24 +29,24 @@
       //    'numbers': ['5076', '(414) 555-1244'],
       //    'memberCount': 2
       //  }, {
-      //    'uuid': 'bbcd1234-abcd-abcd-abcddef123456',
-      //    'name': 'Marketing',
-      //    'numbers': ['5076', '(124) 456-7890', '(414) 555-1244', '(414) 555-1245'],
-      //    'memberCount': 16
-      //  }, {
-      //    'uuid': 'cbcd1234-abcd-abcd-abcddef123456',
-      //    'name': 'Sales',
-      //    'numbers': ['5076'],
-      //    'memberCount': 64
-      //  }, {
       //    'uuid': 'dbcd1234-abcd-abcd-abcddef123456',
       //    'name': 'Groceries',
       //    'numbers': ['5076', '(127) 456-7890'],
       //    'memberCount': 81
+      //  },{
+      //    'uuid': 'bbcd1234-abcd-abcd-abcddef123456',
+      //    'name': 'Marketing Department',
+      //    'numbers': ['5076', '(124) 456-7890', '(414) 555-1244', '(414) 555-1245'],
+      //    'memberCount': 16
       //  }, {
+      //    'uuid': 'cbcd1234-abcd-abcd-abcddef123456',
+      //    'name': 'Sales, Billing and Customer Support',
+      //    'numbers': ['5076'],
+      //    'memberCount': 64
+      //  },  {
       //    'uuid': 'ebcd1234-abcd-abcd-abcddef123456',
       //    'name': 'Billing',
-      //    'numbers': ['5076', '5078'],
+      //    'numbers': ['5076-5078'],
       //    'memberCount': 10
       //  }, {
       //    'uuid': 'fbcd1234-abcd-abcd-abcddef123456',

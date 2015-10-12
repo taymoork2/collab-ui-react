@@ -14,18 +14,19 @@
   justify-content: space-between;
   align-items: flex-end;
   background-color: $brand-white;
+  @include vr-spacing(pl, 0.6);
 }
 
 .new-feature-button {
-  @include vr-spacing(mr, 0.375)
+  @include vr-spacing(mr, 0.75)
 }
 
 .cards-block{
 
-  @include vr-spacing(pt, 1.5);
+  @include vr-spacing(pt, 0.8);
 
   .cs-card article {
-    height : rem-calc(195);
+    height : rem-calc(170);
   }
   .cs-card article section {
     display : flex;
@@ -35,29 +36,25 @@
     align-items: baseline;
   }
 
-  .card-action-btn{
-    //font-size: 1.25rem;
-    @include vr-spacing(pt, 0.3);
-    @include vr-spacing(pb, 0);
-    @include vr-spacing(ph, 0);
-  }
   .card-section {
-    flex : 0 1 auto;
-    align-self : auto;
-    display : block;
-    font-family: $brand-font-regular;//cisco sans light
-    font-size: rem-calc(16);
-    @include vr-spacing(pl, 1.4);
+    @include vr-spacing(pl, 0.9);
     @include vr-spacing(pt, 0.8);
+  }
+
+  .card-section-num {
+    display : block;
+    font-family: $brand-font-regular;
+    font-size: $font-size-large;
+    @include vr-spacing(pb, 0.2);
     line-height: rem-calc(24);
   }
 
   .card-members {
     color : $gray-dark;
     font-family: $brand-font-regular;
-    font-size: rem-calc(16);
-    @include vr-spacing(pl, 1.4);
-    @include vr-spacing(pt, 0.875);
+    font-size: $font-size-large;
+    @include vr-spacing(pl, 0.9);
+    @include vr-spacing(pb, 0.875);
   }
 
   .card-footer {
@@ -71,8 +68,8 @@
   }
 
   .card-icon-div {
-    @include vr-spacing(pr, 1);
-    @include vr-spacing(pb, 0.2);
+    @include vr-spacing(pr, 0.85);
+    @include vr-spacing(pb, 0.6);
   }
 
   .card-icon {
@@ -80,9 +77,8 @@
     height : 2rem;
     width : 2rem;
     border-radius: 50%;
-    font-size: $font-size-h5;
     background-color: $gray-lightest;
-    padding : 7px 6px 6px 6px;
+    padding : 16px 6px 6px 6px;
   }
 }
 
