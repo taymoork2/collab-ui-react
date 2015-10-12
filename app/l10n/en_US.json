@@ -1928,9 +1928,9 @@
     "settingPageLabel_SC_forms": "Support Center Forms",
     "settingPageLabel_SC_branding": "Support Center Branding",
 
-    "settingPageLabel_WebACD_webacd_settings": "WebACD Settings",
-    "settingPageLabel_WebACD_webacd_queues": "WebACD Queues",
-    "settingPageLabel_WebACD_webacd_form": "WebACD Leave Message Forms",
+    "settingPageLabel_WebACD_webacd_settings": "Web ACD Settings",
+    "settingPageLabel_WebACD_webacd_queues": "Web ACD Queues",
+    "settingPageLabel_WebACD_webacd_form": "Web ACD Leave Message Forms",
 
     "settingPageLabel_RA_remote_options": "Remote Access Settings",
     "settingPageLabel_RA_remote_groups": "Remote Access Groups",
