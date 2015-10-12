@@ -15,7 +15,7 @@
   <h6>Certificates</h6>
 
   <div data-ng-repeat="cert in callServiceSettings.certificates" class="row">
-    <div class="small-9 columns">{{cert.certId}}</div>
+    <div class="small-9 columns">{{cert.name}}</div>
     <div class="small-3 columns">
       <a href="#" class="right" sq-click-promise="callServiceSettings.confirmCertDelete(cert)">
         Remove

@@ -858,7 +858,9 @@
     },
     "errors": {
       "enableServiceEntitlementFailure": "Failed! Your organization is missing entitlements that are needed to add the {{serviceName}}. Contact your support representative to fix the issue.",
-      "enableServiceFailure": "Adding the {{serviceName}} failed."
+      "enableServiceFailure": "Adding the {{serviceName}} failed.",
+      "sipDomainInvalid": "SIP domain was invalid. Please enter a valid SIP domain or IP address",
+      "invalidEmail": "Please enter a list of comma-separated email addresses"
     },
     "cloudExtensions": {
       "serviceNames": {
