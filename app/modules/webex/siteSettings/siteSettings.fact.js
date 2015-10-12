@@ -183,7 +183,7 @@
 
                 webACDObj: {
                   id: "WebACD",
-                  label: "WebACD",
+                  label: "Web ACD",
                   pageObjs: null
                 },
 
@@ -541,32 +541,52 @@
 
                   categoryFound = true;
 
-                  var currPageObj = null;
-                  var pageObjs = categoryObj.pageObjs;
+                  var pageInList = false;
+                  var pageIndex = 0;
 
-                  pageObjs.forEach(
+                  categoryObj.pageObjs.forEach(
                     function checkPageObj(pageObj) {
-                      if (newPageObj.id == pageObj.id) {
-                        currPageObj = pageObj;
+                      if (!pageInList) {
+                        var localeCompareResult = newPageObj.label.localeCompare(pageObj.label);
+
+                        logMsg = funcName + ": " +
+                          "pageObj.label=" + pageObj.label + "\n" +
+                          "newPageObj.label=" + newPageObj.label + "\n" +
+                          "localeCompareResult=" + localeCompareResult;
+                        $log.log(logMsg);
+
+                        if (localeCompareResult < 0) {
+                          categoryObj.pageObjs.splice(pageIndex, 0, newPageObj);
+
+                          pageInList = true;
+
+                          logMsg = funcName + ": " +
+                            "Page obj inserted";
+                          $log.log(logMsg);
+                        } else if (localeCompareResult === 0) {
+                          pageObj.id = newPageObj.id;
+                          pageObj.pageId = newPageObj.pageId;
+                          pageObj.label = newPageObj.label;
+                          pageObj.iframeUrl = newPageObj.iframeUrl;
+                          pageObj.uiSref = newPageObj.uiSref;
+
+                          pageInList = true;
+
+                          logMsg = funcName + ": " +
+                            "Page obj updated";
+                          $log.log(logMsg);
+                        }
                       }
+
+                      ++pageIndex;
                     } // checkPageObj()
-                  ); // pageObjs.forEach()
+                  ); // categoryObj.pageObjs.forEach()
 
-                  if (null == currPageObj) {
-                    pageObjs.push(newPageObj);
-
-                    logMsg = funcName + ": " +
-                      "New page obj added";
-                    $log.log(logMsg);
-                  } else {
-                    currPageObj.id = newPageObj.id;
-                    currPageObj.pageId = newPageObj.pageId;
-                    currPageObj.label = newPageObj.label;
-                    currPageObj.iframeUrl = newPageObj.iframeUrl;
-                    currPageObj.uiSref = newPageObj.uiSref;
+                  if (!pageInList) {
+                    categoryObj.pageObjs.push(newPageObj);
 
                     logMsg = funcName + ": " +
-                      "Existing page obj updated";
+                      "Page obj pushed";
                     $log.log(logMsg);
                   }
                 }
@@ -646,7 +666,7 @@
           } // updateSettingCardObjs()
 
           function getCategoryObj(categoryId) {
-            var funcName = "updateDisplayInfo().getCategoryObj()";
+            var funcName = "getCategoryObj()";
             var logMsg = "";
 
             var result = null;
