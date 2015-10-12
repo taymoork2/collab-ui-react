@@ -6,14 +6,10 @@
 
 describe('HuntGroup DeleteCtrl', function () {
 
-  var hgDeleteCtrl, rootScope, $scope, $stateParams, $q, $translate, Authinfo, huntGroupService, Notification, Log;
-
-  var deleteHGDeferred;
-
+  var hgDeleteCtrl, rootScope, $scope, $stateParams, $q, $timeout, $translate, Authinfo, huntGroupService, Notification, Log, deleteHGDeferred;
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
   };
-
   var successResponse = {
     'status': 200,
     'statusText': 'OK'
@@ -29,12 +25,12 @@ describe('HuntGroup DeleteCtrl', function () {
     $provide.value("Authinfo", spiedAuthinfo);
   }));
 
-  beforeEach(inject(function (_$rootScope_, $controller, _$translate_, _$q_, Authinfo, _HuntGroupService_, _Notification_, _Log_) {
-
+  beforeEach(inject(function (_$rootScope_, $controller, _$timeout_, _$translate_, _$q_, Authinfo, _HuntGroupService_, _Notification_, _Log_) {
     rootScope = _$rootScope_;
     $scope = rootScope.$new();
     $q = _$q_;
     $translate = _$translate_;
+    $timeout = _$timeout_;
     Authinfo = Authinfo;
     huntGroupService = _HuntGroupService_;
     Notification = _Notification_;
@@ -55,6 +51,7 @@ describe('HuntGroup DeleteCtrl', function () {
       $rootScope: rootScope,
       $scope: $scope,
       $stateParams: $stateParams,
+      $timeout: $translate,
       $translate: $translate,
       Authinfo: Authinfo,
       HuntGroupService: huntGroupService,
@@ -68,6 +65,7 @@ describe('HuntGroup DeleteCtrl', function () {
     hgDeleteCtrl.deleteHuntGroup();
     deleteHGDeferred.resolve(successResponse);
     $scope.$apply();
+    $timeout.flush();
     expect(rootScope.$broadcast).toHaveBeenCalledWith('HUNT_GROUP_DELETED');
 
   });
@@ -76,6 +74,7 @@ describe('HuntGroup DeleteCtrl', function () {
     hgDeleteCtrl.deleteHuntGroup();
     deleteHGDeferred.resolve(successResponse);
     $scope.$apply();
+    $timeout.flush();
     expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
       huntGroupName: $stateParams.deleteHuntGroupName
     });
@@ -85,6 +84,7 @@ describe('HuntGroup DeleteCtrl', function () {
     hgDeleteCtrl.deleteHuntGroup();
     deleteHGDeferred.reject(failureResponse);
     $scope.$apply();
+    $timeout.flush();
     expect(Notification.error).toHaveBeenCalledWith(jasmine.any(String));
   });
 

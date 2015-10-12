@@ -38,23 +38,25 @@
     /* Adding Auto Attendant and Call Park filters to validate HuntGroup filter */
     /* Please change Auto Attendant and HuntGroup filters accordingly if needed*/
     vm.filters = [{
-      name: 'All',
-      filterValue: 'all'
-    }, {
-      name: 'Auto Attendant',
-      filterValue: 'AA'
-    }, {
-      name: 'Hunt Group',
-      filterValue: 'HG'
-    }, {
-      name: 'Call Park',
-      filterValue: 'CP'
-    }];
+        name: 'All',
+        filterValue: 'all'
+      }, {
+        name: 'Auto Attendant',
+        filterValue: 'AA'
+      }, {
+        name: 'Hunt Group',
+        filterValue: 'HG'
+      },
+      //  {
+      //  name: 'Call Park',
+      //  filterValue: 'CP'
+      //}
+    ];
 
     vm.cardColors = {
       'AA': 'primary',
-      'HG': 'eggplant',
-      'CP': 'alerts'
+      'HG': 'eggplant'
+        //'CP': 'alerts'
     };
 
     //Switches Data that populates the Features tab
@@ -68,11 +70,11 @@
           $: vm.filterText,
           filterValue: 'HG'
         });
-      } else if (filterValue === 'CP') {
-        vm.listOfFeatures = $filter('filter')(listOfAllFeatures, {
-          $: vm.filterText,
-          filterValue: 'CP'
-        });
+        //} else if (filterValue === 'CP') {
+        //  vm.listOfFeatures = $filter('filter')(listOfAllFeatures, {
+        //    $: vm.filterText,
+        //    filterValue: 'CP'
+        //  });
       } else if (filterValue === 'AA') {
         vm.listOfFeatures = $filter('filter')(listOfAllFeatures, {
           $: vm.filterText,
@@ -160,7 +162,6 @@
       listOfAllFeatures = listOfAllFeatures.concat(listOfCallParks);
     };
 
-    //Commenting out the code in this function to keep jshint happy
     vm.editHuronFeature = function (feature) {
       //if (feature.filterValue === 'AA') {
       //  //Call  AutoAttendant Edit Controller

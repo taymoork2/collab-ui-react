@@ -8,7 +8,7 @@
     .module('uc.hurondetails')
     .controller('HuntGroupDeleteCtrl', HuntGroupDeleteCtrl);
 
-  function HuntGroupDeleteCtrl($rootScope, $scope, $stateParams, $translate, Authinfo, HuntGroupService, Notification, Log) {
+  function HuntGroupDeleteCtrl($rootScope, $scope, $stateParams, $timeout, $translate, Authinfo, HuntGroupService, Notification, Log) {
     var vm = this;
 
     vm.deleteHuntGroup = function () {
@@ -20,6 +20,7 @@
         if (angular.isFunction($scope.$dismiss)) {
           $scope.$dismiss();
         }
+        $timeout($rootScope.$broadcast('HUNT_GROUP_DELETED'), 250);
         $rootScope.$broadcast('HUNT_GROUP_DELETED');
         Notification.success('huntGroupDetails.deleteHuntGroupSuccessText', {
           huntGroupName: vm.deleteHuntGroupName

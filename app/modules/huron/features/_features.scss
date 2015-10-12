@@ -43,7 +43,8 @@
 
   .card-section-num {
     display : block;
-    font-family: $brand-font-regular;
+    color : $gray-darkest;
+    font-family: $brand-font-light;
     font-size: $font-size-large;
     @include vr-spacing(pb, 0.2);
     line-height: rem-calc(24);
@@ -51,8 +52,8 @@
 
   .card-members {
     color : $gray-dark;
-    font-family: $brand-font-regular;
-    font-size: $font-size-large;
+    font-family: $brand-font-light;
+    font-size: $font-size-base;
     @include vr-spacing(pl, 0.9);
     @include vr-spacing(pb, 0.875);
   }

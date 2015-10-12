@@ -1,0 +1,9 @@
+{
+  "url": "https://test-hg.com/api/v2/customers/123/features/huntgroups",
+  "items": [{
+    "uuid": "abcd1234-abcd-abcd-abcddef123456",
+    "name": "Technical Support",
+    "numbers": ["5076", "(414) 555-1244"],
+    "memberCount": 2
+  }]
+}

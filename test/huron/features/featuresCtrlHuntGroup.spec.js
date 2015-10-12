@@ -5,40 +5,10 @@
 
 describe('Features Controller', function () {
 
-  var featureCtrl, $rootScope, $scope, $modal, $q, $state, $translate, $filter, $timeout, Authinfo, HuntGroupService, Log, Notification;
-
-  var getListOfHuntGroupsDeferred;
-
-  var listOfHGs = {
-    'url': 'https://test-hg.com/api/v2/customers/123/features/huntgroups',
-    'items': [{
-      'uuid': 'abcd1234-abcd-abcd-abcddef123456',
-      'name': 'Technical Support',
-      'numbers': ['5076', '(414) 555-1244'],
-      'memberCount': 2
-    }, {
-      uuid: 'bbcd1234-abcd-abcd-abcddef123456',
-      name: 'Marketing',
-      numbers: ['5076', '(124) 456-7890', '(414) 555-1244', '(414) 555-1245'],
-      memberCount: 16
-    }]
-  };
-
-  var hg = {
-    'url': 'https://test-hg.com/api/v2/customers/123/features/huntgroups',
-    'items': [{
-      'uuid': 'abcd1234-abcd-abcd-abcddef123456',
-      'name': 'Technical Support',
-      'numbers': ['5076', '(414) 555-1244'],
-      'memberCount': 2
-    }]
-  };
-
-  var emptyListOfHGs = {
-    'url': 'https://test-hg.com/api/v2/customers/123/features/huntgroups',
-    'items': []
-  };
-
+  var featureCtrl, $rootScope, $scope, $modal, $q, $state, $translate, $filter, $timeout, Authinfo, HuntGroupService, Log, Notification, getHGListDeferred;
+  var listOfHGs = getJSONFixture('huron/json/features/huntGroup/hgList.json');
+  var hg = getJSONFixture('huron/json/features/huntGroup/oneHg.json');
+  var emptyListOfHGs = getJSONFixture('huron/json/features/huntGroup/emptyHgList.json');
   var getHGListSuccessResp = function (data) {
     return {
       'data': data,
@@ -46,13 +16,11 @@ describe('Features Controller', function () {
       'statusText': 'OK'
     };
   };
-
   var getHGListFailureResp = {
     'data': 'Internal Server Error',
     'status': 500,
     'statusText': 'Internal Server Error'
   };
-
   var huntGroups = [{
     'cardName': 'Technical Support',
     'numbers': ['5076', '(414) 555-1244'],
@@ -61,7 +29,6 @@ describe('Features Controller', function () {
     'memberCount': 2,
     'huntGroupId': 'abcd1234-abcd-abcd-abcddef123456'
   }, {
-
     cardName: 'Marketing',
     numbers: ['5076', '(124) 456-7890', '(414) 555-1244', '(414) 555-1245'],
     memberCount: 16,
@@ -86,10 +53,10 @@ describe('Features Controller', function () {
     Notification = _Notification_;
 
     //create mock deferred object which will be used to return promises
-    getListOfHuntGroupsDeferred = $q.defer();
+    getHGListDeferred = $q.defer();
 
     //Using a Jasmine Spy to return a promise when methods of the HuntGroupService are called
-    spyOn(HuntGroupService, 'getListOfHuntGroups').and.returnValue(getListOfHuntGroupsDeferred.promise);
+    spyOn(HuntGroupService, 'getListOfHuntGroups').and.returnValue(getHGListDeferred.promise);
 
     spyOn($state, 'go');
     spyOn(Notification, 'success');
@@ -110,26 +77,26 @@ describe('Features Controller', function () {
   }));
 
   it('should get list of huntGroups and then store the data in listOfFeatures', function () {
-    getListOfHuntGroupsDeferred.resolve(getHGListSuccessResp(listOfHGs));
+    getHGListDeferred.resolve(getHGListSuccessResp(listOfHGs));
     $scope.$apply();
     $timeout.flush();
     expect(featureCtrl.listOfFeatures).toEqual(jasmine.arrayContaining(huntGroups));
   });
   it('should get list of huntGroups and if there is any data, should change the pageState to showFeatures', function () {
-    getListOfHuntGroupsDeferred.resolve(getHGListSuccessResp(listOfHGs));
+    getHGListDeferred.resolve(getHGListSuccessResp(listOfHGs));
     $scope.$apply();
     $timeout.flush();
     expect(featureCtrl.pageState).toEqual('showFeatures');
   });
   it('should get list of huntGroups and if data received is empty, should change the pageSate to newFeature', function () {
-    getListOfHuntGroupsDeferred.resolve(getHGListSuccessResp(emptyListOfHGs));
+    getHGListDeferred.resolve(getHGListSuccessResp(emptyListOfHGs));
     $scope.$apply();
     $timeout.flush();
     expect(featureCtrl.pageState).toEqual('NewFeature');
   });
 
   it('should get list of huntGroups and if back end call fails should show error notification', function () {
-    getListOfHuntGroupsDeferred.reject(getHGListFailureResp);
+    getHGListDeferred.reject(getHGListFailureResp);
     $scope.$apply();
     $timeout.flush();
     expect(Notification.error).toHaveBeenCalledWith(jasmine.any(String));
@@ -137,14 +104,14 @@ describe('Features Controller', function () {
 
   it('should set the pageState to Loading when controller is getting data from back-end', function () {
     expect(featureCtrl.pageState).toEqual('Loading');
-    getListOfHuntGroupsDeferred.resolve(getHGListSuccessResp(listOfHGs));
+    getHGListDeferred.resolve(getHGListSuccessResp(listOfHGs));
     $scope.$apply();
     $timeout.flush();
     expect(featureCtrl.pageState).toEqual('showFeatures');
   });
 
   it('should be able call delete a huntGroup function and call the $state service', function () {
-    getListOfHuntGroupsDeferred.resolve(getHGListSuccessResp(emptyListOfHGs));
+    getHGListDeferred.resolve(getHGListSuccessResp(emptyListOfHGs));
     $scope.$apply();
     $timeout.flush();
     featureCtrl.deleteHuronFeature(huntGroups[0]);
@@ -166,7 +133,7 @@ describe('Features Controller', function () {
   it('should receive the HUNT_GROUP_DELETED event and set pageState to newFeature if they are no features to show', function () {
     featureCtrl.listOfFeatures = [];
     expect(featureCtrl.pageState).toEqual('Loading');
-    getListOfHuntGroupsDeferred.resolve(getHGListSuccessResp(hg));
+    getHGListDeferred.resolve(getHGListSuccessResp(hg));
     $scope.$apply();
     $timeout.flush();
     expect(featureCtrl.pageState).toEqual('showFeatures');
@@ -179,7 +146,7 @@ describe('Features Controller', function () {
   });
 
   it('should set the view to huntGroups when HG filter is selected', function () {
-    getListOfHuntGroupsDeferred.resolve(getHGListSuccessResp(listOfHGs));
+    getHGListDeferred.resolve(getHGListSuccessResp(listOfHGs));
     $scope.$apply();
     $timeout.flush();
     featureCtrl.setFilter('HG');
@@ -187,7 +154,7 @@ describe('Features Controller', function () {
   });
 
   it('should take search query and display the results according to search query', function () {
-    getListOfHuntGroupsDeferred.resolve(getHGListSuccessResp(listOfHGs));
+    getHGListDeferred.resolve(getHGListSuccessResp(listOfHGs));
     $scope.$apply();
     $timeout.flush();
     featureCtrl.searchData(huntGroups[0].cardName);

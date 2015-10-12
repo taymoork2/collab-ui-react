@@ -25,13 +25,13 @@
         <div class="card-section">
           <span class="card-section-num" ng-if="(huronFeature.numbers.length <= 2)"
                 ng-repeat="number in huronFeature.numbers">{{number}}</span>
-          <span class="card-section-num" ng-if="(huronFeature.numbers.length > 2)">{{huronFeature.numbers.length + ' '+ ('huronFeatureDetails.numbers' | translate)}}</span>
+          <span class="card-section-num" ng-if="(huronFeature.numbers.length > 2)">{{:: huronFeature.numbers.length + ' '+ ('huronFeatureDetails.numbers' | translate)}}</span>
         </div>
         <div class="card-footer">
           <div class="left"><span ng-if="(huronFeature.filterValue === 'HG')" class="card-members left">
-                {{huronFeature.memberCount + ('huronFeatureDetails.members' | translate)}}</span></div>
+                {{:: huronFeature.memberCount + ('huronFeatureDetails.members' | translate)}}</span></div>
           <div class="right card-icon-div ">
-            <span class="card-icon card-icon-color-{{huronFeature.filterValue}}"><strong>{{huronFeature.featureName | translate}}</strong></span>
+            <span class="card-icon card-icon-color-{{huronFeature.filterValue}}"><strong>{{:: huronFeature.featureName | translate}}</strong></span>
           </div>
         </div>
       </section>
