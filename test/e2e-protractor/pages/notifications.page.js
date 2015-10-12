@@ -1,28 +1,29 @@
 'use strict';
 
-var assertDisplayed = function (cssSelector, message) {
+var assertDisplayed = function (elem, message) {
   if (!message) return;
-  expect(element.all(by.cssContainingText(cssSelector, message)).first().isDisplayed()).toBeTruthy();
+  utils.expectText(elem, message);
 };
 
 var Notifications = function () {
   var alert = element(by.css('.toast .toast-close-button'));
-  this.errorAlert = element(by.css('.toast-error .toast-close-button'));
-  this.successAlert = element(by.css('.toast-success .toast-close-button'));
+  this.errorAlert = element(by.css('.toast-error'));
+  this.successAlert = element(by.css('.toast-success'));
+  this.closeButton = element(by.css('.toast-close-button'));
 
   this.assertError = function (msg1, msg2) {
     utils.wait(this.errorAlert).then(function () {
-      assertDisplayed('.toast-error', msg1);
-      assertDisplayed('.toast-error', msg2);
-      this.errorAlert.click();
+      assertDisplayed(this.errorAlert, msg1);
+      assertDisplayed(this.errorAlert, msg2);
+      utils.click(this.errorAlert.element(this.closeButton.locator()));
     }.bind(this));
   };
 
   this.assertSuccess = function (msg1, msg2) {
     utils.wait(this.successAlert).then(function () {
-      assertDisplayed('.toast-success', msg1);
-      assertDisplayed('.toast-success', msg2);
-      this.successAlert.click();
+      assertDisplayed(this.successAlert, msg1);
+      assertDisplayed(this.successAlert, msg2);
+      utils.click(this.successAlert.element(this.closeButton.locator()));
     }.bind(this));
   };
 
