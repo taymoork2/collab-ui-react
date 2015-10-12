@@ -23,11 +23,9 @@
           vm.saving = false;
         }, function (err) {
           vm.error = $translate.instant(
-            err.status === 409
-              ? 'hercules.clusters.deregisterErrorNoDeregisterSupport'
-              : 'hercules.clusters.deregisterErrorGeneric', {
+            err.status === 409 ? 'hercules.clusters.deregisterErrorNoDeregisterSupport' : 'hercules.clusters.deregisterErrorGeneric', {
               clusterName: cluster.name,
-                errorMessage: XhrNotificationService.getMessages(err).join(', ')
+              errorMessage: XhrNotificationService.getMessages(err).join(', ')
             });
           vm.saving = false;
         });
