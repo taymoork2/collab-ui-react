@@ -292,7 +292,9 @@ exports.click = function (elem, maxRetry) {
     if (maxRetry === 0) {
       return elem.click().then(deferred.fulfill, deferred.reject);
     } else {
-      return elem.click().then(deferred.fulfill, function () {
+      return elem.click().then(deferred.fulfill, function (e) {
+        log('Failed to click element: ' + elem.locator());
+        log(e);
         return exports.click(elem, --maxRetry);
       });
     }
@@ -357,9 +359,12 @@ exports.expectAttribute = function (elem, attr, value) {
   });
 };
 
-exports.expectText = function (elem, value) {
+exports.expectText = function (elem, value, value2) {
   this.wait(elem).then(function () {
     expect(elem.getText()).toContain(value);
+    if (value2) {
+      expect(elem.getText()).toContain(value2);
+    }
   });
 };
 
