@@ -8,8 +8,8 @@
       ui-sref="{{callDetails.route}}.list.details.cluster-settings({cluster:callDetails.cluster, serviceType: callDetails.serviceType})">Settings</a>
     </small>
     <div class="right">
-      <a ng-show="callDetails.state.includes('call-service.list.details.cluster-settings')"
-         ui-sref="call-service.list.details({cluster:callDetails.cluster})"><i class="icon icon-close"/></a>
+      <a ng-show="callDetails.state.includes('*.list.details.cluster-settings')"
+         ui-sref="{{callDetails.state.current.name}}({cluster:callDetails.cluster})"><i class="icon icon-close"/></a>
     </div>
   </h4>
 
@@ -64,27 +64,33 @@
       Depending services
     </h5>
 
-    <p>
-      Management Connector
+    <div class="row">
+      <span class="small-4 column">
+        Management Connector
+      </span>
+      <span class="small-4 column end">
+        <span ng-show="callDetails.managementService.status === 'needs_attention'" class="red">
+          <i class="fa fa-circle"/>
+          <span class="hidden-xs">Needs attention</span>
+        </span>
+      </span>
+    </div>
 
-    <span ng-show="callDetails.managementService.needs_attention" class="red">
-      <i class="fa fa-circle"/>
-      <span class="hidden-xs">Needs attention</span>
-    </span>
-    </p>
 
     <h5>
       Running on hosts:
     </h5>
-
-      <p ng-repeat="connector in callDetails.selectedService.connectors">
+    <div class="row" ng-repeat="connector in callDetails.selectedService.connectors">
+      <span class="small-4 column">
         {{connector.host.host_name}}
-
+      </span>
+      <span class="small-4 column end">
         <span ng-show="connector.status === 'needs_attention'" class="red">
           <i class="fa fa-circle"/>
           <span class="hidden-xs">Needs attention</span>
         </span>
-      </p>
+      </span>
+    </div>
   </div>
 
   <p ng-if="!callDetails.cluster">

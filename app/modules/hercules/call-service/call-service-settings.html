@@ -25,7 +25,10 @@
       <h6>
         {{'hercules.cloudExtensions.serviceNames.squared-fusion-ec' | translate}}
         <span class="switch small right">
-          <cs-toggle-switch ng-click="callServiceSettings.storeEc()" ng-model="callServiceSettings.squaredFusionEc" toggle-id="squaredFusionEc-toggler" size="small"></cs-toggle-switch>
+          <cs-toggle-switch ng-change="callServiceSettings.storeEc(callServiceSettings.squaredFusionEc)"
+                            ng-model="callServiceSettings.squaredFusionEc"
+                            toggle-id="squaredFusionEc-toggler" size="small">
+          </cs-toggle-switch>
         </span>
       </h6>
 
