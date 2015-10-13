@@ -898,7 +898,8 @@ angular.module('Core')
           'mediafusionconnector',
           'callRouter',
           'hurondetails',
-          'cdrsupport'
+          'cdrsupport',
+          'cdr-overview'
         ]
       };
 
