@@ -17,6 +17,8 @@
     dlc.interval = 5000; //5 seconds
     dlc.timeout = 600000; //10 minutes
     dlc.active = false;
+    dlc.error = false;
+    dlc.loading = false;
 
     var LOG_SUCCESS = 'success';
     var EVT_SUCCESS = 'success';
@@ -25,13 +27,20 @@
 
     ////////// Function Definitions ///////////////////////////////////////
     function retrieveLog() {
+      dlc.error = false;
+      dlc.loading = true;
+
       DeviceLogService.retrieveLog(dlc.currentUser.id, dlc.device.uuid)
         .then(function (response) {
           dlc.active = true;
           return refreshLogList();
         }, function (error) {
           //TODO: handle error with notification
+        })
+        .finally(function () {
+          dlc.loading = false;
         });
+
     }
 
     function refreshLogList() {
@@ -98,6 +107,7 @@
         refreshLogList();
       } else {
         removePolling(poll.trackingId);
+        dlc.error = true;
       }
     }
 

@@ -13,18 +13,21 @@
   <div id="deviceLogMain" ng-if="!ucDeviceLog.active">
     <p translate="deviceDetailPage.retrieveLogInstructions"></p>
     <div class="device-log-button">
-      <cs-btn translate="deviceDetailPage.retrieveLogBttn" class="button secondary" ng-click="ucDeviceLog.retrieveLog()"></cs-btn>
+      <button cs-btn loading="ucDeviceLog.loading" class="button secondary" ng-click="ucDeviceLog.retrieveLog()"><span translate="deviceDetailPage.retrieveLogBttn" ></span></button>
     </div>
   </div>
-  <div id="deviceLogList" ng-if="ucDeviceLog.active && !ucDeviceLog.isPolling()">
+  <div id="deviceLogList" ng-if="ucDeviceLog.active && !ucDeviceLog.isPolling() && !ucDeviceLog.error">
     <li ng-repeat="log in ucDeviceLog.logList">
       <p>{{log.name}}</p>
     </li>
   </div>
-  <div id="deviceLogWait" ng-if="ucDeviceLog.active && ucDeviceLog.isPolling()">
+  <div id="deviceLogWait" ng-if="ucDeviceLog.active && ucDeviceLog.isPolling() && !ucDeviceLog.error">
     <span class="report-status">
       <i class='icon icon-spinner' ></i>
     </span>
     <span translate="deviceDetailPage.logWait"></span>
+  </div>
+  <div id="deviceLogError" ng-if="ucDeviceLog.active && ucDeviceLog.error">
+    <button cs-btn loading="ucDeviceLog.loading" class="button alert" ng-click="ucDeviceLog.retrieveLog()"><span translate="deviceDetailPage.errorTryAgain"></span></button>
   </div>
 </div>
