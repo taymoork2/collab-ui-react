@@ -53,7 +53,6 @@
     vm.ciAdmins = [];
     vm.ciUsers = [];
     vm.ciData = CiService.getCiOrgInfo();
-    vm.dev = Config.isDev() && ('testAtlasMsgr' === Authinfo.getOrgName());
     vm.orgAdminUrl = 'https://wapi.webexconnect.com/wbxconnect/acs/widgetserver/mashkit/apps/standalone.html?app=WBX.base.orgadmin';
 
     // Translated text

@@ -47,16 +47,10 @@
 
     var msgrService = {
       protocol: 'http://',
-
-      // TODO: remove when production is up
-      //host: '10.129.24.45',
-      //host: '192.168.0.6',
-      //host: 'localhost',
-      //host: 'gspbt1adm001.webex.com',
-
-      // Default
-      host: '127.0.0.1',
-      port: 8080,
+      host: 'msgr-admin-bts.webexconnect.com',
+      //host: '127.0.0.1',
+      //port: 8080,
+      port: 80,
 
       // TODO: cleanup when production is up
       api: '/admin-service/messenger/admin/api/v1/orgs/' + Authinfo.getOrgId() + '/cisync/'
@@ -107,8 +101,9 @@
           var error = 'GET: ' + status;
 
           // Filter odd status' like -1, 0, etc.
+          // If service returned an error, just use that
           if (response.status >= 100) {
-            error += '; Message: ' + response.data.error.message;
+            error = response.data.error.message;
           }
 
           Log.error('SyncService::fetchSyncStatus(): ' + error);
@@ -317,13 +312,13 @@
         defer.resolve('PATCH Status ' + response.status);
       }, function (response) {
         var status = parseHttpStatus(response.status);
-          var error = 'PATCH: ' + status;
+        var error = 'PATCH: ' + status;
 
-          // Filter odd status' like -1, 0, etc.
-          if (response.status >= 100) {
-            error += '; Message: ' + response.data.error.message;
-          }
-
+        // Filter odd status' like -1, 0, etc.
+        // If service returned an error, just use that
+        if (response.status >= 100) {
+          error = response.data.error.message;
+        }
 
         Log.error('SyncService::patchSync(): ' + error);
 
