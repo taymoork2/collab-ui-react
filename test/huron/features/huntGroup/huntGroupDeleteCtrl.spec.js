@@ -51,7 +51,7 @@ describe('HuntGroup DeleteCtrl', function () {
       $rootScope: rootScope,
       $scope: $scope,
       $stateParams: $stateParams,
-      $timeout: $translate,
+      $timeout: $timeout,
       $translate: $translate,
       Authinfo: Authinfo,
       HuntGroupService: huntGroupService,
@@ -62,10 +62,13 @@ describe('HuntGroup DeleteCtrl', function () {
   }));
 
   it('should broadcast HUNT_GROUP_DELETED event when hunt group is deleted successfully', function () {
+
     hgDeleteCtrl.deleteHuntGroup();
+
     deleteHGDeferred.resolve(successResponse);
     $scope.$apply();
     $timeout.flush();
+
     expect(rootScope.$broadcast).toHaveBeenCalledWith('HUNT_GROUP_DELETED');
 
   });

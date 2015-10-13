@@ -46,7 +46,7 @@
       }, {
         name: 'Hunt Group',
         filterValue: 'HG'
-      },
+      }
       //  {
       //  name: 'Call Park',
       //  filterValue: 'CP'

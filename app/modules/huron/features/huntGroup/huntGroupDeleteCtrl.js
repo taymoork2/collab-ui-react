@@ -10,25 +10,38 @@
 
   function HuntGroupDeleteCtrl($rootScope, $scope, $stateParams, $timeout, $translate, Authinfo, HuntGroupService, Notification, Log) {
     var vm = this;
+    vm.deleteHuntGroupId = $stateParams.deleteHuntGroupId;
+    vm.deleteHuntGroupName = $stateParams.deleteHuntGroupName;
+    vm.deleteBtnDisabled = false;
 
     vm.deleteHuntGroup = function () {
+
+      vm.deleteBtnDisabled = true;
+
       var customerOrgId = Authinfo.getOrgId();
-      vm.deleteHuntGroupId = $stateParams.deleteHuntGroupId;
-      vm.deleteHuntGroupName = $stateParams.deleteHuntGroupName;
 
       HuntGroupService.deleteHuntGroup(customerOrgId, vm.deleteHuntGroupId).then(function (response) {
+
+        vm.deleteBtnDisabled = false;
+
         if (angular.isFunction($scope.$dismiss)) {
           $scope.$dismiss();
         }
-        $timeout($rootScope.$broadcast('HUNT_GROUP_DELETED'), 250);
-        $rootScope.$broadcast('HUNT_GROUP_DELETED');
-        Notification.success('huntGroupDetails.deleteHuntGroupSuccessText', {
-          huntGroupName: vm.deleteHuntGroupName
-        });
+
+        $timeout(function () {
+          $rootScope.$broadcast('HUNT_GROUP_DELETED');
+          Notification.success('huntGroupDetails.deleteHuntGroupSuccessText', {
+            huntGroupName: vm.deleteHuntGroupName
+          });
+        }, 250);
+
       }, function (response) {
+        vm.deleteBtnDisabled = false;
+
         if (angular.isFunction($scope.$dismiss)) {
           $scope.$dismiss();
         }
+
         Log.warn('Could not delete the huntGroup with id:', vm.deleteHuntGroupId);
         var error = '';
         if (response.status) {

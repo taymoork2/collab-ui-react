@@ -6,7 +6,7 @@
     .service('HuntGroupService', huntGroupService);
 
   /* ngInject */
-  function huntGroupService($http, $q, HuronConfig) {
+  function huntGroupService($q, HuntGroupServiceV2) {
 
     /* jshint validthis: true */
 
@@ -18,11 +18,13 @@
 
     function getListOfHuntGroups(customerId) {
 
-      return $http.get(HuronConfig.getCmiV2Url() + '/customers/' + customerId + '/features/huntgroups');
+      return HuntGroupServiceV2.get({
+        customerId: customerId
+      }).$promise;
 
       //Following code is used to mock back-end and will be deleted when back-end gets ready
       //var successResponseData = {
-      //  'url': HuronConfig.getCmiV2Url() + '/customers/' + customerId + '/features/huntgroups',
+      //  'url':  '/customers/' + customerId + '/features/huntgroups',
       //  'items': [{
       //    'uuid': 'abcd1234-abcd-abcd-abcddef123456',
       //    'name': 'Technical Support',
@@ -67,7 +69,7 @@
       //};
       //
       //var emptyData = {
-      //  'url': HuronConfig.getCmiV2Url() + '/customers/' + customerId + '/features/huntgroups',
+      //  'url':  '/customers/' + customerId + '/features/huntgroups',
       //  'items': []
       //};
       //
@@ -92,7 +94,10 @@
 
     function deleteHuntGroup(customerId, huntGroupId) {
 
-      return $http.delete(HuronConfig.getCmiV2Url() + '/customers/' + customerId + '/features/huntgroups/' + huntGroupId);
+      return HuntGroupServiceV2.delete({
+        customerId: customerId,
+        huntGroupId: huntGroupId
+      }).$promise;
 
       // Following code is used to mock back-end
       //var successResponse = {
@@ -105,11 +110,14 @@
       //  'statusText': 'Internal Server Error'
       //};
       //
-      ////returning deferred promise untill back-ends gets ready
       //var deferred = $q.defer();
-      //deferred.resolve(successResponse);
-      ////deferred.reject(failureResponse);
+      //$timeout(function(){
+      //  deferred.resolve(successResponse);
+      //  //deferred.reject(failureResponse);
+      //}, 3000);
+      //
       //return deferred.promise;
+
     }
   }
 
