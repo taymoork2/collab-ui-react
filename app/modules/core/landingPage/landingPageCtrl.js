@@ -243,16 +243,13 @@ angular.module('Core')
 
       var getOrgInfo = function () {
         Orgservice.getOrg(function (data, status) {
-          try {
-            if (status !== 200) {
-              throw new Error("Query active users metrics failed. Status: " + status);
-            }
-            $scope.test = data;
-            $scope.sso = data.ssoEnabled || false;
-            $scope.dirsync = data.dirsyncEnabled || false;
-          } catch (error) {
-            Log.debug('Error: ' + error);
+          if (status !== 200) {
+            Log.error("Query active users metrics failed. Status: " + status);
           }
+
+          $scope.test = data;
+          $scope.sso = data.ssoEnabled || false;
+          $scope.dirsync = data.dirsyncEnabled || false;
         });
       };
 
