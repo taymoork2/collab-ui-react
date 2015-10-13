@@ -36,15 +36,41 @@
       //return (calendarService !== undefined && calendarService.status === "needs_attention") || (managementService !== undefined && managementService.status === "needs_attention");
     };
 
-    var serviceFromCluster = function (service_type, cluster) {
+    var serviceFromCluster = function (serviceType, cluster) {
       return _.find(cluster.services, {
-        service_type: service_type
+        service_type: serviceType
       });
+    };
+
+    var serviceNotInstalled = function (serviceType, cluster) {
+      var serviceInfo = serviceFromCluster(serviceType, cluster);
+      if (serviceInfo === undefined) {
+        return true;
+      } else {
+        return serviceInfo.connectors.length === 0;
+      }
+    };
+
+    var softwareUpgradeAvailable = function (serviceType, cluster) {
+      var serviceInfo = serviceFromCluster(serviceType, cluster);
+      if (serviceInfo === undefined) {
+        return false;
+      } else {
+        return serviceInfo.software_upgrade_available;
+      }
+    };
+
+    var softwareVersion = function (serviceType, cluster) {
+      return serviceFromCluster(serviceType, cluster).software_upgrade_available ? serviceFromCluster(serviceType, cluster).not_approved_package.version : "?";
     };
 
     return {
       status: status,
-      serviceFromCluster: serviceFromCluster
+      serviceFromCluster: serviceFromCluster,
+      serviceNotInstalled: serviceNotInstalled,
+      softwareUpgradeAvailable: softwareUpgradeAvailable,
+      softwareVersion: softwareVersion
+
     };
   }
 

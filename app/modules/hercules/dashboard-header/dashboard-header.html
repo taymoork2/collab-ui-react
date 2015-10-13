@@ -4,26 +4,26 @@
     <div class="small-6 xlarge-4 columns end"
          ng-repeat="(type, service) in serviceAggregates.services">
       <div class="item">
-        <i ng-class="serviceIcon(service.service_id)" />
-        <hercules-uc-config-button style="float: right" ng-show="service.type == 'c_ucmc'"></hercules-uc-config-button>
+        <i ng-class="serviceIcon(service.id)" />
+        <hercules-uc-config-button style="float: right" ng-show="service.id == 'squared-fusion-uc'"></hercules-uc-config-button>
         <div class="content clearfix">
-          <h5 translate="hercules.serviceNames.{{service.service_id}}"/></h5>
+          <h5 translate="hercules.serviceNames.{{service.id}}"/></h5>
           <div>
             <div>
               <span>Clusters: {{service.running}} running</span>
               <span class="red border-left" ng-show="service.needs_attention > 0">{{service.needs_attention}} needs attention</span>
             </div>
             <div>
-              <span>Users: {{summary(service.service_id).activated}} activated</span>
-              <span class="border-left" ng-show="summary(service.service_id).notActivated > 0"><span class="disabled">{{summary(service.service_id).notActivated}} pending</span></a></span>
-              <span class="border-left" ng-show="summary(service.service_id).error > 0 && clusters && clusters.length > 0"><a href ng-click="showUserStatusesDialog(service.service_id)"><span class="error">{{summary(service.service_id).error}} in error</span></a></span>
-              <span ng-show="summary(service.service_id).notActivated > 0 || summary(service.service_id).activated > 0 || summary(service.service_id).error > 0"
+              <span>Users: {{summary(service.id).activated}} activated</span>
+              <span class="border-left" ng-show="summary(service.id).notActivated > 0"><span class="disabled">{{summary(service.id).notActivated}} pending</span></a></span>
+              <span class="border-left" ng-show="summary(service.id).error > 0 && clusters && clusters.length > 0"><a href ng-click="showUserStatusesDialog(service.id)"><span class="error">{{summary(service.id).error}} in error</span></a></span>
+              <span ng-show="summary(service.id).notActivated > 0 || summary(service.id).activated > 0 || summary(service.id).error > 0"
                     class="export-users-statuses-icon"
                     tooltip-placement="top"
                     tooltip="User Status Report"
                     tooltip-animation="false"
                     tooltip-append-to-body="true">
-                <i class="icon icon-content-share" ng-click="openUserStatusReportModal(service.service_id)"></i>
+                <i class="icon icon-content-share" ng-click="openUserStatusReportModal(service.id)"></i>
               </span>
             </div>
           </div>

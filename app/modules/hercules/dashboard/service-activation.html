@@ -12,8 +12,11 @@
     <div ng-hide="loading || confirmRemove">
       <p>Select the Cloud Extension Services you want to turn on for your organization. This step lets you configure the selected Services on your on-premises devices and turn on related functionality for your users.</p>
       <div ng-repeat="service in services.allExceptManagement" style="margin-top: 20px;">
-        <span><cs-checkbox ckid="{{service.service_id}}" ng-model="service.enabled" label=""/></span> <i ng-class="serviceIcon(service.service_id)" style="font-size: 25px; vertical-align: middle;" /> <span translate="hercules.serviceNames.{{service.service_id}}" style="font-weight: 600; margin-left: 10px;"/>
-        <p><span translate="hercules.serviceDescriptions.{{service.service_id}}"/></p>
+        <span><cs-checkbox ckid="{{service.id}}" ng-model="service.enabled" label=""/></span> <i
+        ng-class="serviceIcon(service.id)" style="font-size: 25px; vertical-align: middle;"/> <span
+        translate="hercules.serviceNames.{{service.id}}" style="font-weight: 600; margin-left: 10px;"/>
+
+        <p><span translate="hercules.serviceDescriptions.{{service.id}}"/></p>
       </div>
     </div>
 
@@ -22,9 +25,9 @@
         You are about to remove the following Cloud Extension services for your organization:
       </div>
       <div ng-repeat="service in servicesToBeRemoved" style="margin-top: 15px;">
-        <p style="margin-bottom: 20px;"><i ng-class="serviceIcon(service.service_id)"
+        <p style="margin-bottom: 20px;"><i ng-class="serviceIcon(service.id)"
                                            style="font-size: 25px; vertical-align: middle;"/> <span
-          translate="hercules.serviceNames.{{service.service_id}}" style="font-weight: 500; margin-left: 10px;"/></p>
+          translate="hercules.serviceNames.{{service.id}}" style="font-weight: 500; margin-left: 10px;"/></p>
       </div>
       <p>If you click Confirm, for each service you remove:</p>
       <ul>

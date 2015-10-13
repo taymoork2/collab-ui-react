@@ -60,12 +60,12 @@ angular.module('Mediafusion')
           .error(errorCallback);
       };
 
-      var deleteHost = function (clusterId, serial, callback) {
-        var url = config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/hosts/' + serial;
+      var defuseConnector = function (clusterId, callback) {
+        var url = config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
         $http
           .delete(url)
           .success(callback)
-          .error(createErrorHandler('Unable to delete host', callback));
+          .error(createErrorHandler('Unable to defuse', callback));
       };
 
       function createSuccessCallback(callback) {
@@ -102,7 +102,7 @@ angular.module('Mediafusion')
 
       return {
         fetch: fetch,
-        deleteHost: deleteHost,
+        defuseConnector: defuseConnector,
         upgradeSoftware: upgradeSoftware,
         getGroups: getGroups,
         updateGroupAssignment: updateGroupAssignment,

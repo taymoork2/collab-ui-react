@@ -33,17 +33,19 @@ describe('ServiceDescriptor', function () {
     $httpBackend
       .when('GET', 'https://hercules-integration.wbx2.com/v1/organizations/12345/services')
       .respond({
-        fusion_services: [{
-          foo: 'bar',
-          enabled: true
+        items: [{
+          id: 'squared-fusion-cal',
+          enabled: true,
+          acknowledged: false
         }, {
-          connector_type: 'c_mgmt',
-          enabled: true
+          id: 'squared-fusion-uc',
+          enabled: true,
+          acknowledged: false
         }]
       });
     Service.services(function (error, services) {
       expect(services.length).toEqual(2);
-      expect(services[0].foo).toEqual('bar');
+      expect(services[0].id).toEqual('squared-fusion-cal');
       done();
     });
     $httpBackend.flush();

@@ -34,7 +34,7 @@ angular
         if (services) {
           _.forEach($scope.extensions, function (extension) {
             extension.enabled = ServiceDescriptor.filterEnabledServices(services).some(function (service) {
-              return extension.id === service.service_id;
+              return extension.id === service.id;
             });
             if (extension.enabled) {
               $scope.isEnabled = true;
