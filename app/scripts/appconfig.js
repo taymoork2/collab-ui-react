@@ -37,6 +37,11 @@ angular
           templateUrl: 'modules/squared/views/unauthorized.html',
           parent: 'main'
         })
+        .state('404', {
+          url: '/404',
+          templateUrl: 'modules/squared/views/404.html',
+          parent: 'main'
+        })
         .state('sidepanel', {
           abstract: true,
           onEnter: /* @ngInject */ function ($modal, $state, $previousState) {
