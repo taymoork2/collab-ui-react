@@ -202,6 +202,9 @@
                 id: "siteInfo",
                 pageObjs: []
               }, {
+                id: "SiteInfo",
+                pageObjs: []
+              }, {
                 id: "EMAIL",
                 pageObjs: []
               }, {
@@ -471,30 +474,6 @@
             } // processSiteAdminNavUrl()
           ); // siteAdminNavUrls.forEach()
 
-          updateSettingTable();
-
-          /*
-          _this.webExSiteSettingsObj.categoryObjs.forEach(
-            function checkCategoryObj(categoryObj) {
-              $log.log("processSettingPagesInfo(): categoryObj=" + "\n" + JSON.stringify(categoryObj));
-            } // checkCategoryObj()
-          );
-          */
-
-          function updateSettingTable() {
-            addPage(
-              "siteInfo",
-              "siteInformation",
-              ""
-            );
-
-            addPage(
-              "siteInfo",
-              "siteFeatures",
-              ""
-            );
-          } // updateSettingTable()
-
           function addPage(
             categoryId,
             pageId,
@@ -529,7 +508,7 @@
 
             logMsg = funcName + ": " + "\n" +
               "newPageObj=" + JSON.stringify(newPageObj);
-            $log.log(logMsg);
+            // $log.log(logMsg);
 
             var categoryFound = false;
             _this.webExSiteSettingsObj.categoryObjs.forEach(
@@ -553,17 +532,24 @@
                           "pageObj.label=" + pageObj.label + "\n" +
                           "newPageObj.label=" + newPageObj.label + "\n" +
                           "localeCompareResult=" + localeCompareResult;
-                        $log.log(logMsg);
+                        // $log.log(logMsg);
 
                         if (localeCompareResult < 0) {
+                          logMsg = funcName + ": " +
+                            "Page obj inserted" + "\n" +
+                            "newPageObj=" + JSON.stringify(newPageObj);
+                          // $log.log(logMsg);
+
                           categoryObj.pageObjs.splice(pageIndex, 0, newPageObj);
 
                           pageInList = true;
-
-                          logMsg = funcName + ": " +
-                            "Page obj inserted";
-                          $log.log(logMsg);
                         } else if (localeCompareResult === 0) {
+                          logMsg = funcName + ": " +
+                            "Page obj updated" + "\n" +
+                            "pageObj=" + JSON.stringify(pageObj) + "\n" +
+                            "newPageObj=" + JSON.stringify(newPageObj);
+                          $log.log(logMsg);
+
                           pageObj.id = newPageObj.id;
                           pageObj.pageId = newPageObj.pageId;
                           pageObj.label = newPageObj.label;
@@ -571,10 +557,6 @@
                           pageObj.uiSref = newPageObj.uiSref;
 
                           pageInList = true;
-
-                          logMsg = funcName + ": " +
-                            "Page obj updated";
-                          $log.log(logMsg);
                         }
                       }
 
@@ -583,11 +565,12 @@
                   ); // categoryObj.pageObjs.forEach()
 
                   if (!pageInList) {
-                    categoryObj.pageObjs.push(newPageObj);
-
                     logMsg = funcName + ": " +
-                      "Page obj pushed";
-                    $log.log(logMsg);
+                      "Page obj pushed" + "\n" +
+                      "newPageObj=" + JSON.stringify(newPageObj);
+                    // $log.log(logMsg);
+
+                    categoryObj.pageObjs.push(newPageObj);
                   }
                 }
               } // checkCategoryObj()
@@ -622,11 +605,11 @@
 
             _this.webExSiteSettingsObj.siteInfoCardObj.label = _this.webExSiteSettingsObj.siteUrl;
 
-            getCategoryObj("siteInfo").pageObjs.forEach(
+            getCategoryObj("SiteInfo").pageObjs.forEach(
               function checkPageObj(pageObj) {
-                if (pageObj.pageId == "siteInformation") {
+                if (pageObj.pageId == "site_info") {
                   _this.webExSiteSettingsObj.siteInfoCardObj.siteInfoPageObj = pageObj;
-                } else if (pageObj.pageId == "siteFeatures") {
+                } else if (pageObj.pageId == "site_features") {
                   _this.webExSiteSettingsObj.siteInfoCardObj.siteFeaturePageObj = pageObj;
                 }
               } // checkPageObj()
@@ -634,11 +617,11 @@
 
             logMsg = funcName + ": " + "\n" +
               "siteInfoPageObj=" + JSON.stringify(_this.webExSiteSettingsObj.siteInfoCardObj.siteInfoPageObj);
-            $log.log(logMsg);
+            // $log.log(logMsg);
 
             logMsg = funcName + ": " + "\n" +
               "siteFeaturePageObj=" + JSON.stringify(_this.webExSiteSettingsObj.siteInfoCardObj.siteFeaturePageObj);
-            $log.log(logMsg);
+            // $log.log(logMsg);
           } // updateSiteInfoCardObj()
 
           function updateSettingCardObjs() {
