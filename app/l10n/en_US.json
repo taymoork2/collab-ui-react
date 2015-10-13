@@ -1569,7 +1569,8 @@
     "deviceIpAddressFailureMsg": "Failed to fetch device IP",
     "logTitle": "Logs",
     "retrieveLogBttn": "Retrieve Latest Log",
-    "retrieveLogInstructions":"Retrieve the latest log file from the device."
+    "retrieveLogInstructions": "Device logs can be used by Cisco to troubleshoot issues related to device performance and call quality.",
+    "logWait": "Getting log file from the device. This may take a minute…"
   },
   "deviceOverviewPage": {
     "activationNoLongerNeeded": "If this activation is no longer needed:",
