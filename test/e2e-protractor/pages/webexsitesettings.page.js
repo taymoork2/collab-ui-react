@@ -33,9 +33,10 @@ var SiteSettigsPage = function () {
   this.siteSettingsCrumb = element(by.id('siteSettingsCrumb'));
   this.webexReportCrumb = element(by.id('webexReportCrumb'))
   this.webexReportBreadCrumbs = element(by.id('webexReportBreadCrumbs'));
-  this.siteAdminReportsLink = element(by.id('siteAdminReportsLink'));
+  this.meetingUsageReportLink = element(by.id('meeting_usage'));
   this.webexReportIFrameBreadCrumbs = element(by.id('webexReportIFrameBreadCrumbs'));
   this.webexReportIFrameCrumb2 = element(by.id('webexReportIFrameCrumb2'));
+  this.siteAdminReportsUrl = '/webexreports';
   this.xLaunchSiteAdminIcon = element(by.id('webexSiteAdminLink'));
 
 };
