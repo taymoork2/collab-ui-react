@@ -19,9 +19,9 @@
 
     </div>
   </div>
-  
+
   <div ng-if="sc.codesListSubscription.eventCount == 0 || sc.deviceListSubscription.eventCount == 0">
-    <div windowsize class="empty-devices col-md-12" style="height: {{windowHeight - 150}}px;">
+    <div class="message-container">
       <div class="empty-devices-content">
         <i class="icon icon-2x icon-spinner" />
       </div>
@@ -35,15 +35,15 @@
   </div>
 
   <div ng-if="sc.codesListSubscription.eventCount != 0 && sc.deviceListSubscription.eventCount != 0">
-    <div ng-hide="sc.updateListAndFilter().length" windowsize class="empty-devices col-md-12" style="height: {{windowHeight - 150}}px;">
+    <div ng-hide="sc.updateListAndFilter().length" class="message-container">
       <div class="empty-devices-content">
-        <img ng-src="images/devices/cisco_sx10.png" style="height: 60px; width: 60px" />
+        <img ng-src="images/devices/cisco_sx10.png" />
         <h2 class="empty-device-message">
           No devices found...
         </h2>
       </div>
     </div>
-    <div id="roomsListPanel" class="row">
+    <div id="roomsListPanel" class="row" ng-show="sc.updateListAndFilter().length">
       <div gridscrollbar class="gridStyle col-md-12" ng-grid="sc.gridOptions"></div>
     </div>
   </div>

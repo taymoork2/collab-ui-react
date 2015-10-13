@@ -18,9 +18,9 @@
 
         var updateServices = function (updatedServices) {
           _.forEach(updatedServices, function (service) {
-            ServiceDescriptor.setServiceEnabled(service.service_id, service.enabled, function (error) {
+            ServiceDescriptor.setServiceEnabled(service.id, service.enabled, function (error) {
               if (error) {
-                var serviceName = $translate.instant('hercules.serviceNames.' + service.service_id);
+                var serviceName = $translate.instant('hercules.serviceNames.' + service.id);
                 if (error[1] === 403) {
                   Notification.notify($translate.instant('hercules.errors.enableServiceEntitlementFailure', {
                     serviceName: serviceName
@@ -50,7 +50,7 @@
             } else {
               var updatedServices = $scope.services.allExceptManagement.filter(function (updated) {
                 return services.some(function (original) {
-                  return updated.service_id === original.service_id && updated.enabled !== original.enabled;
+                  return updated.id === original.id && updated.enabled !== original.enabled;
                 });
               });
               if (updatedServices.length > 0) {

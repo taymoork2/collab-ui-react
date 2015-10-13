@@ -13,13 +13,11 @@ describe('DashboardAggregator', function () {
   }));
 
   var mockServiceData = [{
-    display_name: 'UCM Service',
-    icon_class: 'UCM',
-    connector_type: 'c_ucmc'
+    id: "squared-fusion-uc",
+    enabled: true,
   }, {
-    display_name: 'Calendar Service',
-    icon_class: 'Calendar',
-    connector_type: 'c_cal'
+    id: "squared-fusion-cal",
+    enabled: true,
   }];
 
   it('should not count disabled services', function () {
@@ -146,19 +144,16 @@ describe('DashboardAggregator', function () {
     // //console.log(JSON.stringify(Converter.convertClusters(mockClusterData), null, 2));
 
     var aggregate = Service.aggregateServices(mockServiceData, Converter.convertClusters(mockClusterData));
+
     expect(aggregate.running).toBe(1);
     expect(aggregate.needs_attention).toBe(1);
 
     var ucmService = aggregate.services.c_ucmc;
-    expect(ucmService.name).toBe('UCM Service');
-    expect(ucmService.icon).toBe('UCM');
     expect(ucmService.running).toBe(0);
     expect(ucmService.needs_attention).toBe(1);
     expect(ucmService.software_upgrades).toBe(0);
 
     var calService = aggregate.services.c_cal;
-    expect(calService.name).toBe('Calendar Service');
-    expect(calService.icon).toBe('Calendar');
     expect(calService.running).toBe(2);
     expect(calService.needs_attention).toBe(0);
     expect(calService.software_upgrades).toBe(1);

@@ -12,7 +12,7 @@
     <p>Your organization is missing entitlements that are needed to add the following services:</p>
     <ul>
       <li ng-repeat="service in services.enabledOnly | filter: { status: 'error' }">
-        <span translate="hercules.serviceNames.{{service.service_id}}"/></span>
+        <span translate="hercules.serviceNames.{{service.id}}"/></span>
       </li>
     </ul>
     <p>Contact your support representative to fix this.</p>

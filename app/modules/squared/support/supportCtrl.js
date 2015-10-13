@@ -53,25 +53,17 @@ angular.module('Squared')
       };
 
       var getOrg = function () {
-        var orgSettings = '';
         Orgservice.getOrg(function (data, status) {
           if (data.success) {
-            if (data.orgSettings) {
-              for (var settings in data.orgSettings) {
-                try {
-                  orgSettings = JSON.parse(data.orgSettings[settings]);
-                } catch (e) {
-                  continue;
-                }
-                if (orgSettings.reportingSiteUrl) {
-                  $scope.reportingUrl = orgSettings.reportingSiteUrl;
-                  $scope.problemHandler = 'externally';
-                }
-                if (orgSettings.helpUrl) {
-                  $scope.helpUrl = orgSettings.helpUrl;
-                  $scope.helpHandler = 'externally';
-                }
-              }
+            var settings = data.orgSettings;
+
+            if (!_.isEmpty(settings.reportingSiteUrl)) {
+              $scope.reportingUrl = settings.reportingSiteUrl;
+              $scope.problemHandler = 'externally';
+            }
+            if (!_.isEmpty(settings.helpUrl)) {
+              $scope.helpUrl = settings.helpUrl;
+              $scope.helpHandler = 'externally';
             }
           } else {
             Log.debug('Get org failed. Status: ' + status);
