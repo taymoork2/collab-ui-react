@@ -448,7 +448,7 @@
           logMsg = funcName + ": " + "\n" +
             "siteAdminNavUrls.length=" + siteAdminNavUrls.length;
           $log.log(logMsg);
-          
+
           siteAdminNavUrls.forEach(
             function processSiteAdminNavUrl(siteAdminNavUrl) {
               logMsg = funcName + ": " +
@@ -473,7 +473,6 @@
               );
             } // processSiteAdminNavUrl()
           ); // siteAdminNavUrls.forEach()
-
 
           function addPage(
             categoryId,
@@ -570,7 +569,7 @@
                       "Page obj pushed" + "\n" +
                       "newPageObj=" + JSON.stringify(newPageObj);
                     // $log.log(logMsg);
-                    
+
                     categoryObj.pageObjs.push(newPageObj);
                   }
                 }
