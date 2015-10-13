@@ -25,20 +25,9 @@ describe('WebEx site settings', function () {
   it('wait for WebEx settings index page to appear', function () {
     utils.wait(sitesettings.webexSiteSettingsPanel);
     expect(sitesettings.webexSiteSettingsPanel.isPresent()).toBeTruthy();
+    expect(sitesettings.webexSiteInfoCardId.isPresent()).toBeTruthy();
+    expect(sitesettings.webexCommonSettingsCardId.isPresent()).toBeTruthy();
   });
-
-  it('click on common settings site options link', function () {
-    utils.click(sitesettings.configureCommonSiteOptionsLink);
-    navigation.expectCurrentUrl(sitesettings.siteSettingsUrl);
-    expect(sitesettings.iFramePage.isPresent()).toBeTruthy();
-  });
-
-  it('wait for common settings site options page to appear', function () {
-    utils.wait(sitesettings.siteSettingPanel);
-    expect(sitesettings.webexCommonSiteOptionsId.isPresent()).toBeTruthy();
-  });
-
-  // TODO: additional tests to click on various setting page links on the site settings page
 
   /**  
     it('should pause', function () {
