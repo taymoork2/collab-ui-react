@@ -1861,8 +1861,8 @@
 
     "indexPageLabel_EMAIL_send_email_to_all": "Email All Hosts",
 
-    "indexPageLabel_siteInfo_siteInformation": "Site Information",
-    "indexPageLabel_siteInfo_siteFeatures": "Site Features",
+    "indexPageLabel_SiteInfo_site_info": "Site Information",
+    "indexPageLabel_SiteInfo_site_features": "Site Features",
 
     "indexPageLabel_CommonSettings_productivity": "Productivity Tools",
     "indexPageLabel_CommonSettings_address": "Company Addresses",
@@ -1899,8 +1899,8 @@
 
     "settingPageLabel_EMAIL_send_email_to_all": "Email All Hosts",
 
-    "settingPageLabel_siteInfo_siteInformation": "Site Overview",
-    "settingPageLabel_siteInfo_siteFeatures": "Site Overview",
+    "settingPageLabel_SiteInfo_site_info": "Site Overview",
+    "settingPageLabel_SiteInfo_site_features": "Site Overview",
 
     "settingPageLabel_CommonSettings_productivity": "Productivity Tools",
     "settingPageLabel_CommonSettings_address": "Company Addresses",
