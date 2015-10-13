@@ -1721,7 +1721,9 @@
     "defuseText": "Are you sure?<br> Clicking \"Yes\" will remove this device from Cisco Cloud Collaboration Management and stop the devices from accepting any new calls. (Preexisting calls will continue.)",
     "yesDefuse": "Yes",
     "defuseSuccess": "Deregistration successfully",
-    "deleteConnectorError": "Error deleting connector"
+    "deleteConnectorError": "Error deleting connector",
+    "groupAssignmentSuccess": "Cluster assigned successfully",
+    "groupAssignmentFailure": "Cluster not assigned"
   },
   "webexUserSettings": {
     "sessionEnablementUpdateSuccess": "Session type enablement updated.",
