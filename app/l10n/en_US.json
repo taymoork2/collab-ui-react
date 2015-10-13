@@ -1716,9 +1716,11 @@
     "delete": "Delete",
     "cancel": "Cancel",
     "actionsHeader": "Actions",
-    "deleteConnector": "Delete Connector",
-    "deleteConnectorConfText1": "Are you sure you want to delete connector {{hostname}}?",
-    "deleteConnectorSuccess": "Connector {{hostname}} deleted successfully",
+    "defuseConnector": "Deregister",
+    "confirmDefuse": "Confirm Deregistration",
+    "defuseText": "Are you sure?<br> Clicking \"Yes\" will remove this device from Cisco Cloud Collaboration Management and stop the devices from accepting any new calls. (Preexisting calls will continue.)",
+    "yesDefuse": "Yes",
+    "defuseSuccess": "Deregistration successfully",
     "deleteConnectorError": "Error deleting connector"
   },
   "webexUserSettings": {
