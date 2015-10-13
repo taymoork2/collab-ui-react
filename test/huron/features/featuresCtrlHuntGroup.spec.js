@@ -10,11 +10,7 @@ describe('Features Controller', function () {
   var hg = getJSONFixture('huron/json/features/huntGroup/oneHg.json');
   var emptyListOfHGs = getJSONFixture('huron/json/features/huntGroup/emptyHgList.json');
   var getHGListSuccessResp = function (data) {
-    return {
-      'data': data,
-      'status': 200,
-      'statusText': 'OK'
-    };
+    return data;
   };
   var getHGListFailureResp = {
     'data': 'Internal Server Error',
@@ -60,7 +56,7 @@ describe('Features Controller', function () {
 
     spyOn($state, 'go');
     spyOn(Notification, 'success');
-    spyOn(Notification, 'error');
+    spyOn(Notification, 'errorResponse');
 
     featureCtrl = $controller('HuronFeaturesCtrl', {
       $scope: $scope,
@@ -96,10 +92,10 @@ describe('Features Controller', function () {
   });
 
   it('should get list of huntGroups and if back end call fails should show error notification', function () {
-    getHGListDeferred.reject(getHGListFailureResp);
+    getHGListDeferred.reject();
     $scope.$apply();
     $timeout.flush();
-    expect(Notification.error).toHaveBeenCalledWith(jasmine.any(String));
+    expect(Notification.errorResponse);
   });
 
   it('should set the pageState to Loading when controller is getting data from back-end', function () {

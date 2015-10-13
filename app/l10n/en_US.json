@@ -2295,7 +2295,8 @@
   "huntGroup": {
     "code": "HG",
     "title": "Hunt Group",
-    "modalDescription": "Hunt groups (or line hunting) allow you to customize the distribution of incoming phone calls to users' phone lines in a specific order."
+    "modalDescription": "Hunt groups (or line hunting) allow you to customize the distribution of incoming phone calls to users' phone lines in a specific order.",
+    "numberFetchFailure": "Unable to get numbers."
   },
 
   "huronFeatureDetails": {

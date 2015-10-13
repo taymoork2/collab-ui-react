@@ -117,8 +117,7 @@
     var getListOfHuntGroups = function () {
 
       var customerId = Authinfo.getOrgId();
-      HuntGroupService.getListOfHuntGroups(customerId).then(function (response) {
-        var huntGroupData = response.data;
+      HuntGroupService.getListOfHuntGroups(customerId).then(function (huntGroupData) {
         if (huntGroupData.items.length > 0) {
           vm.pageState = 'showFeatures';
           angular.forEach(huntGroupData.items, function (huntGroup) {
@@ -138,7 +137,7 @@
         Log.warn('Could fetch huntGroups for customer with Id:', customerId);
         vm.pageState = 'showFeatures';
         //Notify the user that retrieval of hunt groups list has been failed
-        Notification.error('huntGroupDetails.failedToLoadHuntGroups');
+        Notification.errorResponse(response, 'huntGroupDetails.failedToLoadHuntGroups');
       });
     };
 
