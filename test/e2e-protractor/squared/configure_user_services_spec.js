@@ -22,8 +22,8 @@ describe('Configuring services per-user', function () {
     utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
     utils.click(users.nextButton);
     utils.click(users.onboardButton);
-    utils.expectIsNotDisplayed(users.manageDialog);
     notifications.assertSuccess('onboarded successfully');
+    utils.expectIsNotDisplayed(users.manageDialog);
   });
 
   it('should add standard team rooms service', function () {
