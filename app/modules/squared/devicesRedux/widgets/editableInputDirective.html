@@ -1,18 +1,14 @@
-<div class="editable-input">
-  <div
-    class="read-only-value"
-    ng-hide="editorEnabled" 
-    ng-click="enableEditor()">
-    <span title="{{ngModel}}">
-      {{ngModel}}
-    </span>
+<div class="editable-input clearfix">
+  <div class="read-only-value" ng-hide="editorEnabled" ng-click="enableEditor()">
+    <span title="{{ngModel}}">{{ngModel}}</span>
     <i class="edit-button icon icon-edit" />
   </div>
   <div ng-show="editorEnabled">
     <form ng-submit="saveClicked()">
       <input
+        required
+        maxlength="127"
         ng-model="newText"
-        style="width: 220px"
         ng-show="editorEnabled" 
         focus-on="editorEnabled"
         select-text="editorEnabled"
