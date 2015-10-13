@@ -864,7 +864,11 @@ angular
           url: '/newreports',
           templateUrl: 'modules/core/partnerReports/partnerReports.tpl.html',
           controller: 'PartnerReportCtrl',
-          controllerAs: 'nav'
+          controllerAs: 'nav',
+          params: {
+            tab: null,
+            siteUrl: null
+          },
         })
         .state('login_swap', {
           url: '/login/:customerOrgId/:customerOrgName',

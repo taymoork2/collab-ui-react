@@ -78,7 +78,7 @@ angular.module('Core')
         '<div ng-if="row.entity.showSiteLinks">' + '\n' +
         '  <div ng-if="row.entity.isIframeSupported && row.entity.isAdminReportEnabled">' + '\n' +
         '     <a id="webex-reports-list-iframe"' + '\n' +
-        '         ui-sref="webex-reports({siteUrl:row.entity.license.siteUrl})"> ' + '\n' +
+        '         ui-sref="newpartnerreports({tab:\'webex\',siteUrl:row.entity.license.siteUrl})"> ' + '\n' +
         '      <p class="ngCellText">' + '\n' +
         '        <span name="webexReports"' + '\n' +
         '              id="webexReports">' + '\n' +

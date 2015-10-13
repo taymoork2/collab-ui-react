@@ -6,7 +6,7 @@
     .controller('PartnerReportCtrl', PartnerReportCtrl);
 
   /* @ngInject */
-  function PartnerReportCtrl($scope, $timeout, $translate, $q, PartnerReportService, GraphService, DonutChartService, DummyReportService) {
+  function PartnerReportCtrl($scope, $timeout, $translate, $q, $stateParams, PartnerReportService, GraphService, DonutChartService, DummyReportService, Authinfo, WebExUtilsFact) {
     var vm = this;
 
     var ABORT = 'ABORT';
@@ -26,6 +26,12 @@
     vm.showEngagement = true;
     vm.showQuality = true;
     vm.showWebexReports = true;
+
+    if ($stateParams.tab) {
+      vm.showEngagement = false;
+      vm.showQuality = false;
+      vm.showWebexReports = $stateParams.tab === 'webex';
+    }
 
     vm.activeUsersRefresh = REFRESH;
     vm.activeUserPopulationRefresh = REFRESH;
@@ -68,22 +74,35 @@
     }];
     vm.timeSelected = vm.timeOptions[0];
 
-    vm.webexOptions = [{
-      value: 0,
-      label: 'wbx1.com'
-    },{
-      value: 1,
-      label: 'wbx2.com'
-    }]
+    function generateWebexReportsUrl(){
+      var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl();
+      var data = [];
+      var promiseChain = [];
 
-    vm.webexSelected = vm.webexOptions[0];
+      for(var i = 0; i < conferenceServices.length; i++){
+         promiseChain.push(WebExUtilsFact.isSiteSupportsIframe(conferenceServices[i].license.siteUrl)
+          .then(function (result){
+            if(result.isAdminReportEnabled){
+              data.push(val.license.siteUrl);
+            }
+          }, function (error){
+            console.log(error);
+          }));
+      }
 
+      $q.all(promiseChain).then(function(){
+        vm.webexOptions = data;
+        vm.webexSelected = vm.webexOptions[0];
+      })
+    }
 
-    vm.show = function(showEngagement,showQuality,showWebexReports){
+    generateWebexReportsUrl();
+
+    vm.show = function (showEngagement, showQuality, showWebexReports) {
       vm.showEngagement = showEngagement;
       vm.showQuality = showQuality;
       vm.showWebexReports = showWebexReports;
-    }
+    };
 
     vm.customersSet = function () {
       return vm.customerSelected === null;
