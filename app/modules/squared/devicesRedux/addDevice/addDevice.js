@@ -38,7 +38,7 @@
         };
 
         adc.addDevice = function (callback) {
-          if (!adc.deviceName) {
+          if (!adc.isNameValid()) {
             return $q.defer().reject();
           }
 
@@ -58,8 +58,11 @@
             .createCode(adc.deviceName)
             .then(success, XhrNotificationService.notify);
         };
-      }
 
+        adc.isNameValid = function () {
+          return adc.deviceName && adc.deviceName.length < 128;
+        };
+      }
     )
     .service('AddDeviceModal',
       /* @ngInject */
