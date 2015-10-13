@@ -107,21 +107,11 @@
     });
 
     vm.serviceNotInstalled = function (cluster) {
-      var serviceInfo = ServiceStatusSummaryService.serviceFromCluster(vm.currentServiceType, cluster);
-      if (serviceInfo === undefined) {
-        return true;
-      } else {
-        return serviceInfo.connectors.length === 0;
-      }
+      return ServiceStatusSummaryService.serviceNotInstalled(vm.currentServiceType, cluster);
     };
 
     vm.softwareUpgradeAvailable = function (cluster) {
-      var serviceInfo = ServiceStatusSummaryService.serviceFromCluster(vm.currentServiceType, cluster);
-      if (serviceInfo === undefined) {
-        return false;
-      } else {
-        return serviceInfo.software_upgrade_available;
-      }
+      return ServiceStatusSummaryService.softwareUpgradeAvailable(vm.currentServiceType, cluster);
     };
 
     vm.softwareVersionAvailable = function (cluster) {
@@ -134,7 +124,7 @@
 
     function extractSummaryForAService(res) {
       var userStatusesSummary = res || {};
-      vm.summary = _.find(userStatusesSummary, {
+      vm.userStatusSummary = _.find(userStatusesSummary, {
         serviceId: serviceType2ServiceId(vm.currentServiceType)
       });
     }
@@ -160,8 +150,10 @@
     vm.selectedService = _.find(vm.cluster.services, {
       service_type: vm.serviceType
     });
+
+    var managementServiceType = "c_mgmt";
     vm.managementService = _.find(vm.cluster.services, {
-      service_type: "c_mgmt"
+      service_type: managementServiceType
     });
     //console.log("selected service ", vm.selectedService);
 
@@ -169,12 +161,7 @@
     vm.route = serviceType2RouteName(vm.serviceType);
 
     vm.serviceNotInstalled = function () {
-      var serviceInfo = ServiceStatusSummaryService.serviceFromCluster(vm.serviceType, vm.cluster);
-      if (serviceInfo === undefined) {
-        return true;
-      } else {
-        return serviceInfo.connectors.length === 0;
-      }
+      return ServiceStatusSummaryService.serviceNotInstalled(vm.serviceType, vm.cluster);
     };
 
     vm.upgrade = function () {
@@ -325,11 +312,6 @@
         Notification.error("hercules.errors.sipDomainInvalid");
       });
     };
-
-    //
-    //  PURE COPY FROM CALENDAR !!!
-    //  CANDIDATE FOR SEPARATE SERVICE ?
-    //
 
     vm.config = "";
     NotificationConfigService.read(function (err, config) {
