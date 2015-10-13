@@ -15,6 +15,11 @@ describe('Controller: Partner Reports', function () {
   dummyPopulationData.colorOne = undefined;
   dummyPopulationData.colorTwo = undefined;
   dummyPopulationData.balloon = true;
+  var Authinfo = {
+    getConferenceServicesWithoutSiteUrl: function () {
+      return [];
+    }
+  };
 
   var validateService = {
     invalidate: function () {}
@@ -42,6 +47,8 @@ describe('Controller: Partner Reports', function () {
   }];
 
   beforeEach(module('Core'));
+  beforeEach(module('WebExUtils'));
+  beforeEach(module('WebExXmlApi'));
 
   describe('PartnerReportCtrl - Expected Responses', function () {
     beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _PartnerReportService_, _GraphService_, _DonutChartService_, _DummyReportService_) {
@@ -103,7 +110,8 @@ describe('Controller: Partner Reports', function () {
         PartnerReportService: PartnerReportService,
         GraphService: GraphService,
         DonutChartService: DonutChartService,
-        DummyReportService: DummyReportService
+        DummyReportService: DummyReportService,
+        Authinfo: Authinfo
       });
       $scope.$apply();
     }));
@@ -307,7 +315,8 @@ describe('Controller: Partner Reports', function () {
         $q: $q,
         PartnerReportService: PartnerReportService,
         GraphService: GraphService,
-        DonutChartService: DonutChartService
+        DonutChartService: DonutChartService,
+        Authinfo: Authinfo
       });
       $scope.$apply();
     }));

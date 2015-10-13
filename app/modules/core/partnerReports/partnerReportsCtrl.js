@@ -74,26 +74,32 @@
     }];
     vm.timeSelected = vm.timeOptions[0];
 
-    function generateWebexReportsUrl(){
+    function generateWebexReportsUrl() {
       var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl();
-      var data = [];
+      vm.webexOptions = [];
       var promiseChain = [];
 
-      for(var i = 0; i < conferenceServices.length; i++){
-         promiseChain.push(WebExUtilsFact.isSiteSupportsIframe(conferenceServices[i].license.siteUrl)
-          .then(function (result){
-            if(result.isAdminReportEnabled){
-              data.push(val.license.siteUrl);
+      for (var i = 0; i < conferenceServices.length; i++) {
+        var url = conferenceServices[i].license.siteUrl;
+        promiseChain.push(WebExUtilsFact.isSiteSupportsIframe(url)
+          .then(function (result) {
+            if (result.isAdminReportEnabled && result.isSiteSupportsIframe) {
+              vm.webexOptions.push(url);
             }
-          }, function (error){
-            console.log(error);
+          },function(error){
+            //no-op, but needed
           }));
       }
 
-      $q.all(promiseChain).then(function(){
-        vm.webexOptions = data;
-        vm.webexSelected = vm.webexOptions[0];
-      })
+      $q.all(promiseChain).then(function () {
+        if($stateParams.tab === 'webex'){
+          _.forEach(vm.webexOptions,function(val,index){
+            if(val === $stateParams.siteUrl){
+              vm.webexSelected = vm.webexOptions[index];
+            }
+          })
+        }
+      });
     }
 
     generateWebexReportsUrl();
