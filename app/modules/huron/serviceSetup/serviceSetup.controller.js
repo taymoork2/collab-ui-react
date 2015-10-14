@@ -331,7 +331,7 @@
                 return scope.fc && scope.fc.$validate();
               }
             }
-          }, {
+          },  {
             type: 'button',
             key: 'deleteBtn',
             templateOptions: {
@@ -339,21 +339,28 @@
               label: $translate.instant('common.delete'),
               onClick: function (options, scope) {
                 vm.deleteInternalNumberRange(scope.model);
-                if (vm.model.displayNumberRanges.length === 3 && !vm.firstTimeSetup && angular.isDefined(scope.model.uuid)) {
-                  vm.model.displayNumberRanges.length = vm.model.displayNumberRanges.length - 1;
-                  scope.to.btnClass = 'btn-sm btn-link hide-delete';
-                }
+                
               }
             },
             controller: /* @ngInject */ function ($scope) {
               $scope.$watchCollection(function () {
                 return vm.model.displayNumberRanges;
               }, function (displayNumberRanges) {
-                if (displayNumberRanges.length === 1 || (displayNumberRanges.length === 2 && angular.isUndefined($scope.model.uuid))) {
+                if (displayNumberRanges.length === 1) {
                   $scope.to.btnClass = 'btn-sm btn-link hide-delete';
-                } else if (displayNumberRanges.length > 2 && angular.isUndefined($scope.model.uuid)) {
-                  $scope.to.btnClass = 'btn-sm btn-link';
-                }
+                } else if (displayNumberRanges.length > 1 && !vm.firstTimeSetup && angular.isUndefined($scope.model.uuid)) {
+                     $scope.to.btnClass = 'btn-sm btn-link ';
+                } else if (displayNumberRanges.length > 1 && vm.firstTimeSetup && angular.isUndefined($scope.model.uuid)) {
+                    $scope.to.btnClass = 'btn-sm btn-link ';
+                } else if (vm.model.numberRanges.length ===  1 && displayNumberRanges.length !== 1) {
+                    angular.forEach(vm.model.numberRanges, function (item) {
+                    if (angular.isDefined(item.uuid)) {
+                      $scope.to.btnClass = 'btn-sm btn-link hide-delete';
+                    } else if (angular.isUndefined(item.uuid)) {
+                        $scope.to.btnClass = 'btn-sm btn-link  ';
+                      }
+                  });
+                 } 
               });
             }
           }]
