@@ -10,9 +10,9 @@ describe('Controller: NewFeatureModalCtrl', function () {
     dismiss: jasmine.createSpy('modalInstance.dismiss')
   };
 
-  beforeEach(inject(function ($rootScope, $controller) {
+  beforeEach(inject(function ($rootScope, $controller, $state) {
     $scope = $rootScope.$new();
-
+    spyOn($state, 'go');
     controller = $controller('NewFeatureModalCtrl', {
       $scope: $scope,
       $modalInstance: modalFake

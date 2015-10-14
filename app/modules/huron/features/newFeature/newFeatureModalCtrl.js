@@ -6,7 +6,7 @@
     .controller('NewFeatureModalCtrl', NewFeatureModalCtrl);
 
   /* @ngInject */
-  function NewFeatureModalCtrl($scope, $modalInstance, $translate) {
+  function NewFeatureModalCtrl($scope, $modalInstance, $translate, $state) {
     /*jshint validthis: true */
     var vm = $scope;
 
@@ -33,6 +33,9 @@
     vm.cancel = cancel;
 
     function ok(featureCode) {
+      if (featureCode === 'HG') {
+        $state.go('huronHuntGroup');
+      }
       $modalInstance.close(featureCode);
     }
 

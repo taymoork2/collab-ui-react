@@ -1321,6 +1321,20 @@ angular
           controller: 'FeaturesCtrl',
           controllerAs: 'featuresCtrl',
           templateUrl: 'modules/huron/features/features.tpl.html',
+        })
+        .state('huronnewfeature', {
+          url: '/newfeature',
+          parent: 'hurondetails',
+          controller: 'NewFeatureCtrl',
+          controllerAs: 'newFeatureCtrl',
+          templateUrl: 'modules/huron/features/newFeature/newFeature.tpl.html'
+        })
+        .state('huronHuntGroup', {
+          url: '/huronHuntGroup',
+          parent: 'hurondetails',
+          templateUrl: 'modules/huron/features/huntGroup/huntGroupSetupAssistant.tpl.html',
+          controller: 'HuntGroupSetupAssistantCtrl',
+          controllerAs: 'huntGroupSA'
         });
     }
   ]);
