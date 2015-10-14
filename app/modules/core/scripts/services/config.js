@@ -845,6 +845,7 @@ angular.module('Core')
           'huronfeatures',
           'huronnewfeature',
           'cdrsupport',
+          'cdr-overview',
           'huronHuntGroup'
         ],
         'squared-fusion-mgmt': [
@@ -898,7 +899,8 @@ angular.module('Core')
           'mediafusionconnector',
           'callRouter',
           'hurondetails',
-          'cdrsupport'
+          'cdrsupport',
+          'cdr-overview'
         ]
       };
 

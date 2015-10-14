@@ -84,7 +84,8 @@
     "noExtensionInPool": "No Extension in pool.",
     "noExternalNumberAvail": "No DID available for mapping.",
     "noExtMappingAvail": "No DID mapping available.",
-    "tooManyResultsError": "Search returned too many results.  Please narrow your search criteria."
+    "tooManyResultsError": "Search returned too many results.  Please narrow your search criteria.",
+    "userExistsError": "User {{email}} already exists.  Please use the Convert option on the Overview page to bring the user into your organization.  If this user is not available for conversion, please submit a problem report."
   },
   "groupsPage": {
     "manageGroups": "Groups",
@@ -484,8 +485,11 @@
     "dateExample": "Choose a Date",
     "size": "Size Per Server:",
     "uploadFile": "Upload CDR File",
-    "uploadDescription": "Option TBA",
+    "uploadDescription": "CDRs previously saved in json form can be uploaded for reinspection.",
     "upload": "Upload",
+    "jsonSizeError": "File size is above the maximum of 10 MB.",
+    "jsonTypeError": "Please upload a valid json file.",
+    "jsonSyntaxError": "The file contains syntax errors; please fix the errors before resubmitting.",
     "cdrAccordionHeader": "{{firstTimestamp}} - Number of CDR's: {{numberOfCdrs}} - Total Duration: {{totalDuration}} seconds",
     "timeStamp": "Time Stamp",
     "callingDeviceName": "Calling Device Name",
@@ -507,7 +511,15 @@
     "phoneNumberError": "Please enter a valid phone number using the numbers [0-9].",
     "phoneNumberErrorTwo": "Calling Party Number and Called Party Number should not match.",
     "deviceNameError": "Calling Party Device and Called Party Device should not match.",
-    "hitSizeError": "The request size per server should be between 1 and 50."
+    "hitSizeError": "The request size per server should be between 1 and 50.",
+    "advancedCDR": "Advanced CDR Report",
+    "local": "Local:",
+    "remote": "Remote:",
+    "searchPlaceholder": "Keyword Search",
+    "ladderDiagram": "Ladder Diagram",
+    "cdrSave": "Save Call",
+    "element": "Element",
+    "value": "Value"
   },
   "billingPage": {
     "title": "Order Provisioning",

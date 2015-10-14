@@ -4,7 +4,7 @@
       <h3>{{callDetails.cluster.name}}</h3>
       <h4>
         <small><a
-          ui-sref="{{callDetails.route}}.list.details.cluster-settings({cluster:callDetails.cluster, serviceType: callDetails.serviceType})">Settings</a>
+          ui-sref="{{callDetails.route}}.list.details.cluster-settings({cluster:callDetails.cluster, serviceType: callDetails.serviceType})">Edit</a>
         </small>
         <div class="right">
           <a ng-show="callDetails.state.includes('*.list.details.cluster-settings')"
@@ -78,7 +78,7 @@
 
 
       <h5 class="black-header">
-        Running on hosts:
+        Connectors on Hosts:
       </h5>
       <div class="row" ng-repeat="connector in callDetails.selectedService.connectors">
         <span class="small-4 column">
