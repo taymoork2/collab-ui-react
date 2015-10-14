@@ -21,6 +21,13 @@
 }
 
 .devices-redux {
+  .message-container {
+    padding: 50px;
+    text-align: center;
+    img {
+      width: 200px;
+    }
+  }
   .add-device-modal .alert {
     border: 0;
     padding: 15px;
@@ -73,33 +80,36 @@
 /* widgets */
 
 .editable-input {
-  font-size: 26px;
-  font-family: "CiscoSansTT Extra Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  i {
-    cursor: pointer;
-    color: #999;
+  padding-top: 5px;
+  &, .read-only-value, form {
+    display: flex;
+    align-items: center;
   }
-  i:hover,
-  .read-only-value:hover i {
+  i, input, span {
+    font-size: 22px;
+  }
+  i {
+    color: #999;
+    cursor: pointer;
+  }
+  i:hover, .read-only-value:hover i {
     color: #000;
   }
-  i.edit-button {
-    float: left;
-    padding-top: 5px;
-    padding-left: 10px;
-  }
-  i.save-in-progress-icon {
-    display: inline-block;
-    top: 6px;
-  }
   .read-only-value span {
-    float: left;
     cursor: pointer;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    display: inline-block;
-    max-width: 260px;
+    font-family: "CiscoSansTT Extra Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+  input {
+    width: 320px;
+  }
+  .read-only-value span {
+    max-width: 320px;
+  }
+  .read-only-value span, input {
+    padding-right: 10px;
   }
 }
 

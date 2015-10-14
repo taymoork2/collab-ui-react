@@ -7,7 +7,7 @@
     <div class="loading" ng-if="pstnSetup.loading">
       <i class="icon icon-spinner"></i>
     </div>
-    <div class="cs-card-block" ng-if="!pstnSetup.loading">
+    <cs-card-layout block-view="true" ng-if="!pstnSetup.loading">
       <cs-card class="medium header-border pstn-provider-card" ng-repeat="provider in pstnSetup.providers">
         <article>
         <header class="align-center">
@@ -27,7 +27,7 @@
         </footer>
         </article>
       </cs-card>
-    </div>
+    </cs-card-layout>
 
   </div>
 </div>

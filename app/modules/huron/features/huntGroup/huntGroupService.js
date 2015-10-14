@@ -24,7 +24,7 @@
 
       //Following code is used to mock back-end and will be deleted when back-end gets ready
       //var successResponseData = {
-      //  'url':  '/customers/' + customerId + '/features/huntgroups',
+      //  'url': '/customers/' + customerId + '/features/huntgroups',
       //  'items': [{
       //    'uuid': 'abcd1234-abcd-abcd-abcddef123456',
       //    'name': 'Technical Support',
@@ -69,7 +69,7 @@
       //};
       //
       //var emptyData = {
-      //  'url':  '/customers/' + customerId + '/features/huntgroups',
+      //  'url': '/customers/' + customerId + '/features/huntgroups',
       //  'items': []
       //};
       //
@@ -111,7 +111,7 @@
       //};
       //
       //var deferred = $q.defer();
-      //$timeout(function(){
+      //$timeout(function () {
       //  deferred.resolve(successResponse);
       //  //deferred.reject(failureResponse);
       //}, 3000);

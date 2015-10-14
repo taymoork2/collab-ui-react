@@ -844,7 +844,8 @@ angular.module('Core')
           'huronsettings',
           'huronfeatures',
           'huronnewfeature',
-          'cdrsupport'
+          'cdrsupport',
+          'huronHuntGroup'
         ],
         'squared-fusion-mgmt': [
           'fusion',

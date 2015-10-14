@@ -5,8 +5,8 @@ var PartnerHomePage = function () {
   var randomNumber = utils.randomId();
 
   this.newTrial = {
-    customerName: 'Atlas_Test_Trial_' + randomNumber,
-    customerEmail: 'collabctg+Atlas_Test_Trial_' + randomNumber + '@gmail.com'
+    customerName: 'Atlas_Test_UI_' + randomNumber,
+    customerEmail: 'collabctg+Atlas_Test_UI_' + randomNumber + '@gmail.com'
   };
 
   this.newSqUCTrial = {

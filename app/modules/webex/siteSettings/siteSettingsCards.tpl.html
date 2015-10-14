@@ -1,13 +1,15 @@
 
   <cs-card class="cs-card medium"
            ng-repeat="settingCardObj in WebExSiteSettings.siteSettingsObj.settingCardObjs"
-           ng-if="0 < settingCardObj.pageObjs.length">
+           ng-if="0 < settingCardObj.pageObjs.length"
+           id={{settingCardObj.id}}-card
+           name={{settingCardObj.id}}-card>
            
     <article>
       <header>
         <h4>{{settingCardObj.label}}</h4>
         
-        <div ng-if="'common' == settingCardObj.id">
+        <div ng-if="'CommonSettings' == settingCardObj.id">
           <span translate="webexSiteSettingsLabels.commonSettingsCardNote"></span>
         </div>
       </header>

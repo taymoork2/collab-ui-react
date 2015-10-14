@@ -14,36 +14,47 @@ angular.module('Hercules')
         };
       };
 
+      var serviceIdToConnectorType = function (serviceType) {
+        switch (serviceType) {
+        case "squared-fusion-cal":
+          return "c_cal";
+        case "squared-fusion-uc":
+          return "c_ucmc";
+        default:
+          //console.error("serviceType " + serviceType + " not supported in this controller");
+          return "";
+        }
+      };
+
       function createEmptyServicesAggregate(services) {
         return _.reduce(services, function (serviceAggregate, service) {
-          serviceAggregate[service.connector_type] = {
-            name: service.display_name,
-            type: service.connector_type,
-            icon: service.icon_class,
-            service_id: service.service_id,
-            running: 0,
-            needs_attention: 0,
-            software_upgrades: 0
-          };
+          if (service.enabled) {
+            serviceAggregate[serviceIdToConnectorType(service.id)] = {
+              id: service.id,
+              running: 0,
+              needs_attention: 0,
+              software_upgrades: 0
+            };
+          }
           return serviceAggregate;
         }, {});
       }
 
       var aggregateServiceStatus = function (clusterAggregate, cluster) {
-        _.each(cluster.services, function (service) {
-          if (service.service_type != 'c_mgmt') {
-            var allConnecorsDisabled = _.reduce(service.connectors, function (aggregateStatus, connector) {
+        _.each(cluster.services, function (clusterService) {
+          if (clusterService.service_type != 'c_mgmt') {
+            var allConnecorsDisabled = _.reduce(clusterService.connectors, function (aggregateStatus, connector) {
               return aggregateStatus && connector.state == 'disabled';
             }, true);
             if (!allConnecorsDisabled) {
-              var aggregateService = clusterAggregate.services[service.service_type];
+              var aggregateService = clusterAggregate.services[clusterService.service_type];
               if (aggregateService) {
-                if (service.needs_attention) {
+                if (clusterService.needs_attention) {
                   aggregateService.needs_attention++;
                 } else {
                   aggregateService.running++;
                 }
-                if (service.not_approved_package) {
+                if (clusterService.not_approved_package) {
                   aggregateService.software_upgrades++;
                 }
               }
