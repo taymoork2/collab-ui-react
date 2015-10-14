@@ -168,7 +168,8 @@ module.exports = function() {
         vendor + '/angular-libphonenumber/dist/libphonenumber.js',
         vendor + '/angular-libphonenumber/dist/angular-libphonenumber.js',
         vendor + '/angularjs-toaster/toaster.js',
-        vendor + '/ng-file-upload/ng-file-upload.js'
+        vendor + '/ng-file-upload/ng-file-upload.js',
+        vendor + '/jstimezonedetect/jstz.js'
       ],
       scss: {
         paths: [
