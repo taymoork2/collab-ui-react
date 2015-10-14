@@ -1578,6 +1578,7 @@
     "newDeviceActivation": "Activation code for new device:",
     "ciscoSX10": "Cisco SX10",
     "software": "Software",
+    "upgradeChannel": "Upgrade Channel",
     "serial": "Serial",
     "ipAddr": "IP Address",
     "macAddr": "MAC Address",
@@ -2167,6 +2168,12 @@
     "Unknown": "Unknown",
     "NeedsActivation": "Needs Activation",
     "issuesDetected": "Issues Detected",
+    "upgradeChannels": {
+      "Stable": "Stable",
+      "Latest": "Latest",
+      "Beta": "Beta",
+      "Preview": "Preview"
+    },
     "errorCodes": {
       "mediaProtocol": {
         "type": "Potential loss of video quality",
