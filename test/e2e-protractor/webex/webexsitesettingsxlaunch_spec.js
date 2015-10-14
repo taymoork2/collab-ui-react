@@ -2,7 +2,7 @@
 
 /* global describe, it, expect, login */
 
-describe('WebEx site settings', function () {
+describe('WebEx cross launch', function () {
 
   it('should allow login as admin user', function () {
     login.loginThroughGui(sitesettings.testAdmin2.username, sitesettings.testAdmin2.password);

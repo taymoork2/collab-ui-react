@@ -46,6 +46,7 @@
       // for iframe request
       $scope.trustIframeUrl = $sce.trustAsResourceUrl($scope.iframeUrl);
       $scope.adminEmail = Authinfo.getPrimaryEmail();
+      $scope.authToken = $rootScope.token;
       $scope.locale = ("es_LA" == $translate.use()) ? "es_MX" : $translate.use();
 
       _this.logMsg = _this.funcName + ": " + "\n" +

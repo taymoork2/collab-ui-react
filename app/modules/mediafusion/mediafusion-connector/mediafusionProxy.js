@@ -22,11 +22,11 @@ angular.module('Mediafusion')
         togglePolling();
       };
 
-      var deleteHost = function (clusterId, serial, callback) {
-        clusterService.deleteHost(clusterId, serial, function () {
+      var defuseConnector = function (clusterId) {
+        clusterService.defuseConnector(clusterId, function () {
           var args = arguments;
           poll(function () {
-            if (callback) callback.apply(args);
+            //if (callback) callback.apply(args);
           });
         });
       };
@@ -89,7 +89,7 @@ angular.module('Mediafusion')
       return {
         stopPolling: stop,
         startPolling: start,
-        deleteHost: deleteHost,
+        defuseConnector: defuseConnector,
         getClusters: getClusters,
         upgradeSoftware: upgradeSoftware,
         /* for testing */

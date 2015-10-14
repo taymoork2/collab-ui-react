@@ -1,0 +1,33 @@
+.huntgroup {
+  &.overlay-panel {
+    display: flex;
+    flex-direction: column;
+    & cs-setup-assistant {
+      width: 100%;
+    }
+    .panel-content {
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+  }
+  & .underline {
+    font-size:200%;
+    max-width: 40rem;
+  }
+  & .h-center {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  & .input-details {
+    text-align:center;
+    p {
+      padding: 1rem;
+      color: $gray;
+      font-style: italic;
+    }
+  }
+  & .text-primary {
+    color:$brand-primary;
+  }
+}

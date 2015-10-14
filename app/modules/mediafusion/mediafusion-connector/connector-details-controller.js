@@ -4,7 +4,7 @@ angular.module('Mediafusion')
   .controller('ConnectorDetailsController',
 
     /* @ngInject */
-    function ($scope, $state, $stateParams, MediafusionProxy, MediafusionClusterService, $log) {
+    function ($scope, $state, $stateParams, MediafusionProxy, MediafusionClusterService, $log, Notification, $translate) {
       $scope.visibleAlarm = {};
       $scope.clusters = [];
       $scope.selectedCluster = '';
@@ -57,7 +57,24 @@ angular.module('Mediafusion')
         $scope.displayName = $item.name;
         var promise = MediafusionClusterService.removeGroupAssignment($stateParams.connectorId, $scope.currentPropertySetId);
         promise.finally(function () {
-          MediafusionClusterService.updateGroupAssignment($stateParams.connectorId, $item.id);
+          //var responsePromise = 
+          MediafusionClusterService.updateGroupAssignment($stateParams.connectorId, $item.id)
+            .success(function (data) {
+              $log.log("success data :", data);
+              Notification.notify([$translate.instant('mediaFusion.groupAssignmentSuccess')], 'success');
+            })
+            .error(function (data, status) {
+              $log.log("error data :", data);
+              $log.log("error message :", data.message);
+              $log.log("error status :", status);
+              if (status === 404) {
+                Notification.notify([$translate.instant('mediaFusion.groupAssignmentFailure', {
+                  failureMessage: data.message
+                })], 'error');
+              }
+            });
+          //responsePromise.
+          //$log.log("response:". response);
         });
       };
     }

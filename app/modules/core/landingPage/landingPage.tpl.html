@@ -53,14 +53,19 @@
           </div>
         </section>
 
-        <!-- TODO: To be removed when monitoring service is refactored-->
         <section class="monitoring-panel small-12 column">
-          <h4 class="monitoring-section" translate="homePage.monitoring"></h4>
+          <h4 class="monitoring-section" translate="homePage.status"></h4>
           <ul>
-          <li ng-repeat="health in healthMetrics">
-            <a ng-href="{{statusPageUrl}}" target="_blank" ng-class="{true:'green', false:'red'}[health.status==='operational']" class="monitoring-cell" id="{{health.name}}">
-                <i class="fa fa-circle"></i>&nbsp;&nbsp;<span>{{health.name}}</span>
+          <li ng-class="{'success':'green'}[healthStatus]">
+            <a ng-href="{{statusPageUrl}}" target="_blank" class="monitoring-cell">
+              <i class="fa fa-circle" ng-class="{'warning':'yellow','danger':'red'}[healthStatus]"></i><span translate="homePage.spark"></span>
             </a>
+          </li>
+          <li target="_blank" ng-class="{'green': sso}">
+              <i class="fa fa-circle" ng-class="{'gray': !sso}"></i><span translate="homePage.sso"></span>
+          </li>
+           <li target="_blank" ng-class="{'green': dirsync}">
+              <i class="fa fa-circle" ng-class="{'gray': !dirsync}"></i><span translate="homePage.dirsync"></span>
           </li>
           </ul>
         </section>

@@ -484,8 +484,11 @@
     "dateExample": "Choose a Date",
     "size": "Size Per Server:",
     "uploadFile": "Upload CDR File",
-    "uploadDescription": "Option TBA",
+    "uploadDescription": "CDRs previously saved in json form can be uploaded for reinspection.",
     "upload": "Upload",
+    "jsonSizeError": "File size is above the maximum of 10 MB.",
+    "jsonTypeError": "Please upload a valid json file.",
+    "jsonSyntaxError": "The file contains syntax errors; please fix the errors before resubmitting.",
     "cdrAccordionHeader": "{{firstTimestamp}} - Number of CDR's: {{numberOfCdrs}} - Total Duration: {{totalDuration}} seconds",
     "timeStamp": "Time Stamp",
     "callingDeviceName": "Calling Device Name",
@@ -507,7 +510,15 @@
     "phoneNumberError": "Please enter a valid phone number using the numbers [0-9].",
     "phoneNumberErrorTwo": "Calling Party Number and Called Party Number should not match.",
     "deviceNameError": "Calling Party Device and Called Party Device should not match.",
-    "hitSizeError": "The request size per server should be between 1 and 50."
+    "hitSizeError": "The request size per server should be between 1 and 50.",
+    "advancedCDR": "Advanced CDR Report",
+    "local": "Local:",
+    "remote": "Remote:",
+    "searchPlaceholder": "Keyword Search",
+    "ladderDiagram": "Ladder Diagram",
+    "cdrSave": "Save Call",
+    "element": "Element",
+    "value": "Value"
   },
   "billingPage": {
     "title": "Order Provisioning",
@@ -613,7 +624,11 @@
     "notifications": "Notifications",
     "todo": "To-do",
     "setUpYourTrial": "Set up Advanced Spark Call to start your trial.",
-    "beginTrial": "Begin Trial"
+    "beginTrial": "Begin Trial",
+    "status": "Status",
+    "spark": "Spark",
+    "sso": "Single Sign On (SSO)",
+    "dirsync": "Directory Synchronization"
   },
   "inviteModal": {
     "title": "Service Entitlement",
@@ -1566,7 +1581,12 @@
     "deactivateDevice": "Deactivate Device",
     "deactivateBody": "This action cannot be undone.  Are you sure you want to deactivate this device?",
     "deviceStatusFailureMsg": "Failed to fetch device status",
-    "deviceIpAddressFailureMsg": "Failed to fetch device IP"
+    "deviceIpAddressFailureMsg": "Failed to fetch device IP",
+    "logTitle": "Logs",
+    "retrieveLogBttn": "Retrieve Latest Log",
+    "retrieveLogInstructions": "Device logs can be used by Cisco to troubleshoot issues related to device performance and call quality.",
+    "logWait": "Getting log file from the device. This may take a minute…",
+    "errorTryAgain": "Log file request timed out. Retry?"
   },
   "deviceOverviewPage": {
     "activationNoLongerNeeded": "If this activation is no longer needed:",
@@ -1574,6 +1594,7 @@
     "newDeviceActivation": "Activation code for new device:",
     "ciscoSX10": "Cisco SX10",
     "software": "Software",
+    "upgradeChannel": "Upgrade Channel",
     "serial": "Serial",
     "ipAddr": "IP Address",
     "macAddr": "MAC Address",
@@ -1716,10 +1737,14 @@
     "delete": "Delete",
     "cancel": "Cancel",
     "actionsHeader": "Actions",
-    "deleteConnector": "Delete Connector",
-    "deleteConnectorConfText1": "Are you sure you want to delete connector {{hostname}}?",
-    "deleteConnectorSuccess": "Connector {{hostname}} deleted successfully",
-    "deleteConnectorError": "Error deleting connector"
+    "defuseConnector": "Deregister",
+    "confirmDefuse": "Confirm Deregistration",
+    "defuseText": "Are you sure?<br> Clicking \"Yes\" will remove this device from Cisco Cloud Collaboration Management and stop the devices from accepting any new calls. (Preexisting calls will continue.)",
+    "yesDefuse": "Yes",
+    "defuseSuccess": "Deregistration successfully",
+    "deleteConnectorError": "Error deleting connector",
+    "groupAssignmentSuccess": "Cluster assigned successfully",
+    "groupAssignmentFailure": "Cluster not assigned"
   },
   "webexUserSettings": {
     "sessionEnablementUpdateSuccess": "Session type enablement updated.",
@@ -1861,8 +1886,8 @@
 
     "indexPageLabel_EMAIL_send_email_to_all": "Email All Hosts",
 
-    "indexPageLabel_siteInfo_siteInformation": "Site Information",
-    "indexPageLabel_siteInfo_siteFeatures": "Site Features",
+    "indexPageLabel_SiteInfo_site_info": "Site Information",
+    "indexPageLabel_SiteInfo_site_features": "Site Features",
 
     "indexPageLabel_CommonSettings_productivity": "Productivity Tools",
     "indexPageLabel_CommonSettings_address": "Company Addresses",
@@ -1899,8 +1924,8 @@
 
     "settingPageLabel_EMAIL_send_email_to_all": "Email All Hosts",
 
-    "settingPageLabel_siteInfo_siteInformation": "Site Overview",
-    "settingPageLabel_siteInfo_siteFeatures": "Site Overview",
+    "settingPageLabel_SiteInfo_site_info": "Site Overview",
+    "settingPageLabel_SiteInfo_site_features": "Site Overview",
 
     "settingPageLabel_CommonSettings_productivity": "Productivity Tools",
     "settingPageLabel_CommonSettings_address": "Company Addresses",
@@ -1928,9 +1953,9 @@
     "settingPageLabel_SC_forms": "Support Center Forms",
     "settingPageLabel_SC_branding": "Support Center Branding",
 
-    "settingPageLabel_WebACD_webacd_settings": "WebACD Settings",
-    "settingPageLabel_WebACD_webacd_queues": "WebACD Queues",
-    "settingPageLabel_WebACD_webacd_form": "WebACD Leave Message Forms",
+    "settingPageLabel_WebACD_webacd_settings": "Web ACD Settings",
+    "settingPageLabel_WebACD_webacd_queues": "Web ACD Queues",
+    "settingPageLabel_WebACD_webacd_form": "Web ACD Leave Message Forms",
 
     "settingPageLabel_RA_remote_options": "Remote Access Settings",
     "settingPageLabel_RA_remote_groups": "Remote Access Groups",
@@ -2159,6 +2184,12 @@
     "Unknown": "Unknown",
     "NeedsActivation": "Needs Activation",
     "issuesDetected": "Issues Detected",
+    "upgradeChannels": {
+      "Stable": "Stable",
+      "Latest": "Latest",
+      "Beta": "Beta",
+      "Preview": "Preview"
+    },
     "errorCodes": {
       "mediaProtocol": {
         "type": "Potential loss of video quality",
@@ -2271,5 +2302,20 @@
     "syncStatusHeading": "Sync Status",
     "syncStatusTooltip": "Is syncing active between Messenger and Common Identity?",
     "unauthorized": "Not authorized to view this state"
+  },
+  "huronHuntGroup": {
+    "title": "Create Hunt Group",
+    "namePlaceholder": "Name the Hunt Group",
+    "nameHint": "This hunt group name will also be the name callers see on their device (i.e. alerting name)",
+    "numberPlaceholder": "Select Hunt Group Numbers",
+    "numberHint": "When this number is called, this hunt group is activated",
+    "methodTitle": "Select Hunting Method",
+    "methodHint": "This defines which member gets the call first.",
+    "memberPlaceholder": "Select Hunt Group Members",
+    "memberHint": "These are the users who pickup the hunt group calls",
+    "fallbackPlaceholder": "Enter Fallback Destination",
+    "fallbackHint": "This is where the call goes if it was not answered by this hunt group",
+    "voiceCheckLabel": "Send call directly to voicemail",
+    "createGroupLabel": "CREATE HUNT GROUP"
   }
 }

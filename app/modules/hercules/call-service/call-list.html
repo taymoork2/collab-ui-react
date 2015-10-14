@@ -12,23 +12,26 @@
                ng-click="call.selectedRow = $index">
             <i class="icon icon-data icon-inverse-round" style="float:left"/>
             <i class="overlay" ng-class="{ok: call.selectedServiceAndManagementServiceStatus(cluster).color == 'green',attention: call.selectedServiceAndManagementServiceStatus(cluster).color == 'yellow', alarm: call.selectedServiceAndManagementServiceStatus(cluster).color == 'red'}"/>
-            <b>{{cluster.name}}</b>
+            <h4>{{cluster.name}}</h4>
             <br>
-            <span ng-if="call.selectedServiceAndManagementServiceStatus(cluster).status == 'running'">Running</span>
-            <span ng-if="call.selectedServiceAndManagementServiceStatus(cluster).status == 'alarm'">Alarm</span>
-            <span ng-if="call.selectedServiceAndManagementServiceStatus(cluster).status == 'needs_attention'">Needs attention</span>
-            <span ng-if="call.selectedServiceAndManagementServiceStatus(cluster).status == 'disabled'">Disabled</span>
-            <span ng-show="call.softwareUpgradeAvailable(cluster)">, Upgrades</span>
+            <p class="cell-status">
+              <span ng-if="call.selectedServiceAndManagementServiceStatus(cluster).status == 'running'">Running</span>
+              <span ng-if="call.selectedServiceAndManagementServiceStatus(cluster).status == 'alarm'">Alarm</span>
+              <span ng-if="call.selectedServiceAndManagementServiceStatus(cluster).status == 'needs_attention'">Needs attention</span>
+              <span ng-if="call.selectedServiceAndManagementServiceStatus(cluster).status == 'disabled'">Disabled</span>
+              <span ng-show="call.softwareUpgradeAvailable(cluster)">Upgrades</span>
+            </p>
           </div>
           <div class="cell-content"
                ng-show="call.serviceNotInstalled(cluster)"
                ng-class="{'active':call.selectedRow === $index}"
                ng-click="call.selectedRow = $index">
             <i class="icon icon-data icon-inverse-round" style="float:left"/>
-            <b style="color:#CCC">{{cluster.name}}</b>
+            <h4 style="color:#CCC">{{cluster.name}}</h4>
             <br>
-            <span style="color:#CCC">Not installed</span>
-
+            <p class="cell-status">
+              <span style="color:#CCC">Not installed</span>
+            </p>
           </div>
         </td>
       </tr>
@@ -62,9 +65,12 @@
 
     <div class="centered-info-pane">
       <br>
-      <p>
-        Select a cluster in the left menu to see details for that cluster.
-      </p>
+      <h5>
+        Select a cluster to see more detail.
+      </h5>
+      <h6>
+        Inspect Alarms, Manage Software Upgrades, View Connector, Status on Hosts, Change Service Cluster Settings.
+      </h6>
     </div>
   </div>
 </div>
@@ -76,4 +82,3 @@
     You need to register Cisco VCS for Cloud Extensions.
   </div>
 </div>
-

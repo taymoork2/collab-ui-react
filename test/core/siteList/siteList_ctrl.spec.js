@@ -137,7 +137,7 @@ describe('Controller: SiteListCtrl', function () {
     });
   }));
 
-  it('should assign is iFrame supported site correctly', function () {
+  it('should assign is not iFrame supported and is not report supported to site', function () {
     deferred.resolve("ticket");
     scope.$apply();
 
@@ -152,6 +152,16 @@ describe('Controller: SiteListCtrl', function () {
     expect(SiteListCtrl.gridData[0].isAdminReportEnabled).not.toBe(null);
     expect(SiteListCtrl.gridData[0].isAdminReportEnabled).toBe(false);
     expect(SiteListCtrl.gridData[0].showSiteLinks).toBe(true);
+  });
+
+  it('should assign is iFrame supported and is report supported to site', function () {
+    deferred.resolve("ticket");
+    scope.$apply();
+
+    expect(SiteListCtrl).toBeDefined();
+
+    expect(SiteListCtrl.gridData).toBeDefined();
+    expect(SiteListCtrl.gridData).not.toBe(null);
 
     expect(SiteListCtrl.gridData[1]).not.toBe(null);
     expect(SiteListCtrl.gridData[1].isIframeSupported).not.toBe(null);
@@ -159,6 +169,16 @@ describe('Controller: SiteListCtrl', function () {
     expect(SiteListCtrl.gridData[1].isAdminReportEnabled).not.toBe(null);
     expect(SiteListCtrl.gridData[1].isAdminReportEnabled).toBe(true);
     expect(SiteListCtrl.gridData[1].showSiteLinks).toBe(true);
+  });
+
+  it('should assign is iFrame supported and is not reported supported to site', function () {
+    deferred.resolve("ticket");
+    scope.$apply();
+
+    expect(SiteListCtrl).toBeDefined();
+
+    expect(SiteListCtrl.gridData).toBeDefined();
+    expect(SiteListCtrl.gridData).not.toBe(null);
 
     expect(SiteListCtrl.gridData[2]).not.toBe(null);
     expect(SiteListCtrl.gridData[2].isIframeSupported).not.toBe(null);

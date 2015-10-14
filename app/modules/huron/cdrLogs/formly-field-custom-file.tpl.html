@@ -1,0 +1,12 @@
+<input
+  id="{{::options.key}}"
+  name="{{::options.key}}"
+  type="file"
+  uc-file-read
+  file="model[options.key]"
+  file-name="model[options.templateOptions.filename]"
+  file-max-size="{{::options.templateOptions.maxSize}}"
+  file-max-size-error="options.templateOptions.maxSizeError()"
+  file-type="{{::options.templateOptions.fileType}}"
+  file-type-error="options.templateOptions.fileTypeError()"
+  file-suffix="{{::options.templateOptions.fileSuffix}}">
