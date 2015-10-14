@@ -11,11 +11,14 @@
              ui-sref="{{callDetails.state.current.name}}({cluster:callDetails.cluster})"><i class="icon icon-close"/></a>
         </div>
       </h4>
+      <hr>
     </div>
 
 
+
+
     <div ui-view="details-pane">
-      <h5>
+      <h5 class="black-header">
         Alarms
       </h5>
 
@@ -29,7 +32,7 @@
         No alarms reported
       </p>
 
-      <h5>Software Upgrades
+      <h5 class="black-header">Software Upgrades
         <span class="right">
           <div class="dropdown" on-toggle="dl.toggled(open)">
             <a href class="dropdown-toggle">
@@ -57,7 +60,7 @@
         No new software available
       </p>
 
-      <h5>
+      <h5 class="black-header">
         Depending services
       </h5>
 
@@ -74,7 +77,7 @@
       </div>
 
 
-      <h5>
+      <h5 class="black-header">
         Running on hosts:
       </h5>
       <div class="row" ng-repeat="connector in callDetails.selectedService.connectors">

@@ -93,9 +93,6 @@
 /**
   Toolkit fixes
   */
-  .black-header{
-    color:black !important;
-  }
   .hercules.large-margin{
     .large-4{
       margin-right: 2rem !important;
@@ -116,6 +113,12 @@
       margin-left:0!important;
     }
   }
+
+  /* Has to be fixed in TK before we can fix the code in Atlas */
+  .black-header{
+    color:black !important;
+  }
+
 /**
  Work around the extra col-md-12 class in views/main.tpl.html
  */
@@ -136,5 +139,25 @@
       h3{
         padding-right: 2rem;
       }
+      hr{
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+      }
+    }
+  }
+  /* Detail */
+  .side-view{
+    padding-top: 2rem;
+    .icon.icon-three-dots{
+      color: #666666 !important;
+    }
+    h5{
+      padding-top: 1rem !important;
+    }
+    .icon.icon-close{
+      color:black;
+      position: absolute;
+      top: 1.25rem;
+      right: 2rem;
     }
   }
