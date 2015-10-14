@@ -331,15 +331,14 @@
                 return scope.fc && scope.fc.$validate();
               }
             }
-          },  {
+          }, {
             type: 'button',
             key: 'deleteBtn',
             templateOptions: {
               btnClass: 'btn-sm btn-link',
               label: $translate.instant('common.delete'),
               onClick: function (options, scope) {
-                vm.deleteInternalNumberRange(scope.model);
-                
+                vm.deleteInternalNumberRange(scope.model);  
               }
             },
             controller: /* @ngInject */ function ($scope) {
@@ -353,13 +352,10 @@
                 } else if (displayNumberRanges.length > 1 && vm.firstTimeSetup && angular.isUndefined($scope.model.uuid)) {
                     $scope.to.btnClass = 'btn-sm btn-link ';
                 } else if (vm.model.numberRanges.length ===  1 && displayNumberRanges.length !== 1) {
-                    angular.forEach(vm.model.numberRanges, function (item) {
-                    if (angular.isDefined(item.uuid)) {
+                    if (angular.isDefined(vm.model.numberRanges[0].uuid)) {
                       $scope.to.btnClass = 'btn-sm btn-link hide-delete';
-                    } else if (angular.isUndefined(item.uuid)) {
-                        $scope.to.btnClass = 'btn-sm btn-link  ';
-                      }
-                  });
+                    }  
+                 
                  } 
               });
             }
