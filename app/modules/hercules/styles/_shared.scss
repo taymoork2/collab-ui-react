@@ -96,7 +96,26 @@
   .black-header{
     color:black !important;
   }
+  .hercules.large-margin{
+    .large-4{
+      margin-right: 2rem !important;
+    }
+  }
 
+/**
+  Overwritten from Toolkit somehwere in Atlas -
+  Fix it before removing this code
+  */
+  .hercules.large-margin{
+    p{
+      margin-bottom: 2rem;
+    }
+  }
+  .hercules{
+    .alert,.button.alert,button.alert{
+      margin-left:0!important;
+    }
+  }
 /**
  Work around the extra col-md-12 class in views/main.tpl.html
  */
@@ -106,3 +125,16 @@
     left: -0.5rem;
   };
 }
+/**
+  New styling
+  */
+  .hercules{
+    .header-panel{
+      h3,h4{
+        display: table-cell;
+      }
+      h3{
+        padding-right: 2rem;
+      }
+    }
+  }

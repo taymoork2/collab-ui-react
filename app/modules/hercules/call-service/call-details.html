@@ -1,15 +1,17 @@
 <div class="hercules typography-airy small-margin  side-view">
   <div ng-hide="callDetails.serviceNotInstalled()">
-    <h2>{{callDetails.cluster.name}}</h2>
-    <h4>
-      <small><a
-        ui-sref="{{callDetails.route}}.list.details.cluster-settings({cluster:callDetails.cluster, serviceType: callDetails.serviceType})">Settings</a>
-      </small>
-      <div class="right">
-        <a ng-show="callDetails.state.includes('*.list.details.cluster-settings')"
-           ui-sref="{{callDetails.state.current.name}}({cluster:callDetails.cluster})"><i class="icon icon-close"/></a>
-      </div>
-    </h4>
+    <div class="header-panel">
+      <h3>{{callDetails.cluster.name}}</h3>
+      <h4>
+        <small><a
+          ui-sref="{{callDetails.route}}.list.details.cluster-settings({cluster:callDetails.cluster, serviceType: callDetails.serviceType})">Settings</a>
+        </small>
+        <div class="right">
+          <a ng-show="callDetails.state.includes('*.list.details.cluster-settings')"
+             ui-sref="{{callDetails.state.current.name}}({cluster:callDetails.cluster})"><i class="icon icon-close"/></a>
+        </div>
+      </h4>
+    </div>
 
 
     <div ui-view="details-pane">
@@ -31,7 +33,6 @@
         <span class="right">
           <div class="dropdown" on-toggle="dl.toggled(open)">
             <a href class="dropdown-toggle">
-              <i class="icon icon-three-dots"/>
             </a>
             <ul class="dropdown-menu">
               <li>

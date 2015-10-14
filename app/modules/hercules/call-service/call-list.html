@@ -12,7 +12,7 @@
                ng-click="call.selectedRow = $index">
             <i class="icon icon-data icon-inverse-round" style="float:left"/>
             <i class="overlay" ng-class="{ok: call.selectedServiceAndManagementServiceStatus(cluster).color == 'green',attention: call.selectedServiceAndManagementServiceStatus(cluster).color == 'yellow', alarm: call.selectedServiceAndManagementServiceStatus(cluster).color == 'red'}"/>
-            <h3>{{cluster.name}}</h3>
+            <h4>{{cluster.name}}</h4>
             <br>
             <p class="cell-status">
               <span ng-if="call.selectedServiceAndManagementServiceStatus(cluster).status == 'running'">Running</span>
@@ -21,19 +21,17 @@
               <span ng-if="call.selectedServiceAndManagementServiceStatus(cluster).status == 'disabled'">Disabled</span>
               <span ng-show="call.softwareUpgradeAvailable(cluster)">Upgrades</span>
             </p>
-            <i class="icon icon-three-dots"/>
           </div>
           <div class="cell-content"
                ng-show="call.serviceNotInstalled(cluster)"
                ng-class="{'active':call.selectedRow === $index}"
                ng-click="call.selectedRow = $index">
             <i class="icon icon-data icon-inverse-round" style="float:left"/>
-            <h3 style="color:#CCC">{{cluster.name}}</h3>
+            <h4 style="color:#CCC">{{cluster.name}}</h4>
             <br>
             <p class="cell-status">
               <span style="color:#CCC">Not installed</span>
             </p>
-            <i class="icon icon-three-dots"/>
           </div>
         </td>
       </tr>
