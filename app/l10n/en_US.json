@@ -1570,7 +1570,12 @@
     "deactivateDevice": "Deactivate Device",
     "deactivateBody": "This action cannot be undone.  Are you sure you want to deactivate this device?",
     "deviceStatusFailureMsg": "Failed to fetch device status",
-    "deviceIpAddressFailureMsg": "Failed to fetch device IP"
+    "deviceIpAddressFailureMsg": "Failed to fetch device IP",
+    "logTitle": "Logs",
+    "retrieveLogBttn": "Retrieve Latest Log",
+    "retrieveLogInstructions": "Device logs can be used by Cisco to troubleshoot issues related to device performance and call quality.",
+    "logWait": "Getting log file from the device. This may take a minute…",
+    "errorTryAgain": "Log file request timed out. Retry?"
   },
   "deviceOverviewPage": {
     "activationNoLongerNeeded": "If this activation is no longer needed:",

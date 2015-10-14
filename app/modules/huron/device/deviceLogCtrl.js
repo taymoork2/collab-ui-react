@@ -10,30 +10,43 @@
     var dlc = this;
     dlc.logList = [];
     dlc.currentUser = $stateParams.currentUser;
+    dlc.device = $stateParams.device;
     dlc.retrieveLog = retrieveLog;
     dlc.refreshLogList = refreshLogList;
+    dlc.isPolling = isPolling;
     dlc.interval = 5000; //5 seconds
     dlc.timeout = 600000; //10 minutes
+    dlc.active = false;
+    dlc.error = false;
+    dlc.loading = false;
 
-    var LOG_SUCCESS = 'complete';
+    var LOG_SUCCESS = 'success';
     var EVT_SUCCESS = 'success';
 
     var pollingList = [];
 
     ////////// Function Definitions ///////////////////////////////////////
-    function retrieveLog(customerId, userId, sipEndpointId) {
-      DeviceLogService.retrieveLog(customerId, userId, sipEndpointId)
+    function retrieveLog() {
+      dlc.error = false;
+      dlc.loading = true;
+
+      DeviceLogService.retrieveLog(dlc.currentUser.id, dlc.device.uuid)
         .then(function (response) {
-          refreshLogList(customerId, userId, sipEndpointId);
-        })
-        .catch(function (response) {
+          dlc.active = true;
+          return refreshLogList();
+        }, function (error) {
           //TODO: handle error with notification
+        })
+        .finally(function () {
+          dlc.loading = false;
         });
+
     }
 
-    function refreshLogList(customerId, userId, sipEndpointId) {
-      return DeviceLogService.getLogInformation(customerId, userId, sipEndpointId)
+    function refreshLogList() {
+      return DeviceLogService.getLogInformation(dlc.currentUser.id, dlc.device.uuid)
         .then(function (response) {
+          dlc.logList = [];
           //build log list
           var logs = response;
           if (logs.length < 1) {
@@ -45,13 +58,16 @@
               addLogList(log);
               removePolling(log.trackingId);
             } else {
-              addPolling(log.trackingId, customerId, userId, sipEndpointId);
+              addPolling(log.trackingId);
             }
           });
-        })
-        .catch(function (response) {
+        }, function (error) {
           //TODO: handle error with notification
         });
+    }
+
+    function isPolling() {
+      return (pollingList.length > 0);
     }
 
     function addLogList(logEntry) {
@@ -64,7 +80,7 @@
         for (var i = 0; i < length; i++) {
           var event = logEntry.events[i];
           if (event.status === EVT_SUCCESS) {
-            log.uri = event.uri;
+            log.uri = logEntry.results;
             log.name = event.date;
             dlc.logList.push(log);
             return;
@@ -88,13 +104,14 @@
 
     function fnInterval(poll) {
       if (poll.timeout > Date.now()) {
-        refreshLogList(poll.customerId, poll.userId, poll.sipEndpointId);
+        refreshLogList();
       } else {
         removePolling(poll.trackingId);
+        dlc.error = true;
       }
     }
 
-    function addPolling(trackingId, customerId, userId, sipEndpointId) {
+    function addPolling(trackingId) {
       var length = pollingList.length;
       var poll;
 
@@ -107,9 +124,6 @@
       }
       poll = {};
       poll.trackingId = trackingId;
-      poll.customerId = customerId;
-      poll.userId = userId;
-      poll.sipEndpointId = sipEndpointId;
       poll.timeout = Date.now() + dlc.timeout;
       poll.intervalId = $interval(function () {
         fnInterval(poll);
