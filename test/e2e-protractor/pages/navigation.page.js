@@ -8,13 +8,14 @@ var Navigation = function () {
   this.homeTab = element(by.css('li.overviewTab > a'));
   this.usersTab = element(by.css('li.userTab > a'));
   this.accountTab = element(by.css('li.accountTab > a'));
-  this.orgTab = element(by.css('a[href="#organization"]'));
-  this.orgAddTab = element(by.css('a[href="#add-organization"]'));
+  this.orgTab = element(by.css('a[href="#organizations"]'));
+  this.orgAddTab = element(by.css('#addOrganizations'));
   this.callRoutingTab = element(by.css('a[href="#callrouting"]'));
   this.fusionTab = element(by.css('a[href="#fusion"]'));
   this.reportsTab = element(by.css('li.reportTab > a'));
   this.devReports = element(by.css('a[href="#partner/newreports"]'));
   this.supportTab = element(by.css('li.supportTab > a'));
+  this.cdrTab = element(by.css('a[href="#cdrsupport"]'));
   this.logsTab = element(by.css('a[href="#support"]'));
   this.billingTab = element(by.css('a[href="#orderprovisioning"]'));
   this.devicesTab = element(by.css('li.deviceTab > a'));
@@ -51,6 +52,11 @@ var Navigation = function () {
     utils.click(this.devReports);
   }
 
+  this.clickCDRSupport = function () {
+    this.clickDevelopmentTab();
+    utils.click(this.cdrTab);
+  }
+
   this.clickServicesTab = function () {
     utils.click(this.servicesTab);
   };
@@ -69,7 +75,7 @@ var Navigation = function () {
   this.clickOrganization = function () {
     this.clickDevelopmentTab();
     utils.click(this.orgTab);
-    this.expectCurrentUrl('/organization');
+    this.expectCurrentUrl('/organizations');
   };
 
   this.clickCustomers = function () {

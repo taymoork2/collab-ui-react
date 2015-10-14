@@ -10,6 +10,8 @@
 .sauce
 .sonar
 .tmp
+.bower-cache
+.bower-registry
 
 build
 coverage

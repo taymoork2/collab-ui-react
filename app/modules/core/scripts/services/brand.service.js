@@ -6,7 +6,7 @@
     .factory('BrandService', BrandService);
 
   /* @ngInject */
-  function BrandService($http, $q, $translate, Authinfo, Config, Log, Notification, Orgservice, Upload) {
+  function BrandService($http, $q, $translate, Config, Log, Notification, Orgservice, Upload) {
 
     var service = {
       'getSettings': getSettings,
@@ -26,16 +26,14 @@
       return $q(function (resolve, reject) {
         Orgservice.getOrg(function (data, status) {
           if (data.success) {
-            if (data.orgSettings && data.orgSettings.length > 0) {
-              var length = data.orgSettings.length;
-              var orgSettings = JSON.parse(data.orgSettings[length - 1]);
+            var settings = data.orgSettings;
+            if (!_.isEmpty(settings)) {
               resolve({
-                'usePartnerLogo': orgSettings.usePartnerLogo,
-                'allowCustomerLogos': orgSettings.allowCustomerLogos,
-                'logoUrl': orgSettings.logoUrl
+                'usePartnerLogo': settings.usePartnerLogo,
+                'allowCustomerLogos': settings.allowCustomerLogos,
+                'logoUrl': settings.logoUrl
               });
             } else {
-              Log.debug('No orgSettings found for org: ' + data.id);
               reject();
             }
           } else {
@@ -118,6 +116,5 @@
         Notification.notify(error, 'error');
       }
     }
-
   }
 })();

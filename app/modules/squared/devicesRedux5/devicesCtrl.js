@@ -61,9 +61,10 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, $window, CsdmCo
       .values()
       // include tags
       .map(addTags)
+      // remove codes w/o code
+      .filter(removeOldCodes)
       // filter based on search
-      .map(filterOnSearchQuery)
-      .compact()
+      .filter(filterOnSearchQuery)
       // create rooms of devices with equal names
       .groupBy('displayName')
       .map(createRooms)
@@ -84,6 +85,13 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, $window, CsdmCo
       .flatten()
       .first()
       .value();
+
+    function removeOldCodes(device) {
+      if (device.needsActivation && !device.readableActivationCode) {
+        return null;
+      }
+      return device;
+    }
 
     function addTags(device) {
       device.tags = TagService.list(device.url).join(', ');

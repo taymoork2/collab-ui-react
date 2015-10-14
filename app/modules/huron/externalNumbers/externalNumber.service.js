@@ -5,7 +5,7 @@
     .factory('ExternalNumberService', ExternalNumberService);
 
   /* @ngInject */
-  function ExternalNumberService($q, ExternalNumberPool, PstnSetupService, FeatureToggleService) {
+  function ExternalNumberService($q, ExternalNumberPool, PstnSetupService, FeatureToggleService, Notification) {
     var service = {
       refreshNumbers: refreshNumbers,
       clearNumbers: clearNumbers,
@@ -54,7 +54,17 @@
       return FeatureToggleService.supportsPstnSetup()
         .then(function (isSupported) {
           if (isSupported) {
-            return PstnSetupService.deleteNumber(customerId, number.pattern);
+            return PstnSetupService.isCarrierSwivel(customerId)
+              .then(function (isSwivel) {
+                if (isSwivel) {
+                  return ExternalNumberPool.deletePool(customerId, number.uuid);
+                } else {
+                  return PstnSetupService.deleteNumber(customerId, number.pattern);
+                }
+              })
+              .catch(function (response) {
+                Notification.errorResponse(response);
+              });
           } else {
             return ExternalNumberPool.deletePool(customerId, number.uuid);
           }

@@ -2,7 +2,7 @@
 
 /* global describe, it, expect, login */
 
-describe('WebEx site settings', function () {
+describe('WebEx report breadcrumbs', function () {
 
   it('should allow login as admin user', function () {
     login.loginThroughGui(sitesettings.testAdmin.username, sitesettings.testAdmin.password);
@@ -23,27 +23,27 @@ describe('WebEx site settings', function () {
   });
 
   it('wait for WebEx reports page to appear with bread crumbs', function () {
-    sitesettings.waitForWebexReportBreadCrumbs();
+    utils.wait(sitesettings.webexReportBreadCrumbs);
     expect(sitesettings.webexReportBreadCrumbs.isPresent()).toBeTruthy();
   });
 
   it('click site admin reports link', function () {
-    utils.click(sitesettings.siteAdminReportsLink);
-    navigation.expectCurrentUrl('/iwebexreports');
+    utils.click(sitesettings.meetingUsageReportLink);
+    navigation.expectCurrentUrl(sitesettings.siteAdminReportsUrl);
   });
 
   it('wait for WebEx reports iframe page to appear with bread crumbs', function () {
-    sitesettings.waitForWebexReportIFrameBreadCrumbs();
+    utils.wait(sitesettings.webexReportIFrameBreadCrumbs);
     expect(sitesettings.webexReportIFrameBreadCrumbs.isPresent()).toBeTruthy();
   });
 
   it('Click on site report (second) bread crumb link', function () {
     utils.click(sitesettings.webexReportIFrameCrumb2);
-    navigation.expectCurrentUrl('/webexreports');
+    navigation.expectCurrentUrl(sitesettings.siteAdminReportsUrl);
   });
 
   it('wait for WebEx reports page to appear with bread crumbs', function () {
-    sitesettings.waitForWebexReportBreadCrumbs();
+    utils.wait(sitesettings.webexReportBreadCrumbs);
     expect(sitesettings.webexReportBreadCrumbs.isPresent()).toBeTruthy();
   });
 
@@ -52,9 +52,9 @@ describe('WebEx site settings', function () {
     navigation.expectCurrentUrl('/site-list');
   });
 
-  // it('should pause', function () {
-  //   browser.pause();
-  // });
+  //  it('should pause', function () {
+  //    browser.pause();
+  //  });
 
   it('should allow log out', function () {
     navigation.logout();

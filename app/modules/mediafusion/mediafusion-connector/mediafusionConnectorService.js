@@ -60,12 +60,12 @@ angular.module('Mediafusion')
           .error(errorCallback);
       };
 
-      var deleteHost = function (clusterId, serial, callback) {
-        var url = config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/hosts/' + serial;
+      var defuseConnector = function (clusterId, callback) {
+        var url = config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
         $http
           .delete(url)
           .success(callback)
-          .error(createErrorHandler('Unable to delete host', callback));
+          .error(createErrorHandler('Unable to defuse', callback));
       };
 
       function createSuccessCallback(callback) {
@@ -82,15 +82,31 @@ angular.module('Mediafusion')
       }
 
       var getGroups = function () {
-        var url = config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/tags' + '?' + 'type=' + 'mf_group';
+        var url = config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets' + '?' + 'type=' + 'mf.group';
         return $http.get(url).then(extractDataFromResponse);
+      };
+
+      var updateGroupAssignment = function (clusterId, propertySetId) {
+        var clusterAssignedPropertySet = {
+          'property_set_id': propertySetId
+        };
+
+        var url = config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/assigned_property_sets';
+        return $http.post(url, clusterAssignedPropertySet);
+      };
+
+      var removeGroupAssignment = function (clusterId, propertySetId) {
+        var url = config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/assigned_property_sets/' + propertySetId;
+        return $http.delete(url);
       };
 
       return {
         fetch: fetch,
-        deleteHost: deleteHost,
+        defuseConnector: defuseConnector,
         upgradeSoftware: upgradeSoftware,
-        getGroups: getGroups
+        getGroups: getGroups,
+        updateGroupAssignment: updateGroupAssignment,
+        removeGroupAssignment: removeGroupAssignment
       };
     }
   ]);

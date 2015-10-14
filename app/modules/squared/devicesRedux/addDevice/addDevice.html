@@ -29,7 +29,8 @@
           focus-on="adc.showAdd"
           ng-model="adc.deviceName"
           placeholder="Room or shared space name"
-          class="form-control">
+          class="form-control"
+          maxlength="127">
         </input>
 
       </div>
@@ -81,7 +82,7 @@
       id="create-code-button"
       class="btn btn-primary"
       sq-click-promise="adc.addDevice()"
-      ng-disabled="!adc.deviceName.length">
+      ng-disabled="!adc.isNameValid()">
       <span 
         translate="spacesPage.add">
       </span>

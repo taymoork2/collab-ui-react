@@ -1,0 +1,32 @@
+<h5>
+  Certificates for Encrypted SIP Calls
+</h5>
+
+<p>
+  Use certificates provided from Cisco Collaboration default trust list (Cert Service) for the encrypted SIP
+  calls, or upload self-signed certificates.
+</p>
+
+<div ng-if="callServiceSettings.certificates.length == 0">
+  <p><em>No certificates uploaded. Using the default trust list.</em></p>
+</div>
+
+<div ng-if="callServiceSettings.certificates.length > 0">
+  <h6>Certificates</h6>
+
+  <div data-ng-repeat="cert in callServiceSettings.certificates" class="row">
+    <div class="small-9 columns">{{cert.name}}</div>
+    <div class="small-3 columns">
+      <a href="#" class="right" sq-click-promise="callServiceSettings.confirmCertDelete(cert)">
+        Remove
+      </a>
+    </div>
+  </div>
+</div>
+
+<button class="button secondary" name="file" accept="application/x-x509-ca-cert"
+     ngf-select="callServiceSettings.uploadCert($file, $event)"
+     ng-model="certFile"
+     loading="callServiceSettings.uploadingCert">
+  Upload Certificate
+</button>

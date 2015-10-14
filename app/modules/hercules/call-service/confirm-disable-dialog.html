@@ -1,0 +1,32 @@
+<div class="modal-header">
+  <div class="modal-title">
+    Deactivate <span translate="hercules.serviceNames.{{disableConfirmDialog.serviceId}}"></span>
+  </div>
+</div>
+
+<div class="modal-body">
+  <p>
+    You are about to remove the following Hybrid Service for your organization:
+  </p>
+
+  <p>
+    <i class="{{disableConfirmDialog.serviceIconClass}}"></i>
+    <span translate="hercules.serviceNames.{{disableConfirmDialog.serviceId}}"></span>
+  </p>
+  <p>
+    If you click Confirm:
+  </p>
+  <ul>
+    <li>All of your users will have the service deactivated.</li>
+    <li>Your Cisco Expressway will uninstall the service connector.</li>
+    <li>Data for the service connector will be deleted.</li>
+  </ul>
+  <p>If your Cisco Expressway has no other services installed, you will need to deregister it.
+    Log in and deregister from Applications > Hybrid Services > Connector Management.
+  </p>
+</div>
+
+<div class="modal-footer">
+  <button ng-click="disableConfirmDialog.cancel()" class="button">Cancel</button>
+  <button ng-click="disableConfirmDialog.ok()" class="button alert">Confirm</button>
+</div>

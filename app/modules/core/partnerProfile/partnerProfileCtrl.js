@@ -66,6 +66,7 @@ angular.module('Core')
         $scope.isCiscoHelp = false;
 
         $scope.logoError = null;
+        $scope.logoUrl = '';
 
         UserListService.listPartners(orgId, function (data) {
           for (var partner in data.partners) {
@@ -82,53 +83,45 @@ angular.module('Core')
 
         Orgservice.getOrg(function (data, status) {
           if (data.success) {
-            if (data.orgSettings && data.orgSettings.length > 0) {
-              var length = data.orgSettings.length;
-              var orgSettingsObj = JSON.parse(data.orgSettings[length - 1]);
+            var settings = data.orgSettings;
 
-              if (typeof (orgSettingsObj.reportingSiteUrl) !== 'undefined') {
-                if (orgSettingsObj.reportingSiteUrl && orgSettingsObj.reportingSiteUrl.length) {
-                  $scope.problemSiteRadioValue = 1;
-                  $scope.supportUrl = orgSettingsObj.reportingSiteUrl;
-                  $scope.oldSupportUrl = $scope.supportUrl;
-                }
-              }
-              if (typeof (orgSettingsObj.reportingSiteDesc) !== 'undefined') {
-                if (orgSettingsObj.reportingSiteDesc && orgSettingsObj.reportingSiteDesc.length) {
-                  $scope.problemSiteRadioValue = 1;
-                  $scope.supportText = orgSettingsObj.reportingSiteDesc;
-                  $scope.oldSupportText = $scope.supportText;
-                }
-              }
-              if (typeof (orgSettingsObj.helpUrl) !== 'undefined') {
-                if (orgSettingsObj.helpUrl && orgSettingsObj.helpUrl.length) {
-                  $scope.helpSiteRadioValue = 1;
-                  $scope.helpUrl = orgSettingsObj.helpUrl;
-                  $scope.oldHelpUrl = $scope.helpUrl;
-                }
-              }
-              if (typeof (orgSettingsObj.isCiscoSupport) !== 'undefined') {
-                $scope.isCiscoSupport = orgSettingsObj.isCiscoSupport;
-              }
-              if (typeof (orgSettingsObj.isCiscoHelp) !== 'undefined') {
-                $scope.isCiscoHelp = orgSettingsObj.isCiscoHelp;
-              }
-
-              if (typeof (orgSettingsObj.usePartnerLogo) === 'boolean') {
-                $scope.usePartnerLogo = orgSettingsObj.usePartnerLogo;
-              }
-
-              if (typeof (orgSettingsObj.allowCustomerLogos) !== 'undefined') {
-                $scope.allowCustomerLogos = orgSettingsObj.allowCustomerLogos;
-              }
-
-              if (typeof (orgSettingsObj.logoUrl) !== 'undefined') {
-                $scope.logoUrl = orgSettingsObj.logoUrl;
-              }
-            } else {
-              Log.debug('No orgSettings found for org: ' + data.id);
+            if (!_.isEmpty(settings.reportingSiteUrl)) {
+              $scope.problemSiteRadioValue = 1;
+              $scope.supportUrl = settings.reportingSiteUrl;
+              $scope.oldSupportUrl = $scope.supportUrl;
             }
 
+            if (!_.isEmpty(settings.reportingSiteDesc)) {
+              $scope.problemSiteRadioValue = 1;
+              $scope.supportText = settings.reportingSiteDesc;
+              $scope.oldSupportText = $scope.supportText;
+            }
+
+            if (!_.isEmpty(settings.helpUrl)) {
+              $scope.helpSiteRadioValue = 1;
+              $scope.helpUrl = settings.helpUrl;
+              $scope.oldHelpUrl = $scope.helpUrl;
+            }
+
+            if (!_.isUndefined(settings.isCiscoSupport)) {
+              $scope.isCiscoSupport = settings.isCiscoSupport;
+            }
+
+            if (!_.isUndefined(settings.isCiscoHelp)) {
+              $scope.isCiscoHelp = settings.isCiscoHelp;
+            }
+
+            if (!_.isUndefined(settings.usePartnerLogo)) {
+              $scope.usePartnerLogo = settings.usePartnerLogo;
+            }
+
+            if (!_.isUndefined(settings.allowCustomerLogos)) {
+              $scope.allowCustomerLogos = settings.allowCustomerLogos;
+            }
+
+            if (!_.isUndefined(settings.logoUrl)) {
+              $scope.logoUrl = settings.logoUrl;
+            }
           } else {
             Log.debug('Get existing org failed. Status: ' + status);
           }

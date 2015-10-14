@@ -37,7 +37,7 @@
       $scope.siteUrl = $stateParams.siteUrl;
       $scope.indexPageSref = "webex-reports({siteUrl:'" + $stateParams.siteUrl + "'})";
       $scope.reportPageId = $stateParams.reportPageId;
-      $scope.reportPageTitle = $translate.instant("webexReportsLabels." + $scope.reportPageId);
+      $scope.reportPageTitle = $translate.instant("webexSiteReports." + $scope.reportPageId);
       $scope.reportPageIframeUrl = $stateParams.reportPageIframeUrl;
       $scope.iframeUrl = $stateParams.reportPageIframeUrl;
 
@@ -46,6 +46,7 @@
       // for iframe request
       $scope.trustIframeUrl = $sce.trustAsResourceUrl($scope.iframeUrl);
       $scope.adminEmail = Authinfo.getPrimaryEmail();
+      $scope.authToken = $rootScope.token;
       $scope.locale = ("es_LA" == $translate.use()) ? "es_MX" : $translate.use();
 
       _this.logMsg = _this.funcName + ": " + "\n" +

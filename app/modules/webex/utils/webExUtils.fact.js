@@ -134,58 +134,91 @@
       }; //getSiteName()
 
       obj.isSiteSupportsIframe = function (siteUrl) {
-        var isIframe = false;
         var deferred = $q.defer();
 
         getSessionTicket().then(
-          function getSessionTicketSuccess(sessionTicket) {
-            $log.log("getSessionTicketSuccess()");
+          function getSessionTicketSuccess(response) {
+            $log.log("getSessionTicketSuccess(): siteUrl=" + siteUrl);
 
             webExXmlApiInfoObj.xmlServerURL = "https://" + siteUrl + "/WBXService/XMLService";
             webExXmlApiInfoObj.webexSiteName = obj.getSiteName(siteUrl);
             webExXmlApiInfoObj.webexAdminID = Authinfo.getPrimaryEmail();
-            webExXmlApiInfoObj.webexAdminSessionTicket = sessionTicket;
+            webExXmlApiInfoObj.webexAdminSessionTicket = response;
 
-            getSiteVersionXml().then(
-              function getSiteVersionInfoXmlSuccess(getInfoResult) {
-                $log.log("getSiteVersionInfoXmlSuccess");
+            getSiteData().then(
+              function getSiteDataSuccess(response) {
+                var funcName = "getSiteDataSuccess()";
+                var logMsg = "";
 
-                isIframe = iframeSupportedSiteVersionCheck(getInfoResult);
-                $log.log("Site [" + siteUrl + "], isIframe [" + isIframe + "]");
+                var result = {
+                  isIframeSupported: iframeSupportedSiteVersionCheck(response),
+                  isAdminReportEnabled: isAdminReportEnabledCheck(response)
+                };
 
-                deferred.resolve(isIframe);
-              }, // getSiteVersionInfoXmlSuccess()
+                logMsg = funcName + ": " + "\n" +
+                  "siteUrl=" + siteUrl + "\n" +
+                  "result=" + JSON.stringify(result);
+                $log.log(logMsg);
 
-              function getSiteVersionInfoXmlError(getInfoResult) {
-                $log.log("getSiteVersionInfoXmlError()");
-                deferred.reject("getSiteVersionInfoXmlError");
-              } // getSiteVersionInfoXmlError()
-            ); // vm.getSessionTicket(siteUrl).then()
+                deferred.resolve(result);
+              }, // getSiteDataSuccess()
+
+              function getSiteDataError(response) {
+                var funcName = "getSiteDataError()";
+                var logMsg = "";
+
+                var result = {
+                  error: "getSiteDataError",
+                  response: response
+                };
+
+                logMsg = funcName + ": " + "\n" +
+                  "siteUrl=" + siteUrl + "\n" +
+                  "result=" + JSON.stringify(result);
+                $log.log(logMsg);
+
+                deferred.reject(result);
+              } // getSiteDataError()
+            ); // getSiteData().then
           }, // getSessionTicketSuccess()
 
-          function getSessionTicketError(errId) {
-            $log.log("getSessionTicketError");
-            deferred.reject("getSessionTicketError");
+          function getSessionTicketError(response) {
+            var funcName = "getSessionTicketError()";
+            var logMsg = "";
 
+            var result = {
+              error: "getSessionTicketError",
+              response: response
+            };
+
+            logMsg = funcName + ": " + "\n" +
+              "siteUrl=" + siteUrl + "\n" +
+              "result=" + JSON.stringify(result);
+            $log.log(logMsg);
+
+            deferred.reject(result);
           } // getSessionTicketError()
-        ); // vm.getSessionTicket(siteUrl).then()
+        ); // getSessionTicket(siteUrl).then()
 
         function getSessionTicket() {
           return WebExXmlApiFact.getSessionTicket(siteUrl);
         } // getSessionTicket()
 
-        function getSiteVersionXml() {
+        function getSiteData() {
           var siteVersionXml = WebExXmlApiFact.getSiteVersion(webExXmlApiInfoObj);
+          var siteInfoXml = WebExXmlApiFact.getSiteInfo(webExXmlApiInfoObj);
 
           return $q.all({
-            siteVersionXml: siteVersionXml
+            siteVersionXml: siteVersionXml,
+            siteInfoXml: siteInfoXml
           });
-        } // getSiteVersionXml()
+        } // getSiteData()
 
         function iframeSupportedSiteVersionCheck(getInfoResult) {
-          var funcName = "iframeSupportedSiteVersionCheck";
-          var iframeSupportedSiteVersion = false;
+          var funcName = "iframeSupportedSiteVersionCheck()";
+          var logMsg = "";
 
+          var iframeSupportedSiteVersion = false;
           var siteVersionJsonObj = obj.validateSiteVersionXmlData(getInfoResult.siteVersionXml);
 
           if ("" === siteVersionJsonObj.errId) { // got a good response
@@ -193,7 +226,8 @@
             var trainReleaseVersion = siteVersionJson.ep_trainReleaseVersion;
             var trainReleaseOrder = siteVersionJson.ep_trainReleaseOrder;
 
-            var logMsg = funcName + ": " + "\n" +
+            logMsg = funcName + ": " + "\n" +
+              "siteUrl=" + siteUrl + "\n" +
               "trainReleaseVersion=" + trainReleaseVersion + "\n" +
               "trainReleaseOrder=" + trainReleaseOrder;
             $log.log(logMsg);
@@ -203,13 +237,25 @@
             }
           }
 
-          $log.log(funcName + ": iframeSupportedSiteVersion=" + iframeSupportedSiteVersion);
-
           return iframeSupportedSiteVersion;
         } // iframeSupportedSiteVersionCheck()
 
+        function isAdminReportEnabledCheck(getInfoResult) {
+          var isAdminReportEnabled = false;
+          var siteInfoJsonObj = obj.validateSiteInfoXmlData(getInfoResult.siteInfoXml);
+
+          if ("" === siteInfoJsonObj.errId) { // got a good response
+            var siteInfoJson = siteInfoJsonObj.bodyJson;
+
+            isAdminReportEnabled = ("true" == siteInfoJson.ns1_siteInstance.ns1_commerceAndReporting.ns1_siteAdminReport) ? true : false;
+          }
+
+          return isAdminReportEnabled;
+        } // isAdminReportEnabledCheck()
+
         return deferred.promise;
       };
+
       return obj;
     }
   ]);

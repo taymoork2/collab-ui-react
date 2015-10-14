@@ -6,12 +6,13 @@
     .controller('CdrLogsCtrl', CdrLogsCtrl);
 
   /* @ngInject */
-  function CdrLogsCtrl($scope, $translate, $timeout, Config, formlyValidationMessages, CdrService) {
+  function CdrLogsCtrl($scope, $state, $translate, $timeout, Config, formlyValidationMessages, formlyConfig, CdrService, Notification) {
     var vm = this;
     var SEARCH = "SEARCH";
     var UPLOAD = "UPLOAD";
     var timeFormat = 'hh:mm:ss A';
     var dateFormat = 'YYYY-MM-DD';
+    var filetype = "text/json, application/json";
     var errorStatus = [16, 19, 393216, 0, 17, 1, 21];
 
     vm.gridData = [];
@@ -26,6 +27,11 @@
     };
 
     formlyValidationMessages.addStringMessage('required', $translate.instant('cdrLogs.required'));
+    formlyConfig.setType({
+      name: 'custom-file',
+      templateUrl: 'modules/huron/cdrLogs/formly-field-custom-file.tpl.html',
+      wrapper: ['ciscoWrapper']
+    });
 
     var validations = {
       callingNumber: function (viewValue, modelValue, scope) {
@@ -142,6 +148,9 @@
       },
       searchDisabled: function (viewValue, modelValue, scope) {
         return vm.searchAndUploadForm.$invalid || vm.searchAndUploadForm.$pristine;
+      },
+      uploadDisabled: function (viewValue, modelValue, scope) {
+        return angular.isUndefined(scope.model.uploadFile);
       }
     };
 
@@ -374,11 +383,24 @@
         }
       }, {
         key: 'uploadFile',
-        type: 'file',
+        type: 'custom-file',
         className: 'upload-display',
         templateOptions: {
           label: $translate.instant('cdrLogs.uploadDescription'),
-          disabled: true
+          filename: 'filename',
+          maxSize: 10,
+          maxSizeError: function () {
+            $scope.$apply(function () {
+              Notification.notify($translate.instant('cdrLogs.jsonSizeError'), 'error');
+            });
+          },
+          fileType: filetype,
+          fileTypeError: function () {
+            $scope.$apply(function () {
+              Notification.notify($translate.instant('cdrLogs.jsonTypeError'), 'error');
+            });
+          },
+          fileSuffix: "json"
         },
         expressionProperties: {
           'hide': expression.hideUpload
@@ -390,10 +412,19 @@
         templateOptions: {
           btnClass: 'btn btn-primary search-button',
           label: $translate.instant('cdrLogs.upload'),
-          disabled: true
+          onClick: function (options, scope) {
+            try {
+              var jsonData = JSON.parse(scope.model.uploadFile);
+              vm.gridData = [];
+              vm.gridData.push(jsonData.cdrs);
+            } catch (SyntaxError) {
+              Notification.notify($translate.instant('cdrLogs.jsonSyntaxError'), 'error');
+            }
+          }
         },
         expressionProperties: {
-          'hide': expression.hideUpload
+          'hide': expression.hideUpload,
+          'templateOptions.disabled': expression.uploadDisabled
         }
       }]
     }];
@@ -456,11 +487,15 @@
           });
           $('#cdrtable' + index).getNiceScroll().resize();
         });
-      }, 3000);
+      }, 2000);
     }
 
-    function selectCDR(selectedCDR) {
+    function selectCDR(selectedCDR, call) {
       vm.selectedCDR = selectedCDR;
+      $state.go('cdr-overview', {
+        cdrData: vm.selectedCDR,
+        call: call
+      });
     }
   }
 })();

@@ -2,7 +2,7 @@
 
 /* global describe, it, expect, login */
 
-describe('WebEx site settings', function () {
+describe('WebEx cross launch', function () {
 
   it('should allow login as admin user', function () {
     login.loginThroughGui(sitesettings.testAdmin2.username, sitesettings.testAdmin2.password);
@@ -18,7 +18,7 @@ describe('WebEx site settings', function () {
   });
 
   it('wait for webex cross-launch icon', function () {
-    sitesettings.waitSiteSettingsXLaunchIcon();
+    utils.wait(sitesettings.xLaunchSiteAdminIcon);
   });
 
   // TODO: additional tests to click on various setting page links on the site settings page

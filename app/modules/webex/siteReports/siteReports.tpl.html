@@ -9,7 +9,7 @@
          <span class="title-heading" translate="webexSiteReports.title"></span>
       </div>   
     </div>
-  </div>	
+  </div>  
 
   <div id="webexReportBreadCrumbs" class="breadcrumb-container">
     <ul class="breadcrumbs">
@@ -31,15 +31,16 @@
        ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
     
     
-     	 		 
+           
     
   </div>
 </div>
 
 <cs-container>
 
-<div ng-repeat="sec in sections">
-  <cs-card class="cs-card medium">
+<div ng-if="reportObject.viewReady">
+<cs-card-layout>
+  <cs-card class="cs-card medium" ng-repeat="sec in reportObject.reports.sections">
     <article>
       <header>
        <h4>
@@ -68,6 +69,7 @@
     </article>
 
   </cs-card>
+</cs-card-layout>
 </div>
 
 </cs-container>
@@ -91,13 +93,8 @@
 
   -->
 
-<a id="siteAdminReportsLink" ui-sref="{{uiSref}}">
-                                  test
-</a>
-
-
 <form name="siteAdminLink" action="{{trustSrc(webexAdvancedUrl)}}" method="post" target="webexSiteAdmin">
   <input id="adminEmail" type="hidden" name="adminEmail" ng-model="siteAdminLink.adminEmail" value="{{adminEmailParam}}" />
   <input id="locale" type="hidden" name="locale" ng-model="siteAdminLink.locale" value="{{localeParam}}" />    
-  <button id="hiddenButton" type="submit" onclick="this.parentElement.submit();" style="background-color:#ff00ff;cursor:pointer;width:100px;display:none;">			
+  <button id="hiddenButton" type="submit" onclick="this.parentElement.submit();" style="background-color:#ff00ff;cursor:pointer;width:100px;display:none;">     
 </form>

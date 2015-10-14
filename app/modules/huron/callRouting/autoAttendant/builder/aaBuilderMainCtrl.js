@@ -218,6 +218,8 @@
       vm.aaModel.aaRecord = undefined;
       AAUiModelService.initUiModel();
       vm.ui = AAUiModelService.getUiModel();
+      vm.ui.ceInfo = {};
+      vm.ui.ceInfo.name = aaName;
 
       vm.aaModel.dataReadyPromise.then(function (data) {
         selectAA(aaName);

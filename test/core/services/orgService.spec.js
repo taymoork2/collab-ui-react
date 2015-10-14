@@ -19,10 +19,10 @@ describe('orgService', function () {
       };
       Config = {
         getAdminServiceUrl: function () {
-          return '/foo/';
+          return '/adminService/';
         },
         getScomUrl: function () {
-          return '/foo/';
+          return '/identityService';
         }
       };
       Log = {
@@ -40,6 +40,11 @@ describe('orgService', function () {
     httpBackend = $injector.get('$httpBackend');
     httpBackend.when('GET', 'l10n/en_US.json').respond({});
   }));
+
+  afterEach(function () {
+    httpBackend.verifyNoOutstandingExpectation();
+    httpBackend.verifyNoOutstandingRequest();
+  });
 
   it('should successfully get an organization for a given orgId', function () {
     var orgId = 123;
@@ -178,7 +183,7 @@ describe('orgService', function () {
       isCiscoHelp: true,
       isCiscoSupport: false
     };
-    var reportingSiteUrl = 'http://example.com';
+    httpBackend.when('GET', Config.getScomUrl() + '/' + orgId + '?disableCache=true').respond(200, {});
     httpBackend.when('PATCH', Config.getAdminServiceUrl() + 'organizations/' + orgId + '/settings', payload).respond(200, {});
     Orgservice.setOrgSettings(orgId, payload, callback);
     httpBackend.flush();
@@ -196,11 +201,33 @@ describe('orgService', function () {
       isCiscoHelp: true,
       isCiscoSupport: false
     };
-    var reportingSiteUrl = 'http://example.com';
+    httpBackend.when('GET', Config.getScomUrl() + '/' + orgId + '?disableCache=true').respond(200, {});
     httpBackend.when('PATCH', Config.getAdminServiceUrl() + 'organizations/' + orgId + '/settings', payload).respond(500, {});
     Orgservice.setOrgSettings(orgId, payload, callback);
     httpBackend.flush();
     expect(callback.callCount).toBe(1);
     expect(callback.args[0][0].success).toBe(false);
+  });
+
+  it('should overwrite current settings with new settings', function () {
+    var orgId = Authinfo.getOrgId();
+    var callback = sinon.stub();
+    var currentSettings = {
+      'orgSettings': ['{"reportingSiteUrl": "http://example.com", "isCiscoSupport": true}']
+    };
+    var settings = {
+      'reportingSiteUrl': 'https://helpMeRhonda.ciscospark.com'
+    };
+    httpBackend.when('GET', Config.getScomUrl() + '/' + orgId + '?disableCache=true').respond(200, currentSettings);
+
+    // Assert PATCH data overwrites current reporting url with new reporting url
+    httpBackend.expect('PATCH', Config.getAdminServiceUrl() + 'organizations/' + orgId + '/settings', {
+      'reportingSiteUrl': 'https://helpMeRhonda.ciscospark.com',
+      'isCiscoSupport': true
+    }).respond(200, {});
+
+    Orgservice.setOrgSettings(orgId, settings, callback);
+
+    expect(httpBackend.flush).not.toThrow();
   });
 });

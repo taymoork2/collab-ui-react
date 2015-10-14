@@ -31,6 +31,8 @@
 
       this.reportObject = reportService.initReportsObject();
 
+      $scope.reportObject = this.reportObject;
+
       $scope.reportPageId = "pageId_underDevelopment";
       $scope.siteUrl = $stateParams.siteUrl; //this.reportObject.siteUrl;
 
@@ -45,19 +47,19 @@
       $scope.reportPageIframeUrl = $sce.trustAsResourceUrl(reportPageUrl);
 
       $scope.uiSref =
-        "webex-reports-iframe({" +
+        "webex-reports.webex-reports-iframe({" +
         "  siteUrl:" + "'" + $scope.siteUrl + "'" + "," +
         "  reportPageId:" + "'" + $scope.reportPageId + "'" + "," +
         "  reportPageIframeUrl:" + "'" + $scope.reportPageIframeUrl + "'" +
         "})";
 
-      $log.log("ReportsCtrl start");
-      var reports = reportService.getReports(this.reportObject.siteUrl);
+      // $log.log("ReportsCtrl start");
+      // var reports = reportService.getReports(this.reportObject.siteUrl);
 
-      if (!angular.isUndefined(reports)) {
-        //$log.log(angular.toJson(reports));
-        $scope.sections = reports.getSections();
-      }
+      // if (!angular.isUndefined(reports)) {
+      //   //$log.log(angular.toJson(reports));
+      //   $scope.sections = reports.getSections();
+      // }
 
       $scope.trustSrc = function (src) {
         return $sce.trustAsResourceUrl(src);
