@@ -6,12 +6,14 @@
     .controller('AABuilderMainCtrl', AABuilderMainCtrl); /* was AutoAttendantMainCtrl */
 
   /* @ngInject */
-  function AABuilderMainCtrl($scope, $translate, $stateParams, AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService, Notification) {
+  function AABuilderMainCtrl($scope, $translate, $state, $stateParams, AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService, Notification) {
     var vm = this;
+    vm.overlayTitle = $translate.instant('autoAttendant.builderTitle');
     vm.aaModel = {};
     vm.ui = {};
     vm.errorMessages = [];
 
+    vm.close = closePanel;
     vm.saveAARecords = saveAARecords;
     vm.canSaveAA = canSaveAA;
     vm.getSaveErrorMessages = getSaveErrorMessages;
@@ -22,6 +24,10 @@
     $scope.saveAARecords = saveAARecords;
 
     /////////////////////
+
+    function closePanel() {
+      $state.go('autoattendant.aalanding');
+    }
 
     function updateCeInfos(ceInfos, ceInfo) {
       for (var i = 0; i < ceInfos.length; i++) {

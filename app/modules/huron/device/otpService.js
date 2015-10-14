@@ -67,7 +67,11 @@
     }
 
     function convertExpiryTime(expiryTime) {
-      return moment.utc(expiryTime).local().format('MM/DD/YY h:mmA');
+      var timezone = jstz.determine().name();
+      if (timezone === null || angular.isUndefined(timezone)) {
+        timezone = 'UTC';
+      }
+      return (moment(expiryTime).local().tz(timezone).format('MMMM DD, YYYY h:mm A (z)'));
     }
 
     function getQrCodeUrl(activationCode) {

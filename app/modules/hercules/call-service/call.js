@@ -159,7 +159,6 @@
     vm.managementService = _.find(vm.cluster.services, {
       service_type: managementServiceType
     });
-    //console.log("selected service ", vm.selectedService);
 
     //TODO: Don't like this linking to routes...
     vm.route = serviceType2RouteName(vm.serviceType);
@@ -366,7 +365,10 @@
 
     vm.disableService = function (serviceId) {
       ServiceDescriptor.setServiceEnabled(serviceId, false, function (error) {
-        XhrNotificationService.notify(error);
+        // TODO: Strange callback result ???
+        if (error !== null) {
+          XhrNotificationService.notify(error);
+        }
       });
       vm.serviceEnabled = false;
     };

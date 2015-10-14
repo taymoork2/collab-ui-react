@@ -243,13 +243,12 @@ angular.module('Core')
 
       var getOrgInfo = function () {
         Orgservice.getOrg(function (data, status) {
-          if (status !== 200) {
+          if (status === 200) {
+            $scope.sso = data.ssoEnabled || false;
+            $scope.dirsync = data.dirsyncEnabled || false;
+          } else {
             Log.error("Query active users metrics failed. Status: " + status);
           }
-
-          $scope.test = data;
-          $scope.sso = data.ssoEnabled || false;
-          $scope.dirsync = data.dirsyncEnabled || false;
         });
       };
 
