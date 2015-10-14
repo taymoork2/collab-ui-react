@@ -5,7 +5,6 @@ describe('Controller: CdrService', function () {
   beforeEach(module('Huron'));
 
   var $httpBackend, $q, CdrService, Notification;
-
   var proxyResponse = getJSONFixture('huron/json/cdrLogs/proxyResponse.json');
 
   var model = {
@@ -43,7 +42,7 @@ describe('Controller: CdrService', function () {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  it('should be registered', function () {
+  it('should be defined', function () {
     expect(CdrService).toBeDefined();
   });
 
