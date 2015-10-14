@@ -5,49 +5,32 @@
 @import 'activeUserPopulation/_active-user-population';
 
 .partner-reports {
-  padding: 0px;
+  padding: 0;
   height: auto;
   overflow: hidden;
   .reports-header {
     @extend .row;
     @extend .page-header;
     .sync {
-      padding-left: 35px;
+      padding-left: rem-calc(35);
     }
     .report-filters {
-      padding: 25px 0 24px;
-      .filter-one {
-        // width: 160px;
-        // margin: 5px;
-      }
-      .filter-two {
-        // width: 200px;
-        // margin: 5px;
-      }
-      a {
-        // width:100%;
-        i {
-          // right: 5px;
-        }
-      }
-      .select-dropdown {
-        // width: 100%;
-      }
+      padding: rem-calc(25) 0 rem-calc(24);
     }
   }
   .report-filter-link:first-of-type {
-    padding: 3px 16px 3px 0;
+    padding: rem-calc(3) rem-calc(16) rem-calc(3) 0;
   }
   .report-filter-link:last-of-type {
     border-right: none;
   }
   .report-filter-link {
     display: inline;
-    border-right: 1px solid $gray;
-    padding: 3px 16px;
+    border-right: rem-calc(1) solid $gray;
+    padding: rem-calc(3) rem-calc(16);
     .report-link {
       font-family: $brand-font-cisco-TT-Light;
-      font-size: 14px;
+      font-size: rem-calc(14);
       padding: 0;
       margin:0;
       cursor: pointer;
@@ -60,33 +43,33 @@
     color: $gray-darkest;
   }
   .reports-container {
-    padding-left: 30px;
-    padding-right: 15px;
+    padding-left: rem-calc(30);
+    padding-right: rem-calc(15);
   }
   .report-space{
-    padding: 0 16px;
-    min-width: 650px;
+    padding: 0 rem-calc(16);
+    min-width: rem-calc(650);
   }
   .report-box {
     background-color: $brand-white;
-    min-height: 570px;
-    min-width: 650px;
-    margin-bottom: 32px;
-    padding: 32px;
+    min-height: vr-adjust(570);
+    min-width: rem-calc(650);
+    margin-bottom: rem-calc(32);
+    padding: rem-calc(32);
     .no-data-warning {
       color: #f7c100;
-      padding-right: 15px;
+      padding-right: rem-calc(15);
     }
     .no-data-center {
       position: absolute;
       z-index: 100;
       height: 0;
-      top: 235px;
+      top: rem-calc(235);
       width: 100%;
       .no-data {
         color: $gray-darkest;
         font-family: $brand-font-cisco-TT-Light;
-        font-size: 16px;
+        font-size: rem-calc(16);
         text-align: center;
         margin: 0;
       }
@@ -94,8 +77,8 @@
     .spinner-position {
       position: absolute;
       z-index: 100;
-      top: 235px;
-      left: -3px;
+      top: rem-calc(235);
+      left: rem-calc(-3);
       width: 100%;
       .icon-2x {
         font-size: 4em;
@@ -105,48 +88,48 @@
       }
     }
     .report-description {
-      margin-bottom: 15px;
+      margin-bottom: rem-calc(15);
       font-family: $brand-font-cisco-TT-Light;
-      font-size: 13px;
-      line-height: 18px;
+      font-size: rem-calc(13);
+      line-height: rem-calc(18);
       color: $gray-darkest;
       z-index: 100;
       position: relative;
     }
     .section-title {
       font-family: $brand-font-cisco-TT-Light;
-      font-size: 22px;
+      font-size: rem-calc(22);
       color: $brand-primary;
       text-align: left;
-      margin: 0 0 10px;
+      margin: 0 0 rem-calc(10);
     }
     .sub-section-title {
       font-family: $brand-font-cisco-TT-Light;
-      font-size: 18px;
+      font-size: rem-calc(18);
       color: $gray-darkest;
       text-align: left;
-      margin-top: 40px;
-      margin-bottom: 15px;
+      margin-top: rem-calc(40);
+      margin-bottom: rem-calc(15);
     }
     .title-break {
       margin-top: 0;
       width: 100%;
     }
     .timechartDiv {
-      font-size: 11px;
-      height: 380px;
+      font-size: rem-calc(11);
+      height: vr-adjust(380);
       width: 100%;
     }
     .barchart {
-      font-size: 11px;
-      height: 380px;
+      font-size: rem-calc(11);
+      height: vr-adjust(375);
       width: 75%;
       margin-left: auto;
       margin-right: auto;
       z-index: 50;
     }
     .table-bordered > thead > tr > th, .table-bordered > thead > tr > td {
-      border-bottom-width: 1px;
+      border-bottom-width: rem-calc(1);
     }
     .horizontal-center {
       text-align: center;
@@ -162,13 +145,13 @@
     }
     .graph-text {
       font-family: $brand-font-cisco-TT-Regular;
-      font-size: 15px;
+      font-size: rem-calc(15);
       color: $gray-darkest;
       text-align: left;
       float: left;
       .graph-number {
         font-family: $brand-font-cisco-TT-Regular;
-        font-size: 18px;
+        font-size: rem-calc(18);
         color: $brand-success;
         text-align: left;
       }

@@ -294,7 +294,8 @@
       } else {
         if (activeUserCustomerGraphs[customer.value] !== null && activeUserCustomerGraphs[customer.value] !== undefined && activeUserCustomerGraphs[customer.value].graphData.length > 0) {
           var customerData = activeUserCustomerGraphs[customer.value].graphData;
-          var graph = getDateBase(time, [Config.chartColors.brandSuccessLight, Config.chartColors.brandSuccessDark], customerData[customerData.length - 1].date);
+          var baseDate = moment.tz(customerData[customerData.length - 1].date, timezone).format(dateFormat);
+          var graph = getDateBase(time, [Config.chartColors.brandSuccessLight, Config.chartColors.brandSuccessDark], baseDate);
           return combineMatchingDates(graph, customerData);
         }
         return [];
@@ -380,11 +381,13 @@
           if (response !== null && response !== undefined) {
             var data = response.data.data[0].data;
             angular.forEach(data, function (index) {
-              index.orgName = customer.label;
-              index.numCalls = parseInt(index.details.numCalls);
-              index.totalActivity = parseInt(index.details.totalActivity);
-              index.userId = index.details.userId;
-              index.userName = index.details.userName;
+              if (angular.isDefined(index.details)) {
+                index.orgName = customer.label;
+                index.numCalls = parseInt(index.details.numCalls);
+                index.totalActivity = parseInt(index.details.totalActivity);
+                index.userId = index.details.userId;
+                index.userName = index.details.userName;
+              }
             });
             return data;
           }
@@ -418,7 +421,7 @@
               if (totalSum > 0 || goodSum > 0 || fairSum > 0 || poorSum > 0) {
                 var modifiedDate = moment(index.date).format(monthFormat);
                 if (time.value === 0 || time.value === 1) {
-                  modifiedDate = moment(index.date).format(dayFormat);
+                  modifiedDate = moment.tz(index.date, timezone).format(dayFormat);
                 }
 
                 graph.push({
@@ -433,7 +436,7 @@
             });
 
             if (graph.length > 0) {
-              var graphBase = getDateBase(time, [], graph[graph.length - 1].date);
+              var graphBase = getDateBase(time, [], moment.tz(graph[graph.length - 1].date, timezone).format(dateFormat));
               angular.forEach(graph, function (index) {
                 graphBase = combineQualityGraphs(graphBase, index);
               });
@@ -536,7 +539,10 @@
             data.customer = customer.label;
 
             data.direction = NEGATIVE;
-            if (data.registeredDevicesTrend >= 0) {
+            if (data.registeredDevicesTrend === "NaN") {
+              data.direction = POSITIVE;
+              data.registeredDevicesTrend = 0;
+            } else if (data.registeredDevicesTrend >= 0) {
               data.direction = POSITIVE;
               data.registeredDevicesTrend = "+" + data.registeredDevicesTrend;
             }
