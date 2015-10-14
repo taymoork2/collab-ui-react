@@ -14,19 +14,24 @@ describe('WebEx site settings', function () {
 
   it('click on conferencing option', function () {
     utils.click(sitesettings.conferencing);
-    navigation.expectCurrentUrl('/site-list');
   });
 
   it('click on configure site cog', function () {
     utils.click(sitesettings.configureSJSITE14);
-    navigation.expectCurrentUrl(sitesettings.siteSettingsUrl);
   });
 
   it('wait for WebEx settings index page to appear', function () {
     utils.wait(sitesettings.webexSiteSettingsPanel);
-    expect(sitesettings.webexSiteSettingsPanel.isPresent()).toBeTruthy();
-    expect(sitesettings.webexSiteInfoCardId.isPresent()).toBeTruthy();
-    expect(sitesettings.webexCommonSettingsCardId.isPresent()).toBeTruthy();
+  });
+
+  it('click on common settings session types link', function () {
+    utils.click(sitesettings.configureCommonSessionTypesLink);
+  });
+
+  it('wait for common settings session types page to appear', function () {
+    utils.wait(sitesettings.siteSettingPanel);
+    expect(sitesettings.webexCommonSessionTypesId.isPresent()).toBeTruthy();
+    expect(sitesettings.iFramePage.isPresent()).toBeTruthy();
   });
 
   /**  

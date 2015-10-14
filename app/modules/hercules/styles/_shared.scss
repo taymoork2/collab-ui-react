@@ -34,11 +34,11 @@
   }
 
   .small-padding-top {
-    border-top:1px solid $brand-white;
+    /*border-top:1px solid $brand-white;*/
   }
 
   .tiny-vertical-marker {
-    border-right: 1px solid #CCC;
+    border-right: $gray-lighter solid 1px;
   }
 
   .page-header {
@@ -81,10 +81,41 @@
     min-height: 100vh;
     min-height: calc(100vh - 150px);
   }
+
+  .button.alert{
+    margin-left:0;
+  }
+  .btn-primary,.button.alert,.button.secondary{
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
 }
+/**
+  Toolkit fixes
+  */
+  .black-header{
+    color:black !important;
+  }
+  .hercules.large-margin{
+    .large-4{
+      margin-right: 2rem !important;
+    }
+  }
 
-
-
+/**
+  Overwritten from Toolkit somehwere in Atlas -
+  Fix it before removing this code
+  */
+  .hercules.large-margin{
+    p{
+      margin-bottom: 2rem;
+    }
+  }
+  .hercules{
+    .alert,.button.alert,button.alert{
+      margin-left:0!important;
+    }
+  }
 /**
  Work around the extra col-md-12 class in views/main.tpl.html
  */
@@ -94,3 +125,16 @@
     left: -0.5rem;
   };
 }
+/**
+  New styling
+  */
+  .hercules{
+    .header-panel{
+      h3,h4{
+        display: table-cell;
+      }
+      h3{
+        padding-right: 2rem;
+      }
+    }
+  }

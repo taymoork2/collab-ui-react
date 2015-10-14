@@ -613,7 +613,11 @@
     "notifications": "Notifications",
     "todo": "To-do",
     "setUpYourTrial": "Set up Advanced Spark Call to start your trial.",
-    "beginTrial": "Begin Trial"
+    "beginTrial": "Begin Trial",
+    "status": "Status",
+    "spark": "Spark",
+    "sso": "Single Sign On (SSO)",
+    "dirsync": "Directory Synchronization"
   },
   "inviteModal": {
     "title": "Service Entitlement",
@@ -1574,6 +1578,7 @@
     "newDeviceActivation": "Activation code for new device:",
     "ciscoSX10": "Cisco SX10",
     "software": "Software",
+    "upgradeChannel": "Upgrade Channel",
     "serial": "Serial",
     "ipAddr": "IP Address",
     "macAddr": "MAC Address",
@@ -2163,6 +2168,12 @@
     "Unknown": "Unknown",
     "NeedsActivation": "Needs Activation",
     "issuesDetected": "Issues Detected",
+    "upgradeChannels": {
+      "Stable": "Stable",
+      "Latest": "Latest",
+      "Beta": "Beta",
+      "Preview": "Preview"
+    },
     "errorCodes": {
       "mediaProtocol": {
         "type": "Potential loss of video quality",

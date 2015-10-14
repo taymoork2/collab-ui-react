@@ -1,109 +1,104 @@
-<div class="hercules typography-airy small-margin">
-
-
+<div class="hercules typography-airy small-margin  side-view">
   <div ng-hide="callDetails.serviceNotInstalled()">
-  <h4>
-    {{callDetails.cluster.name}}
-    <small><a
-      ui-sref="{{callDetails.route}}.list.details.cluster-settings({cluster:callDetails.cluster, serviceType: callDetails.serviceType})">Settings</a>
-    </small>
-    <div class="right">
-      <a ng-show="callDetails.state.includes('*.list.details.cluster-settings')"
-         ui-sref="{{callDetails.state.current.name}}({cluster:callDetails.cluster})"><i class="icon icon-close"/></a>
-    </div>
-  </h4>
-
-  <hr/>
-
-
-  <div ui-view="details-pane">
-    <h5>
-      Alarms
-    </h5>
-
-    <p ng-if="callDetails.selectedService.alarm_count">
-      <button class="btn btn-danger" ng-click="callDetails.showAlarms()">
-        {{callDetails.selectedService.alarm_count}} reported alarms
-      </button>
-    </p>
-
-    <p ng-if="!callDetails.selectedService.alarm_count">
-      No alarms reported
-    </p>
-
-    <h5>Software Upgrades
-      <span class="right">
-        <div class="dropdown" on-toggle="dl.toggled(open)">
-          <a href class="dropdown-toggle">
-            <i class="icon icon-three-dots"/>
-          </a>
-          <ul class="dropdown-menu">
-            <li>
-              <a href>Schedule Upgrade</a>
-            </li>
-          </ul>
+    <div class="header-panel">
+      <h3>{{callDetails.cluster.name}}</h3>
+      <h4>
+        <small><a
+          ui-sref="{{callDetails.route}}.list.details.cluster-settings({cluster:callDetails.cluster, serviceType: callDetails.serviceType})">Settings</a>
+        </small>
+        <div class="right">
+          <a ng-show="callDetails.state.includes('*.list.details.cluster-settings')"
+             ui-sref="{{callDetails.state.current.name}}({cluster:callDetails.cluster})"><i class="icon icon-close"/></a>
         </div>
-      </span>
-    </h5>
+      </h4>
+    </div>
 
-    <p>
-      Current version: {{callDetails.selectedService.connectors[0].version}}
-    </p>
 
-    <div ng-if="callDetails.selectedService.software_upgrade_available">
-      <p>
-        New version: {{callDetails.selectedService.not_approved_package.version}}
+    <div ui-view="details-pane">
+      <h5>
+        Alarms
+      </h5>
+
+      <p ng-if="callDetails.selectedService.alarm_count">
+        <button class="btn btn-danger" ng-click="callDetails.showAlarms()">
+          {{callDetails.selectedService.alarm_count}} reported alarms
+        </button>
       </p>
-        <button class="button secondary" ng-click="callDetails.upgrade()">Upgrade</button>
+
+      <p ng-if="!callDetails.selectedService.alarm_count">
+        No alarms reported
+      </p>
+
+      <h5>Software Upgrades
+        <span class="right">
+          <div class="dropdown" on-toggle="dl.toggled(open)">
+            <a href class="dropdown-toggle">
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <a href>Schedule Upgrade</a>
+              </li>
+            </ul>
+          </div>
+        </span>
+      </h5>
+
+      <p>
+        Current version: {{callDetails.selectedService.connectors[0].version}}
+      </p>
+
+      <div ng-if="callDetails.selectedService.software_upgrade_available">
+        <p>
+          New version: {{callDetails.selectedService.not_approved_package.version}}
+        </p>
+          <button class="button secondary" ng-click="callDetails.upgrade()">Upgrade</button>
+      </div>
+      <p ng-if="!callDetails.selectedService.software_upgrade_available">
+        No new software available
+      </p>
+
+      <h5>
+        Depending services
+      </h5>
+
+      <div class="row">
+        <span class="small-4 column">
+          Management Connector
+        </span>
+        <span class="small-4 column end">
+          <span ng-show="callDetails.managementService.status === 'needs_attention'" class="red">
+            <i class="fa fa-circle"/>
+            <span class="hidden-xs">Needs attention</span>
+          </span>
+        </span>
+      </div>
+
+
+      <h5>
+        Running on hosts:
+      </h5>
+      <div class="row" ng-repeat="connector in callDetails.selectedService.connectors">
+        <span class="small-4 column">
+          {{connector.host.host_name}}
+        </span>
+        <span class="small-4 column end">
+          <span ng-show="connector.status === 'needs_attention'" class="red">
+            <i class="fa fa-circle"/>
+            <span class="hidden-xs">Needs attention</span>
+          </span>
+        </span>
+      </div>
     </div>
-    <p ng-if="!callDetails.selectedService.software_upgrade_available">
-      No new software available
+
+    <p ng-if="!callDetails.cluster">
+      No clusters...
     </p>
-
-    <h5>
-      Depending services
-    </h5>
-
-    <div class="row">
-      <span class="small-4 column">
-        Management Connector
-      </span>
-      <span class="small-4 column end">
-        <span ng-show="callDetails.managementService.status === 'needs_attention'" class="red">
-          <i class="fa fa-circle"/>
-          <span class="hidden-xs">Needs attention</span>
-        </span>
-      </span>
-    </div>
-
-
-    <h5>
-      Running on hosts:
-    </h5>
-    <div class="row" ng-repeat="connector in callDetails.selectedService.connectors">
-      <span class="small-4 column">
-        {{connector.host.host_name}}
-      </span>
-      <span class="small-4 column end">
-        <span ng-show="connector.status === 'needs_attention'" class="red">
-          <i class="fa fa-circle"/>
-          <span class="hidden-xs">Needs attention</span>
-        </span>
-      </span>
-    </div>
   </div>
+</div>
 
-  <p ng-if="!callDetails.cluster">
-    No clusters...
-  </p></div>
-
-  </div>
   <div ng-show="callDetails.serviceNotInstalled()">
     <div class="centered-info-pane">
       Service is not installed on this cluster
     </div>
   </div>
 </div>
-
-
-

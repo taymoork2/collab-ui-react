@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Hercules')
-  .controller('CallServicePreviewCtrl', ['$log', '$scope', '$rootScope', '$state', '$stateParams', 'Authinfo', 'Userservice', 'Notification', 'USSService', 'ClusterService', '$timeout',
-    function ($log, $scope, $rootScope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, ClusterService, $timeout) {
+  .controller('CallServicePreviewCtrl', ['$log', '$scope', '$rootScope', '$state', '$stateParams', 'Authinfo', 'Userservice', 'Notification', 'USSService', 'ClusterService', '$timeout', 'ServiceDescriptor',
+    function ($log, $scope, $rootScope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, ClusterService, $timeout, ServiceDescriptor) {
       $scope.currentUser = $stateParams.currentUser;
       var isEntitled = function (ent) {
         return $stateParams.currentUser.entitlements && $stateParams.currentUser.entitlements.indexOf(ent) > -1 ? true : false;
@@ -27,8 +27,18 @@ angular.module('Hercules')
         entitled: isEntitled('squared-fusion-ec'),
         orgEntitled: Authinfo.isFusionEC(),
         huronEntitled: isEntitled('ciscouc'),
+        enabledInFMS: false,
         enterpriseDn: enterpriseDn ? enterpriseDn.value : null
       };
+
+      // Only show callServiceConnect is it's enabled
+      if ($scope.callServiceConnect.orgEntitled) {
+        ServiceDescriptor.isServiceEnabled($scope.callServiceConnect.id, function (error, enabled) {
+          if (!error) {
+            $scope.callServiceConnect.enabledInFMS = enabled;
+          }
+        });
+      }
 
       $scope.$watch('callServiceAware.entitled', function (newVal, oldVal) {
         if (newVal != oldVal) {
@@ -50,9 +60,17 @@ angular.module('Hercules')
           $scope.callServiceAware.status = _.find(activationStatus.userStatuses, function (status) {
             return $scope.callServiceAware.id === status.serviceId;
           });
+          $scope.callServiceConnect.status = _.find(activationStatus.userStatuses, function (status) {
+            return $scope.callServiceConnect.id === status.serviceId;
+          });
           if ($scope.callServiceAware.status && $scope.callServiceAware.status.connectorId) {
             ClusterService.getConnector($scope.callServiceAware.status.connectorId).then(function (connector) {
               $scope.callServiceAware.homedConnector = connector;
+            });
+          }
+          if ($scope.callServiceConnect.status && $scope.callServiceConnect.status.connectorId) {
+            ClusterService.getConnector($scope.callServiceConnect.status.connectorId).then(function (connector) {
+              $scope.callServiceConnect.homedConnector = connector;
             });
           }
         });
@@ -69,7 +87,7 @@ angular.module('Hercules')
           entitlementName: $scope.callServiceAware.name,
           entitlementState: $scope.callServiceAware.entitled === true ? 'ACTIVE' : 'INACTIVE'
         }];
-        /*if ($scope.callServiceConnect.orgEntitled) {
+        /*if ($scope.callServiceConnect.orgEntitled && $scope.callServiceConnect.enabledInFMS) {
          // Bring back when the entitlement support in Atlas is in place
          entitlements.push({
          entitlementName: $scope.callServiceConnect.name,
