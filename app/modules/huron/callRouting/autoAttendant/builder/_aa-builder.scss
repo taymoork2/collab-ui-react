@@ -12,10 +12,10 @@
 }
 
 .aa-builder-frame {
-  border-top: 0.2rem solid $gray-light;
+  border-top: 0.1rem solid $brand-default;
   border-bottom: 0.1rem solid $gray-lightest;
   border-left: 0.1rem solid $gray-lightest;
-  margin-top: 1rem;
+  margin-top: 0rem;
   margin-bottom: 2rem;
   margin-left: 2rem;
   margin-right: 2rem;
@@ -25,7 +25,7 @@
   background-color: $gray-lightest;
   overflow-y: auto;
   overflow-x: hidden;
-  height: calc(100vh - 257px);
+  height: calc(100vh - 241px);
 }
 
 .aa-flex-row {
@@ -41,8 +41,11 @@
   align-items: center;
 }
 
-.aa-flex-row.schedule {
-  padding: 5px;
+.aa-flex-item.schedule {
+  padding-top: .25rem;
+  padding-bottom: .25rem;
+  padding-right: 2rem;
+  padding-left: 2rem;
 }
 
 .aa-flex-row-item {
@@ -120,9 +123,10 @@
 
 .aa-schedule-icon {
   @extend .icon;
-  @extend .icon-Clock;
+  @extend .icon-clock;
   @extend .icon-2x;
   color: $brand-default;
+  padding: .25rem;
 }
 
 .aa-help-icon {
@@ -142,7 +146,7 @@
   flex: 1 1 auto;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  height: calc(100vh - 257px);
   width: 100vw;
   background-color: $brand-white;
 }
@@ -189,8 +193,8 @@
   @extend .panel;
   display: inline-block;
   margin: 0px;
-  padding-left: 15px;
-  padding-right: 15px;
+  padding-left: 2rem;
+  padding-right: 2rem;
   box-shadow: none;
   .text-info {
     color: $brand-info;
@@ -198,17 +202,25 @@
   .aa-panel-body {
     @extend .panel-body;
     margin: 0px;
-    padding: 25px;
+    padding: 1.5rem;
     background-color: $brand-white;
     border: 1px solid $brand-default;
+    border-radius: .25rem;
     &:hover {
       border-color: $brand-primary;
     }
   }
+  .aa-panel-body-endcall {
+    @extend .aa-panel-body;
+    padding-top: .25rem;
+    padding-bottom: .25rem;
+    .text-info {
+      padding-left: .5rem;
+      padding-top: .25rem;
+    }
+  }
   .aa-panel-round {
     @extend .panel-body;
-    border: 2px solid $brand-default;
-    border-radius: 50%;
     margin: 0px;
     padding: 0px;
     text-align: center;
@@ -221,9 +233,10 @@
 
 .aa-add-step-icon {
   @extend .icon;
-  @extend .icon-plus;
+  @extend .icon-plus-circle;
   font-size: 2rem;
   top: 0.0625rem;
+  padding: .25rem;
   color: $brand-default;
   &:hover {
     cursor: pointer;
