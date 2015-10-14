@@ -147,7 +147,7 @@ angular.module('WebExReports').service('reportService', [
       this.reportPageIframeUrl = theUrl;
       this.modifiedUrl = this.reportPageIframeUrl;
       this.toUIsrefString = function () {
-        return "webex-reports-iframe({" +
+        return "webex-reports.webex-reports-iframe({" +
           "  siteUrl:" + "'" + this.siteUrl + "'" + "," +
           "  reportPageId:" + "'" + this.reportPageId + "'" + "," +
           "  reportPageIframeUrl:" + "'" + this.reportPageIframeUrl + "'" +

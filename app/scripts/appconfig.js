@@ -630,8 +630,7 @@ angular
             displayName: 'Reports Page1'
           }
         })
-        .state('webex-reports-iframe', {
-          url: '/iwebexreports',
+        .state('webex-reports.webex-reports-iframe', {
           templateUrl: 'modules/webex/siteReportsIframe/siteReportIframe.tpl.html',
           controller: 'ReportsIframeCtrl',
           controllerAs: 'reportsIframe',
@@ -1322,6 +1321,20 @@ angular
           controller: 'FeaturesCtrl',
           controllerAs: 'featuresCtrl',
           templateUrl: 'modules/huron/features/features.tpl.html',
+        })
+        .state('huronnewfeature', {
+          url: '/newfeature',
+          parent: 'hurondetails',
+          controller: 'NewFeatureCtrl',
+          controllerAs: 'newFeatureCtrl',
+          templateUrl: 'modules/huron/features/newFeature/newFeature.tpl.html'
+        })
+        .state('huronHuntGroup', {
+          url: '/huronHuntGroup',
+          parent: 'hurondetails',
+          templateUrl: 'modules/huron/features/huntGroup/huntGroupSetupAssistant.tpl.html',
+          controller: 'HuntGroupSetupAssistantCtrl',
+          controllerAs: 'huntGroupSA'
         });
     }
   ]);

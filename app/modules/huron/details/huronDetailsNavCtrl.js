@@ -12,9 +12,9 @@
     vm.back = false;
 
     vm.tabs = [{
-      title: 'huronDetails.featuresTitle',
-      state: 'huronfeatures'
-    }, {
+      //   title: 'huronDetails.featuresTitle',
+      //   state: 'huronfeatures'
+      // }, {
       title: 'huronDetails.settingsTitle',
       state: 'huronsettings'
     }];
