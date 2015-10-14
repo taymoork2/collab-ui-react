@@ -14,6 +14,7 @@ angular.module('Squared').service('CsdmConverter',
       this.product = getProduct(obj);
       this.hasIssues = hasIssues(obj);
       this.software = getSoftware(obj);
+      this.upgradeChannel = getUpgradeChannel(obj);
       this.isOnline = getIsOnline(obj);
       this.displayName = obj.displayName;
       this.cssColorClass = getCssColorClass(obj);
@@ -74,6 +75,17 @@ angular.module('Squared').service('CsdmConverter',
       return _.chain(getEvents(obj))
         .where({
           type: 'software',
+          level: 'INFO'
+        })
+        .pluck('description')
+        .first()
+        .value();
+    }
+
+    function getUpgradeChannel(obj) {
+      return _.chain(getEvents(obj))
+        .where({
+          type: 'upgradeChannel',
           level: 'INFO'
         })
         .pluck('description')
@@ -144,7 +156,7 @@ angular.module('Squared').service('CsdmConverter',
 
     function getNotOkEvents(obj) {
       return _.reject(getEvents(obj), function (e) {
-        return e.level == 'INFO' && (e.type == 'ip' || e.type == 'software');
+        return e.level == 'INFO' && (e.type == 'ip' || e.type == 'software' || e.type == 'upgradeChannel');
       });
     }
 
