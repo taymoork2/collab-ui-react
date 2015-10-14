@@ -2266,6 +2266,24 @@
     "modalDescription": "Hunt groups (or line hunting) allow you to customize the distribution of incoming phone calls to users' phone lines in a specific order."
   },
 
+  "huronFeatureDetails": {
+    "members": " Members",
+    "numbers": " Numbers",
+    "hg": "HG",
+    "aa": "AA",
+    "cp": "CP",
+    "editAction": "Edit",
+    "deleteAction": "Delete"
+  },
+
+  "huntGroupDetails": {
+    "failedToLoadHuntGroups": "Unable to load hunt groups information",
+    "deleteHuntGroup": "Delete Hunt Group",
+    "deleteHuntGroupConfText": "Are you sure you want to delete the {{ huntGroupName }} hunt group?",
+    "deleteHuntGroupSuccessText": "{{ huntGroupName }} hunt group has been deleted successfully",
+    "messageError": "Message {{ message }}"
+  },
+
   "linesPage": {
     "manageLines": "Numbers",
     "allLines": "All",

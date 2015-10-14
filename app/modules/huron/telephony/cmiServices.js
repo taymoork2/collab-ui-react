@@ -101,10 +101,11 @@
     });
   })
 
-  .factory('FeatureHuntGroupServiceV2', function ($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/features/huntgroups', {}, {
-      customerId: '@customerId'
-    });
+  .factory('HuntGroupServiceV2', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/features/huntgroups/:huntGroupId', {
+      customerId: '@customerId',
+      huntGroupId: '@huntGroupId'
+    }, {});
   })
 
   .factory('UserServiceVoice', function ($resource, HuronConfig) {
