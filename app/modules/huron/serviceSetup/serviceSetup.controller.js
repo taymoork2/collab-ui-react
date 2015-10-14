@@ -338,7 +338,7 @@
               btnClass: 'btn-sm btn-link',
               label: $translate.instant('common.delete'),
               onClick: function (options, scope) {
-                vm.deleteInternalNumberRange(scope.model);  
+                vm.deleteInternalNumberRange(scope.model);
               }
             },
             controller: /* @ngInject */ function ($scope) {
@@ -348,15 +348,15 @@
                 if (displayNumberRanges.length === 1) {
                   $scope.to.btnClass = 'btn-sm btn-link hide-delete';
                 } else if (displayNumberRanges.length > 1 && !vm.firstTimeSetup && angular.isUndefined($scope.model.uuid)) {
-                     $scope.to.btnClass = 'btn-sm btn-link ';
+                  $scope.to.btnClass = 'btn-sm btn-link ';
                 } else if (displayNumberRanges.length > 1 && vm.firstTimeSetup && angular.isUndefined($scope.model.uuid)) {
-                    $scope.to.btnClass = 'btn-sm btn-link ';
-                } else if (vm.model.numberRanges.length ===  1 && displayNumberRanges.length !== 1) {
-                    if (angular.isDefined(vm.model.numberRanges[0].uuid)) {
-                      $scope.to.btnClass = 'btn-sm btn-link hide-delete';
-                    }  
-                 
-                 } 
+                  $scope.to.btnClass = 'btn-sm btn-link ';
+                } else if (vm.model.numberRanges.length === 1 && displayNumberRanges.length !== 1) {
+                  if (angular.isDefined(vm.model.numberRanges[0].uuid)) {
+                    $scope.to.btnClass = 'btn-sm btn-link hide-delete';
+                  }
+
+                }
               });
             }
           }]
