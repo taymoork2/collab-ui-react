@@ -151,6 +151,10 @@
       service_type: vm.serviceType
     });
 
+    vm.activeActiveApplicable = (vm.serviceType == 'c_cal' || vm.serviceType == 'c_ucmc');
+    vm.activeActivePossible = vm.cluster.hosts.length > 1;
+    vm.activeActiveEnabled = vm.activeActiveApplicable && isActiveActiveEnabled(vm.cluster, vm.serviceType);
+
     var managementServiceType = "c_mgmt";
     vm.managementService = _.find(vm.cluster.services, {
       service_type: managementServiceType
@@ -162,6 +166,29 @@
 
     vm.serviceNotInstalled = function () {
       return ServiceStatusSummaryService.serviceNotInstalled(vm.serviceType, vm.cluster);
+    };
+
+    function isActiveActiveEnabled(cluster, serviceType) {
+      return cluster.properties && cluster.properties[activeActivePropertyName(serviceType)] == 'activeActive';
+    }
+
+    function activeActivePropertyName(serviceType) {
+      switch (serviceType) {
+      case 'c_cal':
+        return 'fms.calendarAssignmentType';
+      case 'c_ucmc':
+        return 'fms.callManagerAssignmentType';
+      default:
+        return '';
+      }
+    }
+
+    vm.toggleActiveActive = function () {
+      var toggledState = !vm.activeActiveEnabled;
+      ClusterService.setProperty(vm.cluster.id, activeActivePropertyName(vm.serviceType), toggledState ? 'activeActive' : 'standard')
+        .then(function () {
+          vm.activeActiveEnabled = toggledState;
+        });
     };
 
     vm.upgrade = function () {
