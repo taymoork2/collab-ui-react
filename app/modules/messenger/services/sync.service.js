@@ -46,19 +46,10 @@
     };
 
     var msgrService = {
-      protocol: 'http://',
+      protocol: 'https://',
       host: 'msgr-admin-bts.webexconnect.com',
-      //host: '127.0.0.1',
-      //port: 8080,
-      port: 80,
-
-      // TODO: cleanup when production is up
+      port: 443,
       api: '/admin-service/messenger/admin/api/v1/orgs/' + Authinfo.getOrgId() + '/cisync/'
-        //api: '/admin-service/messenger/admin/api/v1/orgs/2d23d582-5830-4bab-9d98-3e428d790e58/cisync'
-        //api: '/admin-service/messenger/admin/api/v1/orgs/e805fc73-ad2b-4cef-9ea1-70f070db96a2/cisync/'
-        //api: '/admin-service/messenger/admin/api/v1/orgs/47a4ef6b-f6d0-4c5d-8ffd-9d6a8c94738c/cisync/'
-        //api: '/admin-service/messenger/admin/api/v1/orgs/7c63761c-4d85-4daf-b241-aa63c192ec64/cisync/'
-        //api: '/admin-service/messenger/admin/api/v1/orgs/2d446615-164b-4d81-b1a2-7bddb64279bb/cisync/'
     };
 
     var serviceUrl = msgrService.protocol + msgrService.host + ':' + msgrService.port + msgrService.api;
@@ -67,7 +58,6 @@
       getSyncStatus: getSyncStatus,
       isDirSync: isDirSync,
       isDirSyncEnabled: isDirSyncEnabled,
-      isDirSyncNoFetch: isDirSyncNoFetch,
       isMessengerSync: isMessengerSync,
       isMessengerSyncEnabled: isMessengerSyncEnabled,
       isSyncEnabled: isSyncEnabled,
@@ -97,15 +87,7 @@
           shouldFetch = false;
           defer.resolve(setSyncStatus(response.data));
         }, function (response) {
-          var status = parseHttpStatus(response.status);
-          var error = 'GET: ' + status;
-
-          // Filter odd status' like -1, 0, etc.
-          // If service returned an error, just use that
-          if (response.status >= 100) {
-            error = response.data.error.message;
-          }
-
+          var error = parseHttpErrorResponse('GET', response);
           Log.error('SyncService::fetchSyncStatus(): ' + error);
 
           defer.reject({
@@ -115,6 +97,24 @@
         });
 
       return defer.promise;
+    }
+
+    function parseHttpErrorResponse(method, response) {
+      var status = parseHttpStatus(response.status);
+      var error = method + ': ' + status;
+
+      // Filter odd status' like -1, 0, etc.
+      // If service returned an error, just use that
+      if (response.status >= 100) {
+        // Get message, based on differing formats for Tomcat/Spring and/or Msgr Admin Service
+        if (response.data.message) {
+          error = response.data.error;
+        } else if (response.data.error.message) {
+          error = response.data.error.message;
+        }
+      }
+
+      return error;
     }
 
     function parseHttpStatus(status) {
@@ -212,12 +212,6 @@
       return defer.promise;
     }
 
-    // Optimized to prevent stack overflow,
-    // as the Ci Sync Template calls this many times as part of GUI
-    function isDirSyncNoFetch() {
-      return (syncModes.dirsync.on === syncStatus.syncMode || syncModes.dirsync.off === syncStatus.syncMode);
-    }
-
     function isMessengerSync() {
       var defer = $q.defer();
 
@@ -311,15 +305,7 @@
       $http.patch(serviceUrl, params).then(function (response) {
         defer.resolve('PATCH Status ' + response.status);
       }, function (response) {
-        var status = parseHttpStatus(response.status);
-        var error = 'PATCH: ' + status;
-
-        // Filter odd status' like -1, 0, etc.
-        // If service returned an error, just use that
-        if (response.status >= 100) {
-          error = response.data.error.message;
-        }
-
+        var error = parseHttpErrorResponse('PATCH', response);
         Log.error('SyncService::patchSync(): ' + error);
 
         // Reset to previous settings

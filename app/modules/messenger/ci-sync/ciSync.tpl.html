@@ -1,7 +1,7 @@
 <!-- BEGIN CI Sync -->
 <div ng-if="!sync.authorized()">
   <span class="icon icon-warning"></span>
-  <span translate="messengerCiSync.errorUnauthoredToView"></span>
+  <span translate="messengerCiSync.errorUnauthorizedToView"></span>
 </div>
 
 <div class="container-ci-sync" ng-if="sync.authorized()">
@@ -29,7 +29,7 @@
     <div ng-if="sync.dataStates.loaded === sync.dataStatus">
       <div class="right">
         <span class="icon icon-refresh" ng-click="sync.refreshStatus()"></span><span class="right-5" ng-click="sync.refreshStatus()">{{sync.refresh}}</span>
-        <span ng-if="!sync.isDirSyncNoFetch()"> | <a href="{{sync.orgAdminUrl}}" target="_blank" translate="messengerCiSync.orgAdminLinkText"></a></span>
+        | <a href="{{sync.orgAdminUrl}}" target="_blank" translate="messengerCiSync.orgAdminLinkText"></a>
       </div>
 
       <div class="col-md-4 sync-stats">
