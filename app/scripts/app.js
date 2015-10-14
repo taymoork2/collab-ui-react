@@ -41,7 +41,7 @@ angular.module('Core', [
 
 angular.module('Squared', ['Core']);
 
-angular.module('Huron', ['Core', 'uc.moh', 'uc.device', 'uc.callrouting', 'uc.didadd', 'uc.overview', 'uc.callrouter', 'uc.hurondetails', 'uc.cdrlogsupport']);
+angular.module('Huron', ['Core', 'uc.moh', 'uc.device', 'uc.callrouting', 'uc.didadd', 'uc.overview', 'uc.callrouter', 'uc.hurondetails', 'uc.cdrlogsupport', 'uc.huntGroup']);
 
 angular.module('Hercules', ['Core']);
 
