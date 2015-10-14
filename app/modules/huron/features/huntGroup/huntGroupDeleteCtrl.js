@@ -8,6 +8,7 @@
     .module('uc.hurondetails')
     .controller('HuntGroupDeleteCtrl', HuntGroupDeleteCtrl);
 
+  /* @ngInject */
   function HuntGroupDeleteCtrl($rootScope, $scope, $stateParams, $timeout, $translate, Authinfo, HuntGroupService, Notification, Log) {
     var vm = this;
     vm.deleteHuntGroupId = $stateParams.deleteHuntGroupId;

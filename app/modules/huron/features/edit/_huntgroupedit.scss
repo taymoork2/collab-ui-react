@@ -1,0 +1,118 @@
+.hg-edit {
+  position: relative;
+  background: $color-white;
+  @include vr-spacing(pb, 10);
+  > .row {
+    @include vr-spacing(pt, 2);
+  }
+  .cs-card.small {
+    position: relative;
+    width: 43%;
+    @include vr-spacing(pl, 0);
+    @include vr-spacing(pr, 0);
+    i {
+      font-size: 1.5rem;
+    }
+  }
+  form {
+    @include vr-spacing(m, 1.5);
+  }
+  label {
+    font-size: 1rem;
+  }
+  .hg-name .formly-input-wrapper {
+    width: 16rem;
+  }
+  .hg-num .formly-input-wrapper {
+    width: 13rem;
+  }
+  .hg-time .formly-input-wrapper {
+    width: 8.5rem;
+  }
+  .hg-num .formly-input-wrapper, 
+  .hg-time .formly-input-wrapper {
+    @include vr-spacing(mb, 1);
+  }
+}
+
+.hg-wrapper {
+  @include vr-spacing(m, 1.5);
+  .form-input {
+    width: 40%;
+  }
+  p {
+    @include vr-spacing(pb, 0.5);
+  }
+}
+
+.hgmethods {
+  display: flex;
+  @include vr-spacing(ml, 0);
+}
+
+.hgmethod {
+  display: flex;
+  flex: 0 0 22%;
+  @include vr-spacing(pr, 0.5);
+  &.current {
+    > a {
+      background: $gray-lightest;
+    }
+  }
+  > a {
+    flex: 1;
+    border: 1px solid $gray-light;
+     @include box-shadow(0px 1px 2px 1px rgba(52, 53, 55, 0.18));
+    border-radius: $global-radius;
+    text-align: center;
+    @include vr-spacing(p, 1);
+    cursor: pointer;
+    > div {
+      color: $brand-info;
+    }
+    > i {
+      color: $color-black;
+      font-size: 2rem;
+    }
+    &:hover, &:focus {
+      background: $gray-lightest;
+       @include box-shadow(0px 1px 2px 2px rgba(52, 53, 55, 0.18));
+    }
+  }
+}
+
+.hgmembers {
+  @include vr-spacing(pt, 2);
+  .form-input {
+    width: 80%;
+    @include vr-spacing(mb, 0.5);
+  }
+  section {
+    position: absolute;
+    z-index: 1000;
+    background-color: $brand-white;
+    @include box-shadow(0px 1px 2px 2px rgba(52, 53, 55, 0.18));
+  }
+}
+
+.hgmember {
+  width: 43%;
+  @include vr-spacing(mb, 0.5);
+  .hg-edit & .cs-card.small {
+    width: 100%;
+  }
+}
+
+.dragging-source {
+  display: none;
+}
+
+.drop-placeholder header {
+  background: $brand-white!important;
+}
+
+.dragover {
+  .cs-card.header-background header {
+    background: $gray;
+  }
+}

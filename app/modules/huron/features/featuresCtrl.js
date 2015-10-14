@@ -162,14 +162,16 @@
     };
 
     vm.editHuronFeature = function (feature) {
-      //if (feature.filterValue === 'AA') {
+      // if (feature.filterValue === 'AA') {
       //  //Call  AutoAttendant Edit Controller
-      //} else if (feature.filterValue === 'HG') {
-      //  //Call Edit HuntGroup Controller
-      //  //HuntGroup Edit Page will be done in US213495
-      //} else if (feature.filterValue === 'CP') {
+      // } else 
+      if (feature.filterValue === 'HG') {
+        HuntGroupService.editFeature(feature);
+        $state.go('huntgroupedit');
+      }
+      // else if (feature.filterValue === 'CP') {
       //  //Call CallPark Edit Controller
-      //}
+      // }
     };
 
     vm.deleteHuronFeature = function (feature) {
