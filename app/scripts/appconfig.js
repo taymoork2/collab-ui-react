@@ -1335,16 +1335,30 @@ angular
         .state('huronfeatures', {
           url: '/features',
           parent: 'hurondetails',
-          controller: 'FeaturesCtrl',
-          controllerAs: 'featuresCtrl',
           templateUrl: 'modules/huron/features/features.tpl.html',
+          controller: 'HuronFeaturesCtrl',
+          controllerAs: 'huronFeaturesCtrl'
         })
         .state('huronnewfeature', {
           url: '/newfeature',
           parent: 'hurondetails',
           controller: 'NewFeatureCtrl',
           controllerAs: 'newFeatureCtrl',
-          templateUrl: 'modules/huron/features/newFeature/newFeature.tpl.html'
+          templateUrl: 'modules/huron/features/newFeature/newFeature.tpl.html',
+        })
+        .state('huronfeatures.deleteHuntGroup', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'HuntGroupDeleteCtrl',
+              controllerAs: 'huntGroupDeleteCtrl',
+              templateUrl: 'modules/huron/features/huntGroup/huntGroupDeleteModal.tpl.html'
+            }
+          },
+          params: {
+            deleteHuntGroupName: null,
+            deleteHuntGroupId: null
+          }
         })
         .state('huronHuntGroup', {
           url: '/huronHuntGroup',

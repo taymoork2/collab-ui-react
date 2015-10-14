@@ -952,6 +952,13 @@ angular.module('Core')
                 userResult.message = userResult.email + ' ' + data.userResponse[i].message;
                 userResult.alertType = 'danger';
                 isComplete = false;
+              } else if (userStatus === 403 && data.userResponse[i].message === '400081') {
+                userResult.message = $translate.instant('usersPage.userExistsError', {
+                  email: userResult.email,
+                  status: userStatus
+                });
+                userResult.alertType = 'danger';
+                isComplete = false;
               } else {
                 userResult.message = $translate.instant('usersPage.onboardError', {
                   email: userResult.email,

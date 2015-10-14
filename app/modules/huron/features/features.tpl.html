@@ -1,20 +1,25 @@
-<div>
+<div ng-switch on="huronFeaturesCtrl.pageState" class = "features features-content">
 
-  <div ng-if="featuresCtrl.featuresAvailable()">
-    <b> Under construction:</b>
-    This page will list the features as cards when it is available.
+  <!--Show Create New Feature Page if no features exists-->
+  <div ng-switch-when="NewFeature" class="no-features-available">
+    <div class="h4 nothing-to-see" translate="huronDetails.featuresNotYetConfiguredPage.nothingToSee"></div>
+    <div class="h1 lets-customize" translate="huronDetails.featuresNotYetConfiguredPage.letsCustomize"></div>
+    <div><button class="button info large" ng-click="huronFeaturesCtrl.openModal()" translate="huronDetails.newFeatureButtonText"></button></div>
   </div>
 
-  <div ng-if="!featuresCtrl.featuresAvailable()" class="no-features-available">
-    <div class="h4 nothing-to-see"
-         translate="huronDetails.featuresNotYetConfiguredPage.nothingToSee"></div>
+  <!--Show Spinner Icon until controller receives data from back-end-->
+  <div ng-switch-when="Loading" class="spinner-icon"><i class='icon icon-spinner icon-2x'></i></div>
 
-    <div class="h1 lets-customize"
-         translate="huronDetails.featuresNotYetConfiguredPage.letsCustomize"></div>
-
-    <div><button class="button info large" ng-click="featuresCtrl.newFeature()"
-                 translate="huronDetails.newFeatureButtonText"></button>
+ <!-- Show Cards whenever data is received by controller-->
+  <div ng-switch-when="showFeatures">
+    <div class="feature-header">
+      <span class="open-panel">
+        <cs-searchfilter filters="huronFeaturesCtrl.filters" set-filter-fn="huronFeaturesCtrl.setFilter(filter.filterValue)" search-item-fn="huronFeaturesCtrl.searchData(searchStr)" placeholder-text="{{huronFeaturesCtrl.placeholder.name}}" hide-count="true">
+        </cs-searchfilter>
+      </span>
+      <span><button type="button" class="button info new-feature-button" ng-click="huronFeaturesCtrl.openModal()">New</button></span>
     </div>
+    <feature-cards></feature-cards>
   </div>
-
 </div>
+

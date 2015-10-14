@@ -84,7 +84,8 @@
     "noExtensionInPool": "No Extension in pool.",
     "noExternalNumberAvail": "No DID available for mapping.",
     "noExtMappingAvail": "No DID mapping available.",
-    "tooManyResultsError": "Search returned too many results.  Please narrow your search criteria."
+    "tooManyResultsError": "Search returned too many results.  Please narrow your search criteria.",
+    "userExistsError": "User {{email}} already exists.  Please use the Convert option on the Overview page to bring the user into your organization.  If this user is not available for conversion, please submit a problem report."
   },
   "groupsPage": {
     "manageGroups": "Groups",
@@ -2263,6 +2264,24 @@
     "code": "HG",
     "title": "Hunt Group",
     "modalDescription": "Hunt groups (or line hunting) allow you to customize the distribution of incoming phone calls to users' phone lines in a specific order."
+  },
+
+  "huronFeatureDetails": {
+    "members": " Members",
+    "numbers": " Numbers",
+    "hg": "HG",
+    "aa": "AA",
+    "cp": "CP",
+    "editAction": "Edit",
+    "deleteAction": "Delete"
+  },
+
+  "huntGroupDetails": {
+    "failedToLoadHuntGroups": "Unable to load hunt groups information",
+    "deleteHuntGroup": "Delete Hunt Group",
+    "deleteHuntGroupConfText": "Are you sure you want to delete the {{ huntGroupName }} hunt group?",
+    "deleteHuntGroupSuccessText": "{{ huntGroupName }} hunt group has been deleted successfully",
+    "messageError": "Message {{ message }}"
   },
 
   "linesPage": {

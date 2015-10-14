@@ -116,6 +116,7 @@
     "TIMEOUT": true,
     "inviteusers": true,
     "phoneUtils": true,
-    "fail": true
+    "fail": true,
+    "jstz": true
   }
 }
