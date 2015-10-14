@@ -23,13 +23,13 @@
     <div ng-if="sync.dataStates.error === sync.dataStatus">
       <span class="icon icon-warning"></span>
       <span>{{sync.errorMsg}}</span>
-      <p class="down-10"><span class="icon icon-refresh" ng-click="sync.refreshStatus()" tooltip="{{sync.refresh}}"><span class="right-5" translate="messengerCiSync.refresh"></span></p>
+      <p class="down-10"><span class="icon icon-refresh" ng-click="sync.refreshStatus()"><span class="right-5" ng-click="sync.refreshStatus()">{{sync.refresh}}</span></p>
     </div>
 
     <div ng-if="sync.dataStates.loaded === sync.dataStatus">
-      <div style="float: right;">
-        <span class="icon icon-refresh" ng-click="sync.refreshStatus()" tooltip="{{sync.refresh}}"></span><span class="right-5" translate="messengerCiSync.refresh"></span> |
-        <a ng-if="!sync.isDirSyncNoFetch()" href="{{sync.orgAdminUrl}}" target="_blank" translate="messengerCiSync.orgAdminLinkText"></a>
+      <div class="right">
+        <span class="icon icon-refresh" ng-click="sync.refreshStatus()"></span><span class="right-5" ng-click="sync.refreshStatus()">{{sync.refresh}}</span>
+        <span ng-if="!sync.isDirSyncNoFetch()"> | <a href="{{sync.orgAdminUrl}}" target="_blank" translate="messengerCiSync.orgAdminLinkText"></a></span>
       </div>
 
       <div class="col-md-4 sync-stats">
