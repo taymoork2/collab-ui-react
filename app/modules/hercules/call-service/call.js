@@ -159,7 +159,6 @@
     vm.managementService = _.find(vm.cluster.services, {
       service_type: managementServiceType
     });
-    //console.log("selected service ", vm.selectedService);
 
     //TODO: Don't like this linking to routes...
     vm.route = serviceType2RouteName(vm.serviceType);
