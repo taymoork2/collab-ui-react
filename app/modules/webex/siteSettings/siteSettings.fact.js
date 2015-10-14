@@ -142,7 +142,7 @@
               }, // emailAllHostsBtnObj
 
               siteInfoCardObj: {
-                id: "siteInfo",
+                id: "SiteInfo",
                 label: null,
 
                 licensesTotal: {
@@ -605,7 +605,7 @@
 
             _this.webExSiteSettingsObj.siteInfoCardObj.label = _this.webExSiteSettingsObj.siteUrl;
 
-            getCategoryObj("SiteInfo").pageObjs.forEach(
+            getCategoryObj(_this.webExSiteSettingsObj.siteInfoCardObj.id).pageObjs.forEach(
               function checkPageObj(pageObj) {
                 if (pageObj.pageId == "site_info") {
                   _this.webExSiteSettingsObj.siteInfoCardObj.siteInfoPageObj = pageObj;
