@@ -4,6 +4,7 @@
   angular
     .module('uc.hurondetails')
     .controller('HuronDetailsNavCtrl', HuronDetailsNavCtrl);
+  /* jshint validthis: true */
 
   /* @ngInject */
   function HuronDetailsNavCtrl($scope, $state, Config) {
@@ -12,14 +13,15 @@
     vm.back = false;
 
     vm.tabs = [
-    //  {
-    //  title: 'huronDetails.featuresTitle',
-    //  state: 'huronfeatures'
-    //}, 
+      //  {
+      //  title: 'huronDetails.featuresTitle',
+      //  state: 'huronfeatures'
+      //},
       {
-      title: 'huronDetails.settingsTitle',
-      state: 'huronsettings'
-    }];
+        title: 'huronDetails.settingsTitle',
+        state: 'huronsettings'
+      }
+    ];
 
     init();
 
