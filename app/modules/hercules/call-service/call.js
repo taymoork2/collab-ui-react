@@ -365,7 +365,10 @@
 
     vm.disableService = function (serviceId) {
       ServiceDescriptor.setServiceEnabled(serviceId, false, function (error) {
-        XhrNotificationService.notify(error);
+        // TODO: Strange callback result ???
+        if (error !== null) {
+          XhrNotificationService.notify(error);
+        }
       });
       vm.serviceEnabled = false;
     };
