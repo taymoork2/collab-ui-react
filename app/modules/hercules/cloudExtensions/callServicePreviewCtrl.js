@@ -60,9 +60,17 @@ angular.module('Hercules')
           $scope.callServiceAware.status = _.find(activationStatus.userStatuses, function (status) {
             return $scope.callServiceAware.id === status.serviceId;
           });
+          $scope.callServiceConnect.status = _.find(activationStatus.userStatuses, function (status) {
+            return $scope.callServiceConnect.id === status.serviceId;
+          });
           if ($scope.callServiceAware.status && $scope.callServiceAware.status.connectorId) {
             ClusterService.getConnector($scope.callServiceAware.status.connectorId).then(function (connector) {
               $scope.callServiceAware.homedConnector = connector;
+            });
+          }
+          if ($scope.callServiceConnect.status && $scope.callServiceConnect.status.connectorId) {
+            ClusterService.getConnector($scope.callServiceConnect.status.connectorId).then(function (connector) {
+              $scope.callServiceConnect.homedConnector = connector;
             });
           }
         });
