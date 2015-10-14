@@ -25,7 +25,7 @@
   background-color: $gray-lightest;
   overflow-y: auto;
   overflow-x: hidden;
-  height: calc(100vh - 252px);
+  height: calc(100vh - 257px);
 }
 
 .aa-flex-row {
@@ -148,11 +148,10 @@
 }
 
 #aa-name-detail {
-  font-size: 2rem;
+  @extend h2;
   margin-left: 0px;
   margin-right: 0px;
   width: 50vw;
-  font-family: $brand-font-extra-light;
   text-align: center;
   border: none;
   border-bottom: 1px solid $brand-primary;
@@ -162,7 +161,6 @@
   &:focus {
     border: none;
     outline: none;
-    font-family: $brand-font-cisco-TT-Light;
     border-bottom: 1px solid $brand-primary-darker;
     -webkit-box-shadow: none;
     background-color: transparent;
@@ -295,8 +293,6 @@
   @extend .icon;
   @extend .icon-phone;
   font-size: 3rem;
-  -ms-transform: rotate(125deg);
-  -webkit-transform: rotate(125deg);
   transform: rotate(125deg);
   color: $brand-default;
 }
