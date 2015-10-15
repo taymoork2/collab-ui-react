@@ -97,7 +97,9 @@
     vm.route = serviceType2RouteName(vm.currentServiceType);
 
     vm.clusters = ClusterService.getClusters();
-    vm.clusterLength = _.size(vm.clusters);
+    vm.clusterLength = function () {
+      return _.size(vm.clusters);
+    };
 
     vm.serviceIconClass = ServiceDescriptor.serviceIcon(vm.currentServiceId);
 
