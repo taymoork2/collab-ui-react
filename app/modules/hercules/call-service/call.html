@@ -34,20 +34,24 @@
 </div>
 
 
-<div ng-hide="call.serviceEnabled || call.startSetupClicked">
+<div ng-hide="call.serviceEnabled">
   <div class="hercules">
     <div class="centered-info-pane full-height">
 
-      <p translate="hercules.serviceNames.{{call.currentServiceId}}"></p>
-      <b>Not enabled</b>
+
+      <h3>
+        <i class="{{call.serviceIconClass}}"></i>
+        <span translate="hercules.serviceNames.{{call.currentServiceId}}"></span>
+      </h3>
+      <p>
+        Currently not Activated.
+      </p>
+
 
       <br>
-      <p>You need to enable this service. Follow the notification wizard.</p>
 
-      <br>
-
-      <button class="btn btn-info" ng-click="call.startSetup()">
-        Start Setup
+      <button class="btn btn-info" ng-click="call.enableService(call.currentServiceId)">
+        Activate Service
       </button>
     </div>
   </div>
