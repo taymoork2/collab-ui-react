@@ -3,9 +3,9 @@
   <p>
     <span>severity: {{alarmCtrl.alarm.severity}}</span>
     <br/>
-    <span>first reported: {{alarmCtrl.alarm.first_reported}}</span>
+    <span>first reported: {{alarmCtrl.alarm.first_reported | date : 'medium'}}</span>
     <br/>
-    <span>last reported: {{alarmCtrl.alarm.last_reported}}</span>
+    <span>last reported: {{alarmCtrl.alarm.last_reported | date : 'medium'}}</span>
     <br/>
     <span>host: {{alarmCtrl.host}}</span>
   </p>
