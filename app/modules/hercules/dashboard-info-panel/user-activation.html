@@ -33,7 +33,9 @@
       <p>There are users with service activation errors:</p>
       <ul>
         <li ng-repeat="service in xsummary | filter: { errors: '!0' }">
-          {{'hercules.serviceNames.' + service.serviceId | translate}}: <a class="error" href ng-click="showUserStatusesDialog(service.serviceId)">{{service.errors}} in error.</span></a>
+          {{'hercules.serviceNames.' + service.serviceId | translate}}: <a class="error" href
+                                                                           ng-click="showUserStatusesDialog(service.serviceId)">{{service.errors}}
+          in error.</a>
         </li>
       </ul>
     </div>

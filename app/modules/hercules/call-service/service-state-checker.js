@@ -3,7 +3,8 @@
 
   /*@ngInject*/
   function ServiceStateChecker(NotificationService, ClusterService, DirSyncService, USSService2) {
-    var fuseNotPerformed = false;
+    var fusePerformed = false;
+    var dirSyncEnabled = false;
     var connectorType;
     var serviceId;
 
@@ -19,16 +20,15 @@
     }
 
     function refresh() {
-      checkIfFuseNotPerformed();
-      if (!fuseNotPerformed) {
-        // Show the following notification only if fuse iis performed
+      checkIfFusePerformed();
+      if (fusePerformed) {
         checkIfConnectorsConfigured(connectorType);
-        checkIfDirSyncNotEnabled();
+        checkIfDirSyncEnabled();
         checkUserStatuses();
       }
     }
 
-    function checkIfFuseNotPerformed() {
+    function checkIfFusePerformed() {
       var clusters = ClusterService.getClusters();
       if (_.size(clusters) === 0) {
         NotificationService.addNotification(
@@ -36,10 +36,10 @@
           'fuseNotPerformed',
           1,
           'modules/hercules/notifications/fuse-not-performed.html', {});
-        fuseNotPerformed = true;
+        fusePerformed = false;
       } else {
         NotificationService.removeNotification('fuseNotPerformed');
-        fuseNotPerformed = false;
+        fusePerformed = true;
       }
     }
 
@@ -59,14 +59,14 @@
       }
     }
 
-    function checkIfDirSyncNotEnabled() {
-      if (Date.now() - lastDirSyncCheck < 60000) {
+    function checkIfDirSyncEnabled() {
+      if (dirSyncEnabled || Date.now() - lastDirSyncCheck < 60000) {
         return;
       } else {
         lastDirSyncCheck = Date.now();
       }
       DirSyncService.getDirSyncDomain(function (data) {
-        var dirSyncEnabled = data.success && data.serviceMode == 'ENABLED';
+        dirSyncEnabled = data.success && data.serviceMode == 'ENABLED';
         if (!dirSyncEnabled) {
           NotificationService.addNotification(
             NotificationService.types.TODO,
@@ -98,9 +98,15 @@
             'modules/hercules/notifications/no_users_activated.html', {});
         } else {
           NotificationService.removeNotification('noUsersActivated');
-          /*if (summaryForService && summaryForService.error > 0) {
-            // TODO raise user errors notification
-          }*/
+          if (summaryForService && summaryForService.error > 0) {
+            NotificationService.addNotification(
+              NotificationService.types.TODO,
+              'userErrors',
+              4,
+              'modules/hercules/notifications/user-errors.html', summaryForService);
+          } else {
+            NotificationService.removeNotification('userErrors');
+          }
         }
       });
     }
