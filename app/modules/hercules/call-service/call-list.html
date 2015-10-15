@@ -2,7 +2,7 @@
 
   <div class="medium-4 columns">
 
-    <table class="hercules-cluster-table tiny-vertical-marker">
+    <table class="hercules-cluster-table">
       <tr ng-repeat="(url,cluster) in call.clusters"
           ui-sref="{{call.route}}.list.details({cluster:cluster, serviceType: call.currentServiceType})">
         <td>
@@ -61,7 +61,7 @@
   -->
   </div>
 
-  <div class="medium-8 columns" ui-view="rightPane">
+  <div class="medium-8 columns tiny-vertical-marker" ui-view="rightPane">
 
     <div class="centered-info-pane">
       <br>

@@ -1,11 +1,15 @@
 <div class="hercules typography-airy small-margin  side-view">
   <div ng-hide="callDetails.serviceNotInstalled()">
     <div class="header-panel">
-      <h3>{{callDetails.cluster.name}}</h3>
+        <h3 ng-hide="callDetails.state.includes('*.list.details.cluster-settings')">{{callDetails.cluster.name}}
+        <h3 ng-show="callDetails.state.includes('*.list.details.cluster-settings')">{{callDetails.cluster.name}}: Settings
+      </h3>
       <h4>
-        <small><a
-          ui-sref="{{callDetails.route}}.list.details.cluster-settings({cluster:callDetails.cluster, serviceType: callDetails.serviceType})">Edit</a>
+        <small ng-hide="callDetails.state.includes('*.list.details.cluster-settings')"><a
+          ui-sref="{{callDetails.route}}.list.details.cluster-settings({cluster:callDetails.cluster, serviceType: callDetails.serviceType})"
+        >Edit</a>
         </small>
+
         <div class="right">
           <a ng-show="callDetails.state.includes('*.list.details.cluster-settings')"
              ui-sref="{{callDetails.state.current.name}}({cluster:callDetails.cluster})"><i class="icon icon-close"/></a>

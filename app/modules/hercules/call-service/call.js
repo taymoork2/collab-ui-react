@@ -138,6 +138,33 @@
       });
     }
 
+    vm.openUserStatusReportModal = function (serviceId) {
+      var modalVm = this;
+      $scope.selectedServiceId = serviceId; //TODO: Fix. Currently compatible with "old" concept...
+      $scope.modal = $modal.open({
+        scope: $scope,
+        controller: 'ExportUserStatusesController',
+        templateUrl: 'modules/hercules/export/export-user-statuses.html'
+      });
+    };
+
+    //USSService.getStatusesSummary(function (err, userStatusesSummary) {
+    //  $scope.userStatusesSummary = userStatusesSummary || {};
+    //  $scope.summary = function (serviceId) {
+    //    var summary = null;
+    //    if ($scope.userStatusesSummary) {
+    //      summary = _.find($scope.userStatusesSummary.summary, function (s) {
+    //        return s.serviceId == serviceId;
+    //      });
+    //    }
+    //    return summary || {
+    //        activated: 0,
+    //        notActivated: 0,
+    //        error: 0
+    //      };
+    //  };
+    //});
+
     vm.enableService = function (serviceId) {
       ServiceDescriptor.setServiceEnabled(serviceId, true, function (error) {
         if (error !== null) {
