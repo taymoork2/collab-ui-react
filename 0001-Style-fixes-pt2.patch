@@ -1,0 +1,580 @@
+From beee21b8ed1daebcab5e7b52ab357ca18a4330f4 Mon Sep 17 00:00:00 2001
+From: Sarah Van Neyghem <svanneyg@cisco.com>
+Date: Wed, 14 Oct 2015 14:17:15 +0200
+Subject: [PATCH] Style fixes pt2
+
+---
+ 0001-style-fixes-settings-about-and-list.patch     | 415 +++++++++++++++++++++
+ .../hercules/call-service/_call-service.scss       |  18 +-
+ .../hercules/call-service/call-details.html        |  11 +-
+ .../call-service/deactivate-service-setting.html   |   2 +-
+ app/modules/hercules/styles/_shared.scss           |  29 +-
+ 5 files changed, 450 insertions(+), 25 deletions(-)
+ create mode 100644 0001-style-fixes-settings-about-and-list.patch
+
+diff --git a/0001-style-fixes-settings-about-and-list.patch b/0001-style-fixes-settings-about-and-list.patch
+new file mode 100644
+index 0000000..282ad83
+--- /dev/null
++++ b/0001-style-fixes-settings-about-and-list.patch
+@@ -0,0 +1,415 @@
++From a31b38f0a12e034c4dc9a6c8de8806629c7b515f Mon Sep 17 00:00:00 2001
++From: Sarah Van Neyghem <svanneyg@cisco.com>
++Date: Wed, 14 Oct 2015 14:04:38 +0200
++Subject: [PATCH] style fixes settings, about and list
++
++---
++ .../hercules/call-service/calendar-about.html      | 78 +++++++++++-----------
++ .../call-service/calendar-service-settings.html    |  8 ++-
++ app/modules/hercules/call-service/call-about.html  | 76 ++++++++++-----------
++ .../hercules/call-service/call-details.html        | 23 ++++---
++ app/modules/hercules/call-service/call-list.html   |  6 +-
++ .../call-service/call-service-settings.html        | 21 +++---
++ .../call-service/deactivate-service-setting.html   | 10 +--
++ app/modules/hercules/styles/_shared.scss           | 32 +++++++++
++ 8 files changed, 141 insertions(+), 113 deletions(-)
++
++diff --git a/app/modules/hercules/call-service/calendar-about.html b/app/modules/hercules/call-service/calendar-about.html
++index 7a55219..38d2a5c 100644
++--- a/app/modules/hercules/call-service/calendar-about.html
+++++ b/app/modules/hercules/call-service/calendar-about.html
++@@ -1,42 +1,40 @@
++ <div class="hercules typography-airy large-margin full-height">
++-
++-  <h5>
++-    About Calendar Hybrid Service
++-  </h5>
++-
++-  <p>
++-    Cisco Hybrid Services empower cloud-based and premises-based
++-    solutions to deliver a more capable, better integrated collaboration user
++-    experience.
++-  </p>
++-
++-  <p>
++-    To use Hybrid Services, register your Cisco Expressway with the Collaboration
++-    Cloud to install your Connectors.
++-  </p>
++-
++-  <p>
++-    Then, you can monitor and manage Connectors from the Cloud
++-    Collaboration Management Portal or from your Cisco Expressways.
++-  </p>
++-
++-  <h5>
++-    Documentation
++-  </h5>
++-
++-  <p>
++-    Go to <a href="http://www.cisco.com/go/hybrid-services-calendar" target="_blank">Help Central</a> for prerequisites
++-    and help installing and using Hybrid
++-    Services.
++-  </p>
++-
++-  <h5>
++-    Software
++-  </h5>
++-
++-  <p>
++-    Download Cisco Expressway software from <a
++-    href="https://software.cisco.com/download/find.html?q=expressway&task=default&psaMode=AP" target="_blank">software.cisco.com</a>.
++-  </p>
++-
+++  <div class="row">
+++    <div class="columns large-4">
+++
+++        <h5>
+++          About Calendar Hybrid Service
+++        </h5>
+++
+++        <p>
+++          Cisco Hybrid Services empower cloud-based and premises-based
+++          solutions to deliver a more capable, better integrated collaboration user
+++          experience.
+++          <br>To use Hybrid Services, register your Cisco Expressway with the Collaboration
+++          Cloud to install your Connectors.
+++          <br>Then, you can monitor and manage Connectors from the Cloud
+++          Collaboration Management Portal or from your Cisco Expressways.
+++        </p>
+++
+++
+++        <h5>
+++          Documentation
+++        </h5>
+++
+++        <p>
+++          Go to <a href="http://www.cisco.com/go/hybrid-services-calendar" target="_blank">Help Central</a> for prerequisites
+++          and help installing and using Hybrid
+++          Services.
+++        </p>
+++
+++        <h5>
+++          Software
+++        </h5>
+++
+++        <p>
+++          Download Cisco Expressway software from <a
+++          href="https://software.cisco.com/download/find.html?q=expressway&task=default&psaMode=AP" target="_blank">software.cisco.com</a>.
+++        </p>
+++    </div>
+++  </div>
++ </div>
++diff --git a/app/modules/hercules/call-service/calendar-service-settings.html b/app/modules/hercules/call-service/calendar-service-settings.html
++index 93bc09e..c061ffd 100644
++--- a/app/modules/hercules/call-service/calendar-service-settings.html
+++++ b/app/modules/hercules/call-service/calendar-service-settings.html
++@@ -1,7 +1,7 @@
++ <div class="hercules typography-airy large-margin">
++ 
++ <div class="row">
++-    <div class="large-6 columns">
+++    <div class="large-4 columns">
++ 
++       <div ng-include src="'modules/hercules/call-service/email-notification-setting.html'"></div>
++ 
++@@ -9,9 +9,13 @@
++ 
++     </div>
++ 
++-    <div class="large-6 columns">
+++    <div class="large-4 columns">
++ 
++     </div>
++ 
+++    <!-- TK fix. Other columns didn't get positioned correctly, had too much space. See toolkit -->
+++    <div class="large-4 columns">
+++    </div>
+++
++   </div>
++ </div>
++diff --git a/app/modules/hercules/call-service/call-about.html b/app/modules/hercules/call-service/call-about.html
++index a1245dc..1734d04 100644
++--- a/app/modules/hercules/call-service/call-about.html
+++++ b/app/modules/hercules/call-service/call-about.html
++@@ -1,42 +1,40 @@
++ <div class="hercules typography-airy large-margin full-height">
++-
++-  <h5>
++-    About Call Hybrid Service
++-  </h5>
++-
++-  <p>
++-    Cisco Hybrid Services empower cloud-based and premises-based
++-    solutions to deliver a more capable, better integrated collaboration user
++-    experience.
++-  </p>
++-
++-  <p>
++-    To use Hybrid Services, register your Cisco Expressway with the Collaboration
++-    Cloud to install your Connectors.
++-  </p>
++-
++-  <p>
++-    Then, you can monitor and manage Connectors from the Cloud
++-    Collaboration Management Portal or from your Cisco Expressways.
++-  </p>
++-
++-  <h5>
++-    Documentation
++-  </h5>
++-
++-  <p>
++-    Go to <a href="http://www.cisco.com/go/hybrid-services-calendar" target="_blank">Help Central</a> for prerequisites
++-    and help installing and using Hybrid
++-    Services.
++-  </p>
++-
++-  <h5>
++-    Software
++-  </h5>
++-
++-  <p>
++-    Download Cisco Expressway software from <a
++-    href="https://software.cisco.com/download/find.html?q=expressway&task=default&psaMode=AP" target="_blank">software.cisco.com</a>.
++-  </p>
+++  <div class="row">
+++    <div class="columns large-4">
+++
+++        <h5>
+++          About Call Hybrid Service
+++        </h5>
+++
+++        <p>
+++          Cisco Hybrid Services empower cloud-based and premises-based
+++          solutions to deliver a more capable, better integrated collaboration user
+++          experience.
+++          <br>To use Hybrid Services, register your Cisco Expressway with the Collaboration
+++          Cloud to install your Connectors.
+++          <br>Then, you can monitor and manage Connectors from the Cloud
+++          Collaboration Management Portal or from your Cisco Expressways.
+++        </p>
+++
+++        <h5>
+++          Documentation
+++        </h5>
+++
+++        <p>
+++          Go to <a href="http://www.cisco.com/go/hybrid-services-calendar" target="_blank">Help Central</a> for prerequisites
+++          and help installing and using Hybrid
+++          Services.
+++        </p>
+++
+++        <h5>
+++          Software
+++        </h5>
+++
+++        <p>
+++          Download Cisco Expressway software from <a
+++          href="https://software.cisco.com/download/find.html?q=expressway&task=default&psaMode=AP" target="_blank">software.cisco.com</a>.
+++        </p>
+++    </div>
+++  </div>
++ 
++ </div>
++diff --git a/app/modules/hercules/call-service/call-details.html b/app/modules/hercules/call-service/call-details.html
++index d5c3121..d435baf 100644
++--- a/app/modules/hercules/call-service/call-details.html
+++++ b/app/modules/hercules/call-service/call-details.html
++@@ -1,15 +1,17 @@
++ <div class="hercules typography-airy small-margin  side-view">
++   <div ng-hide="callDetails.serviceNotInstalled()">
++-    <h2>{{callDetails.cluster.name}}</h2>
++-    <h4>
++-      <small><a
++-        ui-sref="{{callDetails.route}}.list.details.cluster-settings({cluster:callDetails.cluster, serviceType: callDetails.serviceType})">Settings</a>
++-      </small>
++-      <div class="right">
++-        <a ng-show="callDetails.state.includes('*.list.details.cluster-settings')"
++-           ui-sref="{{callDetails.state.current.name}}({cluster:callDetails.cluster})"><i class="icon icon-close"/></a>
++-      </div>
++-    </h4>
+++    <div class="header-panel">
+++      <h3>{{callDetails.cluster.name}}</h3>
+++      <h4>
+++        <small><a
+++          ui-sref="{{callDetails.route}}.list.details.cluster-settings({cluster:callDetails.cluster, serviceType: callDetails.serviceType})">Settings</a>
+++        </small>
+++        <div class="right">
+++          <a ng-show="callDetails.state.includes('*.list.details.cluster-settings')"
+++             ui-sref="{{callDetails.state.current.name}}({cluster:callDetails.cluster})"><i class="icon icon-close"/></a>
+++        </div>
+++      </h4>
+++    </div>
++ 
++ 
++     <div ui-view="details-pane">
++@@ -31,7 +33,6 @@
++         <span class="right">
++           <div class="dropdown" on-toggle="dl.toggled(open)">
++             <a href class="dropdown-toggle">
++-              <i class="icon icon-three-dots"/>
++             </a>
++             <ul class="dropdown-menu">
++               <li>
++diff --git a/app/modules/hercules/call-service/call-list.html b/app/modules/hercules/call-service/call-list.html
++index ab71327..4b179a2 100644
++--- a/app/modules/hercules/call-service/call-list.html
+++++ b/app/modules/hercules/call-service/call-list.html
++@@ -12,7 +12,7 @@
++                ng-click="call.selectedRow = $index">
++             <i class="icon icon-data icon-inverse-round" style="float:left"/>
++             <i class="overlay" ng-class="{ok: call.selectedServiceAndManagementServiceStatus(cluster).color == 'green',attention: call.selectedServiceAndManagementServiceStatus(cluster).color == 'yellow', alarm: call.selectedServiceAndManagementServiceStatus(cluster).color == 'red'}"/>
++-            <h3>{{cluster.name}}</h3>
+++            <h4>{{cluster.name}}</h4>
++             <br>
++             <p class="cell-status">
++               <span ng-if="call.selectedServiceAndManagementServiceStatus(cluster).status == 'running'">Running</span>
++@@ -21,19 +21,17 @@
++               <span ng-if="call.selectedServiceAndManagementServiceStatus(cluster).status == 'disabled'">Disabled</span>
++               <span ng-show="call.softwareUpgradeAvailable(cluster)">Upgrades</span>
++             </p>
++-            <i class="icon icon-three-dots"/>
++           </div>
++           <div class="cell-content"
++                ng-show="call.serviceNotInstalled(cluster)"
++                ng-class="{'active':call.selectedRow === $index}"
++                ng-click="call.selectedRow = $index">
++             <i class="icon icon-data icon-inverse-round" style="float:left"/>
++-            <h3 style="color:#CCC">{{cluster.name}}</h3>
+++            <h4 style="color:#CCC">{{cluster.name}}</h4>
++             <br>
++             <p class="cell-status">
++               <span style="color:#CCC">Not installed</span>
++             </p>
++-            <i class="icon icon-three-dots"/>
++           </div>
++         </td>
++       </tr>
++diff --git a/app/modules/hercules/call-service/call-service-settings.html b/app/modules/hercules/call-service/call-service-settings.html
++index 17ca100..d37ad86 100644
++--- a/app/modules/hercules/call-service/call-service-settings.html
+++++ b/app/modules/hercules/call-service/call-service-settings.html
++@@ -1,6 +1,6 @@
++ <div class="hercules typography-airy large-margin">
++   <div class="row">
++-    <div class="large-6 columns">
+++    <div class="large-4 columns">
++ 
++       <h5>
++         Feature Settings
++@@ -12,18 +12,15 @@
++         It can not be turned of, as it is a pre-requisite of the other features.
++       </p>
++ 
++-      <h6 translate="hercules.cloudExtensions.serviceNames.squared-fusion-uc"></h6>
+++      <h6><strong translate="hercules.cloudExtensions.serviceNames.squared-fusion-uc"></strong></h6>
++ 
++       <p>
++         <span translate="hercules.cloudExtensions.serviceDescriptions.squared-fusion-uc"></span>
++-      </p>
++-
++-      <p style="color:#CCC">
++-        On by default
+++        <br><span  style="color:#CCC">On by default</span>
++       </p>
++ 
++       <h6>
++-        {{'hercules.cloudExtensions.serviceNames.squared-fusion-ec' | translate}}
+++        <strong>{{'hercules.cloudExtensions.serviceNames.squared-fusion-ec' | translate}}</strong>
++         <span class="switch small right">
++           <cs-toggle-switch ng-change="callServiceSettings.storeEc(callServiceSettings.squaredFusionEc)"
++                             ng-model="callServiceSettings.squaredFusionEc"
++@@ -44,14 +41,14 @@
++ 
++     </div>
++ 
++-    <div class="large-6 columns">
+++    <div class="large-4 columns">
++       <div ng-include src="'modules/hercules/call-service/email-notification-setting.html'"></div>
++       <div ng-include src="'modules/hercules/call-service/deactivate-service-setting.html'"></div>
++     </div>
+++
+++    <!-- TK fix. Other columns didn't get positioned correctly, had too much space. See toolkit -->
+++    <div class="large-4 columns">
+++    </div>
++   </div>
++ 
++ </div>
++-
++-
++-
++-
++diff --git a/app/modules/hercules/call-service/deactivate-service-setting.html b/app/modules/hercules/call-service/deactivate-service-setting.html
++index ce8691b..b87839d 100644
++--- a/app/modules/hercules/call-service/deactivate-service-setting.html
+++++ b/app/modules/hercules/call-service/deactivate-service-setting.html
++@@ -6,12 +6,12 @@
++   Deactivating a service (requires another confirm step) will remove any service related functionality from your
++   users. Additional steps to remove the service from your on premise devices are required.
++   See documentation for guidance and further instructions.
+++  <button ng-show="callServiceSettings.serviceEnabled"
+++          class="button alert"
+++          ng-click="callServiceSettings.confirmDisable(callServiceSettings.serviceId)">Deactivate
+++  </button>
++ </p>
++-<button ng-show="callServiceSettings.serviceEnabled"
++-        class="button alert"
++-        ng-click="callServiceSettings.confirmDisable(callServiceSettings.serviceId)">Deactivate
++-</button>
++-<p>
+++
++ <p>
++   Go to <a href="http://www.cisco.com/go/hybrid-services-calendar" target="_blank">Help Central</a> for help
++   uninstalling a Hybrid Service.
++diff --git a/app/modules/hercules/styles/_shared.scss b/app/modules/hercules/styles/_shared.scss
++index aa6a3d8..79b75f0 100644
++--- a/app/modules/hercules/styles/_shared.scss
+++++ b/app/modules/hercules/styles/_shared.scss
++@@ -96,8 +96,27 @@
++   .black-header{
++     color:black !important;
++   }
+++  .hercules.large-margin{
+++    .large-4{
+++      margin-right: 2rem !important;
+++    }
+++  }
++ 
++ /**
+++  Overwritten from Toolkit somehwere in Atlas -
+++  Fix it before removing this code
+++  */
+++  .hercules.large-margin{
+++    p{
+++      margin-bottom: 2rem;
+++    }
+++  }
+++  .hercules{
+++    .alert,.button.alert,button.alert{
+++      margin-left:0!important;
+++    }
+++  }
+++/**
++  Work around the extra col-md-12 class in views/main.tpl.html
++  */
++ .hercules {
++@@ -106,3 +125,16 @@
++     left: -0.5rem;
++   };
++ }
+++/**
+++  New styling
+++  */
+++  .hercules{
+++    .header-panel{
+++      h3,h4{
+++        display: table-cell;
+++      }
+++      h3{
+++        padding-right: 2rem;
+++      }
+++    }
+++  }
++-- 
++2.3.2 (Apple Git-55)
++
+diff --git a/app/modules/hercules/call-service/_call-service.scss b/app/modules/hercules/call-service/_call-service.scss
+index 6acdd76..17f99b5 100644
+--- a/app/modules/hercules/call-service/_call-service.scss
++++ b/app/modules/hercules/call-service/_call-service.scss
+@@ -70,23 +70,7 @@ Special stuff currently used to display the clusters in service oriented view
+   }
+ }
+ 
+-/* Detail */
+-.side-view{
+-  padding-top: 2rem;
+-  width: 50%;
+-  .icon.icon-three-dots{
+-    color: #666666 !important;
+-  }
+-  h5{
+-    padding-top: 1rem !important;
+-  }
+-  .icon.icon-close{
+-    color:black;
+-    position: absolute;
+-    top: 1.5rem;
+-    right: 2rem;
+-  }
+-}
++
+ 
+ /**
+ Special stuff currently used for out own mail input field...
+diff --git a/app/modules/hercules/call-service/call-details.html b/app/modules/hercules/call-service/call-details.html
+index d435baf..1c19749 100644
+--- a/app/modules/hercules/call-service/call-details.html
++++ b/app/modules/hercules/call-service/call-details.html
+@@ -11,11 +11,14 @@
+              ui-sref="{{callDetails.state.current.name}}({cluster:callDetails.cluster})"><i class="icon icon-close"/></a>
+         </div>
+       </h4>
++      <hr>
+     </div>
+ 
+ 
++
++
+     <div ui-view="details-pane">
+-      <h5>
++      <h5 class="black-header">
+         Alarms
+       </h5>
+ 
+@@ -29,7 +32,7 @@
+         No alarms reported
+       </p>
+ 
+-      <h5>Software Upgrades
++      <h5 class="black-header">Software Upgrades
+         <span class="right">
+           <div class="dropdown" on-toggle="dl.toggled(open)">
+             <a href class="dropdown-toggle">
+@@ -57,7 +60,7 @@
+         No new software available
+       </p>
+ 
+-      <h5>
++      <h5 class="black-header">
+         Depending services
+       </h5>
+ 
+@@ -74,7 +77,7 @@
+       </div>
+ 
+ 
+-      <h5>
++      <h5 class="black-header">
+         Running on hosts:
+       </h5>
+       <div class="row" ng-repeat="connector in callDetails.selectedService.connectors">
+diff --git a/app/modules/hercules/call-service/deactivate-service-setting.html b/app/modules/hercules/call-service/deactivate-service-setting.html
+index b87839d..3592143 100644
+--- a/app/modules/hercules/call-service/deactivate-service-setting.html
++++ b/app/modules/hercules/call-service/deactivate-service-setting.html
+@@ -5,7 +5,7 @@
+ <p>
+   Deactivating a service (requires another confirm step) will remove any service related functionality from your
+   users. Additional steps to remove the service from your on premise devices are required.
+-  See documentation for guidance and further instructions.
++  See documentation for guidance and further instructions. <br>
+   <button ng-show="callServiceSettings.serviceEnabled"
+           class="button alert"
+           ng-click="callServiceSettings.confirmDisable(callServiceSettings.serviceId)">Deactivate
+diff --git a/app/modules/hercules/styles/_shared.scss b/app/modules/hercules/styles/_shared.scss
+index 79b75f0..064c761 100644
+--- a/app/modules/hercules/styles/_shared.scss
++++ b/app/modules/hercules/styles/_shared.scss
+@@ -93,9 +93,6 @@
+ /**
+   Toolkit fixes
+   */
+-  .black-header{
+-    color:black !important;
+-  }
+   .hercules.large-margin{
+     .large-4{
+       margin-right: 2rem !important;
+@@ -116,6 +113,12 @@
+       margin-left:0!important;
+     }
+   }
++
++  /* Has to be fixed in TK before we can fix the code in Atlas */
++  .black-header{
++    color:black !important;
++  }
++
+ /**
+  Work around the extra col-md-12 class in views/main.tpl.html
+  */
+@@ -136,5 +139,25 @@
+       h3{
+         padding-right: 2rem;
+       }
++      hr{
++        margin-top: 1rem;
++        margin-bottom: 1rem;
++      }
++    }
++  }
++  /* Detail */
++  .side-view{
++    padding-top: 2rem;
++    .icon.icon-three-dots{
++      color: #666666 !important;
++    }
++    h5{
++      padding-top: 1rem !important;
++    }
++    .icon.icon-close{
++      color:black;
++      position: absolute;
++      top: 1.25rem;
++      right: 2rem;
+     }
+   }
+-- 
+2.3.2 (Apple Git-55)
+

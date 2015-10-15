@@ -3,14 +3,9 @@
   position:relative;
   padding-right:0.5rem;
 
-  a,a:hover,a:active{
-    color: #ddd;
-    //position: relative;
-    //top: 0px;
-    //left: 0px;
-  }
   .fa-bell {
     font-size: 20px;
+    margin-right: 2rem;
   }
 
   ul{
@@ -105,7 +100,6 @@
     text-align: center;
 
     padding-top: 1px;
-    background-color: red;
 
     font-size: 8px;
     font-weight: bold;
@@ -116,6 +110,12 @@
     position: relative;
     top: -25px;
     left: 12px;
+  }
+  .todo {
+    background-color: $brand-warning;
+  }
+  .alert {
+    background-color: $brand-danger;
   }
 }
 

@@ -16,17 +16,17 @@
     return service;
     /////////////////////
 
-    function retrieveLog(customerId, userId, sipEndpointId) {
-      return DeviceLogApiService.$save({
-        customerId: customerId,
+    function retrieveLog(userId, sipEndpointId) {
+      return DeviceLogApiService.save({
+        customerId: Authinfo.getOrgId(),
         userId: userId,
         sipEndpointId: sipEndpointId
       }, {}).$promise;
     }
 
-    function getLogInformation(customerId, userId, sipEndpointId) {
-      return DeviceLogApiService.$get({
-        customerId: customerId,
+    function getLogInformation(userId, sipEndpointId) {
+      return DeviceLogApiService.query({
+        customerId: Authinfo.getOrgId(),
         userId: userId,
         sipEndpointId: sipEndpointId
       }).$promise;

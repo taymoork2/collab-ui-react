@@ -820,7 +820,8 @@ angular.module('Core')
           'site-settings',
           'site-setting',
           'webex-reports',
-          'webex-reports-iframe'
+          'webex-reports-iframe',
+          'example'
         ],
         Application: ['organizations', 'organization-overview']
       };
@@ -844,7 +845,9 @@ angular.module('Core')
           'huronsettings',
           'huronfeatures',
           'huronnewfeature',
-          'cdrsupport'
+          'cdrsupport',
+          'cdr-overview',
+          'huronHuntGroup'
         ],
         'squared-fusion-mgmt': [
           'fusion',
@@ -855,11 +858,7 @@ angular.module('Core')
         'squared-fusion-uc': [
           'devices',
           'device-overview',
-          'devices-redux',
-          'devices-redux2',
-          'devices-redux3',
-          'devices-redux4',
-          'devices-redux5'
+          'devices-redux'
         ],
         'squared-team-member': [
           'organization'
@@ -897,7 +896,8 @@ angular.module('Core')
           'mediafusionconnector',
           'callRouter',
           'hurondetails',
-          'cdrsupport'
+          'cdrsupport',
+          'cdr-overview'
         ]
       };
 

@@ -110,7 +110,11 @@
         })
         .then(function (otpInfo) {
           emailInfo.oneTimePassword = otpInfo.password;
-          emailInfo.expiresOn = otpInfo.expiresOn;
+          var timezone = jstz.determine().name();
+          if (timezone === null || angular.isUndefined(timezone)) {
+            timezone = 'UTC';
+          }
+          emailInfo.expiresOn = moment(otpInfo.expiresOn).local().tz(timezone).format('MMMM DD, YYYY h:mm A (z)');
           return HuronEmailService.save({}, emailInfo).$promise
             .then(function () {
               LogMetricsService.logMetrics('User onboard email sent', LogMetricsService.getEventType('userOnboardEmailSent'), LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);

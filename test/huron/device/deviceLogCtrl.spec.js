@@ -12,10 +12,6 @@ describe('Controller: DeviceLogCtrl', function () {
   var failurePostNoBody = getJSONFixture('huron/json/device/logs/failure_POST_No_Body.json');
   var failureZeroLogs = getJSONFixture('huron/json/device/logs/failure_Zero_Logs.json');
 
-  var customerId = 'cd1500f6-ebd8-4009-a79f-9f43fa9bd898';
-  var userId = '6604225e-647f-4db3-a446-9417af9f7ba4';
-  var sipEndpointId = '7a755f28-4fd5-4710-8477-301c5336a885';
-
   beforeEach(module('Huron'));
 
   beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _$interval_, _Config_, _HttpUtils_, _DeviceService_, _DeviceLogService_) {
@@ -30,6 +26,7 @@ describe('Controller: DeviceLogCtrl', function () {
     DeviceLogService = _DeviceLogService_;
 
     $stateParams.currentUser = stateParams.currentUser;
+    $stateParams.device = stateParams.device;
 
     spyOn(DeviceLogService, 'getLogInformation').and.returnValue($q.when(success));
     spyOn(DeviceLogService, 'retrieveLog').and.returnValue($q.when());
@@ -61,22 +58,22 @@ describe('Controller: DeviceLogCtrl', function () {
   });
 
   it('should load logList', function () {
-    controller.refreshLogList(customerId, userId, sipEndpointId);
+    controller.refreshLogList();
 
     $scope.$apply();
     expect(controller.logList.length).toBeGreaterThan(0);
     expect(controller.logList[0].name).toEqual(success[0].events[3].date);
-    expect(controller.logList[0].uri).toEqual(success[0].events[3].uri);
+    expect(controller.logList[0].uri).toEqual(success[0].results);
   });
 
   it('should keep logList the same', function () {
     var currentLength = 0;
 
-    controller.refreshLogList(customerId, userId, sipEndpointId);
+    controller.refreshLogList();
     $scope.$apply();
 
     currentLength = controller.logList.length;
-    controller.refreshLogList(customerId, userId, sipEndpointId);
+    controller.refreshLogList();
     $scope.$apply();
 
     expect(controller.logList.length).toEqual(currentLength);
@@ -84,7 +81,7 @@ describe('Controller: DeviceLogCtrl', function () {
 
   it('should start polling then times out', function () {
     DeviceLogService.getLogInformation.and.returnValue($q.when(successNoEvents));
-    controller.refreshLogList(customerId, userId, sipEndpointId);
+    controller.refreshLogList();
     $scope.$apply();
 
     Date.now.and.returnValue(Date.now() + controller.timeout);
@@ -96,7 +93,7 @@ describe('Controller: DeviceLogCtrl', function () {
 
   it('should start polling then stops because log file successfully uploaded', function () {
     DeviceLogService.getLogInformation.and.returnValue($q.when(successNoEvents));
-    controller.refreshLogList(customerId, userId, sipEndpointId);
+    controller.refreshLogList();
     $scope.$apply();
 
     $intervalSpy.flush(controller.interval);
@@ -111,7 +108,7 @@ describe('Controller: DeviceLogCtrl', function () {
 
   it('should start polling then stops because user left the page', function () {
     DeviceLogService.getLogInformation.and.returnValue($q.when(successNoEvents));
-    controller.refreshLogList(customerId, userId, sipEndpointId);
+    controller.refreshLogList();
     $scope.$apply();
 
     $intervalSpy.flush(controller.interval);

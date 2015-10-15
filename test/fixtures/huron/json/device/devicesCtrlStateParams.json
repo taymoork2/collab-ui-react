@@ -38,5 +38,17 @@
       "CO_88fed306-7866-42b7-a467-d0121a93ba06"
     ],
     "avatarSyncEnabled": false
+  },
+  "device": {
+    "description": "pregoldtx1sl+2callwaiting1(Cisco8861SIP)",
+    "deviceStatus": {
+      "ipAddress": "172.19.235.72",
+      "isValid": "true",
+      "progressStatus": "false",
+      "status": "Online"
+    },
+    "model": "Cisco8861",
+    "name": "SEP2834A2833AAC",
+    "uuid": "7a755f28-4fd5-4710-8477-301c5336a885"
   }
 }

@@ -3,9 +3,9 @@
     <button id="convertModalClose" type="button" class="close" ng-click="$parent.modal.close()">
       <span class="sr-only">Close</span>
     </button>
-    <h3 class="modal-title">
-      <span><span translate="hercules.serviceNames.{{selectedServiceId}}"/>: Activation Errors</span>
-    </h3>
+    <h5 class="modal-title">
+      {{ 'hercules.serviceNames.' + selectedServiceId | translate }}: Activation Errors
+    </h5>
   </div>
   <div class="modal-body">
     <div ng-show="loading" style="text-align: center; padding: 60px;">
@@ -20,7 +20,7 @@
           Host: <a href="https://{{status.connector.host_name}}" target="_blank" style="color: #3ca8e8">{{status.connector.host_name}}</a>
         </span>
         <br/>
-        <span class="error">{{status.description.defaultMessage}}</span>
+        <em class="red">{{status.description.defaultMessage}}</em>
       </p>
     </div>
   </div>

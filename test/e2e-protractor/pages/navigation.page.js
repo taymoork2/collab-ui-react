@@ -15,6 +15,7 @@ var Navigation = function () {
   this.reportsTab = element(by.css('li.reportTab > a'));
   this.devReports = element(by.css('a[href="#partner/newreports"]'));
   this.supportTab = element(by.css('li.supportTab > a'));
+  this.cdrTab = element(by.css('a[href="#cdrsupport"]'));
   this.logsTab = element(by.css('a[href="#support"]'));
   this.billingTab = element(by.css('a[href="#orderprovisioning"]'));
   this.devicesTab = element(by.css('li.deviceTab > a'));
@@ -49,6 +50,11 @@ var Navigation = function () {
   this.clickDevReports = function () {
     this.clickDevelopmentTab();
     utils.click(this.devReports);
+  }
+
+  this.clickCDRSupport = function () {
+    this.clickDevelopmentTab();
+    utils.click(this.cdrTab);
   }
 
   this.clickServicesTab = function () {

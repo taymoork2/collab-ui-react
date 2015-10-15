@@ -1,2 +1,5 @@
 /*import any additional sassy css (scss) here*/
 @import '../lines/_line-list';
+.huron-details {
+  @include vr-spacing(mh, 0.5, 1px, true);
+}

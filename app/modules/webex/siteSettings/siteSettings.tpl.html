@@ -1,85 +1,80 @@
 <div id="webexSiteSettings"
-     name="webexSiteSettings">
+     name="webexSiteSettings"
+     class="siteindex-panel">
 
-  <div class="page-header row full">
+  <div class="row page-header">
     <div class="page-title small-10 columns">
-      <div class="title-heading">
+      <span class="title-heading">
         {{WebExSiteSettings.siteSettingsObj.pageTitle}}
-      </div>
+      </span>
     </div>
-    
-    <div class="page-title small-2 columns">
-      <a class="button large"
+    <div id="emallAllHostsButton" class="page-option-buttons">
+     <a class="button large"
          id={{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.id}}
          name={{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.id}}
          ui-sref={{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.pageObj.uiSref}}
          ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
-           
+
         <span translate="webexSiteSettingsLabels.emailAllHostsBtnTitle"></span>
       </a>
-    </div>
-  </div>  
-  
-  <cs-container>
+      </div>
+  </div>
+
+  <div>
     <!-- breadcrumbs -->
-    <div id="siteSettingsBreadCrumbs"
-         name="siteSettingsBreadCrumbs"
-         class="breadcrumb-container">
-         
-      <ul class="breadcrumbs">
+
+      <ul id="siteSettingsBreadCrumbs"
+         name="siteSettingsBreadCrumbs" class="breadcrumbs">
         <li>
           <a id="siteListCrumb"
              ui-sref="site-list"
              translate="siteList.conferencing">
           </a>
         </li>
-      
+
         <li class="current">
           {{WebExSiteSettings.siteSettingsObj.pageTitleFull}}
         </li>
       </ul>
-    </div>
-    
-    <div ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
-      <cs-card-layout>
+    <!--cards -->
+      <cs-card-layout id="configureCards" ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
         <!-- Info card -->
         <div ng-include="'modules/webex/siteSettings/siteInfoCard.tpl.html'"></div>
-  
+
         <!-- Setting cards -->
-        <div ng-include="'modules/webex/siteSettings/siteSettingsCards.tpl.html'"></div> 
+        <div ng-include="'modules/webex/siteSettings/siteSettingsCards.tpl.html'"></div>
       </cs-card-layout>
-    </div>
-    
+
     <!-- WebEx site admin cross launch -->
-    <div class=row>
-      <a href="" 
+    <div class="row">
+      <a href=""
          onClick="document.getElementById('hiddenButton').click();">
-     
+
         Other&nbsp;Settings
       </a>
     </div>
-  </cs-container>
+  </div>
 </div>
 
 <!-- WebEx site admin cross launch form -->
-<form name="siteAdminLink" 
-      action="{{webexAdvancedUrl}}" 
-      method="post" 
+<form name="siteAdminLink"
+      action="{{webexAdvancedUrl}}"
+      method="post"
       target="webexSiteAdmin">
-      
-  <input id="adminEmail" 
-         name="adminEmail" 
+
+  <input id="adminEmail"
+         name="adminEmail"
          type="hidden"
          value="{{adminEmailParam}}" />
-         
-  <input id="locale" type="hidden" 
-         name="locale" 
+
+  <input id="locale" type="hidden"
+         name="locale"
          type="hidden"
          value="{{localeParam}}" />
-         
-  <button id="hiddenButton" 
-          type="submit" 
-          onclick="this.parentElement.submit();" 
+
+  <button id="hiddenButton"
+          type="submit"
+          onclick="this.parentElement.submit();"
           style="background-color:#ff00ff; cursor:pointer; width:100px; display:none;">
-  </button>    
+  </button>
 </form>

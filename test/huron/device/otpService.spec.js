@@ -95,7 +95,8 @@ describe('Service: OtpService', function () {
 
     it('should return the correct local browser time zone conversion', function () {
       var expiryTime = '2015-09-28 20:23:15.13';
-      var utcTimeToLocal = moment.utc(expiryTime).local().format('MM/DD/YY h:mmA');
+      var timezone = jstz.determine().name();
+      var utcTimeToLocal = moment(expiryTime).local().tz(timezone).format('MMMM DD, YYYY h:mm A (z)');
       expect(OtpService.convertExpiryTime(expiryTime)).toEqual(utcTimeToLocal);
     });
   });
