@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  function HerculesNotificationsController(NotificationService, $state) {
+  function HerculesNotificationsController(NotificationService, $state, $scope, $modal) {
     this.notificationsLength = function () {
       return NotificationService.getNotificationLength();
     };
@@ -22,6 +22,15 @@
 
     this.navigateToUsers = function () {
       $state.go('users.list');
+    };
+
+    this.showUserErrorsDialog = function (serviceId) {
+      $scope.selectedServiceId = serviceId;
+      $scope.modal = $modal.open({
+        scope: $scope,
+        controller: 'UserStatusesController',
+        templateUrl: 'modules/hercules/dashboard-info-panel/user-errors.html'
+      });
     };
   }
 
