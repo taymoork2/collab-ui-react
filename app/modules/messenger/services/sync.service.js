@@ -162,7 +162,7 @@
         messengerOrgId: syncStatus.messengerOrgId,
         linkDate: syncStatus.linkDate,
         isAuthRedirect: syncStatus.isAuthRedirect,
-        isSyncEnabled: syncModes.messenger.on === syncStatus.syncMode || syncModes.dirsync.on === syncStatus.syncMode
+        isSyncEnabled: isSyncEnabledRaw()
       };
     }
 
@@ -186,12 +186,16 @@
       return defer.promise;
     }
 
+    function isDirSyncRaw() {
+      return (syncModes.dirsync.on === syncStatus.syncMode || syncModes.dirsync.off === syncStatus.syncMode);
+    }
+
     function isDirSync() {
       var defer = $q.defer();
 
       getSyncStatus()
         .then(function () {
-          defer.resolve(syncModes.dirsync.on === syncStatus.syncMode || syncModes.dirsync.off === syncStatus.syncMode);
+          defer.resolve(isDirSyncRaw());
         }, function (errorObj) {
           defer.reject(errorObj.message);
         });
@@ -243,12 +247,16 @@
 
       getSyncStatus()
         .then(function () {
-          defer.resolve(syncModes.messenger.on === syncStatus.syncMode || syncModes.dirsync.on === syncStatus.syncMode);
+          defer.resolve(isSyncEnabledRaw());
         }, function (errorObj) {
           defer.reject(errorObj.message);
         });
 
       return defer.promise;
+    }
+
+    function isSyncEnabledRaw() {
+      return (syncModes.messenger.on === syncStatus.syncMode || syncModes.dirsync.on === syncStatus.syncMode);
     }
 
     function parseSyncMode(syncString) {
@@ -289,7 +297,7 @@
       var previousSettings = _.clone(syncStatus);
 
       // Update sync mode
-      if (isDirSync()) {
+      if (isDirSyncRaw()) {
         setDirSyncMode(isSyncEnabled);
       } else {
         setMessengerSyncMode(isSyncEnabled);
