@@ -1,4 +1,4 @@
-<div ng-show="call.clusterLength > 0" class="row">
+<div ng-show="call.clusterLength() > 0" class="row">
 
   <div class="medium-4 columns tiny-vertical-marker">
 
@@ -102,7 +102,7 @@
 </div>
 
 
-<div ng-show="call.clusterLength === 0" class="row">
+<div ng-show="call.clusterLength() === 0" class="row">
   <div class="centered-info-pane">
     No clusters registered.
     You need to register Cisco VCS for Cloud Extensions.
