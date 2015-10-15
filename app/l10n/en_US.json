@@ -751,7 +751,7 @@
   },
   "unauthorizedPage": {
     "title": "Unauthorized",
-    "text": "You are not authorized to access the page you requested."
+    "text": "Sorry! Your account is not authorized to access this page."
   },
   "errors": {
     "status403": "Authorization failed. You do not have administrator priviledges. You will automatically be logged out in a few seconds.",
