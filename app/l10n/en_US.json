@@ -484,7 +484,7 @@
     "startDate": "Start Date:",
     "endDate": "End Date:",
     "dateExample": "Choose a Date",
-    "size": "Size Per Server:",
+    "size": "Calls Per Server:",
     "uploadFile": "Upload CDR File",
     "uploadDescription": "CDRs previously saved in json form can be uploaded for reinspection.",
     "upload": "Upload",

@@ -103,7 +103,7 @@
               for (var i = 0; i < response.hits.hits.length; i++) {
                 results.push(response.hits.hits[i]._source);
               }
-              return secondaryQuery(item, results);
+              return secondaryQuery(item, results, index);
             }
             return;
           },
@@ -137,7 +137,7 @@
       return '{"fquery":{"query":{"query_string":{"query":"dataParam.' + callType + ':(\\"' + device + '\\")"}},"_cache":true}}';
     }
 
-    function secondaryQuery(server, cdrArray) {
+    function secondaryQuery(server, cdrArray, queryIndex) {
       var sessionIds = extractUniqueIds(cdrArray);
       var newCdrArray = [];
       var promises = [];
@@ -187,7 +187,7 @@
       });
 
       return $q.all(promises).then(function () {
-        groupCdrsIntoCalls(newCdrArray);
+        groupCdrsIntoCalls(newCdrArray, queryIndex);
         return;
       });
     }
@@ -209,7 +209,8 @@
       return uniqueIds;
     }
 
-    function groupCdrsIntoCalls(cdrArray) {
+    function groupCdrsIntoCalls(cdrArray, queryIndex) {
+      var x = 0;
       while (cdrArray.length > 0) {
         var call = [];
         call.push(cdrArray[0]);
@@ -231,21 +232,28 @@
             }
           }
         }
-        proxyData.push(splitFurther(call));
+        proxyData.push(splitFurther(call, x, queryIndex));
+        x++;
       }
       return;
     }
 
-    function splitFurther(callGrouping) {
+    function splitFurther(callGrouping, callNum, queryIndex) {
       var callLegs = [];
       var call = JSON.parse(JSON.stringify(callGrouping));
+      var x = -1;
 
       var tempArray = [];
       while (call.length > 0) {
+        x++;
+        call[0].name = "server" + queryIndex + "Call" + callNum + "CDR" + x;
         tempArray.push(call[0]);
         call.splice(0, 1);
         for (var i = 0; i < call.length; i++) {
-          if (call[i].dataParam.localSessionID === tempArray[0].dataParam.localSessionID && call[i].dataParam.remoteSessionID === tempArray[0].dataParam.remoteSessionID || call[i].dataParam.remoteSessionID === tempArray[0].dataParam.localSessionID && call[i].dataParam.localSessionID === tempArray[0].dataParam.remoteSessionID) {
+          if (call[i].dataParam.localSessionID === tempArray[0].dataParam.localSessionID && call[i].dataParam.remoteSessionID === tempArray[0].dataParam.remoteSessionID ||
+            call[i].dataParam.remoteSessionID === tempArray[0].dataParam.localSessionID && call[i].dataParam.localSessionID === tempArray[0].dataParam.remoteSessionID) {
+            x++;
+            call[0].name = "server" + queryIndex + "Call" + callNum + "CDR" + x;
             tempArray.push(call[i]);
             call.splice(i, 1);
             if (call.length > 0) {

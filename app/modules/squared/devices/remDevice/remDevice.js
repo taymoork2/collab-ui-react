@@ -30,7 +30,7 @@
             },
             controllerAs: 'rdc',
             controller: 'RemDeviceController',
-            templateUrl: 'modules/squared/devicesRedux/remDevice/remDevice.html'
+            templateUrl: 'modules/squared/devices/remDevice/remDevice.html'
           }).result;
         }
 

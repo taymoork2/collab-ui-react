@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('WebExReports').controller('ReportsCtrl', [
+  angular.module('WebExReports').controller('WebExReportsCtrl', [
     '$scope',
     '$rootScope',
     '$log',

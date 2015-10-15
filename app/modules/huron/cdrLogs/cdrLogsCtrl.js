@@ -492,9 +492,17 @@
 
     function selectCDR(selectedCDR, call) {
       vm.selectedCDR = selectedCDR;
+      var callCopy = angular.copy(call);
+
+      angular.forEach(callCopy, function (item, index, array) {
+        angular.forEach(item, function (cdr, cdrIndex, cdrArray) {
+          delete cdr['name'];
+        });
+      });
+
       $state.go('cdr-overview', {
         cdrData: vm.selectedCDR,
-        call: call
+        call: callCopy
       });
     }
   }
