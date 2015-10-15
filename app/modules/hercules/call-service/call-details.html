@@ -29,15 +29,7 @@
         </div>
       </div>
 
-      <!--
-      <p ng-if="callDetails.selectedService.alarm_count">
-        <button class="btn btn-danger" ng-click="callDetails.showAlarms()">
-          {{callDetails.selectedService.alarm_count}} reported alarms
-        </button>
-      </p>
-      -->
-
-      <p ng-if="!callDetails.selectedService.alarm_count">
+      <p ng-if="callDetails.selectedService.alarm_count + callDetails.managementService.alarm_count == 0">
         No alarms reported
       </p>
 
