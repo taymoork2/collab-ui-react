@@ -1,4 +1,4 @@
-<div class="users-upload-results" ng-init="wizard.hasErrors=false;">
+<div class="users-upload-results" ng-init="wizard.hasErrors=false; sendBulkMetric();">
   <i ng-if="model.userErrorArray.length === 0" class="icon icon-check-mark-success"></i>
   <div class="results-container">
     <div class="result new-users" ng-class="{disabled: model.numNewUsers === 0}">
@@ -13,7 +13,7 @@
       <div class="total">{{model.userErrorArray.length}}</div>
       <h4 class="total-title" translate="firstTimeWizard.errorUsers"></h4>
       <div class="action-link" ng-if="model.userErrorArray.length > 0" ng-init="wizard.hasErrors=true;">
-        <i class="icon icon-error"></i><a href ng-click="wizard.resetSubTab(1)" translate="firstTimeWizard.fixCsvErrors"></a>
+        <i class="icon icon-error"></i><a href ng-click="wizard.resetSubTab(1)" translate="firstTimeWizard.fixBulkErrors"></a>
       </div>
     </div>
   </div>

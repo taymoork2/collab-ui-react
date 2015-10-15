@@ -77,10 +77,8 @@
         if (angular.isUndefined(scope.model.endNumber) || scope.model.endNumber === "") {
           // trigger validation on endNumber field
           scope.fields[2].formControl.$validate();
-          return true;
-        } else {
-          return value <= scope.model.endNumber;
         }
+        return true;
       },
       rangeOverlap: function (viewValue, modelValue, scope) {
         var value = modelValue || viewValue;
@@ -344,9 +342,22 @@
               }
             },
             controller: /* @ngInject */ function ($scope) {
-              if ($scope.formOptions.formState.formIndex === 0 && vm.firstTimeSetup) {
-                $scope.to.btnClass = 'btn-sm btn-link hide-delete';
-              }
+              $scope.$watchCollection(function () {
+                return vm.model.displayNumberRanges;
+              }, function (displayNumberRanges) {
+                if (displayNumberRanges.length === 1) {
+                  $scope.to.btnClass = 'btn-sm btn-link hide-delete';
+                } else if (displayNumberRanges.length > 1 && !vm.firstTimeSetup && angular.isUndefined($scope.model.uuid)) {
+                  $scope.to.btnClass = 'btn-sm btn-link ';
+                } else if (displayNumberRanges.length > 1 && vm.firstTimeSetup && angular.isUndefined($scope.model.uuid)) {
+                  $scope.to.btnClass = 'btn-sm btn-link ';
+                } else if (vm.model.numberRanges.length === 1 && displayNumberRanges.length !== 1) {
+                  if (angular.isDefined(vm.model.numberRanges[0].uuid)) {
+                    $scope.to.btnClass = 'btn-sm btn-link hide-delete';
+                  }
+
+                }
+              });
             }
           }]
         }]
@@ -647,7 +658,8 @@
             currentSite.timeZone = currentSite.timeZone.value;
             promise = ServiceSetup.createSite(currentSite).then(function () {
               var promises = [];
-              if (vm.pilotNumberSelected) {
+              // Check for voicemailService before updating voicemailpilot number on common/customer
+              if (vm.hasVoicemailService && vm.pilotNumberSelected) {
                 promises.push(ServiceSetup.updateCustomerVoicemailPilotNumber({
                   voicemail: {
                     pilotNumber: vm.pilotNumberSelected.pattern
@@ -656,7 +668,7 @@
                   errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.voicemailUpdateError'));
                 }));
               }
-              if (vm.model.site.timeZone !== DEFAULT_TZ.value) {
+              if (vm.hasVoicemailService && vm.model.site.timeZone !== DEFAULT_TZ.value) {
                 promises.push(ServiceSetup.updateVoicemailTimezone(vm.model.site.timeZone.timezoneid, vm.objectId)
                   .catch(function (response) {
                     errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.timezoneUpdateError'));
@@ -668,7 +680,7 @@
               errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.siteError'));
             });
             deferreds.push(promise);
-          } else if (vm.pilotNumberSelected && vm.pilotNumberSelected.pattern !== vm.model.site.voicemailPilotNumber) {
+          } else if (vm.hasVoicemailService && vm.pilotNumberSelected && vm.pilotNumberSelected.pattern !== vm.model.site.voicemailPilotNumber) {
             promise = ServiceSetup.updateCustomerVoicemailPilotNumber({
               voicemail: {
                 pilotNumber: vm.pilotNumberSelected.pattern

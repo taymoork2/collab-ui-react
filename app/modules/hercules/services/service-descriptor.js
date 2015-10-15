@@ -7,7 +7,7 @@ angular.module('Hercules')
         $http
           .get(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services')
           .success(function (data) {
-            callback(null, data.fusion_services || []);
+            callback(null, data.items || []);
           })
           .error(function () {
             callback(arguments);
@@ -16,13 +16,13 @@ angular.module('Hercules')
 
       var filterEnabledServices = function (services) {
         return _.filter(services, function (service) {
-          return service.connector_type != 'c_mgmt' && service.enabled;
+          return service.id != 'squared-fusion-mgmt' && service.enabled;
         });
       };
 
       var filterAllExceptManagement = function (services) {
         return _.filter(services, function (service) {
-          return service.connector_type != 'c_mgmt' && service.connector_type != 'mf_mgmt';
+          return service.id === 'squared-fusion-cal' || service.id === 'squared-fusion-uc';
         });
       };
 
@@ -38,11 +38,29 @@ angular.module('Hercules')
 
       var setServiceEnabled = function (serviceId, enabled, callback) {
         $http
-          .put(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
+          .patch(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
             enabled: enabled
           })
           .success(function () {
             callback(null);
+          })
+          .error(function () {
+            callback(arguments);
+          });
+      };
+
+      var isServiceEnabled = function (serviceId, callback) {
+        $http
+          .get(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services')
+          .success(function (data) {
+            var service = _.find(data.items, {
+              id: serviceId
+            });
+            if (service === undefined) {
+              callback(false);
+            } else {
+              callback(null, service.enabled);
+            }
           })
           .error(function () {
             callback(arguments);
@@ -72,6 +90,7 @@ angular.module('Hercules')
         filterEnabledServices: filterEnabledServices,
         filterAllExceptManagement: filterAllExceptManagement,
         isFusionEnabled: isFusionEnabled,
+        isServiceEnabled: isServiceEnabled,
         setServiceEnabled: setServiceEnabled,
         serviceIcon: serviceIcon
       };

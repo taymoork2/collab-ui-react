@@ -5,10 +5,11 @@
     .controller('PstnSetupCtrl', PstnSetupCtrl);
 
   /* @ngInject */
-  function PstnSetupCtrl($scope, $q, $window, $translate, $state, $stateParams, PstnSetupService, ValidationService, Notification, TerminusStateService) {
+  function PstnSetupCtrl($scope, $q, $window, $translate, $state, $stateParams, $timeout, PstnSetupService, ValidationService, Notification, TerminusStateService, TelephoneNumberService, ExternalNumberPool) {
     var vm = this;
     var customerExists = false;
-    var hasCarriers = false;
+    vm.hasCarriers = false;
+
     vm.customerId = $stateParams.customerId;
     vm.customerName = $stateParams.customerName;
     vm.loading = true;
@@ -26,6 +27,7 @@
     vm.notifyCustomer = notifyCustomer;
     vm.launchCustomerPortal = launchCustomerPortal;
     vm.orderNumbers = orderNumbers;
+    vm.goToNumbers = goToNumbers;
     vm.placeOrder = placeOrder;
 
     $scope.$watchCollection(function () {
@@ -128,16 +130,111 @@
       }
     }];
 
+    vm.tokenfieldid = 'swivelAddNumbers';
+    vm.tokenplaceholder = $translate.instant('didManageModal.inputPlacehoder');
+    vm.tokenoptions = {
+      delimiter: [',', ';'],
+      createTokensOnBlur: true,
+      limit: 50,
+      tokens: [],
+      minLength: 9,
+      beautify: false
+    };
+    vm.tokenmethods = {
+      createtoken: createToken,
+      createdtoken: createdToken,
+      edittoken: editToken
+    };
+    vm.validateSwivelNumbers = validateSwivelNumbers;
+
     init();
 
     ////////////////////////
 
-    function selectTata() {
-      $state.go('didadd');
+    function editToken(e) {
+      // If invalid token, show the label text in the edit input
+      if (e.attrs.invalid) {
+        e.attrs.value = e.attrs.label;
+      }
     }
 
-    function selectIntelePeer() {
+    function createToken(e) {
+      var tokenNumber = e.attrs.label;
+      e.attrs.value = TelephoneNumberService.getDIDValue(tokenNumber);
+      e.attrs.label = TelephoneNumberService.getDIDLabel(tokenNumber);
+
+      var duplicate = _.find(getSwivelNumberTokens(), {
+        value: e.attrs.value
+      });
+      if (duplicate) {
+        e.attrs.duplicate = true;
+      }
+    }
+
+    function createdToken(e) {
+      if (e.attrs.duplicate) {
+        $timeout(function () {
+          var tokens = getSwivelNumberTokens();
+          _.remove(tokens, function (e) {
+            return e.duplicate;
+          });
+          Notification.error('pstnSetup.duplicateNumber', {
+            number: e.attrs.label
+          });
+          setSwivelNumberTokens(tokens.map(function (token) {
+            return token.value;
+          }));
+        });
+      } else if (!TelephoneNumberService.validateDID(e.attrs.value)) {
+        angular.element(e.relatedTarget).addClass('invalid');
+        e.attrs.invalid = true;
+      }
+    }
+
+    function setSwivelNumberTokens(tokens) {
+      angular.element('#' + vm.tokenfieldid).tokenfield('setTokens', tokens);
+    }
+
+    function getSwivelNumberTokens() {
+      return angular.element('#' + vm.tokenfieldid).tokenfield('getTokens');
+    }
+
+    function validateSwivelNumbers() {
+      var tokens = getSwivelNumberTokens() || [];
+      var invalid = _.find(tokens, {
+        invalid: true
+      });
+      if (invalid) {
+        Notification.error('pstnSetup.invalidNumberPrompt');
+      } else if (tokens.length === 0) {
+        Notification.error('pstnSetup.orderNumbersPrompt');
+      } else {
+        vm.swivelTokens = tokens;
+        $state.go('pstnSetup.review');
+      }
+    }
+
+    function goToNumbers() {
+      if (vm.provider.swivel) {
+        goToSwivelNumbers();
+      } else {
+        goToOrderNumbers();
+      }
+    }
+
+    function goToSwivelNumbers() {
+      $state.go('pstnSetup.swivelNumbers');
+      $timeout(function () {
+        setSwivelNumberTokens(vm.swivelNumbers);
+      }, 100);
+    }
+
+    function goToOrderNumbers() {
       $state.go('pstnSetup.orderNumbers');
+    }
+
+    function goToNextSteps() {
+      $state.go('pstnSetup.nextSteps');
     }
 
     function removeOrder(order) {
@@ -182,7 +279,7 @@
           if (angular.isArray(carriers) && carriers.length === 0) {
             return PstnSetupService.listCarriers();
           } else {
-            hasCarriers = true;
+            vm.hasCarriers = true;
             return carriers;
           }
         })
@@ -195,9 +292,9 @@
         })
         .then(function (carriers) {
           angular.forEach(carriers, initCarrier);
-          if (customerExists && hasCarriers && angular.isArray(vm.providers) && vm.providers.length === 1) {
+          if (customerExists && vm.hasCarriers && angular.isArray(vm.providers) && vm.providers.length === 1) {
             selectProvider(vm.providers[0]);
-            return $state.go('pstnSetup.orderNumbers');
+            goToNumbers();
           }
         })
         .catch(function (response) {
@@ -222,21 +319,26 @@
             $translate.instant('intelepeerFeatures.feature3'),
             $translate.instant('intelepeerFeatures.feature4')
           ],
-          selectFn: selectIntelePeer
+          selectFn: goToOrderNumbers
+        });
+      } else if (carrier.name === PstnSetupService.TATA) {
+        vm.providers.push({
+          swivel: true,
+          uuid: carrier.uuid,
+          name: carrier.name,
+          logoSrc: 'images/carriers/logo_tata_comm.svg',
+          logoAlt: 'Tata',
+          title: 'Tata Smart Voice Bundle',
+          features: [
+            $translate.instant('tataFeatures.feature1'),
+            $translate.instant('tataFeatures.feature2'),
+            $translate.instant('tataFeatures.feature3'),
+            $translate.instant('tataFeatures.feature4'),
+            $translate.instant('tataFeatures.feature5')
+          ],
+          selectFn: goToSwivelNumbers
         });
       }
-      // TODO enable Tata at a later time
-      // else if (carrier.name === PstnSetupService.TATA) {
-      //   vm.providers.push({
-      //     uuid: carrier.uuid,
-      //     name: carrier.name,
-      //     logoSrc: 'images/carriers/logo_tata_comm.svg',
-      //     logoAlt: 'Tata',
-      //     title: 'Tata Trial',
-      //     features: [],
-      //     selectFn: selectTata
-      //   });
-      // }
     }
 
     function orderNumbers() {
@@ -247,46 +349,77 @@
       }
     }
 
-    function placeOrder() {
-      var promise = $q.when();
-      angular.element('#placeOrder').button('loading');
-      if (!customerExists) {
-        promise = promise.then(function () {
-          return PstnSetupService.createCustomer(vm.customerId, vm.customerName, vm.provider.uuid);
-        }).then(function () {
+    function createCustomer() {
+      return PstnSetupService.createCustomer(vm.customerId, vm.customerName, vm.provider.uuid)
+        .then(function () {
           customerExists = true;
         }).catch(function (response) {
           Notification.errorResponse(response, 'pstnSetup.customerCreateError');
           return $q.reject(response);
         });
-      } else if (!hasCarriers) {
-        promise = promise.then(function () {
-          return PstnSetupService.updateCustomerCarrier(vm.customerId, vm.provider.uuid);
-        }).then(function () {
-          hasCarriers = true;
+    }
+
+    function updateCustomerCarrier() {
+      return PstnSetupService.updateCustomerCarrier(vm.customerId, vm.provider.uuid)
+        .then(function () {
+          vm.hasCarriers = true;
         }).catch(function (response) {
           Notification.errorResponse(response, 'pstnSetup.customerUpdateError');
           return $q.reject(response);
         });
-      }
-      promise.then(function () {
-        var promises = [];
-        angular.forEach(vm.blockOrders, function (blockOrder) {
-          var promise = PstnSetupService.orderBlock(vm.customerId, vm.provider.uuid, blockOrder.areaCode, blockOrder.quantity);
-          promise.catch(function (response) {
-            Notification.errorResponse(response, 'pstnSetup.blockOrderError', {
-              areaCode: this.areaCode,
-              quantity: this.quantity
-            });
-          }.bind(blockOrder));
+    }
+
+    function createNumbers() {
+      var promises = [];
+      var errors = [];
+      if (vm.provider.swivel) {
+        angular.forEach(vm.swivelTokens, function (swivelToken) {
+          var promise = ExternalNumberPool.create(vm.customerId, swivelToken.value)
+            .catch(function (response) {
+              if (response.status === 409) {
+                errors.push($translate.instant('pstnSetup.swivelDuplicateError', {
+                  number: this.label
+                }));
+              } else {
+                errors.push(Notification.processErrorResponse(response, 'pstnSetup.swivelAddError', {
+                  number: this.label
+                }));
+              }
+            }.bind(swivelToken));
           promises.push(promise);
         });
-        return $q.all(promises);
-      }).then(function () {
-        $state.go('pstnSetup.nextSteps');
-      }).finally(function () {
-        angular.element('#placeOrder').button('reset');
+      } else {
+        angular.forEach(vm.blockOrders, function (blockOrder) {
+          var promise = PstnSetupService.orderBlock(vm.customerId, vm.provider.uuid, blockOrder.areaCode, blockOrder.quantity)
+            .catch(function (response) {
+              errors.push(Notification.processErrorResponse(response, 'pstnSetup.blockOrderError', {
+                areaCode: this.areaCode,
+                quantity: this.quantity
+              }));
+            }.bind(blockOrder));
+          promises.push(promise);
+        });
+      }
+      return $q.all(promises).then(function () {
+        if (errors.length > 0) {
+          Notification.notify(errors, 'error');
+        }
       });
+    }
+
+    function placeOrder() {
+      var promise = $q.when();
+      vm.placeOrderLoad = true;
+      if (!customerExists) {
+        promise = promise.then(createCustomer);
+      } else if (!vm.hasCarriers) {
+        promise = promise.then(updateCustomerCarrier);
+      }
+      promise.then(createNumbers)
+        .then(goToNextSteps)
+        .finally(function () {
+          vm.placeOrderLoad = false;
+        });
     }
   }
 })();

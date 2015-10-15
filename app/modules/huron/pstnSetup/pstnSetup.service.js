@@ -5,7 +5,7 @@
     .factory('PstnSetupService', PstnSetupService);
 
   /* @ngInject */
-  function PstnSetupService($q, Authinfo, TerminusCarrierService, TerminusCustomerService, TerminusCustomerCarrierService, TerminusBlockOrderService, TerminusOrderService, TerminusCarrierInventory) {
+  function PstnSetupService($q, Authinfo, TerminusCarrierService, TerminusCustomerService, TerminusCustomerCarrierService, TerminusBlockOrderService, TerminusOrderService, TerminusCarrierInventoryCount, TerminusNumberService) {
     var INTELEPEER = "INTELEPEER";
     var TATA = "TATA";
     var PSTN = "PSTN";
@@ -18,12 +18,14 @@
       getCustomer: getCustomer,
       listCarriers: listCarriers,
       getCarrierInventory: getCarrierInventory,
+      isCarrierSwivel: isCarrierSwivel,
       listCustomerCarriers: listCustomerCarriers,
       getCarrierId: getCarrierId,
       orderBlock: orderBlock,
       listPendingOrders: listPendingOrders,
       getOrder: getOrder,
       listPendingNumbers: listPendingNumbers,
+      deleteNumber: deleteNumber,
       INTELEPEER: INTELEPEER,
       TATA: TATA,
       PSTN: PSTN,
@@ -92,10 +94,24 @@
     }
 
     function getCarrierInventory(carrierId, state) {
-      return TerminusCarrierInventory.get({
+      return TerminusCarrierInventoryCount.get({
         carrierId: carrierId,
         state: state
       }).$promise;
+    }
+
+    function isCarrierSwivel(customerId) {
+      return listCustomerCarriers(customerId).then(function (carriers) {
+        if (angular.isArray(carriers)) {
+          var carrier = _.findWhere(carriers, {
+            name: TATA
+          });
+          if (carrier) {
+            return true;
+          }
+        }
+        return false;
+      });
     }
 
     function getCarrierId(customerId, carrierName) {
@@ -162,6 +178,13 @@
           return pendingNumbers;
         });
       });
+    }
+
+    function deleteNumber(customerId, number) {
+      return TerminusNumberService.delete({
+        customerId: customerId,
+        did: number
+      }).$promise;
     }
 
   }

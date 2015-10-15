@@ -10,10 +10,10 @@
         var updateSummary = function () {
           var userActivationNotComplete = false;
           var servicesWithUserErrors = false;
-          if ($scope.clusters && $scope.clusters.length !== 0 && $scope.services && $scope.services.enabledOnly && $scope.services.enabledOnly.length !== 0) {
+          if ($scope.clusters && $scope.clusterLength() !== 0 && $scope.services && $scope.services.enabledOnly && $scope.services.enabledOnly.length !== 0) {
             $scope.xsummary = _.map($scope.services.enabledOnly, function (service) {
               var summaryForService = _.find(statusSummary, function (summary) {
-                return service.service_id == summary.serviceId;
+                return service.id == summary.serviceId;
               });
               var needsUserActivation = !summaryForService || (summaryForService.activated === 0 && summaryForService.error === 0 && summaryForService.notActivated === 0);
               if (needsUserActivation) {
@@ -26,7 +26,7 @@
                 errors = summaryForService.error;
               }
               return {
-                serviceId: service.service_id,
+                serviceId: service.id,
                 needsUserActivation: needsUserActivation,
                 errors: errors
               };

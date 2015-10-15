@@ -8,7 +8,8 @@
 @import '../customers/customerOverview/customer-overview';
 @import '../landingPage/landing-page';
 @import '../login/login';
-@import '../notifications/notifications';
+@import '../organizations/organizationOverview/organization-overview';
+@import '../organizations/organizationList/organization-list';
 @import '../partnerLanding/partner-home';
 @import '../partnerLanding/partner-landing-trials';
 @import '../partnerReports/partner-reports';
@@ -25,3 +26,4 @@
 @import '../convertUsers/convertUsersModal';
 @import '../leaderBoard/leaderBoard';
 @import '../partnerProfile/partnerProfile';
+@import '../partnerProfile/brandingUpload';

@@ -3,7 +3,7 @@
 describe('Controller: UserOverviewCtrl', function () {
   var controller, $scope, $httpBackend, $q, Config, Authinfo, Utils, Userservice, FeatureToggleService;
 
-  var $stateParams, currentUser, updatedUser, getUserMe;
+  var $stateParams, currentUser, updatedUser, getUserMe, getUserFeatures;
 
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
@@ -23,6 +23,11 @@ describe('Controller: UserOverviewCtrl', function () {
     currentUser = angular.copy(getJSONFixture('core/json/currentUser.json'));
     getUserMe = getJSONFixture('core/json/users/me.json');
     updatedUser = angular.copy(currentUser);
+    getUserFeatures = getJSONFixture('core/json/users/me/featureToggles.json');
+    var deferred2 = $q.defer();
+    deferred2.resolve({
+      data: getUserFeatures
+    });
 
     $stateParams = {
       currentUser: currentUser
@@ -32,7 +37,8 @@ describe('Controller: UserOverviewCtrl', function () {
     spyOn(Userservice, 'getUser').and.callFake(function (uid, callback) {
       callback(currentUser, 200);
     });
-    spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(deferred.promise);
+    spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue(deferred.promise);
+    spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(deferred2.promise);
 
     // eww
     var userUrl = Config.getScimUrl(Authinfo.getOrgId()) + '/' + currentUser.id;
@@ -77,6 +83,10 @@ describe('Controller: UserOverviewCtrl', function () {
       $scope.$broadcast('entitlementsUpdated');
       $httpBackend.flush();
       expect(controller.titleCard).toEqual("Display Name");
+    });
+
+    it('should not set features list by default', function () {
+      expect(controller.features).toBeUndefined();
     });
 
     it('should reload the user data from identity response and set subTitleCard to title', function () {
@@ -152,7 +162,6 @@ describe('Controller: UserOverviewCtrl', function () {
       $httpBackend.flush();
       expect(currentUser.licenseID.length).toEqual(1);
     });
-
   });
 
   describe('AuthCodeLink', function () {

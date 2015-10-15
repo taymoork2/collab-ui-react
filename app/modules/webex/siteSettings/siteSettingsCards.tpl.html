@@ -1,0 +1,52 @@
+
+  <cs-card class="cs-card medium"
+           ng-repeat="settingCardObj in WebExSiteSettings.siteSettingsObj.settingCardObjs"
+           ng-if="0 < settingCardObj.pageObjs.length"
+           id={{settingCardObj.id}}-card
+           name={{settingCardObj.id}}-card>
+    <article>
+      <header>
+        <h3>{{settingCardObj.label}}</h3>
+
+      </header>
+      <section id="siteSettingsCardSection">
+       <div id="commonSettingsInfo" class="card-section-content" ng-if="'CommonSettings' == settingCardObj.id">
+          <span translate="webexSiteSettingsLabels.commonSettingsCardNote"></span>
+        </div>
+        <ul class="no-bullet" >
+          <li ng-repeat="pageObj in settingCardObj.pageObjs">
+              <a id={{pageObj.id}}
+                 name={{pageObj.id}}
+                 ui-sref={{pageObj.uiSref}}>
+
+                {{pageObj.label}}
+              </a>
+          </li>
+        </ul>
+         <div ng-if="'SC' == settingCardObj.id">
+            <ul class="no-bullet" ng-if="0 < settingCardObj.webACDObj.pageObjs.length">
+              <h4>{{settingCardObj.webACDObj.label}}</h4>
+              <li ng-repeat="pageObj in settingCardObj.webACDObj.pageObjs">
+                  <a id={{pageObj.id}}
+                     name={{pageObj.id}}
+                     ui-sref={{pageObj.uiSref}}>
+
+                    {{pageObj.label}}
+                  </a>
+              </li>
+            </ul>
+            <ul class="no-bullet" ng-if="0 < settingCardObj.remoteAccessObj.pageObjs.length">
+              <h4>{{settingCardObj.remoteAccessObj.label}}</h4>
+              <li ng-repeat="pageObj in settingCardObj.remoteAccessObj.pageObjs">
+                  <a id={{pageObj.id}}
+                     name={{pageObj.id}}
+                     ui-sref={{pageObj.uiSref}}>
+
+                    {{pageObj.label}}
+                  </a>
+              </li>
+            </ul>
+          </div>
+      </section>
+    </article>
+  </cs-card>

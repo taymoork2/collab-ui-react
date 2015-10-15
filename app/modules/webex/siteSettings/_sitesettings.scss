@@ -1,0 +1,103 @@
+@CHARSET "UTF-8";
+.siteindex-panel {
+  background-color: #ffffff;
+  margin-left:-0.5rem;
+  margin-right:-0.5rem;
+  margin-bottom:-0.5rem;
+}
+
+// padding to line things up there are 8px of padding coming from somewhere in atlas
+// if this changes these won't line up anymore.
+#siteSettingsBreadCrumbs{
+  padding-left: rem(22);
+}
+
+#configureCards{
+  padding-left: rem(16);
+}
+
+#siteSettingsCardSection{
+  ul{
+    @include vr-spacing(pb, 0);
+    @include vr-spacing(pt, .5);
+    h4{
+      @include vr-spacing(pt, 0);
+      @include vr-spacing(pb, .25)
+    }
+    a {
+      line-height: rem(24);
+    }
+  }
+  @include vr-spacing(pb, 1);
+}
+
+#commonSettingsInfo{
+   @include vr-spacing(pt, 0)
+}
+
+#emallAllHostsButton{
+  @include vr-spacing(pr, 1.5);
+}
+
+// Some of this can probably go since it is in the toolkit
+// but there are modifications here
+.configure-card{
+    display: flex;
+    justify-content: space-around;
+    height: 100%;
+    width: 100%;
+    div {
+        &.left-side {
+            border-right: 1px solid $gray-lighter;
+            @include vr-spacing(mv, 1.5);
+            @include vr-spacing(pv, 2);
+            @include vr-spacing(ph, 1.5, 1px);
+             width:  33%;
+            .service-name {
+                display: flex;
+                align-items: center;
+                span {
+                    font-size: rem(36);
+                    font-family: $brand-font-thin;
+                }
+                i {
+                    font-size: rem(48);
+                }
+            }
+        }
+        &.right-side {
+            width: 67%;
+            display: flex;
+            flex-direction: column;
+            @include vr-spacing(pv, 1.5);
+            @include vr-spacing(ph, 1);
+            .overview-title {
+                color: $brand-primary;
+                font-family: $brand-font-light;
+            }
+            .overview-count {
+                @include vr-spacing(pt, 1);
+                font-size: rem(48);
+                line-height: 1;
+                color: $brand-info;
+                display: flex;
+                flex-direction: column;
+            }
+            i {
+                @include vr-spacing(pt, 1);
+                font-size: rem(48);
+                line-height: 1;
+                display: flex;
+                flex-direction: column;
+                cursor: pointer;
+                color: $text-color;
+                &:hover {
+                  color: $anchor-font-color-hover;
+                }
+            }
+            .overview-label {
+                color: $gray;
+            }
+        }
+    }
+}

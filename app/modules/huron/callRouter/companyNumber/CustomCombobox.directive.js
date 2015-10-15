@@ -19,6 +19,12 @@ function CustomComboboxCtrl($scope, $attrs, $parse, CustomComboboxconfig, dropdo
     setIsFocused = angular.noop,
     toggleInvoker = $attrs.onToggle ? $parse($attrs.onToggle) : angular.noop;
 
+  this.changeFunction = function () {
+    if (angular.isFunction(this.onChangeFn)) {
+      this.onChangeFn();
+    }
+  };
+
   this.init = function (element) {
     self.$element = element;
 
@@ -156,11 +162,16 @@ angular.module('uc.callrouter').directive('customCombobox', function () {
 
 .directive('customComboSearch', function () {
   return {
+    controller: 'CustomComboboxCtrl',
     restrict: 'A',
     require: 'ngModel',
+    scope: {
+      onChangeFn: '&'
+    },
     link: function (scope, element, attrs, ngModel) {
       scope.newValue = ngModel.$viewValue;
       ngModel.$parsers.push(function (value) {
+        scope.onChangeFn();
         scope.newValue = value;
         return value;
       });
@@ -181,6 +192,7 @@ angular.module('uc.callrouter').directive('customCombobox', function () {
       value: '=ngModel',
       list: '=',
       required: '=',
+      onChangeFn: '&',
       addText: '=addtext',
       myOptions: '=options',
       maxLength: '=ngMaxlength'
@@ -188,12 +200,15 @@ angular.module('uc.callrouter').directive('customCombobox', function () {
     compile: function compile() {
       return {
         pre: function preLink(scope, element, attrs, cbCtrl) {
+
+          scope.onChangeFn();
           // If options were not provided, initialize an empty default
           scope.options = scope.myOptions || {
             validation: {}
           };
 
           scope.$watch('value', function (newValue) {
+            scope.onChangeFn();
             scope.newValue = newValue;
           });
         },
@@ -206,7 +221,7 @@ angular.module('uc.callrouter').directive('customCombobox', function () {
 
           scope.selectItem = function () {
             cbCtrl.$setViewValue(this.item);
-            //scope.value = this.item;
+            scope.value = this.item;
             input[0].focus();
 
           };

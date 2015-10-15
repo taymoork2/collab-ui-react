@@ -1,0 +1,26 @@
+<h5>
+  Email Notifications
+</h5>
+
+<p>
+  Here we need a new text that tells you something useful.
+  I.e. Add email addresses to receive email notifications about Service impacting Alarms and Software Upgrades.
+</p>
+
+<textarea ng-disabled="saving"
+          placeholder="Separate multiple email addresses by commas, for example, foo@yourdomain.com, bar@yourdomain.com, ..."
+          class="form-control"
+          id="wx2_users"
+          type="text"
+          ng-model="callServiceSettings.config.wx2users"></textarea>
+
+<button ng-disabled="callServiceSettings.loading || callServiceSettings.savingEmail" id="convertActionButton"
+        class="btn-primary"
+        ng-click="callServiceSettings.writeConfig()">
+        <span ng-hide="callServiceSettings.savingEmail">
+          Save
+        </span>
+        <span ng-show="callServiceSettings.savingEmail">
+          <i class="icon icon-spinner"/>
+        </span>
+</button>

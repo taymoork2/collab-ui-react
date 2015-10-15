@@ -1,0 +1,51 @@
+.org-list {
+  .ngCell.col0 .ngVerticalBar, .ngHeaderCell.col0 .ngVerticalBar {
+    display: none;
+  }
+  .ngHeaderText.colt5 {
+    text-align: left;
+  }
+  .ngCell.colt5 {
+    overflow: visible;
+    .dropdown-menu {
+      right: 25px;
+      left: auto;
+      top: 70%;
+    }
+  }
+
+  /** todo: remove once Paul gives the ok */
+  .searchbox {
+    float:none;
+  }
+}
+
+.start-search {
+  position: absolute;
+  top: 150px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: $gray-darker;
+}
+
+.admin-name {
+  color: $gray-dark;
+  font-family: $brand-font-cisco-TT-Extra-Light;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.btn-actions {
+  float: right;
+  padding: 15px 30px;
+  text-align: center;
+}
+
+.filter {
+  top: 35px;
+}
+
+.all-filter {
+  text-align: right;
+}

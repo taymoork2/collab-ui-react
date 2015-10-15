@@ -53,25 +53,17 @@ angular.module('Squared')
       };
 
       var getOrg = function () {
-        var orgSettings = '';
         Orgservice.getOrg(function (data, status) {
           if (data.success) {
-            if (data.orgSettings) {
-              for (var settings in data.orgSettings) {
-                try {
-                  orgSettings = JSON.parse(data.orgSettings[settings]);
-                } catch (e) {
-                  continue;
-                }
-                if (orgSettings.reportingSiteUrl) {
-                  $scope.reportingUrl = orgSettings.reportingSiteUrl;
-                  $scope.problemHandler = 'externally';
-                }
-                if (orgSettings.helpUrl) {
-                  $scope.helpUrl = orgSettings.helpUrl;
-                  $scope.helpHandler = 'externally';
-                }
-              }
+            var settings = data.orgSettings;
+
+            if (!_.isEmpty(settings.reportingSiteUrl)) {
+              $scope.reportingUrl = settings.reportingSiteUrl;
+              $scope.problemHandler = 'externally';
+            }
+            if (!_.isEmpty(settings.helpUrl)) {
+              $scope.helpUrl = settings.helpUrl;
+              $scope.helpHandler = 'externally';
             }
           } else {
             Log.debug('Get org failed. Status: ' + status);
@@ -197,7 +189,7 @@ angular.module('Squared')
         $scope.closeCallInfo();
         $('#logsearchfield').typeahead('close');
         $scope.userLogs = [];
-        angular.element('#logSearchBtn').button('loading');
+        $scope.logSearchBtnLoad = true;
         //check whether email address or uuid was enetered
         var searchInput = $('#logsearchfield').val();
         if (searchInput) {
@@ -207,7 +199,7 @@ angular.module('Squared')
           $('#noResults').text([$filter('translate')('supportPage.noResults')]);
           Log.debug('Search input cannot be empty.');
           Notification.notify([$filter('translate')('supportPage.errEmptyinput')], 'error');
-          angular.element('#logSearchBtn').button('reset');
+          $scope.logSearchBtnLoad = false;
         }
       };
 
@@ -272,18 +264,18 @@ angular.module('Squared')
                   orgId: data.metadataList[index].orgId
                 };
                 $scope.userLogs.push(log);
-                angular.element('#logSearchBtn').button('reset');
+                $scope.logSearchBtnLoad = false;
                 $('#logs-panel').show();
               }
             } else {
               $('#noResults').text([$filter('translate')('supportPage.noResults')]);
-              angular.element('#logSearchBtn').button('reset');
+              $scope.logSearchBtnLoad = false;
               $('#logs-panel').show();
             }
           } else {
             $('#noResults').text([$filter('translate')('supportPage.noResults')]);
             $('#logs-panel').show();
-            angular.element('#logSearchBtn').button('reset');
+            $scope.logSearchBtnLoad = false;
             Log.debug('Failed to retrieve user logs. Status: ' + status);
             Notification.notify([$translate.instant('supportPage.errLogQuery', {
               status: status

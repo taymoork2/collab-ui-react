@@ -86,42 +86,39 @@ angular.module('Mediafusion')
         $scope.connectorId = connector.id;
         if ($scope.showPreview) {
           $state.go('connector-details', {
-            connectorId: connector.id
+            connectorId: connector.id,
+            groupName: connector.properties["mf.group.displayName"]
           });
         }
         $scope.showPreview = true;
       };
 
-      $scope.setDeleteConnector = function (clusterId, serial, connectorName) {
+      $scope.setDeregisterConnector = function (clusterId, connectorName) {
         $scope.showPreview = false;
         $scope.deleteClusterId = clusterId;
-        $scope.deleteSerial = serial;
         $scope.deleteConnectorName = connectorName;
       };
 
       $scope.cancelDelete = function () {
         $scope.deleteClusterId = null;
-        $scope.deleteSerial = null;
         $scope.deleteConnectorName = null;
         $state.go('mediafusionconnector');
       };
 
-      $scope.deleteConnector = function (deleteClusterId, deleteSerial) {
-        MediafusionProxy.deleteHost($scope.deleteClusterId, $scope.deleteSerial)
-          // function (data, status) {
-          .success(function (data, status) {
-            deleteSuccess();
-          })
-          .error(function (response) {
-            Notification.errorResponse(response);
-          });
+      $scope.defuseConnector = function (deleteClusterId) {
+        MediafusionProxy.defuseConnector($scope.deleteClusterId);
+        // function (data, status) {
+        //.success(function (data, status) {
+        //  deleteSuccess();
+        //})
+        //.error(function (response) {
+        //  Notification.errorResponse(response);
+        //});
       };
 
       function deleteSuccess() {
         angular.element('#deleteButton').button('reset');
-        Notification.notify([$translate.instant('mediaFusion.deleteConnectorSuccess', {
-          hostname: $scope.deleteConnectorName
-        })], 'success');
+        Notification.notify([$translate.instant('mediaFusion.defuseSuccess')], 'success');
         //Notification.notify('Connector ' + $scope.deleteConnectorName + ' deleted successfully', 'success');
 
         setTimeout(function () {

@@ -13,17 +13,18 @@
         </div>
         <div class="package-detail-label">
           <div translate="pstnSetup.package"></div>
-          <div translate="pstnSetup.adding"></div>
+          <div translate="pstnSetup.numbersTitle"></div>
         </div>
         <div class="package-detail-text">
           <div>{{::pstnSetup.provider.title}}</div>
-          <div class="detail-text" translate="pstnSetup.newNumbers" translate-value-count="{{::pstnSetup.blockOrderTotals}}" translate-interpolation="messageformat"></div>
+          <div class="detail-text" ng-if="pstnSetup.provider.swivel" translate="pstnSetup.newNumbers" translate-value-count="{{::pstnSetup.swivelTokens.length}}"></div>
+          <div class="detail-text" ng-if="!pstnSetup.provider.swivel" translate="pstnSetup.newNumbers" translate-value-count="{{::pstnSetup.blockOrderTotals}}"></div>
         </div>
       </div>
     </div>
   </div>
   <div class="modal-footer">
-    <button class="btn btn-default" ui-sref="pstnSetup.orderNumbers" translate="common.back"></button>
-    <button class="btn btn-primary" id="placeOrder" ng-click="pstnSetup.placeOrder()" translate="pstnSetup.placeOrder" data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>"></button>
+    <button class="btn btn-default" ng-click="pstnSetup.goToNumbers()"><span translate="common.back"></span></button>
+    <button class="btn btn-primary" id="placeOrder" cs-btn loading="pstnSetup.placeOrderLoad" ng-click="pstnSetup.placeOrder()"><span translate="pstnSetup.placeOrder"></span></button>
   </div>
 </div>

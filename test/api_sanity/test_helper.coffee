@@ -39,7 +39,7 @@ auth =
 
   'test-user':
     user: 'atlasmapservice+ll1@gmail.com'
-    pass: 'C1sc0123!'
+    pass: 'P@ssword123'
     org:  '75653d2f-1675-415c-aa5d-c027233f68fe'
 
   'huron-int1':
@@ -74,7 +74,7 @@ auth =
 
   'media-super-admin':
     user: 'super-admin@mfusion1webex.com'
-    pass: 'Mc23267!'
+    pass: 'C1sc0123!'
     org:  'baab1ece-498c-452b-aea8-1a727413c818'
 
   'customer-support-admin':

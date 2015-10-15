@@ -35,11 +35,27 @@
       return clusterCache;
     };
 
+    var setProperty = function (clusterId, property, value) {
+      var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/properties';
+      var payload = {};
+      payload[property] = value;
+      return $http.post(url, payload);
+    };
+
     var upgradeSoftware = function (clusterId, serviceType) {
       var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/services/' + serviceType + '/upgrade';
       return $http
         .post(url, '{}')
         .then(extractDataFromResponse);
+    };
+
+    var deleteCluster = function (clusterId) {
+      var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
+      return $http.delete(url).then(function () {
+        if (clusterCache[clusterId]) {
+          delete clusterCache[clusterId];
+        }
+      });
     };
 
     var deleteHost = function (clusterId, serial) {
@@ -70,6 +86,8 @@
       getClusters: getClusters,
       getConnector: getConnector,
       upgradeSoftware: upgradeSoftware,
+      deleteCluster: deleteCluster,
+      setProperty: setProperty,
       subscribe: clusterPoller.subscribe
     };
   }

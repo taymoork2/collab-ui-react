@@ -14,7 +14,7 @@
           config.url.indexOf('hercules') > -1) {
           config.headers.TrackingID = undefined;
         }
-        if (config.url.indexOf('huron-dev.com') != -1) {
+        if (config.url.indexOf('huron-dev.com') !== -1 || config.url.indexOf('huron-int.com') !== -1) {
           var exposeHeaders = config.headers['Access-Control-Expose-Headers'];
           if (angular.isUndefined(exposeHeaders)) {
             exposeHeaders = trackingID;

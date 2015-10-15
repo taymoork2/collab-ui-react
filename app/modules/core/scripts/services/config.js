@@ -167,6 +167,12 @@ angular.module('Core')
           prod: 'https://uss-a.wbx2.com/'
         },
 
+        certsUrl: {
+          dev: 'https://certs-integration.wbx2.com/',
+          integration: 'https://certs-integration.wbx2.com/',
+          prod: 'https://certs-a.wbx2.com/'
+        },
+
         webexUrl: {
           siteAdminHomeUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminHomePage',
           siteAdminDeepUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage'
@@ -184,11 +190,12 @@ angular.module('Core')
         ],
 
         helpUrl: 'https://support.ciscospark.com',
-        ssoUrl: 'https://support.ciscospark.com/customer/portal/articles/1909112-sso-setup',
-        rolesUrl: 'https://support.ciscospark.com/customer/portal/articles/1908564-overview-of-admin-roles',
+        ssoUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt/content?filterID=contentstatus[published]~category[security]',
+        rolesUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt/content?filterID=contentstatus[published]~category[getting-started]',
         supportUrl: 'https://help.webex.com/community/cisco-cloud-collab-mgmt',
 
         usersperpage: 100,
+        orgsPerPage: 100,
         meetingsPerPage: 50,
         alarmsPerPage: 50,
         eventsPerPage: 50,
@@ -237,12 +244,11 @@ angular.module('Core')
             desc: 'tabs.conferencingDesc',
             state: 'site-list',
             link: '#site-list'
-              // Temporarily commented out Numbers tab until ready to expose.
-              // }, {
-              //   title: 'tabs.huronLineDetailsTab',
-              //   desc: 'tabs.huronLineDetailsTabDesc',
-              //   state: 'hurondetails',
-              //   link: '#hurondetails'
+          }, {
+            title: 'tabs.huronLineDetailsTab',
+            desc: 'tabs.huronLineDetailsTabDesc',
+            state: 'hurondetails',
+            link: '#hurondetails'
           }, {
             title: 'tabs.fusionDetailsTab',
             desc: 'tabs.fusionDetailsTabDesc',
@@ -258,8 +264,8 @@ angular.module('Core')
             state: 'callRouter',
             link: '#callRouter'
           }, {
-            title: 'Messenger',
-            desc: 'Messenger Administration',
+            title: 'tabs.messengerTab',
+            desc: 'tabs.messengerTabDesc',
             state: 'messenger',
             link: '#messenger'
           }]
@@ -303,31 +309,14 @@ angular.module('Core')
           state: 'profile',
           link: '/profile'
         }, {
-          tab: 'webexUserSettingsTab',
-          icon: 'icon-tools',
-          title: 'webexUserSettings.webexUserSettingsTab',
-          state: 'webexUserSettings',
-          link: '/webexUserSettings'
-        }, {
-          tab: 'webexUserSettings2Tab',
-          icon: 'icon-tools',
-          title: 'webexUserSettings2.webexUserSettings2Tab',
-          state: 'webexUserSettings2',
-          link: '/webexUserSettings2'
-        }, {
           tab: 'developmentTab',
           icon: 'icon-tools',
           title: 'tabs.developmentTab',
           subPages: [{
             title: 'tabs.organizationTab',
             desc: 'tabs.organizationTabDesc',
-            state: 'organization',
-            link: '#organization'
-          }, {
-            title: 'tabs.addOrganizationTab',
-            desc: 'tabs.addOrganizationTabDesc',
-            state: 'organizationAdd',
-            link: '#add-organization'
+            state: 'organizations',
+            link: '#organizations'
           }, {
             title: 'tabs.callRoutingTab',
             desc: 'tabs.callRoutingTabDesc',
@@ -364,6 +353,11 @@ angular.module('Core')
             state: 'newpartnerreports',
             link: '#partner/newreports'
           }, {
+            title: 'tabs.cdrTab',
+            desc: 'tabs.cdrLogsTabDesc',
+            state: 'cdrsupport',
+            link: '#cdrsupport'
+          }, {
             title: 'tabs.entResUtilizationTab',
             desc: 'tabs.entResUtilizationTabDesc',
             state: 'utilization',
@@ -387,7 +381,8 @@ angular.module('Core')
           fusion_uc: 'squared-fusion-uc',
           fusion_cal: 'squared-fusion-cal',
           mediafusion: 'squared-fusion-media',
-          fusion_mgmt: 'squared-fusion-mgmt'
+          fusion_mgmt: 'squared-fusion-mgmt',
+          fusion_ec: 'squared-fusion-ec'
         },
 
         trials: {
@@ -518,6 +513,10 @@ angular.module('Core')
           } else {
             return this.adminServiceUrl.prod;
           }
+        },
+
+        getProdAdminServiceUrl: function () {
+          return this.adminServiceUrl.prod;
         },
 
         getCsdmServiceUrl: function () {
@@ -747,6 +746,10 @@ angular.module('Core')
           return this.ussUrl[this.getEnv()] || this.ussUrl.prod;
         },
 
+        getCertsUrl: function () {
+          return this.certsUrl[this.getEnv()] || this.certsUrl.prod;
+        },
+
         getDefaultEntitlements: function () {
           return this.defaultEntitlements;
         },
@@ -812,8 +815,15 @@ angular.module('Core')
         PARTNER_USER: ['partnercustomers', 'customer-overview', 'trialAdd', 'trialEdit'],
         CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
         User: [],
-        Site_Admin: ['site-list'],
-        Application: ['organizationAdd']
+        Site_Admin: [
+          'site-list',
+          'site-settings',
+          'site-setting',
+          'webex-reports',
+          'webex-reports-iframe',
+          'example'
+        ],
+        Application: ['organizations', 'organization-overview']
       };
 
       config.serviceStates = {
@@ -833,19 +843,22 @@ angular.module('Core')
           'hurondetails',
           'huronlines',
           'huronsettings',
-          'huronfeatures'
+          'huronfeatures',
+          'huronnewfeature',
+          'cdrsupport',
+          'cdr-overview',
+          'huronHuntGroup'
         ],
         'squared-fusion-mgmt': [
           'fusion',
           'cluster-details',
-          'calendar-service'
+          'calendar-service',
+          'call-service'
         ],
         'squared-fusion-uc': [
           'devices',
           'device-overview',
-          'devices-redux2',
-          'devices-redux3',
-          'devices-redux4'
+          'devices-redux'
         ],
         'squared-team-member': [
           'organization'
@@ -861,6 +874,9 @@ angular.module('Core')
           'events',
           'mediafusionconnector',
           'connector-details'
+        ],
+        'webex-messenger': [
+          'messenger'
         ]
       };
 
@@ -878,7 +894,10 @@ angular.module('Core')
           'devices',
           'fusion',
           'mediafusionconnector',
-          'callRouter'
+          'callRouter',
+          'hurondetails',
+          'cdrsupport',
+          'cdr-overview'
         ]
       };
 
@@ -886,14 +905,6 @@ angular.module('Core')
       config.allowedStates = ['unauthorized', 'csadmin'];
 
       config.ciscoOnly = ['billing'];
-
-      // Messenger Sep 2015: Temporarily hide new state so only developers can see it.
-      // This will be changed once the back-end service is operational.
-      if (config.isDev()) {
-        config.serviceStates['webex-messenger'] = [
-          'messenger'
-        ];
-      }
 
       return config;
     }

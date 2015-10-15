@@ -83,7 +83,7 @@
                 </span>
               </div>
                <div class="col-sm-2 col-xs-1" style="overflow: hidden">
-                 &nbsp;
+                  {{cluster.properties["mf.group.displayName"]}}&nbsp;
               </div>
               <div class="col-sm-3 col-xs-3" style="overflow: hidden">
                 <div class="col-md-1" style="top:-4px">0%&nbsp;</div>
@@ -91,22 +91,23 @@
                  &nbsp;&nbsp;<div class="progress-bar page-header " style="width:0%;"></div>
                 </div>
               </div>
-              <div class="col-sm-1 col-xs-1" style="overflow: hidden">
-                <button id="actionsButton" type="button" class="actions-button btn-none dropdown-toggle" ng-class="dropdown-toggle" ng-click="$event.stopPropagation()">
-                  <i class="icon icon-three-dots"></i>
-                </button>
-                <div class="dropdown" class="connector-align-ellipses">
+              <div class="col-sm-1 col-xs-1">
+                <span dropdown>
+                  <button id="actionsButton" type="button" class="btn-none btn-icon btn-actions dropdown-toggle" ng-class="dropdown-toggle" ng-click="$event.stopPropagation()">
+                    <i class="icon icon-three-dots"></i>
+                  </button>
+                  <div class="dropdown" class="connector-align-ellipses">
                   
-                  <ul class="dropdown-menu dropdown-primary" role="menu">
-                    <li id="deleteConnectorAction">
-                        <a data-toggle="modal" data-target="#deleteConnectorModal" ng-click="setDeleteConnector(cluster.hosts[0].host_name, cluster.hosts[0].serial, cluster.hosts[0].host_name)">
-                          <span translate="mediaFusion.deleteConnector"></span>
-                        </a>
-                    </li>
-                  </ul>
-                </div>
+                    <ul class="dropdown-menu dropdown-primary" role="menu">
+                      <li id="deleteConnectorAction">
+                          <a data-toggle="modal" data-target="#deleteConnectorModal" ng-click="setDeregisterConnector(cluster.id, cluster.hosts[0].host_name)">
+                            <span translate="mediaFusion.defuseConnector"></span>
+                          </a>
+                      </li>
+                    </ul>
+                  </div>
+                </span>
               </div>
-
               </div>
             </div>
           </div>
@@ -131,21 +132,21 @@
         <button id="connector-modal-close" type="button" class="close" ng-click="cancelDelete()"  data-dismiss="modal">
           <span class="sr-only">Close</span>
         </button>
-        <h3 class="modal-title">
-            <span translate="mediaFusion.deleteConnector"></span>
-        </h3>
+        <div class="modal-title">
+            <span class="h3" translate="mediaFusion.confirmDefuse"></span>
+        </div>
       </div>
-      <div class="modal-body">
+      <div class="modal-body toast-error icon-inverse">
         <p>
-          <div translate="mediaFusion.deleteConnectorConfText1" translate-values="{ hostname: cluster.hosts[0].host_name }"></div>
+          <div translate="mediaFusion.defuseText"></div>
         </p>
       </div>
       <div class="modal-footer">
         <button id="cancelButton" class="btn btn-default" ng-click="cancelDelete()" data-dismiss="modal">
           <span translate="mediaFusion.cancel"></span>
         </button>
-        <button id="deleteButton" class="btn btn-primary" ng-click="deleteConnector(deleteClusterId, deleteSerial)" data-dismiss="modal">
-          <span translate="mediaFusion.deleteConnector"></span>
+        <button id="deleteButton" class="btn toast-error icon-inverse" ng-click="defuseConnector(deleteClusterId)" data-dismiss="modal">
+          <span translate="mediaFusion.yesDefuse"></span>
         </button>
       </div>
     </div>

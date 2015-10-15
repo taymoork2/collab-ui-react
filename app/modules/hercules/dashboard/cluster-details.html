@@ -68,4 +68,13 @@
     </div>
   </cs-sp-section>
 
+  <!-- deregister -->
+  <cs-sp-section ng-show="showDeregisterButton">
+    <div>
+      <button id="btn-primary" ng-disabled="saving" class="btn btn-danger" style="margin-top: 15px;"
+              translate="hercules.clusters.deregister"
+              ng-click="sp.close();showDeregisterDialog();"/>
+    </div>
+  </cs-sp-section>
+
 </cs-sp-container>

@@ -7,9 +7,27 @@
     <div class="loading" ng-if="pstnSetup.loading">
       <i class="icon icon-spinner"></i>
     </div>
-    <div class="pstn-provider-cards" ng-if="!pstnSetup.loading">
-      <uc-pstn-provider-card ng-repeat="provider in pstnSetup.providers" logo-src="provider.logoSrc" logo-alt="provider.logoAlt" feature-title="provider.title" feature-list="provider.features" on-select="pstnSetup.selectProvider(provider);provider.selectFn()"></uc-pstn-provider-card>
-    </div>
+    <cs-card-layout block-view="true" ng-if="!pstnSetup.loading">
+      <cs-card class="medium header-border pstn-provider-card" ng-repeat="provider in pstnSetup.providers">
+        <article>
+        <header class="align-center">
+          <img ng-src="{{::provider.logoSrc}}" alt="{{::provider.logoAlt}}">
+        </header>
+        <section>
+          <h4>{{::provider.title}}</h4>
+          <div class="card-checkbox">
+            <div ng-repeat="feature in provider.features" class="feature">
+              <i class="icon icon-check"></i>
+              <span class="feature-text" ng-bind-html="feature"></span>
+            </div>
+          </div>
+        </section>
+        <footer>
+          <button class="btn btn-info" ng-click="pstnSetup.selectProvider(provider);provider.selectFn()" translate="common.select"></button>
+        </footer>
+        </article>
+      </cs-card>
+    </cs-card-layout>
 
   </div>
 </div>

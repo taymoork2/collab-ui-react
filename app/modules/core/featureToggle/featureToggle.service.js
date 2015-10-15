@@ -5,40 +5,75 @@
     .service('FeatureToggleService', FeatureToggleService);
 
   /* @ngInject */
-  function FeatureToggleService($http, $q, Config, Authinfo) {
+  function FeatureToggleService($http, $q, Config, Authinfo, Orgservice) {
     var features = {
       pstnSetup: 'pstnSetup',
-      csvUpload: 'csvUpload'
+      csvUpload: 'csvUpload',
+      dirSync: 'dirSync'
     };
     var service = {
+      getUrl: getUrl,
+      getFeatureForUser: getFeatureForUser,
       getFeaturesForUser: getFeaturesForUser,
+      getFeaturesForOrg: getFeaturesForOrg,
       supports: supports,
       supportsPstnSetup: supportsPstnSetup,
-      supportsCsvUpload: supportsCsvUpload
+      supportsCsvUpload: supportsCsvUpload,
+      supportsDirSync: supportsDirSync
     };
 
     return service;
 
-    function getFeaturesForUser(uid, feature) {
-      if (!uid || !feature) {
+    function getUrl(isUid, uidOrOid) {
+      var url = Config.getFeatureToggleUrl();
+      url += '/locus/api/v1/features/';
+      url += isUid ? 'users/' : 'rules/';
+      url += uidOrOid;
+      return url;
+    }
+
+    function getFeaturesForUser(uid) {
+      if (!uid) {
         return $q(function (resolve, reject) {
-          reject((!uid ? 'uid' : 'feature') + ' is undefined');
+          reject('userId is undefined');
         });
       }
 
-      var server = Config.getFeatureToggleUrl();
-      var featureToggleURL = server + '/locus/api/v1/features/users/' + uid;
+      var url = getUrl(true, uid);
 
-      return $http.get(featureToggleURL, {
+      return $http.get(url, {
         cache: true
-      }).then(function (data, status) {
-        var contained = false;
-        _.each(data.data.developer, function (element) {
-          if (element.key === feature && element.val === 'true') {
-            contained = true;
-          }
-        });
-        return contained;
+      });
+    }
+
+    function getFeatureForUser(uid, feature) {
+      return $q(function (resolve, reject) {
+        if (!feature) {
+          reject('feature is undefined');
+        } else {
+          resolve(getFeaturesForUser(uid).then(function (response) {
+            var contained = false;
+            _.each(response.data.developer, function (element) {
+              if (element.key === feature && element.val === 'true') {
+                contained = true;
+              }
+            });
+            return contained;
+          }));
+        }
+      });
+    }
+
+    function getFeaturesForOrg(oid) {
+      return $q(function (resolve, reject) {
+        if (!oid) {
+          reject('orgId is undefined');
+        } else {
+          var url = getUrl(false, oid);
+          resolve($http.get(url, {
+            cache: true
+          }));
+        }
       });
     }
 
@@ -48,7 +83,11 @@
         if (feature === features.pstnSetup) {
           return resolve(Authinfo.getOrgId() === '666a7b2f-f82e-4582-9672-7f22829e728d');
         } else if (feature === features.csvUpload) {
-          return resolve(Authinfo.getOrgId() === '151d02da-33a2-45aa-9467-bdaebbaeee76');
+          return resolve(true);
+        } else if (feature === features.dirSync) {
+          supportsDirSync().then(function (enabled) {
+            return resolve(enabled && Authinfo.getOrgId() === '4e2befa3-9d82-4fdf-ad31-bb862133f078');
+          });
         }
         // else {
         //TODO first check user features
@@ -65,6 +104,20 @@
 
     function supportsCsvUpload() {
       return supports(features.csvUpload);
+    }
+
+    function supportsDirSync() {
+      var deferred = $q.defer();
+      Orgservice.getOrgCacheOption(function (data, status) {
+        if (data.success) {
+          deferred.resolve(data.dirsyncEnabled);
+        } else {
+          deferred.reject(status);
+        }
+      }, null, {
+        cache: true
+      });
+      return deferred.promise;
     }
   }
 })();

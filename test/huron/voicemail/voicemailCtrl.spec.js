@@ -1,11 +1,12 @@
 'use strict';
 
 describe('Controller: VoicemailInfoCtrl', function () {
-  var controller, $scope, $stateParams, $httpBackend, $modal, $q, TelephonyInfoService, Notification, HuronConfig, modalDefer, UserServiceCommon;
+  var controller, $scope, $stateParams, $httpBackend, $modal, $q, TelephonyInfoService, Notification, HuronConfig, modalDefer, UserServiceCommon, DirectoryNumber, LineSettings;
 
   var currentUser = getJSONFixture('core/json/currentUser.json');
   var telephonyInfoWithVoice = getJSONFixture('huron/json/telephonyInfo/voiceEnabled.json');
   var telephonyInfoWithVoicemail = getJSONFixture('huron/json/telephonyInfo/voicemailEnabled.json');
+  var directoryInfo = getJSONFixture('huron/json/telephonyInfo/getDirectoryNumber.json');
   var errorMessage = {
     'data': {
       'errorMessage': 'Common User create failed.'
@@ -15,10 +16,12 @@ describe('Controller: VoicemailInfoCtrl', function () {
 
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$modal_, _$q_, _TelephonyInfoService_, _Notification_, _HuronConfig_, _UserServiceCommon_) {
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$modal_, _$q_, _TelephonyInfoService_, _Notification_, _HuronConfig_, _UserServiceCommon_, _DirectoryNumber_, _LineSettings_) {
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     TelephonyInfoService = _TelephonyInfoService_;
+    DirectoryNumber = _DirectoryNumber_;
+    LineSettings = _LineSettings_;
     Notification = _Notification_;
     HuronConfig = _HuronConfig_;
     $modal = _$modal_;
@@ -32,6 +35,8 @@ describe('Controller: VoicemailInfoCtrl', function () {
     url = HuronConfig.getCmiUrl() + '/common/customers/' + currentUser.meta.organizationID + '/users/' + currentUser.id;
 
     spyOn(TelephonyInfoService, 'getTelephonyInfo').and.returnValue(telephonyInfoWithVoice);
+    spyOn(DirectoryNumber, 'getDirectoryNumber').and.returnValue($q.when(directoryInfo));
+    spyOn(LineSettings, 'updateLineSettings').and.returnValue($q.when());
     spyOn(Notification, 'notify');
     spyOn($modal, 'open').and.returnValue({
       result: modalDefer.promise
@@ -44,7 +49,9 @@ describe('Controller: VoicemailInfoCtrl', function () {
       $modal: $modal,
       TelephonyInfoService: TelephonyInfoService,
       UserServiceCommon: UserServiceCommon,
-      Notification: Notification
+      Notification: Notification,
+      DirectoryNumber: DirectoryNumber,
+      LineSettings: LineSettings
     });
 
     $scope.$apply();
@@ -107,6 +114,7 @@ describe('Controller: VoicemailInfoCtrl', function () {
         controller.saveVoicemail();
         modalDefer.resolve();
         $httpBackend.flush();
+        expect(LineSettings.updateLineSettings).toHaveBeenCalled();
         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
       });
 

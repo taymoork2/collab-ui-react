@@ -28,6 +28,7 @@
     vm.entitlements = $stateParams.entitlements;
     vm.cbAddText = $translate.instant('callForwardPanel.addNew');
     vm.title = $translate.instant('directoryNumberPanel.title');
+    vm.vmFwdMismatch = $translate.instant('callForwardPanel.forwardVoicemailDisabled');
     vm.validForwardOptions = [];
     vm.directoryNumber = DirectoryNumber.getNewDirectoryNumber();
     vm.internalNumberPool = [];
@@ -42,6 +43,7 @@
     vm.saveDisabled = saveDisabled;
     vm.callerIdOptions = [];
     vm.assignedExternalNumberChange = assignedExternalNumberChange;
+    vm.checkDnOverlapsSteeringDigit = checkDnOverlapsSteeringDigit;
     // The following are for externalCallerIdType in DB, no translation needed
     var directLine_type = 'Direct Line';
     var blockedCallerId_type = 'Blocked Outbound Caller ID';
@@ -86,6 +88,9 @@
     vm.initNewForm = initNewForm;
     vm.getUserList = getUserList;
     vm.init = init;
+
+    // Flag to disable and add "loading" animation to Save button while line settings being saved
+    vm.saveInProcess = false;
 
     vm.disassociateSharedLineUser = disassociateSharedLineUser;
     ////////////
@@ -411,6 +416,8 @@
       //variable to set ESN for voicemail if the primary has changed
       var esn = vm.telephonyInfo.esn;
       var companyNumberObj = null;
+      vm.saveInProcess = true; // Set flag for "Save" button behavior
+
       HttpUtils.setTrackingID().then(function () {
         var callForwardSet = processCallForward();
         if (callForwardSet === true) {
@@ -487,10 +494,12 @@
                     }
                   });
                 Notification.notify([$translate.instant('directoryNumberPanel.success')], 'success');
+                vm.saveInProcess = false; // Set flag for "Save" button behavior
                 resetForm();
               })
               .catch(function (response) {
                 Notification.errorResponse(response, 'directoryNumberPanel.error');
+                vm.saveInProcess = false; // Set flag for "Save" button behavior
               });
           } else { // new line
             SharedLineInfoService.getUserLineCount(vm.currentUser.id)
@@ -525,6 +534,7 @@
                           $state.go('user-overview.communication.directorynumber', {
                             directoryNumber: vm.directoryNumber
                           });
+                          vm.saveInProcess = false; // Set flag for "Save" button behavior
                         });
                     });
                 } else {
@@ -532,7 +542,7 @@
                     user: name
                   })], 'error');
                   $state.go('user-overview.communication');
-
+                  vm.saveInProcess = false; // Set flag for "Save" button behavior
                 }
               })
               .catch(function (response) {
@@ -660,7 +670,21 @@
     function initCallForward() {
       if (vm.directoryNumber.callForwardAll.voicemailEnabled === 'true' || vm.directoryNumber.callForwardAll.destination !== null) {
         vm.cfModel.forward = 'all';
-      } else if ((vm.directoryNumber.callForwardAll.voicemailEnabled === 'false' && vm.directoryNumber.callForwardAll.destination === null && vm.directoryNumber.callForwardBusy.voicemailEnabled === 'false' && vm.directoryNumber.callForwardBusy.intVoiceMailEnabled === 'false' && vm.directoryNumber.callForwardBusy.destination === null && vm.directoryNumber.callForwardBusy.intDestination === null && vm.directoryNumber.callForwardNoAnswer.voicemailEnabled === 'false' && vm.directoryNumber.callForwardNoAnswer.intVoiceMailEnabled === 'false' && vm.directoryNumber.callForwardNoAnswer.destination === null && vm.directoryNumber.callForwardNoAnswer.intDestination === null) || (vm.telephonyInfo.voicemail !== 'On' && (vm.directoryNumber.callForwardBusy.intDestination === null || vm.directoryNumber.callForwardBusy.intDestination === undefined))) {
+      } else if ((vm.directoryNumber.callForwardAll.voicemailEnabled === 'false' &&
+          vm.directoryNumber.callForwardAll.destination === null &&
+          vm.directoryNumber.callForwardBusy.voicemailEnabled === 'false' &&
+          vm.directoryNumber.callForwardBusy.intVoiceMailEnabled === 'false' &&
+          vm.directoryNumber.callForwardBusy.destination === null &&
+          vm.directoryNumber.callForwardBusy.intDestination === null &&
+          vm.directoryNumber.callForwardNoAnswer.voicemailEnabled === 'false' &&
+          vm.directoryNumber.callForwardNoAnswer.intVoiceMailEnabled === 'false' &&
+          vm.directoryNumber.callForwardNoAnswer.destination === null &&
+          vm.directoryNumber.callForwardNoAnswer.intDestination === null) ||
+        (vm.telephonyInfo.voicemail !== 'On' &&
+          (vm.directoryNumber.callForwardBusy.intDestination === null ||
+            vm.directoryNumber.callForwardBusy.intDestination === undefined) &&
+          (vm.directoryNumber.callForwardBusy.destination === null ||
+            vm.directoryNumber.callForwardBusy.destination === undefined))) {
         vm.cfModel.forward = 'none';
       } else {
         vm.cfModel.forward = 'busy';
@@ -691,6 +715,21 @@
       } else {
         vm.cfModel.forwardExternalNABCalls = vm.directoryNumber.callForwardBusy.destination;
       }
+
+      // error case 
+      // throw notification when vm is disabled but is not updated in db cfwdynamic and dnfeaturesettings table.
+      if ((vm.telephonyInfo.voicemail === 'Off') && (vm.directoryNumber.callForwardAll.voicemailEnabled === 'true')) {
+        Notification.errorResponse(vm.vmFwdMismatch);
+      }
+
+      if ((vm.telephonyInfo.voicemail === 'Off') && (vm.directoryNumber.callForwardBusy.intVoiceMailEnabled === 'true' || vm.directoryNumber.callForwardNoAnswer.intVoiceMailEnabled === 'true')) {
+        Notification.errorResponse(vm.vmFwdMismatch);
+      }
+
+      if ((vm.telephonyInfo.voicemail === 'Off') && (vm.directoryNumber.callForwardBusy.voicemailEnabled === 'true' || vm.directoryNumber.callForwardNoAnswer.voicemailEnabled === 'true')) {
+        Notification.errorResponse(vm.vmFwdMismatch);
+      }
+
     }
 
     function processCallForward() {
@@ -1154,6 +1193,18 @@
           vm.callerIdInfo.callerIdSelection = CallerId.getCallerIdOption(vm.callerIdOptions, blockedCallerId_type);
         }
       }
+    }
+
+    // Check to see if the currently selected directory number's first digit is
+    // the same as the company steering digit.
+    function checkDnOverlapsSteeringDigit() {
+      var overlaps = false;
+      var dnFirstCharacter = vm.assignedInternalNumber.pattern.charAt(0);
+      var steeringDigit = vm.telephonyInfo.steeringDigit;
+      if (dnFirstCharacter === steeringDigit) {
+        overlaps = true;
+      }
+      return overlaps;
     }
 
     init();

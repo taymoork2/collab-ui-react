@@ -101,6 +101,13 @@
     });
   })
 
+  .factory('HuntGroupServiceV2', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/features/huntgroups/:huntGroupId', {
+      customerId: '@customerId',
+      huntGroupId: '@huntGroupId'
+    }, {});
+  })
+
   .factory('UserServiceVoice', function ($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/users/:userId', {
       customerId: '@customerId',
@@ -263,6 +270,17 @@
 
   .factory('TimeZoneService', function ($resource) {
     return $resource('modules/huron/serviceSetup/timeZones.json', {}, {});
+  })
+
+  .factory('HermesQRCodeService', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getEmailUrl() + '/:getqrima/encoded', {
+      getqrima: 'getqrimage',
+      oneTimePassword: '@oneTimePassword'
+    }, {});
+  })
+
+  .factory('DeviceLogApiService', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/users/:userId/phones/:sipEndpointId/commands/logs', {}, {});
   });
 
 })();

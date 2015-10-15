@@ -1,0 +1,110 @@
+<div ng-show="call.clusterLength() > 0" class="row">
+
+  <div class="medium-4 columns tiny-vertical-marker">
+
+    <h5>ENABLED CLUSTERS</h5>
+
+    <table class="hercules-cluster-table">
+      <tr ng-repeat="(url,cluster) in call.clusters"
+          ui-sref="{{call.route}}.list.details({cluster:cluster, serviceType: call.currentServiceType})">
+        <td>
+          <div class="cell-content"
+               ng-hide="call.serviceNotInstalled(cluster)"
+               ng-class="{'active':call.selectedRow === $index}"
+               ng-click="call.selectedRow = $index">
+            <i class="icon icon-data icon-inverse-round" style="float:left"/>
+            <i class="overlay" ng-class="{ok: call.selectedServiceAndManagementServiceStatus(cluster).color == 'green',attention: call.selectedServiceAndManagementServiceStatus(cluster).color == 'yellow', alarm: call.selectedServiceAndManagementServiceStatus(cluster).color == 'red'}"/>
+            <h4>{{cluster.name}}</h4>
+            <br>
+            <p class="cell-status">
+              <span ng-if="call.selectedServiceAndManagementServiceStatus(cluster).status == 'running'">Running</span>
+              <span ng-if="call.selectedServiceAndManagementServiceStatus(cluster).status == 'alarm'">Alarm</span>
+              <span ng-if="call.selectedServiceAndManagementServiceStatus(cluster).status == 'needs_attention'">Needs attention</span>
+              <span ng-if="call.selectedServiceAndManagementServiceStatus(cluster).status == 'disabled'">Disabled</span>
+              <span ng-show="call.softwareUpgradeAvailable(cluster)">Upgrades</span>
+            </p>
+          </div>
+          <!--
+          <div class="cell-content"
+               ng-show="call.serviceNotInstalled(cluster)"
+               ng-class="{'active':call.selectedRow === $index}"
+               ng-click="call.selectedRow = $index">
+            <i class="icon icon-data icon-inverse-round" style="float:left"/>
+            <h4 style="color:#CCC">{{cluster.name}}</h4>
+            <br>
+            <p class="cell-status">
+              <span style="color:#CCC">Not installed</span>
+            </p>
+          </div>
+          -->
+        </td>
+      </tr>
+
+    </table>
+
+
+    <h5>AVAILABLE CLUSTERS</h5>
+    <table class="hercules-cluster-table">
+      <tr ng-repeat="(url,cluster) in call.clusters"
+          ui-sref="{{call.route}}.list.details({cluster:cluster, serviceType: call.currentServiceType})"
+          ng-show="call.serviceNotInstalled(cluster)">
+        <td>
+          <div class="cell-content"
+               ng-class="{'active':call.selectedRow === $index}">
+            <i class="icon icon-data icon-inverse-round" style="float:left"/>
+            <h4 style="color:#CCC">{{cluster.name}}</h4>
+            <br>
+            <p class="cell-status" style="color:#CCC">
+              Not installed
+            </p>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+
+    <!--
+    <cs-card class="full" id="{{$index}}" ng-repeat="(url,cluster) in call.clusters" ui-sref="{{call.route}}.list.details({cluster:cluster, serviceType: call.currentServiceType})">
+      <article ng-class="{'gray' : call.state.includes('{{call.route}}.list.details') && call.state.params.cluster.id == cluster.id}">
+        <header>
+          <h5>
+            <i class="icon icon-data icon-inverse-round"/>
+            <i class="overlay" ng-class="{ok: call.selectedServiceAndManagementServiceStatus(cluster).color == 'green',attention: call.selectedServiceAndManagementServiceStatus(cluster).color == 'yellow', alarm: call.selectedServiceAndManagementServiceStatus(cluster).color == 'red'}"/>
+            {{cluster.name}}
+          </h5>
+        </header>
+        <section>
+          <p>
+            <span ng-if="call.selectedServiceAndManagementServiceStatus(cluster).status == 'running'">Running</span>
+            <span ng-if="call.selectedServiceAndManagementServiceStatus(cluster).status == 'alarm'">Alarm</span>
+            <span ng-if="call.selectedServiceAndManagementServiceStatus(cluster).status == 'needs_attention'">Needs attention</span>
+            <span ng-if="call.selectedServiceAndManagementServiceStatus(cluster).status == 'disabled'">Disabled</span>
+            <span ng-show="call.softwareUpgradeAvailable(cluster)">, Upgrades</span>
+          </p>
+        </section>
+      </article>
+    </cs-card>
+  -->
+  </div>
+
+  <div class="medium-8 columns tiny-vertical-marker" ui-view="rightPane">
+
+    <div class="centered-info-pane">
+      <br>
+      <h5>
+        Select a cluster to see more detail.
+      </h5>
+      <h6>
+        Inspect Alarms, Manage Software Upgrades, View Connector, Status on Hosts, Change Service Cluster Settings.
+      </h6>
+    </div>
+  </div>
+</div>
+
+
+<div ng-show="call.clusterLength() === 0" class="row">
+  <div class="centered-info-pane">
+    No clusters registered.
+    You need to register Cisco VCS for Cloud Extensions.
+  </div>
+</div>

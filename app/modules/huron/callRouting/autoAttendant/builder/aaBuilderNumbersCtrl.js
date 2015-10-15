@@ -6,7 +6,7 @@
     .controller('AABuilderNumbersCtrl', AABuilderNumbersCtrl); /* was AutoAttendantGeneralCtrl */
 
   /* @ngInject */
-  function AABuilderNumbersCtrl($scope, $q, $stateParams, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, Authinfo, AutoAttendantCeService,
+  function AABuilderNumbersCtrl($q, $stateParams, AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, Authinfo, AutoAttendantCeService,
     AAModelService, Notification) {
     var vm = this;
 
@@ -171,7 +171,7 @@
       }
 
       vm.aaModel = AAModelService.getAAModel();
-      vm.ui = $scope.aa.modal;
+      vm.ui = AAUiModelService.getUiModel();
       vm.aaModel.dataReadyPromise.then(function (data) {
         selectAA(aaName);
       }, function (data) {

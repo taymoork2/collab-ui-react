@@ -13,6 +13,7 @@ exports.resolvePath = function (filePath) {
 };
 
 exports.searchField = element(by.id('searchFilter'));
+exports.searchbox = element(by.css('.searchbox'));
 
 exports.randomId = function () {
   return (Math.random() + 1).toString(36).slice(2, 11);
@@ -291,7 +292,9 @@ exports.click = function (elem, maxRetry) {
     if (maxRetry === 0) {
       return elem.click().then(deferred.fulfill, deferred.reject);
     } else {
-      return elem.click().then(deferred.fulfill, function () {
+      return elem.click().then(deferred.fulfill, function (e) {
+        log('Failed to click element: ' + elem.locator());
+        log(e);
         return exports.click(elem, --maxRetry);
       });
     }
@@ -356,9 +359,12 @@ exports.expectAttribute = function (elem, attr, value) {
   });
 };
 
-exports.expectText = function (elem, value) {
+exports.expectText = function (elem, value, value2) {
   this.wait(elem).then(function () {
     expect(elem.getText()).toContain(value);
+    if (value2) {
+      expect(elem.getText()).toContain(value2);
+    }
   });
 };
 
@@ -442,6 +448,7 @@ exports.findDirectoryNumber = function (message, lineNumber) {
 };
 
 exports.search = function (query) {
+  this.click(this.searchbox);
   this.clear(this.searchField);
   if (query) {
     this.sendKeys(this.searchField, query);
@@ -452,12 +459,13 @@ exports.search = function (query) {
 exports.searchForSingleResult = function (query) {
   function logAndWait() {
     log('Waiting for a single search result');
-    return EC.textToBePresentInElement(element(by.css('.searchinput span')), "1")().thenCatch(function () {
+    return EC.textToBePresentInElement(element(by.css('.searchfilter li:first-child .count')), "1")().thenCatch(function () {
       // handle a possible stale element
       return false;
     });;
   }
   this.expectIsNotDisplayed(element(by.css('.icon-spinner')));
+  this.click(this.searchbox);
   this.sendKeys(this.searchField, query);
   browser.wait(logAndWait, TIMEOUT, 'Waiting for a single search result');
   this.expectIsDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', query)));

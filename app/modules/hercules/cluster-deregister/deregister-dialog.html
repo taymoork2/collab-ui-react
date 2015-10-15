@@ -1,0 +1,42 @@
+<div class="hercules-notification-config">
+  <div class="modal-header">
+    <button id="convertModalClose" type="button" class="close" ng-click="clusterDeregister.close()">
+      <span class="sr-only">Close</span>
+    </button>
+    <h5 class="modal-title" translate="hercules.clusters.deregisterHeader"></h5>
+  </div>
+  <div class="modal-body">
+
+    <div ng-show="clusterDeregister.error" class="alert alert-danger" style="margin-bottom: 30px">
+      {{clusterDeregister.error}}
+    </div>
+
+    <div ng-show="loading" style="text-align: center; padding: 60px;">
+      <i class="icon icon-spinner icon-2x"></i>
+    </div>
+
+    <div ng-hide="loading || clusterDeregister.error">
+      <p>{{clusterDeregister.deregisterAreYouSure}}</p>
+      <ul>
+        <li translate="hercules.clusters.deregisterCausesListItem1"></li>
+        <li>{{clusterDeregister.deregisterCausesListItem2}}</li>
+        <li translate="hercules.clusters.deregisterCausesListItem3"></li>
+      </ul>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button ng-disabled="loading || saving" id="convertActionButton" class="btn btn-danger pull-right"
+            ng-click="clusterDeregister.deregister()">
+      <span ng-hide="saving" translate="hercules.clusters.deregisterConfirm"></span>
+        <span ng-show="saving">
+          <i class="icon icon-spinner"/>
+        </span>
+    </button>
+    <button id="convertCancelButton" class="btn btn-default pull-right" ng-click="clusterDeregister.close()"
+            style="margin-right: 10px">
+      <span translate="hercules.clusters.deregisterCancel"></span>
+    </button>
+  </div>
+</div>
+</div>

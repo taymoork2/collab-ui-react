@@ -328,6 +328,9 @@ angular.module('Core')
         isInitialized: function () {
           return authData.isInitialized;
         },
+        isAppAdmin: function () {
+          return this.hasRole('Application');
+        },
         isAdmin: function () {
           return this.hasRole('Full_Admin') || this.hasRole('PARTNER_ADMIN');
         },
@@ -370,6 +373,9 @@ angular.module('Core')
         },
         isFusionCal: function () {
           return isEntitled(Config.entitlements.fusion_cal);
+        },
+        isFusionEC: function () {
+          return isEntitled(Config.entitlements.fusion_ec);
         },
         hasAccount: function () {
           return authData.hasAccount;

@@ -1,0 +1,35 @@
+
+
+<div id="webexSiteReportIframe" 
+     name="webexSiteReportIframe">
+    
+  <div class="page-header row">
+
+      <div class="page-title col-xs-12">
+        <span id={{reportPageId}}
+              name={{reportPageId}}
+              class="title-heading">
+          {{reportPageTitle}}
+        </span>
+        
+        <span class="search-title">
+          <!-- {{siteUrl}} --><!-- DON'T display for now -->
+        </span>
+      </div>
+  </div>
+
+  <div id="webexReportIFrameBreadCrumbs" class="breadcrumb-container">
+    <ul class="breadcrumbs">
+      <li><a id="webexReportIFrameCrumb1" ui-sref="site-list" translate="siteList.conferencing"></a></li>
+      <li><a id="webexReportIFrameCrumb2" ui-sref="webex-reports({siteUrl:siteUrl})">{{siteUrl + ' '  + ('webexSiteReports.title' | translate)}}</a></li>
+      <li class="current">{{reportPageTitle}}</li>
+    </ul>
+  </div>
+  
+  <!-- <cs-breadcrumbs displayname-property="data.displayName"></cs-breadcrumbs> -->
+</div>
+
+<div ng-include="'modules/webex/iframeContainer/iframeContainer.tpl.html'"></div> 
+
+
+
