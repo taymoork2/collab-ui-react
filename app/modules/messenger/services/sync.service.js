@@ -221,7 +221,7 @@
 
       getSyncStatus()
         .then(function () {
-          defer.resolve(syncModes.messenger.on === syncStatus.syncMode || syncModes.messenger.off === syncStatus.syncMode);
+          defer.resolve(isMessengerSyncRaw());
         }, function (errorObj) {
           defer.reject(errorObj.message);
         });
@@ -229,12 +229,16 @@
       return defer.promise;
     }
 
+    function isMessengerSyncRaw() {
+      return (syncModes.messenger.on === syncStatus.syncMode || syncModes.messenger.off === syncStatus.syncMode);
+    }
+
     function isMessengerSyncEnabled() {
       var defer = $q.defer();
 
       getSyncStatus()
         .then(function () {
-          defer.resolve(isMessengerSync() && isSyncEnabled());
+          defer.resolve(isMessengerSyncRaw() && isSyncEnabledRaw());
         }, function (errorObj) {
           defer.reject(errorObj.message);
         });

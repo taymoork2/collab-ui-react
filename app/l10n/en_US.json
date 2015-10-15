@@ -2323,7 +2323,7 @@
     "labelOrgName": "Messenger Organization Name",
     "labelUnauthorizedUser": "Unauthorized User",
     "loading": "Loading Messenger Synchronization Status",
-    "orgAdminLinkText": "Login to Webex Messenger Admin Tool",
+    "orgAdminLinkText": "Launch Webex Messenger Admin Tool",
     "pageTitle": "Webex Messenger",
     "patchSuccessful": "Messenger Sync updated successfully",
     "patchSyncButtonText": "Update",
