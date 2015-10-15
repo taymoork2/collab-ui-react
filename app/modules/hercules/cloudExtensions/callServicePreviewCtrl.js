@@ -87,13 +87,12 @@ angular.module('Hercules')
           entitlementName: $scope.callServiceAware.name,
           entitlementState: $scope.callServiceAware.entitled === true ? 'ACTIVE' : 'INACTIVE'
         }];
-        /*if ($scope.callServiceConnect.orgEntitled && $scope.callServiceConnect.enabledInFMS) {
-         // Bring back when the entitlement support in Atlas is in place
-         entitlements.push({
-         entitlementName: $scope.callServiceConnect.name,
-         entitlementState: $scope.callServiceAware.entitled === true && $scope.callServiceConnect.entitled === true && $scope.callServiceConnect.huronEntitled !== true ? 'ACTIVE' : 'INACTIVE'
+        if ($scope.callServiceConnect.orgEntitled && $scope.callServiceConnect.enabledInFMS) {
+          entitlements.push({
+            entitlementName: $scope.callServiceConnect.name,
+            entitlementState: $scope.callServiceAware.entitled === true && $scope.callServiceConnect.entitled === true && $scope.callServiceConnect.huronEntitled !== true ? 'ACTIVE' : 'INACTIVE'
          });
-         }*/
+        }
 
         angular.element('#btn-save').button('loading');
 
