@@ -83,8 +83,8 @@
         var url = conferenceServices[i].license.siteUrl;
         promiseChain.push(WebExUtilsFact.isSiteSupportsIframe(url)
           .then(function (result) {
-            if (result.isAdminReportEnabled && result.isSiteSupportsIframe) {
-              vm.webexOptions.push(url);
+            if (result.isAdminReportEnabled && result.isIframeSupported) {
+              vm.webexOptions.push(result.siteUrl);
             }
           },function(error){
             //no-op, but needed
@@ -98,6 +98,8 @@
               vm.webexSelected = vm.webexOptions[index];
             }
           })
+        } else {
+          vm.webexSelected = vm.webexOptions[0];
         }
       });
     }
