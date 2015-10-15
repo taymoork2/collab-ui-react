@@ -71,7 +71,7 @@
           return $modal.open({
             controllerAs: 'adc',
             controller: 'AddDeviceController',
-            templateUrl: 'modules/squared/devicesRedux/addDevice/addDevice.html'
+            templateUrl: 'modules/squared/devices/addDevice/addDevice.html'
           }).result;
         }
 
