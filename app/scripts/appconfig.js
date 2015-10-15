@@ -627,7 +627,7 @@ angular
         .state('webex-reports', {
           url: '/webexreports',
           templateUrl: 'modules/webex/siteReports/siteReports.tpl.html',
-          controller: 'ReportsCtrl',
+          controller: 'WebExReportsCtrl',
           controllerAs: 'reports',
           parent: 'main',
           params: {
