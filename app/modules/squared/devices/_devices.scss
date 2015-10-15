@@ -1,4 +1,4 @@
-.devices-overview {
+.sq-devices-page-overview {
   table {
     td {
       padding: 10px 10px 10px 0;
@@ -20,8 +20,11 @@
 
 }
 
-.devices {
+.sq-devices-page {
   .message-container {
+    position: absolute;
+    left: 0;
+    right: 0;
     padding: 50px;
     text-align: center;
     img {
