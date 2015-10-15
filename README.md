@@ -123,6 +123,7 @@ Setup the environment (If necessary)
 
 TypeScript Definitions
 -----------------
+
 * Run 'gulp tsd' to install configured TypeScript definitions from tsd.json
 * Definitions (\*.d.ts files) are installed under typings directory.
 * Microsoft VSCode automatically detects definition files and provides IntelliSense support (https://code.visualstudio.com/Docs/languages/javascript)
