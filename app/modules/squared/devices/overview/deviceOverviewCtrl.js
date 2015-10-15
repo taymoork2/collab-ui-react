@@ -3,7 +3,7 @@
 
   angular
     .module('Core')
-    .controller('DeviceOverviewCtrlRedux', DeviceOverviewCtrl);
+    .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
   function DeviceOverviewCtrl($q, $state, XhrNotificationService, $stateParams, Authinfo, FeedbackService, CsdmCodeService, CsdmDeviceService, Utils, $window, RemDeviceModal) {

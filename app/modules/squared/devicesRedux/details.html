@@ -19,7 +19,7 @@
       style="flex-grow: 2"
       ng-bind-html="deviceDetails.device.displayName | highlight:devices.search">
     </div>
-    <a href ui-sref="devices-redux5.search">
+    <a href ui-sref="devices-redux.search">
       <i
         class="icon icon-back"
       />
@@ -38,7 +38,7 @@
         <li
           ng-click="devices.expandDevice(device)"
           ng-repeat="device in deviceDetails.device.devices">
-          <div ng-include="'modules/squared/devicesRedux5/deviceCard.html'"></div>
+          <div ng-include="'modules/squared/devicesRedux/deviceCard.html'"></div>
         </li>
       </ul>
 

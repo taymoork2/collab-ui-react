@@ -57,7 +57,7 @@
           },
           restrict: 'E',
           controller: EditableInputController,
-          templateUrl: 'modules/squared/devicesRedux/widgets/editableInputDirective.html'
+          templateUrl: 'modules/squared/devices/widgets/editableInputDirective.html'
         };
       }
     ])

@@ -1,0 +1,139 @@
+.devices-overview {
+  table {
+    td {
+      padding: 10px 10px 10px 0;
+    }
+    tbody {
+      tr {
+        border-top: transparent;
+      }
+    }
+  }
+
+  .activation-code-pane {
+    padding-top: 10px;
+  }
+
+  .activation-code-pane h3 {
+    color: #00c1aa;
+  }
+
+}
+
+.devices {
+  .message-container {
+    padding: 50px;
+    text-align: center;
+    img {
+      width: 200px;
+    }
+  }
+  .add-device-modal .alert {
+    border: 0;
+    padding: 15px;
+    border-radius: 0;
+    margin-bottom: 0;
+  }
+
+  .ngVerticalBar {
+    display: none;
+  }
+
+  .title {
+    display: inline-block;
+    vertical-align: middle;
+    height: 60px;
+    line-height: 60px;
+  }
+
+  .add-button {
+    position: absolute;
+    top: 25px;
+    right: 10px
+  }
+
+  .error-spinner {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 10;
+    background: white;
+    border-radius: 100px;
+    box-shadow: 1px 1px 5px #666;
+    padding: 9px 10px 6px 10px;
+  }
+
+}
+
+.devices, .devices-overview {
+  .needs-activation {
+    opacity: .3;
+  }
+  i.device-status {
+    padding-right: 10px;
+  }
+  td {
+    font-family: "CiscoSansTT Light", Helvetica, Arial, sans-serif, sans-serif;
+  }
+}
+
+/* widgets */
+
+.editable-input {
+  padding-top: 5px;
+  &, .read-only-value, form {
+    display: flex;
+    align-items: center;
+  }
+  i, input, span {
+    font-size: 22px;
+  }
+  i {
+    color: #999;
+    cursor: pointer;
+  }
+  i:hover, .read-only-value:hover i {
+    color: #000;
+  }
+  .read-only-value span {
+    cursor: pointer;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-family: "CiscoSansTT Extra Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+  input {
+    width: 320px;
+  }
+  .read-only-value span {
+    max-width: 320px;
+  }
+  .read-only-value span, input {
+    padding-right: 10px;
+  }
+}
+
+#addDeviceModal {
+  .device-added {
+    h3 {
+      color: #00c1aa;
+      margin: 10px 0;
+    }
+  }
+  .btn {
+    transition: none;
+  }
+}
+
+.device-status-red {
+  color: $brand-danger;
+}
+.device-status-yellow {
+  color: $brand-warning;
+}
+.device-status-green {
+  color: $brand-success;
+}
+.device-status-gray {
+  color: $gray;
+}
