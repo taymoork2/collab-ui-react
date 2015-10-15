@@ -86,18 +86,18 @@
             if (result.isAdminReportEnabled && result.isIframeSupported) {
               vm.webexOptions.push(result.siteUrl);
             }
-          },function(error){
+          }, function (error) {
             //no-op, but needed
           }));
       }
 
       $q.all(promiseChain).then(function () {
-        if($stateParams.tab === 'webex'){
-          _.forEach(vm.webexOptions,function(val,index){
-            if(val === $stateParams.siteUrl){
+        if ($stateParams.tab === 'webex') {
+          _.forEach(vm.webexOptions, function (val, index) {
+            if (val === $stateParams.siteUrl) {
               vm.webexSelected = vm.webexOptions[index];
             }
-          })
+          });
         } else {
           vm.webexSelected = vm.webexOptions[0];
         }

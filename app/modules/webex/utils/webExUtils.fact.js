@@ -169,7 +169,7 @@
                 var logMsg = "";
 
                 var result = {
-                  siteUrl:siteUrl,
+                  siteUrl: siteUrl,
                   error: "getSiteDataError",
                   response: response
                 };
