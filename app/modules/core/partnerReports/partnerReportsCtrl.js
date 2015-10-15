@@ -219,9 +219,12 @@
           setActiveUserGraph(response.graphData);
           setActivePopulationGraph(response.populationGraph, response.overallPopulation);
 
-          vm.mostActiveUsers = response.tableData;
+          vm.mostActiveUsers = [];
+          if (angular.isDefined(response.tableData)) {
+            vm.mostActiveUsers = response.tableData;
+          }
           vm.displayMostActive = false;
-          if (vm.mostActiveUsers.length > 0) {
+          if (angular.isArray(vm.mostActiveUsers) && (vm.mostActiveUsers.length > 0)) {
             vm.displayMostActive = true;
           }
 
