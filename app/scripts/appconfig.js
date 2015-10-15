@@ -2,7 +2,7 @@
 angular
   .module('wx2AdminWebClientApp')
   .config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$translateProvider',
-    function ($httpProvider, $stateProvider, $urlRouterProvider, $translateProvider) {
+    function($httpProvider, $stateProvider, $urlRouterProvider, $translateProvider) {
       var sidepanelMemo = 'sidepanelMemo';
 
       $urlRouterProvider.otherwise('login');
@@ -46,7 +46,7 @@ angular
         })
         .state('sidepanel', {
           abstract: true,
-          onEnter: /* @ngInject */ function ($modal, $state, $previousState) {
+          onEnter: /* @ngInject */ function($modal, $state, $previousState) {
             if ($state.sidepanel) {
               $state.sidepanel.stopPreviousState = true;
             } else {
@@ -58,19 +58,19 @@ angular
               backdrop: false,
               keyboard: false
             });
-            $state.sidepanel.result.finally(function () {
+            $state.sidepanel.result.finally(function() {
               if (!this.stopPreviousState && !$state.modal) {
                 $state.sidepanel = null;
                 var previousState = $previousState.get(sidepanelMemo);
                 if (previousState) {
-                  return $previousState.go(sidepanelMemo).then(function () {
+                  return $previousState.go(sidepanelMemo).then(function() {
                     $previousState.forget(sidepanelMemo);
                   });
                 }
               }
             }.bind($state.sidepanel));
           },
-          onExit: /* @ngInject */ function ($state, $previousState) {
+          onExit: /* @ngInject */ function($state, $previousState) {
             if ($state.sidepanel) {
               $state.sidepanel.dismiss();
             }
@@ -100,7 +100,7 @@ angular
 angular
   .module('Squared')
   .config(['$urlRouterProvider', '$stateProvider',
-    function ($urlRouterProvider, $stateProvider) {
+    function($urlRouterProvider, $stateProvider) {
       var modalMemo = 'modalMemo';
       var wizardmodalMemo = 'wizardmodalMemo';
 
@@ -108,7 +108,7 @@ angular
       function modalOnEnter(options) {
         options = options || {};
         /* @ngInject */
-        return function ($modal, $state, $previousState) {
+        return function($modal, $state, $previousState) {
           if ($state.modal) {
             $state.modal.stopPreviousState = true;
           } else {
@@ -120,12 +120,12 @@ angular
             windowClass: options.windowClass,
             backdrop: options.backdrop || 'static'
           });
-          $state.modal.result.finally(function () {
+          $state.modal.result.finally(function() {
             if (!this.stopPreviousState) {
               $state.modal = null;
               var previousState = $previousState.get(modalMemo);
               if (previousState) {
-                return $previousState.go(modalMemo).then(function () {
+                return $previousState.go(modalMemo).then(function() {
                   $previousState.forget(modalMemo);
                 });
               }
@@ -329,11 +329,11 @@ angular
             }
           },
           resolve: {
-            currentUser: /* @ngInject */ function ($http, $stateParams, Config, Utils, Authinfo) {
+            currentUser: /* @ngInject */ function($http, $stateParams, Config, Utils, Authinfo) {
               var userUrl = Config.getScimUrl(Authinfo.getOrgId()) + '/' + $stateParams.currentUser.id;
 
               return $http.get(userUrl)
-                .then(function (response) {
+                .then(function(response) {
                   angular.copy(response.data, this.currentUser);
                   this.entitlements = Utils.getSqEntitlements(this.currentUser);
                   return response.data;
@@ -819,7 +819,7 @@ angular
             }
           },
           resolve: {
-            identityCustomer: /* @ngInject */ function ($stateParams, $q, Orgservice) {
+            identityCustomer: /* @ngInject */ function($stateParams, $q, Orgservice) {
               var defer = $q.defer();
               if ($stateParams.currentCustomer) {
                 Orgservice.getOrg(orgCallback, $stateParams.currentCustomer.customerOrgId);
@@ -877,7 +877,7 @@ angular
         .state('wizardmodal', {
           abstract: true,
           onEnter: ['$modal', '$state', '$previousState',
-            function ($modal, $state, $previousState) {
+            function($modal, $state, $previousState) {
               $previousState.memo(wizardmodalMemo);
               $state.modal = $modal.open({
                 template: '<div ui-view="modal"></div>',
@@ -885,7 +885,7 @@ angular
                 windowTemplateUrl: 'modules/core/modal/wizardWindow.tpl.html',
                 backdrop: 'static'
               });
-              $state.modal.result.finally(function () {
+              $state.modal.result.finally(function() {
                 $state.modal = null;
                 var previousState = $previousState.get(wizardmodalMemo);
                 if (previousState) {
@@ -895,7 +895,7 @@ angular
             }
           ],
           onExit: ['$state', '$previousState',
-            function ($state, $previousState) {
+            function($state, $previousState) {
               if ($state.modal) {
                 $previousState.forget(wizardmodalMemo);
                 $state.modal.close();
@@ -947,7 +947,7 @@ angular
 angular
   .module('Huron')
   .config(['$stateProvider',
-    function ($stateProvider) {
+    function($stateProvider) {
       $stateProvider
         .state('cdrsupport', {
           url: '/cdrsupport',
@@ -1284,7 +1284,7 @@ angular
 angular
   .module('Hercules')
   .config(['$stateProvider',
-    function ($stateProvider) {
+    function($stateProvider) {
       $stateProvider
         .state('fusion', {
           url: '/fusion',
@@ -1405,6 +1405,19 @@ angular
             }
           }
         })
+        .state('call-service.list.details.alarm', {
+          views: {
+            'details-pane': {
+              controller: 'AlarmController',
+              controllerAs: 'alarmCtrl',
+              templateUrl: 'modules/hercules/call-service/alarm-details.html'
+            }
+          },
+          params: {
+            alarm: null,
+            host: null
+          }
+        })
         .state('call-service.settings', {
           url: '/services/call/settings',
           views: {
@@ -1473,7 +1486,7 @@ angular
 angular
   .module('Mediafusion')
   .config(['$stateProvider',
-    function ($stateProvider) {
+    function($stateProvider) {
       $stateProvider
         .state('meetings', {
           abstract: true,
@@ -1602,7 +1615,7 @@ angular
 angular
   .module('Messenger')
   .config(['$stateProvider',
-    function ($stateProvider) {
+    function($stateProvider) {
       $stateProvider
         .state('messenger', {
           parent: 'main',
