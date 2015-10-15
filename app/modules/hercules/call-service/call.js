@@ -26,6 +26,18 @@
     }
   };
 
+  var serviceId2ServiceType = function (serviceId) {
+    switch (serviceId) {
+    case 'squared-fusion-cal':
+      return "c_cal";
+    case 'squared-fusion-uc':
+      return "c_ucmc";
+    default:
+      //console.error("serviceType " + serviceType + " not supported in this controller");
+      return "";
+    }
+  };
+
   //TODO: Rewrite or use some existing stuff !!!!!!!!!!!!
   var enableEmailValidation = function () {
     //TODO: Someone rewrite code below - it's just a placeholder
@@ -69,7 +81,7 @@
   };
 
   /* @ngInject */
-  function CallController(NotificationService, FmsNotificationService, ServiceDescriptor, $stateParams, $state, $modal, $scope, ClusterService, USSService2, ConverterService, ServiceStatusSummaryService) {
+  function CallController(XhrNotificationService, NotificationService, FmsNotificationService, ServiceDescriptor, $stateParams, $state, $modal, $scope, ClusterService, USSService2, ConverterService, ServiceStatusSummaryService) {
     ClusterService.subscribe(angular.noop, {
       scope: $scope
     });
@@ -85,25 +97,22 @@
     vm.clusters = ClusterService.getClusters();
     vm.clusterLength = _.size(vm.clusters);
 
-    FmsNotificationService.refresh();
+    vm.serviceIconClass = ServiceDescriptor.serviceIcon(vm.currentServiceId);
 
-    vm.startSetupClicked = false;
-    vm.startSetup = function () {
-      vm.startSetupClicked = true;
-    };
+    FmsNotificationService.refresh();
 
     vm.serviceEnabled = false;
     ServiceDescriptor.isServiceEnabled(serviceType2ServiceId(vm.currentServiceType), function (a, b) {
       vm.serviceEnabled = b;
-      if (!b) {
-        NotificationService.addNotification(
-          'todo',
-          'serviceNotEnabled',
-          1,
-          'modules/hercules/notifications/service-not-enabled.html', {});
-      } else {
-        NotificationService.removeNotification('todo', 'serviceNotEnabled');
-      }
+      //if (!b) {
+      //  NotificationService.addNotification(
+      //    'todo',
+      //    'serviceNotEnabled',
+      //    1,
+      //    'modules/hercules/notifications/service-not-enabled.html', {});
+      //} else {
+      //  NotificationService.removeNotification('todo', 'serviceNotEnabled');
+      //}
     });
 
     vm.serviceNotInstalled = function (cluster) {
@@ -128,6 +137,16 @@
         serviceId: serviceType2ServiceId(vm.currentServiceType)
       });
     }
+
+    vm.enableService = function (serviceId) {
+      ServiceDescriptor.setServiceEnabled(serviceId, true, function (error) {
+        if (error !== null) {
+          XhrNotificationService.notify("Problems enabling the service");
+        }
+        //console.log("ERROR disabling service:", error);
+      });
+      vm.serviceEnabled = true;
+    };
 
     USSService2.getStatusesSummary().then(extractSummaryForAService);
   }
@@ -210,17 +229,6 @@
       });
     };
 
-    /*
-    vm.enableService = function (serviceId) {
-      ServiceDescriptor.setServiceEnabled(serviceId, true, function (error) {
-        XhrNotificationService.notify("Problems enabling the service")
-        //console.log("ERROR disabling service:", error);
-      });
-      console.log("activate service")
-      vm.serviceEnabled = true;
-    };
-    */
-
     /* @ngInject */
     function SoftwareUpgradeController($modalInstance) {
       var modalVm = this;
@@ -275,10 +283,9 @@
   }
 
   /* @ngInject */
-  function CallServiceSettingsController($modal, ServiceDescriptor, Authinfo, USSService2, $stateParams, NotificationConfigService, MailValidatorService, XhrNotificationService, CertService, Notification) {
+  function CallServiceSettingsController($state, $modal, ServiceDescriptor, Authinfo, USSService2, $stateParams, NotificationConfigService, MailValidatorService, XhrNotificationService, CertService, Notification) {
     var vm = this;
     vm.config = "";
-    vm.serviceEnabled = false;
     vm.serviceType = $stateParams.serviceType;
     vm.serviceId = serviceType2ServiceId(vm.serviceType);
 
@@ -298,10 +305,6 @@
       if (vm.squaredFusionEc) {
         readCerts();
       }
-    });
-
-    ServiceDescriptor.isServiceEnabled(vm.serviceId, function (a, b) {
-      vm.serviceEnabled = b;
     });
 
     vm.storeEc = function () {
@@ -385,7 +388,12 @@
         }
       }).result.then(function () {
         vm.disableService(serviceId);
-        //TODO: should go to a new page after deactivate the service !!!
+        //TODO: Fix this hack!
+        $state.go(serviceType2RouteName(serviceId2ServiceType(serviceId)) + ".list", {
+          serviceType: serviceId2ServiceType(serviceId)
+        }, {
+          reload: true
+        });
       });
     };
 
