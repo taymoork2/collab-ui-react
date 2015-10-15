@@ -9,8 +9,8 @@
   margin: auto;
   margin-top: 10%;
   padding-top: 60px;
-  color: $login-splash-color;
-  background-color: $login-splash-background-color;
+  color: $gray-dark;
+  background-color: $login-splash-color;
   border-left-width: 1px;
   border-right-width: 1px;
   border-top-width: 1px;
@@ -29,6 +29,27 @@
     span {
       font-size: $h3-font-size;
     }
+    background-color: $brand-primary;
+
+    &:hover {
+      background-color: $brand-primary-darker;
+    }
+  }
+
+  .loading-icon {
+    height: vr-adjust(54);
+    padding-top: 10px;
+    margin-top: vr-adjust(50);
+    width: vr-adjust(280);
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    span {
+      font-size: $h3-font-size;
+    }
+    text-align: center;
+    background-color: $brand-white;
+    border: $brand-white;
   }
 
   .spark-icon {
@@ -43,7 +64,7 @@
   .title {
     font-family: $brand-font-cisco-TT-Extra-Light;
     font-size: $h3-font-size;
-    color: $login-splash-title-color;
+    color: $gray-darkest;
     text-align: center;
   }
 
