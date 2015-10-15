@@ -8,10 +8,10 @@
   /* @ngInject */
   function CdrOverviewCtrl($scope, $state, $stateParams, $translate, $timeout, Config, CdrService) {
     var vm = this;
-    var cdr = formatCdr($stateParams.cdrData);
     var call = $stateParams.call;
     var location = "#" + $stateParams.cdrData.name;
 
+    vm.cdr = formatCdr($stateParams.cdrData);
     vm.searchPlaceholder = $translate.instant('cdrLogs.searchPlaceholder');
     vm.searchField = "";
     vm.cdrTable = [];
@@ -38,7 +38,7 @@
 
     function filter() {
       var result = {};
-      angular.forEach(cdr, function (value, key) {
+      angular.forEach(vm.cdr, function (value, key) {
         if (vm.searchField === undefined || vm.searchField === '' || (value.toString().toLowerCase().replace(/_/g, ' ')).indexOf(vm.searchField.toLowerCase().replace(/_/g, ' ')) > -1 || (key.toString().toLowerCase().replace(/_/g, ' ')).indexOf(vm.searchField.toLowerCase().replace(/_/g, ' ')) > -1) {
           result[key] = value;
         }
