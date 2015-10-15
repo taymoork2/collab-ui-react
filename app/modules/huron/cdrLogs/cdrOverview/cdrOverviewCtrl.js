@@ -10,6 +10,7 @@
     var vm = this;
     var cdr = formatCdr($stateParams.cdrData);
     var call = $stateParams.call;
+    var location = "#" + $stateParams.cdrData.name;
 
     vm.searchPlaceholder = $translate.instant('cdrLogs.searchPlaceholder');
     vm.searchField = "";
@@ -51,6 +52,7 @@
     function formatCdr(cdrRawJson) {
       var newCdr = cdrRawJson.dataParam;
       delete newCdr['message'];
+      delete newCdr['name'];
       for (var key in cdrRawJson) {
         if (["dataParam", "eventSource", "tags", "message"].indexOf(key) < 0) {
           newCdr[key] = cdrRawJson[key];

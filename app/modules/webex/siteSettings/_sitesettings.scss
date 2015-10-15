@@ -1,12 +1,46 @@
 @CHARSET "UTF-8";
-
 .siteindex-panel {
-  margin-bottom: 30px;
-  padding-bottom: 20px;
-  border-color: #999999;
   background-color: #ffffff;
+  margin-left:-0.5rem;
+  margin-right:-0.5rem;
+  margin-bottom:-0.5rem;
 }
 
+// padding to line things up there are 8px of padding coming from somewhere in atlas
+// if this changes these won't line up anymore.
+#siteSettingsBreadCrumbs{
+  padding-left: rem(22);
+}
+
+#configureCards{
+  padding-left: rem(16);
+}
+
+#siteSettingsCardSection{
+  ul{
+    @include vr-spacing(pb, 0);
+    @include vr-spacing(pt, .5);
+    h4{
+      @include vr-spacing(pt, 0);
+      @include vr-spacing(pb, .25)
+    }
+    a {
+      line-height: rem(24);
+    }
+  }
+  @include vr-spacing(pb, 1);
+}
+
+#commonSettingsInfo{
+   @include vr-spacing(pt, 0)
+}
+
+#emallAllHostsButton{
+  @include vr-spacing(pr, 1.5);
+}
+
+// Some of this can probably go since it is in the toolkit
+// but there are modifications here
 .configure-card{
     display: flex;
     justify-content: space-around;
