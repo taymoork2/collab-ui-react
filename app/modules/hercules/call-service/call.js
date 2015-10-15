@@ -82,7 +82,7 @@
   };
 
   /* @ngInject */
-  function CallController(XhrNotificationService, NotificationService, FmsNotificationService, ServiceDescriptor, $stateParams, $state, $modal,
+  function CallController(XhrNotificationService, NotificationService, ServiceStateChecker, ServiceDescriptor, $stateParams, $state, $modal,
     $scope, ClusterService, USSService2, ConverterService, ServiceStatusSummaryService) {
     ClusterService.subscribe(angular.noop, {
       scope: $scope
@@ -103,20 +103,11 @@
 
     vm.serviceIconClass = ServiceDescriptor.serviceIcon(vm.currentServiceId);
 
-    FmsNotificationService.refresh();
+    ServiceStateChecker.init(vm.currentServiceType, vm.currentServiceId);
 
     vm.serviceEnabled = false;
     ServiceDescriptor.isServiceEnabled(serviceType2ServiceId(vm.currentServiceType), function (a, b) {
       vm.serviceEnabled = b;
-      //if (!b) {
-      //  NotificationService.addNotification(
-      //    'todo',
-      //    'serviceNotEnabled',
-      //    1,
-      //    'modules/hercules/notifications/service-not-enabled.html', {});
-      //} else {
-      //  NotificationService.removeNotification('todo', 'serviceNotEnabled');
-      //}
     });
 
     vm.serviceNotInstalled = function (cluster) {

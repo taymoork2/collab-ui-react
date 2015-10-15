@@ -5,17 +5,19 @@
   </a>
 
   <!-- Bubble with amount of notifications. If there are none (length == 0) it doesn't get shown -->
-  <div class="amountBubble" ng-if="notificationController.status.count > 0">
-      <span class="">{{notificationController.status.count}}</span>
+  <div class="amountBubble" ng-if="notificationController.notificationsLength() > 0">
+    <span class="{{notificationController.amountBubbleType}}">{{notificationController.notificationsLength()}}</span>
   </div>
 
   <!-- List of notifications -->
-  <ul class="entries" ng-show="notificationController.showNotifications && notificationController.status.count > 0">
-    <span ng-repeat="type in notificationController.status.types">
-      <li class="notif" ng-repeat="(id,notification) in type.notifications">
-        <span class="badge-wrapper label notification-{{notification.type}}">{{notification.type}} <!--<span class="badge badge-custom-warn {{notification.type}}"></span>--></span>
-        <div class="notif-wrapper"><ng-include src="notification.template"></ng-include></div>
-      </li>
-    </span>
+  <ul class="entries"
+      ng-show="notificationController.showNotifications && notificationController.notificationsLength() > 0">
+    <li class="notif" ng-repeat="(id,notification) in notificationController.notifications">
+      <span class="badge-wrapper label notification-{{notification.type}}">{{notificationController.typeDisplayName(notification.type)}}<!--<span class="badge badge-custom-warn {{notification.type}}"></span>--></span>
+
+      <div class="notif-wrapper">
+        <ng-include src="notification.template"></ng-include>
+      </div>
+    </li>
   </ul>
 </div>

@@ -91,7 +91,7 @@ angular.module('Hercules')
           entitlements.push({
             entitlementName: $scope.callServiceConnect.name,
             entitlementState: $scope.callServiceAware.entitled === true && $scope.callServiceConnect.entitled === true && $scope.callServiceConnect.huronEntitled !== true ? 'ACTIVE' : 'INACTIVE'
-         });
+          });
         }
 
         angular.element('#btn-save').button('loading');
