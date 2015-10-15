@@ -7,6 +7,9 @@
     var connectorType;
     var serviceId;
 
+    var lastDirSyncCheck = 0;
+    var lastUserStatusCheck = 0;
+
     function init(conType, servId) {
       connectorType = conType;
       serviceId = servId;
@@ -57,6 +60,11 @@
     }
 
     function checkIfDirSyncNotEnabled() {
+      if (Date.now() - lastDirSyncCheck < 60000) {
+        return;
+      } else {
+        lastDirSyncCheck = Date.now();
+      }
       DirSyncService.getDirSyncDomain(function (data) {
         var dirSyncEnabled = data.success && data.serviceMode == 'ENABLED';
         if (!dirSyncEnabled) {
@@ -72,6 +80,11 @@
     }
 
     function checkUserStatuses() {
+      if (Date.now() - lastUserStatusCheck < 30000) {
+        return;
+      } else {
+        lastUserStatusCheck = Date.now();
+      }
       USSService2.getStatusesSummary().then(function (res) {
         var summaryForService = _.find(res || {}, {
           serviceId: serviceId
