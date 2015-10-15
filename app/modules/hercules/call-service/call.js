@@ -107,21 +107,11 @@
     });
 
     vm.serviceNotInstalled = function (cluster) {
-      var serviceInfo = ServiceStatusSummaryService.serviceFromCluster(vm.currentServiceType, cluster);
-      if (serviceInfo === undefined) {
-        return true;
-      } else {
-        return serviceInfo.connectors.length === 0;
-      }
+      return ServiceStatusSummaryService.serviceNotInstalled(vm.currentServiceType, cluster);
     };
 
     vm.softwareUpgradeAvailable = function (cluster) {
-      var serviceInfo = ServiceStatusSummaryService.serviceFromCluster(vm.currentServiceType, cluster);
-      if (serviceInfo === undefined) {
-        return false;
-      } else {
-        return serviceInfo.software_upgrade_available;
-      }
+      return ServiceStatusSummaryService.softwareUpgradeAvailable(vm.currentServiceType, cluster);
     };
 
     vm.softwareVersionAvailable = function (cluster) {
@@ -134,7 +124,7 @@
 
     function extractSummaryForAService(res) {
       var userStatusesSummary = res || {};
-      vm.summary = _.find(userStatusesSummary, {
+      vm.userStatusSummary = _.find(userStatusesSummary, {
         serviceId: serviceType2ServiceId(vm.currentServiceType)
       });
     }
@@ -160,21 +150,44 @@
     vm.selectedService = _.find(vm.cluster.services, {
       service_type: vm.serviceType
     });
+
+    vm.activeActiveApplicable = (vm.serviceType == 'c_cal' || vm.serviceType == 'c_ucmc');
+    vm.activeActivePossible = vm.cluster.hosts.length > 1;
+    vm.activeActiveEnabled = vm.activeActiveApplicable && isActiveActiveEnabled(vm.cluster, vm.serviceType);
+
+    var managementServiceType = "c_mgmt";
     vm.managementService = _.find(vm.cluster.services, {
-      service_type: "c_mgmt"
+      service_type: managementServiceType
     });
-    //console.log("selected service ", vm.selectedService);
 
     //TODO: Don't like this linking to routes...
     vm.route = serviceType2RouteName(vm.serviceType);
 
     vm.serviceNotInstalled = function () {
-      var serviceInfo = ServiceStatusSummaryService.serviceFromCluster(vm.serviceType, vm.cluster);
-      if (serviceInfo === undefined) {
-        return true;
-      } else {
-        return serviceInfo.connectors.length === 0;
+      return ServiceStatusSummaryService.serviceNotInstalled(vm.serviceType, vm.cluster);
+    };
+
+    function isActiveActiveEnabled(cluster, serviceType) {
+      return cluster.properties && cluster.properties[activeActivePropertyName(serviceType)] == 'activeActive';
+    }
+
+    function activeActivePropertyName(serviceType) {
+      switch (serviceType) {
+      case 'c_cal':
+        return 'fms.calendarAssignmentType';
+      case 'c_ucmc':
+        return 'fms.callManagerAssignmentType';
+      default:
+        return '';
       }
+    }
+
+    vm.toggleActiveActive = function () {
+      var toggledState = !vm.activeActiveEnabled;
+      ClusterService.setProperty(vm.cluster.id, activeActivePropertyName(vm.serviceType), toggledState ? 'activeActive' : 'standard')
+        .then(function () {
+          vm.activeActiveEnabled = toggledState;
+        });
     };
 
     vm.upgrade = function () {
@@ -326,11 +339,6 @@
       });
     };
 
-    //
-    //  PURE COPY FROM CALENDAR !!!
-    //  CANDIDATE FOR SEPARATE SERVICE ?
-    //
-
     vm.config = "";
     NotificationConfigService.read(function (err, config) {
       vm.loading = false;
@@ -357,7 +365,10 @@
 
     vm.disableService = function (serviceId) {
       ServiceDescriptor.setServiceEnabled(serviceId, false, function (error) {
-        XhrNotificationService.notify(error);
+        // TODO: Strange callback result ???
+        if (error !== null) {
+          XhrNotificationService.notify(error);
+        }
       });
       vm.serviceEnabled = false;
     };

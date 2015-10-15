@@ -13,9 +13,9 @@
 
         <div>
           <i class="icon icon-circle-user"/>
-          {{call.summary.activated}} activated |
-          {{call.summary.notActivated}} pending |
-          {{call.summary.error}} needs attention
+          {{call.userStatusSummary.activated}} activated |
+          {{call.userStatusSummary.notActivated}} pending |
+          {{call.userStatusSummary.error}} needs attention
         </div>
 
         <div class="menu">
@@ -34,8 +34,9 @@
 </div>
 
 
-<div ng-hide="call.serviceEnabled || call.startSetupClicked" class="content">
-    <div class="centered-info-pane">
+<div ng-hide="call.serviceEnabled || call.startSetupClicked">
+  <div class="hercules">
+    <div class="centered-info-pane full-height">
 
       <p translate="hercules.serviceNames.{{call.currentServiceId}}"></p>
       <b>Not enabled</b>
@@ -49,6 +50,7 @@
         Start Setup
       </button>
     </div>
+  </div>
 </div>
 
 

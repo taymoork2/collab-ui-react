@@ -1045,6 +1045,23 @@ angular
           controllerAs: 'cdr',
           parent: 'main'
         })
+        .state('cdr-overview', {
+          parent: 'sidepanel',
+          views: {
+            'sidepanel@': {
+              controller: 'CdrOverviewCtrl',
+              controllerAs: 'cdrpanel',
+              templateUrl: 'modules/huron/cdrLogs/cdrOverview/cdrOverview.tpl.html'
+            }
+          },
+          params: {
+            cdrData: {},
+            call: []
+          },
+          data: {
+            displayName: 'Advanced CDR Report'
+          }
+        })
         .state('callroutingBase', {
           abstract: true,
           parent: 'main',
@@ -1318,9 +1335,37 @@ angular
         .state('huronfeatures', {
           url: '/features',
           parent: 'hurondetails',
-          controller: 'FeaturesCtrl',
-          controllerAs: 'featuresCtrl',
           templateUrl: 'modules/huron/features/features.tpl.html',
+          controller: 'HuronFeaturesCtrl',
+          controllerAs: 'huronFeaturesCtrl'
+        })
+        .state('huronnewfeature', {
+          url: '/newfeature',
+          parent: 'hurondetails',
+          controller: 'NewFeatureCtrl',
+          controllerAs: 'newFeatureCtrl',
+          templateUrl: 'modules/huron/features/newFeature/newFeature.tpl.html',
+        })
+        .state('huronfeatures.deleteHuntGroup', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'HuntGroupDeleteCtrl',
+              controllerAs: 'huntGroupDeleteCtrl',
+              templateUrl: 'modules/huron/features/huntGroup/huntGroupDeleteModal.tpl.html'
+            }
+          },
+          params: {
+            deleteHuntGroupName: null,
+            deleteHuntGroupId: null
+          }
+        })
+        .state('huronHuntGroup', {
+          url: '/huronHuntGroup',
+          parent: 'hurondetails',
+          templateUrl: 'modules/huron/features/huntGroup/huntGroupSetupAssistant.tpl.html',
+          controller: 'HuntGroupSetupAssistantCtrl',
+          controllerAs: 'huntGroupSA'
         });
     }
   ]);

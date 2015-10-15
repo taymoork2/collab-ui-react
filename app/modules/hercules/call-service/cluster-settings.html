@@ -1,16 +1,28 @@
 <div class="typography-airy">
 
-<h5>Mute Notifications</h5>
+<h5 class="black-header">Mute Notifications</h5>
 <p>Not implemented</p>
 
-<hr/>
+  <div ng-if="callDetails.activeActiveApplicable">
 
-<h5>Active-Active mode (High availability)</h5>
-<p>Not implemented</p>
+    <h5 class="black-header">Active-Active mode (High availability)</h5>
 
-<hr/>
+    <p ng-if="!callDetails.activeActivePossible">
+      Not available as Active-Active requires a cluster with more than 1 host
+    </p>
 
-<h5>Deregister Cluster</h5>
-<button>Deregister cluster</button>
+    <button cs-btn
+            ng-class="{'btn-primary': !callDetails.activeActiveEnabled, 'btn-danger': callDetails.activeActiveEnabled}"
+            loading="callDetails.savingActiveActive"
+            ng-click="callDetails.toggleActiveActive()"
+            ng-if="callDetails.activeActivePossible">
+      <span ng-if="callDetails.activeActiveEnabled">Disable</span>
+      <span ng-if="!callDetails.activeActiveEnabled">Enable</span>
+    </button>
+
+  </div>
+
+  <h5 class="black-header">Deregister Cluster</h5>
+  <button class="button secondary">Deregister cluster</button>
 
 </div>
