@@ -492,8 +492,8 @@
         var details = data.data[0].details;
         var transformData = angular.copy(callMetricsData);
 
-        transformData.dataProvider[0].numCalls = details.totalFailedCalls;
-        transformData.dataProvider[1].numCalls = details.totalSuccessfulCalls;
+        transformData.dataProvider[0].numCalls = parseInt(details.totalFailedCalls);
+        transformData.dataProvider[1].numCalls = parseInt(details.totalSuccessfulCalls);
         transformData.labelData.numTotalCalls = parseInt(details.totalCalls);
         transformData.labelData.numTotalMinutes = Math.round(parseFloat(details.totalAudioDuration));
         return transformData;
