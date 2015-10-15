@@ -45,9 +45,6 @@
       <header>
        <h4>
             {{sec.section_name_translated}}
-            <!-- <span translate="{{sec.section_name}}"></span> -->
-            
-
        </h4>
       </header> 
 
@@ -59,7 +56,6 @@
                     name="{{sref.reportPageId}}"
                     ui-sref="{{sref.uisrefString}}">
                     {{sref.reportPageId_translated}}
-                    <!-- <span translate="{{sref.reportPageId}}"></span>  -->           
                  </a>
             </span>  
           </div>
@@ -74,24 +70,6 @@
 
 </cs-container>
 
-
-
-<!--
-        .state('webex-reports-iframe', {
-          url: '/iwebexreports',
-          templateUrl: 'modules/webex/siteReports/siteReportsIframe.tpl.html',
-          controller: 'ReportsIframeCtrl',
-          controllerAs: 'reportsIframe',
-          parent: 'main',
-          params: {
-            siteUrl: null,
-            settingPageId: null,
-            settingPageIframeUrl: null
-          }
-
-        })
-
-  -->
 
 <form name="siteAdminLink" action="{{trustSrc(webexAdvancedUrl)}}" method="post" target="webexSiteAdmin">
   <input id="adminEmail" type="hidden" name="adminEmail" ng-model="siteAdminLink.adminEmail" value="{{adminEmailParam}}" />
