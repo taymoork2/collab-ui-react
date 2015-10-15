@@ -1332,6 +1332,19 @@ angular
             }
           }
         })
+        .state('calendar-service.list.details.alarm', {
+          views: {
+            'details-pane': {
+              controller: 'AlarmController',
+              controllerAs: 'alarmCtrl',
+              templateUrl: 'modules/hercules/call-service/alarm-details.html'
+            }
+          },
+          params: {
+            alarm: null,
+            host: null
+          }
+        })
         .state('calendar-service.about', {
           url: '/services/calendar/about',
           views: {
