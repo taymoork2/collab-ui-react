@@ -4,7 +4,7 @@
   /* @ngInject  */
   function CsdmCodeService($http, Authinfo, CsdmConfigService, CsdmCacheUpdater, CsdmConverter, CsdmCacheFactory) {
 
-    var codesUrl = CsdmConfigService.getUrl() + '/web/organization/' + Authinfo.getOrgId() + '/codes';
+    var codesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/codes';
 
     var codeCache = CsdmCacheFactory.create({
       remove: $http.delete,
