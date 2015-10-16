@@ -319,7 +319,7 @@
 
       if (time.value === 0) {
         for (var i = 6; i >= 0; i--) {
-          dataPoint.modifiedDate = moment().subtract(i + 1, 'day').format(dayFormat);
+          dataPoint.modifiedDate = moment().subtract(i + 2, 'day').format(dayFormat);
           graph.push(angular.copy(dataPoint));
         }
       } else if (time.value === 1) {

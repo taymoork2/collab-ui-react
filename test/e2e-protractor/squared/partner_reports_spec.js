@@ -68,8 +68,7 @@ describe('Partner Reports', function () {
       // call metrics
       reports.verifyDescription(time, reports.metricsDescription, false);
       utils.expectIsDisplayed(reports.callMetricsGraph);
-      //TODO verify API response and graph rendering
-      //reports.verifyNoData(reports.metricsDescription);
+      reports.verifyNoData(reports.metricsDescription);
 
       // device media quality
       reports.scrollToElement(reports.mediaQualityGraph);
