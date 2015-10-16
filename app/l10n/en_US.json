@@ -84,7 +84,8 @@
     "noExtensionInPool": "No Extension in pool.",
     "noExternalNumberAvail": "No DID available for mapping.",
     "noExtMappingAvail": "No DID mapping available.",
-    "tooManyResultsError": "Search returned too many results.  Please narrow your search criteria."
+    "tooManyResultsError": "Search returned too many results.  Please narrow your search criteria.",
+    "userExistsError": "User {{email}} already exists.  Please use the Convert option on the Overview page to bring the user into your organization.  If this user is not available for conversion, please submit a problem report."
   },
   "groupsPage": {
     "manageGroups": "Groups",
@@ -482,7 +483,7 @@
     "startDate": "Start Date:",
     "endDate": "End Date:",
     "dateExample": "Choose a Date",
-    "size": "Size Per Server:",
+    "size": "Calls Per Server:",
     "uploadFile": "Upload CDR File",
     "uploadDescription": "CDRs previously saved in json form can be uploaded for reinspection.",
     "upload": "Upload",
@@ -831,7 +832,7 @@
       "deregisterCausesListItem2": "All connectors and related configuration will be removed from {{clusterName}}.",
       "deregisterCausesListItem3": "If the system is in a cluster, you do not need to deregister the other peers. This will happen automatically.",
       "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}",
-      "deregisterErrorNoDeregisterSupport": "Unable to deregister {{clusterName}}. The current software version does not support cluster deregistration."
+      "deregisterErrorNoDeregisterSupport": "Unable to deregister {{clusterName}}. The management connector software version does not support deregistration from the Cloud. Upgrade the connector, or deregister from the Cisco Expressway web interface."
     },
     "status": {
       "unknown": "Status unknown",
@@ -2263,6 +2264,24 @@
     "code": "HG",
     "title": "Hunt Group",
     "modalDescription": "Hunt groups (or line hunting) allow you to customize the distribution of incoming phone calls to users' phone lines in a specific order."
+  },
+
+  "huronFeatureDetails": {
+    "members": " Members",
+    "numbers": " Numbers",
+    "hg": "HG",
+    "aa": "AA",
+    "cp": "CP",
+    "editAction": "Edit",
+    "deleteAction": "Delete"
+  },
+
+  "huntGroupDetails": {
+    "failedToLoadHuntGroups": "Unable to load hunt groups information",
+    "deleteHuntGroup": "Delete Hunt Group",
+    "deleteHuntGroupConfText": "Are you sure you want to delete the {{ huntGroupName }} hunt group?",
+    "deleteHuntGroupSuccessText": "{{ huntGroupName }} hunt group has been deleted successfully",
+    "messageError": "Message {{ message }}"
   },
 
   "linesPage": {

@@ -56,7 +56,11 @@ angular.module('Hercules')
             var service = _.find(data.items, {
               id: serviceId
             });
-            callback(null, service.enabled);
+            if (service === undefined) {
+              callback(false);
+            } else {
+              callback(null, service.enabled);
+            }
           })
           .error(function () {
             callback(arguments);
