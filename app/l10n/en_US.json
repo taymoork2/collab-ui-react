@@ -2300,8 +2300,8 @@
     "deviceHeader": "Devices",
     "userEmailHeader": "User",
     "actionHeader": "Actions",
-    "lineListError": "Error retrieving the line list. Please try reloading the page."
-
+    "lineListError": "Error retrieving the user line association list. Please try reloading the page.",
+    "getCountError": "Failed to fetch record counts."
   },
 
   "messengerCiSync": {
