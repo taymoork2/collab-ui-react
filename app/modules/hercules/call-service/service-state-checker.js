@@ -45,10 +45,10 @@
 
     function checkIfConnectorsConfigured(connectorType) {
       var clusters = ClusterService.getClusters();
-      var anyConnectorsNotConfigured = _.some(clusters, function (cluster) {
+      var noConnectorsConfigured = _.all(clusters, function (cluster) {
         return !cluster.isConnectorConfigured(connectorType);
       });
-      if (anyConnectorsNotConfigured) {
+      if (noConnectorsConfigured) {
         NotificationService.addNotification(
           NotificationService.types.TODO,
           'configureConnectors',
