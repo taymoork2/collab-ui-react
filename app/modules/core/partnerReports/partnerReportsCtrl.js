@@ -75,7 +75,7 @@
     vm.timeSelected = vm.timeOptions[0];
 
     function generateWebexReportsUrl() {
-      var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl();
+      var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl() || [];
       vm.webexOptions = [];
       var promiseChain = [];
 
