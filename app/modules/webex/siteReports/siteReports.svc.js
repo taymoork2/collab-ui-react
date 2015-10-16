@@ -184,12 +184,21 @@ angular.module('WebExReports').service('reportService', [
       this.uisrefs = self.report_links.map(function (thelink) {
         return new UIsref(thelink, "ReportID", self.site_url);
       });
+      this.isEmpty = function () {
+        return (angular.isUndefined(self.uisrefs)) || (self.uisrefs.length === 0);
+      };
+      this.isNotEmpty = function () {
+        return !self.isEmpty();
+      };
     };
 
     var Reports = function () {
       this.sections = [];
       this.setSections = function (secs) {
-        this.sections = secs;
+        var nonEmptySections = secs.filter(function (s) {
+          return s.isNotEmpty();
+        });
+        this.sections = nonEmptySections;
       };
       this.getSections = function () {
         return this.sections;
