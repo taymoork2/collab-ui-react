@@ -20,6 +20,9 @@ describe('Controller: Partner Reports', function () {
       return [];
     }
   };
+  var ReportService = {
+    initReportsObject: function (input) {}
+  };
 
   var validateService = {
     invalidate: function () {}
@@ -111,7 +114,8 @@ describe('Controller: Partner Reports', function () {
         GraphService: GraphService,
         DonutChartService: DonutChartService,
         DummyReportService: DummyReportService,
-        Authinfo: Authinfo
+        Authinfo: Authinfo,
+        reportService: ReportService
       });
       $scope.$apply();
     }));
@@ -316,7 +320,8 @@ describe('Controller: Partner Reports', function () {
         PartnerReportService: PartnerReportService,
         GraphService: GraphService,
         DonutChartService: DonutChartService,
-        Authinfo: Authinfo
+        Authinfo: Authinfo,
+        reportService: ReportService
       });
       $scope.$apply();
     }));

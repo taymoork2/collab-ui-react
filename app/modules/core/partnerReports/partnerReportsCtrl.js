@@ -6,7 +6,7 @@
     .controller('PartnerReportCtrl', PartnerReportCtrl);
 
   /* @ngInject */
-  function PartnerReportCtrl($scope, $timeout, $translate, $q, $stateParams, PartnerReportService, GraphService, DonutChartService, DummyReportService, Authinfo, WebExUtilsFact) {
+  function PartnerReportCtrl($scope, $timeout, $translate, $q, $stateParams, PartnerReportService, GraphService, DonutChartService, DummyReportService, Authinfo, WebExUtilsFact, reportService) {
     var vm = this;
 
     var ABORT = 'ABORT';
@@ -92,19 +92,23 @@
       }
 
       $q.all(promiseChain).then(function () {
+        var selecteIndex = 0;
         if ($stateParams.tab === 'webex') {
           _.forEach(vm.webexOptions, function (val, index) {
             if (val === $stateParams.siteUrl) {
-              vm.webexSelected = vm.webexOptions[index];
+              selecteIndex = index;
             }
           });
-        } else {
-          vm.webexSelected = vm.webexOptions[0];
         }
+        vm.webexSelected = vm.webexOptions[selecteIndex];
+        vm.updateWebexReports();
       });
     }
 
     generateWebexReportsUrl();
+    vm.updateWebexReports = function () {
+      vm.webexReportsObject = reportService.initReportsObject(vm.webexSelected);
+    };
 
     vm.show = function (showEngagement, showQuality, showWebexReports) {
       vm.showEngagement = showEngagement;

@@ -55,6 +55,32 @@
           <uc-media-quality></uc-media-quality>
         </div>
       </div>
+      <div ng-if="nav.webexReportsObject.viewReady && nav.showWebexReports">
+        <cs-card-layout>
+          <cs-card class="report-box" ng-repeat="sec in nav.webexReportsObject.reports.sections">
+            <article>
+              <header>
+               <h4>{{sec.section_name_translated}}</h4>
+              </header>
+               <section>
+                <div class="card-checkbox">
+                  <div ng-repeat="sref in sec.uisrefs">
+                    <span>
+                         <a id="{{sref.reportPageId}}"
+                            name="{{sref.reportPageId}}"
+                            ui-sref="{{sref.uisrefString}}">
+                            {{sref.reportPageId_translated}}
+                         </a>
+                    </span>
+                  </div>
+                </div>
+               </section>
+
+            </article>
+
+          </cs-card>
+        </cs-card-layout>
+      </div>
     </div>
   </div>
 </div>

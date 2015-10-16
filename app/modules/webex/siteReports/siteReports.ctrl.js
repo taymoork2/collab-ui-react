@@ -29,7 +29,7 @@
       Config
     ) {
 
-      this.reportObject = reportService.initReportsObject();
+      this.reportObject = reportService.initReportsObject($stateParams.siteUrl);
 
       $scope.reportObject = this.reportObject;
 
