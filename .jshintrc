@@ -78,7 +78,9 @@
     "jasmine": true,
     "describe": true,
     "xdescribe": true,
+    "afterAll": true,
     "afterEach": true,
+    "beforeAll": true,
     "beforeEach": true,
     "protractor": true,
 
@@ -114,6 +116,7 @@
     "TIMEOUT": true,
     "inviteusers": true,
     "phoneUtils": true,
+    "fail": true,
     "jstz": true
   }
 }

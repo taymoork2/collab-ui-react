@@ -223,8 +223,8 @@
     "alarmsTabDesc": "Alarm Management",
     "eventsTab": "Events",
     "eventsTabDesc": "Event Management",
-    "messengerTab": "Messenger",
-    "messengerTabDesc": "Messenger Administration"
+    "messengerTab": "Webex Messenger",
+    "messengerTabDesc": "Webex Messenger Administration"
   },
   "index": {
     "welcome": "Welcome!",
@@ -982,7 +982,7 @@
     "addUsersDescription": "Select a method to upload your users.",
     "addUsersSimple": "Invite Users | Simple",
     "addUsersAdvanced": "Invite Users | Advanced",
-    "msgrSyncDesc": "Your orgnization is currently in Messenger Sync Mode. Please onboard new users in the WebEx Messenger administration tool. Consult your Cisco customer representative to enable this screen.",
+    "msgrSyncDesc": "Your organization has synchronization of users from Webex Messenger enabled. Users are provisioned from the Webex Messenger Administration tools.",
     "getStarted": "Get Started",
     "startTrial": "Start Trial",
     "doLater": "Do this later",
@@ -1595,11 +1595,15 @@
     "newDeviceActivation": "Activation code for new device:",
     "ciscoSX10": "Cisco SX10",
     "software": "Software",
-    "upgradeChannel": "Upgrade Channel",
     "serial": "Serial",
     "ipAddr": "IP Address",
     "macAddr": "MAC Address",
     "issues": "Issues"
+  },
+  "deviceUpgradeChannelEditPage": {
+    "instructions": "Choose which channel you want this device to automatically upgrade with:",
+    "deviceUpdated": "Device updated",
+    "updateFailed": "Device did not update its Software Update Channel in time"
   },
   "generateActivationCodeModal": {
     "title": "Activation Code",
@@ -1881,7 +1885,7 @@
     "hostAccountsTitle": "HOST ACCOUNTS",
     "activeTitle": "Active",
     "availableTitle": "Available",
-    "emailAllHostsBtnTitle": "EMAIL&nbsp;ALL&nbsp;HOSTS",
+    "emailAllHostsBtnTitle": "Email All Hosts",
     "commonSettingsCardTitle": "Common Settings",
     "commonSettingsCardNote": "These settings apply across centers.",
 
@@ -1954,9 +1958,9 @@
     "settingPageLabel_SC_forms": "Support Center Forms",
     "settingPageLabel_SC_branding": "Support Center Branding",
 
-    "settingPageLabel_WebACD_webacd_settings": "Web ACD Settings",
-    "settingPageLabel_WebACD_webacd_queues": "Web ACD Queues",
-    "settingPageLabel_WebACD_webacd_form": "Web ACD Leave Message Forms",
+    "settingPageLabel_WebACD_webacd_settings": "WebACD Settings",
+    "settingPageLabel_WebACD_webacd_queues": "WebACD Queues",
+    "settingPageLabel_WebACD_webacd_form": "WebACD Leave Message Forms",
 
     "settingPageLabel_RA_remote_options": "Remote Access Settings",
     "settingPageLabel_RA_remote_groups": "Remote Access Groups",
@@ -2301,27 +2305,38 @@
   },
 
   "messengerCiSync": {
-    "authRedirectHeading": "Authentication Redirect",
-    "authRedirectTooltip": "Is authentication redirected through Common Identity instead of CAS?",
-    "getFailed": "Failed getting CI Sync status",
-    "labelCILinkDate": "CI Link Date",
-    "labelOrgAdmin": "ORG Admin",
+    "authRedirectHeading": "Redirect Users to Common Identity Login Flow",
+    "authRedirectTooltip": "When enabled, Jabber clients login through Common Identity",
+    "errorAuthFailed": "Authorization failed: ",
+    "errorFailedCheckingCIEntitlements": "Failed checking user entitlements from Common Identity: ",
+    "errorFailedCheckingCIRoles": "Failed checking Common Identity user roles: ",
+    "errorFailedCheckingCustSuccessRole": "Failed checking if user has Customer Success Admin CI Role: ",
+    "errorFailedGettingCISyncStatus": "Failed getting Messenger Sync status: ",
+    "errorFailedRefreshingCISyncStatus": "Failed refreshing Messenger Sync status: ",
+    "errorFailedUpdatingCISync": "Failed updating Messenger Sync status: ",
+    "errorLacksEntitlements": "User lacks Customer Success Admin Role or Common Identity entitlements to view this content: ",
+    "errorLacksFullAdmin": "User lacks Full Admin role in Common Identity to view this content",
+    "errorUnauthorizedToView": "Unauthorized to view this content",
+    "http0": "Can't connect to service",
+    "http401": "401 Unauthorized",
+    "http404": "404 Not Found",
+    "http500": "500 Server Error",
+    "httpUnknown": " Unknown HTTP Error",
+    "labelCILinkDate": "Link Date",
     "labelOrgId": "Messenger Organization ID",
     "labelOrgName": "Messenger Organization Name",
-    "labelOpsAdmin": "OPS Admin",
     "labelUnauthorizedUser": "Unauthorized User",
-    "loading": "Loading CI Sync Status",
-    "orgAdminButtonText": "Org Admin",
-    "pageTitle": "Messenger CI Sync",
-    "patchFailed": "Failed updating CI Sync",
-    "patchSuccessful": "CI Sync updated",
+    "loading": "Loading Messenger Synchronization Status",
+    "orgAdminLinkText": "Launch Webex Messenger Admin Tool",
+    "pageTitle": "Webex Messenger",
+    "patchSuccessful": "Messenger Sync updated successfully",
     "patchSyncButtonText": "Update",
     "refresh": "Refresh",
-    "refreshFailed": "Failed refreshing CI Sync status",
-    "syncStatusHeading": "Sync Status",
-    "syncStatusTooltip": "Is syncing active between Messenger and Common Identity?",
-    "unauthorized": "Not authorized to view this state"
+    "refreshFailed": "Failed refreshing Messenger Sync status",
+    "syncStatusHeading": "Messenger User Synchronization",
+    "syncStatusTooltip": "When enabled, users are actively being synced from Messenger"
   },
+
   "huronHuntGroup": {
     "title": "Create Hunt Group",
     "namePlaceholder": "Name the Hunt Group",

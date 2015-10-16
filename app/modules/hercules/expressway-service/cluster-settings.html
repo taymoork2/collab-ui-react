@@ -1,0 +1,28 @@
+<div class="typography-airy">
+
+<h5 class="black-header">Mute Notifications</h5>
+<p>Not implemented</p>
+
+  <div ng-if="expresswayServiceDetails.activeActiveApplicable">
+
+    <h5 class="black-header">Active-Active mode (High availability)</h5>
+
+    <p ng-if="!expresswayServiceDetails.activeActivePossible">
+      Not available as Active-Active requires a cluster with more than 1 host
+    </p>
+
+    <button cs-btn
+            ng-class="{'btn-primary': !expresswayServiceDetails.activeActiveEnabled, 'btn-danger': expresswayServiceDetails.activeActiveEnabled}"
+            loading="expresswayServiceDetails.savingActiveActive"
+            ng-click="expresswayServiceDetails.toggleActiveActive()"
+            ng-if="expresswayServiceDetails.activeActivePossible">
+      <span ng-if="expresswayServiceDetails.activeActiveEnabled">Disable</span>
+      <span ng-if="!expresswayServiceDetails.activeActiveEnabled">Enable</span>
+    </button>
+
+  </div>
+
+  <h5 class="black-header">Deregister Cluster</h5>
+  <button class="button secondary">Deregister cluster</button>
+
+</div>

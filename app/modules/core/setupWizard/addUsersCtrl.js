@@ -8,18 +8,26 @@ angular.module('Core')
       $scope.options = {
         addUsers: 0
       };
+
+      // Messeger User Sync Mode flag
+      $scope.isMsgrSyncEnabled = false;
+
+      SyncService.isMessengerSyncEnabled()
+        .then(function (isIt) {
+          $scope.isMsgrSyncEnabled = isIt;
+
+          if (isIt) {
+            $scope.options.addUsers = -1;
+          }
+        }, function (errorMsg) {
+          Log.error(errorMsg);
+        });
+
       FeatureToggleService.supportsDirSync().then(function (dirSyncEnabled) {
         if (dirSyncEnabled) {
           $scope.options.addUsers = 2;
         }
       });
-
-      // Messeger User Sync Mode flag
-      $scope.isMsgrSyncMode = SyncService.isSyncEnabled() && SyncService.isMessengerSync();
-
-      if ($scope.isMsgrSyncMode) {
-        $scope.options.addUsers = -1;
-      }
 
       $scope.syncSimple = {
         label: $translate.instant('firstTimeWizard.simple'),
@@ -43,8 +51,8 @@ angular.module('Core')
       $scope.initNext = function () {
         var deferred = $q.defer();
 
-        // Messenger Sync mode
-        if ($scope.isMsgrSyncMode) {
+        // Messenger Sync mode should exit
+        if ($scope.isMsgrSyncEnabled) {
           // Move to the next tab as current tab is irrelevant
           $scope.wizard.nextTab();
           deferred.reject();

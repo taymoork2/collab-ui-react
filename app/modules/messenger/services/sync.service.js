@@ -6,10 +6,12 @@
     .factory('SyncService', SyncService);
 
   /** @ngInject */
-  function SyncService($http, $q, Authinfo, Log) {
+  function SyncService($http, $q, $translate, Authinfo, Log) {
     // Interface ---------------------------------------------------------------
 
     // Internal data
+    var translatePrefix = 'messengerCiSync.';
+
     var syncModes = Object.freeze({
       messenger: {
         on: {
@@ -44,25 +46,10 @@
     };
 
     var msgrService = {
-      protocol: 'http://',
-
-      // TODO: remove when production is up
-      //host: '10.129.24.45',
-      //host: '192.168.0.6',
-      //host: 'localhost',
-      //host: 'gspbt1adm001.webex.com',
-
-      // Default
-      host: '127.0.0.1',
-      port: 8080,
-
-      // TODO: cleanup when production is up
+      protocol: 'https://',
+      host: 'msgr-admin-bts.webexconnect.com',
+      port: 443,
       api: '/admin-service/messenger/admin/api/v1/orgs/' + Authinfo.getOrgId() + '/cisync/'
-        //api: '/admin-service/messenger/admin/api/v1/orgs/2d23d582-5830-4bab-9d98-3e428d790e58/cisync'
-        //api: '/admin-service/messenger/admin/api/v1/orgs/e805fc73-ad2b-4cef-9ea1-70f070db96a2/cisync/'
-        //api: '/admin-service/messenger/admin/api/v1/orgs/47a4ef6b-f6d0-4c5d-8ffd-9d6a8c94738c/cisync/'
-        //api: '/admin-service/messenger/admin/api/v1/orgs/7c63761c-4d85-4daf-b241-aa63c192ec64/cisync/'
-        //api: '/admin-service/messenger/admin/api/v1/orgs/2d446615-164b-4d81-b1a2-7bddb64279bb/cisync/'
     };
 
     var serviceUrl = msgrService.protocol + msgrService.host + ':' + msgrService.port + msgrService.api;
@@ -70,7 +57,9 @@
     var service = {
       getSyncStatus: getSyncStatus,
       isDirSync: isDirSync,
+      isDirSyncEnabled: isDirSyncEnabled,
       isMessengerSync: isMessengerSync,
+      isMessengerSyncEnabled: isMessengerSyncEnabled,
       isSyncEnabled: isSyncEnabled,
       patchSync: patchSync,
       refreshSyncStatus: function () {
@@ -89,6 +78,7 @@
     // Implementation ----------------------------------------------------------
 
     // Private fetch to service
+    // Can be time-expensive, so try to limit calls
     function fetchSyncStatus() {
       var defer = $q.defer();
 
@@ -97,17 +87,63 @@
           shouldFetch = false;
           defer.resolve(setSyncStatus(response.data));
         }, function (response) {
-          var baseError = 'Get Status ' + response.status;
+          var error = parseHttpErrorResponse('GET', response);
+          Log.error('SyncService::fetchSyncStatus(): ' + error);
 
-          // TODO: remove excessive checking once Msgr Admin Service returns consistent errors
-          if (response.data && response.data.error && response.data.error.message) {
-            defer.reject(baseError + '; Message: ' + response.data.error.message);
-          } else {
-            defer.reject(baseError);
-          }
+          defer.reject({
+            status: status,
+            message: error
+          });
         });
 
       return defer.promise;
+    }
+
+    function parseHttpErrorResponse(method, response) {
+      var status = parseHttpStatus(response.status);
+      var error = method + ': ' + status;
+
+      // Filter odd status' like -1, 0, etc.
+      // If service returned an error, just use that
+      if (response.status >= 100) {
+        // Get message, based on differing formats for Tomcat/Spring and/or Msgr Admin Service
+        if (response.data.message) {
+          error = response.data.error;
+        } else if (response.data.error.message) {
+          error = response.data.error.message;
+        }
+      }
+
+      return error;
+    }
+
+    function parseHttpStatus(status) {
+      var result = '';
+
+      // Normalize edge cases for parsing
+      if (status < 100) {
+        status = 0;
+      }
+
+      switch (status) {
+      case 0:
+        result = $translate.instant(translatePrefix + 'http0');
+        break;
+      case 401:
+        result = $translate.instant(translatePrefix + 'http401');
+        break;
+      case 404:
+        result = $translate.instant(translatePrefix + 'http404');
+        break;
+      case 500:
+        result = $translate.instant(translatePrefix + 'http500');
+        break;
+      default:
+        result = $translate.instant(translatePrefix + 'httpUnknown');
+        break;
+      }
+
+      return result;
     }
 
     function setSyncStatus(status) {
@@ -126,10 +162,13 @@
         messengerOrgId: syncStatus.messengerOrgId,
         linkDate: syncStatus.linkDate,
         isAuthRedirect: syncStatus.isAuthRedirect,
-        isSyncEnabled: isSyncEnabled()
+        isSyncEnabled: isSyncEnabledRaw()
       };
     }
 
+    // Since fetchSyncStatus() can be time-expensive,
+    // cache result. Generally, only fetch on initialization,
+    // and during an explicit Refresh request by the user
     function getSyncStatus() {
       var defer = $q.defer();
 
@@ -137,8 +176,8 @@
         fetchSyncStatus()
           .then(function (status) {
             defer.resolve(getSimplifiedStatus(syncStatus));
-          }, function (errorMsg) {
-            defer.reject(errorMsg);
+          }, function (errorObj) {
+            defer.reject(errorObj);
           });
       } else {
         defer.resolve(getSimplifiedStatus(syncStatus));
@@ -147,15 +186,80 @@
       return defer.promise;
     }
 
-    function isDirSync() {
+    function isDirSyncRaw() {
       return (syncModes.dirsync.on === syncStatus.syncMode || syncModes.dirsync.off === syncStatus.syncMode);
     }
 
+    function isDirSync() {
+      var defer = $q.defer();
+
+      getSyncStatus()
+        .then(function () {
+          defer.resolve(isDirSyncRaw());
+        }, function (errorObj) {
+          defer.reject(errorObj.message);
+        });
+
+      return defer.promise;
+    }
+
+    function isDirSyncEnabled() {
+      var defer = $q.defer();
+
+      getSyncStatus()
+        .then(function () {
+          defer.resolve(isDirSync() && isSyncEnabled());
+        }, function (errorObj) {
+          defer.reject(errorObj.message);
+        });
+
+      return defer.promise;
+    }
+
     function isMessengerSync() {
+      var defer = $q.defer();
+
+      getSyncStatus()
+        .then(function () {
+          defer.resolve(isMessengerSyncRaw());
+        }, function (errorObj) {
+          defer.reject(errorObj.message);
+        });
+
+      return defer.promise;
+    }
+
+    function isMessengerSyncRaw() {
       return (syncModes.messenger.on === syncStatus.syncMode || syncModes.messenger.off === syncStatus.syncMode);
     }
 
+    function isMessengerSyncEnabled() {
+      var defer = $q.defer();
+
+      getSyncStatus()
+        .then(function () {
+          defer.resolve(isMessengerSyncRaw() && isSyncEnabledRaw());
+        }, function (errorObj) {
+          defer.reject(errorObj.message);
+        });
+
+      return defer.promise;
+    }
+
     function isSyncEnabled() {
+      var defer = $q.defer();
+
+      getSyncStatus()
+        .then(function () {
+          defer.resolve(isSyncEnabledRaw());
+        }, function (errorObj) {
+          defer.reject(errorObj.message);
+        });
+
+      return defer.promise;
+    }
+
+    function isSyncEnabledRaw() {
       return (syncModes.messenger.on === syncStatus.syncMode || syncModes.dirsync.on === syncStatus.syncMode);
     }
 
@@ -193,8 +297,11 @@
     function patchSync(isSyncEnabled, isAuthRedirect) {
       var defer = $q.defer();
 
+      // Deep copy to prevent only reference copy
+      var previousSettings = _.clone(syncStatus);
+
       // Update sync mode
-      if (isDirSync()) {
+      if (isDirSyncRaw()) {
         setDirSyncMode(isSyncEnabled);
       } else {
         setMessengerSyncMode(isSyncEnabled);
@@ -210,7 +317,16 @@
       $http.patch(serviceUrl, params).then(function (response) {
         defer.resolve('PATCH Status ' + response.status);
       }, function (response) {
-        defer.reject('PATCH Status ' + response.status + '; URL \'' + serviceUrl + '\'; Full response: ' + JSON.stringify(response.data));
+        var error = parseHttpErrorResponse('PATCH', response);
+        Log.error('SyncService::patchSync(): ' + error);
+
+        // Reset to previous settings
+        syncStatus = previousSettings;
+
+        defer.reject({
+          status: status,
+          message: error
+        });
       });
 
       return defer.promise;
