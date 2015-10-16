@@ -47,6 +47,16 @@
       });
     }
 
+    function get(url) {
+      return opts.get(url).then(function (obj) {
+        if (obj) {
+          CsdmCacheUpdater.updateOne(cache, url, obj);
+          shouldUpdateCache = false;
+        }
+        return cache[url];
+      });
+    }
+
     function create(url, data) {
       return opts.create(url, data).then(function (obj) {
         CsdmCacheUpdater.updateOne(cache, obj.url, obj);
@@ -57,6 +67,7 @@
 
     return {
       list: list,
+      get: get,
       remove: remove,
       update: update,
       create: create,

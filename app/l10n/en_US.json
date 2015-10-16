@@ -1595,11 +1595,15 @@
     "newDeviceActivation": "Activation code for new device:",
     "ciscoSX10": "Cisco SX10",
     "software": "Software",
-    "upgradeChannel": "Upgrade Channel",
     "serial": "Serial",
     "ipAddr": "IP Address",
     "macAddr": "MAC Address",
     "issues": "Issues"
+  },
+  "deviceUpgradeChannelEditPage": {
+    "instructions": "Choose which channel you want this device to automatically upgrade with:",
+    "deviceUpdated": "Device updated",
+    "updateFailed": "Device did not update its Software Update Channel in time"
   },
   "generateActivationCodeModal": {
     "title": "Activation Code",
