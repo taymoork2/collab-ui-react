@@ -35,6 +35,7 @@
 
           var _this = this;
 
+          _this.locale = $translate.use().replace("_", "-");
           _this.webExSiteSettingsObj = createWebExSiteSettingsObj();
 
           var siteUrl = (!$stateParams.siteUrl) ? '' : $stateParams.siteUrl;
@@ -47,11 +48,12 @@
           );
 
           logMsg = funcName + ": " + "\n" +
+            "locale=" + _this.locale + "\n" +
             "siteUrl=" + siteUrl + "\n" +
             "siteName=" + siteName + "\n" +
             "pageTitle=" + pageTitle + "\n" +
             "pageTitleFull=" + pageTitleFull;
-          // $log.log(logMsg);
+          $log.log(logMsg);
 
           _this.webExSiteSettingsObj.siteUrl = siteUrl;
           _this.webExSiteSettingsObj.siteName = siteName;
@@ -138,6 +140,7 @@
 
               emailAllHostsBtnObj: {
                 id: "emailAllHostsBtn",
+                label: null,
                 pageObj: null,
               }, // emailAllHostsBtnObj
 
@@ -183,7 +186,7 @@
 
                 webACDObj: {
                   id: "WebACD",
-                  label: "Web ACD",
+                  label: "WebACD",
                   pageObjs: null
                 },
 
@@ -195,7 +198,7 @@
               }, {
                 id: "EC",
                 label: "Event Center",
-                pageObjs: null,
+                pageObjs: null
               }, ], // settingCardObjs
 
               categoryObjs: [{
@@ -526,7 +529,10 @@
                   categoryObj.pageObjs.forEach(
                     function checkPageObj(pageObj) {
                       if (!pageInList) {
-                        var localeCompareResult = newPageObj.label.localeCompare(pageObj.label);
+                        var localeCompareResult = newPageObj.label.localeCompare(
+                          pageObj.label,
+                          _this.locale
+                        );
 
                         logMsg = funcName + ": " +
                           "pageObj.label=" + pageObj.label + "\n" +
@@ -595,7 +601,9 @@
           updateSettingCardObjs();
 
           function updateEmailAllHostsBtnObj() {
-            _this.webExSiteSettingsObj.emailAllHostsBtnObj.label = $translate.instant("webexSiteSettingsLabels.emailAllHostsBtnTitle");
+            var btnLabel = $translate.instant("webexSiteSettingsLabels.emailAllHostsBtnTitle").replace(" ", "&nbsp;");
+
+            _this.webExSiteSettingsObj.emailAllHostsBtnObj.label = btnLabel;
             _this.webExSiteSettingsObj.emailAllHostsBtnObj.pageObj = getCategoryObj("EMAIL").pageObjs[0];
           } // updateEmailAllHostsBtnObj()
 
