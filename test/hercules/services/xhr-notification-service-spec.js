@@ -79,7 +79,7 @@ describe('XhrNotificationService', function () {
   it('should handle generic errors with null status', function () {
     Service.notify([null, 0]);
     expect(notification.notify.callCount).toBe(1);
-    expect(notification.notify.args[0][0][0]).toBe('Backend responded with an unknown status.');
+    expect(notification.notify.args[0][0][0]).toBe('An unexpected error occurred.');
   });
 
   it('should handle custom messages', function () {
@@ -112,6 +112,23 @@ describe('XhrNotificationService', function () {
     });
     expect(notification.notify.callCount).toBe(1);
     expect(notification.notify.args[0][0][0]).toBe('Experimental Endpoint');
+  });
+
+  it('should show simple messages', function () {
+    Service.notify('foo');
+    expect(notification.notify.callCount).toBe(1);
+    expect(notification.notify.args[0][0][0]).toBe('foo');
+  });
+
+  it('should show default message for default error object', function () {
+    Service.notify({
+      data: null,
+      status: -1,
+      config: {},
+      statusText: ''
+    });
+    expect(notification.notify.callCount).toBe(1);
+    expect(notification.notify.args[0][0][0]).toBe('An unexpected error occurred.');
   });
 
 });
