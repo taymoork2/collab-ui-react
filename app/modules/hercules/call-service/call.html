@@ -18,6 +18,16 @@
           {{call.userStatusSummary.error}} needs attention
         </div>
 
+        <span ng-show="call.userStatusSummary.notActivated > 0 || call.userStatusSummary.activated > 0 || call.userStatusSummary.error > 0"
+             class="export-users-statuses-icon"
+             tooltip-placement="top"
+             tooltip="User Status Report"
+             tooltip-animation="false"
+             tooltip-append-to-body="true">
+          <i class="icon icon-content-share" ng-click="call.openUserStatusReportModal(call.currentServiceId)"></i>
+        </span>
+
+
         <div class="menu">
           <a ui-sref-active="active" ui-sref="{{call.route}}.list">Resources</a>
           <a ui-sref-active="active" ui-sref="{{call.route}}.settings({serviceType:call.currentServiceType})">Settings</a>
@@ -38,21 +48,8 @@
   <div class="hercules">
     <div class="centered-info-pane full-height">
 
+      <div ng-include src="'modules/hercules/call-service/activate-service.html'"></div>
 
-      <h3>
-        <i class="{{call.serviceIconClass}}"></i>
-        <span translate="hercules.serviceNames.{{call.currentServiceId}}"></span>
-      </h3>
-      <p>
-        Currently not Activated.
-      </p>
-
-
-      <br>
-
-      <button class="btn btn-info" ng-click="call.enableService(call.currentServiceId)">
-        Activate Service
-      </button>
     </div>
   </div>
 </div>

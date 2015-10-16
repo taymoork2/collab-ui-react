@@ -21,7 +21,7 @@
     padding-bottom: 10px;
     padding-top: 10px;
   }
-  td {
+  td, th {
     border-color: $gray-dark;
     border-right: 1px solid $gray-dark;
     color: $gray-dark;
@@ -35,7 +35,7 @@
       color: $gray-dark;
     }
   }
-  .td:last-of-type {
+  .td:last-of-type, th:last-of-type {
     border-right: none;
   }
   .customer-data {
@@ -45,7 +45,7 @@
   }
   .dummyTable {
     border-color: #ECECEC;
-    td {
+    td, th {
       border-color: #ECECEC;
       border-right: 1px solid #ECECEC;
       border-top: 1px solid #ECECEC;
@@ -60,7 +60,10 @@
         color: #ECECEC;
       }
     }
-    .td:last-of-type {
+    th {
+      background-color: $brand-white;
+    }
+    .td:last-of-type, th:last-of-type {
       border-right: none;
     }
   }

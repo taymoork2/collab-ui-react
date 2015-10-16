@@ -18,6 +18,13 @@
     padding: 0;
     color: $brand-primary;
   }
+  .table-bordered > thead > tr > th, .table-bordered > tbody > tr > td {
+    border-bottom-width: rem-calc(1);
+    border-right: rem-calc(1) solid $gray-dark;
+  }
+  .table-bordered > thead > tr > th:last-of-type, .table-bordered > tbody > tr > td:last-of-type {
+    border-right: none;
+  }
   .box-match {
     top: -14px;
     left: -12px;

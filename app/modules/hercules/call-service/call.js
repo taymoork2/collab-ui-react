@@ -61,7 +61,8 @@
 
       function addMail() {
         var mail = $("#add-mails").val();
-        var pattern = /^([a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+(\.[a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+)*|"((([ \t]*\r\n)?[ \t]+)?([\x01-\x08\x0b\x0c\x0e-\x1f\x7f\x21\x23-\x5b\x5d-\x7e\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|\\[\x01-\x09\x0b\x0c\x0d-\x7f\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))*(([ \t]*\r\n)?[ \t]+)?")@(([a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.)+([a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.?$/i;
+        var pattern =
+          /^([a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+(\.[a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+)*|"((([ \t]*\r\n)?[ \t]+)?([\x01-\x08\x0b\x0c\x0e-\x1f\x7f\x21\x23-\x5b\x5d-\x7e\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|\\[\x01-\x09\x0b\x0c\x0d-\x7f\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))*(([ \t]*\r\n)?[ \t]+)?")@(([a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.)+([a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.?$/i;
         if (mail.indexOf(",") > -1 || mail.indexOf(";") > -1) {
           //console.log("has , or ;");
           mail = mail.slice(0, -1);
@@ -81,7 +82,8 @@
   };
 
   /* @ngInject */
-  function CallController(XhrNotificationService, NotificationService, FmsNotificationService, ServiceDescriptor, $stateParams, $state, $modal, $scope, ClusterService, USSService2, ConverterService, ServiceStatusSummaryService) {
+  function CallController(XhrNotificationService, NotificationService, ServiceStateChecker, ServiceDescriptor, $stateParams, $state, $modal,
+    $scope, ClusterService, USSService2, ConverterService, ServiceStatusSummaryService) {
     ClusterService.subscribe(angular.noop, {
       scope: $scope
     });
@@ -95,24 +97,17 @@
     vm.route = serviceType2RouteName(vm.currentServiceType);
 
     vm.clusters = ClusterService.getClusters();
-    vm.clusterLength = _.size(vm.clusters);
+    vm.clusterLength = function () {
+      return _.size(vm.clusters);
+    };
 
     vm.serviceIconClass = ServiceDescriptor.serviceIcon(vm.currentServiceId);
 
-    FmsNotificationService.refresh();
+    ServiceStateChecker.init(vm.currentServiceType, vm.currentServiceId);
 
     vm.serviceEnabled = false;
     ServiceDescriptor.isServiceEnabled(serviceType2ServiceId(vm.currentServiceType), function (a, b) {
       vm.serviceEnabled = b;
-      //if (!b) {
-      //  NotificationService.addNotification(
-      //    'todo',
-      //    'serviceNotEnabled',
-      //    1,
-      //    'modules/hercules/notifications/service-not-enabled.html', {});
-      //} else {
-      //  NotificationService.removeNotification('todo', 'serviceNotEnabled');
-      //}
     });
 
     vm.serviceNotInstalled = function (cluster) {
@@ -124,7 +119,8 @@
     };
 
     vm.softwareVersionAvailable = function (cluster) {
-      return ServiceStatusSummaryService.serviceFromCluster(vm.currentServiceType, cluster).software_upgrade_available ? ServiceStatusSummaryService.serviceFromCluster("c_ucmc", cluster).not_approved_package.version : "?";
+      return ServiceStatusSummaryService.serviceFromCluster(vm.currentServiceType, cluster).software_upgrade_available ?
+        ServiceStatusSummaryService.serviceFromCluster("c_ucmc", cluster).not_approved_package.version : "?";
     };
 
     vm.selectedServiceAndManagementServiceStatus = function (cluster) {
@@ -137,6 +133,33 @@
         serviceId: serviceType2ServiceId(vm.currentServiceType)
       });
     }
+
+    vm.openUserStatusReportModal = function (serviceId) {
+      var modalVm = this;
+      $scope.selectedServiceId = serviceId; //TODO: Fix. Currently compatible with "old" concept...
+      $scope.modal = $modal.open({
+        scope: $scope,
+        controller: 'ExportUserStatusesController',
+        templateUrl: 'modules/hercules/export/export-user-statuses.html'
+      });
+    };
+
+    //USSService.getStatusesSummary(function (err, userStatusesSummary) {
+    //  $scope.userStatusesSummary = userStatusesSummary || {};
+    //  $scope.summary = function (serviceId) {
+    //    var summary = null;
+    //    if ($scope.userStatusesSummary) {
+    //      summary = _.find($scope.userStatusesSummary.summary, function (s) {
+    //        return s.serviceId == serviceId;
+    //      });
+    //    }
+    //    return summary || {
+    //        activated: 0,
+    //        notActivated: 0,
+    //        error: 0
+    //      };
+    //  };
+    //});
 
     vm.enableService = function (serviceId) {
       ServiceDescriptor.setServiceEnabled(serviceId, true, function (error) {
@@ -158,7 +181,8 @@
   }
 
   /* @ngInject */
-  function CallDetailsController(XhrNotificationService, ServiceDescriptor, ServiceStatusSummaryService, $state, $modal, $stateParams, ClusterService) {
+  function CallDetailsController(XhrNotificationService, ServiceDescriptor, ServiceStatusSummaryService, $state, $modal, $stateParams,
+    ClusterService) {
     var vm = this;
     vm.state = $state;
     vm.clusterId = $stateParams.cluster.id;
@@ -283,7 +307,8 @@
   }
 
   /* @ngInject */
-  function CallServiceSettingsController($state, $modal, ServiceDescriptor, Authinfo, USSService2, $stateParams, NotificationConfigService, MailValidatorService, XhrNotificationService, CertService, Notification) {
+  function CallServiceSettingsController($state, $modal, ServiceDescriptor, Authinfo, USSService2, $stateParams, NotificationConfigService,
+    MailValidatorService, XhrNotificationService, CertService, Notification) {
     var vm = this;
     vm.config = "";
     vm.serviceType = $stateParams.serviceType;
@@ -430,12 +455,20 @@
     };
   }
 
+  /* @ngInject */
+  function AlarmController($stateParams) {
+    var vm = this;
+    vm.alarm = $stateParams.alarm;
+    vm.host = $stateParams.host;
+  }
+
   angular
     .module('Hercules')
     .controller('CallController', CallController)
     .controller('CallDetailsController', CallDetailsController)
     .controller('CallClusterSettingsController', CallClusterSettingsController)
     .controller('CallServiceSettingsController', CallServiceSettingsController)
-    .controller('DisableConfirmController', DisableConfirmController);
+    .controller('DisableConfirmController', DisableConfirmController)
+    .controller('AlarmController', AlarmController);
 
 }());

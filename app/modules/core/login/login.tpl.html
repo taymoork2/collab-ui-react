@@ -7,9 +7,9 @@
     </div>
     <div class="round-button" ng-hide="result">
       <div class="round-button-circle">
-        <button class="button info expand login-btn" role="button" ng-click="login()"  >
+        <button ng-class="{'login-btn': !loading, 'loading-icon': loading}" role="button" ng-click="login()" >
           <span ng-hide="loading" translate="loginPage.login"></span>
-          <span ng-show="loading" translate="loginPage.loading"></span>
+          <span ng-show="loading" class="icon icon-spinner"></span>
         </button>
       </div>
     </div>

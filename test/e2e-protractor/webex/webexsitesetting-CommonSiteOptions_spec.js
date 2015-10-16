@@ -2,7 +2,7 @@
 
 /* global describe, it, expect, login */
 
-describe('WebEx site settings', function () {
+describe('WebEx Common Settings -> Site Options', function () {
 
   it('should allow login as admin user', function () {
     login.loginThroughGui(sitesettings.testAdmin.username, sitesettings.testAdmin.password);

@@ -59,7 +59,7 @@ describe('Controller: ReportsCtrl', function () {
     spyOn(reportService, 'getReports');
     spyOn(Authinfo, 'getPrimaryEmail').and.returnValue("mojoco@webex.com");
 
-    var controller = $controller('ReportsCtrl', {
+    var controller = $controller('WebExReportsCtrl', {
       $scope: $scope,
       $stateParams: $stateParams,
       $translate: $translate,
