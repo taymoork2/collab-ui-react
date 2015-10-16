@@ -1,27 +1,27 @@
 <div id="addDeviceModal">
 
   <div class="modal-header">
-    <button 
-      type="button" 
-      class="close" 
+    <button
+      type="button"
+      class="close"
       ng-click="$dismiss()">
     </button>
-    <h3 
-      class="modal-title" 
+    <h3
+      class="modal-title"
       translate="spacesPage.modalTitle">
     </h3>
   </div>
 
   <div class="modal-body">
     <div ng-show="notificationsFailed" class="alert alert-warning">
-      Activation Code created sucessfully, but notifications failed to transmit.
+      Activation Code created successfully, but notifications failed to transmit.
     </div>
 
     <form onsubmit="$('#create-code-button').click()" ng-show="adc.showAdd">
       <h4 translate="spacesPage.addDeviceStep1"></h4>
       <p translate="spacesPage.addDeviceStep1Desc"></p>
       <div>
-        <input 
+        <input
           required
           type="text"
           id="newRoom"
@@ -49,8 +49,8 @@
             class="btn btn-default btn-sm"
             clip-copy="adc.activationCode"
             clip-click="adc.showCopiedToClipboardMessage()">
-            <i 
-              class="fa fa-clipboard" 
+            <i
+              class="fa fa-clipboard"
               data-original-title="Copied to clipboard">
             </i>
           </button>
@@ -62,28 +62,28 @@
   </div>
 
   <div class="modal-footer">
-    <button 
-      type="button" 
-      class="btn" 
-      ng-if="!adc.showAdd" 
+    <button
+      type="button"
+      class="btn"
+      ng-if="!adc.showAdd"
       focus-on="!adc.showAdd"
       ng-click="adc.resetAddDevice()">
       Add another
     </button>
-    <button 
-      type="button" 
-      class="btn btn-primary" 
+    <button
+      type="button"
+      class="btn btn-primary"
       ng-click="$dismiss()"
-      ng-if="!adc.showAdd" 
+      ng-if="!adc.showAdd"
       translate="spacesPage.done">
     </button>
     <button
-      ng-if="adc.showAdd" 
+      ng-if="adc.showAdd"
       id="create-code-button"
       class="btn btn-primary"
       sq-click-promise="adc.addDevice()"
       ng-disabled="!adc.isNameValid()">
-      <span 
+      <span
         translate="spacesPage.add">
       </span>
     </button>
