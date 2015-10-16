@@ -82,7 +82,7 @@
   };
 
   /* @ngInject */
-  function CallController(XhrNotificationService, NotificationService, ServiceStateChecker, ServiceDescriptor, $stateParams, $state, $modal,
+  function ExpresswayServiceController(XhrNotificationService, NotificationService, ServiceStateChecker, ServiceDescriptor, $stateParams, $state, $modal,
     $scope, ClusterService, USSService2, ConverterService, ServiceStatusSummaryService) {
     ClusterService.subscribe(angular.noop, {
       scope: $scope
@@ -175,13 +175,13 @@
   }
 
   /* @ngInject */
-  function CallClusterSettingsController($stateParams) {
-    var vm = this;
-    vm.cluster = $stateParams.cluster;
-  }
+  //function ExpresswayClusterSettingsController($stateParams) {
+  //  var vm = this;
+  //  vm.cluster = $stateParams.cluster;
+  //}
 
   /* @ngInject */
-  function CallDetailsController(XhrNotificationService, ServiceDescriptor, ServiceStatusSummaryService, $state, $modal, $stateParams,
+  function ExpresswayServiceDetailsController(XhrNotificationService, ServiceDescriptor, ServiceStatusSummaryService, $state, $modal, $stateParams,
     ClusterService) {
     var vm = this;
     vm.state = $state;
@@ -235,7 +235,7 @@
 
     vm.upgrade = function () {
       $modal.open({
-        templateUrl: "modules/hercules/call-service/software-upgrade-dialog.html",
+        templateUrl: "modules/hercules/expressway-service/software-upgrade-dialog.html",
         controller: SoftwareUpgradeController,
         controllerAs: "softwareUpgrade"
       }).result.then(function () {
@@ -245,7 +245,7 @@
 
     vm.showAlarms = function () {
       $modal.open({
-        templateUrl: "modules/hercules/call-service/alarms.html",
+        templateUrl: "modules/hercules/expressway-service/alarms.html",
         controller: AlarmsController,
         controllerAs: "alarmsDialog"
       }).result.then(function () {
@@ -307,7 +307,7 @@
   }
 
   /* @ngInject */
-  function CallServiceSettingsController($state, $modal, ServiceDescriptor, Authinfo, USSService2, $stateParams, NotificationConfigService,
+  function ExpresswayServiceSettingsController($state, $modal, ServiceDescriptor, Authinfo, USSService2, $stateParams, NotificationConfigService,
     MailValidatorService, XhrNotificationService, CertService, Notification) {
     var vm = this;
     vm.config = "";
@@ -403,7 +403,7 @@
 
     vm.confirmDisable = function (serviceId) {
       $modal.open({
-        templateUrl: "modules/hercules/call-service/confirm-disable-dialog.html",
+        templateUrl: "modules/hercules/expressway-service/confirm-disable-dialog.html",
         controller: DisableConfirmController,
         controllerAs: "disableConfirmDialog",
         resolve: {
@@ -431,7 +431,7 @@
 
     vm.confirmCertDelete = function (cert) {
       $modal.open({
-        templateUrl: "modules/hercules/call-service/confirm-certificate-delete.html",
+        templateUrl: "modules/hercules/expressway-service/confirm-certificate-delete.html",
         controller: ConfirmCertificateDeleteController,
         controllerAs: "confirmCertificateDelete",
         resolve: {
@@ -464,10 +464,10 @@
 
   angular
     .module('Hercules')
-    .controller('CallController', CallController)
-    .controller('CallDetailsController', CallDetailsController)
-    .controller('CallClusterSettingsController', CallClusterSettingsController)
-    .controller('CallServiceSettingsController', CallServiceSettingsController)
+    .controller('ExpresswayServiceController', ExpresswayServiceController)
+    .controller('ExpresswayServiceDetailsController', ExpresswayServiceDetailsController)
+    //.controller('ExpresswayClusterSettingsController', ExpresswayClusterSettingsController)
+    .controller('ExpresswayServiceSettingsController', ExpresswayServiceSettingsController)
     .controller('DisableConfirmController', DisableConfirmController)
     .controller('AlarmController', AlarmController);
 

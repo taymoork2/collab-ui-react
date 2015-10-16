@@ -1595,11 +1595,15 @@
     "newDeviceActivation": "Activation code for new device:",
     "ciscoSX10": "Cisco SX10",
     "software": "Software",
-    "upgradeChannel": "Upgrade Channel",
     "serial": "Serial",
     "ipAddr": "IP Address",
     "macAddr": "MAC Address",
     "issues": "Issues"
+  },
+  "deviceUpgradeChannelEditPage": {
+    "instructions": "Choose which channel you want this device to automatically upgrade with:",
+    "deviceUpdated": "Device updated",
+    "updateFailed": "Device did not update its Software Update Channel in time"
   },
   "generateActivationCodeModal": {
     "title": "Activation Code",
@@ -1881,7 +1885,7 @@
     "hostAccountsTitle": "HOST ACCOUNTS",
     "activeTitle": "Active",
     "availableTitle": "Available",
-    "emailAllHostsBtnTitle": "EMAIL&nbsp;ALL&nbsp;HOSTS",
+    "emailAllHostsBtnTitle": "Email All Hosts",
     "commonSettingsCardTitle": "Common Settings",
     "commonSettingsCardNote": "These settings apply across centers.",
 
@@ -1954,9 +1958,9 @@
     "settingPageLabel_SC_forms": "Support Center Forms",
     "settingPageLabel_SC_branding": "Support Center Branding",
 
-    "settingPageLabel_WebACD_webacd_settings": "Web ACD Settings",
-    "settingPageLabel_WebACD_webacd_queues": "Web ACD Queues",
-    "settingPageLabel_WebACD_webacd_form": "Web ACD Leave Message Forms",
+    "settingPageLabel_WebACD_webacd_settings": "WebACD Settings",
+    "settingPageLabel_WebACD_webacd_queues": "WebACD Queues",
+    "settingPageLabel_WebACD_webacd_form": "WebACD Leave Message Forms",
 
     "settingPageLabel_RA_remote_options": "Remote Access Settings",
     "settingPageLabel_RA_remote_groups": "Remote Access Groups",
