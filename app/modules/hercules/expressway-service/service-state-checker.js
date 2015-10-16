@@ -2,29 +2,17 @@
   'use strict';
 
   /*@ngInject*/
-  function ServiceStateChecker(NotificationService, ClusterService, DirSyncService, USSService2) {
-    var fusePerformed = false;
-    var dirSyncEnabled = false;
-    var connectorType;
-    var serviceId;
+  function ServiceStateChecker(NotificationService, ClusterService, DirSyncService, USSService2, ServiceDescriptor, Authinfo) {
 
-    var lastDirSyncCheck = 0;
-    var lastUserStatusCheck = 0;
+    var dirSyncEnabled;
 
-    function init(conType, servId) {
-      connectorType = conType;
-      serviceId = servId;
-      ClusterService.subscribe(refresh, {
-        //scope: $scope
-      });
-    }
-
-    function refresh() {
-      checkIfFusePerformed();
-      if (fusePerformed) {
-        checkIfConnectorsConfigured(connectorType);
-        checkIfDirSyncEnabled();
-        checkUserStatuses();
+    function checkState(connectorType, serviceId) {
+      if (checkIfFusePerformed()) {
+        if (checkIfConnectorsConfigured(connectorType)) {
+          checkIfDirSyncEnabled();
+          checkUserStatuses(serviceId);
+          checkCallServiceConnect(serviceId);
+        }
       }
     }
 
@@ -36,10 +24,10 @@
           'fuseNotPerformed',
           1,
           'modules/hercules/notifications/fuse-not-performed.html', {});
-        fusePerformed = false;
+        return false;
       } else {
         NotificationService.removeNotification('fuseNotPerformed');
-        fusePerformed = true;
+        return true;
       }
     }
 
@@ -54,16 +42,16 @@
           'configureConnectors',
           2,
           'modules/hercules/notifications/configure_connectors.html', {});
+        return false;
       } else {
         NotificationService.removeNotification('configureConnectors');
+        return true;
       }
     }
 
     function checkIfDirSyncEnabled() {
-      if (dirSyncEnabled || Date.now() - lastDirSyncCheck < 60000) {
+      if (dirSyncEnabled) {
         return;
-      } else {
-        lastDirSyncCheck = Date.now();
       }
       DirSyncService.getDirSyncDomain(function (data) {
         dirSyncEnabled = data.success && data.serviceMode == 'ENABLED';
@@ -79,41 +67,61 @@
       });
     }
 
-    function checkUserStatuses() {
-      if (Date.now() - lastUserStatusCheck < 30000) {
-        return;
+    function checkUserStatuses(serviceId) {
+      var summaryForService = _.find(USSService2.getStatusesSummary(), {
+        serviceId: serviceId
+      });
+      var needsUserActivation = !summaryForService || (summaryForService.activated === 0 && summaryForService.error === 0 && summaryForService.notActivated === 0);
+      if (needsUserActivation) {
+        NotificationService.addNotification(
+          NotificationService.types.TODO,
+          'noUsersActivated',
+          4,
+          'modules/hercules/notifications/no_users_activated.html', {});
       } else {
-        lastUserStatusCheck = Date.now();
-      }
-      USSService2.getStatusesSummary().then(function (res) {
-        var summaryForService = _.find(res || {}, {
-          serviceId: serviceId
-        });
-        var needsUserActivation = !summaryForService || (summaryForService.activated === 0 && summaryForService.error === 0 && summaryForService.notActivated === 0);
-        if (needsUserActivation) {
+        NotificationService.removeNotification('noUsersActivated');
+        if (summaryForService && summaryForService.error > 0) {
           NotificationService.addNotification(
-            NotificationService.types.TODO,
-            'noUsersActivated',
+            NotificationService.types.ALERT,
+            'userErrors',
             4,
-            'modules/hercules/notifications/no_users_activated.html', {});
+            'modules/hercules/notifications/user-errors.html', summaryForService);
         } else {
-          NotificationService.removeNotification('noUsersActivated');
-          if (summaryForService && summaryForService.error > 0) {
-            NotificationService.addNotification(
-              NotificationService.types.TODO,
-              'userErrors',
-              4,
-              'modules/hercules/notifications/user-errors.html', summaryForService);
+          NotificationService.removeNotification('userErrors');
+        }
+      }
+    }
+
+    function checkCallServiceConnect(serviceId) {
+      if (serviceId != "squared-fusion-uc") {
+        return;
+      }
+      ServiceDescriptor.services(function (error, services) {
+        if (!error) {
+          var callServiceConnect = _.find(services || {}, {
+            id: 'squared-fusion-ec'
+          });
+          if (callServiceConnect && callServiceConnect.enabled) {
+            USSService2.getOrg(Authinfo.getOrgId()).then(function (org) {
+              if (!org || !org.sipDomain || org.sipDomain === '') {
+                NotificationService.addNotification(
+                  NotificationService.types.TODO,
+                  'sipDomainNotConfigured',
+                  5,
+                  'modules/hercules/notifications/sip_domain_not_configured.html', {});
+              } else {
+                NotificationService.removeNotification('sipDomainNotConfigured');
+              }
+            });
           } else {
-            NotificationService.removeNotification('userErrors');
+            NotificationService.removeNotification('sipDomainNotConfigured');
           }
         }
       });
     }
 
     return {
-      init: init,
-      refresh: refresh
+      checkState: checkState
     };
   }
 

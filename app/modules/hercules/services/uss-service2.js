@@ -2,7 +2,19 @@
   'use strict';
 
   /*ngInject*/
-  function USSService2($http, ConfigService, Authinfo) {
+  function USSService2($http, ConfigService, Authinfo, CsdmPoller) {
+    var cachedUserStatusSummary = {};
+
+    var fetchStatusesSummary = function () {
+      return $http
+        .get(ConfigService.getUSSUrl() + '/userStatuses/summary?orgId=' + Authinfo.getOrgId())
+        .then(function (res) {
+          cachedUserStatusSummary = res.data.summary;
+        });
+    };
+
+    var userStatusesSummaryPoller = CsdmPoller.create(fetchStatusesSummary);
+
     var statusesParameterRequestString = function (serviceId, state, limit) {
       var statefilter = state ? "&state=" + state : "";
       return 'serviceId=' + serviceId + statefilter + '&limit=' + limit + '&orgId=' + Authinfo.getOrgId();
@@ -55,24 +67,22 @@
     }
 
     function getStatusesSummary() {
-      return $http
-        .get(ConfigService.getUSSUrl() + '/userStatuses/summary?orgId=' + Authinfo.getOrgId())
-        .then(function (res) {
-          return res.data.summary;
-        });
+      return cachedUserStatusSummary;
     }
 
     function getStatuses(serviceId, state, limit) {
       return $http
         .get(ConfigService.getUSSUrl() + '/userStatuses?' + statusesParameterRequestString(serviceId, state, limit));
     }
+
     return {
       getStatusesForUser: getStatusesForUser,
       decorateWithStatus: decorateWithStatus,
       getOrg: getOrg,
       updateOrg: updateOrg,
       getStatusesSummary: getStatusesSummary,
-      getStatuses: getStatuses
+      getStatuses: getStatuses,
+      subscribeStatusesSummary: userStatusesSummaryPoller.subscribe
     };
   }
 
