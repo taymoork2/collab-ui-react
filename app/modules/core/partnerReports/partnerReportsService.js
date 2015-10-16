@@ -491,7 +491,7 @@
       if (angular.isArray(data.data) && data.data.length !== 0 && data.data[0].details !== undefined && data.data[0].details !== null) {
         var details = data.data[0].details;
         var transformData = angular.copy(callMetricsData);
-        var totalCalls = parseInt(details.totalCalls)
+        var totalCalls = parseInt(details.totalCalls);
 
         if (totalCalls > 0) {
           transformData.labelData.numTotalCalls = totalCalls;
