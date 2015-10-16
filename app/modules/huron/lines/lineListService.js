@@ -6,35 +6,80 @@
     .factory('LineListService', LineListService);
 
   /* @ngInject */
-  function LineListService($http, $q, $translate, Config, Log, DidDnListService) {
+  function LineListService($http, $q, $translate, Authinfo, Config, Log, UserLineAssociationService, UserLineAssociationCountService) {
 
     // define functions available in this factory
     var service = {
       getLineList: getLineList,
+      getCount: getCount,
       exportCSV: exportCSV
     };
     return service;
 
-    function getLineList(startIndex, count, sortBy, sortOrder, searchStr, filterType) {
-      return DidDnListService.query({
-          skip: startIndex,
-          count: count,
-          sortBy: sortBy,
-          sortOrder: sortOrder,
-          searchStr: searchStr,
-          filterType: filterType
-        })
+    function getCount(searchStr) {
+      var wildcard = "%";
+
+      var queryString = {
+        'customerId': Authinfo.getOrgId()
+      };
+
+      if (searchStr.length > 0) {
+        queryString.userid = wildcard + searchStr + wildcard;
+        queryString.internalnumber = wildcard + searchStr + wildcard;
+        queryString.externalnumber = wildcard + searchStr + wildcard;
+
+        queryString.predicatejoinoperator = "or";
+      }
+
+      return UserLineAssociationCountService.query(queryString)
         .$promise.then(function (response) {
-          return response;
+          if (response === undefined || response[0] === undefined) {
+            return $q.reject(response);
+          }
+          // there should only be one element in the response array; take the first one
+          // because it is the one we want
+          return response[0];
         });
+    }
+
+    function getLineList(startIndex, count, sortBy, sortOrder, searchStr, filterType) {
+      var wildcard = "%";
+
+      var queryString = {
+        'customerId': Authinfo.getOrgId()
+      };
+
+      if (searchStr.length > 0) {
+        queryString.userid = wildcard + searchStr + wildcard;
+        queryString.internalnumber = wildcard + searchStr + wildcard;
+        queryString.externalnumber = wildcard + searchStr + wildcard;
+
+        queryString.predicatejoinoperator = "or";
+      }
+
+      switch (filterType) {
+      case "assignedLines":
+        queryString.assignedlines = "true";
+        break;
+      case "unassignedLines":
+        queryString.assignedlines = "false";
+        break;
+      }
+
+      queryString.start = startIndex;
+      queryString.max = count;
+      queryString.order = sortBy + sortOrder;
+
+      return UserLineAssociationService.query(queryString)
+        .$promise;
     } // end of function getLineList
 
     function exportCSV(scope) {
       // add export code here
 
       var linesPerPage = Config.usersperpage;
-      var sortBy = "internalNumber";
-      var sortOrder = "ascending";
+      var sortBy = "internalnumber";
+      var sortOrder = "-asc";
       var searchStr = "";
       var filterType = "all";
       var deferred = $q.defer();
@@ -48,13 +93,11 @@
         getLineList(startIndex, linesPerPage, sortBy, sortOrder, searchStr, filterType)
           .then(function (response) {
 
-            // if (response.length > 0) {
-            //   lines = lines.concat(response);
-            //   page++;
-            //   getLinesInBatches(page * 1000 + 1);
-            // } else if (response.length <= 0) {
-            if (response.length > 0) { // temporary replaces above condition checks for use with dummy data
-              lines = lines.concat(response); // temporary replaces above condition checks for use with dummy data
+            if (response.length > 0) {
+              lines = lines.concat(response);
+              page++;
+              getLinesInBatches(page * 100 + 1);
+            } else if (response.length <= 0) {
               Log.debug("No more lines returned. Exporting to file.");
 
               if (lines.length === 0) {
@@ -65,7 +108,7 @@
               var headerLine = {};
               headerLine.internalNumber = "internalNumber";
               headerLine.externalNumber = "externalNumber";
-              headerLine.userName = "userName";
+              headerLine.userId = "userId";
               exportedLines.push(headerLine);
 
               // data to export for CSV file
@@ -73,7 +116,7 @@
                 var exportedLine = {};
                 exportedLine.internalNumber = lines[i].internalNumber;
                 exportedLine.externalNumber = lines[i].externalNumber;
-                exportedLine.userName = lines[i].userName;
+                exportedLine.userId = lines[i].userId;
                 exportedLines.push(exportedLine);
               } // end of for-loop
               deferred.resolve(exportedLines);
