@@ -192,6 +192,8 @@ angular.module('WebExReports').service('reportService', [
       };
     };
 
+    this.ReportsSection = ReportsSection;
+
     var Reports = function () {
       this.sections = [];
       this.setSections = function (secs) {

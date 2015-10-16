@@ -7,7 +7,7 @@ describe('Service: reportService', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   //Initialize variables
-  var reportService, httpBackend, WebExUtilsFact;
+  var reportService, httpBackend, WebExUtilsFact, testReports;
 
   beforeEach(inject(function ($httpBackend, _reportService_) {
 
@@ -16,6 +16,9 @@ describe('Service: reportService', function () {
     reportService = _reportService_;
     httpBackend = $httpBackend;
     //WebExUtilsFact = _WebExUtilsFact_;
+
+    //ReportsSection = function (sectionName, siteUrl, reportLinks, categoryName)
+    testReports = new reportService.ReportsSection("testReports", "mojoco.webex.com", ["x", "y"], "testReportsCat");
 
   }));
 
@@ -34,4 +37,9 @@ describe('Service: reportService', function () {
     expect(x).toBe("x");
     expect(w).toBe("w");
   });
+
+  it("webex: reports section has correct section name", function () {
+    expect(testReports.section_name).toBe("testReports");
+  });
+
 });
