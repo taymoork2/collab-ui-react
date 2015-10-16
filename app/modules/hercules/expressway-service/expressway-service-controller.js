@@ -84,7 +84,10 @@
   /* @ngInject */
   function ExpresswayServiceController(XhrNotificationService, NotificationService, ServiceStateChecker, ServiceDescriptor, $stateParams, $state, $modal,
     $scope, ClusterService, USSService2, ConverterService, ServiceStatusSummaryService) {
-    ClusterService.subscribe(angular.noop, {
+    ClusterService.subscribe(checkServiceState, {
+      scope: $scope
+    });
+    USSService2.subscribeStatusesSummary(extractSummaryForAService, {
       scope: $scope
     });
 
@@ -102,8 +105,6 @@
     };
 
     vm.serviceIconClass = ServiceDescriptor.serviceIcon(vm.currentServiceId);
-
-    ServiceStateChecker.init(vm.currentServiceType, vm.currentServiceId);
 
     vm.serviceEnabled = false;
     ServiceDescriptor.isServiceEnabled(serviceType2ServiceId(vm.currentServiceType), function (a, b) {
@@ -127,9 +128,12 @@
       return ServiceStatusSummaryService.status(vm.currentServiceType, cluster);
     };
 
-    function extractSummaryForAService(res) {
-      var userStatusesSummary = res || {};
-      vm.userStatusSummary = _.find(userStatusesSummary, {
+    function checkServiceState() {
+      ServiceStateChecker.checkState(vm.currentServiceType, vm.currentServiceId);
+    }
+
+    function extractSummaryForAService() {
+      vm.userStatusSummary = _.find(USSService2.getStatusesSummary(), {
         serviceId: serviceType2ServiceId(vm.currentServiceType)
       });
     }
@@ -144,41 +148,15 @@
       });
     };
 
-    //USSService.getStatusesSummary(function (err, userStatusesSummary) {
-    //  $scope.userStatusesSummary = userStatusesSummary || {};
-    //  $scope.summary = function (serviceId) {
-    //    var summary = null;
-    //    if ($scope.userStatusesSummary) {
-    //      summary = _.find($scope.userStatusesSummary.summary, function (s) {
-    //        return s.serviceId == serviceId;
-    //      });
-    //    }
-    //    return summary || {
-    //        activated: 0,
-    //        notActivated: 0,
-    //        error: 0
-    //      };
-    //  };
-    //});
-
     vm.enableService = function (serviceId) {
       ServiceDescriptor.setServiceEnabled(serviceId, true, function (error) {
         if (error !== null) {
           XhrNotificationService.notify("Problems enabling the service");
         }
-        //console.log("ERROR disabling service:", error);
       });
       vm.serviceEnabled = true;
     };
-
-    USSService2.getStatusesSummary().then(extractSummaryForAService);
   }
-
-  /* @ngInject */
-  //function ExpresswayClusterSettingsController($stateParams) {
-  //  var vm = this;
-  //  vm.cluster = $stateParams.cluster;
-  //}
 
   /* @ngInject */
   function ExpresswayServiceDetailsController(XhrNotificationService, ServiceDescriptor, ServiceStatusSummaryService, $state, $modal, $stateParams,

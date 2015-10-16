@@ -6,7 +6,7 @@
 
   <!-- Bubble with amount of notifications. If there are none (length == 0) it doesn't get shown -->
   <div class="amountBubble" ng-if="notificationController.notificationsLength() > 0">
-    <span class="{{notificationController.amountBubbleType}}">{{notificationController.notificationsLength()}}</span>
+    <span class="{{notificationController.amountBubbleType()}}">{{notificationController.notificationsLength()}}</span>
   </div>
 
   <!-- List of notifications -->
