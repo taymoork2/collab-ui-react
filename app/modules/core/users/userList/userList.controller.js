@@ -232,7 +232,7 @@
 
     function setFilter(filter) {
       $scope.activeFilter = filter;
-      if ((filter === '') || (filter === 'all')) {
+      if ((filter === '') || (filter === 'all') || (angular.isUndefined(filter))) {
         $scope.gridData = $scope.userList.allUsers;
       } else if (filter === 'administrators') {
         $scope.tooManyUsers = false;

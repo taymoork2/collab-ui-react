@@ -820,7 +820,8 @@ angular.module('Core')
           'site-settings',
           'site-setting',
           'webex-reports',
-          'webex-reports-iframe'
+          'webex-reports-iframe',
+          'example'
         ],
         Application: ['organizations', 'organization-overview']
       };
@@ -857,11 +858,7 @@ angular.module('Core')
         'squared-fusion-uc': [
           'devices',
           'device-overview',
-          'devices-redux',
-          'devices-redux2',
-          'devices-redux3',
-          'devices-redux4',
-          'devices-redux5'
+          'devices-redux'
         ],
         'squared-team-member': [
           'organization'

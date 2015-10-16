@@ -6,6 +6,7 @@ describe('Controller: CdrService', function () {
 
   var $httpBackend, $q, CdrService, Notification;
   var proxyResponse = getJSONFixture('huron/json/cdrLogs/proxyResponse.json');
+  var name = 'server0Call0CDR0';
 
   var model = {
     'searchUpload': 'SEARCH',
@@ -50,7 +51,9 @@ describe('Controller: CdrService', function () {
     $httpBackend.whenGET('http://localhost:8080').respond(proxyResponse);
 
     CdrService.query(model).then(function (response) {
-      expect(response[0][0][0]).toEqual(proxyResponse.hits.hits[0]._source);
+      var returnValue = proxyResponse.hits.hits[0]._source;
+      returnValue.name = name;
+      expect(response[0][0][0]).toEqual(returnValue);
     });
 
     $httpBackend.flush();
