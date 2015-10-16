@@ -4,6 +4,8 @@ angular.module('Hercules')
   .service('XhrNotificationService', ['Notification',
     function XhrNotificationService(notification) {
 
+      var defaultErrorMessage = 'An unexpected error occurred.';
+
       var findMessages = function (data, messages) {
         messages = messages || [];
         if (_.isPlainObject(data) || _.isArray(data)) {
@@ -32,7 +34,7 @@ angular.module('Hercules')
           return findMessages(d);
         } else {
           var s = data && data.status || status;
-          return [s ? 'Backend responded with status ' + s + '.' : 'Backend responded with an unknown status.'];
+          return [s ? 'Backend responded with status ' + s + '.' : defaultErrorMessage];
         }
       };
 
@@ -42,9 +44,14 @@ angular.module('Hercules')
           if (args) {
             messages = getMessages.apply(null, args);
             messages.unshift(messageOrArgs);
+          } else if (_.isString(messageOrArgs)) {
+            messages = [messageOrArgs];
           } else {
             messageOrArgs = _.isArray(messageOrArgs) ? messageOrArgs : [messageOrArgs];
             messages = getMessages.apply(null, messageOrArgs);
+          }
+          if (!messages || !messages.length) {
+            messages = [defaultErrorMessage];
           }
           return notification.notify(_.uniq(messages), 'error');
         },
