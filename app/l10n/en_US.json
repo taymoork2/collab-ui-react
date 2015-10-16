@@ -1963,10 +1963,7 @@
     "settingPageLabel_WebACD_webacd_form": "WebACD Leave Message Forms",
 
     "settingPageLabel_RA_remote_options": "Remote Access Settings",
-    "settingPageLabel_RA_remote_groups": "Remote Access Groups",
-
-    "pageId_underDevelopment": "Under Development",
-    "pageId_xxxx": "Undefined"
+    "settingPageLabel_RA_remote_groups": "Remote Access Groups"
   },
   "webexSiteReports": {
     "title": "Reports",
