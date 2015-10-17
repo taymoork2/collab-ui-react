@@ -8,11 +8,20 @@
     this.notifications = NotificationService.getNotifications();
     this.showNotifications = false;
     this.typeDisplayName = function (type) {
-      return type == NotificationService.types.ALERT ? 'Alert' : 'To-do';
+      switch (type) {
+      case NotificationService.types.ALERT:
+        return 'ALERT';
+      case NotificationService.types.NEW:
+        return 'NEW';
+      default:
+        return 'TO-DO';
+      }
     };
-    this.amountBubbleType = _.some(this.notifications, {
-      type: NotificationService.types.ALERT
-    }) ? NotificationService.types.ALERT : NotificationService.types.TODO;
+    this.amountBubbleType = function () {
+      return _.some(this.notifications, {
+        type: NotificationService.types.ALERT
+      }) ? NotificationService.types.ALERT : NotificationService.types.TODO;
+    };
 
     this.navigateToDirSyncSetup = function () {
       $state.go('setupwizardmodal', {
@@ -22,6 +31,10 @@
 
     this.navigateToUsers = function () {
       $state.go('users.list');
+    };
+
+    this.navigateToCallSettings = function () {
+      $state.go('call-service.about');
     };
 
     this.showUserErrorsDialog = function (serviceId) {

@@ -1,13 +1,13 @@
 <h3>
-  <i class="{{call.serviceIconClass}}"></i><br>
-  <span translate="hercules.serviceNames.{{call.currentServiceId}}"></span>
+  <i class="{{exp.serviceIconClass}}"></i><br>
+  <span translate="hercules.serviceNames.{{exp.currentServiceId}}"></span>
 </h3>
 <p>
   Collaborate instantly.
 </p>
 
 
-<div ng-show="call.currentServiceId == 'squared-fusion-cal'">
+<div ng-show="exp.currentServiceId == 'squared-fusion-cal'">
   <p>
     Just add @spark to an invitation to create a Spark room for your meeting.
   </p>
@@ -17,7 +17,7 @@
   <br>
 </div>
 
-<div ng-show="call.currentServiceId == 'squared-fusion-uc'">
+<div ng-show="exp.currentServiceId == 'squared-fusion-uc'">
   <p>
     Effortlessly share your desktop with Spark while you are on your work phone.
   </p>
@@ -29,6 +29,6 @@
 </div>
 
 
-<button class="btn btn-info" ng-click="call.enableService(call.currentServiceId)">
+<button class="btn btn-info" ng-click="exp.enableService(exp.currentServiceId)">
   Activate this service
 </button>

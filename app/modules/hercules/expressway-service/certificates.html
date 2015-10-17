@@ -7,17 +7,17 @@
   calls, or upload self-signed certificates.
 </p>
 
-<div ng-if="callServiceSettings.certificates.length == 0">
+<div ng-if="expresswayServiceSettings.certificates.length == 0">
   <p><em>No certificates uploaded. Using the default trust list.</em></p>
 </div>
 
-<div ng-if="callServiceSettings.certificates.length > 0">
+<div ng-if="expresswayServiceSettings.certificates.length > 0">
   <h6>Certificates</h6>
 
-  <div data-ng-repeat="cert in callServiceSettings.certificates" class="row">
+  <div data-ng-repeat="cert in expresswayServiceSettings.certificates" class="row">
     <div class="small-9 columns">{{cert.name}}</div>
     <div class="small-3 columns">
-      <a href="#" class="right" sq-click-promise="callServiceSettings.confirmCertDelete(cert)">
+      <a href="#" class="right" sq-click-promise="expresswayServiceSettings.confirmCertDelete(cert)">
         Remove
       </a>
     </div>
@@ -25,8 +25,8 @@
 </div>
 
 <button class="button secondary" name="file" accept="application/x-x509-ca-cert"
-     ngf-select="callServiceSettings.uploadCert($file, $event)"
+     ngf-select="expresswayServiceSettings.uploadCert($file, $event)"
      ng-model="certFile"
-     loading="callServiceSettings.uploadingCert">
+     loading="expresswayServiceSettings.uploadingCert">
   Upload Certificate
 </button>

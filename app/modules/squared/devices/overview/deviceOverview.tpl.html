@@ -30,7 +30,11 @@
             </tr>
             <tr ng-show="deviceOverview.currentDevice.software">
               <td translate="deviceOverviewPage.software"></td>
-              <td>{{deviceOverview.currentDevice.software}}</td>
+              <td>
+                {{deviceOverview.currentDevice.software}}
+                (<span ng-model="deviceOverview.currentDevice.upgradeChannel" translate="CsdmStatus.upgradeChannels.{{deviceOverview.currentDevice.upgradeChannel}}" />)
+                <a href ui-sref="device-overview.edit({currentDevice: deviceOverview.currentDevice})" ng-if="deviceOverview.canChangeUpgradeChannel"><i class="icon icon-edit" /></a>
+              </td>
             </tr>
             <tr ng-show="deviceOverview.currentDevice.ip">
               <td translate="deviceOverviewPage.ipAddr"></td>

@@ -319,7 +319,7 @@
 
       if (time.value === 0) {
         for (var i = 6; i >= 0; i--) {
-          dataPoint.modifiedDate = moment().subtract(i + 1, 'day').format(dayFormat);
+          dataPoint.modifiedDate = moment().subtract(i + 2, 'day').format(dayFormat);
           graph.push(angular.copy(dataPoint));
         }
       } else if (time.value === 1) {
@@ -491,15 +491,17 @@
       if (angular.isArray(data.data) && data.data.length !== 0 && data.data[0].details !== undefined && data.data[0].details !== null) {
         var details = data.data[0].details;
         var transformData = angular.copy(callMetricsData);
+        var totalCalls = parseInt(details.totalCalls);
 
-        transformData.dataProvider[0].numCalls = parseInt(details.totalFailedCalls);
-        transformData.dataProvider[1].numCalls = parseInt(details.totalSuccessfulCalls);
-        transformData.labelData.numTotalCalls = parseInt(details.totalCalls);
-        transformData.labelData.numTotalMinutes = Math.round(parseFloat(details.totalAudioDuration));
-        return transformData;
-      } else {
-        return [];
+        if (totalCalls > 0) {
+          transformData.labelData.numTotalCalls = totalCalls;
+          transformData.labelData.numTotalMinutes = Math.round(parseFloat(details.totalAudioDuration));
+          transformData.dataProvider[0].numCalls = parseInt(details.totalFailedCalls);
+          transformData.dataProvider[1].numCalls = parseInt(details.totalSuccessfulCalls);
+          return transformData;
+        }
       }
+      return [];
     }
 
     function getRegisteredEndpoints(customer, time) {
