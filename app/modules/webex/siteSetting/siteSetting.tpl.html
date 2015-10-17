@@ -47,6 +47,10 @@
       </ul>
     </div>
   
-    <div ng-include="'modules/webex/iframeContainer/iframeContainer.tpl.html'"></div> 
+    <div id={{iframeUrlType}}
+         name={{iframeUrlType}}>
+         
+      <div ng-include="'modules/webex/iframeContainer/iframeContainer.tpl.html'"></div> 
+    </div>
   </cs-container>
 </div>

@@ -202,13 +202,10 @@
               }, ], // settingCardObjs
 
               categoryObjs: [{
-                id: "siteInfo",
+                id: "EMAIL",
                 pageObjs: []
               }, {
                 id: "SiteInfo",
-                pageObjs: []
-              }, {
-                id: "EMAIL",
                 pageObjs: []
               }, {
                 id: "CommonSettings",
@@ -477,15 +474,25 @@
             } // processSiteAdminNavUrl()
           ); // siteAdminNavUrls.forEach()
 
-          var hasSiteInfoPage = false;
-          var hasSiteFeaturesPage = false;
+          var emailCategoryObj = _this.getCategoryObj("EMAIL");
           var siteInfoCategoryObj = _this.getCategoryObj("SiteInfo");
 
-          logMsg = funcName + ": " + "siteInfoCategoryObj=" + "\n" +
-            JSON.stringify(siteInfoCategoryObj);
-          $log.log(logMsg);
+          if (0 === emailCategoryObj.pageObjs.length) {
+            logMsg = funcName + ": " +
+              "Missing Email All Hosts page!";
+            $log.log(logMsg);
 
-          _this.getCategoryObj("SiteInfo").pageObjs.forEach(
+            addPage(
+              "EMAIL",
+              "send_email_to_all",
+              null
+            );
+          }
+
+          var hasSiteInfoPage = false;
+          var hasSiteFeaturesPage = false;
+
+          siteInfoCategoryObj.pageObjs.forEach(
             function checkPageObj(pageObj) {
               if ("site_info" == pageObj.pageId) {
                 hasSiteInfoPage = true;
