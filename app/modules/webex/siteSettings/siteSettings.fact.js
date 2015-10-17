@@ -480,11 +480,11 @@
           var hasSiteInfoPage = false;
           var hasSiteFeaturesPage = false;
           var siteInfoCategoryObj = _this.getCategoryObj("SiteInfo");
-          
+
           logMsg = funcName + ": " + "siteInfoCategoryObj=" + "\n" +
             JSON.stringify(siteInfoCategoryObj);
           $log.log(logMsg);
-          
+
           _this.getCategoryObj("SiteInfo").pageObjs.forEach(
             function checkPageObj(pageObj) {
               if ("site_info" == pageObj.pageId) {
