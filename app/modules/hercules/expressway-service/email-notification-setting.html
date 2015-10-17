@@ -12,15 +12,15 @@
           class="form-control"
           id="wx2_users"
           type="text"
-          ng-model="callServiceSettings.config.wx2users"></textarea>
+          ng-model="expresswayServiceSettings.config.wx2users"></textarea>
 
-<button ng-disabled="callServiceSettings.loading || callServiceSettings.savingEmail" id="convertActionButton"
+<button ng-disabled="expresswayServiceSettings.loading || expresswayServiceSettings.savingEmail" id="convertActionButton"
         class="btn-primary"
-        ng-click="callServiceSettings.writeConfig()">
-        <span ng-hide="callServiceSettings.savingEmail">
+        ng-click="expresswayServiceSettings.writeConfig()">
+        <span ng-hide="expresswayServiceSettings.savingEmail">
           Save
         </span>
-        <span ng-show="callServiceSettings.savingEmail">
+        <span ng-show="expresswayServiceSettings.savingEmail">
           <i class="icon icon-spinner"/>
         </span>
 </button>

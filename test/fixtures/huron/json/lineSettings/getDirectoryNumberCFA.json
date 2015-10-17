@@ -1,0 +1,27 @@
+{
+  "uuid": "7876a8fa-613f-4047-9a5a-a8d2e54fd3db",
+  "pattern": "4000",
+  "alertingName": "currentUser@gmail.com",
+  "callForwardAll": {
+    "voicemailEnabled": "false",
+    "destination": "2145555555"
+  },
+  "callForwardBusy": {
+    "intVoiceMailEnabled": "false",
+    "voicemailEnabled": "false",
+    "intDestination": null,
+    "destination": null
+  },
+  "callForwardNoAnswer": {
+    "intVoiceMailEnabled": "false",
+    "voicemailEnabled": "false",
+    "intDestination": null,
+    "destination": null
+  },
+  "callForwardNotRegistered": {
+    "intVoiceMailEnabled": "false",
+    "voicemailEnabled": "false",
+    "intDestination": null,
+    "destination": null
+  }
+}

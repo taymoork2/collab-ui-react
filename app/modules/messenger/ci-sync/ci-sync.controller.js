@@ -53,7 +53,7 @@
     vm.ciAdmins = [];
     vm.ciUsers = [];
     vm.ciData = CiService.getCiOrgInfo();
-    vm.dev = Config.isDev() && ('testAtlasMsgr' === Authinfo.getOrgName());
+    vm.orgAdminUrl = 'https://wapi.webexconnect.com/wbxconnect/acs/widgetserver/mashkit/apps/standalone.html?app=WBX.base.orgadmin';
 
     // Translated text
     vm.refresh = $translate.instant(translatePrefix + 'refresh');
@@ -131,7 +131,9 @@
             getSyncStatus();
           }
         }, function (errorMsg) {
-          Log.error('Failed checking user type: ' + errorMsg);
+          var error = $translate.instant(translatePrefix + 'errorAuthFailed') + errorMsg;
+          Notification.error(error);
+          Log.error(error);
         });
     }
 
@@ -150,31 +152,41 @@
     function checkUserType() {
       var defer = $q.defer();
 
-      // All users must meet these requirements at minimum:
-      // -CI Roles: contains id_full_admin
-      // -CI Entitlements: webex-squared AND webex-messenger
-      CiService.hasEntitlements(requiredEntitlements)
-        .then(function (has) {
-          if (has) {
-            // Must have full admin role
-            CiService.hasRole(fullAdminRole)
-              .then(function (has) {
-                if (has) {
-                  // Check if Customer Success admin
-                  if (CiService.hasRole(customerSuccessRole)) {
-                    setOpsAdmin();
-                  } else {
-                    setOrgAdmin();
-                  }
-
+      // All users must have CI Full Admin role
+      //
+      // Customer Success Admin     --> Ops Admin
+      // Non-Customer Success Admin --> must have webex-squared AND webex-messenger CI entitlements
+      CiService.hasRole(fullAdminRole)
+        .then(function (hasAdminRole) {
+          if (hasAdminRole) {
+            // Now check for Customer Success Admin or not
+            CiService.hasRole(customerSuccessRole)
+              .then(function (hasCSRole) {
+                if (hasCSRole) {
+                  setOpsAdmin();
                   defer.resolve();
+                } else {
+                  // Not a Customer Success Admin, must have entitlements
+                  CiService.hasEntitlements(requiredEntitlements)
+                    .then(function (hasEntitlements) {
+                      if (hasEntitlements) {
+                        setOrgAdmin();
+                        defer.resolve();
+                      } else {
+                        defer.reject($translate.instant(translatePrefix + 'errorLacksEntitlements') + requiredEntitlements);
+                      }
+                    }, function (errorMsg) {
+                      defer.reject($translate.instant(translatePrefix + 'errorFailedCheckingCIEntitlements') + errorMsg);
+                    });
                 }
               }, function (errorMsg) {
-                defer.reject('Failed getting user roles: ' + errorMsg);
+                defer.reject($translate.instant(translatePrefix + 'errorFailedCheckingCustSuccessRole') + errorMsg);
               });
+          } else {
+            defer.reject($translate.instant(translatePrefix + 'errorLacksFullAdmin'));
           }
         }, function (errorMsg) {
-          defer.reject('Failed getting user entitlements: ' + errorMsg);
+          defer.reject($translate.instant(translatePrefix + 'errorFailedCheckingCIRoles') + errorMsg);
         });
 
       return defer.promise;
@@ -184,17 +196,16 @@
       vm.dataStatus = vm.dataStates.loading;
 
       SyncService.getSyncStatus()
-        .then(function (status) {
-          vm.syncInfo = status;
+        .then(function (syncStatusObj) {
+          vm.syncInfo = syncStatusObj;
           vm.dataStatus = vm.dataStates.loaded;
-        }, function (errorMsg) {
-          var baseError = 'Failed getting CI sync status';
-          var fullError = baseError + ': ' + errorMsg;
-
+        }, function (errorObj) {
           vm.dataStatus = vm.dataStates.error;
-          vm.errorMsg = baseError;
-          Log.error(fullError);
-          Notification.error($translate.instant(translatePrefix + 'getFailed'));
+          var error = $translate.instant(translatePrefix + 'errorFailedGettingCISyncStatus') + errorObj.message;
+
+          vm.errorMsg = error;
+          Log.error(error);
+          Notification.error(error);
         });
     }
 
@@ -205,14 +216,13 @@
         .then(function (status) {
           vm.syncInfo = status;
           vm.dataStatus = vm.dataStates.loaded;
-        }, function (errorMsg) {
-          var baseError = 'Failed refreshing CI Sync status';
-          var fullError = baseError + ': ' + errorMsg;
-
+        }, function (errorObj) {
           vm.dataStatus = vm.dataStates.error;
-          vm.errorMsg = baseError;
-          Log.error(fullError);
-          Notification.error($translate.instant(translatePrefix + 'refreshFailed'));
+          var error = $translate.instant(translatePrefix + 'errorFailedRefreshingCISyncStatus') + errorObj.message;
+
+          vm.errorMsg = error;
+          Log.error(error);
+          Notification.error(error);
         });
     }
 
@@ -231,8 +241,14 @@
         SyncService.patchSync(vm.syncInfo.isSyncEnabled, vm.syncInfo.isAuthRedirect)
           .then(function (successMsg) {
             Notification.success($translate.instant(translatePrefix + 'patchSuccessful'));
-          }, function (errorMsg) {
-            Notification.error($translate.instant(translatePrefix + 'patchFailed'));
+          }, function (errorObj) {
+            var error = $translate.instant(translatePrefix + 'errorFailedUpdatingCISync') + errorObj.message;
+
+            Log.error(error);
+            Notification.error(error);
+
+            // Reset to previous state
+            getSyncStatus();
           });
       }
     }
