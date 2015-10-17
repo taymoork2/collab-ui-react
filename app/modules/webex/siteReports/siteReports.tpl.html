@@ -1,75 +1,58 @@
 <div id="webexreportDiv"
-     name="webexreportDiv">
-
-   
-          
-  <div class="page-header row full">
+     name="webexreportDiv"
+     class="siteindex-panel">
+         
+  <div class="row page-header">
     <div class="page-title small-10 columns">
-      <div class="title-heading">
+      <!-- <div class="title-heading"> -->
          <span class="title-heading" translate="webexSiteReports.title"></span>
-      </div>   
+      <!-- </div>    -->
     </div>
   </div>  
+    
+ 
+<div>
 
-  <div id="webexReportBreadCrumbs" class="breadcrumb-container">
-    <ul class="breadcrumbs">
-      <li><a id="webexReportCrumb" ui-sref="site-list" translate="siteList.conferencing"></a></li>
-      <li class="current"><a>{{siteUrl + ' '  + ('webexSiteReports.title' | translate)}}</a></li>
+<!-- <cs-container> -->
+
+<!-- <div id="webexReportBreadCrumbs" class="breadcrumb-container"> -->
+    <ul id="siteSettingsBreadCrumbs" name="siteSettingsBreadCrumbs" class="breadcrumbs">
+      <li><a id="siteListCrumb" ui-sref="site-list" translate="siteList.conferencing"></a></li>
+      <li class="current">{{siteUrl + ' '  + ('webexSiteReports.title' | translate)}}</li>
     </ul>
-  </div>
+<!-- </div> -->
 
-<!--   <div id="webexReportBreadCrumbs" class="breadcrumb-container">
-    <cs-breadcrumbs displayname-property="data.displayName"></cs-breadcrumbs>
-  </div> -->
-  
-  <div id="errSection"
-       name="errSection"
-       ng-if="WebExSiteSettings.siteSettingsObj.hasLoadError">
-  </div>
-    
-  <div class="content-view"
-       ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
-    
-    
-           
-    
-  </div>
-</div>
-
-<cs-container>
-
-<div ng-if="reportObject.viewReady">
-<cs-card-layout>
+<!-- <div ng-if="reportObject.viewReady"> -->
+<cs-card-layout id="configureCards" ng-if="reportObject.viewReady">
   <cs-card class="cs-card medium" ng-repeat="sec in reportObject.reports.sections">
    
     <article>
       <header>
-       <h4>
-            {{sec.section_name_translated}}
-       </h4>
+       <h3>{{sec.section_name_translated}}</h3>
       </header> 
 
-       <section>
-        <div class="card-checkbox">
-          <div ng-repeat="sref in sec.uisrefs">
-            <span>
+       <section id="siteSettingsCardSection">
+         <ul class="no-bullet">
+          <li ng-repeat="sref in sec.uisrefs">
+            
                  <a id="{{sref.reportPageId}}"
                     name="{{sref.reportPageId}}"
                     ui-sref="{{sref.uisrefString}}">
                     {{sref.reportPageId_translated}}
                  </a>
-            </span>  
-          </div>
-        </div>  
+             
+          </li>
+          </ul>
        </section>
 
       </article>
     
   </cs-card>
  </cs-card-layout>
+<!-- </div> -->
 </div>
 
-</cs-container>
+<!-- </cs-container> -->
 
 
 <form name="siteAdminLink" action="{{trustSrc(webexAdvancedUrl)}}" method="post" target="webexSiteAdmin">
