@@ -19,7 +19,7 @@
   background-color: $gray-lightest;
   overflow-y: auto;
   overflow-x: hidden;
-  height: calc(100vh - 202px); /*browser window minus headers */
+  height: calc(100vh - 234px); /*browser window minus headers, border and margins */
   margin-top: 0.1rem; /* allows aa-builder-frame box-shadow to show */
 }
 
