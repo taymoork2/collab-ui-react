@@ -4,16 +4,16 @@
       <h2 class="title-heading" translate="reportsPage.pageTitle"></h2>
       <span class="sync">
         <div class="report-filter-link">
-          <a id="allReports" class="report-link" ng-click="nav.show(true,true)" translate="reportsPage.all"
-            ng-class="{'selected-link': (nav.showEngagement && nav.showQuality), 'not-selected': !(nav.showEngagement || nav.showQuality)}"></a>
+          <a id="allReports" class="report-link" ng-click="nav.showEngagement = true; nav.showQuality = true;" translate="reportsPage.all"
+            ng-class="{'selected-link': nav.showEngagement === true && nav.showQuality === true, 'not-selected': nav.showEngagement === false || nav.showQuality === false}"></a>
         </div>
         <div class="report-filter-link">
-          <a id="engagementReports" class="report-link" ng-click="nav.show(true,false);" translate="reportsPage.engagement"
-            ng-class="{'selected-link': nav.showEngagement, 'not-selected': !nav.showEngagement}"></a>
+          <a id="engagementReports" class="report-link" ng-click="nav.showEngagement = true; nav.showQuality = false;" translate="reportsPage.engagement"
+            ng-class="{'selected-link': nav.showEngagement === true && nav.showQuality === false, 'not-selected': !(nav.showEngagement === true && nav.showQuality === false)}"></a>
         </div>
         <div class="report-filter-link">
-          <a id="qualityReports" class="report-link" ng-click="nav.show(false,true)" translate="reportsPage.quality"
-            ng-class="{'selected-link': nav.showQuality, 'not-selected': !nav.showQuality}"></a>
+          <a id="qualityReports" class="report-link" ng-click="nav.showEngagement = false; nav.showQuality = true;" translate="reportsPage.quality"
+            ng-class="{'selected-link': nav.showEngagement === false && nav.showQuality === true, 'not-selected': !(nav.showEngagement === false && nav.showQuality === true)}"></a>
         </div>
       </span>
     </div>
