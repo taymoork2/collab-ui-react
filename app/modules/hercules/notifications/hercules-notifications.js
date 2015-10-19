@@ -1,13 +1,18 @@
 (function () {
   'use strict';
 
-  function HerculesNotificationsController(NotificationService, $state, $scope, $modal) {
-    this.notificationsLength = function () {
+  function HerculesNotificationsController(NotificationService, $state, $scope, $modal, ServiceDescriptor) {
+    var vm = this;
+    vm.notificationsLength = function () {
       return NotificationService.getNotificationLength();
     };
-    this.notifications = NotificationService.getNotifications();
-    this.showNotifications = false;
-    this.typeDisplayName = function (type) {
+    vm.filteredNotifications = function () {
+      return _.filter(NotificationService.getNotifications(), function (notification) {
+        return _.includes(notification.tags, vm.filterTag)
+      });
+    };
+    vm.showNotifications = false;
+    vm.typeDisplayName = function (type) {
       switch (type) {
       case NotificationService.types.ALERT:
         return 'ALERT';
@@ -17,33 +22,38 @@
         return 'TO-DO';
       }
     };
-    this.amountBubbleType = function () {
-      return _.some(this.notifications, {
+    vm.amountBubbleType = function () {
+      return _.some(vm.filteredNotifications(), {
         type: NotificationService.types.ALERT
       }) ? NotificationService.types.ALERT : NotificationService.types.TODO;
     };
 
-    this.navigateToDirSyncSetup = function () {
+    vm.navigateToDirSyncSetup = function () {
       $state.go('setupwizardmodal', {
         currentTab: 'addUsers'
       });
     };
 
-    this.navigateToUsers = function () {
+    vm.navigateToUsers = function () {
       $state.go('users.list');
     };
 
-    this.navigateToCallSettings = function () {
-      $state.go('call-service.about');
+    vm.navigateToCallSettings = function () {
+      $state.go('call-service.settings');
     };
 
-    this.showUserErrorsDialog = function (serviceId) {
+    vm.showUserErrorsDialog = function (serviceId) {
       $scope.selectedServiceId = serviceId;
       $scope.modal = $modal.open({
         scope: $scope,
         controller: 'UserStatusesController',
         templateUrl: 'modules/hercules/dashboard-info-panel/user-errors.html'
       });
+    };
+
+    vm.dismissNewServiceNotification = function (notificationId, serviceId) {
+      ServiceDescriptor.acknowledgeService(serviceId);
+      NotificationService.removeNotification(notificationId);
     };
   }
 
@@ -53,7 +63,10 @@
       replace: true,
       controller: HerculesNotificationsController,
       controllerAs: 'notificationController',
-      scope: false,
+      bindToController: true,
+      scope: {
+        filterTag: '='
+      },
       templateUrl: 'modules/hercules/notifications/hercules-notifications.html'
     };
   }

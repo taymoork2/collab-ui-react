@@ -70,6 +70,8 @@ Special stuff currently used to display the clusters in service oriented view
 }
 .export-users-statuses-icon {
   padding-left:10px;
+  cursor: pointer;
+  color: $gray-darker;
 }
 
 .icon-circle-user {
