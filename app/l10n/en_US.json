@@ -559,6 +559,7 @@
     "invalidUrl": "This is not a valid URL.",
     "invalidMinLength": "This entry is too short. Minimum length is {{min}}",
     "invalidMaxLength": "This entry is too long. Maximum length is {{max}}.",
+    "invalidMax": "Maximum value is {{max}}.",
     "on": "On",
     "off": "Off",
     "enabled": "Enabled",
@@ -572,7 +573,8 @@
     "modal": "Modal",
     "add": "Add",
     "and": "and",
-    "or": "or"
+    "or": "or",
+    "search": "Search"
   },
   "notifications": {
     "success": "Success notifications",
@@ -1379,6 +1381,7 @@
     "selectAreaCode": "Select area code",
     "searchAreaCodes": "Search area codes",
     "quantity": "Quantity",
+    "consecutive": "Consecutive",
     "reviewAndOrder": "Review and Place Order",
     "package": "Package",
     "adding": "Adding",
@@ -1396,11 +1399,14 @@
     "orderNumbersPrompt": "Must add numbers to proceed.",
     "invalidNumberPrompt": "Please fix invalid number(s) before proceeding.",
     "duplicateNumber": "{{number}} is a duplicate number.",
+    "orderNumbersError": "There was a problem with your order. Please check order history for details.",
     "blockOrderError": "Failed to order {{quantity}} block number(s) with area code {{areaCode}}.",
     "swivelAddError": "Failed to add {{number}}.",
     "swivelDuplicateError": "Failed to add {{number}}. Number already exists.",
     "customerCreateError": "Failed to create customer with the carrier.",
-    "customerUpdateError": "Failed to update customer with the carrier."
+    "customerUpdateError": "Failed to update customer with the carrier.",
+    "searchResults": "Search Results",
+    "noSearchResults": "No Search Results"
   },
   "intelepeerFeatures": {
     "feature1": "Unlimited inbound/outbound calling to U.S. 50 states + Canada",
