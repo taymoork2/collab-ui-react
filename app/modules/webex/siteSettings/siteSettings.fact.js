@@ -202,13 +202,10 @@
               }, ], // settingCardObjs
 
               categoryObjs: [{
-                id: "siteInfo",
+                id: "EMAIL",
                 pageObjs: []
               }, {
                 id: "SiteInfo",
-                pageObjs: []
-              }, {
-                id: "EMAIL",
                 pageObjs: []
               }, {
                 id: "CommonSettings",
@@ -477,6 +474,58 @@
             } // processSiteAdminNavUrl()
           ); // siteAdminNavUrls.forEach()
 
+          var emailCategoryObj = _this.getCategoryObj("EMAIL");
+          var siteInfoCategoryObj = _this.getCategoryObj("SiteInfo");
+
+          if (0 === emailCategoryObj.pageObjs.length) {
+            logMsg = funcName + ": " +
+              "Missing Email All Hosts page!";
+            $log.log(logMsg);
+
+            addPage(
+              "EMAIL",
+              "send_email_to_all",
+              null
+            );
+          }
+
+          var hasSiteInfoPage = false;
+          var hasSiteFeaturesPage = false;
+
+          siteInfoCategoryObj.pageObjs.forEach(
+            function checkPageObj(pageObj) {
+              if ("site_info" == pageObj.pageId) {
+                hasSiteInfoPage = true;
+              } else if ("site_features" == pageObj.pageId) {
+                hasSiteFeaturesPage = true;
+              }
+            } // checkPageObj()
+          ); // getCategoryObj().pageObjs.forEach()
+
+          if (!hasSiteInfoPage) {
+            logMsg = funcName + ": " +
+              "Missing Site Information page!";
+            $log.log(logMsg);
+
+            addPage(
+              "SiteInfo",
+              "site_info",
+              null
+            );
+          }
+
+          if (!hasSiteFeaturesPage) {
+            logMsg = funcName + ": " +
+              "Missing Site Features page!";
+            $log.log(logMsg);
+
+            addPage(
+              "SiteInfo",
+              "site_features",
+              null
+            );
+          }
+
           function addPage(
             categoryId,
             pageId,
@@ -493,7 +542,10 @@
             var iframePageLabelId = "webexSiteSettingsLabels.iframePageLabel_" + webexPageId;
             var iframePageLabel = $translate.instant(iframePageLabelId);
 
-            // iframeUrl = iframeUrl.replace('wbxadmin', 'adm3100');
+            if (null == iframeUrl) {
+              iframeUrl = "https://" + _this.webExSiteSettingsObj.siteUrl + "/igotnuthin";
+            }
+
             var uiSref =
               "site-settings.site-setting({" +
               "  siteUrl: " + "'" + _this.webExSiteSettingsObj.siteUrl + "'" + "," +
@@ -604,7 +656,7 @@
             var btnLabel = $translate.instant("webexSiteSettingsLabels.emailAllHostsBtnTitle").replace(" ", "&nbsp;");
 
             _this.webExSiteSettingsObj.emailAllHostsBtnObj.label = btnLabel;
-            _this.webExSiteSettingsObj.emailAllHostsBtnObj.pageObj = getCategoryObj("EMAIL").pageObjs[0];
+            _this.webExSiteSettingsObj.emailAllHostsBtnObj.pageObj = _this.getCategoryObj("EMAIL").pageObjs[0];
           } // updateEmailAllHostsBtnObj()
 
           function updateSiteInfoCardObj() {
@@ -613,7 +665,7 @@
 
             _this.webExSiteSettingsObj.siteInfoCardObj.label = _this.webExSiteSettingsObj.siteUrl;
 
-            getCategoryObj(_this.webExSiteSettingsObj.siteInfoCardObj.id).pageObjs.forEach(
+            _this.getCategoryObj(_this.webExSiteSettingsObj.siteInfoCardObj.id).pageObjs.forEach(
               function checkPageObj(pageObj) {
                 if (pageObj.pageId == "site_info") {
                   _this.webExSiteSettingsObj.siteInfoCardObj.siteInfoPageObj = pageObj;
@@ -643,11 +695,11 @@
                 if ("CommonSettings" == settingCardObj.id) {
                   settingCardObj.label = $translate.instant("webexSiteSettingsLabels.commonSettingsCardTitle");
                 } else if ("SC" == settingCardObj.id) {
-                  settingCardObj.webACDObj.pageObjs = getCategoryObj(settingCardObj.webACDObj.id).pageObjs;
-                  settingCardObj.remoteAccessObj.pageObjs = getCategoryObj(settingCardObj.remoteAccessObj.id).pageObjs;
+                  settingCardObj.webACDObj.pageObjs = _this.getCategoryObj(settingCardObj.webACDObj.id).pageObjs;
+                  settingCardObj.remoteAccessObj.pageObjs = _this.getCategoryObj(settingCardObj.remoteAccessObj.id).pageObjs;
                 }
 
-                settingCardObj.pageObjs = getCategoryObj(cardId).pageObjs;
+                settingCardObj.pageObjs = _this.getCategoryObj(cardId).pageObjs;
 
                 logMsg = funcName + ": " + "\n" +
                   "settingCardObj=" + JSON.stringify(settingCardObj);
@@ -655,29 +707,29 @@
               } // updateSettingCardObj()
             ); // _this.webExSiteSettingsObj.settingCardObjs.forEach()
           } // updateSettingCardObjs()
-
-          function getCategoryObj(categoryId) {
-            var funcName = "getCategoryObj()";
-            var logMsg = "";
-
-            var result = null;
-
-            _this.webExSiteSettingsObj.categoryObjs.forEach(
-              function checkCategoryObj(categoryObj) {
-                if (categoryId == categoryObj.id) {
-                  result = categoryObj;
-                }
-              } // checkCategoryObj()
-            ); // _this.webExSiteSettingsObj.categoryObjs.forEach()
-
-            logMsg = funcName + ": " + "\n" +
-              "categoryId=" + categoryId + "\n" +
-              "categoryObj=" + JSON.stringify(result);
-            // $log.log(logMsg);
-
-            return result;
-          } // getCategoryObj()
         }, // updateDisplayInfo()
+
+        getCategoryObj: function (categoryId) {
+          var funcName = "getCategoryObj()";
+          var logMsg = "";
+
+          var result = null;
+
+          this.webExSiteSettingsObj.categoryObjs.forEach(
+            function checkCategoryObj(categoryObj) {
+              if (categoryId == categoryObj.id) {
+                result = categoryObj;
+              }
+            } // checkCategoryObj()
+          ); // _this.webExSiteSettingsObj.categoryObjs.forEach()
+
+          logMsg = funcName + ": " + "\n" +
+            "categoryId=" + categoryId + "\n" +
+            "categoryObj=" + JSON.stringify(result);
+          // $log.log(logMsg);
+
+          return result;
+        }, // getCategoryObj()
 
         getSiteSettingsInfoXml: function () {
           var siteInfoXml = WebExXmlApiFact.getSiteInfo(webExXmlApiInfoObj);
