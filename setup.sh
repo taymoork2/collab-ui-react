@@ -57,7 +57,7 @@ else
 fi
 
 # Updating bower to the latest
-# npm update -g bower
+npm update -g bower
 
 # Check and install gulp
 which gulp > /dev/null 2>&1
@@ -82,6 +82,6 @@ fi
 # Install dependecies
 # bundle install
 npm install
-# npm update -g bower
+npm update -g bower
 bower cache clean
 bower install --force

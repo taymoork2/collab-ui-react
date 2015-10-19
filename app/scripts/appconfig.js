@@ -661,7 +661,11 @@ angular
           url: '/reports',
           templateUrl: 'modules/squared/views/reports.html',
           controller: 'ReportsCtrl',
-          parent: 'main'
+          parent: 'main',
+          params: {
+            tab: null,
+            siteUrl: null
+          }
         })
         .state('userprofile', {
           url: '/userprofile/:uid',
@@ -795,11 +799,7 @@ angular
           url: '/newreports',
           templateUrl: 'modules/core/partnerReports/partnerReports.tpl.html',
           controller: 'PartnerReportCtrl',
-          controllerAs: 'nav',
-          params: {
-            tab: null,
-            siteUrl: null
-          },
+          controllerAs: 'nav'
         })
         .state('login_swap', {
           url: '/login/:customerOrgId/:customerOrgName',
