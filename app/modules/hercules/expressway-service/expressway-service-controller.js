@@ -98,6 +98,7 @@
     vm.selectedRow = -1;
     //TODO: Don't like this linking to routes...
     vm.route = serviceType2RouteName(vm.currentServiceType);
+    vm.notificationTag = vm.currentServiceId;
 
     vm.clusters = ClusterService.getClusters();
     vm.clusterLength = function () {
