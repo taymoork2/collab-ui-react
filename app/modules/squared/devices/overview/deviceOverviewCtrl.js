@@ -6,7 +6,7 @@
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, XhrNotificationService, $stateParams, Authinfo, FeedbackService, CsdmCodeService, CsdmDeviceService, Utils, $window, RemDeviceModal) {
+  function DeviceOverviewCtrl($q, $state, XhrNotificationService, $stateParams, Authinfo, FeedbackService, CsdmCodeService, CsdmDeviceService, Utils, $window, RemDeviceModal, channels) {
     var deviceOverview = this;
 
     deviceOverview.currentDevice = $stateParams.currentDevice;
@@ -43,5 +43,6 @@
         .then($state.sidepanel.close);
     };
 
+    deviceOverview.canChangeUpgradeChannel = channels.length > 1 && deviceOverview.currentDevice.isOnline;
   }
 })();

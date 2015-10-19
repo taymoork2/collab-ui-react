@@ -7,6 +7,8 @@ describe('Controller: VoicemailInfoCtrl', function () {
   var telephonyInfoWithVoice = getJSONFixture('huron/json/telephonyInfo/voiceEnabled.json');
   var telephonyInfoWithVoicemail = getJSONFixture('huron/json/telephonyInfo/voicemailEnabled.json');
   var directoryInfo = getJSONFixture('huron/json/telephonyInfo/getDirectoryNumber.json');
+  var directoryInfoBusy = getJSONFixture('huron/json/lineSettings/getDirectoryNumberBusy.json');
+  var directoryInfoCFA = getJSONFixture('huron/json/lineSettings/getDirectoryNumberCFA.json');
   var errorMessage = {
     'data': {
       'errorMessage': 'Common User create failed.'
@@ -35,7 +37,6 @@ describe('Controller: VoicemailInfoCtrl', function () {
     url = HuronConfig.getCmiUrl() + '/common/customers/' + currentUser.meta.organizationID + '/users/' + currentUser.id;
 
     spyOn(TelephonyInfoService, 'getTelephonyInfo').and.returnValue(telephonyInfoWithVoice);
-    spyOn(DirectoryNumber, 'getDirectoryNumber').and.returnValue($q.when(directoryInfo));
     spyOn(LineSettings, 'updateLineSettings').and.returnValue($q.when());
     spyOn(Notification, 'notify');
     spyOn($modal, 'open').and.returnValue({
@@ -66,12 +67,15 @@ describe('Controller: VoicemailInfoCtrl', function () {
     describe('enable voicemail', function () {
       beforeEach(function () {
         controller.enableVoicemail = true;
+        spyOn(DirectoryNumber, 'getDirectoryNumber').and.returnValue($q.when(directoryInfo));
+
       });
 
       it('should notify on success', function () {
         $httpBackend.whenPUT(url).respond(200);
         controller.saveVoicemail();
         $httpBackend.flush();
+        expect(LineSettings.updateLineSettings).toHaveBeenCalled();
         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
       });
 
@@ -104,6 +108,7 @@ describe('Controller: VoicemailInfoCtrl', function () {
     describe('disable voicemail', function () {
       beforeEach(function () {
         controller.enableVoicemail = false;
+        spyOn(DirectoryNumber, 'getDirectoryNumber').and.returnValue($q.when(directoryInfo));
         TelephonyInfoService.getTelephonyInfo.and.returnValue(telephonyInfoWithVoicemail);
         $scope.$broadcast('telephonyInfoUpdated');
         $scope.$apply();
@@ -132,6 +137,29 @@ describe('Controller: VoicemailInfoCtrl', function () {
         expect(Notification.notify).not.toHaveBeenCalled();
       });
     });
-  });
 
+    describe('enable voicemail With prior CFA/CFB destination set', function () {
+      beforeEach(function () {
+        controller.enableVoicemail = true;
+      });
+
+      it('should notify on success', function () {
+        spyOn(DirectoryNumber, 'getDirectoryNumber').and.returnValue($q.when(directoryInfoBusy));
+        $httpBackend.whenPUT(url).respond(200);
+        controller.saveVoicemail();
+        $httpBackend.flush();
+        expect(LineSettings.updateLineSettings).not.toHaveBeenCalled();
+        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+      });
+
+      it('should notify on success', function () {
+        spyOn(DirectoryNumber, 'getDirectoryNumber').and.returnValue($q.when(directoryInfoCFA));
+        $httpBackend.whenPUT(url).respond(200);
+        controller.saveVoicemail();
+        $httpBackend.flush();
+        expect(LineSettings.updateLineSettings).not.toHaveBeenCalled();
+        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+      });
+    });
+  });
 });

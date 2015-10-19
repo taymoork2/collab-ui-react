@@ -48,8 +48,13 @@
         }
       );
 
+      var iframeUrl = $stateParams.settingPageIframeUrl;
+      // iframeUrl = iframeUrl.replace("wbxadmin", "adm3100");
+
+      $scope.iframeUrlType = iframeUrl.includes("/igotnuthin") ? "invalidIframeUrl" : "validIframeUrl";
+
       // for iframe request
-      $scope.trustIframeUrl = $sce.trustAsResourceUrl($stateParams.settingPageIframeUrl);
+      $scope.trustIframeUrl = $sce.trustAsResourceUrl(iframeUrl);
       $scope.adminEmail = Authinfo.getPrimaryEmail();
       $scope.authToken = $rootScope.token;
       $scope.locale = ("es_LA" == $translate.use()) ? "es_MX" : $translate.use();

@@ -36,7 +36,8 @@
       removeNotification: removeNotification,
       types: {
         ALERT: 'alert',
-        TODO: 'todo'
+        TODO: 'todo',
+        NEW: 'new'
       }
     };
   }

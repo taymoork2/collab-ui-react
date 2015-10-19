@@ -319,7 +319,7 @@
 
       if (time.value === 0) {
         for (var i = 6; i >= 0; i--) {
-          dataPoint.modifiedDate = moment().subtract(i + 1, 'day').format(dayFormat);
+          dataPoint.modifiedDate = moment().subtract(i + 2, 'day').format(dayFormat);
           graph.push(angular.copy(dataPoint));
         }
       } else if (time.value === 1) {
@@ -491,21 +491,17 @@
       if (angular.isArray(data.data) && data.data.length !== 0 && data.data[0].details !== undefined && data.data[0].details !== null) {
         var details = data.data[0].details;
         var transformData = angular.copy(callMetricsData);
-        // For now, Questionable calls are not counted in the total and it is not part of the chart display.
-        var totalCalls = parseInt(details.totalCalls, 10) - parseInt(details.totalQuestionableCalls, 10);
+        var totalCalls = parseInt(details.totalCalls);
 
-        if (totalCalls < 0) {
-          totalCalls = 0;
+        if (totalCalls > 0) {
+          transformData.labelData.numTotalCalls = totalCalls;
+          transformData.labelData.numTotalMinutes = Math.round(parseFloat(details.totalAudioDuration));
+          transformData.dataProvider[0].numCalls = parseInt(details.totalFailedCalls);
+          transformData.dataProvider[1].numCalls = parseInt(details.totalSuccessfulCalls);
+          return transformData;
         }
-
-        transformData.dataProvider[0].numCalls = details.totalFailedCalls;
-        transformData.dataProvider[1].numCalls = details.totalSuccessfulCalls;
-        transformData.labelData.numTotalCalls = totalCalls;
-        transformData.labelData.numTotalMinutes = Math.round(parseFloat(details.totalAudioDuration));
-        return transformData;
-      } else {
-        return [];
       }
+      return [];
     }
 
     function getRegisteredEndpoints(customer, time) {
