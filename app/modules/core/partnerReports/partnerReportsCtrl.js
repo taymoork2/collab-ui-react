@@ -6,7 +6,7 @@
     .controller('PartnerReportCtrl', PartnerReportCtrl);
 
   /* @ngInject */
-  function PartnerReportCtrl($scope, $timeout, $translate, $q, $stateParams, PartnerReportService, GraphService, DonutChartService, DummyReportService) {
+  function PartnerReportCtrl($scope, $timeout, $translate, $q, PartnerReportService, GraphService, DonutChartService, DummyReportService) {
     var vm = this;
 
     var ABORT = 'ABORT';

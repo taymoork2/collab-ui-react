@@ -1,8 +1,8 @@
 <div class="partner-reports">
   <div class="reports-header row page-header">
-    <div class="page-title columns medium-8">
+    <div class="page-title columns medium-6">
       <h2 class="title-heading" translate="reportsPage.pageTitle"></h2>
-      <div class="sync">
+      <span class="sync">
         <div class="report-filter-link">
           <a id="allReports" class="report-link" ng-click="nav.show(true,true)" translate="reportsPage.all"
             ng-class="{'selected-link': (nav.showEngagement && nav.showQuality), 'not-selected': !(nav.showEngagement || nav.showQuality)}"></a>
@@ -15,9 +15,9 @@
           <a id="qualityReports" class="report-link" ng-click="nav.show(false,true)" translate="reportsPage.quality"
             ng-class="{'selected-link': nav.showQuality, 'not-selected': !nav.showQuality}"></a>
         </div>
-      </div>
+      </span>
     </div>
-    <div class="columns medium-4 report-filters">
+    <div class="columns medium-6 report-filters">
       <div class="row">
         <div class="large-4 large-offset-3 columns">
           <cs-select id="timeFilter" name="timeFilter" ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.updateReports()" is-disabled="nav.customersSet()"></cs-select>
