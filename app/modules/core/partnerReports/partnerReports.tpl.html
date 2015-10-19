@@ -4,23 +4,17 @@
       <h2 class="title-heading" translate="reportsPage.pageTitle"></h2>
       <div class="sync">
         <div class="report-filter-link">
-          <a id="allReports" class="report-link" ng-click="nav.show(true,true,true)" translate="reportsPage.all"
-            ng-class="{'selected-link': (nav.showEngagement && nav.showQuality && nav.showWebexReports), 'not-selected': !(nav.showEngagement || nav.showQuality || nav.showWebexReports)}"></a>
+          <a id="allReports" class="report-link" ng-click="nav.show(true,true)" translate="reportsPage.all"
+            ng-class="{'selected-link': (nav.showEngagement && nav.showQuality), 'not-selected': !(nav.showEngagement || nav.showQuality)}"></a>
         </div>
         <div class="report-filter-link">
-          <a id="engagementReports" class="report-link" ng-click="nav.show(true,false,false);" translate="reportsPage.engagement"
+          <a id="engagementReports" class="report-link" ng-click="nav.show(true,false);" translate="reportsPage.engagement"
             ng-class="{'selected-link': nav.showEngagement, 'not-selected': !nav.showEngagement}"></a>
         </div>
         <div class="report-filter-link">
-          <a id="qualityReports" class="report-link" ng-click="nav.show(false,true,false)" translate="reportsPage.quality"
+          <a id="qualityReports" class="report-link" ng-click="nav.show(false,true)" translate="reportsPage.quality"
             ng-class="{'selected-link': nav.showQuality, 'not-selected': !nav.showQuality}"></a>
         </div>
-        <div class="report-filter-link" ng-if="nav.webexOptions.length > 0">
-          <a id="webexReports" class="report-link" ng-click="nav.show(false,false,true);" translate="reportsPage.webex"
-            ng-class="{'selected-link': nav.showWebexReports, 'not-selected': !nav.showWebexReports}"></a>
-          <cs-select ng-if="nav.showWebexReports" class="filter-one" name="timeFilter" ng-model="nav.webexSelected" options="nav.webexOptions" on-change-fn="nav.updateWebexReports()"></cs-select>
-        </div>
-
       </div>
     </div>
     <div class="columns medium-4 report-filters">
@@ -54,32 +48,6 @@
         <div class="report-box" ng-show="nav.showQuality">
           <uc-media-quality></uc-media-quality>
         </div>
-      </div>
-      <div ng-if="nav.webexReportsObject.viewReady && nav.showWebexReports">
-        <cs-card-layout>
-          <cs-card class="report-box" ng-repeat="sec in nav.webexReportsObject.reports.sections">
-            <article>
-              <header>
-               <h4>{{sec.section_name_translated}}</h4>
-              </header>
-               <section>
-                <div class="card-checkbox">
-                  <div ng-repeat="sref in sec.uisrefs">
-                    <span>
-                         <a id="{{sref.reportPageId}}"
-                            name="{{sref.reportPageId}}"
-                            ui-sref="{{sref.uisrefString}}">
-                            {{sref.reportPageId_translated}}
-                         </a>
-                    </span>
-                  </div>
-                </div>
-               </section>
-
-            </article>
-
-          </cs-card>
-        </cs-card-layout>
       </div>
     </div>
   </div>

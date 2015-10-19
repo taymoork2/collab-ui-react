@@ -6,7 +6,7 @@
     .controller('PartnerReportCtrl', PartnerReportCtrl);
 
   /* @ngInject */
-  function PartnerReportCtrl($scope, $timeout, $translate, $q, $stateParams, PartnerReportService, GraphService, DonutChartService, DummyReportService, Authinfo, WebExUtilsFact, reportService) {
+  function PartnerReportCtrl($scope, $timeout, $translate, $q, $stateParams, PartnerReportService, GraphService, DonutChartService, DummyReportService) {
     var vm = this;
 
     var ABORT = 'ABORT';
@@ -25,13 +25,6 @@
 
     vm.showEngagement = true;
     vm.showQuality = true;
-    vm.showWebexReports = true;
-
-    if ($stateParams.tab) {
-      vm.showEngagement = false;
-      vm.showQuality = false;
-      vm.showWebexReports = $stateParams.tab === 'webex';
-    }
 
     vm.activeUsersRefresh = REFRESH;
     vm.activeUserPopulationRefresh = REFRESH;
@@ -74,46 +67,9 @@
     }];
     vm.timeSelected = vm.timeOptions[0];
 
-    function generateWebexReportsUrl() {
-      var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl() || [];
-      vm.webexOptions = [];
-      var promiseChain = [];
-
-      for (var i = 0; i < conferenceServices.length; i++) {
-        var url = conferenceServices[i].license.siteUrl;
-        promiseChain.push(WebExUtilsFact.isSiteSupportsIframe(url)
-          .then(function (result) {
-            if (result.isAdminReportEnabled && result.isIframeSupported) {
-              vm.webexOptions.push(result.siteUrl);
-            }
-          }, function (error) {
-            //no-op, but needed
-          }));
-      }
-
-      $q.all(promiseChain).then(function () {
-        var selecteIndex = 0;
-        if ($stateParams.tab === 'webex') {
-          _.forEach(vm.webexOptions, function (val, index) {
-            if (val === $stateParams.siteUrl) {
-              selecteIndex = index;
-            }
-          });
-        }
-        vm.webexSelected = vm.webexOptions[selecteIndex];
-        vm.updateWebexReports();
-      });
-    }
-
-    generateWebexReportsUrl();
-    vm.updateWebexReports = function () {
-      vm.webexReportsObject = reportService.initReportsObject(vm.webexSelected);
-    };
-
-    vm.show = function (showEngagement, showQuality, showWebexReports) {
+    vm.show = function (showEngagement, showQuality) {
       vm.showEngagement = showEngagement;
       vm.showQuality = showQuality;
-      vm.showWebexReports = showWebexReports;
     };
 
     vm.customersSet = function () {

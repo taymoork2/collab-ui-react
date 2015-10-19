@@ -2,8 +2,58 @@
 /* global AmCharts, $:false */
 
 angular.module('Squared')
-  .controller('ReportsCtrl', ['$scope', '$parse', 'ReportsService', 'Log', 'Authinfo', 'UserListService', 'Config', '$translate', 'CannedDataService',
-    function ($scope, $parse, ReportsService, Log, Authinfo, UserListService, Config, $translate, CannedDataService) {
+  .controller('ReportsCtrl', ['$scope', '$parse', '$stateParams', '$q', 'ReportsService', 'reportService', 'Log', 'Authinfo', 'UserListService', 'Config', '$translate', 'CannedDataService', 'WebExUtilsFact',
+    function ($scope, $parse, $stateParams, $q, ReportsService, reportService, Log, Authinfo, UserListService, Config, $translate, CannedDataService, WebExUtilsFact) {
+
+      $scope.showEngagement = true;
+      $scope.showWebexReports = true;
+
+      if ($stateParams.tab) {
+        $scope.showEngagement = false;
+        $scope.showWebexReports = $stateParams.tab === 'webex';
+      }
+
+      function generateWebexReportsUrl() {
+        var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl() || [];
+        $scope.webexOptions = [];
+        var promiseChain = [];
+
+        for (var i = 0; i < conferenceServices.length; i++) {
+          var url = conferenceServices[i].license.siteUrl;
+          promiseChain.push(WebExUtilsFact.isSiteSupportsIframe(url)
+            .then(function (result) {
+              if (result.isAdminReportEnabled && result.isIframeSupported) {
+                $scope.webexOptions.push(result.siteUrl);
+              }
+            }, function (error) {
+              //no-op, but needed
+            }));
+        }
+
+        $q.all(promiseChain).then(function () {
+          var selecteIndex = 0;
+          if ($stateParams.tab === 'webex') {
+            _.forEach($scope.webexOptions, function (val, index) {
+              if (val === $stateParams.siteUrl) {
+                selecteIndex = index;
+              }
+            });
+          }
+          $scope.webexSelected = $scope.webexOptions[selecteIndex];
+          $scope.updateWebexReports();
+        });
+      }
+
+      generateWebexReportsUrl();
+
+      $scope.updateWebexReports = function () {
+        $scope.webexReportsObject = reportService.initReportsObject($scope.webexSelected);
+      };
+
+      $scope.show = function (showEngagement, showWebexReports) {
+        $scope.showEngagement = showEngagement;
+        $scope.showWebexReports = showWebexReports;
+      };
 
       $('#avgEntitlementsdiv').addClass('chart-border');
       $('#avgCallsdiv').addClass('chart-border');
