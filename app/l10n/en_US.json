@@ -352,7 +352,8 @@
     "fair": "Fair",
     "poor": "Poor",
     "description": "Media quality is determined by measuring the amount of packet loss that is reported by the registered devices during all calls that are longer than fifteen seconds in duration.",
-    "mediaQualityGraphError": "There was an error while loading call quality data for {{customer}}."
+    "mediaQualityGraphError": "There was an error while loading call quality data for {{customer}}.",
+    "minutes": "Minutes"
   },
   "callMetrics": {
     "calls": "Calls",

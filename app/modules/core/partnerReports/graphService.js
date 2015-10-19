@@ -199,6 +199,7 @@
       valueAxes[0].stackType = 'regular';
       valueAxes[0].integersOnly = true;
       valueAxes[0].minimum = 0;
+      valueAxes[0].title = $translate.instant('mediaQuality.minutes');
 
       var legend = angular.copy(legendBase);
       legend.reversedOrder = true;
