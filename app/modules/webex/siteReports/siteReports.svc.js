@@ -3,6 +3,7 @@
 angular.module('WebExReports').service('reportService', [
   '$q',
   '$log',
+  '$stateParams',
   '$translate',
   '$filter',
   'Authinfo',
@@ -13,6 +14,7 @@ angular.module('WebExReports').service('reportService', [
   function (
     $q,
     $log,
+    $stateParams,
     $translate,
     $filter,
     Authinfo,
@@ -256,7 +258,7 @@ angular.module('WebExReports').service('reportService', [
       return repts;
     };
 
-    this.initReportsObject = function (reportingSiteUrl) {
+    this.initReportsObject = function () {
       var reportsObject = {};
       var funcName = "initReportsObject()";
       var logMsg = funcName;
@@ -264,7 +266,7 @@ angular.module('WebExReports').service('reportService', [
       var _this = this;
       var displayLabel = null;
 
-      var siteUrl = reportingSiteUrl || '';
+      var siteUrl = (!$stateParams.siteUrl) ? '' : $stateParams.siteUrl;
       var siteName = WebExUtilsFact.getSiteName(siteUrl);
       logMsg = funcName + ": " + "\n" +
         "siteUrl=" + siteUrl + "; " +
@@ -336,5 +338,5 @@ angular.module('WebExReports').service('reportService', [
       });
     };
 
-  } //end top level service function
+  } //end top level service function 
 ]);
