@@ -8,7 +8,7 @@
     };
     vm.filteredNotifications = function () {
       return _.filter(NotificationService.getNotifications(), function (notification) {
-        return _.includes(notification.tags, vm.filterTag)
+        return _.includes(notification.tags, vm.filterTag);
       });
     };
     vm.showNotifications = false;
