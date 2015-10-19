@@ -1,0 +1,28 @@
+
+  <cs-card class="cs-card medium"
+           id={{WebExSiteSettings.siteSettingsObj.commonSettingsCardObj.id}}-card
+           name={{WebExSiteSettings.siteSettingsObj.commonSettingsCardObj.id}}-card>
+           
+    <article>
+      <header>
+        <h3>
+          {{WebExSiteSettings.siteSettingsObj.commonSettingsCardObj.label}}
+        </h3>
+        
+        <span translate="webexSiteSettingsLabels.commonSettingsCardNote"></span>
+      </header>
+      
+      <section>
+        <ul class="no-bullet">
+          <li ng-repeat="pageObj in WebExSiteSettings.siteSettingsObj.commonSettingsCardObj.pageObjs">
+            <a id={{pageObj.id}}
+               name={{pageObj.id}}
+               ui-sref={{pageObj.uiSref}}>
+
+              {{pageObj.label}}
+            </a>
+          </li>
+        </ul>
+      </section>
+    </article>
+  </cs-card>
