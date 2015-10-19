@@ -5,7 +5,7 @@
     .controller('ExternalNumberDetailCtrl', ExternalNumberDetail);
 
   /* @ngInject */
-  function ExternalNumberDetail($stateParams, $translate, $q, ExternalNumberService, ModalService, PstnSetupService, Notification) {
+  function ExternalNumberDetail($stateParams, $translate, $q, ExternalNumberService, ModalService, PstnSetupService, Notification, TelephoneNumberService) {
     var vm = this;
     vm.currentCustomer = $stateParams.currentCustomer;
 
@@ -23,6 +23,8 @@
 
     vm.deleteNumber = deleteNumber;
     vm.listPhoneNumbers = listPhoneNumbers;
+
+    vm.isNumberValid = TelephoneNumberService.validateDID;
 
     listPhoneNumbers();
 

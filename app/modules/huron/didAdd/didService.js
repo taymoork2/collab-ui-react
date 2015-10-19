@@ -23,7 +23,10 @@
     }
 
     function removeDid(did) {
-      didList.splice(didList.indexOf(String(did)), 1);
+      var index = _.indexOf(didList, did);
+      if (index > -1) {
+        didList.splice(index, 1);
+      }
     }
 
     function getDidList() {
