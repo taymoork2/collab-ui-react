@@ -91,7 +91,7 @@ angular.module('Core')
         '    </div>' + '\n' +
         '    <div ng-if="row.entity.isIframeSupported">' + '\n' +
         '       <a id="webex-reports-list-iframe"' + '\n' +
-        '           ui-sref="webex-reports({siteUrl:row.entity.license.siteUrl})"> ' + '\n' +
+        '           ui-sref="reports({tab:\'webex\',siteUrl:row.entity.license.siteUrl})"> ' + '\n' +
         '        <p class="ngCellText">' + '\n' +
         '          <span name="webexReports"' + '\n' +
         '                id="webexReports">' + '\n' +

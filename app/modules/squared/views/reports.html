@@ -5,23 +5,53 @@
       </cr-reload-data>
     </div>
   </div>
-  <div class="row">
+
+<div class="partner-reports">
+  <div class="reports-header row page-header">
+    <div class="page-title columns medium-6">
+      <h2 class="title-heading" translate="reportsPage.pageTitle"></h2>
+      <div class="sync">
+        <div class="report-filter-link">
+          <a id="allReports" class="report-link" ng-click="show(true,true)" translate="reportsPage.all"
+            ng-class="{'selected-link': (showEngagement && showWebexReports), 'not-selected': !(showEngagement || showWebexReports)}"></a>
+        </div>
+        <div class="report-filter-link">
+          <a id="engagementReports" class="report-link" ng-click="show(true,false);" translate="reportsPage.engagement"
+            ng-class="{'selected-link': showEngagement, 'not-selected': !showEngagement}"></a>
+        </div>
+        <div class="report-filter-link" ng-if="webexOptions.length > 0">
+          <a id="webexReports" class="report-link" ng-click="show(false,true);" translate="reportsPage.webex"
+            ng-class="{'selected-link': showWebexReports, 'not-selected': !showWebexReports}"></a>
+        </div>
+      </div>
+    </div>
+    <div class="columns medium-6 report-filters">
+      <div class="row">
+        <div class="large-4 columns" ng-if="webexOptions.length > 0">
+        <cs-select ng-if="showWebexReports" class="filter-one" name="timeFilter" ng-model="webexSelected" options="webexOptions" on-change-fn="updateWebexReports()"></cs-select>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="row" ng-show="showEngagement">
     <div class="all-reports columns small-12">
       <div id="onboardingFunnelDiv" class="timechartDiv"></div>
       <div id="onboarding-funnel-refresh" class="metrics-refresh" ng-show="showOnboardingFunnelRefresh"><i class='icon icon-spinner icon-2x'/></div>
     </div>
   </div>
-  <div class="row" ng-show="false">
+  <div class="row" ng-show="false" >
     <div class="all-reports columns small-12 medium-6">
       <div id="avgEntitlementsdiv" class="timechartDiv"></div>
       <div id="avg-entitlements-refresh" class="metrics-refresh" ng-show="showAvgEntitlementsRefresh"><i class='icon icon-spinner icon-2x'/></div>
     </div>
-    <div class ="all-reports columns small-12 medium-6">
+    <div class ="all-reports columns small-12 medium-6" ng-show="showEngagement">
       <div id="avgCallsdiv" class="timechartDiv"></div>
       <div id="avg-calls-refresh" class="metrics-refresh" ng-show="showAvgCallsRefresh"><i class='icon icon-spinner icon-2x'/></div>
     </div>
   </div>
-  <div class="row">
+  <div class="row" ng-show="showEngagement">
     <div class ="all-reports columns small-12 medium-6">
       <div id="avgConversationsdiv" class="timechartDiv"></div>
       <div id="avg-conversations-refresh" class="metrics-refresh" ng-show="showAvgConversationsRefresh"><i class='icon icon-spinner icon-2x'/></div>
@@ -31,7 +61,7 @@
       <div id="active-users-refresh" class="metrics-refresh" ng-show="showActiveUsersRefresh"><i class='icon icon-spinner icon-2x'/></div>
     </div>
   </div>
-  <div class="row">
+  <div class="row" ng-show="showEngagement">
     <div class ="all-reports columns small-12 medium-6">
       <div id="convOneOnOnediv" class="timechartDiv"></div>
       <div id="conv-one-on-one-refresh" class="metrics-refresh" ng-show="showConvOneOnOneRefresh"><i class='icon icon-spinner icon-2x'/></div>
@@ -41,7 +71,7 @@
       <div id="conv-group-refresh" class="metrics-refresh" ng-show="showConvGroupRefresh"><i class='icon icon-spinner icon-2x'/></div>
     </div>
   </div>
-  <div class="row">
+  <div class="row" ng-show="showEngagement">
     <div class ="all-reports columns small-12 medium-6">
       <div id="callsdiv" class="timechartDiv"></div>
       <div id="calls-refresh" class="metrics-refresh" ng-show="showCallsRefresh"><i class='icon icon-spinner icon-2x'/></div>
@@ -51,7 +81,7 @@
       <div id="calls-avg-duration-refresh" class="metrics-refresh" ng-show="showCallsAvgDurationRefresh"><i class='icon icon-spinner icon-2x'/></div>
     </div>
   </div>
-  <div class="row">
+  <div class="row" ng-show="showEngagement">
     <div class ="all-reports columns small-12 medium-6">
       <div id="contentShareddiv" class="timechartDiv"></div>
       <div id="content-shared-refresh" class="metrics-refresh" ng-show="showContentSharedRefresh"><i class='icon icon-spinner icon-2x'/></div>
@@ -60,5 +90,31 @@
       <div id="contentShareSizesdiv" class="timechartDiv"></div>
       <div id="content-share-sizes-refresh" class="metrics-refresh" ng-show="showContentShareSizesRefresh"><i class='icon icon-spinner icon-2x'/></div>
     </div>
+  </div>
+  <div ng-if="webexReportsObject.viewReady && showWebexReports">
+    <cs-card-layout>
+      <cs-card class="report-box" ng-repeat="sec in webexReportsObject.reports.sections">
+        <article>
+          <header>
+           <h4>{{sec.section_name_translated}}</h4>
+          </header>
+           <section>
+            <div class="card-checkbox">
+              <div ng-repeat="sref in sec.uisrefs">
+                <span>
+                     <a id="{{sref.reportPageId}}"
+                        name="{{sref.reportPageId}}"
+                        ui-sref="{{sref.uisrefString}}">
+                        {{sref.reportPageId_translated}}
+                     </a>
+                </span>
+              </div>
+            </div>
+           </section>
+
+        </article>
+
+      </cs-card>
+    </cs-card-layout>
   </div>
 </div>

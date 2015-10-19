@@ -67,6 +67,11 @@
     }];
     vm.timeSelected = vm.timeOptions[0];
 
+    vm.show = function (showEngagement, showQuality) {
+      vm.showEngagement = showEngagement;
+      vm.showQuality = showQuality;
+    };
+
     vm.customersSet = function () {
       return vm.customerSelected === null;
     };

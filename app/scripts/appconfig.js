@@ -661,7 +661,11 @@ angular
           url: '/reports',
           templateUrl: 'modules/squared/views/reports.html',
           controller: 'ReportsCtrl',
-          parent: 'main'
+          parent: 'main',
+          params: {
+            tab: null,
+            siteUrl: null
+          }
         })
         .state('userprofile', {
           url: '/userprofile/:uid',
