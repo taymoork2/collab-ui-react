@@ -85,6 +85,13 @@ angular.module('Hercules')
         }
       };
 
+      var acknowledgeService = function (serviceId) {
+        return $http
+          .patch(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
+            acknowledged: true
+          });
+      };
+
       return {
         services: services,
         filterEnabledServices: filterEnabledServices,
@@ -92,7 +99,8 @@ angular.module('Hercules')
         isFusionEnabled: isFusionEnabled,
         isServiceEnabled: isServiceEnabled,
         setServiceEnabled: setServiceEnabled,
-        serviceIcon: serviceIcon
+        serviceIcon: serviceIcon,
+        acknowledgeService: acknowledgeService
       };
 
     }

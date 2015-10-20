@@ -661,11 +661,7 @@ angular
           url: '/reports',
           templateUrl: 'modules/squared/views/reports.html',
           controller: 'ReportsCtrl',
-          parent: 'main',
-          params: {
-            tab: null,
-            siteUrl: null
-          }
+          parent: 'main'
         })
         .state('userprofile', {
           url: '/userprofile/:uid',
@@ -1280,7 +1276,7 @@ angular
           parent: 'hurondetails',
           controller: 'NewFeatureCtrl',
           controllerAs: 'newFeatureCtrl',
-          templateUrl: 'modules/huron/features/newFeature/newFeature.tpl.html',
+          templateUrl: 'modules/huron/features/newFeature/newFeature.tpl.html'
         })
         .state('huronfeatures.deleteHuntGroup', {
           parent: 'modal',
@@ -1331,9 +1327,7 @@ angular
           url: '/services/calendar',
           views: {
             'fullPane': {
-              templateUrl: 'modules/hercules/expressway-service/cluster-list.html',
-              controller: 'ExpresswayServiceController',
-              controllerAs: 'exp'
+              templateUrl: 'modules/hercules/expressway-service/cluster-list.html'
             }
           }
         })
@@ -1398,15 +1392,13 @@ angular
           data: {
             serviceType: "c_ucmc"
           },
-          parent: 'main',
+          parent: 'main'
         })
         .state('call-service.list', {
           url: '/services/call',
           views: {
             'fullPane': {
-              templateUrl: 'modules/hercules/expressway-service/cluster-list.html',
-              controller: 'ExpresswayServiceController',
-              controllerAs: 'exp'
+              templateUrl: 'modules/hercules/expressway-service/cluster-list.html'
             }
           }
         })

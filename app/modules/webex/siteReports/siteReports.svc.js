@@ -3,6 +3,7 @@
 angular.module('WebExReports').service('reportService', [
   '$q',
   '$log',
+  '$stateParams',
   '$translate',
   '$filter',
   'Authinfo',
@@ -13,6 +14,7 @@ angular.module('WebExReports').service('reportService', [
   function (
     $q,
     $log,
+    $stateParams,
     $translate,
     $filter,
     Authinfo,
@@ -182,12 +184,23 @@ angular.module('WebExReports').service('reportService', [
       this.uisrefs = self.report_links.map(function (thelink) {
         return new UIsref(thelink, "ReportID", self.site_url);
       });
+      this.isEmpty = function () {
+        return (angular.isUndefined(self.uisrefs)) || (self.uisrefs.length === 0);
+      };
+      this.isNotEmpty = function () {
+        return !self.isEmpty();
+      };
     };
+
+    this.ReportsSection = ReportsSection;
 
     var Reports = function () {
       this.sections = [];
       this.setSections = function (secs) {
-        this.sections = secs;
+        var nonEmptySections = secs.filter(function (s) {
+          return s.isNotEmpty();
+        });
+        this.sections = nonEmptySections;
       };
       this.getSections = function () {
         return this.sections;
@@ -245,7 +258,7 @@ angular.module('WebExReports').service('reportService', [
       return repts;
     };
 
-    this.initReportsObject = function (reportingSiteUrl) {
+    this.initReportsObject = function () {
       var reportsObject = {};
       var funcName = "initReportsObject()";
       var logMsg = funcName;
@@ -253,7 +266,7 @@ angular.module('WebExReports').service('reportService', [
       var _this = this;
       var displayLabel = null;
 
-      var siteUrl = reportingSiteUrl || '';
+      var siteUrl = (!$stateParams.siteUrl) ? '' : $stateParams.siteUrl;
       var siteName = WebExUtilsFact.getSiteName(siteUrl);
       logMsg = funcName + ": " + "\n" +
         "siteUrl=" + siteUrl + "; " +
@@ -325,5 +338,5 @@ angular.module('WebExReports').service('reportService', [
       });
     };
 
-  } //end top level service function
+  } //end top level service function 
 ]);

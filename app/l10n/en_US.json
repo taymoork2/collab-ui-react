@@ -326,8 +326,7 @@
     "leastEngaged": "5 Least Engaged",
     "highQuality": "5 Highest Quality",
     "leastQuality": "5 Lowest Quality",
-    "customerLoadError": "There was an error while loading the customer list.",
-    "webex": "Webex Reports"
+    "customerLoadError": "There was an error while loading the customer list."
   },
   "activeUsers": {
     "active": "Active",
@@ -353,7 +352,8 @@
     "fair": "Fair",
     "poor": "Poor",
     "description": "Media quality is determined by measuring the amount of packet loss that is reported by the registered devices during all calls that are longer than fifteen seconds in duration.",
-    "mediaQualityGraphError": "There was an error while loading call quality data for {{customer}}."
+    "mediaQualityGraphError": "There was an error while loading call quality data for {{customer}}.",
+    "minutes": "Minutes"
   },
   "callMetrics": {
     "calls": "Calls",
@@ -923,6 +923,7 @@
     "csvInvalidRow": "Row contains an incorrect number of columns.  Please verify the row contains six columns and try again.",
     "csvRequiredEmail": "The \"User ID/Email\" field is required. Please provide a valid email address and try again.",
     "csvDuplicateEmail": "Skipped due to duplicate email address.",
+    "bulkInvalidDID": "The \"Direct Line\" field contains an invalid number.  Please fix and try again.",
     "processBulkResponseError": "An error has occurred while reading the response. Please try again.",
     "processBulkError": "Unidentified error while processing the user. Please try again.",
     "bulk400Error": "Unidentified error in the user list. Please verify the user list and try again.",

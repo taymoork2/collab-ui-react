@@ -7,12 +7,16 @@
   I.e. Add email addresses to receive email notifications about Service impacting Alarms and Software Upgrades.
 </p>
 
+<tags-input placeholder="Add email addresses" ng-disabled="saving" ng-model="expresswayServiceSettings.wx2users" type="email" allowed-tags-pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"></tags-input>
+
+<!--
 <textarea ng-disabled="saving"
           placeholder="Separate multiple email addresses by commas, for example, foo@yourdomain.com, bar@yourdomain.com, ..."
           class="form-control"
           id="wx2_users"
           type="text"
           ng-model="expresswayServiceSettings.config.wx2users"></textarea>
+-->
 
 <button ng-disabled="expresswayServiceSettings.loading || expresswayServiceSettings.savingEmail" id="convertActionButton"
         class="btn-primary"

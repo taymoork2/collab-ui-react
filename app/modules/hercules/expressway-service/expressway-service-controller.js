@@ -82,7 +82,8 @@
   };
 
   /* @ngInject */
-  function ExpresswayServiceController(XhrNotificationService, NotificationService, ServiceStateChecker, ServiceDescriptor, $stateParams, $state, $modal,
+  function ExpresswayServiceController(XhrNotificationService, NotificationService, ServiceStateChecker, ServiceDescriptor, $stateParams, $state,
+    $modal,
     $scope, ClusterService, USSService2, ConverterService, ServiceStatusSummaryService) {
     ClusterService.subscribe(checkServiceState, {
       scope: $scope
@@ -98,6 +99,7 @@
     vm.selectedRow = -1;
     //TODO: Don't like this linking to routes...
     vm.route = serviceType2RouteName(vm.currentServiceType);
+    vm.notificationTag = vm.currentServiceId;
 
     vm.clusters = ClusterService.getClusters();
     vm.clusterLength = function () {
@@ -231,6 +233,14 @@
       });
     };
 
+    vm.deleteHost = function (host) {
+      //console.log("Delete host ",host)
+      return ClusterService.deleteHost(vm.clusterId, host.serial).then(function () {
+        //TODO: Update page
+      }, XhrNotificationService.notify);
+
+    };
+
     /* @ngInject */
     function SoftwareUpgradeController($modalInstance) {
       var modalVm = this;
@@ -289,6 +299,7 @@
     MailValidatorService, XhrNotificationService, CertService, Notification) {
     var vm = this;
     vm.config = "";
+    vm.wx2users = "";
     vm.serviceType = $stateParams.serviceType;
     vm.serviceId = serviceType2ServiceId(vm.serviceType);
 
@@ -352,10 +363,22 @@
         return XhrNotificationService.notify(err);
       }
       vm.config = config || {};
+      if (vm.config.wx2users.length > 0) {
+        vm.wx2users = _.map(vm.config.wx2users.split(','), function (user) {
+          return {
+            text: user
+          };
+        });
+      } else {
+        vm.wx2users = [];
+      }
     });
     vm.cluster = $stateParams.cluster;
 
     vm.writeConfig = function () {
+      vm.config.wx2users = _.map(vm.wx2users, function (data) {
+        return data.text;
+      }).toString();
       if (vm.config.wx2users && !MailValidatorService.isValidEmailCsv(vm.config.wx2users)) {
         Notification.error("hercules.errors.invalidEmail");
       } else {

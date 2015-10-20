@@ -10,7 +10,7 @@
 
     function getCerts(orgId) {
       return $http
-        .get(ConfigService.getCertsUrl() + '/certificates?orgId=' + orgId)
+        .get(ConfigService.getCertsUrl() + '/certificates?expand=decoded&orgId=' + orgId)
         .then(extractData);
     }
 

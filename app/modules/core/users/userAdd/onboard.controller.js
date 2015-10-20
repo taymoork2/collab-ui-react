@@ -2,8 +2,8 @@
 
 //TODO refactor this into OnboardCtrl, BulkUserCtrl, AssignServicesCtrl
 angular.module('Core')
-  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$http', '$window', 'Log', '$log', 'Authinfo', 'Storage', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils', 'Orgservice', 'TelephonyInfoService', 'FeatureToggleService', 'NAME_DELIMITER', 'SyncService',
-    function ($scope, $state, $stateParams, $q, $http, $window, Log, $log, Authinfo, Storage, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, SyncService) {
+  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$http', '$window', 'Log', 'Authinfo', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils', 'Orgservice', 'TelephonyInfoService', 'FeatureToggleService', 'NAME_DELIMITER', 'SyncService', 'TelephoneNumberService',
+    function ($scope, $state, $stateParams, $q, $http, $window, Log, Authinfo, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, SyncService, TelephoneNumberService) {
       $scope.hasAccount = Authinfo.hasAccount();
       $scope.usrlist = [];
       $scope.internalNumberPool = [];
@@ -1729,7 +1729,7 @@ angular.module('Core')
                 licenseObj.properties.internalExtension = internalExtension;
               }
               if (directLine) {
-                licenseObj.properties.directLine = directLine;
+                licenseObj.properties.directLine = TelephoneNumberService.getDIDValue(directLine);
               }
             }
             return licenseObj;
@@ -1767,6 +1767,18 @@ angular.module('Core')
           }
         }
 
+        function isValidDID(value) {
+          // If communication license is selected and a value is defined
+          if (communicationLicense && value) {
+            try {
+              return TelephoneNumberService.validateDID(value);
+            } catch (e) {
+              return false;
+            }
+          }
+          return true;
+        }
+
         // Onboard users in chunks
         // Separate chunks on invalid rows
         var csvChunk = communicationLicense ? 4 : 10; // Rate limit for Huron
@@ -1793,6 +1805,10 @@ angular.module('Core')
               // Report a duplicate email
               processingError = true;
               addUserError(j + 1, $translate.instant('firstTimeWizard.csvDuplicateEmail'));
+            } else if (!isValidDID(userRow[5])) {
+              // Report an invalid DID format
+              processingError = true;
+              addUserError(j + 1, $translate.instant('firstTimeWizard.bulkInvalidDID'));
             } else {
               uniqueEmails.push(userRow[3]);
               tempUserArray.push({

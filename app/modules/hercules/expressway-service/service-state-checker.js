@@ -5,6 +5,7 @@
   function ServiceStateChecker(NotificationService, ClusterService, DirSyncService, USSService2, ServiceDescriptor, Authinfo) {
 
     var dirSyncEnabled;
+    var allExpresswayServices = ['squared-fusion-uc', 'squared-fusion-cal', 'squared-fusion-mgmt'];
 
     function checkState(connectorType, serviceId) {
       if (checkIfFusePerformed()) {
@@ -23,7 +24,7 @@
           NotificationService.types.TODO,
           'fuseNotPerformed',
           1,
-          'modules/hercules/notifications/fuse-not-performed.html', {});
+          'modules/hercules/notifications/fuse-not-performed.html', allExpresswayServices);
         return false;
       } else {
         NotificationService.removeNotification('fuseNotPerformed');
@@ -41,7 +42,7 @@
           NotificationService.types.TODO,
           'configureConnectors',
           2,
-          'modules/hercules/notifications/configure_connectors.html', {});
+          'modules/hercules/notifications/configure_connectors.html', allExpresswayServices);
         return false;
       } else {
         NotificationService.removeNotification('configureConnectors');
@@ -60,7 +61,7 @@
             NotificationService.types.TODO,
             'dirSyncNotEnabled',
             3,
-            'modules/hercules/notifications/dirsync-not-enabled.html', {});
+            'modules/hercules/notifications/dirsync-not-enabled.html', allExpresswayServices);
         } else {
           NotificationService.removeNotification('dirSyncNotEnabled');
         }
@@ -71,23 +72,25 @@
       var summaryForService = _.find(USSService2.getStatusesSummary(), {
         serviceId: serviceId
       });
+      var noUsersActivatedId = serviceId + ':noUsersActivated';
       var needsUserActivation = !summaryForService || (summaryForService.activated === 0 && summaryForService.error === 0 && summaryForService.notActivated === 0);
       if (needsUserActivation) {
         NotificationService.addNotification(
           NotificationService.types.TODO,
-          'noUsersActivated',
+          noUsersActivatedId,
           4,
-          'modules/hercules/notifications/no_users_activated.html', {});
+          'modules/hercules/notifications/no_users_activated.html', [serviceId]);
       } else {
-        NotificationService.removeNotification('noUsersActivated');
+        NotificationService.removeNotification(noUsersActivatedId);
+        var userErrorsId = serviceId + ':userErrors';
         if (summaryForService && summaryForService.error > 0) {
           NotificationService.addNotification(
             NotificationService.types.ALERT,
-            'userErrors',
+            userErrorsId,
             4,
-            'modules/hercules/notifications/user-errors.html', summaryForService);
+            'modules/hercules/notifications/user-errors.html', [serviceId], summaryForService);
         } else {
-          NotificationService.removeNotification('userErrors');
+          NotificationService.removeNotification();
         }
       }
     }
@@ -108,13 +111,22 @@
                   NotificationService.types.TODO,
                   'sipDomainNotConfigured',
                   5,
-                  'modules/hercules/notifications/sip_domain_not_configured.html', {});
+                  'modules/hercules/notifications/sip_domain_not_configured.html', [serviceId]);
               } else {
                 NotificationService.removeNotification('sipDomainNotConfigured');
               }
             });
           } else {
             NotificationService.removeNotification('sipDomainNotConfigured');
+            if (callServiceConnect && !callServiceConnect.enabled && !callServiceConnect.acknowledged) {
+              NotificationService.addNotification(
+                NotificationService.types.NEW,
+                'callServiceConnectAvailable',
+                5,
+                'modules/hercules/notifications/connect_available.html', [serviceId]);
+            } else {
+              NotificationService.removeNotification('callServiceConnectAvailable');
+            }
           }
         }
       });
