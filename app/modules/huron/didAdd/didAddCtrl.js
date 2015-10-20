@@ -6,7 +6,7 @@
     .controller('DidAddCtrl', DidAddCtrl);
 
   /* @ngInject */
-  function DidAddCtrl($rootScope, $scope, $state, $stateParams, $q, $translate, $window, ExternalNumberPool, EmailService, DidAddEmailService, Notification, Authinfo, $timeout, Log, LogMetricsService, Config, DidService) {
+  function DidAddCtrl($rootScope, $scope, $state, $stateParams, $q, $translate, $window, ExternalNumberPool, EmailService, DidAddEmailService, Notification, Authinfo, $timeout, Log, LogMetricsService, Config, DidService, TelephoneNumberService) {
     var vm = this;
     var firstValidDid = false;
     var editMode = false;
@@ -35,7 +35,7 @@
 
     vm.deletedNumbers = '';
     vm.tokenfieldid = 'didAddField';
-    vm.tokenplacehoder = $translate.instant('didManageModal.inputPlacehoder');
+    vm.tokenplaceholder = $translate.instant('didManageModal.inputPlacehoder');
     vm.fromEditTrial = $stateParams.fromEditTrial;
     vm.currentTrial = angular.copy($stateParams.currentTrial);
 
@@ -44,21 +44,14 @@
       createTokensOnBlur: true,
       limit: 50,
       tokens: [],
-      minLength: 10,
+      minLength: 9,
       beautify: false
     };
     vm.tokenmethods = {
       createtoken: function (e) {
-        var value = e.attrs.value.replace(/[^0-9]/g, '');
-        var vLength = value.length;
-        if (vLength === 10) {
-          e.attrs.value = '+1' + value;
-          e.attrs.label = value.replace(/(\d{3})(\d{3})(\d{4})/, "1 ($1) $2-$3");
-        } else if (vLength === 11) {
-          e.attrs.value = '+' + value;
-          e.attrs.label = value.replace(/(\d{1})(\d{3})(\d{3})(\d{4})/, "$1 ($2) $3-$4");
-        }
-
+        var tokenNumber = e.attrs.label;
+        e.attrs.value = TelephoneNumberService.getDIDValue(tokenNumber);
+        e.attrs.label = TelephoneNumberService.getDIDLabel(tokenNumber);
       },
       createdtoken: function (e) {
         if (!validateDID(e.attrs.value)) {
@@ -68,12 +61,13 @@
           if (isDidAlreadyPresent(e.attrs.value)) {
             angular.element(e.relatedTarget).addClass('invalid');
           }
-          DidService.addDid(e.attrs.value);
           if (!editMode && !firstValidDid) {
             firstValidDid = true;
             LogMetricsService.logMetrics('First valid DID number entered', LogMetricsService.getEventType('trialDidEntered'), LogMetricsService.getEventAction('keyInputs'), 200, moment(), 1, null);
           }
         }
+        // add to service after validation/duplicate checks
+        DidService.addDid(e.attrs.value);
         setPlaceholderText("");
         vm.submitBtnStatus = vm.checkForInvalidTokens() && vm.checkForDuplicates();
       },
@@ -86,6 +80,8 @@
 
         $timeout(function () {
           var tmpDids = DidService.getDidList().slice();
+          // reset invalid and list before setTokens
+          vm.invalidcount = 0;
           DidService.clearDidList();
           $('#didAddField').tokenfield('setTokens', tmpDids.toString());
         });
@@ -185,7 +181,7 @@
     }
 
     function validateDID(input) {
-      return /^\+([0-9]){10,12}$/.test(input);
+      return TelephoneNumberService.validateDID(input);
     }
 
     function checkForInvalidTokens() {
@@ -340,21 +336,10 @@
       var formattedDids = [];
       if (angular.isDefined(didList) && angular.isDefined(didList.length) && didList.length > 0) {
         _.forEach(didList, function (number) {
-          formattedDids.push(formatPhoneNumbers(number.pattern));
+          formattedDids.push(TelephoneNumberService.getDIDLabel(number.pattern));
         });
       }
       return formattedDids;
-    }
-
-    function formatPhoneNumbers(value) {
-      value = value.replace(/[^0-9]/g, '');
-      var vLength = value.length;
-      if (vLength === 10) {
-        value = value.replace(/(\d{3})(\d{3})(\d{4})/, "1 ($1) $2-$3");
-      } else if (vLength === 11) {
-        value = value.replace(/(\d{1})(\d{3})(\d{3})(\d{4})/, "$1 ($2) $3-$4");
-      }
-      return value;
     }
 
     function startTrial() {

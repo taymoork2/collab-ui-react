@@ -167,39 +167,47 @@
                 siteFeaturesPageObj: null
               }, // siteInfoCardObj
 
-              settingCardObjs: [{
+              commonSettingsCardObj: {
                 id: "CommonSettings",
                 label: null,
-                pageObjs: null,
-              }, {
+                pageObjs: null
+              }, // commonSettingsCardObj
+
+              meetingCenterSettingsCardObj: {
                 id: "MC",
                 label: "Meeting Center",
-                pageObjs: null,
-              }, {
+                pageObjs: null
+              },
+
+              trainingCenterSettingsCardObj: {
                 id: "TC",
                 label: "Training Center",
                 pageObjs: null
-              }, {
+              },
+
+              supportCenterSettingsCardObj: {
                 id: "SC",
                 label: "Support Center",
                 pageObjs: null,
 
-                webACDObj: {
+                webACDSettingsObj: {
                   id: "WebACD",
                   label: "WebACD",
                   pageObjs: null
                 },
 
-                remoteAccessObj: {
+                remoteAccessSettingsObj: {
                   id: "RA",
                   label: "Remote Access",
                   pageObjs: null
                 },
-              }, {
+              },
+
+              eventCenterSettingsCardObj: {
                 id: "EC",
                 label: "Event Center",
                 pageObjs: null
-              }, ], // settingCardObjs
+              },
 
               categoryObjs: [{
                 id: "EMAIL",
@@ -565,79 +573,67 @@
               "newPageObj=" + JSON.stringify(newPageObj);
             // $log.log(logMsg);
 
-            var categoryFound = false;
-            _this.webExSiteSettingsObj.categoryObjs.forEach(
-              function checkCategoryObj(categoryObj) {
-                if (
-                  (!categoryFound) &&
-                  (categoryId == categoryObj.id)
-                ) {
-
-                  categoryFound = true;
-
-                  var pageInList = false;
-                  var pageIndex = 0;
-
-                  categoryObj.pageObjs.forEach(
-                    function checkPageObj(pageObj) {
-                      if (!pageInList) {
-                        var localeCompareResult = newPageObj.label.localeCompare(
-                          pageObj.label,
-                          _this.locale
-                        );
-
-                        logMsg = funcName + ": " +
-                          "pageObj.label=" + pageObj.label + "\n" +
-                          "newPageObj.label=" + newPageObj.label + "\n" +
-                          "localeCompareResult=" + localeCompareResult;
-                        // $log.log(logMsg);
-
-                        if (localeCompareResult < 0) {
-                          logMsg = funcName + ": " +
-                            "Page obj inserted" + "\n" +
-                            "newPageObj=" + JSON.stringify(newPageObj);
-                          // $log.log(logMsg);
-
-                          categoryObj.pageObjs.splice(pageIndex, 0, newPageObj);
-
-                          pageInList = true;
-                        } else if (localeCompareResult === 0) {
-                          logMsg = funcName + ": " +
-                            "Page obj updated" + "\n" +
-                            "pageObj=" + JSON.stringify(pageObj) + "\n" +
-                            "newPageObj=" + JSON.stringify(newPageObj);
-                          $log.log(logMsg);
-
-                          pageObj.id = newPageObj.id;
-                          pageObj.pageId = newPageObj.pageId;
-                          pageObj.label = newPageObj.label;
-                          pageObj.iframeUrl = newPageObj.iframeUrl;
-                          pageObj.uiSref = newPageObj.uiSref;
-
-                          pageInList = true;
-                        }
-                      }
-
-                      ++pageIndex;
-                    } // checkPageObj()
-                  ); // categoryObj.pageObjs.forEach()
-
-                  if (!pageInList) {
-                    logMsg = funcName + ": " +
-                      "Page obj pushed" + "\n" +
-                      "newPageObj=" + JSON.stringify(newPageObj);
-                    // $log.log(logMsg);
-
-                    categoryObj.pageObjs.push(newPageObj);
-                  }
-                }
-              } // checkCategoryObj()
-            ); // categoryObjs.forEach()
-
-            if (!categoryFound) {
+            var categoryObj = _this.getCategoryObj(categoryId);
+            if (null == categoryObj) {
               logMsg = funcName + ": " +
                 categoryId + " cannot be processed!!!";
               $log.log(logMsg);
+            } else {
+              var pageInsertionDone = false;
+              var pageIndex = 0;
+
+              categoryObj.pageObjs.forEach(
+                function checkPageObj(pageObj) {
+                  if (!pageInsertionDone) {
+                    var localeCompareResult = newPageObj.label.localeCompare(
+                      pageObj.label,
+                      _this.locale
+                    );
+
+                    logMsg = funcName + ": " +
+                      "pageObj.label=" + pageObj.label + "\n" +
+                      "newPageObj.label=" + newPageObj.label + "\n" +
+                      "localeCompareResult=" + localeCompareResult;
+                    // $log.log(logMsg);
+
+                    if (localeCompareResult < 0) {
+                      logMsg = funcName + ": " +
+                        "Page obj inserted" + "\n" +
+                        "newPageObj=" + JSON.stringify(newPageObj);
+                      // $log.log(logMsg);
+
+                      categoryObj.pageObjs.splice(pageIndex, 0, newPageObj);
+
+                      pageInsertionDone = true;
+                    } else if (localeCompareResult === 0) {
+                      logMsg = funcName + ": " +
+                        "Page obj updated" + "\n" +
+                        "pageObj=" + JSON.stringify(pageObj) + "\n" +
+                        "newPageObj=" + JSON.stringify(newPageObj);
+                      $log.log(logMsg);
+
+                      pageObj.id = newPageObj.id;
+                      pageObj.pageId = newPageObj.pageId;
+                      pageObj.label = newPageObj.label;
+                      pageObj.iframeUrl = newPageObj.iframeUrl;
+                      pageObj.uiSref = newPageObj.uiSref;
+
+                      pageInsertionDone = true;
+                    }
+                  }
+
+                  ++pageIndex;
+                } // checkPageObj()
+              ); // categoryObj.pageObjs.forEach()
+
+              if (!pageInsertionDone) {
+                logMsg = funcName + ": " +
+                  "Page obj pushed" + "\n" +
+                  "newPageObj=" + JSON.stringify(newPageObj);
+                // $log.log(logMsg);
+
+                categoryObj.pageObjs.push(newPageObj);
+              }
             }
           } // addPage()
         }, // processSettingPagesInfo()
@@ -650,7 +646,11 @@
 
           updateEmailAllHostsBtnObj();
           updateSiteInfoCardObj();
-          updateSettingCardObjs();
+          updateCommonSettingsCardObj();
+          updateMeetingCenterCardObj();
+          updateEventCenterCardObj();
+          updateTrainingCenterCardObj();
+          updateSupportCenterCardObj();
 
           function updateEmailAllHostsBtnObj() {
             var btnLabel = $translate.instant("webexSiteSettingsLabels.emailAllHostsBtnTitle").replace(" ", "&nbsp;");
@@ -684,29 +684,81 @@
             // $log.log(logMsg);
           } // updateSiteInfoCardObj()
 
-          function updateSettingCardObjs() {
-            var funcName = "updateSettingCardObjs()";
+          function updateCommonSettingsCardObj() {
+            var funcName = "updateCommonSettingsCardObj()";
             var logMsg = "";
 
-            _this.webExSiteSettingsObj.settingCardObjs.forEach(
-              function updateSettingCardObj(settingCardObj) {
-                var cardId = settingCardObj.id;
+            var cardObj = _this.webExSiteSettingsObj.commonSettingsCardObj;
+            var categoryObj = _this.getCategoryObj(cardObj.id);
 
-                if ("CommonSettings" == settingCardObj.id) {
-                  settingCardObj.label = $translate.instant("webexSiteSettingsLabels.commonSettingsCardTitle");
-                } else if ("SC" == settingCardObj.id) {
-                  settingCardObj.webACDObj.pageObjs = _this.getCategoryObj(settingCardObj.webACDObj.id).pageObjs;
-                  settingCardObj.remoteAccessObj.pageObjs = _this.getCategoryObj(settingCardObj.remoteAccessObj.id).pageObjs;
-                }
+            cardObj.label = $translate.instant("webexSiteSettingsLabels.commonSettingsCardTitle");
+            cardObj.pageObjs = categoryObj.pageObjs;
 
-                settingCardObj.pageObjs = _this.getCategoryObj(cardId).pageObjs;
+            logMsg = funcName + ": " + "\n" +
+              "cardObj=" + JSON.stringify(cardObj);
+            // $log.log(logMsg);
+          } // updateCommonSettingsCardObj()
 
-                logMsg = funcName + ": " + "\n" +
-                  "settingCardObj=" + JSON.stringify(settingCardObj);
-                // $log.log(logMsg);
-              } // updateSettingCardObj()
-            ); // _this.webExSiteSettingsObj.settingCardObjs.forEach()
-          } // updateSettingCardObjs()
+          function updateMeetingCenterCardObj() {
+            var funcName = "updateMeetingCenterCardObj()";
+            var logMsg = "";
+
+            var cardObj = _this.webExSiteSettingsObj.meetingCenterSettingsCardObj;
+            var categoryObj = _this.getCategoryObj(cardObj.id);
+
+            cardObj.pageObjs = categoryObj.pageObjs;
+
+            logMsg = funcName + ": " + "\n" +
+              "cardObj=" + JSON.stringify(cardObj);
+            // $log.log(logMsg);
+          } // updateMeetingCenterCardObj
+
+          function updateEventCenterCardObj() {
+            var funcName = "updateEventCenterCardObj()";
+            var logMsg = "";
+
+            var cardObj = _this.webExSiteSettingsObj.eventCenterSettingsCardObj;
+            var categoryObj = _this.getCategoryObj(cardObj.id);
+
+            cardObj.pageObjs = categoryObj.pageObjs;
+
+            logMsg = funcName + ": " + "\n" +
+              "cardObj=" + JSON.stringify(cardObj);
+            $log.log(logMsg);
+          } // updateEventCenterCardObj()
+
+          function updateTrainingCenterCardObj() {
+            var funcName = "updateTrainingCenterCardObj()";
+            var logMsg = "";
+
+            var cardObj = _this.webExSiteSettingsObj.trainingCenterSettingsCardObj;
+            var categoryObj = _this.getCategoryObj(cardObj.id);
+
+            cardObj.pageObjs = categoryObj.pageObjs;
+
+            logMsg = funcName + ": " + "\n" +
+              "cardObj=" + JSON.stringify(cardObj);
+            // $log.log(logMsg);
+          } // updateTrainingCenterCardObj()
+
+          function updateSupportCenterCardObj() {
+            var funcName = "updateSupportCenterCardObj()";
+            var logMsg = "";
+
+            var cardObj = _this.webExSiteSettingsObj.supportCenterSettingsCardObj;
+            var categoryObj = _this.getCategoryObj(cardObj.id);
+            var webACDCategoryObj = _this.getCategoryObj(cardObj.webACDSettingsObj.id);
+            var remoteAccessCategoryObj = _this.getCategoryObj(cardObj.remoteAccessSettingsObj.id);
+
+            cardObj.webACDSettingsObj.pageObjs = webACDCategoryObj.pageObjs;
+            cardObj.remoteAccessSettingsObj.pageObjs = remoteAccessCategoryObj.pageObjs;
+
+            cardObj.pageObjs = categoryObj.pageObjs;
+
+            logMsg = funcName + ": " + "\n" +
+              "cardObj=" + JSON.stringify(cardObj);
+            // $log.log(logMsg);
+          } // updateSupportCenterCardObj()
         }, // updateDisplayInfo()
 
         getCategoryObj: function (categoryId) {
