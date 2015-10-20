@@ -2,16 +2,14 @@
 /* global AmCharts, $:false */
 
 angular.module('Squared')
-  .controller('ReportsCtrl', ['$scope', '$parse', '$stateParams', '$q', 'ReportsService', 'reportService', 'Log', 'Authinfo', 'UserListService', 'Config', '$translate', 'CannedDataService', 'WebExUtilsFact',
-    function ($scope, $parse, $stateParams, $q, ReportsService, reportService, Log, Authinfo, UserListService, Config, $translate, CannedDataService, WebExUtilsFact) {
+  .controller('ReportsCtrl', ['$scope', '$stateParams', '$q', 'ReportsService', 'reportService', 'Log', 'Authinfo', 'Config', '$translate', 'CannedDataService', 'WebExUtilsFact',
+    function ($scope, $stateParams, $q, ReportsService, reportService, Log, Authinfo, Config, $translate, CannedDataService, WebExUtilsFact) {
 
       $scope.showEngagement = true;
       $scope.showWebexReports = true;
-      $scope.showQuality = true;
 
       if ($stateParams.tab) {
         $scope.showEngagement = false;
-        $scope.showQuality = false;
         $scope.showWebexReports = $stateParams.tab === 'webex';
       }
 
@@ -52,9 +50,8 @@ angular.module('Squared')
         $scope.webexReportsObject = reportService.initReportsObject($scope.webexSelected);
       };
 
-      $scope.show = function (showEngagement,showQuality, showWebexReports) {
+      $scope.show = function (showEngagement, showWebexReports) {
         $scope.showEngagement = showEngagement;
-        $scope.showQuality = showQuality;
         $scope.showWebexReports = showWebexReports;
       };
 

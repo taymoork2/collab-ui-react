@@ -2,18 +2,7 @@
   'use strict';
 
   angular.module('WebExReports').controller('WebExReportsCtrl', [
-    '$scope',
-    '$rootScope',
-    '$log',
-    '$translate',
-    '$filter',
-    '$state',
-    '$stateParams',
-    '$sce',
-    'reportService',
-    'Notification',
-    'Authinfo',
-    'Config',
+    '$scope','$rootScope','$log','$translate','$filter','$state','$stateParams','$sce','reportService','Notification','Authinfo','Config',
     function (
       $scope,
       $rootScope,
@@ -29,7 +18,7 @@
       Config
     ) {
 
-      this.reportObject = reportService.initReportsObject();
+      this.reportObject = reportService.initReportsObject($stateParams.siteUrl);
 
       $scope.reportObject = this.reportObject;
 
