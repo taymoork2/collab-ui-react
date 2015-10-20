@@ -4,12 +4,14 @@
   padding: 0;
 }
 
+$aa-builder-header-height: 54px;
 @mixin aa-builder-height($rem_offset)
 {
-  $nav-pane-height: 52px;
-  $overlay-panel-height: 93px;
-  $aa-builder-header-height: 54px;
-  $aa-builder-base-offset: rem($nav-pane-height + $overlay-panel-height + $aa-builder-header-height);
+  /* base-offset includes navbar, overlay-heading and aa-builder-header (elements from top of page) */
+  $overlay-heading-height: 93px; /* no global variable */
+  $aa-builder-base-offset: rem($navbar-height + $overlay-heading-height + $aa-builder-header-height);
+
+  /* add to offset any additional value */
   $aa-builder-offset: $aa-builder-base-offset + $rem_offset;
   height: calc(100vh - #{$aa-builder-offset});
 }
@@ -63,7 +65,7 @@
 }
 
 #aa-header-row {
-  min-height: 54px;
+  height: $aa-builder-header-height;
   background-color: $brand-white;
 }
 
