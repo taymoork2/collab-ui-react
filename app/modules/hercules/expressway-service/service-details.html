@@ -63,35 +63,27 @@
       </p>
 
       <h5 class="black-header">
-        Depending services
-      </h5>
-
-      <div class="row">
-        <span class="small-4 column">
-          Management Connector
-        </span>
-        <span class="small-4 column end">
-          <span class="red" ng-show="expresswayServiceDetails.managementService.status === 'needs_attention'">
-            <i class="fa fa-circle"/>
-            <span class="hidden-xs">Needs attention</span>
-          </span>
-        </span>
-      </div>
-
-      <h5 class="black-header">
         Connectors on Hosts:
       </h5>
-      <div class="row" ng-repeat="connector in expresswayServiceDetails.selectedService.connectors">
-        <span class="small-4 column">
-          {{connector.host.host_name}}
+      <p class="row" ng-repeat="connector in expresswayServiceDetails.selectedService.connectors">
+        <span class="small-3 column">
+          <a ng-href="https://{{connector.host.host_name}}/">
+            {{connector.host.host_name}}
+          </a>
         </span>
-        <span class="small-4 column end">
-          <span class="red" ng-show="connector.status === 'needs_attention'">
-            <i class="fa fa-circle"/>
-            <span class="hidden-xs">Needs attention</span>
-          </span>
+        <span class="small-3 column">
+          <span translate="{{connector.state}}"></span>
         </span>
-      </div>
+
+        <span class="small-3 column end">
+
+          <a ng-click="expresswayServiceDetails.deleteHost(connector.host)"
+            ng-show="connector.state == 'offline'">
+            Remove
+          </a>
+        </span>
+
+      </p>
     </div>
 
     <p ng-if="!expresswayServiceDetails.cluster">
