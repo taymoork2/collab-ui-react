@@ -5,7 +5,8 @@
       </cr-reload-data>
     </div>
   </div>
-<div class="partner-reports">
+  <!-- dont show if there is only one option, aka if webex does not show -->
+<div class="partner-reports" ng-if="webexOptions.length > 0">
   <div class="reports-header row page-header">
     <div class="page-title columns medium-6">
       <h2 class="title-heading" translate="reportsPage.pageTitle"></h2>
