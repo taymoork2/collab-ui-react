@@ -233,6 +233,14 @@
       });
     };
 
+    vm.deleteHost = function (host) {
+      //console.log("Delete host ",host)
+      return ClusterService.deleteHost(vm.clusterId, host.serial).then(function () {
+        //TODO: Update page
+      }, XhrNotificationService.notify);
+
+    };
+
     /* @ngInject */
     function SoftwareUpgradeController($modalInstance) {
       var modalVm = this;
