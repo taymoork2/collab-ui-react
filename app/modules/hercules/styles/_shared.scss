@@ -1,6 +1,10 @@
 .hercules {
   background-color: $brand-white;
 
+  .tags {
+    border-radius: 3px;
+  }
+
   .typography-airy {
     h5{
       color: $brand-primary;
