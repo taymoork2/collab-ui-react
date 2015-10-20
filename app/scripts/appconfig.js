@@ -1093,7 +1093,7 @@ angular
           params: {
             aaName: ''
           },
-          templateUrl: 'modules/huron/callRouting/autoAttendant/builder/aaBuilderMain.tpl.html',
+          templateUrl: 'modules/huron/features/autoAttendant/builder/aaBuilderMain.tpl.html',
           controller: 'AABuilderMainCtrl',
           controllerAs: 'aaBuilderMain'
         })
@@ -1294,7 +1294,7 @@ angular
         .state('huronfeatures', {
           url: '/features',
           parent: 'hurondetails',
-          templateUrl: 'modules/huron/features/features.tpl.html',
+          templateUrl: 'modules/huron/features/featureLanding/features.tpl.html',
           controller: 'HuronFeaturesCtrl',
           controllerAs: 'huronFeaturesCtrl'
         })
@@ -1304,6 +1304,30 @@ angular
           controller: 'NewFeatureCtrl',
           controllerAs: 'newFeatureCtrl',
           templateUrl: 'modules/huron/features/newFeature/newFeature.tpl.html'
+        })
+        .state('huronfeatures.aabuilder', {
+          parent: 'hurondetails',
+          params: {
+            aaName: ''
+          },
+          templateUrl: 'modules/huron/features/autoAttendant/builder/aaBuilderMain.tpl.html',
+          controller: 'AABuilderMainCtrl',
+          controllerAs: 'aaBuilderMain'
+        })
+        .state('huronfeatures.deleteFeature', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'HuronFeatureDeleteCtrl',
+              controllerAs: 'huronFeatureDelete',
+              templateUrl: 'modules/huron/features/featureLanding/featureDeleteModal.tpl.html'
+            }
+          },
+          params: {
+            deleteFeatureName: null,
+            deleteFeatureId: null,
+            deleteFeatureType: null
+          }
         })
         .state('huronfeatures.deleteHuntGroup', {
           parent: 'modal',

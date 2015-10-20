@@ -5,14 +5,14 @@
   'use strict';
 
   angular
-    .module('uc.hurondetails')
+    .module('Huron')
     .directive('featureCards', featureCards);
 
   function featureCards() {
     return {
       restrict: 'E',
       scope: false,
-      templateUrl: 'modules/huron/features/featureCards.tpl.html'
+      templateUrl: 'modules/huron/features/featureLanding/featureCards.tpl.html'
     };
   }
 })();

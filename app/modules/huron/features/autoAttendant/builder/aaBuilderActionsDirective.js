@@ -13,7 +13,7 @@ angular
         },
         controller: 'AABuilderActionsCtrl',
         controllerAs: 'actions',
-        templateUrl: 'modules/huron/callRouting/autoAttendant/builder/aaBuilderActions.tpl.html'
+        templateUrl: 'modules/huron/features/autoAttendant/builder/aaBuilderActions.tpl.html'
       };
     }
   ]);

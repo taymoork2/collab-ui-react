@@ -42,7 +42,6 @@
           });
         }
       );
-
     }
 
     /*
@@ -92,7 +91,10 @@
           }
           $q.all(promises).then(
             function (result) {
-              vm.aaModel.ceInfos = AutoAttendantCeInfoModelService.getAllCeInfos(vm.aaModel.aaRecords);
+              AutoAttendantCeInfoModelService.getAllCeInfos(vm.aaModel.aaRecords)
+                .then(function (response) {
+                  vm.aaModel.ceInfos = response;
+                });
               vm.aaModel.ceInfos.sort(function (a, b) {
                 return a.name.localeCompare(b.name);
               });

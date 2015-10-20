@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('uc.hurondetails')
+    .module('Huron')
     .controller('NewFeatureModalCtrl', NewFeatureModalCtrl);
 
   /* @ngInject */
@@ -35,6 +35,10 @@
     function ok(featureCode) {
       if (featureCode === 'HG') {
         $state.go('huronHuntGroup');
+      } else if (featureCode === 'AA') {
+        $state.go('huronfeatures.aabuilder', {
+          aaName: ''
+        });
       }
       $modalInstance.close(featureCode);
     }
