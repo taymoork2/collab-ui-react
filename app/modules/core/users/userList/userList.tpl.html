@@ -19,8 +19,9 @@
     <div class="grid-refresh" ng-if="gridRefresh">
       <i class='icon icon-spinner icon-2x'></i>
     </div>
-    <div class="too-many-users" ng-if="tooManyUsers">
-      <span class="h2" translate="usersPage.tooManyUsersError"></span>
+    <div class="too-many-users" ng-if="activeFilter === 'all' && tooManyUsers">
+      <p class="h2" translate="usersPage.searchUser"></p>
+      <p class="h4" translate="usersPage.tooManyUsers"></p>
     </div>
   </div>
 </div>
