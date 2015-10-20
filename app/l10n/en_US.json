@@ -774,7 +774,7 @@
   "404Page": {
     "title": "404 Not Found",
     "text": "The page you requested cannot be found."
-    },
+  },
   "errors": {
     "status403": "Authorization failed. You do not have administrator priviledges. You will automatically be logged out in a few seconds.",
     "status401": "Authorization failed. Server unable to process authorization token. You will automatically be logged out in a few seconds.",
