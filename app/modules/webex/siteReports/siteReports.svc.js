@@ -256,7 +256,7 @@ angular.module('WebExReports').service('reportService', [
       return repts;
     };
 
-    this.initReportsObject = function (siteUrl) {
+    this.initReportsObject = function (requestedSiteUrl) {
       var reportsObject = {};
       var funcName = "initReportsObject()";
       var logMsg = funcName;
@@ -264,7 +264,7 @@ angular.module('WebExReports').service('reportService', [
       var _this = this;
       var displayLabel = null;
 
-      var siteUrl = siteUrl || '';
+      var siteUrl = requestedSiteUrl || '';
       var siteName = WebExUtilsFact.getSiteName(siteUrl);
       logMsg = funcName + ": " + "\n" +
         "siteUrl=" + siteUrl + "; " +

@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('WebExReports').controller('WebExReportsCtrl', [
-    '$scope','$rootScope','$log','$translate','$filter','$state','$stateParams','$sce','reportService','Notification','Authinfo','Config',
+    '$scope', '$rootScope', '$log', '$translate', '$filter', '$state', '$stateParams', '$sce', 'reportService', 'Notification', 'Authinfo', 'Config',
     function (
       $scope,
       $rootScope,
