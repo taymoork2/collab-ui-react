@@ -69,7 +69,8 @@
     "ciscoucError": "{{email}} did not successfully onboard Unified Communications.",
     "messageError": "Message: {{message}}",
     "userListError": "Error retrieving the user list. Please try reloading the page.",
-    "tooManyUsersError": "Use the search input above to find users.",
+    "searchUser": "Search for a user",
+    "tooManyUsers": "The user list is not displayed because there are more than 1000 users",
     "emailSuccess": "Email sent successfully.",
     "emailError": "Error sending email.",
     "convertUserSuccess": "successfully converted.",
@@ -223,8 +224,8 @@
     "alarmsTabDesc": "Alarm Management",
     "eventsTab": "Events",
     "eventsTabDesc": "Event Management",
-    "messengerTab": "Messenger",
-    "messengerTabDesc": "Messenger Administration"
+    "messengerTab": "Webex Messenger",
+    "messengerTabDesc": "Webex Messenger Administration"
   },
   "index": {
     "welcome": "Welcome!",
@@ -352,7 +353,8 @@
     "fair": "Fair",
     "poor": "Poor",
     "description": "Media quality is determined by measuring the amount of packet loss that is reported by the registered devices during all calls that are longer than fifteen seconds in duration.",
-    "mediaQualityGraphError": "There was an error while loading call quality data for {{customer}}."
+    "mediaQualityGraphError": "There was an error while loading call quality data for {{customer}}.",
+    "minutes": "Minutes"
   },
   "callMetrics": {
     "calls": "Calls",
@@ -767,7 +769,11 @@
   },
   "unauthorizedPage": {
     "title": "Unauthorized",
-    "text": "You are not authorized to access the page you requested."
+    "text": "Sorry! Your account is not authorized to access this page."
+  },
+  "404Page": {
+    "title": "404 Not Found",
+    "text": "The page you requested cannot be found."
   },
   "errors": {
     "status403": "Authorization failed. You do not have administrator priviledges. You will automatically be logged out in a few seconds.",
@@ -922,6 +928,7 @@
     "csvInvalidRow": "Row contains an incorrect number of columns.  Please verify the row contains six columns and try again.",
     "csvRequiredEmail": "The \"User ID/Email\" field is required. Please provide a valid email address and try again.",
     "csvDuplicateEmail": "Skipped due to duplicate email address.",
+    "bulkInvalidDID": "The \"Direct Line\" field contains an invalid number.  Please fix and try again.",
     "processBulkResponseError": "An error has occurred while reading the response. Please try again.",
     "processBulkError": "Unidentified error while processing the user. Please try again.",
     "bulk400Error": "Unidentified error in the user list. Please verify the user list and try again.",
@@ -982,7 +989,7 @@
     "addUsersDescription": "Select a method to upload your users.",
     "addUsersSimple": "Invite Users | Simple",
     "addUsersAdvanced": "Invite Users | Advanced",
-    "msgrSyncDesc": "Your orgnization is currently in Messenger Sync Mode. Please onboard new users in the WebEx Messenger administration tool. Consult your Cisco customer representative to enable this screen.",
+    "msgrSyncDesc": "Your organization has synchronization of users from Webex Messenger enabled. Users are provisioned from the Webex Messenger Administration tools.",
     "getStarted": "Get Started",
     "startTrial": "Start Trial",
     "doLater": "Do this later",
@@ -1595,11 +1602,15 @@
     "newDeviceActivation": "Activation code for new device:",
     "ciscoSX10": "Cisco SX10",
     "software": "Software",
-    "upgradeChannel": "Upgrade Channel",
     "serial": "Serial",
     "ipAddr": "IP Address",
     "macAddr": "MAC Address",
     "issues": "Issues"
+  },
+  "deviceUpgradeChannelEditPage": {
+    "instructions": "Choose which channel you want this device to automatically upgrade with:",
+    "deviceUpdated": "Device updated",
+    "updateFailed": "Device did not update its Software Update Channel in time"
   },
   "generateActivationCodeModal": {
     "title": "Activation Code",
@@ -1959,10 +1970,7 @@
     "settingPageLabel_WebACD_webacd_form": "WebACD Leave Message Forms",
 
     "settingPageLabel_RA_remote_options": "Remote Access Settings",
-    "settingPageLabel_RA_remote_groups": "Remote Access Groups",
-
-    "pageId_underDevelopment": "Under Development",
-    "pageId_xxxx": "Undefined"
+    "settingPageLabel_RA_remote_groups": "Remote Access Groups"
   },
   "webexSiteReports": {
     "title": "Reports",
@@ -2296,32 +2304,43 @@
     "deviceHeader": "Devices",
     "userEmailHeader": "User",
     "actionHeader": "Actions",
-    "lineListError": "Error retrieving the line list. Please try reloading the page."
-
+    "lineListError": "Error retrieving the user line association list. Please try reloading the page.",
+    "getCountError": "Failed to fetch record counts."
   },
 
   "messengerCiSync": {
-    "authRedirectHeading": "Authentication Redirect",
-    "authRedirectTooltip": "Is authentication redirected through Common Identity instead of CAS?",
-    "getFailed": "Failed getting CI Sync status",
-    "labelCILinkDate": "CI Link Date",
-    "labelOrgAdmin": "ORG Admin",
+    "authRedirectHeading": "Redirect Users to Common Identity Login Flow",
+    "authRedirectTooltip": "When enabled, Jabber clients login through Common Identity",
+    "errorAuthFailed": "Authorization failed: ",
+    "errorFailedCheckingCIEntitlements": "Failed checking user entitlements from Common Identity: ",
+    "errorFailedCheckingCIRoles": "Failed checking Common Identity user roles: ",
+    "errorFailedCheckingCustSuccessRole": "Failed checking if user has Customer Success Admin CI Role: ",
+    "errorFailedGettingCISyncStatus": "Failed getting Messenger Sync status: ",
+    "errorFailedRefreshingCISyncStatus": "Failed refreshing Messenger Sync status: ",
+    "errorFailedUpdatingCISync": "Failed updating Messenger Sync status: ",
+    "errorLacksEntitlements": "User lacks Customer Success Admin Role or Common Identity entitlements to view this content: ",
+    "errorLacksFullAdmin": "User lacks Full Admin role in Common Identity to view this content",
+    "errorUnauthorizedToView": "Unauthorized to view this content",
+    "http0": "Can't connect to service",
+    "http401": "401 Unauthorized",
+    "http404": "404 Not Found",
+    "http500": "500 Server Error",
+    "httpUnknown": " Unknown HTTP Error",
+    "labelCILinkDate": "Link Date",
     "labelOrgId": "Messenger Organization ID",
     "labelOrgName": "Messenger Organization Name",
-    "labelOpsAdmin": "OPS Admin",
     "labelUnauthorizedUser": "Unauthorized User",
-    "loading": "Loading CI Sync Status",
-    "orgAdminButtonText": "Org Admin",
-    "pageTitle": "Messenger CI Sync",
-    "patchFailed": "Failed updating CI Sync",
-    "patchSuccessful": "CI Sync updated",
+    "loading": "Loading Messenger Synchronization Status",
+    "orgAdminLinkText": "Launch Webex Messenger Admin Tool",
+    "pageTitle": "Webex Messenger",
+    "patchSuccessful": "Messenger Sync updated successfully",
     "patchSyncButtonText": "Update",
     "refresh": "Refresh",
-    "refreshFailed": "Failed refreshing CI Sync status",
-    "syncStatusHeading": "Sync Status",
-    "syncStatusTooltip": "Is syncing active between Messenger and Common Identity?",
-    "unauthorized": "Not authorized to view this state"
+    "refreshFailed": "Failed refreshing Messenger Sync status",
+    "syncStatusHeading": "Messenger User Synchronization",
+    "syncStatusTooltip": "When enabled, users are actively being synced from Messenger"
   },
+
   "huronHuntGroup": {
     "title": "Create Hunt Group",
     "namePlaceholder": "Name the Hunt Group",

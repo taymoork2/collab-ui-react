@@ -82,9 +82,13 @@
   };
 
   /* @ngInject */
-  function CallController(XhrNotificationService, NotificationService, ServiceStateChecker, ServiceDescriptor, $stateParams, $state, $modal,
+  function ExpresswayServiceController(XhrNotificationService, NotificationService, ServiceStateChecker, ServiceDescriptor, $stateParams, $state,
+    $modal,
     $scope, ClusterService, USSService2, ConverterService, ServiceStatusSummaryService) {
-    ClusterService.subscribe(angular.noop, {
+    ClusterService.subscribe(checkServiceState, {
+      scope: $scope
+    });
+    USSService2.subscribeStatusesSummary(extractSummaryForAService, {
       scope: $scope
     });
 
@@ -95,6 +99,7 @@
     vm.selectedRow = -1;
     //TODO: Don't like this linking to routes...
     vm.route = serviceType2RouteName(vm.currentServiceType);
+    vm.notificationTag = vm.currentServiceId;
 
     vm.clusters = ClusterService.getClusters();
     vm.clusterLength = function () {
@@ -102,8 +107,6 @@
     };
 
     vm.serviceIconClass = ServiceDescriptor.serviceIcon(vm.currentServiceId);
-
-    ServiceStateChecker.init(vm.currentServiceType, vm.currentServiceId);
 
     vm.serviceEnabled = false;
     ServiceDescriptor.isServiceEnabled(serviceType2ServiceId(vm.currentServiceType), function (a, b) {
@@ -127,9 +130,12 @@
       return ServiceStatusSummaryService.status(vm.currentServiceType, cluster);
     };
 
-    function extractSummaryForAService(res) {
-      var userStatusesSummary = res || {};
-      vm.userStatusSummary = _.find(userStatusesSummary, {
+    function checkServiceState() {
+      ServiceStateChecker.checkState(vm.currentServiceType, vm.currentServiceId);
+    }
+
+    function extractSummaryForAService() {
+      vm.userStatusSummary = _.find(USSService2.getStatusesSummary(), {
         serviceId: serviceType2ServiceId(vm.currentServiceType)
       });
     }
@@ -144,44 +150,18 @@
       });
     };
 
-    //USSService.getStatusesSummary(function (err, userStatusesSummary) {
-    //  $scope.userStatusesSummary = userStatusesSummary || {};
-    //  $scope.summary = function (serviceId) {
-    //    var summary = null;
-    //    if ($scope.userStatusesSummary) {
-    //      summary = _.find($scope.userStatusesSummary.summary, function (s) {
-    //        return s.serviceId == serviceId;
-    //      });
-    //    }
-    //    return summary || {
-    //        activated: 0,
-    //        notActivated: 0,
-    //        error: 0
-    //      };
-    //  };
-    //});
-
     vm.enableService = function (serviceId) {
       ServiceDescriptor.setServiceEnabled(serviceId, true, function (error) {
         if (error !== null) {
           XhrNotificationService.notify("Problems enabling the service");
         }
-        //console.log("ERROR disabling service:", error);
       });
       vm.serviceEnabled = true;
     };
-
-    USSService2.getStatusesSummary().then(extractSummaryForAService);
   }
 
   /* @ngInject */
-  function CallClusterSettingsController($stateParams) {
-    var vm = this;
-    vm.cluster = $stateParams.cluster;
-  }
-
-  /* @ngInject */
-  function CallDetailsController(XhrNotificationService, ServiceDescriptor, ServiceStatusSummaryService, $state, $modal, $stateParams,
+  function ExpresswayServiceDetailsController(XhrNotificationService, ServiceDescriptor, ServiceStatusSummaryService, $state, $modal, $stateParams,
     ClusterService) {
     var vm = this;
     vm.state = $state;
@@ -235,7 +215,7 @@
 
     vm.upgrade = function () {
       $modal.open({
-        templateUrl: "modules/hercules/call-service/software-upgrade-dialog.html",
+        templateUrl: "modules/hercules/expressway-service/software-upgrade-dialog.html",
         controller: SoftwareUpgradeController,
         controllerAs: "softwareUpgrade"
       }).result.then(function () {
@@ -245,12 +225,20 @@
 
     vm.showAlarms = function () {
       $modal.open({
-        templateUrl: "modules/hercules/call-service/alarms.html",
+        templateUrl: "modules/hercules/expressway-service/alarms.html",
         controller: AlarmsController,
         controllerAs: "alarmsDialog"
       }).result.then(function () {
         //console.log("Starting alarms dialog...");
       });
+    };
+
+    vm.deleteHost = function (host) {
+      //console.log("Delete host ",host)
+      return ClusterService.deleteHost(vm.clusterId, host.serial).then(function () {
+        //TODO: Update page
+      }, XhrNotificationService.notify);
+
     };
 
     /* @ngInject */
@@ -307,10 +295,11 @@
   }
 
   /* @ngInject */
-  function CallServiceSettingsController($state, $modal, ServiceDescriptor, Authinfo, USSService2, $stateParams, NotificationConfigService,
+  function ExpresswayServiceSettingsController($state, $modal, ServiceDescriptor, Authinfo, USSService2, $stateParams, NotificationConfigService,
     MailValidatorService, XhrNotificationService, CertService, Notification) {
     var vm = this;
     vm.config = "";
+    vm.wx2users = "";
     vm.serviceType = $stateParams.serviceType;
     vm.serviceId = serviceType2ServiceId(vm.serviceType);
 
@@ -374,10 +363,22 @@
         return XhrNotificationService.notify(err);
       }
       vm.config = config || {};
+      if (vm.config.wx2users.length > 0) {
+        vm.wx2users = _.map(vm.config.wx2users.split(','), function (user) {
+          return {
+            text: user
+          };
+        });
+      } else {
+        vm.wx2users = [];
+      }
     });
     vm.cluster = $stateParams.cluster;
 
     vm.writeConfig = function () {
+      vm.config.wx2users = _.map(vm.wx2users, function (data) {
+        return data.text;
+      }).toString();
       if (vm.config.wx2users && !MailValidatorService.isValidEmailCsv(vm.config.wx2users)) {
         Notification.error("hercules.errors.invalidEmail");
       } else {
@@ -403,7 +404,7 @@
 
     vm.confirmDisable = function (serviceId) {
       $modal.open({
-        templateUrl: "modules/hercules/call-service/confirm-disable-dialog.html",
+        templateUrl: "modules/hercules/expressway-service/confirm-disable-dialog.html",
         controller: DisableConfirmController,
         controllerAs: "disableConfirmDialog",
         resolve: {
@@ -431,7 +432,7 @@
 
     vm.confirmCertDelete = function (cert) {
       $modal.open({
-        templateUrl: "modules/hercules/call-service/confirm-certificate-delete.html",
+        templateUrl: "modules/hercules/expressway-service/confirm-certificate-delete.html",
         controller: ConfirmCertificateDeleteController,
         controllerAs: "confirmCertificateDelete",
         resolve: {
@@ -464,10 +465,10 @@
 
   angular
     .module('Hercules')
-    .controller('CallController', CallController)
-    .controller('CallDetailsController', CallDetailsController)
-    .controller('CallClusterSettingsController', CallClusterSettingsController)
-    .controller('CallServiceSettingsController', CallServiceSettingsController)
+    .controller('ExpresswayServiceController', ExpresswayServiceController)
+    .controller('ExpresswayServiceDetailsController', ExpresswayServiceDetailsController)
+    //.controller('ExpresswayClusterSettingsController', ExpresswayClusterSettingsController)
+    .controller('ExpresswayServiceSettingsController', ExpresswayServiceSettingsController)
     .controller('DisableConfirmController', DisableConfirmController)
     .controller('AlarmController', AlarmController);
 

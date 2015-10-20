@@ -1,0 +1,100 @@
+<div class="hercules typography-airy small-margin  side-view">
+  <div ng-hide="expresswayServiceDetails.serviceNotInstalled()">
+    <div class="header-panel">
+      <h3 ng-hide="expresswayServiceDetails.state.includes('*.list.details.cluster-settings') || expresswayServiceDetails.state.includes('*.list.details.alarm')">{{expresswayServiceDetails.cluster.name}}</h3>
+      <h3 ng-show="expresswayServiceDetails.state.includes('*.list.details.alarm')">{{expresswayServiceDetails.cluster.name}}: Alarm</h3>
+      <h3 ng-show="expresswayServiceDetails.state.includes('*.list.details.cluster-settings')">{{expresswayServiceDetails.cluster.name}}: Settings
+      </h3>
+      <h4>
+        <small>
+          <a ng-show="expresswayServiceDetails.state.includes('*.list.details')" ui-sref="{{expresswayServiceDetails.route}}.list.details.cluster-settings({cluster:expresswayServiceDetails.cluster, serviceType: expresswayServiceDetails.serviceType})">Edit</a>
+        </small>
+        <div class="right">
+          <a ng-show="expresswayServiceDetails.state.includes('*.list.details.cluster-settings') || expresswayServiceDetails.state.includes('*.list.details.alarm')" ui-sref="{{expresswayServiceDetails.state.current.name}}({cluster:expresswayServiceDetails.cluster})"><i class="icon icon-close"/></a>
+        </div>
+      </h4>
+      <hr>
+    </div>
+
+    <div ui-view="details-pane">
+      <h5 class="black-header">
+        Alarms
+      </h5>
+
+      <div ng-repeat="connector in combined = expresswayServiceDetails.managementService.connectors.concat(expresswayServiceDetails.selectedService.connectors)">
+        <div ng-repeat="alarm in connector.alarms" ng-show="connector.alarms.length > 0">
+          <span class="icon icon-error red"/>
+          <span class="glyphicon-class">{{alarm.title}}</span>
+          <a ui-sref="{{expresswayServiceDetails.route}}.list.details.alarm({alarm: alarm, host: connector.host.host_name})">View Alarm</a>
+        </div>
+      </div>
+
+      <p ng-if="expresswayServiceDetails.selectedService.alarm_count + expresswayServiceDetails.managementService.alarm_count == 0">
+        No alarms reported
+      </p>
+
+      <h5 class="black-header">Software Upgrades
+        <span class="right">
+          <div class="dropdown" on-toggle="dl.toggled(open)">
+            <a class="dropdown-toggle" href></a>
+            <ul class="dropdown-menu">
+              <li>
+                <a href>Schedule Upgrade</a>
+              </li>
+            </ul>
+          </div>
+        </span>
+      </h5>
+
+      <p>
+        Current version:
+        {{expresswayServiceDetails.selectedService.connectors[0].version}}
+      </p>
+
+      <div ng-if="expresswayServiceDetails.selectedService.software_upgrade_available">
+        <p>
+          New version:
+          {{expresswayServiceDetails.selectedService.not_approved_package.version}}
+        </p>
+        <button class="button secondary" ng-click="expresswayServiceDetails.upgrade()">Upgrade</button>
+      </div>
+      <p ng-if="!expresswayServiceDetails.selectedService.software_upgrade_available">
+        No new software available
+      </p>
+
+      <h5 class="black-header">
+        Connectors on Hosts:
+      </h5>
+      <p class="row" ng-repeat="connector in expresswayServiceDetails.selectedService.connectors">
+        <span class="small-3 column">
+          <a ng-href="https://{{connector.host.host_name}}/">
+            {{connector.host.host_name}}
+          </a>
+        </span>
+        <span class="small-3 column">
+          <span translate="{{connector.state}}"></span>
+        </span>
+
+        <span class="small-3 column end">
+
+          <a ng-click="expresswayServiceDetails.deleteHost(connector.host)"
+            ng-show="connector.state == 'offline'">
+            Remove
+          </a>
+        </span>
+
+      </p>
+    </div>
+
+    <p ng-if="!expresswayServiceDetails.cluster">
+      No clusters...
+    </p>
+  </div>
+</div>
+
+<div ng-show="expresswayServiceDetails.serviceNotInstalled()">
+  <div class="centered-info-pane">
+    Service is not installed on this cluster
+  </div>
+</div>
+</div>

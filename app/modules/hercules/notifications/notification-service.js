@@ -1,24 +1,28 @@
 (function () {
   'use strict';
 
-  function Notification(type, id, priority, template, data) {
+  function Notification(type, id, priority, template, tags, data) {
     this.type = type;
     this.template = template;
-    this.data = data;
     this.id = id;
     this.priority = priority;
+    this.tags = tags;
+    this.data = data;
   }
 
   /* @ngInject */
   function NotificationService() {
-    var notifications = {};
+    var notifications = [];
 
-    function addNotification(type, id, priority, template, data) {
-      notifications[id] = new Notification(type, id, priority, template, data);
+    function addNotification(type, id, priority, template, tags, opts) {
+      removeNotification(id);
+      notifications.push(new Notification(type, id, priority, template, tags, (opts || {}).data));
     }
 
     function removeNotification(id) {
-      delete notifications[id];
+      _.remove(notifications, {
+        id: id
+      });
     }
 
     function getNotifications() {
@@ -36,7 +40,8 @@
       removeNotification: removeNotification,
       types: {
         ALERT: 'alert',
-        TODO: 'todo'
+        TODO: 'todo',
+        NEW: 'new'
       }
     };
   }

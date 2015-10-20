@@ -16,9 +16,5 @@
     it('should initialize as viewed from an unknown user role', function () {
       expect(ctrl.adminType).toBe(ctrl.adminTypes.unknown);
     });
-
-    it('should by default not show debug UI', function () {
-      expect(ctrl.dev).toBe(false);
-    });
   });
 })();

@@ -1,19 +1,22 @@
 <div class="hercules-notifications">
-  <!-- Bell -->
-  <a ng-click="notificationController.showNotifications = !notificationController.showNotifications">
+  <span class="notification-bell"
+        ng-click="notificationController.showNotifications = !notificationController.showNotifications">
     <i class="fa fa-bell" />
-  </a>
+  </span>
 
   <!-- Bubble with amount of notifications. If there are none (length == 0) it doesn't get shown -->
-  <div class="amountBubble" ng-if="notificationController.notificationsLength() > 0">
-    <span class="{{notificationController.amountBubbleType}}">{{notificationController.notificationsLength()}}</span>
+  <div class="amountBubble"
+       ng-if="notificationController.filteredNotifications().length > 0">
+    <span
+      class="notification-{{notificationController.amountBubbleType()}}">{{notificationController.filteredNotifications().length}}</span>
   </div>
 
   <!-- List of notifications -->
   <ul class="entries"
-      ng-show="notificationController.showNotifications && notificationController.notificationsLength() > 0">
-    <li class="notif" ng-repeat="(id,notification) in notificationController.notifications">
-      <span class="badge-wrapper label notification-{{notification.type}}">{{notificationController.typeDisplayName(notification.type)}}<!--<span class="badge badge-custom-warn {{notification.type}}"></span>--></span>
+      ng-show="notificationController.showNotifications && notificationController.filteredNotifications().length > 0">
+    <li class="notif"
+        ng-repeat="notification in notificationController.filteredNotifications() | orderBy:'priority' ">
+      <span class="badge-wrapper label notification-{{notification.type}}">{{notificationController.typeDisplayName(notification.type)}}</span>
 
       <div class="notif-wrapper">
         <ng-include src="notification.template"></ng-include>

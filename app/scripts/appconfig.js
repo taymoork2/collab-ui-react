@@ -17,6 +17,24 @@ angular
           },
           authenticate: false
         })
+        .state('unauthorized', {
+          url: '/unauthorized',
+          views: {
+            'main@': {
+              templateUrl: 'modules/squared/views/unauthorized.html',
+            }
+          },
+          authenticate: false
+        })
+        .state('404', {
+          url: '/404',
+          views: {
+            'main@': {
+              templateUrl: 'modules/squared/views/404.html',
+            }
+          },
+          authenticate: false
+        })
         .state('main', {
           views: {
             'main@': {
@@ -38,11 +56,6 @@ angular
           url: '/partner',
           parent: 'main',
           abstract: true
-        })
-        .state('unauthorized', {
-          url: '/unauthorized',
-          templateUrl: 'modules/squared/views/unauthorized.html',
-          parent: 'main'
         })
         .state('sidepanel', {
           abstract: true,
@@ -705,11 +718,32 @@ angular
               templateUrl: 'modules/squared/devices/overview/deviceHeader.tpl.html'
             }
           },
+          resolve: {
+            channels: /* @ngInject */ function (CsdmUpgradeChannelService) {
+              return CsdmUpgradeChannelService.getUpgradeChannelsPromise();
+            }
+          },
           params: {
             currentDevice: {}
           },
           data: {
             displayName: 'Device Overview'
+          }
+        })
+        .state('device-overview.edit', {
+          templateUrl: 'modules/squared/devices/overview/deviceUpgradeChannelEdit.tpl.html',
+          controller: 'DeviceUpgradeChannelEditCtrl',
+          controllerAs: 'deviceUpgradeChannelEdit',
+          resolve: {
+            channels: /* @ngInject */ function (CsdmUpgradeChannelService) {
+              return CsdmUpgradeChannelService.getUpgradeChannelsPromise();
+            }
+          },
+          params: {
+            currentDevice: {}
+          },
+          data: {
+            displayName: 'Software Update Channel'
           }
         })
 
@@ -1255,7 +1289,7 @@ angular
           parent: 'hurondetails',
           controller: 'NewFeatureCtrl',
           controllerAs: 'newFeatureCtrl',
-          templateUrl: 'modules/huron/features/newFeature/newFeature.tpl.html',
+          templateUrl: 'modules/huron/features/newFeature/newFeature.tpl.html'
         })
         .state('huronfeatures.deleteHuntGroup', {
           parent: 'modal',
@@ -1293,9 +1327,9 @@ angular
           parent: 'main'
         })
         .state('calendar-service', {
-          templateUrl: 'modules/hercules/call-service/call.html',
-          controller: 'CallController',
-          controllerAs: 'call',
+          templateUrl: 'modules/hercules/expressway-service/overview.html',
+          controller: 'ExpresswayServiceController',
+          controllerAs: 'exp',
           data: {
             serviceType: "c_cal"
           },
@@ -1306,18 +1340,16 @@ angular
           url: '/services/calendar',
           views: {
             'fullPane': {
-              templateUrl: 'modules/hercules/call-service/call-list.html',
-              controller: 'CallController',
-              controllerAs: 'call'
+              templateUrl: 'modules/hercules/expressway-service/cluster-list.html'
             }
           }
         })
         .state('calendar-service.list.details', {
           views: {
             'rightPane': {
-              controllerAs: 'callDetails',
-              controller: 'CallDetailsController',
-              templateUrl: 'modules/hercules/call-service/call-details.html'
+              controllerAs: 'expresswayServiceDetails',
+              controller: 'ExpresswayServiceDetailsController',
+              templateUrl: 'modules/hercules/expressway-service/service-details.html'
             }
           },
           params: {
@@ -1328,7 +1360,7 @@ angular
         .state('calendar-service.list.details.cluster-settings', {
           views: {
             'details-pane': {
-              templateUrl: 'modules/hercules/call-service/cluster-settings.html'
+              templateUrl: 'modules/hercules/expressway-service/cluster-settings.html'
             }
           }
         })
@@ -1337,7 +1369,7 @@ angular
             'details-pane': {
               controller: 'AlarmController',
               controllerAs: 'alarmCtrl',
-              templateUrl: 'modules/hercules/call-service/alarm-details.html'
+              templateUrl: 'modules/hercules/expressway-service/alarm-details.html'
             }
           },
           params: {
@@ -1349,7 +1381,7 @@ angular
           url: '/services/calendar/about',
           views: {
             'fullPane': {
-              templateUrl: 'modules/hercules/call-service/calendar-about.html'
+              templateUrl: 'modules/hercules/expressway-service/calendar-about.html'
             }
           }
         })
@@ -1357,9 +1389,9 @@ angular
           url: '/services/calendar/settings',
           views: {
             'fullPane': {
-              controllerAs: 'callServiceSettings',
-              controller: 'CallServiceSettingsController',
-              templateUrl: 'modules/hercules/call-service/calendar-service-settings.html'
+              controllerAs: 'expresswayServiceSettings',
+              controller: 'ExpresswayServiceSettingsController',
+              templateUrl: 'modules/hercules/expressway-service/calendar-service-settings.html'
             }
           },
           params: {
@@ -1367,30 +1399,28 @@ angular
           }
         })
         .state('call-service', {
-          templateUrl: 'modules/hercules/call-service/call.html',
-          controller: 'CallController',
-          controllerAs: 'call',
+          templateUrl: 'modules/hercules/expressway-service/overview.html',
+          controller: 'ExpresswayServiceController',
+          controllerAs: 'exp',
           data: {
             serviceType: "c_ucmc"
           },
-          parent: 'main',
+          parent: 'main'
         })
         .state('call-service.list', {
           url: '/services/call',
           views: {
             'fullPane': {
-              templateUrl: 'modules/hercules/call-service/call-list.html',
-              controller: 'CallController',
-              controllerAs: 'call'
+              templateUrl: 'modules/hercules/expressway-service/cluster-list.html'
             }
           }
         })
         .state('call-service.list.details', {
           views: {
             'rightPane': {
-              controllerAs: 'callDetails',
-              controller: 'CallDetailsController',
-              templateUrl: 'modules/hercules/call-service/call-details.html'
+              controllerAs: 'expresswayServiceDetails',
+              controller: 'ExpresswayServiceDetailsController',
+              templateUrl: 'modules/hercules/expressway-service/service-details.html'
             }
           },
           params: {
@@ -1401,7 +1431,7 @@ angular
         .state('call-service.list.details.cluster-settings', {
           views: {
             'details-pane': {
-              templateUrl: 'modules/hercules/call-service/cluster-settings.html'
+              templateUrl: 'modules/hercules/expressway-service/cluster-settings.html'
             }
           }
         })
@@ -1410,7 +1440,7 @@ angular
             'details-pane': {
               controller: 'AlarmController',
               controllerAs: 'alarmCtrl',
-              templateUrl: 'modules/hercules/call-service/alarm-details.html'
+              templateUrl: 'modules/hercules/expressway-service/alarm-details.html'
             }
           },
           params: {
@@ -1422,9 +1452,9 @@ angular
           url: '/services/call/settings',
           views: {
             'fullPane': {
-              controllerAs: 'callServiceSettings',
-              controller: 'CallServiceSettingsController',
-              templateUrl: 'modules/hercules/call-service/call-service-settings.html'
+              controllerAs: 'expresswayServiceSettings',
+              controller: 'ExpresswayServiceSettingsController',
+              templateUrl: 'modules/hercules/expressway-service/call-service-settings.html'
             }
           },
           params: {
@@ -1435,7 +1465,7 @@ angular
           url: '/services/call/about',
           views: {
             'fullPane': {
-              templateUrl: 'modules/hercules/call-service/call-about.html'
+              templateUrl: 'modules/hercules/expressway-service/call-about.html'
             }
           }
         })

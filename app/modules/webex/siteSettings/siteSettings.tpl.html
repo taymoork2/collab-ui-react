@@ -8,49 +8,69 @@
         {{WebExSiteSettings.siteSettingsObj.pageTitle}}
       </span>
     </div>
-    <div id="emallAllHostsButton" class="page-option-buttons">
+    
+    <div id="emallAllHostsButton" 
+         class="page-option-buttons"
+         ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
+         
      <a class="button large"
          id={{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.id}}
          name={{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.id}}
-         ui-sref={{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.pageObj.uiSref}}
-         ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
+         ui-sref={{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.pageObj.uiSref}}>
 
         <span translate="webexSiteSettingsLabels.emailAllHostsBtnTitle"></span>
       </a>
-      </div>
+    </div>
   </div>
 
   <div>
     <!-- breadcrumbs -->
+    <ul id="siteSettingsBreadCrumbs"
+        name="siteSettingsBreadCrumbs" class="breadcrumbs">
+        
+      <li>
+        <a id="siteListCrumb"
+           ui-sref="site-list"
+           translate="siteList.conferencing">
+        </a>
+      </li>
 
-      <ul id="siteSettingsBreadCrumbs"
-         name="siteSettingsBreadCrumbs" class="breadcrumbs">
-        <li>
-          <a id="siteListCrumb"
-             ui-sref="site-list"
-             translate="siteList.conferencing">
-          </a>
-        </li>
-
-        <li class="current">
-          {{WebExSiteSettings.siteSettingsObj.pageTitleFull}}
-        </li>
-      </ul>
+      <li class="current">
+        {{WebExSiteSettings.siteSettingsObj.pageTitleFull}}
+      </li>
+    </ul>
+    
     <!--cards -->
-      <cs-card-layout id="configureCards" ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
-        <!-- Info card -->
-        <div ng-include="'modules/webex/siteSettings/siteInfoCard.tpl.html'"></div>
+    <cs-card-layout id="configureCards" ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
+      <!-- Info card -->
+      <div ng-include="'modules/webex/siteSettings/siteInfoCard.tpl.html'"></div>
+    </cs-card-layout>
 
-        <!-- Setting cards -->
-        <div ng-include="'modules/webex/siteSettings/siteSettingsCards.tpl.html'"></div>
-      </cs-card-layout>
+    <cs-card-layout id="configureCards" ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
+      <!-- Common Settings card -->
+      <div ng-include="'modules/webex/siteSettings/commonSettingsCard.tpl.html'"></div>
+    </cs-card-layout>
+      
+    <cs-card-layout id="configureCards" ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
+      <!-- Meeting Center Settings card -->
+      <div ng-include="'modules/webex/siteSettings/meetingCenterSettingsCard.tpl.html'"></div>
+      
+      <!-- Training Center Settings card -->
+      <div ng-include="'modules/webex/siteSettings/trainingCenterSettingsCard.tpl.html'"></div>
+      
+      <!-- Support Center Settings card -->
+      <div ng-include="'modules/webex/siteSettings/supportCenterSettingsCard.tpl.html'"></div>
+      
+      <!-- Event Center Settings card -->
+      <div ng-include="'modules/webex/siteSettings/eventCenterSettingsCard.tpl.html'"></div>
+    </cs-card-layout>
 
     <!-- WebEx site admin cross launch -->
     <div class="row">
       <a href=""
          onClick="document.getElementById('hiddenButton').click();">
 
-        Other&nbsp;Settings
+        Launch&nbsp;WebEx&nbsp;Site&nbsp;Admin
       </a>
     </div>
   </div>
