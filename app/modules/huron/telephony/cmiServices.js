@@ -97,8 +97,21 @@
     });
   })
 
+  .factory('NumberSearchServiceV2', function ($resource, HuronConfig) {
+    //var baseUrl = HuronConfig.getMockHgUrl();
+    var baseUrl = HuronConfig.getCmiV2Url();
+    return $resource(baseUrl + '/customers/:customerId/numbers', {
+      //secret: 'sunlight',
+      customerId: '@customerId',
+      number: '@number'
+    });
+  })
+
   .factory('HuntGroupServiceV2', function ($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/features/huntgroups/:huntGroupId', {
+    //var baseUrl = HuronConfig.getMockHgUrl();
+    var baseUrl = HuronConfig.getCmiV2Url();
+    return $resource(baseUrl + '/customers/:customerId/features/huntgroups/:huntGroupId', {
+      //secret: 'sunlight',
       customerId: '@customerId',
       huntGroupId: '@huntGroupId'
     }, {});

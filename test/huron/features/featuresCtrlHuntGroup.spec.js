@@ -92,10 +92,11 @@ describe('Features Controller', function () {
   });
 
   it('should get list of huntGroups and if back end call fails should show error notification', function () {
-    getHGListDeferred.reject();
+    getHGListDeferred.reject(getHGListFailureResp);
     $scope.$apply();
     $timeout.flush();
-    expect(Notification.errorResponse);
+    expect(Notification.errorResponse).toHaveBeenCalledWith(getHGListFailureResp,
+      'huntGroupDetails.failedToLoadHuntGroups');
   });
 
   it('should set the pageState to Loading when controller is getting data from back-end', function () {

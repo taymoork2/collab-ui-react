@@ -6,7 +6,7 @@
     .controller('HuntGroupSetupAssistantCtrl', HuntGroupSetupAssistantCtrl);
 
   /* @ngInject */
-  function HuntGroupSetupAssistantCtrl($scope, $state, Config, $http, NumberSearchService, Notification) {
+  function HuntGroupSetupAssistantCtrl($scope, $state, Config, $http, HuntGroupService, Notification) {
     var vm = this;
     vm.pageIndex = 0;
 
@@ -22,7 +22,7 @@
     vm.selectHuntGroupNumber = selectHuntGroupNumber;
     vm.selectHuntGroupUser = selectHuntGroupUser;
     vm.fetchNumbers = fetchNumbers;
-    vm.removeNumberSelection = removeNumberSelection;
+    vm.unSelectHuntGroupNumber = unSelectHuntGroupNumber;
 
     vm.selected = undefined;
     vm.huntGroupName = undefined;
@@ -47,7 +47,10 @@
     // ==============================================
 
     function fetchNumbers(typedNumber) {
-      return NumberSearchService.fetchSuggestions(typedNumber, vm.selectedPilotNumbers, onFetchNumbersFailure);
+      return HuntGroupService.getPilotNumberSuggestions(
+        typedNumber,
+        vm.selectedPilotNumbers,
+        onFetchNumbersFailure);
     }
 
     function onFetchNumbersFailure(response) {
@@ -58,7 +61,7 @@
       vm.selectedPilotNumbers.push($item.number);
     }
 
-    function removeNumberSelection(number) {
+    function unSelectHuntGroupNumber(number) {
       vm.selectedPilotNumbers.splice(vm.selectedPilotNumbers.indexOf(number), 1);
     }
 

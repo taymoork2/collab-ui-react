@@ -26,7 +26,7 @@
   margin-left: auto;
   margin-right: auto;
   border: 0;
-  color: $color-dark-1;
+  color: $gray-dark-1;
 
   // Search-icon.
   .input-search {
@@ -78,7 +78,7 @@
   .dropdown-menu {
     min-width: 28rem;
     .active > a {
-      background: $color-light-2;
+      background: $gray-light-2;
     }
 
     & li a {
@@ -89,7 +89,7 @@
     & span {
       font-size: $font-size-h3;
       font-family: $brand-font-cisco-TT-Extra-Light;
-      color: $color-dark-2;
+      color: $gray-dark-2;
     }
   }
 }
