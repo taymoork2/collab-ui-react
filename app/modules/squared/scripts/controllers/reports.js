@@ -7,9 +7,11 @@ angular.module('Squared')
 
       $scope.showEngagement = true;
       $scope.showWebexReports = true;
+      $scope.showQuality = true;
 
       if ($stateParams.tab) {
         $scope.showEngagement = false;
+        $scope.showQuality = false;
         $scope.showWebexReports = $stateParams.tab === 'webex';
       }
 
@@ -50,8 +52,9 @@ angular.module('Squared')
         $scope.webexReportsObject = reportService.initReportsObject($scope.webexSelected);
       };
 
-      $scope.show = function (showEngagement, showWebexReports) {
+      $scope.show = function (showEngagement,showQuality, showWebexReports) {
         $scope.showEngagement = showEngagement;
+        $scope.showQuality = showQuality;
         $scope.showWebexReports = showWebexReports;
       };
 
