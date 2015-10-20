@@ -2,7 +2,7 @@
   'use strict';
 
   /*ngInject*/
-  function USSService2($http, ConfigService, Authinfo, CsdmPoller) {
+  function USSService2($http, ConfigService, Authinfo, CsdmPoller, CsdmHubFactory) {
     var cachedUserStatusSummary = {};
 
     var fetchStatusesSummary = function () {
@@ -13,7 +13,8 @@
         });
     };
 
-    var userStatusesSummaryPoller = CsdmPoller.create(fetchStatusesSummary);
+    var hub = CsdmHubFactory.create();
+    var userStatusesSummaryPoller = CsdmPoller.create(fetchStatusesSummary, hub);
 
     var statusesParameterRequestString = function (serviceId, state, limit) {
       var statefilter = state ? "&state=" + state : "";
@@ -82,7 +83,7 @@
       updateOrg: updateOrg,
       getStatusesSummary: getStatusesSummary,
       getStatuses: getStatuses,
-      subscribeStatusesSummary: userStatusesSummaryPoller.subscribe
+      subscribeStatusesSummary: hub.on
     };
   }
 

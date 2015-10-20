@@ -85,10 +85,12 @@
   function ExpresswayServiceController(XhrNotificationService, NotificationService, ServiceStateChecker, ServiceDescriptor, $stateParams, $state,
     $modal,
     $scope, ClusterService, USSService2, ConverterService, ServiceStatusSummaryService) {
-    ClusterService.subscribe(clustersUpdated, {
+
+    ClusterService.subscribe('data', clustersUpdated, {
       scope: $scope
     });
-    USSService2.subscribeStatusesSummary(extractSummaryForAService, {
+
+    USSService2.subscribeStatusesSummary('data', extractSummaryForAService, {
       scope: $scope
     });
 
