@@ -17,6 +17,24 @@ angular
           },
           authenticate: false
         })
+        .state('unauthorized', {
+          url: '/unauthorized',
+          views: {
+            'main@': {
+              templateUrl: 'modules/squared/views/unauthorized.html',
+            }
+          },
+          authenticate: false
+        })
+        .state('404', {
+          url: '/404',
+          views: {
+            'main@': {
+              templateUrl: 'modules/squared/views/404.html',
+            }
+          },
+          authenticate: false
+        })
         .state('main', {
           views: {
             'main@': {
@@ -38,11 +56,6 @@ angular
           url: '/partner',
           parent: 'main',
           abstract: true
-        })
-        .state('unauthorized', {
-          url: '/unauthorized',
-          templateUrl: 'modules/squared/views/unauthorized.html',
-          parent: 'main'
         })
         .state('sidepanel', {
           abstract: true,
