@@ -133,35 +133,42 @@
   };
 }
 /**
-  New styling
-  */
-  .hercules{
-    .header-panel{
-      h3,h4{
-        display: table-cell;
-      }
-      h3{
-        padding-right: 2rem;
-      }
-      hr{
-        margin-top: 1rem;
-        margin-bottom: 1rem;
-      }
+New styling
+*/
+.hercules {
+  .header-panel {
+    h3, h4 {
+      display: table-cell;
+    }
+    h3 {
+      padding-right: 2rem;
+    }
+    hr {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
     }
   }
-  /* Detail */
-  .side-view{
-    padding-top: 2rem;
-    .icon.icon-three-dots{
-      color: #666666 !important;
-    }
-    h5{
-      padding-top: 1rem !important;
-    }
-    .icon.icon-close{
-      color:black;
-      position: absolute;
-      top: 1.25rem;
-      right: 2rem;
-    }
+}
+
+/* Detail */
+.side-view {
+  padding-top: 2rem;
+  .icon.icon-three-dots {
+    color: #666666 !important;
   }
+  h5 {
+    padding-top: 1rem !important;
+  }
+  .icon.icon-close {
+    color: black;
+    position: absolute;
+    top: 1.25rem;
+    right: 2rem;
+  }
+}
+
+/* Fix alert crap */
+.fix-alert-margins {
+  margin-right: 0px;
+  margin-left: 0px;
+}

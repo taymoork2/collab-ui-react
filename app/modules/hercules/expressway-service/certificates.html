@@ -4,14 +4,16 @@
 
 <p>
   Use certificates provided from Cisco Collaboration default trust list for the encrypted SIP
-  calls, or upload self-signed certificates.
+  calls, or upload your own certificates.
 </p>
+<p>
 
 <div ng-if="expresswayServiceSettings.certificates.length == 0">
   <p><em>No certificates uploaded. Using the default trust list.</em></p>
 </div>
 
 <div ng-if="expresswayServiceSettings.certificates.length > 0">
+  <p><em>Using the following uploaded certificates:</em></p>
   <div data-ng-repeat="cert in expresswayServiceSettings.certificates" class="row">
     <div class="small-10 columns">
       <p>{{cert.decoded.subjectDN}}<br>Expires: {{cert.decoded.notAfter | date:'yyyy-MM-dd'}}</p>
@@ -26,7 +28,7 @@
   </div>
 </div>
 
-<button class="button secondary" name="file" accept="application/x-x509-ca-cert"
+<button style="margin-top: 0px;" class="button secondary" name="file" accept="application/x-x509-ca-cert"
      ngf-select="expresswayServiceSettings.uploadCert($file, $event)"
      ng-model="certFile"
      loading="expresswayServiceSettings.uploadingCert">
