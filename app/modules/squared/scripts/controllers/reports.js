@@ -2,11 +2,12 @@
 /* global AmCharts, $:false */
 
 angular.module('Squared')
-  .controller('ReportsCtrl', ['$scope', '$stateParams', '$q', 'ReportsService', 'reportService', 'Log', 'Authinfo', 'Config', '$translate', 'CannedDataService', 'WebExUtilsFact',
-    function ($scope, $stateParams, $q, ReportsService, reportService, Log, Authinfo, Config, $translate, CannedDataService, WebExUtilsFact) {
+  .controller('ReportsCtrl', ['$scope', '$stateParams', '$q', 'ReportsService', 'WebexReportService', 'Log', 'Authinfo', 'Config', '$translate', 'CannedDataService', 'WebExUtilsFact',
+    function ($scope, $stateParams, $q, ReportsService, WebexReportService, Log, Authinfo, Config, $translate, CannedDataService, WebExUtilsFact) {
 
       $scope.showEngagement = true;
       $scope.showWebexReports = true;
+      $scope.webexReportsObject = {};
 
       if ($stateParams.tab) {
         $scope.showEngagement = false;
@@ -31,15 +32,15 @@ angular.module('Squared')
         }
 
         $q.all(promiseChain).then(function () {
-          var selecteIndex = 0;
+          var selectedIndex = 0;
           if ($stateParams.tab === 'webex') {
             _.forEach($scope.webexOptions, function (val, index) {
               if (val === $stateParams.siteUrl) {
-                selecteIndex = index;
+                selectedIndex = index;
               }
             });
           }
-          $scope.webexSelected = $scope.webexOptions[selecteIndex];
+          $scope.webexSelected = $scope.webexOptions[selectedIndex];
           $scope.updateWebexReports();
         });
       }
@@ -47,7 +48,7 @@ angular.module('Squared')
       generateWebexReportsUrl();
 
       $scope.updateWebexReports = function () {
-        $scope.webexReportsObject = reportService.initReportsObject($scope.webexSelected);
+        $scope.webexReportsObject = WebexReportService.initReportsObject($scope.webexSelected);
       };
 
       $scope.show = function (showEngagement, showWebexReports) {

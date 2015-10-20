@@ -3,7 +3,7 @@
 describe('Controller: ReportsCtrl', function () {
 
   var $controller, $scope, $stateParams,
-    $state, reportService, Authinfo, $translate, $sce;
+    $state, WebexReportService, Authinfo, $translate, $sce;
 
   //beforeEach(module('wx2AdminWebClientApp'));
 
@@ -16,7 +16,7 @@ describe('Controller: ReportsCtrl', function () {
       'siteUrl': 'go.webex.com'
     };
 
-    reportService = {
+    WebexReportService = {
 
       'getReports': function () {
         var sections = {
@@ -36,7 +36,7 @@ describe('Controller: ReportsCtrl', function () {
         };
         return reportObject;
       }
-    }; //reportService
+    }; //WebexReportService
 
     Authinfo = {
       'getPrimaryEmail': function () {
@@ -56,7 +56,7 @@ describe('Controller: ReportsCtrl', function () {
       }
     };
 
-    spyOn(reportService, 'getReports');
+    spyOn(WebexReportService, 'getReports');
     spyOn(Authinfo, 'getPrimaryEmail').and.returnValue("mojoco@webex.com");
 
     var controller = $controller('WebExReportsCtrl', {
@@ -65,14 +65,14 @@ describe('Controller: ReportsCtrl', function () {
       $translate: $translate,
       Authinfo: Authinfo,
       $sce: $sce,
-      reportService: reportService
+      WebexReportService: WebexReportService
     });
 
     //$scope.$apply();
   }));
 
-  // it('should call getReports in ReportsCtrl on reportService', function () {
-  //   expect(reportService.getReports).toHaveBeenCalled();
+  // it('should call getReports in ReportsCtrl on WebexReportService', function () {
+  //   expect(WebexReportService.getReports).toHaveBeenCalled();
   //   expect(true).toBe(true);
   // });
   it('scope should contain admin email', function () {

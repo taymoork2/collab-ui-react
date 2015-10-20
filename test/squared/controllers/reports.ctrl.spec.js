@@ -5,7 +5,7 @@ describe('Controller: ReportsCtrl', function () {
   // load the controller's module
   beforeEach(module('Squared'));
 
-  var controller, $scope, $q, ReportsService, Log, Config, $translate, CannedDataService, reportService, WebExUtilsFact, Authinfo;
+  var controller, $scope, $q, ReportsService, Log, Config, $translate, CannedDataService, WebexReportService, WebExUtilsFact, Authinfo;
 
   describe('Expected Responses', function () {
     beforeEach(inject(function ($rootScope, $controller, _$stateParams_, _$q_, _Log_, _Config_, _$translate_, _CannedDataService_) {
@@ -15,7 +15,7 @@ describe('Controller: ReportsCtrl', function () {
       Log = _Log_;
       Config = _Config_;
       CannedDataService = _CannedDataService_;
-      var reportService = {
+      var WebexReportService = {
         initReportsObject: function (input) {}
       };
       var WebExUtilsFact = {
@@ -64,7 +64,7 @@ describe('Controller: ReportsCtrl', function () {
         $translate: $translate,
         $q: $q,
         ReportsService: ReportsService,
-        reportService: reportService,
+        WebexReportService: WebexReportService,
         Log: Log,
         Authinfo: Authinfo,
         Config: Config,
