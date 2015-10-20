@@ -1,0 +1,34 @@
+<div class="modal-header">
+  <div class="modal-title">
+    Software Upgrade
+  </div>
+</div>
+
+<div class="modal-body">
+
+
+  <i class="icon icon-warning yellow"/>Upgrade may involve a service outage. See the release notes.
+
+  <br>
+  <br>
+
+  <p>
+  You are about to upgrade the software for the Calendar Service
+  on all hosts running on the Cisco VCS Cluster
+  {{softwareUpgrade.clusterName}}.
+  </p>
+  <br>
+  <p>
+  Current version {{softwareUpgrade.oldVersion}}
+  </p>
+  <p>
+  After upgrade: {{softwareUpgrade.newVersion}}
+  </p>
+
+</div>
+
+
+<div class="modal-footer">
+  <button ng-click="softwareUpgrade.cancel()">Cancel</button>
+  <button ng-click="softwareUpgrade.ok()">ok</button>
+</div>

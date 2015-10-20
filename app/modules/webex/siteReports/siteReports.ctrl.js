@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('WebExReports').controller('ReportsCtrl', [
+  angular.module('WebExReports').controller('WebExReportsCtrl', [
     '$scope',
     '$rootScope',
     '$log',
@@ -47,7 +47,7 @@
       $scope.reportPageIframeUrl = $sce.trustAsResourceUrl(reportPageUrl);
 
       $scope.uiSref =
-        "webex-reports-iframe({" +
+        "webex-reports.webex-reports-iframe({" +
         "  siteUrl:" + "'" + $scope.siteUrl + "'" + "," +
         "  reportPageId:" + "'" + $scope.reportPageId + "'" + "," +
         "  reportPageIframeUrl:" + "'" + $scope.reportPageIframeUrl + "'" +

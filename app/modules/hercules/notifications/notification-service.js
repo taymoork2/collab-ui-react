@@ -1,55 +1,32 @@
 (function () {
   'use strict';
 
-  function Notification(type, id, priority, template, data) {
+  function Notification(type, id, priority, template, tags, data) {
     this.type = type;
     this.template = template;
-    this.data = data;
     this.id = id;
     this.priority = priority;
+    this.tags = tags;
+    this.data = data;
   }
 
   /* @ngInject */
   function NotificationService() {
-    var notifications = {};
-    var todos = {
-      type: 'todo',
-      notifications: {}
-    };
-    var alerts = {
-      type: 'alert',
-      notifications: {}
-    };
-    var notificationStatus = {
-      count: 0,
-      types: [alerts, todos]
-    };
+    var notifications = [];
 
-    function addNotification(type, id, priority, template, data) {
-      var collection = _.find(notificationStatus.types, {
-        type: type
-      }) || {
-        notifications: {}
-      };
-      collection.notifications[id] = new Notification(type, id, priority, template, data);
-      notificationStatus.count = _.size(todos.notifications) + _.size(alerts.notifications);
+    function addNotification(type, id, priority, template, tags, opts) {
+      removeNotification(id);
+      notifications.push(new Notification(type, id, priority, template, tags, (opts || {}).data));
     }
 
-    function removeNotification(type, id) {
-      var collection = _.find(notificationStatus.types, {
-        type: type
-      }) || {
-        notifications: {}
-      };
-      delete collection.notifications[id];
+    function removeNotification(id) {
+      _.remove(notifications, {
+        id: id
+      });
     }
 
     function getNotifications() {
-      return _.sortBy(notifications, 'type');
-    }
-
-    function getNotificationStatus() {
-      return notificationStatus;
+      return notifications;
     }
 
     function getNotificationLength() {
@@ -60,8 +37,12 @@
       addNotification: addNotification,
       getNotifications: getNotifications,
       getNotificationLength: getNotificationLength,
-      getNotificationStatus: getNotificationStatus,
-      removeNotification: removeNotification
+      removeNotification: removeNotification,
+      types: {
+        ALERT: 'alert',
+        TODO: 'todo',
+        NEW: 'new'
+      }
     };
   }
 

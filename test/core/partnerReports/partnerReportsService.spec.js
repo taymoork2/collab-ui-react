@@ -14,7 +14,7 @@ describe('Service: Partner Reports Service', function () {
   var updateDates = function (response) {
     var data = response.data[0].data;
     for (var i = data.length - 1; i >= 0; i--) {
-      data[i].date = moment().subtract(data.length + 1 - i, 'day').format();
+      data[i].date = moment().subtract(data.length + 2 - i, 'day').format();
     }
     response.data[0].data = data;
     return response;
@@ -41,7 +41,7 @@ describe('Service: Partner Reports Service', function () {
     label: ""
   };
   var customerDatapoint = {
-    modifiedDate: moment().subtract(7, 'day').format(dayFormat),
+    modifiedDate: moment().subtract(8, 'day').format(dayFormat),
     totalRegisteredUsers: 14,
     activeUsers: 14,
     percentage: 100
@@ -96,7 +96,7 @@ describe('Service: Partner Reports Service', function () {
       "orgId": "7e88d491-d6ca-4786-82ed-cbe9efb02ad2",
       "orgName": "Huron Int Test 1",
       "data": [{
-        "date": moment().subtract(1, 'day').format(),
+        "date": moment().subtract(2, 'day').format(),
         "details": {
           "totalCount": "200",
           "totalDurationSum": "3605",

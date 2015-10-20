@@ -43,6 +43,19 @@
       })
       .value();
 
+    this.isConnectorConfigured = function (connectorType) {
+      _.chain(this.services)
+        .filter(function (service) {
+          return service.service_type != connectorType;
+        })
+        .pluck('connectors')
+        .flatten()
+        .find(function (connector) {
+          return connector.state == 'not_configured';
+        })
+        .value();
+    };
+
     function sortBySeverity(alarms) {
       return _.sortBy(alarms, 'severity');
     }

@@ -5,7 +5,7 @@ module.exports = function(context) {
   // utils
   'utils', 'deleteUtils', 'deleteTrialUtils',
   // page objects
-  'notifications', 'login', 'navigation', 'users', 'reports', 'support', 'roles', 'partner', 'wizard', 'invite', 'activate',
+  'notifications', 'landing', 'login', 'navigation', 'users', 'reports', 'support', 'roles', 'partner', 'wizard', 'invite', 'activate',
   'callrouting', 'servicesetup', 'telephony'
   ];
 
@@ -80,7 +80,7 @@ module.exports = function(context) {
           return;
         }
 
-        context.report(node, 'Should not invoke functions directly on page elements. Extract complex functionality to page objects (test/e2e-protractor/pages).');
+        context.report(node, 'Declare functions in page objects (test/e2e-protractor/pages), also make sure the page name is added to the allowedIdentifiers in protractor-guidlines.js, otherwise this rule completely blows.');
         return;
       }
 

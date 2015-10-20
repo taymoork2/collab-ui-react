@@ -10,7 +10,7 @@ var BasicSettigsPage = function () {
   this.ec = element(by.id('EC'));
   this.tc = element(by.id('TC'));
 
-  this.mcPro = this.mc.element(by.css('[ckid="sessionType-3"]'));
+  this.mcPro = this.mc.element(by.css('[ckid="sessionType-214"]'));
   this.mcProCheckbox = this.mcPro.element(by.css('input'));
 
   this.mcAuo = this.mc.element(by.css('[ckid="sessionType-16"]'));
@@ -32,64 +32,70 @@ var BasicSettigsPage = function () {
   this.collabRoom = element(by.model('WebExUserSettings.userPrivileges.general.collabRoom.value'));
   this.collabRoomCheckbox = this.collabRoom.element(by.className('checkboxValue'));
 
-  this.saveButton = element(by.css('[ng-click="WebExUserSettings.btnSave(userSettingsView.form)"]'));
+  this.callInTeleconf = element(by.model('WebExUserSettings.userPrivileges.general.callInTeleconf.value'));
+  this.callInTeleconfCheckbox = this.callInTeleconf.element(by.className('checkboxValue'));
+
+  //this.saveButton = element(by.css('[ng-click="WebExUserSettings.btnSave(userSettingsView.form)"]'));
+  this.saveButton = element(by.id('saveBtn'));
 
   //alertify-log-error
-  this.alertSuccess = element(by.css('.alertify-log-success'));
-  this.alertError = element(by.css('.alertify-log-error'));
+  this.alertSuccess = element(by.css('.toast-success'));
+  this.alertError = element(by.css('.toast-error'));
 
   this.testAdmin = {
-    username: 'atlasintegration@yahoo.com',
+    username: 't30citestprov9@mailinator.com',
     password: 'Cisco!23',
   };
 
   this.testUser = {
-    username: 'atlasintegration2@yahoo.com',
-    password: 'J@smine1',
+    username: 'prov9usr@mailinator.com',
+    password: 'Cisco!23',
   };
 
-  this.testSiteElement = element(by.id('t30citest.webex.com'));
+  this.testSiteElement = element(by.id('t30citestprov9.webex.com'));
 
   this.save = function () {
     utils.click(this.saveButton);
   };
 
-  this.selectAllMcSessionTypeByPrefix = function (prefix) {
-    usersettings.mc.all(by.repeater('sessionType in WebExUserSettings.userSettingsModel.sessionTypes')).map(function (row) {
-      var checkbox = row.element(by.css('cs-checkbox'));
-      //        checkbox.getOuterHtml().then(function(html) {
-      //        	console.log('--->'+html);
-      //        });
-      var input = checkbox.element(by.css('input'));
+  /**  
+    this.selectAllMcSessionTypeByPrefix = function (prefix) {
+      usersettings.mc.all(by.repeater('sessionType in WebExUserSettings.userSettingsModel.sessionTypes')).map(function (row) {
+        var checkbox = row.element(by.css('cs-checkbox'));
+        //        checkbox.getOuterHtml().then(function(html) {
+        //        	console.log('--->'+html);
+        //        });
+        var input = checkbox.element(by.css('input'));
 
-      checkbox.element(by.css('.ng-binding')).getText().then(function (text) {
-        if (text.toUpperCase() === prefix.toUpperCase()) {
-          input.isSelected().then(function (selected) {
-            if (!selected) {
-              checkbox.click();
-            }
-          });
-        }
+        checkbox.element(by.css('.ng-binding')).getText().then(function (text) {
+          if (text.toUpperCase() === prefix.toUpperCase()) {
+            input.isSelected().then(function (selected) {
+              if (!selected) {
+                checkbox.click();
+              }
+            });
+          }
+        });
       });
-    });
-  };
+    };
 
-  this.unSelectAllMcSessionTypeByPrefix = function (prefix) {
-    usersettings.mc.all(by.repeater('sessionType in WebExUserSettings.userSettingsModel.sessionTypes')).map(function (row) {
-      var checkbox = row.element(by.css('cs-checkbox'));
-      var input = checkbox.element(by.css('input'));
+    this.unSelectAllMcSessionTypeByPrefix = function (prefix) {
+      usersettings.mc.all(by.repeater('sessionType in WebExUserSettings.userSettingsModel.sessionTypes')).map(function (row) {
+        var checkbox = row.element(by.css('cs-checkbox'));
+        var input = checkbox.element(by.css('input'));
 
-      checkbox.element(by.css('.ng-binding')).getText().then(function (text) {
-        if (text.toUpperCase() === prefix.toUpperCase()) {
-          input.isSelected().then(function (selected) {
-            if (selected) {
-              checkbox.click();
-            }
-          });
-        }
+        checkbox.element(by.css('.ng-binding')).getText().then(function (text) {
+          if (text.toUpperCase() === prefix.toUpperCase()) {
+            input.isSelected().then(function (selected) {
+              if (selected) {
+                checkbox.click();
+              }
+            });
+          }
+        });
       });
-    });
-  };
+    };
+  **/
 
   this.selectMcPro = function () {
     var mc = this.mcPro;
@@ -119,35 +125,35 @@ var BasicSettigsPage = function () {
     });
   };
 
-  this.selectMcAuo = function () {
-    var mc = this.mcAuo;
-    this.mcAuoCheckbox.isSelected().then(function (selected) {
-      if (!selected) {
-        mc.click();
-      }
-    });
-  };
-
-  this.unSelectMcAuo = function () {
-    var mc = this.mcAuo;
-    this.mcAuoCheckbox.isSelected().then(function (selected) {
-      if (selected) {
-        mc.click();
-      }
-    });
-  };
-
-  this.isMcAuoSelected = function () {
-    this.mcAuoCheckbox.isSelected().then(function (selected) {
-      if (!selected) {
-        return false;
-      } else {
-        return true;
-      }
-    });
-  };
-
   /**
+    this.selectMcAuo = function () {
+      var mc = this.mcAuo;
+      this.mcAuoCheckbox.isSelected().then(function (selected) {
+        if (!selected) {
+          mc.click();
+        }
+      });
+    };
+
+    this.unSelectMcAuo = function () {
+      var mc = this.mcAuo;
+      this.mcAuoCheckbox.isSelected().then(function (selected) {
+        if (selected) {
+          mc.click();
+        }
+      });
+    };
+
+    this.isMcAuoSelected = function () {
+      this.mcAuoCheckbox.isSelected().then(function (selected) {
+        if (!selected) {
+          return false;
+        } else {
+          return true;
+        }
+      });
+    };
+
   this.clickRecordingEditor = function () {
     utils.click(this.recordingEditor);
   };

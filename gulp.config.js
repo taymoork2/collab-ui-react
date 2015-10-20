@@ -99,7 +99,8 @@ module.exports = function() {
         huron: e2e + '/huron/**/*_spec.js',
         mediafusion: e2e + '/mediafusion/**/*_spec.js',
         squared: e2e + '/squared/**/*_spec.js',
-        webex: e2e + '/webex/**/*_spec.js',
+        webexsite: e2e + '/webex/site/**/*_spec.js',
+        webexuser: e2e + '/webex/user/**/*_spec.js',
         sunlight: e2e + '/sunlight/**/*_spec.js'
       }
     },
@@ -168,7 +169,11 @@ module.exports = function() {
         vendor + '/angular-libphonenumber/dist/libphonenumber.js',
         vendor + '/angular-libphonenumber/dist/angular-libphonenumber.js',
         vendor + '/angularjs-toaster/toaster.js',
-        vendor + '/ng-file-upload/ng-file-upload.js'
+        vendor + '/ng-file-upload/ng-file-upload.js',
+        vendor + '/jstimezonedetect/jstz.js',
+        vendor + '/masonry/dist/masonry.pkgd.js',
+        vendor + '/imagesloaded/imagesloaded.pkgd.js',
+        vendor + '/ng-tags-input/ng-tags-input.min.js'
       ],
       scss: {
         paths: [
@@ -184,7 +189,8 @@ module.exports = function() {
         vendor + '/alertify.js/themes/alertify.default.css',
         vendor + '/angular-wizard/dist/angular-wizard.css',
         vendor + '/angular-dialog-service/dialogs.css',
-        vendor + '/animate.css/animate.css'
+        vendor + '/animate.css/animate.css',
+        vendor + '/ng-tags-input/ng-tags-input.css'
       ],
       fonts: [
         vendor + '/cisco-ui/dist/fonts/*',

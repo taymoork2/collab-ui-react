@@ -1,0 +1,17 @@
+[{
+  "internalNumber": "internalNumber",
+  "externalNumber": "externalNumber",
+  "userId": "userId"
+}, {
+  "internalNumber": "1000",
+  "externalNumber": "+19725551000",
+  "userId": "asuna@sao.com"
+}, {
+  "internalNumber": "1001",
+  "externalNumber": null,
+  "userId": "kirito@sao.com"
+}, {
+  "internalNumber": "1002",
+  "externalNumber": null,
+  "userId": null
+}]

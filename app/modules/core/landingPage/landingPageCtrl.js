@@ -3,8 +3,8 @@
 /* global AmCharts, moment */
 
 angular.module('Core')
-  .controller('LandingPageCtrl', ['$scope', '$rootScope', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'CannedDataService', '$state',
-    function ($scope, $rootScope, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, CannedDataService, $state) {
+  .controller('LandingPageCtrl', ['$scope', '$rootScope', '$timeout', 'Orgservice', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'CannedDataService', '$state',
+    function ($scope, $rootScope, $timeout, Orgservice, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, CannedDataService, $state) {
 
       $scope.isAdmin = false;
       var callsChart, conversationsChart, contentSharedChart;
@@ -234,13 +234,20 @@ angular.module('Core')
         }
       };
 
-      var getHealthMetrics = function () {
-        ReportsService.healthMonitor(function (data, status) {
-          if (data.success) {
-            $scope.healthMetrics = data.components;
-            $scope.isCollapsed = true;
+      var getHealthTotal = function () {
+        ReportsService.getHealthStatus()
+          .then(function (status) {
+            $scope.healthStatus = status;
+          });
+      };
+
+      var getOrgInfo = function () {
+        Orgservice.getOrg(function (data, status) {
+          if (status === 200) {
+            $scope.sso = data.ssoEnabled || false;
+            $scope.dirsync = data.dirsyncEnabled || false;
           } else {
-            Log.debug('Query active users metrics failed. Status: ' + status);
+            Log.error("Query active users metrics failed. Status: " + status);
           }
         });
       };
@@ -253,7 +260,8 @@ angular.module('Core')
       };
 
       $scope.isAdmin = Auth.isUserAdmin();
-      getHealthMetrics();
+      getHealthTotal();
+      getOrgInfo();
 
       $scope.$on('AuthinfoUpdated', function () {
         $scope.isAdmin = Auth.isUserAdmin();

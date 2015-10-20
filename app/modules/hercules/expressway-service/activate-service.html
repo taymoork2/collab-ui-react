@@ -1,0 +1,34 @@
+<h3>
+  <i class="{{exp.serviceIconClass}}"></i><br>
+  <span translate="hercules.serviceNames.{{exp.currentServiceId}}"></span>
+</h3>
+<p>
+  Collaborate instantly.
+</p>
+
+
+<div ng-show="exp.currentServiceId == 'squared-fusion-cal'">
+  <p>
+    Just add @spark to an invitation to create a Spark room for your meeting.
+  </p>
+  <p>
+    Add @webex to attach your WebEx CMR.
+  </p>
+  <br>
+</div>
+
+<div ng-show="exp.currentServiceId == 'squared-fusion-uc'">
+  <p>
+    Effortlessly share your desktop with Spark while you are on your work phone.
+  </p>
+  <p>
+    Answer your work phone or call your coworkers from Spark.
+  </p>
+
+  <br>
+</div>
+
+
+<button class="btn btn-info" ng-click="exp.enableService(exp.currentServiceId)">
+  Activate this service
+</button>

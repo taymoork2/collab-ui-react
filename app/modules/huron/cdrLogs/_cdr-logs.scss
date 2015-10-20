@@ -1,3 +1,5 @@
+@import 'cdrOverview/_cdr-overview';
+
 .cdr {
   .cdr-content {
     padding: 30px;
@@ -15,7 +17,7 @@
       position: relative;
       top: rem-calc(-20);
       margin-bottom: rem-calc(10);
-      width: rem-calc(650);
+      width: rem-calc(675);
       height: vr-adjust(275);
       .upload-radio {
         margin-left: rem-calc(30);
@@ -45,7 +47,7 @@
       }
       .hitsize {
         display: block;
-        margin-top: rem-calc(20);
+        margin-top: rem-calc(15);
       }
       .search-display {
         display: inline-flex;
@@ -113,12 +115,6 @@
         }
         thead > tr > th:last-of-type, tbody > tr > td:last-of-type {
           border-right: none;
-        }
-        .table-width-one {
-          width: rem-calc(150);
-        }
-        .table-width-two {
-          width: rem-calc(75);
         }
         .center {
           text-align: center;

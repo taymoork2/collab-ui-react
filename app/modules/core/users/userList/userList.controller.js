@@ -231,16 +231,14 @@
     }
 
     function setFilter(filter) {
-      $scope.activeFilter = filter;
-      if ((filter === '') || (filter === 'all')) {
-        $scope.gridData = $scope.userList.allUsers;
-      } else if (filter === 'administrators') {
-        $scope.tooManyUsers = false;
+      $scope.activeFilter = filter || 'all';
+      if (filter === 'administrators') {
         $scope.gridData = $scope.userList.adminUsers;
         $scope.searchStr = 'administrators';
       } else if (filter === 'partners') {
-        $scope.tooManyUsers = false;
         $scope.gridData = $scope.userList.partnerUsers;
+      } else {
+        $scope.gridData = $scope.userList.allUsers;
       }
     }
 

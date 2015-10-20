@@ -35,8 +35,19 @@
 
     return {
       query: query,
-      formDate: formDate
+      formDate: formDate,
+      createDownload: createDownload
     };
+
+    function createDownload(call) {
+      var jsonFileData = {
+        cdrs: call
+      };
+      var jsonBlob = new Blob([JSON.stringify(jsonFileData)], {
+        type: 'application/json'
+      });
+      return (window.URL || window.webkitURL).createObjectURL(jsonBlob);
+    }
 
     function formDate(date, time) {
       var returnDate = moment(date);
@@ -92,7 +103,7 @@
               for (var i = 0; i < response.hits.hits.length; i++) {
                 results.push(response.hits.hits[i]._source);
               }
-              return secondaryQuery(item, results);
+              return secondaryQuery(item, results, index);
             }
             return;
           },
@@ -126,49 +137,63 @@
       return '{"fquery":{"query":{"query_string":{"query":"dataParam.' + callType + ':(\\"' + device + '\\")"}},"_cache":true}}';
     }
 
-    function secondaryQuery(server, cdrArray) {
+    function secondaryQuery(server, cdrArray, queryIndex) {
       var sessionIds = extractUniqueIds(cdrArray);
+      var newCdrArray = [];
       var promises = [];
-
+      var queries = [];
+      var x = 0;
+      var y = 0;
       var queryElement = '{"fquery":{"query":{"query_string":{"query":"';
+      queries.push(queryElement);
+
+      // break down the queries to a max of twenty local/remote combinations to make the requests small for TX2 
       for (var i = 0; i < sessionIds.length; i++) {
-        queryElement += 'dataParam.localSessionID:(\\"' + sessionIds[i] + '\\") OR dataParam.remoteSessionID:(\\"' + sessionIds[i] + '\\")';
-        if (i + 1 < sessionIds.length) {
-          queryElement += ' OR ';
+        queries[x] += 'dataParam.localSessionID:(\\"' + sessionIds[i] + '\\") OR dataParam.remoteSessionID:(\\"' + sessionIds[i] + '\\")';
+        y++;
+
+        if (i + 1 < sessionIds.length && (y !== 20)) {
+          queries[x] += ' OR ';
+        }
+        if (y === 20) {
+          y = 0;
+          x++;
+          queries.push(queryElement);
         }
       }
-      queryElement += '"}},"_cache":true}}';
+      angular.forEach(queries, function (item, index, array) {
+        item += '"}},"_cache":true}}';
 
-      var headers = angular.copy(baseHeaders);
-      headers.server = server.url;
-      headers.qs = '{"query": {"filtered": {"query": {"bool": {"should": [' + generateHosts() + ']} },"filter": {"bool": {"should":[' + queryElement + ']}}}},"size": 2000,"sort": [{"@timestamp": {"order": "desc"}}]}';
+        var headers = angular.copy(baseHeaders);
+        headers.server = server.url;
+        headers.qs = '{"query": {"filtered": {"query": {"bool": {"should": [' + generateHosts() + ']} },"filter": {"bool": {"should":[' + item + ']}}}},"size": 2000,"sort": [{"@timestamp": {"order": "desc"}}]}';
 
-      var proxyQuery = proxy(headers).then(function (response) {
-          if (!angular.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
-            var newCdrArray = [];
-            for (var i = 0; i < response.hits.hits.length; i++) {
-              newCdrArray.push(response.hits.hits[i]._source);
+        var proxyQuery = proxy(headers).then(function (response) {
+            if (!angular.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
+              for (var i = 0; i < response.hits.hits.length; i++) {
+                newCdrArray.push(response.hits.hits[i]._source);
+              }
             }
-            groupCdrsIntoCalls(newCdrArray);
-          }
-          return;
-        },
-        function (response) {
-          Log.debug('Failed to retrieve cdr data from ' + server.name + ' server. Status: ' + response.status);
-          Notification.notify([$translate.instant('cdrLogs.cdrRecursiveError', {
-            server: server.name
-          })], 'error');
-          return;
-        });
-      promises.push(proxyQuery);
+            return;
+          },
+          function (response) {
+            Log.debug('Failed to retrieve cdr data from ' + server.name + ' server. Status: ' + response.status);
+            Notification.notify([$translate.instant('cdrLogs.cdrRecursiveError', {
+              server: server.name
+            })], 'error');
+            return;
+          });
+        promises.push(proxyQuery);
+      });
 
       return $q.all(promises).then(function () {
+        groupCdrsIntoCalls(newCdrArray, queryIndex);
         return;
       });
     }
 
     function extractUniqueIds(cdrArray) {
-      if (cdrArray === undefined) {
+      if (!angular.isDefined(cdrArray)) {
         return [];
       }
       var uniqueIds = [];
@@ -184,7 +209,8 @@
       return uniqueIds;
     }
 
-    function groupCdrsIntoCalls(cdrArray) {
+    function groupCdrsIntoCalls(cdrArray, queryIndex) {
+      var x = 0;
       while (cdrArray.length > 0) {
         var call = [];
         call.push(cdrArray[0]);
@@ -206,21 +232,28 @@
             }
           }
         }
-        proxyData.push(splitFurther(call));
+        proxyData.push(splitFurther(call, x, queryIndex));
+        x++;
       }
       return;
     }
 
-    function splitFurther(callGrouping) {
+    function splitFurther(callGrouping, callNum, queryIndex) {
       var callLegs = [];
       var call = JSON.parse(JSON.stringify(callGrouping));
+      var x = -1;
 
       var tempArray = [];
       while (call.length > 0) {
+        x++;
+        call[0].name = "server" + queryIndex + "Call" + callNum + "CDR" + x;
         tempArray.push(call[0]);
         call.splice(0, 1);
         for (var i = 0; i < call.length; i++) {
-          if (call[i].dataParam.localSessionID === tempArray[0].dataParam.localSessionID && call[i].dataParam.remoteSessionID === tempArray[0].dataParam.remoteSessionID || call[i].dataParam.remoteSessionID === tempArray[0].dataParam.localSessionID && call[i].dataParam.localSessionID === tempArray[0].dataParam.remoteSessionID) {
+          if (call[i].dataParam.localSessionID === tempArray[0].dataParam.localSessionID && call[i].dataParam.remoteSessionID === tempArray[0].dataParam.remoteSessionID ||
+            call[i].dataParam.remoteSessionID === tempArray[0].dataParam.localSessionID && call[i].dataParam.localSessionID === tempArray[0].dataParam.remoteSessionID) {
+            x++;
+            call[0].name = "server" + queryIndex + "Call" + callNum + "CDR" + x;
             tempArray.push(call[i]);
             call.splice(i, 1);
             if (call.length > 0) {

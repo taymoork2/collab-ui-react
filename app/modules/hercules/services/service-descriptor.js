@@ -56,7 +56,11 @@ angular.module('Hercules')
             var service = _.find(data.items, {
               id: serviceId
             });
-            callback(null, service.enabled);
+            if (service === undefined) {
+              callback(false);
+            } else {
+              callback(null, service.enabled);
+            }
           })
           .error(function () {
             callback(arguments);
@@ -81,6 +85,13 @@ angular.module('Hercules')
         }
       };
 
+      var acknowledgeService = function (serviceId) {
+        return $http
+          .patch(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
+            acknowledged: true
+          });
+      };
+
       return {
         services: services,
         filterEnabledServices: filterEnabledServices,
@@ -88,7 +99,8 @@ angular.module('Hercules')
         isFusionEnabled: isFusionEnabled,
         isServiceEnabled: isServiceEnabled,
         setServiceEnabled: setServiceEnabled,
-        serviceIcon: serviceIcon
+        serviceIcon: serviceIcon,
+        acknowledgeService: acknowledgeService
       };
 
     }

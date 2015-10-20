@@ -5,7 +5,7 @@
   <div class="cdr-content row">
     <div class="searchUpload">
       <form class="searchUpdateForm" novalidate name="cdr.searchAndUploadForm">
-        <formly-form model="cdr.model" fields="cdr.fields"></formly-form>        
+        <formly-form model="cdr.model" fields="cdr.fields"></formly-form>
       </form>
     </div>
     <div class="cdrDisplay">
@@ -62,7 +62,7 @@
                   <col class="medium-2">
                 </colgroup>
                 <tbody ng-repeat="callSegment in call">
-                  <tr ng-repeat="data in callSegment" ng-click='cdr.selectCDR(data)' ng-class="{'selectedCDR': data.message === cdr.selectedCDR.message}">
+                  <tr ng-repeat="data in callSegment" ng-click='cdr.selectCDR(data, call)' ng-class="{'selectedCDR': data.name === cdr.selectedCDR.name}" id="{{::data.name}}">
                     <td>{{::data['@timestamp']}}</td>
                     <td>{{::data.dataParam.calling_deviceName}}</td>
                     <td>{{::data.dataParam.calling_partyNumber}}</td>
@@ -78,8 +78,8 @@
           </div>
           <h3 class="cdr-title cdr-accordion-title" translate="cdrLogs.sessionIds"></h3>
           <div ng-repeat="callSegment in call">
-            <div class="session-id"><b>Local: {{callSegment[0].dataParam.localSessionID}}</b></div>
-            <div class="session-id"><b>Remote: {{callSegment[0].dataParam.remoteSessionID}}</b></div>
+            <div class="session-id"><b><span translate="cdrLogs.local"></span> {{callSegment[0].dataParam.localSessionID}}</b></div>
+            <div class="session-id"><b><span translate="cdrLogs.remote"></span> {{callSegment[0].dataParam.remoteSessionID}}</b></div>
           </div>
         </cs-accordion-group>
       </cs-accordion>

@@ -17,10 +17,6 @@
     return $resource(HuronConfig.getEmailUrl() + '/email/didadd', {}, {});
   })
 
-  .factory('DidDnListService', function ($resource, HuronConfig) {
-    return $resource('/modules/huron/lines/:filterType.json', {}, {});
-  })
-
   .factory('IdentityOTPService', function ($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/identity/users/otp', {}, {});
   })
@@ -101,10 +97,11 @@
     });
   })
 
-  .factory('FeatureHuntGroupServiceV2', function ($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/features/huntgroups', {}, {
-      customerId: '@customerId'
-    });
+  .factory('HuntGroupServiceV2', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/features/huntgroups/:huntGroupId', {
+      customerId: '@customerId',
+      huntGroupId: '@huntGroupId'
+    }, {});
   })
 
   .factory('UserServiceVoice', function ($resource, HuronConfig) {
@@ -280,6 +277,18 @@
 
   .factory('DeviceLogApiService', function ($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiV2Url() + '/customers/:customerId/users/:userId/phones/:sipEndpointId/commands/logs', {}, {});
+  })
+
+  .factory('UserLineAssociationService', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/userlineassociations', {
+      customerId: '@customerId'
+    });
+  })
+
+  .factory('UserLineAssociationCountService', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/userlineassociationcounts', {
+      customerId: '@customerId'
+    });
   });
 
 })();

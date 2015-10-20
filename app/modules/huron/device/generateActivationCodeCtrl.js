@@ -61,11 +61,17 @@
 
     function sendActivationCodeEmail() {
       var entitleResult;
+      var timezone = jstz.determine().name();
+      if (timezone === null || angular.isUndefined(timezone)) {
+        timezone = 'UTC';
+      }
+      var expiresOn = moment(vm.otp.expiresOn).local().tz(timezone).format('MMMM DD, YYYY h:mm A (z)');
+
       var emailInfo = {
         'email': vm.email.to,
         'firstName': vm.email.to,
         'oneTimePassword': vm.otp.code,
-        'expiresOn': vm.otp.expiresOn
+        'expiresOn': expiresOn
       };
 
       ActivationCodeEmailService.save({}, emailInfo, function () {
