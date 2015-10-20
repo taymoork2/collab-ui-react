@@ -12,15 +12,15 @@
       <h2 class="title-heading" translate="reportsPage.pageTitle"></h2>
       <div class="sync">
         <div class="report-filter-link">
-          <a id="allReports" class="report-link" ng-click="show(true,true,true)" translate="reportsPage.all"
+          <a id="allReports" class="report-link" ng-click="show(true,true)" translate="reportsPage.all"
             ng-class="{'selected-link': (showEngagement && showWebexReports), 'not-selected': !(showEngagement || showWebexReports)}"></a>
         </div>
         <div class="report-filter-link">
-          <a id="engagementReports" class="report-link" ng-click="show(true,false,false);" translate="reportsPage.engagement"
+          <a id="engagementReports" class="report-link" ng-click="show(true,false);" translate="reportsPage.engagement"
             ng-class="{'selected-link': showEngagement, 'not-selected': !showEngagement}"></a>
         </div>
         <div class="report-filter-link" ng-if="webexOptions.length > 0">
-          <a id="webexReports" class="report-link" ng-click="show(false,false,true);" translate="reportsPage.webex"
+          <a id="webexReports" class="report-link" ng-click="show(false,true);" translate="reportsPage.webex"
             ng-class="{'selected-link': showWebexReports, 'not-selected': !showWebexReports}"></a>
         </div>
       </div>
