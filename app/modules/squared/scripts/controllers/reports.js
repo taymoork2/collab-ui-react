@@ -276,7 +276,7 @@ angular.module('Squared')
 
           val[metric] = dataList[i].count;
           var dateVal = new Date(dataList[i].date);
-          dateVal = dateVal.toDateString();
+          dateVal = dateVal.toUTCString().split(' ').slice(0, 4).join(' ');
           val.week = dateVal.substring(dateVal.indexOf(' ') + 1);
           chartVals[i] = val;
           count += dataList[i].count;
