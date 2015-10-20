@@ -202,6 +202,9 @@
         expressionProperties: {
           'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
             return vm.hasSites;
+          },
+          'hide': function ($viewValue, $modelValue, scope) {
+            return true;
           }
         }
       }, {
@@ -218,6 +221,9 @@
         expressionProperties: {
           'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
             return vm.hasSites;
+          },
+          'hide': function ($viewValue, $modelValue, scope) {
+            return true;
           }
         }
       }]
