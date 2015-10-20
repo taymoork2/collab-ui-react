@@ -250,7 +250,7 @@ angular.module('Core')
 
           for (var j = 0; j < countData.length; j++) {
             var date = new Date(countData[j].date);
-            date = moment.utc(date).local().format('MMM D');
+            date = date.toUTCString().split(' ').slice(1, 4).join(' ');
             if (dateMap[date]) {
               dateMap[date][customerNameKey] = currentOrgName;
               dateMap[date][countKey] = countData[j].count;
@@ -279,7 +279,7 @@ angular.module('Core')
       var formatTimeChartData = function (data) {
         for (var obj in data) {
           var date = new Date(data[obj].date);
-          data[obj].date = moment.utc(date).local().format('MMM D');
+          data[obj].date = date.toUTCString().split(' ').slice(1, 4).join(' ');
         }
         return data;
       };
