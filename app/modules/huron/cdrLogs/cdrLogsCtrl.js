@@ -14,6 +14,7 @@
     var dateFormat = 'YYYY-MM-DD';
     var filetype = "text/json, application/json";
     var errorStatus = [16, 19, 393216, 0, 17, 1, 21];
+    var today = moment().format(dateFormat);
 
     vm.gridData = [];
     vm.selectedCDR = null;
@@ -70,29 +71,34 @@
         var value = viewValue || modelValue;
         var timeOne = CdrService.formDate(scope.model.startDate, scope.model.startTime);
         var timeTwo = CdrService.formDate(scope.model.endDate, value);
-        return /([0-2][0-9][:])([0-5][0-9][:])([0-5][0-9])([ ][apAP][mM])?/.test(value) && (timeTwo > timeOne);
+        var noError = /([0-2][0-9][:])([0-5][0-9][:])([0-5][0-9])([ ][apAP][mM])?/.test(value) && (timeTwo > timeOne);
+        scope.showError = !noError;
+        return noError;
       },
       startDate: function (viewValue, modelValue, scope) {
         var value = viewValue || modelValue;
         scope.model.startDate = value;
-        if (!angular.isUndefined(scope.fields[7].formControl)) {
+        var noError = moment(today).format() >= moment(value).format();
+        if (noError && !angular.isUndefined(scope.fields[7].formControl)) {
           scope.fields[7].formControl.$validate();
         }
-        if (!angular.isUndefined(scope.fields[9].formControl)) {
+        if (noError && !angular.isUndefined(scope.fields[9].formControl)) {
           scope.fields[9].formControl.$validate();
         }
         vm.searchAndUploadForm.$setDirty();
-        return true;
+        scope.showError = !noError;
+        return noError;
       },
       endDate: function (viewValue, modelValue, scope) {
         var value = viewValue || modelValue;
         scope.model.endDate = value;
-        if (!angular.isUndefined(scope.fields[7].formControl)) {
+        var noError = (moment(value).format() >= moment(scope.model.startDate).format()) && (moment(today).format() >= moment(value).format());
+        if (noError && !angular.isUndefined(scope.fields[7].formControl)) {
           scope.fields[7].formControl.$validate();
         }
         vm.searchAndUploadForm.$setDirty();
-        scope.showError = moment(value).format() < moment(scope.model.startDate).format();
-        return moment(value).format() >= moment(scope.model.startDate).format();
+        scope.showError = !noError;
+        return noError;
       },
       hitSize: function (viewValue, modelValue, scope) {
         var value = viewValue || modelValue;
@@ -131,8 +137,16 @@
           return $translate.instant('cdrLogs.invalidTime');
         }
       },
-      endDate: function () {
-        return $translate.instant('cdrLogs.invalidDate');
+      startDate: function () {
+        return $translate.instant('cdrLogs.tomorrowError');
+      },
+      endDate: function (viewValue, modelValue, scope) {
+        var value = viewValue || modelValue;
+        if (moment(today).format() < moment(value).format()) {
+          return $translate.instant('cdrLogs.tomorrowError');
+        } else {
+          return $translate.instant('cdrLogs.invalidDate');
+        }
       },
       hitSize: function () {
         return $translate.instant('cdrLogs.hitSizeError');
@@ -147,7 +161,7 @@
         return scope.model.searchUpload !== UPLOAD;
       },
       searchDisabled: function (viewValue, modelValue, scope) {
-        return vm.searchAndUploadForm.$invalid || vm.searchAndUploadForm.$pristine;
+        return vm.searchAndUploadForm.$invalid;
       },
       uploadDisabled: function (viewValue, modelValue, scope) {
         return angular.isUndefined(scope.model.uploadFile);
@@ -290,7 +304,7 @@
         validators: {
           time: {
             expression: validations.startDate,
-            message: messages.blank
+            message: messages.startDate
           }
         },
         templateOptions: {
@@ -367,14 +381,16 @@
           btnClass: 'btn btn-primary search-button',
           label: $translate.instant('cdrLogs.reset'),
           onClick: function (options, scope) {
-            vm.model = {
-              'searchUpload': SEARCH,
-              'startTime': moment().format(timeFormat),
-              'endTime': moment().format(timeFormat),
-              'startDate': moment().subtract(1, 'days').format(dateFormat),
-              'endDate': moment().format(dateFormat),
-              'hitSize': 50
-            };
+            vm.model.callingPartyNumber = "";
+            vm.model.calledPartyNumber = "";
+            vm.model.callingPartyDevice = "";
+            vm.model.calledPartyDevice = "";
+            vm.model.startTime = moment().format(timeFormat);
+            vm.model.endTime = moment().format(timeFormat);
+            vm.model.startDate = moment().subtract(1, 'days').format(dateFormat);
+            vm.model.endDate = moment().format(dateFormat);
+            vm.model.hitSize = 50;
+
             vm.searchAndUploadForm.$setPristine();
           }
         },

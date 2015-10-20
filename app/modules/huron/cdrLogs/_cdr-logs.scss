@@ -1,15 +1,21 @@
 @import 'cdrOverview/_cdr-overview';
 
+.cdr-title {
+  font-family: $brand-font-cisco-TT-Light;
+  color: $brand-primary;
+  text-align: left;
+}
 .cdr {
+  min-height: 65vh;
+  max-height: 83vh;
+  overflow-y: auto;
+  overflow-x: hidden;
   .cdr-content {
-    padding: 30px;
+    min-height: 500px;
     background-color: $brand-white;
-    min-height: vr-adjust(450);
-    .cdr-title {
-      font-family: $brand-font-cisco-TT-Light;
-      color: $brand-primary;
-      text-align: left;
-    }
+    width: 100%;
+    margin: 0;
+    padding: 30px;
     .cdr-accordion-title {
       margin: 0 0 rem-calc(10);
     }
@@ -71,8 +77,10 @@
           .cs-datapicker-normal {
             input {
               margin-bottom: 0;
-              margin-left: rem-calc(5);
               width: 80%;
+            }
+            .close {
+              display: none;
             }
           }
           .cs-datepicker {
@@ -80,8 +88,8 @@
             left: 0;
           }
           .validation {
-            left: rem-calc(27);
-            top: rem-calc(7);
+            right: rem-calc(15);
+            top: rem-calc(9);
             width: 10%;
           }
         }
