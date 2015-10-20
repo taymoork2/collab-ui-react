@@ -172,3 +172,23 @@ New styling
   margin-right: 0px;
   margin-left: 0px;
 }
+
+.hercules-needs_attention {
+  color: $color-alerts;
+}
+
+.hercules-alarm {
+  color: $color-alerts;
+}
+
+.hercules-disabled {
+  color: $gray-light;
+}
+
+.hercules-running {
+  color: $color-cta;
+}
+
+.hercules-unknown {
+  color: $gray-light;
+}

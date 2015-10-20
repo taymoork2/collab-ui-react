@@ -1,0 +1,16 @@
+<cs-sp-header>
+  <div class="header-image">
+    <div style="font-size: 36px; padding-top: 14px;" class="user-img">
+      <i class="icon icon-data"/>
+    </div>
+  </div>
+  <div class="header-info">
+    <div class="header-info-wrap">
+      <a id="rolesChevron"
+         ui-sref="cluster-details-new.cluster-settings({cluster:expresswayServiceDetails.cluster, serviceType: expresswayServiceDetails.serviceType})">
+        <div class="header-title" title="">{{expresswayServiceDetails.cluster.name}}</div>
+        <span class="edit-link">{{'common.edit' | translate | lowercase}}</span>
+      </a>
+    </div>
+  </div>
+</cs-sp-header>

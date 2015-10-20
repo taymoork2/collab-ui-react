@@ -1,0 +1,9 @@
+<div class="ngCellText">
+  <i class="fa fa-circle {{'hercules-'+exp.selectedServiceAndManagementServiceStatus(row.entity).status}}"/>
+  <span ng-if="exp.selectedServiceAndManagementServiceStatus(row.entity).status == 'running'">Running</span>
+  <span ng-if="exp.selectedServiceAndManagementServiceStatus(row.entity).status == 'alarm'">Alarm</span>
+  <span
+    ng-if="exp.selectedServiceAndManagementServiceStatus(row.entity).status == 'needs_attention'">Needs attention</span>
+  <span ng-if="exp.selectedServiceAndManagementServiceStatus(row.entity).status == 'disabled'">Disabled</span>
+  <span ng-if="exp.serviceNotInstalled(row.entity)">Not installed</span>
+</div>

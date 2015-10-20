@@ -1,0 +1,74 @@
+<div ui-view="header"></div>
+
+<cs-sp-container ng-if="!expresswayServiceDetails.serviceNotInstalled()">
+
+  <cs-sp-section>
+    <div class="section-title-row section-name">
+      Alarms
+    </div>
+
+    <div class="feature-list" ng-if="expresswayServiceDetails.selectedService.alarm_count > 0">
+      <ul ng-repeat="connector in expresswayServiceDetails.selectedService.connectors">
+        <li class="feature" ng-repeat="alarm in connector.alarms" ng-class="{'list-item': !$first}">
+          <a ui-sref="cluster-details-new.alarm-details({alarm: alarm, host: connector.host.host_name})">
+            <i class="icon icon-error hercules-alarm status-icon"/>
+            <span class="feature-name">{{alarm.title}}</span>
+            <span class="feature-status">View Alarm</span>
+            <i class="feature-arrow"></i>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <p ng-if="expresswayServiceDetails.selectedService.alarm_count == 0">
+      No alarms reported
+    </p>
+  </cs-sp-section>
+
+  <cs-sp-section>
+    <div class="section-title-row section-name">
+      Software Upgrades
+    </div>
+    <p>
+      Current version: {{expresswayServiceDetails.selectedService.connectors[0].version}}
+    </p>
+
+    <div ng-if="expresswayServiceDetails.selectedService.software_upgrade_available">
+      <p>
+        New version: {{expresswayServiceDetails.selectedService.not_approved_package.version}}
+      </p>
+      <button class="button secondary" ng-click="expresswayServiceDetails.upgrade()">Upgrade</button>
+    </div>
+    <p ng-if="!expresswayServiceDetails.selectedService.software_upgrade_available">
+      No new software available
+    </p>
+  </cs-sp-section>
+
+  <cs-sp-section>
+    <div class="section-title-row section-name">
+      Connectors
+    </div>
+    <div class="row" ng-repeat="connector in expresswayServiceDetails.selectedService.connectors">
+      <span class="small-4 column">
+        {{connector.host.host_name}}
+      </span>
+      <span class="small-4 column end">
+        <span class="hercules-alarm" ng-if="connector.status === 'needs_attention'">
+          <i class="fa fa-circle"/>
+          <span class="hidden-xs">Needs attention</span>
+        </span>
+      </span>
+    </div>
+  </cs-sp-section>
+
+</cs-sp-container>
+
+<cs-sp-container ng-if="expresswayServiceDetails.serviceNotInstalled()">
+  <p>
+    The service is not installed on this cluster.
+  </p>
+
+  <p>
+    On the Cisco Expressway, configure and enable the connectors under Applications > Hybrid Services > Connector
+    Management.
+  </p>
+</cs-sp-container>

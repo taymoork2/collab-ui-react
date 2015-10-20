@@ -573,7 +573,9 @@
     "modal": "Modal",
     "add": "Add",
     "and": "and",
-    "or": "or"
+    "or": "or",
+    "edit": "Edit",
+    "confirm": "Confirm"
   },
   "notifications": {
     "success": "Success notifications",

@@ -1327,7 +1327,7 @@ angular
           url: '/services/calendar',
           views: {
             'fullPane': {
-              templateUrl: 'modules/hercules/expressway-service/cluster-list.html'
+              templateUrl: 'modules/hercules/expressway-service/cluster-list2.html'
             }
           }
         })
@@ -1398,7 +1398,7 @@ angular
           url: '/services/call',
           views: {
             'fullPane': {
-              templateUrl: 'modules/hercules/expressway-service/cluster-list.html'
+              templateUrl: 'modules/hercules/expressway-service/cluster-list2.html'
             }
           }
         })
@@ -1456,8 +1456,45 @@ angular
             }
           }
         })
-
-      .state('cluster-details', {
+        .state('cluster-details-new', {
+          parent: 'sidepanel',
+          views: {
+            'sidepanel@': {
+              controllerAs: 'expresswayServiceDetails',
+              controller: 'ExpresswayServiceDetailsController',
+              templateUrl: 'modules/hercules/expressway-service/cluster-details.html'
+            },
+            'header@cluster-details-new': {
+              templateUrl: 'modules/hercules/expressway-service/cluster-header.html'
+            }
+          },
+          data: {
+            displayName: 'Cluster'
+          },
+          params: {
+            cluster: undefined,
+            serviceType: undefined
+          }
+        })
+        .state('cluster-details-new.cluster-settings', {
+          templateUrl: 'modules/hercules/expressway-service/cluster-settings2.html',
+          data: {
+            displayName: 'Edit'
+          }
+        })
+        .state('cluster-details-new.alarm-details', {
+          templateUrl: 'modules/hercules/expressway-service/alarm-details2.html',
+          controller: 'AlarmController',
+          controllerAs: 'alarmCtrl',
+          data: {
+            displayName: 'Alarm Details'
+          },
+          params: {
+            alarm: null,
+            host: null
+          }
+        })
+        .state('cluster-details', {
           parent: 'sidepanel',
           views: {
             'sidepanel@': {

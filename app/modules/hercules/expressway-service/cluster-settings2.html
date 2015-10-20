@@ -1,0 +1,29 @@
+<cs-sp-container>
+
+  <cs-sp-section ng-if="expresswayServiceDetails.activeActiveApplicable">
+    <div class="section-title-row section-name">
+      Active-Active Mode (High Availability)
+    </div>
+    <p ng-if="!expresswayServiceDetails.activeActivePossible">
+      Not available as Active-Active requires a cluster with more than 1 host
+    </p>
+
+    <button cs-btn
+            ng-class="{'btn-primary': !expresswayServiceDetails.activeActiveEnabled, 'btn-danger': expresswayServiceDetails.activeActiveEnabled}"
+            loading="expresswayServiceDetails.savingActiveActive"
+            ng-click="expresswayServiceDetails.toggleActiveActive()"
+            ng-if="expresswayServiceDetails.activeActivePossible">
+      <span ng-if="expresswayServiceDetails.activeActiveEnabled">Disable</span>
+      <span ng-if="!expresswayServiceDetails.activeActiveEnabled">Enable</span>
+    </button>
+  </cs-sp-section>
+
+  <cs-sp-section>
+    <div>
+      <button id="btn-primary" ng-disabled="saving" class="btn btn-danger" style="margin-top: 15px;"
+              translate="hercules.clusters.deregister"
+              ng-click="sp.close(); expresswayServiceDetails.showDeregisterDialog();"></button>
+    </div>
+  </cs-sp-section>
+
+</cs-sp-container>
