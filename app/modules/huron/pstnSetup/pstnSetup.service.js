@@ -5,7 +5,7 @@
     .factory('PstnSetupService', PstnSetupService);
 
   /* @ngInject */
-  function PstnSetupService($q, Authinfo, TerminusCarrierService, TerminusCustomerService, TerminusCustomerCarrierService, TerminusBlockOrderService, TerminusOrderService, TerminusCarrierInventoryCount, TerminusNumberService) {
+  function PstnSetupService($q, Authinfo, TerminusCarrierService, TerminusCustomerService, TerminusCustomerCarrierService, TerminusBlockOrderService, TerminusOrderService, TerminusCarrierInventoryCount, TerminusNumberService, TerminusCarrierInventorySearch, TerminusCarrierInventoryReserve, TerminusCarrierInventoryRelease, TerminusNumberOrderService) {
     var INTELEPEER = "INTELEPEER";
     var TATA = "TATA";
     var PSTN = "PSTN";
@@ -18,10 +18,14 @@
       getCustomer: getCustomer,
       listCarriers: listCarriers,
       getCarrierInventory: getCarrierInventory,
+      searchCarrierInventory: searchCarrierInventory,
+      reserveCarrierInventory: reserveCarrierInventory,
+      releaseCarrierInventory: releaseCarrierInventory,
       isCarrierSwivel: isCarrierSwivel,
       listCustomerCarriers: listCustomerCarriers,
       getCarrierId: getCarrierId,
       orderBlock: orderBlock,
+      orderNumbers: orderNumbers,
       listPendingOrders: listPendingOrders,
       getOrder: getOrder,
       listPendingNumbers: listPendingNumbers,
@@ -100,6 +104,37 @@
       }).$promise;
     }
 
+    function searchCarrierInventory(carrierId, params) {
+      var paramObj = params || {};
+      paramObj.carrierId = carrierId;
+      return TerminusCarrierInventorySearch.get(paramObj).$promise
+        .then(function (response) {
+          return response.numbers || [];
+        });
+    }
+
+    function reserveCarrierInventory(carrierId, numbers) {
+      if (!angular.isArray(numbers)) {
+        numbers = [numbers];
+      }
+      return TerminusCarrierInventoryReserve.save({
+        carrierId: carrierId
+      }, {
+        numbers: numbers
+      }).$promise;
+    }
+
+    function releaseCarrierInventory(carrierId, numbers) {
+      if (!angular.isArray(numbers)) {
+        numbers = [numbers];
+      }
+      return TerminusCarrierInventoryRelease.save({
+        carrierId: carrierId
+      }, {
+        numbers: numbers
+      }).$promise;
+    }
+
     function isCarrierSwivel(customerId) {
       return listCustomerCarriers(customerId).then(function (carriers) {
         if (angular.isArray(carriers)) {
@@ -133,6 +168,16 @@
       payload.quantity = quantity;
 
       return TerminusBlockOrderService.save({
+        customerId: customerId,
+        carrierId: carrierId
+      }, payload).$promise;
+    }
+
+    function orderNumbers(customerId, carrierId, numbers) {
+      var payload = angular.copy(blockOrderPayload);
+      payload.numbers = numbers;
+
+      return TerminusNumberOrderService.save({
         customerId: customerId,
         carrierId: carrierId
       }, payload).$promise;

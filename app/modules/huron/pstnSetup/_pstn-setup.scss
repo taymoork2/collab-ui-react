@@ -23,13 +23,17 @@
   }
 }
 
+.pstn-provider-logo {
+  height: rem-calc(40px);
+  width: rem-calc(235px);
+}
+
 .pstn-provider-card {
   footer {
     text-align: center;
   }
   header img {
-    height: rem-calc(40px);
-    width: rem-calc(235px);
+    @extend .pstn-provider-logo;
   }
   h4 {
     text-align: center;
@@ -88,10 +92,20 @@
 
   .modal-body {
     margin: 0;
+    .formly-field {
+      padding-bottom: 0;
+    }
+    + .modal-body {
+      margin-top: rem-calc(10);
+    }
+  }
+
+  .search-results {
+    margin-top: rem-calc(15);
   }
 
   .form .has-feedback .form-control-feedback {
-      right: 4px;
+      top: 6px;
   }
 
   .form-inline.formly-field-select {
@@ -145,8 +159,7 @@
     .logo {
       border-right: 1px solid $gray-lighter;
       img {
-        height: 40px;
-        width: 235px;
+        @extend .pstn-provider-logo;
         margin: 50px;
       }
     }
