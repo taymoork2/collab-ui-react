@@ -53,6 +53,12 @@
         });
     }
 
+    function LicenseFeature(name, state) {
+        this['id'] = name.toString();
+        this['properties'] = null;
+        //this['state'] = state ? 'ADD' : 'REMOVE';
+    }
+
     function collectLicenseIdsForWebexSites(liclist) {
       var licIds = [];
       var i = 0;
@@ -66,7 +72,7 @@
         var isConfType = lictype === "CONFERENCING";
         var licHasSiteUrl = (angular.isUndefined(lic.siteUrl) === false);
         if (licHasSiteUrl && isConfType) {
-          licIds.push(licId);
+          licIds.push( new LicenseFeature(licId, true) );
         }
       }
       return licIds;

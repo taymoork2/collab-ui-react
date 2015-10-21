@@ -615,29 +615,35 @@ angular.module('Core')
         return confId;
       };
 
-      var getAccountLicenseIds = function () {
-        var licenseIdList = [];
+      var getAccountLicenses = function () {
+        var licenseList = [];
         if (Authinfo.hasAccount()) {
           // Messaging: prefer selected subscription, if specified
           if ('licenseId' in $scope.radioStates.subLicense) {
-            licenseIdList.push($scope.radioStates.subLicense.licenseId);
+            licenseList.push(new LicenseFeature($scope.radioStates.subLicense.licenseId, true));
           } else {
             var msgIndex = $scope.radioStates.msgRadio ? 1 : 0;
             var selMsgService = $scope.messageFeatures[msgIndex];
             // TODO (tohagema): clean up messageFeatures license(s) model :/
             var license = selMsgService.license || selMsgService.licenses[0];
-            if ('licenseId' in license) licenseIdList.push(license.licenseId);
+            if ('licenseId' in license) licenseList.push(new LicenseFeature(license.licenseId, true));
           }
+          
           // Conferencing: depends on model (standard vs. CMR)
-          licenseIdList = licenseIdList.concat(getConfIdList());
+          var cidList = getConfIdList();
+          for ( var i  = 0; i < cidList.length; i++ ) {
+            licenseList.push( new LicenseFeature(cidList[i], true) );
+          }
+
           // Communication: straightforward license, for now
           var commIndex = $scope.radioStates.commRadio ? 1 : 0;
           var selCommService = $scope.communicationFeatures[commIndex];
           if ('licenseId' in selCommService.license) {
-            licenseIdList.push(selCommService.license.licenseId);
+            licenseList.push(new LicenseFeature(selCommService.license.licenseId, true));
           }
         }
-        return licenseIdList.length === 0 ? null : licenseIdList;
+
+        return licenseList.length === 0 ? null : licenseList;
       };
 
       var getEntitlements = function (action) {
@@ -677,7 +683,7 @@ angular.module('Core')
         }
         $scope.btnSaveEntLoad = true;
 
-        Userservice.updateUsers(user, getAccountLicenseIds(), null, 'updateUserLicense', entitleUserCallback);
+        Userservice.updateUsers(user, getAccountLicenses(), null, 'updateUserLicense', entitleUserCallback);
       };
 
       //****************MODAL INIT FUNCTION FOR INVITE AND ADD***************
@@ -688,6 +694,12 @@ angular.module('Core')
       function Feature(name, state) {
         this.entitlementName = name;
         this.entitlementState = state ? 'ACTIVE' : 'INACTIVE';
+      }
+
+      function LicenseFeature(name, state) {
+        this['id'] = name.toString();
+        this['properties'] = null;
+        //this['state'] = state ? 'ADD' : 'REMOVE';
       }
 
       $scope.isAddEnabled = function () {
@@ -1034,7 +1046,7 @@ angular.module('Core')
             var entitleList = [];
             var licenseList = [];
             if (Authinfo.hasAccount() && $scope.collabRadio === 1) {
-              licenseList = getAccountLicenseIds();
+              licenseList = getAccountLicenses();
             } else {
               entitleList = getEntitlements('add');
             }
@@ -1445,7 +1457,7 @@ angular.module('Core')
             var entitleList = [];
             var licenseList = [];
             if (Authinfo.hasAccount() && $scope.collabRadio === 1) {
-              licenseList = getAccountLicenseIds();
+              licenseList = getAccountLicenses();
             } else {
               entitleList = getEntitlements('add');
             }
@@ -1710,7 +1722,7 @@ angular.module('Core')
         var entitleList = [];
         var licenseList = [];
         if (Authinfo.hasAccount() && $scope.collabRadio === 1) {
-          licenseList = getAccountLicenseIds() || [];
+          licenseList = getAccountLicenses() || [];
         } else {
           entitleList = getEntitlements('add');
         }

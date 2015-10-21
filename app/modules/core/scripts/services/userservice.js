@@ -51,7 +51,7 @@ angular.module('Core')
 
       return {
 
-        updateUsers: function (usersDataArray, userLicenses, entitlements, method, callback) {
+        updateUsers: function (usersDataArray, licenses, entitlements, method, callback) {
           var userData = {
             'users': []
           };
@@ -62,7 +62,7 @@ angular.module('Core')
               var user = {
                 'email': userEmail,
                 'userEntitlements': entitlements,
-                'userLicenses': userLicenses,
+                'licenses': licenses,
                 'assignedDn': usersDataArray[i].assignedDn,
                 'externalNumber': usersDataArray[i].externalNumber
               };
@@ -396,7 +396,7 @@ angular.module('Core')
             });
         },
 
-        onboardUsers: function (usersDataArray, entitlements, userLicenses, callback, cancelPromise) {
+        onboardUsers: function (usersDataArray, entitlements, licenses, callback, cancelPromise) {
           var userData = {
             'users': []
           };
@@ -412,42 +412,12 @@ angular.module('Core')
                 'familyName': null,
               },
               'userEntitlements': entitlements,
-              'userLicenses': userLicenses
+              'licenses': licenses
             };
 
             if (userEmail.length > 0) {
               user.email = userEmail;
               user.name = tokenParseFirstLastName(userName);
-              userData.users.push(user);
-            }
-          }
-          onboardUsers(userData, callback, cancelPromise);
-        },
-
-        onboardLicenseUsers: function (usersDataArray, entitlements, licenses, callback, cancelPromise) {
-          var userData = {
-            'users': []
-          };
-
-          for (var i = 0; i < usersDataArray.length; i++) {
-            var userEmail = usersDataArray[i].address.trim();
-            var userName = usersDataArray[i].name;
-            var displayName = usersDataArray[i].displayName;
-            var user = {
-              'email': null,
-              'name': {
-                'givenName': null,
-                'familyName': null,
-              },
-              'userEntitlements': entitlements,
-              'licenses': (licenses && licenses.length > i) ? licenses[i] : null
-            };
-            if (userEmail.length > 0) {
-              user.email = userEmail;
-              user.name = tokenParseFirstLastName(userName);
-              if (displayName) {
-                user.displayName = displayName;
-              }
               userData.users.push(user);
             }
           }
