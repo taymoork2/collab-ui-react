@@ -525,7 +525,6 @@
           return connector.id == vm.connectorId;
         })
         .value();
-      console.log(conn);
       return conn;
     };
 
