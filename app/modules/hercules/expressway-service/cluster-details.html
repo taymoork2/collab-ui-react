@@ -58,12 +58,15 @@
       <ul>
         <li class="feature" ng-repeat="connector in expresswayServiceDetails.selectedService().connectors"
             ng-class="{'list-item': !$first}">
-          <a ui-sref="cluster-details-new.host-details({connector: connector})">
+          <a
+            ui-sref="cluster-details-new.host-details({connectorId: connector.id, clusterId: expresswayServiceDetails.clusterId})">
             <i class="fa fa-circle status-icon"
-               ng-class="connectors.alarms.length > 0 ? 'hercules-alarm' : connector.state"></i>
+               ng-class="connector.alarms.length > 0 ? 'hercules-alarm' : connector.state"></i>
             <span class="feature-name">{{connector.host.host_name}}</span>
-            <span class="feature-status"
+            <span class="feature-status" ng-if="connector.alarms.length == 0"
                   translate="{{'hercules.status.' + (connector.state || 'unknown') }}"></span>
+            <span class="feature-status" ng-if="connector.alarms.length > 0"
+                  translate="hercules.status.alarm"></span>
             <i class="feature-arrow"></i>
           </a>
         </li>

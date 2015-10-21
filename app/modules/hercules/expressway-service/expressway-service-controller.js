@@ -512,13 +512,41 @@
     vm.host = $stateParams.host;
   }
 
+  /* @ngInject */
+  function HostDetailsController($stateParams, $state, ClusterService, XhrNotificationService) {
+    var vm = this;
+    vm.connectorId = $stateParams.connectorId;
+    vm.cluster = ClusterService.getClusters()[$stateParams.clusterId];
+    vm.connector = function () {
+      var conn = _.chain(vm.cluster.services)
+        .pluck('connectors')
+        .flatten()
+        .find(function (connector) {
+          return connector.id == vm.connectorId;
+        })
+        .value();
+      return conn;
+    };
+
+    vm.deleteHost = function () {
+      return ClusterService.deleteHost(vm.clusterId, vm.connector.host.serial).then(function () {
+        if (ClusterService.getClusters()[vm.clusterId]) {
+          $state.go('cluster-details', {
+            clusterId: vm.clusterId
+          });
+        } else {
+          $state.sidepanel.close();
+        }
+      }, XhrNotificationService.notify);
+    };
+  }
+
   angular
     .module('Hercules')
     .controller('ExpresswayServiceController', ExpresswayServiceController)
     .controller('ExpresswayServiceDetailsController', ExpresswayServiceDetailsController)
-    //.controller('ExpresswayClusterSettingsController', ExpresswayClusterSettingsController)
     .controller('ExpresswayServiceSettingsController', ExpresswayServiceSettingsController)
     .controller('DisableConfirmController', DisableConfirmController)
-    .controller('AlarmController', AlarmController);
-
+    .controller('AlarmController', AlarmController)
+    .controller('HostDetailsController', HostDetailsController);
 }());
