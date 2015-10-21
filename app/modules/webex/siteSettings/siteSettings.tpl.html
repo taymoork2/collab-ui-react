@@ -1,6 +1,5 @@
 <div id="webexSiteSettings"
-     name="webexSiteSettings"
-     class="siteindex-panel">
+     name="webexSiteSettings">
 
   <div class="row page-header">
     <div class="page-title small-10 columns">
@@ -23,11 +22,14 @@
     </div>
   </div>
 
-  <div>
+  <cs-container>
+  <!-- 
+  <div class="siteindex-panel">
+  -->
     <!-- breadcrumbs -->
     <ul id="siteSettingsBreadCrumbs"
         name="siteSettingsBreadCrumbs" class="breadcrumbs">
-        
+          
       <li>
         <a id="siteListCrumb"
            ui-sref="site-list"
@@ -49,10 +51,10 @@
       <cs-card-layout>
         <!-- Common Settings card -->
         <div ng-include="'modules/webex/siteSettings/commonSettingsCard.tpl.html'"></div>
-      
+    
         <!-- Meeting Center Settings card -->
         <div ng-include="'modules/webex/siteSettings/meetingCenterSettingsCard.tpl.html'"></div>
-      
+    
         <!-- Training Center Settings card -->
         <div ng-include="'modules/webex/siteSettings/trainingCenterSettingsCard.tpl.html'"></div>
       
@@ -67,14 +69,17 @@
     <!-- WebEx site admin cross launch -->
     <p>
       &nbsp;&nbsp;&nbsp;
-      
+    
       <a href=""
          onClick="document.getElementById('hiddenButton').click();">
 
         Launch&nbsp;WebEx&nbsp;Site&nbsp;Admin
       </a>
     </p>
-  </div>
+  <!-- 
+  </div> 
+  -->
+  </cs-container>
 </div>
 
 <!-- WebEx site admin cross launch form -->
