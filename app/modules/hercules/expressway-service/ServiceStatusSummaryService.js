@@ -8,35 +8,26 @@
   function ServiceStatusSummaryService() {
 
     var status = function (service_id, cluster) {
-      var calendarService = _.find(cluster.services, {
+      var service = _.find(cluster.services, {
         service_type: service_id
       });
-      var managementService = _.find(cluster.services, {
-        service_type: "c_mgmt"
-      });
-      if (managementService === undefined || managementService.status === "needs_attention") {
+      if (service === undefined) {
         return {
-          status: "alarm",
-          color: "red"
+          status: "unknown"
         };
-      } else if (calendarService === undefined) {
+      } else if (service.alarm_count > 0) {
         return {
-          status: "unknown",
-          color: "grey"
-        };
-      } else if (calendarService.status === "running") {
-        return {
-          status: "running",
-          color: "green"
+          status: "alarm"
         };
       } else return {
-        status: calendarService.status,
-        color: "yellow"
+        status: service.status
       };
-      //return (calendarService !== undefined && calendarService.status === "needs_attention") || (managementService !== undefined && managementService.status === "needs_attention");
     };
 
     var serviceFromCluster = function (serviceType, cluster) {
+      if (!cluster || !cluster.services) {
+        return null;
+      }
       return _.find(cluster.services, {
         service_type: serviceType
       });
@@ -44,7 +35,7 @@
 
     var serviceNotInstalled = function (serviceType, cluster) {
       var serviceInfo = serviceFromCluster(serviceType, cluster);
-      if (serviceInfo === undefined) {
+      if (!serviceInfo) {
         return true;
       } else {
         return serviceInfo.connectors.length === 0;
@@ -53,7 +44,7 @@
 
     var softwareUpgradeAvailable = function (serviceType, cluster) {
       var serviceInfo = serviceFromCluster(serviceType, cluster);
-      if (serviceInfo === undefined) {
+      if (!serviceInfo) {
         return false;
       } else {
         return serviceInfo.software_upgrade_available;

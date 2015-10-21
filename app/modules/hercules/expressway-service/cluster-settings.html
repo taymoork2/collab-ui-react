@@ -1,12 +1,9 @@
-<div class="typography-airy">
+<cs-sp-container>
 
-<h5 class="black-header">Mute Notifications</h5>
-<p>Not implemented</p>
-
-  <div ng-if="expresswayServiceDetails.activeActiveApplicable">
-
-    <h5 class="black-header">Active-Active mode (High availability)</h5>
-
+  <cs-sp-section ng-if="expresswayServiceDetails.activeActiveApplicable">
+    <div class="section-title-row section-name">
+      Active-Active Mode (High Availability)
+    </div>
     <p ng-if="!expresswayServiceDetails.activeActivePossible">
       Not available as Active-Active requires a cluster with more than 1 host
     </p>
@@ -19,10 +16,14 @@
       <span ng-if="expresswayServiceDetails.activeActiveEnabled">Disable</span>
       <span ng-if="!expresswayServiceDetails.activeActiveEnabled">Enable</span>
     </button>
+  </cs-sp-section>
 
-  </div>
+  <cs-sp-section>
+    <div>
+      <button id="btn-primary" ng-disabled="saving" class="btn btn-danger" style="margin-top: 15px;"
+              translate="hercules.clusters.deregister"
+              ng-click="sp.close(); expresswayServiceDetails.showDeregisterDialog();"></button>
+    </div>
+  </cs-sp-section>
 
-  <h5 class="black-header">Deregister Cluster</h5>
-  <button class="button secondary">Deregister cluster</button>
-
-</div>
+</cs-sp-container>

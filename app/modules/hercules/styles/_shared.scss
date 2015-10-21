@@ -3,6 +3,18 @@
 
   .tags {
     border-radius: 3px;
+    .tag-item {
+      background: none;
+      background-color: $brand-primary-light;
+      color: $brand-white;
+
+      .remove-button {
+        color: $brand-white;
+      }
+    }
+    .input.invalid-tag {
+      color: $brand-danger;
+    }
   }
 
   .typography-airy {
@@ -39,10 +51,6 @@
 
   .small-padding-top {
     /*border-top:1px solid $brand-white;*/
-  }
-
-  .tiny-vertical-marker {
-    border-right: $gray-lighter solid 1px;
   }
 
   .page-header {
@@ -132,43 +140,35 @@
     left: -0.5rem;
   };
 }
-/**
-New styling
-*/
-.hercules {
-  .header-panel {
-    h3, h4 {
-      display: table-cell;
-    }
-    h3 {
-      padding-right: 2rem;
-    }
-    hr {
-      margin-top: 1rem;
-      margin-bottom: 1rem;
-    }
-  }
-}
-
-/* Detail */
-.side-view {
-  padding-top: 2rem;
-  .icon.icon-three-dots {
-    color: #666666 !important;
-  }
-  h5 {
-    padding-top: 1rem !important;
-  }
-  .icon.icon-close {
-    color: black;
-    position: absolute;
-    top: 1.25rem;
-    right: 2rem;
-  }
-}
 
 /* Fix alert crap */
 .fix-alert-margins {
   margin-right: 0px;
   margin-left: 0px;
+}
+
+.hercules-needs_attention {
+  color: $color-alerts;
+}
+
+.hercules-alarm {
+  color: $color-alerts;
+}
+
+.hercules-disabled {
+  color: $gray-light;
+}
+
+.hercules-running {
+  color: $color-cta;
+}
+
+.hercules-unknown {
+  color: $gray-light;
+}
+
+.hercules-fix-paragraphs {
+  p {
+    margin-bottom: 1rem;
+  }
 }

@@ -30,13 +30,6 @@
           adc.notificationsFailed = false;
         };
 
-        adc.showCopiedToClipboardMessage = function () {
-          $('#copyCodeToClipboardButton i').tooltip('show');
-          setTimeout(function () {
-            $('#copyCodeToClipboardButton i').tooltip('destroy');
-          }, 3000);
-        };
-
         adc.addDevice = function (callback) {
           if (!adc.isNameValid()) {
             return $q.defer().reject();

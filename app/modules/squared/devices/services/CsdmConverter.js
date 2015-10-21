@@ -40,6 +40,7 @@ angular.module('Squared').service('CsdmConverter',
 
       this.url = obj.url;
       this.cisUuid = obj.id;
+      this.expiryTime = obj.expiryTime;
       this.displayName = obj.displayName;
       this.activationCode = obj.activationCode;
       this.readableState = getReadableState(obj);

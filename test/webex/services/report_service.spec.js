@@ -1,29 +1,29 @@
 'use strict';
 
 //Below is the Test Suit written for FaultRuleService
-describe('Service: reportService', function () {
+describe('Service: WebexReportService', function () {
 
   //load the service's module
   beforeEach(module('wx2AdminWebClientApp'));
 
   //Initialize variables
-  var reportService, httpBackend, WebExUtilsFact, testReports;
+  var WebexReportService, httpBackend, WebExUtilsFact, testReports;
 
-  beforeEach(inject(function ($httpBackend, _reportService_) {
+  beforeEach(inject(function ($httpBackend, _WebexReportService_) {
 
     //httpBackend = $httpBackend;
 
-    reportService = _reportService_;
+    WebexReportService = _WebexReportService_;
     httpBackend = $httpBackend;
     //WebExUtilsFact = _WebExUtilsFact_;
 
     //ReportsSection = function (sectionName, siteUrl, reportLinks, categoryName)
-    testReports = new reportService.ReportsSection("testReports", "mojoco.webex.com", ["x", "y"], "testReportsCat");
+    testReports = new WebexReportService.ReportsSection("testReports", "mojoco.webex.com", ["x", "y"], "testReportsCat");
 
   }));
 
-  // it("reportService should be defined", function () {
-  //   expect(reportService).toBeDefined();
+  // it("WebexReportService should be defined", function () {
+  //   expect(WebexReportService).toBeDefined();
   // });
 
   it("webex: can reverse mapping", function () {
@@ -31,7 +31,7 @@ describe('Service: reportService', function () {
       "x": "y",
       "w": "z"
     };
-    var reversedMap = reportService.reverseMapping(mapping);
+    var reversedMap = WebexReportService.reverseMapping(mapping);
     var x = reversedMap["y"];
     var w = reversedMap["z"];
     expect(x).toBe("x");

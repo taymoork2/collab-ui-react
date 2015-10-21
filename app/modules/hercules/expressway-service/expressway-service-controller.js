@@ -85,10 +85,12 @@
   function ExpresswayServiceController(XhrNotificationService, NotificationService, ServiceStateChecker, ServiceDescriptor, $stateParams, $state,
     $modal,
     $scope, ClusterService, USSService2, ConverterService, ServiceStatusSummaryService) {
-    ClusterService.subscribe(checkServiceState, {
+
+    ClusterService.subscribe('data', clustersUpdated, {
       scope: $scope
     });
-    USSService2.subscribeStatusesSummary(extractSummaryForAService, {
+
+    USSService2.subscribeStatusesSummary('data', extractSummaryForAService, {
       scope: $scope
     });
 
@@ -100,8 +102,7 @@
     //TODO: Don't like this linking to routes...
     vm.route = serviceType2RouteName(vm.currentServiceType);
     vm.notificationTag = vm.currentServiceId;
-
-    vm.clusters = ClusterService.getClusters();
+    vm.clusters = _.values(ClusterService.getClusters());
     vm.clusterLength = function () {
       return _.size(vm.clusters);
     };
@@ -130,8 +131,9 @@
       return ServiceStatusSummaryService.status(vm.currentServiceType, cluster);
     };
 
-    function checkServiceState() {
+    function clustersUpdated() {
       ServiceStateChecker.checkState(vm.currentServiceType, vm.currentServiceId);
+      vm.clusters = _.values(ClusterService.getClusters());
     }
 
     function extractSummaryForAService() {
@@ -158,6 +160,34 @@
       });
       vm.serviceEnabled = true;
     };
+
+    vm.showClusterDetails = function (cluster) {
+      $state.go('cluster-details-new', {
+        cluster: cluster,
+        serviceType: vm.currentServiceType
+      });
+    };
+
+    vm.clusterListGridOptions = {
+      data: 'exp.clusters',
+      enableSorting: false,
+      multiSelect: false,
+      showFilter: false,
+      showFooter: false,
+      rowHeight: 75,
+      rowTemplate: 'modules/hercules/expressway-service/cluster-list-row-template.html',
+      headerRowHeight: 44,
+      columnDefs: [{
+        field: 'name',
+        displayName: 'Expressway Clusters',
+        cellTemplate: 'modules/hercules/expressway-service/cluster-list-display-name.html',
+        width: '35%'
+      }, {
+        displayName: 'Service Status',
+        cellTemplate: 'modules/hercules/expressway-service/cluster-list-status.html',
+        width: '65%'
+      }]
+    };
   }
 
   /* @ngInject */
@@ -170,9 +200,11 @@
 
     vm.cluster = ClusterService.getClusters()[vm.clusterId];
 
-    vm.selectedService = _.find(vm.cluster.services, {
-      service_type: vm.serviceType
-    });
+    vm.selectedService = function () {
+      return _.find(vm.cluster.services, {
+        service_type: vm.serviceType
+      });
+    };
 
     vm.activeActiveApplicable = (vm.serviceType == 'c_cal' || vm.serviceType == 'c_ucmc');
     vm.activeActivePossible = vm.cluster.hosts.length > 1;
@@ -238,7 +270,19 @@
       return ClusterService.deleteHost(vm.clusterId, host.serial).then(function () {
         //TODO: Update page
       }, XhrNotificationService.notify);
+    };
 
+    vm.showDeregisterDialog = function () {
+      $modal.open({
+        resolve: {
+          cluster: function () {
+            return vm.cluster;
+          }
+        },
+        controller: 'ClusterDeregisterController',
+        controllerAs: "clusterDeregister",
+        templateUrl: 'modules/hercules/cluster-deregister/deregister-dialog.html'
+      });
     };
 
     /* @ngInject */
@@ -442,6 +486,11 @@
         }
       }).result.then(readCerts);
     };
+
+    vm.invalidEmail = function (tag) {
+      Notification.error(tag.text + " is not a valid email");
+    };
+
   }
 
   /* @ngInject */
@@ -463,13 +512,41 @@
     vm.host = $stateParams.host;
   }
 
+  /* @ngInject */
+  function HostDetailsController($stateParams, $state, ClusterService, XhrNotificationService) {
+    var vm = this;
+    vm.connectorId = $stateParams.connectorId;
+    vm.cluster = ClusterService.getClusters()[$stateParams.clusterId];
+    vm.connector = function () {
+      var conn = _.chain(vm.cluster.services)
+        .pluck('connectors')
+        .flatten()
+        .find(function (connector) {
+          return connector.id == vm.connectorId;
+        })
+        .value();
+      return conn;
+    };
+
+    vm.deleteHost = function () {
+      return ClusterService.deleteHost(vm.clusterId, vm.connector.host.serial).then(function () {
+        if (ClusterService.getClusters()[vm.clusterId]) {
+          $state.go('cluster-details', {
+            clusterId: vm.clusterId
+          });
+        } else {
+          $state.sidepanel.close();
+        }
+      }, XhrNotificationService.notify);
+    };
+  }
+
   angular
     .module('Hercules')
     .controller('ExpresswayServiceController', ExpresswayServiceController)
     .controller('ExpresswayServiceDetailsController', ExpresswayServiceDetailsController)
-    //.controller('ExpresswayClusterSettingsController', ExpresswayClusterSettingsController)
     .controller('ExpresswayServiceSettingsController', ExpresswayServiceSettingsController)
     .controller('DisableConfirmController', DisableConfirmController)
-    .controller('AlarmController', AlarmController);
-
+    .controller('AlarmController', AlarmController)
+    .controller('HostDetailsController', HostDetailsController);
 }());
