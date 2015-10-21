@@ -180,10 +180,12 @@
       columnDefs: [{
         field: 'name',
         displayName: 'Expressway Clusters',
-        cellTemplate: 'modules/hercules/expressway-service/cluster-list-display-name.html'
+        cellTemplate: 'modules/hercules/expressway-service/cluster-list-display-name.html',
+        width: '35%'
       }, {
         displayName: 'Service Status',
-        cellTemplate: 'modules/hercules/expressway-service/cluster-list-status.html'
+        cellTemplate: 'modules/hercules/expressway-service/cluster-list-status.html',
+        width: '65%'
       }]
     };
   }
@@ -198,9 +200,11 @@
 
     vm.cluster = ClusterService.getClusters()[vm.clusterId];
 
-    vm.selectedService = _.find(vm.cluster.services, {
-      service_type: vm.serviceType
-    });
+    vm.selectedService = function () {
+      return _.find(vm.cluster.services, {
+        service_type: vm.serviceType
+      });
+    };
 
     vm.activeActiveApplicable = (vm.serviceType == 'c_cal' || vm.serviceType == 'c_ucmc');
     vm.activeActivePossible = vm.cluster.hosts.length > 1;

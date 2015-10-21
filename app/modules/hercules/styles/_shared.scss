@@ -166,3 +166,9 @@
 .hercules-unknown {
   color: $gray-light;
 }
+
+.hercules-fix-paragraphs {
+  p {
+    margin-bottom: 1rem;
+  }
+}
