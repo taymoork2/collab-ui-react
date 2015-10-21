@@ -12,11 +12,17 @@
           <span class="feature-status">{{hostDetailsCtrl.connector().host.serial}}</span>
         </li>
         <li class="feature">
+          <span class="feature-name">Version</span>
+          <span class="feature-status">{{hostDetailsCtrl.connector().version}}</span>
+        </li>
+        <li class="feature">
           <span class="feature-name">Status</span>
-          <span class="feature-status" ng-if="hostDetailsCtrl.connector().alarms.length == 0"
+          <span class="feature-status"
+                ng-if="hostDetailsCtrl.connector().alarms.length == 0"
                 translate="{{'hercules.status.' + (hostDetailsCtrl.connector().state || 'unknown') }}"></span>
-            <span class="feature-status" ng-if="hostDetailsCtrl.connector().alarms.length > 0"
-                  translate="hercules.status.alarm"></span>
+          <span class="feature-status"
+                ng-if="hostDetailsCtrl.connector().alarms.length > 0"
+                translate="hercules.status.alarm"></span>
         </li>
       </ul>
     </div>
@@ -35,5 +41,29 @@
     </div>
 
   </cs-sp-section>
+
+  <cs-sp-section>
+    <div class="section-title-row section-name">
+      Alarms
+    </div>
+
+    <div class="feature-list" ng-if="hostDetailsCtrl.connector().alarms.length > 0">
+      <ul>
+        <li class="feature" ng-repeat="alarm in hostDetailsCtrl.connector().alarms" ng-class="{'list-item': !$first}">
+          <a
+            ui-sref="cluster-details-new.alarm-details({alarm: alarm, host: hostDetailsCtrl.connector().host.host_name})">
+            <i class="icon icon-error hercules-alarm status-icon"/>
+            <span class="feature-name">{{alarm.title}}</span>
+            <span class="feature-status">View Alarm</span>
+            <i class="feature-arrow"></i>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <p ng-if="hostDetailsCtrl.connector().alarms.length == 0">
+      No alarms reported
+    </p>
+  </cs-sp-section>
+
 
 </cs-sp-container>

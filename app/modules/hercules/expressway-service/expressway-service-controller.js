@@ -518,13 +518,15 @@
     vm.connectorId = $stateParams.connectorId;
     vm.cluster = ClusterService.getClusters()[$stateParams.clusterId];
     vm.connector = function () {
-      return _.chain(vm.cluster.services)
+      var conn = _.chain(vm.cluster.services)
         .pluck('connectors')
         .flatten()
         .find(function (connector) {
           return connector.id == vm.connectorId;
         })
         .value();
+      console.log(conn);
+      return conn;
     };
 
     vm.deleteHost = function () {
