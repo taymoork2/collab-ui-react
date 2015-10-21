@@ -98,20 +98,20 @@
   })
 
   .factory('NumberSearchServiceV2', function ($resource, HuronConfig) {
-    //var baseUrl = HuronConfig.getMockHgUrl();
-    var baseUrl = HuronConfig.getCmiV2Url();
+    var baseUrl = HuronConfig.getMockHgUrl();
+    //var baseUrl = HuronConfig.getCmiV2Url();
     return $resource(baseUrl + '/customers/:customerId/numbers', {
-      //secret: 'sunlight',
+      secret: 'sunlight', // TODO: Remove this parameter when Mock is replaced with CmiV2.
       customerId: '@customerId',
       number: '@number'
     });
   })
 
   .factory('HuntGroupServiceV2', function ($resource, HuronConfig) {
-    //var baseUrl = HuronConfig.getMockHgUrl();
-    var baseUrl = HuronConfig.getCmiV2Url();
+    var baseUrl = HuronConfig.getMockHgUrl();
+    //var baseUrl = HuronConfig.getCmiV2Url();
     return $resource(baseUrl + '/customers/:customerId/features/huntgroups/:huntGroupId', {
-      //secret: 'sunlight',
+      secret: 'sunlight', // TODO: Remove this parameter when Mock is replaced with CmiV2.
       customerId: '@customerId',
       huntGroupId: '@huntGroupId'
     }, {});
