@@ -1,7 +1,8 @@
 'use strict';
 
 // Waiting for page refactor to complete before turning tests back on
-describe('Partner Reports', function () {
+// TODO re-enable when a partner org is restored
+xdescribe('Partner Reports', function () {
   var customer = 'Huron Int Test 2';
   var sampleCustomer = 'Sample Customer Data';
   var time = 'Last Month';

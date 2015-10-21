@@ -1,9 +1,11 @@
 'use strict';
 
 angular.module('Core')
-  .controller('SiteListCtrl', ['$q', '$translate', 'Authinfo', 'Config', '$log', '$scope', 'Userservice', 'WebExUtilsFact', 'WebExXmlApiFact', 'WebExXmlApiInfoSvc',
-    function ($q, $translate, Authinfo, Config, $log, $scope, Userservice, WebExUtilsFact, WebExXmlApiFact, webExXmlApiInfoObj) {
+  .controller('SiteListCtrl', ['$translate', 'Authinfo', 'Config', '$log', 'Userservice', 'WebExUtilsFact',
+    function ($translate, Authinfo, Config, $log, Userservice, WebExUtilsFact) {
       var vm = this;
+      var funcName = "siteListCtrl()";
+      var logMsg = "";
 
       vm.getWebexUrl = function (url) {
         return Config.getWebexAdvancedHomeUrl(url);
@@ -15,18 +17,8 @@ angular.module('Core')
         userEmailParam: null,
       };
 
-      if (_.isUndefined(Authinfo.getPrimaryEmail())) {
-        Userservice.getUser('me', function (data, status) {
-          if (data.success) {
-            if (data.emails) {
-              Authinfo.setEmail(data.emails);
-              vm.siteLaunch.adminEmailParam = Authinfo.getPrimaryEmail();
-            }
-          }
-        });
-      }
-
       vm.gridData = Authinfo.getConferenceServicesWithoutSiteUrl();
+
       vm.gridData.forEach(
         function initGrid(grid) {
           grid.showSiteLink = false;
@@ -34,9 +26,9 @@ angular.module('Core')
           grid.isAdminReportEnabled = false;
           grid.webExSessionTicket = null;
 
-          var logMsg = "siteListCtrl(): " + "\n" +
+          logMsg = funcName + ": " + "\n" +
             "grid=" + JSON.stringify(grid);
-          $log.log(logMsg);
+          // $log.log(logMsg);
         } // initGrid()
       ); // vm.gridData.forEach()
 
@@ -91,7 +83,7 @@ angular.module('Core')
         '    </div>' + '\n' +
         '    <div ng-if="row.entity.isIframeSupported">' + '\n' +
         '       <a id="webex-reports-list-iframe"' + '\n' +
-        '           ui-sref="webex-reports({siteUrl:row.entity.license.siteUrl})"> ' + '\n' +
+        '           ui-sref="reports({tab:\'webex\',siteUrl:row.entity.license.siteUrl})"> ' + '\n' +
         '        <p class="ngCellText">' + '\n' +
         '          <span name="webexReports"' + '\n' +
         '                id="webexReports">' + '\n' +
@@ -149,49 +141,65 @@ angular.module('Core')
       });
       // End of grid set up
 
-      vm.gridData.forEach(
-        function processGrid(grid) {
-          var funcName = "processGrid()";
-          var logMsg = "";
+      if (_.isUndefined(Authinfo.getPrimaryEmail())) {
+        Userservice.getUser('me', function (data, status) {
+          if (data.success) {
+            if (data.emails) {
+              Authinfo.setEmail(data.emails);
+              vm.siteLaunch.adminEmailParam = Authinfo.getPrimaryEmail();
+              getInfoFromXmlApi();
+            }
+          }
+        });
+      } else {
+        getInfoFromXmlApi();
+      }
 
-          var siteUrl = grid.license.siteUrl;
+      function getInfoFromXmlApi() {
+        vm.gridData.forEach(
+          function processGrid(grid) {
+            var funcName = "processGrid()";
+            var logMsg = "";
 
-          WebExUtilsFact.isSiteSupportsIframe(siteUrl).then(
-            function isSiteSupportsIframeSuccess(result) {
-              var funcName = "isSiteSupportsIframeSuccess()";
-              var logMsg = "";
+            var siteUrl = grid.license.siteUrl;
 
-              logMsg = funcName + ": " + "\n" +
-                "result=" + JSON.stringify(result);
-              $log.log(logMsg);
+            WebExUtilsFact.isSiteSupportsIframe(siteUrl).then(
+              function isSiteSupportsIframeSuccess(result) {
+                var funcName = "isSiteSupportsIframeSuccess()";
+                var logMsg = "";
 
-              grid.isIframeSupported = result.isIframeSupported;
-              grid.isAdminReportEnabled = result.isAdminReportEnabled;
-              grid.showSiteLinks = true;
+                logMsg = funcName + ": " + "\n" +
+                  "result=" + JSON.stringify(result);
+                $log.log(logMsg);
 
-              logMsg = funcName + ": " + "\n" +
-                "siteUrl=" + siteUrl + "\n" +
-                "isIframeSupported=" + grid.isIframeSupported + "\n" +
-                "isAdminReportEnabled=" + grid.isAdminReportEnabled + "\n" +
-                "showSiteLinks=" + grid.showSiteLinks;
-              $log.log(logMsg);
-            }, // isSiteSupportsIframeSuccess()
+                grid.isIframeSupported = result.isIframeSupported;
+                grid.isAdminReportEnabled = result.isAdminReportEnabled;
+                grid.showSiteLinks = true;
 
-            function isSiteSupportsIframeError(response) {
-              var funcName = "isSiteSupportsIframeError()";
-              var logMsg = "";
+                logMsg = funcName + ": " + "\n" +
+                  "siteUrl=" + siteUrl + "\n" +
+                  "isIframeSupported=" + grid.isIframeSupported + "\n" +
+                  "isAdminReportEnabled=" + grid.isAdminReportEnabled + "\n" +
+                  "showSiteLinks=" + grid.showSiteLinks;
+                $log.log(logMsg);
+              }, // isSiteSupportsIframeSuccess()
 
-              grid.isIframeSupported = false;
-              grid.isAdminReportEnabled = false;
-              grid.showSiteLinks = true;
+              function isSiteSupportsIframeError(response) {
+                var funcName = "isSiteSupportsIframeError()";
+                var logMsg = "";
 
-              logMsg = funcName + ": " + "\n" +
-                "response=" + JSON.stringify(response);
-              $log.log(logMsg);
-            } // isSiteSupportsIframeError()
-          ); // WebExUtilsFact.isSiteSupportsIframe().then
-        } // processGrid()
-      ); // vm.gridData.forEach()
+                grid.isIframeSupported = false;
+                grid.isAdminReportEnabled = false;
+                grid.showSiteLinks = true;
+
+                logMsg = funcName + ": " + "\n" +
+                  "response=" + JSON.stringify(response);
+                $log.log(logMsg);
+              } // isSiteSupportsIframeError()
+            ); // WebExUtilsFact.isSiteSupportsIframe().then
+          } // processGrid()
+        ); // vm.gridData.forEach()
+      } // getInfoFromXmlApi()
 
       // End of site links set up
     }

@@ -2,16 +2,17 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmCacheFactory(CsdmPoller, CsdmCacheUpdater) {
+  function CsdmCacheFactory(CsdmPoller, CsdmCacheUpdater, CsdmHubFactory) {
     return {
       create: function (opts) {
-        return new CsdmCache(opts, CsdmPoller, CsdmCacheUpdater);
+        return new CsdmCache(opts, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory);
       }
     };
   }
 
-  function CsdmCache(opts, CsdmPoller, CsdmCacheUpdater) {
+  function CsdmCache(opts, CsdmPoller, CsdmCacheUpdater, CsdmHubFactory) {
     var cache = {};
+    var that = this;
     var shouldUpdateCache;
 
     function fetch() {
@@ -24,7 +25,8 @@
       });
     }
 
-    var poller = CsdmPoller.create(fetch);
+    var hub = CsdmHubFactory.create();
+    var poller = CsdmPoller.create(fetch, hub);
 
     function list() {
       return cache;
@@ -34,6 +36,8 @@
       return opts.remove(url, cache[url]).then(function () {
         delete cache[url];
         shouldUpdateCache = false;
+        hub.emit('data');
+        hub.emit('remove', url);
       });
     }
 
@@ -42,6 +46,8 @@
         if (obj) {
           CsdmCacheUpdater.updateOne(cache, url, obj);
           shouldUpdateCache = false;
+          hub.emit('data');
+          hub.emit('update', obj);
         }
         return cache[url];
       });
@@ -52,6 +58,8 @@
         if (obj) {
           CsdmCacheUpdater.updateOne(cache, url, obj);
           shouldUpdateCache = false;
+          hub.emit('data');
+          hub.emit('read', obj);
         }
         return cache[url];
       });
@@ -61,17 +69,19 @@
       return opts.create(url, data).then(function (obj) {
         CsdmCacheUpdater.updateOne(cache, obj.url, obj);
         shouldUpdateCache = false;
+        hub.emit('data');
+        hub.emit('create', obj);
         return cache[obj.url];
       });
     }
 
     return {
-      list: list,
       get: get,
+      on: hub.on,
+      list: list,
       remove: remove,
       update: update,
-      create: create,
-      subscribe: poller.subscribe
+      create: create
     };
   }
 

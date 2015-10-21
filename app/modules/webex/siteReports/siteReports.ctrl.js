@@ -2,18 +2,7 @@
   'use strict';
 
   angular.module('WebExReports').controller('WebExReportsCtrl', [
-    '$scope',
-    '$rootScope',
-    '$log',
-    '$translate',
-    '$filter',
-    '$state',
-    '$stateParams',
-    '$sce',
-    'reportService',
-    'Notification',
-    'Authinfo',
-    'Config',
+    '$scope', '$rootScope', '$log', '$translate', '$filter', '$state', '$stateParams', '$sce', 'WebexReportService', 'Notification', 'Authinfo', 'Config',
     function (
       $scope,
       $rootScope,
@@ -23,13 +12,13 @@
       $state,
       $stateParams,
       $sce,
-      reportService,
+      WebexReportService,
       Notification,
       Authinfo,
       Config
     ) {
 
-      this.reportObject = reportService.initReportsObject();
+      this.reportObject = WebexReportService.initReportsObject($stateParams.siteUrl);
 
       $scope.reportObject = this.reportObject;
 
@@ -54,7 +43,7 @@
         "})";
 
       // $log.log("ReportsCtrl start");
-      // var reports = reportService.getReports(this.reportObject.siteUrl);
+      // var reports = WebexReportService.getReports(this.reportObject.siteUrl);
 
       // if (!angular.isUndefined(reports)) {
       //   //$log.log(angular.toJson(reports));

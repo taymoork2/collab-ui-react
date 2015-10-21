@@ -58,12 +58,12 @@
     }
 
     return {
-      getDeviceList: getDeviceList,
+      on: deviceCache.on,
       getDevice: getDevice,
       uploadLogs: uploadLogs,
       deleteDevice: deleteDevice,
-      updateDeviceName: updateDeviceName,
-      subscribe: deviceCache.subscribe
+      getDeviceList: getDeviceList,
+      updateDeviceName: updateDeviceName
     };
   }
 

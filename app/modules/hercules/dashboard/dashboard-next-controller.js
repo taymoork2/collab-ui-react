@@ -9,7 +9,7 @@ angular.module('Hercules')
       $scope.noServicesSelected = false;
       $scope.startSetupClicked = false;
 
-      $scope.subscription = ClusterService.subscribe(angular.noop, {
+      $scope.subscription = ClusterService.subscribe('data', angular.noop, {
         scope: $scope
       });
 

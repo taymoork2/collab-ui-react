@@ -128,6 +128,18 @@
     });
   })
 
+  .factory('CompanyNumberService', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/companynumbers/:companyNumberId', {
+      customerId: '@customerId',
+      companyNumberId: '@companyNumberId'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  })
+
+  // Will remove this service later
   .factory('CallRouterService', function ($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/companynumbers/:companyNumberId', {
       customerId: '@customerId',

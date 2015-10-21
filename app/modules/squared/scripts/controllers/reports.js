@@ -2,8 +2,59 @@
 /* global AmCharts, $:false */
 
 angular.module('Squared')
-  .controller('ReportsCtrl', ['$scope', '$parse', 'ReportsService', 'Log', 'Authinfo', 'UserListService', 'Config', '$translate', 'CannedDataService',
-    function ($scope, $parse, ReportsService, Log, Authinfo, UserListService, Config, $translate, CannedDataService) {
+  .controller('ReportsCtrl', ['$scope', '$stateParams', '$q', 'ReportsService', 'WebexReportService', 'Log', 'Authinfo', 'Config', '$translate', 'CannedDataService', 'WebExUtilsFact',
+    function ($scope, $stateParams, $q, ReportsService, WebexReportService, Log, Authinfo, Config, $translate, CannedDataService, WebExUtilsFact) {
+
+      $scope.showEngagement = true;
+      $scope.showWebexReports = true;
+      $scope.webexReportsObject = {};
+
+      if ($stateParams.tab) {
+        $scope.showEngagement = false;
+        $scope.showWebexReports = $stateParams.tab === 'webex';
+      }
+
+      function generateWebexReportsUrl() {
+        var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl() || [];
+        $scope.webexOptions = [];
+        var promiseChain = [];
+
+        for (var i = 0; i < conferenceServices.length; i++) {
+          var url = conferenceServices[i].license.siteUrl;
+          promiseChain.push(WebExUtilsFact.isSiteSupportsIframe(url)
+            .then(function (result) {
+              if (result.isAdminReportEnabled && result.isIframeSupported) {
+                $scope.webexOptions.push(result.siteUrl);
+              }
+            }, function (error) {
+              //no-op, but needed
+            }));
+        }
+
+        $q.all(promiseChain).then(function () {
+          var selectedIndex = 0;
+          if ($stateParams.tab === 'webex') {
+            _.forEach($scope.webexOptions, function (val, index) {
+              if (val === $stateParams.siteUrl) {
+                selectedIndex = index;
+              }
+            });
+          }
+          $scope.webexSelected = $scope.webexOptions[selectedIndex];
+          $scope.updateWebexReports();
+        });
+      }
+
+      generateWebexReportsUrl();
+
+      $scope.updateWebexReports = function () {
+        $scope.webexReportsObject = WebexReportService.initReportsObject($scope.webexSelected);
+      };
+
+      $scope.show = function (showEngagement, showWebexReports) {
+        $scope.showEngagement = showEngagement;
+        $scope.showWebexReports = showWebexReports;
+      };
 
       $('#avgEntitlementsdiv').addClass('chart-border');
       $('#avgCallsdiv').addClass('chart-border');
@@ -226,7 +277,7 @@ angular.module('Squared')
 
           val[metric] = dataList[i].count;
           var dateVal = new Date(dataList[i].date);
-          dateVal = dateVal.toDateString();
+          dateVal = dateVal.toUTCString().split(' ').slice(0, 4).join(' ');
           val.week = dateVal.substring(dateVal.indexOf(' ') + 1);
           chartVals[i] = val;
           count += dataList[i].count;

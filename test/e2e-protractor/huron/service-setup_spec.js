@@ -14,10 +14,7 @@ describe('First Time Wizard - CiscoUC Service Setup', function () {
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Unified Communications');
     utils.expectIsDisplayed(servicesetup.timeZone);
     utils.expectIsDisplayed(servicesetup.steeringDigit);
-    utils.expectIsDisplayed(servicesetup.siteSteeringDigit);
-    utils.expectIsDisplayed(servicesetup.siteCode);
     utils.expectIsDisplayed(servicesetup.globalMOH);
-    utils.expectIsDisplayed(servicesetup.siteCode);
     utils.expectIsDisplayed(servicesetup.companyVoicemail);
     utils.expectIsDisplayed(servicesetup.numberRanges.first());
   });

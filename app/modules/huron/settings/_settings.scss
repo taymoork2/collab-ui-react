@@ -1,0 +1,49 @@
+@import 'customCombobox/_custom-combobox';
+
+.huron-settings {
+  position: relative;
+
+  .loading {
+    background: $brand-white;
+    font-size: 3rem;
+    text-align: center;
+  }
+
+  .huron-settings-main-container {
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+    overflow-y: auto;
+    height: 80vh;
+    color: $gray-darker;
+    background: $brand-white;
+
+    .column {
+      flex: 1;
+      padding: rem(60) rem(30) rem(30) rem(30);
+    }
+
+    label {
+      font-size: 1.5rem;
+    }
+
+    .nested {
+      label {
+        font-size: 1rem;
+      }
+    }
+
+    .caller-id-name {
+      .formly-input-wrapper {
+        width: 50%
+      }
+    }
+
+    .caller-id-number {
+      .formly-input-wrapper {
+        width: 55%;
+      }
+    }
+  }
+
+}

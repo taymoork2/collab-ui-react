@@ -1,7 +1,71 @@
+<!DOCTYPE html>
+<head>
+	<style type="text/css">
 
-<div id="unauthorized">
-	<h3>{{'unauthorizedPage.title' | translate}} </h3>
-	<p>{{'unauthorizedPage.text' | translate}} </p>
-</div>
+		html {
+	    	background:url(images/bg_3515.jpg) center center / cover no-repeat fixed;
+	  	}
+
+	  	body {
+	    	background-color: transparent;
+	  	}
+
+		#unauthorized {
+			position: relative;
+			margin: auto;
+			margin-top: 10%;
+			vertical-align: middle;
+			width: 375px;
+			height: 450px;
+			background: #fff;
+		}
+
+		.icon-circle-comp-neg {
+			font-size: 92px;
+			text-align: center;
+			padding-top: 32px;
+			color: #666;
+		}
+
+		h3{
+			text-align: center;
+			font-size: 36px;
+			padding-top: 24px;
+			font-family: "CiscoSansTT Extra Light";
+			color: #f05d3b;
+		}
+
+		p {
+			font-size: 20px;
+			text-align: center;
+			padding-top: 48px;
+			padding-left: 40px;
+			padding-right: 40px;
+			font-family: "CiscoSansTT Light";
+			color: #383A41; 
+		}
+
+		.icon-cisco-logo {
+			position: absolute;
+			font-size: 32px;
+			text-align: center;
+			color: #999;
+			bottom: 24px;
+			right: 0;
+			left: 0;
+		}
+
+	</style>
+</head>
+
+<body>
+	<div id="unauthorized">
+		<div class="icon icon-circle-lock icon-circle-comp-neg"></div>
+		<h3 translate="unauthorizedPage.title"></h3>
+		<p translate="unauthorizedPage.text"></p>
+		<div class="icon icon-cisco-logo"></div>
+	</div>
+</body>
+</html>
 
 

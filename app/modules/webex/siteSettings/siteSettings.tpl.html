@@ -40,18 +40,15 @@
       </li>
     </ul>
     
-    <!--cards -->
-    <cs-card-layout id="configureCards" ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
-      <!-- Info card -->
+    <!-- Info card -->
+    <cs-card-layout ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
       <div ng-include="'modules/webex/siteSettings/siteInfoCard.tpl.html'"></div>
     </cs-card-layout>
 
-    <cs-card-layout id="configureCards" ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
+    <cs-card-layout ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
       <!-- Common Settings card -->
       <div ng-include="'modules/webex/siteSettings/commonSettingsCard.tpl.html'"></div>
-    </cs-card-layout>
       
-    <cs-card-layout id="configureCards" ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
       <!-- Meeting Center Settings card -->
       <div ng-include="'modules/webex/siteSettings/meetingCenterSettingsCard.tpl.html'"></div>
       
@@ -66,13 +63,15 @@
     </cs-card-layout>
 
     <!-- WebEx site admin cross launch -->
-    <div class="row">
+    <p>
+      &nbsp;&nbsp;&nbsp;
+      
       <a href=""
          onClick="document.getElementById('hiddenButton').click();">
 
         Launch&nbsp;WebEx&nbsp;Site&nbsp;Admin
       </a>
-    </div>
+    </p>
   </div>
 </div>
 

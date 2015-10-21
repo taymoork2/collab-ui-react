@@ -9,13 +9,20 @@ describe('Controller: PstnSetupCtrl', function () {
   var customerOrderList = getJSONFixture('huron/json/pstnSetup/customerOrderList.json');
   var customerOrder = getJSONFixture('huron/json/pstnSetup/customerOrder.json');
 
-  var blockOrders = [{
-    areaCode: '512',
-    quantity: '5'
-  }, {
-    areaCode: '623',
-    quantity: '10'
-  }];
+  var orderCart = [
+    // single number
+    "+12145551234",
+    // consecutive numbers
+    [
+      "+12145557000",
+      "+12145557001"
+    ],
+    // non-consecutive numbers
+    [
+      "+12145558000",
+      "+12145559000"
+    ]
+  ];
 
   var swivelNumberTokens = [{
     "value": "+12223334444",
@@ -45,7 +52,7 @@ describe('Controller: PstnSetupCtrl', function () {
     spyOn(PstnSetupService, 'listCarriers').and.returnValue($q.when(carrierList));
     spyOn(PstnSetupService, 'createCustomer').and.returnValue($q.when());
     spyOn(PstnSetupService, 'updateCustomerCarrier').and.returnValue($q.when());
-    spyOn(PstnSetupService, 'orderBlock').and.returnValue($q.when());
+    spyOn(PstnSetupService, 'orderNumbers').and.returnValue($q.when());
     spyOn(ExternalNumberPool, 'create').and.returnValue($q.when());
     spyOn(Notification, 'errorResponse');
     spyOn(Notification, 'error');
@@ -107,9 +114,9 @@ describe('Controller: PstnSetupCtrl', function () {
   });
 
   describe('orderNumbers', function () {
-    it('should default to no block orders', function () {
-      expect(controller.blockOrders).toEqual([]);
-      expect(controller.blockOrderTotals).toEqual(0);
+    it('should default to no orders', function () {
+      expect(controller.orderCart).toEqual([]);
+      expect(controller.orderNumbersTotal).toEqual(0);
     });
 
     it('should notify error on Next button action', function () {
@@ -118,9 +125,9 @@ describe('Controller: PstnSetupCtrl', function () {
     });
 
     it('should update with new numbers', function () {
-      controller.blockOrders = blockOrders;
+      controller.orderCart = orderCart;
       $scope.$apply();
-      expect(controller.blockOrderTotals).toEqual(15);
+      expect(controller.orderNumbersTotal).toEqual(5);
       controller.orderNumbers();
       expect($state.go).toHaveBeenCalledWith('pstnSetup.review');
     });
@@ -130,14 +137,14 @@ describe('Controller: PstnSetupCtrl', function () {
     describe('when customer exists', function () {
       it('should place orders and transition to nextSteps', function () {
         controller.selectProvider(controller.providers[0]);
-        controller.blockOrders = blockOrders;
+        controller.orderCart = orderCart;
         controller.placeOrder();
 
         expect($state.go).not.toHaveBeenCalledWith('pstnSetup.nextSteps');
         $scope.$apply();
         expect(PstnSetupService.createCustomer).not.toHaveBeenCalled();
         expect(PstnSetupService.updateCustomerCarrier).not.toHaveBeenCalled();
-        expect(PstnSetupService.orderBlock).toHaveBeenCalled();
+        expect(PstnSetupService.orderNumbers).toHaveBeenCalled();
         expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps');
       });
     });
@@ -152,14 +159,14 @@ describe('Controller: PstnSetupCtrl', function () {
       });
       it('should update customer and then place orders and transition to nextSteps', function () {
         controller.selectProvider(controller.providers[0]);
-        controller.blockOrders = blockOrders;
+        controller.orderCart = orderCart;
         controller.placeOrder();
 
         expect($state.go).not.toHaveBeenCalledWith('pstnSetup.nextSteps');
         $scope.$apply();
         expect(PstnSetupService.createCustomer).not.toHaveBeenCalled();
         expect(PstnSetupService.updateCustomerCarrier).toHaveBeenCalled();
-        expect(PstnSetupService.orderBlock).toHaveBeenCalled();
+        expect(PstnSetupService.orderNumbers).toHaveBeenCalled();
         expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps');
       });
 
@@ -188,14 +195,14 @@ describe('Controller: PstnSetupCtrl', function () {
 
       it('should create customer and then place orders and transition to nextSteps', function () {
         controller.selectProvider(controller.providers[0]);
-        controller.blockOrders = blockOrders;
+        controller.orderCart = orderCart;
         controller.placeOrder();
 
         expect($state.go).not.toHaveBeenCalledWith('pstnSetup.nextSteps');
         $scope.$apply();
         expect(PstnSetupService.createCustomer).toHaveBeenCalled();
         expect(PstnSetupService.updateCustomerCarrier).not.toHaveBeenCalled();
-        expect(PstnSetupService.orderBlock).toHaveBeenCalled();
+        expect(PstnSetupService.orderNumbers).toHaveBeenCalled();
         expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps');
       });
     });

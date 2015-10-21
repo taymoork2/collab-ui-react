@@ -69,7 +69,8 @@
     "ciscoucError": "{{email}} did not successfully onboard Unified Communications.",
     "messageError": "Message: {{message}}",
     "userListError": "Error retrieving the user list. Please try reloading the page.",
-    "tooManyUsersError": "Use the search input above to find users.",
+    "searchUser": "Search for a user",
+    "tooManyUsers": "The user list is not displayed because there are more than 1000 users",
     "emailSuccess": "Email sent successfully.",
     "emailError": "Error sending email.",
     "convertUserSuccess": "successfully converted.",
@@ -326,7 +327,8 @@
     "leastEngaged": "5 Least Engaged",
     "highQuality": "5 Highest Quality",
     "leastQuality": "5 Lowest Quality",
-    "customerLoadError": "There was an error while loading the customer list."
+    "customerLoadError": "There was an error while loading the customer list.",
+    "webex": "Webex Reports"
   },
   "activeUsers": {
     "active": "Active",
@@ -507,7 +509,8 @@
     "cdrRecursiveError": "Record size requested too large to retrieve all related CDR data from {{server}}.  To retrieve data from {{server}} lower the 'Size Per Server' count and resubmit.",
     "required": "This field is required.",
     "invalidDate": "End date should be the same day as, or any day after, the start date.",
-    "invalidTime": "Entered time is invalid.  Please follow the 'hh:mm:ss AM/PM' format.  If 'AM/PM' is ommited, then it will be assumed that 24-hour time is being used.",
+    "tomorrowError": "Select today's date or any date before today's date.",
+    "invalidTime": "Please follow 'hh:mm:ss AM/PM' format.  If 'AM/PM' is ommited, it will be assumed that 24-hour time is being used.",
     "invalidTimeTwo": "End Time should not be equal to or earlier than the Start Time.",
     "phoneNumberError": "Please enter a valid phone number using the numbers [0-9].",
     "phoneNumberErrorTwo": "Calling Party Number and Called Party Number should not match.",
@@ -559,6 +562,7 @@
     "invalidUrl": "This is not a valid URL.",
     "invalidMinLength": "This entry is too short. Minimum length is {{min}}",
     "invalidMaxLength": "This entry is too long. Maximum length is {{max}}.",
+    "invalidMax": "Maximum value is {{max}}.",
     "on": "On",
     "off": "Off",
     "enabled": "Enabled",
@@ -572,7 +576,10 @@
     "modal": "Modal",
     "add": "Add",
     "and": "and",
-    "or": "or"
+    "or": "or",
+    "search": "Search",
+    "edit": "Edit",
+    "confirm": "Confirm"
   },
   "notifications": {
     "success": "Success notifications",
@@ -768,7 +775,11 @@
   },
   "unauthorizedPage": {
     "title": "Unauthorized",
-    "text": "You are not authorized to access the page you requested."
+    "text": "Sorry! Your account is not authorized to access this page."
+  },
+  "404Page": {
+    "title": "404 Not Found",
+    "text": "The page you requested cannot be found."
   },
   "errors": {
     "status403": "Authorization failed. You do not have administrator priviledges. You will automatically be logged out in a few seconds.",
@@ -847,7 +858,8 @@
       "downloading": "Downloading",
       "uninstalling": "Uninstalling",
       "running": "Running",
-      "needs_attention": "Needs attention"
+      "needs_attention": "Needs attention",
+      "alarm": "Alarm"
     },
     "setup": {
       "label": "Connector Management",
@@ -1317,7 +1329,8 @@
     "customCallerId": "Custom",
     "customName": "Custom Name",
     "customNumber": "Custom Number",
-    "customNumberValidation": "Field can contain digits 0 to 9 and +. For example: +15556667777."
+    "customNumberValidation": "Field can contain digits 0 to 9 and +. For example: +15556667777.",
+    "saveConfirmation": "Do you want to save your changes?"
   },
   "sharedLinePanel": {
     "title": "Shared Line",
@@ -1379,6 +1392,7 @@
     "selectAreaCode": "Select area code",
     "searchAreaCodes": "Search area codes",
     "quantity": "Quantity",
+    "consecutive": "Consecutive",
     "reviewAndOrder": "Review and Place Order",
     "package": "Package",
     "adding": "Adding",
@@ -1396,11 +1410,14 @@
     "orderNumbersPrompt": "Must add numbers to proceed.",
     "invalidNumberPrompt": "Please fix invalid number(s) before proceeding.",
     "duplicateNumber": "{{number}} is a duplicate number.",
+    "orderNumbersError": "There was a problem with your order. Please check order history for details.",
     "blockOrderError": "Failed to order {{quantity}} block number(s) with area code {{areaCode}}.",
     "swivelAddError": "Failed to add {{number}}.",
     "swivelDuplicateError": "Failed to add {{number}}. Number already exists.",
     "customerCreateError": "Failed to create customer with the carrier.",
-    "customerUpdateError": "Failed to update customer with the carrier."
+    "customerUpdateError": "Failed to update customer with the carrier.",
+    "searchResults": "Search Results",
+    "noSearchResults": "No Search Results"
   },
   "intelepeerFeatures": {
     "feature1": "Unlimited inbound/outbound calling to U.S. 50 states + Canada",
@@ -1533,27 +1550,15 @@
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
   },
-  "callRouter": {
-    "popover": "Assign numbers for company routing and voicemail.",
-    "callerinfopopover": "Specify the default outbound Caller ID that can take an external or internal number.",
-    "title": "Manage company numbers and company caller ID",
-    "saveCallerIdSuccess": "Caller Id and number saved successfully.",
-    "saveCallerIdError": "Caller Id and number failed to save.",
-    "updateCallerIdSuccess": "Caller ID and number updated successfully",
-    "updateCallerIdError": "Caller ID and number failed to update.",
-    "deleteCallerIdSuccess": "Caller ID and number deleted successfully.",
-    "deleteCallerIdError": "Caller ID and number failed to delete",
-    "companycallerID": "Company Caller ID",
-    "hide": "Hide",
-    "expand": "Expand"
+  "companyCallerId": {
+    "companyCallerId": "Company Caller ID",
+    "companyCallerIdDesc": "Specify the default outbound Caller ID. Exceptions can be made at the individual user's settings.",
+    "callerIdName": "Caller ID Name",
+    "callerIdNumber": "Caller ID Number"
   },
-  "routingModal": {
-    "title": "Company Number",
-    "create": "Create",
-    "label": "Name",
-    "calleridnumber": "Number",
-    "companynumber": "Company Number",
-    "routeto": "Route To"
+  "huronSettings": {
+    "saveSuccess": "Settings successfully saved.",
+    "companyCallerIdsaveError": "Company Caller ID failed to save."
   },
   "didManageModal": {
     "title": "Manage Phone Numbers",
