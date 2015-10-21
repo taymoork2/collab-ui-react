@@ -6,4 +6,5 @@
     ng-if="exp.selectedServiceAndManagementServiceStatus(row.entity).status == 'needs_attention'">Needs attention</span>
   <span ng-if="exp.selectedServiceAndManagementServiceStatus(row.entity).status == 'disabled'">Disabled</span>
   <span ng-if="exp.serviceNotInstalled(row.entity)">Not installed</span>
+  <span ng-if="exp.softwareUpgradeAvailable(row.entity)">- Upgrade available</span>
 </div>

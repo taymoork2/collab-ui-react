@@ -26,7 +26,7 @@
 
   <cs-sp-section>
     <div class="section-title-row section-name">
-      Software Upgrades
+      Software Upgrade
     </div>
     <p>
       Current version: {{expresswayServiceDetails.selectedService.connectors[0].version}}
@@ -45,18 +45,22 @@
 
   <cs-sp-section>
     <div class="section-title-row section-name">
-      Connectors
+      Hosts
     </div>
-    <div class="row" ng-repeat="connector in expresswayServiceDetails.selectedService.connectors">
-      <span class="small-4 column">
-        {{connector.host.host_name}}
-      </span>
-      <span class="small-4 column end">
-        <span class="hercules-alarm" ng-if="connector.status === 'needs_attention'">
-          <i class="fa fa-circle"/>
-          <span class="hidden-xs">Needs attention</span>
-        </span>
-      </span>
+    <div class="feature-list">
+      <ul>
+        <li class="feature" ng-repeat="connector in expresswayServiceDetails.selectedService.connectors"
+            ng-class="{'list-item': !$first}">
+          <a ui-sref="cluster-details-new.host-details({connector: connector})">
+            <i class="fa fa-circle status-icon"
+               ng-class="connectors.alarms.length > 0 ? 'hercules-alarm' : connector.state"></i>
+            <span class="feature-name">{{connector.host.host_name}}</span>
+            <span class="feature-status"
+                  translate="{{'hercules.status.' + (connector.state || 'unknown') }}"></span>
+            <i class="feature-arrow"></i>
+          </a>
+        </li>
+      </ul>
     </div>
   </cs-sp-section>
 

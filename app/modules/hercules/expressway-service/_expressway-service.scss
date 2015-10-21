@@ -1,73 +1,3 @@
-
-/**
-Special stuff currently used to display the clusters in service oriented view
-*/
-.hercules-cluster-table {
-  cursor: pointer;
-  tr {
-    border-top:0px;
-    padding-top:0.5rem;
-    padding-bottom:0.5rem;
-  }
-  td {
-    border-top:0px;
-    padding:0px;
-  }
-  .active {
-    background-color:#F7F7F7;
-  }
-  .cell-content {
-    padding: 0.7rem;
-    padding-left:1rem;
-    position:relative;
-
-    display: block;
-
-    .icon {
-      float:right;
-      margin-right:10px;
-      margin-top:5px;
-    }
-    .overlay {
-      position: absolute;
-      left: 20px;
-      top: 15px;
-      border-radius: 50px;
-      height: 12px;
-      width: 12px;
-      border: 6px solid white;
-    }
-    .alarm {
-      border-color: red;
-    }
-
-    .attention {
-      border-color: #F5A623;
-    }
-
-    .ok {
-      border-color: green;
-    }
-
-    .icon.icon-three-dots{
-      position: absolute;
-      top: 1rem;
-      left:100%;
-      margin-left: -3rem;
-    }
-    /* New code */
-    .cell-status{
-      display: block;
-      padding-left: 2.8rem;
-
-      margin-top: -1.5rem;
-
-      span{
-        display: block;
-      }
-    }
-  }
-}
 .export-users-statuses-icon {
   padding-left:10px;
   cursor: pointer;
@@ -78,8 +8,6 @@ Special stuff currently used to display the clusters in service oriented view
   font-size:1.5em;
   top:0.1em;
 }
-
-
 
 /**
 Special stuff currently used for out own mail input field...

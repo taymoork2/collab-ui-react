@@ -172,7 +172,7 @@
       multiSelect: false,
       showFilter: false,
       showFooter: false,
-      rowHeight: 44,
+      rowHeight: 75,
       rowTemplate: 'modules/hercules/expressway-service/cluster-list-row-template.html',
       headerRowHeight: 44,
       columnDefs: [{
@@ -180,11 +180,8 @@
         displayName: 'Expressway Clusters',
         cellTemplate: 'modules/hercules/expressway-service/cluster-list-display-name.html'
       }, {
-        displayName: 'Status',
+        displayName: 'Service Status',
         cellTemplate: 'modules/hercules/expressway-service/cluster-list-status.html'
-      }, {
-        displayName: 'Actions',
-        cellTemplate: 'modules/hercules/expressway-service/cluster-list-actions.html'
       }]
     };
   }

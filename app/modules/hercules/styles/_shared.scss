@@ -41,10 +41,6 @@
     /*border-top:1px solid $brand-white;*/
   }
 
-  .tiny-vertical-marker {
-    border-right: $gray-lighter solid 1px;
-  }
-
   .page-header {
     .title-heading {
       margin-right: 1rem;
@@ -131,40 +127,6 @@
     right: -0.5rem;
     left: -0.5rem;
   };
-}
-/**
-New styling
-*/
-.hercules {
-  .header-panel {
-    h3, h4 {
-      display: table-cell;
-    }
-    h3 {
-      padding-right: 2rem;
-    }
-    hr {
-      margin-top: 1rem;
-      margin-bottom: 1rem;
-    }
-  }
-}
-
-/* Detail */
-.side-view {
-  padding-top: 2rem;
-  .icon.icon-three-dots {
-    color: #666666 !important;
-  }
-  h5 {
-    padding-top: 1rem !important;
-  }
-  .icon.icon-close {
-    color: black;
-    position: absolute;
-    top: 1.25rem;
-    right: 2rem;
-  }
 }
 
 /* Fix alert crap */
