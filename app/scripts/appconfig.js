@@ -1416,7 +1416,7 @@ angular
             }
           },
           data: {
-            displayName: 'Cluster'
+            displayName: 'Overview'
           },
           params: {
             cluster: undefined,
@@ -1443,11 +1443,14 @@ angular
         })
         .state('cluster-details-new.host-details', {
           templateUrl: 'modules/hercules/expressway-service/host-details.html',
+          controller: 'HostDetailsController',
+          controllerAs: 'hostDetailsCtrl',
           data: {
             displayName: 'Host'
           },
           params: {
-            connector: null
+            connectorId: null,
+            clusterId: null
           }
         })
         .state('cluster-details', {
