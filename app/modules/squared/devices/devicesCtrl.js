@@ -9,11 +9,11 @@ angular.module('Squared')
 
       vm.deviceFilter = DeviceFilter;
 
-      vm.codesListSubscription = CsdmCodeService.subscribe(angular.noop, {
+      vm.codesListSubscription = CsdmCodeService.on('data', angular.noop, {
         scope: $scope
       });
 
-      vm.deviceListSubscription = CsdmDeviceService.subscribe(angular.noop, {
+      vm.deviceListSubscription = CsdmDeviceService.on('data', angular.noop, {
         scope: $scope
       });
 
