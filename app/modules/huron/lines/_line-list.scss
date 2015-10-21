@@ -17,19 +17,15 @@
     }
   }
   & .content-header {
+    padding: 10px 0 10px 24px;
     background: white;
     border-bottom: 1px solid $gray-lightest;
-    padding-right: 0px;
-    padding-top: 10px;
-    padding-bottom: 10px;
   }
   & .export-lines {
-    color: $gray-dark;
+    margin-right: 8px;
     font-size: 24px;
     display: inline-block;
     vertical-align: top;
-    padding-left: 20px;
-    margin-left: 10px;
     cursor: pointer;
   }
   & .gridStyle {
@@ -43,13 +39,5 @@
   }
   & .page-option-buttons {
     padding-top: 0;
-  }
-  & .searchbox {
-    .searchinput {
-      padding-left: 3px;  /*manual adjustment to make search icon line up with page title*/
-      > input {
-        background-color: inherit;
-      }
-    }
   }
 }
