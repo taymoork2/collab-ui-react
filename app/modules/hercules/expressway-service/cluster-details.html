@@ -7,8 +7,8 @@
       Alarms
     </div>
 
-    <div class="feature-list" ng-if="expresswayServiceDetails.selectedService.alarm_count > 0">
-      <ul ng-repeat="connector in expresswayServiceDetails.selectedService.connectors">
+    <div class="feature-list" ng-if="expresswayServiceDetails.selectedService().alarm_count > 0">
+      <ul ng-repeat="connector in expresswayServiceDetails.selectedService().connectors">
         <li class="feature" ng-repeat="alarm in connector.alarms" ng-class="{'list-item': !$first}">
           <a ui-sref="cluster-details-new.alarm-details({alarm: alarm, host: connector.host.host_name})">
             <i class="icon icon-error hercules-alarm status-icon"/>
@@ -19,7 +19,7 @@
         </li>
       </ul>
     </div>
-    <p ng-if="expresswayServiceDetails.selectedService.alarm_count == 0">
+    <p ng-if="expresswayServiceDetails.selectedService().alarm_count == 0">
       No alarms reported
     </p>
   </cs-sp-section>
@@ -33,20 +33,20 @@
       <ul>
         <li class="feature">
           <span class="feature-name">Current version</span>
-          <span class="feature-status">{{expresswayServiceDetails.selectedService.connectors[0].version}}</span>
+          <span class="feature-status">{{expresswayServiceDetails.selectedService().connectors[0].version}}</span>
         </li>
-        <li class="feature" ng-if="expresswayServiceDetails.selectedService.software_upgrade_available">
+        <li class="feature" ng-if="expresswayServiceDetails.selectedService().software_upgrade_available">
           <span class="feature-name">New version</span>
-          <span class="feature-status">{{expresswayServiceDetails.selectedService.not_approved_package.version}}</span>
+          <span class="feature-status">{{expresswayServiceDetails.selectedService().not_approved_package.version}}</span>
         </li>
-        <li class="feature" ng-if="!expresswayServiceDetails.selectedService.software_upgrade_available">
+        <li class="feature" ng-if="!expresswayServiceDetails.selectedService().software_upgrade_available">
           <span class="feature-name">No new software available</span>
         </li>
       </ul>
     </div>
     <button class="button secondary"
             ng-click="expresswayServiceDetails.upgrade()"
-            ng-if="expresswayServiceDetails.selectedService.software_upgrade_available">Upgrade
+            ng-if="expresswayServiceDetails.selectedService().software_upgrade_available">Upgrade
     </button>
   </cs-sp-section>
 
@@ -56,7 +56,7 @@
     </div>
     <div class="feature-list">
       <ul>
-        <li class="feature" ng-repeat="connector in expresswayServiceDetails.selectedService.connectors"
+        <li class="feature" ng-repeat="connector in expresswayServiceDetails.selectedService().connectors"
             ng-class="{'list-item': !$first}">
           <a ui-sref="cluster-details-new.host-details({connector: connector})">
             <i class="fa fa-circle status-icon"
