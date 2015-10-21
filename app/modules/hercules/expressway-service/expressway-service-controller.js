@@ -198,7 +198,7 @@
 
     vm.cluster = ClusterService.getClusters()[vm.clusterId];
 
-    vm.selectedService = function() {
+    vm.selectedService = function () {
       return _.find(vm.cluster.services, {
         service_type: vm.serviceType
       });
