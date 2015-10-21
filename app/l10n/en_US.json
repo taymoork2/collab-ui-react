@@ -1325,7 +1325,8 @@
     "customCallerId": "Custom",
     "customName": "Custom Name",
     "customNumber": "Custom Number",
-    "customNumberValidation": "Field can contain digits 0 to 9 and +. For example: +15556667777."
+    "customNumberValidation": "Field can contain digits 0 to 9 and +. For example: +15556667777.",
+    "saveConfirmation": "Do you want to save your changes?"
   },
   "sharedLinePanel": {
     "title": "Shared Line",
@@ -1545,27 +1546,15 @@
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
   },
-  "callRouter": {
-    "popover": "Assign numbers for company routing and voicemail.",
-    "callerinfopopover": "Specify the default outbound Caller ID that can take an external or internal number.",
-    "title": "Manage company numbers and company caller ID",
-    "saveCallerIdSuccess": "Caller Id and number saved successfully.",
-    "saveCallerIdError": "Caller Id and number failed to save.",
-    "updateCallerIdSuccess": "Caller ID and number updated successfully",
-    "updateCallerIdError": "Caller ID and number failed to update.",
-    "deleteCallerIdSuccess": "Caller ID and number deleted successfully.",
-    "deleteCallerIdError": "Caller ID and number failed to delete",
-    "companycallerID": "Company Caller ID",
-    "hide": "Hide",
-    "expand": "Expand"
+  "companyCallerId": {
+    "companyCallerId": "Company Caller ID",
+    "companyCallerIdDesc": "Specify the default outbound Caller ID. Exceptions can be made at the individual user's settings.",
+    "callerIdName": "Caller ID Name",
+    "callerIdNumber": "Caller ID Number"
   },
-  "routingModal": {
-    "title": "Company Number",
-    "create": "Create",
-    "label": "Name",
-    "calleridnumber": "Number",
-    "companynumber": "Company Number",
-    "routeto": "Route To"
+  "huronSettings": {
+    "saveSuccess": "Settings successfully saved.",
+    "companyCallerIdsaveError": "Company Caller ID failed to save."
   },
   "didManageModal": {
     "title": "Manage Phone Numbers",

@@ -1253,10 +1253,10 @@ angular
           url: '/hurondetails',
           parent: 'hurondetailsBase',
           views: {
-            'nav': {
-              templateUrl: 'modules/huron/details/huronDetailsNav.tpl.html',
-              controller: 'HuronDetailsNavCtrl',
-              controllerAs: 'nav'
+            'header': {
+              templateUrl: 'modules/huron/details/huronDetailsHeader.tpl.html',
+              controller: 'HuronDetailsHeaderCtrl',
+              controllerAs: 'header'
             },
             'main': {
               template: '<div ui-view></div>'
@@ -1273,9 +1273,9 @@ angular
         .state('huronsettings', {
           url: '/settings',
           parent: 'hurondetails',
-          templateUrl: 'modules/huron/callRouter/companyNumber.tpl.html',
-          controller: 'CallRouterCtrl',
-          controllerAs: 'callRouterCtrl'
+          templateUrl: 'modules/huron/settings/settings.tpl.html',
+          controller: 'HuronSettingsCtrl',
+          controllerAs: 'settings'
         })
         .state('huronfeatures', {
           url: '/features',

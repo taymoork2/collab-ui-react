@@ -1,5 +1,5 @@
 'use strict';
-angular.module('uc.callrouter')
+angular.module('uc.hurondetails')
 
 .constant('CustomComboboxconfig', {
   openClass: 'open',
@@ -19,11 +19,11 @@ function CustomComboboxCtrl($scope, $attrs, $parse, CustomComboboxconfig, dropdo
     setIsFocused = angular.noop,
     toggleInvoker = $attrs.onToggle ? $parse($attrs.onToggle) : angular.noop;
 
-  this.changeFunction = function () {
-    if (angular.isFunction(this.onChangeFn)) {
-      this.onChangeFn();
-    }
-  };
+  // this.changeFunction = function () {
+  //   if (angular.isFunction(this.onChangeFn)) {
+  //     this.onChangeFn();
+  //   }
+  // };
 
   this.init = function (element) {
     self.$element = element;
@@ -109,7 +109,7 @@ function CustomComboboxCtrl($scope, $attrs, $parse, CustomComboboxconfig, dropdo
   });
 }
 
-angular.module('uc.callrouter').directive('customCombobox', function () {
+angular.module('uc.hurondetails').directive('customCombobox', function () {
   return {
     restrict: 'CA',
     require: '?^csCustomCombobox',
@@ -165,13 +165,13 @@ angular.module('uc.callrouter').directive('customCombobox', function () {
     controller: 'CustomComboboxCtrl',
     restrict: 'A',
     require: 'ngModel',
-    scope: {
-      onChangeFn: '&'
-    },
+    // scope: {
+    //   onChangeFn: '&'
+    // },
     link: function (scope, element, attrs, ngModel) {
       scope.newValue = ngModel.$viewValue;
       ngModel.$parsers.push(function (value) {
-        scope.onChangeFn();
+        // scope.onChangeFn();
         scope.newValue = value;
         return value;
       });
@@ -183,7 +183,7 @@ angular.module('uc.callrouter').directive('customCombobox', function () {
   return {
     restrict: 'E',
     // replace: true,
-    templateUrl: 'modules/huron/callRouter/companyNumber/CustomCombobox.tpl.html',
+    templateUrl: 'modules/huron/settings/customCombobox/CustomCombobox.tpl.html',
     require: 'ngModel',
     controller: 'CustomComboboxCtrl',
     scope: {
@@ -192,8 +192,8 @@ angular.module('uc.callrouter').directive('customCombobox', function () {
       value: '=ngModel',
       list: '=',
       required: '=',
-      onChangeFn: '&',
-      addText: '=addtext',
+      disabled: '=',
+      // onChangeFn: '&',
       myOptions: '=options',
       maxLength: '=ngMaxlength'
     },
@@ -201,34 +201,25 @@ angular.module('uc.callrouter').directive('customCombobox', function () {
       return {
         pre: function preLink(scope, element, attrs, cbCtrl) {
 
-          scope.onChangeFn();
+          // scope.onChangeFn();
           // If options were not provided, initialize an empty default
           scope.options = scope.myOptions || {
             validation: {}
           };
 
-          scope.$watch('value', function (newValue) {
-            scope.onChangeFn();
-            scope.newValue = newValue;
-          });
+          // scope.$watch('value', function (newValue) {
+          //   scope.onChangeFn();
+          //   scope.newValue = newValue;
+          // });
         },
         post: function postLink(scope, element, attrs, cbCtrl) {
           var input = element.find('input');
-
-          scope.$watch('value', function (newValue) {
-            scope.newValue = newValue;
-          });
 
           scope.selectItem = function () {
             cbCtrl.$setViewValue(this.item);
             scope.value = this.item;
             input[0].focus();
 
-          };
-          scope.addItem = function () {
-            scope.value = '';
-            input[0].focus();
-            cbCtrl.toggleElement[0].focus();
           };
         }
       };

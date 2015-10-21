@@ -3,11 +3,10 @@
 
   angular
     .module('uc.hurondetails')
-    .controller('HuronDetailsNavCtrl', HuronDetailsNavCtrl);
-  /* jshint validthis: true */
+    .controller('HuronDetailsHeaderCtrl', HuronDetailsHeaderCtrl);
 
   /* @ngInject */
-  function HuronDetailsNavCtrl($scope, $state, Config) {
+  function HuronDetailsHeaderCtrl($scope, $state, Config) {
     var vm = this;
     vm.title = 'huronDetails.title';
     vm.back = false;

@@ -1,5 +1,26 @@
 /*import any additional sassy css (scss) here*/
+@import '../settings/_settings';
+@import '../features/_features';
 @import '../lines/_line-list';
+
 .huron-details {
   @include vr-spacing(mh, 0.5, 1px, true);
+}
+
+.save-section {
+  position: absolute;
+  width: 100%;
+  padding: rem(8) rem(24);
+  border-bottom: rem(1) solid $gray-light;
+  display: flex;
+  z-index: 100;
+  align-items: baseline;
+  p {
+    flex: 1;
+  }
+  .right {
+    button:first-child {
+      margin-right: 0.5rem;
+    }
+  }
 }
