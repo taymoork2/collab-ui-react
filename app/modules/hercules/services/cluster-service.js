@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function ClusterService($q, $http, $location, CsdmPoller, CsdmCacheUpdater, ConnectorMock, ConverterService, ConfigService, Authinfo) {
+  function ClusterService($q, $http, $location, CsdmPoller, CsdmCacheUpdater, ConnectorMock, ConverterService, ConfigService, Authinfo, CsdmHubFactory) {
     var clusterCache = {};
 
     function extractDataFromResponse(res) {
@@ -78,7 +78,8 @@
       return $http.get(url).then(extractDataFromResponse);
     };
 
-    var clusterPoller = CsdmPoller.create(fetch);
+    var hub = CsdmHubFactory.create();
+    var clusterPoller = CsdmPoller.create(fetch, hub);
 
     return {
       fetch: fetch,
@@ -88,7 +89,7 @@
       upgradeSoftware: upgradeSoftware,
       deleteCluster: deleteCluster,
       setProperty: setProperty,
-      subscribe: clusterPoller.subscribe
+      subscribe: hub.on
     };
   }
 

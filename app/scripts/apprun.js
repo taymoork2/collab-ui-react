@@ -123,6 +123,7 @@ angular
 
       formlyValidationMessages.messages.minlength = getMinLengthMessage;
       formlyValidationMessages.messages.maxlength = getMaxLengthMessage;
+      formlyValidationMessages.messages.max = getMaxMessage;
 
       function getMinLengthMessage($viewValue, $modelValue, scope) {
         return $translate.instant('common.invalidMinLength', {
@@ -133,6 +134,12 @@ angular
       function getMaxLengthMessage($viewValue, $modelValue, scope) {
         return $translate.instant('common.invalidMaxLength', {
           max: scope.options.templateOptions.maxlength
+        });
+      }
+
+      function getMaxMessage($viewValue, $modelValue, scope) {
+        return $translate.instant('common.invalidMax', {
+          max: scope.options.templateOptions.max
         });
       }
     }

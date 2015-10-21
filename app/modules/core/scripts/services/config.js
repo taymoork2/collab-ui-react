@@ -260,10 +260,6 @@ angular.module('Core')
             state: 'mediafusionconnector',
             link: '#mediafusionconnector'
           }, {
-            title: 'tabs.callRoutingTab',
-            state: 'callRouter',
-            link: '#callRouter'
-          }, {
             title: 'tabs.messengerTab',
             desc: 'tabs.messengerTabDesc',
             state: 'messenger',
@@ -839,7 +835,6 @@ angular.module('Core')
           'huntgroups',
           'didadd',
           'newpartnerreports',
-          'callRouter',
           'hurondetails',
           'huronlines',
           'huronsettings',
@@ -853,7 +848,8 @@ angular.module('Core')
           'fusion',
           'cluster-details',
           'calendar-service',
-          'call-service'
+          'call-service',
+          'cluster-details-new',
         ],
         'squared-fusion-uc': [
           'devices',
@@ -894,7 +890,6 @@ angular.module('Core')
           'devices',
           'fusion',
           'mediafusionconnector',
-          'callRouter',
           'hurondetails',
           'cdrsupport',
           'cdr-overview'

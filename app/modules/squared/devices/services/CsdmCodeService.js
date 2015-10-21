@@ -47,11 +47,11 @@
     }
 
     return {
-      getCodeList: getCodeList,
+      on: codeCache.on,
       deleteCode: deleteCode,
       createCode: createCode,
-      updateCodeName: updateCodeName,
-      subscribe: codeCache.subscribe
+      getCodeList: getCodeList,
+      updateCodeName: updateCodeName
     };
   }
 

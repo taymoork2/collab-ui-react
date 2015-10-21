@@ -59,17 +59,13 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, $window, CsdmCo
       .extend(CsdmDeviceService.getDeviceList())
       .extend(CsdmCodeService.getCodeList())
       .values()
-      // include tags
       .map(addTags)
-      // remove codes w/o code
       .filter(removeOldCodes)
-      // filter based on search
       .filter(filterOnSearchQuery)
-      // create rooms of devices with equal names
       .groupBy('displayName')
       .map(createRooms)
       .flatten()
-      // group devices
+      .sortBy(displayNameSorter)
       .reduce(groupDevices, {})
       .map(extendWithDisplayNameFromFilter)
       .value();
@@ -174,11 +170,11 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, $window, CsdmCo
 
   };
 
-  vm.codesListSubscription = CsdmCodeService.subscribe(vm.updateCodesAndDevices, {
+  vm.codesListSubscription = CsdmCodeService.on('data', vm.updateCodesAndDevices, {
     scope: $scope
   });
 
-  vm.deviceListSubscription = CsdmDeviceService.subscribe(vm.updateCodesAndDevices, {
+  vm.deviceListSubscription = CsdmDeviceService.on('data', vm.updateCodesAndDevices, {
     scope: $scope
   });
 

@@ -1,85 +1,13 @@
-
-/**
-Special stuff currently used to display the clusters in service oriented view
-*/
-.hercules-cluster-table {
-  cursor: pointer;
-  tr {
-    border-top:0px;
-    padding-top:0.5rem;
-    padding-bottom:0.5rem;
-  }
-  td {
-    border-top:0px;
-    padding:0px;
-  }
-  .active {
-    background-color:#F7F7F7;
-  }
-  .cell-content {
-    padding: 0.7rem;
-    padding-left:1rem;
-    position:relative;
-
-    display: block;
-
-    .icon {
-      float:right;
-      margin-right:10px;
-      margin-top:5px;
-    }
-    .overlay {
-      position: absolute;
-      left: 20px;
-      top: 15px;
-      border-radius: 50px;
-      height: 12px;
-      width: 12px;
-      border: 6px solid white;
-    }
-    .alarm {
-      border-color: red;
-    }
-
-    .attention {
-      border-color: #F5A623;
-    }
-
-    .ok {
-      border-color: green;
-    }
-
-    .icon.icon-three-dots{
-      position: absolute;
-      top: 1rem;
-      left:100%;
-      margin-left: -3rem;
-    }
-    /* New code */
-    .cell-status{
-      display: block;
-      padding-left: 2.8rem;
-
-      margin-top: -1.5rem;
-
-      span{
-        display: block;
-      }
-    }
-  }
-}
 .export-users-statuses-icon {
   padding-left:10px;
   cursor: pointer;
-  color: $gray-darker;
+  color: $gray-light;
 }
 
 .icon-circle-user {
   font-size:1.5em;
   top:0.1em;
 }
-
-
 
 /**
 Special stuff currently used for out own mail input field...
@@ -144,60 +72,11 @@ Special stuff currently used for out own mail input field...
     }
 }
 
-
-
-
-/**
-  Old stuff that was previously used to style settings page.
-  Moved to separate typography style...
-  Kept for reference... can be removed ?
-*/
-
-/*
-.calendar-sub{
-  min-height: 100vh;
-  min-height: calc(100vh - 150px);
-
-    .row{
-      margin-right: 2rem;
-      margin-bottom: 1rem;
-
-        p{
-          margin-bottom: 1rem;
-        }
-        p:last-child{
-          margin-bottom: 0;
-        }
-        h5{
-          color: $brand-primary;
-          margin-bottom: .25rem;
-        }
-        button{
-          margin-top: .25rem;
-        }
-        .button.large{
-          padding:{
-            left: 3rem;
-            right: 3rem;
-          }
-          margin:{
-            left: 0 !important;
-            right: 0;
-          }
-        }
-        .alert{
-          margin-bottom: 2rem;
-        }
-
-    }
-}
-
-.calendar-sub.subpage{
-  padding:{
-    top:1.5rem !important;
-    bottom: 5rem !important;
-    left:2.5rem !important;
-    right:0.5rem !important;
+.hercules-clusters-list {
+  i {
+    margin-right: 10px;
+  }
+  .ngVerticalBar {
+    display: none;
   }
 }
-*/
