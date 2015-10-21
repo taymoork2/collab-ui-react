@@ -1,0 +1,22 @@
+<div class="huron-settings">
+  <div class="loading" ng-if="settings.processing">
+    <i class="icon icon-spinner"></i>
+  </div>
+
+  <form novalidate name="settings.form">
+    <div class="save-section clearfix" ng-class="{invisible: !settings.form.$dirty}">
+      <p class="left" translate="callerIdPanel.saveConfirmation"></p>
+      <div class="right">
+        <button ng-click="settings.resetSettings()" translate="common.cancel"></button>
+        <button class="secondary" cs-btn loading="settings.processing" ng-click="settings.save()" ng-disabled="settings.form.$invalid" translate="common.save"></button>
+      </div>
+    </div>
+    <div class="huron-settings-main-container">
+      <div class="column service-setup-container" ng-if="!settings.processing">
+        <formly-form model="settings.model" fields="settings.callerIdFields" form="settings.form"></formly-form>
+      </div>
+      <div class="column service-setup-container">
+      </div>
+    </div>
+  </form>
+</div>
