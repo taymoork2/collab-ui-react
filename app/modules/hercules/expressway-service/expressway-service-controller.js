@@ -178,10 +178,12 @@
       columnDefs: [{
         field: 'name',
         displayName: 'Expressway Clusters',
-        cellTemplate: 'modules/hercules/expressway-service/cluster-list-display-name.html'
+        cellTemplate: 'modules/hercules/expressway-service/cluster-list-display-name.html',
+        width: '35%'
       }, {
         displayName: 'Service Status',
-        cellTemplate: 'modules/hercules/expressway-service/cluster-list-status.html'
+        cellTemplate: 'modules/hercules/expressway-service/cluster-list-status.html',
+        width: '65%'
       }]
     };
   }
