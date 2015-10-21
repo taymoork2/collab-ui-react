@@ -1,0 +1,7 @@
+<div class="ngCellText">
+  <span ng-if="exp.softwareUpgradeAvailable(row.entity)">
+    <i class="fa fa-cloud-upload"></i>
+    <span>Software upgrade available</span>
+  </span>
+  <span ng-if="!exp.softwareUpgradeAvailable(row.entity)">-</span>
+</div>

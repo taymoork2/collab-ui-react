@@ -144,60 +144,8 @@ Special stuff currently used for out own mail input field...
     }
 }
 
-
-
-
-/**
-  Old stuff that was previously used to style settings page.
-  Moved to separate typography style...
-  Kept for reference... can be removed ?
-*/
-
-/*
-.calendar-sub{
-  min-height: 100vh;
-  min-height: calc(100vh - 150px);
-
-    .row{
-      margin-right: 2rem;
-      margin-bottom: 1rem;
-
-        p{
-          margin-bottom: 1rem;
-        }
-        p:last-child{
-          margin-bottom: 0;
-        }
-        h5{
-          color: $brand-primary;
-          margin-bottom: .25rem;
-        }
-        button{
-          margin-top: .25rem;
-        }
-        .button.large{
-          padding:{
-            left: 3rem;
-            right: 3rem;
-          }
-          margin:{
-            left: 0 !important;
-            right: 0;
-          }
-        }
-        .alert{
-          margin-bottom: 2rem;
-        }
-
-    }
-}
-
-.calendar-sub.subpage{
-  padding:{
-    top:1.5rem !important;
-    bottom: 5rem !important;
-    left:2.5rem !important;
-    right:0.5rem !important;
+.hercules-clusters-list {
+  i {
+    margin-right: 10px;
   }
 }
-*/

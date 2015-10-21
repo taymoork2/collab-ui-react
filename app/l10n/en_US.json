@@ -576,7 +576,9 @@
     "add": "Add",
     "and": "and",
     "or": "or",
-    "search": "Search"
+    "search": "Search",
+    "edit": "Edit",
+    "confirm": "Confirm"
   },
   "notifications": {
     "success": "Success notifications",
