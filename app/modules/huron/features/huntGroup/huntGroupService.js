@@ -6,7 +6,8 @@
     .service('HuntGroupService', huntGroupService);
 
   /* ngInject */
-  function huntGroupService(Authinfo, HuntGroupServiceV2, NumberSearchServiceV2, $q) {
+  function huntGroupService(Authinfo, HuntGroupServiceV2, NumberSearchServiceV2,
+    TelephoneNumberService, $q) {
 
     /* jshint validthis: true */
 
@@ -34,13 +35,21 @@
         customerId: Authinfo.getOrgId(),
         number: typedNumber
       }).$promise.then(function handleResponse(response) {
-        suggestions.resolve(filterSelected(response.numbers, selections));
+        suggestions.resolve(
+          filterSelected(formatNumbers(response.numbers), selections));
       }).catch(function (response) {
         suggestions.resolve([]);
         onFailure(response);
       });
 
       return suggestions.promise;
+    }
+
+    function formatNumbers(numbers) {
+      return numbers.map(function (n) {
+        n.number = TelephoneNumberService.getDIDLabel(n.number);
+        return n;
+      });
     }
 
     function suggestionsNeeded(typedNumber) {

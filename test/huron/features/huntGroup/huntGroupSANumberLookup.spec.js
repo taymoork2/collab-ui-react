@@ -98,4 +98,17 @@ describe('Controller: HuntGroupSetupAssistantCtrl', function () {
       expect(FakeNumberSearchServiceV2.get).toHaveBeenCalled();
     });
   });
+
+  it("formats the number based on US region code.", function () {
+    FakeApi.resolve({
+      numbers: [{
+        "number": "+19724052108"
+      }]
+    });
+
+    controller.fetchNumbers(108).then(function (dropdownList) {
+      expect(dropdownList(0)).toBe("(972) 405-2108");
+    });
+  });
+
 });
