@@ -2,8 +2,18 @@
   'use strict';
 
   angular.module('Huron')
+    .filter('startFrom', StartFromFilter)
     .controller('PstnSetupCtrl', PstnSetupCtrl);
 
+  function StartFromFilter() {
+    return filter;
+
+    function filter(input, startFrom) {
+      return _.slice(input, _.parseInt(startFrom));
+    }
+  }
+
+  //TODO refactor this into several different controllers
   /* @ngInject */
   function PstnSetupCtrl($scope, $q, $window, $translate, $state, $stateParams, $timeout, PstnSetupService, ValidationService, Notification, TerminusStateService, TelephoneNumberService, ExternalNumberPool) {
     var vm = this;
@@ -16,11 +26,11 @@
     vm.model = {
       state: '',
       areaCode: '',
-      quantity: ''
+      quantity: '',
+      consecutive: false
     };
     vm.areaCodeOptions = [];
-    vm.blockOrders = [];
-    vm.blockOrderTotals = 0;
+    vm.orderNumbersTotal = 0;
 
     vm.removeOrder = removeOrder;
     vm.selectProvider = selectProvider;
@@ -30,16 +40,37 @@
     vm.goToNumbers = goToNumbers;
     vm.placeOrder = placeOrder;
 
+    vm.formatTelephoneNumber = formatTelephoneNumber;
+    vm.searchResults = [];
+
+    vm.searchResultsModel = {};
+    vm.hasResultsSelected = hasResultsSelected;
+    vm.paginateOptions = {
+      currentPage: 0,
+      pageSize: 15,
+      numberOfPages: function () {
+        return Math.ceil(vm.searchResults.length / this.pageSize);
+      },
+      previousPage: function () {
+        vm.searchResultsModel = {};
+        this.currentPage--;
+      },
+      nextPage: function () {
+        vm.searchResultsModel = {};
+        this.currentPage++;
+      }
+    };
+    vm.orderCart = [];
+    vm.addToOrder = addToOrder;
+    vm.isArray = angular.isArray;
+
     $scope.$watchCollection(function () {
-      return vm.blockOrders;
-    }, function (blockOrders) {
-      vm.blockOrderTotals = blockOrders.reduce(function (previousValue, currentOrder) {
-        return previousValue + (parseInt(currentOrder.quantity) || 0);
-      }, 0);
+      return vm.orderCart;
+    }, function () {
+      vm.orderNumbersTotal = getOrderNumbersTotal();
     });
 
     vm.providers = [];
-    vm.blockOrders = [];
 
     vm.fields = [{
       type: 'inline',
@@ -48,6 +79,7 @@
           type: 'select',
           key: 'state',
           templateOptions: {
+            required: true,
             label: $translate.instant('pstnSetup.state'),
             options: [],
             labelfield: 'name',
@@ -61,12 +93,20 @@
             TerminusStateService.query().$promise.then(function (states) {
               $scope.to.options = states;
             });
+            $scope.$watchCollection(function () {
+              return vm.areaCodeOptions;
+            }, function (newAreaCodes) {
+              $scope.to.helpText = $translate.instant('pstnSetup.numbers', {
+                count: (newAreaCodes && newAreaCodes.length) ? _.sum(newAreaCodes, 'count') : 0
+              }, 'messageformat');
+            });
           }
         }, {
           type: 'select',
           key: 'areaCode',
           id: 'areaCode',
           templateOptions: {
+            required: true,
             label: $translate.instant('pstnSetup.areaCode'),
             options: [],
             labelfield: 'code',
@@ -95,8 +135,10 @@
           key: 'quantity',
           id: 'quantity',
           templateOptions: {
+            required: true,
             label: $translate.instant('pstnSetup.quantity'),
-            type: 'number'
+            type: 'number',
+            max: 100
           },
           validators: {
             positiveNumber: {
@@ -108,18 +150,11 @@
           }
         }, {
           type: 'button',
-          key: 'addBtn',
+          key: 'searchBtn',
           templateOptions: {
             btnClass: 'btn-primary label-height-offset',
-            label: $translate.instant('common.add'),
-            onClick: function (options, scope) {
-              vm.blockOrders.push({
-                areaCode: scope.model.areaCode.code,
-                quantity: scope.model.quantity
-              });
-              resetForm();
-              angular.element('#areaCode').focus();
-            }
+            label: $translate.instant('common.search'),
+            onClick: searchCarrierInventory
           },
           expressionProperties: {
             'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
@@ -127,6 +162,23 @@
             }
           }
         }]
+      }
+    }, {
+      type: 'checkbox',
+      key: 'consecutive',
+      templateOptions: {
+        id: 'consecutiveChk',
+        label: $translate.instant('pstnSetup.consecutive')
+      },
+      expressionProperties: {
+        'hide': function () {
+          var shouldHide = angular.isUndefined(vm.model.quantity) || vm.model.quantity < 2;
+          if (shouldHide) {
+            // uncheck the consecutive checkbox
+            vm.model.consecutive = false;
+          }
+          return shouldHide;
+        }
       }
     }];
 
@@ -238,7 +290,10 @@
     }
 
     function removeOrder(order) {
-      _.remove(vm.blockOrders, order);
+      PstnSetupService.releaseCarrierInventory(vm.provider.uuid, order)
+        .then(function () {
+          _.pull(vm.orderCart, order);
+        });
     }
 
     function resetForm() {
@@ -270,6 +325,123 @@
           vm.areaCodeOptions = response.areaCodes;
           vm.model.areaCode = '';
         });
+    }
+
+    function getLongestCommonSubstring(x, y) {
+      if (!angular.isString(x) || !angular.isString(y)) {
+        return '';
+      }
+      var i = 0;
+      var length = x.length;
+      while (i < length && x.charAt(i) === y.charAt(i)) {
+        i++;
+      }
+      return x.substring(0, i);
+    }
+
+    function searchCarrierInventory() {
+      var params = {
+        npa: vm.model.areaCode.code,
+        count: vm.model.quantity,
+        sequential: vm.model.consecutive
+      };
+      vm.searchResults = [];
+      vm.searchResultsModel = {};
+      vm.paginateOptions.currentPage = 0;
+      vm.singleResults = vm.model.quantity === 1;
+      vm.consecutiveResults = vm.model.consecutive;
+
+      PstnSetupService.searchCarrierInventory(vm.provider.uuid, params)
+        .then(function (numberRanges) {
+          if (vm.singleResults) {
+            vm.searchResults = _.flatten(numberRanges);
+          } else {
+            vm.searchResults = numberRanges;
+          }
+        });
+    }
+
+    function formatTelephoneNumber(telephoneNumber) {
+      // if a single number
+      if (angular.isString(telephoneNumber)) {
+        return TelephoneNumberService.getDIDLabel(telephoneNumber);
+        // else if a range of numbers
+      } else if (angular.isArray(telephoneNumber)) {
+        var firstNumber = TelephoneNumberService.getDIDLabel(_.first(telephoneNumber));
+        var lastNumber = TelephoneNumberService.getDIDLabel(_.last(telephoneNumber));
+        if (vm.consecutiveResults) {
+          return firstNumber + ' - ' + _.last(lastNumber.split('-'));
+        } else {
+          var commonNumber = getLongestCommonSubstring(firstNumber, lastNumber);
+          return commonNumber + _.repeat('X', firstNumber.length - commonNumber.length);
+        }
+      }
+    }
+
+    function hasResultsSelected() {
+      return _.contains(vm.searchResultsModel, true);
+    }
+
+    $scope.$watchCollection(function () {
+      return vm.searchResultsModel;
+    }, function (searchResultsModel) {
+      // set disabled in next digest because of cs-btn
+      $timeout(function () {
+        vm.addDisabled = !_.contains(searchResultsModel, true);
+      });
+    });
+
+    function addToOrder() {
+      var promises = [];
+      vm.addLoading = true;
+      // add to cart
+      _.forIn(vm.searchResultsModel, function (value, _key) {
+        if (value) {
+          var key = _.parseInt(_key);
+          var searchResultsIndex = vm.paginateOptions.currentPage * vm.paginateOptions.pageSize + key;
+          if (searchResultsIndex < vm.searchResults.length) {
+            var numbers = vm.searchResults[searchResultsIndex];
+            var promise = PstnSetupService.reserveCarrierInventory(vm.provider.uuid, numbers)
+              .then(function () {
+                vm.orderCart.push(numbers);
+                // return the index to be used in the promise callback
+                return {
+                  searchResultsIndex: searchResultsIndex,
+                  searchResultsModelIndex: key
+                };
+              }).catch(function (response) {
+                Notification.errorResponse(response);
+              });
+            promises.push(promise);
+          }
+        }
+      });
+      $q.all(promises).then(function (results) {
+        // sort our successful indexes and process from high to low
+        _.forInRight(_.sortBy(results), function (indices) {
+          if (angular.isObject(indices) && angular.isNumber(indices.searchResultsIndex) && angular.isNumber(indices.searchResultsModelIndex)) {
+            // clear the checkbox
+            _.set(vm.searchResultsModel, indices.searchResultsModelIndex, false);
+            // remove from search result
+            vm.searchResults.splice(indices.searchResultsIndex, 1);
+          }
+        });
+      }).finally(function () {
+        // workaround for cs-btn so button is set by ng-disabled
+        delete vm.addLoading;
+        // check if we need to decrement current page
+        if (vm.paginateOptions.currentPage >= vm.paginateOptions.numberOfPages()) {
+          vm.paginateOptions.currentPage--;
+        }
+      });
+    }
+
+    function getOrderNumbers() {
+      return _.flatten(vm.orderCart);
+    }
+
+    function getOrderNumbersTotal() {
+      return getOrderNumbers().length;
     }
 
     function init() {
@@ -342,7 +514,7 @@
     }
 
     function orderNumbers() {
-      if (vm.blockOrders.length === 0) {
+      if (vm.orderNumbersTotal === 0) {
         Notification.error('pstnSetup.orderNumbersPrompt');
       } else {
         $state.go('pstnSetup.review');
@@ -378,27 +550,22 @@
             .catch(function (response) {
               if (response.status === 409) {
                 errors.push($translate.instant('pstnSetup.swivelDuplicateError', {
-                  number: this.label
+                  number: swivelToken.label
                 }));
               } else {
                 errors.push(Notification.processErrorResponse(response, 'pstnSetup.swivelAddError', {
-                  number: this.label
+                  number: swivelToken.label
                 }));
               }
-            }.bind(swivelToken));
+            });
           promises.push(promise);
         });
       } else {
-        angular.forEach(vm.blockOrders, function (blockOrder) {
-          var promise = PstnSetupService.orderBlock(vm.customerId, vm.provider.uuid, blockOrder.areaCode, blockOrder.quantity)
-            .catch(function (response) {
-              errors.push(Notification.processErrorResponse(response, 'pstnSetup.blockOrderError', {
-                areaCode: this.areaCode,
-                quantity: this.quantity
-              }));
-            }.bind(blockOrder));
-          promises.push(promise);
-        });
+        var promise = PstnSetupService.orderNumbers(vm.customerId, vm.provider.uuid, getOrderNumbers())
+          .catch(function (response) {
+            errors.push(Notification.processErrorResponse(response, 'pstnSetup.orderNumbersError'));
+          });
+        promises.push(promise);
       }
       return $q.all(promises).then(function () {
         if (errors.length > 0) {
