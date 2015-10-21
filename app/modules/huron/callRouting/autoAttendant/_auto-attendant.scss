@@ -244,28 +244,28 @@ a.dropdown-toggle:focus {
     @extend .icon-clock;
     font-size: 1.5em;
     text-align: center;
-    color: $brand-default;
+    color: $aa-builder-icon-color;
   }
   .aa-audio-icon {
     @extend .icon;
     @extend .icon-audio;
     font-size: 1.5em;
     text-align: center;
-    color: $brand-default;
+    color: $aa-builder-icon-color;
   }
   .aa-headset-icon {
     @extend .icon;
     @extend .icon-headset;
     font-size: 1.5em;
     text-align: center;
-    color: $brand-default;
+    color: $aa-builder-icon-color;
   }
   .aa-playlist-icon {
     @extend .icon;
     @extend .icon-playlist;
     font-size: 1.5em;
     text-align: center;
-    color: $brand-default;
+    color: $aa-builder-icon-color;
   }
 }
 
