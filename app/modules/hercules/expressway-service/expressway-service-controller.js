@@ -1,62 +1,62 @@
-(function() {
+(function () {
   'use strict';
 
   // TODO: Don't like this linking to routing name...
-  var serviceType2RouteName = function(serviceType) {
+  var serviceType2RouteName = function (serviceType) {
     switch (serviceType) {
-      case 'c_cal':
-        return "calendar-service";
-      case 'c_ucmc':
-        return "call-service";
-      default:
-        //console.error("serviceType " + serviceType + " not supported in this controller");
-        return "";
+    case 'c_cal':
+      return "calendar-service";
+    case 'c_ucmc':
+      return "call-service";
+    default:
+      //console.error("serviceType " + serviceType + " not supported in this controller");
+      return "";
     }
   };
 
-  var serviceType2ServiceId = function(serviceType) {
+  var serviceType2ServiceId = function (serviceType) {
     switch (serviceType) {
-      case 'c_cal':
-        return "squared-fusion-cal";
-      case 'c_ucmc':
-        return "squared-fusion-uc";
-      default:
-        //console.error("serviceType " + serviceType + " not supported in this controller");
-        return "";
+    case 'c_cal':
+      return "squared-fusion-cal";
+    case 'c_ucmc':
+      return "squared-fusion-uc";
+    default:
+      //console.error("serviceType " + serviceType + " not supported in this controller");
+      return "";
     }
   };
 
-  var serviceId2ServiceType = function(serviceId) {
+  var serviceId2ServiceType = function (serviceId) {
     switch (serviceId) {
-      case 'squared-fusion-cal':
-        return "c_cal";
-      case 'squared-fusion-uc':
-        return "c_ucmc";
-      default:
-        //console.error("serviceType " + serviceType + " not supported in this controller");
-        return "";
+    case 'squared-fusion-cal':
+      return "c_cal";
+    case 'squared-fusion-uc':
+      return "c_ucmc";
+    default:
+      //console.error("serviceType " + serviceType + " not supported in this controller");
+      return "";
     }
   };
 
   //TODO: Rewrite or use some existing stuff !!!!!!!!!!!!
-  var enableEmailValidation = function() {
+  var enableEmailValidation = function () {
     //TODO: Someone rewrite code below - it's just a placeholder
     //No real functionality here, just needed something so I could style the input
 
-    $(document).on('keyup', '#add-mails', function(e) {
+    $(document).on('keyup', '#add-mails', function (e) {
       //console.log(e.keyCode);
       switch (e.keyCode) {
-        case 13:
-          addMail();
-          break;
+      case 13:
+        addMail();
+        break;
 
-        case 186:
-          addMail();
-          break;
+      case 186:
+        addMail();
+        break;
 
-        case 188:
-          addMail();
-          break;
+      case 188:
+        addMail();
+        break;
       }
 
       function addMail() {
@@ -101,31 +101,31 @@
     vm.route = serviceType2RouteName(vm.currentServiceType);
     vm.notificationTag = vm.currentServiceId;
     vm.clusters = _.values(ClusterService.getClusters());
-    vm.clusterLength = function() {
+    vm.clusterLength = function () {
       return _.size(vm.clusters);
     };
 
     vm.serviceIconClass = ServiceDescriptor.serviceIcon(vm.currentServiceId);
 
     vm.serviceEnabled = false;
-    ServiceDescriptor.isServiceEnabled(serviceType2ServiceId(vm.currentServiceType), function(a, b) {
+    ServiceDescriptor.isServiceEnabled(serviceType2ServiceId(vm.currentServiceType), function (a, b) {
       vm.serviceEnabled = b;
     });
 
-    vm.serviceNotInstalled = function(cluster) {
+    vm.serviceNotInstalled = function (cluster) {
       return ServiceStatusSummaryService.serviceNotInstalled(vm.currentServiceType, cluster);
     };
 
-    vm.softwareUpgradeAvailable = function(cluster) {
+    vm.softwareUpgradeAvailable = function (cluster) {
       return ServiceStatusSummaryService.softwareUpgradeAvailable(vm.currentServiceType, cluster);
     };
 
-    vm.softwareVersionAvailable = function(cluster) {
+    vm.softwareVersionAvailable = function (cluster) {
       return ServiceStatusSummaryService.serviceFromCluster(vm.currentServiceType, cluster).software_upgrade_available ?
         ServiceStatusSummaryService.serviceFromCluster("c_ucmc", cluster).not_approved_package.version : "?";
     };
 
-    vm.selectedServiceAndManagementServiceStatus = function(cluster) {
+    vm.selectedServiceAndManagementServiceStatus = function (cluster) {
       return ServiceStatusSummaryService.status(vm.currentServiceType, cluster);
     };
 
@@ -140,7 +140,7 @@
       });
     }
 
-    vm.openUserStatusReportModal = function(serviceId) {
+    vm.openUserStatusReportModal = function (serviceId) {
       var modalVm = this;
       $scope.selectedServiceId = serviceId; //TODO: Fix. Currently compatible with "old" concept...
       $scope.modal = $modal.open({
@@ -150,8 +150,8 @@
       });
     };
 
-    vm.enableService = function(serviceId) {
-      ServiceDescriptor.setServiceEnabled(serviceId, true, function(error) {
+    vm.enableService = function (serviceId) {
+      ServiceDescriptor.setServiceEnabled(serviceId, true, function (error) {
         if (error !== null) {
           XhrNotificationService.notify("Problems enabling the service");
         }
@@ -159,7 +159,7 @@
       vm.serviceEnabled = true;
     };
 
-    vm.showClusterDetails = function(cluster) {
+    vm.showClusterDetails = function (cluster) {
       $state.go('cluster-details-new', {
         cluster: cluster,
         serviceType: vm.currentServiceType
@@ -212,7 +212,7 @@
     //TODO: Don't like this linking to routes...
     vm.route = serviceType2RouteName(vm.serviceType);
 
-    vm.serviceNotInstalled = function() {
+    vm.serviceNotInstalled = function () {
       return ServiceStatusSummaryService.serviceNotInstalled(vm.serviceType, vm.cluster);
     };
 
@@ -222,54 +222,54 @@
 
     function activeActivePropertyName(serviceType) {
       switch (serviceType) {
-        case 'c_cal':
-          return 'fms.calendarAssignmentType';
-        case 'c_ucmc':
-          return 'fms.callManagerAssignmentType';
-        default:
-          return '';
+      case 'c_cal':
+        return 'fms.calendarAssignmentType';
+      case 'c_ucmc':
+        return 'fms.callManagerAssignmentType';
+      default:
+        return '';
       }
     }
 
-    vm.toggleActiveActive = function() {
+    vm.toggleActiveActive = function () {
       var toggledState = !vm.activeActiveEnabled;
       ClusterService.setProperty(vm.cluster.id, activeActivePropertyName(vm.serviceType), toggledState ? 'activeActive' : 'standard')
-        .then(function() {
+        .then(function () {
           vm.activeActiveEnabled = toggledState;
         });
     };
 
-    vm.upgrade = function() {
+    vm.upgrade = function () {
       $modal.open({
         templateUrl: "modules/hercules/expressway-service/software-upgrade-dialog.html",
         controller: SoftwareUpgradeController,
         controllerAs: "softwareUpgrade"
-      }).result.then(function() {
+      }).result.then(function () {
         //console.log("Starting upgrade dialog...");
       });
     };
 
-    vm.showAlarms = function() {
+    vm.showAlarms = function () {
       $modal.open({
         templateUrl: "modules/hercules/expressway-service/alarms.html",
         controller: AlarmsController,
         controllerAs: "alarmsDialog"
-      }).result.then(function() {
+      }).result.then(function () {
         //console.log("Starting alarms dialog...");
       });
     };
 
-    vm.deleteHost = function(host) {
+    vm.deleteHost = function (host) {
       //console.log("Delete host ",host)
-      return ClusterService.deleteHost(vm.clusterId, host.serial).then(function() {
+      return ClusterService.deleteHost(vm.clusterId, host.serial).then(function () {
         //TODO: Update page
       }, XhrNotificationService.notify);
     };
 
-    vm.showDeregisterDialog = function() {
+    vm.showDeregisterDialog = function () {
       $modal.open({
         resolve: {
-          cluster: function() {
+          cluster: function () {
             return vm.cluster;
           }
         },
@@ -284,10 +284,10 @@
       var modalVm = this;
       modalVm.newVersion = vm.selectedService.not_approved_package.version;
       modalVm.oldVersion = vm.selectedService.connectors[0].version;
-      modalVm.ok = function() {
+      modalVm.ok = function () {
         $modalInstance.close();
       };
-      modalVm.cancel = function() {
+      modalVm.cancel = function () {
         $modalInstance.dismiss();
       };
       modalVm.clusterName = vm.cluster.name;
@@ -299,7 +299,7 @@
       var alarmsVm = this;
       alarmsVm.connectors = vm.selectedService.connectors;
 
-      alarmsVm.colorFromSeverity = function(alarm) {
+      alarmsVm.colorFromSeverity = function (alarm) {
         if (alarm.severity === "error") {
           return "red";
         } else if (alarm.severity === "critical") {
@@ -309,10 +309,10 @@
         }
       };
 
-      alarmsVm.ok = function() {
+      alarmsVm.ok = function () {
         $modalInstance.close();
       };
-      alarmsVm.cancel = function() {
+      alarmsVm.cancel = function () {
         $modalInstance.dismiss();
       };
     }
@@ -324,10 +324,10 @@
     modalVm.serviceId = serviceId;
     modalVm.serviceIconClass = ServiceDescriptor.serviceIcon(serviceId);
 
-    modalVm.ok = function() {
+    modalVm.ok = function () {
       $modalInstance.close();
     };
-    modalVm.cancel = function() {
+    modalVm.cancel = function () {
       $modalInstance.dismiss();
     };
   }
@@ -343,26 +343,26 @@
 
     enableEmailValidation();
 
-    var readCerts = function() {
-      CertService.getCerts(Authinfo.getOrgId()).then(function(res) {
+    var readCerts = function () {
+      CertService.getCerts(Authinfo.getOrgId()).then(function (res) {
         vm.certificates = res || [];
-      }, function(err) {
+      }, function (err) {
         return XhrNotificationService.notify(err);
       });
     };
 
     vm.squaredFusionEc = false;
-    ServiceDescriptor.isServiceEnabled("squared-fusion-ec", function(a, b) {
+    ServiceDescriptor.isServiceEnabled("squared-fusion-ec", function (a, b) {
       vm.squaredFusionEc = b;
       if (vm.squaredFusionEc) {
         readCerts();
       }
     });
 
-    vm.storeEc = function() {
+    vm.storeEc = function () {
       //console.log("store ec", vm.squaredFusionEc)
       ServiceDescriptor.setServiceEnabled("squared-fusion-ec", vm.squaredFusionEc,
-        function(err) {
+        function (err) {
           // TODO: fix this callback crap!
           if (err) {
             XhrNotificationService.notify("Failed to enable Aware");
@@ -375,34 +375,34 @@
     };
 
     vm.loading = true;
-    USSService2.getOrg(Authinfo.getOrgId()).then(function(res) {
+    USSService2.getOrg(Authinfo.getOrgId()).then(function (res) {
       vm.loading = false;
       vm.sipDomain = res.sipDomain;
       vm.org = res || {};
-    }, function(err) {
+    }, function (err) {
       //  if (err) return notification.notify(err);
     });
 
-    vm.updateSipDomain = function() {
+    vm.updateSipDomain = function () {
       vm.savingSip = true;
 
-      USSService2.updateOrg(vm.org).then(function(res) {
+      USSService2.updateOrg(vm.org).then(function (res) {
         vm.savingSip = false;
-      }, function(err) {
+      }, function (err) {
         vm.savingSip = false;
         Notification.error("hercules.errors.sipDomainInvalid");
       });
     };
 
     vm.config = "";
-    NotificationConfigService.read(function(err, config) {
+    NotificationConfigService.read(function (err, config) {
       vm.loading = false;
       if (err) {
         return XhrNotificationService.notify(err);
       }
       vm.config = config || {};
       if (vm.config.wx2users.length > 0) {
-        vm.wx2users = _.map(vm.config.wx2users.split(','), function(user) {
+        vm.wx2users = _.map(vm.config.wx2users.split(','), function (user) {
           return {
             text: user
           };
@@ -413,15 +413,15 @@
     });
     vm.cluster = $stateParams.cluster;
 
-    vm.writeConfig = function() {
-      vm.config.wx2users = _.map(vm.wx2users, function(data) {
+    vm.writeConfig = function () {
+      vm.config.wx2users = _.map(vm.wx2users, function (data) {
         return data.text;
       }).toString();
       if (vm.config.wx2users && !MailValidatorService.isValidEmailCsv(vm.config.wx2users)) {
         Notification.error("hercules.errors.invalidEmail");
       } else {
         vm.savingEmail = true;
-        NotificationConfigService.write(vm.config, function(err) {
+        NotificationConfigService.write(vm.config, function (err) {
           vm.savingEmail = false;
           if (err) {
             return XhrNotificationService.notify(err);
@@ -430,8 +430,8 @@
       }
     };
 
-    vm.disableService = function(serviceId) {
-      ServiceDescriptor.setServiceEnabled(serviceId, false, function(error) {
+    vm.disableService = function (serviceId) {
+      ServiceDescriptor.setServiceEnabled(serviceId, false, function (error) {
         // TODO: Strange callback result ???
         if (error !== null) {
           XhrNotificationService.notify(error);
@@ -440,17 +440,17 @@
       vm.serviceEnabled = false;
     };
 
-    vm.confirmDisable = function(serviceId) {
+    vm.confirmDisable = function (serviceId) {
       $modal.open({
         templateUrl: "modules/hercules/expressway-service/confirm-disable-dialog.html",
         controller: DisableConfirmController,
         controllerAs: "disableConfirmDialog",
         resolve: {
-          serviceId: function() {
+          serviceId: function () {
             return serviceId;
           }
         }
-      }).result.then(function() {
+      }).result.then(function () {
         vm.disableService(serviceId);
         //TODO: Fix this hack!
         $state.go(serviceType2RouteName(serviceId2ServiceType(serviceId)) + ".list", {
@@ -461,27 +461,27 @@
       });
     };
 
-    vm.uploadCert = function(file, event) {
+    vm.uploadCert = function (file, event) {
       if (!file) {
         return;
       }
       CertService.uploadCert(Authinfo.getOrgId(), file).then(readCerts, XhrNotificationService.notify);
     };
 
-    vm.confirmCertDelete = function(cert) {
+    vm.confirmCertDelete = function (cert) {
       $modal.open({
         templateUrl: "modules/hercules/expressway-service/confirm-certificate-delete.html",
         controller: ConfirmCertificateDeleteController,
         controllerAs: "confirmCertificateDelete",
         resolve: {
-          cert: function() {
+          cert: function () {
             return cert;
           }
         }
       }).result.then(readCerts);
     };
 
-    vm.invalidEmail = function(tag) {
+    vm.invalidEmail = function (tag) {
       Notification.error(tag.text + " is not a valid email");
     };
 
@@ -491,10 +491,10 @@
   function ConfirmCertificateDeleteController(CertService, $modalInstance, XhrNotificationService, cert) {
     var vm = this;
     vm.cert = cert;
-    vm.remove = function() {
+    vm.remove = function () {
       CertService.deleteCert(vm.cert.certId).then($modalInstance.close, XhrNotificationService.notify);
     };
-    vm.cancel = function() {
+    vm.cancel = function () {
       $modalInstance.dismiss();
     };
   }
