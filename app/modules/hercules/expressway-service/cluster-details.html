@@ -1,6 +1,6 @@
 <div ui-view="header"></div>
 
-<cs-sp-container ng-if="!expresswayServiceDetails.serviceNotInstalled()">
+<cs-sp-container class="hercules-fix-paragraphs" ng-if="!expresswayServiceDetails.serviceNotInstalled()">
 
   <cs-sp-section>
     <div class="section-title-row section-name">
@@ -28,19 +28,26 @@
     <div class="section-title-row section-name">
       Software Upgrade
     </div>
-    <p>
-      Current version: {{expresswayServiceDetails.selectedService.connectors[0].version}}
-    </p>
 
-    <div ng-if="expresswayServiceDetails.selectedService.software_upgrade_available">
-      <p>
-        New version: {{expresswayServiceDetails.selectedService.not_approved_package.version}}
-      </p>
-      <button class="button secondary" ng-click="expresswayServiceDetails.upgrade()">Upgrade</button>
+    <div class="feature-list">
+      <ul>
+        <li class="feature">
+          <span class="feature-name">Current version</span>
+          <span class="feature-status">{{expresswayServiceDetails.selectedService.connectors[0].version}}</span>
+        </li>
+        <li class="feature" ng-if="expresswayServiceDetails.selectedService.software_upgrade_available">
+          <span class="feature-name">New version</span>
+          <span class="feature-status">{{expresswayServiceDetails.selectedService.not_approved_package.version}}</span>
+        </li>
+        <li class="feature" ng-if="!expresswayServiceDetails.selectedService.software_upgrade_available">
+          <span class="feature-name">No new software available</span>
+        </li>
+      </ul>
     </div>
-    <p ng-if="!expresswayServiceDetails.selectedService.software_upgrade_available">
-      No new software available
-    </p>
+    <button class="button secondary"
+            ng-click="expresswayServiceDetails.upgrade()"
+            ng-if="expresswayServiceDetails.selectedService.software_upgrade_available">Upgrade
+    </button>
   </cs-sp-section>
 
   <cs-sp-section>
@@ -66,7 +73,7 @@
 
 </cs-sp-container>
 
-<cs-sp-container ng-if="expresswayServiceDetails.serviceNotInstalled()">
+<cs-sp-container class="hercules-fix-paragraphs" ng-if="expresswayServiceDetails.serviceNotInstalled()">
   <p>
     The service is not installed on this cluster.
   </p>
