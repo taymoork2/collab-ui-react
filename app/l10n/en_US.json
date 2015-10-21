@@ -327,7 +327,8 @@
     "leastEngaged": "5 Least Engaged",
     "highQuality": "5 Highest Quality",
     "leastQuality": "5 Lowest Quality",
-    "customerLoadError": "There was an error while loading the customer list."
+    "customerLoadError": "There was an error while loading the customer list.",
+    "webex": "Webex Reports"
   },
   "activeUsers": {
     "active": "Active",
@@ -576,7 +577,9 @@
     "add": "Add",
     "and": "and",
     "or": "or",
-    "search": "Search"
+    "search": "Search",
+    "edit": "Edit",
+    "confirm": "Confirm"
   },
   "notifications": {
     "success": "Success notifications",
@@ -855,7 +858,8 @@
       "downloading": "Downloading",
       "uninstalling": "Uninstalling",
       "running": "Running",
-      "needs_attention": "Needs attention"
+      "needs_attention": "Needs attention",
+      "alarm": "Alarm"
     },
     "setup": {
       "label": "Connector Management",

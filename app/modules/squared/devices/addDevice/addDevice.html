@@ -44,16 +44,7 @@
       <div class="clearfix">
         <h3>
           {{adc.activationCode}}
-          <button
-            id="copyCodeToClipboardButton"
-            class="btn btn-default btn-sm"
-            clip-copy="adc.activationCode"
-            clip-click="adc.showCopiedToClipboardMessage()">
-            <i
-              class="fa fa-clipboard"
-              data-original-title="Copied to clipboard">
-            </i>
-          </button>
+          <sq-clipboard clip-copy="adc.activationCode"></sq-clipboard>
         </h3>
       </div>
 

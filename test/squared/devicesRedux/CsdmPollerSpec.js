@@ -3,10 +3,11 @@
 describe('CsdmPoller', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var Poller, $q, $timeout, $rootScope;
+  var Poller, Hub, $q, $timeout, $rootScope;
 
-  beforeEach(inject(function (_$q_, CsdmPoller, _$timeout_, _$rootScope_, $httpBackend) {
+  beforeEach(inject(function (_$q_, CsdmPoller, _$timeout_, _$rootScope_, $httpBackend, CsdmHubFactory) {
     $q = _$q_;
+    Hub = CsdmHubFactory;
     Poller = CsdmPoller;
     $timeout = _$timeout_;
     $rootScope = _$rootScope_;
@@ -25,10 +26,11 @@ describe('CsdmPoller', function () {
       defer = $q.defer();
       return defer.promise;
     };
-    var poller = Poller.create(service);
+    var hub = Hub.create();
+    var poller = Poller.create(service, hub);
 
     var callback = sinon.stub();
-    var subscription = poller.subscribe(callback, {
+    var subscription = hub.on('data', callback, {
       scope: scope
     });
 
