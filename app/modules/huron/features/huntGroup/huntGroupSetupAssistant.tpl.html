@@ -1,16 +1,3 @@
-<script type="text/ng-template" id="numberTemplate.html">
-  <a>
-      <span ng-bind-html="match.label | typeaheadHighlight:query" ></span>
-  </a>
-</script>
-<script type="text/ng-template" id="userTemplate.html">
-  <div>
-    <span ng-bind-html="match.label.userName | typeaheadHighlight:query" ></span>
-  </div>
-  <a ng-repeat="number in match.label.userNumber">
-      <span ng-bind-html="number | typeaheadHighlight:query" ></span>
-  </a>
-</script>
 <cs-overlay-panel class="huntgroup overlay-panel typeahead-group" overlay-title="{{::'huronHuntGroup.title' | translate}}" close="huntGroupSA.cancelModal()"  ng-keyup="huntGroupSA.evalKeyPress($event.keyCode)">
   <cs-setup-assistant previous="huntGroupSA.previousButton(huntGroupSA.getPageIndex())" next="huntGroupSA.nextButton(huntGroupSA.getPageIndex())" previous-fn="huntGroupSA.previousPage()" next-fn="huntGroupSA.nextPage()">
 

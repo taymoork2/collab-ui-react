@@ -6,18 +6,19 @@
     'huntPilotLookup',
     'huntMethod',
     'huntMembersLookup',
-    'fallbackDestination'];
+    'fallbackDestination'
+  ];
 
-  pageDirectiveNames.map(function(directiveName){
+  pageDirectiveNames.map(function (directiveName) {
     angular
       .module('uc.huntGroup')
-      .directive(directiveName, function() {
+      .directive(directiveName, function () {
         return createSetupAssistantPageDirective(directiveName + '.tpl.html');
       });
   });
 
   function createSetupAssistantPageDirective(pageFile) {
-    var huntGroupSA = undefined;
+    var huntGroupSA;
 
     var directive = {
       controller: 'HuntGroupSetupAssistantCtrl',

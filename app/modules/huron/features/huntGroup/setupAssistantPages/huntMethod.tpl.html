@@ -4,9 +4,9 @@
   <p class="hunt-method-description" translate="huronHuntGroup.methodHint"></p>
 
   <div>
-    <button>Longest Idle</button>
-    <button>Broadcast</button>
-    <button>Circular</button>
-    <button>Top Down</button>
+    <button ng-click="huntGroupSA.huntMethodSelection('idle')" focus-on>Longest Idle</button>
+    <button ng-click="huntGroupSA.huntMethodSelection('broadcast')">Broadcast</button>
+    <button ng-click="huntGroupSA.huntMethodSelection('circular')">Circular</button>
+    <button ng-click="huntGroupSA.huntMethodSelection('topdown')">Top Down</button>
   </div>
 </div>
