@@ -426,9 +426,9 @@ angular
             service: 'MESSAGING'
           }
         })
-        .state('user-overview.cloudExtension-squared-fusion-cal', {
-          templateUrl: 'modules/hercules/cloudExtensions/cloudExtensionPreview.tpl.html',
-          controller: 'CloudExtensionPreviewCtrl',
+        .state('user-overview.hybrid-services-squared-fusion-cal', {
+          templateUrl: 'modules/hercules/userPreview/hybridServicesPreview.tpl.html',
+          controller: 'HybridServicesPreviewCtrl',
           data: {
             displayName: 'Calendar Service'
           },
@@ -436,8 +436,8 @@ angular
             extensionId: {}
           }
         })
-        .state('user-overview.cloudExtension-squared-fusion-uc', {
-          templateUrl: 'modules/hercules/cloudExtensions/callServicePreview.tpl.html',
+        .state('user-overview.hybrid-services-squared-fusion-uc', {
+          templateUrl: 'modules/hercules/userPreview/callServicePreview.tpl.html',
           controller: 'CallServicePreviewCtrl',
           data: {
             displayName: 'Call Service'
@@ -1429,8 +1429,14 @@ angular
         })
         .state('cluster-details-new.cluster-settings', {
           templateUrl: 'modules/hercules/expressway-service/cluster-settings.html',
+          controller: 'ExpresswayClusterSettingsController',
+          controllerAs: 'expresswayClusterSettingsCtrl',
           data: {
             displayName: 'Edit'
+          },
+          params: {
+            clusterId: null,
+            serviceType: null
           }
         })
         .state('cluster-details-new.alarm-details', {
@@ -1453,8 +1459,9 @@ angular
             displayName: 'Host'
           },
           params: {
-            connectorId: null,
-            clusterId: null
+            host: null,
+            clusterId: null,
+            serviceType: null
           }
         })
         .state('cluster-details', {

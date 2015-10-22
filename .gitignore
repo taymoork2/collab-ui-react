@@ -1,3 +1,4 @@
+*.patch
 *.gz
 *.iml
 *.pyc

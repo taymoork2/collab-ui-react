@@ -191,8 +191,7 @@
   }
 
   /* @ngInject */
-  function ExpresswayServiceDetailsController(XhrNotificationService, ServiceDescriptor, ServiceStatusSummaryService, $state, $modal, $stateParams,
-    ClusterService) {
+  function ExpresswayServiceDetailsController(XhrNotificationService, ServiceStatusSummaryService, $state, $modal, $stateParams, ClusterService) {
     var vm = this;
     vm.state = $state;
     vm.clusterId = $stateParams.cluster.id;
@@ -206,43 +205,11 @@
       });
     };
 
-    vm.activeActiveApplicable = (vm.serviceType == 'c_cal' || vm.serviceType == 'c_ucmc');
-    vm.activeActivePossible = vm.cluster.hosts.length > 1;
-    vm.activeActiveEnabled = vm.activeActiveApplicable && isActiveActiveEnabled(vm.cluster, vm.serviceType);
-
-    var managementServiceType = "c_mgmt";
-    vm.managementService = _.find(vm.cluster.services, {
-      service_type: managementServiceType
-    });
-
     //TODO: Don't like this linking to routes...
     vm.route = serviceType2RouteName(vm.serviceType);
 
     vm.serviceNotInstalled = function () {
       return ServiceStatusSummaryService.serviceNotInstalled(vm.serviceType, vm.cluster);
-    };
-
-    function isActiveActiveEnabled(cluster, serviceType) {
-      return cluster.properties && cluster.properties[activeActivePropertyName(serviceType)] == 'activeActive';
-    }
-
-    function activeActivePropertyName(serviceType) {
-      switch (serviceType) {
-      case 'c_cal':
-        return 'fms.calendarAssignmentType';
-      case 'c_ucmc':
-        return 'fms.callManagerAssignmentType';
-      default:
-        return '';
-      }
-    }
-
-    vm.toggleActiveActive = function () {
-      var toggledState = !vm.activeActiveEnabled;
-      ClusterService.setProperty(vm.cluster.id, activeActivePropertyName(vm.serviceType), toggledState ? 'activeActive' : 'standard')
-        .then(function () {
-          vm.activeActiveEnabled = toggledState;
-        });
     };
 
     vm.upgrade = function () {
@@ -272,19 +239,6 @@
       }, XhrNotificationService.notify);
     };
 
-    vm.showDeregisterDialog = function () {
-      $modal.open({
-        resolve: {
-          cluster: function () {
-            return vm.cluster;
-          }
-        },
-        controller: 'ClusterDeregisterController',
-        controllerAs: "clusterDeregister",
-        templateUrl: 'modules/hercules/cluster-deregister/deregister-dialog.html'
-      });
-    };
-
     /* @ngInject */
     function SoftwareUpgradeController($modalInstance) {
       var modalVm = this;
@@ -297,7 +251,6 @@
         $modalInstance.dismiss();
       };
       modalVm.clusterName = vm.cluster.name;
-      //console.log("SoftwareUpgradeController", modalVm.clusterName);
     }
 
     /* @ngInject */
@@ -515,17 +468,16 @@
   /* @ngInject */
   function HostDetailsController($stateParams, $state, ClusterService, XhrNotificationService) {
     var vm = this;
-    vm.connectorId = $stateParams.connectorId;
+    vm.host = $stateParams.host;
     vm.cluster = ClusterService.getClusters()[$stateParams.clusterId];
+    vm.serviceType = $stateParams.serviceType;
     vm.connector = function () {
-      var conn = _.chain(vm.cluster.services)
-        .pluck('connectors')
-        .flatten()
-        .find(function (connector) {
-          return connector.id == vm.connectorId;
-        })
-        .value();
-      return conn;
+      var service = _.find(vm.cluster.services, {
+        service_type: vm.serviceType
+      });
+      return _.find(service.connectors, function (connector) {
+        return connector.host.serial == vm.host.serial;
+      });
     };
 
     vm.deleteHost = function () {
@@ -541,11 +493,88 @@
     };
   }
 
+  /* @ngInject */
+  function ExpresswayClusterSettingsController(ServiceStatusSummaryService, $modal, $stateParams, ClusterService, $scope, XhrNotificationService) {
+    var vm = this;
+    vm.clusterId = $stateParams.clusterId;
+    vm.serviceType = $stateParams.serviceType;
+    vm.cluster = ClusterService.getClusters()[vm.clusterId];
+    vm.saving = false;
+
+    vm.selectedService = function () {
+      return _.find(vm.cluster.services, {
+        service_type: vm.serviceType
+      });
+    };
+
+    vm.activeActiveApplicable = (vm.serviceType == 'c_cal' || vm.serviceType == 'c_ucmc');
+    vm.activeActivePossible = vm.cluster.hosts.length > 1;
+    vm.activeActiveEnabled = vm.activeActiveApplicable && isActiveActiveEnabled(vm.cluster, vm.serviceType);
+    vm.activeActiveEnabledOld = vm.activeActiveApplicable && isActiveActiveEnabled(vm.cluster, vm.serviceType);
+
+    var managementServiceType = "c_mgmt";
+    vm.managementService = _.find(vm.cluster.services, {
+      service_type: managementServiceType
+    });
+
+    vm.serviceNotInstalled = function () {
+      return ServiceStatusSummaryService.serviceNotInstalled(vm.serviceType, vm.cluster);
+    };
+
+    function isActiveActiveEnabled(cluster, serviceType) {
+      return cluster.properties && cluster.properties[activeActivePropertyName(serviceType)] == 'activeActive';
+    }
+
+    function activeActivePropertyName(serviceType) {
+      switch (serviceType) {
+      case 'c_cal':
+        return 'fms.calendarAssignmentType';
+      case 'c_ucmc':
+        return 'fms.callManagerAssignmentType';
+      default:
+        return '';
+      }
+    }
+
+    vm.showDeregisterDialog = function () {
+      $modal.open({
+        resolve: {
+          cluster: function () {
+            return vm.cluster;
+          }
+        },
+        controller: 'ClusterDeregisterController',
+        controllerAs: "clusterDeregister",
+        templateUrl: 'modules/hercules/cluster-deregister/deregister-dialog.html'
+      });
+    };
+
+    $scope.$watch('expresswayClusterSettingsCtrl.activeActiveEnabled', function (newVal, oldVal) {
+      if (newVal !== undefined && newVal != oldVal) {
+        vm.showButtons = newVal != vm.activeActiveEnabledOld;
+      }
+    });
+
+    vm.save = function () {
+      vm.saving = true;
+      ClusterService.setProperty(vm.clusterId, activeActivePropertyName(vm.serviceType), vm.activeActiveEnabled ? 'activeActive' : 'standard')
+        .then(function () {
+          vm.saving = false;
+        }, XhrNotificationService.notify);
+    };
+
+    vm.cancel = function () {
+      vm.showButtons = false;
+      vm.activeActiveEnabled = vm.activeActiveEnabledOld;
+    };
+  }
+
   angular
     .module('Hercules')
     .controller('ExpresswayServiceController', ExpresswayServiceController)
     .controller('ExpresswayServiceDetailsController', ExpresswayServiceDetailsController)
     .controller('ExpresswayServiceSettingsController', ExpresswayServiceSettingsController)
+    .controller('ExpresswayClusterSettingsController', ExpresswayClusterSettingsController)
     .controller('DisableConfirmController', DisableConfirmController)
     .controller('AlarmController', AlarmController)
     .controller('HostDetailsController', HostDetailsController);

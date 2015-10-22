@@ -1,58 +1,45 @@
 <div id="webexreportDiv"
-     name="webexreportDiv"
-     class="siteindex-panel">
+     name="webexreportDiv">
          
   <div class="row page-header">
     <div class="page-title small-10 columns">
-      <!-- <div class="title-heading"> -->
-         <span class="title-heading" translate="webexSiteReports.title"></span>
-      <!-- </div>    -->
+       <span class="title-heading" translate="webexSiteReports.title"></span>
     </div>
   </div>  
-    
- 
-<div>
 
-<!-- <cs-container> -->
-
-<!-- <div id="webexReportBreadCrumbs" class="breadcrumb-container"> -->
+  <cs-container>
+    <!-- 
+    <div class="siteindex-panel">
+    -->
     <ul id="siteSettingsBreadCrumbs" name="siteSettingsBreadCrumbs" class="breadcrumbs">
       <li><a id="siteListCrumb" ui-sref="site-list" translate="siteList.conferencing"></a></li>
       <li class="current">{{siteUrl + ' '  + ('webexSiteReports.title' | translate)}}</li>
     </ul>
-<!-- </div> -->
 
-<!-- <div ng-if="reportObject.viewReady"> -->
-<cs-card-layout id="configureCards" ng-if="reportObject.viewReady">
-  <cs-card class="cs-card medium" ng-repeat="sec in reportObject.reports.sections">
-   
-    <article>
-      <header>
-       <h3>{{sec.section_name_translated}}</h3>
-      </header> 
+    <cs-card-layout id="configureCards" ng-if="reportObject.viewReady">
+      <cs-card class="cs-card medium" ng-repeat="sec in reportObject.reports.sections">
+        <article>
+          <header>
+           <h3>{{sec.section_name_translated}}</h3>
+          </header> 
 
-       <section id="siteSettingsCardSection">
-         <ul class="no-bullet">
-          <li ng-repeat="sref in sec.uisrefs">
-            
-                 <a id="{{sref.reportPageId}}"
-                    name="{{sref.reportPageId}}"
-                    ui-sref="{{sref.uisrefString}}">
-                    {{sref.reportPageId_translated}}
-                 </a>
-             
-          </li>
-          </ul>
-       </section>
-
-      </article>
-    
-  </cs-card>
- </cs-card-layout>
-<!-- </div> -->
+          <section id="siteSettingsCardSection">
+            <ul class="no-bullet">
+              <li ng-repeat="sref in sec.uisrefs">
+                <a id="{{sref.reportPageId}}"
+                   name="{{sref.reportPageId}}"
+                   ui-sref="{{sref.uisrefString}}">
+                   
+                  {{sref.reportPageId_translated}}
+                </a>
+              </li>
+            </ul>
+          </section>
+        </article>
+      </cs-card>
+    </cs-card-layout>
+  </cs-container>
 </div>
-
-<!-- </cs-container> -->
 
 
 <form name="siteAdminLink" action="{{trustSrc(webexAdvancedUrl)}}" method="post" target="webexSiteAdmin">

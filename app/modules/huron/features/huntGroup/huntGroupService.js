@@ -6,15 +6,61 @@
     .service('HuntGroupService', huntGroupService);
 
   /* ngInject */
-  function huntGroupService($q, HuntGroupServiceV2) {
+  function huntGroupService(Authinfo, HuntGroupServiceV2, NumberSearchServiceV2,
+    TelephoneNumberService, $q) {
 
     /* jshint validthis: true */
 
     var service = {
       getListOfHuntGroups: getListOfHuntGroups,
-      deleteHuntGroup: deleteHuntGroup
+      deleteHuntGroup: deleteHuntGroup,
+      getPilotNumberSuggestions: getPilotNumberSuggestions
     };
     return service;
+
+    function getPilotNumberSuggestions(typedNumber, selections, onFailure) {
+      var suggestions = $q.defer();
+
+      if (suggestionsNeeded(typedNumber)) {
+        return fetchSuggestionsFromService(typedNumber, selections, onFailure, suggestions);
+      }
+
+      suggestions.resolve([]);
+      return suggestions.promise;
+    }
+
+    function fetchSuggestionsFromService(typedNumber, selections, onFailure, suggestions) {
+
+      NumberSearchServiceV2.get({
+        customerId: Authinfo.getOrgId(),
+        number: typedNumber
+      }).$promise.then(function handleResponse(response) {
+        suggestions.resolve(
+          filterSelected(formatNumbers(response.numbers), selections));
+      }).catch(function (response) {
+        suggestions.resolve([]);
+        onFailure(response);
+      });
+
+      return suggestions.promise;
+    }
+
+    function formatNumbers(numbers) {
+      return numbers.map(function (n) {
+        n.number = TelephoneNumberService.getDIDLabel(n.number);
+        return n;
+      });
+    }
+
+    function suggestionsNeeded(typedNumber) {
+      return (typedNumber.length >= 3);
+    }
+
+    function filterSelected(fromList, selected) {
+      return fromList.filter(function (n) {
+        return (selected.indexOf(n.number) === -1);
+      });
+    }
 
     function getListOfHuntGroups(customerId) {
 

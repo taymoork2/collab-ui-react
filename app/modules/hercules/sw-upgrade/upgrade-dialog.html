@@ -16,7 +16,8 @@
     </div>
 
     <div ng-hide="loading">
-      <p>You are about to upgrade the software for the {{upgradePackage.service.display_name}} on all hosts running on the Cisco VCS Cluster {{cluster.name || 'Unknown Cluster Name'}}</p>
+      <p>You are about to upgrade the software for the {{upgradePackage.service.display_name}} on all hosts running on
+        the Cisco Expressway Cluster {{cluster.name || 'Unknown Cluster Name'}}</p>
       <p style="font-weight: bold;">{{upgradePackage.service.display_name}} {{upgradePackage.version}}</p>
       <p>
         <pre style="margin:0 0 0 0;padding:0 0 0 0; border:0;font-family:Helvetica Neue,Helvetica,Arial,sans-serif;font-size:14px;">{{upgradePackage.release_notes}}</pre>

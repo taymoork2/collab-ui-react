@@ -7,9 +7,12 @@
 
   .tag-container {
     padding-top: 10px;
-    > span {
+
+    .tag {
       margin-right: 5px;
+      margin-bottom: 5px;
       border-radius: 8px;
+      white-space: nowrap;
       padding: 2px 4px 3px 10px;
       background-color: $gray-lightest;
     }
