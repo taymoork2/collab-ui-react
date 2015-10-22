@@ -9,9 +9,10 @@
 /* global notifications */
 /* global deleteTrialUtils */
 
-xdescribe('Partner flow', function () {
+describe('Partner flow', function () {
   var orgId;
   var accessToken;
+  var appWindow;
 
   afterEach(function () {
     utils.dumpConsoleErrors();
@@ -105,7 +106,7 @@ xdescribe('Partner flow', function () {
   describe('Partner launches customer portal', function () {
 
     it('Launch customer portal via preview panel and display first time wizard', function () {
-      var appWindow = browser.getWindowHandle();
+      appWindow = browser.getWindowHandle();
 
       utils.click(partner.newTrialRow);
       utils.expectIsDisplayed(partner.previewPanel);
@@ -116,33 +117,34 @@ xdescribe('Partner flow', function () {
         utils.expectIsDisplayed(wizard.wizard);
         utils.expectIsDisplayed(wizard.leftNav);
         utils.expectIsDisplayed(wizard.mainView);
-
-        utils.expectTextToBeSet(wizard.mainviewTitle, 'Plan Review');
-        utils.click(wizard.beginBtn);
-        utils.click(wizard.saveBtn);
-
-        utils.expectTextToBeSet(wizard.mainviewTitle, 'Enterprise Settings');
-        utils.click(wizard.nextBtn);
-
-        utils.expectTextToBeSet(wizard.mainviewTitle, 'Invite Users');
-        utils.click(wizard.nextBtn);
-        utils.click(wizard.finishBtn);
-        notifications.clearNotifications();
-
-        utils.expectTextToBeSet(wizard.mainviewTitle, 'Get Started');
-        utils.click(wizard.finishBtn);
-
-        navigation.expectDriverCurrentUrl('overview');
-        utils.expectIsDisplayed(navigation.tabs);
-
-        browser.close();
-        browser.switchTo().window(appWindow);
-
       });
     });
 
+    it('should navigate first time wizard', function () {
+      utils.expectTextToBeSet(wizard.mainviewTitle, 'Plan Review');
+      utils.click(wizard.beginBtn);
+      utils.click(wizard.saveBtn);
+
+      utils.expectTextToBeSet(wizard.mainviewTitle, 'Enterprise Settings');
+      utils.click(wizard.nextBtn);
+
+      utils.expectTextToBeSet(wizard.mainviewTitle, 'Invite Users');
+      utils.click(wizard.nextBtn);
+      utils.click(wizard.finishBtn);
+      notifications.clearNotifications();
+
+      utils.expectTextToBeSet(wizard.mainviewTitle, 'Get Started');
+      utils.click(wizard.finishBtn);
+
+      navigation.expectDriverCurrentUrl('overview');
+      utils.expectIsDisplayed(navigation.tabs);
+
+      browser.close();
+      browser.switchTo().window(appWindow);
+    });
+
     it('Launch customer portal via dropdown and display partner managing org in partner filter', function () {
-      var appWindow = browser.getWindowHandle();
+      appWindow = browser.getWindowHandle();
 
       utils.click(partner.exitPreviewButton);
 
@@ -155,13 +157,11 @@ xdescribe('Partner flow', function () {
 
         browser.close();
         browser.switchTo().window(appWindow);
-
       });
     });
-
   });
 
-  it('should delete an exisiting org thus deleting trial', function () {
+  afterAll(function () {
     deleteTrialUtils.deleteOrg(orgId, accessToken);
   });
 
