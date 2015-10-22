@@ -5,7 +5,8 @@
   <div class="feature-list cloud-extensions">
     <ul>
       <li class="feature" ng-repeat="extension in extensions | filter: { enabled: true }">
-        <a id="{{extension.name}}" ui-sref="user-overview.cloudExtension-{{extension.id}}({extensionId: extension.id})">
+        <a id="{{extension.name}}"
+           ui-sref="user-overview.hybrid-services-{{extension.id}}({extensionId: extension.id})">
           <i class="feature-icon-extension" ng-class="extensionIcon(extension.id)"></i>
           <span class="feature-name" translate="hercules.serviceNames.{{extension.id}}"></span>
           <span class="feature-status" ng-class="extension.status ? 'status-' + extension.status.state : ''"

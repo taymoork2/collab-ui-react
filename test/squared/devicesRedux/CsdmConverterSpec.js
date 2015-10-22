@@ -9,6 +9,14 @@ describe('CsdmConverterSpec', function () {
     converter = CsdmConverter;
   }));
 
+  it('should convert tags', function () {
+    var obj = {
+      description: '["foo"]'
+    };
+    expect(converter.convertCode(obj).tags[0]).toBe('foo');
+    expect(converter.convertDevice(obj).tags[0]).toBe('foo');
+  });
+
   it('should format activation code', function () {
     var arr = [{
       activationCode: '1111222233334444'
