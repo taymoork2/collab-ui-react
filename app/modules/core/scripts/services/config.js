@@ -840,9 +840,10 @@ angular.module('Core')
           'huronsettings',
           'huronfeatures',
           'huronnewfeature',
-          'cdrsupport',
           'cdr-overview',
-          'huronHuntGroup'
+          'huronHuntGroup',
+          'huntgroupedit',
+          'cdrsupport'
         ],
         'squared-fusion-mgmt': [
           'fusion',
