@@ -1,10 +1,6 @@
 <div class="ngCellText" style="padding-top: 30px">
-  <i class="fa fa-circle {{'hercules-'+exp.selectedServiceAndManagementServiceStatus(row.entity).status}}"/>
-  <span ng-if="exp.selectedServiceAndManagementServiceStatus(row.entity).status == 'running'">Running</span>
-  <span ng-if="exp.selectedServiceAndManagementServiceStatus(row.entity).status == 'alarm'">Alarm</span>
-  <span
-    ng-if="exp.selectedServiceAndManagementServiceStatus(row.entity).status == 'needs_attention'">Needs attention</span>
-  <span ng-if="exp.selectedServiceAndManagementServiceStatus(row.entity).status == 'disabled'">Disabled</span>
+  <i class="fa fa-circle hercules-cluster-status-{{exp.selectedServiceStatus(row.entity)}}"/>
+  {{exp.selectedServiceStatus(row.entity)}}
   <span ng-if="exp.serviceNotInstalled(row.entity)">Not installed</span>
   <span ng-if="exp.softwareUpgradeAvailable(row.entity)">- Upgrade available</span>
 </div>

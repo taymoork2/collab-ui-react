@@ -11,7 +11,7 @@
       <span ng-bind-html="number | typeaheadHighlight:query" ></span>
   </a>
 </script>
-<cs-overlay-panel class="huntgroup overlay-panel typeahead-group" overlay-title="{{::'huronHuntGroup.title' | translate}}" close="huntGroupSA.close()">
+<cs-overlay-panel class="huntgroup overlay-panel typeahead-group" overlay-title="{{::'huronHuntGroup.title' | translate}}" close="huntGroupSA.cancelModal()"  ng-keyup="huntGroupSA.evalKeyPress($event.keyCode)">
   <cs-setup-assistant previous="huntGroupSA.previousButton(huntGroupSA.getPageIndex())" next="huntGroupSA.nextButton(huntGroupSA.getPageIndex())" previous-fn="huntGroupSA.previousPage()" next-fn="huntGroupSA.nextPage()">
 
     <div hunt-group-name ng-if="huntGroupSA.getPageIndex() == 0"/>

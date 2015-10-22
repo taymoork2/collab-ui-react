@@ -1,10 +1,12 @@
-<div class="pilot-number-details" ng-if="huntGroupSA.getPageIndex() == 1">
+<div class="pilot-number-details" ng-class="huntGroupSA.animation" ng-if="huntGroupSA.getPageIndex() == 1">
   <div class="typeahead-large">
     <span class="input-search"></span>
     <input id="numberInput" type="text" ng-model="huntGroupSA.selected"
            typeahead="number as num.number for num in huntGroupSA.fetchNumbers($viewValue) | limitTo:10"
            typeahead-on-select="huntGroupSA.selectHuntGroupNumber($item)"
-           typeahead-template-url="numberTemplate.html" placeholder="{{:: 'huronHuntGroup.numberPlaceholder' | translate}}"/>
+           typeahead-template-url="numberTemplate.html"
+           placeholder="{{:: 'huronHuntGroup.numberPlaceholder' | translate}}"/>
+
     <p class="input-description" translate="huronHuntGroup.numberHint"></p>
   </div>
   <div class="pilot-number-container">
