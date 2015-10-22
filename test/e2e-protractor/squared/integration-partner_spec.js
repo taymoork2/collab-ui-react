@@ -168,7 +168,7 @@ describe('Partner flow', function () {
   describe('Partner launches its orgs portal', function () {
 
     it('should launch partners org view', function () {
-      var appWindow = browser.getWindowHandle();
+      appWindow = browser.getWindowHandle();
 
       utils.expectIsDisplayed(navigation.userInfoButton);
       navigation.launchPartnerOrgPortal();
