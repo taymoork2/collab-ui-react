@@ -11,12 +11,12 @@
               <i class="icon icon-three-dots"></i>
             </button>
             <ul class="dropdown-menu dropdown-primary actions-services" role="menu">
-              <li><a><span
-                ng-click="huronFeaturesCtrl.editHuronFeature((huronFeature))"
-                translate="huronFeatureDetails.editAction"></span></a></li>
-              <li><a><span
-                ng-click="huronFeaturesCtrl.deleteHuronFeature((huronFeature))"
-                translate="huronFeatureDetails.deleteAction"></span></a></li>
+              <li>
+                <a ng-click="huronFeaturesCtrl.editHuronFeature((huronFeature))" href="#"><span translate="huronFeatureDetails.editAction"></span></a>
+              </li>
+              <li>
+                <a ng-click="huronFeaturesCtrl.deleteHuronFeature((huronFeature))" href="#"><span translate="huronFeatureDetails.deleteAction"></span></a>
+              </li>
             </ul>
           </span>
         </div>
