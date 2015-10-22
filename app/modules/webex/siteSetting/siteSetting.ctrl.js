@@ -51,7 +51,7 @@
       var iframeUrl = $stateParams.settingPageIframeUrl;
       // iframeUrl = iframeUrl.replace("wbxadmin", "adm3100");
 
-      $scope.iframeUrlType = iframeUrl.includes("/igotnuthin") ? "invalidIframeUrl" : "validIframeUrl";
+      $scope.iframeUrlType = (0 <= iframeUrl.indexOf("/igotnuthin")) ? "invalidIframeUrl" : "validIframeUrl";
 
       // for iframe request
       $scope.trustIframeUrl = $sce.trustAsResourceUrl(iframeUrl);
