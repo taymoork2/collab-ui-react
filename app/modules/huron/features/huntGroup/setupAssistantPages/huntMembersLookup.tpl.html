@@ -1,0 +1,12 @@
+<div class="typeahead-large">
+  <span class="input-search"></span>
+  <input id="userInput" type="text" ng-model="huntGroupSA.userSelected" class="form-control  "
+         typeahead="user for user in huntGroupSA.userData | filter:$viewValue | limitTo:10"
+         typeahead-on-select="huntGroupSA.selectHuntGroupUser($item)"
+         typeahead-template-url="userTemplate.html" placeholder="{{:: 'huronHuntGroup.memberPlaceholder' | translate}}"/>
+  <p class="input-description" translate="huronHuntGroup.memberHint"></p>
+</div>
+<div ng-repeat="user in huntGroupSA.users">
+  <span>{{user.userName}} &nbsp;</span><span class="icon icon-chevron-down"></span>
+</div>
+
