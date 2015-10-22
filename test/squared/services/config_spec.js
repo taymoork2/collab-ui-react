@@ -12,18 +12,18 @@ describe('Config', function () {
   }));
 
   var devHost = 'localhost';
-  var prodHost = 'admin.ciscospark.com';
-  var intHost = 'int-admin.ciscospark.com';
   var cfeHost = 'cfe-admin.ciscospark.com';
+  var intHost = 'int-admin.ciscospark.com';
+  var prodHost = 'admin.ciscospark.com';
 
   var scope = encodeURIComponent('webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config Identity:Organization cloudMeetings:login webex-messenger:get_webextoken ccc_config:admin');
 
   var whenCalling = function (fn, arg) {
     var hosts = {
       development: devHost,
+      cfe: cfeHost,
       integration: intHost,
-      production: prodHost,
-      cfe: cfeHost
+      production: prodHost
     };
     return {
       expectUrlToBe: function (obj) {
@@ -134,7 +134,7 @@ describe('Config', function () {
   });
 
   it('should return correct meeting service url', function () {
-    whenCalling('getMeetinginfoserviceUrl').expectUrlToBe({
+    whenCalling('getMeetingInfoServiceUrl').expectUrlToBe({
       development: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
       integration: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
       production: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
