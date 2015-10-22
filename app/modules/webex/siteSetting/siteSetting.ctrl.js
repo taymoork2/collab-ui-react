@@ -50,15 +50,15 @@
 
       var iframeUrl = $stateParams.settingPageIframeUrl;
 
-      if ( 
-    	(null == iframeUrl) || 
-    	("null" === iframeUrl) || 
-    	("" === iframeUrl) 
+      if (
+        (null == iframeUrl) ||
+        ("null" === iframeUrl) ||
+        ("" === iframeUrl)
       ) {
-    	  
-    	_this.logMsg = _this.funcName + ": " + "ERROR!!! Iframe URL is empty";
-    	$log.log(_this.logMsg);
-    	  
+
+        _this.logMsg = _this.funcName + ": " + "ERROR!!! Iframe URL is empty";
+        $log.log(_this.logMsg);
+
         $scope.iframeUrlType = "invalidIframeUrl";
         iframeUrl = "https://" + $stateParams.siteUrl + "/igotnuthin";
       } else {
