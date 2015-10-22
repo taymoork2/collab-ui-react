@@ -197,7 +197,7 @@ angular.module('Core')
           dev: 'https://config.integration-tx1.thunderhead.io/config/v1',
           cfe: 'https://config.integration-tx1.thunderhead.io/config/v1',
           integration: 'https://config.integration-tx1.thunderhead.io/config/v1',
-          prod: 'https://config.integration-tx1.thunderhead.io/config/v1', //This will change to prod later in future
+          prod: 'https://config.integration-tx1.thunderhead.io/config/v1' //This will change to prod later in future
         },
 
         scimSchemas: [
