@@ -1,0 +1,8 @@
+{
+  "errorMessage": "ERROR: cannot execute UPDATE in a read-only transaction",
+  "details": [{
+    "productName": "VOICE",
+    "productErrorCode": "SQL_ERROR",
+    "productErrorMessage": "ERROR: cannot execute UPDATE in a read-only transaction"
+  }]
+}
