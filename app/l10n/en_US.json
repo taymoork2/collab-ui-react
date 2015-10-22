@@ -2401,6 +2401,10 @@
     "addMemberLabel": "Add & Search Members",
     "successUpdate": "Successfully updated the Hunt Group",
     "errorUpdate": "Error while saving Hunt Group",
-    "numberLabel": "Select Numbers"
+    "numberLabel": "Select Numbers",
+    "cancelHeader": "Cancel Hunt Group Creation",
+    "cancelDialog": "Are you sure you wish to cancel hunt group creation? This hunt group will not be saved.",
+    "confirmButton": "Cancel Creation",
+    "continueButton": "Continue Creation"
   }
 }
