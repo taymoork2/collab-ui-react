@@ -49,11 +49,23 @@
       );
 
       var iframeUrl = $stateParams.settingPageIframeUrl;
-      // iframeUrl = iframeUrl.replace("wbxadmin", "adm3100");
 
-      $scope.iframeUrlType = (0 > iframeUrl.indexOf("/igotnuthin")) ? "invalidIframeUrl" : "validIframeUrl";
+      if ( 
+    	(null == iframeUrl) || 
+    	("null" === iframeUrl) || 
+    	("" === iframeUrl) 
+      ) {
+    	  
+    	_this.logMsg = _this.funcName + ": " + "ERROR!!! Iframe URL is empty";
+    	$log.log(_this.logMsg);
+    	  
+        $scope.iframeUrlType = "invalidIframeUrl";
+        iframeUrl = "https://" + $stateParams.siteUrl + "/igotnuthin";
+      } else {
+        $scope.iframeUrlType = "validIframeUrl";
+      }
 
-      // for iframe request
+      // iframe request variables
       $scope.trustIframeUrl = $sce.trustAsResourceUrl(iframeUrl);
       $scope.adminEmail = Authinfo.getPrimaryEmail();
       $scope.authToken = $rootScope.token;
@@ -62,14 +74,14 @@
       _this.logMsg = _this.funcName + ": " + "\n" +
         "siteSettingId=" + $scope.siteSettingId + "\n" +
         "siteSettingLabel=" + $scope.siteSettingLabel + "\n" +
-        "settingPageIframeUrl=" + $stateParams.settingPageIframeUrl + "\n" +
+        "iframeUrl=" + iframeUrl + "\n" +
         "trustIframeUrl=" + $scope.trustIframeUrl + "\n" +
         "adminEmail=" + $scope.adminEmail + "\n" +
         "authToken=" + $scope.authToken + "\n" +
         "locale=" + $scope.locale + "\n" +
         "siteSettingsBreadcrumbUiSref=" + $scope.siteSettingsBreadcrumbUiSref + "\n" +
         "siteSettingsBreadcrumbLabel=" + $scope.siteSettingsBreadcrumbLabel;
-      $log.log(_this.logMsg);
+      // $log.log(_this.logMsg);
 
       $timeout(
         function () {
