@@ -34,7 +34,7 @@ We use pull requests, and consequentially the forking model.  To make a contribu
 
 **Note*: If you get a Permission Denied (publickey) then follow these directions in Generating SSH Keys
  `https://help.github.com/articles/generating-ssh-keys/`
- 
+
 When you're making changes to your fork, you'll push to your fork with `git push origin master`, and your pull request will get automatically updated with the latest pushes you've made.
 
 When your pull request gets approved by someone, this means you're able to push to jenkins with `git push jenkins master`. Clicking the "Merge" button will not merge into master since we used gated builds. This means that Jenkins is the only one who is capable of pushing to master to ensure our repository stays clean.
@@ -127,7 +127,7 @@ Adding a simple page ("Hello World")
 
   PLAY RECORDING (1 hr 8 min 11 sec)
   https://cisco.webex.com/ciscosales/lsr.php?RCID=10b20fbacd884535bcbcffbf06d458d6
-  
+
 **1. Clone the repo**
 
 **2. Add a new module**
@@ -156,7 +156,7 @@ Adding a simple page ("Hello World")
 * **Testing Resources**
   * https://docs.angularjs.org/guide/unit-testing
   * http://www.pluralsight.com/courses/play-by-play-angular-testing-papa-bell
-  * http://www.bradoncode.com/tutorials/angularjs-unit-testing/ 
+  * http://www.bradoncode.com/tutorials/angularjs-unit-testing/
 
 **4. Test and Run**
 * run the app using: `gulp serve`
@@ -177,7 +177,7 @@ Gulp.js Tasks
 
 ### Available arguments
 
-There are several arguments that can be added to the gulp tasks. Arguments are listed after the Mian tasks.
+There are several arguments that can be added to the gulp tasks. Arguments are listed after the main tasks.
 
 ### `gulp`
 
@@ -185,7 +185,7 @@ There are several arguments that can be added to the gulp tasks. Arguments are l
 
 ### `gulp build`
 
-* Cleans (deletes) friles in the 'build' & 'dist' directories
+* Cleans (deletes) files in the 'build' & 'dist' directories
 * Builds (copies) files from the development (app) folder into the staging (build) folder
 * Compiles HTML templates into JS template file and adds them to the $templatecache
 * Compiles index file by adding CSS links and JS  script tags for dependencies

@@ -71,6 +71,7 @@ module.exports = function() {
       karmaWatchTpl: 'karma/karma.watch.tpl.js',
       app: [
         build + '/scripts/**/*.js',
+        build + '/modules/**/*.module.js',
         build + '/modules/**/*.js'
       ],
       js: [

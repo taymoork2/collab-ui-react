@@ -137,7 +137,7 @@
     "trainingCenter": "Training Center {{capacity}}",
     "eventCenter": "Event Center {{capacity}}",
     "communication": "Communication",
-    "cloudExtensions": "Cloud Extensions",
+    "cloudExtensions": "Hybrid Services",
     "cmr": "Collaboration Meeting Rooms"
   },
   "usersPreview": {
@@ -2197,7 +2197,7 @@
     "siteReports": "Reports"
   },
   "cloudExtensions": {
-    "cloudExtensions": "Cloud Extensions",
+    "cloudExtensions": "Hybrid Services",
     "enableService": "Activate service for this user",
     "status": "Status",
     "host": "Host",
@@ -2295,7 +2295,8 @@
   "huntGroup": {
     "code": "HG",
     "title": "Hunt Group",
-    "modalDescription": "Hunt groups (or line hunting) allow you to customize the distribution of incoming phone calls to users' phone lines in a specific order."
+    "modalDescription": "Hunt groups (or line hunting) allow you to customize the distribution of incoming phone calls to users' phone lines in a specific order.",
+    "numberFetchFailure": "Unable to get numbers."
   },
 
   "huronFeatureDetails": {
