@@ -4,11 +4,11 @@
     <h3 class="modal-title" translate="pstnSetup.setupService"></h3>
   </div>
   <div class="modal-body">
-    <div class="loading" ng-if="pstnSetup.loading">
+    <div class="loading" ng-if="pstnProviders.loading">
       <i class="icon icon-spinner"></i>
     </div>
-    <cs-card-layout block-view="true" ng-if="!pstnSetup.loading">
-      <cs-card class="medium header-border pstn-provider-card" ng-repeat="provider in pstnSetup.providers">
+    <cs-card-layout block-view="true" ng-if="!pstnProviders.loading">
+      <cs-card class="medium header-border pstn-provider-card" ng-repeat="provider in pstnProviders.providers">
         <article>
         <header class="align-center">
           <img ng-src="{{::provider.logoSrc}}" alt="{{::provider.logoAlt}}">
@@ -23,7 +23,7 @@
           </div>
         </section>
         <footer>
-          <button class="btn btn-info" ng-click="pstnSetup.selectProvider(provider);provider.selectFn()" translate="common.select"></button>
+          <button class="btn btn-info" ng-click="pstnProviders.selectProvider(provider);provider.selectFn()" translate="common.select"></button>
         </footer>
         </article>
       </cs-card>
