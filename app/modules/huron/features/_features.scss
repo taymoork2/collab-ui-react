@@ -7,7 +7,6 @@
     height: calc(100vh - #{($navbar-height + $page-header-height + $features-header-height)});
     overflow: auto;
     background-color: $brand-white;
-    @include vr-spacing(ph, 1);
     @include vr-spacing(pt, 0);
   }
 }
@@ -21,9 +20,7 @@
   background-color: $brand-white;
   @include vr-spacing(ph, 1.5);
   @include vr-spacing(pv, 1);
-  border-bottom:solid ;
-  border-color: $gray-light-3;
-  border-width: thin;
+  border-bottom: 1px solid $gray-light-3;
 }
 
 .new-feature-button {
@@ -32,7 +29,8 @@
 
 .cards-block{
 
-  @include vr-spacing(pt, 0.8);
+  @include vr-spacing(pv, 1);
+  @include vr-spacing(ph, 0.5);
 
   .cs-card article {
     height : rem-calc(170);

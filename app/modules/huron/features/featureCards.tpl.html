@@ -1,5 +1,5 @@
-<cs-card-layout>
 <div class="cards-block">
+<cs-card-layout block-view="true">
   <cs-card ng-repeat="huronFeature in huronFeaturesCtrl.listOfFeatures"
            class="small header-background {{ huronFeaturesCtrl.cardColors[huronFeature.filterValue] }}">
     <article>
@@ -37,5 +37,5 @@
       </section>
     </article>
   </cs-card>
-</div>
 </cs-card-layout>
+</div>
