@@ -28,14 +28,14 @@ angular.module('Core')
 
         locusServiceUrl: {
           dev: 'http://localhost:8080/locus-mount',
-          cfe: 'https://admin-portal-test-public.wbx2.com/locus',
+          cfe: 'https://locus-e.wbx2.com',
           integration: 'https://admin-portal-test-public.wbx2.com/locus',
           prod: 'https://locus-a.wbx2.com'
         },
 
         enrollmentServiceUrl: {
           dev: 'http://localhost:8080/locus-mount/locus/api/v1',
-          cfe: 'https://locus-integration.wbx2.com/locus/api/v1',
+          cfe: 'https://locus-e.wbx2.com/locus/api/v1',
           integration: 'https://locus-integration.wbx2.com/locus/api/v1',
           prod: 'https://locus-a.wbx2.com/locus/api/v1'
         },
@@ -169,21 +169,21 @@ angular.module('Core')
 
         herculesUrl: {
           dev: 'https://hercules-integration.wbx2.com/',
-          cfe: 'https://hercules-a.wbx2.com/',
+          cfe: 'https://hercules-e.wbx2.com/',
           integration: 'https://hercules-integration.wbx2.com/',
           prod: 'https://hercules-a.wbx2.com/'
         },
 
         ussUrl: {
           dev: 'https://uss-integration.wbx2.com/',
-          cfe: 'https://uss-a.wbx2.com/',
+          cfe: 'https://uss-e.wbx2.com/',
           integration: 'https://uss-integration.wbx2.com/',
           prod: 'https://uss-a.wbx2.com/'
         },
 
         certsUrl: {
           dev: 'https://certs-integration.wbx2.com/',
-          cfe: 'https://certs-a.wbx2.com/',
+          cfe: 'https://certs-e.wbx2.com/',
           integration: 'https://certs-integration.wbx2.com/',
           prod: 'https://certs-a.wbx2.com/'
         },
@@ -537,7 +537,7 @@ angular.module('Core')
         },
 
         getCsdmServiceUrl: function () {
-          var csdmServiceUrl  = {
+          var csdmServiceUrl = {
             'dev': this.csdmServiceUrl.integration,
             'cfe': this.csdmServiceUrl.cfe,
             'integration': this.csdmServiceUrl.integration,
