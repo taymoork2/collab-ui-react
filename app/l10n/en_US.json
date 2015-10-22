@@ -2193,7 +2193,7 @@
     "siteName": "Site Name",
     "licenseCount": "License Count",
     "type": "Type",
-    "siteSettings": "Configure Site",
+    "launchSite": "Configure Site",
     "siteReports": "Reports"
   },
   "cloudExtensions": {
