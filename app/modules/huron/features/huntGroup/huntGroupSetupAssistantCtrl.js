@@ -21,11 +21,18 @@
     vm.close = closePanel;
     vm.selectHuntGroupNumber = selectHuntGroupNumber;
     vm.selectHuntGroupUser = selectHuntGroupUser;
-
+    vm.setHuntMethod = setHuntMethod;
     vm.huntGroupName = undefined;
     vm.huntGroupNumber = undefined;
     vm.numbers = [];
     vm.users = [];
+    vm.hgMethods = {
+      "longestIdle": "longest-idle",
+      "broadcast": "broadcast",
+      "circular": "circular",
+      "topDown": "top-down"
+    };
+    vm.huntGroupMethod = vm.hgMethods.longestIdle;
     vm.numberData = [{
       "userNumber": "1597534567"
     }, {
@@ -97,6 +104,15 @@
       vm.userSelected = undefined;
 
       vm.users.push(selectedUser);
+    }
+
+    function setHuntMethod(methodSelected) {
+
+      if (vm.huntGroupMethod === methodSelected) {
+        nextPage();
+      } else {
+        vm.huntGroupMethod = methodSelected;
+      }
     }
 
     function init() {}

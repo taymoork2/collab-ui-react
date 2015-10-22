@@ -2378,6 +2378,24 @@
     "fallbackPlaceholder": "Enter Fallback Destination",
     "fallbackHint": "This is where the call goes if it was not answered by this hunt group",
     "voiceCheckLabel": "Send call directly to voicemail",
-    "createGroupLabel": "CREATE HUNT GROUP"
+    "createGroupLabel": "CREATE HUNT GROUP",
+    "hgMethods": {
+      "longestIdle": {
+        "name": "Longest Idle",
+        "desc": "Longest Idle first sends the call to the longest idle (or available), member, and if unanswered, proceeds to the least idle member."
+      },
+      "broadcast": {
+        "name": "Broadcast",
+        "desc": "Broadcast simultaneously sends the call to all idle (or available) members."
+      },
+      "circular": {
+        "name": "Circular",
+        "desc": "The system keeps a track of which member was sent the previous call. Circular first send tha call to next sequential idle (or available) member."
+      },
+      "topDown": {
+        "name": "Top Down",
+        "desc": "Top Down first sends the call to the first idle (or available) member, and if unanswered, proceeds to the last idle (or available) member"
+      }
+    }
   }
 }
