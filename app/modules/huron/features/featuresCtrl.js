@@ -124,12 +124,11 @@
           angular.forEach(huntGroupData.items, function (huntGroup) {
             commonDataFormatForCards.cardName = huntGroup.name;
             commonDataFormatForCards.numbers = huntGroup.numbers.map(function (number) {
-              number = TelephoneNumberService.getDIDLabel(number);
-              return number;
+              return TelephoneNumberService.getDIDLabel(number);
             });
             commonDataFormatForCards.memberCount = huntGroup.memberCount;
             commonDataFormatForCards.huntGroupId = huntGroup.uuid;
-            commonDataFormatForCards.featureName = 'huronFeatureDetails.hg';
+            commonDataFormatForCards.featureName = 'huronHuntGroup.hg';
             commonDataFormatForCards.filterValue = 'HG';
             listOfHuntGroups.push(commonDataFormatForCards);
             commonDataFormatForCards = {};
@@ -141,7 +140,7 @@
         Log.warn('Could fetch huntGroups for customer with Id:', customerId);
         vm.pageState = 'showFeatures';
         //Notify the user that retrieval of hunt groups list has been failed
-        Notification.error('huntGroupDetails.failedToLoadHuntGroups');
+        Notification.error('huronHuntGroup.failedToLoadHuntGroups');
       });
     };
 

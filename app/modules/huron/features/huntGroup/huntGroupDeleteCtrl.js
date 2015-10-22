@@ -30,7 +30,7 @@
 
         $timeout(function () {
           $rootScope.$broadcast('HUNT_GROUP_DELETED');
-          Notification.success('huntGroupDetails.deleteHuntGroupSuccessText', {
+          Notification.success('huronHuntGroup.deleteHuntGroupSuccessText', {
             huntGroupName: vm.deleteHuntGroupName
           });
         }, 250);
@@ -49,7 +49,7 @@
             status: response.status
           });
           if (response.data && angular.isString(response.data)) {
-            error += ' ' + $translate.instant('huntGroupDetails.messageError', {
+            error += ' ' + $translate.instant('huronHuntGroup.messageError', {
               message: response.data
             });
           }
