@@ -218,7 +218,7 @@
     "entResUtilizationTab": "Utilization",
     "entResUtilizationTabDesc": "Enterprise Resources Utilization",
     "servicesTab": "Services",
-    "conferencing": "Conferencing",
+    "conferencing": "WebEx",
     "conferencingDesc": "List of Site Admins",
     "alarmsTab": "Alarms",
     "alarmsTabDesc": "Alarm Management",
@@ -2189,11 +2189,11 @@
     "chineseTraditional": "Chinese(Traditional)"
   },
   "siteList": {
-    "conferencing": "Conferencing",
+    "conferencing": "WebEx Sites",
     "siteName": "Site Name",
     "licenseCount": "License Count",
     "type": "Type",
-    "siteSettings": "Configure Site",
+    "launchSite": "Configure Site",
     "siteReports": "Reports"
   },
   "cloudExtensions": {
