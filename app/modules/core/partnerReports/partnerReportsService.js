@@ -19,6 +19,7 @@
     var monthFormat = "MMMM";
     var timezone = "Etc/GMT";
     var customerList = null;
+    var cacheValue = (parseInt(moment.utc().format('H')) >= 8);
 
     var overallPopulation = 0;
     var timeFilter = null;
@@ -237,31 +238,31 @@
 
     function getQuery(filter) {
       if (filter.value === 0) {
-        return '?&intervalCount=8&intervalType=day&spanCount=1&spanType=day&cache=true';
+        return '?&intervalCount=8&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
       } else if (filter.value === 1) {
-        return '?&intervalCount=31&intervalType=day&spanCount=7&spanType=day&cache=true';
+        return '?&intervalCount=31&intervalType=day&spanCount=7&spanType=day&cache=' + cacheValue;
       } else {
-        return '?&intervalCount=3&intervalType=month&spanCount=1&spanType=month&cache=true';
+        return '?&intervalCount=3&intervalType=month&spanCount=1&spanType=month&cache=' + cacheValue;
       }
     }
 
     function getQueryForOnePeriod(filter) {
       if (filter.value === 0) {
-        return '?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=true';
+        return '?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=' + cacheValue;
       } else if (filter.value === 1) {
-        return '?&intervalCount=31&intervalType=day&spanCount=31&spanType=day&cache=true';
+        return '?&intervalCount=31&intervalType=day&spanCount=31&spanType=day&cache=' + cacheValue;
       } else {
-        return '?&intervalCount=92&intervalType=day&spanCount=92&spanType=day&cache=true';
+        return '?&intervalCount=92&intervalType=day&spanCount=92&spanType=day&cache=' + cacheValue;
       }
     }
 
     function getTrendQuery(filter) {
       if (filter.value === 0) {
-        return '?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=true';
+        return '?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
       } else if (filter.value === 1) {
-        return '?&intervalCount=31&intervalType=day&spanCount=1&spanType=day&cache=true';
+        return '?&intervalCount=31&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
       } else {
-        return '?&intervalCount=92&intervalType=day&spanCount=1&spanType=day&cache=true';
+        return '?&intervalCount=92&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
       }
     }
 
