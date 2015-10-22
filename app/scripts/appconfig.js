@@ -1325,6 +1325,13 @@ angular
           templateUrl: 'modules/huron/features/huntGroup/huntGroupSetupAssistant.tpl.html',
           controller: 'HuntGroupSetupAssistantCtrl',
           controllerAs: 'huntGroupSA'
+        })
+        .state('huntgroupedit', {
+          url: '/features/hg/edit',
+          parent: 'main',
+          templateUrl: 'modules/huron/features/edit/huntgroupedit.tpl.html',
+          controller: 'HuntGroupEditCtrl',
+          controllerAs: 'hge'
         });
     }
   ]);

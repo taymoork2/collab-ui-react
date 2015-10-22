@@ -124,11 +124,11 @@
 
     vm.softwareVersionAvailable = function (cluster) {
       return ServiceStatusSummaryService.serviceFromCluster(vm.currentServiceType, cluster).software_upgrade_available ?
-        ServiceStatusSummaryService.serviceFromCluster("c_ucmc", cluster).not_approved_package.version : "?";
+        ServiceStatusSummaryService.serviceFromCluster(vm.currentServiceType, cluster).not_approved_package.version : "?";
     };
 
-    vm.selectedServiceAndManagementServiceStatus = function (cluster) {
-      return ServiceStatusSummaryService.status(vm.currentServiceType, cluster);
+    vm.selectedServiceStatus = function (cluster) {
+      return ServiceStatusSummaryService.clusterAggregatedStatus(vm.currentServiceType, cluster);
     };
 
     function clustersUpdated() {
