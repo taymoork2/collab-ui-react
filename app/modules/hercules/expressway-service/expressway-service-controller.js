@@ -218,8 +218,8 @@
         controller: SoftwareUpgradeController,
         controllerAs: "softwareUpgrade"
       }).result.then(function () {
-          //console.log("Starting upgrade dialog...");
-        });
+        //console.log("Starting upgrade dialog...");
+      });
     };
 
     vm.showAlarms = function () {
@@ -228,8 +228,8 @@
         controller: AlarmsController,
         controllerAs: "alarmsDialog"
       }).result.then(function () {
-          //console.log("Starting alarms dialog...");
-        });
+        //console.log("Starting alarms dialog...");
+      });
     };
 
     vm.deleteHost = function (host) {
@@ -527,12 +527,12 @@
 
     function activeActivePropertyName(serviceType) {
       switch (serviceType) {
-        case 'c_cal':
-          return 'fms.calendarAssignmentType';
-        case 'c_ucmc':
-          return 'fms.callManagerAssignmentType';
-        default:
-          return '';
+      case 'c_cal':
+        return 'fms.calendarAssignmentType';
+      case 'c_ucmc':
+        return 'fms.callManagerAssignmentType';
+      default:
+        return '';
       }
     }
 
@@ -550,7 +550,7 @@
     };
 
     $scope.$watch('expresswayClusterSettingsCtrl.activeActiveEnabled', function (newVal, oldVal) {
-      if (newVal != undefined && newVal != oldVal) {
+      if (newVal !== undefined && newVal != oldVal) {
         vm.showButtons = newVal != vm.activeActiveEnabledOld;
       }
     });
