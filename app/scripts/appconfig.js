@@ -1429,8 +1429,14 @@ angular
         })
         .state('cluster-details-new.cluster-settings', {
           templateUrl: 'modules/hercules/expressway-service/cluster-settings.html',
+          controller: 'ExpresswayClusterSettingsController',
+          controllerAs: 'expresswayClusterSettingsCtrl',
           data: {
             displayName: 'Edit'
+          },
+          params: {
+            clusterId: null,
+            serviceType: null
           }
         })
         .state('cluster-details-new.alarm-details', {
