@@ -97,3 +97,22 @@ Special stuff currently used for out own mail input field...
     }
   }
 }
+
+.hercules-cluster-status-Alarm {
+  color: $color-negative-base;
+}
+.hercules-cluster-status-Running {
+  color: $color-cta-base;
+}
+.hercules-cluster-status-Installing {
+  color: $color-attention-base;
+}
+.hercules-cluster-status-NotConfigured {
+  color: $color-attention-base
+}
+.hercules-cluster-status-Disabled {
+  color: $color-attention-base;
+}
+.hercules-cluster-status-Unknown {
+  color: $gray-base;
+}

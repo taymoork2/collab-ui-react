@@ -47,9 +47,11 @@ var LoginPage = function () {
     helper.getBearerToken(username, function (_bearer) {
       bearer = _bearer;
       expect(bearer).not.toBeNull();
-      browser.executeScript("localStorage.accessToken='" + bearer + "'");
-      browser.refresh();
-      navigation.expectDriverCurrentUrl(typeof expectedUrl !== 'undefined' ? expectedUrl : '/overview');
+      navigation.expectDriverCurrentUrl('/login').then(function () {
+        browser.executeScript("localStorage.accessToken='" + bearer + "'");
+        browser.refresh();
+        navigation.expectDriverCurrentUrl(typeof expectedUrl !== 'undefined' ? expectedUrl : '/overview');
+      });
     });
     return browser.wait(function () {
       return bearer;
@@ -62,9 +64,11 @@ var LoginPage = function () {
     helper.getBearerToken(username, function (_bearer) {
       bearer = _bearer;
       expect(bearer).not.toBeNull();
-      browser.executeScript("localStorage.accessToken='" + bearer + "'");
-      browser.refresh();
-      navigation.expectDriverCurrentUrl(typeof expectedUrl !== 'undefined' ? expectedUrl : '/unauthorized');
+      navigation.expectDriverCurrentUrl('/login').then(function () {
+        browser.executeScript("localStorage.accessToken='" + bearer + "'");
+        browser.refresh();
+        navigation.expectDriverCurrentUrl(typeof expectedUrl !== 'undefined' ? expectedUrl : '/unauthorized');
+      });
     });
     return browser.wait(function () {
       return bearer;
@@ -89,8 +93,10 @@ var LoginPage = function () {
     helper.getBearerToken(username, function (_bearer) {
       bearer = _bearer;
       expect(bearer).not.toBeNull();
-      browser.executeScript("localStorage.accessToken='" + bearer + "'");
-      browser.refresh();
+      navigation.expectDriverCurrentUrl('/login').then(function () {
+        browser.executeScript("localStorage.accessToken='" + bearer + "'");
+        browser.refresh();
+      });
     });
     return browser.wait(function () {
       return bearer;
