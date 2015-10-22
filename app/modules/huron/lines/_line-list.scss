@@ -1,7 +1,8 @@
 .line-list {
   & .btn-actions {
+    @include vr-spacing(pv, 0.9375);
+    @include vr-spacing(ph, 1.875);
     float: right;
-    padding: 15px 30px;
     text-align: center;
   }
   & .btn-icon {
@@ -17,17 +18,17 @@
     }
   }
   & .content-header {
-    padding: 10px 0 10px 24px;
+    @include vr-spacing(pv, 0.625);
+    @include vr-spacing(pr, 0.625);
+    @include vr-spacing(pl, 1.5);
     background: white;
-    border-bottom: 1px solid $gray-lightest;
+    border-bottom: 0.0625rem solid $gray-lightest;
   }
   & .export-lines {
-    margin-right: 8px;
-    margin-top: 8px;
-    font-size: 24px;
+    @include vr-spacing(mr, 0.5, 0px, true);
+    @include vr-spacing(mt, .5);
+    font-size: 1.5rem;
     display: inline-block;
-    vertical-align: top;
-    cursor: pointer;
   }
   & .gridStyle {
     height: calc(50vh);
@@ -39,6 +40,6 @@
     }
   }
   & .page-option-buttons {
-    padding-top: 0;
+    @include vr-spacing(pt, 0);
   }
 }
