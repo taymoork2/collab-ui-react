@@ -7,7 +7,7 @@ describe('ControllerWireing', function () {
     'DashboardNextController',
     'DashboardHeaderController',
     'EntitledServicesController',
-    'CloudExtensionsCtrl',
+    'HybridServicesCtrl',
     'SWUpgradeController',
     'NotificationConfigController'
   ];

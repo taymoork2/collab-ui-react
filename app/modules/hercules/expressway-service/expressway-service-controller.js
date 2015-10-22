@@ -191,8 +191,7 @@
   }
 
   /* @ngInject */
-  function ExpresswayServiceDetailsController(XhrNotificationService, ServiceDescriptor, ServiceStatusSummaryService, $state, $modal, $stateParams,
-    ClusterService) {
+  function ExpresswayServiceDetailsController(XhrNotificationService, ServiceStatusSummaryService, $state, $modal, $stateParams, ClusterService) {
     var vm = this;
     vm.state = $state;
     vm.clusterId = $stateParams.cluster.id;
@@ -515,17 +514,16 @@
   /* @ngInject */
   function HostDetailsController($stateParams, $state, ClusterService, XhrNotificationService) {
     var vm = this;
-    vm.connectorId = $stateParams.connectorId;
+    vm.host = $stateParams.host;
     vm.cluster = ClusterService.getClusters()[$stateParams.clusterId];
+    vm.serviceType = $stateParams.serviceType;
     vm.connector = function () {
-      var conn = _.chain(vm.cluster.services)
-        .pluck('connectors')
-        .flatten()
-        .find(function (connector) {
-          return connector.id == vm.connectorId;
-        })
-        .value();
-      return conn;
+      var service = _.find(vm.cluster.services, {
+        service_type: vm.serviceType
+      });
+      return _.find(service.connectors, function (connector) {
+        return connector.host.serial == vm.host.serial;
+      });
     };
 
     vm.deleteHost = function () {

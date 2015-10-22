@@ -137,7 +137,7 @@
     "trainingCenter": "Training Center {{capacity}}",
     "eventCenter": "Event Center {{capacity}}",
     "communication": "Communication",
-    "cloudExtensions": "Cloud Extensions",
+    "cloudExtensions": "Hybrid Services",
     "cmr": "Collaboration Meeting Rooms"
   },
   "usersPreview": {
@@ -2197,7 +2197,7 @@
     "siteReports": "Reports"
   },
   "cloudExtensions": {
-    "cloudExtensions": "Cloud Extensions",
+    "cloudExtensions": "Hybrid Services",
     "enableService": "Activate service for this user",
     "status": "Status",
     "host": "Host",
