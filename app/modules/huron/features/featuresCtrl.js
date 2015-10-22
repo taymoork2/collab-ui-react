@@ -8,7 +8,7 @@
   /* jshint validthis: true */
 
   /* @ngInject */
-  function HuronFeaturesCtrl($scope, $state, $filter, $timeout, $modal, Authinfo, HuntGroupService, Log, Notification) {
+  function HuronFeaturesCtrl($scope, $state, $filter, $timeout, $modal, Authinfo, HuntGroupService, TelephoneNumberService, Log, Notification) {
 
     var vm = this;
     vm.filters = [];
@@ -123,7 +123,10 @@
           vm.pageState = 'showFeatures';
           angular.forEach(huntGroupData.items, function (huntGroup) {
             commonDataFormatForCards.cardName = huntGroup.name;
-            commonDataFormatForCards.numbers = huntGroup.numbers;
+            commonDataFormatForCards.numbers = huntGroup.numbers.map(function (number) {
+              number = TelephoneNumberService.getDIDLabel(number);
+              return number;
+            });
             commonDataFormatForCards.memberCount = huntGroup.memberCount;
             commonDataFormatForCards.huntGroupId = huntGroup.uuid;
             commonDataFormatForCards.featureName = 'huronFeatureDetails.hg';

@@ -5,7 +5,7 @@
 
 describe('Features Controller', function () {
 
-  var featureCtrl, $rootScope, $scope, $modal, $q, $state, $translate, $filter, $timeout, Authinfo, HuntGroupService, Log, Notification, getHGListDeferred;
+  var featureCtrl, $rootScope, $scope, $modal, $q, $state, $translate, $filter, $timeout, Authinfo, HuntGroupService, TelephoneNumberService, Log, Notification, getHGListDeferred;
   var listOfHGs = getJSONFixture('huron/json/features/huntGroup/hgList.json');
   var hg = getJSONFixture('huron/json/features/huntGroup/oneHg.json');
   var emptyListOfHGs = getJSONFixture('huron/json/features/huntGroup/emptyHgList.json');
@@ -30,7 +30,7 @@ describe('Features Controller', function () {
     'huntGroupId': 'abcd1234-abcd-abcd-abcddef123456'
   }, {
     cardName: 'Marketing',
-    numbers: ['5076', '(124) 456-7890', '(414) 555-1244', '(414) 555-1245'],
+    numbers: ['5076', '(302) 682-4905', '(414) 555-1244', '(414) 555-1245'],
     memberCount: 16,
     huntGroupId: 'bbcd1234-abcd-abcd-abcddef123456',
     featureName: 'huronFeatureDetails.hg',
@@ -39,7 +39,7 @@ describe('Features Controller', function () {
 
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _HuntGroupService_, _Log_, _Notification_) {
+  beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _HuntGroupService_, _TelephoneNumberService_, _Log_, _Notification_) {
     $rootScope = _$rootScope_;
     $scope = _$rootScope_.$new();
     $modal = _$modal_;
@@ -49,6 +49,7 @@ describe('Features Controller', function () {
     $q = _$q_;
     Authinfo = _Authinfo_;
     HuntGroupService = _HuntGroupService_;
+    TelephoneNumberService = _TelephoneNumberService_;
     Log = _Log_;
     Notification = _Notification_;
 
@@ -70,6 +71,7 @@ describe('Features Controller', function () {
       $timeout: $timeout,
       Authinfo: Authinfo,
       HuntGroupService: HuntGroupService,
+      TelephoneNumberService: TelephoneNumberService,
       Log: Log,
       Notification: Notification
     });
