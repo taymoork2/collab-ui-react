@@ -2282,39 +2282,7 @@
     "title": "Communication",
     "linesTitle": "Numbers",
     "settingsTitle": "Settings",
-    "featuresTitle": "Features",
-    "featureListingError": "Failed to retrieve the feature list.",
-    "newFeatureButtonText": "New",
-    "newFeatureModalTitle": "Create New Feature",
-    "featuresNotYetConfiguredPage": {
-      "nothingToSee": "Nothing here to see yet.",
-      "letsCustomize": "Let's customize the calling experience"
-    }
-  },
-
-  "huntGroup": {
-    "code": "HG",
-    "title": "Hunt Group",
-    "modalDescription": "Hunt groups (or line hunting) allow you to customize the distribution of incoming phone calls to users' phone lines in a specific order.",
-    "numberFetchFailure": "Unable to get numbers."
-  },
-
-  "huronFeatureDetails": {
-    "members": " Members",
-    "numbers": " Numbers",
-    "hg": "HG",
-    "aa": "AA",
-    "cp": "CP",
-    "editAction": "Edit",
-    "deleteAction": "Delete"
-  },
-
-  "huntGroupDetails": {
-    "failedToLoadHuntGroups": "Unable to load hunt groups information",
-    "deleteHuntGroup": "Delete Hunt Group",
-    "deleteHuntGroupConfText": "Are you sure you want to delete the {{ huntGroupName }} hunt group?",
-    "deleteHuntGroupSuccessText": "{{ huntGroupName }} hunt group has been deleted successfully",
-    "messageError": "Message {{ message }}"
+    "featuresTitle": "Features"
   },
 
   "linesPage": {
@@ -2380,6 +2348,46 @@
     "fallbackHint": "This is where the call goes if it was not answered by this hunt group",
     "voiceCheckLabel": "Send call directly to voicemail",
     "createGroupLabel": "CREATE HUNT GROUP",
+    "members": " Members",
+    "numbers": " Numbers",
+    "hg": "HG",
+    "aa": "AA",
+    "cp": "CP",
+    "editAction": "Edit",
+    "deleteAction": "Delete",
+    "failedToLoadHuntGroups": "Unable to load hunt groups information",
+    "deleteHuntGroup": "Delete Hunt Group",
+    "deleteHuntGroupConfText": "Are you sure you want to delete the {{ huntGroupName }} hunt group?",
+    "deleteHuntGroupSuccessText": "{{ huntGroupName }} hunt group has been deleted successfully",
+    "messageError": "Message {{ message }}",
+    "code": "HG",
+    "title": "Hunt Group",
+    "modalDescription": "Hunt groups (or line hunting) allow you to customize the distribution of incoming phone calls to users' phone lines in a specific order.",
+    "featureListingError": "Failed to retrieve the feature list.",
+    "newFeatureButtonText": "New",
+    "newFeatureModalTitle": "Create New Feature",
+    "featuresNotYetConfiguredPage": {
+      "nothingToSee": "Nothing here to see yet.",
+      "letsCustomize": "Let's customize the calling experience"
+    },
+    "hgMethods": {
+      "longestIdle": {
+        "name": "Longest Idle",
+        "desc": "Longest Idle first sends the call to the longest idle (or available), member, and if unanswered, proceeds to the least idle member."
+      },
+      "broadcast": {
+        "name": "Broadcast",
+        "desc": "Broadcast simultaneously sends the call to all idle (or available) members."
+      },
+      "circular": {
+        "name": "Circular",
+        "desc": "The system keeps a track of which member was sent the previous call. Circular first send tha call to next sequential idle (or available) member."
+      },
+      "topDown": {
+        "name": "Top Down",
+        "desc": "Top Down first sends the call to the first idle (or available) member, and if unanswered, proceeds to the last idle (or available) member"
+      }
+    },
     "nameLabel": "Hunt Group Name",
     "nameDesc": "This will also be the name callers see (i.e. alerting name).",
     "numbersLabel": "Hunt Group Numbers",

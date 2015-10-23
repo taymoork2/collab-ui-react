@@ -8,7 +8,7 @@
   /* jshint validthis: true */
 
   /* @ngInject */
-  function HuronFeaturesCtrl($scope, $state, $filter, $timeout, $modal, Authinfo, HuntGroupService, Log, Notification) {
+  function HuronFeaturesCtrl($scope, $state, $filter, $timeout, $modal, Authinfo, HuntGroupService, TelephoneNumberService, Log, Notification) {
 
     var vm = this;
     vm.filters = [];
@@ -122,10 +122,12 @@
           vm.pageState = 'showFeatures';
           angular.forEach(huntGroupData.items, function (huntGroup) {
             commonDataFormatForCards.cardName = huntGroup.name;
-            commonDataFormatForCards.numbers = huntGroup.numbers;
+            commonDataFormatForCards.numbers = huntGroup.numbers.map(function (number) {
+              return TelephoneNumberService.getDIDLabel(number);
+            });
             commonDataFormatForCards.memberCount = huntGroup.memberCount;
             commonDataFormatForCards.huntGroupId = huntGroup.uuid;
-            commonDataFormatForCards.featureName = 'huronFeatureDetails.hg';
+            commonDataFormatForCards.featureName = 'huronHuntGroup.hg';
             commonDataFormatForCards.filterValue = 'HG';
             listOfHuntGroups.push(commonDataFormatForCards);
             commonDataFormatForCards = {};
@@ -164,7 +166,7 @@
     vm.editHuronFeature = function (feature) {
       // if (feature.filterValue === 'AA') {
       //  //Call  AutoAttendant Edit Controller
-      // } else 
+      // } else
       if (feature.filterValue === 'HG') {
         HuntGroupService.editFeature(feature);
         $state.go('huntgroupedit');

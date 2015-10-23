@@ -22,7 +22,7 @@ describe('Controller: NewFeatureModalCtrl', function () {
   it("has features data for AA, HG and CP with l10n key.", function () {
     expect($scope.features.length).toEqual(2);
     expect($scope.features[0].code).toEqual("autoAttendant.code");
-    expect($scope.features[1].code).toEqual("huntGroup.code");
+    expect($scope.features[1].code).toEqual("huronHuntGroup.code");
     //expect($scope.features[2].code).toEqual("callPark.code");
   });
 

@@ -9,7 +9,6 @@ describe('Huron Setup Assistant Ctrl', function () {
   var escapeKey = 27;
   var testGroupName = 'test';
   var testGroupNumber = '654-654-9874';
-  var testGroupMethod = 'idle';
   var testGroupUser = 'testUser';
 
   beforeEach(module('Huron'));
@@ -45,8 +44,8 @@ describe('Huron Setup Assistant Ctrl', function () {
   });
 
   it("should enable next button when not null on third page", function () {
-    expect(controller.nextButton(2)).toEqual(false);
-    controller.huntGroupMethod = testGroupMethod;
+    expect(controller.nextButton(2)).toEqual(true);
+    controller.huntGroupMethod = controller.hgMethods.longestIdle;
     expect(controller.nextButton(2)).toEqual(true);
   });
 
