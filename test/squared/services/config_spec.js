@@ -17,13 +17,15 @@ describe('Config', function () {
   var prodHost = 'admin.ciscospark.com';
 
   var scope = encodeURIComponent('webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config Identity:Organization cloudMeetings:login webex-messenger:get_webextoken ccc_config:admin');
+  var orgId = 'abc123efg456';
+  var siteURL = 'webex.com';
 
   var whenCalling = function (fn, arg) {
     var hosts = {
-      dev: devHost,
-      cfe: cfeHost,
-      integration: intHost,
-      prod: prodHost
+      'dev': devHost,
+      'cfe': cfeHost,
+      'integration': intHost,
+      'prod': prodHost
     };
     return {
       expectUrlToBe: function (obj) {
@@ -109,6 +111,24 @@ describe('Config', function () {
     expect(creds).toBe('QzgwZmI5YzcwOTZiZDg0NzQ2MjczMTdlZTFkN2E4MTdlZmYzNzJjYTljOWNlZTNjZTQzYzNlYTNlOGQxNTExZWM6YzEwYzM3MWI0NjQxMDEwYTc1MDA3M2IzYzhlNjVhN2ZmZjA1Njc0MDBkMzE2MDU1ODI4ZDNjNzQ5MjViMDg1Nw==');
   });
 
+  it('should return correct identity user service url', function () {
+    whenCalling('getScimUrl', orgId).expectUrlToBe({
+      dev: 'https://identity.webex.com/identity/scim/abc123efg456/v1/Users',
+      cfe: 'https://identitybts.webex.com/identity/scim/abc123efg456/v1/Users',
+      integration: 'https://identity.webex.com/identity/scim/abc123efg456/v1/Users',
+      prod: 'https://identity.webex.com/identity/scim/abc123efg456/v1/Users'
+    });
+  });
+
+  it('should return correct identity org service url', function () {
+    whenCalling('getScomUrl', orgId).expectUrlToBe({
+      dev: 'https://identity.webex.com/organization/scim/v1/Orgs',
+      cfe: 'https://identitybts.webex.com/organization/scim/v1/Orgs',
+      integration: 'https://identity.webex.com/organization/scim/v1/Orgs',
+      prod: 'https://identity.webex.com/organization/scim/v1/Orgs'
+    });
+  });
+
   it('should return correct admin service url', function () {
     whenCalling('getAdminServiceUrl').expectUrlToBe({
       dev: 'https://atlas-integration.wbx2.com/admin/api/v1/',
@@ -118,12 +138,30 @@ describe('Config', function () {
     });
   });
 
+  it('should return correct csdm service url', function () {
+    whenCalling('getCsdmServiceUrl').expectUrlToBe({
+      dev: 'https://csdm-integration.wbx2.com/csdm/api/v1',
+      cfe: 'https://csdm-e.wbx2.com/csdm/api/v1',
+      integration: 'https://csdm-integration.wbx2.com/csdm/api/v1',
+      prod: 'https://csdm-a.wbx2.com/csdm/api/v1'
+    });
+  });
+
   it('should always return locus integration service url', function () {
     whenCalling('getLocusServiceUrl').expectUrlToBe({
       dev: 'https://admin-portal-test-public.wbx2.com/locus',
       cfe: 'https://admin-portal-test-public.wbx2.com/locus',
       integration: 'https://admin-portal-test-public.wbx2.com/locus',
       prod: 'https://admin-portal-test-public.wbx2.com/locus'
+    });
+  });
+
+  it('should always return locus prod service url', function () {
+    whenCalling('getFeatureToggleUrl').expectUrlToBe({
+      dev: 'https://locus-a.wbx2.com',
+      cfe: 'https://locus-a.wbx2.com',
+      integration: 'https://locus-a.wbx2.com',
+      prod: 'https://locus-a.wbx2.com'
     });
   });
 
@@ -313,6 +351,24 @@ describe('Config', function () {
       cfe: 'https://certs-e.wbx2.com/',
       integration: 'https://certs-integration.wbx2.com/',
       prod: 'https://certs-a.wbx2.com/'
+    });
+  });
+
+  it('should return correct webex advanced home url', function () {
+    whenCalling('getWebexAdvancedHomeUrl', siteURL).expectUrlToBe({
+      dev: 'https://webex.com/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminHomePage',
+      cfe: 'https://webex.com/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminHomePage',
+      integration: 'https://webex.com/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminHomePage',
+      prod: 'https://webex.com/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminHomePage'
+    });
+  });
+
+  it('should return correct webex advanced edit url', function () {
+    whenCalling('getWebexAdvancedEditUrl', siteURL).expectUrlToBe({
+      dev: 'https://webex.com/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage',
+      cfe: 'https://webex.com/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage',
+      integration: 'https://webex.com/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage',
+      prod: 'https://webex.com/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage'
     });
   });
 
