@@ -1,60 +1,170 @@
+$overlay-panel-height: 93px;
 .huntgroup {
   &.overlay-panel {
-    overflow-y: auto;
     & cs-setup-assistant {
       width: 100%;
     }
   }
-
-  & > .panel-content {
-    min-height : calc(90vh - 93px);
+  .panel-content {
+    flex : 1;
+    height: calc(100vh - #{$navbar-height + $overlay-panel-height});
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-content: center;
-    text-align:center;
+    align-items: center;
+  }
+}
+
+///// Type ahead input box styling with icon ///////
+.typeahead-large {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  font-family: $brand-font-thin;
+  width: 40rem;
+  margin-left: auto;
+  margin-right: auto;
+  border: 0;
+  color: $gray-dark-1;
+
+  // Search-icon.
+  .input-search {
+    @extend .icon;
+    @extend .icon-search;
+    @extend .icon-lg;
+    @include vr-spacing(ph, 1);
   }
 
-  & .underline {
-    font-size:200%;
-    max-width: 40rem;
+  // Description.
+  .input-description {
+    border: 0;
+    border-top: solid rem(1px) $gray-light;
+    width: 100%;
+    text-align: center;
+    @include vr-spacing(p, 1);
+    color: $gray;
+    font-style: italic;
   }
-  & .h-center {
-    margin-left: auto;
-    margin-right: auto;
-  }
-  & .input-details {
-    text-align:center;
-    p {
-      padding: 1rem;
-      color: $gray;
-      font-style: italic;
+
+  // Input control.
+  input {
+    font-size: $font-size-h2;
+    text-align: center;
+    outline: none;
+    width: 28rem;
+    border: 0px none;
+    &:focus {
+      box-shadow: none;
+    }
+
+    &:focus ~ .input-description {
+      border-top: solid rem(1px) $brand-primary;
+    }
+
+    &::-webkit-input-placeholder {
+      text-align:center;
+    }
+    &::-moz-placeholder {
+      text-align: center;
+    }
+    &:-ms-input-placeholder {
+      text-align: center;
     }
   }
-  & .text-primary {
-    color:$brand-primary;
+
+  // Suggestion dropdown.
+  .dropdown-menu {
+    min-width: 28rem;
+    .active > a {
+      background: $gray-light-2;
+    }
+
+    & li a {
+      @include vr-spacing(ph, 1);
+      @include vr-spacing(pv, 0.5);
+    }
+
+    & span {
+      font-size: $font-size-h3;
+      font-family: $brand-font-cisco-TT-Extra-Light;
+      color: $gray-dark-2;
+    }
+  }
+}
+
+///// Styling for Hunt Pilot number page. /////
+.pilot-number-details {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-content: center;
+  justify-content: center;
+}
+
+.number-pill-container {
+  position: fixed;
+  width: 40rem;
+  max-height: 12rem;
+  left: 50%;
+  @include vr-spacing(ml,20,0px,true);
+  overflow-y: auto;
+  display: inline-flex;
+  //align-content: center;
+  flex-flow: row wrap;
+  flex: 1;
+  justify-content: center;
+  margin-right: auto;
+}
+
+.number-pill-item {
+  display: inline-block;
+  width: rem-calc(200);
+  height: rem-calc(35);
+  background-color: $color-primary;
+  border-radius: rem-calc(4);
+  color: $color-white;
+  @include vr-spacing(p,0.5);
+  @include vr-spacing(m,0.25);
+
+  & a, & a:hover {
+    color: $color-white;
+  }
+
+  & .hunt-number {
+    display: inline-block;
+    min-width: 85%;
+    text-align: left;
   }
 }
 
 .hgmethods {
 
-  text-align:center;
-  display : flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  justify-content: center;
-  align-content: center;
-  align-items: center;
+  &.large {
+    text-align:center;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto;
+    > div {
+      height: calc(100vh - #{$navbar-height + $overlay-panel-height});
+    }
+  }
 
   .title {
-    @include vr-spacing(pt,2);
     color : $color-primary-base;
     font-family: $brand-font-thin;
     font-size : $font-size-h1;
+    @include vr-spacing(pt, 3);
   }
 
   .desc {
-    @include vr-spacing(pb,2.5);
+    @include vr-spacing(pt, 1);
+    @include vr-spacing(pb, 2.5);
     color: $gray-dark-1;
     font-family: $brand-font-light;
     font-size : $font-size-h4;
@@ -71,24 +181,14 @@
 
 .large {
   .hgmethod {
-
     display: flex;
+    flex: none;
     @include vr-spacing(ph,0.5);
     @include vr-spacing(pb,1);
-    &.current {
-      > a {
-        background: $gray-lightest;
-      }
-    }
-    > a{
-      flex: 1;
-      border: 1px solid $gray-light;
-      @include box-shadow(0px,1px,2px,2px,rgba(52,53,55,0.18));
-      border-radius: $global-radius;
-      text-align: center;
+
+    > a {
       @include vr-spacing(p, 0.75);
       @include vr-spacing(pt, 2.8);
-      cursor: pointer;
       > div {
         color: $color-people-base;
         font-family: $brand-font-extra-light;
@@ -108,12 +208,6 @@
         color: $gray-darkest;
         font-size : 4rem;
       }
-      &:hover, &:focus {
-        background: $gray-lightest;
-        @include box-shadow(0px,1px,2px,2px,rgba(52,53,55,0.18));
-      }
     }
-
   }
 }
-

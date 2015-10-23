@@ -87,7 +87,7 @@
       var page = 0;
       var exportedLines = [];
 
-      getLinesInBatches(1);
+      getLinesInBatches(0);
 
       function getLinesInBatches(startIndex) {
         getLineList(startIndex, linesPerPage, sortBy, sortOrder, searchStr, filterType)

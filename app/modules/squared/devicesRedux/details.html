@@ -51,7 +51,7 @@
          ng-bind-html="deviceDetails.device.product | highlight:devices.search">
       </strong>
 
-      <div class="para" style="display: flex; align-items: center;">
+      <div class="para" style="display: flex; align-items: center">
         <img
           ng-if="deviceDetails.device.image"
           ng-src="{{deviceDetails.device.image}}"
@@ -66,28 +66,29 @@
             />
             <span ng-bind-html="deviceDetails.device.readableState | highlight:devices.search"></span>
           </div>
-          <div class="tag-container">
+          <div class="tag-container" style="display: flex; align-items: center; flex-wrap: wrap;">
             <span 
-              ng-repeat="tag in devices.tags.listTags(deviceDetails.device.url)">
+              class="tag"
+              ng-repeat="tag in deviceDetails.device.tags">
               <span ng-bind-html="tag | highlight:devices.search" />
               <i 
                 class="fa fa-times" 
-                ng-click="devices.tags.removeTag(deviceDetails.device.url, tag)"
+                ng-click="deviceDetails.tags.removeTag(deviceDetails.device, tag)"
               />
             </span>
             <a href 
-              ng-hide="devices.tags.isAdding"
-              ng-click="devices.tags.isAdding = !devices.tags.isAdding">
+              ng-hide="deviceDetails.tags.isAdding"
+              ng-click="deviceDetails.tags.isAdding = !deviceDetails.tags.isAdding">
               Add tag
             </a>
             <input 
               type="text" 
               placeholder="Enter tag..."
-              ng-model="devices.tags.newTag"
-              ng-show="devices.tags.isAdding"
-              focus-on="devices.tags.isAdding"
-              ng-blur="devices.tags.isAdding = false"
-              ng-keyup="devices.tags.createTag(deviceDetails.device.url, $event)"
+              ng-model="deviceDetails.tags.newTag"
+              ng-show="deviceDetails.tags.isAdding"
+              focus-on="deviceDetails.tags.isAdding"
+              ng-blur="deviceDetails.tags.isAdding = false"
+              ng-keyup="deviceDetails.tags.createTag(deviceDetails.device, $event)"
             />
           </div>
         </div>

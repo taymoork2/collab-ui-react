@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('Hercules')
-  .controller('CloudExtensionPreviewCtrl', ['$log', '$scope', '$rootScope', '$state', '$stateParams', 'Authinfo', 'Userservice', 'Notification', 'USSService', 'ClusterService', '$timeout',
+  .controller('HybridServicesPreviewCtrl', ['$log', '$scope', '$rootScope', '$state', '$stateParams', 'Authinfo', 'Userservice', 'Notification', 'USSService', 'ClusterService', '$timeout',
     function ($log, $scope, $rootScope, $state, $stateParams, Authinfo, Userservice, Notification, USSService, ClusterService, $timeout) {
       $scope.entitlementNames = {
         'squared-fusion-cal': 'squaredFusionCal',

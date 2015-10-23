@@ -1,6 +1,6 @@
 <script type="text/ng-template" id="numberTemplate.html">
   <a>
-      <span ng-bind-html="match.label.userNumber | typeaheadHighlight:query" ></span>
+      <span ng-bind-html="match.label | typeaheadHighlight:query" ></span>
   </a>
 </script>
 <script type="text/ng-template" id="userTemplate.html">
@@ -11,32 +11,38 @@
       <span ng-bind-html="number | typeaheadHighlight:query" ></span>
   </a>
 </script>
-<cs-overlay-panel class="huntgroup overlay-panel typeahead-group" overlay-title="{{::'huronHuntGroup.title' | translate}}" close="huntGroupSA.close()">
+<cs-overlay-panel class="huntgroup overlay-panel typeahead-group" overlay-title="{{::'huronHuntGroup.title' | translate}}" close="huntGroupSA.cancelModal()"  ng-keyup="huntGroupSA.evalKeyPress($event.keyCode)">
   <cs-setup-assistant previous="huntGroupSA.previousButton(huntGroupSA.getPageIndex())" next="huntGroupSA.nextButton(huntGroupSA.getPageIndex())" previous-fn="huntGroupSA.previousPage()" next-fn="huntGroupSA.nextPage()">
-    <div class="h-center input-details" ng-if="huntGroupSA.getPageIndex() == 0">
-      <input class="form-control h-center underline" placeholder="{{:: 'huronHuntGroup.namePlaceholder' | translate}}" ng-model="huntGroupSA.huntGroupName">
-      <div>
-        <p translate="huronHuntGroup.nameHint"></p>
-      </div>
+
+    <div class="typeahead-large" ng-class="huntGroupSA.animation" ng-if="huntGroupSA.getPageIndex() == 0">
+      <input class="form-control" placeholder="{{:: 'huronHuntGroup.namePlaceholder' | translate}}" ng-model="huntGroupSA.huntGroupName" ng-keypress="huntGroupSA.enterNextPage($event.keyCode)" focus-on>
+      <p class="input-description" translate="huronHuntGroup.nameHint"></p>
     </div>
-    <div class="h-center input-details" ng-if="huntGroupSA.getPageIndex() == 1">
-      <div>
-        <input id="numberInput" type="text" ng-model="huntGroupSA.selected" class="form-control h-center underline"
-            typeahead="userNumber for userNumber in huntGroupSA.numberData | filter:$viewValue | limitTo:10"
+
+    <div class="pilot-number-details" ng-class="huntGroupSA.animation" ng-if="huntGroupSA.getPageIndex() == 1">
+      <div class="typeahead-large">
+        <span class="input-search"></span>
+        <input id="numberInput" type="text" ng-model="huntGroupSA.selected"
+            typeahead="number as num.number for num in huntGroupSA.fetchNumbers($viewValue) | limitTo:10"
             typeahead-on-select="huntGroupSA.selectHuntGroupNumber($item)"
-            typeahead-template-url="numberTemplate.html" placeholder="{{:: 'huronHuntGroup.numberPlaceholder' | translate}}"/>
+            typeahead-template-url="numberTemplate.html" placeholder="{{:: 'huronHuntGroup.numberPlaceholder' | translate}}"
+            ng-keypress="huntGroupSA.enterNextPage($event.keyCode)" focus-on/>
+        <p class="input-description" translate="huronHuntGroup.numberHint"></p>
       </div>
-      <p translate="huronHuntGroup.numberHint"></p>
-      <div ng-repeat="userNumber in huntGroupSA.numbers">
-        <span>{{userNumber}} &nbsp;<span class="icon icon-remove"></span></button>
+      <div class="number-pill-container">
+        <span class="number-pill-item" ng-repeat="number in huntGroupSA.selectedPilotNumbers">
+          <span class="hunt-number">{{number}}</span>
+          <a href='#' class="icon icon-close icon-lg" ng-click="huntGroupSA.unSelectHuntGroupNumber(number)"></a>
+        </span>
       </div>
     </div>
-    <div ng-if="huntGroupSA.getPageIndex() == 2">
-      <div class="hgmethods">
+    <div ng-if="huntGroupSA.getPageIndex() == 2" ng-class="huntGroupSA.animation">
+      <div class="hgmethods large">
+        <div>
         <div class="title" translate="huronHuntGroup.methodTitle"></div>
         <div class="desc" translate="huronHuntGroup.methodHint"></div>
-        <div class="row">
-          <ul class="select-method large-9 columns medium-centered large-block-grid-4 medium-block-grid-2 large">
+        <div class="row method-container">
+          <ul class="select-method large-9 columns medium-centered large-block-grid-4 medium-block-grid-2">
             <li class="hgmethod" ng-class="{current: huntGroupSA.huntGroupMethod === huntGroupSA.hgMethods.longestIdle}">
               <a href="#" ng-click="huntGroupSA.setHuntMethod(huntGroupSA.hgMethods.longestIdle)">
                 <i class="icon icon-circle-clock-hands"></i>
@@ -67,30 +73,36 @@
             </li>
           </ul>
         </div>
+        </div>
       </div>
     </div>
-    <div class="h-center input-details" ng-if="huntGroupSA.getPageIndex() == 3">
-      <input id="userInput" type="text" ng-model="huntGroupSA.userSelected" class="form-control h-center underline"
-            typeahead="user for user in huntGroupSA.userData | filter:$viewValue | limitTo:10"
-            typeahead-on-select="huntGroupSA.selectHuntGroupUser($item)"
-            typeahead-template-url="userTemplate.html" placeholder="{{:: 'huronHuntGroup.memberPlaceholder' | translate}}"/>
-      <p translate="huronHuntGroup.memberHint"></p>
+
+    <div ng-class="huntGroupSA.animation" ng-if="huntGroupSA.getPageIndex() == 3">
+      <div class="typeahead-large">
+        <span class="input-search"></span>
+        <input id="userInput" type="text" ng-model="huntGroupSA.userSelected" class="form-control  "
+              typeahead="user for user in huntGroupSA.userData | filter:$viewValue | limitTo:10"
+              typeahead-on-select="huntGroupSA.selectHuntGroupUser($item)"
+              typeahead-template-url="userTemplate.html" placeholder="{{:: 'huronHuntGroup.memberPlaceholder' | translate}}"
+              ng-keypress="huntGroupSA.enterNextPage($event.keyCode)" focus-on/>
+        <p class="input-description" translate="huronHuntGroup.memberHint"></p>
+      </div>
       <div ng-repeat="user in huntGroupSA.users">
-        <span>{{user.userName}} &nbsp;<span class="icon icon-chevron-down"></span></button>
+        <span>{{user.userName}} &nbsp;</span><span class="icon icon-chevron-down"></span>
       </div>
     </div>
-    <div class="h-center input-details" ng-if="huntGroupSA.getPageIndex() == 4">
-      <div>
-        <input class="form-control h-center underline" placeholder="{{:: 'huronHuntGroup.fallbackPlaceholder' | translate}}">
+
+    <div ng-class="huntGroupSA.animation" ng-if="huntGroupSA.getPageIndex() == 4">
+      <div class="typeahead-large">
+        <span class="input-search"></span>
+        <input class="form-control  " placeholder="{{:: 'huronHuntGroup.fallbackPlaceholder' | translate}}" focus-on>
+        <p class="input-description" translate="huronHuntGroup.fallbackHint"></p>
       </div>
-      <div>
-        <p translate="huronHuntGroup.fallbackHint"></p>
-      </div>
-      <div>
+      <div class="text-center">
         <cs-checkbox ckid="ckbox2" ng-model="cb.checkboxValue1" label="{{:: 'huronHuntGroup.voiceCheckLabel' | translate}}"></cs-checkbox>
       </div>
-      <div>
-        <button translate="huronHuntGroup.createGroupLabel"></button>
+      <div class="text-center">
+        <button class="label success" translate="huronHuntGroup.createGroupLabel"></button>
       </div>
     </div>
   </cs-setup-assistant>

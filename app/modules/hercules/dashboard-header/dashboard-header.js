@@ -40,6 +40,7 @@
 
         $scope.$watch('clusters', function (_clusters) {
           clusters = _clusters;
+          $scope.clusterLength = _.size(clusters);
           updateServiceAggregates();
         });
 
