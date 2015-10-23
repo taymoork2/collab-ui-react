@@ -1424,6 +1424,37 @@ angular
             }
           }
         })
+        .state('management-service', {
+          templateUrl: 'modules/hercules/expressway-service/overview.html',
+          controller: 'ExpresswayServiceController',
+          controllerAs: 'exp',
+          data: {
+            serviceType: "c_mgmt"
+          },
+          parent: 'main',
+          abstract: true
+        })
+        .state('management-service.list', {
+          url: '/services/expressway-management',
+          views: {
+            'fullPane': {
+              templateUrl: 'modules/hercules/expressway-service/cluster-list.html'
+            }
+          }
+        })
+        .state('management-service.settings', {
+          url: '/services/expressway-management/settings',
+          views: {
+            'fullPane': {
+              controllerAs: 'expresswayServiceSettings',
+              controller: 'ExpresswayServiceSettingsController',
+              templateUrl: 'modules/hercules/expressway-service/management-service-settings.html'
+            }
+          },
+          params: {
+            serviceType: "c_mgmt"
+          }
+        })
         .state('cluster-details-new', {
           parent: 'sidepanel',
           views: {

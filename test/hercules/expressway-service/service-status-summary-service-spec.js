@@ -33,7 +33,7 @@ describe('ServiceStatusSummaryService', function () {
   it("cluster state is 'running' when all hosts has service state 'running'", function () {
     var clusterMockData = createClusterMockWithConnectorStates("running", "running");
     var aggregated = Service.clusterAggregatedStatus("c_cal", clusterMockData);
-    expect(aggregated == "Running").toBe(true);
+    expect(aggregated == "running").toBe(true);
   });
 
   it("cluster state is 'alarm' if one or several hosts has service alarm", function () {
@@ -54,37 +54,37 @@ describe('ServiceStatusSummaryService', function () {
       }]
     };
     var aggregated = Service.clusterAggregatedStatus("c_cal", clusterMockData);
-    expect(aggregated == "Alarm").toBe(true);
+    expect(aggregated == "alarm").toBe(true);
   });
 
   it('disabled higher pri than notconfigured', function () {
     var clusterMockData = createClusterMockWithConnectorStates("not_configured", "disabled");
     var aggregated = Service.clusterAggregatedStatus("c_cal", clusterMockData);
-    expect(aggregated == "Disabled").toBe(true);
+    expect(aggregated == "disabled").toBe(true);
     clusterMockData = createClusterMockWithConnectorStates("disabled", "not_configured");
     aggregated = Service.clusterAggregatedStatus("c_cal", clusterMockData);
-    expect(aggregated == "Disabled").toBe(true);
+    expect(aggregated == "disabled").toBe(true);
   });
 
   it('notconfigured higher pri than software upgrade states', function () {
     var clusterMockData = createClusterMockWithConnectorStates("not_configured", "uninstalling");
     var aggregated = Service.clusterAggregatedStatus("c_cal", clusterMockData);
-    expect(aggregated == "NotConfigured").toBe(true);
+    expect(aggregated == "not_configured").toBe(true);
     clusterMockData = createClusterMockWithConnectorStates("not_configured", "downloading");
     aggregated = Service.clusterAggregatedStatus("c_cal", clusterMockData);
-    expect(aggregated == "NotConfigured").toBe(true);
+    expect(aggregated == "not_configured").toBe(true);
     clusterMockData = createClusterMockWithConnectorStates("not_configured", "installing");
     aggregated = Service.clusterAggregatedStatus("c_cal", clusterMockData);
-    expect(aggregated == "NotConfigured").toBe(true);
+    expect(aggregated == "not_configured").toBe(true);
     clusterMockData = createClusterMockWithConnectorStates("uninstalling", "not_configured");
     aggregated = Service.clusterAggregatedStatus("c_cal", clusterMockData);
-    expect(aggregated == "NotConfigured").toBe(true);
+    expect(aggregated == "not_configured").toBe(true);
     clusterMockData = createClusterMockWithConnectorStates("downloading", "not_configured");
     aggregated = Service.clusterAggregatedStatus("c_cal", clusterMockData);
-    expect(aggregated == "NotConfigured").toBe(true);
+    expect(aggregated == "not_configured").toBe(true);
     clusterMockData = createClusterMockWithConnectorStates("installing", "not_configured");
     aggregated = Service.clusterAggregatedStatus("c_cal", clusterMockData);
-    expect(aggregated == "NotConfigured").toBe(true);
+    expect(aggregated == "not_configured").toBe(true);
   });
 
   // Helper function to create cluster data
