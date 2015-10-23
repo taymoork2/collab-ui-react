@@ -1,6 +1,6 @@
 <div class="ngCellText" style="padding-top: 30px">
-  <i class="fa fa-circle hercules-cluster-status-{{exp.selectedServiceStatus(row.entity)}}"/>
-  {{exp.selectedServiceStatus(row.entity)}}
+  <i class="fa fa-circle hercules-state-{{exp.selectedClusterAggregatedStatus(row.entity)}}"/>
+  <span translate="{{'hercules.status.' + exp.selectedClusterAggregatedStatus(row.entity)}}"></span>
   <span ng-if="exp.serviceNotInstalled(row.entity)">Not installed</span>
   <span ng-if="exp.softwareUpgradeAvailable(row.entity)">- Upgrade available</span>
 </div>

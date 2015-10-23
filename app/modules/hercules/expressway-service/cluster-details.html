@@ -61,7 +61,7 @@
           <a
             ui-sref="cluster-details-new.host-details({host: connector.host, clusterId: expresswayServiceDetails.clusterId, serviceType: expresswayServiceDetails.serviceType})">
             <i class="fa fa-circle status-icon"
-               ng-class="connector.alarms.length > 0 ? 'hercules-alarm' : connector.state"></i>
+               ng-class="connector.alarms.length > 0 ? 'hercules-state-alarm' : 'hercules-state-'+connector.state"></i>
             <span class="feature-name">{{connector.host.host_name}}</span>
             <span class="feature-status" ng-if="connector.alarms.length == 0"
                   translate="{{'hercules.status.' + (connector.state || 'unknown') }}"></span>

@@ -127,7 +127,7 @@
         ServiceStatusSummaryService.serviceFromCluster(vm.currentServiceType, cluster).not_approved_package.version : "?";
     };
 
-    vm.selectedServiceStatus = function (cluster) {
+    vm.selectedClusterAggregatedStatus = function (cluster) {
       return ServiceStatusSummaryService.clusterAggregatedStatus(vm.currentServiceType, cluster);
     };
 

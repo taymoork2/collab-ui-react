@@ -32,21 +32,21 @@
 
       var nrOfConnectors = service.connectors.length || 0;
       if (nrOfConnectorsWithAlarm(service) > 0) {
-        clusterStatus = "Alarm";
+        clusterStatus = "alarm";
       } else if (nfOfConnectorsInState(service, "running") === nrOfConnectors) {
-        clusterStatus = "Running";
+        clusterStatus = "running";
       } else if (nfOfConnectorsInState(service, "disabled") > 0) {
-        clusterStatus = "Disabled"; // ???
+        clusterStatus = "disabled"; // ???
       } else if (nfOfConnectorsInState(service, "not_configured") > 0) {
-        clusterStatus = "NotConfigured";
+        clusterStatus = "not_configured";
       } else if (nfOfConnectorsInState(service, "uninstalling") > 0 || nfOfConnectorsInState(service, "downloading") > 0 || nfOfConnectorsInState(service, "installing") > 0) {
-        clusterStatus = "Installing";
+        clusterStatus = "installing";
       } else if (nfOfConnectorsInState(service, "disabled") > 0) {
-        clusterStatus = "Disabled";
+        clusterStatus = "disabled";
       } else if (nfOfConnectorsInState(service, "stopped") > 0) {
-        clusterStatus = "Stopped";
+        clusterStatus = "stopped";
       } else if (nfOfConnectorsInState(service, "offline") > 0) {
-        clusterStatus = "Offline";
+        clusterStatus = "offline";
       }
       return clusterStatus;
     };
