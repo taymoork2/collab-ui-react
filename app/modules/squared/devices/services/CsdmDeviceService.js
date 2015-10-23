@@ -11,7 +11,20 @@
       },
       update: function (url, obj) {
         return $http.patch(url, obj).then(function (res) {
-          return CsdmConverter.convertDevice(res.data);
+          // return CsdmConverter.convertDevice(res.data);
+          // todo: hackorama - API is fubar
+          var device = _.clone(deviceCache.list()[url]);
+          if (obj.description) {
+            try {
+              device.tags = JSON.parse(obj.description);
+            } catch (e) {
+              device.tags = [];
+            }
+          }
+          if (obj.name) {
+            device.displayName = obj.name;
+          }
+          return device;
         });
       },
       get: function (url) {
@@ -40,6 +53,14 @@
       });
     }
 
+    function updateTags(url, tags) {
+      deviceCache.list()[url].tags = tags; // update ui asap
+      deviceCache.list()[url].tagString = tags.join(', '); // update ui asap
+      return deviceCache.update(url, {
+        description: JSON.stringify(tags || [])
+      });
+    }
+
     function deleteDevice(deviceUrl) {
       return deviceCache.remove(deviceUrl);
     }
@@ -61,6 +82,7 @@
       on: deviceCache.on,
       getDevice: getDevice,
       uploadLogs: uploadLogs,
+      updateTags: updateTags,
       deleteDevice: deleteDevice,
       getDeviceList: getDeviceList,
       updateDeviceName: updateDeviceName

@@ -159,7 +159,7 @@ var Navigation = function () {
   };
 
   this.expectCurrentUrl = function (url) {
-    browser.wait(function () {
+    return browser.wait(function () {
       return browser.getCurrentUrl().then(function (currentUrl) {
         return currentUrl.indexOf(url) !== -1;
       });
@@ -167,7 +167,7 @@ var Navigation = function () {
   };
 
   this.expectDriverCurrentUrl = function (url) {
-    browser.wait(function () {
+    return browser.wait(function () {
       return browser.driver.getCurrentUrl().then(function (currentUrl) {
         return currentUrl.indexOf(url) !== -1;
       });

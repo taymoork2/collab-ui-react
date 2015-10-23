@@ -18,7 +18,7 @@
 
   var createAlarm = function (opts) {
     return {
-      "id": rnd(),
+      "id": _.camelCase(opts.title),
       "first_reported": new Date(),
       "last_reported": new Date(),
       "title": opts.title,

@@ -1,6 +1,6 @@
 <div class="hercules-notifications">
   <span class="notification-bell"
-        ng-click="notificationController.showNotifications = !notificationController.showNotifications">
+        ng-click="notificationController.showNotifications = notificationController.filteredNotifications().length > 0 && !notificationController.showNotifications">
     <i class="fa fa-bell" />
   </span>
 

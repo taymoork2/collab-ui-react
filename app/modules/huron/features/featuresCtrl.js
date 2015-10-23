@@ -117,8 +117,7 @@
     var getListOfHuntGroups = function () {
 
       var customerId = Authinfo.getOrgId();
-      HuntGroupService.getListOfHuntGroups(customerId).then(function (response) {
-        var huntGroupData = response.data;
+      HuntGroupService.getListOfHuntGroups(customerId).then(function (huntGroupData) {
         if (huntGroupData.items.length > 0) {
           vm.pageState = 'showFeatures';
           angular.forEach(huntGroupData.items, function (huntGroup) {
@@ -138,7 +137,7 @@
         Log.warn('Could fetch huntGroups for customer with Id:', customerId);
         vm.pageState = 'showFeatures';
         //Notify the user that retrieval of hunt groups list has been failed
-        Notification.error('huntGroupDetails.failedToLoadHuntGroups');
+        Notification.errorResponse(response, 'huntGroupDetails.failedToLoadHuntGroups');
       });
     };
 
@@ -163,14 +162,16 @@
     };
 
     vm.editHuronFeature = function (feature) {
-      //if (feature.filterValue === 'AA') {
+      // if (feature.filterValue === 'AA') {
       //  //Call  AutoAttendant Edit Controller
-      //} else if (feature.filterValue === 'HG') {
-      //  //Call Edit HuntGroup Controller
-      //  //HuntGroup Edit Page will be done in US213495
-      //} else if (feature.filterValue === 'CP') {
+      // } else 
+      if (feature.filterValue === 'HG') {
+        HuntGroupService.editFeature(feature);
+        $state.go('huntgroupedit');
+      }
+      // else if (feature.filterValue === 'CP') {
       //  //Call CallPark Edit Controller
-      //}
+      // }
     };
 
     vm.deleteHuronFeature = function (feature) {

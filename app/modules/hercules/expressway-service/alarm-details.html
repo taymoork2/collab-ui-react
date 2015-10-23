@@ -2,17 +2,26 @@
 
   <cs-sp-section>
     <div class="section-title-row section-name">
-      {{alarmCtrl.alarm.title}}
+      {{alarmCtrl.alarm.alarm.title}}
     </div>
     <p>
-      <span>Severity: {{alarmCtrl.alarm.severity}}</span>
+      <span>Severity: {{alarmCtrl.alarm.alarm.severity}}</span>
       <br/>
-      <span>First Reported: {{alarmCtrl.alarm.first_reported | date : 'medium'}}</span>
+      <span>First Reported: {{alarmCtrl.alarm.alarm.first_reported | date : 'medium'}}</span>
       <br/>
-      <span>Last Reported: {{alarmCtrl.alarm.last_reported | date : 'medium'}}</span>
-      <br/>
-      <span>Host: {{alarmCtrl.host}}</span>
+      <span>Last Reported: {{alarmCtrl.alarm.alarm.last_reported | date : 'medium'}}</span>
     </p>
+  </cs-sp-section>
+
+  <cs-sp-section>
+    <div class="section-title-row section-name">
+      Hosts
+    </div>
+    <ul>
+      <li class="feature" ng-repeat="host in alarmCtrl.alarm.hosts">
+        {{host.host_name}}
+      </li>
+    </ul>
   </cs-sp-section>
 
   <cs-sp-section>
@@ -20,7 +29,7 @@
       Description
     </div>
     <p>
-      {{alarmCtrl.alarm.description}}
+      {{alarmCtrl.alarm.alarm.description}}
     </p>
   </cs-sp-section>
 

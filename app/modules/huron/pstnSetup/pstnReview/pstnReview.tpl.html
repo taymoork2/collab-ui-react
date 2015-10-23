@@ -9,22 +9,21 @@
       <h1 class="title" translate="pstnSetup.reviewAndOrder"></h1>
       <div class="review-details">
         <div class="logo">
-          <img ng-src="{{::pstnSetup.provider.logoSrc}}" alt="{{::pstnSetup.provider.logoAlt}}">
+          <img ng-src="{{::pstnReview.provider.logoSrc}}" alt="{{::pstnReview.provider.logoAlt}}">
         </div>
         <div class="package-detail-label">
           <div translate="pstnSetup.package"></div>
           <div translate="pstnSetup.numbersTitle"></div>
         </div>
         <div class="package-detail-text">
-          <div>{{::pstnSetup.provider.title}}</div>
-          <div class="detail-text" ng-if="pstnSetup.provider.swivel" translate="pstnSetup.newNumbers" translate-value-count="{{::pstnSetup.swivelTokens.length}}"></div>
-          <div class="detail-text" ng-if="!pstnSetup.provider.swivel" translate="pstnSetup.newNumbers" translate-value-count="{{::pstnSetup.orderNumbersTotal}}"></div>
+          <div>{{::pstnReview.provider.title}}</div>
+          <div class="detail-text" translate="pstnSetup.newNumbers" translate-value-count="{{::pstnReview.numbers.length}}"></div>
         </div>
       </div>
     </div>
   </div>
   <div class="modal-footer">
-    <button class="btn btn-default" ng-click="pstnSetup.goToNumbers()"><span translate="common.back"></span></button>
-    <button class="btn btn-primary" id="placeOrder" cs-btn loading="pstnSetup.placeOrderLoad" ng-click="pstnSetup.placeOrder()"><span translate="pstnSetup.placeOrder"></span></button>
+    <button class="btn btn-default" ng-click="pstnReview.goToNumbers()"><span translate="common.back"></span></button>
+    <button class="btn btn-primary" id="placeOrder" cs-btn loading="pstnReview.placeOrderLoad" ng-click="pstnReview.placeOrder()"><span translate="pstnSetup.placeOrder"></span></button>
   </div>
 </div>
