@@ -3,28 +3,21 @@
 </h5>
 
 <p>
-  Here we need a new text that tells you something useful.
-  I.e. Add email addresses to receive email notifications about Service impacting Alarms and Software Upgrades.
+  Add email addresses to receive notifications about Alarms and Software Upgrades.
 </p>
 
-<tags-input add-on-blur="false" on-invalid-tag="expresswayServiceSettings.invalidEmail($tag)" placeholder="Add email addresses" ng-disabled="saving" ng-model="expresswayServiceSettings.wx2users" type="email" allowed-tags-pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"></tags-input>
+<tags-input add-on-blur="false"
+            on-tag-added="expresswayServiceSettings.writeConfig()"
+            on-tag-removed="expresswayServiceSettings.writeConfig()"
+            on-invalid-tag="expresswayServiceSettings.invalidEmail($tag)"
+            placeholder="Add email addresses"
+            ng-disabled="expresswayServiceSettings.savingEmail"
+            ng-model="expresswayServiceSettings.wx2users"
+            type="email"
+            allowed-tags-pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"></tags-input>
 
-<!--
-<textarea ng-disabled="saving"
-          placeholder="Separate multiple email addresses by commas, for example, foo@yourdomain.com, bar@yourdomain.com, ..."
-          class="form-control"
-          id="wx2_users"
-          type="text"
-          ng-model="expresswayServiceSettings.config.wx2users"></textarea>
--->
+<span class="right" ng-show="expresswayServiceSettings.savingEmail">
+  Saving <i class="icon icon-spinner"/>
+</span>
 
-<button ng-disabled="expresswayServiceSettings.loading || expresswayServiceSettings.savingEmail" id="convertActionButton"
-        class="btn-primary"
-        ng-click="expresswayServiceSettings.writeConfig()">
-        <span ng-hide="expresswayServiceSettings.savingEmail">
-          Save
-        </span>
-        <span ng-show="expresswayServiceSettings.savingEmail">
-          <i class="icon icon-spinner"/>
-        </span>
-</button>
+
