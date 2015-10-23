@@ -1,0 +1,13 @@
+<cs-overlay-panel overlay-title="{{aaBuilderMain.overlayTitle}}" close="aaBuilderMain.close()">
+  <div ng-include="'modules/huron/features/autoAttendant/builder/aaBuilderHeader.tpl.html'"></div>
+
+  <div ng-if="!aaBuilderMain.ui.ceInfo.name">
+    <span ng-include="'modules/huron/features/autoAttendant/builder/aaBuilderName.tpl.html'"></span>
+  </div>
+
+  <div ng-if="aaBuilderMain.ui.ceInfo.name" class="aa-builder-frame">
+    <div class="aa-builder-container">
+      <span ng-include="'modules/huron/features/autoAttendant/builder/aaBuilderContainer.tpl.html'" ng-controller="AABuilderContainerCtrl as aaBuilder"></span>
+    </div>
+  </div>
+</cs-overlay-panel>

@@ -11,7 +11,7 @@
 
   pageDirectiveNames.map(function (directiveName) {
     angular
-      .module('uc.huntGroup')
+      .module('Huron')
       .directive(directiveName, function () {
         return createSetupAssistantPageDirective(directiveName + '.tpl.html');
       });

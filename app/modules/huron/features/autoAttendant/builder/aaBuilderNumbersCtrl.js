@@ -172,7 +172,7 @@
 
       vm.aaModel = AAModelService.getAAModel();
       vm.ui = AAUiModelService.getUiModel();
-      vm.aaModel.dataReadyPromise.then(function (data) {
+      AutoAttendantCeInfoModelService.getCeInfosList().then(function (data) {
         selectAA(aaName);
       }, function (data) {
         selectAA(aaName);

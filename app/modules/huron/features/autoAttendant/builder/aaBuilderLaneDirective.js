@@ -11,7 +11,7 @@ angular
         },
         controller: 'AABuilderLaneCtrl',
         controllerAs: 'aaLane',
-        templateUrl: 'modules/huron/callRouting/autoAttendant/builder/aaBuilderLane.tpl.html'
+        templateUrl: 'modules/huron/features/autoAttendant/builder/aaBuilderLane.tpl.html'
       };
     }
   ]);

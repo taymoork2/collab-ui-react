@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('uc.huntGroup')
+    .module('Huron')
     .controller('HuntGroupSetupAssistantCtrl', HuntGroupSetupAssistantCtrl);
 
   /* @ngInject */
