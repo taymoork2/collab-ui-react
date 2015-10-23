@@ -1,6 +1,5 @@
 <cs-sp-container>
-
-  <cs-sp-section>
+  <cs-sp-section ng-if="alarmCtrl.alarm.alarm">
     <div class="section-title-row section-name">
       {{alarmCtrl.alarm.alarm.title}}
     </div>
@@ -13,7 +12,32 @@
     </p>
   </cs-sp-section>
 
+  <cs-sp-section ng-if="!alarmCtrl.alarm.alarm">
+    <div class="section-title-row section-name">
+      {{alarmCtrl.alarm.title}}
+    </div>
+    <p>
+      <span>Severity: {{alarmCtrl.alarm.severity}}</span>
+      <br/>
+      <span>First Reported: {{alarmCtrl.alarm.first_reported | date : 'medium'}}</span>
+      <br/>
+      <span>Last Reported: {{alarmCtrl.alarm.last_reported | date : 'medium'}}</span>
+    </p>
+  </cs-sp-section>
+
   <cs-sp-section>
+    <div class="section-title-row section-name">
+      Description
+    </div>
+    <p ng-if="alarmCtrl.alarm.alarm">
+      {{alarmCtrl.alarm.alarm.description}}
+    </p>
+    <p ng-if="!alarmCtrl.alarm.alarm">
+      {{alarmCtrl.alarm.description}}
+    </p>
+  </cs-sp-section>
+
+  <cs-sp-section ng-if="alarmCtrl.alarm.alarm">
     <div class="section-title-row section-name">
       Hosts
     </div>
@@ -22,15 +46,6 @@
         {{host.host_name}}
       </li>
     </ul>
-  </cs-sp-section>
-
-  <cs-sp-section>
-    <div class="section-title-row section-name">
-      Description
-    </div>
-    <p>
-      {{alarmCtrl.alarm.alarm.description}}
-    </p>
   </cs-sp-section>
 
 </cs-sp-container>
