@@ -8,8 +8,11 @@
         <span translate="hercules.serviceNames.{{exp.currentServiceId}}" class="title-heading">
         </span>
 
-        <!-- TODO: Seems to be problems with positioning with narrow screen -->
-        <hercules-notifications filter-tag="exp.notificationTag"></hercules-notifications>
+        <!-- TODO: Seems to be problems with positioning with narrow screen
+             TODO: Remove relative div quick hack !           -->
+        <div style="position:relative">
+          <hercules-notifications filter-tag="exp.notificationTag"></hercules-notifications>
+        </div>
 
         <div ng-if="exp.currentServiceId !== 'squared-fusion-mgmt'">
           <i class="icon icon-circle-user"/>
