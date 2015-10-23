@@ -8,6 +8,8 @@
       return "calendar-service";
     case 'c_ucmc':
       return "call-service";
+    case 'c_mgmt':
+      return "management-service";
     default:
       //console.error("serviceType " + serviceType + " not supported in this controller");
       return "";
@@ -20,6 +22,8 @@
       return "squared-fusion-cal";
     case 'c_ucmc':
       return "squared-fusion-uc";
+    case 'c_mgmt':
+      return "squared-fusion-mgmt";
     default:
       //console.error("serviceType " + serviceType + " not supported in this controller");
       return "";
@@ -32,6 +36,8 @@
       return "c_cal";
     case 'squared-fusion-uc':
       return "c_ucmc";
+    case 'squared-fusion-mgmt':
+      return "c_mgmt";
     default:
       //console.error("serviceType " + serviceType + " not supported in this controller");
       return "";
@@ -106,13 +112,16 @@
     vm.clusterLength = function () {
       return _.size(vm.clusters);
     };
-
     vm.serviceIconClass = ServiceDescriptor.serviceIcon(vm.currentServiceId);
 
-    vm.serviceEnabled = false;
-    ServiceDescriptor.isServiceEnabled(serviceType2ServiceId(vm.currentServiceType), function (a, b) {
-      vm.serviceEnabled = b;
-    });
+    if (vm.currentServiceId == "squared-fusion-mgmt") {
+      vm.serviceEnabled = true;
+    } else {
+      vm.serviceEnabled = false;
+      ServiceDescriptor.isServiceEnabled(serviceType2ServiceId(vm.currentServiceType), function (a, b) {
+        vm.serviceEnabled = b;
+      });
+    }
 
     vm.serviceNotInstalled = function (cluster) {
       return ServiceStatusSummaryService.serviceNotInstalled(vm.currentServiceType, cluster);
