@@ -218,7 +218,7 @@
     "entResUtilizationTab": "Utilization",
     "entResUtilizationTabDesc": "Enterprise Resources Utilization",
     "servicesTab": "Services",
-    "conferencing": "Conferencing",
+    "conferencing": "WebEx",
     "conferencingDesc": "List of Site Admins",
     "alarmsTab": "Alarms",
     "alarmsTabDesc": "Alarm Management",
@@ -877,7 +877,8 @@
       "squared-fusion-cal": "Calendar Service",
       "squared-fusion-media": "Media Service",
       "contact-center-context": "Context Center Service",
-      "squared-fusion-ec": "Call Service Connect"
+      "squared-fusion-ec": "Call Service Connect",
+      "squared-fusion-mgmt": "Expressway Management Service"
     },
     "serviceDescriptions": {
       "squared-fusion-uc": "Effortlessly share your desktop with Spark while you are on your work phone. Answer your work phone or call your coworkers from Spark.",
@@ -1402,9 +1403,7 @@
     "thankYou": "Thank you",
     "setupSuccess": "You have set up the PSTN service successfully.",
     "nextStep": "Next Step",
-    "notifyCustomer": "If you want to Notify customer:",
-    "addUsers": "If you want to Add users:",
-    "sendMessage": "Send Message",
+    "checkOrderStatus": "Check Order Status",
     "launchPortal": "Launch Company Portal",
     "carrierListError": "Failed to retrieve carrier list for this customer.",
     "orderNumbersPrompt": "Must add numbers to proceed.",
@@ -1594,7 +1593,8 @@
     "retrieveLogBttn": "Retrieve Latest Log",
     "retrieveLogInstructions": "Device logs can be used by Cisco to troubleshoot issues related to device performance and call quality.",
     "logWait": "Getting log file from the device. This may take a minute…",
-    "errorTryAgain": "Log file request timed out. Retry?"
+    "errorLogTryAgain": "Log file request timed out. Retry?",
+    "errorLogInvaidMsg": "Log service message is invalid"
   },
   "deviceOverviewPage": {
     "activationNoLongerNeeded": "If this activation is no longer needed:",
@@ -2189,11 +2189,11 @@
     "chineseTraditional": "Chinese(Traditional)"
   },
   "siteList": {
-    "conferencing": "Conferencing",
+    "conferencing": "WebEx Sites",
     "siteName": "Site Name",
     "licenseCount": "License Count",
     "type": "Type",
-    "siteSettings": "Configure Site",
+    "launchSite": "Configure Site",
     "siteReports": "Reports"
   },
   "cloudExtensions": {
@@ -2295,7 +2295,8 @@
   "huntGroup": {
     "code": "HG",
     "title": "Hunt Group",
-    "modalDescription": "Hunt groups (or line hunting) allow you to customize the distribution of incoming phone calls to users' phone lines in a specific order."
+    "modalDescription": "Hunt groups (or line hunting) allow you to customize the distribution of incoming phone calls to users' phone lines in a specific order.",
+    "numberFetchFailure": "Unable to get numbers."
   },
 
   "huronFeatureDetails": {
@@ -2378,6 +2379,32 @@
     "fallbackPlaceholder": "Enter Fallback Destination",
     "fallbackHint": "This is where the call goes if it was not answered by this hunt group",
     "voiceCheckLabel": "Send call directly to voicemail",
-    "createGroupLabel": "CREATE HUNT GROUP"
+    "createGroupLabel": "CREATE HUNT GROUP",
+    "nameLabel": "Hunt Group Name",
+    "nameDesc": "This will also be the name callers see (i.e. alerting name).",
+    "numbersLabel": "Hunt Group Numbers",
+    "numberSingular": "Number",
+    "numberPlural": "Numbers",
+    "ringTimeLabel": "Member's Max Ring Time",
+    "ringTimeDesc": "The maximum amount of time a member's line will ring before it sent to the next number.",
+    "waitTimeLabel": "Caller Max Wait Time",
+    "waitTimeDesc": "The maximum time a caller will be in waiting before sent to fallback destination.",
+    "fallbackLabel": "Fallback Destination",
+    "fallbackDesc": "This is where the call goes if it was not answered by this hunt group.",
+    "methodLabel": "Hunting Method and Members",
+    "methodDesc": "This defines which member gets the call first.",
+    "membersLabel": "Hunt Group Members",
+    "membersDesc": "Drag and drop to reorder members hunt group sequence.",
+    "saveLabel": "Do you want to save your changes?",
+    "remove": "Remove",
+    "removeMem": "Remove Member",
+    "addMemberLabel": "Add & Search Members",
+    "successUpdate": "Successfully updated the Hunt Group",
+    "errorUpdate": "Error while saving Hunt Group",
+    "numberLabel": "Select Numbers",
+    "cancelHeader": "Cancel Hunt Group Creation",
+    "cancelDialog": "Are you sure you wish to cancel hunt group creation? This hunt group will not be saved.",
+    "confirmButton": "Cancel Creation",
+    "continueButton": "Continue Creation"
   }
 }

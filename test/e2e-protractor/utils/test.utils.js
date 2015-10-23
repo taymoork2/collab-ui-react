@@ -466,6 +466,7 @@ exports.searchForSingleResult = function (query) {
   }
   this.expectIsNotDisplayed(element(by.css('.icon-spinner')));
   this.click(this.searchbox);
+  this.clear(this.searchField);
   this.sendKeys(this.searchField, query);
   browser.wait(logAndWait, TIMEOUT, 'Waiting for a single search result');
   this.expectIsDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', query)));

@@ -12,7 +12,7 @@
          class="page-option-buttons"
          ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
          
-     <a class="button large"
+      <a class="button large"
          id={{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.id}}
          name={{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.id}}
          ui-sref={{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.pageObj.uiSref}}>
@@ -28,40 +28,35 @@
   -->
     <!-- breadcrumbs -->
     <ul id="siteSettingsBreadCrumbs"
-        name="siteSettingsBreadCrumbs" class="breadcrumbs">
+        name="siteSettingsBreadCrumbs" 
+        class="breadcrumbs">
           
       <li>
         <a id="siteListCrumb"
+           name="siteListCrumb"
            ui-sref="site-list"
            translate="siteList.conferencing">
         </a>
       </li>
 
-      <li class="current">
+      <li class="current"
+          id="siteSettingsCrumb"
+          name="siteSettingsCrumb">
+          
         {{WebExSiteSettings.siteSettingsObj.pageTitleFull}}
       </li>
     </ul>
     
     <div ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
       <cs-card-layout>
-        <!-- Info card -->
         <div ng-include="'modules/webex/siteSettings/siteInfoCard.tpl.html'"></div>
       </cs-card-layout>
 
       <cs-card-layout>
-        <!-- Common Settings card -->
         <div ng-include="'modules/webex/siteSettings/commonSettingsCard.tpl.html'"></div>
-    
-        <!-- Meeting Center Settings card -->
         <div ng-include="'modules/webex/siteSettings/meetingCenterSettingsCard.tpl.html'"></div>
-    
-        <!-- Training Center Settings card -->
         <div ng-include="'modules/webex/siteSettings/trainingCenterSettingsCard.tpl.html'"></div>
-      
-        <!-- Support Center Settings card -->
         <div ng-include="'modules/webex/siteSettings/supportCenterSettingsCard.tpl.html'"></div>
-      
-        <!-- Event Center Settings card -->
         <div ng-include="'modules/webex/siteSettings/eventCenterSettingsCard.tpl.html'"></div>
       </cs-card-layout>
     </div>

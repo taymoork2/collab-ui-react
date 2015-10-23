@@ -9,6 +9,10 @@
   top:0.1em;
 }
 
+.hercules-trash-icon {
+  color: $color-alerts
+}
+
 /**
 Special stuff currently used for out own mail input field...
 */
@@ -79,4 +83,42 @@ Special stuff currently used for out own mail input field...
   .ngVerticalBar {
     display: none;
   }
+}
+
+.hercules-cluster-settings {
+  .section-title-row {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .toggle-switch {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.hercules-state-alarm {
+  color: $color-negative-base;
+}
+.hercules-state-running {
+  color: $color-cta-base;
+}
+.hercules-state-installing {
+  color: $color-attention-base;
+}
+.hercules-state-not_configured {
+  color: $color-attention-base
+}
+.hercules-state-disabled {
+  color: $color-attention-base;
+}
+.hercules-state-not_installed {
+  color: $gray-base;
+}
+.hercules-state-offline {
+  color: $color-attention-base;
+}
+.hercules-state-unknown {
+  color: $gray-base;
 }

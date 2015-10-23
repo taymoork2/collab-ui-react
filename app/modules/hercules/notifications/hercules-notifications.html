@@ -13,13 +13,22 @@
 
   <!-- List of notifications -->
   <ul class="entries"
-      ng-show="notificationController.showNotifications && notificationController.filteredNotifications().length > 0">
+      ng-if="notificationController.showNotifications && notificationController.filteredNotifications().length > 0">
     <li class="notif"
         ng-repeat="notification in notificationController.filteredNotifications() | orderBy:'priority' ">
       <span class="badge-wrapper label notification-{{notification.type}}">{{notificationController.typeDisplayName(notification.type)}}</span>
 
       <div class="notif-wrapper">
         <ng-include src="notification.template"></ng-include>
+      </div>
+    </li>
+  </ul>
+
+  <ul class="entries"
+      ng-if="notificationController.showNotifications && notificationController.filteredNotifications().length == 0">
+    <li class="notif">
+      <div class="notif-wrapper">
+        <p>No notifications.</p>
       </div>
     </li>
   </ul>

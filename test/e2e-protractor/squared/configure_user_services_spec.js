@@ -26,8 +26,11 @@ describe('Configuring services per-user', function () {
     utils.expectIsNotDisplayed(users.manageDialog);
   });
 
-  it('should add standard team rooms service', function () {
+  it('should search for user', function () {
     utils.searchAndClick(testUser);
+  });
+
+  it('should add standard team rooms service', function () {
     utils.click(users.servicesActionButton);
     utils.click(users.editServicesButton);
     utils.waitForModal().then(function () {
@@ -37,11 +40,10 @@ describe('Configuring services per-user', function () {
       utils.click(users.saveButton);
       notifications.assertSuccess('entitled successfully');
     });
-
   });
 
   it('should disable the Messenger interop entitlement', function () {
-    utils.searchAndClick(testUser);
+    utils.clickUser(testUser);
     utils.click(users.messagingService);
     utils.expectCheckbox(users.messengerInteropCheckbox, true);
     utils.click(users.messengerInteropCheckbox);
@@ -52,7 +54,7 @@ describe('Configuring services per-user', function () {
   });
 
   it('should re-enable the Messenger interop entitlement', function () {
-    utils.searchAndClick(testUser);
+    utils.clickUser(testUser);
     utils.click(users.messagingService);
     utils.expectCheckbox(users.messengerInteropCheckbox, false);
     utils.click(users.messengerInteropCheckbox);
@@ -63,7 +65,7 @@ describe('Configuring services per-user', function () {
   });
 
   it('should verify that the Messenger interop entitlement was re-enabled', function () {
-    utils.searchAndClick(testUser);
+    utils.clickUser(testUser);
     utils.click(users.messagingService);
     utils.expectCheckbox(users.messengerInteropCheckbox, true);
   });

@@ -16,7 +16,8 @@
             <div>
               <span>Users: {{summary(service.id).activated}} activated</span>
               <span class="border-left" ng-show="summary(service.id).notActivated > 0"><span class="disabled">{{summary(service.id).notActivated}} pending</span></a></span>
-              <span class="border-left" ng-show="summary(service.id).error > 0 && clusters && clusters.length > 0"><a href ng-click="showUserStatusesDialog(service.id)"><span class="error">{{summary(service.id).error}} in error</span></a></span>
+              <span class="border-left" ng-show="summary(service.id).error > 0 && clusterLength() > 0"><a
+                href ng-click="showUserStatusesDialog(service.id)"><span class="red">{{summary(service.id).error}} in error</span></a></span>
               <span ng-show="summary(service.id).notActivated > 0 || summary(service.id).activated > 0 || summary(service.id).error > 0"
                     class="export-users-statuses-icon"
                     tooltip-placement="top"
