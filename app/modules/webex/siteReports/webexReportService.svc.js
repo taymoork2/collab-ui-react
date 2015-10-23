@@ -188,6 +188,16 @@ angular.module('WebExReports').service('WebexReportService', [
       this.isNotEmpty = function () {
         return !self.isEmpty();
       };
+      this.subsections = [];
+      this.hasNoSubsections = function () {
+        return (angular.isUndefined(self.subsections)) || (self.subsections.length === 0);
+      };
+      this.hasSubsections = function () {
+        return !self.hasNoSubsections();
+      };
+      this.addSubsection = function (reportsSection) {
+        self.subsections.push(reportsSection);
+      };
     };
 
     this.ReportsSection = ReportsSection;
@@ -248,6 +258,8 @@ angular.module('WebExReports').service('WebexReportService', [
         //   return new UIsref(theUrl, rid, siteUrl);
         // });
       });
+
+      support_center.addSubsection(remote_access);
 
       var repts = new Reports();
       repts.setSections([common_reports, training_center, support_center,

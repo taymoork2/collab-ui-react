@@ -33,6 +33,7 @@
 
        <section id="siteSettingsCardSection">
          <ul class="no-bullet">
+          <!-- Top level section -->
           <li ng-repeat="sref in sec.uisrefs">
             
                  <a id="{{sref.reportPageId}}"
@@ -40,8 +41,25 @@
                     ui-sref="{{sref.uisrefString}}">
                     {{sref.reportPageId_translated}}
                  </a>
-             
+                 subsections
+             {{sec.subsections}}
           </li>
+          <!-- sub sections  -->
+          <li ng-repeat="s in sec.subsections">
+                  <h4>{{s.section_name_translated}}</h4>
+                  <ul class="no-bullet">
+                      <li ng-repeat="sref in s.uisrefs">
+                          <a id="{{sref.reportPageId}}"
+                            name="{{sref.reportPageId}}"
+                            ui-sref="{{sref.uisrefString}}">
+                               {{sref.reportPageId_translated}}
+                          </a>
+                      </li>
+
+                  </ul>
+          </li>
+
+          
           </ul>
        </section>
 
@@ -52,6 +70,8 @@
 <!-- </div> -->
 </div>
 
+
+testtkljse;kjt
 <!-- </cs-container> -->
 
 
