@@ -2335,7 +2335,7 @@
   },
 
   "huronHuntGroup": {
-    "title": "Create Hunt Group",
+    "createTitle": "Create Hunt Group",
     "namePlaceholder": "Name the Hunt Group",
     "nameHint": "This hunt group name will also be the name callers see on their device (i.e. alerting name)",
     "numberPlaceholder": "Select Hunt Group Numbers",

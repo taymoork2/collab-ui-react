@@ -38,7 +38,8 @@
       "circular": "circular",
       "topDown": "top-down"
     };
-    vm.huntGroupMethod = vm.hgMethods.longestIdle;
+    vm.huntGroupMethod = '';
+    vm.huntGroupMethodFocus = vm.hgMethods.longestIdle;
     vm.numberData = [{
       "userNumber": "1597534567"
     }, {
@@ -166,6 +167,7 @@
         nextPage();
       } else {
         vm.huntGroupMethod = methodSelected;
+        vm.huntGroupMethodFocus = methodSelected;
       }
     }
 
