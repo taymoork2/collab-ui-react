@@ -1,7 +1,8 @@
 .line-list {
   & .btn-actions {
+    @include vr-spacing(pv, 0.9375);
+    @include vr-spacing(ph, 1.875);
     float: right;
-    padding: 15px 30px;
     text-align: center;
   }
   & .btn-icon {
@@ -17,20 +18,17 @@
     }
   }
   & .content-header {
+    @include vr-spacing(pv, 0.625);
+    @include vr-spacing(pr, 0.625);
+    @include vr-spacing(pl, 1.5);
     background: white;
-    border-bottom: 1px solid $gray-lightest;
-    padding-right: 0px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    border-bottom: 0.0625rem solid $gray-lightest;
   }
   & .export-lines {
-    color: $gray-dark;
-    font-size: 24px;
+    @include vr-spacing(mr, 0.5, 0px, true);
+    @include vr-spacing(mt, 0.5);
+    font-size: 1.5rem;
     display: inline-block;
-    vertical-align: top;
-    padding-left: 20px;
-    margin-left: 10px;
-    cursor: pointer;
   }
   & .gridStyle {
     height: calc(50vh);
@@ -42,14 +40,6 @@
     }
   }
   & .page-option-buttons {
-    padding-top: 0;
-  }
-  & .searchbox {
-    .searchinput {
-      padding-left: 3px;  /*manual adjustment to make search icon line up with page title*/
-      > input {
-        background-color: inherit;
-      }
-    }
+    @include vr-spacing(pt, 0);
   }
 }
