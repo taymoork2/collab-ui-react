@@ -1,17 +1,23 @@
 <div class="hercules-fix-paragraphs">
-  <h3>
-    <i class="{{exp.serviceIconClass}} icon-2x"></i><br>
-    <span translate="hercules.serviceNames.{{exp.currentServiceId}}"></span>
-  </h3>
   <p>
-    Collaborate instantly.
+    Extend the Cloud to you Premises
   </p>
 
+  <h2>
+    {{'hercules.serviceNames.' + exp.currentServiceId | translate}}
+  </h2>
+  <br>
+
+  <p>
+    <button class="button info large" ng-click="exp.enableService(exp.currentServiceId)">
+      Activate and Begin Setup
+    </button>
+  </p>
+  <br>
   <div ng-show="exp.currentServiceId == 'squared-fusion-cal'">
     <p>
       Just add @spark to an invitation to create a Spark room for your meeting.
     </p>
-
     <p>
       Add @webex to attach your WebEx Personal Room.
     </p>
@@ -22,15 +28,9 @@
     <p>
       Effortlessly share your desktop with Spark while you are on your work phone.
     </p>
-
     <p>
       Answer your work phone or call your colleagues from Spark.
     </p>
-
     <br>
   </div>
-
-  <button class="btn btn-info" ng-click="exp.enableService(exp.currentServiceId)">
-    Activate this service
-  </button>
 </div>

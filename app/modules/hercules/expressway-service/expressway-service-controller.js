@@ -101,6 +101,7 @@
     });
 
     var vm = this;
+    vm.loading = true;
     vm.state = $state;
     vm.currentServiceType = $state.current.data.serviceType;
     vm.currentServiceId = serviceType2ServiceId(vm.currentServiceType);
@@ -116,10 +117,12 @@
 
     if (vm.currentServiceId == "squared-fusion-mgmt") {
       vm.serviceEnabled = true;
+      vm.loading = false;
     } else {
       vm.serviceEnabled = false;
       ServiceDescriptor.isServiceEnabled(serviceType2ServiceId(vm.currentServiceType), function (a, b) {
         vm.serviceEnabled = b;
+        vm.loading = false;
       });
     }
 
