@@ -31,8 +31,7 @@
 
         <div class="menu">
           <a ui-sref-active="active" ui-sref="{{exp.route}}.list">Resources</a>
-          <a ng-if="exp.currentServiceId !== 'squared-fusion-mgmt'" ui-sref-active="active"
-             ui-sref="{{exp.route}}.settings({serviceType:exp.currentServiceType})">Settings</a>
+          <a ui-sref-active="active" ui-sref="{{exp.route}}.settings({serviceType:exp.currentServiceType})">Settings</a>
         </div>
 
       </div>

@@ -1442,6 +1442,19 @@ angular
             }
           }
         })
+        .state('management-service.settings', {
+          url: '/services/expressway-management/settings',
+          views: {
+            'fullPane': {
+              controllerAs: 'expresswayServiceSettings',
+              controller: 'ExpresswayServiceSettingsController',
+              templateUrl: 'modules/hercules/expressway-service/management-service-settings.html'
+            }
+          },
+          params: {
+            serviceType: "c_mgmt"
+          }
+        })
         .state('cluster-details-new', {
           parent: 'sidepanel',
           views: {
