@@ -271,6 +271,21 @@ angular.module('Core')
             state: 'fusion',
             link: '#fusion'
           }, {
+            title: 'tabs.expresswayManagementServiceTab',
+            desc: 'tabs.expresswayManagementServiceTabDesc',
+            state: 'management-service',
+            link: '#/services/expressway-management'
+          }, {
+            title: 'tabs.calendarServiceTab',
+            desc: 'tabs.calendarServiceTabDesc',
+            state: 'calendar-service',
+            link: '#/services/calendar'
+          }, {
+            title: 'tabs.callServiceTab',
+            desc: 'tabs.callServiceTabDesc',
+            state: 'call-service',
+            link: '#/services/call'
+          }, {
             title: 'tabs.MediafusionDetailsTab',
             desc: 'tabs.MediafusionDetailsTabDesc',
             state: 'mediafusionconnector',
@@ -890,15 +905,17 @@ angular.module('Core')
         'squared-fusion-mgmt': [
           'fusion',
           'cluster-details',
-          'calendar-service',
-          'call-service',
-          'cluster-details-new',
-          'management-service'
+          'cluster-details-new'
+          // 'management-service',
         ],
         'squared-fusion-uc': [
           'devices',
           'device-overview',
           'devices-redux'
+          // 'call-service'
+        ],
+        'squared-fusion-cal': [
+          // 'calendar-service'
         ],
         'squared-team-member': [
           'organization'
@@ -919,6 +936,16 @@ angular.module('Core')
           'messenger'
         ]
       };
+
+      if (!config.isProd()) {
+        // Experimental, not to be enabled in production (yet)
+        var calStates = config.serviceStates['squared-fusion-cal'];
+        calStates.push('calendar-service');
+        var ucStates = config.serviceStates['squared-fusion-uc'];
+        ucStates.push('call-service');
+        var mgmtStates = config.serviceStates['squared-fusion-mgmt'];
+        mgmtStates.push('management-service');
+      }
 
       // These states are not allowed in specific views
       // (i.e. devices are not allowed in partner)

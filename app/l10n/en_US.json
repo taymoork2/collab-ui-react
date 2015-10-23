@@ -225,7 +225,13 @@
     "eventsTab": "Events",
     "eventsTabDesc": "Event Management",
     "messengerTab": "Webex Messenger",
-    "messengerTabDesc": "Webex Messenger Administration"
+    "messengerTabDesc": "Webex Messenger Administration",
+    "calendarServiceTab": "Calendar",
+    "calendarServiceTabDesc": "Calendar Service",
+    "callServiceTab": "Call",
+    "callServiceTabDesc": "Call Service",
+    "expresswayManagementServiceTab": "Management Service",
+    "expresswayManagementServiceTabDesc": "Expressway"
   },
   "index": {
     "welcome": "Welcome!",
