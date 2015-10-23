@@ -114,7 +114,14 @@
       secret: 'sunlight', // TODO: Remove this parameter when Mock is replaced with CmiV2.
       customerId: '@customerId',
       huntGroupId: '@huntGroupId'
-    }, {});
+    }, {
+      update: {
+        method: 'PUT'
+      },
+      delete: {
+        method: 'DELETE'
+      }
+    });
   })
 
   .factory('UserServiceVoice', function ($resource, HuronConfig) {

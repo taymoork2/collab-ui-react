@@ -17,9 +17,9 @@
         description: 'autoAttendant.modalDescription'
       }, {
         cssClass: 'HG',
-        code: 'huntGroup.code',
-        label: 'huntGroup.title',
-        description: 'huntGroup.modalDescription'
+        code: 'huronHuntGroup.code',
+        label: 'huronHuntGroup.title',
+        description: 'huronHuntGroup.modalDescription'
       }
       //  , {
       //  cssClass: 'CP',

@@ -1,9 +1,13 @@
 .features{
 
-  &.features-content {
-    min-height: 100vh;
+  $page-header-height: 95px;
+  $features-header-height : 83px;
+
+  .features-content {
+    height: calc(100vh - #{($navbar-height + $page-header-height + $features-header-height)});
+    overflow: auto;
     background-color: $brand-white;
-    @include vr-spacing(p, 1.5);
+    @include vr-spacing(pt, 0);
   }
 }
 
@@ -14,16 +18,19 @@
   justify-content: space-between;
   align-items: flex-end;
   background-color: $brand-white;
-  @include vr-spacing(pl, 0.6);
+  @include vr-spacing(ph, 1.5);
+  @include vr-spacing(pv, 1);
+  border-bottom: 1px solid $gray-light-3;
 }
 
 .new-feature-button {
-  @include vr-spacing(mr, 0.75)
+  @include vr-spacing(mr, 0.25)
 }
 
 .cards-block{
 
-  @include vr-spacing(pt, 0.8);
+  @include vr-spacing(pv, 1);
+  @include vr-spacing(ph, 0.5);
 
   .cs-card article {
     height : rem-calc(170);

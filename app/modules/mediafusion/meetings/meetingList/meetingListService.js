@@ -8,7 +8,7 @@ angular.module('Mediafusion')
       //Fetching the Base url form config.js file.
       var searchfilter = 'filter=%s';
       var baseUrl = Config.getMeetingServiceUrl();
-      var meetinginfoUrl = Config.getMeetinginfoserviceUrl();
+      var meetinginfoUrl = Config.getMeetingInfoServiceUrl();
 
       var meetinglistservice = {
 

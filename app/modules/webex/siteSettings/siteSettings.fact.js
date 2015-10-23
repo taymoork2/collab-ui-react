@@ -550,10 +550,6 @@
             var iframePageLabelId = "webexSiteSettingsLabels.iframePageLabel_" + webexPageId;
             var iframePageLabel = $translate.instant(iframePageLabelId);
 
-            if (null == iframeUrl) {
-              iframeUrl = "https://" + _this.webExSiteSettingsObj.siteUrl + "/igotnuthin";
-            }
-
             var uiSref =
               "site-settings.site-setting({" +
               "  siteUrl: " + "'" + _this.webExSiteSettingsObj.siteUrl + "'" + "," +

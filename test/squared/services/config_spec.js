@@ -12,18 +12,18 @@ describe('Config', function () {
   }));
 
   var devHost = 'localhost';
-  var prodHost = 'admin.ciscospark.com';
-  var intHost = 'int-admin.ciscospark.com';
   var cfeHost = 'cfe-admin.ciscospark.com';
+  var intHost = 'int-admin.ciscospark.com';
+  var prodHost = 'admin.ciscospark.com';
 
   var scope = encodeURIComponent('webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config Identity:Organization cloudMeetings:login webex-messenger:get_webextoken ccc_config:admin');
 
   var whenCalling = function (fn, arg) {
     var hosts = {
-      development: devHost,
+      dev: devHost,
+      cfe: cfeHost,
       integration: intHost,
-      production: prodHost,
-      cfe: cfeHost
+      prod: prodHost
     };
     return {
       expectUrlToBe: function (obj) {
@@ -42,17 +42,6 @@ describe('Config', function () {
             throw new Error("Expected " + fn + " in " + env + " to be '" + expected + "' but it was '" + actual + "'");
           }
         });
-
-        Config.getEnv = function () {
-          return 'foo-' + new Date().getTime().toString(16);
-        };
-        var conf = Config[fn](arg);
-        if (!conf) {
-          throw new Error("Expected " + fn + " to have a sensible default for unknown envs");
-        }
-        if (conf.indexOf('undefined') != -1) {
-          throw new Error("Expected " + fn + " to not have undefined parts for unknown envs. Got: " + conf);
-        }
       }
     };
   };
@@ -74,6 +63,14 @@ describe('Config', function () {
     expect(Config.isDev()).toBe(false);
   });
 
+  it('should detect load test environment', function () {
+    $location.host.and.returnValue(cfeHost);
+    expect(Config.isCfe()).toBe(true);
+
+    $location.host.and.returnValue(prodHost);
+    expect(Config.isCfe()).toBe(false);
+  });
+
   it('should detect integration environment', function () {
     $location.host.and.returnValue(intHost);
     expect(Config.isIntegration()).toBe(true);
@@ -82,7 +79,7 @@ describe('Config', function () {
     expect(Config.isIntegration()).toBe(false);
   });
 
-  it('should detect production environment', function () {
+  it('should detect prod environment', function () {
     $location.host.and.returnValue(intHost);
     expect(Config.isProd()).toBe(false);
 
@@ -91,11 +88,14 @@ describe('Config', function () {
   });
 
   it('should return env', function () {
-    $location.host.and.returnValue(intHost);
-    expect(Config.getEnv()).toBe('integration');
-
     $location.host.and.returnValue(devHost);
     expect(Config.getEnv()).toBe('dev');
+
+    $location.host.and.returnValue(cfeHost);
+    expect(Config.getEnv()).toBe('cfe');
+
+    $location.host.and.returnValue(intHost);
+    expect(Config.getEnv()).toBe('integration');
 
     $location.host.and.returnValue(prodHost);
     expect(Config.getEnv()).toBe('prod');
@@ -111,177 +111,217 @@ describe('Config', function () {
 
   it('should return correct admin service url', function () {
     whenCalling('getAdminServiceUrl').expectUrlToBe({
-      development: 'https://atlas-integration.wbx2.com/admin/api/v1/',
+      dev: 'https://atlas-integration.wbx2.com/admin/api/v1/',
+      cfe: 'https://atlas-e.wbx2.com/admin/api/v1/',
       integration: 'https://atlas-integration.wbx2.com/admin/api/v1/',
-      production: 'https://atlas-a.wbx2.com/admin/api/v1/',
+      prod: 'https://atlas-a.wbx2.com/admin/api/v1/',
     });
   });
 
-  it('should return correct locus service url', function () {
+  it('should always return locus integration service url', function () {
     whenCalling('getLocusServiceUrl').expectUrlToBe({
-      development: 'https://admin-portal-test-public.wbx2.com/locus',
+      dev: 'https://admin-portal-test-public.wbx2.com/locus',
+      cfe: 'https://admin-portal-test-public.wbx2.com/locus',
       integration: 'https://admin-portal-test-public.wbx2.com/locus',
-      production: 'https://admin-portal-test-public.wbx2.com/locus'
+      prod: 'https://admin-portal-test-public.wbx2.com/locus'
     });
   });
 
   it('should return correct meeting service url', function () {
     whenCalling('getMeetingServiceUrl').expectUrlToBe({
-      development: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
+      dev: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
+      cfe: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
       integration: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
-      production: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
+      prod: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
     });
   });
 
   it('should return correct meeting service url', function () {
-    whenCalling('getMeetinginfoserviceUrl').expectUrlToBe({
-      development: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
+    whenCalling('getMeetingInfoServiceUrl').expectUrlToBe({
+      dev: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
+      cfe: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
       integration: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
-      production: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
+      prod: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
     });
   });
 
   it('should return correct oauth login url', function () {
     whenCalling('getOauthLoginUrl').expectUrlToBe({
-      development: 'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=' + scope + '&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000&state=random-string&service=spark',
+      dev: 'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=' + scope + '&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000&state=random-string&service=spark',
+      cfe: 'https://idbrokerbts.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C5469b72a6de8f8f0c5a23e50b073063ea872969fc74bb461d0ea0438feab9c03&scope=' + scope + '&redirect_uri=https%3A%2F%2Fcfe-admin.ciscospark.com&state=random-string&service=spark',
       integration: 'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=' + scope + '&redirect_uri=https%3A%2F%2Fint-admin.ciscospark.com%2F&state=random-string&service=spark',
-      production: 'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=' + scope + '&redirect_uri=https%3A%2F%2Fadmin.ciscospark.com%2F&state=random-string&service=spark'
+      prod: 'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=' + scope + '&redirect_uri=https%3A%2F%2Fadmin.ciscospark.com%2F&state=random-string&service=spark'
     });
   });
 
   it('should return correct redir url', function () {
     whenCalling('getRedirectUrl').expectUrlToBe({
-      development: 'redirect_uri=http%3A%2F%2F127.0.0.1%3A8000',
+      dev: 'redirect_uri=http%3A%2F%2F127.0.0.1%3A8000',
+      cfe: 'redirect_uri=https%3A%2F%2Fcfe-admin.ciscospark.com',
       integration: 'redirect_uri=https%3A%2F%2Fint-admin.ciscospark.com%2F',
-      production: 'redirect_uri=https%3A%2F%2Fadmin.ciscospark.com%2F'
+      prod: 'redirect_uri=https%3A%2F%2Fadmin.ciscospark.com%2F'
     });
   });
 
   it('should return correct oauth code url', function () {
     whenCalling('getOauthCodeUrl', 'foo').expectUrlToBe({
-      development: 'grant_type=authorization_code&code=foo&scope=',
+      dev: 'grant_type=authorization_code&code=foo&scope=',
+      cfe: 'grant_type=authorization_code&code=foo&scope=',
       integration: 'grant_type=authorization_code&code=foo&scope=',
-      production: 'grant_type=authorization_code&code=foo&scope='
+      prod: 'grant_type=authorization_code&code=foo&scope='
     });
   });
 
   it('should return correct access code url', function () {
     whenCalling('getOauthAccessCodeUrl', 'foo').expectUrlToBe({
-      development: 'grant_type=refresh_token&refresh_token=foo&scope=' + scope,
+      dev: 'grant_type=refresh_token&refresh_token=foo&scope=' + scope,
+      cfe: 'grant_type=refresh_token&refresh_token=foo&scope=' + scope,
       integration: 'grant_type=refresh_token&refresh_token=foo&scope=' + scope,
-      production: 'grant_type=refresh_token&refresh_token=foo&scope=' + scope
+      prod: 'grant_type=refresh_token&refresh_token=foo&scope=' + scope
     });
   });
 
   it('should return correct logout url', function () {
     whenCalling('getLogoutUrl').expectUrlToBe({
-      development: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=http%3A%2F%2F127.0.0.1%3A8000',
+      dev: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=http%3A%2F%2F127.0.0.1%3A8000',
+      cfe: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=https%3A%2F%2Fcfe-admin.ciscospark.com',
       integration: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=https%3A%2F%2Fint-admin.ciscospark.com%2F',
-      production: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=https%3A%2F%2Fadmin.ciscospark.com%2F'
+      prod: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=https%3A%2F%2Fadmin.ciscospark.com%2F'
     });
   });
 
   it('should return correct sso setup url', function () {
     whenCalling('getSSOSetupUrl').expectUrlToBe({
-      development: 'https://idbroker.webex.com/idb/idbconfig/',
+      dev: 'https://idbroker.webex.com/idb/idbconfig/',
+      cfe: 'https://idbroker.webex.com/idb/idbconfig/',
       integration: 'https://idbroker.webex.com/idb/idbconfig/',
-      production: 'https://idbroker.webex.com/idb/idbconfig/'
+      prod: 'https://idbroker.webex.com/idb/idbconfig/'
     });
   });
 
   it('should return correct sso test url', function () {
     whenCalling('getSSOTestUrl').expectUrlToBe({
-      development: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
+      dev: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
+      cfe: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
       integration: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
-      production: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp'
+      prod: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp'
     });
   });
 
   it('should return correct health check service url', function () {
     whenCalling('getHealthCheckUrlServiceUrl').expectUrlToBe({
-      development: 'https://ciscospark.statuspage.io/index.json',
+      dev: 'https://ciscospark.statuspage.io/index.json',
+      cfe: 'https://ciscospark.statuspage.io/index.json',
       integration: 'https://ciscospark.statuspage.io/index.json',
-      production: 'https://ciscospark.statuspage.io/index.json'
+      prod: 'https://ciscospark.statuspage.io/index.json'
     });
   });
 
   it('should return correct log metrics url', function () {
     whenCalling('getLogMetricsUrl').expectUrlToBe({
-      development: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
+      dev: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
+      cfe: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
       integration: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
-      production: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics'
+      prod: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics'
     });
   });
 
   it('should return correct call flow service url', function () {
     whenCalling('getCallflowServiceUrl').expectUrlToBe({
-      development: 'https://admin-portal-test-public.wbx2.com/atlas-server/admin/api/v1/',
+      dev: 'https://admin-portal-test-public.wbx2.com/atlas-server/admin/api/v1/',
+      cfe: 'https://admin-portal-test-public.wbx2.com/atlas-server/admin/api/v1/',
       integration: 'https://admin-portal-test-public.wbx2.com/atlas-server/admin/api/v1/',
-      production: 'https://admin-portal-test-public.wbx2.com/atlas-server/admin/api/v1/'
+      prod: 'https://admin-portal-test-public.wbx2.com/atlas-server/admin/api/v1/'
     });
   });
 
   it('should return correct status page url', function () {
     whenCalling('getStatusPageUrl').expectUrlToBe({
-      development: 'http://status.ciscospark.com/',
+      dev: 'http://status.ciscospark.com/',
+      cfe: 'http://status.ciscospark.com/',
       integration: 'http://status.ciscospark.com/',
-      production: 'http://status.ciscospark.com/'
+      prod: 'http://status.ciscospark.com/'
     });
   });
 
   it('should return correct squared app url', function () {
     whenCalling('getSquaredAppUrl').expectUrlToBe({
-      development: 'squared://',
+      dev: 'squared://',
+      cfe: 'squared://',
       integration: 'squared://',
-      production: 'squared://'
+      prod: 'squared://'
     });
   });
 
   it('should return correct itunes store url', function () {
     whenCalling('getItunesStoreUrl').expectUrlToBe({
-      development: 'http://cs.co/sqios',
+      dev: 'http://cs.co/sqios',
+      cfe: 'http://cs.co/sqios',
       integration: 'http://cs.co/sqios',
-      production: 'http://cs.co/sqios'
+      prod: 'http://cs.co/sqios'
     });
   });
 
   it('should return correct android store url', function () {
     whenCalling('getAndroidStoreUrl').expectUrlToBe({
-      development: 'http://cs.co/sqandroid',
+      dev: 'http://cs.co/sqandroid',
+      cfe: 'http://cs.co/sqandroid',
       integration: 'http://cs.co/sqandroid',
-      production: 'http://cs.co/sqandroid'
+      prod: 'http://cs.co/sqandroid'
     });
   });
 
   it('should return correct android app intent url', function () {
     whenCalling('getAndroidAppIntent').expectUrlToBe({
-      development: 'intent://view?id=123#Intent;package=com.cisco.wx2.android;scheme=squared;end;',
+      dev: 'intent://view?id=123#Intent;package=com.cisco.wx2.android;scheme=squared;end;',
+      cfe: 'intent://view?id=123#Intent;package=com.cisco.wx2.android;scheme=squared;end;',
       integration: 'intent://view?id=123#Intent;package=com.cisco.wx2.android;scheme=squared;end;',
-      production: 'intent://view?id=123#Intent;package=com.cisco.wx2.android;scheme=squared;end;'
+      prod: 'intent://view?id=123#Intent;package=com.cisco.wx2.android;scheme=squared;end;'
     });
   });
 
   it('should return correct web client url', function () {
     whenCalling('getWebClientUrl').expectUrlToBe({
-      development: 'https://web.ciscospark.com/',
+      dev: 'https://web.ciscospark.com/',
+      cfe: 'https://web.ciscospark.com/',
       integration: 'https://web.ciscospark.com/',
-      production: 'https://web.ciscospark.com/'
+      prod: 'https://web.ciscospark.com/'
     });
   });
 
   it('should return correct hercules url', function () {
     whenCalling('getHerculesUrl').expectUrlToBe({
-      development: 'https://hercules-integration.wbx2.com/',
-      integration: 'https://hercules-integration.wbx2.com/',
-      production: 'https://hercules-a.wbx2.com/'
+      dev: 'https://hercules-integration.wbx2.com/v1',
+      cfe: 'https://hercules-e.wbx2.com/v1',
+      integration: 'https://hercules-integration.wbx2.com/v1',
+      prod: 'https://hercules-a.wbx2.com/v1'
     });
   });
 
   it('should return correct USS url', function () {
     whenCalling('getUssUrl').expectUrlToBe({
-      development: 'https://uss-integration.wbx2.com/',
+      dev: 'https://uss-integration.wbx2.com/',
+      cfe: 'https://uss-e.wbx2.com/',
       integration: 'https://uss-integration.wbx2.com/',
-      production: 'https://uss-a.wbx2.com/'
+      prod: 'https://uss-a.wbx2.com/'
+    });
+  });
+
+  it('should return correct certs url', function () {
+    whenCalling('getCertsUrl').expectUrlToBe({
+      dev: 'https://certs-integration.wbx2.com/',
+      cfe: 'https://certs-e.wbx2.com/',
+      integration: 'https://certs-integration.wbx2.com/',
+      prod: 'https://certs-a.wbx2.com/'
+    });
+  });
+
+  it('should return correct customer care url', function () {
+    whenCalling('getSunlightConfigServiceUrl').expectUrlToBe({
+      dev: 'https://config.integration-tx1.thunderhead.io/config/v1',
+      cfe: 'https://config.integration-tx1.thunderhead.io/config/v1',
+      integration: 'https://config.integration-tx1.thunderhead.io/config/v1',
+      prod: 'https://config.integration-tx1.thunderhead.io/config/v1'
     });
   });
 

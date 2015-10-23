@@ -1325,6 +1325,13 @@ angular
           templateUrl: 'modules/huron/features/huntGroup/huntGroupSetupAssistant.tpl.html',
           controller: 'HuntGroupSetupAssistantCtrl',
           controllerAs: 'huntGroupSA'
+        })
+        .state('huntgroupedit', {
+          url: '/features/hg/edit',
+          parent: 'main',
+          templateUrl: 'modules/huron/features/edit/huntgroupedit.tpl.html',
+          controller: 'HuntGroupEditCtrl',
+          controllerAs: 'hge'
         });
     }
   ]);
@@ -1415,6 +1422,37 @@ angular
             'fullPane': {
               templateUrl: 'modules/hercules/expressway-service/call-about.html'
             }
+          }
+        })
+        .state('management-service', {
+          templateUrl: 'modules/hercules/expressway-service/overview.html',
+          controller: 'ExpresswayServiceController',
+          controllerAs: 'exp',
+          data: {
+            serviceType: "c_mgmt"
+          },
+          parent: 'main',
+          abstract: true
+        })
+        .state('management-service.list', {
+          url: '/services/expressway-management',
+          views: {
+            'fullPane': {
+              templateUrl: 'modules/hercules/expressway-service/cluster-list.html'
+            }
+          }
+        })
+        .state('management-service.settings', {
+          url: '/services/expressway-management/settings',
+          views: {
+            'fullPane': {
+              controllerAs: 'expresswayServiceSettings',
+              controller: 'ExpresswayServiceSettingsController',
+              templateUrl: 'modules/hercules/expressway-service/management-service-settings.html'
+            }
+          },
+          params: {
+            serviceType: "c_mgmt"
           }
         })
         .state('cluster-details-new', {

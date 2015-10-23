@@ -97,3 +97,28 @@ Special stuff currently used for out own mail input field...
     }
   }
 }
+
+.hercules-state-alarm {
+  color: $color-negative-base;
+}
+.hercules-state-running {
+  color: $color-cta-base;
+}
+.hercules-state-installing {
+  color: $color-attention-base;
+}
+.hercules-state-not_configured {
+  color: $color-attention-base
+}
+.hercules-state-disabled {
+  color: $color-attention-base;
+}
+.hercules-state-not_installed {
+  color: $gray-base;
+}
+.hercules-state-offline {
+  color: $color-attention-base;
+}
+.hercules-state-unknown {
+  color: $gray-base;
+}
