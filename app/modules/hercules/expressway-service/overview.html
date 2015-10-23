@@ -11,26 +11,28 @@
         <!-- TODO: Seems to be problems with positioning with narrow screen -->
         <hercules-notifications filter-tag="exp.notificationTag"></hercules-notifications>
 
-        <div>
+        <div ng-if="exp.currentServiceId !== 'squared-fusion-mgmt'">
           <i class="icon icon-circle-user"/>
-          <span>{{exp.userStatusSummary.activated}} activated</span>
+          <span>{{exp.userStatusSummary.activated || 0}} activated</span>
           <span ng-if="exp.userStatusSummary.notActivated > 0">| {{exp.userStatusSummary.notActivated}} pending</span>
-          <span ng-if="exp.userStatusSummary.error > 0">| {{exp.userStatusSummary.error}} error</span>
+          <span ng-if="exp.userStatusSummary.error > 0">|
+            <a href ng-click="exp.openUserErrorsModal()"><span class="red">{{exp.userStatusSummary.error}} error</span></a>
+          </span>
+          <span
+            ng-show="exp.userStatusSummary.notActivated > 0 || exp.userStatusSummary.activated > 0 || exp.userStatusSummary.error > 0"
+            class="export-users-statuses-icon"
+            tooltip-placement="top"
+            tooltip="User Status Report"
+            tooltip-animation="false"
+            tooltip-append-to-body="true">
+            <i class="icon icon-content-share" ng-click="exp.openUserStatusReportModal(exp.currentServiceId)"></i>
+          </span>
         </div>
-
-        <span ng-show="exp.userStatusSummary.notActivated > 0 || exp.userStatusSummary.activated > 0 || exp.userStatusSummary.error > 0"
-             class="export-users-statuses-icon"
-             tooltip-placement="top"
-             tooltip="User Status Report"
-             tooltip-animation="false"
-             tooltip-append-to-body="true">
-          <i class="icon icon-content-share" ng-click="exp.openUserStatusReportModal(exp.currentServiceId)"></i>
-        </span>
-
 
         <div class="menu">
           <a ui-sref-active="active" ui-sref="{{exp.route}}.list">Resources</a>
-          <a ui-sref-active="active" ui-sref="{{exp.route}}.settings({serviceType:exp.currentServiceType})">Settings</a>
+          <a ng-if="exp.currentServiceId !== 'squared-fusion-mgmt'" ui-sref-active="active"
+             ui-sref="{{exp.route}}.settings({serviceType:exp.currentServiceType})">Settings</a>
         </div>
 
       </div>

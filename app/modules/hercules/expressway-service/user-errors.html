@@ -1,0 +1,34 @@
+<div>
+  <div class="modal-header">
+    <button id="convertModalClose" type="button" class="close" ng-click="$parent.modal.close()">
+      <span class="sr-only">Close</span>
+    </button>
+    <h5 class="modal-title">
+      {{ 'hercules.serviceNames.' + userErrorsCtrl.serviceId | translate }}: Activation Errors
+    </h5>
+  </div>
+  <div class="modal-body">
+    <div ng-show="loading" style="text-align: center; padding: 60px;">
+      <i class="icon icon-spinner icon-2x"></i>
+    </div>
+    <div ng-hide="loading">
+      <p>Showing {{userErrorsCtrl.totalCount > userErrorsCtrl.limit ? userErrorsCtrl.limit : userErrorsCtrl.totalCount}}
+        out of {{userErrorsCtrl.totalCount}} errors.</p>
+
+      <p ng-repeat="status in userErrorsCtrl.userStatuses">
+        <span style="text-decoration: underline;">{{status.displayName}}</span>
+        <br ng-show="status.connector"/>
+        <span ng-show="status.connector">
+          Host: <a href="https://{{status.connector.host_name}}" target="_blank" style="color: #3ca8e8">{{status.connector.host_name}}</a>
+        </span>
+        <br/>
+        <em class="red">{{status.description.defaultMessage}}</em>
+      </p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button id="convertCancelButton" class="btn btn-default pull-right" ng-click="$parent.modal.close()">
+      <span>Close</span>
+    </button>
+  </div>
+</div>

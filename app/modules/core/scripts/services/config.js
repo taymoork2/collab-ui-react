@@ -851,6 +851,7 @@ angular.module('Core')
           'calendar-service',
           'call-service',
           'cluster-details-new',
+          'management-service'
         ],
         'squared-fusion-uc': [
           'devices',
