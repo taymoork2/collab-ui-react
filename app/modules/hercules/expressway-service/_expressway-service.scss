@@ -116,6 +116,9 @@ Special stuff currently used for out own mail input field...
 .hercules-state-not_installed {
   color: $gray-base;
 }
+.hercules-state-offline {
+  color: $color-attention-base;
+}
 .hercules-state-unknown {
   color: $gray-base;
 }
