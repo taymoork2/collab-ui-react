@@ -9,7 +9,7 @@ angular.module('Hercules')
       var baseCertsUrl = Config.getCertsUrl();
 
       var getUrl = function () {
-        return baseHerculesUrl + 'v1';
+        return baseHerculesUrl;
       };
       var getUSSUrl = function () {
         return baseUssUrl + 'uss/api/v1';

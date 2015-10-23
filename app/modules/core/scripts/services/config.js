@@ -168,10 +168,10 @@ angular.module('Core')
         },
 
         herculesUrl: {
-          dev: 'https://hercules-integration.wbx2.com/',
-          cfe: 'https://hercules-e.wbx2.com/',
-          integration: 'https://hercules-integration.wbx2.com/',
-          prod: 'https://hercules-a.wbx2.com/'
+          dev: 'https://hercules-integration.wbx2.com/v1',
+          cfe: 'https://hercules-e.wbx2.com/v1',
+          integration: 'https://hercules-integration.wbx2.com/v1',
+          prod: 'https://hercules-a.wbx2.com/v1'
         },
 
         ussUrl: {
