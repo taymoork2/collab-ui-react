@@ -32,7 +32,7 @@
         vm.initialnumbers = angular.copy(initialnumberoptions);
         intializeFields();
       } else {
-        HuntGroupService.getDetails().then(function (data) {
+        HuntGroupService.getDetails(customerId).then(function (data) {
           vm.title = data.name;
           vm.initialnumber = data.numbers;
           vm.model = {
