@@ -1,12 +1,38 @@
-<div class="text-center">
-  <h2 class="primary-color" translate="huronHuntGroup.methodTitle"></h2>
-
-  <p class="hunt-method-description" translate="huronHuntGroup.methodHint"></p>
-
+<div class="hgmethods large">
   <div>
-    <button ng-click="huntGroupSA.huntMethodSelection('idle')" focus-on>Longest Idle</button>
-    <button ng-click="huntGroupSA.huntMethodSelection('broadcast')">Broadcast</button>
-    <button ng-click="huntGroupSA.huntMethodSelection('circular')">Circular</button>
-    <button ng-click="huntGroupSA.huntMethodSelection('topdown')">Top Down</button>
+    <div class="title" translate="huronHuntGroup.methodTitle"></div>
+    <div class="desc" translate="huronHuntGroup.methodHint"></div>
+    <div class="row method-container">
+      <ul class="select-method large-9 columns medium-centered large-block-grid-4 medium-block-grid-2">
+        <li class="hgmethod" ng-class="{current: huntGroupSA.huntGroupMethod === huntGroupSA.hgMethods.longestIdle}">
+          <a href="#" ng-click="huntGroupSA.setHuntMethod(huntGroupSA.hgMethods.longestIdle)">
+            <i class="icon icon-circle-clock-hands"></i>
+            <div translate="huronHuntGroup.hgMethods.longestIdle.name" ></div>
+            <p translate="huronHuntGroup.hgMethods.longestIdle.desc"></p>
+          </a>
+        </li>
+        <li class="hgmethod" ng-class="{current: huntGroupSA.huntGroupMethod === huntGroupSA.hgMethods.broadcast}">
+          <a href="#" ng-click="huntGroupSA.setHuntMethod(huntGroupSA.hgMethods.broadcast)">
+            <i class="icon icon-circle-arrows-cross"></i>
+            <div translate="huronHuntGroup.hgMethods.broadcast.name"></div>
+            <p translate="huronHuntGroup.hgMethods.broadcast.desc"></p>
+          </a>
+        </li>
+        <li class="hgmethod"  ng-class="{current: huntGroupSA.huntGroupMethod === huntGroupSA.hgMethods.circular}">
+          <a href="#" ng-click="huntGroupSA.setHuntMethod(huntGroupSA.hgMethods.circular)">
+            <i class="icon icon-circle-arrows-circular"></i>
+            <div translate="huronHuntGroup.hgMethods.circular.name"></div>
+            <p translate="huronHuntGroup.hgMethods.circular.desc"></p>
+          </a>
+        </li>
+        <li class="hgmethod" ng-class="{current: huntGroupSA.huntGroupMethod === huntGroupSA.hgMethods.topDown}">
+          <a href="#" ng-click="huntGroupSA.setHuntMethod(huntGroupSA.hgMethods.topDown)">
+            <i class="icon icon-circle-arrow-down"></i>
+            <div translate="huronHuntGroup.hgMethods.topDown.name"></div>
+            <p  translate="huronHuntGroup.hgMethods.topDown.desc"></p>
+          </a>
+        </li>
+      </ul>
+    </div>
   </div>
 </div>

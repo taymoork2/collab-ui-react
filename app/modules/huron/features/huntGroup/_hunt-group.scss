@@ -1,15 +1,18 @@
+$overlay-panel-height: 93px;
 .huntgroup {
   &.overlay-panel {
-    display: flex;
-    flex-direction: column;
     & cs-setup-assistant {
       width: 100%;
     }
-    .panel-content {
-      flex: 1;
-      display: flex;
-      align-items: center;
-    }
+  }
+  .panel-content {
+    flex : 1;
+    height: calc(100vh - #{$navbar-height + $overlay-panel-height});
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
   }
 }
 
@@ -63,7 +66,7 @@
     }
 
     &::-webkit-input-placeholder {
-      text-align:center;
+      text-align: center;
     }
     &::-moz-placeholder {
       text-align: center;
@@ -92,3 +95,4 @@
     }
   }
 }
+

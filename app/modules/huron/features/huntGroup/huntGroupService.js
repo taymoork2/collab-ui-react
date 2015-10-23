@@ -311,7 +311,6 @@
       // }, 3000);
 
       // return deferred.promise;
-
     }
   }
 
