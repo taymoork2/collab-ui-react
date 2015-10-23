@@ -44,8 +44,6 @@ describe('Huron Setup Assistant Ctrl', function () {
   });
 
   it("should enable next button when not null on third page", function () {
-    expect(controller.nextButton(2)).toEqual(false);
-    controller.huntGroupMethod = controller.hgMethods.longestIdle;
     expect(controller.nextButton(2)).toEqual(true);
   });
 
