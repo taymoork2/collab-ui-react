@@ -227,6 +227,24 @@
       });
     };
 
+    vm.alarms2hosts = _.memoize(function () {
+      var alarms = {};
+
+      _.forEach(vm.selectedService().connectors, function (conn) {
+        _.forEach(conn.alarms, function (alarm) {
+          if (!alarms[alarm.id]) {
+            alarms[alarm.id] = {
+              alarm: alarm,
+              hosts: []
+            };
+          }
+          alarms[alarm.id].hosts.push(conn.host);
+        });
+      });
+      var mappedAlarms = _.toArray(alarms);
+      return mappedAlarms;
+    });
+
     //TODO: Don't like this linking to routes...
     vm.route = serviceType2RouteName(vm.serviceType);
 
