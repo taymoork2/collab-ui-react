@@ -143,8 +143,7 @@
     }
 
     vm.openUserStatusReportModal = function (serviceId) {
-      var modalVm = this;
-      $scope.selectedServiceId = serviceId; //TODO: Fix. Currently compatible with "old" concept...
+      $scope.currentServiceId = serviceId; //TODO: Fix. Currently compatible with "old" concept...
       $scope.modal = $modal.open({
         scope: $scope,
         controller: 'ExportUserStatusesController',
@@ -187,6 +186,20 @@
         cellTemplate: 'modules/hercules/expressway-service/cluster-list-status.html',
         width: '65%'
       }]
+    };
+
+    vm.openUserErrorsModal = function () {
+      $scope.modal = $modal.open({
+        scope: $scope,
+        controller: 'UserErrorsController',
+        controllerAs: 'userErrorsCtrl',
+        templateUrl: 'modules/hercules/expressway-service/user-errors.html',
+        resolve: {
+          serviceId: function () {
+            return vm.currentServiceId;
+          }
+        }
+      });
     };
   }
 
@@ -569,6 +582,56 @@
     };
   }
 
+  /* @ngInject */
+  function UserErrorsController(serviceId, USSService, XhrNotificationService, Userservice, ClusterService) {
+    var vm = this;
+    vm.loading = true;
+    vm.limit = 5;
+    vm.serviceId = serviceId;
+
+    USSService.getStatuses(function (error, statuses) {
+      if (error) {
+        XhrNotificationService.notify("Failed to fetch user statuses", error);
+        return;
+      }
+      if (statuses) {
+        vm.totalCount = statuses.paging.count;
+        vm.userStatuses = [];
+        var connectorIds = [];
+
+        _.forEach(statuses.userStatuses, function (userStatus) {
+          if (userStatus.connectorId && !_.contains(connectorIds, userStatus.connectorId)) {
+            connectorIds.push(userStatus.connectorId);
+          }
+          Userservice.getUser(userStatus.userId, function (data, status) {
+            if (data.success) {
+              userStatus.displayName = data.displayName || data.userName;
+              vm.userStatuses.push(userStatus);
+            }
+          });
+          return status;
+        });
+
+        _.forEach(connectorIds, function (connectorId) {
+          ClusterService.getConnector(connectorId).then(function (connector) {
+            if (connector) {
+              _.forEach(statuses.userStatuses, function (userStatus) {
+                if (userStatus.connectorId === connectorId) {
+                  userStatus.connector = connector;
+                }
+              });
+            }
+          });
+        });
+
+      } else {
+        vm.totalCount = 0;
+        vm.userStatuses = [];
+      }
+      vm.loading = false;
+    }, vm.serviceId, 'error', vm.limit);
+  }
+
   angular
     .module('Hercules')
     .controller('ExpresswayServiceController', ExpresswayServiceController)
@@ -577,5 +640,6 @@
     .controller('ExpresswayClusterSettingsController', ExpresswayClusterSettingsController)
     .controller('DisableConfirmController', DisableConfirmController)
     .controller('AlarmController', AlarmController)
-    .controller('HostDetailsController', HostDetailsController);
+    .controller('HostDetailsController', HostDetailsController)
+    .controller('UserErrorsController', UserErrorsController);
 }());

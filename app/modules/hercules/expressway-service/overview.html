@@ -15,7 +15,9 @@
           <i class="icon icon-circle-user"/>
           <span>{{exp.userStatusSummary.activated}} activated</span>
           <span ng-if="exp.userStatusSummary.notActivated > 0">| {{exp.userStatusSummary.notActivated}} pending</span>
-          <span ng-if="exp.userStatusSummary.error > 0">| {{exp.userStatusSummary.error}} error</span>
+          <span ng-if="exp.userStatusSummary.error > 0">|
+            <a href ng-click="exp.openUserErrorsModal()"><span class="red">{{exp.userStatusSummary.error}} error</span></a>
+          </span>
         </div>
 
         <span ng-show="exp.userStatusSummary.notActivated > 0 || exp.userStatusSummary.activated > 0 || exp.userStatusSummary.error > 0"
