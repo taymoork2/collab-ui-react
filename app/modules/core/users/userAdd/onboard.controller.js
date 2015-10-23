@@ -628,11 +628,11 @@ angular.module('Core')
             var license = selMsgService.license || selMsgService.licenses[0];
             if ('licenseId' in license) licenseList.push(new LicenseFeature(license.licenseId, true));
           }
-          
+
           // Conferencing: depends on model (standard vs. CMR)
           var cidList = getConfIdList();
-          for ( var i  = 0; i < cidList.length; i++ ) {
-            licenseList.push( new LicenseFeature(cidList[i], true) );
+          for (var i = 0; i < cidList.length; i++) {
+            licenseList.push(new LicenseFeature(cidList[i], true));
           }
 
           // Communication: straightforward license, for now
@@ -1752,7 +1752,7 @@ angular.module('Core')
           return csvPromise.then(function () {
             return $q(function (resolve, reject) {
               if (userArray.length > 0) {
-                Userservice.onboardLicenseUsers(userArray, entitleList, licenseArray, callback.bind({
+                Userservice.onboardUsers(userArray, entitleList, licenseArray, callback.bind({
                   startIndex: startIndex - userArray.length + 1,
                   length: userArray.length,
                   resolve: resolve

@@ -3,6 +3,14 @@
 describe('Controller: CustomerOverviewCtrl', function () {
   var controller, $scope, $stateParams, $state, $window, $q, currentCustomer, identityCustomer, Userservice, Authinfo, BrandService;
 
+  function LicenseFeature(name, state) {
+    this['id'] = name.toString();
+    this['properties'] = null;
+    //this['state'] = state ? 'ADD' : 'REMOVE';
+  }
+
+  var licenseString = 'MC_cfb817d0-ddfe-403d-a976-ada57d32a3d7_100_t30citest.webex.com';
+
   beforeEach(module('Core'));
 
   beforeEach(inject(function ($rootScope, $controller, _$stateParams_, _$state_, _$window_, _$q_) {
@@ -11,7 +19,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
       customerEmail: 'testuser@gmail.com',
       customerOrgId: '123-456',
       licenseList: [{
-        licenseId: "MC_cfb817d0-ddfe-403d-a976-ada57d32a3d7_100_t30citest.webex.com",
+        licenseId: licenseString,
         offerName: "MC",
         licenseType: "CONFERENCING",
         siteUrl: "t30citest.webex.com"
@@ -101,8 +109,10 @@ describe('Controller: CustomerOverviewCtrl', function () {
 
     it('should call Userservice.updateUsers with correct license', function () {
       expect(Userservice.updateUsers).toHaveBeenCalledWith([{
-        address: "xyz123@gmail.com"
-      }], ["MC_cfb817d0-ddfe-403d-a976-ada57d32a3d7_100_t30citest.webex.com"], null, 'updateUserLicense', jasmine.any(Function));
+          address: "xyz123@gmail.com"
+        }], jasmine.any(Array),
+        //[new LicenseFeature(licenseString, true)],
+        null, 'updateUserLicense', jasmine.any(Function));
     });
 
     it('should call $window.open', function () {
