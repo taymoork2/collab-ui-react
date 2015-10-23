@@ -713,7 +713,7 @@
     "companyVoicemail": "Company Voicemail",
     "companyVoicemailDescription": "Select a number that users can call to check their voicemail.",
     "to": "to",
-    "addMoreExtensionRanges": "Add More Extension Ranges",
+    "addMoreExtensionRanges": "Add more extension ranges",
     "globalMOH": "Global Media On Hold (MOH)",
     "mohDescription": "Provide callers with music, announcements, or video when they are placed on hold. You can change the MOH settings at the group or user level.",
     "ciscoDefault": "Cisco Default",
