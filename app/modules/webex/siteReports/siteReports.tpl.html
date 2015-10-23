@@ -1,32 +1,26 @@
 
-  <cs-container>
-   <!--
-    <ul id="siteSettingsBreadCrumbs" name="siteSettingsBreadCrumbs" class="breadcrumbs">
-      <li><a id="siteListCrumb" ui-sref="site-list" translate="siteList.conferencing"></a></li>
-      <li class="current">{{siteUrl + ' '  + ('webexSiteReports.title' | translate)}}</li>
-    </ul>
-   <--
+  <cs-card-layout ng-if="webexReportsObject.viewReady && showWebexReports">
+    <cs-card class="cs-card medium" ng-repeat="sec in webexReportsObject.reports.sections">
+      <article>
+        <header>
+          <div class="h3">{{sec.section_name_translated}}</div>
+        </header>
+        <section id="siteSettingsCardSection">
+          <ul class="no-bullet">
+            <li ng-repeat="sref in sec.uisrefs">
+              <a id="{{sref.reportPageId}}"
+                name="{{sref.reportPageId}}"
+                ui-sref="{{sref.uisrefString}}">
+                {{sref.reportPageId_translated}}
+              </a>
+            </li>
+          </ul>
+        </section>
+      </article>
+    </cs-card>
+  </cs-card-layout>
 
-    <cs-card-layout id="configureCards" ng-if="reportObject.viewReady">
-      <cs-card class="cs-card medium" ng-repeat="sec in reportObject.reports.sections">
-        <article>
-          <header>
-           <h3>{{sec.section_name_translated}}</h3>
-          </header> 
-          <section id="siteSettingsCardSection">
-            <ul class="no-bullet">
-             <!-- Top level section -->
-              <li ng-repeat="sref in sec.uisrefs">
-            
-                 <a id="{{sref.reportPageId}}"
-                    name="{{sref.reportPageId}}"
-                    ui-sref="{{sref.uisrefString}}">
-                    {{sref.reportPageId_translated}}
-                 </a>
-                 subsections
-             {{sec.subsections}}
-          </li>
-          <!-- sub sections  -->
+          <!--
           <li ng-repeat="s in sec.subsections">
                   <h4>{{s.section_name_translated}}</h4>
                   <ul class="no-bullet">
@@ -40,18 +34,6 @@
 
                   </ul>
           </li>
-
-          
-          </ul>
-       </section>
-
-      </article>
-    
-    </cs-card>
-   </cs-card-layout>
-  </cs-container>
-<!-- </div> -->
-</div>
-
+        -->
 
 
