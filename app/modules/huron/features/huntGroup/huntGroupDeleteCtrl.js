@@ -8,6 +8,7 @@
     .module('uc.hurondetails')
     .controller('HuntGroupDeleteCtrl', HuntGroupDeleteCtrl);
 
+  /* @ngInject */
   function HuntGroupDeleteCtrl($rootScope, $scope, $stateParams, $timeout, $translate, Authinfo, HuntGroupService, Notification, Log) {
     var vm = this;
     vm.deleteHuntGroupId = $stateParams.deleteHuntGroupId;
@@ -30,7 +31,7 @@
 
         $timeout(function () {
           $rootScope.$broadcast('HUNT_GROUP_DELETED');
-          Notification.success('huntGroupDetails.deleteHuntGroupSuccessText', {
+          Notification.success('huronHuntGroup.deleteHuntGroupSuccessText', {
             huntGroupName: vm.deleteHuntGroupName
           });
         }, 250);
@@ -49,7 +50,7 @@
             status: response.status
           });
           if (response.data && angular.isString(response.data)) {
-            error += ' ' + $translate.instant('huntGroupDetails.messageError', {
+            error += ' ' + $translate.instant('huronHuntGroup.messageError', {
               message: response.data
             });
           }

@@ -840,9 +840,10 @@ angular.module('Core')
           'huronsettings',
           'huronfeatures',
           'huronnewfeature',
-          'cdrsupport',
           'cdr-overview',
-          'huronHuntGroup'
+          'huronHuntGroup',
+          'huntgroupedit',
+          'cdrsupport'
         ],
         'squared-fusion-mgmt': [
           'fusion',
@@ -850,6 +851,7 @@ angular.module('Core')
           'calendar-service',
           'call-service',
           'cluster-details-new',
+          'management-service'
         ],
         'squared-fusion-uc': [
           'devices',

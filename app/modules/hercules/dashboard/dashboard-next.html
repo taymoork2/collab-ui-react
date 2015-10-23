@@ -8,18 +8,18 @@
       <div ng-hide="shouldShowWelcomeScreen()" class="small-5 columns page-option-buttons" style="white-space: nowrap">
         <div  style="border-right: solid 1px #dddddd; padding-right: 15px; margin-right: 10px; display: inline-block;">
           <button
-            class="btn btn-info"
+            class="button info"
             ng-click="showServiceActivationDialog()">
             Add/Remove Services
           </button>
         </div>
         <button
-          class="btn btn-primary"
+          class="button secondary"
           ng-click="showInfoPanel = !showInfoPanel">
           <i class="fa fa-bell" />
         </button>
         <button
-          class="btn btn-primary"
+          class="button secondary"
           ng-click="showNotificationConfigDialog()">
           <i class="icon icon-settings" />
         </button>
@@ -46,7 +46,7 @@
         <hercules-dashboard-header> </hercules-dashboard-header>
 
         <div class="row" ng-show="clusterLength() != 0">
-          <h3>Cisco VCS Clusters: {{clusterLength()}}</h3>
+          <h3>Cisco Expressway Clusters: {{clusterLength()}}</h3>
 
           <div class="grid" style="margin-right: -30px; margin-left: -10px;">
 
@@ -82,7 +82,7 @@
         </div>
 
         <div ng-show="clusterLength() == 0">
-          <h3>Cisco VCS Clusters</h3>
+          <h3>Cisco Expressway Clusters</h3>
           <h5 style="color: #ccc">
             No clusters connected to Spark
           </h5>

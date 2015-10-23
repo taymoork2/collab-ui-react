@@ -8,7 +8,7 @@
   /* jshint validthis: true */
 
   /* @ngInject */
-  function HuronFeaturesCtrl($scope, $state, $filter, $timeout, $modal, Authinfo, HuntGroupService, Log, Notification) {
+  function HuronFeaturesCtrl($scope, $state, $filter, $timeout, $modal, Authinfo, HuntGroupService, TelephoneNumberService, Log, Notification) {
 
     var vm = this;
     vm.filters = [];
@@ -117,16 +117,17 @@
     var getListOfHuntGroups = function () {
 
       var customerId = Authinfo.getOrgId();
-      HuntGroupService.getListOfHuntGroups(customerId).then(function (response) {
-        var huntGroupData = response.data;
+      HuntGroupService.getListOfHuntGroups(customerId).then(function (huntGroupData) {
         if (huntGroupData.items.length > 0) {
           vm.pageState = 'showFeatures';
           angular.forEach(huntGroupData.items, function (huntGroup) {
             commonDataFormatForCards.cardName = huntGroup.name;
-            commonDataFormatForCards.numbers = huntGroup.numbers;
+            commonDataFormatForCards.numbers = huntGroup.numbers.map(function (number) {
+              return TelephoneNumberService.getDIDLabel(number);
+            });
             commonDataFormatForCards.memberCount = huntGroup.memberCount;
             commonDataFormatForCards.huntGroupId = huntGroup.uuid;
-            commonDataFormatForCards.featureName = 'huronFeatureDetails.hg';
+            commonDataFormatForCards.featureName = 'huronHuntGroup.hg';
             commonDataFormatForCards.filterValue = 'HG';
             listOfHuntGroups.push(commonDataFormatForCards);
             commonDataFormatForCards = {};
@@ -138,7 +139,7 @@
         Log.warn('Could fetch huntGroups for customer with Id:', customerId);
         vm.pageState = 'showFeatures';
         //Notify the user that retrieval of hunt groups list has been failed
-        Notification.error('huntGroupDetails.failedToLoadHuntGroups');
+        Notification.errorResponse(response, 'huntGroupDetails.failedToLoadHuntGroups');
       });
     };
 
@@ -163,14 +164,16 @@
     };
 
     vm.editHuronFeature = function (feature) {
-      //if (feature.filterValue === 'AA') {
+      // if (feature.filterValue === 'AA') {
       //  //Call  AutoAttendant Edit Controller
-      //} else if (feature.filterValue === 'HG') {
-      //  //Call Edit HuntGroup Controller
-      //  //HuntGroup Edit Page will be done in US213495
-      //} else if (feature.filterValue === 'CP') {
+      // } else
+      if (feature.filterValue === 'HG') {
+        HuntGroupService.editFeature(feature);
+        $state.go('huntgroupedit');
+      }
+      // else if (feature.filterValue === 'CP') {
       //  //Call CallPark Edit Controller
-      //}
+      // }
     };
 
     vm.deleteHuronFeature = function (feature) {

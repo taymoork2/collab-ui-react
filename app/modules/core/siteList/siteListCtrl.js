@@ -128,14 +128,15 @@ angular.module('Core')
 
       vm.gridOptions.columnDefs.push({
         field: 'license.siteUrl',
-        displayName: $translate.instant('siteList.siteSettings'),
+        displayName: $translate.instant('siteList.launchSite'),
         cellTemplate: siteUrlTemplate,
         sortable: false
       });
 
       vm.gridOptions.columnDefs.push({
         field: 'license.siteReports',
-        displayName: $translate.instant('siteList.siteReports'),
+        // displayName: $translate.instant('siteList.siteReports'),
+        displayName: "Reports",
         cellTemplate: siteReportsTemplate,
         sortable: false
       });

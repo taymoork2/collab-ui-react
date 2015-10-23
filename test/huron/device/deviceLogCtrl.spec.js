@@ -1,11 +1,13 @@
 'use strict';
 
 describe('Controller: DeviceLogCtrl', function () {
-  var controller, $scope, $q, $stateParams, $interval, $intervalSpy, Config, HttpUtils, currentDevice, DeviceService, DeviceLogService;
+  var controller, $scope, $q, $stateParams, $interval, $intervalSpy, Config, HttpUtils, Notification, currentDevice, DeviceService, DeviceLogService;
 
   var stateParams = getJSONFixture('huron/json/device/devicesCtrlStateParams.json');
 
   var success = getJSONFixture('huron/json/device/logs/success.json');
+  var success2 = getJSONFixture('huron/json/device/logs/success2.json');
+  var successDup = getJSONFixture('huron/json/device/logs/successDup.json');
   var successNoEvents = getJSONFixture('huron/json/device/logs/success_No_Events.json');
   var failureCmsToEndpoint = getJSONFixture('huron/json/device/logs/failure_CMS_to_Endpoint.json');
   var failureEndpointCommand = getJSONFixture('huron/json/device/logs/failure_Endpoint_Command.json');
@@ -14,7 +16,7 @@ describe('Controller: DeviceLogCtrl', function () {
 
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _$interval_, _Config_, _HttpUtils_, _DeviceService_, _DeviceLogService_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$q_, _$stateParams_, _$interval_, _Config_, _HttpUtils_, _Notification_, _DeviceService_, _DeviceLogService_) {
     $scope = _$rootScope_.$new();
 
     $q = _$q_;
@@ -22,6 +24,7 @@ describe('Controller: DeviceLogCtrl', function () {
     $interval = _$interval_;
     Config = _Config_;
     HttpUtils = _HttpUtils_;
+    Notification = _Notification_;
     DeviceService = _DeviceService_;
     DeviceLogService = _DeviceLogService_;
 
@@ -30,6 +33,8 @@ describe('Controller: DeviceLogCtrl', function () {
 
     spyOn(DeviceLogService, 'getLogInformation').and.returnValue($q.when(success));
     spyOn(DeviceLogService, 'retrieveLog').and.returnValue($q.when());
+    spyOn(Notification, 'error');
+    spyOn(Notification, 'errorResponse');
     spyOn(Date, 'now').and.returnValue(1);
 
     spyOn($interval, 'cancel').and.callThrough();
@@ -57,16 +62,44 @@ describe('Controller: DeviceLogCtrl', function () {
     expect(failureZeroLogs).toBeDefined();
   });
 
+  it('should start the log retrieval process', function () {
+    controller.retrieveLog();
+    $scope.$apply();
+    expect(controller.active).toEqual(true);
+  });
+
+  it('should error on starting the log retrieval', function () {
+    DeviceLogService.retrieveLog.and.returnValue($q.reject(failurePostNoBody));
+    controller.retrieveLog();
+    $scope.$apply();
+
+    expect(Notification.errorResponse).toHaveBeenCalled();
+  });
+
   it('should load logList', function () {
     controller.refreshLogList();
-
     $scope.$apply();
+
     expect(controller.logList.length).toBeGreaterThan(0);
     expect(controller.logList[0].name).toEqual(success[0].events[3].date);
     expect(controller.logList[0].uri).toEqual(success[0].results);
+
+    DeviceLogService.getLogInformation.and.returnValue($q.when(success2));
+    controller.refreshLogList();
+    $scope.$apply();
+
+    expect(controller.logList.length).toBeGreaterThan(1);
   });
 
-  it('should keep logList the same', function () {
+  it('should handle duplicate entries, loglist should not change', function () {
+    DeviceLogService.getLogInformation.and.returnValue($q.when(successDup));
+    controller.refreshLogList();
+    $scope.$apply();
+
+    expect(controller.logList.length).toEqual(1);
+  });
+
+  it('should call refresh mulitple times, loglist should not change', function () {
     var currentLength = 0;
 
     controller.refreshLogList();
@@ -85,6 +118,7 @@ describe('Controller: DeviceLogCtrl', function () {
     $scope.$apply();
 
     Date.now.and.returnValue(Date.now() + controller.timeout);
+    expect(controller.isPolling()).toEqual(true);
 
     $intervalSpy.flush(controller.timeout + 1);
     expect($intervalSpy.calls.count()).toEqual(1);
@@ -117,6 +151,28 @@ describe('Controller: DeviceLogCtrl', function () {
 
     $scope.$broadcast('$destroy');
     expect($intervalSpy.cancel.calls.count()).toEqual(1);
+  });
+
+  it('should error on refreshing log list due to network error', function () {
+    DeviceLogService.getLogInformation.and.returnValue($q.reject(failureZeroLogs));
+    controller.refreshLogList();
+    $scope.$apply();
+
+    expect(Notification.errorResponse).toHaveBeenCalled();
+  });
+
+  it('should error on refreshing log list, due to invalid log array', function () {
+    DeviceLogService.getLogInformation.and.returnValue($q.when([]));
+    controller.refreshLogList();
+    $scope.$apply();
+
+    expect(Notification.error).toHaveBeenCalled();
+
+    DeviceLogService.getLogInformation.and.returnValue($q.when({}));
+    controller.refreshLogList();
+    $scope.$apply();
+
+    expect(Notification.error).toHaveBeenCalled();
   });
 
 });

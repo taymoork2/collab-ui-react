@@ -1,7 +1,7 @@
 'use strict';
 angular
   .module('Hercules')
-  .controller('CloudExtensionsCtrl', ['$log', '$rootScope', 'UserListService', '$scope', '$stateParams', '$translate', 'Authinfo', 'USSService', 'ServiceDescriptor', '$timeout',
+  .controller('HybridServicesCtrl', ['$log', '$rootScope', 'UserListService', '$scope', '$stateParams', '$translate', 'Authinfo', 'USSService', 'ServiceDescriptor', '$timeout',
     function ($log, $rootScope, UserListService, $scope, $stateParams, $translate, Authinfo, USSService, ServiceDescriptor, $timeout) {
       if (!Authinfo.isFusion()) {
         return;
@@ -91,8 +91,8 @@ angular
       return {
         restrict: 'E',
         scope: false,
-        controller: 'CloudExtensionsCtrl',
-        templateUrl: 'modules/hercules/cloudExtensions/cloudExtensions.tpl.html'
+        controller: 'HybridServicesCtrl',
+        templateUrl: 'modules/hercules/userPreview/hybridServices.tpl.html'
       };
     }
   ]);

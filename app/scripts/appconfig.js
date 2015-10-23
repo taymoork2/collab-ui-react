@@ -426,9 +426,9 @@ angular
             service: 'MESSAGING'
           }
         })
-        .state('user-overview.cloudExtension-squared-fusion-cal', {
-          templateUrl: 'modules/hercules/cloudExtensions/cloudExtensionPreview.tpl.html',
-          controller: 'CloudExtensionPreviewCtrl',
+        .state('user-overview.hybrid-services-squared-fusion-cal', {
+          templateUrl: 'modules/hercules/userPreview/hybridServicesPreview.tpl.html',
+          controller: 'HybridServicesPreviewCtrl',
           data: {
             displayName: 'Calendar Service'
           },
@@ -436,8 +436,8 @@ angular
             extensionId: {}
           }
         })
-        .state('user-overview.cloudExtension-squared-fusion-uc', {
-          templateUrl: 'modules/hercules/cloudExtensions/callServicePreview.tpl.html',
+        .state('user-overview.hybrid-services-squared-fusion-uc', {
+          templateUrl: 'modules/hercules/userPreview/callServicePreview.tpl.html',
           controller: 'CallServicePreviewCtrl',
           data: {
             displayName: 'Call Service'
@@ -1232,21 +1232,31 @@ angular
               controllerAs: 'pstnSetup'
             },
             '@pstnSetup': {
-              templateUrl: 'modules/huron/pstnSetup/pstnProviders.tpl.html'
+              templateUrl: 'modules/huron/pstnSetup/pstnProviders/pstnProviders.tpl.html',
+              controller: 'PstnProvidersCtrl',
+              controllerAs: 'pstnProviders'
             }
           }
         })
         .state('pstnSetup.orderNumbers', {
-          templateUrl: 'modules/huron/pstnSetup/pstnNumbers.tpl.html'
+          templateUrl: 'modules/huron/pstnSetup/pstnNumbers/pstnNumbers.tpl.html',
+          controller: 'PstnNumbersCtrl',
+          controllerAs: 'pstnNumbers'
         })
         .state('pstnSetup.swivelNumbers', {
-          templateUrl: 'modules/huron/pstnSetup/pstnSwivelNumbers.tpl.html'
+          templateUrl: 'modules/huron/pstnSetup/pstnSwivelNumbers/pstnSwivelNumbers.tpl.html',
+          controller: 'PstnSwivelNumbersCtrl',
+          controllerAs: 'pstnSwivelNumbers'
         })
         .state('pstnSetup.review', {
-          templateUrl: 'modules/huron/pstnSetup/pstnReview.tpl.html'
+          templateUrl: 'modules/huron/pstnSetup/pstnReview/pstnReview.tpl.html',
+          controller: 'PstnReviewCtrl',
+          controllerAs: 'pstnReview'
         })
         .state('pstnSetup.nextSteps', {
-          templateUrl: 'modules/huron/pstnSetup/pstnNextSteps.tpl.html'
+          templateUrl: 'modules/huron/pstnSetup/pstnNextSteps/pstnNextSteps.tpl.html',
+          controller: 'PstnNextStepsCtrl',
+          controllerAs: 'pstnNextSteps'
         })
         .state('hurondetailsBase', {
           abstract: true,
@@ -1315,6 +1325,13 @@ angular
           templateUrl: 'modules/huron/features/huntGroup/huntGroupSetupAssistant.tpl.html',
           controller: 'HuntGroupSetupAssistantCtrl',
           controllerAs: 'huntGroupSA'
+        })
+        .state('huntgroupedit', {
+          url: '/features/hg/edit',
+          parent: 'main',
+          templateUrl: 'modules/huron/features/edit/huntgroupedit.tpl.html',
+          controller: 'HuntGroupEditCtrl',
+          controllerAs: 'hge'
         });
     }
   ]);
@@ -1407,6 +1424,37 @@ angular
             }
           }
         })
+        .state('management-service', {
+          templateUrl: 'modules/hercules/expressway-service/overview.html',
+          controller: 'ExpresswayServiceController',
+          controllerAs: 'exp',
+          data: {
+            serviceType: "c_mgmt"
+          },
+          parent: 'main',
+          abstract: true
+        })
+        .state('management-service.list', {
+          url: '/services/expressway-management',
+          views: {
+            'fullPane': {
+              templateUrl: 'modules/hercules/expressway-service/cluster-list.html'
+            }
+          }
+        })
+        .state('management-service.settings', {
+          url: '/services/expressway-management/settings',
+          views: {
+            'fullPane': {
+              controllerAs: 'expresswayServiceSettings',
+              controller: 'ExpresswayServiceSettingsController',
+              templateUrl: 'modules/hercules/expressway-service/management-service-settings.html'
+            }
+          },
+          params: {
+            serviceType: "c_mgmt"
+          }
+        })
         .state('cluster-details-new', {
           parent: 'sidepanel',
           views: {
@@ -1429,8 +1477,14 @@ angular
         })
         .state('cluster-details-new.cluster-settings', {
           templateUrl: 'modules/hercules/expressway-service/cluster-settings.html',
+          controller: 'ExpresswayClusterSettingsController',
+          controllerAs: 'expresswayClusterSettingsCtrl',
           data: {
             displayName: 'Edit'
+          },
+          params: {
+            clusterId: null,
+            serviceType: null
           }
         })
         .state('cluster-details-new.alarm-details', {
@@ -1453,8 +1507,9 @@ angular
             displayName: 'Host'
           },
           params: {
-            connectorId: null,
-            clusterId: null
+            host: null,
+            clusterId: null,
+            serviceType: null
           }
         })
         .state('cluster-details', {
