@@ -183,8 +183,8 @@
     "supportTab": "Support",
     "logsTab": "Logs",
     "logsTabDesc": "View user logs",
-    "cdrTab": "Device Logs",
-    "cdrLogsTabDesc": "View device logs",
+    "cdrTab": "CDR Call Flow",
+    "cdrLogsTabDesc": "View CDR Call Flow",
     "billingTab": "Order Provisioning",
     "billingTabDesc": "Engineering support/operations",
     "accountTab": "Account",
@@ -472,7 +472,7 @@
     "status": "Status"
   },
   "cdrLogs": {
-    "title": "Device Support",
+    "title": "CDR Call Flow",
     "searchForm": "Search Form",
     "search": "Search",
     "reset": "Reset",
@@ -2335,7 +2335,7 @@
   },
 
   "huronHuntGroup": {
-    "title": "Create Hunt Group",
+    "createTitle": "Create Hunt Group",
     "namePlaceholder": "Name the Hunt Group",
     "nameHint": "This hunt group name will also be the name callers see on their device (i.e. alerting name)",
     "numberPlaceholder": "Select Hunt Group Numbers",

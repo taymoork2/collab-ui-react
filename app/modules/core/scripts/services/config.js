@@ -14,38 +14,42 @@ angular.module('Core')
 
         adminClientUrl: {
           dev: 'http://127.0.0.1:8000',
+          cfe: 'https://cfe-admin.ciscospark.com',
           integration: 'https://int-admin.ciscospark.com/',
-          prod: 'https://admin.ciscospark.com/',
-          cfe: 'https://cfe-admin.ciscospark.com'
+          prod: 'https://admin.ciscospark.com/'
         },
 
         adminServiceUrl: {
           dev: 'http://localhost:8080/atlas-server/admin/api/v1/',
+          cfe: 'https://atlas-e.wbx2.com/admin/api/v1/',
           integration: 'https://atlas-integration.wbx2.com/admin/api/v1/',
-          prod: 'https://atlas-a.wbx2.com/admin/api/v1/',
-          cfe: 'https://atlas-e.wbx2.com/admin/api/v1/'
+          prod: 'https://atlas-a.wbx2.com/admin/api/v1/'
         },
 
         locusServiceUrl: {
           dev: 'http://localhost:8080/locus-mount',
+          cfe: 'https://locus-e.wbx2.com',
           integration: 'https://admin-portal-test-public.wbx2.com/locus',
           prod: 'https://locus-a.wbx2.com'
         },
 
         enrollmentServiceUrl: {
           dev: 'http://localhost:8080/locus-mount/locus/api/v1',
+          cfe: 'https://locus-e.wbx2.com/locus/api/v1',
           integration: 'https://locus-integration.wbx2.com/locus/api/v1',
           prod: 'https://locus-a.wbx2.com/locus/api/v1'
         },
 
         meetingServiceUrl: {
           dev: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
+          cfe: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
           integration: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
           prod: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
         },
 
         metricsServiceUrl: {
           dev: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
+          cfe: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
           integration: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
           prod: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1'
 
@@ -53,29 +57,30 @@ angular.module('Core')
 
         alarmServiceUrl: {
           dev: 'http://multimediafusion-cf-fault.mmf-cf.huron.uno/mediafusion/v1/faultservice',
+          cfe: 'http://multimediafusion-cf-fault.mmf-cf.huron.uno/mediafusion/v1/faultservice',
           integration: 'http://multimediafusion-cf-fault.mmf-cf.huron.uno/mediafusion/v1/faultservice',
           prod: 'http://multimediafusion-cf-fault.mmf-cf.huron.uno/mediafusion/v1/faultservice'
-
         },
 
         thresholdServiceUrl: {
           dev: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
+          cfe: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
           integration: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1',
           prod: 'http://threshold-krishna.mmf-cf.huron.uno/threshold/api/v1'
-
         },
 
-        MeetinginfoserviceUrl: {
+        meetingInfoServiceUrl: {
           dev: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
+          cfe: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
           integration: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
           prod: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
         },
 
         csdmServiceUrl: {
           dev: 'http://localhost:8080/csdm-server/csdm/api/v1',
+          cfe: 'https://csdm-e.wbx2.com/csdm/api/v1',
           integration: 'https://csdm-integration.wbx2.com/csdm/api/v1',
-          prod: 'https://csdm-a.wbx2.com/csdm/api/v1',
-          cfe: 'https://csdm-e.wbx2.com/csdm/api/v1'
+          prod: 'https://csdm-a.wbx2.com/csdm/api/v1'
         },
 
         oauthClientRegistration: {
@@ -108,6 +113,7 @@ angular.module('Core')
 
         utilizationServiceUrl: {
           dev: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
+          cfe: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
           integration: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
           prod: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
         },
@@ -125,13 +131,17 @@ angular.module('Core')
         ssoTestUrl: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
 
         scimUrl: {
-          spark: 'https://identity.webex.com/identity/scim/%s/v1/Users',
-          cfe: 'https://identitybts.webex.com/identity/scim/%s/v1/Users'
+          dev: 'https://identity.webex.com/identity/scim/%s/v1/Users',
+          cfe: 'https://identitybts.webex.com/identity/scim/%s/v1/Users',
+          integration: 'https://identity.webex.com/identity/scim/%s/v1/Users',
+          prod: 'https://identity.webex.com/identity/scim/%s/v1/Users'
         },
 
         scomUrl: {
-          spark: 'https://identity.webex.com/organization/scim/v1/Orgs',
-          cfe: 'https://identitybts.webex.com/organization/scim/v1/Orgs'
+          dev: 'https://identity.webex.com/organization/scim/v1/Orgs',
+          cfe: 'https://identitybts.webex.com/organization/scim/v1/Orgs',
+          integration: 'https://identity.webex.com/organization/scim/v1/Orgs',
+          prod: 'https://identity.webex.com/organization/scim/v1/Orgs'
         },
 
         statusPageUrl: 'http://status.ciscospark.com/',
@@ -152,23 +162,28 @@ angular.module('Core')
 
         healthCheckUrl: {
           dev: 'https://ciscospark.statuspage.io/index.json',
+          cfe: 'https://ciscospark.statuspage.io/index.json',
+          integration: 'https://ciscospark.statuspage.io/index.json',
           prod: 'https://ciscospark.statuspage.io/index.json'
         },
 
         herculesUrl: {
-          dev: 'https://hercules-integration.wbx2.com/',
-          integration: 'https://hercules-integration.wbx2.com/',
-          prod: 'https://hercules-a.wbx2.com/'
+          dev: 'https://hercules-integration.wbx2.com/v1',
+          cfe: 'https://hercules-e.wbx2.com/v1',
+          integration: 'https://hercules-integration.wbx2.com/v1',
+          prod: 'https://hercules-a.wbx2.com/v1'
         },
 
         ussUrl: {
           dev: 'https://uss-integration.wbx2.com/',
+          cfe: 'https://uss-e.wbx2.com/',
           integration: 'https://uss-integration.wbx2.com/',
           prod: 'https://uss-a.wbx2.com/'
         },
 
         certsUrl: {
           dev: 'https://certs-integration.wbx2.com/',
+          cfe: 'https://certs-e.wbx2.com/',
           integration: 'https://certs-integration.wbx2.com/',
           prod: 'https://certs-a.wbx2.com/'
         },
@@ -180,8 +195,9 @@ angular.module('Core')
 
         sunlightConfigServiceUrl: {
           dev: 'https://config.integration-tx1.thunderhead.io/config/v1',
+          cfe: 'https://config.integration-tx1.thunderhead.io/config/v1',
           integration: 'https://config.integration-tx1.thunderhead.io/config/v1',
-          prod: 'https://config.integration-tx1.thunderhead.io/config/v1', //This will change to prod later in future
+          prod: 'https://config.integration-tx1.thunderhead.io/config/v1' //This will change to prod later in future
         },
 
         scimSchemas: [
@@ -205,10 +221,10 @@ angular.module('Core')
           keepOnNavigate: false
         },
 
-        tokenTimers: { //timers: 3000000(50 mins), 39600000(11 hours), 900000(15 mins)
-          timeoutTimer: 3000000,
-          refreshTimer: 39600000,
-          refreshDelay: 900000
+        tokenTimers: {
+          timeoutTimer: 3000000, // 50 mins
+          refreshTimer: 39600000, // 11 hours
+          refreshDelay: 900000 // 15 mins
         },
 
         tabs: [{
@@ -484,31 +500,36 @@ angular.module('Core')
 
         getScimUrl: function (orgId) {
           var params = [orgId];
-          if (this.isCfe()) {
-            return Utils.sprintf(this.scimUrl.cfe, params);
-          } else {
-            return Utils.sprintf(this.scimUrl.spark, params);
-          }
+          var scimUrl = {
+            'dev': Utils.sprintf(this.scimUrl.dev, params),
+            'cfe': Utils.sprintf(this.scimUrl.cfe, params),
+            'integration': Utils.sprintf(this.scimUrl.integration, params),
+            'prod': Utils.sprintf(this.scimUrl.prod, params)
+          };
+
+          return scimUrl[this.getEnv()];
         },
 
         getScomUrl: function () {
-          if (this.isCfe()) {
-            return this.scomUrl.cfe;
-          } else {
-            return this.scomUrl.spark;
-          }
+          var scomUrl = {
+            'dev': this.scomUrl.dev,
+            'cfe': this.scomUrl.cfe,
+            'integration': this.scomUrl.integration,
+            'prod': this.scomUrl.prod
+          };
+
+          return scomUrl[this.getEnv()];
         },
 
         getAdminServiceUrl: function () {
-          if (this.isDev()) {
-            return this.adminServiceUrl.integration;
-          } else if (this.isCfe()) {
-            return this.adminServiceUrl.cfe;
-          } else if (this.isIntegration()) {
-            return this.adminServiceUrl.integration;
-          } else {
-            return this.adminServiceUrl.prod;
-          }
+          var adminServiceUrl = {
+            'dev': this.adminServiceUrl.integration,
+            'cfe': this.adminServiceUrl.cfe,
+            'integration': this.adminServiceUrl.integration,
+            'prod': this.adminServiceUrl.prod
+          };
+
+          return adminServiceUrl[this.getEnv()];
         },
 
         getProdAdminServiceUrl: function () {
@@ -516,15 +537,14 @@ angular.module('Core')
         },
 
         getCsdmServiceUrl: function () {
-          if (this.isDev()) {
-            return this.csdmServiceUrl.integration;
-          } else if (this.isCfe()) {
-            return this.csdmServiceUrl.cfe;
-          } else if (this.isIntegration()) {
-            return this.csdmServiceUrl.integration;
-          } else {
-            return this.csdmServiceUrl.prod;
-          }
+          var csdmServiceUrl = {
+            'dev': this.csdmServiceUrl.integration,
+            'cfe': this.csdmServiceUrl.cfe,
+            'integration': this.csdmServiceUrl.integration,
+            'prod': this.csdmServiceUrl.prod
+          };
+
+          return csdmServiceUrl[this.getEnv()];
         },
 
         getLocusServiceUrl: function () {
@@ -536,110 +556,128 @@ angular.module('Core')
         },
 
         getEnrollmentServiceUrl: function () {
-          if (this.isDev()) {
-            return this.enrollmentServiceUrl.integration;
-          } else if (this.isIntegration()) {
-            return this.enrollmentServiceUrl.integration;
-          } else {
-            return this.enrollmentServiceUrl.prod;
-          }
+          var enrollmentServiceUrl = {
+            'dev': this.enrollmentServiceUrl.integration,
+            'cfe': this.enrollmentServiceUrl.cfe,
+            'integration': this.enrollmentServiceUrl.integration,
+            'prod': this.enrollmentServiceUrl.prod
+          };
+
+          return enrollmentServiceUrl[this.getEnv()];
         },
 
         getMeetingServiceUrl: function () {
-          if (this.isDev()) {
-            return this.meetingServiceUrl.dev;
-          } else if (this.isIntegration()) {
-            return this.meetingServiceUrl.integration;
-          } else {
-            return this.meetingServiceUrl.prod;
-          }
+          var meetingServiceUrl = {
+            'dev': this.meetingServiceUrl.dev,
+            'cfe': this.meetingServiceUrl.cfe,
+            'integration': this.meetingServiceUrl.integration,
+            'prod': this.meetingServiceUrl.prod
+          };
+
+          return meetingServiceUrl[this.getEnv()];
         },
 
-        getMeetinginfoserviceUrl: function () {
-          if (this.isDev()) {
-            return this.MeetinginfoserviceUrl.dev;
-          } else if (this.isIntegration()) {
-            return this.MeetinginfoserviceUrl.integration;
-          } else {
-            return this.MeetinginfoserviceUrl.prod;
-          }
+        getMeetingInfoServiceUrl: function () {
+          var meetingInfoServiceUrl = {
+            'dev': this.meetingInfoServiceUrl.dev,
+            'cfe': this.meetingInfoServiceUrl.cfe,
+            'integration': this.meetingInfoServiceUrl.integration,
+            'prod': this.meetingInfoServiceUrl.prod
+          };
+
+          return meetingInfoServiceUrl[this.getEnv()];
         },
+
         getMetricsServiceUrl: function () {
-          if (this.isDev()) {
-            return this.metricsServiceUrl.dev;
-          } else if (this.isIntegration()) {
-            return this.metricsServiceUrl.integration;
-          } else {
-            return this.metricsServiceUrl.prod;
-          }
+          var metricsServiceUrl = {
+            'dev': this.metricsServiceUrl.dev,
+            'cfe': this.metricsServiceUrl.cfe,
+            'integration': this.metricsServiceUrl.integration,
+            'prod': this.metricsServiceUrl.prod
+          };
+
+          return metricsServiceUrl[this.getEnv()];
         },
 
         getThresholdServiceUrl: function () {
-          if (this.isDev()) {
-            return this.thresholdServiceUrl.dev;
-          } else if (this.isIntegration()) {
-            return this.thresholdServiceUrl.integration;
-          } else {
-            return this.thresholdServiceUrl.prod;
-          }
+          var thresholdServiceUrl = {
+            'dev': this.thresholdServiceUrl.dev,
+            'cfe': this.thresholdServiceUrl.cfe,
+            'integration': this.thresholdServiceUrl.integration,
+            'prod': this.thresholdServiceUrl.prod
+          };
+
+          return thresholdServiceUrl[this.getEnv()];
         },
 
         getAlarmServiceUrl: function () {
-          if (this.isDev()) {
-            return this.alarmServiceUrl.dev;
-          } else if (this.isIntegration()) {
-            return this.alarmServiceUrl.integration;
-          } else {
-            return this.alarmServiceUrl.prod;
-          }
+          var alarmServiceUrl = {
+            'dev': this.alarmServiceUrl.dev,
+            'cfe': this.alarmServiceUrl.cfe,
+            'integration': this.alarmServiceUrl.integration,
+            'prod': this.alarmServiceUrl.prod
+          };
+
+          return alarmServiceUrl[this.getEnv()];
         },
 
         getEventServiceUrl: function () {
-          if (this.isDev()) {
-            return this.alarmServiceUrl.dev;
-          } else if (this.isIntegration()) {
-            return this.alarmServiceUrl.integration;
-          } else {
-            return this.alarmServiceUrl.prod;
-          }
+          var eventServiceUrl = {
+            'dev': this.alarmServiceUrl.dev,
+            'cfe': this.alarmServiceUrl.cfe,
+            'integration': this.alarmServiceUrl.integration,
+            'prod': this.alarmServiceUrl.prod
+          };
+
+          return eventServiceUrl[this.getEnv()];
         },
 
         getFaultServiceUrl: function () {
-          if (this.isDev()) {
-            return this.thresholdServiceUrl.dev;
-          } else if (this.isIntegration()) {
-            return this.thresholdServiceUrl.integration;
-          } else {
-            return this.thresholdServiceUrl.prod;
-          }
+          var faultServiceUrl = {
+            'dev': this.thresholdServiceUrl.dev,
+            'cfe': this.thresholdServiceUrl.cfe,
+            'integration': this.thresholdServiceUrl.integration,
+            'prod': this.thresholdServiceUrl.prod
+          };
+
+          return faultServiceUrl[this.getEnv()];
         },
 
         getClientSecret: function () {
-          if (this.isCfe()) {
-            return this.oauthClientRegistration.cfe.secret;
-          } else {
-            return this.oauthClientRegistration.atlas.secret;
-          }
+          var clientSecret = {
+            'dev': this.oauthClientRegistration.atlas.secret,
+            'cfe': this.oauthClientRegistration.cfe.secret,
+            'integration': this.oauthClientRegistration.atlas.secret,
+            'prod': this.oauthClientRegistration.atlas.secret
+          };
+
+          return clientSecret[this.getEnv()];
         },
 
         getClientId: function () {
-          if (this.isCfe()) {
-            return this.oauthClientRegistration.cfe.id;
-          } else {
-            return this.oauthClientRegistration.atlas.id;
-          }
+          var clientId = {
+            'dev': this.oauthClientRegistration.atlas.id,
+            'cfe': this.oauthClientRegistration.cfe.id,
+            'integration': this.oauthClientRegistration.atlas.id,
+            'prod': this.oauthClientRegistration.atlas.id
+          };
+
+          return clientId[this.getEnv()];
         },
 
         getOauth2Url: function () {
-          if (this.isCfe()) {
-            return this.oauthUrl.oauth2UrlCfe;
-          } else {
-            return this.oauthUrl.oauth2UrlAtlas;
-          }
+          var oAuth2Url = {
+            'dev': this.oauthUrl.oauth2UrlAtlas,
+            'cfe': this.oauthUrl.oauth2UrlCfe,
+            'integration': this.oauthUrl.oauth2UrlAtlas,
+            'prod': this.oauthUrl.oauth2UrlAtlas
+          };
+
+          return oAuth2Url[this.getEnv()];
         },
 
         getOauthLoginUrl: function () {
-          var acu = this.adminClientUrl[this.getEnv()] || this.adminClientUrl.prod;
+          var acu = this.adminClientUrl[this.getEnv()];
           var params = [
             this.getOauth2Url(),
             this.getClientId(),
@@ -651,7 +689,7 @@ angular.module('Core')
         },
 
         getRedirectUrl: function () {
-          var acu = this.adminClientUrl[this.getEnv()] || this.adminClientUrl.prod;
+          var acu = this.adminClientUrl[this.getEnv()];
           var params = [encodeURIComponent(acu)];
           return Utils.sprintf(this.oauthUrl.ciRedirectUrl, params);
         },
@@ -674,7 +712,7 @@ angular.module('Core')
         },
 
         getLogoutUrl: function () {
-          var acu = this.adminClientUrl[this.getEnv()] || this.adminClientUrl.prod;
+          var acu = this.adminClientUrl[this.getEnv()];
           return this.logoutUrl + encodeURIComponent(acu);
         },
 
@@ -695,11 +733,14 @@ angular.module('Core')
         },
 
         getHealthCheckUrlServiceUrl: function () {
-          if (this.isDev()) {
-            return this.healthCheckUrl.dev;
-          } else {
-            return this.healthCheckUrl.prod;
-          }
+          var healthCheckServiceUrl = {
+            'dev': this.healthCheckUrl.dev,
+            'cfe': this.healthCheckUrl.cfe,
+            'integration': this.healthCheckUrl.integration,
+            'prod': this.healthCheckUrl.prod
+          };
+
+          return healthCheckServiceUrl[this.getEnv()];
         },
 
         getLogMetricsUrl: function () {
@@ -735,15 +776,15 @@ angular.module('Core')
         },
 
         getHerculesUrl: function () {
-          return this.herculesUrl[this.getEnv()] || this.herculesUrl.prod;
+          return this.herculesUrl[this.getEnv()];
         },
 
         getUssUrl: function () {
-          return this.ussUrl[this.getEnv()] || this.ussUrl.prod;
+          return this.ussUrl[this.getEnv()];
         },
 
         getCertsUrl: function () {
-          return this.certsUrl[this.getEnv()] || this.certsUrl.prod;
+          return this.certsUrl[this.getEnv()];
         },
 
         getDefaultEntitlements: function () {
@@ -751,13 +792,14 @@ angular.module('Core')
         },
 
         getUtilizationServiceUrl: function () {
-          if (this.isDev()) {
-            return this.utilizationServiceUrl.dev;
-          } else if (this.isIntegration()) {
-            return this.utilizationServiceUrl.integration;
-          } else {
-            return this.utilizationServiceUrl.prod;
-          }
+          var utilizationServiceUrl = {
+            'dev': this.utilizationServiceUrl.dev,
+            'cfe': this.utilizationServiceUrl.cfe,
+            'integration': this.utilizationServiceUrl.integration,
+            'prod': this.utilizationServiceUrl.prod
+          };
+
+          return utilizationServiceUrl[this.getEnv()];
         },
 
         getWebexAdvancedHomeUrl: function (siteURL) {
@@ -775,14 +817,14 @@ angular.module('Core')
         },
 
         getSunlightConfigServiceUrl: function () {
+          var sunlightConfigServiceUrl = {
+            'dev': this.sunlightConfigServiceUrl.dev,
+            'cfe': this.sunlightConfigServiceUrl.cfe,
+            'integration': this.sunlightConfigServiceUrl.integration,
+            'prod': this.sunlightConfigServiceUrl.prod
+          };
 
-          if (this.isDev()) {
-            return this.sunlightConfigServiceUrl.dev;
-          } else if (this.isIntegration()) {
-            return this.sunlightConfigServiceUrl.integration;
-          } else {
-            return this.sunlightConfigServiceUrl.prod;
-          }
+          return sunlightConfigServiceUrl[this.getEnv()];
         }
 
       };

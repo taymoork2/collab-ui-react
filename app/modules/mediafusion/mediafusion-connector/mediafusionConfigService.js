@@ -8,7 +8,7 @@ angular.module('Mediafusion')
       var baseUssUrl = Config.getUssUrl();
 
       var getUrl = function () {
-        return baseHerculesUrl + 'v1';
+        return baseHerculesUrl;
       };
       var getUSSUrl = function () {
         return baseUssUrl + 'uss/api/v1';
