@@ -877,7 +877,8 @@
       "squared-fusion-cal": "Calendar Service",
       "squared-fusion-media": "Media Service",
       "contact-center-context": "Context Center Service",
-      "squared-fusion-ec": "Call Service Connect"
+      "squared-fusion-ec": "Call Service Connect",
+      "squared-fusion-mgmt": "Expressway Management Service"
     },
     "serviceDescriptions": {
       "squared-fusion-uc": "Effortlessly share your desktop with Spark while you are on your work phone. Answer your work phone or call your coworkers from Spark.",
