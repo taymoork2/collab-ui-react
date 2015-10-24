@@ -18,6 +18,7 @@ describe('WebEx site setting breadcrumbs', function () {
   });
 
   it('click on configure site cog', function () {
+    utils.wait(sitesettings.configureSJSITE14cog);
     utils.click(sitesettings.configureSJSITE14);
     navigation.expectCurrentUrl(sitesettings.siteSettingsUrl);
   });

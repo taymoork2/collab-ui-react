@@ -2,7 +2,7 @@
 
 /* global describe, it, expect, login */
 
-describe('WebEx report breadcrumbs', function () {
+xdescribe('WebEx report breadcrumbs', function () {
 
   it('should allow login as admin user', function () {
     login.loginThroughGui(sitesettings.testAdmin.username, sitesettings.testAdmin.password);

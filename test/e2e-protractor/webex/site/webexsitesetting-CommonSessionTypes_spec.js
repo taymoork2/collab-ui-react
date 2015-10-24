@@ -17,6 +17,7 @@ describe('WebEx Common Settings -> Session Types', function () {
   });
 
   it('click on configure site cog', function () {
+    utils.wait(sitesettings.configureSJSITE14cog);
     utils.click(sitesettings.configureSJSITE14);
   });
 
