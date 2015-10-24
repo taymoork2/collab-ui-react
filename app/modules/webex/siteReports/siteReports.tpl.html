@@ -14,6 +14,33 @@
                 {{sref.reportPageId_translated}}
               </a>
             </li>
+
+            <li ng-repeat="s in sec.subsections">
+                  <h4>{{s.section_name_translated}}</h4>
+
+                  <div ng-repeat="sref in s.uisrefs">
+                          <a id="{{sref.reportPageId}}"
+                            name="{{sref.reportPageId}}"
+                            ui-sref="{{sref.uisrefString}}">
+                               {{sref.reportPageId_translated}}
+                          </a>
+                  </div>
+                  <!-- 
+                  <ul class="no-bullet" style="list-style:none; padding-left:0;">
+                      <li ng-repeat="sref in s.uisrefs">
+                          <a id="{{sref.reportPageId}}"
+                            name="{{sref.reportPageId}}"
+                            ui-sref="{{sref.uisrefString}}">
+                               {{sref.reportPageId_translated}}
+                          </a>
+                      </li>
+
+                  </ul>
+                -->
+            </li>
+
+
+
           </ul>
         </section>
       </article>

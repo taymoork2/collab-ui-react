@@ -263,7 +263,7 @@ angular.module('WebExReports').service('WebexReportService', [
 
       var repts = new Reports();
       repts.setSections([common_reports, training_center, support_center,
-        event_center, remote_access
+        event_center
       ]);
       return repts;
     };
