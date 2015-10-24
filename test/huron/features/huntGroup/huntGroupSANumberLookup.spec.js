@@ -44,7 +44,10 @@ describe('Controller: HuntGroupSetupAssistantCtrl', function () {
 
   it("on selecting a pilot number, the selectedPilotNumbers list is updated.", function () {
     controller.selectHuntGroupNumber(someNumber);
-    expect(controller.selectedPilotNumbers.indexOf(someNumber.number)).not.toBe(-1);
+    var numbers = controller.selectedPilotNumbers.map(function (e) {
+      return e.number;
+    });
+    expect(numbers.indexOf(someNumber.number)).not.toBe(-1);
   });
 
   it("filters the selected numbers from showing in the drop down.", function () {

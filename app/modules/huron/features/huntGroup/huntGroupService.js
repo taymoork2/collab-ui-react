@@ -7,67 +7,102 @@
 
   /* @ngInject */
 
-  function huntGroupService($q, HuntGroupServiceV2, UserServiceCommonV2, NumberSearchServiceV2, TelephoneNumberService, Authinfo, $http) {
+  function huntGroupService($q, HuntGroupServiceV2, UserSearchServiceV2, NumberSearchServiceV2, Authinfo, $http) {
 
     /* jshint validthis: true */
 
     var feature;
-
+    var customerId = Authinfo.getOrgId();
     var service = {
       getListOfHuntGroups: getListOfHuntGroups,
       deleteHuntGroup: deleteHuntGroup,
-      getPilotNumberSuggestions: getPilotNumberSuggestions,
       updateHuntGroup: updateHuntGroup,
       editFeature: editFeature,
       getDetails: getDetails,
       getNumbersWithSelection: getNumbersWithSelection,
-      getMemberInfo: getMemberInfo
+      getMemberInfo: getMemberInfo,
+      getPilotNumberSuggestions: suggestionForTypeAhead,
+      getHuntMembers: suggestionForTypeAhead
     };
 
     return service;
 
-    function getPilotNumberSuggestions(typedNumber, selections, onFailure) {
+    function suggestionForTypeAhead(filterKey, filterValue, itemsInUI, onFailure) {
       var suggestions = $q.defer();
 
-      if (suggestionsNeeded(typedNumber)) {
-        return fetchSuggestionsFromService(typedNumber, selections, onFailure, suggestions);
+      if (suggestionsNeeded(filterValue)) {
+        var apiArgs = {};
+        apiArgs[filterKey] = filterValue;
+        var service = inferServiceByFilter(filterKey);
+        if (service) {
+          return fetchSuggestionsFromService(service, apiArgs, itemsInUI,
+            onFailure, suggestions);
+        }
       }
 
       suggestions.resolve([]);
       return suggestions.promise;
     }
 
-    function fetchSuggestionsFromService(typedNumber, selections, onFailure, suggestions) {
+    function inferServiceByFilter(filterKey) {
+      var service = {};
 
-      NumberSearchServiceV2.get({
-        customerId: Authinfo.getOrgId(),
-        number: typedNumber
-      }).$promise.then(function handleResponse(response) {
-        suggestions.resolve(
-          filterSelected(formatNumbers(response.numbers), selections));
-      }).catch(function (response) {
-        suggestions.resolve([]);
-        onFailure(response);
+      if (filterKey === 'number') {
+        service.resource = NumberSearchServiceV2;
+        service.extractItems = function (response) {
+          return response.numbers;
+        };
+      } else if (filterKey === 'name') {
+        // TODO: Replace UserSearchServiceV2 with UserServiceCommonV2 when ready.
+        service.resource = UserSearchServiceV2;
+        service.extractItems = function (response) {
+          return addIsSelectedFlagToNumbers(response.users);
+        };
+      } else {
+        service = undefined;
+      }
+
+      return service;
+    }
+
+    function addIsSelectedFlagToNumbers(users) {
+      return users.map(function (u) {
+        u.numbers.map(function(n) {
+          n.isSelected = false;
+          return n;
+        });
+        return u;
       });
+    }
+
+    function fetchSuggestionsFromService(service, apiArgs, itemsInUI, onFailure, suggestions) {
+      apiArgs.customerId = customerId;
+      var uuidInUI = itemsInUI.map(function (e) {
+        return e.uuid;
+      });
+
+      service.resource.get(apiArgs).$promise
+        .then(suggest)
+        .catch(suggestNothingAndNotifyFailure);
 
       return suggestions.promise;
+
+      function suggest(response) {
+        var itemsFromBackend = service.extractItems(response);
+        var suggestedItems = itemsFromBackend.filter(function (backendItem) {
+          return (uuidInUI.indexOf(backendItem.uuid) === -1);
+        });
+        suggestions.resolve(suggestedItems);
+      }
+
+      function suggestNothingAndNotifyFailure(response) {
+        suggestions.resolve([]);
+        onFailure(response);
+      }
     }
 
-    function formatNumbers(numbers) {
-      return numbers.map(function (n) {
-        n.number = TelephoneNumberService.getDIDLabel(n.number);
-        return n;
-      });
-    }
-
-    function suggestionsNeeded(typedNumber) {
-      return (typedNumber.length >= 3);
-    }
-
-    function filterSelected(fromList, selected) {
-      return fromList.filter(function (n) {
-        return (selected.indexOf(n.number) === -1);
-      });
+    function suggestionsNeeded(typedText) {
+      return (typedText.length >= 3);
     }
 
     function getListOfHuntGroups(customerId) {
@@ -280,10 +315,16 @@
     }
 
     function getMemberInfo(customerId, userId) {
-      return UserServiceCommonV2.get({
+      // TODO: Replace UserSearchServiceV2 with UserServiceCommonV2 when ready.
+      return UserSearchServiceV2.get({
         customerId: customerId,
         userId: userId
       }).$promise;
+
+      //return UserServiceCommonV2.get({
+      //  customerId: customerId,
+      //  userId: userId
+      //}).$promise;
 
       // var deferred = $q.defer();
       // var successResponse = {
