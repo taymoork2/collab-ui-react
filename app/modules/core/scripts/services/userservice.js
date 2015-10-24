@@ -56,13 +56,22 @@ angular.module('Core')
             'users': []
           };
 
+          // Patch user is generating an error if I use licenses, so I'm converting this to userLicenses
+          // temporarily
+          var tempFix = [];
+          if (licenses) {
+            for (var j = 0; j < licenses.length; j++)
+              tempFix.push(licenses[j]['id'].toString());
+          }
+
           for (var i = 0; i < usersDataArray.length; i++) {
             var userEmail = usersDataArray[i].address.trim();
             if (userEmail.length > 0) {
               var user = {
                 'email': userEmail,
                 'userEntitlements': entitlements,
-                'licenses': licenses,
+                //'licenses': licenses,
+                'userLicenses': (tempFix.length > 0) ? tempFix : null,
                 'assignedDn': usersDataArray[i].assignedDn,
                 'externalNumber': usersDataArray[i].externalNumber
               };
@@ -396,7 +405,12 @@ angular.module('Core')
             });
         },
 
-        onboardUsers: function (usersDataArray, entitlements, licenses, callback, cancelPromise) {
+        // Note there are two license arrays that can be passed
+        // 'licenses' is a general array applied to all users
+        // 'licensesPerUser' is an array of license arrays paired to each user in the usersDataArray
+        // this latter argument is used by thinsg like CSV import
+        //
+        onboardUsers: function (usersDataArray, entitlements, licenses, licensesPerUser, callback, cancelPromise) {
           var userData = {
             'users': []
           };
@@ -404,6 +418,7 @@ angular.module('Core')
           for (var i = 0; i < usersDataArray.length; i++) {
             var userEmail = usersDataArray[i].address.trim();
             var userName = usersDataArray[i].name;
+            var displayName = usersDataArray[i].displayName;
 
             var user = {
               'email': null,
@@ -411,13 +426,24 @@ angular.module('Core')
                 'givenName': null,
                 'familyName': null,
               },
-              'userEntitlements': entitlements,
-              'licenses': licenses
+              'userEntitlements': (entitlements && entitlements.length > 0) ? entitlements : null,
+              'licenses': null
             };
 
             if (userEmail.length > 0) {
+
               user.email = userEmail;
               user.name = tokenParseFirstLastName(userName);
+              if (displayName) {
+                user.displayName = displayName;
+              }
+
+              // CSV import specifies licenses on a per-user basis
+              if (licenses && licenses.length > 0)
+                user.licenses = licenses;
+              else if (licensesPerUser && licensesPerUser.length > i)
+                user.licenses = licensesPerUser[i];
+
               userData.users.push(user);
             }
           }

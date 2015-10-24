@@ -1050,7 +1050,7 @@ angular.module('Core')
             } else {
               entitleList = getEntitlements('add');
             }
-            Userservice.onboardUsers(temparray, entitleList, licenseList, callback);
+            Userservice.onboardUsers(temparray, entitleList, licenseList, null, callback);
           }
         } else if (!optionalOnboard) {
           Log.debug('No users entered.');
@@ -1752,7 +1752,7 @@ angular.module('Core')
           return csvPromise.then(function () {
             return $q(function (resolve, reject) {
               if (userArray.length > 0) {
-                Userservice.onboardUsers(userArray, entitleList, licenseArray, callback.bind({
+                Userservice.onboardUsers(userArray, entitleList, null, licenseArray, callback.bind({
                   startIndex: startIndex - userArray.length + 1,
                   length: userArray.length,
                   resolve: resolve

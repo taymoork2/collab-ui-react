@@ -79,7 +79,7 @@ describe('OnboardCtrl: Ctrl', function () {
     var twoInvalidUsers = "First Name,Last Name,Display Name,User ID/Email,Directory Number,Direct Line\nTest,Doe,John Doe,johndoe@example.com,5001\nJane,Doe,Jane Doe,janedoe@example.com,5002";
 
     function fakeOnboardUsers(successFlag, statusCode, responseMessage) {
-      return function (userArray, entitleList, licenseList, callback) {
+      return function (userArray, entitleList, licenseList, licensePerUserList, callback) {
         var data = {
           success: successFlag,
           userResponse: [{
