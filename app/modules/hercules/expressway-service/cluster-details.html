@@ -1,14 +1,11 @@
 <div ui-view="header"></div>
 
-<cs-sp-container class="hercules-fix-paragraphs" ng-if="!expresswayServiceDetails.serviceNotInstalled()">
+<cs-sp-container class="hercules-fix-paragraphs hercules-settings-table"
+                 ng-if="!expresswayServiceDetails.serviceNotInstalled()">
 
   <cs-sp-section>
-    <div class="section-title-row section-name">
-      Alarms
-    </div>
-
+    <div class="section-title-row section-name" translate="hercules.alarms.alarms"></div>
     <div class="feature-list" ng-if="expresswayServiceDetails.selectedService().alarm_count > 0">
-
       <ul>
         <li class="feature" ng-repeat="alarm in expresswayServiceDetails.alarms2hosts()" ng-class="{'list-item': !$first}">
           <a ui-sref="cluster-details-new.alarm-details({alarm: alarm})">
@@ -18,56 +15,36 @@
           </a>
         </li>
       </ul>
-
-      <!--
-      <ul ng-repeat="connector in expresswayServiceDetails.selectedService().connectors">
-        <li class="feature" ng-repeat="alarm in connector.alarms" ng-class="{'list-item': !$first}">
-          <a ui-sref="cluster-details-new.alarm-details({alarm: alarm, host: connector.host.host_name})">
-            <i class="icon icon-error hercules-alarm status-icon"/>
-            <span class="feature-name">{{alarm.title}}</span>
-            <span class="feature-status">View Alarm</span>
-            <i class="feature-arrow"></i>
-          </a>
-        </li>
-      </ul>
-      -->
-
     </div>
-    <p ng-if="expresswayServiceDetails.selectedService().alarm_count == 0">
-      No alarms reported
-    </p>
+    <p ng-if="expresswayServiceDetails.selectedService().alarm_count == 0" translate="hercules.alarms.noAlarms"></p>
   </cs-sp-section>
 
   <cs-sp-section>
-    <div class="section-title-row section-name">
-      Software Upgrade
-    </div>
-
-    <div class="feature-list">
-      <ul>
-        <li class="feature">
-          <span class="feature-name">Current version</span>
-          <span class="feature-status">{{expresswayServiceDetails.selectedService().connectors[0].version}}</span>
-        </li>
-        <li class="feature" ng-if="expresswayServiceDetails.selectedService().software_upgrade_available">
-          <span class="feature-name">New version</span>
-          <span class="feature-status">{{expresswayServiceDetails.selectedService().not_approved_package.version}}</span>
-        </li>
-        <li class="feature" ng-if="!expresswayServiceDetails.selectedService().software_upgrade_available">
-          <span class="feature-name">No new software available</span>
-        </li>
-      </ul>
-    </div>
+    <div class="section-title-row section-name" translate="hercules.softwareUpgrade.softwareUpgrade"></div>
+    <table>
+      <tbody>
+      <tr>
+        <td translate="hercules.softwareUpgrade.currentVersion"></td>
+        <td><span>{{expresswayServiceDetails.selectedService().connectors[0].version}}</span></td>
+      </tr>
+      <tr ng-if="expresswayServiceDetails.selectedService().software_upgrade_available">
+        <td translate="hercules.softwareUpgrade.newVersion">New Version</td>
+        <td><span>{{expresswayServiceDetails.selectedService().not_approved_package.version}}</span></td>
+      </tr>
+      <tr ng-if="!expresswayServiceDetails.selectedService().software_upgrade_available">
+        <td colspan="2" translate="hercules.softwareUpgrade.noNewAvailable"></td>
+      </tr>
+      </tbody>
+    </table>
     <button class="button secondary"
             ng-click="expresswayServiceDetails.upgrade()"
-            ng-if="expresswayServiceDetails.selectedService().software_upgrade_available">Upgrade
+            ng-if="expresswayServiceDetails.selectedService().software_upgrade_available"
+            translate="hercules.softwareUpgrade.upgrade">
     </button>
   </cs-sp-section>
 
   <cs-sp-section>
-    <div class="section-title-row section-name">
-      Hosts
-    </div>
+    <div class="section-title-row section-name" translate="hercules.connectors.hosts"></div>
     <div class="feature-list">
       <ul>
         <li class="feature" ng-repeat="connector in expresswayServiceDetails.selectedService().connectors"
