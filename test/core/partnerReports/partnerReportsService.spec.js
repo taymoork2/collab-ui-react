@@ -16,7 +16,7 @@ describe('Service: Partner Reports Service', function () {
   var updateDates = function (response) {
     var data = response.data[0].data;
     for (var i = data.length - 1; i >= 0; i--) {
-      data[i].date = moment().tz(timezone).subtract(data.length + 2 - i, 'day').format();
+      data[i].date = moment().tz(timezone).subtract(data.length + 1 - i, 'day').format();
     }
     response.data[0].data = data;
     return response;
@@ -43,7 +43,7 @@ describe('Service: Partner Reports Service', function () {
     label: ""
   };
   var customerDatapoint = {
-    modifiedDate: moment().tz(timezone).subtract(8, 'day').format(dayFormat),
+    modifiedDate: moment().tz(timezone).subtract(7, 'day').format(dayFormat),
     totalRegisteredUsers: 14,
     activeUsers: 14,
     percentage: 100
@@ -98,7 +98,7 @@ describe('Service: Partner Reports Service', function () {
       "orgId": "7e88d491-d6ca-4786-82ed-cbe9efb02ad2",
       "orgName": "Huron Int Test 1",
       "data": [{
-        "date": moment().tz(timezone).subtract(2, 'day').format(),
+        "date": moment().tz(timezone).subtract(1, 'day').format(),
         "details": {
           "totalCount": "200",
           "totalDurationSum": "3605",
@@ -173,8 +173,7 @@ describe('Service: Partner Reports Service', function () {
         $httpBackend.whenGET(activeUsersDetailedUrl).respond(updateDates(activeUserDetailedData));
       });
 
-      // TODO: fix the getDateBase logic
-      xit('for an existing customer', function () {
+      it('for an existing customer', function () {
         PartnerReportService.getActiveUserData(customer, timeFilter).then(function (response) {
           expect(response.graphData[0].modifiedDate).toEqual(customerDatapoint.modifiedDate);
           expect(response.graphData[0].totalRegisteredUsers).toEqual(customerDatapoint.totalRegisteredUsers);
@@ -191,8 +190,7 @@ describe('Service: Partner Reports Service', function () {
 
     describe('should notify an error for getActiveUserData', function () {
 
-      // TODO: fix the getDateBase logic
-      xit('and return empty table data', function () {
+      it('and return empty table data', function () {
         $httpBackend.whenGET(mostActiveUsersUrl + customers[0].customerOrgId).respond(500, error);
         $httpBackend.whenGET(activeUsersDetailedUrl).respond(updateDates(activeUserDetailedData));
 
