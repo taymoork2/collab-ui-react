@@ -1,0 +1,44 @@
+<div ng-repeat="siteSettingCardObj in WebExSiteSettings.siteSettingsObj.siteSettingCardObjs">
+  <cs-card class="medium"
+           id={{siteSettingCardObj.id}}-card
+           name={{siteSettingCardObj.id}}-card>
+           
+    <article>
+      <header>
+        <h3>
+          {{siteSettingCardObj.label}}
+        </h3>
+        
+        {{siteSettingCardObj.comment}}
+      </header>
+      
+      <section>
+        <ul class="no-bullet">
+          <div ng-repeat="pageObj in siteSettingCardObj.pageObjs">
+            <a id={{pageObj.id}}
+               name={{pageObj.id}}
+               ui-sref={{pageObj.uiSref}}>
+
+              {{pageObj.label}}
+            </a>
+          </div>
+          
+          <div ng-repeat="subSectionObj in siteSettingCardObj.subSectionObjs">
+            <h4>
+              {{subSectionObj.label}}
+            </h4>
+            
+            <div ng-repeat="pageObj in subSectionObj.pageObjs">
+              <a id={{pageObj.id}}
+                 name={{pageObj.id}}
+                 ui-sref={{pageObj.uiSref}}>
+
+                {{pageObj.label}}
+              </a>
+            </div>
+          </div>
+        </ul>
+      </section>
+    </article>
+  </cs-card>
+</div>
