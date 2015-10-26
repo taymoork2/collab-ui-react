@@ -263,8 +263,8 @@ angular.module('Core')
           }, {
             title: 'tabs.huronLineDetailsTab',
             desc: 'tabs.huronLineDetailsTabDesc',
-            state: 'hurondetails',
-            link: '#hurondetails'
+            state: 'huronsettings',
+            link: '#hurondetails/settings'
           }, {
             title: 'tabs.fusionDetailsTab',
             desc: 'tabs.fusionDetailsTabDesc',
