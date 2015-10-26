@@ -1,6 +1,6 @@
 <div class="cards-block">
 <cs-card-layout block-view="true">
-  <cs-card ng-repeat="huronFeature in huronFeaturesCtrl.listOfFeatures"
+  <cs-card ng-repeat="huronFeature in huronFeaturesCtrl.listOfFeatures | orderBy: 'cardName'"
            class="small header-background {{ huronFeaturesCtrl.cardColors[huronFeature.filterValue] }}">
     <article>
       <header>
@@ -29,7 +29,7 @@
         </div>
         <div class="card-footer">
           <div class="left"><span ng-if="(huronFeature.filterValue === 'HG')" class="card-members left">
-                {{:: huronFeature.memberCount + ('huronHuntGroup.members' | translate)}}</span></div>
+                {{:: huronFeature.memberCount + ('huronFeatureDetails.members' | translate)}}</span></div>
           <div class="right card-icon-div ">
             <span class="card-icon card-icon-color-{{huronFeature.filterValue}}"><strong>{{:: huronFeature.featureName | translate}}</strong></span>
           </div>

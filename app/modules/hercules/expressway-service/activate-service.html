@@ -6,10 +6,9 @@
   <h2>
     {{'hercules.serviceNames.' + exp.currentServiceId | translate}}
   </h2>
-  <br>
 
-  <p>
-    <button class="button info large" ng-click="exp.enableService(exp.currentServiceId)">
+  <p ng-if="exp.currentServiceId != 'squared-fusion-mgmt'">
+    <button style="margin-top: 20px;" class="button info large" ng-click="exp.enableService(exp.currentServiceId)">
       Activate and Begin Setup
     </button>
   </p>
@@ -30,6 +29,17 @@
     </p>
     <p>
       Answer your work phone or call your colleagues from Spark.
+    </p>
+    <br>
+  </div>
+
+  <div ng-show="exp.currentServiceId == 'squared-fusion-mgmt'">
+    <p>
+      Manage your Hybrid Services running on Cisco Expressway
+    </p>
+
+    <p>
+      The are currently no services enabled.
     </p>
     <br>
   </div>

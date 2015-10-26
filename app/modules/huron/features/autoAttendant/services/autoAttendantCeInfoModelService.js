@@ -103,10 +103,12 @@
     return this.ceUrl;
   };
 
-  function AutoAttendantCeInfoModelService() {
+  /* @ngInject */
+  function AutoAttendantCeInfoModelService($q, AutoAttendantCeService) {
 
     var service = {
       getAllCeInfos: getAllCeInfos,
+      getCeInfosList: getCeInfoslist,
       getCeInfo: getCeInfo,
       setCeInfo: setCeInfo,
       deleteCeInfo: deleteCeInfo,
@@ -132,6 +134,34 @@
         }
       }
       return ceInfos;
+    }
+
+    // New get method for Huron Features Page
+    function getCeInfoslist() {
+      var aaModel = {};
+      return AutoAttendantCeService.listCes().then(function (aaRecords) {
+        if (angular.isArray(aaRecords)) {
+          aaModel.aaRecords = aaRecords;
+          _.forEach(aaModel.aaRecords, function (aaRecord) {
+            _.forEach(aaRecord.assignedResources, function (assignedResource) {
+              setDirectoryNumber(assignedResource);
+            });
+          });
+          aaModel.ceInfos = getAllCeInfos(aaModel.aaRecords);
+
+          // aaModel.ceInfos.sort(function (a, b) {
+          //   return a.callExperienceName.localeCompare(b.callExperienceName);
+          // });
+        }
+
+        // aaModel.ceInfos = aaModel.ceInfos.sort(function (a, b) {
+        //   return a.callExperienceName.localeCompare(b.callExperienceName);
+        // });
+        return aaModel;
+      }).catch(function (response) {
+        aaModel = {};
+        return $q.reject(response);
+      });
     }
 
     /*
@@ -187,5 +217,20 @@
         }
       }
     }
+
+    //////////// 
+
+    function setDirectoryNumber(resource) {
+      resource.number = resource.id;
+      /* workaround for Tropo-AA integraiton
+      return DirectoryNumberService.get({
+        customerId: Authinfo.getOrgId(),
+        directoryNumberId: resource.id
+      }).$promise.then(function (data) {
+        resource.number = data.pattern;
+      });
+      */
+    }
+
   }
 })();

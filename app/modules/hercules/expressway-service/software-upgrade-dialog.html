@@ -4,26 +4,29 @@
   </div>
 </div>
 
-<div class="modal-body">
-
-
-  <i class="icon icon-warning yellow"/>Upgrade may involve a service outage. See the release notes.
-
-  <br>
-  <br>
+<div class="modal-body hercules-fix-paragraphs hercules-settings-table">
 
   <p>
-  You are about to upgrade the software for the Calendar Service
-    on all hosts running on the Cisco Expressway Cluster
+    <i class="icon icon-warning yellow"/></i> Upgrade may involve a service outage. Please see release notes.
+  </p>
+
+  <p>
+    You are about to upgrade the software for the Calendar Service on all hosts running on the Cisco Expressway Cluster
   {{softwareUpgrade.clusterName}}.
   </p>
-  <br>
-  <p>
-  Current version {{softwareUpgrade.oldVersion}}
-  </p>
-  <p>
-  After upgrade: {{softwareUpgrade.newVersion}}
-  </p>
+
+  <table>
+    <tbody>
+    <tr>
+      <td translate="hercules.softwareUpgrade.currentVersion"></td>
+      <td><span>{{softwareUpgrade.oldVersion}}</span></td>
+    </tr>
+    <tr>
+      <td translate="hercules.softwareUpgrade.newVersion">New Version</td>
+      <td><span>{{softwareUpgrade.newVersion}}</span></td>
+    </tr>
+    </tbody>
+  </table>
 
 </div>
 

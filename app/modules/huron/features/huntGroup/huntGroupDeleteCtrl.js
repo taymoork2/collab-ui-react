@@ -5,7 +5,7 @@
   'use strict';
   /* jshint validthis: true */
   angular
-    .module('uc.hurondetails')
+    .module('Huron')
     .controller('HuntGroupDeleteCtrl', HuntGroupDeleteCtrl);
 
   /* @ngInject */

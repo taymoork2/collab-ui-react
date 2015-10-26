@@ -122,3 +122,16 @@ Special stuff currently used for out own mail input field...
 .hercules-state-unknown {
   color: $gray-base;
 }
+
+.hercules-settings-table {
+  table {
+    td {
+      padding: 10px 10px 10px 0;
+    }
+    tbody {
+      tr {
+        border-top: transparent;
+      }
+    }
+  }
+}

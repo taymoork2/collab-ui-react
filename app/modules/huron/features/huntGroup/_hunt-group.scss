@@ -1,4 +1,9 @@
 $overlay-panel-height: 93px;
+
+@import 'setupAssistantPages/_hunt-pilot-lookup';
+@import 'setupAssistantPages/_hunt-method';
+@import 'setupAssistantPages/_hunt-members-lookup';
+
 .huntgroup {
   &.overlay-panel {
     & cs-setup-assistant {

@@ -43,7 +43,13 @@ describe('Huron Setup Assistant Ctrl', function () {
     expect(controller.nextButton(1)).toEqual(true);
   });
 
-  it("should enable next button when not null on third page", function () {
+  it("next button should be enabled on third page", function () {
+    expect(controller.nextButton(2)).toEqual(true);
+  });
+
+  it("should be able to set the hunt method", function () {
+    controller.setHuntMethod(controller.hgMethods.broadcast);
+    expect(controller.huntGroupMethod).toEqual(controller.hgMethods.broadcast);
     expect(controller.nextButton(2)).toEqual(true);
   });
 

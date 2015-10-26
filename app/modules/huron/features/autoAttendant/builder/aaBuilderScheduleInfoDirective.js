@@ -12,7 +12,7 @@ angular
         controller: 'AABuilderScheduleInfoCtrl',
         controllerAs: 'scheduleInfo',
         bindToController: true,
-        templateUrl: 'modules/huron/callRouting/autoAttendant/builder/aaBuilderScheduleInfo.tpl.html'
+        templateUrl: 'modules/huron/features/autoAttendant/builder/aaBuilderScheduleInfo.tpl.html'
       };
     }
   ]);

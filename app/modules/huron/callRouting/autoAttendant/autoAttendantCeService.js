@@ -27,7 +27,7 @@
     }
 
     function readCe(ceUrl) {
-      var aCeId = ceUrl.substr(ceUrl.lastIndexOf('/') + 1);
+      var aCeId = getCeId(ceUrl);
       return CeService.get({
         customerId: Authinfo.getOrgId(),
         ceId: aCeId
@@ -43,7 +43,7 @@
     }
 
     function updateCe(ceUrl, ceDefinition) {
-      var aCeId = ceUrl.substr(ceUrl.lastIndexOf('/') + 1);
+      var aCeId = getCeId(ceUrl);
       return CeService.update({
           customerId: Authinfo.getOrgId(),
           ceId: aCeId
@@ -53,11 +53,25 @@
     }
 
     function deleteCe(ceUrl) {
-      var aCeId = ceUrl.substr(ceUrl.lastIndexOf('/') + 1);
+      var aCeId = getCeId(ceUrl);
       return CeService.delete({
         customerId: Authinfo.getOrgId(),
         ceId: aCeId
       }).$promise;
+    }
+
+    /**
+     * TODO: This method is for POC delete with ceURL
+     * and can be removed when POC code is removed 
+     */
+    function getCeId(ceUrl) {
+      var aCeId;
+      if (ceUrl.substring(0, 4) === "http") {
+        aCeId = ceUrl.substr(ceUrl.lastIndexOf('/') + 1);
+      } else {
+        aCeId = ceUrl;
+      }
+      return aCeId;
     }
   }
 })();
