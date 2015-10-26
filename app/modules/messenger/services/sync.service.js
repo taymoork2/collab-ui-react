@@ -162,7 +162,8 @@
         messengerOrgId: syncStatus.messengerOrgId,
         linkDate: syncStatus.linkDate,
         isAuthRedirect: syncStatus.isAuthRedirect,
-        isSyncEnabled: isSyncEnabledRaw()
+        isSyncEnabled: isSyncEnabledRaw(),
+        isMessengerSyncRawMode: isMessengerSyncRaw()
       };
     }
 
