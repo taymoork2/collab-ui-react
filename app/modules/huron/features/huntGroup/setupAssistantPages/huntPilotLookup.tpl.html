@@ -5,7 +5,6 @@
 </script>
 <div class="pilot-number-details">
   <div class="typeahead-large">
-    <span class="input-search"></span>
     <input id="numberInput" type="text" ng-model="huntGroupSA.selected"
            typeahead="number as num.number for num in huntGroupSA.fetchNumbers($viewValue) | limitTo:10"
            typeahead-on-select="huntGroupSA.selectHuntGroupNumber($item)"

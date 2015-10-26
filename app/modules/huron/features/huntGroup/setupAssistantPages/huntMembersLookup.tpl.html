@@ -8,7 +8,6 @@
 </script>
 <div>
   <div class="typeahead-large">
-    <span class="input-search"></span>
     <input id="userInput" type="text" ng-model="huntGroupSA.userSelected" class="form-control  "
            typeahead="user for user in huntGroupSA.userData | filter:$viewValue | limitTo:10"
            typeahead-on-select="huntGroupSA.selectHuntGroupUser($item)"
