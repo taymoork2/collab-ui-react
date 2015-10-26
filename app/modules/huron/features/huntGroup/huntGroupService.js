@@ -67,7 +67,7 @@
 
     function addIsSelectedFlagToNumbers(users) {
       return users.map(function (u) {
-        u.numbers.map(function(n) {
+        u.numbers.map(function (n) {
           n.isSelected = false;
           return n;
         });

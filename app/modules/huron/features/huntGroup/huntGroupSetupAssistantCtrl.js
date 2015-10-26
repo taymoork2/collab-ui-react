@@ -140,7 +140,7 @@
 
     function selectHuntGroupMember(user) {
       vm.userSelected = undefined;
-      if(huntNumberSelected(user)) {
+      if (huntNumberSelected(user)) {
         vm.selectedHuntMembers.push(user);
       }
     }
