@@ -227,6 +227,7 @@
     vm.state = $state;
     vm.clusterId = $stateParams.cluster.id;
     vm.serviceType = $stateParams.serviceType;
+    vm.serviceId = serviceType2ServiceId(vm.serviceType);
 
     vm.cluster = ClusterService.getClusters()[vm.clusterId];
 
