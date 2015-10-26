@@ -7,7 +7,7 @@
     .factory('UserListService', UserListService);
 
   /* @ngInject */
-  function UserListService($http, $rootScope, $location, $q, $filter, $compile, Storage, Config, Authinfo, Log, Utils, Auth) {
+  function UserListService($http, $rootScope, $location, $q, $filter, $compile, Storage, Config, Authinfo, Log, Utils, Auth, pako, $translate) {
     var searchFilter = 'filter=active%20eq%20true%20and%20userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22%20or%20displayName%20sw%20%22%s%22';
     var attributes = 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID';
     var scimUrl = Config.getScimUrl(Authinfo.getOrgId()) + '?' + '&' + attributes;
@@ -15,9 +15,11 @@
 
     var service = {
       'listUsers': listUsers,
+      'generateUserReports': generateUserReports,
+      'getUserReports': getUserReports,
+      'extractUsers': extractUsers,
       'exportCSV': exportCSV,
-      'listPartners': listPartners,
-      'getUser': getUser
+      'listPartners': listPartners
     };
 
     return service;
@@ -97,70 +99,163 @@
         });
     }
 
-    function exportCSV(scope) {
-      var searchStr = '';
-      var deferred = $q.defer();
-      var users = [];
-      var page = 0;
-      var exportedUsers = [];
-
-      var getUsersBatch = function (startIndex) {
-        var entitlementFilter = '';
-        if (scope.activeFilter === 'administrators') {
-          entitlementFilter = 'webex-squared';
-        }
-        listUsers(startIndex, 0, 'userName', 'ascending', function (data, status) {
-          if (data.success && data.Resources.length > 0) {
-            users = users.concat(data.Resources);
-            page++;
-            getUsersBatch(page * 1000 + 1);
-          } else if (status === 500 || data.Resources.length <= 0) {
-            Log.debug('No more users to return. Exporting to file... ');
-            $('#export-icon').html('<i class=\'icon icon-content-share\'></i>');
-            $compile(angular.element('#global-export-btn').html($filter('translate')('organizationsPage.exportBtn')))(scope);
-            $rootScope.exporting = false;
-            $rootScope.$broadcast('EXPORT_FINISHED');
-            if (scope.exportBtn) {
-              $('#btncover').hide();
-            }
-
-            if (users.length === 0) {
-              Log.debug('No users found.');
-              return;
-            }
-            //formatting the data for export
-            for (var i = 0; i < users.length; i++) {
-              var exportedUser = {};
-              var entitlements = '';
-              exportedUser.userName = users[i].userName;
-              if (users[i].hasOwnProperty('name') && users[i].name.familyName !== '' && users[i].name.givenName !== '') {
-                exportedUser.name = users[i].name.givenName + ' ' + users[i].name.familyName;
-              } else {
-                exportedUser.name = 'N/A';
-              }
-              for (var entitlement in users[i].entitlements) {
-                entitlements += users[i].entitlements[entitlement] + ' ';
-              }
-              exportedUser.entitlements = entitlements;
-              exportedUsers.push(exportedUser);
-            }
-            deferred.resolve(exportedUsers);
-          } else {
-            Log.debug('Exporting users failed. Status ' + status);
-            deferred.reject('Exporting users failed. Status ' + status);
-          }
-        }, searchStr, entitlementFilter);
+    // Call user reports REST api to request a user report be generated.
+    function generateUserReports(sortBy, callback) {
+      var generateUserReportsUrl = Config.getConfigUrl(Authinfo.getOrgId());
+      var requestData = {
+        "sortedBy": [sortBy],
+        "attributes": ["name", "userName", "entitlements", "roles", "active"]
       };
 
-      $('#export-icon').html('<i class=\'icon icon-spinner\'></i>');
-      $compile(angular.element('#global-export-btn').html($filter('translate')('organizationsPage.loadingMsg')))(scope);
-      $rootScope.exporting = true;
-      if (scope.exportBtn) {
-        scope.exportBtn.disabled = true;
-        $('#btncover').show();
+      $http({
+          method: 'POST',
+          url: generateUserReportsUrl,
+          data: requestData
+        })
+        .success(function (data, status) {
+          data = data || {};
+          data.success = true;
+          Log.debug('UserListService.generateUserReport - executing callback...');
+          callback(data, status);
+        })
+        .error(function (data, status) {
+          data = data || {};
+          data.success = false;
+          data.status = status;
+          callback(data, status);
+        });
+    }
+
+    // Call user reports rest api to get the user report data based on the report id from the
+    // generate user report request.
+    function getUserReports(userReportsID, callback) {
+      var getUserReportsUrl = Config.getConfigUrl(Authinfo.getOrgId()) + '/' + userReportsID;
+
+      $http.get(getUserReportsUrl)
+        .success(function (data, status) {
+          if (data.status !== 'success') {
+            // Set 3 second delay to limit the amount times we
+            // continually hit the user reports REST api.
+            setTimeout(function () {
+              getUserReports(userReportsID, callback);
+            }, 3000);
+          } else {
+            data = data || {};
+            data.success = true;
+            Log.debug('UserListService.getUserReport - executing callback...');
+            callback(data, status);
+          }
+        })
+        .error(function (data, status) {
+          data = data || {};
+          data.success = false;
+          data.status = status;
+          callback(data, status);
+        });
+    }
+
+    // Extract users from userReportData where it has been GZIP compressed
+    // and then Base64 encoded. Also, apply filter to the list of users.
+    function extractUsers(userReportData, entitlementFilter) {
+      // Workaround atob issue (InvalidCharacterError: DOM Exception 5
+      // atob@[native code]) for Safari browser on how it handles
+      // base64 encoded text string by removing all the whitespaces.
+      userReportData = userReportData.replace(/\s/g, '');
+
+      // Decode base64 (convert ascii phbinary)
+      var binData = atob(userReportData);
+
+      // Convert binary string to character-number array
+      var charData = binData.split('').map(function (x) {
+        return x.charCodeAt(0);
+      });
+
+      // Turn number array into byte-array
+      var byteData = new Uint8Array(charData);
+
+      // Pako magic
+      var userReport = pako.inflate(byteData, {
+        to: 'string'
+      });
+
+      // Filtering user report
+      var users = $.parseJSON(userReport).filter(
+        function (user) {
+          if (user.active === true) {
+            if (entitlementFilter) {
+              if (user.roles && user.roles.indexOf('id_full_admin') !== -1) {
+                return user;
+              }
+            } else {
+              return user;
+            }
+          }
+        });
+
+      return users;
+    }
+
+    // Return a list of users from calling the user reports REST
+    // apis.
+    function exportCSV(activeFilter) {
+      var deferred = $q.defer();
+
+      activeFilter = activeFilter || '';
+
+      if ($rootScope.exporting === true) {
+        deferred.reject($translate.instant('usersPage.csvBtnExportingTitle'));
       }
 
-      getUsersBatch(1);
+      $rootScope.exporting = true;
+      $rootScope.$broadcast('EXPORTING');
+
+      var entitlementFilter = '';
+      if (activeFilter === 'administrators') {
+        entitlementFilter = 'webex-squared';
+      }
+
+      generateUserReports('userName', function (data, status) {
+        if (data.success && data.id) {
+          getUserReports(data.id, function (data, status) {
+            if (data.success && data.report) {
+              var users = extractUsers(data.report, entitlementFilter);
+              var exportedUsers = [];
+              if (users.length === 0) {
+                Log.debug('No users found.');
+              } else {
+                //formatting the data for export
+                for (var i = 0; i < users.length; i++) {
+                  var exportedUser = {};
+                  var entitlements = '';
+                  exportedUser.userName = users[i].userName;
+                  if (users[i].hasOwnProperty('name') && users[i].name.familyName !== '' && users[i].name.givenName !== '') {
+                    exportedUser.name = users[i].name.givenName + ' ' + users[i].name.familyName;
+                  } else {
+                    exportedUser.name = 'N/A';
+                  }
+                  for (var entitlement in users[i].entitlements) {
+                    entitlements += users[i].entitlements[entitlement] + ' ';
+                  }
+                  exportedUser.entitlements = entitlements;
+                  exportedUsers.push(exportedUser);
+                }
+              }
+
+              $rootScope.exporting = false;
+              $rootScope.$broadcast('EXPORT_FINISHED');
+
+              deferred.resolve(exportedUsers);
+            } else {
+              Log.debug('Get user reports failed. Status ' + status);
+              deferred.reject('Get user reports failed. Status ' + status);
+            }
+          });
+        } else {
+          Log.debug('Generate user reports failed. Status ' + status);
+          deferred.reject('Generate user reports failed. Status ' + status);
+        }
+      });
+
       return deferred.promise;
     }
 
@@ -184,26 +279,6 @@
           if (errors) {
             description = errors[0].description;
           }
-        });
-    }
-
-    function getUser(searchinput, callback) {
-      var filter = 'filter=userName%20eq%20%22' + window.encodeURIComponent(searchinput) + '%22';
-      var scimSearchUrl = Config.getScimUrl(Authinfo.getOrgId()) + '?' + filter + '&' + attributes;
-      var getUserUrl = scimSearchUrl;
-
-      $http.get(getUserUrl)
-        .success(function (data, status) {
-          data = data || {};
-          data.success = true;
-          Log.debug('Retrieved user successfully.');
-          callback(data, status);
-        })
-        .error(function (data, status) {
-          data = data || {};
-          data.success = false;
-          data.status = status;
-          callback(data, status);
         });
     }
   }

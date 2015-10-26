@@ -137,6 +137,8 @@ angular.module('Core')
           prod: 'https://identity.webex.com/identity/scim/%s/v1/Users'
         },
 
+        configUrl: 'https://identity.webex.com/identity/config/%s/v1/UserReports',
+
         scomUrl: {
           dev: 'https://identity.webex.com/organization/scim/v1/Orgs',
           cfe: 'https://identitybts.webex.com/organization/scim/v1/Orgs',
@@ -524,6 +526,11 @@ angular.module('Core')
           };
 
           return scimUrl[this.getEnv()];
+        },
+
+        getConfigUrl: function (orgId) {
+          var params = [orgId];
+          return Utils.sprintf(this.configUrl, params);
         },
 
         getScomUrl: function () {
