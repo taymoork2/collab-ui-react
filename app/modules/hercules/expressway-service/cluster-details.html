@@ -10,7 +10,7 @@
         <li class="feature" ng-repeat="alarm in expresswayServiceDetails.alarms2hosts()" ng-class="{'list-item': !$first}">
           <a ui-sref="cluster-details-new.alarm-details({alarm: alarm})">
             <i class="icon icon-error hercules-alarm status-icon"/>
-            <span class="feature-name"><b>{{alarm.alarm.title}}</b> raised on {{alarm.hosts.length}} host(s)</span>
+            <span class="feature-name">{{alarm.alarm.title}}</span>
             <i class="feature-arrow"></i>
           </a>
         </li>

@@ -185,7 +185,7 @@ angular.module('uc.hurondetails').directive('customCombobox', function () {
           }
 
           element.find('input').on('keyup focus', function () {
-            scope.$apply(function () {
+            $timeout(function () {
               updateValue();
             });
           });

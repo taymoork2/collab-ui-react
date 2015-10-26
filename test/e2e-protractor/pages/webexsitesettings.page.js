@@ -20,6 +20,7 @@ var SiteSettigsPage = function () {
   this.siteSettingsUrl = '/site_settings';
   this.siteSettingPanel = element(by.id('siteSetting'));
   this.configureSJSITE14 = element(by.id("sjsite14.webex.com_webex-site-settings"));
+  this.configureSJSITE14cog = this.configureSJSITE14.element(by.css(".icon-settings"));
   this.emailAllHostsBtn = element(by.id('emailAllHostsBtn'));
   this.siteInformationLink = element(by.id('SiteInfo_site_info'));
   this.siteFeaturesLink = element(by.id('SiteInfo_site_features'));
