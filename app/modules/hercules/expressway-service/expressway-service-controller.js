@@ -223,9 +223,16 @@
       $modal.open({
         templateUrl: "modules/hercules/expressway-service/software-upgrade-dialog.html",
         controller: SoftwareUpgradeController,
-        controllerAs: "softwareUpgrade"
+        controllerAs: "softwareUpgrade",
+        resolve: {
+          serviceId: function () {
+            return vm.serviceId;
+          }
+        }
       }).result.then(function () {
-        //console.log("Starting upgrade dialog...");
+        ClusterService
+          .upgradeSoftware(vm.clusterId, vm.serviceType)
+          .then(function () {}, XhrNotificationService.notify);
       });
     };
 
@@ -237,10 +244,11 @@
     };
 
     /* @ngInject */
-    function SoftwareUpgradeController($modalInstance) {
+    function SoftwareUpgradeController(serviceId, $modalInstance) {
       var modalVm = this;
       modalVm.newVersion = vm.selectedService().not_approved_package.version;
       modalVm.oldVersion = vm.selectedService().connectors[0].version;
+      modalVm.serviceId = serviceId;
       modalVm.ok = function () {
         $modalInstance.close();
       };
