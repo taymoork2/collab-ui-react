@@ -838,7 +838,11 @@
       "serial": "Serial",
       "version": "Version",
       "status": "Status",
-      "alarms": "Alarms"
+      "alarms": "Alarms",
+      "serial": "Serial",
+      "hosts": "Hosts",
+      "goToHost": "Go to Host",
+      "remove": "Remove"
     },
     "clusters": {
       "deregister": "Deregister",
@@ -910,6 +914,25 @@
         "squared-fusion-cal": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
         "squared-fusion-ec": "Users can answer their work phone or call colleagues from Cisco Spark."
       }
+    },
+    "alarms": {
+      "alarms": "Alarms",
+      "critical": "Critical",
+      "error": "Error",
+      "warning": "Warning",
+      "alert": "Alert",
+      "severity": "Severity",
+      "firstReported": "First Reported",
+      "lastReported": "Last Reported",
+      "description": "Description",
+      "noAlarms": "No alarms reported"
+    },
+    "softwareUpgrade": {
+      "softwareUpgrade": "Software Upgrade",
+      "currentVersion": "Current Version",
+      "newVersion": "New Version",
+      "noNewAvailable": "No new software available",
+      "upgrade": "Upgrade"
     }
   },
   "firstTimeWizard": {
