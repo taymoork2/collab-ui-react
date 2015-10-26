@@ -12,23 +12,12 @@
       <h2 class="title-heading" translate="reportsPage.pageTitle"></h2>
       <div class="sync">
         <div class="report-filter-link">
-          <a id="allReports" class="report-link" ng-click="show(true,false)" translate="reportsPage.all"
-            ng-class="(showEngagement) ? 'selected-link': 'not-selected'"></a>
-        </div>
-        <div class="report-filter-link">
           <a id="engagementReports" class="report-link" ng-click="show(true,false);" translate="reportsPage.engagement"
             ng-class="showEngagement ? 'selected-link' : 'not-selected'"></a>
         </div>
         <div class="report-filter-link" ng-if="webexOptions.length > 0">
           <a id="webexReports" class="report-link" ng-click="show(false,true);" translate="reportsPage.webex"
             ng-class="showWebexReports ? 'selected-link' : 'not-selected'"></a>
-        </div>
-      </div>
-    </div>
-    <div class="columns medium-6 report-filters">
-      <div class="row">
-        <div class="large-4 columns" ng-if="webexOptions.length > 0">
-        <cs-select ng-if="showWebexReports" class="filter-one" name="timeFilter" ng-model="webexSelected" options="webexOptions" on-change-fn="updateWebexReports()"></cs-select>
         </div>
       </div>
     </div>
@@ -92,27 +81,5 @@
     </div>
   </div>
 
-  <div ng-if="showWebexReports" ng-include="'modules/webex/siteReports/siteReports.tpl.html'"/>
-  <!--
-  <cs-card-layout ng-if="webexReportsObject.viewReady && showWebexReports">
-    <cs-card class="cs-card medium" ng-repeat="sec in webexReportsObject.reports.sections">
-      <article>
-        <header>
-          <div class="h3">{{sec.section_name_translated}}</div>
-        </header>
-        <section id="siteSettingsCardSection">
-          <ul class="no-bullet">
-            <li ng-repeat="sref in sec.uisrefs">
-              <a id="{{sref.reportPageId}}"
-                name="{{sref.reportPageId}}"
-                ui-sref="{{sref.uisrefString}}">
-                {{sref.reportPageId_translated}}
-              </a>
-            </li>
-          </ul>
-        </section>
-      </article>
-    </cs-card>
-  </cs-card-layout>
--->
+  <div ng-if="showWebexReports" ng-include="'modules/webex/siteReports/siteReports.tpl.html'"></div>
 </div>
