@@ -1,6 +1,6 @@
-<cs-card-layout>
 <div class="cards-block">
-  <cs-card ng-repeat="huronFeature in huronFeaturesCtrl.listOfFeatures"
+<cs-card-layout block-view="true">
+  <cs-card ng-repeat="huronFeature in huronFeaturesCtrl.listOfFeatures | orderBy: 'cardName'"
            class="small header-background {{ huronFeaturesCtrl.cardColors[huronFeature.filterValue] }}">
     <article>
       <header>
@@ -12,10 +12,10 @@
             </button>
             <ul class="dropdown-menu dropdown-primary actions-services" role="menu">
               <li>
-                <a ng-click="huronFeaturesCtrl.editHuronFeature((huronFeature))" href="#"><span translate="huronFeatureDetails.editAction"></span></a>
+                <a ng-click="huronFeaturesCtrl.editHuronFeature((huronFeature))" href="#"><span translate="huronHuntGroup.editAction"></span></a>
               </li>
               <li>
-                <a ng-click="huronFeaturesCtrl.deleteHuronFeature((huronFeature))" href="#"><span translate="huronFeatureDetails.deleteAction"></span></a>
+                <a ng-click="huronFeaturesCtrl.deleteHuronFeature((huronFeature))" href="#"><span translate="huronHuntGroup.deleteAction"></span></a>
               </li>
             </ul>
           </span>
@@ -25,7 +25,7 @@
         <div class="card-section">
           <span class="card-section-num" ng-if="(huronFeature.numbers.length <= 2)"
                 ng-repeat="number in huronFeature.numbers">{{number}}</span>
-          <span class="card-section-num" ng-if="(huronFeature.numbers.length > 2)">{{:: huronFeature.numbers.length + ' '+ ('huronFeatureDetails.numbers' | translate)}}</span>
+          <span class="card-section-num" ng-if="(huronFeature.numbers.length > 2)">{{:: huronFeature.numbers.length + ' '+ ('huronHuntGroup.numbers' | translate)}}</span>
         </div>
         <div class="card-footer">
           <div class="left"><span ng-if="(huronFeature.filterValue === 'HG')" class="card-members left">
@@ -37,5 +37,5 @@
       </section>
     </article>
   </cs-card>
-</div>
 </cs-card-layout>
+</div>

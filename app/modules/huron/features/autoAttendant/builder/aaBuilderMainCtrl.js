@@ -26,7 +26,7 @@
     /////////////////////
 
     function closePanel() {
-      $state.go('autoattendant.aalanding');
+      $state.go('huronfeatures');
     }
 
     function updateCeInfos(ceInfos, ceInfo) {
@@ -227,7 +227,7 @@
       vm.ui.ceInfo = {};
       vm.ui.ceInfo.name = aaName;
 
-      vm.aaModel.dataReadyPromise.then(function (data) {
+      AutoAttendantCeInfoModelService.getCeInfosList().then(function (data) {
         selectAA(aaName);
       }, function (data) {
         selectAA(aaName);

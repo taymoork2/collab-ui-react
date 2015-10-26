@@ -6,6 +6,6 @@
     </div>
   </div>
   <ul class="dropdown-menu" role="menu">
-    <li ng-repeat="item in list | filter:options.templateOptions.currentInput"><a href ng-click="selectItem()">{{item}}</a></li>
+    <li ng-repeat="item in list | filter:changedValue"><a href ng-click="selectItem()">{{item}}</a></li>
   </ul>
 </div>

@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('uc.hurondetails')
+    .module('Huron')
     .controller('NewFeatureModalCtrl', NewFeatureModalCtrl);
 
   /* @ngInject */
@@ -17,9 +17,9 @@
         description: 'autoAttendant.modalDescription'
       }, {
         cssClass: 'HG',
-        code: 'huntGroup.code',
-        label: 'huntGroup.title',
-        description: 'huntGroup.modalDescription'
+        code: 'huronHuntGroup.code',
+        label: 'huronHuntGroup.title',
+        description: 'huronHuntGroup.modalDescription'
       }
       //  , {
       //  cssClass: 'CP',
@@ -35,6 +35,10 @@
     function ok(featureCode) {
       if (featureCode === 'HG') {
         $state.go('huronHuntGroup');
+      } else if (featureCode === 'AA') {
+        $state.go('huronfeatures.aabuilder', {
+          aaName: ''
+        });
       }
       $modalInstance.close(featureCode);
     }

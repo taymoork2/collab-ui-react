@@ -1093,7 +1093,7 @@ angular
           params: {
             aaName: ''
           },
-          templateUrl: 'modules/huron/callRouting/autoAttendant/builder/aaBuilderMain.tpl.html',
+          templateUrl: 'modules/huron/features/autoAttendant/builder/aaBuilderMain.tpl.html',
           controller: 'AABuilderMainCtrl',
           controllerAs: 'aaBuilderMain'
         })
@@ -1294,7 +1294,7 @@ angular
         .state('huronfeatures', {
           url: '/features',
           parent: 'hurondetails',
-          templateUrl: 'modules/huron/features/features.tpl.html',
+          templateUrl: 'modules/huron/features/featureLanding/features.tpl.html',
           controller: 'HuronFeaturesCtrl',
           controllerAs: 'huronFeaturesCtrl'
         })
@@ -1304,6 +1304,30 @@ angular
           controller: 'NewFeatureCtrl',
           controllerAs: 'newFeatureCtrl',
           templateUrl: 'modules/huron/features/newFeature/newFeature.tpl.html'
+        })
+        .state('huronfeatures.aabuilder', {
+          parent: 'hurondetails',
+          params: {
+            aaName: ''
+          },
+          templateUrl: 'modules/huron/features/autoAttendant/builder/aaBuilderMain.tpl.html',
+          controller: 'AABuilderMainCtrl',
+          controllerAs: 'aaBuilderMain'
+        })
+        .state('huronfeatures.deleteFeature', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'HuronFeatureDeleteCtrl',
+              controllerAs: 'huronFeatureDelete',
+              templateUrl: 'modules/huron/features/featureLanding/featureDeleteModal.tpl.html'
+            }
+          },
+          params: {
+            deleteFeatureName: null,
+            deleteFeatureId: null,
+            deleteFeatureType: null
+          }
         })
         .state('huronfeatures.deleteHuntGroup', {
           parent: 'modal',
@@ -1422,6 +1446,37 @@ angular
             'fullPane': {
               templateUrl: 'modules/hercules/expressway-service/call-about.html'
             }
+          }
+        })
+        .state('management-service', {
+          templateUrl: 'modules/hercules/expressway-service/overview.html',
+          controller: 'ExpresswayServiceController',
+          controllerAs: 'exp',
+          data: {
+            serviceType: "c_mgmt"
+          },
+          parent: 'main',
+          abstract: true
+        })
+        .state('management-service.list', {
+          url: '/services/expressway-management',
+          views: {
+            'fullPane': {
+              templateUrl: 'modules/hercules/expressway-service/cluster-list.html'
+            }
+          }
+        })
+        .state('management-service.settings', {
+          url: '/services/expressway-management/settings',
+          views: {
+            'fullPane': {
+              controllerAs: 'expresswayServiceSettings',
+              controller: 'ExpresswayServiceSettingsController',
+              templateUrl: 'modules/hercules/expressway-service/management-service-settings.html'
+            }
+          },
+          params: {
+            serviceType: "c_mgmt"
           }
         })
         .state('cluster-details-new', {

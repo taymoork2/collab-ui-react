@@ -113,10 +113,14 @@ angular.module('Core')
       return {
         Base64: Base64,
 
-        sprintf: function (template, values) {
-          return template.replace(/%s/g, function () {
+        sprintf: function (template, params) {
+          var values = _.clone(params);
+
+          var url = template.replace(/%s/g, function () {
             return values.shift();
           });
+
+          return url;
         },
 
         startsWith: function (str, prefix) {

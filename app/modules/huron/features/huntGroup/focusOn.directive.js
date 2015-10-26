@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('uc.huntGroup')
+    .module('Huron')
     .directive('focusOn', /* @ngInject */ function ($timeout) {
       return {
         restrict: 'A',

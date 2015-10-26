@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('uc.huntGroup')
+    .module('Huron')
     .controller('HuntGroupSetupAssistantCtrl', HuntGroupSetupAssistantCtrl);
 
   /* @ngInject */
@@ -17,10 +17,11 @@
     vm.close = closePanel;
     vm.selectHuntGroupNumber = selectHuntGroupNumber;
     vm.selectHuntGroupUser = selectHuntGroupUser;
+    vm.setHuntMethod = setHuntMethod;
+    vm.huntGroupName = undefined;
     vm.fetchNumbers = fetchNumbers;
     vm.unSelectHuntGroupNumber = unSelectHuntGroupNumber;
     vm.cancelModal = cancelModal;
-    vm.huntMethodSelection = huntMethodSelection;
     vm.evalKeyPress = evalKeyPress;
     vm.enterNextPage = enterNextPage;
 
@@ -30,8 +31,23 @@
     vm.animation = 'slide-left';
     vm.huntGroupName = '';
     vm.huntGroupNumber = undefined;
-    vm.huntGroupMethod = '';
     vm.users = [];
+    vm.hgMethods = {
+      "longestIdle": "longest-idle",
+      "broadcast": "broadcast",
+      "circular": "circular",
+      "topDown": "top-down"
+    };
+    vm.huntGroupMethod = vm.hgMethods.longestIdle;
+    vm.numberData = [{
+      "userNumber": "1597534567"
+    }, {
+      "userNumber": "6549873210"
+    }, {
+      "userNumber": "3216549870"
+    }, {
+      "userNumber": "3692581470"
+    }];
     vm.userData = [{
       "userName": "samwi",
       "userNumber": ["3579517894", "9876543210"]
@@ -131,11 +147,6 @@
       return vm.pageIndex;
     }
 
-    function huntMethodSelection($method) {
-      vm.huntGroupMethod = $method;
-      nextPage();
-    }
-
     function closePanel() {
       $state.go('huronfeatures');
     }
@@ -148,6 +159,17 @@
       vm.userSelected = undefined;
       vm.users.push(selectedUser);
     }
+
+    function setHuntMethod(methodSelected) {
+
+      if (vm.huntGroupMethod === methodSelected) {
+        nextPage();
+      } else {
+        vm.huntGroupMethod = methodSelected;
+      }
+    }
+
+    function init() {}
 
     function cancelModal() {
       $modal.open({

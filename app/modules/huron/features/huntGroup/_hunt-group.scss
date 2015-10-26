@@ -1,15 +1,23 @@
+$overlay-panel-height: 93px;
+
+@import 'setupAssistantPages/_hunt-pilot-lookup';
+@import 'setupAssistantPages/_hunt-method';
+@import 'setupAssistantPages/_hunt-members-lookup';
+
 .huntgroup {
   &.overlay-panel {
-    display: flex;
-    flex-direction: column;
     & cs-setup-assistant {
       width: 100%;
     }
-    .panel-content {
-      flex: 1;
-      display: flex;
-      align-items: center;
-    }
+  }
+  .panel-content {
+    flex : 1;
+    height: calc(100vh - #{$navbar-height + $overlay-panel-height});
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
   }
 }
 
@@ -63,7 +71,7 @@
     }
 
     &::-webkit-input-placeholder {
-      text-align:center;
+      text-align: center;
     }
     &::-moz-placeholder {
       text-align: center;
@@ -93,54 +101,3 @@
   }
 }
 
-///// Styling for Hunt Pilot number page. /////
-.pilot-number-details {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  align-content: center;
-  justify-content: center;
-}
-
-.number-pill-container {
-  position: fixed;
-  width: 40rem;
-  max-height: 12rem;
-  left: 50%;
-  @include vr-spacing(ml,20,0px,true);
-  overflow: auto;
-  display: inline-flex;
-  //align-content: center;
-  flex-flow: row wrap;
-  flex: 1;
-  justify-content: center;
-  margin-right: auto;
-}
-
-.number-pill-item {
-  display: inline-block;
-  width: rem-calc(200);
-  height: rem-calc(35);
-  background-color: $color-primary;
-  border-radius: rem-calc(4);
-  color: $color-white;
-  @include vr-spacing(p,0.5);
-  @include vr-spacing(m,0.25);
-
-  & a, & a:hover {
-    color: $color-white;
-  }
-
-  & .hunt-number {
-    display: inline-block;
-    min-width: 85%;
-    text-align: left;
-  }
-}
-///////////////////////////////////
-
-.hunt-method-description {
-  @include vr-spacing(p, 1);
-  color: $gray;
-  font-style: italic;
-}

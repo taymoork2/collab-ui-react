@@ -91,6 +91,9 @@
       <div id="content-share-sizes-refresh" class="metrics-refresh" ng-show="showContentShareSizesRefresh"><i class='icon icon-spinner icon-2x'/></div>
     </div>
   </div>
+
+  <div ng-if="showWebexReports" ng-include="'modules/webex/siteReports/siteReports.tpl.html'"/>
+  <!--
   <cs-card-layout ng-if="webexReportsObject.viewReady && showWebexReports">
     <cs-card class="cs-card medium" ng-repeat="sec in webexReportsObject.reports.sections">
       <article>
@@ -111,4 +114,5 @@
       </article>
     </cs-card>
   </cs-card-layout>
+-->
 </div>

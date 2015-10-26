@@ -58,11 +58,12 @@ describe('Controller: AABuilderMainCtrl', function () {
     AutoAttendantCeService = _AutoAttendantCeService_;
     Notification = _Notification_;
 
-    aaModel.dataReadyPromise = $q(function () {});
-    $stateParams.name = '';
+    // aaModel.dataReadyPromise = $q(function () {});
+    $stateParams.aaName = '';
 
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
     spyOn(AAUiModelService, 'initUiModel');
+    spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue($q.when($stateParams.aaName));
 
     controller = $controller('AABuilderMainCtrl as vm', {
       $scope: $scope,

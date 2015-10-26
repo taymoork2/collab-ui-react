@@ -49,8 +49,7 @@ angular.module('Huron', [
   'uc.didadd',
   'uc.overview',
   'uc.hurondetails',
-  'uc.cdrlogsupport',
-  'uc.huntGroup'
+  'uc.cdrlogsupport'
 ]);
 
 angular.module('Hercules', ['Core', 'ngTagsInput']);

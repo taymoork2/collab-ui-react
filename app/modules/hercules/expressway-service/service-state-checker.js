@@ -34,10 +34,10 @@
 
     function checkIfConnectorsConfigured(connectorType) {
       var clusters = ClusterService.getClusters();
-      var noConnectorsConfigured = _.all(clusters, function (cluster) {
-        return !cluster.isConnectorConfigured(connectorType);
+      var areAllConnectorsConfigured = _.all(clusters, function (cluster) {
+        return allConnectorsConfigured(cluster, connectorType);
       });
-      if (noConnectorsConfigured) {
+      if (!areAllConnectorsConfigured) {
         NotificationService.addNotification(
           NotificationService.types.TODO,
           'configureConnectors',
@@ -69,6 +69,9 @@
     }
 
     function checkUserStatuses(serviceId) {
+      if (serviceId == "squared-fusion-mgmt") {
+        return;
+      }
       var summaryForService = _.find(USSService2.getStatusesSummary(), {
         serviceId: serviceId
       });
@@ -129,6 +132,15 @@
             }
           }
         }
+      });
+    }
+
+    function allConnectorsConfigured(cluster, serviceType) {
+      var service = _.find(cluster.services, {
+        service_type: serviceType
+      });
+      return _.all(service.connectors, function (connector) {
+        return connector.state !== 'not_configured';
       });
     }
 
