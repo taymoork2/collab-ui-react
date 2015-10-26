@@ -15,10 +15,10 @@
 <div ng-if="expresswayServiceSettings.certificates.length > 0">
   <p>Uploaded Certificates:</p>
   <div data-ng-repeat="cert in expresswayServiceSettings.certificates" class="row">
-    <div class="small-8 columns">
+    <div class="small-7 columns">
       <span>{{cert.decoded.subjectDN}}</span>
     </div>
-    <div class="small-3 columns">
+    <div class="small-4 columns">
       <span>Expires: {{cert.decoded.notAfter | date:'yyyy-MM-dd'}}</span>
     </div>
     <div class="small-1 columns">
