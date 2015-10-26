@@ -118,7 +118,7 @@
     }
 
     vm.openUserStatusReportModal = function (serviceId) {
-      $scope.currentServiceId = serviceId; //TODO: Fix. Currently compatible with "old" concept...
+      $scope.selectedServiceId = serviceId; //TODO: Fix. Currently compatible with "old" concept...
       $scope.modal = $modal.open({
         scope: $scope,
         controller: 'ExportUserStatusesController',
