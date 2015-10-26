@@ -14,14 +14,14 @@
       
       <section>
         <ul class="no-bullet">
-          <li ng-repeat="pageObj in WebExSiteSettings.siteSettingsObj.commonSettingsCardObj.pageObjs">
+          <div ng-repeat="pageObj in WebExSiteSettings.siteSettingsObj.commonSettingsCardObj.pageObjs">
             <a id={{pageObj.id}}
                name={{pageObj.id}}
                ui-sref={{pageObj.uiSref}}>
 
               {{pageObj.label}}
             </a>
-          </li>
+          </div>
         </ul>
       </section>
     </article>

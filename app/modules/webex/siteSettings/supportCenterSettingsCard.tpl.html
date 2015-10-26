@@ -11,28 +11,28 @@
       
       <section>        
         <ul class="no-bullet">
-          <li ng-repeat="pageObj in WebExSiteSettings.siteSettingsObj.supportCenterSettingsCardObj.pageObjs">
+          <div ng-repeat="pageObj in WebExSiteSettings.siteSettingsObj.supportCenterSettingsCardObj.pageObjs">
             <a id={{pageObj.id}}
                name={{pageObj.id}}
                ui-sref={{pageObj.uiSref}}>
 
               {{pageObj.label}}
             </a>
-          </li>
+          </div>
         
           <div ng-if="0 < WebExSiteSettings.siteSettingsObj.supportCenterSettingsCardObj.webACDSettingsObj.pageObjs.length">
             <h4>
               {{WebExSiteSettings.siteSettingsObj.supportCenterSettingsCardObj.webACDSettingsObj.label}}
             </h4>
 
-            <li ng-repeat="pageObj in WebExSiteSettings.siteSettingsObj.supportCenterSettingsCardObj.webACDSettingsObj.pageObjs">
+            <div ng-repeat="pageObj in WebExSiteSettings.siteSettingsObj.supportCenterSettingsCardObj.webACDSettingsObj.pageObjs">
               <a id={{pageObj.id}}
                   name={{pageObj.id}}
                   ui-sref={{pageObj.uiSref}}>
 
                  {{pageObj.label}}
               </a>
-            </li>
+            </div>
           </div>
         
           <div ng-if="0 < WebExSiteSettings.siteSettingsObj.supportCenterSettingsCardObj.remoteAccessSettingsObj.pageObjs.length">
@@ -40,14 +40,14 @@
               {{WebExSiteSettings.siteSettingsObj.supportCenterSettingsCardObj.remoteAccessSettingsObj.label}}
             </h4>
           
-            <li ng-repeat="pageObj in WebExSiteSettings.siteSettingsObj.supportCenterSettingsCardObj.remoteAccessSettingsObj.pageObjs">
+            <div ng-repeat="pageObj in WebExSiteSettings.siteSettingsObj.supportCenterSettingsCardObj.remoteAccessSettingsObj.pageObjs">
               <a id={{pageObj.id}}
                  name={{pageObj.id}}
                  ui-sref={{pageObj.uiSref}}>
 
                 {{pageObj.label}}
               </a>
-            </li>
+            </div>
           </div>
         </ul>
       </section>
