@@ -12,8 +12,8 @@
       <h2 class="title-heading" translate="reportsPage.pageTitle"></h2>
       <div class="sync">
         <div class="report-filter-link">
-          <a id="allReports" class="report-link" ng-click="show(true,true)" translate="reportsPage.all"
-            ng-class="(showEngagement && showWebexReports) ? 'selected-link': 'not-selected'"></a>
+          <a id="allReports" class="report-link" ng-click="show(true,false)" translate="reportsPage.all"
+            ng-class="(showEngagement) ? 'selected-link': 'not-selected'"></a>
         </div>
         <div class="report-filter-link">
           <a id="engagementReports" class="report-link" ng-click="show(true,false);" translate="reportsPage.engagement"
