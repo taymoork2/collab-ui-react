@@ -116,8 +116,14 @@
     vm.serviceIconClass = ServiceDescriptor.serviceIcon(vm.currentServiceId);
 
     if (vm.currentServiceId == "squared-fusion-mgmt") {
-      vm.serviceEnabled = true;
-      vm.loading = false;
+      ServiceDescriptor.services(function (error, services) {
+        if (!error) {
+          vm.serviceEnabled = _.any(ServiceDescriptor.filterAllExceptManagement(services), {
+            enabled: true
+          });
+          vm.loading = false;
+        }
+      });
     } else {
       vm.serviceEnabled = false;
       ServiceDescriptor.isServiceEnabled(serviceType2ServiceId(vm.currentServiceType), function (a, b) {

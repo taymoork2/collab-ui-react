@@ -41,11 +41,13 @@
     <div class="section-title-row section-name">
       Hosts
     </div>
-    <ul>
-      <li class="feature" ng-repeat="host in alarmCtrl.alarm.hosts">
-        {{host.host_name}}
-      </li>
-    </ul>
+    <div>
+      <ul>
+        <li ng-repeat="host in alarmCtrl.alarm.hosts">
+          {{host.host_name}}
+        </li>
+      </ul>
+    </div>
   </cs-sp-section>
 
 </cs-sp-container>
