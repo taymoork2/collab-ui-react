@@ -285,8 +285,8 @@
     /* @ngInject */
     function SoftwareUpgradeController($modalInstance) {
       var modalVm = this;
-      modalVm.newVersion = vm.selectedService.not_approved_package.version;
-      modalVm.oldVersion = vm.selectedService.connectors[0].version;
+      modalVm.newVersion = vm.selectedService().not_approved_package.version;
+      modalVm.oldVersion = vm.selectedService().connectors[0].version;
       modalVm.ok = function () {
         $modalInstance.close();
       };
