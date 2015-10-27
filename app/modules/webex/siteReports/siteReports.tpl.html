@@ -4,13 +4,14 @@
   </div>
 </div>
 <cs-card-layout ng-if="webexReportsObject.viewReady">
-  <div ng-repeat="sec in webexReportsObject.reports.sections">
+<div ng-repeat="sec in webexReportsObject.reports.sections">
   <div ng-if="'common_reports' == sec.section_name">
     <cs-card class="medium header-bar">
       <article>
         <header id={{sec.section_name}}
-              name={{sec.section_name}}
-              class="no-bullet">
+                name={{sec.section_name}}
+                class="no-bullet">
+
           <div class="h3">
             {{sec.section_name_translated}}
           </div>
@@ -45,38 +46,33 @@
 
         <section id="siteSettingsCardSection">
           <ul class="no-bullet">
-            <li ng-repeat="sref in sec.uisrefs">
+            <div ng-repeat="sref in sec.uisrefs">
               <a id="{{sref.reportPageId}}"
                  name="{{sref.reportPageId}}"
                  ui-sref="{{sref.uisrefString}}">
 
                 {{sref.reportPageId_translated}}
               </a>
-            </li>
+            </div>
 
             <div ng-repeat="s in sec.subsections">
-              <h4 id={{s.section_name}}
-                  name={{s.section_name}}
-                  class="no-bullet">
+              <h4 id="{{s.section_name}}"
+                  name="{{s.section_name}}">
 		        {{s.section_name_translated}}
 		      </h4>
+              <div ng-repeat="sref in s.uisrefs">
+                <a id="{{sref.reportPageId}}"
+                   name="{{sref.reportPageId}}"
+                   ui-sref="{{sref.uisrefString}}">
 
-              <li ng-repeat="s in sec.subsections">
-			    <div ng-repeat="sref in s.uisrefs">
-			      <a id="{{sref.reportPageId}}"
-                     name="{{sref.reportPageId}}"
-                     ui-sref="{{sref.uisrefString}}"
-                     ng-repeat="sref in s.uisrefs">
-
-                    {{sref.reportPageId_translated}}
-                  </a>
-                </div>
-              </li>
+                  {{sref.reportPageId_translated}}
+                </a>
+              </div>
             </div>
           </ul>
         </section>
       </article>
     </cs-card>
   </div>
-  </div>
+</div>
 </cs-card-layout>
