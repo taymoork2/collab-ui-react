@@ -41,12 +41,12 @@
         clusterStatus = "not_configured";
       } else if (nfOfConnectorsInState(service, "uninstalling") > 0 || nfOfConnectorsInState(service, "downloading") > 0 || nfOfConnectorsInState(service, "installing") > 0) {
         clusterStatus = "installing";
-      } else if (nfOfConnectorsInState(service, "disabled") > 0) {
-        clusterStatus = "disabled";
       } else if (nfOfConnectorsInState(service, "stopped") > 0) {
         clusterStatus = "stopped";
       } else if (nfOfConnectorsInState(service, "offline") > 0) {
         clusterStatus = "offline";
+      } else if (nfOfConnectorsInState(service, "not_installed") > 0) {
+        clusterStatus = "not_installed";
       }
       return clusterStatus;
     };

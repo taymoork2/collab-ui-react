@@ -1,22 +1,21 @@
 <script type="text/ng-template" id="numberTemplate.html">
   <a>
-    <span ng-bind-html="match.label | typeaheadHighlight:query" ></span>
+    <span ng-bind-html="(match.label.number | telephoneNumber) | typeaheadHighlight:query" ></span>
   </a>
 </script>
 <div class="pilot-number-details">
   <div class="typeahead-large">
-    <span class="input-search"></span>
-    <input id="numberInput" type="text" ng-model="huntGroupSA.selected"
-           typeahead="number as num.number for num in huntGroupSA.fetchNumbers($viewValue) | limitTo:10"
-           typeahead-on-select="huntGroupSA.selectHuntGroupNumber($item)"
+    <input id="numberInput" type="text" ng-model="huntGroupSA.selectedPilotNumber"
+           typeahead="num for num in huntGroupSA.fetchNumbers($viewValue) | limitTo:10"
+           typeahead-on-select="huntGroupSA.selectPilotNumber($item)"
            typeahead-template-url="numberTemplate.html" placeholder="{{:: 'huronHuntGroup.numberPlaceholder' | translate}}"
            ng-keypress="huntGroupSA.enterNextPage($event.keyCode)" focus-on/>
     <p class="input-description" translate="huronHuntGroup.numberHint"></p>
   </div>
   <div class="pilot-number-container">
-        <span class="pilot-number-item" ng-repeat="number in huntGroupSA.selectedPilotNumbers">
-          <span class="pilot-number">{{number}}</span>
-          <a href='#' class="icon icon-close icon-lg" ng-click="huntGroupSA.unSelectHuntGroupNumber(number)"></a>
+        <span class="pilot-number-item" ng-repeat="num in huntGroupSA.selectedPilotNumbers">
+          <span class="pilot-number">{{num.number | telephoneNumber}}</span>
+          <a href='#' class="icon icon-close icon-lg" ng-click="huntGroupSA.unSelectPilotNumber(num)"></a>
         </span>
   </div>
 </div>

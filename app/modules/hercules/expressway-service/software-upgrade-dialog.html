@@ -7,16 +7,17 @@
 <div class="modal-body hercules-fix-paragraphs hercules-settings-table">
 
   <p>
-    <i class="icon icon-warning yellow"/></i> Upgrade may involve a service outage. Please see release notes.
-  </p>
-
-  <p>
-    You are about to upgrade the software for the Calendar Service on all hosts running on the Cisco Expressway Cluster
-  {{softwareUpgrade.clusterName}}.
+    You are about to upgrade the software for the <span
+    translate="hercules.serviceNames.{{softwareUpgrade.serviceId}}"></span> on all
+    hosts in the selected Cisco Expressway Cluster:
   </p>
 
   <table>
     <tbody>
+    <tr>
+      <td translate="hercules.connectors.cluster_id"></td>
+      <td><span>{{softwareUpgrade.clusterName}}</span></td>
+    </tr>
     <tr>
       <td translate="hercules.softwareUpgrade.currentVersion"></td>
       <td><span>{{softwareUpgrade.oldVersion}}</span></td>

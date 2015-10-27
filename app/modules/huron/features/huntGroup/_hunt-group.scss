@@ -23,29 +23,7 @@ $overlay-panel-height: 93px;
 
 ///// Type ahead input box styling with icon ///////
 .typeahead-large {
-  display: flex;
-  flex-direction: row;
-  flex: 1;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  font-family: $brand-font-thin;
-  width: 40rem;
-  margin-left: auto;
-  margin-right: auto;
-  border: 0;
-  color: $gray-dark-1;
-
-  // Search-icon.
-  .input-search {
-    @extend .icon;
-    @extend .icon-search;
-    @extend .icon-lg;
-    @include vr-spacing(ph, 1);
-  }
-
-  // Description.
-  .input-description {
+  .input-hint {
     border: 0;
     border-top: solid rem(1px) $gray-light;
     width: 100%;
@@ -57,46 +35,8 @@ $overlay-panel-height: 93px;
 
   // Input control.
   input {
-    font-size: $font-size-h2;
-    text-align: center;
-    outline: none;
-    width: 28rem;
-    border: 0px none;
-    &:focus {
-      box-shadow: none;
-    }
-
-    &:focus ~ .input-description {
+    &:focus ~ .input-hint {
       border-top: solid rem(1px) $brand-primary;
-    }
-
-    &::-webkit-input-placeholder {
-      text-align: center;
-    }
-    &::-moz-placeholder {
-      text-align: center;
-    }
-    &:-ms-input-placeholder {
-      text-align: center;
-    }
-  }
-
-  // Suggestion dropdown.
-  .dropdown-menu {
-    min-width: 28rem;
-    .active > a {
-      background: $gray-light-2;
-    }
-
-    & li a {
-      @include vr-spacing(ph, 1);
-      @include vr-spacing(pv, 0.5);
-    }
-
-    & span {
-      font-size: $font-size-h3;
-      font-family: $brand-font-cisco-TT-Extra-Light;
-      color: $gray-dark-2;
     }
   }
 }
