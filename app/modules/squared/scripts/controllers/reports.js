@@ -41,7 +41,7 @@ angular.module('Squared')
             });
           }
           $scope.webexSelected = $scope.webexOptions[selectedIndex];
-          if($scope.webexOptions.length){
+          if ($scope.webexOptions.length) {
             $scope.updateWebexReports();
           }
         });
