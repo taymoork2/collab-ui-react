@@ -55,12 +55,10 @@ angular.module('Core')
         '  </div>' + '\n' +
         '  <div ng-if="row.entity.isIframeSupported">' + '\n' +
         '    <a id="{{row.entity.license.siteUrl}}_webex-site-settings"' + '\n' +
+        '       name="{{row.entity.license.siteUrl}}_webex-site-settings"' + '\n' +
         '       ui-sref="site-settings({siteUrl:row.entity.license.siteUrl})">' + '\n' +
         '      <p class="ngCellText">' + '\n' +
-        '        <span name="webexSiteSettings"' + '\n' +
-        '              id="webexSiteSettings">' + '\n' +
-        '          <i class="icon-settings icon"></i>' + '\n' +
-        '        </span>' + '\n' +
+        '        <i class="icon-settings icon"></i>' + '\n' +
         '      </p>' + '\n' +
         '    </a>' + '\n' +
         '  </div>' + '\n' +
@@ -82,13 +80,11 @@ angular.module('Core')
         '      </launch-site>' + '\n' +
         '    </div>' + '\n' +
         '    <div ng-if="row.entity.isIframeSupported">' + '\n' +
-        '       <a id="webex-reports-list-iframe"' + '\n' +
-        '           ui-sref="reports({tab:\'webex\',siteUrl:row.entity.license.siteUrl})"> ' + '\n' +
+        '       <a id="{{row.entity.license.siteUrl}}_webex-site-reports"' + '\n' +
+        '          name="{{row.entity.license.siteUrl}}_webex-site-reports"' + '\n' +
+        '          ui-sref="reports({tab:\'webex\',siteUrl:row.entity.license.siteUrl})"> ' + '\n' +
         '        <p class="ngCellText">' + '\n' +
-        '          <span name="webexReports"' + '\n' +
-        '                id="webexReports">' + '\n' +
-        '            <i class="icon-settings icon"></i>' + '\n' +
-        '          </span>' + '\n' +
+        '          <i class="icon-settings icon"></i>' + '\n' +
         '        </p>' + '\n' +
         '       </a>' + '\n' +
         '    </div>' + '\n' +
