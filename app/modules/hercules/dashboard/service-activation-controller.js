@@ -16,6 +16,14 @@
           $scope.loading = false;
         });
 
+        $scope.setServices = function (services) {
+          $scope.services = {
+            all: services,
+            enabledOnly: ServiceDescriptor.filterEnabledServices(services),
+            allExceptManagement: ServiceDescriptor.filterAllExceptManagement(services)
+          };
+        };
+
         var updateServices = function (updatedServices) {
           _.forEach(updatedServices, function (service) {
             ServiceDescriptor.setServiceEnabled(service.id, service.enabled, function (error) {
