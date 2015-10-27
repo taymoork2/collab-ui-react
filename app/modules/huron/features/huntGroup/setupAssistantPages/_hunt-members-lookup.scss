@@ -1,0 +1,29 @@
+
+.typeahead-large .dropdown-menu {
+
+  li .hunt-member-name {
+    @include vr-spacing(ph, 2);
+    @include vr-spacing(pv, 0.5);
+    background: $color-white;
+    cursor: default;
+  }
+
+  & .active > .hunt-member-line {
+    background: $color-white;
+  }
+
+  li .hunt-member-line {
+    @include vr-spacing(ph, 2);
+    @include vr-spacing(pv, 0.5);
+
+    & span {
+      font-size: $font-size-h4;
+      font-family: $brand-font-cisco-TT-Extra-Light;
+      color: $gray-dark-1;
+    }
+  }
+
+  .hunt-member-line:hover {
+    background: $gray-light-3;
+  }
+}

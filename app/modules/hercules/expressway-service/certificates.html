@@ -12,23 +12,29 @@
   <p><em>No certificates uploaded. Using the default trust list.</em></p>
 </div>
 
-<div ng-if="expresswayServiceSettings.certificates.length > 0">
+<div ng-if="expresswayServiceSettings.certificates.length > 0" class="hercules-certificates-table">
   <p>Uploaded Certificates:</p>
-  <div data-ng-repeat="cert in expresswayServiceSettings.certificates" class="row">
-    <div class="small-7 columns">
-      <span>{{cert.decoded.subjectDN}}</span>
-    </div>
-    <div class="small-4 columns">
-      <span>Expires: {{cert.decoded.notAfter | date:'yyyy-MM-dd'}}</span>
-    </div>
-    <div class="small-1 columns">
-      <i class="icon icon-trash icon-lg hercules-trash-icon right"
-         ng-click="expresswayServiceSettings.confirmCertDelete(cert)"
-         tooltip-placement="top"
-         tooltip="Delete Certificate"
-         tooltip-animation="false"></i>
-    </div>
-  </div>
+  <hr>
+  <table>
+    <tbody>
+    <tr data-ng-repeat="cert in expresswayServiceSettings.certificates">
+      <td>
+        <span>{{cert.decoded.subjectDN}}</span>
+        <br>
+        <span>Expires: {{cert.decoded.notAfter | date:'yyyy-MM-dd'}}</span>
+      </td>
+      <td>
+        <i class="icon icon-trash icon-lg hercules-trash-icon right"
+           style="margin-left: 10px; margin-top: 5px;"
+           ng-click="expresswayServiceSettings.confirmCertDelete(cert)"
+           tooltip-placement="top"
+           tooltip="Delete Certificate"
+           tooltip-animation="false"></i>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <hr>
 </div>
 <button class="button secondary" name="file" accept="application/x-x509-ca-cert"
      ngf-select="expresswayServiceSettings.uploadCert($file, $event)"

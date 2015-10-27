@@ -76,7 +76,7 @@ describe('Controller: ReportsCtrl', function () {
 
     it('should show engagement as well as webex reports as true', function () {
       expect($scope.showEngagement).toEqual(true);
-      expect($scope.showWebexReports).toEqual(true);
+      expect($scope.showWebexReports).toEqual(false);
     });
 
     it('should not have anything in the dropdown for webex reports', function () {

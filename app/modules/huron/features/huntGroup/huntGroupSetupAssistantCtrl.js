@@ -15,23 +15,23 @@
     vm.previousButton = previousButton;
     vm.getPageIndex = getPageIndex;
     vm.close = closePanel;
-    vm.selectHuntGroupNumber = selectHuntGroupNumber;
-    vm.selectHuntGroupUser = selectHuntGroupUser;
+    vm.selectPilotNumber = selectPilotNumber;
+    vm.selectHuntGroupMember = selectHuntGroupMember;
     vm.setHuntMethod = setHuntMethod;
     vm.huntGroupName = undefined;
     vm.fetchNumbers = fetchNumbers;
-    vm.unSelectHuntGroupNumber = unSelectHuntGroupNumber;
+    vm.unSelectPilotNumber = unSelectPilotNumber;
+    vm.fetchHuntMembers = fetchHuntMembers;
     vm.cancelModal = cancelModal;
     vm.evalKeyPress = evalKeyPress;
     vm.enterNextPage = enterNextPage;
 
-    vm.selected = undefined;
+    vm.selectedPilotNumber = undefined;
     vm.selectedPilotNumbers = [];
+    vm.selectedHuntMembers = [];
     vm.pageIndex = 0;
     vm.animation = 'slide-left';
     vm.huntGroupName = '';
-    vm.huntGroupNumber = undefined;
-    vm.users = [];
     vm.hgMethods = {
       "longestIdle": "longest-idle",
       "broadcast": "broadcast",
@@ -39,50 +39,37 @@
       "topDown": "top-down"
     };
     vm.huntGroupMethod = vm.hgMethods.longestIdle;
-    vm.numberData = [{
-      "userNumber": "1597534567"
-    }, {
-      "userNumber": "6549873210"
-    }, {
-      "userNumber": "3216549870"
-    }, {
-      "userNumber": "3692581470"
-    }];
-    vm.userData = [{
-      "userName": "samwi",
-      "userNumber": ["3579517894", "9876543210"]
-    }, {
-      "userName": "nlipe",
-      "userNumber": ["6549873210"]
-    }, {
-      "userName": "brspence",
-      "userNumber": ["3216549870"]
-    }, {
-      "userName": "jlowery",
-      "userNumber": ["3692581470"]
-    }];
     vm.userSelected = undefined;
 
     // ==============================================
 
+    function fetchHuntMembers(nameHint) {
+      return HuntGroupService.getHuntMembers(
+        'name', nameHint,
+        vm.selectedHuntMembers,
+        onFailureNotify('huntGroup.nameFetchFailure'));
+    }
+
     function fetchNumbers(typedNumber) {
       return HuntGroupService.getPilotNumberSuggestions(
-        typedNumber,
+        'number', typedNumber,
         vm.selectedPilotNumbers,
-        onFetchNumbersFailure);
+        onFailureNotify('huntGroup.numberFetchFailure'));
     }
 
-    function onFetchNumbersFailure(response) {
-      Notification.errorResponse(response, 'huntGroup.numberFetchFailure');
+    function onFailureNotify(notificationKey) {
+      return function (response) {
+        Notification.errorResponse(response, notificationKey);
+      };
     }
 
-    function selectHuntGroupNumber($item) {
-      vm.selected = undefined;
-      vm.selectedPilotNumbers.push($item.number);
+    function selectPilotNumber(numItem) {
+      vm.selectedPilotNumber = undefined;
+      vm.selectedPilotNumbers.push(numItem);
     }
 
-    function unSelectHuntGroupNumber(number) {
-      vm.selectedPilotNumbers.splice(vm.selectedPilotNumbers.indexOf(number), 1);
+    function unSelectPilotNumber(numItem) {
+      vm.selectedPilotNumbers.splice(vm.selectedPilotNumbers.indexOf(numItem), 1);
     }
 
     function nextButton($index) {
@@ -109,7 +96,7 @@
         }
         break;
       case 3:
-        if (vm.users.length === 0) {
+        if (vm.selectedHuntMembers.length === 0) {
           return false;
         } else {
           return true;
@@ -151,13 +138,17 @@
       $state.go('huronfeatures');
     }
 
-    function selectHuntGroupUser($item) {
-      var selectedUser = {
-        'userName': $item.userName,
-        'userNumber': $item.userNumber
-      };
+    function selectHuntGroupMember(user) {
       vm.userSelected = undefined;
-      vm.users.push(selectedUser);
+      if (huntNumberSelected(user)) {
+        vm.selectedHuntMembers.push(user);
+      }
+    }
+
+    function huntNumberSelected(user) {
+      return user.numbers.filter(function (n) {
+        return (n.isSelected);
+      }).length > 0;
     }
 
     function setHuntMethod(methodSelected) {
@@ -202,7 +193,7 @@
 
     function enterNextPage($keyCode) {
       if ($keyCode === 13 && nextButton(getPageIndex()) === true) {
-        if (vm.selected === undefined || vm.userSelected === undefined || vm.huntGroupName !== '') {
+        if (vm.selectedPilotNumber === undefined || vm.userSelected === undefined || vm.huntGroupName !== '') {
           nextPage();
         }
       }

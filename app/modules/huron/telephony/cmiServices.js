@@ -97,6 +97,18 @@
     });
   })
 
+  /*
+   * TODO: UserSearchServiceV2 is a temp setup until UserServiceCommonV2's GET/search functionality is implemented.
+   */
+  .factory('UserSearchServiceV2', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getMockHgUrl() + '/customers/:customerId/users/:userId', {
+      secret: 'sunlight',
+      customerId: '@customerId',
+      name: '@name',
+      userId: '@userId',
+    });
+  })
+
   .factory('NumberSearchServiceV2', function ($resource, HuronConfig) {
     var baseUrl = HuronConfig.getMockHgUrl();
     //var baseUrl = HuronConfig.getCmiV2Url();
