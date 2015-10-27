@@ -238,7 +238,7 @@
 
     function getQuery(filter) {
       if (filter.value === 0) {
-        return '?&intervalCount=8&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
+        return '?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
       } else if (filter.value === 1) {
         return '?&intervalCount=31&intervalType=day&spanCount=7&spanType=day&cache=' + cacheValue;
       } else {
