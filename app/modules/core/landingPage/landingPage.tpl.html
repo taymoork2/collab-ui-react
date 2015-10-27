@@ -42,35 +42,14 @@
     <section class="widgets small-12 medium-5 large-4 column">
     <div class="row collapse">
       <div class="small-12 columns background-white">
-
-        <section class="monitoring-panel small-3 medium-12 column" ng-show="setupNotDone || !(isCalendarAcknowledged && isCallAcknowledged)" ng-hide="!setupNotDone && (isCalendarAcknowledged && isCallAcknowledged)">
+        <section class="monitoring-panel small-3 medium-12 column" ng-show="setupNotDone()">
           <h4 class="monitoring-section" translate="homePage.notifications"></h4>
-          <div class="notification-style" ng-show="setupNotDone">
-            <span class="badge badge-warning" translate="homePage.todo"></span>
+          <div class="notification-style">
+            <span  class="badge badge-warning" translate="homePage.todo"></span>
             <span class="notification-spacing">
               <span translate="homePage.setUpYourTrial"></span>
               <a ng-click="openFirstTimeSetupWiz()" translate="homePage.beginTrial"></a>
             </span>
-          </div>
-
-          <div class="notification-style" ng-show="!isCalendarAcknowledged" ng-hide="isCalendarAcknowledged">
-            <span class="badge success" translate="common.new"></span>
-            <div class="notification-spacing">
-              <span translate="homePage.setUpCalendarService"></span>
-              <a ng-click="showServiceActivationDialog('CalendarService')" translate="homePage.getStarted"></a>
-            </div>
-            <button id="convertModalClose" type="button" class="close" ng-click="setHybridAcknowledged('CalendarService')">
-            </button>
-          </div>
-
-          <div class="notification-style" ng-show="!isCallAcknowledged" ng-hide="isCallAcknowledged">
-            <span class="badge success" translate="common.new"></span>
-            <div class="notification-spacing">
-              <span translate="homePage.setUpCallService"></span>
-              <a ng-click="showServiceActivationDialog('CallService')" translate="homePage.getStarted"></a>
-            </div>
-            <button id="convertModalClose" type="button" class="close" ng-click="setHybridAcknowledged('CallService')">
-            </button>
           </div>
         </section>
 
