@@ -1,23 +1,33 @@
 <script type="text/ng-template" id="userTemplate.html">
-  <div>
-    <span ng-bind-html="match.label.userName | typeaheadHighlight:query" ></span>
+  <div class="hunt-member-name">
+    <span ng-bind-html="match.label.firstName | typeaheadHighlight:query" ></span>&nbsp;
+    <span ng-bind-html="match.label.lastName | typeaheadHighlight:query" ></span>
+    <span ng-bind-html="' (' + match.label.userName + ')' | typeaheadHighlight:query" ></span>
   </div>
-  <a ng-repeat="number in match.label.userNumber">
-    <span ng-bind-html="number | typeaheadHighlight:query" ></span>
+  <a class="hunt-member-line" href ng-click="number.isSelected = true" ng-repeat="number in match.label.numbers">
+    <div ng-if="(number.internal !== '' && number.external !== '')">
+        <span ng-bind-html="((number.internal) + ' and ' + (number.external | telephoneNumber)) | typeaheadHighlight:query" ></span>
+    </div>
+    <div ng-if="(number.internal === '' || number.external === '')">
+        <span ng-hide="(number.internal === '')"
+              ng-bind-html="number.internal | typeaheadHighlight:query" ></span>
+        <span ng-hide="(number.external === '')"
+              ng-bind-html="(number.external | telephoneNumber) | typeaheadHighlight:query" ></span>
+    </div>
   </a>
 </script>
 <div>
   <div class="typeahead-large">
-    <input id="userInput" type="text" ng-model="huntGroupSA.userSelected" class="form-control  "
-           typeahead="user for user in huntGroupSA.userData | filter:$viewValue | limitTo:10"
-           typeahead-on-select="huntGroupSA.selectHuntGroupUser($item)"
+    <input id="userInput" type="text" ng-model="huntGroupSA.userSelected" class="form-control"
+           typeahead="user for user in huntGroupSA.fetchHuntMembers($viewValue) | limitTo:10"
+           typeahead-on-select="huntGroupSA.selectHuntGroupMember($item)"
            typeahead-template-url="userTemplate.html"
            placeholder="{{:: 'huronHuntGroup.memberPlaceholder' | translate}}"
            ng-keypress="huntGroupSA.enterNextPage($event.keyCode)" focus-on/>
 
     <p class="input-description" translate="huronHuntGroup.memberHint"></p>
   </div>
-  <div ng-repeat="user in huntGroupSA.users">
-    <span>{{user.userName}} &nbsp;</span><span class="icon icon-chevron-down"></span>
+  <div ng-repeat="user in huntGroupSA.selectedHuntMembers">
+    <span>{{user.firstName}} &nbsp;</span><span class="icon icon-chevron-down"></span>
   </div>
 </div>

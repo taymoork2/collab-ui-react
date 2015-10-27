@@ -43,13 +43,16 @@ describe('Controller: HuntGroupSetupAssistantCtrl', function () {
   });
 
   it("on selecting a pilot number, the selectedPilotNumbers list is updated.", function () {
-    controller.selectHuntGroupNumber(someNumber);
-    expect(controller.selectedPilotNumbers.indexOf(someNumber.number)).not.toBe(-1);
+    controller.selectPilotNumber(someNumber);
+    var numbers = controller.selectedPilotNumbers.map(function (e) {
+      return e.number;
+    });
+    expect(numbers.indexOf(someNumber.number)).not.toBe(-1);
   });
 
   it("filters the selected numbers from showing in the drop down.", function () {
     // UI selected a number pill.
-    controller.selectHuntGroupNumber(someNumber);
+    controller.selectPilotNumber(someNumber);
 
     // Backend returns a list.
     FakeApi.resolve({
@@ -67,9 +70,9 @@ describe('Controller: HuntGroupSetupAssistantCtrl', function () {
 
   it("on closing a pill, the list is updated and drop down starts showing the closed pill.", function () {
     // UI selects and Un-Selects number pills.
-    controller.selectHuntGroupNumber(someNumber);
-    controller.selectHuntGroupNumber(anotherNumber);
-    controller.unSelectHuntGroupNumber(someNumber.number);
+    controller.selectPilotNumber(someNumber);
+    controller.selectPilotNumber(anotherNumber);
+    controller.unSelectPilotNumber(someNumber.number);
 
     // Backend returns a list.
     FakeApi.resolve({
