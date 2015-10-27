@@ -17,7 +17,6 @@ describe('WebEx Common Settings -> Navigation Customization', function () {
   });
 
   it('click on configure site cog', function () {
-    utils.wait(sitesettings.configureSJSITE14cog);
     utils.click(sitesettings.configureSJSITE14);
   });
 
