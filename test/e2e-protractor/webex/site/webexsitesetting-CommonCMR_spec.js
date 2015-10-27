@@ -17,7 +17,6 @@ describe('WebEx Common Settings -> CMR', function () {
   });
 
   it('click on configure site cog', function () {
-    utils.wait(sitesettings.configureSJSITE14cog);
     utils.click(sitesettings.configureSJSITE14);
   });
 
