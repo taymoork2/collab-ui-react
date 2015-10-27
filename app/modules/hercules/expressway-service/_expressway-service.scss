@@ -135,3 +135,18 @@ Special stuff currently used for out own mail input field...
     }
   }
 }
+
+.hercules-certificates-table {
+  table {
+    margin-bottom: 0px;
+    td {
+      padding: 5px 5px 10px 0;
+      vertical-align: top;
+    }
+    tbody {
+      tr {
+        border-top: transparent;
+      }
+    }
+  }
+}
