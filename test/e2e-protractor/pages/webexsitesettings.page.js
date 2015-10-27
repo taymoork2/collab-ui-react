@@ -20,7 +20,6 @@ var SiteSettigsPage = function () {
   this.siteSettingsUrl = '/site_settings';
   this.siteSettingPanel = element(by.id('siteSetting'));
   this.configureSJSITE14 = element(by.id("sjsite14.webex.com_webex-site-settings"));
-  this.configureSJSITE14cog = this.configureSJSITE14.element(by.css(".icon-settings"));
   this.emailAllHostsBtn = element(by.id('emailAllHostsBtn'));
   this.siteInformationLink = element(by.id('SiteInfo_site_info'));
   this.siteFeaturesLink = element(by.id('SiteInfo_site_features'));
@@ -37,7 +36,6 @@ var SiteSettigsPage = function () {
   this.configureCommonCompanyAddressesLink = element(by.id('CommonSettings_address'));
   this.configureCommonCMRLink = element(by.id('CommonSettings_cmr'));
   this.iFramePage = element(by.id('webexIframeContainer'));
-  this.siteReports = element(by.css('#webex-reports-list-iframe'));
   this.webexSiteSettingsPanel = element(by.css('#webexSiteSettings'));
   this.webexSiteInfoCardId = element(by.id('SiteInfo-card'));
   this.webexCommonSettingsCardId = element(by.id('CommonSettings-card'));
@@ -60,14 +58,7 @@ var SiteSettigsPage = function () {
   this.siteSettingBreadCrumbs = element(by.id('siteSettingBreadCrumbs'));
   this.siteListCrumb = element(by.id('siteListCrumb'));
   this.siteSettingsCrumb = element(by.id('siteSettingsCrumb'));
-  this.webexReportCrumb = element(by.id('webexReportCrumb'))
-  this.webexReportBreadCrumbs = element(by.id('webexReportBreadCrumbs'));
-  this.meetingUsageReportLink = element(by.id('meeting_usage'));
-  this.webexReportIFrameBreadCrumbs = element(by.id('webexReportIFrameBreadCrumbs'));
-  this.webexReportIFrameCrumb2 = element(by.id('webexReportIFrameCrumb2'));
-  this.siteAdminReportsUrl = '/webexreports';
   this.xLaunchSiteAdminIcon = element(by.id('webexSiteAdminLink'));
-
 };
 
 module.exports = SiteSettigsPage;
