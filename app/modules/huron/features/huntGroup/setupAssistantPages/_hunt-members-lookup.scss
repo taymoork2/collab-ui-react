@@ -1,9 +1,12 @@
 
 .typeahead-large .dropdown-menu {
 
+  @include vr-spacing(pb, 1);
+
   li .hunt-member-name {
     @include vr-spacing(ph, 2);
-    @include vr-spacing(pv, 0.5);
+    @include vr-spacing(pt, 1);
+    @include vr-spacing(pb, 0.25);
     background: $color-white;
     cursor: default;
   }
@@ -14,7 +17,7 @@
 
   li .hunt-member-line {
     @include vr-spacing(ph, 2);
-    @include vr-spacing(pv, 0.5);
+    @include vr-spacing(pv, 0.25);
 
     & span {
       font-size: $font-size-h4;
@@ -25,5 +28,48 @@
 
   .hunt-member-line:hover {
     background: $gray-light-3;
+  }
+}
+
+.hunt-member-lookup .cs-card-layout {
+  position: fixed !important;
+  height: 16rem !important;
+  width: 48rem;
+  left: 50%;
+  @include vr-spacing(ml,24,0px,true);
+  @include vr-spacing(pb,1);
+  margin-right: auto;
+  overflow: auto;
+  display: inline-flex;
+  flex-flow: row wrap;
+  flex: 1;
+  align-content: flex-start;
+  justify-content: center;
+}
+
+.hunt-member-card {
+  width: rem-calc(250);
+  height: rem-calc(40);
+
+  & .email {
+    color: $gray-light-1;
+  }
+
+  & article > header {
+    z-index: 100;
+  }
+
+  & article > section {
+    z-index: 200;
+    background: $color-white;
+  }
+
+  & section > fieldset {
+    @include vr-spacing(pt, 0);
+    @include vr-spacing(pb, 0.5);
+  }
+
+  & fieldset > p {
+    @include vr-spacing(p, 0);
   }
 }

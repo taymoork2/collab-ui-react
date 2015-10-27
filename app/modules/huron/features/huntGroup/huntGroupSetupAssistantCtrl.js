@@ -17,6 +17,7 @@
     vm.close = closePanel;
     vm.selectPilotNumber = selectPilotNumber;
     vm.selectHuntGroupMember = selectHuntGroupMember;
+    vm.unSelectHuntGroupMember = unSelectHuntGroupMember;
     vm.setHuntMethod = setHuntMethod;
     vm.huntGroupName = undefined;
     vm.selectFallback = selectFallback;
@@ -146,15 +147,21 @@
 
     function selectHuntGroupMember(user) {
       vm.userSelected = undefined;
-      if (huntNumberSelected(user)) {
+
+      var selectedNumber = user.numbers.filter(function (n) {
+        return (n.isSelected);
+      });
+
+      if (selectedNumber.length > 0) {
+        user.selectedNumberUuid = selectedNumber[0].uuid;
+        user.canConfigPanel = false;
         vm.selectedHuntMembers.push(user);
       }
     }
 
-    function huntNumberSelected(user) {
-      return user.numbers.filter(function (n) {
-        return (n.isSelected);
-      }).length > 0;
+    function unSelectHuntGroupMember(user) {
+      vm.selectedHuntMembers.splice(
+        vm.selectedHuntMembers.indexOf(user), 1);
     }
 
     function selectFallback($item) {
