@@ -55,7 +55,7 @@ describe('Huron Setup Assistant Ctrl', function () {
 
   it("should enable next button when not null on fourth page", function () {
     expect(controller.nextButton(3)).toEqual(false);
-    controller.users.push(testGroupUser);
+    controller.selectedHuntMembers.push(testGroupUser);
     expect(controller.nextButton(3)).toEqual(true);
   });
 

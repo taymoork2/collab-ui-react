@@ -4,14 +4,14 @@
 angular.module('Squared')
   .controller('ReportsCtrl', ['$scope', '$stateParams', '$q', 'ReportsService', 'WebexReportService', 'Log', 'Authinfo', 'Config', '$translate', 'CannedDataService', 'WebExUtilsFact',
     function ($scope, $stateParams, $q, ReportsService, WebexReportService, Log, Authinfo, Config, $translate, CannedDataService, WebExUtilsFact) {
-
-      $scope.showEngagement = true;
-      $scope.showWebexReports = true;
       $scope.webexReportsObject = {};
 
       if ($stateParams.tab) {
         $scope.showEngagement = false;
         $scope.showWebexReports = $stateParams.tab === 'webex';
+      } else {
+        $scope.showEngagement = true;
+        $scope.showWebexReports = false;
       }
 
       function generateWebexReportsUrl() {
@@ -41,7 +41,9 @@ angular.module('Squared')
             });
           }
           $scope.webexSelected = $scope.webexOptions[selectedIndex];
-          $scope.updateWebexReports();
+          if ($scope.webexOptions.length) {
+            $scope.updateWebexReports();
+          }
         });
       }
 
