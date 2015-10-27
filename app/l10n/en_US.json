@@ -1623,7 +1623,8 @@
     "retrieveLogInstructions": "Device logs can be used by Cisco to troubleshoot issues related to device performance and call quality.",
     "logWait": "Getting log file from the device. This may take a minute…",
     "errorLogTryAgain": "Log file request timed out. Retry?",
-    "errorLogInvaidMsg": "Log service message is invalid"
+    "errorLogInvaidMsg": "Log service message is invalid",
+    "unknownFilename": "Unknown Filename"
   },
   "deviceOverviewPage": {
     "activationNoLongerNeeded": "If this activation is no longer needed:",
