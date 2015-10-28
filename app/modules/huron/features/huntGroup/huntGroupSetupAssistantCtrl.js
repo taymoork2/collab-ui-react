@@ -6,9 +6,9 @@
     .controller('HuntGroupSetupAssistantCtrl', HuntGroupSetupAssistantCtrl);
 
   /* @ngInject */
-  function HuntGroupSetupAssistantCtrl($scope, $state, Config, $http, HuntGroupService, Notification, $modal, $timeout) {
+  function HuntGroupSetupAssistantCtrl($scope, $state, Config, $http, HuntGroupService, Notification, $modal, $timeout, TelephoneNumberService, Authinfo, $translate) {
     var vm = this;
-
+    var customerId = Authinfo.getOrgId();
     vm.nextPage = nextPage;
     vm.previousPage = previousPage;
     vm.nextButton = nextButton;
@@ -19,12 +19,17 @@
     vm.selectHuntGroupMember = selectHuntGroupMember;
     vm.setHuntMethod = setHuntMethod;
     vm.huntGroupName = undefined;
+    vm.selectFallback = selectFallback;
     vm.fetchNumbers = fetchNumbers;
     vm.unSelectPilotNumber = unSelectPilotNumber;
     vm.fetchHuntMembers = fetchHuntMembers;
     vm.cancelModal = cancelModal;
     vm.evalKeyPress = evalKeyPress;
     vm.enterNextPage = enterNextPage;
+    vm.validateFallback = validateFallback;
+    vm.toggleFallback = toggleFallback;
+    vm.removeFallbackDest = removeFallbackDest;
+    vm.saveHuntGroup = saveHuntGroup;
 
     vm.selectedPilotNumber = undefined;
     vm.selectedPilotNumbers = [];
@@ -40,6 +45,7 @@
     };
     vm.huntGroupMethod = vm.hgMethods.longestIdle;
     vm.userSelected = undefined;
+    vm.users = [];
 
     // ==============================================
 
@@ -151,6 +157,27 @@
       }).length > 0;
     }
 
+    function selectFallback($item) {
+      vm.fallback = undefined;
+      var numbers = [];
+      $item.userNumber.forEach(function (value) {
+        var number = value;
+        var newvalue = {
+          label: number,
+          value: number,
+          name: 'FallbackRadio',
+          id: 'value.external'
+        };
+
+        numbers.push(newvalue);
+      });
+      vm.fallbackSelected = {
+        'userName': $item.userName,
+        'userNumber': numbers,
+        'number': $item.userNumber[0]
+      };
+    }
+
     function setHuntMethod(methodSelected) {
 
       if (vm.huntGroupMethod === methodSelected) {
@@ -197,6 +224,54 @@
           nextPage();
         }
       }
+    }
+
+    function validateFallback() {
+      if (vm.fallback !== '') {
+        vm.fallback = TelephoneNumberService.getDIDLabel(vm.fallback);
+        if (TelephoneNumberService.validateDID(vm.fallback)) {
+          vm.fallbackValid = true;
+        } else {
+          vm.fallbackValid = false;
+        }
+      } else {
+        vm.fallbackValid = false;
+      }
+    }
+
+    function toggleFallback() {
+      vm.fallbackSelected.open = !vm.fallbackSelected.open;
+    }
+
+    function removeFallbackDest() {
+      vm.fallbackSelected = undefined;
+    }
+
+    function saveHuntGroup() {
+      vm.saveProgress = true;
+      var data = {
+        name: vm.huntGroupName,
+        numbers: vm.selectedPilotNumber,
+        huntMethod: vm.huntGroupMethod,
+        fallbackDestination: vm.fallbackSelected,
+        sendToVoicemail: vm.sendToVoicemail,
+        members: []
+      };
+      vm.users.forEach(function (value) {
+        data.members.push(value.number);
+      });
+      if (vm.fallbackValid) {
+        data.fallbackDestination = {};
+        data.fallbackDestination.number = vm.fallback;
+      }
+      HuntGroupService.saveHuntGroup(customerId, data).then(function (data) {
+        vm.saveProgress = false;
+        Notification.success($translate.instant('huronHuntGroup.successSave'));
+        $state.go('huronfeatures');
+      }, function () {
+        vm.saveProgress = false;
+        Notification.error($translate.instant('huronHuntGroup.errorSave'));
+      });
     }
   }
 })();

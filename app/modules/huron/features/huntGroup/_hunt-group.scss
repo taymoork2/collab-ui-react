@@ -41,3 +41,23 @@ $overlay-panel-height: 93px;
   }
 }
 
+[fallback-destination] {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  overflow: auto;
+  > div {
+    height: calc(100vh - #{$navbar-height + $overlay-panel-height});
+  }
+  .cs-card {
+    float: none;
+    width: 45%;
+    margin: 0 auto;
+    @include vr-spacing(mb, 1);
+  }
+  .typeahead-large {
+    margin-top: 30vh;
+  }
+}
