@@ -11,16 +11,17 @@
   function HuronFeaturesCtrl($scope, $state, $filter, $timeout, $modal, $q, Authinfo, HuronFeaturesListService, HuntGroupService, AutoAttendantCeInfoModelService, AAModelService, Notification, Log) {
 
     var vm = this;
-    vm.filters = [];
-    vm.filterText = '';
-    vm.placeholder = {};
     vm.searchData = searchData;
     vm.setFilter = setFilter;
-    vm.listOfFeatures = [];
-    vm.aaModel = {};
     vm.openModal = openModal;
     vm.reload = reload;
-    vm.pageState = 'Loading';
+    vm.filters = [];
+    vm.listOfFeatures = [];
+    vm.pageState = '';
+    vm.filterText = '';
+    vm.placeholder = {};
+    vm.cardColor = {};
+    vm.aaModel = {};
     vm.placeholder = {
       'name': 'Search'
     };
@@ -39,31 +40,48 @@
       //  filterValue: 'CP'
       //}
     ];
-    vm.cardColors = {
-      'AA': 'primary',
-      'HG': 'alerts'
-        //'CP': 'alerts'
-    };
     var listOfAllFeatures = [];
-    var listOfHuntGroups = [];
-    var listOfAutoAttendants = [];
     var featureToBeDeleted = {};
-    var areFeaturesEmpty = {
-      'aa': false,
-      'hg': false
-    };
+    var customerId = Authinfo.getOrgId();
+
+    /* LIST OF FEATURES
+     *
+     *  To add a New Feature
+     *  1. Define the service to get the list of feature
+     *  2. Inject the features Service into the Controller
+     *  3. Add the Object for the feature in the format of the Features Array Object (features)
+     *  4. Define the SuccessHandler
+     * */
+    var features = [{
+      name: 'AA',
+      service: AutoAttendantCeInfoModelService.getCeInfosList,
+      successHandler: HuronFeaturesListService.autoAttendants,
+      isEmpty: false,
+      i18n: 'huronFeatureDetails.aaName',
+      color: 'primary'
+    }, {
+      name: 'HG',
+      service: HuntGroupService.getListOfHuntGroups,
+      successHandler: HuronFeaturesListService.huntGroups,
+      isEmpty: false,
+      i18n: 'huronFeatureDetails.hgName',
+      color: 'alerts'
+    }];
+
+    angular.forEach(features, function (feature) {
+      vm.cardColor[feature.name] = feature.color;
+    });
 
     init();
 
     function init() {
 
-      var aaPromise = getListOfAutoAttendants();
-      var hgPromise = getListOfHuntGroups();
+      vm.pageState = 'Loading';
+      var featuresPromises = getListOfFeatures();
 
-      handleAAPromise(aaPromise);
-      handleHGPromise(hgPromise);
+      handleFeaturePromises(featuresPromises);
 
-      $q.all([aaPromise, hgPromise]).then(function (responses) {
+      $q.all(featuresPromises).then(function (responses) {
         isFeatureListEmpty();
       });
     }
@@ -104,69 +122,56 @@
       init();
     }
 
-    function getListOfAutoAttendants() {
-      return AutoAttendantCeInfoModelService.getCeInfosList();
+    function getListOfFeatures() {
+      var promises = [];
+      features.forEach(function (value) {
+        promises.push(value.service(customerId));
+      });
+      return promises;
     }
 
-    function getListOfHuntGroups() {
-      var customerId = Authinfo.getOrgId();
-      return HuntGroupService.getListOfHuntGroups(customerId);
-    }
-
-    function handleAAPromise(aaPromise) {
-      aaPromise.then(function (data) {
-        handleAutoAttendants(data);
-      }, function (response) {
-        handleFailures(response, 'huronFeatureDetails.aaName', 'aa');
+    function handleFeaturePromises(promises) {
+      angular.forEach(features, function (feature, index) {
+        promises[index].then(function (data) {
+          handleFeatureData(data, feature);
+        }, function (response) {
+          handleFailures(response, feature);
+        });
       });
     }
 
-    function handleHGPromise(hgPromise) {
-      hgPromise.then(function (data) {
-        handleHuntGroups(data.items);
-      }, function (response) {
-        handleFailures(response, 'huronFeatureDetails.hgName', 'hg');
-      });
-    }
-
-    function handleFailures(response, featureName, featureCode) {
+    function handleFailures(response, feature) {
       Log.warn('Could fetch features for customer with Id:', Authinfo.getOrgId());
-      if (featureCode === 'aa') {
-        areFeaturesEmpty.aa = true;
-      } else if (featureCode === 'hg') {
-        areFeaturesEmpty.hg = true;
-      }
+
+      feature.isEmpty = true;
+
       Notification.errorResponse(response, 'huronFeatureDetails.failedToLoad', {
-        featureType: $filter('translate')(featureName)
+        featureType: $filter('translate')(feature.i18n)
       });
-      showRetryPageIfNeeded();
+
+      showReloadPageIfNeeded();
     }
 
-    function handleAutoAttendants(data) {
-      vm.aaModel = AAModelService.newAAModel();
-      vm.aaModel = data;
-      listOfAutoAttendants = HuronFeaturesListService.autoAttendants(vm.aaModel.ceInfos);
-      if (listOfAutoAttendants.length > 0) {
-        AAModelService.setAAModel(vm.aaModel);
-        vm.pageState = 'showFeatures';
-        areFeaturesEmpty.aa = false;
-        vm.listOfFeatures = vm.listOfFeatures.concat(listOfAutoAttendants);
-        listOfAllFeatures = listOfAllFeatures.concat(listOfAutoAttendants);
-      } else if (listOfAutoAttendants.length === 0) {
-        areFeaturesEmpty.aa = true;
+    function handleFeatureData(data, feature) {
+
+      if (feature.name === 'AA') {
+        vm.aaModel = AAModelService.newAAModel();
+        vm.aaModel = data;
       }
-    }
 
-    function handleHuntGroups(data) {
-      if (data.length > 0) {
-        areFeaturesEmpty.hg = false;
+      var list = feature.successHandler(data);
+      if (list.length > 0) {
+
+        if (feature.name === 'AA') {
+          AAModelService.setAAModel(vm.aaModel);
+        }
+
         vm.pageState = 'showFeatures';
-        areFeaturesEmpty.hg = false;
-        listOfHuntGroups = HuronFeaturesListService.huntGroups(data);
-        vm.listOfFeatures = vm.listOfFeatures.concat(listOfHuntGroups);
-        listOfAllFeatures = listOfAllFeatures.concat(listOfHuntGroups);
-      } else if (data.length === 0) {
-        areFeaturesEmpty.hg = true;
+        feature.isEmpty = false;
+        vm.listOfFeatures = vm.listOfFeatures.concat(list);
+        listOfAllFeatures = listOfAllFeatures.concat(list);
+      } else if (list.length === 0) {
+        feature.isEmpty = true;
       }
     }
 
@@ -204,15 +209,24 @@
       //}
     };
 
+    function areFeaturesEmpty() {
+      var isEmpty = true;
+      features.forEach(function (feature) {
+        isEmpty = isEmpty && feature.isEmpty;
+      });
+      return isEmpty;
+    }
+
     function isFeatureListEmpty() {
-      if (vm.pageState !== 'showFeatures' && areFeaturesEmpty.aa && areFeaturesEmpty.hg && vm.listOfFeatures.length === 0) {
+
+      if (vm.pageState !== 'showFeatures' && areFeaturesEmpty() && vm.listOfFeatures.length === 0) {
         vm.pageState = 'NewFeature';
       }
     }
 
-    function showRetryPageIfNeeded() {
-      if (vm.pageState === 'Loading' && areFeaturesEmpty.aa && areFeaturesEmpty.hg && vm.listOfFeatures.length === 0) {
-        vm.pageState = 'Retry';
+    function showReloadPageIfNeeded() {
+      if (vm.pageState === 'Loading' && areFeaturesEmpty() && vm.listOfFeatures.length === 0) {
+        vm.pageState = 'Reload';
       }
     }
 

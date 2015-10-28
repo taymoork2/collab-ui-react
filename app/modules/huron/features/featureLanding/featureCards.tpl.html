@@ -1,7 +1,7 @@
 <div class="cards-block">
 <cs-card-layout block-view="true">
   <cs-card ng-repeat="huronFeature in huronFeaturesCtrl.listOfFeatures | orderBy: 'cardName'"
-           class="small header-background {{ huronFeaturesCtrl.cardColors[huronFeature.filterValue] }}">
+           class="small header-background" ng-class="huronFeaturesCtrl.cardColor[huronFeature.filterValue]">
     <article>
       <header>
         <div class="header-with-right-icon">

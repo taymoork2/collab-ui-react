@@ -2410,6 +2410,7 @@
     "title": "Hunt Group",
     "modalDescription": "Hunt groups (or line hunting) allow you to customize the distribution of incoming phone calls to users' phone lines in a specific order.",
     "featureListingError": "Failed to retrieve the feature list.",
+    "numberFetchFailure": "Unable to get numbers.",
     "newFeatureButtonText": "New",
     "newFeatureModalTitle": "Create New Feature",
     "featuresNotYetConfiguredPage": {

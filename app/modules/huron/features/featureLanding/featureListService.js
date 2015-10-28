@@ -26,7 +26,7 @@
 
     function autoAttendants(data) {
       var formattedList = [];
-      _.forEach(data, function (aa) {
+      _.forEach(data.ceInfos, function (aa) {
         formattedCard.cardName = aa.name;
         formattedCard.numbers = _.pluck(aa.resources, 'number');
         formattedCard.id = aa.ceUrl.substr(aa.ceUrl.lastIndexOf('/') + 1);
@@ -44,7 +44,7 @@
 
     function huntGroups(data) {
       var formattedList = [];
-      _.forEach(data, function (huntGroup) {
+      _.forEach(data.items, function (huntGroup) {
         formattedCard.cardName = huntGroup.name;
         formattedCard.numbers = huntGroup.numbers.map(function (number) {
           return TelephoneNumberService.getDIDLabel(number);
