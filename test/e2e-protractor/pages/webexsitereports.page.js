@@ -18,10 +18,14 @@ var SiteReportsPage = function () {
   this.webexReportsLink = element(by.id('webexReports'));
   this.webexCommonMeetingUsageLink = element(by.id('meeting_usage'));
   this.webexCommonMeetingsInProgressLink = element(by.id('meeting_in_progess'));
+  this.webexCommonRecordingUsageLink = element(by.id('recording_usage'));
+  this.webexCommonStorageUsageLink = element(by.id('storage_utilization'));
 
   this.webexCommonReportsCardId = element(by.id('common_reports'));
   this.webexCommonMeetingUsageId = element(by.id('webexSiteReportIframe-meeting_usage'));
   this.webexCommonMeetingsInProgressId = element(by.id('webexSiteReportIframe-meeting_in_progess'));
+  this.webexCommonRecordingUsageId = element(by.id('webexSiteReportIframe-recording_usage'));
+  this.webexCommonStorageUsageId = element(by.id('webexSiteReportIframe-storage_utilization'));
 
   this.siteAdminReportsUrl = '/webexreports';
 };
