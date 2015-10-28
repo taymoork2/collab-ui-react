@@ -25,6 +25,7 @@ describe('WebEx site report breadcrumbs', function () {
     utils.wait(sitereports.webexCommonMeetingUsageLink);
   });
 
+  /*
   it('click on common reports meeting usage link (2nd time)', function () {
     utils.click(sitereports.webexCommonMeetingUsageLink);
     utils.wait(sitereports.webexReportCrumb1);
@@ -34,6 +35,7 @@ describe('WebEx site report breadcrumbs', function () {
     utils.click(sitereports.webexReportCrumb1);
     navigation.expectCurrentUrl('/site-list');
   });
+  */
 
   //  it('should pause', function () {
   //    browser.pause();
