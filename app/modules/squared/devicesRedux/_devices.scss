@@ -1,11 +1,18 @@
 .devices-redux {
+  .clipboard-button {
+    padding-left: 10px;
+  }
+
   background-color: white !important;
 
   .tag-container {
     padding-top: 10px;
-    > span {
+
+    .tag {
       margin-right: 5px;
+      margin-bottom: 5px;
       border-radius: 8px;
+      white-space: nowrap;
       padding: 2px 4px 3px 10px;
       background-color: $gray-lightest;
     }
@@ -44,7 +51,6 @@
 
     h4, h4 span {
       font-family: "CiscoSansTT Light","Helvetica Neue",Helvetica,Arial,sans-serif;
-      font-weight: 700;
       font-size: 1rem;
     }
 
@@ -163,13 +169,8 @@
       }
     }
 
-    .readable-activation-code {
-      padding-top: 20px;
-    }
-
     .readable-activation-code, .readable-activation-code span {
-      font-size: 2rem;
-      color: $brand-primary;
+      font-weight: bold;
     }
   }
   .result-pane {
@@ -281,6 +282,14 @@
       padding: 20px 0 10px 0;
       list-style-type: none;
       border-bottom: 1px solid #eee;
+    }
+  }
+
+  .button-bar {
+    a {
+      font-size: .9rem;
+      padding-right: 40px;
+      font-family: "CiscoSansTT Light","Helvetica Neue",Helvetica,Arial,sans-serif;
     }
   }
 }

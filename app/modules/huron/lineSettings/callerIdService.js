@@ -6,7 +6,7 @@
     .factory('CallerId', CallerId);
 
   /* @ngInject */
-  function CallerId(Authinfo, $q, CallRouterService, UserDirectoryNumberService, DirectoryNumberUserService, DirectoryNumber,
+  function CallerId(Authinfo, $q, CompanyNumberService, UserDirectoryNumberService, DirectoryNumberUserService, DirectoryNumber,
     SharedLineInfoService, UserEndpointService, SipEndpointDirectoryNumberService) {
 
     var callerIdOptions = [];
@@ -23,6 +23,9 @@
       getCallerIdOption: getCallerIdOption,
       getCallerIdOptionIndex: getCallerIdOptionIndex,
       listCompanyNumbers: listCompanyNumbers,
+      saveCompanyNumber: saveCompanyNumber,
+      updateCompanyNumber: updateCompanyNumber,
+      deleteCompanyNumber: deleteCompanyNumber,
       getUserDn: getUserDn,
       listUserEndPoints: listUserEndPoints,
       listEndPointDirectoryNumbers: listEndPointDirectoryNumbers,
@@ -94,8 +97,28 @@
     }
 
     function listCompanyNumbers() {
-      return CallRouterService.query({
+      return CompanyNumberService.query({
         customerId: Authinfo.getOrgId()
+      }).$promise;
+    }
+
+    function saveCompanyNumber(data) {
+      return CompanyNumberService.save({
+        customerId: Authinfo.getOrgId()
+      }, data).$promise;
+    }
+
+    function updateCompanyNumber(companyNumberId, data) {
+      return CompanyNumberService.update({
+        customerId: Authinfo.getOrgId(),
+        companyNumberId: companyNumberId
+      }, data).$promise;
+    }
+
+    function deleteCompanyNumber(companyNumberId) {
+      return CompanyNumberService.delete({
+        customerId: Authinfo.getOrgId(),
+        companyNumberId: companyNumberId
       }).$promise;
     }
 

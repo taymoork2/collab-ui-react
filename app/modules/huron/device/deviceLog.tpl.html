@@ -18,7 +18,7 @@
   </div>
   <div id="deviceLogList" ng-if="ucDeviceLog.active && !ucDeviceLog.isPolling() && !ucDeviceLog.error">
     <li ng-repeat="log in ucDeviceLog.logList">
-      <p>{{log.name}}</p>
+      <p><a href="#" tooltip-placement="right" tooltip-animation="false" tooltip="{{log.filename}}" >{{log.name}}</a></p>
     </li>
   </div>
   <div id="deviceLogWait" ng-if="ucDeviceLog.active && ucDeviceLog.isPolling() && !ucDeviceLog.error">
@@ -28,6 +28,6 @@
     <span translate="deviceDetailPage.logWait"></span>
   </div>
   <div id="deviceLogError" ng-if="ucDeviceLog.active && ucDeviceLog.error">
-    <button cs-btn loading="ucDeviceLog.loading" class="button alert" ng-click="ucDeviceLog.retrieveLog()"><span translate="deviceDetailPage.errorTryAgain"></span></button>
+    <button cs-btn loading="ucDeviceLog.loading" class="button alert fix-alert-margins" ng-click="ucDeviceLog.retrieveLog()"><span translate="deviceDetailPage.errorLogTryAgain"></span></button>
   </div>
 </div>

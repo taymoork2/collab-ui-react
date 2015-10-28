@@ -87,7 +87,7 @@ describe('Service: LineListService', function () {
   });
 
   it('should exportCSV', function () {
-    $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?max=100&order=internalnumber-asc&start=1').respond(lines);
+    $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?max=100&order=internalnumber-asc&start=0').respond(lines);
     $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?max=100&order=internalnumber-asc&start=101').respond([]);
     LineListService.exportCSV({})
       .then(function (response) {

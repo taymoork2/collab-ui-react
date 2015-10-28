@@ -4,15 +4,9 @@
 
 describe('WebEx site settings', function () {
 
-  it('should allow login as admin user', function () {
+  it('navigate to WebEx site list', function () {
     login.loginThroughGui(sitesettings.testAdmin.username, sitesettings.testAdmin.password);
-  });
-
-  it('click on services tab', function () {
     navigation.clickServicesTab();
-  });
-
-  it('click on conferencing option', function () {
     utils.click(sitesettings.conferencing);
     navigation.expectCurrentUrl('/site-list');
   });
@@ -22,11 +16,16 @@ describe('WebEx site settings', function () {
     navigation.expectCurrentUrl(sitesettings.siteSettingsUrl);
   });
 
-  it('wait for WebEx settings index page to appear', function () {
+  it('show WebEx settings index', function () {
     utils.wait(sitesettings.webexSiteSettingsPanel);
-    expect(sitesettings.webexSiteSettingsPanel.isPresent()).toBeTruthy();
-    expect(sitesettings.webexSiteInfoCardId.isPresent()).toBeTruthy();
-    expect(sitesettings.webexCommonSettingsCardId.isPresent()).toBeTruthy();
+  });
+
+  it('show WebEx info card', function () {
+    utils.wait(sitesettings.webexSiteInfoCardId);
+  });
+
+  it('show WebEx common settings card', function () {
+    utils.wait(sitesettings.webexCommonSettingsCardId);
   });
 
   /**  
@@ -35,7 +34,7 @@ describe('WebEx site settings', function () {
     });
   **/
 
-  it('should allow log out', function () {
+  it('log out', function () {
     navigation.logout();
   });
 });

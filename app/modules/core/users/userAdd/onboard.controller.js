@@ -1493,6 +1493,9 @@ angular.module('Core')
             if (data.totalResults) {
               $scope.unlicensed = data.totalResults;
               $scope.unlicensedUsersList = data.resources;
+              $('.ngViewport').mouseover(function () {
+                $('.ngViewport').getNiceScroll().resize();
+              });
             }
           }
         });

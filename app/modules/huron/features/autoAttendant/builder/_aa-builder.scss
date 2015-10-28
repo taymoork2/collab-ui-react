@@ -1,0 +1,309 @@
+.aa-nowrap {
+  white-space: nowrap;
+  margin: 0;
+  padding: 0;
+}
+
+$aa-builder-header-height: 54px;
+$aa-builder-border-color: $gray-light;
+$aa-builder-border-size: .075rem;
+$aa-builder-icon-color: $gray-base;
+
+@mixin aa-builder-height($rem_offset)
+{
+  /* base-offset includes navbar, overlay-heading and aa-builder-header (elements from top of page) */
+  $overlay-heading-height: 93px; /* no global variable */
+  $aa-builder-base-offset: rem($navbar-height + $overlay-heading-height + $aa-builder-header-height);
+
+  /* add to offset any additional value */
+  $aa-builder-offset: $aa-builder-base-offset + $rem_offset;
+  height: calc(100vh - #{$aa-builder-offset});
+}
+
+.aa-builder-frame {
+  $frame-margin-size: 2rem;
+  $frame-border-size: .075rem;
+  border-top: $frame-border-size solid $aa-builder-border-color;
+  box-shadow: inset 0 .25rem .25rem .25rem $gray-lighter;
+  border-bottom: $frame-border-size solid $gray-lightest;
+  border-left: $frame-border-size solid $gray-lightest;
+  margin-top: 0;
+  margin-bottom: $frame-margin-size;
+  margin-left: $frame-margin-size;
+  margin-right: $frame-margin-size;
+  .aa-builder-container {
+    background-color: $gray-lightest;
+    overflow-y: auto;
+    overflow-x: hidden;
+    $margin-top: .125rem;
+    margin-top: $margin-top; /* allows aa-builder-frame box-shadow to show */
+    @include aa-builder-height($frame-margin-size + (2 * $frame-border-size) + $margin-top);
+  }
+}
+
+.aa-flex-row {
+  @extend .row;
+  display: flex;
+  flex-direction: row;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.aa-flex-row.centered {
+  justify-content: center;
+  align-items: center;
+}
+
+.aa-flex-item.schedule {
+  padding-top: .25rem;
+  padding-bottom: .25rem;
+  padding-right: 2rem;
+  padding-left: 2rem;
+}
+
+.aa-flex-row-item {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: baseline;
+  justify-content: center;
+}
+
+#aa-header-row {
+  height: $aa-builder-header-height;
+  background-color: $brand-white;
+}
+
+#aa-header-row-content {
+  padding-left: 120px;
+}
+
+#aa-header-row-name {
+  padding-right: 40px;
+}
+
+#aa-header-row-numbers {
+  padding-left: 40px;
+}
+
+.aa-flex-row-item-right {
+  display: flex;
+  flex: 0 1 auto;
+  align-items: baseline;
+  justify-content: right;
+}
+
+#aa-header-row-save {
+  padding-right: 15px;
+}
+
+.aa-edit-icon {
+  @extend .icon;
+  @extend .icon-edit;
+  font-size: 1.5rem;
+  color: $aa-builder-icon-color;
+  padding-left: .25rem;
+  padding-top: .25rem;
+  &:hover {
+    cursor: pointer;
+    color: $brand-primary;
+  }
+}
+
+.aa-trash-icon {
+  @extend .icon;
+  @extend .icon-trash;
+  font-size: 1.5rem;
+  color: $aa-builder-icon-color;
+  padding-left: .25rem;
+  padding-top: .25rem;
+  &:hover {
+    cursor: pointer;
+    color: $brand-primary;
+  }
+}
+
+.aa-schedule-icon {
+  @extend .icon;
+  @extend .icon-clock;
+  font-size: 2.5rem;
+  color: $aa-builder-icon-color;
+  padding: .25rem;
+}
+
+.aa-help-icon {
+  @extend .icon;
+  @extend .icon-help;
+  font-size: 1.25rem;
+  color: $aa-builder-icon-color;
+  padding-left: .25rem;
+  padding-top: .25rem;
+  &:hover {
+    cursor: pointer;
+    color: $brand-primary;
+  }
+}
+
+.aa-flex-name-item {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  @include aa-builder-height($h2-font-size);
+  width: 100vw;
+  background-color: $brand-white;
+  #aa-name-detail {
+    @extend h2;
+    margin-left: 0;
+    margin-right: 0;
+    width: 50vw;
+    text-align: center;
+    border: none;
+    border-bottom: 1px solid $brand-primary;
+    outline: none;
+    border-radius: 0;
+    background-color: transparent;
+    &:focus {
+      border: none;
+      outline: none;
+      border-bottom: 1px solid $brand-primary-darker;
+      -webkit-box-shadow: none;
+      background-color: transparent;
+    }
+  }
+}
+
+.aa-container {
+  overflow: visible;
+  padding: 0;
+  min-height: 1px;
+  align-items: center;
+}
+
+.aa-flex-container {
+  @extend .aa-container;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+#aa-builder-actionsets {
+  min-height: 60vh;
+}
+
+.aa-panel {
+  @extend .panel;
+  display: inline-block;
+  margin: 0;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  box-shadow: none;
+  .text-info {
+    color: $brand-info;
+  }
+  .aa-panel-body {
+    @extend .panel-body;
+    margin: 0;
+    padding: 1.5rem;
+    background-color: $brand-white;
+    border: $aa-builder-border-size solid $aa-builder-border-color;
+    border-radius: .25rem;
+    &:hover {
+      border-color: $brand-primary;
+    }
+  }
+  .aa-panel-body-endcall {
+    @extend .aa-panel-body;
+    padding-top: .25rem;
+    padding-bottom: .25rem;
+    .text-info {
+      padding-left: .5rem;
+      padding-top: .25rem;
+    }
+  }
+  .aa-panel-round {
+    @extend .panel-body;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    vertical-align: middle;
+  }
+}
+
+.aa-add-step-icon {
+  @extend .icon;
+  @extend .icon-plus-circle;
+  font-size: 2.25rem;
+  top: 0.0625rem;
+  padding: .25rem;
+  color: $aa-builder-border-color;
+  &:hover {
+    cursor: pointer;
+    color: $brand-primary;
+  }
+}
+
+.aa-action-delete {
+  margin-left: auto;
+  .aa-action-delete-icon {
+    @extend .icon;
+    @extend .icon-close;
+    font-size: 1.25rem;
+    &:hover {
+      cursor: pointer;
+      color: $brand-primary;
+    }
+  }
+}
+
+.aa-flex-vertical-line {
+  border-left: $aa-builder-border-size solid $aa-builder-border-color;
+  min-height: 30px;
+  display: flex;
+  flex: 0 1 auto;
+}
+
+.aa-flex-vertical-spacer {
+  min-height: 30px;
+  display: flex;
+  flex: 0 1 auto;
+}
+
+.aa-flex-horizontal-line {
+  border-bottom: $aa-builder-border-size solid $aa-builder-border-color;
+  height: 1px;
+  width: 100%;
+  display: flex;
+  flex: 0 1 auto;
+}
+
+.aa-flex-horizontal-line-right {
+  border-bottom: $aa-builder-border-size solid $aa-builder-border-color;
+  height: 1px;
+  min-width: 50%;
+  display: flex;
+  flex: 0 1 auto;
+  align-self: flex-end;
+}
+
+.aa-flex-horizontal-line-left {
+  border-bottom: $aa-builder-border-size solid $aa-builder-border-color;
+  height: 1px;
+  min-width: 50%;
+  display: flex;
+  flex: 0 1 auto;
+  align-self: flex-start;
+}
+
+.aa-new-step-info {
+  max-width: 18.75rem;
+  margin-top: 0.625rem;
+  margin-bottom: 1.875rem;
+}
+
+.aa-endcall-icon {
+  @extend .icon;
+  @extend .icon-phone;
+  font-size: 2.25rem;
+  transform: rotate(125deg);
+  color: $aa-builder-icon-color;
+}

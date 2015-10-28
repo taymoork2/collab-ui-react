@@ -15,6 +15,9 @@
     .factory('TerminusBlockOrderService', function ($resource, HuronConfig) {
       return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/carriers/:carrierId/did/block', {}, {});
     })
+    .factory('TerminusNumberOrderService', function ($resource, HuronConfig) {
+      return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/carriers/:carrierId/did/order', {}, {});
+    })
     .factory('TerminusOrderService', function ($resource, HuronConfig) {
       return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/orders/:orderId', {}, {});
     })
@@ -29,6 +32,12 @@
     })
     .factory('TerminusCarrierInventorySearch', function ($resource, HuronConfig) {
       return $resource(HuronConfig.getTerminusUrl() + '/carriers/:carrierId/did/inventory/search');
+    })
+    .factory('TerminusCarrierInventoryReserve', function ($resource, HuronConfig) {
+      return $resource(HuronConfig.getTerminusUrl() + '/carriers/:carrierId/did/inventory/reserve');
+    })
+    .factory('TerminusCarrierInventoryRelease', function ($resource, HuronConfig) {
+      return $resource(HuronConfig.getTerminusUrl() + '/carriers/:carrierId/did/inventory/release');
     })
     .factory('TerminusStateService', function ($resource) {
       return $resource('modules/huron/pstnSetup/states.json', {}, {

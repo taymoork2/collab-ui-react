@@ -4,9 +4,6 @@
   /* @ngInject */
   function ClusterDetailsController($scope, $modal, $stateParams, $location, ClusterService) {
     $scope.cluster = ClusterService.getClusters()[$stateParams.clusterId];
-    if ($location.absUrl().match(/hercules-deregister=true/)) {
-      $scope.showDeregisterButton = true;
-    }
 
     $scope.showDeregisterDialog = function () {
       $modal.open({

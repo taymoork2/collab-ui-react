@@ -1,26 +1,10 @@
 'use strict';
 
 /* @ngInject */
-function DevicesReduxCtrl($scope, $state, $location, $rootScope, $window, CsdmCodeService, CsdmDeviceService, AddDeviceModal, TagService) {
+function DevicesReduxCtrl($scope, $state, $location, $rootScope, $window, CsdmCodeService, CsdmDeviceService, AddDeviceModal) {
   var vm = this;
 
   $('body').css('background', 'white');
-
-  vm.tags = {
-    listTags: function (id) {
-      return TagService.list(id);
-    },
-    createTag: function (id, $event) {
-      var tag = _.trim(vm.tags.newTag);
-      if ($event.keyCode == 13 && tag) {
-        TagService.add(id, tag);
-        vm.tags.newTag = undefined;
-      }
-    },
-    removeTag: function (id, tag) {
-      TagService.remove(id, tag);
-    }
-  };
 
   vm.deviceProps = {
     product: 'Product',
@@ -31,7 +15,7 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, $window, CsdmCo
     readableActivationCode: 'Activation Code',
     readableState: 'Status',
     diagnosticsEvent: 'Event',
-    tags: 'Tags'
+    tagString: 'Tags'
   };
 
   vm.deviceList = [];
@@ -59,17 +43,12 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, $window, CsdmCo
       .extend(CsdmDeviceService.getDeviceList())
       .extend(CsdmCodeService.getCodeList())
       .values()
-      // include tags
-      .map(addTags)
-      // remove codes w/o code
       .filter(removeOldCodes)
-      // filter based on search
       .filter(filterOnSearchQuery)
-      // create rooms of devices with equal names
       .groupBy('displayName')
       .map(createRooms)
       .flatten()
-      // group devices
+      .sortBy(displayNameSorter)
       .reduce(groupDevices, {})
       .map(extendWithDisplayNameFromFilter)
       .value();
@@ -90,11 +69,6 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, $window, CsdmCo
       if (device.needsActivation && !device.readableActivationCode) {
         return null;
       }
-      return device;
-    }
-
-    function addTags(device) {
-      device.tags = TagService.list(device.url).join(', ');
       return device;
     }
 
@@ -120,7 +94,7 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, $window, CsdmCo
         'readableActivationCode',
         'product',
         'diagnosticsEvent',
-        'tags'
+        'tagString'
       ];
 
       device.diagnosticsEvent = _.pluck(device.diagnosticsEvents, 'type')[0];
@@ -174,11 +148,11 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, $window, CsdmCo
 
   };
 
-  vm.codesListSubscription = CsdmCodeService.subscribe(vm.updateCodesAndDevices, {
+  vm.codesListSubscription = CsdmCodeService.on('data', vm.updateCodesAndDevices, {
     scope: $scope
   });
 
-  vm.deviceListSubscription = CsdmDeviceService.subscribe(vm.updateCodesAndDevices, {
+  vm.deviceListSubscription = CsdmDeviceService.on('data', vm.updateCodesAndDevices, {
     scope: $scope
   });
 
@@ -239,7 +213,7 @@ function DevicesReduxCtrl($scope, $state, $location, $rootScope, $window, CsdmCo
 }
 
 /* @ngInject */
-function DevicesReduxDetailsCtrl($stateParams, $state, $window, RemDeviceModal, Utils, CsdmDeviceService, Authinfo, FeedbackService, XhrNotificationService) {
+function DevicesReduxDetailsCtrl($stateParams, $state, $window, RemDeviceModal, Utils, CsdmDeviceService, CsdmCodeService, Authinfo, FeedbackService, XhrNotificationService) {
   var vm = this;
 
   if ($stateParams.device) {
@@ -247,6 +221,24 @@ function DevicesReduxDetailsCtrl($stateParams, $state, $window, RemDeviceModal, 
   } else {
     $state.go('devices-redux.search');
   }
+
+  vm.tags = {
+    createTag: function (device, $event) {
+      var tag = _.trim(vm.tags.newTag);
+      if ($event.keyCode == 13 && tag && !_.contains(device.tags, tag)) {
+        vm.tags.newTag = undefined;
+        return (device.needsActivation ? CsdmCodeService : CsdmDeviceService)
+          .updateTags(device.url, device.tags.concat(tag))
+          .catch(XhrNotificationService.notify);
+      }
+    },
+    removeTag: function (device, tag) {
+      var tags = _.without(device.tags, tag);
+      return (device.needsActivation ? CsdmCodeService : CsdmDeviceService)
+        .updateTags(device.url, tags)
+        .catch(XhrNotificationService.notify);
+    }
+  };
 
   vm.deviceProps = {
     software: 'Software',
@@ -289,45 +281,8 @@ function HighlightFilter() {
   };
 }
 
-function TagService($window) {
-  var id = '___tags';
-
-  var rawTags = $window.localStorage.getItem(id);
-  var tags = rawTags ? JSON.parse(rawTags) : {};
-
-  function writeTags() {
-    $window.localStorage.setItem(id, JSON.stringify(tags));
-  }
-
-  function list(id) {
-    tags[id] = tags[id] || [];
-    return tags[id];
-  }
-
-  function add(id, tag) {
-    tags[id] = tags[id] || [];
-    if (!_.includes(tags[id], tag)) {
-      tags[id].push(tag);
-    }
-    writeTags();
-  }
-
-  function remove(id, tag) {
-    tags[id] = tags[id] || [];
-    tags[id] = _.without(tags[id], tag);
-    writeTags();
-  }
-
-  return {
-    add: add,
-    list: list,
-    remove: remove
-  };
-}
-
 angular
   .module('Squared')
-  .service('TagService', TagService)
   .filter('highlight', HighlightFilter)
   .controller('DevicesReduxCtrl', DevicesReduxCtrl)
   .controller('DevicesReduxDetailsCtrl', DevicesReduxDetailsCtrl);

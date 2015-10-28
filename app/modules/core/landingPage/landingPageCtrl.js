@@ -118,7 +118,7 @@ angular.module('Core')
         if (angular.isArray(dataList)) {
           for (var i = 0; i < dataList.length; i++) {
             var dateVal = new Date(dataList[i].date);
-            dateVal = dateVal.toDateString();
+            dateVal = dateVal.toUTCString().split(' ').slice(0, 4).join(' ');
             dataList[i].date = dateVal.substring(dateVal.indexOf(' ') + 1);
           }
         }

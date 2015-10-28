@@ -32,7 +32,7 @@
       <!-- room -->
 
       <strong style="padding-bottom: 20px; display: block">
-        Devices In Room
+        DEVICES IN ROOM
       </strong>
       <ul class="small-block-grid-1 medium-block-grid-2 large-block-grid-3">
         <li
@@ -51,7 +51,7 @@
          ng-bind-html="deviceDetails.device.product | highlight:devices.search">
       </strong>
 
-      <div class="para" style="display: flex; align-items: center;">
+      <div class="para" style="display: flex; align-items: center">
         <img
           ng-if="deviceDetails.device.image"
           ng-src="{{deviceDetails.device.image}}"
@@ -66,37 +66,32 @@
             />
             <span ng-bind-html="deviceDetails.device.readableState | highlight:devices.search"></span>
           </div>
-          <div class="tag-container">
+          <div class="tag-container" style="display: flex; align-items: center; flex-wrap: wrap;">
             <span 
-              ng-repeat="tag in devices.tags.listTags(deviceDetails.device.url)">
+              class="tag"
+              ng-repeat="tag in deviceDetails.device.tags">
               <span ng-bind-html="tag | highlight:devices.search" />
               <i 
                 class="fa fa-times" 
-                ng-click="devices.tags.removeTag(deviceDetails.device.url, tag)"
+                ng-click="deviceDetails.tags.removeTag(deviceDetails.device, tag)"
               />
             </span>
             <a href 
-              ng-hide="devices.tags.isAdding"
-              ng-click="devices.tags.isAdding = !devices.tags.isAdding">
+              ng-hide="deviceDetails.tags.isAdding"
+              ng-click="deviceDetails.tags.isAdding = !deviceDetails.tags.isAdding">
               Add tag
             </a>
             <input 
               type="text" 
               placeholder="Enter tag..."
-              ng-model="devices.tags.newTag"
-              ng-show="devices.tags.isAdding"
-              focus-on="devices.tags.isAdding"
-              ng-blur="devices.tags.isAdding = false"
-              ng-keyup="devices.tags.createTag(deviceDetails.device.url, $event)"
+              ng-model="deviceDetails.tags.newTag"
+              ng-show="deviceDetails.tags.isAdding"
+              focus-on="deviceDetails.tags.isAdding"
+              ng-blur="deviceDetails.tags.isAdding = false"
+              ng-keyup="deviceDetails.tags.createTag(deviceDetails.device, $event)"
             />
           </div>
         </div>
-      </div>
-
-      <div
-        class="readable-activation-code"
-        ng-show="deviceDetails.device.readableActivationCode"
-        ng-bind-html="deviceDetails.device.readableActivationCode | highlight:devices.search">
       </div>
 
       <div ng-show="deviceDetails.device.hasIssues" class="device-issues">
@@ -112,39 +107,44 @@
         </div>
       </div>
 
-      <strong
-        ng-if="!deviceDetails.device.readableActivationCode">
+      <strong>
          Details
       </strong>
 
-      <div class="para">
-        <div class="row" ng-show="deviceDetails.device[key]" ng-repeat="(key, name) in deviceDetails.deviceProps">
-          <div
-            class="small-3 columns">
-            {{name}}:
+      <div class="para" ng-if="deviceDetails.device.readableActivationCode">
+        <div class="row">
+          <div class="small-4 columns">Activation Code:</div>
+          <div class="small-8 columns ellipsis readable-activation-code">
+            <span ng-bind-html="deviceDetails.device.readableActivationCode | highlight:devices.search"></span>
+            <sq-clipboard clip-copy="deviceDetails.device.readableActivationCode"></sq-clipboard>
           </div>
-          <div
-            class="small-9 columns ellipsis"
-            ng-bind-html="deviceDetails.device[key] | highlight:devices.search">
-          </div>
+        </div>
+        <div class="row" ng-if="deviceDetails.device.expiryTime">
+          <div class="small-4 columns">Expiry Time:</div>
+          <div class="small-8 columns ellipsis" ng-bind-html="deviceDetails.device.expiryTime | date : 'medium'"></div>
         </div>
       </div>
 
-      <span ng-if="!deviceDetails.device.needsActivation">
-        <button
-          class="btn btn-default"
+
+      <div class="para" ng-if="!deviceDetails.device.readableActivationCode">
+        <div class="row" ng-show="deviceDetails.device[key]" ng-repeat="(key, name) in deviceDetails.deviceProps">
+          <div class="small-4 columns">{{name}}:</div>
+          <div class="small-8 columns ellipsis" ng-bind-html="deviceDetails.device[key] | highlight:devices.search"></div>
+        </div>
+      </div>
+
+      <div class="button-bar">
+        <a href
           ng-if="!deviceDetails.device.needsActivation"
           sq-click-promise="deviceDetails.reportProblem()">
           Report Problem
-        </button>
-      </span>
+        </a>
 
-      <button
-        class="btn btn-default"
-        ng-click="deviceDetails.deleteDevice()">
-        {{deviceDetails.device.needsActivation ? 'Delete activation code...' : 'Delete device...'}}
-        </span>
-      </button>
+        <a href
+          ng-click="deviceDetails.deleteDevice()">
+          {{deviceDetails.device.needsActivation ? 'Delete activation code...' : 'Delete device...'}}
+        </a>
+      </div>
 
     </div>
   </div>

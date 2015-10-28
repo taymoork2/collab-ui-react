@@ -17,6 +17,24 @@ angular
           },
           authenticate: false
         })
+        .state('unauthorized', {
+          url: '/unauthorized',
+          views: {
+            'main@': {
+              templateUrl: 'modules/squared/views/unauthorized.html',
+            }
+          },
+          authenticate: false
+        })
+        .state('404', {
+          url: '/404',
+          views: {
+            'main@': {
+              templateUrl: 'modules/squared/views/404.html',
+            }
+          },
+          authenticate: false
+        })
         .state('main', {
           views: {
             'main@': {
@@ -38,11 +56,6 @@ angular
           url: '/partner',
           parent: 'main',
           abstract: true
-        })
-        .state('unauthorized', {
-          url: '/unauthorized',
-          templateUrl: 'modules/squared/views/unauthorized.html',
-          parent: 'main'
         })
         .state('sidepanel', {
           abstract: true,
@@ -413,9 +426,9 @@ angular
             service: 'MESSAGING'
           }
         })
-        .state('user-overview.cloudExtension-squared-fusion-cal', {
-          templateUrl: 'modules/hercules/cloudExtensions/cloudExtensionPreview.tpl.html',
-          controller: 'CloudExtensionPreviewCtrl',
+        .state('user-overview.hybrid-services-squared-fusion-cal', {
+          templateUrl: 'modules/hercules/userPreview/hybridServicesPreview.tpl.html',
+          controller: 'HybridServicesPreviewCtrl',
           data: {
             displayName: 'Calendar Service'
           },
@@ -423,8 +436,8 @@ angular
             extensionId: {}
           }
         })
-        .state('user-overview.cloudExtension-squared-fusion-uc', {
-          templateUrl: 'modules/hercules/cloudExtensions/callServicePreview.tpl.html',
+        .state('user-overview.hybrid-services-squared-fusion-uc', {
+          templateUrl: 'modules/hercules/userPreview/callServicePreview.tpl.html',
           controller: 'CallServicePreviewCtrl',
           data: {
             displayName: 'Call Service'
@@ -661,7 +674,11 @@ angular
           url: '/reports',
           templateUrl: 'modules/squared/views/reports.html',
           controller: 'ReportsCtrl',
-          parent: 'main'
+          parent: 'main',
+          params: {
+            tab: null,
+            siteUrl: null
+          }
         })
         .state('userprofile', {
           url: '/userprofile/:uid',
@@ -1076,7 +1093,7 @@ angular
           params: {
             aaName: ''
           },
-          templateUrl: 'modules/huron/callRouting/autoAttendant/builder/aaBuilderMain.tpl.html',
+          templateUrl: 'modules/huron/features/autoAttendant/builder/aaBuilderMain.tpl.html',
           controller: 'AABuilderMainCtrl',
           controllerAs: 'aaBuilderMain'
         })
@@ -1215,21 +1232,31 @@ angular
               controllerAs: 'pstnSetup'
             },
             '@pstnSetup': {
-              templateUrl: 'modules/huron/pstnSetup/pstnProviders.tpl.html'
+              templateUrl: 'modules/huron/pstnSetup/pstnProviders/pstnProviders.tpl.html',
+              controller: 'PstnProvidersCtrl',
+              controllerAs: 'pstnProviders'
             }
           }
         })
         .state('pstnSetup.orderNumbers', {
-          templateUrl: 'modules/huron/pstnSetup/pstnNumbers.tpl.html'
+          templateUrl: 'modules/huron/pstnSetup/pstnNumbers/pstnNumbers.tpl.html',
+          controller: 'PstnNumbersCtrl',
+          controllerAs: 'pstnNumbers'
         })
         .state('pstnSetup.swivelNumbers', {
-          templateUrl: 'modules/huron/pstnSetup/pstnSwivelNumbers.tpl.html'
+          templateUrl: 'modules/huron/pstnSetup/pstnSwivelNumbers/pstnSwivelNumbers.tpl.html',
+          controller: 'PstnSwivelNumbersCtrl',
+          controllerAs: 'pstnSwivelNumbers'
         })
         .state('pstnSetup.review', {
-          templateUrl: 'modules/huron/pstnSetup/pstnReview.tpl.html'
+          templateUrl: 'modules/huron/pstnSetup/pstnReview/pstnReview.tpl.html',
+          controller: 'PstnReviewCtrl',
+          controllerAs: 'pstnReview'
         })
         .state('pstnSetup.nextSteps', {
-          templateUrl: 'modules/huron/pstnSetup/pstnNextSteps.tpl.html'
+          templateUrl: 'modules/huron/pstnSetup/pstnNextSteps/pstnNextSteps.tpl.html',
+          controller: 'PstnNextStepsCtrl',
+          controllerAs: 'pstnNextSteps'
         })
         .state('hurondetailsBase', {
           abstract: true,
@@ -1240,10 +1267,10 @@ angular
           url: '/hurondetails',
           parent: 'hurondetailsBase',
           views: {
-            'nav': {
-              templateUrl: 'modules/huron/details/huronDetailsNav.tpl.html',
-              controller: 'HuronDetailsNavCtrl',
-              controllerAs: 'nav'
+            'header': {
+              templateUrl: 'modules/huron/details/huronDetailsHeader.tpl.html',
+              controller: 'HuronDetailsHeaderCtrl',
+              controllerAs: 'header'
             },
             'main': {
               template: '<div ui-view></div>'
@@ -1260,14 +1287,14 @@ angular
         .state('huronsettings', {
           url: '/settings',
           parent: 'hurondetails',
-          templateUrl: 'modules/huron/callRouter/companyNumber.tpl.html',
-          controller: 'CallRouterCtrl',
-          controllerAs: 'callRouterCtrl'
+          templateUrl: 'modules/huron/settings/settings.tpl.html',
+          controller: 'HuronSettingsCtrl',
+          controllerAs: 'settings'
         })
         .state('huronfeatures', {
           url: '/features',
           parent: 'hurondetails',
-          templateUrl: 'modules/huron/features/features.tpl.html',
+          templateUrl: 'modules/huron/features/featureLanding/features.tpl.html',
           controller: 'HuronFeaturesCtrl',
           controllerAs: 'huronFeaturesCtrl'
         })
@@ -1277,6 +1304,30 @@ angular
           controller: 'NewFeatureCtrl',
           controllerAs: 'newFeatureCtrl',
           templateUrl: 'modules/huron/features/newFeature/newFeature.tpl.html'
+        })
+        .state('huronfeatures.aabuilder', {
+          parent: 'hurondetails',
+          params: {
+            aaName: ''
+          },
+          templateUrl: 'modules/huron/features/autoAttendant/builder/aaBuilderMain.tpl.html',
+          controller: 'AABuilderMainCtrl',
+          controllerAs: 'aaBuilderMain'
+        })
+        .state('huronfeatures.deleteFeature', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'HuronFeatureDeleteCtrl',
+              controllerAs: 'huronFeatureDelete',
+              templateUrl: 'modules/huron/features/featureLanding/featureDeleteModal.tpl.html'
+            }
+          },
+          params: {
+            deleteFeatureName: null,
+            deleteFeatureId: null,
+            deleteFeatureType: null
+          }
         })
         .state('huronfeatures.deleteHuntGroup', {
           parent: 'modal',
@@ -1298,6 +1349,13 @@ angular
           templateUrl: 'modules/huron/features/huntGroup/huntGroupSetupAssistant.tpl.html',
           controller: 'HuntGroupSetupAssistantCtrl',
           controllerAs: 'huntGroupSA'
+        })
+        .state('huntgroupedit', {
+          url: '/features/hg/edit',
+          parent: 'main',
+          templateUrl: 'modules/huron/features/edit/huntgroupedit.tpl.html',
+          controller: 'HuntGroupEditCtrl',
+          controllerAs: 'hge'
         });
     }
   ]);
@@ -1329,39 +1387,6 @@ angular
             'fullPane': {
               templateUrl: 'modules/hercules/expressway-service/cluster-list.html'
             }
-          }
-        })
-        .state('calendar-service.list.details', {
-          views: {
-            'rightPane': {
-              controllerAs: 'expresswayServiceDetails',
-              controller: 'ExpresswayServiceDetailsController',
-              templateUrl: 'modules/hercules/expressway-service/service-details.html'
-            }
-          },
-          params: {
-            cluster: null,
-            serviceType: "c_cal"
-          }
-        })
-        .state('calendar-service.list.details.cluster-settings', {
-          views: {
-            'details-pane': {
-              templateUrl: 'modules/hercules/expressway-service/cluster-settings.html'
-            }
-          }
-        })
-        .state('calendar-service.list.details.alarm', {
-          views: {
-            'details-pane': {
-              controller: 'AlarmController',
-              controllerAs: 'alarmCtrl',
-              templateUrl: 'modules/hercules/expressway-service/alarm-details.html'
-            }
-          },
-          params: {
-            alarm: null,
-            host: null
           }
         })
         .state('calendar-service.about', {
@@ -1402,39 +1427,6 @@ angular
             }
           }
         })
-        .state('call-service.list.details', {
-          views: {
-            'rightPane': {
-              controllerAs: 'expresswayServiceDetails',
-              controller: 'ExpresswayServiceDetailsController',
-              templateUrl: 'modules/hercules/expressway-service/service-details.html'
-            }
-          },
-          params: {
-            cluster: null,
-            serviceType: "c_ucmc"
-          }
-        })
-        .state('call-service.list.details.cluster-settings', {
-          views: {
-            'details-pane': {
-              templateUrl: 'modules/hercules/expressway-service/cluster-settings.html'
-            }
-          }
-        })
-        .state('call-service.list.details.alarm', {
-          views: {
-            'details-pane': {
-              controller: 'AlarmController',
-              controllerAs: 'alarmCtrl',
-              templateUrl: 'modules/hercules/expressway-service/alarm-details.html'
-            }
-          },
-          params: {
-            alarm: null,
-            host: null
-          }
-        })
         .state('call-service.settings', {
           url: '/services/call/settings',
           views: {
@@ -1456,8 +1448,95 @@ angular
             }
           }
         })
-
-      .state('cluster-details', {
+        .state('management-service', {
+          templateUrl: 'modules/hercules/expressway-service/overview.html',
+          controller: 'ExpresswayServiceController',
+          controllerAs: 'exp',
+          data: {
+            serviceType: "c_mgmt"
+          },
+          parent: 'main',
+          abstract: true
+        })
+        .state('management-service.list', {
+          url: '/services/expressway-management',
+          views: {
+            'fullPane': {
+              templateUrl: 'modules/hercules/expressway-service/cluster-list.html'
+            }
+          }
+        })
+        .state('management-service.settings', {
+          url: '/services/expressway-management/settings',
+          views: {
+            'fullPane': {
+              controllerAs: 'expresswayServiceSettings',
+              controller: 'ExpresswayServiceSettingsController',
+              templateUrl: 'modules/hercules/expressway-service/management-service-settings.html'
+            }
+          },
+          params: {
+            serviceType: "c_mgmt"
+          }
+        })
+        .state('cluster-details-new', {
+          parent: 'sidepanel',
+          views: {
+            'sidepanel@': {
+              controllerAs: 'expresswayServiceDetails',
+              controller: 'ExpresswayServiceDetailsController',
+              templateUrl: 'modules/hercules/expressway-service/cluster-details.html'
+            },
+            'header@cluster-details-new': {
+              templateUrl: 'modules/hercules/expressway-service/cluster-header.html'
+            }
+          },
+          data: {
+            displayName: 'Overview'
+          },
+          params: {
+            cluster: undefined,
+            serviceType: undefined
+          }
+        })
+        .state('cluster-details-new.cluster-settings', {
+          templateUrl: 'modules/hercules/expressway-service/cluster-settings.html',
+          controller: 'ExpresswayClusterSettingsController',
+          controllerAs: 'expresswayClusterSettingsCtrl',
+          data: {
+            displayName: 'Edit'
+          },
+          params: {
+            clusterId: null,
+            serviceType: null
+          }
+        })
+        .state('cluster-details-new.alarm-details', {
+          templateUrl: 'modules/hercules/expressway-service/alarm-details.html',
+          controller: 'AlarmController',
+          controllerAs: 'alarmCtrl',
+          data: {
+            displayName: 'Alarm Details'
+          },
+          params: {
+            alarm: null,
+            host: null
+          }
+        })
+        .state('cluster-details-new.host-details', {
+          templateUrl: 'modules/hercules/expressway-service/host-details.html',
+          controller: 'HostDetailsController',
+          controllerAs: 'hostDetailsCtrl',
+          data: {
+            displayName: 'Host'
+          },
+          params: {
+            host: null,
+            clusterId: null,
+            serviceType: null
+          }
+        })
+        .state('cluster-details', {
           parent: 'sidepanel',
           views: {
             'sidepanel@': {

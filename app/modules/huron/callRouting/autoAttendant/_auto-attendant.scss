@@ -1,7 +1,7 @@
-@import 'builder/_aa-builder';
 
 /*** old UI styles TO BE REMOVED ***/
 /* if using any of these older styles, please move to new section for UX 12.x and beyond */
+$aa-builder-icon-color: $gray-base;
 
 .aa-validation .popover {
   white-space: nowrap;
@@ -241,31 +241,31 @@ a.dropdown-toggle:focus {
   }
   .aa-schedule-icon {
     @extend .icon;
-    @extend .icon-Clock;
+    @extend .icon-clock;
     font-size: 1.5em;
     text-align: center;
-    color: $brand-default;
+    color: $aa-builder-icon-color;
   }
   .aa-audio-icon {
     @extend .icon;
-    @extend .icon-Audio;
+    @extend .icon-audio;
     font-size: 1.5em;
     text-align: center;
-    color: $brand-default;
+    color: $aa-builder-icon-color;
   }
   .aa-headset-icon {
     @extend .icon;
-    @extend .icon-Headset;
+    @extend .icon-headset;
     font-size: 1.5em;
     text-align: center;
-    color: $brand-default;
+    color: $aa-builder-icon-color;
   }
   .aa-playlist-icon {
     @extend .icon;
-    @extend .icon-Playlist;
+    @extend .icon-playlist;
     font-size: 1.5em;
     text-align: center;
-    color: $brand-default;
+    color: $aa-builder-icon-color;
   }
 }
 

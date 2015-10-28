@@ -8,13 +8,13 @@
       <div class="page-option-buttons" ng-controller="LineExportCtrl as lineExportCtrl">
         <div ng-if="!lineExportCtrl.exportBusy">
           <a id="export-btn" ng-csv="lineExportCtrl.exportCSV()" filename="{{'linesPage.csvFilename' | translate}}">
-            <span id="export-icon" class="export-lines" tooltip-placement="top" tooltip="{{'linesPage.csvBtnTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true">
+            <span id="export-icon" class="export-lines icon-export" tooltip-placement="top" tooltip="{{'linesPage.csvBtnTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true">
               <i class="icon icon-content-share"></i>
             </span>
           </a>
         </div>
         <div ng-if="lineExportCtrl.exportBusy" >
-          <span id="export-icon" class="export-lines">
+          <span id="export-icon" class="export-lines icon-export">
             <i class="icon icon-spinner"></i>
           </span>
         </div>

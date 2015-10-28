@@ -3,30 +3,42 @@
 </h5>
 
 <p>
-  Use certificates provided from Cisco Collaboration default trust list (Cert Service) for the encrypted SIP
-  calls, or upload self-signed certificates.
+  Use certificates provided from Cisco Collaboration default trust list for the encrypted SIP
+  calls, or upload your own certificates.
 </p>
+<p>
 
 <div ng-if="expresswayServiceSettings.certificates.length == 0">
   <p><em>No certificates uploaded. Using the default trust list.</em></p>
 </div>
 
-<div ng-if="expresswayServiceSettings.certificates.length > 0">
-  <h6>Certificates</h6>
-
-  <div data-ng-repeat="cert in expresswayServiceSettings.certificates" class="row">
-    <div class="small-9 columns">{{cert.name}}</div>
-    <div class="small-3 columns">
-      <a href="#" class="right" sq-click-promise="expresswayServiceSettings.confirmCertDelete(cert)">
-        Remove
-      </a>
-    </div>
-  </div>
+<div ng-if="expresswayServiceSettings.certificates.length > 0" class="hercules-certificates-table">
+  <p>Uploaded Certificates:</p>
+  <hr>
+  <table>
+    <tbody>
+    <tr data-ng-repeat="cert in expresswayServiceSettings.certificates">
+      <td>
+        <span>{{cert.decoded.subjectDN}}</span>
+        <br>
+        <span>Expires: {{cert.decoded.notAfter | date:'yyyy-MM-dd'}}</span>
+      </td>
+      <td>
+        <i class="icon icon-trash icon-lg hercules-trash-icon right"
+           style="margin-left: 10px; margin-top: 5px;"
+           ng-click="expresswayServiceSettings.confirmCertDelete(cert)"
+           tooltip-placement="top"
+           tooltip="Delete Certificate"
+           tooltip-animation="false"></i>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <hr>
 </div>
-
 <button class="button secondary" name="file" accept="application/x-x509-ca-cert"
      ngf-select="expresswayServiceSettings.uploadCert($file, $event)"
      ng-model="certFile"
      loading="expresswayServiceSettings.uploadingCert">
-  Upload Certificate
+  Upload
 </button>

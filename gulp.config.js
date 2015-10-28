@@ -71,6 +71,7 @@ module.exports = function() {
       karmaWatchTpl: 'karma/karma.watch.tpl.js',
       app: [
         build + '/scripts/**/*.js',
+        build + '/modules/**/*.module.js',
         build + '/modules/**/*.js'
       ],
       js: [
@@ -172,7 +173,8 @@ module.exports = function() {
         vendor + '/ng-file-upload/ng-file-upload.js',
         vendor + '/jstimezonedetect/jstz.js',
         vendor + '/masonry/dist/masonry.pkgd.js',
-        vendor + '/imagesloaded/imagesloaded.pkgd.js'
+        vendor + '/imagesloaded/imagesloaded.pkgd.js',
+        vendor + '/ng-tags-input/ng-tags-input.min.js'
       ],
       scss: {
         paths: [
@@ -188,7 +190,8 @@ module.exports = function() {
         vendor + '/alertify.js/themes/alertify.default.css',
         vendor + '/angular-wizard/dist/angular-wizard.css',
         vendor + '/angular-dialog-service/dialogs.css',
-        vendor + '/animate.css/animate.css'
+        vendor + '/animate.css/animate.css',
+        vendor + '/ng-tags-input/ng-tags-input.css'
       ],
       fonts: [
         vendor + '/cisco-ui/dist/fonts/*',

@@ -9,16 +9,18 @@ angular.module('Squared').service('CsdmConverter',
       this.url = obj.url;
       this.mac = obj.mac;
       this.ip = getIp(obj);
+      this.tags = getTags(obj);
       this.serial = obj.serial;
       this.cisUuid = obj.cisUuid;
       this.product = getProduct(obj);
       this.hasIssues = hasIssues(obj);
       this.software = getSoftware(obj);
-      this.upgradeChannel = getUpgradeChannel(obj);
       this.isOnline = getIsOnline(obj);
+      this.tagString = getTagString(obj);
       this.displayName = obj.displayName;
       this.cssColorClass = getCssColorClass(obj);
       this.readableState = getReadableState(obj);
+      this.upgradeChannel = getUpgradeChannel(obj);
       this.needsActivation = getNeedsActivation(obj);
       this.diagnosticsEvents = getDiagnosticsEvents(obj);
       this.readableActivationCode = getReadableActivationCode(obj);
@@ -40,6 +42,9 @@ angular.module('Squared').service('CsdmConverter',
 
       this.url = obj.url;
       this.cisUuid = obj.id;
+      this.tags = getTags(obj);
+      this.expiryTime = obj.expiryTime;
+      this.tagString = getTagString(obj);
       this.displayName = obj.displayName;
       this.activationCode = obj.activationCode;
       this.readableState = getReadableState(obj);
@@ -213,6 +218,20 @@ angular.module('Squared').service('CsdmConverter',
 
     function t(key) {
       return $translate.instant(key);
+    }
+
+    function getTags(obj) {
+      try {
+        var tags = JSON.parse(obj.description);
+        return _.unique(tags);
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function getTagString(obj) {
+      var tags = getTags(obj);
+      return tags.join(', ');
     }
 
     return {

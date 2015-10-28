@@ -1,6 +1,5 @@
 <div id="webexSiteSettings"
-     name="webexSiteSettings"
-     class="siteindex-panel">
+     name="webexSiteSettings">
 
   <div class="row page-header">
     <div class="page-title small-10 columns">
@@ -13,7 +12,7 @@
          class="page-option-buttons"
          ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
          
-     <a class="button large"
+      <a class="button large"
          id={{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.id}}
          name={{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.id}}
          ui-sref={{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.pageObj.uiSref}}>
@@ -23,41 +22,55 @@
     </div>
   </div>
 
-  <div>
+  <cs-container>
+  <!-- 
+  <div class="siteindex-panel">
+  -->
     <!-- breadcrumbs -->
     <ul id="siteSettingsBreadCrumbs"
-        name="siteSettingsBreadCrumbs" class="breadcrumbs">
-        
+        name="siteSettingsBreadCrumbs" 
+        class="breadcrumbs">
+          
       <li>
         <a id="siteListCrumb"
+           name="siteListCrumb"
            ui-sref="site-list"
            translate="siteList.conferencing">
         </a>
       </li>
 
-      <li class="current">
+      <li class="current"
+          id="siteSettingsCrumb"
+          name="siteSettingsCrumb">
+          
         {{WebExSiteSettings.siteSettingsObj.pageTitleFull}}
       </li>
     </ul>
     
-    <!--cards -->
-    <cs-card-layout id="configureCards" ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
-      <!-- Info card -->
-      <div ng-include="'modules/webex/siteSettings/siteInfoCard.tpl.html'"></div>
+    <div ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
+      <cs-card-layout>
+        <div ng-include="'modules/webex/siteSettings/siteInfoCard.tpl.html'"></div>
+      </cs-card-layout>
 
-      <!-- Setting cards -->
-      <div ng-include="'modules/webex/siteSettings/siteSettingsCards.tpl.html'"></div>
-    </cs-card-layout>
+      <cs-card-layout>
+        <div ng-include="'modules/webex/siteSettings/siteSettingCards.tpl.html'"></div>
+      </cs-card-layout>
+    </div>
 
     <!-- WebEx site admin cross launch -->
-    <div class="row">
+    <p>
+      &nbsp;&nbsp;&nbsp;
+    
       <a href=""
          onClick="document.getElementById('hiddenButton').click();">
 
         Launch&nbsp;WebEx&nbsp;Site&nbsp;Admin
       </a>
-    </div>
-  </div>
+    </p>
+  <!-- 
+  </div> 
+  -->
+  </cs-container>
 </div>
 
 <!-- WebEx site admin cross launch form -->

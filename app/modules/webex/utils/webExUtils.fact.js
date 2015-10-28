@@ -151,6 +151,7 @@
                 var logMsg = "";
 
                 var result = {
+                  siteUrl: siteUrl,
                   isIframeSupported: iframeSupportedSiteVersionCheck(response),
                   isAdminReportEnabled: isAdminReportEnabledCheck(response)
                 };
@@ -187,6 +188,7 @@
             var logMsg = "";
 
             var result = {
+              siteUrl: siteUrl,
               error: "getSessionTicketError",
               response: response
             };

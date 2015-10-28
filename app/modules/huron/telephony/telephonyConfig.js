@@ -42,6 +42,11 @@
             prod: 'https://hermes.huron-dev.com/api/v1'
           },
 
+          // TODO: Remove this when CMIv2 URl is ready.
+          getMockHgUrl: function () {
+            return 'https://mock-hg.de-ams.thunderhead.io/api/v2';
+          },
+
           getCmiUrl: function () {
             if (Config.isDev()) {
               return this.cmiUrl.dev;

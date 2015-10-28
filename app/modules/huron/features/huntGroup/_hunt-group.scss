@@ -1,33 +1,43 @@
+$overlay-panel-height: 93px;
+
+@import 'setupAssistantPages/_hunt-pilot-lookup';
+@import 'setupAssistantPages/_hunt-method';
+@import 'setupAssistantPages/_hunt-members-lookup';
+
 .huntgroup {
   &.overlay-panel {
-    display: flex;
-    flex-direction: column;
     & cs-setup-assistant {
       width: 100%;
     }
-    .panel-content {
-      flex: 1;
-      display: flex;
-      align-items: center;
-    }
   }
-  & .underline {
-    font-size:200%;
-    max-width: 40rem;
-  }
-  & .h-center {
-    margin-left: auto;
-    margin-right: auto;
-  }
-  & .input-details {
-    text-align:center;
-    p {
-      padding: 1rem;
-      color: $gray;
-      font-style: italic;
-    }
-  }
-  & .text-primary {
-    color:$brand-primary;
+  .panel-content {
+    flex : 1;
+    height: calc(100vh - #{$navbar-height + $overlay-panel-height});
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
   }
 }
+
+///// Type ahead input box styling with icon ///////
+.typeahead-large {
+  .input-hint {
+    border: 0;
+    border-top: solid rem(1px) $gray-light;
+    width: 100%;
+    text-align: center;
+    @include vr-spacing(p, 1);
+    color: $gray;
+    font-style: italic;
+  }
+
+  // Input control.
+  input {
+    &:focus ~ .input-hint {
+      border-top: solid rem(1px) $brand-primary;
+    }
+  }
+}
+

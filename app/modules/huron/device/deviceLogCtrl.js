@@ -6,7 +6,7 @@
     .controller('DeviceLogCtrl', DeviceLogCtrl);
 
   /* @ngInject */
-  function DeviceLogCtrl($scope, $q, $interval, $stateParams, DeviceLogService) {
+  function DeviceLogCtrl($scope, $q, $interval, $stateParams, $translate, Notification, DeviceLogService) {
     var dlc = this;
     dlc.logList = [];
     dlc.currentUser = $stateParams.currentUser;
@@ -27,6 +27,7 @@
 
     ////////// Function Definitions ///////////////////////////////////////
     function retrieveLog() {
+      dlc.active = false;
       dlc.error = false;
       dlc.loading = true;
 
@@ -34,13 +35,13 @@
         .then(function (response) {
           dlc.active = true;
           return refreshLogList();
-        }, function (error) {
-          //TODO: handle error with notification
+        })
+        .catch(function (response) {
+          Notification.errorResponse(response);
         })
         .finally(function () {
           dlc.loading = false;
         });
-
     }
 
     function refreshLogList() {
@@ -49,8 +50,8 @@
           dlc.logList = [];
           //build log list
           var logs = response;
-          if (logs.length < 1) {
-            //TODO: handle error with notification
+          if (!Array.isArray(logs) || logs.length < 1) {
+            Notification.error('deviceDetailPage.errorLogInvaidMsg');
             return;
           }
           angular.forEach(logs, function (log) {
@@ -61,13 +62,24 @@
               addPolling(log.trackingId);
             }
           });
-        }, function (error) {
-          //TODO: handle error with notification
+        })
+        .catch(function (response) {
+          Notification.errorResponse(response);
+          //stop polling
+          removeAllPolling();
         });
     }
 
     function isPolling() {
       return (pollingList.length > 0);
+    }
+
+    function getFilename(url) {
+      var pathArray = url.split('/');
+      if (Array.isArray(pathArray) && pathArray.length > 0 && pathArray[pathArray.length - 1].length > 0) {
+        return pathArray[pathArray.length - 1];
+      }
+      return $translate.instant('deviceDetailPage.unknownFilename');
     }
 
     function addLogList(logEntry) {
@@ -82,12 +94,11 @@
           if (event.status === EVT_SUCCESS) {
             log.uri = logEntry.results;
             log.name = event.date;
+            log.filename = getFilename(log.uri);
             dlc.logList.push(log);
             return;
           }
         }
-        //no event status success
-        //TODO: Error or Start polling?
       }
     }
 
