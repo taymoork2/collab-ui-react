@@ -913,7 +913,11 @@ angular.module('Core')
           'devices',
           'device-overview',
           'devices-redux'
-          // 'call-service'
+        ],
+        'squared-fusion-uc': [
+          'devices',
+          'device-overview',
+          'devices-redux'
         ],
         'squared-fusion-cal': [
           // 'calendar-service'
