@@ -957,6 +957,7 @@ gulp.task('karma-watch', ['karma-config-watch'], function (done) {
  * --prod               Runs tests against production atlas
  * --nosetup            Runs tests without serving the app
  * --specs              Runs tests against specific files or modules
+ * --regression         Runs tests in regression folder in addition to any specified tests
  * --build              Runs tests against the build directory
  * --verbose            Runs tests with detailed console.log() messages
  *************************************************************************/
@@ -986,6 +987,7 @@ gulp.task('e2e', function (done) {
  * --specs=hercules         Runs only tests in test/hercules directory
  * --specs=mediafusion      Runs only tests in test/mediafusion directory
  * --specs=filepath         Runs only tests in specified file
+ * --regression             Runs tests in regression folder in addition to any specified tests
  * --build                  Runs tests against the build directory
  * --verbose                Runs tests with detailed console.log() messages
  *************************************************************************/
@@ -1020,6 +1022,12 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
       config.testFiles.e2e.webexsite
     );
     messageLogger('Running End 2 End tests from all modules.');
+  }
+
+  // Extra regression tests that are not gating
+  if (args.regression) {
+      messageLogger('Running extra End 2 End tests from: ' + $.util.colors.red(config.testFiles.e2e.regression));
+      tests.push(config.testFiles.e2e.regression);
   }
 
   /*

@@ -102,7 +102,8 @@ module.exports = function() {
         squared: e2e + '/squared/**/*_spec.js',
         webexsite: e2e + '/webex/site/**/*_spec.js',
         webexuser: e2e + '/webex/user/**/*_spec.js',
-        sunlight: e2e + '/sunlight/**/*_spec.js'
+        sunlight: e2e + '/sunlight/**/*_spec.js',
+        regression: e2e + '/regression/**/*_spec.js'
       }
     },
 
