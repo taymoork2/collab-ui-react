@@ -49,7 +49,7 @@ describe('OnboardCtrl: Ctrl', function () {
     getMyFeatureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
 
     spyOn(Notification, 'notify');
-    spyOn(Userservice, 'onboardLicenseUsers');
+    spyOn(Userservice, 'onboardUsers');
     spyOn(Orgservice, 'getUnlicensedUsers');
     spyOn(SyncService, 'isMessengerSync');
 
@@ -79,7 +79,7 @@ describe('OnboardCtrl: Ctrl', function () {
     var twoInvalidUsers = "First Name,Last Name,Display Name,User ID/Email,Directory Number,Direct Line\nTest,Doe,John Doe,johndoe@example.com,5001\nJane,Doe,Jane Doe,janedoe@example.com,5002";
 
     function fakeOnboardUsers(successFlag, statusCode, responseMessage) {
-      return function (userArray, entitleList, licenseList, callback) {
+      return function (userArray, entitleList, licenseList, licensePerUserList, callback) {
         var data = {
           success: successFlag,
           userResponse: [{
@@ -150,7 +150,7 @@ describe('OnboardCtrl: Ctrl', function () {
         $timeout.flush();
       });
       it('should report new users', function () {
-        Userservice.onboardLicenseUsers.and.callFake(fakeOnboardUsers(true, 200));
+        Userservice.onboardUsers.and.callFake(fakeOnboardUsers(true, 200));
 
         var promise = $scope.csvProcessingNext();
         $scope.$apply();
@@ -162,7 +162,7 @@ describe('OnboardCtrl: Ctrl', function () {
         expect($scope.model.userErrorArray.length).toEqual(0);
       });
       it('should report existing users', function () {
-        Userservice.onboardLicenseUsers.and.callFake(fakeOnboardUsers(true, 200, 'User Patched'));
+        Userservice.onboardUsers.and.callFake(fakeOnboardUsers(true, 200, 'User Patched'));
 
         var promise = $scope.csvProcessingNext();
         $scope.$apply();
@@ -175,7 +175,7 @@ describe('OnboardCtrl: Ctrl', function () {
       });
 
       it('should report error users', function () {
-        Userservice.onboardLicenseUsers.and.callFake(fakeOnboardUsers(true, 500));
+        Userservice.onboardUsers.and.callFake(fakeOnboardUsers(true, 500));
 
         var promise = $scope.csvProcessingNext();
         $scope.$apply();
@@ -188,7 +188,7 @@ describe('OnboardCtrl: Ctrl', function () {
       });
 
       it('should report error users when API fails', function () {
-        Userservice.onboardLicenseUsers.and.callFake(fakeOnboardUsers(false));
+        Userservice.onboardUsers.and.callFake(fakeOnboardUsers(false));
 
         var promise = $scope.csvProcessingNext();
         $scope.$apply();
@@ -205,7 +205,7 @@ describe('OnboardCtrl: Ctrl', function () {
         $scope.$apply();
         $timeout.flush();
 
-        Userservice.onboardLicenseUsers.and.callFake(fakeOnboardUsers(true, 200));
+        Userservice.onboardUsers.and.callFake(fakeOnboardUsers(true, 200));
 
         var promise = $scope.csvProcessingNext();
         $scope.$apply();
@@ -218,7 +218,7 @@ describe('OnboardCtrl: Ctrl', function () {
       });
 
       it('should stop processing when cancelled', function () {
-        Userservice.onboardLicenseUsers.and.stub();
+        Userservice.onboardUsers.and.stub();
 
         var promise = $scope.csvProcessingNext();
         $scope.$apply();

@@ -1,13 +1,28 @@
-.features{
 
-  $page-header-height: 95px;
-  $features-header-height : 83px;
+$page-header-height: 95px;
+$features-header-height : 83px;
+
+.features{
 
   .features-content {
     height: calc(100vh - #{($navbar-height + $page-header-height + $features-header-height)});
     overflow: auto;
     background-color: $brand-white;
     @include vr-spacing(pt, 0);
+  }
+}
+
+.features-reload {
+  display : flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - #{($navbar-height + $page-header-height + $features-header-height)});
+   >p {
+     color: $gray-dark;
+   }
+  >div {
+    color: $gray-darker;
   }
 }
 

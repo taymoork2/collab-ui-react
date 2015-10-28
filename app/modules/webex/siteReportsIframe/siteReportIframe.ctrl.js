@@ -49,6 +49,9 @@
       $scope.authToken = $rootScope.token;
       $scope.locale = ("es_LA" == $translate.use()) ? "es_MX" : $translate.use();
 
+      var dotLoc = $stateParams.siteUrl.indexOf('.');
+      $scope.siteName = $stateParams.siteUrl.substring(0, dotLoc);
+
       _this.logMsg = _this.funcName + ": " + "\n" +
         "siteUrl=" + $scope.siteUrl + "\n" +
         "reportPageId=" + $scope.reportPageId + "\n" +
