@@ -21,6 +21,7 @@ var log = $.util.log;
 var path = require('path');
 var pkg = require('./package.json');
 var protractor = require('gulp-protractor').protractor;
+var fs = require('fs');
 var webdriverUpdate = require('gulp-protractor').webdriver_update;
 var reload = browserSync.reload;
 var runSeq = require('run-sequence');
@@ -986,6 +987,8 @@ gulp.task('e2e', function (done) {
  * --specs=hercules         Runs only tests in test/hercules directory
  * --specs=mediafusion      Runs only tests in test/mediafusion directory
  * --specs=filepath         Runs only tests in specified file
+ * --specs=fromfile         Runs only tests from within a file
+ * --filename=filepath      Specify the filename
  * --build                  Runs tests against the build directory
  * --verbose                Runs tests with detailed console.log() messages
  *************************************************************************/
@@ -1001,7 +1004,23 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
   var tests = [];
   if (args.specs) {
     var specs = args.specs;
-    if (!specs.match(/_spec.js/)) {
+    if (specs === 'fromfile') {
+      if (args.filename) {
+        var filename = args.filename;
+        try {
+          var e2ePrTests = fs.readFileSync('./' + filename, "utf8");
+          tests = e2ePrTests.split('\n');
+          tests = tests.filter(function (test) {
+            return test.trim() !== '';
+          });
+          messageLogger('Running End 2 End tests from file: ' + $.util.colors.red(specs));
+        } catch (err) {
+          messageLogger('Error:: ' + $.util.colors.red(err));
+        }
+      } else {
+        messageLogger('Error:: ' + $.util.colors.red("'--filename' is not specified."));
+      }
+    } else if (!specs.match(/_spec.js/)) {
       tests = 'test/e2e-protractor/' + specs + '/**/*_spec.js';
       messageLogger('Running End 2 End tests from module: ' + $.util.colors.red(specs));
       // log($.util.colors.green('Running End 2 End tests from module: ') + $.util.colors.red(specs));

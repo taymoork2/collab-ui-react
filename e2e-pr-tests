@@ -1,0 +1,2 @@
+test/e2e-protractor/squared/login_spec.js
+test/e2e-protractor/squared/list_users_spec.js
