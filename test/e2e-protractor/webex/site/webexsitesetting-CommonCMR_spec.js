@@ -4,20 +4,17 @@
 
 describe('WebEx Common Settings -> CMR', function () {
 
-  it('should allow login as admin user', function () {
+  it('should navigate to WebEx site list', function () {
     login.loginThroughGui(sitesettings.testAdmin.username, sitesettings.testAdmin.password);
-  });
-
-  it('click on services tab', function () {
     navigation.clickServicesTab();
-  });
-
-  it('click on conferencing option', function () {
     utils.click(sitesettings.conferencing);
+    navigation.expectCurrentUrl('/site-list');
   });
 
-  it('click on configure site cog', function () {
+  it('should call XML API and allow click on configure site cog', function () {
+    utils.wait(sitesettings.configureSJSITE14cog);
     utils.click(sitesettings.configureSJSITE14);
+    navigation.expectCurrentUrl(sitesettings.siteSettingsUrl);
   });
 
   it('wait for WebEx settings index page to appear', function () {
@@ -26,9 +23,6 @@ describe('WebEx Common Settings -> CMR', function () {
 
   it('click on common settings cmr link', function () {
     utils.click(sitesettings.configureCommonCMRLink);
-  });
-
-  it('wait for common settings cmr page to appear', function () {
     utils.wait(sitesettings.siteSettingPanel);
     expect(sitesettings.webexCMRId.isPresent()).toBeTruthy();
     expect(sitesettings.iFramePage.isPresent()).toBeTruthy();

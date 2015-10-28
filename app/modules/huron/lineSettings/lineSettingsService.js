@@ -27,32 +27,19 @@
       var altNum = _altNum;
       var dnSettings = angular.copy(_dnSettings);
       dnSettings.pattern = pattern;
-      var isExternalCallerIdTypeDirectLine = false;
 
       return HuronAssignedLine.assignDirectoryNumber(userUuid, dnUsage, pattern)
         .then(function (dn) {
           TelephonyInfoService.updateCurrentDirectoryNumber(dn.uuid, dn.pattern, dnUsage, null, false);
-          // if Direct Line is the external caller ID, it cannot be added right away
-          // because the DID has not been set yet
-          if (dnSettings.externalCallerIdType === 'Direct Line') {
-            isExternalCallerIdTypeDirectLine = true;
-            dnSettings.externalCallerIdType = 'Blocked Outbound Caller ID';
-          }
-          return DirectoryNumber.updateDirectoryNumber(dn.uuid, dnSettings);
-        })
-        .then(function () {
           if (typeof altNum.pattern !== 'undefined' && altNum.pattern !== 'None') {
             var telInfo = TelephonyInfoService.getTelephonyInfo();
             return addExternalLine(telInfo.currentDirectoryNumber.uuid, altNum.pattern);
           }
         })
         .then(function () {
-          // update to Direct Line if necessary
-          if (isExternalCallerIdTypeDirectLine) {
-            var telInfo = TelephonyInfoService.getTelephonyInfo();
-            dnSettings.externalCallerIdType = 'Direct Line';
-            return DirectoryNumber.updateDirectoryNumber(telInfo.currentDirectoryNumber.uuid, dnSettings);
-          }
+          var telInfo = TelephonyInfoService.getTelephonyInfo();
+          dnSettings.externalCallerIdType = 'Direct Line';
+          return DirectoryNumber.updateDirectoryNumber(telInfo.currentDirectoryNumber.uuid, dnSettings);
         })
         .then(function () {
           return $q.all([TelephonyInfoService.loadInternalNumberPool(), TelephonyInfoService.loadExternalNumberPool()]);
