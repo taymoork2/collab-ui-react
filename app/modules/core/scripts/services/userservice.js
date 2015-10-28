@@ -56,22 +56,13 @@ angular.module('Core')
             'users': []
           };
 
-          // Patch user is generating an error if I use licenses, so I'm converting this to userLicenses
-          // temporarily
-          var tempFix = [];
-          if (licenses) {
-            for (var j = 0; j < licenses.length; j++)
-              tempFix.push(licenses[j]['id'].toString());
-          }
-
           for (var i = 0; i < usersDataArray.length; i++) {
             var userEmail = usersDataArray[i].address.trim();
             if (userEmail.length > 0) {
               var user = {
                 'email': userEmail,
                 'userEntitlements': entitlements,
-                //'licenses': licenses,
-                'userLicenses': (tempFix.length > 0) ? tempFix : null,
+                'licenses': licenses,
                 'assignedDn': usersDataArray[i].assignedDn,
                 'externalNumber': usersDataArray[i].externalNumber
               };

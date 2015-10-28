@@ -1727,16 +1727,13 @@ angular.module('Core')
           entitleList = getEntitlements('add');
         }
         var communicationLicense = _.find(licenseList, function (license) {
-          return license.indexOf("CO_") === 0;
+          return license['id'].indexOf("CO_") === 0;
         });
 
         function buildLicenseArray(internalExtension, directLine) {
           return licenseList.map(function (license) {
-            var licenseObj = {
-              id: license,
-              properties: {}
-            };
-            if (license.indexOf("CO_") === 0) {
+            var licenseObj = license;
+            if (license['id'].indexOf("CO_") === 0) {
               if (internalExtension) {
                 licenseObj.properties.internalExtension = internalExtension;
               }
