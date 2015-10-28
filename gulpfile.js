@@ -1026,8 +1026,8 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
 
   // Extra regression tests that are not gating
   if (args.regression) {
-      messageLogger('Running extra End 2 End tests from: ' + $.util.colors.red(config.testFiles.e2e.regression));
-      tests.push(config.testFiles.e2e.regression);
+    messageLogger('Running extra End 2 End tests from: ' + $.util.colors.red(config.testFiles.e2e.regression));
+    tests.push(config.testFiles.e2e.regression);
   }
 
   /*
