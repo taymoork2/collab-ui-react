@@ -83,12 +83,22 @@ describe('Controller: DeviceLogCtrl', function () {
     expect(controller.logList.length).toBeGreaterThan(0);
     expect(controller.logList[0].name).toEqual(success[0].events[3].date);
     expect(controller.logList[0].uri).toEqual(success[0].results);
+    expect(controller.logList[0].filename.length).toBeGreaterThan(0);
 
     DeviceLogService.getLogInformation.and.returnValue($q.when(success2));
     controller.refreshLogList();
     $scope.$apply();
 
     expect(controller.logList.length).toBeGreaterThan(1);
+  });
+
+  it('should load loglist with with bad result field, but still contain information about the filename', function () {
+    success[0].results = '';
+    DeviceLogService.getLogInformation.and.returnValue($q.when(success));
+    controller.refreshLogList();
+    $scope.$apply();
+
+    expect(controller.logList[0].filename.length).toBeGreaterThan(0);
   });
 
   it('should handle duplicate entries, loglist should not change', function () {

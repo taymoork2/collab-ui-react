@@ -1,68 +1,68 @@
 'use strict';
 
-/* global describe, xit, expect, login */
+/* global describe, it, expect, login */
 
 describe('WebEx user settings', function () {
 
-  xit('should allow login as admin user', function () {
+  it('should allow login as admin user', function () {
     login.loginThroughGui(usersettings.testAdmin.username, usersettings.testAdmin.password);
   });
 
-  xit('click on users tab', function () {
+  it('click on users tab', function () {
     navigation.clickUsers();
   });
 
-  xit('should allow search and click on user', function () {
+  it('should allow search and click on user', function () {
     utils.search(usersettings.testUser.username);
     users.clickOnUser();
   });
 
-  xit('should allow click on conferencing', function () {
+  it('should allow click on conferencing', function () {
     utils.wait(users.conferencingService);
     expect(users.conferencingService.isPresent()).toBeTruthy();
     utils.click(users.conferencingService);
   });
 
-  xit('should allow click on site name', function () {
+  it('should allow click on site name', function () {
     utils.wait(usersettings.testSiteElement);
     expect(usersettings.testSiteElement.isPresent()).toBeTruthy();
     utils.click(usersettings.testSiteElement);
   });
 
-  xit('should display basic WebEx settigns page', function () {
+  it('should display basic WebEx settigns page', function () {
     utils.wait(usersettings.userSettingsPanel);
     expect(usersettings.userSettingsPanel.isPresent()).toBeTruthy();
     expect(usersettings.userSettingsPanel.isDisplayed()).toBeTruthy();
   });
 
-  xit('should not display WebEx error page', function () {
+  it('should not display WebEx error page', function () {
     expect(usersettings.errorPanel.isPresent()).toBeFalsy();
   });
 
-  xit('should allow navigation to the 4th panel', function () {
+  it('should allow navigation to the 4th panel', function () {
     utils.click(usersettings.userPrivilegesLink);
     utils.wait(usersettings.userPrivilegesPanel);
     expect(usersettings.userPrivilegesPanel.isPresent()).toBeTruthy();
     expect(usersettings.userPrivilegesPanel.isDisplayed()).toBeTruthy();
   });
 
-  xit('should allow navigation back to the 3rd panel', function () {
+  it('should allow navigation back to the 3rd panel', function () {
     utils.clickLastBreadcrumb();
     expect(usersettings.userSettingsPanel.isPresent()).toBeTruthy();
     expect(usersettings.userSettingsPanel.isDisplayed()).toBeTruthy();
   });
 
-  xit('should not show save button without any changes', function () {
+  it('should not show save button without any changes', function () {
     expect(usersettings.saveButton.isPresent()).toBeFalsy();
   });
 
-  xit('should allow edit in 3rd panel', function () {
+  it('should allow edit in 3rd panel', function () {
     expect(usersettings.mcAuoCheckbox.isPresent());
     usersettings.mcAuo.click();
     expect(usersettings.saveButton.isPresent()).toBeTruthy();
   });
 
-  xit('should allow save in 3rd panel', function () {
+  it('should allow save in 3rd panel', function () {
     usersettings.save();
     //    expect(usersettings.alertSuccess.isDisplayed()).toBeTruthy();
   });
@@ -103,12 +103,12 @@ describe('WebEx user settings', function () {
   **/
 
   /**  
-    xit('should pause', function () {
+    it('should pause', function () {
       browser.pause();
     });
   **/
 
-  xit('should allow log out', function () {
+  it('should allow log out', function () {
     navigation.logout();
   });
 });
