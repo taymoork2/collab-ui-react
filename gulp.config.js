@@ -100,9 +100,8 @@ module.exports = function() {
         huron: e2e + '/huron/**/*_spec.js',
         mediafusion: e2e + '/mediafusion/**/*_spec.js',
         squared: e2e + '/squared/**/*_spec.js',
-        webexsitesettings: e2e + '/webex/sitesettings/**/*_spec.js',
-        webexsitereports: e2e + '/webex/sitereports/**/*_spec.js',
-        webexusersettings: e2e + '/webex/usersettings/**/*_spec.js',
+        webexsite: e2e + '/webex/site/**/*_spec.js',
+        webexuser: e2e + '/webex/user/**/*_spec.js',
         sunlight: e2e + '/sunlight/**/*_spec.js'
       }
     },
