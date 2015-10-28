@@ -10,21 +10,18 @@ var SiteReportsPage = function () {
     password: 'Cisco!23',
   };
 
-  this.conferencing = element(by.css('a[href="#site-list"]'));
-
-  this.siteReportsUrl = '/reports';
-  this.reportSJSITE14 = element(by.id("sjsite14.webex.com_webex-site-reports"));
   this.webexSiteReportsPanel = element(by.id('webexSiteReports'));
-  this.webexReportCrumb = element(by.id('webexReportCrumb'))
-  this.webexReportBreadCrumbs = element(by.id('webexReportBreadCrumbs'));
-  this.webexReportIFrameBreadCrumbs = element(by.id('webexReportIFrameBreadCrumbs'));
-  this.webexReportIFrameCrumb2 = element(by.id('webexReportIFrameCrumb2'));
+
+  this.webexReportCrumb1 = element(by.id('webexReportIFrameCrumb1'));
+  this.webexReportCrumb2 = element(by.id('webexReportIFrameCrumb2'));
 
   this.webexReportsLink = element(by.id('webexReports'));
-  this.webexCommonMeetingUsageReportLink = element(by.id('meeting_usage'));
+  this.webexCommonMeetingUsageLink = element(by.id('meeting_usage'));
+  this.webexCommonMeetingsInProgressLink = element(by.id('meeting_in_progess'));
 
   this.webexCommonReportsCardId = element(by.id('common_reports'));
-  this.webexCommonMeetingUsageReportId = element(by.id('webexSiteReportIframe-meeting_usage'));
+  this.webexCommonMeetingUsageId = element(by.id('webexSiteReportIframe-meeting_usage'));
+  this.webexCommonMeetingsInProgressId = element(by.id('webexSiteReportIframe-meeting_in_progess'));
 
   this.siteAdminReportsUrl = '/webexreports';
 };

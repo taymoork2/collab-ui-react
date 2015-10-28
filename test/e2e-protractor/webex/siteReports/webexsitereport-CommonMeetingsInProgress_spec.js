@@ -2,7 +2,7 @@
 
 /* global describe, it, expect, login */
 
-describe('WebEx site meeting usage report', function () {
+describe('WebEx site meetings in progress report', function () {
 
   it('navigate to reports', function () {
     login.loginThroughGui(sitereports.testAdmin.username, sitereports.testAdmin.password);
@@ -12,12 +12,12 @@ describe('WebEx site meeting usage report', function () {
 
   it('click on webex reports link', function () {
     utils.click(sitereports.webexReportsLink);
-    utils.wait(sitereports.webexCommonMeetingUsageLink);
+    utils.wait(sitereports.webexCommonMeetingsInProgressLink);
   });
 
-  it('click on common reports meeting usage link', function () {
-    utils.click(sitereports.webexCommonMeetingUsageLink);
-    utils.wait(sitereports.webexCommonMeetingUsageId);
+  it('click on common reports meetings in progress link', function () {
+    utils.click(sitereports.webexCommonMeetingsInProgressLink);
+    utils.wait(sitereports.webexCommonMeetingsInProgressId);
   });
 
   /**  
