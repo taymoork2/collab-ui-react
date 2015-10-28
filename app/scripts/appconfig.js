@@ -76,9 +76,11 @@ angular
                 $state.sidepanel = null;
                 var previousState = $previousState.get(sidepanelMemo);
                 if (previousState) {
-                  return $previousState.go(sidepanelMemo).then(function () {
-                    $previousState.forget(sidepanelMemo);
-                  });
+                  if ($state.current.parent === 'sidepanel' || angular.isUndefined($state.current.parent)) {
+                    return $previousState.go(sidepanelMemo).then(function () {
+                      $previousState.forget(sidepanelMemo);
+                    });
+                  }
                 }
               }
             }.bind($state.sidepanel));
