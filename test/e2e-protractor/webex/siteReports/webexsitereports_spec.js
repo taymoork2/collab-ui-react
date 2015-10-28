@@ -19,7 +19,7 @@ describe('WebEx site reports', function () {
   it('show WebEx reports index', function () {
     utils.wait(sitereports.webexSiteReportsPanel);
   });
-  
+
   it('show common reports card', function () {
     utils.wait(sitereports.webexCommonReportsCardId);
   });
