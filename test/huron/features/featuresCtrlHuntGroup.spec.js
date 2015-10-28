@@ -19,14 +19,14 @@ describe('Features Controller', function () {
   };
   var huntGroups = [{
     'cardName': 'Technical Support',
-    'numbers': ['5076', '(414) 555-1244'],
-    'featureName': 'huronHuntGroup.hg',
-    'filterValue': 'HG',
+    'numbers': ['5076', '4145551244'],
     'memberCount': 2,
-    'huntGroupId': 'abcd1234-abcd-abcd-abcddef123456'
+    'huntGroupId': 'abcd1234-abcd-abcd-abcddef123456',
+    'featureName': 'huronHuntGroup.hg',
+    'filterValue': 'HG'
   }, {
     cardName: 'Marketing',
-    numbers: ['5076', '(302) 682-4905', '(414) 555-1244', '(414) 555-1245'],
+    numbers: ['5076', '13026824905', '4145551244', '4145551245'],
     memberCount: 16,
     huntGroupId: 'bbcd1234-abcd-abcd-abcddef123456',
     featureName: 'huronHuntGroup.hg',

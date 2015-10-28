@@ -6,7 +6,7 @@
     .service('HuronFeaturesListService', HuronFeaturesListService);
 
   /* @ngInject */
-  function HuronFeaturesListService($q, TelephoneNumberService) {
+  function HuronFeaturesListService($q) {
     var service = {
       autoAttendants: autoAttendants,
       callParks: callParks,
@@ -46,9 +46,7 @@
       var formattedList = [];
       _.forEach(data.items, function (huntGroup) {
         formattedCard.cardName = huntGroup.name;
-        formattedCard.numbers = huntGroup.numbers.map(function (number) {
-          return TelephoneNumberService.getDIDLabel(number);
-        });
+        formattedCard.numbers = huntGroup.numbers;
         formattedCard.memberCount = huntGroup.memberCount;
         formattedCard.huntGroupId = huntGroup.uuid;
         formattedCard.featureName = 'huronHuntGroup.hg';

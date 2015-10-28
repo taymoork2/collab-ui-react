@@ -441,42 +441,45 @@
             });
             promises.push(promise);
 
-            if (vm.telephonyInfo.currentDirectoryNumber.uuid !== vm.assignedInternalNumber.uuid) { // internal line              
-              promise = LineSettings.changeInternalLine(vm.telephonyInfo.currentDirectoryNumber.uuid, vm.telephonyInfo.currentDirectoryNumber.dnUsage, vm.assignedInternalNumber.pattern, vm.directoryNumber)
-                .then(function () {
-                  vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
-                  vm.directoryNumber.uuid = vm.telephonyInfo.currentDirectoryNumber.uuid;
-                  vm.directoryNumber.pattern = vm.telephonyInfo.currentDirectoryNumber.pattern;
-                  esn = vm.telephonyInfo.siteSteeringDigit + vm.telephonyInfo.siteCode + vm.assignedInternalNumber.pattern;
-                  processInternalNumberList();
-                });
-              promises.push(promise);
-            } else { // no line change, just update settings
-              promise = LineSettings.updateLineSettings(vm.directoryNumber);
-              promises.push(promise);
-            }
-
+            var dnPromise;
+            var dnPromises = [];
             if (vm.telephonyInfo.alternateDirectoryNumber.uuid !== vm.assignedExternalNumber.uuid) { // external line
               if ((vm.telephonyInfo.alternateDirectoryNumber.uuid === '' || vm.telephonyInfo.alternateDirectoryNumber.uuid === 'none') && vm.assignedExternalNumber.uuid !== 'none') { // no existing external line, add external line
-                promise = LineSettings.addExternalLine(vm.directoryNumber.uuid, vm.assignedExternalNumber.pattern)
+                dnPromise = LineSettings.addExternalLine(vm.directoryNumber.uuid, vm.assignedExternalNumber.pattern)
                   .then(function () {
                     processExternalNumberList();
                   });
-                promises.push(promise);
+                dnPromises.push(dnPromise);
               } else if ((vm.telephonyInfo.alternateDirectoryNumber.uuid !== '' && vm.telephonyInfo.alternateDirectoryNumber.uuid !== 'none') && vm.assignedExternalNumber.uuid !== 'none') { // changing external line
-                promise = LineSettings.changeExternalLine(vm.directoryNumber.uuid, vm.telephonyInfo.alternateDirectoryNumber.uuid, vm.assignedExternalNumber.pattern)
+                dnPromise = LineSettings.changeExternalLine(vm.directoryNumber.uuid, vm.telephonyInfo.alternateDirectoryNumber.uuid, vm.assignedExternalNumber.pattern)
                   .then(function () {
                     processExternalNumberList();
                   });
-                promises.push(promise);
+                dnPromises.push(dnPromise);
               } else if (vm.telephonyInfo.alternateDirectoryNumber.uuid !== '' && vm.assignedExternalNumber.uuid === 'none') {
-                promise = LineSettings.deleteExternalLine(vm.directoryNumber.uuid, vm.telephonyInfo.alternateDirectoryNumber.uuid)
+                dnPromise = LineSettings.deleteExternalLine(vm.directoryNumber.uuid, vm.telephonyInfo.alternateDirectoryNumber.uuid)
                   .then(function () {
                     processExternalNumberList();
                   });
-                promises.push(promise);
+                dnPromises.push(dnPromise);
               }
             }
+
+            promises.push($q.all(dnPromises)
+              .then(function () {
+                if (vm.telephonyInfo.currentDirectoryNumber.uuid !== vm.assignedInternalNumber.uuid) { // internal line              
+                  return LineSettings.changeInternalLine(vm.telephonyInfo.currentDirectoryNumber.uuid, vm.telephonyInfo.currentDirectoryNumber.dnUsage, vm.assignedInternalNumber.pattern, vm.directoryNumber)
+                    .then(function () {
+                      vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
+                      vm.directoryNumber.uuid = vm.telephonyInfo.currentDirectoryNumber.uuid;
+                      vm.directoryNumber.pattern = vm.telephonyInfo.currentDirectoryNumber.pattern;
+                      esn = vm.telephonyInfo.siteSteeringDigit + vm.telephonyInfo.siteCode + vm.assignedInternalNumber.pattern;
+                      processInternalNumberList();
+                    });
+                } else { // no line change, just update settings
+                  return LineSettings.updateLineSettings(vm.directoryNumber);
+                }
+              }));
 
             $q.all(promises)
               .then(function () {
