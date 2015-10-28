@@ -2,7 +2,7 @@
 
 /* global describe, it, expect, login */
 
-describe('WebEx site recording usage report', function () {
+describe('WebEx site storage usage report', function () {
 
   it('navigate to reports', function () {
     login.loginThroughGui(sitereports.testAdmin.username, sitereports.testAdmin.password);
