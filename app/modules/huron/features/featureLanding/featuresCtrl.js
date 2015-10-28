@@ -8,36 +8,23 @@
   /* jshint validthis: true */
 
   /* @ngInject */
-  function HuronFeaturesCtrl($scope, $state, $filter, $timeout, $modal, $q, Authinfo, HuronFeaturesListService, HuntGroupService, TelephoneNumberService, AutoAttendantCeInfoModelService, AAModelService, Notification, Log) {
+  function HuronFeaturesCtrl($scope, $state, $filter, $timeout, $modal, $q, Authinfo, HuronFeaturesListService, HuntGroupService, AutoAttendantCeInfoModelService, AAModelService, Notification, Log) {
 
     var vm = this;
-    vm.filters = [];
-    vm.filterText = '';
-    vm.placeholder = {};
     vm.searchData = searchData;
     vm.setFilter = setFilter;
-    vm.listOfFeatures = [];
-    vm.aaModel = {};
     vm.openModal = openModal;
-    vm.pageState = 'Loading';
-    var listOfAllFeatures = [];
-    var listOfHuntGroups = [];
-    var listOfAutoAttendants = [];
-    var listOfCallParks = [];
-    var featureToBeDeleted = {};
+    vm.reload = reload;
+    vm.filters = [];
+    vm.listOfFeatures = [];
+    vm.pageState = '';
+    vm.filterText = '';
+    vm.placeholder = {};
+    vm.cardColor = {};
+    vm.aaModel = {};
     vm.placeholder = {
       'name': 'Search'
     };
-
-    /* This common format is used to layout cards for AA, HG, CP */
-    var commonDataFormatForCards = {
-      'cardName': '',
-      'numbers': [],
-      'featureName': '',
-      'filterValue': ''
-    };
-    /* Adding Auto Attendant and Call Park filters to validate HuntGroup filter */
-    /* Please change Auto Attendant and HuntGroup filters accordingly if needed*/
     vm.filters = [{
         name: 'All',
         filterValue: 'all'
@@ -53,20 +40,50 @@
       //  filterValue: 'CP'
       //}
     ];
+    var listOfAllFeatures = [];
+    var featureToBeDeleted = {};
+    var customerId = Authinfo.getOrgId();
 
-    vm.cardColors = {
-      'AA': 'primary',
-      'HG': 'alerts'
-        //'CP': 'alerts'
-    };
+    /* LIST OF FEATURES
+     *
+     *  To add a New Feature
+     *  1. Define the service to get the list of feature
+     *  2. Inject the features Service into the Controller
+     *  3. Add the Object for the feature in the format of the Features Array Object (features)
+     *  4. Define the SuccessHandler
+     * */
+    var features = [{
+      name: 'AA',
+      service: AutoAttendantCeInfoModelService.getCeInfosList,
+      successHandler: HuronFeaturesListService.autoAttendants,
+      isEmpty: false,
+      i18n: 'huronFeatureDetails.aaName',
+      color: 'primary'
+    }, {
+      name: 'HG',
+      service: HuntGroupService.getListOfHuntGroups,
+      successHandler: HuronFeaturesListService.huntGroups,
+      isEmpty: false,
+      i18n: 'huronFeatureDetails.hgName',
+      color: 'alerts'
+    }];
+
+    angular.forEach(features, function (feature) {
+      vm.cardColor[feature.name] = feature.color;
+    });
 
     init();
 
     function init() {
-      getListOfAutoAttendants();
-      getListOfHuntGroups();
-      getListOfCallParks();
-      $timeout(isFeatureListEmpty, 1000);
+
+      vm.pageState = 'Loading';
+      var featuresPromises = getListOfFeatures();
+
+      handleFeaturePromises(featuresPromises);
+
+      $q.all(featuresPromises).then(function (responses) {
+        isFeatureListEmpty();
+      });
     }
 
     //Switches Data that populates the Features tab
@@ -101,79 +118,61 @@
       });
     }
 
-    /*
-     * Get list of auto attendants
-     */
-    function getListOfAutoAttendants() {
-      vm.aaModel = AAModelService.newAAModel();
-      AutoAttendantCeInfoModelService.getCeInfosList()
-        .then(function (response) {
-          vm.aaModel = response;
-          var listOfAutoAttendants = HuronFeaturesListService.autoAttendants(vm.aaModel.ceInfos);
-
-          if (listOfAutoAttendants.length > 0) {
-            AAModelService.setAAModel(vm.aaModel);
-            // Set vm.pageState to 'showFeatures' if any AA's are received
-            vm.pageState = 'showFeatures';
-
-            vm.listOfFeatures = vm.listOfFeatures.concat(listOfAutoAttendants);
-
-            /* this is done -
-             * 1. to have to a local copy of the data to do in page search
-             * 2. to display data based on filter selected
-             */
-            listOfAllFeatures = listOfAllFeatures.concat(listOfAutoAttendants);
-          }
-        });
+    function reload() {
+      init();
     }
 
-    /* Get list of HuntGroups*/
-    function getListOfHuntGroups() {
-      var customerId = Authinfo.getOrgId();
-      HuntGroupService.getListOfHuntGroups(customerId).then(function (huntGroupData) {
-        if (huntGroupData.items.length > 0) {
-          vm.pageState = 'showFeatures';
-          angular.forEach(huntGroupData.items, function (huntGroup) {
-            commonDataFormatForCards.cardName = huntGroup.name;
-            commonDataFormatForCards.numbers = huntGroup.numbers.map(function (number) {
-              return TelephoneNumberService.getDIDLabel(number);
-            });
-            commonDataFormatForCards.memberCount = huntGroup.memberCount;
-            commonDataFormatForCards.huntGroupId = huntGroup.uuid;
-            commonDataFormatForCards.featureName = 'huronHuntGroup.hg';
-            commonDataFormatForCards.filterValue = 'HG';
-            listOfHuntGroups.push(commonDataFormatForCards);
-            commonDataFormatForCards = {};
-          });
-        }
-        vm.listOfFeatures = vm.listOfFeatures.concat(listOfHuntGroups);
-        listOfAllFeatures = listOfAllFeatures.concat(listOfHuntGroups);
-      }, function (response) {
-        Log.warn('Could fetch huntGroups for customer with Id:', customerId);
-        vm.pageState = 'showFeatures';
-        //Notify the user that retrieval of hunt groups list has been failed
-        Notification.errorResponse(response, 'huntGroupDetails.failedToLoadHuntGroups');
+    function getListOfFeatures() {
+      var promises = [];
+      features.forEach(function (value) {
+        promises.push(value.service(customerId));
+      });
+      return promises;
+    }
+
+    function handleFeaturePromises(promises) {
+      angular.forEach(features, function (feature, index) {
+        promises[index].then(function (data) {
+          handleFeatureData(data, feature);
+        }, function (response) {
+          handleFailures(response, feature);
+        });
       });
     }
 
-    /* Get list of CallParks*/
-    /* This is a Dummy implementation of this function*/
-    function getListOfCallParks() {
+    function handleFailures(response, feature) {
+      Log.warn('Could fetch features for customer with Id:', Authinfo.getOrgId());
 
-      /*
-        1. Get list of CallParks code may go here
-        2. If Get List of call parks back-end call is successful just stub out the listOfCallParks array
-           and concatenate listOfCallParks with listOfFeatures
-        3. Set vm.pageState to 'showFeatures' when any CP's are received by controller
-       */
+      feature.isEmpty = true;
 
-      vm.listOfFeatures = vm.listOfFeatures.concat(listOfCallParks);
+      Notification.errorResponse(response, 'huronFeatureDetails.failedToLoad', {
+        featureType: $filter('translate')(feature.i18n)
+      });
 
-      /* this is done -
-       1. to have to a local copy of the data to do in page search
-       2. to display data based on filter selected
-       */
-      listOfAllFeatures = listOfAllFeatures.concat(listOfCallParks);
+      showReloadPageIfNeeded();
+    }
+
+    function handleFeatureData(data, feature) {
+
+      if (feature.name === 'AA') {
+        vm.aaModel = AAModelService.newAAModel();
+        vm.aaModel = data;
+      }
+
+      var list = feature.successHandler(data);
+      if (list.length > 0) {
+
+        if (feature.name === 'AA') {
+          AAModelService.setAAModel(vm.aaModel);
+        }
+
+        vm.pageState = 'showFeatures';
+        feature.isEmpty = false;
+        vm.listOfFeatures = vm.listOfFeatures.concat(list);
+        listOfAllFeatures = listOfAllFeatures.concat(list);
+      } else if (list.length === 0) {
+        feature.isEmpty = true;
+      }
     }
 
     vm.editHuronFeature = function (feature) {
@@ -210,9 +209,24 @@
       //}
     };
 
+    function areFeaturesEmpty() {
+      var isEmpty = true;
+      features.forEach(function (feature) {
+        isEmpty = isEmpty && feature.isEmpty;
+      });
+      return isEmpty;
+    }
+
     function isFeatureListEmpty() {
-      if (vm.pageState !== 'showFeatures' && vm.listOfFeatures.length === 0) {
+
+      if (vm.pageState !== 'showFeatures' && areFeaturesEmpty() && vm.listOfFeatures.length === 0) {
         vm.pageState = 'NewFeature';
+      }
+    }
+
+    function showReloadPageIfNeeded() {
+      if (vm.pageState === 'Loading' && areFeaturesEmpty() && vm.listOfFeatures.length === 0) {
+        vm.pageState = 'Reload';
       }
     }
 
