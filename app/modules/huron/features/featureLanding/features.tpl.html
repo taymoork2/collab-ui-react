@@ -24,5 +24,23 @@
   <div ng-switch-when="showFeatures" class="features-content">
     <feature-cards></feature-cards>
   </div>
+
+  <div ng-switch-when="Retry" class="feature-header">
+      <span class="open-panel">
+        <cs-searchfilter filters="huronFeaturesCtrl.filters" set-filter-fn="huronFeaturesCtrl.setFilter(filter.filterValue)" search-item-fn="huronFeaturesCtrl.searchData(searchStr)" placeholder-text="{{huronFeaturesCtrl.placeholder.name}}" hide-count="true">
+        </cs-searchfilter>
+      </span>
+    <span><button type="button" class="button info new-feature-button" ng-click="huronFeaturesCtrl.openModal()">New</button></span>
+  </div>
+
+  <div ng-switch-when="Retry" class="features-content">
+    <div class="features-retry">
+      <p class="h4" translate="huronFeatureDetails.sorryMessage"></p>
+      <div class="h2" translate="huronFeatureDetails.reloadMessage"></div>
+      <button type="button" class="button btn-link" ng-click="huronFeaturesCtrl.reload()">Reload</button>
+    </div>
+  </div>
+
+
 </div>
 

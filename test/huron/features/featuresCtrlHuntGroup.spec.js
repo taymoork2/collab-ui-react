@@ -103,7 +103,9 @@ describe('Features Controller', function () {
     $scope.$apply();
     $timeout.flush();
     expect(Notification.errorResponse).toHaveBeenCalledWith(getHGListFailureResp,
-      'huntGroupDetails.failedToLoadHuntGroups');
+      'huronFeatureDetails.failedToLoad', {
+        featureType: 'huronFeatureDetails.hgName'
+      });
   });
 
   it('should set the pageState to Loading when controller is getting data from back-end', function () {

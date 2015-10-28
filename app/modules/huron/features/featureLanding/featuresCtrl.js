@@ -8,7 +8,7 @@
   /* jshint validthis: true */
 
   /* @ngInject */
-  function HuronFeaturesCtrl($scope, $state, $filter, $timeout, $modal, $q, Authinfo, HuronFeaturesListService, HuntGroupService, TelephoneNumberService, AutoAttendantCeInfoModelService, AAModelService, Notification, Log) {
+  function HuronFeaturesCtrl($scope, $state, $filter, $timeout, $modal, $q, Authinfo, HuronFeaturesListService, HuntGroupService, AutoAttendantCeInfoModelService, AAModelService, Notification, Log) {
 
     var vm = this;
     vm.filters = [];
@@ -19,25 +19,11 @@
     vm.listOfFeatures = [];
     vm.aaModel = {};
     vm.openModal = openModal;
+    vm.reload = reload;
     vm.pageState = 'Loading';
-    var listOfAllFeatures = [];
-    var listOfHuntGroups = [];
-    var listOfAutoAttendants = [];
-    var listOfCallParks = [];
-    var featureToBeDeleted = {};
     vm.placeholder = {
       'name': 'Search'
     };
-
-    /* This common format is used to layout cards for AA, HG, CP */
-    var commonDataFormatForCards = {
-      'cardName': '',
-      'numbers': [],
-      'featureName': '',
-      'filterValue': ''
-    };
-    /* Adding Auto Attendant and Call Park filters to validate HuntGroup filter */
-    /* Please change Auto Attendant and HuntGroup filters accordingly if needed*/
     vm.filters = [{
         name: 'All',
         filterValue: 'all'
@@ -53,20 +39,33 @@
       //  filterValue: 'CP'
       //}
     ];
-
     vm.cardColors = {
       'AA': 'primary',
       'HG': 'alerts'
         //'CP': 'alerts'
     };
+    var listOfAllFeatures = [];
+    var listOfHuntGroups = [];
+    var listOfAutoAttendants = [];
+    var featureToBeDeleted = {};
+    var areFeaturesEmpty = {
+      'aa': false,
+      'hg': false
+    };
 
     init();
 
     function init() {
-      getListOfAutoAttendants();
-      getListOfHuntGroups();
-      getListOfCallParks();
-      $timeout(isFeatureListEmpty, 1000);
+
+      var aaPromise = getListOfAutoAttendants();
+      var hgPromise = getListOfHuntGroups();
+
+      handleAAPromise(aaPromise);
+      handleHGPromise(hgPromise);
+
+      $q.all([aaPromise, hgPromise]).then(function (responses) {
+        isFeatureListEmpty();
+      });
     }
 
     //Switches Data that populates the Features tab
@@ -101,79 +100,74 @@
       });
     }
 
-    /*
-     * Get list of auto attendants
-     */
-    function getListOfAutoAttendants() {
-      vm.aaModel = AAModelService.newAAModel();
-      AutoAttendantCeInfoModelService.getCeInfosList()
-        .then(function (response) {
-          vm.aaModel = response;
-          var listOfAutoAttendants = HuronFeaturesListService.autoAttendants(vm.aaModel.ceInfos);
-
-          if (listOfAutoAttendants.length > 0) {
-            AAModelService.setAAModel(vm.aaModel);
-            // Set vm.pageState to 'showFeatures' if any AA's are received
-            vm.pageState = 'showFeatures';
-
-            vm.listOfFeatures = vm.listOfFeatures.concat(listOfAutoAttendants);
-
-            /* this is done -
-             * 1. to have to a local copy of the data to do in page search
-             * 2. to display data based on filter selected
-             */
-            listOfAllFeatures = listOfAllFeatures.concat(listOfAutoAttendants);
-          }
-        });
+    function reload() {
+      init();
     }
 
-    /* Get list of HuntGroups*/
+    function getListOfAutoAttendants() {
+      return AutoAttendantCeInfoModelService.getCeInfosList();
+    }
+
     function getListOfHuntGroups() {
       var customerId = Authinfo.getOrgId();
-      HuntGroupService.getListOfHuntGroups(customerId).then(function (huntGroupData) {
-        if (huntGroupData.items.length > 0) {
-          vm.pageState = 'showFeatures';
-          angular.forEach(huntGroupData.items, function (huntGroup) {
-            commonDataFormatForCards.cardName = huntGroup.name;
-            commonDataFormatForCards.numbers = huntGroup.numbers.map(function (number) {
-              return TelephoneNumberService.getDIDLabel(number);
-            });
-            commonDataFormatForCards.memberCount = huntGroup.memberCount;
-            commonDataFormatForCards.huntGroupId = huntGroup.uuid;
-            commonDataFormatForCards.featureName = 'huronHuntGroup.hg';
-            commonDataFormatForCards.filterValue = 'HG';
-            listOfHuntGroups.push(commonDataFormatForCards);
-            commonDataFormatForCards = {};
-          });
-        }
-        vm.listOfFeatures = vm.listOfFeatures.concat(listOfHuntGroups);
-        listOfAllFeatures = listOfAllFeatures.concat(listOfHuntGroups);
+      return HuntGroupService.getListOfHuntGroups(customerId);
+    }
+
+    function handleAAPromise(aaPromise) {
+      aaPromise.then(function (data) {
+        handleAutoAttendants(data);
       }, function (response) {
-        Log.warn('Could fetch huntGroups for customer with Id:', customerId);
-        vm.pageState = 'showFeatures';
-        //Notify the user that retrieval of hunt groups list has been failed
-        Notification.errorResponse(response, 'huntGroupDetails.failedToLoadHuntGroups');
+        handleFailures(response, 'huronFeatureDetails.aaName', 'aa');
       });
     }
 
-    /* Get list of CallParks*/
-    /* This is a Dummy implementation of this function*/
-    function getListOfCallParks() {
+    function handleHGPromise(hgPromise) {
+      hgPromise.then(function (data) {
+        handleHuntGroups(data.items);
+      }, function (response) {
+        handleFailures(response, 'huronFeatureDetails.hgName', 'hg');
+      });
+    }
 
-      /*
-        1. Get list of CallParks code may go here
-        2. If Get List of call parks back-end call is successful just stub out the listOfCallParks array
-           and concatenate listOfCallParks with listOfFeatures
-        3. Set vm.pageState to 'showFeatures' when any CP's are received by controller
-       */
+    function handleFailures(response, featureName, featureCode) {
+      Log.warn('Could fetch features for customer with Id:', Authinfo.getOrgId());
+      if (featureCode === 'aa') {
+        areFeaturesEmpty.aa = true;
+      } else if (featureCode === 'hg') {
+        areFeaturesEmpty.hg = true;
+      }
+      Notification.errorResponse(response, 'huronFeatureDetails.failedToLoad', {
+        featureType: $filter('translate')(featureName)
+      });
+      showRetryPageIfNeeded();
+    }
 
-      vm.listOfFeatures = vm.listOfFeatures.concat(listOfCallParks);
+    function handleAutoAttendants(data) {
+      vm.aaModel = AAModelService.newAAModel();
+      vm.aaModel = data;
+      listOfAutoAttendants = HuronFeaturesListService.autoAttendants(vm.aaModel.ceInfos);
+      if (listOfAutoAttendants.length > 0) {
+        AAModelService.setAAModel(vm.aaModel);
+        vm.pageState = 'showFeatures';
+        areFeaturesEmpty.aa = false;
+        vm.listOfFeatures = vm.listOfFeatures.concat(listOfAutoAttendants);
+        listOfAllFeatures = listOfAllFeatures.concat(listOfAutoAttendants);
+      } else if (listOfAutoAttendants.length === 0) {
+        areFeaturesEmpty.aa = true;
+      }
+    }
 
-      /* this is done -
-       1. to have to a local copy of the data to do in page search
-       2. to display data based on filter selected
-       */
-      listOfAllFeatures = listOfAllFeatures.concat(listOfCallParks);
+    function handleHuntGroups(data) {
+      if (data.length > 0) {
+        areFeaturesEmpty.hg = false;
+        vm.pageState = 'showFeatures';
+        areFeaturesEmpty.hg = false;
+        listOfHuntGroups = HuronFeaturesListService.huntGroups(data);
+        vm.listOfFeatures = vm.listOfFeatures.concat(listOfHuntGroups);
+        listOfAllFeatures = listOfAllFeatures.concat(listOfHuntGroups);
+      } else if (data.length === 0) {
+        areFeaturesEmpty.hg = true;
+      }
     }
 
     vm.editHuronFeature = function (feature) {
@@ -211,8 +205,14 @@
     };
 
     function isFeatureListEmpty() {
-      if (vm.pageState !== 'showFeatures' && vm.listOfFeatures.length === 0) {
+      if (vm.pageState !== 'showFeatures' && areFeaturesEmpty.aa && areFeaturesEmpty.hg && vm.listOfFeatures.length === 0) {
         vm.pageState = 'NewFeature';
+      }
+    }
+
+    function showRetryPageIfNeeded() {
+      if (vm.pageState === 'Loading' && areFeaturesEmpty.aa && areFeaturesEmpty.hg && vm.listOfFeatures.length === 0) {
+        vm.pageState = 'Retry';
       }
     }
 

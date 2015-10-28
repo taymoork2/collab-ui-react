@@ -24,7 +24,7 @@
       <section>
         <div class="card-section">
           <span class="card-section-num" ng-if="(huronFeature.numbers.length <= 2)"
-                ng-repeat="number in huronFeature.numbers">{{number}}</span>
+                ng-repeat="number in huronFeature.numbers">{{number | telephoneNumber}}</span>
           <span class="card-section-num" ng-if="(huronFeature.numbers.length > 2)">{{:: huronFeature.numbers.length + ' '+ ('huronHuntGroup.numbers' | translate)}}</span>
         </div>
         <div class="card-footer">

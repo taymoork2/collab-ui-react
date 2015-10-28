@@ -11,6 +11,20 @@
   }
 }
 
+.features-retry {
+  display : flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+   >p {
+     color: $gray-dark;
+   }
+  >div {
+    color: $gray-darker;
+  }
+}
+
 .feature-header {
   display : flex;
   flex-direction: row;

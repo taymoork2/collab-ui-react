@@ -6,7 +6,7 @@
     .service('HuronFeaturesListService', HuronFeaturesListService);
 
   /* @ngInject */
-  function HuronFeaturesListService($q) {
+  function HuronFeaturesListService($q, TelephoneNumberService) {
     var service = {
       autoAttendants: autoAttendants,
       callParks: callParks,
@@ -42,8 +42,21 @@
       // TODO: Add callpark formatting service
     }
 
-    function huntGroups() {
-      // TODO: Add hunt groups formatting service
+    function huntGroups(data) {
+      var formattedList = [];
+      _.forEach(data, function (huntGroup) {
+        formattedCard.cardName = huntGroup.name;
+        formattedCard.numbers = huntGroup.numbers.map(function (number) {
+          return TelephoneNumberService.getDIDLabel(number);
+        });
+        formattedCard.memberCount = huntGroup.memberCount;
+        formattedCard.huntGroupId = huntGroup.uuid;
+        formattedCard.featureName = 'huronHuntGroup.hg';
+        formattedCard.filterValue = 'HG';
+        formattedList.push(formattedCard);
+        formattedCard = {};
+      });
+      return formattedList;
     }
 
   }
