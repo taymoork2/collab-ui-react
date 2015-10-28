@@ -53,14 +53,14 @@
       return HuntGroupService.getHuntMembers(
         'name', nameHint,
         vm.selectedHuntMembers,
-        onFailureNotify('huntGroup.nameFetchFailure'));
+        onFailureNotify('huronHuntGroup.nameFetchFailure'));
     }
 
     function fetchNumbers(typedNumber) {
       return HuntGroupService.getPilotNumberSuggestions(
         'number', typedNumber,
         vm.selectedPilotNumbers,
-        onFailureNotify('huntGroup.numberFetchFailure'));
+        onFailureNotify('huronHuntGroup.numberFetchFailure'));
     }
 
     function onFailureNotify(notificationKey) {

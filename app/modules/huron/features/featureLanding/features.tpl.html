@@ -1,18 +1,13 @@
-
-
-<div ng-switch on="huronFeaturesCtrl.pageState" class="features">
+<div class="features">
 
   <!--Show Create New Feature Page if no features exists-->
-  <div ng-switch-when="NewFeature" class="no-features-available">
+  <div ng-if="huronFeaturesCtrl.pageState == 'NewFeature'" class="no-features-available">
     <div class="h4 nothing-to-see" translate="huronHuntGroup.featuresNotYetConfiguredPage.nothingToSee"></div>
     <div class="h1 lets-customize" translate="huronHuntGroup.featuresNotYetConfiguredPage.letsCustomize"></div>
     <div><button class="button info large" ng-click="huronFeaturesCtrl.openModal()" translate="huronHuntGroup.newFeatureButtonText"></button></div>
   </div>
 
-  <!--Show Spinner Icon until controller receives data from back-end-->
-  <div ng-switch-when="Loading" class="spinner-icon"><i class='icon icon-spinner icon-2x'></i></div>
-
-  <div ng-switch-when="showFeatures" class="feature-header">
+  <div ng-if="huronFeaturesCtrl.pageState !== 'NewFeature'" class="feature-header">
       <span class="open-panel">
         <cs-searchfilter filters="huronFeaturesCtrl.filters" set-filter-fn="huronFeaturesCtrl.setFilter(filter.filterValue)" search-item-fn="huronFeaturesCtrl.searchData(searchStr)" placeholder-text="{{huronFeaturesCtrl.placeholder.name}}" hide-count="true">
         </cs-searchfilter>
@@ -20,9 +15,21 @@
     <span><button type="button" class="button info new-feature-button" ng-click="huronFeaturesCtrl.openModal()">New</button></span>
   </div>
 
- <!-- Show Cards whenever data is received by controller-->
-  <div ng-switch-when="showFeatures" class="features-content">
-    <feature-cards></feature-cards>
+  <div class="features-content">
+    <!--Show Reload page when all feature requests fail-->
+    <div ng-if="huronFeaturesCtrl.pageState == 'Reload'">
+      <div class="features-reload">
+        <p class="h4" translate="huronFeatureDetails.sorryMessage"></p>
+        <div class="h2" translate="huronFeatureDetails.reloadMessage"></div>
+        <button type="button" class="button btn-link" ng-click="huronFeaturesCtrl.reload()">Reload</button>
+      </div>
+    </div>
+    <!--Show Spinner Icon until controller receives data from back-end-->
+    <div ng-if="huronFeaturesCtrl.pageState == 'Loading'" class="spinner-icon">
+      <i class='icon icon-spinner icon-2x'></i>
+    </div>
+    <!-- Show Cards whenever data is received by controller-->
+    <feature-cards ng-if="huronFeaturesCtrl.pageState == 'showFeatures'"></feature-cards>
   </div>
 </div>
 

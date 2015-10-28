@@ -2336,21 +2336,7 @@
     "title": "Communication",
     "linesTitle": "Numbers",
     "settingsTitle": "Settings",
-    "featuresTitle": "Features",
-    "featureListingError": "Failed to retrieve the feature list.",
-    "newFeatureButtonText": "New",
-    "newFeatureModalTitle": "Create New Feature",
-    "featuresNotYetConfiguredPage": {
-      "nothingToSee": "Nothing here to see yet.",
-      "letsCustomize": "Let's customize the calling experience"
-    }
-  },
-
-  "huntGroup": {
-    "code": "HG",
-    "title": "Hunt Group",
-    "modalDescription": "Hunt groups (or line hunting) allow you to customize the distribution of incoming phone calls to users' phone lines in a specific order.",
-    "numberFetchFailure": "Unable to get numbers."
+    "featuresTitle": "Features"
   },
 
   "huronFeatureDetails": {
@@ -2364,15 +2350,11 @@
     "deleteFeature": "Delete {{ featureType }}",
     "deleteConfirmText": "Are you sure you want to delete the {{ featureName }} {{ featureType }}?",
     "deleteSuccessText": "{{ featureName }} {{ featureType }} has been deleted successfully",
-    "failedToLoad": "Unable to load {{ featureType }}"
-  },
-
-  "huntGroupDetails": {
-    "failedToLoadHuntGroups": "Unable to load hunt groups information",
-    "deleteHuntGroup": "Delete Hunt Group",
-    "deleteHuntGroupConfText": "Are you sure you want to delete the {{ huntGroupName }} hunt group?",
-    "deleteHuntGroupSuccessText": "{{ huntGroupName }} hunt group has been deleted successfully",
-    "messageError": "Message {{ message }}"
+    "failedToLoad": "Unable to load {{ featureType }}(s) information",
+    "aaName": "auto attendant",
+    "hgName": "hunt group",
+    "sorryMessage": "Sorry, something went wrong ",
+    "reloadMessage": "Please try reloading the page"
   },
 
   "linesPage": {
@@ -2445,7 +2427,6 @@
     "cp": "CP",
     "editAction": "Edit",
     "deleteAction": "Delete",
-    "failedToLoadHuntGroups": "Unable to load hunt groups information",
     "deleteHuntGroup": "Delete Hunt Group",
     "deleteHuntGroupConfText": "Are you sure you want to delete the {{ huntGroupName }} hunt group?",
     "deleteHuntGroupSuccessText": "{{ huntGroupName }} hunt group has been deleted successfully",
@@ -2454,6 +2435,7 @@
     "title": "Hunt Group",
     "modalDescription": "Hunt groups (or line hunting) allow you to customize the distribution of incoming phone calls to users' phone lines in a specific order.",
     "featureListingError": "Failed to retrieve the feature list.",
+    "numberFetchFailure": "Unable to get numbers.",
     "newFeatureButtonText": "New",
     "newFeatureModalTitle": "Create New Feature",
     "featuresNotYetConfiguredPage": {
