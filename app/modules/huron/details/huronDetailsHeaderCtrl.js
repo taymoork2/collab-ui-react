@@ -15,9 +15,6 @@
       title: 'huronDetails.linesTitle',
       state: 'huronlines'
     }, {
-    //  title: 'huronDetails.featuresTitle',
-    //  state: 'huronfeatures'
-    //}, {
       title: 'huronDetails.settingsTitle',
       state: 'huronsettings'
     }];
