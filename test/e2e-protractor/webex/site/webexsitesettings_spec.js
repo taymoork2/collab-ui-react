@@ -18,10 +18,14 @@ describe('WebEx site settings', function () {
 
   it('show WebEx settings index', function () {
     utils.wait(sitesettings.webexSiteSettingsPanel);
+  });
+
+  it('show WebEx info card', function () {
     utils.wait(sitesettings.webexSiteInfoCardId);
-    expect(sitesettings.webexSiteSettingsPanel.isPresent()).toBeTruthy("site settings panel is not present");
-    expect(sitesettings.webexSiteInfoCardId.isPresent()).toBeTruthy("site info card is not present");
-    expect(sitesettings.webexCommonSettingsCardId.isPresent()).toBeTruthy("common settings card is not present");
+  });
+
+  it('show WebEx common settings card', function () {
+    utils.wait(sitesettings.webexCommonSettingsCardId);
   });
 
   /**  
