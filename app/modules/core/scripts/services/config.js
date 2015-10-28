@@ -409,6 +409,7 @@ angular.module('Core')
           fusion_cal: 'squared-fusion-cal',
           mediafusion: 'squared-fusion-media',
           fusion_mgmt: 'squared-fusion-mgmt',
+          device_mgmt: 'spark-device-mgmt',
           fusion_ec: 'squared-fusion-ec'
         },
 
@@ -908,7 +909,7 @@ angular.module('Core')
           'cluster-details-new'
           // 'management-service',
         ],
-        'squared-fusion-uc': [
+        'spark-device-mgmt': [
           'devices',
           'device-overview',
           'devices-redux'
