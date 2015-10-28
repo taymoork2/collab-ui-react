@@ -7,54 +7,47 @@ describe('WebEx site reports', function () {
   it('navigate to reports', function () {
     login.loginThroughGui(sitereports.testAdmin.username, sitereports.testAdmin.password);
     navigation.clickReports();
-    utils.wait(sitereports.webexReportsLink);
+    expect(sitereports.webexReportsLink.isPresent()).toBeTruthy();
   });
 
   it('click on webex reports link', function () {
     utils.click(sitereports.webexReportsLink);
-    utils.wait(sitereports.webexSiteReportsPanel);
+    expect(sitereports.webexSiteReportsPanel.isPresent()).toBeTruthy();
   });
 
   it('click on common reports meetings in progress link', function () {
-    utils.wait(sitereports.webexCommonMeetingsInProgressLink);
     utils.click(sitereports.webexCommonMeetingsInProgressLink);
-    utils.wait(sitereports.webexCommonMeetingsInProgressId);
+    expect(sitereports.webexCommonMeetingsInProgressId.isPresent()).toBeTruthy();
   });
 
-  it('Click on site reports index bread crumb link', function () {
-    utils.wait(sitereports.webexReportCrumb2);
+  it('click on reports index breadcrumb', function () {
     utils.click(sitereports.webexReportCrumb2);
-    utils.wait(sitereports.webexSiteReportsPanel);
+    expect(sitereports.webexSiteReportsPanel.isPresent()).toBeTruthy();
   });
 
   it('click on common reports meeting usage link', function () {
-    utils.wait(sitereports.webexCommonMeetingUsageLink);
     utils.click(sitereports.webexCommonMeetingUsageLink);
-    utils.wait(sitereports.webexCommonMeetingUsageId);
+    expect(sitereports.webexCommonMeetingUsageId.isPresent()).toBeTruthy();
   });
 
-  it('Click on site reports index bread crumb link', function () {
-    utils.wait(sitereports.webexReportCrumb2);
+  it('click on reports index breadcrumb', function () {
     utils.click(sitereports.webexReportCrumb2);
-    utils.wait(sitereports.webexSiteReportsPanel);
+    expect(sitereports.webexSiteReportsPanel.isPresent()).toBeTruthy();
   });
 
   it('click on common reports recording usage link', function () {
-    utils.wait(sitereports.webexCommonRecordingUsageLink);
     utils.click(sitereports.webexCommonRecordingUsageLink);
-    utils.wait(sitereports.webexCommonRecordingUsageId);
+    expect(sitereports.webexCommonRecordingUsageId.isPresent()).toBeTruthy();
   });
 
-  it('Click on site reports index bread crumb link', function () {
-    utils.wait(sitereports.webexReportCrumb2);
+  it('click on reports index breadcrumb', function () {
     utils.click(sitereports.webexReportCrumb2);
-    utils.wait(sitereports.webexSiteReportsPanel);
+    expect(sitereports.webexSiteReportsPanel.isPresent()).toBeTruthy();
   });
 
   it('click on common reports storage usage link', function () {
-    utils.wait(sitereports.webexCommonStorageUsageLink);
     utils.click(sitereports.webexCommonStorageUsageLink);
-    utils.wait(sitereports.webexCommonStorageUsageId);
+    expect(sitereports.webexCommonStorageUsageId.isPresent()).toBeTruthy();
   });
 
   /**  
