@@ -7,6 +7,8 @@ describe('orgService', function () {
 
   var httpBackend, Orgservice, Auth, Authinfo, Config, Log;
 
+  var extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-uc'];
+
   beforeEach(function () {
     module(function ($provide) {
       Auth = {
@@ -23,6 +25,9 @@ describe('orgService', function () {
         },
         getScomUrl: function () {
           return '/identityService';
+        },
+        getHerculesUrl: function () {
+          return '/hercules';
         }
       };
       Log = {
@@ -230,4 +235,49 @@ describe('orgService', function () {
 
     expect(httpBackend.flush).not.toThrow();
   });
+
+  it('should get Acknowledged', function () {
+    var items = [{
+      "id": "squared-fusion-cal",
+      "enabled": true,
+      "acknowledged": true
+    }, {
+      "id": "squared-fusion-mgmt",
+      "enabled": true,
+      "acknowledged": true
+    }, {
+      "id": "squared-fusion-uc",
+      "enabled": true,
+      "acknowledged": false
+    }, {
+      "id": "squared-fusion-media",
+      "enabled": false,
+      "acknowledged": false
+    }, {
+      "id": "squared-fusion-ec",
+      "enabled": false,
+      "acknowledged": true
+    }];
+    httpBackend.when('GET', Config.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services').respond(200, items);
+    var response = Orgservice.getHybridServiceAcknowledged();
+    httpBackend.flush();
+    angular.forEach(response.items, function (items) {
+      if (items.id === extensionEntitlements[0]) {
+        expect(items.acknowledged).toBe(true);
+      } else if (items.id === extensionEntitlements[1]) {
+        expect(items.acknowledged).toBe(false);
+      }
+    });
+  });
+
+  it('should set Acknowledged', function () {
+    var data = {
+      "acknowledged": true
+    };
+    httpBackend.when('PATCH', Config.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + extensionEntitlements[0], data).respond(200, {});
+    var response = Orgservice.setHybridServiceAcknowledged('CalendarService');
+    httpBackend.flush();
+    expect(response).not.toBe(true);
+  });
+
 });

@@ -3,8 +3,8 @@
 /* global AmCharts, moment */
 
 angular.module('Core')
-  .controller('LandingPageCtrl', ['$scope', '$rootScope', '$timeout', 'Orgservice', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'CannedDataService', '$state',
-    function ($scope, $rootScope, $timeout, Orgservice, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, CannedDataService, $state) {
+  .controller('LandingPageCtrl', ['$scope', '$rootScope', '$timeout', '$modal', 'Orgservice', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'CannedDataService', '$state',
+    function ($scope, $rootScope, $timeout, $modal, Orgservice, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, CannedDataService, $state) {
 
       $scope.isAdmin = false;
       var callsChart, conversationsChart, contentSharedChart;
@@ -18,6 +18,10 @@ angular.module('Core')
         conversations: 'refresh',
         contentShared: 'refresh'
       };
+
+      $scope.isCalendarAcknowledged = true;
+      $scope.isCallAcknowledged = true;
+      var extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-uc'];
 
       $scope.currentDate = moment().subtract(1, 'months').format('LL');
       var weekOf = $translate.instant('reports.weekOf');
@@ -34,6 +38,15 @@ angular.module('Core')
       }, {
         'date': todaysDate.setDate(todaysDate.getDate() + 1)
       }];
+
+      $scope.showServiceActivationDialog = function (serviceName) {
+        $scope.modal = $modal.open({
+          scope: $scope,
+          controller: 'ServiceActivationController',
+          templateUrl: 'modules/hercules/dashboard/service-activation.html'
+        });
+        $scope.setHybridAcknowledged(serviceName);
+      };
 
       $scope.isRefresh = function (property) {
         return $scope.reportStatus[property] === 'refresh';
@@ -250,6 +263,29 @@ angular.module('Core')
             Log.error("Query active users metrics failed. Status: " + status);
           }
         });
+
+        Orgservice.getHybridServiceAcknowledged().then(function (response) {
+          if (response.status === 200) {
+            angular.forEach(response.data.items, function (items) {
+              if (items.id === extensionEntitlements[0]) {
+                $scope.isCalendarAcknowledged = items.acknowledged;
+              } else if (items.id === extensionEntitlements[1]) {
+                $scope.isCallAcknowledged = items.acknowledged;
+              }
+            });
+          } else {
+            Log.error("Error in GET service acknowledged status");
+          }
+        });
+      };
+
+      $scope.setHybridAcknowledged = function (serviceName) {
+        if (serviceName === 'CalendarService') {
+          $scope.isCalendarAcknowledged = true;
+        } else if (serviceName === 'CallService') {
+          $scope.isCallAcknowledged = true;
+        }
+        Orgservice.setHybridServiceAcknowledged(serviceName);
       };
 
       $scope.inviteUsers = function () {

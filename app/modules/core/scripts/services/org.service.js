@@ -7,6 +7,8 @@
     .module('Core')
     .factory('Orgservice', Orgservice);
 
+  var extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-uc'];
+
   /* @ngInject */
   function Orgservice($http, $location, $q, $rootScope, Auth, Authinfo, Config, Log, Storage) {
     var service = {
@@ -18,7 +20,9 @@
       'setOrgSettings': setOrgSettings,
       'createOrg': createOrg,
       'listOrgs': listOrgs,
-      'getOrgCacheOption': getOrgCacheOption
+      'getOrgCacheOption': getOrgCacheOption,
+      'getHybridServiceAcknowledged': getHybridServiceAcknowledged,
+      'setHybridServiceAcknowledged': setHybridServiceAcknowledged
     };
 
     return service;
@@ -240,6 +244,32 @@
           data.status = status;
           callback(data, status);
         });
+    }
+
+    function getHybridServiceAcknowledged() {
+      var serviceUrl = Config.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services';
+      return $http({
+        method: 'GET',
+        url: serviceUrl
+      });
+    }
+
+    function setHybridServiceAcknowledged(serviceName) {
+      var serviceUrl = Config.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/';
+      if (serviceName === 'CalendarService') {
+        serviceUrl = serviceUrl.concat(extensionEntitlements[0]);
+      } else if (serviceName === 'CallService') {
+        serviceUrl = serviceUrl.concat(extensionEntitlements[1]);
+      }
+      return $http({
+        method: 'PATCH',
+        url: serviceUrl,
+        data: {
+          "acknowledged": true
+        }
+      }).error(function () {
+        Log.error("Error in PATCH acknowledge status to " + serviceUrl);
+      });
     }
   }
 })();
