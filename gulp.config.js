@@ -101,6 +101,7 @@ module.exports = function() {
         mediafusion: e2e + '/mediafusion/**/*_spec.js',
         squared: e2e + '/squared/**/*_spec.js',
         webexsite: e2e + '/webex/site/**/*_spec.js',
+        webexsitereport: e2e + '/webex/siteReports/**/*_spec.js',
         webexuser: e2e + '/webex/user/**/*_spec.js',
         sunlight: e2e + '/sunlight/**/*_spec.js'
       }
