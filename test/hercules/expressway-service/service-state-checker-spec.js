@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('ServiceStateChecker', function () {
+describe('ServiceStateChecker', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   var ClusterService, NotificationService, ServiceStateChecker, DirSyncService, AuthInfo, USSService2;
@@ -32,12 +32,10 @@ fdescribe('ServiceStateChecker', function () {
   var okUserStatusSummary = [{
     serviceId: 'squared-fusion-cal',
     activated: 10
-  },
-    {
-      serviceId: 'squared-fusion-uc',
-      activated: 10
-    }
-  ];
+  }, {
+    serviceId: 'squared-fusion-uc',
+    activated: 10
+  }];
 
   beforeEach(module(function ($provide) {
     ClusterService = {
@@ -93,11 +91,17 @@ fdescribe('ServiceStateChecker', function () {
   it("Dirsync not enabled should raise the 'dirSyncNotEnabled' message and clear appropriately", function () {
     USSService2.getStatusesSummary.returns(okUserStatusSummary);
     ClusterService.getClusters.returns([okClusterMockData]);
-    DirSyncService.getDirSyncDomain.callsArgWith(0, {success: false, serviceMode: 'Argh!'});
+    DirSyncService.getDirSyncDomain.callsArgWith(0, {
+      success: false,
+      serviceMode: 'Argh!'
+    });
     ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('dirSyncNotEnabled');
-    DirSyncService.getDirSyncDomain.callsArgWith(0, {success: true, serviceMode: 'ENABLED'});
+    DirSyncService.getDirSyncDomain.callsArgWith(0, {
+      success: true,
+      serviceMode: 'ENABLED'
+    });
     ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(0);
   });
@@ -110,11 +114,17 @@ fdescribe('ServiceStateChecker', function () {
       notActivated: 0
     }]);
     ClusterService.getClusters.returns([okClusterMockData]);
-    DirSyncService.getDirSyncDomain.callsArgWith(0, {success: true, serviceMode: 'ENABLED'});
+    DirSyncService.getDirSyncDomain.callsArgWith(0, {
+      success: true,
+      serviceMode: 'ENABLED'
+    });
     ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('squared-fusion-cal:noUsersActivated');
-    USSService2.getStatusesSummary.returns([{serviceId: 'squared-fusion-cal', activated: 1}]);
+    USSService2.getStatusesSummary.returns([{
+      serviceId: 'squared-fusion-cal',
+      activated: 1
+    }]);
     ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(0);
   });
@@ -127,11 +137,17 @@ fdescribe('ServiceStateChecker', function () {
       notActivated: 0
     }]);
     ClusterService.getClusters.returns([okClusterMockData]);
-    DirSyncService.getDirSyncDomain.callsArgWith(0, {success: true, serviceMode: 'ENABLED'});
+    DirSyncService.getDirSyncDomain.callsArgWith(0, {
+      success: true,
+      serviceMode: 'ENABLED'
+    });
     ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('squared-fusion-cal:userErrors');
-    USSService2.getStatusesSummary.returns([{serviceId: 'squared-fusion-cal', activated: 1}]);
+    USSService2.getStatusesSummary.returns([{
+      serviceId: 'squared-fusion-cal',
+      activated: 1
+    }]);
     ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(0);
   });
