@@ -23,7 +23,7 @@ exports.config = {
       'args': ['--disable-extensions', '--start-fullscreen']
     },
     shardTestFiles: true,
-    maxInstances: process.env.MAX_INSTANCES ? process.env.MAX_INSTANCES : process.env.SAUCE_USERNAME ? 5 : 1
+    maxInstances: process.env.SAUCE_MAX_INSTANCES ? process.env.SAUCE_MAX_INSTANCES : process.env.SAUCE_USERNAME ? 5 : 1
   },
 
   // A base URL for your application under test. Calls to protractor.get()

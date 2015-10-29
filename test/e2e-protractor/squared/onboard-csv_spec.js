@@ -3,7 +3,15 @@
 describe('Onboard Users using uploading CSV File', function () {
   var fileToUpload = './../data/sample-squared.csv';
   var absolutePath = utils.resolvePath(fileToUpload);
-  var user = 'collabctg+234298675@gmail.com';
+
+  var i;
+
+  // User array
+  var userList = [];
+  for (i = 0; i < 5; i++) {
+    userList[i] = 'collabctg+23429867' + (5 + i) + '@gmail.com';
+  }
+
   beforeAll(function () {
     login.login('test-user', '#/users');
   }, 120000);
@@ -34,15 +42,20 @@ describe('Onboard Users using uploading CSV File', function () {
   it('should land to upload result page', function () {
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Upload Result');
   });
-  it('search for the user if he is created', function () {
+
+  it('should find all ' + userList.length + ' users created', function () {
     utils.click(inviteusers.finishButton);
-    utils.searchAndClick(user);
-    utils.expectIsDisplayed(users.servicesPanel);
-    utils.click(users.closeSidePanel);
+    for (i = 0; i < userList.length; i++) {
+      utils.searchAndClick(userList[i]);
+      utils.expectIsDisplayed(users.servicesPanel);
+      utils.click(users.closeSidePanel);
+    }
   });
 
   afterAll(function () {
-    utils.deleteUser(user);
+    for (i = 0; i < userList.length; i++) {
+      utils.deleteUser(userList[i]);
+    }
   });
 
 });

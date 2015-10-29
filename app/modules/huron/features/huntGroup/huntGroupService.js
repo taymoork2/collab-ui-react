@@ -16,6 +16,7 @@
     var service = {
       getListOfHuntGroups: getListOfHuntGroups,
       deleteHuntGroup: deleteHuntGroup,
+      saveHuntGroup: saveHuntGroup,
       updateHuntGroup: updateHuntGroup,
       editFeature: editFeature,
       getDetails: getDetails,
@@ -207,6 +208,31 @@
 
       //   return deferred.promise;
 
+    }
+
+    function saveHuntGroup(customerId, details) {
+      return HuntGroupServiceV2.save({
+        customerId: customerId
+      }, details).$promise;
+
+      // Following code is used to mock back-end
+      // var successResponse = {
+      //  'status': 200,
+      //  'statusText': 'OK'
+      // };
+      // var failureResponse = {
+      //  'data': 'Internal Server Error',
+      //  'status': 500,
+      //  'statusText': 'Internal Server Error'
+      // };
+
+      // var deferred = $q.defer();
+      // $timeout(function () {
+      //  //deferred.resolve(successResponse);
+      //  deferred.reject(failureResponse);
+      // }, 3000);
+
+      // return deferred.promise;
     }
 
     function updateHuntGroup(customerId, details) {
