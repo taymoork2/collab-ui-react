@@ -39,7 +39,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl', function () {
   });
 
   beforeEach(inject(function ($rootScope, $controller, _$httpBackend_,
-                              _HuntGroupService_, _Notification_) {
+    _HuntGroupService_, _Notification_) {
     $scope = $rootScope.$new();
     HuntGroupService = _HuntGroupService_;
     Notification = _Notification_;
@@ -58,7 +58,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl', function () {
     $httpBackend.expectGET(NumberLookupUrl).respond(500);
     controller.fetchNumbers("123").then(function () {
       expect(Notification.errorResponse).toHaveBeenCalledWith(jasmine.anything(),
-        'huntGroup.numberFetchFailure');
+        'huronHuntGroup.numberFetchFailure');
     });
     $httpBackend.flush();
   });
@@ -113,8 +113,8 @@ describe('Controller: HuntGroupSetupAssistantCtrl', function () {
 
   function listContains(dropdownList, number) {
     return (dropdownList.filter(function (elem) {
-        return (elem.uuid == number.uuid);
-      })).length > 0;
+      return (elem.uuid == number.uuid);
+    })).length > 0;
   }
 
   it("calls the backend only after 3 key strokes.", function () {
@@ -128,7 +128,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl', function () {
     $httpBackend.verifyNoOutstandingRequest(); // Not request made.
 
     controller.fetchNumbers("123");
-    $httpBackend.flush();                     // Request made.
+    $httpBackend.flush(); // Request made.
   });
 
   //it("formats the number based on US region code if filter called from UI.", function () {
