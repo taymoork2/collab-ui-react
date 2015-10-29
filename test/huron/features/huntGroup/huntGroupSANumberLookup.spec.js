@@ -2,44 +2,65 @@
 
 describe('Controller: HuntGroupSetupAssistantCtrl', function () {
 
-  var FakeNumberSearchServiceV2, FakeApi, controller, $scope, HuntGroupService, Notification;
-  var someNumber = {
-    number: 1234
-  };
-  var anotherNumber = {
-    number: 4321
-  };
-  beforeEach(module('Huron'));
+  var $httpBackend, controller, $scope, HuntGroupService, Notification;
 
-  beforeEach(inject(function ($rootScope, $controller, $q, $state, _HuntGroupService_, _Notification_) {
+  var someNumber = {
+    "type": "INTERNAL",
+    "uuid": "167da8d1-0711-4155-832b-0172ba48e1af",
+    "number": "2101",
+    "assigned": false
+  };
+
+  var anotherNumber = {
+    "type": "INTERNAL",
+    "uuid": "973d465a-cf96-47a1-beb8-500eccfeb4ef",
+    "number": "2102",
+    "assigned": false
+  };
+
+  var successResponse = {
+    "numbers": [someNumber, anotherNumber]
+  };
+
+  var spiedAuthinfo = {
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
+  };
+
+  beforeEach(module('Huron'));
+  beforeEach(module(function ($provide) {
+    $provide.value("Authinfo", spiedAuthinfo);
+  }));
+
+  var NumberLookupUrl = new RegExp(".*/customers/1/numbers.*");
+
+  afterEach(function () {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_,
+                              _HuntGroupService_, _Notification_) {
     $scope = $rootScope.$new();
     HuntGroupService = _HuntGroupService_;
     Notification = _Notification_;
-
-    FakeApi = $q.defer();
-    FakeNumberSearchServiceV2 = {
-      get: function () {
-        return {
-          $promise: FakeApi.promise
-        };
-      }
-    };
+    $httpBackend = _$httpBackend_;
 
     controller = $controller('HuntGroupSetupAssistantCtrl', {
       $scope: $scope,
       HuntGroupService: HuntGroupService,
-      Notification: Notification,
-      NumberSearchServiceV2: FakeNumberSearchServiceV2
+      Notification: Notification
     });
+
   }));
 
   it("notifies with error response when number fetch fails.", function () {
     spyOn(Notification, 'errorResponse');
-    FakeApi.reject('Some Error');
-    controller.fetchNumbers(someNumber.number).then(function () {
-      expect(Notification.errorResponse).toHaveBeenCalled('Some Error',
+    $httpBackend.expectGET(NumberLookupUrl).respond(500);
+    controller.fetchNumbers("123").then(function () {
+      expect(Notification.errorResponse).toHaveBeenCalledWith(jasmine.anything(),
         'huntGroup.numberFetchFailure');
     });
+    $httpBackend.flush();
   });
 
   it("on selecting a pilot number, the selectedPilotNumbers list is updated.", function () {
@@ -55,63 +76,69 @@ describe('Controller: HuntGroupSetupAssistantCtrl', function () {
     controller.selectPilotNumber(someNumber);
 
     // Backend returns a list.
-    FakeApi.resolve({
-      numbers: [
-        someNumber,
-        anotherNumber
-      ]
-    });
+    $httpBackend.expectGET(NumberLookupUrl).respond(200, successResponse);
 
     // UI must filter and show only the list that is not already selected.
     controller.fetchNumbers(someNumber.number).then(function (dropdownList) {
       expect(dropdownList.indexOf(someNumber)).toBe(-1);
     });
+    $httpBackend.flush();
   });
 
   it("on closing a pill, the list is updated and drop down starts showing the closed pill.", function () {
-    // UI selects and Un-Selects number pills.
-    controller.selectPilotNumber(someNumber);
-    controller.selectPilotNumber(anotherNumber);
-    controller.unSelectPilotNumber(someNumber.number);
+
+    controller.selectPilotNumber(someNumber); // pill 1 selected.
+    controller.selectPilotNumber(anotherNumber); // pill 2 selected.
 
     // Backend returns a list.
-    FakeApi.resolve({
-      numbers: [
-        someNumber,
-        anotherNumber
-      ]
+    $httpBackend.expectGET(NumberLookupUrl).respond(200, successResponse);
+
+    // UI types in number of pill 1
+    controller.fetchNumbers(someNumber.number).then(function (dropdownList) {
+      expect(listContains(dropdownList, someNumber)).toBeFalsy(); // drop down must not show it.
     });
 
-    // UI must show and filter the correct items in the dropdown.
+    controller.unSelectPilotNumber(someNumber); // pill 1 is closed.
+
+    // Backend returns a list.
+    $httpBackend.expectGET(NumberLookupUrl).respond(200, successResponse);
+
+    // UI types in number of pill 1
     controller.fetchNumbers(someNumber.number).then(function (dropdownList) {
-      expect(dropdownList.indexOf(someNumber)).not.toBe(-1);
-      expect(dropdownList.indexOf(anotherNumber)).toBe(-1);
+      expect(listContains(dropdownList, someNumber)).toBeTruthy(); // drop down must show it.
     });
+
+    $httpBackend.flush();
   });
+
+  function listContains(dropdownList, number) {
+    return (dropdownList.filter(function (elem) {
+        return (elem.uuid == number.uuid);
+      })).length > 0;
+  }
 
   it("calls the backend only after 3 key strokes.", function () {
-    spyOn(FakeNumberSearchServiceV2, 'get');
-    controller.fetchNumbers(1).then(function () {
-      expect(FakeNumberSearchServiceV2.get).not.toHaveBeenCalled();
-    });
-    controller.fetchNumbers(12).then(function () {
-      expect(FakeNumberSearchServiceV2.get).not.toHaveBeenCalled();
-    });
-    controller.fetchNumbers(123).then(function () {
-      expect(FakeNumberSearchServiceV2.get).toHaveBeenCalled();
-    });
+    $httpBackend.expectGET(NumberLookupUrl).respond(200, successResponse);
+    controller.fetchNumbers("1");
+    $scope.$apply();
+    $httpBackend.verifyNoOutstandingRequest(); // Not request made.
+
+    controller.fetchNumbers("12");
+    $scope.$apply();
+    $httpBackend.verifyNoOutstandingRequest(); // Not request made.
+
+    controller.fetchNumbers("123");
+    $httpBackend.flush();                     // Request made.
   });
 
-  it("formats the number based on US region code.", function () {
-    FakeApi.resolve({
-      numbers: [{
-        "number": "+19724052108"
-      }]
-    });
-
-    controller.fetchNumbers(108).then(function (dropdownList) {
-      expect(dropdownList(0)).toBe("(972) 405-2108");
-    });
-  });
-
+  //it("formats the number based on US region code if filter called from UI.", function () {
+  //
+  //  $httpBackend.expectGET(NumberLookupUrl).respond(200, {"numbers": [usRegionNumber]});
+  //
+  //  controller.fetchNumbers("110").then(function (dropdownList) {
+  //    expect(HuntMemberTelephoneFilter(dropdownList[0].number)).toBe("(972) 405-2110");
+  //  });
+  //
+  //  $httpBackend.flush();
+  //});
 });
