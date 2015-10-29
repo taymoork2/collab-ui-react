@@ -46,10 +46,10 @@ angular.module('Core')
         '  </p>' + '\n' +
         '</div>' + '\n' +
         '<div ng-if="row.entity.showSiteLinks">' + '\n' +
-        '  <div ng-if="!row.entity.isIframeSupported"' + '\n' +
-        '       id = "{{row.entity.license.siteUrl}}_xlaunch-webex-site-settings"' + '\n ' +
-        '       name="{{row.entity.license.siteUrl}}_xlaunch-webex-site-settings">' + '\n' +
-        '    <launch-site admin-email-param="{{siteList.siteLaunch.adminEmailParam}}"' + '\n' +
+        '  <div ng-if="!row.entity.isIframeSupported">' + '\n' +
+        '    <launch-site id = "{{row.entity.license.siteUrl}}_xlaunch-webex-site-settings"' + '\n' +
+        '                 name="{{row.entity.license.siteUrl}}_xlaunch-webex-site-settings">' + '\n' +
+        '                 admin-email-param="{{siteList.siteLaunch.adminEmailParam}}"' + '\n' +
         '                 advanced-settings="{{siteList.siteLaunch.advancedSettings}}"' + '\n' +
         '                 user-email-param="{{siteList.siteLaunch.userEmailParam}}"' + '\n' +
         '                 webex-advanced-url="{{siteList.getWebexUrl(row.entity.license.siteUrl)}}">' + '\n' +
@@ -74,10 +74,10 @@ angular.module('Core')
         '</div>' + '\n' +
         '<div ng-if="row.entity.showSiteLinks">' + '\n' +
         '  <div ng-if="row.entity.isAdminReportEnabled">' + '\n' +
-        '    <div ng-if="!row.entity.isIframeSupported"' + '\n' +
-        '         id="{{row.entity.license.siteUrl}}_xlaunch-webex-site-reports"' + '\n' +
-        '         name="{{row.entity.license.siteUrl}}_xlaunch-webex-site-reports">' + '\n' +
-        '      <launch-site admin-email-param="{{siteList.siteLaunch.adminEmailParam}}"' + '\n' +
+        '    <div ng-if="!row.entity.isIframeSupported">' + '\n' +
+        '      <launch-site id="{{row.entity.license.siteUrl}}_xlaunch-webex-site-reports"' + '\n' +
+        '                   name="{{row.entity.license.siteUrl}}_xlaunch-webex-site-reports">' + '\n' +
+        '                   admin-email-param="{{siteList.siteLaunch.adminEmailParam}}"' + '\n' +
         '                   advanced-settings="{{siteList.siteLaunch.advancedSettings}}"' + '\n' +
         '                   user-email-param="{{siteList.siteLaunch.userEmailParam}}"' + '\n' +
         '                   webex-advanced-url="{{siteList.getWebexUrl(row.entity.license.siteUrl)}}">' + '\n' +
