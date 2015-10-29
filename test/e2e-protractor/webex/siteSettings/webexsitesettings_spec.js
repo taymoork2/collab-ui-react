@@ -5,6 +5,25 @@
 describe('WebEx site settings', function () {
 
   it('navigate to WebEx site list', function () {
+    login.loginThroughGui(sitesettings.testAdmin2.username, sitesettings.testAdmin2.password);
+    navigation.clickServicesTab();
+    utils.click(sitesettings.conferencing);
+    navigation.expectCurrentUrl('/site-list');
+  });
+
+  it('find webex settings cross-launch icon', function () {
+    expect(sitesettings.xLaunchSiteSettingsT30CITEST.isPresent).toBeTruthy();
+  });
+
+  it('find webex reports cross-launch icon', function () {
+    expect(sitesettings.xLaunchSiteReportsT30CITEST.isPresent).toBeTruthy();
+  });
+
+  it('should allow log out', function () {
+    navigation.logout();
+  });
+
+  it('navigate to WebEx site list', function () {
     login.loginThroughGui(sitesettings.testAdmin.username, sitesettings.testAdmin.password);
     navigation.clickServicesTab();
     utils.click(sitesettings.conferencing);
