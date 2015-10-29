@@ -965,6 +965,7 @@ gulp.task('e2e', function (done) {
   if (args.sauce) {
     runSeq(
       'e2e:setup',
+      'protractor:clean',
       'sauce:start',
       'protractor',
       'protractor:clean',
@@ -973,6 +974,7 @@ gulp.task('e2e', function (done) {
   } else {
     runSeq(
       'e2e:setup',
+      'protractor:clean',
       'protractor',
       'protractor:clean',
       done
