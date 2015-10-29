@@ -6,7 +6,9 @@
 
 <div id="webexSiteReports"
      name="webexSiteReports">
-     
+
+
+<div>
   <cs-card-layout ng-if="webexReportsObject.viewReady">
     <div ng-repeat="sec in webexReportsObject.reports.sections">
       <div ng-if="'common_reports' == sec.section_name">
@@ -83,4 +85,5 @@
       </div>
     </div>
   </cs-card-layout>
+</div>
 </div>
