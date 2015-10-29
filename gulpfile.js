@@ -1016,9 +1016,9 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
       config.testFiles.e2e.squared,
       config.testFiles.e2e.hercules,
       config.testFiles.e2e.sunlight,
-      config.testFiles.e2e.webexuser,
-      config.testFiles.e2e.webexsite,
-      config.testFiles.e2e.webexsitereport
+      config.testFiles.e2e.webexusersettings,
+      config.testFiles.e2e.webexsitesettings,
+      config.testFiles.e2e.webexsitereports
     );
     messageLogger('Running End 2 End tests from all modules.');
   }
