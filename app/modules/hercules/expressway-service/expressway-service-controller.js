@@ -291,12 +291,15 @@
     };
 
     vm.squaredFusionEc = false;
-    ServiceDescriptor.isServiceEnabled("squared-fusion-ec", function (a, b) {
-      vm.squaredFusionEc = b;
-      if (vm.squaredFusionEc) {
-        readCerts();
-      }
-    });
+    vm.squaredFusionEcEntitled = Authinfo.isFusionEC();
+    if (vm.squaredFusionEcEntitled) {
+      ServiceDescriptor.isServiceEnabled("squared-fusion-ec", function (a, b) {
+        vm.squaredFusionEc = b;
+        if (vm.squaredFusionEc) {
+          readCerts();
+        }
+      });
+    }
 
     vm.storeEc = function () {
       //console.log("store ec", vm.squaredFusionEc)
