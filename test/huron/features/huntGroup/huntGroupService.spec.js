@@ -4,7 +4,7 @@
 
 'use strict';
 
-describe('Hunt Group Service', function () {
+fdescribe('Hunt Group Service', function () {
 
   var HuronConfig, $q, $httpBackend, huntGroupService, customerId, huntGroupId, huntList, getHuntListUrl, deleteHGUrl;
 
