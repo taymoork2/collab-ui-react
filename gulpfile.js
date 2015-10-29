@@ -25,7 +25,6 @@ var webdriverUpdate = require('gulp-protractor').webdriver_update;
 var reload = browserSync.reload;
 var runSeq = require('run-sequence');
 var uuid = require('uuid');
-var fs = require('fs');
 var testFiles = [];
 var changedFiles = [];
 var _uuid;
@@ -967,14 +966,14 @@ gulp.task('e2e', function (done) {
       'e2e:setup',
       'sauce:start',
       'protractor',
-      'protractor:clean'
+      'protractor:clean',
       done
     );
   } else {
     runSeq(
       'e2e:setup',
       'protractor',
-      'protractor:clean'
+      'protractor:clean',
       done
     );
   }
@@ -1053,8 +1052,8 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
     });
 });
 
-gulp:task('protractor:clean', function(done){
-  fs.unlink('e2e-fail-notify',done);
+gulp.task('protractor:clean', function (done) {
+  del('e2e-fail-notify', done);
 });
 
 gulp.task('protractor:update', webdriverUpdate);
