@@ -21,6 +21,7 @@ var SiteReportsPage = function () {
   this.webexCommonRecordingUsageLink = element(by.id('recording_usage'));
   this.webexCommonStorageUsageLink = element(by.id('storage_utilization'));
 
+  this.reportEngagementId = element(by.id('engagementReports'));
   this.webexCommonReportsCardId = element(by.id('common_reports'));
   this.webexCommonMeetingUsageId = element(by.id('webexSiteReportIframe-meeting_usage'));
   this.webexCommonMeetingsInProgressId = element(by.id('webexSiteReportIframe-meeting_in_progess'));

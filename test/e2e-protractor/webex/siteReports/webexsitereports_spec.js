@@ -7,6 +7,7 @@ describe('WebEx site reports', function () {
   it('navigate to reports', function () {
     login.loginThroughGui(sitereports.testAdmin.username, sitereports.testAdmin.password);
     navigation.clickReports();
+    utils.wait(sitereports.reportEngagementId);
     expect(sitereports.webexReportsLink.isPresent()).toBeTruthy();
   });
 
