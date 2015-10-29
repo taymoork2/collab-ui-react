@@ -2489,6 +2489,7 @@
     "cancelHeader": "Cancel Hunt Group Creation",
     "cancelDialog": "Are you sure you wish to cancel hunt group creation? This hunt group will not be saved.",
     "confirmButton": "Cancel Creation",
-    "continueButton": "Continue Creation"
+    "continueButton": "Continue Creation",
+    "memberFetchFailure": "Unable to get members."
   }
 }

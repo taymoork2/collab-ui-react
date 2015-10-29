@@ -28,8 +28,8 @@
       <header>
         <div class="header-with-right-icon">
           <h5 class="ellipsis"
-              title="{{user.firstName + ' ' + user.lastName}}">
-            {{user.firstName + ' ' + user.lastName}}</h5>
+              title="{{huntGroupSA.getDisplayName(user)}}">
+            {{huntGroupSA.getDisplayName(user)}}</h5>
                   <span  dropdown>
                     <a class="right btn-none card-action-btn"
                        ng-click="user.canConfigPanel = !user.canConfigPanel">

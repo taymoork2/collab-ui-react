@@ -78,6 +78,10 @@
 
     function fetchSuggestionsFromService(service, apiArgs, itemsInUI, onFailure, suggestions) {
       apiArgs.customerId = customerId;
+
+      if (service.resource == NumberSearchServiceV2)
+        apiArgs.assigned = false; // fetch unassigned numbers only.
+
       var uuidInUI = itemsInUI.map(function (e) {
         return e.uuid;
       });

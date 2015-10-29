@@ -24,6 +24,7 @@
     vm.fetchNumbers = fetchNumbers;
     vm.unSelectPilotNumber = unSelectPilotNumber;
     vm.fetchHuntMembers = fetchHuntMembers;
+    vm.getDisplayName = getDisplayName;
     vm.cancelModal = cancelModal;
     vm.evalKeyPress = evalKeyPress;
     vm.enterNextPage = enterNextPage;
@@ -49,6 +50,14 @@
     vm.users = [];
 
     // ==============================================
+
+    function getDisplayName(user) {
+      if (user.lastName) {
+        return user.firstName + " " + user.lastName;
+      } else {
+        return user.firstName;
+      }
+    }
 
     function fetchHuntMembers(nameHint) {
       return HuntGroupService.getHuntMembers(
