@@ -43,6 +43,19 @@
   p {
     @include vr-spacing(pb, 0.5);
   }
+  .warning-typeahead {
+    .icon {
+      @extend .icon-warning;
+			font-size: .75rem;
+      color: $color-attention;
+    }
+    .message {
+      color: $color-attention;
+    }
+    > input[type="text"] {
+      border: 1px solid $color-attention;
+    }
+  }
 }
 
 .hgmethods {
@@ -114,5 +127,17 @@
 .dragover {
   .cs-card.header-background header {
     background: $gray;
+  }
+}
+
+.typeahead .dropdown-menu {
+  li .hunt-member-name {
+    @include vr-spacing(ph, 0.5);
+  }
+  li .hunt-member-line {
+    @include vr-spacing(ph, 0.5);
+    & span {
+      font-size: 1rem;
+    }
   }
 }
