@@ -38,6 +38,7 @@
     function saveUiModel() {
       vm.ui.ceInfo.name = vm.name;
       if (angular.isDefined(vm.ui.ceInfo) && angular.isDefined(vm.ui.ceInfo.getName()) && vm.ui.ceInfo.getName().length > 0) {
+        vm.ui.builder.ceInfo_name = vm.ui.ceInfo.getName();
         AutoAttendantCeInfoModelService.setCeInfo(vm.aaModel.aaRecord, vm.ui.ceInfo);
       }
     }

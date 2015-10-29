@@ -88,6 +88,7 @@ describe('Controller: aaBuilderNameCtrl', function () {
       controller.name = rawCeInfo.callExperienceName;
       controller.ui = {};
       controller.ui.ceInfo = ce2CeInfo(rawCeInfo);
+      controller.ui.builder = {};
     });
 
     /*  Commented out as code references AutoAttendant.saveAARecords()
@@ -136,7 +137,7 @@ describe('Controller: aaBuilderNameCtrl', function () {
     /*  Commented out as code references AutoAttendant.saveAARecords()
      *
      *
-    
+
     it('should issue error message on failure to save', function () {
 
       saveCeSpy.and.returnValue(

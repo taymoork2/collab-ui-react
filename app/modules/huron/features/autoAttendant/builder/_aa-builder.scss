@@ -68,6 +68,13 @@ $aa-builder-icon-color: $gray-base;
   justify-content: center;
 }
 
+.aa-flex-row-item-bottom-align {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: flex-end;
+  justify-content: center;
+}
+
 #aa-header-row {
   height: $aa-builder-header-height;
   background-color: $brand-white;
@@ -103,6 +110,7 @@ $aa-builder-icon-color: $gray-base;
   color: $aa-builder-icon-color;
   padding-left: .25rem;
   padding-top: .25rem;
+  margin-bottom: 1rem;
   &:hover {
     cursor: pointer;
     color: $brand-primary;
@@ -169,6 +177,16 @@ $aa-builder-icon-color: $gray-base;
       -webkit-box-shadow: none;
       background-color: transparent;
     }
+  }
+}
+
+.aa-name-edit {
+  @extend h2;
+  min-width: 1rem;
+  &:focus {
+    outline-style: solid;
+    outline-width: 1px;
+    outline-color: transparent;
   }
 }
 

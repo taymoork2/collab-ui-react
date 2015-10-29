@@ -12,7 +12,9 @@
     vm.aaModel = {};
     vm.ui = {};
     vm.errorMessages = [];
+    vm.aaNameFocus = false;
 
+    vm.setAANameFocus = setAANameFocus;
     vm.close = closePanel;
     vm.saveAARecords = saveAARecords;
     vm.canSaveAA = canSaveAA;
@@ -20,27 +22,19 @@
     vm.selectAA = selectAA;
     vm.populateUiModel = populateUiModel;
     vm.saveUiModel = saveUiModel;
+    vm.extractUUID = extractUUID;
+    vm.isNameValidationSuccess = isNameValidationSuccess;
 
     $scope.saveAARecords = saveAARecords;
 
     /////////////////////
 
-    function closePanel() {
-      $state.go('huronfeatures');
+    function setAANameFocus() {
+      vm.aaNameFocus = true;
     }
 
-    function updateCeInfos(ceInfos, ceInfo) {
-      for (var i = 0; i < ceInfos.length; i++) {
-        if (ceInfos[i].getName() === ceInfo.getName()) {
-          break;
-        }
-      }
-
-      if (i === ceInfos.length) {
-        ceInfos.push(ceInfo);
-      }
-
-      return i;
+    function closePanel() {
+      $state.go('huronfeatures');
     }
 
     function removeNumberAttribute(resources) {
@@ -79,6 +73,9 @@
 
     function saveUiModel() {
       if (angular.isDefined(vm.ui.ceInfo) && angular.isDefined(vm.ui.ceInfo.getName()) && vm.ui.ceInfo.getName().length > 0) {
+        if (angular.isDefined(vm.ui.builder.ceInfo_name) && (vm.ui.builder.ceInfo_name.length > 0)) {
+          vm.ui.ceInfo.setName(angular.copy(vm.ui.builder.ceInfo_name));
+        }
         AutoAttendantCeInfoModelService.setCeInfo(vm.aaModel.aaRecord, vm.ui.ceInfo);
       }
       if (vm.ui.isOpenHours && angular.isDefined(vm.ui.openHours)) {
@@ -102,14 +99,23 @@
 
     function saveAARecords() {
 
+      if (!vm.isNameValidationSuccess()) {
+        return;
+      }
       vm.saveUiModel();
 
       var aaRecords = vm.aaModel.aaRecords;
       var aaRecord = vm.aaModel.aaRecord;
+      var aaRecordUUID = vm.aaModel.aaRecordUUID;
+      var i = 0;
 
-      for (var i = 0; i < aaRecords.length; i++) {
-        if (aaRecords[i].callExperienceName === aaRecord.callExperienceName) {
-          break;
+      if (aaRecordUUID === "") {
+        i = aaRecords.length;
+      } else {
+        for (i = 0; i < aaRecords.length; i++) {
+          if (extractUUID(aaRecords[i].callExperienceURL) === aaRecordUUID) {
+            break;
+          }
         }
       }
 
@@ -129,6 +135,7 @@
             newAaRecord.assignedResources = angular.copy(aaRecord.assignedResources);
             newAaRecord.callExperienceURL = response.callExperienceURL;
             aaRecords.push(newAaRecord);
+            vm.aaModel.aaRecordUUID = extractUUID(response.callExperienceURL);
             vm.aaModel.ceInfos.push(AutoAttendantCeInfoModelService.getCeInfo(newAaRecord));
             Notification.success('autoAttendant.successCreateCe', {
               name: aaRecord.callExperienceName
@@ -170,6 +177,20 @@
       }
     }
 
+    function isNameValidationSuccess() {
+      if (!angular.isDefined(vm.ui.builder.ceInfo_name) || (vm.ui.builder.ceInfo_name.trim().length === 0)) {
+        Notification.error('autoAttendant.invalidBuilderNameMissing');
+        return false;
+      }
+      for (var i = 0; i < vm.aaModel.ceInfos.length; i++) {
+        if ((vm.aaModel.aaRecordUUID !== extractUUID(vm.aaModel.ceInfos[i].ceUrl)) && (vm.ui.builder.ceInfo_name === vm.aaModel.ceInfos[i].getName())) {
+          Notification.error('autoAttendant.invalidBuilderNameNotUnique');
+          return false;
+        }
+      }
+      return true;
+    }
+
     function canSaveAA() {
       var canSave = true;
       return canSave;
@@ -182,11 +203,17 @@
       return messages;
     }
 
+    function extractUUID(ceURL) {
+      var uuidPos = ceURL.lastIndexOf("/");
+      return ceURL.substr(uuidPos + 1);
+    }
+
     function selectAA(aaName) {
       vm.aaModel.aaName = aaName;
       if (angular.isUndefined(vm.aaModel.aaRecord)) {
         if (aaName === '') {
           vm.aaModel.aaRecord = AAModelService.newAARecord();
+          vm.aaModel.aaRecordUUID = "";
         } else {
           for (var i = 0; i < vm.aaModel.aaRecords.length; i++) {
             if (vm.aaModel.aaRecords[i].callExperienceName === aaName) {
@@ -194,10 +221,10 @@
               AutoAttendantCeService.readCe(vm.aaModel.aaRecords[i].callExperienceURL).then(
                 function (data) {
                   vm.aaModel.aaRecord = data;
-
                   // Workaround for reading the dn number: by copying it from aaRecords[i], until
                   // dn number is officialy stored in ceDefintion.
                   vm.aaModel.aaRecord.assignedResources = angular.copy(vm.aaModel.aaRecords[i].assignedResources);
+                  vm.aaModel.aaRecordUUID = vm.extractUUID(vm.aaModel.aaRecords[i].callExperienceURL);
                   //
                   vm.populateUiModel();
                 },
@@ -226,6 +253,9 @@
       vm.ui = AAUiModelService.getUiModel();
       vm.ui.ceInfo = {};
       vm.ui.ceInfo.name = aaName;
+      vm.ui.builder = {};
+      // Define vm.ui.builder.ceInfo_name for editing purpose.
+      vm.ui.builder.ceInfo_name = angular.copy(vm.ui.ceInfo.name);
 
       AutoAttendantCeInfoModelService.getCeInfosList().then(function (data) {
         selectAA(aaName);
