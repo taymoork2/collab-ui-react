@@ -2,7 +2,7 @@
 
 describe('Huron Setup Assistant Ctrl', function () {
 
-  var controller, $scope, $modal, $timeout;
+  var controller, $scope, $modal, $timeout, Notification, HuntGroupService, $q, $state;
 
   var leftArrow = 37;
   var rightArrow = 39;
@@ -13,17 +13,28 @@ describe('Huron Setup Assistant Ctrl', function () {
 
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$modal_, _$timeout_) {
+  beforeEach(inject(function ($rootScope, $controller, _$modal_, _$timeout_, _Notification_, _HuntGroupService_, _$q_, _$state_) {
     $scope = $rootScope.$new();
     $modal = _$modal_;
     $timeout = _$timeout_;
+    Notification = _Notification_;
+    HuntGroupService = _HuntGroupService_;
+    $q = _$q_;
+    $state = _$state_;
 
     controller = $controller('HuntGroupSetupAssistantCtrl', {
       $scope: $scope,
-      $modal: $modal
+      $modal: $modal,
+      Notification: Notification,
+      HuntGroupService: HuntGroupService,
+      $state: $state
     });
 
     spyOn($modal, 'open');
+    spyOn($state, 'go');
+    spyOn(Notification, 'success');
+    spyOn(Notification, 'error');
+    spyOn(HuntGroupService, 'saveHuntGroup').and.returnValue($q.when());
   }));
 
   it("should test that the page index starts at 0", function () {
@@ -99,5 +110,28 @@ describe('Huron Setup Assistant Ctrl', function () {
   it("should test the escape key", function () {
     controller.evalKeyPress(escapeKey);
     expect($modal.open).toHaveBeenCalled();
+  });
+
+  it("should invalidate the fallback number if entered invalid", function () {
+    controller.fallback = "8";
+    controller.validateFallback();
+    $scope.$apply();
+
+    expect(controller.fallbackValid).toBeFalsy();
+  });
+
+  it("should validate the fallback number if entered invalid", function () {
+    controller.fallback = "8179325798";
+    controller.validateFallback();
+    $scope.$apply();
+
+    expect(controller.fallbackValid).toBeTruthy();
+  });
+
+  it("should save the details entered", function () {
+    controller.saveHuntGroup();
+    $scope.$apply();
+
+    expect(Notification.success).toHaveBeenCalled();
   });
 });

@@ -1,7 +1,7 @@
 <div class="cards-block">
 <cs-card-layout block-view="true">
   <cs-card ng-repeat="huronFeature in huronFeaturesCtrl.listOfFeatures | orderBy: 'cardName'"
-           class="small header-background {{ huronFeaturesCtrl.cardColors[huronFeature.filterValue] }}">
+           class="small header-background" ng-class="huronFeaturesCtrl.cardColor[huronFeature.filterValue]">
     <article>
       <header>
         <div class="header-with-right-icon">
@@ -24,7 +24,7 @@
       <section>
         <div class="card-section">
           <span class="card-section-num" ng-if="(huronFeature.numbers.length <= 2)"
-                ng-repeat="number in huronFeature.numbers">{{number}}</span>
+                ng-repeat="number in huronFeature.numbers">{{number | telephoneNumber}}</span>
           <span class="card-section-num" ng-if="(huronFeature.numbers.length > 2)">{{:: huronFeature.numbers.length + ' '+ ('huronHuntGroup.numbers' | translate)}}</span>
         </div>
         <div class="card-footer">

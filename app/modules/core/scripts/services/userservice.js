@@ -51,7 +51,7 @@ angular.module('Core')
 
       return {
 
-        updateUsers: function (usersDataArray, userLicenses, entitlements, method, callback) {
+        updateUsers: function (usersDataArray, licenses, entitlements, method, callback) {
           var userData = {
             'users': []
           };
@@ -62,7 +62,7 @@ angular.module('Core')
               var user = {
                 'email': userEmail,
                 'userEntitlements': entitlements,
-                'userLicenses': userLicenses,
+                'licenses': licenses,
                 'assignedDn': usersDataArray[i].assignedDn,
                 'externalNumber': usersDataArray[i].externalNumber
               };
@@ -396,35 +396,12 @@ angular.module('Core')
             });
         },
 
-        onboardUsers: function (usersDataArray, entitlements, userLicenses, callback, cancelPromise) {
-          var userData = {
-            'users': []
-          };
-
-          for (var i = 0; i < usersDataArray.length; i++) {
-            var userEmail = usersDataArray[i].address.trim();
-            var userName = usersDataArray[i].name;
-
-            var user = {
-              'email': null,
-              'name': {
-                'givenName': null,
-                'familyName': null,
-              },
-              'userEntitlements': entitlements,
-              'userLicenses': userLicenses
-            };
-
-            if (userEmail.length > 0) {
-              user.email = userEmail;
-              user.name = tokenParseFirstLastName(userName);
-              userData.users.push(user);
-            }
-          }
-          onboardUsers(userData, callback, cancelPromise);
-        },
-
-        onboardLicenseUsers: function (usersDataArray, entitlements, licenses, callback, cancelPromise) {
+        // Note there are two license arrays that can be passed
+        // 'licenses' is a general array applied to all users
+        // 'licensesPerUser' is an array of license arrays paired to each user in the usersDataArray
+        // this latter argument is used by thinsg like CSV import
+        //
+        onboardUsers: function (usersDataArray, entitlements, licenses, licensesPerUser, callback, cancelPromise) {
           var userData = {
             'users': []
           };
@@ -433,21 +410,31 @@ angular.module('Core')
             var userEmail = usersDataArray[i].address.trim();
             var userName = usersDataArray[i].name;
             var displayName = usersDataArray[i].displayName;
+
             var user = {
               'email': null,
               'name': {
                 'givenName': null,
                 'familyName': null,
               },
-              'userEntitlements': entitlements,
-              'licenses': (licenses && licenses.length > i) ? licenses[i] : null
+              'userEntitlements': (entitlements && entitlements.length > 0) ? entitlements : null,
+              'licenses': null
             };
+
             if (userEmail.length > 0) {
+
               user.email = userEmail;
               user.name = tokenParseFirstLastName(userName);
               if (displayName) {
                 user.displayName = displayName;
               }
+
+              // CSV import specifies licenses on a per-user basis
+              if (licenses && licenses.length > 0)
+                user.licenses = licenses;
+              else if (licensesPerUser && licensesPerUser.length > i)
+                user.licenses = licensesPerUser[i];
+
               userData.users.push(user);
             }
           }
