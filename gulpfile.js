@@ -965,14 +965,18 @@ gulp.task('e2e', function (done) {
   if (args.sauce) {
     runSeq(
       'e2e:setup',
+      'protractor:clean',
       'sauce:start',
       'protractor',
+      'protractor:clean',
       done
     );
   } else {
     runSeq(
       'e2e:setup',
+      'protractor:clean',
       'protractor',
+      'protractor:clean',
       done
     );
   }
@@ -1068,6 +1072,10 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
     .on('end', function () {
       exit(0);
     });
+});
+
+gulp.task('protractor:clean', function (done) {
+  del('e2e-fail-notify', done);
 });
 
 gulp.task('protractor:update', webdriverUpdate);
