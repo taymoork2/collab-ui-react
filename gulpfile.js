@@ -1013,7 +1013,7 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
           tests = tests.filter(function (test) {
             return test.trim() !== '';
           });
-          messageLogger('Running End 2 End tests from file: ' + $.util.colors.red(specs));
+          messageLogger('Running End 2 End tests from: ' + $.util.colors.red(filename));
         } catch (err) {
           messageLogger('Error:: ' + $.util.colors.red(err));
         }
