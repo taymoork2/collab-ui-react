@@ -140,17 +140,15 @@
 
               emailAllHostsBtnObj: {
                 id: "emailAllHostsBtn",
-                label: null,
                 pageObj: null,
               }, // emailAllHostsBtnObj
 
               siteInfoCardObj: {
                 id: "SiteInfo",
-                label: null,
 
                 licensesTotal: {
                   id: "licensesTotal",
-                  count: 0
+                  count: null
                 },
 
                 licensesUsage: {
@@ -648,17 +646,14 @@
           updateSiteSettingCardObjs();
 
           function updateEmailAllHostsBtnObj() {
-            var btnLabel = $translate.instant("webexSiteSettingsLabels.emailAllHostsBtnTitle").replace(" ", "&nbsp;");
+            var btnLabel = $translate.instant("webexSiteSettingsLabels.emailAllHostsBtnTitle");
 
-            _this.webExSiteSettingsObj.emailAllHostsBtnObj.label = btnLabel;
             _this.webExSiteSettingsObj.emailAllHostsBtnObj.pageObj = _this.getCategoryObj("EMAIL").pageObjs[0];
           } // updateEmailAllHostsBtnObj()
 
           function updateSiteInfoCardObj() {
             var funcName = "updateSiteInfoCardObj()";
             var logMsg = "";
-
-            _this.webExSiteSettingsObj.siteInfoCardObj.label = _this.webExSiteSettingsObj.siteUrl;
 
             _this.getCategoryObj(_this.webExSiteSettingsObj.siteInfoCardObj.id).pageObjs.forEach(
               function checkPageObj(pageObj) {
