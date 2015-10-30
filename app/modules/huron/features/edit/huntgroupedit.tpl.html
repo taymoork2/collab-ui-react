@@ -17,8 +17,8 @@
       <button class="secondary" cs-btn loading="hge.saveInProgress" ng-click="hge.saveForm()" ng-disabled="hge.form.$invalid || (!hge.fallbackValid && hge.addFallback) || !hge.membersValid">{{:: 'usersPage.save' | translate}}</button>
     </div>
   </div>
-  <div ng-if="!hge.initialized">
-    Loading...
+  <div ng-if="!hge.initialized" class="load">
+    <i class='icon icon-spinner'></i>
   </div>
   <div class="row" ng-if="hge.initialized">
     <div class="medium-6 columns">
