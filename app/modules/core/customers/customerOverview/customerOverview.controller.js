@@ -20,6 +20,7 @@
     vm.usePartnerLogo = true;
     vm.allowCustomerLogos = false;
     vm.logoOverride = false;
+    vm.isSetup = isSetup;
 
     initCustomer();
     getLogoSettings();
@@ -134,6 +135,12 @@
         return _.contains(identityCustomer.services, Config.entitlements.huron);
       }
       return false;
+    }
+
+    function isSetup() {
+      return _(vm.currentCustomer.unmodifiedLicenses).every({
+        status: 'ACTIVE'
+      });
     }
   }
 })();

@@ -68,8 +68,10 @@
     <uc-external-number-overview ng-if="customerOverview.isSquaredUC"></uc-external-number-overview>
 
     <button id="launchCustomer" class="btn btn-lg btn-primary text-center launchCustomer"
-      ng-disabled="!customerOverview.currentCustomer.isAllowedToManage" translate="customerPage.launchButton"
+      ng-disabled="!customerOverview.currentCustomer.isAllowedToManage"
       ng-click="customerOverview.launchCustomerPortal()">
+      <span ng-if="customerOverview.isSetup()" translate="customerPage.launchButton"></span>
+      <span ng-if="!customerOverview.isSetup()" translate="customerPage.setupButton"></span>
     </button>
 
     <cs-sp-section>
