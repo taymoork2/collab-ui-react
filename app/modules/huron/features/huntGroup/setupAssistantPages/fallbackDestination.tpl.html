@@ -1,7 +1,7 @@
 <div>
   <div class="typeahead-large">
     <input type="text" ng-model="huntGroupSA.fallback" class="form-control"
-          typeahead="user for user in huntGroupSA.userData | filter:$viewValue | limitTo:10"
+          typeahead="user for user in huntGroupSA.fetchHuntMembers($viewValue) | limitTo:10"
           typeahead-on-select="huntGroupSA.selectFallback($item)"
           typeahead-template-url="userTemplate.html" placeholder="{{:: 'huronHuntGroup.fallbackPlaceholder' | translate}}" 
           ng-keyup="huntGroupSA.validateFallback()"
@@ -20,7 +20,12 @@
         </header>
         <section ng-if="huntGroupSA.fallbackSelected.open">
           <p>{{huntGroupSA.fallbackSelected.email}}
-            <cs-radiolist options="huntGroupSA.fallbackSelected.userNumber" ng-model="huntGroupSA.fallbackSelected.number"></cs-radiolist></p>
+            <cs-radio ng-repeat="number in huntGroupSA.fallbackSelected.userNumber"
+                      label="number | huntMemberTelephone"
+                      value="number.uuid"
+                      name="{{huntGroupSA.fallbackSelected.uuid}}"
+                      id="number.uuid"
+                      ng-model="huntGroupSA.fallbackSelected.selectedNumberUuid"></cs-radio>
         </section>
         <footer ng-if="huntGroupSA.fallbackSelected.open">
           <a ng-click="huntGroupSA.removeFallbackDest()" href="">{{:: 'huronHuntGroup.remove' | translate}}</a>

@@ -351,11 +351,6 @@
         userId: userId
       }).$promise;
 
-      //return UserServiceCommonV2.get({
-      //  customerId: customerId,
-      //  userId: userId
-      //}).$promise;
-
       // var deferred = $q.defer();
       // var successResponse = {
       //   "userName": "bspence@cisco.com",

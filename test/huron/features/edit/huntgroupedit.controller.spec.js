@@ -7,6 +7,17 @@ describe('Hunt Group EditCtrl Controller', function () {
 
   var hgEditCtrl, $rootScope, $scope, $q, $state, $timeout, Authinfo, HuntGroupService, Notification, form;
   var hgFeature = getJSONFixture('huron/json/features/edit/featureDetails.json');
+  var numbers = [{
+    "internal": "8001",
+    "external": "972-510-5002",
+    "uuid": "eae8c29f-14b5-4528-b3f7-2e68f1d5c8b0",
+    "isSelected": true
+  }, {
+    "internal": "5601",
+    "external": "",
+    "uuid": "d9ba914b-7747-48b8-b7ee-2793b3984ca6",
+    "isSelected": false
+  }];
 
   beforeEach(module('Huron'));
 
@@ -75,6 +86,7 @@ describe('Hunt Group EditCtrl Controller', function () {
 
   it('Select Hunt Group Fallback User', function () {
     var item = hgEditCtrl.userData[2];
+    item.numbers = numbers;
     hgEditCtrl.selectHuntGroupUser(item);
     $scope.$apply();
 
@@ -83,6 +95,7 @@ describe('Hunt Group EditCtrl Controller', function () {
 
   it('Select Hunt Group Member', function () {
     var item = hgEditCtrl.userData[1];
+    item.numbers = numbers;
     hgEditCtrl.selectHuntGroupMember(item);
     $scope.$apply();
 
