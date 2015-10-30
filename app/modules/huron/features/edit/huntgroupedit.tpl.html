@@ -1,10 +1,12 @@
 <cs-page-header title="hge.title"></cs-page-header>
 <script type="text/ng-template" id="userTemplate.html">
-  <div>
-    <span bind-html-unsafe="match.label.userName | typeaheadHighlight:query"></span>
+  <div class="hunt-member-name">
+    <span ng-bind-html="match.label.firstName | typeaheadHighlight:query" ></span>&nbsp;
+    <span ng-bind-html="match.label.lastName | typeaheadHighlight:query" ></span>
+    <span ng-bind-html="' (' + match.label.userName + ')' | typeaheadHighlight:query" ></span>
   </div>
-  <a ng-repeat="number in match.label.userNumber">
-    <span bind-html-unsafe="number | typeaheadHighlight:query"></span>
+  <a class="hunt-member-line" href ng-click="number.isSelected = true" ng-repeat="number in match.label.numbers">
+    <span ng-bind-html="(number | huntMemberTelephone) | typeaheadHighlight:query" ></span>
   </a>
 </script>
 <div class="hg-edit">
@@ -12,7 +14,7 @@
     <p class="left">{{:: 'huronHuntGroup.saveLabel' | translate}}</p>
     <div class="right">
       <button ng-click="hge.resetForm()">{{:: 'usersPage.cancel' | translate}}</button>
-      <button class="secondary" cs-btn loading="hge.saveInProgress" ng-click="hge.saveForm()" ng-disabled="hge.form.$invalid">{{:: 'usersPage.save' | translate}}</button>
+      <button class="secondary" cs-btn loading="hge.saveInProgress" ng-click="hge.saveForm()" ng-disabled="hge.form.$invalid || (!hge.fallbackValid && hge.addFallback) || !hge.membersValid">{{:: 'usersPage.save' | translate}}</button>
     </div>
   </div>
   <div ng-if="!hge.initialized">
@@ -26,8 +28,11 @@
       <div class="hg-wrapper">
         <label for="fallback-dest">{{:: 'huronHuntGroup.fallbackLabel' | translate}}</label>
         <p>{{:: 'huronHuntGroup.fallbackDesc' | translate}}</p>
-        <div ng-if="hge.addFallback" class="form-input">
-          <input type="text" ng-model="hge.userSelected" typeahead="user for user in hge.userData | filter:$viewValue | limitTo: 10" typeahead-template-url="userTemplate.html" typeahead-on-select="hge.selectHuntGroupUser($item)" placeholder="{{:: 'huronHuntGroup.numberLabel' | translate}}">
+        <div ng-if="hge.addFallback" class="form-input typeahead" ng-class="{'warning-typeahead': !hge.fallbackValid && hge.fallbackDirty}">
+          <input type="text" ng-model="hge.userSelected" typeahead="user for user in hge.fetchHuntMembers($viewValue) | limitTo: 10" typeahead-template-url="userTemplate.html" typeahead-on-select="hge.selectHuntGroupUser($item)" ng-keyup="hge.validateFallback()" placeholder="{{:: 'huronHuntGroup.numberLabel' | translate}}">
+        </div>
+        <div class="ellipsis warning-typeahead" ng-if="!hge.fallbackValid && hge.addFallback && hge.fallbackDirty">
+            <span class="icon"></span> <span class="message">{{:: 'huronHuntGroup.invalidFallback' | translate}}</span>
         </div>
         <div ng-if="!hge.addFallback">
           <div class="clearfix">
@@ -41,7 +46,13 @@
                 </header>
                 <section ng-if="hge.model.fallbackDestination.open">
                   <p>{{hge.model.fallbackDestination.email}}
-                    <cs-radiolist options="hge.model.fallbackDestination.numbers" ng-model="hge.model.fallbackDestination.number"></cs-radiolist></p>
+                    <cs-radio ng-repeat="number in hge.model.fallbackDestination.numbers"
+                      label="number.label"
+                      value="number.uuid"
+                      name="{{hge.model.fallbackDestination.uuid}}"
+                      id="number.uuid"
+                      ng-model="hge.model.fallbackDestination.selectedNumberUuid"></cs-radio>
+                  </p>
                 </section>
                 <footer ng-if="hge.model.fallbackDestination.open">
                   <a ng-click="hge.removeFallbackDest()" href="">{{:: 'huronHuntGroup.remove' | translate}}</a>
@@ -49,7 +60,9 @@
               </article>
             </div>
           </div>
-          <cs-checkbox ckid="ckbox1" ng-model="cb.checkboxValue0" label="{{:: 'huronHuntGroup.voiceCheckLabel' | translate}}"></cs-checkbox>
+          <div class="ui-mt">
+            <cs-checkbox ckid="voicemail" ng-model="hge.model.fallbackDestination.sendToVoicemail" label="{{:: 'huronHuntGroup.voiceCheckLabel' | translate}}"></cs-checkbox>
+          </div>
         </div>
       </div>
     </div>
@@ -58,31 +71,34 @@
         <label for="fallback-dest">{{:: 'huronHuntGroup.methodLabel' | translate}}</label>
         <p>{{:: 'huronHuntGroup.methodDesc' | translate}}</p>
         <ul class="hgmethods">
-          <li class="hgmethod" ng-class="{current: hge.model.huntMethod === 'longest-idle'}">
-            <a href="#" ng-click="hge.selectHuntMethod('longest-idle')"><i class="icon icon-circle-clock-hands"></i>
+          <li class="hgmethod" ng-class="{current: hge.model.huntMethod === 'LongestIdle'}">
+            <a href="#" ng-click="hge.selectHuntMethod('LongestIdle')"><i class="icon icon-circle-clock-hands"></i>
               <div>Longest Idle</div>
             </a>
           </li>
-          <li class="hgmethod" ng-class="{current: hge.model.huntMethod === 'broadcast'}">
-            <a href="#" ng-click="hge.selectHuntMethod('broadcast')"><i class="icon icon-circle-arrows-cross"></i>
+          <li class="hgmethod" ng-class="{current: hge.model.huntMethod === 'Broadcast'}">
+            <a href="#" ng-click="hge.selectHuntMethod('Broadcast')"><i class="icon icon-circle-arrows-cross"></i>
               <div>Broadcast</div>
             </a>
           </li>
-          <li class="hgmethod" ng-class="{current: hge.model.huntMethod === 'circular'}">
-            <a href="#" ng-click="hge.selectHuntMethod('circular')"><i class="icon icon-circle-arrows-circular"></i>
+          <li class="hgmethod" ng-class="{current: hge.model.huntMethod === 'Circular'}">
+            <a href="#" ng-click="hge.selectHuntMethod('Circular')"><i class="icon icon-circle-arrows-circular"></i>
               <div>Circular</div>
             </a>
           </li>
-          <li class="hgmethod" ng-class="{current: hge.model.huntMethod === 'top-down'}">
-            <a href="#" ng-click="hge.selectHuntMethod('top-down')"><i class="icon icon-circle-arrow-down"></i>
+          <li class="hgmethod" ng-class="{current: hge.model.huntMethod === 'TopDown'}">
+            <a href="#" ng-click="hge.selectHuntMethod('TopDown')"><i class="icon icon-circle-arrow-down"></i>
               <div>Top Down</div>
             </a>
           </li>
         </ul>
         <div class="hgmembers">
-          <div class="form-input">
+          <div class="form-input typeahead" ng-class="{'warning-typeahead': !hge.membersValid}">
             <label for="">{{:: 'huronHuntGroup.membersLabel' | translate}}</label>
-            <input type="text" ng-model="hge.member" typeahead="user for user in hge.userData | filter:$viewValue | limitTo: 10" typeahead-template-url="userTemplate.html" typeahead-on-select="hge.selectHuntGroupMember($item)" placeholder="{{:: 'huronHuntGroup.addMemberLabel' | translate}}">
+            <input type="text" ng-model="hge.member" typeahead="user for user in hge.fetchHuntMembers($viewValue) | limitTo: 10" typeahead-template-url="userTemplate.html" typeahead-on-select="hge.selectHuntGroupMember($item)" placeholder="{{:: 'huronHuntGroup.addMemberLabel' | translate}}">
+            <div class="ellipsis warning-typeahead" ng-if="!hge.membersValid">
+              <span class="icon"></span> <span class="message">{{:: 'huronHuntGroup.invalidMember' | translate}}</span>
+          </div>
           </div>
           <p>{{:: 'huronHuntGroup.membersDesc' | translate}}</p>
           <div drop-list="hge.model.members" callback="hge.callback()" unique="userName">
@@ -98,7 +114,12 @@
                 </article>
                 <section ng-if="item.open">
                   <p> {{item.email}}
-                    <cs-radiolist options="item.numbers" ng-model="item.number"></cs-radiolist>
+                    <cs-radio ng-repeat="number in item.numbers"
+                      label="number | huntMemberTelephone"
+                      value="number.uuid"
+                      name="{{item.uuid}}"
+                      id="number.uuid"
+                      ng-model="item.selectedNumberUuid"></cs-radio>
                     <a href="" ng-click="hge.removeHuntMember(item)">{{:: 'huronHuntGroup.removeMem' | translate}}</a>
                   </p>         
                 </section>

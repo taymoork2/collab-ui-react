@@ -176,22 +176,27 @@
     function selectFallback($item) {
       vm.fallback = undefined;
       var numbers = [];
-      $item.userNumber.forEach(function (value) {
+      vm.fallbackSelected = {};
+      vm.fallbackSelected.userName = $item.userName;
+      vm.fallbackSelected.uuid = $item.uuid;
+      $item.numbers.forEach(function (value) {
         var number = value;
+        if (number.isSelected) {
+          vm.fallbackSelected.number = number.internal;
+          vm.fallbackSelected.selectedNumberUuid = number.uuid;
+        }
         var newvalue = {
-          label: number,
-          value: number,
+          internal: number.internal,
+          external: number.external,
+          value: number.internal,
           name: 'FallbackRadio',
-          id: 'value.external'
+          id: 'internal',
+          uuid: number.uuid
         };
 
         numbers.push(newvalue);
       });
-      vm.fallbackSelected = {
-        'userName': $item.userName,
-        'userNumber': numbers,
-        'number': $item.userNumber[0]
-      };
+      vm.fallbackSelected.userNumber = numbers;
     }
 
     function setHuntMethod(methodSelected) {

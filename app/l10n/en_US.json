@@ -2248,6 +2248,7 @@
     "licenseCount": "License Count",
     "type": "Type",
     "launchSite": "Configure Site",
+    "siteSettings": "Configure Site",
     "siteReports": "Reports"
   },
   "cloudExtensions": {
@@ -2490,6 +2491,8 @@
     "cancelDialog": "Are you sure you wish to cancel hunt group creation? This hunt group will not be saved.",
     "confirmButton": "Cancel Creation",
     "continueButton": "Continue Creation",
-    "memberFetchFailure": "Unable to get members."
+    "memberFetchFailure": "Unable to get members.",
+    "invalidMember": "Select atleast one member",
+    "invalidFallback": "Select a number or enter a new valid number"
   }
 }
