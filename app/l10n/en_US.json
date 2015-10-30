@@ -2248,6 +2248,7 @@
     "licenseCount": "License Count",
     "type": "Type",
     "launchSite": "Configure Site",
+    "siteSettings": "Configure Site",
     "siteReports": "Reports"
   },
   "cloudExtensions": {
