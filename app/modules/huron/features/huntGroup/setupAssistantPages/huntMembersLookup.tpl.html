@@ -5,29 +5,56 @@
     <span ng-bind-html="' (' + match.label.userName + ')' | typeaheadHighlight:query" ></span>
   </div>
   <a class="hunt-member-line" href ng-click="number.isSelected = true" ng-repeat="number in match.label.numbers">
-    <div ng-if="(number.internal !== '' && number.external !== '')">
-        <span ng-bind-html="((number.internal) + ' and ' + (number.external | telephoneNumber)) | typeaheadHighlight:query" ></span>
-    </div>
-    <div ng-if="(number.internal === '' || number.external === '')">
-        <span ng-hide="(number.internal === '')"
-              ng-bind-html="number.internal | typeaheadHighlight:query" ></span>
-        <span ng-hide="(number.external === '')"
-              ng-bind-html="(number.external | telephoneNumber) | typeaheadHighlight:query" ></span>
-    </div>
+    <span ng-bind-html="(number | huntMemberTelephone) | typeaheadHighlight:query" ></span>
   </a>
 </script>
-<div>
-  <div class="typeahead-large">
-    <input id="userInput" type="text" ng-model="huntGroupSA.userSelected" class="form-control"
-           typeahead="user for user in huntGroupSA.fetchHuntMembers($viewValue) | limitTo:10"
-           typeahead-on-select="huntGroupSA.selectHuntGroupMember($item)"
-           typeahead-template-url="userTemplate.html"
-           placeholder="{{:: 'huronHuntGroup.memberPlaceholder' | translate}}"
-           ng-keypress="huntGroupSA.enterNextPage($event.keyCode)" focus-on/>
 
-    <p class="input-description" translate="huronHuntGroup.memberHint"></p>
-  </div>
-  <div ng-repeat="user in huntGroupSA.selectedHuntMembers">
-    <span>{{user.firstName}} &nbsp;</span><span class="icon icon-chevron-down"></span>
-  </div>
+<div class="hunt-member-lookup">
+<div class="typeahead-large">
+  <input id="userInput" type="text" ng-model="huntGroupSA.userSelected" class="form-control"
+         typeahead="user for user in huntGroupSA.fetchHuntMembers($viewValue) | limitTo:10"
+         typeahead-on-select="huntGroupSA.selectHuntGroupMember($item)"
+         typeahead-template-url="userTemplate.html"
+         placeholder="{{:: 'huronHuntGroup.memberPlaceholder' | translate}}"
+         ng-keypress="huntGroupSA.enterNextPage($event.keyCode)" focus-on/>
+
+  <p class="input-description" translate="huronHuntGroup.memberHint"></p>
+</div>
+
+<cs-card-layout>
+  <cs-card class="small header-background primary hunt-member-card"
+           ng-repeat="user in huntGroupSA.selectedHuntMembers">
+    <article>
+      <header>
+        <div class="header-with-right-icon">
+          <h5 class="ellipsis"
+              title="{{huntGroupSA.getDisplayName(user)}}">
+            {{huntGroupSA.getDisplayName(user)}}</h5>
+                  <span  dropdown>
+                    <a class="right btn-none card-action-btn"
+                       ng-click="user.canConfigPanel = !user.canConfigPanel">
+                      <i class="icon icon-chevron-down icon-lg"></i>
+                    </a>
+                  </span>
+        </div>
+      </header>
+      <section ng-if="user.canConfigPanel">
+
+        <p class="email">{{user.email}}</p>
+        <fieldset>
+          <cs-radio ng-repeat="number in user.numbers"
+                    label="number | huntMemberTelephone"
+                    value="number.uuid"
+                    name="{{user.uuid}}"
+                    id="number.uuid"
+                    ng-model="user.selectedNumberUuid"></cs-radio>
+
+          <p>
+            <a href ng-click="huntGroupSA.unSelectHuntGroupMember(user)">Remove Member</a>
+          </p>
+        </fieldset>
+      </section>
+    </article>
+  </cs-card>
+</cs-card-layout>
 </div>

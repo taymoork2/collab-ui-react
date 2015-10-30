@@ -5,7 +5,7 @@
     .controller('HuntGroupEditCtrl', HuntGroupEditCtrl);
 
   /* @ngInject */
-  function HuntGroupEditCtrl($state, $translate, Authinfo, HuntGroupService, Notification) {
+  function HuntGroupEditCtrl($state, $translate, Authinfo, HuntGroupService, Notification, TelephoneNumberService) {
     var vm = this;
     var initialModel;
     var initialnumberoptions;
@@ -20,12 +20,17 @@
     vm.resetForm = resetForm;
     vm.saveForm = saveForm;
     vm.callback = callback;
+    vm.validateFallback = validateFallback;
+    vm.fetchHuntMembers = fetchHuntMembers;
     vm.initialized = false;
 
     function init() {
       vm.userSelected = undefined;
       vm.member = undefined;
       vm.addFallback = false;
+      vm.membersValid = true;
+      vm.fallbackValid = true;
+      vm.fallbackDirty = false;
 
       if (vm.initialized) {
         vm.model = angular.copy(initialModel);
@@ -163,6 +168,8 @@
 
     function removeFallbackDest() {
       vm.addFallback = true;
+      vm.fallbackValid = true;
+      vm.fallbackDirty = false;
       vm.form.$setDirty();
     }
 
@@ -170,30 +177,81 @@
       var index = vm.model.members.indexOf(item);
       vm.model.members.splice(index, 1);
       vm.form.$setDirty();
+      if (vm.model.members.length === 0) {
+        vm.membersValid = false;
+      }
     }
 
     function selectHuntGroupUser($item) {
+      var numbers = [];
       vm.model.fallbackDestination = {};
       vm.model.fallbackDestination.userName = $item.userName;
-      vm.model.fallbackDestination.number = $item.userNumber[0];
+      vm.model.fallbackDestination.uuid = $item.uuid;
+      $item.numbers.forEach(function (value) {
+        var number = value;
+        if (number.isSelected) {
+          vm.model.fallbackDestination.number = number.internal;
+          vm.model.fallbackDestination.selectedNumberUuid = number.uuid;
+        }
+        var newvalue = {
+          internal: number.internal,
+          external: number.external,
+          value: number.internal,
+          name: 'FallbackRadio',
+          id: 'internal',
+          uuid: number.uuid
+        };
+
+        numbers.push(newvalue);
+      });
+      vm.model.fallbackDestination.numbers = numbers;
       vm.addFallback = false;
       vm.userSelected = undefined;
       vm.form.$setDirty();
     }
 
+    function fetchHuntMembers(nameHint) {
+      return HuntGroupService.getHuntMembers(
+        'name', nameHint,
+        vm.model.members,
+        function (response) {
+          Notification.errorResponse(response, 'huntGroup.nameFetchFailure');
+        });
+    }
+
     function selectHuntGroupMember($item) {
-      var item = {
-        userName: $item.userName,
-        userEmail: $item.userEmail
-      };
+      vm.membersValid = true;
+
       var alreadyExist = false;
-      angular.forEach(vm.model.items, function (value) {
+      angular.forEach(vm.model.members, function (value) {
         if (value.userName === $item.userName) {
           alreadyExist = true;
         }
       });
       vm.member = undefined;
       if (!alreadyExist) {
+        var item = {};
+        var numbers = [];
+        item.userName = $item.userName;
+        item.uuid = $item.uuid;
+        $item.numbers.forEach(function (value) {
+          var number = value;
+          if (number.isSelected) {
+            item.number = number.internal;
+            item.selectedNumberUuid = number.uuid;
+          }
+          var newvalue = {
+            internal: number.internal,
+            external: number.external,
+            value: number.internal,
+            name: 'FallbackRadio',
+            id: 'internal',
+            uuid: number.uuid
+          };
+
+          numbers.push(newvalue);
+        });
+        item.numbers = numbers;
         vm.model.members.push(item);
         vm.form.$setDirty();
       }
@@ -210,34 +268,43 @@
       if (isOpen) {
         item.open = false;
       } else {
-        HuntGroupService.getMemberInfo(customerId, item.userUuid).then(function (data) {
-          item.email = data.userName;
-          data.numbers.forEach(function (value) {
-            value.label = value.internal;
-            value.value = value.internal;
-            value.name = 'MemberRadios';
-            value.id = 'value.external';
-          });
-          item.numbers = data.numbers;
+        if (item.numbers) {
           item.open = true;
-        });
-
+        } else {
+          HuntGroupService.getMemberInfo(customerId, item.userUuid).then(function (data) {
+            item.email = data.userName;
+            data.numbers.forEach(function (value) {
+              value.label = value.internal;
+              value.value = value.internal;
+              value.name = 'MemberRadios';
+              value.id = 'value.external';
+              item.selectedNumberUuid = value.uuid;
+            });
+            item.numbers = data.numbers;
+            item.open = true;
+          });
+        }
       }
     }
 
     function toggleFallback() {
       if (!vm.model.fallbackDestination.open) {
-        HuntGroupService.getMemberInfo(customerId, vm.model.fallbackDestination.userUuid).then(function (data) {
-          vm.model.fallbackDestination.email = data.userName;
-          data.numbers.forEach(function (value) {
-            value.label = value.internal;
-            value.value = value.internal;
-            value.name = 'MemberRadios';
-            value.id = 'value.external';
-          });
-          vm.model.fallbackDestination.numbers = data.numbers;
+        if (vm.model.fallbackDestination.numbers) {
           vm.model.fallbackDestination.open = true;
-        });
+        } else {
+          HuntGroupService.getMemberInfo(customerId, vm.model.fallbackDestination.userUuid).then(function (data) {
+            vm.model.fallbackDestination.email = data.userName;
+            data.numbers.forEach(function (value) {
+              value.label = value.internal;
+              value.value = value.internal;
+              value.name = 'MemberRadios';
+              value.id = 'value.external';
+              vm.model.fallbackDestination.selectedNumberUuid = value.uuid;
+            });
+            vm.model.fallbackDestination.numbers = data.numbers;
+            vm.model.fallbackDestination.open = true;
+          });
+        }
       } else {
         vm.model.fallbackDestination.open = false;
       }
@@ -266,6 +333,22 @@
 
     function callback() {
       vm.form.$setDirty();
+    }
+
+    function validateFallback() {
+      if (vm.userSelected.length > 2 && !vm.fallbackValid) {
+        vm.fallbackDirty = true;
+      }
+      if (vm.userSelected !== '') {
+        vm.userSelected = TelephoneNumberService.getDIDLabel(vm.userSelected);
+        if (TelephoneNumberService.validateDID(vm.userSelected)) {
+          vm.fallbackValid = true;
+        } else {
+          vm.fallbackValid = false;
+        }
+      } else {
+        vm.fallbackValid = false;
+      }
     }
 
     vm.userData = [{

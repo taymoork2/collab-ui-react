@@ -6,7 +6,7 @@
     <article>
       <header>
         <h4>
-          {{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.label}}
+          {{WebExSiteSettings.siteSettingsObj.siteUrl}}
         </h4>
       </header>
       
@@ -14,42 +14,41 @@
         <div class="configure-card">
           <div class="left-side">
             <div class="service-name">
-              <p><img src="/images/webex_logo_48px.png"/ class="webexlogo"><span>&nbsp;WebEx</span></p>
+              <img src="/images/webex_logo_48px.png" 
+                   class="webexlogo"
+                   id="webexLogo"
+                   name="webexLogo" />
+                
+              <span>
+                &nbsp;WebEx
+              </span>
             </div>
           </div>
           
-          <div class="right-side">
+          <div class="right-side">                                                    
             <div class="configure-content">
-              <div class="text-center">
+              <div align="center">
                 <div translate="webexSiteSettingsLabels.hostAccountsTitle"></div>
                 
                 <div class="overview-count">
                   {{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.licensesUsage.count}}
                 </div>
                 
-                <div>
-                  <span translate="webexSiteSettingsLabels.activeTitle"></span>
-                </div>
+                <div translate="webexSiteSettingsLabels.activeTitle"> </div>
               </div>
                 
-              <div class="text-center">
-                <div>
-                  &nbsp;
-                </div>
+              <div align="center">
+                <div>&nbsp;</div>
                 
                 <div class="overview-count">
                   {{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.licensesAvailable.count}}
                 </div>
                   
-                <div>
-                  <span translate="webexSiteSettingsLabels.availableTitle"></span>
-                </div>
+                <div translate="webexSiteSettingsLabels.availableTitle"></div>
               </div>
                 
-              <div class="text-center">
-                <div>
-                  &nbsp;
-                </div>
+              <div align="center">
+                <div>&nbsp;</div>
                 
                 <a id="siteInfo-siteInformation"
                    name="siteInfo-siteInformation"
@@ -68,10 +67,8 @@
                 </a>
               </div>
               
-              <div class="text-center">
-                <div>
-                  &nbsp;
-                </div>
+              <div align="center">
+                <div>&nbsp;</div>
                 
                 <a id="siteInfo-siteFeatures"
                    name="siteInfo-siteFeatures"

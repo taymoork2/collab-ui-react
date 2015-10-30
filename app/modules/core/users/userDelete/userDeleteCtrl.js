@@ -1,15 +1,17 @@
 'use strict';
 
 angular.module('Core')
-  .controller('UserDeleteCtrl', ['$scope', '$rootScope', '$state', '$stateParams', '$q', 'Log', 'Userservice', 'Notification', 'Config', '$translate', 'HuronUser',
-    function ($scope, $rootScope, $state, $stateParams, $q, Log, Userservice, Notification, Config, $translate, HuronUser) {
+  .controller('UserDeleteCtrl', ['$scope', '$rootScope', '$state', '$stateParams', '$q', 'Log', 'Authinfo', 'Userservice', 'Notification', 'Config', '$translate', 'HuronUser', 'SyncService',
+    function ($scope, $rootScope, $state, $stateParams, $q, Log, Authinfo, Userservice, Notification, Config, $translate, HuronUser, SyncService) {
 
       $scope.deleteUserOrgId = $stateParams.deleteUserOrgId;
       $scope.deleteUserUuId = $stateParams.deleteUserUuId;
       $scope.deleteUsername = $stateParams.deleteUsername;
       $scope.deleteUserdisplayName = $stateParams.deleteUserdisplayName;
       $scope.userName = $stateParams.userName;
+      $scope.isMsgrSyncEnabled = false;
 
+      $scope.getMessengerSyncStatus = getMessengerSyncStatus;
       $scope.inputstr = {
         response: ""
       };
@@ -46,6 +48,18 @@ angular.module('Core')
               deleteSuccess();
             }
           });
+      }
+
+      function getMessengerSyncStatus() {
+        SyncService.isMessengerSyncEnabled()
+          .then(function (isIt) {
+            $scope.isMsgrSyncEnabled = isIt;
+          }, function (errorMsg) {
+            Log.error(errorMsg);
+          });
+      }
+      if (null !== Authinfo.getOrgId()) {
+        getMessengerSyncStatus();
       }
 
       $scope.deactivateUser = function () {
