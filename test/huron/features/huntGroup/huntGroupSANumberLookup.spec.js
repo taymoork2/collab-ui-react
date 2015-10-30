@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: HuntGroupSetupAssistantCtrl', function () {
+describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Pilot Number Lookup', function () {
 
   var $httpBackend, controller, $scope, HuntGroupService, Notification;
 
@@ -65,10 +65,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl', function () {
 
   it("on selecting a pilot number, the selectedPilotNumbers list is updated.", function () {
     controller.selectPilotNumber(someNumber);
-    var numbers = controller.selectedPilotNumbers.map(function (e) {
-      return e.number;
-    });
-    expect(numbers.indexOf(someNumber.number)).not.toBe(-1);
+    expect(listContains(controller.selectedPilotNumbers, someNumber)).toBeTruthy();
   });
 
   it("filters the selected numbers from showing in the drop down.", function () {
@@ -80,7 +77,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl', function () {
 
     // UI must filter and show only the list that is not already selected.
     controller.fetchNumbers(someNumber.number).then(function (dropdownList) {
-      expect(dropdownList.indexOf(someNumber)).toBe(-1);
+      expect(listContains(dropdownList, someNumber)).toBeFalsy();
     });
     $httpBackend.flush();
   });
