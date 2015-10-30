@@ -1,31 +1,30 @@
 <div id="webexSiteSettings"
      name="webexSiteSettings">
 
-  <div class="row page-header">
-    <div class="page-title small-10 columns">
-      <span class="title-heading">
-        {{WebExSiteSettings.siteSettingsObj.pageTitle}}
-      </span>
-    </div>
+  <div class="col-md-12">
+    <div class="row page-header">
+      <div class="page-title small-5 columns">
+        <span class="title-heading">
+          {{WebExSiteSettings.siteSettingsObj.pageTitle}}
+        </span>
+      </div>
     
-    <div id="emallAllHostsButton" 
-         class="page-option-buttons"
-         ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
-         
-      <a class="button large"
-         id={{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.id}}
-         name={{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.id}}
-         ui-sref={{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.pageObj.uiSref}}>
-
-        <span translate="webexSiteSettingsLabels.emailAllHostsBtnTitle"></span>
-      </a>
+      <div class="small-7 columns"
+           ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
+           
+        <div class="page-option-buttons" ng-controller="ExportUsersCtrl">
+          <button id={{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.id}}
+                  name={{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.id}}
+                  ui-sref={{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.pageObj.uiSref}}
+                  class="button large"
+                  translate="webexSiteSettingsLabels.emailAllHostsBtnTitle">
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
   <cs-container>
-  <!-- 
-  <div class="siteindex-panel">
-  -->
     <!-- breadcrumbs -->
     <ul id="siteSettingsBreadCrumbs"
         name="siteSettingsBreadCrumbs" 
@@ -67,9 +66,6 @@
         Launch&nbsp;WebEx&nbsp;Site&nbsp;Admin
       </a>
     </p>
-  <!-- 
-  </div> 
-  -->
   </cs-container>
 </div>
 
