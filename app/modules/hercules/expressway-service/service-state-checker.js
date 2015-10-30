@@ -93,7 +93,7 @@
             4,
             'modules/hercules/notifications/user-errors.html', [serviceId], summaryForService);
         } else {
-          NotificationService.removeNotification();
+          NotificationService.removeNotification(userErrorsId);
         }
       }
     }

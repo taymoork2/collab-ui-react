@@ -14,6 +14,10 @@
       font-size: 1.5rem;
     }
   }
+  .load {
+    font-size: 3rem;
+    text-align: center;
+  }
   form {
     @include vr-spacing(m, 1.5);
   }

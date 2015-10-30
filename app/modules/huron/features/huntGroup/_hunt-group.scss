@@ -61,3 +61,9 @@ $overlay-panel-height: 93px;
     margin-top: 30vh;
   }
 }
+.cs-setupassistant--content {
+  height: calc(100vh - #{$navbar-height + $overlay-panel-height});
+  .typeahead-large {
+    margin-top: 30vh;
+  }
+}
