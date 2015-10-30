@@ -26,6 +26,9 @@ angular.module('WebExReports').service('WebexReportService', [
     //the above self is overloaded in places.
     var uself = this;
 
+
+    uself.locale = $translate.use().replace("_", "-");
+
     var common_reports_pageids = ["meeting_in_progess", "meeting_usage",
       "recording_usage",
       "storage_utilization"
@@ -206,7 +209,8 @@ angular.module('WebExReports').service('WebexReportService', [
         var theComparator = function (aRef, bRef) {
           var atranslatedString = aRef.reportPageId_translated;
           var btranslatedString = bRef.reportPageId_translated;
-          var compareResult = atranslatedString.localeCompare(btranslatedString, uself.locale);
+          var loc = uself.locale;
+          var compareResult = atranslatedString.localeCompare(btranslatedString, loc);
           return compareResult;
         };
         refs.sort(theComparator);
