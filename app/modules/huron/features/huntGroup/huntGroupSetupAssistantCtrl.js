@@ -163,7 +163,7 @@
 
       if (selectedNumber.length > 0) {
         user.selectedNumberUuid = selectedNumber[0].uuid;
-        user.canConfigPanel = false;
+        user.showConfigSection = false;
         vm.selectedHuntMembers.push(user);
       }
     }

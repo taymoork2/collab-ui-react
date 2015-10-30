@@ -32,13 +32,13 @@
             {{huntGroupSA.getDisplayName(user)}}</h5>
                   <span  dropdown>
                     <a class="right btn-none card-action-btn"
-                       ng-click="user.canConfigPanel = !user.canConfigPanel">
+                       ng-click="user.showConfigSection = !user.showConfigSection">
                       <i class="icon icon-chevron-down icon-lg"></i>
                     </a>
                   </span>
         </div>
       </header>
-      <section ng-if="user.canConfigPanel">
+      <section ng-if="user.showConfigSection">
 
         <p class="email">{{user.email}}</p>
         <fieldset>
