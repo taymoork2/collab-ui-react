@@ -1,8 +1,10 @@
 'use strict';
 
 angular.module('Core')
-  .controller('ExportUsersCtrl', ['$scope', '$rootScope', 'UserListService', 'Notification', '$translate',
+  .controller('ExportUsersCtrl', ['$scope', '$rootScope', 'UserListService', 'Notification',
     function ($scope, $rootScope, UserListService, Notification, $translate) {
+
+      $scope.exporting = $rootScope.exporting;
 
       $scope.exportCSV = function () {
         var promise = UserListService.exportCSV($scope.activeFilter);
@@ -13,18 +15,16 @@ angular.module('Core')
         return promise;
       };
 
-      // Set the appropriate export icon and tooltip where it shows an
+      // Set exporting value in $scope to true if an
       // export to CSV is taking place
       $scope.$on('EXPORTING', function () {
-        $('#export-icon').html('<i class=\'icon icon-spinner icon-lg\'></i>');
-        $scope.exportIconTooltip = $translate.instant('usersPage.csvBtnExportingTitle');
+        $scope.exporting = true;
       });
 
-      // Set the appropriate export icon and tooltip where it shows
-      // export to CSV has completed
+      // Set exporting value in $scope to false if there's
+      // no export to CSV taking place
       $scope.$on('EXPORT_FINISHED', function () {
-        $('#export-icon').html('<i class=\'icon icon-content-share icon-lg\'></i>');
-        $scope.exportIconTooltip = $translate.instant('usersPage.csvBtnTitle');
+        $scope.exporting = false;
       });
     }
   ]);

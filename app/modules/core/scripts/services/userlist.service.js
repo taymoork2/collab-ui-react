@@ -7,7 +7,7 @@
     .factory('UserListService', UserListService);
 
   /* @ngInject */
-  function UserListService($http, $rootScope, $location, $q, $filter, $compile, Storage, Config, Authinfo, Log, Utils, Auth, pako, $translate) {
+  function UserListService($http, $rootScope, $location, $q, $filter, $compile, $timeout, Storage, Config, Authinfo, Log, Utils, Auth, pako) {
     var searchFilter = 'filter=active%20eq%20true%20and%20userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22%20or%20displayName%20sw%20%22%s%22';
     var attributes = 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID';
     var scimUrl = Config.getScimUrl(Authinfo.getOrgId()) + '?' + '&' + attributes;
@@ -101,7 +101,7 @@
 
     // Call user reports REST api to request a user report be generated.
     function generateUserReports(sortBy, callback) {
-      var generateUserReportsUrl = Config.getConfigUrl(Authinfo.getOrgId());
+      var generateUserReportsUrl = Config.getUserReportsUrl(Authinfo.getOrgId());
       var requestData = {
         "sortedBy": [sortBy],
         "attributes": ["name", "userName", "entitlements", "roles", "active"]
@@ -129,14 +129,14 @@
     // Call user reports rest api to get the user report data based on the report id from the
     // generate user report request.
     function getUserReports(userReportsID, callback) {
-      var getUserReportsUrl = Config.getConfigUrl(Authinfo.getOrgId()) + '/' + userReportsID;
+      var userReportsUrl = Config.getUserReportsUrl(Authinfo.getOrgId()) + '/' + userReportsID;
 
-      $http.get(getUserReportsUrl)
+      $http.get(userReportsUrl)
         .success(function (data, status) {
           if (data.status !== 'success') {
             // Set 3 second delay to limit the amount times we
             // continually hit the user reports REST api.
-            setTimeout(function () {
+            $timeout(function () {
               getUserReports(userReportsID, callback);
             }, 3000);
           } else {
@@ -155,7 +155,8 @@
     }
 
     // Extract users from userReportData where it has been GZIP compressed
-    // and then Base64 encoded. Also, apply filter to the list of users.
+    // and then Base64 encoded. Also, apply appropriate filters to the list
+    // of users.
     function extractUsers(userReportData, entitlementFilter) {
       // Workaround atob issue (InvalidCharacterError: DOM Exception 5
       // atob@[native code]) for Safari browser on how it handles
@@ -179,18 +180,14 @@
       });
 
       // Filtering user report
-      var users = $.parseJSON(userReport).filter(
-        function (user) {
-          if (user.active === true) {
-            if (entitlementFilter) {
-              if (user.roles && user.roles.indexOf('id_full_admin') !== -1) {
-                return user;
-              }
-            } else {
-              return user;
-            }
-          }
+      var users = _.filter(JSON.parse(userReport), {
+        active: true
+      });
+      if (entitlementFilter) {
+        users = _.filter(users, {
+          roles: ['id_full_admin']
         });
+      }
 
       return users;
     }
@@ -201,10 +198,6 @@
       var deferred = $q.defer();
 
       activeFilter = activeFilter || '';
-
-      if ($rootScope.exporting === true) {
-        deferred.reject($translate.instant('usersPage.csvBtnExportingTitle'));
-      }
 
       $rootScope.exporting = true;
       $rootScope.$broadcast('EXPORTING');

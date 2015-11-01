@@ -106,14 +106,6 @@
       $scope.$on('USER_LIST_UPDATED', function () {
         getUserList();
       });
-
-      $scope.$on('$viewContentLoaded', function () {
-        if ($rootScope.exporting === true) {
-          $scope.$broadcast('EXPORTING');
-        } else {
-          $scope.$broadcast('EXPORT_FINISHED');
-        }
-      });
     }
 
     function getUserList(startAt) {
