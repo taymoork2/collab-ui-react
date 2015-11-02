@@ -140,7 +140,7 @@ angular.module('Core')
         userReportsUrl: {
           dev: 'https://identity.webex.com/identity/config/%s/v1/UserReports',
           cfe: 'https://identitybts.webex.com/identity/config/%s/v1/UserReports',
-          integration: 'https://identity.webex.com/identityconfig/%s/v1/UserReports',
+          integration: 'https://identity.webex.com/identity/config/%s/v1/UserReports',
           prod: 'https://identity.webex.com/identity/config/%s/v1/UserReports',
         },
 
