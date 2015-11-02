@@ -262,11 +262,6 @@
     vm.activeActiveEnabled = vm.activeActiveApplicable && isActiveActiveEnabled(vm.cluster, vm.serviceType);
     vm.activeActiveEnabledOld = vm.activeActiveApplicable && isActiveActiveEnabled(vm.cluster, vm.serviceType);
 
-    var managementServiceType = "c_mgmt";
-    vm.managementService = _.find(vm.cluster.services, {
-      service_type: managementServiceType
-    });
-
     vm.serviceNotInstalled = function () {
       return ServiceStatusSummaryService.serviceNotInstalled(vm.serviceType, vm.cluster);
     };
