@@ -192,13 +192,6 @@
       });
     };
 
-    vm.deleteHost = function (host) {
-      //console.log("Delete host ",host)
-      return ClusterService.deleteHost(vm.clusterId, host.serial).then(function () {
-        //TODO: Update page
-      }, XhrNotificationService.notify);
-    };
-
     /* @ngInject */
     function SoftwareUpgradeController(serviceId, $modalInstance) {
       var modalVm = this;
@@ -238,10 +231,10 @@
     };
 
     vm.deleteHost = function () {
-      return ClusterService.deleteHost(vm.clusterId, vm.connector.host.serial).then(function () {
-        if (ClusterService.getClusters()[vm.clusterId]) {
+      return ClusterService.deleteHost(vm.cluster.id, vm.connector().host.serial).then(function () {
+        if (ClusterService.getClusters()[vm.cluster.id]) {
           $state.go('cluster-details', {
-            clusterId: vm.clusterId
+            clusterId: vm.cluster.id
           });
         } else {
           $state.sidepanel.close();
