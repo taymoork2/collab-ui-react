@@ -3,34 +3,34 @@
         id="webexIframeContainer"
         frameborder="0"
         width="100%"
-        height="600">
+        height={{iframeHeight}}>
 </iframe>
 
 <form name="iframeForm"
       id="iframeForm"
-      action="{{trustIframeUrl}}"
+      action={{trustIframeUrl}}
       method="post"
       target="webexIframeContainer">
                
   <input id="adminEmail"
          name="adminEmail"
          type="hidden"
-         value="{{adminEmail}}" />
+         value={{adminEmail}} />
          
-  <input id="Authorization"
+  <input id="authorization"
          name="authorization"
          type="hidden"
-         value="{{authToken}}" />
+         value={{authToken}} />
   
   <input id="locale"
          name="locale"
          type="hidden"
-         value="{{locale}}" />
+         value={{locale}} />
 
   <input id="siteurl"
          name="siteurl"
          type="hidden"
-         value="{{siteName}}" />
+         value={{siteName}} />
   
   <button id="submitFormBtn"
           type="submit"
