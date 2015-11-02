@@ -26,7 +26,7 @@ describe('User List Service', function () {
     Authinfo = _Authinfo_;
     $rootScope = _$rootScope_;
 
-    testData = getJSONFixture('core/json/users/userListService.json');
+    testData = getJSONFixture('core/json/users/userlist.service.json');
   }));
 
   afterEach(function () {
