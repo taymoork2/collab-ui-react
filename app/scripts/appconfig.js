@@ -1389,14 +1389,6 @@ angular
             }
           }
         })
-        .state('calendar-service.about', {
-          url: '/services/calendar/about',
-          views: {
-            'fullPane': {
-              templateUrl: 'modules/hercules/expressway-service/calendar-about.html'
-            }
-          }
-        })
         .state('calendar-service.settings', {
           url: '/services/calendar/settings',
           views: {
@@ -1438,14 +1430,6 @@ angular
           },
           params: {
             serviceType: "c_ucmc"
-          }
-        })
-        .state('call-service.about', {
-          url: '/services/call/about',
-          views: {
-            'fullPane': {
-              templateUrl: 'modules/hercules/expressway-service/call-about.html'
-            }
           }
         })
         .state('management-service', {
