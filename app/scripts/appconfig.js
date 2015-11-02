@@ -638,7 +638,7 @@ angular
           }
         })
         .state('webex-reports.webex-reports-iframe', {
-          url:'reports/webex/i',
+          url: 'reports/webex/i',
           templateUrl: 'modules/webex/siteReportsIframe/siteReportIframe.tpl.html',
           controller: 'ReportsIframeCtrl',
           controllerAs: 'reportsIframe',
