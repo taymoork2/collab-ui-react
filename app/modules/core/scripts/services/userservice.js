@@ -433,7 +433,7 @@ angular.module('Core')
               if (licenses && licenses.length > 0)
                 user.licenses = licenses;
               else if (licensesPerUser && licensesPerUser.length > i)
-                user.licenses = licensesPerUser[i];
+                user.licenses = (licensesPerUser[i] && licensesPerUser[i].length > 0) ? licensesPerUser[i] : null;
 
               userData.users.push(user);
             }
