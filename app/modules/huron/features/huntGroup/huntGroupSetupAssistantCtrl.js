@@ -32,7 +32,8 @@
     vm.toggleFallback = toggleFallback;
     vm.removeFallbackDest = removeFallbackDest;
     vm.saveHuntGroup = saveHuntGroup;
-
+    vm.openMemberPanelUuid = undefined;
+    vm.toggleMemberPanel = toggleMemberPanel;
     vm.selectedPilotNumber = undefined;
     vm.selectedPilotNumbers = [];
     vm.selectedHuntMembers = [];
@@ -50,6 +51,14 @@
     vm.users = [];
 
     // ==============================================
+
+    function toggleMemberPanel(userUuid) {
+      if(vm.openMemberPanelUuid === userUuid) {
+        vm.openMemberPanelUuid = undefined;
+      } else {
+        vm.openMemberPanelUuid = userUuid;
+      }
+    }
 
     function getDisplayName(user) {
       if (user.lastName) {
@@ -86,6 +95,7 @@
 
     function unSelectPilotNumber(numItem) {
       vm.selectedPilotNumbers.splice(vm.selectedPilotNumbers.indexOf(numItem), 1);
+      vm.openMemberPanelUuid = undefined;
     }
 
     function nextButton($index) {
@@ -156,16 +166,7 @@
 
     function selectHuntGroupMember(user) {
       vm.userSelected = undefined;
-
-      var selectedNumber = user.numbers.filter(function (n) {
-        return (n.isSelected);
-      });
-
-      if (selectedNumber.length > 0) {
-        user.selectedNumberUuid = selectedNumber[0].uuid;
-        user.showConfigSection = false;
-        vm.selectedHuntMembers.push(user);
-      }
+      vm.selectedHuntMembers.push(user);
     }
 
     function unSelectHuntGroupMember(user) {

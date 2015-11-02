@@ -57,7 +57,7 @@
         // TODO: Replace UserSearchServiceV2 with UserServiceCommonV2 when ready.
         service.resource = UserSearchServiceV2;
         service.extractItems = function (response) {
-          return addIsSelectedFlagToNumbers(response.users);
+          return constructUserNumberMappingForUI(response.users);
         };
       } else {
         service = undefined;
@@ -66,14 +66,56 @@
       return service;
     }
 
-    function addIsSelectedFlagToNumbers(users) {
-      return users.map(function (u) {
-        u.numbers.map(function (n) {
-          n.isSelected = false;
-          return n;
+    /**
+     * The array returned by this function is directly used as entries for
+     * member lookup type-ahead control. The tree structure received from the
+     * backend is flattened to a table structure, so that it becomes a UI
+     * friendly data modal for the type-ahead. Obviously, there is some data
+     * duplication due to this. However, the keyboard accessibility benefits
+     * we get due to this outweighs the data duplication cost.
+     *
+     * Before:
+     * =======
+     * user ---+--> number0
+     *         |
+     *         +--> number1
+     *
+     * After:
+     * =======
+     * user ------> number0
+     *
+     * user ------> number1
+     *
+     * $item = {
+     *   displayUser:       [flag that is enabled only for the first selectableNumber
+     *                       of the user]
+     *   selectableNumber:  a number of the user that could be selected.
+     *   user:              [the user object]
+     *   uuid:              [uuid of the user to help in filtering]
+     * }
+     *
+     * If a user has 2 number lines, there will be 2 $items in the array with
+     * displayUser flag enabled for the first line alone.
+     */
+    function constructUserNumberMappingForUI(users) {
+      var huntMembers = [];
+      users.map(function (user) {
+        var flatArr = user.numbers.map(function (number){
+          return {
+            displayUser: false,
+            selectableNumber: number,
+            user: user,
+            uuid: user.uuid
+          };
         });
-        return u;
+
+        if(flatArr.length > 0) {
+          flatArr[0].displayUser = true;
+          huntMembers = huntMembers.concat(flatArr);
+        }
       });
+
+      return huntMembers;
     }
 
     function fetchSuggestionsFromService(service, apiArgs, itemsInUI, onFailure, suggestions) {
