@@ -116,6 +116,14 @@ describe('Features Controller', function () {
     expect(featureCtrl.pageState).toEqual('showFeatures');
   });
 
+  it('should set the pageState to Reload when controller fails to load the data for all features from back-end', function () {
+    expect(featureCtrl.pageState).toEqual('Loading');
+    getDeferred.reject(getHGListFailureResp);
+    $scope.$apply();
+    $timeout.flush();
+    expect(featureCtrl.pageState).toEqual('Reload');
+  });
+
   it('should be able call delete a huntGroup function and call the $state service', function () {
     getDeferred.resolve(getHGListSuccessResp(emptyListOfHGs));
     $scope.$apply();

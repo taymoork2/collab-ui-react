@@ -40,8 +40,12 @@ fi
 npm --version > /dev/null 2>&1
 NPM_RET=$?
 if [ $NPM_RET -ne 0 ]; then
-    echo "NPM not found, installing:"
-    brew install npm
+    echo "npm not found, installing:"
+    if [ "`uname`" = "Darwin" ]; then
+      brew install npm
+    else
+      "Please install npm (for CentOS, see: http://serverfault.com/questions/299288/how-do-you-install-node-js-on-centos )."
+    fi
 else
     echo "NPM is already installed"
 fi

@@ -17,12 +17,14 @@
     vm.close = closePanel;
     vm.selectPilotNumber = selectPilotNumber;
     vm.selectHuntGroupMember = selectHuntGroupMember;
+    vm.unSelectHuntGroupMember = unSelectHuntGroupMember;
     vm.setHuntMethod = setHuntMethod;
     vm.huntGroupName = undefined;
     vm.selectFallback = selectFallback;
     vm.fetchNumbers = fetchNumbers;
     vm.unSelectPilotNumber = unSelectPilotNumber;
     vm.fetchHuntMembers = fetchHuntMembers;
+    vm.getDisplayName = getDisplayName;
     vm.cancelModal = cancelModal;
     vm.evalKeyPress = evalKeyPress;
     vm.enterNextPage = enterNextPage;
@@ -48,6 +50,14 @@
     vm.users = [];
 
     // ==============================================
+
+    function getDisplayName(user) {
+      if (user.lastName) {
+        return user.firstName + " " + user.lastName;
+      } else {
+        return user.firstName;
+      }
+    }
 
     function fetchHuntMembers(nameHint) {
       return HuntGroupService.getHuntMembers(
@@ -146,36 +156,47 @@
 
     function selectHuntGroupMember(user) {
       vm.userSelected = undefined;
-      if (huntNumberSelected(user)) {
+
+      var selectedNumber = user.numbers.filter(function (n) {
+        return (n.isSelected);
+      });
+
+      if (selectedNumber.length > 0) {
+        user.selectedNumberUuid = selectedNumber[0].uuid;
+        user.showConfigSection = false;
         vm.selectedHuntMembers.push(user);
       }
     }
 
-    function huntNumberSelected(user) {
-      return user.numbers.filter(function (n) {
-        return (n.isSelected);
-      }).length > 0;
+    function unSelectHuntGroupMember(user) {
+      vm.selectedHuntMembers.splice(
+        vm.selectedHuntMembers.indexOf(user), 1);
     }
 
     function selectFallback($item) {
       vm.fallback = undefined;
       var numbers = [];
-      $item.userNumber.forEach(function (value) {
+      vm.fallbackSelected = {};
+      vm.fallbackSelected.userName = $item.userName;
+      vm.fallbackSelected.uuid = $item.uuid;
+      $item.numbers.forEach(function (value) {
         var number = value;
+        if (number.isSelected) {
+          vm.fallbackSelected.number = number.internal;
+          vm.fallbackSelected.selectedNumberUuid = number.uuid;
+        }
         var newvalue = {
-          label: number,
-          value: number,
+          internal: number.internal,
+          external: number.external,
+          value: number.internal,
           name: 'FallbackRadio',
-          id: 'value.external'
+          id: 'internal',
+          uuid: number.uuid
         };
 
         numbers.push(newvalue);
       });
-      vm.fallbackSelected = {
-        'userName': $item.userName,
-        'userNumber': numbers,
-        'number': $item.userNumber[0]
-      };
+      vm.fallbackSelected.userNumber = numbers;
     }
 
     function setHuntMethod(methodSelected) {

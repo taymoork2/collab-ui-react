@@ -47,7 +47,7 @@
 
     var msgrService = {
       protocol: 'https://',
-      host: 'msgr-admin-bts.webexconnect.com',
+      host: 'msgr-admin.webexconnect.com',
       port: 443,
       api: '/admin-service/messenger/admin/api/v1/orgs/' + Authinfo.getOrgId() + '/cisync/'
     };
@@ -162,7 +162,8 @@
         messengerOrgId: syncStatus.messengerOrgId,
         linkDate: syncStatus.linkDate,
         isAuthRedirect: syncStatus.isAuthRedirect,
-        isSyncEnabled: isSyncEnabledRaw()
+        isSyncEnabled: isSyncEnabledRaw(),
+        isMessengerSyncRawMode: isMessengerSyncRaw()
       };
     }
 

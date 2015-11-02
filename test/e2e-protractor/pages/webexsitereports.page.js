@@ -10,6 +10,11 @@ var SiteReportsPage = function () {
     password: 'Cisco!23',
   };
 
+  this.testAdmin2 = {
+    username: 't30citestprov9@mailinator.com',
+    password: 'Cisco!23',
+  }
+
   this.webexSiteReportsPanel = element(by.id('webexSiteReports'));
 
   this.webexReportCrumb1 = element(by.id('webexReportIFrameCrumb1'));
