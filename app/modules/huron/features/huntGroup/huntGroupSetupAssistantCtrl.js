@@ -95,7 +95,6 @@
 
     function unSelectPilotNumber(numItem) {
       vm.selectedPilotNumbers.splice(vm.selectedPilotNumbers.indexOf(numItem), 1);
-      vm.openMemberPanelUuid = undefined;
     }
 
     function nextButton($index) {
@@ -175,6 +174,7 @@
     function unSelectHuntGroupMember(user) {
       vm.selectedHuntMembers.splice(
         vm.selectedHuntMembers.indexOf(user), 1);
+      vm.openMemberPanelUuid = undefined;
     }
 
     function selectFallback($item) {
