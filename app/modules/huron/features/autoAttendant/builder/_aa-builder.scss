@@ -68,32 +68,11 @@ $aa-builder-icon-color: $gray-base;
   justify-content: center;
 }
 
-#aa-header-row {
-  height: $aa-builder-header-height;
-  background-color: $brand-white;
-}
-
-#aa-header-row-content {
-  padding-left: 120px;
-}
-
-#aa-header-row-name {
-  padding-right: 40px;
-}
-
-#aa-header-row-numbers {
-  padding-left: 40px;
-}
-
 .aa-flex-row-item-right {
   display: flex;
   flex: 0 1 auto;
   align-items: baseline;
   justify-content: right;
-}
-
-#aa-header-row-save {
-  padding-right: 15px;
 }
 
 .aa-edit-icon {
@@ -143,6 +122,26 @@ $aa-builder-icon-color: $gray-base;
   }
 }
 
+.aa-builder-number-tile {
+  height: 2rem;
+  width: 16rem;
+  padding: .5rem .5rem;
+  margin: .125rem .5rem .125rem 0rem;
+  border: .0625rem solid $gray-lighter;
+  color: $brand-white;
+  background-color: $brand-primary;
+  display: inline-block;
+  vertical-align: top;
+  transition: all 0.2s ease-in-out;
+  &:hover {
+    background-color: $gray;
+  }
+  .icon {
+    float: right;
+    font-size: 1rem;
+  }
+}
+
 .aa-flex-name-item {
   display: flex;
   flex: 1 1 auto;
@@ -170,6 +169,18 @@ $aa-builder-icon-color: $gray-base;
       background-color: transparent;
     }
   }
+}
+
+.aa-and-more {
+  margin-left: 1rem;
+}
+.aa-selected-phones{
+  margin-top: .25rem;
+}
+
+.aa-panel-numbers {
+  @extend .panel;
+  width: 17.75rem;
 }
 
 .aa-container {
