@@ -2,8 +2,8 @@
 /* global AmCharts, $:false */
 
 angular.module('Squared')
-  .controller('ReportsCtrl', ['$scope', '$stateParams', '$q', 'ReportsService', 'WebexReportService', 'Log', 'Authinfo', 'Config', '$translate', 'CannedDataService', 'WebExUtilsFact',
-    function ($scope, $stateParams, $q, ReportsService, WebexReportService, Log, Authinfo, Config, $translate, CannedDataService, WebExUtilsFact) {
+  .controller('ReportsCtrl', ['$scope', '$stateParams', '$q', 'ReportsService', 'WebexReportService', 'Log', 'Authinfo', 'Config', '$translate', 'CannedDataService', 'WebExUtilsFact', 'Storage',
+    function ($scope, $stateParams, $q, ReportsService, WebexReportService, Log, Authinfo, Config, $translate, CannedDataService, WebExUtilsFact, Storage) {
       $scope.webexReportsObject = {};
 
       if ($stateParams.tab) {
@@ -32,15 +32,18 @@ angular.module('Squared')
         }
 
         $q.all(promiseChain).then(function () {
-          var selectedIndex = 0;
-          if ($stateParams.tab === 'webex') {
-            _.forEach($scope.webexOptions, function (val, index) {
-              if (val === $stateParams.siteUrl) {
-                selectedIndex = index;
-              }
-            });
+          $scope.webexSelected = Storage.get('webexReportsSiteUrl');
+          if (!$scope.webexSelected || $scope.webexSelected === 'undefined') {
+            var selectedIndex = 0;
+            if ($stateParams.tab === 'webex') {
+              _.forEach($scope.webexOptions, function (val, index) {
+                if (val === $stateParams.siteUrl) {
+                  selectedIndex = index;
+                }
+              });
+            }
+            $scope.webexSelected = $scope.webexOptions[selectedIndex];
           }
-          $scope.webexSelected = $scope.webexOptions[selectedIndex];
           if ($scope.webexOptions.length) {
             $scope.updateWebexReports();
           }
@@ -51,6 +54,7 @@ angular.module('Squared')
 
       $scope.updateWebexReports = function () {
         $scope.webexReportsObject = WebexReportService.initReportsObject($scope.webexSelected);
+        Storage.put('webexReportsSiteUrl', $scope.webexSelected);
       };
 
       $scope.show = function (showEngagement, showWebexReports) {
