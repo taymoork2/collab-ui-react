@@ -334,6 +334,32 @@
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/userlineassociationcounts', {
       customerId: '@customerId'
     });
+  })
+
+  .factory('ClusterCommonCmiService', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiUrl() + '/common/clusters/:clusterId', {
+      clusterId: '@clusterId',
+    });
+  })
+
+  .factory('CustomerVoiceCmiService', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId', {
+      customerId: '@customerId'
+    });
+  })
+
+  .factory('DialPlanCmiService', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiUrl() + '/voice/clusters/:clusterId/dialplans/:dialPlanId', {
+      clusterId: '@clusterId',
+      dialPlanId: '@dialPlanId'
+    });
+  })
+
+  .factory('DialPlanDetailsCmiService', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiUrl() + '/voice/clusters/:clusterId/dialplandetails/:dialPlanId', {
+      clusterId: '@clusterId',
+      dialPlanId: '@dialPlanId'
+    });
   });
 
 })();

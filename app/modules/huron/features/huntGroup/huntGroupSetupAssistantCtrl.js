@@ -32,7 +32,8 @@
     vm.toggleFallback = toggleFallback;
     vm.removeFallbackDest = removeFallbackDest;
     vm.saveHuntGroup = saveHuntGroup;
-
+    vm.openMemberPanelUuid = undefined;
+    vm.toggleMemberPanel = toggleMemberPanel;
     vm.selectedPilotNumber = undefined;
     vm.selectedPilotNumbers = [];
     vm.selectedHuntMembers = [];
@@ -50,6 +51,14 @@
     vm.users = [];
 
     // ==============================================
+
+    function toggleMemberPanel(userUuid) {
+      if (vm.openMemberPanelUuid === userUuid) {
+        vm.openMemberPanelUuid = undefined;
+      } else {
+        vm.openMemberPanelUuid = userUuid;
+      }
+    }
 
     function getDisplayName(user) {
       if (user.lastName) {
@@ -154,23 +163,18 @@
       $state.go('huronfeatures');
     }
 
-    function selectHuntGroupMember(user) {
+    function selectHuntGroupMember(member) {
       vm.userSelected = undefined;
-
-      var selectedNumber = user.numbers.filter(function (n) {
-        return (n.isSelected);
+      HuntGroupService.getMemberInfo(customerId, member.user.uuid).then(function (user) {
+        member.user.email = user.email;
       });
-
-      if (selectedNumber.length > 0) {
-        user.selectedNumberUuid = selectedNumber[0].uuid;
-        user.canConfigPanel = false;
-        vm.selectedHuntMembers.push(user);
-      }
+      vm.selectedHuntMembers.push(member);
     }
 
     function unSelectHuntGroupMember(user) {
       vm.selectedHuntMembers.splice(
         vm.selectedHuntMembers.indexOf(user), 1);
+      vm.openMemberPanelUuid = undefined;
     }
 
     function selectFallback($item) {

@@ -22,6 +22,11 @@ angular.module('WebExReports').service('WebexReportService', [
     Notification
   ) {
     var self = this;
+    //ok, we need a unique global self. 
+    //the above self is overloaded in places.
+    var uself = this;
+
+    var loc = $translate.use().replace("_", "-");
 
     var common_reports_pageids = ["meeting_in_progess", "meeting_usage",
       "recording_usage",
@@ -198,6 +203,17 @@ angular.module('WebExReports').service('WebexReportService', [
       this.addSubsection = function (reportsSection) {
         self.subsections.push(reportsSection);
       };
+      this.sort = function () {
+        var refs = self.uisrefs;
+        var theComparator = function (aRef, bRef) {
+          var atranslatedString = aRef.reportPageId_translated;
+          var btranslatedString = bRef.reportPageId_translated;
+          //var loc = uself.locale;
+          var compareResult = atranslatedString.localeCompare(btranslatedString, loc);
+          return compareResult;
+        };
+        refs.sort(theComparator);
+      };
     };
 
     this.ReportsSection = ReportsSection;
@@ -261,10 +277,15 @@ angular.module('WebExReports').service('WebexReportService', [
 
       support_center.addSubsection(remote_access);
 
-      var repts = new Reports();
-      repts.setSections([common_reports, training_center, support_center,
+      var sections = [common_reports, training_center, support_center,
         event_center
-      ]);
+      ];
+      sections.forEach(function (sec) {
+        sec.sort();
+      });
+
+      var repts = new Reports();
+      repts.setSections(sections);
       return repts;
     };
 

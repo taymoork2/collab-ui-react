@@ -137,6 +137,13 @@ angular.module('Core')
           prod: 'https://identity.webex.com/identity/scim/%s/v1/Users'
         },
 
+        userReportsUrl: {
+          dev: 'https://identity.webex.com/identity/config/%s/v1/UserReports',
+          cfe: 'https://identitybts.webex.com/identity/config/%s/v1/UserReports',
+          integration: 'https://identity.webex.com/identity/config/%s/v1/UserReports',
+          prod: 'https://identity.webex.com/identity/config/%s/v1/UserReports',
+        },
+
         scomUrl: {
           dev: 'https://identity.webex.com/organization/scim/v1/Orgs',
           cfe: 'https://identitybts.webex.com/organization/scim/v1/Orgs',
@@ -409,6 +416,7 @@ angular.module('Core')
           fusion_cal: 'squared-fusion-cal',
           mediafusion: 'squared-fusion-media',
           fusion_mgmt: 'squared-fusion-mgmt',
+          device_mgmt: 'spark-device-mgmt',
           fusion_ec: 'squared-fusion-ec'
         },
 
@@ -523,6 +531,18 @@ angular.module('Core')
           };
 
           return scimUrl[this.getEnv()];
+        },
+
+        getUserReportsUrl: function (orgId) {
+          var params = [orgId];
+          var userReportsUrl = {
+            'dev': Utils.sprintf(this.userReportsUrl.dev, params),
+            'cfe': Utils.sprintf(this.userReportsUrl.cfe, params),
+            'integration': Utils.sprintf(this.userReportsUrl.integration, params),
+            'prod': Utils.sprintf(this.userReportsUrl.prod, params)
+          };
+
+          return userReportsUrl[this.getEnv()];
         },
 
         getScomUrl: function () {
@@ -908,11 +928,15 @@ angular.module('Core')
           'cluster-details-new'
           // 'management-service',
         ],
+        'spark-device-mgmt': [
+          'devices',
+          'device-overview',
+          'devices-redux'
+        ],
         'squared-fusion-uc': [
           'devices',
           'device-overview',
           'devices-redux'
-          // 'call-service'
         ],
         'squared-fusion-cal': [
           // 'calendar-service'

@@ -697,9 +697,13 @@ angular.module('Core')
       }
 
       function LicenseFeature(name, state) {
-        this['id'] = name.toString();
-        this['properties'] = null;
-        //this['state'] = state ? 'ADD' : 'REMOVE';
+        return {
+          id: name.toString(),
+          properties: {
+            internalExtension: null,
+            directLine: null
+          }
+        };
       }
 
       $scope.isAddEnabled = function () {
@@ -923,32 +927,6 @@ angular.module('Core')
                 userResult.message = $translate.instant('usersPage.onboardSuccess', userResult);
                 userResult.alertType = 'success';
                 var promise;
-                if (data.userResponse[i].entitled && data.userResponse[i].entitled.indexOf(Config.entitlements.huron) !== -1) {
-                  var userData = {
-                    'email': data.userResponse[i].email,
-                    'name': data.userResponse[i].name,
-                    'directoryNumber': "",
-                    'externalNumber': ""
-                  };
-                  var userAndDnObj = $scope.usrlist.filter(function (user) {
-                    return (user.address == data.userResponse[i].email);
-                  });
-
-                  if ((userAndDnObj[0].assignedDn !== null) && userAndDnObj[0].assignedDn.pattern.length > 0) {
-                    userData.directoryNumber = userAndDnObj[0].assignedDn.pattern;
-                  }
-                  //with None as externalNumber pattern the CMI call fails
-                  if (userAndDnObj[0].externalNumber !== false && userAndDnObj[0].externalNumber.pattern !== "None") {
-                    userData.externalNumber = userAndDnObj[0].externalNumber.pattern;
-                  }
-
-                  promise = HuronUser.create(data.userResponse[i].uuid, userData)
-                    .catch(function (response) {
-                      this.alertType = 'danger';
-                      this.message = Notification.processErrorResponse(response, 'usersPage.ciscoucError', this);
-                    }.bind(userResult));
-                  promises.push(promise);
-                }
                 if (data.userResponse[i].unentitled && data.userResponse[i].unentitled.indexOf(Config.entitlements.huron) !== -1) {
                   promise = HuronUser.delete(data.userResponse[i].uuid)
                     .catch(function (response) {
@@ -1039,7 +1017,24 @@ angular.module('Core')
         if (angular.isArray(usersList) && usersList.length > 0) {
           $scope.btnOnboardLoading = true;
 
-          var i, temparray, chunk = Config.batchSize;
+          var i, j;
+          for (i = 0; i < usersList.length; i++) {
+            var userAndDnObj = $scope.usrlist.filter(function (user) {
+              return (user.address == usersList[i].address);
+            });
+
+            var internalExtension, directLine;
+            if (userAndDnObj[0].assignedDn && userAndDnObj[0].assignedDn.pattern.length > 0) {
+              usersList[i].internalExtension = userAndDnObj[0].assignedDn.pattern;
+            }
+            if (userAndDnObj[0].externalNumber && userAndDnObj[0].externalNumber.pattern !== "None") {
+              usersList[i].directLine = userAndDnObj[0].externalNumber.pattern;
+            }
+          }
+
+          var temparray = [],
+            tempLicenseArray = [],
+            chunk = Config.batchSize;
           for (i = 0; i < usersList.length; i += chunk) {
             temparray = usersList.slice(i, i + chunk);
             //update entitlements
@@ -1050,7 +1045,27 @@ angular.module('Core')
             } else {
               entitleList = getEntitlements('add');
             }
-            Userservice.onboardUsers(temparray, entitleList, licenseList, null, callback);
+
+            tempLicenseArray = [];
+            if (licenseList && licenseList.length > 0) {
+              for (j = 0; j < temparray.length; j++) {
+                var newLicenseList = licenseList.map(function (license) {
+                  var licenseObj = angular.copy(license);
+                  if (licenseObj['id'].indexOf("CO_") === 0) {
+                    if (temparray[j].internalExtension) {
+                      licenseObj.properties.internalExtension = temparray[j].internalExtension;
+                    }
+                    if (temparray[j].directLine) {
+                      licenseObj.properties.directLine = temparray[j].directLine;
+                    }
+                  }
+                  return licenseObj;
+                });
+                tempLicenseArray.push(newLicenseList);
+              }
+            }
+
+            Userservice.onboardUsers(temparray, entitleList, null, tempLicenseArray, callback);
           }
         } else if (!optionalOnboard) {
           Log.debug('No users entered.');

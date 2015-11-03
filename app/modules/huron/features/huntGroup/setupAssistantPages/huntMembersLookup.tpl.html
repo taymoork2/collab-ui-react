@@ -1,11 +1,11 @@
 <script type="text/ng-template" id="userTemplate.html">
-  <div class="hunt-member-name">
-    <span ng-bind-html="match.label.firstName | typeaheadHighlight:query" ></span>&nbsp;
-    <span ng-bind-html="match.label.lastName | typeaheadHighlight:query" ></span>
-    <span ng-bind-html="' (' + match.label.userName + ')' | typeaheadHighlight:query" ></span>
+  <div class="hunt-member-name" ng-if="match.label.displayUser">
+    <span ng-bind-html="match.label.user.firstName | typeaheadHighlight:query" ></span>&nbsp;
+    <span ng-bind-html="match.label.user.lastName | typeaheadHighlight:query" ></span>
+    <span ng-bind-html="' (' + match.label.user.userName + ')' | typeaheadHighlight:query" ></span>
   </div>
-  <a class="hunt-member-line" href ng-click="number.isSelected = true" ng-repeat="number in match.label.numbers">
-    <span ng-bind-html="(number | huntMemberTelephone) | typeaheadHighlight:query" ></span>
+  <a class="hunt-member-line">
+    <span ng-bind-html="(match.label.selectableNumber | huntMemberTelephone) | typeaheadHighlight:query" ></span>
   </a>
 </script>
 
@@ -23,34 +23,32 @@
 
 <cs-card-layout>
   <cs-card class="small header-background primary hunt-member-card"
-           ng-repeat="user in huntGroupSA.selectedHuntMembers">
+           ng-repeat="member in huntGroupSA.selectedHuntMembers">
     <article>
-      <header>
+      <header ng-click="huntGroupSA.toggleMemberPanel(member.user.uuid)"
+              ng-class="{'open-panel' : huntGroupSA.openMemberPanelUuid === member.user.uuid}">
         <div class="header-with-right-icon">
           <h5 class="ellipsis"
-              title="{{huntGroupSA.getDisplayName(user)}}">
-            {{huntGroupSA.getDisplayName(user)}}</h5>
-                  <span  dropdown>
-                    <a class="right btn-none card-action-btn"
-                       ng-click="user.canConfigPanel = !user.canConfigPanel">
-                      <i class="icon icon-chevron-down icon-lg"></i>
-                    </a>
-                  </span>
+              title="{{huntGroupSA.getDisplayName(member.user)}}">
+            {{huntGroupSA.getDisplayName(member.user)}}</h5>
+          <span  dropdown>
+            <i class="icon icon-chevron-down icon-lg"></i>
+          </span>
         </div>
       </header>
-      <section ng-if="user.canConfigPanel">
+      <section ng-if="(huntGroupSA.openMemberPanelUuid === member.user.uuid)">
 
-        <p class="email">{{user.email}}</p>
+        <p class="email">{{member.user.email}}</p>
         <fieldset>
-          <cs-radio ng-repeat="number in user.numbers"
+          <cs-radio ng-repeat="number in member.user.numbers"
                     label="number | huntMemberTelephone"
-                    value="number.uuid"
-                    name="{{user.uuid}}"
+                    value="number"
+                    name="{{member.user.uuid}}"
                     id="number.uuid"
-                    ng-model="user.selectedNumberUuid"></cs-radio>
+                    ng-model="member.selectableNumber"></cs-radio>
 
           <p>
-            <a href ng-click="huntGroupSA.unSelectHuntGroupMember(user)">Remove Member</a>
+            <a href ng-click="huntGroupSA.unSelectHuntGroupMember(member)">Remove Member</a>
           </p>
         </fieldset>
       </section>
