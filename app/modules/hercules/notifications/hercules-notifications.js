@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  function HerculesNotificationsController(NotificationService, $state, $scope, $modal, ServiceDescriptor) {
+  function HerculesNotificationsController(NotificationService, $state, $scope, $modal, $timeout, ServiceDescriptor) {
     var vm = this;
     vm.notificationsLength = function () {
       return NotificationService.getNotificationLength();
@@ -22,6 +22,17 @@
         return 'TO-DO';
       }
     };
+
+    vm.handleClick = function () {
+      if (vm.filteredNotifications().length > 0) {
+        vm.showNotifications = !vm.showNotifications;
+      } else {
+        $timeout(function () {
+          vm.showNotifications = !vm.showNotifications;
+        }, 2000);
+      }
+    };
+
     vm.amountBubbleType = function () {
       return _.some(vm.filteredNotifications(), {
         type: NotificationService.types.ALERT
