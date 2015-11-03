@@ -70,8 +70,8 @@
         var licId = lic.licenseId;
         var lictype = lic.licenseType;
         var isConfType = lictype === "CONFERENCING";
-        if ( isConfType) {
-          licIds.push(new LicenseFeature(licId, (angular.isUndefined(lic.siteUrl) === false)) );
+        if (isConfType) {
+          licIds.push(new LicenseFeature(licId, (angular.isUndefined(lic.siteUrl) === false)));
         }
       }
       return licIds;

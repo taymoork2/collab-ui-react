@@ -9,7 +9,7 @@ describe('Onboard Users using uploading CSV File', function () {
   // User array
   var userList = [];
   for (i = 0; i < 5; i++) {
-    userList[i] = 'collabctg+23429867' + (5 + i) + '@gmail.com';
+    userList[i] = 'collabctg+csvImportTestUser500' + (i + 1) + '@gmail.com';
   }
 
   beforeAll(function () {

@@ -610,10 +610,10 @@ angular.module('Core')
         var confId = [];
         for (var cf in $scope.confChk) {
           var current = $scope.confChk[cf];
-          if ((current.confModel === state) && (current.confFeature.license.licenseId != undefined)) {
+          if ((current.confModel === state) && (current.confFeature.license.licenseId !== undefined)) {
             confId.push(current.confFeature.license.licenseId);
           }
-          if ((current.cmrModel === state) && (current.cmrFeature.license.licenseId != undefined)) {
+          if ((current.cmrModel === state) && (current.cmrFeature.license.licenseId !== undefined)) {
             confId.push(current.cmrFeature.license.licenseId);
           }
         }
@@ -625,7 +625,7 @@ angular.module('Core')
        *
        * @param action - 'additive' - add new licenses only, 'patch' - remove any licenses not specified
        */
-      var getAccountLicenses = function ( action ) {
+      var getAccountLicenses = function (action) {
         var licenseList = [];
         if (Authinfo.hasAccount()) {
           // Messaging: prefer selected subscription, if specified
@@ -639,21 +639,20 @@ angular.module('Core')
             if ('licenseId' in license) {
               // Add new licenses
               licenseList.push(new LicenseFeature(license.licenseId, true));
-            } else if ( (action === 'patch') && ($scope.messageFeatures.length > 1) && ('licenseId' in $scope.messageFeatures[1].licenses[0]) ) {
+            } else if ((action === 'patch') && ($scope.messageFeatures.length > 1) && ('licenseId' in $scope.messageFeatures[1].licenses[0])) {
               // Remove existing license
               licenseList.push(new LicenseFeature($scope.messageFeatures[1].licenses[0].licenseId, false));
             }
           }
 
           // Conferencing: depends on model (standard vs. CMR)
-          var cidListAdd = getConfIdList( true );
+          var cidListAdd = getConfIdList(true);
           for (var i = 0; i < cidListAdd.length; i++) {
             licenseList.push(new LicenseFeature(cidListAdd[i], true));
           }
-          if ( action === 'patch' )
-          {
-            var cidListRemove = getConfIdList( false );
-            for ( i = 0; i < cidListRemove.length; i++ ) {
+          if (action === 'patch') {
+            var cidListRemove = getConfIdList(false);
+            for (i = 0; i < cidListRemove.length; i++) {
               licenseList.push(new LicenseFeature(cidListRemove[i], false));
             }
           }
@@ -663,7 +662,7 @@ angular.module('Core')
           var selCommService = $scope.communicationFeatures[commIndex];
           if ('licenseId' in selCommService.license) {
             licenseList.push(new LicenseFeature(selCommService.license.licenseId, true));
-          } else if ( (action === 'patch') && ($scope.communicationFeatures.length > 1) && ('licenseId' in $scope.communicationFeatures[1].license) ) {
+          } else if ((action === 'patch') && ($scope.communicationFeatures.length > 1) && ('licenseId' in $scope.communicationFeatures[1].license)) {
             licenseList.push(new LicenseFeature($scope.communicationFeatures[1].license.licenseId, false));
           }
         }
