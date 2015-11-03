@@ -2,7 +2,7 @@
 
 describe('Controller: AABuilderMainCtrl', function () {
   var controller, Notification, AutoAttendantCeService;
-  var AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService;
+  var AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAValidationService;
   var $rootScope, $scope, $q, $translate, $stateParams;
 
   var ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
@@ -42,7 +42,7 @@ describe('Controller: AABuilderMainCtrl', function () {
   beforeEach(module('Huron'));
 
   beforeEach(inject(function (_$rootScope_, _$q_, _$stateParams_, $controller, _$translate_, _Notification_,
-    _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAUiModelService_, _AAModelService_, _AutoAttendantCeService_) {
+    _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAUiModelService_, _AAModelService_, _AutoAttendantCeService_, _AAValidationService_) {
     $rootScope = _$rootScope_;
     $q = _$q_;
     $scope = $rootScope.$new();
@@ -55,6 +55,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     AAModelService = _AAModelService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
+    AAValidationService = _AAValidationService_;
     AutoAttendantCeService = _AutoAttendantCeService_;
     Notification = _Notification_;
 
@@ -88,7 +89,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       spyOn(Notification, 'success');
       spyOn(Notification, 'error');
       spyOn($scope.vm, 'saveUiModel');
-      nameValidationSpy = spyOn($scope.vm, 'isNameValidationSuccess').and.returnValue(true);
+      nameValidationSpy = spyOn(AAValidationService, 'isNameValidationSuccess').and.returnValue(true);
       aaModel.ceInfos = [];
       aaModel.aaRecords = [];
       aaModel.aaRecord = aCe;
@@ -307,60 +308,6 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect(AutoAttendantCeMenuModelService.updateCombinedMenu).toHaveBeenCalledWith($scope.vm.aaModel.aaRecord, 'holidays', $scope.vm.ui.holidays);
     });
 
-  });
-
-  describe('isNameValidationSuccess', function () {
-
-    beforeEach(function () {
-      spyOn(Notification, 'error');
-      aaModel.ceInfos = [];
-      aaModel.aaRecords = [];
-    });
-
-    it('report name validation error for an empty string', function () {
-      // when aaModel.aaRecord is defined
-      $scope.vm.aaModel = {};
-      $scope.vm.aaModel.aaRecord = {};
-      $scope.vm.ui.builder.ceInfo_name = "";
-      var valid = controller.isNameValidationSuccess();
-
-      expect(valid).toEqual(false);
-      expect(Notification.error).toHaveBeenCalled();
-    });
-
-    it('report name validation error for a string of spaces', function () {
-      // when aaModel.aaRecord is defined
-      $scope.vm.aaModel = {};
-      $scope.vm.aaModel.aaRecord = {};
-      $scope.vm.ui.builder.ceInfo_name = "  ";
-      var valid = controller.isNameValidationSuccess();
-
-      expect(valid).toEqual(false);
-      expect(Notification.error).toHaveBeenCalled();
-    });
-
-    it('should report name validation error if new AA name is not unique', function () {
-      var ceInfo = ce2CeInfo(rawCeInfo);
-      aaModel.ceInfos.push(ceInfo);
-      aaModel.aaRecordUUID = 'c16a6027-caef-4429-b3af-9d61ddc7964c';
-      $scope.vm.ui.builder.ceInfo_name = "AAA2";
-
-      var valid = controller.isNameValidationSuccess();
-
-      expect(valid).toEqual(false);
-      expect(Notification.error).toHaveBeenCalled();
-    });
-
-    it('should report name validation success if new AA name is unique', function () {
-      var ceInfo = ce2CeInfo(rawCeInfo);
-      aaModel.ceInfos.push(ceInfo);
-      aaModel.aaRecordUUID = 'c16a6027-caef-4429-b3af-9d61ddc7964c';
-      $scope.vm.ui.builder.ceInfo_name = "AAA3";
-
-      var valid = controller.isNameValidationSuccess();
-
-      expect(valid).toEqual(true);
-    });
   });
 
   describe('setAANameFocus', function () {

@@ -6,7 +6,7 @@
     .controller('AABuilderMainCtrl', AABuilderMainCtrl); /* was AutoAttendantMainCtrl */
 
   /* @ngInject */
-  function AABuilderMainCtrl($scope, $translate, $state, $stateParams, AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService, Notification) {
+  function AABuilderMainCtrl($scope, $translate, $state, $stateParams, AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService, AAValidationService, Notification) {
     var vm = this;
     vm.overlayTitle = $translate.instant('autoAttendant.builderTitle');
     vm.aaModel = {};
@@ -22,8 +22,6 @@
     vm.selectAA = selectAA;
     vm.populateUiModel = populateUiModel;
     vm.saveUiModel = saveUiModel;
-    vm.extractUUID = extractUUID;
-    vm.isNameValidationSuccess = isNameValidationSuccess;
 
     $scope.saveAARecords = saveAARecords;
 
@@ -99,21 +97,22 @@
 
     function saveAARecords() {
 
-      if (!vm.isNameValidationSuccess()) {
-        return;
-      }
-      vm.saveUiModel();
-
       var aaRecords = vm.aaModel.aaRecords;
       var aaRecord = vm.aaModel.aaRecord;
-      var aaRecordUUID = vm.aaModel.aaRecordUUID;
-      var i = 0;
 
-      if (aaRecordUUID === "") {
-        i = aaRecords.length;
-      } else {
+      var aaRecordUUID = vm.aaModel.aaRecordUUID;
+      if (!AAValidationService.isNameValidationSuccess(vm.ui.builder.ceInfo_name, aaRecordUUID)) {
+        return;
+      }
+
+      vm.saveUiModel();
+
+      var i = 0;
+      var isNewRecord = true;
+      if (aaRecordUUID.length > 0) {
         for (i = 0; i < aaRecords.length; i++) {
-          if (extractUUID(aaRecords[i].callExperienceURL) === aaRecordUUID) {
+          if (AutoAttendantCeInfoModelService.extractUUID(aaRecords[i].callExperienceURL) === aaRecordUUID) {
+            isNewRecord = false;
             break;
           }
         }
@@ -125,7 +124,7 @@
       removeNumberAttribute(_aaRecord.assignedResources);
       //
 
-      if (i === aaRecords.length) {
+      if (isNewRecord) {
         var ceUrlPromise = AutoAttendantCeService.createCe(_aaRecord);
         ceUrlPromise.then(
           function (response) {
@@ -135,7 +134,7 @@
             newAaRecord.assignedResources = angular.copy(aaRecord.assignedResources);
             newAaRecord.callExperienceURL = response.callExperienceURL;
             aaRecords.push(newAaRecord);
-            vm.aaModel.aaRecordUUID = extractUUID(response.callExperienceURL);
+            vm.aaModel.aaRecordUUID = AutoAttendantCeInfoModelService.extractUUID(response.callExperienceURL);
             vm.aaModel.ceInfos.push(AutoAttendantCeInfoModelService.getCeInfo(newAaRecord));
             Notification.success('autoAttendant.successCreateCe', {
               name: aaRecord.callExperienceName
@@ -177,20 +176,6 @@
       }
     }
 
-    function isNameValidationSuccess() {
-      if (!angular.isDefined(vm.ui.builder.ceInfo_name) || (vm.ui.builder.ceInfo_name.trim().length === 0)) {
-        Notification.error('autoAttendant.invalidBuilderNameMissing');
-        return false;
-      }
-      for (var i = 0; i < vm.aaModel.ceInfos.length; i++) {
-        if ((vm.aaModel.aaRecordUUID !== extractUUID(vm.aaModel.ceInfos[i].ceUrl)) && (vm.ui.builder.ceInfo_name === vm.aaModel.ceInfos[i].getName())) {
-          Notification.error('autoAttendant.invalidBuilderNameNotUnique');
-          return false;
-        }
-      }
-      return true;
-    }
-
     function canSaveAA() {
       var canSave = true;
       return canSave;
@@ -201,11 +186,6 @@
       var messages = vm.errorMessages.join('<br>');
 
       return messages;
-    }
-
-    function extractUUID(ceURL) {
-      var uuidPos = ceURL.lastIndexOf("/");
-      return ceURL.substr(uuidPos + 1);
     }
 
     function selectAA(aaName) {
@@ -224,7 +204,7 @@
                   // Workaround for reading the dn number: by copying it from aaRecords[i], until
                   // dn number is officialy stored in ceDefintion.
                   vm.aaModel.aaRecord.assignedResources = angular.copy(vm.aaModel.aaRecords[i].assignedResources);
-                  vm.aaModel.aaRecordUUID = vm.extractUUID(vm.aaModel.aaRecords[i].callExperienceURL);
+                  vm.aaModel.aaRecordUUID = AutoAttendantCeInfoModelService.extractUUID(vm.aaModel.aaRecords[i].callExperienceURL);
                   //
                   vm.populateUiModel();
                 },

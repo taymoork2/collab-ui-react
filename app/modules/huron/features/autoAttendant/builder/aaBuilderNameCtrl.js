@@ -6,7 +6,7 @@
     .controller('aaBuilderNameCtrl', AutoAttendantNameBuilderCtrl);
 
   /* @ngInject */
-  function AutoAttendantNameBuilderCtrl($scope, AAUiModelService, AutoAttendantCeInfoModelService, AAModelService, Notification) {
+  function AutoAttendantNameBuilderCtrl($scope, AAUiModelService, AutoAttendantCeInfoModelService, AAModelService, AAValidationService, Notification) {
 
     var vm = this;
     vm.aaModel = {};
@@ -15,7 +15,6 @@
     vm.saveAARecord = saveAARecord;
 
     // exposed checkNameEntry and saveUiModel for unit tests
-    vm.checkNameEntry = checkNameEntry;
     vm.saveUiModel = saveUiModel;
 
     var name = "";
@@ -25,7 +24,7 @@
 
     function saveAARecord() {
 
-      if (!checkNameEntry(vm.name)) {
+      if (!AAValidationService.isNameValidationSuccess(vm.name, '')) {
         return;
       }
 
@@ -41,36 +40,6 @@
         vm.ui.builder.ceInfo_name = vm.ui.ceInfo.getName();
         AutoAttendantCeInfoModelService.setCeInfo(vm.aaModel.aaRecord, vm.ui.ceInfo);
       }
-    }
-
-    function checkNameEntry(aaNameToTest) {
-      if (angular.isUndefined(aaNameToTest) || aaNameToTest.length === 0) {
-        Notification.error('autoAttendant.invalidBuilderNameMissing');
-        return false;
-      }
-
-      if (checkForDups(aaNameToTest)) {
-        return false;
-      }
-
-      return true;
-
-    }
-
-    function checkForDups(aaNameToTest) {
-
-      // AA name unique on create
-      var isNameInUse;
-      isNameInUse = vm.aaModel.ceInfos.some(function (record) {
-        return record.name === aaNameToTest;
-      });
-
-      if (isNameInUse) {
-        Notification.error('autoAttendant.invalidBuilderNameNotUnique');
-        return true;
-      }
-
-      return false;
     }
 
     function activate() {

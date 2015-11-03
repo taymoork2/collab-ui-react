@@ -117,23 +117,6 @@ describe('Controller: aaBuilderNameCtrl', function () {
 
     *** */
 
-    it('should issue error message on no name', function () {
-
-      controller.checkNameEntry("");
-      $scope.$apply();
-
-      expect(Notification.error).toHaveBeenCalledWith('autoAttendant.invalidBuilderNameMissing');
-    });
-    it('should return a true value', function () {
-
-      var result = controller.checkNameEntry("Smith");
-
-      $scope.$apply();
-
-      expect(result).toEqual(true);
-
-    });
-
     /*  Commented out as code references AutoAttendant.saveAARecords()
      *
      *
@@ -152,21 +135,6 @@ describe('Controller: aaBuilderNameCtrl', function () {
       expect(Notification.error).toHaveBeenCalledWith('autoAttendant.errorCreateCe');
     });
     **** */
-
-    it('should reject adding a dupe CE (no update for now)', function () {
-
-      aaModel.ceInfos.push({
-        name: rawCeInfo.callExperienceName
-      });
-
-      controller.name = rawCeInfo.callExperienceName;
-
-      controller.checkNameEntry(controller.name);
-
-      $scope.$apply();
-
-      expect(Notification.error).toHaveBeenCalledWith('autoAttendant.invalidBuilderNameNotUnique');
-    });
 
     it('should have called setCeInfo', function () {
 
