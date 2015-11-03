@@ -47,7 +47,13 @@
     }
 
     function validateDID(number) {
-      return phoneUtils.isValidNumberForRegion(number, regionCode);
+      var res;
+      try {
+        res = phoneUtils.isValidNumberForRegion(number, regionCode);
+      } catch (e) {
+        res = false;
+      }
+      return res;
     }
 
     function getDIDValue(number) {

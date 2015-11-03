@@ -6,7 +6,7 @@
     .controller('DeviceLogCtrl', DeviceLogCtrl);
 
   /* @ngInject */
-  function DeviceLogCtrl($scope, $q, $interval, $stateParams, Notification, DeviceLogService) {
+  function DeviceLogCtrl($scope, $q, $interval, $stateParams, $translate, Notification, DeviceLogService) {
     var dlc = this;
     dlc.logList = [];
     dlc.currentUser = $stateParams.currentUser;
@@ -74,6 +74,14 @@
       return (pollingList.length > 0);
     }
 
+    function getFilename(url) {
+      var pathArray = url.split('/');
+      if (Array.isArray(pathArray) && pathArray.length > 0 && pathArray[pathArray.length - 1].length > 0) {
+        return pathArray[pathArray.length - 1];
+      }
+      return $translate.instant('deviceDetailPage.unknownFilename');
+    }
+
     function addLogList(logEntry) {
       var log = findLogInLogList(logEntry.trackingId);
       if (!angular.isDefined(log)) {
@@ -86,6 +94,7 @@
           if (event.status === EVT_SUCCESS) {
             log.uri = logEntry.results;
             log.name = event.date;
+            log.filename = getFilename(log.uri);
             dlc.logList.push(log);
             return;
           }

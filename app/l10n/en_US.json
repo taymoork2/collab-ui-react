@@ -39,6 +39,7 @@
     "duplicateDidFound": "Duplicate Direct Line entered.",
     "noUsersInput": "No users were entered.",
     "csvBtnTitle": "Export to CSV",
+    "csvBtnExportingTitle": "Export in progress",
     "csvFilename": "exported_users.csv",
     "emailSent": "{{email}} email sent successfully",
     "emailFailed": "{{email}} email not sent, {{message}}",
@@ -1030,7 +1031,7 @@
     "addUsersDescription": "Select a method to upload your users.",
     "addUsersSimple": "Invite Users | Simple",
     "addUsersAdvanced": "Invite Users | Advanced",
-    "msgrSyncDesc": "Your organization has synchronization of users from Webex Messenger enabled. Users are provisioned from the Webex Messenger Administration tools.",
+    "msgrSyncDesc": "Your organization has user information being synced from the WebEx Messenger Service. To add, remove, or edit user information you must use the WebEx Messenger Administration Tool.",
     "getStarted": "Get Started",
     "startTrial": "Start Trial",
     "doLater": "Do this later",
@@ -1627,7 +1628,8 @@
     "retrieveLogInstructions": "Device logs can be used by Cisco to troubleshoot issues related to device performance and call quality.",
     "logWait": "Getting log file from the device. This may take a minute…",
     "errorLogTryAgain": "Log file request timed out. Retry?",
-    "errorLogInvaidMsg": "Log service message is invalid"
+    "errorLogInvaidMsg": "Log service message is invalid",
+    "unknownFilename": "Unknown Filename"
   },
   "deviceOverviewPage": {
     "activationNoLongerNeeded": "If this activation is no longer needed:",
@@ -2251,6 +2253,7 @@
     "licenseCount": "License Count",
     "type": "Type",
     "launchSite": "Configure Site",
+    "siteSettings": "Configure Site",
     "siteReports": "Reports"
   },
   "cloudExtensions": {
@@ -2339,21 +2342,7 @@
     "title": "Communication",
     "linesTitle": "Numbers",
     "settingsTitle": "Settings",
-    "featuresTitle": "Features",
-    "featureListingError": "Failed to retrieve the feature list.",
-    "newFeatureButtonText": "New",
-    "newFeatureModalTitle": "Create New Feature",
-    "featuresNotYetConfiguredPage": {
-      "nothingToSee": "Nothing here to see yet.",
-      "letsCustomize": "Let's customize the calling experience"
-    }
-  },
-
-  "huntGroup": {
-    "code": "HG",
-    "title": "Hunt Group",
-    "modalDescription": "Hunt groups (or line hunting) allow you to customize the distribution of incoming phone calls to users' phone lines in a specific order.",
-    "numberFetchFailure": "Unable to get numbers."
+    "featuresTitle": "Features"
   },
 
   "huronFeatureDetails": {
@@ -2367,15 +2356,11 @@
     "deleteFeature": "Delete {{ featureType }}",
     "deleteConfirmText": "Are you sure you want to delete the {{ featureName }} {{ featureType }}?",
     "deleteSuccessText": "{{ featureName }} {{ featureType }} has been deleted successfully",
-    "failedToLoad": "Unable to load {{ featureType }}"
-  },
-
-  "huntGroupDetails": {
-    "failedToLoadHuntGroups": "Unable to load hunt groups information",
-    "deleteHuntGroup": "Delete Hunt Group",
-    "deleteHuntGroupConfText": "Are you sure you want to delete the {{ huntGroupName }} hunt group?",
-    "deleteHuntGroupSuccessText": "{{ huntGroupName }} hunt group has been deleted successfully",
-    "messageError": "Message {{ message }}"
+    "failedToLoad": "Unable to load {{ featureType }}(s) information",
+    "aaName": "auto attendant",
+    "hgName": "hunt group",
+    "sorryMessage": "Sorry, something went wrong ",
+    "reloadMessage": "Please try reloading the page"
   },
 
   "linesPage": {
@@ -2424,7 +2409,9 @@
     "refresh": "Refresh",
     "refreshFailed": "Failed refreshing Messenger Sync status",
     "syncStatusHeading": "Messenger User Synchronization",
-    "syncStatusTooltip": "When enabled, users are actively being synced from Messenger"
+    "syncStatusTooltip": "When enabled, users are actively being synced from Messenger",
+    "dirsyncStatusHeading": "Common Identity Directory Synchronization",
+    "dirsyncStatusTooltip": "To access Spark platform capabilities, WebEx Messenger users need to be synchronized with the Common Identity service."
   },
 
   "huronHuntGroup": {
@@ -2448,7 +2435,6 @@
     "cp": "CP",
     "editAction": "Edit",
     "deleteAction": "Delete",
-    "failedToLoadHuntGroups": "Unable to load hunt groups information",
     "deleteHuntGroup": "Delete Hunt Group",
     "deleteHuntGroupConfText": "Are you sure you want to delete the {{ huntGroupName }} hunt group?",
     "deleteHuntGroupSuccessText": "{{ huntGroupName }} hunt group has been deleted successfully",
@@ -2457,6 +2443,7 @@
     "title": "Hunt Group",
     "modalDescription": "Hunt groups (or line hunting) allow you to customize the distribution of incoming phone calls to users' phone lines in a specific order.",
     "featureListingError": "Failed to retrieve the feature list.",
+    "numberFetchFailure": "Unable to get numbers.",
     "newFeatureButtonText": "New",
     "newFeatureModalTitle": "Create New Feature",
     "featuresNotYetConfiguredPage": {
@@ -2500,12 +2487,17 @@
     "remove": "Remove",
     "removeMem": "Remove Member",
     "addMemberLabel": "Add & Search Members",
+    "successSave": "Successfully saved the Hunt Group",
     "successUpdate": "Successfully updated the Hunt Group",
-    "errorUpdate": "Error while saving Hunt Group",
+    "errorSave": "Error while saving the Hunt Group",
+    "errorUpdate": "Error while updating the Hunt Group",
     "numberLabel": "Select Numbers",
     "cancelHeader": "Cancel Hunt Group Creation",
     "cancelDialog": "Are you sure you wish to cancel hunt group creation? This hunt group will not be saved.",
     "confirmButton": "Cancel Creation",
-    "continueButton": "Continue Creation"
+    "continueButton": "Continue Creation",
+    "memberFetchFailure": "Unable to get members.",
+    "invalidMember": "Select atleast one member",
+    "invalidFallback": "Select a number or enter a new valid number"
   }
 }

@@ -6,9 +6,9 @@
     .controller('HuntGroupSetupAssistantCtrl', HuntGroupSetupAssistantCtrl);
 
   /* @ngInject */
-  function HuntGroupSetupAssistantCtrl($scope, $state, Config, $http, HuntGroupService, Notification, $modal, $timeout) {
+  function HuntGroupSetupAssistantCtrl($scope, $state, Config, $http, HuntGroupService, Notification, $modal, $timeout, TelephoneNumberService, Authinfo, $translate) {
     var vm = this;
-
+    var customerId = Authinfo.getOrgId();
     vm.nextPage = nextPage;
     vm.previousPage = previousPage;
     vm.nextButton = nextButton;
@@ -17,15 +17,23 @@
     vm.close = closePanel;
     vm.selectPilotNumber = selectPilotNumber;
     vm.selectHuntGroupMember = selectHuntGroupMember;
+    vm.unSelectHuntGroupMember = unSelectHuntGroupMember;
     vm.setHuntMethod = setHuntMethod;
     vm.huntGroupName = undefined;
+    vm.selectFallback = selectFallback;
     vm.fetchNumbers = fetchNumbers;
     vm.unSelectPilotNumber = unSelectPilotNumber;
     vm.fetchHuntMembers = fetchHuntMembers;
+    vm.getDisplayName = getDisplayName;
     vm.cancelModal = cancelModal;
     vm.evalKeyPress = evalKeyPress;
     vm.enterNextPage = enterNextPage;
-
+    vm.validateFallback = validateFallback;
+    vm.toggleFallback = toggleFallback;
+    vm.removeFallbackDest = removeFallbackDest;
+    vm.saveHuntGroup = saveHuntGroup;
+    vm.openMemberPanelUuid = undefined;
+    vm.toggleMemberPanel = toggleMemberPanel;
     vm.selectedPilotNumber = undefined;
     vm.selectedPilotNumbers = [];
     vm.selectedHuntMembers = [];
@@ -40,21 +48,38 @@
     };
     vm.huntGroupMethod = vm.hgMethods.longestIdle;
     vm.userSelected = undefined;
+    vm.users = [];
 
     // ==============================================
+
+    function toggleMemberPanel(userUuid) {
+      if (vm.openMemberPanelUuid === userUuid) {
+        vm.openMemberPanelUuid = undefined;
+      } else {
+        vm.openMemberPanelUuid = userUuid;
+      }
+    }
+
+    function getDisplayName(user) {
+      if (user.lastName) {
+        return user.firstName + " " + user.lastName;
+      } else {
+        return user.firstName;
+      }
+    }
 
     function fetchHuntMembers(nameHint) {
       return HuntGroupService.getHuntMembers(
         'name', nameHint,
         vm.selectedHuntMembers,
-        onFailureNotify('huntGroup.nameFetchFailure'));
+        onFailureNotify('huronHuntGroup.nameFetchFailure'));
     }
 
     function fetchNumbers(typedNumber) {
       return HuntGroupService.getPilotNumberSuggestions(
         'number', typedNumber,
         vm.selectedPilotNumbers,
-        onFailureNotify('huntGroup.numberFetchFailure'));
+        onFailureNotify('huronHuntGroup.numberFetchFailure'));
     }
 
     function onFailureNotify(notificationKey) {
@@ -138,17 +163,44 @@
       $state.go('huronfeatures');
     }
 
-    function selectHuntGroupMember(user) {
+    function selectHuntGroupMember(member) {
       vm.userSelected = undefined;
-      if (huntNumberSelected(user)) {
-        vm.selectedHuntMembers.push(user);
-      }
+      HuntGroupService.getMemberInfo(customerId, member.user.uuid).then(function (user) {
+        member.user.email = user.email;
+      });
+      vm.selectedHuntMembers.push(member);
     }
 
-    function huntNumberSelected(user) {
-      return user.numbers.filter(function (n) {
-        return (n.isSelected);
-      }).length > 0;
+    function unSelectHuntGroupMember(user) {
+      vm.selectedHuntMembers.splice(
+        vm.selectedHuntMembers.indexOf(user), 1);
+      vm.openMemberPanelUuid = undefined;
+    }
+
+    function selectFallback($item) {
+      vm.fallback = undefined;
+      var numbers = [];
+      vm.fallbackSelected = {};
+      vm.fallbackSelected.userName = $item.userName;
+      vm.fallbackSelected.uuid = $item.uuid;
+      $item.numbers.forEach(function (value) {
+        var number = value;
+        if (number.isSelected) {
+          vm.fallbackSelected.number = number.internal;
+          vm.fallbackSelected.selectedNumberUuid = number.uuid;
+        }
+        var newvalue = {
+          internal: number.internal,
+          external: number.external,
+          value: number.internal,
+          name: 'FallbackRadio',
+          id: 'internal',
+          uuid: number.uuid
+        };
+
+        numbers.push(newvalue);
+      });
+      vm.fallbackSelected.userNumber = numbers;
     }
 
     function setHuntMethod(methodSelected) {
@@ -197,6 +249,54 @@
           nextPage();
         }
       }
+    }
+
+    function validateFallback() {
+      if (vm.fallback !== '') {
+        vm.fallback = TelephoneNumberService.getDIDLabel(vm.fallback);
+        if (TelephoneNumberService.validateDID(vm.fallback)) {
+          vm.fallbackValid = true;
+        } else {
+          vm.fallbackValid = false;
+        }
+      } else {
+        vm.fallbackValid = false;
+      }
+    }
+
+    function toggleFallback() {
+      vm.fallbackSelected.open = !vm.fallbackSelected.open;
+    }
+
+    function removeFallbackDest() {
+      vm.fallbackSelected = undefined;
+    }
+
+    function saveHuntGroup() {
+      vm.saveProgress = true;
+      var data = {
+        name: vm.huntGroupName,
+        numbers: vm.selectedPilotNumber,
+        huntMethod: vm.huntGroupMethod,
+        fallbackDestination: vm.fallbackSelected,
+        sendToVoicemail: vm.sendToVoicemail,
+        members: []
+      };
+      vm.users.forEach(function (value) {
+        data.members.push(value.number);
+      });
+      if (vm.fallbackValid) {
+        data.fallbackDestination = {};
+        data.fallbackDestination.number = vm.fallback;
+      }
+      HuntGroupService.saveHuntGroup(customerId, data).then(function (data) {
+        vm.saveProgress = false;
+        Notification.success($translate.instant('huronHuntGroup.successSave'));
+        $state.go('huronfeatures');
+      }, function () {
+        vm.saveProgress = false;
+        Notification.error($translate.instant('huronHuntGroup.errorSave'));
+      });
     }
   }
 })();

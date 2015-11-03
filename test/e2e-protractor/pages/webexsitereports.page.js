@@ -10,15 +10,29 @@ var SiteReportsPage = function () {
     password: 'Cisco!23',
   };
 
-  this.conferencing = element(by.css('a[href="#site-list"]'));
-  this.siteReports = element(by.css('#webex-reports-list-iframe'));
-  this.siteReportsUrl = '/webexreports';
-  this.reportSJSITE14 = element(by.id("sjsite14.webex.com_webex-site-reports"));
-  this.webexReportCrumb = element(by.id('webexReportCrumb'))
-  this.webexReportBreadCrumbs = element(by.id('webexReportBreadCrumbs'));
-  this.meetingUsageReportLink = element(by.id('meeting_usage'));
-  this.webexReportIFrameBreadCrumbs = element(by.id('webexReportIFrameBreadCrumbs'));
-  this.webexReportIFrameCrumb2 = element(by.id('webexReportIFrameCrumb2'));
+  this.testAdmin2 = {
+    username: 't30citestprov9@mailinator.com',
+    password: 'Cisco!23',
+  }
+
+  this.webexSiteReportsPanel = element(by.id('webexSiteReports'));
+
+  this.webexReportCrumb1 = element(by.id('webexReportIFrameCrumb1'));
+  this.webexReportCrumb2 = element(by.id('webexReportIFrameCrumb2'));
+
+  this.webexReportsLink = element(by.id('webexReports'));
+  this.webexCommonMeetingUsageLink = element(by.id('meeting_usage'));
+  this.webexCommonMeetingsInProgressLink = element(by.id('meeting_in_progess'));
+  this.webexCommonRecordingUsageLink = element(by.id('recording_usage'));
+  this.webexCommonStorageUsageLink = element(by.id('storage_utilization'));
+
+  this.reportEngagementId = element(by.id('engagementReports'));
+  this.webexCommonReportsCardId = element(by.id('common_reports'));
+  this.webexCommonMeetingUsageId = element(by.id('webexSiteReportIframe-meeting_usage'));
+  this.webexCommonMeetingsInProgressId = element(by.id('webexSiteReportIframe-meeting_in_progess'));
+  this.webexCommonRecordingUsageId = element(by.id('webexSiteReportIframe-recording_usage'));
+  this.webexCommonStorageUsageId = element(by.id('webexSiteReportIframe-storage_utilization'));
+
   this.siteAdminReportsUrl = '/webexreports';
 };
 

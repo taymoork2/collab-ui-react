@@ -16,7 +16,7 @@
         <br><span  style="color:#CCC">On by default</span>
       </p>
 
-      <h6>
+      <h6 ng-if="expresswayServiceSettings.squaredFusionEcEntitled">
         <strong>{{'hercules.cloudExtensions.serviceNames.squared-fusion-ec' | translate}}</strong>
         <span class="switch small right">
           <cs-toggle-switch ng-click="expresswayServiceSettings.storeEc(expresswayServiceSettings.squaredFusionEc)"

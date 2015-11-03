@@ -11,8 +11,8 @@ var SiteSettigsPage = function () {
   };
 
   this.testAdmin2 = {
-    username: 'monika@mfs.com',
-    password: 'P@ssword123',
+    username: 't30citestprov9@mailinator.com',
+    password: 'Cisco!23',
   }
 
   this.conferencing = element(by.css('a[href="#site-list"]'));
@@ -20,6 +20,7 @@ var SiteSettigsPage = function () {
   this.siteSettingsUrl = '/site_settings';
   this.siteSettingPanel = element(by.id('siteSetting'));
   this.configureSJSITE14 = element(by.id("sjsite14.webex.com_webex-site-settings"));
+  this.configureSJSITE14cog = this.configureSJSITE14.element(by.css(".icon-settings"));
   this.emailAllHostsBtn = element(by.id('emailAllHostsBtn'));
   this.siteInformationLink = element(by.id('SiteInfo_site_info'));
   this.siteFeaturesLink = element(by.id('SiteInfo_site_features'));
@@ -36,7 +37,7 @@ var SiteSettigsPage = function () {
   this.configureCommonCompanyAddressesLink = element(by.id('CommonSettings_address'));
   this.configureCommonCMRLink = element(by.id('CommonSettings_cmr'));
   this.iFramePage = element(by.id('webexIframeContainer'));
-  this.webexSiteSettingsPanel = element(by.css('#webexSiteSettings'));
+  this.webexSiteSettingsPanel = element(by.id('webexSiteSettings'));
   this.webexSiteInfoCardId = element(by.id('SiteInfo-card'));
   this.webexCommonSettingsCardId = element(by.id('CommonSettings-card'));
   this.webexEmailAllHostsId = element(by.id('EMAIL_send_email_to_all'));
@@ -58,7 +59,8 @@ var SiteSettigsPage = function () {
   this.siteSettingBreadCrumbs = element(by.id('siteSettingBreadCrumbs'));
   this.siteListCrumb = element(by.id('siteListCrumb'));
   this.siteSettingsCrumb = element(by.id('siteSettingsCrumb'));
-  this.xLaunchSiteAdminIcon = element(by.id('webexSiteAdminLink'));
+  this.xLaunchSiteSettingsT30CITEST = element(by.id('t30citest.webex.com_xlaunch-webex-site-settings'));
+  this.xLaunchSiteReportsT30CITEST = element(by.id('t30citest.webex.com_xlaunch-webex-site-reports'));
 };
 
 module.exports = SiteSettigsPage;

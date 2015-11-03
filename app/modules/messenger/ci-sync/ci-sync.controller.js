@@ -58,6 +58,7 @@
     // Translated text
     vm.refresh = $translate.instant(translatePrefix + 'refresh');
     vm.syncStatusTooltip = $translate.instant(translatePrefix + 'syncStatusTooltip');
+    vm.dirsyncStatusTooltip = $translate.instant(translatePrefix + 'dirsyncStatusTooltip');
     vm.authRedirectTooltip = $translate.instant(translatePrefix + 'authRedirectTooltip');
     vm.patchSyncButtonText = $translate.instant(translatePrefix + 'patchSyncButtonText');
 
@@ -66,7 +67,8 @@
       messengerOrgId: 'Unknown',
       linkDate: 'Unknown',
       isAuthRedirect: false,
-      isSyncEnabled: false
+      isSyncEnabled: false,
+      isMessengerSyncRawMode: false
     };
 
     vm.fields = [{

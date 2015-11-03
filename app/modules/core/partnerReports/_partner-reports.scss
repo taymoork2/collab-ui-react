@@ -46,9 +46,12 @@
     padding-left: rem-calc(30);
     padding-right: rem-calc(15);
   }
-  .report-space{
+  .report-space {
     padding: 0 rem-calc(16);
     min-width: rem-calc(650);
+  }
+  .report-space:last-of-type {
+    float: left;
   }
   .report-box {
     background-color: $brand-white;

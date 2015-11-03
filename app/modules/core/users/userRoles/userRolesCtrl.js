@@ -3,14 +3,16 @@ angular.module('Squared')
   .controller('UserRolesCtrl', UserRolesCtrl);
 
 /* @ngInject */
-function UserRolesCtrl($scope, $translate, $stateParams, $state, SessionStorage, Userservice, Log, Config, $rootScope, Notification, Orgservice) {
+function UserRolesCtrl($scope, $translate, $stateParams, $state, SessionStorage, Userservice, Log, Authinfo, Config, $rootScope, Notification, Orgservice, SyncService) {
   $scope.currentUser = $stateParams.currentUser;
   if ($scope.currentUser) {
     $scope.roles = $scope.currentUser.roles;
   }
 
   $scope.dirsyncEnabled = false;
+  $scope.isMsgrSyncEnabled = false;
 
+  $scope.getMessengerSyncStatus = getMessengerSyncStatus;
   $scope.rolesObj = {};
 
   var inArray = function (array, el) {
@@ -57,6 +59,18 @@ function UserRolesCtrl($scope, $translate, $stateParams, $state, SessionStorage,
       return null;
     }
   };
+
+  function getMessengerSyncStatus() {
+    SyncService.isMessengerSyncEnabled()
+      .then(function (isIt) {
+        $scope.isMsgrSyncEnabled = isIt;
+      }, function (errorMsg) {
+        Log.error(errorMsg);
+      });
+  }
+  if (null !== Authinfo.getOrgId()) {
+    getMessengerSyncStatus();
+  }
 
   $scope.rolesObj.adminRadioValue = checkMainRoles([Config.backend_roles.full_admin]);
   //$scope.userAdminValue = checkSubRoles(Config.backend_roles.full_admin, Config.backend_roles.all);

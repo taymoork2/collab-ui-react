@@ -26,7 +26,7 @@
 
     function autoAttendants(data) {
       var formattedList = [];
-      _.forEach(data, function (aa) {
+      _.forEach(data.ceInfos, function (aa) {
         formattedCard.cardName = aa.name;
         formattedCard.numbers = _.pluck(aa.resources, 'number');
         formattedCard.id = aa.ceUrl.substr(aa.ceUrl.lastIndexOf('/') + 1);
@@ -42,8 +42,19 @@
       // TODO: Add callpark formatting service
     }
 
-    function huntGroups() {
-      // TODO: Add hunt groups formatting service
+    function huntGroups(data) {
+      var formattedList = [];
+      _.forEach(data.items, function (huntGroup) {
+        formattedCard.cardName = huntGroup.name;
+        formattedCard.numbers = huntGroup.numbers;
+        formattedCard.memberCount = huntGroup.memberCount;
+        formattedCard.huntGroupId = huntGroup.uuid;
+        formattedCard.featureName = 'huronHuntGroup.hg';
+        formattedCard.filterValue = 'HG';
+        formattedList.push(formattedCard);
+        formattedCard = {};
+      });
+      return formattedList;
     }
 
   }

@@ -120,6 +120,15 @@ describe('Config', function () {
     });
   });
 
+  it('should return correct user reports url', function () {
+    whenCalling('getUserReportsUrl', orgId).expectUrlToBe({
+      dev: 'https://identity.webex.com/identity/config/abc123efg456/v1/UserReports',
+      cfe: 'https://identitybts.webex.com/identity/config/abc123efg456/v1/UserReports',
+      integration: 'https://identity.webex.com/identity/config/abc123efg456/v1/UserReports',
+      prod: 'https://identity.webex.com/identity/config/abc123efg456/v1/UserReports'
+    });
+  });
+
   it('should return correct identity org service url', function () {
     whenCalling('getScomUrl', orgId).expectUrlToBe({
       dev: 'https://identity.webex.com/organization/scim/v1/Orgs',
