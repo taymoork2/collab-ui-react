@@ -5,7 +5,6 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
   var $httpBackend, filter, controller, $scope, HuntGroupService, Notification;
 
   var user1 = {
-    "email": "sumuthur@cisco.com",
     "uuid": "84cfdbb2-5eef-4c25-9f07-41729ce70e20",
     "numbers": [{
       "internal": "4001",
@@ -20,9 +19,14 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
     "firstName": "Sundar Rajan",
     "userName": "sumuthur"
   };
+  var member1 = {
+    uuid: user1.uuid,
+    displayUser: true,
+    user: user1,
+    selectableNumber: user1.numbers[0]
+  };
 
   var user2 = {
-    "email": "sjalipar@cisco.com",
     "uuid": "d1a3f4db-0ba1-4283-a30c-35d29942e086",
     "numbers": [{
       "internal": "4002",
@@ -36,6 +40,13 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
     "lastName": "Jaliparthy",
     "firstName": "Sri Krishna",
     "userName": "sjalipar"
+  };
+
+  var member2 = {
+    uuid: user2.uuid,
+    displayUser: true,
+    user: user2,
+    selectableNumber: user2.numbers[0]
   };
 
   function listContains(someList, item) {
@@ -58,6 +69,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
   }));
 
   var MemberLookupUrl = new RegExp(".*/customers/1/users.*");
+  var GetMember = new RegExp(".*/customers/1/users/.*");
 
   afterEach(function () {
     $httpBackend.verifyNoOutstandingExpectation();
@@ -94,44 +106,42 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
     $httpBackend.expectGET(MemberLookupUrl).respond(200, successResponse);
     controller.fetchHuntMembers("s");
     $scope.$apply();
-    $httpBackend.verifyNoOutstandingRequest(); // Not request made.
+    $httpBackend.verifyNoOutstandingRequest(); // No request made.
 
     controller.fetchHuntMembers("su");
     $scope.$apply();
-    $httpBackend.verifyNoOutstandingRequest(); // Not request made.
+    $httpBackend.verifyNoOutstandingRequest(); // No request made.
 
     controller.fetchHuntMembers("sun");
     $httpBackend.flush(); // Request made.
   });
 
-  it("on selecting a member name, the selectedHuntMembers list is not updated.", function () {
-    controller.selectHuntGroupMember(user1);
-    expect(listContains(controller.selectedHuntMembers, user1)).toBeFalsy();
-  });
-
-  it("on selecting a phone line of a member, the member is added into selectedHuntMembers list " +
-    "updating isSelected, selectedNumberUuid & showConfigSection to the right values.",
+  it("on selecting a member, the member is added into selectedHuntMembers list with email id retrieved from backend.",
     function () {
+      expect(user1.email).toBeUndefined();
+      user1.email = "sumuthur@cisco.com";
+      user2.email = "test@cisco.com";
 
-      user1.numbers[0].isSelected = true;
-      controller.selectHuntGroupMember(user1);
+      expect(member2.user.email).not.toEqual(user1.email);
 
-      expect(listContains(controller.selectedHuntMembers, user1)).toBeTruthy();
-      expect(user1.selectedNumberUuid).toBe(user1.numbers[0].uuid);
-      expect(user1.showConfigSection).toBeFalsy();
+      $httpBackend.expectGET(GetMember).respond(200, user1);
+      controller.selectHuntGroupMember(member2);
+      $httpBackend.flush();
+
+      expect(member2.user.email).toEqual(user1.email);
+      expect(listContains(controller.selectedHuntMembers, member2)).toBeTruthy();
     });
 
   it("filters the selected members from showing in the drop down.", function () {
     // UI selected a member pill.
-    user2.numbers[0].isSelected = true;
-    controller.selectHuntGroupMember(user2);
+    selectHuntMember(member2);
 
     // Backend returns a list.
     $httpBackend.expectGET(MemberLookupUrl).respond(200, successResponse);
 
     // UI must filter and show only the list that is not already selected.
     controller.fetchHuntMembers(user2.firstName).then(function (dropdownList) {
-      expect(listContains(dropdownList, user2)).toBeFalsy();
+      expect(listContains(dropdownList, member2)).toBeFalsy();
     });
     $httpBackend.flush();
   });
@@ -139,29 +149,26 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
   it("on deselecting a member, the list is updated and drop down starts showing the deselected member.",
     function () {
 
-      user1.numbers[0].isSelected = true;
-      controller.selectHuntGroupMember(user1); // user 1 selected.
-
-      user2.numbers[1].isSelected = true;
-      controller.selectHuntGroupMember(user2); // user 2 selected.
+      selectHuntMember(member1); // user 1 selected.
+      selectHuntMember(member2); // user 2 selected.
 
       // Backend returns a list.
       $httpBackend.expectGET(MemberLookupUrl).respond(200, successResponse);
 
       // UI types in name of user1
       controller.fetchHuntMembers(user1.firstName).then(function (dropdownList) {
-        expect(listContains(dropdownList, user1)).toBeFalsy(); // drop down must not show it.
+        expect(listContains(dropdownList, member1)).toBeFalsy(); // drop down must not show it.
       });
       $httpBackend.flush();
 
-      controller.unSelectHuntGroupMember(user1); // used 1 is removed.
+      controller.unSelectHuntGroupMember(member1); // used 1 is removed.
 
       // Backend returns a list.
       $httpBackend.expectGET(MemberLookupUrl).respond(200, successResponse);
 
       // UI types in number of user1 again.
       controller.fetchHuntMembers(user1.firstName).then(function (dropdownList) {
-        expect(listContains(dropdownList, user1)).toBeTruthy(); // drop down must show this time.
+        expect(listContains(dropdownList, member1)).toBeTruthy(); // drop down must show this time.
       });
       $httpBackend.flush();
 
@@ -175,8 +182,13 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
 
   it("displays the member name with firstName and lastName correctly.", function () {
     expect(controller.getDisplayName(user1)).toBe("Sundar Rajan Muthuraj");
-
     user1.lastName = "";
     expect(controller.getDisplayName(user1)).toBe("Sundar Rajan");
   });
+
+  function selectHuntMember(member) {
+    $httpBackend.expectGET(GetMember).respond(200, member.user);
+    controller.selectHuntGroupMember(member);
+    $httpBackend.flush();
+  }
 });
