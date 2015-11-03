@@ -621,7 +621,7 @@ angular.module('Core')
       };
 
       /**
-       * get the lit of selected account licenses on the dialog
+       * get the list of selected account licenses on the dialog
        *
        * @param action - 'additive' - add new licenses only, 'patch' - remove any licenses not specified
        */
