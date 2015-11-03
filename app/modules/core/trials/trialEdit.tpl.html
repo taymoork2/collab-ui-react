@@ -50,32 +50,28 @@
     </div>
   </div>
   <div class="modal-body">
-    <div class="pull-right" ng-show="trial.editTerms && !trial.showPartnerEdit">
-      <button id="editTrialButton" class="btn btn-primary" ng-click="trial.editTerms = false" translate="partnerHomePage.edit"></button>
+    <div class="h4 section-title" translate="partnerHomePage.trialServices"></div>
+    <label translate="partnerHomePage.individualUserServices"></label>
+    <formly-form model="trial.model" fields="trial.individualServices">
+    </formly-form>
+    <div ng-if="trial.showRoomSystems">
+      <label translate="partnerHomePage.roomSystems"></label>
+      <form class="form-inline" role="form">
+        <div class="row">
+          <cs-checkbox ckid="trialRoomSystemsChecked" ng-click="trial.roomSystemsChecked()" ng-model="trial.model.roomSystemsEnabled" label="{{'partnerHomePage.roomSystem' | translate}}" class="small-offset-1 columns small-3" ng-disabled="trial.currentTrial.roomSystems > 0"></cs-checkbox>
+          <div class="columns small-5">
+            <cs-select id="trialRoomSystemsAmount" ng-model="trial.model.roomSystems" options="trial.roomSystemOptions" placeholder="0" is-disabled="!trial.model.roomSystemsEnabled || trial.currentTrial.roomSystems > 0">
+            </cs-select>
+          </div>
+          <label class="columns small-3" translate="common.devices"></label>
+        </div>
+      </form>
     </div>
-    <h4 class="section-title" translate="partnerHomePage.termsOfTrial"></h4>
-    <div ng-show="trial.editTerms && !trial.showPartnerEdit">
-      <div class="row">
-        <div class="small-4 columns">
-          <label class="control-label right" translate="partnerHomePage.duration"></label>
-        </div>
-        <div class="small-8 columns">
-          <p class="form-control-static">{{trial.currentTrial.duration}} Days</p>
-        </div>
-      </div>
-      <div class="row">
-        <div class="small-4 columns">
-          <label class="control-label right" translate="partnerHomePage.numberOfLicenses"></label>
-        </div>
-        <div class="small-8 columns">
-          <p class="form-control-static">{{trial.currentTrial.licenses}}</p>
-        </div>
-      </div>
-    </div>
-    <div class="row" ng-show="!trial.editTerms || trial.showPartnerEdit">
-      <formly-form model="trial.currentTrial" fields="trial.trialTermsFields">
-      </formly-form>
-    </div>
+  </div>
+  <div class="modal-body">
+    <div class="h4 section-title" translate="partnerHomePage.termsOfTrial"></div>
+    <formly-form model="trial.model" fields="trial.trialTermsFields">
+    </formly-form>
   </div>
   <div class="modal-footer">
     <div ng-show="!trial.editTerms || trial.showPartnerEdit">

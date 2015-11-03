@@ -200,6 +200,13 @@ angular.module('Core')
           siteAdminDeepUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage'
         },
 
+        wdmUrl: {
+          dev: 'https://wdm-a.wbx2.com/wdm/api/v1',
+          cfe: 'http://wdm.cfe.wbx2.com/wdm/api/v1',
+          integration: 'http://wdm.integration.wbx2.com/wdm/api/v1',
+          prod: 'http://wdm.cfa.wbx2.com/wdm/api/v1',
+        },
+
         sunlightConfigServiceUrl: {
           dev: 'https://config.integration-tx1.thunderhead.io/config/v1',
           cfe: 'https://config.integration-tx1.thunderhead.io/config/v1',
@@ -822,6 +829,10 @@ angular.module('Core')
 
         getCertsUrl: function () {
           return this.certsUrl[this.getEnv()];
+        },
+
+        getWdmUrl: function () {
+          return this.wdmUrl.dev;
         },
 
         getDefaultEntitlements: function () {

@@ -1,17 +1,20 @@
 'use strict';
 
 describe('Controller: ListOrganizationsCtrl', function () {
-  var controller, $scope, $rootScope, $state, $timeout, Orgservice;
-  var OrgserviceResponses;
+  var controller, $scope, $rootScope, $state, $q, $timeout, Orgservice;
 
   beforeEach(module('Core'));
 
-  beforeEach(inject(function ($rootScope, $controller, $state, _$timeout_, _Orgservice_) {
+  beforeEach(inject(function ($rootScope, $controller, $state, $q, _$timeout_, _Orgservice_) {
     $scope = $rootScope.$new();
     $state = $state;
+    $q = $q;
     $timeout = _$timeout_;
     Orgservice = _Orgservice_;
-    OrgserviceResponses = getJSONFixture('core/json/organizations/Orgservice.json');
+
+    var orgServiceResponses = getJSONFixture('core/json/organizations/Orgservice.json');
+    var listOrgs = orgServiceResponses.listOrgs;
+    spyOn(Orgservice, 'listOrgs').and.returnValue($q.when(listOrgs));
 
     $scope.timeoutVal = 1;
 
@@ -36,14 +39,12 @@ describe('Controller: ListOrganizationsCtrl', function () {
   });
 
   it('shouldnt search if the query.length >= 4 characters', function () {
-    spyOn(Orgservice, 'listOrgs').and.returnValue(false);
     $scope.filterList('1234');
     $timeout.flush($scope.timeoutVal);
     expect($scope.searchStr).toBe('1234');
   });
 
   it('a proper query should call out to the Orgservice', function () {
-    spyOn(Orgservice, 'listOrgs').and.returnValue(false);
     $scope.filterList('1234');
     $timeout.flush($scope.timeoutVal);
     expect($scope.searchStr).toBe('1234');
@@ -51,7 +52,6 @@ describe('Controller: ListOrganizationsCtrl', function () {
   });
 
   it('should not call out to the Orgservice if the query was not changed', function () {
-    spyOn(Orgservice, 'listOrgs').and.returnValue(false);
     $scope.searchStr = '1234';
     $scope.filterList('1234');
     $timeout.flush($scope.timeoutVal);
@@ -60,10 +60,6 @@ describe('Controller: ListOrganizationsCtrl', function () {
   });
 
   it('not changing the query should not call out to the Orgservice', function () {
-    spyOn(Orgservice, 'listOrgs').and.callFake(function (filter, callback) {
-      callback(OrgserviceResponses.listOrgs, 200);
-    });
-
     $scope.filterList('cisco');
     $timeout.flush($scope.timeoutVal);
     expect($scope.searchStr).toBe('cisco');

@@ -593,7 +593,9 @@
     "lastName": "Last Name",
     "email": "Email",
     "id": "ID",
-    "new": "New"
+    "new": "New",
+    "devices": "Devices",
+    "users": "Users"
   },
   "notifications": {
     "success": "Success notifications",
@@ -1641,7 +1643,9 @@
     "oneHundred": "100",
     "twoHundred": "200",
     "fiveHundred": "500",
-    "duration": "Trial Duration (days)",
+    "duration": "Duration of the Trial",
+    "durationHelp": "Days",
+    "message": "Message",
     "thirtyDays": "30 Days",
     "sixtyDays": "60 Days",
     "ninetyDays": "90",
@@ -1651,6 +1655,8 @@
     "startTrial": "Start Trial",
     "customerInformation": "Customer Information",
     "termsOfTrial": "Terms of Trial",
+    "trialServices": "Trial Services",
+    "sparkRoomSystem": "Room Systems",
     "trialButton": "Add Trial Customer",
     "dialogTitle": "Add New Trial",
     "customerName": "Company Name",
@@ -1665,7 +1671,11 @@
     "averageCallsTitle": "Average Calls Per User",
     "contentSharedTitle": "Files Shared",
     "errGetPhoneNumberCount": "Failed to retrieve phone number count.",
-    "invalidTrialLicenseCount": "Number of Licenses should be greater than 0 and less than 1000."
+    "invalidTrialLicenseCount": "Number of Licenses should be greater than 0 and less than 1000.",
+    "individualUserServices": "Individual User Services",
+    "roomSystems": "Room Systems",
+    "roomSystem": "Room System",
+    "call": "Call"
   },
   "trialModal": {
     "trialSuccess": "You have set up your trial successfully.",
