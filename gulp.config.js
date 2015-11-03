@@ -175,7 +175,8 @@ module.exports = function() {
         vendor + '/jstimezonedetect/jstz.js',
         vendor + '/masonry/dist/masonry.pkgd.js',
         vendor + '/imagesloaded/imagesloaded.pkgd.js',
-        vendor + '/ng-tags-input/ng-tags-input.min.js'
+        vendor + '/ng-tags-input/ng-tags-input.min.js',
+        vendor + '/pako/dist/pako.js',
       ],
       scss: {
         paths: [

@@ -1,53 +1,9 @@
 (function () {
   'use strict';
 
-  // TODO: Don't like this linking to routing name...
-  var serviceType2RouteName = function (serviceType) {
-    switch (serviceType) {
-    case 'c_cal':
-      return "calendar-service";
-    case 'c_ucmc':
-      return "call-service";
-    case 'c_mgmt':
-      return "management-service";
-    default:
-      //console.error("serviceType " + serviceType + " not supported in this controller");
-      return "";
-    }
-  };
-
-  var serviceType2ServiceId = function (serviceType) {
-    switch (serviceType) {
-    case 'c_cal':
-      return "squared-fusion-cal";
-    case 'c_ucmc':
-      return "squared-fusion-uc";
-    case 'c_mgmt':
-      return "squared-fusion-mgmt";
-    default:
-      //console.error("serviceType " + serviceType + " not supported in this controller");
-      return "";
-    }
-  };
-
-  var serviceId2ServiceType = function (serviceId) {
-    switch (serviceId) {
-    case 'squared-fusion-cal':
-      return "c_cal";
-    case 'squared-fusion-uc':
-      return "c_ucmc";
-    case 'squared-fusion-mgmt':
-      return "c_mgmt";
-    default:
-      //console.error("serviceType " + serviceType + " not supported in this controller");
-      return "";
-    }
-  };
-
   /* @ngInject */
-  function ExpresswayServiceController(XhrNotificationService, NotificationService, ServiceStateChecker, ServiceDescriptor, $stateParams, $state,
-    $modal,
-    $scope, ClusterService, USSService2, ConverterService, ServiceStatusSummaryService) {
+  function ExpresswayServiceController(XhrNotificationService, ServiceStateChecker, ServiceDescriptor, $state,
+    $modal, $scope, ClusterService, USSService2, ServiceStatusSummaryService, HelperNuggetsService) {
 
     ClusterService.subscribe('data', clustersUpdated, {
       scope: $scope
@@ -61,86 +17,24 @@
     vm.loading = true;
     vm.state = $state;
     vm.currentServiceType = $state.current.data.serviceType;
-    vm.currentServiceId = serviceType2ServiceId(vm.currentServiceType);
+    vm.currentServiceId = HelperNuggetsService.serviceType2ServiceId(vm.currentServiceType);
     vm.selectedRow = -1;
+
     //TODO: Don't like this linking to routes...
-    vm.route = serviceType2RouteName(vm.currentServiceType);
+    vm.route = HelperNuggetsService.serviceType2RouteName(vm.currentServiceType);
+
     vm.notificationTag = vm.currentServiceId;
     vm.clusters = _.values(ClusterService.getClusters());
-    vm.clusterLength = function () {
-      return _.size(vm.clusters);
-    };
     vm.serviceIconClass = ServiceDescriptor.serviceIcon(vm.currentServiceId);
-
-    if (vm.currentServiceId == "squared-fusion-mgmt") {
-      ServiceDescriptor.services(function (error, services) {
-        if (!error) {
-          vm.serviceEnabled = _.any(ServiceDescriptor.filterAllExceptManagement(services), {
-            enabled: true
-          });
-          vm.loading = false;
-        }
-      });
-    } else {
-      vm.serviceEnabled = false;
-      ServiceDescriptor.isServiceEnabled(serviceType2ServiceId(vm.currentServiceType), function (a, b) {
-        vm.serviceEnabled = b;
-        vm.loading = false;
-      });
-    }
-
-    vm.serviceNotInstalled = function (cluster) {
-      return ServiceStatusSummaryService.serviceNotInstalled(vm.currentServiceType, cluster);
-    };
-
-    vm.softwareUpgradeAvailable = function (cluster) {
-      return ServiceStatusSummaryService.softwareUpgradeAvailable(vm.currentServiceType, cluster);
-    };
-
-    vm.softwareVersionAvailable = function (cluster) {
-      return ServiceStatusSummaryService.serviceFromCluster(vm.currentServiceType, cluster).software_upgrade_available ?
-        ServiceStatusSummaryService.serviceFromCluster(vm.currentServiceType, cluster).not_approved_package.version : "?";
-    };
-
-    vm.selectedClusterAggregatedStatus = function (cluster) {
-      return ServiceStatusSummaryService.clusterAggregatedStatus(vm.currentServiceType, cluster);
-    };
-
-    function clustersUpdated() {
-      ServiceStateChecker.checkState(vm.currentServiceType, vm.currentServiceId);
-      vm.clusters = _.values(ClusterService.getClusters());
-    }
-
-    function extractSummaryForAService() {
-      vm.userStatusSummary = _.find(USSService2.getStatusesSummary(), {
-        serviceId: serviceType2ServiceId(vm.currentServiceType)
-      });
-    }
-
-    vm.openUserStatusReportModal = function (serviceId) {
-      $scope.selectedServiceId = serviceId; //TODO: Fix. Currently compatible with "old" concept...
-      $scope.modal = $modal.open({
-        scope: $scope,
-        controller: 'ExportUserStatusesController',
-        templateUrl: 'modules/hercules/export/export-user-statuses.html'
-      });
-    };
-
-    vm.enableService = function (serviceId) {
-      ServiceDescriptor.setServiceEnabled(serviceId, true, function (error) {
-        if (error !== null) {
-          XhrNotificationService.notify("Problems enabling the service");
-        }
-      });
-      vm.serviceEnabled = true;
-    };
-
-    vm.showClusterDetails = function (cluster) {
-      $state.go('cluster-details-new', {
-        cluster: cluster,
-        serviceType: vm.currentServiceType
-      });
-    };
+    vm.clusterLength = clusterLength;
+    vm.serviceNotInstalled = serviceNotInstalled;
+    vm.softwareUpgradeAvailable = softwareUpgradeAvailable;
+    vm.softwareVersionAvailable = softwareVersionAvailable;
+    vm.selectedClusterAggregatedStatus = selectedClusterAggregatedStatus;
+    vm.openUserStatusReportModal = openUserStatusReportModal;
+    vm.enableService = enableService;
+    vm.showClusterDetails = showClusterDetails;
+    vm.openUserErrorsModal = openUserErrorsModal;
 
     vm.clusterListGridOptions = {
       data: 'exp.clusters',
@@ -163,7 +57,81 @@
       }]
     };
 
-    vm.openUserErrorsModal = function () {
+    if (vm.currentServiceId == "squared-fusion-mgmt") {
+      ServiceDescriptor.services(function (error, services) {
+        if (!error) {
+          vm.serviceEnabled = _.any(ServiceDescriptor.filterAllExceptManagement(services), {
+            enabled: true
+          });
+          vm.loading = false;
+        }
+      });
+    } else {
+      vm.serviceEnabled = false;
+      ServiceDescriptor.isServiceEnabled(HelperNuggetsService.serviceType2ServiceId(vm.currentServiceType), function (a, b) {
+        vm.serviceEnabled = b;
+        vm.loading = false;
+      });
+    }
+
+    function clusterLength() {
+      return _.size(vm.clusters);
+    }
+
+    function serviceNotInstalled(cluster) {
+      return ServiceStatusSummaryService.serviceNotInstalled(vm.currentServiceType, cluster);
+    }
+
+    function softwareUpgradeAvailable(cluster) {
+      return ServiceStatusSummaryService.softwareUpgradeAvailable(vm.currentServiceType, cluster);
+    }
+
+    function softwareVersionAvailable(cluster) {
+      return ServiceStatusSummaryService.serviceFromCluster(vm.currentServiceType, cluster).software_upgrade_available ?
+        ServiceStatusSummaryService.serviceFromCluster(vm.currentServiceType, cluster).not_approved_package.version : "?";
+    }
+
+    function selectedClusterAggregatedStatus(cluster) {
+      return ServiceStatusSummaryService.clusterAggregatedStatus(vm.currentServiceType, cluster);
+    }
+
+    function clustersUpdated() {
+      ServiceStateChecker.checkState(vm.currentServiceType, vm.currentServiceId);
+      vm.clusters = _.values(ClusterService.getClusters());
+    }
+
+    function extractSummaryForAService() {
+      vm.userStatusSummary = _.find(USSService2.getStatusesSummary(), {
+        serviceId: HelperNuggetsService.serviceType2ServiceId(vm.currentServiceType)
+      });
+    }
+
+    function openUserStatusReportModal(serviceId) {
+      $scope.selectedServiceId = serviceId; //TODO: Fix. Currently compatible with "old" concept...
+      $scope.modal = $modal.open({
+        scope: $scope,
+        controller: 'ExportUserStatusesController',
+        templateUrl: 'modules/hercules/export/export-user-statuses.html'
+      });
+    }
+
+    function enableService(serviceId) {
+      ServiceDescriptor.setServiceEnabled(serviceId, true, function (error) {
+        if (error !== null) {
+          XhrNotificationService.notify("Problems enabling the service");
+        }
+      });
+      vm.serviceEnabled = true;
+    }
+
+    function showClusterDetails(cluster) {
+      $state.go('cluster-details-new', {
+        cluster: cluster,
+        serviceType: vm.currentServiceType
+      });
+    }
+
+    function openUserErrorsModal() {
       $scope.modal = $modal.open({
         scope: $scope,
         controller: 'UserErrorsController',
@@ -175,270 +143,7 @@
           }
         }
       });
-    };
-  }
-
-  /* @ngInject */
-  function ExpresswayServiceDetailsController(XhrNotificationService, ServiceStatusSummaryService, $state, $modal, $stateParams, ClusterService) {
-    var vm = this;
-    vm.state = $state;
-    vm.clusterId = $stateParams.cluster.id;
-    vm.serviceType = $stateParams.serviceType;
-    vm.serviceId = serviceType2ServiceId(vm.serviceType);
-
-    vm.cluster = ClusterService.getClusters()[vm.clusterId];
-
-    vm.selectedService = function () {
-      return _.find(vm.cluster.services, {
-        service_type: vm.serviceType
-      });
-    };
-
-    vm.alarms2hosts = _.memoize(function () {
-      var alarms = {};
-
-      _.forEach(vm.selectedService().connectors, function (conn) {
-        _.forEach(conn.alarms, function (alarm) {
-          if (!alarms[alarm.id]) {
-            alarms[alarm.id] = {
-              alarm: alarm,
-              hosts: []
-            };
-          }
-          alarms[alarm.id].hosts.push(conn.host);
-        });
-      });
-      var mappedAlarms = _.toArray(alarms);
-      return mappedAlarms;
-    });
-
-    //TODO: Don't like this linking to routes...
-    vm.route = serviceType2RouteName(vm.serviceType);
-
-    vm.serviceNotInstalled = function () {
-      return ServiceStatusSummaryService.serviceNotInstalled(vm.serviceType, vm.cluster);
-    };
-
-    vm.upgrade = function () {
-      $modal.open({
-        templateUrl: "modules/hercules/expressway-service/software-upgrade-dialog.html",
-        controller: SoftwareUpgradeController,
-        controllerAs: "softwareUpgrade",
-        resolve: {
-          serviceId: function () {
-            return vm.serviceId;
-          }
-        }
-      }).result.then(function () {
-        ClusterService
-          .upgradeSoftware(vm.clusterId, vm.serviceType)
-          .then(function () {}, XhrNotificationService.notify);
-      });
-    };
-
-    vm.deleteHost = function (host) {
-      //console.log("Delete host ",host)
-      return ClusterService.deleteHost(vm.clusterId, host.serial).then(function () {
-        //TODO: Update page
-      }, XhrNotificationService.notify);
-    };
-
-    /* @ngInject */
-    function SoftwareUpgradeController(serviceId, $modalInstance) {
-      var modalVm = this;
-      modalVm.newVersion = vm.selectedService().not_approved_package.version;
-      modalVm.oldVersion = vm.selectedService().connectors[0].version;
-      modalVm.serviceId = serviceId;
-      modalVm.ok = function () {
-        $modalInstance.close();
-      };
-      modalVm.cancel = function () {
-        $modalInstance.dismiss();
-      };
-      modalVm.clusterName = vm.cluster.name;
     }
-  }
-
-  /* @ngInject */
-  function DisableConfirmController(ServiceDescriptor, $modalInstance, serviceId) {
-    var modalVm = this;
-    modalVm.serviceId = serviceId;
-    modalVm.serviceIconClass = ServiceDescriptor.serviceIcon(serviceId);
-
-    modalVm.ok = function () {
-      $modalInstance.close();
-    };
-    modalVm.cancel = function () {
-      $modalInstance.dismiss();
-    };
-  }
-
-  /* @ngInject */
-  function ExpresswayServiceSettingsController($state, $modal, ServiceDescriptor, Authinfo, USSService2, $stateParams, NotificationConfigService,
-    MailValidatorService, XhrNotificationService, CertService, Notification) {
-    var vm = this;
-    vm.config = "";
-    vm.wx2users = "";
-    vm.serviceType = $stateParams.serviceType;
-    vm.serviceId = serviceType2ServiceId(vm.serviceType);
-
-    var readCerts = function () {
-      CertService.getCerts(Authinfo.getOrgId()).then(function (res) {
-        vm.certificates = res || [];
-      }, function (err) {
-        return XhrNotificationService.notify(err);
-      });
-    };
-
-    vm.squaredFusionEc = false;
-    vm.squaredFusionEcEntitled = Authinfo.isFusionEC();
-    if (vm.squaredFusionEcEntitled) {
-      ServiceDescriptor.isServiceEnabled("squared-fusion-ec", function (a, b) {
-        vm.squaredFusionEc = b;
-        if (vm.squaredFusionEc) {
-          readCerts();
-        }
-      });
-    }
-
-    vm.storeEc = function () {
-      //console.log("store ec", vm.squaredFusionEc)
-      ServiceDescriptor.setServiceEnabled("squared-fusion-ec", vm.squaredFusionEc,
-        function (err) {
-          // TODO: fix this callback crap!
-          if (err) {
-            XhrNotificationService.notify("Failed to enable Aware");
-          }
-        }
-      );
-      if (vm.squaredFusionEc) {
-        readCerts();
-      }
-    };
-
-    vm.loading = true;
-    USSService2.getOrg(Authinfo.getOrgId()).then(function (res) {
-      vm.loading = false;
-      vm.sipDomain = res.sipDomain;
-      vm.org = res || {};
-    }, function (err) {
-      //  if (err) return notification.notify(err);
-    });
-
-    vm.updateSipDomain = function () {
-      vm.savingSip = true;
-
-      USSService2.updateOrg(vm.org).then(function (res) {
-        vm.savingSip = false;
-      }, function (err) {
-        vm.savingSip = false;
-        Notification.error("hercules.errors.sipDomainInvalid");
-      });
-    };
-
-    vm.config = "";
-    NotificationConfigService.read(function (err, config) {
-      vm.loading = false;
-      if (err) {
-        return XhrNotificationService.notify(err);
-      }
-      vm.config = config || {};
-      if (vm.config.wx2users.length > 0) {
-        vm.wx2users = _.map(vm.config.wx2users.split(','), function (user) {
-          return {
-            text: user
-          };
-        });
-      } else {
-        vm.wx2users = [];
-      }
-    });
-    vm.cluster = $stateParams.cluster;
-
-    vm.writeConfig = function () {
-      vm.config.wx2users = _.map(vm.wx2users, function (data) {
-        return data.text;
-      }).toString();
-      if (vm.config.wx2users && !MailValidatorService.isValidEmailCsv(vm.config.wx2users)) {
-        Notification.error("hercules.errors.invalidEmail");
-      } else {
-        vm.savingEmail = true;
-        NotificationConfigService.write(vm.config, function (err) {
-          vm.savingEmail = false;
-          if (err) {
-            return XhrNotificationService.notify(err);
-          }
-        });
-      }
-    };
-
-    vm.disableService = function (serviceId) {
-      ServiceDescriptor.setServiceEnabled(serviceId, false, function (error) {
-        // TODO: Strange callback result ???
-        if (error !== null) {
-          XhrNotificationService.notify(error);
-        }
-      });
-      vm.serviceEnabled = false;
-    };
-
-    vm.confirmDisable = function (serviceId) {
-      $modal.open({
-        templateUrl: "modules/hercules/expressway-service/confirm-disable-dialog.html",
-        controller: DisableConfirmController,
-        controllerAs: "disableConfirmDialog",
-        resolve: {
-          serviceId: function () {
-            return serviceId;
-          }
-        }
-      }).result.then(function () {
-        vm.disableService(serviceId);
-        //TODO: Fix this hack!
-        $state.go(serviceType2RouteName(serviceId2ServiceType(serviceId)) + ".list", {
-          serviceType: serviceId2ServiceType(serviceId)
-        }, {
-          reload: true
-        });
-      });
-    };
-
-    vm.uploadCert = function (file, event) {
-      if (!file) {
-        return;
-      }
-      CertService.uploadCert(Authinfo.getOrgId(), file).then(readCerts, XhrNotificationService.notify);
-    };
-
-    vm.confirmCertDelete = function (cert) {
-      $modal.open({
-        templateUrl: "modules/hercules/expressway-service/confirm-certificate-delete.html",
-        controller: ConfirmCertificateDeleteController,
-        controllerAs: "confirmCertificateDelete",
-        resolve: {
-          cert: function () {
-            return cert;
-          }
-        }
-      }).result.then(readCerts);
-    };
-
-    vm.invalidEmail = function (tag) {
-      Notification.error(tag.text + " is not a valid email");
-    };
-
-  }
-
-  /* @ngInject */
-  function ConfirmCertificateDeleteController(CertService, $modalInstance, XhrNotificationService, cert) {
-    var vm = this;
-    vm.cert = cert;
-    vm.remove = function () {
-      CertService.deleteCert(vm.cert.certId).then($modalInstance.close, XhrNotificationService.notify);
-    };
-    vm.cancel = function () {
-      $modalInstance.dismiss();
-    };
   }
 
   /* @ngInject */
@@ -464,10 +169,10 @@
     };
 
     vm.deleteHost = function () {
-      return ClusterService.deleteHost(vm.clusterId, vm.connector.host.serial).then(function () {
-        if (ClusterService.getClusters()[vm.clusterId]) {
+      return ClusterService.deleteHost(vm.cluster.id, vm.connector().host.serial).then(function () {
+        if (ClusterService.getClusters()[vm.cluster.id]) {
           $state.go('cluster-details', {
-            clusterId: vm.clusterId
+            clusterId: vm.cluster.id
           });
         } else {
           $state.sidepanel.close();
@@ -494,11 +199,6 @@
     vm.activeActivePossible = vm.cluster.hosts.length > 1;
     vm.activeActiveEnabled = vm.activeActiveApplicable && isActiveActiveEnabled(vm.cluster, vm.serviceType);
     vm.activeActiveEnabledOld = vm.activeActiveApplicable && isActiveActiveEnabled(vm.cluster, vm.serviceType);
-
-    var managementServiceType = "c_mgmt";
-    vm.managementService = _.find(vm.cluster.services, {
-      service_type: managementServiceType
-    });
 
     vm.serviceNotInstalled = function () {
       return ServiceStatusSummaryService.serviceNotInstalled(vm.serviceType, vm.cluster);
@@ -605,10 +305,7 @@
   angular
     .module('Hercules')
     .controller('ExpresswayServiceController', ExpresswayServiceController)
-    .controller('ExpresswayServiceDetailsController', ExpresswayServiceDetailsController)
-    .controller('ExpresswayServiceSettingsController', ExpresswayServiceSettingsController)
     .controller('ExpresswayClusterSettingsController', ExpresswayClusterSettingsController)
-    .controller('DisableConfirmController', DisableConfirmController)
     .controller('AlarmController', AlarmController)
     .controller('HostDetailsController', HostDetailsController)
     .controller('UserErrorsController', UserErrorsController);

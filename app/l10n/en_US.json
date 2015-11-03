@@ -39,6 +39,7 @@
     "duplicateDidFound": "Duplicate Direct Line entered.",
     "noUsersInput": "No users were entered.",
     "csvBtnTitle": "Export to CSV",
+    "csvBtnExportingTitle": "Export in progress",
     "csvFilename": "exported_users.csv",
     "emailSent": "{{email}} email sent successfully",
     "emailFailed": "{{email}} email not sent, {{message}}",
@@ -1026,7 +1027,7 @@
     "addUsersDescription": "Select a method to upload your users.",
     "addUsersSimple": "Invite Users | Simple",
     "addUsersAdvanced": "Invite Users | Advanced",
-    "msgrSyncDesc": "Your organization has synchronization of users from Webex Messenger enabled. Users are provisioned from the Webex Messenger Administration tools.",
+    "msgrSyncDesc": "Your organization has user information being synced from the WebEx Messenger Service. To add, remove, or edit user information you must use the WebEx Messenger Administration Tool.",
     "getStarted": "Get Started",
     "startTrial": "Start Trial",
     "doLater": "Do this later",
@@ -2248,6 +2249,7 @@
     "licenseCount": "License Count",
     "type": "Type",
     "launchSite": "Configure Site",
+    "siteSettings": "Configure Site",
     "siteReports": "Reports"
   },
   "cloudExtensions": {
@@ -2403,7 +2405,9 @@
     "refresh": "Refresh",
     "refreshFailed": "Failed refreshing Messenger Sync status",
     "syncStatusHeading": "Messenger User Synchronization",
-    "syncStatusTooltip": "When enabled, users are actively being synced from Messenger"
+    "syncStatusTooltip": "When enabled, users are actively being synced from Messenger",
+    "dirsyncStatusHeading": "Common Identity Directory Synchronization",
+    "dirsyncStatusTooltip": "To access Spark platform capabilities, WebEx Messenger users need to be synchronized with the Common Identity service."
   },
 
   "huronHuntGroup": {
@@ -2487,6 +2491,9 @@
     "cancelHeader": "Cancel Hunt Group Creation",
     "cancelDialog": "Are you sure you wish to cancel hunt group creation? This hunt group will not be saved.",
     "confirmButton": "Cancel Creation",
-    "continueButton": "Continue Creation"
+    "continueButton": "Continue Creation",
+    "memberFetchFailure": "Unable to get members.",
+    "invalidMember": "Select atleast one member",
+    "invalidFallback": "Select a number or enter a new valid number"
   }
 }
