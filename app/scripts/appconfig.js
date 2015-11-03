@@ -1465,8 +1465,8 @@ angular
           parent: 'sidepanel',
           views: {
             'sidepanel@': {
-              controllerAs: 'expresswayServiceDetails',
-              controller: 'ExpresswayServiceDetailsController',
+              controllerAs: 'expresswayClusterDetails',
+              controller: 'ExpresswayServiceClusterController',
               templateUrl: 'modules/hercules/expressway-service/cluster-details.html'
             },
             'header@cluster-details-new': {
