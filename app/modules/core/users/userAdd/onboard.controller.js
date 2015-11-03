@@ -1047,20 +1047,22 @@ angular.module('Core')
             }
 
             tempLicenseArray = [];
-            for (j = 0; j < temparray.length; j++) {
-              var newLicenseList = licenseList.map(function (license) {
-                var licenseObj = license;
-                if (license['id'].indexOf("CO_") === 0) {
-                  if (temparray[j].internalExtension) {
-                    licenseObj.properties.internalExtension = temparray[j].internalExtension;
+            if (licenseList && licenseList.length > 0) {
+              for (j = 0; j < temparray.length; j++) {
+                var newLicenseList = licenseList.map(function (license) {
+                  var licenseObj = angular.copy(license);
+                  if (licenseObj['id'].indexOf("CO_") === 0) {
+                    if (temparray[j].internalExtension) {
+                      licenseObj.properties.internalExtension = temparray[j].internalExtension;
+                    }
+                    if (temparray[j].directLine) {
+                      licenseObj.properties.directLine = temparray[j].directLine;
+                    }
                   }
-                  if (temparray[j].directLine) {
-                    licenseObj.properties.directLine = temparray[j].directLine;
-                  }
-                }
-                return licenseObj;
-              });
-              tempLicenseArray.push(newLicenseList);
+                  return licenseObj;
+                });
+                tempLicenseArray.push(newLicenseList);
+              }
             }
 
             Userservice.onboardUsers(temparray, entitleList, null, tempLicenseArray, callback);
