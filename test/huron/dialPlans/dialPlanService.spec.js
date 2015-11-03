@@ -102,5 +102,16 @@ describe('Service: DialPlanService', function () {
         expect(angular.equals(response, dialPlanDetails)).toBe(true);
       });
     });
+
+    it('should return dialPlanDetails for customer in parameter', function () {
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/common/clusters?type=APPLICATION_VOICE').respond(clusters);
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/common/clusters?type=APPLICATION_VOICE').respond(clusters);
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + uuids.orgId).respond(customerVoiceNorthAmerica);
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/clusters/' + uuids.clusterId + '/dialplans').respond(dialPlans);
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/clusters/' + uuids.clusterId + '/dialplandetails/' + uuids.dialPlanIdNadp).respond(dialPlanDetails);
+      DialPlanService.getCustomerDialPlanDetails(uuids.orgId).then(function (response) {
+        expect(angular.equals(response, dialPlanDetails)).toBe(true);
+      });
+    });
   });
 });

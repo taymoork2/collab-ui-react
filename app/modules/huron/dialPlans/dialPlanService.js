@@ -6,7 +6,7 @@
     .factory('DialPlanService', DialPlanService);
 
   /* @ngInject */
-  function DialPlanService($q, $filter, Authinfo, ClusterCommonCmiService, CustomerVoiceCmiService, DialPlanCmiService, DialPlanDetailsCmiService) {
+  function DialPlanService($q, Authinfo, ClusterCommonCmiService, CustomerVoiceCmiService, DialPlanCmiService, DialPlanDetailsCmiService) {
 
     var service = {
       getVoiceClusters: getVoiceClusters,
@@ -28,13 +28,8 @@
     // get the customer's voice service profile
     function getCustomerVoice(customerId) {
       var queryString = {
-        customerId: undefined
+        customerId: customerId || Authinfo.getOrgId()
       };
-      if (angular.isDefined(customerId)) {
-        queryString.customerId = customerId;
-      } else {
-        queryString.customerId = Authinfo.getOrgId();
-      }
       return CustomerVoiceCmiService.get(queryString).$promise;
     }
 
@@ -50,8 +45,8 @@
     }
 
     // get dial plan details corresponding to the customer's dial plan
-    function getCustomerDialPlanDetails() {
-      return $q.all([getVoiceClusters(), getDialPlans(), getCustomerVoice()]).then(function (responses) {
+    function getCustomerDialPlanDetails(customerId) {
+      return $q.all([getVoiceClusters(), getDialPlans(), getCustomerVoice(customerId)]).then(function (responses) {
         // wait until all promises in $q are resolved, then...
         var voiceClusters = responses[0];
         var clusterDialPlans = responses[1];
