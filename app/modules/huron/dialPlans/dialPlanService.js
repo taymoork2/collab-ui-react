@@ -26,10 +26,15 @@
     }
 
     // get the customer's voice service profile
-    function getCustomerVoice() {
+    function getCustomerVoice(customerId) {
       var queryString = {
-        customerId: Authinfo.getOrgId()
+        customerId: undefined
       };
+      if (angular.isDefined(customerId)) {
+        queryString.customerId = customerId;
+      } else {
+        queryString.customerId = Authinfo.getOrgId();
+      }
       return CustomerVoiceCmiService.get(queryString).$promise;
     }
 
@@ -55,11 +60,11 @@
         if (customerVoice.dialPlan === null) {
           // if customer's dialPlan attribute is defined but null, assume the customer is on the 
           // North American Dial Plan. Look up uuid for NANP and insert it into customer dialPlan.
-          var northAmericanDialPlan = $filter('filter')(clusterDialPlans, {
-            name: "NANP"
-          }, true);
+          var northAmericanDialPlan = _.find(clusterDialPlans, {
+            'name': 'NANP'
+          });
           customerVoice.dialPlan = {
-            uuid: northAmericanDialPlan[0].uuid
+            uuid: northAmericanDialPlan.uuid
           };
         }
 
@@ -77,16 +82,13 @@
             // Remove this section when dialPlanDetails for North America becomes available in UPDM.
             // Ask Ken Nakano (kennakan) for any questions.
             if (response.status === 404) {
-              return $q(function (resolve) {
-                // manually build the North American dialPlanDetails for the customer
-                var northAmericanDialPlanData = {
-                  countryCode: "+1",
-                  extensionGenerated: "false",
-                  steeringDigitRequired: "true"
-                };
-                service.customerDialPlanDetails = northAmericanDialPlanData;
-                resolve(northAmericanDialPlanData);
-              });
+              // manually build the North American dialPlanDetails for the customer
+              var northAmericanDialPlanData = {
+                countryCode: "+1",
+                extensionGenerated: "false",
+                steeringDigitRequired: "true"
+              };
+              return northAmericanDialPlanData;
             }
             // end of Manually build dialPlanDetails for North America
 

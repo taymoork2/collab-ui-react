@@ -48,16 +48,23 @@ describe('Service: DialPlanService', function () {
   });
 
   describe('getCustomerVoice', function () {
-    it('should return voice profile for Australian customer', function () {
+    it('should return voice profile for current Australian customer', function () {
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + uuids.orgId).respond(customerVoiceAustalia);
       DialPlanService.getCustomerVoice().then(function (response) {
         expect(angular.equals(response, customerVoiceAustalia)).toBe(true);
       });
     });
 
-    it('should return voice profile for North American customer', function () {
+    it('should return voice profile for current North American customer', function () {
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + uuids.orgId).respond(customerVoiceNorthAmerica);
       DialPlanService.getCustomerVoice().then(function (response) {
+        expect(angular.equals(response, customerVoiceNorthAmerica)).toBe(true);
+      });
+    });
+
+    it('should return voice profile for customer in parameter', function () {
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + uuids.orgId).respond(customerVoiceNorthAmerica);
+      DialPlanService.getCustomerVoice(uuids.orgId).then(function (response) {
         expect(angular.equals(response, customerVoiceNorthAmerica)).toBe(true);
       });
     });
