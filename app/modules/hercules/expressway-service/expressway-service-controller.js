@@ -19,84 +19,22 @@
     vm.currentServiceType = $state.current.data.serviceType;
     vm.currentServiceId = HelperNuggetsService.serviceType2ServiceId(vm.currentServiceType);
     vm.selectedRow = -1;
+
     //TODO: Don't like this linking to routes...
     vm.route = HelperNuggetsService.serviceType2RouteName(vm.currentServiceType);
+
     vm.notificationTag = vm.currentServiceId;
     vm.clusters = _.values(ClusterService.getClusters());
-    vm.clusterLength = function () {
-      return _.size(vm.clusters);
-    };
     vm.serviceIconClass = ServiceDescriptor.serviceIcon(vm.currentServiceId);
-
-    if (vm.currentServiceId == "squared-fusion-mgmt") {
-      ServiceDescriptor.services(function (error, services) {
-        if (!error) {
-          vm.serviceEnabled = _.any(ServiceDescriptor.filterAllExceptManagement(services), {
-            enabled: true
-          });
-          vm.loading = false;
-        }
-      });
-    } else {
-      vm.serviceEnabled = false;
-      ServiceDescriptor.isServiceEnabled(HelperNuggetsService.serviceType2ServiceId(vm.currentServiceType), function (a, b) {
-        vm.serviceEnabled = b;
-        vm.loading = false;
-      });
-    }
-
-    vm.serviceNotInstalled = function (cluster) {
-      return ServiceStatusSummaryService.serviceNotInstalled(vm.currentServiceType, cluster);
-    };
-
-    vm.softwareUpgradeAvailable = function (cluster) {
-      return ServiceStatusSummaryService.softwareUpgradeAvailable(vm.currentServiceType, cluster);
-    };
-
-    vm.softwareVersionAvailable = function (cluster) {
-      return ServiceStatusSummaryService.serviceFromCluster(vm.currentServiceType, cluster).software_upgrade_available ?
-        ServiceStatusSummaryService.serviceFromCluster(vm.currentServiceType, cluster).not_approved_package.version : "?";
-    };
-
-    vm.selectedClusterAggregatedStatus = function (cluster) {
-      return ServiceStatusSummaryService.clusterAggregatedStatus(vm.currentServiceType, cluster);
-    };
-
-    function clustersUpdated() {
-      ServiceStateChecker.checkState(vm.currentServiceType, vm.currentServiceId);
-      vm.clusters = _.values(ClusterService.getClusters());
-    }
-
-    function extractSummaryForAService() {
-      vm.userStatusSummary = _.find(USSService2.getStatusesSummary(), {
-        serviceId: HelperNuggetsService.serviceType2ServiceId(vm.currentServiceType)
-      });
-    }
-
-    vm.openUserStatusReportModal = function (serviceId) {
-      $scope.selectedServiceId = serviceId; //TODO: Fix. Currently compatible with "old" concept...
-      $scope.modal = $modal.open({
-        scope: $scope,
-        controller: 'ExportUserStatusesController',
-        templateUrl: 'modules/hercules/export/export-user-statuses.html'
-      });
-    };
-
-    vm.enableService = function (serviceId) {
-      ServiceDescriptor.setServiceEnabled(serviceId, true, function (error) {
-        if (error !== null) {
-          XhrNotificationService.notify("Problems enabling the service");
-        }
-      });
-      vm.serviceEnabled = true;
-    };
-
-    vm.showClusterDetails = function (cluster) {
-      $state.go('cluster-details-new', {
-        cluster: cluster,
-        serviceType: vm.currentServiceType
-      });
-    };
+    vm.clusterLength = clusterLength;
+    vm.serviceNotInstalled = serviceNotInstalled;
+    vm.softwareUpgradeAvailable = softwareUpgradeAvailable;
+    vm.softwareVersionAvailable = softwareVersionAvailable;
+    vm.selectedClusterAggregatedStatus = selectedClusterAggregatedStatus;
+    vm.openUserStatusReportModal = openUserStatusReportModal;
+    vm.enableService = enableService;
+    vm.showClusterDetails = showClusterDetails;
+    vm.openUserErrorsModal = openUserErrorsModal;
 
     vm.clusterListGridOptions = {
       data: 'exp.clusters',
@@ -119,7 +57,81 @@
       }]
     };
 
-    vm.openUserErrorsModal = function () {
+    if (vm.currentServiceId == "squared-fusion-mgmt") {
+      ServiceDescriptor.services(function (error, services) {
+        if (!error) {
+          vm.serviceEnabled = _.any(ServiceDescriptor.filterAllExceptManagement(services), {
+            enabled: true
+          });
+          vm.loading = false;
+        }
+      });
+    } else {
+      vm.serviceEnabled = false;
+      ServiceDescriptor.isServiceEnabled(HelperNuggetsService.serviceType2ServiceId(vm.currentServiceType), function (a, b) {
+        vm.serviceEnabled = b;
+        vm.loading = false;
+      });
+    }
+
+    function clusterLength() {
+      return _.size(vm.clusters);
+    }
+
+    function serviceNotInstalled(cluster) {
+      return ServiceStatusSummaryService.serviceNotInstalled(vm.currentServiceType, cluster);
+    }
+
+    function softwareUpgradeAvailable(cluster) {
+      return ServiceStatusSummaryService.softwareUpgradeAvailable(vm.currentServiceType, cluster);
+    }
+
+    function softwareVersionAvailable(cluster) {
+      return ServiceStatusSummaryService.serviceFromCluster(vm.currentServiceType, cluster).software_upgrade_available ?
+        ServiceStatusSummaryService.serviceFromCluster(vm.currentServiceType, cluster).not_approved_package.version : "?";
+    }
+
+    function selectedClusterAggregatedStatus(cluster) {
+      return ServiceStatusSummaryService.clusterAggregatedStatus(vm.currentServiceType, cluster);
+    }
+
+    function clustersUpdated() {
+      ServiceStateChecker.checkState(vm.currentServiceType, vm.currentServiceId);
+      vm.clusters = _.values(ClusterService.getClusters());
+    }
+
+    function extractSummaryForAService() {
+      vm.userStatusSummary = _.find(USSService2.getStatusesSummary(), {
+        serviceId: HelperNuggetsService.serviceType2ServiceId(vm.currentServiceType)
+      });
+    }
+
+    function openUserStatusReportModal(serviceId) {
+      $scope.selectedServiceId = serviceId; //TODO: Fix. Currently compatible with "old" concept...
+      $scope.modal = $modal.open({
+        scope: $scope,
+        controller: 'ExportUserStatusesController',
+        templateUrl: 'modules/hercules/export/export-user-statuses.html'
+      });
+    }
+
+    function enableService(serviceId) {
+      ServiceDescriptor.setServiceEnabled(serviceId, true, function (error) {
+        if (error !== null) {
+          XhrNotificationService.notify("Problems enabling the service");
+        }
+      });
+      vm.serviceEnabled = true;
+    }
+
+    function showClusterDetails(cluster) {
+      $state.go('cluster-details-new', {
+        cluster: cluster,
+        serviceType: vm.currentServiceType
+      });
+    }
+
+    function openUserErrorsModal() {
       $scope.modal = $modal.open({
         scope: $scope,
         controller: 'UserErrorsController',
@@ -131,80 +143,6 @@
           }
         }
       });
-    };
-  }
-
-  /* @ngInject */
-  function ExpresswayServiceDetailsController(XhrNotificationService, ServiceStatusSummaryService, $state, $modal, $stateParams, ClusterService, HelperNuggetsService) {
-    var vm = this;
-    vm.state = $state;
-    vm.clusterId = $stateParams.cluster.id;
-    vm.serviceType = $stateParams.serviceType;
-    vm.serviceId = HelperNuggetsService.serviceType2ServiceId(vm.serviceType);
-
-    vm.cluster = ClusterService.getClusters()[vm.clusterId];
-
-    vm.selectedService = function () {
-      return _.find(vm.cluster.services, {
-        service_type: vm.serviceType
-      });
-    };
-
-    vm.alarms2hosts = _.memoize(function () {
-      var alarms = {};
-
-      _.forEach(vm.selectedService().connectors, function (conn) {
-        _.forEach(conn.alarms, function (alarm) {
-          if (!alarms[alarm.id]) {
-            alarms[alarm.id] = {
-              alarm: alarm,
-              hosts: []
-            };
-          }
-          alarms[alarm.id].hosts.push(conn.host);
-        });
-      });
-      var mappedAlarms = _.toArray(alarms);
-      return mappedAlarms;
-    });
-
-    //TODO: Don't like this linking to routes...
-    vm.route = HelperNuggetsService.serviceType2RouteName(vm.serviceType);
-
-    vm.serviceNotInstalled = function () {
-      return ServiceStatusSummaryService.serviceNotInstalled(vm.serviceType, vm.cluster);
-    };
-
-    vm.upgrade = function () {
-      $modal.open({
-        templateUrl: "modules/hercules/expressway-service/software-upgrade-dialog.html",
-        controller: SoftwareUpgradeController,
-        controllerAs: "softwareUpgrade",
-        resolve: {
-          serviceId: function () {
-            return vm.serviceId;
-          }
-        }
-      }).result.then(function () {
-        ClusterService
-          .upgradeSoftware(vm.clusterId, vm.serviceType)
-          .then(function () {}, XhrNotificationService.notify);
-      });
-    };
-
-    /* @ngInject */
-    function SoftwareUpgradeController(serviceId, $modalInstance) {
-      var modalVm = this;
-      modalVm.newVersion = vm.selectedService().not_approved_package.version;
-      modalVm.oldVersion = vm.selectedService().connectors[0].version;
-      modalVm.serviceId = serviceId;
-      modalVm.ok = function () {
-        $modalInstance.close();
-      };
-      modalVm.cancel = function () {
-        $modalInstance.dismiss();
-      };
-      modalVm.clusterName = vm.cluster.name;
     }
   }
 
@@ -367,7 +305,6 @@
   angular
     .module('Hercules')
     .controller('ExpresswayServiceController', ExpresswayServiceController)
-    .controller('ExpresswayServiceDetailsController', ExpresswayServiceDetailsController)
     .controller('ExpresswayClusterSettingsController', ExpresswayClusterSettingsController)
     .controller('AlarmController', AlarmController)
     .controller('HostDetailsController', HostDetailsController)

@@ -66,10 +66,6 @@ describe('User Service', function () {
         entitled: ["ciscouc"]
       }]
     });
-    $httpBackend.expectPOST(HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/users').respond(201);
-    $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/users/directorynumbers').respond(200);
-    $httpBackend.expectPOST(HuronConfig.getCmiUrl() + '/identity/users/otp').respond(201);
-    $httpBackend.expectPOST(HuronConfig.getEmailUrl() + '/email/userwelcome').respond(201);
     Userservice.updateUsers(users);
     $httpBackend.flush();
     expect(rootScope.$broadcast).toHaveBeenCalledWith('Userservice::updateUsers');

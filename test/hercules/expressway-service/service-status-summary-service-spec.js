@@ -48,7 +48,6 @@ describe('ServiceStatusSummaryService', function () {
   });
 
   it('other aggregated status is based on a certain priority list', function () {
-
     var clusterMockData = createAClusterMockWithGivenStates("not_configured", "disabled");
     var aggregated = Service.clusterAggregatedStatus("c_cal", clusterMockData);
     expect(aggregated).toEqual("disabled");
@@ -70,8 +69,87 @@ describe('ServiceStatusSummaryService', function () {
 
   });
 
+  it('service not installed', function () {
+    var clusterMockData = createCompleteClustersMockData("cluster1", ["c_mgmt", "c_cal"], ["host1.cisco.com"]);
+    var notInstalled = Service.serviceNotInstalled("c_cal", clusterMockData);
+    expect(notInstalled).toBe(false);
+    notInstalled = Service.serviceNotInstalled("c_ucmc", clusterMockData);
+    expect(notInstalled).toBe(true);
+  });
+
+  it('software upgrade available if provisioning data has not_approved_packages for given service', function () {
+    var clusterMockData = {
+      id: 0,
+      provisioning_data: {
+        not_approved_packages: [{
+          release_note: "no release note for this test data",
+          service: {
+            display_name: "calendar connector",
+            service_type: "c_cal"
+          },
+          tlp_url: "whatever_url",
+          version: "1.2.3.4"
+        }]
+      },
+      services: [{
+        service_type: "c_cal",
+        connectors: [{
+          state: "running"
+        }, {
+          alarms: [{
+            alarm: "isRaised"
+          }],
+          state: "downloading"
+        }, {
+          state: "disabled"
+        }]
+      }, {
+        service_type: "c_ucmc",
+        connectors: [{
+          state: "running"
+        }, {
+          alarms: [{
+            alarm: "isRaised"
+          }],
+          state: "downloading"
+        }, {
+          state: "disabled"
+        }]
+      }]
+    };
+
+    var software = Service.softwareUpgradeAvailable("c_cal", clusterMockData);
+    expect(software).toBe(true);
+    software = Service.softwareUpgradeAvailable("c_ucmc", clusterMockData);
+    expect(software).toBe(false);
+  });
+
+  it('no software packages available if no not_approved_packages', function () {
+    var clusterMockData = {
+      id: 0,
+      services: [{
+        service_type: "c_cal",
+        connectors: [{
+          state: "running"
+        }, {
+          alarms: [{
+            alarm: "isRaised"
+          }],
+          state: "downloading"
+        }, {
+          state: "disabled"
+        }]
+      }]
+    };
+
+    var software = Service.softwareUpgradeAvailable("c_cal", clusterMockData);
+    expect(software).toBe(false);
+    software = Service.softwareUpgradeAvailable("c_ucmc", clusterMockData);
+    expect(software).toBe(false);
+  });
+
   //********************************************************************
-  // Testing my own internal cluster data creator functions
+  // Testing this specs own internal cluster data creator functions
   //********************************************************************
   it("cluster mock data is generated correctly", function () {
     var expected = {
