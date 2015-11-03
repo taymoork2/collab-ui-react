@@ -5,14 +5,16 @@
         <h2 class="aa-nowrap">{{ aaBuilderMain.ui.ceInfo.getName() }}</h2>
         <span class="aa-edit-icon" aria-label="common.edit"></span>
       </a>
-      <div ng-if="aaBuilderMain.ui.ceInfo.getResources().length > 0" class="aa-flex-row-item" id="aa-header-row-numbers">
-        <h2 class="aa-nowrap">{{ aaBuilderMain.ui.ceInfo | preferredAAResource }}</h2>
+      <div class="aa-flex-row-item" id="aa-header-row-numbers">
+        <h2 class="aa-nowrap">{{ aaBuilderMain.ui.ceInfo | preferredAAResource | telephoneNumber}}</h2>
+        <h3 class ="aa-and-more">{{ aaBuilderMain.ui.ceInfo | moreAAResources }}</h3>
       </div>
     </div>
   </div>
   <div class="aa-flex-row-item-right" id="aa-header-row-save" ng-if="aaBuilderMain.ui.ceInfo.getName()">
-    <div class="aa-tooltip-wrapper" tooltip-html-unsafe="{{aaBuilderMain.getSaveErrorMessages()}}" tooltip-trigger="mouseenter" tooltip-placement="top">
-      <button type="button" name="saveButton" class="btn btn-primary" ng-disabled="!aaBuilderMain.canSaveAA()" ng-click="aaBuilderMain.saveAARecords()" translate="common.save"></button>
-    </div>
+    <button type="button" name="saveButton" class="btn btn-primary" ng-disabled="!aaBuilderMain.canSaveAA()" ng-click="aaBuilderMain.saveAARecords()" translate="common.save"></button>
   </div>
 </div>
+
+
+

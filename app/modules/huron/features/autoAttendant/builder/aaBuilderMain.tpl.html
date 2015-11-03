@@ -5,7 +5,7 @@
     <span ng-include="'modules/huron/features/autoAttendant/builder/aaBuilderName.tpl.html'"></span>
   </div>
 
-  <div ng-if="aaBuilderMain.ui.ceInfo.name" class="aa-builder-frame">
+  <div ng-if="aaBuilderMain.ui.ceInfo.getName()" class="aa-builder-frame">
     <div class="aa-builder-container">
       <span ng-include="'modules/huron/features/autoAttendant/builder/aaBuilderContainer.tpl.html'" ng-controller="AABuilderContainerCtrl as aaBuilder"></span>
     </div>
