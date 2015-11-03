@@ -1950,11 +1950,13 @@
     "indexPageLabel_MC_mc_scheduling_templates": "Scheduling Templates",
     "indexPageLabel_MC_mc_navigation_customization": "Navigation Customization",
 
+    "indexPageLabel_TC_tc_ecommerce": "E-Commerce",
     "indexPageLabel_TC_tc_options": "Site Options",
     "indexPageLabel_TC_tc_navigation_customization": "Navigation Customization",
     "indexPageLabel_TC_tc_scheduling_templates": "Scheduling Templates",
     "indexPageLabel_TC_tc_default_options": "Default Options",
 
+    "indexPageLabel_EC_ec_ecommerce": "E-Commerce",
     "indexPageLabel_EC_ec_options": "Site Options",
     "indexPageLabel_EC_ec_default_options": "Default Options",
     "indexPageLabel_EC_ec_navigation_customization": "Navigation Customization",
@@ -2000,11 +2002,13 @@
     "settingPageLabel_MC_mc_scheduling_templates": "Meeting Center Settings",
     "settingPageLabel_MC_mc_navigation_customization": "Meeting Center Settings",
 
+    "settingPageLabel_TC_tc_ecommerce": "Training Center E-Commerce",
     "settingPageLabel_TC_tc_options": "Training Center Settings",
     "settingPageLabel_TC_tc_navigation_customization": "Training Center Settings",
     "settingPageLabel_TC_tc_scheduling_templates": "Training Center Settings",
     "settingPageLabel_TC_tc_default_options": "Training Center Settings",
 
+    "settingPageLabel_EC_ec_ecommerce": "Event Center E-Commerce",
     "settingPageLabel_EC_ec_options": "Event Center Settings",
     "settingPageLabel_EC_ec_default_options": "Event Center Settings",
     "settingPageLabel_EC_ec_navigation_customization": "Event Center Settings",
