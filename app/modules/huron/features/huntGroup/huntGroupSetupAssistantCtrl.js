@@ -53,7 +53,7 @@
     // ==============================================
 
     function toggleMemberPanel(userUuid) {
-      if(vm.openMemberPanelUuid === userUuid) {
+      if (vm.openMemberPanelUuid === userUuid) {
         vm.openMemberPanelUuid = undefined;
       } else {
         vm.openMemberPanelUuid = userUuid;
@@ -164,9 +164,12 @@
       $state.go('huronfeatures');
     }
 
-    function selectHuntGroupMember(user) {
+    function selectHuntGroupMember(member) {
       vm.userSelected = undefined;
-      vm.selectedHuntMembers.push(user);
+      HuntGroupService.getMemberInfo(customerId, member.user.uuid).then(function (user) {
+        member.user.email = user.email;
+      });
+      vm.selectedHuntMembers.push(member);
     }
 
     function unSelectHuntGroupMember(user) {

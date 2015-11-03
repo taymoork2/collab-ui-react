@@ -100,7 +100,7 @@
     function constructUserNumberMappingForUI(users) {
       var huntMembers = [];
       users.map(function (user) {
-        var flatArr = user.numbers.map(function (number){
+        var flatArr = user.numbers.map(function (number) {
           return {
             displayUser: false,
             selectableNumber: number,
@@ -109,7 +109,7 @@
           };
         });
 
-        if(flatArr.length > 0) {
+        if (flatArr.length > 0) {
           flatArr[0].displayUser = true;
           huntMembers = huntMembers.concat(flatArr);
         }
