@@ -32,19 +32,10 @@ angular.module('Squared')
         }
 
         $q.all(promiseChain).then(function () {
-          $scope.webexSelected = Storage.get('webexReportsSiteUrl');
-          if (!$scope.webexSelected || $scope.webexSelected === 'undefined') {
-            var selectedIndex = 0;
-            if ($stateParams.tab === 'webex') {
-              _.forEach($scope.webexOptions, function (val, index) {
-                if (val === $stateParams.siteUrl) {
-                  selectedIndex = index;
-                }
-              });
-            }
-            $scope.webexSelected = $scope.webexOptions[selectedIndex];
-          }
           if ($scope.webexOptions.length) {
+            var index = $scope.webexOptions.indexOf($stateParams.siteUrl);
+            index = (index === -1) ? 0 : index;
+            $scope.webexSelected = Storage.get('webexReportsSiteUrl') || $scope.webexOptions[index];
             $scope.updateWebexReports();
           }
         });
