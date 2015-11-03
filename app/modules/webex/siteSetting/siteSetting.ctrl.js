@@ -12,7 +12,6 @@
     '$sce',
     '$timeout',
     'Authinfo',
-    'Notification',
     'Config',
     function (
       $scope,
@@ -25,7 +24,6 @@
       $sce,
       $timeout,
       Authinfo,
-      Notification,
       Config
     ) {
 
@@ -76,7 +74,8 @@
       $scope.locale = ("es_LA" == $translate.use()) ? "es_MX" : $translate.use();
       $scope.siteName = $stateParams.siteUrl.substring(
         0,
-        $stateParams.siteUrl.indexOf('.'));
+        $stateParams.siteUrl.indexOf('.')
+      );
 
       _this.logMsg = _this.funcName + ": " + "\n" +
         "siteSettingId=" + $scope.siteSettingId + "\n" +
