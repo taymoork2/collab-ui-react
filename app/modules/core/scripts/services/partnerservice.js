@@ -211,6 +211,7 @@
           dataObj.offer = offerNames.join(', ');
         }
 
+        dataObj.unmodifiedLicenses = _.cloneDeep(data.licenses);
         dataObj.licenseList = data.licenses;
         dataObj.messaging = getLicense(data.licenses, 'messaging');
         dataObj.conferencing = getLicense(data.licenses, 'conferencing');
