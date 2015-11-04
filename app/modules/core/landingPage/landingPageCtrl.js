@@ -3,8 +3,8 @@
 /* global AmCharts, moment */
 
 angular.module('Core')
-  .controller('LandingPageCtrl', ['$scope', '$rootScope', '$timeout', '$modal', 'Orgservice', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'CannedDataService', '$state',
-    function ($scope, $rootScope, $timeout, $modal, Orgservice, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, CannedDataService, $state) {
+  .controller('LandingPageCtrl', ['$scope', '$rootScope', '$timeout', 'Orgservice', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'CannedDataService', '$state',
+    function ($scope, $rootScope, $timeout, Orgservice, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, CannedDataService, $state) {
 
       $scope.isAdmin = false;
       var callsChart, conversationsChart, contentSharedChart;
@@ -39,12 +39,8 @@ angular.module('Core')
         'date': todaysDate.setDate(todaysDate.getDate() + 1)
       }];
 
-      $scope.showServiceActivationDialog = function (serviceName) {
-        $scope.modal = $modal.open({
-          scope: $scope,
-          controller: 'ServiceActivationController',
-          templateUrl: 'modules/hercules/dashboard/service-activation.html'
-        });
+      $scope.showServiceActivationPage = function (serviceName) {
+        $state.go(serviceName + '.list');
         $scope.setHybridAcknowledged(serviceName);
       };
 
@@ -280,9 +276,9 @@ angular.module('Core')
       };
 
       $scope.setHybridAcknowledged = function (serviceName) {
-        if (serviceName === 'CalendarService') {
+        if (serviceName === 'calendar-service') {
           $scope.isCalendarAcknowledged = true;
-        } else if (serviceName === 'CallService') {
+        } else if (serviceName === 'call-service') {
           $scope.isCallAcknowledged = true;
         }
         Orgservice.setHybridServiceAcknowledged(serviceName);

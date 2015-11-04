@@ -275,9 +275,8 @@ describe('orgService', function () {
       "acknowledged": true
     };
     httpBackend.when('PATCH', Config.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + extensionEntitlements[0], data).respond(200, {});
-    var response = Orgservice.setHybridServiceAcknowledged('CalendarService');
-    httpBackend.flush();
-    expect(response).not.toBe(true);
+    Orgservice.setHybridServiceAcknowledged('calendar-service');
+    expect(httpBackend.flush).not.toThrow();
   });
 
 });

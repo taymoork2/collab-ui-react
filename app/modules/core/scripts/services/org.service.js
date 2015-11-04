@@ -256,9 +256,9 @@
 
     function setHybridServiceAcknowledged(serviceName) {
       var serviceUrl = Config.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/';
-      if (serviceName === 'CalendarService') {
+      if (serviceName === 'calendar-service') {
         serviceUrl = serviceUrl.concat(extensionEntitlements[0]);
-      } else if (serviceName === 'CallService') {
+      } else if (serviceName === 'call-service') {
         serviceUrl = serviceUrl.concat(extensionEntitlements[1]);
       }
       return $http({
