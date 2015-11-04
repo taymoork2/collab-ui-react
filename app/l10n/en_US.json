@@ -2495,5 +2495,8 @@
     "memberFetchFailure": "Unable to get members.",
     "invalidMember": "Select atleast one member",
     "invalidFallback": "Select a number or enter a new valid number"
+  },
+  "overview": {
+    "pageTitle": "Overview"
   }
 }

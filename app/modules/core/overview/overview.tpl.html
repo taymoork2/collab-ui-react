@@ -1,0 +1,41 @@
+<cs-page-header title="overview.pageTitle"></cs-page-header>
+
+
+<div class="overview-content-container">
+  <cs-card-layout >
+    <cs-card class="medium menu-card" ng-repeat="foo in [1,2,3,4,5]">
+      <article>
+        <section>
+          <div class="service-card">
+            <div class="left-side">
+              <div class="service-name">
+                <img src="images/webex_logo_48px.png" width="40px" alt="Webex Logo"/>
+                <span>WebEx</span>
+              </div>
+            </div>
+            <div class="right-side">
+              <div class="overview-title">MEETINGS</div>
+              <div class="overview-count current">27,988</div>
+              <div class="overview-time current">This month</div>
+              <div class="overview-count last">28,469</div>
+              <div class="overview-time last">Last month</div>
+            </div>
+          </div>
+        </section>
+        <cs-card-menu-footer icon="'settings'">
+          <i class="icon icon-circle"></i>
+          <span>Excellent</span>
+        </cs-card-menu-footer>
+        <cs-card-menu menutitle="cd.menutitle">
+          <ul class="service-menu-list no-bullet">
+            <li><a class="service-menu-item" href="">pg_event.webex.com</a></li>
+            <li><a class="service-menu-item" href="">pg_finance.webex.com</a></li>
+            <li><a class="service-menu-item" href="">pg_marketing.webex.com</a></li>
+            <li><a class="service-menu-item" href="">pg_operations.webex.com</a></li>
+          </ul>
+        </cs-card-menu>
+      </article>
+    </cs-card>
+
+  </cs-card-layout>
+</div>
