@@ -1,16 +1,17 @@
 'use strict';
 
 angular.module('Core')
-  .controller('ExportUsersCtrl', ['$scope', '$rootScope', 'UserListService', 'Notification',
-    function ($scope, $rootScope, UserListService, Notification) {
+  .controller('ExportCustomersCtrl', ['$scope', '$rootScope', 'PartnerService', 'Notification',
+    function ($scope, $rootScope, PartnerService, Notification) {
 
       $scope.exporting = $rootScope.exporting;
 
       $scope.exportCSV = function () {
-        var promise = UserListService.exportCSV($scope.activeFilter);
+        var promise = PartnerService.exportCSV();
         promise.then(null, function (error) {
           Notification.notify(error, 'error');
         });
+
         return promise;
       };
 
