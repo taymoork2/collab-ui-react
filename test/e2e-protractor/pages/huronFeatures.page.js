@@ -4,10 +4,6 @@
 'use strict';
 var HuronFeaturesPage = function(){
 
-  //this.newHuntGroupName = 'Hunt Group - ' + (Math.floor(Math.random() * 1000)).toString();
-  //TODO 1. Remove the Hard coding of hunt group name when e2e for create hunt group gets ready
-  //TODO: 2. use randomly created hunt group name
-  this.huntGroupName = 'Self Driving Cars support';
   this.featuresList = element.all(by.css('.cs-card'));
   this.huntGroups = element.all(by.css('.cs-card.alerts'));
   this.autoAttendants = element.all(by.css('.cs-card.primary'));

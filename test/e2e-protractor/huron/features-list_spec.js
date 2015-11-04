@@ -47,7 +47,7 @@ describe('As an admin i should be able to', function () {
     utils.click(huronFeatures.allFilter);
     utils.click(utils.searchbox);
     utils.clear(utils.searchField);
-    utils.sendKeys(utils.searchField, huronFeatures.huntGroupName);
+    utils.sendKeys(utils.searchField, huntGroup.randomHGName);
     utils.expectIsDisplayed(huronFeatures.huntGroups);
     utils.expectCountToBeGreater(huronFeatures.selectedHuntGroups , 0);
   });
@@ -88,13 +88,13 @@ describe('As an admin i should be able to', function () {
     utils.click(huronFeatures.huntGroupDeleteBtn);
     utils.expectIsDisplayed(huronFeatures.popUpDelteBtn);
     utils.click(huronFeatures.popUpDelteBtn);
-    notifications.assertSuccess(huronFeatures.huntGroupName + ' hunt group has been deleted successfully');
+    notifications.assertSuccess(huntGroup.randomHGName + ' hunt group has been deleted successfully');
   });
 
   xit('verify the deleted hunt group is not shown on features list page', function(){
     utils.click(utils.searchbox);
     utils.clear(utils.searchField);
-    utils.sendKeys(utils.searchField, huronFeatures.huntGroupName);
+    utils.sendKeys(utils.searchField, huntGroup.randomHGName);
     expect(huronFeatures.huntGroups.count()).toBe(0);
   })
 });
