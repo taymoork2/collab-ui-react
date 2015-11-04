@@ -1000,7 +1000,10 @@ angular.module('Core')
           'mediafusionconnector',
           'hurondetails',
           'cdrsupport',
-          'cdr-overview'
+          'cdr-overview',
+          'calendar-service',
+          'call-service',
+          'management-service'
         ]
       };
 
