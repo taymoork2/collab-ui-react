@@ -21,6 +21,7 @@ var log = $.util.log;
 var path = require('path');
 var pkg = require('./package.json');
 var protractor = require('gulp-protractor').protractor;
+var fs = require('fs');
 var webdriverUpdate = require('gulp-protractor').webdriver_update;
 var reload = browserSync.reload;
 var runSeq = require('run-sequence');
@@ -965,14 +966,18 @@ gulp.task('e2e', function (done) {
   if (args.sauce) {
     runSeq(
       'e2e:setup',
+      'protractor:clean',
       'sauce:start',
       'protractor',
+      'protractor:clean',
       done
     );
   } else {
     runSeq(
       'e2e:setup',
+      'protractor:clean',
       'protractor',
+      'protractor:clean',
       done
     );
   }
@@ -987,7 +992,8 @@ gulp.task('e2e', function (done) {
  * --specs=hercules         Runs only tests in test/hercules directory
  * --specs=mediafusion      Runs only tests in test/mediafusion directory
  * --specs=filepath         Runs only tests in specified file
- * --regression             Runs tests in regression folder in addition to any specified tests
+ * --specs=fromfile         Runs only tests from within a file
+ * --filename=filepath      Specify the filename
  * --build                  Runs tests against the build directory
  * --verbose                Runs tests with detailed console.log() messages
  *************************************************************************/
@@ -1003,7 +1009,23 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
   var tests = [];
   if (args.specs) {
     var specs = args.specs;
-    if (!specs.match(/_spec.js/)) {
+    if (specs === 'fromfile') {
+      if (args.filename) {
+        var filename = args.filename;
+        try {
+          var e2ePrTests = fs.readFileSync('./' + filename, "utf8");
+          tests = e2ePrTests.split('\n');
+          tests = tests.filter(function (test) {
+            return test.trim() !== '';
+          });
+          messageLogger('Running End 2 End tests from: ' + $.util.colors.red(filename));
+        } catch (err) {
+          messageLogger('Error:: ' + $.util.colors.red(err));
+        }
+      } else {
+        messageLogger('Error:: ' + $.util.colors.red("'--filename' is not specified."));
+      }
+    } else if (!specs.match(/_spec.js/)) {
       tests = 'test/e2e-protractor/' + specs + '/**/*_spec.js';
       messageLogger('Running End 2 End tests from module: ' + $.util.colors.red(specs));
       // log($.util.colors.green('Running End 2 End tests from module: ') + $.util.colors.red(specs));
@@ -1018,8 +1040,9 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
       config.testFiles.e2e.squared,
       config.testFiles.e2e.hercules,
       config.testFiles.e2e.sunlight,
-      config.testFiles.e2e.webexuser,
-      config.testFiles.e2e.webexsite
+      config.testFiles.e2e.webexusersettings,
+      config.testFiles.e2e.webexsitesettings,
+      config.testFiles.e2e.webexsitereports
     );
     messageLogger('Running End 2 End tests from all modules.');
   }
@@ -1056,6 +1079,10 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
     .on('end', function () {
       exit(0);
     });
+});
+
+gulp.task('protractor:clean', function (done) {
+  del('e2e-fail-notify', done);
 });
 
 gulp.task('protractor:update', webdriverUpdate);

@@ -10,6 +10,11 @@ var SiteReportsPage = function () {
     password: 'Cisco!23',
   };
 
+  this.testAdmin2 = {
+    username: 't30citestprov9@mailinator.com',
+    password: 'Cisco!23',
+  }
+
   this.webexSiteReportsPanel = element(by.id('webexSiteReports'));
 
   this.webexReportCrumb1 = element(by.id('webexReportIFrameCrumb1'));
@@ -21,6 +26,7 @@ var SiteReportsPage = function () {
   this.webexCommonRecordingUsageLink = element(by.id('recording_usage'));
   this.webexCommonStorageUsageLink = element(by.id('storage_utilization'));
 
+  this.reportEngagementId = element(by.id('engagementReports'));
   this.webexCommonReportsCardId = element(by.id('common_reports'));
   this.webexCommonMeetingUsageId = element(by.id('webexSiteReportIframe-meeting_usage'));
   this.webexCommonMeetingsInProgressId = element(by.id('webexSiteReportIframe-meeting_in_progess'));

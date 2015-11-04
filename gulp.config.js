@@ -100,10 +100,11 @@ module.exports = function() {
         huron: e2e + '/huron/**/*_spec.js',
         mediafusion: e2e + '/mediafusion/**/*_spec.js',
         squared: e2e + '/squared/**/*_spec.js',
-        webexsite: e2e + '/webex/site/**/*_spec.js',
-        webexuser: e2e + '/webex/user/**/*_spec.js',
+        webexsitesettings: e2e + '/webex/siteSettings/**/*_spec.js',
+        webexsitereports: e2e + '/webex/siteReports/**/*_spec.js',
+        webexusersettings: e2e + '/webex/userSettings/**/*_spec.js',
         sunlight: e2e + '/sunlight/**/*_spec.js',
-        regression: e2e + '/regression/**/*_spec.js'
+		regression: e2e + '/regression/**/*_spec.js'
       }
     },
 
@@ -175,7 +176,8 @@ module.exports = function() {
         vendor + '/jstimezonedetect/jstz.js',
         vendor + '/masonry/dist/masonry.pkgd.js',
         vendor + '/imagesloaded/imagesloaded.pkgd.js',
-        vendor + '/ng-tags-input/ng-tags-input.min.js'
+        vendor + '/ng-tags-input/ng-tags-input.min.js',
+        vendor + '/pako/dist/pako.js',
       ],
       scss: {
         paths: [

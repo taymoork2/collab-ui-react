@@ -11,8 +11,8 @@ var SiteSettigsPage = function () {
   };
 
   this.testAdmin2 = {
-    username: 'monika@mfs.com',
-    password: 'P@ssword123',
+    username: 't30citestprov9@mailinator.com',
+    password: 'Cisco!23',
   }
 
   this.conferencing = element(by.css('a[href="#site-list"]'));
@@ -59,7 +59,8 @@ var SiteSettigsPage = function () {
   this.siteSettingBreadCrumbs = element(by.id('siteSettingBreadCrumbs'));
   this.siteListCrumb = element(by.id('siteListCrumb'));
   this.siteSettingsCrumb = element(by.id('siteSettingsCrumb'));
-  this.xLaunchSiteAdminIcon = element(by.id('webexSiteAdminLink'));
+  this.xLaunchSiteSettingsT30CITEST = element(by.id('t30citest.webex.com_xlaunch-webex-site-settings'));
+  this.xLaunchSiteReportsT30CITEST = element(by.id('t30citest.webex.com_xlaunch-webex-site-reports'));
 };
 
 module.exports = SiteSettigsPage;

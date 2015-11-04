@@ -6,7 +6,6 @@
     '$log',
     '$stateParams',
     '$translate',
-    '$filter',
     'Orgservice',
     'Authinfo',
     'WebExUtilsFact',
@@ -17,7 +16,6 @@
       $log,
       $stateParams,
       $translate,
-      $filter,
       Orgservice,
       Authinfo,
       WebExUtilsFact,
@@ -25,9 +23,128 @@
       webExXmlApiInfoObj
     ) {
       return {
-        getSiteSettingsObj: function () {
+        newSiteSettingsObj: function () {
+          this.webExSiteSettingsObj = {
+            viewReady: false,
+            hasLoadError: false,
+            sessionTicketError: false,
+            allowRetry: false,
+            errMsg: "",
+            pageTitle: null,
+            pageTitleFull: null,
+
+            siteUrl: null,
+            siteName: null,
+
+            // siteInfo: null,
+            // meetingTypesInfo: null,
+            // sessionTypesInfo: null,
+            settingPagesInfo: null,
+
+            emailAllHostsBtnObj: {
+              id: "emailAllHostsBtn",
+              pageObj: null,
+            }, // emailAllHostsBtnObj
+
+            siteInfoCardObj: {
+              id: "SiteInfo",
+
+              licensesTotal: {
+                id: "licensesTotal",
+                count: null
+              },
+
+              licensesUsage: {
+                id: "licensesUsage",
+                count: null
+              },
+
+              licensesAvailable: {
+                id: "licensesAvailable",
+                count: null
+              },
+
+              siteInfoPageObj: null,
+              siteFeaturesPageObj: null
+            }, // siteInfoCardObj
+
+            siteSettingCardObjs: [{
+              id: "CommonSettings",
+              label: null,
+              comment: null,
+              pageObjs: null,
+
+              subSectionObjs: []
+            }, {
+              id: "MC",
+              label: "Meeting Center",
+              comment: null,
+              pageObjs: null,
+
+              subSectionObjs: []
+            }, {
+              id: "TC",
+              label: "Training Center",
+              comment: null,
+              pageObjs: null,
+
+              subSectionObjs: []
+            }, {
+              id: "SC",
+              label: "Support Center",
+              comment: null,
+              pageObjs: null,
+
+              subSectionObjs: [{
+                id: "WebACD",
+                label: "WebACD",
+                pageObjs: null
+              }, {
+                id: "RA",
+                label: "Remote Access",
+                pageObjs: null
+              }]
+            }, {
+              id: "EC",
+              label: "Event Center",
+              comment: null,
+              pageObjs: null,
+
+              subSectionObjs: []
+            }], // siteSettingCardObjs
+
+            categoryObjs: [{
+              id: "EMAIL",
+              pageObjs: []
+            }, {
+              id: "SiteInfo",
+              pageObjs: []
+            }, {
+              id: "CommonSettings",
+              pageObjs: []
+            }, {
+              id: "MC",
+              pageObjs: []
+            }, {
+              id: "EC",
+              pageObjs: []
+            }, {
+              id: "SC",
+              pageObjs: []
+            }, {
+              id: "TC",
+              pageObjs: []
+            }, {
+              id: "RA",
+              pageObjs: []
+            }, {
+              id: "WebACD",
+              pageObjs: []
+            }], // categoryObjs
+          }; // webExSiteSettingsObj
+
           return this.webExSiteSettingsObj;
-        }, // getSiteSettingsObj
+        }, // newSiteSettingsObj()
 
         initSiteSettingsObj: function () {
           var funcName = "initSiteSettingsObj()";
@@ -35,8 +152,7 @@
 
           var _this = this;
 
-          _this.locale = $translate.use().replace("_", "-");
-          _this.webExSiteSettingsObj = createWebExSiteSettingsObj();
+          _this.newSiteSettingsObj();
 
           var siteUrl = (!$stateParams.siteUrl) ? '' : $stateParams.siteUrl;
           var siteName = WebExUtilsFact.getSiteName(siteUrl);
@@ -48,7 +164,6 @@
           );
 
           logMsg = funcName + ": " + "\n" +
-            "locale=" + _this.locale + "\n" +
             "siteUrl=" + siteUrl + "\n" +
             "siteName=" + siteName + "\n" +
             "pageTitle=" + pageTitle + "\n" +
@@ -87,163 +202,6 @@
           ); // _this.getSessionTicket().then()
 
           return _this.webExSiteSettingsObj;
-
-          function createWebExSiteSettingsObj() {
-            var webExSiteSettingsObj = {
-              viewReady: false,
-              hasLoadError: false,
-              sessionTicketError: false,
-              allowRetry: false,
-              errMsg: "",
-              pageTitle: null,
-              pageTitleFull: null,
-
-              siteUrl: null,
-              siteName: null,
-
-              // siteInfo: null,
-              // meetingTypesInfo: null,
-              // sessionTypesInfo: null,
-              settingPagesInfo: null,
-
-              /*
-              siteStatus: {
-                meetingCenter: {
-                  id: "MC",
-                  label: "Meeting Center",
-                  serviceType: "MeetingCenter",
-                  isSiteEnabled: false
-                }, // meetingCenter
-
-                trainingCenter: {
-                  id: "TC",
-                  label: "Training Center",
-                  serviceType: "TrainingCenter",
-                  isSiteEnabled: false,
-                }, // trainingCenter
-
-                eventCenter: {
-                  id: "EC",
-                  label: "Event Center",
-                  serviceType: "EventCenter",
-                  isSiteEnabled: false,
-                }, // eventCenter
-
-                supportCenter: {
-                  id: "SC",
-                  label: "Support Center",
-                  serviceType: "SupportCenter",
-                  isSiteEnabled: false
-                }, // supportCenter
-              }, // siteStatus
-              */
-
-              emailAllHostsBtnObj: {
-                id: "emailAllHostsBtn",
-                label: null,
-                pageObj: null,
-              }, // emailAllHostsBtnObj
-
-              siteInfoCardObj: {
-                id: "SiteInfo",
-                label: null,
-
-                licensesTotal: {
-                  id: "licensesTotal",
-                  count: 0
-                },
-
-                licensesUsage: {
-                  id: "licensesUsage",
-                  count: null
-                },
-
-                licensesAvailable: {
-                  id: "licensesAvailable",
-                  count: null
-                },
-
-                siteInfoPageObj: null,
-                siteFeaturesPageObj: null
-              }, // siteInfoCardObj
-
-              siteSettingCardObjs: [{
-                id: "CommonSettings",
-                label: null,
-                comment: null,
-                pageObjs: null,
-
-                subSectionObjs: []
-              }, {
-                id: "MC",
-                label: "Meeting Center",
-                comment: null,
-                pageObjs: null,
-
-                subSectionObjs: []
-              }, {
-                id: "TC",
-                label: "Training Center",
-                comment: null,
-                pageObjs: null,
-
-                subSectionObjs: []
-              }, {
-                id: "SC",
-                label: "Support Center",
-                comment: null,
-                pageObjs: null,
-
-                subSectionObjs: [{
-                  id: "WebACD",
-                  label: "WebACD",
-                  pageObjs: null
-                }, {
-                  id: "RA",
-                  label: "Remote Access",
-                  pageObjs: null
-                }]
-              }, {
-                id: "EC",
-                label: "Event Center",
-                comment: null,
-                pageObjs: null,
-
-                subSectionObjs: []
-              }], // siteSettingCardObjs
-
-              categoryObjs: [{
-                id: "EMAIL",
-                pageObjs: []
-              }, {
-                id: "SiteInfo",
-                pageObjs: []
-              }, {
-                id: "CommonSettings",
-                pageObjs: []
-              }, {
-                id: "MC",
-                pageObjs: []
-              }, {
-                id: "EC",
-                pageObjs: []
-              }, {
-                id: "SC",
-                pageObjs: []
-              }, {
-                id: "TC",
-                pageObjs: []
-              }, {
-                id: "RA",
-                pageObjs: []
-              }, {
-                id: "WebACD",
-                pageObjs: []
-              }], // categoryObjs
-            }; // webExSiteSettingsObj
-
-            return webExSiteSettingsObj;
-          } // createWebExSiteSettingsObj()
         }, // initSiteSettingsObj
 
         getSessionTicket: function (webexSiteUrl) {
@@ -297,16 +255,8 @@
               logMsg = funcName + ": " + "getInfoResult=" + JSON.stringify(getInfoResult);
               // $log.log(logMsg);
 
-              // _this.webExSiteSettingsObj.siteInfo = WebExUtilsFact.validateSiteInfoXmlData(getInfoResult.siteInfoXml);
-              // _this.webExSiteSettingsObj.meetingTypesInfo = WebExUtilsFact.validateMeetingTypesInfoXmlData(getInfoResult.meetingTypesInfoXml);
-              _this.webExSiteSettingsObj.settingPagesInfo = WebExUtilsFact.validateAdminPagesInfoXmlData(getInfoResult.settingPagesInfoXml);
-
-              // _this.processSiteInfo();
-              // _this.processMeetingTypesInfo();
-              _this.processSettingPagesInfo();
-
+              _this.processSettingPagesInfo(WebExUtilsFact.validateAdminPagesInfoXmlData(getInfoResult.settingPagesInfoXml));
               _this.updateDisplayInfo();
-
               _this.webExSiteSettingsObj.viewReady = true;
             },
 
@@ -357,103 +307,15 @@
           // $log.log(logMsg);
         }, // updateLicenseInfo()
 
-        /*
-        processSiteInfo: function () {
-          var siteInfoJson = _this.webExSiteSettingsObj.siteInfo.bodyJson;
-          var siteServiceTypes = [].concat(siteInfoJson.ns1_siteInstance.ns1_metaData.ns1_serviceType);
-
-          siteServiceTypes.forEach(
-            function chkSiteServiceType(siteServiceType) {
-              if (siteServiceType == _this.webExSiteSettingsObj.siteStatus.meetingCenter.label) {
-                _this.webExSiteSettingsObj.siteStatus.meetingCenter.isSiteEnabled = true;
-              } else if (siteServiceType == _this.webExSiteSettingsObj.siteStatus.eventCenter.label) {
-                _this.webExSiteSettingsObj.siteStatus.eventCenter.isSiteEnabled = true;
-              } else if (siteServiceType == _this.webExSiteSettingsObj.siteStatus.trainingCenter.label) {
-                _this.webExSiteSettingsObj.siteStatus.trainingCenter.isSiteEnabled = true;
-              } else if (siteServiceType == _this.webExSiteSettingsObj.siteStatus.supportCenter.label) {
-                _this.webExSiteSettingsObj.siteStatus.supportCenter.isSiteEnabled = true;
-              }
-            } // chkSiteServiceType()
-          ); // siteServiceTypes.forEach()
-        }, // processSiteInfo()
-        */
-
-        /*
-        processMeetingTypesInfo: function () {
-          var meetingTypesInfoJson = _this.webExSiteSettingsObj.meetingTypesInfo.bodyJson;
-          var sessionTypesInfo = [];
-
-          if (null != meetingTypesInfoJson.mtgtype_meetingType) { // non-empty meetingTypesInfoJson
-            var siteMeetingTypes = [].concat(meetingTypesInfoJson.mtgtype_meetingType);
-
-            siteMeetingTypes.forEach(
-              function chkSiteMeetingType(siteMeetingType) {
-                var siteMtgServiceTypeID = siteMeetingType.mtgtype_meetingTypeID;
-                var siteMtgProductCodePrefix = siteMeetingType.mtgtype_productCodePrefix;
-                var siteMtgDisplayName = siteMeetingType.mtgtype_displayName;
-                var siteMtgServiceTypes = [].concat(siteMeetingType.mtgtype_serviceTypes.mtgtype_serviceType);
-
-                var meetingCenterApplicable = false;
-                var trainingCenterApplicable = false;
-                var eventCenterApplicable = false;
-                var supportCenterApplicable = false;
-
-                siteMtgServiceTypes.forEach(
-                  function chkSiteMtgServiceType(siteMtgServiceType) {
-                    if (_this.webExSiteSettingsObj.siteStatus.meetingCenter.serviceType == siteMtgServiceType) {
-                      meetingCenterApplicable = true;
-                    } else if (_this.webExSiteSettingsObj.siteStatus.eventCenter.serviceType == siteMtgServiceType) {
-                      if ("AUO" != siteMtgProductCodePrefix) {
-                        eventCenterApplicable = true;
-                      }
-                    } else if (_this.webExSiteSettingsObj.siteStatus.trainingCenter.serviceType == siteMtgServiceType) {
-                      if ("AUO" != siteMtgProductCodePrefix) {
-                        trainingCenterApplicable = true;
-                      }
-                    } else if (_this.webExSiteSettingsObj.siteStatus.supportCenter.serviceType == siteMtgServiceType) {
-                      if (
-                        ("SMT" != siteMtgProductCodePrefix) &&
-                        ("AUO" != siteMtgProductCodePrefix)
-                      ) {
-                        supportCenterApplicable = true;
-                      }
-                    }
-
-                    if ("RAS" === siteMtgProductCodePrefix) {
-                      meetingCenterApplicable = false;
-                      trainingCenterApplicable = false;
-                      eventCenterApplicable = false;
-                      supportCenterApplicable = false;
-                    } //filter out RAS
-                  } // chkSiteMtgServiceType()
-                ); // siteMtgServiceTypes.forEach()
-
-                var sessionType = {
-                  id: "sessionType-" + siteMtgServiceTypeID,
-                  sessionTypeId: siteMtgServiceTypeID,
-                  sessionName: siteMtgProductCodePrefix,
-                  sessionDescription: siteMtgDisplayName,
-                  meetingCenterApplicable: meetingCenterApplicable,
-                  trainingCenterApplicable: trainingCenterApplicable,
-                  eventCenterApplicable: eventCenterApplicable,
-                  supportCenterApplicable: supportCenterApplicable,
-                  sessionEnabled: false
-                }; // sessionType
-
-                sessionTypesInfo.push(sessionType);
-              } // chkSiteMeetingType()
-            ); // siteMeetingTypes.forEach()
-          } // // non-empty meetingTypesInfoJson()
-
-          _this.webExSiteSettingsObj.sessionTypesInfo = sessionTypesInfo;
-        }, // processMeetingTypesInfo()
-        */
-
-        processSettingPagesInfo: function () {
+        processSettingPagesInfo: function (settingPagesInfo) {
           var funcName = "processSettingPagesInfo()";
           var logMsg = "";
 
           var _this = this;
+
+          _this.webExSiteSettingsObj.settingPagesInfo = settingPagesInfo;
+
+          var locale = $translate.use().replace("_", "-");
           var siteAdminNavUrls = _this.webExSiteSettingsObj.settingPagesInfo.bodyJson.ns1_siteAdminNavUrl;
 
           logMsg = funcName + ": " + "\n" +
@@ -586,7 +448,7 @@
                   if (!pageInsertionDone) {
                     var localeCompareResult = newPageObj.label.localeCompare(
                       pageObj.label,
-                      _this.locale
+                      locale
                     );
 
                     logMsg = funcName + ": " +
@@ -648,17 +510,14 @@
           updateSiteSettingCardObjs();
 
           function updateEmailAllHostsBtnObj() {
-            var btnLabel = $translate.instant("webexSiteSettingsLabels.emailAllHostsBtnTitle").replace(" ", "&nbsp;");
+            var btnLabel = $translate.instant("webexSiteSettingsLabels.emailAllHostsBtnTitle");
 
-            _this.webExSiteSettingsObj.emailAllHostsBtnObj.label = btnLabel;
             _this.webExSiteSettingsObj.emailAllHostsBtnObj.pageObj = _this.getCategoryObj("EMAIL").pageObjs[0];
           } // updateEmailAllHostsBtnObj()
 
           function updateSiteInfoCardObj() {
             var funcName = "updateSiteInfoCardObj()";
             var logMsg = "";
-
-            _this.webExSiteSettingsObj.siteInfoCardObj.label = _this.webExSiteSettingsObj.siteUrl;
 
             _this.getCategoryObj(_this.webExSiteSettingsObj.siteInfoCardObj.id).pageObjs.forEach(
               function checkPageObj(pageObj) {

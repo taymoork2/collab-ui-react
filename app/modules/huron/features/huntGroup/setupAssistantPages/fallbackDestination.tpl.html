@@ -1,12 +1,44 @@
-<div class="typeahead-large">
-  <input class="form-control  " placeholder="{{:: 'huronHuntGroup.fallbackPlaceholder' | translate}}" focus-on>
-
-  <p class="input-description" translate="huronHuntGroup.fallbackHint"></p>
-</div>
-<div class="text-center">
-  <cs-checkbox ckid="ckbox2" ng-model="cb.checkboxValue1"
-               label="{{:: 'huronHuntGroup.voiceCheckLabel' | translate}}"></cs-checkbox>
-</div>
-<div class="text-center">
-  <button class="label success" translate="huronHuntGroup.createGroupLabel"></button>
+<div>
+  <div class="typeahead-large">
+    <input type="text" ng-model="huntGroupSA.fallback" class="form-control"
+          typeahead="user for user in huntGroupSA.fetchHuntMembers($viewValue) | limitTo:10"
+          typeahead-on-select="huntGroupSA.selectFallback($item)"
+          typeahead-template-url="userTemplate.html" placeholder="{{:: 'huronHuntGroup.fallbackPlaceholder' | translate}}" 
+          ng-keyup="huntGroupSA.validateFallback()"
+          ng-disabled="huntGroupSA.fallbackSelected"
+          focus-on>
+    <p class="input-description" translate="huronHuntGroup.fallbackHint"></p>
+  </div>
+  <div class="clearfix" ng-if="huntGroupSA.fallbackSelected">
+    <div class="small header-background primary cs-card">
+      <article>
+        <header ng-click="huntGroupSA.toggleFallback()">
+          <div class="header-with-right-icon">
+            <h5 class="ellipsis">{{huntGroupSA.fallbackSelected.userName}}</h5>
+            <i class="icon icon-chevron-down"></i>
+          </div>
+        </header>
+        <section ng-if="huntGroupSA.fallbackSelected.open">
+          <p>{{huntGroupSA.fallbackSelected.email}}
+            <cs-radio ng-repeat="number in huntGroupSA.fallbackSelected.userNumber"
+                      label="number | huntMemberTelephone"
+                      value="number.uuid"
+                      name="{{huntGroupSA.fallbackSelected.uuid}}"
+                      id="number.uuid"
+                      ng-model="huntGroupSA.fallbackSelected.selectedNumberUuid"></cs-radio>
+        </section>
+        <footer ng-if="huntGroupSA.fallbackSelected.open">
+          <a ng-click="huntGroupSA.removeFallbackDest()" href="">{{:: 'huronHuntGroup.remove' | translate}}</a>
+        </footer>
+      </article>
+    </div>
+  </div>
+  <div class="text-center">
+    <cs-checkbox ckid="checkbox" ng-model="huntGroupSA.sendToVoicemail" label="{{:: 'huronHuntGroup.voiceCheckLabel' | translate}}"></cs-checkbox>
+  </div>
+  <div class="text-center">
+    <button class="button" cs-btn loading="huntGroupSA.saveProgress" ng-click="huntGroupSA.saveHuntGroup()" ng-class="{success: (huntGroupSA.fallbackSelected || huntGroupSA.fallbackValid), disabled: (!huntGroupSA.fallbackSelected && !huntGroupSA.fallbackValid)}">
+      <span translate="huronHuntGroup.createGroupLabel"></span>
+    </button>
+  </div>
 </div>

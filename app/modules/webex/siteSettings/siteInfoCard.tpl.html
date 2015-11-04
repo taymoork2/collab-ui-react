@@ -1,12 +1,12 @@
 
   <cs-card class="full header-background"
-           id={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.id}}-card
-           name={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.id}}-card>
+           id={{siteSettingsObj.siteInfoCardObj.id}}-card
+           name={{siteSettingsObj.siteInfoCardObj.id}}-card>
            
     <article>
       <header>
         <h4>
-          {{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.label}}
+          {{siteSettingsObj.siteUrl}}
         </h4>
       </header>
       
@@ -14,78 +14,75 @@
         <div class="configure-card">
           <div class="left-side">
             <div class="service-name">
-              <p><img src="/images/webex_logo_48px.png"/ class="webexlogo"><span>&nbsp;WebEx</span></p>
+              <img src="/images/webex_logo_48px.png" 
+                   class="webexlogo"
+                   id="webexLogo"
+                   name="webexLogo" />
+                
+              <span>
+                &nbsp;WebEx
+              </span>
             </div>
           </div>
           
-          <div class="right-side">
+          <div class="right-side">                                                    
             <div class="configure-content">
-              <div class="text-center">
+              <div align="center">
                 <div translate="webexSiteSettingsLabels.hostAccountsTitle"></div>
                 
                 <div class="overview-count">
-                  {{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.licensesUsage.count}}
+                  {{siteSettingsObj.siteInfoCardObj.licensesUsage.count}}
                 </div>
                 
-                <div>
-                  <span translate="webexSiteSettingsLabels.activeTitle"></span>
-                </div>
+                <div translate="webexSiteSettingsLabels.activeTitle"> </div>
               </div>
                 
-              <div class="text-center">
-                <div>
-                  &nbsp;
-                </div>
+              <div align="center">
+                <div>&nbsp;</div>
                 
                 <div class="overview-count">
-                  {{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.licensesAvailable.count}}
+                  {{siteSettingsObj.siteInfoCardObj.licensesAvailable.count}}
                 </div>
                   
-                <div>
-                  <span translate="webexSiteSettingsLabels.availableTitle"></span>
-                </div>
+                <div translate="webexSiteSettingsLabels.availableTitle"></div>
               </div>
                 
-              <div class="text-center">
-                <div>
-                  &nbsp;
-                </div>
+              <div align="center">
+                <div>&nbsp;</div>
                 
                 <a id="siteInfo-siteInformation"
                    name="siteInfo-siteInformation"
-                   ui-sref={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteInfoPageObj.uiSref}}>
+                   ui-sref={{siteSettingsObj.siteInfoCardObj.siteInfoPageObj.uiSref}}>
                    
                   <i class="icon icon-circle-webex"></i>
                 </a>
                 
-                <a id={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteInfoPageObj.id}}
-                   name={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteInfoPageObj.id}}
-                   ui-sref={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteInfoPageObj.uiSref}}>
+                <a id={{siteSettingsObj.siteInfoCardObj.siteInfoPageObj.id}}
+                   name={{siteSettingsObj.siteInfoCardObj.siteInfoPageObj.id}}
+                   ui-sref={{siteSettingsObj.siteInfoCardObj.siteInfoPageObj.uiSref}}>
                     
                   <span>
-                    {{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteInfoPageObj.label}}
+                    {{siteSettingsObj.siteInfoCardObj.siteInfoPageObj.label}}
                   </span>
                 </a>
               </div>
               
-              <div class="text-center">
-                <div>
-                  &nbsp;
-                </div>
+              <div align="center">
+                <div>&nbsp;</div>
                 
                 <a id="siteInfo-siteFeatures"
                    name="siteInfo-siteFeatures"
-                   ui-sref={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.uiSref}}>
+                   ui-sref={{siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.uiSref}}>
                    
                   <i class="icon icon-circle-star"></i>
                 </a>
                 
-                <a id={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.id}}
-                   name={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.id}}
-                   ui-sref={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.uiSref}}>
+                <a id={{siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.id}}
+                   name={{siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.id}}
+                   ui-sref={{siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.uiSref}}>
                   
                   <span>
-                    {{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.label}}                  
+                    {{siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.label}}                  
                   </span>
                 </a>
               </div>

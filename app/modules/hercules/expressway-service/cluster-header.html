@@ -6,9 +6,9 @@
   </div>
   <div class="header-info">
     <div class="header-info-wrap">
-      <a ui-sref="cluster-details-new.cluster-settings({clusterId:expresswayServiceDetails.clusterId, serviceType:expresswayServiceDetails.serviceType})">
-        <div class="header-title" title="">{{expresswayServiceDetails.cluster.name}}</div>
-        <span ng-if="expresswayServiceDetails.state.current.name === 'cluster-details-new'"
+      <a ui-sref="cluster-details-new.cluster-settings({clusterId:expresswayClusterDetails.clusterId, serviceType:expresswayClusterDetails.serviceType})">
+        <div class="header-title" title="">{{expresswayClusterDetails.cluster.name}}</div>
+        <span ng-if="expresswayClusterDetails.state.current.name === 'cluster-details-new'"
               class="edit-link">{{'common.edit' | translate | lowercase}}</span>
       </a>
     </div>

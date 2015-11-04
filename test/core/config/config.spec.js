@@ -52,8 +52,8 @@ describe('App Configuration', function () {
       expect(Config.serviceStates['squared-fusion-mgmt'][1]).toBe('cluster-details');
     });
 
-    it('squared-fusion-uc should contain devices state', function () {
-      expect(Config.serviceStates['squared-fusion-uc'][0]).toBe('devices');
+    it('spark-device-mgmt should contain devices state', function () {
+      expect(Config.serviceStates['spark-device-mgmt'][0]).toBe('devices');
     });
 
   });

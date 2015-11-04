@@ -14,6 +14,10 @@
       font-size: 1.5rem;
     }
   }
+  .load {
+    font-size: 3rem;
+    text-align: center;
+  }
   form {
     @include vr-spacing(m, 1.5);
   }
@@ -42,6 +46,19 @@
   }
   p {
     @include vr-spacing(pb, 0.5);
+  }
+  .warning-typeahead {
+    .icon {
+      @extend .icon-warning;
+			font-size: .75rem;
+      color: $color-attention;
+    }
+    .message {
+      color: $color-attention;
+    }
+    > input[type="text"] {
+      border: 1px solid $color-attention;
+    }
   }
 }
 
@@ -114,5 +131,17 @@
 .dragover {
   .cs-card.header-background header {
     background: $gray;
+  }
+}
+
+.typeahead .dropdown-menu {
+  li .hunt-member-name {
+    @include vr-spacing(ph, 0.5);
+  }
+  li .hunt-member-line {
+    @include vr-spacing(ph, 0.5);
+    & span {
+      font-size: 1rem;
+    }
   }
 }

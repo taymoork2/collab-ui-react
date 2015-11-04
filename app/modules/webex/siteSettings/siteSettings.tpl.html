@@ -1,31 +1,32 @@
 <div id="webexSiteSettings"
      name="webexSiteSettings">
 
-  <div class="row page-header">
-    <div class="page-title small-10 columns">
-      <span class="title-heading">
-        {{WebExSiteSettings.siteSettingsObj.pageTitle}}
-      </span>
-    </div>
+  <div id="pageTitle"
+       name="pageTitle">
+       
+    <div class="row page-header">
+      <div class="page-title small-5 columns">
+        <span class="title-heading">
+          {{siteSettingsObj.pageTitle}}
+        </span>
+      </div>
     
-    <div id="emallAllHostsButton" 
-         class="page-option-buttons"
-         ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
-         
-      <a class="button large"
-         id={{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.id}}
-         name={{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.id}}
-         ui-sref={{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.pageObj.uiSref}}>
-
-        <span translate="webexSiteSettingsLabels.emailAllHostsBtnTitle"></span>
-      </a>
+      <div class="small-7 columns"
+           ng-if="siteSettingsObj.viewReady">
+           
+        <div class="page-option-buttons" ng-controller="ExportUsersCtrl">
+          <button id={{siteSettingsObj.emailAllHostsBtnObj.id}}
+                  name={{siteSettingsObj.emailAllHostsBtnObj.id}}
+                  ui-sref={{siteSettingsObj.emailAllHostsBtnObj.pageObj.uiSref}}
+                  class="button large"
+                  translate="webexSiteSettingsLabels.emailAllHostsBtnTitle">
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
   <cs-container>
-  <!-- 
-  <div class="siteindex-panel">
-  -->
     <!-- breadcrumbs -->
     <ul id="siteSettingsBreadCrumbs"
         name="siteSettingsBreadCrumbs" 
@@ -43,11 +44,11 @@
           id="siteSettingsCrumb"
           name="siteSettingsCrumb">
           
-        {{WebExSiteSettings.siteSettingsObj.pageTitleFull}}
+        {{siteSettingsObj.pageTitleFull}}
       </li>
     </ul>
     
-    <div ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
+    <div ng-if="siteSettingsObj.viewReady">
       <cs-card-layout>
         <div ng-include="'modules/webex/siteSettings/siteInfoCard.tpl.html'"></div>
       </cs-card-layout>
@@ -59,7 +60,7 @@
 
     <!-- WebEx site admin cross launch -->
     <p>
-      &nbsp;&nbsp;&nbsp;
+      <br>&nbsp;&nbsp;
     
       <a href=""
          onClick="document.getElementById('hiddenButton').click();">
@@ -67,9 +68,6 @@
         Launch&nbsp;WebEx&nbsp;Site&nbsp;Admin
       </a>
     </p>
-  <!-- 
-  </div> 
-  -->
   </cs-container>
 </div>
 
@@ -88,6 +86,11 @@
          name="locale"
          type="hidden"
          value="{{localeParam}}" />
+
+  <input id="siteurl"
+         name="siteurl"
+         type="hidden"
+         value="{{siteName}}" />
 
   <button id="hiddenButton"
           type="submit"
