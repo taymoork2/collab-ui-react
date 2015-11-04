@@ -61,6 +61,7 @@ describe('As an admin i should be able to', function () {
     utils.expectIsEnabled(huronFeatures.huntGroupDeleteBtn);
   });
 
+
   xit('see the delete pop up when clicked on delete button of a selected hunt group', function(){
     utils.expectIsDisplayed(huronFeatures.huntGroupDeleteBtn);
     utils.click(huronFeatures.huntGroupDeleteBtn);
