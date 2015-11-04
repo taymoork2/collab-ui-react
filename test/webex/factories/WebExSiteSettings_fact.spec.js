@@ -223,9 +223,6 @@ describe('WebExSiteSettingsFactTest', function () {
 
     expect(siteSettingsObj.siteName).toBeDefined();
     expect(siteSettingsObj.siteName).toEqual(siteName);
-
-    expect(WebExSiteSettingsFact.locale).toBeDefined();
-    expect(WebExSiteSettingsFact.locale).toEqual(locale2);
   }));
 
   it('can get a session ticket', inject(function (WebExSiteSettingsFact) {
