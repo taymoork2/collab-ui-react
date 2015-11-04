@@ -6,16 +6,6 @@ angular.module('Core')
 
     function ($scope, $rootScope, $stateParams, Notification, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, PartnerService, $filter, $state, ExternalNumberPool, LogMetricsService, $log) {
 
-      var FREE = 0,
-        TRIAL = 1,
-        ACTIVE = 2,
-        CANCELED = 99,
-        NO_LICENSE = -1,
-        NOTE_EXPIRED = 0,
-        NOTE_EXPIRE_TODAY = 0,
-        NOTE_NO_LICENSE = 0,
-        NOTE_CANCELED = 0,
-        NOTE_NOT_EXPIRED = 99;
       $scope.load = true;
       $scope.currentDataPosition = 0;
       if ($state.params.filter) {
@@ -24,13 +14,15 @@ angular.module('Core')
         $scope.activeFilter = 'all';
       }
 
+      $scope.exportType = $rootScope.typeOfExport.CUSTOMER;
+
       $scope.daysExpired = 5;
       $scope.displayRows = 10;
       $scope.expiredRows = 3;
       $scope.currentTrial = null;
       $scope.showTrialsRefresh = true;
       $scope.filter = 'ALL';
-      $scope.isCustomerPartner = Authinfo.isCustomerPartner;
+      $scope.isCustomerPartner = Authinfo.isCustomerPartner ? true : false;
       setNotesTextOrder();
 
       $scope.openAddTrialModal = function () {
@@ -147,6 +139,9 @@ angular.module('Core')
       } else {
         $scope.gridData = $scope.trialsList;
       }
+
+      var ACTIVE = PartnerService.customerStatus.ACTIVE;
+      var CANCELED = PartnerService.customerStatus.CANCELED;
 
       $scope.newTrialName = null;
       $scope.trialsGrid = {
@@ -265,7 +260,7 @@ angular.module('Core')
       };
 
       function serviceSort(a, b) {
-        if (a.sortOrder === TRIAL && b.sortOrder === TRIAL) {
+        if (a.sortOrder === PartnerService.customerStatus.TRIAL && b.sortOrder === PartnerService.customerStatus.TRIAL) {
           // if a and b are both trials, sort by expiration length
           return sortByDays(a, b);
         } else if (a.sortOrder === b.sortOrder) {
@@ -308,19 +303,20 @@ angular.module('Core')
         textArray.sort();
         angular.forEach(textArray, function (text, index) {
           if (text === textSuspended) {
-            NOTE_CANCELED = index;
+            PartnerService.customerStatus.NOTE_CANCELED = index;
           } else if (text === textExpiringToday) {
-            NOTE_EXPIRE_TODAY = index;
+            PartnerService.customerStatus.NOTE_EXPIRE_TODAY = index;
           } else if (text === textExpired) {
-            NOTE_EXPIRED = index;
+            PartnerService.customerStatus.NOTE_EXPIRED = index;
           } else if (text === textLicenseInfoNotAvailable) {
-            NOTE_NO_LICENSE = index;
+            PartnerService.customerStatus.NOTE_NO_LICENSE = index;
           }
         });
       }
 
       function notesSort(a, b) {
-        if (a.sortOrder === NOTE_NOT_EXPIRED && b.sortOrder === NOTE_NOT_EXPIRED) {
+        if (a.sortOrder === PartnerService.customerStatus.NOTE_NOT_EXPIRED &&
+          b.sortOrder === PartnerService.customerStatus.NOTE_NOT_EXPIRED) {
           return a.daysLeft - b.daysLeft;
         } else {
           return a.sortOrder - b.sortOrder;

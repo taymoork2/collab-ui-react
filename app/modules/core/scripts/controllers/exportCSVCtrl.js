@@ -1,17 +1,25 @@
 'use strict';
 
 angular.module('Core')
-  .controller('ExportCustomersCtrl', ['$scope', '$rootScope', 'PartnerService', 'Notification',
-    function ($scope, $rootScope, PartnerService, Notification) {
+  .controller('ExportCSVCtrl', ['$scope', '$rootScope', 'UserListService', 'PartnerService', 'Log', 'Notification',
+    function ($scope, $rootScope, UserListService, PartnerService, Log, Notification) {
 
       $scope.exporting = $rootScope.exporting;
+      var promise = null;
 
       $scope.exportCSV = function () {
-        var promise = PartnerService.exportCSV();
+        if ($scope.exportType === $rootScope.typeOfExport.USER) {
+          promise = UserListService.exportCSV($scope.activeFilter);
+        } else if ($scope.exportType === $rootScope.typeOfExport.CUSTOMER) {
+          promise = PartnerService.exportCSV();
+        } else {
+          Log.debug('Invalid export type: ' + $scope.exportType);
+          Notification.notify('Invalid export', 'error');
+        }
+
         promise.then(null, function (error) {
           Notification.notify(error, 'error');
         });
-
         return promise;
       };
 

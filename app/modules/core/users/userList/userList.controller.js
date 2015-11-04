@@ -50,6 +50,8 @@
     }];
     $scope.dirsyncEnabled = false;
 
+    $scope.exportType = $rootScope.typeOfExport.USER;
+
     // Functions
     $scope.setFilter = setFilter;
     $scope.filterList = filterList;

@@ -24,6 +24,7 @@
     };
 
     var factory = {
+      customerStatus: customerStatus,
       getTrialsList: getTrialsList,
       getManagedOrgsList: getManagedOrgsList,
       loadRetrievedDataToList: loadRetrievedDataToList,
@@ -254,71 +255,51 @@
     function exportCSV() {
       var deferred = $q.defer();
 
-      var returnLists = [];
-      var trialsList = [];
-      var managedOrgsList = [];
+      var customers = [];
 
       $rootScope.exporting = true;
       $rootScope.$broadcast('EXPORTING');
 
-      getTrialsList(function (data, status) {
-        if (data.success && data.trials) {
-          if (data.trials.length > 0) {
-            returnLists = loadRetrievedDataToList(data.trials, true);
-            trialsList = returnLists[0];
-            Log.debug('total trial records found:' + trialsList.length);
+      getManagedOrgsList(function (data, status) {
+        if (data.success && data.organizations) {
+          if (data.organizations.length > 0) {
+            var returnedLists = loadRetrievedDataToList(data.organizations, false);
+            customers = returnedLists[0];
+            Log.debug('total managed orgs records found:' + customers.length);
           } else {
-            Log.debug('No trial records found');
+            Log.debug('No managed orgs records found');
           }
 
-          getManagedOrgsList(function (data, status) {
-            if (data.success && data.organizations) {
-              if (data.organizations.length > 0) {
-                returnLists = loadRetrievedDataToList(data.organizations, false);
-                managedOrgsList = returnLists[0];
-                Log.debug('total managed orgs records found:' + managedOrgsList.length);
-              } else {
-                Log.debug('No managed orgs records found');
-              }
+          //var exportedCustomers = formatCustomerList(customerList);
+          var exportedCustomers = [];
 
-              var customers = trialsList.concat(managedOrgsList);
-              var exportedCustomers = [];
+          if (customers.length === 0) {
+            Log.debug('No lines found.');
+          } else {
+            // header line for CSV file
+            var header = {};
+            header.customerName = "Customer Name";
+            header.adminEmail = "Admin Email";
+            header.entitlements = "Entitlements";
+            exportedCustomers.push(header);
 
-              if (customers.length === 0) {
-                Log.debug('No lines found.');
-              } else {
-                // header line for CSV file
-                var header = {};
-                header.customerName = "Customer Name";
-                header.adminEmail = "Admin Email";
-                header.entitlements = "Entitlements";
-                exportedCustomers.push(header);
+            // data to export for CSV file customer.conferencing.features[j]
+            for (var i = 0; i < customers.length; i++) {
+              var exportedCustomer = {};
 
-                // data to export for CSV file customer.conferencing.features[j]
-                for (var i = 0; i < customers.length; i++) {
-                  var exportedCustomer = {};
-                  var entitlements = '';
-
-                  exportedCustomer.customerName = customers[i].customerName;
-                  exportedCustomer.customerEmail = customers[i].customerEmail;
-                  exportedCustomer.entitlements = customers[i].conferencing.features.join(' ');
-                  exportedCustomers.push(exportedCustomer);
-                }
-              }
-
-              $rootScope.exporting = false;
-              $rootScope.$broadcast('EXPORT_FINISHED');
-
-              deferred.resolve(exportedCustomers);
-            } else {
-              Log.debug('Failed to retrieve managed orgs information. Status: ' + status);
-              deferred.reject($translate.instant('partnerHomePage.errGetTrialsQuery', {
-                status: status
-              }));
+              exportedCustomer.customerName = customers[i].customerName;
+              exportedCustomer.customerEmail = customers[i].customerEmail;
+              exportedCustomer.entitlements = customers[i].conferencing.features.join(' ');
+              exportedCustomers.push(exportedCustomer);
             }
-          });
+          }
+
+          $rootScope.exporting = false;
+          $rootScope.$broadcast('EXPORT_FINISHED');
+
+          deferred.resolve(exportedCustomers);
         } else {
-          Log.debug('Failed to retrieve trial information. Status: ' + status);
+          Log.debug('Failed to retrieve managed orgs information. Status: ' + status);
           deferred.reject($translate.instant('partnerHomePage.errGetTrialsQuery', {
             status: status
           }));
