@@ -9,7 +9,7 @@
   function AABuilderNumbersCtrl($scope, $q, $stateParams, AAUiModelService, AutoAttendantCeInfoModelService,
     AAModelService, ExternalNumberPoolService, Authinfo, Notification, $translate) {
     var vm = this;
-    vm.addOne = addOne;
+    vm.addNumber = addNumber;
     vm.deleteAAResource = deleteAAResource;
     vm.filter = filter;
     vm.getDupeNumberAnyAA = getDupeNumberAnyAA;
@@ -22,9 +22,6 @@
       trigger: 'incomingCall'
     };
 
-    // vm.selectedPhoneNums = [];
-
-    vm.externalPhoneNums = [];
     vm.availablePhoneNums = [];
     vm.addAAResourceFromInputNumber = addAAResourceFromInputNumber;
     vm.deleteAAResource = deleteAAResource;
@@ -41,12 +38,17 @@
 
     /////////////////////
 
-    function addOne(value) {
-      var index = vm.availablePhoneNums.indexOf(value);
+    // Add Number, top-level method called by UI
+    function addNumber(formattedNumber) {
+
+      var index = vm.availablePhoneNums.indexOf(formattedNumber);
 
       if (index >= 0) {
 
-        vm.inputNumber.number = value.replace(/\D/g, '');
+        // strip the formatting from the number
+
+        vm.inputNumber.number = formattedNumber.replace(/\D/g, '');
+
         addAAResourceFromInputNumber();
 
         vm.availablePhoneNums.splice(index, 1);
@@ -88,19 +90,20 @@
 
     }
 
-    function deleteAAResource(number) {
+    // Delete the number to the CE Info resource list - called by UI
+    function deleteAAResource(unFormattedNumber) {
       var i = 0;
 
-      if (angular.isUndefined(number)) {
+      if (angular.isUndefined(unFormattedNumber)) {
         return;
       }
-      vm.availablePhoneNums.push(filter(number));
+      vm.availablePhoneNums.push(filter(unFormattedNumber));
 
       vm.availablePhoneNums.sort();
 
       var resources = vm.ui.ceInfo.getResources();
       for (i = 0; i < resources.length; i++) {
-        if (resources[i].getNumber() === number) {
+        if (resources[i].getNumber() === unFormattedNumber) {
           resources.splice(i, 1);
         }
       }

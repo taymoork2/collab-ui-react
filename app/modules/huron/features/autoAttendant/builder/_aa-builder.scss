@@ -67,6 +67,7 @@ $aa-builder-icon-color: $gray-base;
   align-items: baseline;
   justify-content: center;
 }
+
 #aa-header-row {
   height: $aa-builder-header-height;
   background-color: $brand-white;
@@ -79,7 +80,6 @@ $aa-builder-icon-color: $gray-base;
 #aa-header-row-name {
   padding-right: 2.5rem;
 }
-
 .aa-flex-row-item-right {
   display: flex;
   flex: 0 1 auto;

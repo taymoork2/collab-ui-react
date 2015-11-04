@@ -96,7 +96,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
   });
 
-  describe('addOne', function () {
+  describe('addNumber', function () {
 
     beforeEach(function () {
       controller.availablePhoneNums[0] = "1(206)426-1234";
@@ -116,7 +116,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
         name: rawCeInfo.callExperienceName
       });
 
-      controller.addOne("1(206)426-1234");
+      controller.addNumber("1(206)426-1234");
 
       $scope.$apply();
 
@@ -231,6 +231,20 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
   });
 
+  describe('getExternalNumbers', function () {
 
+    it('should load external numbers', function () {
+
+      var ret = controller.getExternalNumbers();
+
+      $httpBackend.flush();
+
+      $scope.$apply();
+
+      expect(controller.availablePhoneNums.length > 0);
+
+    });
+
+  });
 
 });

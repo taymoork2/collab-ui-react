@@ -14,7 +14,7 @@
           <i class="icon icon-close" ng-click="aa.deleteAAResource(phoneNum.getNumber())"></i>
         </div>
         <form>
-          <cs-select class="aa-selected-phones" ng-model="aa.selected" options="aa.availablePhoneNums" placeholder="aa.selectPlaceHolder" input-placeholder="aa.inputPlaceHolder" required="aa.required" filter="true" on-change-fn="aa.addOne(value)">
+          <cs-select class="aa-selected-phones" ng-model="aa.selected" options="aa.availablePhoneNums" placeholder="aa.selectPlaceHolder" input-placeholder="aa.inputPlaceHolder" required="aa.required" filter="true" on-change-fn="aa.addNumber(value)">
           </cs-select>
         </form>
       </div>
