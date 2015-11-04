@@ -275,7 +275,9 @@ angular.module('WebExReports').service('WebexReportService', [
         // });
       });
 
-      support_center.addSubsection(remote_access);
+      if (remote_access.isNotEmpty()) {
+        support_center.addSubsection(remote_access);
+      }
 
       var sections = [common_reports, training_center, support_center,
         event_center

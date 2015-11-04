@@ -1,31 +1,28 @@
 <div class="hercules-notifications">
-  <span class="notification-bell"
-        ng-click="notificationController.showNotifications = !notificationController.showNotifications">
-    <i class="fa fa-bell" />
+  <span class="notification-bell" ng-click="notificationController.handleClick()">
+    <i class="fa fa-bell"/>
   </span>
 
   <!-- Bubble with amount of notifications. If there are none (length == 0) it doesn't get shown -->
-  <div class="amountBubble"
-       ng-if="notificationController.filteredNotifications().length > 0">
-    <span
-      class="notification-{{notificationController.amountBubbleType()}}">{{notificationController.filteredNotifications().length}}</span>
+  <div class="amountBubble" ng-if="notificationController.filteredNotifications().length > 0">
+    <span class="notification-{{notificationController.amountBubbleType()}}">{{notificationController.filteredNotifications().length}}</span>
   </div>
 
   <!-- List of notifications -->
-  <ul class="entries"
-      ng-if="notificationController.showNotifications && notificationController.filteredNotifications().length > 0">
-    <li class="notif"
-        ng-repeat="notification in notificationController.filteredNotifications() | orderBy:'priority' ">
-      <span class="badge-wrapper label notification-{{notification.type}}">{{notificationController.typeDisplayName(notification.type)}}</span>
+  <div class="container" ng-if="notificationController.showNotifications && notificationController.filteredNotifications().length > 0">
+    <span class="icon icon-close icon-lg right notification-close" ng-click="notificationController.handleClick()"/>
+    <ul class="entries">
+      <li class="notif" ng-repeat="notification in notificationController.filteredNotifications() | orderBy:'priority' ">
+        <span class="badge-wrapper label notification-{{notification.type}}">{{notificationController.typeDisplayName(notification.type)}}</span>
 
-      <div class="notif-wrapper">
-        <ng-include src="notification.template"></ng-include>
-      </div>
-    </li>
-  </ul>
+        <div class="notif-wrapper">
+          <ng-include src="notification.template"></ng-include>
+        </div>
+      </li>
+    </ul>
+  </div>
 
-  <ul class="entries"
-      ng-if="notificationController.showNotifications && notificationController.filteredNotifications().length == 0">
+  <ul class="entries" ng-if="notificationController.showNotifications && notificationController.filteredNotifications().length == 0">
     <li class="notif">
       <div class="notif-wrapper">
         <p>No notifications.</p>
