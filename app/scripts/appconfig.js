@@ -1676,7 +1676,8 @@ angular
           },
           params: {
             connectorId: {},
-            groupName: {}
+            groupName: {},
+            roleSelected: {}
           }
         })
         .state('connector-details.alarms', {
