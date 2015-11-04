@@ -13,6 +13,7 @@
 .tmp
 .bower-cache
 .bower-registry
+.e2e-fail-notify
 
 build
 coverage
