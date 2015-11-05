@@ -215,7 +215,6 @@ function ReportsService($http, $q, $rootScope, $location, Storage, Config, Log, 
   }
 
   function getOverviewMetrics(useCache) {
-    getCounts(useCache);
     var charts = ['calls', 'conversations', 'contentShared'];
     getTimeCharts(useCache, charts, {
       intervalType: 'month',

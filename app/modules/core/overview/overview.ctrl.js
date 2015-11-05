@@ -6,14 +6,26 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($scope, $translate, $state, ReportsService, Orgservice, Config) {
+  function OverviewCtrl($scope, Log, $translate, $state, ReportsService, Orgservice, Config) {
+
     var vm = this;
     vm.pageTitle = $translate.instant('overview.pageTitle');
     var cards = [
-      {key: 'message', icon: 'icon-circle-message', eventHandler: messageEventHandler},
-      {key: 'meeting', icon: 'icon-circle-group'},
-      {key: 'call', icon: 'icon-circle-call', eventHandler: callEventHandler},
-      {key: 'roomSystem', icon: 'icon-circle-telepresence'},
+      {
+        key: 'message',
+        icon: 'icon-circle-message',
+        eventHandler: messageEventHandler,
+        healthStatusUpdatedHandler: messageHealthEventHandler
+      },
+      {
+        key: 'meeting', icon: 'icon-circle-group',
+        healthStatusUpdatedHandler: meeetingHealthEventHandler
+      },
+      {
+        key: 'call', icon: 'icon-circle-call', eventHandler: callEventHandler,
+        healthStatusUpdatedHandler: meeetingHealthEventHandler
+      },
+      {key: 'roomSystem', icon: 'icon-circle-telepresence'}
     ];
     vm.cards = _.map(cards, function (card) {
       card.name = $translate.instant('overview.cards.' + card.key + '.title');
@@ -22,6 +34,26 @@
     });
 
     vm.user = {};
+
+    vm.hybrid = {};
+
+    function messageHealthEventHandler(data) {
+      _.each(data.components, function (component) {
+        if (component.name == 'Mobile Clients' || component.name == 'Rooms'
+          || component.name == 'Web and Desktop Clients') {
+
+          this.healthStatus = mapStatus(this.healthStatus, component.status);
+        }
+      }, this);
+    }
+
+    function meeetingHealthEventHandler(data) {
+      _.each(data.components, function (component) {
+        if (component.name == 'Media/Calling') {
+          this.healthStatus = mapStatus(this.healthStatus, component.status);
+        }
+      }, this);
+    }
 
     function callEventHandler(event, response) {
       if (!response.data.success) return;
@@ -65,7 +97,7 @@
 
 
     Orgservice.getOrg(function (data, status) {
-      if (status === 200) {
+      if (data.success) {
         console.log(data);
         vm.user.ssoEnabled = data.ssoEnabled || false;
         vm.user.dirsyncEnabled = data.dirsyncEnabled || false;
@@ -76,15 +108,30 @@
 
     vm.statusPageUrl = Config.getStatusPageUrl();
 
-    ReportsService.getHealthStatus()
-      .then(function (status) {
-        console.log('status::'+status);
-        vm.healthStatus = status;
-      });
-
     vm.openConvertModal = function () {
       $state.go('users.convert', {});
     };
 
+    function mapStatus(oldStatus, componentStatus) {
+      if (oldStatus == 'error') return 'error';
+
+      if (componentStatus == "partial_outage" || oldStatus == 'warning') return "warning";
+
+      if (componentStatus == "operational") return "success";
+
+      return "error";
+    }
+
+    ReportsService.healthMonitor(function (data, status) {
+      if (data.success) {
+        _.each(cards, function (card) {
+          if (card.healthStatusUpdatedHandler) {
+            card.healthStatusUpdatedHandler(data);
+          }
+        });
+      } else {
+        Log.error("Get health status failed. Status: " + status);
+      }
+    });
   }
 })();
