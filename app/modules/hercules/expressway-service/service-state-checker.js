@@ -49,23 +49,23 @@
       }
     }
 
-    function checkIfDirSyncEnabled() {
-      if (dirSyncEnabled) {
-        return;
-      }
-      DirSyncService.getDirSyncDomain(function (data) {
-        dirSyncEnabled = data.success && data.serviceMode == 'ENABLED';
-        if (!dirSyncEnabled) {
-          NotificationService.addNotification(
-            NotificationService.types.TODO,
-            'dirSyncNotEnabled',
-            3,
-            'modules/hercules/notifications/dirsync-not-enabled.html', allExpresswayServices);
-        } else {
-          NotificationService.removeNotification('dirSyncNotEnabled');
-        }
-      });
-    }
+    // function checkIfDirSyncEnabled() {
+    //   if (dirSyncEnabled) {
+    //     return;
+    //   }
+    //   DirSyncService.getDirSyncDomain(function (data) {
+    //     dirSyncEnabled = data.success && data.serviceMode == 'ENABLED';
+    //     if (!dirSyncEnabled) {
+    //       NotificationService.addNotification(
+    //         NotificationService.types.TODO,
+    //         'dirSyncNotEnabled',
+    //         3,
+    //         'modules/hercules/notifications/dirsync-not-enabled.html', allExpresswayServices);
+    //     } else {
+    //       NotificationService.removeNotification('dirSyncNotEnabled');
+    //     }
+    //   });
+    // }
 
     function checkUserStatuses(serviceId) {
       if (serviceId == "squared-fusion-mgmt") {
