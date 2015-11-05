@@ -16,7 +16,6 @@
     vm.deleteAAResource = deleteAAResource;
     vm.getExternalNumbers = getExternalNumbers;
     vm.getInternalNumbers = getInternalNumbers;
-    vm.filter = filter;
     vm.getDupeNumberAnyAA = getDupeNumberAnyAA;
 
     vm.externalNumberList = [];
@@ -43,8 +42,6 @@
       }
 
       var number = option.value;
-
-      //      var index = vm.availablePhoneNums.indexOf(number);
 
       var numobj = vm.availablePhoneNums.filter(function (obj) {
         return obj.value == number;
@@ -76,7 +73,9 @@
       };
       vm.availablePhoneNums.push(opt);
 
-      //      vm.availablePhoneNums.sort();
+      vm.availablePhoneNums.sort(function (a, b) {
+        return a.label.localeCompare(b.label);
+      });
 
       deleteAAResource(number);
     }
@@ -147,23 +146,6 @@
         }
       }
       return false;
-    }
-
-    function filter(number) {
-      if (!number) {
-        return '';
-      }
-
-      var countryTelephoneNumberRegex = /(\+?\d{1})(\d{3})(\d{3})(\d{4})/;
-      var basicTelephoneNumberRegex = /(\d{3})(\d{3})(\d{4})/;
-
-      if (countryTelephoneNumberRegex.test(number)) {
-        return number.replace(countryTelephoneNumberRegex, "$1 ($2) $3-$4");
-      } else if (basicTelephoneNumberRegex.test(number)) {
-        return number.replace(basicTelephoneNumberRegex, "($1) $2-$3");
-      } else {
-        return number;
-      }
     }
 
     function getInternalNumbers() {
