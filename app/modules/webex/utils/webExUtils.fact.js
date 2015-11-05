@@ -253,7 +253,7 @@
           var trainReleaseVersion = trainReleaseJsonObj.trainReleaseVersion;
           var trainReleaseOrder = trainReleaseJsonObj.trainReleaseOrder;
           var iframeSupportedSiteVersion = (
-            (null != trainReleaseOrder) && 
+            (null != trainReleaseOrder) &&
             (400 <= +trainReleaseOrder)
           ) ? true : false;
 
