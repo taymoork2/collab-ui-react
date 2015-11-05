@@ -10,7 +10,6 @@
     function checkState(connectorType, serviceId) {
       if (checkIfFusePerformed()) {
         if (checkIfConnectorsConfigured(connectorType)) {
-          checkIfDirSyncEnabled();
           checkUserStatuses(serviceId);
           checkCallServiceConnect(serviceId);
         }
@@ -76,7 +75,8 @@
         serviceId: serviceId
       });
       var noUsersActivatedId = serviceId + ':noUsersActivated';
-      var needsUserActivation = !summaryForService || (summaryForService.activated === 0 && summaryForService.error === 0 && summaryForService.notActivated === 0);
+      var needsUserActivation = !summaryForService || (summaryForService.activated === 0 && summaryForService.error === 0 && summaryForService.notActivated ===
+        0);
       if (needsUserActivation) {
         NotificationService.addNotification(
           NotificationService.types.TODO,
