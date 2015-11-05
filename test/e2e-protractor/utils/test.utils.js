@@ -213,13 +213,13 @@ exports.expectIsNotDisplayed = function (elem, timeout) {
 
   if (elem instanceof protractor.ElementArrayFinder) {
     return browser.wait(function () {
-      log('Waiting for element array to be displayed: ' + elem.locator());
+      log('Waiting for element array not to be displayed: ' + elem.locator());
       return elem.first().isDisplayed().then(function (isDisplayed) {
-        return isDisplayed;
+        return !isDisplayed;
       }, function () {
         return true;
       });
-    }, timeout || TIMEOUT, 'Waiting for element array to be displayed: ' + elem.locator());
+    }, timeout || TIMEOUT, 'Waiting for element array not to be displayed: ' + elem.locator());
   }
 
   function logAndWait() {
