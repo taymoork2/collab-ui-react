@@ -11,7 +11,8 @@ angular.module('Mediafusion')
       $scope.displayName = '';
       $scope.clusterVal = '';
       $scope.newGrpId = '';
-      $scope.newPropertySetId = '';
+      $scope.newPropertySet = '';
+      $scope.currentPropertySet = '';
       $scope.oldClusterVal = '';
       $scope.roleSelected = '';
       $scope.displayName1 = "Initial";
@@ -50,7 +51,7 @@ angular.module('Mediafusion')
         if ($event.keyCode === 13) {
           $scope.showbutton = true;
           $scope.clusterVal = $item;
-          $log.log("The value in enter is ", $scope.clusterVal);
+          // $log.log("The value in enter is ", $scope.clusterVal);
         }
       };
 
@@ -60,38 +61,40 @@ angular.module('Mediafusion')
       };
 
       $scope.changeRole = function ($selectedRole) {
-        $log.log("The new value is ", $selectedRole);
-        $log.log("The value of selectedCluster is", $scope.selectedCluster);
+        // $log.log("The new value is ", $selectedRole);
+        // $log.log("The value of selectedCluster is", $scope.selectedCluster);
         MediafusionClusterService.changeRole($selectedRole, $scope.selectedCluster)
           .success(function (data) {
             Notification.notify([$translate.instant('mediaFusion.roleAssignmentSuccess')], 'success');
           })
           .error(function (data, status) {
-            if (status === 404) {
               Notification.notify([$translate.instant('mediaFusion.roleAssignmentFailure', {
                 failureMessage: data.message
               })], 'error');
-            }
           });
       };
 
       $scope.updateCluster = function ($name, $event) {
-        $log.log($event);
-        $log.log("name in update", $name);
-        $log.log("the vvalue in $scope.clusterVal is", $scope.clusterVal);
-        $log.log("displayname in update", $scope.displayName);
+        // $log.log($event);
+        // $log.log("name in update", $name);
+        // $log.log("the vvalue in $scope.clusterVal is", $scope.clusterVal);
+        // $log.log("displayname in update", $scope.displayName);
+        $event.stopPropagation();
         if ($event.offsetX !== 0 && $event.clientX !== 0) {
-          $log.log("entered autosave");
+          // $log.log("entered autosave");
           $scope.showbutton = false;
           $scope.oldClusterVal = $scope.displayName;
-          $scope.currentPropertySet = _.chain($scope.groups)
+          /*$scope.currentPropertySet = _.chain($scope.groups)
             .filter(function (group) {
               if (angular.equals(group.name, $scope.displayName)) {
                 $scope.currentPropertySetId = group.id;
                 return group;
               }
             })
-            .value();
+            .value();*/
+          $scope.currentPropertySet = _.find($scope.groups, function (group) {
+            return group.name == $scope.displayName;
+          });  
 
           if ($scope.currentPropertySet.length === 0) {
             var resp = MediafusionClusterService.createGroup($name);
@@ -103,50 +106,46 @@ angular.module('Mediafusion')
                   Notification.notify([$translate.instant('mediaFusion.groupAssignmentSuccess')], 'success');
                 })
                 .error(function (data, status) {
-                  if (status === 404) {
                     Notification.notify([$translate.instant('mediaFusion.groupAssignmentFailure', {
                       failureMessage: data.message
                     })], 'error');
-                  }
                 });
-              //responsePromise.
-              //$log.log("response:". response);
             });
           } else {
-            $log.log("inside else bloc");
+            // $log.log("inside else bloc");
             $scope.displayName = $scope.clusterVal;
             // First check if the new value has an entry in group
-            $scope.newPropertySet = _.chain($scope.groups)
+            /*$scope.newPropertySet = _.chain($scope.groups)
               .filter(function (group) {
                 if (angular.equals(group.name, $scope.displayName)) {
                   $scope.newPropertySetId = group.id;
                   return group;
                 }
               })
-              .value();
-            $log.log("Check if grp id exists", $scope.newPropertySetId);
-            if ($scope.newPropertySetId === '') {
+              .value();*/
+            $scope.newPropertySet = _.find($scope.groups, function (group) {
+              return group.name == $scope.displayName;
+            }); 
+            if ($scope.newPropertySet === undefined || $scope.newPropertySet === '') {
               var createPromise = MediafusionClusterService.createGroup($scope.clusterVal);
               createPromise.finally(function () {
                 getGroups();
-                MediafusionClusterService.removeGroupAssignment($stateParams.connectorId, $scope.currentPropertySetId)
+                MediafusionClusterService.removeGroupAssignment($stateParams.connectorId, $scope.currentPropertySet.id)
                   .success(function (data) {
-                    $log.log("Removal success");
+                    // $log.log("Removal success");
                     MediafusionClusterService.updateGroupAssignment($stateParams.connectorId, createPromise.$$state.value.data.id)
                       .success(function (data) {
-                        $log.log("success data :", data);
+                        // $log.log("success data :", data);
                         $scope.oldClusterVal = $name;
                         Notification.notify([$translate.instant('mediaFusion.groupAssignmentSuccess')], 'success');
                       })
                       .error(function (data, status) {
-                        $log.log("error data :", data);
-                        $log.log("error message :", data.message);
-                        $log.log("error status :", status);
-                        if (status === 404) {
-                          Notification.notify([$translate.instant('mediaFusion.groupAssignmentFailure', {
-                            failureMessage: data.message
-                          })], 'error');
-                        }
+                        // $log.log("error data :", data);
+                        // $log.log("error message :", data.message);
+                        // $log.log("error status :", status);
+                        Notification.notify([$translate.instant('mediaFusion.groupAssignmentFailure', {
+                          failureMessage: data.message
+                        })], 'error');
                       });
                   })
                   .error(function (data) {
@@ -157,7 +156,7 @@ angular.module('Mediafusion')
 
               });
             } else {
-              var promise = MediafusionClusterService.removeGroupAssignment($stateParams.connectorId, $scope.currentPropertySetId);
+              var promise = MediafusionClusterService.removeGroupAssignment($stateParams.connectorId, $scope.currentPropertySet.id);
               promise.finally(function () {
                 //Check if new cluster has a valid cluster id
                 MediafusionClusterService.updateGroupAssignment($stateParams.connectorId, $scope.newGrpId)
@@ -166,11 +165,9 @@ angular.module('Mediafusion')
                     Notification.notify([$translate.instant('mediaFusion.groupAssignmentSuccess')], 'success');
                   })
                   .error(function (data, status) {
-                    if (status === 404) {
-                      Notification.notify([$translate.instant('mediaFusion.groupAssignmentFailure', {
-                        failureMessage: data.message
-                      })], 'error');
-                    }
+                    Notification.notify([$translate.instant('mediaFusion.groupAssignmentFailure', {
+                      failureMessage: data.message
+                    })], 'error');
                   });
               });
             }
@@ -185,7 +182,7 @@ angular.module('Mediafusion')
         $scope.clusterVal = $item.name;
         $scope.newGrpId = $item.id;
         $scope.oldClusterVal = $scope.displayName;
-        $log.log("new grp id", $scope.newGrpId);
+        // $log.log("new grp id", $scope.newGrpId);
       };
     }
   );

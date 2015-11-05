@@ -1793,7 +1793,12 @@
     "groupAssignmentSuccess": "Cluster assigned successfully",
     "groupAssignmentFailure": "Cluster not assigned",
     "roleAssignmentSuccess": "Role assigned successfully",
-    "roleAssignmentFailure": "Role not assigned"
+    "roleAssignmentFailure": "Role not assigned",
+    "cluster": "Cluster",
+    "role": "Role",
+    "switching": "Switching",
+    "transcoding": "Transcoding",
+    "confirmCluster": "Please press save to confirm cluster change."
   },
   "webexUserSettings": {
     "sessionEnablementUpdateSuccess": "Session type enablement updated.",
