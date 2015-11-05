@@ -107,11 +107,12 @@ describe('Controller: HuronFeatureDeleteCtrl', function () {
         'status': 404,
         'statusText': 'Not Found'
       };
-
+      expect(aaModel.ceInfos.length).toEqual(2);
       controller.deleteFeature();
       featDefer.reject(errorResponse);
       $scope.$apply();
       $timeout.flush();
+      expect(aaModel.ceInfos.length).toEqual(2);
       expect(Notification.error).toHaveBeenCalledWith(jasmine.any(String));
       expect(AutoAttendantCeInfoModelService.deleteCeInfo).not.toHaveBeenCalled();
       expect($rootScope.$broadcast).not.toHaveBeenCalledWith('HUNT_GROUP_DELETED');
@@ -121,9 +122,11 @@ describe('Controller: HuronFeatureDeleteCtrl', function () {
     it('should produce a error notification if feature id for auto attendant delete is invalid', function () {
 
       $scope.vm.featureId = 'invalid-aa-id';
+      expect(aaModel.ceInfos.length).toEqual(2);
       controller.deleteFeature();
       $scope.$apply();
       $timeout.flush();
+      expect(aaModel.ceInfos.length).toEqual(2);
       expect(Notification.error).toHaveBeenCalledWith('huronFeatureDetails.deleteFailedText');
       expect(AutoAttendantCeInfoModelService.deleteCeInfo).not.toHaveBeenCalled();
       expect($rootScope.$broadcast).not.toHaveBeenCalledWith('HUNT_GROUP_DELETED');

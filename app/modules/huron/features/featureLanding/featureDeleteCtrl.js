@@ -31,13 +31,14 @@
 
         var aaModel = AAModelService.getAAModel();
         var ceInfoToDelete;
+        var delPosition;
         for (var i = 0; i < aaModel.ceInfos.length; i++) {
           var ceUrl = aaModel.ceInfos[i].getCeUrl();
           var uuidPos = ceUrl.lastIndexOf("/");
           var uuid = ceUrl.substr(uuidPos + 1);
           if (uuid === vm.featureId) {
             ceInfoToDelete = aaModel.ceInfos[i];
-            aaModel.ceInfos.splice(i, 1);
+            delPosition = i;
             break;
           }
         }
@@ -49,6 +50,7 @@
 
         AutoAttendantCeService.deleteCe(ceInfoToDelete.getCeUrl()).then(
           function (data) {
+            aaModel.ceInfos.splice(delPosition, 1);
             AutoAttendantCeInfoModelService.deleteCeInfo(aaModel.aaRecords, ceInfoToDelete);
             deleteSuccess();
           },

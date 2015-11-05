@@ -2352,7 +2352,7 @@
     "deleteFeature": "Delete {{ featureType }}",
     "deleteConfirmText": "Are you sure you want to delete the {{ featureName }} {{ featureType }}?",
     "deleteSuccessText": "{{ featureName }} {{ featureType }} has been deleted successfully",
-    "deleteFailedText": "Failed to delete {{ featureName }} {{ featureType }}. {{ message }}",
+    "deleteFailedText": "Failed to delete {{ featureName }} {{ featureType }}.",
     "messageError": "Message {{ message }}",
     "failedToLoad": "Unable to load {{ featureType }}(s) information",
     "aaName": "auto attendant",
