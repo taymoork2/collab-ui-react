@@ -6,7 +6,7 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($scope, $translate, ReportsService, Orgservice, Config) {
+  function OverviewCtrl($scope, $translate, $state, ReportsService, Orgservice, Config) {
     var vm = this;
     vm.pageTitle = $translate.instant('overview.pageTitle');
     var cards = [
@@ -82,6 +82,9 @@
         vm.healthStatus = status;
       });
 
+    vm.openConvertModal = function () {
+      $state.go('users.convert', {});
+    };
 
   }
 })();

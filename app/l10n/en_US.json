@@ -2500,6 +2500,9 @@
     "pageTitle": "Overview",
     "thisMonth": "This Month",
     "lastMonth": "Last Month",
+    "user":{
+    "convertButton": "Convert",
+    "convertText":"Users who may belong to your organization"},
     "cards":{
       "message":{"title":"Message", "desc":"Active Rooms"},
       "meeting":{"title":"Meeting", "desc":"Meetings"},

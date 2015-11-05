@@ -1,32 +1,7 @@
 <div class="overview-page">
   <cs-page-header title="overview.pageTitle"></cs-page-header>
   <cs-card-layout block-view="true">
-    <cs-card class="large menu-card">
-      <article>
-        <header><h4>Users</h4></header>
-        <section>
-          <div>
-            <div class="top">
-              <div>
-                <i class="icon icon-circle" ng-class="overview.user.dirsyncEnabled ? 'success' : 'disabled'"></i>
-                <span>Directory Synchronization</span>
-              </div>
-
-              <div>
-                <i class="icon icon-circle" ng-class="overview.user.ssoEnabled ? 'success' : 'disabled' "></i>
-                <span>Single Sign On</span>
-              </div>
-            </div>
-            <hr/>
-            <div class="bottom">
-              <h4>{{(overview.user.usersToConvert | number) || 'N/A'}}</h4>
-              Users who may belong to your organization
-              <button>Convert</button>
-            </div>
-          </div>
-        </section>
-      </article>
-    </cs-card>
+    
     <cs-card class="large menu-card" ng-repeat="card in overview.cards">
       <article>
         <section>
@@ -60,6 +35,37 @@
             <li><a class="service-menu-item" href="">pg_operations.webex.com</a></li>
           </ul>
         </cs-card-menu>
+      </article>
+    </cs-card>
+    <cs-card class="large menu-card">
+      <article>
+        <header><h4>Users</h4></header>
+        <section>
+          <div>
+            <div class="top">
+              <div>
+                <i class="icon icon-circle" ng-class="overview.user.dirsyncEnabled ? 'success' : 'disabled'"></i>
+                <span>Directory Synchronization</span>
+              </div>
+
+              <div>
+                <i class="icon icon-circle" ng-class="overview.user.ssoEnabled ? 'success' : 'disabled' "></i>
+                <span>Single Sign On</span>
+              </div>
+            </div>
+            <hr/>
+            <div class="bottom">
+              <h4>{{(overview.user.usersToConvert | number) || 'N/A'}}</h4>
+              <span translate="overview.user.convertText"></span>
+              <button
+                class="btn btn-sm btn-default"
+                translate="overview.user.convertButton"
+                ng-click="overview.openConvertModal()"
+                ng-disabled="!overview.user.usersToConvert">
+              </button>
+            </div>
+          </div>
+        </section>
       </article>
     </cs-card>
   </cs-card-layout>
