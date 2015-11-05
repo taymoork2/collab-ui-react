@@ -162,7 +162,7 @@
     "expires": "Expires",
     "editServices": "Edit services",
     "editServiceTitle": "Services Enabled for {{firstName}} {{lastName}}",
-    "siteUris": "Site Urls",
+    "siteUris": "WebEx Sites",
     "webex": "Webex",
     "spark": "Spark",
     "calling": "Calling",
@@ -220,7 +220,7 @@
     "entResUtilizationTabDesc": "Enterprise Resources Utilization",
     "servicesTab": "Services",
     "conferencing": "WebEx",
-    "conferencingDesc": "List of Site Admins",
+    "conferencingDesc": "List of WebEx Sites",
     "alarmsTab": "Alarms",
     "alarmsTabDesc": "Alarm Management",
     "eventsTab": "Events",
@@ -2256,8 +2256,7 @@
     "siteName": "Site Name",
     "licenseCount": "License Count",
     "type": "Type",
-    "launchSite": "Configure Site",
-    "siteSettings": "Configure Site",
+    "siteSettings": "Configure",
     "siteReports": "Reports"
   },
   "cloudExtensions": {
