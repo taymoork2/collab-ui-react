@@ -8,6 +8,7 @@
 /* global login */
 /* global notifications */
 /* global deleteTrialUtils */
+/* global LONG_TIMEOUT */
 
 describe('Partner flow', function () {
   var orgId;
@@ -70,7 +71,7 @@ describe('Partner flow', function () {
 
       utils.click(partner.startTrialButton);
       notifications.assertSuccess(partner.newTrial.customerName, 'A trial was successfully started');
-    }, 60000);
+    }, LONG_TIMEOUT);
 
     it('should find new trial', function (done) {
       utils.click(partner.trialFilter);
@@ -99,7 +100,7 @@ describe('Partner flow', function () {
         utils.click(partner.trialFilter);
         utils.expectIsDisplayed(partner.newTrialRow);
       });
-    }, 60000);
+    }, LONG_TIMEOUT);
 
   });
 
@@ -114,11 +115,12 @@ describe('Partner flow', function () {
       utils.click(partner.launchCustomerPanelButton);
       utils.switchToNewWindow().then(function () {
 
-        utils.expectIsDisplayed(wizard.wizard);
+        // backend services are slow
+        utils.wait(wizard.wizard, LONG_TIMEOUT);
         utils.expectIsDisplayed(wizard.leftNav);
         utils.expectIsDisplayed(wizard.mainView);
       });
-    });
+    }, LONG_TIMEOUT);
 
     it('should navigate first time wizard', function () {
       utils.expectTextToBeSet(wizard.mainviewTitle, 'Plan Review');
@@ -141,7 +143,7 @@ describe('Partner flow', function () {
 
       browser.close();
       browser.switchTo().window(appWindow);
-    });
+    }, LONG_TIMEOUT);
 
     it('Launch customer portal via dropdown and display partner managing org in partner filter', function () {
       appWindow = browser.getWindowHandle();
@@ -159,7 +161,7 @@ describe('Partner flow', function () {
         browser.switchTo().window(appWindow);
       });
     });
-  });
+  }, LONG_TIMEOUT);
 
   afterAll(function () {
     deleteTrialUtils.deleteOrg(orgId, accessToken);

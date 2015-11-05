@@ -101,6 +101,7 @@
       var aaRecord = vm.aaModel.aaRecord;
 
       var aaRecordUUID = vm.aaModel.aaRecordUUID;
+      vm.ui.builder.ceInfo_name = vm.ui.builder.ceInfo_name.trim();
       if (!AAValidationService.isNameValidationSuccess(vm.ui.builder.ceInfo_name, aaRecordUUID)) {
         return;
       }
