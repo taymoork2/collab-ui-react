@@ -1,12 +1,25 @@
 WebexSquared AdminWebClient
 ===========================
 
-Technology
-__________
+Contributor Style Guides
+-----------
+These style guides establish and enforce best practices
+in order to improve code quality, maintainability, and readability.
+All contributors are expected to take the time to learn and apply them.
+Adherence is mandatory. Please refactor non-compliant code.
 
-* UI is developed using Angular JS:
-  https://angularjs.org
-  https://github.com/johnpapa/angularjs-styleguide
+* [Javascript Style Guide](https://github.com/airbnb/javascript)
+* [Angular Style Guide](https://github.com/johnpapa/angularjs-styleguide)
+* [Git Commit Style Guide](http://chris.beams.io/posts/git-commit/)
+
+If you have any questions open an
+[issue](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/issues/new)
+and include the text: "Please add $cec_user_id to the 'Atlas UI Dev Team' room. Thanks!"
+
+Technology
+-----------
+
+* UI is developed using [Angular JS](https://angularjs.org)
 * UI is composed of a core module and service modules for different functional groups
 * Modules are developed using directives, here is a good read on the topic:
   http://briantford.com/blog/angular-bower

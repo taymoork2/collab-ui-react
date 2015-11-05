@@ -138,7 +138,7 @@ gulp.task('tsd', function (done) {
  * Delete build and dist directory files
  * Usage: gulp clean
  ********************************************/
-gulp.task('clean', ['clean:build', 'clean:dist', 'clean:karma']);
+gulp.task('clean', ['clean:build', 'clean:dist', 'clean:karma', 'clean:test']);
 
 /*********************************************
  * Delete dist directory files
@@ -161,23 +161,36 @@ gulp.task('clean:build', function (done) {
 });
 
 /*********************************************
- * Delete build directory files
- * Usage: gulp clean:build
+ * Delete karma files
+ * Usage: gulp clean:karma
  ********************************************/
 gulp.task('clean:karma', function (done) {
   var files = config.test + '/karma*.js';
-  messageLogger('Cleaning build directory', files);
+  messageLogger('Cleaning karma files', files);
   del(files, done);
 });
 
 /*********************************************
  * Delete files from individual build sub-directories
+ * Usage: gulp clean:css
  ********************************************/
 gulp.task('clean:css', function (done) {
   var files = [
     config.build + 'styles/**/*.css'
   ];
   messageLogger('Cleaning CSS files', files);
+  del(files, done);
+});
+
+/*********************************************
+ * Delete test result files
+ * Usage: gulp clean:test
+ ********************************************/
+gulp.task('clean:test', function (done) {
+  var files = [
+    config.e2e + '/reports/*.xml'
+  ];
+  messageLogger('Cleaning test results', files);
   del(files, done);
 });
 
@@ -1082,7 +1095,7 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
 });
 
 gulp.task('protractor:clean', function (done) {
-  del('e2e-fail-notify', done);
+  del('.e2e-fail-notify', done);
 });
 
 gulp.task('protractor:update', webdriverUpdate);
