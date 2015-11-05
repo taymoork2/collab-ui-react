@@ -27,7 +27,6 @@ exports.randomTestRoom = function () {
   return 'atlas-' + this.randomId();
 };
 
-
 exports.randomTestGmail = function () {
   return 'collabctg+' + this.randomId() + '@gmail.com';
 };

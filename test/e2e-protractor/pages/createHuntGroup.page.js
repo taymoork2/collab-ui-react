@@ -4,7 +4,7 @@
 'use strict';
 
 var CreateHuntGroup = function () {
-  this.randomHGName = 'huntGroup-'+ utils.randomId();
+  this.randomHGName = 'huntGroup-' + utils.randomId();
   //TODO: Decide about pilotNumber and memberSearch fileds
   this.pilotNumber = '972';
   this.memberSearch = 'Sun';

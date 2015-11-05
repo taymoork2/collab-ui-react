@@ -2,7 +2,7 @@
  * Created by sjalipar on 11/2/15.
  */
 'use strict';
-var HuronFeaturesPage = function(){
+var HuronFeaturesPage = function () {
 
   this.featuresList = element.all(by.css('.cs-card'));
   this.huntGroups = element.all(by.css('.cs-card.alerts'));
@@ -18,12 +18,11 @@ var HuronFeaturesPage = function(){
   this.allFilter = element.all(by.repeater('filter in filters')).get(0);
   this.autoAttendantFilter = element.all(by.repeater('filter in filters')).get(1);
   this.huntGroupFilter = element.all(by.repeater('filter in filters')).get(2);
-  this.selectedHuntGroups = element.all(by.css('.cs-card.alerts .h5')).filter(function(elem, index){
-    return elem.getText().then(function(text){
+  this.selectedHuntGroups = element.all(by.css('.cs-card.alerts .h5')).filter(function (elem, index) {
+    return elem.getText().then(function (text) {
       return text === huronFeatures.huntGroupName;
     });
   });
 };
-
 
 module.exports = HuronFeaturesPage;
