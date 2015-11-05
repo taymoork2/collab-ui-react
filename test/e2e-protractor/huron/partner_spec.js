@@ -1,5 +1,6 @@
 'use strict';
 
+/* global LONG_TIMEOUT */
 /* global describe */
 /* global expect */
 /* global partner */
@@ -8,6 +9,7 @@
 /* global login */
 /* global notifications */
 /* global deleteTrialUtils */
+/* global deleteUtils */
 
 //TODO reenable after pstn change
 xdescribe('Spark UC Partner flow', function () {
@@ -42,7 +44,7 @@ xdescribe('Spark UC Partner flow', function () {
         utils.click(partner.startTrialButton);
         notifications.assertSuccess(partner.newSqUCTrial.customerName, 'A trial was successfully started');
       });
-    }, 60000);
+    }, LONG_TIMEOUT);
 
     it('should find new trial', function (done) {
       utils.click(partner.trialFilter);
@@ -76,7 +78,7 @@ xdescribe('Spark UC Partner flow', function () {
 
         notifications.assertSuccess(partner.newSqUCTrial.customerName, 'You have successfully edited a trial for');
       });
-    }, 60000);
+    }, LONG_TIMEOUT);
 
     it('should add two new did to the trial', function () {
       utils.click(partner.trialFilter);

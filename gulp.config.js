@@ -103,7 +103,8 @@ module.exports = function() {
         webexsitesettings: e2e + '/webex/siteSettings/**/*_spec.js',
         webexsitereports: e2e + '/webex/siteReports/**/*_spec.js',
         webexusersettings: e2e + '/webex/userSettings/**/*_spec.js',
-        sunlight: e2e + '/sunlight/**/*_spec.js'
+        sunlight: e2e + '/sunlight/**/*_spec.js',
+		regression: e2e + '/regression/**/*_spec.js'
       }
     },
 

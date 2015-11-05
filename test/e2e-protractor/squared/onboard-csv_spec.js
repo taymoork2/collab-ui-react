@@ -1,5 +1,8 @@
 'use strict';
 
+/* global inviteusers */
+/* global LONG_TIMEOUT */
+
 describe('Onboard Users using uploading CSV File', function () {
   var fileToUpload = './../data/sample-squared.csv';
   var absolutePath = utils.resolvePath(fileToUpload);
@@ -50,7 +53,7 @@ describe('Onboard Users using uploading CSV File', function () {
       utils.expectIsDisplayed(users.servicesPanel);
       utils.click(users.closeSidePanel);
     }
-  });
+  }, LONG_TIMEOUT); // increase time for 5 users
 
   afterAll(function () {
     for (i = 0; i < userList.length; i++) {

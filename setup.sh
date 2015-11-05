@@ -83,9 +83,20 @@ fi
 #   ./cleanUpManagedOrgs.sh
 # fi
 
+time_start=$(date +"%s")
+
 # Install dependecies
 # bundle install
 npm install
 npm update -g bower
+
+time_npm=$(date +"%s")
+npm_duration=$(($time_npm-$time_start))
+echo "npm completed after $(($npm_duration / 60)) minutes and $(($npm_duration % 60)) seconds."
+
 bower cache clean
 bower install --force
+
+time_bower=$(date +"%s")
+bower_duration=$(($time_bower-$time_npm))
+echo "bower completed after $(($bower_duration / 60)) minutes and $(($bower_duration % 60)) seconds."
