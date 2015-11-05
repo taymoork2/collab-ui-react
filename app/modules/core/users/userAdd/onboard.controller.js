@@ -601,21 +601,31 @@ angular.module('Core')
 
       var usersList = [];
 
-      var getConfIdList = function () {
+      /**
+       * get the current license settings for the CF_ licenses
+       *
+       * @param state - return license list based on matching state (checked = true)
+       */
+      var getConfIdList = function (state) {
         var confId = [];
         for (var cf in $scope.confChk) {
           var current = $scope.confChk[cf];
-          if (current.confModel === true) {
+          if ((current.confModel === state) && (current.confFeature.license.licenseId !== undefined)) {
             confId.push(current.confFeature.license.licenseId);
           }
-          if (current.cmrModel === true) {
+          if ((current.cmrModel === state) && (current.cmrFeature.license.licenseId !== undefined)) {
             confId.push(current.cmrFeature.license.licenseId);
           }
         }
         return confId;
       };
 
-      var getAccountLicenses = function () {
+      /**
+       * get the list of selected account licenses on the dialog
+       *
+       * @param action - 'additive' - add new licenses only, 'patch' - remove any licenses not specified
+       */
+      var getAccountLicenses = function (action) {
         var licenseList = [];
         if (Authinfo.hasAccount()) {
           // Messaging: prefer selected subscription, if specified
@@ -626,13 +636,25 @@ angular.module('Core')
             var selMsgService = $scope.messageFeatures[msgIndex];
             // TODO (tohagema): clean up messageFeatures license(s) model :/
             var license = selMsgService.license || selMsgService.licenses[0];
-            if ('licenseId' in license) licenseList.push(new LicenseFeature(license.licenseId, true));
+            if ('licenseId' in license) {
+              // Add new licenses
+              licenseList.push(new LicenseFeature(license.licenseId, true));
+            } else if ((action === 'patch') && ($scope.messageFeatures.length > 1) && ('licenseId' in $scope.messageFeatures[1].licenses[0])) {
+              // Remove existing license
+              licenseList.push(new LicenseFeature($scope.messageFeatures[1].licenses[0].licenseId, false));
+            }
           }
 
           // Conferencing: depends on model (standard vs. CMR)
-          var cidList = getConfIdList();
-          for (var i = 0; i < cidList.length; i++) {
-            licenseList.push(new LicenseFeature(cidList[i], true));
+          var cidListAdd = getConfIdList(true);
+          for (var i = 0; i < cidListAdd.length; i++) {
+            licenseList.push(new LicenseFeature(cidListAdd[i], true));
+          }
+          if (action === 'patch') {
+            var cidListRemove = getConfIdList(false);
+            for (i = 0; i < cidListRemove.length; i++) {
+              licenseList.push(new LicenseFeature(cidListRemove[i], false));
+            }
           }
 
           // Communication: straightforward license, for now
@@ -640,6 +662,8 @@ angular.module('Core')
           var selCommService = $scope.communicationFeatures[commIndex];
           if ('licenseId' in selCommService.license) {
             licenseList.push(new LicenseFeature(selCommService.license.licenseId, true));
+          } else if ((action === 'patch') && ($scope.communicationFeatures.length > 1) && ('licenseId' in $scope.communicationFeatures[1].license)) {
+            licenseList.push(new LicenseFeature($scope.communicationFeatures[1].license.licenseId, false));
           }
         }
 
@@ -683,7 +707,7 @@ angular.module('Core')
         }
         $scope.btnSaveEntLoad = true;
 
-        Userservice.updateUsers(user, getAccountLicenses(), null, 'updateUserLicense', entitleUserCallback);
+        Userservice.updateUsers(user, getAccountLicenses('patch'), null, 'updateUserLicense', entitleUserCallback);
       };
 
       //****************MODAL INIT FUNCTION FOR INVITE AND ADD***************
@@ -696,10 +720,15 @@ angular.module('Core')
         this.entitlementState = state ? 'ACTIVE' : 'INACTIVE';
       }
 
-      function LicenseFeature(name, state) {
-        this['id'] = name.toString();
-        this['properties'] = null;
-        //this['state'] = state ? 'ADD' : 'REMOVE';
+      function LicenseFeature(name, bAdd) {
+        return {
+          id: name.toString(),
+          idOperation: bAdd ? 'ADD' : 'REMOVE',
+          properties: {
+            internalExtension: null,
+            directLine: null
+          }
+        };
       }
 
       $scope.isAddEnabled = function () {
@@ -923,32 +952,6 @@ angular.module('Core')
                 userResult.message = $translate.instant('usersPage.onboardSuccess', userResult);
                 userResult.alertType = 'success';
                 var promise;
-                if (data.userResponse[i].entitled && data.userResponse[i].entitled.indexOf(Config.entitlements.huron) !== -1) {
-                  var userData = {
-                    'email': data.userResponse[i].email,
-                    'name': data.userResponse[i].name,
-                    'directoryNumber': "",
-                    'externalNumber': ""
-                  };
-                  var userAndDnObj = $scope.usrlist.filter(function (user) {
-                    return (user.address == data.userResponse[i].email);
-                  });
-
-                  if ((userAndDnObj[0].assignedDn !== null) && userAndDnObj[0].assignedDn.pattern.length > 0) {
-                    userData.directoryNumber = userAndDnObj[0].assignedDn.pattern;
-                  }
-                  //with None as externalNumber pattern the CMI call fails
-                  if (userAndDnObj[0].externalNumber !== false && userAndDnObj[0].externalNumber.pattern !== "None") {
-                    userData.externalNumber = userAndDnObj[0].externalNumber.pattern;
-                  }
-
-                  promise = HuronUser.create(data.userResponse[i].uuid, userData)
-                    .catch(function (response) {
-                      this.alertType = 'danger';
-                      this.message = Notification.processErrorResponse(response, 'usersPage.ciscoucError', this);
-                    }.bind(userResult));
-                  promises.push(promise);
-                }
                 if (data.userResponse[i].unentitled && data.userResponse[i].unentitled.indexOf(Config.entitlements.huron) !== -1) {
                   promise = HuronUser.delete(data.userResponse[i].uuid)
                     .catch(function (response) {
@@ -1039,18 +1042,55 @@ angular.module('Core')
         if (angular.isArray(usersList) && usersList.length > 0) {
           $scope.btnOnboardLoading = true;
 
-          var i, temparray, chunk = Config.batchSize;
+          var i, j;
+          for (i = 0; i < usersList.length; i++) {
+            var userAndDnObj = $scope.usrlist.filter(function (user) {
+              return (user.address == usersList[i].address);
+            });
+
+            var internalExtension, directLine;
+            if (userAndDnObj[0].assignedDn && userAndDnObj[0].assignedDn.pattern.length > 0) {
+              usersList[i].internalExtension = userAndDnObj[0].assignedDn.pattern;
+            }
+            if (userAndDnObj[0].externalNumber && userAndDnObj[0].externalNumber.pattern !== "None") {
+              usersList[i].directLine = userAndDnObj[0].externalNumber.pattern;
+            }
+          }
+
+          var temparray = [],
+            tempLicenseArray = [],
+            chunk = Config.batchSize;
           for (i = 0; i < usersList.length; i += chunk) {
             temparray = usersList.slice(i, i + chunk);
             //update entitlements
             var entitleList = [];
             var licenseList = [];
             if (Authinfo.hasAccount() && $scope.collabRadio === 1) {
-              licenseList = getAccountLicenses();
+              licenseList = getAccountLicenses('additive');
             } else {
               entitleList = getEntitlements('add');
             }
-            Userservice.onboardUsers(temparray, entitleList, licenseList, null, callback);
+
+            tempLicenseArray = [];
+            if (licenseList && licenseList.length > 0) {
+              for (j = 0; j < temparray.length; j++) {
+                var newLicenseList = licenseList.map(function (license) {
+                  var licenseObj = angular.copy(license);
+                  if (licenseObj['id'].indexOf("CO_") === 0) {
+                    if (temparray[j].internalExtension) {
+                      licenseObj.properties.internalExtension = temparray[j].internalExtension;
+                    }
+                    if (temparray[j].directLine) {
+                      licenseObj.properties.directLine = temparray[j].directLine;
+                    }
+                  }
+                  return licenseObj;
+                });
+                tempLicenseArray.push(newLicenseList);
+              }
+            }
+
+            Userservice.onboardUsers(temparray, entitleList, null, tempLicenseArray, callback);
           }
         } else if (!optionalOnboard) {
           Log.debug('No users entered.');
@@ -1457,7 +1497,7 @@ angular.module('Core')
             var entitleList = [];
             var licenseList = [];
             if (Authinfo.hasAccount() && $scope.collabRadio === 1) {
-              licenseList = getAccountLicenses();
+              licenseList = getAccountLicenses('patch');
             } else {
               entitleList = getEntitlements('add');
             }
@@ -1725,7 +1765,7 @@ angular.module('Core')
         var entitleList = [];
         var licenseList = [];
         if (Authinfo.hasAccount() && $scope.collabRadio === 1) {
-          licenseList = getAccountLicenses() || [];
+          licenseList = getAccountLicenses('additive') || [];
         } else {
           entitleList = getEntitlements('add');
         }

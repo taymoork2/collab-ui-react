@@ -88,36 +88,7 @@ angular.module('Core')
                       alertType: null
                     };
 
-                    // This code is being added temporarily to add/remove users from Squared UC
-                    // Discussions are ongoing concerning how these common functions should be
-                    // integrated.
-                    if (user.entitled && user.entitled.indexOf(Config.entitlements.huron) !== -1) {
-                      var userObj = {
-                        'email': user.email,
-                        'name': user.name,
-                        'directoryNumber': "",
-                        'externalNumber': ""
-                      };
-
-                      var userAndDnObj = userData.users.filter(function (user) {
-                        return (user.email == userObj.email);
-                      });
-
-                      if (angular.isDefined(userAndDnObj[0].assignedDn) && (userAndDnObj[0].assignedDn !== null) && userAndDnObj[0].assignedDn.pattern.length > 0) {
-                        userObj.directoryNumber = userAndDnObj[0].assignedDn.pattern;
-                      }
-                      //with None as externalNumber pattern the CMI call fails
-                      if (angular.isDefined(userAndDnObj[0].externalNumber) && userAndDnObj[0].externalNumber !== false && userAndDnObj[0].externalNumber.pattern !== "None") {
-                        userObj.externalNumber = userAndDnObj[0].externalNumber.pattern;
-                      }
-
-                      promises.push(HuronUser.create(user.uuid, userObj)
-                        .catch(function (response) {
-                          this.alertType = 'danger';
-                          this.message = Notification.processErrorResponse(response, 'usersPage.ciscoucError', this);
-                        }.bind(userResult)));
-
-                    } else if (user.unentitled && user.unentitled.indexOf(Config.entitlements.huron) !== -1) {
+                    if (user.unentitled && user.unentitled.indexOf(Config.entitlements.huron) !== -1) {
                       promises.push(HuronUser.delete(user.uuid)
                         .catch(function (response) {
                           // If the user does not exist in Squared UC do not report an error
@@ -399,7 +370,7 @@ angular.module('Core')
         // Note there are two license arrays that can be passed
         // 'licenses' is a general array applied to all users
         // 'licensesPerUser' is an array of license arrays paired to each user in the usersDataArray
-        // this latter argument is used by thinsg like CSV import
+        // this latter argument is used by things like CSV import
         //
         onboardUsers: function (usersDataArray, entitlements, licenses, licensesPerUser, callback, cancelPromise) {
           var userData = {
@@ -433,7 +404,7 @@ angular.module('Core')
               if (licenses && licenses.length > 0)
                 user.licenses = licenses;
               else if (licensesPerUser && licensesPerUser.length > i)
-                user.licenses = licensesPerUser[i];
+                user.licenses = (licensesPerUser[i] && licensesPerUser[i].length > 0) ? licensesPerUser[i] : null;
 
               userData.users.push(user);
             }

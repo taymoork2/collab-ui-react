@@ -37,17 +37,40 @@ angular.module('Core')
       }
 
       function deleteHuron() {
-        HuronUser.delete($scope.deleteUserUuId)
-          .then(function () {
-            deleteSuccess();
-          })
-          .catch(function (response) {
-            if (response.status !== 404) {
-              Notification.errorResponse(response);
-            } else {
-              deleteSuccess();
+        return HuronUser.delete($scope.deleteUserUuId);
+      }
+
+      function deleteUser() {
+        var userData = {
+          email: $scope.deleteUsername
+        };
+        Userservice.deactivateUser(userData).success(function (data, status) {
+          deleteSuccess();
+          if (angular.isFunction($scope.$dismiss)) {
+            $scope.$dismiss();
+          }
+        }).error(function (data, status) {
+          Log.warn('Could not delete the user', data);
+          var error = null;
+          if (status) {
+            error = $translate.instant('errors.statusError', {
+              status: status
+            });
+            if (data && angular.isString(data.message)) {
+              error += ' ' + $translate.instant('usersPage.messageError', {
+                message: data.message
+              });
             }
-          });
+          } else {
+            error = 'Request failed.';
+            if (angular.isString(data)) {
+              error += ' ' + data;
+            }
+            Notification.notify(error, 'error');
+          }
+          Notification.notify([error], 'error');
+          $scope.deleteUserButtonLoad = false;
+        });
       }
 
       function getMessengerSyncStatus() {
@@ -63,40 +86,19 @@ angular.module('Core')
       }
 
       $scope.deactivateUser = function () {
-        var userData = {
-          email: $scope.deleteUsername
-        };
         $scope.deleteUserButtonLoad = true;
         Log.debug('Deactivating user ' + $scope.deleteUsername);
-        Userservice.deactivateUser(userData)
-          .success(function (data, status) {
-            deleteHuron();
-            if (angular.isFunction($scope.$dismiss)) {
-              $scope.$dismiss();
-            }
-          })
-          .error(function (data, status) {
-            Log.warn('Could not delete the user', data);
-            var error = null;
-            if (status) {
-              error = $translate.instant('errors.statusError', {
-                status: status
-              });
-              if (data && angular.isString(data.message)) {
-                error += ' ' + $translate.instant('usersPage.messageError', {
-                  message: data.message
-                });
-              }
-            } else {
-              error = 'Request failed.';
-              if (angular.isString(data)) {
-                error += ' ' + data;
-              }
-              Notification.notify(error, 'error');
-            }
-            Notification.notify([error], 'error');
-            $scope.deleteUserButtonLoad = false;
-          });
+        // Delete Huron first
+        deleteHuron().then(function () {
+          deleteUser();
+        }).catch(function (response) {
+          if (response.status !== 404) {
+            Notification.errorResponse(response);
+          } else {
+            deleteUser();
+          }
+        });
+
       };
     }
   ]);

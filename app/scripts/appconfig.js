@@ -76,9 +76,11 @@ angular
                 $state.sidepanel = null;
                 var previousState = $previousState.get(sidepanelMemo);
                 if (previousState) {
-                  return $previousState.go(sidepanelMemo).then(function () {
-                    $previousState.forget(sidepanelMemo);
-                  });
+                  if ($state.current.parent === 'sidepanel' || angular.isUndefined($state.current.parent)) {
+                    return $previousState.go(sidepanelMemo).then(function () {
+                      $previousState.forget(sidepanelMemo);
+                    });
+                  }
                 }
               }
             }.bind($state.sidepanel));
@@ -637,20 +639,8 @@ angular
             settingPageIframeUrl: null
           }
         })
-        .state('webex-reports', {
-          url: '/webexreports',
-          templateUrl: 'modules/webex/siteReports/siteReports.tpl.html',
-          controller: 'WebExReportsCtrl',
-          controllerAs: 'reports',
-          parent: 'main',
-          params: {
-            siteUrl: null
-          },
-          data: {
-            displayName: 'Reports Page1'
-          }
-        })
         .state('webex-reports.webex-reports-iframe', {
+          url: 'reports/webex/i',
           templateUrl: 'modules/webex/siteReportsIframe/siteReportIframe.tpl.html',
           controller: 'ReportsIframeCtrl',
           controllerAs: 'reportsIframe',
@@ -677,6 +667,16 @@ angular
           parent: 'main',
           params: {
             tab: null,
+            siteUrl: null
+          }
+        })
+        .state('webex-reports', {
+          url: '/reports/webex',
+          templateUrl: 'modules/squared/views/reports.html',
+          controller: 'ReportsCtrl',
+          parent: 'main',
+          params: {
+            tab: 'webex',
             siteUrl: null
           }
         })
@@ -1467,8 +1467,8 @@ angular
           parent: 'sidepanel',
           views: {
             'sidepanel@': {
-              controllerAs: 'expresswayServiceDetails',
-              controller: 'ExpresswayServiceDetailsController',
+              controllerAs: 'expresswayClusterDetails',
+              controller: 'ExpresswayServiceClusterController',
               templateUrl: 'modules/hercules/expressway-service/cluster-details.html'
             },
             'header@cluster-details-new': {

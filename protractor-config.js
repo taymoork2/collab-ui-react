@@ -4,6 +4,7 @@ var HttpsProxyAgent = require("https-proxy-agent");
 var agent = new HttpsProxyAgent(process.env.http_proxy || 'http://proxy.esl.cisco.com:80');
 var touch = require('touch');
 var fs = require('fs');
+var e2eFailNotify = '.e2e-fail-notify';
 
 exports.config = {
   framework: "jasmine2",
@@ -35,13 +36,13 @@ exports.config = {
   onPrepare: function() {
     var FailFast = function(){
       this.suiteStarted = function(suite){
-        if (fs.existsSync('e2e-fail-notify')){
+        if (fs.existsSync(e2eFailNotify)){
             console.log('fail file exists');
         }
       };
 
       this.specStarted = function(spec){
-        if (fs.existsSync('e2e-fail-notify')){
+        if (fs.existsSync(e2eFailNotify)){
             env.specFilter = function(spec) {
               return false;
             };
@@ -50,7 +51,7 @@ exports.config = {
 
       this.specDone = function(spec) {
         if (spec.status === 'failed') {
-            touch('e2e-fail-notify');
+            touch(e2eFailNotify);
         }
       };
     }
@@ -81,6 +82,7 @@ exports.config = {
     );
 
     global.TIMEOUT = 30000;
+    global.LONG_TIMEOUT = 60000;
 
     global.baseUrl = exports.config.baseUrl;
 

@@ -1,0 +1,155 @@
+'use strict';
+
+describe('User List Service', function () {
+  beforeEach(module('Core'));
+
+  var $httpBackend, $rootScope, UserListService, Authinfo, Config;
+
+  var testData;
+
+  beforeEach(function () {
+    module(function ($provide) {
+      Authinfo = {
+        getOrgId: function () {
+          return '12345';
+        }
+      };
+
+      $provide.value('Authinfo', Authinfo);
+    });
+  });
+
+  beforeEach(inject(function (_$httpBackend_, _$rootScope_, _UserListService_, _Config_, _Authinfo_) {
+    $httpBackend = _$httpBackend_;
+    UserListService = _UserListService_;
+    Config = _Config_;
+    Authinfo = _Authinfo_;
+    $rootScope = _$rootScope_;
+
+    testData = getJSONFixture('core/json/users/userlist.service.json');
+  }));
+
+  afterEach(function () {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
+  it('should successfully return an array of 2 users from calling listUsers', function () {
+    var listUsersUrl = Config.getScimUrl(Authinfo.getOrgId()) +
+      '?' + '&' + testData.listUsers.attributes +
+      '&' + testData.listUsers.filter +
+      '&count=' + testData.listUsers.count +
+      '&sortBy=' + testData.listUsers.sortBy +
+      '&sortOrder=' + testData.listUsers.sortOrder;
+
+    $httpBackend.whenGET(listUsersUrl).respond(200, {
+      TotalResults: "2",
+      itemsPerPage: "2",
+      startIndex: "1",
+      schemas: testData.listUsers.schemas,
+      Resources: testData.listUsers.users,
+      success: true
+    });
+
+    UserListService.listUsers(testData.listUsers.startIndex, testData.listUsers.count,
+      testData.listUsers.sortBy, testData.listUsers.sortOrder,
+      function (data, status, searchStr) {
+        expect(status).toBe(200);
+        expect(data.TotalResults).toBe('2');
+        expect(data.itemsPerPage).toBe('2');
+        expect(data.startIndex).toBe('1');
+        expect(data.schemas).toEqual(testData.listUsers.schemas);
+        expect(data.Resources).toEqual(testData.listUsers.users);
+        expect(data.success).toBe(true);
+      }, '');
+
+    $httpBackend.flush();
+  });
+
+  it('should successfully return the user reports ID from calling generateUserReports', function () {
+    var generateUserReportsUrl = Config.getUserReportsUrl(Authinfo.getOrgId());
+
+    $httpBackend.whenPOST(generateUserReportsUrl).respond(202, {
+      id: testData.exportCSV.id,
+      status: 'pending'
+    });
+
+    UserListService.generateUserReports('userName', function (data, status) {
+      expect(status).toBe(202);
+      expect(data.status).toBe('pending');
+      expect(data.id).toBe(testData.exportCSV.id);
+    });
+
+    $httpBackend.flush();
+  });
+
+  it('should successfully return the user reports data from calling getUserReports', function () {
+    var userReportsUrl = Config.getUserReportsUrl(Authinfo.getOrgId()) + '/' + testData.exportCSV.id;
+
+    $httpBackend.whenGET(userReportsUrl).respond(200, {
+      report: testData.exportCSV.report,
+      id: testData.exportCSV.id,
+      status: 'success'
+    });
+
+    UserListService.getUserReports(testData.exportCSV.id, function (data, status) {
+      expect(status).toBe(200);
+      expect(data.status).toBe('success');
+      expect(data.id).toBe(testData.exportCSV.id);
+      expect(data.report).toBe(testData.exportCSV.report);
+    });
+
+    $httpBackend.flush();
+  });
+
+  it('should successfully return an array of 2 users from calling extractUsers', function () {
+    var userReports = UserListService.extractUsers(testData.exportCSV.report,
+      testData.exportCSV.filter);
+
+    expect(userReports).toEqual(testData.exportCSV.users);
+  });
+
+  it('should successfully return an array of 2 users from calling exportCSV', function () {
+    var generateUserReportsUrl = Config.getUserReportsUrl(Authinfo.getOrgId());
+    var getUserReportsUrl = generateUserReportsUrl + '/' + testData.exportCSV.id;
+
+    $httpBackend.whenPOST(generateUserReportsUrl).respond(202, {
+      id: testData.exportCSV.id,
+      status: 'pending'
+    });
+
+    $httpBackend.whenGET(getUserReportsUrl).respond(200, {
+      report: testData.exportCSV.report,
+      id: testData.exportCSV.id,
+      status: 'success'
+    });
+
+    var promise = UserListService.exportCSV(testData.exportCSV.filter);
+
+    promise.then(function (users) {
+      expect(users).toEqual(testData.exportCSV.usersToExport);
+    });
+
+    $httpBackend.flush();
+  });
+
+  it('should successfully return an array of 2 partners from calling listPartners', function () {
+    var orgId = Authinfo.getOrgId();
+    var adminUrl = Config.getAdminServiceUrl() +
+      'organization/' + orgId + '/users/partneradmins';
+
+    $httpBackend.whenGET(adminUrl).respond(200, {
+      partners: testData.listPartners.partners,
+      status: true
+    });
+
+    UserListService.listPartners(orgId, function (data, status) {
+      expect(status).toBe(200);
+      expect(data.status).toBe(true);
+      expect(data.partners).toEqual(testData.listPartners.partners);
+    });
+
+    $httpBackend.flush();
+  });
+
+});
