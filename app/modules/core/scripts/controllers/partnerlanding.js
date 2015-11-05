@@ -129,9 +129,6 @@ angular.module('Core')
         $scope.activeCount = $scope.activeList.length;
       }
 
-      var ACTIVE = PartnerService.customerStatus.ACTIVE;
-      var CANCELED = PartnerService.customerStatus.CANCELED;
-
       $scope.newTrialName = null;
       $scope.trialsGrid = {
         data: 'activeList',
