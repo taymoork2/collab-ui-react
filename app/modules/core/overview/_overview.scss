@@ -10,13 +10,13 @@
     }
   }
   .footer-content i, i.icon-circle {
-    &.info {
+    &.success {
       color: $color-cta-base;
     }
-    &.warn {
+    &.warning {
       color: $color-attention-base;
     }
-    &.error {
+    &.danger {
       color: $color-alerts-base;
     }
     &.disabled {

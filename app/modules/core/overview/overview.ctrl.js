@@ -6,7 +6,7 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($scope, $translate, ReportsService, Orgservice) {
+  function OverviewCtrl($scope, $translate, ReportsService, Orgservice, Config) {
     var vm = this;
     vm.pageTitle = $translate.instant('overview.pageTitle');
     var cards = [
@@ -73,6 +73,15 @@
         Log.error("Query active users metrics failed. Status: " + status);
       }
     });
+
+    vm.statusPageUrl = Config.getStatusPageUrl();
+
+    ReportsService.getHealthStatus()
+      .then(function (status) {
+        console.log('status::'+status);
+        vm.healthStatus = status;
+      });
+
 
   }
 })();
