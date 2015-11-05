@@ -7,7 +7,7 @@
 /* global describe */
 /* global it */
 
-xdescribe('As an admin i should be able to', function () {
+xdescribe('An admin should be able to', function () {
 
   afterEach(function () {
     utils.dumpConsoleErrors();
@@ -30,7 +30,7 @@ xdescribe('As an admin i should be able to', function () {
     utils.expectIsDisplayed(huronFeatures.featuresList);
   });
 
-  it('see only auto attendants when auto attendant filter is selected', function () {
+  xit('see only auto attendants when auto attendant filter is selected', function () {
     utils.click(huronFeatures.autoAttendantFilter);
     utils.expectIsDisplayed(huronFeatures.autoAttendants);
     utils.expectIsNotDisplayed(huronFeatures.huntGroups);
@@ -39,7 +39,7 @@ xdescribe('As an admin i should be able to', function () {
   it('see only hunt groups when Hunt Group filter is selected', function () {
     utils.click(huronFeatures.huntGroupFilter);
     utils.expectIsDisplayed(huronFeatures.huntGroups);
-    expect(huronFeatures.autoAttendants.count()).toBe(0);
+    utils.expectIsNotDisplayed(huronFeatures.autoAttendants);
   });
 
   it('see the searched hunt group', function () {
@@ -48,7 +48,7 @@ xdescribe('As an admin i should be able to', function () {
     utils.clear(utils.searchField);
     utils.sendKeys(utils.searchField, huntGroup.randomHGName);
     utils.expectIsDisplayed(huronFeatures.huntGroups);
-    utils.expectCountToBeGreater(huronFeatures.selectedHuntGroups, 0);
+    utils.expectTextToBeSet(huronFeatures.selectedHuntGroup, huntGroup.randomHGName);
   });
 
   it('see the edit and delete button when clicked on menu button of a selected hunt group', function () {
@@ -63,7 +63,7 @@ xdescribe('As an admin i should be able to', function () {
   it('see the delete pop up when clicked on delete button of a selected hunt group', function () {
     utils.expectIsDisplayed(huronFeatures.huntGroupDeleteBtn);
     utils.click(huronFeatures.huntGroupDeleteBtn);
-    utils.click(huronFeatures.closeBtnOnModal);
+    utils.expectIsDisplayed(huronFeatures.huntGroupDeletePopUp);
   });
 
   it('click on close button of delete hunt group pop up', function () {
@@ -93,6 +93,6 @@ xdescribe('As an admin i should be able to', function () {
     utils.click(utils.searchbox);
     utils.clear(utils.searchField);
     utils.sendKeys(utils.searchField, huntGroup.randomHGName);
-    expect(huronFeatures.huntGroups.count()).toBe(0);
-  })
+    utils.expectIsNotDisplayed(huronFeatures.huntGroups);
+  });
 });

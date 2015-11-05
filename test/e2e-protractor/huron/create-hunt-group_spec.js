@@ -21,7 +21,7 @@ xdescribe('Create Hunt Group', function () {
   });
 
   it('should set the name of the hunt group', function () {
-    expect(huntGroup.typeAheadInput.getAttribute('placeholder')).toContain('Name the Hunt Group');
+    utils.expectTextToBeSet(huntGroup.description, 'This hunt group name will also be the name callers see on their device (i.e. alerting name)');
     utils.sendKeys(huntGroup.typeAheadInput, huntGroup.randomHGName);
   });
 

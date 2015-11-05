@@ -18,11 +18,8 @@ var HuronFeaturesPage = function () {
   this.allFilter = element.all(by.repeater('filter in filters')).get(0);
   this.autoAttendantFilter = element.all(by.repeater('filter in filters')).get(1);
   this.huntGroupFilter = element.all(by.repeater('filter in filters')).get(2);
-  this.selectedHuntGroups = element.all(by.css('.cs-card.alerts .h5')).filter(function (elem, index) {
-    return elem.getText().then(function (text) {
-      return text === huronFeatures.huntGroupName;
-    });
-  });
+  this.huntGroupDeletePopUp = element.all(by.css('.modal-body'));
+  this.selectedHuntGroup = element(by.css('.cs-card.alerts .h5'));
 };
 
 module.exports = HuronFeaturesPage;
