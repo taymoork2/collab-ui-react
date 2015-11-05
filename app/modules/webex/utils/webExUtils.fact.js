@@ -131,7 +131,34 @@
         var siteName = siteUrl.slice(0, index);
 
         return siteName;
-      }; //getSiteName()
+      }; // getSiteName()
+
+      obj.getSiteVersion = function (siteVersionJsonObj) {
+        var funcName = "getSiteVersion()";
+        var logMsg = "";
+
+        var siteVersionJson = null;
+        var trainReleaseJson = {
+          trainReleaseVersion: null,
+          trainReleaseOrder: null
+        };
+
+        var trainReleaseVersion = null;
+        var trainReleaseOrder = null;
+
+        if ("" === siteVersionJsonObj.errId) { // got a good response
+          siteVersionJson = siteVersionJsonObj.bodyJson;
+          trainReleaseJson.trainReleaseVersion = siteVersionJson.ep_trainReleaseVersion;
+          trainReleaseJson.trainReleaseOrder = siteVersionJson.ep_trainReleaseOrder;
+
+          logMsg = funcName + ": " + "\n" +
+            "trainReleaseVersion=" + trainReleaseVersion + "\n" +
+            "trainReleaseOrder=" + trainReleaseOrder;
+          $log.log(logMsg);
+        }
+
+        return trainReleaseJson;
+      }; // getSiteVersion()
 
       obj.isSiteSupportsIframe = function (siteUrl) {
         var deferred = $q.defer();
@@ -220,24 +247,22 @@
           var funcName = "iframeSupportedSiteVersionCheck()";
           var logMsg = "";
 
-          var iframeSupportedSiteVersion = false;
           var siteVersionJsonObj = obj.validateSiteVersionXmlData(getInfoResult.siteVersionXml);
+          var trainReleaseJsonObj = obj.getSiteVersion(siteVersionJsonObj);
 
-          if ("" === siteVersionJsonObj.errId) { // got a good response
-            var siteVersionJson = siteVersionJsonObj.bodyJson;
-            var trainReleaseVersion = siteVersionJson.ep_trainReleaseVersion;
-            var trainReleaseOrder = siteVersionJson.ep_trainReleaseOrder;
+          var trainReleaseVersion = trainReleaseJsonObj.trainReleaseVersion;
+          var trainReleaseOrder = trainReleaseJsonObj.trainReleaseOrder;
+          var iframeSupportedSiteVersion = (
+            (null != trainReleaseOrder) && 
+            (400 <= +trainReleaseOrder)
+          ) ? true : false;
 
-            logMsg = funcName + ": " + "\n" +
-              "siteUrl=" + siteUrl + "\n" +
-              "trainReleaseVersion=" + trainReleaseVersion + "\n" +
-              "trainReleaseOrder=" + trainReleaseOrder;
-            $log.log(logMsg);
-
-            if ((null != trainReleaseOrder) && (400 <= +trainReleaseOrder)) {
-              iframeSupportedSiteVersion = true;
-            }
-          }
+          logMsg = funcName + ": " + "\n" +
+            "siteUrl=" + siteUrl + "\n" +
+            "trainReleaseVersion=" + trainReleaseVersion + "\n" +
+            "trainReleaseOrder=" + trainReleaseOrder + "\n" +
+            "iframeSupportedSiteVersion=" + iframeSupportedSiteVersion;
+          $log.log(logMsg);
 
           return iframeSupportedSiteVersion;
         } // iframeSupportedSiteVersionCheck()
@@ -249,7 +274,9 @@
           if ("" === siteInfoJsonObj.errId) { // got a good response
             var siteInfoJson = siteInfoJsonObj.bodyJson;
 
-            isAdminReportEnabled = ("true" == siteInfoJson.ns1_siteInstance.ns1_commerceAndReporting.ns1_siteAdminReport) ? true : false;
+            isAdminReportEnabled = (
+              "true" == siteInfoJson.ns1_siteInstance.ns1_commerceAndReporting.ns1_siteAdminReport
+            ) ? true : false;
           }
 
           return isAdminReportEnabled;
