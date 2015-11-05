@@ -3,14 +3,13 @@
 /* global describe, it, expect, login */
 
 describe('WebEx site settings cross-launch', function () {
-  it('should login as t30citestprov9@mailinator.com and navigate to WebEx site list', function () {
+  it('should login as t30citestprov9@mailinator.com', function () {
     login.loginThroughGui(sitesettings.testAdmin2.username, sitesettings.testAdmin2.password);
-    navigation.clickServicesTab();
-    utils.click(sitesettings.conferencing);
-    navigation.expectCurrentUrl('/site-list');
   });
 
-  it('should find webex settings cross-launch icon', function () {
+  it('should navigate to webex site list and find webex settings cross-launch icon', function () {
+    navigation.clickServicesTab();
+    utils.click(sitesettings.conferencing);
     expect(sitesettings.xLaunchSiteSettingsT30CITEST.isPresent).toBeTruthy();
   });
 
@@ -20,272 +19,275 @@ describe('WebEx site settings cross-launch', function () {
 });
 
 describe('WebEx site settings iframe', function () {
-  it('should login as sjsite14@mailinator.com and navigate to WebEx site list', function () {
+  it('should login as sjsite14@mailinator.com ', function () {
     login.loginThroughGui(sitesettings.testAdmin.username, sitesettings.testAdmin.password);
-    navigation.clickServicesTab();
-    utils.click(sitesettings.conferencing);
-    expect(sitesettings.configureSJSITE14.isPresent).toBeTruthy();
   });
 
-  it('click on configure site cog and should navigate to site settings index', function () {
+  it('should navigate to webex site list and find configure site cog', function () {
+    navigation.clickServicesTab();
+    utils.click(sitesettings.conferencing);
+    utils.wait(sitesettings.configureSJSITE14);
+  });
+
+  it('click on configure site cog and navigate to site settings index', function () {
     utils.click(sitesettings.configureSJSITE14);
-    expect(sitesettings.webexSiteSettingsPanel.isPresent).toBeTruthy();
-    expect(sitesettings.webexSiteInfoCardId.isPresent).toBeTruthy();
-    expect(sitesettings.webexCommonSettingsCardId.isPresent).toBeTruthy();
+    utils.wait(sitesettings.siteSettingsPanel);
+    expect(sitesettings.siteInfoCardId.isPresent).toBeTruthy();
+    expect(sitesettings.commonSettingsCardId.isPresent).toBeTruthy();
     expect(sitesettings.siteListCrumb.isPresent).toBeTruthy();
   });
 
-  it('click on site list breadcrumb and should navigate to site list', function () {
+  it('should click on site list breadcrumb and navigate to site list', function () {
     utils.click(sitesettings.siteListCrumb);
     expect(sitesettings.configureSJSITE14.isPresent).toBeTruthy();
   });
 
-  it('click on configure site cog and should navigate to site settings index', function () {
+  it('should click on configure site cog and navigate to site settings index', function () {
     utils.click(sitesettings.configureSJSITE14);
-    expect(sitesettings.webexSiteSettingsPanel.isPresent).toBeTruthy();
-    expect(sitesettings.webexSiteInfoCardId.isPresent).toBeTruthy();
-    expect(sitesettings.webexCommonSettingsCardId.isPresent).toBeTruthy();
+    utils.wait(sitesettings.siteSettingsPanel);
+    expect(sitesettings.siteInfoCardId.isPresent).toBeTruthy();
+    expect(sitesettings.commonSettingsCardId.isPresent).toBeTruthy();
     expect(sitesettings.siteListCrumb.isPresent).toBeTruthy();
   });
 
-  it('click on common settings cmr link and should navigate to the correct site setting', function () {
+  it('should click on common settings cmr link and navigate to the correct site setting', function () {
     utils.click(sitesettings.configureCommonCMRLink);
-    expect(sitesettings.siteSettingPanel.isPresent()).toBeTruthy();
-    expect(sitesettings.webexCMRId.isPresent()).toBeTruthy();
+    utils.wait(sitesettings.siteSettingPanel);
+    expect(sitesettings.cmrId.isPresent()).toBeTruthy();
     expect(sitesettings.iFramePage.isPresent()).toBeTruthy();
     expect(sitesettings.siteSettingsCrumb.isPresent()).toBeTruthy();
     expect(sitesettings.siteListCrumb.isPresent()).toBeTruthy();
   });
 
-  it('click on settings index breadcrumb and should navigate to site settings index', function () {
+  it('should click on settings index breadcrumb and navigate to site settings index', function () {
     utils.click(sitesettings.siteSettingsCrumb);
-    expect(sitesettings.webexSiteSettingsPanel.isPresent).toBeTruthy();
-    expect(sitesettings.webexSiteInfoCardId.isPresent).toBeTruthy();
-    expect(sitesettings.webexCommonSettingsCardId.isPresent).toBeTruthy();
+    utils.wait(sitesettings.siteSettingsPanel);
+    expect(sitesettings.siteInfoCardId.isPresent).toBeTruthy();
+    expect(sitesettings.commonSettingsCardId.isPresent).toBeTruthy();
   });
 
-  it('click on common settings company addresses link and should navigate to the correct site setting', function () {
+  it('should click on common settings company addresses link and navigate to the correct site setting', function () {
     utils.click(sitesettings.configureCommonCompanyAddressesLink);
-    expect(sitesettings.siteSettingPanel.isPresent()).toBeTruthy();
-    expect(sitesettings.webexCompanyAddressesId.isPresent()).toBeTruthy();
+    utils.wait(sitesettings.siteSettingPanel);
+    expect(sitesettings.companyAddressesId.isPresent()).toBeTruthy();
     expect(sitesettings.iFramePage.isPresent()).toBeTruthy();
     expect(sitesettings.siteSettingsCrumb.isPresent()).toBeTruthy();
     expect(sitesettings.siteListCrumb.isPresent()).toBeTruthy();
   });
 
-  it('click on settings index breadcrumb and should navigate to site settings index', function () {
+  it('should click on settings index breadcrumb and navigate to site settings index', function () {
     utils.click(sitesettings.siteSettingsCrumb);
-    expect(sitesettings.webexSiteSettingsPanel.isPresent).toBeTruthy();
-    expect(sitesettings.webexSiteInfoCardId.isPresent).toBeTruthy();
-    expect(sitesettings.webexCommonSettingsCardId.isPresent).toBeTruthy();
+    utils.wait(sitesettings.siteSettingsPanel);
+    expect(sitesettings.siteInfoCardId.isPresent).toBeTruthy();
+    expect(sitesettings.commonSettingsCardId.isPresent).toBeTruthy();
   });
 
-  it('click on common settings disclaimers link and should navigate to the correct site setting', function () {
+  it('should click on common settings disclaimers link and navigate to the correct site setting', function () {
     utils.click(sitesettings.configureCommonDisclaimersLink);
-    expect(sitesettings.siteSettingPanel.isPresent()).toBeTruthy();
-    expect(sitesettings.webexDisclaimersId.isPresent()).toBeTruthy();
+    utils.wait(sitesettings.siteSettingPanel);
+    expect(sitesettings.disclaimersId.isPresent()).toBeTruthy();
     expect(sitesettings.iFramePage.isPresent()).toBeTruthy();
     expect(sitesettings.siteSettingsCrumb.isPresent()).toBeTruthy();
     expect(sitesettings.siteListCrumb.isPresent()).toBeTruthy();
   });
 
-  it('click on settings index breadcrumb and should navigate to site settings index', function () {
+  it('should click on settings index breadcrumb and navigate to site settings index', function () {
     utils.click(sitesettings.siteSettingsCrumb);
-    expect(sitesettings.webexSiteSettingsPanel.isPresent).toBeTruthy();
-    expect(sitesettings.webexSiteInfoCardId.isPresent).toBeTruthy();
-    expect(sitesettings.webexCommonSettingsCardId.isPresent).toBeTruthy();
+    utils.wait(sitesettings.siteSettingsPanel);
+    expect(sitesettings.siteInfoCardId.isPresent).toBeTruthy();
+    expect(sitesettings.commonSettingsCardId.isPresent).toBeTruthy();
   });
 
-  it('click on common settings email template link and should navigate to the correct site setting', function () {
+  it('should click on common settings email template link and navigate to the correct site setting', function () {
     utils.click(sitesettings.configureCommonEmailTemplateLink);
-    expect(sitesettings.siteSettingPanel.isPresent()).toBeTruthy();
-    expect(sitesettings.webexEmailTemplateId.isPresent()).toBeTruthy();
+    utils.wait(sitesettings.siteSettingPanel);
+    expect(sitesettings.emaillTemplateId.isPresent()).toBeTruthy();
     expect(sitesettings.iFramePage.isPresent()).toBeTruthy();
     expect(sitesettings.siteSettingsCrumb.isPresent()).toBeTruthy();
     expect(sitesettings.siteListCrumb.isPresent()).toBeTruthy();
   });
 
-  it('click on settings index breadcrumb and should navigate to site settings index', function () {
+  it('should click on settings index breadcrumb and navigate to site settings index', function () {
     utils.click(sitesettings.siteSettingsCrumb);
-    expect(sitesettings.webexSiteSettingsPanel.isPresent).toBeTruthy();
-    expect(sitesettings.webexSiteInfoCardId.isPresent).toBeTruthy();
-    expect(sitesettings.webexCommonSettingsCardId.isPresent).toBeTruthy();
+    utils.wait(sitesettings.siteSettingsPanel);
+    expect(sitesettings.siteInfoCardId.isPresent).toBeTruthy();
+    expect(sitesettings.commonSettingsCardId.isPresent).toBeTruthy();
   });
 
-  it('click on common settings mobile link and should navigate to the correct site setting', function () {
+  it('should click on common settings mobile link and navigate to the correct site setting', function () {
     utils.click(sitesettings.configureCommonMobileLink);
-    expect(sitesettings.siteSettingPanel.isPresent()).toBeTruthy();
-    expect(sitesettings.webexCommonMobileId.isPresent()).toBeTruthy();
+    utils.wait(sitesettings.siteSettingPanel);
+    expect(sitesettings.commonMobileId.isPresent()).toBeTruthy();
     expect(sitesettings.iFramePage.isPresent()).toBeTruthy();
     expect(sitesettings.siteSettingsCrumb.isPresent()).toBeTruthy();
     expect(sitesettings.siteListCrumb.isPresent()).toBeTruthy();
   });
 
-  it('click on settings index breadcrumb and should navigate to site settings index', function () {
+  it('should click on settings index breadcrumb and navigate to site settings index', function () {
     utils.click(sitesettings.siteSettingsCrumb);
-    expect(sitesettings.webexSiteSettingsPanel.isPresent).toBeTruthy();
-    expect(sitesettings.webexSiteInfoCardId.isPresent).toBeTruthy();
-    expect(sitesettings.webexCommonSettingsCardId.isPresent).toBeTruthy();
+    utils.wait(sitesettings.siteSettingsPanel);
+    expect(sitesettings.siteInfoCardId.isPresent).toBeTruthy();
+    expect(sitesettings.commonSettingsCardId.isPresent).toBeTruthy();
   });
 
-  it('click on common settings navigation customization link and should navigate to the correct site setting', function () {
+  it('should click on common settings navigation customization link and navigate to the correct site setting', function () {
     utils.click(sitesettings.configureCommonNavigationLink);
-    expect(sitesettings.siteSettingPanel.isPresent()).toBeTruthy();
-    expect(sitesettings.webexCommonNavigationId.isPresent()).toBeTruthy();
+    utils.wait(sitesettings.siteSettingPanel);
+    expect(sitesettings.commonNavigationId.isPresent()).toBeTruthy();
     expect(sitesettings.iFramePage.isPresent()).toBeTruthy();
     expect(sitesettings.siteSettingsCrumb.isPresent()).toBeTruthy();
     expect(sitesettings.siteListCrumb.isPresent()).toBeTruthy();
   });
 
-  it('click on settings index breadcrumb and should navigate to site settings index', function () {
+  it('should click on settings index breadcrumb and navigate to site settings index', function () {
     utils.click(sitesettings.siteSettingsCrumb);
-    expect(sitesettings.webexSiteSettingsPanel.isPresent).toBeTruthy();
-    expect(sitesettings.webexSiteInfoCardId.isPresent).toBeTruthy();
-    expect(sitesettings.webexCommonSettingsCardId.isPresent).toBeTruthy();
+    utils.wait(sitesettings.siteSettingsPanel);
+    expect(sitesettings.siteInfoCardId.isPresent).toBeTruthy();
+    expect(sitesettings.commonSettingsCardId.isPresent).toBeTruthy();
   });
 
-  it('click on common settings productivity tools link and should navigate to the correct site setting', function () {
+  it('should click on common settings productivity tools link and navigate to the correct site setting', function () {
     utils.click(sitesettings.configureCommonProductivityToolsLink);
-    expect(sitesettings.siteSettingPanel.isPresent()).toBeTruthy();
-    expect(sitesettings.webexCommonProductivityToolsId.isPresent()).toBeTruthy();
+    utils.wait(sitesettings.siteSettingPanel);
+    expect(sitesettings.commonProductivityToolsId.isPresent()).toBeTruthy();
     expect(sitesettings.iFramePage.isPresent()).toBeTruthy();
     expect(sitesettings.siteSettingsCrumb.isPresent()).toBeTruthy();
     expect(sitesettings.siteListCrumb.isPresent()).toBeTruthy();
   });
 
-  it('click on settings index breadcrumb and should navigate to site settings index', function () {
+  it('should click on settings index breadcrumb and navigate to site settings index', function () {
     utils.click(sitesettings.siteSettingsCrumb);
-    expect(sitesettings.webexSiteSettingsPanel.isPresent).toBeTruthy();
-    expect(sitesettings.webexSiteInfoCardId.isPresent).toBeTruthy();
-    expect(sitesettings.webexCommonSettingsCardId.isPresent).toBeTruthy();
+    utils.wait(sitesettings.siteSettingsPanel);
+    expect(sitesettings.siteInfoCardId.isPresent).toBeTruthy();
+    expect(sitesettings.commonSettingsCardId.isPresent).toBeTruthy();
   });
 
-  it('click on common settings scheduler link and should navigate to the correct site setting', function () {
+  it('should click on common settings scheduler link and navigate to the correct site setting', function () {
     utils.click(sitesettings.configureCommonSchedulerLink);
-    expect(sitesettings.siteSettingPanel.isPresent()).toBeTruthy();
-    expect(sitesettings.webexCommonSchedulerId.isPresent()).toBeTruthy();
+    utils.wait(sitesettings.siteSettingPanel);
+    expect(sitesettings.commonSchedulerId.isPresent()).toBeTruthy();
     expect(sitesettings.iFramePage.isPresent()).toBeTruthy();
     expect(sitesettings.siteSettingsCrumb.isPresent()).toBeTruthy();
     expect(sitesettings.siteListCrumb.isPresent()).toBeTruthy();
   });
 
-  it('click on settings index breadcrumb and should navigate to site settings index', function () {
+  it('should click on settings index breadcrumb and navigate to site settings index', function () {
     utils.click(sitesettings.siteSettingsCrumb);
-    expect(sitesettings.webexSiteSettingsPanel.isPresent).toBeTruthy();
-    expect(sitesettings.webexSiteInfoCardId.isPresent).toBeTruthy();
-    expect(sitesettings.webexCommonSettingsCardId.isPresent).toBeTruthy();
+    utils.wait(sitesettings.siteSettingsPanel);
+    expect(sitesettings.siteInfoCardId.isPresent).toBeTruthy();
+    expect(sitesettings.commonSettingsCardId.isPresent).toBeTruthy();
   });
 
-  it('click on common settings security link and should navigate to the correct site setting', function () {
+  it('should click on common settings security link and navigate to the correct site setting', function () {
     utils.click(sitesettings.configureCommonSecurityLink);
-    expect(sitesettings.siteSettingPanel.isPresent()).toBeTruthy();
-    expect(sitesettings.webexCommonSecurityId.isPresent()).toBeTruthy();
+    utils.wait(sitesettings.siteSettingPanel);
+    expect(sitesettings.commonSecurityId.isPresent()).toBeTruthy();
     expect(sitesettings.iFramePage.isPresent()).toBeTruthy();
     expect(sitesettings.siteSettingsCrumb.isPresent()).toBeTruthy();
     expect(sitesettings.siteListCrumb.isPresent()).toBeTruthy();
   });
 
-  it('click on settings index breadcrumb and should navigate to site settings index', function () {
+  it('should click on settings index breadcrumb and navigate to site settings index', function () {
     utils.click(sitesettings.siteSettingsCrumb);
-    expect(sitesettings.webexSiteSettingsPanel.isPresent).toBeTruthy();
-    expect(sitesettings.webexSiteInfoCardId.isPresent).toBeTruthy();
-    expect(sitesettings.webexCommonSettingsCardId.isPresent).toBeTruthy();
+    utils.wait(sitesettings.siteSettingsPanel);
+    expect(sitesettings.siteInfoCardId.isPresent).toBeTruthy();
+    expect(sitesettings.commonSettingsCardId.isPresent).toBeTruthy();
   });
 
-  it('click on common settings session types link and should navigate to the correct site setting', function () {
+  it('should click on common settings session types link and navigate to the correct site setting', function () {
     utils.click(sitesettings.configureCommonSessionTypesLink);
-    expect(sitesettings.siteSettingPanel.isPresent()).toBeTruthy();
-    expect(sitesettings.webexCommonSessionTypesId.isPresent()).toBeTruthy();
+    utils.wait(sitesettings.siteSettingPanel);
+    expect(sitesettings.commonSessionTypesId.isPresent()).toBeTruthy();
     expect(sitesettings.iFramePage.isPresent()).toBeTruthy();
     expect(sitesettings.siteSettingsCrumb.isPresent()).toBeTruthy();
     expect(sitesettings.siteListCrumb.isPresent()).toBeTruthy();
   });
 
-  it('click on settings index breadcrumb and should navigate to site settings index', function () {
+  it('should click on settings index breadcrumb and navigate to site settings index', function () {
     utils.click(sitesettings.siteSettingsCrumb);
-    expect(sitesettings.webexSiteSettingsPanel.isPresent).toBeTruthy();
-    expect(sitesettings.webexSiteInfoCardId.isPresent).toBeTruthy();
-    expect(sitesettings.webexCommonSettingsCardId.isPresent).toBeTruthy();
+    utils.wait(sitesettings.siteSettingsPanel);
+    expect(sitesettings.siteInfoCardId.isPresent).toBeTruthy();
+    expect(sitesettings.commonSettingsCardId.isPresent).toBeTruthy();
   });
 
-  it('click on common settings site options link and should navigate to the correct site setting', function () {
+  it('should click on common settings site options link and navigate to the correct site setting', function () {
     utils.click(sitesettings.configureCommonSiteOptionsLink);
-    expect(sitesettings.siteSettingPanel.isPresent()).toBeTruthy();
-    expect(sitesettings.webexCommonSiteOptionsId.isPresent()).toBeTruthy();
+    utils.wait(sitesettings.siteSettingPanel);
+    expect(sitesettings.commonSiteOptionsId.isPresent()).toBeTruthy();
     expect(sitesettings.iFramePage.isPresent()).toBeTruthy();
     expect(sitesettings.siteSettingsCrumb.isPresent()).toBeTruthy();
     expect(sitesettings.siteListCrumb.isPresent()).toBeTruthy();
   });
 
-  it('click on settings index breadcrumb and should navigate to site settings index', function () {
+  it('should click on settings index breadcrumb and navigate to site settings index', function () {
     utils.click(sitesettings.siteSettingsCrumb);
-    expect(sitesettings.webexSiteSettingsPanel.isPresent).toBeTruthy();
-    expect(sitesettings.webexSiteInfoCardId.isPresent).toBeTruthy();
-    expect(sitesettings.webexCommonSettingsCardId.isPresent).toBeTruthy();
+    utils.wait(sitesettings.siteSettingsPanel);
+    expect(sitesettings.siteInfoCardId.isPresent).toBeTruthy();
+    expect(sitesettings.commonSettingsCardId.isPresent).toBeTruthy();
   });
 
-  it('click on common settings user privileges link and should navigate to the correct site setting', function () {
+  it('should click on common settings user privileges link and navigate to the correct site setting', function () {
     utils.click(sitesettings.configureCommonUserPrivLink);
-    expect(sitesettings.siteSettingPanel.isPresent()).toBeTruthy();
-    expect(sitesettings.webexCommonUserPrivId.isPresent()).toBeTruthy();
+    utils.wait(sitesettings.siteSettingPanel);
+    expect(sitesettings.commonUserPrivId.isPresent()).toBeTruthy();
     expect(sitesettings.iFramePage.isPresent()).toBeTruthy();
     expect(sitesettings.siteSettingsCrumb.isPresent()).toBeTruthy();
     expect(sitesettings.siteListCrumb.isPresent()).toBeTruthy();
   });
 
-  it('click on settings index breadcrumb and should navigate to site settings index', function () {
+  it('should click on settings index breadcrumb and navigate to site settings index', function () {
     utils.click(sitesettings.siteSettingsCrumb);
-    expect(sitesettings.webexSiteSettingsPanel.isPresent).toBeTruthy();
-    expect(sitesettings.webexSiteInfoCardId.isPresent).toBeTruthy();
-    expect(sitesettings.webexCommonSettingsCardId.isPresent).toBeTruthy();
+    utils.wait(sitesettings.siteSettingsPanel);
+    expect(sitesettings.siteInfoCardId.isPresent).toBeTruthy();
+    expect(sitesettings.commonSettingsCardId.isPresent).toBeTruthy();
   });
 
   /*
-  it('click on email all hosts btn and should navigate to the correct site setting', function () {
+  it('should click on email all hosts btn and navigate to the correct site setting', function () {
     utils.click(sitesettings.emailAllHostsBtn);
-    expect(sitesettings.siteSettingPanel.isPresent()).toBeTruthy();
-    expect(sitesettings.webexEmailAllHostsId.isPresent()).toBeTruthy();
+    utils.wait(sitesettings.siteSettingPanel);
+    expect(sitesettings.emaillAllHostsId.isPresent()).toBeTruthy();
     expect(sitesettings.iFramePage.isPresent()).toBeTruthy();
     expect(sitesettings.siteSettingsCrumb.isPresent()).toBeTruthy();
     expect(sitesettings.siteListCrumb.isPresent()).toBeTruthy();
   });
   */
 
-  it('click on settings index breadcrumb and should navigate to site settings index', function () {
+  it('should click on settings index breadcrumb and navigate to site settings index', function () {
     utils.click(sitesettings.siteSettingsCrumb);
-    expect(sitesettings.webexSiteSettingsPanel.isPresent).toBeTruthy();
-    expect(sitesettings.webexSiteInfoCardId.isPresent).toBeTruthy();
-    expect(sitesettings.webexCommonSettingsCardId.isPresent).toBeTruthy();
+    utils.wait(sitesettings.siteSettingsPanel);
+    expect(sitesettings.siteInfoCardId.isPresent).toBeTruthy();
+    expect(sitesettings.commonSettingsCardId.isPresent).toBeTruthy();
   });
 
-  it('click on site features link and should navigate to the correct site setting', function () {
+  it('should click on site features link and navigate to the correct site setting', function () {
     utils.click(sitesettings.siteFeaturesLink);
-    expect(sitesettings.siteSettingPanel.isPresent()).toBeTruthy();
-    expect(sitesettings.webexSiteFeaturesId.isPresent()).toBeTruthy();
+    utils.wait(sitesettings.siteSettingPanel);
+    expect(sitesettings.siteFeaturesId.isPresent()).toBeTruthy();
     expect(sitesettings.iFramePage.isPresent()).toBeTruthy();
     expect(sitesettings.siteSettingsCrumb.isPresent()).toBeTruthy();
     expect(sitesettings.siteListCrumb.isPresent()).toBeTruthy();
   });
 
-  it('click on settings index breadcrumb and should navigate to site settings index', function () {
+  it('should click on settings index breadcrumb and navigate to site settings index', function () {
     utils.click(sitesettings.siteSettingsCrumb);
-    expect(sitesettings.webexSiteSettingsPanel.isPresent).toBeTruthy();
-    expect(sitesettings.webexSiteInfoCardId.isPresent).toBeTruthy();
-    expect(sitesettings.webexCommonSettingsCardId.isPresent).toBeTruthy();
+    utils.wait(sitesettings.siteSettingsPanel);
+    expect(sitesettings.siteInfoCardId.isPresent).toBeTruthy();
+    expect(sitesettings.commonSettingsCardId.isPresent).toBeTruthy();
   });
 
-  it('click on site information link and should navigate to the correct site setting', function () {
+  it('should click on site information link and navigate to the correct site setting', function () {
     utils.click(sitesettings.siteInformationLink);
-    expect(sitesettings.siteSettingPanel.isPresent()).toBeTruthy();
-    expect(sitesettings.webexSiteInformationId.isPresent()).toBeTruthy();
+    utils.wait(sitesettings.siteSettingPanel);
+    expect(sitesettings.siteInformationId.isPresent()).toBeTruthy();
     expect(sitesettings.iFramePage.isPresent()).toBeTruthy();
     expect(sitesettings.siteSettingsCrumb.isPresent()).toBeTruthy();
     expect(sitesettings.siteListCrumb.isPresent()).toBeTruthy();
   });
 
-  it('click on site list breadcrumb and should navigate to site list', function () {
+  it('should click on site list breadcrumb and navigate to site list', function () {
     utils.click(sitesettings.siteListCrumb);
-    expect(sitesettings.configureSJSITE14.isPresent).toBeTruthy();
+    utils.wait(sitesettings.configureSJSITE14);
   });
 
   /**  
