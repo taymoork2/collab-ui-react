@@ -7,7 +7,7 @@
 /* global describe */
 /* global it */
 
-xdescribe('An admin should be able to', function () {
+xdescribe('Admin should be able to', function () {
 
   afterEach(function () {
     utils.dumpConsoleErrors();
@@ -30,7 +30,7 @@ xdescribe('An admin should be able to', function () {
     utils.expectIsDisplayed(huronFeatures.featuresList);
   });
 
-  xit('see only auto attendants when auto attendant filter is selected', function () {
+  it('see only auto attendants when auto attendant filter is selected', function () {
     utils.click(huronFeatures.autoAttendantFilter);
     utils.expectIsDisplayed(huronFeatures.autoAttendants);
     utils.expectIsNotDisplayed(huronFeatures.huntGroups);
