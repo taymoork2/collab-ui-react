@@ -27,6 +27,10 @@
       customerStatus: customerStatus,
       getTrialsList: getTrialsList,
       getManagedOrgsList: getManagedOrgsList,
+      isLicenseInfoAvailable: isLicenseInfoAvailable,
+      isLicenseATrial: isLicenseATrial,
+      isLicenseActive: isLicenseActive,
+      isLicenseFree: isLicenseFree,
       loadRetrievedDataToList: loadRetrievedDataToList,
       exportCSV: exportCSV
     };
