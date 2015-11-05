@@ -21,7 +21,7 @@
       return card;
     });
 
-    vm.user = {usersToConvert: 1450, dirStatus: 'warn', ssoStatus: 'info'};
+    vm.user = {};
 
     function callEventHandler(event, response) {
       if (!response.data.success) return;
@@ -62,5 +62,17 @@
         vm.user.usersToConvert = data.resources.length;
       }
     });
+
+
+    Orgservice.getOrg(function (data, status) {
+      if (status === 200) {
+        console.log(data);
+        vm.user.ssoEnabled = data.ssoEnabled || false;
+        vm.user.dirsyncEnabled = data.dirsyncEnabled || false;
+      } else {
+        Log.error("Query active users metrics failed. Status: " + status);
+      }
+    });
+
   }
 })();

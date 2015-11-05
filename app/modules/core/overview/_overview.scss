@@ -19,6 +19,9 @@
     &.error {
       color: $color-alerts-base;
     }
+    &.disabled {
+      color: $gray-base;
+    }
   }
   .cs-card > article footer.footer-menu {
     background-color: #efefef;
