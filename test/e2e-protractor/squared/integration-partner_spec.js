@@ -81,7 +81,7 @@ describe('Partner flow', function () {
         orgId = _orgId;
         done();
       });
-    });
+    }, LONG_TIMEOUT);
 
     it('should edit an exisiting trial', function () {
       utils.click(partner.newTrialRow);
