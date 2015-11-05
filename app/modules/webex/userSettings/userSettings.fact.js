@@ -64,6 +64,10 @@
         }, // getUserSettingsModel()
 
         initUserSettingsModel: function () {
+          webExUserSettingsModel.siteInfo = null;
+          webExUserSettingsModel.meetingTypesInfo = null;
+          webExUserSettingsModel.siteVersionInfo = null;
+
           webExUserSettingsModel.viewReady = false;
           webExUserSettingsModel.hasLoadError = false;
           webExUserSettingsModel.allowRetry = false;
@@ -72,6 +76,7 @@
           webExUserSettingsModel.disableCancel2 = false;
           webExUserSettingsModel.disableSave = false;
           webExUserSettingsModel.disableSave2 = false;
+          webExUserSettingsModel.isT31Site = false;
 
           webExUserSettingsModel.trainingCenter.handsOnLabAdmin.label = $translate.instant("webexUserSettingLabels.handsOnLabAdminLabel");
 
@@ -144,6 +149,7 @@
           var userInfoJson = webExUserSettingsModel.userInfo.bodyJson;
           var siteInfoJson = webExUserSettingsModel.siteInfo.bodyJson;
           var meetingTypesInfoJson = webExUserSettingsModel.meetingTypesInfo.bodyJson;
+          var siteVersionInfoJson = webExUserSettingsModel.siteVersionInfo.bodyJson;
 
           // Start of center status update
           var siteServiceTypes = [].concat(siteInfoJson.ns1_siteInstance.ns1_metaData.ns1_serviceType);
@@ -269,19 +275,23 @@
           var userInfoJson = webExUserSettingsModel.userInfo.bodyJson;
           var siteInfoJson = webExUserSettingsModel.siteInfo.bodyJson;
           var meetingTypesInfoJson = webExUserSettingsModel.meetingTypesInfo.bodyJson;
+          var siteVersionInfoJson = webExUserSettingsModel.siteVersionInfo.bodyJson;
 
           // Start of Telephony privileges
           webExUserSettingsModel.telephonyPriviledge.hybridAudio.isSiteEnabled = (
             "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_hybridTeleconference
           ) ? true : false;
-          $log.log("Hybrid audio = " + webExUserSettingsModel.telephonyPriviledge.hybridAudio.isSiteEnabled);
 
           webExUserSettingsModel.telephonyPriviledge.telephonyType.isWebExAudio = (siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_isTSPUsingTelephonyAPI == "false" && //not TSP audio
             siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_meetingPlace.ns1_persistentTSP == "false") ? true : false; // not MP audio
-          $log.log("WebEx audio = " + webExUserSettingsModel.telephonyPriviledge.telephonyType.isWebExAudio);
 
           webExUserSettingsModel.telephonyPriviledge.telephonyType.isTspAudio = (siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_isTSPUsingTelephonyAPI == "true") ? true : false;
-          $log.log("TSP audio = " + webExUserSettingsModel.telephonyPriviledge.telephonyType.isTspAudio);
+
+          logMsg = funcName + ": " + "\n" +
+            "Hybrid audio=" + webExUserSettingsModel.telephonyPriviledge.hybridAudio.isSiteEnabled + "\n" +
+            "WebEx audio=" + webExUserSettingsModel.telephonyPriviledge.telephonyType.isWebExAudio + "\n" +
+            "TSP audio=" + webExUserSettingsModel.telephonyPriviledge.telephonyType.isTspAudio;
+          $log.log(logMsg);
 
           // Start of call-in teleconf
           webExUserSettingsModel.telephonyPriviledge.callInTeleconf.toll.isSiteEnabled = (
@@ -391,6 +401,7 @@
           var userInfoJson = webExUserSettingsModel.userInfo.bodyJson;
           var siteInfoJson = webExUserSettingsModel.siteInfo.bodyJson;
           var meetingTypesInfoJson = webExUserSettingsModel.meetingTypesInfo.bodyJson;
+          var siteVersionInfoJson = webExUserSettingsModel.siteVersionInfo.bodyJson;
 
           //console.log("HERE -------");
           var enablePMRSiteLevel = siteInfoJson.ns1_siteInstance.ns1_siteCommonOptions.ns1_enablePersonalMeetingRoom;
@@ -470,6 +481,12 @@
           return $q.all(xmlData);
         }, // getMeetingTypeInfoXml()
 
+        getSiteVersionInfoXml: function () {
+          var siteVersionInfoXml = WebExXmlApiFact.getSiteVersion(webExXmlApiInfo);
+
+          return siteVersionInfoXml;
+        }, // getSiteVersionInfoXml()
+
         getUserSettingsInfoXml: function () {
           var userInfoXml = WebExXmlApiFact.getUserInfo(webExXmlApiInfo);
           var siteInfoXml = WebExXmlApiFact.getSiteInfo(webExXmlApiInfo);
@@ -512,7 +529,40 @@
 
               webExUserSettingsModel.sessionTicketErr = false;
 
-              _self.getUserSettingsInfo();
+              _self.getSiteVersionInfoXml().then(
+                function getSiteVersionInfoXmlSuccess(siteVersionInfoXml) {
+                  var funcName = "getSiteVersionInfoXmlSuccess()";
+                  var logMsg = "";
+
+                  var siteVersionInfo = WebExUtilsFact.validateSiteVersionXmlData(siteVersionInfoXml);
+                  var trainReleaseJsonObj = WebExUtilsFact.getSiteVersion(siteVersionInfo);
+                  var trainReleaseVersion = trainReleaseJsonObj.trainReleaseVersion;
+                  var trainReleaseOrder = trainReleaseJsonObj.trainReleaseOrder;
+
+                  webExUserSettingsModel.isT31Site = (
+                    (null != trainReleaseOrder) &&
+                    (400 <= +trainReleaseOrder)
+                  ) ? true : false;
+
+                  logMsg = funcName + ": " + "\n" +
+                    "trainReleaseVersion=" + trainReleaseVersion + "\n" +
+                    "trainReleaseOrder=" + trainReleaseOrder;
+                  $log.log(logMsg);
+
+                  webExUserSettingsModel.siteVersionInfo = siteVersionInfo;
+
+                  _self.getUserSettingsInfo();
+                }, // getSiteVersionInfoXmlSuccess()
+
+                function getSiteVersionInfoXmlError(info) {
+                  var funcName = "getSiteVersionInfoXmlError()";
+                  var logMsg = "";
+
+                  $log.log(funcName);
+
+                  _self.getUserSettingsInfo();
+                } // getSiteVersionInfoXmlError()
+              );
             }, // getSessionTicketSuccess()
 
             function getSessionTicketError(errId) {
@@ -546,7 +596,8 @@
           var funcName = "getUserSettingsInfo()";
           var logMsg = "";
 
-          logMsg = funcName + ": " + "START";
+          logMsg = funcName + ":" + "\n" +
+            "webExUserSettingsModel.isT31Site=" + webExUserSettingsModel.isT31Site;
           $log.log(logMsg);
 
           webExUserSettingsModel.disableSave = true;
@@ -560,9 +611,9 @@
 
           var _self = this;
 
-          this.getUserSettingsInfoXml().then(
+          _self.getUserSettingsInfoXml().then(
             function getUserSettingsInfoXmlSuccess(getInfoResult) {
-              var funcName = "getUserSettingsInfo().getUserSettingsInfoSuccess()";
+              var funcName = "getUserSettingsInfoSuccess()";
               var logMsg = "";
 
               webExUserSettingsModel.userInfo = WebExUtilsFact.validateUserInfoXmlData(getInfoResult.userInfoXml);
