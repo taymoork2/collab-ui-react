@@ -65,9 +65,6 @@ angular.module('Core')
 
       function getTrialsList() {
         $scope.showTrialsRefresh = true;
-        $scope.activeList = [];
-        $scope.expiredList = [];
-        $scope.trialsList = [];
         PartnerService.getTrialsList(function (data, status) {
           $scope.showTrialsRefresh = false;
           if (data.success && data.trials) {
@@ -75,7 +72,7 @@ angular.module('Core')
               var returnLists = PartnerService.loadRetrievedDataToList(data.trials, true);
               $scope.trialsList = returnLists[0];
               $scope.activeList = returnLists[1];
-              $scope.expireList = returnLists[2];
+              $scope.expiredList = returnLists[2];
               $scope.showExpired = $scope.expiredList.length > 0;
               Log.debug('active trial records found:' + $scope.activeList.length);
               Log.debug('total trial records found:' + $scope.trialsList.length);
@@ -85,7 +82,6 @@ angular.module('Core')
             }
             $scope.totalTrials = $scope.trialsList.length;
             $scope.setFilter($scope.activeFilter);
-
           } else {
             Log.debug('Failed to retrieve trial information. Status: ' + status);
             $scope.getPending = false;
@@ -98,20 +94,18 @@ angular.module('Core')
 
       function getManagedOrgsList() {
         $scope.showManagedOrgsRefresh = true;
-        $scope.managedOrgsList = [];
         PartnerService.getManagedOrgsList(function (data, status) {
           $scope.showManagedOrgsRefresh = false;
           if (data.success && data.organizations) {
             if (data.organizations.length > 0) {
               var returnLists = PartnerService.loadRetrievedDataToList(data.organizations, false);
               $scope.managedOrgsList = returnLists[0];
-              $scope.activeList = returnLists[1];
-              $scope.expireList = returnLists[2];
               Log.debug('total managed orgs records found:' + $scope.managedOrgsList.length);
             } else {
               Log.debug('No managed orgs records found');
             }
             $scope.totalOrgs = $scope.managedOrgsList.length;
+            $scope.setFilter($scope.activeFilter);
           } else {
             Log.debug('Failed to retrieve managed orgs information. Status: ' + status);
             Notification.notify([$translate.instant('partnerHomePage.errGetTrialsQuery', {
@@ -134,14 +128,6 @@ angular.module('Core')
       if ($scope.activeList) {
         $scope.activeCount = $scope.activeList.length;
       }
-      if ($scope.activeFilter === 'all') {
-        $scope.gridData = $scope.managedOrgsList;
-      } else {
-        $scope.gridData = $scope.trialsList;
-      }
-
-      var ACTIVE = PartnerService.customerStatus.ACTIVE;
-      var CANCELED = PartnerService.customerStatus.CANCELED;
 
       $scope.newTrialName = null;
       $scope.trialsGrid = {

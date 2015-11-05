@@ -125,7 +125,7 @@
       }
     }
 
-    function setNotesSortOrder(rowData, isLicenceInfoAvailable) {
+    function setNotesSortOrder(rowData) {
       rowData.notes = {};
       if (isLicenseInfoAvailable(rowData.licenseList)) {
         if (rowData.status === 'CANCELED') {
