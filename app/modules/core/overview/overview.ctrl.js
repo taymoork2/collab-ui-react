@@ -21,7 +21,7 @@
       return card;
     });
 
-    vm.user = {usersToConvert: 1450};
+    vm.user = {usersToConvert: 1450, dirStatus: 'warn', ssoStatus:'info'};
 
     function callEventHandler(event, response) {
       if (!response.data.success) return;

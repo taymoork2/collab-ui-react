@@ -1,19 +1,19 @@
 <div class="overview-page">
   <cs-page-header title="overview.pageTitle"></cs-page-header>
   <cs-card-layout block-view="true">
-    <cs-card class="large menu-card" ng-scope="overview.user">
+    <cs-card class="large menu-card">
       <article>
         <header><h4>Users</h4></header>
         <section>
           <div>
             <div class="top">
               <div>
-                <i class="icon icon-circle" ng-class="card.level"></i>
+                <i class="icon icon-circle" ng-class="overview.user.dirStatus"></i>
                 <span>Directory Synchronization</span>
               </div>
 
               <div>
-                <i class="icon icon-circle" ng-class="card.level"></i>
+                <i class="icon icon-circle" ng-class="overview.user.ssoStatus"></i>
                 <span>Single Sign On</span>
               </div>
             </div>
