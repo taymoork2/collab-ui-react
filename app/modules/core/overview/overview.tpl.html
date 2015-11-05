@@ -1,6 +1,32 @@
 <div class="overview-page">
   <cs-page-header title="overview.pageTitle"></cs-page-header>
   <cs-card-layout block-view="true">
+    <cs-card class="large menu-card" ng-scope="overview.user">
+      <article>
+        <header><h4>Users</h4></header>
+        <section>
+          <div>
+            <div class="top">
+              <div>
+                <i class="icon icon-circle" ng-class="card.level"></i>
+                <span>Directory Synchronization</span>
+              </div>
+
+              <div>
+                <i class="icon icon-circle" ng-class="card.level"></i>
+                <span>Single Sign On</span>
+              </div>
+            </div>
+            <hr/>
+            <div class="bottom">
+              <h4>{{(overview.user.usersToConvert | number) || 'N/A'}}</h4>
+              Users who may belong to your organization
+              <button>Convert</button>
+            </div>
+          </div>
+        </section>
+      </article>
+    </cs-card>
     <cs-card class="large menu-card" ng-repeat="card in overview.cards">
       <article>
         <section>
@@ -12,11 +38,11 @@
               </div>
             </div>
             <div class="right-side">
-              <div class="overview-title">{{card.name}}</div>
+              <div class="overview-title">{{card.desc}}</div>
               <div class="overview-count current">{{(card.current | number) || 'N/A'}}</div>
-              <div class="overview-time current">This month</div>
+              <div class="overview-time current" translate="overview.thisMonth"/>
               <div class="overview-count last">{{(card.previous | number) || 'N/A'}}</div>
-              <div class="overview-time last">Last month</div>
+              <div class="overview-time last" translate="overview.lastMonth"/>
             </div>
           </div>
         </section>

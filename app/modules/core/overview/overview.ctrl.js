@@ -9,25 +9,19 @@
   function OverviewCtrl($scope, $translate, ReportsService) {
     var vm = this;
     vm.pageTitle = $translate.instant('overview.pageTitle');
-    vm.cards = [
-      {name: 'Room Systems', icon: 'icon-circle-message', level: 'info', levelText: 'Excellent'},
-      {
-        name: 'Message',
-        icon: 'icon-circle-calendar',
-        level: 'warn',
-        levelText: 'Warning',
-        eventHandler: messageEventHandler
-      },
-      {name: 'Meeting', icon: 'icon-circle-comp-pos', level: 'error', levelText: 'Error'},
-      {
-        name: 'Call',
-        icon: 'icon-circle-contact-centre',
-        level: 'info',
-        levelText: 'Check status',
-        eventHandler: callEventHandler
-      },
-      {name: 'Hybrid Services', icon: 'icon-circle-localize', level: 'info', levelText: 'Excellent'}
+    var cards = [
+      {key: 'message',    icon: 'icon-circle-message', eventHandler: messageEventHandler},
+      {key: 'meeting',    icon: 'icon-circle-group'},
+      {key: 'call',       icon: 'icon-circle-call', eventHandler: callEventHandler},
+      {key: 'roomSystem', icon: 'icon-circle-telepresence'},
     ];
+    vm.cards = _.map(cards, function(card){
+      card.name = $translate.instant('overview.cards.'+card.key+'.title');
+      card.desc = $translate.instant('overview.cards.'+card.key+'.desc');
+      return card;
+    });
+
+    vm.user = {usersToConvert: 1450};
 
     function callEventHandler(event, response) {
       if (!response.data.success) return;

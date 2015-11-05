@@ -2497,6 +2497,14 @@
     "invalidFallback": "Select a number or enter a new valid number"
   },
   "overview": {
-    "pageTitle": "Overview"
+    "pageTitle": "Overview",
+    "thisMonth": "This Month",
+    "lastMonth": "Last Month",
+    "cards":{
+      "message":{"title":"Message", "desc":"Active Rooms"},
+      "meeting":{"title":"Meeting", "desc":"Meetings"},
+      "call":{"title":"Call", "desc":"Calls"},
+      "roomSystem":{"title":"Room Systems", "desc":"Calls"}
+    }
   }
 }
