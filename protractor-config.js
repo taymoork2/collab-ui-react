@@ -126,6 +126,8 @@ exports.config = {
     var MeetingsPage = require('./test/e2e-protractor/pages/meetings.page.js');
     var TrialExtInterestPage = require('./test/e2e-protractor/pages/trialExtInterest.page.js');
     var InviteUsers = require('./test/e2e-protractor/pages/inviteusers.page.js');
+    var HuronFeatures = require('./test/e2e-protractor/pages/huronFeatures.page.js');
+    var CreateHuntGroup = require('./test/e2e-protractor/pages/createHuntGroup.page.js');
 
     global.notifications = new Notifications();
     global.navigation = new Navigation();
@@ -160,6 +162,8 @@ exports.config = {
     global.meetings = new MeetingsPage();
     global.trialextinterest = new TrialExtInterestPage();
     global.inviteusers = new InviteUsers();
+    global.huronFeatures = new HuronFeatures();
+    global.huntGroup = new CreateHuntGroup();
 
     return browser.getCapabilities().then(function (capabilities) {
       if (capabilities.caps_.browserName === 'firefox') {
