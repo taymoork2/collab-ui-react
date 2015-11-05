@@ -173,12 +173,12 @@ angular.module('WebExUserSettings')
           disableCancel2: false,
           disableSave: false,
           disableSave2: false,
+          isT31Site: false,
 
           userInfo: null,
-          userInfoJson: null,
-
           siteInfo: null,
           meetingTypesInfo: null,
+          siteVersionInfo: null,
         }, // telephonyPriviledges
       }; // return
     } // WebexUserSettingsModel
