@@ -6,22 +6,22 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($scope, $translate, ReportsService) {
+  function OverviewCtrl($scope, $translate, ReportsService, Orgservice) {
     var vm = this;
     vm.pageTitle = $translate.instant('overview.pageTitle');
     var cards = [
-      {key: 'message',    icon: 'icon-circle-message', eventHandler: messageEventHandler},
-      {key: 'meeting',    icon: 'icon-circle-group'},
-      {key: 'call',       icon: 'icon-circle-call', eventHandler: callEventHandler},
+      {key: 'message', icon: 'icon-circle-message', eventHandler: messageEventHandler},
+      {key: 'meeting', icon: 'icon-circle-group'},
+      {key: 'call', icon: 'icon-circle-call', eventHandler: callEventHandler},
       {key: 'roomSystem', icon: 'icon-circle-telepresence'},
     ];
-    vm.cards = _.map(cards, function(card){
-      card.name = $translate.instant('overview.cards.'+card.key+'.title');
-      card.desc = $translate.instant('overview.cards.'+card.key+'.desc');
+    vm.cards = _.map(cards, function (card) {
+      card.name = $translate.instant('overview.cards.' + card.key + '.title');
+      card.desc = $translate.instant('overview.cards.' + card.key + '.desc');
       return card;
     });
 
-    vm.user = {usersToConvert: 1450, dirStatus: 'warn', ssoStatus:'info'};
+    vm.user = {usersToConvert: 1450, dirStatus: 'warn', ssoStatus: 'info'};
 
     function callEventHandler(event, response) {
       if (!response.data.success) return;
@@ -55,5 +55,12 @@
 
     ReportsService.getOverviewMetrics(true);
 
+    Orgservice.getUnlicensedUsers(function (data) {
+      if (data.success && data.resources) {
+        // for now use the length to get the count as there is a bug in CI and totalResults
+        // is not accurate.
+        vm.user.usersToConvert = data.resources.length;
+      }
+    });
   }
 })();
