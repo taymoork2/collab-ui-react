@@ -10,7 +10,6 @@
     function checkState(connectorType, serviceId) {
       if (checkIfFusePerformed()) {
         if (checkIfConnectorsConfigured(connectorType)) {
-          checkIfDirSyncEnabled();
           checkUserStatuses(serviceId);
           checkCallServiceConnect(serviceId);
         }
@@ -50,23 +49,23 @@
       }
     }
 
-    function checkIfDirSyncEnabled() {
-      if (dirSyncEnabled) {
-        return;
-      }
-      DirSyncService.getDirSyncDomain(function (data) {
-        dirSyncEnabled = data.success && data.serviceMode == 'ENABLED';
-        if (!dirSyncEnabled) {
-          NotificationService.addNotification(
-            NotificationService.types.TODO,
-            'dirSyncNotEnabled',
-            3,
-            'modules/hercules/notifications/dirsync-not-enabled.html', allExpresswayServices);
-        } else {
-          NotificationService.removeNotification('dirSyncNotEnabled');
-        }
-      });
-    }
+    // function checkIfDirSyncEnabled() {
+    //   if (dirSyncEnabled) {
+    //     return;
+    //   }
+    //   DirSyncService.getDirSyncDomain(function (data) {
+    //     dirSyncEnabled = data.success && data.serviceMode == 'ENABLED';
+    //     if (!dirSyncEnabled) {
+    //       NotificationService.addNotification(
+    //         NotificationService.types.TODO,
+    //         'dirSyncNotEnabled',
+    //         3,
+    //         'modules/hercules/notifications/dirsync-not-enabled.html', allExpresswayServices);
+    //     } else {
+    //       NotificationService.removeNotification('dirSyncNotEnabled');
+    //     }
+    //   });
+    // }
 
     function checkUserStatuses(serviceId) {
       if (serviceId == "squared-fusion-mgmt") {
@@ -76,7 +75,8 @@
         serviceId: serviceId
       });
       var noUsersActivatedId = serviceId + ':noUsersActivated';
-      var needsUserActivation = !summaryForService || (summaryForService.activated === 0 && summaryForService.error === 0 && summaryForService.notActivated === 0);
+      var needsUserActivation = !summaryForService || (summaryForService.activated === 0 && summaryForService.error === 0 && summaryForService.notActivated ===
+        0);
       if (needsUserActivation) {
         NotificationService.addNotification(
           NotificationService.types.TODO,

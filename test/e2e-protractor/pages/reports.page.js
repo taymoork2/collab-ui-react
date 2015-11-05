@@ -1,5 +1,8 @@
 'use strict';
 
+/* global TIMEOUT */
+/* global LONG_TIMEOUT */
+
 var ReportsPage = function () {
   // customer reports
   this.entitlements = element(by.id('avgEntitlementsdiv'));
@@ -82,7 +85,7 @@ var ReportsPage = function () {
       return dropdown.element(by.css('.select-toggle')).getAttribute('disabled').then(function (enabled) {
         return enabled === null;
       });
-    }, 60000, 'Waiting for Not Disabled');
+    }, LONG_TIMEOUT, 'Waiting for Not Disabled');
   };
 
   this.clickFilter = function (dropdown) {
@@ -107,7 +110,6 @@ var ReportsPage = function () {
   };
 
   this.confirmCustomerInTable = function (customer, table, bool) {
-    var found = false;
     return table.element(by.cssContainingText('.customer-data', customer)).isPresent(function (present) {
       expect(present).toBe(bool);
     });
