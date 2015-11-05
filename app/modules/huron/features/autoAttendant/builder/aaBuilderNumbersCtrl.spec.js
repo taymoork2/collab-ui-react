@@ -84,6 +84,11 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       'uuid': '8888888881-id'
     }]);
 
+    $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/internalnumberpools?directorynumber=&order=pattern').respond([{
+      "pattern": "4000",
+      "uuid": "3f51ef5b-584f-42db-9ad8-8810b5e9e9ea"
+    }]);
+
     // listCesSpy = spyOn(AutoAttendantCeService, 'listCes').and.returnValue($q.when(angular.copy(ces)));
 
     controller = $controller('AABuilderNumbersCtrl', {
@@ -99,7 +104,15 @@ describe('Controller: AABuilderNumbersCtrl', function () {
   describe('addNumber', function () {
 
     beforeEach(function () {
-      controller.availablePhoneNums[0] = "1(206)426-1234";
+      controller.externalNumberList[0] = {
+        id: "450C190F-4942-CA5B-496B-B0A919364D54",
+        number: "(206)426-1234"
+      };
+
+      controller.internalNumberList[0] = {
+        id: "450C190F-4942-CA5B-496B-B0A919364D55",
+        number: "1234"
+      };
 
       aaModel.ceInfos = [];
       aaModel.aaRecords = [];
@@ -111,12 +124,20 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
     });
 
-    it('should move a phone number from available to selected successfully', function () {
+    it('should move an external phone number from available to selected successfully', function () {
       aaModel.ceInfos.push({
         name: rawCeInfo.callExperienceName
       });
 
-      controller.addNumber("1(206)426-1234");
+      controller.availablePhoneNums[0] = {
+        label: controller.externalNumberList[0].number,
+        value: controller.externalNumberList[0].number
+      };
+
+      controller.addNumber({
+        label: controller.externalNumberList[0].number,
+        value: controller.externalNumberList[0].number
+      });
 
       $scope.$apply();
 
@@ -126,9 +147,57 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
     });
 
+    it('should remove an internal phone number from available successfully', function () {
+      aaModel.ceInfos.push({
+        name: rawCeInfo.callExperienceName
+      });
+
+      controller.availablePhoneNums[0] = {
+        label: controller.internalNumberList[0].number,
+        value: controller.internalNumberList[0].number
+      };
+
+      controller.addNumber({
+        label: controller.internalNumberList[0].number,
+        value: controller.internalNumberList[0].number
+      });
+
+      $scope.$apply();
+
+      var resources = controller.ui.ceInfo.getResources();
+
+      expect(controller.availablePhoneNums.length === 0);
+
+    });
+
+    it('should not move a bad or missing phone number from available', function () {
+      aaModel.ceInfos.push({
+        name: rawCeInfo.callExperienceName
+      });
+
+      controller.availablePhoneNums[0] = {
+        label: controller.externalNumberList[0].number,
+        value: controller.externalNumberList[0].number
+      };
+      controller.availablePhoneNums[1] = {
+        label: controller.internalNumberList[0].number,
+        value: controller.internalNumberList[0].number
+      };
+
+      controller.addNumber('');
+      controller.addNumber('bogus');
+
+      $scope.$apply();
+
+      var resources = controller.ui.ceInfo.getResources();
+
+      expect(controller.availablePhoneNums.length === 2);
+
+    });
+
   });
 
-  describe('deleteAAResource', function () {
+  describe('removeNumber', function () {
 
     beforeEach(function () {
 
@@ -141,56 +210,33 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       controller.ui.ceInfo = ce2CeInfo(rawCeInfo);
     });
 
-    it('should move a phone number from available to selected successfully', function () {
-      var index;
+    it('should move a phone number to available successfully', function () {
 
-      controller.deleteAAResource(rawCeInfo.assignedResources[0].number);
+      controller.removeNumber(rawCeInfo.assignedResources[0].number);
 
       $scope.$apply();
 
       expect(controller.availablePhoneNums.length).toEqual(1);
 
-      index = controller.availablePhoneNums.indexOf(rawCeInfo.assignedResources[0].number);
+      var numobj = controller.availablePhoneNums.filter(function (obj) {
+        return obj.value == rawCeInfo.assignedResources[0].number;
+      });
 
-      expect(index).toEqual(0);
-
-    });
-
-  });
-  describe('filter', function () {
-
-    beforeEach(function () {
-
-      aaModel.ceInfos = [];
-      aaModel.aaRecords = [];
-      aaModel.aaRecord = aCe;
-
-      // controller.name = rawCeInfo.callExperienceName;
-      controller.ui = {};
-      controller.ui.ceInfo = ce2CeInfo(rawCeInfo);
+      expect(numobj).toBeDefined();
 
     });
 
-    it('should format a phone number successfully', function () {
-      var number;
+    it('should not move a bad or missing phone number to available', function () {
+      var index;
 
-      number = controller.filter("12064261234");
+      controller.availablePhoneNums = [];
 
-      $scope.$apply();
-
-      expect(number).toEqual("1 (206) 426-1234");
-
-      number = controller.filter("2064261234");
+      controller.removeNumber('');
 
       $scope.$apply();
 
-      expect(number).toEqual("(206) 426-1234");
+      expect(controller.availablePhoneNums.length).toEqual(0);
 
-      number = controller.filter("206");
-
-      $scope.$apply();
-
-      expect(number).toEqual("206");
     });
 
   });
@@ -233,9 +279,49 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
   describe('getExternalNumbers', function () {
 
+    beforeEach(function () {
+
+      aaModel.ceInfos = [];
+      aaModel.aaRecords = cesWithNumber;
+      aaModel.aaRecord = aCe;
+
+      // controller.name = rawCeInfo.callExperienceName;
+      controller.ui = {};
+      controller.ui.ceInfo = ce2CeInfo(rawCeInfo);
+
+    });
+
     it('should load external numbers', function () {
 
       var ret = controller.getExternalNumbers();
+
+      $httpBackend.flush();
+
+      $scope.$apply();
+
+      expect(controller.availablePhoneNums.length > 0);
+
+    });
+
+  });
+
+  describe('getInternalNumbers', function () {
+
+    beforeEach(function () {
+
+      aaModel.ceInfos = [];
+      aaModel.aaRecords = cesWithNumber;
+      aaModel.aaRecord = aCe;
+
+      // controller.name = rawCeInfo.callExperienceName;
+      controller.ui = {};
+      controller.ui.ceInfo = ce2CeInfo(rawCeInfo);
+
+    });
+
+    it('should load internal numbers', function () {
+
+      var ret = controller.getInternalNumbers();
 
       $httpBackend.flush();
 
