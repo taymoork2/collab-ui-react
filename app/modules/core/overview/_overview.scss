@@ -1,8 +1,29 @@
-.overview-content-container {
-  background-color: white;
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  top: 100px;
+.overview-page {
+  .service-name {
+    flex-direction: column;
+    i {
+      font-size: 56px;
+      padding-bottom: 20px;
+    }
+    span {
+      text-align: center;
+    }
+  }
+  .footer-content i {
+    &.info {
+      color: $color-cta-base;
+    }
+    &.warn {
+      color: $color-attention-base;
+    }
+    &.error {
+      color: $color-alerts-base;
+    }
+  }
+  .cs-card > article footer.footer-menu {
+    background-color: #efefef;
+  }
+  .overview-title {
+    text-transform: uppercase;
+  }
 }
