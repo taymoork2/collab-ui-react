@@ -260,6 +260,10 @@
         serviceUrl = serviceUrl.concat(extensionEntitlements[0]);
       } else if (serviceName === 'call-service') {
         serviceUrl = serviceUrl.concat(extensionEntitlements[1]);
+      } else {
+        return $q(function (resolve, reject) {
+          reject('serviceName is invalid: ' + serviceName);
+        });
       }
       return $http({
         method: 'PATCH',
