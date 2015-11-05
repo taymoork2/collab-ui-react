@@ -13,9 +13,9 @@
             </div>
             <div class="right-side">
               <div class="overview-title">{{card.name}}</div>
-              <div class="overview-count current">{{card.num | number}}</div>
+              <div class="overview-count current">{{(card.current | number) || 'N/A'}}</div>
               <div class="overview-time current">This month</div>
-              <div class="overview-count last">{{(card.num * 2) | number}}</div>
+              <div class="overview-count last">{{(card.previous | number) || 'N/A'}}</div>
               <div class="overview-time last">Last month</div>
             </div>
           </div>
