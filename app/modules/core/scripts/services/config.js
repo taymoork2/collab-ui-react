@@ -5,7 +5,7 @@ angular.module('Core')
     function ($location, Utils, $filter, Storage) {
 
       var oauth2Scope = encodeURIComponent('webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config Identity:Organization cloudMeetings:login webex-messenger:get_webextoken ccc_config:admin');
-      var productionBackend = isProductionBackend();
+      var isProdBackend = isProductionBackend();
       var getCurrentHostname = function () {
         return $location.host() || '';
       };
@@ -494,11 +494,11 @@ angular.module('Core')
 
         isDev: function () {
           var currentHostname = getCurrentHostname();
-          return !productionBackend && (currentHostname === '127.0.0.1' || currentHostname === '0.0.0.0' || currentHostname === 'localhost' || currentHostname === 'server');
+          return !isProdBackend && (currentHostname === '127.0.0.1' || currentHostname === '0.0.0.0' || currentHostname === 'localhost' || currentHostname === 'server');
         },
 
         isIntegration: function () {
-          return !productionBackend && getCurrentHostname() === 'int-admin.ciscospark.com';
+          return !isProdBackend && getCurrentHostname() === 'int-admin.ciscospark.com';
         },
 
         isProd: function () {
@@ -506,7 +506,7 @@ angular.module('Core')
         },
 
         isCfe: function () {
-          return !productionBackend && getCurrentHostname() === 'cfe-admin.ciscospark.com';
+          return !isProdBackend && getCurrentHostname() === 'cfe-admin.ciscospark.com';
         },
 
         getEnv: function () {
@@ -868,7 +868,7 @@ angular.module('Core')
           // Store in localStorage so new windows pick up the value
           // Will be cleared on logout
           Storage.put('backend', _backend);
-          productionBackend = isProductionBackend();
+          isProdBackend = isProductionBackend();
         }
       };
 

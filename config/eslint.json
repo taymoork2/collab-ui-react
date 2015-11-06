@@ -35,6 +35,7 @@
     "beforeAll": true,
     "afterAll": true,
 
+    "isProductionBackend": true,
     "login": true,
     "users": true,
     "roles": true,
