@@ -108,10 +108,11 @@
 
     var service = {
       getAllCeInfos: getAllCeInfos,
-      getCeInfosList: getCeInfoslist,
+      getCeInfosList: getCeInfosList,
       getCeInfo: getCeInfo,
       setCeInfo: setCeInfo,
       deleteCeInfo: deleteCeInfo,
+      extractUUID: extractUUID,
 
       newCeInfo: function () {
         return new CeInfo();
@@ -137,7 +138,7 @@
     }
 
     // New get method for Huron Features Page
-    function getCeInfoslist() {
+    function getCeInfosList() {
       var aaModel = {};
       return AutoAttendantCeService.listCes().then(function (aaRecords) {
         if (angular.isArray(aaRecords)) {
@@ -218,7 +219,15 @@
       }
     }
 
-    //////////// 
+    function extractUUID(ceURL) {
+      var uuidPos = ceURL.lastIndexOf("/");
+      if (uuidPos === -1) {
+        return '';
+      }
+      return ceURL.substr(uuidPos + 1);
+    }
+
+    ////////////
 
     function setDirectoryNumber(resource) {
       resource.number = resource.id;
