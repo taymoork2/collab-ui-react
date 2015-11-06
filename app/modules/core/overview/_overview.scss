@@ -1,4 +1,5 @@
 .overview-page {
+  padding-bottom: 20px;
   .service-name {
     flex-direction: column;
     i {
@@ -28,6 +29,33 @@
   }
   .overview-title {
     text-transform: uppercase;
+  }
+  h4 {
+    font-size: 2.25rem;
+    font-family: "CiscoSansTT Thin", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+  .users-card {
+    ul {
+      list-style-type: none;
+      li {
+        padding-bottom: 10px;
+      }
+    }
+    section {
+      padding-right: 1.5rem !important;
+      padding-left: 1.5rem !important;
+      padding-bottom: 2rem !important;
+      padding-top: 1rem !important;
+    }
+    .bottom {
+      text-align: center;
+      button {
+        margin-top: 20px;
+      }
+      h4 {
+        font-size: 3rem;
+      }
+    }
   }
 }
 #unlicensedUserList{

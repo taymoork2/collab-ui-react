@@ -37,33 +37,30 @@
         </cs-card-menu>
       </article>
     </cs-card>
-    <cs-card class="large menu-card">
+    <cs-card class="large menu-card users-card">
       <article>
         <header><h4>Users</h4></header>
         <section>
-          <div>
-            <div class="top">
-              <div>
-                <i class="icon icon-circle" ng-class="overview.user.dirsyncEnabled ? 'success' : 'disabled'"></i>
-                <span>Directory Synchronization</span>
-              </div>
-
-              <div>
-                <i class="icon icon-circle" ng-class="overview.user.ssoEnabled ? 'success' : 'disabled' "></i>
-                <span>Single Sign On</span>
-              </div>
-            </div>
-            <hr/>
-            <div class="bottom">
-              <h4>{{(overview.user.usersToConvert | number) || 'N/A'}}</h4>
-              <span translate="overview.user.convertText"></span>
-              <button
-                class="btn btn-sm btn-default"
-                translate="overview.user.convertButton"
-                ng-click="overview.openConvertModal()"
-                ng-disabled="!overview.user.usersToConvert">
-              </button>
-            </div>
+          <ul>
+            <li>
+              <i class="icon icon-circle" ng-class="overview.user.dirsyncEnabled ? 'success' : 'disabled'"></i>
+              <span>Directory Synchronization</span>
+            </li>
+            <li>
+              <i class="icon icon-circle" ng-class="overview.user.ssoEnabled ? 'success' : 'disabled' "></i>
+              <span>Single Sign On</span>
+            </li>
+          </ul>
+          <hr/>
+          <div class="bottom">
+            <h4>{{(overview.user.usersToConvert | number) || 'N/A'}}</h4>
+            <div translate="overview.user.convertText"></div>
+            <button
+              class="btn btn-success"
+              translate="overview.user.convertButton"
+              ng-click="overview.openConvertModal()"
+              ng-disabled="!overview.user.usersToConvert">
+            </button>
           </div>
         </section>
       </article>
