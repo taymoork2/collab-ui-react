@@ -55,6 +55,7 @@
     "telephony": true,
     "navigation": true,
     "callrouting": true,
+    "autoattendant": true,
     "deleteUtils": true,
     "utilization": true,
     "usersettings": true,
@@ -65,6 +66,8 @@
     "enterpriseResource": true,
     "trialextinterest": true,
     "orgprofile": true,
-    "inviteusers": true
+    "inviteusers": true,
+    "huntGroup": true,
+    "huronFeatures": true
   }
 }

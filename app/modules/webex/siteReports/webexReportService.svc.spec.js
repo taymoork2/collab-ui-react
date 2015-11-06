@@ -1,7 +1,7 @@
 'use strict';
 
 //Below is the Test Suit written for FaultRuleService
-describe('Service: WebexReportService', function () {
+describe('WebexReportService Test', function () {
 
   //load the service's module
   //beforeEach(module('wx2AdminWebClientApp'));
