@@ -6,7 +6,7 @@ module.exports = function(context) {
   'utils', 'deleteUtils', 'deleteTrialUtils',
   // page objects
   'notifications', 'landing', 'login', 'navigation', 'users', 'reports', 'support', 'roles', 'partner', 'wizard', 'invite', 'activate',
-  'callrouting', 'servicesetup', 'telephony', 'huronFeatures', 'huntGroup'
+  'callrouting', 'autoattendant', 'servicesetup', 'telephony', 'huronFeatures', 'huntGroup'
   ];
 
   var allowedPageElementMethods = ['first', 'last', 'then'];

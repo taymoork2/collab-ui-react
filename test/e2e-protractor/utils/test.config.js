@@ -32,3 +32,20 @@ exports.orgId = {
 };
 
 exports.webClientURL = 'https://web.ciscospark.com/';
+
+exports.cesUrl = {
+  integration: 'https://ces.huron-int.com/api/v1/'
+};
+
+/* We drive the AutoAttendant testing via the AA name, so to delete the test
+ AA CES we need to fetch all of the AA CES for the customer so we can find
+ the one (if any) with a matching name.
+ Also note that we have only plumbed an integration URL value into
+ test.confg.js, when we go live on production we'll need to add that and
+ provide for both sorts of test environments.
+ current revision yields this URL:
+ https://ces.huron-int.com/api/v1/customers/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/callExperiences
+ */
+exports.getAutoAttendantsUrl = function (customerUuid) {
+  return this.cesUrl.integration + 'customers/' + customerUuid + '/callExperiences';
+};
