@@ -134,10 +134,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
         value: controller.externalNumberList[0].number
       };
 
-      controller.addNumber({
-        label: controller.externalNumberList[0].number,
-        value: controller.externalNumberList[0].number
-      });
+      controller.addNumber(controller.externalNumberList[0].number);
 
       $scope.$apply();
 
@@ -157,10 +154,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
         value: controller.internalNumberList[0].number
       };
 
-      controller.addNumber({
-        label: controller.internalNumberList[0].number,
-        value: controller.internalNumberList[0].number
-      });
+      controller.addNumber(controller.internalNumberList[0].number);
 
       $scope.$apply();
 
@@ -212,11 +206,17 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
     it('should move a phone number to available successfully', function () {
 
+      // start out as 1 available number
+      controller.availablePhoneNums[0] = {
+        label: "1234567",
+        value: "1234567"
+      };
+
       controller.removeNumber(rawCeInfo.assignedResources[0].number);
 
       $scope.$apply();
 
-      expect(controller.availablePhoneNums.length).toEqual(1);
+      expect(controller.availablePhoneNums.length).toEqual(2);
 
       var numobj = controller.availablePhoneNums.filter(function (obj) {
         return obj.value == rawCeInfo.assignedResources[0].number;
