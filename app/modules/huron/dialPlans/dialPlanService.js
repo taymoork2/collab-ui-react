@@ -12,7 +12,7 @@
       getVoiceClusters: getVoiceClusters,
       getCustomerVoice: getCustomerVoice,
       getDialPlans: getDialPlans,
-      getCustomerDialPlanDetails: getCustomerDialPlanDetails,
+      getCustomerDialPlanDetails: getCustomerDialPlanDetails
     };
 
     return service;
@@ -75,6 +75,7 @@
 
             // Manually build dialPlanDetails for North America
             // Remove this section when dialPlanDetails for North America becomes available in UPDM.
+            // When this section is removed, didAdd.spec.js must be updated to not expect a 404 for NADP.
             // Ask Ken Nakano (kennakan) for any questions.
             if (response.status === 404) {
               // manually build the North American dialPlanDetails for the customer

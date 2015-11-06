@@ -6,7 +6,7 @@
     .controller('DidAddCtrl', DidAddCtrl);
 
   /* @ngInject */
-  function DidAddCtrl($rootScope, $scope, $state, $stateParams, $q, $translate, $window, ExternalNumberPool, EmailService, DidAddEmailService, Notification, Authinfo, $timeout, Log, LogMetricsService, Config, DidService, TelephoneNumberService) {
+  function DidAddCtrl($rootScope, $scope, $state, $stateParams, $q, $translate, $window, ExternalNumberPool, EmailService, DidAddEmailService, Notification, Authinfo, $timeout, Log, LogMetricsService, Config, DidService, TelephoneNumberService, DialPlanService, Utils) {
     var vm = this;
     var firstValidDid = false;
     var editMode = false;
@@ -125,7 +125,22 @@
         customerId = $stateParams.currentOrg.customerOrgId;
       }
       if (angular.isDefined(customerId)) {
-        ExternalNumberPool.getAll(customerId).then(function (results) {
+        DialPlanService.getCustomerDialPlanDetails($stateParams.currentOrg.customerOrgId).then(function (response) {
+          var countryCode = response.countryCode;
+          if (Utils.startsWith(countryCode, '+')) {
+            countryCode = countryCode.substr(1); // remove first character, i.e. the '+' sign
+          }
+          if (countryCode === "1") {
+            // country code "1" is shared by Canada, Dominica Republic, and US. Set to US.
+            TelephoneNumberService.setRegionCode("us");
+          } else {
+            TelephoneNumberService.setCountryCode(countryCode);
+          }
+        }).catch(function (response) {
+          Notification.errorResponse(response, 'serviceSetupModal.customerDialPlanDetailsGetError');
+        }).then(function () {
+          return ExternalNumberPool.getAll(customerId);
+        }).then(function (results) {
           if (angular.isArray(results)) {
             $timeout(function () {
               angular.forEach(results, function (did) {
