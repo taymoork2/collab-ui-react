@@ -59,6 +59,8 @@ exports.config = {
     jasmine.getEnv().addReporter(new FailFast());
     browser.ignoreSynchronization = true;
 
+    global.isProductionBackend = browser.params.isProductionBackend === 'true';
+
     global.log = function (message) {
       if (browser.params.log == 'true') {
         console.log(message);

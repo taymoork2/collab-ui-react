@@ -18,7 +18,7 @@ done
 # Build
 gulp clean || exit $?
 gulp jsb:verify || exit $?
-gulp e2e --sauce --nolint || exit $?
+gulp e2e --sauce --production-backend --nolint || exit $?
 
 # Check build number
 if [ -n "$BUILD_NUMBER" ]; then

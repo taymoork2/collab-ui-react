@@ -166,10 +166,11 @@ var Navigation = function () {
     }, TIMEOUT);
   };
 
-  this.expectDriverCurrentUrl = function (url) {
+  this.expectDriverCurrentUrl = function (url, url2) {
     return browser.wait(function () {
       return browser.driver.getCurrentUrl().then(function (currentUrl) {
-        return currentUrl.indexOf(url) !== -1;
+        log('Expecting ' + currentUrl + ' to contain ' + url + ' or ' + url2);
+        return currentUrl.indexOf(url) !== -1 || currentUrl.indexOf(url2) !== -1;
       });
     }, TIMEOUT);
   };
@@ -190,11 +191,7 @@ var Navigation = function () {
   this.logout = function () {
     utils.click(this.userInfoButton);
     utils.click(this.logoutButton);
-    if (process.env.LAUNCH_URL) {
-      this.expectDriverCurrentUrl('/login');
-    } else {
-      this.expectDriverCurrentUrl('idbroker.webex.com');
-    }
+    this.expectDriverCurrentUrl('/login', 'idbroker.webex.com');
 
   };
 

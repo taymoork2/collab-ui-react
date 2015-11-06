@@ -47,10 +47,8 @@ describe('Invite User and Check Buckets', function () {
       });
     });
 
-    describe('Delete user used for entitle test', function () {
-      it('should delete added user', function () {
-        deleteUtils.deleteUser(addEmail);
-      });
+    afterAll(function () {
+      deleteUtils.deleteUser(addEmail);
     });
   });
 });
