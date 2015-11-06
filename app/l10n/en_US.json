@@ -162,7 +162,7 @@
     "expires": "Expires",
     "editServices": "Edit services",
     "editServiceTitle": "Services Enabled for {{firstName}} {{lastName}}",
-    "siteUris": "Site Urls",
+    "siteUris": "WebEx Sites",
     "webex": "Webex",
     "spark": "Spark",
     "calling": "Calling",
@@ -220,7 +220,7 @@
     "entResUtilizationTabDesc": "Enterprise Resources Utilization",
     "servicesTab": "Services",
     "conferencing": "WebEx",
-    "conferencingDesc": "List of Site Admins",
+    "conferencingDesc": "List of WebEx Sites",
     "alarmsTab": "Alarms",
     "alarmsTabDesc": "Alarm Management",
     "eventsTab": "Events",
@@ -1265,7 +1265,11 @@
     "scheduleClosed": "Closed Hours",
     "scheduleHolidays": "Holidays",
     "invalidBuilderNameMissing": "Enter an Auto Attendant Name.",
-    "invalidBuilderNameNotUnique": "This Auto Attendant Name is already in use. Please enter a unique Auto Attendant Name."
+    "invalidBuilderNameNotUnique": "This Auto Attendant Name is already in use. Please enter a unique Auto Attendant Name.",
+    "addNumberMsg": "This auto attendant will answer all calls to the following numbers. You can add or remove numbers at any time.",
+    "numberInfoPopover": "If you don’t enter a number here, it’s okay. Calls may still come through from another Auto Attendant.",
+    "selectPlaceHolder": "Search or Select a Number",
+    "inputPlaceHolder": "Start typing here"
   },
   "callPark": {
     "code": "CP",
@@ -1950,11 +1954,13 @@
     "indexPageLabel_MC_mc_scheduling_templates": "Scheduling Templates",
     "indexPageLabel_MC_mc_navigation_customization": "Navigation Customization",
 
+    "indexPageLabel_TC_tc_ecommerce": "E-Commerce",
     "indexPageLabel_TC_tc_options": "Site Options",
     "indexPageLabel_TC_tc_navigation_customization": "Navigation Customization",
     "indexPageLabel_TC_tc_scheduling_templates": "Scheduling Templates",
     "indexPageLabel_TC_tc_default_options": "Default Options",
 
+    "indexPageLabel_EC_ec_ecommerce": "E-Commerce",
     "indexPageLabel_EC_ec_options": "Site Options",
     "indexPageLabel_EC_ec_default_options": "Default Options",
     "indexPageLabel_EC_ec_navigation_customization": "Navigation Customization",
@@ -2000,11 +2006,13 @@
     "settingPageLabel_MC_mc_scheduling_templates": "Meeting Center Settings",
     "settingPageLabel_MC_mc_navigation_customization": "Meeting Center Settings",
 
+    "settingPageLabel_TC_tc_ecommerce": "Training Center E-Commerce",
     "settingPageLabel_TC_tc_options": "Training Center Settings",
     "settingPageLabel_TC_tc_navigation_customization": "Training Center Settings",
     "settingPageLabel_TC_tc_scheduling_templates": "Training Center Settings",
     "settingPageLabel_TC_tc_default_options": "Training Center Settings",
 
+    "settingPageLabel_EC_ec_ecommerce": "Event Center E-Commerce",
     "settingPageLabel_EC_ec_options": "Event Center Settings",
     "settingPageLabel_EC_ec_default_options": "Event Center Settings",
     "settingPageLabel_EC_ec_navigation_customization": "Event Center Settings",
@@ -2248,8 +2256,7 @@
     "siteName": "Site Name",
     "licenseCount": "License Count",
     "type": "Type",
-    "launchSite": "Configure Site",
-    "siteSettings": "Configure Site",
+    "siteSettings": "Configure",
     "siteReports": "Reports"
   },
   "cloudExtensions": {
