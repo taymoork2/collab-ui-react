@@ -24,6 +24,8 @@
     };
 
     var factory = {
+      trialsUrl: trialsUrl,
+      managedOrgsUrl: managedOrgsUrl,
       customerStatus: customerStatus,
       getTrialsList: getTrialsList,
       getManagedOrgsList: getManagedOrgsList,
