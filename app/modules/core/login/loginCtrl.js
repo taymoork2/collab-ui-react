@@ -60,6 +60,8 @@ angular.module('Core')
                 state = 'partnercustomers.list';
               } else if (Authinfo.isSupportUser()) {
                 state = 'support';
+              } else if (Authinfo.isHelpDeskUser()) {
+                state = 'helpdesk.landing';
               }
               $rootScope.services = Authinfo.getServices();
 

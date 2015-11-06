@@ -896,7 +896,8 @@ angular.module('Core')
           'webex-reports-iframe',
           'example'
         ],
-        Application: ['organizations', 'organization-overview']
+        Application: ['organizations', 'organization-overview'],
+        HELP_DESK_USER: ['helpdesk', 'helpdesk.landing', 'helpdesk.user', 'helpdesk.org']
       };
 
       config.serviceStates = {
@@ -987,7 +988,7 @@ angular.module('Core')
           'mediafusionconnector',
           'hurondetails',
           'cdrsupport',
-          'cdr-overview'
+          'cdr-overview',
         ]
       };
 

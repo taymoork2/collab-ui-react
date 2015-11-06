@@ -1,0 +1,65 @@
+<div class="helpdesk-landing row">
+  <div class="medium-12 medium-centered columns">
+    <h1>Help Desk</h1>
+
+    <div class="typeahead-large" style="text-align: left;">
+      <input id="numberInput" type="text"
+             ng-model="helpdeskLandingCtrl.selectedSearchResult"
+             placeholder="Search user or customer"/>
+      <button class="button secondary" ng-click="helpdeskLandingCtrl.search()">Search</button>
+      <p class="input-description">Search users by email address / name or customers by name</p>
+    </div>
+
+    <cs-card class="large header-bar"
+             ng-if="helpdeskLandingCtrl.searchingForUsers || helpdeskLandingCtrl.userSearchResults">
+      <article>
+        <header>
+          <h4>Users</h4>
+        </header>
+        <section>
+          <div ng-if="helpdeskLandingCtrl.searchingForUsers">
+            <span><i class="icon icon-spinner icon-2x"></i></span>
+
+            <p>Searching for users, please wait...</p>
+          </div>
+          <table class="table helpdesk-search-results-table"
+                 ng-if="!helpdeskLandingCtrl.searchingForUsers && helpdeskLandingCtrl.userSearchResults">
+            <tbody>
+            <tr ng-repeat="user in helpdeskLandingCtrl.userSearchResults">
+              <td><a ui-sref-active="active" ui-sref="helpdesk,user({user:user})">{{user.displayName}}</a></td>
+              <td><span>{{user.userName}}</span></td>
+            </tr>
+            </tbody>
+          </table>
+          <div ng-if="!helpdeskLandingCtrl.searchingForUsers && helpdeskLandingCtrl.userSearchResults.length == 0">
+            <p>No matching users found. Try to narrow your search...</p>
+          </div>
+        </section>
+      </article>
+    </cs-card>
+
+    <cs-card class="large header-bar"
+             ng-if="helpdeskLandingCtrl.searchingForOrgs || helpdeskLandingCtrl.orgSearchResults">
+      <article>
+        <header>
+          <h4>Customers</h4>
+        </header>
+        <section>
+          <div ng-if="helpdeskLandingCtrl.searchingForOrgs">
+            <span><i class="icon icon-spinner icon-2x"></i></span>
+
+            <p>Searching for customers, please wait...</p>
+          </div>
+          <div class="org-list"
+               ng-if="!helpdeskLandingCtrl.searchingForOrgs && helpdeskLandingCtrl.orgSearchResults.length > 0"
+               ng-repeat="org in helpdeskLandingCtrl.orgSearchResults">
+            <a ui-sref="helpdesk.org({org:org})">{{org.displayName}}</a>
+          </div>
+          <div ng-if="!helpdeskLandingCtrl.searchingForOrgs && helpdeskLandingCtrl.orgSearchResults.length == 0">
+            <p>No matching customers found. Try to narrow your search...</p>
+          </div>
+        </section>
+      </article>
+    </cs-card>
+  </div>
+</div>

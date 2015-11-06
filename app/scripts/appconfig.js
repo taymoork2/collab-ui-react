@@ -57,6 +57,21 @@ angular
           parent: 'main',
           abstract: true
         })
+        .state('helpdesk-main', {
+          views: {
+            'main@': {
+              templateUrl: 'modules/squared/views/helpdesk.tpl.html'
+            }
+          },
+          abstract: true,
+          sticky: true
+        })
+        .state('helpdesk', {
+          template: '<div ui-view></div>',
+          url: '/helpdesk',
+          parent: 'helpdesk-main',
+          abstract: true
+        })
         .state('sidepanel', {
           abstract: true,
           onEnter: /* @ngInject */ function ($modal, $state, $previousState) {
@@ -976,6 +991,28 @@ angular
           templateUrl: 'modules/squared/views/trialExtInterest.html',
           controller: 'TrialExtInterestCtrl',
           parent: 'main'
+        })
+        .state('helpdesk.landing', {
+          url: '/landing',
+          templateUrl: 'modules/squared/helpdesk/helpdesk-landing.html',
+          controller: 'HelpdeskLandingController',
+          controllerAs: 'helpdeskLandingCtrl'
+        })
+        .state('helpdesk.user', {
+          templateUrl: 'modules/squared/helpdesk/helpdesk-user.html',
+          controller: 'HelpdeskUserController',
+          controllerAs: 'helpdeskUserCtrl',
+          params: {
+            user: null
+          }
+        })
+        .state('helpdesk.org', {
+          templateUrl: 'modules/squared/helpdesk/helpdesk-org.html',
+          controller: 'HelpdeskOrgController',
+          controllerAs: 'helpdeskOrgCtrl',
+          params: {
+            org: null
+          }
         });
     }
   ]);
