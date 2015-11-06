@@ -80,7 +80,7 @@ angular.module('Core')
               $scope.getPending = false;
               Log.debug('No trial records found');
             }
-            $scope.totalTrials = $scope.trialsList.length;
+            $scope.totalTrials = $scope.trialsList ? $scope.trialsList.length : 0;
             $scope.setFilter($scope.activeFilter);
           } else {
             Log.debug('Failed to retrieve trial information. Status: ' + status);
@@ -104,7 +104,7 @@ angular.module('Core')
             } else {
               Log.debug('No managed orgs records found');
             }
-            $scope.totalOrgs = $scope.managedOrgsList.length;
+            $scope.totalOrgs = $scope.managedOrgsList ? $scope.managedOrgsList.length : 0;
             $scope.setFilter($scope.activeFilter);
           } else {
             Log.debug('Failed to retrieve managed orgs information. Status: ' + status);

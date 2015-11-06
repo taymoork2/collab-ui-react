@@ -24,13 +24,18 @@
     };
 
     var factory = {
+      trialsUrl: trialsUrl,
+      managedOrgsUrl: managedOrgsUrl,
       customerStatus: customerStatus,
       getTrialsList: getTrialsList,
       getManagedOrgsList: getManagedOrgsList,
-      isLicenseInfoAvailable: isLicenseInfoAvailable,
       isLicenseATrial: isLicenseATrial,
       isLicenseActive: isLicenseActive,
       isLicenseFree: isLicenseFree,
+      getLicense: getLicense,
+      isLicenseInfoAvailable: isLicenseInfoAvailable,
+      setServiceSortOrder: setServiceSortOrder,
+      setNotesSortOrder: setNotesSortOrder,
       loadRetrievedDataToList: loadRetrievedDataToList,
       exportCSV: exportCSV
     };
@@ -92,13 +97,16 @@
       }
 
       if (angular.isDefined(licenses) && angular.isDefined(licenses.length)) {
-        for (var i = 0; i < licenses.length; i++) {
-          for (var j = 0; j < offerNames.length; j++) {
-            if (licenses[i].offerName === offerNames[j]) {
-              return licenses[i];
-            }
-          }
-        }
+        //for (var i = 0; i < licenses.length; i++) {
+        //  for (var j = 0; j < offerNames.length; j++) {
+        //    if (licenses[i].offerName === offerNames[j]) {
+        //      return licenses[i];
+        //    }
+        //  }
+        //}
+        return _.find(licenses, function (license) {
+          return offerNames.indexOf(license.offerName) !== -1;
+        }) || {};
       }
       return {};
     }
@@ -282,9 +290,11 @@
           } else {
             // header line for CSV file
             var header = {};
-            header.customerName = "Customer Name";
-            header.adminEmail = "Admin Email";
-            header.entitlements = "Entitlements";
+            header.customerName = $translate.instant('customerPage.csvHeaderCustomerName');
+            header.adminEmail = $translate.instant('customerPage.csvHeaderAdminEmail');
+            header.messagingEntitlements = $translate.instant('customerPage.csvHeaderMessagingEntitlements');
+            header.conferencingEntitlements = $translate.instant('customerPage.csvHeaderConferencingEntitlements');
+            header.communicationsEntitlements = $translate.instant('customerPage.csvHeaderCommunicationsEntitlements');
             exportedCustomers.push(header);
 
             // data to export for CSV file customer.conferencing.features[j]
@@ -292,8 +302,19 @@
               var exportedCustomer = {};
 
               exportedCustomer.customerName = customers[i].customerName;
-              exportedCustomer.customerEmail = customers[i].customerEmail;
-              exportedCustomer.entitlements = customers[i].conferencing.features.join(' ');
+              exportedCustomer.adminEmail = customers[i].customerEmail;
+              exportedCustomer.messagingEntitlements = '';
+              exportedCustomer.conferenceEntitlements = '';
+              exportedCustomer.communicationsEntitlements = '';
+              if (customers[i].messaging && customers[i].messaging.features) {
+                exportedCustomer.messagingEntitlements = customers[i].messaging.features.join(' ');
+              }
+              if (customers[i].conferencing && customers[i].conferencing.features) {
+                exportedCustomer.conferenceEntitlements = customers[i].conferencing.features.join(' ');
+              }
+              if (customers[i].communications && customers[i].communications.features) {
+                exportedCustomer.communicationsEntitlements = customers[i].communications.features.join(' ');
+              }
               exportedCustomers.push(exportedCustomer);
             }
           }
