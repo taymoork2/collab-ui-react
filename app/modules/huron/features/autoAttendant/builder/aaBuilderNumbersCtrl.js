@@ -17,6 +17,7 @@
     vm.getExternalNumbers = getExternalNumbers;
     vm.getInternalNumbers = getInternalNumbers;
     vm.getDupeNumberAnyAA = getDupeNumberAnyAA;
+    vm.addToAvailableNumberList = addToAvailableNumberList;
 
     vm.externalNumberList = [];
     vm.internalNumberList = [];
@@ -27,6 +28,7 @@
     vm.inputPlaceHolder = $translate.instant('autoAttendant.inputPlaceHolder');
 
     // needed for cs-select's model, aaBuilderNumbers.tpl.html
+    // but right now at least, we don't want to pre-select any number, so it's blank
     vm.selected = {
       "label": "",
       "value": ""
@@ -35,18 +37,18 @@
     /////////////////////
 
     // Add Number, top-level method called by UI
-    function addNumber(option) {
+    function addNumber(number) {
 
-      if (angular.isUndefined(option) || option === '') {
+      if (angular.isUndefined(number) || number === '') {
         return;
       }
 
-      var number = option.value;
-
+      // check to see if it's in the available list
       var numobj = vm.availablePhoneNums.filter(function (obj) {
         return obj.value == number;
       });
 
+      // if it's in the available list, take it out, and add to CE resources
       if (!angular.isUndefined(numobj) && numobj.length > 0) {
 
         vm.availablePhoneNums = vm.availablePhoneNums.filter(function (obj) {
@@ -55,6 +57,12 @@
 
         // add to the CE resources
         addAAResource(number);
+
+        // clear selection
+        vm.selected = {
+          "label": "",
+          "value": ""
+        };
 
       }
 
@@ -67,17 +75,20 @@
         return;
       }
 
-      var opt = {
-        label: telephoneNumberFilter(number),
-        value: number
-      };
-      vm.availablePhoneNums.push(opt);
+      addToAvailableNumberList(telephoneNumberFilter(number), number);
 
       vm.availablePhoneNums.sort(function (a, b) {
         return a.label.localeCompare(b.label);
       });
 
       deleteAAResource(number);
+
+      // clear selection
+      vm.selected = {
+        "label": "",
+        "value": ""
+      };
+
     }
 
     // Add the number to the CE Info resource list
@@ -130,6 +141,14 @@
 
     }
 
+    function addToAvailableNumberList(label, number) {
+      var opt = {
+        label: label,
+        value: number
+      };
+      vm.availablePhoneNums.push(opt);
+    }
+
     function isExternalNumber(number) {
       for (var i = 0; i < vm.externalNumberList.length; i++) {
         if (vm.externalNumberList[i].number.replace(/\D/g, '') === number.replace(/\D/g, '')) {
@@ -163,14 +182,11 @@
           // the internalNumberList will contain the info as it came from CMI
           vm.internalNumberList.push(dn);
 
+          var num = dn.number.replace(/\D/g, '');
           // Add to the available phone number list if not already used
-          if (!getDupeNumberAnyAA(dn.number.replace(/\D/g, ''))) {
+          if (!getDupeNumberAnyAA(num)) {
             // Internal extensions don't need formatting
-            var opt = {
-              label: dn.number,
-              value: dn.number
-            };
-            vm.availablePhoneNums.push(opt);
+            addToAvailableNumberList(num, num);
           }
         }
       });
@@ -193,16 +209,12 @@
             // the externalNumberList will contain the info as it came from CMI
             vm.externalNumberList.push(dn);
 
+            var num = dn.number.replace(/\D/g, '');
             // Add to the available phone number list if not already used
-            if (!getDupeNumberAnyAA(dn.number.replace(/\D/g, ''))) {
+            if (!getDupeNumberAnyAA(num)) {
               // For the option list, format the number for the label,
               // and return the value as just the number
-              var num = dn.number.replace(/\D/g, '');
-              var opt = {
-                label: telephoneNumberFilter(num),
-                value: num
-              };
-              vm.availablePhoneNums.push(opt);
+              addToAvailableNumberList(telephoneNumberFilter(num), num);
             }
 
           }
