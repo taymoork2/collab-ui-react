@@ -26,7 +26,7 @@ angular.module('WebExReports').service('WebexReportService', [
     //the above self is overloaded in places.
     var uself = this;
 
-    var loc = $translate.use().replace("_", "-");
+    //var loc = $translate.use().replace("_", "-");
 
     var common_reports_pageids = ["meeting_in_progess", "meeting_usage",
       "recording_usage",
@@ -86,6 +86,10 @@ angular.module('WebExReports').service('WebexReportService', [
       "training_usage": "tc_usage"
     };
 
+    var pinnnedItems = ["meeting_usage", "attendee", "event_center_overview",
+      "support_center_allocation_queue"
+    ];
+
     var reverseMapping = function (mapping) {
       var keys = [];
       for (var key in mapping) {
@@ -102,7 +106,9 @@ angular.module('WebExReports').service('WebexReportService', [
       return reversedMap;
     };
 
-    this.reverseMapping = reverseMapping;
+    this.reverseMapping = function () {
+      return reverseMapping;
+    };
 
     var pageid_to_navItemId_mapping_reversed = reverseMapping(pageid_to_navItemId_mapping);
     this.pageid_to_navItemId_mapping_reversed = pageid_to_navItemId_mapping_reversed;
@@ -157,6 +163,12 @@ angular.module('WebExReports').service('WebexReportService', [
           "})";
       };
       this.uisrefString = this.toUIsrefString();
+      //that is always the first link if it appears with other links in a card
+      this.isPinned = function () {
+        var rid = this.reportPageId;
+        var idx = pinnnedItems.indexOf(rid);
+        return idx !== -1;
+      };
     };
 
     this.instantiateUIsref = function (theUrl, rid, siteUrl) {
@@ -208,12 +220,24 @@ angular.module('WebExReports').service('WebexReportService', [
         var theComparator = function (aRef, bRef) {
           var atranslatedString = aRef.reportPageId_translated;
           var btranslatedString = bRef.reportPageId_translated;
-          //var loc = uself.locale;
+          var loc = $translate.use().replace("_", "-");
           var compareResult = atranslatedString.localeCompare(btranslatedString, loc);
           return compareResult;
         };
         refs.sort(theComparator);
       };
+      this.doPin = function () {
+        if (self.isNotEmpty()) {
+          var pinnedA = self.uisrefs.filter(function (ref) {
+            return ref.isPinned();
+          });
+          var notPinnedA = self.uisrefs.filter(function (ref) {
+            return !ref.isPinned();
+          });
+          self.uisrefs = pinnedA.concat(notPinnedA);
+        }
+      };
+
     };
 
     this.ReportsSection = ReportsSection;
@@ -277,6 +301,8 @@ angular.module('WebExReports').service('WebexReportService', [
 
       if (remote_access.isNotEmpty()) {
         support_center.addSubsection(remote_access);
+        remote_access.sort();
+        remote_access.doPin();
       }
 
       var sections = [common_reports, training_center, support_center,
@@ -284,6 +310,7 @@ angular.module('WebExReports').service('WebexReportService', [
       ];
       sections.forEach(function (sec) {
         sec.sort();
+        sec.doPin();
       });
 
       var repts = new Reports();
