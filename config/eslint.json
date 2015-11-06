@@ -65,6 +65,8 @@
     "enterpriseResource": true,
     "trialextinterest": true,
     "orgprofile": true,
-    "inviteusers": true
+    "inviteusers": true,
+    "huntGroup": true,
+    "huronFeatures": true
   }
 }

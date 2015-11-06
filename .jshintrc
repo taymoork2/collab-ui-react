@@ -117,6 +117,8 @@
     "inviteusers": true,
     "phoneUtils": true,
     "fail": true,
-    "jstz": true
+    "jstz": true,
+    "huronFeatures":true,
+    "huntGroup": true
   }
 }

@@ -2,7 +2,7 @@
 
 describe('Controller: AABuilderMainCtrl', function () {
   var controller, Notification, AutoAttendantCeService;
-  var AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService;
+  var AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAValidationService;
   var $rootScope, $scope, $q, $translate, $stateParams;
 
   var ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
@@ -42,7 +42,7 @@ describe('Controller: AABuilderMainCtrl', function () {
   beforeEach(module('Huron'));
 
   beforeEach(inject(function (_$rootScope_, _$q_, _$stateParams_, $controller, _$translate_, _Notification_,
-    _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAUiModelService_, _AAModelService_, _AutoAttendantCeService_) {
+    _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAUiModelService_, _AAModelService_, _AutoAttendantCeService_, _AAValidationService_) {
     $rootScope = _$rootScope_;
     $q = _$q_;
     $scope = $rootScope.$new();
@@ -55,6 +55,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     AAModelService = _AAModelService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
+    AAValidationService = _AAValidationService_;
     AutoAttendantCeService = _AutoAttendantCeService_;
     Notification = _Notification_;
 
@@ -78,18 +79,24 @@ describe('Controller: AABuilderMainCtrl', function () {
 
   describe('saveAARecords', function () {
 
+    var createCeSpy;
+    var updateCeSpy;
+    var nameValidationSpy;
+
     beforeEach(function () {
-      spyOn(AutoAttendantCeService, 'createCe').and.returnValue($q.when(angular.copy(rawCeInfo)));
-      spyOn(AutoAttendantCeService, 'updateCe').and.returnValue($q.when(angular.copy(rawCeInfo)));
+      createCeSpy = spyOn(AutoAttendantCeService, 'createCe').and.returnValue($q.when(angular.copy(rawCeInfo)));
+      updateCeSpy = spyOn(AutoAttendantCeService, 'updateCe').and.returnValue($q.when(angular.copy(rawCeInfo)));
       spyOn(Notification, 'success');
       spyOn(Notification, 'error');
       spyOn($scope.vm, 'saveUiModel');
+      nameValidationSpy = spyOn(AAValidationService, 'isNameValidationSuccess').and.returnValue(true);
       aaModel.ceInfos = [];
       aaModel.aaRecords = [];
       aaModel.aaRecord = aCe;
     });
 
     it('should save a new aaRecord successfully', function () {
+      aaModel.aaRecordUUID = "";
       controller.saveAARecords();
       $scope.$apply();
 
@@ -105,8 +112,21 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect(Notification.success).toHaveBeenCalledWith('autoAttendant.successCreateCe', jasmine.any(Object));
     });
 
+    it('should report failure if AutoAttendantCeService.createCe() failed', function () {
+      aaModel.aaRecordUUID = "";
+      createCeSpy.and.returnValue($q.reject({
+        statusText: "server error",
+        status: 500
+      }));
+      controller.saveAARecords();
+      $scope.$apply();
+
+      expect(Notification.error).toHaveBeenCalledWith('autoAttendant.errorCreateCe', jasmine.any(Object));
+    });
+
     it('should update an existing aaRecord successfully', function () {
       aaModel.aaRecords.push(rawCeInfo);
+      aaModel.aaRecordUUID = 'c16a6027-caef-4429-b3af-9d61ddc7964b';
 
       controller.saveAARecords();
       $scope.$apply();
@@ -123,6 +143,26 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect(Notification.success).toHaveBeenCalledWith('autoAttendant.successUpdateCe', jasmine.any(Object));
     });
 
+    it('should report failure if AutoAttendantCeService.updateCe() failed', function () {
+      aaModel.aaRecords.push(rawCeInfo);
+      aaModel.aaRecordUUID = 'c16a6027-caef-4429-b3af-9d61ddc7964b';
+      updateCeSpy.and.returnValue($q.reject({
+        statusText: "server error",
+        status: 500
+      }));
+      controller.saveAARecords();
+      $scope.$apply();
+
+      expect(Notification.error).toHaveBeenCalledWith('autoAttendant.errorUpdateCe', jasmine.any(Object));
+    });
+
+    it('should not save when there is a name validation error', function () {
+      nameValidationSpy.and.returnValue(false);
+
+      controller.saveAARecords();
+
+      expect($scope.vm.saveUiModel).not.toHaveBeenCalled();
+    });
   });
 
   describe('selectAA', function () {
@@ -228,6 +268,8 @@ describe('Controller: AABuilderMainCtrl', function () {
       $scope.vm.aaModel.aaRecord = {};
       $scope.vm.ui = {};
       $scope.vm.ui.ceInfo = ce2CeInfo(rawCeInfo);
+      $scope.vm.ui.builder = {};
+      $scope.vm.ui.builder.ceInfo_name = "AAA2";
     });
 
     it('should write UI CeInfo into model', function () {
@@ -266,5 +308,14 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect(AutoAttendantCeMenuModelService.updateCombinedMenu).toHaveBeenCalledWith($scope.vm.aaModel.aaRecord, 'holidays', $scope.vm.ui.holidays);
     });
 
+  });
+
+  describe('setAANameFocus', function () {
+    it('should set model aaNameFocus variable to true', function () {
+      $scope.vm.aaNameFocus = "false";
+      controller.setAANameFocus();
+
+      expect($scope.vm.aaNameFocus).toEqual(true);
+    });
   });
 });
