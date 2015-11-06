@@ -90,7 +90,7 @@ angular.module('WebExReports').service('WebexReportService', [
       "support_center_allocation_queue"
     ];
 
-    var reverseMapping = function (mapping) {
+    this.reverseMapping = function (mapping) {
       var keys = [];
       for (var key in mapping) {
         if (mapping.hasOwnProperty(key)) {
@@ -106,11 +106,7 @@ angular.module('WebExReports').service('WebexReportService', [
       return reversedMap;
     };
 
-    this.reverseMapping = function () {
-      return reverseMapping;
-    };
-
-    var pageid_to_navItemId_mapping_reversed = reverseMapping(pageid_to_navItemId_mapping);
+    var pageid_to_navItemId_mapping_reversed = this.reverseMapping(pageid_to_navItemId_mapping);
     this.pageid_to_navItemId_mapping_reversed = pageid_to_navItemId_mapping_reversed;
 
     //TODO: remove

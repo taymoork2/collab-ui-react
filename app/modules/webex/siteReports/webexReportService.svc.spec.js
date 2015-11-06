@@ -61,7 +61,7 @@ describe('WebexReportService Test', function () {
       "x": "y",
       "w": "z"
     };
-    var reversedMap = WebexReportService.reverseMapping()(mapping);
+    var reversedMap = WebexReportService.reverseMapping(mapping);
     var x = reversedMap["y"];
     var w = reversedMap["z"];
     expect(x).toBe("x");
