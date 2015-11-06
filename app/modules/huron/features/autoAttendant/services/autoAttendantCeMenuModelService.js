@@ -599,8 +599,10 @@
       }
       // manually add a disconnect action to each defined actionSet
       var actionSet = getActionSet(ceRecord, actionSetName);
-      if (actionSet.actions.length > 0) {
-        addDisconnectAction(actionSet.actions);
+      if (actionSet.actions && actionSet.actions.length > 0) {
+        if (angular.isUndefined(actionSet.actions[actionSet.actions.length - 1].disconnect)) {
+          addDisconnectAction(actionSet.actions);
+        }
       }
     }
 
@@ -796,27 +798,35 @@
       var newOptionArray = [];
       var menuEntry;
 
-      for (var i = 0; i < aaMenu.entries.length; i++) {
-        menuEntry = aaMenu.entries[i];
-        newOptionArray[i] = {};
-        newOptionArray[i].description = menuEntry.description;
-        newOptionArray[i].input = menuEntry.key;
-        newOptionArray[i].actions = createActionArray(menuEntry.actions);
+      if (aaMenu.entries) {
+        for (var i = 0; i < aaMenu.entries.length; i++) {
+          menuEntry = aaMenu.entries[i];
+          newOptionArray[i] = {};
+          newOptionArray[i].description = menuEntry.description;
+          newOptionArray[i].input = menuEntry.key;
+          newOptionArray[i].actions = createActionArray(menuEntry.actions);
+        }
+
+        if (aaMenu.headers) {
+          if (aaMenu.headers.length > 0) {
+            // create prompts section
+            menuEntry = aaMenu.headers[0];
+            inputAction.prompts = {};
+            inputAction.prompts.description = menuEntry.description;
+            inputAction.prompts.playList = createPlayList(menuEntry.actions);
+          }
+
+          if (aaMenu.headers.length > 1) {
+            // create default action
+            i = aaMenu.entries.length;
+            menuEntry = aaMenu.headers[1];
+            newOptionArray[i] = {};
+            newOptionArray[i].description = menuEntry.description;
+            newOptionArray[i].input = 'default';
+            newOptionArray[i].actions = createActionArray(menuEntry.actions);
+          }
+        }
       }
-
-      // create prompts section
-      menuEntry = aaMenu.headers[0];
-      inputAction.prompts = {};
-      inputAction.prompts.description = menuEntry.description;
-      inputAction.prompts.playList = createPlayList(menuEntry.actions);
-
-      // create default action
-      i = aaMenu.entries.length;
-      menuEntry = aaMenu.headers[1];
-      newOptionArray[i] = {};
-      newOptionArray[i].description = menuEntry.description;
-      newOptionArray[i].input = 'default';
-      newOptionArray[i].actions = createActionArray(menuEntry.actions);
 
       // create language section
       // todo
@@ -855,16 +865,25 @@
       if (angular.isUndefined(aaMenu.type) || aaMenu.type === null) {
         return false;
       }
-      if (aaMenu.type === 'MENU_CUSTOM') {
-        return updateCustomMenu(ceRecord, actionSetName, aaMenu);
+      for (var i = 0; i < aaMenu.entries.length; i++) {
+        var menu = aaMenu.entries[i];
+        if (menu.type === 'MENU_CUSTOM') {
+          updateCustomMenu(ceRecord, actionSetName, menu);
+        }
+        if (menu.type == 'MENU_OPTION') {
+          updateOptionMenu(ceRecord, actionSetName, menu);
+        }
       }
       if (aaMenu.type == 'MENU_WELCOME') {
-        return updateWelcomeMenu(ceRecord, actionSetName, aaMenu);
+        updateWelcomeMenu(ceRecord, actionSetName, aaMenu);
       }
       if (aaMenu.type == 'MENU_OPTION') {
-        return updateOptionMenu(ceRecord, actionSetName, aaMenu);
+        updateOptionMenu(ceRecord, actionSetName, aaMenu);
       }
-      return false;
+      if (aaMenu.type == 'MENU_CUSTOM') {
+        updateCustomMenu(ceRecord, actionSetName, aaMenu);
+      }
+      return true;
     }
 
     /*
