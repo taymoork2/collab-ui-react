@@ -2500,14 +2500,33 @@
     "pageTitle": "Overview",
     "thisMonth": "This Month",
     "lastMonth": "Last Month",
-    "user":{
-    "convertButton": "Convert",
-    "convertText":"Users who may belong to your organization"},
     "cards":{
-      "message":{"title":"Message", "desc":"Active Rooms"},
-      "meeting":{"title":"Meeting", "desc":"Meetings"},
-      "call":{"title":"Call", "desc":"Calls"},
-      "roomSystem":{"title":"Room Systems", "desc":"Calls"}
+      "users": {
+        "title": "Users",
+        "directorySynchronization": "Directory Synchronization",
+        "singleSignOn": "Single Sign On",
+        "convertButton": "Convert",
+        "convertText":"Users who may belong to your organization"
+      },
+      "message":{
+        "title":"Message",
+        "desc":"Active Rooms"
+      },
+      "meeting":{
+        "title":"Meeting",
+        "desc":"Meetings"
+      },
+      "call":{
+        "title":"Call",
+        "desc":"Calls"
+      },
+      "roomSystem":{
+        "title":"Room Systems",
+        "desc":"Calls"
+      },
+      "hybrid":{
+        "title":"Hybrid Services"
+      }
     }
   }
 }

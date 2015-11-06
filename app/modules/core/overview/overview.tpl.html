@@ -38,7 +38,7 @@
     </cs-card>
     <cs-card class="large menu-card users-card">
       <article>
-        <header><h4>Hybrid Services</h4></header>
+        <header><h4 translate="overview.cards.hybrid.title"></h4></header>
         <section>
           <span>N/A</span>
         </section>
@@ -46,25 +46,25 @@
     </cs-card>
     <cs-card class="large menu-card users-card">
       <article>
-        <header><h4>Users</h4></header>
+        <header><h4 translate="overview.cards.users.title"></h4></header>
         <section>
           <ul>
             <li>
               <i class="icon icon-circle" ng-class="overview.user.dirsyncEnabled ? 'success' : 'disabled'"></i>
-              <span>Directory Synchronization</span>
+              <span translate="overview.cards.users.directorySynchronization"></span>
             </li>
             <li>
               <i class="icon icon-circle" ng-class="overview.user.ssoEnabled ? 'success' : 'disabled' "></i>
-              <span>Single Sign On</span>
+              <span translate="overview.cards.users.singleSignOn"></span>
             </li>
           </ul>
           <hr/>
           <div class="bottom">
             <h4>{{(overview.user.usersToConvert | number) || 'N/A'}}</h4>
-            <div translate="overview.user.convertText"></div>
+            <div translate="overview.cards.users.convertText"></div>
             <button
               class="btn btn-success"
-              translate="overview.user.convertButton"
+              translate="overview.cards.users.convertButton"
               ng-click="overview.openConvertModal()"
               ng-disabled="!overview.user.usersToConvert">
             </button>
