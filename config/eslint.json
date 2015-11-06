@@ -55,6 +55,7 @@
     "telephony": true,
     "navigation": true,
     "callrouting": true,
+    "autoattendant": true,
     "deleteUtils": true,
     "utilization": true,
     "usersettings": true,

@@ -11,6 +11,7 @@ var Navigation = function () {
   this.orgTab = element(by.css('a[href="#organizations"]'));
   this.orgAddTab = element(by.css('#addOrganizations'));
   this.callRoutingTab = element(by.css('a[href="#callrouting"]'));
+  this.autoAttendantPage = element(by.css('a[href="#/callrouting/autoattendant"]'));
   this.fusionTab = element(by.css('a[href="#fusion"]'));
   this.reportsTab = element(by.css('li.reportTab > a'));
   this.devReports = element(by.css('a[href="#partner/newreports"]'));
@@ -97,6 +98,15 @@ var Navigation = function () {
     this.clickDevelopmentTab();
     utils.click(this.callRoutingTab);
     this.expectCurrentUrl('/callrouting');
+  };
+
+  this.clickAutoAttendant = function () {
+    this.clickDevelopmentTab();
+    utils.click(this.callRoutingTab);
+    utils.click(this.autoAttendantPage);
+    this.expectCurrentUrl('/autoattendant');
+    utils.click(autoattendant.autoAttendantDevLink);
+    utils.expectIsDisplayed(autoattendant.newFeatureButton);
   };
 
   this.clickReports = function () {
