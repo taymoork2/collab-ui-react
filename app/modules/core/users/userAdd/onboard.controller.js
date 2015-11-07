@@ -2,8 +2,8 @@
 
 //TODO refactor this into OnboardCtrl, BulkUserCtrl, AssignServicesCtrl
 angular.module('Core')
-  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$http', '$window', 'Log', 'Authinfo', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils', 'Orgservice', 'TelephonyInfoService', 'FeatureToggleService', 'NAME_DELIMITER', 'SyncService', 'TelephoneNumberService',
-    function ($scope, $state, $stateParams, $q, $http, $window, Log, Authinfo, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, SyncService, TelephoneNumberService) {
+  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$http', '$window', 'Log', 'Authinfo', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils', 'Orgservice', 'TelephonyInfoService', 'FeatureToggleService', 'NAME_DELIMITER', 'SyncService', 'TelephoneNumberService', 'DialPlanService',
+    function ($scope, $state, $stateParams, $q, $http, $window, Log, Authinfo, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, SyncService, TelephoneNumberService, DialPlanService) {
       $scope.hasAccount = Authinfo.hasAccount();
       $scope.usrlist = [];
       $scope.internalNumberPool = [];
@@ -27,6 +27,9 @@ angular.module('Core')
       $scope.PATTERN_LIMIT = 50;
 
       $scope.isReset = false;
+      $scope.showExtension = undefined;
+      $scope.displayInternal = $translate.instant('usersPage.extensionHeader');
+      $scope.displayExternal = $translate.instant('usersPage.directLineHeader');
       $scope.isResetEnabled = false;
 
       // model can be removed after switching to controllerAs
@@ -465,7 +468,7 @@ angular.module('Core')
         '</div>';
 
       var headerRowTemplate = '<div ng-style="{ height: col.headerRowHeight }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngHeaderCell">' +
-        '<div ng-header-cell></div></div>';
+        '<div ng-header-cell></div>';
 
       var nameTemplate = '<div class="ngCellText"><span class="name-display-style">{{row.getProperty(col.field)}}</span>' +
         '<span class="email-display-style">{{row.getProperty(\'address\')}}</span></div>';
@@ -552,49 +555,56 @@ angular.module('Core')
         }
       };
 
-      $scope.initGrid = function () {
-        $scope.isResetEnabled = false;
-        $scope.validateDnForUser();
-      };
+      $scope.isResetEnabled = false;
+      $scope.validateDnForUser();
+      toggleShowExtension().then(function () {
+        if ($scope.showExtension === "true") {
+          $scope.showGrid = false;
+          $scope.displayInternal = $translate.instant('usersPage.directLineHeader');
+        } else {
+          $scope.showGrid = true;
+          $scope.displayExternal = $translate.instant('usersPage.directLineHeader');
+          $scope.displayInternal = $translate.instant('usersPage.extensionHeader');
+        }
 
-      $scope.addDnGridOptions = {
-        data: 'usrlist',
-        enableRowSelection: false,
-        multiSelect: false,
-        showFilter: false,
-        rowHeight: 55,
-        rowTemplate: rowTemplate,
-        headerRowHeight: 44,
-        headerRowTemplate: headerRowTemplate, // this is needed to get rid of vertical bars in header
-        useExternalSorting: false,
-        init: $scope.initGrid,
+        $scope.addDnGridOptions = {
+          data: 'usrlist',
+          enableRowSelection: false,
+          multiSelect: false,
+          showFilter: false,
+          rowHeight: 55,
+          rowTemplate: rowTemplate,
+          headerRowHeight: 44,
+          headerRowTemplate: headerRowTemplate, // this is needed to get rid of vertical bars in header
+          useExternalSorting: false,
 
-        columnDefs: [{
-          field: 'name',
-          displayName: $translate.instant('usersPage.nameHeader'),
-          sortable: false,
-          cellTemplate: nameTemplate,
-          width: '42%',
-          height: 35
+          columnDefs: [{
+            field: 'name',
+            displayName: $translate.instant('usersPage.nameHeader'),
+            sortable: false,
+            cellTemplate: nameTemplate,
+            width: '42%',
+            height: 35
 
-        }, {
-          field: 'externalNumber',
-          displayName: $translate.instant('usersPage.directLineHeader'),
-          sortable: false,
-          cellTemplate: externalExtensionTemplate,
-          width: '33%',
-          height: 35
+          }, {
+            field: 'externalNumber',
+            displayName: $scope.displayExternal,
+            sortable: false,
+            cellTemplate: externalExtensionTemplate,
+            width: '33%',
+            height: 35,
+            visible: $scope.showGrid
 
-        }, {
-          field: 'internalExtension',
-          displayName: $translate.instant('usersPage.extensionHeader'),
-          sortable: false,
-          cellTemplate: internalExtensionTemplate,
-          width: '25%',
-          height: 35
-        }]
-      };
-
+          }, {
+            field: 'internalExtension',
+            displayName: $scope.displayInternal,
+            sortable: false,
+            cellTemplate: internalExtensionTemplate,
+            width: '25%',
+            height: 35
+          }]
+        };
+      });
       $scope.collabRadio = 1;
 
       $scope.onboardUsers = onboardUsers;
@@ -693,6 +703,12 @@ angular.module('Core')
         }
         return entStrings;
       };
+
+      function toggleShowExtension() {
+        return DialPlanService.getCustomerDialPlanDetails().then(function (response) {
+          $scope.showExtension = response.extensionGenerated;
+        });
+      }
 
       $scope.updateUserLicense = function () {
         var user = [];
