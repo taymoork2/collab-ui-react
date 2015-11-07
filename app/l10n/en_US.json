@@ -1917,6 +1917,9 @@
     "OtherPrivilegesLabel": "Other Privileges",
     "advancedLinkLabel": "Advanced Settings"
   },
+    "webexCommon": {
+    "logoAltText": "Cisco WebEx"
+  },
   "webexSiteSettingsLabels": {
     "siteSettingsIndexPageTitle": "Configure",
     "siteSettingsIndexPageTitleFull": "Configure {{siteUrl}}",

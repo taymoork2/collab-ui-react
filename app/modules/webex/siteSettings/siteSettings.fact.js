@@ -73,6 +73,7 @@
               label: null,
               comment: null,
               pageObjs: null,
+              lang: null,
 
               subSectionObjs: []
             }, {
@@ -80,6 +81,7 @@
               label: "Meeting Center",
               comment: null,
               pageObjs: null,
+              lang: null,
 
               subSectionObjs: []
             }, {
@@ -87,6 +89,7 @@
               label: "Training Center",
               comment: null,
               pageObjs: null,
+              lang: null,
 
               subSectionObjs: []
             }, {
@@ -94,14 +97,17 @@
               label: "Support Center",
               comment: null,
               pageObjs: null,
+              lang: null,
 
               subSectionObjs: [{
                 id: "WebACD",
                 label: "WebACD",
-                pageObjs: null
+                lang: null,
+               pageObjs: null
               }, {
                 id: "RA",
                 label: "Remote Access",
+                lang: null,
                 pageObjs: null
               }]
             }, {
@@ -109,6 +115,7 @@
               label: "Event Center",
               comment: null,
               pageObjs: null,
+              lang: null,
 
               subSectionObjs: []
             }], // siteSettingCardObjs
@@ -553,6 +560,10 @@
                   siteSettingCardObj.label = $translate.instant("webexSiteSettingsLabels.commonSettingsCardTitle");
                   siteSettingCardObj.comment = $translate.instant("webexSiteSettingsLabels.commonSettingsCardNote");
                 }
+                else
+                	{
+                	siteSettingCardObj.lang = "en"; //Centre names are in English
+                	}
 
                 var categoryObj = _this.getCategoryObj(siteSettingCardObjId);
                 siteSettingCardObj.pageObjs = categoryObj.pageObjs;
@@ -561,6 +572,7 @@
                   function updateSubSectionObj(subSectionObj) {
                     categoryObj = _this.getCategoryObj(subSectionObj.id);
                     subSectionObj.pageObjs = categoryObj.pageObjs;
+                    subSectionObj.lang = "en"; //WebACD, Remote Acces are in English
                   }
                 ); // subSectionObjs.forEach()
 
