@@ -1,4 +1,4 @@
-{
+[{
   "callingSearchSpace": {
     "name": "COMMON_TO_PSTN_AUNP_CSS",
     "uuid": "00000000-0000-0000-0000-000000000012"
@@ -21,4 +21,4 @@
     "rel": "voice",
     "href": "/api/v1/voice/clusters/00000000-0000-0000-0000-000000000003/dialplandetails/00000000-0000-0000-0000-000000000009"
   }]
-}
+}]

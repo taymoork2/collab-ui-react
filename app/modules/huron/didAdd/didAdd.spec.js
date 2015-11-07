@@ -35,7 +35,11 @@ describe('Controller: DidAddCtrl', function () {
   var customerVoiceNorthAmerica = getJSONFixture('huron/json/dialPlans/customervoice-nanp.json');
   var dialPlans = getJSONFixture('huron/json/dialPlans/dialplans.json');
   var dialPlanDetailsAustralia = getJSONFixture('huron/json/dialPlans/dialplandetails-aunp.json');
-
+  var dialPlanDetailsNorthAmerica = [{
+    countryCode: "+1",
+    extensionGenerated: "false",
+    steeringDigitRequired: "true"
+  }];
   var uuids = {
     orgId: '1',
     clusterId: '00000000-0000-0000-0000-000000000001',
@@ -73,8 +77,7 @@ describe('Controller: DidAddCtrl', function () {
     $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/common/clusters?type=APPLICATION_VOICE').respond(clusters);
     $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + uuids.orgId).respond(customerVoiceNorthAmerica);
     $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/clusters/' + uuids.clusterId + '/dialplans').respond(dialPlans);
-    $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/clusters/' + uuids.clusterId + '/dialplandetails/' + uuids.dialPlanIdNadp).respond(404);
-    // the 404 response needs to be removed when the manual dialPlanDetails is removed from dialPlanService.js
+    $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/clusters/' + uuids.clusterId + '/dialplandetails?dialplan=' + uuids.dialPlanIdNadp).respond(dialPlanDetailsNorthAmerica);
 
     controller = $controller('DidAddCtrl', {
       $scope: $scope,
