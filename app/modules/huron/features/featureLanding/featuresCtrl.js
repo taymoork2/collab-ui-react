@@ -185,9 +185,11 @@
           aaName: vm.aaModel.aaName
         });
       } else if (feature.filterValue === 'HG') {
-        HuntGroupService.editFeature(feature);
-        $state.go('huntgroupedit');
-      } // else if (feature.filterValue === 'CP') {
+        $state.go('huntgroupedit', {
+          feature: feature
+        });
+      }
+      // else if (feature.filterValue === 'CP') {
       //  //Call CallPark Edit Controller
       //}
     };

@@ -1,8 +1,12 @@
 .hg-edit {
+  height: calc(100vh - #{($navbar-height + $page-header-height)}) !important;
+  overflow-y: auto;
   position: relative;
   background: $color-white;
+  @include vr-spacing(mh, 0.5, 1px, true);
   @include vr-spacing(pb, 10);
   > .row {
+
     @include vr-spacing(pt, 2);
   }
   .cs-card.small {
@@ -25,15 +29,21 @@
     font-size: 1rem;
   }
   .hg-name .formly-input-wrapper {
-    width: 16rem;
+    width: 20rem;
+    font-family: $brand-font-light;
+    font-size: $font-size-base;
   }
   .hg-num .formly-input-wrapper {
     width: 13rem;
+    font-family: $brand-font-light;
+    font-size: $font-size-base;
   }
   .hg-time .formly-input-wrapper {
-    width: 8.5rem;
+    width: 9rem;
+    font-family: $brand-font-light;
+    font-size: $font-size-base;
   }
-  .hg-num .formly-input-wrapper, 
+  .hg-num .formly-input-wrapper,
   .hg-time .formly-input-wrapper {
     @include vr-spacing(mb, 1);
   }
@@ -63,46 +73,50 @@
 }
 
 .hgmethods {
-  display: flex;
-  @include vr-spacing(ml, 0);
+  margin-left: auto;
+  margin-right: auto;
+  display : flex !important;
+  flex-wrap: wrap;
+  @include vr-spacing(mr, 0.5);
 }
 
 .hgmethod {
-  display: flex;
-  flex: 0 0 22%;
-  @include vr-spacing(pr, 0.5);
+  display: flex !important;
+  flex: none;
+  @include vr-spacing(ph, 0.5);
   &.current {
     > a {
-      background: $gray-lightest;
+      background: $gray-light-4;
     }
   }
   > a {
     flex: 1;
     border: 1px solid $gray-light;
-     @include box-shadow(0px 1px 2px 1px rgba(52, 53, 55, 0.18));
+    @include box-shadow(0px 1px 2px 1px rgba(52, 53, 55, 0.18));
     border-radius: $global-radius;
     text-align: center;
-    @include vr-spacing(p, 1);
+    @include vr-spacing(pv, 1);
     cursor: pointer;
     > div {
       color: $brand-info;
+      @include vr-spacing(pt,0.5)
     }
     > i {
       color: $color-black;
       font-size: 2rem;
     }
     &:hover, &:focus {
-      background: $gray-lightest;
+      background: $gray-light-4;
        @include box-shadow(0px 1px 2px 2px rgba(52, 53, 55, 0.18));
     }
   }
 }
 
 .hgmembers {
-  @include vr-spacing(pt, 2);
+  @include vr-spacing(pt, 1);
   .form-input {
     width: 80%;
-    @include vr-spacing(mb, 0.5);
+    @include vr-spacing(mb, 2);
   }
   section {
     position: absolute;
