@@ -5,7 +5,7 @@
     .controller('HuntGroupEditCtrl', HuntGroupEditCtrl);
 
   /* @ngInject */
-  function HuntGroupEditCtrl($state, $translate, Authinfo, HuntGroupService, Notification, TelephoneNumberService) {
+  function HuntGroupEditCtrl($state, $stateParams, $translate, Authinfo, HuntGroupService, Notification, TelephoneNumberService) {
     var vm = this;
     var initialModel;
     var initialnumberoptions;
@@ -23,6 +23,7 @@
     vm.validateFallback = validateFallback;
     vm.fetchHuntMembers = fetchHuntMembers;
     vm.initialized = false;
+    vm.back = true;
 
     function init() {
       vm.userSelected = undefined;
@@ -37,7 +38,7 @@
         vm.initialnumbers = angular.copy(initialnumberoptions);
         intializeFields();
       } else {
-        HuntGroupService.getDetails(customerId).then(function (data) {
+        HuntGroupService.getDetails(customerId, $stateParams.feature.huntGroupId).then(function (data) {
           vm.title = data.name;
           vm.initialnumber = data.numbers;
           vm.model = {
@@ -66,7 +67,6 @@
         }, function (data) {
           $state.go('huronfeatures');
         });
-
       }
     }
 
@@ -89,6 +89,7 @@
           templateOptions: {
             label: $translate.instant('huronHuntGroup.numbersLabel'),
             placeholder: $translate.instant('huronHuntGroup.numbersLabel'),
+            inputPlaceholder: $translate.instant('huronHuntGroup.numbersInputPlaceHolder'),
             waitTime: 'true',
             multi: 'true',
             filter: true,
@@ -369,6 +370,10 @@
       "userNumber": ["3692581470"]
     }];
 
-    init();
+    if ($stateParams.feature) {
+      init();
+    } else {
+      $state.go('huronfeatures');
+    }
   }
 })();
