@@ -115,7 +115,7 @@ describe('Partner flow', function () {
       utils.click(partner.launchCustomerPanelButton);
       utils.switchToNewWindow().then(function () {
 
-        // backend services are slow
+        // backend services are slow to check userauthinfo/accounts
         utils.wait(wizard.wizard, LONG_TIMEOUT);
         utils.expectIsDisplayed(wizard.leftNav);
         utils.expectIsDisplayed(wizard.mainView);
@@ -155,6 +155,8 @@ describe('Partner flow', function () {
       utils.click(partner.launchCustomerButton);
       utils.switchToNewWindow().then(function () {
 
+        // backend services are slow to check userauthinfo/accounts
+        utils.wait(navigation.tabs, LONG_TIMEOUT);
         utils.expectIsDisplayed(navigation.tabs);
 
         browser.close();
