@@ -586,7 +586,8 @@
     "or": "or",
     "search": "Search",
     "edit": "Edit",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "new": "New"
   },
   "notifications": {
     "success": "Success notifications",
@@ -644,7 +645,10 @@
     "status": "Status",
     "spark": "Spark",
     "sso": "Single Sign On (SSO)",
-    "dirsync": "Directory Synchronization"
+    "dirsync": "Directory Synchronization",
+    "setUpCalendarService": "Calendar Service is available. Use @spark and @webex to enhance your collaboration experience.",
+    "setUpCallService": "Call Service (Aware) is available. Effortlessly share your desktop with Spark while you are on your work phone.",
+    "getStarted": "Get Started"
   },
   "inviteModal": {
     "title": "Service Entitlement",
