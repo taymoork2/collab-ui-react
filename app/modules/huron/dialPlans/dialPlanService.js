@@ -59,7 +59,7 @@
             'name': 'NANP'
           });
           customerVoice.dialPlan = {
-            uuid: northAmericanDialPlan.uuid
+            uuid: "f193ed3e-9591-43e9-a631-3bcf9f1f6c40"
           };
         }
 

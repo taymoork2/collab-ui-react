@@ -44,7 +44,7 @@ if [ $NPM_RET -ne 0 ]; then
     if [ "`uname`" = "Darwin" ]; then
       brew install npm
     else
-      "Please install npm (for CentOS, see: http://serverfault.com/questions/299288/how-do-you-install-node-js-on-centos )."
+      echo "Please install npm (for CentOS, see: http://serverfault.com/questions/299288/how-do-you-install-node-js-on-centos )."
     fi
 else
     echo "NPM is already installed"

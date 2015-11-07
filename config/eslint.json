@@ -35,6 +35,7 @@
     "beforeAll": true,
     "afterAll": true,
 
+    "isProductionBackend": true,
     "login": true,
     "users": true,
     "roles": true,
@@ -55,6 +56,7 @@
     "telephony": true,
     "navigation": true,
     "callrouting": true,
+    "autoattendant": true,
     "deleteUtils": true,
     "utilization": true,
     "usersettings": true,

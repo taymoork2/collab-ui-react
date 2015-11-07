@@ -80,8 +80,8 @@
     "addtionalServiceSetupConfirmation": "Are you sure you want to leave this window? You will lose your data.",
     "setUpThisService": "Set up this service",
     "nameHeader": "Name",
-    "directLineHeader": "Direct Line",
-    "extensionHeader": "Internal Extension",
+    "directLineHeader": "Phone Number",
+    "extensionHeader": " Extension",
     "notApplicable": "N/A",
     "noExtensionInPool": "No Extension in pool.",
     "noExternalNumberAvail": "No DID available for mapping.",
@@ -586,7 +586,8 @@
     "or": "or",
     "search": "Search",
     "edit": "Edit",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "new": "New"
   },
   "notifications": {
     "success": "Success notifications",
@@ -644,7 +645,10 @@
     "status": "Status",
     "spark": "Spark",
     "sso": "Single Sign On (SSO)",
-    "dirsync": "Directory Synchronization"
+    "dirsync": "Directory Synchronization",
+    "setUpCalendarService": "Calendar Service is available. Use @spark and @webex to enhance your collaboration experience.",
+    "setUpCallService": "Call Service (Aware) is available. Effortlessly share your desktop with Spark while you are on your work phone.",
+    "getStarted": "Get Started"
   },
   "inviteModal": {
     "title": "Service Entitlement",
@@ -1316,12 +1320,12 @@
     "error": "Line configuration failed.",
     "directNumbers": "Directory Numbers",
     "internalNumberLabel": "Reach this line by dialing the numbers or extensions listed below.",
-    "internalNumberExtension": "Internal Extension",
+    "internalNumberExtension": "Extension",
     "internalNumberExtensionTooltip": "Use the internal extension to reach this line from within the company at the same site.",
     "internalNumberPoolError": "Internal extensions failed to load.",
     "steeringDigitOverlapWarning": "First digit of Internal Extension overlaps with Outbound Dial Digit ({{steeringDigitInTranslation}}).",
     "enterpriseSiteNumberLabel": "If your company uses site-to-site dialing:",
-    "externalNumberLabel": "Direct Line",
+    "externalNumberLabel": "Phone Number",
     "externalNumberTooltip": "Use the direct line to reach this line from outside of the company.",
     "externalNumberPoolError": "Direct lines failed to load.",
     "externalNumberMappingError": "Direct line Mappings failed to load.",
