@@ -76,24 +76,48 @@
       }
     }
 
+    function fetchNumbers(typedNumber) {
+
+      var GetPilotNumbers = HuntGroupService.getPilotNumberSuggestions(typedNumber);
+
+      if (GetPilotNumbers) {
+        GetPilotNumbers.setOnFailure(onFailureNotify('huronHuntGroup.numberFetchFailure'));
+        GetPilotNumbers.setFilter({
+          sourceKey: 'uuid',
+          responseKey: 'uuid',
+          dataToStrip: vm.selectedPilotNumbers
+        });
+
+        return GetPilotNumbers.result();
+      }
+
+      return [];
+    }
+
+    function fetchMembers(nameHint, filter) {
+      var GetHuntMembers = HuntGroupService.getHuntMembers(nameHint);
+
+      if (GetHuntMembers) {
+        GetHuntMembers.setOnFailure(onFailureNotify('huronHuntGroup.memberFetchFailure'));
+        if (filter) {
+          GetHuntMembers.setFilter(filter);
+        }
+        return GetHuntMembers.result();
+      }
+
+      return [];
+    }
+
     function fetchHuntMembers(nameHint) {
-      return HuntGroupService.getHuntMembers(
-        'name', nameHint,
-        vm.selectedHuntMembers,
-        onFailureNotify('huronHuntGroup.nameFetchFailure'));
+      return fetchMembers(nameHint, {
+        sourceKey: 'uuid',
+        responseKey: 'uuid',
+        dataToStrip: vm.selectedHuntMembers
+      });
     }
 
     function fetchFallbackDestination(nameHint) {
-      return HuntGroupService.getHuntMembers(
-        'name', nameHint, [], // We don't need filtering.
-        onFailureNotify('huronHuntGroup.nameFetchFailure'));
-    }
-
-    function fetchNumbers(typedNumber) {
-      return HuntGroupService.getPilotNumberSuggestions(
-        'number', typedNumber,
-        vm.selectedPilotNumbers,
-        onFailureNotify('huronHuntGroup.numberFetchFailure'));
+      return fetchMembers(nameHint); // We don't need filtering.
     }
 
     function onFailureNotify(notificationKey) {

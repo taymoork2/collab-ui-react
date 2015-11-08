@@ -90,24 +90,6 @@ describe('Hunt Group EditCtrl Controller', function () {
     expect(index).toEqual(-1);
   });
 
-  it('Select Hunt Group Fallback User', function () {
-    var item = hgEditCtrl.userData[2];
-    item.numbers = numbers;
-    hgEditCtrl.selectHuntGroupUser(item);
-    $scope.$apply();
-
-    expect(hgEditCtrl.model.fallbackDestination.userName).toEqual(item.userName);
-  });
-
-  it('Select Hunt Group Member', function () {
-    var item = hgEditCtrl.userData[1];
-    item.numbers = numbers;
-    hgEditCtrl.selectHuntGroupMember(item);
-    $scope.$apply();
-
-    expect(hgEditCtrl.model.members[1].userName).toEqual(item.userName);
-  });
-
   it('Select Hunt Method', function () {
     hgEditCtrl.selectHuntMethod('broadcast');
     $scope.$apply();

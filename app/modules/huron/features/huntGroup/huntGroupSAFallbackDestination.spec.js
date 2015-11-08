@@ -77,7 +77,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
     $httpBackend.expectGET(MemberLookupUrl).respond(500);
     controller.fetchFallbackDestination("sun").then(function () {
       expect(Notification.errorResponse).toHaveBeenCalledWith(jasmine.anything(),
-        'huronHuntGroup.nameFetchFailure');
+        'huronHuntGroup.memberFetchFailure');
     });
     $httpBackend.flush();
   });

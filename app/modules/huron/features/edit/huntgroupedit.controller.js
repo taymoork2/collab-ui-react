@@ -211,51 +211,41 @@
       vm.form.$setDirty();
     }
 
+    function onFailureNotify(notificationKey) {
+      return function (response) {
+        Notification.errorResponse(response, notificationKey);
+      };
+    }
+
     function fetchHuntMembers(nameHint) {
-      return HuntGroupService.getHuntMembers(
-        'name', nameHint,
-        vm.model.members,
-        function (response) {
-          Notification.errorResponse(response, 'huntGroup.nameFetchFailure');
+      var GetHuntMembers = HuntGroupService.getHuntMembers(nameHint);
+
+      if (GetHuntMembers) {
+        GetHuntMembers.setOnFailure(onFailureNotify('huronHuntGroup.memberFetchFailure'));
+        GetHuntMembers.setFilter({
+          sourceKey: 'userUuid',
+          responseKey: 'uuid',
+          dataToStrip: vm.model.members
         });
+
+        return GetHuntMembers.result();
+      }
+
+      return [];
     }
 
     function selectHuntGroupMember($item) {
+      vm.member = undefined;
       vm.membersValid = true;
 
-      var alreadyExist = false;
-      angular.forEach(vm.model.members, function (value) {
-        if (value.userName === $item.userName) {
-          alreadyExist = true;
-        }
+      vm.model.members.push({
+        userUuid: $item.uuid,
+        userName: $item.user.firstName + " " + $item.user.lastName,
+        number: $item.selectableNumber.number,
+        numberUuid: $item.selectableNumber.uuid
       });
-      vm.member = undefined;
-      if (!alreadyExist) {
-        var item = {};
-        var numbers = [];
-        item.userName = $item.userName;
-        item.uuid = $item.uuid;
-        $item.numbers.forEach(function (value) {
-          var number = value;
-          if (number.isSelected) {
-            item.number = number.internal;
-            item.selectedNumberUuid = number.uuid;
-          }
-          var newvalue = {
-            internal: number.internal,
-            external: number.external,
-            value: number.internal,
-            name: 'FallbackRadio',
-            id: 'internal',
-            uuid: number.uuid
-          };
 
-          numbers.push(newvalue);
-        });
-        item.numbers = numbers;
-        vm.model.members.push(item);
-        vm.form.$setDirty();
-      }
+      vm.form.$setDirty();
     }
 
     function toggleMembers(item) {
@@ -351,24 +341,6 @@
         vm.fallbackValid = false;
       }
     }
-
-    vm.userData = [{
-      "userName": "samwi",
-      "userEmail": "samwi@cisco.com",
-      "userNumber": ["3579517894", "9876543210"]
-    }, {
-      "userName": "nlipe",
-      "userEmail": "nlipe@cisco.com",
-      "userNumber": ["6549873210"]
-    }, {
-      "userName": "bspence",
-      "userEmail": "bspence@cisco.com",
-      "userNumber": ["8177777777"]
-    }, {
-      "userName": "jlowery",
-      "userEmail": "jlowery@cisco.com",
-      "userNumber": ["3692581470"]
-    }];
 
     if ($stateParams.feature) {
       init();

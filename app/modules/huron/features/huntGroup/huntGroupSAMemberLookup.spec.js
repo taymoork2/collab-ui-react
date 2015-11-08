@@ -69,7 +69,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
     $httpBackend.expectGET(MemberLookupUrl).respond(500);
     controller.fetchHuntMembers("sun").then(function () {
       expect(Notification.errorResponse).toHaveBeenCalledWith(jasmine.anything(),
-        'huronHuntGroup.nameFetchFailure');
+        'huronHuntGroup.memberFetchFailure');
     });
     $httpBackend.flush();
   });
