@@ -59,25 +59,25 @@
             'name': 'NANP'
           });
           customerVoice.dialPlan = {
-            uuid: "f193ed3e-9591-43e9-a631-3bcf9f1f6c40"
+            uuid: northAmericanDialPlan.uuid
           };
         }
 
         var queryString = {
           clusterId: undefined,
-          dialPlanId: undefined
+          'dialplan': undefined
         };
         queryString.clusterId = voiceClusters[0].uuid; // this must be revisited once a customer's actual cluster can be identified
-        queryString.dialPlanId = customerVoice.dialPlan.uuid;
+        queryString.dialplan = customerVoice.dialPlan.uuid;
 
-        return DialPlanDetailsCmiService.get(queryString).$promise
-          .catch(function (response) {
+        return DialPlanDetailsCmiService.query(queryString).$promise
+          .then(function (response) {
 
-            // Manually build dialPlanDetails for North America
-            // Remove this section when dialPlanDetails for North America becomes available in UPDM.
+            // Manually build the missing dialPlanDetails for North America
+            // TODO: Remove this section when dialPlanDetails for North America becomes available in UPDM.
+            // When this section is removed, didAdd.spec.js must be updated to not expect a 404 for NADP.
             // Ask Ken Nakano (kennakan) for any questions.
-            if (response.status === 404) {
-              // manually build the North American dialPlanDetails for the customer
+            if (response.length < 1) {
               var northAmericanDialPlanData = {
                 countryCode: "+1",
                 extensionGenerated: "false",
@@ -85,10 +85,9 @@
               };
               return northAmericanDialPlanData;
             }
-            // end of Manually build dialPlanDetails for North America
+            // end of Manually build the missing dialPlanDetails for North America
 
-            // non-404 error responses will be rejected
-            return $q.reject(response);
+            return response[0];
           });
       });
     }

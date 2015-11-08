@@ -7,7 +7,12 @@ describe('Service: DialPlanService', function () {
   var customerVoiceAustalia = getJSONFixture('huron/json/dialPlans/customervoice-aunp.json');
   var customerVoiceNorthAmerica = getJSONFixture('huron/json/dialPlans/customervoice-nanp.json');
   var dialPlans = getJSONFixture('huron/json/dialPlans/dialplans.json');
-  var dialPlanDetails = getJSONFixture('huron/json/dialPlans/dialplandetails.json');
+  var dialPlanDetailsAustralia = getJSONFixture('huron/json/dialPlans/dialplandetails-aunp.json');
+  var dialPlanDetailsNorthAmerica = [{
+    countryCode: "+1",
+    extensionGenerated: "false",
+    steeringDigitRequired: "true"
+  }];
 
   var uuids = {
     orgId: '1',
@@ -86,9 +91,9 @@ describe('Service: DialPlanService', function () {
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/common/clusters?type=APPLICATION_VOICE').respond(clusters);
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + uuids.orgId).respond(customerVoiceAustalia);
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/clusters/' + uuids.clusterId + '/dialplans').respond(dialPlans);
-      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/clusters/' + uuids.clusterId + '/dialplandetails/' + uuids.dialPlanIdAudp).respond(dialPlanDetails);
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/clusters/' + uuids.clusterId + '/dialplandetails?dialplan=' + uuids.dialPlanIdAudp).respond(dialPlanDetailsAustralia);
       DialPlanService.getCustomerDialPlanDetails().then(function (response) {
-        expect(angular.equals(response, dialPlanDetails)).toBe(true);
+        expect(angular.equals(response, dialPlanDetailsAustralia[0])).toBe(true);
       });
     });
 
@@ -97,9 +102,9 @@ describe('Service: DialPlanService', function () {
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/common/clusters?type=APPLICATION_VOICE').respond(clusters);
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + uuids.orgId).respond(customerVoiceNorthAmerica);
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/clusters/' + uuids.clusterId + '/dialplans').respond(dialPlans);
-      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/clusters/' + uuids.clusterId + '/dialplandetails/' + uuids.dialPlanIdNadp).respond(dialPlanDetails);
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/clusters/' + uuids.clusterId + '/dialplandetails?dialplan=' + uuids.dialPlanIdNadp).respond(dialPlanDetailsNorthAmerica);
       DialPlanService.getCustomerDialPlanDetails().then(function (response) {
-        expect(angular.equals(response, dialPlanDetails)).toBe(true);
+        expect(angular.equals(response, dialPlanDetailsNorthAmerica[0])).toBe(true);
       });
     });
 
@@ -108,9 +113,9 @@ describe('Service: DialPlanService', function () {
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/common/clusters?type=APPLICATION_VOICE').respond(clusters);
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + uuids.orgId).respond(customerVoiceNorthAmerica);
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/clusters/' + uuids.clusterId + '/dialplans').respond(dialPlans);
-      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/clusters/' + uuids.clusterId + '/dialplandetails/' + uuids.dialPlanIdNadp).respond(dialPlanDetails);
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/clusters/' + uuids.clusterId + '/dialplandetails?dialplan=' + uuids.dialPlanIdNadp).respond(dialPlanDetailsNorthAmerica);
       DialPlanService.getCustomerDialPlanDetails(uuids.orgId).then(function (response) {
-        expect(angular.equals(response, dialPlanDetails)).toBe(true);
+        expect(angular.equals(response, dialPlanDetailsNorthAmerica[0])).toBe(true);
       });
     });
   });
