@@ -68,9 +68,9 @@ angular.module('Mediafusion')
             Notification.notify([$translate.instant('mediaFusion.roleAssignmentSuccess')], 'success');
           })
           .error(function (data, status) {
-              Notification.notify([$translate.instant('mediaFusion.roleAssignmentFailure', {
-                failureMessage: data.message
-              })], 'error');
+            Notification.notify([$translate.instant('mediaFusion.roleAssignmentFailure', {
+              failureMessage: data.message
+            })], 'error');
           });
       };
 
@@ -94,7 +94,7 @@ angular.module('Mediafusion')
             .value();*/
           $scope.currentPropertySet = _.find($scope.groups, function (group) {
             return group.name == $scope.displayName;
-          });  
+          });
 
           if ($scope.currentPropertySet.length === 0) {
             var resp = MediafusionClusterService.createGroup($name);
@@ -106,9 +106,9 @@ angular.module('Mediafusion')
                   Notification.notify([$translate.instant('mediaFusion.groupAssignmentSuccess')], 'success');
                 })
                 .error(function (data, status) {
-                    Notification.notify([$translate.instant('mediaFusion.groupAssignmentFailure', {
-                      failureMessage: data.message
-                    })], 'error');
+                  Notification.notify([$translate.instant('mediaFusion.groupAssignmentFailure', {
+                    failureMessage: data.message
+                  })], 'error');
                 });
             });
           } else {
@@ -125,7 +125,7 @@ angular.module('Mediafusion')
               .value();*/
             $scope.newPropertySet = _.find($scope.groups, function (group) {
               return group.name == $scope.displayName;
-            }); 
+            });
             if ($scope.newPropertySet === undefined || $scope.newPropertySet === '') {
               var createPromise = MediafusionClusterService.createGroup($scope.clusterVal);
               createPromise.finally(function () {
