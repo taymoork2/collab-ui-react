@@ -5,7 +5,7 @@
 
 describe('Hunt Group EditCtrl Controller', function () {
 
-  var hgEditCtrl, $rootScope, $scope, $q, $state, $timeout, Authinfo, HuntGroupService, Notification, form;
+  var hgEditCtrl, $rootScope, $scope, $q, $state, $stateParams, $timeout, Authinfo, HuntGroupService, Notification, form;
   var hgFeature = getJSONFixture('huron/json/features/edit/featureDetails.json');
   var numbers = [{
     "internal": "8001",
@@ -32,6 +32,11 @@ describe('Hunt Group EditCtrl Controller', function () {
     var emptyForm = function () {
       return true;
     };
+    $stateParams = {
+      feature: {
+        huntGroupId: '111'
+      }
+    };
     form = {
       '$invalid': false,
       $setDirty: emptyForm,
@@ -47,6 +52,7 @@ describe('Hunt Group EditCtrl Controller', function () {
     spyOn(HuntGroupService, 'getNumbersWithSelection').and.returnValue($q.when());
     hgEditCtrl = $controller('HuntGroupEditCtrl', {
       $state: $state,
+      $stateParams: $stateParams,
       $timeout: $timeout,
       Authinfo: Authinfo,
       HuntGroupService: HuntGroupService,

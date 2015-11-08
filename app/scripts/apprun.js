@@ -16,6 +16,8 @@ angular
       var storedParams = 'storedParams';
       var queryParams = 'queryParams';
 
+      Config.setProductionBackend($location.search().backend);
+
       $rootScope.$on('$stateChangeStart', function (e, to, toParams) {
 
         if (typeof to.authenticate === 'undefined' || to.authenticate) {

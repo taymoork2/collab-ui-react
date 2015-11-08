@@ -11,14 +11,12 @@
 
     /* jshint validthis: true */
 
-    var feature;
     var customerId = Authinfo.getOrgId();
     var service = {
       getListOfHuntGroups: getListOfHuntGroups,
       deleteHuntGroup: deleteHuntGroup,
       saveHuntGroup: saveHuntGroup,
       updateHuntGroup: updateHuntGroup,
-      editFeature: editFeature,
       getDetails: getDetails,
       getNumbersWithSelection: getNumbersWithSelection,
       getMemberInfo: getMemberInfo,
@@ -306,10 +304,6 @@
       // return deferred.promise;
     }
 
-    function editFeature(_feature) {
-      feature = _feature;
-    }
-
     function getNumbersWithSelection(numbers) {
       var deferred = $q.defer();
 
@@ -330,60 +324,12 @@
       return deferred.promise;
     }
 
-    function getDetails(customerId) {
-      var deferred = $q.defer();
-      if (feature) {
+    function getDetails(customerId, huntGroupId) {
 
-        return HuntGroupServiceV2.get({
-          customerId: customerId,
-          huntGroupId: feature.huntGroupId
-        }).$promise;
-
-        // var successResponse = {
-        //   "name": "Technical Difficulties",
-        //   "numbers": [{
-        //     "number": "972-405-2102"
-        //   }, {
-        //     "number": "972-405-2103"
-        //   }],
-        //   "huntMethod": "longest-idle",
-        //   "maxRingSecs": 30,
-        //   "maxWaitMins": 40,
-        //   "fallbackDestination": {
-        //     "number": "8177777777",
-        //     "numberUuid": "2342-2342-23423-234898",
-        //     "userName": "bspence",
-        //     "userUuid": "97898-86823-34545-234234",
-        //     "sendToVoicemail": true
-        //   },
-        //   "members": [{
-        //     "userName": "Brian Spence",
-        //     "userUuid": "97898-86823-34545-234234",
-        //     "number": "8177777777",
-        //     "numberUuid": "2342-2342-23423-234898"
-        //   }, {
-        //     "userName": "Sam Williams",
-        //     "userUuid": "97898-86823-34545-234235",
-        //     "number": "8166666666",
-        //     "numberUuid": "2342-2342-23423-234899"
-        //   }]
-        // };
-
-        // var failureResponse = {
-        //   'data': 'Internal Server Error',
-        //   'status': 500,
-        //   'statusText': 'Internal Server Error'
-        // };
-
-        // $timeout(function () {
-        //   deferred.resolve(successResponse);
-        //   //deferred.reject(failureResponse);
-        // }, 3000);
-
-      } else {
-        deferred.reject('error');
-      }
-      return deferred.promise;
+      return HuntGroupServiceV2.get({
+        customerId: customerId,
+        huntGroupId: huntGroupId
+      }).$promise;
     }
 
     function getMemberInfo(customerId, userId) {

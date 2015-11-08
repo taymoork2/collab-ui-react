@@ -11,7 +11,7 @@ var utils = require('./test.utils.js');
 //   utils.getToken().then(function(token) {
 //     var options = {
 //       method: 'delete',
-//       url: config.adminServiceUrl.integration + 'trials/' + trialId,
+//       url: config.getAdminServiceUrl() + 'trials/' + trialId,
 //       headers: {
 //         'Content-Type': 'application/json',
 //         Authorization: 'Bearer ' + token
@@ -35,7 +35,7 @@ exports.deleteOrg = function (orgId, token) {
 
   var options = {
     method: 'delete',
-    url: config.adminServiceUrl.integration + 'organizations/' + orgId,
+    url: config.getAdminServiceUrl() + 'organizations/' + orgId,
     headers: {
       'Content-Type': 'application/json',
       Authorization: 'Bearer ' + token

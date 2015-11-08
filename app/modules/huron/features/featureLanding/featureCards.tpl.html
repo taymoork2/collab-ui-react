@@ -21,7 +21,7 @@
           </span>
         </div>
       </header>
-      <section>
+      <section class="card-body" ng-click="huronFeaturesCtrl.editHuronFeature((huronFeature))">
         <div class="card-section">
           <span class="card-section-num" ng-if="(huronFeature.numbers.length <= 2)"
                 ng-repeat="number in huronFeature.numbers">{{number | telephoneNumber}}</span>

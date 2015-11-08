@@ -59,6 +59,8 @@ exports.config = {
     jasmine.getEnv().addReporter(new FailFast());
     browser.ignoreSynchronization = true;
 
+    global.isProductionBackend = browser.params.isProductionBackend === 'true';
+
     global.log = function (message) {
       if (browser.params.log == 'true') {
         console.log(message);
@@ -109,6 +111,7 @@ exports.config = {
     var ActivatePage = require('./test/e2e-protractor/pages/activate.page.js');
     var SpacesPage = require('./test/e2e-protractor/pages/spaces.page.js');
     var CallRoutingPage = require('./test/e2e-protractor/pages/callrouting.page.js');
+    var AutoAttendantPage = require('./test/e2e-protractor/pages/autoattendant.page.js');
     var PartnerHomePage = require('./test/e2e-protractor/pages/partner.page.js');
     var TelephonyPage = require('./test/e2e-protractor/pages/telephony.page.js');
     var PartnerPage = require('./test/e2e-protractor/pages/partner.page.js');
@@ -145,6 +148,7 @@ exports.config = {
     global.activate = new ActivatePage();
     global.spaces = new SpacesPage();
     global.callrouting = new CallRoutingPage();
+    global.autoattendant = new AutoAttendantPage();
     global.partner = new PartnerHomePage();
     global.telephony = new TelephonyPage();
     global.partner = new PartnerPage();

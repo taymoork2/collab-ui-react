@@ -24,6 +24,7 @@
     vm.fetchNumbers = fetchNumbers;
     vm.unSelectPilotNumber = unSelectPilotNumber;
     vm.fetchHuntMembers = fetchHuntMembers;
+    vm.fetchFallbackDestination = fetchFallbackDestination;
     vm.getDisplayName = getDisplayName;
     vm.cancelModal = cancelModal;
     vm.evalKeyPress = evalKeyPress;
@@ -37,6 +38,8 @@
     vm.selectedPilotNumber = undefined;
     vm.selectedPilotNumbers = [];
     vm.selectedHuntMembers = [];
+    vm.selectedFallbackMember = undefined;
+    vm.selectedFallbackNumber = undefined;
     vm.pageIndex = 0;
     vm.animation = 'slide-left';
     vm.huntGroupName = '';
@@ -48,9 +51,14 @@
     };
     vm.huntGroupMethod = vm.hgMethods.longestIdle;
     vm.userSelected = undefined;
-    vm.users = [];
 
-    // ==============================================
+    // ==================================================
+    // The below methods have elevated access only to be
+    // called from unit testing.
+    // ==================================================
+    vm.populateHuntPilotNumbers = populateHuntPilotNumbers;
+    vm.populateHuntMembers = populateHuntMembers;
+    vm.populateFallbackDestination = populateFallbackDestination;
 
     function toggleMemberPanel(userUuid) {
       if (vm.openMemberPanelUuid === userUuid) {
@@ -72,6 +80,12 @@
       return HuntGroupService.getHuntMembers(
         'name', nameHint,
         vm.selectedHuntMembers,
+        onFailureNotify('huronHuntGroup.nameFetchFailure'));
+    }
+
+    function fetchFallbackDestination(nameHint) {
+      return HuntGroupService.getHuntMembers(
+        'name', nameHint, [], // We don't need filtering.
         onFailureNotify('huronHuntGroup.nameFetchFailure'));
     }
 
@@ -178,29 +192,17 @@
     }
 
     function selectFallback($item) {
-      vm.fallback = undefined;
-      var numbers = [];
-      vm.fallbackSelected = {};
-      vm.fallbackSelected.userName = $item.userName;
-      vm.fallbackSelected.uuid = $item.uuid;
-      $item.numbers.forEach(function (value) {
-        var number = value;
-        if (number.isSelected) {
-          vm.fallbackSelected.number = number.internal;
-          vm.fallbackSelected.selectedNumberUuid = number.uuid;
-        }
-        var newvalue = {
-          internal: number.internal,
-          external: number.external,
-          value: number.internal,
-          name: 'FallbackRadio',
-          id: 'internal',
-          uuid: number.uuid
-        };
+      vm.selectedFallbackNumber = undefined;
+      vm.selectedFallbackMember = {
+        member: $item,
+        number: "",
+        sendToVoicemail: false,
+        openPanel: false
+      };
 
-        numbers.push(newvalue);
+      HuntGroupService.getMemberInfo(customerId, $item.user.uuid).then(function (user) {
+        vm.selectedFallbackMember.member.user.email = user.email;
       });
-      vm.fallbackSelected.userNumber = numbers;
     }
 
     function setHuntMethod(methodSelected) {
@@ -252,51 +254,72 @@
     }
 
     function validateFallback() {
-      if (vm.fallback !== '') {
-        vm.fallback = TelephoneNumberService.getDIDLabel(vm.fallback);
-        if (TelephoneNumberService.validateDID(vm.fallback)) {
-          vm.fallbackValid = true;
-        } else {
-          vm.fallbackValid = false;
-        }
-      } else {
-        vm.fallbackValid = false;
+      vm.selectedFallbackNumberValid =
+        TelephoneNumberService.validateDID(vm.selectedFallbackNumber);
+
+      if (vm.selectedFallbackNumberValid) {
+        vm.selectedFallbackNumber = TelephoneNumberService.getDIDLabel(vm.selectedFallbackNumber);
       }
     }
 
     function toggleFallback() {
-      vm.fallbackSelected.open = !vm.fallbackSelected.open;
+      vm.selectedFallbackMember.openPanel = !vm.selectedFallbackMember.openPanel;
     }
 
     function removeFallbackDest() {
-      vm.fallbackSelected = undefined;
+      vm.selectedFallbackMember = undefined;
     }
 
     function saveHuntGroup() {
       vm.saveProgress = true;
       var data = {
         name: vm.huntGroupName,
-        numbers: vm.selectedPilotNumber,
         huntMethod: vm.huntGroupMethod,
-        fallbackDestination: vm.fallbackSelected,
-        sendToVoicemail: vm.sendToVoicemail,
-        members: []
       };
-      vm.users.forEach(function (value) {
-        data.members.push(value.number);
-      });
-      if (vm.fallbackValid) {
-        data.fallbackDestination = {};
-        data.fallbackDestination.number = vm.fallback;
-      }
+
+      populateHuntPilotNumbers(data);
+      populateHuntMembers(data);
+      populateFallbackDestination(data);
+
       HuntGroupService.saveHuntGroup(customerId, data).then(function (data) {
         vm.saveProgress = false;
         Notification.success($translate.instant('huronHuntGroup.successSave'));
         $state.go('huronfeatures');
-      }, function () {
+      }, function (error) {
         vm.saveProgress = false;
-        Notification.error($translate.instant('huronHuntGroup.errorSave'));
+        Notification.errorResponse(error, $translate.instant('huronHuntGroup.errorSave'));
       });
+    }
+
+    function populateHuntPilotNumbers(data) {
+      data.numbers = [];
+      vm.selectedPilotNumbers.forEach(function (number) {
+        data.numbers.push({
+          type: number.type,
+          number: number.number
+        });
+      });
+    }
+
+    function populateHuntMembers(data) {
+      data.members = [];
+      vm.selectedHuntMembers.forEach(function (member) {
+        data.members.push(member.selectableNumber.uuid);
+      });
+    }
+
+    function populateFallbackDestination(data) {
+      if (vm.selectedFallbackNumberValid) {
+        data.fallbackDestination = {
+          number: vm.selectedFallbackNumber
+        };
+      } else {
+        data.fallbackDestination = {
+          numberUuid: vm.selectedFallbackMember.member.selectableNumber.uuid,
+          userUuid: vm.selectedFallbackMember.member.uuid,
+          sendToVoicemail: vm.selectedFallbackMember.sendToVoicemail
+        };
+      }
     }
   }
 })();
