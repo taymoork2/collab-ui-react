@@ -12,7 +12,7 @@
     var customerId = Authinfo.getOrgId();
     vm.removeFallbackDest = removeFallbackDest;
     vm.removeHuntMember = removeHuntMember;
-    vm.selectHuntGroupUser = selectHuntGroupUser;
+    vm.selectFallback = selectFallback;
     vm.toggleMembers = toggleMembers;
     vm.toggleFallback = toggleFallback;
     vm.selectHuntMethod = selectHuntMethod;
@@ -56,6 +56,11 @@
             members: data.members,
             fallbackDestination: data.fallbackDestination
           };
+
+          if (vm.model.fallbackDestination.number && vm.model.fallbackDestination.number !== '') {
+            vm.addFallback = true;
+            vm.userSelected = vm.model.fallbackDestination.number;
+          }
 
           HuntGroupService.getNumbersWithSelection(data.numbers).then(function (data) {
             vm.numberoptions = data;
@@ -183,7 +188,7 @@
       }
     }
 
-    function selectHuntGroupUser($item) {
+    function selectFallback($item) {
       var numbers = [];
       vm.model.fallbackDestination = {};
       vm.model.fallbackDestination.userName = $item.userName;
