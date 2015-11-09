@@ -32,8 +32,8 @@ describe('Huron Auto Attendant', function () {
       utils.wait(autoattendant.featureTypeAA, 8000);
       utils.click(autoattendant.featureTypeAA);
 
-      utils.sendKeys(autoattendant.name, deleteUtils.testAAName);
-      utils.sendKeys(autoattendant.name, protractor.Key.ENTER);
+      utils.sendKeys(autoattendant.newAAname, deleteUtils.testAAName);
+      utils.sendKeys(autoattendant.newAAname, protractor.Key.ENTER);
 
       utils.wait(autoattendant.addAANumbers, 8000);
       utils.expectIsDisplayed(autoattendant.addAANumbers);
