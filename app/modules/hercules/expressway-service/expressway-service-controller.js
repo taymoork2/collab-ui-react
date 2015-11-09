@@ -116,12 +116,14 @@
     }
 
     function enableService(serviceId) {
+      vm.waitForEnabled = true;
       ServiceDescriptor.setServiceEnabled(serviceId, true, function (error) {
         if (error !== null) {
           XhrNotificationService.notify("Problems enabling the service");
         }
+        vm.serviceEnabled = true;
+        vm.waitForEnabled = false;
       });
-      vm.serviceEnabled = true;
     }
 
     function showClusterDetails(cluster) {
