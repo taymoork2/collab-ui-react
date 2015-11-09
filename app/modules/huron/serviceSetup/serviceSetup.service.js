@@ -112,7 +112,12 @@
 
       getTimeZones: function () {
         return TimeZoneService.query().$promise;
+      },
+
+      isOverlapping: function (x1, x2, y1, y2) {
+        return Math.max(x1, y1) <= Math.min(x2, y2);
       }
+
     };
   }
 })();

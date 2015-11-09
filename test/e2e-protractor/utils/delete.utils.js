@@ -8,7 +8,7 @@ exports.deleteUser = function (email) {
   return utils.getToken().then(function (token) {
     var options = {
       method: 'delete',
-      url: config.adminServiceUrl.integration + 'user?email=' + encodeURIComponent(email),
+      url: config.getAdminServiceUrl() + 'user?email=' + encodeURIComponent(email),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + token
@@ -24,7 +24,7 @@ exports.deleteUser = function (email) {
 exports.deleteSquaredUCUser = function (customerUuid, userUuid, token) {
   var options = {
     method: 'delete',
-    url: config.squaredUCServiceUrl.integration + 'common/customers/' + customerUuid + '/users/' + userUuid,
+    url: config.getCmiServiceUrl() + 'common/customers/' + customerUuid + '/users/' + userUuid,
     headers: {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + token
@@ -39,7 +39,7 @@ exports.deleteSquaredUCUser = function (customerUuid, userUuid, token) {
 exports.deleteSquaredUCCustomer = function (customerUuid, token) {
   var options = {
     method: 'delete',
-    url: config.squaredUCServiceUrl.integration + 'common/customers/' + customerUuid,
+    url: config.getCmiServiceUrl() + 'common/customers/' + customerUuid,
     headers: {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + token

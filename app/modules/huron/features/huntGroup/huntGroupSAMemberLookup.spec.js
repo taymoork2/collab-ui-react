@@ -4,42 +4,18 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
 
   var $httpBackend, filter, controller, $scope, HuntGroupService, Notification;
 
-  var user1 = {
-    "uuid": "84cfdbb2-5eef-4c25-9f07-41729ce70e20",
-    "numbers": [{
-      "internal": "4001",
-      "external": "972-510-4001",
-      "uuid": "a8f8ee55-d670-4cb2-a73a-f31eacbe09f5"
-    }, {
-      "internal": "1236",
-      "external": "",
-      "uuid": "4b55a097-c117-42a0-b42f-ee7273b0895a"
-    }],
-    "lastName": "Muthuraj",
-    "firstName": "Sundar Rajan",
-    "userName": "sumuthur"
+  var user1 = getJSONFixture('huron/json/features/huntGroup/user1.json');
+  var user2 = getJSONFixture('huron/json/features/huntGroup/user2.json');
+
+  var successResponse = {
+    "users": [user1, user2]
   };
+
   var member1 = {
     uuid: user1.uuid,
     displayUser: true,
     user: user1,
     selectableNumber: user1.numbers[0]
-  };
-
-  var user2 = {
-    "uuid": "d1a3f4db-0ba1-4283-a30c-35d29942e086",
-    "numbers": [{
-      "internal": "4002",
-      "external": "972-510-4002",
-      "uuid": "99d11522-7459-4b06-bb1a-0904d2be0cd4"
-    }, {
-      "internal": "5002",
-      "external": "",
-      "uuid": "a80f3351-fb88-499f-bbc4-e6b42862509c"
-    }],
-    "lastName": "Jaliparthy",
-    "firstName": "Sri Krishna",
-    "userName": "sjalipar"
   };
 
   var member2 = {
@@ -54,10 +30,6 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
       return (elem.uuid == item.uuid);
     })).length > 0;
   }
-
-  var successResponse = {
-    "users": [user1, user2]
-  };
 
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
@@ -97,7 +69,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
     $httpBackend.expectGET(MemberLookupUrl).respond(500);
     controller.fetchHuntMembers("sun").then(function () {
       expect(Notification.errorResponse).toHaveBeenCalledWith(jasmine.anything(),
-        'huronHuntGroup.nameFetchFailure');
+        'huronHuntGroup.memberFetchFailure');
     });
     $httpBackend.flush();
   });
@@ -184,6 +156,20 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
     expect(controller.getDisplayName(user1)).toBe("Sundar Rajan Muthuraj");
     user1.lastName = "";
     expect(controller.getDisplayName(user1)).toBe("Sundar Rajan");
+  });
+
+  it("member pane open works like accordion based on user's uuid.", function () {
+    //toggleMemberPanel is invoked while clicking the card header, with user uuid as argument.
+    controller.openMemberPanelUuid = undefined;
+
+    controller.toggleMemberPanel("user1Uuid"); // user1 header clicked.
+    expect(controller.openMemberPanelUuid).toBe("user1Uuid"); // opens user1 panel.
+    controller.toggleMemberPanel("user1Uuid"); // user1 header clicked again.
+    expect(controller.openMemberPanelUuid).toBeUndefined(); //closes user1 panel.
+
+    controller.toggleMemberPanel("user1Uuid"); // user1 header clicked.
+    controller.toggleMemberPanel("user2Uuid"); // user2 header clicked.
+    expect(controller.openMemberPanelUuid).toBe("user2Uuid"); //shows user2 panel.
   });
 
   function selectHuntMember(member) {

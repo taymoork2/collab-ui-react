@@ -97,7 +97,7 @@
             // Skip current range under validation if it's valid, otherwise we get into a validation loop
             if ((beginNumber === vm.model.numberRanges[i].beginNumber) && (endNumber === vm.model.numberRanges[i].endNumber)) {
               continue;
-            } else if (isOverlapping(beginNumber, endNumber, vm.model.numberRanges[i].beginNumber, vm.model.numberRanges[i].endNumber)) {
+            } else if (ServiceSetup.isOverlapping(beginNumber, endNumber, vm.model.numberRanges[i].beginNumber, vm.model.numberRanges[i].endNumber)) {
               result = false;
             }
           }
@@ -412,10 +412,6 @@
     vm.deleteInternalNumberRange = deleteInternalNumberRange;
     vm.loadExternalNumberPool = loadExternalNumberPool;
     vm.initNext = initNext;
-
-    function isOverlapping(x1, x2, y1, y2) {
-      return Math.max(x1, y1) <= Math.min(x2, y2);
-    }
 
     function initServiceSetup() {
       var errors = [];

@@ -116,12 +116,14 @@
     }
 
     function enableService(serviceId) {
+      vm.waitForEnabled = true;
       ServiceDescriptor.setServiceEnabled(serviceId, true, function (error) {
         if (error !== null) {
           XhrNotificationService.notify("Problems enabling the service");
         }
+        vm.serviceEnabled = true;
+        vm.waitForEnabled = false;
       });
-      vm.serviceEnabled = true;
     }
 
     function showClusterDetails(cluster) {
@@ -195,7 +197,9 @@
       });
     };
 
-    vm.activeActiveApplicable = (vm.serviceType == 'c_cal' || vm.serviceType == 'c_ucmc');
+    //TODO Turn on when active-active is implemented by services
+    //vm.activeActiveApplicable = (vm.serviceType == 'c_cal' || vm.serviceType == 'c_ucmc');
+    vm.activeActiveApplicable = false;
     vm.activeActivePossible = vm.cluster.hosts.length > 1;
     vm.activeActiveEnabled = vm.activeActiveApplicable && isActiveActiveEnabled(vm.cluster, vm.serviceType);
     vm.activeActiveEnabledOld = vm.activeActiveApplicable && isActiveActiveEnabled(vm.cluster, vm.serviceType);

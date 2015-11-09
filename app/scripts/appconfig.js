@@ -1301,9 +1301,9 @@ angular
         .state('huronnewfeature', {
           url: '/newfeature',
           parent: 'hurondetails',
+          templateUrl: 'modules/huron/features/newFeature/newFeature.tpl.html',
           controller: 'NewFeatureCtrl',
-          controllerAs: 'newFeatureCtrl',
-          templateUrl: 'modules/huron/features/newFeature/newFeature.tpl.html'
+          controllerAs: 'newFeatureCtrl'
         })
         .state('huronfeatures.aabuilder', {
           parent: 'hurondetails',
@@ -1355,7 +1355,10 @@ angular
           parent: 'main',
           templateUrl: 'modules/huron/features/edit/huntgroupedit.tpl.html',
           controller: 'HuntGroupEditCtrl',
-          controllerAs: 'hge'
+          controllerAs: 'hge',
+          params: {
+            feature: null
+          }
         });
     }
   ]);
@@ -1676,7 +1679,8 @@ angular
           },
           params: {
             connectorId: {},
-            groupName: {}
+            groupName: {},
+            roleSelected: {}
           }
         })
         .state('connector-details.alarms', {

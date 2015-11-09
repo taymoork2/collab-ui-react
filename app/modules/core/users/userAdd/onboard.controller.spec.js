@@ -3,7 +3,7 @@
 'use strict';
 
 describe('OnboardCtrl: Ctrl', function () {
-  var controller, $scope, $timeout, GroupService, Notification, Userservice, $q, TelephonyInfoService, Orgservice, FeatureToggleService, SyncService, $state;
+  var controller, $scope, $timeout, GroupService, Notification, Userservice, $q, TelephonyInfoService, Orgservice, FeatureToggleService, SyncService, $state, DialPlanService;
   var internalNumbers;
   var externalNumbers;
   var externalNumberPool;
@@ -15,13 +15,14 @@ describe('OnboardCtrl: Ctrl', function () {
   beforeEach(module('Huron'));
   beforeEach(module('Messenger'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$timeout_, _GroupService_, _Notification_, _Userservice_, _TelephonyInfoService_, _$q_, _Orgservice_, _FeatureToggleService_, _SyncService_, _$state_) {
+  beforeEach(inject(function ($rootScope, $controller, _$timeout_, _GroupService_, _Notification_, _Userservice_, _TelephonyInfoService_, _$q_, _Orgservice_, _FeatureToggleService_, _DialPlanService_, _SyncService_, _$state_) {
     $scope = $rootScope.$new();
     $timeout = _$timeout_;
     $q = _$q_;
     $state = _$state_;
     GroupService = _GroupService_;
     Notification = _Notification_;
+    DialPlanService = _DialPlanService_;
     Userservice = _Userservice_;
     Orgservice = _Orgservice_;
     TelephonyInfoService = _TelephonyInfoService_;
@@ -56,6 +57,9 @@ describe('OnboardCtrl: Ctrl', function () {
     spyOn(TelephonyInfoService, 'getInternalNumberPool').and.returnValue(internalNumbers);
     spyOn(TelephonyInfoService, 'loadInternalNumberPool').and.returnValue($q.when(internalNumbers));
     spyOn(TelephonyInfoService, 'getExternalNumberPool').and.returnValue(externalNumbers);
+    spyOn(DialPlanService, 'getCustomerDialPlanDetails').and.returnValue($q.when({
+      extensionGenerated: true
+    }));
     spyOn(TelephonyInfoService, 'loadExternalNumberPool').and.returnValue($q.when(externalNumbers));
     spyOn(TelephonyInfoService, 'loadExtPoolWithMapping').and.returnValue($q.when(externalNumberPoolMap));
     spyOn(Userservice, 'getUser').and.returnValue(getUserMe);
