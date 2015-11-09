@@ -103,7 +103,7 @@
                 id: "WebACD",
                 label: "WebACD",
                 lang: null,
-               pageObjs: null
+                pageObjs: null
               }, {
                 id: "RA",
                 label: "Remote Access",
@@ -559,11 +559,9 @@
                 if ("CommonSettings" == siteSettingCardObjId) {
                   siteSettingCardObj.label = $translate.instant("webexSiteSettingsLabels.commonSettingsCardTitle");
                   siteSettingCardObj.comment = $translate.instant("webexSiteSettingsLabels.commonSettingsCardNote");
+                } else {
+                  siteSettingCardObj.lang = "en"; //Centre names are in English
                 }
-                else
-                	{
-                	siteSettingCardObj.lang = "en"; //Centre names are in English
-                	}
 
                 var categoryObj = _this.getCategoryObj(siteSettingCardObjId);
                 siteSettingCardObj.pageObjs = categoryObj.pageObjs;
