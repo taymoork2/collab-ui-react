@@ -2,10 +2,9 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskLandingController($q, $timeout) {
+  function HelpdeskLandingController($timeout) {
     var vm = this;
     vm.search = search;
-    vm.selectSearchResult = selectSearchResult;
     vm.searchingForUsers = false;
     vm.searchingForOrgs = false;
     vm.searchResults = null;
@@ -23,16 +22,12 @@
       }, 200);
     }
 
-    function selectSearchResult(result) {
-
-    }
-
     vm.mockUsers = [
       {
-        "id": "7c9cfe25-2981-4062-af7a-98d7f4d3097d",
-        "organizationId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
-        "userName": "thomitte@cisco.com",
-        "displayName": "Thomas Mittet (thomitte)",
+        "id": "a56ab29e-f8c5-41fb-b169-a5be0b32fb3a",
+        "organizationId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "userName": "helgelangehaug@gmail.com",
+        "displayName": "helgelangehaug@gmail.com",
         "phoneNumbers": [
           {
             "type": "work",
@@ -45,17 +40,17 @@
         ]
       },
       {
-        "id": "8c9cfe25-2981-4062-af7a-98d7f4d3097d",
-        "organizationId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
-        "userName": "tvasset@cisco.com",
-        "displayName": "Tom Vasset (tvasset)",
+        "id": "d1c75b63-edc8-4eb3-afdc-c116f25278d2",
+        "organizationId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "userName": "jewagner56@icloud.com",
+        "displayName": "jewagner56@icloud.com",
         "phoneNumbers": []
       }];
 
     vm.mockOrgs = [
       {
-        "id": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
-        "displayName": "Cisco Systems, Inc."
+        "id": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "displayName": "Fusion System Test"
       }
     ];
   }

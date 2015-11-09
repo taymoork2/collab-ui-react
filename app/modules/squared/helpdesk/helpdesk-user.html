@@ -1,4 +1,83 @@
-<div>
-  <h1>User</h1>
-  {{helpdeskUserCtrl.user.displayName}}
+<div class="helpdesk-details">
+  <h1>{{helpdeskUserCtrl.user.displayName}} <span style="margin-left: 3rem;"><i class="icon icon-search"></i><a
+    ui-sref="helpdesk.landing">Back to
+    Search</a></span></h1>
+
+  <div class="medium-6 columns">
+    <table class="table">
+      <tbody>
+      <tr>
+        <td colspan="2">
+          <i class="icon icon-circle"
+             ng-class="helpdeskUserCtrl.user.userStatus == 'pending' ? 'helpdesk-yellow' : 'helpdesk-green'"></i>
+          <span class="helpdesk-yellow" ng-if="helpdeskUserCtrl.user.userStatus == 'pending'">Pending</span>
+          <span class="helpdesk-green" ng-if="helpdeskUserCtrl.user.userStatus !== 'pending'">Active</span>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span>User ID / Email Address</span>
+        </td>
+        <td>
+          <span>{{helpdeskUserCtrl.user.userName}}</span>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span>First Name</span>
+        </td>
+        <td>
+          <span>{{helpdeskUserCtrl.user.name.givenName}}</span>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span>Last Name</span>
+        </td>
+        <td>
+          <span>{{helpdeskUserCtrl.user.name.familyName}}</span>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span>Roles</span>
+        </td>
+        <td>
+          <span
+            ng-repeat="role in helpdeskUserCtrl.user.roles">{{'roles.' + role | translate }}{{$last ? '' : ', '}}</span>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="medium-6 columns">
+    <table class="table">
+      <tbody>
+      <tr>
+        <td>
+          <span>Organization</span>
+        </td>
+        <td>
+          <span>{{helpdeskUserCtrl.org.displayName}}</span>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <i class="icon icon-circle"
+             ng-class="helpdeskUserCtrl.org.ssoEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
+          <span>SSO</span>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <i class="icon icon-circle"
+             ng-class="helpdeskUserCtrl.org.dirsyncEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
+          <span>Directory Sync</span>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
 </div>

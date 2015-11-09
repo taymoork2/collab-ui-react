@@ -4,7 +4,6 @@
 
     <div class="typeahead-large" style="text-align: left;">
       <input id="numberInput" type="text"
-             ng-model="helpdeskLandingCtrl.selectedSearchResult"
              placeholder="Search user or customer"/>
       <button class="button secondary" ng-click="helpdeskLandingCtrl.search()">Search</button>
       <p class="input-description">Search users by email address / name or customers by name</p>
@@ -22,11 +21,12 @@
 
             <p>Searching for users, please wait...</p>
           </div>
-          <table class="table helpdesk-search-results-table"
+          <table class="table"
                  ng-if="!helpdeskLandingCtrl.searchingForUsers && helpdeskLandingCtrl.userSearchResults">
             <tbody>
             <tr ng-repeat="user in helpdeskLandingCtrl.userSearchResults">
-              <td><a ui-sref-active="active" ui-sref="helpdesk,user({user:user})">{{user.displayName}}</a></td>
+              <td><span><a ui-sref-active="active" ui-sref="helpdesk.user({user:user})">{{user.displayName}}</a></span>
+              </td>
               <td><span>{{user.userName}}</span></td>
             </tr>
             </tbody>
@@ -53,7 +53,7 @@
           <div class="org-list"
                ng-if="!helpdeskLandingCtrl.searchingForOrgs && helpdeskLandingCtrl.orgSearchResults.length > 0"
                ng-repeat="org in helpdeskLandingCtrl.orgSearchResults">
-            <a ui-sref="helpdesk.org({org:org})">{{org.displayName}}</a>
+            <span><a ui-sref="helpdesk.org({org:org})">{{org.displayName}}</a></span>
           </div>
           <div ng-if="!helpdeskLandingCtrl.searchingForOrgs && helpdeskLandingCtrl.orgSearchResults.length == 0">
             <p>No matching customers found. Try to narrow your search...</p>
