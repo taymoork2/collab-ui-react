@@ -38,6 +38,7 @@ module.exports = function() {
         app + '/scripts/**/*.js',
         '!' + app + '/modules/**/*.spec.js',
       ],
+      ts: [app + '/**/*.ts'],
       json: [app + '/**/*.json'],
       csv: [app + '/**/*.csv'],
       tpl: [app + '/modules/**/*.html'],
@@ -66,6 +67,8 @@ module.exports = function() {
       },
       dest: build + '/modules/core/templates'
     },
+    
+    typeDefs: ['typings/**/*.ts'],
 
     testFiles: {
       karmaTpl: 'karma/karma-conf.tpl.js',

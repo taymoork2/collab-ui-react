@@ -5,13 +5,7 @@ describe('WebexReportService Test', function () {
 
   //load the service's module
   //beforeEach(module('wx2AdminWebClientApp'));
-  beforeEach(module('wx2AdminWebClientApp', function ($provide) {
-    $provide.value("$translate", {
-      'use': function () {
-        return "en_US.json";
-      }
-    });
-  }));
+  beforeEach(module('wx2AdminWebClientApp'));
 
   // beforeEach(module(function ($provide) {
   //   $provide.value("$translate", {
@@ -21,25 +15,27 @@ describe('WebexReportService Test', function () {
   //   });
   // }));
   //Initialize variables
-  var WebexReportService, httpBackend, WebExUtilsFact, $provide, testReports, $translate, reportService;
+  var WebexReportService, httpBackend, WebExUtilsFact, testReports, $translate, reportService;
 
-  beforeEach(inject(function ($httpBackend, _WebexReportService_, _$provide_, _$translate_) {
+  beforeEach(inject(function ($httpBackend, _WebexReportService_, _$translate_) {
 
     //httpBackend = $httpBackend;
+    var useLocale = "en_US";
 
-    $provide = _$provide_;
     WebexReportService = _WebexReportService_;
     httpBackend = $httpBackend;
 
-    $translate = {
-      'use': function () {
-        return "en_US.json";
-      }
-    };
+    // $translate = {
+    //   'use': function () {
+    //     return "en_US.json";
+    //   }
+    // };
     $translate = _$translate_;
-    $translate.use = function () {
-      return "en_US.json";
-    };
+    // $translate.use = function () {
+    //   return "en_US.json";
+    // };
+    //spyOn($translate, 'use').and.returnValue(useLocale);
+    //spyOn($translate, 'storageKey').and.returnValue(useLocale);
 
     //WebExUtilsFact = _WebExUtilsFact_;
 
@@ -49,30 +45,31 @@ describe('WebexReportService Test', function () {
     //   $translate: $translate
     // });
 
-    testReports = WebexReportService.ReportsSection("testReports",
+    testReports = new WebexReportService.ReportsSection("testReports",
       "mojoco.webex.com", ["x", "y"],
       "testReportsCat");
 
   }));
 
-  // it("WebexReportService should be defined", function () {
-  //   expect(WebexReportService).toBeDefined();
-  // });
+  it("Test of a test", function () {
+    //expect(WebexReportService).toBeDefined();
+    expect("x").toBe("x");
+  });
 
-  // it("webex: can reverse mapping", function () {
-  //   var mapping = {
-  //     "x": "y",
-  //     "w": "z"
-  //   };
-  //   var reversedMap = WebexReportService.reverseMapping(mapping);
-  //   var x = reversedMap["y"];
-  //   var w = reversedMap["z"];
-  //   expect(x).toBe("x");
-  //   expect(w).toBe("w");
-  // });
+  it("webex: can reverse mapping", function () {
+    var mapping = {
+      "x": "y",
+      "w": "z"
+    };
+    var reversedMap = WebexReportService.reverseMapping(mapping);
+    var x = reversedMap["y"];
+    var w = reversedMap["z"];
+    expect(x).toBe("x");
+    expect(w).toBe("w");
+  });
 
-  // it("webex: reports section has correct section name", function () {
-  //   expect(testReports.section_name).toBe("testReports");
-  // });
+  it("webex: reports section has correct section name", function () {
+    expect(testReports.section_name).toBe("testReports");
+  });
 
 });
