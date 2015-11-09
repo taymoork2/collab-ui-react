@@ -7,10 +7,10 @@
   </h2>
 
   <p ng-if="exp.currentServiceId != 'squared-fusion-mgmt'">
-    <button translate="{{'hercules.activateService.label'}}" style="margin-top: 20px;" class="button info large" ng-click="exp.enableService(exp.currentServiceId)">
+    <button ng-disabled="exp.waitForEnabled" translate="{{'hercules.activateService.label'}}" style="margin-top: 20px;" class="button info large" ng-click="exp.enableService(exp.currentServiceId)">
     </button>
   </p>
-  <br>
+  <i ng-show="exp.waitForEnabled" class="icon icon-spinner icon"></i>
 
   <p translate="{{'hercules.serviceDescriptions.' + exp.currentServiceId}}"></p>
 
