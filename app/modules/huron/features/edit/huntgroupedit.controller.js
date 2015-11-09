@@ -276,7 +276,7 @@
               value.name = 'MemberRadios';
               value.id = 'value.external';
 
-              if(item.numberUuid === value.uuid) {
+              if (item.numberUuid === value.uuid) {
                 item.selectedNumberUuid = value.uuid;
               }
             });
@@ -300,7 +300,7 @@
               value.name = 'MemberRadios';
               value.id = 'value.external';
 
-              if(vm.model.fallbackDestination.numberUuid === value.uuid) {
+              if (vm.model.fallbackDestination.numberUuid === value.uuid) {
                 vm.model.fallbackDestination.selectedNumberUuid = value.uuid;
               }
             });
