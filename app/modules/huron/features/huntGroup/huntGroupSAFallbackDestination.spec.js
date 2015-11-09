@@ -43,9 +43,10 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
   };
 
-  var MemberLookupUrl = new RegExp(".*/customers/1/users.*");
-  var GetMemberUrl = new RegExp(".*/customers/1/users/.*");
-  var SaveHuntGroupUrl = new RegExp(".*/customers/1/features/huntgroups.*");
+  var MemberLookupUrl = new RegExp(".*/api/v2/customers/1/users.*");
+  var GetNumberUrl = new RegExp(".*/api/v2/customers/1/numbers.*");
+  var GetMemberUrl = new RegExp(".*/api/v2/customers/1/users/.*");
+  var SaveHuntGroupUrl = new RegExp(".*/api/v2/customers/1/features/huntgroups.*");
 
   beforeEach(module('Huron'));
 
@@ -104,9 +105,8 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
     expect(controller.selectedFallbackNumberValid).toBeFalsy();
   });
 
-  it("should validate the fallback number if entered invalid", function () {
-    controller.selectedFallbackNumber = "8179325798";
-    controller.validateFallback();
+  it("should validate the external fallback number correctly.", function () {
+    expectFallbackNumberSuggestion("8179325798", []); // no internal match found.
     $scope.$apply();
 
     expect(controller.selectedFallbackNumberValid).toBeTruthy();
@@ -139,8 +139,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
   });
 
   it("should be able to create Hunt Group with fallback number", function () {
-    controller.selectedFallbackNumber = "8179325798";
-    controller.validateFallback();
+    expectFallbackNumberSuggestion("8179325798", []); // no internal match found.
     $scope.$apply();
 
     spyOn($state, 'go');
@@ -167,8 +166,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
   });
 
   it("should notify with an error when create hunt group fails", function () {
-    controller.selectedFallbackNumber = "8179325798";
-    controller.validateFallback();
+    expectFallbackNumberSuggestion("8179325798", []); // no internal match found.
     $scope.$apply();
 
     spyOn($state, 'go');
@@ -216,8 +214,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
     };
     expect(data.fallbackDestination).toBeUndefined();
 
-    controller.selectedFallbackNumber = "8179325798";
-    controller.validateFallback();
+    expectFallbackNumberSuggestion("8179325798", []); // no internal match found.
 
     controller.populateFallbackDestination(data);
 
@@ -246,6 +243,15 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
     expect(data.fallbackDestination.userUuid).toBe(
       fallbackMember1.uuid);
   });
+
+  function expectFallbackNumberSuggestion(inNumber, outArray) {
+    controller.selectedFallbackNumber = inNumber;
+    $httpBackend.expectGET(GetNumberUrl).respond(200, {
+      numbers: outArray
+    });
+    controller.validateFallback();
+    $httpBackend.flush();
+  }
 
   function selectFallbackMember(fbMember) {
     $httpBackend.expectGET(GetMemberUrl).respond(200, fbMember.user);
