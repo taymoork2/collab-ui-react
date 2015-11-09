@@ -329,10 +329,11 @@
       // return deferred.promise;
     }
 
-    function updateHuntGroup(customerId, details) {
+    function updateHuntGroup(customerId, huntGroupId, huntGroupData) {
       return HuntGroupServiceV2.update({
-        customerId: customerId
-      }).$promise;
+        customerId: customerId,
+        huntGroupId: huntGroupId
+      }, huntGroupData).$promise;
 
       // Following code is used to mock back-end
       // var successResponse = {
