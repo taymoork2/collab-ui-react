@@ -954,7 +954,6 @@
       "softwareUpgrade": "Software Upgrade",
       "currentVersion": "Current Version",
       "newVersion": "New Version",
-      "noNewAvailable": "No new software available",
       "upgrade": "Upgrade"
     }
   },
