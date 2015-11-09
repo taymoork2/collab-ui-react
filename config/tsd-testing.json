@@ -1,0 +1,27 @@
+{
+  "version": "v4",
+  "repo": "borisyankov/DefinitelyTyped",
+  "ref": "master",
+  "path": "../typings",
+  "bundle": "../typings/tsd-testing.d.ts",
+  "installed": {
+    "jasmine-promise-matchers/jasmine-promise-matchers.d.ts": {
+      "commit": "7a3ca1f0b8a0960af9fc1838f3234cc9d6ce0645"
+    },
+    "jasmine-jquery/jasmine-jquery.d.ts": {
+      "commit": "7a3ca1f0b8a0960af9fc1838f3234cc9d6ce0645"
+    },
+    "jasmine/jasmine.d.ts": {
+      "commit": "7a3ca1f0b8a0960af9fc1838f3234cc9d6ce0645"
+    },
+    "karma-jasmine/karma-jasmine.d.ts": {
+      "commit": "7a3ca1f0b8a0960af9fc1838f3234cc9d6ce0645"
+    },
+    "karma/karma.d.ts": {
+      "commit": "7a3ca1f0b8a0960af9fc1838f3234cc9d6ce0645"
+    },
+    "selenium-webdriver/selenium-webdriver.d.ts": {
+      "commit": "001ca36ba58cef903c4c063555afb07bbc36bb58"
+    }
+  }
+}

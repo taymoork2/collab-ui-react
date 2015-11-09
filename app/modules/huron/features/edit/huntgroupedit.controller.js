@@ -199,16 +199,19 @@
 
     function selectFallback($item) {
       var numbers = [];
-      vm.model.fallbackDestination = {};
-      vm.model.fallbackDestination.userName = $item.userName;
-      vm.model.fallbackDestination.uuid = $item.uuid;
-      $item.numbers.forEach(function (value) {
+
+      vm.model.fallbackDestination = {
+        userUuid: $item.uuid,
+        userName: $item.user.firstName + " " + $item.user.lastName,
+        number: $item.selectableNumber.number,
+        numberUuid: $item.selectableNumber.uuid,
+        selectedNumberUuid: $item.selectableNumber.uuid,
+        sendToVoicemail: false
+      };
+
+      $item.user.numbers.forEach(function (value) {
         var number = value;
-        if (number.isSelected) {
-          vm.model.fallbackDestination.number = number.internal;
-          vm.model.fallbackDestination.selectedNumberUuid = number.uuid;
-        }
-        var newvalue = {
+        var newValue = {
           internal: number.internal,
           external: number.external,
           value: number.internal,
@@ -217,7 +220,7 @@
           uuid: number.uuid
         };
 
-        numbers.push(newvalue);
+        numbers.push(newValue);
       });
       vm.model.fallbackDestination.numbers = numbers;
       vm.addFallback = false;
@@ -242,7 +245,7 @@
           dataToStrip: vm.model.members
         });
 
-        return GetHuntMembers.result();
+        return GetHuntMembers.fetch();
       }
 
       return [];

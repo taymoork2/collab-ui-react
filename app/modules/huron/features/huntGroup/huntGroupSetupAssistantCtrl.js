@@ -88,7 +88,7 @@
           dataToStrip: vm.selectedPilotNumbers
         });
 
-        return GetPilotNumbers.result();
+        return GetPilotNumbers.fetch();
       }
 
       return [];
@@ -102,7 +102,7 @@
         if (filter) {
           GetHuntMembers.setFilter(filter);
         }
-        return GetHuntMembers.result();
+        return GetHuntMembers.fetch();
       }
 
       return [];
@@ -216,7 +216,6 @@
     }
 
     function selectFallback($item) {
-      vm.selectedFallbackNumber = undefined;
       vm.selectedFallbackMember = {
         member: $item,
         number: "",
@@ -277,7 +276,38 @@
       }
     }
 
+    function needNumberValidation() {
+      return (vm.selectedFallbackNumber && !isNaN(vm.selectedFallbackNumber));
+    }
+
     function validateFallback() {
+      if (!needNumberValidation()) {
+        return;
+      }
+
+      var internalNumValidator =
+        HuntGroupService.isFallbackNumberValid(vm.selectedFallbackNumber);
+
+      if (internalNumValidator) {
+        internalNumValidator.setOnFailure(onFailureNotify('huronHuntGroup.numberFetchFailure'));
+        internalNumValidator.fetch().then(function (data) {
+          if (data.length === 0) {
+            // no internal number found, check for a valid external number match.
+            validateFallbackForNonHuronUser();
+          } else {
+            // Either 1 or more internal match found, check for absolute match.
+            data.forEach(function (n) {
+              if (n.number === vm.selectedFallbackNumber) {
+                vm.selectedFallbackNumberValid = true;
+                vm.selectedFallbackNumber = TelephoneNumberService.getDIDLabel(vm.selectedFallbackNumber);
+              }
+            });
+          }
+        });
+      }
+    }
+
+    function validateFallbackForNonHuronUser() {
       vm.selectedFallbackNumberValid =
         TelephoneNumberService.validateDID(vm.selectedFallbackNumber);
 

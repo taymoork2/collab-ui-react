@@ -22,7 +22,8 @@
       getNumbersWithSelection: getNumbersWithSelection,
       getMemberInfo: getMemberInfo,
       getPilotNumberSuggestions: getPilotNumberSuggestions,
-      getHuntMembers: getHuntMembers
+      getHuntMembers: getHuntMembers,
+      isFallbackNumberValid: isFallbackNumberValid
     };
 
     return service;
@@ -31,7 +32,7 @@
       if (suggestionsNeeded(hint)) {
         var helper = getServiceHelper();
         helper.setService(UserSearchServiceV2);
-        helper.fetch({
+        helper.setApiArgs({
           name: hint
         });
         helper.setExtractData(function (data) {
@@ -43,20 +44,33 @@
       return undefined;
     }
 
-    function getPilotNumberSuggestions(hint) {
+    function getNumbers() {
+      var helper = getServiceHelper();
+      helper.setService(NumberSearchServiceV2);
+      helper.setExtractData(function (data) {
+        return data.numbers;
+      });
+      return helper;
+    }
+
+    function getNumberSuggestions(hint, assigned) {
       if (suggestionsNeeded(hint)) {
-        var helper = getServiceHelper();
-        helper.setService(NumberSearchServiceV2);
-        helper.fetch({
+        var helper = getNumbers();
+        helper.setApiArgs({
           number: hint,
-          assigned: false
-        });
-        helper.setExtractData(function (data) {
-          return data.numbers;
+          assigned: assigned
         });
         return helper;
       }
       return undefined;
+    }
+
+    function getPilotNumberSuggestions(hint) {
+      return getNumberSuggestions(hint, false); // hunt pilots are unassigned numbers.
+    }
+
+    function isFallbackNumberValid(hint) {
+      return getNumberSuggestions(hint, true); // fallback destination are assigned numbers.
     }
 
     /**
@@ -73,6 +87,7 @@
       var filter = '';
       var mapping = '';
       var service = '';
+      var apiArgs = '';
 
       var valid = function (data) {
         return (data !== '');
@@ -132,13 +147,14 @@
         setService: function (s) {
           service = s;
         },
-        fetch: function (apiArgs) {
+        setApiArgs: function (args) {
+          apiArgs = args;
           apiArgs.customerId = customerId;
+        },
+        fetch: function () {
           service.get(apiArgs).$promise
             .then(main)
             .catch(fail);
-        },
-        result: function () {
           return asyncResult.promise;
         }
       };
@@ -197,7 +213,7 @@
     }
 
     function suggestionsNeeded(typedText) {
-      return (typedText.length >= 3);
+      return (typedText && typedText.length >= 3);
     }
 
     function getListOfHuntGroups(customerId) {
@@ -205,75 +221,6 @@
       return HuntGroupServiceV2.get({
         customerId: customerId
       }).$promise;
-
-      //Following code is used to mock back-end and will be deleted when back-end gets ready
-      //   var successResponseData = {
-      //     'url': '/customers/' + customerId + '/features/huntgroups',
-      //     'items': [{
-      //       'uuid': 'abcd1234-abcd-abcd-abcddef123456',
-      //       'name': 'Technical Support',
-      //       'numbers': ['3011', '(414) 555-1244'],
-      //       'memberCount': 2
-      //     }, {
-      //       'uuid': 'dbcd1234-abcd-abcd-abcddef123456',
-      //       'name': 'Groceries',
-      //       'numbers': ['5076', '(127) 456-7890'],
-      //       'memberCount': 81
-      //     }, {
-      //       'uuid': 'bbcd1234-abcd-abcd-abcddef123456',
-      //       'name': 'Marketing Department',
-      //       'numbers': ['5076', '(124) 456-7890', '(414) 555-1244', '(414) 555-1245'],
-      //       'memberCount': 16
-      //     }, {
-      //       'uuid': 'cbcd1234-abcd-abcd-abcddef123456',
-      //       'name': 'Sales, Billing and Customer Support',
-      //       'numbers': ['5076'],
-      //       'memberCount': 64
-      //     }, {
-      //       'uuid': 'ebcd1234-abcd-abcd-abcddef123456',
-      //       'name': 'Billing',
-      //       'numbers': ['5076-5078'],
-      //       'memberCount': 10
-      //     }, {
-      //       'uuid': 'fbcd1234-abcd-abcd-abcddef123456',
-      //       'name': 'SalesTeam',
-      //       'numbers': ['(124) 456-7890', '(414) 555-1244', '(414) 555-1245'],
-      //       'memberCount': 100
-      //     }, {
-      //       'uuid': 'fbcd1234-abcd-abcd-abcddef123456',
-      //       'name': 'SlackTeamSupport',
-      //       'numbers': ['(124) 456-7890', '(414) 555-1244', '(414) 555-1245'],
-      //       'memberCount': 101
-      //     }, {
-      //       'uuid': 'fbcd1234-abcd-abcd-abcddef123456',
-      //       'name': 'CarProblems',
-      //       'numbers': ['(124) 456-7890', '(414) 555-1244', '(414) 555-1245'],
-      //       'memberCount': 101
-      //     }]
-      //   };
-
-      //   var emptyData = {
-      //     'url': '/customers/' + customerId + '/features/huntgroups',
-      //     'items': []
-      //   };
-
-      //   var successResponse = {
-      //     'data': successResponseData,
-      //     //'data': emptyData,
-      //     'status': 200,
-      //     'statusText': 'OK'
-      //   };
-      //   var failureResponse = {
-      //     'data': 'Internal Server Error',
-      //     'status': 500,
-      //     'statusText': 'Internal Server Error'
-      //   };
-
-      //   var deferred = $q.defer();
-      //   deferred.resolve(successResponse);
-      //   //deferred.resolve(emptyData);
-      //   //deferred.reject(failureResponse);
-      //   return deferred.promise;
     }
 
     function deleteHuntGroup(customerId, huntGroupId) {
@@ -282,51 +229,12 @@
         customerId: customerId,
         huntGroupId: huntGroupId
       }).$promise;
-
-      //Following code is used to mock back-end
-      //   var successResponse = {
-      //     'status': 200,
-      //     'statusText': 'OK'
-      //   };
-      //   var failureResponse = {
-      //     'data': 'Internal Server Error',
-      //     'status': 500,
-      //     'statusText': 'Internal Server Error'
-      //   };
-
-      //   var deferred = $q.defer();
-      //   $timeout(function () {
-      //     deferred.resolve(successResponse);
-      //     //deferred.reject(failureResponse);
-      //   }, 0);
-
-      //   return deferred.promise;
-
     }
 
     function saveHuntGroup(customerId, details) {
       return HuntGroupServiceV2.save({
         customerId: customerId
       }, details).$promise;
-
-      // Following code is used to mock back-end
-      // var successResponse = {
-      //  'status': 200,
-      //  'statusText': 'OK'
-      // };
-      // var failureResponse = {
-      //  'data': 'Internal Server Error',
-      //  'status': 500,
-      //  'statusText': 'Internal Server Error'
-      // };
-
-      // var deferred = $q.defer();
-      // $timeout(function () {
-      //  //deferred.resolve(successResponse);
-      //  deferred.reject(failureResponse);
-      // }, 3000);
-
-      // return deferred.promise;
     }
 
     function updateHuntGroup(customerId, huntGroupId, huntGroupData) {
@@ -334,27 +242,10 @@
         customerId: customerId,
         huntGroupId: huntGroupId
       }, huntGroupData).$promise;
-
-      // Following code is used to mock back-end
-      // var successResponse = {
-      //  'status': 200,
-      //  'statusText': 'OK'
-      // };
-      // var failureResponse = {
-      //  'data': 'Internal Server Error',
-      //  'status': 500,
-      //  'statusText': 'Internal Server Error'
-      // };
-
-      // var deferred = $q.defer();
-      // $timeout(function () {
-      //  deferred.resolve(successResponse);
-      //  //deferred.reject(failureResponse);
-      // }, 3000);
-
-      // return deferred.promise;
     }
 
+    // TODO: Get only unassigned numbers as this is apparently for Edit
+    // page to change the pilot numbers.
     function getNumbersWithSelection(numbers) {
       var deferred = $q.defer();
 
@@ -389,33 +280,6 @@
         customerId: customerId,
         userId: userId
       }).$promise;
-
-      // var deferred = $q.defer();
-      // var successResponse = {
-      //   "userName": "bspence@cisco.com",
-      //   "numbers": [{
-      //     "internal": "8177777777",
-      //     "external": "222",
-      //     "uuid": "2342-2342-23423-234898"
-      //   }, {
-      //     "internal": "222211",
-      //     "external": "222",
-      //     "uuid": "2344-4444-4444-44444"
-      //   }]
-      // };
-
-      // var failureResponse = {
-      //   'data': 'Internal Server Error',
-      //   'status': 500,
-      //   'statusText': 'Internal Server Error'
-      // };
-
-      // $timeout(function () {
-      //   deferred.resolve(successResponse);
-      //   //deferred.reject(failureResponse);
-      // }, 3000);
-
-      // return deferred.promise;
     }
   }
 
