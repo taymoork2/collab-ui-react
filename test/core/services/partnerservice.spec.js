@@ -92,7 +92,44 @@ describe('Partner Service', function () {
   });
 
   it('should successfully add notes property to customer from calling setNotesSortOrder', function () {
+    // Customer's status and daysLeft properties are "ACTIVE" and 45.
+    var customerActive = testData.customers[0];
+    PartnerService.setNotesSortOrder(customerActive);
+    expect(customerActive.notes.sortOrder).toBe(PartnerService.customerStatus.NOTE_NOT_EXPIRED);
+    expect(customerActive.notes.daysLeft).toBe(45);
+    expect(customerActive.notes.text).toBe('customerPage.daysRemaining');
 
+    // Customer's isTrial, status, and daysLeft properties are true, "ACTIVE", and 0.
+    var customerExpireToday = testData.customers[1];
+    PartnerService.setNotesSortOrder(customerExpireToday);
+    expect(customerExpireToday.notes.sortOrder).toBe(PartnerService.customerStatus.NOTE_EXPIRE_TODAY);
+    expect(customerExpireToday.notes.daysLeft).toBe(0);
+    expect(customerExpireToday.notes.text).toBe('customerPage.expiringToday');
+
+    // Customer's status and daysLeft properties are "ACTIVE" and -30
+    var customerExpired = testData.customers[2];
+    PartnerService.setNotesSortOrder(customerExpired);
+    expect(customerExpired.notes.sortOrder).toBe(PartnerService.customerStatus.NOTE_EXPIRED);
+    expect(customerExpired.notes.daysLeft).toBe(-1);
+    expect(customerExpired.notes.text).toBe('customerPage.expired');
+
+    // Customer's status property is "PENDING"
+    var customerNoLicense = testData.customers[3];
+    PartnerService.setNotesSortOrder(customerNoLicense);
+    expect(customerNoLicense.notes.sortOrder).toBe(PartnerService.customerStatus.NOTE_NO_LICENSE);
+    expect(customerNoLicense.notes.text).toBe('customerPage.licenseInfoNotAvailable');
+
+    // Customer does not have a licenseList property
+    customerNoLicense = testData.customers[4];
+    PartnerService.setNotesSortOrder(customerNoLicense);
+    expect(customerNoLicense.notes.sortOrder).toBe(PartnerService.customerStatus.NOTE_NO_LICENSE);
+    expect(customerNoLicense.notes.text).toBe('customerPage.licenseInfoNotAvailable');
+
+    // Customer status property is "CANCELED"
+    var customerCanceled = testData.customers[5];
+    PartnerService.setNotesSortOrder(customerCanceled);
+    expect(customerCanceled.notes.sortOrder).toBe(PartnerService.customerStatus.NOTE_CANCELED);
+    expect(customerCanceled.notes.text).toBe('customerPage.suspended');
   });
 
   it('should successfully return an array of customers with additional properties from calling loadRetrievedDataToList', function () {

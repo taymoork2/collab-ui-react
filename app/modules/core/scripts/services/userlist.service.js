@@ -233,10 +233,7 @@
                     exportedUser.name = 'N/A';
                   }
                   exportedUser.email = users[i].userName;
-                  for (var entitlement in users[i].entitlements) {
-                    entitlements += users[i].entitlements[entitlement] + ' ';
-                  }
-                  exportedUser.entitlements = entitlements;
+                  exportedUser.entitlements = angular.isArray(users[i].entitlements) ? users[i].entitlements.join(' ') : '';
                   exportedUsers.push(exportedUser);
                 }
               }

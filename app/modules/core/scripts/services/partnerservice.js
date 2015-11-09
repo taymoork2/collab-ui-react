@@ -306,13 +306,13 @@
               exportedCustomer.messagingEntitlements = '';
               exportedCustomer.conferenceEntitlements = '';
               exportedCustomer.communicationsEntitlements = '';
-              if (customers[i].messaging && customers[i].messaging.features) {
+              if (customers[i].messaging && angular.isArray(customers[i].messaging.features)) {
                 exportedCustomer.messagingEntitlements = customers[i].messaging.features.join(' ');
               }
-              if (customers[i].conferencing && customers[i].conferencing.features) {
+              if (customers[i].conferencing && angular.isArray(customers[i].conferencing.features)) {
                 exportedCustomer.conferenceEntitlements = customers[i].conferencing.features.join(' ');
               }
-              if (customers[i].communications && customers[i].communications.features) {
+              if (customers[i].communications && angular.isArray(customers[i].communications.features)) {
                 exportedCustomer.communicationsEntitlements = customers[i].communications.features.join(' ');
               }
               exportedCustomers.push(exportedCustomer);

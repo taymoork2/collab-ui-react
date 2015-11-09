@@ -152,11 +152,11 @@
     }, {
       "name": "Jackson Smith",
       "email": "atlaspartneradmin@atlas.test.com",
-      "entitlements": "squared-call-initiation webex-squared "
+      "entitlements": "squared-call-initiation webex-squared"
     }, {
       "name": "SQ Doe",
       "email": "sq-testpaiduser@atlas.test.com",
-      "entitlements": "squared-room-moderation squared-call-initiation webex-squared squared-syncup "
+      "entitlements": "squared-room-moderation squared-call-initiation webex-squared squared-syncup"
     }]
   },
   "listPartners": {
