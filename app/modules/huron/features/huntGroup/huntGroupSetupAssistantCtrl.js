@@ -281,6 +281,7 @@
     }
 
     function validateFallback() {
+      vm.selectedFallbackNumberValid = false;
       if (!needNumberValidation()) {
         return;
       }
