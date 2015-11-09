@@ -100,13 +100,42 @@ angular.module('Mediafusion')
         return $http.delete(url);
       };
 
+      var createGroup = function (groupName) {
+        var grp = {
+          'orgId': Authinfo.getOrgId(),
+          'type': 'mf.group',
+          'name': groupName,
+          'properties': {
+            'mf.group.displayName': groupName,
+          }
+        };
+
+        var url = config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets';
+        return $http
+          .post(url, grp);
+        //.success(callback);
+      };
+
+      var changeRole = function (role, clusterId) {
+        var grp = {
+          'mf.role': role
+        };
+
+        var url = config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/properties';
+        return $http
+          .post(url, grp);
+        //.success(callback);
+      };
+
       return {
         fetch: fetch,
         defuseConnector: defuseConnector,
         upgradeSoftware: upgradeSoftware,
         getGroups: getGroups,
         updateGroupAssignment: updateGroupAssignment,
-        removeGroupAssignment: removeGroupAssignment
+        removeGroupAssignment: removeGroupAssignment,
+        createGroup: createGroup,
+        changeRole: changeRole
       };
     }
   ]);

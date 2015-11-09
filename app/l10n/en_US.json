@@ -80,8 +80,8 @@
     "addtionalServiceSetupConfirmation": "Are you sure you want to leave this window? You will lose your data.",
     "setUpThisService": "Set up this service",
     "nameHeader": "Name",
-    "directLineHeader": "Direct Line",
-    "extensionHeader": "Internal Extension",
+    "directLineHeader": "Phone Number",
+    "extensionHeader": " Extension",
     "notApplicable": "N/A",
     "noExtensionInPool": "No Extension in pool.",
     "noExternalNumberAvail": "No DID available for mapping.",
@@ -162,7 +162,7 @@
     "expires": "Expires",
     "editServices": "Edit services",
     "editServiceTitle": "Services Enabled for {{firstName}} {{lastName}}",
-    "siteUris": "Site Urls",
+    "siteUris": "WebEx Sites",
     "webex": "Webex",
     "spark": "Spark",
     "calling": "Calling",
@@ -220,7 +220,7 @@
     "entResUtilizationTabDesc": "Enterprise Resources Utilization",
     "servicesTab": "Services",
     "conferencing": "WebEx",
-    "conferencingDesc": "List of Site Admins",
+    "conferencingDesc": "List of WebEx Sites",
     "alarmsTab": "Alarms",
     "alarmsTabDesc": "Alarm Management",
     "eventsTab": "Events",
@@ -586,7 +586,8 @@
     "or": "or",
     "search": "Search",
     "edit": "Edit",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "new": "New"
   },
   "notifications": {
     "success": "Success notifications",
@@ -644,7 +645,10 @@
     "status": "Status",
     "spark": "Spark",
     "sso": "Single Sign On (SSO)",
-    "dirsync": "Directory Synchronization"
+    "dirsync": "Directory Synchronization",
+    "setUpCalendarService": "Calendar Service is available. Use @spark and @webex to enhance your collaboration experience.",
+    "setUpCallService": "Call Service (Aware) is available. Effortlessly share your desktop with Spark while you are on your work phone.",
+    "getStarted": "Get Started"
   },
   "inviteModal": {
     "title": "Service Entitlement",
@@ -721,6 +725,7 @@
     "siteError": "Failed to create site.",
     "customerGetError": "Failed to get customer services.",
     "customerPutError": "Failed to update customer services.",
+    "customerDialPlanDetailsGetError": "Failed to get customer dial plan details.",
     "voicemailGetError": "Failed to get company voicemail number.",
     "voicemailUpdateError": "Failed to update company voicemail number.",
     "timezoneUpdateError": "Failed to update company timezone.",
@@ -845,7 +850,23 @@
       "goToHost": "Go to Host",
       "remove": "Remove"
     },
+    "activateService": {
+      "ingress": "Extend the Cloud to Your On-Premises Environmen",
+      "serviceNames": {
+        "squared-fusion-uc": "Call Service Activation",
+        "squared-fusion-cal": "Calendar Service Activation",
+        "squared-fusion-media": "Media Service Activation",
+        "contact-center-context": "Context Center Service Activation",
+        "squared-fusion-ec": "Call Service Connect Activation",
+        "squared-fusion-mgmt": "Expressway Management Service Activation"
+      },
+      "label": "ACTIVATE AND BEGIN SETUP"
+    },
     "clusters": {
+      "listing": {
+        "no_clusters_heading": "No Cisco Expressway clusters registered",
+        "no_clusters_text": "See required actions above and documentation to get started."
+      },
       "deregister": "Deregister",
       "deregisterCancel": "Cancel",
       "deregisterConfirm": "Confirm",
@@ -892,11 +913,12 @@
       "squared-fusion-mgmt": "Expressway Management Service"
     },
     "serviceDescriptions": {
-      "squared-fusion-uc": "Effortlessly share your desktop with Spark while you are on your work phone. Answer your work phone or call your coworkers from Spark.",
-      "squared-fusion-cal": "Collaborate instantly. Just add @spark to an invitation to create a Spark room for your meeting. Add @webex to attach your WebEx CMR.",
+      "squared-fusion-uc": "Call Service Aware lets your users instantly share their desktops from their Cisco Spark clients while on a call. Call Service Connect lets users answer calls to their work phones on their  Cisco Spark client, and place calls to others' work phones from their Cisco Spark client.",
+      "squared-fusion-cal": "Calendar Service helps your users collaborate instantly. Just add @spark to create a Spark room. Add @webex to attach a WebEx to your invitation.",
       "squared-fusion-media": "",
       "contact-center-context": "",
-      "squared-fusion-ec": ""
+      "squared-fusion-ec": "",
+      "squared-fusion-mgmt": "Management Service is the global configuration service for Calendar and Call Services. This page will be active after you activate one of these services."
     },
     "errors": {
       "enableServiceEntitlementFailure": "Failed! Your organization is missing entitlements that are needed to add the {{serviceName}}. Contact your support representative to fix the issue.",
@@ -932,7 +954,6 @@
       "softwareUpgrade": "Software Upgrade",
       "currentVersion": "Current Version",
       "newVersion": "New Version",
-      "noNewAvailable": "No new software available",
       "upgrade": "Upgrade"
     }
   },
@@ -1315,12 +1336,12 @@
     "error": "Line configuration failed.",
     "directNumbers": "Directory Numbers",
     "internalNumberLabel": "Reach this line by dialing the numbers or extensions listed below.",
-    "internalNumberExtension": "Internal Extension",
+    "internalNumberExtension": "Extension",
     "internalNumberExtensionTooltip": "Use the internal extension to reach this line from within the company at the same site.",
     "internalNumberPoolError": "Internal extensions failed to load.",
     "steeringDigitOverlapWarning": "First digit of Internal Extension overlaps with Outbound Dial Digit ({{steeringDigitInTranslation}}).",
     "enterpriseSiteNumberLabel": "If your company uses site-to-site dialing:",
-    "externalNumberLabel": "Direct Line",
+    "externalNumberLabel": "Phone Number",
     "externalNumberTooltip": "Use the direct line to reach this line from outside of the company.",
     "externalNumberPoolError": "Direct lines failed to load.",
     "externalNumberMappingError": "Direct line Mappings failed to load.",
@@ -1791,7 +1812,14 @@
     "defuseSuccess": "Deregistration successfully",
     "deleteConnectorError": "Error deleting connector",
     "groupAssignmentSuccess": "Cluster assigned successfully",
-    "groupAssignmentFailure": "Cluster not assigned"
+    "groupAssignmentFailure": "Cluster not assigned",
+    "roleAssignmentSuccess": "Role assigned successfully",
+    "roleAssignmentFailure": "Role not assigned",
+    "cluster": "Cluster",
+    "role": "Role",
+    "switching": "Switching",
+    "transcoding": "Transcoding",
+    "confirmCluster": "Please press save to confirm cluster change."
   },
   "webexUserSettings": {
     "sessionEnablementUpdateSuccess": "Session type enablement updated.",
@@ -2256,8 +2284,7 @@
     "siteName": "Site Name",
     "licenseCount": "License Count",
     "type": "Type",
-    "launchSite": "Configure Site",
-    "siteSettings": "Configure Site",
+    "siteSettings": "Configure",
     "siteReports": "Reports"
   },
   "cloudExtensions": {
@@ -2477,13 +2504,14 @@
     "numbersLabel": "Hunt Group Numbers",
     "numberSingular": "Number",
     "numberPlural": "Numbers",
+    "numbersInputPlaceHolder": "Start typing here",
     "ringTimeLabel": "Member's Max Ring Time",
     "ringTimeDesc": "The maximum amount of time a member's line will ring before it sent to the next number.",
     "waitTimeLabel": "Caller Max Wait Time",
     "waitTimeDesc": "The maximum time a caller will be in waiting before sent to fallback destination.",
     "fallbackLabel": "Fallback Destination",
     "fallbackDesc": "This is where the call goes if it was not answered by this hunt group.",
-    "methodLabel": "Hunting Method and Members",
+    "methodLabel": "Hunting Method",
     "methodDesc": "This defines which member gets the call first.",
     "membersLabel": "Hunt Group Members",
     "membersDesc": "Drag and drop to reorder members hunt group sequence.",

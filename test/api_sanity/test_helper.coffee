@@ -154,7 +154,7 @@ getAuthCode = (req, creds, cb) ->
       response_type: 'code'
       redirect_uri: 'urn:ietf:wg:oauth:2.0:oob'
       client_id: clientId
-      scope: 'webexsquare:admin Identity:SCIM Identity:Config Identity:Organization ccc_config:admin'
+      scope: 'webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config Identity:Organization ccc_config:admin'
       realm: '/' + creds.org
       state: rand_str
 

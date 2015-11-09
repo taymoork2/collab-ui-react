@@ -5,7 +5,7 @@
 
 describe('Hunt Group EditCtrl Controller', function () {
 
-  var hgEditCtrl, $rootScope, $scope, $q, $state, $timeout, Authinfo, HuntGroupService, Notification, form;
+  var hgEditCtrl, $rootScope, $scope, $q, $state, $stateParams, $timeout, Authinfo, HuntGroupService, Notification, form;
   var hgFeature = getJSONFixture('huron/json/features/edit/featureDetails.json');
   var numbers = [{
     "internal": "8001",
@@ -32,6 +32,11 @@ describe('Hunt Group EditCtrl Controller', function () {
     var emptyForm = function () {
       return true;
     };
+    $stateParams = {
+      feature: {
+        huntGroupId: '111'
+      }
+    };
     form = {
       '$invalid': false,
       $setDirty: emptyForm,
@@ -47,6 +52,7 @@ describe('Hunt Group EditCtrl Controller', function () {
     spyOn(HuntGroupService, 'getNumbersWithSelection').and.returnValue($q.when());
     hgEditCtrl = $controller('HuntGroupEditCtrl', {
       $state: $state,
+      $stateParams: $stateParams,
       $timeout: $timeout,
       Authinfo: Authinfo,
       HuntGroupService: HuntGroupService,
@@ -82,24 +88,6 @@ describe('Hunt Group EditCtrl Controller', function () {
 
     var index = hgEditCtrl.model.members.indexOf(item);
     expect(index).toEqual(-1);
-  });
-
-  it('Select Hunt Group Fallback User', function () {
-    var item = hgEditCtrl.userData[2];
-    item.numbers = numbers;
-    hgEditCtrl.selectHuntGroupUser(item);
-    $scope.$apply();
-
-    expect(hgEditCtrl.model.fallbackDestination.userName).toEqual(item.userName);
-  });
-
-  it('Select Hunt Group Member', function () {
-    var item = hgEditCtrl.userData[1];
-    item.numbers = numbers;
-    hgEditCtrl.selectHuntGroupMember(item);
-    $scope.$apply();
-
-    expect(hgEditCtrl.model.members[1].userName).toEqual(item.userName);
   });
 
   it('Select Hunt Method', function () {

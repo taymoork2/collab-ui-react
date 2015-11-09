@@ -967,6 +967,7 @@ gulp.task('karma-watch', ['karma-config-watch'], function (done) {
  * Usage: gulp e2e      Runs tests against the dist directory
  * Options:
  * --sauce              Runs tests against SauceLabs
+ * --production-backend Runs tests against local atlas with production services
  * --int                Runs tests against integration atlas
  * --prod               Runs tests against production atlas
  * --nosetup            Runs tests without serving the app
@@ -1016,7 +1017,10 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
     configFile: 'protractor-config.js',
     noColor: false,
     debug: debug,
-    args: ['--params.log', args.verbose ? 'true' : 'false']
+    args: [
+      '--params.log', !!args.verbose,
+      '--params.isProductionBackend', !!args['production-backend']
+    ]
   };
 
   var tests = [];
@@ -1174,7 +1178,8 @@ gulp.task('e2e:setup', function (done) {
   var buildTask = args.build ? 'build' : 'dist';
   if (!args.nosetup) {
     runSeq(
-      'test:api',
+      // TODO make mocha not exit on errors
+      // 'test:api',
       buildTask,
       'eslint:e2e',
       'connect',

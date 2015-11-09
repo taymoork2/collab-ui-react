@@ -7,7 +7,6 @@ angular
 /* @ngInject */
 function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Config, SessionStorage, Authinfo, Utils, Storage, $rootScope) {
   var auth = {
-    authorizeUrl: Config.getAdminServiceUrl(),
     oauthUrl: Config.getOauth2Url()
   };
 
@@ -21,6 +20,7 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
   };
 
   auth.authorize = function (token) {
+    var authorizeUrl = Config.getAdminServiceUrl();
     var $http = $injector.get('$http');
     $http.defaults.headers.common.Authorization = 'Bearer ' + token;
 
@@ -31,13 +31,13 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
     var authUrl = null;
 
     if (currentOrgId) {
-      authUrl = auth.authorizeUrl + 'organization/' + currentOrgId + '/userauthinfo';
+      authUrl = authorizeUrl + 'organization/' + currentOrgId + '/userauthinfo';
       orgId = currentOrgId;
     } else if (partnerOrgId) {
-      authUrl = auth.authorizeUrl + 'organization/' + partnerOrgId + '/userauthinfo?launchpartnerorg=true';
+      authUrl = authorizeUrl + 'organization/' + partnerOrgId + '/userauthinfo?launchpartnerorg=true';
       orgId = partnerOrgId;
     } else {
-      authUrl = auth.authorizeUrl + 'userauthinfo';
+      authUrl = authorizeUrl + 'userauthinfo';
     }
 
     //Return data from the /userauthinfo API, with data from the /services API
@@ -62,7 +62,7 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
           //Do the /services requset if the user is allowed to;
           //otherwise, explicitly return null
           if (doServicesRequest) {
-            var servicesUrl = auth.authorizeUrl + 'organizations/' + result.orgId + '/services';
+            var servicesUrl = Config.getAdminServiceUrl() + 'organizations/' + result.orgId + '/services';
             return $http.get(servicesUrl);
           } else {
             return $q.when(null);

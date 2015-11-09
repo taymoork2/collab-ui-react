@@ -1,7 +1,7 @@
 'use strict';
 
 describe(
-  'Controller: WebExSiteSettingCtrl',
+  'WebExSiteSettingCtrl Test',
   function () {
     var $controller;
     var $scope;
