@@ -850,6 +850,18 @@
       "goToHost": "Go to Host",
       "remove": "Remove"
     },
+    "activateService": {
+      "ingress": "Extend the Cloud to Your On-Premises Environmen",
+      "serviceNames": {
+        "squared-fusion-uc": "Call Service Activation",
+        "squared-fusion-cal": "Calendar Service Activation",
+        "squared-fusion-media": "Media Service Activation",
+        "contact-center-context": "Context Center Service Activation",
+        "squared-fusion-ec": "Call Service Connect Activation",
+        "squared-fusion-mgmt": "Expressway Management Service Activation"
+      },
+      "label": "ACTIVATE AND BEGIN SETUP"
+    },
     "clusters": {
       "deregister": "Deregister",
       "deregisterCancel": "Cancel",
@@ -897,11 +909,12 @@
       "squared-fusion-mgmt": "Expressway Management Service"
     },
     "serviceDescriptions": {
-      "squared-fusion-uc": "Effortlessly share your desktop with Spark while you are on your work phone. Answer your work phone or call your coworkers from Spark.",
-      "squared-fusion-cal": "Collaborate instantly. Just add @spark to an invitation to create a Spark room for your meeting. Add @webex to attach your WebEx CMR.",
+      "squared-fusion-uc": "Call Service Aware lets your users instantly share their desktops from their Cisco Spark clients while on a call. Call Service Connect lets users answer calls to their work phones on their  Cisco Spark client, and place calls to others' work phones from their Cisco Spark client.",
+      "squared-fusion-cal": "Calendar Service helps your users collaborate instantly. Just add @spark to create a Spark room. Add @webex to attach a WebEx to your invitation.",
       "squared-fusion-media": "",
       "contact-center-context": "",
-      "squared-fusion-ec": ""
+      "squared-fusion-ec": "",
+      "squared-fusion-mgmt": "Management Service is the global configuration service for Calendar and Call Services. This page will be active after you activate one of these services."
     },
     "errors": {
       "enableServiceEntitlementFailure": "Failed! Your organization is missing entitlements that are needed to add the {{serviceName}}. Contact your support representative to fix the issue.",
