@@ -11,6 +11,7 @@ angular.module('Squared').service('CsdmConverter',
       this.ip = getIp(obj);
       this.tags = getTags(obj);
       this.serial = obj.serial;
+      this.createTime = obj.createTime;
       this.cisUuid = obj.cisUuid;
       this.product = getProduct(obj);
       this.hasIssues = hasIssues(obj);
