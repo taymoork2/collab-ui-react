@@ -135,6 +135,7 @@
     this.name = 'overview.cards.roomSystem.title';
     this.currentTitle = 'overview.cards.roomSystem.currentTitle';
     this.previousTitle = 'overview.cards.roomSystem.previousTitle';
+    this.settingsUrl = '#/devices';
     this.deviceUpdateEventHandler = deviceUpdateEventHandler;
 
     function deviceUpdateEventHandler(response) {

@@ -20,27 +20,27 @@
             </div>
           </div>
         </section>
-        <cs-card-menu-footer icon="'settings'">
-          <a ng-href="{{overview.statusPageUrl}}" target="_blank" class="monitoring-cell">
-            <i class="icon icon-circle" ng-class="card.healthStatus || 'disabled'"></i>
-            <span>{{card.levelText}}</span>
-          </a>
-        </cs-card-menu-footer>
-        <cs-card-menu menutitle="cd.menutitle">
-          <ul class="service-menu-list no-bullet">
-            <li><a class="service-menu-item" href="">pg_event.webex.com</a></li>
-            <li><a class="service-menu-item" href="">pg_finance.webex.com</a></li>
-            <li><a class="service-menu-item" href="">pg_marketing.webex.com</a></li>
-            <li><a class="service-menu-item" href="">pg_operations.webex.com</a></li>
-          </ul>
-        </cs-card-menu>
+        <footer class="footer-menu">
+          <span class="footer-content">
+            <a ng-href="{{overview.statusPageUrl}}" target="_blank" class="monitoring-cell">
+              <i class="icon icon-circle" ng-class="card.healthStatus || 'disabled'"></i>
+              <span>{{card.levelText}}</span>
+            </a>
+          </span>
+          <span class="footer-icons">
+            <a ng-href="{{card.settingsUrl}}">
+              &nbsp;<i class="icon icon-settings" ng-if="card.settingsUrl"></i>
+            </a>
+          </span>
+        </footer>
       </article>
     </cs-card>
     <cs-card class="large menu-card users-card">
       <article>
         <header><h4 translate="overview.cards.hybrid.title"></h4></header>
         <section>
-          <span>N/A</span>
+          <div ng-repeat="batman in [1,2,3,4,5,6]">N/A</div>
+          <div>BATMAN!</div>
         </section>
       </article>
     </cs-card>

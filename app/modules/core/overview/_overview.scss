@@ -10,7 +10,7 @@
       text-align: center;
     }
   }
-  .footer-content i, i.icon-circle {
+  i.icon-circle {
     &.success {
       color: $color-cta-base;
     }
@@ -24,8 +24,13 @@
       color: $gray-base;
     }
   }
-  .cs-card > article footer.footer-menu {
-    background-color: #efefef;
+  .footer-menu {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .footer-icons a {
+      color: $gray-base;
+    }
   }
   .overview-title {
     text-transform: uppercase;
