@@ -180,7 +180,8 @@
         "trialId": "7db0f7c1-a961-41dd-995e-ef4eb204cc72",
         "isAllowedToManage": false,
         "createdDate": "2015-08-05T00:00:00.000Z"
-      }, {
+      },
+                        {
         "customerOrgId": "1803daee-4247-4d67-a812-932382682642",
         "startDate": "2015-08-19T00:00:00.000Z",
         "trialPeriod": 90,
@@ -224,7 +225,8 @@
         "trialId": "f4c2397f-75a3-4a00-8e93-fe6aa2b9890f",
         "isAllowedToManage": false,
         "createdDate": "2015-08-19T00:00:00.000Z"
-      }, {
+      },
+                        {
         "customerOrgId": "3166b803-d6a0-4127-9d81-539950339a3d",
         "startDate": "2015-09-10T00:00:00.000Z",
         "trialPeriod": 90,
@@ -268,7 +270,8 @@
         "trialId": "16c3c2e9-d114-43c0-841d-b2b19de6989c",
         "isAllowedToManage": false,
         "createdDate": "2015-09-10T00:00:00.000Z"
-      }, {
+      },
+                        {
         "customerOrgId": "af9abee9-0c6e-4625-a02f-b007456689f2",
         "startDate": "2015-08-05T00:00:00.000Z",
         "trialPeriod": 90,
@@ -312,7 +315,8 @@
         "trialId": "ce87e6ac-dced-4e78-9c50-cc250bd9fca0",
         "isAllowedToManage": false,
         "createdDate": "2015-08-05T00:00:00.000Z"
-      }, {
+      },
+                        {
         "customerOrgId": "24664293-a6a6-4944-8db5-3e5c58520086",
         "startDate": "2015-07-31T00:00:00.000Z",
         "trialPeriod": 90,
@@ -462,7 +466,8 @@
     "isAllowedToManage": false,
     "status": "ACTIVE",
     "createdDate": "2015-08-05T00:00:00.000Z"
-  }, {
+  },
+                {
     "customerOrgId": "1803daee-4247-4d67-a812-932382682642",
     "startDate": "2015-08-19T00:00:00.000Z",
     "trialPeriod": 90,
@@ -510,7 +515,8 @@
     "daysLeft": 0,
     "isTrial": true,
     "createdDate": "2015-08-19T00:00:00.000Z"
-  }, {
+  },
+                {
     "customerOrgId": "3166b803-d6a0-4127-9d81-539950339a3d",
     "startDate": "2015-09-10T00:00:00.000Z",
     "trialPeriod": 90,
@@ -556,7 +562,8 @@
     "trialId": "16c3c2e9-d114-43c0-841d-b2b19de6989c",
     "isAllowedToManage": false,
     "createdDate": "2015-09-10T00:00:00.000Z"
-  }, {
+  },
+                {
     "customerOrgId": "af9abee9-0c6e-4625-a02f-b007456689f2",
     "startDate": "2015-08-05T00:00:00.000Z",
     "trialPeriod": 90,
@@ -602,7 +609,8 @@
     "trialId": "ce87e6ac-dced-4e78-9c50-cc250bd9fca0",
     "isAllowedToManage": false,
     "createdDate": "2015-08-05T00:00:00.000Z"
-  }, {
+  },
+                {
     "customerOrgId": "24664293-a6a6-4944-8db5-3e5c58520086",
     "startDate": "2015-07-31T00:00:00.000Z",
     "trialPeriod": 90,
