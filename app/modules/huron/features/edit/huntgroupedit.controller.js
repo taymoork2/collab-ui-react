@@ -24,6 +24,12 @@
     vm.fetchHuntMembers = fetchHuntMembers;
     vm.initialized = false;
     vm.back = true;
+    vm.hgMethods = {
+      longestIdle: "DA_LONGEST_IDLE_TIME",
+      broadcast: "DA_BROADCAST",
+      circular: "DA_CIRCULAR",
+      topDown: "DA_TOP_DOWN"
+    };
 
     function init() {
       vm.userSelected = undefined;
@@ -32,13 +38,15 @@
       vm.membersValid = true;
       vm.fallbackValid = true;
       vm.fallbackDirty = false;
+      vm.huntGroupId = $stateParams.feature.huntGroupId;
 
       if (vm.initialized) {
         vm.model = angular.copy(initialModel);
         vm.initialnumbers = angular.copy(initialnumberoptions);
         intializeFields();
       } else {
-        HuntGroupService.getDetails(customerId, $stateParams.feature.huntGroupId).then(function (data) {
+        HuntGroupService.getDetails(customerId, vm.huntGroupId).then(function (data) {
+
           vm.title = data.name;
           vm.initialnumber = data.numbers;
           vm.model = {
@@ -325,12 +333,50 @@
       init();
     }
 
+    function getFallBackDest() {
+      if (vm.model.fallbackDestination.number) {
+        return {
+          number: vm.model.fallbackDestination.number
+        };
+      } else {
+        return {
+          numberUuid: vm.model.fallbackDestination.numberUuid,
+          userUuid: vm.model.fallbackDestination.userUuid,
+          sendToVoicemail: vm.model.fallbackDestination.sendToVociemail
+        };
+      }
+    }
+
+    function hgUpdateReqBody() {
+      var members = vm.model.members.map(function (member) {
+        return member.numberUuid;
+      });
+
+      var numbers = vm.model.numbers.map(function (numberObj) {
+        return {
+          type: numberObj.type,
+          number: numberObj.number
+        };
+      });
+
+      return {
+        name: vm.model.name,
+        numbers: numbers,
+        huntMethod: vm.model.huntMethod,
+        maxRingSecs: vm.model.maxRingSecs.value,
+        maxWaitMins: vm.model.maxWaitMins.value,
+        fallbackDestination: getFallBackDest(),
+        members: members
+      };
+    }
+
     function saveForm() {
       vm.saveInProgress = true;
-      HuntGroupService.updateHuntGroup(customerId, vm.model).then(function (data) {
+
+      HuntGroupService.updateHuntGroup(customerId, vm.huntGroupId, hgUpdateReqBody()).then(function (data) {
         vm.saveInProgress = false;
         Notification.success($translate.instant('huronHuntGroup.successUpdate'));
-        resetForm();
+
       }, function (data) {
         vm.saveInProgress = false;
         Notification.error($translate.instant('huronHuntGroup.errorUpdate'));

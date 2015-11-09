@@ -237,10 +237,11 @@
       }, details).$promise;
     }
 
-    function updateHuntGroup(customerId, details) {
+    function updateHuntGroup(customerId, huntGroupId, huntGroupData) {
       return HuntGroupServiceV2.update({
-        customerId: customerId
-      }).$promise;
+        customerId: customerId,
+        huntGroupId: huntGroupId
+      }, huntGroupData).$promise;
     }
 
     // TODO: Get only unassigned numbers as this is apparently for Edit

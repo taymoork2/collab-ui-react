@@ -71,23 +71,23 @@
         <label for="fallback-dest">{{:: 'huronHuntGroup.methodLabel' | translate}}</label>
         <p>{{:: 'huronHuntGroup.methodDesc' | translate}}</p>
         <ul class="hgmethods large-9 columns medium-centered large-block-grid-4 medium-block-grid-2">
-          <li class="hgmethod" ng-class="{current: hge.model.huntMethod === 'LongestIdle'}">
-            <a href="#" ng-click="hge.selectHuntMethod('LongestIdle')"><i class="icon icon-circle-clock-hands"></i>
+          <li class="hgmethod" ng-class="{current: hge.model.huntMethod === hge.hgMethods.longestIdle}">
+            <a href="#" ng-click="hge.selectHuntMethod(hge.hgMethods.longestIdle)"><i class="icon icon-circle-clock-hands"></i>
               <div>Longest Idle</div>
             </a>
           </li>
-          <li class="hgmethod" ng-class="{current: hge.model.huntMethod === 'Broadcast'}">
-            <a href="#" ng-click="hge.selectHuntMethod('Broadcast')"><i class="icon icon-circle-arrows-cross"></i>
+          <li class="hgmethod" ng-class="{current: hge.model.huntMethod === hge.hgMethods.broadcast}">
+            <a href="#" ng-click="hge.selectHuntMethod(hge.hgMethods.broadcast)"><i class="icon icon-circle-arrows-cross"></i>
               <div>Broadcast</div>
             </a>
           </li>
-          <li class="hgmethod" ng-class="{current: hge.model.huntMethod === 'Circular'}">
-            <a href="#" ng-click="hge.selectHuntMethod('Circular')"><i class="icon icon-circle-arrows-circular"></i>
+          <li class="hgmethod" ng-class="{current: hge.model.huntMethod === hge.hgMethods.circular}">
+            <a href="#" ng-click="hge.selectHuntMethod(hge.hgMethods.circular)"><i class="icon icon-circle-arrows-circular"></i>
               <div>Circular</div>
             </a>
           </li>
-          <li class="hgmethod" ng-class="{current: hge.model.huntMethod === 'TopDown'}">
-            <a href="#" ng-click="hge.selectHuntMethod('TopDown')"><i class="icon icon-circle-arrow-down"></i>
+          <li class="hgmethod" ng-class="{current: hge.model.huntMethod === hge.hgMethods.topDown}">
+            <a href="#" ng-click="hge.selectHuntMethod(hge.hgMethods.topDown)"><i class="icon icon-circle-arrow-down"></i>
               <div>Top Down</div>
             </a>
           </li>
