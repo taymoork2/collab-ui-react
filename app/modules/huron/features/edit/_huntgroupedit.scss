@@ -47,6 +47,29 @@
   .hg-time .formly-input-wrapper {
     @include vr-spacing(mb, 1);
   }
+
+  .typeahead .dropdown-menu {
+    .active > a {
+      background: $gray-light-2;
+    }
+
+    & span {
+      font-size: $font-size-h4;
+      font-family: $brand-font-cisco-TT-Light;
+      color: $gray-dark-2;
+    }
+
+    li .hunt-member-name {
+      @include vr-spacing(ph, 0.5);
+    }
+
+    li .hunt-member-line {
+      @include vr-spacing(ph, 0.5);
+      & span {
+        font-size: 1rem;
+      }
+    }
+  }
 }
 
 .hg-wrapper {
@@ -145,29 +168,5 @@
 .dragover {
   .cs-card.header-background header {
     background: $gray;
-  }
-}
-
-.hg-edit .typeahead .dropdown-menu {
-
-  .active > a {
-    background: $gray-light-2;
-  }
-
-  & span {
-    font-size: $font-size-h4;
-    font-family: $brand-font-cisco-TT-Light;
-    color: $gray-dark-2;
-  }
-
-  li .hunt-member-name {
-    @include vr-spacing(ph, 0.5);
-  }
-
-  li .hunt-member-line {
-    @include vr-spacing(ph, 0.5);
-    & span {
-      font-size: 1rem;
-    }
   }
 }
