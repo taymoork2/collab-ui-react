@@ -1,4 +1,4 @@
-(function () {
+(function() {
   'use strict';
 
   /* @ngInject */
@@ -58,7 +58,7 @@
     };
 
     if (vm.currentServiceId == "squared-fusion-mgmt") {
-      ServiceDescriptor.services(function (error, services) {
+      ServiceDescriptor.services(function(error, services) {
         if (!error) {
           vm.serviceEnabled = _.any(ServiceDescriptor.filterAllExceptManagement(services), {
             enabled: true
@@ -68,7 +68,7 @@
       });
     } else {
       vm.serviceEnabled = false;
-      ServiceDescriptor.isServiceEnabled(HelperNuggetsService.serviceType2ServiceId(vm.currentServiceType), function (a, b) {
+      ServiceDescriptor.isServiceEnabled(HelperNuggetsService.serviceType2ServiceId(vm.currentServiceType), function(a, b) {
         vm.serviceEnabled = b;
         vm.loading = false;
       });
@@ -117,7 +117,7 @@
 
     function enableService(serviceId) {
       vm.waitForEnabled = true;
-      ServiceDescriptor.setServiceEnabled(serviceId, true, function (error) {
+      ServiceDescriptor.setServiceEnabled(serviceId, true, function(error) {
         if (error !== null) {
           XhrNotificationService.notify("Problems enabling the service");
         }
@@ -140,7 +140,7 @@
         controllerAs: 'userErrorsCtrl',
         templateUrl: 'modules/hercules/expressway-service/user-errors.html',
         resolve: {
-          serviceId: function () {
+          serviceId: function() {
             return vm.currentServiceId;
           }
         }
@@ -161,17 +161,17 @@
     vm.host = $stateParams.host;
     vm.cluster = ClusterService.getClusters()[$stateParams.clusterId];
     vm.serviceType = $stateParams.serviceType;
-    vm.connector = function () {
+    vm.connector = function() {
       var service = _.find(vm.cluster.services, {
         service_type: vm.serviceType
       });
-      return _.find(service.connectors, function (connector) {
+      return _.find(service.connectors, function(connector) {
         return connector.host.serial == vm.host.serial;
       });
     };
 
-    vm.deleteHost = function () {
-      return ClusterService.deleteHost(vm.cluster.id, vm.connector().host.serial).then(function () {
+    vm.deleteHost = function() {
+      return ClusterService.deleteHost(vm.cluster.id, vm.connector().host.serial).then(function() {
         if (ClusterService.getClusters()[vm.cluster.id]) {
           $state.go('cluster-details', {
             clusterId: vm.cluster.id
@@ -191,18 +191,20 @@
     vm.cluster = ClusterService.getClusters()[vm.clusterId];
     vm.saving = false;
 
-    vm.selectedService = function () {
+    vm.selectedService = function() {
       return _.find(vm.cluster.services, {
         service_type: vm.serviceType
       });
     };
 
-    vm.activeActiveApplicable = (vm.serviceType == 'c_cal' || vm.serviceType == 'c_ucmc');
+    //TODO Turn on when active-active is implemented by services
+    //vm.activeActiveApplicable = (vm.serviceType == 'c_cal' || vm.serviceType == 'c_ucmc');
+    vm.activeActiveApplicable = false;
     vm.activeActivePossible = vm.cluster.hosts.length > 1;
     vm.activeActiveEnabled = vm.activeActiveApplicable && isActiveActiveEnabled(vm.cluster, vm.serviceType);
     vm.activeActiveEnabledOld = vm.activeActiveApplicable && isActiveActiveEnabled(vm.cluster, vm.serviceType);
 
-    vm.serviceNotInstalled = function () {
+    vm.serviceNotInstalled = function() {
       return ServiceStatusSummaryService.serviceNotInstalled(vm.serviceType, vm.cluster);
     };
 
@@ -212,19 +214,19 @@
 
     function activeActivePropertyName(serviceType) {
       switch (serviceType) {
-      case 'c_cal':
-        return 'fms.calendarAssignmentType';
-      case 'c_ucmc':
-        return 'fms.callManagerAssignmentType';
-      default:
-        return '';
+        case 'c_cal':
+          return 'fms.calendarAssignmentType';
+        case 'c_ucmc':
+          return 'fms.callManagerAssignmentType';
+        default:
+          return '';
       }
     }
 
-    vm.showDeregisterDialog = function () {
+    vm.showDeregisterDialog = function() {
       $modal.open({
         resolve: {
-          cluster: function () {
+          cluster: function() {
             return vm.cluster;
           }
         },
@@ -234,21 +236,21 @@
       });
     };
 
-    $scope.$watch('expresswayClusterSettingsCtrl.activeActiveEnabled', function (newVal, oldVal) {
+    $scope.$watch('expresswayClusterSettingsCtrl.activeActiveEnabled', function(newVal, oldVal) {
       if (newVal !== undefined && newVal != oldVal) {
         vm.showButtons = newVal != vm.activeActiveEnabledOld;
       }
     });
 
-    vm.save = function () {
+    vm.save = function() {
       vm.saving = true;
       ClusterService.setProperty(vm.clusterId, activeActivePropertyName(vm.serviceType), vm.activeActiveEnabled ? 'activeActive' : 'standard')
-        .then(function () {
+        .then(function() {
           vm.saving = false;
         }, XhrNotificationService.notify);
     };
 
-    vm.cancel = function () {
+    vm.cancel = function() {
       vm.showButtons = false;
       vm.activeActiveEnabled = vm.activeActiveEnabledOld;
     };
@@ -261,7 +263,7 @@
     vm.limit = 5;
     vm.serviceId = serviceId;
 
-    USSService.getStatuses(function (error, statuses) {
+    USSService.getStatuses(function(error, statuses) {
       if (error) {
         XhrNotificationService.notify("Failed to fetch user statuses", error);
         return;
@@ -271,11 +273,11 @@
         vm.userStatuses = [];
         var connectorIds = [];
 
-        _.forEach(statuses.userStatuses, function (userStatus) {
+        _.forEach(statuses.userStatuses, function(userStatus) {
           if (userStatus.connectorId && !_.contains(connectorIds, userStatus.connectorId)) {
             connectorIds.push(userStatus.connectorId);
           }
-          Userservice.getUser(userStatus.userId, function (data, status) {
+          Userservice.getUser(userStatus.userId, function(data, status) {
             if (data.success) {
               userStatus.displayName = data.displayName || data.userName;
               vm.userStatuses.push(userStatus);
@@ -284,10 +286,10 @@
           return status;
         });
 
-        _.forEach(connectorIds, function (connectorId) {
-          ClusterService.getConnector(connectorId).then(function (connector) {
+        _.forEach(connectorIds, function(connectorId) {
+          ClusterService.getConnector(connectorId).then(function(connector) {
             if (connector) {
-              _.forEach(statuses.userStatuses, function (userStatus) {
+              _.forEach(statuses.userStatuses, function(userStatus) {
                 if (userStatus.connectorId === connectorId) {
                   userStatus.connector = connector;
                 }
