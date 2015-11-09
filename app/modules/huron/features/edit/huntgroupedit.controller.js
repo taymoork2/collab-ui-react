@@ -25,10 +25,10 @@
     vm.initialized = false;
     vm.back = true;
     vm.hgMethods = {
-      "longestIdle": "DA_LONGEST_IDLE_TIME",
-      "broadcast": "DA_BROADCAST",
-      "circular": "DA_CIRCULAR",
-      "topDown": "DA_TOP_DOWN"
+      longestIdle: "DA_LONGEST_IDLE_TIME",
+      broadcast: "DA_BROADCAST",
+      circular: "DA_CIRCULAR",
+      topDown: "DA_TOP_DOWN"
     };
 
     function init() {
@@ -331,13 +331,13 @@
     function getFallBackDest() {
       if (vm.model.fallbackDestination.number) {
         return {
-          "number": vm.model.fallbackDestination.number
+          number: vm.model.fallbackDestination.number
         };
       } else {
         return {
-          "numberUuid": vm.model.fallbackDestination.numberUuid,
-          "userUuid": vm.model.fallbackDestination.userUuid,
-          "sendToVoicemail": vm.model.fallbackDestination.sendToVociemail
+          numberUuid: vm.model.fallbackDestination.numberUuid,
+          userUuid: vm.model.fallbackDestination.userUuid,
+          sendToVoicemail: vm.model.fallbackDestination.sendToVociemail
         };
       }
     }
@@ -349,19 +349,19 @@
 
       var numbers = vm.model.numbers.map(function (numberObj) {
         return {
-          "type": numberObj.type,
-          "number": numberObj.number
+          type: numberObj.type,
+          number: numberObj.number
         };
       });
 
       return {
-        "name": vm.model.name,
-        "numbers": numbers,
-        "huntMethod": vm.model.huntMethod,
-        "maxRingSecs": vm.model.maxRingSecs.value,
-        "maxWaitMins": vm.model.maxWaitMins.value,
-        "fallbackDestination": getFallBackDest(),
-        "members": members
+        name: vm.model.name,
+        numbers: numbers,
+        huntMethod: vm.model.huntMethod,
+        maxRingSecs: vm.model.maxRingSecs.value,
+        maxWaitMins: vm.model.maxWaitMins.value,
+        fallbackDestination: getFallBackDest(),
+        members: members
       };
     }
 

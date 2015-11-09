@@ -172,6 +172,7 @@
         vm.pageState = 'showFeatures';
         feature.isEmpty = false;
         vm.listOfFeatures = vm.listOfFeatures.concat(list);
+        vm.listOfFeatures = HuronFeaturesListService.orderBy(vm.listOfFeatures, 'filterValue');
         listOfAllFeatures = listOfAllFeatures.concat(list);
       } else if (list.length === 0) {
         feature.isEmpty = true;

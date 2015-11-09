@@ -44,10 +44,10 @@
     vm.animation = 'slide-left';
     vm.huntGroupName = '';
     vm.hgMethods = {
-      "longestIdle": "DA_LONGEST_IDLE_TIME",
-      "broadcast": "DA_BROADCAST",
-      "circular": "DA_CIRCULAR",
-      "topDown": "DA_TOP_DOWN"
+      longestIdle: "DA_LONGEST_IDLE_TIME",
+      broadcast: "DA_BROADCAST",
+      circular: "DA_CIRCULAR",
+      topDown: "DA_TOP_DOWN"
     };
     vm.huntGroupMethod = vm.hgMethods.longestIdle;
     vm.userSelected = undefined;
