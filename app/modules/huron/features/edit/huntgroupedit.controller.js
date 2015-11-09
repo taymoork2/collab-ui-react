@@ -56,6 +56,11 @@
             members: data.members,
             fallbackDestination: data.fallbackDestination
           };
+          vm.model.fallbackDestination.selectedNumberUuid = vm.model.fallbackDestination.numberUuid;
+
+          HuntGroupService.getMemberInfo(customerId, data.fallbackDestination.userUuid).then(function (user) {
+            vm.model.fallbackDestination.userName = user.firstName + " " + user.lastName;
+          });
 
           HuntGroupService.getNumbersWithSelection(data.numbers).then(function (data) {
             vm.numberoptions = data;
@@ -296,7 +301,7 @@
           vm.model.fallbackDestination.open = true;
         } else {
           HuntGroupService.getMemberInfo(customerId, vm.model.fallbackDestination.userUuid).then(function (data) {
-            vm.model.fallbackDestination.email = data.userName;
+            vm.model.fallbackDestination.email = data.email;
             data.numbers.forEach(function (value) {
               value.label = value.internal;
               value.value = value.internal;
