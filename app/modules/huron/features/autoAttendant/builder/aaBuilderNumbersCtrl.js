@@ -19,7 +19,7 @@
     vm.getDupeNumberAnyAA = getDupeNumberAnyAA;
     vm.addToAvailableNumberList = addToAvailableNumberList;
 
-    var numberTypeList = {};
+    vm.numberTypeList = {};
 
     vm.availablePhoneNums = [];
 
@@ -78,10 +78,10 @@
       addToAvailableNumberList(telephoneNumberFilter(number), number);
 
       vm.availablePhoneNums.sort(function (a, b) {
-        if (numberTypeList[a.value] === numberTypeList[b.value]) {
+        if (vm.numberTypeList[a.value] === vm.numberTypeList[b.value]) {
           return a.label.localeCompare(b.label);
         }
-        if (numberTypeList[a.value] === "directoryNumber") {
+        if (vm.numberTypeList[a.value] === "directoryNumber") {
           return 1;
         }
         return -1;
@@ -110,7 +110,7 @@
       resource.setNumber(number);
       resource.setId(number);
 
-      resource.setType(numberTypeList[number]);
+      resource.setType(vm.numberTypeList[number]);
 
       // add to the resource list
       var resources = vm.ui.ceInfo.getResources();
@@ -120,10 +120,10 @@
         var tmp = _.rest(resources);
 
         tmp.sort(function (a, b) {
-          if (numberTypeList[a.number] === numberTypeList[b.number]) {
+          if (vm.numberTypeList[a.number] === vm.numberTypeList[b.number]) {
             return a.number.localeCompare(b.number);
           }
-          if (numberTypeList[a.number] === "directoryNumber") {
+          if (vm.numberTypeList[a.number] === "directoryNumber") {
             return 1;
           }
           return -1;
@@ -190,7 +190,7 @@
             number: intPool[i].pattern.replace(/\D/g, '')
           };
 
-          numberTypeList[dn.number] = "directoryNumber";
+          vm.numberTypeList[dn.number] = "directoryNumber";
 
           // Add to the available phone number list if not already used
           if (!getDupeNumberAnyAA(dn.number)) {
@@ -216,7 +216,7 @@
               number: extPool[i].pattern.replace(/\D/g, '')
             };
 
-            numberTypeList[dn.number] = "externalNumber";
+            vm.numberTypeList[dn.number] = "externalNumber";
 
             // Add to the available phone number list if not already used
             if (!getDupeNumberAnyAA(dn.number)) {
