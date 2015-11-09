@@ -57,11 +57,6 @@
             fallbackDestination: data.fallbackDestination
           };
 
-          if (vm.model.fallbackDestination.number && vm.model.fallbackDestination.number !== '') {
-            vm.addFallback = true;
-            vm.userSelected = vm.model.fallbackDestination.number;
-          }
-
           HuntGroupService.getNumbersWithSelection(data.numbers).then(function (data) {
             vm.numberoptions = data;
             initialModel = angular.copy(vm.model);
@@ -169,6 +164,12 @@
         vm.form.$setPristine();
         vm.form.$setUntouched();
       }
+
+      if (vm.model.fallbackDestination.number && vm.model.fallbackDestination.number !== '') {
+        vm.addFallback = true;
+        vm.userSelected = vm.model.fallbackDestination.number;
+      }
+
       vm.initialized = true;
     }
 
@@ -268,13 +269,16 @@
           item.open = true;
         } else {
           HuntGroupService.getMemberInfo(customerId, item.userUuid).then(function (data) {
-            item.email = data.userName;
+            item.email = data.email;
             data.numbers.forEach(function (value) {
               value.label = value.internal;
               value.value = value.internal;
               value.name = 'MemberRadios';
               value.id = 'value.external';
-              item.selectedNumberUuid = value.uuid;
+
+              if(item.numberUuid === value.uuid) {
+                item.selectedNumberUuid = value.uuid;
+              }
             });
             item.numbers = data.numbers;
             item.open = true;
@@ -295,7 +299,10 @@
               value.value = value.internal;
               value.name = 'MemberRadios';
               value.id = 'value.external';
-              vm.model.fallbackDestination.selectedNumberUuid = value.uuid;
+
+              if(vm.model.fallbackDestination.numberUuid === value.uuid) {
+                vm.model.fallbackDestination.selectedNumberUuid = value.uuid;
+              }
             });
             vm.model.fallbackDestination.numbers = data.numbers;
             vm.model.fallbackDestination.open = true;
