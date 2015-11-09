@@ -2542,7 +2542,9 @@
       },
       "roomSystem":{
         "title":"Room Systems",
-        "desc":"Calls"
+        "desc":"Registered Systems",
+        "currentTitle": "Last 30 days",
+        "previousTitle": "Total"
       },
       "hybrid":{
         "title":"Hybrid Services"

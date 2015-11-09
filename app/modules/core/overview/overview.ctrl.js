@@ -26,7 +26,10 @@
         healthStatusUpdatedHandler: meeetingHealthEventHandler
       },
       {
-        key: 'roomSystem', icon: 'icon-circle-telepresence',
+        key: 'roomSystem',
+        icon: 'icon-circle-telepresence',
+        currentTitle: 'overview.cards.roomSystem.currentTitle',
+        previousTitle: 'overview.cards.roomSystem.previousTitle',
         deviceUpdateEventHandler: deviceUpdateEventHandler
       }
     ];
@@ -50,24 +53,18 @@
       }, this);
     }
 
-
     function deviceUpdateEventHandler(response) {
-
-      console.log(response);
 
       if (response.data) {
         this.current = _.size(response.data);
 
         var last30Days = new Date(new Date().getTime() - (1000 * 60 * 60 * 24 * 30));
 
-
-        var filteredRes = _.filter(response.data, function(value, key) {
-          console.log("filter", value.createTime, new Date(value.createTime) > last30Days);
+        var filteredRes = _.filter(response.data, function (value, key) {
           return new Date(value.createTime) > last30Days;
         });
 
         this.previous = _.size(filteredRes);
-        //   this.current = data.length;
       }
     }
 
@@ -122,7 +119,6 @@
 
     Orgservice.getOrg(function (data, status) {
       if (data.success) {
-        console.log(data);
         vm.user.ssoEnabled = data.ssoEnabled || false;
         vm.user.dirsyncEnabled = data.dirsyncEnabled || false;
       } else {
@@ -147,7 +143,6 @@
     }
 
     vm.deviceListSubscription = CsdmDeviceService.on('data', function (data) {
-      console.log("deviceList", data);
       _.each(cards, function (card) {
         if (card.deviceUpdateEventHandler) {
           card.deviceUpdateEventHandler(data);

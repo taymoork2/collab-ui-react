@@ -14,9 +14,9 @@
             <div class="right-side">
               <div class="overview-title">{{card.desc}}</div>
               <div class="overview-count current">{{(card.current | number) || 'N/A'}}</div>
-              <div class="overview-time current" translate="overview.thisMonth"/>
+              <div class="overview-time current">{{(card.currentTitle || 'overview.thisMonth') | translate }}</div>
               <div class="overview-count last">{{(card.previous | number) || 'N/A'}}</div>
-              <div class="overview-time last" translate="overview.lastMonth"/>
+              <div class="overview-time last" >{{(card.previousTitle || 'overview.lastMonth') | translate }}</div>
             </div>
           </div>
         </section>
