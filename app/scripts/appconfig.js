@@ -1362,7 +1362,10 @@ angular
           parent: 'main',
           templateUrl: 'modules/huron/features/edit/huntgroupedit.tpl.html',
           controller: 'HuntGroupEditCtrl',
-          controllerAs: 'hge'
+          controllerAs: 'hge',
+          params: {
+            feature: null
+          }
         });
     }
   ]);
@@ -1683,7 +1686,8 @@ angular
           },
           params: {
             connectorId: {},
-            groupName: {}
+            groupName: {},
+            roleSelected: {}
           }
         })
         .state('connector-details.alarms', {

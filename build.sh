@@ -1,5 +1,16 @@
 #!/bin/bash
 
+# import helper functions
+source ./bin/pid-helpers
+
+# look for any zombie instances of process names (shouldn't be any when Jenkins runs this)
+proc_names_to_scan="bin\\/sc gulp bin\\/spin"
+for i in $proc_names_to_scan; do
+    if [ -n "`get_pids $i`" ]; then
+        echo "WARNING: stale process found: $i"
+        kill_wait "$i"
+    fi
+done
 
 # Setup
 ./setup.sh
@@ -7,7 +18,7 @@
 # Build
 gulp clean || exit $?
 gulp jsb:verify || exit $?
-gulp e2e --sauce --nolint || exit $?
+gulp e2e --sauce --production-backend --nolint || exit $?
 
 # Check build number
 if [ -n "$BUILD_NUMBER" ]; then

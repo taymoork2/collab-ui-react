@@ -35,7 +35,8 @@ module.exports = function() {
     appFiles: {
       js: [
         app + '/modules/**/*.js',
-        app + '/scripts/**/*.js'
+        app + '/scripts/**/*.js',
+        '!' + app + '/modules/**/*.spec.js',
       ],
       json: [app + '/**/*.json'],
       csv: [app + '/**/*.csv'],
@@ -85,15 +86,7 @@ module.exports = function() {
         test + '/global.spec.js'
       ],
       spec: [
-        test + '/core/**/*.js',
-        test + '/huron/**/*.js',
-        test + '/hercules/**/*.js',
-        test + '/mediafusion/**/*.js',
-        test + '/messenger/**/*.js',
-        test + '/squared/**/*.js',
-        test + '/sunlight/**/*.js',
-        test + '/webex/**/*.js',
-        '!' + test + '/e2e-protractor/**/*'
+        app + '/modules/**/*.spec.js',
       ],
       e2e: {
         hercules: e2e + '/hercules/**/*_spec.js',
@@ -103,7 +96,8 @@ module.exports = function() {
         webexsitesettings: e2e + '/webex/siteSettings/**/*_spec.js',
         webexsitereports: e2e + '/webex/siteReports/**/*_spec.js',
         webexusersettings: e2e + '/webex/userSettings/**/*_spec.js',
-        sunlight: e2e + '/sunlight/**/*_spec.js'
+        sunlight: e2e + '/sunlight/**/*_spec.js',
+        regression: e2e + '/regression/**/*_spec.js'
       }
     },
 

@@ -38,7 +38,6 @@
         })
         .then(function () {
           var telInfo = TelephonyInfoService.getTelephonyInfo();
-          dnSettings.externalCallerIdType = 'Direct Line';
           return DirectoryNumber.updateDirectoryNumber(telInfo.currentDirectoryNumber.uuid, dnSettings);
         })
         .then(function () {

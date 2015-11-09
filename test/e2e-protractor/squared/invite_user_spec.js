@@ -65,7 +65,7 @@ describe('Squared Invite User Flow', function () {
       utils.expectText(users.userListStatus.first(), 'Invite Pending');
     });
 
-    it('should delete random users', function () {
+    afterAll(function () {
       deleteUtils.deleteUser(inviteEmail);
       deleteUtils.deleteUser(inviteEmail2);
     });
@@ -119,7 +119,7 @@ describe('Squared Invite User Flow', function () {
       utils.expectText(users.userListStatus.first(), 'Invite Pending');
     });
 
-    it('should delete random users', function () {
+    afterAll(function () {
       deleteUtils.deleteUser(inviteEmail);
       deleteUtils.deleteUser(inviteEmail2);
     });

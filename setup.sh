@@ -44,7 +44,7 @@ if [ $NPM_RET -ne 0 ]; then
     if [ "`uname`" = "Darwin" ]; then
       brew install npm
     else
-      "Please install npm (for CentOS, see: http://serverfault.com/questions/299288/how-do-you-install-node-js-on-centos )."
+      echo "Please install npm (for CentOS, see: http://serverfault.com/questions/299288/how-do-you-install-node-js-on-centos )."
     fi
 else
     echo "NPM is already installed"
@@ -83,9 +83,20 @@ fi
 #   ./cleanUpManagedOrgs.sh
 # fi
 
+time_start=$(date +"%s")
+
 # Install dependecies
 # bundle install
 npm install
 npm update -g bower
+
+time_npm=$(date +"%s")
+npm_duration=$(($time_npm-$time_start))
+echo "npm completed after $(($npm_duration / 60)) minutes and $(($npm_duration % 60)) seconds."
+
 bower cache clean
 bower install --force
+
+time_bower=$(date +"%s")
+bower_duration=$(($time_bower-$time_npm))
+echo "bower completed after $(($bower_duration / 60)) minutes and $(($bower_duration % 60)) seconds."
