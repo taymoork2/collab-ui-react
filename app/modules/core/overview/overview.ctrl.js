@@ -6,7 +6,7 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($scope, Log, $translate, $state, ReportsService, Orgservice, Config) {
+  function OverviewCtrl($scope, Log, $translate, $state, ReportsService, Orgservice, CsdmDeviceService, Config) {
 
     var vm = this;
     vm.pageTitle = $translate.instant('overview.pageTitle');
@@ -25,7 +25,10 @@
         key: 'call', icon: 'icon-circle-call', eventHandler: callEventHandler,
         healthStatusUpdatedHandler: meeetingHealthEventHandler
       },
-      {key: 'roomSystem', icon: 'icon-circle-telepresence'}
+      {
+        key: 'roomSystem', icon: 'icon-circle-telepresence',
+        deviceUpdateEventHandler: deviceUpdateEventHandler
+      }
     ];
     vm.cards = _.map(cards, function (card) {
       card.name = $translate.instant('overview.cards.' + card.key + '.title');
@@ -45,6 +48,27 @@
           this.healthStatus = mapStatus(this.healthStatus, component.status);
         }
       }, this);
+    }
+
+
+    function deviceUpdateEventHandler(response) {
+
+      console.log(response);
+
+      if (response.data) {
+        this.current = _.size(response.data);
+
+        var last30Days = new Date(new Date().getTime() - (1000 * 60 * 60 * 24 * 30));
+
+
+        var filteredRes = _.filter(response.data, function(value, key) {
+          console.log("filter", value.createTime, new Date(value.createTime) > last30Days);
+          return new Date(value.createTime) > last30Days;
+        });
+
+        this.previous = _.size(filteredRes);
+        //   this.current = data.length;
+      }
     }
 
     function meeetingHealthEventHandler(data) {
@@ -121,6 +145,17 @@
 
       return "error";
     }
+
+    vm.deviceListSubscription = CsdmDeviceService.on('data', function (data) {
+      console.log("deviceList", data);
+      _.each(cards, function (card) {
+        if (card.deviceUpdateEventHandler) {
+          card.deviceUpdateEventHandler(data);
+        }
+      });
+    }, {
+      scope: $scope
+    });
 
     ReportsService.healthMonitor(function (data, status) {
       if (data.success) {
