@@ -104,9 +104,14 @@
         // TODO: Strange callback result ???
         if (error !== null) {
           XhrNotificationService.notify(error);
+        } else {
+          $state.go(HelperNuggetsService.serviceType2RouteName(HelperNuggetsService.serviceId2ServiceType(serviceId)) + ".list", {
+            serviceType: HelperNuggetsService.serviceId2ServiceType(serviceId)
+          }, {
+            reload: true
+          });
         }
       });
-      vm.serviceEnabled = false;
     };
 
     vm.confirmDisable = function (serviceId) {
@@ -121,12 +126,6 @@
         }
       }).result.then(function () {
         vm.disableService(serviceId);
-        //TODO: Fix this hack!
-        $state.go(HelperNuggetsService.serviceType2RouteName(HelperNuggetsService.serviceId2ServiceType(serviceId)) + ".list", {
-          serviceType: HelperNuggetsService.serviceId2ServiceType(serviceId)
-        }, {
-          reload: true
-        });
       });
     };
 
