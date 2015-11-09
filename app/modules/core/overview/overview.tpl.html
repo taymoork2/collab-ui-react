@@ -8,11 +8,11 @@
             <div class="left-side">
               <div class="service-name">
                 <i class="icon" ng-class="card.icon"></i>
-                <span>{{card.name}}</span>
+                <span>{{card.name | translate}}</span>
               </div>
             </div>
             <div class="right-side">
-              <div class="overview-title">{{card.desc}}</div>
+              <div class="overview-title">{{card.desc | translate}}</div>
               <div class="overview-count current">{{(card.current | number) || 'N/A'}}</div>
               <div class="overview-time current">{{(card.currentTitle || 'overview.thisMonth') | translate }}</div>
               <div class="overview-count last">{{(card.previous | number) || 'N/A'}}</div>
@@ -50,23 +50,23 @@
         <section>
           <ul>
             <li>
-              <i class="icon icon-circle" ng-class="overview.user.dirsyncEnabled ? 'success' : 'disabled'"></i>
+              <i class="icon icon-circle" ng-class="overview.userCard.dirsyncEnabled ? 'success' : 'disabled'"></i>
               <span translate="overview.cards.users.directorySynchronization"></span>
             </li>
             <li>
-              <i class="icon icon-circle" ng-class="overview.user.ssoEnabled ? 'success' : 'disabled' "></i>
+              <i class="icon icon-circle" ng-class="overview.userCard.ssoEnabled ? 'success' : 'disabled' "></i>
               <span translate="overview.cards.users.singleSignOn"></span>
             </li>
           </ul>
           <hr/>
           <div class="bottom">
-            <h4>{{(overview.user.usersToConvert | number) || 'N/A'}}</h4>
+            <h4>{{(overview.userCard.usersToConvert | number) || 'N/A'}}</h4>
             <div translate="overview.cards.users.convertText"></div>
             <button
               class="btn btn-success"
               translate="overview.cards.users.convertButton"
               ng-click="overview.openConvertModal()"
-              ng-disabled="!overview.user.usersToConvert">
+              ng-disabled="!overview.userCard.usersToConvert">
             </button>
           </div>
         </section>

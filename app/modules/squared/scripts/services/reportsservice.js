@@ -219,7 +219,8 @@ function ReportsService($http, $q, $rootScope, $location, Storage, Config, Log, 
     getTimeCharts(useCache, charts, {
       intervalType: 'month',
       intervalCount: 2,
-      spanType: 'month'});
+      spanType: 'month'
+    });
   }
 
   function getLandingMetrics(useCache) {
