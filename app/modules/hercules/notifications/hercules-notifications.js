@@ -1,59 +1,53 @@
-(function () {
+(function() {
   'use strict';
 
   function HerculesNotificationsController(NotificationService, $state, $scope, $modal, $timeout, ServiceDescriptor) {
     var vm = this;
-    vm.notificationsLength = function () {
+    vm.notificationsLength = function() {
       return NotificationService.getNotificationLength();
     };
-    vm.filteredNotifications = function () {
-      return _.filter(NotificationService.getNotifications(), function (notification) {
+    vm.filteredNotifications = function() {
+      return _.filter(NotificationService.getNotifications(), function(notification) {
         return _.includes(notification.tags, vm.filterTag);
       });
     };
     vm.showNotifications = false;
-    vm.typeDisplayName = function (type) {
+    vm.typeDisplayName = function(type) {
       switch (type) {
-      case NotificationService.types.ALERT:
-        return 'ALERT';
-      case NotificationService.types.NEW:
-        return 'NEW';
-      default:
-        return 'TO-DO';
+        case NotificationService.types.ALERT:
+          return 'ALERT';
+        case NotificationService.types.NEW:
+          return 'NEW';
+        default:
+          return 'TO-DO';
       }
     };
 
-    vm.handleClick = function () {
-      if (vm.filteredNotifications().length > 0) {
-        vm.showNotifications = !vm.showNotifications;
-      } else {
-        $timeout(function () {
-          vm.showNotifications = !vm.showNotifications;
-        }, 2000);
-      }
+    vm.handleClick = function() {
+      vm.showNotifications = !vm.showNotifications;
     };
 
-    vm.amountBubbleType = function () {
+    vm.amountBubbleType = function() {
       return _.some(vm.filteredNotifications(), {
         type: NotificationService.types.ALERT
       }) ? NotificationService.types.ALERT : NotificationService.types.TODO;
     };
 
-    vm.navigateToDirSyncSetup = function () {
+    vm.navigateToDirSyncSetup = function() {
       $state.go('setupwizardmodal', {
         currentTab: 'addUsers'
       });
     };
 
-    vm.navigateToUsers = function () {
+    vm.navigateToUsers = function() {
       $state.go('users.list');
     };
 
-    vm.navigateToCallSettings = function () {
+    vm.navigateToCallSettings = function() {
       $state.go('call-service.settings');
     };
 
-    vm.showUserErrorsDialog = function (serviceId) {
+    vm.showUserErrorsDialog = function(serviceId) {
       $scope.selectedServiceId = serviceId;
       $scope.modal = $modal.open({
         scope: $scope,
@@ -62,7 +56,7 @@
       });
     };
 
-    vm.dismissNewServiceNotification = function (notificationId, serviceId) {
+    vm.dismissNewServiceNotification = function(notificationId, serviceId) {
       ServiceDescriptor.acknowledgeService(serviceId);
       NotificationService.removeNotification(notificationId);
     };
