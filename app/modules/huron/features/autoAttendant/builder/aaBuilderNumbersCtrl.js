@@ -16,11 +16,11 @@
     vm.deleteAAResource = deleteAAResource;
     vm.getExternalNumbers = getExternalNumbers;
     vm.getInternalNumbers = getInternalNumbers;
-    vm.filter = filter;
     vm.getDupeNumberAnyAA = getDupeNumberAnyAA;
+    vm.addToAvailableNumberList = addToAvailableNumberList;
 
-    vm.externalNumberList = [];
-    vm.internalNumberList = [];
+    vm.numberTypeList = {};
+
     vm.availablePhoneNums = [];
 
     vm.selectPlaceHolder = $translate.instant('autoAttendant.selectPlaceHolder');
@@ -28,6 +28,7 @@
     vm.inputPlaceHolder = $translate.instant('autoAttendant.inputPlaceHolder');
 
     // needed for cs-select's model, aaBuilderNumbers.tpl.html
+    // but right now at least, we don't want to pre-select any number, so it's blank
     vm.selected = {
       "label": "",
       "value": ""
@@ -36,20 +37,18 @@
     /////////////////////
 
     // Add Number, top-level method called by UI
-    function addNumber(option) {
+    function addNumber(number) {
 
-      if (angular.isUndefined(option) || option === '') {
+      if (angular.isUndefined(number) || number === '') {
         return;
       }
 
-      var number = option.value;
-
-      //      var index = vm.availablePhoneNums.indexOf(number);
-
+      // check to see if it's in the available list
       var numobj = vm.availablePhoneNums.filter(function (obj) {
         return obj.value == number;
       });
 
+      // if it's in the available list, take it out, and add to CE resources
       if (!angular.isUndefined(numobj) && numobj.length > 0) {
 
         vm.availablePhoneNums = vm.availablePhoneNums.filter(function (obj) {
@@ -58,6 +57,12 @@
 
         // add to the CE resources
         addAAResource(number);
+
+        // clear selection
+        vm.selected = {
+          "label": "",
+          "value": ""
+        };
 
       }
 
@@ -70,15 +75,27 @@
         return;
       }
 
-      var opt = {
-        label: telephoneNumberFilter(number),
-        value: number
-      };
-      vm.availablePhoneNums.push(opt);
+      addToAvailableNumberList(telephoneNumberFilter(number), number);
 
-      //      vm.availablePhoneNums.sort();
+      vm.availablePhoneNums.sort(function (a, b) {
+        if (vm.numberTypeList[a.value] === vm.numberTypeList[b.value]) {
+          return a.label.localeCompare(b.label);
+        }
+        if (vm.numberTypeList[a.value] === "directoryNumber") {
+          return 1;
+        }
+        return -1;
+
+      });
 
       deleteAAResource(number);
+
+      // clear selection
+      vm.selected = {
+        "label": "",
+        "value": ""
+      };
+
     }
 
     // Add the number to the CE Info resource list
@@ -87,23 +104,38 @@
       var resource = AutoAttendantCeInfoModelService.newResource();
       // both internal and external triggers are incomingCall
       resource.setTrigger('incomingCall');
-      // default to externalNumber
-      resource.setType('externalNumber');
 
       // the server POST schema specifies an id and number field but the number is actually not used; the id is used as the number
       // So just set them both to the number
       resource.setNumber(number);
       resource.setId(number);
 
-      if (isExternalNumber(number)) {
-        resource.setType('externalNumber');
-      } else if (isInternalNumber(number)) {
-        resource.setType('directoryNumber');
-      }
+      resource.setType(vm.numberTypeList[number]);
 
       // add to the resource list
       var resources = vm.ui.ceInfo.getResources();
       resources.push(resource);
+
+      if (resources.length > 2) {
+        var tmp = _.rest(resources);
+
+        tmp.sort(function (a, b) {
+          if (vm.numberTypeList[a.number] === vm.numberTypeList[b.number]) {
+            return a.number.localeCompare(b.number);
+          }
+          if (vm.numberTypeList[a.number] === "directoryNumber") {
+            return 1;
+          }
+          return -1;
+
+        });
+
+        resources.splice(1, resources.length - 1);
+
+        _.forEach(tmp, function (n) {
+          resources.push(n);
+        });
+      }
 
     }
 
@@ -113,7 +145,7 @@
 
       var resources = vm.ui.ceInfo.getResources();
       for (i = 0; i < resources.length; i++) {
-        if (resources[i].getNumber() === number.replace(/\D/g, '')) {
+        if (resources[i].getNumber() === number) {
           resources.splice(i, 1);
         }
       }
@@ -131,39 +163,19 @@
 
     }
 
-    function isExternalNumber(number) {
-      for (var i = 0; i < vm.externalNumberList.length; i++) {
-        if (vm.externalNumberList[i].number.replace(/\D/g, '') === number.replace(/\D/g, '')) {
-          return true;
-        }
-      }
-      return false;
+    function addToAvailableNumberList(label, number) {
+      var opt = {
+        label: label,
+        value: number
+      };
+      vm.availablePhoneNums.push(opt);
     }
 
-    function isInternalNumber(number) {
-      for (var i = 0; i < vm.internalNumberList.length; i++) {
-        if (vm.internalNumberList[i].number.replace(/\D/g, '') === number.replace(/\D/g, '')) {
-          return true;
-        }
-      }
-      return false;
-    }
+    function loadNums() {
+      getExternalNumbers().then(function () {
+        getInternalNumbers();
+      });
 
-    function filter(number) {
-      if (!number) {
-        return '';
-      }
-
-      var countryTelephoneNumberRegex = /(\+?\d{1})(\d{3})(\d{3})(\d{4})/;
-      var basicTelephoneNumberRegex = /(\d{3})(\d{3})(\d{4})/;
-
-      if (countryTelephoneNumberRegex.test(number)) {
-        return number.replace(countryTelephoneNumberRegex, "$1 ($2) $3-$4");
-      } else if (basicTelephoneNumberRegex.test(number)) {
-        return number.replace(basicTelephoneNumberRegex, "($1) $2-$3");
-      } else {
-        return number;
-      }
     }
 
     function getInternalNumbers() {
@@ -175,20 +187,16 @@
         for (var i = 0; i < intPool.length; i++) {
           var dn = {
             id: intPool[i].uuid,
-            number: intPool[i].pattern
+            number: intPool[i].pattern.replace(/\D/g, '')
           };
 
-          // the internalNumberList will contain the info as it came from CMI
-          vm.internalNumberList.push(dn);
+          vm.numberTypeList[dn.number] = "directoryNumber";
 
           // Add to the available phone number list if not already used
-          if (!getDupeNumberAnyAA(dn.number.replace(/\D/g, ''))) {
+          if (!getDupeNumberAnyAA(dn.number)) {
             // Internal extensions don't need formatting
-            var opt = {
-              label: dn.number,
-              value: dn.number
-            };
-            vm.availablePhoneNums.push(opt);
+            addToAvailableNumberList(dn.number, dn.number);
+
           }
         }
       });
@@ -196,7 +204,7 @@
 
     function getExternalNumbers() {
 
-      ExternalNumberPoolService.query({
+      return ExternalNumberPoolService.query({
           customerId: Authinfo.getOrgId(),
           order: 'pattern'
         }).$promise
@@ -205,22 +213,17 @@
 
             var dn = {
               id: extPool[i].uuid,
-              number: extPool[i].pattern
+              number: extPool[i].pattern.replace(/\D/g, '')
             };
 
-            // the externalNumberList will contain the info as it came from CMI
-            vm.externalNumberList.push(dn);
+            vm.numberTypeList[dn.number] = "externalNumber";
 
             // Add to the available phone number list if not already used
-            if (!getDupeNumberAnyAA(dn.number.replace(/\D/g, ''))) {
+            if (!getDupeNumberAnyAA(dn.number)) {
               // For the option list, format the number for the label,
               // and return the value as just the number
-              var num = dn.number.replace(/\D/g, '');
-              var opt = {
-                label: telephoneNumberFilter(num),
-                value: num
-              };
-              vm.availablePhoneNums.push(opt);
+              addToAvailableNumberList(telephoneNumberFilter(dn.number), dn.number);
+
             }
 
           }
@@ -233,9 +236,8 @@
 
       vm.ui = AAUiModelService.getUiModel();
 
-      getExternalNumbers();
+      loadNums();
 
-      getInternalNumbers();
     }
 
     activate();

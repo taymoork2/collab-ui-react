@@ -104,15 +104,9 @@ describe('Controller: AABuilderNumbersCtrl', function () {
   describe('addNumber', function () {
 
     beforeEach(function () {
-      controller.externalNumberList[0] = {
-        id: "450C190F-4942-CA5B-496B-B0A919364D54",
-        number: "(206)426-1234"
-      };
 
-      controller.internalNumberList[0] = {
-        id: "450C190F-4942-CA5B-496B-B0A919364D55",
-        number: "1234"
-      };
+      controller.numberTypeList[2064261234] = "externalNumber";
+      controller.numberTypeList[1234] = "directoryNumber";
 
       aaModel.ceInfos = [];
       aaModel.aaRecords = [];
@@ -130,14 +124,11 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       });
 
       controller.availablePhoneNums[0] = {
-        label: controller.externalNumberList[0].number,
-        value: controller.externalNumberList[0].number
+        label: "2064261234",
+        value: "2064261234"
       };
 
-      controller.addNumber({
-        label: controller.externalNumberList[0].number,
-        value: controller.externalNumberList[0].number
-      });
+      controller.addNumber("2064261234");
 
       $scope.$apply();
 
@@ -153,14 +144,11 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       });
 
       controller.availablePhoneNums[0] = {
-        label: controller.internalNumberList[0].number,
-        value: controller.internalNumberList[0].number
+        label: "1234",
+        value: "1234"
       };
 
-      controller.addNumber({
-        label: controller.internalNumberList[0].number,
-        value: controller.internalNumberList[0].number
-      });
+      controller.addNumber("1234");
 
       $scope.$apply();
 
@@ -176,12 +164,12 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       });
 
       controller.availablePhoneNums[0] = {
-        label: controller.externalNumberList[0].number,
-        value: controller.externalNumberList[0].number
+        label: "2064261234",
+        value: "2064261234"
       };
       controller.availablePhoneNums[1] = {
-        label: controller.internalNumberList[0].number,
-        value: controller.internalNumberList[0].number
+        label: "1234",
+        value: "1234"
       };
 
       controller.addNumber('');
@@ -212,11 +200,17 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
     it('should move a phone number to available successfully', function () {
 
+      // start out as 1 available number
+      controller.availablePhoneNums[0] = {
+        label: "1234567",
+        value: "1234567"
+      };
+
       controller.removeNumber(rawCeInfo.assignedResources[0].number);
 
       $scope.$apply();
 
-      expect(controller.availablePhoneNums.length).toEqual(1);
+      expect(controller.availablePhoneNums.length).toEqual(2);
 
       var numobj = controller.availablePhoneNums.filter(function (obj) {
         return obj.value == rawCeInfo.assignedResources[0].number;
