@@ -130,7 +130,7 @@
 
         });
 
-        resources = _.dropRight(resources, resources.length - 1);
+        resources.splice(1, resources.length - 1);
 
         _.forEach(tmp, function (n) {
           resources.push(n);
