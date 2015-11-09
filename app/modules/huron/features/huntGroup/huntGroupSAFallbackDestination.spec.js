@@ -165,7 +165,6 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
     expect(controller.selectedFallbackNumber).toEqual("80632101");
   });
 
-
   it("selecting a fallback member initializes fallback data correctly.", function () {
     selectFallbackMember(fallbackMember1);
     controller.validateFallback();

@@ -5,8 +5,10 @@
 
 describe('Hunt Group EditCtrl Controller', function () {
 
-  var hgEditCtrl, $rootScope, $scope, $q, $state, $stateParams, $timeout, Authinfo, HuntGroupService, Notification, form;
+  var hgEditCtrl, $httpBackend, $rootScope, $scope, $q, $state, $stateParams, $timeout, Authinfo, HuntGroupService, Notification, form;
   var hgFeature = getJSONFixture('huron/json/features/edit/featureDetails.json');
+  var GetMemberUrl = new RegExp(".*/api/v2/customers/1/users/.*");
+  var user1 = getJSONFixture('huron/json/features/huntGroup/user1.json');
   var numbers = [{
     "internal": "8001",
     "external": "972-510-5002",
@@ -20,11 +22,19 @@ describe('Hunt Group EditCtrl Controller', function () {
   }];
 
   beforeEach(module('Huron'));
+  beforeEach(module(function ($provide) {
+    $provide.value("Authinfo", spiedAuthinfo);
+  }));
 
-  beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$state_, _$timeout_, _Authinfo_, _HuntGroupService_, _Notification_) {
+  var spiedAuthinfo = {
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
+  };
+
+  beforeEach(inject(function (_$rootScope_, $controller, _$httpBackend_, _$q_, _$state_, _$timeout_, _Authinfo_, _HuntGroupService_, _Notification_) {
     $scope = _$rootScope_.$new();
     $state = _$state_;
     $timeout = _$timeout_;
+    $httpBackend = _$httpBackend_;
     $q = _$q_;
     Authinfo = _Authinfo_;
     HuntGroupService = _HuntGroupService_;
@@ -50,6 +60,9 @@ describe('Hunt Group EditCtrl Controller', function () {
     spyOn(HuntGroupService, 'getDetails').and.returnValue($q.when(hgFeature));
     spyOn(HuntGroupService, 'updateHuntGroup').and.returnValue($q.when());
     spyOn(HuntGroupService, 'getNumbersWithSelection').and.returnValue($q.when());
+
+    $httpBackend.whenGET(GetMemberUrl).respond(200, user1);
+
     hgEditCtrl = $controller('HuntGroupEditCtrl', {
       $state: $state,
       $stateParams: $stateParams,
@@ -62,6 +75,7 @@ describe('Hunt Group EditCtrl Controller', function () {
     hgEditCtrl.form = form;
     $scope.$apply();
     $timeout.flush();
+    $httpBackend.flush();
   }));
 
   it('Controller Should get Initialized', function () {
