@@ -19,6 +19,10 @@ angular.module('Core')
         contentShared: 'refresh'
       };
 
+      $scope.isCalendarAcknowledged = true;
+      $scope.isCallAcknowledged = true;
+      var extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-uc'];
+
       $scope.currentDate = moment().subtract(1, 'months').format('LL');
       var weekOf = $translate.instant('reports.weekOf');
 
@@ -34,6 +38,11 @@ angular.module('Core')
       }, {
         'date': todaysDate.setDate(todaysDate.getDate() + 1)
       }];
+
+      $scope.showServiceActivationPage = function (serviceName) {
+        $state.go(serviceName + '.list');
+        $scope.setHybridAcknowledged(serviceName);
+      };
 
       $scope.isRefresh = function (property) {
         return $scope.reportStatus[property] === 'refresh';
@@ -250,6 +259,29 @@ angular.module('Core')
             Log.error("Query active users metrics failed. Status: " + status);
           }
         });
+
+        Orgservice.getHybridServiceAcknowledged().then(function (response) {
+          if (response.status === 200) {
+            angular.forEach(response.data.items, function (items) {
+              if (items.id === extensionEntitlements[0]) {
+                $scope.isCalendarAcknowledged = items.acknowledged;
+              } else if (items.id === extensionEntitlements[1]) {
+                $scope.isCallAcknowledged = items.acknowledged;
+              }
+            });
+          } else {
+            Log.error("Error in GET service acknowledged status");
+          }
+        });
+      };
+
+      $scope.setHybridAcknowledged = function (serviceName) {
+        if (serviceName === 'calendar-service') {
+          $scope.isCalendarAcknowledged = true;
+        } else if (serviceName === 'call-service') {
+          $scope.isCallAcknowledged = true;
+        }
+        Orgservice.setHybridServiceAcknowledged(serviceName);
       };
 
       $scope.inviteUsers = function () {

@@ -58,6 +58,12 @@ $features-header-height : 83px;
     align-items: baseline;
   }
 
+  .card-body{
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
   .card-section {
     @include vr-spacing(pl, 0.9);
     @include vr-spacing(pt, 0.8);

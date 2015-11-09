@@ -94,6 +94,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Pilot Number Lookup', f
     controller.fetchNumbers(someNumber.number).then(function (dropdownList) {
       expect(listContains(dropdownList, someNumber)).toBeFalsy(); // drop down must not show it.
     });
+    $httpBackend.flush();
 
     controller.unSelectPilotNumber(someNumber); // pill 1 is closed.
 

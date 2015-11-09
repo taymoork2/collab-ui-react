@@ -88,24 +88,6 @@ describe('ServiceStateChecker', function () {
     expect(NotificationService.getNotifications()[0].id).toEqual('configureConnectors');
   });
 
-  it("Dirsync not enabled should raise the 'dirSyncNotEnabled' message and clear appropriately", function () {
-    USSService2.getStatusesSummary.returns(okUserStatusSummary);
-    ClusterService.getClusters.returns([okClusterMockData]);
-    DirSyncService.getDirSyncDomain.callsArgWith(0, {
-      success: false,
-      serviceMode: 'Argh!'
-    });
-    ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
-    expect(NotificationService.getNotificationLength()).toEqual(1);
-    expect(NotificationService.getNotifications()[0].id).toEqual('dirSyncNotEnabled');
-    DirSyncService.getDirSyncDomain.callsArgWith(0, {
-      success: true,
-      serviceMode: 'ENABLED'
-    });
-    ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
-    expect(NotificationService.getNotificationLength()).toEqual(0);
-  });
-
   it("No users activated should raise the 'noUsersActivated' message and clear appropriately", function () {
     USSService2.getStatusesSummary.returns([{
       serviceId: 'squared-fusion-cal',

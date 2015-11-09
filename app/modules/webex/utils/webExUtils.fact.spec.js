@@ -3,7 +3,7 @@
  */
 'use strict';
 
-describe('WebExUtilsFactTest', function () {
+describe('WebExUtilsFact Test', function () {
 
   var $q;
   var $rootScope;

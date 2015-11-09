@@ -11,59 +11,137 @@
 
     /* jshint validthis: true */
 
-    var feature;
     var customerId = Authinfo.getOrgId();
+
     var service = {
       getListOfHuntGroups: getListOfHuntGroups,
       deleteHuntGroup: deleteHuntGroup,
       saveHuntGroup: saveHuntGroup,
       updateHuntGroup: updateHuntGroup,
-      editFeature: editFeature,
       getDetails: getDetails,
       getNumbersWithSelection: getNumbersWithSelection,
       getMemberInfo: getMemberInfo,
-      getPilotNumberSuggestions: suggestionForTypeAhead,
-      getHuntMembers: suggestionForTypeAhead
+      getPilotNumberSuggestions: getPilotNumberSuggestions,
+      getHuntMembers: getHuntMembers
     };
 
     return service;
 
-    function suggestionForTypeAhead(filterKey, filterValue, itemsInUI, onFailure) {
-      var suggestions = $q.defer();
-
-      if (suggestionsNeeded(filterValue)) {
-        var apiArgs = {};
-        apiArgs[filterKey] = filterValue;
-        var service = inferServiceByFilter(filterKey);
-        if (service) {
-          return fetchSuggestionsFromService(service, apiArgs, itemsInUI,
-            onFailure, suggestions);
-        }
+    function getHuntMembers(hint) {
+      if (suggestionsNeeded(hint)) {
+        var helper = getServiceHelper();
+        helper.setService(UserSearchServiceV2);
+        helper.fetch({
+          name: hint
+        });
+        helper.setExtractData(function (data) {
+          return data.users;
+        });
+        helper.setMapping(constructUserNumberMappingForUI);
+        return helper;
       }
-
-      suggestions.resolve([]);
-      return suggestions.promise;
+      return undefined;
     }
 
-    function inferServiceByFilter(filterKey) {
-      var service = {};
-
-      if (filterKey === 'number') {
-        service.resource = NumberSearchServiceV2;
-        service.extractItems = function (response) {
-          return response.numbers;
-        };
-      } else if (filterKey === 'name') {
-        // TODO: Replace UserSearchServiceV2 with UserServiceCommonV2 when ready.
-        service.resource = UserSearchServiceV2;
-        service.extractItems = function (response) {
-          return constructUserNumberMappingForUI(response.users);
-        };
-      } else {
-        service = undefined;
+    function getPilotNumberSuggestions(hint) {
+      if (suggestionsNeeded(hint)) {
+        var helper = getServiceHelper();
+        helper.setService(NumberSearchServiceV2);
+        helper.fetch({
+          number: hint,
+          assigned: false
+        });
+        helper.setExtractData(function (data) {
+          return data.numbers;
+        });
+        return helper;
       }
+      return undefined;
+    }
 
-      return service;
+    /**
+     * Returns a helper object that has a set of feeder
+     * closure functions. The helper takes care of response
+     * extraction, filtering, mapping and failure handling
+     * in a generic manner.
+     */
+    function getServiceHelper() {
+
+      var asyncResult = $q.defer();
+      var onFailure = '';
+      var extractData = '';
+      var filter = '';
+      var mapping = '';
+      var service = '';
+
+      var valid = function (data) {
+        return (data !== '');
+      };
+
+      var fail = function (error) {
+        if (valid(onFailure)) {
+          onFailure(error);
+        }
+        asyncResult.resolve([]);
+      };
+
+      var main = function (response) {
+        var data = '';
+
+        if (valid(extractData)) {
+          data = extractData(response);
+        }
+
+        if (valid(filter)) {
+          data = filterData(data);
+        }
+
+        if (valid(mapping)) {
+          data = mapping(data);
+        }
+
+        asyncResult.resolve(data);
+
+        function filterData(rArray) {
+          var sKey = filter.sourceKey;
+          var sArray = filter.dataToStrip;
+          var rKey = filter.responseKey;
+
+          var sArrayMapped = sArray.map(function (e) {
+            return e[sKey];
+          });
+          return rArray.filter(function (rItem) {
+            return (sArrayMapped.indexOf(rItem[rKey]) === -1);
+          });
+        }
+      };
+
+      return {
+        setOnFailure: function (callback) {
+          onFailure = callback;
+        },
+        setExtractData: function (callback) {
+          extractData = callback;
+        },
+        setFilter: function (filterConfig) {
+          filter = filterConfig;
+        },
+        setMapping: function (map) {
+          mapping = map;
+        },
+        setService: function (s) {
+          service = s;
+        },
+        fetch: function (apiArgs) {
+          apiArgs.customerId = customerId;
+          service.get(apiArgs).$promise
+            .then(main)
+            .catch(fail);
+        },
+        result: function () {
+          return asyncResult.promise;
+        }
+      };
     }
 
     /**
@@ -116,36 +194,6 @@
       });
 
       return huntMembers;
-    }
-
-    function fetchSuggestionsFromService(service, apiArgs, itemsInUI, onFailure, suggestions) {
-      apiArgs.customerId = customerId;
-
-      if (service.resource == NumberSearchServiceV2)
-        apiArgs.assigned = false; // fetch unassigned numbers only.
-
-      var uuidInUI = itemsInUI.map(function (e) {
-        return e.uuid;
-      });
-
-      service.resource.get(apiArgs).$promise
-        .then(suggest)
-        .catch(suggestNothingAndNotifyFailure);
-
-      return suggestions.promise;
-
-      function suggest(response) {
-        var itemsFromBackend = service.extractItems(response);
-        var suggestedItems = itemsFromBackend.filter(function (backendItem) {
-          return (uuidInUI.indexOf(backendItem.uuid) === -1);
-        });
-        suggestions.resolve(suggestedItems);
-      }
-
-      function suggestNothingAndNotifyFailure(response) {
-        suggestions.resolve([]);
-        onFailure(response);
-      }
     }
 
     function suggestionsNeeded(typedText) {
@@ -306,10 +354,6 @@
       // return deferred.promise;
     }
 
-    function editFeature(_feature) {
-      feature = _feature;
-    }
-
     function getNumbersWithSelection(numbers) {
       var deferred = $q.defer();
 
@@ -330,60 +374,12 @@
       return deferred.promise;
     }
 
-    function getDetails(customerId) {
-      var deferred = $q.defer();
-      if (feature) {
+    function getDetails(customerId, huntGroupId) {
 
-        return HuntGroupServiceV2.get({
-          customerId: customerId,
-          huntGroupId: feature.huntGroupId
-        }).$promise;
-
-        // var successResponse = {
-        //   "name": "Technical Difficulties",
-        //   "numbers": [{
-        //     "number": "972-405-2102"
-        //   }, {
-        //     "number": "972-405-2103"
-        //   }],
-        //   "huntMethod": "longest-idle",
-        //   "maxRingSecs": 30,
-        //   "maxWaitMins": 40,
-        //   "fallbackDestination": {
-        //     "number": "8177777777",
-        //     "numberUuid": "2342-2342-23423-234898",
-        //     "userName": "bspence",
-        //     "userUuid": "97898-86823-34545-234234",
-        //     "sendToVoicemail": true
-        //   },
-        //   "members": [{
-        //     "userName": "Brian Spence",
-        //     "userUuid": "97898-86823-34545-234234",
-        //     "number": "8177777777",
-        //     "numberUuid": "2342-2342-23423-234898"
-        //   }, {
-        //     "userName": "Sam Williams",
-        //     "userUuid": "97898-86823-34545-234235",
-        //     "number": "8166666666",
-        //     "numberUuid": "2342-2342-23423-234899"
-        //   }]
-        // };
-
-        // var failureResponse = {
-        //   'data': 'Internal Server Error',
-        //   'status': 500,
-        //   'statusText': 'Internal Server Error'
-        // };
-
-        // $timeout(function () {
-        //   deferred.resolve(successResponse);
-        //   //deferred.reject(failureResponse);
-        // }, 3000);
-
-      } else {
-        deferred.reject('error');
-      }
-      return deferred.promise;
+      return HuntGroupServiceV2.get({
+        customerId: customerId,
+        huntGroupId: huntGroupId
+      }).$promise;
     }
 
     function getMemberInfo(customerId, userId) {

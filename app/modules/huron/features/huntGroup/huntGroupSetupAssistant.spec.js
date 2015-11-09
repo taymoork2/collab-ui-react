@@ -111,27 +111,4 @@ describe('Huron Setup Assistant Ctrl', function () {
     controller.evalKeyPress(escapeKey);
     expect($modal.open).toHaveBeenCalled();
   });
-
-  it("should invalidate the fallback number if entered invalid", function () {
-    controller.fallback = "8";
-    controller.validateFallback();
-    $scope.$apply();
-
-    expect(controller.fallbackValid).toBeFalsy();
-  });
-
-  it("should validate the fallback number if entered invalid", function () {
-    controller.fallback = "8179325798";
-    controller.validateFallback();
-    $scope.$apply();
-
-    expect(controller.fallbackValid).toBeTruthy();
-  });
-
-  it("should save the details entered", function () {
-    controller.saveHuntGroup();
-    $scope.$apply();
-
-    expect(Notification.success).toHaveBeenCalled();
-  });
 });
