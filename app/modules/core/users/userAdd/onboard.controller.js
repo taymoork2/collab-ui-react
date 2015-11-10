@@ -28,6 +28,7 @@ angular.module('Core')
 
       $scope.isReset = false;
       $scope.showExtension = undefined;
+      $scope.showExtentions = false;
       $scope.displayInternal = $translate.instant('usersPage.extensionHeader');
       $scope.displayExternal = $translate.instant('usersPage.directLineHeader');
       $scope.isResetEnabled = false;
@@ -62,9 +63,13 @@ angular.module('Core')
       //***********************************************************************************/
 
       function activateDID() {
-        $q.all([loadInternalNumberPool(), loadExternalNumberPool()])
+        $q.all([loadInternalNumberPool(), loadExternalNumberPool(), toggleShowExtensions()])
           .finally(function () {
-            assignDNForUserList();
+            if ($scope.showExtentions === true) {
+              assignDNForUserList();
+            } else {
+              mapDidToDn();
+            }
             $scope.processing = false;
           });
       }
@@ -204,6 +209,18 @@ angular.module('Core')
           onboardUsers(true);
         }
       };
+
+      function toggleShowExtensions() {
+        return DialPlanService.getCustomerDialPlanDetails().then(function (response) {
+          if (response.extensionGenerated === "true") {
+            $scope.showExtentions = false;
+          } else {
+            $scope.showExtentions = true;
+          }
+        }).catch(function (response) {
+          Notification.errorResponse(response, 'serviceSetupModal.customerDialPlanDetailsGetError');
+        });
+      }
 
       /****************************** Did to Dn Mapping END *******************************/
       //***
