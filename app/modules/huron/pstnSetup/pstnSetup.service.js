@@ -8,6 +8,7 @@
   function PstnSetupService($q, Authinfo, TerminusCarrierService, TerminusCustomerService, TerminusCustomerCarrierService, TerminusBlockOrderService, TerminusOrderService, TerminusCarrierInventoryCount, TerminusNumberService, TerminusCarrierInventorySearch, TerminusCarrierInventoryReserve, TerminusCarrierInventoryRelease, TerminusNumberOrderService) {
     var INTELEPEER = "INTELEPEER";
     var TATA = "TATA";
+    var TELSTRA = "TELSTRA";
     var PSTN = "PSTN";
     var PENDING = "PENDING";
     var QUEUED = "QUEUED";
@@ -23,7 +24,6 @@
       releaseCarrierInventory: releaseCarrierInventory,
       isCarrierSwivel: isCarrierSwivel,
       listCustomerCarriers: listCustomerCarriers,
-      getCarrierId: getCarrierId,
       orderBlock: orderBlock,
       orderNumbers: orderNumbers,
       listPendingOrders: listPendingOrders,
@@ -32,6 +32,7 @@
       deleteNumber: deleteNumber,
       INTELEPEER: INTELEPEER,
       TATA: TATA,
+      TELSTRA: TELSTRA,
       PSTN: PSTN,
       PENDING: PENDING
     };
@@ -88,13 +89,46 @@
     }
 
     function listCarriers() {
-      return TerminusCarrierService.query().$promise;
+      var carrierList = [];
+      return TerminusCarrierService.query().$promise
+        .then(function (carriers) {
+          var promises = [];
+          angular.forEach(carriers, function (carrier) {
+            var promise = TerminusCarrierService.get({
+              carrierId: carrier.uuid
+            }).$promise.then(function (carrierGet) {
+              carrier.apiExists = carrierGet.apiExists;
+              carrier.vendor = carrierGet.vendor;
+              carrierList.push(carrier);
+            });
+            promises.push(promise);
+          });
+          return $q.all(promises).then(function () {
+            return carrierList;
+          });
+        });
     }
 
     function listCustomerCarriers(customerId) {
+      var carrierList = [];
       return TerminusCustomerCarrierService.query({
         customerId: customerId
-      }).$promise;
+      }).$promise.then(function (carriers) {
+        var promises = [];
+        angular.forEach(carriers, function (carrier) {
+          var promise = TerminusCarrierService.get({
+            carrierId: carrier.uuid
+          }).$promise.then(function (carrierGet) {
+            carrier.apiExists = carrierGet.apiExists;
+            carrier.vendor = carrierGet.vendor;
+            carrierList.push(carrier);
+          });
+          promises.push(promise);
+        });
+        return $q.all(promises).then(function () {
+          return carrierList;
+        });
+      });
     }
 
     function getCarrierInventory(carrierId, state) {
@@ -146,19 +180,6 @@
           }
         }
         return false;
-      });
-    }
-
-    function getCarrierId(customerId, carrierName) {
-      return listCustomerCarriers(customerId).then(function (carriers) {
-        var matchingCarriers = carriers.filter(function (carrier) {
-          return carrier.name === (carrierName || INTELEPEER);
-        });
-        if (matchingCarriers.length > 0) {
-          return matchingCarriers[0].uuid;
-        } else {
-          return $q.reject('carrier not found');
-        }
       });
     }
 

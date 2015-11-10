@@ -7,17 +7,17 @@
     <div class="row page-header">
       <div class="page-title small-5 columns">
         <span class="title-heading">
-          {{WebExSiteSettings.siteSettingsObj.pageTitle}}
+          {{siteSettingsObj.pageTitle}}
         </span>
       </div>
     
       <div class="small-7 columns"
-           ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
+           ng-if="siteSettingsObj.viewReady">
            
         <div class="page-option-buttons" ng-controller="ExportUsersCtrl">
-          <button id={{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.id}}
-                  name={{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.id}}
-                  ui-sref={{WebExSiteSettings.siteSettingsObj.emailAllHostsBtnObj.pageObj.uiSref}}
+          <button id={{siteSettingsObj.emailAllHostsBtnObj.id}}
+                  name={{siteSettingsObj.emailAllHostsBtnObj.id}}
+                  ui-sref={{siteSettingsObj.emailAllHostsBtnObj.pageObj.uiSref}}
                   class="button large"
                   translate="webexSiteSettingsLabels.emailAllHostsBtnTitle">
           </button>
@@ -44,11 +44,11 @@
           id="siteSettingsCrumb"
           name="siteSettingsCrumb">
           
-        {{WebExSiteSettings.siteSettingsObj.pageTitleFull}}
+        {{siteSettingsObj.pageTitleFull}}
       </li>
     </ul>
     
-    <div ng-if="WebExSiteSettings.siteSettingsObj.viewReady">
+    <div ng-if="siteSettingsObj.viewReady">
       <cs-card-layout>
         <div ng-include="'modules/webex/siteSettings/siteInfoCard.tpl.html'"></div>
       </cs-card-layout>
@@ -60,7 +60,7 @@
 
     <!-- WebEx site admin cross launch -->
     <p>
-      &nbsp;&nbsp;&nbsp;
+      <br>&nbsp;&nbsp;
     
       <a href=""
          onClick="document.getElementById('hiddenButton').click();">

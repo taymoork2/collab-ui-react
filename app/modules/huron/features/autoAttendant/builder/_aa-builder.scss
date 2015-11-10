@@ -8,13 +8,11 @@ $aa-builder-header-height: 54px;
 $aa-builder-border-color: $gray-light;
 $aa-builder-border-size: .075rem;
 $aa-builder-icon-color: $gray-base;
-
-@mixin aa-builder-height($rem_offset)
-{
+@mixin aa-builder-height($rem_offset) {
   /* base-offset includes navbar, overlay-heading and aa-builder-header (elements from top of page) */
-  $overlay-heading-height: 93px; /* no global variable */
+  $overlay-heading-height: 93px;
+  /* no global variable */
   $aa-builder-base-offset: rem($navbar-height + $overlay-heading-height + $aa-builder-header-height);
-
   /* add to offset any additional value */
   $aa-builder-offset: $aa-builder-base-offset + $rem_offset;
   height: calc(100vh - #{$aa-builder-offset});
@@ -36,7 +34,8 @@ $aa-builder-icon-color: $gray-base;
     overflow-y: auto;
     overflow-x: hidden;
     $margin-top: .125rem;
-    margin-top: $margin-top; /* allows aa-builder-frame box-shadow to show */
+    margin-top: $margin-top;
+    /* allows aa-builder-frame box-shadow to show */
     @include aa-builder-height($frame-margin-size + (2 * $frame-border-size) + $margin-top);
   }
 }
@@ -68,21 +67,24 @@ $aa-builder-icon-color: $gray-base;
   justify-content: center;
 }
 
+.aa-flex-row-item-bottom-align {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: flex-end;
+  justify-content: center;
+}
+
 #aa-header-row {
   height: $aa-builder-header-height;
   background-color: $brand-white;
 }
 
 #aa-header-row-content {
-  padding-left: 120px;
+  padding-left: 7.5rem;
 }
 
 #aa-header-row-name {
-  padding-right: 40px;
-}
-
-#aa-header-row-numbers {
-  padding-left: 40px;
+  padding-right: 2.5rem;
 }
 
 .aa-flex-row-item-right {
@@ -93,7 +95,7 @@ $aa-builder-icon-color: $gray-base;
 }
 
 #aa-header-row-save {
-  padding-right: 15px;
+  padding-right: 1rem;
 }
 
 .aa-edit-icon {
@@ -103,6 +105,7 @@ $aa-builder-icon-color: $gray-base;
   color: $aa-builder-icon-color;
   padding-left: .25rem;
   padding-top: .25rem;
+  margin-bottom: 1rem;
   &:hover {
     cursor: pointer;
     color: $brand-primary;
@@ -143,6 +146,26 @@ $aa-builder-icon-color: $gray-base;
   }
 }
 
+.aa-builder-number-tile {
+  height: 2rem;
+  width: 16rem;
+  padding: .5rem .5rem;
+  margin: .125rem .5rem .125rem 0rem;
+  border: .0625rem solid $gray-lighter;
+  color: $brand-white;
+  background-color: $brand-primary;
+  display: inline-block;
+  vertical-align: top;
+  transition: all 0.2s ease-in-out;
+  &:hover {
+    background-color: $gray;
+  }
+  .icon {
+    float: right;
+    font-size: 1rem;
+  }
+}
+
 .aa-flex-name-item {
   display: flex;
   flex: 1 1 auto;
@@ -170,6 +193,30 @@ $aa-builder-icon-color: $gray-base;
       background-color: transparent;
     }
   }
+}
+
+.aa-name-edit {
+  @extend h2;
+  min-width: 1rem;
+  white-space: nowrap;
+  &:focus {
+    outline-style: solid;
+    outline-width: 1px;
+    outline-color: transparent;
+  }
+}
+
+.aa-and-more {
+  margin-left: 1rem;
+}
+
+.aa-selected-phones {
+  margin-top: .25rem;
+}
+
+.aa-panel-numbers {
+  @extend .panel;
+  width: 17.75rem;
 }
 
 .aa-container {

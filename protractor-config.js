@@ -4,6 +4,7 @@ var HttpsProxyAgent = require("https-proxy-agent");
 var agent = new HttpsProxyAgent(process.env.http_proxy || 'http://proxy.esl.cisco.com:80');
 var touch = require('touch');
 var fs = require('fs');
+var e2eFailNotify = '.e2e-fail-notify';
 
 exports.config = {
   framework: "jasmine2",
@@ -35,13 +36,13 @@ exports.config = {
   onPrepare: function() {
     var FailFast = function(){
       this.suiteStarted = function(suite){
-        if (fs.existsSync('e2e-fail-notify')){
+        if (fs.existsSync(e2eFailNotify)){
             console.log('fail file exists');
         }
       };
 
       this.specStarted = function(spec){
-        if (fs.existsSync('e2e-fail-notify')){
+        if (fs.existsSync(e2eFailNotify)){
             env.specFilter = function(spec) {
               return false;
             };
@@ -50,13 +51,15 @@ exports.config = {
 
       this.specDone = function(spec) {
         if (spec.status === 'failed') {
-            touch('e2e-fail-notify');
+            touch(e2eFailNotify);
         }
       };
     }
 
     jasmine.getEnv().addReporter(new FailFast());
     browser.ignoreSynchronization = true;
+
+    global.isProductionBackend = browser.params.isProductionBackend === 'true';
 
     global.log = function (message) {
       if (browser.params.log == 'true') {
@@ -81,6 +84,7 @@ exports.config = {
     );
 
     global.TIMEOUT = 30000;
+    global.LONG_TIMEOUT = 60000;
 
     global.baseUrl = exports.config.baseUrl;
 
@@ -107,6 +111,7 @@ exports.config = {
     var ActivatePage = require('./test/e2e-protractor/pages/activate.page.js');
     var SpacesPage = require('./test/e2e-protractor/pages/spaces.page.js');
     var CallRoutingPage = require('./test/e2e-protractor/pages/callrouting.page.js');
+    var AutoAttendantPage = require('./test/e2e-protractor/pages/autoattendant.page.js');
     var PartnerHomePage = require('./test/e2e-protractor/pages/partner.page.js');
     var TelephonyPage = require('./test/e2e-protractor/pages/telephony.page.js');
     var PartnerPage = require('./test/e2e-protractor/pages/partner.page.js');
@@ -124,6 +129,8 @@ exports.config = {
     var MeetingsPage = require('./test/e2e-protractor/pages/meetings.page.js');
     var TrialExtInterestPage = require('./test/e2e-protractor/pages/trialExtInterest.page.js');
     var InviteUsers = require('./test/e2e-protractor/pages/inviteusers.page.js');
+    var HuronFeatures = require('./test/e2e-protractor/pages/huronFeatures.page.js');
+    var CreateHuntGroup = require('./test/e2e-protractor/pages/createHuntGroup.page.js');
 
     global.notifications = new Notifications();
     global.navigation = new Navigation();
@@ -141,6 +148,7 @@ exports.config = {
     global.activate = new ActivatePage();
     global.spaces = new SpacesPage();
     global.callrouting = new CallRoutingPage();
+    global.autoattendant = new AutoAttendantPage();
     global.partner = new PartnerHomePage();
     global.telephony = new TelephonyPage();
     global.partner = new PartnerPage();
@@ -158,6 +166,8 @@ exports.config = {
     global.meetings = new MeetingsPage();
     global.trialextinterest = new TrialExtInterestPage();
     global.inviteusers = new InviteUsers();
+    global.huronFeatures = new HuronFeatures();
+    global.huntGroup = new CreateHuntGroup();
 
     return browser.getCapabilities().then(function (capabilities) {
       if (capabilities.caps_.browserName === 'firefox') {

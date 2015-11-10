@@ -1,6 +1,14 @@
 <div class="row">
-  <div class="large-4 columns" ng-if="webexOptions.length > 0">
-  <cs-select ng-if="showWebexReports" class="filter-one" name="timeFilter" ng-model="webexSelected" options="webexOptions" on-change-fn="updateWebexReports()"></cs-select>
+  <div class="large-4 columns" 
+       ng-if="webexOptions.length > 1">
+       
+    <cs-select ng-if="showWebexReports" 
+               class="filter-one" 
+               name="timeFilter" 
+               ng-model="webexSelected" 
+               options="webexOptions" 
+               on-change-fn="updateWebexReports()">
+    </cs-select>
   </div>
 </div>
 

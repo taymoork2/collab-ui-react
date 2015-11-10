@@ -1,5 +1,7 @@
 'use strict';
 
+/* global isProductionBackend */
+
 var LoginPage = function () {
 
   this.setLoginUsername = function (username) {
@@ -41,9 +43,22 @@ var LoginPage = function () {
 
   this.loginButton = element(by.cssContainingText('button[role="button"]', 'Login'));
 
+  function getLoginUrl(expectedUrl) {
+    var url = typeof expectedUrl !== 'undefined' ? expectedUrl : '#/login';
+    if (isProductionBackend) {
+      if (url.indexOf('?') > -1) {
+        url += '&';
+      } else {
+        url += '?';
+      }
+      url += 'backend=production';
+    }
+    return url;
+  }
+
   this.login = function (username, expectedUrl) {
     var bearer;
-    browser.get(typeof expectedUrl !== 'undefined' ? expectedUrl : '#/login');
+    browser.get(getLoginUrl(expectedUrl));
     helper.getBearerToken(username, function (_bearer) {
       bearer = _bearer;
       expect(bearer).not.toBeNull();
@@ -60,7 +75,7 @@ var LoginPage = function () {
 
   this.loginUnauthorized = function (username, expectedUrl) {
     var bearer;
-    browser.get(typeof expectedUrl !== 'undefined' ? expectedUrl : '#/login');
+    browser.get(getLoginUrl(expectedUrl));
     helper.getBearerToken(username, function (_bearer) {
       bearer = _bearer;
       expect(bearer).not.toBeNull();
@@ -85,22 +100,6 @@ var LoginPage = function () {
     this.setLoginPassword(password);
     this.clickLoginSubmit();
     navigation.expectDriverCurrentUrl(typeof expectedUrl !== 'undefined' ? expectedUrl : '/overview');
-  };
-
-  this.loginWithParam = function (username, expectedUrl) {
-    var bearer;
-    browser.get(typeof expectedUrl !== 'undefined' ? expectedUrl : '#/login');
-    helper.getBearerToken(username, function (_bearer) {
-      bearer = _bearer;
-      expect(bearer).not.toBeNull();
-      navigation.expectDriverCurrentUrl('/login').then(function () {
-        browser.executeScript("localStorage.accessToken='" + bearer + "'");
-        browser.refresh();
-      });
-    });
-    return browser.wait(function () {
-      return bearer;
-    }, 10000, 'Could not retrieve bearer token to login');
   };
 };
 

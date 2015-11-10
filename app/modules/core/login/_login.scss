@@ -2,88 +2,27 @@
     #LOGIN SPLASH SCREEN
 \*------------------------------------*/
 
-.login-splash-spark {
-  width: vr-adjust(320);
-  height: vr-adjust(390);
-  min-height: 360px;
-  margin: auto;
-  margin-top: 10%;
-  padding-top: 60px;
-  color: $gray-dark;
-  background-color: $login-splash-color;
-  border-left-width: 1px;
-  border-right-width: 1px;
-  border-top-width: 1px;
-  border-bottom-width: 1px;
-  border-color: $login-splash-border-color;
-  border-style: solid;
-
-  .login-btn {
-    height: vr-adjust(54);
-    padding-top: 10px;
-    margin-top: vr-adjust(50);
-    width: vr-adjust(280);
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
-    span {
-      font-size: $h3-font-size;
-    }
-    background-color: $brand-primary;
-
-    &:hover {
-      background-color: $brand-primary-darker;
-    }
-  }
-
-  .loading-icon {
-    height: vr-adjust(54);
-    padding-top: 10px;
-    margin-top: vr-adjust(50);
-    width: vr-adjust(280);
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
-    span {
-      font-size: $h3-font-size;
-    }
-    text-align: center;
-    background-color: $brand-white;
-    border: $brand-white;
-  }
-
-  .spark-icon {
-    height: 94px;
-    text-align: center;
-  }
-
-  .alert:before {
-    content: '';
-  }
-
-  .title {
-    font-family: $brand-font-cisco-TT-Extra-Light;
+.loading-icon {
+  height: vr-adjust(54);
+  padding-top: 10px;
+  margin-top: vr-adjust(50);
+  width: vr-adjust(280);
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  span {
     font-size: $h3-font-size;
-    color: $gray-darkest;
-    text-align: center;
   }
-
-  .content {
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-
-  .results {
-    margin: 50px auto 0 auto;
-    width: 280px;
-  }
+  text-align: center;
+  background-color: $brand-white;
+  border: $brand-white;
 }
 
-.bottom-icon {
-  color: $login-splash-title-color;
-  font-size: 46px;
-  margin-top:75px;
-  margin-bottom: 24px;
-  text-align: center;
+.alert:before {
+  content: '';
+}
+
+.results {
+  margin: 50px auto 0 auto;
+  width: 280px;
 }

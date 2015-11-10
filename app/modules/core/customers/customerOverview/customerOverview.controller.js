@@ -20,6 +20,7 @@
     vm.usePartnerLogo = true;
     vm.allowCustomerLogos = false;
     vm.logoOverride = false;
+    vm.isOrgSetup = isOrgSetup;
 
     initCustomer();
     getLogoSettings();
@@ -53,10 +54,10 @@
         });
     }
 
-    function LicenseFeature(name, state) {
+    function LicenseFeature(name, bAdd) {
       this['id'] = name.toString();
+      this['idOperation'] = bAdd ? 'ADD' : 'REMOVE';
       this['properties'] = null;
-      //this['state'] = state ? 'ADD' : 'REMOVE';
     }
 
     function collectLicenseIdsForWebexSites(liclist) {
@@ -70,9 +71,8 @@
         var licId = lic.licenseId;
         var lictype = lic.licenseType;
         var isConfType = lictype === "CONFERENCING";
-        var licHasSiteUrl = (angular.isUndefined(lic.siteUrl) === false);
-        if (licHasSiteUrl && isConfType) {
-          licIds.push(new LicenseFeature(licId, true));
+        if (isConfType) {
+          licIds.push(new LicenseFeature(licId, (angular.isUndefined(lic.siteUrl) === false)));
         }
       }
       return licIds;
@@ -135,6 +135,12 @@
         return _.contains(identityCustomer.services, Config.entitlements.huron);
       }
       return false;
+    }
+
+    function isOrgSetup() {
+      return _.every(vm.currentCustomer.unmodifiedLicenses, {
+        status: 'ACTIVE'
+      });
     }
   }
 })();
