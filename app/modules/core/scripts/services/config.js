@@ -999,6 +999,7 @@ angular.module('Core')
           'fusion',
           'mediafusionconnector',
           'hurondetails',
+          'huronsettings',
           'cdrsupport',
           'cdr-overview',
           'calendar-service',
