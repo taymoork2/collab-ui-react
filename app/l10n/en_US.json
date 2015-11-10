@@ -851,7 +851,7 @@
       "remove": "Remove"
     },
     "activateService": {
-      "ingress": "Extend the Cloud to Your On-Premises Environmen",
+      "ingress": "Extend the Cloud to Your On-Premises Environment",
       "serviceNames": {
         "squared-fusion-uc": "Call Service Activation",
         "squared-fusion-cal": "Calendar Service Activation",
@@ -960,7 +960,15 @@
       "deactivateServiceHeading": "Deactivate Service",
       "deactivateService": "Your users will no longer be able to use this service. You should also remove the connector from your on-premises environment.",
       "emailNotificationsHeading": "Email Notifications",
-      "emailNotifications": "Enter a list of email address for people  who need to be notified about service-specific alarms and upgrades."
+      "emailNotifications": "Enter a list of email address for people  who need to be notified about service-specific alarms and upgrades.",
+      "call": {
+        "featureHeading": "Feature Settings",
+        "feature": "Enable or disable Call Service features.",
+        "awareHeading": "Aware",
+        "aware": "Users can share their desktops from Cisco Spark clients while they are on their work phones.",
+        "connectHeading": "Connect",
+        "connect": "Users can answer their work phone or call colleagues from Cisco Spark."
+      }
     }
   },
   "firstTimeWizard": {
