@@ -224,6 +224,13 @@ angular
           controller: 'LandingPageCtrl',
           parent: 'main'
         })
+        .state('overview-nm', {
+          url: '/overview-nm',
+          templateUrl: 'modules/core/overview/overview.tpl.html',
+          controller: 'OverviewCtrl',
+          controllerAs: 'overview',
+          parent: 'main'
+        })
         .state('users', {
           abstract: true,
           template: '<div ui-view></div>',
