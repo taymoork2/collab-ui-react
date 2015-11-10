@@ -4,8 +4,6 @@
 'use strict';
 
 module.exports = function() {
-  var pkg = require('./package.json');
-
   var build = 'build';
   var dist = 'dist';
   var app = 'app';
@@ -45,16 +43,16 @@ module.exports = function() {
       html: [app + '/*.html'],
       scss: ['styles/app.scss'],
       images: [app + '/images'],
-      lang: [app + '/l10n/*.json']
+      lang: [app + '/l10n/*.json'],
     },
 
     unsupported: {
       dir: 'unsupported',
       file: 'unsupportedApp.js',
       js: [
-        app + '/unsupported/**/*.js'
+        app + '/unsupported/**/*.js',
       ],
-      name: 'unsupported.scripts'
+      name: 'unsupported.scripts',
     },
 
     templateCache: {
@@ -63,9 +61,9 @@ module.exports = function() {
         module: 'templates-app',
         standalone: true,
         moduleSystem: 'IIFE',
-        root: 'modules'
+        root: 'modules',
       },
-      dest: build + '/modules/core/templates'
+      dest: build + '/modules/core/templates',
     },
     
     typeDefs: ['typings/**/*.ts'],
@@ -76,7 +74,7 @@ module.exports = function() {
       app: [
         build + '/scripts/**/*.js',
         build + '/modules/**/*.module.js',
-        build + '/modules/**/*.js'
+        build + '/modules/**/*.js',
       ],
       js: [
         vendor + '/angular-mocks/angular-mocks.js',
@@ -86,7 +84,7 @@ module.exports = function() {
         node_modules + '/jasmine-promise-matchers/dist/jasmine-promise-matchers.js',
       ],
       global: [
-        test + '/global.spec.js'
+        test + '/global.spec.js',
       ],
       spec: [
         app + '/modules/**/*.spec.js',
@@ -96,11 +94,9 @@ module.exports = function() {
         huron: e2e + '/huron/**/*_spec.js',
         mediafusion: e2e + '/mediafusion/**/*_spec.js',
         squared: e2e + '/squared/**/*_spec.js',
-        webexsitesettings: e2e + '/webex/siteSettings/**/*_spec.js',
-        webexsitereports: e2e + '/webex/siteReports/**/*_spec.js',
-        webexusersettings: e2e + '/webex/userSettings/**/*_spec.js',
+        webex: e2e + '/webex/**/*_spec.js',
         sunlight: e2e + '/sunlight/**/*_spec.js',
-        regression: e2e + '/regression/**/*_spec.js'
+        regression: e2e + '/regression/**/*_spec.js',
       }
     },
 
@@ -109,7 +105,7 @@ module.exports = function() {
         vendor + '/json3/lib/json3.min.js',
         vendor + '/angular/angular.js',
         vendor + '/angular-translate/angular-translate.js',
-        vendor + '/angular-translate-loader-static-files/angular-translate-loader-static-files.js'
+        vendor + '/angular-translate-loader-static-files/angular-translate-loader-static-files.js',
       ],
       js: [
         vendor + '/x2js/xml2json.js',
@@ -178,10 +174,10 @@ module.exports = function() {
       scss: {
         paths: [
           './' + vendor + '/bootstrap-sass/assets/stylesheets',
-          './' + vendor + '/foundation/scss'
+          './' + vendor + '/foundation/scss',
         ],
         files: [
-          vendor + '/cisco-ui/scss/**/*.scss'
+          vendor + '/cisco-ui/scss/**/*.scss',
         ]
       },
       css: [
@@ -190,14 +186,14 @@ module.exports = function() {
         vendor + '/angular-wizard/dist/angular-wizard.css',
         vendor + '/angular-dialog-service/dialogs.css',
         vendor + '/animate.css/animate.css',
-        vendor + '/ng-tags-input/ng-tags-input.css'
+        vendor + '/ng-tags-input/ng-tags-input.css',
       ],
       fonts: [
         vendor + '/cisco-ui/dist/fonts/*',
-        vendor + '/font-awesome/fonts/*'
+        vendor + '/font-awesome/fonts/*',
       ],
       images: [
-        vendor + '/cisco-ui/dist/images/*'
+        vendor + '/cisco-ui/dist/images/*',
       ]
     },
 
