@@ -28,7 +28,7 @@ angular.module('Core')
 
       $scope.isReset = false;
       $scope.showExtension = undefined;
-      $scope.showExtentions = false;
+      $scope.showExtensions = false;
       $scope.displayInternal = $translate.instant('usersPage.extensionHeader');
       $scope.displayExternal = $translate.instant('usersPage.directLineHeader');
       $scope.isResetEnabled = false;
@@ -65,7 +65,7 @@ angular.module('Core')
       function activateDID() {
         $q.all([loadInternalNumberPool(), loadExternalNumberPool(), toggleShowExtensions()])
           .finally(function () {
-            if ($scope.showExtentions === true) {
+            if ($scope.showExtensions === true) {
               assignDNForUserList();
             } else {
               mapDidToDn();
@@ -213,9 +213,9 @@ angular.module('Core')
       function toggleShowExtensions() {
         return DialPlanService.getCustomerDialPlanDetails().then(function (response) {
           if (response.extensionGenerated === "true") {
-            $scope.showExtentions = false;
+            $scope.showExtensions = false;
           } else {
-            $scope.showExtentions = true;
+            $scope.showExtensions = true;
           }
         }).catch(function (response) {
           Notification.errorResponse(response, 'serviceSetupModal.customerDialPlanDetailsGetError');
