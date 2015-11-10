@@ -44,7 +44,7 @@ describe('Hunt Group EditCtrl Controller', function () {
     };
     $stateParams = {
       feature: {
-        huntGroupId: '111'
+        id: '111'
       }
     };
     form = {
