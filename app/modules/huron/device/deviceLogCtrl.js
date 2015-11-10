@@ -13,24 +13,28 @@
     dlc.device = $stateParams.device;
     dlc.retrieveLog = retrieveLog;
     dlc.refreshLogList = refreshLogList;
+    dlc.viewPreviousLog = viewPreviousLog;
     dlc.isPolling = isPolling;
     dlc.interval = 5000; //5 seconds
     dlc.timeout = 600000; //10 minutes
+    dlc.eventTimeout = 0;
     dlc.active = false;
     dlc.error = false;
     dlc.loading = false;
 
     var LOG_SUCCESS = 'success';
     var EVT_SUCCESS = 'success';
+    var TIMEOUT_PREFIX = 2 * dlc.interval;
 
     var pollingList = [];
 
     ////////// Function Definitions ///////////////////////////////////////
     function retrieveLog() {
-      dlc.active = false;
-      dlc.error = false;
+      resetState();
       dlc.loading = true;
-
+      //The eventTimeout is needed for multiple calls of this method.
+      //Multiple calls without timeoust will cause a false positive of the previous call
+      dlc.eventTimeout = TIMEOUT_PREFIX + Date.now();
       DeviceLogService.retrieveLog(dlc.currentUser.id, dlc.device.uuid)
         .then(function (response) {
           dlc.active = true;
@@ -44,6 +48,12 @@
         });
     }
 
+    function viewPreviousLog() {
+      dlc.active = true;
+      dlc.eventTimeout = dlc.interval + Date.now();
+      refreshLogList();
+    }
+
     function refreshLogList() {
       return DeviceLogService.getLogInformation(dlc.currentUser.id, dlc.device.uuid)
         .then(function (response) {
@@ -55,9 +65,17 @@
             return;
           }
           angular.forEach(logs, function (log) {
-            if (log.status === LOG_SUCCESS) {
-              addLogList(log);
-              removePolling(log.trackingId);
+            if (dlc.eventTimeout < Date.now()) {
+              if (log.status === LOG_SUCCESS) {
+                addLogList(log);
+                removePolling(log.trackingId);
+              } else {
+                if (log.events.length === 0) {
+                  Notification.error();
+                  removePolling(log.trackingId);
+                  resetState('deviceDetailPage.errorLogNotFound');
+                }
+              }
             } else {
               addPolling(log.trackingId);
             }
@@ -72,6 +90,12 @@
 
     function isPolling() {
       return (pollingList.length > 0);
+    }
+
+    function resetState() {
+      dlc.active = false;
+      dlc.error = false;
+      dlc.loading = false;
     }
 
     function getFilename(url) {
@@ -125,6 +149,7 @@
     function addPolling(trackingId) {
       var length = pollingList.length;
       var poll;
+      var now = Date.now();
 
       //verify tracking Id is not already polling
       for (var i = 0; i < length; i++) {
@@ -133,9 +158,10 @@
           return;
         }
       }
+
       poll = {};
       poll.trackingId = trackingId;
-      poll.timeout = Date.now() + dlc.timeout;
+      poll.timeout = now + dlc.timeout;
       poll.intervalId = $interval(function () {
         fnInterval(poll);
       }, dlc.interval);
