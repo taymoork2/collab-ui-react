@@ -7,7 +7,7 @@ describe('orgService', function () {
 
   var httpBackend, Orgservice, Auth, Authinfo, Config, Log;
 
-  var extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-uc'];
+  var extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-uc', 'squared-fusion-ec'];
 
   beforeEach(function () {
     module(function ($provide) {
@@ -255,7 +255,7 @@ describe('orgService', function () {
       "acknowledged": false
     }, {
       "id": "squared-fusion-ec",
-      "enabled": false,
+      "enabled": true,
       "acknowledged": true
     }];
     httpBackend.when('GET', Config.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services').respond(200, items);
@@ -266,6 +266,8 @@ describe('orgService', function () {
         expect(items.acknowledged).toBe(true);
       } else if (items.id === extensionEntitlements[1]) {
         expect(items.acknowledged).toBe(false);
+      } else if (items.id === extensionEntitlements[2]) {
+        expect(items.acknowledged).toBe(true);
       }
     });
   });

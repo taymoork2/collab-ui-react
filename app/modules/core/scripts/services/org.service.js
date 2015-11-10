@@ -7,7 +7,7 @@
     .module('Core')
     .factory('Orgservice', Orgservice);
 
-  var extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-uc'];
+  var extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-uc', 'squared-fusion-ec'];
 
   /* @ngInject */
   function Orgservice($http, $location, $q, $rootScope, Auth, Authinfo, Config, Log, Storage) {
@@ -258,8 +258,10 @@
       var serviceUrl = Config.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/';
       if (serviceName === 'calendar-service') {
         serviceUrl = serviceUrl.concat(extensionEntitlements[0]);
-      } else if (serviceName === 'call-service') {
+      } else if (serviceName === 'call-aware-service') {
         serviceUrl = serviceUrl.concat(extensionEntitlements[1]);
+      } else if (serviceName === 'call-connect-service') {
+        serviceUrl = serviceUrl.concat(extensionEntitlements[2]);
       } else {
         return $q(function (resolve, reject) {
           reject('serviceName is invalid: ' + serviceName);

@@ -43,7 +43,7 @@
     <div class="row collapse">
       <div class="small-12 columns background-white">
 
-        <section class="monitoring-panel small-3 medium-12 column" ng-show="setupNotDone || !(isCalendarAcknowledged && isCallAcknowledged)" ng-hide="!setupNotDone && (isCalendarAcknowledged && isCallAcknowledged)">
+        <section class="monitoring-panel small-3 medium-12 column" ng-show="setupNotDone || !(isCalendarAcknowledged && isCallAwareAcknowledged && isCallConnectAcknowledged)">
           <h4 class="monitoring-section" translate="homePage.notifications"></h4>
           <div class="notification-style" ng-show="setupNotDone">
             <span class="badge badge-warning" translate="homePage.todo"></span>
@@ -63,11 +63,21 @@
             </button>
           </div>
 
-          <div class="notification-style" ng-show="!isCallAcknowledged">
+          <div class="notification-style" ng-show="!isCallAwareAcknowledged">
             <span class="badge success" translate="common.new"></span>
             <div class="notification-spacing">
-              <span translate="homePage.setUpCallService"></span>
-              <a ng-click="showServiceActivationPage('call-service')" translate="homePage.getStarted"></a>
+              <span translate="homePage.setUpCallAwareService"></span>
+              <a ng-click="showServiceActivationPage('call-aware-service')" translate="homePage.getStarted"></a>
+            </div>
+            <button id="convertModalClose" type="button" class="close" ng-click="setHybridAcknowledged('call-aware-service')">
+            </button>
+          </div>
+
+          <div class="notification-style" ng-show="!isCallConnectAcknowledged">
+            <span class="badge success" translate="common.new"></span>
+            <div class="notification-spacing">
+              <span translate="homePage.setUpCallConnectService"></span>
+              <a ng-click="showServiceActivationPage('call-connect-service')" translate="homePage.getStarted"></a>
             </div>
             <button id="convertModalClose" type="button" class="close" ng-click="setHybridAcknowledged('call-service')">
             </button>
