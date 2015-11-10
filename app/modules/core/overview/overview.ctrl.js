@@ -26,7 +26,7 @@
       $state.go('users.convert', {});
     };
 
-    _.each(['callsLoaded', 'conversationsLoaded'], function (eventType) {
+    _.each(['oneOnOneCallsLoaded', 'groupCallsLoaded', 'conversationsLoaded'], function (eventType) {
       $scope.$on(eventType, function (event, response) {
         _.each(vm.cards, function (card) {
           if (card.eventHandler) {
@@ -105,10 +105,20 @@
   }
 
   function MeetingCard() {
+    var card = this;
     this.icon = 'icon-circle-group';
     this.desc = 'overview.cards.meeting.desc';
     this.name = 'overview.cards.meeting.title';
-    this.healthStatusUpdatedHandler = _.partial(meeetingHealthEventHandler, this);
+    this.healthStatusUpdatedHandler = _.partial(meeetingHealthEventHandler, card);
+    this.eventHandler = callEventHandler;
+
+    function callEventHandler(event, response) {
+      if (!response.data.success) return;
+      if (event.name == 'groupCallsLoaded' && response.data.spanType == 'month' && response.data.intervalCount >= 2) {
+        card.current = Math.round(response.data.data[0].count);
+        card.previous = Math.round(response.data.data[1].count);
+      }
+    }
   }
 
   function CallCard() {
@@ -121,7 +131,7 @@
 
     function callEventHandler(event, response) {
       if (!response.data.success) return;
-      if (event.name == 'callsLoaded' && response.data.spanType == 'month' && response.data.intervalCount >= 2) {
+      if (event.name == 'oneOnOneCallsLoaded' && response.data.spanType == 'month' && response.data.intervalCount >= 2) {
         card.current = Math.round(response.data.data[0].count);
         card.previous = Math.round(response.data.data[1].count);
       }
