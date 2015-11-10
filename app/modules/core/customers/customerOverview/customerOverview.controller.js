@@ -20,7 +20,7 @@
     vm.usePartnerLogo = true;
     vm.allowCustomerLogos = false;
     vm.logoOverride = false;
-    vm.isSetup = isSetup;
+    vm.isOrgSetup = isOrgSetup;
 
     initCustomer();
     getLogoSettings();
@@ -137,8 +137,8 @@
       return false;
     }
 
-    function isSetup() {
-      return _(vm.currentCustomer.unmodifiedLicenses).every({
+    function isOrgSetup() {
+      return _.every(vm.currentCustomer.unmodifiedLicenses, {
         status: 'ACTIVE'
       });
     }
