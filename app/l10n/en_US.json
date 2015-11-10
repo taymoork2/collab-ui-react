@@ -955,6 +955,12 @@
       "currentVersion": "Current Version",
       "newVersion": "New Version",
       "upgrade": "Upgrade"
+    },
+    "settings": {
+      "deactivateServiceHeading": "Deactivate Service",
+      "deactivateService": "Your users will no longer be able to use this service. You should also remove the connector from your on-premises environment.",
+      "emailNotificationsHeading": "Email Notifications",
+      "emailNotifications": "Enter a list of email address for people  who need to be notified about service-specific alarms and upgrades."
     }
   },
   "firstTimeWizard": {
