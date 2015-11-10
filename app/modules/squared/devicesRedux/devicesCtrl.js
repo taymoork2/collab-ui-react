@@ -200,11 +200,17 @@
     vm.exportToCsv = function () {
       var fields = ['cisUuid', 'displayName', 'needsActivation', 'readableState', 'readableActivationCode', 'ip', 'mac', 'serial', 'software'];
       var csv = fields.join(';') + '\r\n';
+
       var devices = _.chain(vm.groupedDevices.groups)
         .pluck('devices')
         .flatten()
+        .map(function (d) {
+          return d.devices || d;
+        })
+        .flatten()
         .concat(vm.deviceList)
         .value();
+
       _.each(devices, function (item) {
         _.each(fields, function (field) {
           csv += (item[field] || '') + ';';
