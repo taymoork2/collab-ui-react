@@ -6,7 +6,7 @@
     .controller('AABuilderNumbersCtrl', AABuilderNumbersCtrl); /* was AutoAttendantGeneralCtrl */
 
   /* @ngInject */
-  function AABuilderNumbersCtrl($scope, $q, $stateParams, AAUiModelService, AutoAttendantCeInfoModelService,
+  function AABuilderNumbersCtrl($scope, $q, $stateParams, AAUiModelService, AutoAttendantCeInfoModelService, AANumberAssignmentService,
     AAModelService, ExternalNumberPoolService, InternalNumberPoolService, Authinfo, Notification, $translate, telephoneNumberFilter) {
     var vm = this;
 
@@ -136,6 +136,8 @@
           resources.push(n);
         });
       }
+
+      var obj = AANumberAssignmentService.addAANumberAssignment(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources);
 
     }
 

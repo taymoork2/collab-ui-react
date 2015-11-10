@@ -6,7 +6,7 @@
     .factory('AutoAttendantCeService', AutoAttendantCeService);
 
   /* @ngInject */
-  function AutoAttendantCeService(CeService, Authinfo) {
+  function AutoAttendantCeService(CeService, Authinfo, AANumberAssignmentService) {
 
     var service = {
       listCes: listCes,
@@ -54,10 +54,21 @@
 
     function deleteCe(ceUrl) {
       var aCeId = getCeId(ceUrl);
+
       return CeService.delete({
         customerId: Authinfo.getOrgId(),
         ceId: aCeId
-      }).$promise;
+      }).$promise.then(
+        function (response) {
+          // success
+          return AANumberAssignmentService.deleteAANumberAssignments(Authinfo.getOrgId(), aCeId);
+        },
+        function (response) {
+          // failure
+          return response;
+        }
+      );
+
     }
 
     /**
