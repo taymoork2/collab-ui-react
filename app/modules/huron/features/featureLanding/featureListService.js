@@ -11,7 +11,7 @@
       autoAttendants: autoAttendants,
       callParks: callParks,
       huntGroups: huntGroups,
-      orderBy: orderBy
+      orderByFilter: orderByFilter
     };
 
     var formattedCard = {
@@ -20,8 +20,6 @@
       // 'featureName': '',
       // 'filterValue': ''
     };
-
-    var orderByFilter = $filter('orderBy');
 
     return service;
 
@@ -38,7 +36,7 @@
         formattedList.push(formattedCard);
         formattedCard = {};
       });
-      return orderBy(formattedList, 'cardName');
+      return orderByCardName(formattedList);
     }
 
     function callParks() {
@@ -51,18 +49,24 @@
         formattedCard.cardName = huntGroup.name;
         formattedCard.numbers = huntGroup.numbers;
         formattedCard.memberCount = huntGroup.memberCount;
-        formattedCard.huntGroupId = huntGroup.uuid;
+        formattedCard.id = huntGroup.uuid;
         formattedCard.featureName = 'huronHuntGroup.hg';
         formattedCard.filterValue = 'HG';
         formattedList.push(formattedCard);
         formattedCard = {};
       });
-      return orderBy(formattedList, 'cardName');
+      return orderByCardName(formattedList);
     }
 
-    function orderBy(list, predicate) {
-      return orderByFilter(list, predicate, false);
+    function orderByCardName(list) {
+      return _.sortBy(list, function (item) {
+        //converting cardName to lower case as _.sortByAll by default does a case sensitive matching
+        return item.cardName.toLowerCase();
+      });
     }
 
+    function orderByFilter(list) {
+      return _.sortBy(list, 'filterValue');
+    }
   }
 })();
