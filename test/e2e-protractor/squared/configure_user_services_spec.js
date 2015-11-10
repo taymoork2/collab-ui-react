@@ -70,7 +70,7 @@ describe('Configuring services per-user', function () {
     utils.expectCheckbox(users.messengerInteropCheckbox, true);
   });
 
-  it('should delete added user', function () {
+  afterAll(function () {
     deleteUtils.deleteUser(testUser);
   });
 

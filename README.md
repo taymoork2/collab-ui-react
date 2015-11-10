@@ -20,6 +20,7 @@ Technology
 -----------
 
 * UI is developed using [Angular JS](https://angularjs.org)
+* ES6(ES2015) JavaScript is transpiled with [TypeScript](http://www.typescriptlang.org)
 * UI is composed of a core module and service modules for different functional groups
 * Modules are developed using directives, here is a good read on the topic:
   http://briantford.com/blog/angular-bower
@@ -105,6 +106,11 @@ TypeScript Definitions
 * Definitions (*.d.ts files) are installed under typings directory.
 * Microsoft VSCode automatically detects definition files and provides IntelliSense support (https://code.visualstudio.com/Docs/languages/javascript)
 * Add new TypeScript definitions using tsd (TypeScript Definition manager) from DefinitelyTyped (https://github.com/DefinitelyTyped/tsd)
+
+TypeScript & ES6(ES2015)
+-----------------
+* ES6 and TypeScript are the preferred method of writing JavaScript in the app
+* Writing Angular 1.x code in TypeScript and/or ES6 will allow for easier migration to Angular 2
 
 Project structure
 -----------------
@@ -200,6 +206,7 @@ There are several arguments that can be added to the gulp tasks. Arguments are l
 
 * Cleans (deletes) files in the 'build' & 'dist' directories
 * Builds (copies) files from the development (app) folder into the staging (build) folder
+* Transpiles ES6 and TypeScript code into ES5 JavaScript
 * Compiles HTML templates into JS template file and adds them to the $templatecache
 * Compiles index file by adding CSS links and JS  script tags for dependencies
 * Runs Karma Unit Tests on build folder

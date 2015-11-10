@@ -59,7 +59,7 @@ var ActivatePage = function () {
   function verifyEmail(obj) {
     var options = {
       method: 'post',
-      url: config.adminServiceUrl.integration + 'users/email/verify',
+      url: config.getAdminServiceUrl() + 'users/email/verify',
       headers: {
         'User-Agent': obj.deviceUA,
         'Content-Type': 'application/json',

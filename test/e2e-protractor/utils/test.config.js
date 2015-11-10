@@ -1,5 +1,7 @@
 'use strict';
 
+/* global isProductionBackend */
+
 exports.oauthClientRegistration = {
   id: 'C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec',
   secret: 'c10c371b4641010a750073b3c8e65a7fff0567400d316055828d3c74925b0857',
@@ -14,10 +16,26 @@ exports.adminServiceUrl = {
   prod: 'https://atlas-a.wbx2.com/admin/api/v1/'
 };
 
-exports.squaredUCServiceUrl = {
+exports.getAdminServiceUrl = function () {
+  if (isProductionBackend) {
+    return this.adminServiceUrl.prod;
+  } else {
+    return this.adminServiceUrl.integration;
+  }
+}
+
+exports.cmiServiceUrl = {
   dev: 'https://cmi.huron-int.com/api/v1/',
   integration: 'https://cmi.huron-int.com/api/v1/',
-  prod: 'https://cmi.sc-tx2.huron-dev.com/api/v1/'
+  prod: 'https://cmi.huron-dev.com/api/v1/'
+};
+
+exports.getCmiServiceUrl = function () {
+  if (isProductionBackend) {
+    return this.cmiServiceUrl.prod;
+  } else {
+    return this.cmiServiceUrl.integration;
+  }
 };
 
 exports.deviceUserAgent = {

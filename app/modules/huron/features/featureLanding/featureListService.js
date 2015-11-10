@@ -6,11 +6,12 @@
     .service('HuronFeaturesListService', HuronFeaturesListService);
 
   /* @ngInject */
-  function HuronFeaturesListService($q) {
+  function HuronFeaturesListService($q, $filter) {
     var service = {
       autoAttendants: autoAttendants,
       callParks: callParks,
-      huntGroups: huntGroups
+      huntGroups: huntGroups,
+      orderBy: orderBy
     };
 
     var formattedCard = {
@@ -19,6 +20,8 @@
       // 'featureName': '',
       // 'filterValue': ''
     };
+
+    var orderByFilter = $filter('orderBy');
 
     return service;
 
@@ -35,7 +38,7 @@
         formattedList.push(formattedCard);
         formattedCard = {};
       });
-      return formattedList;
+      return orderBy(formattedList, 'cardName');
     }
 
     function callParks() {
@@ -54,7 +57,11 @@
         formattedList.push(formattedCard);
         formattedCard = {};
       });
-      return formattedList;
+      return orderBy(formattedList, 'cardName');
+    }
+
+    function orderBy(list, predicate) {
+      return orderByFilter(list, predicate, false);
     }
 
   }

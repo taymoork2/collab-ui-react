@@ -86,36 +86,39 @@
       });
     }
 
+    var filterCards = function (filterValue) {
+      var filter = (filterValue === 'all') ? '' : filterValue;
+
+      var cardsFilteredByName = $filter('filter')(listOfAllFeatures, {
+        cardName: vm.filterText,
+        filterValue: filter
+      });
+
+      var cardsFilteredByNumber = $filter('filter')(listOfAllFeatures, {
+        cardName: "!" + vm.filterText,
+        numbers: vm.filterText,
+        filterValue: filter
+      });
+
+      var cardsFilteredByMemberCount = $filter('filter')(listOfAllFeatures, {
+        cardName: "!" + vm.filterText,
+        numbers: "!" + vm.filterText,
+        memberCount: vm.filterText,
+        filterValue: filter
+      });
+
+      return cardsFilteredByName.concat(cardsFilteredByNumber, cardsFilteredByMemberCount);
+    };
+
     //Switches Data that populates the Features tab
     function setFilter(filterValue) {
-      if (filterValue === 'all') {
-        vm.listOfFeatures = $filter('filter')(listOfAllFeatures, {
-          $: vm.filterText
-        });
-      } else if (filterValue === 'HG') {
-        vm.listOfFeatures = $filter('filter')(listOfAllFeatures, {
-          $: vm.filterText,
-          filterValue: 'HG'
-        });
-        //} else if (filterValue === 'CP') {
-        //  vm.listOfFeatures = $filter('filter')(listOfAllFeatures, {
-        //    $: vm.filterText,
-        //    filterValue: 'CP'
-        //  });
-      } else if (filterValue === 'AA') {
-        vm.listOfFeatures = $filter('filter')(listOfAllFeatures, {
-          $: vm.filterText,
-          filterValue: 'AA'
-        });
-      }
+      vm.listOfFeatures = filterCards(filterValue);
     }
 
     /* This function does an in-page search for the string typed in search box*/
     function searchData(searchStr) {
       vm.filterText = searchStr;
-      vm.listOfFeatures = $filter('filter')(listOfAllFeatures, {
-        $: vm.filterText
-      });
+      vm.listOfFeatures = filterCards('all');
     }
 
     function reload() {
@@ -169,6 +172,7 @@
         vm.pageState = 'showFeatures';
         feature.isEmpty = false;
         vm.listOfFeatures = vm.listOfFeatures.concat(list);
+        vm.listOfFeatures = HuronFeaturesListService.orderBy(vm.listOfFeatures, 'filterValue');
         listOfAllFeatures = listOfAllFeatures.concat(list);
       } else if (list.length === 0) {
         feature.isEmpty = true;
@@ -182,9 +186,11 @@
           aaName: vm.aaModel.aaName
         });
       } else if (feature.filterValue === 'HG') {
-        HuntGroupService.editFeature(feature);
-        $state.go('huntgroupedit');
-      } // else if (feature.filterValue === 'CP') {
+        $state.go('huntgroupedit', {
+          feature: feature
+        });
+      }
+      // else if (feature.filterValue === 'CP') {
       //  //Call CallPark Edit Controller
       //}
     };

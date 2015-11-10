@@ -2,8 +2,8 @@
 
 //TODO refactor this into OnboardCtrl, BulkUserCtrl, AssignServicesCtrl
 angular.module('Core')
-  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$http', '$window', 'Log', 'Authinfo', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils', 'Orgservice', 'TelephonyInfoService', 'FeatureToggleService', 'NAME_DELIMITER', 'SyncService', 'TelephoneNumberService',
-    function ($scope, $state, $stateParams, $q, $http, $window, Log, Authinfo, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, SyncService, TelephoneNumberService) {
+  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$http', '$window', 'Log', 'Authinfo', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils', 'Orgservice', 'TelephonyInfoService', 'FeatureToggleService', 'NAME_DELIMITER', 'SyncService', 'TelephoneNumberService', 'DialPlanService',
+    function ($scope, $state, $stateParams, $q, $http, $window, Log, Authinfo, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, SyncService, TelephoneNumberService, DialPlanService) {
       $scope.hasAccount = Authinfo.hasAccount();
       $scope.usrlist = [];
       $scope.internalNumberPool = [];
@@ -27,6 +27,10 @@ angular.module('Core')
       $scope.PATTERN_LIMIT = 50;
 
       $scope.isReset = false;
+      $scope.showExtension = undefined;
+      $scope.showExtentions = false;
+      $scope.displayInternal = $translate.instant('usersPage.extensionHeader');
+      $scope.displayExternal = $translate.instant('usersPage.directLineHeader');
       $scope.isResetEnabled = false;
 
       // model can be removed after switching to controllerAs
@@ -59,9 +63,13 @@ angular.module('Core')
       //***********************************************************************************/
 
       function activateDID() {
-        $q.all([loadInternalNumberPool(), loadExternalNumberPool()])
+        $q.all([loadInternalNumberPool(), loadExternalNumberPool(), toggleShowExtensions()])
           .finally(function () {
-            assignDNForUserList();
+            if ($scope.showExtentions === true) {
+              assignDNForUserList();
+            } else {
+              mapDidToDn();
+            }
             $scope.processing = false;
           });
       }
@@ -201,6 +209,18 @@ angular.module('Core')
           onboardUsers(true);
         }
       };
+
+      function toggleShowExtensions() {
+        return DialPlanService.getCustomerDialPlanDetails().then(function (response) {
+          if (response.extensionGenerated === "true") {
+            $scope.showExtentions = false;
+          } else {
+            $scope.showExtentions = true;
+          }
+        }).catch(function (response) {
+          Notification.errorResponse(response, 'serviceSetupModal.customerDialPlanDetailsGetError');
+        });
+      }
 
       /****************************** Did to Dn Mapping END *******************************/
       //***
@@ -465,7 +485,7 @@ angular.module('Core')
         '</div>';
 
       var headerRowTemplate = '<div ng-style="{ height: col.headerRowHeight }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngHeaderCell">' +
-        '<div ng-header-cell></div></div>';
+        '<div ng-header-cell></div>';
 
       var nameTemplate = '<div class="ngCellText"><span class="name-display-style">{{row.getProperty(col.field)}}</span>' +
         '<span class="email-display-style">{{row.getProperty(\'address\')}}</span></div>';
@@ -552,49 +572,56 @@ angular.module('Core')
         }
       };
 
-      $scope.initGrid = function () {
-        $scope.isResetEnabled = false;
-        $scope.validateDnForUser();
-      };
+      $scope.isResetEnabled = false;
+      $scope.validateDnForUser();
+      toggleShowExtension().then(function () {
+        if ($scope.showExtension === "true") {
+          $scope.showGrid = false;
+          $scope.displayInternal = $translate.instant('usersPage.directLineHeader');
+        } else {
+          $scope.showGrid = true;
+          $scope.displayExternal = $translate.instant('usersPage.directLineHeader');
+          $scope.displayInternal = $translate.instant('usersPage.extensionHeader');
+        }
 
-      $scope.addDnGridOptions = {
-        data: 'usrlist',
-        enableRowSelection: false,
-        multiSelect: false,
-        showFilter: false,
-        rowHeight: 55,
-        rowTemplate: rowTemplate,
-        headerRowHeight: 44,
-        headerRowTemplate: headerRowTemplate, // this is needed to get rid of vertical bars in header
-        useExternalSorting: false,
-        init: $scope.initGrid,
+        $scope.addDnGridOptions = {
+          data: 'usrlist',
+          enableRowSelection: false,
+          multiSelect: false,
+          showFilter: false,
+          rowHeight: 55,
+          rowTemplate: rowTemplate,
+          headerRowHeight: 44,
+          headerRowTemplate: headerRowTemplate, // this is needed to get rid of vertical bars in header
+          useExternalSorting: false,
 
-        columnDefs: [{
-          field: 'name',
-          displayName: $translate.instant('usersPage.nameHeader'),
-          sortable: false,
-          cellTemplate: nameTemplate,
-          width: '42%',
-          height: 35
+          columnDefs: [{
+            field: 'name',
+            displayName: $translate.instant('usersPage.nameHeader'),
+            sortable: false,
+            cellTemplate: nameTemplate,
+            width: '42%',
+            height: 35
 
-        }, {
-          field: 'externalNumber',
-          displayName: $translate.instant('usersPage.directLineHeader'),
-          sortable: false,
-          cellTemplate: externalExtensionTemplate,
-          width: '33%',
-          height: 35
+          }, {
+            field: 'externalNumber',
+            displayName: $scope.displayExternal,
+            sortable: false,
+            cellTemplate: externalExtensionTemplate,
+            width: '33%',
+            height: 35,
+            visible: $scope.showGrid
 
-        }, {
-          field: 'internalExtension',
-          displayName: $translate.instant('usersPage.extensionHeader'),
-          sortable: false,
-          cellTemplate: internalExtensionTemplate,
-          width: '25%',
-          height: 35
-        }]
-      };
-
+          }, {
+            field: 'internalExtension',
+            displayName: $scope.displayInternal,
+            sortable: false,
+            cellTemplate: internalExtensionTemplate,
+            width: '25%',
+            height: 35
+          }]
+        };
+      });
       $scope.collabRadio = 1;
 
       $scope.onboardUsers = onboardUsers;
@@ -610,10 +637,10 @@ angular.module('Core')
         var confId = [];
         for (var cf in $scope.confChk) {
           var current = $scope.confChk[cf];
-          if ((current.confModel === state) && (current.confFeature.license.licenseId !== undefined)) {
+          if ((current.confModel === state) && angular.isDefined(_.get(current, 'confFeature.license.licenseId'))) {
             confId.push(current.confFeature.license.licenseId);
           }
-          if ((current.cmrModel === state) && (current.cmrFeature.license.licenseId !== undefined)) {
+          if ((current.cmrModel === state) && angular.isDefined(_.get(current, 'cmrFeature.license.licenseId'))) {
             confId.push(current.cmrFeature.license.licenseId);
           }
         }
@@ -693,6 +720,12 @@ angular.module('Core')
         }
         return entStrings;
       };
+
+      function toggleShowExtension() {
+        return DialPlanService.getCustomerDialPlanDetails().then(function (response) {
+          $scope.showExtension = response.extensionGenerated;
+        });
+      }
 
       $scope.updateUserLicense = function () {
         var user = [];
