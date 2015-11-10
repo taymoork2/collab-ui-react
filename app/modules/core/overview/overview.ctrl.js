@@ -161,7 +161,7 @@
       }
     }
 
-    function orgEventHandler(data, status) {
+    function orgEventHandler(data) {
       if (data.success) {
         card.ssoEnabled = data.ssoEnabled || false;
         card.dirsyncEnabled = data.dirsyncEnabled || false;
