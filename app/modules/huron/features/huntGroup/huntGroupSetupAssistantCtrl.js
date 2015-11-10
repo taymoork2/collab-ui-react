@@ -216,6 +216,7 @@
     }
 
     function selectFallback($item) {
+      vm.selectedFallbackNumber = undefined;
       vm.selectedFallbackMember = {
         member: $item,
         number: "",
@@ -294,7 +295,7 @@
         internalNumValidator.fetch().then(function (data) {
           if (data.length === 0) {
             // no internal number found, check for a valid external number match.
-            validateFallbackForNonHuronUser();
+            validateFallbackForNonHuronNumber();
           } else {
             // Either 1 or more internal match found, check for absolute match.
             data.forEach(function (n) {
@@ -308,7 +309,7 @@
       }
     }
 
-    function validateFallbackForNonHuronUser() {
+    function validateFallbackForNonHuronNumber() {
       vm.selectedFallbackNumberValid =
         TelephoneNumberService.validateDID(vm.selectedFallbackNumber);
 
