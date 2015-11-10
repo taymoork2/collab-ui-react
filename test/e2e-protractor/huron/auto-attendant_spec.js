@@ -26,16 +26,16 @@ describe('Huron Auto Attendant', function () {
 
       navigation.clickAutoAttendant();
 
-      utils.wait(autoattendant.newFeatureButton, 12000);
+      utils.wait(autoattendant.newFeatureButton, 15000);
       utils.click(autoattendant.newFeatureButton);
 
-      utils.wait(autoattendant.featureTypeAA, 8000);
+      utils.wait(autoattendant.featureTypeAA, 12000);
       utils.click(autoattendant.featureTypeAA);
 
       utils.sendKeys(autoattendant.newAAname, deleteUtils.testAAName);
       utils.sendKeys(autoattendant.newAAname, protractor.Key.ENTER);
 
-      utils.wait(autoattendant.addAANumbers, 8000);
+      utils.wait(autoattendant.addAANumbers, 12000);
       utils.expectIsDisplayed(autoattendant.addAANumbers);
     });
   });
