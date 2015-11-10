@@ -44,10 +44,10 @@
     vm.animation = 'slide-left';
     vm.huntGroupName = '';
     vm.hgMethods = {
-      "longestIdle": "longest-idle",
-      "broadcast": "broadcast",
-      "circular": "circular",
-      "topDown": "top-down"
+      longestIdle: "DA_LONGEST_IDLE_TIME",
+      broadcast: "DA_BROADCAST",
+      circular: "DA_CIRCULAR",
+      topDown: "DA_TOP_DOWN"
     };
     vm.huntGroupMethod = vm.hgMethods.longestIdle;
     vm.userSelected = undefined;
@@ -88,7 +88,7 @@
           dataToStrip: vm.selectedPilotNumbers
         });
 
-        return GetPilotNumbers.result();
+        return GetPilotNumbers.fetch();
       }
 
       return [];
@@ -102,7 +102,7 @@
         if (filter) {
           GetHuntMembers.setFilter(filter);
         }
-        return GetHuntMembers.result();
+        return GetHuntMembers.fetch();
       }
 
       return [];
@@ -216,7 +216,6 @@
     }
 
     function selectFallback($item) {
-      vm.selectedFallbackNumber = undefined;
       vm.selectedFallbackMember = {
         member: $item,
         number: "",
@@ -277,7 +276,39 @@
       }
     }
 
+    function needNumberValidation() {
+      return (vm.selectedFallbackNumber && !isNaN(vm.selectedFallbackNumber));
+    }
+
     function validateFallback() {
+      vm.selectedFallbackNumberValid = false;
+      if (!needNumberValidation()) {
+        return;
+      }
+
+      var internalNumValidator =
+        HuntGroupService.isFallbackNumberValid(vm.selectedFallbackNumber);
+
+      if (internalNumValidator) {
+        internalNumValidator.setOnFailure(onFailureNotify('huronHuntGroup.numberFetchFailure'));
+        internalNumValidator.fetch().then(function (data) {
+          if (data.length === 0) {
+            // no internal number found, check for a valid external number match.
+            validateFallbackForNonHuronUser();
+          } else {
+            // Either 1 or more internal match found, check for absolute match.
+            data.forEach(function (n) {
+              if (n.number === vm.selectedFallbackNumber) {
+                vm.selectedFallbackNumberValid = true;
+                vm.selectedFallbackNumber = TelephoneNumberService.getDIDLabel(vm.selectedFallbackNumber);
+              }
+            });
+          }
+        });
+      }
+    }
+
+    function validateFallbackForNonHuronUser() {
       vm.selectedFallbackNumberValid =
         TelephoneNumberService.validateDID(vm.selectedFallbackNumber);
 

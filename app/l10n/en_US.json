@@ -713,7 +713,7 @@
     "companyVoicemail": "Company Voicemail",
     "companyVoicemailDescription": "Select a number that users can call to check their voicemail.",
     "to": "to",
-    "addMoreExtensionRanges": "Add More Extension Ranges",
+    "addMoreExtensionRanges": "Add more extension ranges",
     "globalMOH": "Global Media On Hold (MOH)",
     "mohDescription": "Provide callers with music, announcements, or video when they are placed on hold. You can change the MOH settings at the group or user level.",
     "ciscoDefault": "Cisco Default",
@@ -863,6 +863,10 @@
       "label": "ACTIVATE AND BEGIN SETUP"
     },
     "clusters": {
+      "listing": {
+        "no_clusters_heading": "No Cisco Expressway clusters registered",
+        "no_clusters_text": "See required actions above and documentation to get started."
+      },
       "deregister": "Deregister",
       "deregisterCancel": "Cancel",
       "deregisterConfirm": "Confirm",
@@ -950,7 +954,6 @@
       "softwareUpgrade": "Software Upgrade",
       "currentVersion": "Current Version",
       "newVersion": "New Version",
-      "noNewAvailable": "No new software available",
       "upgrade": "Upgrade"
     }
   },
@@ -1576,7 +1579,8 @@
     "contactName": "Contact Name",
     "contactEmail": "Email",
     "contactPhone": "Phone",
-    "launchButton": "Launch Customer Portal",
+    "launchButton": "View Customer",
+    "setupButton": "Setup Customer",
     "edit": "Edit Terms of Trial",
     "trialTerms": "Terms of Trial",
     "trialOverview": "Trial",
@@ -1945,6 +1949,9 @@
     "pmrLabel": "Personal Room",
     "OtherPrivilegesLabel": "Other Privileges",
     "advancedLinkLabel": "Advanced Settings"
+  },
+  "webexCommon": {
+    "logoAltText": "Cisco WebEx"
   },
   "webexSiteSettingsLabels": {
     "siteSettingsIndexPageTitle": "Configure",

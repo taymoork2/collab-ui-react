@@ -1308,9 +1308,9 @@ angular
         .state('huronnewfeature', {
           url: '/newfeature',
           parent: 'hurondetails',
+          templateUrl: 'modules/huron/features/newFeature/newFeature.tpl.html',
           controller: 'NewFeatureCtrl',
-          controllerAs: 'newFeatureCtrl',
-          templateUrl: 'modules/huron/features/newFeature/newFeature.tpl.html'
+          controllerAs: 'newFeatureCtrl'
         })
         .state('huronfeatures.aabuilder', {
           parent: 'hurondetails',
