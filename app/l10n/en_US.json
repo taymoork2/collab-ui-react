@@ -959,15 +959,22 @@
     "settings": {
       "deactivateServiceHeading": "Deactivate Service",
       "deactivateService": "Your users will no longer be able to use this service. You should also remove the connector from your on-premises environment.",
+      "deactivate": "Deactivate",
       "emailNotificationsHeading": "Email Notifications",
-      "emailNotifications": "Enter a list of email address for people  who need to be notified about service-specific alarms and upgrades.",
+      "emailNotifications": "Enter a list of email addresses for people  who need to be notified about service-specific alarms and upgrades.",
       "call": {
         "featureHeading": "Feature Settings",
         "feature": "Enable or disable Call Service features.",
         "awareHeading": "Aware",
         "aware": "Users can share their desktops from Cisco Spark clients while they are on their work phones.",
         "connectHeading": "Connect",
-        "connect": "Users can answer their work phone or call colleagues from Cisco Spark."
+        "connect": "Users can answer their work phone or call colleagues from Cisco Spark.",
+        "certificatesHeading": "Certificates",
+        "certificates": "Use certificates provided from the Cisco Collaboration default trust list for encrypted SIP calls, or upload your own certificates.",
+        "certificatesUpload": "Upload",
+        "sipDomainHeading": "SIP Domain",
+        "sipDomain": "Enter the SRV domain of your Expressway edge server(s) so that calls route correctly to and from there.",
+        "sipDomainPlaceholder": "Enter a single domain or subdomain"
       }
     }
   },
