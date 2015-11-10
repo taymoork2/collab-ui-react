@@ -54,7 +54,7 @@
                 Cluster
               </div>
               <div class="col-sm-3 col-xs-3">
-                Current Usage
+                Role
               </div>
               <div class="col-sm-2 col-xs-1">
                 Actions
@@ -86,10 +86,7 @@
                   {{cluster.properties["mf.group.displayName"]}}&nbsp;
               </div>
               <div class="col-sm-3 col-xs-3" style="overflow: hidden">
-                <div class="col-md-1" style="top:-4px">0%&nbsp;</div>
-                <div class="progress page-header col-md-8">
-                 &nbsp;&nbsp;<div class="progress-bar page-header " style="width:0%;"></div>
-                </div>
+                {{cluster.properties["mf.role"]}}&nbsp;
               </div>
               <div class="col-sm-1 col-xs-1">
                 <span dropdown>

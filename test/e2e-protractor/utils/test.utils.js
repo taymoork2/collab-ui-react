@@ -209,7 +209,19 @@ exports.expectIsNotPresent = function (elem) {
   expect(elem.isPresent()).toBeFalsy();
 };
 
-exports.expectIsNotDisplayed = function (elem) {
+exports.expectIsNotDisplayed = function (elem, timeout) {
+
+  if (elem instanceof protractor.ElementArrayFinder) {
+    return browser.wait(function () {
+      log('Waiting for element array not to be displayed: ' + elem.locator());
+      return elem.first().isDisplayed().then(function (isDisplayed) {
+        return !isDisplayed;
+      }, function () {
+        return true;
+      });
+    }, timeout || TIMEOUT, 'Waiting for element array not to be displayed: ' + elem.locator());
+  }
+
   function logAndWait() {
     log('Waiting for element to be invisible: ' + elem.locator());
     return EC.invisibilityOf(elem)().thenCatch(function () {

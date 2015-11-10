@@ -2,8 +2,8 @@
 
 //TODO refactor this into OnboardCtrl, BulkUserCtrl, AssignServicesCtrl
 angular.module('Core')
-  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$http', '$window', 'Log', 'Authinfo', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils', 'Orgservice', 'TelephonyInfoService', 'FeatureToggleService', 'NAME_DELIMITER', 'SyncService', 'TelephoneNumberService',
-    function ($scope, $state, $stateParams, $q, $http, $window, Log, Authinfo, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, SyncService, TelephoneNumberService) {
+  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$http', '$window', 'Log', 'Authinfo', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils', 'Orgservice', 'TelephonyInfoService', 'FeatureToggleService', 'NAME_DELIMITER', 'SyncService', 'TelephoneNumberService', 'DialPlanService',
+    function ($scope, $state, $stateParams, $q, $http, $window, Log, Authinfo, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, SyncService, TelephoneNumberService, DialPlanService) {
       $scope.hasAccount = Authinfo.hasAccount();
       $scope.usrlist = [];
       $scope.internalNumberPool = [];
@@ -27,6 +27,9 @@ angular.module('Core')
       $scope.PATTERN_LIMIT = 50;
 
       $scope.isReset = false;
+      $scope.showExtension = undefined;
+      $scope.displayInternal = $translate.instant('usersPage.extensionHeader');
+      $scope.displayExternal = $translate.instant('usersPage.directLineHeader');
       $scope.isResetEnabled = false;
 
       // model can be removed after switching to controllerAs
@@ -465,7 +468,7 @@ angular.module('Core')
         '</div>';
 
       var headerRowTemplate = '<div ng-style="{ height: col.headerRowHeight }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngHeaderCell">' +
-        '<div ng-header-cell></div></div>';
+        '<div ng-header-cell></div>';
 
       var nameTemplate = '<div class="ngCellText"><span class="name-display-style">{{row.getProperty(col.field)}}</span>' +
         '<span class="email-display-style">{{row.getProperty(\'address\')}}</span></div>';
@@ -552,70 +555,87 @@ angular.module('Core')
         }
       };
 
-      $scope.initGrid = function () {
-        $scope.isResetEnabled = false;
-        $scope.validateDnForUser();
-      };
+      $scope.isResetEnabled = false;
+      $scope.validateDnForUser();
+      toggleShowExtension().then(function () {
+        if ($scope.showExtension === "true") {
+          $scope.showGrid = false;
+          $scope.displayInternal = $translate.instant('usersPage.directLineHeader');
+        } else {
+          $scope.showGrid = true;
+          $scope.displayExternal = $translate.instant('usersPage.directLineHeader');
+          $scope.displayInternal = $translate.instant('usersPage.extensionHeader');
+        }
 
-      $scope.addDnGridOptions = {
-        data: 'usrlist',
-        enableRowSelection: false,
-        multiSelect: false,
-        showFilter: false,
-        rowHeight: 55,
-        rowTemplate: rowTemplate,
-        headerRowHeight: 44,
-        headerRowTemplate: headerRowTemplate, // this is needed to get rid of vertical bars in header
-        useExternalSorting: false,
-        init: $scope.initGrid,
+        $scope.addDnGridOptions = {
+          data: 'usrlist',
+          enableRowSelection: false,
+          multiSelect: false,
+          showFilter: false,
+          rowHeight: 55,
+          rowTemplate: rowTemplate,
+          headerRowHeight: 44,
+          headerRowTemplate: headerRowTemplate, // this is needed to get rid of vertical bars in header
+          useExternalSorting: false,
 
-        columnDefs: [{
-          field: 'name',
-          displayName: $translate.instant('usersPage.nameHeader'),
-          sortable: false,
-          cellTemplate: nameTemplate,
-          width: '42%',
-          height: 35
+          columnDefs: [{
+            field: 'name',
+            displayName: $translate.instant('usersPage.nameHeader'),
+            sortable: false,
+            cellTemplate: nameTemplate,
+            width: '42%',
+            height: 35
 
-        }, {
-          field: 'externalNumber',
-          displayName: $translate.instant('usersPage.directLineHeader'),
-          sortable: false,
-          cellTemplate: externalExtensionTemplate,
-          width: '33%',
-          height: 35
+          }, {
+            field: 'externalNumber',
+            displayName: $scope.displayExternal,
+            sortable: false,
+            cellTemplate: externalExtensionTemplate,
+            width: '33%',
+            height: 35,
+            visible: $scope.showGrid
 
-        }, {
-          field: 'internalExtension',
-          displayName: $translate.instant('usersPage.extensionHeader'),
-          sortable: false,
-          cellTemplate: internalExtensionTemplate,
-          width: '25%',
-          height: 35
-        }]
-      };
-
+          }, {
+            field: 'internalExtension',
+            displayName: $scope.displayInternal,
+            sortable: false,
+            cellTemplate: internalExtensionTemplate,
+            width: '25%',
+            height: 35
+          }]
+        };
+      });
       $scope.collabRadio = 1;
 
       $scope.onboardUsers = onboardUsers;
 
       var usersList = [];
 
-      var getConfIdList = function () {
+      /**
+       * get the current license settings for the CF_ licenses
+       *
+       * @param state - return license list based on matching state (checked = true)
+       */
+      var getConfIdList = function (state) {
         var confId = [];
         for (var cf in $scope.confChk) {
           var current = $scope.confChk[cf];
-          if (current.confModel === true) {
+          if ((current.confModel === state) && (current.confFeature.license.licenseId !== undefined)) {
             confId.push(current.confFeature.license.licenseId);
           }
-          if (current.cmrModel === true) {
+          if ((current.cmrModel === state) && (current.cmrFeature.license.licenseId !== undefined)) {
             confId.push(current.cmrFeature.license.licenseId);
           }
         }
         return confId;
       };
 
-      var getAccountLicenses = function () {
+      /**
+       * get the list of selected account licenses on the dialog
+       *
+       * @param action - 'additive' - add new licenses only, 'patch' - remove any licenses not specified
+       */
+      var getAccountLicenses = function (action) {
         var licenseList = [];
         if (Authinfo.hasAccount()) {
           // Messaging: prefer selected subscription, if specified
@@ -626,13 +646,25 @@ angular.module('Core')
             var selMsgService = $scope.messageFeatures[msgIndex];
             // TODO (tohagema): clean up messageFeatures license(s) model :/
             var license = selMsgService.license || selMsgService.licenses[0];
-            if ('licenseId' in license) licenseList.push(new LicenseFeature(license.licenseId, true));
+            if ('licenseId' in license) {
+              // Add new licenses
+              licenseList.push(new LicenseFeature(license.licenseId, true));
+            } else if ((action === 'patch') && ($scope.messageFeatures.length > 1) && ('licenseId' in $scope.messageFeatures[1].licenses[0])) {
+              // Remove existing license
+              licenseList.push(new LicenseFeature($scope.messageFeatures[1].licenses[0].licenseId, false));
+            }
           }
 
           // Conferencing: depends on model (standard vs. CMR)
-          var cidList = getConfIdList();
-          for (var i = 0; i < cidList.length; i++) {
-            licenseList.push(new LicenseFeature(cidList[i], true));
+          var cidListAdd = getConfIdList(true);
+          for (var i = 0; i < cidListAdd.length; i++) {
+            licenseList.push(new LicenseFeature(cidListAdd[i], true));
+          }
+          if (action === 'patch') {
+            var cidListRemove = getConfIdList(false);
+            for (i = 0; i < cidListRemove.length; i++) {
+              licenseList.push(new LicenseFeature(cidListRemove[i], false));
+            }
           }
 
           // Communication: straightforward license, for now
@@ -640,6 +672,8 @@ angular.module('Core')
           var selCommService = $scope.communicationFeatures[commIndex];
           if ('licenseId' in selCommService.license) {
             licenseList.push(new LicenseFeature(selCommService.license.licenseId, true));
+          } else if ((action === 'patch') && ($scope.communicationFeatures.length > 1) && ('licenseId' in $scope.communicationFeatures[1].license)) {
+            licenseList.push(new LicenseFeature($scope.communicationFeatures[1].license.licenseId, false));
           }
         }
 
@@ -670,6 +704,12 @@ angular.module('Core')
         return entStrings;
       };
 
+      function toggleShowExtension() {
+        return DialPlanService.getCustomerDialPlanDetails().then(function (response) {
+          $scope.showExtension = response.extensionGenerated;
+        });
+      }
+
       $scope.updateUserLicense = function () {
         var user = [];
         if ($scope.currentUser) {
@@ -683,7 +723,7 @@ angular.module('Core')
         }
         $scope.btnSaveEntLoad = true;
 
-        Userservice.updateUsers(user, getAccountLicenses(), null, 'updateUserLicense', entitleUserCallback);
+        Userservice.updateUsers(user, getAccountLicenses('patch'), null, 'updateUserLicense', entitleUserCallback);
       };
 
       //****************MODAL INIT FUNCTION FOR INVITE AND ADD***************
@@ -696,9 +736,10 @@ angular.module('Core')
         this.entitlementState = state ? 'ACTIVE' : 'INACTIVE';
       }
 
-      function LicenseFeature(name, state) {
+      function LicenseFeature(name, bAdd) {
         return {
           id: name.toString(),
+          idOperation: bAdd ? 'ADD' : 'REMOVE',
           properties: {
             internalExtension: null,
             directLine: null
@@ -1041,7 +1082,7 @@ angular.module('Core')
             var entitleList = [];
             var licenseList = [];
             if (Authinfo.hasAccount() && $scope.collabRadio === 1) {
-              licenseList = getAccountLicenses();
+              licenseList = getAccountLicenses('additive');
             } else {
               entitleList = getEntitlements('add');
             }
@@ -1472,7 +1513,7 @@ angular.module('Core')
             var entitleList = [];
             var licenseList = [];
             if (Authinfo.hasAccount() && $scope.collabRadio === 1) {
-              licenseList = getAccountLicenses();
+              licenseList = getAccountLicenses('patch');
             } else {
               entitleList = getEntitlements('add');
             }
@@ -1740,7 +1781,7 @@ angular.module('Core')
         var entitleList = [];
         var licenseList = [];
         if (Authinfo.hasAccount() && $scope.collabRadio === 1) {
-          licenseList = getAccountLicenses() || [];
+          licenseList = getAccountLicenses('additive') || [];
         } else {
           entitleList = getEntitlements('add');
         }

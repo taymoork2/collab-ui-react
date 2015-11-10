@@ -28,16 +28,16 @@
       return $resource(HuronConfig.getTerminusUrl() + '/carriers/:carrierId', {});
     })
     .factory('TerminusCarrierInventoryCount', function ($resource, HuronConfig) {
-      return $resource(HuronConfig.getTerminusUrl() + '/carriers/:carrierId/did/inventory/count');
+      return $resource(HuronConfig.getTerminusUrl() + '/inventory/carriers/:carrierId/did/count');
     })
     .factory('TerminusCarrierInventorySearch', function ($resource, HuronConfig) {
-      return $resource(HuronConfig.getTerminusUrl() + '/carriers/:carrierId/did/inventory/search');
+      return $resource(HuronConfig.getTerminusUrl() + '/inventory/carriers/:carrierId/did/search');
     })
     .factory('TerminusCarrierInventoryReserve', function ($resource, HuronConfig) {
-      return $resource(HuronConfig.getTerminusUrl() + '/carriers/:carrierId/did/inventory/reserve');
+      return $resource(HuronConfig.getTerminusUrl() + '/inventory/carriers/:carrierId/did/reserve');
     })
     .factory('TerminusCarrierInventoryRelease', function ($resource, HuronConfig) {
-      return $resource(HuronConfig.getTerminusUrl() + '/carriers/:carrierId/did/inventory/release');
+      return $resource(HuronConfig.getTerminusUrl() + '/inventory/carriers/:carrierId/did/release');
     })
     .factory('TerminusStateService', function ($resource) {
       return $resource('modules/huron/pstnSetup/states.json', {}, {

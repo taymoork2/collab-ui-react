@@ -5,6 +5,9 @@
 /* global browser */
 /* global by */
 /* global element */
+/* global wizard */
+/* global users */
+/* global LONG_TIMEOUT */
 
 describe('First Time Wizard', function () {
   afterEach(function () {
@@ -55,7 +58,7 @@ describe('First Time Wizard', function () {
     utils.click(wizard.finishBtn);
     utils.clickEscape();
     utils.expectIsNotDisplayed(wizard.wizard);
-  }, 60000);
+  }, LONG_TIMEOUT);
 
   it('should reopen the wizard', function () {
     navigation.clickFirstTimeWizard();
