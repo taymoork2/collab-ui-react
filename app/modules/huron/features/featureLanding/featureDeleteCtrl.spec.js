@@ -96,7 +96,7 @@ describe('Controller: HuronFeatureDeleteCtrl', function () {
       expect(Notification.error).not.toHaveBeenCalled();
       expect(aaModel.ceInfos.length).toEqual(1);
       expect(AutoAttendantCeInfoModelService.deleteCeInfo).toHaveBeenCalled();
-      expect($rootScope.$broadcast).toHaveBeenCalledWith('HUNT_GROUP_DELETED');
+      expect($rootScope.$broadcast).toHaveBeenCalledWith('HURON_FEATURE_DELETED');
 
     });
 
@@ -115,7 +115,7 @@ describe('Controller: HuronFeatureDeleteCtrl', function () {
       expect(aaModel.ceInfos.length).toEqual(2);
       expect(Notification.error).toHaveBeenCalledWith(jasmine.any(String));
       expect(AutoAttendantCeInfoModelService.deleteCeInfo).not.toHaveBeenCalled();
-      expect($rootScope.$broadcast).not.toHaveBeenCalledWith('HUNT_GROUP_DELETED');
+      expect($rootScope.$broadcast).not.toHaveBeenCalledWith('HURON_FEATURE_DELETED');
 
     });
 
@@ -129,7 +129,7 @@ describe('Controller: HuronFeatureDeleteCtrl', function () {
       expect(aaModel.ceInfos.length).toEqual(2);
       expect(Notification.error).toHaveBeenCalledWith('huronFeatureDetails.deleteFailedText');
       expect(AutoAttendantCeInfoModelService.deleteCeInfo).not.toHaveBeenCalled();
-      expect($rootScope.$broadcast).not.toHaveBeenCalledWith('HUNT_GROUP_DELETED');
+      expect($rootScope.$broadcast).not.toHaveBeenCalledWith('HURON_FEATURE_DELETED');
 
     });
   });
@@ -173,7 +173,7 @@ describe('Huron Feature DeleteCtrl', function () {
     featureDelDeferred = $q.defer();
     spyOn(huntGroupService, 'deleteHuntGroup').and.returnValue(featureDelDeferred.promise);
     spyOn(Notification, 'success');
-    spyOn(Notification, 'errorResponse');
+    spyOn(Notification, 'error');
     spyOn(rootScope, '$broadcast').and.callThrough();
 
     $stateParams = {
@@ -225,8 +225,7 @@ describe('Huron Feature DeleteCtrl', function () {
     featureDelDeferred.reject(failureResponse);
     $scope.$apply();
     $timeout.flush();
-    expect(Notification.errorResponse).toHaveBeenCalledWith(jasmine.any(Object), jasmine.any(String), jasmine.any(Object));
+    expect(Notification.error).toHaveBeenCalledWith(jasmine.any(String));
   });
 
 });
-

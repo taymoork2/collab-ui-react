@@ -17,14 +17,13 @@
     vm.featureName = $stateParams.deleteFeatureName;
     vm.featureFilter = $stateParams.deleteFeatureType;
     vm.featureType = vm.featureFilter === 'AA' ? $translate.instant('autoAttendant.title') : vm.featureFilter === 'HG' ?
-      $translate.instant('huntGroup.title') : 'Feature';
+      $translate.instant('huronHuntGroup.title') : 'Feature';
 
     vm.deleteBtnDisabled = false;
 
     vm.deleteFeature = deleteFeature;
     vm.deleteSuccess = deleteSuccess;
     vm.deleteError = deleteError;
-
 
     function deleteFeature() {
       vm.deleteBtnDisabled = true;
@@ -60,12 +59,16 @@
             deleteError(response);
           }
         );
-      }
-      // else if (vm.featureFilter === 'hg') {
-      // } else if (vm.featureFilter === 'cp') {
-      //   //
-      // }
-      else {
+      } else if (vm.featureFilter === 'HG') {
+        HuntGroupService.deleteHuntGroup(vm.featureId).then(
+          function (data) {
+            deleteSuccess();
+          },
+          function (response) {
+            deleteError(response);
+          }
+        );
+      } else {
         return;
       }
     }
@@ -78,7 +81,7 @@
       }
 
       $timeout(function () {
-        $rootScope.$broadcast('HUNT_GROUP_DELETED');
+        $rootScope.$broadcast('HURON_FEATURE_DELETED');
         Notification.success('huronFeatureDetails.deleteSuccessText', {
           featureName: vm.featureName,
           featureType: vm.featureType
