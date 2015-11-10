@@ -133,7 +133,7 @@ angular.module('Core')
           authData.managedOrgs = data.managedOrgs;
           authData.entitlements = data.entitlements;
           authData.services = data.services;
-          authData.roles = ["HELP_DESK_USER"]; // data.roles;
+          authData.roles = data.roles; // ["Helpdesk"];
           //if Full_Admin or WX2_User and has managedOrgs, add partnerustomers tab as allowed tab
           if (authData.managedOrgs && authData.managedOrgs.length > 0) {
             for (var i = 0; i < authData.roles.length; i++) {

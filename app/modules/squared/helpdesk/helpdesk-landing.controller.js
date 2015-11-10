@@ -45,6 +45,13 @@
         "userName": "jewagner56@icloud.com",
         "displayName": "jewagner56@icloud.com",
         "phoneNumbers": []
+      },
+      {
+        "id": "983761d5-3120-4747-9ab3-a3960ecdecc8",
+        "organizationId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
+        "userName": "sqintegration1234@gmail.com",
+        "displayName": "first admin",
+        "phoneNumbers": []
       }];
 
     vm.mockOrgs = [
