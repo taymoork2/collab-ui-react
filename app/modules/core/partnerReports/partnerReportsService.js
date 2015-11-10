@@ -340,8 +340,13 @@
       };
 
       if (time.value === 0) {
+        var offset = 1;
+        if (moment.tz(mostRecent, timezone).format(dayFormat) === moment().tz(timezone).format(dayFormat)) {
+          offset = 0;
+        }
+
         for (var i = 6; i >= 0; i--) {
-          dataPoint.modifiedDate = moment().subtract(i + 1, 'day').format(dayFormat);
+          dataPoint.modifiedDate = moment().subtract(i + offset, 'day').format(dayFormat);
           graph.push(angular.copy(dataPoint));
         }
       } else if (time.value === 1) {
