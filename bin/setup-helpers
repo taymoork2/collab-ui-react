@@ -1,0 +1,63 @@
+last_refreshed_file=".last-refreshed"
+manifest_checksums_file=".manifest-checksums"
+manifest_files="package.json bower.json"
+dependency_dirs="./node_modules ./bower_components"
+
+# generate a new timestamp file
+function mk_last_refreshed_file {
+    local timestamp_file=${1:-$last_refreshed_file}
+    date +"%Y%m%d%H%M%S" > $timestamp_file
+}
+
+# compare if current time minus a given timestamp's file time exceeds a given threshold
+function is_time_to_refresh {
+    local min_refresh_period=${1:-$(( 60 * 60 * 24 ))}  # default to 24 hours
+    local timestamp_file=${2:-$last_refreshed_file}
+
+    # no such file exists, return success
+    if [ ! -f $timestamp_file ]; then
+        return 0
+    else
+        set -x
+        local t1=`cat $timestamp_file`   # ex. Nov. 6, 2015 3:27:00 PM => '201511152700'
+        local t2=`date +"%Y%m%d%H%M%S"`
+        [ $(( $t2 - $t1 )) -gt $min_refresh_period ] && return 0 || return 1
+        set +x
+    fi
+}
+
+# quietly validate checksums
+function is_checksums_ok {
+    local checksum_file=${1:-$manifest_checksums_file}
+    shasum -c $checksum_file > /dev/null && return 0 || return 1
+}
+
+# generate a new checksum file
+function mk_checksum_file {
+    local checksum_file=${1:-$manifest_checksums_file}
+    shift
+    if [ $# -eq 0 ]; then
+        local files_list=${manifest_files}
+    else
+        local files_list=$*
+    fi
+    > $checksum_file
+    for f in $files_list; do
+        shasum $f >> $checksum_file
+    done
+}
+
+# checks existence of a list of dirs
+function dirs_exist {
+    if [ $# -eq 0 ]; then
+        local dirs_list=${dependency_dirs}
+    else
+        local dirs_list="$*"
+    fi
+    for dir in $dirs_list; do
+        if [ ! -d $dir ]; then
+            return 1
+        fi
+    done
+    return 0
+}

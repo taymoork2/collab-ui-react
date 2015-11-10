@@ -16,6 +16,7 @@ describe('WebexReportService Test', function () {
   // }));
   //Initialize variables
   var WebexReportService, httpBackend, WebExUtilsFact, testReports, $translate, reportService;
+  var ref1, ref2;
 
   beforeEach(inject(function ($httpBackend, _WebexReportService_, _$translate_) {
 
@@ -34,7 +35,7 @@ describe('WebexReportService Test', function () {
     // $translate.use = function () {
     //   return "en_US.json";
     // };
-    //spyOn($translate, 'use').and.returnValue(useLocale);
+    spyOn($translate, 'use').and.returnValue(useLocale);
     //spyOn($translate, 'storageKey').and.returnValue(useLocale);
 
     //WebExUtilsFact = _WebExUtilsFact_;
@@ -48,6 +49,9 @@ describe('WebexReportService Test', function () {
     testReports = new WebexReportService.ReportsSection("testReports",
       "mojoco.webex.com", ["x", "y"],
       "testReportsCat");
+
+    ref1 = WebexReportService.instantiateUIsref("www.dontcare.come", "abcReport", "mojoco.webex.com");
+    ref2 = WebexReportService.instantiateUIsref("www.dontcare.come", "meeting_usage", "mojoco.webex.com");
 
   }));
 
@@ -70,6 +74,27 @@ describe('WebexReportService Test', function () {
 
   it("webex: reports section has correct section name", function () {
     expect(testReports.section_name).toBe("testReports");
+  });
+
+  it("webex: reports section when sort and pinned, pinned item should be first", function () {
+    //this var is only here for reference.
+    var pinnnedItems = ["meeting_usage", "attendee", "event_center_overview",
+      "support_center_allocation_queue"
+    ];
+
+    //the idea here is that even though meeting_usage is second, it should appear first
+    //since it is one of the pinned item.
+
+    var trs = testReports;
+    trs.uisrefs = [ref1, ref2];
+
+    trs.sort(); //sorts the links
+    trs.doPin(); //puts the pinned link at the top.
+
+    var topReportId = trs.uisrefs[0].reportPageId;
+
+    expect(topReportId).toBe("meeting_usage");
+
   });
 
 });

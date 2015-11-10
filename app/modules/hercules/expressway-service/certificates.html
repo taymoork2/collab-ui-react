@@ -1,10 +1,7 @@
-<h5>
-  Certificates for Encrypted SIP Calls
+<h5 translate="{{'hercules.settings.call.certificatesHeading'}}">
 </h5>
 
-<p>
-  Use certificates provided from Cisco Collaboration default trust list for the encrypted SIP
-  calls, or upload your own certificates.
+<p translate="{{'hercules.settings.call.certificates'}}">
 </p>
 <p>
 
@@ -39,6 +36,6 @@
 <button class="button secondary" name="file" accept="application/x-x509-ca-cert"
      ngf-select="expresswayServiceSettings.uploadCert($file, $event)"
      ng-model="certFile"
-     loading="expresswayServiceSettings.uploadingCert">
-  Upload
+     loading="expresswayServiceSettings.uploadingCert"
+     translate="{{'hercules.settings.call.certificatesUpload'}}">
 </button>
