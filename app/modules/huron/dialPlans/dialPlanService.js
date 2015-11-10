@@ -81,7 +81,9 @@
               var northAmericanDialPlanData = {
                 countryCode: "+1",
                 extensionGenerated: "false",
-                steeringDigitRequired: "true"
+                steeringDigitRequired: "true",
+                supportSiteCode: "true",
+                supportSiteSteeringDigit: "true"
               };
               return northAmericanDialPlanData;
             }
