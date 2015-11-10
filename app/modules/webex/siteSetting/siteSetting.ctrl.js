@@ -64,8 +64,6 @@
       }
 
       var screenAvailHeight = window.screen.availHeight;
-      var innerHeight = window.innerHeight;
-      $scope.iframeHeight = (200 >= innerHeight) ? 0 : innerHeight - 200;
 
       // iframe request variables
       $scope.trustIframeUrl = $sce.trustAsResourceUrl(iframeUrl);
@@ -82,8 +80,6 @@
         "siteSettingLabel=" + $scope.siteSettingLabel + "\n" +
         "iframeUrl=" + iframeUrl + "\n" +
         "screenAvailHeight=" + screenAvailHeight + "\n" +
-        "innerHeight=" + innerHeight + "\n" +
-        "iframeHeight=" + $scope.iframeHeight + "\n" +
         "trustIframeUrl=" + $scope.trustIframeUrl + "\n" +
         "adminEmail=" + $scope.adminEmail + "\n" +
         "authToken=" + $scope.authToken + "\n" +
@@ -104,3 +100,12 @@
     } // function()
   ]); // angular.module().controller()
 })(); // function()
+
+/**
+ $(window).on('load resize', function(){
+    $window = $(window);
+    $('iframe').height(function(){
+        return $window.height()-$(this).offset().top;   
+    });
+});
+**/
