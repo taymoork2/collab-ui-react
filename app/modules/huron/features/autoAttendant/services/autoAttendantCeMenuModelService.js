@@ -54,6 +54,7 @@
   Action.prototype.clone = function () {
     var newObj = new Action(this.name, this.value);
     newObj.setDescription(this.description);
+    newObj.setVoice(this.voice);
     return newObj;
   };
 
@@ -130,6 +131,7 @@
       newObj.actions[i] = this.actions[i].clone();
     }
     newObj.setTimeout(this.timeout);
+    newObj.setLanguage(this.language);
 
     newObj.setUsername(this.username);
     newObj.setPassword(this.password);

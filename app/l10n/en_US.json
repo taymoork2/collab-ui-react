@@ -1294,7 +1294,6 @@
     "sayMessage": "Message",
     "sayMessagePlaceholder": "Enter your message here.",
     "sayMessageUninterrupt": "Message playback will be uninterruptable.",
-    "sayMessageLanguage": "Language",
     "sayMessageVoice": "Voice",
     "sayMessageSelectPlaceholder": "Select...",
     "voices": {

@@ -67,7 +67,6 @@
             });
             if (isMatch) {
               vm.template = vm.templates[i];
-              getTemplateController();
             }
           }
         }
