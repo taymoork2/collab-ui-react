@@ -152,10 +152,11 @@
       if (response.data) {
         card.current = _.size(response.data);
         var last30Days = new Date(new Date().getTime() - (1000 * 60 * 60 * 24 * 30));
-        var filteredRes = _.filter(response.data, function (value, key) {
-          return new Date(value.createTime) > last30Days;
-        });
-        card.previous = _.size(filteredRes);
+        card.previous = _(response.data)
+          .filter(function (value, key) {
+            return new Date(value.createTime) > last30Days;
+          })
+          .size();
       }
     }
   }
