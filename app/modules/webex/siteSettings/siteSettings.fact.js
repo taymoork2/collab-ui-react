@@ -67,7 +67,6 @@
               siteInfoPageObj: null,
               siteFeaturesPageObj: null
             }, // siteInfoCardObj
-
             siteSettingCardObjs: [],
             categoryObjs: [],
           }; // webExSiteSettingsObj
@@ -99,6 +98,7 @@
               label: cardLabel,
               comment: null,
               pageObjs: null,
+              lang: null,
 
               subSectionObjs: []
             };
@@ -107,12 +107,14 @@
               cardObj.subSectionObjs.push({
                 id: "WebACD",
                 label: "WebACD",
+                lang: null,
                 pageObjs: null
               });
 
               cardObj.subSectionObjs.push({
                 id: "RA",
                 label: "Remote Access",
+                lang: null,
                 pageObjs: null
               });
             }
@@ -569,6 +571,8 @@
                 if ("CommonSettings" == siteSettingCardObjId) {
                   siteSettingCardObj.label = $translate.instant("webexSiteSettingsLabels.commonSettingsCardTitle");
                   siteSettingCardObj.comment = $translate.instant("webexSiteSettingsLabels.commonSettingsCardNote");
+                } else {
+                  siteSettingCardObj.lang = "en"; //Centre names are in English
                 }
 
                 var categoryObj = _this.getCategoryObj(siteSettingCardObjId);
@@ -578,6 +582,7 @@
                   function updateSubSectionObj(subSectionObj) {
                     categoryObj = _this.getCategoryObj(subSectionObj.id);
                     subSectionObj.pageObjs = categoryObj.pageObjs;
+                    subSectionObj.lang = "en"; //WebACD, Remote Acces are in English
                   }
                 ); // subSectionObjs.forEach()
 

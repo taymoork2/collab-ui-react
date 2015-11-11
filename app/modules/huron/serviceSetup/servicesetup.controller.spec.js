@@ -1,18 +1,27 @@
 'use strict';
 
 describe('Controller: ServiceSetup', function () {
-  var controller, $scope, $state, $q, ServiceSetup, Notification, HuronCustomer;
+  var controller, $scope, $state, $q, $httpBackend, ServiceSetup, Notification, HuronCustomer, DialPlanService;
   var model, customer, voicemail, externalNumberPool, usertemplate, form, timeZone;
+
+  var dialPlanDetailsNorthAmerica = [{
+    countryCode: "+1",
+    extensionGenerated: "false",
+    steeringDigitRequired: "true",
+    supportSiteCode: "true",
+    supportSiteSteeringDigit: "true"
+  }];
 
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$q_, _ServiceSetup_, _Notification_, _HuronCustomer_) {
+  beforeEach(inject(function ($rootScope, $controller, _$q_, _ServiceSetup_, _Notification_, _HuronCustomer_, _DialPlanService_) {
     $scope = $rootScope.$new();
     // $state = _$state_;
     $q = _$q_;
     ServiceSetup = _ServiceSetup_;
     Notification = _Notification_;
     HuronCustomer = _HuronCustomer_;
+    DialPlanService = _DialPlanService_;
 
     customer = {
       "uuid": "84562afa-2f35-474f-ba0f-2def42864e12",
@@ -110,6 +119,7 @@ describe('Controller: ServiceSetup', function () {
     spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.when(timeZone));
     spyOn(Notification, 'notify');
     spyOn(Notification, 'errorResponse');
+    spyOn(DialPlanService, 'getCustomerDialPlanDetails').and.returnValue($q.when(dialPlanDetailsNorthAmerica));
 
     controller = $controller('ServiceSetupCtrl', {
       $scope: $scope,
@@ -232,6 +242,30 @@ describe('Controller: ServiceSetup', function () {
 
       expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
       expect(promise.$$state.value).toEqual('Site/extension create failed.');
+    });
+
+    it('should call getCustomerDialPlanDetails()', function () {
+      expect(DialPlanService.getCustomerDialPlanDetails).toHaveBeenCalled();
+    });
+
+    it('should call createInternalNumberRange() if hideFieldInternalNumberRange is false', function () {
+      controller.hideFieldInternalNumberRange = false;
+      var promise = controller.initNext();
+      $scope.$apply();
+      expect(ServiceSetup.createInternalNumberRange).toHaveBeenCalled();
+    });
+
+    it('should call not createInternalNumberRange() if hideFieldInternalNumberRange is true', function () {
+      controller.hideFieldInternalNumberRange = true;
+      var promise = controller.initNext();
+      $scope.$apply();
+      expect(ServiceSetup.createInternalNumberRange).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('setServiceValues', function () {
+    it('should call DialPlanService()', function () {
+      expect(DialPlanService.getCustomerDialPlanDetails).toHaveBeenCalled();
     });
   });
 

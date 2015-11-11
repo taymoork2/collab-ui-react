@@ -1,7 +1,7 @@
 <div class="small-12 columns">
   <div class="row">
     <div ng-click="manualReload(false)" class="overview-updated columns small-12" id="reports-click-div">
-      <cr-reload-data id="reportsRefreshData" last-updated-time="reportsRefreshTime">
+      <cr-reload-data id="reportsRefreshData" last-updated-time="reportsRefreshTime" ng-if="!showWebexReports">
       </cr-reload-data>
     </div>
   </div>

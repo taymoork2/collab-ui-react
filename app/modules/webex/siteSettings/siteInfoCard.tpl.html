@@ -1,7 +1,7 @@
 
   <cs-card class="full header-background"
            id={{siteSettingsObj.siteInfoCardObj.id}}-card
-           name={{siteSettingsObj.siteInfoCardObj.id}}-card >
+           name={{siteSettingsObj.siteInfoCardObj.id}}-card>
            
     <article>
       <header>
@@ -17,9 +17,10 @@
               <img src="/images/webex_logo_48px.png" 
                    class="webexlogo"
                    id="webexLogo"
-                   name="webexLogo" />
+                   name="webexLogo"
+                   alt="{{'webexCommon.logoAltText' | translate}}" />
                 
-              <span>
+              <span xml:lang="en">
                 &nbsp;WebEx
               </span>
             </div>
@@ -52,14 +53,16 @@
                 
                 <a id="siteInfo-siteInformation"
                    name="siteInfo-siteInformation"
-                   ui-sref={{siteSettingsObj.siteInfoCardObj.siteInfoPageObj.uiSref}} >
+                   ui-sref={{siteSettingsObj.siteInfoCardObj.siteInfoPageObj.uiSref}}
+                   title="{{siteSettingsObj.siteInfoCardObj.siteInfoPageObj.label}}">
                    
                   <i class="icon icon-circle-webex"></i>
                 </a>
                 
                 <a id={{siteSettingsObj.siteInfoCardObj.siteInfoPageObj.id}}
                    name={{siteSettingsObj.siteInfoCardObj.siteInfoPageObj.id}}
-                   ui-sref={{siteSettingsObj.siteInfoCardObj.siteInfoPageObj.uiSref}} >
+                   ui-sref={{siteSettingsObj.siteInfoCardObj.siteInfoPageObj.uiSref}}
+                   href="">
                     
                   {{siteSettingsObj.siteInfoCardObj.siteInfoPageObj.label}}
                 </a>
@@ -70,14 +73,16 @@
                 
                 <a id="siteInfo-siteFeatures"
                    name="siteInfo-siteFeatures"
-                   ui-sref={{siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.uiSref}} >
+                   ui-sref={{siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.uiSref}}
+                   title="{{siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.label}}">
                    
                   <i class="icon icon-circle-star"></i>
                 </a>
                 
                 <a id={{siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.id}}
                    name={{siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.id}}
-                   ui-sref={{siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.uiSref}} >
+                   ui-sref={{siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.uiSref}}
+                   href="">
                   
                   {{siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.label}}                  
                 </a>
