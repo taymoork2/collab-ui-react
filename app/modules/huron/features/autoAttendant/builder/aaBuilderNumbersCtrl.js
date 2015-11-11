@@ -113,8 +113,9 @@
       // if it's longer than 2, we sort it
       if (resources.length > 2) {
 
-        // but we don't change the first top-line number, which is also shown in the header, so 
+        // but we don't change the first top-line number, which is also shown in the header, so
         // get a temp list without that first number
+
         var tmp = _.rest(resources);
 
         // and sort it
@@ -123,7 +124,8 @@
         });
 
         // we have a sorted list, take out the old unsorted ones, put in the sorted ones
-        resources.splice(1, resources.length - 1);
+        resources.length = 1;
+
         _.forEach(tmp, function (n) {
           resources.push(n);
         });
