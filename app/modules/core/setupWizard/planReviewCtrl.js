@@ -38,7 +38,9 @@
     vm.trialUsedPercentage = 0;
     vm.isInitialized = false; // invert the logic and initialize to false so the template doesn't flicker before spinner
 
-    function activate() {
+    init();
+
+    function init() {
       vm.messagingServices.services = Authinfo.getMessageServices();
       if (vm.messagingServices.services) {
         angular.forEach(vm.messagingServices.services, function (service) {
@@ -137,8 +139,6 @@
       }
     }
     /////////////////
-
-    activate();
 
     function populateTrialData(trial) {
       vm.trial = trial;
