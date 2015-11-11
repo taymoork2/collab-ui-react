@@ -10,6 +10,9 @@ angular
       $scope.extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-uc'];
 
       var hasEntitlement = function (entitlement) {
+        if (!angular.isDefined($scope.currentUser))
+          return false;
+
         return $scope.currentUser.entitlements && $scope.currentUser.entitlements.indexOf(entitlement) > -1;
       };
 
@@ -40,7 +43,7 @@ angular
               $scope.isEnabled = true;
             }
           });
-          if ($scope.isEnabled) {
+          if ($scope.isEnabled && angular.isDefined($scope.currentUser)) {
             // Only poll for statuses if there are enabled extensions
             updateStatusForUser();
           }
@@ -92,7 +95,7 @@ angular
         restrict: 'E',
         scope: false,
         controller: 'HybridServicesCtrl',
-        templateUrl: 'modules/hercules/userPreview/hybridServices.tpl.html'
+        templateUrl: 'modules/hercules/hybridServices/hybridServices.tpl.html'
       };
     }
   ]);

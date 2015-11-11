@@ -45,6 +45,29 @@
     line-height: inherit;
     padding-bottom: 10px;
   }
+
+  &.hybrid-services-panel {
+    background-color: $brand-white;
+    font-family: $brand-font-light;
+    font-size: 14px;
+    color: $gray-darkest;
+    .hs-header {
+      padding-left: 15px;
+      font-family: $brand-font-cisco-TT-Extra-Light;
+    }
+    .hs-extension-list {
+      background: $gray-lightest;
+      margin-top: 5px;
+      padding: 15px 15px 0 15px;
+      .cs-checkbox span:before {
+        margin-top: -2px;
+        margin-right: 12px;
+      }
+    }
+    .hs-extension {
+        display: block;
+    }
+  }
 }
 
 .cloud-extension-label {

@@ -1,0 +1,13 @@
+<div class="cloud-extensions hybrid-services-panel" ng-if="vm.isEnabled">
+  <h3 class="hs-header" translate="cloudExtensions.cloudExtensions"></h3>
+  <div class="hs-extension-list">
+    <span class="hs-extension" ng-repeat="extension in vm.extensions | filter: { enabled: true }">
+      <label class="cs-checkbox" for="{{extension.id}}">
+          <input type="checkbox" id="{{extension.id}}" ng-model="extension.entitlementState"
+                 ng-true-value="'ACTIVE'" ng-false-value="'INACTIVE'"
+                 ng-change="vm.setEntitlements()">
+          <span translate="hercules.serviceNames.{{extension.id}}"></span>
+      </label>
+    </span>
+  </div>
+</div>

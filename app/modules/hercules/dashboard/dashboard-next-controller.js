@@ -26,12 +26,10 @@ angular.module('Hercules')
         if ($scope.noServicesSelected) $scope.showInfoPanel = true;
       });
 
-      ServiceDescriptor.services(function (error, services) {
-        if (!error) {
-          $scope.setServices(services);
-        } else {
-          $scope.setServices([]);
-        }
+      ServiceDescriptor.getServices().then(function (services) {
+        $scope.setServices(services);
+      }, function () {
+        $scope.setServices([]);
       });
 
       $scope.showClusterDetails = function (cluster) {
