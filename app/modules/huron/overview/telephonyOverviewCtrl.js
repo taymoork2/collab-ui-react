@@ -11,15 +11,7 @@
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
 
-    vm.gsxFeature = false;
-
-    Userservice.getUser('me', function (data, status) {
-      FeatureToggleService.getFeatureForUser(data.id, 'gsxdemo').then(function (value) {
-        vm.gsxFeature = value;
-      }).finally(function () {
-        activate();
-      });
-    });
+    activate();
 
     function activate() {
       // TODO: Change TelephonyInfoService to return directly from this instead of having
@@ -31,16 +23,6 @@
       TelephonyInfoService.loadInternalNumberPool();
       TelephonyInfoService.loadExternalNumberPool();
       vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
-
-      if ($state.$current &&
-        $state.$current.data &&
-        $state.$current.data.displayName &&
-        $state.$current.data.displayName === 'Communications' &&
-        vm.gsxFeature
-      ) {
-        $state.$current.data.displayName = $translate.instant('usersPreview.calling');
-        $rootScope.$broadcast('displayNameUpdated');
-      }
     }
 
     activate();

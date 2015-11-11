@@ -37,15 +37,8 @@
     vm.trialDaysRemaining = 0;
     vm.trialUsedPercentage = 0;
     vm.isInitialized = false; // invert the logic and initialize to false so the template doesn't flicker before spinner
-    vm.gsxFeature = false;
 
-    Userservice.getUser('me', function (data, status) {
-      FeatureToggleService.getFeatureForUser(data.id, 'gsxdemo').then(function (value) {
-        vm.gsxFeature = value;
-      }).finally(function () {
-        activate();
-      });
-    });
+    activate();
 
     function activate() {
       vm.messagingServices.services = Authinfo.getMessageServices();
@@ -81,9 +74,6 @@
       vm.confServices.services = Authinfo.getConferenceServices();
       if (vm.confServices.services) {
         angular.forEach(vm.confServices.services, function (service) {
-          if (vm.gsxFeature && service.label.indexOf('Meeting Center') != -1) {
-            service.label = 'Meeting Center';
-          }
           if (service.license.isTrial) {
             vm.trialExists = true;
             vm.trialId = service.license.trialId;
