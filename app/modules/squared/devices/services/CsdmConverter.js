@@ -11,6 +11,7 @@ angular.module('Squared').service('CsdmConverter',
       this.ip = getIp(obj);
       this.tags = getTags(obj);
       this.serial = obj.serial;
+      this.createTime = obj.createTime;
       this.cisUuid = obj.cisUuid;
       this.product = getProduct(obj);
       this.hasIssues = hasIssues(obj);
@@ -24,6 +25,7 @@ angular.module('Squared').service('CsdmConverter',
       this.needsActivation = getNeedsActivation(obj);
       this.diagnosticsEvents = getDiagnosticsEvents(obj);
       this.readableActivationCode = getReadableActivationCode(obj);
+      this.rsuKey = obj.remoteSupportUser && obj.remoteSupportUser.token;
       this.update = function (updated) {
         this.displayName = updated.displayName;
       };

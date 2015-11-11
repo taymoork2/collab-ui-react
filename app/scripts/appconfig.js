@@ -224,6 +224,13 @@ angular
           controller: 'LandingPageCtrl',
           parent: 'main'
         })
+        .state('overview-nm', {
+          url: '/overview-nm',
+          templateUrl: 'modules/core/overview/overview.tpl.html',
+          controller: 'OverviewCtrl',
+          controllerAs: 'overview',
+          parent: 'main'
+        })
         .state('users', {
           abstract: true,
           template: '<div ui-view></div>',
@@ -1327,20 +1334,6 @@ angular
             deleteFeatureName: null,
             deleteFeatureId: null,
             deleteFeatureType: null
-          }
-        })
-        .state('huronfeatures.deleteHuntGroup', {
-          parent: 'modal',
-          views: {
-            'modal@': {
-              controller: 'HuntGroupDeleteCtrl',
-              controllerAs: 'huntGroupDeleteCtrl',
-              templateUrl: 'modules/huron/features/huntGroup/huntGroupDeleteModal.tpl.html'
-            }
-          },
-          params: {
-            deleteHuntGroupName: null,
-            deleteHuntGroupId: null
           }
         })
         .state('huronHuntGroup', {

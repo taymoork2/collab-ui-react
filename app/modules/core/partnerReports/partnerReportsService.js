@@ -85,13 +85,34 @@
             var totalRegistered = 0;
 
             if (angular.isArray(customer.data)) {
-              angular.forEach(customer.data, function (index) {
-                var activeUsers = parseInt(index.details.activeUsers);
-                var totalRegisteredUsers = parseInt(index.details.totalRegisteredUsers);
+              angular.forEach(customer.data, function (item, index, array) {
+                var activeUsers = parseInt(item.details.activeUsers);
+                var totalRegisteredUsers = parseInt(item.details.totalRegisteredUsers);
+
+                // temporary fix for when totalRegisteredUsers equals -1 due to errors recording the number 
+                if (totalRegisteredUsers < 0) {
+                  var previousTotal = 0;
+                  var nextTotal = 0;
+                  if (index !== 0) {
+                    previousTotal = parseInt(array[index - 1].details.totalRegisteredUsers);
+                  }
+                  if (index < (array.length - 1)) {
+                    nextTotal = parseInt(array[index + 1].details.totalRegisteredUsers);
+                  }
+
+                  if (previousTotal < activeUsers && nextTotal < activeUsers) {
+                    totalRegisteredUsers = activeUsers;
+                  } else if (previousTotal > nextTotal) {
+                    totalRegisteredUsers = previousTotal;
+                  } else {
+                    totalRegisteredUsers = nextTotal;
+                  }
+                }
+
                 if (activeUsers !== 0 && totalRegisteredUsers !== 0) {
-                  var modifiedDate = moment(index.date).add(1, 'day').format(monthFormat);
+                  var modifiedDate = moment(item.date).add(1, 'day').format(monthFormat);
                   if (time.value === 0 || time.value === 1) {
-                    modifiedDate = moment(index.date).add(1, 'day').format(dayFormat);
+                    modifiedDate = moment(item.date).add(1, 'day').format(dayFormat);
                   }
 
                   graphData.push({
@@ -99,7 +120,7 @@
                     totalRegisteredUsers: totalRegisteredUsers,
                     percentage: Math.round((activeUsers / totalRegisteredUsers) * 100),
                     modifiedDate: modifiedDate,
-                    date: index.date
+                    date: item.date
                   });
 
                   totalActive += activeUsers;
@@ -319,8 +340,13 @@
       };
 
       if (time.value === 0) {
+        var offset = 1;
+        if (moment.tz(mostRecent, timezone).format(dayFormat) === moment().tz(timezone).format(dayFormat)) {
+          offset = 0;
+        }
+
         for (var i = 6; i >= 0; i--) {
-          dataPoint.modifiedDate = moment().subtract(i + 1, 'day').format(dayFormat);
+          dataPoint.modifiedDate = moment().subtract(i + offset, 'day').format(dayFormat);
           graph.push(angular.copy(dataPoint));
         }
       } else if (time.value === 1) {

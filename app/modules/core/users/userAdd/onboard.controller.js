@@ -28,6 +28,7 @@ angular.module('Core')
 
       $scope.isReset = false;
       $scope.showExtension = undefined;
+      $scope.showExtensions = false;
       $scope.displayInternal = $translate.instant('usersPage.extensionHeader');
       $scope.displayExternal = $translate.instant('usersPage.directLineHeader');
       $scope.isResetEnabled = false;
@@ -62,9 +63,13 @@ angular.module('Core')
       //***********************************************************************************/
 
       function activateDID() {
-        $q.all([loadInternalNumberPool(), loadExternalNumberPool()])
+        $q.all([loadInternalNumberPool(), loadExternalNumberPool(), toggleShowExtensions()])
           .finally(function () {
-            assignDNForUserList();
+            if ($scope.showExtensions === true) {
+              assignDNForUserList();
+            } else {
+              mapDidToDn();
+            }
             $scope.processing = false;
           });
       }
@@ -206,6 +211,18 @@ angular.module('Core')
           });
         }
       };
+
+      function toggleShowExtensions() {
+        return DialPlanService.getCustomerDialPlanDetails().then(function (response) {
+          if (response.extensionGenerated === "true") {
+            $scope.showExtensions = false;
+          } else {
+            $scope.showExtensions = true;
+          }
+        }).catch(function (response) {
+          Notification.errorResponse(response, 'serviceSetupModal.customerDialPlanDetailsGetError');
+        });
+      }
 
       /****************************** Did to Dn Mapping END *******************************/
       //***
@@ -622,10 +639,10 @@ angular.module('Core')
         var confId = [];
         for (var cf in $scope.confChk) {
           var current = $scope.confChk[cf];
-          if ((current.confModel === state) && (current.confFeature.license.licenseId !== undefined)) {
+          if ((current.confModel === state) && angular.isDefined(_.get(current, 'confFeature.license.licenseId'))) {
             confId.push(current.confFeature.license.licenseId);
           }
-          if ((current.cmrModel === state) && (current.cmrFeature.license.licenseId !== undefined)) {
+          if ((current.cmrModel === state) && angular.isDefined(_.get(current, 'cmrFeature.license.licenseId'))) {
             confId.push(current.cmrFeature.license.licenseId);
           }
         }

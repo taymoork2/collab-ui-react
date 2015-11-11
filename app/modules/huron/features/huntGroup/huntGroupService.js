@@ -10,9 +10,7 @@
   function huntGroupService($q, HuntGroupServiceV2, UserSearchServiceV2, NumberSearchServiceV2, Authinfo, $http) {
 
     /* jshint validthis: true */
-
     var customerId = Authinfo.getOrgId();
-
     var service = {
       getListOfHuntGroups: getListOfHuntGroups,
       deleteHuntGroup: deleteHuntGroup,
@@ -216,14 +214,14 @@
       return (typedText && typedText.length >= 3);
     }
 
-    function getListOfHuntGroups(customerId) {
+    function getListOfHuntGroups() {
 
       return HuntGroupServiceV2.get({
         customerId: customerId
       }).$promise;
     }
 
-    function deleteHuntGroup(customerId, huntGroupId) {
+    function deleteHuntGroup(huntGroupId) {
 
       return HuntGroupServiceV2.delete({
         customerId: customerId,
@@ -237,10 +235,11 @@
       }, details).$promise;
     }
 
-    function updateHuntGroup(customerId, details) {
+    function updateHuntGroup(customerId, huntGroupId, huntGroupData) {
       return HuntGroupServiceV2.update({
-        customerId: customerId
-      }).$promise;
+        customerId: customerId,
+        huntGroupId: huntGroupId
+      }, huntGroupData).$promise;
     }
 
     // TODO: Get only unassigned numbers as this is apparently for Edit

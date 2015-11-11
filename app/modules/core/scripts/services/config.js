@@ -879,6 +879,7 @@ angular.module('Core')
       config.roleStates = {
         Full_Admin: [ // Customer Admin
           'overview',
+          'overview-nm',
           'users',
           'user-overview',
           'userprofile',
@@ -998,6 +999,7 @@ angular.module('Core')
           'fusion',
           'mediafusionconnector',
           'hurondetails',
+          'huronsettings',
           'cdrsupport',
           'cdr-overview',
           'calendar-service',
