@@ -18,6 +18,7 @@
     vm.getInternalNumbers = getInternalNumbers;
     vm.getDupeNumberAnyAA = getDupeNumberAnyAA;
     vm.addToAvailableNumberList = addToAvailableNumberList;
+    vm.compareNumbersExternalThenInternal = compareNumbersExternalThenInternal;
 
     vm.numberTypeList = {};
 
@@ -78,14 +79,7 @@
       addToAvailableNumberList(telephoneNumberFilter(number), number);
 
       vm.availablePhoneNums.sort(function (a, b) {
-        if (vm.numberTypeList[a.value] === vm.numberTypeList[b.value]) {
-          return a.label.localeCompare(b.label);
-        }
-        if (vm.numberTypeList[a.value] === "directoryNumber") {
-          return 1;
-        }
-        return -1;
-
+        return compareNumbersExternalThenInternal(a.value, b.value);
       });
 
       deleteAAResource(number);
@@ -116,22 +110,20 @@
       var resources = vm.ui.ceInfo.getResources();
       resources.push(resource);
 
+      // if it's longer than 2, we sort it
       if (resources.length > 2) {
+
+        // but we don't change the first top-line number, which is also shown in the header, so 
+        // get a temp list without that first number
         var tmp = _.rest(resources);
 
+        // and sort it
         tmp.sort(function (a, b) {
-          if (vm.numberTypeList[a.number] === vm.numberTypeList[b.number]) {
-            return a.number.localeCompare(b.number);
-          }
-          if (vm.numberTypeList[a.number] === "directoryNumber") {
-            return 1;
-          }
-          return -1;
-
+          return compareNumbersExternalThenInternal(a.number, b.number);
         });
 
+        // we have a sorted list, take out the old unsorted ones, put in the sorted ones
         resources.splice(1, resources.length - 1);
-
         _.forEach(tmp, function (n) {
           resources.push(n);
         });
@@ -162,6 +154,24 @@
         });
       });
       return isNumberInUseOtherAA;
+
+    }
+
+    // A comparison method used in sorting to make external numbers first, internal numbers last
+    function compareNumbersExternalThenInternal(a, b) {
+
+      // if they are of the same type, ie both external or internal, just compare directly
+      if (vm.numberTypeList[a] === vm.numberTypeList[b]) {
+        var foo = a.localeCompare(b);
+        return a.localeCompare(b);
+      }
+      // else if a is an internal extension, it comes after
+      else if (vm.numberTypeList[a] === "directoryNumber") {
+        return 1;
+        // else a must be an externalNumber, which comes first
+      } else {
+        return -1;
+      }
 
     }
 
