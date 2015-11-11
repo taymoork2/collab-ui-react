@@ -33,8 +33,7 @@ angular.module('Squared')
               if (result.isAdminReportEnabled && result.isIframeSupported) {
                 $scope.webexOptions.push(result.siteUrl);
 
-                if (!$scope.repPageHeader_ShowWebexTab)
-                {
+                if (!$scope.repPageHeader_ShowWebexTab) {
                   $scope.repPageHeader_tabs.push({
                     title: $translate.instant('reportsPage.webex'),
                     state: 'webex-reports'
