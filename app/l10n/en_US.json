@@ -831,7 +831,13 @@
     "needsActivation": "Needs Activation",
     "active": "Active",
     "offline": "Offline",
-    "issuesDetected": "Issues Detected"
+    "issuesDetected": "Issues Detected",
+    "remoteSupport": "Remote Support",
+    "rsuKey": "Share this key with Cisco Support by pasting it in a message.",
+    "rsuKeyDesc": "This will give Cisco Support full access to your device. Use the 'Reset' button to create a new Remote Support Access Key and invalidate any previous key you may have shared with Cisco Support.",
+    "reset": "Reset",
+    "rsuKeyWasReset": "The remote support key was reset. Any key you may have shared with Cisco Support is now not usable anymore.",
+    "rsuKeyResetFailed": "The remote support key reset failed, the device did not return a new key in time."
   },
   "hercules": {
     "page_title": "Connector Management",
