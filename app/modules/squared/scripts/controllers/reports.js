@@ -26,9 +26,8 @@ angular.module('Squared')
             .then(function (result) {
               if (result.isAdminReportEnabled && result.isIframeSupported) {
                 var resultSiteUrl = result.siteUrl;
-                var newSiteUrl = (-1 === scope.webexOptions.indexOf(resultSiteUrl) ) ? true : false
-                		
-                if (-1 === scope.webexOptions.indexOf(resultSiteUrl) ) {
+
+                if (-1 === scope.webexOptions.indexOf(resultSiteUrl)) {
                   scope.webexOptions.push(resultSiteUrl);
                   scope.webexSelected = resultSiteUrl;
                 }
