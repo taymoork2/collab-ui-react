@@ -6,11 +6,12 @@
     .service('HuronFeaturesListService', HuronFeaturesListService);
 
   /* @ngInject */
-  function HuronFeaturesListService($q) {
+  function HuronFeaturesListService($q, $filter) {
     var service = {
       autoAttendants: autoAttendants,
       callParks: callParks,
-      huntGroups: huntGroups
+      huntGroups: huntGroups,
+      orderByFilter: orderByFilter
     };
 
     var formattedCard = {
@@ -35,7 +36,7 @@
         formattedList.push(formattedCard);
         formattedCard = {};
       });
-      return formattedList;
+      return orderByCardName(formattedList);
     }
 
     function callParks() {
@@ -48,14 +49,24 @@
         formattedCard.cardName = huntGroup.name;
         formattedCard.numbers = huntGroup.numbers;
         formattedCard.memberCount = huntGroup.memberCount;
-        formattedCard.huntGroupId = huntGroup.uuid;
+        formattedCard.id = huntGroup.uuid;
         formattedCard.featureName = 'huronHuntGroup.hg';
         formattedCard.filterValue = 'HG';
         formattedList.push(formattedCard);
         formattedCard = {};
       });
-      return formattedList;
+      return orderByCardName(formattedList);
     }
 
+    function orderByCardName(list) {
+      return _.sortBy(list, function (item) {
+        //converting cardName to lower case as _.sortByAll by default does a case sensitive matching
+        return item.cardName.toLowerCase();
+      });
+    }
+
+    function orderByFilter(list) {
+      return _.sortBy(list, 'filterValue');
+    }
   }
 })();

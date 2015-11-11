@@ -24,6 +24,12 @@
     vm.fetchHuntMembers = fetchHuntMembers;
     vm.initialized = false;
     vm.back = true;
+    vm.hgMethods = {
+      longestIdle: "DA_LONGEST_IDLE_TIME",
+      broadcast: "DA_BROADCAST",
+      circular: "DA_CIRCULAR",
+      topDown: "DA_TOP_DOWN"
+    };
 
     function init() {
       vm.userSelected = undefined;
@@ -32,13 +38,15 @@
       vm.membersValid = true;
       vm.fallbackValid = true;
       vm.fallbackDirty = false;
+      vm.huntGroupId = $stateParams.feature.id;
 
       if (vm.initialized) {
         vm.model = angular.copy(initialModel);
         vm.initialnumbers = angular.copy(initialnumberoptions);
         intializeFields();
       } else {
-        HuntGroupService.getDetails(customerId, $stateParams.feature.huntGroupId).then(function (data) {
+        HuntGroupService.getDetails(customerId, vm.huntGroupId).then(function (data) {
+
           vm.title = data.name;
           vm.initialnumber = data.numbers;
           vm.model = {
@@ -56,6 +64,11 @@
             members: data.members,
             fallbackDestination: data.fallbackDestination
           };
+          vm.model.fallbackDestination.selectedNumberUuid = vm.model.fallbackDestination.numberUuid;
+
+          HuntGroupService.getMemberInfo(customerId, data.fallbackDestination.userUuid).then(function (user) {
+            vm.model.fallbackDestination.userName = user.firstName + " " + user.lastName;
+          });
 
           HuntGroupService.getNumbersWithSelection(data.numbers).then(function (data) {
             vm.numberoptions = data;
@@ -191,16 +204,19 @@
 
     function selectFallback($item) {
       var numbers = [];
-      vm.model.fallbackDestination = {};
-      vm.model.fallbackDestination.userName = $item.userName;
-      vm.model.fallbackDestination.uuid = $item.uuid;
-      $item.numbers.forEach(function (value) {
+
+      vm.model.fallbackDestination = {
+        userUuid: $item.uuid,
+        userName: $item.user.firstName + " " + $item.user.lastName,
+        number: $item.selectableNumber.number,
+        numberUuid: $item.selectableNumber.uuid,
+        selectedNumberUuid: $item.selectableNumber.uuid,
+        sendToVoicemail: false
+      };
+
+      $item.user.numbers.forEach(function (value) {
         var number = value;
-        if (number.isSelected) {
-          vm.model.fallbackDestination.number = number.internal;
-          vm.model.fallbackDestination.selectedNumberUuid = number.uuid;
-        }
-        var newvalue = {
+        var newValue = {
           internal: number.internal,
           external: number.external,
           value: number.internal,
@@ -209,7 +225,7 @@
           uuid: number.uuid
         };
 
-        numbers.push(newvalue);
+        numbers.push(newValue);
       });
       vm.model.fallbackDestination.numbers = numbers;
       vm.addFallback = false;
@@ -234,7 +250,7 @@
           dataToStrip: vm.model.members
         });
 
-        return GetHuntMembers.result();
+        return GetHuntMembers.fetch();
       }
 
       return [];
@@ -293,7 +309,7 @@
           vm.model.fallbackDestination.open = true;
         } else {
           HuntGroupService.getMemberInfo(customerId, vm.model.fallbackDestination.userUuid).then(function (data) {
-            vm.model.fallbackDestination.email = data.userName;
+            vm.model.fallbackDestination.email = data.email;
             data.numbers.forEach(function (value) {
               value.label = value.internal;
               value.value = value.internal;
@@ -317,12 +333,50 @@
       init();
     }
 
+    function getFallBackDest() {
+      if (vm.model.fallbackDestination.number) {
+        return {
+          number: vm.model.fallbackDestination.number
+        };
+      } else {
+        return {
+          numberUuid: vm.model.fallbackDestination.numberUuid,
+          userUuid: vm.model.fallbackDestination.userUuid,
+          sendToVoicemail: vm.model.fallbackDestination.sendToVociemail
+        };
+      }
+    }
+
+    function hgUpdateReqBody() {
+      var members = vm.model.members.map(function (member) {
+        return member.numberUuid;
+      });
+
+      var numbers = vm.model.numbers.map(function (numberObj) {
+        return {
+          type: numberObj.type,
+          number: numberObj.number
+        };
+      });
+
+      return {
+        name: vm.model.name,
+        numbers: numbers,
+        huntMethod: vm.model.huntMethod,
+        maxRingSecs: vm.model.maxRingSecs.value,
+        maxWaitMins: vm.model.maxWaitMins.value,
+        fallbackDestination: getFallBackDest(),
+        members: members
+      };
+    }
+
     function saveForm() {
       vm.saveInProgress = true;
-      HuntGroupService.updateHuntGroup(customerId, vm.model).then(function (data) {
+
+      HuntGroupService.updateHuntGroup(customerId, vm.huntGroupId, hgUpdateReqBody()).then(function (data) {
         vm.saveInProgress = false;
         Notification.success($translate.instant('huronHuntGroup.successUpdate'));
-        resetForm();
+
       }, function (data) {
         vm.saveInProgress = false;
         Notification.error($translate.instant('huronHuntGroup.errorUpdate'));
@@ -354,7 +408,7 @@
       }
     }
 
-    if ($stateParams.feature) {
+    if ($stateParams.feature && $stateParams.feature.id) {
       init();
     } else {
       $state.go('huronfeatures');
