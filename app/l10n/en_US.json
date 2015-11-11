@@ -2559,6 +2559,7 @@
   },
 
   "huronHuntGroup": {
+    "title": "Hunt Group",
     "createTitle": "Create Hunt Group",
     "namePlaceholder": "Name the Hunt Group",
     "nameHint": "This hunt group name will also be the name callers see on their device (i.e. alerting name)",
@@ -2581,7 +2582,6 @@
     "deleteAction": "Delete",
     "deleteHuntGroup": "Delete Hunt Group",
     "deleteHuntGroupConfText": "Are you sure you want to delete the {{ huntGroupName }} hunt group?",
-    "deleteHuntGroupSuccessText": "{{ huntGroupName }} hunt group has been deleted successfully",
     "messageError": "Message {{ message }}",
     "code": "HG",
     "title": "Hunt Group",
