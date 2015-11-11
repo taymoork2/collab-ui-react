@@ -437,7 +437,8 @@ angular.module('Core')
           support: 'atlas-portal.support',
           application: 'atlas-portal.application',
           reports: 'atlas-portal.reports',
-          sales: 'atlas-portal.partner.salesadmin'
+          sales: 'atlas-portal.partner.salesadmin',
+          helpdesk: 'atlas-portal.helpdesk'
         },
 
         roles: {
@@ -447,7 +448,8 @@ angular.module('Core')
           support: 'Support',
           application: 'Application',
           reports: 'Reports',
-          sales: 'Sales_Admin'
+          sales: 'Sales_Admin',
+          helpdesk: 'Help_Desk'
         },
 
         roleState: {
@@ -897,7 +899,7 @@ angular.module('Core')
           'example'
         ],
         Application: ['organizations', 'organization-overview'],
-        HELP_DESK_USER: ['helpdesk', 'helpdesk.landing', 'helpdesk.user', 'helpdesk.org']
+        Help_Desk: ['helpdesk', 'helpdesk.landing', 'helpdesk.user', 'helpdesk.org']
       };
 
       config.serviceStates = {

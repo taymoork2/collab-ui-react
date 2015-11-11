@@ -356,7 +356,7 @@ angular.module('Core')
           return this.hasRole('Support') && !this.isAdmin();
         },
         isHelpDeskUser: function () {
-          return this.hasRole('HELP_DESK_USER');
+          return this.hasRole(Config.roles.helpdesk);
         },
         isServiceAllowed: function (service) {
           if (service === 'squaredTeamMember' && !this.isSquaredTeamMember()) {
