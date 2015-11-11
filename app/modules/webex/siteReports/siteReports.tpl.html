@@ -1,17 +1,3 @@
-<div class="row">
-  <div class="large-4 columns" 
-       ng-if="webexOptions.length > 1">
-       
-    <cs-select ng-if="showWebexReports" 
-               class="filter-one" 
-               name="timeFilter" 
-               ng-model="webexSelected" 
-               options="webexOptions" 
-               on-change-fn="updateWebexReports()">
-    </cs-select>
-  </div>
-</div>
-
 <div id="webexSiteReports"
      name="webexSiteReports">
 
@@ -74,9 +60,9 @@
                   <h4 id="{{s.section_name}}"
                       name="{{s.section_name}}">
                     
-  	  	           {{s.section_name_translated}}
+                   {{s.section_name_translated}}
                   </h4>
-		        
+            
                   <div ng-repeat="sref in s.uisrefs">
                     <a id="{{sref.reportPageId}}"
                        name="{{sref.reportPageId}}"
