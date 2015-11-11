@@ -67,6 +67,8 @@
 
   & article > section {
     z-index: 200;
+    position: absolute;
+    background-color: $brand-white;
     border-style: solid;
     border-width: rem-calc(1);
     border-color: $gray-light-3;

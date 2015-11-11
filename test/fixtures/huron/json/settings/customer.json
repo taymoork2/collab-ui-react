@@ -1,0 +1,15 @@
+{
+  "uuid": "c127f0cb-8abf-4965-a013-ce41a0649b7e",
+  "name": "Atlas_Test_JP001",
+  "servicePackage": "DEMO_STANDARD",
+  "links": [{
+    "rel": "common",
+    "href": "/api/v1/common/customers/c127f0cb-8abf-4965-a013-ce41a0649b7e"
+  }, {
+    "rel": "voicemail",
+    "href": "/api/v1/voicemail/customers/c127f0cb-8abf-4965-a013-ce41a0649b7e"
+  }, {
+    "rel": "voice",
+    "href": "/api/v1/voice/customers/c127f0cb-8abf-4965-a013-ce41a0649b7e"
+  }]
+}

@@ -4,7 +4,6 @@
   position: relative;
 
   .loading {
-    background: $brand-white;
     font-size: 3rem;
     text-align: center;
   }
@@ -27,6 +26,12 @@
       font-size: 1.5rem;
     }
 
+    .service-setup-timezone-column {
+      .formly-input-wrapper {
+        width: 100%
+      }
+    }
+
     .nested {
       label {
         font-size: 1rem;
@@ -42,6 +47,18 @@
     .caller-id-number {
       .formly-input-wrapper {
         width: 55%;
+      }
+    }
+
+    .trash-icon {
+      @extend .icon;
+      @extend .icon-trash;
+      font-size: 1.8rem;
+    }
+
+    .icon-button-delete {
+      .formly-template-wrapper {
+        margin-bottom: 0;
       }
     }
   }

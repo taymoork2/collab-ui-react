@@ -149,9 +149,10 @@ $aa-builder-icon-color: $gray-base;
 .aa-builder-number-tile {
   height: 2rem;
   width: 16rem;
-  padding: .5rem .5rem;
-  margin: .125rem .5rem .125rem 0rem;
-  border: .0625rem solid $gray-lighter;
+  padding: .5rem;
+  margin: .125rem .0rem;
+  /* set to match the select-box's 3px radius */
+  border-radius: .188rem;	
   color: $brand-white;
   background-color: $brand-primary;
   display: inline-block;
@@ -211,12 +212,18 @@ $aa-builder-icon-color: $gray-base;
 }
 
 .aa-selected-phones {
-  margin-top: .25rem;
+  margin-top: .18rem;
+  margin-right: 0rem;
+  width:17.9rem;
 }
-
+.aa-numbers-help-icon {
+  margin-top: .5rem;
+}
 .aa-panel-numbers {
   @extend .panel;
-  width: 17.75rem;
+  width: 16rem;
+  margin-bottom : .55rem;
+  padding-bottom: 0rem;
 }
 
 .aa-container {

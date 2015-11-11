@@ -34,6 +34,8 @@ var SiteReportsPage = function () {
   this.webexCommonStorageUsageId = element(by.id('webexSiteReportIframe-storage_utilization'));
 
   this.siteAdminReportsUrl = '/webexreports';
+
+  this.lastSyncElement = element(by.id('reportsRefreshData'));
 };
 
 module.exports = SiteReportsPage;
