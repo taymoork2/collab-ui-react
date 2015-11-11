@@ -6,7 +6,7 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($scope, Log, $translate, $state, ReportsService, Orgservice, CsdmDeviceService, Config) {
+  function OverviewCtrl($scope, Log, $translate, $state, ReportsService, Orgservice, CsdmDeviceService, ServiceDescriptor, Config) {
     var vm = this;
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
@@ -19,6 +19,7 @@
     ];
 
     vm.userCard = new UserCard();
+    vm.hybridCard = new HybridServicesCard();
 
     vm.statusPageUrl = Config.getStatusPageUrl();
 
@@ -60,6 +61,14 @@
         });
       } else {
         Log.error("Get health status failed. Status: " + status);
+      }
+    });
+
+    ServiceDescriptor.services(function (err, services) {
+      if (!err) {
+        if (vm.hybridCard.hybridStatusEventHandler) {
+          vm.hybridCard.hybridStatusEventHandler(services);
+        }
       }
     });
   }
@@ -180,4 +189,17 @@
     }
   }
 
+  function HybridServicesCard() {
+    var card = this;
+    this.icon = 'icon-circle-data';
+    //this.services = [];
+    this.hybridStatusEventHandler = hybridStatusEventHandler;
+    function hybridStatusEventHandler(services) {
+      //console.log('services', services);
+      _.each(services, function (service) {
+        service.statusIcon = !service.enabled || !service.acknowledged ? 'warning' : 'success';
+      });
+      card.services = services;
+    }
+  }
 })();
