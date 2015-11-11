@@ -5,7 +5,7 @@
     .service('CdrService', CdrService);
 
   /* @ngInject */
-  function CdrService($translate, $http, $q, Notification, Log) {
+  function CdrService($translate, $http, $q, Config, Notification, Log) {
     var proxyData = [];
     var LOCAL = 'localSessionID';
     var REMOTE = 'remoteSessionID';
@@ -16,28 +16,27 @@
     var emptyId = "00000000000000000000000000000000";
     var serverHosts = ['SME-01', 'SME-02', 'CMS-01', 'CMS-02'];
 
-    var baseHeaders = {
-      Authorization: 'Basic ' + btoa('huron:4Jd7w6%6~8yB7r4m'),
-      Accept: 'application/json, text/plain, */*',
-      'Content-type': 'application/x-ww-form-urlencoded'
+    var cdrUrl = {
+      dev: 'https://hades.huron-int.com/api/v1/elasticsearch/_all/_search?pretty',
+      integration: 'https://hades.huron-int.com/api/v1/elasticsearch/_all/_search?pretty',
+      prod: 'https://hades.huron-dev.com/api/v1/elasticsearch/_all/_search?pretty'
     };
-
-    var servers = [{
-      name: "TX1",
-      url: "https://revproxy.hptx1.huron-dev.com:8001/_all/_search?pretty"
-    }, {
-      name: "TX2",
-      url: "https://revproxy.sc-tx2.huron-dev.com:8001/_all/_search?pretty"
-    }, {
-      name: "TX3",
-      url: "https://revproxy.sc-tx3.huron-dev.com:8001/_all/_search?pretty"
-    }];
 
     return {
       query: query,
       formDate: formDate,
       createDownload: createDownload
     };
+
+    function getCdrUrl() {
+      if (Config.isDev()) {
+        return cdrUrl.dev;
+      } else if (Config.isIntegration()) {
+        return cdrUrl.integration;
+      } else {
+        return cdrUrl.prod;
+      }
+    }
 
     function createDownload(call) {
       var jsonFileData = {
@@ -67,6 +66,10 @@
       var startTimeUtc = formDate(model.startDate, model.startTime);
       var endTimeUtc = formDate(model.endDate, model.endTime);
       var timeStamp = '"from":' + startTimeUtc + ',"to":' + endTimeUtc;
+      var altTimeStamp = {
+        "from": startTimeUtc,
+        "to": endTimeUtc
+      };
 
       var devicesQuery = [];
       var device = null;
@@ -92,30 +95,28 @@
       jsQuery += '}}} },"size": ' + model.hitSize + ',"sort": [{"@timestamp": {"order": "desc"}}]}';
 
       var promises = [];
-      angular.forEach(servers, function (item, index, array) {
-        var headers = angular.copy(baseHeaders);
-        headers.server = item.url;
-        headers.qs = jsQuery;
 
-        var results = [];
-        var proxyPromise = proxy(headers).then(function (response) {
-            if (!angular.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
-              for (var i = 0; i < response.hits.hits.length; i++) {
-                results.push(response.hits.hits[i]._source);
-              }
-              return secondaryQuery(item, results, index);
+      var results = [];
+      var proxyPromise = proxy(jsQuery).then(function (response) {
+          if (!angular.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
+            for (var i = 0; i < response.hits.hits.length; i++) {
+              results.push(response.hits.hits[i]._source);
             }
-            return;
-          },
-          function (response) {
-            Log.debug('Failed to retrieve cdr data from ' + item.name + ' server. Status: ' + response.status);
-            Notification.notify([$translate.instant('cdrLogs.cdrRetrievalError', {
-              server: item.name
-            })], 'error');
-            return;
-          });
-        promises.push(proxyPromise);
-      });
+            return secondaryQuery(results);
+          }
+          return;
+        },
+        function (response) {
+          if (response.status === 401) {
+            Log.debug('User unauthorized to retrieve cdr data from server. Status: ' + response.status);
+            Notification.notify([$translate.instant('cdrLogs.cdr401Unauthorized')], 'error');
+          } else {
+            Log.debug('Failed to retrieve cdr data from server. Status: ' + response.status);
+            Notification.notify([$translate.instant('cdrLogs.cdrRetrievalError')], 'error');
+          }
+          return;
+        });
+      promises.push(proxyPromise);
 
       return $q.all(promises).then(function () {
         return proxyData;
@@ -137,7 +138,7 @@
       return '{"fquery":{"query":{"query_string":{"query":"dataParam.' + callType + ':(\\"' + device + '\\")"}},"_cache":true}}';
     }
 
-    function secondaryQuery(server, cdrArray, queryIndex) {
+    function secondaryQuery(cdrArray) {
       var sessionIds = extractUniqueIds(cdrArray);
       var newCdrArray = [];
       var promises = [];
@@ -163,12 +164,9 @@
       }
       angular.forEach(queries, function (item, index, array) {
         item += '"}},"_cache":true}}';
+        var jsQuery = '{"query": {"filtered": {"query": {"bool": {"should": [' + generateHosts() + ']} },"filter": {"bool": {"should":[' + item + ']}}}},"size": 2000,"sort": [{"@timestamp": {"order": "desc"}}]}';
 
-        var headers = angular.copy(baseHeaders);
-        headers.server = server.url;
-        headers.qs = '{"query": {"filtered": {"query": {"bool": {"should": [' + generateHosts() + ']} },"filter": {"bool": {"should":[' + item + ']}}}},"size": 2000,"sort": [{"@timestamp": {"order": "desc"}}]}';
-
-        var proxyQuery = proxy(headers).then(function (response) {
+        var proxyQuery = proxy(jsQuery).then(function (response) {
             if (!angular.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
               for (var i = 0; i < response.hits.hits.length; i++) {
                 newCdrArray.push(response.hits.hits[i]._source);
@@ -177,17 +175,15 @@
             return;
           },
           function (response) {
-            Log.debug('Failed to retrieve cdr data from ' + server.name + ' server. Status: ' + response.status);
-            Notification.notify([$translate.instant('cdrLogs.cdrRecursiveError', {
-              server: server.name
-            })], 'error');
+            Log.debug('Failed to retrieve cdr data from server. Status: ' + response.status);
+            Notification.notify([$translate.instant('cdrLogs.cdrRecursiveError')], 'error');
             return;
           });
         promises.push(proxyQuery);
       });
 
       return $q.all(promises).then(function () {
-        groupCdrsIntoCalls(newCdrArray, queryIndex);
+        groupCdrsIntoCalls(newCdrArray);
         return;
       });
     }
@@ -209,7 +205,7 @@
       return uniqueIds;
     }
 
-    function groupCdrsIntoCalls(cdrArray, queryIndex) {
+    function groupCdrsIntoCalls(cdrArray) {
       var x = 0;
       while (cdrArray.length > 0) {
         var call = [];
@@ -232,13 +228,13 @@
             }
           }
         }
-        proxyData.push(splitFurther(call, x, queryIndex));
+        proxyData.push(splitFurther(call, x));
         x++;
       }
       return;
     }
 
-    function splitFurther(callGrouping, callNum, queryIndex) {
+    function splitFurther(callGrouping, callNum) {
       var callLegs = [];
       var call = JSON.parse(JSON.stringify(callGrouping));
       var x = -1;
@@ -246,14 +242,14 @@
       var tempArray = [];
       while (call.length > 0) {
         x++;
-        call[0].name = "server" + queryIndex + "Call" + callNum + "CDR" + x;
+        call[0].name = "call" + callNum + "CDR" + x;
         tempArray.push(call[0]);
         call.splice(0, 1);
         for (var i = 0; i < call.length; i++) {
           if (call[i].dataParam.localSessionID === tempArray[0].dataParam.localSessionID && call[i].dataParam.remoteSessionID === tempArray[0].dataParam.remoteSessionID ||
             call[i].dataParam.remoteSessionID === tempArray[0].dataParam.localSessionID && call[i].dataParam.localSessionID === tempArray[0].dataParam.remoteSessionID) {
             x++;
-            call[0].name = "server" + queryIndex + "Call" + callNum + "CDR" + x;
+            call[0].name = "call" + callNum + "CDR" + x;
             tempArray.push(call[i]);
             call.splice(i, 1);
             if (call.length > 0) {
@@ -270,22 +266,21 @@
       return callLegs;
     }
 
-    function proxy(header) {
+    function proxy(query) {
       var defer = $q.defer();
       $http({
-          method: "GET",
-          url: 'http://localhost:8080',
-          headers: header
-        })
-        .success(function (response) {
-          defer.resolve(response);
-        })
-        .error(function (response, status) {
-          defer.reject({
-            'response': response,
-            'status': status
-          });
+        method: "POST",
+        url: getCdrUrl(),
+        data: query
+      }).success(function (response) {
+        defer.resolve(response);
+      }).error(function (response, status) {
+        defer.reject({
+          'response': response,
+          'status': status
         });
+      });
+
       return defer.promise;
     }
   }

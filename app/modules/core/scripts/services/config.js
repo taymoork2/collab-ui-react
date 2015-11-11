@@ -895,9 +895,9 @@ angular.module('Core')
           'editService',
           'trialExtInterest'
         ],
-        Support: ['support', 'reports', 'billing'],
+        Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview'],
         WX2_User: ['overview', 'reports', 'support'],
-        WX2_Support: ['overview', 'reports', 'support'],
+        WX2_Support: ['overview', 'reports', 'support', 'cdrsupport', 'cdr-overview'],
         WX2_SquaredInviter: [],
         PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup'],
         PARTNER_USER: ['partnercustomers', 'customer-overview', 'trialAdd', 'trialEdit'],
@@ -933,10 +933,8 @@ angular.module('Core')
           'huronsettings',
           'huronfeatures',
           'huronnewfeature',
-          'cdr-overview',
           'huronHuntGroup',
-          'huntgroupedit',
-          'cdrsupport'
+          'huntgroupedit'
         ],
         'squared-fusion-mgmt': [
           //'fusion',
@@ -1009,8 +1007,6 @@ angular.module('Core')
           'mediafusionconnector',
           'hurondetails',
           'huronsettings',
-          'cdrsupport',
-          'cdr-overview',
           'calendar-service',
           'call-service',
           'management-service'
