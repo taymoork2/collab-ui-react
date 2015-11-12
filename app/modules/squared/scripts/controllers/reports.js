@@ -45,7 +45,7 @@ angular.module('Squared')
           }
         );
 
-        $q.all(promiseChain).then(
+        $q.all(promiseChain).then( 
           function promisChainDone() {
             var funcName = "promisChainDone()";
             var logMsg = "";
