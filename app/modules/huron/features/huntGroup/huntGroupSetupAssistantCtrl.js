@@ -6,34 +6,54 @@
     .controller('HuntGroupSetupAssistantCtrl', HuntGroupSetupAssistantCtrl);
 
   /* @ngInject */
-  function HuntGroupSetupAssistantCtrl($scope, $state, Config, HuntGroupService, FallbackDataService, Notification, $modal, $timeout, TelephoneNumberService, Authinfo, $translate) {
+  function HuntGroupSetupAssistantCtrl($scope, $state, Config, HuntGroupService, HuntGroupFallbackDataService, Notification, $modal, $timeout, TelephoneNumberService, Authinfo, $translate) {
     var vm = this;
     var customerId = Authinfo.getOrgId();
+
+    // Setup assistant controller functions
     vm.nextPage = nextPage;
     vm.previousPage = previousPage;
     vm.nextButton = nextButton;
     vm.previousButton = previousButton;
     vm.getPageIndex = getPageIndex;
     vm.close = closePanel;
-    vm.selectPilotNumber = selectPilotNumber;
-    vm.selectHuntGroupMember = selectHuntGroupMember;
-    vm.unSelectHuntGroupMember = unSelectHuntGroupMember;
-    vm.setHuntMethod = setHuntMethod;
-    vm.huntGroupName = undefined;
-    vm.fetchNumbers = fetchNumbers;
-    vm.unSelectPilotNumber = unSelectPilotNumber;
-    vm.fetchHuntMembers = fetchHuntMembers;
-    vm.getDisplayName = getDisplayName;
     vm.cancelModal = cancelModal;
     vm.evalKeyPress = evalKeyPress;
     vm.enterNextPage = enterNextPage;
     vm.saveHuntGroup = saveHuntGroup;
-    vm.openMemberPanelUuid = undefined;
-    vm.toggleMemberPanel = toggleMemberPanel;
+    vm.pageIndex = 0;
+    vm.animation = 'slide-left';
+
+    vm.huntGroupName = '';
+
+    // Hunt pilot numbers controller functions
+    vm.selectPilotNumber = selectPilotNumber;
+    vm.fetchNumbers = fetchNumbers;
+    vm.unSelectPilotNumber = unSelectPilotNumber;
     vm.selectedPilotNumber = undefined;
     vm.selectedPilotNumbers = [];
-    vm.selectedHuntMembers = [];
 
+    // Hunt Methods controller functions
+    vm.hgMethods = {
+      longestIdle: "DA_LONGEST_IDLE_TIME",
+      broadcast: "DA_BROADCAST",
+      circular: "DA_CIRCULAR",
+      topDown: "DA_TOP_DOWN"
+    };
+    vm.huntGroupMethod = vm.hgMethods.longestIdle;
+    vm.setHuntMethod = setHuntMethod;
+
+    // Hunt Members controller functions
+    vm.selectHuntGroupMember = selectHuntGroupMember;
+    vm.unSelectHuntGroupMember = unSelectHuntGroupMember;
+    vm.fetchHuntMembers = fetchHuntMembers;
+    vm.toggleMemberPanel = toggleMemberPanel;
+    vm.getDisplayName = getDisplayName;
+    vm.selectedHuntMembers = [];
+    vm.openMemberPanelUuid = undefined;
+    vm.userSelected = undefined;
+
+    // Hunt fallback destination controller functions
     vm.selectedFallbackMember = undefined;
     vm.selectedFallbackNumber = undefined;
     vm.isFallbackValid = isFallbackValid;
@@ -43,18 +63,6 @@
     vm.toggleFallback = toggleFallback;
     vm.removeFallbackDest = removeFallbackDest;
 
-    vm.pageIndex = 0;
-    vm.animation = 'slide-left';
-    vm.huntGroupName = '';
-    vm.hgMethods = {
-      longestIdle: "DA_LONGEST_IDLE_TIME",
-      broadcast: "DA_BROADCAST",
-      circular: "DA_CIRCULAR",
-      topDown: "DA_TOP_DOWN"
-    };
-    vm.huntGroupMethod = vm.hgMethods.longestIdle;
-    vm.userSelected = undefined;
-
     // ==================================================
     // The below methods have elevated access only to be
     // called from unit testing.
@@ -62,22 +70,6 @@
     vm.populateHuntPilotNumbers = populateHuntPilotNumbers;
     vm.populateHuntMembers = populateHuntMembers;
     vm.populateFallbackDestination = populateFallbackDestination;
-
-    function toggleMemberPanel(userUuid) {
-      if (vm.openMemberPanelUuid === userUuid) {
-        vm.openMemberPanelUuid = undefined;
-      } else {
-        vm.openMemberPanelUuid = userUuid;
-      }
-    }
-
-    function getDisplayName(user) {
-      if (user.lastName) {
-        return user.firstName + " " + user.lastName;
-      } else {
-        return user.firstName;
-      }
-    }
 
     function fetchNumbers(typedNumber) {
 
@@ -95,28 +87,6 @@
       }
 
       return [];
-    }
-
-    function fetchMembers(nameHint, filter) {
-      var GetHuntMembers = HuntGroupService.getHuntMembers(nameHint);
-
-      if (GetHuntMembers) {
-        GetHuntMembers.setOnFailure(onFailureNotify('huronHuntGroup.memberFetchFailure'));
-        if (filter) {
-          GetHuntMembers.setFilter(filter);
-        }
-        return GetHuntMembers.fetch();
-      }
-
-      return [];
-    }
-
-    function fetchHuntMembers(nameHint) {
-      return fetchMembers(nameHint, {
-        sourceKey: 'uuid',
-        responseKey: 'uuid',
-        dataToStrip: vm.selectedHuntMembers
-      });
     }
 
     function onFailureNotify(notificationKey) {
@@ -200,20 +170,6 @@
       $state.go('huronfeatures');
     }
 
-    function selectHuntGroupMember(member) {
-      vm.userSelected = undefined;
-      HuntGroupService.getMemberInfo(customerId, member.user.uuid).then(function (user) {
-        member.user.email = user.email;
-      });
-      vm.selectedHuntMembers.push(member);
-    }
-
-    function unSelectHuntGroupMember(user) {
-      vm.selectedHuntMembers.splice(
-        vm.selectedHuntMembers.indexOf(user), 1);
-      vm.openMemberPanelUuid = undefined;
-    }
-
     function setHuntMethod(methodSelected) {
 
       if (vm.huntGroupMethod === methodSelected) {
@@ -263,23 +219,75 @@
     }
 
     /////////////////////////////////////////////////////////
+    // Fallback members presentation controller functions.
+
+    function selectHuntGroupMember(member) {
+      vm.userSelected = undefined;
+      HuntGroupService.getMemberInfo(customerId, member.user.uuid).then(function (user) {
+        member.user.email = user.email;
+      });
+      vm.selectedHuntMembers.push(member);
+    }
+
+    function unSelectHuntGroupMember(user) {
+      vm.selectedHuntMembers.splice(
+        vm.selectedHuntMembers.indexOf(user), 1);
+      vm.openMemberPanelUuid = undefined;
+    }
+
+    function fetchHuntMembers(nameHint) {
+      return fetchMembers(nameHint, {
+        sourceKey: 'uuid',
+        responseKey: 'uuid',
+        dataToStrip: vm.selectedHuntMembers
+      });
+    }
+
+    function toggleMemberPanel(userUuid) {
+      if (vm.openMemberPanelUuid === userUuid) {
+        vm.openMemberPanelUuid = undefined;
+      } else {
+        vm.openMemberPanelUuid = userUuid;
+      }
+    }
+
+    function getDisplayName(user) {
+      if (user.lastName) {
+        return user.firstName + " " + user.lastName;
+      } else {
+        return user.firstName;
+      }
+    }
+
+    function fetchMembers(nameHint, filter) {
+      var GetHuntMembers = HuntGroupService.getHuntMembers(nameHint);
+
+      if (GetHuntMembers) {
+        GetHuntMembers.setOnFailure(onFailureNotify('huronHuntGroup.memberFetchFailure'));
+        if (filter) {
+          GetHuntMembers.setFilter(filter);
+        }
+        return GetHuntMembers.fetch();
+      }
+
+      return [];
+    }
+
+    /////////////////////////////////////////////////////////
     // Fallback destination presentation controller functions.
 
     function selectFallback($item) {
       vm.selectedFallbackNumber = undefined;
-      FallbackDataService.setFallbackMember($item).then(function (member) {
-        vm.selectedFallbackMember = member;
-        vm.selectedFallbackMember.openPanel = false;
-      });
+      vm.selectedFallbackMember = HuntGroupFallbackDataService.setFallbackMember($item);
     }
 
     function isFallbackValid() {
-      return FallbackDataService.isFallbackValid();
+      return HuntGroupFallbackDataService.isFallbackValid();
     }
 
     function validateFallbackNumber() {
       vm.selectedFallbackNumber =
-        FallbackDataService.validateFallbackNumber(vm.selectedFallbackNumber);
+        HuntGroupFallbackDataService.validateFallbackNumber(vm.selectedFallbackNumber);
     }
 
     function fetchFallbackDestination(nameHint) {
@@ -287,7 +295,10 @@
     }
 
     function toggleFallback() {
-      vm.selectedFallbackMember.openPanel = !vm.selectedFallbackMember.openPanel;
+      HuntGroupFallbackDataService.updateMemberEmail(vm.selectedFallbackMember.member.user).then(
+        function () {
+          vm.selectedFallbackMember.openPanel = !vm.selectedFallbackMember.openPanel;
+        });
     }
 
     function removeFallbackDest() {
@@ -295,7 +306,7 @@
     }
 
     function populateFallbackDestination(data) {
-      data.fallbackDestination = FallbackDataService.getFallbackDestinationJSON();
+      data.fallbackDestination = HuntGroupFallbackDataService.getFallbackDestinationJSON();
     }
     /////////////////////////////////////////////////////////
 

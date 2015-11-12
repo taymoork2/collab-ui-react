@@ -8,11 +8,11 @@
    */
   angular
     .module('uc.hurondetails')
-    .factory('FallbackDataService', FallbackDataService);
+    .factory('HuntGroupFallbackDataService', HuntGroupFallbackDataService);
 
   /* @ngInject */
 
-  function FallbackDataService(TelephoneNumberService, HuntGroupService, Notification, Authinfo) {
+  function HuntGroupFallbackDataService(TelephoneNumberService, HuntGroupService, Notification, Authinfo, $q) {
 
     var isValidInternalNumber = false;
     var isValidExternalNumber = false;
@@ -24,29 +24,40 @@
       isFallbackValid: isFallbackValid,
       validateFallbackNumber: validateFallbackNumber,
       setFallbackMember: setFallbackMember,
-      getFallbackDestinationJSON: getFallbackDestinationJSON
+      getFallbackDestinationJSON: getFallbackDestinationJSON,
+      updateMemberEmail: updateMemberEmail
     };
 
     ///////////////
 
     /**
+     * Function to update the user email when the fallback member
+     * pill is opened for the first time.
+     */
+    function updateMemberEmail(user) {
+      var asyncResponse = $q.defer();
+      if (!user.email) {
+        return HuntGroupService.getMemberInfo(customerId, user.uuid).then(function (u) {
+          user.email = u.email;
+        });
+      } else {
+        asyncResponse.resolve();
+        return asyncResponse.promise;
+      }
+    }
+
+    /**
      * Receive the type-ahead item from the UI as parameter and
-     * returns a promise, which resolves into a UI data modal
-     * populating the email id details from the backend.
+     * returns a UI data modal.
      */
     function setFallbackMember(item) {
       fallbackNumber = undefined;
       fallbackMember = {
         member: item,
         number: "",
-        sendToVoicemail: false,
-        openPanel: false
+        sendToVoicemail: false
       };
-
-      return HuntGroupService.getMemberInfo(customerId, item.user.uuid).then(function (user) {
-        fallbackMember.member.user.email = user.email;
-        return fallbackMember;
-      });
+      return fallbackMember;
     }
 
     /**

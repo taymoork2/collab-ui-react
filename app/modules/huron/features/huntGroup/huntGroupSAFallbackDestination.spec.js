@@ -177,7 +177,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
 
   it("selecting a fallback member initializes fallback data correctly.", function () {
     controller.selectedFallbackNumber = "80";
-    selectFallbackMember(fallbackMember1);
+    controller.selectFallback(fallbackMember1);
     controller.validateFallbackNumber();
 
     expect(controller.selectedFallbackNumber).toBeUndefined();
@@ -186,15 +186,23 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
   });
 
   it("should have the openPanel flag for fallback member and toggleFallback works.", function () {
-    selectFallbackMember(fallbackMember1);
+    var member1 = angular.copy(huntGroupMember1);
+    controller.selectFallback(member1);
     expect(controller.selectedFallbackMember.openPanel).toBeFalsy();
+    expect(controller.selectedFallbackMember.member.user.email).toBeUndefined();
 
+    $httpBackend.expectGET(GetMemberUrl).respond(200, {
+      email: "test@cisco.com"
+    });
     controller.toggleFallback();
+    $httpBackend.flush();
+
     expect(controller.selectedFallbackMember.openPanel).toBeTruthy();
+    expect(controller.selectedFallbackMember.member.user.email).toBe("test@cisco.com");
   });
 
   it("removing fallback member resets the member to undefined.", function () {
-    selectFallbackMember(fallbackMember1);
+    controller.selectFallback(fallbackMember1);
     expect(controller.selectedFallbackMember).not.toBeUndefined();
 
     controller.removeFallbackDest();
@@ -218,7 +226,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
   });
 
   it("should be able to create Hunt Group with fallback member", function () {
-    selectFallbackMember(fallbackMember1);
+    controller.selectFallback(fallbackMember1);
 
     spyOn($state, 'go');
     spyOn(Notification, 'success');
@@ -298,7 +306,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
     };
     expect(data.fallbackDestination).toBeUndefined();
 
-    selectFallbackMember(fallbackMember1);
+    controller.selectFallback(fallbackMember1);
 
     controller.populateFallbackDestination(data);
 
@@ -314,12 +322,6 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
       numbers: outArray
     });
     controller.validateFallbackNumber();
-    $httpBackend.flush();
-  }
-
-  function selectFallbackMember(fbMember) {
-    $httpBackend.expectGET(GetMemberUrl).respond(200, fbMember.user);
-    controller.selectFallback(fbMember);
     $httpBackend.flush();
   }
 });
