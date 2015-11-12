@@ -586,7 +586,10 @@
     "or": "or",
     "search": "Search",
     "edit": "Edit",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email"
   },
   "notifications": {
     "success": "Success notifications",
@@ -2505,6 +2508,7 @@
     "user": "User"
   },
   "helpdesk": {
+    "navHeaderTitle": "Cloud Collaboration Help Desk",
     "helpdesk": "Help Desk",
     "users": "Users",
     "customers": "Customers",
@@ -2512,6 +2516,10 @@
     "unexpectedError": "An unexpected error occurred",
     "searchingPleaseWait": "Searching, please wait...",
     "noSearchHits": "No matches found. Try to narrow your search...",
-    "searchInputDescription": "Search users (name, email address, phone number) or customers (name)"
+    "searchInputDescription": "Search users (name, email address, phone number) or customers (name)",
+    "roles": "Roles",
+    "goToSearch": "Go to Search",
+    "sso": "SSO",
+    "dirSync": "Directory Sync"
   }
 }

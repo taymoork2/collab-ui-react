@@ -9,7 +9,8 @@
              ng-keypress="($event.which === 13) ? helpdeskLandingCtrl.search() : 0"/>
       <button class="button secondary"
               ng-click="helpdeskLandingCtrl.search()"
-              translate="common.search"></button>
+              translate="common.search"
+              ng-disabled="helpdeskLandingCtrl.searchString == ''"></button>
       <p class="input-description" translate="helpdesk.searchInputDescription"></p>
     </div>
 

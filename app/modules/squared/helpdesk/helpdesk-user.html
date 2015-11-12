@@ -1,7 +1,6 @@
 <div class="helpdesk-details">
   <h2>{{helpdeskUserCtrl.user.displayName}} <span style="margin-left: 3rem;"><i class="icon icon-search"></i><a
-    ui-sref="helpdesk.landing">Back to
-    Search</a></span></h2>
+    ui-sref="helpdesk.landing" translate="helpdesk.goToSearch"></a></span></h2>
 
   <div class="medium-6 columns">
     <table class="table">
@@ -10,13 +9,15 @@
         <td colspan="2">
           <i class="icon icon-circle"
              ng-class="helpdeskUserCtrl.user.userStatus == 'pending' ? 'helpdesk-yellow' : 'helpdesk-green'"></i>
-          <span class="helpdesk-yellow" ng-if="helpdeskUserCtrl.user.userStatus == 'pending'">Pending</span>
-          <span class="helpdesk-green" ng-if="helpdeskUserCtrl.user.userStatus !== 'pending'">Active</span>
+          <span class="helpdesk-yellow" ng-if="helpdeskUserCtrl.user.userStatus == 'pending'"
+                translate="usersPage.pending"></span>
+          <span class="helpdesk-green" ng-if="helpdeskUserCtrl.user.userStatus !== 'pending'"
+                translate="usersPage.active"></span>
         </td>
       </tr>
       <tr>
         <td>
-          <span>User ID / Email Address</span>
+          <span translate="common.email"></span>
         </td>
         <td>
           <span>{{helpdeskUserCtrl.user.userName}}</span>
@@ -24,7 +25,7 @@
       </tr>
       <tr>
         <td>
-          <span>First Name</span>
+          <span translate="common.firstName"></span>
         </td>
         <td>
           <span>{{helpdeskUserCtrl.user.name.givenName}}</span>
@@ -32,7 +33,7 @@
       </tr>
       <tr>
         <td>
-          <span>Last Name</span>
+          <span translate="common.lastName"></span>
         </td>
         <td>
           <span>{{helpdeskUserCtrl.user.name.familyName}}</span>
@@ -40,7 +41,7 @@
       </tr>
       <tr>
         <td>
-          <span>Roles</span>
+          <span translate="helpdesk.roles"></span>
         </td>
         <td>
           <span
@@ -67,14 +68,14 @@
         <td>
           <i class="icon icon-circle"
              ng-class="helpdeskUserCtrl.org.ssoEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
-          <span>SSO</span>
+          <span translate="helpdesk.sso"></span>
         </td>
       </tr>
       <tr>
         <td>
           <i class="icon icon-circle"
              ng-class="helpdeskUserCtrl.org.dirsyncEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
-          <span>Directory Sync</span>
+          <span translate="helpdesk.dirSync"></span>
         </td>
       </tr>
       </tbody>

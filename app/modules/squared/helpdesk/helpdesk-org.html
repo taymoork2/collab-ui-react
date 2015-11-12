@@ -1,20 +1,19 @@
 <div class="helpdesk-details">
   <h2>{{helpdeskOrgCtrl.org.displayName}} <span style="margin-left: 3rem;"><i class="icon icon-search"></i><a
-    ui-sref="helpdesk.landing">Back to
-    Search</a></span></h2>
+    ui-sref="helpdesk.landing" translate="helpdesk.goToSearch"></a></span></h2>
   <table class="table">
     <tbody>
     <tr>
       <td>
         <i class="icon icon-circle" ng-class="helpdeskOrgCtrl.org.ssoEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
-        <span>SSO</span>
+        <span translate="helpdesk.sso"></span>
       </td>
     </tr>
     <tr>
       <td>
         <i class="icon icon-circle"
            ng-class="helpdeskOrgCtrl.org.dirsyncEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
-        <span>Directory Sync</span>
+        <span translate="helpdesk.dirSync"></span>
       </td>
     </tr>
     </tbody>

@@ -2,12 +2,12 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskUserController($stateParams, HelpdeskLandingController, Orgservice, $log) {
+  function HelpdeskUserController($stateParams, HelpdeskService, Orgservice, $log) {
     var vm = this;
     vm.user = $stateParams.user;
     vm.org = {};
 
-    HelpdeskLandingController.getUser(vm.user.organizationId, vm.user.id).then(function (res) {
+    HelpdeskService.getUser(vm.user.organizationId, vm.user.id).then(function (res) {
       if (res) {
         vm.user = res;
       }
