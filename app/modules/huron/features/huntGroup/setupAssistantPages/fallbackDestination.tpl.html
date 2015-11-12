@@ -5,7 +5,7 @@
            typeahead-on-select="huntGroupSA.selectFallback($item)"
            typeahead-template-url="userTemplate.html"
            placeholder="{{:: 'huronHuntGroup.fallbackPlaceholder' | translate}}"
-           ng-keyup="huntGroupSA.validateFallback()"
+           ng-keyup="huntGroupSA.validateFallbackNumber()"
            ng-disabled="huntGroupSA.selectedFallbackMember"
            focus-on>
 
@@ -53,7 +53,7 @@
     <div class="text-center fallback-container-item">
       <button class="button" cs-btn loading="huntGroupSA.saveProgress"
               ng-click="huntGroupSA.saveHuntGroup()"
-              ng-class="{success: (huntGroupSA.selectedFallbackMember || huntGroupSA.selectedFallbackNumberValid), disabled: (!huntGroupSA.selectedFallbackMember && !huntGroupSA.selectedFallbackNumberValid)}">
+              ng-class="{success: (huntGroupSA.isFallbackValid()), disabled: (!huntGroupSA.isFallbackValid())}">
         <span translate="huronHuntGroup.createGroupLabel"></span>
       </button>
     </div>
