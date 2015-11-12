@@ -1339,14 +1339,14 @@ angular
         .state('huronHuntGroup', {
           url: '/huronHuntGroup',
           parent: 'hurondetails',
-          templateUrl: 'modules/huron/features/huntGroup/huntGroupSetupAssistant.tpl.html',
+          templateUrl: 'modules/huron/features/huntGroup/hgSetupAssistant.tpl.html',
           controller: 'HuntGroupSetupAssistantCtrl',
           controllerAs: 'huntGroupSA'
         })
         .state('huntgroupedit', {
           url: '/features/hg/edit',
           parent: 'main',
-          templateUrl: 'modules/huron/features/edit/huntgroupedit.tpl.html',
+          templateUrl: 'modules/huron/features/huntGroup/edit/hgEdit.tpl.html',
           controller: 'HuntGroupEditCtrl',
           controllerAs: 'hge',
           params: {
