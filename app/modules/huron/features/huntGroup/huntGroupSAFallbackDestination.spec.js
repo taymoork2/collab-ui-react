@@ -274,7 +274,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
     };
     expect(data.members).toBeUndefined();
 
-    controller.selectedHuntMembers = [huntGroupMember1];
+    controller.selectHuntGroupMember(huntGroupMember1);
     controller.populateHuntMembers(data);
 
     expect(data.members).not.toBeUndefined();

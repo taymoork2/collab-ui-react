@@ -19,12 +19,29 @@
       getDetails: getDetails,
       getNumbersWithSelection: getNumbersWithSelection,
       getMemberInfo: getMemberInfo,
+      updateMemberEmail: updateMemberEmail,
       getPilotNumberSuggestions: getPilotNumberSuggestions,
       getHuntMembers: getHuntMembers,
       isFallbackNumberValid: isFallbackNumberValid
     };
 
     return service;
+
+    /**
+     * Function to update the user email in a promise when a member
+     * pill is opened for the first time.
+     */
+    function updateMemberEmail(user) {
+      var asyncResponse = $q.defer();
+      if (!user.email) {
+        return getMemberInfo(customerId, user.uuid).then(function (u) {
+          user.email = u.email;
+        });
+      } else {
+        asyncResponse.resolve();
+        return asyncResponse.promise;
+      }
+    }
 
     function getHuntMembers(hint) {
       if (suggestionsNeeded(hint)) {

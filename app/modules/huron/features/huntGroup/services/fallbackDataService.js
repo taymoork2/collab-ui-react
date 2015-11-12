@@ -12,39 +12,21 @@
 
   /* @ngInject */
 
-  function HuntGroupFallbackDataService(TelephoneNumberService, HuntGroupService, Notification, Authinfo, $q) {
+  function HuntGroupFallbackDataService(TelephoneNumberService, HuntGroupService, Notification, $q) {
 
     var isValidInternalNumber = false;
     var isValidExternalNumber = false;
     var fallbackNumber = '';
     var fallbackMember = '';
-    var customerId = Authinfo.getOrgId();
 
     return {
       isFallbackValid: isFallbackValid,
       validateFallbackNumber: validateFallbackNumber,
       setFallbackMember: setFallbackMember,
       getFallbackDestinationJSON: getFallbackDestinationJSON,
-      updateMemberEmail: updateMemberEmail
     };
 
     ///////////////
-
-    /**
-     * Function to update the user email when the fallback member
-     * pill is opened for the first time.
-     */
-    function updateMemberEmail(user) {
-      var asyncResponse = $q.defer();
-      if (!user.email) {
-        return HuntGroupService.getMemberInfo(customerId, user.uuid).then(function (u) {
-          user.email = u.email;
-        });
-      } else {
-        asyncResponse.resolve();
-        return asyncResponse.promise;
-      }
-    }
 
     /**
      * Receive the type-ahead item from the UI as parameter and

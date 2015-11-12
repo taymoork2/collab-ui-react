@@ -6,7 +6,10 @@
     .controller('HuntGroupSetupAssistantCtrl', HuntGroupSetupAssistantCtrl);
 
   /* @ngInject */
-  function HuntGroupSetupAssistantCtrl($scope, $state, Config, HuntGroupService, HuntGroupFallbackDataService, Notification, $modal, $timeout, TelephoneNumberService, Authinfo, $translate) {
+  function HuntGroupSetupAssistantCtrl($scope, $state, Config, $modal, $timeout, $translate,
+    Authinfo, Notification, TelephoneNumberService,
+    HuntGroupService, HuntGroupFallbackDataService,
+    HuntGroupMemberDataService) {
     var vm = this;
     var customerId = Authinfo.getOrgId();
 
@@ -76,7 +79,9 @@
       var GetPilotNumbers = HuntGroupService.getPilotNumberSuggestions(typedNumber);
 
       if (GetPilotNumbers) {
-        GetPilotNumbers.setOnFailure(onFailureNotify('huronHuntGroup.numberFetchFailure'));
+        GetPilotNumbers.setOnFailure(function (response) {
+          Notification.errorResponse(response, 'huronHuntGroup.numberFetchFailure');
+        });
         GetPilotNumbers.setFilter({
           sourceKey: 'uuid',
           responseKey: 'uuid',
@@ -87,12 +92,6 @@
       }
 
       return [];
-    }
-
-    function onFailureNotify(notificationKey) {
-      return function (response) {
-        Notification.errorResponse(response, notificationKey);
-      };
     }
 
     function selectPilotNumber(numItem) {
@@ -219,58 +218,34 @@
     }
 
     /////////////////////////////////////////////////////////
-    // Fallback members presentation controller functions.
+    // Hunt members presentation controller functions.
 
     function selectHuntGroupMember(member) {
       vm.userSelected = undefined;
-      HuntGroupService.getMemberInfo(customerId, member.user.uuid).then(function (user) {
-        member.user.email = user.email;
-      });
-      vm.selectedHuntMembers.push(member);
+      vm.selectedHuntMembers = HuntGroupMemberDataService.selectMember(member);
     }
 
     function unSelectHuntGroupMember(user) {
-      vm.selectedHuntMembers.splice(
-        vm.selectedHuntMembers.indexOf(user), 1);
+      HuntGroupMemberDataService.removeMember(user);
       vm.openMemberPanelUuid = undefined;
     }
 
     function fetchHuntMembers(nameHint) {
-      return fetchMembers(nameHint, {
-        sourceKey: 'uuid',
-        responseKey: 'uuid',
-        dataToStrip: vm.selectedHuntMembers
+      return HuntGroupMemberDataService.fetchHuntMembers(nameHint);
+    }
+
+    function toggleMemberPanel(user) {
+      HuntGroupService.updateMemberEmail(user).then(function () {
+        vm.openMemberPanelUuid = HuntGroupMemberDataService.toggleMemberPanel(user.uuid);
       });
     }
 
-    function toggleMemberPanel(userUuid) {
-      if (vm.openMemberPanelUuid === userUuid) {
-        vm.openMemberPanelUuid = undefined;
-      } else {
-        vm.openMemberPanelUuid = userUuid;
-      }
-    }
-
     function getDisplayName(user) {
-      if (user.lastName) {
-        return user.firstName + " " + user.lastName;
-      } else {
-        return user.firstName;
-      }
+      return HuntGroupMemberDataService.getDisplayName(user);
     }
 
-    function fetchMembers(nameHint, filter) {
-      var GetHuntMembers = HuntGroupService.getHuntMembers(nameHint);
-
-      if (GetHuntMembers) {
-        GetHuntMembers.setOnFailure(onFailureNotify('huronHuntGroup.memberFetchFailure'));
-        if (filter) {
-          GetHuntMembers.setFilter(filter);
-        }
-        return GetHuntMembers.fetch();
-      }
-
-      return [];
+    function populateHuntMembers(data) {
+      data.members = HuntGroupMemberDataService.getMembersNumberUuidJSON();
     }
 
     /////////////////////////////////////////////////////////
@@ -291,11 +266,11 @@
     }
 
     function fetchFallbackDestination(nameHint) {
-      return fetchMembers(nameHint);
+      return HuntGroupMemberDataService.fetchMembers(nameHint);
     }
 
     function toggleFallback() {
-      HuntGroupFallbackDataService.updateMemberEmail(vm.selectedFallbackMember.member.user).then(
+      HuntGroupService.updateMemberEmail(vm.selectedFallbackMember.member.user).then(
         function () {
           vm.selectedFallbackMember.openPanel = !vm.selectedFallbackMember.openPanel;
         });
@@ -342,13 +317,6 @@
           type: number.type,
           number: number.number
         });
-      });
-    }
-
-    function populateHuntMembers(data) {
-      data.members = [];
-      vm.selectedHuntMembers.forEach(function (member) {
-        data.members.push(member.selectableNumber.uuid);
       });
     }
   }
