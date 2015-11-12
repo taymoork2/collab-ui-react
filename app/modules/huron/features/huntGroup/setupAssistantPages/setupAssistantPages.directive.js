@@ -2,11 +2,11 @@
   'use strict';
 
   var pageDirectiveNames = [
-    'huntGroupName',
-    'huntPilotLookup',
-    'huntMethod',
-    'huntMembersLookup',
-    'fallbackDestination'
+    'hgName',
+    'hgPilotLookup',
+    'hgMethod',
+    'hgMemberLookup',
+    'hgFallbackDestination'
   ];
 
   pageDirectiveNames.map(function (directiveName) {
