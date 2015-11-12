@@ -2,24 +2,24 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskUserController($stateParams, Userservice, Orgservice) {
+  function HelpdeskUserController($stateParams, HelpdeskLandingController, Orgservice, $log) {
     var vm = this;
     vm.user = $stateParams.user;
     vm.org = {};
 
-    Userservice.getUser(vm.user.id, function (data, status) {
-      if (data.success) {
-        vm.user = data
-      } else {
-        console.error('Get user failed', status);
+    HelpdeskLandingController.getUser(vm.user.organizationId, vm.user.id).then(function (res) {
+      if (res) {
+        vm.user = res;
       }
+    }, function (err) {
+      $log.error(err)
     });
 
     Orgservice.getAdminOrg(function (data, status) {
       if (data.success) {
         vm.org = data;
       } else {
-        console.error('Get org failed', status);
+        $log.error('Get org failed', status);
       }
     }, vm.user.organizationId, true);
   }

@@ -4,13 +4,13 @@
   /*ngInject*/
   function HelpdeskService($http, Config, $q) {
     var urlBase = 'http://localhost:8080/admin/api/v1/'; // Config.getAdminServiceUrl();
-    var mock = false;
+    var mock = true;
     var mockUsers = [
       {
-        "id": "a56ab29e-f8c5-41fb-b169-a5be0b32fb3a",
-        "organizationId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
-        "userName": "helgelangehaug@gmail.com",
-        "displayName": "helgelangehaug@gmail.com",
+        "id": "ddb4dd78-26a2-45a2-8ad8-4c181c5b3f0a",
+        "organizationId": "ce8d17f8-1734-4a54-8510-fae65acc505e",
+        "userName": "tom.vasset+marvelhelpdesk@gmail.com",
+        "displayName": "Tom Vasset",
         "phoneNumbers": [
           {
             "type": "work",
@@ -23,29 +23,33 @@
         ]
       },
       {
-        "id": "d1c75b63-edc8-4eb3-afdc-c116f25278d2",
-        "organizationId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
-        "userName": "jewagner56@icloud.com",
-        "displayName": "jewagner56@icloud.com",
+        "id": "335bf4a2-a09c-45ba-a72a-e3f1de613295",
+        "organizationId": "ce8d17f8-1734-4a54-8510-fae65acc505e",
+        "userName": "jayScott@marvel.com",
+        "displayName": "Jay Scott",
         "phoneNumbers": []
       },
       {
-        "id": "983761d5-3120-4747-9ab3-a3960ecdecc8",
-        "organizationId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
-        "userName": "sqintegration1234@gmail.com",
-        "displayName": "first admin",
+        "id": "2f4c85f7-e827-4b28-b567-0e49693b3f75",
+        "organizationId": "ce8d17f8-1734-4a54-8510-fae65acc505e",
+        "userName": "shamim.pirzada+marvelenduser@gmail.com",
+        "displayName": "Shamim",
         "phoneNumbers": []
       }];
 
     var mockOrgs = [
       {
-        "id": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
-        "displayName": "Fusion System Test"
+        "id": "ce8d17f8-1734-4a54-8510-fae65acc505e",
+        "displayName": "Marvel Partners"
       }
     ];
 
     function extractItems(res) {
       return res.data.items;
+    }
+
+    function extractData(res) {
+      return res.data;
     }
 
     function searchUsers(searchString) {
@@ -70,9 +74,16 @@
         .then(extractItems);
     }
 
+    function getUser(orgId, userId) {
+      return $http
+        .get(urlBase + 'helpdesk/organizations/' + orgId + '/users/' + userId)
+        .then(extractData);
+    }
+
     return {
       searchUsers: searchUsers,
-      searchOrgs: searchOrgs
+      searchOrgs: searchOrgs,
+      getUser: getUser
     };
 
 

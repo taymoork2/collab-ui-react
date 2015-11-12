@@ -1,7 +1,7 @@
 <div class="helpdesk-details">
-  <h1>{{helpdeskUserCtrl.user.displayName}} <span style="margin-left: 3rem;"><i class="icon icon-search"></i><a
+  <h2>{{helpdeskUserCtrl.user.displayName}} <span style="margin-left: 3rem;"><i class="icon icon-search"></i><a
     ui-sref="helpdesk.landing">Back to
-    Search</a></span></h1>
+    Search</a></span></h2>
 
   <div class="medium-6 columns">
     <table class="table">
@@ -44,7 +44,11 @@
         </td>
         <td>
           <span
+            ng-if="helpdeskUserCtrl.user.roles.length > 0"
             ng-repeat="role in helpdeskUserCtrl.user.roles">{{'roles.' + role | translate }}{{$last ? '' : ', '}}</span>
+          <span
+            ng-if="!helpdeskUserCtrl.user.roles || helpdeskUserCtrl.user.roles.length == 0"
+            translate="roles.user"></span>
         </td>
       </tr>
       </tbody>

@@ -2501,7 +2501,8 @@
     "atlas-portal.support": "Billing Administrator",
     "atlas-portal.reports": "Support Administrator",
     "atlas-portal.helpdesk": "Help Desk Support",
-    "id_full_admin": "Full Administrator"
+    "id_full_admin": "Full Administrator",
+    "user": "User"
   },
   "helpdesk": {
     "helpdesk": "Help Desk",
