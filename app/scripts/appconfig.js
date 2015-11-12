@@ -1336,20 +1336,6 @@ angular
             deleteFeatureType: null
           }
         })
-        .state('huronfeatures.deleteHuntGroup', {
-          parent: 'modal',
-          views: {
-            'modal@': {
-              controller: 'HuntGroupDeleteCtrl',
-              controllerAs: 'huntGroupDeleteCtrl',
-              templateUrl: 'modules/huron/features/huntGroup/huntGroupDeleteModal.tpl.html'
-            }
-          },
-          params: {
-            deleteHuntGroupName: null,
-            deleteHuntGroupId: null
-          }
-        })
         .state('huronHuntGroup', {
           url: '/huronHuntGroup',
           parent: 'hurondetails',

@@ -38,7 +38,7 @@
       vm.membersValid = true;
       vm.fallbackValid = true;
       vm.fallbackDirty = false;
-      vm.huntGroupId = $stateParams.feature.huntGroupId;
+      vm.huntGroupId = $stateParams.feature.id;
 
       if (vm.initialized) {
         vm.model = angular.copy(initialModel);
@@ -408,7 +408,7 @@
       }
     }
 
-    if ($stateParams.feature) {
+    if ($stateParams.feature && $stateParams.feature.id) {
       init();
     } else {
       $state.go('huronfeatures');

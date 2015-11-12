@@ -6,7 +6,7 @@
     .controller('HuntGroupSetupAssistantCtrl', HuntGroupSetupAssistantCtrl);
 
   /* @ngInject */
-  function HuntGroupSetupAssistantCtrl($scope, $state, Config, $http, HuntGroupService, Notification, $modal, $timeout, TelephoneNumberService, Authinfo, $translate) {
+  function HuntGroupSetupAssistantCtrl($scope, $state, Config, HuntGroupService, Notification, $modal, $timeout, TelephoneNumberService, Authinfo, $translate) {
     var vm = this;
     var customerId = Authinfo.getOrgId();
     vm.nextPage = nextPage;
@@ -29,7 +29,7 @@
     vm.cancelModal = cancelModal;
     vm.evalKeyPress = evalKeyPress;
     vm.enterNextPage = enterNextPage;
-    vm.validateFallback = validateFallback;
+    vm.validateFallbackNumber = validateFallbackNumber;
     vm.toggleFallback = toggleFallback;
     vm.removeFallbackDest = removeFallbackDest;
     vm.saveHuntGroup = saveHuntGroup;
@@ -40,6 +40,9 @@
     vm.selectedHuntMembers = [];
     vm.selectedFallbackMember = undefined;
     vm.selectedFallbackNumber = undefined;
+    vm.selectedFallbackValidInternalNumber = false;
+    vm.selectedFallbackValidExternalNumber = false;
+    vm.isFallbackValid = isFallbackValid;
     vm.pageIndex = 0;
     vm.animation = 'slide-left';
     vm.huntGroupName = '';
@@ -114,10 +117,6 @@
         responseKey: 'uuid',
         dataToStrip: vm.selectedHuntMembers
       });
-    }
-
-    function fetchFallbackDestination(nameHint) {
-      return fetchMembers(nameHint); // We don't need filtering.
     }
 
     function onFailureNotify(notificationKey) {
@@ -277,45 +276,58 @@
       }
     }
 
-    function needNumberValidation() {
-      return (vm.selectedFallbackNumber && !isNaN(vm.selectedFallbackNumber));
+    function isFallbackValid() {
+      return (
+        vm.selectedFallbackValidInternalNumber ||
+        vm.selectedFallbackValidExternalNumber ||
+        vm.selectedFallbackMember);
     }
 
-    function validateFallback() {
-      vm.selectedFallbackNumberValid = false;
-      if (!needNumberValidation()) {
+    function validateFallbackNumber() {
+      vm.selectedFallbackValidExternalNumber = false;
+      vm.selectedFallbackValidInternalNumber = false;
+
+      if (!validateExternalNumber()) {
+        validateInternalNumber();
+      }
+    }
+
+    function validateExternalNumber() {
+      if (TelephoneNumberService.validateDID(vm.selectedFallbackNumber)) {
+        vm.selectedFallbackNumber = TelephoneNumberService.getDIDLabel(vm.selectedFallbackNumber);
+        vm.selectedFallbackValidExternalNumber = true;
+      }
+      return vm.selectedFallbackValidExternalNumber;
+    }
+
+    function validateInternalNumber() {
+      var validator = huronNumberBackendValidationNeeded();
+      if (!validator) {
         return;
       }
 
-      var internalNumValidator =
-        HuntGroupService.isFallbackNumberValid(vm.selectedFallbackNumber);
+      validator.setOnFailure(onFailureNotify('huronHuntGroup.numberFetchFailure'));
+      validator.fetch().then(function (data) {
+        if (data.length > 0 && !vm.isFallbackValid()) {
+          // Either 1 or more internal match found, check for absolute match.
+          data.forEach(function (n) {
+            if (n.number === vm.selectedFallbackNumber) {
+              vm.selectedFallbackValidInternalNumber = true;
+            }
+          });
+        }
+      });
+    }
 
-      if (internalNumValidator) {
-        internalNumValidator.setOnFailure(onFailureNotify('huronHuntGroup.numberFetchFailure'));
-        internalNumValidator.fetch().then(function (data) {
-          if (data.length === 0) {
-            // no internal number found, check for a valid external number match.
-            validateFallbackForNonHuronNumber();
-          } else {
-            // Either 1 or more internal match found, check for absolute match.
-            data.forEach(function (n) {
-              if (n.number === vm.selectedFallbackNumber) {
-                vm.selectedFallbackNumberValid = true;
-                vm.selectedFallbackNumber = TelephoneNumberService.getDIDLabel(vm.selectedFallbackNumber);
-              }
-            });
-          }
-        });
+    function huronNumberBackendValidationNeeded() {
+      if (!isNaN(parseFloat(vm.selectedFallbackNumber)) &&
+        isFinite(vm.selectedFallbackNumber)) {
+        return HuntGroupService.isFallbackNumberValid(vm.selectedFallbackNumber);
       }
     }
 
-    function validateFallbackForNonHuronNumber() {
-      vm.selectedFallbackNumberValid =
-        TelephoneNumberService.validateDID(vm.selectedFallbackNumber);
-
-      if (vm.selectedFallbackNumberValid) {
-        vm.selectedFallbackNumber = TelephoneNumberService.getDIDLabel(vm.selectedFallbackNumber);
-      }
+    function fetchFallbackDestination(nameHint) {
+      return fetchMembers(nameHint);
     }
 
     function toggleFallback() {
@@ -365,9 +377,9 @@
     }
 
     function populateFallbackDestination(data) {
-      if (vm.selectedFallbackNumberValid) {
+      if (vm.selectedFallbackValidInternalNumber || vm.selectedFallbackValidExternalNumber) {
         data.fallbackDestination = {
-          number: vm.selectedFallbackNumber
+          number: TelephoneNumberService.getDIDValue(vm.selectedFallbackNumber)
         };
       } else {
         data.fallbackDestination = {
