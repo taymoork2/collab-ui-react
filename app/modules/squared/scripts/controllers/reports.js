@@ -26,18 +26,17 @@ angular.module('Squared')
 
             promiseChain.push(
               WebExUtilsFact.isSiteSupportsIframe(url).then(
-                function isSiteSupportsIframeSuccess(result) {
+                function getSiteSupportsIframeSuccess(result) {
                   if (result.isAdminReportEnabled && result.isIframeSupported) {
                     var resultSiteUrl = result.siteUrl;
 
                     if (-1 === $scope.webexOptions.indexOf(resultSiteUrl)) {
                       $scope.webexOptions.push(resultSiteUrl);
-                      $scope.webexSelected = resultSiteUrl;
                     }
                   }
                 },
 
-                function isSiteSupportsIframeError(error) {
+                function getSiteSupportsIframeError(error) {
                   //no-op, but needed
                 }
               )
@@ -45,24 +44,21 @@ angular.module('Squared')
           }
         );
 
-        $q.all(promiseChain).then( 
+        $q.all(promiseChain).then(
           function promisChainDone() {
             var funcName = "promisChainDone()";
             var logMsg = "";
 
-            if (
-              ($scope.showWebexReports) &&
-              ($scope.webexOptions.length > 0)
-            ) {
-
-              var webexSelected = null;
-
+            // determine if we are displaying the webex reports index page 
+            if ($scope.showWebexReports) {
+              // get the information needed for the webex reports index page
               var stateParamsSiteUrl = $stateParams.siteUrl;
               var stateParamsSiteUrlIndex = $scope.webexOptions.indexOf(stateParamsSiteUrl);
 
               var storageReportsSiteUrl = Storage.get('webexReportsSiteUrl');
               var storageReportsSiteUrlIndex = $scope.webexOptions.indexOf(storageReportsSiteUrl);
 
+              var webexSelected = null;
               if (-1 !== stateParamsSiteUrlIndex) {
                 webexSelected = stateParamsSiteUrl;
               } else if (-1 !== storageReportsSiteUrlIndex) {
