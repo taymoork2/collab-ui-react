@@ -2520,6 +2520,7 @@
     "roles": "Roles",
     "goToSearch": "Go to Search",
     "sso": "SSO",
-    "dirSync": "Directory Sync"
+    "dirSync": "Directory Sync",
+    "createdAt": "Created At"
   }
 }

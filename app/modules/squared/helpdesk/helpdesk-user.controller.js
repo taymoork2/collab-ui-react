@@ -5,9 +5,10 @@
   function HelpdeskUserController($stateParams, HelpdeskService, Orgservice, $log) {
     var vm = this;
     vm.user = $stateParams.user;
+    console.log(vm.user);
     vm.org = {};
 
-    HelpdeskService.getUser(vm.user.organizationId, vm.user.id).then(function (res) {
+    HelpdeskService.getUser(vm.user.organization.id, vm.user.id).then(function (res) {
       if (res) {
         vm.user = res;
       }
