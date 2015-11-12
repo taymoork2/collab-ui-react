@@ -103,10 +103,20 @@
   @include vr-spacing(mr, 0.5);
 }
 
+.method-container {
+  @include vr-spacing(mt, 0.75, 1px, false);
+  @include vr-spacing(mh, 0.5, 1px, true);
+}
+
+.method-desc {
+  color: $gray-dark-2;
+  font-family: $brand-font-light;
+}
+
 .hgmethod {
   display: flex !important;
   flex: none;
-  @include vr-spacing(ph, 0.5);
+  @include vr-spacing(pr, 0);
   &.current {
     > a {
       background: $gray-light-4;
