@@ -11,7 +11,6 @@
 
     vm.service = '';
     vm.sites = [];
-    vm.gsxFeature = false;
 
     init();
 
@@ -26,29 +25,9 @@
         vm.sites = Authinfo.getConferenceServices();
       }
 
-      Userservice.getUser('me', function (data, status) {
-        FeatureToggleService.getFeatureForUser(data.id, 'gsxdemo').then(function (value) {
-          vm.gsxFeature = value;
-        }).finally(function () {
-          displayName();
-        });
-      });
-
       $scope.closePreview = function () {
         $state.go('users.list');
       };
-    }
-
-    function displayName() {
-      if ($state.current &&
-        $state.current.data &&
-        $state.current.data.displayName &&
-        $state.current.data.displayName === 'Conferencing' &&
-        vm.gsxFeature
-      ) {
-        $state.current.data.displayName = $translate.instant('usersPreview.webex');
-        $rootScope.$broadcast('displayNameUpdated');
-      }
     }
   }
 })();

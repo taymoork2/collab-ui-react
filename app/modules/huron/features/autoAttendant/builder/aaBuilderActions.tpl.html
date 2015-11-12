@@ -12,14 +12,14 @@
         </div>
       </div>
       <div class="aa-flex-row">
-        <h5 class="text-muted aa-new-step-info" translate="autoAttendant.builderNewStepInfo"></h5>
+        <p class="h6 aa-new-step-info" translate="autoAttendant.builderNewStepInfo"></p>
       </div>
 
       <div class="aa-flex-row">
         <select class="form-control" ng-model="actions.template" ng-options="option.title for option in actions.templates">
           <option value="" disabled translate="autoAttendant.actionPlaceholder"></option>
         </select>
-        <span class="aa-help-icon" aria-label="common.help" popover=" {{ :: 'autoAttendant.builderNewStepChoiceHelp' | translate }} " popover-trigger="mouseenter" popover-animation="false" popover-placement="bottom" popover-append-to-body="false"></span>
+        <span class="aa-help-icon" aria-label="common.help" popover=" {{ :: 'autoAttendant.builderNewStepChoiceHelp' | translate }} " popover-trigger="mouseenter" popover-animation="true" popover-placement="right" popover-append-to-body="false"></span>
       </div>
     </div>
   </div>
@@ -28,8 +28,12 @@
     <div class="aa-panel-body">
       <div class="aa-flex-row">
         <h3 class="text-info" translate="{{actions.template.title}}"></h3>
-        <span class="aa-help-icon"></span>
-        <!-- help tooltip -->
+        <span ng-if="actions.template.help" class="aa-help-icon" popover="{{ :: actions.template.help }}" popover-trigger="mouseenter" popover-animation="true" popover-placement="right" popover-append-to-body="false"></span>
+        <div class="aa-action-delete">
+          <a ng-click="actions.removeAction(index)">
+            <span class="aa-action-delete-icon" aria-label="common.delete"></span>
+          </a>
+        </div>
       </div>
       <div class="aa-flex-row">
         <div ng-controller="actions.getTemplateController" ng-include="actions.template.url"></div>
