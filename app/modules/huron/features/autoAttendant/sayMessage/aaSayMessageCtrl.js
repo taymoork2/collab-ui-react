@@ -9,9 +9,6 @@
   function AASayMessageCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AALanguageService) {
 
     var vm = this;
-    vm.uiMenu = {};
-    vm.menuEntry = {};
-
     var messageInput = '';
     var languageOption = {
       label: '',
@@ -21,6 +18,9 @@
       label: '',
       value: ''
     };
+
+    vm.uiMenu = {};
+    vm.menuEntry = {};
 
     vm.messageInput = messageInput;
     vm.messageInputPlaceholder = $translate.instant('autoAttendant.sayMessagePlaceholder');
