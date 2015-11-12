@@ -1664,7 +1664,7 @@
     "deviceStatus": "Device Status",
     "description": "Description",
     "id": "ID",
-    "deviceIpAddressFailureMsgess": "IP Address",
+    "ipAddress": "IP Address",
     "deactivate": "Deactivate",
     "success": "Device updated successfully",
     "error": "Device configuration failed",
