@@ -2,7 +2,7 @@
 
 describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', function () {
 
-  var $httpBackend, filter, controller, $scope, HuntGroupService, Notification;
+  var $httpBackend, filter, controller, $scope, Notification;
 
   var user1 = getJSONFixture('huron/json/features/huntGroup/user1.json');
   var user2 = getJSONFixture('huron/json/features/huntGroup/user2.json');
@@ -48,17 +48,14 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$filter_,
-    _HuntGroupService_, _Notification_) {
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$filter_, _Notification_) {
     $scope = $rootScope.$new();
-    HuntGroupService = _HuntGroupService_;
     Notification = _Notification_;
     $httpBackend = _$httpBackend_;
     filter = _$filter_('huntMemberTelephone');
 
     controller = $controller('HuntGroupSetupAssistantCtrl', {
       $scope: $scope,
-      HuntGroupService: HuntGroupService,
       Notification: Notification
     });
 
@@ -88,16 +85,16 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
     $httpBackend.flush(); // Request made.
   });
 
-  it("on selecting a member, the member is added into selectedHuntMembers list with email id retrieved from backend.",
+  it("on selecting & toggling a member, the member is added into selectedHuntMembers " +
+    "list with email id retrieved from backend.",
     function () {
-      expect(user1.email).toBeUndefined();
       user1.email = "sumuthur@cisco.com";
-      user2.email = "test@cisco.com";
+      user2.email = undefined;
 
-      expect(member2.user.email).not.toEqual(user1.email);
+      controller.selectHuntGroupMember(member2);
 
       $httpBackend.expectGET(GetMember).respond(200, user1);
-      controller.selectHuntGroupMember(member2);
+      controller.toggleMemberPanel(member2.user);
       $httpBackend.flush();
 
       expect(member2.user.email).toEqual(user1.email);
@@ -106,7 +103,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
 
   it("filters the selected members from showing in the drop down.", function () {
     // UI selected a member pill.
-    selectHuntMember(member2);
+    controller.selectHuntGroupMember(member2);
 
     // Backend returns a list.
     $httpBackend.expectGET(MemberLookupUrl).respond(200, successResponse);
@@ -121,8 +118,8 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
   it("on deselecting a member, the list is updated and drop down starts showing the deselected member.",
     function () {
 
-      selectHuntMember(member1); // user 1 selected.
-      selectHuntMember(member2); // user 2 selected.
+      controller.selectHuntGroupMember(member1);
+      controller.selectHuntGroupMember(member2);
 
       // Backend returns a list.
       $httpBackend.expectGET(MemberLookupUrl).respond(200, successResponse);
@@ -161,20 +158,32 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
   it("member pane open works like accordion based on user's uuid.", function () {
     //toggleMemberPanel is invoked while clicking the card header, with user uuid as argument.
     controller.openMemberPanelUuid = undefined;
+    user1.email = undefined;
+    user2.email = undefined;
 
-    controller.toggleMemberPanel("user1Uuid"); // user1 header clicked.
-    expect(controller.openMemberPanelUuid).toBe("user1Uuid"); // opens user1 panel.
-    controller.toggleMemberPanel("user1Uuid"); // user1 header clicked again.
+    controller.selectHuntGroupMember(member1);
+    controller.selectHuntGroupMember(member2);
+
+    toggleAndFetchEmail(user1, {
+      email: "test1@cisco.com"
+    }); // user1 header clicked.
+    expect(controller.openMemberPanelUuid).toBe(user1.uuid); // opens user1 panel.
+
+    controller.toggleMemberPanel(user1); // user1 header clicked again.
+    $scope.$apply();
     expect(controller.openMemberPanelUuid).toBeUndefined(); //closes user1 panel.
 
-    controller.toggleMemberPanel("user1Uuid"); // user1 header clicked.
-    controller.toggleMemberPanel("user2Uuid"); // user2 header clicked.
-    expect(controller.openMemberPanelUuid).toBe("user2Uuid"); //shows user2 panel.
+    controller.toggleMemberPanel(user1); // user1 header clicked.
+    $scope.$apply();
+    toggleAndFetchEmail(user2, {
+      email: "test2@cisco.com"
+    }); // user2 header clicked.
+    expect(controller.openMemberPanelUuid).toBe(user2.uuid); //shows user2 panel.
   });
 
-  function selectHuntMember(member) {
-    $httpBackend.expectGET(GetMember).respond(200, member.user);
-    controller.selectHuntGroupMember(member);
+  function toggleAndFetchEmail(user, email) {
+    $httpBackend.expectGET(GetMember).respond(200, email);
+    controller.toggleMemberPanel(user);
     $httpBackend.flush();
   }
 });
