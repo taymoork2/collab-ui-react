@@ -5,6 +5,8 @@ angular.module('Squared')
   .controller('ReportsCtrl', ['$scope', '$stateParams', '$q', '$log', 'ReportsService', 'WebexReportService', 'Log', 'Authinfo', 'Config', '$translate', 'CannedDataService', 'WebExUtilsFact', 'Storage',
     function ($scope, $stateParams, $q, $log, ReportsService, WebexReportService, Log, Authinfo, Config, $translate, CannedDataService, WebExUtilsFact, Storage) {
       $scope.webexReportsObject = {};
+      $scope.webexOptions = [];
+      $scope.webexSelected = null;
 
       if ($stateParams.tab) {
         $scope.showEngagement = false;
@@ -14,80 +16,93 @@ angular.module('Squared')
         $scope.showWebexReports = false;
       }
 
-      var scope = $scope;
-
       function generateWebexReportsUrl() {
         var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl() || [];
         var promiseChain = [];
 
-        for (var i = 0; i < conferenceServices.length; i++) {
-          var url = conferenceServices[i].license.siteUrl;
-          promiseChain.push(WebExUtilsFact.isSiteSupportsIframe(url)
-            .then(function (result) {
-              if (result.isAdminReportEnabled && result.isIframeSupported) {
-                var resultSiteUrl = result.siteUrl;
+        conferenceServices.forEach(
+          function chkConferenceService(conferenceService) {
+            var url = conferenceService.license.siteUrl;
 
-                if (-1 === scope.webexOptions.indexOf(resultSiteUrl)) {
-                  scope.webexOptions.push(resultSiteUrl);
-                  scope.webexSelected = resultSiteUrl;
+            promiseChain.push(
+              WebExUtilsFact.isSiteSupportsIframe(url).then(
+                function isSiteSupportsIframeSuccess(result) {
+                  if (result.isAdminReportEnabled && result.isIframeSupported) {
+                    var resultSiteUrl = result.siteUrl;
+
+                    if (-1 === $scope.webexOptions.indexOf(resultSiteUrl)) {
+                      $scope.webexOptions.push(resultSiteUrl);
+                      $scope.webexSelected = resultSiteUrl;
+                    }
+                  }
+                },
+
+                function isSiteSupportsIframeError(error) {
+                  //no-op, but needed
                 }
-              }
-            }, function (error) {
-              //no-op, but needed
-            }));
-        }
-
-        $q.all(promiseChain).then(function promisChainDone() {
-          var funcName = "promisChainDone()";
-          var logMsg = "";
-
-          if (
-            (scope.showWebexReports) &&
-            (scope.webexOptions.length > 0)
-          ) {
-
-            var index = scope.webexOptions.indexOf($stateParams.siteUrl);
-            var useIndex = (index === -1) ? 0 : index;
-            var storageReportsSiteUrl = Storage.get('webexReportsSiteUrl');
-            var webexSelected = storageReportsSiteUrl || scope.webexOptions[useIndex];
-
-            logMsg = funcName + ": " + "\n" +
-              "stateParams.siteUrl=" + $stateParams.siteUrl + "\n" +
-              "index=" + index + "\n" +
-              "useIndex=" + useIndex + "\n" +
-              "storageReportsSiteUrl=" + storageReportsSiteUrl + "\n" +
-              "webexSelected=" + webexSelected;
-            $log.log(logMsg);
-
-            scope.webexSelected = webexSelected;
-            scope.webexReportsObject = WebexReportService.initReportsObject(webexSelected);
-            Storage.put('webexReportsSiteUrl', webexSelected);
+              )
+            );
           }
-        });
-      }
+        );
 
-      scope.webexOptions = [];
-      scope.webexSelected = null;
+        $q.all(promiseChain).then(
+          function promisChainDone() {
+            var funcName = "promisChainDone()";
+            var logMsg = "";
+
+            if (
+              ($scope.showWebexReports) &&
+              ($scope.webexOptions.length > 0)
+            ) {
+
+              var webexSelected = null;
+
+              var stateParamsSiteUrl = $stateParams.siteUrl;
+              var stateParamsSiteUrlIndex = $scope.webexOptions.indexOf(stateParamsSiteUrl);
+
+              var storageReportsSiteUrl = Storage.get('webexReportsSiteUrl');
+              var storageReportsSiteUrlIndex = $scope.webexOptions.indexOf(storageReportsSiteUrl);
+
+              if (-1 !== stateParamsSiteUrlIndex) {
+                webexSelected = stateParamsSiteUrl;
+              } else if (-1 !== storageReportsSiteUrlIndex) {
+                webexSelected = storageReportsSiteUrl;
+              } else {
+                webexSelected = $scope.webexOptions[0];
+              }
+
+              logMsg = funcName + ": " + "\n" +
+                "stateParamsSiteUrl=" + stateParamsSiteUrl + "\n" +
+                "stateParamsSiteUrlIndex=" + stateParamsSiteUrlIndex + "\n" +
+                "storageReportsSiteUrl=" + storageReportsSiteUrl + "\n" +
+                "storageReportsSiteUrlIndex=" + storageReportsSiteUrlIndex + "\n" +
+                "webexSelected=" + webexSelected;
+              $log.log(logMsg);
+
+              $scope.webexSelected = webexSelected;
+              $scope.webexReportsObject = WebexReportService.initReportsObject(webexSelected);
+              Storage.put('webexReportsSiteUrl', webexSelected);
+            }
+          }
+        );
+      } // generateWebexReportsUrl()
 
       generateWebexReportsUrl();
 
       $scope.updateWebexReports = function () {
-        var storageWebexReportsSiteUrl = Storage.get('webexReportsSiteUrl');
+        var storageReportsSiteUrl = Storage.get('webexReportsSiteUrl');
+        var scopeWebexSelected = $scope.webexSelected;
 
         var logMsg = "updateWebexReports(): " + "\n" +
-          "scope.webexSelected=" + $scope.webexSelected + "\n" +
-          "storageWebexReportsSiteUrl=" + storageWebexReportsSiteUrl + "\n" +
-          "scope.webexOptionsLen=" + $scope.webexOptions.length + "\n" +
-          "scope.webexOptions=" + $scope.webexOptions + "\n" +
-          "scope.webexSelected=" + $scope.webexSelected + "\n" +
-          "storageWebexReportsSiteUrl=" + storageWebexReportsSiteUrl;
+          "scopeWebexSelected=" + scopeWebexSelected + "\n" +
+          "storageReportsSiteUrl=" + storageReportsSiteUrl;
         $log.log(logMsg);
 
-        if ($scope.webexSelected != storageWebexReportsSiteUrl) {
-          $scope.webexReportsObject = WebexReportService.initReportsObject($scope.webexSelected);
-          Storage.put('webexReportsSiteUrl', $scope.webexSelected);
+        if ($scope.webexSelected != storageReportsSiteUrl) {
+          $scope.webexReportsObject = WebexReportService.initReportsObject(scopeWebexSelected);
+          Storage.put('webexReportsSiteUrl', scopeWebexSelected);
         }
-      };
+      }; // updateWebexReports()
 
       $scope.show = function (showEngagement, showWebexReports) {
         $scope.showEngagement = showEngagement;
