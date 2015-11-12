@@ -75,7 +75,7 @@
      * Returns a helper object that has a set of feeder
      * closure functions. The helper takes care of response
      * extraction, filtering, mapping and failure handling
-     * in a generic manner.
+     * inside main private method.
      */
     function getServiceHelper() {
 
@@ -87,18 +87,49 @@
       var service = '';
       var apiArgs = '';
 
-      var valid = function (data) {
-        return (data !== '');
+      var helper = {
+        setOnFailure: function (callback) {
+          onFailure = callback;
+        },
+        setExtractData: function (callback) {
+          extractData = callback;
+        },
+        setFilter: function (filterConfig) {
+          filter = filterConfig;
+        },
+        setMapping: function (map) {
+          mapping = map;
+        },
+        setService: function (s) {
+          service = s;
+        },
+        setApiArgs: function (args) {
+          apiArgs = args;
+          apiArgs.customerId = customerId;
+        },
+        fetch: function () {
+          service.get(apiArgs).$promise
+            .then(main)
+            .catch(fail);
+          return asyncResult.promise;
+        }
       };
+      return helper;
 
-      var fail = function (error) {
+      ////////////
+
+      function valid(data) {
+        return (data !== '');
+      }
+
+      function fail(error) {
         if (valid(onFailure)) {
           onFailure(error);
         }
         asyncResult.resolve([]);
-      };
+      }
 
-      var main = function (response) {
+      function main(response) {
         var data = '';
 
         if (valid(extractData)) {
@@ -127,35 +158,7 @@
             return (sArrayMapped.indexOf(rItem[rKey]) === -1);
           });
         }
-      };
-
-      return {
-        setOnFailure: function (callback) {
-          onFailure = callback;
-        },
-        setExtractData: function (callback) {
-          extractData = callback;
-        },
-        setFilter: function (filterConfig) {
-          filter = filterConfig;
-        },
-        setMapping: function (map) {
-          mapping = map;
-        },
-        setService: function (s) {
-          service = s;
-        },
-        setApiArgs: function (args) {
-          apiArgs = args;
-          apiArgs.customerId = customerId;
-        },
-        fetch: function () {
-          service.get(apiArgs).$promise
-            .then(main)
-            .catch(fail);
-          return asyncResult.promise;
-        }
-      };
+      }
     }
 
     /**

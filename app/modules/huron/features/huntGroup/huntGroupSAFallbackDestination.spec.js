@@ -102,8 +102,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
     controller.validateFallbackNumber();
     $scope.$apply();
 
-    expect(controller.selectedFallbackValidInternalNumber).toBeFalsy();
-    expect(controller.selectedFallbackValidExternalNumber).toBeFalsy();
+    expect(controller.isFallbackValid()).toBeFalsy();
   });
 
   it("should validate the external fallback number (without country code) correctly.", function () {
@@ -111,8 +110,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
     controller.validateFallbackNumber();
     $scope.$apply();
 
-    expect(controller.selectedFallbackValidInternalNumber).toBeFalsy();
-    expect(controller.selectedFallbackValidExternalNumber).toBeTruthy();
+    expect(controller.isFallbackValid()).toBeTruthy();
     expect(controller.selectedFallbackNumber).toEqual("(817) 932-5798");
   });
 
@@ -121,8 +119,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
     controller.validateFallbackNumber();
     $scope.$apply();
 
-    expect(controller.selectedFallbackValidInternalNumber).toBeFalsy();
-    expect(controller.selectedFallbackValidExternalNumber).toBeTruthy();
+    expect(controller.isFallbackValid()).toBeTruthy();
     expect(controller.selectedFallbackNumber).toEqual("(817) 932-5798");
   });
 
@@ -135,8 +132,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
     expectFallbackNumberSuggestion("2101", [number]); // backend suggests partial match
     $scope.$apply();
 
-    expect(controller.selectedFallbackValidInternalNumber).toBeFalsy();
-    expect(controller.selectedFallbackValidExternalNumber).toBeFalsy();
+    expect(controller.isFallbackValid()).toBeFalsy();
     expect(controller.selectedFallbackNumber).toEqual("2101");
   });
 
@@ -153,8 +149,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
     expectFallbackNumberSuggestion("8063", [number1, number2]); // back suggests > 1 match
     $scope.$apply();
 
-    expect(controller.selectedFallbackValidInternalNumber).toBeTruthy();
-    expect(controller.selectedFallbackValidExternalNumber).toBeFalsy();
+    expect(controller.isFallbackValid()).toBeTruthy();
     expect(controller.selectedFallbackNumber).toEqual("8063");
   });
 
@@ -166,20 +161,17 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
 
     expectFallbackNumberSuggestion("80632101", [number1]);
     $scope.$apply();
-    expect(controller.selectedFallbackValidInternalNumber).toBeTruthy();
-    expect(controller.selectedFallbackValidExternalNumber).toBeFalsy();
+    expect(controller.isFallbackValid()).toBeTruthy();
     expect(controller.selectedFallbackNumber).toEqual("80632101");
 
     expectFallbackNumberSuggestion("8063210", [number1]); // enters a backspace
     $scope.$apply();
-    expect(controller.selectedFallbackValidInternalNumber).toBeFalsy();
-    expect(controller.selectedFallbackValidExternalNumber).toBeFalsy();
+    expect(controller.isFallbackValid()).toBeFalsy();
     expect(controller.selectedFallbackNumber).toEqual("8063210");
 
     expectFallbackNumberSuggestion("80632101", [number1]);
     $scope.$apply();
-    expect(controller.selectedFallbackValidInternalNumber).toBeTruthy();
-    expect(controller.selectedFallbackValidExternalNumber).toBeFalsy();
+    expect(controller.isFallbackValid()).toBeTruthy();
     expect(controller.selectedFallbackNumber).toEqual("80632101");
   });
 
@@ -189,8 +181,7 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
     controller.validateFallbackNumber();
 
     expect(controller.selectedFallbackNumber).toBeUndefined();
-    expect(controller.selectedFallbackValidInternalNumber).toBeFalsy();
-    expect(controller.selectedFallbackValidExternalNumber).toBeFalsy();
+    expect(controller.isFallbackValid()).toBeTruthy();
     expect(controller.selectedFallbackMember).not.toBeUndefined();
   });
 
@@ -297,7 +288,6 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
     expect(data.fallbackDestination).not.toBeUndefined();
     expect(data.fallbackDestination.number).toBe("+18179325798");
     expect(data.fallbackDestination.numberUuid).toBeUndefined();
-    expect(data.fallbackDestination.userUuid).toBeUndefined();
     expect(data.fallbackDestination.sendToVoicemail).toBeUndefined();
   });
 
@@ -316,8 +306,6 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
     expect(data.fallbackDestination.number).toBeUndefined();
     expect(data.fallbackDestination.numberUuid).toBe(
       fallbackMember1.selectableNumber.uuid);
-    expect(data.fallbackDestination.userUuid).toBe(
-      fallbackMember1.uuid);
   });
 
   function expectFallbackNumberSuggestion(inNumber, outArray) {

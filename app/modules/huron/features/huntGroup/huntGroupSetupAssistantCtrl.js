@@ -6,7 +6,7 @@
     .controller('HuntGroupSetupAssistantCtrl', HuntGroupSetupAssistantCtrl);
 
   /* @ngInject */
-  function HuntGroupSetupAssistantCtrl($scope, $state, Config, HuntGroupService, Notification, $modal, $timeout, TelephoneNumberService, Authinfo, $translate) {
+  function HuntGroupSetupAssistantCtrl($scope, $state, Config, HuntGroupService, FallbackDataService, Notification, $modal, $timeout, TelephoneNumberService, Authinfo, $translate) {
     var vm = this;
     var customerId = Authinfo.getOrgId();
     vm.nextPage = nextPage;
@@ -20,29 +20,29 @@
     vm.unSelectHuntGroupMember = unSelectHuntGroupMember;
     vm.setHuntMethod = setHuntMethod;
     vm.huntGroupName = undefined;
-    vm.selectFallback = selectFallback;
     vm.fetchNumbers = fetchNumbers;
     vm.unSelectPilotNumber = unSelectPilotNumber;
     vm.fetchHuntMembers = fetchHuntMembers;
-    vm.fetchFallbackDestination = fetchFallbackDestination;
     vm.getDisplayName = getDisplayName;
     vm.cancelModal = cancelModal;
     vm.evalKeyPress = evalKeyPress;
     vm.enterNextPage = enterNextPage;
-    vm.validateFallbackNumber = validateFallbackNumber;
-    vm.toggleFallback = toggleFallback;
-    vm.removeFallbackDest = removeFallbackDest;
     vm.saveHuntGroup = saveHuntGroup;
     vm.openMemberPanelUuid = undefined;
     vm.toggleMemberPanel = toggleMemberPanel;
     vm.selectedPilotNumber = undefined;
     vm.selectedPilotNumbers = [];
     vm.selectedHuntMembers = [];
+
     vm.selectedFallbackMember = undefined;
     vm.selectedFallbackNumber = undefined;
-    vm.selectedFallbackValidInternalNumber = false;
-    vm.selectedFallbackValidExternalNumber = false;
     vm.isFallbackValid = isFallbackValid;
+    vm.selectFallback = selectFallback;
+    vm.fetchFallbackDestination = fetchFallbackDestination;
+    vm.validateFallbackNumber = validateFallbackNumber;
+    vm.toggleFallback = toggleFallback;
+    vm.removeFallbackDest = removeFallbackDest;
+
     vm.pageIndex = 0;
     vm.animation = 'slide-left';
     vm.huntGroupName = '';
@@ -214,20 +214,6 @@
       vm.openMemberPanelUuid = undefined;
     }
 
-    function selectFallback($item) {
-      vm.selectedFallbackNumber = undefined;
-      vm.selectedFallbackMember = {
-        member: $item,
-        number: "",
-        sendToVoicemail: false,
-        openPanel: false
-      };
-
-      HuntGroupService.getMemberInfo(customerId, $item.user.uuid).then(function (user) {
-        vm.selectedFallbackMember.member.user.email = user.email;
-      });
-    }
-
     function setHuntMethod(methodSelected) {
 
       if (vm.huntGroupMethod === methodSelected) {
@@ -276,54 +262,24 @@
       }
     }
 
-    function isFallbackValid() {
-      return (
-        vm.selectedFallbackValidInternalNumber ||
-        vm.selectedFallbackValidExternalNumber ||
-        vm.selectedFallbackMember);
-    }
+    /////////////////////////////////////////////////////////
+    // Fallback destination presentation controller functions.
 
-    function validateFallbackNumber() {
-      vm.selectedFallbackValidExternalNumber = false;
-      vm.selectedFallbackValidInternalNumber = false;
-
-      if (!validateExternalNumber()) {
-        validateInternalNumber();
-      }
-    }
-
-    function validateExternalNumber() {
-      if (TelephoneNumberService.validateDID(vm.selectedFallbackNumber)) {
-        vm.selectedFallbackNumber = TelephoneNumberService.getDIDLabel(vm.selectedFallbackNumber);
-        vm.selectedFallbackValidExternalNumber = true;
-      }
-      return vm.selectedFallbackValidExternalNumber;
-    }
-
-    function validateInternalNumber() {
-      var validator = huronNumberBackendValidationNeeded();
-      if (!validator) {
-        return;
-      }
-
-      validator.setOnFailure(onFailureNotify('huronHuntGroup.numberFetchFailure'));
-      validator.fetch().then(function (data) {
-        if (data.length > 0 && !vm.isFallbackValid()) {
-          // Either 1 or more internal match found, check for absolute match.
-          data.forEach(function (n) {
-            if (n.number === vm.selectedFallbackNumber) {
-              vm.selectedFallbackValidInternalNumber = true;
-            }
-          });
-        }
+    function selectFallback($item) {
+      vm.selectedFallbackNumber = undefined;
+      FallbackDataService.setFallbackMember($item).then(function (member) {
+        vm.selectedFallbackMember = member;
+        vm.selectedFallbackMember.openPanel = false;
       });
     }
 
-    function huronNumberBackendValidationNeeded() {
-      if (!isNaN(parseFloat(vm.selectedFallbackNumber)) &&
-        isFinite(vm.selectedFallbackNumber)) {
-        return HuntGroupService.isFallbackNumberValid(vm.selectedFallbackNumber);
-      }
+    function isFallbackValid() {
+      return FallbackDataService.isFallbackValid();
+    }
+
+    function validateFallbackNumber() {
+      vm.selectedFallbackNumber =
+        FallbackDataService.validateFallbackNumber(vm.selectedFallbackNumber);
     }
 
     function fetchFallbackDestination(nameHint) {
@@ -337,6 +293,11 @@
     function removeFallbackDest() {
       vm.selectedFallbackMember = undefined;
     }
+
+    function populateFallbackDestination(data) {
+      data.fallbackDestination = FallbackDataService.getFallbackDestinationJSON();
+    }
+    /////////////////////////////////////////////////////////
 
     function saveHuntGroup() {
       vm.saveProgress = true;
@@ -378,20 +339,6 @@
       vm.selectedHuntMembers.forEach(function (member) {
         data.members.push(member.selectableNumber.uuid);
       });
-    }
-
-    function populateFallbackDestination(data) {
-      if (vm.selectedFallbackValidInternalNumber || vm.selectedFallbackValidExternalNumber) {
-        data.fallbackDestination = {
-          number: TelephoneNumberService.getDIDValue(vm.selectedFallbackNumber)
-        };
-      } else {
-        data.fallbackDestination = {
-          numberUuid: vm.selectedFallbackMember.member.selectableNumber.uuid,
-          userUuid: vm.selectedFallbackMember.member.uuid,
-          sendToVoicemail: vm.selectedFallbackMember.sendToVoicemail
-        };
-      }
     }
   }
 })();
