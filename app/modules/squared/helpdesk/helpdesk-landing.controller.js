@@ -2,64 +2,57 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskLandingController($timeout) {
+  function HelpdeskLandingController(HelpdeskService, $log, $translate) {
     var vm = this;
     vm.search = search;
     vm.searchingForUsers = false;
     vm.searchingForOrgs = false;
-    vm.searchResults = null;
+    vm.userSearchResults = null;
+    vm.orgSearchResults = null;
+    vm.searchString = '';
+    vm.userSearchFailure = null;
+    vm.orgSearchFailure = null;
+    angular.element('#searchInput').focus();
 
     function search() {
-      vm.searchingForUsers = true;
-      vm.searchingForOrgs = true;
-      $timeout(function () {
-        vm.searchingForUsers = false;
-        vm.userSearchResults = vm.mockUsers;
-      }, 300);
-      $timeout(function () {
-        vm.searchingForOrgs = false;
-        vm.orgSearchResults = vm.mockOrgs;
-      }, 200);
-    }
-
-    vm.mockUsers = [
-      {
-        "id": "a56ab29e-f8c5-41fb-b169-a5be0b32fb3a",
-        "organizationId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
-        "userName": "helgelangehaug@gmail.com",
-        "displayName": "helgelangehaug@gmail.com",
-        "phoneNumbers": [
-          {
-            "type": "work",
-            "value": "+47 67 51 14 67"
-          },
-          {
-            "type": "mobile",
-            "value": "+47 92 01 30 30"
-          }
-        ]
-      },
-      {
-        "id": "d1c75b63-edc8-4eb3-afdc-c116f25278d2",
-        "organizationId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
-        "userName": "jewagner56@icloud.com",
-        "displayName": "jewagner56@icloud.com",
-        "phoneNumbers": []
-      },
-      {
-        "id": "983761d5-3120-4747-9ab3-a3960ecdecc8",
-        "organizationId": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
-        "userName": "sqintegration1234@gmail.com",
-        "displayName": "first admin",
-        "phoneNumbers": []
-      }];
-
-    vm.mockOrgs = [
-      {
-        "id": "fe5acf7a-6246-484f-8f43-3e8c910fc50d",
-        "displayName": "Fusion System Test"
+      if (vm.searchString === '') {
+        return;
       }
-    ];
+      vm.userSearchResults = null;
+      vm.orgSearchResults = null;
+      vm.userSearchFailure = null;
+      vm.orgSearchFailure = null;
+
+      if (vm.searchString.length >= 3) {
+        vm.searchingForUsers = true;
+        HelpdeskService.searchUsers(vm.searchString).then(function (res) {
+          vm.userSearchResults = res || [];
+          vm.searchingForUsers = false;
+          vm.userSearchFailure = null;
+        }, function (err) {
+          vm.searchingForUsers = false;
+          vm.userSearchResults = null;
+          if (err.status === 400) {
+            vm.userSearchFailure = $translate.instant('helpdesk.badUserSearchInput');
+          } else {
+            vm.userSearchFailure = $translate.instant('helpdesk.unexpectedError');
+          }
+          $log.error(err)
+        });
+      } else {
+        vm.userSearchFailure = $translate.instant('helpdesk.badUserSearchInput');
+      }
+
+      vm.searchingForOrgs = true;
+      HelpdeskService.searchOrgs(vm.searchString).then(function (res) {
+        vm.orgSearchResults = res || [];
+        vm.searchingForOrgs = false;
+      }, function (err) {
+        vm.searchingForOrgs = false;
+        vm.orgSearchFailure = $translate.instant('helpdesk.unexpectedError');
+        $log.error(err)
+      });
+    }
   }
 
   angular

@@ -1,25 +1,34 @@
 <div class="helpdesk-landing row">
   <div class="medium-12 medium-centered columns">
-    <h1>Help Desk</h1>
+    <h1 translate="helpdesk.helpdesk"></h1>
 
     <div class="typeahead-large" style="text-align: left;">
-      <input id="numberInput" type="text"
-             placeholder="Search user or customer"/>
-      <button class="button secondary" ng-click="helpdeskLandingCtrl.search()">Search</button>
-      <p class="input-description">Search users by email address / name or customers by name</p>
+      <input id="searchInput" type="text"
+             placeholder=""
+             ng-model="helpdeskLandingCtrl.searchString" ,
+             ng-keypress="($event.which === 13) ? helpdeskLandingCtrl.search() : 0"/>
+      <button class="button secondary"
+              ng-click="helpdeskLandingCtrl.search()"
+              translate="common.search"></button>
+      <p class="input-description" translate="helpdesk.searchInputDescription"></p>
     </div>
 
     <cs-card class="large header-bar"
-             ng-if="helpdeskLandingCtrl.searchingForUsers || helpdeskLandingCtrl.userSearchResults">
+             ng-if="helpdeskLandingCtrl.searchingForUsers || helpdeskLandingCtrl.userSearchResults || helpdeskLandingCtrl.userSearchFailure">
       <article>
         <header>
-          <h4>Users</h4>
+          <h4 translate="helpdesk.users"></h4>
         </header>
         <section>
           <div ng-if="helpdeskLandingCtrl.searchingForUsers">
             <span><i class="icon icon-spinner icon-2x"></i></span>
 
-            <p>Searching for users, please wait...</p>
+            <p translate="helpdesk.searchingPleaseWait"></p>
+          </div>
+          <div ng-if="helpdeskLandingCtrl.userSearchFailure">
+            <span><i class="icon icon-warning icon-2x helpdesk-red"></i></span>
+
+            <p class="helpdesk-red">{{helpdeskLandingCtrl.userSearchFailure}}</p>
           </div>
           <table class="table"
                  ng-if="!helpdeskLandingCtrl.searchingForUsers && helpdeskLandingCtrl.userSearchResults">
@@ -32,23 +41,28 @@
             </tbody>
           </table>
           <div ng-if="!helpdeskLandingCtrl.searchingForUsers && helpdeskLandingCtrl.userSearchResults.length == 0">
-            <p>No matching users found. Try to narrow your search...</p>
+            <p translate="helpdesk.noSearchHits"></p>
           </div>
         </section>
       </article>
     </cs-card>
 
     <cs-card class="large header-bar"
-             ng-if="helpdeskLandingCtrl.searchingForOrgs || helpdeskLandingCtrl.orgSearchResults">
+             ng-if="helpdeskLandingCtrl.searchingForOrgs || helpdeskLandingCtrl.orgSearchResults || helpdeskLandingCtrl.orgSearchFailure">
       <article>
         <header>
-          <h4>Customers</h4>
+          <h4 translate="helpdesk.customers"></h4>
         </header>
         <section>
           <div ng-if="helpdeskLandingCtrl.searchingForOrgs">
             <span><i class="icon icon-spinner icon-2x"></i></span>
 
-            <p>Searching for customers, please wait...</p>
+            <p translate="helpdesk.searchingPleaseWait"></p>
+          </div>
+          <div ng-if="helpdeskLandingCtrl.orgSearchFailure">
+            <span><i class="icon icon-warning icon-2x helpdesk-red"></i></span>
+
+            <p class="helpdesk-red">{{helpdeskLandingCtrl.orgSearchFailure}}</p>
           </div>
           <div class="org-list"
                ng-if="!helpdeskLandingCtrl.searchingForOrgs && helpdeskLandingCtrl.orgSearchResults.length > 0"
@@ -56,7 +70,7 @@
             <span><a ui-sref="helpdesk.org({org:org})">{{org.displayName}}</a></span>
           </div>
           <div ng-if="!helpdeskLandingCtrl.searchingForOrgs && helpdeskLandingCtrl.orgSearchResults.length == 0">
-            <p>No matching customers found. Try to narrow your search...</p>
+            <p translate="helpdesk.noSearchHits"></p>
           </div>
         </section>
       </article>

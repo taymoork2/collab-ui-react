@@ -2502,5 +2502,15 @@
     "atlas-portal.reports": "Support Administrator",
     "atlas-portal.helpdesk": "Help Desk Support",
     "id_full_admin": "Full Administrator"
+  },
+  "helpdesk": {
+    "helpdesk": "Help Desk",
+    "users": "Users",
+    "customers": "Customers",
+    "badUserSearchInput": "Searching for users requires a minimum of three characters. Name and email searches requires a minimum of two words, e.g. john.doe or John Doe.",
+    "unexpectedError": "An unexpected error occurred",
+    "searchingPleaseWait": "Searching, please wait...",
+    "noSearchHits": "No matches found. Try to narrow your search...",
+    "searchInputDescription": "Search users (name, email address, phone number) or customers (name)"
   }
 }
