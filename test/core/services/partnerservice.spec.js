@@ -60,21 +60,33 @@ describe('Partner Service', function () {
   });
 
   it('should successfully return an array of 5 customers from calling getManagedOrgsList', function () {
+    $httpBackend.whenGET(PartnerService.managedOrgsUrl).respond(testData.managedOrgsResponse.status, testData.managedOrgsResponse.data);
 
+    PartnerService.getManagedOrgsList(function (data, status) {
+      expect(status).toBe(200);
+      expect(data.organizations.length).toBe(5);
+      expect(data.organizations).toEqual(testData.managedOrgsResponse.data.organizations);
+    });
+
+    $httpBackend.flush();
   });
 
   it('should successfully return a boolean on whether or not a license is a trial license from calling isLicenseATrial', function () {
     expect(PartnerService.isLicenseATrial(testData.licenses[0])).toBe(true);
-    expect(PartnerService.isLicenseATrial(testData.freeLicense)).toBe(false);
-    expect(PartnerService.isLicenseATrial(testData.activeLicense)).toBe(false);
+    expect(PartnerService.isLicenseATrial(testData.licenses[3])).toBe(false);
+    expect(PartnerService.isLicenseATrial(testData.licenses[4])).toBe(false);
   });
 
   it('should successfully return a boolean on whether or not a license is an active license from calling isLicenseActive', function () {
-
+    expect(PartnerService.isLicenseActive(testData.licenses[0])).toBe(false);
+    expect(PartnerService.isLicenseActive(testData.licenses[3])).toBe(false);
+    expect(PartnerService.isLicenseActive(testData.licenses[4])).toBe(true);
   });
 
   it('should successfully return a boolean on whether or not a license is a free license from calling isLicenseFree', function () {
-
+    expect(PartnerService.isLicenseFree(testData.licenses[0])).toBe(false);
+    expect(PartnerService.isLicenseFree(testData.licenses[3])).toBe(true);
+    expect(PartnerService.isLicenseFree(testData.licenses[4])).toBe(false);
   });
 
   it('should successfully return the corresponding license object or an empty object from calling getLicense', function () {
@@ -84,11 +96,35 @@ describe('Partner Service', function () {
   });
 
   it('should successfully return a boolean on whether or not a license is available from calling isLicenseInfoAvailable', function () {
-
+    var licenses = [];
+    expect(PartnerService.isLicenseInfoAvailable(licenses)).toBe(false);
+    expect(PartnerService.isLicenseInfoAvailable(testData.licenses)).toBe(true);
   });
 
   it('should successfully add sortOrder property to license from calling setServiceSortOrder', function () {
+    var licenses = [];
+    PartnerService.setServiceSortOrder(licenses);
+    expect(licenses.sortOrder).toBe(PartnerService.customerStatus.NO_LICENSE);
 
+    // Status is "ACTIVE".
+    var customerActive = testData.licenses[3];
+    PartnerService.setServiceSortOrder(customerActive);
+    expect(customerActive.sortOrder).toBe(PartnerService.customerStatus.FREE);
+
+    // Status is "TRIAL".
+    var customerTrial = testData.licenses[0];
+    PartnerService.setServiceSortOrder(customerTrial);
+    expect(customerTrial.sortOrder).toBe(PartnerService.customerStatus.TRIAL);
+
+    // Status is "ACTIVE"
+    var customerFree = testData.licenses[4];
+    PartnerService.setServiceSortOrder(customerFree);
+    expect(customerFree.sortOrder).toBe(PartnerService.customerStatus.ACTIVE);
+
+    // Status is "CANCELED"
+    var customerCanceled = testData.licenses[5];
+    PartnerService.setServiceSortOrder(customerCanceled);
+    expect(customerCanceled.sortOrder).toBe(PartnerService.customerStatus.CANCELED);
   });
 
   it('should successfully add notes property to customer from calling setNotesSortOrder', function () {
@@ -133,10 +169,38 @@ describe('Partner Service', function () {
   });
 
   it('should successfully return an array of customers with additional properties from calling loadRetrievedDataToList', function () {
+    var returnLists = [];
+    returnLists = PartnerService.loadRetrievedDataToList(testData.managedOrgsResponse.data.organizations, true);
+    // Five customers, three active, two expired
+    expect(returnLists[0].length).toBe(5);
+    expect(returnLists[1].length).toBe(2);
+    expect(returnLists[2].length).toBe(3);
 
+    // Two licenses converted to License List. First license has four entitlements
+    expect(returnLists[0][0].licenseList.length).toBe(2);
+    expect(returnLists[0][0].licenseList[0].features.length).toBe(4);
+    expect(returnLists[0][0].licenseList[0].features).toEqual(testData.managedOrgsResponse.data.organizations[0].licenses[0].features);
+
+    // Verify conferencing, messaging and communications objects are created
+    expect(returnLists[1][1].conferencing.features.length).toBe(3);
+    expect(returnLists[1][1].messaging.features.length).toBe(4);
+    expect(returnLists[1][1].communications.sortOrder).toBe(PartnerService.customerStatus.FREE);
+
+    // Verify notes object is created by checking value of sort order
+    expect(returnLists[0][3].notes.sortOrder).toBe(PartnerService.customerStatus.FREE);
+
+    // Verify sort order is set is added to license list
+    expect(returnLists[0][2].licenseList[1].sortOrder).toBe(PartnerService.customerStatus.TRIAL);
   });
 
   it('should successfully return an array of customers from calling exportCSV', function () {
+    $httpBackend.whenGET(PartnerService.managedOrgsUrl).respond(testData.managedOrgsResponse.status, testData.managedOrgsResponse.data);
 
+    var promise = PartnerService.exportCSV();
+    promise.then(function (customers) {
+      expect(customers).toEqual(testData.exportCSVResult);
+    });
+
+    $httpBackend.flush();
   });
 });

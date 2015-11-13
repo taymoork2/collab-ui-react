@@ -115,8 +115,8 @@
       return angular.isArray(licenses) && licenses.length > 0;
     }
 
-    function setServiceSortOrder(license, licenses) {
-      if (!licenses || licenses.length === 0) {
+    function setServiceSortOrder(license) {
+      if (!license || license.length === 0) {
         license.sortOrder = customerStatus.NO_LICENSE;
       } else {
         if (license.status === 'CANCELED') {
@@ -252,9 +252,9 @@
         angular.extend(dataObj.messaging, tmpServiceObj);
         angular.extend(dataObj.conferencing, tmpServiceObj);
         angular.extend(dataObj.communications, tmpServiceObj);
-        setServiceSortOrder(dataObj.messaging, dataObj.licenseList);
-        setServiceSortOrder(dataObj.conferencing, dataObj.licenseList);
-        setServiceSortOrder(dataObj.communications, dataObj.licenseList);
+        setServiceSortOrder(dataObj.messaging);
+        setServiceSortOrder(dataObj.conferencing);
+        setServiceSortOrder(dataObj.communications);
 
         dataObj.notes = {};
         setNotesSortOrder(dataObj);
@@ -275,8 +275,9 @@
       getManagedOrgsList(function (data, status) {
         if (data.success && data.organizations) {
           if (data.organizations.length > 0) {
-            var returnedLists = loadRetrievedDataToList(data.organizations, false);
-            customers = returnedLists[0];
+            //var returnedLists = loadRetrievedDataToList(data.organizations, false);
+            //customers = returnedLists[0];
+            customers = data.organizations;
             Log.debug('total managed orgs records found:' + customers.length);
           } else {
             Log.debug('No managed orgs records found');
@@ -306,14 +307,14 @@
               exportedCustomer.messagingEntitlements = '';
               exportedCustomer.conferenceEntitlements = '';
               exportedCustomer.communicationsEntitlements = '';
-              if (customers[i].messaging && angular.isArray(customers[i].messaging.features)) {
-                exportedCustomer.messagingEntitlements = customers[i].messaging.features.join(' ');
+              if (customers[i].licenses[0] && angular.isArray(customers[i].licenses[0].features)) {
+                exportedCustomer.messagingEntitlements = customers[i].licenses[0].features.join(' ');
               }
-              if (customers[i].conferencing && angular.isArray(customers[i].conferencing.features)) {
-                exportedCustomer.conferenceEntitlements = customers[i].conferencing.features.join(' ');
+              if (customers[i].licenses[1] && angular.isArray(customers[i].licenses[1].features)) {
+                exportedCustomer.conferenceEntitlements = customers[i].licenses[1].features.join(' ');
               }
-              if (customers[i].communications && angular.isArray(customers[i].communications.features)) {
-                exportedCustomer.communicationsEntitlements = customers[i].communications.features.join(' ');
+              if (customers[i].licenses[2] && angular.isArray(customers[i].licenses[2].features)) {
+                exportedCustomer.communicationsEntitlements = customers[i].licenses[2].features.join(' ');
               }
               exportedCustomers.push(exportedCustomer);
             }
