@@ -1,10 +1,11 @@
 <div id="webexSiteReports"
-     name="webexSiteReports">
+     name="webexSiteReports"
+     class="cs-card-container multiple-layouts" 
+     ng-if="webexReportsObject.viewReady"  >
      
-  <cs-card-layout ng-if="webexReportsObject.viewReady">
+  <cs-card-layout class="third" >
     <div ng-repeat="sec in webexReportsObject.reports.sections">
-      <div ng-if="'common_reports' == sec.section_name">
-        <cs-card class="medium header-bar">
+        <cs-card class="full header-bar"  ng-if="$index === 0">
           <article>
             <header id={{sec.section_name}}
                     name={{sec.section_name}}
@@ -29,20 +30,19 @@
             </section>
           </article>
         </cs-card>
-      </div>
-
-      <div ng-if="'common_reports' != sec.section_name">
-        <cs-card class="medium">
+        </div>
+    </cs-card-layout>
+    <cs-card-layout class="two-thirds">
+        <div ng-repeat="sec in webexReportsObject.reports.sections">
+        <cs-card class="large" ng-if="$index != 0">
           <article>
             <header id={{sec.section_name}}
                   name={{sec.section_name}}
                   class="no-bullet">
-                  
               <div class="h3">
                 {{sec.section_name_translated}}
               </div>
             </header>
-
             <section id="siteSettingsCardSection">
               <ul class="no-bullet">
                 <div ng-repeat="sref in sec.uisrefs">
@@ -57,10 +57,8 @@
                 <div ng-repeat="s in sec.subsections">
                   <h4 id="{{s.section_name}}"
                       name="{{s.section_name}}">
-                    
                    {{s.section_name_translated}}
                   </h4>
-            
                   <div ng-repeat="sref in s.uisrefs">
                     <a id="{{sref.reportPageId}}"
                        name="{{sref.reportPageId}}"
@@ -74,7 +72,7 @@
             </section>
           </article>
         </cs-card>
-      </div>
+        </div>
+    </cs-card-layout>
     </div>
-  </cs-card-layout>
 </div>
