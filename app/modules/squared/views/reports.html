@@ -81,8 +81,10 @@
     </div>
   </div>
 
-  <div ng-show="(showWebexReports)">
-    <div class="row" 
+  <!-- WebEx reports content -->
+  <div ng-if="showWebexReports">
+    <!-- webex siteUrl dropdown list -->
+    <div class="row"  
          ng-show="(webexOptions.length > 1)" >
          
       <div class="large-3" >
@@ -93,6 +95,7 @@
       </div>
     </div>
 
+    <!-- webex site reports index -->
     <div ng-include="'modules/webex/siteReports/siteReports.tpl.html'"></div>
   </div>
 </div>
