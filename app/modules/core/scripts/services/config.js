@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('Core')
-  .factory('Config', ['$location', 'Utils', '$filter',
-    function ($location, Utils, $filter) {
+  .factory('Config', ['$location', 'Utils', '$filter', 'Storage',
+    function ($location, Utils, $filter, Storage) {
 
       var oauth2Scope = encodeURIComponent('webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config Identity:Organization cloudMeetings:login webex-messenger:get_webextoken ccc_config:admin');
-
+      var isProdBackend = isProductionBackend();
       var getCurrentHostname = function () {
         return $location.host() || '';
       };
@@ -496,11 +496,11 @@ angular.module('Core')
 
         isDev: function () {
           var currentHostname = getCurrentHostname();
-          return currentHostname === '127.0.0.1' || currentHostname === '0.0.0.0' || currentHostname === 'localhost' || currentHostname === 'server';
+          return !isProdBackend && (currentHostname === '127.0.0.1' || currentHostname === '0.0.0.0' || currentHostname === 'localhost' || currentHostname === 'server');
         },
 
         isIntegration: function () {
-          return getCurrentHostname() === 'int-admin.ciscospark.com';
+          return !isProdBackend && getCurrentHostname() === 'int-admin.ciscospark.com';
         },
 
         isProd: function () {
@@ -508,7 +508,7 @@ angular.module('Core')
         },
 
         isCfe: function () {
-          return getCurrentHostname() === 'cfe-admin.ciscospark.com';
+          return !isProdBackend && getCurrentHostname() === 'cfe-admin.ciscospark.com';
         },
 
         getEnv: function () {
@@ -863,12 +863,25 @@ angular.module('Core')
 
           return sunlightConfigServiceUrl[this.getEnv()];
         }
-
       };
+
+      config.setProductionBackend = function (_backend) {
+        if (angular.isDefined(_backend)) {
+          // Store in localStorage so new windows pick up the value
+          // Will be cleared on logout
+          Storage.put('backend', _backend);
+          isProdBackend = isProductionBackend();
+        }
+      };
+
+      function isProductionBackend() {
+        return Storage.get('backend') === 'production';
+      }
 
       config.roleStates = {
         Full_Admin: [ // Customer Admin
           'overview',
+          'overview-nm',
           'users',
           'user-overview',
           'userprofile',
@@ -926,7 +939,7 @@ angular.module('Core')
           'cdrsupport'
         ],
         'squared-fusion-mgmt': [
-          'fusion',
+          //'fusion',
           'cluster-details',
           'cluster-details-new'
           // 'management-service',
@@ -964,6 +977,12 @@ angular.module('Core')
         ]
       };
 
+      // Poor mans feature toggle... (preliminary...)
+      if (!config.isIntegration()) {
+        // Old fusion menu will not be shown in integration... soon to removed from production as well...
+        var mgmtState = config.serviceStates['squared-fusion-mgmt'];
+        mgmtState.push('fusion');
+      }
       if (!config.isProd()) {
         // Experimental, not to be enabled in production (yet)
         var calStates = config.serviceStates['squared-fusion-cal'];
@@ -989,8 +1008,12 @@ angular.module('Core')
           'fusion',
           'mediafusionconnector',
           'hurondetails',
+          'huronsettings',
           'cdrsupport',
           'cdr-overview',
+          'calendar-service',
+          'call-service',
+          'management-service'
         ]
       };
 

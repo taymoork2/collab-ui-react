@@ -1,12 +1,12 @@
 
   <cs-card class="full header-background"
-           id={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.id}}-card
-           name={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.id}}-card>
+           id={{siteSettingsObj.siteInfoCardObj.id}}-card
+           name={{siteSettingsObj.siteInfoCardObj.id}}-card>
            
     <article>
       <header>
         <h4>
-          {{WebExSiteSettings.siteSettingsObj.siteUrl}}
+          {{siteSettingsObj.siteUrl}}
         </h4>
       </header>
       
@@ -17,9 +17,10 @@
               <img src="/images/webex_logo_48px.png" 
                    class="webexlogo"
                    id="webexLogo"
-                   name="webexLogo" />
+                   name="webexLogo"
+                   alt="{{'webexCommon.logoAltText' | translate}}" />
                 
-              <span>
+              <span xml:lang="en">
                 &nbsp;WebEx
               </span>
             </div>
@@ -31,59 +32,59 @@
                 <div translate="webexSiteSettingsLabels.hostAccountsTitle"></div>
                 
                 <div class="overview-count">
-                  {{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.licensesUsage.count}}
+                  {{siteSettingsObj.siteInfoCardObj.licensesUsage.count}}
                 </div>
                 
                 <div translate="webexSiteSettingsLabels.activeTitle"> </div>
               </div>
                 
               <div align="center">
-                <div>&nbsp;</div>
+                <br>
                 
                 <div class="overview-count">
-                  {{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.licensesAvailable.count}}
+                  {{siteSettingsObj.siteInfoCardObj.licensesAvailable.count}}
                 </div>
                   
                 <div translate="webexSiteSettingsLabels.availableTitle"></div>
               </div>
                 
               <div align="center">
-                <div>&nbsp;</div>
+                <br>
                 
                 <a id="siteInfo-siteInformation"
                    name="siteInfo-siteInformation"
-                   ui-sref={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteInfoPageObj.uiSref}}>
+                   ui-sref={{siteSettingsObj.siteInfoCardObj.siteInfoPageObj.uiSref}}
+                   title="{{siteSettingsObj.siteInfoCardObj.siteInfoPageObj.label}}">
                    
                   <i class="icon icon-circle-webex"></i>
                 </a>
                 
-                <a id={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteInfoPageObj.id}}
-                   name={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteInfoPageObj.id}}
-                   ui-sref={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteInfoPageObj.uiSref}}>
+                <a id={{siteSettingsObj.siteInfoCardObj.siteInfoPageObj.id}}
+                   name={{siteSettingsObj.siteInfoCardObj.siteInfoPageObj.id}}
+                   ui-sref={{siteSettingsObj.siteInfoCardObj.siteInfoPageObj.uiSref}}
+                   href="">
                     
-                  <span>
-                    {{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteInfoPageObj.label}}
-                  </span>
+                  {{siteSettingsObj.siteInfoCardObj.siteInfoPageObj.label}}
                 </a>
               </div>
               
               <div align="center">
-                <div>&nbsp;</div>
+                <br>
                 
                 <a id="siteInfo-siteFeatures"
                    name="siteInfo-siteFeatures"
-                   ui-sref={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.uiSref}}>
+                   ui-sref={{siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.uiSref}}
+                   title="{{siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.label}}">
                    
                   <i class="icon icon-circle-star"></i>
                 </a>
                 
-                <a id={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.id}}
-                   name={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.id}}
-                   ui-sref={{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.uiSref}}>
+                <a id={{siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.id}}
+                   name={{siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.id}}
+                   ui-sref={{siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.uiSref}}
+                   href="">
                   
-                  <span>
-                    {{WebExSiteSettings.siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.label}}                  
-                  </span>
+                  {{siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.label}}                  
                 </a>
               </div>
             </div>

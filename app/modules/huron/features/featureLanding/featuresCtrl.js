@@ -26,20 +26,15 @@
       'name': 'Search'
     };
     vm.filters = [{
-        name: 'All',
-        filterValue: 'all'
-      }, {
-        name: 'Auto Attendant',
-        filterValue: 'AA'
-      }, {
-        name: 'Hunt Group',
-        filterValue: 'HG'
-      }
-      //  {
-      //  name: 'Call Park',
-      //  filterValue: 'CP'
-      //}
-    ];
+      name: 'All',
+      filterValue: 'all'
+    }, {
+      name: 'Auto Attendant',
+      filterValue: 'AA'
+    }, {
+      name: 'Hunt Group',
+      filterValue: 'HG'
+    }];
     var listOfAllFeatures = [];
     var featureToBeDeleted = {};
     var customerId = Authinfo.getOrgId();
@@ -86,36 +81,39 @@
       });
     }
 
+    var filterCards = function (filterValue) {
+      var filter = (filterValue === 'all') ? '' : filterValue;
+
+      var cardsFilteredByName = $filter('filter')(listOfAllFeatures, {
+        cardName: vm.filterText,
+        filterValue: filter
+      });
+
+      var cardsFilteredByNumber = $filter('filter')(listOfAllFeatures, {
+        cardName: "!" + vm.filterText,
+        numbers: vm.filterText,
+        filterValue: filter
+      });
+
+      var cardsFilteredByMemberCount = $filter('filter')(listOfAllFeatures, {
+        cardName: "!" + vm.filterText,
+        numbers: "!" + vm.filterText,
+        memberCount: vm.filterText,
+        filterValue: filter
+      });
+
+      return cardsFilteredByName.concat(cardsFilteredByNumber, cardsFilteredByMemberCount);
+    };
+
     //Switches Data that populates the Features tab
     function setFilter(filterValue) {
-      if (filterValue === 'all') {
-        vm.listOfFeatures = $filter('filter')(listOfAllFeatures, {
-          $: vm.filterText
-        });
-      } else if (filterValue === 'HG') {
-        vm.listOfFeatures = $filter('filter')(listOfAllFeatures, {
-          $: vm.filterText,
-          filterValue: 'HG'
-        });
-        //} else if (filterValue === 'CP') {
-        //  vm.listOfFeatures = $filter('filter')(listOfAllFeatures, {
-        //    $: vm.filterText,
-        //    filterValue: 'CP'
-        //  });
-      } else if (filterValue === 'AA') {
-        vm.listOfFeatures = $filter('filter')(listOfAllFeatures, {
-          $: vm.filterText,
-          filterValue: 'AA'
-        });
-      }
+      vm.listOfFeatures = filterCards(filterValue);
     }
 
     /* This function does an in-page search for the string typed in search box*/
     function searchData(searchStr) {
       vm.filterText = searchStr;
-      vm.listOfFeatures = $filter('filter')(listOfAllFeatures, {
-        $: vm.filterText
-      });
+      vm.listOfFeatures = filterCards('all');
     }
 
     function reload() {
@@ -125,7 +123,7 @@
     function getListOfFeatures() {
       var promises = [];
       features.forEach(function (value) {
-        promises.push(value.service(customerId));
+        promises.push(value.service());
       });
       return promises;
     }
@@ -169,6 +167,7 @@
         vm.pageState = 'showFeatures';
         feature.isEmpty = false;
         vm.listOfFeatures = vm.listOfFeatures.concat(list);
+        vm.listOfFeatures = HuronFeaturesListService.orderByFilter(vm.listOfFeatures);
         listOfAllFeatures = listOfAllFeatures.concat(list);
       } else if (list.length === 0) {
         feature.isEmpty = true;
@@ -182,31 +181,19 @@
           aaName: vm.aaModel.aaName
         });
       } else if (feature.filterValue === 'HG') {
-        HuntGroupService.editFeature(feature);
-        $state.go('huntgroupedit');
-      } // else if (feature.filterValue === 'CP') {
-      //  //Call CallPark Edit Controller
-      //}
+        $state.go('huntgroupedit', {
+          feature: feature
+        });
+      }
     };
 
     vm.deleteHuronFeature = function (feature) {
-      if (feature.filterValue === 'HG') {
-        featureToBeDeleted = feature;
-        $state.go('huronfeatures.deleteHuntGroup', {
-          deleteHuntGroupName: feature.cardName,
-          deleteHuntGroupId: feature.huntGroupId
-        });
-      } else if (feature.filterValue === 'AA') {
-        featureToBeDeleted = feature;
-        $state.go('huronfeatures.deleteFeature', {
-          deleteFeatureName: feature.cardName,
-          deleteFeatureId: feature.id,
-          deleteFeatureType: feature.filterValue
-        });
-      }
-      // else if (feature.filterValue === 'CP') {
-      //  //goto Delete CallPark Controller
-      //}
+      featureToBeDeleted = feature;
+      $state.go('huronfeatures.deleteFeature', {
+        deleteFeatureName: feature.cardName,
+        deleteFeatureId: feature.id,
+        deleteFeatureType: feature.filterValue
+      });
     };
 
     function areFeaturesEmpty() {
@@ -230,8 +217,8 @@
       }
     }
 
-    //list is updated by deleting a hunt group
-    $scope.$on('HUNT_GROUP_DELETED', function () {
+    //list is updated by deleting a feature
+    $scope.$on('HURON_FEATURE_DELETED', function () {
       vm.listOfFeatures.splice(vm.listOfFeatures.indexOf(featureToBeDeleted), 1);
       listOfAllFeatures.splice(listOfAllFeatures.indexOf(featureToBeDeleted), 1);
       featureToBeDeleted = {};

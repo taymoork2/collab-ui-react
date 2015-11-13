@@ -4,7 +4,7 @@
   "registry": {
     "search": [
       "http://bower.herokuapp.com",
-      "http://10.89.58.222/bower"
+      "http://10.89.118.46:5678"
     ]
   }
 }

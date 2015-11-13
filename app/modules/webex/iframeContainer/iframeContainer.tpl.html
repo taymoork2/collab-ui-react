@@ -1,11 +1,10 @@
-
-<iframe name="webexIframeContainer"
+<iframe i-frame-resizable 
+		ng-style="{'width': '100%', 'height': iframeHeight }"
+		name="webexIframeContainer"
         id="webexIframeContainer"
         frameborder="0"
-        width="100%"
-        height={{iframeHeight}}>
+        title="{{siteSettingLabel}}">
 </iframe>
-
 <form name="iframeForm"
       id="iframeForm"
       action={{trustIframeUrl}}

@@ -91,9 +91,11 @@ angular
                 $state.sidepanel = null;
                 var previousState = $previousState.get(sidepanelMemo);
                 if (previousState) {
-                  return $previousState.go(sidepanelMemo).then(function () {
-                    $previousState.forget(sidepanelMemo);
-                  });
+                  if ($state.current.parent === 'sidepanel' || angular.isUndefined($state.current.parent)) {
+                    return $previousState.go(sidepanelMemo).then(function () {
+                      $previousState.forget(sidepanelMemo);
+                    });
+                  }
                 }
               }
             }.bind($state.sidepanel));
@@ -235,6 +237,13 @@ angular
           url: '/overview',
           templateUrl: 'modules/core/landingPage/landingPage.tpl.html',
           controller: 'LandingPageCtrl',
+          parent: 'main'
+        })
+        .state('overview-nm', {
+          url: '/overview-nm',
+          templateUrl: 'modules/core/overview/overview.tpl.html',
+          controller: 'OverviewCtrl',
+          controllerAs: 'overview',
           parent: 'main'
         })
         .state('users', {
@@ -1336,9 +1345,9 @@ angular
         .state('huronnewfeature', {
           url: '/newfeature',
           parent: 'hurondetails',
+          templateUrl: 'modules/huron/features/newFeature/newFeature.tpl.html',
           controller: 'NewFeatureCtrl',
-          controllerAs: 'newFeatureCtrl',
-          templateUrl: 'modules/huron/features/newFeature/newFeature.tpl.html'
+          controllerAs: 'newFeatureCtrl'
         })
         .state('huronfeatures.aabuilder', {
           parent: 'hurondetails',
@@ -1364,20 +1373,6 @@ angular
             deleteFeatureType: null
           }
         })
-        .state('huronfeatures.deleteHuntGroup', {
-          parent: 'modal',
-          views: {
-            'modal@': {
-              controller: 'HuntGroupDeleteCtrl',
-              controllerAs: 'huntGroupDeleteCtrl',
-              templateUrl: 'modules/huron/features/huntGroup/huntGroupDeleteModal.tpl.html'
-            }
-          },
-          params: {
-            deleteHuntGroupName: null,
-            deleteHuntGroupId: null
-          }
-        })
         .state('huronHuntGroup', {
           url: '/huronHuntGroup',
           parent: 'hurondetails',
@@ -1390,7 +1385,10 @@ angular
           parent: 'main',
           templateUrl: 'modules/huron/features/edit/huntgroupedit.tpl.html',
           controller: 'HuntGroupEditCtrl',
-          controllerAs: 'hge'
+          controllerAs: 'hge',
+          params: {
+            feature: null
+          }
         });
     }
   ]);
@@ -1711,7 +1709,8 @@ angular
           },
           params: {
             connectorId: {},
-            groupName: {}
+            groupName: {},
+            roleSelected: {}
           }
         })
         .state('connector-details.alarms', {

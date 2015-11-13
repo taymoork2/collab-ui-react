@@ -16,10 +16,10 @@
     ////////////////////////
 
     function goToNumbers() {
-      if (PstnSetup.getProvider().swivel) {
-        goToSwivelNumbers();
-      } else {
+      if (PstnSetup.getProvider().apiExists) {
         goToOrderNumbers();
+      } else {
+        goToSwivelNumbers();
       }
     }
 
@@ -74,10 +74,12 @@
     }
 
     function initCarrier(carrier) {
-      if (carrier.name === PstnSetupService.INTELEPEER) {
+      if (carrier.vendor === PstnSetupService.INTELEPEER) {
         vm.providers.push({
           uuid: carrier.uuid,
           name: carrier.name,
+          apiExists: carrier.apiExists,
+          vendor: carrier.vendor,
           logoSrc: 'images/carriers/logo_intelepeer.svg',
           logoAlt: 'IntelePeer',
           title: 'IntelePeer Pro6S',
@@ -89,11 +91,12 @@
           ],
           selectFn: goToOrderNumbers
         });
-      } else if (carrier.name === PstnSetupService.TATA) {
+      } else if (carrier.vendor === PstnSetupService.TATA) {
         vm.providers.push({
-          swivel: true,
           uuid: carrier.uuid,
           name: carrier.name,
+          apiExists: carrier.apiExists,
+          vendor: carrier.vendor,
           logoSrc: 'images/carriers/logo_tata_comm.svg',
           logoAlt: 'Tata',
           title: 'Tata Smart Voice Bundle',

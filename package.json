@@ -45,6 +45,7 @@
     "gulp-sourcemaps": "^1.5.2",
     "gulp-task-listing": "^1.0.0",
     "gulp-tsd": "^0.0.4",
+    "gulp-typescript": "^2.9.2",
     "gulp-uglify": "^1.2.0",
     "gulp-useref": "^1.1.2",
     "gulp-util": "^3.0.4",
@@ -75,6 +76,7 @@
     "plato": "^1.4.0",
     "protractor-jasmine2-screenshot-reporter": "~0.1.4",
     "request": "~2.54.0",
+    "require-dir": "^0.3.0",
     "requirejs": "~2.1.16",
     "run-sequence": "^1.1.0",
     "sinon": "^1.14.1",
@@ -87,6 +89,7 @@
     "node": ">=0.8.0"
   },
   "scripts": {
-    "test": "gulp e2e"
+    "test": "gulp e2e",
+    "postinstall": "gulp tsd"
   }
 }

@@ -1,5 +1,8 @@
 'use strict';
 
+/* global inviteusers */
+/* global LONG_TIMEOUT */
+
 describe('Onboard Users using uploading CSV File', function () {
   var fileToUpload = './../data/sample-squared.csv';
   var absolutePath = utils.resolvePath(fileToUpload);
@@ -9,7 +12,7 @@ describe('Onboard Users using uploading CSV File', function () {
   // User array
   var userList = [];
   for (i = 0; i < 5; i++) {
-    userList[i] = 'collabctg+23429867' + (5 + i) + '@gmail.com';
+    userList[i] = 'collabctg+csvImportTestUser500' + (i + 1) + '@gmail.com';
   }
 
   beforeAll(function () {
@@ -50,12 +53,12 @@ describe('Onboard Users using uploading CSV File', function () {
       utils.expectIsDisplayed(users.servicesPanel);
       utils.click(users.closeSidePanel);
     }
-  });
+  }, LONG_TIMEOUT); // increase time for 5 users
 
   afterAll(function () {
     for (i = 0; i < userList.length; i++) {
-      utils.deleteUser(userList[i]);
+      deleteUtils.deleteUser(userList[i]);
     }
-  });
+  }, LONG_TIMEOUT);
 
 });

@@ -2,9 +2,16 @@
 /* global AmCharts, $:false */
 
 angular.module('Squared')
-  .controller('ReportsCtrl', ['$scope', '$stateParams', '$q', 'ReportsService', 'WebexReportService', 'Log', 'Authinfo', 'Config', '$translate', 'CannedDataService', 'WebExUtilsFact',
-    function ($scope, $stateParams, $q, ReportsService, WebexReportService, Log, Authinfo, Config, $translate, CannedDataService, WebExUtilsFact) {
+  .controller('ReportsCtrl', ['$scope', '$stateParams', '$q', 'ReportsService', 'WebexReportService', 'Log', 'Authinfo', 'Config', '$translate', 'CannedDataService', 'WebExUtilsFact', 'Storage',
+    function ($scope, $stateParams, $q, ReportsService, WebexReportService, Log, Authinfo, Config, $translate, CannedDataService, WebExUtilsFact, Storage) {
       $scope.webexReportsObject = {};
+      $scope.repPageHeader_pageTitle = 'reportsPage.pageTitle';
+      $scope.repPageHeader_back = false;
+      $scope.repPageHeader_ShowWebexTab = false;
+      $scope.repPageHeader_tabs = [{
+        title: $translate.instant('reportsPage.engagement'),
+        state: 'reports'
+      }];
 
       if ($stateParams.tab) {
         $scope.showEngagement = false;
@@ -25,6 +32,14 @@ angular.module('Squared')
             .then(function (result) {
               if (result.isAdminReportEnabled && result.isIframeSupported) {
                 $scope.webexOptions.push(result.siteUrl);
+
+                if (!$scope.repPageHeader_ShowWebexTab) {
+                  $scope.repPageHeader_tabs.push({
+                    title: $translate.instant('reportsPage.webex'),
+                    state: 'webex-reports'
+                  });
+                  $scope.repPageHeader_ShowWebexTab = true;
+                }
               }
             }, function (error) {
               //no-op, but needed
@@ -32,16 +47,10 @@ angular.module('Squared')
         }
 
         $q.all(promiseChain).then(function () {
-          var selectedIndex = 0;
-          if ($stateParams.tab === 'webex') {
-            _.forEach($scope.webexOptions, function (val, index) {
-              if (val === $stateParams.siteUrl) {
-                selectedIndex = index;
-              }
-            });
-          }
-          $scope.webexSelected = $scope.webexOptions[selectedIndex];
           if ($scope.webexOptions.length) {
+            var index = $scope.webexOptions.indexOf($stateParams.siteUrl);
+            index = (index === -1) ? 0 : index;
+            $scope.webexSelected = Storage.get('webexReportsSiteUrl') || $scope.webexOptions[index];
             $scope.updateWebexReports();
           }
         });
@@ -51,6 +60,7 @@ angular.module('Squared')
 
       $scope.updateWebexReports = function () {
         $scope.webexReportsObject = WebexReportService.initReportsObject($scope.webexSelected);
+        Storage.put('webexReportsSiteUrl', $scope.webexSelected);
       };
 
       $scope.show = function (showEngagement, showWebexReports) {

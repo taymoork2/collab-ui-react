@@ -17,10 +17,10 @@
     ////////////////////////
 
     function goToNumbers() {
-      if (vm.provider.swivel) {
-        goToSwivelNumbers();
-      } else {
+      if (vm.provider.apiExists) {
         goToOrderNumbers();
+      } else {
+        goToSwivelNumbers();
       }
     }
 
@@ -59,7 +59,13 @@
     function createNumbers() {
       var promises = [];
       var errors = [];
-      if (vm.provider.swivel) {
+      if (vm.provider.apiExists) {
+        var promise = PstnSetupService.orderNumbers(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), vm.numbers)
+          .catch(function (response) {
+            errors.push(Notification.processErrorResponse(response, 'pstnSetup.orderNumbersError'));
+          });
+        promises.push(promise);
+      } else {
         angular.forEach(vm.numbers, function (swivelToken) {
           var promise = ExternalNumberPool.create(PstnSetup.getCustomerId(), swivelToken.value)
             .catch(function (response) {
@@ -75,12 +81,6 @@
             });
           promises.push(promise);
         });
-      } else {
-        var promise = PstnSetupService.orderNumbers(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), vm.numbers)
-          .catch(function (response) {
-            errors.push(Notification.processErrorResponse(response, 'pstnSetup.orderNumbersError'));
-          });
-        promises.push(promise);
       }
       return $q.all(promises).then(function () {
         if (errors.length > 0) {

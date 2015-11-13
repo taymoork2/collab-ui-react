@@ -11,6 +11,7 @@ var Navigation = function () {
   this.orgTab = element(by.css('a[href="#organizations"]'));
   this.orgAddTab = element(by.css('#addOrganizations'));
   this.callRoutingTab = element(by.css('a[href="#callrouting"]'));
+  this.autoAttendantPage = element(by.css('a[href="#/callrouting/autoattendant"]'));
   this.fusionTab = element(by.css('a[href="#fusion"]'));
   this.reportsTab = element(by.css('li.reportTab > a'));
   this.devReports = element(by.css('a[href="#partner/newreports"]'));
@@ -99,6 +100,15 @@ var Navigation = function () {
     this.expectCurrentUrl('/callrouting');
   };
 
+  this.clickAutoAttendant = function () {
+    this.clickDevelopmentTab();
+    utils.click(this.callRoutingTab);
+    utils.click(this.autoAttendantPage);
+    this.expectCurrentUrl('/autoattendant');
+    utils.click(autoattendant.autoAttendantDevLink);
+    utils.expectIsDisplayed(autoattendant.newFeatureButton);
+  };
+
   this.clickReports = function () {
     utils.click(this.reportsTab);
     this.expectCurrentUrl('/reports');
@@ -166,10 +176,11 @@ var Navigation = function () {
     }, TIMEOUT);
   };
 
-  this.expectDriverCurrentUrl = function (url) {
+  this.expectDriverCurrentUrl = function (url, url2) {
     return browser.wait(function () {
       return browser.driver.getCurrentUrl().then(function (currentUrl) {
-        return currentUrl.indexOf(url) !== -1;
+        log('Expecting ' + currentUrl + ' to contain ' + url + ' or ' + url2);
+        return currentUrl.indexOf(url) !== -1 || currentUrl.indexOf(url2) !== -1;
       });
     }, TIMEOUT);
   };
@@ -190,11 +201,7 @@ var Navigation = function () {
   this.logout = function () {
     utils.click(this.userInfoButton);
     utils.click(this.logoutButton);
-    if (process.env.LAUNCH_URL) {
-      this.expectDriverCurrentUrl('/login');
-    } else {
-      this.expectDriverCurrentUrl('idbroker.webex.com');
-    }
+    this.expectDriverCurrentUrl('/login', 'idbroker.webex.com');
 
   };
 
