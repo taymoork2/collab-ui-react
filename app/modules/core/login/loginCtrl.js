@@ -56,6 +56,8 @@ angular.module('Core')
                   Auth.clearLoginMarker();
                 }
                 state = 'partneroverview';
+              } else if (Authinfo.isHelpDeskUser()) {
+                state = 'helpdesk.landing';
               } else if (Authinfo.isPartnerUser()) {
                 state = 'partnercustomers.list';
               } else if (Authinfo.isSupportUser()) {

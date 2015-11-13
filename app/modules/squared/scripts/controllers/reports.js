@@ -8,6 +8,14 @@ angular.module('Squared')
       $scope.webexOptions = [];
       $scope.webexSelected = null;
 
+      $scope.repPageHeader_pageTitle = 'reportsPage.pageTitle';
+      $scope.repPageHeader_back = false;
+      $scope.repPageHeader_ShowWebexTab = false;
+      $scope.repPageHeader_tabs = [{
+        title: $translate.instant('reportsPage.engagement'),
+        state: 'reports'
+      }];
+
       if ($stateParams.tab) {
         $scope.showEngagement = false;
         $scope.showWebexReports = $stateParams.tab === 'webex';
@@ -16,58 +24,77 @@ angular.module('Squared')
         $scope.showWebexReports = false;
       }
 
-      function generateWebexReportsUrl() {
+      function onlyUnique(value, index, self) {
+        return self.indexOf(value) === index;
+      }
+
+      function getUniqueWebexSiteUrls() {
         var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl() || [];
-        var promiseChain = [];
+        var webexSiteUrls = [];
 
         conferenceServices.forEach(
-          function chkConferenceService(conferenceService) {
-            var url = conferenceService.license.siteUrl;
+          function getWebExSiteUrl(conferenceService) {
+            webexSiteUrls.push(conferenceService.license.siteUrl);
+          }
+        );
 
+        return webexSiteUrls.filter(onlyUnique);
+      }
+
+      function generateWebexReportsUrl() {
+        var promiseChain = [];
+        var webexSiteUrls = getUniqueWebexSiteUrls(); // strip off any duplicate webexSiteUrl to prevent unnecessary XML API calls
+
+        webexSiteUrls.forEach(
+          function chkWebexSiteUrl(url) {
             promiseChain.push(
               WebExUtilsFact.isSiteSupportsIframe(url).then(
-                function isSiteSupportsIframeSuccess(result) {
+                function getSiteSupportsIframeSuccess(result) {
                   if (result.isAdminReportEnabled && result.isIframeSupported) {
-                    var resultSiteUrl = result.siteUrl;
+                    $scope.webexOptions.push(result.siteUrl);
 
-                    if (-1 === $scope.webexOptions.indexOf(resultSiteUrl)) {
-                      $scope.webexOptions.push(resultSiteUrl);
-                      $scope.webexSelected = resultSiteUrl;
+                    if (!$scope.repPageHeader_ShowWebexTab) {
+                      $scope.repPageHeader_tabs.push({
+                        title: $translate.instant('reportsPage.webex'),
+                        state: 'webex-reports'
+                      });
+
+                      $scope.repPageHeader_ShowWebexTab = true;
                     }
                   }
                 },
 
-                function isSiteSupportsIframeError(error) {
+                function getSiteSupportsIframeError(error) {
                   //no-op, but needed
                 }
               )
             );
-          }
+          } // chkWebexSiteUrl()
         );
 
-        $q.all(promiseChain).then( 
+        $q.all(promiseChain).then(
           function promisChainDone() {
             var funcName = "promisChainDone()";
             var logMsg = "";
 
-            if (
-              ($scope.showWebexReports) &&
-              ($scope.webexOptions.length > 0)
-            ) {
+            // if we are displaying the webex reports index page then go ahead with the rest of the code 
+            if ($scope.showWebexReports) {
+              // TODO: add code to sort the siteUrls in the dropdown to be in alphabetical order
 
-              var webexSelected = null;
-
+              // get the information needed for the webex reports index page
               var stateParamsSiteUrl = $stateParams.siteUrl;
               var stateParamsSiteUrlIndex = $scope.webexOptions.indexOf(stateParamsSiteUrl);
 
               var storageReportsSiteUrl = Storage.get('webexReportsSiteUrl');
               var storageReportsSiteUrlIndex = $scope.webexOptions.indexOf(storageReportsSiteUrl);
 
-              if (-1 !== stateParamsSiteUrlIndex) {
+              // initialize the site that the webex reports index page will display
+              var webexSelected = null;
+              if (-1 !== stateParamsSiteUrlIndex) { // if a valid siteUrl is passed in, the reports index page should reflect that site
                 webexSelected = stateParamsSiteUrl;
-              } else if (-1 !== storageReportsSiteUrlIndex) {
+              } else if (-1 !== storageReportsSiteUrlIndex) { // otherwise, if a valid siteUrl is in the local storage, the reports index page should reflect that site
                 webexSelected = storageReportsSiteUrl;
-              } else {
+              } else { // otherwise, the reports index page should reflect the 1st site that is in the dropdown list
                 webexSelected = $scope.webexOptions[0];
               }
 
@@ -80,8 +107,7 @@ angular.module('Squared')
               $log.log(logMsg);
 
               $scope.webexSelected = webexSelected;
-              $scope.webexReportsObject = WebexReportService.initReportsObject(webexSelected);
-              Storage.put('webexReportsSiteUrl', webexSelected);
+              $scope.updateWebexReports();
             }
           }
         );
@@ -98,8 +124,9 @@ angular.module('Squared')
           "storageReportsSiteUrl=" + storageReportsSiteUrl;
         $log.log(logMsg);
 
-        if ($scope.webexSelected != storageReportsSiteUrl) {
-          $scope.webexReportsObject = WebexReportService.initReportsObject(scopeWebexSelected);
+        $scope.webexReportsObject = WebexReportService.initReportsObject(scopeWebexSelected);
+
+        if (scopeWebexSelected !== storageReportsSiteUrl) {
           Storage.put('webexReportsSiteUrl', scopeWebexSelected);
         }
       }; // updateWebexReports()
