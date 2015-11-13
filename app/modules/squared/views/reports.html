@@ -82,10 +82,10 @@
   </div>
 
   <!-- WebEx reports content -->
-  <div ng-if="showWebexReports">
+  <div ng-show="showWebexReports">
     <!-- webex siteUrl dropdown list -->
     <div class="row"  
-         ng-show="(webexOptions.length > 1)" >
+         ng-show="webexOptions.length > 1" >
          
       <div class="large-3" >
         <cs-select ng-model="webexSelected" 
