@@ -24,6 +24,7 @@
     vm.fetchHuntMembers = fetchHuntMembers;
     vm.initialized = false;
     vm.back = true;
+    vm.backUrl = 'huronfeatures';
     vm.hgMethods = {
       longestIdle: "DA_LONGEST_IDLE_TIME",
       broadcast: "DA_BROADCAST",
