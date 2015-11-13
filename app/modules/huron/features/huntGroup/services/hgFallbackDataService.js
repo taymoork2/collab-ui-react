@@ -24,9 +24,20 @@
       validateFallbackNumber: validateFallbackNumber,
       setFallbackMember: setFallbackMember,
       getFallbackDestinationJSON: getFallbackDestinationJSON,
+      reset: reset
     };
 
     ///////////////
+
+    /**
+     * Reset the single data service to its origin state.
+     */
+    function reset() {
+      isValidInternalNumber = false;
+      isValidExternalNumber = false;
+      fallbackNumber = '';
+      fallbackMember = '';
+    }
 
     /**
      * Receive the type-ahead item from the UI as parameter and
