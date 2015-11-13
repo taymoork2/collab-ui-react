@@ -326,15 +326,6 @@
                   exportedCustomer.communicationsEntitlements = communicationsType.features.join(' ');
                 }
               }
-              /*              if (customers[i].licenses[0] && angular.isArray(customers[i].licenses[0].features)) {
-                              exportedCustomer.messagingEntitlements = customers[i].licenses[0].features.join(' ');
-                            }
-                            if (customers[i].licenses[1] && angular.isArray(customers[i].licenses[1].features)) {
-                              exportedCustomer.conferenceEntitlements = customers[i].licenses[1].features.join(' ');
-                            }
-                            if (customers[i].licenses[2] && angular.isArray(customers[i].licenses[2].features)) {
-                              exportedCustomer.communicationsEntitlements = customers[i].licenses[2].features.join(' ');
-                            }*/
               exportedCustomers.push(exportedCustomer);
             }
           }
