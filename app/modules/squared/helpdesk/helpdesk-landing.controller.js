@@ -15,9 +15,7 @@
     angular.element('#searchInput').focus();
 
     function search() {
-      if (vm.searchString === '') {
-        return;
-      }
+      if (!vm.searchString) return;
       vm.userSearchResults = null;
       vm.orgSearchResults = null;
       vm.userSearchFailure = null;
@@ -28,7 +26,6 @@
         HelpdeskService.searchUsers(vm.searchString).then(function (res) {
           vm.userSearchResults = res;
           vm.searchingForUsers = false;
-          vm.userSearchFailure = null;
         }, function (err) {
           vm.searchingForUsers = false;
           vm.userSearchResults = null;
