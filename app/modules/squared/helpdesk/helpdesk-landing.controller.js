@@ -26,7 +26,7 @@
       if (vm.searchString.length >= 3) {
         vm.searchingForUsers = true;
         HelpdeskService.searchUsers(vm.searchString).then(function (res) {
-          vm.userSearchResults = res || [];
+          vm.userSearchResults = res;
           vm.searchingForUsers = false;
           vm.userSearchFailure = null;
         }, function (err) {
@@ -45,7 +45,7 @@
 
       vm.searchingForOrgs = true;
       HelpdeskService.searchOrgs(vm.searchString).then(function (res) {
-        vm.orgSearchResults = res || [];
+        vm.orgSearchResults = res;
         vm.searchingForOrgs = false;
       }, function (err) {
         vm.searchingForOrgs = false;
