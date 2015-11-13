@@ -1,7 +1,7 @@
 <div class="details-body user-entitlements-body">
 	<div class="entitle-preview-grp">
 		<div class="entitle-check-grp" ng-repeat="key in entitlementsKeys" ng-if="isServiceAllowed(key)&&key">
-			<cs-checkbox ng-class="{'indentedCheckbox':shouldAddIndent(key,'webExSquared')};" ckid="{{'chk_'+key}}" ng-model="entitlements[key]" label="{{getServiceName(key)}}"></cs-checkbox>
+			<cs-checkbox ng-class="{'indentedCheckbox':shouldAddIndent(key,'webExSquared') && shouldAddIndent(key,'jabberMessenger')};" ckid="{{'chk_'+key}}" ng-model="entitlements[key]" label="{{getServiceName(key)}}"></cs-checkbox>
 		</div>
 	</div>
 	<div class="entitle-save-btn">
