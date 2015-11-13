@@ -589,7 +589,8 @@
     "confirm": "Confirm",
     "firstName": "First Name",
     "lastName": "Last Name",
-    "email": "Email"
+    "email": "Email",
+    "id": "ID"
   },
   "notifications": {
     "success": "Success notifications",
@@ -2521,6 +2522,9 @@
     "goToSearch": "Go to Search",
     "sso": "SSO",
     "dirSync": "Directory Sync",
-    "createdAt": "Created At"
+    "createdAt": "Created At",
+    "type": "Type",
+    "partner": "Partner",
+    "customer": "Customer"
   }
 }

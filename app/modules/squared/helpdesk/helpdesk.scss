@@ -61,6 +61,12 @@
       td {
         padding-left: 0;
       }
+      td a, .td a {
+        color: $anchor-font-color;
+      }
+      td a:hover, .td a:hover {
+        color: $anchor-font-color-hover;
+      }
     }
   }
 }
