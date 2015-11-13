@@ -3,6 +3,7 @@
 .webexlogo {
     vertical-align:text-bottom;
 }
+
 .configure-card{
     div {
         &.right-side {
@@ -20,4 +21,21 @@
             }
         }
     }
+}
+
+.nodata-icon {
+  margin-top: 50px;
+  margin-bottom: 30px;
+  font-size: 100px;
+  color: $gray-light;
+}
+
+.nodata-message {
+  width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-bottom: 30px;
+  font-family: $brand-font-extra-light;
+  font-size: 18px;
+  color: $gray-darkest;
 }

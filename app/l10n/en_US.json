@@ -1952,8 +1952,9 @@
     "010086": "The site does not support hybrid audio",
     "110055": "User limit exceeded for the session type \"{{sessionTypeName}}\".",
     "defaultProcessError": "Unable to process request.",
+    "defaultNotWebExAdminError": "You have not yet been provisioned to this site as an administrator. This process may take a moment.",
     "defaultAccessError": "Unable to access server at this time.",
-    "defaultNotWebExAdminError": "You have not yet been provisioned to this site as an administrator. This process may take a moment."
+    "defaultReloadMsg": "Please try reloading the page."
   },
   "webexUserSettingLabels": {
     "sessionEnablementLabel": "Session Type Enablement",
