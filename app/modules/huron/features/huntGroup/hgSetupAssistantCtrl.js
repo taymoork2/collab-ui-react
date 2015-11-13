@@ -7,9 +7,8 @@
 
   /* @ngInject */
   function HuntGroupSetupAssistantCtrl($scope, $state, Config, $modal, $timeout, $translate,
-    Authinfo, Notification, TelephoneNumberService,
-    HuntGroupService, HuntGroupFallbackDataService,
-    HuntGroupMemberDataService) {
+    Authinfo, Notification, HuntGroupService,
+    HuntGroupFallbackDataService, HuntGroupMemberDataService) {
     var vm = this;
     var customerId = Authinfo.getOrgId();
 
@@ -73,6 +72,13 @@
     vm.populateHuntPilotNumbers = populateHuntPilotNumbers;
     vm.populateHuntMembers = populateHuntMembers;
     vm.populateFallbackDestination = populateFallbackDestination;
+
+    init();
+
+    function init() {
+      HuntGroupFallbackDataService.reset();
+      HuntGroupMemberDataService.reset();
+    }
 
     function fetchNumbers(typedNumber) {
 
@@ -177,8 +183,6 @@
         vm.huntGroupMethod = methodSelected;
       }
     }
-
-    function init() {}
 
     function cancelModal() {
       $modal.open({
