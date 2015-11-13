@@ -24,21 +24,6 @@
   </div>
 </div>
 
-  <div ng-show="(showWebexReports)">
-    <div class="row" 
-         ng-show="(webexOptions.length > 1)" >
-         
-      <div class="large-3" >
-        <cs-select ng-model="webexSelected" 
-                   options="webexOptions" 
-                   on-change-fn="updateWebexReports()" >
-        </cs-select>
-      </div>
-    </div>
-
-    <div ng-include="'modules/webex/siteReports/siteReports.tpl.html'"></div>
-  </div>
-
   <div class="row" ng-show="showEngagement">
     <div class="all-reports columns small-12">
       <div id="onboardingFunnelDiv" class="timechartDiv"></div>
@@ -94,5 +79,20 @@
       <div id="contentShareSizesdiv" class="timechartDiv"></div>
       <div id="content-share-sizes-refresh" class="metrics-refresh" ng-show="showContentShareSizesRefresh"><i class='icon icon-spinner icon-2x'/></div>
     </div>
+  </div>
+
+  <div ng-show="(showWebexReports)">
+    <div class="row" 
+         ng-show="(webexOptions.length > 1)" >
+         
+      <div class="large-3" >
+        <cs-select ng-model="webexSelected" 
+                   options="webexOptions" 
+                   on-change-fn="updateWebexReports()" >
+        </cs-select>
+      </div>
+    </div>
+
+    <div ng-include="'modules/webex/siteReports/siteReports.tpl.html'"></div>
   </div>
 </div>
