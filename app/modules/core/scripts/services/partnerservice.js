@@ -97,13 +97,6 @@
       }
 
       if (angular.isDefined(licenses) && angular.isDefined(licenses.length)) {
-        //for (var i = 0; i < licenses.length; i++) {
-        //  for (var j = 0; j < offerNames.length; j++) {
-        //    if (licenses[i].offerName === offerNames[j]) {
-        //      return licenses[i];
-        //    }
-        //  }
-        //}
         return _.find(licenses, function (license) {
           return offerNames.indexOf(license.offerName) !== -1;
         }) || {};
