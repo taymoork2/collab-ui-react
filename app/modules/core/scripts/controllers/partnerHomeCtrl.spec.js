@@ -3,6 +3,9 @@
 describe('Controller: PartnerHomeCtrl', function () {
   var $scope, controller, $httpBackend, Config;
 
+  var Orgservice;
+  var adminJSONFixture = getJSONFixture('core/json/organizations/adminServices.json');
+
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
 
@@ -17,11 +20,16 @@ describe('Controller: PartnerHomeCtrl', function () {
     $provide.value("Authinfo", authInfo);
   }));
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _Config_) {
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _Config_, _Orgservice_) {
     $scope = $rootScope.$new();
     $rootScope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     Config = _Config_;
+    Orgservice = _Orgservice_;
+
+    spyOn(Orgservice, 'getAdminOrg').and.callFake(function (callback, status) {
+      callback(adminJSONFixture.getAdminOrg, 200);
+    });
 
     $rootScope.typeOfExport = {
       USER: 1,
@@ -30,8 +38,10 @@ describe('Controller: PartnerHomeCtrl', function () {
 
     controller = $controller('PartnerHomeCtrl', {
       $scope: $scope,
-      $rootScope: $rootScope
+      $rootScope: $rootScope,
+      Orgservice: Orgservice
     });
+
   }));
 
   beforeEach(function () {
@@ -59,7 +69,7 @@ describe('Controller: PartnerHomeCtrl', function () {
     it('should be created successfully', function () {
       expect(controller).toBeDefined();
       expect($scope.totalTrials).toEqual(2);
-      expect($scope.totalOrgs).toEqual(2);
+      expect($scope.totalOrgs).toEqual(3);
     });
 
     it('should set the first row licenses states to trial', function () {

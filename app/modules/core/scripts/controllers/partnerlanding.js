@@ -2,9 +2,9 @@
 /* global moment */
 
 angular.module('Core')
-  .controller('PartnerHomeCtrl', ['$scope', '$rootScope', '$stateParams', 'Notification', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'PartnerService', '$filter', '$state', 'ExternalNumberPool', 'LogMetricsService', '$log',
+  .controller('PartnerHomeCtrl', ['$scope', '$rootScope', '$stateParams', 'Notification', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'PartnerService', 'Orgservice', '$filter', '$state', 'ExternalNumberPool', 'LogMetricsService', '$log',
 
-    function ($scope, $rootScope, $stateParams, Notification, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, PartnerService, $filter, $state, ExternalNumberPool, LogMetricsService, $log) {
+    function ($scope, $rootScope, $stateParams, Notification, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, PartnerService, Orgservice, $filter, $state, ExternalNumberPool, LogMetricsService, $log) {
 
       $scope.load = true;
       $scope.currentDataPosition = 0;
@@ -97,6 +97,15 @@ angular.module('Core')
 
       function getManagedOrgsList() {
         $scope.showManagedOrgsRefresh = true;
+        $scope.managedOrgsList = [];
+        var accountId = Authinfo.getOrgId();
+        Orgservice.getAdminOrg(function (data, status) {
+          if (status === 200) {
+            loadRetrievedDataToList([data], $scope.managedOrgsList, false);
+          } else {
+            Log.debug('Failed to retrieve partner org information. Status: ' + status);
+          }
+        }, accountId);
         PartnerService.getManagedOrgsList(function (data, status) {
           $scope.showManagedOrgsRefresh = false;
           if (data.success && data.organizations) {
@@ -192,7 +201,7 @@ angular.module('Core')
         ' class="red" translate="customerPage.expired"></span>' +
         '<span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && row.entity.status === \'CANCELED\'"' +
         ' translate="customerPage.suspended"> </span>' +
-        '<span ng-if="!isLicenseInfoAvailable(row.entity.licenseList)"' +
+        '<span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && row.entity.status === undefined"' +
         ' class="red" translate="customerPage.licenseInfoNotAvailable"></span></div>';
 
       $scope.gridOptions = {
@@ -211,7 +220,8 @@ angular.module('Core')
         columnDefs: [{
           field: 'customerName',
           displayName: $translate.instant('customerPage.customerNameHeader'),
-          width: '25%'
+          width: '25%',
+          sortFn: partnerAtTopSort
         }, {
           field: 'messaging',
           displayName: $translate.instant('customerPage.messaging'),
@@ -268,12 +278,23 @@ angular.module('Core')
       }
 
       function sortByName(a, b) {
-        if (a.customerName.toLowerCase() > b.customerName.toLowerCase()) {
+        var first = a.customerName || a;
+        var second = b.customerName || b;
+        if (first.toLowerCase() > second.toLowerCase()) {
           return 1;
-        } else if (a.customerName.toLowerCase() < b.customerName.toLowerCase()) {
+        } else if (first.toLowerCase() < second.toLowerCase()) {
           return -1;
         } else {
           return 0;
+        }
+      }
+
+      function partnerAtTopSort(a, b) {
+        var orgName = Authinfo.getOrgName();
+        if (a === orgName || b === orgName) {
+          return -1;
+        } else {
+          return sortByName(a, b);
         }
       }
 
