@@ -1,0 +1,24 @@
+.aa-message-panel {
+  width: 22.5rem;
+}
+
+.aa-message-textarea {
+  margin-bottom: 1rem;
+  line-height: 1.5rem;
+  padding-top: .75rem;
+  padding-bottom: .75rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.aa-message-select-list {
+  margin-bottom: 1.5rem;
+  div.select-list {
+    width: 12.75rem;
+  }
+}
+
+.aa-message-footer {
+  color: $gray-base;
+  white-space: nowrap;
+}

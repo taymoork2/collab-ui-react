@@ -7,22 +7,19 @@
     <div class="col-sm-4">
       <div class="column-header">
         <i class="icon icon-circle-message"></i>
-        <h3 ng-if="!planReview.gsxFeature" translate="firstTimeWizard.messaging"></h3>
-        <h3 ng-if="planReview.gsxFeature" translate="firstTimeWizard.spark"></h3>
+        <h3 translate="firstTimeWizard.messaging"></h3>
       </div>
     </div>
     <div class="col-sm-4">
       <div class="column-header">
         <i class="icon icon-circle-group"></i>
-        <h3 ng-if="!planReview.gsxFeature" translate="firstTimeWizard.conferencing"></h3>
-        <h3 ng-if="planReview.gsxFeature" translate="firstTimeWizard.webex"></h3>
+        <h3 translate="firstTimeWizard.conferencing"></h3>
       </div>
     </div>
     <div class="col-sm-4">
       <div class="column-header">
         <i class="icon icon-circle-call"></i>
-        <h3 ng-if="!planReview.gsxFeature" translate="firstTimeWizard.communications"></h3>
-        <h3 ng-if="planReview.gsxFeature" translate="firstTimeWizard.calling"></h3>
+        <h3 translate="firstTimeWizard.communications"></h3>
       </div>
     </div>
   </div>
@@ -70,7 +67,7 @@
       <div ng-if="planReview.confServices.isNewTrial" class="col-trial-header" translate="firstTimeWizard.startYourTrial" translate-values="{days: planReview.trial.trialPeriod}">
       </div>
 
-      <div ng-if="!planReview.gsxFeature" class="item-conf" ng-repeat="(siteUrl,services) in planReview.sites">
+      <div class="item-conf" ng-repeat="(siteUrl,services) in planReview.sites">
         {{siteUrl}}
         <div class="sub-item" ng-repeat="service in services">
           <div>
@@ -85,21 +82,6 @@
         <div ng-class="{'sub-line':!$last}">
         </div>
       </div>
-
-      <div ng-if="planReview.gsxFeature" class="item-conf" ng-repeat="(siteUrl,services) in planReview.sites">
-        <div ng-repeat="service in services">
-          <div>
-            {{service.label}}
-          </div>
-          <div class="quantity">
-            <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
-            <span class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial" translate-values="{number: service.license.volume}"></span>
-          </div>
-        </div>
-        <div ng-class="{'sub-line':!$last}">
-        </div>
-      </div>
-
 
     </div>
 

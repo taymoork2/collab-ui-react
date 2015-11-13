@@ -25,7 +25,7 @@
     <cs-card class="small header-background primary hunt-member-card"
              ng-repeat="member in huntGroupSA.selectedHuntMembers">
       <article>
-        <header ng-click="huntGroupSA.toggleMemberPanel(member.user.uuid)"
+        <header ng-click="huntGroupSA.toggleMemberPanel(member.user)"
                 ng-class="{'open-panel' : huntGroupSA.openMemberPanelUuid === member.user.uuid}">
           <div class="header-with-right-icon">
             <h5 class="ellipsis"
