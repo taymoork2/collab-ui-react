@@ -116,20 +116,16 @@
     }
 
     function setServiceSortOrder(license) {
-      if (!license || license.length === 0) {
-        license.sortOrder = customerStatus.NO_LICENSE;
+      if (license.status === 'CANCELED') {
+        license.sortOrder = customerStatus.CANCELED;
+      } else if (isLicenseFree(license)) {
+        license.sortOrder = customerStatus.FREE;
+      } else if (isLicenseATrial(license)) {
+        license.sortOrder = customerStatus.TRIAL;
+      } else if (isLicenseActive(license)) {
+        license.sortOrder = customerStatus.ACTIVE;
       } else {
-        if (license.status === 'CANCELED') {
-          license.sortOrder = customerStatus.CANCELED;
-        } else if (isLicenseFree(license)) {
-          license.sortOrder = customerStatus.FREE;
-        } else if (isLicenseATrial(license)) {
-          license.sortOrder = customerStatus.TRIAL;
-        } else if (isLicenseActive(license)) {
-          license.sortOrder = customerStatus.ACTIVE;
-        } else {
-          license.sortOrder = customerStatus.NO_LICENSE;
-        }
+        license.sortOrder = customerStatus.NO_LICENSE;
       }
     }
 
@@ -305,15 +301,40 @@
               exportedCustomer.messagingEntitlements = '';
               exportedCustomer.conferenceEntitlements = '';
               exportedCustomer.communicationsEntitlements = '';
-              if (customers[i].licenses[0] && angular.isArray(customers[i].licenses[0].features)) {
-                exportedCustomer.messagingEntitlements = customers[i].licenses[0].features.join(' ');
+
+              var messagingType = _.find(customers[i].licenses, {
+                licenseType: "MESSAGING"
+              });
+              var conferenceType = _.find(customers[i].licenses, {
+                licenseType: "CONFERENCING"
+              });
+              var communicationsType = _.find(customers[i].licenses, {
+                licenseType: "COMMUNICATIONS"
+              });
+              if (messagingType) {
+                if (angular.isArray(messagingType.features)) {
+                  exportedCustomer.messagingEntitlements = messagingType.features.join(' ');
+                }
               }
-              if (customers[i].licenses[1] && angular.isArray(customers[i].licenses[1].features)) {
-                exportedCustomer.conferenceEntitlements = customers[i].licenses[1].features.join(' ');
+              if (conferenceType) {
+                if (angular.isArray(conferenceType.features)) {
+                  exportedCustomer.conferenceEntitlements = conferenceType.features.join(' ');
+                }
               }
-              if (customers[i].licenses[2] && angular.isArray(customers[i].licenses[2].features)) {
-                exportedCustomer.communicationsEntitlements = customers[i].licenses[2].features.join(' ');
+              if (communicationsType) {
+                if (angular.isArray(communicationsType.features)) {
+                  exportedCustomer.communicationsEntitlements = communicationsType.features.join(' ');
+                }
               }
+              /*              if (customers[i].licenses[0] && angular.isArray(customers[i].licenses[0].features)) {
+                              exportedCustomer.messagingEntitlements = customers[i].licenses[0].features.join(' ');
+                            }
+                            if (customers[i].licenses[1] && angular.isArray(customers[i].licenses[1].features)) {
+                              exportedCustomer.conferenceEntitlements = customers[i].licenses[1].features.join(' ');
+                            }
+                            if (customers[i].licenses[2] && angular.isArray(customers[i].licenses[2].features)) {
+                              exportedCustomer.communicationsEntitlements = customers[i].licenses[2].features.join(' ');
+                            }*/
               exportedCustomers.push(exportedCustomer);
             }
           }
