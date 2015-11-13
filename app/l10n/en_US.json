@@ -2412,15 +2412,17 @@
     "actions": "Actions",
     "licenseUsage": "License Usage",
     "lastSynced": "Last Synced:",
-    "messagingTitle": "Messaging",
+    "messagingTitle": "Message",
     "messagingSubtitle": "Standard Team Rooms",
     "messagingDesc": "Team Rooms with content storage allow you to easily collaborate from any device to any user inside or outside your organization.",
-    "communicationTitle": "Communication",
+    "communicationTitle": "Call",
     "communicationSubtitle": "Advanced Spark Call",
     "communicationDesc": "Basic external calling and full Unified Communications enabled for your organization.",
-    "conferencingTitle": "Conferencing",
+    "conferencingTitle": "Meeting",
     "conferencingSubtitle": "Meeting Center",
-    "conferencingDesc": "Join up to 25 colleagues in a Team Room Sync-up or many more in a WebEx Meeting Center."
+    "conferencingDesc": "Join up to 25 colleagues in a Team Room Sync-up or many more in a WebEx Meeting Center.",
+    "shared_devicesTitle": "Room Systems",
+    "shared_devicesSubtitle": "Shared Devices"
   },
   "partnerProfile": {
     "link": "Partner Profile",

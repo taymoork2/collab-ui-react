@@ -12,7 +12,8 @@ angular.module('Core')
           title: $filter('translate')('leaderBoard.messagingTitle'),
           totalCount: 0,
           unlimited: false,
-          visible: false
+          visible: false,
+          trial: false
         },
         conferencing: {
           currentCount: 0,
@@ -21,7 +22,8 @@ angular.module('Core')
           title: $filter('translate')('leaderBoard.conferencingTitle'),
           totalCount: 0,
           unlimited: false,
-          visible: false
+          visible: false,
+          trial: false
         },
         communication: {
           currentCount: 0,
@@ -30,15 +32,28 @@ angular.module('Core')
           title: $filter('translate')('leaderBoard.communicationTitle'),
           totalCount: 0,
           unlimited: false,
-          visible: false
-        }
+          visible: false,
+          trial: false
+        },
+
+        shared_devices: {
+          currentCount: 0,
+          title: $filter('translate')('leaderBoard.shared_devicesTitle'),
+          subtitle: $filter('translate')('leaderBoard.shared_devicesSubtitle'),
+          totalCount: 0,
+          unlimited: false,
+          visible: false,
+          trial: false
+        },
+
       };
 
       // for explicit ordering:
       $scope.bucketKeys = [
         'messaging',
         'conferencing',
-        'communication'
+        'communication',
+        'shared_devices'
       ];
 
       var getLicenses = function () {
@@ -59,6 +74,7 @@ angular.module('Core')
               if ($scope.buckets[bucket]) {
                 $scope.buckets[bucket].totalCount += license.volume;
                 $scope.buckets[bucket].currentCount += license.usage;
+                $scope.buckets[bucket].trial = license.isTrial;
               }
             });
           }

@@ -6,6 +6,10 @@
   margin-bottom: 40px;
 }
 
+ .badge-trial {
+    @extend .badge.badge-warning;
+  }
+
 .leader-board {
   padding: 30px;
 
@@ -22,7 +26,7 @@
 .bucket-info {
   width: 225px;
   float: right;
-  padding-top: 11px;
+  padding-top: 5px;
 }
 
 .cs-donut-svg {
@@ -32,9 +36,6 @@
 
 .header-section {
   padding-bottom: 8px;
-  border-bottom: $gray-light;
-  border-width: 1px;
-  border-bottom-style: solid;
   margin-bottom: 19px;
 }
 
@@ -56,8 +57,7 @@
 
 .bucket-header {
   font-family: "Arial";
-  font-weight: bold;
-  font-size: 13px;
+  font-size: 22px;
   color: $gray-darker;
   text-align: left;
 }

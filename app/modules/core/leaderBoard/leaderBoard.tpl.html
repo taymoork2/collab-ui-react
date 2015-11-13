@@ -1,27 +1,60 @@
 <div class="leader-board row" ng-init="init()">
-  <div class="title-section">
-    <span class="leader-board-title" translate="leaderBoard.licenseUsage"></span>
-    <!-- <span class="leader-board-time" translate="leaderBoard.lastSynced"><span> -->
-  </div>
-  <div class="col-md-4" ng-repeat="key in bucketKeys">
-    <div class="header-section">
-      <span class="bucket-header">{{buckets[key].title | translate}}</span>
-    </div>
-    <cs-donut value="buckets[key].currentCount" max="buckets[key].totalCount" unlimited="buckets[key].unlimited"></cs-donut>
-    <div class="bucket-info">
-      <h4><span class="total-count">{{buckets[key].totalCount}}</span> {{buckets[key].subtitle | translate}}</h4>
-      <p class="bucket-description">{{buckets[key].description | translate}}</p>
-      <div>
-          <!-- <a href="">
-            <span class="bucket-actions" translate="leaderBoard.actions"></span>
-          </a>
-          <div class="vertical-divider"></div>
-          <a href="">
-            <span class="bucket-actions" translate="leaderBoard.actions"></span>
-          </a>
-          </div> -->
-      </div>
-    </div>
+  <div>
+    <cs-card class="small header-bar">
+      <article>
+        <header class="header-section align-center">
+          <span class="bucket-header">{{buckets.messaging.title | translate}}</span>
+        </header> 
+        <cs-donut value="buckets.messaging.currentCount" max="buckets.messaging.totalCount" unlimited="buckets.messaging.unlimited" class="text-center">
+        </cs-donut>
+        <section class="bucket-info">
+          <p class = "text-center"><span class="total-count">{{buckets.messaging.totalCount}}</span> {{buckets.messaging.subtitle | translate}}</p>
+          <p class = "text-center"><span ng-show = "buckets.messaging.trial !== false" class="badge badge-trial" >trial</span> </p>
+        </section>
+      </article>
+    </cs-card>
+
+      <cs-card class="small header-bar meetings">
+      <article>
+        <header class="header-section align-center">
+          <span class="bucket-header">{{buckets.conferencing.title | translate}}</span>
+        </header> 
+        <cs-donut value="buckets.conferencing.currentCount" max="buckets.conferencing.totalCount" unlimited="buckets.conferencing.unlimited" class="text-center">
+        </cs-donut>
+        <section class="bucket-info">
+          <p class = "text-center"><span class="total-count">{{buckets.conferencing.totalCount}}</span> {{buckets.conferencing.subtitle | translate}}</p>
+          <p class = "text-center"><span ng-show = "buckets.conferencing.trial !== false" class="badge badge-trial">trial</span> </p>
+        </section>
+      </article>
+    </cs-card>
+
+      <cs-card class="small header-bar people">
+      <article>
+        <header class="header-section align-center">
+          <span class="bucket-header">{{buckets.communication.title | translate}}</span>
+        </header> 
+        <cs-donut value="buckets.communication.currentCount" max="buckets.communication.totalCount" unlimited="buckets.communication.unlimited" class="text-center">
+        </cs-donut>
+        <section class="bucket-info">
+          <p class = "text-center"><span class="total-count">{{buckets.communication.totalCount}}</span> {{buckets.communication.subtitle | translate}}</p>
+        </section>
+      </article>
+    </cs-card>
+
+
+
+    <cs-card class="small header-bar gray">
+      <article>
+        <header class="header-section align-center">
+          <span class="bucket-header">{{buckets.shared_devices.title | translate}}</span>
+        </header> 
+        <cs-donut value="buckets.shared_devices.currentCount" max="buckets.shared_devices.totalCount" unlimited="buckets.shared_devices.unlimited" class="text-center">
+        </cs-donut>
+        <section class="bucket-info">
+          <p class = "text-center"><span class="total-count">{{buckets.shared_devices.totalCount}}</span> {{buckets.shared_devices.subtitle | translate}}</p>
+          <p class = "text-center"><span ng-show = "buckets.shared_devices.trial !== false" class="badge badge-trial">trial</span> </p>
+        </section>
+      </article>
+    </cs-card>
   </div>
 </div>
-
