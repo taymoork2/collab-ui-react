@@ -25,8 +25,9 @@ describe('Hunt Group Service', function () {
     $httpBackend = _$httpBackend_;
     huntGroupService = _HuntGroupService_;
     huntGroupId = '456';
-    getHuntListUrl = HuronConfig.getMockHgUrl() + '/customers/' + customerId + '/features/huntgroups?secret=sunlight';
-    deleteHGUrl = HuronConfig.getMockHgUrl() + '/customers/' + customerId + '/features/huntgroups/' + huntGroupId + '?secret=sunlight';
+
+    getHuntListUrl = new RegExp(".*/customers/" + customerId + "/features/huntgroups.*");
+    deleteHGUrl = new RegExp(".*/customers/" + customerId + "/features/huntgroups/" + huntGroupId + ".*");
 
     huntList = {
       "url": getHuntListUrl,
