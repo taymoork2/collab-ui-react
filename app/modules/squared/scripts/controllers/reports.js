@@ -30,6 +30,7 @@ angular.module('Squared')
                   if (result.isAdminReportEnabled && result.isIframeSupported) {
                     var resultSiteUrl = result.siteUrl;
 
+                    // push siteUrl into webexOptions only if it's not already in webexOptions
                     if (-1 === $scope.webexOptions.indexOf(resultSiteUrl)) {
                       $scope.webexOptions.push(resultSiteUrl);
                     }
@@ -51,6 +52,8 @@ angular.module('Squared')
 
             // determine if we are displaying the webex reports index page 
             if ($scope.showWebexReports) {
+              // TODO: add code to sort the siteUrls in the dropdown to be in alphabetical order
+
               // get the information needed for the webex reports index page
               var stateParamsSiteUrl = $stateParams.siteUrl;
               var stateParamsSiteUrlIndex = $scope.webexOptions.indexOf(stateParamsSiteUrl);
@@ -58,12 +61,13 @@ angular.module('Squared')
               var storageReportsSiteUrl = Storage.get('webexReportsSiteUrl');
               var storageReportsSiteUrlIndex = $scope.webexOptions.indexOf(storageReportsSiteUrl);
 
+              // initialize the site that the webex reports index page will display
               var webexSelected = null;
-              if (-1 !== stateParamsSiteUrlIndex) {
+              if (-1 !== stateParamsSiteUrlIndex) { // if a valid siteUrl is passed in, the reports index page should reflect that site
                 webexSelected = stateParamsSiteUrl;
-              } else if (-1 !== storageReportsSiteUrlIndex) {
+              } else if (-1 !== storageReportsSiteUrlIndex) { // otherwise, if a valid siteUrl is in the local storage, the reports index page should reflect that site
                 webexSelected = storageReportsSiteUrl;
-              } else {
+              } else { // otherwise, the reports index page should reflect the 1st site that is in the dropdown list
                 webexSelected = $scope.webexOptions[0];
               }
 
@@ -76,8 +80,7 @@ angular.module('Squared')
               $log.log(logMsg);
 
               $scope.webexSelected = webexSelected;
-              $scope.webexReportsObject = WebexReportService.initReportsObject(webexSelected);
-              Storage.put('webexReportsSiteUrl', webexSelected);
+              $scope.updateWebexReports();
             }
           }
         );
@@ -94,8 +97,9 @@ angular.module('Squared')
           "storageReportsSiteUrl=" + storageReportsSiteUrl;
         $log.log(logMsg);
 
-        if ($scope.webexSelected != storageReportsSiteUrl) {
-          $scope.webexReportsObject = WebexReportService.initReportsObject(scopeWebexSelected);
+        $scope.webexReportsObject = WebexReportService.initReportsObject(scopeWebexSelected);
+
+        if (scopeWebexSelected !== storageReportsSiteUrl) {
           Storage.put('webexReportsSiteUrl', scopeWebexSelected);
         }
       }; // updateWebexReports()
