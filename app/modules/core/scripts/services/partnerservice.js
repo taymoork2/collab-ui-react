@@ -275,8 +275,6 @@
       getManagedOrgsList(function (data, status) {
         if (data.success && data.organizations) {
           if (data.organizations.length > 0) {
-            //var returnedLists = loadRetrievedDataToList(data.organizations, false);
-            //customers = returnedLists[0];
             customers = data.organizations;
             Log.debug('total managed orgs records found:' + customers.length);
           } else {
