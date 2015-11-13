@@ -75,7 +75,7 @@
       handleFeaturePromises(featuresPromises);
 
       $q.all(featuresPromises).then(function (responses) {
-        showNewFeaturePage();
+        showNewFeaturePageIfNeeded();
       });
     }
 
@@ -178,7 +178,7 @@
       return isEmpty;
     }
 
-    function showNewFeaturePage() {
+    function showNewFeaturePageIfNeeded() {
 
       if (vm.pageState !== 'showFeatures' && areFeaturesEmpty() && vm.listOfFeatures.length === 0) {
         vm.pageState = 'NewFeature';
