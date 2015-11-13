@@ -1,4 +1,4 @@
-<cs-page-header title="hge.title" back="hge.back"></cs-page-header>
+<cs-page-header title="(hge.model.name)" back="hge.back"></cs-page-header>
 <script type="text/ng-template" id="userTemplate.html">
   <div class="hunt-member-name" ng-if="match.label.displayUser">
     <span ng-bind-html="match.label.user.firstName | typeaheadHighlight:query"></span>&nbsp;
@@ -9,14 +9,14 @@
     <span ng-bind-html="(match.label.selectableNumber | huntMemberTelephone) | typeaheadHighlight:query"></span>
   </a>
 </script>
-<div class="hg-edit">
-  <div class="save-section clearfix" ng-if="hge.form.$dirty">
-    <p class="left">{{:: 'huronHuntGroup.saveLabel' | translate}}</p>
-    <div class="right">
-      <button ng-click="hge.resetForm()">{{:: 'usersPage.cancel' | translate}}</button>
-      <button class="secondary" cs-btn loading="hge.saveInProgress" ng-click="hge.saveForm()" ng-disabled="hge.form.$invalid || (!hge.fallbackValid && hge.addFallback) || !hge.membersValid">{{:: 'usersPage.save' | translate}}</button>
-    </div>
+<div class="save-section clearfix hg-save" ng-if="hge.form.$dirty">
+  <p class="left">{{:: 'huronHuntGroup.saveLabel' | translate}}</p>
+  <div class="right">
+    <button ng-click="hge.resetForm()">{{:: 'usersPage.cancel' | translate}}</button>
+    <button class="secondary" cs-btn loading="hge.saveInProgress" ng-click="hge.saveForm()" ng-disabled="hge.form.$invalid || (!hge.fallbackValid && hge.addFallback) || !hge.membersValid">{{:: 'usersPage.save' | translate}}</button>
   </div>
+</div>
+<div class="hg-edit">
   <div ng-if="!hge.initialized" class="load">
     <i class='icon icon-spinner'></i>
   </div>
@@ -68,7 +68,7 @@
     </div>
     <div class="medium-6 columns">
       <div class="hg-wrapper">
-          <label for="fallback-dest">{{:: 'huronHuntGroup.methodLabel' | translate}}</label>
+          <label for="fallback-dest">{{:: 'huronHuntGroup.methodAndMemberLabel' | translate}}</label>
           <p class="method-desc">{{:: 'huronHuntGroup.methodDesc' | translate}}</p>
         <div class="method-container">
           <ul class="hgmethods large-9 columns medium-centered large-block-grid-4 medium-block-grid-2">
@@ -95,12 +95,11 @@
           </ul>
         </div>
         <div class="hgmembers">
-          <div class="form-input typeahead" ng-class="{'warning-typeahead': !hge.membersValid}">
-            <label for="">{{:: 'huronHuntGroup.membersLabel' | translate}}</label>
+          <div class="form-input typeahead select-member" ng-class="{'warning-typeahead': !hge.membersValid}">
             <input type="text" ng-model="hge.member" typeahead="user for user in hge.fetchHuntMembers($viewValue) | limitTo: 10" typeahead-template-url="userTemplate.html" typeahead-on-select="hge.selectHuntGroupMember($item)" placeholder="{{:: 'huronHuntGroup.addMemberLabel' | translate}}">
             <div class="ellipsis warning-typeahead" ng-if="!hge.membersValid">
               <span class="icon"></span> <span class="message">{{:: 'huronHuntGroup.invalidMember' | translate}}</span>
-          </div>
+            </div>
           </div>
           <p>{{:: 'huronHuntGroup.membersDesc' | translate}}</p>
           <div drop-list="hge.model.members" callback="hge.callback()" unique="userName">

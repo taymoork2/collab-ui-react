@@ -6,7 +6,7 @@
 
 $aa-builder-header-height: 54px;
 $aa-builder-border-color: $gray-light;
-$aa-builder-border-size: .075rem;
+$aa-builder-border-size: 1px;
 $aa-builder-icon-color: $gray-base;
 @mixin aa-builder-height($rem_offset) {
   /* base-offset includes navbar, overlay-heading and aa-builder-header (elements from top of page) */
@@ -216,6 +216,7 @@ $aa-builder-icon-color: $gray-base;
   margin-right: 0rem;
   width:17.9rem;
 }
+
 .aa-panel-numbers {
   @extend .panel;
   width: 16rem;
@@ -250,6 +251,7 @@ $aa-builder-icon-color: $gray-base;
   box-shadow: none;
   .text-info {
     color: $brand-info;
+    text-align: center;
   }
   .aa-panel-body {
     @extend .panel-body;
@@ -298,10 +300,11 @@ $aa-builder-icon-color: $gray-base;
   .aa-action-delete-icon {
     @extend .icon;
     @extend .icon-close;
-    font-size: 1.25rem;
+    color: transparent;
+    font-size: 1.5rem;
     &:hover {
       cursor: pointer;
-      color: $brand-primary;
+      color: $gray-light;
     }
   }
 }

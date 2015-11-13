@@ -57,6 +57,21 @@ angular
           parent: 'main',
           abstract: true
         })
+        .state('helpdesk-main', {
+          views: {
+            'main@': {
+              templateUrl: 'modules/squared/views/helpdesk.tpl.html'
+            }
+          },
+          abstract: true,
+          sticky: true
+        })
+        .state('helpdesk', {
+          template: '<div ui-view></div>',
+          url: '/helpdesk',
+          parent: 'helpdesk-main',
+          abstract: true
+        })
         .state('sidepanel', {
           abstract: true,
           onEnter: /* @ngInject */ function ($modal, $state, $previousState) {
@@ -985,6 +1000,28 @@ angular
           templateUrl: 'modules/squared/views/trialExtInterest.html',
           controller: 'TrialExtInterestCtrl',
           parent: 'main'
+        })
+        .state('helpdesk.landing', {
+          url: '/landing',
+          templateUrl: 'modules/squared/helpdesk/helpdesk-landing.html',
+          controller: 'HelpdeskLandingController',
+          controllerAs: 'helpdeskLandingCtrl'
+        })
+        .state('helpdesk.user', {
+          templateUrl: 'modules/squared/helpdesk/helpdesk-user.html',
+          controller: 'HelpdeskUserController',
+          controllerAs: 'helpdeskUserCtrl',
+          params: {
+            user: null
+          }
+        })
+        .state('helpdesk.org', {
+          templateUrl: 'modules/squared/helpdesk/helpdesk-org.html',
+          controller: 'HelpdeskOrgController',
+          controllerAs: 'helpdeskOrgCtrl',
+          params: {
+            org: null
+          }
         });
     }
   ]);
@@ -1339,14 +1376,14 @@ angular
         .state('huronHuntGroup', {
           url: '/huronHuntGroup',
           parent: 'hurondetails',
-          templateUrl: 'modules/huron/features/huntGroup/huntGroupSetupAssistant.tpl.html',
+          templateUrl: 'modules/huron/features/huntGroup/hgSetupAssistant.tpl.html',
           controller: 'HuntGroupSetupAssistantCtrl',
           controllerAs: 'huntGroupSA'
         })
         .state('huntgroupedit', {
           url: '/features/hg/edit',
           parent: 'main',
-          templateUrl: 'modules/huron/features/edit/huntgroupedit.tpl.html',
+          templateUrl: 'modules/huron/features/huntGroup/edit/hgEdit.tpl.html',
           controller: 'HuntGroupEditCtrl',
           controllerAs: 'hge',
           params: {

@@ -32,6 +32,7 @@
   //     key: String
   //     actions: Action[]
   //     timeout: String
+  //     language: String
   //
   //     username: String
   //     password: String
@@ -41,16 +42,19 @@
   //     name: String
   //     value: String
   //     description: String
+  //     voice: String
   //
   function Action(name, value) {
     this.name = name;
     this.value = value;
     this.description = '';
+    this.voice = '';
   }
 
   Action.prototype.clone = function () {
     var newObj = new Action(this.name, this.value);
     newObj.setDescription(this.description);
+    newObj.setVoice(this.voice);
     return newObj;
   };
 
@@ -78,6 +82,14 @@
     return this.description;
   };
 
+  Action.prototype.setVoice = function (voice) {
+    this.voice = voice;
+  };
+
+  Action.prototype.getVoice = function () {
+    return this.voice;
+  };
+
   function CeMenuEntry() {
     //
     // common
@@ -96,6 +108,7 @@
     this.key = '';
     this.actions = [];
     this.timeout = '';
+    this.language = '';
 
     //
     // custom menu entry
@@ -118,6 +131,7 @@
       newObj.actions[i] = this.actions[i].clone();
     }
     newObj.setTimeout(this.timeout);
+    newObj.setLanguage(this.language);
 
     newObj.setUsername(this.username);
     newObj.setPassword(this.password);
@@ -172,6 +186,14 @@
 
   CeMenuEntry.prototype.getTimeout = function () {
     return this.timeout;
+  };
+
+  CeMenuEntry.prototype.setLanguage = function (language) {
+    this.language = language;
+  };
+
+  CeMenuEntry.prototype.getLanguage = function () {
+    return this.language;
   };
 
   CeMenuEntry.prototype.setPassword = function (password) {
@@ -318,6 +340,13 @@
         if (angular.isDefined(inAction.play.description)) {
           action.setDescription(inAction.play.description);
         }
+        menuEntry.addAction(action);
+      } else if (angular.isDefined(inAction.say)) {
+        action = new Action('say', inAction.say.value);
+        if (angular.isDefined(inAction.say.voice)) {
+          action.setVoice(inAction.say.voice);
+        }
+        // language handling
         menuEntry.addAction(action);
       } else if (angular.isDefined(inAction.route)) {
         action = new Action('route', inAction.route.destination);
@@ -679,21 +708,26 @@
       for (var i = 0; i < aaMenu.entries.length; i++) {
         var menuEntry = aaMenu.entries[i];
         newActionArray[i] = {};
-        var actionName = menuEntry.actions[0].getName();
-        newActionArray[i][actionName] = {};
-        if (angular.isDefined(menuEntry.actions[0].description) && menuEntry.actions[0].description.length > 0) {
-          newActionArray[i][actionName].description = menuEntry.actions[0].description;
-        }
-        if (actionName === 'play') {
-          newActionArray[i][actionName].url = menuEntry.actions[0].getValue();
-          // newActionArray[i][actionName].url = MediaResourceService.getFileUrl(menuEntry.actions[0].getValue());
-        } else if (actionName === 'route') {
-          newActionArray[i][actionName].destination = menuEntry.actions[0].getValue();
-        } else if (actionName === 'routeToMailbox') {
-          newActionArray[i][actionName].mailbox = menuEntry.actions[0].getValue();
-        } else if (actionName === 'disconnect') {
-          if (menuEntry.actions[0].getValue() && menuEntry.actions[0].getValue() !== 'none') {
-            newActionArray[i][actionName].treatment = menuEntry.actions[0].getValue();
+        if (angular.isDefined(menuEntry.actions[0])) {
+          var actionName = menuEntry.actions[0].getName();
+          newActionArray[i][actionName] = {};
+          if (angular.isDefined(menuEntry.actions[0].description) && menuEntry.actions[0].description.length > 0) {
+            newActionArray[i][actionName].description = menuEntry.actions[0].description;
+          }
+          if (actionName === 'say') {
+            newActionArray[i][actionName].value = menuEntry.actions[0].getValue();
+            newActionArray[i][actionName].voice = menuEntry.actions[0].voice;
+          } else if (actionName === 'play') {
+            newActionArray[i][actionName].url = menuEntry.actions[0].getValue();
+            // newActionArray[i][actionName].url = MediaResourceService.getFileUrl(menuEntry.actions[0].getValue());
+          } else if (actionName === 'route') {
+            newActionArray[i][actionName].destination = menuEntry.actions[0].getValue();
+          } else if (actionName === 'routeToMailbox') {
+            newActionArray[i][actionName].mailbox = menuEntry.actions[0].getValue();
+          } else if (actionName === 'disconnect') {
+            if (menuEntry.actions[0].getValue() && menuEntry.actions[0].getValue() !== 'none') {
+              newActionArray[i][actionName].treatment = menuEntry.actions[0].getValue();
+            }
           }
         }
       }
@@ -730,7 +764,10 @@
         var actionName = actions[i].getName();
         var val = actions[i].getValue();
         newActionArray[i][actionName] = {};
-        if (actionName === 'play') {
+        if (actionName === 'say') {
+          newActionArray[i][actionName].value = val;
+          newActionArray[i][actionName].voice = actions[i].voice;
+        } else if (actionName === 'play') {
           // convert unique filename to corresponding URL
           newActionArray[i][actionName].url = val;
           // newActionArray[i][actionName].url = MediaResourceService.getFileUrl(val);
@@ -780,6 +817,9 @@
       newOptionArray[i].description = menuEntry.description;
       newOptionArray[i].input = 'default';
       newOptionArray[i].actions = createActionArray(menuEntry.actions);
+
+      // create language section
+      // todo
 
       // create timeout section
       // i = aaMenu.entries.length;
