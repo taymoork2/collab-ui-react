@@ -57,8 +57,8 @@ describe('Onboard Users using uploading CSV File', function () {
 
   afterAll(function () {
     for (i = 0; i < userList.length; i++) {
-      utils.deleteUser(userList[i]);
+      deleteUtils.deleteUser(userList[i]);
     }
-  });
+  }, LONG_TIMEOUT);
 
 });

@@ -5,6 +5,13 @@ angular.module('Squared')
   .controller('ReportsCtrl', ['$scope', '$stateParams', '$q', 'ReportsService', 'WebexReportService', 'Log', 'Authinfo', 'Config', '$translate', 'CannedDataService', 'WebExUtilsFact', 'Storage',
     function ($scope, $stateParams, $q, ReportsService, WebexReportService, Log, Authinfo, Config, $translate, CannedDataService, WebExUtilsFact, Storage) {
       $scope.webexReportsObject = {};
+      $scope.repPageHeader_pageTitle = 'reportsPage.pageTitle';
+      $scope.repPageHeader_back = false;
+      $scope.repPageHeader_ShowWebexTab = false;
+      $scope.repPageHeader_tabs = [{
+        title: $translate.instant('reportsPage.engagement'),
+        state: 'reports'
+      }];
 
       if ($stateParams.tab) {
         $scope.showEngagement = false;
@@ -25,6 +32,14 @@ angular.module('Squared')
             .then(function (result) {
               if (result.isAdminReportEnabled && result.isIframeSupported) {
                 $scope.webexOptions.push(result.siteUrl);
+
+                if (!$scope.repPageHeader_ShowWebexTab) {
+                  $scope.repPageHeader_tabs.push({
+                    title: $translate.instant('reportsPage.webex'),
+                    state: 'webex-reports'
+                  });
+                  $scope.repPageHeader_ShowWebexTab = true;
+                }
               }
             }, function (error) {
               //no-op, but needed

@@ -13,6 +13,7 @@ describe('Controller: DeviceLogCtrl', function () {
   var failureEndpointCommand = getJSONFixture('huron/json/device/logs/failure_Endpoint_Command.json');
   var failurePostNoBody = getJSONFixture('huron/json/device/logs/failure_POST_No_Body.json');
   var failureZeroLogs = getJSONFixture('huron/json/device/logs/failure_Zero_Logs.json');
+  var incomplete = getJSONFixture('huron/json/device/logs/incomplete.json');
 
   beforeEach(module('Huron'));
 
@@ -45,8 +46,6 @@ describe('Controller: DeviceLogCtrl', function () {
       $scope: $scope,
       $interval: $intervalSpy
     });
-    controller.interval = 100;
-    controller.timeout = 500;
   }));
 
   it('should be created successfully', function () {
@@ -55,7 +54,10 @@ describe('Controller: DeviceLogCtrl', function () {
 
   it('should have defined message responses', function () {
     expect(success.length).toBeGreaterThan(0);
+    expect(success2.length).toBeGreaterThan(0);
+    expect(successDup.length).toBeGreaterThan(0);
     expect(successNoEvents.length).toBeGreaterThan(0);
+    expect(incomplete.length).toBeGreaterThan(0);
     expect(failureCmsToEndpoint.length).toBeGreaterThan(0);
     expect(failureEndpointCommand.length).toBeGreaterThan(0);
     expect(failurePostNoBody).toBeDefined();
@@ -76,9 +78,16 @@ describe('Controller: DeviceLogCtrl', function () {
     expect(Notification.errorResponse).toHaveBeenCalled();
   });
 
-  it('should load logList', function () {
-    controller.refreshLogList();
+  function callViewPreviousLog() {
+    Date.now.and.returnValue(1);
+    controller.viewPreviousLog();
     $scope.$apply();
+    Date.now.and.returnValue(controller.eventTimeout + 1);
+    $intervalSpy.flush(controller.interval * 2);
+  }
+
+  it('should load logList', function () {
+    callViewPreviousLog();
 
     expect(controller.logList.length).toBeGreaterThan(0);
     expect(controller.logList[0].name).toEqual(success[0].events[3].date);
@@ -86,76 +95,65 @@ describe('Controller: DeviceLogCtrl', function () {
     expect(controller.logList[0].filename.length).toBeGreaterThan(0);
 
     DeviceLogService.getLogInformation.and.returnValue($q.when(success2));
-    controller.refreshLogList();
-    $scope.$apply();
+    callViewPreviousLog();
 
     expect(controller.logList.length).toBeGreaterThan(1);
   });
 
-  it('should load loglist with with bad result field, but still contain information about the filename', function () {
+  it('should load loglist successful, but with bad result field, the filename', function () {
     success[0].results = '';
     DeviceLogService.getLogInformation.and.returnValue($q.when(success));
-    controller.refreshLogList();
-    $scope.$apply();
+    callViewPreviousLog();
 
     expect(controller.logList[0].filename.length).toBeGreaterThan(0);
   });
 
   it('should handle duplicate entries, loglist should not change', function () {
     DeviceLogService.getLogInformation.and.returnValue($q.when(successDup));
-    controller.refreshLogList();
-    $scope.$apply();
+    callViewPreviousLog();
 
     expect(controller.logList.length).toEqual(1);
   });
 
   it('should call refresh mulitple times, loglist should not change', function () {
     var currentLength = 0;
-
-    controller.refreshLogList();
-    $scope.$apply();
-
+    callViewPreviousLog();
     currentLength = controller.logList.length;
-    controller.refreshLogList();
-    $scope.$apply();
+    callViewPreviousLog();
 
     expect(controller.logList.length).toEqual(currentLength);
   });
 
   it('should start polling then times out', function () {
-    DeviceLogService.getLogInformation.and.returnValue($q.when(successNoEvents));
-    controller.refreshLogList();
-    $scope.$apply();
+    DeviceLogService.getLogInformation.and.returnValue($q.when(incomplete));
+    callViewPreviousLog();
 
-    Date.now.and.returnValue(Date.now() + controller.timeout);
     expect(controller.isPolling()).toEqual(true);
 
-    $intervalSpy.flush(controller.timeout + 1);
+    Date.now.and.returnValue(Date.now() + controller.timeout);
+    $intervalSpy.flush(controller.interval);
+
     expect($intervalSpy.calls.count()).toEqual(1);
     expect($intervalSpy.cancel.calls.count()).toEqual(1);
   });
 
   it('should start polling then stops because log file successfully uploaded', function () {
-    DeviceLogService.getLogInformation.and.returnValue($q.when(successNoEvents));
-    controller.refreshLogList();
-    $scope.$apply();
+    DeviceLogService.getLogInformation.and.returnValue($q.when(incomplete));
+    callViewPreviousLog();
 
-    $intervalSpy.flush(controller.interval);
     expect($intervalSpy.calls.count()).toEqual(1);
     expect($intervalSpy.cancel.calls.count()).toEqual(0);
 
     DeviceLogService.getLogInformation.and.returnValue($q.when(success));
-    $scope.$apply();
     $intervalSpy.flush(controller.interval);
+
     expect($intervalSpy.cancel.calls.count()).toEqual(1);
   });
 
   it('should start polling then stops because user left the page', function () {
-    DeviceLogService.getLogInformation.and.returnValue($q.when(successNoEvents));
-    controller.refreshLogList();
-    $scope.$apply();
+    DeviceLogService.getLogInformation.and.returnValue($q.when(incomplete));
+    callViewPreviousLog();
 
-    $intervalSpy.flush(controller.interval);
     expect($intervalSpy.calls.count()).toEqual(1);
     expect($intervalSpy.cancel.calls.count()).toEqual(0);
 
@@ -165,22 +163,19 @@ describe('Controller: DeviceLogCtrl', function () {
 
   it('should error on refreshing log list due to network error', function () {
     DeviceLogService.getLogInformation.and.returnValue($q.reject(failureZeroLogs));
-    controller.refreshLogList();
-    $scope.$apply();
+    callViewPreviousLog();
 
     expect(Notification.errorResponse).toHaveBeenCalled();
   });
 
   it('should error on refreshing log list, due to invalid log array', function () {
     DeviceLogService.getLogInformation.and.returnValue($q.when([]));
-    controller.refreshLogList();
-    $scope.$apply();
+    callViewPreviousLog();
 
     expect(Notification.error).toHaveBeenCalled();
 
     DeviceLogService.getLogInformation.and.returnValue($q.when({}));
-    controller.refreshLogList();
-    $scope.$apply();
+    callViewPreviousLog();
 
     expect(Notification.error).toHaveBeenCalled();
   });

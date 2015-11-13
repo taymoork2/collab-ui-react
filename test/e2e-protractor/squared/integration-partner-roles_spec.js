@@ -1,9 +1,7 @@
 'use strict';
-/*jshint loopfunc: true */
 
-/* global describe */
-/* global it */
-/* global browser */
+/* jshint loopfunc: true */
+/* global describe, it, browser, LONG_TIMEOUT, roles */
 
 describe('Org Entitlement flow', function () {
   var newLastName = 'Doe';
@@ -21,9 +19,11 @@ describe('Org Entitlement flow', function () {
   it('should launch partner organization portal', function () {
     navigation.launchPartnerOrgPortal();
     utils.switchToNewWindow().then(function () {
+      // backend services are slow to check userauthinfo/accounts
+      utils.wait(navigation.tabs, LONG_TIMEOUT);
       navigation.clickUsers();
     });
-  });
+  }, LONG_TIMEOUT);
 
   it('should display conversations panel for test user', function () {
     utils.searchAndClick(searchStr);
