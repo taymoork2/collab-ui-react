@@ -7,9 +7,8 @@
 
   /* @ngInject */
   function HuntGroupSetupAssistantCtrl($scope, $state, Config, $modal, $timeout, $translate,
-    Authinfo, Notification, TelephoneNumberService,
-    HuntGroupService, HuntGroupFallbackDataService,
-    HuntGroupMemberDataService) {
+    Authinfo, Notification, HuntGroupService,
+    HuntGroupFallbackDataService, HuntGroupMemberDataService) {
     var vm = this;
     var customerId = Authinfo.getOrgId();
 
@@ -73,6 +72,13 @@
     vm.populateHuntPilotNumbers = populateHuntPilotNumbers;
     vm.populateHuntMembers = populateHuntMembers;
     vm.populateFallbackDestination = populateFallbackDestination;
+
+    init();
+
+    function init() {
+      HuntGroupFallbackDataService.reset();
+      HuntGroupMemberDataService.reset();
+    }
 
     function fetchNumbers(typedNumber) {
 
@@ -178,11 +184,9 @@
       }
     }
 
-    function init() {}
-
     function cancelModal() {
       $modal.open({
-        templateUrl: 'modules/huron/features/huntGroup/huntGroupCancelModal.tpl.html'
+        templateUrl: 'modules/huron/features/huntGroup/hgCancelModal.tpl.html'
       });
     }
 

@@ -25,7 +25,18 @@
       getDisplayName: getDisplayName,
       toggleMemberPanel: toggleMemberPanel,
       getMembersNumberUuidJSON: getMembersNumberUuidJSON,
+      reset: reset
     };
+
+    ////////////////
+
+    /**
+     * Reset the single data service to its origin state.
+     */
+    function reset() {
+      selectedHuntMembers.splice(0, selectedHuntMembers.length);
+      currentOpenMemberUuid = '';
+    }
 
     /**
      * Return the JSON data format to be used for POST & PUT

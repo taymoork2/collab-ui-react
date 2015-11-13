@@ -591,6 +591,10 @@
     "search": "Search",
     "edit": "Edit",
     "confirm": "Confirm",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "id": "ID",
     "new": "New"
   },
   "notifications": {
@@ -1752,11 +1756,13 @@
     "deviceIpAddressFailureMsg": "Failed to fetch device IP",
     "logTitle": "Logs",
     "retrieveLogBttn": "Retrieve Latest Log",
+    "viewPreviousLogBttn": "View Previous Log",
     "retrieveLogInstructions": "Device logs can be used by Cisco to troubleshoot issues related to device performance and call quality.",
     "logWait": "Getting log file from the device. This may take a minute…",
     "errorLogTryAgain": "Log file request timed out. Retry?",
     "errorLogInvaidMsg": "Log service message is invalid",
-    "unknownFilename": "Unknown Filename"
+    "unknownFilename": "Unknown Filename",
+    "errorLogNotFound": "No device log was been found"
   },
   "deviceOverviewPage": {
     "activationNoLongerNeeded": "If this activation is no longer needed:",
@@ -1807,7 +1813,8 @@
     "billingAdmin": "Billing Administrator",
     "supportAdmin": "Support Administrator",
     "save": "Save",
-    "roles": "Roles"
+    "roles": "Roles",
+    "helpdesk": "Help Desk Support"
   },
   "mohManagement": {
     "title": "Media On Hold",
@@ -2699,5 +2706,31 @@
         "title": "Hybrid Services"
       }
     }
+  },
+  "roles": {
+    "atlas-portal.support": "Billing Administrator",
+    "atlas-portal.reports": "Support Administrator",
+    "atlas-portal.helpdesk": "Help Desk Support",
+    "id_full_admin": "Full Administrator",
+    "user": "User"
+  },
+  "helpdesk": {
+    "navHeaderTitle": "Cloud Collaboration Help Desk",
+    "helpdesk": "Help Desk",
+    "users": "Users",
+    "customers": "Customers",
+    "badUserSearchInput": "Searching for users requires a minimum of three characters. Name and email searches requires a minimum of two words, e.g. john.doe or John Doe.",
+    "unexpectedError": "An unexpected error occurred",
+    "searchingPleaseWait": "Searching, please wait...",
+    "noSearchHits": "No matches found. Try to narrow your search...",
+    "searchInputDescription": "Search users (name, email address, phone number) or customers (name)",
+    "roles": "Roles",
+    "goToSearch": "Go to Search",
+    "sso": "SSO",
+    "dirSync": "Directory Sync",
+    "createdAt": "Created At",
+    "type": "Type",
+    "partner": "Partner",
+    "customer": "Customer"
   }
 }

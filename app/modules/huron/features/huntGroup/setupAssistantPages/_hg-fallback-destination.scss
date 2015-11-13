@@ -6,6 +6,13 @@
   width: 48rem !important;
   overflow-x: hidden;
   overflow-y: auto;
+  margin: auto;
+}
+
+.fallback-container .cs-card-layout {
+  margin: auto;
+  @include vr-spacing(mv, 0);
+  @include vr-spacing(mb, 1);
 }
 
 .fallback-container-item {
