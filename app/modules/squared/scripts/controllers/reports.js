@@ -16,24 +16,34 @@ angular.module('Squared')
         $scope.showWebexReports = false;
       }
 
-      function generateWebexReportsUrl() {
+      function onlyUnique(value, index, self) {
+        return self.indexOf(value) === index;
+      }
+
+      function getUniqueWebexSiteUrls() {
         var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl() || [];
-        var promiseChain = [];
+        var webexSiteUrls = [];
 
         conferenceServices.forEach(
-          function chkConferenceService(conferenceService) {
-            var url = conferenceService.license.siteUrl;
+          function getWebExSiteUrl(conferenceService) {
+            webexSiteUrls.push(conferenceService.license.siteUrl);
+          }
+        );
 
+        return webexSiteUrls.filter(onlyUnique);
+      }
+
+      function generateWebexReportsUrl() {
+        var promiseChain = [];
+        var webexSiteUrls = getUniqueWebexSiteUrls(); // strip off any duplicate webexSiteUrl to prevent unnecessary XML API calls
+
+        webexSiteUrls.forEach(
+          function chkWebexSiteUrl(url) {
             promiseChain.push(
               WebExUtilsFact.isSiteSupportsIframe(url).then(
                 function getSiteSupportsIframeSuccess(result) {
                   if (result.isAdminReportEnabled && result.isIframeSupported) {
-                    var resultSiteUrl = result.siteUrl;
-
-                    // push siteUrl into webexOptions only if it's not already in webexOptions
-                    if (-1 === $scope.webexOptions.indexOf(resultSiteUrl)) {
-                      $scope.webexOptions.push(resultSiteUrl);
-                    }
+                    $scope.webexOptions.push(result.siteUrl);
                   }
                 },
 
@@ -42,7 +52,7 @@ angular.module('Squared')
                 }
               )
             );
-          }
+          } // chkWebexSiteUrl()
         );
 
         $q.all(promiseChain).then(
@@ -50,7 +60,7 @@ angular.module('Squared')
             var funcName = "promisChainDone()";
             var logMsg = "";
 
-            // determine if we are displaying the webex reports index page 
+            // if we are displaying the webex reports index page then go ahead with the rest of the code 
             if ($scope.showWebexReports) {
               // TODO: add code to sort the siteUrls in the dropdown to be in alphabetical order
 
