@@ -5,7 +5,6 @@
   function HelpdeskUserController($stateParams, HelpdeskService, Orgservice, $log) {
     var vm = this;
     vm.user = $stateParams.user;
-    console.log(vm.user);
     vm.org = {};
 
     HelpdeskService.getUser(vm.user.organization.id, vm.user.id).then(function (res) {
@@ -13,7 +12,7 @@
         vm.user = res;
       }
     }, function (err) {
-      $log.error(err)
+      $log.error(err);
     });
 
     Orgservice.getAdminOrg(function (data, status) {
@@ -22,7 +21,7 @@
       } else {
         $log.error('Get org failed', status);
       }
-    }, vm.user.organizationId, true);
+    }, vm.user.organization.id, true);
   }
 
   angular

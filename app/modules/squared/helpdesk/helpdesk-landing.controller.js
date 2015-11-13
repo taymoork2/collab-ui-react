@@ -37,7 +37,7 @@
           } else {
             vm.userSearchFailure = $translate.instant('helpdesk.unexpectedError');
           }
-          $log.error(err)
+          $log.error(err);
         });
       } else {
         vm.userSearchFailure = $translate.instant('helpdesk.badUserSearchInput');
@@ -50,7 +50,7 @@
       }, function (err) {
         vm.searchingForOrgs = false;
         vm.orgSearchFailure = $translate.instant('helpdesk.unexpectedError');
-        $log.error(err)
+        $log.error(err);
       });
     }
   }
