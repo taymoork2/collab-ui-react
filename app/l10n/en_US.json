@@ -2071,7 +2071,8 @@
     "advancedLinkLabel": "Advanced Settings"
   },
   "webexCommon": {
-    "logoAltText": "Cisco WebEx"
+    "logoAltText": "Cisco WebEx",
+    "breadcrumbsAltText": "You are here"
   },
   "webexSiteSettingsLabels": {
     "siteSettingsIndexPageTitle": "Configure",
