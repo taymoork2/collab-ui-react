@@ -36,7 +36,8 @@ gulp.task('copy:build-app-files', function () {
     config.appFiles.js,
     config.appFiles.json,
     config.appFiles.csv,
-    config.app + '/.htaccess'
+    config.app + '/.htaccess',
+    '!' + config.testFiles.spec
   );
   messageLogger('Copying application files', files);
   return gulp

@@ -12,6 +12,7 @@
     "moment": true,
     "angular": true,
     "AmCharts": true,
+    "bard": true,
     "module": true,
     "process": true,
     "require": true,
