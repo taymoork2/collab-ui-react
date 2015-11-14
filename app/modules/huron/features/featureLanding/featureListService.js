@@ -44,7 +44,7 @@
 
     function huntGroups(data) {
       var formattedList = [];
-      _.forEach(data.items, function (huntGroup) {
+      _.forEach(data, function (huntGroup) {
         formattedCard.cardName = huntGroup.name;
         formattedCard.numbers = huntGroup.numbers;
         formattedCard.memberCount = huntGroup.memberCount;

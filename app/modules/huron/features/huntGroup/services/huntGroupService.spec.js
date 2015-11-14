@@ -6,13 +6,14 @@
 
 describe('Hunt Group Service', function () {
 
-  var HuronConfig, $q, $httpBackend, huntGroupService, huntGroupId, huntList, getHuntListUrl, deleteHGUrl;
+  var HuronConfig, $q, $httpBackend, huntGroupService, huntGroupId, getHuntListUrl, deleteHGUrl;
   var customerId = '123',
     userSearchServiceV2, numberSearchServiceV2;
 
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue(customerId)
   };
+  var huntList = getJSONFixture('huron/json/features/huntGroup/hgList.json');
 
   beforeEach(module('Huron'));
   beforeEach(module(function ($provide) {
@@ -25,23 +26,9 @@ describe('Hunt Group Service', function () {
     $httpBackend = _$httpBackend_;
     huntGroupService = _HuntGroupService_;
     huntGroupId = '456';
-    getHuntListUrl = HuronConfig.getMockHgUrl() + '/customers/' + customerId + '/features/huntgroups?secret=sunlight';
-    deleteHGUrl = HuronConfig.getMockHgUrl() + '/customers/' + customerId + '/features/huntgroups/' + huntGroupId + '?secret=sunlight';
 
-    huntList = {
-      "url": getHuntListUrl,
-      "items": [{
-        "uuid": "abcd1234-abcd-abcd-abcddef123456",
-        "name": "Technical Support",
-        "numbers": ["5076", "4145551244"],
-        "memberCount": 2
-      }, {
-        "uuid": "bbcd1234-abcd-abcd-abcddef123456",
-        "name": "Marketing",
-        "numbers": ["5076", "1244567890", "4145551244", "4145551245"],
-        "memberCount": 16
-      }]
-    };
+    getHuntListUrl = new RegExp(".*/customers/" + customerId + "/features/huntgroups.*");
+    deleteHGUrl = new RegExp(".*/customers/" + customerId + "/features/huntgroups/" + huntGroupId + ".*");
   }));
 
   afterEach(function () {
@@ -52,9 +39,8 @@ describe('Hunt Group Service', function () {
 
   it('should be able to get list of huntGroups for a given customerId', function () {
     $httpBackend.expectGET(getHuntListUrl).respond(200, huntList);
-    huntGroupService.getListOfHuntGroups().then(function (response) {
-      expect(response.url).toEqual(getHuntListUrl);
-      expect(response.items).toEqual(huntList.items);
+    huntGroupService.getListOfHuntGroups().then(function (list) {
+      expect(angular.equals(list, huntList)).toBeTruthy();
     });
   });
 
