@@ -54,8 +54,7 @@
                   </a>
                   </li>
 
-                <div ng-repeat="s in sec.subsections">
-                  <h4 id="{{s.section_name}}"
+                  <h4 ng-repeat-start="s in sec.subsections" id="{{s.section_name}}"
                       name="{{s.section_name}}">
                    {{s.section_name_translated}}
                   </h4>
@@ -67,7 +66,7 @@
                       {{sref.reportPageId_translated}}
                     </a>
                     </li>
-                </div>
+                    <div hidden ng-repeat-end style="display: none;"></div>
               </ul>
             </section>
           </article>
