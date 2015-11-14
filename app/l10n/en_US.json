@@ -1773,7 +1773,8 @@
     "none": "None",
     "partnerLogo": "Partner Logo",
     "logoOverride": "Customer Logo Override",
-    "allowCustomerLogo": "Enable Customer Logo for {{customer}}"
+    "allowCustomerLogo": "Enable Customer Logo for {{customer}}",
+    "myOrganization": "My Organization"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"

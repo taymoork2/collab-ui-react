@@ -21,6 +21,7 @@ angular.module('Core')
       $scope.expiredRows = 3;
       $scope.currentTrial = null;
       $scope.showTrialsRefresh = true;
+      $scope.activeBadge = false;
       $scope.filter = 'ALL';
       $scope.isCustomerPartner = Authinfo.isCustomerPartner ? true : false;
       setNotesTextOrder();
@@ -183,6 +184,11 @@ angular.module('Core')
         '<div ng-cell></div>' +
         '</div>';
 
+      var nameTemplate = '<div class="ngCellText" ng-click="partnerClicked(row.entity.customerOrgId)">' +
+        '<span translate="{{row.entity.customerName}}"></span>' +
+        '<span ng-if="isPartnerOrg(row.entity.customerOrgId)" class="label label-managed" ng-class="activeBadge ? \'active\' : \'inactive\'" translate="customerPage.myOrganization"></span>' +
+        '</div>';
+
       var serviceTemplate = '<div class="ngCellText align-center">' +
         '<span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && isLicenseTypeActive(row.entity, col.field)"' +
         ' class="badge" ng-class="{\'badge-active\': row.entity.status != \'CANCELED\', \'badge-disabled\': row.entity.status === \'CANCELED\'}"' +
@@ -201,7 +207,7 @@ angular.module('Core')
         ' class="red" translate="customerPage.expired"></span>' +
         '<span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && row.entity.status === \'CANCELED\'"' +
         ' translate="customerPage.suspended"> </span>' +
-        '<span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && row.entity.status === undefined"' +
+        '<span ng-if="!isLicenseInfoAvailable(row.entity.licenseList)"' +
         ' class="red" translate="customerPage.licenseInfoNotAvailable"></span></div>';
 
       $scope.gridOptions = {
@@ -221,6 +227,7 @@ angular.module('Core')
           field: 'customerName',
           displayName: $translate.instant('customerPage.customerNameHeader'),
           width: '25%',
+          cellTemplate: nameTemplate,
           sortFn: partnerAtTopSort
         }, {
           field: 'messaging',
@@ -396,6 +403,14 @@ angular.module('Core')
 
       $scope.isLicenseTypeFree = function (rowData, licenseTypeField) {
         return PartnerService.isLicenseFree(getLicenseObj(rowData, licenseTypeField));
+      };
+
+      $scope.isPartnerOrg = function (rowData) {
+        return rowData === Authinfo.getOrgId();
+      };
+
+      $scope.partnerClicked = function (rowData) {
+        $scope.activeBadge = rowData === Authinfo.getOrgId();
       };
 
       if ($state.current.name === "partnercustomers.list") {
