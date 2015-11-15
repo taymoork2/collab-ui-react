@@ -24,10 +24,86 @@
       validateFallbackNumber: validateFallbackNumber,
       setFallbackMember: setFallbackMember,
       getFallbackDestinationJSON: getFallbackDestinationJSON,
-      reset: reset
+      setFallbackDestinationJSON: setFallbackDestinationJSON,
+      reset: reset,
+      isFallbackValidNumber: isFallbackValidNumber,
+      isFallbackValidMember: isFallbackValidMember,
+      getFallbackNumber: getFallbackNumber,
+      getFallbackMember: getFallbackMember
     };
 
     ///////////////
+
+    function getFallbackNumber() {
+      return fallbackNumber;
+    }
+
+    function getFallbackMember() {
+      return fallbackMember;
+    }
+
+    /**
+     * This is the JSON data for fallbackDestination field that is
+     * returned by GET on /huntgroups/{id}. And in turn constructs
+     * the data modal to be used by UI.
+     */
+    function setFallbackDestinationJSON(data) {
+      if (!data) {
+        return;
+      }
+
+      reset();
+      setFallbackNumberFromJSON(data);
+      if (!isFallbackValid()) {
+        setFallbackMemberFromJSON(data);
+      }
+    }
+
+    function setFallbackNumberFromJSON(data) {
+      if (data.number && data.number !== '') {
+        fallbackNumber = data.number;
+
+        if (!validateExternalNumber()) {
+          isValidInternalNumber = true;
+        }
+      }
+    }
+
+    function setFallbackMemberFromJSON(data) {
+      fallbackMember = {
+        member: {
+          user: {
+            uuid: data.userUuid
+          },
+          selectableNumber: {
+            uuid: data.numberUuid
+          }
+        },
+        sendToVoicemail: data.sendToVoicemail
+      };
+
+      var names = data.userName.split(" ");
+      fallbackMember.member.user.firstName = names[0];
+      if (names.length > 1) {
+        fallbackMember.member.user.lastName = names[1];
+      }
+    }
+
+    function isFallbackValidMember() {
+      return (fallbackMember && fallbackMember !== '');
+    }
+
+    function isFallbackValidNumber() {
+      return (isValidInternalNumber || isValidExternalNumber);
+    }
+
+    /**
+     * Return true if there is a valid internal or external or
+     * Huron user available as the fallback destination.
+     */
+    function isFallbackValid() {
+      return (isFallbackValidNumber() || isFallbackValidMember());
+    }
 
     /**
      * Reset the single data service to its origin state.
@@ -35,8 +111,8 @@
     function reset() {
       isValidInternalNumber = false;
       isValidExternalNumber = false;
-      fallbackNumber = '';
-      fallbackMember = '';
+      fallbackNumber = undefined;
+      fallbackMember = undefined;
     }
 
     /**
@@ -51,17 +127,6 @@
         sendToVoicemail: false
       };
       return fallbackMember;
-    }
-
-    /**
-     * Return true if there is a valid internal or external or
-     * Huron user available as the fallback destination.
-     */
-    function isFallbackValid() {
-      return (
-        isValidInternalNumber ||
-        isValidExternalNumber ||
-        (fallbackMember && fallbackMember !== ''));
     }
 
     /**

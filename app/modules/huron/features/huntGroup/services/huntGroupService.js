@@ -22,10 +22,20 @@
       updateMemberEmail: updateMemberEmail,
       getPilotNumberSuggestions: getPilotNumberSuggestions,
       getHuntMembers: getHuntMembers,
-      isFallbackNumberValid: isFallbackNumberValid
+      isFallbackNumberValid: isFallbackNumberValid,
+      getHuntMethods: getHuntMethods
     };
 
     return service;
+
+    function getHuntMethods() {
+      return {
+        longestIdle: "DA_LONGEST_IDLE_TIME",
+        broadcast: "DA_BROADCAST",
+        circular: "DA_CIRCULAR",
+        topDown: "DA_TOP_DOWN"
+      };
+    }
 
     /**
      * Function to update the user email in a promise when a member

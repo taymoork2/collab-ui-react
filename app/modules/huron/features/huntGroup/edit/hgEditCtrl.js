@@ -5,14 +5,16 @@
     .controller('HuntGroupEditCtrl', HuntGroupEditCtrl);
 
   /* @ngInject */
-  function HuntGroupEditCtrl($state, $stateParams, $translate, Authinfo, HuntGroupService, Notification, TelephoneNumberService) {
+  function HuntGroupEditCtrl($state, $stateParams, $translate,
+    Authinfo, HuntGroupService, Notification,
+    TelephoneNumberService, HuntGroupFallbackDataService,
+    HuntGroupMemberDataService) {
     var vm = this;
     var initialModel;
     var initialnumberoptions;
     var customerId = Authinfo.getOrgId();
     vm.removeFallbackDest = removeFallbackDest;
     vm.removeHuntMember = removeHuntMember;
-    vm.selectFallback = selectFallback;
     vm.toggleMembers = toggleMembers;
     vm.toggleFallback = toggleFallback;
     vm.selectHuntMethod = selectHuntMethod;
@@ -20,21 +22,53 @@
     vm.resetForm = resetForm;
     vm.saveForm = saveForm;
     vm.callback = callback;
-    vm.validateFallback = validateFallback;
-    vm.fetchHuntMembers = fetchHuntMembers;
     vm.initialized = false;
     vm.back = true;
     vm.backUrl = 'huronfeatures';
-    vm.hgMethods = {
-      longestIdle: "DA_LONGEST_IDLE_TIME",
-      broadcast: "DA_BROADCAST",
-      circular: "DA_CIRCULAR",
-      topDown: "DA_TOP_DOWN"
-    };
+    vm.hgMethods = HuntGroupService.getHuntMethods();
+
+    // Fallback destination controller functions
+    vm.shouldShowFallbackLookup = shouldShowFallbackLookup;
+    vm.shouldShowFallbackPill = shouldShowFallbackPill;
+    vm.shouldShowFallbackWarning = shouldShowFallbackWarning;
+    vm.fetchFallbackDestination = fetchFallbackDestination;
+    vm.selectFallback = selectFallback;
+    vm.validateFallbackNumber = validateFallbackNumber;
+    vm.selectedFallbackNumber = undefined;
+    vm.selectedFallbackMember = undefined;
+
+    vm.showDisableSave = showDisableSave;
+
     vm.model = {};
 
+    if ($stateParams.feature && $stateParams.feature.id) {
+      init();
+    } else {
+      $state.go('huronfeatures');
+    }
+
+    ////////////////
+
+    function showDisableSave() {
+      return (vm.form.$invalid ||
+        !HuntGroupFallbackDataService.isFallbackValid() ||
+        !vm.membersValid);
+    }
+
+    function shouldShowFallbackLookup() {
+      return (!HuntGroupFallbackDataService.isFallbackValid() ||
+        HuntGroupFallbackDataService.isFallbackValidNumber());
+    }
+
+    function shouldShowFallbackPill() {
+      return HuntGroupFallbackDataService.isFallbackValidMember();
+    }
+
+    function shouldShowFallbackWarning() {
+      return !HuntGroupFallbackDataService.isFallbackValid();
+    }
+
     function init() {
-      vm.userSelected = undefined;
       vm.member = undefined;
       vm.addFallback = false;
       vm.membersValid = true;
@@ -42,6 +76,8 @@
       vm.fallbackDirty = false;
       vm.model.name = $stateParams.feature.cardName;
       vm.hgId = $stateParams.feature.id;
+      HuntGroupFallbackDataService.reset();
+      HuntGroupMemberDataService.reset();
 
       if (vm.initialized) {
 
@@ -67,7 +103,9 @@
             members: data.members,
             fallbackDestination: data.fallbackDestination
           };
-          vm.model.fallbackDestination.selectedNumberUuid = vm.model.fallbackDestination.numberUuid;
+          HuntGroupFallbackDataService.setFallbackDestinationJSON(data.fallbackDestination);
+          vm.selectedFallbackNumber = HuntGroupFallbackDataService.getFallbackNumber();
+          vm.selectedFallbackMember = HuntGroupFallbackDataService.getFallbackMember();
 
           HuntGroupService.getMemberInfo(customerId, data.fallbackDestination.userUuid).then(function (user) {
             vm.model.fallbackDestination.userName = user.firstName + " " + user.lastName;
@@ -181,11 +219,6 @@
         vm.form.$setUntouched();
       }
 
-      if (vm.model.fallbackDestination.number && vm.model.fallbackDestination.number !== '') {
-        vm.addFallback = true;
-        vm.userSelected = vm.model.fallbackDestination.number;
-      }
-
       vm.initialized = true;
     }
 
@@ -206,33 +239,8 @@
     }
 
     function selectFallback($item) {
-      var numbers = [];
-
-      vm.model.fallbackDestination = {
-        userUuid: $item.uuid,
-        userName: $item.user.firstName + " " + $item.user.lastName,
-        number: $item.selectableNumber.number,
-        numberUuid: $item.selectableNumber.uuid,
-        selectedNumberUuid: $item.selectableNumber.uuid,
-        sendToVoicemail: false
-      };
-
-      $item.user.numbers.forEach(function (value) {
-        var number = value;
-        var newValue = {
-          internal: number.internal,
-          external: number.external,
-          value: number.internal,
-          name: 'FallbackRadio',
-          id: 'internal',
-          uuid: number.uuid
-        };
-
-        numbers.push(newValue);
-      });
-      vm.model.fallbackDestination.numbers = numbers;
-      vm.addFallback = false;
-      vm.userSelected = undefined;
+      vm.selectedFallbackNumber = undefined;
+      vm.selectedFallbackMember = HuntGroupFallbackDataService.setFallbackMember($item);
       vm.form.$setDirty();
     }
 
@@ -242,21 +250,8 @@
       };
     }
 
-    function fetchHuntMembers(nameHint) {
-      var GetHuntMembers = HuntGroupService.getHuntMembers(nameHint);
-
-      if (GetHuntMembers) {
-        GetHuntMembers.setOnFailure(onFailureNotify('huronHuntGroup.memberFetchFailure'));
-        GetHuntMembers.setFilter({
-          sourceKey: 'userUuid',
-          responseKey: 'uuid',
-          dataToStrip: vm.model.members
-        });
-
-        return GetHuntMembers.fetch();
-      }
-
-      return [];
+    function fetchFallbackDestination(nameHint) {
+      return HuntGroupMemberDataService.fetchMembers(nameHint);
     }
 
     function selectHuntGroupMember($item) {
@@ -307,47 +302,14 @@
     }
 
     function toggleFallback() {
-      if (!vm.model.fallbackDestination.open) {
-        if (vm.model.fallbackDestination.numbers) {
-          vm.model.fallbackDestination.open = true;
-        } else {
-          HuntGroupService.getMemberInfo(customerId, vm.model.fallbackDestination.userUuid).then(function (data) {
-            vm.model.fallbackDestination.email = data.email;
-            data.numbers.forEach(function (value) {
-              value.label = value.internal;
-              value.value = value.internal;
-              value.name = 'MemberRadios';
-              value.id = 'value.external';
-
-              if (vm.model.fallbackDestination.numberUuid === value.uuid) {
-                vm.model.fallbackDestination.selectedNumberUuid = value.uuid;
-              }
-            });
-            vm.model.fallbackDestination.numbers = data.numbers;
-            vm.model.fallbackDestination.open = true;
-          });
-        }
-      } else {
-        vm.model.fallbackDestination.open = false;
-      }
+      HuntGroupService.updateMemberEmail(vm.selectedFallbackMember.member.user).then(
+        function () {
+          vm.selectedFallbackMember.openPanel = !vm.selectedFallbackMember.openPanel;
+        });
     }
 
     function resetForm() {
       init();
-    }
-
-    function getFallBackDest() {
-      if (vm.model.fallbackDestination.number) {
-        return {
-          number: vm.model.fallbackDestination.number
-        };
-      } else {
-        return {
-          numberUuid: vm.model.fallbackDestination.numberUuid,
-          userUuid: vm.model.fallbackDestination.userUuid,
-          sendToVoicemail: vm.model.fallbackDestination.sendToVociemail
-        };
-      }
     }
 
     function hgUpdateReqBody() {
@@ -368,7 +330,7 @@
         huntMethod: vm.model.huntMethod,
         maxRingSecs: vm.model.maxRingSecs.value,
         maxWaitMins: vm.model.maxWaitMins.value,
-        fallbackDestination: getFallBackDest(),
+        fallbackDestination: HuntGroupFallbackDataService.getFallbackDestinationJSON(),
         members: members
       };
     }
@@ -401,26 +363,13 @@
       vm.form.$setDirty();
     }
 
-    function validateFallback() {
-      if (vm.userSelected.length > 2 && !vm.fallbackValid) {
-        vm.fallbackDirty = true;
-      }
-      if (vm.userSelected !== '') {
-        vm.userSelected = TelephoneNumberService.getDIDLabel(vm.userSelected);
-        if (TelephoneNumberService.validateDID(vm.userSelected)) {
-          vm.fallbackValid = true;
-        } else {
-          vm.fallbackValid = false;
-        }
-      } else {
-        vm.fallbackValid = false;
-      }
+    function validateFallbackNumber() {
+      vm.selectedFallbackNumber =
+        HuntGroupFallbackDataService.validateFallbackNumber(vm.selectedFallbackNumber);
     }
 
-    if ($stateParams.feature && $stateParams.feature.id) {
-      init();
-    } else {
-      $state.go('huronfeatures');
+    function getDisplayName(user) {
+      return HuntGroupMemberDataService.getDisplayName(user);
     }
   }
 })();
