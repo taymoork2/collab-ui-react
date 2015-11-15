@@ -18,6 +18,7 @@
     var isValidExternalNumber = false;
     var fallbackNumber = '';
     var fallbackMember = '';
+    var pristineFallbackMember;
 
     return {
       isFallbackValid: isFallbackValid,
@@ -29,7 +30,8 @@
       isFallbackValidNumber: isFallbackValidNumber,
       isFallbackValidMember: isFallbackValidMember,
       getFallbackNumber: getFallbackNumber,
-      getFallbackMember: getFallbackMember
+      getFallbackMember: getFallbackMember,
+      isFallbackDirty: isFallbackDirty
     };
 
     ///////////////
@@ -47,7 +49,7 @@
      * returned by GET on /huntgroups/{id}. And in turn constructs
      * the data modal to be used by UI.
      */
-    function setFallbackDestinationJSON(data) {
+    function setFallbackDestinationJSON(data, resetFromBackend) {
       if (!data) {
         return;
       }
@@ -55,7 +57,7 @@
       reset();
       setFallbackNumberFromJSON(data);
       if (!isFallbackValid()) {
-        setFallbackMemberFromJSON(data);
+        setFallbackMemberFromJSON(data, resetFromBackend);
       }
     }
 
@@ -69,23 +71,18 @@
       }
     }
 
-    function setFallbackMemberFromJSON(data) {
+    function setFallbackMemberFromJSON(data, resetFromBackend) {
       fallbackMember = {
-        member: {
-          user: {
-            uuid: data.userUuid
-          },
-          selectableNumber: {
-            uuid: data.numberUuid
-          }
-        },
         sendToVoicemail: data.sendToVoicemail
       };
 
-      var names = data.userName.split(" ");
-      fallbackMember.member.user.firstName = names[0];
-      if (names.length > 1) {
-        fallbackMember.member.user.lastName = names[1];
+      if (resetFromBackend) {
+        HuntGroupService.getHuntMemberWithSelectedNumber(data).then(function (m) {
+          pristineFallbackMember = m;
+          fallbackMember.member = pristineFallbackMember;
+        });
+      } else {
+        fallbackMember.member = pristineFallbackMember;
       }
     }
 
@@ -108,11 +105,15 @@
     /**
      * Reset the single data service to its origin state.
      */
-    function reset() {
+    function reset(resetFromBackend) {
       isValidInternalNumber = false;
       isValidExternalNumber = false;
       fallbackNumber = undefined;
       fallbackMember = undefined;
+
+      if (resetFromBackend) {
+        pristineFallbackMember = undefined;
+      }
     }
 
     /**
@@ -196,6 +197,19 @@
     function huronNumberBackendValidationNeeded() {
       if (!isNaN(parseFloat(fallbackNumber)) && isFinite(fallbackNumber)) {
         return HuntGroupService.isFallbackNumberValid(fallbackNumber);
+      }
+    }
+
+    function isFallbackDirty(pristineFallbackJSON) {
+      if (pristineFallbackJSON.number &&
+        pristineFallbackJSON.number !== '') {
+        return (pristineFallbackJSON.number !==
+          TelephoneNumberService.getDIDValue(fallbackNumber));
+      }
+
+      if (pristineFallbackJSON.numberUuid) {
+        return (pristineFallbackJSON.numberUuid !==
+          fallbackMember.member.selectableNumber.uuid);
       }
     }
   }
