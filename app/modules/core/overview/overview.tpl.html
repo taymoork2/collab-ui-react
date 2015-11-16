@@ -20,7 +20,7 @@
           </section>
           <footer class="footer-menu ng-isolate-scope overview-footer-content-trial"
                   ng-class="{'overview-footer-content-trial' : card.trial ,  'overview-footer-content'  : !card.trial }">
-            <span class="footer-content" ng-transclude="">
+            <span class="footer-content">
               <span class="label warning ng-scope" ng-if="card.trial">Trial</span>
               <a ng-href="{{overview.statusPageUrl}}" target="_blank" class="monitoring-cell">
                 <i class="icon icon-circle" ng-class="card.healthStatus || 'disabled'"></i>
@@ -40,7 +40,7 @@
               <button type="button" class="close" ng-click="cm.toggleSettings()"><span class="sr-only">Close</span>
               </button>
             </div>
-            <div ng-transclude="">
+            <div>
               <ul class="service-menu-list no-bullet ng-scope">
                 <!-- ngRepeat: item in cd.CallMenuItems -->
                 <li ng-repeat="item in cd.CallMenuItems" class="ng-scope">
@@ -110,7 +110,7 @@
           </section>
           <footer class="footer-menu ng-isolate-scope overview-footer-content-trial"
                   ng-class="{'overview-footer-content-trial' : card.trial ,  'overview-footer-content'  : !card.trial }">
-            <span class="footer-content" ng-transclude="">
+            <span class="footer-content">
               <span class="label warning ng-scope" ng-if="card.trial">Trial</span>
               <a ng-href="{{overview.statusPageUrl}}" target="_blank" class="monitoring-cell">
                 <i class="icon icon-circle" ng-class="card.healthStatus || 'disabled'"></i>
@@ -130,7 +130,7 @@
               <button type="button" class="close" ng-click="cm.toggleSettings(); cm.menuOpen = false;"><span class="sr-only">Close</span>
               </button>
             </div>
-            <div ng-transclude="">
+            <div>
               <ul class="service-menu-list no-bullet ng-scope">
                 <!-- Placeholder: Start -->
                 <li><a href="">Item1</a></li>
