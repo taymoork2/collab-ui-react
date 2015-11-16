@@ -6,7 +6,7 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($scope, Log, $translate, $state, ReportsService, Orgservice, CsdmDeviceService, ServiceDescriptor, Config) {
+  function OverviewCtrl($scope, Log, Authinfo, $translate, $state, ReportsService, Orgservice, CsdmDeviceService, ServiceDescriptor, Config) {
     var vm = this;
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
@@ -17,6 +17,14 @@
       new CallCard(),
       new RoomSystemCard()
     ];
+
+    var licenses = Authinfo.getLicenses();
+
+    _.each(vm.cards, function (card) {
+      if (card.licenseEventHandler) {
+        card.licenseEventHandler(licenses);
+      }
+    });
 
     vm.userCard = new UserCard();
     vm.hybridCard = new HybridServicesCard();
@@ -151,6 +159,7 @@
     this.trial = false;
     this.eventHandler = messageEventHandler;
     this.healthStatusUpdatedHandler = messageHealthEventHandler;
+    this.licenseEventHandler = licenseEventHandler;
 
     function messageEventHandler(event, response) {
       if (!response.data.success) return;
@@ -167,6 +176,10 @@
         }
       });
     }
+
+    function licenseEventHandler(licenses) {
+      card.trial  = _.any(licenses, { 'offerName': 'MS', 'isTrial': true });
+    }
   }
 
   function MeetingCard() {
@@ -175,9 +188,10 @@
     this.desc = 'overview.cards.meeting.desc';
     this.name = 'overview.cards.meeting.title';
     this.cardClass = 'meetings';
-    this.trial = true;
+    this.trial = false;
     this.healthStatusUpdatedHandler = _.partial(meeetingHealthEventHandler, card);
     this.eventHandler = callEventHandler;
+    this.licenseEventHandler = licenseEventHandler;
 
     function callEventHandler(event, response) {
       if (!response.data.success) return;
@@ -185,6 +199,11 @@
         card.current = Math.round(response.data.data[0].count);
         card.previous = Math.round(response.data.data[1].count);
       }
+    }
+
+    function licenseEventHandler(licenses) {
+      //MC = ? CF = ? Is CF calls and MC meetings? both contain "squared-syncup"=25 party meetings, so binding to meeting card.
+      card.trial  = _.any(licenses, function(l) { return (l.offerName == 'MC' || l.offerName == 'CF') && l.isTrial; });
     }
   }
 
@@ -195,6 +214,7 @@
     this.name = 'overview.cards.call.title';
     this.trial = true;
     this.cardClass = 'people';
+    this.trial = false;
     this.healthStatusUpdatedHandler = _.partial(meeetingHealthEventHandler, card);
     this.eventHandler = callEventHandler;
 
@@ -254,11 +274,9 @@
   function HybridServicesCard() {
     var card = this;
     this.icon = 'icon-circle-data';
-    //this.services = [];
     this.hybridStatusEventHandler = hybridStatusEventHandler;
 
     function hybridStatusEventHandler(services) {
-      console.log('services', services);
       _.each(services, function (service) {
         service.statusIcon = !service.enabled || !service.acknowledged ? 'warning' : 'success';
       });
