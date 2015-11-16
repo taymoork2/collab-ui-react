@@ -440,14 +440,14 @@
             vm.hasVoiceService = true;
           }
         });
+      }).catch(function (response) {
+        errors.push(Notification.errorResponse(response, 'serviceSetupModal.customerGetError'));
       }).then(function () {
         // TODO BLUE-1221 - make /customer requests synchronous until fixed
         return initTimeZone();
       }).then(function () {
         // TODO BLUE-1221 - make /customer requests synchronous until fixed
         return listInternalExtensionRanges();
-      }).catch(function (response) {
-        errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.customerGetError'));
       }).then(function () {
         return setServiceValues();
       }).then(function () {
