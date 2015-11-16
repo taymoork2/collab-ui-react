@@ -71,6 +71,34 @@
         }
       }
     });
+
+
+    //ClusterService.subscribe('data', function (data) {
+      //if(!data.error){
+      //console.log(ClusterService.getClusters());
+      //console.log(ClusterService.getConnector());  //undefined, since no connector id is specified..
+      //}
+      //console.log(data);
+      //var servicesKnow =[{id:'asdf'}];
+      //var map = {};
+      //_.each(data, function(cluster){
+      //  _.each(cluster.services, function (service){
+      //    if(map[service.service_type]){
+      //      map[service.service_type] = [];
+      //    }
+      //    map[service.service_type].push(service.needs_attention);
+      //  });
+      //});
+      //_.each(servicesKnow, function(service){
+      //  if(map[service.id]){
+      //    if(_.contains('needs_attetion')){
+      //      service.status = 'warning';
+      //    }
+      //  }
+      //});
+    //});
+    //ClusterService.getClusters
+    //ConverterService.convertClusters()
   }
 
   function mapStatus(oldStatus, componentStatus) {
@@ -118,6 +146,7 @@
     this.icon = 'icon-circle-group';
     this.desc = 'overview.cards.meeting.desc';
     this.name = 'overview.cards.meeting.title';
+    this.cardClass = 'meetings';
     this.healthStatusUpdatedHandler = _.partial(meeetingHealthEventHandler, card);
     this.eventHandler = callEventHandler;
 
@@ -135,6 +164,7 @@
     this.icon = 'icon-circle-call';
     this.desc = 'overview.cards.call.desc';
     this.name = 'overview.cards.call.title';
+    this.cardClass = 'people';
     this.healthStatusUpdatedHandler = _.partial(meeetingHealthEventHandler, card);
     this.eventHandler = callEventHandler;
 
@@ -152,6 +182,7 @@
     this.icon = 'icon-circle-telepresence';
     this.desc = 'overview.cards.roomSystem.desc';
     this.name = 'overview.cards.roomSystem.title';
+    this.cardClass = 'Call';
     this.currentTitle = 'overview.cards.roomSystem.currentTitle';
     this.previousTitle = 'overview.cards.roomSystem.previousTitle';
     this.settingsUrl = '#/devices';
@@ -195,7 +226,7 @@
     //this.services = [];
     this.hybridStatusEventHandler = hybridStatusEventHandler;
     function hybridStatusEventHandler(services) {
-      //console.log('services', services);
+      console.log('services', services);
       _.each(services, function (service) {
         service.statusIcon = !service.enabled || !service.acknowledged ? 'warning' : 'success';
       });
