@@ -44,7 +44,7 @@ We use pull requests, and consequentially the forking model.  To make a contribu
 3. After your new fork is created, you'll want to pull the fork to your local environment, and add the upstream and jenkins remotes:
  - `git clone git@sqbu-github.cisco.com:username/wx2-admin-web-client`
  - `git remote add upstream git@sqbu-github.cisco.com:WebExSquared/wx2-admin-web-client`
- - `git remote add jenkins ssh://username@sqbu-jenkins.cisco.com:2022/wx2-admin-web-client`
+ - `git remote add jenkins ssh://username@sqbu-jenkins.cisco.com:2022/team/atlas/wx2-admin-web-client`
 
 **Note*: If you get a Permission Denied (publickey) then follow these directions in Generating SSH Keys
  `https://help.github.com/articles/generating-ssh-keys/`
