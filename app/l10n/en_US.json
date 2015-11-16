@@ -2571,7 +2571,10 @@
       },
       "message": {
         "title": "Message",
-        "desc": "Active Rooms"
+        "desc": "Active Rooms",
+        "currentTitle": "Active Rooms Last 7 days",
+        "previousTitle": "Last 30 days:"
+
       },
       "meeting": {
         "title": "Meeting",

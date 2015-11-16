@@ -146,6 +146,8 @@
     this.icon = 'icon-circle-message';
     this.desc = 'overview.cards.message.desc';
     this.name = 'overview.cards.message.title';
+    this.currentTitle = 'overview.cards.message.currentTitle';
+    this.previousTitle = 'overview.cards.message.previousTitle';
     this.trial = false;
     this.eventHandler = messageEventHandler;
     this.healthStatusUpdatedHandler = messageHealthEventHandler;
