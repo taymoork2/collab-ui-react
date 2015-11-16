@@ -102,11 +102,11 @@ describe('Partner Service', function () {
   });
 
   it('should successfully add sortOrder property to license from calling setServiceSortOrder', function () {
-    //var license = [];
-    //PartnerService.setServiceSortOrder(license);
-    //expect(license.sortOrder).toBe(PartnerService.customerStatus.NO_LICENSE);
+    var license = {};
+    PartnerService.setServiceSortOrder(license);
+    expect(license.sortOrder).toBe(PartnerService.customerStatus.NO_LICENSE);
 
-    // Status is "ACTIVE".
+    // Status is "FREE".
     var customerActive = testData.licenses[3];
     PartnerService.setServiceSortOrder(customerActive);
     expect(customerActive.sortOrder).toBe(PartnerService.customerStatus.FREE);
@@ -186,7 +186,7 @@ describe('Partner Service', function () {
     expect(returnLists[1][1].messaging.features.length).toBe(4);
     expect(returnLists[1][1].communications.sortOrder).toBe(PartnerService.customerStatus.FREE);
 
-    // Verify notes object is created by checking value of sort order
+    // Verify notes property is added to license object containing sortOrder properties set to free license
     expect(returnLists[0][3].notes.sortOrder).toBe(PartnerService.customerStatus.FREE);
 
     // Verify sort order is set is added to license list

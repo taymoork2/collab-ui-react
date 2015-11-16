@@ -109,7 +109,9 @@
     }
 
     function setServiceSortOrder(license) {
-      if (license.status === 'CANCELED') {
+      if (_.isEmpty(license)) {
+        license.sortOrder = customerStatus.NO_LICENSE;
+      } else if (license.status === 'CANCELED') {
         license.sortOrder = customerStatus.CANCELED;
       } else if (isLicenseFree(license)) {
         license.sortOrder = customerStatus.FREE;
@@ -295,29 +297,23 @@
               exportedCustomer.conferenceEntitlements = '';
               exportedCustomer.communicationsEntitlements = '';
 
-              var messagingType = _.find(customers[i].licenses, {
+              var messagingLicense = _.find(customers[i].licenses, {
                 licenseType: "MESSAGING"
               });
-              var conferenceType = _.find(customers[i].licenses, {
+              var conferenceLicense = _.find(customers[i].licenses, {
                 licenseType: "CONFERENCING"
               });
-              var communicationsType = _.find(customers[i].licenses, {
+              var communicationsLicense = _.find(customers[i].licenses, {
                 licenseType: "COMMUNICATIONS"
               });
-              if (messagingType) {
-                if (angular.isArray(messagingType.features)) {
-                  exportedCustomer.messagingEntitlements = messagingType.features.join(' ');
-                }
+              if (messagingLicense && angular.isArray(messagingLicense.features)) {
+                exportedCustomer.messagingEntitlements = messagingLicense.features.join(' ');
               }
-              if (conferenceType) {
-                if (angular.isArray(conferenceType.features)) {
-                  exportedCustomer.conferenceEntitlements = conferenceType.features.join(' ');
-                }
+              if (conferenceLicense && angular.isArray(conferenceLicense.features)) {
+                exportedCustomer.conferenceEntitlements = conferenceLicense.features.join(' ');
               }
-              if (communicationsType) {
-                if (angular.isArray(communicationsType.features)) {
-                  exportedCustomer.communicationsEntitlements = communicationsType.features.join(' ');
-                }
+              if (communicationsLicense && angular.isArray(communicationsLicense.features)) {
+                exportedCustomer.communicationsEntitlements = communicationsLicense.features.join(' ');
               }
               exportedCustomers.push(exportedCustomer);
             }
