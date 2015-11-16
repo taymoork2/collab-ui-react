@@ -120,6 +120,7 @@
     this.icon = 'icon-circle-message';
     this.desc = 'overview.cards.message.desc';
     this.name = 'overview.cards.message.title';
+    this.trial = false;
     this.eventHandler = messageEventHandler;
     this.healthStatusUpdatedHandler = messageHealthEventHandler;
 
@@ -146,6 +147,7 @@
     this.desc = 'overview.cards.meeting.desc';
     this.name = 'overview.cards.meeting.title';
     this.cardClass = 'meetings';
+    this.trial = true;
     this.healthStatusUpdatedHandler = _.partial(meeetingHealthEventHandler, card);
     this.eventHandler = callEventHandler;
 

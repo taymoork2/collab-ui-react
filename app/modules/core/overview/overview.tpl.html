@@ -18,9 +18,9 @@
             </div>
           </section>
           <footer class="footer-menu ng-isolate-scope overview-footer-content-trial"
-                  ng-class="{'overview-footer-content-trial' : card.callTrial ,  'overview-footer-content'  : !card.callTrial }">
+                  ng-class="{'overview-footer-content-trial' : card.trial ,  'overview-footer-content'  : !card.trial }">
     <span class="footer-content" ng-transclude="">
-                        <span class="label warning ng-scope">Trial</span>
+                        <span class="label warning ng-scope" ng-if="card.trial">Trial</span>
                         <i class="icon icon-circle ng-scope"></i>
                     </span>
     <span class="footer-icons">
