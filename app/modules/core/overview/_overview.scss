@@ -139,16 +139,18 @@
   .side-info-card{
     min-height: 50px;
     height: auto;
-    .card-notification{
-      padding-top: 0;
-      margin-top: 0;
-      .notification-msg{
-        padding-bottom: 15px;
+    .monitoring-panel{
+      padding-right: 1rem;
+      padding-left: 1rem;
+      padding-top: 1rem;
+
+      .notification-style{
+        padding-bottom: 1.5rem;
+        margin-bottom: 1.5rem;
+        border-bottom: 1px solid $gray-light-2;
       }
-      label{
-        height:1.5rem;
-        margin-left:0;
-        margin-right: 0;
+      .notification-style:last-child{
+        border-bottom: none;
       }
     }
   }
