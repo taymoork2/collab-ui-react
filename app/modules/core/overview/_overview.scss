@@ -158,11 +158,53 @@
         border-bottom: 1px solid $gray-light-2;
       }
       .notification-style:last-child{
-        border-bottom: none;
+        border-bottom: 0px solid $gray-light-2;;
       }
     }
   }
 }
 #unlicensedUserList{
   overflow: auto;
+}
+
+@media only screen and (max-width: 1345px){
+  .overview-page {
+    .menu-card{
+      height: 300px;
+    }
+  }
+}
+@media only screen and (max-width: 1025px){
+  .overview-page {
+    .multiple-layouts{
+      display: flex;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+    }
+    .menu-card{
+      height: 260px;
+    }
+    .fourth{
+      //position: absolute;
+      //top: 0;
+      order: -1 !important;
+      width: 100%;
+      max-width: 100vw;
+    }
+  }
+}
+@media only screen and (max-width: 760px){
+  .overview-page {
+    .menu-card{
+      height: 300px;
+    }
+  }
+}
+@media only screen and (max-width: 642px){
+
+  .cs-card-container.multiple-layouts {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
