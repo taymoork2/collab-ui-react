@@ -3,7 +3,7 @@
 
   /*ngInject*/
   function HelpdeskService($http, Config, $q) {
-    var urlBase = Config.getAdminServiceUrl();
+    var urlBase = 'http://localhost:8080/admin/api/v1/'; //Config.getAdminServiceUrl();
     var mock = false;
     var mockUsers = [{
       "id": "ddb4dd78-26a2-45a2-8ad8-4c181c5b3f0a",

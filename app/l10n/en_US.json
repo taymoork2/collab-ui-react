@@ -2708,7 +2708,7 @@
   "roles": {
     "atlas-portal.support": "Billing Administrator",
     "atlas-portal.reports": "Support Administrator",
-    "atlas-portal.helpdesk": "Help Desk Support",
+    "atlas-portal.partner.helpdesk": "Help Desk Support",
     "id_full_admin": "Full Administrator",
     "user": "User"
   },
