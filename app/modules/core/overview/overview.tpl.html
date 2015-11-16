@@ -182,23 +182,39 @@
           <header>
             <div>Notifications</div>
           </header>
-          <section class="card-notification">
-            <div class="notification-msg">
-              <span class="label alert">Alert</span>
-              <span class="msg">System update on Dec 5, 2915 at 11pm(PST).</span>
+          <section class="monitoring-panel small-3 medium-12 column"
+                   ng-show="overview.setupNotDone || !(overview.isCalendarAcknowledged && overview.isCallAcknowledged)"
+                   ng-hide="!overview.setupNotDone && (overview.isCalendarAcknowledged && overview.isCallAcknowledged)">
+            <div class="notification-style" ng-show="overview.setupNotDone">
+              <span class="badge badge-warning" translate="homePage.todo"></span>
+            <span class="notification-spacing">
+              <span translate="homePage.setUpYourTrial"></span>
+              <a ng-click="openFirstTimeSetupWiz()" translate="homePage.beginTrial"></a>
+            </span>
             </div>
-            <div class="notification-msg">
-              <span class="label ">To-do</span>
-              <span class="msg">Set up Call to start your 90-day trial. <a>Start Trial</a></span>
+            <div class="notification-style" ng-show="!overview.isCalendarAcknowledged">
+              <span class="badge success" translate="common.new"></span>
+
+              <div class="notification-spacing">
+                <span translate="homePage.setUpCalendarService"></span>
+                <a ng-click="showServiceActivationPage('calendar-service')" translate="homePage.getStarted"></a>
+              </div>
+              <button type="button" class="close" ng-click="overview.setHybridAcknowledged('calendar-service')">
+              </button>
             </div>
-            <div class="notification-msg">
-              <span class="label">To-do</span>
-              <span class="msg">2 Users from your organization are using Free Services.<a>Convert</a></span>
+            <div class="notification-style" ng-show="!overview.isCallAcknowledged">
+              <span class="badge success" translate="common.new"></span>
+
+              <div class="notification-spacing">
+                <span translate="homePage.setUpCallService"></span>
+                <a ng-click="showServiceActivationPage('call-service')" translate="homePage.getStarted"></a>
+              </div>
+              <button type="button" class="close" ng-click="overview.setHybridAcknowledged('call-service')">
+              </button>
             </div>
           </section>
         </article>
       </cs-card>
-
     </cs-card-layout>
   </div>
 </div>
