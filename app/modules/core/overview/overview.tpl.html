@@ -2,7 +2,8 @@
   <cs-page-header title="overview.pageTitle"></cs-page-header>
   <div class="cs-card-container multiple-layouts">
     <cs-card-layout block-view="true" class="three-fourths">
-      <cs-card class="medium menu-card header-bar overview-card cs-card" ng-class="card.cardClass" ng-repeat="card in overview.cards">
+      <cs-card class="medium menu-card header-bar overview-card cs-card" ng-class="card.cardClass"
+               ng-repeat="card in overview.cards">
         <article>
           <header>
             <div class="overview-header">
@@ -19,14 +20,18 @@
           </section>
           <footer class="footer-menu ng-isolate-scope overview-footer-content-trial"
                   ng-class="{'overview-footer-content-trial' : card.trial ,  'overview-footer-content'  : !card.trial }">
-    <span class="footer-content" ng-transclude="">
-                        <span class="label warning ng-scope" ng-if="card.trial">Trial</span>
-                        <i class="icon icon-circle ng-scope"></i>
-                    </span>
-    <span class="footer-icons">
-        <i class="menu-icon icon icon-settings" ng-class="cfm.icon != undefined ? 'icon-' :'icon-settings'"
-           ng-click="cfm.toggleSettings()"></i>
-      </span>
+            <span class="footer-content" ng-transclude="">
+              <span class="label warning ng-scope" ng-if="card.trial">Trial</span>
+              <a ng-href="{{overview.statusPageUrl}}" target="_blank" class="monitoring-cell">
+                <i class="icon icon-circle" ng-class="card.healthStatus || 'disabled'"></i>
+                <span>{{card.levelText}}</span>
+              </a>
+            </span>
+            <span class="footer-icons">
+              <a ng-href="{{card.settingsUrl}}">
+                &nbsp;<i class="icon icon-settings" ng-if="card.settingsUrl"></i>
+              </a>
+            </span>
           </footer>
           <section class="card-menu ng-isolate-scope" ng-class="{ open: cm.menuOpen === true }"
                    menutitle="card.name">
