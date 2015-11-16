@@ -141,7 +141,7 @@ angular.module('Core')
           dev: 'https://identity.webex.com/identity/config/%s/v1/UserReports',
           cfe: 'https://identitybts.webex.com/identity/config/%s/v1/UserReports',
           integration: 'https://identity.webex.com/identity/config/%s/v1/UserReports',
-          prod: 'https://identity.webex.com/identity/config/%s/v1/UserReports',
+          prod: 'https://identity.webex.com/identity/config/%s/v1/UserReports'
         },
 
         scomUrl: {
@@ -438,7 +438,7 @@ angular.module('Core')
           application: 'atlas-portal.application',
           reports: 'atlas-portal.reports',
           sales: 'atlas-portal.partner.salesadmin',
-          helpdesk: 'atlas-portal.helpdesk'
+          helpdesk: 'atlas-portal.partner.helpdesk'
         },
 
         roles: {

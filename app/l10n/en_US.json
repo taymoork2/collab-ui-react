@@ -114,9 +114,6 @@
     "waitInvitation": "Send email invitations and wait until the user accepts before provisioning services.",
     "sendImmediate": "Immediately provision services for the user and send email notifications.",
     "messaging": "Messaging",
-    "message": "Message",
-    "meeting": "Meeting",
-    "call": "Call",
     "conferencing": "Conferencing",
     "communications": "Communications",
     "contactCenter": "Contact Center",
@@ -128,7 +125,6 @@
     "addEntitleError": "insufficient priveledge to add or entitle a user.",
     "freeMsg": "Free Spark Messaging",
     "freeConf": "Free 3 Party Spark Meet",
-    "freeCall": "Call Free",
     "freeComm": "Free 1:1 Spark Call",
     "freeContactCenter": "Free Chat, Email, Voice",
     "paidMsg": "Standard Team Rooms",
@@ -339,7 +335,7 @@
     "highQuality": "5 Highest Quality",
     "leastQuality": "5 Lowest Quality",
     "customerLoadError": "There was an error while loading the customer list.",
-    "webex": "Webex Reports"
+    "webex": "WebEx Reports"
   },
   "activeUsers": {
     "active": "Active",
@@ -2048,8 +2044,9 @@
     "010086": "The site does not support hybrid audio",
     "110055": "User limit exceeded for the session type \"{{sessionTypeName}}\".",
     "defaultProcessError": "Unable to process request.",
+    "defaultNotWebExAdminError": "You have not yet been provisioned to this site as an administrator. This process may take a moment.",
     "defaultAccessError": "Unable to access server at this time.",
-    "defaultNotWebExAdminError": "You have not yet been provisioned to this site as an administrator. This process may take a moment."
+    "defaultReloadMsg": "Please try reloading the page."
   },
   "webexUserSettingLabels": {
     "sessionEnablementLabel": "Session Type Enablement",
@@ -2074,7 +2071,8 @@
     "advancedLinkLabel": "Advanced Settings"
   },
   "webexCommon": {
-    "logoAltText": "Cisco WebEx"
+    "logoAltText": "Cisco WebEx",
+    "breadcrumbsAltText": "You are here"
   },
   "webexSiteSettingsLabels": {
     "siteSettingsIndexPageTitle": "Configure",
@@ -2710,20 +2708,20 @@
   "roles": {
     "atlas-portal.support": "Billing Administrator",
     "atlas-portal.reports": "Support Administrator",
-    "atlas-portal.helpdesk": "Help Desk Support",
+    "atlas-portal.partner.helpdesk": "Help Desk Support",
     "id_full_admin": "Full Administrator",
     "user": "User"
   },
   "helpdesk": {
     "navHeaderTitle": "Cloud Collaboration Help Desk",
-    "helpdesk": "Help Desk",
+    "helpdesk": "Help Desk Support",
     "users": "Users",
     "customers": "Customers",
     "badUserSearchInput": "Searching for users requires a minimum of three characters. Name and email searches requires a minimum of two words, e.g. john.doe or John Doe.",
     "unexpectedError": "An unexpected error occurred",
     "searchingPleaseWait": "Searching, please wait...",
     "noSearchHits": "No matches found. Try to narrow your search...",
-    "searchInputDescription": "Search users (name, email address, phone number) or customers (name)",
+    "searchInputDescription": "Search and view a user or a company.",
     "roles": "Roles",
     "goToSearch": "Go to Search",
     "sso": "SSO",
@@ -2731,6 +2729,8 @@
     "createdAt": "Created At",
     "type": "Type",
     "partner": "Partner",
-    "customer": "Customer"
+    "customer": "Customer",
+    "searchCriteriaLink": "Show supported search criteria.",
+    "searchInfo": "Search users by Email, Phone Number or Display Name (two words required). Search company by Display Name."
   }
 }

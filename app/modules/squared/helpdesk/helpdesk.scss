@@ -43,6 +43,7 @@
   }
   h1 {
     margin-bottom: 1rem;
+    color: $color-primary-base;
   }
   h2 {
     margin-bottom: 1rem;
@@ -68,6 +69,12 @@
         color: $anchor-font-color-hover;
       }
     }
+  }
+  .card-list {
+    text-align: left;
+    margin-left: 1.5rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
   }
 }
 

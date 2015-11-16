@@ -13,13 +13,11 @@
       XhrNotificationService.notify(err);
     });
 
-    Orgservice.getAdminOrg(function (data, status) {
-      if (data.success) {
-        vm.org = data;
-      } else {
-        XhrNotificationService.notify(status);
-      }
-    }, vm.user.organization.id, true);
+    HelpdeskService.getOrg(vm.user.organization.id).then(function (res) {
+      vm.org = res;
+    }, function (err) {
+      XhrNotificationService.notify(err);
+    });
   }
 
   angular

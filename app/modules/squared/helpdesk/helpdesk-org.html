@@ -49,4 +49,25 @@
     </table>
   </div>
 
+  <cs-card class="large header-bar">
+    <article>
+      <header>
+        <h4 translate="cloudExtensions.cloudExtensions"></h4>
+      </header>
+      <section>
+        <div ng-if="!helpdeskOrgCtrl.hybridServicesEntitled" class="card-list">
+          <span class="helpdesk-yellow"><i
+            class="icon icon-warning helpdesk-yellow"></i>Not entitled to this service</span>
+        </div>
+        <div class="card-list"
+             ng-repeat="service in helpdeskOrgCtrl.hybridServices"
+             ng-if="helpdeskOrgCtrl.hybridServicesEntitled">
+          <span translate="hercules.serviceNames.{{service.id}}"></span>
+          <span ng-if="service.enabled" class="helpdesk-green">(Enabled)</span>
+          <span ng-if="!service.enabled" class="helpdesk-yellow">(Disabled)</span>
+        </div>
+      </section>
+    </article>
+  </cs-card>
+
 </div>
