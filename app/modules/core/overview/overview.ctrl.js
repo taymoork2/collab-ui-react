@@ -72,6 +72,32 @@
       }
     });
 
+    var extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-uc'];
+    vm.isCalendarAcknowledged = true;
+    vm.isCallAcknowledged = true;
+//    vm.setupNotDone = true;
+
+    Orgservice.getHybridServiceAcknowledged().then(function (response) {
+      if (response.status === 200) {
+        _.forEach(response.data.items, function (items) {
+          if (items.id === extensionEntitlements[0]) {
+            vm.isCalendarAcknowledged = items.acknowledged;
+          } else if (items.id === extensionEntitlements[1]) {
+            vm.isCallAcknowledged = items.acknowledged;
+          }
+        });
+      } else {
+        Log.error("Error in GET service acknowledged status");
+      }
+    });
+
+    vm.setupNotDone = function () {
+      if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
+        return true;
+      }
+      return false;
+    };
+
     //ClusterService.subscribe('data', function (data) {
     //if(!data.error){
     //console.log(ClusterService.getClusters());
@@ -165,6 +191,7 @@
     this.icon = 'icon-circle-call';
     this.desc = 'overview.cards.call.desc';
     this.name = 'overview.cards.call.title';
+    this.trial = true;
     this.cardClass = 'people';
     this.healthStatusUpdatedHandler = _.partial(meeetingHealthEventHandler, card);
     this.eventHandler = callEventHandler;
@@ -184,6 +211,7 @@
     this.desc = 'overview.cards.roomSystem.desc';
     this.name = 'overview.cards.roomSystem.title';
     this.cardClass = 'gray';
+    this.trial = true;
     this.currentTitle = 'overview.cards.roomSystem.currentTitle';
     this.previousTitle = 'overview.cards.roomSystem.previousTitle';
     this.settingsUrl = '#/devices';
