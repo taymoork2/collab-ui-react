@@ -37,7 +37,7 @@ describe('User Service', function () {
     $httpBackend.flush();
   });
 
-  it('updateUsers should send POST request to create user', function () {
+  it('updateUsers should send PATCH request to update user', function () {
     var users = [{
       address: 'dntodid@gmail.com',
       assignedDn: {
