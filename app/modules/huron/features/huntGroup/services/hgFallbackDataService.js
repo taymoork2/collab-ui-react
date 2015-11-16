@@ -21,7 +21,7 @@
     var pristineFallbackMember;
 
     return {
-      isFallbackValid: isFallbackValid,
+      isFallbackInvalid: isFallbackInvalid,
       validateFallbackNumber: validateFallbackNumber,
       setFallbackMember: setFallbackMember,
       getFallbackDestinationJSON: getFallbackDestinationJSON,
@@ -54,9 +54,9 @@
         return;
       }
 
-      reset();
+      reset(resetFromBackend);
       setFallbackNumberFromJSON(data);
-      if (!isFallbackValid()) {
+      if (isFallbackInvalid()) {
         setFallbackMemberFromJSON(data, resetFromBackend);
       }
     }
@@ -95,11 +95,11 @@
     }
 
     /**
-     * Return true if there is a valid internal or external or
-     * Huron user available as the fallback destination.
+     * Return true if there is no valid internal/external
+     * and no valid Huron user available as the fallback destination.
      */
-    function isFallbackValid() {
-      return (isFallbackValidNumber() || isFallbackValidMember());
+    function isFallbackInvalid() {
+      return (!isFallbackValidNumber() && !isFallbackValidMember());
     }
 
     /**
@@ -183,7 +183,7 @@
       });
 
       validator.fetch().then(function (data) {
-        if (data.length > 0 && !isFallbackValid()) {
+        if (data.length > 0 && isFallbackInvalid()) {
           data.some(function (n) {
             if (n.number === fallbackNumber) {
               isValidInternalNumber = true;

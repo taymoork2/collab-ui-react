@@ -256,7 +256,7 @@
     }
 
     function isFallbackValid() {
-      return HuntGroupFallbackDataService.isFallbackValid();
+      return !HuntGroupFallbackDataService.isFallbackInvalid();
     }
 
     function validateFallbackNumber() {

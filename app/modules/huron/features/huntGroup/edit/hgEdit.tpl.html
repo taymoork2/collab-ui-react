@@ -43,7 +43,7 @@
         </div>
         <div ng-if="hge.shouldShowFallbackPill()">
           <div class="clearfix">
-            <div class="small header-background primary cs-card">
+            <div class="small header-background primary cs-card hunt-member-card">
               <article>
                 <header ng-click="hge.toggleFallback()">
                   <div class="header-with-right-icon">
@@ -115,9 +115,9 @@
             </div>
           </div>
           <p>{{:: 'huronHuntGroup.membersDesc' | translate}}</p>
-          <div drop-list="hge.selectedHuntMembers" callback="hge.callback()" unique="userName">
+          <div drop-list="hge.selectedHuntMembers" callback="hge.callback()" unique="uuid">
             <div ng-repeat="member in hge.selectedHuntMembers" drag-drop draggable="member" class="clearfix hgmember">
-              <div class="small header-background primary cs-card" class="large header-background primary">
+              <div class="small header-background primary cs-card hunt-member-card" class="large header-background primary">
                 <article>
                   <header ng-click="hge.toggleMemberPanel(member.user)"
                           ng-class="{'open-panel' : hge.openMemberPanelUuid === member.user.uuid}">

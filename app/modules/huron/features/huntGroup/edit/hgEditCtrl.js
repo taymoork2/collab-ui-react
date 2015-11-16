@@ -128,12 +128,12 @@
 
     function showDisableSave() {
       return (vm.form.$invalid ||
-        !HuntGroupFallbackDataService.isFallbackValid() ||
+        HuntGroupFallbackDataService.isFallbackInvalid() ||
         vm.isMembersInvalid());
     }
 
     function shouldShowFallbackLookup() {
-      return (!HuntGroupFallbackDataService.isFallbackValid() ||
+      return (HuntGroupFallbackDataService.isFallbackInvalid() ||
         HuntGroupFallbackDataService.isFallbackValidNumber());
     }
 
@@ -142,7 +142,7 @@
     }
 
     function shouldShowFallbackWarning() {
-      return !HuntGroupFallbackDataService.isFallbackValid();
+      return HuntGroupFallbackDataService.isFallbackInvalid();
     }
 
     function initializeFields() {
