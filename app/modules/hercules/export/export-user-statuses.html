@@ -13,8 +13,8 @@
       <i class="icon icon-spinner icon-2x"></i>
     </div>
     <div ng-hide="loading">
-      <p>The exported report will be a comma separated list of users, their state, and associated details. </p>
-      <p>Select which user states should be included in the report:</p>
+      <p>The exported report will be a comma separated list of users, their state, and related details. </p>
+      <p>Select the type of information that you want included in the report:</p>
 
       <div ng-repeat="item in statusTypes" ng-hide="item.unselectable" style="margin-top: 15px;">
           <span><cs-checkbox ng-click="selectedStateChanged()" ckid="{{item.stateType}}" ng-model="item.selected" label=""></cs-checkbox></span>
@@ -24,7 +24,7 @@
         </div>
         <div ng-show="exportError"><div>Problems</div><div>{{exportError}}</div></div>
         <br>
-        <p>Note: Time required to generate report increases with number of users. </p>
+        <p>Note: The more users included, the longer the report takes to generate.</p>
     </div>
   </div>
   <div class="modal-footer">

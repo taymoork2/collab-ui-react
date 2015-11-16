@@ -43,10 +43,6 @@
 
       $scope.webexAdvancedUrl = Config.getWebexAdvancedEditUrl($stateParams.siteUrl);
 
-      var screenAvailHeight = window.screen.availHeight;
-      var innerHeight = window.innerHeight;
-      $scope.iframeHeight = (200 >= innerHeight) ? 0 : innerHeight - 200;
-
       // for iframe request
       $scope.trustIframeUrl = $sce.trustAsResourceUrl($scope.iframeUrl);
       $scope.adminEmail = Authinfo.getPrimaryEmail();

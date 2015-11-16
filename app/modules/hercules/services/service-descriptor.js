@@ -14,6 +14,16 @@ angular.module('Hercules')
           });
       };
 
+      function extractData(res) {
+        return res.data.items;
+      }
+
+      var servicesInOrg = function (orgId) {
+        return $http
+          .get(config.getUrl() + '/organizations/' + orgId + '/services')
+          .then(extractData);
+      };
+
       var filterEnabledServices = function (services) {
         return _.filter(services, function (service) {
           return service.id != 'squared-fusion-mgmt' && service.enabled;
@@ -100,7 +110,8 @@ angular.module('Hercules')
         isServiceEnabled: isServiceEnabled,
         setServiceEnabled: setServiceEnabled,
         serviceIcon: serviceIcon,
-        acknowledgeService: acknowledgeService
+        acknowledgeService: acknowledgeService,
+        servicesInOrg: servicesInOrg
       };
 
     }
