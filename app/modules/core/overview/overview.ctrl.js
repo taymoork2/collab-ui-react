@@ -73,7 +73,6 @@
     var extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-uc'];
     vm.isCalendarAcknowledged = true;
     vm.isCallAcknowledged = true;
-//    vm.setupNotDone = true;
 
     Orgservice.getHybridServiceAcknowledged().then(function (response) {
       if (response.status === 200) {
@@ -95,33 +94,6 @@
       }
       return false;
     };
-
-    //ClusterService.subscribe('data', function (data) {
-    //if(!data.error){
-    //console.log(ClusterService.getClusters());
-    //console.log(ClusterService.getConnector());  //undefined, since no connector id is specified..
-    //}
-    //console.log(data);
-    //var servicesKnow =[{id:'asdf'}];
-    //var map = {};
-    //_.each(data, function(cluster){
-    //  _.each(cluster.services, function (service){
-    //    if(map[service.service_type]){
-    //      map[service.service_type] = [];
-    //    }
-    //    map[service.service_type].push(service.needs_attention);
-    //  });
-    //});
-    //_.each(servicesKnow, function(service){
-    //  if(map[service.id]){
-    //    if(_.contains('needs_attetion')){
-    //      service.status = 'warning';
-    //    }
-    //  }
-    //});
-    //});
-    //ClusterService.getClusters
-    //ConverterService.convertClusters()
   }
 
   function mapStatus(oldStatus, componentStatus) {
