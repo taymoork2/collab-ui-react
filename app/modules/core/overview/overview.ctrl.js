@@ -183,7 +183,7 @@
     this.icon = 'icon-circle-telepresence';
     this.desc = 'overview.cards.roomSystem.desc';
     this.name = 'overview.cards.roomSystem.title';
-    this.cardClass = 'Call';
+    this.cardClass = 'gray';
     this.currentTitle = 'overview.cards.roomSystem.currentTitle';
     this.previousTitle = 'overview.cards.roomSystem.previousTitle';
     this.settingsUrl = '#/devices';
