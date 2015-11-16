@@ -150,7 +150,7 @@ $aa-builder-icon-color: $gray-base;
   height: 2rem;
   width: 16rem;
   padding: .5rem;
-  margin: .125rem .0rem;
+  margin: .125rem 0;
   /* set to match the select-box's 3px radius */
   border-radius: .188rem;
   color: $brand-white;
@@ -212,16 +212,25 @@ $aa-builder-icon-color: $gray-base;
 }
 
 .aa-selected-phones {
+<<<<<<< HEAD
+  margin-top: 1rem;
+=======
   margin-top: .18rem;
   margin-right: 0rem;
+>>>>>>> 80f3dc157b2826c6afd1dc3018abacf8a1df7c61
   width:17.9rem;
 }
 
 .aa-panel-numbers {
   @extend .panel;
   width: 16rem;
+<<<<<<< HEAD
+  margin-top : 1rem;
+  margin-bottom : 1rem;
+=======
   margin-bottom : .55rem;
   padding-bottom: 0rem;
+>>>>>>> 80f3dc157b2826c6afd1dc3018abacf8a1df7c61
 }
 
 .aa-container {

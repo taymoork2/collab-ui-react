@@ -18,8 +18,6 @@ gulp.task('build', ['clean'], function (done) {
         'ts:build'
       ],
       'processHtml:build',
-      'karma-config',
-      'karma',
       done
     );
   } else {
@@ -31,8 +29,6 @@ gulp.task('build', ['clean'], function (done) {
         'ts:build'
       ],
       'processHtml:build',
-      'karma-config',
-      'karma',
       done
     );
   }
