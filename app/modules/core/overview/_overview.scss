@@ -177,10 +177,10 @@
 @media only screen and (max-width: 1025px){
   .overview-page {
     .multiple-layouts{
-      display: flex;
-      display: -webkit-box;
-      display: -webkit-flex;
-      display: -ms-flexbox;
+      display: flex !important;
+      display: -webkit-box !important;
+      display: -webkit-flex !important;
+      display: -ms-flexbox !important;
     }
     .menu-card{
       height: 260px;
