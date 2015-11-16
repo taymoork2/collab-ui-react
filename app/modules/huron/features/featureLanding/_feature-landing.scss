@@ -83,7 +83,7 @@ $features-header-height : 83px;
     font-family: $brand-font-light;
     font-size: $font-size-base;
     @include vr-spacing(pl, 0.9);
-    @include vr-spacing(pb, 0.875);
+    @include vr-spacing(pb, 0.75);
   }
 
   .card-footer {
@@ -93,13 +93,13 @@ $features-header-height : 83px;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: flex-end;
-    @include vr-spacing(pb, 0.5);
   }
 
   .card-icon-div {
-    @include vr-spacing(pr, 0.85);
-    @include vr-spacing(pb, 0.6);
+    @include vr-spacing(pr, 1);
+    @include vr-spacing(pb, 0.75);
   }
+
 
   .card-icon {
     display : block;
@@ -107,7 +107,8 @@ $features-header-height : 83px;
     width : 2rem;
     border-radius: 50%;
     background-color: $gray-lightest;
-    padding : 16px 6px 6px 6px;
+    @include vr-spacing(pt, 0.5);
+    padding-left: 0.4rem;
   }
 }
 
