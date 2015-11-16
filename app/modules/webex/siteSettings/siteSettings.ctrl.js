@@ -3,7 +3,6 @@
 
   angular.module('WebExSiteSettings').controller('WebExSiteSettingsCtrl', [
     '$scope',
-    '$rootScope',
     '$log',
     '$translate',
     '$stateParams',
@@ -14,7 +13,6 @@
     'Config',
     function (
       $scope,
-      $rootScope,
       $log,
       $translate,
       $stateParams,

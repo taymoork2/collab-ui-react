@@ -114,9 +114,6 @@
     "waitInvitation": "Send email invitations and wait until the user accepts before provisioning services.",
     "sendImmediate": "Immediately provision services for the user and send email notifications.",
     "messaging": "Messaging",
-    "message": "Message",
-    "meeting": "Meeting",
-    "call": "Call",
     "conferencing": "Conferencing",
     "communications": "Communications",
     "contactCenter": "Contact Center",
@@ -128,7 +125,6 @@
     "addEntitleError": "insufficient priveledge to add or entitle a user.",
     "freeMsg": "Free Spark Messaging",
     "freeConf": "Free 3 Party Spark Meet",
-    "freeCall": "Call Free",
     "freeComm": "Free 1:1 Spark Call",
     "freeContactCenter": "Free Chat, Email, Voice",
     "paidMsg": "Standard Team Rooms",
@@ -339,7 +335,7 @@
     "highQuality": "5 Highest Quality",
     "leastQuality": "5 Lowest Quality",
     "customerLoadError": "There was an error while loading the customer list.",
-    "webex": "Webex Reports"
+    "webex": "WebEx Reports"
   },
   "activeUsers": {
     "active": "Active",
@@ -1756,11 +1752,13 @@
     "deviceIpAddressFailureMsg": "Failed to fetch device IP",
     "logTitle": "Logs",
     "retrieveLogBttn": "Retrieve Latest Log",
+    "viewPreviousLogBttn": "View Previous Log",
     "retrieveLogInstructions": "Device logs can be used by Cisco to troubleshoot issues related to device performance and call quality.",
     "logWait": "Getting log file from the device. This may take a minute…",
     "errorLogTryAgain": "Log file request timed out. Retry?",
     "errorLogInvaidMsg": "Log service message is invalid",
-    "unknownFilename": "Unknown Filename"
+    "unknownFilename": "Unknown Filename",
+    "errorLogNotFound": "No device log was been found"
   },
   "deviceOverviewPage": {
     "activationNoLongerNeeded": "If this activation is no longer needed:",
@@ -2046,8 +2044,9 @@
     "010086": "The site does not support hybrid audio",
     "110055": "User limit exceeded for the session type \"{{sessionTypeName}}\".",
     "defaultProcessError": "Unable to process request.",
+    "defaultNotWebExAdminError": "You have not yet been provisioned to this site as an administrator. This process may take a moment.",
     "defaultAccessError": "Unable to access server at this time.",
-    "defaultNotWebExAdminError": "You have not yet been provisioned to this site as an administrator. This process may take a moment."
+    "defaultReloadMsg": "Please try reloading the page."
   },
   "webexUserSettingLabels": {
     "sessionEnablementLabel": "Session Type Enablement",
@@ -2072,7 +2071,8 @@
     "advancedLinkLabel": "Advanced Settings"
   },
   "webexCommon": {
-    "logoAltText": "Cisco WebEx"
+    "logoAltText": "Cisco WebEx",
+    "breadcrumbsAltText": "You are here"
   },
   "webexSiteSettingsLabels": {
     "siteSettingsIndexPageTitle": "Configure",

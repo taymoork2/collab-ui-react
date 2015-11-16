@@ -2,9 +2,12 @@
 /* global AmCharts, $:false */
 
 angular.module('Squared')
-  .controller('ReportsCtrl', ['$scope', '$stateParams', '$q', 'ReportsService', 'WebexReportService', 'Log', 'Authinfo', 'Config', '$translate', 'CannedDataService', 'WebExUtilsFact', 'Storage',
-    function ($scope, $stateParams, $q, ReportsService, WebexReportService, Log, Authinfo, Config, $translate, CannedDataService, WebExUtilsFact, Storage) {
+  .controller('ReportsCtrl', ['$scope', '$stateParams', '$q', '$log', 'ReportsService', 'WebexReportService', 'Log', 'Authinfo', 'Config', '$translate', 'CannedDataService', 'WebExUtilsFact', 'Storage',
+    function ($scope, $stateParams, $q, $log, ReportsService, WebexReportService, Log, Authinfo, Config, $translate, CannedDataService, WebExUtilsFact, Storage) {
       $scope.webexReportsObject = {};
+      $scope.webexOptions = [];
+      $scope.webexSelected = null;
+
       $scope.repPageHeader_pageTitle = 'reportsPage.pageTitle';
       $scope.repPageHeader_back = false;
       $scope.repPageHeader_ShowWebexTab = false;
@@ -21,47 +24,112 @@ angular.module('Squared')
         $scope.showWebexReports = false;
       }
 
-      function generateWebexReportsUrl() {
-        var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl() || [];
-        $scope.webexOptions = [];
-        var promiseChain = [];
-
-        for (var i = 0; i < conferenceServices.length; i++) {
-          var url = conferenceServices[i].license.siteUrl;
-          promiseChain.push(WebExUtilsFact.isSiteSupportsIframe(url)
-            .then(function (result) {
-              if (result.isAdminReportEnabled && result.isIframeSupported) {
-                $scope.webexOptions.push(result.siteUrl);
-
-                if (!$scope.repPageHeader_ShowWebexTab) {
-                  $scope.repPageHeader_tabs.push({
-                    title: $translate.instant('reportsPage.webex'),
-                    state: 'webex-reports'
-                  });
-                  $scope.repPageHeader_ShowWebexTab = true;
-                }
-              }
-            }, function (error) {
-              //no-op, but needed
-            }));
-        }
-
-        $q.all(promiseChain).then(function () {
-          if ($scope.webexOptions.length) {
-            var index = $scope.webexOptions.indexOf($stateParams.siteUrl);
-            index = (index === -1) ? 0 : index;
-            $scope.webexSelected = Storage.get('webexReportsSiteUrl') || $scope.webexOptions[index];
-            $scope.updateWebexReports();
-          }
-        });
+      function onlyUnique(value, index, self) {
+        return self.indexOf(value) === index;
       }
+
+      function getUniqueWebexSiteUrls() {
+        var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl() || [];
+        var webexSiteUrls = [];
+
+        conferenceServices.forEach(
+          function getWebExSiteUrl(conferenceService) {
+            webexSiteUrls.push(conferenceService.license.siteUrl);
+          }
+        );
+
+        return webexSiteUrls.filter(onlyUnique);
+      }
+
+      function generateWebexReportsUrl() {
+        var promiseChain = [];
+        var webexSiteUrls = getUniqueWebexSiteUrls(); // strip off any duplicate webexSiteUrl to prevent unnecessary XML API calls
+
+        webexSiteUrls.forEach(
+          function chkWebexSiteUrl(url) {
+            promiseChain.push(
+              WebExUtilsFact.isSiteSupportsIframe(url).then(
+                function getSiteSupportsIframeSuccess(result) {
+                  if (result.isAdminReportEnabled && result.isIframeSupported) {
+                    $scope.webexOptions.push(result.siteUrl);
+
+                    if (!$scope.repPageHeader_ShowWebexTab) {
+                      $scope.repPageHeader_tabs.push({
+                        title: $translate.instant('reportsPage.webex'),
+                        state: 'webex-reports'
+                      });
+
+                      $scope.repPageHeader_ShowWebexTab = true;
+                    }
+                  }
+                },
+
+                function getSiteSupportsIframeError(error) {
+                  //no-op, but needed
+                }
+              )
+            );
+          } // chkWebexSiteUrl()
+        );
+
+        $q.all(promiseChain).then(
+          function promisChainDone() {
+            var funcName = "promisChainDone()";
+            var logMsg = "";
+
+            // if we are displaying the webex reports index page then go ahead with the rest of the code 
+            if ($scope.showWebexReports) {
+              // TODO: add code to sort the siteUrls in the dropdown to be in alphabetical order
+
+              // get the information needed for the webex reports index page
+              var stateParamsSiteUrl = $stateParams.siteUrl;
+              var stateParamsSiteUrlIndex = $scope.webexOptions.indexOf(stateParamsSiteUrl);
+
+              var storageReportsSiteUrl = Storage.get('webexReportsSiteUrl');
+              var storageReportsSiteUrlIndex = $scope.webexOptions.indexOf(storageReportsSiteUrl);
+
+              // initialize the site that the webex reports index page will display
+              var webexSelected = null;
+              if (-1 !== stateParamsSiteUrlIndex) { // if a valid siteUrl is passed in, the reports index page should reflect that site
+                webexSelected = stateParamsSiteUrl;
+              } else if (-1 !== storageReportsSiteUrlIndex) { // otherwise, if a valid siteUrl is in the local storage, the reports index page should reflect that site
+                webexSelected = storageReportsSiteUrl;
+              } else { // otherwise, the reports index page should reflect the 1st site that is in the dropdown list
+                webexSelected = $scope.webexOptions[0];
+              }
+
+              logMsg = funcName + ": " + "\n" +
+                "stateParamsSiteUrl=" + stateParamsSiteUrl + "\n" +
+                "stateParamsSiteUrlIndex=" + stateParamsSiteUrlIndex + "\n" +
+                "storageReportsSiteUrl=" + storageReportsSiteUrl + "\n" +
+                "storageReportsSiteUrlIndex=" + storageReportsSiteUrlIndex + "\n" +
+                "webexSelected=" + webexSelected;
+              $log.log(logMsg);
+
+              $scope.webexSelected = webexSelected;
+              $scope.updateWebexReports();
+            }
+          }
+        );
+      } // generateWebexReportsUrl()
 
       generateWebexReportsUrl();
 
       $scope.updateWebexReports = function () {
-        $scope.webexReportsObject = WebexReportService.initReportsObject($scope.webexSelected);
-        Storage.put('webexReportsSiteUrl', $scope.webexSelected);
-      };
+        var storageReportsSiteUrl = Storage.get('webexReportsSiteUrl');
+        var scopeWebexSelected = $scope.webexSelected;
+
+        var logMsg = "updateWebexReports(): " + "\n" +
+          "scopeWebexSelected=" + scopeWebexSelected + "\n" +
+          "storageReportsSiteUrl=" + storageReportsSiteUrl;
+        $log.log(logMsg);
+
+        $scope.webexReportsObject = WebexReportService.initReportsObject(scopeWebexSelected);
+
+        if (scopeWebexSelected !== storageReportsSiteUrl) {
+          Storage.put('webexReportsSiteUrl', scopeWebexSelected);
+        }
+      }; // updateWebexReports()
 
       $scope.show = function (showEngagement, showWebexReports) {
         $scope.showEngagement = showEngagement;
