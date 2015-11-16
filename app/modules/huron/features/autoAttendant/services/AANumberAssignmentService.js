@@ -14,10 +14,9 @@
     var feature;
     var customerId = Authinfo.getOrgId();
     var service = {
-      addAANumberAssignment: addAANumberAssignment,
+      setAANumberAssignment: setAANumberAssignment,
       getListOfAANumberAssignments: getListOfAANumberAssignments,
-      deleteAANumberAssignments: deleteAANumberAssignments,
-      updateAANumberAssignments: updateAANumberAssignments
+      deleteAANumberAssignments: deleteAANumberAssignments
     };
 
     return service;
@@ -40,7 +39,7 @@
 
     }
 
-    function addAANumberAssignment(customerId, cesId, resources) {
+    function setAANumberAssignment(customerId, cesId, resources) {
       var numObjList = [];
 
       for (var i = 0; i < resources.length; i++) {
@@ -77,14 +76,6 @@
           return response;
         }
       );
-
-    }
-
-    function updateAANumberAssignments(customerId, cesId) {
-      return AssignAutoAttendantService.update({
-        customerId: customerId,
-        cesId: cesId
-      }).$promise;
 
     }
 

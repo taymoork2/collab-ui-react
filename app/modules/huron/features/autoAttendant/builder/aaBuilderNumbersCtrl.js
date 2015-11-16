@@ -129,8 +129,8 @@
         });
       }
 
-      var obj = AANumberAssignmentService.addAANumberAssignment(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources);
-
+      var obj = AANumberAssignmentService.setAANumberAssignment(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources);
+      //      var obj = AANumberAssignmentService.getListOfAANumberAssignments(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID);
     }
 
     // Delete the number to the CE Info resource list
@@ -143,6 +143,8 @@
           resources.splice(i, 1);
         }
       }
+
+      var obj = AANumberAssignmentService.setAANumberAssignment(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources);
 
     }
 

@@ -60,12 +60,8 @@
         ceId: aCeId
       }).$promise.then(
         function (response) {
-          // success
+          // on successful delete of AA, delete the AA mapping in CMI
           return AANumberAssignmentService.deleteAANumberAssignments(Authinfo.getOrgId(), aCeId);
-        },
-        function (response) {
-          // failure
-          return response;
         }
       );
 

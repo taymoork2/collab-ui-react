@@ -89,6 +89,8 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       "uuid": "3f51ef5b-584f-42db-9ad8-8810b5e9e9ea"
     }]);
 
+    $httpBackend.whenPUT(HuronConfig.getCmiV2Url() + '/customers/1/features/autoattendants/2/numbers').respond(200);
+
     // listCesSpy = spyOn(AutoAttendantCeService, 'listCes').and.returnValue($q.when(angular.copy(ces)));
 
     controller = $controller('AABuilderNumbersCtrl', {
@@ -110,7 +112,8 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
       aaModel.ceInfos = [];
       aaModel.aaRecords = [];
-      aaModel.aaRecord = aCe;
+      aaModel.aaRecord = rawCeInfo;
+      controller.aaModel.aaRecordUUID = '2';
 
       controller.name = rawCeInfo.callExperienceName;
       controller.ui = {};
