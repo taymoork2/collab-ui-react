@@ -58,9 +58,6 @@
           } else {
             return ExternalNumberPool.deletePool(customerId, number.uuid);
           }
-        })
-        .catch(function (response) {
-          Notification.errorResponse(response);
         });
     }
 
