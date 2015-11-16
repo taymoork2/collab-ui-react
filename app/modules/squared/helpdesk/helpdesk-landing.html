@@ -11,7 +11,13 @@
               ng-click="helpdeskLandingCtrl.search()"
               translate="common.search"
               ng-disabled="helpdeskLandingCtrl.searchString == ''"></button>
-      <p class="input-description" translate="helpdesk.searchInputDescription"></p>
+      <p class="input-description">
+        <span translate="helpdesk.searchInputDescription"></span>
+        <a href popover="{{'helpdesk.searchInfo' | translate}}"
+           popover-placement="bottom">
+          <span translate="helpdesk.searchCriteriaLink"></span>
+        </a>
+      </p>
     </div>
 
     <cs-card class="large header-bar"
