@@ -2560,7 +2560,7 @@
   "overview": {
     "pageTitle": "Overview",
     "thisMonth": "This Month",
-    "lastMonth": "Last Month",
+    "lastMonth": "Last Month:",
     "cards": {
       "users": {
         "title": "Users",
@@ -2585,7 +2585,7 @@
         "title": "Room Systems",
         "desc": "Registered Systems",
         "currentTitle": "Last 30 days",
-        "previousTitle": "Total"
+        "previousTitle": "Total:"
       },
       "hybrid": {
         "title": "Hybrid Services"
