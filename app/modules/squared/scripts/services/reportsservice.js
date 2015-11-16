@@ -215,7 +215,7 @@ function ReportsService($http, $q, $rootScope, $location, Storage, Config, Log, 
   }
 
   function getOverviewMetrics(useCache) {
-    var charts = ['conversations', 'oneOnOneCalls', 'groupCalls'];
+    var charts = ['conversations', 'oneOnOneCalls', 'groupCalls', 'activeRooms'];
     getTimeCharts(useCache, charts, {
       intervalType: 'month',
       intervalCount: 2,

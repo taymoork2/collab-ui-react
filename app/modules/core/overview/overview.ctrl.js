@@ -6,7 +6,7 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($scope, Log, Authinfo, $translate, $state, ReportsService, Orgservice, CsdmDeviceService, ServiceDescriptor, Config) {
+  function OverviewCtrl($scope, Log, Authinfo, $translate, $state, ReportsService, Orgservice, ServiceDescriptor, Config) {
     var vm = this;
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
@@ -35,7 +35,7 @@
       $state.go('users.convert', {});
     };
 
-    _.each(['oneOnOneCallsLoaded', 'groupCallsLoaded', 'conversationsLoaded'], function (eventType) {
+    _.each(['oneOnOneCallsLoaded', 'groupCallsLoaded', 'conversationsLoaded', 'activeRoomsLoaded'], function (eventType) {
       $scope.$on(eventType, function (event, response) {
         _.each(vm.cards, function (card) {
           if (card.eventHandler) {
@@ -49,16 +49,6 @@
 
     Orgservice.getOrg(vm.userCard.orgEventHandler);
     Orgservice.getUnlicensedUsers(vm.userCard.unlicencedUsersHandler);
-
-    CsdmDeviceService.on('data', function (data) {
-      _.each(vm.cards, function (card) {
-        if (card.deviceUpdateEventHandler) {
-          card.deviceUpdateEventHandler(data);
-        }
-      });
-    }, {
-      scope: $scope
-    });
 
     ReportsService.healthMonitor(function (data, status) {
       if (data.success) {
@@ -233,21 +223,18 @@
     this.desc = 'overview.cards.roomSystem.desc';
     this.name = 'overview.cards.roomSystem.title';
     this.cardClass = 'gray';
-    this.trial = true;
     this.currentTitle = 'overview.cards.roomSystem.currentTitle';
     this.previousTitle = 'overview.cards.roomSystem.previousTitle';
     this.settingsUrl = '#/devices';
-    this.deviceUpdateEventHandler = deviceUpdateEventHandler;
 
-    function deviceUpdateEventHandler(response) {
-      if (response.data) {
-        card.current = _.size(response.data);
-        var last30Days = new Date(new Date().getTime() - (1000 * 60 * 60 * 24 * 30));
-        card.previous = _(response.data)
-          .filter(function (value, key) {
-            return new Date(value.createTime) > last30Days;
-          })
-          .size();
+    this.eventHandler = activeRoomsEventHandler;
+
+    function activeRoomsEventHandler(event, response) {
+
+      if (!response.data.success) return;
+      if (event.name == 'activeRoomsLoaded' && response.data.spanType == 'month' && response.data.intervalCount >= 2) {
+        card.current = Math.round(response.data.data[0].count);
+        card.previous = Math.round(response.data.data[1].count);
       }
     }
   }
