@@ -113,8 +113,9 @@
       // if it's longer than 2, we sort it
       if (resources.length > 2) {
 
-        // but we don't change the first top-line number, which is also shown in the header, so 
+        // but we don't change the first top-line number, which is also shown in the header, so
         // get a temp list without that first number
+
         var tmp = _.rest(resources);
 
         // and sort it
@@ -123,7 +124,8 @@
         });
 
         // we have a sorted list, take out the old unsorted ones, put in the sorted ones
-        resources.splice(1, resources.length - 1);
+        resources.length = 1;
+
         _.forEach(tmp, function (n) {
           resources.push(n);
         });
@@ -164,7 +166,6 @@
 
       // if they are of the same type, ie both external or internal, just compare directly
       if (vm.numberTypeList[a] === vm.numberTypeList[b]) {
-        var foo = a.localeCompare(b);
         return a.localeCompare(b);
       }
       // else if a is an internal extension, it comes after
@@ -199,17 +200,15 @@
         order: 'pattern'
       }).$promise.then(function (intPool) {
         for (var i = 0; i < intPool.length; i++) {
-          var dn = {
-            id: intPool[i].uuid,
-            number: intPool[i].pattern.replace(/\D/g, '')
-          };
 
-          vm.numberTypeList[dn.number] = "directoryNumber";
+          var number = intPool[i].pattern.replace(/\D/g, '');
+
+          vm.numberTypeList[number] = "directoryNumber";
 
           // Add to the available phone number list if not already used
-          if (!getDupeNumberAnyAA(dn.number)) {
+          if (!getDupeNumberAnyAA(number)) {
             // Internal extensions don't need formatting
-            addToAvailableNumberList(dn.number, dn.number);
+            addToAvailableNumberList(number, number);
 
           }
         }
@@ -225,18 +224,15 @@
         .then(function (extPool) {
           for (var i = 0; i < extPool.length; i++) {
 
-            var dn = {
-              id: extPool[i].uuid,
-              number: extPool[i].pattern.replace(/\D/g, '')
-            };
+            var number = extPool[i].pattern.replace(/\D/g, '');
 
-            vm.numberTypeList[dn.number] = "externalNumber";
+            vm.numberTypeList[number] = "externalNumber";
 
             // Add to the available phone number list if not already used
-            if (!getDupeNumberAnyAA(dn.number)) {
+            if (!getDupeNumberAnyAA(number)) {
               // For the option list, format the number for the label,
               // and return the value as just the number
-              addToAvailableNumberList(telephoneNumberFilter(dn.number), dn.number);
+              addToAvailableNumberList(telephoneNumberFilter(number), number);
 
             }
 

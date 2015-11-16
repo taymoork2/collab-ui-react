@@ -1,0 +1,95 @@
+.helpdesk-app-container {
+  background-color: $brand-white;
+  height: 100%;
+  overflow: hidden;
+}
+
+.helpdesk-content-view {
+  background-color: $brand-white;
+  height: 100%;
+  min-height: 100vh;
+  min-width: 100vh;
+  margin-left: 2rem;
+  margin-right: 2rem;
+  padding-top: 4rem;
+  p {
+    margin-bottom: 1rem;
+  }
+}
+
+.helpdesk-landing {
+  padding-top: 2rem;
+  text-align: center;
+  table {
+    tbody {
+      tr {
+        border-top: transparent;
+      }
+      td a, .td a {
+        color: $anchor-font-color;
+      }
+      td a:hover, .td a:hover {
+        color: $anchor-font-color-hover;
+      }
+    }
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .org-list {
+    text-align: left;
+    margin-left: 1.5rem;
+    margin-top: 5px;
+    margin-bottom: 1rem;
+  }
+  h1 {
+    margin-bottom: 1rem;
+    color: $color-primary-base;
+  }
+  h2 {
+    margin-bottom: 1rem;
+  }
+}
+
+.helpdesk-details {
+  h2 {
+    margin-bottom: 1.5rem;
+  }
+  table {
+    tbody {
+      tr {
+        border-top: transparent;
+      }
+      td {
+        padding-left: 0;
+      }
+      td a, .td a {
+        color: $anchor-font-color;
+      }
+      td a:hover, .td a:hover {
+        color: $anchor-font-color-hover;
+      }
+    }
+  }
+  .card-list {
+    text-align: left;
+    margin-left: 1.5rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+}
+
+.helpdesk-red {
+  color: $color-negative-base;
+}
+
+.helpdesk-green {
+  color: $color-cta-base;
+}
+
+.helpdesk-grey {
+  color: $gray-base;
+}
+
+.helpdesk-yellow {
+  color: $color-attention-base;
+}

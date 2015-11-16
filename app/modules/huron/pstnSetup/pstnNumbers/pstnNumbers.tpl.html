@@ -22,8 +22,8 @@
           </li>
         </ul>
         <div class="provider-flex">
-          <button ng-click="pstnNumbers.paginateOptions.previousPage()" ng-class="{invisible: pstnNumbers.paginateOptions.currentPage === 0}"><span translate="common.back"></span></button>
-          <button ng-click="pstnNumbers.paginateOptions.nextPage()" ng-class="{invisible: pstnNumbers.paginateOptions.currentPage >= pstnNumbers.searchResults.length/pstnNumbers.paginateOptions.pageSize - 1}"><span translate="common.next"></span></button>
+          <button type="button" class="circle-small secondary icon icon-chevron-left" ng-click="pstnNumbers.paginateOptions.previousPage()" ng-class="{invisible: pstnNumbers.paginateOptions.currentPage === 0}"><span class="sr-only" translate="common.back"></span></button>
+          <button type="button" class="circle-small secondary icon icon-chevron-right" ng-click="pstnNumbers.paginateOptions.nextPage()" ng-class="{invisible: pstnNumbers.paginateOptions.currentPage >= pstnNumbers.searchResults.length/pstnNumbers.paginateOptions.pageSize - 1}"><span class="sr-only" translate="common.next"></span></button>
         </div>
       </div>
       <div class="modal-body" ng-if="pstnNumbers.searchResults.length === 0">

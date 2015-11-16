@@ -79,7 +79,7 @@
       return {
         restrict: 'A',
         link: function ($scope, $element, $attr) {
-          $scope.$watch($attr.focusOn, function (_focusVal) {
+          $scope.$watch($attr.selectText, function (_focusVal) {
             $timeout(function () {
               if (_focusVal) {
                 $element.select();

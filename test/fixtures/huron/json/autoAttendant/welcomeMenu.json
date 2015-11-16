@@ -34,12 +34,14 @@
       "actions": [{
         "name": "play",
         "value": "file1.avi",
-        "description": "Welcome prompt"
+        "description": "Welcome prompt",
+        "voice": ""
       }],
       "timeout": "",
       "username": "",
       "password": "",
-      "url": ""
+      "url": "",
+      "language": ""
     }, {
       "description": "",
       "isConfigured": true,
@@ -49,12 +51,14 @@
       "actions": [{
         "name": "route",
         "value": "1111",
-        "description": "Operator"
+        "description": "Operator",
+        "voice": ""
       }],
       "timeout": "",
       "username": "",
       "password": "",
-      "url": ""
+      "url": "",
+      "language": ""
     }]
   }
 }

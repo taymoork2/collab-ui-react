@@ -24,12 +24,14 @@
     vm.fetchHuntMembers = fetchHuntMembers;
     vm.initialized = false;
     vm.back = true;
+    vm.backUrl = 'huronfeatures';
     vm.hgMethods = {
       longestIdle: "DA_LONGEST_IDLE_TIME",
       broadcast: "DA_BROADCAST",
       circular: "DA_CIRCULAR",
       topDown: "DA_TOP_DOWN"
     };
+    vm.model = {};
 
     function init() {
       vm.userSelected = undefined;
@@ -38,16 +40,17 @@
       vm.membersValid = true;
       vm.fallbackValid = true;
       vm.fallbackDirty = false;
-      vm.huntGroupId = $stateParams.feature.id;
+      vm.model.name = $stateParams.feature.cardName;
+      vm.hgId = $stateParams.feature.id;
 
       if (vm.initialized) {
+
         vm.model = angular.copy(initialModel);
         vm.initialnumbers = angular.copy(initialnumberoptions);
         intializeFields();
       } else {
-        HuntGroupService.getDetails(customerId, vm.huntGroupId).then(function (data) {
+        HuntGroupService.getDetails(customerId, vm.hgId).then(function (data) {
 
-          vm.title = data.name;
           vm.initialnumber = data.numbers;
           vm.model = {
             maxRingSecs: {
@@ -58,7 +61,7 @@
               'label': data.maxWaitMins + ' mins',
               'value': data.maxWaitMins
             },
-            name: vm.title,
+            name: data.name,
             numbers: angular.copy(vm.initialnumber),
             huntMethod: data.huntMethod,
             members: data.members,
@@ -373,13 +376,19 @@
     function saveForm() {
       vm.saveInProgress = true;
 
-      HuntGroupService.updateHuntGroup(customerId, vm.huntGroupId, hgUpdateReqBody()).then(function (data) {
+      HuntGroupService.updateHuntGroup(customerId, vm.hgId, hgUpdateReqBody()).then(function (data) {
         vm.saveInProgress = false;
-        Notification.success($translate.instant('huronHuntGroup.successUpdate'));
+        Notification.success($translate.instant('huronHuntGroup.successUpdate', {
+          huntGroupName: vm.model.name
+        }));
+        initialModel = angular.copy(vm.model);
+        resetForm();
 
       }, function (data) {
         vm.saveInProgress = false;
-        Notification.error($translate.instant('huronHuntGroup.errorUpdate'));
+        Notification.error($translate.instant('huronHuntGroup.errorUpdate'), {
+          huntGroupName: vm.model.name
+        });
       });
     }
 

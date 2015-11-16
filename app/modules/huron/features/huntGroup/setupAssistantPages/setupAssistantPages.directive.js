@@ -2,11 +2,11 @@
   'use strict';
 
   var pageDirectiveNames = [
-    'huntGroupName',
-    'huntPilotLookup',
-    'huntMethod',
-    'huntMembersLookup',
-    'fallbackDestination'
+    'hgName',
+    'hgPilotLookup',
+    'hgMethod',
+    'hgMemberLookup',
+    'hgFallbackDestination'
   ];
 
   pageDirectiveNames.map(function (directiveName) {
@@ -21,18 +21,15 @@
     var huntGroupSA;
 
     var directive = {
-      controller: 'HuntGroupSetupAssistantCtrl',
-      link: link,
+      link: function (scope, element, attrs) {
+        huntGroupSA = scope.huntGroupSA;
+      },
       templateUrl: 'modules/huron/features/huntGroup/setupAssistantPages/' + pageFile,
       restrict: 'EA',
       scope: false
     };
 
     return directive;
-
-    function link(scope, element, attrs) {
-      huntGroupSA = scope.huntGroupSA;
-    }
   }
 
 })();

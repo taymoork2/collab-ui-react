@@ -161,6 +161,65 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
     });
 
+    it('should sort combination of internal/external numbers with internals sorting last', function () {
+
+      aaModel.ceInfos.push({
+        name: rawCeInfo.callExperienceName
+      });
+
+      // start out with 2 external available numbers, with an internal in-between, that are not sorted
+      controller.availablePhoneNums[0] = {
+        label: "2064261234",
+        value: "2064261234"
+      };
+      controller.numberTypeList["2064261234"] = "externalNumber";
+
+      controller.availablePhoneNums[1] = {
+        label: "1234",
+        value: "1234"
+      };
+      controller.numberTypeList["1234"] = "directoryNumber";
+
+      controller.availablePhoneNums[2] = {
+        label: "1234567",
+        value: "1234567"
+      };
+      controller.numberTypeList["1234567"] = "externalNumber";
+
+      // add a number
+      controller.addNumber("2064261234");
+      $scope.$apply();
+
+      // and we should be down to 2 available now
+      expect(controller.availablePhoneNums.length === 2);
+
+      // add internal
+      controller.addNumber("1234");
+      $scope.$apply();
+
+      // we should be down to 1 available
+      expect(controller.availablePhoneNums.length === 1);
+
+      // add another
+      controller.addNumber("1234567");
+      $scope.$apply();
+
+      // we should be down to 0 available
+      expect(controller.availablePhoneNums.length === 0);
+
+      var resources = controller.ui.ceInfo.getResources();
+
+      // we don't sort the first top-line header number - it should have stayed put
+      expect(resources[0].number).toEqual("999999");
+
+      // and the 1234567 should have sorted first after that - even though we added it last
+      expect(resources[1].number).toEqual("1234567");
+
+      // and the internal 1234 should have sorted last - special case for internal
+      expect(resources[3].number).toEqual("1234");
+
+    });
+
     it('should not move a bad or missing phone number from available', function () {
       aaModel.ceInfos.push({
         name: rawCeInfo.callExperienceName
@@ -203,8 +262,12 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
     it('should move a phone number to available successfully', function () {
 
-      // start out as 1 available number
+      // start out as 2 available numbers that are not sorted
       controller.availablePhoneNums[0] = {
+        label: "2345678",
+        value: "2345678"
+      };
+      controller.availablePhoneNums[1] = {
         label: "1234567",
         value: "1234567"
       };
@@ -213,7 +276,10 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
       $scope.$apply();
 
-      expect(controller.availablePhoneNums.length).toEqual(2);
+      // we should have 3 numbers now
+      expect(controller.availablePhoneNums.length).toEqual(3);
+      // and the 1234567 should have sorted first
+      expect(controller.availablePhoneNums[0].value).toEqual("1234567");
 
       var numobj = controller.availablePhoneNums.filter(function (obj) {
         return obj.value == rawCeInfo.assignedResources[0].number;
