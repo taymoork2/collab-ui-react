@@ -268,32 +268,7 @@ describe('Controller: Partner Reports', function () {
       DonutChartService = _DonutChartService_;
 
       spyOn(PartnerReportService, 'getOverallActiveUserData').and.returnValue($q.when({}));
-      spyOn(PartnerReportService, 'getActiveUserData').and.returnValue($q.when({
-        graphData: [],
-        tableData: [],
-        populationGraph: [],
-        overallPopulation: 0
-      }));
       spyOn(PartnerReportService, 'getCustomerList').and.returnValue($q.when([]));
-      spyOn(PartnerReportService, 'getMediaQualityMetrics').and.returnValue($q.when(dummyMediaQualityGraphData));
-      spyOn(PartnerReportService, 'getCallMetricsData').and.returnValue($q.when({
-        data: dummycallMetricsData
-      }));
-      spyOn(PartnerReportService, 'getRegisteredEndpoints').and.returnValue($q.when([]));
-
-      spyOn(GraphService, 'updateActiveUsersGraph');
-      spyOn(GraphService, 'createActiveUsersGraph').and.returnValue({
-        'dataProvider': dummyGraphData,
-        invalidateSize: validateService.invalidate
-      });
-
-      spyOn(GraphService, 'updateMediaQualityGraph');
-      spyOn(GraphService, 'createMediaQualityGraph').and.returnValue({
-        'dataProvider': dummyMediaQualityGraphData,
-        invalidateSize: validateService.invalidate
-      });
-
-      spyOn(DonutChartService, 'createCallMetricsDonutChart');
 
       spyOn(DummyReportService, 'dummyActiveUserData').and.returnValue(dummyData.activeUser.one);
       spyOn(DummyReportService, 'dummyActivePopulationData').and.returnValue(dummyData.activeUserPopulation);
@@ -316,14 +291,8 @@ describe('Controller: Partner Reports', function () {
       it('should be created successfully and all expected calls completed', function () {
         expect(controller).toBeDefined();
 
-        expect(PartnerReportService.getActiveUserData).toHaveBeenCalled();
+        expect(PartnerReportService.getOverallActiveUserData).toHaveBeenCalled();
         expect(PartnerReportService.getCustomerList).toHaveBeenCalled();
-        expect(PartnerReportService.getMediaQualityMetrics).toHaveBeenCalled();
-        expect(PartnerReportService.getRegisteredEndpoints).toHaveBeenCalled();
-
-        expect(GraphService.createActiveUsersGraph).toHaveBeenCalled();
-        expect(GraphService.createMediaQualityGraph).toHaveBeenCalled();
-        expect(DonutChartService.createCallMetricsDonutChart).toHaveBeenCalled();
       });
 
       it('should set all page variables empty defaults', function () {
