@@ -2559,8 +2559,8 @@
   },
   "overview": {
     "pageTitle": "Overview",
-    "thisMonth": "This Month",
-    "lastMonth": "Last Month:",
+    "thisMonth": "This month",
+    "lastMonth": "Last month:",
     "cards": {
       "users": {
         "title": "Users",
@@ -2572,7 +2572,7 @@
       "message": {
         "title": "Message",
         "desc": "Active Rooms",
-        "currentTitle": "Active Rooms Last 7 days",
+        "currentTitle": "Active rooms last 7 days",
         "previousTitle": "Last 30 days:"
 
       },
