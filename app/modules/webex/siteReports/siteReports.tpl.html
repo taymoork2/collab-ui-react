@@ -39,7 +39,7 @@
             <header id={{sec.section_name}}
                   name={{sec.section_name}}
                   class="no-bullet">
-              <h3>
+              <h3 xml:lang="{{sec.lang}}">
                 {{sec.section_name_translated}}
               </h3>
             </header>
@@ -55,7 +55,7 @@
                   </li>
 
                   <h4 ng-repeat-start="s in sec.subsections" id="{{s.section_name}}"
-                      name="{{s.section_name}}">
+                      name="{{s.section_name}}" xml:lang="{{s.lang}}">
                    {{s.section_name_translated}}
                   </h4>
                   <li ng-repeat="sref in s.uisrefs">
