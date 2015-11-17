@@ -62,21 +62,18 @@
 
     function filterDevices(searchString, devices) {
       searchString = searchString.toLowerCase();
-      var filterDevices = [];
+      var filteredDevices = [];
       _.each(devices, function (device) {
-        if ((device.displayName || '').toLowerCase().indexOf(searchString) != -1
-          || (device.mac || '').toLowerCase().indexOf(searchString) != -1
-          || (device.serial || '').toLowerCase().indexOf(searchString) != -1) {
+        if ((device.displayName || '').toLowerCase().indexOf(searchString) != -1 || (device.mac || '').toLowerCase().indexOf(searchString) != -1 || (device.serial || '').toLowerCase().indexOf(searchString) != -1) {
           if (_.size(filterDevices) < 5) {
-            filterDevices.push(device);
+            filteredDevices.push(device);
           } else {
             return false;
           }
         }
       });
-      return filterDevices;
+      return filteredDevices;
     }
-
 
     return {
       searchUsers: searchUsers,

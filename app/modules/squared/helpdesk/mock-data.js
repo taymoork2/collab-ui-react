@@ -120,7 +120,11 @@
         "mac": "DC:EB:94:B5:0F:44",
         "product": "Cisco TelePresence SX10",
         "state": "CLAIMED",
-        "remoteSupportUser": {"username": "", "token": "", "expiryTime": "1970-01-01T00:00:00.000Z"},
+        "remoteSupportUser": {
+          "username": "",
+          "token": "",
+          "expiryTime": "1970-01-01T00:00:00.000Z"
+        },
         "status": {
           "cisUuid": "824d3dfe-7143-4f04-af15-2f5e5659d596",
           "url": "https://csdm-a.wbx2.com/csdm/api/v1/organization/4214d345-7caf-4e32-b015-34de878d1158/devices/7cdf6cbe-6f84-5338-9064-87a20ec6f9c8",

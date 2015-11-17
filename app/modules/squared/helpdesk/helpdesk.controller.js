@@ -68,7 +68,6 @@
       } else {
         vm.searchingForDevices = true;
         HelpdeskService.searchCloudberryDevices(vm.searchString, orgFilterId).then(function (res) {
-          console.log('searchCloudberryDevices', res);
           vm.currentSearch.deviceSearchResults = res;
           vm.searchingForDevices = false;
         }, function (err) {
