@@ -123,6 +123,7 @@ gulp.task('copy:dist', function (done) {
 
 gulp.task('copy:dist-appfiles', function () {
   var files = [].concat(
+    '**/*.svg',
     '*.{txt,html}',
     '!index.html',
     '**/*.json',

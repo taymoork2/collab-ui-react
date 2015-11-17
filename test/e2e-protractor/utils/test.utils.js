@@ -372,7 +372,7 @@ exports.expectAttribute = function (elem, attr, value) {
 };
 
 exports.expectText = function (elem, value, value2) {
-  this.wait(elem).then(function () {
+  return this.wait(elem).then(function () {
     expect(elem.getText()).toContain(value);
     if (value2) {
       expect(elem.getText()).toContain(value2);

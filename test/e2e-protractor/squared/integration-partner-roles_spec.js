@@ -45,7 +45,6 @@ describe('Org Entitlement flow', function () {
     utils.click(roles.saveButton);
 
     notifications.assertSuccess('User successfully updated.');
-    notifications.clearNotifications();
   });
 
   it('should reverse role change', function () {
@@ -54,7 +53,6 @@ describe('Org Entitlement flow', function () {
     utils.click(roles.saveButton);
 
     notifications.assertSuccess('User successfully updated.');
-    notifications.clearNotifications();
   });
 
   it('should verify user name change', function () {
