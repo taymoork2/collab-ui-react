@@ -93,6 +93,47 @@
       }
     }
   }
+  .search-results {
+    .cs-card:first-child{
+      margin-top: 0;
+    }
+    .cs-card{
+      header{
+        h5 a{
+          padding-left: 0.5rem;
+          font-size: 0.875rem;
+          font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+          color: $gray-dark-3;
+        }
+      }
+      section{
+        div,span{
+          font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+      }
+    }
+    .cs-card:hover{
+      article{
+        border: 1px solid $brand-primary;
+      }
+    }
+    .cs-card article:focus{
+      outline: none !important;
+      outline:0 !important;
+      border: 1px solid $brand-primary;
+    }
+    .cs-card:active{
+      article{
+        background-color: $brand-primary;
+        color: white !important;
+        header{
+          h4,h5,*{
+            color: white !important;
+          }
+        }
+      }
+    }
+  }
 }
 
 .helpdesk-details {
@@ -124,6 +165,7 @@
     margin-top: 1rem;
     margin-bottom: 1rem;
   }
+
 }
 
 .helpdesk-red {
