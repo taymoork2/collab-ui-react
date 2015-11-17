@@ -335,7 +335,8 @@
     "highQuality": "5 Highest Quality",
     "leastQuality": "5 Lowest Quality",
     "customerLoadError": "There was an error while loading the customer list.",
-    "webex": "WebEx Reports"
+    "unauthorizedError": "User is not authorized to access the customer reports.",
+    "webex": "Webex Reports"
   },
   "activeUsers": {
     "active": "Active",

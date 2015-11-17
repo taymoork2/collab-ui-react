@@ -109,7 +109,7 @@
                   }
                 }
 
-                if (activeUsers !== 0 && totalRegisteredUsers !== 0) {
+                if (activeUsers !== 0 || totalRegisteredUsers !== 0) {
                   var modifiedDate = moment(item.date).add(1, 'day').format(monthFormat);
                   if (time.value === 0 || time.value === 1) {
                     modifiedDate = moment(item.date).add(1, 'day').format(dayFormat);
@@ -164,7 +164,11 @@
     }
 
     function returnErrorCheck(error, debug, message, returnItem) {
-      if (error.status !== 0) {
+      if (error.status === 401 || error.status === 403) {
+        Log.debug('User not authorized to access reports.  Status: ' + error.status);
+        Notification.notify([$translate.instant('reportsPage.unauthorizedError')], 'error');
+        return returnItem;
+      } else if (error.status !== 0) {
         Log.debug(debug + '  Status: ' + error.status + ' Response: ' + error.message);
         Notification.notify([message], 'error');
         return returnItem;
