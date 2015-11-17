@@ -1,4 +1,4 @@
-(function() {
+(function () {
   'use strict';
 
   var mockData = {
@@ -42,8 +42,7 @@
       "id": "bc1d8493-69a7-4ba7-a0c0-62abf1b57ac6",
       "displayName": "Autobots",
       "isPartner": false
-    }
-    ]
+    }]
   };
   angular.module('Squared').constant('HelpdeskMockData', mockData);
 }());
