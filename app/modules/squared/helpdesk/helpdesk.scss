@@ -60,6 +60,13 @@
   .typeahead-large .input-description:before {
     display: none;
   }
+  .typeahead-large{
+    position: relative;
+    .icon-search{
+      position: absolute;
+      right: 0;
+    }
+  }
 }
 
 .helpdesk-details {

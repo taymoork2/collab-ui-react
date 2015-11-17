@@ -7,10 +7,12 @@
            placeholder=""
            ng-model="helpdeskCtrl.searchString" ,
            ng-keypress="($event.which === 13) ? helpdeskCtrl.search() : 0"/>
-    <button class="button secondary"
+    <!--<button class="button secondary"
             ng-click="helpdeskCtrl.search()"
             translate="common.search"
-            ng-disabled="helpdeskCtrl.searchString == ''"></button>
+            ng-disabled="helpdeskCtrl.searchString == ''"></button>-->
+    <button type="button" class="circle-small secondary icon icon-search" ng-click="helpdeskCtrl.search()" ng-disabled="helpdeskCtrl.searchString == ''" ></button>
+
     <div class="input-description">
       <p>
         <span translate="helpdesk.searchInputDescription"></span>
