@@ -195,6 +195,15 @@
     this.currentTitle = 'overview.cards.roomSystem.currentTitle';
     this.previousTitle = 'overview.cards.roomSystem.previousTitle';
     this.settingsUrl = '#/devices';
+
+    this.healthStatusUpdatedHandler = function roomSystemHealthEventHandler(data) {
+      _.each(data.components, function (component) {
+        if (component.name == 'Rooms') {
+          card.healthStatus = mapStatus(card.healthStatus, component.status);
+        }
+      });
+    };
+
     this.reportDataEventHandler = function(event, response) {
 
       if (!response.data.success) return;
