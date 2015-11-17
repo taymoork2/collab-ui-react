@@ -977,6 +977,13 @@ angular.module('Core')
         ]
       };
 
+      // Poor mans feature toggle... (preliminary...)
+      if (!config.isIntegration()) {
+        // Old fusion menu will not be shown in integration... soon to removed from production as well...
+        var mgmtState = config.serviceStates['squared-fusion-mgmt'];
+        mgmtState.push('fusion');
+      }
+
       if (!config.isProd()) {
         // Experimental, not to be enabled in production (yet)
         var calStates = config.serviceStates['squared-fusion-cal'];
