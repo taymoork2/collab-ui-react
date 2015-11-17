@@ -236,7 +236,7 @@
 
     function getListOfHuntGroups() {
 
-      return HuntGroupServiceV2.get({
+      return HuntGroupServiceV2.query({
         customerId: customerId
       }).$promise;
     }

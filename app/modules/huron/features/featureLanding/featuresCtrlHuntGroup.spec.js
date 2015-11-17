@@ -8,7 +8,7 @@ describe('Features Controller', function () {
   var featureCtrl, $rootScope, $scope, $modal, $q, $state, $translate, $filter, $timeout, Authinfo, HuntGroupService, TelephoneNumberService, Log, Notification, getDeferred, HuronFeaturesListService, AutoAttendantCeInfoModelService, AAModelService;
   var listOfHGs = getJSONFixture('huron/json/features/huntGroup/hgList.json');
   var hg = getJSONFixture('huron/json/features/huntGroup/oneHg.json');
-  var emptyListOfHGs = getJSONFixture('huron/json/features/huntGroup/emptyHgList.json');
+  var emptyListOfHGs = [];
   var getHGListSuccessResp = function (data) {
     return data;
   };
