@@ -381,6 +381,8 @@
           btnClass: 'btn btn-primary search-button',
           label: $translate.instant('cdrLogs.reset'),
           onClick: function (options, scope) {
+            vm.selectedCDR = null;
+
             vm.model.callingPartyNumber = "";
             vm.model.calledPartyNumber = "";
             vm.model.callingPartyDevice = "";
@@ -429,6 +431,7 @@
           btnClass: 'btn btn-primary search-button',
           label: $translate.instant('cdrLogs.upload'),
           onClick: function (options, scope) {
+            vm.selectedCDR = null;
             try {
               var jsonData = JSON.parse(scope.model.uploadFile);
               vm.gridData = [];
