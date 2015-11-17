@@ -72,6 +72,7 @@
       value: 6
     }];
 
+    // TBD means the action isn't supported in the backend yet
     vm.keyActions = [{
       label: $translate.instant('autoAttendant.phoneMenuPlaySubmenu'),
       name: 'phoneMenuPlaySubmenu',
@@ -104,6 +105,7 @@
       action: 'goto'
     }];
 
+    // search for a timeout action by its name
     function findTimeoutAction(name) {
       for (var i = 0; i < vm.timeoutActions.length; i++) {
         if (vm.timeoutActions[i].name === name) {
@@ -112,6 +114,7 @@
       }
     }
 
+    // search for a key action by its name
     function findKeyAction(name) {
       for (var i = 0; i < vm.keyActions.length; i++) {
         if (vm.keyActions[i].name === name) {
@@ -120,27 +123,32 @@
       }
     }
 
+    // the user has pressed "Add another input digit" to add a key/action pair
     function addKeyAction() {
       var keyAction = new KeyAction();
       keyAction.keys = getAvailableKeys('');
       vm.selectedActions.push(keyAction);
     }
 
+    // the user has pressed the trash can icon for a key/action pair
     function deleteKeyAction(index) {
       vm.selectedActions.splice(index, 1);
       saveUIModel();
     }
 
+    // the user has changed the key for an existing action
     function keyChanged(index, keyValue) {
       vm.selectedActions[index].key = keyValue;
       saveUIModel();
     }
 
+    // the user has changed the action for an existing key
     function keyActionChanged(index, keyAction) {
       vm.selectedActions[index].value = keyAction;
       saveUIModel();
     }
 
+    // the user has changed the timeout/invalid option
     function timeoutActionChanged() {
       var timeout = findTimeoutAction(vm.selectedTimeout.name);
       if (timeout) {
@@ -149,12 +157,18 @@
       }
     }
 
+    // determine which keys are still available.
+    // selectedKey: a key we want to force into the available list. this is
+    // needed because when the user is changing a key we want to show the
+    // current key as available even though the model thinks it's in use.
     function getAvailableKeys(selectedKey) {
       var keys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '#', '*'];
       var availableKeys = [];
+      // for each key determine if it's in use by looping over all actions.
       for (var i = 0; i < keys.length; i++) {
         var key = keys[i];
         if (key === selectedKey) {
+          // force this key to be in the available list
           availableKeys.push(key);
           continue;
         }
@@ -167,6 +181,7 @@
           }
         }
         if (!keyInUse) {
+          // key is not in use to add to the available list
           availableKeys.push(key);
         }
       }
@@ -174,6 +189,7 @@
       return availableKeys;
     }
 
+    // update the list of available keys for each action
     function setAvailableKeys() {
       for (var x = 0; x < vm.selectedActions.length; x++) {
         var selectedAction = vm.selectedActions[x];
@@ -184,9 +200,11 @@
     function saveUIModel() {
       var entry = vm.menuEntry;
       if (entry.type == "MENU_OPTION") {
+        // this is number of times to repeat the timeout/invalid menu
         entry.attempts = vm.selectedTimeout.value;
         //TODO set language and voice here
         entry.entries = [];
+        // add each key/action pair
         for (var j = 0; j < vm.selectedActions.length; j++) {
           var selectedAction = vm.selectedActions[j];
           var keyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
@@ -197,6 +215,8 @@
             keyAction.name = action.action;
             keyAction.value = selectedAction.value;
             if (angular.isDefined(action.inputType)) {
+              // some action names are overloaded and are distinguished
+              // by inputType
               keyAction.inputType = action.inputType;
             }
             keyEntry.key = selectedAction.key;
@@ -207,6 +227,7 @@
         }
         setAvailableKeys();
         for (var k = 0; k < entry.headers.length; k++) {
+          // the only header should be the Say Message announcement
           var header = entry.headers[k];
           if (angular.isDefined(header.actions) && header.actions.length > 0) {
             var headerAction = header.actions[0];
@@ -224,6 +245,8 @@
       if (entry.type == "MENU_OPTION") {
         if (angular.isDefined(entry.attempts)) {
           vm.selectedTimeout.value = entry.attempts;
+          // both timeout options have the same action name so
+          // we distinguish by the number of attempts allowed
           if (entry.attempts === 1) {
             vm.selectedTimeout.name = 'phoneMenuContinue';
           } else {
@@ -233,6 +256,7 @@
         var entries = entry.entries;
         var headers = entry.headers;
         if (entries.length > 0) {
+          // add the key/action pairs
           for (var j = 0; j < entries.length; j++) {
             var menuEntry = entries[j];
             if (menuEntry.actions.length == 1 && menuEntry.type == "MENU_OPTION") {
@@ -244,7 +268,9 @@
             }
           }
         }
+        // remove keys that are in use from the selection widget
         setAvailableKeys();
+        // handle the Say Message announcement
         for (var k = 0; k < headers.length; k++) {
           var header = headers[k];
           if (header.actions.length == 1) {
