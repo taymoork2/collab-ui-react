@@ -31,6 +31,5 @@ test/karma-unit.js
 test/karma-watch.js
 test/unit-test-results.html
 test/unit-test-results.xml
-/bin/
 .manifest-checksums
 .last-refreshed
