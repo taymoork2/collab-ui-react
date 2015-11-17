@@ -1,8 +1,8 @@
-(function () {
+(function() {
   'use strict';
 
   var mockData = {
-    use: true,
+    use: false,
     users: [{
       "id": "ddb4dd78-26a2-45a2-8ad8-4c181c5b3f0a",
       "organization": {
