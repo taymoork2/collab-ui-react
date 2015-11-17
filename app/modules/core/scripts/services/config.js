@@ -939,10 +939,7 @@ angular.module('Core')
           'cdr-overview'
         ],
         'squared-fusion-mgmt': [
-<<<<<<< HEAD
           // 'fusion',
-=======
->>>>>>> upstream/master
           'cluster-details',
           'cluster-details-new',
           'management-service',
