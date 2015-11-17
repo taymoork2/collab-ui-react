@@ -107,7 +107,11 @@
           <p translate="helpdesk.searchingPleaseWait"></p>
         </div>
 
-        <p ng-if="!helpdeskCtrl.currentSearch.orgFilter">Device search is not supported yet.</p>
+        <div ng-if="!helpdeskCtrl.currentSearch.orgFilter">
+          <p>Global device search is not supported yet.</p>
+
+          <p>Find the customer first and then search for devices.</p>
+        </div>
 
         <div ng-if="helpdeskCtrl.currentSearch.deviceSearchFailure">
           <p class="helpdesk-red">{{helpdeskCtrl.currentSearch.deviceSearchFailure}}</p>

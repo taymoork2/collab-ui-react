@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskUserController($stateParams, HelpdeskService, Orgservice, XhrNotificationService) {
+  function HelpdeskUserController($stateParams, HelpdeskService, XhrNotificationService) {
     var vm = this;
     vm.user = $stateParams.user;
     vm.org = {};

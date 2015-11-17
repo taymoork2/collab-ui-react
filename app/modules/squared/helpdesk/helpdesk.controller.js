@@ -24,8 +24,10 @@
         this.searchString = searchString;
         this.userSearchResults = null;
         this.orgSearchResults = null;
+        this.deviceSearchResults = null;
         this.userSearchFailure = null;
         this.orgSearchFailure = null;
+        this.deviceSearchFailure = null;
       }
     };
     angular.element('#searchInput').focus();
