@@ -141,7 +141,7 @@ angular.module('Core')
           dev: 'https://identity.webex.com/identity/config/%s/v1/UserReports',
           cfe: 'https://identitybts.webex.com/identity/config/%s/v1/UserReports',
           integration: 'https://identity.webex.com/identity/config/%s/v1/UserReports',
-          prod: 'https://identity.webex.com/identity/config/%s/v1/UserReports'
+          prod: 'https://identity.webex.com/identity/config/%s/v1/UserReports',
         },
 
         scomUrl: {
@@ -437,8 +437,7 @@ angular.module('Core')
           support: 'atlas-portal.support',
           application: 'atlas-portal.application',
           reports: 'atlas-portal.reports',
-          sales: 'atlas-portal.partner.salesadmin',
-          helpdesk: 'atlas-portal.partner.helpdesk'
+          sales: 'atlas-portal.partner.salesadmin'
         },
 
         roles: {
@@ -448,8 +447,7 @@ angular.module('Core')
           support: 'Support',
           application: 'Application',
           reports: 'Reports',
-          sales: 'Sales_Admin',
-          helpdesk: 'Help_Desk'
+          sales: 'Sales_Admin'
         },
 
         roleState: {
@@ -911,8 +909,7 @@ angular.module('Core')
           'webex-reports-iframe',
           'example'
         ],
-        Application: ['organizations', 'organization-overview'],
-        Help_Desk: ['helpdesk', 'helpdesk.landing', 'helpdesk.user', 'helpdesk.org']
+        Application: ['organizations', 'organization-overview']
       };
 
       config.serviceStates = {
@@ -934,10 +931,12 @@ angular.module('Core')
           'huronfeatures',
           'huronnewfeature',
           'huronHuntGroup',
-          'huntgroupedit'
+          'huntgroupedit',
+          'cdrsupport',
+          'cdr-overview'
         ],
         'squared-fusion-mgmt': [
-          //'fusion',
+          'fusion',
           'cluster-details',
           'cluster-details-new'
           // 'management-service',
@@ -975,12 +974,6 @@ angular.module('Core')
         ]
       };
 
-      // Poor mans feature toggle... (preliminary...)
-      if (!config.isIntegration()) {
-        // Old fusion menu will not be shown in integration... soon to removed from production as well...
-        var mgmtState = config.serviceStates['squared-fusion-mgmt'];
-        mgmtState.push('fusion');
-      }
       if (!config.isProd()) {
         // Experimental, not to be enabled in production (yet)
         var calStates = config.serviceStates['squared-fusion-cal'];
@@ -1009,7 +1002,9 @@ angular.module('Core')
           'huronsettings',
           'calendar-service',
           'call-service',
-          'management-service'
+          'management-service',
+          'cdrsupport',
+          'cdr-overview'
         ]
       };
 
