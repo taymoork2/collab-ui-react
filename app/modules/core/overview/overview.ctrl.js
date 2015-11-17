@@ -212,8 +212,8 @@
     var card = this;
 
     this.unlicensedUsersHandler = function (data) {
-      if (data.success && data.resources) {
-        card.usersToConvert = data.resources.length; // for now use the length to get the count as there is a bug in CI and totalResults is not accurate.
+      if (data.success) {
+        card.usersToConvert = (data.resources||[]).length; // for now use the length to get the count as there is a bug in CI and totalResults is not accurate.
       }
     };
 
