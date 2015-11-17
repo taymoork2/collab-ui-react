@@ -1,3 +1,8 @@
+.fallback-page {
+  height: calc(100vh - #{$navbar-height + $overlay-panel-height});
+  overflow-y: auto;
+}
+
 .fallback-container {
   display: flex;
   flex-direction: column;
@@ -5,7 +10,6 @@
   height: 16rem !important;
   width: 48rem !important;
   overflow-x: hidden;
-  overflow-y: auto;
   margin: auto;
 }
 
