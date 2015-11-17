@@ -4,10 +4,7 @@
 </div>
 <div class="form-group">
   <label for="internalNumber">
-    {{'directoryNumberPanel.internalNumberExtension' | translate}}<span class="asterix">*</span>
-    <span popover="{{'directoryNumberPanel.internalNumberExtensionTooltip' | translate}}">
-      <i class="dn-help-icon"></i>
-    </span>
+    {{lineSettings.internalNumberLabel}}
   </label>
   <cs-select
     name="internalNumber"
@@ -21,22 +18,24 @@
     valuefield="uuid"
     required="true"
     ng-class="{'warning': lineSettings.checkDnOverlapsSteeringDigit()}"
+    on-change-fn="lineSettings.syncDidDn('internalNumber')"
     filter="true">
   </cs-select>
   <div ng-if="lineSettings.checkDnOverlapsSteeringDigit()" class="dn-warning-text">{{'directoryNumberPanel.steeringDigitOverlapWarning' | translate: { steeringDigitInTranslation: lineSettings.telephonyInfo.steeringDigit } }}</div>
   <div class="esn-number-field">
-    <p>
+    <p ng-if="lineSettings.showExtensions">
       {{'directoryNumberPanel.enterpriseSiteNumberLabel' | translate }}&nbsp;
       {{lineSettings.telephonyInfo.siteSteeringDigit}}{{lineSettings.telephonyInfo.siteCode}}<strong class="esn-extension" id="esnTail">{{lineSettings.assignedInternalNumber.pattern}}</strong>
     </p>
+    <p ng-if="!lineSettings.showExtensions">
+      {{'directoryNumberPanel.nationalNumberLabel' | translate}}:
+      {{lineSettings.assignedExternalNumber.pattern}}
+    </p>
   </div>
 </div>
-<div class="form-group">
+<div class="form-group" ng-if="lineSettings.showExtensions">
   <label for="externalNumber">
     {{'directoryNumberPanel.externalNumberLabel' | translate}}
-    <span popover="{{'directoryNumberPanel.externalNumberTooltip' | translate}}">
-      <i class="dn-help-icon"></i>
-    </span>
   </label>
   <cs-select
     name="externalNumber"
@@ -49,6 +48,5 @@
     labelfield="pattern"
     valuefield="uuid"
     filter="true"
-    on-change-fn="lineSettings.assignedExternalNumberChange()">
+    on-change-fn="lineSettings.syncDidDn('externalNumber')">
   </cs-select>
-</div>

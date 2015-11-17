@@ -1472,6 +1472,7 @@
     "externalNumberTooltip": "Use the direct line to reach this line from outside of the company.",
     "externalNumberPoolError": "Direct lines failed to load.",
     "externalNumberMappingError": "Direct line Mappings failed to load.",
+    "nationalNumberLabel": "National Number",
     "chooseNumber": "Choose a Number",
     "searchNumber": "Search for a number...",
     "addNewNumber": "Add a New Number",
