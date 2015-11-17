@@ -14,7 +14,7 @@
             <div class="overview-info">
               <div>{{(card.currentTitle || 'overview.thisMonth') | translate }}</div>
               <div class="overview-count">{{(card.current | number) || 'N/A'}}</div>
-              <div>{{(card.previousTitle || 'overview.lastMonth') | translate }} {{(card.current | number) || 'N/A'}}
+              <div>{{(card.previousTitle || 'overview.lastMonth') | translate }} {{(card.previous | number) || 'N/A'}}
               </div>
             </div>
           </section>
@@ -200,7 +200,6 @@
               <a ng-click="openFirstTimeSetupWiz()" translate="homePage.beginTrial"></a>
             </span>
             </div>
-            
             <div class="notification-style" ng-show="!overview.isCalendarAcknowledged">
               <span class="badge success" translate="common.new"></span>
 
