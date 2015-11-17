@@ -57,7 +57,7 @@
   <div class="flex-row row-licenses ">
     <div class="col-sm-4" ng-class="{'col-paid' : !planReview.messagingServices.isNewTrial, 'col-trial' : planReview.messagingServices.isNewTrial}">
       <div ng-if="planReview.messagingServices.isNewTrial" class="col-trial-header" translate="firstTimeWizard.startYourTrial" translate-values="{days: planReview.trial.trialPeriod}"></div>
-      <div ng-if="planReview.messagingServices.services" class="item-msg" translate="firstTimeWizard.messaging"></div>
+      <div ng-if="planReview.messagingServices.services" class="item-msg" translate="firstTimeWizard.message"></div>
       <div class="item-paid" ng-repeat="service in planReview.messagingServices.services">     
         <div ng-if="service.license.isTrial || planReview.messagingServices.isNewTrial" class="badge badge-trial" translate="firstTimeWizard.trial"></div>
         <div class="quantity">
