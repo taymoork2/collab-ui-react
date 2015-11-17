@@ -164,8 +164,11 @@
     }
 
     function licenseEventHandler(licenses) {
-      //MC = ? CF = ? Is CF calls and MC meetings? both contain "squared-syncup"=25 party meetings, so binding to meeting card.
-      card.trial  = _.any(licenses, function(l) { return (l.offerName == 'MC' || l.offerName == 'CF') && l.isTrial; });
+      card.trial  = _.any(licenses, function(l) {
+        return (
+          l.offerName == 'CF' ||
+          l.offerName == 'EE' ||
+          l.offerName == 'MC' ) && l.isTrial; }); //list: https://sqbu-github.cisco.com/WebExSquared/wx2-admin-service/blob/master/common/src/main/java/com/cisco/wx2/atlas/common/bean/order/OfferCode.java
     }
   }
 
@@ -198,8 +201,8 @@
     this.currentTitle = 'overview.cards.roomSystem.currentTitle';
     this.previousTitle = 'overview.cards.roomSystem.previousTitle';
     this.settingsUrl = '#/devices';
-
     this.eventHandler = activeRoomsEventHandler;
+    this.licenseEventHandler = licenseEventHandler;
 
     function activeRoomsEventHandler(event, response) {
 
@@ -208,6 +211,10 @@
         card.current = Math.round(response.data.data[0].count);
         card.previous = Math.round(response.data.data[1].count);
       }
+    }
+
+    function licenseEventHandler(licenses) {
+      card.trial  = _.any(licenses, { 'offerName': 'SD', 'isTrial': true }); //SD = Shared Devices
     }
   }
 
