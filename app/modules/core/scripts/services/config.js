@@ -895,9 +895,9 @@ angular.module('Core')
           'editService',
           'trialExtInterest'
         ],
-        Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview'],
+        Support: ['support', 'reports', 'billing'],
         WX2_User: ['overview', 'reports', 'support'],
-        WX2_Support: ['overview', 'reports', 'support', 'cdrsupport', 'cdr-overview'],
+        WX2_Support: ['overview', 'reports', 'support'],
         WX2_SquaredInviter: [],
         PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup'],
         PARTNER_USER: ['partnercustomers', 'customer-overview', 'trialAdd', 'trialEdit'],
