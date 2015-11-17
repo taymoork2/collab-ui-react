@@ -69,22 +69,6 @@ describe('Controller: PstnReviewCtrl', function () {
         expect(PstnSetupService.orderNumbers).toHaveBeenCalled();
         expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps');
       });
-
-      it('should create numbers directly when using a swivel carrier', function () {
-        PstnSetup.setProvider(carrierList[1]);
-        PstnSetup.setNumbers(swivelNumberTokens);
-        controller = $controller('PstnReviewCtrl', {
-          $scope: $scope
-        });
-        $scope.$apply();
-
-        controller.placeOrder();
-        $scope.$apply();
-
-        expect(ExternalNumberPool.create).toHaveBeenCalled();
-        expect(ExternalNumberPool.create.calls.count()).toEqual(2);
-        expect($state.go).toHaveBeenCalledWith('pstnSetup.nextSteps');
-      });
     });
 
     describe('when customer doesnt exist', function () {

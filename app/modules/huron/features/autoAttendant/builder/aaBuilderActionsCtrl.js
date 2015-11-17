@@ -18,9 +18,9 @@
       actions: ['say']
     }, {
       title: $translate.instant('autoAttendant.actionPhoneMenu'),
-      controller: 'AutoAttendantMainCtrl as aaMain',
-      url: 'modules/huron/callRouting/autoAttendant/autoAttendantMenu.tpl.html',
-      help: '',
+      controller: 'AAPhoneMenuCtrl as aaPhoneMenu',
+      url: 'modules/huron/features/autoAttendant/phoneMenu/aaPhoneMenu.tpl.html',
+      help: $translate.instant('autoAttendant.phoneMenuHelp'),
       actions: ['runActionsOnInput']
     }, {
       title: $translate.instant('autoAttendant.actionRouteCall'),
@@ -60,7 +60,9 @@
     function setTemplate() {
       if ($scope.index >= 0) {
         var menuEntry = vm.ui[vm.schedule].getEntryAt($scope.index);
-        if (menuEntry.actions.length > 0 && menuEntry.actions[0].getName()) {
+        if (menuEntry.type == "MENU_OPTION") {
+          vm.template = vm.templates[1];
+        } else if (menuEntry.actions.length > 0 && menuEntry.actions[0].getName()) {
           for (var i = 0; i < vm.templates.length; i++) {
             var isMatch = vm.templates[i].actions.some(function (action) {
               return menuEntry.actions[0].getName() === action;

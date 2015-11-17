@@ -70,10 +70,7 @@
       $scope.adminEmail = Authinfo.getPrimaryEmail();
       $scope.authToken = $rootScope.token;
       $scope.locale = ("es_LA" == $translate.use()) ? "es_MX" : $translate.use();
-      $scope.siteName = $stateParams.siteUrl.substring(
-        0,
-        $stateParams.siteUrl.indexOf('.')
-      );
+      $scope.siteName = $stateParams.siteUrl;
 
       _this.logMsg = _this.funcName + ": " + "\n" +
         "siteSettingId=" + $scope.siteSettingId + "\n" +

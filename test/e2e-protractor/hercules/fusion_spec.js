@@ -15,10 +15,12 @@ describe('Fusion Page', function () {
     login.login('media-super-admin');
   });
 
-  it('should navigate to the fusion page and display something', function () {
-    navigation.clickFusion();
-    utils.expectIsDisplayed(element(by.id('fusion-root')));
-  });
+  // Preliminary removed because old menu is replaced by new ones.
+  // TODO: Add proper test of those new elements
+  //it('should navigate to the fusion page and display something', function () {
+  //  navigation.clickFusion();
+  //  utils.expectIsDisplayed(element(by.id('fusion-root')));
+  //});
 
   it('should log out', function () {
     navigation.logout();

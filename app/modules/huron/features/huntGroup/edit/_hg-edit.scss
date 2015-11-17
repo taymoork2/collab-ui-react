@@ -3,7 +3,7 @@
 }
 
 .hg-edit {
-  height: calc(100vh - #{($navbar-height + $page-header-height + 1px)}) !important;
+  height: calc(100vh - #{($top-bar-height + $page-header-height)}) !important;
   overflow-y: auto;
   position: relative;
   background: $color-white;
@@ -150,7 +150,7 @@
     }
     &:hover, &:focus {
       background: $gray-light-4;
-       @include box-shadow(0px 1px 2px 2px rgba(52, 53, 55, 0.18));
+      @include box-shadow(0px 1px 2px 2px rgba(52, 53, 55, 0.18));
     }
   }
 }
@@ -161,12 +161,6 @@
     width: 80%;
     @include vr-spacing(mb, 2);
   }
-  section {
-    position: absolute;
-    z-index: 1000;
-    background-color: $brand-white;
-    @include box-shadow(0px 1px 2px 2px rgba(52, 53, 55, 0.18));
-  }
 
   .select-member{
     width : 76%;
@@ -175,11 +169,14 @@
 }
 
 .hgmember {
-  width: 43%;
+  width: rem-calc(250) !important;
   @include vr-spacing(mb, 0.5);
   .hg-edit & .cs-card.small {
     width: 100%;
   }
+}
+.hgmember .hunt-member-card {
+  @include vr-spacing(mt, 0);
 }
 
 .dragging-source {

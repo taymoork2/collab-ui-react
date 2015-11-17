@@ -2,45 +2,8 @@
   'use strict';
 
   /*ngInject*/
-  function HelpdeskService($http, Config, $q) {
+  function HelpdeskService($http, Config, $q, HelpdeskMockData, CsdmConfigService, CsdmConverter) {
     var urlBase = Config.getAdminServiceUrl();
-    var mock = false;
-    var mockUsers = [{
-      "id": "ddb4dd78-26a2-45a2-8ad8-4c181c5b3f0a",
-      "organization": {
-        id: "ce8d17f8-1734-4a54-8510-fae65acc505e"
-      },
-      "userName": "tom.vasset+marvelhelpdesk@gmail.com",
-      "displayName": "Tom Vasset",
-      "phoneNumbers": [{
-        "type": "work",
-        "value": "+47 67 51 14 67"
-      }, {
-        "type": "mobile",
-        "value": "+47 92 01 30 30"
-      }]
-    }, {
-      "id": "335bf4a2-a09c-45ba-a72a-e3f1de613295",
-      "organization": {
-        "id": "ce8d17f8-1734-4a54-8510-fae65acc505e"
-      },
-      "userName": "jayScott@marvel.com",
-      "displayName": "Jay Scott",
-      "phoneNumbers": []
-    }, {
-      "id": "2f4c85f7-e827-4b28-b567-0e49693b3f75",
-      "organization": {
-        "id": "ce8d17f8-1734-4a54-8510-fae65acc505e"
-      },
-      "userName": "shamim.pirzada+marvelenduser@gmail.com",
-      "displayName": "Shamim",
-      "phoneNumbers": []
-    }];
-
-    var mockOrgs = [{
-      "id": "ce8d17f8-1734-4a54-8510-fae65acc505e",
-      "displayName": "Marvel Partners"
-    }];
 
     function extractItems(res) {
       return res.data.items;
@@ -50,21 +13,21 @@
       return res.data;
     }
 
-    function searchUsers(searchString) {
-      if (mock) {
+    function searchUsers(searchString, orgId) {
+      if (HelpdeskMockData.use) {
         var deferred = $q.defer();
-        deferred.resolve(mockUsers);
+        deferred.resolve(HelpdeskMockData.users);
         return deferred.promise;
       }
       return $http
-        .get(urlBase + 'helpdesk/search/users?phrase=' + searchString + '&limit=5')
+        .get(urlBase + 'helpdesk/search/users?phrase=' + searchString + '&limit=5' + (orgId ? '&orgId=' + orgId : ''))
         .then(extractItems);
     }
 
     function searchOrgs(searchString) {
-      if (mock) {
+      if (HelpdeskMockData.use) {
         var deferred = $q.defer();
-        deferred.resolve(mockOrgs);
+        deferred.resolve(HelpdeskMockData.orgs);
         return deferred.promise;
       }
       return $http
@@ -84,11 +47,40 @@
         .then(extractData);
     }
 
+    function searchCloudberryDevices(searchString, orgId) {
+      if (HelpdeskMockData.use) {
+        var deferred = $q.defer();
+        deferred.resolve(filterDevices(searchString, CsdmConverter.convertDevices(HelpdeskMockData.devices)));
+        return deferred.promise;
+      }
+      return $http
+        .get(CsdmConfigService.getUrl() + '/organization/' + orgId + '/devices?checkOnline=false')
+        .then(function (res) {
+          return filterDevices(searchString, CsdmConverter.convertDevices(res.data));
+        });
+    }
+
+    function filterDevices(searchString, devices) {
+      searchString = searchString.toLowerCase();
+      var filteredDevices = [];
+      _.each(devices, function (device) {
+        if ((device.displayName || '').toLowerCase().indexOf(searchString) != -1 || (device.mac || '').toLowerCase().indexOf(searchString) != -1 || (device.serial || '').toLowerCase().indexOf(searchString) != -1) {
+          if (_.size(filterDevices) < 5) {
+            filteredDevices.push(device);
+          } else {
+            return false;
+          }
+        }
+      });
+      return filteredDevices;
+    }
+
     return {
       searchUsers: searchUsers,
       searchOrgs: searchOrgs,
       getUser: getUser,
-      getOrg: getOrg
+      getOrg: getOrg,
+      searchCloudberryDevices: searchCloudberryDevices
     };
 
   }

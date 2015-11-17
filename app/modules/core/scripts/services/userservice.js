@@ -3,8 +3,8 @@
 angular.module('Core')
   .constant('NAME_DELIMITER', ' \u000B')
   .service('Userservice', ['$http', '$rootScope', '$location', 'Storage', 'Config', 'Authinfo', 'Log', 'Auth', 'Utils', 'HuronUser', 'Notification', 'NAME_DELIMITER',
-    '$translate', '$q',
-    function ($http, $rootScope, $location, Storage, Config, Authinfo, Log, Auth, Utils, HuronUser, Notification, NAME_DELIMITER, $translate, $q) {
+    '$translate', '$q', 'TelephoneNumberService',
+    function ($http, $rootScope, $location, Storage, Config, Authinfo, Log, Auth, Utils, HuronUser, Notification, NAME_DELIMITER, $translate, $q, TelephoneNumberService) {
 
       var userUrl = Config.getAdminServiceUrl();
 
@@ -27,10 +27,10 @@ angular.module('Core')
         };
       }
 
-      function onboardUsers(userData, callback, cancelPromise) {
+      function onboardUsers(userPayload, callback, cancelPromise) {
 
-        if (userData && angular.isArray(userData.users) && userData.users.length > 0) {
-          $http.post(userUrl + 'organization/' + Authinfo.getOrgId() + '/users/onboard', userData, {
+        if (userPayload && angular.isArray(userPayload.users) && userPayload.users.length > 0) {
+          $http.post(userUrl + 'organization/' + Authinfo.getOrgId() + '/users/onboard', userPayload, {
               timeout: cancelPromise
             }).success(function (data, status) {
               data = data || {};
@@ -47,6 +47,30 @@ angular.module('Core')
         } else {
           callback('No valid emails entered.');
         }
+      }
+
+      /*
+       * Modifies a license or entitlement array with properties specific for the user
+       */
+      function buildUserSpecificProperties(user, entitlementOrLicenseList) {
+        return _.map(entitlementOrLicenseList, function (_entitlementOrLicense) {
+          var entitlementOrLicense = angular.copy(_entitlementOrLicense);
+          if (!_.has(entitlementOrLicense, 'properties')) {
+            entitlementOrLicense.properties = {};
+          }
+
+          // Communications license or ciscouc entitlement
+          if (_.startsWith(entitlementOrLicense.id, 'CO_') || entitlementOrLicense.entitlementName === 'ciscoUC') {
+            if (user.internalExtension) {
+              entitlementOrLicense.properties.internalExtension = user.internalExtension;
+            }
+            if (user.directLine) {
+              entitlementOrLicense.properties.directLine = TelephoneNumberService.getDIDValue(user.directLine);
+            }
+          }
+
+          return entitlementOrLicense;
+        });
       }
 
       return {
@@ -71,66 +95,25 @@ angular.module('Core')
           }
 
           if (userData.users.length > 0) {
-            var resultList = [];
             $http({
-                method: 'PATCH',
-                url: userUrl + 'organization/' + Authinfo.getOrgId() + '/users',
-                data: userData
-              })
-              .success(function (data, status) {
-                data = data || {};
-                // Huron user onboarding
-                if (angular.isDefined(data.userResponse) && angular.isArray(data.userResponse) && data.userResponse.length > 0) {
-                  var promises = [];
-                  angular.forEach(data.userResponse, function (user, index) {
-                    var userResult = {
-                      email: user.email,
-                      alertType: null
-                    };
-
-                    if (user.unentitled && user.unentitled.indexOf(Config.entitlements.huron) !== -1) {
-                      promises.push(HuronUser.delete(user.uuid)
-                        .catch(function (response) {
-                          // If the user does not exist in Squared UC do not report an error
-                          if (response.status !== 404) {
-                            this.alertType = 'danger';
-                            this.message = Notification.processErrorResponse(response, 'usersPage.deleteUserError', this);
-                          }
-                        }.bind(userResult)));
-                    }
-                    resultList.push(userResult);
-                  }); // end of foreach
-
-                  $q.all(promises).finally(function () {
-                    //concatenating the results in an array of strings for notify function
-                    var errors = [];
-
-                    for (var idx in resultList) {
-                      if (resultList[idx].alertType === 'danger') {
-                        errors.push(resultList[idx].message);
-                      }
-                    }
-                    //Displaying notifications
-                    if (errors.length > 0) {
-                      Notification.notify(errors, 'error');
-                    }
-
-                    $rootScope.$broadcast('Userservice::updateUsers');
-
-                    // callback to entitlement handle function
-                    data.success = true;
-                    callback(data, status, method);
-
-                  });
-
-                } // end of if
-              })
-              .error(function (data, status) {
-                data = data || {};
-                data.success = false;
-                data.status = status;
+              method: 'PATCH',
+              url: userUrl + 'organization/' + Authinfo.getOrgId() + '/users',
+              data: userData
+            }).success(function (data, status) {
+              data = data || {};
+              $rootScope.$broadcast('Userservice::updateUsers');
+              data.success = true;
+              if (angular.isFunction(callback)) {
                 callback(data, status, method);
-              });
+              }
+            }).error(function (data, status) {
+              data = data || {};
+              data.success = false;
+              data.status = status;
+              if (angular.isFunction(callback)) {
+                callback(data, status, method);
+              }
+            });
           }
         },
 
@@ -367,20 +350,15 @@ angular.module('Core')
             });
         },
 
-        // Note there are two license arrays that can be passed
-        // 'licenses' is a general array applied to all users
-        // 'licensesPerUser' is an array of license arrays paired to each user in the usersDataArray
-        // this latter argument is used by things like CSV import
-        //
-        onboardUsers: function (usersDataArray, entitlements, licenses, licensesPerUser, callback, cancelPromise) {
-          var userData = {
+        onboardUsers: function (usersDataArray, entitlements, licenses, callback, cancelPromise) {
+          var userPayload = {
             'users': []
           };
 
-          for (var i = 0; i < usersDataArray.length; i++) {
-            var userEmail = usersDataArray[i].address.trim();
-            var userName = usersDataArray[i].name;
-            var displayName = usersDataArray[i].displayName;
+          _.forEach(usersDataArray, function (userData) {
+            var userEmail = userData.address.trim();
+            var userName = userData.name;
+            var displayName = userData.displayName;
 
             var user = {
               'email': null,
@@ -388,7 +366,7 @@ angular.module('Core')
                 'givenName': null,
                 'familyName': null,
               },
-              'userEntitlements': (entitlements && entitlements.length > 0) ? entitlements : null,
+              'userEntitlements': null,
               'licenses': null
             };
 
@@ -400,16 +378,18 @@ angular.module('Core')
                 user.displayName = displayName;
               }
 
-              // CSV import specifies licenses on a per-user basis
-              if (licenses && licenses.length > 0)
-                user.licenses = licenses;
-              else if (licensesPerUser && licensesPerUser.length > i)
-                user.licenses = (licensesPerUser[i] && licensesPerUser[i].length > 0) ? licensesPerUser[i] : null;
+              // Build entitlement and license arrays with properties driven from userData model
+              if (_.isArray(entitlements) && entitlements.length > 0) {
+                user.userEntitlements = buildUserSpecificProperties(userData, entitlements);
+              }
+              if (_.isArray(licenses) && licenses.length > 0) {
+                user.licenses = buildUserSpecificProperties(userData, licenses);
+              }
 
-              userData.users.push(user);
+              userPayload.users.push(user);
             }
-          }
-          onboardUsers(userData, callback, cancelPromise);
+          });
+          onboardUsers(userPayload, callback, cancelPromise);
         },
 
         deactivateUser: function (userData) {
