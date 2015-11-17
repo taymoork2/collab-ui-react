@@ -51,7 +51,7 @@
         vm.currentSearch.userSearchFailure = $translate.instant('helpdesk.badUserSearchInput');
       }
 
-      if (!vm.currentSearch.orgFilter) {
+      if (!orgFilterId) {
         vm.searchingForOrgs = true;
         HelpdeskService.searchOrgs(vm.searchString).then(function (res) {
           vm.currentSearch.orgSearchResults = res;

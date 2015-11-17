@@ -13,7 +13,7 @@
       return res.data;
     }
 
-    function searchUsers(searchString) {
+    function searchUsers(searchString, orgId) {
       if (HelpdeskMockData.use) {
         var deferred = $q.defer();
         deferred.resolve(HelpdeskMockData.users);
@@ -31,7 +31,7 @@
         return deferred.promise;
       }
       return $http
-        .get(urlBase + 'helpdesk/search/organizations?phrase=' + searchString + '&limit=5' + (orgId ? '&orgId=' + orgId : ''))
+        .get(urlBase + 'helpdesk/search/organizations?phrase=' + searchString + '&limit=5')
         .then(extractItems);
     }
 
