@@ -28,7 +28,6 @@ describe('Squared Add & Entitle User Flows', function () {
     utils.click(users.nextButton);
     utils.click(users.onboardButton);
     notifications.assertSuccess(inputEmail, 'onboarded successfully');
-    notifications.clearNotifications();
     utils.expectIsNotDisplayed(users.manageDialog);
   });
 
@@ -43,7 +42,6 @@ describe('Squared Add & Entitle User Flows', function () {
     utils.click(users.deleteUserButton);
     notifications.assertSuccess(inputEmail, 'deleted successfully');
     utils.expectIsNotDisplayed(users.deleteUserModal);
-    notifications.clearNotifications();
     utils.expectRowIsNotDisplayed(inputEmail);
   });
 

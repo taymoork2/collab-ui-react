@@ -44,7 +44,6 @@ xdescribe('Org Entitlement flow', function () {
     utils.click(roles.saveButton);
 
     notifications.assertSuccess('User successfully updated.');
-    notifications.clearNotifications();
   });
 
   it('should have full admin selected', function () {
@@ -56,7 +55,6 @@ xdescribe('Org Entitlement flow', function () {
     utils.click(roles.saveButton);
 
     notifications.assertSuccess('User successfully updated.');
-    notifications.clearNotifications();
   });
 
   it('should verify user name change', function () {
