@@ -121,15 +121,6 @@ describe('Service: PstnSetupService', function () {
     expect(ExternalNumberPool.deletePool).not.toHaveBeenCalled();
   });
 
-  it('should delete numbers from cmi with swivel', function () {
-    PstnSetupService.isCarrierSwivel.and.returnValue($q.when(true));
-    ExternalNumberService.deleteNumber(customerId, externalNumber);
-    $rootScope.$apply();
-
-    expect(PstnSetupService.deleteNumber).not.toHaveBeenCalled();
-    expect(ExternalNumberPool.deletePool).toHaveBeenCalledWith(customerId, externalNumber.uuid);
-  });
-
   it('should delete numbers from cmi without pstn support', function () {
     FeatureToggleService.supportsPstnSetup.and.returnValue($q.when(false));
     ExternalNumberService.deleteNumber(customerId, externalNumber);

@@ -1,0 +1,100 @@
+{
+  "selectedActionsRepeatMenu": [{
+    "key": "1",
+    "keys": [
+      "0", "1", "3", "4", "5", "6", "7", "8", "9", "#", "*"
+    ],
+    "name": "phoneMenuRepeatMenu",
+    "value": "phoneMenuRepeatMenu"
+  }],
+  "selectedActionsDialExt": [{
+    "key": "2",
+    "keys": [
+      "0", "2", "3", "4", "5", "6", "7", "8", "9", "#", "*"
+    ],
+    "name": "phoneMenuDialExt",
+    "value": "phoneMenuDialExt"
+  }],
+  "selectedActionsHuntGroup": {
+    "key": "1",
+    "keys": [
+      "0", "2", "3", "4", "5", "6", "7", "8", "9", "#", "*"
+    ],
+    "name": "phoneMenuRouteHunt",
+    "value": "phoneMenuRouteHunt"
+  },
+  "selectedActions": [{
+    "key": "1",
+    "keys": [
+      "0", "1", "3", "4", "5", "6", "7", "8", "9", "#", "*"
+    ],
+    "name": "phoneMenuRepeatMenu",
+    "value": "phoneMenuRepeatMenu"
+  }, {
+    "key": "2",
+    "keys": [
+      "0", "2", "3", "4", "5", "6", "7", "8", "9", "#", "*"
+    ],
+    "name": "phoneMenuDialExt",
+    "value": "phoneMenuDialExt"
+  }],
+  "selectedTimeout": {
+    "name": "phoneMenuContinue",
+    "value": "2"
+  },
+  "ceMenu": {
+    "type": "MENU_OPTION",
+    "attempts": "1",
+    "entries": [{
+      "description": "phoneMenuRepeatMenu",
+      "isConfigured": true,
+      "type": "",
+      "isTouched": false,
+      "key": "1",
+      "actions": [{
+        "name": "repeatActionsOnInput",
+        "value": "phoneMenuRepeatMenu",
+        "description": ""
+      }],
+      "timeout": "",
+      "username": "",
+      "password": "",
+      "type": "MENU_OPTION",
+      "url": ""
+    }, {
+      "description": "phoneMenuDialExt",
+      "isConfigured": true,
+      "type": "",
+      "isTouched": false,
+      "key": "2",
+      "actions": [{
+        "name": "runActionsOnInput",
+        "value": "phoneMenuDialExt",
+        "inputType": "2",
+        "description": ""
+      }],
+      "timeout": "",
+      "username": "",
+      "password": "",
+      "type": "MENU_OPTION",
+      "url": ""
+    }],
+    "headers": [{
+      "description": "",
+      "isConfigured": true,
+      "type": "",
+      "isTouched": false,
+      "key": "",
+      "actions": [{
+        "name": "",
+        "value": "say message",
+        "description": ""
+      }],
+      "timeout": "",
+      "username": "",
+      "password": "",
+      "type": "MENU_OPTION_ANNOUNCEMENT",
+      "url": ""
+    }]
+  }
+}

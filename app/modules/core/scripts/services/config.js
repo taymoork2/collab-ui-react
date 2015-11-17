@@ -939,10 +939,9 @@ angular.module('Core')
           'cdrsupport'
         ],
         'squared-fusion-mgmt': [
-          //'fusion',
           'cluster-details',
-          'cluster-details-new'
-          // 'management-service',
+          'cluster-details-new',
+          'management-service',
         ],
         'spark-device-mgmt': [
           'devices',
@@ -952,10 +951,11 @@ angular.module('Core')
         'squared-fusion-uc': [
           'devices',
           'device-overview',
-          'devices-redux'
+          'devices-redux',
+          'call-service'
         ],
         'squared-fusion-cal': [
-          // 'calendar-service'
+          'calendar-service'
         ],
         'squared-team-member': [
           'organization'
@@ -976,22 +976,6 @@ angular.module('Core')
           'messenger'
         ]
       };
-
-      // Poor mans feature toggle... (preliminary...)
-      if (!config.isIntegration()) {
-        // Old fusion menu will not be shown in integration... soon to removed from production as well...
-        var mgmtState = config.serviceStates['squared-fusion-mgmt'];
-        mgmtState.push('fusion');
-      }
-      if (!config.isProd()) {
-        // Experimental, not to be enabled in production (yet)
-        var calStates = config.serviceStates['squared-fusion-cal'];
-        calStates.push('calendar-service');
-        var ucStates = config.serviceStates['squared-fusion-uc'];
-        ucStates.push('call-service');
-        var mgmtStates = config.serviceStates['squared-fusion-mgmt'];
-        mgmtStates.push('management-service');
-      }
 
       // These states are not allowed in specific views
       // (i.e. devices are not allowed in partner)
