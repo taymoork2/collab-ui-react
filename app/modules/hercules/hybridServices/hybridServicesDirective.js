@@ -43,7 +43,7 @@ angular
               $scope.isEnabled = true;
             }
           });
-          if ($scope.isEnabled && angular.isDefined($scope.currentUser)) {
+          if ($scope.isEnabled) {
             // Only poll for statuses if there are enabled extensions
             updateStatusForUser();
           }
@@ -52,16 +52,18 @@ angular
 
       // Periodically update the user statuses from USS
       function updateStatusForUser() {
-        USSService.getStatusesForUser($scope.currentUser.id, function (err, activationStatus) {
-          if (activationStatus && activationStatus.userStatuses) {
-            _.forEach($scope.extensions, function (extension) {
-              extension.status = _.find(activationStatus.userStatuses, function (status) {
-                return extension.id === status.serviceId;
+        if (angular.isDefined($scope.currentUser)) {
+          USSService.getStatusesForUser($scope.currentUser.id, function (err, activationStatus) {
+            if (activationStatus && activationStatus.userStatuses) {
+              _.forEach($scope.extensions, function (extension) {
+                extension.status = _.find(activationStatus.userStatuses, function (status) {
+                  return extension.id === status.serviceId;
+                });
               });
-            });
-          }
-          delayedUpdateStatusForUser();
-        });
+            }
+            delayedUpdateStatusForUser();
+          });
+        }
       }
 
       function delayedUpdateStatusForUser() {

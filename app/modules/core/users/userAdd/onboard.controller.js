@@ -1172,7 +1172,7 @@ angular.module('Core')
                 // Success message redundant (since one is generated for being onboarded)
                 /*msg = response.email + '\'s entitlements were updated successfully.';
                 successResponses.push(msg);*/
-                msg = '';  // avoid lint errors
+                msg = ''; // avoid lint errors
               } else if (userStatus === 404) {
                 msg = 'Entitlements for ' + response.email + ' do not exist.';
                 failureResponses.push(msg);
