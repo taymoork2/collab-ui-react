@@ -218,9 +218,9 @@ function ReportsService($http, $q, $rootScope, $location, Storage, Config, Log, 
 
     var charts = ['conversations', 'activeRooms'];
     getTimeCharts(useCache, charts, {
-      intervalType: 'day',
-      intervalCount: 30,
-      spanType: 'day'
+      intervalType: 'week',
+      intervalCount: 2,
+      spanType: 'week'
     });
 
     var callCharts = ['oneOnOneCalls', 'groupCalls'];

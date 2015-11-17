@@ -2572,8 +2572,8 @@
       "message": {
         "title": "Message",
         "desc": "Active Rooms",
-        "currentTitle": "Active rooms last 7 days",
-        "previousTitle": "Last 30 days:"
+        "currentTitle": "Active rooms this week",
+        "previousTitle": "Last week:"
 
       },
       "meeting": {
@@ -2587,8 +2587,8 @@
       "roomSystem": {
         "title": "Room Systems",
         "desc": "Registered Systems",
-        "currentTitle": "Online last 7 days",
-        "previousTitle": "Last 30 days:"
+        "currentTitle": "Online this week",
+        "previousTitle": "Last week:"
       },
       "hybrid": {
         "title": "Hybrid Services"
