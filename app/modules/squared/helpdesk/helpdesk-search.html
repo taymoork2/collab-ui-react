@@ -98,10 +98,20 @@
       </div>
 
       <div class="medium-4 columns"
-           ng-if="helpdeskCtrl.searchingForUsers || helpdeskCtrl.currentSearch.userSearchResults || helpdeskCtrl.currentSearch.userSearchFailure">
+           ng-if="(helpdeskCtrl.currentSearch.orgFilter && (helpdeskCtrl.searchingForDevices || helpdeskCtrl.currentSearch.deviceSearchResults || helpdeskCtrl.currentSearch.deviceSearchFailure)) || (helpdeskCtrl.searchingForOrgs || helpdeskCtrl.currentSearch.orgSearchResults || helpdeskCtrl.currentSearch.orgSearchFailurehelpdeskCtrl.searchingForOrgs || helpdeskCtrl.currentSearch.orgSearchResults || helpdeskCtrl.currentSearch.orgSearchFailurehelpdeskCtrl.searchingForOrgs || helpdeskCtrl.currentSearch.orgSearchResults || helpdeskCtrl.currentSearch.orgSearchFailure)">
         <h4 translate="helpdesk.devices"></h4>
 
-        <p>Device search is not supported yet.</p>
+        <div ng-if="helpdeskCtrl.searchingForDevices">
+          <span><i class="icon icon-spinner icon-2x"></i></span>
+
+          <p translate="helpdesk.searchingPleaseWait"></p>
+        </div>
+
+        <p ng-if="!helpdeskCtrl.currentSearch.orgFilter">Device search is not supported yet.</p>
+
+        <div ng-if="helpdeskCtrl.currentSearch.deviceSearchFailure">
+          <p class="helpdesk-red">{{helpdeskCtrl.currentSearch.deviceSearchFailure}}</p>
+        </div>
       </div>
 
     </div>

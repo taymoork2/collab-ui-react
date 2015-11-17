@@ -36,8 +36,14 @@
     }],
     orgs: [{
       "id": "ce8d17f8-1734-4a54-8510-fae65acc505e",
-      "displayName": "Marvel Partners"
-    }]
+      "displayName": "Marvel Partners",
+      "isPartner": true
+    }, {
+      "id": "bc1d8493-69a7-4ba7-a0c0-62abf1b57ac6",
+      "displayName": "Autobots",
+      "isPartner": false
+    }
+    ]
   };
   angular.module('Squared').constant('HelpdeskMockData', mockData);
 }());

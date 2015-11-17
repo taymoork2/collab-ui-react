@@ -2,7 +2,7 @@
   'use strict';
 
   /*ngInject*/
-  function HelpdeskService($http, Config, $q, HelpdeskMockData) {
+  function HelpdeskService($http, Config, $q, HelpdeskMockData, CsdmConfigService) {
     var urlBase = Config.getAdminServiceUrl();
 
     function extractItems(res) {
@@ -47,11 +47,18 @@
         .then(extractData);
     }
 
+    function searchCloudberryDevices(searchString, orgId) {
+      return $http
+        .get(CsdmConfigService.getUrl() + '/organization/' + orgId + '/devices?checkOnline=false')
+        .then(extractData);
+    }
+
     return {
       searchUsers: searchUsers,
       searchOrgs: searchOrgs,
       getUser: getUser,
-      getOrg: getOrg
+      getOrg: getOrg,
+      searchCloudberryDevices: searchCloudberryDevices
     };
 
   }

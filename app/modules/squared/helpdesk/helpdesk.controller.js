@@ -9,13 +9,16 @@
     vm.clearOrgFilter = clearOrgFilter;
     vm.searchingForUsers = false;
     vm.searchingForOrgs = false;
+    vm.searchingForDevices = false;
     vm.searchString = '';
     vm.currentSearch = {
       searchString: '',
       userSearchResults: null,
       orgSearchResults: null,
+      deviceSearchResult: null,
       userSearchFailure: null,
       orgSearchFailure: null,
+      deviceSearchFailure: null,
       orgFilter: null,
       initSearch: function (searchString) {
         this.searchString = searchString;
@@ -30,7 +33,7 @@
     function search() {
       if (!vm.searchString) return;
       vm.currentSearch.initSearch(vm.searchString);
-      var orgFilterId = vm.currentSearch.org ? vm.currentSearch.org.id : null;
+      var orgFilterId = vm.currentSearch.orgFilter ? vm.currentSearch.orgFilter.id : null;
 
       if (vm.searchString.length >= 3) {
         vm.searchingForUsers = true;
@@ -60,6 +63,17 @@
           vm.searchingForOrgs = false;
           vm.currentSearch.orgSearchResults = null;
           vm.currentSearch.orgSearchFailure = $translate.instant('helpdesk.unexpectedError');
+          $log.error(err);
+        });
+      } else {
+        vm.searchingForDevices = true;
+        HelpdeskService.searchCloudberryDevices(vm.searchString, orgFilterId).then(function (res) {
+          vm.currentSearch.deviceSearchResult = res;
+          vm.searchingForDevices = false;
+        }, function (err) {
+          vm.searchingForDevices = false;
+          vm.currentSearch.deviceSearchResult = null;
+          vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
           $log.error(err);
         });
       }
