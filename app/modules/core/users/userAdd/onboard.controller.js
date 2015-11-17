@@ -768,16 +768,14 @@ angular.module('Core')
       function Feature(name, state) {
         this.entitlementName = name;
         this.entitlementState = state ? 'ACTIVE' : 'INACTIVE';
+        this.properties = {};
       }
 
       function LicenseFeature(name, bAdd) {
         return {
           id: name.toString(),
           idOperation: bAdd ? 'ADD' : 'REMOVE',
-          properties: {
-            internalExtension: null,
-            directLine: null
-          }
+          properties: {}
         };
       }
 
@@ -1107,40 +1105,18 @@ angular.module('Core')
             }
           }
 
-          var temparray = [],
-            tempLicenseArray = [],
+          var tempUserArray = [],
+            entitleList = [],
+            licenseList = [],
             chunk = Config.batchSize;
+          if (Authinfo.hasAccount() && $scope.collabRadio === 1) {
+            licenseList = getAccountLicenses('additive');
+          } else {
+            entitleList = getEntitlements('add');
+          }
           for (i = 0; i < usersList.length; i += chunk) {
-            temparray = usersList.slice(i, i + chunk);
-            //update entitlements
-            var entitleList = [];
-            var licenseList = [];
-            if (Authinfo.hasAccount() && $scope.collabRadio === 1) {
-              licenseList = getAccountLicenses('additive');
-            } else {
-              entitleList = getEntitlements('add');
-            }
-
-            tempLicenseArray = [];
-            if (licenseList && licenseList.length > 0) {
-              for (j = 0; j < temparray.length; j++) {
-                var newLicenseList = licenseList.map(function (license) {
-                  var licenseObj = angular.copy(license);
-                  if (licenseObj['id'].indexOf("CO_") === 0) {
-                    if (temparray[j].internalExtension) {
-                      licenseObj.properties.internalExtension = temparray[j].internalExtension;
-                    }
-                    if (temparray[j].directLine) {
-                      licenseObj.properties.directLine = temparray[j].directLine;
-                    }
-                  }
-                  return licenseObj;
-                });
-                tempLicenseArray.push(newLicenseList);
-              }
-            }
-
-            Userservice.onboardUsers(temparray, entitleList, null, tempLicenseArray, callback);
+            tempUserArray = usersList.slice(i, i + chunk);
+            Userservice.onboardUsers(tempUserArray, entitleList, licenseList, callback);
           }
         } else if (!optionalOnboard) {
           Log.debug('No users entered.');
@@ -1814,35 +1790,24 @@ angular.module('Core')
         // Get license/entitlements
         var entitleList = [];
         var licenseList = [];
+        var isCommunicationSelected;
         if (Authinfo.hasAccount() && $scope.collabRadio === 1) {
           licenseList = getAccountLicenses('additive') || [];
+          isCommunicationSelected = !!_.find(licenseList, function (license) {
+            return _.startsWith(license.id, 'CO_');
+          });
         } else {
           entitleList = getEntitlements('add');
-        }
-        var communicationLicense = _.find(licenseList, function (license) {
-          return license['id'].indexOf("CO_") === 0;
-        });
-
-        function buildLicenseArray(internalExtension, directLine) {
-          return licenseList.map(function (license) {
-            var licenseObj = license;
-            if (license['id'].indexOf("CO_") === 0) {
-              if (internalExtension) {
-                licenseObj.properties.internalExtension = internalExtension;
-              }
-              if (directLine) {
-                licenseObj.properties.directLine = TelephoneNumberService.getDIDValue(directLine);
-              }
-            }
-            return licenseObj;
+          isCommunicationSelected = !!_.find(entitleList, {
+            entitlementName: 'ciscoUC'
           });
         }
 
-        function onboardCsvUsers(startIndex, userArray, licenseArray, csvPromise) {
+        function onboardCsvUsers(startIndex, userArray, entitlementArray, licenseArray, csvPromise) {
           return csvPromise.then(function () {
             return $q(function (resolve, reject) {
               if (userArray.length > 0) {
-                Userservice.onboardUsers(userArray, entitleList, null, licenseArray, callback.bind({
+                Userservice.onboardUsers(userArray, entitlementArray, licenseArray, callback.bind({
                   startIndex: startIndex - userArray.length + 1,
                   length: userArray.length,
                   resolve: resolve
@@ -1871,7 +1836,7 @@ angular.module('Core')
 
         function isValidDID(value) {
           // If communication license is selected and a value is defined
-          if (communicationLicense && value) {
+          if (isCommunicationSelected && value) {
             try {
               return TelephoneNumberService.validateDID(value);
             } catch (e) {
@@ -1883,17 +1848,15 @@ angular.module('Core')
 
         // Onboard users in chunks
         // Separate chunks on invalid rows
-        var csvChunk = communicationLicense ? 4 : 10; // Rate limit for Huron
+        var csvChunk = isCommunicationSelected ? 4 : 10; // Rate limit for Huron
         var csvPromise = $q.when();
         var tempUserArray = [];
-        var tempLicenseArray = [];
         var uniqueEmails = [];
         var processingError;
-        for (var j = 0; j < userArray.length; j++) {
+        _.forEach(userArray, function (userRow, j) {
           processingError = false;
           // If we haven't met the chunk size, process the next user
           if (tempUserArray.length < csvChunk) {
-            var userRow = userArray[j];
             // Validate content in the row
             if (userRow.length !== 6) {
               // Report incorrect number of columns
@@ -1916,24 +1879,22 @@ angular.module('Core')
               tempUserArray.push({
                 address: userRow[3],
                 name: userRow[0] + NAME_DELIMITER + userRow[1],
-                displayName: userRow[2]
+                displayName: userRow[2],
+                internalExtension: userRow[4],
+                directLine: userRow[5]
               });
-              tempLicenseArray.push(buildLicenseArray(userRow[4], userRow[5]));
             }
           }
           // Onboard all the previous users in the temp array if there was an error processing a row
           if (processingError) {
-            csvPromise = onboardCsvUsers(j - 1, tempUserArray, tempLicenseArray, csvPromise);
+            csvPromise = onboardCsvUsers(j - 1, tempUserArray, entitleList, licenseList, csvPromise);
             tempUserArray = [];
-            tempLicenseArray = [];
           } else if (tempUserArray.length === csvChunk || j === (userArray.length - 1)) {
             // Onboard the current temp array if we've met the chunk size or is the last user in list
-            csvPromise = onboardCsvUsers(j, tempUserArray, tempLicenseArray, csvPromise);
+            csvPromise = onboardCsvUsers(j, tempUserArray, entitleList, licenseList, csvPromise);
             tempUserArray = [];
-            tempLicenseArray = [];
           }
-
-        }
+        });
 
         calculateProcessProgress();
 
