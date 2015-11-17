@@ -2722,7 +2722,7 @@
     "unexpectedError": "An unexpected error occurred",
     "searchingPleaseWait": "Searching, please wait...",
     "noSearchHits": "No matches found. Try to narrow your search...",
-    "searchInputDescription": "Search and view a user or a company.",
+    "searchInputDescription": "Search and view a user or a customer.",
     "roles": "Roles",
     "goToSearch": "Go to Search",
     "sso": "SSO",
@@ -2732,6 +2732,11 @@
     "partner": "Partner",
     "customer": "Customer",
     "searchCriteriaLink": "Show supported search criteria.",
-    "searchInfo": "Search users by Email, Phone Number or Display Name (two words required). Search company by Display Name."
+    "searchInfo": "Search users by Email, Phone Number or Display Name (two words required). Search company by Display Name.",
+    "devices": "Devices",
+    "mobile": "mobile",
+    "work": "work",
+    "fax": "fax",
+    "filterByOrg": "Search this Customer"
   }
 }

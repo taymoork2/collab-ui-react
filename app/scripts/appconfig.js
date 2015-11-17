@@ -57,21 +57,6 @@ angular
           parent: 'main',
           abstract: true
         })
-        .state('helpdesk-main', {
-          views: {
-            'main@': {
-              templateUrl: 'modules/squared/views/helpdesk.tpl.html'
-            }
-          },
-          abstract: true,
-          sticky: true
-        })
-        .state('helpdesk', {
-          template: '<div ui-view></div>',
-          url: '/helpdesk',
-          parent: 'helpdesk-main',
-          abstract: true
-        })
         .state('sidepanel', {
           abstract: true,
           onEnter: /* @ngInject */ function ($modal, $state, $previousState) {
@@ -774,7 +759,8 @@ angular
         })
 
       /*
-        devices redux prototypes
+       devices
+       prototypes
       */
       .state('main-redux', {
           views: {
@@ -1001,13 +987,29 @@ angular
           controller: 'TrialExtInterestCtrl',
           parent: 'main'
         })
-        .state('helpdesk.landing', {
-          url: '/landing',
-          templateUrl: 'modules/squared/helpdesk/helpdesk-landing.html',
-          controller: 'HelpdeskLandingController',
-          controllerAs: 'helpdeskLandingCtrl'
+        .state('helpdesk-main', {
+          views: {
+            'main@': {
+              templateUrl: 'modules/squared/views/helpdesk.tpl.html'
+            }
+          },
+          abstract: true,
+          sticky: true
+        })
+        .state('helpdesk', {
+          url: '/helpdesk',
+          template: '<div ui-view></div>',
+          controller: 'HelpdeskController',
+          controllerAs: 'helpdeskCtrl',
+          abstract: true,
+          parent: 'helpdesk-main'
+        })
+        .state('helpdesk.search', {
+          url: '/',
+          templateUrl: 'modules/squared/helpdesk/helpdesk-search.html'
         })
         .state('helpdesk.user', {
+          url: '/user',
           templateUrl: 'modules/squared/helpdesk/helpdesk-user.html',
           controller: 'HelpdeskUserController',
           controllerAs: 'helpdeskUserCtrl',
@@ -1016,6 +1018,7 @@ angular
           }
         })
         .state('helpdesk.org', {
+          url: '/org',
           templateUrl: 'modules/squared/helpdesk/helpdesk-org.html',
           controller: 'HelpdeskOrgController',
           controllerAs: 'helpdeskOrgCtrl',

@@ -912,7 +912,7 @@ angular.module('Core')
           'example'
         ],
         Application: ['organizations', 'organization-overview'],
-        Help_Desk: ['helpdesk', 'helpdesk.landing', 'helpdesk.user', 'helpdesk.org']
+        Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org']
       };
 
       config.serviceStates = {
