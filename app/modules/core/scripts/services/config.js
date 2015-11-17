@@ -912,7 +912,7 @@ angular.module('Core')
           'example'
         ],
         Application: ['organizations', 'organization-overview'],
-        Help_Desk: ['helpdesk', 'helpdesk.landing', 'helpdesk.user', 'helpdesk.org']
+        Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org']
       };
 
       config.serviceStates = {
@@ -939,10 +939,13 @@ angular.module('Core')
           'cdr-overview'
         ],
         'squared-fusion-mgmt': [
+<<<<<<< HEAD
           // 'fusion',
+=======
+>>>>>>> upstream/master
           'cluster-details',
-          'cluster-details-new'
-          // 'management-service',
+          'cluster-details-new',
+          'management-service',
         ],
         'spark-device-mgmt': [
           'devices',
@@ -952,10 +955,11 @@ angular.module('Core')
         'squared-fusion-uc': [
           'devices',
           'device-overview',
-          'devices-redux'
+          'devices-redux',
+          'call-service'
         ],
         'squared-fusion-cal': [
-          // 'calendar-service'
+          'calendar-service'
         ],
         'squared-team-member': [
           'organization'

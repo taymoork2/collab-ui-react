@@ -7,30 +7,29 @@
 
   /* @ngInject */
   function AABuilderNumbersCtrl($scope, $q, $stateParams, AAUiModelService, AutoAttendantCeInfoModelService,
-    AAModelService, ExternalNumberPoolService, Authinfo, Notification, $translate) {
+    AAModelService, ExternalNumberPoolService, InternalNumberPoolService, Authinfo, Notification, $translate, telephoneNumberFilter) {
     var vm = this;
-    vm.addNumber = addNumber;
-    vm.deleteAAResource = deleteAAResource;
-    vm.filter = filter;
-    vm.getDupeNumberAnyAA = getDupeNumberAnyAA;
-    vm.getExternalNumbers = getExternalNumbers;
 
-    vm.inputNumber = {
-      id: '',
-      number: '',
-      type: 'directoryNumber',
-      trigger: 'incomingCall'
-    };
+    vm.addNumber = addNumber;
+    vm.removeNumber = removeNumber;
+    vm.addAAResource = addAAResource;
+    vm.deleteAAResource = deleteAAResource;
+    vm.getExternalNumbers = getExternalNumbers;
+    vm.getInternalNumbers = getInternalNumbers;
+    vm.getDupeNumberAnyAA = getDupeNumberAnyAA;
+    vm.addToAvailableNumberList = addToAvailableNumberList;
+    vm.compareNumbersExternalThenInternal = compareNumbersExternalThenInternal;
+
+    vm.numberTypeList = {};
 
     vm.availablePhoneNums = [];
-    vm.addAAResourceFromInputNumber = addAAResourceFromInputNumber;
-    vm.deleteAAResource = deleteAAResource;
 
     vm.selectPlaceHolder = $translate.instant('autoAttendant.selectPlaceHolder');
 
     vm.inputPlaceHolder = $translate.instant('autoAttendant.inputPlaceHolder');
 
     // needed for cs-select's model, aaBuilderNumbers.tpl.html
+    // but right now at least, we don't want to pre-select any number, so it's blank
     vm.selected = {
       "label": "",
       "value": ""
@@ -39,20 +38,110 @@
     /////////////////////
 
     // Add Number, top-level method called by UI
-    function addNumber(formattedNumber) {
+    function addNumber(number) {
 
-      var index = vm.availablePhoneNums.indexOf(formattedNumber);
+      if (angular.isUndefined(number) || number === '') {
+        return;
+      }
 
-      if (index >= 0) {
+      // check to see if it's in the available list
+      var numobj = vm.availablePhoneNums.filter(function (obj) {
+        return obj.value == number;
+      });
 
-        // strip the formatting from the number
+      // if it's in the available list, take it out, and add to CE resources
+      if (!angular.isUndefined(numobj) && numobj.length > 0) {
 
-        vm.inputNumber.number = formattedNumber.replace(/\D/g, '');
+        vm.availablePhoneNums = vm.availablePhoneNums.filter(function (obj) {
+          return obj.value != number;
+        });
 
-        addAAResourceFromInputNumber();
+        // add to the CE resources
+        addAAResource(number);
 
-        vm.availablePhoneNums.splice(index, 1);
+        // clear selection
+        vm.selected = {
+          "label": "",
+          "value": ""
+        };
 
+      }
+
+    }
+
+    // Remove number, top-level method called by UI
+    function removeNumber(number) {
+
+      if (angular.isUndefined(number) || number === '') {
+        return;
+      }
+
+      addToAvailableNumberList(telephoneNumberFilter(number), number);
+
+      vm.availablePhoneNums.sort(function (a, b) {
+        return compareNumbersExternalThenInternal(a.value, b.value);
+      });
+
+      deleteAAResource(number);
+
+      // clear selection
+      vm.selected = {
+        "label": "",
+        "value": ""
+      };
+
+    }
+
+    // Add the number to the CE Info resource list
+    function addAAResource(number) {
+
+      var resource = AutoAttendantCeInfoModelService.newResource();
+      // both internal and external triggers are incomingCall
+      resource.setTrigger('incomingCall');
+
+      // the server POST schema specifies an id and number field but the number is actually not used; the id is used as the number
+      // So just set them both to the number
+      resource.setNumber(number);
+      resource.setId(number);
+
+      resource.setType(vm.numberTypeList[number]);
+
+      // add to the resource list
+      var resources = vm.ui.ceInfo.getResources();
+      resources.push(resource);
+
+      // if it's longer than 2, we sort it
+      if (resources.length > 2) {
+
+        // but we don't change the first top-line number, which is also shown in the header, so
+        // get a temp list without that first number
+
+        var tmp = _.rest(resources);
+
+        // and sort it
+        tmp.sort(function (a, b) {
+          return compareNumbersExternalThenInternal(a.number, b.number);
+        });
+
+        // we have a sorted list, take out the old unsorted ones, put in the sorted ones
+        resources.length = 1;
+
+        _.forEach(tmp, function (n) {
+          resources.push(n);
+        });
+      }
+
+    }
+
+    // Delete the number to the CE Info resource list
+    function deleteAAResource(number) {
+      var i = 0;
+
+      var resources = vm.ui.ceInfo.getResources();
+      for (i = 0; i < resources.length; i++) {
+        if (resources[i].getNumber() === number) {
+          resources.splice(i, 1);
+        }
       }
 
     }
@@ -68,83 +157,79 @@
 
     }
 
-    function addAAResourceFromInputNumber() {
+    // A comparison method used in sorting to make external numbers first, internal numbers last
+    function compareNumbersExternalThenInternal(a, b) {
 
-      if (angular.isUndefined(vm.inputNumber) || vm.inputNumber.number === '') {
-        return;
+      // if they are of the same type, ie both external or internal, just compare directly
+      if (vm.numberTypeList[a] === vm.numberTypeList[b]) {
+        return a.localeCompare(b);
       }
-
-      // the server POST schema specifies an id and number field but the number is actually not used; the id is used as the number
-      // So just set them both to the number
-      vm.inputNumber.id = vm.inputNumber.number;
-
-      // add new resource for this number
-      var resource = AutoAttendantCeInfoModelService.newResource();
-      resource.setNumber(vm.inputNumber.number);
-      resource.setId(vm.inputNumber.id);
-      resource.setType(vm.inputNumber.type);
-      resource.setTrigger(vm.inputNumber.trigger);
-
-      var resources = vm.ui.ceInfo.getResources();
-      resources.push(resource);
-
-    }
-
-    // Delete the number to the CE Info resource list - called by UI
-    function deleteAAResource(unFormattedNumber) {
-      var i = 0;
-
-      if (angular.isUndefined(unFormattedNumber)) {
-        return;
-      }
-      vm.availablePhoneNums.push(filter(unFormattedNumber));
-
-      vm.availablePhoneNums.sort();
-
-      var resources = vm.ui.ceInfo.getResources();
-      for (i = 0; i < resources.length; i++) {
-        if (resources[i].getNumber() === unFormattedNumber) {
-          resources.splice(i, 1);
-        }
-      }
-
-    }
-
-    function filter(number) {
-      if (!number) {
-        return '';
-      }
-
-      var countryTelephoneNumberRegex = /(\+?\d{1})(\d{3})(\d{3})(\d{4})/;
-      var basicTelephoneNumberRegex = /(\d{3})(\d{3})(\d{4})/;
-
-      if (countryTelephoneNumberRegex.test(number)) {
-        return number.replace(countryTelephoneNumberRegex, "$1 ($2) $3-$4");
-      } else if (basicTelephoneNumberRegex.test(number)) {
-        return number.replace(basicTelephoneNumberRegex, "($1) $2-$3");
+      // else if a is an internal extension, it comes after
+      else if (vm.numberTypeList[a] === "directoryNumber") {
+        return 1;
+        // else a must be an externalNumber, which comes first
       } else {
-        return number;
+        return -1;
       }
+
+    }
+
+    function addToAvailableNumberList(label, number) {
+      var opt = {
+        label: label,
+        value: number
+      };
+      vm.availablePhoneNums.push(opt);
+    }
+
+    function loadNums() {
+      getExternalNumbers().then(function () {
+        getInternalNumbers();
+      });
+
+    }
+
+    function getInternalNumbers() {
+      return InternalNumberPoolService.query({
+        customerId: Authinfo.getOrgId(),
+        directorynumber: '',
+        order: 'pattern'
+      }).$promise.then(function (intPool) {
+        for (var i = 0; i < intPool.length; i++) {
+
+          var number = intPool[i].pattern.replace(/\D/g, '');
+
+          vm.numberTypeList[number] = "directoryNumber";
+
+          // Add to the available phone number list if not already used
+          if (!getDupeNumberAnyAA(number)) {
+            // Internal extensions don't need formatting
+            addToAvailableNumberList(number, number);
+
+          }
+        }
+      });
     }
 
     function getExternalNumbers() {
 
-      ExternalNumberPoolService.query({
+      return ExternalNumberPoolService.query({
           customerId: Authinfo.getOrgId(),
           order: 'pattern'
         }).$promise
         .then(function (extPool) {
           for (var i = 0; i < extPool.length; i++) {
 
-            var dn = {
-              id: extPool[i].uuid,
-              number: extPool[i].pattern.replace(/\D/g, ''),
-              type: '', //tbd
-              trigger: '' //tbd
-            };
+            var number = extPool[i].pattern.replace(/\D/g, '');
 
-            if (!getDupeNumberAnyAA(dn.number)) {
-              vm.availablePhoneNums.push(filter(dn.number));
+            vm.numberTypeList[number] = "externalNumber";
+
+            // Add to the available phone number list if not already used
+            if (!getDupeNumberAnyAA(number)) {
+              // For the option list, format the number for the label,
+              // and return the value as just the number
+              addToAvailableNumberList(telephoneNumberFilter(number), number);
+
             }
 
           }
@@ -157,7 +242,7 @@
 
       vm.ui = AAUiModelService.getUiModel();
 
-      getExternalNumbers();
+      loadNums();
 
     }
 
