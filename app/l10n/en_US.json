@@ -2607,7 +2607,7 @@
   },
 
   "huronHuntGroup": {
-    "title": "Hunt Group",
+    "title": "hunt group",
     "createTitle": "Create Hunt Group",
     "namePlaceholder": "Name the Hunt Group",
     "nameHint": "This hunt group name will also be the name callers see on their device (i.e. alerting name)",
@@ -2632,7 +2632,6 @@
     "deleteHuntGroupConfText": "Are you sure you want to delete the {{ huntGroupName }} hunt group?",
     "messageError": "Message {{ message }}",
     "code": "HG",
-    "title": "Hunt Group",
     "modalDescription": "Hunt groups (or line hunting) allow you to customize the distribution of incoming phone calls to users' phone lines in a specific order.",
     "featureListingError": "Failed to retrieve the feature list.",
     "numberFetchFailure": "Unable to get numbers.",
@@ -2679,8 +2678,8 @@
     "remove": "Remove",
     "removeMem": "Remove Member",
     "addMemberLabel": "Add & Search Members",
-    "successSave": "{{huntGroupName}} Hunt Group has been created successfully",
-    "successUpdate": "{{huntGroupName}} Hunt Group has been updated successfully",
+    "successSave": "{{huntGroupName}} hunt group has been created successfully",
+    "successUpdate": "{{huntGroupName}} hunt group has been updated successfully",
     "errorSave": "Failed to create the {{huntGroupName}} Hunt Group",
     "errorUpdate": "Failed to update the {{huntGroupName}} Hunt Group",
     "numberLabel": "Select Numbers",
