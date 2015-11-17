@@ -112,6 +112,28 @@
         <div ng-if="helpdeskCtrl.currentSearch.deviceSearchFailure">
           <p class="helpdesk-red">{{helpdeskCtrl.currentSearch.deviceSearchFailure}}</p>
         </div>
+
+        <div
+          ng-if="!helpdeskCtrl.searchingForDevices && helpdeskCtrl.currentSearch.deviceSearchResults.length == 0">
+          <p translate="helpdesk.noSearchHits"></p>
+        </div>
+
+        <cs-card-layout ng-if="helpdeskCtrl.currentSearch.deviceSearchResults.length > 0">
+          <cs-card class="full" ng-repeat="device in helpdeskCtrl.currentSearch.deviceSearchResults">
+            <article tabindex="{{$index + 1}}">
+              <header>
+                <h5>
+                  <a tabindex="-1" ui-sref="helpdesk.device({device:device})">{{device.displayName}}</a>
+                </h5>
+              </header>
+              <section class="card-section">
+                <div ng-if="device.product"><span>{{device.product}}</span></div>
+                <div ng-if="device.serial"><span>{{device.serial}}</span></div>
+                <div ng-if="device.mac"><span>{{device.mac}}</span></div>
+              </section>
+            </article>
+          </cs-card>
+        </cs-card-layout>
       </div>
 
     </div>
