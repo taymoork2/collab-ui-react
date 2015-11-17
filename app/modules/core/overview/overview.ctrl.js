@@ -121,10 +121,12 @@
     this.trial = false;
 
     this.reportDataEventHandler = function (event, response) {
+
       if (!response.data.success) return;
-      if (event.name == 'conversationsLoaded' && response.data.spanType == 'month' && response.data.intervalCount >= 2) {
-        card.current = Math.round(response.data.data[0].count);
-        card.previous = Math.round(response.data.data[1].count);
+      if (event.name == 'conversationsLoaded' && response.data.spanType == 'day' && response.data.intervalCount >= 30) {
+
+        card.current = Math.round(_.sum(response.data.data.slice(23,30)));
+        card.previous = Math.round(_(response.data.data).sum());
       }
     };
 
@@ -207,9 +209,9 @@
     this.reportDataEventHandler = function(event, response) {
 
       if (!response.data.success) return;
-      if (event.name == 'activeRoomsLoaded' && response.data.spanType == 'month' && response.data.intervalCount >= 2) {
-        card.current = Math.round(response.data.data[0].count);
-        card.previous = Math.round(response.data.data[1].count);
+      if (event.name == 'activeRoomsLoaded' && response.data.spanType == 'day' && response.data.intervalCount >= 30) {
+        card.current = Math.round(_.sum(response.data.data.slice(23,30)));
+        card.previous = Math.round(_(response.data.data).sum());
       }
     };
 

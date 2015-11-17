@@ -2587,8 +2587,8 @@
       "roomSystem": {
         "title": "Room Systems",
         "desc": "Registered Systems",
-        "currentTitle": "Last 30 days",
-        "previousTitle": "Total:"
+        "currentTitle": "Online last 7 days",
+        "previousTitle": "Last 30 days:"
       },
       "hybrid": {
         "title": "Hybrid Services"
