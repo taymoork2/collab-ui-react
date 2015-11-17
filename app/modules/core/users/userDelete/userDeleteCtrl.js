@@ -40,7 +40,7 @@ angular.module('Core')
         var deferred = $q.defer();
         Userservice.getUser($scope.deleteUserUuId, function (user) {
           if (user.entitlements && user.entitlements.indexOf(Config.entitlements.huron) !== -1) {
-            return HuronUser.delete($scope.deleteUserUuId).then(function () {
+            HuronUser.delete($scope.deleteUserUuId).then(function () {
               deferred.resolve();
             }).catch(function (response) {
               deferred.reject(response);
