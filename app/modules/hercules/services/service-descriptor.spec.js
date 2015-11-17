@@ -43,11 +43,19 @@ describe('ServiceDescriptor', function () {
           acknowledged: false
         }]
       });
+    /*
     Service.services(function (error, services) {
       expect(services.length).toEqual(2);
       expect(services[0].id).toEqual('squared-fusion-cal');
       done();
     });
+    */
+    Service.getServices().then(function (services) {
+      expect(services.length).toEqual(2);
+      expect(services[0].id).toEqual('squared-fusion-cal');
+      done();
+    });
+
     $httpBackend.flush();
   });
 
