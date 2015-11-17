@@ -62,9 +62,15 @@
   }
   .typeahead-large{
     position: relative;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
     .icon-search{
       position: absolute;
       right: 0;
+      font-size: 1rem;
+      width:2.5rem;
+      height:2.5rem;
     }
     .helpdesk-tile {
       height: 2.25rem;
