@@ -10,10 +10,10 @@ $aa-builder-border-size: 1px;
 $aa-builder-icon-color: $gray-base;
 
 @mixin aa-builder-height($rem_offset) {
-  /* base-offset includes navbar, overlay-heading and aa-builder-header (elements from top of page) */
+  /* base-offset includes top-bar, overlay-heading and aa-builder-header (elements from top of page) */
   $overlay-heading-height: 93px;
   /* no global variable */
-  $aa-builder-base-offset: rem($navbar-height + $overlay-heading-height + $aa-builder-header-height);
+  $aa-builder-base-offset: rem($top-bar-height + $overlay-heading-height + $aa-builder-header-height);
   /* add to offset any additional value */
   $aa-builder-offset: $aa-builder-base-offset + $rem_offset;
 
