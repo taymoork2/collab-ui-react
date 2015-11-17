@@ -152,6 +152,9 @@
     width: 100%;
   }
 }
+.hgmember .hunt-member-card {
+  @include vr-spacing(mt, 0);
+}
 
 .dragging-source {
   display: none;

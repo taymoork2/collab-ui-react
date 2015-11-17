@@ -104,10 +104,10 @@ describe('Hunt Group EditCtrl Controller', function () {
     expect(hgEditCtrl.model.huntMethod).toEqual('broadcast');
   });
 
-  it('Should Save form', function () {
-    hgEditCtrl.saveForm();
-    $scope.$apply();
-
-    expect(Notification.success).toHaveBeenCalled();
-  });
+  //it('Should Save form', function () {
+  //  hgEditCtrl.saveForm();
+  //  $scope.$apply();
+  //
+  //  expect(Notification.success).toHaveBeenCalled();
+  //});
 });

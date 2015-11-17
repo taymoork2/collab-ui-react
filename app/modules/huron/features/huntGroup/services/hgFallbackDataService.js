@@ -31,10 +31,15 @@
       isFallbackValidMember: isFallbackValidMember,
       getFallbackNumber: getFallbackNumber,
       getFallbackMember: getFallbackMember,
-      isFallbackDirty: isFallbackDirty
+      isFallbackDirty: isFallbackDirty,
+      setAsPristine: setAsPristine
     };
 
-    ///////////////
+    ////////////////
+
+    function setAsPristine() {
+      pristineFallbackMember = angular.copy(fallbackMember.member);
+    }
 
     function getFallbackNumber() {
       return fallbackNumber;

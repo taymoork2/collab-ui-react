@@ -29,10 +29,15 @@
       reset: reset,
       setMemberJSON: setMemberJSON,
       getHuntMembers: getHuntMembers,
-      isMemberDirty: isMemberDirty
+      isMemberDirty: isMemberDirty,
+      setAsPristine: setAsPristine
     };
 
     ////////////////
+
+    function setAsPristine() {
+      pristineSelectedHuntMembers = angular.copy(selectedHuntMembers);
+    }
 
     function isMemberDirty(pristineMember) {
       var dirty = false;
@@ -72,7 +77,7 @@
     /**
      * Reset the single data service to its origin state.
      */
-    function reset(doneResetPristine, resetFromBackend) {
+    function reset(resetFromBackend) {
       selectedHuntMembers.splice(0, selectedHuntMembers.length);
       currentOpenMemberUuid = '';
       if (resetFromBackend) {

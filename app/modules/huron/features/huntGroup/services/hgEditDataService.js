@@ -24,10 +24,15 @@
       getPristine: getPristine,
       isFallbackDirty: isFallbackDirty,
       isMemberDirty: isMemberDirty,
-      reset: reset
+      reset: reset,
+      setPristine: setPristine
     };
 
     ////////////////
+
+    function setPristine(updatedHG) {
+      pristineHGData = angular.copy(updatedHG);
+    }
 
     function reset() {
       pristineHGData = {};

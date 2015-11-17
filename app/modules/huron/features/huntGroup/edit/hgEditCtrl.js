@@ -86,15 +86,6 @@
         });
     }
 
-    function updatePilotNumbers(pristineData) {
-      vm.allPilotOptions = angular.copy(vm.allUnassignedPilotNumbers);
-      pristineData.numbers.forEach(function (n) {
-        n.isSelected = true;
-      });
-      vm.selectedPilotNumbers = angular.copy(pristineData.numbers);
-      vm.allPilotOptions = vm.allPilotOptions.concat(pristineData.numbers);
-    }
-
     function updateModal(pristineData, resetFromBackend) {
       HuntGroupFallbackDataService.reset(resetFromBackend);
       HuntGroupMemberDataService.reset(resetFromBackend);
@@ -109,6 +100,15 @@
       vm.selectedHuntMembers = HuntGroupMemberDataService.getHuntMembers();
       vm.selectedFallbackNumber = HuntGroupFallbackDataService.getFallbackNumber();
       vm.selectedFallbackMember = HuntGroupFallbackDataService.getFallbackMember();
+    }
+
+    function updatePilotNumbers(pristineData) {
+      vm.allPilotOptions = angular.copy(vm.allUnassignedPilotNumbers);
+      pristineData.numbers.forEach(function (n) {
+        n.isSelected = true;
+      });
+      vm.selectedPilotNumbers = angular.copy(pristineData.numbers);
+      vm.allPilotOptions = vm.allPilotOptions.concat(pristineData.numbers);
     }
 
     function resetForm() {
@@ -150,6 +150,110 @@
 
     function shouldShowFallbackWarning() {
       return HuntGroupFallbackDataService.isFallbackInvalid();
+    }
+
+    function removeFallbackDest() {
+      vm.selectedFallbackMember = undefined;
+      vm.form.$setDirty();
+    }
+
+    function unSelectHuntGroupMember(user) {
+      HuntGroupMemberDataService.removeMember(user);
+      vm.openMemberPanelUuid = undefined;
+      vm.form.$setDirty();
+    }
+
+    function selectFallback($item) {
+      vm.selectedFallbackNumber = undefined;
+      vm.selectedFallbackMember = HuntGroupFallbackDataService.setFallbackMember($item);
+      vm.form.$setDirty();
+    }
+
+    function fetchFallbackDestination(nameHint) {
+      return HuntGroupMemberDataService.fetchMembers(nameHint);
+    }
+
+    function selectHuntGroupMember(member) {
+      vm.userSelected = undefined;
+      vm.selectedHuntMembers = HuntGroupMemberDataService.selectMember(member);
+      vm.form.$setDirty();
+    }
+
+    function toggleMemberPanel(user) {
+      HuntGroupService.updateMemberEmail(user).then(function () {
+        vm.openMemberPanelUuid = HuntGroupMemberDataService.toggleMemberPanel(user.uuid);
+      });
+    }
+
+    function toggleFallback() {
+      HuntGroupService.updateMemberEmail(vm.selectedFallbackMember.member.user).then(
+        function () {
+          vm.selectedFallbackMember.openPanel = !vm.selectedFallbackMember.openPanel;
+        });
+    }
+
+    function hgUpdateReqBody() {
+      return {
+        name: vm.model.name,
+        numbers: vm.model.numbers.map(function (numberObj) {
+          return {
+            type: numberObj.type,
+            number: numberObj.number
+          };
+        }),
+        huntMethod: vm.model.huntMethod,
+        maxRingSecs: vm.model.maxRingSecs.value,
+        maxWaitMins: vm.model.maxWaitMins.value,
+        fallbackDestination: HuntGroupFallbackDataService.getFallbackDestinationJSON(),
+        members: HuntGroupMemberDataService.getMembersNumberUuidJSON()
+      };
+    }
+
+    function saveForm() {
+      vm.saveInProgress = true;
+      var updateJSONRequest = hgUpdateReqBody();
+      HuntGroupService.updateHuntGroup(customerId, vm.hgId, updateJSONRequest).then(function (data) {
+        vm.saveInProgress = false;
+        Notification.success($translate.instant('huronHuntGroup.successUpdate', {
+          huntGroupName: vm.model.name
+        }));
+
+        HuntGroupEditDataService.setPristine(updateJSONRequest);
+        HuntGroupFallbackDataService.setAsPristine();
+        HuntGroupMemberDataService.setAsPristine();
+        resetForm(false);
+      }, function (data) {
+        vm.saveInProgress = false;
+        Notification.errorResponse(data, $translate.instant('huronHuntGroup.errorUpdate'), {
+          huntGroupName: vm.model.name
+        });
+      });
+    }
+
+    function selectHuntMethod(method) {
+      vm.model.huntMethod = method;
+      vm.form.$setDirty();
+    }
+
+    function callback() {
+      vm.form.$setDirty();
+    }
+
+    function validateFallbackNumber() {
+      vm.selectedFallbackNumber =
+        HuntGroupFallbackDataService.validateFallbackNumber(vm.selectedFallbackNumber);
+
+      if (HuntGroupEditDataService.isFallbackDirty()) {
+        vm.form.$setDirty();
+      }
+    }
+
+    function getDisplayName(user) {
+      return HuntGroupMemberDataService.getDisplayName(user);
+    }
+
+    function isMembersInvalid() {
+      return (!vm.selectedHuntMembers || vm.selectedHuntMembers.length === 0);
     }
 
     function initializeFields() {
@@ -242,114 +346,6 @@
         }
       }];
       vm.isLoadingCompleted = true;
-    }
-
-    function removeFallbackDest() {
-      vm.selectedFallbackMember = undefined;
-      vm.form.$setDirty();
-    }
-
-    function unSelectHuntGroupMember(user) {
-      HuntGroupMemberDataService.removeMember(user);
-      vm.openMemberPanelUuid = undefined;
-      vm.form.$setDirty();
-    }
-
-    function selectFallback($item) {
-      vm.selectedFallbackNumber = undefined;
-      vm.selectedFallbackMember = HuntGroupFallbackDataService.setFallbackMember($item);
-      vm.form.$setDirty();
-    }
-
-    function fetchFallbackDestination(nameHint) {
-      return HuntGroupMemberDataService.fetchMembers(nameHint);
-    }
-
-    function selectHuntGroupMember(member) {
-      vm.userSelected = undefined;
-      vm.selectedHuntMembers = HuntGroupMemberDataService.selectMember(member);
-      vm.form.$setDirty();
-    }
-
-    function toggleMemberPanel(user) {
-      HuntGroupService.updateMemberEmail(user).then(function () {
-        vm.openMemberPanelUuid = HuntGroupMemberDataService.toggleMemberPanel(user.uuid);
-      });
-    }
-
-    function toggleFallback() {
-      HuntGroupService.updateMemberEmail(vm.selectedFallbackMember.member.user).then(
-        function () {
-          vm.selectedFallbackMember.openPanel = !vm.selectedFallbackMember.openPanel;
-        });
-    }
-
-    function hgUpdateReqBody() {
-      var members = vm.model.members.map(function (member) {
-        return member.numberUuid;
-      });
-
-      var numbers = vm.model.numbers.map(function (numberObj) {
-        return {
-          type: numberObj.type,
-          number: numberObj.number
-        };
-      });
-
-      return {
-        name: vm.model.name,
-        numbers: numbers,
-        huntMethod: vm.model.huntMethod,
-        maxRingSecs: vm.model.maxRingSecs.value,
-        maxWaitMins: vm.model.maxWaitMins.value,
-        fallbackDestination: HuntGroupFallbackDataService.getFallbackDestinationJSON(),
-        members: members
-      };
-    }
-
-    function saveForm() {
-      vm.saveInProgress = true;
-
-      HuntGroupService.updateHuntGroup(customerId, vm.hgId, hgUpdateReqBody()).then(function (data) {
-        vm.saveInProgress = false;
-        Notification.success($translate.instant('huronHuntGroup.successUpdate', {
-          huntGroupName: vm.model.name
-        }));
-        //initialModel = angular.copy(vm.model);
-        resetForm();
-
-      }, function (data) {
-        vm.saveInProgress = false;
-        Notification.error($translate.instant('huronHuntGroup.errorUpdate'), {
-          huntGroupName: vm.model.name
-        });
-      });
-    }
-
-    function selectHuntMethod(method) {
-      vm.model.huntMethod = method;
-      vm.form.$setDirty();
-    }
-
-    function callback() {
-      vm.form.$setDirty();
-    }
-
-    function validateFallbackNumber() {
-      vm.selectedFallbackNumber =
-        HuntGroupFallbackDataService.validateFallbackNumber(vm.selectedFallbackNumber);
-
-      if (HuntGroupEditDataService.isFallbackDirty()) {
-        vm.form.$setDirty();
-      }
-    }
-
-    function getDisplayName(user) {
-      return HuntGroupMemberDataService.getDisplayName(user);
-    }
-
-    function isMembersInvalid() {
-      return (!vm.selectedHuntMembers || vm.selectedHuntMembers.length === 0);
     }
   }
 })();
