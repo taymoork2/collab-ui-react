@@ -3,7 +3,7 @@
  */
 'use strict';
 
-xdescribe('Admin should be able to', function () {
+describe('Admin should be able to', function () {
 
   beforeAll(function () {
     login.login('huron-int1', '#/hurondetails/features');
@@ -70,7 +70,7 @@ xdescribe('Admin should be able to', function () {
     utils.click(huntGroup.submitBtn);
   });
 
-  it('should be able to see success notification of hunt group creation', function(){
+  it('should be able to see success notification of hunt group creation', function () {
     notifications.assertSuccess(huntGroup.randomHGName + ' hunt group has been created successfully');
   });
 
@@ -92,12 +92,12 @@ xdescribe('Admin should be able to', function () {
     utils.expectIsEnabled(huronFeatures.huntGroupDeleteBtn);
   });
 
-  it('click on the edit btn on the hunt group card', function(){
+  it('click on the edit btn on the hunt group card', function () {
     utils.click(huronFeatures.huntGroupEditBtn);
     utils.expectText(huntGroup.editPageTitle, huntGroup.randomHGName);
   });
 
-  it('change the hunt group name on hunt group edit page', function(){
+  it('change the hunt group name on hunt group edit page', function () {
     utils.expectIsDisplayed(huntGroup.editHgName);
     utils.expectValueToBeSet(huntGroup.editHgName, huntGroup.randomHGName);
     utils.clear(huntGroup.editHgName);
@@ -108,26 +108,26 @@ xdescribe('Admin should be able to', function () {
     utils.expectValueToBeSet(huntGroup.editHgName, huntGroup.randomHGName);
   });
 
-  it('click on the cancel btn of cancel/save bar on edit page', function(){
+  it('click on the cancel btn of cancel/save bar on edit page', function () {
     utils.clear(huntGroup.editHgName);
     utils.sendKeys(huntGroup.editHgName, huntGroup.modifiedHGName);
     utils.expectIsDisplayed(huntGroup.cancelBtn);
     utils.click(huntGroup.cancelBtn);
   });
 
-  it('remove the hunt group number', function() {
+  it('remove the hunt group number', function () {
     utils.expectIsDisplayed(huntGroup.hgNumbers);
     utils.click(huntGroup.hgNumbers);
     utils.expectIsDisplayed(huntGroup.hgNumber1);
     utils.click(huntGroup.hgNumber1);
   });
 
-  it('not click on the disabled save btn, when they are any changes in hunt group edit page', function(){
+  it('not click on the disabled save btn, when they are any changes in hunt group edit page', function () {
     utils.expectIsDisplayed(huntGroup.cancelSaveBar);
     utils.expectIsDisabled(huntGroup.saveBtn);
   });
 
-  it('add hunt group numbers by using the number functionality', function(){
+  it('add hunt group numbers by using the number functionality', function () {
     utils.expectIsDisplayed(huntGroup.numSearchFilter);
     utils.clear(huntGroup.numSearchFilter);
     utils.sendKeys(huntGroup.numSearchFilter, huntGroup.pilotNumber);
@@ -136,43 +136,43 @@ xdescribe('Admin should be able to', function () {
     utils.click(huntGroup.hgNumbers);
   });
 
-  it('configure the hunt members max ring time', function(){
+  it('configure the hunt members max ring time', function () {
     utils.expectIsDisplayed(huntGroup.memberMaxRingTimeElmnt);
     utils.click(huntGroup.memberMaxRingTimeElmnt);
     utils.expectIsDisplayed(huntGroup.memberMaxRingTime);
     utils.click(huntGroup.memberMaxRingTime);
   });
 
-  it('configure the caller max wait time', function(){
+  it('configure the caller max wait time', function () {
     utils.expectIsDisplayed(huntGroup.callerMaxWaitTimeElmnt);
     utils.click(huntGroup.callerMaxWaitTimeElmnt);
     utils.expectIsDisplayed(huntGroup.callerMaxWaitTime);
     utils.click(huntGroup.callerMaxWaitTime);
   });
 
-  it('change the hunt method', function(){
+  it('change the hunt method', function () {
     utils.expectIsDisplayed(huntGroup.oldHuntMethod);
     utils.expectIsDisplayed(huntGroup.newHuntMethod);
     utils.click(huntGroup.newHuntMethod);
   });
 
-  it('see the cancel/save bar when any changes are there on edit page', function(){
-      utils.expectIsDisplayed(huntGroup.cancelSaveBar);
-      utils.expectTextToBeSet(huntGroup.cancelSaveBar, "Do you want to save your changes?");
+  it('see the cancel/save bar when any changes are there on edit page', function () {
+    utils.expectIsDisplayed(huntGroup.cancelSaveBar);
+    utils.expectTextToBeSet(huntGroup.cancelSaveBar, "Do you want to save your changes?");
   });
 
-  it('search a member', function(){
+  it('search a member', function () {
     utils.expectIsDisplayed(huntGroup.memberSearch);
     utils.clear(huntGroup.memberSearch);
     utils.sendKeys(huntGroup.memberSearch, huntGroup.member3Search);
   });
 
-  it('add a search member to the hunt group', function(){
+  it('add a search member to the hunt group', function () {
     utils.expectIsDisplayed(huntGroup.searchedMemeber);
     utils.click(huntGroup.searchedMemeber);
   });
 
-  it('remove an user from the hunt group', function(){
+  it('remove an user from the hunt group', function () {
     utils.expectIsDisplayed(huntGroup.addedMember);
     utils.expectText(huntGroup.addedMemberName, huntGroup.member3Search);
     utils.click(huntGroup.addedMember);
@@ -181,14 +181,14 @@ xdescribe('Admin should be able to', function () {
     utils.expectNotText(huntGroup.addedMemberName, huntGroup.member3Search);
   });
 
-  it('click on the save btn of cancel/save bar and changes to be reflected on edit page', function(){
+  it('click on the save btn of cancel/save bar and changes to be reflected on edit page', function () {
     utils.expectIsDisplayed(huntGroup.cancelSaveBar);
     utils.click(huntGroup.saveBtn);
     notifications.assertSuccess(huntGroup.randomHGName + ' hunt group has been updated successfully');
 
   });
 
-  it('click on the back button of hunt group edit page', function(){
+  it('click on the back button of hunt group edit page', function () {
     utils.expectIsDisplayed(huntGroup.backBtn);
     utils.click(huntGroup.backBtn);
   });

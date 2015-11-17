@@ -29,7 +29,7 @@ var HuntGroup = function () {
   //Hunt Group Edit Page
   this.editPageTitle = element(by.css('.title-heading'));
   this.editHgName = element(by.css('.hg-name .formly-input-wrapper input'));
-  this.modifiedHGName = 'e2e-hg-new-'+utils.randomId();
+  this.modifiedHGName = 'e2e-hg-new-' + utils.randomId();
   this.backBtn = element(by.css('.page-title a'));
   this.cancelBtn = element(by.css('[ng-click="hge.resetForm()"]'));
   this.cancelSaveBar = element(by.css('.hg-save .left'));
