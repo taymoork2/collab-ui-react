@@ -196,6 +196,7 @@
                 var logMsg = "";
 
                 var result = {
+                  siteUrl: siteUrl,
                   error: "getSiteDataError",
                   response: response
                 };
