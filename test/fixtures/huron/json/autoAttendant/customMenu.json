@@ -42,7 +42,8 @@
       "username": "",
       "password": "",
       "url": "",
-      "language": ""
+      "language": "",
+      "voice": ""
     }]
   },
 
@@ -60,7 +61,8 @@
       "username": "userabc",
       "password": "passwordabc",
       "url": "https://aws/custom/menu",
-      "language": ""
+      "language": "",
+      "voice": ""
     }]
   }
 }

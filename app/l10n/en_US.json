@@ -1334,7 +1334,6 @@
     "scheduleHolidays": "Holidays",
     "invalidBuilderNameMissing": "Enter an Auto Attendant Name.",
     "invalidBuilderNameNotUnique": "This Auto Attendant Name is already in use. Please enter a unique Auto Attendant Name.",
-    "phoneMenuSayPlaceholder": "Enter your message here.",
     "phoneMenuAddDigit": "Add another input digit",
     "phoneMenuTimeout": "Timeout/Invalid",
     "phoneMenuContinue": "Continue To Next Step",
@@ -1363,7 +1362,7 @@
     "sayMessagePlaceholder": "Enter your message here.",
     "sayMessageUninterrupt": "Message playback will be uninterruptable.",
     "sayMessageVoice": "Voice",
-    "sayMessageSelectPlaceholder": "Select...",
+    "selectPlaceholder": "Select...",
     "voices": {
       "male": "male",
       "female": "female",

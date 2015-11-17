@@ -130,8 +130,6 @@ describe('Controller: AAPhoneMenuCtrl', function () {
       expectedActions.push(data.selectedActionsRepeatMenu[0]);
       expectedActions.push(data.selectedActionsDialExt[0]);
       expect(angular.equals(expectedActions, controller.selectedActions)).toEqual(true);
-      var expectedSayMessage = controller.menuEntry.headers[0].actions[0].value;
-      expect(angular.equals(expectedSayMessage, controller.sayMessage)).toEqual(true);
     });
   });
 
@@ -172,27 +170,5 @@ describe('Controller: AAPhoneMenuCtrl', function () {
     });
 
   });
-
-  // describe('setVoiceOptions', function () {
-  //   it('should have voice options for selected language', function () {
-  //     controller.languageOption.value = "it_IT";
-  //     controller.setVoiceOptions();
-  //     $scope.$apply();
-
-  //     expect(controller.voiceOptions.length).toEqual(8);
-
-  //   });
-
-  //   it('should select previously saved voiceOption if available', function () {
-  //     var voice = "Kate";
-  //     controller.voiceBackup.value = voice;
-  //     controller.languageOption.value = "en_GB";
-  //     controller.setVoiceOptions();
-  //     $scope.$apply();
-
-  //     expect(controller.voiceOption.value).toEqual(voice);
-  //   });
-
-  // });
 
 });

@@ -16,10 +16,7 @@
   function AAPhoneMenuCtrl($scope, $translate, $filter, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService) {
 
     var vm = this;
-    vm.sayMessage = '';
-    vm.language = '';
-    vm.voice = '';
-    vm.selectPlaceholder = $translate.instant('autoAttendant.sayMessageSelectPlaceholder');
+    vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
     vm.actionPlaceholder = $translate.instant('autoAttendant.actionPlaceholder');
     vm.keys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '#', '*'];
     vm.selectedActions = [];
@@ -226,16 +223,6 @@
           }
         }
         setAvailableKeys();
-        for (var k = 0; k < entry.headers.length; k++) {
-          // the only header should be the Say Message announcement
-          var header = entry.headers[k];
-          if (angular.isDefined(header.actions) && header.actions.length > 0) {
-            var headerAction = header.actions[0];
-            if (header.type == "MENU_OPTION_ANNOUNCEMENT") {
-              headerAction.value = vm.sayMessage;
-            }
-          }
-        }
       }
     }
 
@@ -270,16 +257,6 @@
         }
         // remove keys that are in use from the selection widget
         setAvailableKeys();
-        // handle the Say Message announcement
-        for (var k = 0; k < headers.length; k++) {
-          var header = headers[k];
-          if (header.actions.length == 1) {
-            var action = header.actions[0];
-            if (header.type == "MENU_OPTION_ANNOUNCEMENT") {
-              vm.sayMessage = action.value;
-            }
-          }
-        }
       }
     }
 
@@ -294,12 +271,6 @@
       var emptyAction = AutoAttendantCeMenuModelService.newCeActionEntry();
       keyEntry.addAction(emptyAction);
       menu.entries.push(keyEntry);
-
-      var annc = AutoAttendantCeMenuModelService.newCeMenuEntry();
-      annc.type = "MENU_OPTION_ANNOUNCEMENT";
-      var anncAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
-      annc.addAction(anncAction);
-      menu.headers.push(annc);
     }
 
     /////////////////////
