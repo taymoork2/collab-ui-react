@@ -68,13 +68,9 @@
       var startTimeUtc = formDate(model.startDate, model.startTime);
       var endTimeUtc = formDate(model.endDate, model.endTime);
       var timeStamp = '"from":' + startTimeUtc + ',"to":' + endTimeUtc;
-      var altTimeStamp = {
-        "from": startTimeUtc,
-        "to": endTimeUtc
-      };
-
       var devicesQuery = [];
       var device = null;
+
       if (angular.isDefined(model.callingPartyDevice)) {
         devicesQuery.push(deviceQuery(callingDevice, model.callingPartyDevice));
       }
