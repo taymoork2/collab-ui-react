@@ -148,6 +148,7 @@
     this.name = 'overview.cards.meeting.title';
     this.cardClass = 'meetings';
     this.trial = false;
+    this.settingsUrl = '#/site-list';
     this.healthStatusUpdatedHandler = _.partial(meeetingHealthEventHandler, card);
 
     this.reportDataEventHandler = function (event, response) {
