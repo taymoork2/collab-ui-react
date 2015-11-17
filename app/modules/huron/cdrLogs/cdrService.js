@@ -176,28 +176,28 @@
       var jsQuery = '{"query": {"filtered": {"query": {"bool": {"should": [' + generateHosts() + ']} },"filter": {"bool": {"should":[' + item + ']}}}},"size": 2000,"sort": [{"@timestamp": {"order": "desc"}}]}';
 
       return proxy(jsQuery).then(function (response) {
-        if (!angular.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
-          for (var i = 0; i < response.hits.hits.length; i++) {
-            cdrArray.push(response.hits.hits[i]._source);
-          }
-        }
-
-        if (queryArray.length > 0) {
-          return secondaryQuery(queryArray).then(function (newCdrArray) {
-            if (angular.isDefined(newCdrArray)) {
-              cdrArray.concat(newCdrArray);
+          if (!angular.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
+            for (var i = 0; i < response.hits.hits.length; i++) {
+              cdrArray.push(response.hits.hits[i]._source);
             }
+          }
+
+          if (queryArray.length > 0) {
+            return secondaryQuery(queryArray).then(function (newCdrArray) {
+              if (angular.isDefined(newCdrArray)) {
+                cdrArray.concat(newCdrArray);
+              }
+              return cdrArray;
+            });
+          } else {
             return cdrArray;
-          });
-        } else {
-          return cdrArray;
-        }
-      },
-      function (response) {
-        Log.debug('Failed to retrieve cdr data from server. Status: ' + response.status);
-        Notification.notify([$translate.instant('cdrLogs.cdrRecursiveError')], 'error');
-        return;
-      });
+          }
+        },
+        function (response) {
+          Log.debug('Failed to retrieve cdr data from server. Status: ' + response.status);
+          Notification.notify([$translate.instant('cdrLogs.cdrRecursiveError')], 'error');
+          return;
+        });
     }
 
     function extractUniqueIds(cdrArray) {
