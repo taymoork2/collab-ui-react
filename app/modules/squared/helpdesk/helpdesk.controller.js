@@ -13,15 +13,15 @@
       searchString: '',
       userSearchResults: null,
       orgSearchResults: null,
-      userSearchFailure: '',
-      orgSearchFailure: '',
+      userSearchFailure: null,
+      orgSearchFailure: null,
       orgFilter: null,
       initSearch: function (searchString) {
         this.searchString = searchString;
         this.userSearchResults = null;
         this.orgSearchResults = null;
-        this.userSearchFailure = '';
-        this.orgSearchFailure = '';
+        this.userSearchFailure = null;
+        this.orgSearchFailure = null;
       }
     };
     angular.element('#searchInput').focus();
@@ -36,7 +36,7 @@
           vm.currentSearch.userSearchResults = res;
           vm.searchingForUsers = false;
         }, function (err) {
-          vm.currentSearch.searchingForUsers = false;
+          vm.searchingForUsers = false;
           vm.currentSearch.userSearchResults = null;
           if (err.status === 400) {
             vm.currentSearch.userSearchFailure = $translate.instant('helpdesk.badUserSearchInput');

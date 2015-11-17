@@ -41,7 +41,7 @@
           <p translate="helpdesk.noSearchHits"></p>
         </div>
 
-        <cs-card-layout>
+        <cs-card-layout ng-if="helpdeskCtrl.currentSearch.userSearchResults.length > 0">
           <cs-card class="full" ng-repeat="user in helpdeskCtrl.currentSearch.userSearchResults">
             <article>
               <header>
@@ -70,14 +70,14 @@
           <p translate="helpdesk.searchingPleaseWait"></p>
         </div>
         <div ng-if="helpdeskCtrl.currentSearch.orgSearchFailure">
-          <p class="helpdesk-red">{{helpdeskCtrl.currentSearcondch.orgSearchFailure}}</p>
+          <p class="helpdesk-red">{{helpdeskCtrl.currentSearch.orgSearchFailure}}</p>
         </div>
         <div
           ng-if="!helpdeskCtrl.searchingForOrgs && helpdeskCtrl.currentSearch.orgSearchResults.length == 0">
           <p translate="helpdesk.noSearchHits"></p>
         </div>
 
-        <cs-card-layout>
+        <cs-card-layout ng-if="helpdeskCtrl.currentSearch.orgSearchResults.length > 0">
           <cs-card class="full" ng-repeat="org in helpdeskCtrl.currentSearch.orgSearchResults">
             <article>
               <header>
@@ -97,7 +97,7 @@
            ng-if="helpdeskCtrl.searchingForUsers || helpdeskCtrl.currentSearch.userSearchResults || helpdeskCtrl.currentSearch.userSearchFailure">
         <h4 translate="helpdesk.devices"></h4>
 
-        <p class="helpdesk-grey top-margin">Device search is not supported yet.</p>
+        <p class="helpdesk-grey">Device search is not supported yet.</p>
       </div>
 
     </div>
