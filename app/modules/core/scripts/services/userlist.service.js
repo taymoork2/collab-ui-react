@@ -238,17 +238,12 @@
                 }
               }
 
-              $rootScope.exporting = false;
-              $rootScope.$broadcast('EXPORT_FINISHED');
-
               deferred.resolve(exportedUsers);
             } else {
-              Log.debug('Get user reports failed. Status ' + status);
               deferred.reject('Get user reports failed. Status ' + status);
             }
           });
         } else {
-          Log.debug('Generate user reports failed. Status ' + status);
           deferred.reject('Generate user reports failed. Status ' + status);
         }
       });

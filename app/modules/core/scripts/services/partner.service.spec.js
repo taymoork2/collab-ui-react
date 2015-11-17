@@ -26,7 +26,7 @@ describe('Partner Service', function () {
     Authinfo = _Authinfo_;
     $rootScope = _$rootScope_;
 
-    testData = getJSONFixture('core/json/partner/partnerservice.json');
+    testData = getJSONFixture('core/json/partner/partner.service.json');
   }));
 
   afterEach(function () {
@@ -169,28 +169,26 @@ describe('Partner Service', function () {
   });
 
   it('should successfully return an array of customers with additional properties from calling loadRetrievedDataToList', function () {
-    var returnLists = [];
-    returnLists = PartnerService.loadRetrievedDataToList(testData.managedOrgsResponse.data.organizations, true);
+    var returnList = PartnerService.loadRetrievedDataToList(testData.managedOrgsResponse.data.organizations, true);
+    var activeList = _.filter(returnList, {
+      state: "ACTIVE"
+    });
+    var expiredList = _.filter(returnList, {
+      state: "EXPIRED"
+    });
     // Five customers, three active, two expired
-    expect(returnLists[0].length).toBe(5);
-    expect(returnLists[1].length).toBe(2);
-    expect(returnLists[2].length).toBe(3);
+    expect(returnList.length).toBe(5);
+    expect(activeList.length).toBe(3);
+    expect(expiredList.length).toBe(2);
 
     // Two licenses converted to License List. First license has four entitlements
-    expect(returnLists[0][0].licenseList.length).toBe(2);
-    expect(returnLists[0][0].licenseList[0].features.length).toBe(4);
-    expect(returnLists[0][0].licenseList[0].features).toEqual(testData.managedOrgsResponse.data.organizations[0].licenses[0].features);
+    expect(returnList[0].licenseList.length).toBe(2);
+    expect(returnList[0].licenseList[0].features.length).toBe(4);
+    expect(returnList[0].licenseList[0].features).toEqual(testData.managedOrgsResponse.data.organizations[0].licenses[0].features);
 
     // Verify additional properties are set to the corresponding license object and added to customer object.
-    expect(returnLists[1][1].conferencing.features.length).toBe(3);
-    expect(returnLists[1][1].messaging.features.length).toBe(4);
-    expect(returnLists[1][1].communications.sortOrder).toBe(PartnerService.customerStatus.FREE);
-
-    // Verify notes property is added to license object containing sortOrder properties set to free license
-    expect(returnLists[0][3].notes.sortOrder).toBe(PartnerService.customerStatus.FREE);
-
-    // Verify sort order is set is added to license list
-    expect(returnLists[0][2].licenseList[1].sortOrder).toBe(PartnerService.customerStatus.TRIAL);
+    expect(activeList[1].conferencing.features.length).toBe(3);
+    expect(activeList[1].messaging.features.length).toBe(4);
   });
 
   it('should successfully return an array of customers from calling exportCSV', function () {

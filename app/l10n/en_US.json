@@ -816,7 +816,8 @@
     "expired": "Your session is expired or unauthorized. You will automatically be logged out in a few seconds. Please login again to continue using the service.",
     "unsupported": "You are using an <strong>outdated</strong> version of Internet Explorer. Please <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>upgrade your browser</a> to version 11 or higher.",
     "status404": "Requested resource not found.",
-    "statusError": "Request failed with status: {{status}}."
+    "statusError": "Request failed with status: {{status}}.",
+    "csvError": "Export failed."
   },
   "spacesPage": {
     "title": "Devices",

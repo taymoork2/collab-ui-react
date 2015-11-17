@@ -138,8 +138,8 @@
     "data": {
       "organizations": [{
         "customerOrgId": "b93b10ad-ae24-4abf-9c21-76e8b86faf01",
-        "startDate": "2015-08-05T00:00:00.000Z",
-        "trialPeriod": 90,
+        "startDate": "2015-11-05T00:00:00.000Z",
+        "trialPeriod": 900,
         "offers": [{
           "id": "COLLAB",
           "licenseCount": 100,
@@ -179,11 +179,11 @@
         "customerEmail": "collabctg+Atlas_Test_Trial_vt453w4p8d@gmail.com",
         "trialId": "7db0f7c1-a961-41dd-995e-ef4eb204cc72",
         "isAllowedToManage": false,
-        "createdDate": "2015-08-05T00:00:00.000Z"
+        "createdDate": "2015-11-05T00:00:00.000Z"
       }, {
         "customerOrgId": "1803daee-4247-4d67-a812-932382682642",
-        "startDate": "2015-08-19T00:00:00.000Z",
-        "trialPeriod": 90,
+        "startDate": "2015-10-19T00:00:00.000Z",
+        "trialPeriod": 900,
         "offers": [{
           "id": "COLLAB",
           "licenseCount": 100,
@@ -223,11 +223,11 @@
         "customerEmail": "collabctg+Atlas_Test_Trial_t81tts9by9@gmail.com",
         "trialId": "f4c2397f-75a3-4a00-8e93-fe6aa2b9890f",
         "isAllowedToManage": false,
-        "createdDate": "2015-08-19T00:00:00.000Z"
+        "createdDate": "2015-10-19T00:00:00.000Z"
       }, {
         "customerOrgId": "3166b803-d6a0-4127-9d81-539950339a3d",
-        "startDate": "2015-09-10T00:00:00.000Z",
-        "trialPeriod": 90,
+        "startDate": "2015-10-10T00:00:00.000Z",
+        "trialPeriod": 900,
         "offers": [{
           "id": "COLLAB",
           "licenseCount": 100,
@@ -267,7 +267,7 @@
         "customerEmail": "collabctg+Atlas_Test_Trial_jpgjhf6or@gmail.com",
         "trialId": "16c3c2e9-d114-43c0-841d-b2b19de6989c",
         "isAllowedToManage": false,
-        "createdDate": "2015-09-10T00:00:00.000Z"
+        "createdDate": "2015-10-10T00:00:00.000Z"
       }, {
         "customerOrgId": "af9abee9-0c6e-4625-a02f-b007456689f2",
         "startDate": "2015-08-05T00:00:00.000Z",

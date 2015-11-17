@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('ExportCSVCtrl', ['$scope', '$rootScope', 'UserListService', 'PartnerService', 'Log', 'Notification',
-    function ($scope, $rootScope, UserListService, PartnerService, Log, Notification) {
+  .controller('ExportCSVCtrl', ['$scope', '$rootScope', '$translate', '$q', 'UserListService', 'PartnerService', 'Log', 'Notification',
+    function ($scope, $rootScope, $translate, $q, UserListService, PartnerService, Log, Notification) {
 
       $scope.exporting = $rootScope.exporting;
       var promise = null;
@@ -14,13 +14,21 @@ angular.module('Core')
           promise = PartnerService.exportCSV();
         } else {
           Log.debug('Invalid export type: ' + $scope.exportType);
-          Notification.notify('Invalid export', 'error');
+          Notification.notify([$translate.instant('errors.csvError')], 'error');
+          promise = null;
         }
 
-        promise.then(null, function (error) {
-          Notification.notify(error, 'error');
-        });
-        return promise;
+        if (promise) {
+          promise.then(null, function (error) {
+            Log.debug(error);
+            Notification.notify([$translate.instant('errors.csvError')], 'error');
+          }).finally(function () {
+            $rootScope.exporting = false;
+            $rootScope.$broadcast('EXPORT_FINISHED');
+          });
+          return promise;
+        }
+        return $q.reject();
       };
 
       // Set exporting value in $scope to true if an

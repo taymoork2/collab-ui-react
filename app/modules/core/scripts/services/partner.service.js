@@ -156,8 +156,6 @@
 
     function loadRetrievedDataToList(retrievedData, isTrialData) {
       var list = [];
-      var activeList = [];
-      var expiredList = [];
 
       for (var index in retrievedData) {
         var data = retrievedData[index];
@@ -228,11 +226,9 @@
         var daysLeft = moment(then).diff(now, 'days');
         dataObj.daysLeft = daysLeft;
         if (isTrialData) {
-          if (daysLeft >= 0) {
-            activeList.push(dataObj);
-          } else {
+          if (daysLeft < 0) {
             dataObj.status = $translate.instant('customerPage.expired');
-            expiredList.push(dataObj);
+            dataObj.state = "EXPIRED";
           }
         }
 
@@ -253,7 +249,7 @@
         list.push(dataObj);
       }
 
-      return [list, activeList, expiredList];
+      return list;
     }
 
     function exportCSV() {
@@ -320,15 +316,9 @@
             }
           }
 
-          $rootScope.exporting = false;
-          $rootScope.$broadcast('EXPORT_FINISHED');
-
           deferred.resolve(exportedCustomers);
         } else {
-          Log.debug('Failed to retrieve managed orgs information. Status: ' + status);
-          deferred.reject($translate.instant('partnerHomePage.errGetTrialsQuery', {
-            status: status
-          }));
+          deferred.reject('Failed to retrieve managed orgs information. Status: ' + status);
         }
       });
 

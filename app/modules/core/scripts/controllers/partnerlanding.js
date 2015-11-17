@@ -69,10 +69,13 @@ angular.module('Core')
           $scope.showTrialsRefresh = false;
           if (data.success && data.trials) {
             if (data.trials.length > 0) {
-              var returnLists = PartnerService.loadRetrievedDataToList(data.trials, true);
-              $scope.trialsList = returnLists[0];
-              $scope.activeList = returnLists[1];
-              $scope.expiredList = returnLists[2];
+              $scope.trialsList = PartnerService.loadRetrievedDataToList(data.trials, true);
+              $scope.activeList = _.filter($scope.trialsList, {
+                state: "ACTIVE"
+              });
+              $scope.expiredList = _.filter($scope.trialsList, {
+                state: "EXPIRED"
+              });
               $scope.showExpired = $scope.expiredList.length > 0;
               Log.debug('active trial records found:' + $scope.activeList.length);
               Log.debug('total trial records found:' + $scope.trialsList.length);
@@ -98,8 +101,7 @@ angular.module('Core')
           $scope.showManagedOrgsRefresh = false;
           if (data.success && data.organizations) {
             if (data.organizations.length > 0) {
-              var returnLists = PartnerService.loadRetrievedDataToList(data.organizations, false);
-              $scope.managedOrgsList = returnLists[0];
+              $scope.managedOrgsList = PartnerService.loadRetrievedDataToList(data.organizations, false);
               Log.debug('total managed orgs records found:' + $scope.managedOrgsList.length);
             } else {
               Log.debug('No managed orgs records found');
