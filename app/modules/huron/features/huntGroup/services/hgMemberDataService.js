@@ -29,12 +29,12 @@
       reset: reset,
       setMemberJSON: setMemberJSON,
       getHuntMembers: getHuntMembers,
-      checkMemberDirtiness: checkMemberDirtiness
+      isMemberDirty: isMemberDirty
     };
 
     ////////////////
 
-    function checkMemberDirtiness(pristineMember) {
+    function isMemberDirty(pristineMember) {
       var dirty = false;
       selectedHuntMembers.some(function (m) {
         if (pristineMember.userUuid === m.user.uuid) {

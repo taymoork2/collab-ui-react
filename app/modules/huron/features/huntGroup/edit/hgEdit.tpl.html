@@ -58,6 +58,7 @@
                               label="number | huntMemberTelephone"
                               value="number"
                               name="fallbackDestinationNumbers"
+                              ng-click="hge.checkFallbackDirtiness()"
                               id="number.uuid"
                               ng-model="hge.selectedFallbackMember.member.selectableNumber"></cs-radio>
                     <p>
@@ -69,7 +70,8 @@
             </div>
           </div>
           <div class="ui-mt">
-            <cs-checkbox ckid="voicemail" ng-model="hge.selectedFallbackMember.sendToVoicemail"
+            <cs-checkbox ckid="voicemail" ng-click="hge.checkFallbackDirtiness()"
+                         ng-model="hge.selectedFallbackMember.sendToVoicemail"
                          label="{{:: 'huronHuntGroup.voiceCheckLabel' | translate}}"></cs-checkbox>
           </div>
         </div>

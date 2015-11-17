@@ -23,7 +23,7 @@
       fetchHuntGroup: fetchHuntGroup,
       getPristine: getPristine,
       isFallbackDirty: isFallbackDirty,
-      checkMemberDirtiness: checkMemberDirtiness,
+      isMemberDirty: isMemberDirty,
       reset: reset
     };
 
@@ -35,8 +35,8 @@
 
     function fetchHuntGroup(customerId, hgId) {
       return HuntGroupService.getDetails(customerId, hgId).then(function (backendData) {
-        pristineHGData = angular.copy(backendData);
-        return backendData;
+        pristineHGData = backendData;
+        return getPristine();
       });
     }
 
@@ -49,11 +49,11 @@
         pristineHGData.fallbackDestination);
     }
 
-    function checkMemberDirtiness(userUuid) {
+    function isMemberDirty(userUuid) {
       var dirty = false;
       pristineHGData.members.some(function (m) {
         if (m.userUuid === userUuid) {
-          dirty = HuntGroupMemberDataService.checkMemberDirtiness(m);
+          dirty = HuntGroupMemberDataService.isMemberDirty(m);
         }
         return dirty;
       });

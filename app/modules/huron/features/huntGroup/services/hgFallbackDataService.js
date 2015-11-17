@@ -79,10 +79,10 @@
       if (resetFromBackend) {
         HuntGroupService.getHuntMemberWithSelectedNumber(data).then(function (m) {
           pristineFallbackMember = m;
-          fallbackMember.member = pristineFallbackMember;
+          fallbackMember.member = angular.copy(pristineFallbackMember);
         });
       } else {
-        fallbackMember.member = pristineFallbackMember;
+        fallbackMember.member = angular.copy(pristineFallbackMember);
       }
     }
 
@@ -208,9 +208,19 @@
       }
 
       if (pristineFallbackJSON.numberUuid) {
-        return (pristineFallbackJSON.numberUuid !==
-          fallbackMember.member.selectableNumber.uuid);
+        return memberNumberChanged(pristineFallbackJSON) ||
+          memberSendToVoicemailChanged(pristineFallbackJSON);
       }
+    }
+
+    function memberNumberChanged(pristineFallbackJSON) {
+      return (pristineFallbackJSON.numberUuid !==
+        fallbackMember.member.selectableNumber.uuid);
+    }
+
+    function memberSendToVoicemailChanged(pristineFallbackJSON) {
+      return (pristineFallbackJSON.sendToVoicemail !==
+        fallbackMember.sendToVoicemail);
     }
   }
 })();

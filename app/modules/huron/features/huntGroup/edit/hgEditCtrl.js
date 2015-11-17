@@ -30,6 +30,7 @@
     vm.fetchHuntMembers = fetchHuntMembers;
     vm.getDisplayName = getDisplayName;
     vm.isMembersInvalid = isMembersInvalid;
+    vm.checkMemberDirtiness = checkMemberDirtiness;
     vm.userSelected = undefined;
     vm.selectedHuntMembers = [];
     vm.openMemberPanelUuid = undefined;
@@ -43,7 +44,7 @@
     vm.toggleFallback = toggleFallback;
     vm.validateFallbackNumber = validateFallbackNumber;
     vm.removeFallbackDest = removeFallbackDest;
-    vm.checkMemberDirtiness = checkMemberDirtiness;
+    vm.checkFallbackDirtiness = checkFallbackDirtiness;
     vm.selectedFallbackNumber = undefined;
     vm.selectedFallbackMember = undefined;
 
@@ -116,8 +117,14 @@
       vm.form.$setUntouched();
     }
 
-    function checkMemberDirtiness(member) {
-      if (HuntGroupEditDataService.checkMemberDirtiness(member)) {
+    function checkFallbackDirtiness() {
+      if (HuntGroupEditDataService.isFallbackDirty()) {
+        vm.form.$setDirty();
+      }
+    }
+
+    function checkMemberDirtiness(userUuid) {
+      if (HuntGroupEditDataService.isMemberDirty(userUuid)) {
         vm.form.$setDirty();
       }
     }
