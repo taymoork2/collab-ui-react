@@ -2737,6 +2737,6 @@
     "mobile": "mobile",
     "work": "work",
     "fax": "fax",
-    "filterByOrg": "Search this Customer"
+    "searchingOrg": "Searching {{name}}"
   }
 }
