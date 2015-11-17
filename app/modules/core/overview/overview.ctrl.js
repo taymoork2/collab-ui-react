@@ -173,9 +173,9 @@
     this.icon = 'icon-circle-call';
     this.desc = 'overview.cards.call.desc';
     this.name = 'overview.cards.call.title';
-    this.trial = true;
     this.cardClass = 'people';
     this.trial = false;
+    this.settingsUrl = '#/hurondetails/settings';
     this.healthStatusUpdatedHandler = _.partial(meeetingHealthEventHandler, card);
     this.reportDataEventHandler = function (event, response) {
       if (!response.data.success) return;
