@@ -21,13 +21,16 @@ describe('Controller: Partner Reports', function () {
   };
   var customerOptions = [{
     value: 'a7cba512-7b62-4f0a-a869-725b413680e4',
-    label: 'Test Org One'
+    label: 'Test Org One',
+    isAllowedToManage: true
   }, {
     value: '1896f9dc-c5a4-4041-8257-b3adfe3cf9a4',
-    label: 'Test Org Three'
+    label: 'Test Org Three',
+    isAllowedToManage: true
   }, {
     value: 'b7e25333-6750-4b17-841c-ce5124f8ddbb',
-    label: 'Test Org Two'
+    label: 'Test Org Two',
+    isAllowedToManage: true
   }];
   var endpointResponse = [{
     orgId: '6f631c7b-04e5-4dfe-b359-47d5fa9f4837',
@@ -302,7 +305,8 @@ describe('Controller: Partner Reports', function () {
         expect(controller.customerOptions).toEqual([]);
         expect(controller.customerSelected).toEqual({
           value: 0,
-          label: ''
+          label: '',
+          isAllowedToManage: false
         });
         expect(controller.timeSelected).toEqual(controller.timeOptions[0]);
       });

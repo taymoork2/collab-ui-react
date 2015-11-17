@@ -181,7 +181,8 @@
       angular.forEach(orgsData, function (org) {
         customers.push({
           value: org.customerOrgId,
-          label: org.customerName
+          label: org.customerName,
+          isAllowedToManage: org.isAllowedToManage
         });
       });
 
@@ -194,7 +195,8 @@
       } else {
         vm.customerSelected = {
           value: 0,
-          label: ""
+          label: "",
+          isAllowedToManage: false
         };
       }
     }
@@ -236,9 +238,10 @@
           setActivePopulationGraph(response.populationGraph, response.overallPopulation);
 
           vm.mostActiveUsers = [];
-          if (angular.isDefined(response.tableData)) {
+          if (vm.customerSelected.isAllowedToManage && angular.isDefined(response.tableData)) {
             vm.mostActiveUsers = response.tableData;
           }
+
           vm.displayMostActive = false;
           if (angular.isArray(vm.mostActiveUsers) && (vm.mostActiveUsers.length > 0)) {
             vm.displayMostActive = true;
