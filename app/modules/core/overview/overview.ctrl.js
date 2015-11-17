@@ -38,8 +38,8 @@
     _.each(['oneOnOneCallsLoaded', 'groupCallsLoaded', 'conversationsLoaded', 'activeRoomsLoaded'], function (eventType) {
       $scope.$on(eventType, function (event, response) {
         _.each(vm.cards, function (card) {
-          if (card.eventHandler) {
-            card.eventHandler(event, response);
+          if (card.reportDataEventHandler) {
+            card.reportDataEventHandler(event, response);
           }
         });
       });
@@ -48,7 +48,7 @@
     ReportsService.getOverviewMetrics(true);
 
     Orgservice.getOrg(vm.userCard.orgEventHandler);
-    Orgservice.getUnlicensedUsers(vm.userCard.unlicencedUsersHandler);
+    Orgservice.getUnlicensedUsers(vm.userCard.unlicensedUsersHandler);
 
     ReportsService.healthMonitor(function (data, status) {
       if (data.success) {
@@ -119,29 +119,26 @@
     this.currentTitle = 'overview.cards.message.currentTitle';
     this.previousTitle = 'overview.cards.message.previousTitle';
     this.trial = false;
-    this.eventHandler = messageEventHandler;
-    this.healthStatusUpdatedHandler = messageHealthEventHandler;
-    this.licenseEventHandler = licenseEventHandler;
 
-    function messageEventHandler(event, response) {
+    this.reportDataEventHandler = function (event, response) {
       if (!response.data.success) return;
       if (event.name == 'conversationsLoaded' && response.data.spanType == 'month' && response.data.intervalCount >= 2) {
         card.current = Math.round(response.data.data[0].count);
         card.previous = Math.round(response.data.data[1].count);
       }
-    }
+    };
 
-    function messageHealthEventHandler(data) {
+    this.healthStatusUpdatedHandler = function messageHealthEventHandler(data) {
       _.each(data.components, function (component) {
         if (component.name == 'Mobile Clients' || component.name == 'Rooms' || component.name == 'Web and Desktop Clients') {
           card.healthStatus = mapStatus(card.healthStatus, component.status);
         }
       });
-    }
+    };
 
-    function licenseEventHandler(licenses) {
+    this.licenseEventHandler = function (licenses) {
       card.trial  = _.any(licenses, { 'offerName': 'MS', 'isTrial': true });
-    }
+    };
   }
 
   function MeetingCard() {
@@ -152,24 +149,22 @@
     this.cardClass = 'meetings';
     this.trial = false;
     this.healthStatusUpdatedHandler = _.partial(meeetingHealthEventHandler, card);
-    this.eventHandler = callEventHandler;
-    this.licenseEventHandler = licenseEventHandler;
 
-    function callEventHandler(event, response) {
+    this.reportDataEventHandler = function (event, response) {
       if (!response.data.success) return;
       if (event.name == 'groupCallsLoaded' && response.data.spanType == 'month' && response.data.intervalCount >= 2) {
         card.current = Math.round(response.data.data[0].count);
         card.previous = Math.round(response.data.data[1].count);
       }
-    }
+    };
 
-    function licenseEventHandler(licenses) {
+    this.licenseEventHandler = function (licenses) {
       card.trial  = _.any(licenses, function(l) {
         return (
           l.offerName == 'CF' ||
           l.offerName == 'EE' ||
           l.offerName == 'MC' ) && l.isTrial; }); //list: https://sqbu-github.cisco.com/WebExSquared/wx2-admin-service/blob/master/common/src/main/java/com/cisco/wx2/atlas/common/bean/order/OfferCode.java
-    }
+    };
   }
 
   function CallCard() {
@@ -181,15 +176,13 @@
     this.cardClass = 'people';
     this.trial = false;
     this.healthStatusUpdatedHandler = _.partial(meeetingHealthEventHandler, card);
-    this.eventHandler = callEventHandler;
-
-    function callEventHandler(event, response) {
+    this.reportDataEventHandler = function (event, response) {
       if (!response.data.success) return;
       if (event.name == 'oneOnOneCallsLoaded' && response.data.spanType == 'month' && response.data.intervalCount >= 2) {
         card.current = Math.round(response.data.data[0].count);
         card.previous = Math.round(response.data.data[1].count);
       }
-    }
+    };
   }
 
   function RoomSystemCard() {
@@ -201,52 +194,45 @@
     this.currentTitle = 'overview.cards.roomSystem.currentTitle';
     this.previousTitle = 'overview.cards.roomSystem.previousTitle';
     this.settingsUrl = '#/devices';
-    this.eventHandler = activeRoomsEventHandler;
-    this.licenseEventHandler = licenseEventHandler;
-
-    function activeRoomsEventHandler(event, response) {
+    this.reportDataEventHandler = function(event, response) {
 
       if (!response.data.success) return;
       if (event.name == 'activeRoomsLoaded' && response.data.spanType == 'month' && response.data.intervalCount >= 2) {
         card.current = Math.round(response.data.data[0].count);
         card.previous = Math.round(response.data.data[1].count);
       }
-    }
+    };
 
-    function licenseEventHandler(licenses) {
+    this.licenseEventHandler = function (licenses) {
       card.trial  = _.any(licenses, { 'offerName': 'SD', 'isTrial': true }); //SD = Shared Devices
-    }
+    };
   }
 
   function UserCard() {
     var card = this;
-    this.orgEventHandler = orgEventHandler;
-    this.unlicencedUsersHandler = unlicencedUsersHandler;
 
-    function unlicencedUsersHandler(data) {
+    this.unlicensedUsersHandler = function (data) {
       if (data.success && data.resources) {
         card.usersToConvert = data.resources.length; // for now use the length to get the count as there is a bug in CI and totalResults is not accurate.
       }
-    }
+    };
 
-    function orgEventHandler(data) {
+    this.orgEventHandler = function (data) {
       if (data.success) {
         card.ssoEnabled = data.ssoEnabled || false;
         card.dirsyncEnabled = data.dirsyncEnabled || false;
       }
-    }
+    };
   }
 
   function HybridServicesCard() {
     var card = this;
     this.icon = 'icon-circle-data';
-    this.hybridStatusEventHandler = hybridStatusEventHandler;
-
-    function hybridStatusEventHandler(services) {
+    this.hybridStatusEventHandler = function (services) {
       _.each(services, function (service) {
         service.statusIcon = !service.enabled || !service.acknowledged ? 'warning' : 'success';
       });
       card.services = services;
-    }
+    };
   }
 })();
