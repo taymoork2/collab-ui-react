@@ -3,7 +3,7 @@
  */
 'use strict';
 
-describe('Admin should be able to', function () {
+xdescribe('Admin should be able to', function () {
 
   beforeAll(function () {
     login.login('huron-int1', '#/hurondetails/features');
@@ -158,7 +158,7 @@ describe('Admin should be able to', function () {
 
   it('see the cancel/save bar when any changes are there on edit page', function () {
     utils.expectIsDisplayed(huntGroup.cancelSaveBar);
-    utils.expectTextToBeSet(huntGroup.cancelSaveBar, "Do you want to save your changes?");
+    utils.expectTextToBeSet(huntGroup.cancelSaveBar, 'Do you want to save your changes?');
   });
 
   it('search a member', function () {
@@ -167,12 +167,12 @@ describe('Admin should be able to', function () {
     utils.sendKeys(huntGroup.memberSearch, huntGroup.member3Search);
   });
 
-  it('add a search member to the hunt group', function () {
+  it('add a searched member to the hunt group', function () {
     utils.expectIsDisplayed(huntGroup.searchedMemeber);
     utils.click(huntGroup.searchedMemeber);
   });
 
-  it('remove an user from the hunt group', function () {
+  it('remove added member from the hunt group', function () {
     utils.expectIsDisplayed(huntGroup.addedMember);
     utils.expectText(huntGroup.addedMemberName, huntGroup.member3Search);
     utils.click(huntGroup.addedMember);
