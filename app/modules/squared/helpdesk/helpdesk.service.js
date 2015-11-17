@@ -20,7 +20,7 @@
         return deferred.promise;
       }
       return $http
-        .get(urlBase + 'helpdesk/search/users?phrase=' + searchString + '&limit=5')
+        .get(urlBase + 'helpdesk/search/users?phrase=' + searchString + '&limit=5' + (orgId ? '&orgId=' + orgId : ''))
         .then(extractItems);
     }
 
@@ -31,7 +31,7 @@
         return deferred.promise;
       }
       return $http
-        .get(urlBase + 'helpdesk/search/organizations?phrase=' + searchString + '&limit=5')
+        .get(urlBase + 'helpdesk/search/organizations?phrase=' + searchString + '&limit=5' + (orgId ? '&orgId=' + orgId : ''))
         .then(extractItems);
     }
 

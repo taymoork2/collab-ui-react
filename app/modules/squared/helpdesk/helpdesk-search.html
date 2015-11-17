@@ -19,6 +19,12 @@
           <span translate="helpdesk.searchCriteriaLink"></span>
         </a>
       </p>
+
+      <div ng-if="helpdeskCtrl.currentSearch.orgFilter" class="helpdesk-tile">
+        <span translate="helpdesk.searchingOrg"
+              translate-value-name="{{helpdeskCtrl.currentSearch.orgFilter.displayName}}"></span>
+        <i class="icon icon-close" ng-click="helpdeskCtrl.clearOrgFilter()"></i>
+      </div>
     </div>
   </div>
 
@@ -81,12 +87,12 @@
           <cs-card class="full" ng-repeat="org in helpdeskCtrl.currentSearch.orgSearchResults">
             <article>
               <header>
-                <h5><a ui-sref="helpdesk.org({org:org})">{{org.displayName}}</a></h5>
+                <h5>
+                  <a ui-sref="helpdesk.org({org:org})">{{org.displayName}}</a>
+                  <a href class="right" ng-click="helpdeskCtrl.setOrgFilter(org)"><i class="icon icon-search"></i></a>
+                </h5>
               </header>
               <section class="card-section">
-                <a href ng-click="helpdeskCtrl.filterByOrg(org)">
-                  <span translate="helpdesk.filterByOrg"></span>
-                </a>
               </section>
             </article>
           </cs-card>
@@ -97,7 +103,7 @@
            ng-if="helpdeskCtrl.searchingForUsers || helpdeskCtrl.currentSearch.userSearchResults || helpdeskCtrl.currentSearch.userSearchFailure">
         <h4 translate="helpdesk.devices"></h4>
 
-        <p class="helpdesk-grey">Device search is not supported yet.</p>
+        <p>Device search is not supported yet.</p>
       </div>
 
     </div>

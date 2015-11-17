@@ -5,7 +5,8 @@
   function HelpdeskController(HelpdeskService, $log, $translate) {
     var vm = this;
     vm.search = search;
-    vm.setFilterByOrg = setFilterByOrg;
+    vm.setOrgFilter = setOrgFilter;
+    vm.clearOrgFilter = clearOrgFilter;
     vm.searchingForUsers = false;
     vm.searchingForOrgs = false;
     vm.searchString = '';
@@ -29,10 +30,11 @@
     function search() {
       if (!vm.searchString) return;
       vm.currentSearch.initSearch(vm.searchString);
+      var orgFilterId = vm.currentSearch.org ? vm.currentSearch.org.id : null;
 
       if (vm.searchString.length >= 3) {
         vm.searchingForUsers = true;
-        HelpdeskService.searchUsers(vm.searchString).then(function (res) {
+        HelpdeskService.searchUsers(vm.searchString, orgFilterId).then(function (res) {
           vm.currentSearch.userSearchResults = res;
           vm.searchingForUsers = false;
         }, function (err) {
@@ -49,20 +51,30 @@
         vm.currentSearch.userSearchFailure = $translate.instant('helpdesk.badUserSearchInput');
       }
 
-      vm.searchingForOrgs = true;
-      HelpdeskService.searchOrgs(vm.searchString).then(function (res) {
-        vm.currentSearch.orgSearchResults = res;
-        vm.searchingForOrgs = false;
-      }, function (err) {
-        vm.searchingForOrgs = false;
-        vm.currentSearch.orgSearchResults = null;
-        vm.currentSearch.orgSearchFailure = $translate.instant('helpdesk.unexpectedError');
-        $log.error(err);
-      });
+      if (!vm.currentSearch.orgFilter) {
+        vm.searchingForOrgs = true;
+        HelpdeskService.searchOrgs(vm.searchString).then(function (res) {
+          vm.currentSearch.orgSearchResults = res;
+          vm.searchingForOrgs = false;
+        }, function (err) {
+          vm.searchingForOrgs = false;
+          vm.currentSearch.orgSearchResults = null;
+          vm.currentSearch.orgSearchFailure = $translate.instant('helpdesk.unexpectedError');
+          $log.error(err);
+        });
+      }
     }
 
-    function setFilterByOrg(org) {
+    function setOrgFilter(org) {
+      vm.searchString = '';
+      vm.currentSearch.initSearch('');
       vm.currentSearch.orgFilter = org;
+    }
+
+    function clearOrgFilter() {
+      vm.searchString = '';
+      vm.currentSearch.initSearch('');
+      vm.currentSearch.orgFilter = null;
     }
   }
 
