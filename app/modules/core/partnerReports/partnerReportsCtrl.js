@@ -126,19 +126,23 @@
       setAllDummyData();
       setTimeBasedText();
 
-      vm.activeUsersRefresh = REFRESH;
-      vm.activeUserPopulationRefresh = REFRESH;
-      vm.mostActiveDescription = "";
-      getActiveUserReports();
+      if (vm.customerSelected.value !== 0) {
+        vm.activeUsersRefresh = REFRESH;
+        vm.activeUserPopulationRefresh = REFRESH;
+        vm.mostActiveDescription = "";
+        getActiveUserReports();
 
-      vm.callMetricsRefresh = REFRESH;
-      getCallMetricsReports();
+        vm.callMetricsRefresh = REFRESH;
+        getCallMetricsReports();
 
-      vm.mediaQualityRefresh = REFRESH;
-      getMediaQualityReports();
+        vm.mediaQualityRefresh = REFRESH;
+        getMediaQualityReports();
 
-      vm.endpointRefresh = REFRESH;
-      getRegisteredEndpoints();
+        vm.endpointRefresh = REFRESH;
+        getRegisteredEndpoints();
+      } else {
+        setAllNoData();
+      }
     };
 
     init();
@@ -152,11 +156,23 @@
       PartnerReportService.getOverallActiveUserData(vm.timeSelected);
       PartnerReportService.getCustomerList().then(function (response) {
         updateCustomerFilter(response);
-        getRegisteredEndpoints();
-        getMediaQualityReports();
-        getActiveUserReports();
-        getCallMetricsReports();
+        if (vm.customerSelected.value !== 0) {
+          getRegisteredEndpoints();
+          getMediaQualityReports();
+          getActiveUserReports();
+          getCallMetricsReports();
+        } else {
+          setAllNoData();
+        }
       });
+    }
+
+    function setAllNoData() {
+      vm.activeUserPopulationRefresh = EMPTY;
+      vm.activeUsersRefresh = EMPTY;
+      vm.mediaQualityRefresh = EMPTY;
+      vm.callMetricsRefresh = EMPTY;
+      vm.endpointRefresh = EMPTY;
     }
 
     function updateCustomerFilter(orgsData) {
