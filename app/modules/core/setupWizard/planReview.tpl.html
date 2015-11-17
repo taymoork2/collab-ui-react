@@ -7,19 +7,22 @@
     <div class="col-sm-4 col-free">
       <div class="column-header">
         <i class="icon icon-circle-message"></i>
-        <h3 translate="firstTimeWizard.messaging"></h3>
+        <h3 ng-if="planReview.showRoomSystems" translate="firstTimeWizard.message"></h3>
+        <h3 ng-if="!planReview.showRoomSystems" translate="firstTimeWizard.messaging"></h3>
       </div>
     </div>
     <div class="col-sm-4 col-free">
       <div class="column-header">
         <i class="icon icon-circle-group"></i>
-        <h3 translate="firstTimeWizard.meeting"></h3>
+        <h3 ng-if="planReview.showRoomSystems" translate="firstTimeWizard.meeting"></h3>
+        <h3 ng-if="!planReview.showRoomSystems" translate="firstTimeWizard.conferencing"></h3>
       </div>
     </div>
     <div class="col-sm-4 col-free">
       <div class="column-header">
         <i class="icon icon-circle-call"></i>
-        <h3 translate="firstTimeWizard.call"></h3>
+        <h3 ng-if="planReview.showRoomSystems" translate="firstTimeWizard.call"></h3>
+        <h3 ng-if="!planReview.showRoomSystems" translate="firstTimeWizard.communications"></h3>
       </div>
     </div>
   </div>
@@ -32,13 +35,16 @@
 
   <div class="flex-row">
     <div class="col-sm-4 col-free">
-      <div class="item-free" translate="firstTimeWizard.freeMsg"></div>
+      <div ng-if="planReview.showRoomSystems" class="item-free" translate="firstTimeWizard.freeMsg"></div>
+      <div ng-if="!planReview.showRoomSystems" class="item-free" translate="firstTimeWizard.sparkMsg"></div>
     </div>
     <div class="col-sm-4 col-free">
-      <div class="item-free" translate="firstTimeWizard.freeMtg"></div>
+      <div ng-if="planReview.showRoomSystems" class="item-free" translate="firstTimeWizard.freeMtg"></div>
+      <div ng-if="!planReview.showRoomSystems" class="item-free" translate="firstTimeWizard.confMsg"></div>
     </div>
     <div class="col-sm-4 col-free">
-      <div class="item-free" translate="firstTimeWizard.freeCall"></div>
+      <div ng-if="planReview.showRoomSystems" class="item-free" translate="firstTimeWizard.freeCall"></div>
+      <div ng-if="!planReview.showRoomSystems" class="item-free" translate="firstTimeWizard.commMsg"></div>
     </div>
   </div>
 

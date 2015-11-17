@@ -10,7 +10,7 @@
       pstnSetup: 'pstnSetup',
       csvUpload: 'csvUpload',
       dirSync: 'dirSync',
-      planReview: 'planReview'
+      atlasStormBranding: 'atlasStormBranding'
     };
     var service = {
       getUrl: getUrl,
@@ -90,7 +90,7 @@
           supportsDirSync().then(function (enabled) {
             return resolve(enabled && Authinfo.getOrgId() === '4e2befa3-9d82-4fdf-ad31-bb862133f078');
           });
-        } else if (feature === features.planReview) {
+        } else if (feature === features.atlasStormBranding) {
           return resolve(true);
         } else {
           return resolve(false);

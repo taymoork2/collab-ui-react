@@ -44,7 +44,7 @@
 
     init();
 
-    FeatureToggleService.supports(FeatureToggleService.features.planReview).then(function (result) {
+    FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
       vm.showRoomSystems = result;
     });
 
