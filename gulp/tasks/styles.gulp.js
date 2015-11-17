@@ -5,19 +5,24 @@
 
 var gulp = require('gulp');
 var config = require('../gulp.config')();
-var $ = require('gulp-load-plugins')({ lazy: true });
+var $ = require('gulp-load-plugins')({lazy: true});
 var args = require('yargs').argv;
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
 var errorLogger = require('../utils/errorLogger.gulp');
 var messageLogger = require('../utils/messageLogger.gulp')();
+var colors = $.util.colors;
+var log = $.util.log;
 
 gulp.task('scss:build', ['clean:css'], function () {
   messageLogger('Compiling SCSS --> CSS');
   return gulp
     .src('app/styles/app.scss')
     .pipe($.sourcemaps.init())
-    .pipe($.plumber())
+    .pipe($.plumber(function(error) {
+      log(colors.red(error));
+      this.emit('end');
+    }))
     .pipe($.sass({
       outputStyle: 'compact',
       includePaths: config.vendorFiles.scss.paths
@@ -48,4 +53,4 @@ gulp.task('watch:scss', function () {
         'scss:build'
       ]);
   }
-})
+});
