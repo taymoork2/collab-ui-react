@@ -1,10 +1,5 @@
 /******** Resets & Globals **********/
 
-html {
-  // position: relative;
-  // min-height: 100%;
-}
-
 body {
   background-color: $background-color;
 }
@@ -14,15 +9,11 @@ body {
 }
 
 .container {
-  //width: 1000px;
-  //overflow: none;
   margin: 0;
 }
 
 .page-content-wrapper {
   padding-left: 0;
-
-  //width: ~"calc(100% - 100px)";
 }
 
 .page-header {
