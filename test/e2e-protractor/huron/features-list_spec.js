@@ -7,7 +7,7 @@
 /* global describe */
 /* global it */
 
-describe('Admin should be able to', function () {
+xdescribe('Admin should be able to', function () {
 
   afterEach(function () {
     utils.dumpConsoleErrors();

@@ -3,7 +3,7 @@
  */
 'use strict';
 
-describe('Admin should be able to', function () {
+xdescribe('Admin should be able to', function () {
 
   beforeAll(function () {
     login.login('huron-int1', '#/hurondetails/features');
