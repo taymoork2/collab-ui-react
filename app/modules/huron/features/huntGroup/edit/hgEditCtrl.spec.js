@@ -118,13 +118,15 @@ describe('Hunt Group EditCtrl Controller', function () {
   });
 
   it('on resetting the form, the model has pristine data from edit service', function () {
-    HuntGroupEditDataService.setPristine(hgFeature);
-    hgEditCtrl.resetForm();
-    expect(hgEditCtrl.model.name).toEqual(hgFeature.name);
-  });
+    var newHgFeature = angular.copy(hgFeature);
+    newHgFeature.name = "Test Model";
+    expect(hgEditCtrl.model.name).not.toEqual(newHgFeature.name);
+    expect(hgEditCtrl.model.name).toEqual(hgFeature.name); // Existing model.
 
-  it('have intialized formly fields correctly', function () {
-    expect(hgEditCtrl.fields.length).toEqual(4);
+    HuntGroupEditDataService.setPristine(newHgFeature);
+    hgEditCtrl.resetForm();
+    $scope.$apply();
+    expect(hgEditCtrl.model.name).toEqual(newHgFeature.name); // Pristine model.
   });
 
   it('on removing fallback destination shows fallback warning (invalid)', function () {
@@ -136,9 +138,27 @@ describe('Hunt Group EditCtrl Controller', function () {
     expect(hgEditCtrl.shouldShowFallbackPill()).toBeFalsy();
   });
 
+  it('on changing fallback destination check if the form is marked dirty', function () {
+    //spyOn(hgEditCtrl.form, '$setDirty');
+    //var newHgFeature = angular.copy(hgFeature);
+    //expect(hgEditCtrl.selectedFallbackMember.sendToVoicemail).toBeTruthy();
+    //HuntGroupEditDataService.setPristine(newHgFeature);
+    //hgEditCtrl.resetForm(false);
+    //hgEditCtrl.selectedFallbackMember.sendToVoicemail = false; // Dirtying the model.
+    //$scope.$apply();
+    //
+    //hgEditCtrl.checkFallbackDirtiness();
+    //expect(hgEditCtrl.form.$setDirty).not.toHaveBeenCalled();
+  });
+
   it('on selecting a hunt method, updates the model', function () {
     hgEditCtrl.selectHuntMethod('DA_LONGEST_IDLE_TIME');
     $scope.$apply();
     expect(hgEditCtrl.model.huntMethod).toEqual('DA_LONGEST_IDLE_TIME');
   });
+
+  it('have intialized formly fields correctly', function () {
+    expect(hgEditCtrl.fields.length).toEqual(4);
+  });
+
 });

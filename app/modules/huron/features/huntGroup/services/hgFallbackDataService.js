@@ -65,11 +65,15 @@
         return;
       }
 
+      var asyncTask = $q.defer();
       reset(resetFromBackend);
       setFallbackNumberFromJSON(data);
       if (isFallbackInvalid()) {
-        setFallbackMemberFromJSON(data, resetFromBackend);
+        setFallbackMemberFromJSON(data, resetFromBackend, asyncTask);
+      } else {
+        asyncTask.resolve();
       }
+      return asyncTask.promise;
     }
 
     function setFallbackNumberFromJSON(data) {
@@ -82,18 +86,23 @@
       }
     }
 
-    function setFallbackMemberFromJSON(data, resetFromBackend) {
+    function setFallbackMemberFromJSON(fallbackJSON, resetFromBackend, asyncTask) {
       fallbackMember = {
-        sendToVoicemail: data.sendToVoicemail
+        sendToVoicemail: fallbackJSON.sendToVoicemail
       };
 
       if (resetFromBackend) {
-        HuntGroupService.getHuntMemberWithSelectedNumber(data).then(function (m) {
+        HuntGroupService.getHuntMemberWithSelectedNumber(fallbackJSON).then(function (m) {
           pristineFallbackMember = m;
           fallbackMember.member = angular.copy(pristineFallbackMember);
+          asyncTask.resolve();
+        }, function (error) {
+          Notification.errorResponse(error, 'huronHuntGroup.memberFetchFailure');
+          asyncTask.reject();
         });
       } else {
         fallbackMember.member = angular.copy(pristineFallbackMember);
+        asyncTask.resolve();
       }
     }
 
@@ -168,7 +177,7 @@
         };
       } else {
         data.fallbackDestination = {
-          numberUuid: fallbackMember.member.selectableNumber.uuid,
+          numberUuid: fallbackMemberNumberUuid(),
           sendToVoicemail: fallbackMember.sendToVoicemail
         };
       }
@@ -224,9 +233,14 @@
       }
     }
 
+    function fallbackMemberNumberUuid() {
+      if (fallbackMember) {
+        return fallbackMember.member.selectableNumber.uuid;
+      }
+    }
+
     function memberNumberChanged(pristineFallbackJSON) {
-      return (pristineFallbackJSON.numberUuid !==
-        fallbackMember.member.selectableNumber.uuid);
+      return (pristineFallbackJSON.numberUuid !== fallbackMemberNumberUuid());
     }
 
     function memberSendToVoicemailChanged(pristineFallbackJSON) {

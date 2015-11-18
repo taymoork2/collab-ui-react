@@ -5,7 +5,7 @@
     .controller('HuntGroupEditCtrl', HuntGroupEditCtrl);
 
   /* @ngInject */
-  function HuntGroupEditCtrl($state, $stateParams, $translate,
+  function HuntGroupEditCtrl($state, $q, $stateParams, $translate,
     Authinfo, HuntGroupService, Notification, HuntGroupFallbackDataService,
     HuntGroupMemberDataService, HuntGroupEditDataService) {
     var vm = this;
@@ -32,7 +32,7 @@
     vm.isMembersInvalid = isMembersInvalid;
     vm.checkMemberDirtiness = checkMemberDirtiness;
     vm.userSelected = undefined;
-    vm.selectedHuntMembers = [];
+    vm.selectedHuntMembers = undefined;
     vm.openMemberPanelUuid = undefined;
 
     // Fallback destination controller functions
@@ -75,7 +75,6 @@
             });
 
             updateModal(pristineData, true);
-            initializeFields();
           });
         })
         .catch(function (error) {
@@ -90,16 +89,24 @@
       HuntGroupFallbackDataService.reset(resetFromBackend);
       HuntGroupMemberDataService.reset(resetFromBackend);
 
-      vm.model = pristineData;
-      updatePilotNumbers(pristineData);
-
-      HuntGroupFallbackDataService.setFallbackDestinationJSON(
+      var fetchFallbackPromise = HuntGroupFallbackDataService.setFallbackDestinationJSON(
         pristineData.fallbackDestination, resetFromBackend);
-      HuntGroupMemberDataService.setMemberJSON(pristineData.members, resetFromBackend);
+      var fetchMemberPromise = HuntGroupMemberDataService.setMemberJSON(pristineData.members,
+        resetFromBackend);
 
-      vm.selectedHuntMembers = HuntGroupMemberDataService.getHuntMembers();
-      vm.selectedFallbackNumber = HuntGroupFallbackDataService.getFallbackNumber();
-      vm.selectedFallbackMember = HuntGroupFallbackDataService.getFallbackMember();
+      $q.all([fetchFallbackPromise, fetchMemberPromise]).then(function () {
+        vm.model = pristineData;
+        updatePilotNumbers(pristineData);
+        vm.selectedHuntMembers = HuntGroupMemberDataService.getHuntMembers();
+        vm.selectedFallbackNumber = HuntGroupFallbackDataService.getFallbackNumber();
+        vm.selectedFallbackMember = HuntGroupFallbackDataService.getFallbackMember();
+
+        if (resetFromBackend) {
+          initializeFields();
+        }
+      }, function () {
+        $state.go('huronfeatures');
+      });
     }
 
     function updatePilotNumbers(pristineData) {

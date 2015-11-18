@@ -54,6 +54,15 @@
       return selectedHuntMembers;
     }
 
+    function getMemberAsynchronously(user, async) {
+      HuntGroupService.getHuntMemberWithSelectedNumber(user).then(function (m) {
+        selectedHuntMembers.push(m);
+        async.resolve();
+      }, function () {
+        async.reject();
+      });
+    }
+
     /**
      * Given hunt members "members" field JSON received from
      * GET /huntgroups/{id} initialize the data model for the UI
@@ -61,17 +70,25 @@
     function setMemberJSON(users, resetFromBackend) {
       reset(resetFromBackend);
 
+      var asyncTask = $q.defer();
       if (resetFromBackend) {
+        var promises = [];
         users.forEach(function (user) {
-          HuntGroupService.getHuntMemberWithSelectedNumber(user).then(function (m) {
-            selectedHuntMembers.push(m);
-            pristineSelectedHuntMembers = angular.copy(selectedHuntMembers);
-          });
+          var async = $q.defer();
+          promises.push(async.promise);
+          getMemberAsynchronously(user, async);
         });
+
+        $q.all(promises).then(function () {
+          pristineSelectedHuntMembers = angular.copy(selectedHuntMembers);
+          asyncTask.resolve(selectedHuntMembers);
+        }, memberFailureResponse());
+
       } else {
         selectedHuntMembers = angular.copy(pristineSelectedHuntMembers);
+        asyncTask.resolve(selectedHuntMembers);
       }
-      return selectedHuntMembers;
+      return asyncTask.promise;
     }
 
     /**
@@ -148,9 +165,7 @@
       var GetHuntMembers = HuntGroupService.getHuntMembers(nameHint);
 
       if (GetHuntMembers) {
-        GetHuntMembers.setOnFailure(function (response) {
-          Notification.errorResponse(response, 'huronHuntGroup.memberFetchFailure');
-        });
+        GetHuntMembers.setOnFailure(memberFailureResponse());
         if (filter) {
           GetHuntMembers.setFilter(filter);
         }
@@ -158,6 +173,12 @@
       }
 
       return [];
+    }
+
+    function memberFailureResponse() {
+      return function (response) {
+        Notification.errorResponse(response, 'huronHuntGroup.memberFetchFailure');
+      };
     }
 
     /**

@@ -11,7 +11,7 @@
   "maxRingSecs": 30,
   "maxWaitMins": 40,
   "fallbackDestination": {
-    "number": "8177777777",
+    "number": null,
     "numberUuid": "2342-2342-23423-234898",
     "userName": "bspence",
     "userUuid": "97898-86823-34545-234234",
