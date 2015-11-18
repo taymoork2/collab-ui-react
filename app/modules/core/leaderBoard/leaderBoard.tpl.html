@@ -9,7 +9,21 @@
         </cs-donut>
         <section class="bucket-info">
           <p class = "text-center"><span class="total-count">{{buckets.messaging.totalCount}}</span> {{buckets.messaging.subtitle | translate}}</p>
-          <p class = "text-center"><span ng-show = "buckets.messaging.trial !== false" class="badge badge-trial" >trial</span> </p>
+          <p class = "text-center"><span ng-show = "buckets.messaging.trial !== false" class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial" </span> </p>
+
+            <div ng-if="vm.messagingServices.isNewTrial" class="col-trial-header" translate="firstTimeWizard.startYourTrial" translate-values="{days: vm.trial.trialPeriod}"></div>
+                  <div class="text-center" class="item-paid" ng-repeat="service in vm.messagingServices.services">
+                      <cs-donut value="service.license.usage" max="service.license.volume" class="text-center">
+                        </cs-donut> 
+                    <div class = "text-center">
+                      {{service.label}}
+                    </div>
+                    <div class = "text-center" class="quantity">
+                      <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
+                      <span ng-if="!service.license.isTrial || vm.messagingServices.isNewTrial">{{service.license.volume}}</span>
+                      <span ng-if="service.license.isTrial && !vm.messagingServices.isNewTrial" class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"></span>
+                    </div>
+                  </div>
         </section>
       </article>
     </cs-card>
@@ -23,7 +37,19 @@
         </cs-donut>
         <section class="bucket-info">
           <p class = "text-center"><span class="total-count">{{buckets.conferencing.totalCount}}</span> {{buckets.conferencing.subtitle | translate}}</p>
-          <p class = "text-center"><span ng-show = "buckets.conferencing.trial !== false" class="badge badge-trial">trial</span> </p>
+          <p class = "text-center"><span ng-show = "buckets.conferencing.trial !== false" class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"</span> </p>
+            <div ng-if="vm.confServices.isNewTrial" class="col-trial-header" translate="firstTimeWizard.startYourTrial" translate-values="{days: vm.trial.trialPeriod}"></div>
+                  <div class="text-center" class="item-paid" ng-repeat="service in vm.confServices.services">
+                      <cs-donut value="3" max="service.license.volume" class="text-center"> </cs-donut> 
+                    <div class = "text-center">
+                      {{service.label}}
+                    </div>
+                    <div class = "text-center" class="quantity">
+                      <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
+                      <span ng-if="!service.license.isTrial || vm.confServices.isNewTrial">{{service.license.volume}}</span>
+                      <span ng-if="service.license.isTrial && !vm.confServices.isNewTrial" class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"></span>
+                    </div>
+                  </div>
         </section>
       </article>
     </cs-card>
@@ -38,6 +64,7 @@
         <section class="bucket-info">
           <p class = "text-center"><span class="total-count">{{buckets.communication.totalCount}}</span> {{buckets.communication.subtitle | translate}}</p>
         </section>
+
       </article>
     </cs-card>
 
@@ -52,7 +79,7 @@
         </cs-donut>
         <section class="bucket-info">
           <p class = "text-center"><span class="total-count">{{buckets.shared_devices.totalCount}}</span> {{buckets.shared_devices.subtitle | translate}}</p>
-          <p class = "text-center"><span ng-show = "buckets.shared_devices.trial !== false" class="badge badge-trial">trial</span> </p>
+          <p class = "text-center"><span ng-show = "buckets.shared_devices.trial !== false" class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"</span> </p>
         </section>
       </article>
     </cs-card>
