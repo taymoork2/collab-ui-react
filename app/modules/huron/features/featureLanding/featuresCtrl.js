@@ -50,7 +50,6 @@
       getFeature: AutoAttendantCeInfoModelService.getCeInfosList,
       formatter: HuronFeaturesListService.autoAttendants,
       isEmpty: false,
-      isLoaded: false,
       i18n: 'huronFeatureDetails.aaName',
       color: 'primary'
     }, {
@@ -58,7 +57,6 @@
       getFeature: HuntGroupService.getListOfHuntGroups,
       formatter: HuronFeaturesListService.huntGroups,
       isEmpty: false,
-      isLoaded:false,
       i18n: 'huronFeatureDetails.hgName',
       color: 'alerts'
     }];
@@ -107,7 +105,6 @@
     function handleFeaturePromises(promises) {
       _.forEach(features, function (feature, index) {
         promises[index].then(function (data) {
-          feature.isLoaded = true;
           handleFeatureData(data, feature);
         }, function (response) {
           handleFailures(response, feature);
@@ -119,6 +116,7 @@
       Log.warn('Could fetch features for customer with Id:', Authinfo.getOrgId());
 
       feature.isEmpty = true;
+
       Notification.errorResponse(response, 'huronFeatureDetails.failedToLoad', {
         featureType: $filter('translate')(feature.i18n)
       });
@@ -127,6 +125,7 @@
     }
 
     function handleFeatureData(data, feature) {
+
       if (feature.name === 'AA') {
         vm.aaModel = AAModelService.newAAModel();
         vm.aaModel = data;
@@ -171,23 +170,23 @@
       });
     };
 
-    function areFeaturesPresent() {
-      var isPresent = true;
+    function areFeaturesEmpty() {
+      var isEmpty = true;
       _.forEach(features, function (feature) {
-        isPresent = isPresent && feature.isEmpty && feature.isLoaded;
+        isEmpty = isEmpty && feature.isEmpty;
       });
-      return isPresent;
+      return isEmpty;
     }
 
     function showNewFeaturePageIfNeeded() {
 
-      if (vm.pageState !== 'showFeatures' && areFeaturesPresent() && vm.listOfFeatures.length === 0) {
+      if (vm.pageState !== 'showFeatures' && areFeaturesEmpty() && vm.listOfFeatures.length === 0) {
         vm.pageState = 'NewFeature';
       }
     }
 
     function showReloadPageIfNeeded() {
-      if (vm.pageState === 'Loading' && areFeaturesPresent() && vm.listOfFeatures.length === 0) {
+      if (vm.pageState === 'Loading' && areFeaturesEmpty() && vm.listOfFeatures.length === 0) {
         vm.pageState = 'Reload';
       }
     }
