@@ -5,7 +5,7 @@
     .factory('PstnSetupService', PstnSetupService);
 
   /* @ngInject */
-  function PstnSetupService($q, Authinfo, TerminusCarrierService, TerminusCustomerService, TerminusCustomerCarrierService, TerminusBlockOrderService, TerminusOrderService, TerminusCarrierInventoryCount, TerminusNumberService, TerminusCarrierInventorySearch, TerminusCarrierInventoryReserve, TerminusCarrierInventoryRelease, TerminusNumberOrderService) {
+  function PstnSetupService($q, Authinfo, TerminusCarrierService, TerminusCustomerService, TerminusCustomerCarrierService, TerminusBlockOrderService, TerminusOrderService, TerminusCarrierInventoryCount, TerminusNumberService, TerminusCarrierInventorySearch, TerminusCarrierInventoryReserve, TerminusCarrierInventoryRelease, TerminusNumberOrderService, TerminusResellerCarrierService) {
     var INTELEPEER = "INTELEPEER";
     var TATA = "TATA";
     var TELSTRA = "TELSTRA";
@@ -17,13 +17,14 @@
       createCustomer: createCustomer,
       updateCustomerCarrier: updateCustomerCarrier,
       getCustomer: getCustomer,
-      listCarriers: listCarriers,
+      listDefaultCarriers: listDefaultCarriers,
       getCarrierInventory: getCarrierInventory,
       searchCarrierInventory: searchCarrierInventory,
       reserveCarrierInventory: reserveCarrierInventory,
       releaseCarrierInventory: releaseCarrierInventory,
       isCarrierSwivel: isCarrierSwivel,
       listCustomerCarriers: listCustomerCarriers,
+      listResellerCarriers: listResellerCarriers,
       orderBlock: orderBlock,
       orderNumbers: orderNumbers,
       listPendingOrders: listPendingOrders,
@@ -88,47 +89,40 @@
       }).$promise;
     }
 
-    function listCarriers() {
-      var carrierList = [];
-      return TerminusCarrierService.query().$promise
-        .then(function (carriers) {
-          var promises = [];
-          angular.forEach(carriers, function (carrier) {
-            var promise = TerminusCarrierService.get({
-              carrierId: carrier.uuid
-            }).$promise.then(function (carrierGet) {
-              carrier.apiExists = carrierGet.apiExists;
-              carrier.vendor = carrierGet.vendor;
-              carrierList.push(carrier);
-            });
-            promises.push(promise);
-          });
-          return $q.all(promises).then(function () {
-            return carrierList;
-          });
-        });
+    function listDefaultCarriers() {
+      return TerminusCarrierService.query({
+        service: 'PSTN',
+        defaultOffer: true
+      }).$promise.then(getCarrierDetails);
+    }
+
+    function listResellerCarriers() {
+      return TerminusResellerCarrierService.query({
+        resellerId: Authinfo.getOrgId()
+      }).$promise.then(getCarrierDetails);
     }
 
     function listCustomerCarriers(customerId) {
-      var carrierList = [];
       return TerminusCustomerCarrierService.query({
         customerId: customerId
-      }).$promise.then(function (carriers) {
-        var promises = [];
-        angular.forEach(carriers, function (carrier) {
-          var promise = TerminusCarrierService.get({
-            carrierId: carrier.uuid
-          }).$promise.then(function (carrierGet) {
-            carrier.apiExists = carrierGet.apiExists;
-            carrier.vendor = carrierGet.vendor;
-            carrierList.push(carrier);
-          });
-          promises.push(promise);
+      }).$promise.then(getCarrierDetails);
+    }
+
+    function getCarrierDetails(carriers) {
+      var promises = [];
+      angular.forEach(carriers, function (carrier) {
+        var promise = TerminusCarrierService.get({
+          carrierId: carrier.uuid
+        }).$promise.then(function (carrierGet) {
+          carrier.country = carrierGet.country;
+          carrier.countryCode = carrierGet.countryCode;
+          carrier.apiExists = carrierGet.apiExists;
+          carrier.vendor = carrierGet.vendor;
+          return carrier;
         });
-        return $q.all(promises).then(function () {
-          return carrierList;
-        });
+        promises.push(promise);
       });
+      return $q.all(promises);
     }
 
     function getCarrierInventory(carrierId, state) {

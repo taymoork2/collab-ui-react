@@ -105,7 +105,7 @@
       return $q(function (resolve, reject) {
         //TODO temporary hardcoded checks for huron
         if (feature === features.pstnSetup) {
-          resolve(Authinfo.getOrgId() === '666a7b2f-f82e-4582-9672-7f22829e728d');
+          return resolve(Authinfo.getOrgId() === '666a7b2f-f82e-4582-9672-7f22829e728d' || Authinfo.getOrgId() === 'a28c73de-8ebe-46b1-867a-a4d8bdac8c3f');
         } else if (feature === features.csvUpload) {
           resolve(true);
         } else if (feature === features.dirSync) {
