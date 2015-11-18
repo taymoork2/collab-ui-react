@@ -195,8 +195,8 @@
     "addOrganizationTabDesc": "Add a new organization to this account",
     "fusionDetailsTab": "Connector Management",
     "fusionDetailsTabDesc": "Connector Management",
-    "huronLineDetailsTab": "Communication",
-    "huronLineDetailsTabDesc": "Communication Details",
+    "huronLineDetailsTab": "Call",
+    "huronLineDetailsTabDesc": "Numbers and Settings",
     "MediafusionDetailsTab": "Media Service Management",
     "MediafusionDetailsTabDesc": "Media Service Management",
     "callRoutingTab": "Call Routing",
@@ -2539,7 +2539,7 @@
   },
 
   "huronDetails": {
-    "title": "Communication",
+    "title": "Call",
     "linesTitle": "Numbers",
     "settingsTitle": "Settings",
     "featuresTitle": "Features"
