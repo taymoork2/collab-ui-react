@@ -175,17 +175,14 @@ exports.expectIsDisplayed = function (elem) {
 };
 
 exports.expectAllDisplayed = function (elems) {
-  this.wait(elems);
-  elems.each().then(function (elem) {
-    expect(elem.isDisplayed()).toBeTruthy();
+  this.wait(elems).then(function(){
+    elems.each(function (elem) {
+      expect(elem.isDisplayed()).toBeTruthy();
+    });
   });
 };
 
-exports.expectAllNotDisplayed = function (elems) {
-  elems.each().then(function (elem) {
-    expect(elem.isDisplayed()).toBeFalsy();
-  });
-};
+exports.expectAllNotDisplayed = this.expectIsNotDisplayed;
 
 exports.expectIsDisabled = function (elem) {
   this.wait(elem).then(function () {
@@ -324,6 +321,14 @@ exports.clickLast = function (elem) {
   return this.wait(elem).then(function () {
     return exports.click(elem.last());
   });
+};
+
+exports.clickAll = function(elems) {
+  return this.wait(elems).then(function(){
+    elems.each(function(elem, index){
+      return exports.click(elem);
+    });
+  })
 };
 
 exports.isSelected = function (elem) {
