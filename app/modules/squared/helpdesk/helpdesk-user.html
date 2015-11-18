@@ -9,11 +9,11 @@
   </div>
 
   <div class="row vw-90">
-    <div class="columns large-4">
+    <div class="columns large-4 medium-5">
       <h3 class="display-name">{{helpdeskUserCtrl.user.displayName}}</h3>
       <div class="user-info">
         <span translate="helpdesk.userId"></span>:
-        <span class="user-value">{{helpdeskUserCtrl.user.id}}</span>
+        <span class="user-value right">{{helpdeskUserCtrl.user.id}}</span>
       </div>
       <div class="user-info">
         <span translate="helpdesk.userStatus"></span>:
@@ -22,12 +22,12 @@
       </div>
       <div class="user-info">
         <span translate="common.email"></span>:
-        <span class="user-value">{{helpdeskUserCtrl.user.userName}}</span>
+        <span class="user-value right">{{helpdeskUserCtrl.user.userName}}</span>
       </div>
       <div class="user-info">
         <span translate="helpdesk.roles"></span>:
-        <span class="user-value" ng-if="helpdeskUserCtrl.user.roles.length > 0" ng-repeat="role in helpdeskUserCtrl.user.roles">{{'roles.' + role | translate }}{{$last ? '' : ', '}}</span>
-        <span class="user-value" ng-if="!helpdeskUserCtrl.user.roles || helpdeskUserCtrl.user.roles.length == 0" translate="roles.user"></span>
+        <span class="user-value right" ng-if="helpdeskUserCtrl.user.roles.length > 0" ng-repeat="role in helpdeskUserCtrl.user.roles">{{'roles.' + role | translate }}{{$last ? '' : ', '}}</span>
+        <span class="user-value right" ng-if="!helpdeskUserCtrl.user.roles || helpdeskUserCtrl.user.roles.length == 0" translate="roles.user"></span>
       </div>
       <div class="user-info">
         <span translate="helpdesk.organization"></span>:
@@ -50,6 +50,6 @@
         To be implemented
       </p>
     </div>
-    <div class="columns large-5">cards to be inserted</div>
+    <div class="columns large-5 medium-5" ng-include src="'modules/squared/helpdesk/cards.html'"></div>
   </div>
 </div>

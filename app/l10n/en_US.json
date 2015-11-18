@@ -2757,6 +2757,10 @@
     "mobile": "mobile",
     "work": "work",
     "fax": "fax",
-    "searchingOrg": "Searching {{name}}"
+    "searchingOrg": "Searching {{name}}",
+    "userStatus": "Status",
+    "userId": "Id",
+    "organization": "Organization",
+    "customerPortalLaunch": "Launch Customer Portal"
   }
 }
