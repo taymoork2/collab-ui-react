@@ -1,4 +1,4 @@
-
+<cs-card-layout>
   <cs-card class="full header-background"
            id={{siteSettingsObj.siteInfoCardObj.id}}-card
            name={{siteSettingsObj.siteInfoCardObj.id}}-card>
@@ -27,9 +27,9 @@
           </div>
           
           <div class="right-side">                                                    
-            <div class="configure-content">
-              <div align="center">
-                <div translate="webexSiteSettingsLabels.hostAccountsTitle"></div>
+            <div class="configure-card-heading" translate="webexSiteSettingsLabels.hostAccountsTitle"></div>
+             <div class="configure-content">
+              <div class="text-center">
                 
                 <div class="overview-count">
                   {{siteSettingsObj.siteInfoCardObj.licensesUsage.count}}
@@ -38,8 +38,7 @@
                 <div translate="webexSiteSettingsLabels.activeTitle"> </div>
               </div>
                 
-              <div align="center">
-                <br>
+              <div class="text-center">
                 
                 <div class="overview-count">
                   {{siteSettingsObj.siteInfoCardObj.licensesAvailable.count}}
@@ -48,8 +47,7 @@
                 <div translate="webexSiteSettingsLabels.availableTitle"></div>
               </div>
                 
-              <div align="center">
-                <br>
+              <div  class="overview-icon text-center">
                 
                 <a id="siteInfo-siteInformation"
                    name="siteInfo-siteInformation"
@@ -68,9 +66,8 @@
                 </a>
               </div>
               
-              <div align="center">
-                <br>
-                
+              <div  class="overview-icon text-center">
+                              
                 <a id="siteInfo-siteFeatures"
                    name="siteInfo-siteFeatures"
                    ui-sref={{siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.uiSref}}
@@ -93,3 +90,4 @@
       </section>
     </article>
   </cs-card>
+</cs-card-layout>

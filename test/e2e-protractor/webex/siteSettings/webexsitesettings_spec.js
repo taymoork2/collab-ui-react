@@ -243,7 +243,6 @@ describe('WebEx site settings iframe', function () {
     expect(sitesettings.commonSettingsCardId.isPresent).toBeTruthy();
   });
 
-  /*
   it('should click on email all hosts btn and navigate to the correct site setting', function () {
     utils.click(sitesettings.emailAllHostsBtn);
     utils.wait(sitesettings.siteSettingPanel);
@@ -252,7 +251,6 @@ describe('WebEx site settings iframe', function () {
     expect(sitesettings.siteSettingsCrumb.isPresent()).toBeTruthy();
     expect(sitesettings.siteListCrumb.isPresent()).toBeTruthy();
   });
-  */
 
   it('should click on settings index breadcrumb and navigate to site settings index', function () {
     utils.click(sitesettings.siteSettingsCrumb);

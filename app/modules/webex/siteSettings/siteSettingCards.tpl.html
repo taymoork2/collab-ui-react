@@ -1,5 +1,6 @@
-<div ng-repeat="siteSettingCardObj in siteSettingsObj.siteSettingCardObjs">
-  <cs-card class="medium"
+<cs-card-layout>
+  <cs-card ng-repeat="siteSettingCardObj in siteSettingsObj.siteSettingCardObjs"
+  		   class="medium"
            id={{siteSettingCardObj.id}}-card
            name={{siteSettingCardObj.id}}-card
            ng-if="0 <siteSettingCardObj.pageObjs.length">
@@ -43,4 +44,4 @@
       </section>
     </article>
   </cs-card>
-</div>
+</cs-card-layout>
