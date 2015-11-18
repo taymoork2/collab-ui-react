@@ -51,7 +51,7 @@ describe('WebexReportService Test', function () {
       "testReportsCat");
 
     ref1 = WebexReportService.instantiateUIsref("www.dontcare.come", "abcReport", "mojoco.webex.com");
-    ref2 = WebexReportService.instantiateUIsref("www.dontcare.come", "meeting_usage", "mojoco.webex.com");
+    ref2 = WebexReportService.instantiateUIsref("www.dontcare.come", "meeting_in_progess", "mojoco.webex.com");
 
   }));
 
@@ -77,10 +77,6 @@ describe('WebexReportService Test', function () {
   });
 
   it("webex: reports section when sort and pinned, pinned item should be first", function () {
-    //this var is only here for reference.
-    var pinnnedItems = ["meeting_usage", "attendee", "event_center_overview",
-      "support_center_allocation_queue"
-    ];
 
     //the idea here is that even though meeting_usage is second, it should appear first
     //since it is one of the pinned item.
@@ -93,7 +89,7 @@ describe('WebexReportService Test', function () {
 
     var topReportId = trs.uisrefs[0].reportPageId;
 
-    expect(topReportId).toBe("meeting_usage");
+    expect(topReportId).toBe("meeting_in_progess");
 
   });
 
