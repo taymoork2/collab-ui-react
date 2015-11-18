@@ -86,6 +86,13 @@ describe('Controller: DeviceLogCtrl', function () {
     $intervalSpy.flush(controller.interval * 2);
   }
 
+  function isStateReset() {
+    if (controller.active === false && controller.error === false && controller.loading === false) {
+      return true;
+    }
+    return false;
+  }
+
   it('should load logList', function () {
     callViewPreviousLog();
 
@@ -172,11 +179,13 @@ describe('Controller: DeviceLogCtrl', function () {
     DeviceLogService.getLogInformation.and.returnValue($q.when([]));
     callViewPreviousLog();
 
+    expect(isStateReset()).toBe(true);
     expect(Notification.error).toHaveBeenCalled();
 
     DeviceLogService.getLogInformation.and.returnValue($q.when({}));
     callViewPreviousLog();
 
+    expect(isStateReset()).toBe(true);
     expect(Notification.error).toHaveBeenCalled();
   });
 
