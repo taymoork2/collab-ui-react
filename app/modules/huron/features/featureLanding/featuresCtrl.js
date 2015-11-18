@@ -174,7 +174,7 @@
     function areFeaturesPresent() {
       var isPresent = true;
       _.forEach(features, function (feature) {
-        isPresent = isEmpty && feature.isEmpty && feature.isLoaded;
+        isPresent = isPresent && feature.isEmpty && feature.isLoaded;
       });
       return isPresent;
     }
