@@ -38,7 +38,7 @@ xdescribe('Admin should be able to', function () {
     utils.expectIsDisplayed(huntGroup.addedPilotNumber);
   });
 
-  it('select pilot numbers and delete a selected pilot number', function(){
+  it('select pilot numbers and delete a selected pilot number', function () {
     utils.sendKeys(huntGroup.pilotTypeAheadInput, huntGroup.pilotNumber);
     utils.expectTextToBeSet(huntGroup.dropdownItem, huntGroup.pilotNumber);
     utils.click(huntGroup.dropdownItem);
@@ -61,7 +61,7 @@ xdescribe('Admin should be able to', function () {
     utils.expectIsDisplayed(huntGroup.saAddedMember);
   });
 
-  it('add and expand a memeber', function(){
+  it('add and expand a memeber', function () {
     utils.sendKeys(huntGroup.typeAheadInput, huntGroup.member2Search);
     utils.expectTextToBeSet(huntGroup.memberDropdownItemName, huntGroup.member2Search);
     utils.click(huntGroup.memberDropdownItem);
@@ -69,7 +69,7 @@ xdescribe('Admin should be able to', function () {
     utils.click(huntGroup.saAddedMemberChevronBtn);
   });
 
-  it('change the number assigned and remove the number', function(){
+  it('change the number assigned and remove the number', function () {
     utils.click(huntGroup.selectNumberForSAAddedMember);
     utils.click(huntGroup.removeSAAddedMember);
   });
@@ -83,7 +83,7 @@ xdescribe('Admin should be able to', function () {
     navigation.hasClass(huntGroup.submitBtn, 'disabled');
   });
 
-  it('see the voice mail option is not present on hunt group setUp assistant fallback page', function(){
+  it('see the voice mail option is not present on hunt group setUp assistant fallback page', function () {
     utils.expectIsNotDisplayed(huntGroup.saVociemailOption);
   });
 
@@ -93,45 +93,45 @@ xdescribe('Admin should be able to', function () {
     utils.click(huntGroup.memberDropdownItem);
   });
 
-  it('see the voice mail option is present on hunt group setUp assistant fallback page when a member is selecetd', function(){
+  it('see the voice mail option is present on hunt group setUp assistant fallback page when a member is selecetd', function () {
     utils.expectIsDisplayed(huntGroup.saVociemailOption);
   });
 
-  it('click on the voicemail option', function(){
+  it('click on the voicemail option', function () {
     utils.click(huntGroup.saVociemailOption);
   });
 
-  it('see the disabled typeahead', function(){
+  it('see the disabled typeahead', function () {
     utils.expectIsDisabled(huntGroup.disabledTypeahead);
   });
 
-  it('click on the selected fallback member and remove', function(){
+  it('click on the selected fallback member and remove', function () {
     utils.expectIsDisplayed(huntGroup.fallbackMember);
     utils.click(huntGroup.fallbackMember);
     utils.click(huntGroup.numberForFallbackMember);
     utils.click(huntGroup.removeFallbackMember);
   });
 
-  it('see the enabled typeahead when a selected member is removed', function(){
+  it('see the enabled typeahead when a selected member is removed', function () {
     utils.expectIsEnabled(huntGroup.enabledTypeahead);
     //navigation.hasClass(huntGroup.submitBtn, 'disabled');
   });
 
-  it('see the voice mail option is not present when a selected member is removed', function(){
+  it('see the voice mail option is not present when a selected member is removed', function () {
     utils.expectIsNotDisplayed(huntGroup.saVociemailOption);
   });
 
-  it('add a fallback member again', function(){
+  it('add a fallback member again', function () {
     utils.sendKeys(huntGroup.typeAheadInput, huntGroup.member2Search);
     utils.expectTextToBeSet(huntGroup.memberDropdownItemName, huntGroup.member2Search);
     utils.click(huntGroup.memberDropdownItem);
   });
 
-  it('see the voice mail option is present on when a member is added back', function(){
+  it('see the voice mail option is present on when a member is added back', function () {
     utils.expectIsDisplayed(huntGroup.saVociemailOption);
   });
 
-  it('click on the voicemail option when a member is added back', function(){
+  it('click on the voicemail option when a member is added back', function () {
     utils.click(huntGroup.saVociemailOption);
   });
 
@@ -141,7 +141,7 @@ xdescribe('Admin should be able to', function () {
   });
 
   it('should be able to see success notification of hunt group creation', function () {
-    notifications.assertSuccess('\''+huntGroup.randomHGName + '\' hunt group has been created successfully');
+    notifications.assertSuccess('\'' + huntGroup.randomHGName + '\' hunt group has been created successfully');
   });
 
   it('see the searched hunt group', function () {
@@ -167,9 +167,6 @@ xdescribe('Admin should be able to', function () {
     utils.expectText(huntGroup.editPageTitle, huntGroup.randomHGName);
   });
 
-  /*
-  Hunt Group Edit Page E2E
-   */
   it('change the hunt group name on hunt group edit page', function () {
     utils.expectIsDisplayed(huntGroup.editHgName);
     utils.expectValueToBeSet(huntGroup.editHgName, huntGroup.randomHGName);
@@ -222,44 +219,44 @@ xdescribe('Admin should be able to', function () {
     utils.click(huntGroup.callerMaxWaitTime);
   });
 
-  it('see the fallback member selected', function(){
+  it('see the fallback member selected', function () {
     utils.expectIsDisplayed(huntGroup.fallbackDest);
   });
 
-  it('see the voicemail option', function(){
+  it('see the voicemail option', function () {
     utils.click(huntGroup.fallbackVoiceMail);
   });
 
-  it('click on the fallback member card and change the number', function(){
+  it('click on the fallback member card and change the number', function () {
     utils.click(huntGroup.fallbackDest);
     utils.click(huntGroup.changeFallbackNumber);
   });
 
-  it('to remove the fallback member', function(){
+  it('to remove the fallback member', function () {
     utils.click(huntGroup.removeFallbackMemberonEditPage);
   });
 
-  it('see the  warning typeahead and disabled save btn', function(){
+  it('see the  warning typeahead and disabled save btn', function () {
     utils.expectIsDisplayed(huntGroup.fallbackLookupWarningTypeahed);
     utils.expectIsDisplayed(huntGroup.fallbackWarningText);
     utils.expectIsDisplayed(huntGroup.cancelSaveBar);
     utils.expectIsDisabled(huntGroup.saveBtn);
   });
 
-  it('see the voicemail option is not present', function(){
+  it('see the voicemail option is not present', function () {
     utils.expectIsNotDisplayed(huntGroup.fallbackVoiceMail);
   });
 
-  it('add a fallback member using the typeahead', function(){
+  it('add a fallback member using the typeahead', function () {
     utils.sendKeys(huntGroup.searchFallbackMember, huntGroup.member2Search);
     utils.click(huntGroup.addFallbackMember);
   });
 
-  it('see the voicemail option present and be able to click', function(){
+  it('see the voicemail option present and be able to click', function () {
     utils.click(huntGroup.fallbackVoiceMail);
   });
 
-  it('see the enabled save btn', function(){
+  it('see the enabled save btn', function () {
     utils.expectIsDisplayed(huntGroup.cancelSaveBar);
     utils.expectIsEnabled(huntGroup.saveBtn);
   });
@@ -286,7 +283,7 @@ xdescribe('Admin should be able to', function () {
     utils.click(huntGroup.searchedMemeber);
   });
 
-  it('change the number of added hunt member', function(){
+  it('change the number of added hunt member', function () {
     utils.expectIsDisplayed(huntGroup.addedMember);
     utils.click(huntGroup.addedMember);
     utils.click(huntGroup.alternateNumforMem);
@@ -305,7 +302,7 @@ xdescribe('Admin should be able to', function () {
   it('click on the save btn of cancel/save bar and changes to be reflected on edit page', function () {
     utils.expectIsDisplayed(huntGroup.cancelSaveBar);
     utils.click(huntGroup.saveBtn);
-    notifications.assertSuccess('\''+huntGroup.randomHGName + '\' hunt group has been updated successfully');
+    notifications.assertSuccess('\'' + huntGroup.randomHGName + '\' hunt group has been updated successfully');
 
   });
 

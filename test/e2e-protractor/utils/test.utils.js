@@ -175,7 +175,7 @@ exports.expectIsDisplayed = function (elem) {
 };
 
 exports.expectAllDisplayed = function (elems) {
-  this.wait(elems).then(function(){
+  this.wait(elems).then(function () {
     elems.each(function (elem) {
       expect(elem.isDisplayed()).toBeTruthy();
     });
@@ -323,9 +323,9 @@ exports.clickLast = function (elem) {
   });
 };
 
-exports.clickAll = function(elems) {
-  return this.wait(elems).then(function(){
-    elems.each(function(elem, index){
+exports.clickAll = function (elems) {
+  return this.wait(elems).then(function () {
+    elems.each(function (elem, index) {
       return exports.click(elem);
     });
   })
