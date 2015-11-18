@@ -117,7 +117,7 @@ xdescribe('Admin should be able to', function () {
   });
 
   it('should be able to see success notification of hunt group creation', function () {
-    notifications.assertSuccess(huntGroup.randomHGName + ' hunt group has been created successfully');
+    notifications.assertSuccess('\''+huntGroup.randomHGName + '\' hunt group has been created successfully');
   });
 
   it('see the searched hunt group', function () {
@@ -236,7 +236,7 @@ xdescribe('Admin should be able to', function () {
   it('click on the save btn of cancel/save bar and changes to be reflected on edit page', function () {
     utils.expectIsDisplayed(huntGroup.cancelSaveBar);
     utils.click(huntGroup.saveBtn);
-    notifications.assertSuccess(huntGroup.randomHGName + ' hunt group has been updated successfully');
+    notifications.assertSuccess('\''+huntGroup.randomHGName + '\' hunt group has been updated successfully');
 
   });
 

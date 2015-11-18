@@ -28,8 +28,8 @@ var HuntGroup = function () {
   this.saAddedMemberChevronBtn = element.all(by.css('.hunt-member-lookup .hunt-member-card .icon-chevron-down')).last();
   this.selectNumberForSAAddedMember = element.all(by.css('.hunt-member-lookup .hunt-member-card section cs-radio label')).last();
   this.removeSAAddedMember = element(by.css('.hunt-member-lookup .hunt-member-card section p a'));
-  this.enabledTypeahead = element(by.css('.fallback-page .typeahead-large input'));
-  this.disabledTypeahead = element(by.css('.fallback-page .typeahead-large input[disabled="disabled"]'));
+  this.enabledTypeahead = element(by.css('.typeahead-large input'));
+  this.disabledTypeahead = element(by.css('.typeahead-large input[disabled="disabled"]'));
   this.fallbackMember = element(by.css('.fallback-container article .icon-chevron-down'));
   this.numberForFallbackMember = element.all(by.css('.fallback-container section cs-radio')).last();
   this.removeFallbackMember = element(by.css('.fallback-container section p a'));
