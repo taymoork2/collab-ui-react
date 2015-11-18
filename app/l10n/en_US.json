@@ -2716,8 +2716,8 @@
       },
       "message": {
         "title": "Message",
-        "desc": "Active Rooms",
-        "currentTitle": "Active rooms this week",
+        "desc": "New Rooms",
+        "currentTitle": "New rooms this week",
         "previousTitle": "Last week:"
 
       },
