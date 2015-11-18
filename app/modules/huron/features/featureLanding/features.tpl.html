@@ -1,18 +1,15 @@
-<div class="huron-features">
-<cs-page-sub-header ng-if="huronFeaturesCtrl.pageState !== 'NewFeature'">
-  <cs-page-sub-header-left>
-    <cs-searchfilter filters="huronFeaturesCtrl.filters" set-filter-fn="huronFeaturesCtrl.setFilter(filter.filterValue)" search-item-fn="huronFeaturesCtrl.searchData(searchStr)" placeholder-text="{{huronFeaturesCtrl.placeholder.name}}" hide-count="true">
-    </cs-searchfilter>
-  </cs-page-sub-header-left>
-  <cs-page-sub-header-right>
-    <button class="btn btn--people new-feature-button" ng-click="huronFeaturesCtrl.openModal()">
-      <span translate="huronHuntGroup.newFeatureButtonText"></span>
-    </button>
-  </cs-page-sub-header-right>
-</cs-page-sub-header>
-
-
-
+<div class="huron-features" ng-if="!huronFeaturesCtrl.loading && !huronFeaturesCtrl.noFeatures">
+  <cs-page-sub-header ng-if="huronFeaturesCtrl.pageState !== 'NewFeature'">
+    <cs-page-sub-header-left>
+      <cs-searchfilter filters="huronFeaturesCtrl.filters" set-filter-fn="huronFeaturesCtrl.setFilter(filter.filterValue)" search-item-fn="huronFeaturesCtrl.searchData(searchStr)" placeholder-text="{{huronFeaturesCtrl.placeholder.name}}" hide-count="true">
+      </cs-searchfilter>
+    </cs-page-sub-header-left>
+    <cs-page-sub-header-right>
+      <button class="btn btn--people new-feature-button" ng-click="huronFeaturesCtrl.openModal()">
+        <span translate="huronHuntGroup.newFeatureButtonText"></span>
+      </button>
+    </cs-page-sub-header-right>
+  </cs-page-sub-header>
 
   <!--Show Create New Feature Page if no features exists-->
   <div ng-if="huronFeaturesCtrl.pageState == 'NewFeature'" class="no-features-available">
@@ -38,4 +35,9 @@
     <feature-cards ng-if="huronFeaturesCtrl.pageState == 'showFeatures'"></feature-cards>
   </div>
 </div>
-
+<div class="loading" ng-if="huronFeaturesCtrl.loading">
+  <i class="icon icon-spinner"></i>
+</div>
+<div class="no-features-available" ng-if="!huronFeaturesCtrl.loading && huronFeaturesCtrl.noFeatures">
+  <span class="h1 gray-base" translate="huronHuntGroup.noFeatures"></span>
+</div>

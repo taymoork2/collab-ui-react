@@ -2966,6 +2966,8 @@
     "numberFetchFailure": "Unable to get numbers.",
     "newFeatureButtonText": "New",
     "newFeatureModalTitle": "Create New Feature",
+    "noFeatures": "Features are not available for the current login",
+    "noFeature": "This feature is not enabled for the current login",
     "featuresNotYetConfiguredPage": {
       "nothingToSee": "Nothing here to see yet.",
       "letsCustomize": "Let's customize the calling experience"
