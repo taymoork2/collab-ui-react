@@ -16,6 +16,7 @@
 
     var selectedHuntMembers = [];
     var currentOpenMemberUuid = '';
+    var pristineSelectedHuntMembers;
 
     return {
       selectMember: selectMember,
@@ -25,17 +26,63 @@
       getDisplayName: getDisplayName,
       toggleMemberPanel: toggleMemberPanel,
       getMembersNumberUuidJSON: getMembersNumberUuidJSON,
-      reset: reset
+      reset: reset,
+      setMemberJSON: setMemberJSON,
+      getHuntMembers: getHuntMembers,
+      isMemberDirty: isMemberDirty,
+      setAsPristine: setAsPristine
     };
 
     ////////////////
 
+    function setAsPristine() {
+      pristineSelectedHuntMembers = angular.copy(selectedHuntMembers);
+    }
+
+    function isMemberDirty(pristineMember) {
+      var dirty = false;
+      selectedHuntMembers.some(function (m) {
+        if (pristineMember.userUuid === m.user.uuid) {
+          dirty = (pristineMember.numberUuid === m.selectableNumber.uuid);
+        }
+        return dirty;
+      });
+      return dirty;
+    }
+
+    function getHuntMembers() {
+      return selectedHuntMembers;
+    }
+
+    /**
+     * Given hunt members "members" field JSON received from
+     * GET /huntgroups/{id} initialize the data model for the UI
+     */
+    function setMemberJSON(users, resetFromBackend) {
+      reset(resetFromBackend);
+
+      if (resetFromBackend) {
+        users.forEach(function (user) {
+          HuntGroupService.getHuntMemberWithSelectedNumber(user).then(function (m) {
+            selectedHuntMembers.push(m);
+            pristineSelectedHuntMembers = angular.copy(selectedHuntMembers);
+          });
+        });
+      } else {
+        selectedHuntMembers = angular.copy(pristineSelectedHuntMembers);
+      }
+      return selectedHuntMembers;
+    }
+
     /**
      * Reset the single data service to its origin state.
      */
-    function reset() {
+    function reset(resetFromBackend) {
       selectedHuntMembers.splice(0, selectedHuntMembers.length);
       currentOpenMemberUuid = '';
+      if (resetFromBackend) {
+        pristineSelectedHuntMembers = undefined;
+      }
     }
 
     /**
@@ -118,6 +165,9 @@
      * concatenated with a space.
      */
     function getDisplayName(user) {
+      if (!user || (!user.firstName && !user.lastName))
+        return;
+
       if (user.lastName) {
         return user.firstName + " " + user.lastName;
       } else {

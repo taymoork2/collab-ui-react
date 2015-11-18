@@ -94,8 +94,8 @@
     color: $gray-darker;
     font-size: 18px;
     border-bottom: 1px solid $hr-border;
-    padding-bottom: 7px;
-    padding-top: 10px;
+    padding: .5rem 0;
+    margin-bottom: .5rem;
   }
 
   section {
@@ -149,16 +149,31 @@
     @include text-overflow;
   }
 
-  ul {
-    list-style-type: none;
-    font-size: 1rem;
-
-    @include vr-baseline(17px, 32px, $baseline: false);
-
-    @extend %ui-ml0;
-
-    margin-top: 2px;
+  ul, li {
+    list-style: none;
+    padding-left: 0;
+    font-size: 13px;
   }
+
+  a.red:hover {
+    color: $brand-danger;
+  }
+
+  a.yellow:hover {
+    color: $brand-warning;
+  }
+
+  a.red:hover {
+    color: $brand-danger;
+  }
+
+  a.yellow:hover {
+    color: $brand-warning;
+  }
+  .icon-li {
+    text-align: left;
+  }
+
 }
 
 .notification-style {
@@ -179,23 +194,6 @@
 }
 
 .monitoring-list {
-  &ul, ul, li {
-    list-style: none;
-    padding-left: 0;
-    font-size: 13px;
-  }
-
-  span {
-    margin-left: 9px;
-  }
-
-  a.red:hover {
-    color: $brand-danger;
-  }
-
-  a.yellow:hover {
-    color: $brand-warning;
-  }
 }
 
 i {
@@ -231,7 +229,7 @@ li.monitoring-cell {
   font-size: 10px;
   margin: 9px 0;
 
-  .fa {
+  .icon {
     font-size: 8px;
     margin-left: 2px;
   }

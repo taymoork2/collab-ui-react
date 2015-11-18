@@ -41,6 +41,8 @@
 .hunt-member-card {
   position: static !important;
   width: rem-calc(250) !important;
+  @include vr-spacing(mt, 0.5);
+  @include vr-spacing(ph, 0.25);
 
   & .email {
     color: $gray-light-1;

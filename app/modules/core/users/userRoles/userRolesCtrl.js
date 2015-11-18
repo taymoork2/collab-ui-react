@@ -129,6 +129,7 @@ function UserRolesCtrl($scope, $translate, $stateParams, $state, SessionStorage,
   Orgservice.getOrg(function (data, status) {
     if (data.success) {
       $scope.dirsyncEnabled = data.dirsyncEnabled;
+      $scope.delegatedAdministration = data.delegatedAdministration;
     } else {
       Log.debug('Get existing org failed. Status: ' + status);
     }

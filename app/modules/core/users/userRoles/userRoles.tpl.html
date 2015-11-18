@@ -83,7 +83,7 @@
                 <i tooltip-html-unsafe="<ul class='roles-tooltip'><li><i class='icon icon-remove'></i>User Management</li><li><i class='icon icon-remove'></i>Company Policy & Templates</li><li><i cass='icon icon-check'></i>Analytics & Reports</li><li><i class='icon icon-check'></i>Support Metrics & Notifications</li><li><i class='icon icon-remove'></i>Licenses & Upgrades</li><li><i class='icon icon-remove'></i>Assign Roles</li></ul>" tooltip-placement="right" tooltip-trigger="mouseenter" class="icon icon-information role-information"></i>
               </div>
             </div>
-            <div class="admin-options" id="helpdesk-options" ng-show="isPartner() && isNotProd()">
+            <div class="admin-options" id="helpdesk-options" ng-show="(isPartner() || delegatedAdministration) && isNotProd()">
               <cs-radio label="helpdesk.label" value="helpdesk.value" name="helpdesk.name" id="helpdesk.id"
                         ng-click="clearCheckboxes();" ng-model="rolesObj.adminRadioValue"></cs-radio>
               <i tooltip-html-unsafe="Access to Help Desk" tooltip-placement="right" tooltip-trigger="mouseenter"

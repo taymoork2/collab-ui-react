@@ -2,8 +2,8 @@
 
 //TODO refactor this into OnboardCtrl, BulkUserCtrl, AssignServicesCtrl
 angular.module('Core')
-  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$http', '$window', 'Log', 'Authinfo', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils', 'Orgservice', 'TelephonyInfoService', 'FeatureToggleService', 'NAME_DELIMITER', 'SyncService', 'TelephoneNumberService', 'DialPlanService',
-    function ($scope, $state, $stateParams, $q, $http, $window, Log, Authinfo, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, SyncService, TelephoneNumberService, DialPlanService) {
+  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$http', '$window', 'Log', 'Authinfo', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', '$timeout', 'Utils', 'Orgservice', 'TelephonyInfoService', 'FeatureToggleService', 'NAME_DELIMITER', 'SyncService', 'TelephoneNumberService', 'DialPlanService',
+    function ($scope, $state, $stateParams, $q, $http, $window, Log, Authinfo, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, SyncService, TelephoneNumberService, DialPlanService) {
       $scope.hasAccount = Authinfo.hasAccount();
       $scope.usrlist = [];
       $scope.internalNumberPool = [];
@@ -768,16 +768,14 @@ angular.module('Core')
       function Feature(name, state) {
         this.entitlementName = name;
         this.entitlementState = state ? 'ACTIVE' : 'INACTIVE';
+        this.properties = {};
       }
 
       function LicenseFeature(name, bAdd) {
         return {
           id: name.toString(),
           idOperation: bAdd ? 'ADD' : 'REMOVE',
-          properties: {
-            internalExtension: null,
-            directLine: null
-          }
+          properties: {}
         };
       }
 
@@ -976,7 +974,6 @@ angular.module('Core')
           if (data.success) {
             Log.info('User onboard request returned:', data);
             $rootScope.$broadcast('USER_LIST_UPDATED');
-            var promises = [];
             var numAddedUsers = 0;
 
             for (var num = 0; num < data.userResponse.length; num++) {
@@ -1001,18 +998,6 @@ angular.module('Core')
               if (userStatus === 200) {
                 userResult.message = $translate.instant('usersPage.onboardSuccess', userResult);
                 userResult.alertType = 'success';
-                var promise;
-                if (data.userResponse[i].unentitled && data.userResponse[i].unentitled.indexOf(Config.entitlements.huron) !== -1) {
-                  promise = HuronUser.delete(data.userResponse[i].uuid)
-                    .catch(function (response) {
-                      // If the user does not exist in Squared UC do not report an error
-                      if (response.status !== 404) {
-                        // Notify Huron error
-                        Notification.errorResponse(response);
-                      }
-                    });
-                  promises.push(promise);
-                }
               } else if (userStatus === 409) {
                 userResult.message = userResult.email + ' ' + data.userResponse[i].message;
                 userResult.alertType = 'danger';
@@ -1035,32 +1020,30 @@ angular.module('Core')
               $scope.results.resultList.push(userResult);
             }
 
-            $q.all(promises).then(function () {
-              //concatenating the results in an array of strings for notify function
-              var successes = [];
-              var errors = [];
-              var count_s = 0;
-              var count_e = 0;
-              for (var idx in $scope.results.resultList) {
-                if ($scope.results.resultList[idx].alertType === 'success') {
-                  successes[count_s] = $scope.results.resultList[idx].message;
-                  count_s++;
-                } else {
-                  errors[count_e] = $scope.results.resultList[idx].message;
-                  count_e++;
-                }
+            //concatenating the results in an array of strings for notify function
+            var successes = [];
+            var errors = [];
+            var count_s = 0;
+            var count_e = 0;
+            for (var idx in $scope.results.resultList) {
+              if ($scope.results.resultList[idx].alertType === 'success') {
+                successes[count_s] = $scope.results.resultList[idx].message;
+                count_s++;
+              } else {
+                errors[count_e] = $scope.results.resultList[idx].message;
+                count_e++;
               }
-              //Displaying notifications
-              if (successes.length + errors.length === usersList.length) {
-                $scope.btnOnboardLoading = false;
-                Notification.notify(successes, 'success');
-                Notification.notify(errors, 'error');
-                deferred.resolve();
-              }
-              if (angular.isFunction($scope.$dismiss) && successes.length === usersList.length) {
-                $scope.$dismiss();
-              }
-            });
+            }
+            //Displaying notifications
+            if (successes.length + errors.length === usersList.length) {
+              $scope.btnOnboardLoading = false;
+              Notification.notify(successes, 'success');
+              Notification.notify(errors, 'error');
+              deferred.resolve();
+            }
+            if (angular.isFunction($scope.$dismiss) && successes.length === usersList.length) {
+              $scope.$dismiss();
+            }
 
           } else {
             Log.warn('Could not onboard the user', data);
@@ -1107,40 +1090,18 @@ angular.module('Core')
             }
           }
 
-          var temparray = [],
-            tempLicenseArray = [],
+          var tempUserArray = [],
+            entitleList = [],
+            licenseList = [],
             chunk = Config.batchSize;
+          if (Authinfo.hasAccount() && $scope.collabRadio === 1) {
+            licenseList = getAccountLicenses('additive');
+          } else {
+            entitleList = getEntitlements('add');
+          }
           for (i = 0; i < usersList.length; i += chunk) {
-            temparray = usersList.slice(i, i + chunk);
-            //update entitlements
-            var entitleList = [];
-            var licenseList = [];
-            if (Authinfo.hasAccount() && $scope.collabRadio === 1) {
-              licenseList = getAccountLicenses('additive');
-            } else {
-              entitleList = getEntitlements('add');
-            }
-
-            tempLicenseArray = [];
-            if (licenseList && licenseList.length > 0) {
-              for (j = 0; j < temparray.length; j++) {
-                var newLicenseList = licenseList.map(function (license) {
-                  var licenseObj = angular.copy(license);
-                  if (licenseObj['id'].indexOf("CO_") === 0) {
-                    if (temparray[j].internalExtension) {
-                      licenseObj.properties.internalExtension = temparray[j].internalExtension;
-                    }
-                    if (temparray[j].directLine) {
-                      licenseObj.properties.directLine = temparray[j].directLine;
-                    }
-                  }
-                  return licenseObj;
-                });
-                tempLicenseArray.push(newLicenseList);
-              }
-            }
-
-            Userservice.onboardUsers(temparray, entitleList, null, tempLicenseArray, callback);
+            tempUserArray = usersList.slice(i, i + chunk);
+            Userservice.onboardUsers(tempUserArray, entitleList, licenseList, callback);
           }
         } else if (!optionalOnboard) {
           Log.debug('No users entered.');
@@ -1714,12 +1675,9 @@ angular.module('Core')
 
       function sendBulkMetric() {
         var eType = LogMetricsService.getEventType('bulkCsvUsers');
-        if ($scope.options) {
-          if ($scope.options.addUsers == 1) {
-            eType = LogMetricsService.getEventType('bulkCsvUsers');
-          } else if ($scope.options.addUsers == 2) {
-            eType = LogMetricsService.getEventType('bulkDirSyncUsers');
-          }
+        var currentStepName = _.get($scope, 'wizard.current.step.name', 'csvResult');
+        if (currentStepName === 'dirsyncResult') {
+          eType = LogMetricsService.getEventType('bulkDirSyncUsers');
         }
         var data = {
           'newUsersCount': $scope.model.numNewUsers || 0,
@@ -1814,35 +1772,24 @@ angular.module('Core')
         // Get license/entitlements
         var entitleList = [];
         var licenseList = [];
+        var isCommunicationSelected;
         if (Authinfo.hasAccount() && $scope.collabRadio === 1) {
           licenseList = getAccountLicenses('additive') || [];
+          isCommunicationSelected = !!_.find(licenseList, function (license) {
+            return _.startsWith(license.id, 'CO_');
+          });
         } else {
           entitleList = getEntitlements('add');
-        }
-        var communicationLicense = _.find(licenseList, function (license) {
-          return license['id'].indexOf("CO_") === 0;
-        });
-
-        function buildLicenseArray(internalExtension, directLine) {
-          return licenseList.map(function (license) {
-            var licenseObj = license;
-            if (license['id'].indexOf("CO_") === 0) {
-              if (internalExtension) {
-                licenseObj.properties.internalExtension = internalExtension;
-              }
-              if (directLine) {
-                licenseObj.properties.directLine = TelephoneNumberService.getDIDValue(directLine);
-              }
-            }
-            return licenseObj;
+          isCommunicationSelected = !!_.find(entitleList, {
+            entitlementName: 'ciscoUC'
           });
         }
 
-        function onboardCsvUsers(startIndex, userArray, licenseArray, csvPromise) {
+        function onboardCsvUsers(startIndex, userArray, entitlementArray, licenseArray, csvPromise) {
           return csvPromise.then(function () {
             return $q(function (resolve, reject) {
               if (userArray.length > 0) {
-                Userservice.onboardUsers(userArray, entitleList, null, licenseArray, callback.bind({
+                Userservice.onboardUsers(userArray, entitlementArray, licenseArray, callback.bind({
                   startIndex: startIndex - userArray.length + 1,
                   length: userArray.length,
                   resolve: resolve
@@ -1871,7 +1818,7 @@ angular.module('Core')
 
         function isValidDID(value) {
           // If communication license is selected and a value is defined
-          if (communicationLicense && value) {
+          if (isCommunicationSelected && value) {
             try {
               return TelephoneNumberService.validateDID(value);
             } catch (e) {
@@ -1883,17 +1830,15 @@ angular.module('Core')
 
         // Onboard users in chunks
         // Separate chunks on invalid rows
-        var csvChunk = communicationLicense ? 4 : 10; // Rate limit for Huron
+        var csvChunk = isCommunicationSelected ? 4 : 10; // Rate limit for Huron
         var csvPromise = $q.when();
         var tempUserArray = [];
-        var tempLicenseArray = [];
         var uniqueEmails = [];
         var processingError;
-        for (var j = 0; j < userArray.length; j++) {
+        _.forEach(userArray, function (userRow, j) {
           processingError = false;
           // If we haven't met the chunk size, process the next user
           if (tempUserArray.length < csvChunk) {
-            var userRow = userArray[j];
             // Validate content in the row
             if (userRow.length !== 6) {
               // Report incorrect number of columns
@@ -1916,24 +1861,22 @@ angular.module('Core')
               tempUserArray.push({
                 address: userRow[3],
                 name: userRow[0] + NAME_DELIMITER + userRow[1],
-                displayName: userRow[2]
+                displayName: userRow[2],
+                internalExtension: userRow[4],
+                directLine: userRow[5]
               });
-              tempLicenseArray.push(buildLicenseArray(userRow[4], userRow[5]));
             }
           }
           // Onboard all the previous users in the temp array if there was an error processing a row
           if (processingError) {
-            csvPromise = onboardCsvUsers(j - 1, tempUserArray, tempLicenseArray, csvPromise);
+            csvPromise = onboardCsvUsers(j - 1, tempUserArray, entitleList, licenseList, csvPromise);
             tempUserArray = [];
-            tempLicenseArray = [];
           } else if (tempUserArray.length === csvChunk || j === (userArray.length - 1)) {
             // Onboard the current temp array if we've met the chunk size or is the last user in list
-            csvPromise = onboardCsvUsers(j, tempUserArray, tempLicenseArray, csvPromise);
+            csvPromise = onboardCsvUsers(j, tempUserArray, entitleList, licenseList, csvPromise);
             tempUserArray = [];
-            tempLicenseArray = [];
           }
-
-        }
+        });
 
         calculateProcessProgress();
 

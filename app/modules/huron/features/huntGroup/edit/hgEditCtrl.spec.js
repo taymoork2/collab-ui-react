@@ -5,8 +5,10 @@
 
 describe('Hunt Group EditCtrl Controller', function () {
 
-  var hgEditCtrl, $httpBackend, $rootScope, $scope, $q, $state, $stateParams, $timeout, Authinfo, HuntGroupService, Notification, form;
+  var hgEditCtrl, controller, $httpBackend, $rootScope, $scope, $q, $state, $stateParams, $timeout, Authinfo,
+    HuntGroupService, HuntGroupEditDataService, Notification, form;
   var hgFeature = getJSONFixture('huron/json/features/edit/featureDetails.json');
+  var pilotNumbers = getJSONFixture('huron/json/features/edit/pilotNumbers.json');
   var GetMemberUrl = new RegExp(".*/api/v2/customers/1/users/.*");
   var user1 = getJSONFixture('huron/json/features/huntGroup/user1.json');
   var numbers = [{
@@ -30,7 +32,9 @@ describe('Hunt Group EditCtrl Controller', function () {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
   };
 
-  beforeEach(inject(function (_$rootScope_, $controller, _$httpBackend_, _$q_, _$state_, _$timeout_, _Authinfo_, _HuntGroupService_, _Notification_) {
+  beforeEach(inject(function (_$rootScope_, $controller, _$httpBackend_, _$q_, _$state_, _$timeout_, _Authinfo_,
+    _HuntGroupService_, _HuntGroupEditDataService_, _Notification_) {
+    controller = $controller;
     $scope = _$rootScope_.$new();
     $state = _$state_;
     $timeout = _$timeout_;
@@ -39,6 +43,7 @@ describe('Hunt Group EditCtrl Controller', function () {
     Authinfo = _Authinfo_;
     HuntGroupService = _HuntGroupService_;
     Notification = _Notification_;
+    HuntGroupEditDataService = _HuntGroupEditDataService_;
     var emptyForm = function () {
       return true;
     };
@@ -56,10 +61,10 @@ describe('Hunt Group EditCtrl Controller', function () {
 
     spyOn($state, 'go');
     spyOn(Notification, 'success');
-    spyOn(Notification, 'error');
+    spyOn(Notification, 'errorResponse');
     spyOn(HuntGroupService, 'getDetails').and.returnValue($q.when(hgFeature));
     spyOn(HuntGroupService, 'updateHuntGroup').and.returnValue($q.when());
-    spyOn(HuntGroupService, 'getNumbersWithSelection').and.returnValue($q.when());
+    spyOn(HuntGroupService, 'getAllUnassignedPilotNumbers').and.returnValue($q.when(pilotNumbers));
 
     $httpBackend.whenGET(GetMemberUrl).respond(200, user1);
 
@@ -78,43 +83,62 @@ describe('Hunt Group EditCtrl Controller', function () {
     $httpBackend.flush();
   }));
 
-  it('Controller Should get Initialized', function () {
-    expect(hgEditCtrl.initialized).toEqual(true);
+  it('should get initialized in the happy path', function () {
+    expect(hgEditCtrl.isLoadingCompleted).toEqual(true);
   });
 
-  it('Controller Should set the title', function () {
-    expect(hgEditCtrl.title).toHaveValue();
+  it('should redirect to features page if hg id is unavailable', function () {
+    hgEditCtrl = controller('HuntGroupEditCtrl', {
+      $state: $state,
+      $stateParams: {},
+      $timeout: $timeout,
+      Authinfo: Authinfo,
+      HuntGroupService: HuntGroupService,
+      Notification: Notification
+    });
+    $scope.$apply();
+    expect($state.go).toHaveBeenCalledWith("huronfeatures");
+    expect(hgEditCtrl.isLoadingCompleted).toEqual(false);
   });
-  it('Formly Fields should be initialized', function () {
+
+  it('should throw error notification when edit service failed to fetch hg', function () {
+    spyOn(HuntGroupEditDataService, 'fetchHuntGroup').and.returnValue($q.reject("Error"));
+    hgEditCtrl = controller('HuntGroupEditCtrl', {
+      $state: $state,
+      $stateParams: $stateParams,
+      $timeout: $timeout,
+      Authinfo: Authinfo,
+      HuntGroupService: HuntGroupService,
+      Notification: Notification
+    });
+    $scope.$apply();
+    expect(Notification.errorResponse).toHaveBeenCalled();
+    expect($state.go).toHaveBeenCalledWith("huronfeatures");
+    expect(hgEditCtrl.isLoadingCompleted).toEqual(false);
+  });
+
+  it('on resetting the form, the model has pristine data from edit service', function () {
+    HuntGroupEditDataService.setPristine(hgFeature);
+    hgEditCtrl.resetForm();
+    expect(hgEditCtrl.model.name).toEqual(hgFeature.name);
+  });
+
+  it('have intialized formly fields correctly', function () {
     expect(hgEditCtrl.fields.length).toEqual(4);
   });
-  it('Remove Fallback Destination should dirty the form', function () {
+
+  it('on removing fallback destination shows fallback warning (invalid)', function () {
     hgEditCtrl.removeFallbackDest();
     $scope.$apply();
 
-    expect(hgEditCtrl.addFallback).toBeTruthy();
+    expect(hgEditCtrl.shouldShowFallbackWarning()).toBeTruthy();
+    expect(hgEditCtrl.shouldShowFallbackLookup()).toBeTruthy();
+    expect(hgEditCtrl.shouldShowFallbackPill()).toBeFalsy();
   });
 
-  it('Remove Hunt Member', function () {
-    var item = hgFeature.members[0];
-    hgEditCtrl.removeHuntMember(item);
+  it('on selecting a hunt method, updates the model', function () {
+    hgEditCtrl.selectHuntMethod('DA_LONGEST_IDLE_TIME');
     $scope.$apply();
-
-    var index = hgEditCtrl.model.members.indexOf(item);
-    expect(index).toEqual(-1);
-  });
-
-  it('Select Hunt Method', function () {
-    hgEditCtrl.selectHuntMethod('broadcast');
-    $scope.$apply();
-
-    expect(hgEditCtrl.model.huntMethod).toEqual('broadcast');
-  });
-
-  it('Should Save form', function () {
-    hgEditCtrl.saveForm();
-    $scope.$apply();
-
-    expect(Notification.success).toHaveBeenCalled();
+    expect(hgEditCtrl.model.huntMethod).toEqual('DA_LONGEST_IDLE_TIME');
   });
 });

@@ -36,6 +36,25 @@ describe('Controller: Dummy Reports', function () {
     return data;
   };
 
+  var updateMediaDates = function (data, filter) {
+    var dayFormat = "MMM DD";
+    var monthFormat = "MMMM";
+    if (filter.value === 0) {
+      for (var i = 6; i >= 0; i--) {
+        data[i].modifiedDate = moment().subtract(8 - i, 'day').format(dayFormat);
+      }
+    } else if (filter.value === 1) {
+      for (var x = 0; x <= 3; x++) {
+        data[x].modifiedDate = moment().startOf('week').subtract(1 + (3 - x) * 7, 'day').format(dayFormat);
+      }
+    } else {
+      for (var y = 0; y <= 2; y++) {
+        data[y].modifiedDate = moment().subtract((2 - y), 'month').format(monthFormat);
+      }
+    }
+    return data;
+  };
+
   beforeEach(module('Core'));
 
   describe('Dummy Data Responses', function () {
@@ -58,9 +77,9 @@ describe('Controller: Dummy Reports', function () {
     });
 
     it('dummyMediaQualityData should return the expected responses', function () {
-      mediaQuality.one = updateDates(mediaQuality.one, timeFilter[0]);
-      mediaQuality.two = updateDates(mediaQuality.two, timeFilter[1]);
-      mediaQuality.three = updateDates(mediaQuality.three, timeFilter[2]);
+      mediaQuality.one = updateMediaDates(mediaQuality.one, timeFilter[0]);
+      mediaQuality.two = updateMediaDates(mediaQuality.two, timeFilter[1]);
+      mediaQuality.three = updateMediaDates(mediaQuality.three, timeFilter[2]);
 
       expect(DummyReportService.dummyMediaQualityData(timeFilter[0])).toEqual(mediaQuality.one);
       expect(DummyReportService.dummyMediaQualityData(timeFilter[1])).toEqual(mediaQuality.two);

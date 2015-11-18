@@ -36,12 +36,7 @@
     vm.selectedPilotNumbers = [];
 
     // Hunt Methods controller functions
-    vm.hgMethods = {
-      longestIdle: "DA_LONGEST_IDLE_TIME",
-      broadcast: "DA_BROADCAST",
-      circular: "DA_CIRCULAR",
-      topDown: "DA_TOP_DOWN"
-    };
+    vm.hgMethods = HuntGroupService.getHuntMethods();
     vm.huntGroupMethod = vm.hgMethods.longestIdle;
     vm.setHuntMethod = setHuntMethod;
 
@@ -261,7 +256,7 @@
     }
 
     function isFallbackValid() {
-      return HuntGroupFallbackDataService.isFallbackValid();
+      return !HuntGroupFallbackDataService.isFallbackInvalid();
     }
 
     function validateFallbackNumber() {
@@ -281,7 +276,7 @@
     }
 
     function removeFallbackDest() {
-      vm.selectedFallbackMember = undefined;
+      vm.selectedFallbackMember = HuntGroupFallbackDataService.removeFallbackMember();
     }
 
     function populateFallbackDestination(data) {

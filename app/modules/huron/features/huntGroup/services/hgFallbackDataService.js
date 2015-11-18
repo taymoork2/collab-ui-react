@@ -16,27 +16,115 @@
 
     var isValidInternalNumber = false;
     var isValidExternalNumber = false;
-    var fallbackNumber = '';
-    var fallbackMember = '';
+    var fallbackNumber;
+    var fallbackMember;
+    var pristineFallbackMember;
 
     return {
-      isFallbackValid: isFallbackValid,
+      isFallbackInvalid: isFallbackInvalid,
       validateFallbackNumber: validateFallbackNumber,
       setFallbackMember: setFallbackMember,
+      removeFallbackMember: removeFallbackMember,
       getFallbackDestinationJSON: getFallbackDestinationJSON,
-      reset: reset
+      setFallbackDestinationJSON: setFallbackDestinationJSON,
+      reset: reset,
+      isFallbackValidNumber: isFallbackValidNumber,
+      isFallbackValidMember: isFallbackValidMember,
+      getFallbackNumber: getFallbackNumber,
+      getFallbackMember: getFallbackMember,
+      isFallbackDirty: isFallbackDirty,
+      setAsPristine: setAsPristine
     };
 
-    ///////////////
+    ////////////////
+
+    function removeFallbackMember() {
+      reset(false);
+      return fallbackMember;
+    }
+
+    function setAsPristine() {
+      pristineFallbackMember = angular.copy(fallbackMember.member);
+    }
+
+    function getFallbackNumber() {
+      return fallbackNumber;
+    }
+
+    function getFallbackMember() {
+      return fallbackMember;
+    }
+
+    /**
+     * This is the JSON data for fallbackDestination field that is
+     * returned by GET on /huntgroups/{id}. And in turn constructs
+     * the data modal to be used by UI.
+     */
+    function setFallbackDestinationJSON(data, resetFromBackend) {
+      if (!data) {
+        return;
+      }
+
+      reset(resetFromBackend);
+      setFallbackNumberFromJSON(data);
+      if (isFallbackInvalid()) {
+        setFallbackMemberFromJSON(data, resetFromBackend);
+      }
+    }
+
+    function setFallbackNumberFromJSON(data) {
+      if (data.number && data.number !== '') {
+        fallbackNumber = data.number;
+
+        if (!validateExternalNumber()) {
+          isValidInternalNumber = true;
+        }
+      }
+    }
+
+    function setFallbackMemberFromJSON(data, resetFromBackend) {
+      fallbackMember = {
+        sendToVoicemail: data.sendToVoicemail
+      };
+
+      if (resetFromBackend) {
+        HuntGroupService.getHuntMemberWithSelectedNumber(data).then(function (m) {
+          pristineFallbackMember = m;
+          fallbackMember.member = angular.copy(pristineFallbackMember);
+        });
+      } else {
+        fallbackMember.member = angular.copy(pristineFallbackMember);
+      }
+    }
+
+    function isFallbackValidMember() {
+      return (fallbackMember);
+    }
+
+    function isFallbackValidNumber() {
+      return (isValidInternalNumber || isValidExternalNumber);
+    }
+
+    /**
+     * Return true if there is no valid internal/external
+     * and no valid Huron user available as the fallback destination.
+     */
+    function isFallbackInvalid() {
+      return (!isFallbackValidNumber() && !isFallbackValidMember());
+    }
 
     /**
      * Reset the single data service to its origin state.
      */
-    function reset() {
+    function reset(resetFromBackend) {
       isValidInternalNumber = false;
       isValidExternalNumber = false;
-      fallbackNumber = '';
-      fallbackMember = '';
+      fallbackNumber = undefined;
+      fallbackMember = undefined;
+
+      if (resetFromBackend) {
+        pristineFallbackMember = undefined;
+      }
     }
 
     /**
@@ -51,17 +139,6 @@
         sendToVoicemail: false
       };
       return fallbackMember;
-    }
-
-    /**
-     * Return true if there is a valid internal or external or
-     * Huron user available as the fallback destination.
-     */
-    function isFallbackValid() {
-      return (
-        isValidInternalNumber ||
-        isValidExternalNumber ||
-        (fallbackMember && fallbackMember !== ''));
     }
 
     /**
@@ -117,7 +194,7 @@
       });
 
       validator.fetch().then(function (data) {
-        if (data.length > 0 && !isFallbackValid()) {
+        if (data.length > 0 && isFallbackInvalid()) {
           data.some(function (n) {
             if (n.number === fallbackNumber) {
               isValidInternalNumber = true;
@@ -132,6 +209,29 @@
       if (!isNaN(parseFloat(fallbackNumber)) && isFinite(fallbackNumber)) {
         return HuntGroupService.isFallbackNumberValid(fallbackNumber);
       }
+    }
+
+    function isFallbackDirty(pristineFallbackJSON) {
+      if (pristineFallbackJSON.number &&
+        pristineFallbackJSON.number !== '') {
+        return (pristineFallbackJSON.number !==
+          TelephoneNumberService.getDIDValue(fallbackNumber));
+      }
+
+      if (pristineFallbackJSON.numberUuid) {
+        return memberNumberChanged(pristineFallbackJSON) ||
+          memberSendToVoicemailChanged(pristineFallbackJSON);
+      }
+    }
+
+    function memberNumberChanged(pristineFallbackJSON) {
+      return (pristineFallbackJSON.numberUuid !==
+        fallbackMember.member.selectableNumber.uuid);
+    }
+
+    function memberSendToVoicemailChanged(pristineFallbackJSON) {
+      return (pristineFallbackJSON.sendToVoicemail !==
+        fallbackMember.sendToVoicemail);
     }
   }
 })();

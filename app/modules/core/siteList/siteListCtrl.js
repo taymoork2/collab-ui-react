@@ -21,7 +21,7 @@ angular.module('Core')
 
       vm.gridData.forEach(
         function initGrid(grid) {
-          grid.showSiteLink = false;
+          grid.showSiteLinks = false;
           grid.isIframeSupported = false;
           grid.isAdminReportEnabled = false;
           grid.webExSessionTicket = null;
@@ -141,7 +141,9 @@ angular.module('Core')
       });
       // End of grid set up
 
-      if (_.isUndefined(Authinfo.getPrimaryEmail())) {
+      if (!_.isUndefined(Authinfo.getPrimaryEmail())) {
+        getInfoFromXmlApi();
+      } else {
         Userservice.getUser('me', function (data, status) {
           if (data.success) {
             if (data.emails) {
@@ -151,8 +153,6 @@ angular.module('Core')
             }
           }
         });
-      } else {
-        getInfoFromXmlApi();
       }
 
       function getInfoFromXmlApi() {

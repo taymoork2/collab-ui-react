@@ -11,13 +11,18 @@ var browserSync = require('browser-sync');
 var reload = browserSync.reload;
 var errorLogger = require('../utils/errorLogger.gulp');
 var messageLogger = require('../utils/messageLogger.gulp')();
+var colors = $.util.colors;
+var log = $.util.log;
 
-gulp.task('scss:build', ['clean:css'], function () {
+gulp.task('scss:build', ['clean:css'], function() {
   messageLogger('Compiling SCSS --> CSS');
   return gulp
     .src('app/styles/app.scss')
     .pipe($.sourcemaps.init())
-    .pipe($.plumber())
+    .pipe($.plumber(function(error) {
+      log(colors.red(error));
+      this.emit('end');
+    }))
     .pipe($.sass({
       outputStyle: 'compact',
       includePaths: config.vendorFiles.scss.paths
@@ -39,13 +44,13 @@ gulp.task('scss:build', ['clean:css'], function () {
     }));
 });
 
-gulp.task('watch:scss', function () {
+gulp.task('watch:scss', function() {
   if (!args.dist) {
     gulp.watch([
       config.app + '/**/*.scss',
       config.vendorFiles.scss.files
     ], [
-        'scss:build'
-      ]);
+      'scss:build'
+    ]);
   }
-})
+});
