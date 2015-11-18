@@ -1,102 +1,52 @@
-<div class="helpdesk-details">
-  <h2>{{helpdeskUserCtrl.user.displayName}} <span style="margin-left: 3rem;"><i class="icon icon-search"></i><a
-    ui-sref="helpdesk.search" translate="helpdesk.goToSearch"></a></span></h2>
-
-  <div class="medium-6 columns">
-    <table class="table">
-      <tbody>
-      <tr>
-        <td colspan="2">
-          <i class="icon icon-circle"
-             ng-class="helpdeskUserCtrl.user.userStatus == 'pending' ? 'helpdesk-yellow' : 'helpdesk-green'"></i>
-          <span class="helpdesk-yellow" ng-if="helpdeskUserCtrl.user.userStatus == 'pending'"
-                translate="usersPage.pending"></span>
-          <span class="helpdesk-green" ng-if="helpdeskUserCtrl.user.userStatus !== 'pending'"
-                translate="usersPage.active"></span>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <span translate="common.id"></span>
-        </td>
-        <td>
-          <span>{{helpdeskUserCtrl.user.id}}</span>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <span translate="common.email"></span>
-        </td>
-        <td>
-          <span>{{helpdeskUserCtrl.user.userName}}</span>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <span translate="common.firstName"></span>
-        </td>
-        <td>
-          <span>{{helpdeskUserCtrl.user.name.givenName}}</span>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <span translate="common.lastName"></span>
-        </td>
-        <td>
-          <span>{{helpdeskUserCtrl.user.name.familyName}}</span>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <span translate="helpdesk.roles"></span>
-        </td>
-        <td>
-          <span
-            ng-if="helpdeskUserCtrl.user.roles.length > 0"
-            ng-repeat="role in helpdeskUserCtrl.user.roles">{{'roles.' + role | translate }}{{$last ? '' : ', '}}</span>
-          <span
-            ng-if="!helpdeskUserCtrl.user.roles || helpdeskUserCtrl.user.roles.length == 0"
-            translate="roles.user"></span>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <span translate="helpdesk.createdAt"></span>
-        </td>
-        <td>
-          <span>{{helpdeskUserCtrl.user.meta.created | date:'medium'}}</span>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+<div class="user-view">
+  <div class="row head">
+    <div class="columns small-6 medium-4">
+      <a ui-sref="helpdesk.search">
+        <i class="icon icon-back icon-lg"></i>
+        <span translate="helpdesk.goToSearch"></span>
+      </a>
+    </div>
   </div>
 
-  <div class="medium-6 columns">
-    <table class="table">
-      <tbody>
-      <tr>
-        <td>
-          <span><a
-            ui-sref="helpdesk.org({org:helpdeskUserCtrl.org})">{{helpdeskUserCtrl.org.displayName}}</a></span>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <i class="icon icon-circle"
-             ng-class="helpdeskUserCtrl.org.ssoEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
-          <span translate="helpdesk.sso"></span>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <i class="icon icon-circle"
-             ng-class="helpdeskUserCtrl.org.dirsyncEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
-          <span translate="helpdesk.dirSync"></span>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+  <div class="row">
+    <div class="columns large-4">
+      <h3 class="display-name">{{helpdeskUserCtrl.user.displayName}}</h3>
+      <div class="user-info">
+        <span translate="helpdesk.identification"></span>:
+        <span>12345678</span>
+        <button class="action secondary right" type="button">Send Code</button>
+      </div>
+      <div class="user-info">
+        <span translate="helpdesk.userStatus"></span>:
+        <span>TBD</span>
+        <button class="action secondary right" type="button">Re-send</button>
+      </div>
+      <div class="user-info">
+        <span translate="common.email"></span>:
+        <span>{{helpdeskUserCtrl.user.userName}}</span>
+      </div>
+      <div class="user-info">
+        <span translate="helpdesk.roles"></span>:
+        <span ng-if="helpdeskUserCtrl.user.roles.length > 0" ng-repeat="role in helpdeskUserCtrl.user.roles">{{'roles.' + role | translate }}{{$last ? '' : ', '}}</span>
+        <span ng-if="!helpdeskUserCtrl.user.roles || helpdeskUserCtrl.user.roles.length == 0" translate="roles.user"></span>
+      </div>
+      <div class="user-info">
+        <span translate="helpdesk.organization"></span>:
+        <a href="#">
+          <i class="icon icon-content-share"></i>
+        </a>
+      </div>
+      <div class="user-info">
+        <span translate="helpdesk.customerPortalLaunch"></span>
+        <a href="#">
+          <i class="icon icon-content-share"></i>
+        </a>
+      </div>
+      <h3 class="display-name" translate="helpdesk.devices"></h3>
+      <p>
+        To be implemented
+      </p>
+    </div>
+    <div class="columns large-7 medium-offset-1">cards to be inserted</div>
   </div>
-
 </div>

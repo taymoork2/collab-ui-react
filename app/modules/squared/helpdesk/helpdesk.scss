@@ -14,6 +14,21 @@
   p {
     margin-bottom: 1rem;
   }
+  .user-view {
+    .user-info {
+      margin-bottom: 0.5rem;
+      .action {
+        padding: 2px;
+        width: 5rem;
+      }
+    }
+    .display-name {
+      margin-bottom: 0.5rem;
+    }
+    .head {
+      margin-bottom: 1rem;
+    }
+  }
 }
 
 .helpdesk-landing {
