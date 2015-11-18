@@ -51,10 +51,10 @@ describe('Service: HybridService', function () {
       expect(extensions.length).toEqual(2);
 
       expect(extensions[0].id).toEqual('squared-fusion-cal');
-      expect(extensions[0].enabled).toEqual( true );
+      expect(extensions[0].enabled).toEqual(true);
 
       expect(extensions[1].id).toEqual('squared-fusion-uc');
-      expect(extensions[1].enabled).toEqual( false );
+      expect(extensions[1].enabled).toEqual(false);
 
       done();
     });
@@ -63,7 +63,7 @@ describe('Service: HybridService', function () {
   });
 
   it('should get only squared-fusion-uc extension', function (done) {
-
+    // Disable squared-fusion-cal
     authinfo.isEntitled.withArgs('squared-fusion-cal').returns(false);
 
     $httpBackend
@@ -81,12 +81,9 @@ describe('Service: HybridService', function () {
       });
 
     Service.getEntitledExtensions().then(function (extensions) {
-      expect(extensions.length).toEqual(2);
-
-      expect(extensions[0]).toEqual(undefined);
-
-      expect(extensions[1].id).toEqual('squared-fusion-uc');
-      expect(extensions[1].enabled).toEqual( true );
+      expect(extensions.length).toEqual(1);
+      expect(extensions[0].id).toEqual('squared-fusion-uc');
+      expect(extensions[0].enabled).toEqual(true);
 
       done();
     });

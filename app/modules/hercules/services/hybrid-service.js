@@ -29,16 +29,19 @@
             .pluck('id')
             .value();
         }).then(function (enabledExtensions) {
-          return _.map(extensionIds, function (id) {
-            if (Authinfo.isEntitled(id)) {
+          return _(extensionIds)
+            .map(function (id) {
               return {
                 'id': id,
                 'entitlementState': '',
                 'entitlementName': entitlementNames[id],
                 'enabled': (_.indexOf(enabledExtensions, id) !== -1)
               };
-            }
-          });
+            })
+            .filter(function (extension) {
+              return Authinfo.isEntitled(extension.id);
+            })
+            .value();
         });
     }
   }

@@ -207,7 +207,7 @@ angular.module('Core')
           $state.go('users.add.services.dn');
         } else {
           onboardUsers(true).then(function () {
-            assignCloudExtensionEntitlements($scope.extensionEntitlements);
+            assignHybridServices($scope.extensionEntitlements);
           });
         }
       };
@@ -1143,7 +1143,7 @@ angular.module('Core')
         $scope.extensionEntitlements = entitlements;
       };
 
-      function assignCloudExtensionEntitlements(entitlements) {
+      function assignHybridServices(entitlements) {
         var usersList = getUsersList();
 
         // TODO: Similar chunking logic is used throughout. Refactor!
