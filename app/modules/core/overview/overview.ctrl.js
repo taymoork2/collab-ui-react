@@ -124,8 +124,8 @@
 
       if (!response.data.success) return;
       if (event.name == 'conversationsLoaded' && response.data.spanType == 'week' && response.data.intervalCount >= 2) {
-        card.current = Math.round(response.data.data[response.data.data.length-1].count);
-        card.previous = Math.round(response.data.data[response.data.data.length-2].count);
+        card.current = Math.round(response.data.data[response.data.data.length - 1].count);
+        card.previous = Math.round(response.data.data[response.data.data.length - 2].count);
       }
     };
 
@@ -138,7 +138,10 @@
     };
 
     this.licenseEventHandler = function (licenses) {
-      card.trial  = _.any(licenses, { 'offerName': 'MS', 'isTrial': true });
+      card.trial = _.any(licenses, {
+        'offerName': 'MS',
+        'isTrial': true
+      });
     };
   }
 
@@ -155,17 +158,18 @@
     this.reportDataEventHandler = function (event, response) {
       if (!response.data.success) return;
       if (event.name == 'groupCallsLoaded' && response.data.spanType == 'month' && response.data.intervalCount >= 2) {
-        card.current = Math.round(response.data.data[response.data.data.length-1].count);
-        card.previous = Math.round(response.data.data[response.data.data.length-2].count);
+        card.current = Math.round(response.data.data[response.data.data.length - 1].count);
+        card.previous = Math.round(response.data.data[response.data.data.length - 2].count);
       }
     };
 
     this.licenseEventHandler = function (licenses) {
-      card.trial  = _.any(licenses, function(l) {
+      card.trial = _.any(licenses, function (l) {
         return (
           l.offerName == 'CF' ||
           l.offerName == 'EE' ||
-          l.offerName == 'MC' ) && l.isTrial; }); //list: https://sqbu-github.cisco.com/WebExSquared/wx2-admin-service/blob/master/common/src/main/java/com/cisco/wx2/atlas/common/bean/order/OfferCode.java
+          l.offerName == 'MC') && l.isTrial;
+      }); //list: https://sqbu-github.cisco.com/WebExSquared/wx2-admin-service/blob/master/common/src/main/java/com/cisco/wx2/atlas/common/bean/order/OfferCode.java
     };
   }
 
@@ -181,8 +185,8 @@
     this.reportDataEventHandler = function (event, response) {
       if (!response.data.success) return;
       if (event.name == 'oneOnOneCallsLoaded' && response.data.spanType == 'month' && response.data.intervalCount >= 2) {
-        card.current = Math.round(response.data.data[response.data.data.length-1].count);
-        card.previous = Math.round(response.data.data[response.data.data.length-2].count);
+        card.current = Math.round(response.data.data[response.data.data.length - 1].count);
+        card.previous = Math.round(response.data.data[response.data.data.length - 2].count);
       }
     };
   }
@@ -205,17 +209,20 @@
       });
     };
 
-    this.reportDataEventHandler = function(event, response) {
+    this.reportDataEventHandler = function (event, response) {
 
       if (!response.data.success) return;
       if (event.name == 'activeRoomsLoaded' && response.data.spanType == 'week' && response.data.intervalCount >= 2) {
-        card.current = Math.round(response.data.data[response.data.data.length-1].count);
-        card.previous = Math.round(response.data.data[response.data.data.length-2].count);
+        card.current = Math.round(response.data.data[response.data.data.length - 1].count);
+        card.previous = Math.round(response.data.data[response.data.data.length - 2].count);
       }
     };
 
     this.licenseEventHandler = function (licenses) {
-      card.trial  = _.any(licenses, { 'offerName': 'SD', 'isTrial': true }); //SD = Shared Devices
+      card.trial = _.any(licenses, {
+        'offerName': 'SD',
+        'isTrial': true
+      }); //SD = Shared Devices
     };
   }
 
@@ -224,7 +231,7 @@
 
     this.unlicensedUsersHandler = function (data) {
       if (data.success) {
-        card.usersToConvert = (data.resources||[]).length; // for now use the length to get the count as there is a bug in CI and totalResults is not accurate.
+        card.usersToConvert = (data.resources || []).length; // for now use the length to get the count as there is a bug in CI and totalResults is not accurate.
       }
     };
 
@@ -241,7 +248,7 @@
     this.icon = 'icon-circle-data';
     this.hybridStatusEventHandler = function (services) {
       _.each(services, function (service) {
-        service.statusIcon = !service.enabled || !service.acknowledged ? 'warning' : 'success';
+        service.healthStatus = !service.enabled || !service.acknowledged ? 'warning' : 'success';
       });
       card.services = services;
     };
