@@ -56,6 +56,7 @@
 
     if ($stateParams.feature && $stateParams.feature.id) {
       vm.hgId = $stateParams.feature.id;
+      vm.model.name = $stateParams.feature.cardName;
       init();
     } else {
       $state.go('huronfeatures');
