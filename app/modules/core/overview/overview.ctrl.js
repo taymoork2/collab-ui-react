@@ -168,7 +168,10 @@
         return (
           l.offerName == 'CF' ||
           l.offerName == 'EE' ||
-          l.offerName == 'MC') && l.isTrial;
+          l.offerName == 'MC' ||
+          l.offerName == 'SC' ||
+          l.offerName == 'TC' ||
+          l.offerName == 'EC') && l.isTrial;
       }); //list: https://sqbu-github.cisco.com/WebExSquared/wx2-admin-service/blob/master/common/src/main/java/com/cisco/wx2/atlas/common/bean/order/OfferCode.java
     };
   }
