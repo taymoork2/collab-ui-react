@@ -374,7 +374,7 @@
                 return true;
               }
             },
-            'templateOptions.disabled': function () {
+            'hide': function () {
               return !vm.model.callerId.callerIdEnabled;
             }
           }
@@ -401,7 +401,7 @@
                 return true;
               }
             },
-            'templateOptions.disabled': function () {
+            'hide': function () {
               return !vm.model.callerId.callerIdEnabled;
             }
           },
