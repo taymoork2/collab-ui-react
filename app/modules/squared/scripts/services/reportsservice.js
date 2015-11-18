@@ -215,12 +215,21 @@ function ReportsService($http, $q, $rootScope, $location, Storage, Config, Log, 
   }
 
   function getOverviewMetrics(useCache) {
-    var charts = ['calls', 'conversations', 'contentShared'];
+
+    var charts = ['conversations', 'activeRooms'];
     getTimeCharts(useCache, charts, {
+      intervalType: 'week',
+      intervalCount: 2,
+      spanType: 'week'
+    });
+
+    var callCharts = ['oneOnOneCalls', 'groupCalls'];
+    getTimeCharts(useCache, callCharts, {
       intervalType: 'month',
       intervalCount: 2,
       spanType: 'month'
     });
+
   }
 
   function getLandingMetrics(useCache) {

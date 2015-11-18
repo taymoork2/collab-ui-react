@@ -2704,8 +2704,8 @@
   },
   "overview": {
     "pageTitle": "Overview",
-    "thisMonth": "This Month",
-    "lastMonth": "Last Month",
+    "thisMonth": "This month",
+    "lastMonth": "Last month:",
     "cards": {
       "users": {
         "title": "Users",
@@ -2716,7 +2716,10 @@
       },
       "message": {
         "title": "Message",
-        "desc": "Active Rooms"
+        "desc": "Active Rooms",
+        "currentTitle": "Active rooms this week",
+        "previousTitle": "Last week:"
+
       },
       "meeting": {
         "title": "Meeting",
@@ -2729,8 +2732,8 @@
       "roomSystem": {
         "title": "Room Systems",
         "desc": "Registered Systems",
-        "currentTitle": "Last 30 days",
-        "previousTitle": "Total"
+        "currentTitle": "Online this week",
+        "previousTitle": "Last week:"
       },
       "hybrid": {
         "title": "Hybrid Services"
