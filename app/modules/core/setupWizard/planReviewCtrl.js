@@ -40,12 +40,12 @@
     vm.trialDaysRemaining = 0;
     vm.trialUsedPercentage = 0;
     vm.isInitialized = false; // invert the logic and initialize to false so the template doesn't flicker before spinner
-    vm.showRoomSystems = false;
+    vm.isStormBranding = false;
 
     init();
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
-      vm.showRoomSystems = result;
+      vm.isStormBranding = result;
     });
 
     function init() {
