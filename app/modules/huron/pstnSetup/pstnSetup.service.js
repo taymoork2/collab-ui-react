@@ -219,15 +219,12 @@
       }).$promise;
     }
 
-    function listPendingNumbers(customerId, carrier) {
+    function listPendingNumbers(customerId) {
       var pendingNumbers = [];
 
       return listPendingOrders(customerId).then(function (orders) {
-        var carrierOrders = orders.filter(function (order) {
-          return order.carrier === carrier;
-        });
         var promises = [];
-        angular.forEach(carrierOrders, function (carrierOrder) {
+        angular.forEach(orders, function (carrierOrder) {
           var promise = getOrder(customerId, carrierOrder.uuid).then(function (orderNumbers) {
             angular.forEach(orderNumbers, function (orderNumber) {
               if (orderNumber && orderNumber.number && (orderNumber.network === PENDING || orderNumber.network === QUEUED)) {

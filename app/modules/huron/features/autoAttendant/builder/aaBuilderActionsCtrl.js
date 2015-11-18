@@ -13,18 +13,21 @@
     vm.templates = [{
       title: $translate.instant('autoAttendant.actionSayMessage'),
       controller: 'AASayMessageCtrl as aaSay',
-      url: 'modules/huron/callRouting/autoAttendant/aaSayMessage.tpl.html',
-      help: ''
+      url: 'modules/huron/features/autoAttendant/sayMessage/aaSayMessage.tpl.html',
+      help: $translate.instant('autoAttendant.sayMessageHelp'),
+      actions: ['say']
     }, {
       title: $translate.instant('autoAttendant.actionPhoneMenu'),
-      controller: 'AutoAttendantMainCtrl as aaMain',
-      url: 'modules/huron/callRouting/autoAttendant/autoAttendantMenu.tpl.html',
-      help: ''
+      controller: 'AAPhoneMenuCtrl as aaPhoneMenu',
+      url: 'modules/huron/features/autoAttendant/phoneMenu/aaPhoneMenu.tpl.html',
+      help: $translate.instant('autoAttendant.phoneMenuHelp'),
+      actions: ['runActionsOnInput']
     }, {
       title: $translate.instant('autoAttendant.actionRouteCall'),
       controller: '',
       url: '',
-      help: ''
+      help: '',
+      actions: ['route', 'goto', 'routeToExtension']
     }];
 
     vm.template = ""; // no default template
@@ -54,17 +57,28 @@
       uiMenu.deleteEntryAt(index);
     }
 
-    function activate() {
-      var menuEntry;
-      vm.schedule = $scope.schedule;
-      vm.ui = AAUiModelService.getUiModel();
+    function setTemplate() {
       if ($scope.index >= 0) {
-        menuEntry = vm.ui[vm.schedule].getEntryAt($scope.index);
-        if (menuEntry.actions.length > 0 && menuEntry.actions[0].getName() === 'play') {
-          vm.template = vm.templates[0];
+        var menuEntry = vm.ui[vm.schedule].getEntryAt($scope.index);
+        if (menuEntry.type == "MENU_OPTION") {
+          vm.template = vm.templates[1];
+        } else if (menuEntry.actions.length > 0 && menuEntry.actions[0].getName()) {
+          for (var i = 0; i < vm.templates.length; i++) {
+            var isMatch = vm.templates[i].actions.some(function (action) {
+              return menuEntry.actions[0].getName() === action;
+            });
+            if (isMatch) {
+              vm.template = vm.templates[i];
+            }
+          }
         }
       }
+    }
 
+    function activate() {
+      vm.schedule = $scope.schedule;
+      vm.ui = AAUiModelService.getUiModel();
+      setTemplate();
     }
 
     activate();

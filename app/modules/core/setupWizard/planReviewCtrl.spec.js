@@ -12,7 +12,8 @@ describe('Controller: PlanReviewCtrl', function () {
     getMessageServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/messagingServices.json')),
     getCommunicationServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/commServices.json')),
     getConferenceServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/confServices.json')),
-    getCmrServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/cmrServices.json'))
+    getCmrServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/cmrServices.json')),
+    getLicenses: sinon.stub().returns(getJSONFixture('core/json/authInfo/licenseServices.json'))
   };
 
   beforeEach(module(function ($provide) {
@@ -63,7 +64,7 @@ describe('Controller: PlanReviewCtrl', function () {
     });
 
     it('should calculate trial days remaining correctly', function () {
-      // trial length is 180 days, so expecting 180 - 100 = 80 days.
+      // trial length is 180 days, so expecting 180 - 100 = 80 days.     
       expect(controller.trialDaysRemaining).toEqual(80);
     });
 

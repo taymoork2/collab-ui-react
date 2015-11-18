@@ -21,7 +21,7 @@
     <div class="col-sm-12">
       <!-- loader -->
       <div ng-show="loading || pollHasFailed" style="text-align: center; padding-top: 60px;">
-        <p ng-show="pollHasFailed">Disconnected. Trying to reconnect...</p>
+        <p ng-show="pollHasFailed">{{'mediaFusion.disconnect' | translate}}</p>
         <i class="icon icon-spinner icon-2x"></i>
       </div>
 
@@ -42,22 +42,22 @@
             <div class="row">
             <B>
               <div class="col-sm-2 col-xs-1">
-                Name
+                {{'mediaFusion.name' | translate}}
               </div>
               <div class="col-sm-2 col-xs-1">
-                Host Name / IP Address
+                {{'mediaFusion.ipAddr' | translate}}
               </div>
               <div class="col-sm-1 col-xs-1">
-                Status
+                {{'mediaFusion.status' | translate}}
               </div>
               <div class="col-sm-2 col-xs-1">
-                Cluster
+                {{'mediaFusion.cluster' | translate}}
               </div>
               <div class="col-sm-3 col-xs-3">
-                Role
+                {{'mediaFusion.role' | translate}}
               </div>
               <div class="col-sm-2 col-xs-1">
-                Actions
+                {{'mediaFusion.actions' | translate}}
               </div>
             </B>
             </div>
@@ -71,15 +71,15 @@
               <div class="col-sm-1 col-xs-1" style="overflow: hidden">
                 <span ng-show="cluster.needs_attention" class="red">
                   <i class="fa fa-circle" />
-                  <span class="hidden-xs">Offline </span>
+                  <span class="hidden-xs">{{'mediaFusion.offline' | translate}} </span>
                 </span>
                 <span ng-show="!cluster.needs_attention &&  !cluster.alarms_present" class="green">
                   <i class="fa fa-circle" />
-                  <span class="hidden-xs">Active </span>
+                  <span class="hidden-xs">{{'mediaFusion.active' | translate}} </span>
                 </span>
                 <span ng-show="!cluster.needs_attention &&  cluster.alarms_present" class="yellow">
                   <i class="fa fa-circle" />
-                  <span class="hidden-xs">Active </span>
+                  <span class="hidden-xs">{{'mediaFusion.active' | translate}} </span>
                 </span>
               </div>
                <div class="col-sm-2 col-xs-1" style="overflow: hidden">
@@ -113,7 +113,7 @@
 
         <div ng-show="clusters.length == 0">
           <h3 style="text-align: center; padding: 20px 0; color: #ccc">
-            No Media Service Clusters Connected to Spark
+            {{'mediaFusion.noCluster' | translate}} 
           </h3>
         </div>
       </div>
@@ -127,7 +127,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button id="connector-modal-close" type="button" class="close" ng-click="cancelDelete()"  data-dismiss="modal">
-          <span class="sr-only">Close</span>
+          <span class="sr-only">{{'mediaFusion.close' | translate}} </span>
         </button>
         <div class="modal-title">
             <span class="h3" translate="mediaFusion.confirmDefuse"></span>

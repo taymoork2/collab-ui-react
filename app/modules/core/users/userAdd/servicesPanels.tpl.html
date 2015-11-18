@@ -5,12 +5,11 @@
         <div id="messaging" class="bucket-column">
             <div class="bucket-column-inner">
                 <div class="bucket-row-header">
-                    <h3 ng-if="!gsxFeature" translate="onboardModal.messaging"></h3>
-                    <h3 ng-if="gsxFeature" translate="onboardModal.spark"></h3>
+                    <h3 translate="onboardModal.messaging"></h3>
                 </div>
                 <div class="bucket-row">
                     <div class="entitle-check-grp onboard-radio" ng-repeat="msgFeature in messageFeatures">
-                        <div class="bucket-row-inner top-row" ng-if="msgFeature.license && msgFeature.license.licenseType === 'freeTeamRoom' && !gsxFeature">
+                        <div class="bucket-row-inner top-row" ng-if="msgFeature.license && msgFeature.license.licenseType === 'freeTeamRoom'">
                             <div class="service-check">
                                 <span class="icon icon-check onboard-check"></span>
                             </div>
@@ -46,13 +45,12 @@
         <div id="conference" class="bucket-column">
             <div class="bucket-column-inner">
                 <div class="bucket-row-header">
-                    <h3 ng-if="!gsxFeature" translate="onboardModal.conferencing"></h3>
-                    <h3 ng-if="gsxFeature" translate="onboardModal.webex"></h3>
+                    <h3 translate="onboardModal.conferencing"></h3>
                 </div>
                 <div class="bucket-row">
                     <div class="entitle-check-grp onboard-radio" ng-repeat="cf in confChk">
                         <!-- Free Conferencing -->
-                        <div class="bucket-row-inner top-row" ng-if="cf.confFeature.license.licenseType === 'freeConferencing' && !gsxFeature">
+                        <div class="bucket-row-inner top-row" ng-if="cf.confFeature.license.licenseType === 'freeConferencing'">
                             <div class="service-check">
                                 <span class="icon icon-check onboard-check"></span>
                             </div>
@@ -85,12 +83,11 @@
         <div id="communication" class="bucket-column">
             <div class="bucket-column-inner last-column">
                 <div class="bucket-row-header">
-                    <h3 ng-if="!gsxFeature" translate="onboardModal.communications"></h3>
-                    <h3 ng-if="gsxFeature" translate="onboardModal.calling"></h3>
+                    <h3 translate="onboardModal.communications"></h3>
                 </div>
                 <div class="bucket-row">
                     <div class="entitle-check-grp onboard-radio" ng-repeat="commFeature in communicationFeatures">
-                        <div class="bucket-row-inner top-row" ng-if="commFeature.license.licenseType === 'advancedCommunication' && !gsxFeature">
+                        <div class="bucket-row-inner top-row" ng-if="commFeature.license.licenseType === 'advancedCommunication'">
                             <div class="service-check">
                                 <span class="icon icon-check onboard-check"></span>
                             </div>

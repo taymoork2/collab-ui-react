@@ -142,9 +142,10 @@
         }, {
           type: 'button',
           key: 'searchBtn',
+          className: 'search-button',
           templateOptions: {
-            btnClass: 'btn-primary label-height-offset',
-            label: $translate.instant('common.search'),
+            btnClass: 'circle-small secondary',
+            spanClass: 'icon icon-search',
             onClick: searchCarrierInventory
           },
           expressionProperties: {
@@ -203,6 +204,8 @@
     }
 
     function searchCarrierInventory() {
+      /*jshint validthis: true */
+      var field = this;
       var params = {
         npa: vm.model.areaCode.code,
         count: vm.model.quantity,
@@ -212,6 +215,7 @@
       vm.searchResultsModel = {};
       vm.paginateOptions.currentPage = 0;
       vm.singleResults = vm.model.quantity === 1;
+      field.loading = true;
 
       PstnSetupService.searchCarrierInventory(PstnSetup.getProviderId(), params)
         .then(function (numberRanges) {
@@ -220,6 +224,9 @@
           } else {
             vm.searchResults = numberRanges;
           }
+        })
+        .finally(function () {
+          field.loading = false;
         });
     }
 

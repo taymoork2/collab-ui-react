@@ -103,10 +103,16 @@
                     $scope.getUsersBatch(statuses.userStatuses, 0, dfd);
                     $scope.loading = false;
                   }
+                }).catch(function (error) {
+                  // connector i.e. found... collect potential user info anyway...?
+                  if (ind + 1 == connectorIds.length) {
+                    $scope.getUsersBatch(statuses.userStatuses, 0, dfd);
+                    $scope.loading = false;
+                  }
                 });
               });
 
-            }, serviceId, null, 2000); // TODO: Remove hardcoded limit .... ups...
+            }, serviceId, null, 100000); // TODO: should be paged? How does this scale ?
 
           $scope.loading = false;
           return dfd.promise();

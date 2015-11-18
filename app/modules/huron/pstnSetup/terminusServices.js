@@ -9,6 +9,9 @@
         }
       });
     })
+    .factory('TerminusResellerCarrierService', function ($resource, HuronConfig) {
+      return $resource(HuronConfig.getTerminusUrl() + '/resellers/:resellerId/carriers/:carrierId', {}, {});
+    })
     .factory('TerminusCustomerCarrierService', function ($resource, HuronConfig) {
       return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/carriers/:carrierId', {}, {});
     })

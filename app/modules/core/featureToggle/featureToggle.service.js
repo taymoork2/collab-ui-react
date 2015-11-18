@@ -9,7 +9,8 @@
     var features = {
       pstnSetup: 'pstnSetup',
       csvUpload: 'csvUpload',
-      dirSync: 'dirSync'
+      dirSync: 'dirSync',
+      atlasStormBranding: 'atlasStormBranding'
     };
     var service = {
       getUrl: getUrl,
@@ -19,7 +20,8 @@
       supports: supports,
       supportsPstnSetup: supportsPstnSetup,
       supportsCsvUpload: supportsCsvUpload,
-      supportsDirSync: supportsDirSync
+      supportsDirSync: supportsDirSync,
+      features: features
     };
 
     return service;
@@ -88,6 +90,10 @@
           supportsDirSync().then(function (enabled) {
             return resolve(enabled && Authinfo.getOrgId() === '4e2befa3-9d82-4fdf-ad31-bb862133f078');
           });
+        } else if (feature === features.atlasStormBranding) {
+          return resolve(true);
+        } else {
+          return resolve(false);
         }
         // else {
         //TODO first check user features

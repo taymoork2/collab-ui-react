@@ -19,7 +19,6 @@ describe('Partner flow', function () {
     utils.dumpConsoleErrors();
   });
 
-  // Logging in. Write your tests after the login flow is complete.
   describe('Login as partner admin user', function () {
 
     it('should login', function () {
@@ -47,7 +46,7 @@ describe('Partner flow', function () {
       utils.expectIsDisplayed(partner.trialsPanel);
       utils.expectIsDisplayed(partner.viewAllLink);
     });
-  }); //State is logged-in
+  });
 
   describe('Add Partner Trial', function () {
 
@@ -180,14 +179,15 @@ describe('Partner flow', function () {
       utils.switchToNewWindow().then(function () {
 
         navigation.expectDriverCurrentUrl('overview');
+        // backend services are slow to check userauthinfo/accounts
+        utils.wait(navigation.tabs, LONG_TIMEOUT);
         utils.expectIsDisplayed(navigation.tabs);
 
         browser.close();
         browser.switchTo().window(appWindow);
 
       });
-    });
-
+    }, LONG_TIMEOUT);
   });
 
   describe('Partner landing page reports', function () {

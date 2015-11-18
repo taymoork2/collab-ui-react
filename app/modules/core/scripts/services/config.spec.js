@@ -429,8 +429,9 @@ describe('Config', function () {
   describe('service states', function () {
 
     it('squared-fusion-mgmt should contain fusion states', function () {
-      expect(Config.serviceStates['squared-fusion-mgmt'][0]).toBe('fusion');
-      expect(Config.serviceStates['squared-fusion-mgmt'][1]).toBe('cluster-details');
+      // Preliminary removed until new fusion menues are in place in both integration and production
+      //expect(Config.serviceStates['squared-fusion-mgmt'][0]).toBe('fusion');
+      //expect(Config.serviceStates['squared-fusion-mgmt'][1]).toBe('cluster-details');
     });
 
     it('spark-device-mgmt should contain devices state', function () {

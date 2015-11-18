@@ -133,7 +133,7 @@ angular.module('Core')
           authData.managedOrgs = data.managedOrgs;
           authData.entitlements = data.entitlements;
           authData.services = data.services;
-          authData.roles = data.roles;
+          authData.roles = data.roles; // ["Helpdesk"];
           //if Full_Admin or WX2_User and has managedOrgs, add partnerustomers tab as allowed tab
           if (authData.managedOrgs && authData.managedOrgs.length > 0) {
             for (var i = 0; i < authData.roles.length; i++) {
@@ -354,6 +354,9 @@ angular.module('Core')
         },
         isSupportUser: function () {
           return this.hasRole('Support') && !this.isAdmin();
+        },
+        isHelpDeskUser: function () {
+          return this.hasRole(Config.roles.helpdesk);
         },
         isServiceAllowed: function (service) {
           if (service === 'squaredTeamMember' && !this.isSquaredTeamMember()) {

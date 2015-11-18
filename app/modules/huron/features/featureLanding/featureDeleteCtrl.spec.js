@@ -135,8 +135,6 @@ describe('Controller: HuronFeatureDeleteCtrl', function () {
   });
 });
 
-'use strict';
-
 describe('Huron Feature DeleteCtrl', function () {
 
   var featureDeleteCtrl, rootScope, $scope, $stateParams, $q, $timeout, $translate, Authinfo, huntGroupService, autoAttendantCeService, Notification, Log, featureDelDeferred;

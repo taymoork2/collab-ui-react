@@ -42,7 +42,6 @@ describe('Invite User and Check Buckets', function () {
       it('should add users successfully', function () {
         utils.click(users.onboardButton);
         notifications.assertSuccess(addEmail, 'onboarded successfully');
-        notifications.clearNotifications();
         utils.expectIsNotDisplayed(users.manageDialog);
       });
     });

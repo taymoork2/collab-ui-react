@@ -1,7 +1,7 @@
 <div class="app-container">
   <cs-header navstyle="{{navStyle}}" headertitle="{{headerTitle}}" icon="{{icon}}" ng-controller="HeaderCtrl">
     <cs-header-left>
-      <div class="navbar-orgname" ng-controller="UserInfoController" ng-if="Utils.isAdminPage()"><div class="navbar-title" title="{{orgname}}">{{orgname}}</div></div>
+      <div class="top-bar-orgname" ng-controller="UserInfoController" ng-if="Utils.isAdminPage()"><div class="top-bar-title" title="{{orgname}}">{{orgname}}</div></div>
     </cs-header-left>
     <cs-header-right>
       <div class="leaderboard-push-trigger" ng-controller="HeaderPushCtrl" ng-if="Utils.isAdminPage()">

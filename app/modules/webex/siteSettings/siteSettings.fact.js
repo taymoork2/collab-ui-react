@@ -172,8 +172,6 @@
               var funcName = "initSiteSettingsModel().getSessionTicketSuccess()";
               var logMsg = "";
 
-              _this.webExSiteSettingsObj.sessionTicketError = false;
-
               webExXmlApiInfoObj.xmlServerURL = "https://" + siteUrl + "/WBXService/XMLService";
               webExXmlApiInfoObj.webexSiteName = siteName;
               webExXmlApiInfoObj.webexAdminID = Authinfo.getPrimaryEmail();
@@ -190,6 +188,7 @@
               $log.log(logMsg);
 
               _this.webExSiteSettingsObj.sessionTicketError = true;
+              _this.webExSiteSettingsObj.hasLoadError = true;
             } // getSessionTicketError()
           ); // _this.getSessionTicket().then()
 
@@ -247,10 +246,21 @@
               logMsg = funcName + ": " + "getInfoResult=" + JSON.stringify(getInfoResult);
               // $log.log(logMsg);
 
-              _this.processSettingPagesInfo(WebExUtilsFact.validateAdminPagesInfoXmlData(getInfoResult.settingPagesInfoXml));
-              _this.pinPageInCategory();
-              _this.updateDisplayInfo();
-              _this.webExSiteSettingsObj.viewReady = true;
+              var settingPagesInfo = WebExUtilsFact.validateAdminPagesInfoXmlData(getInfoResult.settingPagesInfoXml);
+              _this.webExSiteSettingsObj.settingPagesInfo = settingPagesInfo;
+
+              if (
+                ("" !== settingPagesInfo.errId) ||
+                ("" !== settingPagesInfo.errReason)
+              ) {
+
+                _this.webExSiteSettingsObj.hasLoadError = true;
+              } else {
+                _this.processSettingPagesInfo(settingPagesInfo);
+                _this.pinPageInCategory();
+                _this.updateDisplayInfo();
+                _this.webExSiteSettingsObj.viewReady = true;
+              }
             },
 
             function getSiteSettingsInfoXmlError(getInfoResult) {
@@ -259,6 +269,8 @@
 
               logMsg = funcName + ": " + "getInfoResult=" + JSON.stringify(getInfoResult);
               $log.log(logMsg);
+
+              _this.webExSiteSettingsObj.hasLoadError = true;
             } // getSiteSettingsInfoXmlError()
           ); // _this.getSiteSettingsInfoXml().then()
         }, // getSiteSettingsInfo()
@@ -305,8 +317,6 @@
           var logMsg = "";
 
           var _this = this;
-
-          _this.webExSiteSettingsObj.settingPagesInfo = settingPagesInfo;
 
           var locale = $translate.use().replace("_", "-");
           var siteAdminNavUrls = _this.webExSiteSettingsObj.settingPagesInfo.bodyJson.ns1_siteAdminNavUrl;

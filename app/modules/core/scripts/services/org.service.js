@@ -78,7 +78,9 @@
           callback(data, status);
         })
         .error(function (data, status) {
-          data = data || {};
+          if (!data || !(data instanceof Object)) {
+            data = {};
+          }
           data.success = false;
           data.status = status;
           callback(data, status);

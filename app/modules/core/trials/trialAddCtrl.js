@@ -10,6 +10,7 @@
 
     vm.nameError = false;
     vm.emailError = false;
+    vm.supportsPstnSetup = false;
     vm.startDate = new Date();
     vm.offers = {};
     vm.model = {
@@ -130,15 +131,23 @@
     vm.gotoAddNumber = gotoAddNumber;
     vm.clickStartTrial = clickStartTrial;
 
+    init();
+
+    ///////////////////////
+
+    function init() {
+      FeatureToggleService.supportsPstnSetup().then(function (isSupported) {
+        vm.supportsPstnSetup = isSupported;
+      });
+    }
+
     function clickStartTrial() {
       if (isSquaredUCEnabled()) {
-        if (FeatureToggleService.supportsPstnSetup().then(function (isSupported) {
-            if (isSupported) {
-              startTrial();
-            } else {
-              gotoAddNumber();
-            }
-          }));
+        if (vm.supportsPstnSetup) {
+          startTrial();
+        } else {
+          gotoAddNumber();
+        }
       } else {
         startTrial();
       }
@@ -163,7 +172,7 @@
     function startTrial(keepModal) {
       vm.nameError = false;
       vm.emailError = false;
-      if (!isSquaredUCEnabled()) {
+      if (vm.supportsPstnSetup || !isSquaredUCEnabled()) {
         vm.startTrialButtonLoad = true;
       }
 
@@ -209,12 +218,8 @@
           })];
           Notification.notify(successMessage, 'success');
 
-          if (offersList.indexOf(Config.trials.squaredUC) !== -1) {
-            FeatureToggleService.supportsPstnSetup().then(function (isSupported) {
-              if (isSupported) {
-                gotoNextSteps();
-              }
-            });
+          if (offersList.indexOf(Config.trials.squaredUC) !== -1 && vm.supportsPstnSetup) {
+            gotoNextSteps();
           } else if (!keepModal) {
             $state.modal.close();
           }
