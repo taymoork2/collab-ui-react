@@ -1,11 +1,11 @@
 .line-list {
-  & .btn-actions {
+  & .btn--actions {
     @include vr-spacing(pv, 0.9375);
     @include vr-spacing(ph, 1.875);
     float: right;
     text-align: center;
   }
-  & .btn-icon {
+  & .btn--icon {
     background: none;
     border: none;
     box-shadow: none;

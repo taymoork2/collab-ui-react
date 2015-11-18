@@ -7,7 +7,7 @@
     </div>
     <div class="small-5 columns" ng-show="Utils.isAdminPage()">
       <div class="page-option-buttons" ng-controller="ExportCSVCtrl">
-        <button id="addUsers" class="button large info" ui-sref="users.add" translate="usersPage.inviteUsers"></button>
+        <button id="addUsers" class="btn btn--large btn--people" ui-sref="users.add" translate="usersPage.inviteUsers"></button>
         <a id="export-btn" class="export-users" ng-if="!exporting" ng-csv="exportCSV()" filename="{{'usersPage.csvFilename' | translate}}">
           <span id="export-icon" class="icon-export" tooltip-placement="top" tooltip="{{'usersPage.csvBtnTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true"><i class="icon icon-content-share icon-lg"></i></span>
         </a>
