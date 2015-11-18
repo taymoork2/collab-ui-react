@@ -171,23 +171,23 @@
       });
     };
 
-    function areFeaturesEmpty() {
-      var isEmpty = true;
+    function areFeaturesPresent() {
+      var isPresent = true;
       _.forEach(features, function (feature) {
-        isEmpty = isEmpty && feature.isEmpty && feature.isLoaded;
+        isPresent = isEmpty && feature.isEmpty && feature.isLoaded;
       });
-      return isEmpty;
+      return isPresent;
     }
 
     function showNewFeaturePageIfNeeded() {
 
-      if (vm.pageState !== 'showFeatures' && areFeaturesEmpty() && vm.listOfFeatures.length === 0) {
+      if (vm.pageState !== 'showFeatures' && areFeaturesPresent() && vm.listOfFeatures.length === 0) {
         vm.pageState = 'NewFeature';
       }
     }
 
     function showReloadPageIfNeeded() {
-      if (vm.pageState === 'Loading' && areFeaturesEmpty() && vm.listOfFeatures.length === 0) {
+      if (vm.pageState === 'Loading' && areFeaturesPresent() && vm.listOfFeatures.length === 0) {
         vm.pageState = 'Reload';
       }
     }
