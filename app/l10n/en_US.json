@@ -1427,7 +1427,8 @@
       "sven": "Sven",
       "empar": "Empar"
     },
-    "sayMessageHelp": "Select the desired language and voice which is used to speak the phrase to the caller. Say message is optional. If no message is entered, the conversation will continue to the next step."
+    "sayMessageHelp": "Select the desired language and voice which is used to speak the phrase to the caller. Say message is optional. If no message is entered, the conversation will continue to the next step.",
+    "errorAddCMI": "Unable to assign the phone number. Number is use"
   },
   "callPark": {
     "code": "CP",

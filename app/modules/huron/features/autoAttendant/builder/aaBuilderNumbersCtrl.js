@@ -110,29 +110,38 @@
       var resources = vm.ui.ceInfo.getResources();
       resources.push(resource);
 
-      // if it's longer than 2, we sort it
-      if (resources.length > 2) {
+      AANumberAssignmentService.setAANumberAssignment(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources).then(
+        function (response) {
+          // if it's longer than 2, we sort it
+          if (resources.length > 2) {
 
-        // but we don't change the first top-line number, which is also shown in the header, so
-        // get a temp list without that first number
+            // but we don't change the first top-line number, which is also shown in the header, so
+            // get a temp list without that first number
+            var tmp = _.rest(resources);
 
-        var tmp = _.rest(resources);
+            // and sort it
+            tmp.sort(function (a, b) {
+              return compareNumbersExternalThenInternal(a.number, b.number);
+            });
 
-        // and sort it
-        tmp.sort(function (a, b) {
-          return compareNumbersExternalThenInternal(a.number, b.number);
+            // we have a sorted list, take out the old unsorted ones, put in the sorted ones
+            resources.splice(1, resources.length - 1);
+            _.forEach(tmp, function (n) {
+              resources.push(n);
+            });
+          }
+        },
+        function (response) {
+          Notification.error('autoAttendant.errorAddCMI', {
+            phoneNumber: number,
+            statusText: response.statusText,
+            status: response.status
+          });
+
+          resources.pop();
+
         });
 
-        // we have a sorted list, take out the old unsorted ones, put in the sorted ones
-        resources.length = 1;
-
-        _.forEach(tmp, function (n) {
-          resources.push(n);
-        });
-      }
-
-      var obj = AANumberAssignmentService.setAANumberAssignment(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources);
-      //      var obj = AANumberAssignmentService.getListOfAANumberAssignments(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID);
     }
 
     // Delete the number to the CE Info resource list

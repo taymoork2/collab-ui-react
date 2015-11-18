@@ -73,7 +73,7 @@
         },
         function (response) {
           // failure
-          return response;
+          return $q.reject(response);
         }
       );
 
