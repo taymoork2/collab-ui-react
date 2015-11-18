@@ -195,8 +195,8 @@
     "addOrganizationTabDesc": "Add a new organization to this account",
     "fusionDetailsTab": "Connector Management",
     "fusionDetailsTabDesc": "Connector Management",
-    "huronLineDetailsTab": "Communication",
-    "huronLineDetailsTabDesc": "Communication Details",
+    "huronLineDetailsTab": "Call",
+    "huronLineDetailsTabDesc": "Numbers and Settings",
     "MediafusionDetailsTab": "Media Service Management",
     "MediafusionDetailsTabDesc": "Media Service Management",
     "callRoutingTab": "Call Routing",
@@ -1482,6 +1482,7 @@
     "externalNumberTooltip": "Use the direct line to reach this line from outside of the company.",
     "externalNumberPoolError": "Direct lines failed to load.",
     "externalNumberMappingError": "Direct line Mappings failed to load.",
+    "nationalNumberLabel": "National Number",
     "chooseNumber": "Choose a Number",
     "searchNumber": "Search for a number...",
     "addNewNumber": "Add a New Number",
@@ -2539,7 +2540,7 @@
   },
 
   "huronDetails": {
-    "title": "Communication",
+    "title": "Call",
     "linesTitle": "Numbers",
     "settingsTitle": "Settings",
     "featuresTitle": "Features"
