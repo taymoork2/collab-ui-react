@@ -1,11 +1,13 @@
 {
   "name": "Technical Difficulties",
   "numbers": [{
-    "number": "972-405-2102"
+    "number": "972-405-2102",
+    "uuid": "1e99a90c-ac61-46da-88e4-181a2a774080"
   }, {
-    "number": "972-405-2103"
+    "number": "972-405-2103",
+    "uuid": "36dc5e87-c07a-42bc-b243-c0cc552d62e5"
   }],
-  "huntMethod": "longest-idle",
+  "huntMethod": "DA_LONGEST_IDLE_TIME",
   "maxRingSecs": 30,
   "maxWaitMins": 40,
   "fallbackDestination": {
