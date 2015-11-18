@@ -50,6 +50,7 @@
       getFeature: AutoAttendantCeInfoModelService.getCeInfosList,
       formatter: HuronFeaturesListService.autoAttendants,
       isEmpty: false,
+      isLoaded: false,
       i18n: 'huronFeatureDetails.aaName',
       color: 'primary'
     }, {
@@ -57,6 +58,7 @@
       getFeature: HuntGroupService.getListOfHuntGroups,
       formatter: HuronFeaturesListService.huntGroups,
       isEmpty: false,
+      isLoaded:false,
       i18n: 'huronFeatureDetails.hgName',
       color: 'alerts'
     }];
@@ -105,6 +107,7 @@
     function handleFeaturePromises(promises) {
       _.forEach(features, function (feature, index) {
         promises[index].then(function (data) {
+          feature.isLoaded = true;
           handleFeatureData(data, feature);
         }, function (response) {
           handleFailures(response, feature);
@@ -116,7 +119,6 @@
       Log.warn('Could fetch features for customer with Id:', Authinfo.getOrgId());
 
       feature.isEmpty = true;
-
       Notification.errorResponse(response, 'huronFeatureDetails.failedToLoad', {
         featureType: $filter('translate')(feature.i18n)
       });
@@ -125,7 +127,6 @@
     }
 
     function handleFeatureData(data, feature) {
-
       if (feature.name === 'AA') {
         vm.aaModel = AAModelService.newAAModel();
         vm.aaModel = data;
@@ -173,7 +174,7 @@
     function areFeaturesEmpty() {
       var isEmpty = true;
       _.forEach(features, function (feature) {
-        isEmpty = isEmpty && feature.isEmpty;
+        isEmpty = isEmpty && feature.isEmpty && feature.isLoaded;
       });
       return isEmpty;
     }
