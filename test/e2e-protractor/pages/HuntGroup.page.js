@@ -33,6 +33,7 @@ var HuntGroup = function () {
   this.fallbackMember = element(by.css('.fallback-container article .icon-chevron-down'));
   this.numberForFallbackMember = element.all(by.css('.fallback-container section cs-radio')).last();
   this.removeFallbackMember = element(by.css('.fallback-container section p a'));
+  this.saVociemailOption = element(by.css('.fallback-container .fallback-container-item cs-checkbox'));
   this.huntMethod = element(by.css('.hgmethod:last-child a'));
   this.submitBtn = element(by.css('[cs-btn]'));
 
@@ -62,6 +63,15 @@ var HuntGroup = function () {
   this.addedMemberName = element.all(by.css('.hgmembers .hgmember .cs-card h5')).last();
   this.removeAddedMember = element.all(by.css('.hgmembers .hgmember a')).last();
   this.alternateNumforMem = element.all(by.css('.hgmembers cs-radio label')).last();
+  this.fallbackDest = element(by.css('.hg-wrapper [ng-if="hge.shouldShowFallbackPill()"] .hunt-member-card'));
+  this.fallbackVoiceMail = element(by.css('.hg-wrapper [ng-if="hge.shouldShowFallbackPill()"] label.cs-checkbox'));
+  this.changeFallbackNumber = element.all(by.css('.hg-wrapper [ng-if="hge.shouldShowFallbackPill()"] .hunt-member-card cs-radio')).last();
+  this.removeFallbackMemberonEditPage = element(by.css('.hg-wrapper [ng-if="hge.shouldShowFallbackPill()"] .hunt-member-card p a'));
+  this.fallbackLookupWarningTypeahed = element(by.css('.hg-wrapper [ng-if="hge.shouldShowFallbackLookup()"].warning-typeahead'));
+  this.fallbackWarningText = element(by.css('.hg-wrapper [ng-if="hge.shouldShowFallbackWarning()"] span.message'));
+  this.searchFallbackMember = element(by.css('.hg-wrapper [ng-if="hge.shouldShowFallbackLookup()"].warning-typeahead input'));
+  this.addFallbackMember = element(by.css('.hg-wrapper [ng-if="hge.shouldShowFallbackLookup()"] li:first-child a:last-child'));
+
 };
 
 module.exports = HuntGroup;

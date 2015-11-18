@@ -3,7 +3,7 @@
  */
 'use strict';
 
-xdescribe('Admin should be able to', function () {
+describe('Admin should be able to', function () {
 
   beforeAll(function () {
     login.login('huron-int1', '#/hurondetails/features');
@@ -83,10 +83,22 @@ xdescribe('Admin should be able to', function () {
     navigation.hasClass(huntGroup.submitBtn, 'disabled');
   });
 
+  it('see the voice mail option is not present on hunt group setUp assistant fallback page', function(){
+    utils.expectIsNotDisplayed(huntGroup.saVociemailOption);
+  });
+
   it('enable the create hunt group button', function () {
     utils.sendKeys(huntGroup.typeAheadInput, huntGroup.member2Search);
     utils.expectTextToBeSet(huntGroup.memberDropdownItemName, huntGroup.member2Search);
     utils.click(huntGroup.memberDropdownItem);
+  });
+
+  it('see the voice mail option is present on hunt group setUp assistant fallback page when a member is selecetd', function(){
+    utils.expectIsDisplayed(huntGroup.saVociemailOption);
+  });
+
+  it('click on the voicemail option', function(){
+    utils.click(huntGroup.saVociemailOption);
   });
 
   it('see the disabled typeahead', function(){
@@ -105,10 +117,22 @@ xdescribe('Admin should be able to', function () {
     //navigation.hasClass(huntGroup.submitBtn, 'disabled');
   });
 
+  it('see the voice mail option is not present when a selected member is removed', function(){
+    utils.expectIsNotDisplayed(huntGroup.saVociemailOption);
+  });
+
   it('add a fallback member again', function(){
     utils.sendKeys(huntGroup.typeAheadInput, huntGroup.member2Search);
     utils.expectTextToBeSet(huntGroup.memberDropdownItemName, huntGroup.member2Search);
     utils.click(huntGroup.memberDropdownItem);
+  });
+
+  it('see the voice mail option is present on when a member is added back', function(){
+    utils.expectIsDisplayed(huntGroup.saVociemailOption);
+  });
+
+  it('click on the voicemail option when a member is added back', function(){
+    utils.click(huntGroup.saVociemailOption);
   });
 
   it('should be to click on the create hunt group btn', function () {
@@ -143,6 +167,9 @@ xdescribe('Admin should be able to', function () {
     utils.expectText(huntGroup.editPageTitle, huntGroup.randomHGName);
   });
 
+  /*
+  Hunt Group Edit Page E2E
+   */
   it('change the hunt group name on hunt group edit page', function () {
     utils.expectIsDisplayed(huntGroup.editHgName);
     utils.expectValueToBeSet(huntGroup.editHgName, huntGroup.randomHGName);
@@ -193,6 +220,48 @@ xdescribe('Admin should be able to', function () {
     utils.click(huntGroup.callerMaxWaitTimeElmnt);
     utils.expectIsDisplayed(huntGroup.callerMaxWaitTime);
     utils.click(huntGroup.callerMaxWaitTime);
+  });
+
+  it('see the fallback member selected', function(){
+    utils.expectIsDisplayed(huntGroup.fallbackDest);
+  });
+
+  it('see the voicemail option', function(){
+    utils.click(huntGroup.fallbackVoiceMail);
+  });
+
+  it('click on the fallback member card and change the number', function(){
+    utils.click(huntGroup.fallbackDest);
+    utils.click(huntGroup.changeFallbackNumber);
+  });
+
+  it('to remove the fallback member', function(){
+    utils.click(huntGroup.removeFallbackMemberonEditPage);
+  });
+
+  it('see the  warning typeahead and disabled save btn', function(){
+    utils.expectIsDisplayed(huntGroup.fallbackLookupWarningTypeahed);
+    utils.expectIsDisplayed(huntGroup.fallbackWarningText);
+    utils.expectIsDisplayed(huntGroup.cancelSaveBar);
+    utils.expectIsDisabled(huntGroup.saveBtn);
+  });
+
+  it('see the voicemail option is not present', function(){
+    utils.expectIsNotDisplayed(huntGroup.fallbackVoiceMail);
+  });
+
+  it('add a fallback member using the typeahead', function(){
+    utils.sendKeys(huntGroup.searchFallbackMember, huntGroup.member2Search);
+    utils.click(huntGroup.addFallbackMember);
+  });
+
+  it('see the voicemail option present and be able to click', function(){
+    utils.click(huntGroup.fallbackVoiceMail);
+  });
+
+  it('see the enabled save btn', function(){
+    utils.expectIsDisplayed(huntGroup.cancelSaveBar);
+    utils.expectIsEnabled(huntGroup.saveBtn);
   });
 
   it('change the hunt method', function () {

@@ -220,7 +220,7 @@ exports.expectIsNotDisplayed = function (elem, timeout) {
   }
 
   function logAndWait() {
-    log('Waiting for element to be invisible: ' + elem.locator());
+    log('Waiting for element not to be invisible: ' + elem.locator());
     return EC.invisibilityOf(elem)().thenCatch(function () {
       // Handle stale element reference
       return EC.stalenessOf(elem)();
