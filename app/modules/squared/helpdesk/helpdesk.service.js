@@ -3,7 +3,7 @@
 
   /*ngInject*/
   function HelpdeskService($http, Config, $q, HelpdeskMockData, CsdmConfigService, CsdmConverter) {
-    var urlBase = Config.getAdminServiceUrl();
+    var urlBase = Config.getAdminServiceUrl(); //"http://localhost:8080/admin/api/v1/"
 
     function extractItems(res) {
       return res.data.items;
@@ -54,7 +54,7 @@
         return deferred.promise;
       }
       return $http
-        .get(CsdmConfigService.getUrl() + '/organization/' + orgId + '/devices?checkOnline=false')
+        .get(CsdmConfigService.getUrl() + '/organization/' + orgId + '/devices?checkOnline=false&isHelpDesk=true')
         .then(function (res) {
           return filterDevices(searchString, CsdmConverter.convertDevices(res.data));
         });
