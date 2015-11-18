@@ -276,7 +276,7 @@
     }
 
     function removeFallbackDest() {
-      vm.selectedFallbackMember = undefined;
+      vm.selectedFallbackMember = HuntGroupFallbackDataService.removeFallbackMember();
     }
 
     function populateFallbackDestination(data) {

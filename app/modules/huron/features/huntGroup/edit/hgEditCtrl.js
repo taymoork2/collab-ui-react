@@ -55,6 +55,7 @@
     var customerId = Authinfo.getOrgId();
 
     if ($stateParams.feature && $stateParams.feature.id) {
+      vm.hgId = $stateParams.feature.id;
       init();
     } else {
       $state.go('huronfeatures');
@@ -63,11 +64,7 @@
     ////////////////
 
     function init() {
-      vm.userSelected = undefined;
-      vm.model.name = $stateParams.feature.cardName;
-      vm.hgId = $stateParams.feature.id;
       HuntGroupEditDataService.reset();
-
       HuntGroupEditDataService.fetchHuntGroup(customerId, vm.hgId)
         .then(function (pristineData) {
           HuntGroupService.getAllUnassignedPilotNumbers().then(function (numbers) {
@@ -81,7 +78,10 @@
             initializeFields();
           });
         })
-        .catch(function () {
+        .catch(function (error) {
+          Notification.errorResponse(error, 'huronHuntGroup.huntGroupFetchFailure', {
+            huntGroupName: vm.model.name
+          });
           $state.go('huronfeatures');
         });
     }
@@ -153,7 +153,7 @@
     }
 
     function removeFallbackDest() {
-      vm.selectedFallbackMember = undefined;
+      vm.selectedFallbackMember = HuntGroupFallbackDataService.removeFallbackMember();
       vm.form.$setDirty();
     }
 
@@ -192,6 +192,32 @@
         });
     }
 
+    function selectHuntMethod(method) {
+      vm.model.huntMethod = method;
+      vm.form.$setDirty();
+    }
+
+    function callback() {
+      vm.form.$setDirty();
+    }
+
+    function validateFallbackNumber() {
+      vm.selectedFallbackNumber =
+        HuntGroupFallbackDataService.validateFallbackNumber(vm.selectedFallbackNumber);
+
+      if (HuntGroupEditDataService.isFallbackDirty()) {
+        vm.form.$setDirty();
+      }
+    }
+
+    function getDisplayName(user) {
+      return HuntGroupMemberDataService.getDisplayName(user);
+    }
+
+    function isMembersInvalid() {
+      return (!vm.selectedHuntMembers || vm.selectedHuntMembers.length === 0);
+    }
+
     function hgUpdateReqBody() {
       return {
         name: vm.model.name,
@@ -228,32 +254,6 @@
           huntGroupName: vm.model.name
         });
       });
-    }
-
-    function selectHuntMethod(method) {
-      vm.model.huntMethod = method;
-      vm.form.$setDirty();
-    }
-
-    function callback() {
-      vm.form.$setDirty();
-    }
-
-    function validateFallbackNumber() {
-      vm.selectedFallbackNumber =
-        HuntGroupFallbackDataService.validateFallbackNumber(vm.selectedFallbackNumber);
-
-      if (HuntGroupEditDataService.isFallbackDirty()) {
-        vm.form.$setDirty();
-      }
-    }
-
-    function getDisplayName(user) {
-      return HuntGroupMemberDataService.getDisplayName(user);
-    }
-
-    function isMembersInvalid() {
-      return (!vm.selectedHuntMembers || vm.selectedHuntMembers.length === 0);
     }
 
     function initializeFields() {
@@ -317,13 +317,7 @@
           valuefield: 'value'
         },
         controller: /* @ngInject */ function ($scope) {
-          $scope.to.options = [{
-            label: '30 secs',
-            value: 30
-          }, {
-            label: '40 secs',
-            value: 40
-          }];
+          $scope.to.options = HuntGroupEditDataService.getMaxRingSecsOptions();
         }
       }, {
         key: 'maxWaitMins',
@@ -336,13 +330,7 @@
           valuefield: 'value'
         },
         controller: /* @ngInject */ function ($scope) {
-          $scope.to.options = [{
-            label: '30 secs',
-            value: 30
-          }, {
-            label: '40 secs',
-            value: 40
-          }];
+          $scope.to.options = HuntGroupEditDataService.getMaxWaitMinsOptions();
         }
       }];
       vm.isLoadingCompleted = true;

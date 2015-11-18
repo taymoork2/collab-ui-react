@@ -259,8 +259,7 @@ describe('Service: Partner Reports Service', function () {
   });
 
   describe('Media Quality Services', function () {
-    // TODO fix the getDateBase logic
-    xit('should get MediaQuality Metrics', function () {
+    it('should get MediaQuality Metrics', function () {
       $httpBackend.whenGET(mediaQualityUrl + customers[0].customerOrgId).respond(mediaQualityGraphData);
       PartnerReportService.getMediaQualityMetrics(customer, timeFilter).then(function (data) {
         expect(data[6].totalDurationSum).toBe(parseInt(mediaQualityGraphData.data[0].data[0].details.totalDurationSum));

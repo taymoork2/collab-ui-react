@@ -127,7 +127,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     controller.externalNumberPool = [{
       uuid: '1234',
       pattern: '+12292291234'
-    }]
+    }];
     controller.hasVoicemailService = true;
     controller.pilotNumberSelected.uuid = '1234';
     controller.pilotNumberSelected.pattern = '(229) 229-1234';
