@@ -192,6 +192,12 @@
         card.previous = Math.round(response.data.data[response.data.data.length - 2].count);
       }
     };
+
+    this.licenseEventHandler = function (licenses) {
+      card.trial = _.any(licenses, function (l) {
+        return l.offerName == 'CO' && l.isTrial;
+      });
+    };
   }
 
   function RoomSystemCard() {
