@@ -1,5 +1,5 @@
 <div class="user-view">
-  <div class="row head">
+  <div class="row head vw-90">
     <div class="columns small-6 medium-4">
       <a ui-sref="helpdesk.search">
         <i class="icon icon-back icon-lg"></i>
@@ -8,39 +8,42 @@
     </div>
   </div>
 
-  <div class="row">
+  <div class="row vw-90">
     <div class="columns large-4">
       <h3 class="display-name">{{helpdeskUserCtrl.user.displayName}}</h3>
       <div class="user-info">
-        <span translate="helpdesk.identification"></span>:
-        <span>12345678</span>
-        <button class="action secondary right" type="button">Send Code</button>
+        <span translate="helpdesk.userId"></span>:
+        <span class="user-value">{{helpdeskUserCtrl.user.id}}</span>
       </div>
       <div class="user-info">
         <span translate="helpdesk.userStatus"></span>:
-        <span>TBD</span>
+        <span class="user-value">{{helpdeskUserCtrl.user.status}}</span>
         <button class="action secondary right" type="button">Re-send</button>
       </div>
       <div class="user-info">
         <span translate="common.email"></span>:
-        <span>{{helpdeskUserCtrl.user.userName}}</span>
+        <span class="user-value">{{helpdeskUserCtrl.user.userName}}</span>
       </div>
       <div class="user-info">
         <span translate="helpdesk.roles"></span>:
-        <span ng-if="helpdeskUserCtrl.user.roles.length > 0" ng-repeat="role in helpdeskUserCtrl.user.roles">{{'roles.' + role | translate }}{{$last ? '' : ', '}}</span>
-        <span ng-if="!helpdeskUserCtrl.user.roles || helpdeskUserCtrl.user.roles.length == 0" translate="roles.user"></span>
+        <span class="user-value" ng-if="helpdeskUserCtrl.user.roles.length > 0" ng-repeat="role in helpdeskUserCtrl.user.roles">{{'roles.' + role | translate }}{{$last ? '' : ', '}}</span>
+        <span class="user-value" ng-if="!helpdeskUserCtrl.user.roles || helpdeskUserCtrl.user.roles.length == 0" translate="roles.user"></span>
       </div>
       <div class="user-info">
         <span translate="helpdesk.organization"></span>:
-        <a href="#">
-          <i class="icon icon-content-share"></i>
-        </a>
+        <span class="user-value right">
+          <a href="#">
+            <i class="icon icon-content-share"></i>
+          </a>
+        </span>
       </div>
       <div class="user-info">
         <span translate="helpdesk.customerPortalLaunch"></span>
-        <a href="#">
-          <i class="icon icon-content-share"></i>
-        </a>
+        <span class="user-value right">
+          <a href="#">
+            <i class="icon icon-content-share"></i>
+          </a>
+        </span>
       </div>
       <h3 class="display-name" translate="helpdesk.devices"></h3>
       <p>
