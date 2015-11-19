@@ -1797,7 +1797,9 @@
       "serial": "Serial",
       "version": "Version",
       "status": "Status",
-      "alarms": "Alarms"
+      "alarms": "Alarms",
+      "reportAlarm": "reported alarm.",
+      "reportAlarms": "reported alarms."
     },
     "activateService": {
       "ingress": "Extend the Cloud to Your On-Premises Environment",
@@ -1824,6 +1826,15 @@
     "switching": "Switching",
     "transcoding": "Transcoding",
     "confirmCluster": "Please press save to confirm cluster change.",
+    "disconnect": "Disconnected. Trying to reconnect...",
+    "name": "Name",
+    "ipAddr": "Host Name / IP Address",
+    "status": "Status",
+    "actions": "Actions",
+    "offline": "Offline",
+    "active": "Active",
+    "noCluster": "No Media Service Clusters Connected to Spark",
+    "close": "Close",
     "mediaServiceActivationFailure": "Problems enabling the service",
     "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion"
   },
