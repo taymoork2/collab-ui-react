@@ -6,10 +6,65 @@
 xdescribe('Admin should be able to', function () {
 
   beforeAll(function () {
-    login.login('huron-int1', '#/hurondetails/features');
-  }, 120000);
+    //TODO: Move the provisioning logic to API calls instead of using UI
+    //create 2 Huron users
+    login.login('huron-e2e', '#/users');
+    utils.deleteIfUserExists(huntGroup.member1);
+    utils.deleteIfUserExists(huntGroup.member2);
+    utils.createHuronUser(huntGroup.member1, huntGroup.member2);
+    navigation.clickUsers();
+    //Add an extra line to member1
+    utils.searchAndClick(huntGroup.member1);
+    utils.expectIsDisplayed(users.servicesPanel);
+    utils.click(users.communicationsService);
+    utils.expectIsDisplayed(telephony.communicationPanel);
+    utils.expectIsDisplayed(telephony.communicationPanel);
+    utils.click(telephony.communicationActionButton);
+    utils.click(telephony.newLineButton);
+    utils.expectIsDisplayed(telephony.lineConfigurationPanel);
+    utils.click(telephony.saveButton);
+    notifications.assertSuccess('Line configuration saved successfully');
+    //Add an extra line to member2
+    navigation.clickUsers();
+    utils.searchAndClick(huntGroup.member2);
+    utils.expectIsDisplayed(users.servicesPanel);
+    utils.click(users.communicationsService);
+    utils.expectIsDisplayed(telephony.communicationPanel);
+    utils.expectIsDisplayed(telephony.communicationPanel);
+    utils.click(telephony.communicationActionButton);
+    utils.click(telephony.newLineButton);
+    utils.expectIsDisplayed(telephony.lineConfigurationPanel);
+    utils.click(telephony.saveButton);
+    notifications.assertSuccess('Line configuration saved successfully');
 
-  it('should open features modal pop up', function () {
+    //Get an extension range
+    navigation.clickCommunicationWizard();
+    utils.expectTextToBeSet(wizard.mainviewTitle, 'Unified Communications');
+    utils.click(servicesetup.addNumberRange);
+    utils.sendKeys(servicesetup.newBeginRange, huntGroup.beginNumber);
+    utils.sendKeys(servicesetup.newEndRange, huntGroup.endNumber);
+    utils.click(huntGroup.hgwizardCloseBtn);
+
+  }, 300000);
+
+  afterAll(function () {
+    navigation.clickUsers();
+    navigation.clickCommunicationWizard();
+    utils.expectTextToBeSet(wizard.mainviewTitle, 'Unified Communications');
+    notifications.clearNotifications();
+    servicesetup.deleteNumberRange(huntGroup.beginNumber);
+    notifications.assertSuccess('Successfully deleted');
+    utils.click(huntGroup.hgwizardCloseBtn);
+    utils.deleteUser(huntGroup.member1, huntGroup.member2);
+  }, 300000);
+
+  it('open features modal pop up', function () {
+    //Goto Communication page and click Features Tab
+    utils.click(huntGroup.serviceTab);
+    utils.click(huntGroup.communicationsPage);
+    utils.expectIsDisplayed(huntGroup.settingTab);
+    utils.expectIsPresent(huntGroup.featuresTab);
+    utils.click(huntGroup.featuresTab);
     utils.expectIsDisplayed(huronFeatures.newFeatureBtn);
     utils.click(huronFeatures.newFeatureBtn);
   });
