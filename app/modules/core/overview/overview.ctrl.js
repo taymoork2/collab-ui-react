@@ -114,6 +114,7 @@
     this.currentTitle = 'overview.cards.message.currentTitle';
     this.previousTitle = 'overview.cards.message.previousTitle';
     this.trial = false;
+    this.enabled = true;
 
     this.reportDataEventHandler = function (event, response) {
 
@@ -147,6 +148,7 @@
     this.name = 'overview.cards.meeting.title';
     this.cardClass = 'meetings';
     this.trial = false;
+    this.enabled = true;
     this.settingsUrl = '';
     this.healthStatusUpdatedHandler = _.partial(meeetingHealthEventHandler, card);
 
@@ -179,6 +181,9 @@
     this.name = 'overview.cards.call.title';
     this.cardClass = 'people';
     this.trial = false;
+    this.enabled = true;
+    this.notEnabledText = 'overview.cards.call.notEnabledText';
+    this.notEnabledFooter = 'overview.contactPartner';
     this.settingsUrl = '#/hurondetails/settings';
     this.healthStatusUpdatedHandler = _.partial(meeetingHealthEventHandler, card);
     this.reportDataEventHandler = function (event, response) {
@@ -202,6 +207,9 @@
     this.desc = 'overview.cards.roomSystem.desc';
     this.name = 'overview.cards.roomSystem.title';
     this.cardClass = 'gray';
+    this.enabled = true;
+    this.notEnabledText = 'overview.cards.roomSystem.notEnabledText';
+    this.notEnabledFooter = 'overview.contactPartner';
     this.currentTitle = 'overview.cards.roomSystem.currentTitle';
     this.previousTitle = 'overview.cards.roomSystem.previousTitle';
     this.settingsUrl = '#/devices';
@@ -252,6 +260,10 @@
   function HybridServicesCard() {
     var card = this;
     this.icon = 'icon-circle-data';
+    this.enabled = true;
+    this.notEnabledText = 'overview.cards.hybrid.notEnabledText';
+    this.notEnabledAction = '#overview-nm';
+    this.notEnabledActionText = 'overview.cards.hybrid.notEnabledActionText';
     this.hybridStatusEventHandler = function (services) {
       _.each(services, function (service) {
         service.healthStatus = !service.enabled || !service.acknowledged ? 'warning' : 'success';
