@@ -156,16 +156,12 @@
 
     this.licenseEventHandler = function (licenses) {
       card.trial = _.any(licenses, function (l) {
-        return (
-          l.offerName == 'CF' ||
-          l.offerName == 'EE' ||
-          l.offerName == 'MC' ||
-          l.offerName == 'SC' ||
-          l.offerName == 'TC' ||
-          l.offerName == 'EC') && l.isTrial;
-      }); //list: https://sqbu-github.cisco.com/WebExSquared/wx2-admin-service/blob/master/common/src/main/java/com/cisco/wx2/atlas/common/bean/order/OfferCode.java
+        return l.isTrial && _(['CF', 'EE', 'MC', 'SC', 'TC', 'EC']).contains(l.offername);
+      });
     };
   }
+
+      //list: https://sqbu-github.cisco.com/WebExSquared/wx2-admin-service/blob/master/common/src/main/java/com/cisco/wx2/atlas/common/bean/order/OfferCode.java
 
   function CallCard() {
     var card = this;
