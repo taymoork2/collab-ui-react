@@ -44,21 +44,20 @@
 
     function showCard(type) {
       var entitlements = vm.org.entitlements;
-      switch(type){
+      switch (type) {
         //TODO: Check for the CORRECT entitlements !!!
-        case 'message':
-          return _.includes(entitlements, "webex-squared"); //???
-        case 'meeting':
-          return _.includes(entitlements, "webex-squared"); //???
-        case 'call':
-          return _.includes(entitlements, "squared-call-initiation");
-        case 'hybrid':
-          return _.includes(entitlements, "squared-fusion-cal")
-            || _.includes(entitlements, "squared-fusion-uc");
-        case 'room':
-          return _.includes(entitlements, "webex-squared"); //???
-        case 'users':
-          return _.includes(entitlements, "webex-squared"); //???
+      case 'message':
+        return _.includes(entitlements, "webex-squared"); //???
+      case 'meeting':
+        return _.includes(entitlements, "webex-squared"); //???
+      case 'call':
+        return _.includes(entitlements, "squared-call-initiation");
+      case 'hybrid':
+        return _.includes(entitlements, "squared-fusion-cal") || _.includes(entitlements, "squared-fusion-uc");
+      case 'room':
+        return _.includes(entitlements, "webex-squared"); //???
+      case 'users':
+        return _.includes(entitlements, "webex-squared"); //???
       }
       return true;
     }
