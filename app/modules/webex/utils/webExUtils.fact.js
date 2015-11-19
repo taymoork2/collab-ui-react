@@ -172,10 +172,9 @@
 
             logMsg = funcName + ": " + "\n" +
               "licenses=" + JSON.stringify(licenses);
-            // $log.log(logMsg);
+            $log.log(logMsg);
 
             var licenseInfo = null;
-            var updateDone = false;
 
             licenses.forEach(
               function checkLicense(license) {
@@ -184,7 +183,6 @@
                 // $log.log(logMsg);
 
                 if (
-                  (!updateDone) &&
                   ("CONFERENCING" == license.licenseType) &&
                   (0 <= license.licenseId.indexOf(siteUrl))
                 ) {
@@ -199,16 +197,12 @@
                     available: licensesAvailable
                   };
 
-                  updateDone = true;
+                  deferredGetWebexLicenseInfo.resolve(licenseInfo);
                 }
               } // checkLicense()
             ); // licenses.forEach()
 
-            if (null == licenseInfo) {
-              deferredGetWebexLicenseInfo.reject(licenseInfo);
-            } else {
-              deferredGetWebexLicenseInfo.resolve(licenseInfo);
-            }
+            deferredGetWebexLicenseInfo.reject(licenseInfo);
           }, // getValidLicensesSuccess()
 
           function getValidLicensesError(info) {
