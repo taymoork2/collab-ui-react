@@ -59,10 +59,6 @@
                 <div ng-repeat="number in user.phoneNumbers">
                   <span>{{number.value}} ({{'helpdesk.' + number.type | translate}})</span>
                 </div>
-                <div>
-                  <span><a ui-sref="helpdesk.org({org:user.organization})">{{user.organization.displayName ||
-                    "&nbsp;"}}</a></span>
-                </div>
               </section>
             </article>
           </cs-card>
