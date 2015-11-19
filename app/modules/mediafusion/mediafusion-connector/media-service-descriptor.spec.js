@@ -5,7 +5,7 @@ describe('MediaServiceDescriptor', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   // instantiate service
-  var Service, $httpBackend, authinfo;
+  var Service, $httpBackend, authinfo, $rootScope;
   var extensionEntitlements = ['squared-fusion-media'];
   var mediaAgentOrgIds = ['mediafusion'];
 
@@ -26,10 +26,10 @@ describe('MediaServiceDescriptor', function () {
       .when('GET', 'l10n/en_US.json')
       .respond({});
   }));
-  /*
-    afterEach(function () {
-      $httpBackend.verifyNoOutstandingRequest();
-    });*/
+
+  afterEach(function () {
+    $httpBackend.verifyNoOutstandingRequest();
+  });
 
   it('should return the service enabled status', function (done) {
     $httpBackend
