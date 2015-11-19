@@ -8,7 +8,8 @@ describe('FeatureToggleService', function () {
   var forUser = true;
   var userId = '1';
   var orgId = '2';
-  var getUserFeatureToggles;
+  var getUserFeatureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
+  var userRegex = /.*\/locus\/api\/v1\/features\/users\.*/;
 
   beforeEach(inject(function (_$httpBackend_, _$q_, _Config_, _Authinfo_, _FeatureToggleService_) {
     httpBackend = _$httpBackend_;
@@ -16,24 +17,11 @@ describe('FeatureToggleService', function () {
     Config = _Config_;
     AuthInfo = _Authinfo_;
     FeatureToggleService = _FeatureToggleService_;
-
-    getUserFeatureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
-
   }));
 
   afterEach(function () {
     httpBackend.verifyNoOutstandingExpectation();
     httpBackend.verifyNoOutstandingRequest();
-  });
-
-  it('should give you an org url if you are calling an org based fn', function () {
-    var orgUrl = FeatureToggleService.getUrl(forOrg, orgId);
-    expect(orgUrl).toContain('rules/' + orgId);
-  });
-
-  it('should give you an user url if you are calling a user based fn', function () {
-    var userUrl = FeatureToggleService.getUrl(forUser, userId);
-    expect(userUrl).toContain('users/' + userId);
   });
 
   it('should verify that you have a user id', function () {
@@ -55,17 +43,21 @@ describe('FeatureToggleService', function () {
   });
 
   it('should return a 3 set array when it is queried by a user', function () {
-    httpBackend.when('GET', FeatureToggleService.getUrl(forUser, userId)).respond(200, getUserFeatureToggles);
+    httpBackend.whenGET(userRegex).respond(200, getUserFeatureToggles);
     FeatureToggleService.getFeaturesForUser(userId).then(function (data) {
-      expect(data.data.developer).toEqual(getUserFeatureToggles.developer);
-      expect(data.data.entitlement).toEqual(getUserFeatureToggles.entitlement);
-      expect(data.data.user).toEqual(getUserFeatureToggles.user);
+      var dev = getUserFeatureToggles.developer[0];
+      var ettlmt = getUserFeatureToggles.entitlement[0];
+      dev.val = dev.val === 'true' ? true : dev.val === 'false' ? false : dev.val;
+      ettlmt.val = ettlmt.val === 'true' ? true : ettlmt.val === 'false' ? false : ettlmt.val;
+      expect(data.developer[0]).toEqual(dev);
+      expect(data.entitlement[0]).toEqual(ettlmt);
+      expect(data.user).toEqual(getUserFeatureToggles.user);
     });
     httpBackend.flush();
   });
 
   it('should return false for a feature if it wasnt returned for a user', function () {
-    httpBackend.when('GET', FeatureToggleService.getUrl(forUser, userId)).respond(200, getUserFeatureToggles);
+    httpBackend.whenGET(userRegex).respond(200, getUserFeatureToggles);
     FeatureToggleService.getFeatureForUser(userId, 'non-existant-feature').then(function (data) {
       expect(data).toBe(false);
     });
@@ -73,7 +65,7 @@ describe('FeatureToggleService', function () {
   });
 
   it('should return accurate value for a feature when queried by a user', function () {
-    httpBackend.when('GET', FeatureToggleService.getUrl(forUser, userId)).respond(200, getUserFeatureToggles);
+    httpBackend.whenGET(userRegex).respond(200, getUserFeatureToggles);
     FeatureToggleService.getFeatureForUser(userId, 'android-add-guest-release').then(function (data) {
       expect(data).toBe(true);
     });

@@ -2,16 +2,15 @@
      name="webexSiteSettings">
 
   <div id="pageTitle"
-       name="pageTitle">
+       name="pageTitle" class="row page-header">
        
-    <div class="row page-header">
-      <div class="page-title small-5 columns">
+      <div class="page-title small-7 columns">
         <span class="title-heading">
           {{siteSettingsObj.pageTitle}}
         </span>
       </div>
     
-      <div class="small-7 columns"
+      <div class="small-5 columns"
            ng-if="siteSettingsObj.viewReady">
            
         <div class="page-option-buttons" ng-controller="ExportUsersCtrl">
@@ -23,52 +22,85 @@
           </button>
         </div>
       </div>
-    </div>
   </div>
 
-  <cs-container>
-    <!-- breadcrumbs -->
-    <ul id="siteSettingsBreadCrumbs"
-        name="siteSettingsBreadCrumbs" 
-        class="breadcrumbs">
-          
-      <li>
-        <a id="siteListCrumb"
-           name="siteListCrumb"
-           ui-sref="site-list"
-           translate="siteList.conferencing">
-        </a>
-      </li>
+    <!-- start of breadcrumbs -->     
+      <ul id="siteSettingsBreadCrumbs"
+          name="siteSettingsBreadCrumbs"      
+          class="breadcrumbs siteSettingsBreadCrumbs" 
+          title="{{'webexCommon.breadcrumbsAltText' | translate}}">
+        <li>
+          <a id="siteListCrumb"
+             name="siteListCrumb"
+             ui-sref="site-list"
+             translate="siteList.conferencing">
+          </a>
+        </li>
 
-      <li class="current"
-          id="siteSettingsCrumb"
-          name="siteSettingsCrumb">
+        <li class="current"
+            id="siteSettingsCrumb"
+            name="siteSettingsCrumb">
           
-        {{siteSettingsObj.pageTitleFull}}
-      </li>
-    </ul>
-    
-    <div ng-if="siteSettingsObj.viewReady">
-      <cs-card-layout>
-        <div ng-include="'modules/webex/siteSettings/siteInfoCard.tpl.html'"></div>
-      </cs-card-layout>
+          {{siteSettingsObj.pageTitleFull}}
+        </li>
+      </ul>
+    <!-- end of breadcrumbs -->
 
-      <cs-card-layout>
-        <div ng-include="'modules/webex/siteSettings/siteSettingCards.tpl.html'"></div>
-      </cs-card-layout>
+    <!-- start of cards loading -->
+    <div ng-if="!siteSettingsObj.viewReady"
+         id="loadingSection"
+         name="loadingSection" >
+         
+      <div id="loadingInprogressSection"
+           name="loadingInprogressSection"
+           ng-if="!siteSettingsObj.hasLoadError" >
+             
+        <br><br><br>
+        <i class="icon icon-spinner icon-3x"></i>
+        <br><br><br>
+      </div>
+      
+      <div id="loadErrSection"
+           name="loadErrSection"
+           ng-if="siteSettingsObj.hasLoadError" >
+                   
+        <div class="nodata-icon" >
+          <i class="icon icon-circle-clock" ></i>
+        </div>
+
+        <div class="nodata-message" >
+          <span translate="webexUserSettingsAccessErrors.defaultAccessError" ></span>
+          <br>
+          <span translate="webexUserSettingsAccessErrors.defaultReloadMsg" ></span>
+        </div>
+      </div>
     </div>
+    <!-- end of cards loading -->
+    
+    <!-- start of card containers -->
+    <div ng-if="siteSettingsObj.viewReady" 
+         id="cardsSection"
+         name="cardsSection">
+           
+     <div class="cs-card-container">
+             <div ng-include="'modules/webex/siteSettings/siteInfoCard.tpl.html'"></div>
+</div>
+     <div class="cs-card-container">
+             <div ng-include="'modules/webex/siteSettings/siteSettingCards.tpl.html'"></div>
+</div>    
+</div>
+    <!-- end of card containers -->
 
     <!-- WebEx site admin cross launch -->
     <p>
       <br>&nbsp;&nbsp;
     
       <a href=""
-         onClick="document.getElementById('hiddenButton').click();">
+         onClick="document.getElementById('hiddenButton').click();" >
 
         Launch&nbsp;WebEx&nbsp;Site&nbsp;Admin
       </a>
     </p>
-  </cs-container>
 </div>
 
 <!-- WebEx site admin cross launch form -->
@@ -87,8 +119,8 @@
          type="hidden"
          value="{{localeParam}}" />
 
-  <input id="siteurl"
-         name="siteurl"
+  <input id="ngxsiteurl"
+         name="ngxsiteurl"
          type="hidden"
          value="{{siteName}}" />
 

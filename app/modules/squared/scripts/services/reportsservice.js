@@ -58,7 +58,8 @@ function ReportsService($http, $q, $rootScope, $location, Storage, Config, Log, 
     getLogInfo: getLogInfo,
     getCallSummary: getCallSummary,
     healthMonitor: healthMonitor,
-    getHealthStatus: getHealthStatus
+    getHealthStatus: getHealthStatus,
+    getOverviewMetrics: getOverviewMetrics
   };
 
   return service;
@@ -115,15 +116,15 @@ function ReportsService($http, $q, $rootScope, $location, Storage, Config, Log, 
     }
   }
 
-  function getTimeCharts(useCache, customerCharts) {
-    var params = {
+  function getTimeCharts(useCache, customerCharts, paramOverrides) {
+    var params = _.assign({
       'intervalCount': 1,
       'intervalType': 'month',
       'spanCount': 1,
       'spanType': 'week',
       'cache': useCache,
       'isCustomerView': true
-    };
+    }, paramOverrides);
 
     for (var chart in customerCharts) {
       getUsageMetrics(customerCharts[chart], params);
@@ -211,6 +212,15 @@ function ReportsService($http, $q, $rootScope, $location, Storage, Config, Log, 
     for (chart in funnelCharts) {
       getUsageMetrics(funnelCharts[chart], chartParams);
     }
+  }
+
+  function getOverviewMetrics(useCache) {
+    var charts = ['calls', 'conversations', 'contentShared'];
+    getTimeCharts(useCache, charts, {
+      intervalType: 'month',
+      intervalCount: 2,
+      spanType: 'month'
+    });
   }
 
   function getLandingMetrics(useCache) {

@@ -1,4 +1,4 @@
-
+<cs-card-layout>
   <cs-card class="full header-background"
            id={{siteSettingsObj.siteInfoCardObj.id}}-card
            name={{siteSettingsObj.siteInfoCardObj.id}}-card>
@@ -17,18 +17,19 @@
               <img src="/images/webex_logo_48px.png" 
                    class="webexlogo"
                    id="webexLogo"
-                   name="webexLogo" />
+                   name="webexLogo"
+                   alt="{{'webexCommon.logoAltText' | translate}}" />
                 
-              <span>
-                &nbsp;WebEx
+              <span xml:lang="en">
+                WebEx
               </span>
             </div>
           </div>
           
           <div class="right-side">                                                    
-            <div class="configure-content">
-              <div align="center">
-                <div translate="webexSiteSettingsLabels.hostAccountsTitle"></div>
+            <div class="configure-card-heading" translate="webexSiteSettingsLabels.hostAccountsTitle"></div>
+             <div class="configure-content">
+              <div class="text-center">
                 
                 <div class="overview-count">
                   {{siteSettingsObj.siteInfoCardObj.licensesUsage.count}}
@@ -37,8 +38,7 @@
                 <div translate="webexSiteSettingsLabels.activeTitle"> </div>
               </div>
                 
-              <div align="center">
-                <div>&nbsp;</div>
+              <div class="text-center">
                 
                 <div class="overview-count">
                   {{siteSettingsObj.siteInfoCardObj.licensesAvailable.count}}
@@ -47,37 +47,39 @@
                 <div translate="webexSiteSettingsLabels.availableTitle"></div>
               </div>
                 
-              <div align="center">
-                <div>&nbsp;</div>
+              <div  class="overview-icon text-center">
                 
                 <a id="siteInfo-siteInformation"
                    name="siteInfo-siteInformation"
-                   ui-sref={{siteSettingsObj.siteInfoCardObj.siteInfoPageObj.uiSref}}>
+                   ui-sref={{siteSettingsObj.siteInfoCardObj.siteInfoPageObj.uiSref}}
+                   title="{{siteSettingsObj.siteInfoCardObj.siteInfoPageObj.label}}">
                    
                   <i class="icon icon-circle-webex"></i>
                 </a>
                 
                 <a id={{siteSettingsObj.siteInfoCardObj.siteInfoPageObj.id}}
                    name={{siteSettingsObj.siteInfoCardObj.siteInfoPageObj.id}}
-                   ui-sref={{siteSettingsObj.siteInfoCardObj.siteInfoPageObj.uiSref}}>
+                   ui-sref={{siteSettingsObj.siteInfoCardObj.siteInfoPageObj.uiSref}}
+                   href="">
                     
                   {{siteSettingsObj.siteInfoCardObj.siteInfoPageObj.label}}
                 </a>
               </div>
               
-              <div align="center">
-                <div>&nbsp;</div>
-                
+              <div  class="overview-icon text-center">
+                              
                 <a id="siteInfo-siteFeatures"
                    name="siteInfo-siteFeatures"
-                   ui-sref={{siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.uiSref}}>
+                   ui-sref={{siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.uiSref}}
+                   title="{{siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.label}}">
                    
                   <i class="icon icon-circle-star"></i>
                 </a>
                 
                 <a id={{siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.id}}
                    name={{siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.id}}
-                   ui-sref={{siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.uiSref}}>
+                   ui-sref={{siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.uiSref}}
+                   href="">
                   
                   {{siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.label}}                  
                 </a>
@@ -88,3 +90,4 @@
       </section>
     </article>
   </cs-card>
+</cs-card-layout>

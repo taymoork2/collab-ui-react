@@ -1,9 +1,9 @@
 <div class="huron-settings">
-  <div class="loading" ng-if="settings.processing">
+  <div class="loading" ng-if="settings.loading">
     <i class="icon icon-spinner"></i>
   </div>
 
-  <form novalidate name="settings.form">
+  <form novalidate name="settings.form" ng-if="!settings.loading">
     <div class="save-section clearfix" ng-class="{invisible: !settings.form.$dirty}">
       <p class="left" translate="callerIdPanel.saveConfirmation"></p>
       <div class="right">
@@ -12,10 +12,28 @@
       </div>
     </div>
     <div class="huron-settings-main-container">
-      <div class="column service-setup-container" ng-if="!settings.processing">
-        <formly-form model="settings.model" fields="settings.callerIdFields" form="settings.form"></formly-form>
+      <div class="column service-setup-container">
+        <formly-form model="settings.model" fields="settings.leftPanelFields" form="settings.form"></formly-form>
       </div>
       <div class="column service-setup-container">
+        <formly-form model="settings.model" fields="settings.rightPanelFields" form="settings.form"></formly-form>
+        <div class="form-group service-setup" ng-hide="!settings.hasVoicemailService">
+          <label for="companyVoicemail" translate="serviceSetupModal.companyVoicemail"></label>
+          <p translate="serviceSetupModal.companyVoicemailDescription"></p>
+          <div class="service-setup-company-voicemail row full">
+            <cs-select class="select-dropdown"
+              id="companyVoicemail"
+              name="companyVoicemail"
+              ng-model="settings.pilotNumberSelected"
+              options="settings.externalNumberPoolBeautified"
+              wait-time="0"
+              input-placeholder="settings.inputPlaceholder"
+              labelfield="pattern"
+              valuefield="uuid"
+              filter="true">
+            </cs-select>
+          </div>
+        </div>
       </div>
     </div>
   </form>

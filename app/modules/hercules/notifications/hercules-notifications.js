@@ -24,13 +24,7 @@
     };
 
     vm.handleClick = function () {
-      if (vm.filteredNotifications().length > 0) {
-        vm.showNotifications = !vm.showNotifications;
-      } else {
-        $timeout(function () {
-          vm.showNotifications = !vm.showNotifications;
-        }, 2000);
-      }
+      vm.showNotifications = !vm.showNotifications;
     };
 
     vm.amountBubbleType = function () {

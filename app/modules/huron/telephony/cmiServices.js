@@ -121,10 +121,10 @@
   })
 
   .factory('HuntGroupServiceV2', function ($resource, HuronConfig) {
-    var baseUrl = HuronConfig.getMockHgUrl();
-    //var baseUrl = HuronConfig.getCmiV2Url();
+    //var baseUrl = HuronConfig.getMockHgUrl();
+    var baseUrl = HuronConfig.getCmiV2Url();
     return $resource(baseUrl + '/customers/:customerId/features/huntgroups/:huntGroupId', {
-      secret: 'sunlight', // TODO: Remove this parameter when Mock is replaced with CmiV2.
+      //secret: 'sunlight', // TODO: Remove this parameter when Mock is no more needed.
       customerId: '@customerId',
       huntGroupId: '@huntGroupId'
     }, {

@@ -6,7 +6,7 @@
     .controller('ServiceSetupCtrl', ServiceSetupCtrl);
 
   /* @ngInject*/
-  function ServiceSetupCtrl($q, $state, ServiceSetup, HttpUtils, Notification, Authinfo, $translate, HuronCustomer, ValidationService, ExternalNumberPool) {
+  function ServiceSetupCtrl($q, $state, ServiceSetup, HttpUtils, Notification, Authinfo, $translate, HuronCustomer, ValidationService, ExternalNumberPool, DialPlanService) {
     var vm = this;
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
@@ -60,6 +60,8 @@
     vm.hasVoiceService = false;
     vm.hasSites = false;
     vm.customer = undefined;
+    vm.hideFieldInternalNumberRange = false;
+    vm.hideFieldSteeringDigit = false;
 
     vm.validations = {
       greaterThan: function (viewValue, modelValue, scope) {
@@ -97,7 +99,7 @@
             // Skip current range under validation if it's valid, otherwise we get into a validation loop
             if ((beginNumber === vm.model.numberRanges[i].beginNumber) && (endNumber === vm.model.numberRanges[i].endNumber)) {
               continue;
-            } else if (isOverlapping(beginNumber, endNumber, vm.model.numberRanges[i].beginNumber, vm.model.numberRanges[i].endNumber)) {
+            } else if (ServiceSetup.isOverlapping(beginNumber, endNumber, vm.model.numberRanges[i].beginNumber, vm.model.numberRanges[i].endNumber)) {
               result = false;
             }
           }
@@ -188,6 +190,9 @@
         expressionProperties: {
           'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
             return vm.hasSites;
+          },
+          'hide': function () {
+            return vm.hideFieldSteeringDigit;
           }
         }
       }, {
@@ -367,6 +372,11 @@
             }
           }]
         }]
+      },
+      expressionProperties: {
+        'hide': function () {
+          return vm.hideFieldInternalNumberRange;
+        }
       }
     }, {
       type: 'button',
@@ -382,7 +392,13 @@
         'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
           return vm.form.$invalid;
         },
-        'hide': 'model.displayNumberRanges.length > 9'
+        'hide': function () {
+          if (vm.model.displayNumberRanges.length > 9) {
+            return true;
+          } else {
+            return vm.hideFieldInternalNumberRange;
+          }
+        }
       }
     }];
 
@@ -413,10 +429,6 @@
     vm.loadExternalNumberPool = loadExternalNumberPool;
     vm.initNext = initNext;
 
-    function isOverlapping(x1, x2, y1, y2) {
-      return Math.max(x1, y1) <= Math.min(x2, y2);
-    }
-
     function initServiceSetup() {
       var errors = [];
       return HuronCustomer.get().then(function (customer) {
@@ -428,14 +440,16 @@
             vm.hasVoiceService = true;
           }
         });
+      }).catch(function (response) {
+        errors.push(Notification.errorResponse(response, 'serviceSetupModal.customerGetError'));
       }).then(function () {
         // TODO BLUE-1221 - make /customer requests synchronous until fixed
         return initTimeZone();
       }).then(function () {
         // TODO BLUE-1221 - make /customer requests synchronous until fixed
         return listInternalExtensionRanges();
-      }).catch(function (response) {
-        errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.customerGetError'));
+      }).then(function () {
+        return setServiceValues();
       }).then(function () {
         return ServiceSetup.listSites().then(function () {
           if (ServiceSetup.sites.length !== 0) {
@@ -697,7 +711,7 @@
             deferreds.push(promise);
           }
 
-          if (angular.isArray(vm.model.displayNumberRanges)) {
+          if (angular.isArray(vm.model.displayNumberRanges) && (vm.hideFieldInternalNumberRange !== true)) {
             angular.forEach(vm.model.displayNumberRanges, function (internalNumberRange) {
               if (angular.isUndefined(internalNumberRange.uuid)) {
                 promise = ServiceSetup.createInternalNumberRange(internalNumberRange)
@@ -723,6 +737,32 @@
         });
 
       }
+    }
+
+    function setServiceValues() {
+      DialPlanService.getCustomerDialPlanDetails(Authinfo.getOrgId()).then(function (response) {
+        if (response.extensionGenerated === 'true') {
+          vm.hideFieldInternalNumberRange = true;
+        } else {
+          vm.hideFieldInternalNumberRange = false;
+        }
+        if (response.steeringDigitRequired === 'true') {
+          vm.hideFieldSteeringDigit = false;
+        } else {
+          vm.hideFieldSteeringDigit = true;
+          vm.model.site.steeringDigit = undefined;
+        }
+        if (response.supportSiteSteeringDigit !== 'true') {
+          vm.model.site.siteSteeringDigit = undefined;
+        }
+        if (response.supportSiteCode !== 'true') {
+          vm.model.site.siteCode = undefined;
+        }
+      }).catch(function (response) {
+        vm.hideFieldInternalNumberRange = false;
+        vm.hideFieldSteeringDigit = false;
+        Notification.errorResponse(response, 'serviceSetupModal.customerDialPlanDetailsGetError');
+      });
     }
 
     HttpUtils.setTrackingID().then(function () {

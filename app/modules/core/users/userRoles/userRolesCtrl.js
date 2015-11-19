@@ -15,31 +15,12 @@ function UserRolesCtrl($scope, $translate, $stateParams, $state, SessionStorage,
   $scope.getMessengerSyncStatus = getMessengerSyncStatus;
   $scope.rolesObj = {};
 
-  var inArray = function (array, el) {
-    for (var i = array.length; i--;) {
-      if (array[i] === el) {
-        return true;
-      }
-    }
-    return false;
-  };
-
-  var isEqualArrays = function (arr1, arr2) {
-    if (arr1.length !== arr2.length) {
-      return false;
-    }
-    for (var i = arr1.length; i--;) {
-      if (!inArray(arr2, arr1[i])) {
-        return false;
-      }
-    }
-    return true;
-  };
-
-  var checkMainRoles = function (roles) {
+  var checkMainRoles = function () {
     if ($scope.roles) {
-      if (isEqualArrays(roles, _.intersection($scope.roles, roles))) {
+      if (_.includes($scope.roles, Config.backend_roles.full_admin)) {
         return 1;
+      } else if (_.includes($scope.roles, Config.backend_roles.helpdesk)) {
+        return 3;
       } else {
         return 2;
       }
@@ -72,8 +53,7 @@ function UserRolesCtrl($scope, $translate, $stateParams, $state, SessionStorage,
     getMessengerSyncStatus();
   }
 
-  $scope.rolesObj.adminRadioValue = checkMainRoles([Config.backend_roles.full_admin]);
-  //$scope.userAdminValue = checkSubRoles(Config.backend_roles.full_admin, Config.backend_roles.all);
+  $scope.rolesObj.adminRadioValue = checkMainRoles();
   $scope.rolesObj.salesAdminValue = checkSubRoles(Config.backend_roles.sales);
   $scope.rolesObj.billingAdminValue = checkSubRoles(Config.backend_roles.billing);
   $scope.rolesObj.supportAdminValue = checkSubRoles(Config.backend_roles.support);
@@ -100,6 +80,13 @@ function UserRolesCtrl($scope, $translate, $stateParams, $state, SessionStorage,
     id: 'partialAdmin'
   };
 
+  $scope.helpdesk = {
+    label: $translate.instant('rolesPanel.helpdesk'),
+    value: 3,
+    name: 'helpdesk',
+    id: 'helpdesk'
+  };
+
   $scope.sipAddr = "";
   if ($scope.currentUser.sipAddresses) {
     for (var x = 0; x < $scope.currentUser.sipAddresses.length; x++) {
@@ -121,6 +108,10 @@ function UserRolesCtrl($scope, $translate, $stateParams, $state, SessionStorage,
     return SessionStorage.get('partnerOrgId');
   };
 
+  $scope.isNotProd = function () {
+    return !Config.isProd();
+  };
+
   function resetForm() {
     $scope.rolesEdit.form.$setPristine();
     $scope.rolesEdit.form.$setUntouched();
@@ -128,7 +119,7 @@ function UserRolesCtrl($scope, $translate, $stateParams, $state, SessionStorage,
 
   $scope.resetRoles = function () {
     $state.go('user-overview.userProfile');
-    $scope.rolesObj.adminRadioValue = checkMainRoles([Config.backend_roles.full_admin]);
+    $scope.rolesObj.adminRadioValue = checkMainRoles();
     if ($scope.rolesObj.adminRadioValue !== 2) {
       $scope.clearCheckboxes();
     }
@@ -138,6 +129,7 @@ function UserRolesCtrl($scope, $translate, $stateParams, $state, SessionStorage,
   Orgservice.getOrg(function (data, status) {
     if (data.success) {
       $scope.dirsyncEnabled = data.dirsyncEnabled;
+      $scope.delegatedAdministration = data.delegatedAdministration;
     } else {
       Log.debug('Get existing org failed. Status: ' + status);
     }
@@ -148,7 +140,8 @@ function UserRolesCtrl($scope, $translate, $stateParams, $state, SessionStorage,
     var choice = $scope.rolesObj.adminRadioValue;
     var roles = [];
 
-    if ($scope.rolesObj.adminRadioValue === 0) {
+    switch ($scope.rolesObj.adminRadioValue) {
+    case 0: // No admin
       for (var roleNames in Config.roles) {
         var inactiveRoleState = {
           'roleName': Config.roles[roleNames],
@@ -156,30 +149,19 @@ function UserRolesCtrl($scope, $translate, $stateParams, $state, SessionStorage,
         };
         roles.push(inactiveRoleState);
       }
+      break;
+    case 1: // Full admin
+      roles.push({
+        'roleName': Config.roles.full_admin,
+        'roleState': Config.roleState.active
+      });
 
-    } else {
-      if ($scope.rolesObj.adminRadioValue === 1) {
-        roles.push({
-          'roleName': Config.roles.full_admin,
-          'roleState': Config.roleState.active
-        });
-
-        roles.push({
-          'roleName': Config.roles.all,
-          'roleState': Config.roleState.inactive
-        });
-      } else {
-        roles.push({
-          'roleName': Config.roles.full_admin,
-          'roleState': checkPartialRoles($scope.userAdminValue)
-        });
-
-        roles.push({
-          'roleName': Config.roles.all,
-          'roleState': Config.roleState.inactive
-        });
-      }
-
+      roles.push({
+        'roleName': Config.roles.all,
+        'roleState': Config.roleState.inactive
+      });
+      break;
+    case 2: // Some admin roles
       roles.push({
         'roleName': Config.roles.sales,
         'roleState': checkPartialRoles($scope.rolesObj.salesAdminValue)
@@ -204,6 +186,18 @@ function UserRolesCtrl($scope, $translate, $stateParams, $state, SessionStorage,
         'roleName': Config.roles.application,
         'roleState': checkPartialRoles($scope.rolesObj.cloudAdminValue)
       });
+      break;
+    case 3: // Helpdesk
+      roles.push({
+        'roleName': Config.roles.helpdesk,
+        'roleState': Config.roleState.active
+      });
+
+      roles.push({
+        'roleName': Config.roles.all,
+        'roleState': Config.roleState.inactive
+      });
+      break;
     }
 
     Userservice.patchUserRoles($scope.currentUser.userName, $scope.currentUser.displayName, roles, function (data, status) {

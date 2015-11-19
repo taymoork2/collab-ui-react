@@ -68,16 +68,30 @@
 
 }
 
-.devices, .devices-overview {
-  .needs-activation {
-    opacity: .3;
+.sq-devices-page-overview {
+  .panel-buttons {
+    margin-top: 10px;
   }
-  i.device-status {
-    padding-right: 10px;
+}
+
+.modal-success, .modal-warning {
+  padding: 10px 20px;
+  margin: 0 30px;
+  color: white;
+  display: flex;
+  align-items: center;
+  i {
+    padding-right: 15px;
+    font-size: 1.5rem;
   }
-  td {
-    font-family: "CiscoSansTT Light", Helvetica, Arial, sans-serif, sans-serif;
-  }
+}
+
+.modal-success {
+  background-color: $color-cta-base;
+}
+
+.modal-warning {
+  background-color: $color-attention-base;
 }
 
 /* widgets */
@@ -125,6 +139,15 @@
   }
   .btn {
     transition: none;
+  }
+}
+
+#remoteSupportModal {
+  h3 {
+    display: flex;
+  }
+  input {
+    margin-right: 15px;
   }
 }
 

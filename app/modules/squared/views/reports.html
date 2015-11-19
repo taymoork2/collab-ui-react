@@ -1,28 +1,12 @@
 <div class="small-12 columns">
   <div class="row">
     <div ng-click="manualReload(false)" class="overview-updated columns small-12" id="reports-click-div">
-      <cr-reload-data id="reportsRefreshData" last-updated-time="reportsRefreshTime">
+      <cr-reload-data id="reportsRefreshData" last-updated-time="reportsRefreshTime" ng-if="!showWebexReports">
       </cr-reload-data>
     </div>
   </div>
   <!-- dont show if there is only one option, aka if webex does not show -->
-<div class="partner-reports" ng-if="webexOptions.length > 0">
-  <div class="reports-header row page-header">
-    <div class="page-title columns medium-6">
-      <h2 class="title-heading" translate="reportsPage.pageTitle"></h2>
-      <div class="sync">
-        <div class="report-filter-link">
-          <a id="engagementReports" class="report-link" translate="reportsPage.engagement" ui-sref="reports"
-            ng-class="showEngagement ? 'selected-link' : 'not-selected'"></a>
-        </div>
-        <div class="report-filter-link" ng-if="webexOptions.length > 0">
-          <a id="webexReports" class="report-link" translate="reportsPage.webex" ui-sref="webex-reports"
-            ng-class="showWebexReports ? 'selected-link' : 'not-selected'"></a>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<cs-page-header id="reportsPanel" title="repPageHeader_pageTitle" back="repPageHeader_back" tabs="repPageHeader_tabs"></cs-page-header>
 
   <div class="row" ng-show="showEngagement">
     <div class="all-reports columns small-12">
@@ -81,5 +65,21 @@
     </div>
   </div>
 
-  <div ng-if="showWebexReports" ng-include="'modules/webex/siteReports/siteReports.tpl.html'"></div>
+  <!-- WebEx reports content -->
+  <div ng-show="showWebexReports">
+    <!-- webex siteUrl dropdown list -->
+    <div class="row"  
+         ng-show="webexOptions.length > 1" >
+         
+      <div class="large-4 columns">
+        <cs-select ng-model="webexSelected" 
+                   options="webexOptions" 
+                   on-change-fn="updateWebexReports()" >
+        </cs-select>
+      </div>
+    </div>
+
+    <!-- webex site reports index -->
+    <div ng-include="'modules/webex/siteReports/siteReports.tpl.html'"></div>
+  </div>
 </div>

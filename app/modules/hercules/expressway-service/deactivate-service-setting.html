@@ -1,12 +1,15 @@
-<h5>
-  Deactivate Service
+<h5 translate="{{'hercules.settings.deactivateServiceHeading'}}">
 </h5>
 
-<p>
-  Deactivating a service (requires another confirm step) will remove any service related functionality from your
-  users. Additional steps to remove the service from your on premise devices are required.
-  See documentation for guidance and further instructions. <br>
-  <button class="button alert"
-          ng-click="expresswayServiceSettings.confirmDisable(expresswayServiceSettings.serviceId)">Deactivate
-  </button>
+<p translate="{{'hercules.settings.deactivateService'}}">
 </p>
+
+<p>
+  Visit <a href="http://www.cisco.com/go/hybrid-services" target="_blank">Help Central</a> whenever you need further information about Hybrid Services.
+</p>
+
+<button class="button alert"
+        ng-click="expresswayServiceSettings.confirmDisable(expresswayServiceSettings.serviceId)"
+        translate="{{'hercules.settings.deactivate'}}">
+</button>
+

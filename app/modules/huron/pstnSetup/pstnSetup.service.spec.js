@@ -12,6 +12,7 @@ describe('Service: PstnSetupService', function () {
   var customerCarrierList = getJSONFixture('huron/json/pstnSetup/customerCarrierList.json');
   var customerOrderList = getJSONFixture('huron/json/pstnSetup/customerOrderList.json');
   var customerOrder = getJSONFixture('huron/json/pstnSetup/customerOrder.json');
+  var carrierIntelepeer = getJSONFixture('huron/json/pstnSetup/carrierIntelepeer.json');
 
   var customerPayload = {
     uuid: customerId,
@@ -90,20 +91,12 @@ describe('Service: PstnSetupService', function () {
 
   it('should retrieve a customer\'s carrier', function () {
     $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/carriers').respond(customerCarrierList);
-    var promise = PstnSetupService.getCarrierId(customerId, 'INTELEPEER');
-    promise.then(function (value) {
-      expect(value).toEqual('4f5f5bf7-0034-4ade-8b1c-db63777f062c');
-    });
-    $httpBackend.flush();
-  });
-
-  it('should reject promise if carrier is not found', function () {
-    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/carriers').respond([]);
-    var promise = PstnSetupService.getCarrierId(customerId, 'INTELEPEER');
-    promise.then(function (response) {
-      expect(response).toBeUndefined();
-    }, function (response) {
-      expect(response).toEqual('carrier not found');
+    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/carriers/' + carrierId).respond(carrierIntelepeer);
+    var promise = PstnSetupService.listCustomerCarriers(customerId);
+    promise.then(function (carrierList) {
+      expect(carrierList).toContain(jasmine.objectContaining({
+        vendor: 'INTELEPEER'
+      }));
     });
     $httpBackend.flush();
   });

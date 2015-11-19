@@ -85,13 +85,34 @@
             var totalRegistered = 0;
 
             if (angular.isArray(customer.data)) {
-              angular.forEach(customer.data, function (index) {
-                var activeUsers = parseInt(index.details.activeUsers);
-                var totalRegisteredUsers = parseInt(index.details.totalRegisteredUsers);
-                if (activeUsers !== 0 && totalRegisteredUsers !== 0) {
-                  var modifiedDate = moment(index.date).add(1, 'day').format(monthFormat);
+              angular.forEach(customer.data, function (item, index, array) {
+                var activeUsers = parseInt(item.details.activeUsers);
+                var totalRegisteredUsers = parseInt(item.details.totalRegisteredUsers);
+
+                // temporary fix for when totalRegisteredUsers equals -1 due to errors recording the number 
+                if (totalRegisteredUsers < 0) {
+                  var previousTotal = 0;
+                  var nextTotal = 0;
+                  if (index !== 0) {
+                    previousTotal = parseInt(array[index - 1].details.totalRegisteredUsers);
+                  }
+                  if (index < (array.length - 1)) {
+                    nextTotal = parseInt(array[index + 1].details.totalRegisteredUsers);
+                  }
+
+                  if (previousTotal < activeUsers && nextTotal < activeUsers) {
+                    totalRegisteredUsers = activeUsers;
+                  } else if (previousTotal > nextTotal) {
+                    totalRegisteredUsers = previousTotal;
+                  } else {
+                    totalRegisteredUsers = nextTotal;
+                  }
+                }
+
+                if (activeUsers !== 0 || totalRegisteredUsers !== 0) {
+                  var modifiedDate = moment.tz(item.date, timezone).add(1, 'day').format(monthFormat);
                   if (time.value === 0 || time.value === 1) {
-                    modifiedDate = moment(index.date).add(1, 'day').format(dayFormat);
+                    modifiedDate = moment.tz(item.date, timezone).add(1, 'day').format(dayFormat);
                   }
 
                   graphData.push({
@@ -99,7 +120,7 @@
                     totalRegisteredUsers: totalRegisteredUsers,
                     percentage: Math.round((activeUsers / totalRegisteredUsers) * 100),
                     modifiedDate: modifiedDate,
-                    date: index.date
+                    date: item.date
                   });
 
                   totalActive += activeUsers;
@@ -143,7 +164,11 @@
     }
 
     function returnErrorCheck(error, debug, message, returnItem) {
-      if (error.status !== 0) {
+      if (error.status === 401 || error.status === 403) {
+        Log.debug('User not authorized to access reports.  Status: ' + error.status);
+        Notification.notify([$translate.instant('reportsPage.unauthorizedError')], 'error');
+        return returnItem;
+      } else if (error.status !== 0) {
         Log.debug(debug + '  Status: ' + error.status + ' Response: ' + error.message);
         Notification.notify([message], 'error');
         return returnItem;
@@ -319,8 +344,14 @@
       };
 
       if (time.value === 0) {
+        var offset = 1;
+        if (moment.tz(mostRecent, timezone).format(dayFormat) === moment().tz(timezone).format(dayFormat)) {
+          offset = 0;
+        }
+
         for (var i = 6; i >= 0; i--) {
-          dataPoint.modifiedDate = moment().subtract(i + 1, 'day').format(dayFormat);
+          dataPoint.modifiedDate = moment().tz(timezone).subtract(i + offset, 'day').format(dayFormat);
+          dataPoint.date = moment().tz(timezone).subtract(i + offset, 'day').format();
           graph.push(angular.copy(dataPoint));
         }
       } else if (time.value === 1) {
@@ -332,12 +363,14 @@
         }
 
         for (var x = 3; x >= 0; x--) {
-          dataPoint.modifiedDate = moment().startOf('week').subtract(dayOffset + (x * 7), 'day').format(dayFormat);
+          dataPoint.modifiedDate = moment().tz(timezone).startOf('week').subtract(dayOffset + (x * 7), 'day').format(dayFormat);
+          dataPoint.date = moment().tz(timezone).startOf('week').subtract(dayOffset + (x * 7), 'day').format();
           graph.push(angular.copy(dataPoint));
         }
       } else {
         for (var y = 2; y >= 0; y--) {
-          dataPoint.modifiedDate = moment().subtract(y, 'month').startOf('month').format(monthFormat);
+          dataPoint.modifiedDate = moment().tz(timezone).subtract(y, 'month').startOf('month').format(monthFormat);
+          dataPoint.date = moment().tz(timezone).subtract(y, 'month').startOf('month').format();
           graph.push(angular.copy(dataPoint));
         }
       }
@@ -420,7 +453,7 @@
               var poorSum = parseInt(index.details.poorQualityDurationSum);
 
               if (totalSum > 0 || goodSum > 0 || fairSum > 0 || poorSum > 0) {
-                var modifiedDate = moment(index.date).format(monthFormat);
+                var modifiedDate = moment.tz(index.date, timezone).format(monthFormat);
                 if (time.value === 0 || time.value === 1) {
                   modifiedDate = moment.tz(index.date, timezone).format(dayFormat);
                 }
@@ -441,6 +474,11 @@
               angular.forEach(graph, function (index) {
                 graphBase = combineQualityGraphs(graphBase, index);
               });
+
+              if (time.value === 0) {
+                graphBase = setDates(graphBase);
+              }
+
               return graphBase;
             }
           }
@@ -452,6 +490,15 @@
         });
         return returnErrorCheck(error, 'Loading call quality data for customer ' + customer.label + ' failed.', errorMessage, []);
       });
+    }
+
+    function setDates(graphData) {
+      angular.forEach(graphData, function (item, index, array) {
+        var date = moment.tz(item.date, timezone).subtract(1, 'day').format();
+        item.modifiedDate = moment.tz(date, timezone).format(dayFormat);
+      });
+
+      return graphData;
     }
 
     function combineQualityGraphs(graph, option) {

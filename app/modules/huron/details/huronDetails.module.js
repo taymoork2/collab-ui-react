@@ -19,6 +19,11 @@
         template: '<cs-toggle-switch ng-model="model[options.key]" toggle-id="model[options.key]" name="toggleSwitch"></cs-toggle-switch>',
         wrapper: commonWrappers
       });
+      formlyConfigProvider.setType({
+        name: 'icon-button',
+        template: '<i ng-class="to.btnClass" ng-click="to.onClick(options, this)"></i>',
+        wrapper: commonWrappers
+      });
     }
   );
 

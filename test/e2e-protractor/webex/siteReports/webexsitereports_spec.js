@@ -34,6 +34,10 @@ describe('WebEx site reports iframe', function () {
     utils.wait(sitereports.webexSiteReportsPanel);
   });
 
+  it('should not see last sync text or link', function () {
+    expect(sitereports.lastSyncElement.isPresent()).toBeFalsy();
+  });
+
   it('click on common reports meetings in progress link and should navigate to the correct site report', function () {
     utils.click(sitereports.webexCommonMeetingsInProgressLink);
     utils.wait(sitereports.webexReportCrumb2);

@@ -1,9 +1,14 @@
-<h5>SIP Domain</h5>
+<h5 translate="{{'hercules.settings.call.sipDomainHeading'}}">
+</h5>
 
+<p translate="{{'hercules.settings.call.sipDomain'}}">
+</p>
+
+</p>
 <form ng-submit="expresswayServiceSettings.updateSipDomain()">
   <input type="text"
        ng-disabled="expresswayServiceSettings.savingSip"
-       placeholder="SIP domain or static host name / IP address, for example, yourdomain.com"
+       placeholder="{{'hercules.settings.call.sipDomainPlaceholder' | translate}} "
        class="form-control"
        id="sipDomain" type="text" ng-model="expresswayServiceSettings.org.sipDomain"/>
 </form>

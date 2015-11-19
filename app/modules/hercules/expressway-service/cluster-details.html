@@ -31,9 +31,6 @@
         <td translate="hercules.softwareUpgrade.newVersion">New Version</td>
         <td><span>{{expresswayClusterDetails.selectedService().not_approved_package.version}}</span></td>
       </tr>
-      <tr ng-if="!expresswayClusterDetails.selectedService().software_upgrade_available">
-        <td colspan="2" translate="hercules.softwareUpgrade.noNewAvailable"></td>
-      </tr>
       </tbody>
     </table>
     <button class="button secondary"

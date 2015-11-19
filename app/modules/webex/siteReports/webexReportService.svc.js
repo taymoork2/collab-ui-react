@@ -26,7 +26,7 @@ angular.module('WebExReports').service('WebexReportService', [
     //the above self is overloaded in places.
     var uself = this;
 
-    var loc = $translate.use().replace("_", "-");
+    //var loc = $translate.use().replace("_", "-");
 
     var common_reports_pageids = ["meeting_in_progess", "meeting_usage",
       "recording_usage",
@@ -86,7 +86,15 @@ angular.module('WebExReports').service('WebexReportService', [
       "training_usage": "tc_usage"
     };
 
-    var reverseMapping = function (mapping) {
+    /*var pinnnedItems = ["meeting_usage", "attendee", "event_center_overview",
+      "support_center_allocation_queue"
+    ];*/
+
+    var pinnnedItems = ["meeting_in_progess", "training_usage", "event_center_overview",
+      "support_center_support_sessions", "remote_access_computer_usage"
+    ];
+
+    this.reverseMapping = function (mapping) {
       var keys = [];
       for (var key in mapping) {
         if (mapping.hasOwnProperty(key)) {
@@ -102,9 +110,7 @@ angular.module('WebExReports').service('WebexReportService', [
       return reversedMap;
     };
 
-    this.reverseMapping = reverseMapping;
-
-    var pageid_to_navItemId_mapping_reversed = reverseMapping(pageid_to_navItemId_mapping);
+    var pageid_to_navItemId_mapping_reversed = this.reverseMapping(pageid_to_navItemId_mapping);
     this.pageid_to_navItemId_mapping_reversed = pageid_to_navItemId_mapping_reversed;
 
     //TODO: remove
@@ -157,6 +163,12 @@ angular.module('WebExReports').service('WebexReportService', [
           "})";
       };
       this.uisrefString = this.toUIsrefString();
+      //that is always the first link if it appears with other links in a card
+      this.isPinned = function () {
+        var rid = this.reportPageId;
+        var idx = pinnnedItems.indexOf(rid);
+        return idx !== -1;
+      };
     };
 
     this.instantiateUIsref = function (theUrl, rid, siteUrl) {
@@ -175,12 +187,13 @@ angular.module('WebExReports').service('WebexReportService', [
 
     this.getUISrefs = getUISrefs;
 
-    var ReportsSection = function (sectionName, siteUrl, reportLinks, categoryName) {
+    var ReportsSection = function (sectionName, siteUrl, reportLinks, categoryName, lang) {
       var self = this;
       this.section_name = sectionName;
       this.site_url = siteUrl;
       this.report_links = reportLinks;
       this.category_Name = categoryName;
+      this.lang = lang;
       this.section_name_translated = $translate.instant("webexSiteReports." + this.section_name);
       //We have to rewrite this with the actual uirefs with proper reportids
       //right now I've hardcoded as reportID.
@@ -208,12 +221,24 @@ angular.module('WebExReports').service('WebexReportService', [
         var theComparator = function (aRef, bRef) {
           var atranslatedString = aRef.reportPageId_translated;
           var btranslatedString = bRef.reportPageId_translated;
-          //var loc = uself.locale;
+          var loc = $translate.use().replace("_", "-");
           var compareResult = atranslatedString.localeCompare(btranslatedString, loc);
           return compareResult;
         };
         refs.sort(theComparator);
       };
+      this.doPin = function () {
+        if (self.isNotEmpty()) {
+          var pinnedA = self.uisrefs.filter(function (ref) {
+            return ref.isPinned();
+          });
+          var notPinnedA = self.uisrefs.filter(function (ref) {
+            return !ref.isPinned();
+          });
+          self.uisrefs = pinnedA.concat(notPinnedA);
+        }
+      };
+
     };
 
     this.ReportsSection = ReportsSection;
@@ -235,13 +260,13 @@ angular.module('WebExReports').service('WebexReportService', [
       var common_reports = new ReportsSection("common_reports", siteUrl, ["/x/y/z", "/u/io/p"],
         "CommonReports");
       var event_center = new ReportsSection("event_center", siteUrl, ["/u/y/z", "www.yahoo.com"],
-        "EC");
+        "EC", "en");
       var support_center = new ReportsSection("support_center", siteUrl, ["/u/y/z", "www.yahoo.com"],
-        "SC");
+        "SC", "en");
       var training_center = new ReportsSection("training_center", siteUrl, ["/u/y/z", "www.yahoo.com"],
-        "TC");
+        "TC", "en");
       var remote_access = new ReportsSection("remote_access", siteUrl, ["/u/y/z", "www.yahoo.com"],
-        "RA");
+        "RA", "en");
 
       var uisrefsArray = [];
 
@@ -277,6 +302,8 @@ angular.module('WebExReports').service('WebexReportService', [
 
       if (remote_access.isNotEmpty()) {
         support_center.addSubsection(remote_access);
+        remote_access.sort();
+        remote_access.doPin();
       }
 
       var sections = [common_reports, training_center, support_center,
@@ -284,6 +311,7 @@ angular.module('WebExReports').service('WebexReportService', [
       ];
       sections.forEach(function (sec) {
         sec.sort();
+        sec.doPin();
       });
 
       var repts = new Reports();

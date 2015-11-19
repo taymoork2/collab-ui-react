@@ -1,10 +1,13 @@
 [{
   "uuid": "4f5f5bf7-0034-4ade-8b1c-db63777f062c",
   "name": "INTELEPEER",
-  "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c"
+  "apiExists": true,
+  "vendor": "INTELEPEER",
+  "url": "https://terminus.huron-int.com/api/v1/carriers/4f5f5bf7-0034-4ade-8b1c-db63777f062c"
 }, {
   "uuid": "5c898145-e508-46e8-a7fd-3dcfcc21ed40",
   "name": "TATA",
-  "swivel": true,
-  "url": "https://terminus.huron-int.com/api/v1/customers/744d58c5-9205-47d6-b7de-a176e3ca431f/carriers/5c898145-e508-46e8-a7fd-3dcfcc21ed40"
+  "apiExists": false,
+  "vendor": "TATA",
+  "url": "https://terminus.huron-int.com/api/v1/carriers/5c898145-e508-46e8-a7fd-3dcfcc21ed40"
 }]

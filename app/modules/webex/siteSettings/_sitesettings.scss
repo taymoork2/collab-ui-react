@@ -3,21 +3,15 @@
 .webexlogo {
     vertical-align:text-bottom;
 }
-.configure-card{
-    div {
-        &.right-side {
-            i {
-                @include vr-spacing(pt, 1);
-                font-size: rem(48);
-                line-height: 1;
-                display: flex;
-                flex-direction: column;
-                cursor: pointer;
-                color: $text-color;
-                &:hover {
-                  color: $anchor-font-color-hover;
-                }
-            }
-        }
-    }
+
+#webexSiteSettings {
+  .page-option-buttons {
+      padding-right: $page-side-padding;
+  }
 }
+
+.siteSettingsBreadCrumbs {
+  padding-left: $page-side-padding;
+  padding-top: 0px;
+}
+

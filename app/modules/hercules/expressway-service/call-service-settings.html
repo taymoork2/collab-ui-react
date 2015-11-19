@@ -2,22 +2,22 @@
   <div class="row">
     <div class="large-4 columns">
 
-      <h5>
-        Feature Settings
+      <h5 translate="{{'hercules.settings.call.featureHeading'}}">
       </h5>
-      <p>
-        Specify the Call Service features to enable or disable.
+
+      <p translate="{{'hercules.settings.call.feature'}}">
       </p>
 
-      <h6><strong translate="hercules.cloudExtensions.serviceNames.squared-fusion-uc"></strong></h6>
+      <h6>
+        <strong translate="{{'hercules.settings.call.awareHeading'}}"></strong>
+      </h6>
 
-      <p>
-        <span translate="hercules.cloudExtensions.serviceDescriptions.squared-fusion-uc"></span>
+      <p translate="{{'hercules.settings.call.aware'}}">
         <br><span  style="color:#CCC">On by default</span>
       </p>
 
       <h6 ng-if="expresswayServiceSettings.squaredFusionEcEntitled">
-        <strong>{{'hercules.cloudExtensions.serviceNames.squared-fusion-ec' | translate}}</strong>
+        <strong translate="{{'hercules.settings.call.connectHeading'}}"></strong>
         <span class="switch small right">
           <cs-toggle-switch ng-click="expresswayServiceSettings.storeEc(expresswayServiceSettings.squaredFusionEc)"
                             ng-model="expresswayServiceSettings.squaredFusionEc"
@@ -27,7 +27,7 @@
       </h6>
 
       <p>
-        <span translate="hercules.cloudExtensions.serviceDescriptions.squared-fusion-ec"></span>
+        <span translate="{{'hercules.settings.call.connect'}}"></span>
       </p>
 
       <div ng-if="expresswayServiceSettings.squaredFusionEc" ng-include
@@ -47,12 +47,10 @@
       </h5>
 
       <p>
-        Go to <a href="http://www.cisco.com/go/hybrid-services-call" target="_blank">Help Central</a> for prerequisites
-        and help installing and using Hybrid
-        Services.
-
-        Download Cisco Expressway software from <a
-        href="https://software.cisco.com/download/find.html?q=expressway&task=default&psaMode=AP" target="_blank">software.cisco.com</a>.
+        Visit <a href="http://www.cisco.com/go/hybrid-services" target="_blank">Help Central</a> whenever you need further information about Hybrid Services.
+      </p>
+      <p>
+        Download Cisco Expressway software from <a href="https://software.cisco.com/download/find.html?q=expressway&task=default&psaMode=AP" target="_blank">software.cisco.com</a>.
       </p>
 
     </div>

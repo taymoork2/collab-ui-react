@@ -101,6 +101,10 @@ Special stuff currently used for out own mail input field...
 .hercules-state-alarm {
   color: $color-negative-base;
 }
+
+.hercules-state-stopped {
+  color: $color-attention-base;
+}
 .hercules-state-running {
   color: $color-cta-base;
 }

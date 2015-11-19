@@ -15,12 +15,12 @@ var SiteReportsPage = function () {
     password: 'Cisco!23',
   }
 
-  this.webexSiteReportsPanel = element(by.id('webexSiteReports'));
+  this.webexSiteReportsPanel = element(by.css('#reportsPanel'));
 
   this.webexReportCrumb1 = element(by.id('webexReportIFrameCrumb1'));
   this.webexReportCrumb2 = element(by.id('webexReportIFrameCrumb2'));
 
-  this.webexReportsLink = element(by.id('webexReports'));
+  this.webexReportsLink = element(by.css('a[href="#/reports/webex"]'));
   this.webexCommonMeetingUsageLink = element(by.id('meeting_usage'));
   this.webexCommonMeetingsInProgressLink = element(by.id('meeting_in_progess'));
   this.webexCommonRecordingUsageLink = element(by.id('recording_usage'));
@@ -34,6 +34,8 @@ var SiteReportsPage = function () {
   this.webexCommonStorageUsageId = element(by.id('webexSiteReportIframe-storage_utilization'));
 
   this.siteAdminReportsUrl = '/webexreports';
+
+  this.lastSyncElement = element(by.id('reportsRefreshData'));
 };
 
 module.exports = SiteReportsPage;

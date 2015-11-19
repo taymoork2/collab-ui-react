@@ -1,6 +1,6 @@
 
 <div id="addDnAndExtToUserOptionButtons" class="page-option-buttons">
-  <div ng-if = "OnboardCtrl.showExtension">
+  <div ng-if="showExtensions">
     <i ng-if="isMapInProgress" class='icon icon-spinner did-map-spinner'></i>
     <a id="mapDn" href="" translate="firstTimeWizard.mapDirectLineWithExt" ng-click="!isMapEnabled || mapDidToDn()"  ng-class="isMapEnabled ? 'primary' : 'disabled'" ></a>
     <span class="option-separator-pipe">|</span>

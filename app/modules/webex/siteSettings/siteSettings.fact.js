@@ -23,8 +23,8 @@
       webExXmlApiInfoObj
     ) {
       return {
-        newSiteSettingsObj: function () {
-          this.webExSiteSettingsObj = {
+        newWebExSiteSettingsObj: function () {
+          var webExSiteSettingsObj = {
             viewReady: false,
             hasLoadError: false,
             sessionTicketError: false,
@@ -67,84 +67,76 @@
               siteInfoPageObj: null,
               siteFeaturesPageObj: null
             }, // siteInfoCardObj
-
-            siteSettingCardObjs: [{
-              id: "CommonSettings",
-              label: null,
-              comment: null,
-              pageObjs: null,
-
-              subSectionObjs: []
-            }, {
-              id: "MC",
-              label: "Meeting Center",
-              comment: null,
-              pageObjs: null,
-
-              subSectionObjs: []
-            }, {
-              id: "TC",
-              label: "Training Center",
-              comment: null,
-              pageObjs: null,
-
-              subSectionObjs: []
-            }, {
-              id: "SC",
-              label: "Support Center",
-              comment: null,
-              pageObjs: null,
-
-              subSectionObjs: [{
-                id: "WebACD",
-                label: "WebACD",
-                pageObjs: null
-              }, {
-                id: "RA",
-                label: "Remote Access",
-                pageObjs: null
-              }]
-            }, {
-              id: "EC",
-              label: "Event Center",
-              comment: null,
-              pageObjs: null,
-
-              subSectionObjs: []
-            }], // siteSettingCardObjs
-
-            categoryObjs: [{
-              id: "EMAIL",
-              pageObjs: []
-            }, {
-              id: "SiteInfo",
-              pageObjs: []
-            }, {
-              id: "CommonSettings",
-              pageObjs: []
-            }, {
-              id: "MC",
-              pageObjs: []
-            }, {
-              id: "EC",
-              pageObjs: []
-            }, {
-              id: "SC",
-              pageObjs: []
-            }, {
-              id: "TC",
-              pageObjs: []
-            }, {
-              id: "RA",
-              pageObjs: []
-            }, {
-              id: "WebACD",
-              pageObjs: []
-            }], // categoryObjs
+            siteSettingCardObjs: [],
+            categoryObjs: [],
           }; // webExSiteSettingsObj
 
-          return this.webExSiteSettingsObj;
-        }, // newSiteSettingsObj()
+          webExSiteSettingsObj.siteSettingCardObjs.push(newCardObj("CommonSettings", null));
+          webExSiteSettingsObj.siteSettingCardObjs.push(newCardObj("MC", "Meeting Center"));
+          webExSiteSettingsObj.siteSettingCardObjs.push(newCardObj("TC", "Training Center"));
+          webExSiteSettingsObj.siteSettingCardObjs.push(newCardObj("SC", "Support Center"));
+          webExSiteSettingsObj.siteSettingCardObjs.push(newCardObj("EC", "Event Center"));
+
+          webExSiteSettingsObj.categoryObjs.push(newCategoryObj("EMAIL", ""));
+          webExSiteSettingsObj.categoryObjs.push(newCategoryObj("SiteInfo", ""));
+          webExSiteSettingsObj.categoryObjs.push(newCategoryObj("CommonSettings", "common_options"));
+          webExSiteSettingsObj.categoryObjs.push(newCategoryObj("MC", "mc_options"));
+          webExSiteSettingsObj.categoryObjs.push(newCategoryObj("EC", "ec_options"));
+          webExSiteSettingsObj.categoryObjs.push(newCategoryObj("SC", "sc_options"));
+          webExSiteSettingsObj.categoryObjs.push(newCategoryObj("TC", "tc_options"));
+          webExSiteSettingsObj.categoryObjs.push(newCategoryObj("RA", "remote_options"));
+          webExSiteSettingsObj.categoryObjs.push(newCategoryObj("WebACD", "webacd_settings"));
+
+          return webExSiteSettingsObj;
+
+          function newCardObj(
+            cardId,
+            cardLabel
+          ) {
+            var cardObj = {
+              id: cardId,
+              label: cardLabel,
+              comment: null,
+              pageObjs: null,
+              lang: null,
+
+              subSectionObjs: []
+            };
+
+            if ("SC" == cardId) {
+              cardObj.subSectionObjs.push({
+                id: "WebACD",
+                label: "WebACD",
+                lang: null,
+                pageObjs: null
+              });
+
+              cardObj.subSectionObjs.push({
+                id: "RA",
+                label: "Remote Access",
+                lang: null,
+                pageObjs: null
+              });
+            }
+
+            return cardObj;
+          } // newCardObj()
+
+          function newCategoryObj(
+            categoryId,
+            categoryPinPageId
+          ) {
+
+            var categoryObj = {
+              id: categoryId,
+              pinPageId: categoryPinPageId,
+              pinPageObj: null,
+              pageObjs: []
+            };
+
+            return categoryObj;
+          } // newCategoryObj()
+        }, // newWebExSiteSettingsObj()
 
         initSiteSettingsObj: function () {
           var funcName = "initSiteSettingsObj()";
@@ -152,7 +144,7 @@
 
           var _this = this;
 
-          _this.newSiteSettingsObj();
+          _this.webExSiteSettingsObj = _this.newWebExSiteSettingsObj();
 
           var siteUrl = (!$stateParams.siteUrl) ? '' : $stateParams.siteUrl;
           var siteName = WebExUtilsFact.getSiteName(siteUrl);
@@ -180,8 +172,6 @@
               var funcName = "initSiteSettingsModel().getSessionTicketSuccess()";
               var logMsg = "";
 
-              _this.webExSiteSettingsObj.sessionTicketError = false;
-
               webExXmlApiInfoObj.xmlServerURL = "https://" + siteUrl + "/WBXService/XMLService";
               webExXmlApiInfoObj.webexSiteName = siteName;
               webExXmlApiInfoObj.webexAdminID = Authinfo.getPrimaryEmail();
@@ -198,6 +188,7 @@
               $log.log(logMsg);
 
               _this.webExSiteSettingsObj.sessionTicketError = true;
+              _this.webExSiteSettingsObj.hasLoadError = true;
             } // getSessionTicketError()
           ); // _this.getSessionTicket().then()
 
@@ -255,9 +246,21 @@
               logMsg = funcName + ": " + "getInfoResult=" + JSON.stringify(getInfoResult);
               // $log.log(logMsg);
 
-              _this.processSettingPagesInfo(WebExUtilsFact.validateAdminPagesInfoXmlData(getInfoResult.settingPagesInfoXml));
-              _this.updateDisplayInfo();
-              _this.webExSiteSettingsObj.viewReady = true;
+              var settingPagesInfo = WebExUtilsFact.validateAdminPagesInfoXmlData(getInfoResult.settingPagesInfoXml);
+              _this.webExSiteSettingsObj.settingPagesInfo = settingPagesInfo;
+
+              if (
+                ("" !== settingPagesInfo.errId) ||
+                ("" !== settingPagesInfo.errReason)
+              ) {
+
+                _this.webExSiteSettingsObj.hasLoadError = true;
+              } else {
+                _this.processSettingPagesInfo(settingPagesInfo);
+                _this.pinPageInCategory();
+                _this.updateDisplayInfo();
+                _this.webExSiteSettingsObj.viewReady = true;
+              }
             },
 
             function getSiteSettingsInfoXmlError(getInfoResult) {
@@ -266,6 +269,8 @@
 
               logMsg = funcName + ": " + "getInfoResult=" + JSON.stringify(getInfoResult);
               $log.log(logMsg);
+
+              _this.webExSiteSettingsObj.hasLoadError = true;
             } // getSiteSettingsInfoXmlError()
           ); // _this.getSiteSettingsInfoXml().then()
         }, // getSiteSettingsInfo()
@@ -312,8 +317,6 @@
           var logMsg = "";
 
           var _this = this;
-
-          _this.webExSiteSettingsObj.settingPagesInfo = settingPagesInfo;
 
           var locale = $translate.use().replace("_", "-");
           var siteAdminNavUrls = _this.webExSiteSettingsObj.settingPagesInfo.bodyJson.ns1_siteAdminNavUrl;
@@ -373,7 +376,7 @@
                 hasSiteFeaturesPage = true;
               }
             } // checkPageObj()
-          ); // getCategoryObj().pageObjs.forEach()
+          ); // siteInfoCategoryObj.pageObjs.forEach()
 
           if (!hasSiteInfoPage) {
             logMsg = funcName + ": " +
@@ -440,64 +443,90 @@
                 categoryId + " cannot be processed!!!";
               $log.log(logMsg);
             } else {
-              var pageInsertionDone = false;
-              var pageIndex = 0;
+              var pinPageId = categoryObj.pinPageId;
 
-              categoryObj.pageObjs.forEach(
-                function checkPageObj(pageObj) {
-                  if (!pageInsertionDone) {
-                    var localeCompareResult = newPageObj.label.localeCompare(
-                      pageObj.label,
-                      locale
-                    );
+              if (
+                (null != pinPageId) &&
+                (pinPageId == newPageObj.pageId)
+              ) {
 
-                    logMsg = funcName + ": " +
-                      "pageObj.label=" + pageObj.label + "\n" +
-                      "newPageObj.label=" + newPageObj.label + "\n" +
-                      "localeCompareResult=" + localeCompareResult;
-                    // $log.log(logMsg);
+                categoryObj.pinPageObj = newPageObj;
+              } else {
+                var pageInsertionDone = false;
+                var pageIndex = 0;
 
-                    if (localeCompareResult < 0) {
+                categoryObj.pageObjs.forEach(
+                  function checkPageObj(pageObj) {
+                    if (!pageInsertionDone) {
+                      var localeCompareResult = newPageObj.label.localeCompare(
+                        pageObj.label,
+                        locale
+                      );
+
                       logMsg = funcName + ": " +
-                        "Page obj inserted" + "\n" +
-                        "newPageObj=" + JSON.stringify(newPageObj);
+                        "pageObj.label=" + pageObj.label + "\n" +
+                        "newPageObj.label=" + newPageObj.label + "\n" +
+                        "localeCompareResult=" + localeCompareResult;
                       // $log.log(logMsg);
 
-                      categoryObj.pageObjs.splice(pageIndex, 0, newPageObj);
+                      if (localeCompareResult < 0) {
+                        logMsg = funcName + ": " +
+                          "Page obj inserted" + "\n" +
+                          "newPageObj=" + JSON.stringify(newPageObj);
+                        // $log.log(logMsg);
 
-                      pageInsertionDone = true;
-                    } else if (localeCompareResult === 0) {
-                      logMsg = funcName + ": " +
-                        "Page obj updated" + "\n" +
-                        "pageObj=" + JSON.stringify(pageObj) + "\n" +
-                        "newPageObj=" + JSON.stringify(newPageObj);
-                      $log.log(logMsg);
+                        categoryObj.pageObjs.splice(pageIndex, 0, newPageObj);
 
-                      pageObj.id = newPageObj.id;
-                      pageObj.pageId = newPageObj.pageId;
-                      pageObj.label = newPageObj.label;
-                      pageObj.iframeUrl = newPageObj.iframeUrl;
-                      pageObj.uiSref = newPageObj.uiSref;
+                        pageInsertionDone = true;
+                      } else if (localeCompareResult === 0) {
+                        logMsg = funcName + ": " +
+                          "Page obj updated" + "\n" +
+                          "pageObj=" + JSON.stringify(pageObj) + "\n" +
+                          "newPageObj=" + JSON.stringify(newPageObj);
+                        // $log.log(logMsg);
 
-                      pageInsertionDone = true;
+                        pageObj.id = newPageObj.id;
+                        pageObj.pageId = newPageObj.pageId;
+                        pageObj.label = newPageObj.label;
+                        pageObj.iframeUrl = newPageObj.iframeUrl;
+                        pageObj.uiSref = newPageObj.uiSref;
+
+                        pageInsertionDone = true;
+                      }
                     }
-                  }
 
-                  ++pageIndex;
-                } // checkPageObj()
-              ); // categoryObj.pageObjs.forEach()
+                    ++pageIndex;
+                  } // checkPageObj()
+                ); // categoryObj.pageObjs.forEach()
 
-              if (!pageInsertionDone) {
-                logMsg = funcName + ": " +
-                  "Page obj pushed" + "\n" +
-                  "newPageObj=" + JSON.stringify(newPageObj);
-                // $log.log(logMsg);
+                if (!pageInsertionDone) {
+                  logMsg = funcName + ": " +
+                    "Page obj pushed" + "\n" +
+                    "newPageObj=" + JSON.stringify(newPageObj);
+                  // $log.log(logMsg);
 
-                categoryObj.pageObjs.push(newPageObj);
+                  categoryObj.pageObjs.push(newPageObj);
+                }
               }
             }
           } // addPage()
         }, // processSettingPagesInfo()
+
+        pinPageInCategory: function () {
+          var funcName = "pinPageInCategory()";
+          var logMsg = "";
+
+          this.webExSiteSettingsObj.categoryObjs.forEach(
+            function checkCategoryObj(categoryObj) {
+              var funcName = "pinPageInCategory().checkCategoryObj()";
+              var logMsg = "";
+
+              if (null != categoryObj.pinPageObj) {
+                categoryObj.pageObjs.splice(0, 0, categoryObj.pinPageObj);
+              }
+            } // checkCategoryObj()
+          ); // this.webExSiteSettingsObj.categoryObjs.forEach()
+        }, // pinPageInCategory()
 
         updateDisplayInfo: function () {
           var funcName = "updateDisplayInfo()";
@@ -552,6 +581,8 @@
                 if ("CommonSettings" == siteSettingCardObjId) {
                   siteSettingCardObj.label = $translate.instant("webexSiteSettingsLabels.commonSettingsCardTitle");
                   siteSettingCardObj.comment = $translate.instant("webexSiteSettingsLabels.commonSettingsCardNote");
+                } else {
+                  siteSettingCardObj.lang = "en"; //Centre names are in English
                 }
 
                 var categoryObj = _this.getCategoryObj(siteSettingCardObjId);
@@ -561,6 +592,7 @@
                   function updateSubSectionObj(subSectionObj) {
                     categoryObj = _this.getCategoryObj(subSectionObj.id);
                     subSectionObj.pageObjs = categoryObj.pageObjs;
+                    subSectionObj.lang = "en"; //WebACD, Remote Acces are in English
                   }
                 ); // subSectionObjs.forEach()
 
@@ -594,7 +626,7 @@
           return result;
         }, // getCenterSettingsCardObj()
 
-        getCategoryObj: function (categoryId) {
+        getCategoryObj: function (targetCategoryId) {
           var funcName = "getCategoryObj()";
           var logMsg = "";
 
@@ -602,14 +634,14 @@
 
           this.webExSiteSettingsObj.categoryObjs.forEach(
             function checkCategoryObj(categoryObj) {
-              if (categoryId == categoryObj.id) {
+              if (targetCategoryId == categoryObj.id) {
                 result = categoryObj;
               }
             } // checkCategoryObj()
           ); // categoryObjs.forEach()
 
           logMsg = funcName + ": " + "\n" +
-            "categoryId=" + categoryId + "\n" +
+            "targetCategoryId=" + targetCategoryId + "\n" +
             "categoryObj=" + JSON.stringify(result);
           // $log.log(logMsg);
 

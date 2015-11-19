@@ -141,7 +141,7 @@ angular.module('Core')
           dev: 'https://identity.webex.com/identity/config/%s/v1/UserReports',
           cfe: 'https://identitybts.webex.com/identity/config/%s/v1/UserReports',
           integration: 'https://identity.webex.com/identity/config/%s/v1/UserReports',
-          prod: 'https://identity.webex.com/identity/config/%s/v1/UserReports',
+          prod: 'https://identity.webex.com/identity/config/%s/v1/UserReports'
         },
 
         scomUrl: {
@@ -198,6 +198,13 @@ angular.module('Core')
         webexUrl: {
           siteAdminHomeUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminHomePage',
           siteAdminDeepUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage'
+        },
+
+        wdmUrl: {
+          dev: 'https://wdm-a.wbx2.com/wdm/api/v1',
+          cfe: 'http://wdm.cfe.wbx2.com/wdm/api/v1',
+          integration: 'http://wdm.integration.wbx2.com/wdm/api/v1',
+          prod: 'http://wdm.cfa.wbx2.com/wdm/api/v1',
         },
 
         sunlightConfigServiceUrl: {
@@ -444,7 +451,8 @@ angular.module('Core')
           support: 'atlas-portal.support',
           application: 'atlas-portal.application',
           reports: 'atlas-portal.reports',
-          sales: 'atlas-portal.partner.salesadmin'
+          sales: 'atlas-portal.partner.salesadmin',
+          helpdesk: 'atlas-portal.partner.helpdesk'
         },
 
         roles: {
@@ -454,7 +462,8 @@ angular.module('Core')
           support: 'Support',
           application: 'Application',
           reports: 'Reports',
-          sales: 'Sales_Admin'
+          sales: 'Sales_Admin',
+          helpdesk: 'Help_Desk'
         },
 
         roleState: {
@@ -833,6 +842,10 @@ angular.module('Core')
           return this.certsUrl[this.getEnv()];
         },
 
+        getWdmUrl: function () {
+          return this.wdmUrl.dev;
+        },
+
         getDefaultEntitlements: function () {
           return this.defaultEntitlements;
         },
@@ -890,6 +903,7 @@ angular.module('Core')
       config.roleStates = {
         Full_Admin: [ // Customer Admin
           'overview',
+          'overview-nm',
           'users',
           'user-overview',
           'userprofile',
@@ -919,7 +933,8 @@ angular.module('Core')
           'webex-reports-iframe',
           'example'
         ],
-        Application: ['organizations', 'organization-overview']
+        Application: ['organizations', 'organization-overview'],
+        Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org']
       };
 
       config.serviceStates = {
@@ -940,16 +955,15 @@ angular.module('Core')
           'huronsettings',
           'huronfeatures',
           'huronnewfeature',
-          'cdr-overview',
           'huronHuntGroup',
           'huntgroupedit',
-          'cdrsupport'
+          'cdrsupport',
+          'cdr-overview'
         ],
         'squared-fusion-mgmt': [
-          'fusion',
           'cluster-details',
-          'cluster-details-new'
-          // 'management-service',
+          'cluster-details-new',
+          'management-service',
         ],
         'spark-device-mgmt': [
           'devices',
@@ -959,10 +973,11 @@ angular.module('Core')
         'squared-fusion-uc': [
           'devices',
           'device-overview',
-          'devices-redux'
+          'devices-redux',
+          'call-service'
         ],
         'squared-fusion-cal': [
-          // 'calendar-service'
+          'calendar-service'
         ],
         'squared-team-member': [
           'organization'
@@ -984,16 +999,6 @@ angular.module('Core')
         ]
       };
 
-      if (!config.isProd()) {
-        // Experimental, not to be enabled in production (yet)
-        var calStates = config.serviceStates['squared-fusion-cal'];
-        calStates.push('calendar-service');
-        var ucStates = config.serviceStates['squared-fusion-uc'];
-        ucStates.push('call-service');
-        var mgmtStates = config.serviceStates['squared-fusion-mgmt'];
-        mgmtStates.push('management-service');
-      }
-
       // These states are not allowed in specific views
       // (i.e. devices are not allowed in partner)
       config.restrictedStates = {
@@ -1009,11 +1014,12 @@ angular.module('Core')
           'fusion',
           'mediafusionconnector',
           'hurondetails',
-          'cdrsupport',
-          'cdr-overview',
+          'huronsettings',
           'calendar-service',
           'call-service',
-          'management-service'
+          'management-service',
+          'cdrsupport',
+          'cdr-overview'
         ]
       };
 

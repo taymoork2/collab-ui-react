@@ -12,6 +12,13 @@ Adherence is mandatory. Please refactor non-compliant code.
 * [Angular Style Guide](https://github.com/johnpapa/angularjs-styleguide)
 * [Git Commit Style Guide](http://chris.beams.io/posts/git-commit/)
 
+**Additional Conventions**
+* Indent using spaces not tabs
+  * 2 space indentation - Javascript, HTML, and CSS
+* When using the bard.js test helper you need to add a jshint globals comment at the
+    top of the file containing the dependencies in the spec, example:
+      `/* globals $httpBackend, $rootScope, Authinfo, Userservice */`
+
 If you have any questions open an
 [issue](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/issues/new)
 and include the text: "Please add $cec_user_id to the 'Atlas UI Dev Team' room. Thanks!"
@@ -20,6 +27,7 @@ Technology
 -----------
 
 * UI is developed using [Angular JS](https://angularjs.org)
+* ES6(ES2015) JavaScript is transpiled with [TypeScript](http://www.typescriptlang.org)
 * UI is composed of a core module and service modules for different functional groups
 * Modules are developed using directives, here is a good read on the topic:
   http://briantford.com/blog/angular-bower
@@ -43,7 +51,7 @@ We use pull requests, and consequentially the forking model.  To make a contribu
 3. After your new fork is created, you'll want to pull the fork to your local environment, and add the upstream and jenkins remotes:
  - `git clone git@sqbu-github.cisco.com:username/wx2-admin-web-client`
  - `git remote add upstream git@sqbu-github.cisco.com:WebExSquared/wx2-admin-web-client`
- - `git remote add jenkins ssh://username@sqbu-jenkins.cisco.com:2022/wx2-admin-web-client`
+ - `git remote add jenkins ssh://username@sqbu-jenkins.cisco.com:2022/team/atlas/wx2-admin-web-client`
 
 **Note*: If you get a Permission Denied (publickey) then follow these directions in Generating SSH Keys
  `https://help.github.com/articles/generating-ssh-keys/`
@@ -106,6 +114,11 @@ TypeScript Definitions
 * Microsoft VSCode automatically detects definition files and provides IntelliSense support (https://code.visualstudio.com/Docs/languages/javascript)
 * Add new TypeScript definitions using tsd (TypeScript Definition manager) from DefinitelyTyped (https://github.com/DefinitelyTyped/tsd)
 
+TypeScript & ES6(ES2015)
+-----------------
+* ES6 and TypeScript are the preferred method of writing JavaScript in the app
+* Writing Angular 1.x code in TypeScript and/or ES6 will allow for easier migration to Angular 2
+
 Project structure
 -----------------
 
@@ -157,14 +170,13 @@ Adding a simple page ("Hello World")
 * add a menu option by adding a tab to `config.js` -> tabs array under: `app/modules/core/scripts/services/config.js`
 
 **3. Add its unit and end-to-end tests**
-* add a unit test folder for your module:
-  * **+**`test/hello-world`
 * add a functional test folder for your module:
   * **+**`test/e2e-protractor/hello-world`
-* add the new test directories to `config.testFiles.spec` and `config.testFiles.e2e` in **gulp.config.js**:
-  * **+**`test + '/hello-world/**/*.js'`
+* add the new test directory to `config.testFiles.e2e` in **gulp/gulp.config.js**:
   * **+**`hello-world: e2e + '/hello-world/**/*_spec.js'`
-* write unit tests and place them in the new unit test folder
+* write unit tests and place them side by side the corresponding code under test
+  * All unit tests are named the same as the corresponding code file, but append .spec.js
+  * **+**`say-hello: 'app/modules/hello-world/say-hello/say-hello.controller.spec.js'`
 * write an end to end protractor test and place it in the new e2e folder
 * **Testing Resources**
   * https://docs.angularjs.org/guide/unit-testing
@@ -200,6 +212,7 @@ There are several arguments that can be added to the gulp tasks. Arguments are l
 
 * Cleans (deletes) files in the 'build' & 'dist' directories
 * Builds (copies) files from the development (app) folder into the staging (build) folder
+* Transpiles ES6 and TypeScript code into ES5 JavaScript
 * Compiles HTML templates into JS template file and adds them to the $templatecache
 * Compiles index file by adding CSS links and JS  script tags for dependencies
 * Runs Karma Unit Tests on build folder

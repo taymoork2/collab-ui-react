@@ -1,0 +1,61 @@
+<div>
+  <div class="typeahead-large">
+    <input type="text" ng-model="huntGroupSA.selectedFallbackNumber" class="form-control"
+           typeahead="user for user in huntGroupSA.fetchFallbackDestination($viewValue) | limitTo:10"
+           typeahead-on-select="huntGroupSA.selectFallback($item)"
+           typeahead-template-url="userTemplate.html"
+           placeholder="{{:: 'huronHuntGroup.fallbackPlaceholder' | translate}}"
+           ng-keyup="huntGroupSA.validateFallbackNumber()"
+           ng-disabled="huntGroupSA.selectedFallbackMember"
+           focus-on>
+
+    <p class="input-description" translate="huronHuntGroup.fallbackHint"></p>
+  </div>
+  <div class="fallback-container">
+    <cs-card-layout block-view="true" ng-if="huntGroupSA.selectedFallbackMember">
+      <cs-card class="small header-background primary hunt-member-card">
+        <article>
+          <header ng-click="huntGroupSA.toggleFallback()"
+                  ng-class="{'open-panel' : huntGroupSA.selectedFallbackMember.openPanel}">
+            <div class="header-with-right-icon">
+              <h5 class="ellipsis"
+                  title="{{huntGroupSA.getDisplayName(huntGroupSA.selectedFallbackMember.member.user)}}">
+                {{huntGroupSA.getDisplayName(huntGroupSA.selectedFallbackMember.member.user)}}</h5>
+              <span dropdown>
+                <i class="icon icon-chevron-down icon-lg"></i>
+              </span>
+            </div>
+          </header>
+          <section ng-if="huntGroupSA.selectedFallbackMember.openPanel">
+            <p class="email">{{huntGroupSA.selectedFallbackMember.member.user.email}}
+            <fieldset>
+              <cs-radio ng-repeat="number in huntGroupSA.selectedFallbackMember.member.user.numbers"
+                        label="number | huntMemberTelephone"
+                        value="number"
+                        name="fallbackDestinationNumbers"
+                        id="number.uuid"
+                        ng-model="huntGroupSA.selectedFallbackMember.member.selectableNumber"></cs-radio>
+              <p>
+                <a href ng-click="huntGroupSA.removeFallbackDest()">Remove Member</a>
+              </p>
+            </fieldset>
+          </section>
+        </article>
+      </cs-card>
+    </cs-card-layout>
+
+    <div class="text-center fallback-container-item">
+      <cs-checkbox ng-if="huntGroupSA.selectedFallbackMember" ckid="checkbox"
+                   ng-model="huntGroupSA.selectedFallbackMember.sendToVoicemail"
+                   label="{{:: 'huronHuntGroup.voiceCheckLabel' | translate}}">
+      </cs-checkbox>
+    </div>
+    <div class="text-center fallback-container-item">
+      <button class="button" cs-btn loading="huntGroupSA.saveProgress"
+              ng-click="huntGroupSA.saveHuntGroup()"
+              ng-class="{success: (huntGroupSA.isFallbackValid()), disabled: (!huntGroupSA.isFallbackValid())}">
+        <span translate="huronHuntGroup.createGroupLabel"></span>
+      </button>
+    </div>
+  </div>
+</div>

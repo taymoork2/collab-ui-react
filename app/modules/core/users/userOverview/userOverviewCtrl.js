@@ -12,7 +12,6 @@
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;
     vm.queryuserslist = $stateParams.queryuserslist;
-    vm.gsxFeature = false;
     vm.services = [];
     vm.dropDownItems = [];
     vm.titleCard = '';
@@ -24,33 +23,27 @@
     vm.isFusion = Authinfo.isFusion();
     vm.isFusionCal = Authinfo.isFusionCal();
 
-    Userservice.getUser('me', function (data, status) {
-      FeatureToggleService.getFeatureForUser(data.id, 'gsxdemo').then(function (value) {
-        vm.gsxFeature = value;
-      }).finally(function () {
-        init();
-      });
-    });
+    init();
 
     function init() {
       vm.services = [];
 
       var msgState = {
-        name: $translate.instant(vm.gsxFeature ? 'onboardModal.spark' : 'onboardModal.messaging'),
+        name: $translate.instant('onboardModal.messaging'),
         icon: $translate.instant('onboardModal.messaging'),
         state: 'user-overview.messaging',
         detail: $translate.instant('onboardModal.freeMsg')
       };
 
       var commState = {
-        name: $translate.instant(vm.gsxFeature ? 'onboardModal.calling' : 'onboardModal.communications'),
+        name: $translate.instant('onboardModal.communications'),
         icon: $translate.instant('onboardModal.communications'),
         state: 'user-overview.communication',
         detail: $translate.instant('onboardModal.freeComm')
       };
 
       var confState = {
-        name: $translate.instant(vm.gsxFeature ? 'onboardModal.webex' : 'onboardModal.conferencing'),
+        name: $translate.instant('onboardModal.conferencing'),
         icon: $translate.instant('onboardModal.conferencing'),
         state: 'user-overview.conferencing',
         detail: $translate.instant('onboardModal.freeConf')
@@ -72,9 +65,6 @@
       if (hasEntitlement('squared-syncup')) {
         if (getServiceDetails('CF')) {
           confState.detail = $translate.instant('onboardModal.paidConf');
-        }
-        if (vm.gsxFeature) {
-          confState.detail = 'Meeting Center';
         }
         vm.services.push(confState);
       }

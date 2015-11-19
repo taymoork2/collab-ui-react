@@ -1,0 +1,15 @@
+[{
+  "externalCallerIdType": "Company Caller ID",
+  "externalNumber": {
+    "pattern": "+12292292299",
+    "uuid": "75deb3ef-f92a-4d1e-837e-c6c8f02fd300"
+  },
+  "name": "Cisco",
+  "pattern": "+12292292299",
+  "uuid": "46a00f3b-07d3-4180-82a2-22ff7dba40e5",
+  "url": "https://cmi.huron-int.com/api/v1/voice/customers/909df552-e36d-4889-b9be-ccac895575aa/companynumbers/46a00f3b-07d3-4180-82a2-22ff7dba40e5",
+  "links": [{
+    "rel": "voice",
+    "href": "/api/v1/voice/customers/909df552-e36d-4889-b9be-ccac895575aa/companynumbers/46a00f3b-07d3-4180-82a2-22ff7dba40e5"
+  }]
+}]

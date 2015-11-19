@@ -34,7 +34,9 @@ describe('Controller: PstnProvidersCtrl', function () {
       });
       $scope.$apply();
       expect(controller.providers).toEqual([jasmine.objectContaining({
-        name: PstnSetupService.INTELEPEER
+        name: PstnSetupService.INTELEPEER,
+        apiExists: true,
+        vendor: PstnSetupService.INTELEPEER
       })]);
       expect($state.go).toHaveBeenCalledWith('pstnSetup.orderNumbers');
     });
@@ -48,9 +50,13 @@ describe('Controller: PstnProvidersCtrl', function () {
       });
       $scope.$apply();
       expect(controller.providers).toEqual([jasmine.objectContaining({
-        name: PstnSetupService.INTELEPEER
+        name: PstnSetupService.INTELEPEER,
+        apiExists: true,
+        vendor: PstnSetupService.INTELEPEER
       }), jasmine.objectContaining({
-        name: PstnSetupService.TATA
+        name: PstnSetupService.TATA,
+        apiExists: false,
+        vendor: PstnSetupService.TATA
       })]);
       expect($state.go).not.toHaveBeenCalled();
     });

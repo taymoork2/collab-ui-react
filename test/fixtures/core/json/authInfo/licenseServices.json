@@ -1,0 +1,38 @@
+[{
+  "licenseId": "CF_5f8612e4-be11-4135-9d19-1423b78da5d7",
+  "offerName": "CF",
+  "licenseType": "CONFERENCING",
+  "billingServiceId": "SubRef101478",
+  "features": [
+    "webex-squared",
+    "squared-call-initiation",
+    "squared-syncup"
+  ],
+  "volume": 1000,
+  "isTrial": false,
+  "status": "PENDING"
+}, {
+  "licenseId": "MS_6baa31c5-cfcd-417e-97ef-5ddebba1b3a7",
+  "offerName": "MS",
+  "licenseType": "MESSAGING",
+  "billingServiceId": "SubC2015100901",
+  "features": [
+    "webex-squared",
+    "squared-call-initiation",
+    "webex-messenger",
+    "squared-room-moderation"
+  ],
+  "volume": 10,
+  "isTrial": false,
+  "status": "PENDING"
+}, {
+  "licenseId": "ST_051b6b5f-1c9f-440c-9630-1cb10be804d7_50000",
+  "offerName": "ST",
+  "licenseType": "STORAGE",
+  "billingServiceId": "SubRef500522",
+  "features": [],
+  "volume": 50000,
+  "isTrial": false,
+  "status": "PENDING",
+  "capacity": 50000
+}]

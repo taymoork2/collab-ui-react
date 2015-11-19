@@ -1,0 +1,72 @@
+.overview-page {
+  padding-bottom: 20px;
+  .service-name {
+    flex-direction: column;
+    i {
+      font-size: 56px;
+      padding-bottom: 20px;
+    }
+    span {
+      text-align: center;
+    }
+  }
+  i.icon-circle {
+    &.success {
+      color: $color-cta-base;
+    }
+    &.warning {
+      color: $color-attention-base;
+    }
+    &.danger {
+      color: $color-alerts-base;
+    }
+    &.disabled {
+      color: $gray-base;
+    }
+  }
+  .footer-menu {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .footer-icons a {
+      color: $gray-base;
+    }
+  }
+  .overview-title {
+    text-transform: uppercase;
+  }
+  h4 {
+    font-size: 2.25rem;
+    font-family: "CiscoSansTT Thin", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+  .overview-layout{
+    background-color: white;
+    padding-bottom: 20px;
+  }
+  .users-card {
+    ul {
+      list-style-type: none;
+      li {
+        padding-bottom: 10px;
+      }
+    }
+    section {
+      padding-right: 1.5rem !important;
+      padding-left: 1.5rem !important;
+      padding-bottom: 2rem !important;
+      padding-top: 1rem !important;
+    }
+    .bottom {
+      text-align: center;
+      button {
+        margin-top: 20px;
+      }
+      h4 {
+        font-size: 3rem;
+      }
+    }
+  }
+}
+#unlicensedUserList{
+  overflow: auto;
+}
