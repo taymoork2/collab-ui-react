@@ -9,8 +9,17 @@ describe('Hunt Group EditCtrl Controller', function () {
     HuntGroupService, HuntGroupEditDataService, Notification, form;
   var hgFeature = getJSONFixture('huron/json/features/edit/featureDetails.json');
   var pilotNumbers = getJSONFixture('huron/json/features/edit/pilotNumbers.json');
-  var GetMemberUrl = new RegExp(".*/api/v2/customers/1/users/.*");
-  var user1 = getJSONFixture('huron/json/features/huntGroup/user1.json');
+  var GetMember1Url = new RegExp(".*/api/v2/customers/1/users/ba6c9d76-bed9-413f-a373-054a40df7095.*");
+  var GetMember2Url = new RegExp(".*/api/v2/customers/1/users/5dea2d85-7f23-4392-a1bc-360b8a74a487.*");
+  var GetMemberListUrl = new RegExp(".*/api/v2/customers/1/users?.*");
+  var GetFallbackNumbersUrl = new RegExp(".*/api/v2/customers/1/numbers.*");
+  var user1 = getJSONFixture('huron/json/features/huntGroup/member1.json');
+  var user2 = getJSONFixture('huron/json/features/huntGroup/member2.json');
+  var member1ResponseHandler, member2ResponseHandler;
+  var members = {
+    "users": [user1, user2]
+  };
+
   var numbers = [{
     "internal": "8001",
     "external": "972-510-5002",
@@ -63,10 +72,10 @@ describe('Hunt Group EditCtrl Controller', function () {
     spyOn(Notification, 'success');
     spyOn(Notification, 'errorResponse');
     spyOn(HuntGroupService, 'getDetails').and.returnValue($q.when(hgFeature));
-    spyOn(HuntGroupService, 'updateHuntGroup').and.returnValue($q.when());
     spyOn(HuntGroupService, 'getAllUnassignedPilotNumbers').and.returnValue($q.when(pilotNumbers));
 
-    $httpBackend.whenGET(GetMemberUrl).respond(200, user1);
+    member1ResponseHandler = $httpBackend.whenGET(GetMember1Url).respond(200, user1);
+    member2ResponseHandler = $httpBackend.whenGET(GetMember2Url).respond(200, user2);
 
     hgEditCtrl = $controller('HuntGroupEditCtrl', {
       $state: $state,
@@ -129,26 +138,193 @@ describe('Hunt Group EditCtrl Controller', function () {
     expect(hgEditCtrl.model.name).toEqual(newHgFeature.name); // Pristine model.
   });
 
-  it('on removing fallback destination shows fallback warning (invalid)', function () {
+  it('on removing fallback destination shows fallback warning (invalid) and form is dirty', function () {
+    spyOn(hgEditCtrl.form, '$setDirty');
     hgEditCtrl.removeFallbackDest();
     $scope.$apply();
 
     expect(hgEditCtrl.shouldShowFallbackWarning()).toBeTruthy();
     expect(hgEditCtrl.shouldShowFallbackLookup()).toBeTruthy();
     expect(hgEditCtrl.shouldShowFallbackPill()).toBeFalsy();
+    expect(hgEditCtrl.form.$setDirty).toHaveBeenCalled();
   });
 
-  it('on changing fallback destination check if the form is marked dirty', function () {
-    //spyOn(hgEditCtrl.form, '$setDirty');
-    //var newHgFeature = angular.copy(hgFeature);
-    //expect(hgEditCtrl.selectedFallbackMember.sendToVoicemail).toBeTruthy();
-    //HuntGroupEditDataService.setPristine(newHgFeature);
-    //hgEditCtrl.resetForm(false);
-    //hgEditCtrl.selectedFallbackMember.sendToVoicemail = false; // Dirtying the model.
-    //$scope.$apply();
-    //
-    //hgEditCtrl.checkFallbackDirtiness();
-    //expect(hgEditCtrl.form.$setDirty).not.toHaveBeenCalled();
+  it('on init when one of the member fetch fails, notification is shown and state goes to features', function () {
+    member1ResponseHandler.respond(404, '');
+
+    hgEditCtrl = controller('HuntGroupEditCtrl', {
+      $state: $state,
+      $stateParams: $stateParams,
+      $timeout: $timeout,
+      Authinfo: Authinfo,
+      HuntGroupService: HuntGroupService,
+      Notification: Notification
+    });
+    $httpBackend.flush();
+    $scope.$apply();
+    expect(Notification.errorResponse).toHaveBeenCalled();
+    expect($state.go).toHaveBeenCalledWith('huronfeatures');
+  });
+
+  it('on removing a hunt member list the form is marked dirty', function () {
+    spyOn(hgEditCtrl.form, '$setDirty');
+    hgEditCtrl.unSelectHuntGroupMember(hgEditCtrl.selectedHuntMembers[0].user);
+    expect(hgEditCtrl.openMemberPanelUuid).toBeUndefined();
+    expect(hgEditCtrl.form.$setDirty).toHaveBeenCalled();
+  });
+
+  it('on adding a new hunt member the form is marked dirty', function () {
+    var newUser = angular.copy(hgEditCtrl.selectedHuntMembers[0]);
+    newUser.uuid = "test";
+    newUser.user.uuid = "test";
+    var initMembersCount = hgEditCtrl.selectedHuntMembers.length;
+    spyOn(hgEditCtrl.form, '$setDirty');
+    hgEditCtrl.selectHuntGroupMember(newUser);
+    expect(hgEditCtrl.openMemberPanelUuid).toBeUndefined();
+    expect(hgEditCtrl.form.$setDirty).toHaveBeenCalled();
+    expect(initMembersCount + 1).toEqual(hgEditCtrl.selectedHuntMembers.length);
+  });
+
+  it('on changing a hunt member phone line the form is marked dirty', function () {
+    spyOn(hgEditCtrl.form, '$setDirty');
+    var member1 = hgEditCtrl.selectedHuntMembers[0];
+    member1.selectableNumber = member1.user.numbers[1];
+    hgEditCtrl.checkMemberDirtiness(member1.user.uuid);
+    expect(hgEditCtrl.form.$setDirty).toHaveBeenCalled();
+  });
+
+  it('on looking up new members, is able to fetch the members from member data service', function () {
+    $httpBackend.expectGET(GetMemberListUrl).respond(200, members);
+    hgEditCtrl.fetchHuntMembers("me");
+    $scope.$apply();
+    $httpBackend.verifyNoOutstandingRequest(); // No request made.
+
+    hgEditCtrl.fetchHuntMembers("mem");
+    $httpBackend.flush();
+  });
+
+  it('on trying to change fallback member, is able to fetch the members from member data service', function () {
+    $httpBackend.expectGET(GetMemberListUrl).respond(200, members);
+    hgEditCtrl.fetchFallbackDestination("me");
+    $scope.$apply();
+    $httpBackend.verifyNoOutstandingRequest(); // No request made.
+
+    hgEditCtrl.fetchFallbackDestination("mem");
+    $httpBackend.flush();
+  });
+
+  it('disables the save button when it fines the vm.form.invalid is true', function () {
+    hgEditCtrl.form.$invalid = true;
+    expect(hgEditCtrl.showDisableSave()).toBeTruthy();
+
+    hgEditCtrl.form.$invalid = false;
+    expect(hgEditCtrl.showDisableSave()).toBeFalsy();
+    hgEditCtrl.removeFallbackDest();
+    expect(hgEditCtrl.showDisableSave()).toBeTruthy();
+
+    hgEditCtrl.selectedFallbackNumber = "+19723453456";
+    hgEditCtrl.validateFallbackNumber();
+    expect(hgEditCtrl.showDisableSave()).toBeFalsy();
+
+  });
+
+  it('shows fallback lookup field when there is a valid fallback number', function () {
+    hgEditCtrl.selectedFallbackNumber = "+19723453456";
+    hgEditCtrl.validateFallbackNumber();
+    expect(hgEditCtrl.shouldShowFallbackLookup()).toBeTruthy();
+  });
+
+  it('check fallback dirtiness when fallback number is invalid', function () {
+    spyOn(hgEditCtrl.form, '$setDirty');
+    hgEditCtrl.selectedFallbackNumber = "3456";
+    $httpBackend.expectGET(GetFallbackNumbersUrl).respond(200, {
+      numbers: []
+    });
+    hgEditCtrl.validateFallbackNumber();
+    $httpBackend.flush();
+    hgEditCtrl.checkFallbackDirtiness();
+    expect(hgEditCtrl.form.$setDirty).toHaveBeenCalled();
+  });
+
+  it('on toggle hunt member panel, openMemberPanelUuid is updated correctly', function () {
+    expect(hgEditCtrl.openMemberPanelUuid).toBeUndefined();
+
+    var newUser = angular.copy(user1);
+    newUser.email = "test@cisco.com";
+    member1ResponseHandler.respond(200, newUser);
+    hgEditCtrl.toggleMemberPanel(hgEditCtrl.selectedHuntMembers[0].user);
+    $scope.$apply();
+    $httpBackend.flush();
+    expect(hgEditCtrl.openMemberPanelUuid).toEqual(hgEditCtrl.selectedHuntMembers[0].user.uuid);
+
+    hgEditCtrl.toggleMemberPanel(hgEditCtrl.selectedHuntMembers[0].user);
+    $scope.$apply();
+    expect(hgEditCtrl.openMemberPanelUuid).toBeUndefined();
+
+    newUser = angular.copy(user2);
+    newUser.email = "test@cisco.com";
+    member2ResponseHandler.respond(200, newUser);
+    hgEditCtrl.toggleMemberPanel(hgEditCtrl.selectedHuntMembers[1].user);
+    $scope.$apply();
+    $httpBackend.flush();
+    expect(hgEditCtrl.openMemberPanelUuid).toEqual(hgEditCtrl.selectedHuntMembers[1].user.uuid);
+  });
+
+  it('on toggle fallback panel, openPanel is updated correctly', function () {
+    var fbUser = {
+      "uuid": "ba6c9d76-bed9-413f-a373-054a40df7095",
+      "user": user1,
+      "selectableNumber": {
+        "internal": "2043",
+        "external": "",
+        "uuid": "bbdfc3bc-ca48-4d13-b8cc-9554ce71203b"
+      }
+    };
+
+    hgEditCtrl.selectFallback(fbUser);
+    $scope.$apply();
+    expect(hgEditCtrl.selectedFallbackMember.openPanel).toBeFalsy();
+
+    var newUser = angular.copy(user1);
+    newUser.email = "test@cisco.com";
+    member1ResponseHandler.respond(200, newUser);
+
+    hgEditCtrl.toggleFallback();
+    $scope.$apply();
+    $httpBackend.flush();
+    expect(hgEditCtrl.selectedFallbackMember.openPanel).toBeTruthy();
+
+    hgEditCtrl.toggleFallback();
+    $scope.$apply();
+    expect(hgEditCtrl.selectedFallbackMember.openPanel).toBeFalsy();
+  });
+
+  it('on changing a hunt member orders in the list the form is marked dirty', function () {
+    spyOn(hgEditCtrl.form, '$setDirty');
+    hgEditCtrl.callback();
+    expect(hgEditCtrl.form.$setDirty).toHaveBeenCalled();
+  });
+
+  it('on validateFallbackNumber, applies validation and dirties the form', function () {
+    spyOn(hgEditCtrl.form, '$setDirty');
+    hgEditCtrl.validateFallbackNumber();
+    expect(hgEditCtrl.form.$setDirty).not.toHaveBeenCalled();
+
+    hgEditCtrl.selectedFallbackNumber = "+19723453457";
+    hgEditCtrl.validateFallbackNumber();
+    expect(hgEditCtrl.form.$setDirty).toHaveBeenCalled();
+  });
+
+  it('gets the display name of a user with firstName and lastName concatenation', function () {
+    hgEditCtrl.resetForm();
+    $scope.$apply();
+    expect(hgEditCtrl.getDisplayName(hgEditCtrl.selectedHuntMembers[0].user)).toEqual("member1 hg");
+  });
+
+  it('isMembersInvalid check works based on selectedHuntMembers', function () {
+    expect(hgEditCtrl.isMembersInvalid()).toBeFalsy();
+    hgEditCtrl.selectedHuntMembers = undefined;
+    expect(hgEditCtrl.isMembersInvalid()).toBeTruthy();
   });
 
   it('on selecting a hunt method, updates the model', function () {
@@ -159,6 +335,33 @@ describe('Hunt Group EditCtrl Controller', function () {
 
   it('have intialized formly fields correctly', function () {
     expect(hgEditCtrl.fields.length).toEqual(4);
+  });
+
+  it('on save hunt group success updates the pristine model', function () {
+    var hgFeaturePristine = HuntGroupEditDataService.getPristine();
+    expect(hgFeaturePristine.name).toEqual("HuntGroupUnitTest");
+
+    hgEditCtrl.model.name = "NewHuntGroup";
+    spyOn(HuntGroupService, 'updateHuntGroup').and.returnValue($q.when());
+    hgEditCtrl.saveForm();
+    $scope.$apply();
+
+    hgFeaturePristine = HuntGroupEditDataService.getPristine();
+    expect(hgFeaturePristine.name).toEqual("NewHuntGroup");
+  });
+
+  it('on save hunt group failure does not change the pristine model', function () {
+    var hgFeaturePristine = HuntGroupEditDataService.getPristine();
+    expect(hgFeaturePristine.name).toEqual("HuntGroupUnitTest");
+
+    hgEditCtrl.model.name = "NewHuntGroup";
+    spyOn(HuntGroupService, 'updateHuntGroup').and.returnValue($q.reject());
+    hgEditCtrl.saveForm();
+    $scope.$apply();
+
+    hgFeaturePristine = HuntGroupEditDataService.getPristine();
+    expect(hgFeaturePristine.name).toEqual("HuntGroupUnitTest");
+    expect(Notification.errorResponse).toHaveBeenCalled();
   });
 
 });

@@ -43,7 +43,7 @@
       var dirty = false;
       selectedHuntMembers.some(function (m) {
         if (pristineMember.userUuid === m.user.uuid) {
-          dirty = (pristineMember.numberUuid === m.selectableNumber.uuid);
+          dirty = (pristineMember.numberUuid !== m.selectableNumber.uuid);
         }
         return dirty;
       });
@@ -82,7 +82,7 @@
         $q.all(promises).then(function () {
           pristineSelectedHuntMembers = angular.copy(selectedHuntMembers);
           asyncTask.resolve(selectedHuntMembers);
-        }, memberFailureResponse());
+        }, memberFailureResponse(asyncTask));
 
       } else {
         selectedHuntMembers = angular.copy(pristineSelectedHuntMembers);
@@ -175,9 +175,12 @@
       return [];
     }
 
-    function memberFailureResponse() {
+    function memberFailureResponse(asyncTask) {
       return function (response) {
         Notification.errorResponse(response, 'huronHuntGroup.memberFetchFailure');
+        if (asyncTask) {
+          asyncTask.reject();
+        }
       };
     }
 

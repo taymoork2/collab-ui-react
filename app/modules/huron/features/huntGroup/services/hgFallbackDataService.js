@@ -44,7 +44,7 @@
     }
 
     function setAsPristine() {
-      if(fallbackMember) {
+      if (fallbackMember) {
         pristineFallbackMember = angular.copy(fallbackMember.member);
       }
     }

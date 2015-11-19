@@ -15,7 +15,7 @@
     vm.callback = callback;
     vm.isLoadingCompleted = false;
     vm.back = true;
-    vm.backUrl = 'huronfeatures';
+    vm.huronFeaturesUrl = 'huronfeatures';
     vm.hgMethods = HuntGroupService.getHuntMethods();
 
     // Hunt Pilot controller functions.
@@ -58,7 +58,7 @@
       vm.hgId = $stateParams.feature.id;
       init();
     } else {
-      $state.go('huronfeatures');
+      $state.go(vm.huronFeaturesUrl);
     }
 
     ////////////////
@@ -81,7 +81,7 @@
           Notification.errorResponse(error, 'huronHuntGroup.huntGroupFetchFailure', {
             huntGroupName: vm.model.name
           });
-          $state.go('huronfeatures');
+          $state.go(vm.huronFeaturesUrl);
         });
     }
 
@@ -105,7 +105,7 @@
           initializeFields();
         }
       }, function () {
-        $state.go('huronfeatures');
+        $state.go(vm.huronFeaturesUrl);
       });
     }
 
