@@ -24,7 +24,9 @@
       getHuntMembers: getHuntMembers,
       isFallbackNumberValid: isFallbackNumberValid,
       getHuntMethods: getHuntMethods,
-      getHuntMemberWithSelectedNumber: getHuntMemberWithSelectedNumber
+      getHuntMemberWithSelectedNumber: getHuntMemberWithSelectedNumber,
+      NUMBER_FORMAT_DIRECT_LINE: "NUMBER_FORMAT_DIRECT_LINE",
+      NUMBER_FORMAT_EXTENSION: "NUMBER_FORMAT_EXTENSION"
     };
 
     return service;

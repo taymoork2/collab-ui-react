@@ -86,8 +86,12 @@ angular.module('WebExReports').service('WebexReportService', [
       "training_usage": "tc_usage"
     };
 
-    var pinnnedItems = ["meeting_usage", "attendee", "event_center_overview",
+    /*var pinnnedItems = ["meeting_usage", "attendee", "event_center_overview",
       "support_center_allocation_queue"
+    ];*/
+
+    var pinnnedItems = ["meeting_in_progess", "training_usage", "event_center_overview",
+      "support_center_support_sessions", "remote_access_computer_usage"
     ];
 
     this.reverseMapping = function (mapping) {

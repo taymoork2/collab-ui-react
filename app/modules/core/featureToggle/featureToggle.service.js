@@ -5,75 +5,99 @@
     .service('FeatureToggleService', FeatureToggleService);
 
   /* @ngInject */
-  function FeatureToggleService($http, $q, Config, Authinfo, Orgservice) {
+  function FeatureToggleService($resource, $q, Config, Authinfo, Orgservice) {
     var features = {
       pstnSetup: 'pstnSetup',
       csvUpload: 'csvUpload',
-      dirSync: 'dirSync'
+      dirSync: 'dirSync',
+      atlasCloudberryTrials: 'atlas-cloudberry-trials',
+      atlasStormBranding: 'atlas-2015-storm-launch',
+      atlasSipUriDomain: 'atlas-sip-uri-domain',
     };
+
     var service = {
       getUrl: getUrl,
       getFeatureForUser: getFeatureForUser,
       getFeaturesForUser: getFeaturesForUser,
+      getFeatureForOrg: getFeatureForOrg,
       getFeaturesForOrg: getFeaturesForOrg,
       supports: supports,
       supportsPstnSetup: supportsPstnSetup,
       supportsCsvUpload: supportsCsvUpload,
-      supportsDirSync: supportsDirSync
+      supportsDirSync: supportsDirSync,
+      features: features,
     };
+
+    var orgResource = $resource(Config.getWdmUrl() + '/features/rules/:id', {
+      id: '@id'
+    }, {
+      get: {
+        method: 'GET',
+        cache: true
+      }
+    });
+
+    var userResource = $resource(Config.getFeatureToggleUrl() + '/locus/api/v1/features/users/:id', {
+      id: '@id'
+    }, {
+      get: {
+        method: 'GET',
+        cache: true
+      }
+    });
 
     return service;
 
-    function getUrl(isUid, uidOrOid) {
-      var url = Config.getFeatureToggleUrl();
-      url += '/locus/api/v1/features/';
-      url += isUid ? 'users/' : 'rules/';
-      url += uidOrOid;
-      return url;
+    function getFeatureForUser(id, feature) {
+      return getFeature(true, id, feature);
     }
 
-    function getFeaturesForUser(uid) {
-      if (!uid) {
-        return $q(function (resolve, reject) {
-          reject('userId is undefined');
-        });
+    function getFeaturesForUser(id) {
+      return getFeatures(true, id);
+    }
+
+    function getFeatureForOrg(id, feature) {
+      return getFeature(false, id, feature);
+    }
+
+    function getFeaturesForOrg(id) {
+      return getFeatures(false, id);
+    }
+
+    function getUrl(isUser) {
+      return isUser ? userResource : orgResource;
+    }
+
+    function getFeatures(isUser, id) {
+      if (angular.isUndefined(id)) {
+        return $q.reject('id is undefined');
       }
 
-      var url = getUrl(true, uid);
-
-      return $http.get(url, {
-        cache: true
+      return getUrl(isUser).get({
+        id: id
+      }).$promise.then(function (response) {
+        _.forEach(response.developer, fixVal);
+        _.forEach(response.entitlement, fixVal);
+        _.forEach(response.user, fixVal);
+        return response;
       });
     }
 
-    function getFeatureForUser(uid, feature) {
-      return $q(function (resolve, reject) {
-        if (!feature) {
-          reject('feature is undefined');
-        } else {
-          resolve(getFeaturesForUser(uid).then(function (response) {
-            var contained = false;
-            _.each(response.data.developer, function (element) {
-              if (element.key === feature && element.val === 'true') {
-                contained = true;
-              }
-            });
-            return contained;
-          }));
-        }
-      });
-    }
+    function getFeature(isUser, id, feature) {
+      if (angular.isUndefined(feature)) {
+        return $q.reject('feature is undefined');
+      }
 
-    function getFeaturesForOrg(oid) {
-      return $q(function (resolve, reject) {
-        if (!oid) {
-          reject('orgId is undefined');
-        } else {
-          var url = getUrl(false, oid);
-          resolve($http.get(url, {
-            cache: true
-          }));
+      return getFeatures(isUser, id).then(function (features) {
+        var key = _.find(features.developer, {
+          key: feature
+        });
+        if (angular.isUndefined(key)) {
+          return false;
         }
+        return key.val;
+      }).catch(function (err) {
+        return false;
       });
     }
 
@@ -81,19 +105,35 @@
       return $q(function (resolve, reject) {
         //TODO temporary hardcoded checks for huron
         if (feature === features.pstnSetup) {
-          return resolve(Authinfo.getOrgId() === '666a7b2f-f82e-4582-9672-7f22829e728d');
+          resolve(Authinfo.getOrgId() === '666a7b2f-f82e-4582-9672-7f22829e728d');
         } else if (feature === features.csvUpload) {
-          return resolve(true);
+          resolve(true);
         } else if (feature === features.dirSync) {
           supportsDirSync().then(function (enabled) {
-            return resolve(enabled && Authinfo.getOrgId() === '4e2befa3-9d82-4fdf-ad31-bb862133f078');
+            resolve(enabled && Authinfo.getOrgId() === '4e2befa3-9d82-4fdf-ad31-bb862133f078');
+          });
+        } else if (feature === features.atlasCloudberryTrials) {
+          if (Authinfo.getOrgId() === 'c054027f-c5bd-4598-8cd8-07c08163e8cd') {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        } else if (feature === features.atlasStormBranding) {
+          resolve(false);
+        } else {
+          var userId = Authinfo.getUserId();
+          var orgId = Authinfo.getOrgId();
+
+          getFeatureForUser(userId, feature).then(function (userResult) {
+            if (!userResult) {
+              getFeatureForOrg(orgId, feature).then(function (orgResult) {
+                resolve(orgResult);
+              });
+            } else {
+              resolve(userResult);
+            }
           });
         }
-        // else {
-        //TODO first check user features
-        //TODO then check org features
-        //TODO last check system features
-        // }
       });
     }
 
@@ -118,6 +158,36 @@
         cache: true
       });
       return deferred.promise;
+    }
+
+    /**
+     * Feature toggle rules will set feature toggles for organizations
+     * @param  {uuid} orgId
+     * @param  {string} key   one of the FeatureToggleService.features
+     * @param  {any} val      false to turn off, otherwise any value
+     * @return {object}       this should not be used outside of this service
+     */
+    function generateFeatureToggleRule(orgId, key, val) {
+      return {
+        val: val,
+        key: key,
+        orgId: orgId,
+        group: 'ORG',
+      };
+    }
+
+    /**
+     * convenience fn to change val:['true'|'false'] to val:[true|false]
+     * @param  {object} feature feature from service
+     * @return {object}         feature with swap
+     */
+    function fixVal(feature) {
+      var val = feature.val;
+      if (val === 'true') {
+        feature.val = true;
+      } else if (val === 'false') {
+        feature.val = false;
+      }
     }
   }
 })();

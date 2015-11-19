@@ -30,6 +30,25 @@ var utils = require('./test.utils.js');
 //   return defer.promise;
 // };
 
+function getBlackListOrgs() {
+  var auth = helper.auth,
+    i,
+    ret = {};
+
+  for (i in auth) {
+    ret[auth[i].org] = null;
+  }
+  return ret;
+}
+
+function isBlackListedOrg(orgId) {
+  if (!orgId) {
+    throw new Error('Invalid value for orgId: ' + orgId);
+  }
+  var blackList = getBlackListOrgs();
+  return (orgId in blackList);
+}
+
 exports.deleteOrg = function (orgId, token) {
   var defer = protractor.promise.defer();
 
@@ -42,13 +61,18 @@ exports.deleteOrg = function (orgId, token) {
     },
   };
 
-  utils.sendRequest(options).then(function () {
-    //console.log('org deleted successfully: ', orgId);
-    defer.fulfill(200);
-  }, function (data) {
-    //console.log('org deletion failed: ', orgId, data);
-    defer.fulfill(200);
-  });
+  if (isBlackListedOrg(orgId)) {
+    // console.log('Prevent delete of a blacklisted orgId: ' + orgId);
+    defer.reject('Prevent delete of a blacklisted orgId: ' + orgId);
+  } else {
+    utils.sendRequest(options).then(function () {
+      // console.log('org deleted successfully: ', orgId);
+      defer.fulfill(200);
+    }, function (data) {
+      // console.log('org deletion failed: ', orgId, data);
+      defer.fulfill(200);
+    });
+  }
 
   return defer.promise;
 };

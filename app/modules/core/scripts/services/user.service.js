@@ -95,66 +95,25 @@ angular.module('Core')
           }
 
           if (userData.users.length > 0) {
-            var resultList = [];
             $http({
-                method: 'PATCH',
-                url: userUrl + 'organization/' + Authinfo.getOrgId() + '/users',
-                data: userData
-              })
-              .success(function (data, status) {
-                data = data || {};
-                // Huron user onboarding
-                if (angular.isDefined(data.userResponse) && angular.isArray(data.userResponse) && data.userResponse.length > 0) {
-                  var promises = [];
-                  angular.forEach(data.userResponse, function (user, index) {
-                    var userResult = {
-                      email: user.email,
-                      alertType: null
-                    };
-
-                    if (user.unentitled && user.unentitled.indexOf(Config.entitlements.huron) !== -1) {
-                      promises.push(HuronUser.delete(user.uuid)
-                        .catch(function (response) {
-                          // If the user does not exist in Squared UC do not report an error
-                          if (response.status !== 404) {
-                            this.alertType = 'danger';
-                            this.message = Notification.processErrorResponse(response, 'usersPage.deleteUserError', this);
-                          }
-                        }.bind(userResult)));
-                    }
-                    resultList.push(userResult);
-                  }); // end of foreach
-
-                  $q.all(promises).finally(function () {
-                    //concatenating the results in an array of strings for notify function
-                    var errors = [];
-
-                    for (var idx in resultList) {
-                      if (resultList[idx].alertType === 'danger') {
-                        errors.push(resultList[idx].message);
-                      }
-                    }
-                    //Displaying notifications
-                    if (errors.length > 0) {
-                      Notification.notify(errors, 'error');
-                    }
-
-                    $rootScope.$broadcast('Userservice::updateUsers');
-
-                    // callback to entitlement handle function
-                    data.success = true;
-                    callback(data, status, method);
-
-                  });
-
-                } // end of if
-              })
-              .error(function (data, status) {
-                data = data || {};
-                data.success = false;
-                data.status = status;
+              method: 'PATCH',
+              url: userUrl + 'organization/' + Authinfo.getOrgId() + '/users',
+              data: userData
+            }).success(function (data, status) {
+              data = data || {};
+              $rootScope.$broadcast('Userservice::updateUsers');
+              data.success = true;
+              if (angular.isFunction(callback)) {
                 callback(data, status, method);
-              });
+              }
+            }).error(function (data, status) {
+              data = data || {};
+              data.success = false;
+              data.status = status;
+              if (angular.isFunction(callback)) {
+                callback(data, status, method);
+              }
+            });
           }
         },
 

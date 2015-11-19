@@ -2,8 +2,8 @@
 
 //TODO refactor this into OnboardCtrl, BulkUserCtrl, AssignServicesCtrl
 angular.module('Core')
-  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$http', '$window', 'Log', 'Authinfo', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', 'HuronUser', '$timeout', 'Utils', 'Orgservice', 'TelephonyInfoService', 'FeatureToggleService', 'NAME_DELIMITER', 'SyncService', 'TelephoneNumberService', 'DialPlanService',
-    function ($scope, $state, $stateParams, $q, $http, $window, Log, Authinfo, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, HuronUser, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, SyncService, TelephoneNumberService, DialPlanService) {
+  .controller('OnboardCtrl', ['$scope', '$state', '$stateParams', '$q', '$http', '$window', 'Log', 'Authinfo', '$rootScope', '$translate', 'LogMetricsService', 'Config', 'GroupService', 'Notification', 'Userservice', '$timeout', 'Utils', 'Orgservice', 'TelephonyInfoService', 'FeatureToggleService', 'NAME_DELIMITER', 'SyncService', 'TelephoneNumberService', 'DialPlanService',
+    function ($scope, $state, $stateParams, $q, $http, $window, Log, Authinfo, $rootScope, $translate, LogMetricsService, Config, GroupService, Notification, Userservice, $timeout, Utils, Orgservice, TelephonyInfoService, FeatureToggleService, NAME_DELIMITER, SyncService, TelephoneNumberService, DialPlanService) {
       $scope.hasAccount = Authinfo.hasAccount();
       $scope.usrlist = [];
       $scope.internalNumberPool = [];
@@ -974,7 +974,6 @@ angular.module('Core')
           if (data.success) {
             Log.info('User onboard request returned:', data);
             $rootScope.$broadcast('USER_LIST_UPDATED');
-            var promises = [];
             var numAddedUsers = 0;
 
             for (var num = 0; num < data.userResponse.length; num++) {
@@ -999,18 +998,6 @@ angular.module('Core')
               if (userStatus === 200) {
                 userResult.message = $translate.instant('usersPage.onboardSuccess', userResult);
                 userResult.alertType = 'success';
-                var promise;
-                if (data.userResponse[i].unentitled && data.userResponse[i].unentitled.indexOf(Config.entitlements.huron) !== -1) {
-                  promise = HuronUser.delete(data.userResponse[i].uuid)
-                    .catch(function (response) {
-                      // If the user does not exist in Squared UC do not report an error
-                      if (response.status !== 404) {
-                        // Notify Huron error
-                        Notification.errorResponse(response);
-                      }
-                    });
-                  promises.push(promise);
-                }
               } else if (userStatus === 409) {
                 userResult.message = userResult.email + ' ' + data.userResponse[i].message;
                 userResult.alertType = 'danger';
@@ -1033,32 +1020,30 @@ angular.module('Core')
               $scope.results.resultList.push(userResult);
             }
 
-            $q.all(promises).then(function () {
-              //concatenating the results in an array of strings for notify function
-              var successes = [];
-              var errors = [];
-              var count_s = 0;
-              var count_e = 0;
-              for (var idx in $scope.results.resultList) {
-                if ($scope.results.resultList[idx].alertType === 'success') {
-                  successes[count_s] = $scope.results.resultList[idx].message;
-                  count_s++;
-                } else {
-                  errors[count_e] = $scope.results.resultList[idx].message;
-                  count_e++;
-                }
+            //concatenating the results in an array of strings for notify function
+            var successes = [];
+            var errors = [];
+            var count_s = 0;
+            var count_e = 0;
+            for (var idx in $scope.results.resultList) {
+              if ($scope.results.resultList[idx].alertType === 'success') {
+                successes[count_s] = $scope.results.resultList[idx].message;
+                count_s++;
+              } else {
+                errors[count_e] = $scope.results.resultList[idx].message;
+                count_e++;
               }
-              //Displaying notifications
-              if (successes.length + errors.length === usersList.length) {
-                $scope.btnOnboardLoading = false;
-                Notification.notify(successes, 'success');
-                Notification.notify(errors, 'error');
-                deferred.resolve();
-              }
-              if (angular.isFunction($scope.$dismiss) && successes.length === usersList.length) {
-                $scope.$dismiss();
-              }
-            });
+            }
+            //Displaying notifications
+            if (successes.length + errors.length === usersList.length) {
+              $scope.btnOnboardLoading = false;
+              Notification.notify(successes, 'success');
+              Notification.notify(errors, 'error');
+              deferred.resolve();
+            }
+            if (angular.isFunction($scope.$dismiss) && successes.length === usersList.length) {
+              $scope.$dismiss();
+            }
 
           } else {
             Log.warn('Could not onboard the user', data);
@@ -1690,12 +1675,9 @@ angular.module('Core')
 
       function sendBulkMetric() {
         var eType = LogMetricsService.getEventType('bulkCsvUsers');
-        if ($scope.options) {
-          if ($scope.options.addUsers == 1) {
-            eType = LogMetricsService.getEventType('bulkCsvUsers');
-          } else if ($scope.options.addUsers == 2) {
-            eType = LogMetricsService.getEventType('bulkDirSyncUsers');
-          }
+        var currentStepName = _.get($scope, 'wizard.current.step.name', 'csvResult');
+        if (currentStepName === 'dirsyncResult') {
+          eType = LogMetricsService.getEventType('bulkDirSyncUsers');
         }
         var data = {
           'newUsersCount': $scope.model.numNewUsers || 0,
