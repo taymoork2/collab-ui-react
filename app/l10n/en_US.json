@@ -2775,7 +2775,7 @@
     "noSearchHits": "No matches found. Try to narrow your search...",
     "searchInputDescription": "Search and view a user or a customer.",
     "roles": "Roles",
-    "goToSearch": "Go to Search",
+    "backToSearchResults": "Back to search results",
     "sso": "SSO",
     "dirSync": "Directory Sync",
     "createdAt": "Created At",
@@ -2796,6 +2796,11 @@
     "contact": "Contact",
     "claimedDomain": "Claimed Domain",
     "partners": "Partners",
-    "administratorUsers": "Administrator Users"
+    "administratorUsers": "Administrator Users",
+    "message": "Message",
+    "meeting": "Meeting",
+    "call": "Call",
+    "rooms": "Rooms",
+    "hybridServices": "Hybrid Services"
   }
 }
