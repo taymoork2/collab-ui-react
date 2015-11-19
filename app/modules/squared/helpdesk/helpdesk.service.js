@@ -69,18 +69,17 @@
 
     function getHybridServices(orgId) {
       // Use existing methods, such as in service-descriptor, instead ???
+      var deferred = $q.defer();
       if (useMock()) {
-        var services = [];
-        var deferred = $q.defer();
         deferred.resolve(filterHybridServices(HelpdeskMockData.org.entitlements));
         return deferred.promise;
       }
       ServiceDescriptor.servicesInOrg(orgId).then(function (services) {
-        var deferred = $q.defer();
         deferred.resolve(filterHybridServices(services));
       }, function (err) {
         deferred.reject(err);
       });
+      return deferred.promise;
     }
 
     function searchCloudberryDevices(searchString, orgId) {
