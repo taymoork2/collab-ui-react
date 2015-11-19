@@ -2,7 +2,7 @@
   'use strict';
 
   /*ngInject*/
-  function HelpdeskService($http, Config, $q, HelpdeskMockData, CsdmConfigService, CsdmConverter) {
+  function HelpdeskService(ServiceDescriptor, $location, $http, Config, $q, HelpdeskMockData, CsdmConfigService, CsdmConverter) {
     var urlBase = Config.getAdminServiceUrl(); //"http://localhost:8080/admin/api/v1/"
 
     function extractItems(res) {
@@ -13,8 +13,12 @@
       return res.data;
     }
 
+    function useMock(){
+      return $location.absUrl().match(/helpdesk-backend=mock/)
+    }
+
     function searchUsers(searchString, orgId) {
-      if (HelpdeskMockData.use) {
+      if (useMock()) {
         var deferred = $q.defer();
         deferred.resolve(HelpdeskMockData.users);
         return deferred.promise;
@@ -25,7 +29,7 @@
     }
 
     function searchOrgs(searchString) {
-      if (HelpdeskMockData.use) {
+      if (useMock()) {
         var deferred = $q.defer();
         deferred.resolve(HelpdeskMockData.orgs);
         return deferred.promise;
@@ -42,9 +46,35 @@
     }
 
     function getOrg(orgId) {
+      if (useMock()) {
+        var deferred = $q.defer();
+        deferred.resolve(HelpdeskMockData.org);
+        return deferred.promise;
+      }
       return $http
         .get(urlBase + 'helpdesk/organizations/' + orgId)
         .then(extractData);
+    }
+
+    function getHybridServices(orgId){
+      // Use existing methods, such as in service-descriptor, instead ???
+      if (useMock()) {
+        var services = [];
+        var deferred = $q.defer();
+        if (_.includes(HelpdeskMockData.org.entitlements, "squared-fusion-mgmt")){
+          services = _.filter(HelpdeskMockData.org.entitlements, function (service) {
+            return service === 'squared-fusion-cal' || service === 'squared-fusion-uc';
+          });
+        }
+        deferred.resolve(services);
+        return deferred.promise;
+      }
+      ServiceDescriptor.servicesInOrg(orgId).then(function (services) {
+        var deferred = $q.defer();
+        deferred.resolve(ServiceDescriptor.filterAllExceptManagement(services));
+      }, function (err) {
+        deferred.reject(err);
+      });
     }
 
     function searchCloudberryDevices(searchString, orgId) {
@@ -80,7 +110,8 @@
       searchOrgs: searchOrgs,
       getUser: getUser,
       getOrg: getOrg,
-      searchCloudberryDevices: searchCloudberryDevices
+      searchCloudberryDevices: searchCloudberryDevices,
+      getHybridServices: getHybridServices
     };
 
   }
