@@ -48,11 +48,11 @@
         </div>
 
         <cs-card-layout ng-if="helpdeskCtrl.currentSearch.userSearchResults.length > 0">
-          <cs-card class="full" ng-repeat="user in helpdeskCtrl.currentSearch.userSearchResults">
+          <cs-card class="full" ng-repeat="user in helpdeskCtrl.currentSearch.userSearchResults" ui-sref="helpdesk.user({user:user})">
             <article tabindex="{{$index + 1}}">
               <header>
-                <h5><a tabindex="-1" ui-sref-active="active"
-                       ui-sref="helpdesk.user({user:user})">{{user.displayName}}</a></h5>
+                <h5><!--<a tabindex="-1" ui-sref-active="active"
+                       ui-sref="helpdesk.user({user:user})">-->{{user.displayName}}<!--</a>--></h5>
               </header>
               <section class="card-section">
                 <div><span>{{user.userName}}</span></div>
