@@ -42,6 +42,7 @@
         HelpdeskService.searchUsers(vm.searchString, orgFilterId).then(function (res) {
           vm.currentSearch.userSearchResults = res;
           vm.searchingForUsers = false;
+          findOrgsForUsersResult(vm.currentSearch.userSearchResults);
         }, function (err) {
           vm.searchingForUsers = false;
           vm.currentSearch.userSearchResults = null;
@@ -91,6 +92,26 @@
       vm.searchString = '';
       vm.currentSearch.initSearch('');
       vm.currentSearch.orgFilter = null;
+    }
+
+    function findOrgsForUsersResult(userSearchResults) {
+      if (_.size(userSearchResults) > 0) {
+        var orgs = [];
+        _.each(userSearchResults, function (user) {
+          orgs.push(user.organization.id);
+        });
+        _.each(_.uniq(orgs), function (orgId) {
+          HelpdeskService.getOrg(orgId).then(function (res) {
+            _.each(userSearchResults, function (user) {
+              if (user.organization.id === orgId) {
+                user.organization = res;
+              }
+            });
+          }, function (err) {
+            $log.error(err);
+          });
+        });
+      }
     }
   }
 
