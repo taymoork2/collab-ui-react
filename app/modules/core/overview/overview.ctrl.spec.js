@@ -62,31 +62,27 @@ describe('Controller: OverviewCtrl', function () {
 
     it('should set the serviceHealth on each service based on enabled and ack on each service', function () {
       var hybridCard = controller.hybridCard;
-      hybridCard.hybridStatusEventHandler([
-        {
-          name: 'fake.service.enabled.ack',
-          enabled: true,
-          acknowledged: true
-        },
-        {
-          name: 'fake.service.ack',
-          enabled: false,
-          acknowledged: true
-        },
-        {
-          name: 'fake.service.enabled',
-          enabled: true,
-          acknowledged: false
-        },
-        {
-          name: 'fake.service',
-          enabled: false,
-          acknowledged: false
-        }]);
+      hybridCard.hybridStatusEventHandler([{
+        name: 'fake.service.enabled.ack',
+        enabled: true,
+        acknowledged: true
+      }, {
+        name: 'fake.service.ack',
+        enabled: false,
+        acknowledged: true
+      }, {
+        name: 'fake.service.enabled',
+        enabled: true,
+        acknowledged: false
+      }, {
+        name: 'fake.service',
+        enabled: false,
+        acknowledged: false
+      }]);
 
       expect(hybridCard.services).toBeDefined();
 
-      var testService = function(name,expectedHealth){
+      var testService = function (name, expectedHealth) {
         var serviceInTest = _(hybridCard.services).filter(function (service) {
           return service.name == name;
         }).first();
@@ -94,10 +90,10 @@ describe('Controller: OverviewCtrl', function () {
         expect(serviceInTest.healthStatus).toEqual(expectedHealth);
       };
 
-      testService('fake.service.enabled.ack','success');
-      testService('fake.service.ack','warning');
-      testService('fake.service.enabled','warning');
-      testService('fake.service','warning');
+      testService('fake.service.enabled.ack', 'success');
+      testService('fake.service.ack', 'warning');
+      testService('fake.service.enabled', 'warning');
+      testService('fake.service', 'warning');
 
     });
   });
@@ -106,12 +102,11 @@ describe('Controller: OverviewCtrl', function () {
     beforeEach(inject(defaultWireUpFunc));
     it('should update the list of services from an hybridStatusEvent', function () {
       var hybridCard = controller.hybridCard;
-      hybridCard.hybridStatusEventHandler([
-        {
-          name: 'fake.service',
-          enabled: true,
-          acknowledged: true
-        }]);
+      hybridCard.hybridStatusEventHandler([{
+        name: 'fake.service',
+        enabled: true,
+        acknowledged: true
+      }]);
 
       expect(hybridCard.services).toBeDefined();
       var fakeService = _(hybridCard.services).filter(function (service) {
@@ -131,15 +126,12 @@ describe('Controller: OverviewCtrl', function () {
     Config = _Config_;
 
     ServiceDescriptor = {
-      services: function (eventHandler) {
-      }
+      services: function (eventHandler) {}
     };
 
     Orgservice = {
-      getOrg: function (orgEventHandler) {
-      },
-      getUnlicensedUsers: function (unlicencedUsersHandler) {
-      },
+      getOrg: function (orgEventHandler) {},
+      getUnlicensedUsers: function (unlicencedUsersHandler) {},
       getHybridServiceAcknowledged: function () {
         var defer = $q.defer();
         defer.resolve({});
@@ -154,10 +146,8 @@ describe('Controller: OverviewCtrl', function () {
       getAllMetrics: function (backendCache) {
         return null;
       },
-      getOverviewMetrics: function (backendCach) {
-      },
-      healthMonitor: function (eventHandler) {
-      }
+      getOverviewMetrics: function (backendCach) {},
+      healthMonitor: function (eventHandler) {}
     };
 
     var Authinfo = {

@@ -49,6 +49,7 @@
   .cs-card {
     padding-bottom: 4px;
     article{
+      height: 100%;
       position: relative;
       section{
         .icon-circle:before{
@@ -154,6 +155,9 @@
     min-height: 50px;
     height: auto;
     display: block;
+        padding-left: 0;
+        padding-right: 1rem;
+
     .monitoring-panel{
       padding-right: 1rem;
       padding-left: 1rem;

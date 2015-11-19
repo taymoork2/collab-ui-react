@@ -75,8 +75,12 @@
 
     Orgservice.getHybridServiceAcknowledged().then(function (response) {
       if (response.status === 200 && response.data.items) {
-        vm.isCalendarAcknowledged = !!_.chain(response.data.items).find({id: 'sqared-fusion-cal'}).get('acknowledged', true).value();
-        vm.isCallAcknowledged = !!_.chain(response.data.items).find({id: 'sqared-fusion-uc'}).get('acknowledged', true).value();
+        vm.isCalendarAcknowledged = !!_.chain(response.data.items).find({
+          id: 'sqared-fusion-cal'
+        }).get('acknowledged', true).value();
+        vm.isCallAcknowledged = !!_.chain(response.data.items).find({
+          id: 'sqared-fusion-uc'
+        }).get('acknowledged', true).value();
       } else {
         Log.error("Error in GET service acknowledged status");
       }
@@ -161,7 +165,7 @@
     };
   }
 
-      //list: https://sqbu-github.cisco.com/WebExSquared/wx2-admin-service/blob/master/common/src/main/java/com/cisco/wx2/atlas/common/bean/order/OfferCode.java
+  //list: https://sqbu-github.cisco.com/WebExSquared/wx2-admin-service/blob/master/common/src/main/java/com/cisco/wx2/atlas/common/bean/order/OfferCode.java
 
   function CallCard() {
     var card = this;
@@ -198,11 +202,12 @@
     this.settingsUrl = '#/devices';
 
     this.healthStatusUpdatedHandler = function roomSystemHealthEventHandler(data) {
-      _.each(data.components, function (component) {
-        if (component.name == 'Rooms') {
-          card.healthStatus = mapStatus(card.healthStatus, component.status);
-        }
+      var room = _.find(data.components, {
+        name: 'Rooms'
       });
+      if (room) {
+        card.healthStatus = mapStatus(card.healthStatus, room.status);
+      }
     };
 
     this.reportDataEventHandler = function (event, response) {
