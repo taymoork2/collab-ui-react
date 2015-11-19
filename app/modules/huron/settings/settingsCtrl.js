@@ -6,7 +6,7 @@
 
   /* @ngInject */
   function HuronSettingsCtrl($scope, Authinfo, $q, $translate, HttpUtils, Notification, ServiceSetup,
-    CallerId, ExternalNumberService, HuronCustomer, ValidationService, TelephoneNumberService) {
+    CallerId, ExternalNumberService, HuronCustomer, ValidationService, TelephoneNumberService, DialPlanService) {
 
     var vm = this;
     var DEFAULT_SITE_INDEX = '000001';
@@ -22,6 +22,7 @@
     var DEFAULT_TO = '5999';
     var companyCallerIdType = 'Company Caller ID';
     vm.processing = false;
+    vm.hideFieldSteeringDigit = undefined;
     vm.loading = true;
     vm.init = init;
     vm.save = save;
@@ -191,6 +192,9 @@
           options: vm.steeringDigits
         },
         expressionProperties: {
+          'hide': function () {
+            return vm.hideFieldSteeringDigit;
+          },
           'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
             return true;
           }
@@ -200,6 +204,9 @@
       key: 'displayNumberRanges',
       type: 'repeater',
       className: 'service-setup service-setup-extension',
+      hideExpression: function () {
+        return vm.hideFieldInternalNumberRange;
+      },
       templateOptions: {
         label: $translate.instant('serviceSetupModal.internalExtensionRange'),
         description: $translate.instant('serviceSetupModal.internalNumberRangeDescription'),
@@ -345,7 +352,13 @@
         }
       },
       expressionProperties: {
-        'hide': 'model.displayNumberRanges.length > 9'
+        'hide': function () {
+          if (vm.model.displayNumberRanges.length > 9) {
+            return true;
+          } else {
+            return vm.hideFieldInternalNumberRange;
+          }
+        }
       }
     }];
 
@@ -426,7 +439,6 @@
       var promises = [];
       vm.loading = true;
       var errors = [];
-
       promises.push(HuronCustomer.get().then(function (customer) {
         vm.customer = customer;
         angular.forEach(customer.links, function (service) {
@@ -440,6 +452,8 @@
         return initTimeZone();
       }).then(function () {
         return listInternalExtensionRanges();
+      }).then(function () {
+        return setServiceValues();
       }).catch(function (response) {
         errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.customerGetError'));
       }).then(function () {
@@ -679,6 +693,25 @@
         } else {
           vm.model.callerId.callerIdEnabled = false;
         }
+      });
+    }
+
+    function setServiceValues() {
+      DialPlanService.getCustomerDialPlanDetails(Authinfo.getOrgId()).then(function (response) {
+        if (response.extensionGenerated === 'true') {
+          vm.hideFieldInternalNumberRange = true;
+        } else {
+          vm.hideFieldInternalNumberRange = false;
+        }
+        if (response.steeringDigitRequired === 'true') {
+          vm.hideFieldSteeringDigit = false;
+        } else {
+          vm.hideFieldSteeringDigit = true;
+        }
+      }).catch(function (response) {
+        vm.hideFieldInternalNumberRange = false;
+        vm.hideFieldSteeringDigit = false;
+        Notification.errorResponse(response, 'serviceSetupModal.customerDialPlanDetailsGetError');
       });
     }
 
