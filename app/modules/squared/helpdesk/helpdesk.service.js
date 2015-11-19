@@ -110,13 +110,25 @@
       return filteredDevices;
     }
 
+    function resendInviteEmail(displayName, email) {
+      return $http
+        .post(urlBase + 'helpdesk/actions/resendinvitation/invoke', {
+          inviteList: [{
+            displayName: displayName,
+            email: email
+          }]
+        })
+        .then(extractData);
+    }
+
     return {
       searchUsers: searchUsers,
       searchOrgs: searchOrgs,
       getUser: getUser,
       getOrg: getOrg,
       searchCloudberryDevices: searchCloudberryDevices,
-      getHybridServices: getHybridServices
+      getHybridServices: getHybridServices,
+      resendInviteEmail: resendInviteEmail
     };
 
   }
