@@ -25,7 +25,27 @@
       if (result) {
         messagingLabel = $translate.instant('partnerHomePage.message');
       }
+      // formly doesnt allow dynamic label changing, but it does allow dynamic input adding
+      // so we change our label, and then add it to the form
+      vm.individualServices.splice(1, 0, collabCheckBox);
     });
+
+    var collabCheckBox = {
+      key: 'COLLAB',
+      type: 'checkbox',
+      model: vm.offers,
+      defaultValue: _.get(vm, 'currentTrial.communications.status') === 'ACTIVE',
+      templateOptions: {
+        label: messagingLabel,
+        id: 'squaredTrial',
+        class: 'small-offset-1 columns',
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function () {
+          return _.get(vm, 'currentTrial.communications.status') === 'ACTIVE';
+        },
+      },
+    };
 
     vm.roomSystemOptions = [5, 10, 15, 20, 25];
     vm.individualServices = [{
@@ -48,21 +68,6 @@
           message: function () {
             return $translate.instant('partnerHomePage.invalidTrialLicenseCount');
           },
-        },
-      },
-    }, {
-      key: 'COLLAB',
-      type: 'checkbox',
-      model: vm.offers,
-      defaultValue: _.get(vm, 'currentTrial.communications.status') === 'ACTIVE',
-      templateOptions: {
-        label: messagingLabel,
-        id: 'squaredTrial',
-        class: 'small-offset-1 columns',
-      },
-      expressionProperties: {
-        'templateOptions.disabled': function () {
-          return _.get(vm, 'currentTrial.communications.status') === 'ACTIVE';
         },
       },
     }, {

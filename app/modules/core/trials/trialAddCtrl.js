@@ -31,7 +31,26 @@
       if (result) {
         messagingLabel = $translate.instant('partnerHomePage.message');
       }
+      // formly doesnt allow dynamic label changing, but it does allow dynamic input adding
+      // so we change our label, and then add it to the form
+      vm.individualServices.splice(1, 0, collabCheckBox);
     });
+
+    var collabCheckBox = {
+      key: 'COLLAB',
+      type: 'checkbox',
+      model: vm.offers,
+      templateOptions: {
+        label: messagingLabel,
+        id: 'squaredTrial',
+        class: 'small-offset-1 columns'
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function () {
+          return vm.isSquaredUCEnabled();
+        },
+      },
+    };
 
     vm.custInfoFields = [{
       key: 'customerName',
@@ -77,20 +96,6 @@
           message: function () {
             return $translate.instant('partnerHomePage.invalidTrialLicenseCount');
           },
-        },
-      },
-    }, {
-      key: 'COLLAB',
-      type: 'checkbox',
-      model: vm.offers,
-      templateOptions: {
-        label: messagingLabel,
-        id: 'squaredTrial',
-        class: 'small-offset-1 columns'
-      },
-      expressionProperties: {
-        'templateOptions.disabled': function () {
-          return vm.isSquaredUCEnabled();
         },
       },
     }, {
