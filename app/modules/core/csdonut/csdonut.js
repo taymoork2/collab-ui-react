@@ -22,7 +22,8 @@
       scope: {
         value: '=',
         max: '=',
-        unlimited: '='
+        unlimited: '=',
+        ssize: '='
       },
 
       controller: ['$scope', function controller($scope) {
@@ -31,8 +32,13 @@
         $scope.donutId = 'csDonut_' + (Math.floor(Math.random() * 100)).toString();
         //Settings defaults
         $scope.colours = ['#3CA8E8', 'lightgray'];
-        $scope.height = 85;
-        $scope.width = 85;
+        if (!$scope.height) {
+          $scope.height = 85;
+        }
+        if (!$scope.width) {
+          $scope.width = 85;
+        }
+
         $scope.radius = 3;
         $scope.dataset = [];
         $scope.text = {
@@ -59,7 +65,11 @@
           }
         };
 
-        $scope.computeDataset = function (value, max, unlimited) {
+        $scope.computeDataset = function (value, max, unlimited, ssize) {
+          if (typeof ssize !== 'undefined') {
+            $scope.width = ssize;
+            $scope.height = ssize;
+          }
           if (typeof unlimited !== 'undefined' && unlimited === true) {
             $scope.text.content = 'Unlimited';
             $scope.colours = ['#3CA8E8'];
@@ -154,7 +164,7 @@
       link: function link(scope, element) {
 
         var radius, pie, arc, svg, path, text;
-        scope.computeDataset(scope.value, scope.max, scope.unlimited);
+        scope.computeDataset(scope.value, scope.max, scope.unlimited, scope.ssize);
         scope.computeTextProperties(scope.value, scope.unlimited);
         scope.createDonut = function createDonut() {
           radius = Math.min(scope.getWidth(), scope.getHeight()) / 2;

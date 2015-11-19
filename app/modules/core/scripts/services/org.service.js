@@ -12,7 +12,9 @@
     var service = {
       'getOrg': getOrg,
       'getAdminOrg': getAdminOrg,
+      'getAdminOrgUsage': getAdminOrgUsage,
       'getValidLicenses': getValidLicenses,
+      'getLicensesUsage': getLicensesUsage,
       'getUnlicensedUsers': getUnlicensedUsers,
       'setSetupDone': setSetupDone,
       'setOrgSettings': setOrgSettings,
@@ -67,6 +69,7 @@
         adminUrl = Config.getAdminServiceUrl() + 'organizations/' + oid;
       } else {
         adminUrl = Config.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId();
+
       }
 
       $http.get(adminUrl)
@@ -85,6 +88,57 @@
         });
     }
 
+    function getAdminOrgUsage(callback, oid) {
+      var adminUrl = null;
+      if (oid) {
+        adminUrl = Config.getAdminServiceUrl() + 'customers/' + oid + '/usage';
+      } else {
+        adminUrl = Config.getAdminServiceUrl() + 'customers/' + Authinfo.getOrgId() + '/usage';
+      }
+
+      $http.get(adminUrl)
+        .success(function (data, status) {
+          data = data || {};
+          data.success = true;
+          callback(data, status);
+        })
+        .error(function (data, status) {
+          if (!data || !(data instanceof Object)) {
+            data = {};
+          }
+          data.success = false;
+          data.status = status;
+          callback(data, status);
+        });
+    }
+
+    function getLicensesUsage() {
+      var d = $q.defer();
+
+      getAdminOrgUsage(function (data, status) {
+        var validLicenses;
+        var usageLicenses = data[0].licenses || [];
+        var statusLicenses = Authinfo.getLicenses();
+
+        if (!data.success) {
+          Log.debug('Get existing admin org failed. Status: ' + status);
+          d.reject(status);
+          return;
+        }
+
+        validLicenses = _.filter(usageLicenses, function (license) {
+          var match = _.find(statusLicenses, {
+            'licenseId': license.licenseId
+          });
+          // If the license is not valid do not add to list
+          return !(match.status === 'CANCELLED' || match.status === 'SUSPENDED');
+        });
+
+        d.resolve(validLicenses);
+      });
+
+      return d.promise;
+    }
     /**
      * Compare the two lists of licenses and filter out invalid ones
      */

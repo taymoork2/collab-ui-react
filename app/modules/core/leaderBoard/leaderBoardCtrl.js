@@ -13,7 +13,7 @@ angular.module('Core')
           isNewTrial: false,
           services: []
         },
-        conferencing: {
+        cf: {
           title: $filter('translate')('leaderBoard.conferencingTitle'),
           subtitle: $filter('translate')('leaderBoard.conferencingSubtitle'),
           unlimited: false,
@@ -30,6 +30,15 @@ angular.module('Core')
           services: []
         },
 
+        conferencing: {
+          title: $filter('translate')('leaderBoard.conferencingTitle'),
+          subtitle: $filter('translate')('leaderBoard.conferencingSubtitle'),
+          unlimited: false,
+          visible: false,
+          isNewTrial: false,
+          services: []
+        },
+
         shared_devices: {
           title: $filter('translate')('leaderBoard.shared_devicesTitle'),
           subtitle: $filter('translate')('leaderBoard.shared_devicesSubtitle'),
@@ -38,6 +47,10 @@ angular.module('Core')
           isNewTrial: false,
           services: []
         },
+
+        storage: {
+          services: []
+        }
 
       };
 
@@ -75,6 +88,14 @@ angular.module('Core')
         services: []
       };
 
+      $scope.vm.webexServices = {
+        title: $filter('translate')('leaderBoard.conferencingTitle'),
+        unlimited: false,
+        visible: false,
+        isNewTrial: false,
+        services: []
+      };
+
       $scope.vm.cmrServices = {
         title: $filter('translate')('leaderBoard.shared_devicesTitle'),
         unlimited: false,
@@ -83,9 +104,8 @@ angular.module('Core')
         services: []
       };
 
-
       $scope.vm.sdServices = {
-        title: $filter('translate')('leaderBoard.communicationTitle'),
+        title: $filter('translate')('leaderBoard.shared_devicesTitle'),
         unlimited: false,
         visible: false,
         isNewTrial: false,
@@ -104,29 +124,47 @@ angular.module('Core')
       // for explicit ordering:
       $scope.bucketKeys = [
         'messaging',
+        'cf',
         'conferencing',
         'communication',
-        'shared_devices'
+        'shared_devices',
+        'storage'
       ];
 
+      var map = {
+        "MS": "Message",
+        "CF": "Meeting 25 Party",
+        "MC": "Meeting 25 Party with WebEx Meeting Center",
+        "SC": "WebEx Support Center",
+        "TC": "WebEx Training Center",
+        "EC": "WebEx Event Center",
+        "EE": "Meeting 25 Party with Webex Enterprise Edition",
+        "CMR": "WebEx Collaboration Meeting Room",
+        "CO": "Call",
+        "ST": "Storage",
+        "SD": "Spark Room System"
+      };
 
-      var getLicenses = function() {
-        Orgservice.getValidLicenses().then(function (licenses) {
-          if(licenses.length === 0  ){
+      var getLicenses = function () {
+
+        Orgservice.getLicensesUsage().then(function (licenses) {
+          if (licenses.length === 0) {
             $scope.bucketKeys.forEach(function (bucket) {
               $scope.buckets[bucket].unlimited = true;
             });
-            } else {
-              licenses.forEach(function (license) {
+          } else {
+            licenses.forEach(function (license) {
               if (license.licenseId.lastIndexOf('CMR', 0) === 0) return;
               var bucket = license.licenseType.toLowerCase();
-              $scope.buckets[bucket].services.push(license);
-              $scope.buckets[bucket].volume = license.volume;
-              $scope.buckets[bucket].usage = license.usage;
-              $scope.buckets[bucket].isTrial = license.isTrial;
-              $scope.buckets[bucket].licenseId = license.licenseId;
-              });
-            }
+              var offerName = license.offerName;
+              license.label = map[offerName];
+              if (license.offerName !== "CF") {
+                $scope.buckets[bucket].services.push(license);
+              } else {
+                $scope.buckets.cf.services.push(license);
+              }
+            });
+          }
         });
       };
 

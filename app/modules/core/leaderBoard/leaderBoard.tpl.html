@@ -1,6 +1,6 @@
 <div class="leader-board row" ng-init="init()">
   <div>
-    <cs-card class="small header-bar">
+    <cs-card class="small header-bar" ng-show = "buckets.messaging.services.length !== 0">
     <article>
       <header class="header-section align-center">
         <span class="bucket-header">{{vm.messagingServices.title | translate}}</span>
@@ -11,79 +11,97 @@
         </cs-donut> 
         <div class = "text-center" class="quantity">
           <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
-          <span ng-if="!service.trial">{{service.volume}}</span>
-          <span ng-if="service.trial" class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"></span>
+          <span>{{service.volume}}</span>
+           <p ng-show = "service.isTrial" class = "text-center" style="padding-top: 5px; padding-bottom: 5px;"><span ng-show = "buckets.shared_devices.trial !== false" class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"</span> </p>
         </div>
       </div>
     </section>
   </article>
 </cs-card>
-<cs-card class="small header-bar meetings">
+
+
+<cs-card class="small header-bar meetings" ng-show = "buckets.conferencing.services.length !== 0" >
 <article>
   <header class="header-section align-center">
     <span class="bucket-header">{{vm.confServices.title | translate}}</span>
   </header> 
-  <section class="bucket-info">
-    <div class="text-center" class="item-paid" ng-repeat="service in buckets.conferencing.services">
+  </section>
+  <section ng-if="buckets.cf.services.length !== 0"class="bucket-info">
+    <div class="text-center" class="item-paid" ng-repeat="service in buckets.cf.services">
       <cs-donut value="service.usage" max="service.volume" class="text-center">
     </cs-donut> 
     <div class = "text-center" class="quantity">
       <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
       <span ng-if="!service.trial">{{service.volume}}</span>
-      <span ng-if="service.trial" class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"></span>
+      <p ng-show = "service.isTrial" class = "text-center" style="padding-top: 5px; padding-bottom: 5px;"><span ng-show = "buckets.shared_devices.trial !== false" class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"</span> </p>
     </div>
   </div>
 </section>
-</article>
-</cs-card>
-
-<cs-card class="small header-bar people">
-<article>
-  <header class="header-section align-center">
-    <span class="bucket-header">{{buckets.communication.title | translate}}</span>
-  </header> 
-  <cs-donut value="buckets.communication.currentCount" max="buckets.communication.totalCount" unlimited="buckets.communication.unlimited" class="text-center">
-</cs-donut>
-<section class="bucket-info">
-<!-- 
-    <div class="text-center" class="item-paid" ng-repeat="service in buckets.communication.services">
+  <section class="bucket-info">
+<!--     <div class="text-center" class="item-paid" ng-repeat="service in buckets.conferencing.services">
       <cs-donut value="service.usage" max="service.volume" class="text-center">
     </cs-donut> 
     <div class = "text-center" class="quantity">
       <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
       <span ng-if="!service.trial">{{service.volume}}</span>
-      <span ng-if="service.trial" class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"></span>
+      <p> {{service.siteUrl}}</p>
+      <div> {{service.offerName}}</div>
+       <p ng-show = "service.isTrial" class = "text-center" style="padding-top: 5px; padding-bottom: 5px;"><span ng-show = "buckets.shared_devices.trial !== false" class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"</span> </p>
     </div>
   </div> -->
-  <p class = "text-center"><span class="total-count">{{buckets.communication.totalCount}}</span> {{buckets.communication.subtitle | translate}}</p>
-</section>
-
+    <div class="text-center site-info" class="item-paid" ng-repeat="service in buckets.conferencing.services" style="min-height:120px;">
+      <div style="width:100px;float:left;">
+        <cs-donut value="service.usage" max="service.volume" ssize="64" class="text-center">
+        </cs-donut>
+         <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
+        <span ng-if="!service.trial">{{service.volume}}</span>
+        <span ng-if="service.trial" class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"></span>
+      </div> 
+      <div class = "text-center " class="quantity" style="margin-left:100px">
+        <div> {{service.siteUrl}}</div>
+        <div> {{service.label}}</div>
+        <div> {{service.isTrial}}</div>
+      </div>
+  </div>
 </article>
 </cs-card>
 
+<cs-card class="small header-bar people" ng-show = "buckets.communication.services.length !== 0">
+    <article>
+      <header class="header-section align-center">
+        <span class="bucket-header">{{vm.commServices.title | translate}}</span>
+      </header> 
+      <section class="bucket-info">
+        <div class="text-center" class="item-paid" ng-repeat="service in buckets.communication.services">
+          <cs-donut value="service.usage" max="service.volume" class="text-center">
+        </cs-donut> 
+        <div class = "text-center" class="quantity">
+          <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
+          <span>{{service.volume}}</span>
+           <p ng-show = "service.isTrial" class = "text-center" style="padding-top: 5px; padding-bottom: 5px;"><span ng-show = "buckets.shared_devices.trial !== false" class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"</span> </p>
+        </div>
+      </div>
+    </section>
+  </article>
+</cs-card>
 
-<cs-card class="small header-bar gray">
-<article>
-  <header class="header-section align-center">
-    <span class="bucket-header">{{buckets.shared_devices.title | translate}}</span>
-  </header> 
-  <cs-donut value="buckets.shared_devices.currentCount" max="buckets.shared_devices.totalCount" unlimited="buckets.shared_devices.unlimited" class="text-center">
-</cs-donut>
-<section class="bucket-info">
-<!--  
-    <div class="text-center" class="item-paid" ng-repeat="service in buckets.communication.services">
-      <cs-donut value="service.usage" max="service.volume" class="text-center">
-    </cs-donut> 
-    <div class = "text-center" class="quantity">
-      <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
-      <span ng-if="!service.trial">{{service.volume}}</span>
-      <span ng-if="service.trial" class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"></span>
-    </div>
-  </div> -->
-  <p class = "text-center"><span class="total-count">{{buckets.shared_devices.totalCount}}</span> {{buckets.shared_devices.subtitle | translate}}</p>
-  <p class = "text-center"><span ng-show = "buckets.shared_devices.trial !== false" class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"</span> </p>
-</section>
-</article>
+<cs-card class="small header-bar gray" ng-show = "buckets.shared_devices.services.length !== 0">
+    <article>
+      <header class="header-section align-center">
+        <span class="bucket-header">{{vm.sdServices.title | translate}}</span>
+      </header> 
+      <section class="bucket-info">
+        <div class="text-center" class="item-paid" ng-repeat="service in buckets.shared_devices.services">
+          <cs-donut value="service.usage" max="service.volume" class="text-center">
+        </cs-donut> 
+        <div class = "text-center" class="quantity">
+          <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
+          <span>{{service.volume}}</span>
+           <p ng-show = "service.isTrial" class = "text-center" style="padding-top: 5px; padding-bottom: 5px;"><span ng-show = "buckets.shared_devices.trial !== false" class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"</span> </p>
+        </div>
+      </div>
+    </section>
+  </article>
 </cs-card>
 </div>
 </div>
