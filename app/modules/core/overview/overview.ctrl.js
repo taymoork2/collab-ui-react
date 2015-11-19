@@ -147,8 +147,10 @@
     this.desc = 'overview.cards.meeting.desc';
     this.name = 'overview.cards.meeting.title';
     this.cardClass = 'meetings';
+    this.notEnabledText = 'overview.cards.meeting.notEnabledText';
+    this.notEnabledFooter = 'overview.contactPartner';
     this.trial = false;
-    this.enabled = true;
+    this.enabled = false;
     this.settingsUrl = '';
     this.healthStatusUpdatedHandler = _.partial(meeetingHealthEventHandler, card);
 

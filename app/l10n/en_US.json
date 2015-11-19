@@ -2721,7 +2721,8 @@
         "previousTitle": "Last week:"
       },
       "meeting": {
-        "title": "Meeting"
+        "title": "Meeting",
+        "notEnabledText": "Hybrid Services allow you to integrate on-premise systems to the Cisco Collaboration Platform."
       },
       "call": {
         "title": "Call",

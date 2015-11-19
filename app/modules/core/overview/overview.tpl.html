@@ -55,12 +55,12 @@
               </ul>
             </div>
           </section>
-          <section ng-if="!card.enabled">
+          <section ng-if="!card.enabled" class="disabled-section">
             <span>{{(card.notEnabledText || 'overview.notEnabledText') | translate}}</span>
             <a ng-href="card.notEnabledAction" ng-if="card.notEnabledAction">{{card.notEnabledActionText | translate}}</a>
           </section>
-          <footer ng-if="!card.enabled && card.notEnabledFooter">
-            <span>{{card.notEnabledFooter| translate}}</span>
+          <footer ng-if="!card.enabled && card.notEnabledFooter" class="disabled-footer">
+            <p>{{card.notEnabledFooter| translate}}</p>
           </footer>
         </article>
       </cs-card>
