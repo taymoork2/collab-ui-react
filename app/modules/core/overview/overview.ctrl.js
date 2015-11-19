@@ -163,8 +163,10 @@
         return l.isTrial && _(['CF', 'EE', 'MC', 'SC', 'TC', 'EC']).contains(l.offername);
       });
 
-      var hasSites = _.some(licenses, function (l) {return l.siteUrl;});
-      this.settingsUrl = hasSites? '#/site-list':'';
+      var hasSites = _.some(licenses, function (l) {
+        return l.siteUrl;
+      });
+      this.settingsUrl = hasSites ? '#/site-list' : '';
     };
   }
 
