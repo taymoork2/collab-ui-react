@@ -70,19 +70,13 @@
       }
     });
 
-    var extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-uc'];
     vm.isCalendarAcknowledged = true;
     vm.isCallAcknowledged = true;
 
     Orgservice.getHybridServiceAcknowledged().then(function (response) {
-      if (response.status === 200) {
-        _.forEach(response.data.items, function (items) {
-          if (items.id === extensionEntitlements[0]) {
-            vm.isCalendarAcknowledged = items.acknowledged;
-          } else if (items.id === extensionEntitlements[1]) {
-            vm.isCallAcknowledged = items.acknowledged;
-          }
-        });
+      if (response.status === 200 && response.data.items) {
+        vm.isCalendarAcknowledged = !!_.chain(response.data.items).find({id: 'sqared-fusion-cal'}).get('acknowledged', true).value();
+        vm.isCallAcknowledged = !!_.chain(response.data.items).find({id: 'sqared-fusion-uc'}).get('acknowledged', true).value();
       } else {
         Log.error("Error in GET service acknowledged status");
       }
