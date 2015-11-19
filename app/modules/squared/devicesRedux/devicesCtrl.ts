@@ -1,6 +1,5 @@
 module devicesRedux {
 
-  /* @ngInject */
   class DevicesReduxCtrl {
 
     private _search;
@@ -31,6 +30,7 @@ module devicesRedux {
       matches: (device) => !device.hasIssues || this.search
     }];
 
+    /* @ngInject */
     constructor(private $scope,
                 private $state,
                 private $window,
