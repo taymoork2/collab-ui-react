@@ -83,10 +83,7 @@
     });
 
     vm.setupNotDone = function () {
-      if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
-        return true;
-      }
-      return false;
+      return !!(!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin());
     };
   }
 
