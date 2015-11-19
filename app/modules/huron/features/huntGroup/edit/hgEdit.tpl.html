@@ -62,7 +62,7 @@
                               id="number.uuid"
                               ng-model="hge.selectedFallbackMember.member.selectableNumber"></cs-radio>
                     <p>
-                      <a href ng-click="hge.removeFallbackDest()">Remove Member</a>
+                      <a href ng-click="hge.removeFallbackDest()">{{:: 'huronHuntGroup.remove' | translate}}</a>
                     </p>
                   </fieldset>
                 </section>
@@ -143,7 +143,7 @@
                                 ng-click="hge.checkMemberDirtiness(member.user.uuid)"
                                 ng-model="member.selectableNumber"></cs-radio>
                       <p>
-                        <a href ng-click="hge.unSelectHuntGroupMember(member)">Remove Member</a>
+                        <a href ng-click="hge.unSelectHuntGroupMember(member)">{{:: 'huronHuntGroup.removeMember' | translate}}</a>
                       </p>
                     </fieldset>
                   </section>
