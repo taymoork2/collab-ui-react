@@ -24,9 +24,6 @@ angular.module('Core')
           grid.showSiteLinks = false;
           grid.isIframeSupported = false;
           grid.isAdminReportEnabled = false;
-          grid.siteAccessBlocked = false;
-          grid.getInfoFromXmlApiError = false;
-          grid.webexSiteEntitled = true;
           grid.webExSessionTicket = null;
 
           logMsg = funcName + ": " + "\n" +
@@ -49,37 +46,23 @@ angular.module('Core')
         '  </p>' + '\n' +
         '</div>' + '\n' +
         '<div ng-if="row.entity.showSiteLinks">' + '\n' +
-        '  <div ng-if="row.entity.siteAccessBlocked">' + '\n' +
-        '    <div ng-if="row.entity.getInfoFromXmlApiError">' + '\n' +
-        '      <p class="ngCellText">' + '\n' +
-        '        <i class="icon-error icon"></i>' + '\n' +
-        '      </p>' + '\n' +
-        '    </div>' + '\n' +
-        '    <div ng-if="!row.entity.webexSiteEntitled">' + '\n' +
-        '      <p class="ngCellText">' + '\n' +
-        '        <i class="icon-warning icon"></i>' + '\n' +
-        '      </p>' + '\n' +
-        '    </div>' + '\n' +
+        '  <div ng-if="!row.entity.isIframeSupported">' + '\n' +
+        '    <launch-site admin-email-param={{siteList.siteLaunch.adminEmailParam}}' + '\n' +
+        '                 advanced-settings={{siteList.siteLaunch.advancedSettings}}' + '\n' +
+        '                 user-email-param={{siteList.siteLaunch.userEmailParam}}' + '\n' +
+        '                 webex-advanced-url={{siteList.getWebexUrl(row.entity.license.siteUrl)}}' + '\n' +
+        '                 id = {{row.entity.license.siteUrl}}_xlaunch-webex-site-settings' + '\n ' +
+        '                 name={{row.entity.license.siteUrl}}_xlaunch-webex-site-settings>' + '\n' +
+        '    </launch-site>' + '\n' +
         '  </div>' + '\n' +
-        '  <div ng-if="!row.entity.siteAccessBlocked">' + '\n' +
-        '    <div ng-if="!row.entity.isIframeSupported">' + '\n' +
-        '      <launch-site admin-email-param={{siteList.siteLaunch.adminEmailParam}}' + '\n' +
-        '                   advanced-settings={{siteList.siteLaunch.advancedSettings}}' + '\n' +
-        '                   user-email-param={{siteList.siteLaunch.userEmailParam}}' + '\n' +
-        '                   webex-advanced-url={{siteList.getWebexUrl(row.entity.license.siteUrl)}}' + '\n' +
-        '                   id = {{row.entity.license.siteUrl}}_xlaunch-webex-site-settings' + '\n ' +
-        '                   name={{row.entity.license.siteUrl}}_xlaunch-webex-site-settings>' + '\n' +
-        '      </launch-site>' + '\n' +
-        '    </div>' + '\n' +
-        '    <div ng-if="row.entity.isIframeSupported">' + '\n' +
-        '      <a id="{{row.entity.license.siteUrl}}_webex-site-settings"' + '\n' +
-        '         name="{{row.entity.license.siteUrl}}_webex-site-settings"' + '\n' +
-        '         ui-sref="site-settings({siteUrl:row.entity.license.siteUrl})">' + '\n' +
-        '        <p class="ngCellText">' + '\n' +
-        '          <i class="icon-settings icon"></i>' + '\n' +
-        '        </p>' + '\n' +
-        '      </a>' + '\n' +
-        '    </div>' + '\n' +
+        '  <div ng-if="row.entity.isIframeSupported">' + '\n' +
+        '    <a id="{{row.entity.license.siteUrl}}_webex-site-settings"' + '\n' +
+        '       name="{{row.entity.license.siteUrl}}_webex-site-settings"' + '\n' +
+        '       ui-sref="site-settings({siteUrl:row.entity.license.siteUrl})">' + '\n' +
+        '      <p class="ngCellText">' + '\n' +
+        '        <i class="icon-settings icon"></i>' + '\n' +
+        '      </p>' + '\n' +
+        '    </a>' + '\n' +
         '  </div>' + '\n' +
         '</div>' + '\n';
 
@@ -198,33 +181,20 @@ angular.module('Core')
                   "isIframeSupported=" + grid.isIframeSupported + "\n" +
                   "isAdminReportEnabled=" + grid.isAdminReportEnabled + "\n" +
                   "showSiteLinks=" + grid.showSiteLinks;
-                // $log.log(logMsg);
+                $log.log(logMsg);
               }, // isSiteSupportsIframeSuccess()
 
-              function isSiteSupportsIframeError(result) {
+              function isSiteSupportsIframeError(response) {
                 var funcName = "isSiteSupportsIframeError()";
                 var logMsg = "";
-
-                logMsg = funcName + ": " + "\n" +
-                  "result=" + JSON.stringify(result);
-                $log.log(logMsg);
-
-                if (
-                  (null === result.response) ||
-                  ("" === result.response) ||
-                  ("null" === result.response)
-                ) {
-
-                  grid.siteAccessBlocked = true;
-                  grid.getInfoFromXmlApiError = true;
-                } else {
-                  grid.siteAccessBlocked = true;
-                  grid.webexSiteEntitled = false;
-                }
 
                 grid.isIframeSupported = false;
                 grid.isAdminReportEnabled = false;
                 grid.showSiteLinks = true;
+
+                logMsg = funcName + ": " + "\n" +
+                  "response=" + JSON.stringify(response);
+                $log.log(logMsg);
               } // isSiteSupportsIframeError()
             ); // WebExUtilsFact.isSiteSupportsIframe().then
           } // processGrid()
