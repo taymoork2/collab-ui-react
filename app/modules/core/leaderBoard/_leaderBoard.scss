@@ -27,6 +27,7 @@
   width: 225px;
   float: right;
   padding-top: 5px;
+  margin-bottom: 25px;
 }
 
 .cs-donut-svg {
@@ -101,4 +102,10 @@
   height: 13px;
   margin-left: 15px;
   margin-right: 15px;
+}
+
+.quantity-badge{
+  font-size: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
 }
