@@ -1428,7 +1428,8 @@
       "empar": "Empar"
     },
     "sayMessageHelp": "Select the desired language and voice which is used to speak the phrase to the caller. Say message is optional. If no message is entered, the conversation will continue to the next step.",
-    "errorAddCMI": "Unable to assign phone number {{phoneNumber}}: {{statusText}} ({{status}})."
+    "errorAddCMI": "Unable to assign phone number {{phoneNumber}}: {{statusText}} ({{status}}).",
+    "errorRemoveCMI": "Unable to remove assigned phone number(s)."
   },
   "callPark": {
     "code": "CP",

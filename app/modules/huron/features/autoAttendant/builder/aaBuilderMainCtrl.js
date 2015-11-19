@@ -6,7 +6,7 @@
     .controller('AABuilderMainCtrl', AABuilderMainCtrl); /* was AutoAttendantMainCtrl */
 
   /* @ngInject */
-  function AABuilderMainCtrl($scope, $translate, $state, $stateParams, AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService, AAValidationService, Notification) {
+  function AABuilderMainCtrl($scope, $translate, $state, $stateParams, AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService, AAValidationService, AANumberAssignmentService, Notification, Authinfo) {
     var vm = this;
     vm.overlayTitle = $translate.instant('autoAttendant.builderTitle');
     vm.aaModel = {};
@@ -31,7 +31,16 @@
       vm.aaNameFocus = true;
     }
 
+    function unAssignAssigned() {
+      if (vm.aaModel.aaRecord.assignedResources.length < vm.ui.ceInfo.getResources().length) {
+        var ceInfo = AutoAttendantCeInfoModelService.getCeInfo(vm.aaModel.aaRecord);
+        AANumberAssignmentService.setAANumberAssignment(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, ceInfo);
+      }
+    }
+
     function closePanel() {
+      unAssignAssigned();
+
       $state.go('huronfeatures');
     }
 
@@ -148,6 +157,7 @@
               statusText: response.statusText,
               status: response.status
             });
+            unAssignAssigned();
           }
         );
       } else {
@@ -172,6 +182,7 @@
               statusText: response.statusText,
               status: response.status
             });
+            unAssignAssigned();
           }
         );
       }

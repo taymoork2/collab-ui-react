@@ -23,6 +23,7 @@
     vm.numberTypeList = {};
 
     vm.availablePhoneNums = [];
+    vm.assignedPhoneNums = [];
 
     vm.selectPlaceHolder = $translate.instant('autoAttendant.selectPlaceHolder');
 
@@ -69,6 +70,13 @@
 
     }
 
+    function removeAssignedNumbers() {
+      vm.assignedPhoneNums.forEach(function (number) {
+        removeNumber(number);
+      });
+
+    }
+
     // Remove number, top-level method called by UI
     function removeNumber(number) {
 
@@ -107,7 +115,11 @@
       resource.setType(vm.numberTypeList[number]);
 
       // add to the resource list
-      var resources = vm.ui.ceInfo.getResources();
+      var resources;
+
+      // angular.copy(vm.ui.ceInfo.getResources(), resources);
+      resources = vm.ui.ceInfo.getResources();
+
       resources.push(resource);
 
       AANumberAssignmentService.setAANumberAssignment(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources).then(
@@ -130,6 +142,8 @@
               resources.push(n);
             });
           }
+          vm.assignedPhoneNums.push(number);
+
         },
         function (response) {
           Notification.error('autoAttendant.errorAddCMI', {
@@ -155,7 +169,16 @@
         }
       }
 
-      var obj = AANumberAssignmentService.setAANumberAssignment(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources);
+      AANumberAssignmentService.setAANumberAssignment(Authinfo.getOrgId(),
+        vm.aaModel.aaRecordUUID, resources).then(
+        function (response) {},
+        function (response) {
+          Notification.error('autoAttendant.errorRemoveCMI', {
+            phoneNumber: number,
+            statusText: response.statusText,
+            status: response.status
+          });
+        });
 
     }
 
