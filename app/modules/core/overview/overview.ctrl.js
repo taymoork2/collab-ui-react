@@ -150,7 +150,7 @@
     this.notEnabledText = 'overview.cards.meeting.notEnabledText';
     this.notEnabledFooter = 'overview.contactPartner';
     this.trial = false;
-    this.enabled = false;
+    this.enabled = true;
     this.settingsUrl = '';
     this.healthStatusUpdatedHandler = _.partial(meeetingHealthEventHandler, card);
 
