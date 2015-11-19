@@ -1,0 +1,76 @@
+<cs-card-layout block-view="true">
+  <cs-card class="large header-bar" ng-show="helpdeskOrgCtrl.showCard('message')">
+    <article>
+      <header class="align-center">
+        <h4><i class="icon icon-circle-message"/>Message</h4>
+      </header>
+      <section>
+        <p>Nothing here yet</p>
+      </section>
+      <footer></footer>
+    </article>
+  </cs-card>
+
+  <cs-card class="large header-bar" ng-show="helpdeskOrgCtrl.showCard('meeting')">
+    <article>
+      <header class="align-center">
+        <h4><i class="icon icon-circle-group"/>Meeting</h4>
+      </header>
+      <section>
+        <p>Nothing here yet</p>
+      </section>
+      <footer></footer>
+    </article>
+  </cs-card>
+
+  <cs-card class="large header-bar" ng-show="helpdeskOrgCtrl.showCard('call')">
+    <article>
+      <header class="align-center">
+        <h4><i class="icon icon-circle-call"/>Call</h4>
+      </header>
+      <section>
+        <p>Nothing here yet</p>
+      </section>
+      <footer></footer>
+    </article>
+  </cs-card>
+
+  <cs-card class="large header-bar" ng-show="helpdeskOrgCtrl.showCard('room')">
+    <article>
+      <header class="align-center">
+        <h4><i class="icon icon-circle-telepresence"/>Rooms</h4>
+      </header>
+      <section>
+        <p>Nothing here yet</p>
+      </section>
+      <footer></footer>
+    </article>
+  </cs-card>
+
+  <cs-card class="large header-bar" ng-show="helpdeskOrgCtrl.showCard('hybrid')">
+    <article>
+      <header class="align-center">
+        <h4><i class="icon icon-circle-world"/>Hybrid Services</h4>
+      </header>
+      <section>
+        <p>Enabled services:</p>
+        <div ng-repeat="hybridService in helpdeskOrgCtrl.hybridServices">
+          <p>{{hybridService}}</p>
+        </div>
+      </section>
+      <footer></footer>
+    </article>
+  </cs-card>
+
+  <cs-card class="large header-bar" ng-show="helpdeskOrgCtrl.showCard('users')">
+    <article>
+      <header class="align-center">
+        <h4>Users</h4>
+      </header>
+      <section>
+        <p>Nothing here yet</p>
+      </section>
+      <footer></footer>
+    </article>
+  </cs-card>
+</cs-card-layout>
