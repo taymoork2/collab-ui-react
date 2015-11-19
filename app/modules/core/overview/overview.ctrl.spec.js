@@ -17,15 +17,12 @@ describe('Controller: OverviewCtrl', function () {
       Config = _Config_;
 
       ServiceDescriptor = {
-        services: function (eventHandler) {
-        }
+        services: function (eventHandler) {}
       };
 
       Orgservice = {
-        getOrg: function (orgEventHandler) {
-        },
-        getUnlicensedUsers: function (unlicencedUsersHandler) {
-        },
+        getOrg: function (orgEventHandler) {},
+        getUnlicensedUsers: function (unlicencedUsersHandler) {},
         getHybridServiceAcknowledged: function () {
           var defer = $q.defer();
           defer.resolve({});
@@ -40,10 +37,8 @@ describe('Controller: OverviewCtrl', function () {
         getAllMetrics: function (backendCache) {
           return null;
         },
-        getOverviewMetrics: function (backendCach) {
-        },
-        healthMonitor: function (eventHandler) {
-        }
+        getOverviewMetrics: function (backendCach) {},
+        healthMonitor: function (eventHandler) {}
       };
 
       var Authinfo = {
@@ -102,30 +97,38 @@ describe('Controller: OverviewCtrl', function () {
       expect(_.contains(cardnames, 'overview.cards.undefined.title')).toBeFalsy();
     });
 
-    describe('Callcard with healthStatus Event', function(){
-      it('should update its status', function() {
+    describe('Callcard with healthStatus Event', function () {
+      it('should update its status', function () {
 
-        var callCard = _(controller.cards).filter(function(card){
+        var callCard = _(controller.cards).filter(function (card) {
           return card.name == 'overview.cards.call.title';
         }).first();
 
-        callCard.healthStatusUpdatedHandler({components:[{name:'Mobile Clients',status:'error'}]});
+        callCard.healthStatusUpdatedHandler({
+          components: [{
+            name: 'Mobile Clients',
+            status: 'error'
+          }]
+        });
 
         //TODO this isn't giving the status as expected, its undefined.
         //expect(callCard.healthStatus).toEqual('error');
       });
     });
 
-    describe('HybridCard with hybridStatusEvent', function(){
-      it('should update the list of services', function() {
+    describe('HybridCard with hybridStatusEvent', function () {
+      it('should update the list of services', function () {
 
         var hybridCard = controller.hybridCard;
 
-
-        hybridCard.hybridStatusEventHandler([{name:'fake.service'}]);
+        hybridCard.hybridStatusEventHandler([{
+          name: 'fake.service'
+        }]);
 
         expect(hybridCard.services).toBeDefined();
-        expect(_.any(hybridCard.services, function(service){return service.name == 'fake.service';})).toBeTruthy();
+        expect(_.any(hybridCard.services, function (service) {
+          return service.name == 'fake.service';
+        })).toBeTruthy();
       });
     });
   });

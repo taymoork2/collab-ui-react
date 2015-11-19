@@ -75,8 +75,12 @@
 
     Orgservice.getHybridServiceAcknowledged().then(function (response) {
       if (response.status === 200 && response.data.items) {
-        vm.isCalendarAcknowledged = !!_.chain(response.data.items).find({id: 'sqared-fusion-cal'}).get('acknowledged', true).value();
-        vm.isCallAcknowledged = !!_.chain(response.data.items).find({id: 'sqared-fusion-uc'}).get('acknowledged', true).value();
+        vm.isCalendarAcknowledged = !!_.chain(response.data.items).find({
+          id: 'sqared-fusion-cal'
+        }).get('acknowledged', true).value();
+        vm.isCallAcknowledged = !!_.chain(response.data.items).find({
+          id: 'sqared-fusion-uc'
+        }).get('acknowledged', true).value();
       } else {
         Log.error("Error in GET service acknowledged status");
       }
@@ -129,7 +133,10 @@
     };
 
     this.licenseEventHandler = function (licenses) {
-      card.trial = _.any(licenses, {'offerName': 'MS', 'isTrial': true});
+      card.trial = _.any(licenses, {
+        'offerName': 'MS',
+        'isTrial': true
+      });
     };
   }
 
@@ -156,7 +163,7 @@
         return (
           l.offerName == 'CF' ||
           l.offerName == 'EE' ||
-          l.offerName == 'MC' ) && l.isTrial;
+          l.offerName == 'MC') && l.isTrial;
       }); //list: https://sqbu-github.cisco.com/WebExSquared/wx2-admin-service/blob/master/common/src/main/java/com/cisco/wx2/atlas/common/bean/order/OfferCode.java
     };
   }
@@ -190,7 +197,9 @@
     this.settingsUrl = '#/devices';
 
     this.healthStatusUpdatedHandler = function roomSystemHealthEventHandler(data) {
-      var room = _.find(data.components, {name: 'Rooms'});
+      var room = _.find(data.components, {
+        name: 'Rooms'
+      });
       if (room) {
         card.healthStatus = mapStatus(card.healthStatus, room.status);
       }
@@ -206,7 +215,10 @@
     };
 
     this.licenseEventHandler = function (licenses) {
-      card.trial = _.any(licenses, {'offerName': 'SD', 'isTrial': true}); //SD = Shared Devices
+      card.trial = _.any(licenses, {
+        'offerName': 'SD',
+        'isTrial': true
+      }); //SD = Shared Devices
     };
   }
 
