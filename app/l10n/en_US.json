@@ -131,7 +131,7 @@
     "paidComm": "Advanced Spark Call",
     "paidContactCenter": "Chat, Email, Voice",
     "freeSpark": "Free Spark Messaging",
-    "enterpriseEdition": "Enterprise Edition",
+    "enterpriseEdition": "Enterprise Edition {{capacity}}",
     "meetingCenter": "Meeting Center {{capacity}}",
     "supportCenter": "Support Center {{capacity}}",
     "trainingCenter": "Training Center {{capacity}}",
@@ -195,8 +195,8 @@
     "addOrganizationTabDesc": "Add a new organization to this account",
     "fusionDetailsTab": "Connector Management",
     "fusionDetailsTabDesc": "Connector Management",
-    "huronLineDetailsTab": "Communication",
-    "huronLineDetailsTabDesc": "Communication Details",
+    "huronLineDetailsTab": "Call",
+    "huronLineDetailsTabDesc": "Numbers and Settings",
     "MediafusionDetailsTab": "Media Service Management",
     "MediafusionDetailsTabDesc": "Media Service Management",
     "callRoutingTab": "Call Routing",
@@ -596,7 +596,9 @@
     "lastName": "Last Name",
     "email": "Email",
     "id": "ID",
-    "new": "New"
+    "new": "New",
+    "devices": "Devices",
+    "users": "Users"
   },
   "notifications": {
     "success": "Success notifications",
@@ -1052,16 +1054,25 @@
     "needHelpExplain": "Search the knowledge base.",
     "planReview": "Plan Review",
     "spark": "Spark",
-    "sparkMsg": "Spark Messaging",
+    "sparkMsg": "Free Spark Messaging",
     "sparkStub": "Set up Spark",
     "webex": "WebEx",
     "webexMsg": "Webex Conferencing",
     "webexStub": "Set up Webex",
     "calling": "Calling",
     "callingMsg": "Cloud Calling",
+    "message": "Message",
+    "meeting": "Meeting",
+    "call": "Call",
     "messaging": "Messaging",
     "conferencing": "Conferencing",
     "communications": "Communications",
+    "roomSystems": "Room Systems",
+    "freeMsg": "Message Free",
+    "freeMtg": "Meeting Free 3 Party",
+    "freeCall": "Call Free",
+    "confMsg": "Free 3 Party Spark Meet",
+    "commMsg": "Free 1:1 Spark Call",
     "communicationsSub": "Setup calling service",
     "claimSipUrl": "Claim SIP URI Domain",
     "claimSipUriTitle": "Customize your company’s SIP URI domain name. This domain will be used to create a universally reachable URI for each user in your company.",
@@ -1476,6 +1487,7 @@
     "externalNumberTooltip": "Use the direct line to reach this line from outside of the company.",
     "externalNumberPoolError": "Direct lines failed to load.",
     "externalNumberMappingError": "Direct line Mappings failed to load.",
+    "nationalNumberLabel": "National Number",
     "chooseNumber": "Choose a Number",
     "searchNumber": "Search for a number...",
     "addNewNumber": "Add a New Number",
@@ -1634,7 +1646,9 @@
     "oneHundred": "100",
     "twoHundred": "200",
     "fiveHundred": "500",
-    "duration": "Trial Duration (days)",
+    "duration": "Duration of the Trial",
+    "durationHelp": "Days",
+    "message": "Message",
     "thirtyDays": "30 Days",
     "sixtyDays": "60 Days",
     "ninetyDays": "90",
@@ -1644,6 +1658,8 @@
     "startTrial": "Start Trial",
     "customerInformation": "Customer Information",
     "termsOfTrial": "Terms of Trial",
+    "trialServices": "Trial Services",
+    "sparkRoomSystem": "Room Systems",
     "trialButton": "Add Trial Customer",
     "dialogTitle": "Add New Trial",
     "customerName": "Company Name",
@@ -1658,7 +1674,11 @@
     "averageCallsTitle": "Average Calls Per User",
     "contentSharedTitle": "Files Shared",
     "errGetPhoneNumberCount": "Failed to retrieve phone number count.",
-    "invalidTrialLicenseCount": "Number of Licenses should be greater than 0 and less than 1000."
+    "invalidTrialLicenseCount": "Number of Licenses should be greater than 0 and less than 1000.",
+    "individualUserServices": "Individual User Services",
+    "roomSystems": "Room Systems",
+    "roomSystem": "Room System",
+    "call": "Call"
   },
   "trialModal": {
     "trialSuccess": "You have set up your trial successfully.",
@@ -1939,6 +1959,15 @@
       "reportAlarm": "reported alarm.",
       "reportAlarms": "reported alarms."
     },
+    "activateService": {
+      "ingress": "Extend the Cloud to Your On-Premises Environment",
+      "serviceName": "Media Service Activation",
+      "label": "ACTIVATE AND BEGIN SETUP"
+    },
+    "mediaServiceActivationFailure": "Problems enabling the service",
+    "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
+    "serviceName": "Media Service",
+    "serviceDescription": "Media Service complement your on-premises conferencing environment and add further flexibility to your existing configuration. With Media Services, you can be certain that your meetings can happen anywhere and that the cloud resources will jump in to help when you need them.",
     "delete": "Delete",
     "cancel": "Cancel",
     "actionsHeader": "Actions",
@@ -2222,7 +2251,7 @@
     "support_center": "Support Center",
     "remote_access": "Remote Access",
 
-    "meeting_in_progess": "Meetings in Progess",
+    "meeting_in_progess": "Meetings in Progress",
     "meeting_usage": "Meeting Usage",
     "recordings_storage_usage": "Storage Usage",
     "recording_usage": "Recording Usage",
@@ -2533,7 +2562,7 @@
   },
 
   "huronDetails": {
-    "title": "Communication",
+    "title": "Call",
     "linesTitle": "Numbers",
     "settingsTitle": "Settings",
     "featuresTitle": "Features"
@@ -2640,6 +2669,8 @@
     "featureListingError": "Failed to retrieve the feature list.",
     "numberFetchFailure": "Unable to get numbers.",
     "newFeatureButtonText": "New",
+    "remove": "Remove",
+    "removeMember": "Remove Member",
     "newFeatureModalTitle": "Create New Feature",
     "featuresNotYetConfiguredPage": {
       "nothingToSee": "Nothing here to see yet.",
@@ -2682,23 +2713,24 @@
     "remove": "Remove",
     "removeMem": "Remove Member",
     "addMemberLabel": "Add & Search Members",
-    "successSave": "{{huntGroupName}} hunt group has been created successfully",
-    "successUpdate": "{{huntGroupName}} hunt group has been updated successfully",
-    "errorSave": "Failed to create the {{huntGroupName}} Hunt Group",
-    "errorUpdate": "Failed to update the {{huntGroupName}} Hunt Group",
+    "successSave": "'{{huntGroupName}}' hunt group has been created successfully",
+    "successUpdate": "'{{huntGroupName}}' hunt group has been updated successfully",
+    "errorSave": "Failed to create the '{{huntGroupName}}' Hunt Group",
+    "errorUpdate": "Failed to update the '{{huntGroupName}}' Hunt Group",
     "numberLabel": "Select Numbers",
     "cancelHeader": "Cancel Hunt Group Creation",
     "cancelDialog": "Are you sure you wish to cancel hunt group creation? This hunt group will not be saved.",
     "confirmButton": "Cancel Creation",
     "continueButton": "Continue Creation",
     "memberFetchFailure": "Unable to get members.",
+    "huntGroupFetchFailure": "Failed to fetch hunt group details '{{huntGroupName}}'.",
     "invalidMember": "Select atleast one member",
     "invalidFallback": "Select a number or enter a new valid number"
   },
   "overview": {
     "pageTitle": "Overview",
-    "thisMonth": "This Month",
-    "lastMonth": "Last Month",
+    "thisMonth": "This month",
+    "lastMonth": "Last month:",
     "cards": {
       "users": {
         "title": "Users",
@@ -2709,7 +2741,10 @@
       },
       "message": {
         "title": "Message",
-        "desc": "Active Rooms"
+        "desc": "Active Rooms",
+        "currentTitle": "Active rooms this week",
+        "previousTitle": "Last week:"
+
       },
       "meeting": {
         "title": "Meeting",
@@ -2722,8 +2757,8 @@
       "roomSystem": {
         "title": "Room Systems",
         "desc": "Registered Systems",
-        "currentTitle": "Last 30 days",
-        "previousTitle": "Total"
+        "currentTitle": "Online this week",
+        "previousTitle": "Last week:"
       },
       "hybrid": {
         "title": "Hybrid Services"

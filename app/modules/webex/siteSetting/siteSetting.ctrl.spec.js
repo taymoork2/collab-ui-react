@@ -23,10 +23,7 @@ describe(
     var scopeTrustIframeUrl = paramsSettingPageIframeUrl;
     var scopeAdminEmail = authPrimaryEmail;
     var scopeLocale = "es_MX";
-    var scopeSiteName = paramsSiteUrl.substring(
-      0,
-      paramsSiteUrl.indexOf('.')
-    );
+    var scopeSiteName = paramsSiteUrl;
 
     beforeEach(module('WebExSiteSetting'));
 

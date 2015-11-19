@@ -6,7 +6,7 @@
     .controller('OrganizationFeaturesCtrl', OrganizationFeaturesCtrl);
 
   /* @ngInject */
-  function OrganizationFeaturesCtrl($stateParams, $rootScope, $scope, $state, Storage, Orgservice, Authinfo, Notification) {
+  function OrganizationFeaturesCtrl($stateParams, $scope, $state, FeatureToggleService) {
     var vm = this;
     vm.currentOrganization = $stateParams.currentOrganization;
     vm.options = [{
@@ -29,7 +29,19 @@
 
     }
 
+    function getOrgFeatureToggles() {
+      // TODO complete once the feature toggle api is smoothened out
+      FeatureToggleService.getFeaturesForOrg(vm.currentOrganization.id)
+        .then(function (result) {
+
+        })
+        .catch(function (err) {
+
+        });
+    }
+
     vm.resetForm = resetForm;
     vm.updateToggles = updateToggles;
+    getOrgFeatureToggles();
   }
 })();

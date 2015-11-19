@@ -44,7 +44,7 @@ describe('ExportUserStatusesController', function () {
     $scope.selectedServiceId = "squared-fusion-cal";
     $scope.getHeader();
     expect($scope.loading).toBe(true);
-    expect($scope.getHeader()).toEqual(["id", "email", "connector", "myService state", "message"]);
+    expect($scope.getHeader()).toEqual(["Id", "Username", "Connector", "myService State", "Message"]);
   });
 
   it('export multiple users', function () {
@@ -67,7 +67,7 @@ describe('ExportUserStatusesController', function () {
         }]
       });
 
-    uss_request = "https://uss-integration.wbx2.com/uss/api/v1/userStatuses?serviceId=squared-fusion-cal&limit=2000&orgId=5632-f806-org";
+    uss_request = "https://uss-integration.wbx2.com/uss/api/v1/userStatuses?serviceId=squared-fusion-cal&limit=100000&orgId=5632-f806-org";
     $httpBackend
       .when('GET', uss_request)
       .respond({

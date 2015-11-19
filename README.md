@@ -12,6 +12,13 @@ Adherence is mandatory. Please refactor non-compliant code.
 * [Angular Style Guide](https://github.com/johnpapa/angularjs-styleguide)
 * [Git Commit Style Guide](http://chris.beams.io/posts/git-commit/)
 
+**Additional Conventions**
+* Indent using spaces not tabs
+  * 2 space indentation - Javascript, HTML, and CSS
+* When using the bard.js test helper you need to add a jshint globals comment at the
+    top of the file containing the dependencies in the spec, example:
+      `/* globals $httpBackend, $rootScope, Authinfo, Userservice */`
+
 If you have any questions open an
 [issue](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/issues/new)
 and include the text: "Please add $cec_user_id to the 'Atlas UI Dev Team' room. Thanks!"
@@ -163,14 +170,13 @@ Adding a simple page ("Hello World")
 * add a menu option by adding a tab to `config.js` -> tabs array under: `app/modules/core/scripts/services/config.js`
 
 **3. Add its unit and end-to-end tests**
-* add a unit test folder for your module:
-  * **+**`test/hello-world`
 * add a functional test folder for your module:
   * **+**`test/e2e-protractor/hello-world`
-* add the new test directories to `config.testFiles.spec` and `config.testFiles.e2e` in **gulp.config.js**:
-  * **+**`test + '/hello-world/**/*.js'`
+* add the new test directory to `config.testFiles.e2e` in **gulp/gulp.config.js**:
   * **+**`hello-world: e2e + '/hello-world/**/*_spec.js'`
-* write unit tests and place them in the new unit test folder
+* write unit tests and place them side by side the corresponding code under test
+  * All unit tests are named the same as the corresponding code file, but append .spec.js
+  * **+**`say-hello: 'app/modules/hello-world/say-hello/say-hello.controller.spec.js'`
 * write an end to end protractor test and place it in the new e2e folder
 * **Testing Resources**
   * https://docs.angularjs.org/guide/unit-testing

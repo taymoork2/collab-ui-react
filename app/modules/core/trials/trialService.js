@@ -55,13 +55,13 @@
       });
     }
 
-    function startTrial(customerName, customerEmail, trialPeriod, count, startDate, offersList) {
+    function startTrial(customerName, customerEmail, trialPeriod, count, roomSystemCount, startDate, offersList) {
       var trialData = {
         'customerName': customerName,
         'customerEmail': customerEmail,
         'offers': [],
         'trialPeriod': trialPeriod,
-        'startDate': startDate
+        'startDate': startDate,
       };
 
       for (var i in offersList) {
