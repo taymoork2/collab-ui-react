@@ -933,10 +933,10 @@ angular.module('Core')
           'huronsettings',
           'huronfeatures',
           'huronnewfeature',
-          'cdr-overview',
           'huronHuntGroup',
           'huntgroupedit',
-          'cdrsupport'
+          'cdrsupport',
+          'cdr-overview'
         ],
         'squared-fusion-mgmt': [
           'cluster-details',
@@ -993,11 +993,11 @@ angular.module('Core')
           'mediafusionconnector',
           'hurondetails',
           'huronsettings',
-          'cdrsupport',
-          'cdr-overview',
           'calendar-service',
           'call-service',
-          'management-service'
+          'management-service',
+          'cdrsupport',
+          'cdr-overview'
         ]
       };
 

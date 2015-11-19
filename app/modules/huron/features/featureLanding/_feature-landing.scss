@@ -5,7 +5,7 @@ $features-header-height : 83px;
 .features{
 
   .features-content {
-    height: calc(100vh - #{($navbar-height + $page-header-height + $features-header-height)});
+    height: calc(100vh - #{($top-bar-height + $page-header-height + $features-header-height)});
     overflow: auto;
     background-color: $brand-white;
     @include vr-spacing(pt, 0);
@@ -17,7 +17,7 @@ $features-header-height : 83px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: calc(100vh - #{($navbar-height + $page-header-height + $features-header-height)});
+  height: calc(100vh - #{($top-bar-height + $page-header-height + $features-header-height)});
    >p {
      color: $gray-dark;
    }

@@ -16,14 +16,15 @@
 
     var isValidInternalNumber = false;
     var isValidExternalNumber = false;
-    var fallbackNumber = '';
-    var fallbackMember = '';
+    var fallbackNumber;
+    var fallbackMember;
     var pristineFallbackMember;
 
     return {
       isFallbackInvalid: isFallbackInvalid,
       validateFallbackNumber: validateFallbackNumber,
       setFallbackMember: setFallbackMember,
+      removeFallbackMember: removeFallbackMember,
       getFallbackDestinationJSON: getFallbackDestinationJSON,
       setFallbackDestinationJSON: setFallbackDestinationJSON,
       reset: reset,
@@ -36,6 +37,11 @@
     };
 
     ////////////////
+
+    function removeFallbackMember() {
+      reset(false);
+      return fallbackMember;
+    }
 
     function setAsPristine() {
       pristineFallbackMember = angular.copy(fallbackMember.member);
@@ -92,7 +98,7 @@
     }
 
     function isFallbackValidMember() {
-      return (fallbackMember && fallbackMember !== '');
+      return (fallbackMember);
     }
 
     function isFallbackValidNumber() {
