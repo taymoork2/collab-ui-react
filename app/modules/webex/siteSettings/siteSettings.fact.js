@@ -236,7 +236,7 @@
 
               logMsg = funcName + ": " + "\n" +
                 "siteInfoCardObj=" + JSON.stringify(_this.webExSiteSettingsObj.siteInfoCardObj);
-              $log.log(logMsg);
+              // $log.log(logMsg);
             }, // getWebexLicenseInfoSuccess()
 
             function getWebexLicenseInfoError(result) {
