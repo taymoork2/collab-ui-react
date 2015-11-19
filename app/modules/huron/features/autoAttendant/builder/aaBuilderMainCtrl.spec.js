@@ -173,7 +173,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       readCe = spyOn(AutoAttendantCeService, 'readCe').and.returnValue($q.when(angular.copy(aCe)));
       spyOn($scope.vm, 'populateUiModel');
       spyOn(Notification, 'error');
-      spyOn(AAModelService, 'newAARecord').and.callThrough();
+      spyOn(AAModelService, 'getNewAARecord').and.callThrough();
     });
 
     it('should create a new aaRecord successfully when no name is given and vm.aaModel.aaRecord is undefined', function () {
@@ -181,7 +181,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       controller.selectAA('');
       $scope.$apply();
 
-      expect(AAModelService.newAARecord).toHaveBeenCalled();
+      expect(AAModelService.getNewAARecord).toHaveBeenCalled();
       expect($scope.vm.populateUiModel).toHaveBeenCalled();
       expect(AutoAttendantCeService.readCe).not.toHaveBeenCalled();
       expect(Notification.error).not.toHaveBeenCalled();
@@ -195,7 +195,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       $scope.$apply();
 
       // $scope.vm.aaModel should not be initialized again with a new AARecord
-      expect(AAModelService.newAARecord).not.toHaveBeenCalled();
+      expect(AAModelService.getNewAARecord).not.toHaveBeenCalled();
       expect(AutoAttendantCeService.readCe).not.toHaveBeenCalled();
       expect(Notification.error).not.toHaveBeenCalled();
 
@@ -208,7 +208,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       controller.selectAA('AA2');
       $scope.$apply();
 
-      expect(AAModelService.newAARecord).not.toHaveBeenCalled();
+      expect(AAModelService.getNewAARecord).not.toHaveBeenCalled();
       expect(Notification.error).not.toHaveBeenCalled();
 
       expect($scope.vm.aaModel.aaRecord.callExperienceName).toEqual(aCe.callExperienceName);
@@ -227,7 +227,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       $scope.$apply();
 
       expect(Notification.error).toHaveBeenCalled();
-      expect(AAModelService.newAARecord).not.toHaveBeenCalled();
+      expect(AAModelService.getNewAARecord).not.toHaveBeenCalled();
       expect($scope.vm.populateUiModel).not.toHaveBeenCalled();
     });
   });
@@ -263,6 +263,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     beforeEach(function () {
       spyOn(AutoAttendantCeInfoModelService, 'setCeInfo');
       spyOn(AutoAttendantCeMenuModelService, 'updateCombinedMenu');
+      spyOn(AutoAttendantCeMenuModelService, 'deleteCombinedMenu');
       spyOn(AutoAttendantCeMenuModelService, 'newCeMenu').and.callThrough();
       $scope.vm.aaModel = {};
       $scope.vm.aaModel.aaRecord = {};
@@ -286,6 +287,8 @@ describe('Controller: AABuilderMainCtrl', function () {
       controller.saveUiModel();
 
       expect(AutoAttendantCeMenuModelService.updateCombinedMenu).toHaveBeenCalledWith($scope.vm.aaModel.aaRecord, 'openHours', $scope.vm.ui.openHours);
+      expect(AutoAttendantCeMenuModelService.deleteCombinedMenu).toHaveBeenCalledWith($scope.vm.aaModel.aaRecord, 'closedHours');
+      expect(AutoAttendantCeMenuModelService.deleteCombinedMenu).toHaveBeenCalledWith($scope.vm.aaModel.aaRecord, 'holidays');
     });
 
     it('should write closedHours menu into model', function () {
@@ -296,6 +299,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       controller.saveUiModel();
 
       expect(AutoAttendantCeMenuModelService.updateCombinedMenu).toHaveBeenCalledWith($scope.vm.aaModel.aaRecord, 'closedHours', $scope.vm.ui.closedHours);
+      expect(AutoAttendantCeMenuModelService.deleteCombinedMenu).toHaveBeenCalledWith($scope.vm.aaModel.aaRecord, 'holidays');
     });
 
     it('should write holidays menu into model', function () {
@@ -306,6 +310,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       controller.saveUiModel();
 
       expect(AutoAttendantCeMenuModelService.updateCombinedMenu).toHaveBeenCalledWith($scope.vm.aaModel.aaRecord, 'holidays', $scope.vm.ui.holidays);
+      expect(AutoAttendantCeMenuModelService.deleteCombinedMenu).toHaveBeenCalledWith($scope.vm.aaModel.aaRecord, 'closedHours');
     });
 
   });
