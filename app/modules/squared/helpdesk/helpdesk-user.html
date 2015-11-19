@@ -1,5 +1,5 @@
 <div class="user-view">
-  <div class="row head vw-90">
+  <div class="row head full">
     <div class="columns large-12">
       <a ui-sref="helpdesk.search">
         <i class="icon icon-back icon-lg"></i>
@@ -8,7 +8,7 @@
     </div>
   </div>
 
-  <div class="row vw-90">
+  <div class="row full">
     <div class="columns large-4 medium-5">
       <h3 class="display-name">{{helpdeskUserCtrl.user.displayName}}</h3>
       <div class="user-info">
@@ -33,23 +33,12 @@
         <span translate="helpdesk.organization"></span>:
         <span class="user-value right">
           <a href="#">
+            {{helpdeskUserCtrl.org.displayName}}
             <i class="icon icon-content-share"></i>
           </a>
         </span>
       </div>
-      <div class="user-info">
-        <span translate="helpdesk.customerPortalLaunch"></span>
-        <span class="user-value right">
-          <a href="#">
-            <i class="icon icon-content-share"></i>
-          </a>
-        </span>
-      </div>
-      <h3 class="display-name" translate="helpdesk.devices"></h3>
-      <p>
-        To be implemented
-      </p>
     </div>
-    <div class="columns large-6 medium-5" ng-include src="'modules/squared/helpdesk/cards.html'"></div>
+    <div class="columns large-8 medium-7" ng-include src="'modules/squared/helpdesk/user-cards.html'"></div>
   </div>
 </div>
