@@ -1,6 +1,151 @@
 <div class="helpdesk-details">
-  <h2>{{helpdeskOrgCtrl.org.displayName}} <span style="margin-left: 3rem;"><i class="icon icon-search"></i><a
-    ui-sref="helpdesk.search" translate="helpdesk.goToSearch"></a></span></h2>
+
+  <i class="icon icon-search"></i>
+  <a ui-sref="helpdesk.search" translate="helpdesk.goToSearch"></a>
+  <br>
+
+  <div class="row">
+    <div class="medium-4 columns">
+      <h3>{{helpdeskOrgCtrl.org.displayName}}</h3>
+
+
+      <div class="row">
+        <div class="large-6 columns">
+          <p>Contact:</p>
+        </div>
+        <div class="large-6 columns">
+          <p>{{helpdeskOrgCtrl.org.contact}}</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="large-6 columns">
+          <p>Claimed&nbsp;Domain:</p>
+        </div>
+        <div class="large-6 columns">
+          <div ng-repeat="claimedDomain in helpdeskOrgCtrl.org.claimedDomains">
+           <p>{{claimedDomain}}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="medium-6 columns">
+          <p>Org. ID:</p>
+        </div>
+        <div class="medium-6 columns">
+          <p>{{helpdeskOrgCtrl.orgId}}</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="medium-6 columns">
+          <p>Partners:</p>
+        </div>
+        <div class="medium-6 columns">
+          <div ng-repeat="partner in helpdeskOrgCtrl.org.partners">
+            <p>{{helpdeskOrgCtrl.org.partner}}</p>
+          </div>
+        </div>
+      </div>
+
+      <!--Launch Lannister Inc-->
+
+      <h4>Administrator Users <b>{{helpdeskOrgCtrl.partners.length}}</b></h4>
+      <div ng-repeat="administratorUser in helpdeskOrgCtrl.org.administratorUsers">
+        <p>{{administratorUser}}</p>
+      </div>
+
+    </div>
+
+
+    <div class="helpdesk-cards medium-8 columns">
+
+
+      <cs-card ng-show="helpdeskUserCtrl.showCard('message')" class="medium header-bar">
+        <article style="overflow:hidden">
+          <header>
+            <h4><i class="icon icon-circle-message"/>Message</h4>
+          </header>
+          <section>
+            <span style="width:30px">
+            <cs-donut value="50" max="100"></cs-donut>
+            </span>
+          </section>
+        </article>
+      </cs-card>
+
+      <cs-card ng-show="helpdeskUserCtrl.showCard('meeting')" class="medium header-bar">
+        <article style="overflow:hidden">
+          <header>
+            <h4><i class="icon icon-circle-group"/>Meeting</h4>
+          </header>
+          <section>
+            <p>Nothing here yet</p>
+          </section>
+        </article>
+      </cs-card>
+
+      <cs-card ng-show="helpdeskOrgCtrl.showCard('call')" class="medium header-bar">
+        <article style="overflow:hidden">
+          <header>
+            <h4><i class="icon icon-circle-call"/>Call</h4>
+          </header>
+          <section>
+            <p>Nothing here yet</p>
+          </section>
+        </article>
+      </cs-card>
+
+      <cs-card ng-show="helpdeskOrgCtrl.showCard('room')" class="medium header-bar">
+        <article style="overflow:hidden">
+          <header>
+            <h4><i class="icon icon-circle-telepresence"/>Room Systems</h4>
+          </header>
+          <section>
+            <p>Nothing here yet</p>
+          </section>
+        </article>
+      </cs-card>
+
+      <cs-card ng-show="helpdeskOrgCtrl.showCard('hybrid')" class="medium header-bar ">
+        <article style="overflow:hidden">
+          <header>
+            <h4><i class="icon icon-circle-world"/>Hybrid Services</h4>
+          </header>
+          <section>
+            <p>Enabled services:</p>
+            <div ng-repeat="hybridService in helpdeskOrgCtrl.hybridServices">
+              <p>{{hybridService}}</p>
+            </div>
+          </section>
+        </article>
+      </cs-card>
+
+      <cs-card ng-show="helpdeskOrgCtrl.showCard('users')" class="medium header-bar">
+        <article style="overflow:hidden">
+          <header>
+            <h4>Users</h4>
+          </header>
+          <section>
+            <p>Nothing here yet</p>
+          </section>
+        </article>
+      </cs-card>
+
+
+    </div>
+
+  </div>
+
+<!--
+FISKEKAKE:
+  {{helpdeskOrgCtrl.org}}
+<br>
+  {{helpdeskOrgCtrl.org.manages}}
+
+
+
 
   <div class="medium-6 columns">
     <table class="table">
@@ -69,5 +214,5 @@
       </section>
     </article>
   </cs-card>
-
+-->
 </div>

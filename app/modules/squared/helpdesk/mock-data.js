@@ -50,7 +50,11 @@
         "squared-fusion-cal",
         "webex-squared",
         "squared-fusion-mgmt"
-        ]
+        ],
+      "contact": "MOCK tywin.lannister@kingslanding.com",
+      "claimedDomains": ["MOCK kingslanding.com", "MOCK kingslanding2.com"],
+      "partners": ["MOCK Drogon Solutions", "MOCK Red Keep Global"],
+      "administratorUsers": ["MOCK Lannister Administrator 1", "MOCK Lannister Administrator 2"]
     },
     devices: {
       "https://csdm-a.wbx2.com/csdm/api/v1/organization/4214d345-7caf-4e32-b015-34de878d1158/devices/94b3e13c-b1dd-5e2a-9b64-e3ca02de51d3": {
