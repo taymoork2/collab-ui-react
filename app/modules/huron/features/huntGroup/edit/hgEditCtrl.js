@@ -5,7 +5,7 @@
     .controller('HuntGroupEditCtrl', HuntGroupEditCtrl);
 
   /* @ngInject */
-  function HuntGroupEditCtrl($state, $stateParams, $translate,
+  function HuntGroupEditCtrl($state, $q, $stateParams, $translate,
     Authinfo, HuntGroupService, Notification, HuntGroupFallbackDataService,
     HuntGroupMemberDataService, HuntGroupEditDataService) {
     var vm = this;
@@ -15,7 +15,7 @@
     vm.callback = callback;
     vm.isLoadingCompleted = false;
     vm.back = true;
-    vm.backUrl = 'huronfeatures';
+    vm.huronFeaturesUrl = 'huronfeatures';
     vm.hgMethods = HuntGroupService.getHuntMethods();
 
     // Hunt Pilot controller functions.
@@ -32,7 +32,7 @@
     vm.isMembersInvalid = isMembersInvalid;
     vm.checkMemberDirtiness = checkMemberDirtiness;
     vm.userSelected = undefined;
-    vm.selectedHuntMembers = [];
+    vm.selectedHuntMembers = undefined;
     vm.openMemberPanelUuid = undefined;
 
     // Fallback destination controller functions
@@ -55,19 +55,17 @@
     var customerId = Authinfo.getOrgId();
 
     if ($stateParams.feature && $stateParams.feature.id) {
+      vm.hgId = $stateParams.feature.id;
+      vm.model.name = $stateParams.feature.cardName;
       init();
     } else {
-      $state.go('huronfeatures');
+      $state.go(vm.huronFeaturesUrl);
     }
 
     ////////////////
 
     function init() {
-      vm.userSelected = undefined;
-      vm.model.name = $stateParams.feature.cardName;
-      vm.hgId = $stateParams.feature.id;
       HuntGroupEditDataService.reset();
-
       HuntGroupEditDataService.fetchHuntGroup(customerId, vm.hgId)
         .then(function (pristineData) {
           HuntGroupService.getAllUnassignedPilotNumbers().then(function (numbers) {
@@ -78,11 +76,13 @@
             });
 
             updateModal(pristineData, true);
-            initializeFields();
           });
         })
-        .catch(function () {
-          $state.go('huronfeatures');
+        .catch(function (error) {
+          Notification.errorResponse(error, 'huronHuntGroup.huntGroupFetchFailure', {
+            huntGroupName: vm.model.name
+          });
+          $state.go(vm.huronFeaturesUrl);
         });
     }
 
@@ -90,16 +90,24 @@
       HuntGroupFallbackDataService.reset(resetFromBackend);
       HuntGroupMemberDataService.reset(resetFromBackend);
 
-      vm.model = pristineData;
-      updatePilotNumbers(pristineData);
-
-      HuntGroupFallbackDataService.setFallbackDestinationJSON(
+      var fetchFallbackPromise = HuntGroupFallbackDataService.setFallbackDestinationJSON(
         pristineData.fallbackDestination, resetFromBackend);
-      HuntGroupMemberDataService.setMemberJSON(pristineData.members, resetFromBackend);
+      var fetchMemberPromise = HuntGroupMemberDataService.setMemberJSON(pristineData.members,
+        resetFromBackend);
 
-      vm.selectedHuntMembers = HuntGroupMemberDataService.getHuntMembers();
-      vm.selectedFallbackNumber = HuntGroupFallbackDataService.getFallbackNumber();
-      vm.selectedFallbackMember = HuntGroupFallbackDataService.getFallbackMember();
+      $q.all([fetchFallbackPromise, fetchMemberPromise]).then(function () {
+        vm.model = pristineData;
+        updatePilotNumbers(pristineData);
+        vm.selectedHuntMembers = HuntGroupMemberDataService.getHuntMembers();
+        vm.selectedFallbackNumber = HuntGroupFallbackDataService.getFallbackNumber();
+        vm.selectedFallbackMember = HuntGroupFallbackDataService.getFallbackMember();
+
+        if (resetFromBackend) {
+          initializeFields();
+        }
+      }, function () {
+        $state.go(vm.huronFeaturesUrl);
+      });
     }
 
     function updatePilotNumbers(pristineData) {
@@ -153,7 +161,7 @@
     }
 
     function removeFallbackDest() {
-      vm.selectedFallbackMember = undefined;
+      vm.selectedFallbackMember = HuntGroupFallbackDataService.removeFallbackMember();
       vm.form.$setDirty();
     }
 
@@ -192,6 +200,32 @@
         });
     }
 
+    function selectHuntMethod(method) {
+      vm.model.huntMethod = method;
+      vm.form.$setDirty();
+    }
+
+    function callback() {
+      vm.form.$setDirty();
+    }
+
+    function validateFallbackNumber() {
+      vm.selectedFallbackNumber =
+        HuntGroupFallbackDataService.validateFallbackNumber(vm.selectedFallbackNumber);
+
+      if (HuntGroupEditDataService.isFallbackDirty()) {
+        vm.form.$setDirty();
+      }
+    }
+
+    function getDisplayName(user) {
+      return HuntGroupMemberDataService.getDisplayName(user);
+    }
+
+    function isMembersInvalid() {
+      return (!vm.selectedHuntMembers || vm.selectedHuntMembers.length === 0);
+    }
+
     function hgUpdateReqBody() {
       return {
         name: vm.model.name,
@@ -228,32 +262,6 @@
           huntGroupName: vm.model.name
         });
       });
-    }
-
-    function selectHuntMethod(method) {
-      vm.model.huntMethod = method;
-      vm.form.$setDirty();
-    }
-
-    function callback() {
-      vm.form.$setDirty();
-    }
-
-    function validateFallbackNumber() {
-      vm.selectedFallbackNumber =
-        HuntGroupFallbackDataService.validateFallbackNumber(vm.selectedFallbackNumber);
-
-      if (HuntGroupEditDataService.isFallbackDirty()) {
-        vm.form.$setDirty();
-      }
-    }
-
-    function getDisplayName(user) {
-      return HuntGroupMemberDataService.getDisplayName(user);
-    }
-
-    function isMembersInvalid() {
-      return (!vm.selectedHuntMembers || vm.selectedHuntMembers.length === 0);
     }
 
     function initializeFields() {
@@ -317,13 +325,7 @@
           valuefield: 'value'
         },
         controller: /* @ngInject */ function ($scope) {
-          $scope.to.options = [{
-            label: '30 secs',
-            value: 30
-          }, {
-            label: '40 secs',
-            value: 40
-          }];
+          $scope.to.options = HuntGroupEditDataService.getMaxRingSecsOptions();
         }
       }, {
         key: 'maxWaitMins',
@@ -336,13 +338,7 @@
           valuefield: 'value'
         },
         controller: /* @ngInject */ function ($scope) {
-          $scope.to.options = [{
-            label: '30 secs',
-            value: 30
-          }, {
-            label: '40 secs',
-            value: 40
-          }];
+          $scope.to.options = HuntGroupEditDataService.getMaxWaitMinsOptions();
         }
       }];
       vm.isLoadingCompleted = true;

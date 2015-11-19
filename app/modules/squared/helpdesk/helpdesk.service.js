@@ -13,8 +13,8 @@
       return res.data;
     }
 
-    function useMock(){
-      return $location.absUrl().match(/helpdesk-backend=mock/)
+    function useMock() {
+      return $location.absUrl().match(/helpdesk-backend=mock/);
     }
 
     function searchUsers(searchString, orgId) {
@@ -56,22 +56,28 @@
         .then(extractData);
     }
 
-    function getHybridServices(orgId){
+    function filterHybridServices(entitlements) {
+      // Use existing methods, such as in filter in service-descriptor, instead ???
+      var services = [];
+      if (_.includes(entitlements, "squared-fusion-mgmt")) {
+        services = _.filter(entitlements, function (service) {
+          return service === 'squared-fusion-cal' || service === 'squared-fusion-uc';
+        });
+      }
+      return services;
+    }
+
+    function getHybridServices(orgId) {
       // Use existing methods, such as in service-descriptor, instead ???
       if (useMock()) {
         var services = [];
         var deferred = $q.defer();
-        if (_.includes(HelpdeskMockData.org.entitlements, "squared-fusion-mgmt")){
-          services = _.filter(HelpdeskMockData.org.entitlements, function (service) {
-            return service === 'squared-fusion-cal' || service === 'squared-fusion-uc';
-          });
-        }
-        deferred.resolve(services);
+        deferred.resolve(filterHybridServices(HelpdeskMockData.org.entitlements));
         return deferred.promise;
       }
       ServiceDescriptor.servicesInOrg(orgId).then(function (services) {
         var deferred = $q.defer();
-        deferred.resolve(ServiceDescriptor.filterAllExceptManagement(services));
+        deferred.resolve(filterHybridServices(services));
       }, function (err) {
         deferred.reject(err);
       });
