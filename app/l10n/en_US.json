@@ -1806,6 +1806,8 @@
       "serviceName": "Media Service Activation",
       "label": "ACTIVATE AND BEGIN SETUP"
     },
+    "mediaServiceActivationFailure": "Problems enabling the service",
+    "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
     "serviceName": "Media Service",
     "serviceDescription": "Media Service complement your on-premises conferencing environment and add further flexibility to your existing configuration. With Media Services, you can be certain that your meetings can happen anywhere and that the cloud resources will jump in to help when you need them.",
     "delete": "Delete",
@@ -1834,9 +1836,7 @@
     "offline": "Offline",
     "active": "Active",
     "noCluster": "No Media Service Clusters Connected to Spark",
-    "close": "Close",
-    "mediaServiceActivationFailure": "Problems enabling the service",
-    "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion"
+    "close": "Close"
   },
   "webexUserSettings": {
     "sessionEnablementUpdateSuccess": "Session type enablement updated.",
