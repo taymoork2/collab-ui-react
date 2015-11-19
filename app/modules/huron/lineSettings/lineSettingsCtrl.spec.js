@@ -5,7 +5,7 @@ describe('Controller: LineSettingsCtrl', function () {
   var currentUser, directoryNumber, getDirectoryNumber, getDirectoryNumberBusy, getDirectoryNumberBusyNewLine, internalNumbers,
     externalNumbers, telephonyInfoWithVoicemail, telephonyInfoVoiceOnly, telephonyInfoVoiceOnlyShared, telephonyInfoSecondLine,
     modalDefer;
-  var UserListService, SharedLineInfoService, CallerId, companyNumber, DeviceService;
+  var UserListService, SharedLineInfoService, CallerId, companyNumber, DeviceService, DialPlanService;
   var userList = [];
   var userData = [];
   var sharedLineUsers = [];
@@ -36,7 +36,7 @@ describe('Controller: LineSettingsCtrl', function () {
   }));
 
   beforeEach(inject(function (_$rootScope_, _$state_, _$httpBackend_, $controller, _$q_, _$modal_, _Notification_, _DirectoryNumber_, _TelephonyInfoService_, _LineSettings_, _HuronAssignedLine_, _HuronUser_, _ServiceSetup_,
-    _UserListService_, _SharedLineInfoService_, _CallerId_, _DeviceService_) {
+    _UserListService_, _SharedLineInfoService_, _CallerId_, _DeviceService_, _DialPlanService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
@@ -53,6 +53,7 @@ describe('Controller: LineSettingsCtrl', function () {
     SharedLineInfoService = _SharedLineInfoService_;
     CallerId = _CallerId_;
     DeviceService = _DeviceService_;
+    DialPlanService = _DialPlanService_;
 
     $scope.sort = {
       by: 'name',
@@ -111,6 +112,9 @@ describe('Controller: LineSettingsCtrl', function () {
     spyOn(CallerId, 'loadCompanyNumbers').and.returnValue($q.when(companyNumber));
     spyOn(CallerId, 'getCallerIdOption').and.returnValue(callerIdSelection);
     spyOn(DeviceService, 'listDevices').and.returnValue($q.when(userDevices));
+    spyOn(DialPlanService, 'getCustomerDialPlanDetails').and.returnValue($q.when({
+      extensionGenerated: "false"
+    }));
     //Sharedline
     spyOn(UserListService, 'listUsers').and.returnValue($q.when(userList));
     spyOn(SharedLineInfoService, 'loadSharedLineUsers').and.returnValue($q.when(sharedLineUsers));
@@ -206,6 +210,21 @@ describe('Controller: LineSettingsCtrl', function () {
       controller.init();
       $scope.$apply();
       expect(CallerId.loadCompanyNumbers).toHaveBeenCalled();
+      expect(Notification.errorResponse).toHaveBeenCalled();
+    });
+
+    it('should call getCustomerDialPlanDetails during init', function () {
+      controller.init();
+      $scope.$apply();
+      expect(DialPlanService.getCustomerDialPlanDetails).toHaveBeenCalled();
+      expect(Notification.errorResponse).not.toHaveBeenCalled();
+    });
+
+    it('should notify an error when getCustomerDialPlanDetails fails', function () {
+      DialPlanService.getCustomerDialPlanDetails.and.returnValue($q.reject());
+      controller.init();
+      $scope.$apply();
+      expect(DialPlanService.getCustomerDialPlanDetails).toHaveBeenCalled();
       expect(Notification.errorResponse).toHaveBeenCalled();
     });
 

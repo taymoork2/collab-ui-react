@@ -370,11 +370,11 @@
           },
           expressionProperties: {
             'templateOptions.required': function () {
-              if (vm.model.callerId.callerIdNumber) {
+              if (vm.model.callerId.callerIdEnabled) {
                 return true;
               }
             },
-            'templateOptions.disabled': function () {
+            'hide': function () {
               return !vm.model.callerId.callerIdEnabled;
             }
           }
@@ -397,11 +397,11 @@
           },
           expressionProperties: {
             'templateOptions.required': function (newValue, oldValue) {
-              if (vm.model.callerId.callerIdName) {
+              if (vm.model.callerId.callerIdEnabled) {
                 return true;
               }
             },
-            'templateOptions.disabled': function () {
+            'hide': function () {
               return !vm.model.callerId.callerIdEnabled;
             }
           },
@@ -686,11 +686,20 @@
       var rawPattern = '';
       var uuidExternalNumber = '';
       var data;
+      var deferred = $q.defer();
 
-      if (!vm.model.callerId.callerIdEnabled && vm.model.callerId.uuid) {
-        return CallerId.deleteCompanyNumber(vm.model.callerId.uuid).then(function () {
+      if (!vm.model.callerId.callerIdEnabled) {
+        if (vm.model.callerId.uuid) {
+          CallerId.deleteCompanyNumber(vm.model.callerId.uuid).then(function () {
+            clearCallerIdFields();
+            deferred.resolve();
+          }).catch(function (response) {
+            deferred.reject(response);
+          });
+        } else {
           clearCallerIdFields();
-        });
+          deferred.resolve();
+        }
       } else {
         vm.model.callerId.callerIdNumber = TelephoneNumberService.getDIDLabel(vm.model.callerId.callerIdNumber);
         rawPattern = TelephoneNumberService.getDIDValue(vm.model.callerId.callerIdNumber);
@@ -713,18 +722,26 @@
 
         if (vm.model.callerId.callerIdEnabled && !vm.model.callerId.uuid) {
           if (vm.model.callerId.callerIdName && vm.model.callerId.callerIdNumber) {
-            return CallerId.saveCompanyNumber(data).then(function () {
-              return getCompanyCallerId();
+            CallerId.saveCompanyNumber(data).then(function () {
+              getCompanyCallerId();
+              deferred.resolve();
+            }).catch(function (response) {
+              deferred.reject(response);
             });
           }
         } else if (vm.model.callerId.callerIdEnabled && vm.model.callerId.uuid) {
           if (vm.model.callerId.callerIdName && vm.model.callerId.callerIdNumber) {
-            return CallerId.updateCompanyNumber(vm.model.callerId.uuid, data);
+            CallerId.updateCompanyNumber(vm.model.callerId.uuid, data).then(function () {
+              deferred.resolve();
+            }).catch(function (response) {
+              deferred.reject(response);
+            });
           }
         } else {
-          return $q.when();
+          deferred.resolve();
         }
       }
+      return deferred.promise;
     }
 
     function resetForm() {
