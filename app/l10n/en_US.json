@@ -2792,6 +2792,10 @@
     "userStatus": "Status",
     "userId": "Id",
     "organization": "Organization",
-    "customerPortalLaunch": "Launch Customer Portal"
+    "customerPortalLaunch": "Launch Customer Portal",
+    "contact": "Contact",
+    "claimedDomain": "Claimed Domain",
+    "partners": "Partners",
+    "administratorUsers": "Administrator Users"
   }
 }
