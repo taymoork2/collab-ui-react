@@ -2716,22 +2716,17 @@
       },
       "message": {
         "title": "Message",
-        "desc": "New Rooms",
         "currentTitle": "New rooms this week",
         "previousTitle": "Last week:"
-
       },
       "meeting": {
         "title": "Meeting",
-        "desc": "Meetings"
       },
       "call": {
         "title": "Call",
-        "desc": "Calls"
       },
       "roomSystem": {
         "title": "Room Systems",
-        "desc": "Registered Systems",
         "currentTitle": "Online this week",
         "previousTitle": "Last week:"
       },
