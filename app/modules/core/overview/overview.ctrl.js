@@ -147,7 +147,7 @@
     this.name = 'overview.cards.meeting.title';
     this.cardClass = 'meetings';
     this.trial = false;
-    this.settingsUrl = '#/site-list';
+    this.settingsUrl = '';
     this.healthStatusUpdatedHandler = _.partial(meeetingHealthEventHandler, card);
 
     this.reportDataEventHandler = function (event, response) {
@@ -162,6 +162,9 @@
       card.trial = _.any(licenses, function (l) {
         return l.isTrial && _(['CF', 'EE', 'MC', 'SC', 'TC', 'EC']).contains(l.offername);
       });
+
+      var hasSites = _.some(licenses, function (l) {return l.siteUrl;});
+      this.settingsUrl = hasSites? '#/site-list':'';
     };
   }
 
