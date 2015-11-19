@@ -1,33 +1,36 @@
 {
   "listOrgs": {
-    "success": true,
-    "organizations": [{
-      "id": "739a36a7-5164-4c8d-b657-2ae032311f6d",
-      "email": "47ciscocomadmin@cmipartnerorg.com",
-      "displayName": "47ciscocomCmiPartnerOrg",
-      "meta": {
-        "created": "2015-05-28T13:16:30.100Z",
-        "uri": "https://identity.webex.com/organization/scim/v1/Orgs/739a36a7-5164-4c8d-b657-2ae032311f6d"
-      },
-      "zone": "AllZone",
-      "ssoEnabled": false,
-      "dirsyncEnabled": false,
-      "isPartner": false,
-      "delegatedAdministration": true,
-      "selfSubscribeServices": ["webex-squared", "ciscouc"]
-    }, {
-      "id": "4d510f20-ccab-4803-84d9-57ff6400fcfd",
-      "email": "47ciscocomAdmin@CommonFunctional.com",
-      "displayName": "47ciscocomCommonFunctionalCustomer",
-      "meta": {
-        "created": "2015-05-28T13:16:38.731Z",
-        "uri": "https://identity.webex.com/organization/scim/v1/Orgs/4d510f20-ccab-4803-84d9-57ff6400fcfd"
-      },
-      "zone": "AllZone",
-      "ssoEnabled": false,
-      "dirsyncEnabled": false,
-      "isPartner": false,
-      "selfSubscribeServices": ["webex-squared", "ciscouc"]
-    }]
+    "status": 200,
+    "data": {
+      "success": true,
+      "organizations": [{
+        "id": "739a36a7-5164-4c8d-b657-2ae032311f6d",
+        "email": "47ciscocomadmin@cmipartnerorg.com",
+        "displayName": "47ciscocomCmiPartnerOrg",
+        "meta": {
+          "created": "2015-05-28T13:16:30.100Z",
+          "uri": "https://identity.webex.com/organization/scim/v1/Orgs/739a36a7-5164-4c8d-b657-2ae032311f6d"
+        },
+        "zone": "AllZone",
+        "ssoEnabled": false,
+        "dirsyncEnabled": false,
+        "isPartner": false,
+        "delegatedAdministration": true,
+        "selfSubscribeServices": ["webex-squared", "ciscouc"]
+      }, {
+        "id": "4d510f20-ccab-4803-84d9-57ff6400fcfd",
+        "email": "47ciscocomAdmin@CommonFunctional.com",
+        "displayName": "47ciscocomCommonFunctionalCustomer",
+        "meta": {
+          "created": "2015-05-28T13:16:38.731Z",
+          "uri": "https://identity.webex.com/organization/scim/v1/Orgs/4d510f20-ccab-4803-84d9-57ff6400fcfd"
+        },
+        "zone": "AllZone",
+        "ssoEnabled": false,
+        "dirsyncEnabled": false,
+        "isPartner": false,
+        "selfSubscribeServices": ["webex-squared", "ciscouc"]
+      }]
+    }
   }
 }

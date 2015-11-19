@@ -593,7 +593,9 @@
     "lastName": "Last Name",
     "email": "Email",
     "id": "ID",
-    "new": "New"
+    "new": "New",
+    "devices": "Devices",
+    "users": "Users"
   },
   "notifications": {
     "success": "Success notifications",
@@ -1482,6 +1484,7 @@
     "externalNumberTooltip": "Use the direct line to reach this line from outside of the company.",
     "externalNumberPoolError": "Direct lines failed to load.",
     "externalNumberMappingError": "Direct line Mappings failed to load.",
+    "nationalNumberLabel": "National Number",
     "chooseNumber": "Choose a Number",
     "searchNumber": "Search for a number...",
     "addNewNumber": "Add a New Number",
@@ -1640,7 +1643,9 @@
     "oneHundred": "100",
     "twoHundred": "200",
     "fiveHundred": "500",
-    "duration": "Trial Duration (days)",
+    "duration": "Duration of the Trial",
+    "durationHelp": "Days",
+    "message": "Message",
     "thirtyDays": "30 Days",
     "sixtyDays": "60 Days",
     "ninetyDays": "90",
@@ -1650,6 +1655,8 @@
     "startTrial": "Start Trial",
     "customerInformation": "Customer Information",
     "termsOfTrial": "Terms of Trial",
+    "trialServices": "Trial Services",
+    "sparkRoomSystem": "Room Systems",
     "trialButton": "Add Trial Customer",
     "dialogTitle": "Add New Trial",
     "customerName": "Company Name",
@@ -1664,7 +1671,11 @@
     "averageCallsTitle": "Average Calls Per User",
     "contentSharedTitle": "Files Shared",
     "errGetPhoneNumberCount": "Failed to retrieve phone number count.",
-    "invalidTrialLicenseCount": "Number of Licenses should be greater than 0 and less than 1000."
+    "invalidTrialLicenseCount": "Number of Licenses should be greater than 0 and less than 1000.",
+    "individualUserServices": "Individual User Services",
+    "roomSystems": "Room Systems",
+    "roomSystem": "Room System",
+    "call": "Call"
   },
   "trialModal": {
     "trialSuccess": "You have set up your trial successfully.",
@@ -1945,6 +1956,15 @@
       "reportAlarm": "reported alarm.",
       "reportAlarms": "reported alarms."
     },
+    "activateService": {
+      "ingress": "Extend the Cloud to Your On-Premises Environment",
+      "serviceName": "Media Service Activation",
+      "label": "ACTIVATE AND BEGIN SETUP"
+    },
+    "mediaServiceActivationFailure": "Problems enabling the service",
+    "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
+    "serviceName": "Media Service",
+    "serviceDescription": "Media Service complement your on-premises conferencing environment and add further flexibility to your existing configuration. With Media Services, you can be certain that your meetings can happen anywhere and that the cloud resources will jump in to help when you need them.",
     "delete": "Delete",
     "cancel": "Cancel",
     "actionsHeader": "Actions",
@@ -2704,8 +2724,8 @@
   },
   "overview": {
     "pageTitle": "Overview",
-    "thisMonth": "This Month",
-    "lastMonth": "Last Month",
+    "thisMonth": "This month",
+    "lastMonth": "Last month:",
     "cards": {
       "users": {
         "title": "Users",
@@ -2716,7 +2736,10 @@
       },
       "message": {
         "title": "Message",
-        "desc": "Active Rooms"
+        "desc": "Active Rooms",
+        "currentTitle": "Active rooms this week",
+        "previousTitle": "Last week:"
+
       },
       "meeting": {
         "title": "Meeting",
@@ -2729,8 +2752,8 @@
       "roomSystem": {
         "title": "Room Systems",
         "desc": "Registered Systems",
-        "currentTitle": "Last 30 days",
-        "previousTitle": "Total"
+        "currentTitle": "Online this week",
+        "previousTitle": "Last week:"
       },
       "hybrid": {
         "title": "Hybrid Services"

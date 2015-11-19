@@ -13,10 +13,25 @@
     vm.supportsPstnSetup = false;
     vm.startDate = new Date();
     vm.offers = {};
+    vm.showRoomSystems = false;
+
     vm.model = {
+      roomSystems: 0,
       licenseCount: 100,
       licenseDuration: 90,
     };
+
+    var messagingLabel = $translate.instant('trials.collab');
+
+    FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials).then(function (result) {
+      vm.showRoomSystems = result;
+    });
+
+    FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
+      if (result) {
+        messagingLabel = $translate.instant('partnerHomePage.message');
+      }
+    });
 
     vm.custInfoFields = [{
       key: 'customerName',
@@ -27,8 +42,8 @@
         inputClass: 'small-7 columns left',
         type: 'text',
         required: true,
-        maxlength: 50
-      }
+        maxlength: 50,
+      },
     }, {
       key: 'customerEmail',
       type: 'input',
@@ -38,70 +53,21 @@
         labelClass: 'small-4 columns',
         inputClass: 'small-7 columns left',
         type: 'email',
-        required: true
-      }
+        required: true,
+      },
     }];
 
-    vm.trialTermsFields = [{
-      key: 'COLLAB',
-      type: 'checkbox',
-      model: vm.offers,
-      templateOptions: {
-        label: $translate.instant('trials.collab'),
-        id: 'squaredTrial',
-        class: 'small-8 small-offset-4 columns'
-      },
-      expressionProperties: {
-        'templateOptions.disabled': function () {
-          return vm.isSquaredUCEnabled();
-        }
-      }
-    }, {
-      key: 'SQUAREDUC',
-      type: 'checkbox',
-      model: vm.offers,
-      templateOptions: {
-        label: $translate.instant('trials.squaredUC'),
-        id: 'squaredUCTrial',
-        class: 'small-8 small-offset-4 columns'
-      },
-      expressionProperties: {
-        'hide': function () {
-          return !vm.isSquaredUC();
-        }
-      }
-    }, {
-      key: 'licenseDuration',
-      type: 'radio-list',
-      templateOptions: {
-        horizontal: true,
-        label: $translate.instant('partnerHomePage.duration'),
-        labelClass: 'small-4 columns',
-        inputClass: 'small-7 columns left',
-        options: [{
-          label: $translate.instant('partnerHomePage.ninetyDays'),
-          value: 90,
-          id: 'trial90'
-        }, {
-          label: $translate.instant('partnerHomePage.onehundredtwentyDays'),
-          value: 120,
-          id: 'trial120'
-        }, {
-          label: $translate.instant('partnerHomePage.onehundredeightyDays'),
-          value: 180,
-          id: 'trial180'
-        }]
-      }
-    }, {
+    vm.roomSystemOptions = [5, 10, 15, 20, 25];
+    vm.individualServices = [{
       key: 'licenseCount',
       type: 'input',
-      className: 'last-field',
       templateOptions: {
-        label: $translate.instant('partnerHomePage.numberOfLicenses'),
+        label: $translate.instant('siteList.licenseCount'),
         labelClass: 'small-4 columns',
         inputClass: 'small-3 columns left',
+        helpText: $translate.instant('common.users'),
         type: 'number',
-        required: true
+        required: true,
       },
       validators: {
         count: {
@@ -110,10 +76,57 @@
           },
           message: function () {
             return $translate.instant('partnerHomePage.invalidTrialLicenseCount');
-          }
-        }
-      }
+          },
+        },
+      },
+    }, {
+      key: 'COLLAB',
+      type: 'checkbox',
+      model: vm.offers,
+      templateOptions: {
+        label: messagingLabel,
+        id: 'squaredTrial',
+        class: 'small-offset-1 columns'
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function () {
+          return vm.isSquaredUCEnabled();
+        },
+      },
+    }, {
+      key: 'SQUAREDUC',
+      type: 'checkbox',
+      model: vm.offers,
+      templateOptions: {
+        label: $translate.instant('partnerHomePage.call'),
+        id: 'squaredUCTrial',
+        class: 'small-offset-1 columns',
+      },
+      expressionProperties: {
+        'hide': function () {
+          return !vm.isSquaredUC();
+        },
+      },
     }];
+
+    vm.trialTermsFields = [{
+      key: 'licenseDuration',
+      type: 'select',
+      defaultValue: 30,
+      templateOptions: {
+        labelfield: 'label',
+        required: true,
+        label: $translate.instant('partnerHomePage.duration'),
+        helpText: $translate.instant('partnerHomePage.durationHelp'),
+        labelClass: 'small-4 columns',
+        inputClass: 'small-3 columns left',
+        options: [30, 60, 90],
+      },
+    }];
+
+    vm.roomSystemsChecked = function () {
+      vm.model.roomSystems = vm.model.roomSystemsEnabled ? vm.roomSystemOptions[0] : 0;
+    };
 
     $scope.$watch(function () {
       return vm.offers[Config.trials.squaredUC];
@@ -183,7 +196,7 @@
         }
       }
 
-      return TrialService.startTrial(vm.model.customerName, vm.model.customerEmail, vm.model.licenseDuration, vm.model.licenseCount, vm.startDate, offersList)
+      return TrialService.startTrial(vm.model.customerName, vm.model.customerEmail, vm.model.licenseDuration, vm.model.licenseCount, vm.model.roomSystems, vm.startDate, offersList)
         .catch(function (response) {
           vm.startTrialButtonLoad = false;
           Notification.notify([response.data.message], 'error');
