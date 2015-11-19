@@ -190,11 +190,10 @@
     this.settingsUrl = '#/devices';
 
     this.healthStatusUpdatedHandler = function roomSystemHealthEventHandler(data) {
-      _.each(data.components, function (component) {
-        if (component.name == 'Rooms') {
-          card.healthStatus = mapStatus(card.healthStatus, component.status);
-        }
-      });
+      var room = _.find(data.components, {name: 'Rooms'});
+      if (room) {
+        card.healthStatus = mapStatus(card.healthStatus, room.status);
+      }
     };
 
     this.reportDataEventHandler = function (event, response) {
