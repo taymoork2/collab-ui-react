@@ -207,6 +207,13 @@ angular.module('Core')
           prod: 'https://config.integration-tx1.thunderhead.io/config/v1' //This will change to prod later in future
         },
 
+        calliopeUrl: {
+          dev: 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1',
+          cfe: 'https://calliope-e.wbx2.com/calliope/api/authorization/v1',
+          integration: 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1',
+          prod: 'https://calliope-a.wbx2.com/calliope/api/authorization/v1'
+        },
+
         scimSchemas: [
           'urn:scim:schemas:core:1.0',
           'urn:scim:schemas:extension:cisco:commonidentity:1.0'
@@ -816,6 +823,10 @@ angular.module('Core')
 
         getUssUrl: function () {
           return this.ussUrl[this.getEnv()];
+        },
+
+        getCalliopeUrl: function () {
+          return this.calliopeUrl[this.getEnv()];
         },
 
         getCertsUrl: function () {

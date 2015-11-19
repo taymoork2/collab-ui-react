@@ -1799,6 +1799,13 @@
       "status": "Status",
       "alarms": "Alarms"
     },
+    "activateService": {
+      "ingress": "Extend the Cloud to Your On-Premises Environment",
+      "serviceName": "Media Service Activation",
+      "label": "ACTIVATE AND BEGIN SETUP"
+    },
+    "serviceName": "Media Service",
+    "serviceDescription": "Media Service complement your on-premises conferencing environment and add further flexibility to your existing configuration. With Media Services, you can be certain that your meetings can happen anywhere and that the cloud resources will jump in to help when you need them.",
     "delete": "Delete",
     "cancel": "Cancel",
     "actionsHeader": "Actions",
@@ -1816,7 +1823,9 @@
     "role": "Role",
     "switching": "Switching",
     "transcoding": "Transcoding",
-    "confirmCluster": "Please press save to confirm cluster change."
+    "confirmCluster": "Please press save to confirm cluster change.",
+    "mediaServiceActivationFailure": "Problems enabling the service",
+    "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion"
   },
   "webexUserSettings": {
     "sessionEnablementUpdateSuccess": "Session type enablement updated.",
