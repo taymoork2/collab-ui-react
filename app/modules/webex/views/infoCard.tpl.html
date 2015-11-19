@@ -1,12 +1,12 @@
 <cs-card-layout>
   <cs-card class="full header-background"
-           id={{siteSettingsObj.siteInfoCardObj.id}}-card
-           name={{siteSettingsObj.siteInfoCardObj.id}}-card>
+           id={{infoCardObj.id}}-card
+           name={{infoCardObj.id}}-card>
            
     <article>
       <header>
         <h4>
-          {{siteSettingsObj.siteUrl}}
+          {{infoCardObj.label}}
         </h4>
       </header>
       
@@ -28,60 +28,57 @@
           
           <div class="right-side">                                                    
             <div class="configure-card-heading" translate="webexSiteSettingsLabels.hostAccountsTitle"></div>
-             <div class="configure-content">
+            
+            <div class="configure-content">
               <div class="text-center">
-                
                 <div class="overview-count">
-                  {{siteSettingsObj.siteInfoCardObj.licensesUsage.count}}
+                  {{infoCardObj.licensesUsage.count}}
                 </div>
                 
-                <div translate="webexSiteSettingsLabels.activeTitle"> </div>
+                <div translate="webexSiteSettingsLabels.activeTitle"></div>
               </div>
                 
               <div class="text-center">
-                
                 <div class="overview-count">
-                  {{siteSettingsObj.siteInfoCardObj.licensesAvailable.count}}
+                  {{infoCardObj.licensesAvailable.count}}
                 </div>
                   
                 <div translate="webexSiteSettingsLabels.availableTitle"></div>
               </div>
                 
               <div  class="overview-icon text-center">
-                
                 <a id="siteInfo-siteInformation"
                    name="siteInfo-siteInformation"
-                   ui-sref={{siteSettingsObj.siteInfoCardObj.siteInfoPageObj.uiSref}}
-                   title="{{siteSettingsObj.siteInfoCardObj.siteInfoPageObj.label}}">
+                   ui-sref={{infoCardObj.iframeLinkObj1.iframePageObj.uiSref}}
+                   title="{{infoCardObj.iframeLinkObj1.iframePageObj.label}}">
                    
-                  <i class="icon icon-circle-webex"></i>
+                  <i class={{infoCardObj.iframeLinkObj1.iconClass}}></i>
                 </a>
                 
-                <a id={{siteSettingsObj.siteInfoCardObj.siteInfoPageObj.id}}
-                   name={{siteSettingsObj.siteInfoCardObj.siteInfoPageObj.id}}
-                   ui-sref={{siteSettingsObj.siteInfoCardObj.siteInfoPageObj.uiSref}}
+                <a id={{infoCardObj.iframeLinkObj1.iframePageObj.id}}
+                   name={{infoCardObj.iframeLinkObj1.iframePageObj.id}}
+                   ui-sref={{infoCardObj.iframeLinkObj1.iframePageObj.uiSref}}
                    href="">
                     
-                  {{siteSettingsObj.siteInfoCardObj.siteInfoPageObj.label}}
+                  {{infoCardObj.iframeLinkObj1.iframePageObj.label}}
                 </a>
               </div>
               
               <div  class="overview-icon text-center">
-                              
                 <a id="siteInfo-siteFeatures"
                    name="siteInfo-siteFeatures"
-                   ui-sref={{siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.uiSref}}
-                   title="{{siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.label}}">
+                   ui-sref={{infoCardObj.iframeLinkObj2.iframePageObj.uiSref}}
+                   title="{{infoCardObj.iframeLinkObj2.iframePageObj.label}}">
                    
-                  <i class="icon icon-circle-star"></i>
+                  <i class={{infoCardObj.iframeLinkObj2.iconClass}}></i>
                 </a>
                 
-                <a id={{siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.id}}
-                   name={{siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.id}}
-                   ui-sref={{siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.uiSref}}
+                <a id={{infoCardObj.iframeLinkObj2.iframePageObj.id}}
+                   name={{infoCardObj.iframeLinkObj2.iframePageObj.id}}
+                   ui-sref={{infoCardObj.iframeLinkObj2.iframePageObj.uiSref}}
                    href="">
                   
-                  {{siteSettingsObj.siteInfoCardObj.siteFeaturePageObj.label}}                  
+                  {{infoCardObj.iframeLinkObj2.iframePageObj.label}}                  
                 </a>
               </div>
             </div>

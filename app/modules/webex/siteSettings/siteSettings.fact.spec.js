@@ -64,7 +64,9 @@ describe('WebExSiteSettingsFact Test', function () {
 
     expect(siteSettingsObj.siteInfoCardObj).toBeDefined();
     expect(siteSettingsObj.siteInfoCardObj.id).toBeDefined();
+    expect(siteSettingsObj.siteInfoCardObj.label).toBeDefined();
     expect(siteSettingsObj.siteInfoCardObj.id).toEqual("SiteInfo");
+    expect(siteSettingsObj.siteInfoCardObj.label).toEqual(siteUrl);
 
     expect(siteSettingsObj.siteInfoCardObj.licensesTotal).toBeDefined();
     expect(siteSettingsObj.siteInfoCardObj.licensesTotal.id).toBeDefined();
@@ -84,10 +86,15 @@ describe('WebExSiteSettingsFact Test', function () {
     expect(siteSettingsObj.siteInfoCardObj.licensesAvailable.id).toEqual("licensesAvailable");
     expect(siteSettingsObj.siteInfoCardObj.licensesAvailable.count).toEqual(null);
 
-    expect(siteSettingsObj.siteInfoCardObj.siteInfoPageObj).toBeDefined();
-    expect(siteSettingsObj.siteInfoCardObj.siteFeaturesPageObj).toBeDefined();
-    expect(siteSettingsObj.siteInfoCardObj.siteInfoPageObj).toEqual(null);
-    expect(siteSettingsObj.siteInfoCardObj.siteFeaturesPageObj).toEqual(null);
+    expect(siteSettingsObj.siteInfoCardObj.iframeLinkObj1).toBeDefined();
+    expect(siteSettingsObj.siteInfoCardObj.iframeLinkObj1.iconClass).toBeDefined();
+    expect(siteSettingsObj.siteInfoCardObj.iframeLinkObj1.iframePageObj).toBeDefined();
+    expect(siteSettingsObj.siteInfoCardObj.iframeLinkObj1.iframePageObj).toEqual(null);
+
+    expect(siteSettingsObj.siteInfoCardObj.iframeLinkObj2).toBeDefined();
+    expect(siteSettingsObj.siteInfoCardObj.iframeLinkObj2.iconClass).toBeDefined();
+    expect(siteSettingsObj.siteInfoCardObj.iframeLinkObj2.iframePageObj).toBeDefined();
+    expect(siteSettingsObj.siteInfoCardObj.iframeLinkObj2.iframePageObj).toEqual(null);
 
     expect(siteSettingsObj.siteSettingCardObjs).toBeDefined();
     expect(siteSettingsObj.siteSettingCardObjs[0]).toBeDefined();

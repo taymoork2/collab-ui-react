@@ -6,7 +6,6 @@
     '$log',
     '$stateParams',
     '$translate',
-    'Orgservice',
     'Authinfo',
     'WebExUtilsFact',
     'WebExXmlApiFact',
@@ -16,7 +15,6 @@
       $log,
       $stateParams,
       $translate,
-      Orgservice,
       Authinfo,
       WebExUtilsFact,
       WebExXmlApiFact,
@@ -48,6 +46,7 @@
 
             siteInfoCardObj: {
               id: "SiteInfo",
+              label: null,
 
               licensesTotal: {
                 id: "licensesTotal",
@@ -64,9 +63,17 @@
                 count: null
               },
 
-              siteInfoPageObj: null,
-              siteFeaturesPageObj: null
+              iframeLinkObj1: {
+                iconClass: "icon icon-circle-webex",
+                iframePageObj: null,
+              },
+
+              iframeLinkObj2: {
+                iconClass: "icon icon-circle-star",
+                iframePageObj: null,
+              },
             }, // siteInfoCardObj
+
             siteSettingCardObjs: [],
             categoryObjs: [],
           }; // webExSiteSettingsObj
@@ -166,6 +173,7 @@
           _this.webExSiteSettingsObj.siteName = siteName;
           _this.webExSiteSettingsObj.pageTitle = pageTitle;
           _this.webExSiteSettingsObj.pageTitleFull = pageTitleFull;
+          _this.webExSiteSettingsObj.siteInfoCardObj.label = siteUrl;
 
           _this.getSessionTicket(siteUrl).then(
             function getSessionTicketSuccess(sessionTicket) {
@@ -204,6 +212,7 @@
           siteName,
           sessionTicket
         ) {
+        	
           webExXmlApiInfoObj.xmlServerURL = "https://" + siteUrl + "/WBXService/XMLService";
           webExXmlApiInfoObj.webexSiteName = siteName;
           webExXmlApiInfoObj.webexAdminID = Authinfo.getPrimaryEmail();
@@ -216,27 +225,29 @@
 
           var _this = this;
 
-          Orgservice.getValidLicenses().then(
-            function getValidLicensesSuccess(licenses) {
-              var funcName = "getValidLicensesSuccess()";
+          WebExUtilsFact.getWebexLicenseInfo(_this.webExSiteSettingsObj.siteUrl).then(
+            function getWebexLicenseInfoSuccess(licenseInfo) {
+              var funcName = "getWebexLicenseInfoSuccess()";
               var logMsg = "";
 
-              logMsg = funcName + ": " + "\n" +
-                "licenses=" + JSON.stringify(licenses);
-              // $log.log(logMsg);
-
-              _this.updateLicenseInfo(licenses);
-            },
-
-            function getValidLicensesError(info) {
-              var funcName = "getValidLicensesError()";
-              var logMsg = "";
+              _this.webExSiteSettingsObj.siteInfoCardObj.licensesTotal.count = licenseInfo.volume;
+              _this.webExSiteSettingsObj.siteInfoCardObj.licensesUsage.count = licenseInfo.usage;
+              _this.webExSiteSettingsObj.siteInfoCardObj.licensesAvailable.count = licenseInfo.available;
 
               logMsg = funcName + ": " + "\n" +
-                "info=" + JSON.stringify(info);
+                "siteInfoCardObj=" + JSON.stringify(_this.webExSiteSettingsObj.siteInfoCardObj);
               $log.log(logMsg);
-            }
-          ); // Orgservice.getValidLicenses().then()
+            }, // getWebexLicenseInfoSuccess()
+
+            function getWebexLicenseInfoError(result) {
+              var funcName = "getWebexLicenseInfoError()";
+              var logMsg = "";
+
+              logMsg = funcName + ": " + "\n" +
+                "result=" + JSON.stringfy(result);
+              $log.log(logMsg);
+            } // getWebexLicenseInfoError()
+          );
 
           _this.getSiteSettingsInfoXml().then(
             function getSiteSettingsInfoXmlSuccess(getInfoResult) {
@@ -274,43 +285,6 @@
             } // getSiteSettingsInfoXmlError()
           ); // _this.getSiteSettingsInfoXml().then()
         }, // getSiteSettingsInfo()
-
-        updateLicenseInfo: function (licenses) {
-          var funcName = "updateLicenseInfo()";
-          var logMsg = "";
-
-          var _this = this;
-          var updateDone = false;
-
-          licenses.forEach(
-            function checkLicense(license) {
-              logMsg = funcName + ": " + "\n" +
-                "license=" + JSON.stringify(license);
-              // $log.log(logMsg);
-
-              if (
-                (!updateDone) &&
-                ("CONFERENCING" == license.licenseType) &&
-                (0 <= license.licenseId.indexOf(_this.webExSiteSettingsObj.siteUrl))
-              ) {
-
-                var licenseVolume = license.volume;
-                var licenseUsage = license.usage;
-                var licensesAvailable = licenseVolume - licenseUsage;
-
-                _this.webExSiteSettingsObj.siteInfoCardObj.licensesTotal.count = licenseVolume;
-                _this.webExSiteSettingsObj.siteInfoCardObj.licensesUsage.count = licenseUsage;
-                _this.webExSiteSettingsObj.siteInfoCardObj.licensesAvailable.count = licensesAvailable;
-
-                updateDone = true;
-              }
-            } // checkLicense()
-          ); // licenses.forEach()
-
-          logMsg = funcName + ":" + "\n" +
-            "siteInfoCardObj=" + JSON.stringify(_this.webExSiteSettingsObj.siteInfoCardObj);
-          // $log.log(logMsg);
-        }, // updateLicenseInfo()
 
         processSettingPagesInfo: function (settingPagesInfo) {
           var funcName = "processSettingPagesInfo()";
@@ -551,19 +525,19 @@
             _this.getCategoryObj(_this.webExSiteSettingsObj.siteInfoCardObj.id).pageObjs.forEach(
               function checkPageObj(pageObj) {
                 if (pageObj.pageId == "site_info") {
-                  _this.webExSiteSettingsObj.siteInfoCardObj.siteInfoPageObj = pageObj;
+                  _this.webExSiteSettingsObj.siteInfoCardObj.iframeLinkObj1.iframePageObj = pageObj;
                 } else if (pageObj.pageId == "site_features") {
-                  _this.webExSiteSettingsObj.siteInfoCardObj.siteFeaturePageObj = pageObj;
+                  _this.webExSiteSettingsObj.siteInfoCardObj.iframeLinkObj2.iframePageObj = pageObj;
                 }
               } // checkPageObj()
             ); // getCategoryObj("siteInfo").pageObjs.forEach()
 
             logMsg = funcName + ": " + "\n" +
-              "siteInfoPageObj=" + JSON.stringify(_this.webExSiteSettingsObj.siteInfoCardObj.siteInfoPageObj);
+              "iframeLinkObj1.iframePageObj=" + JSON.stringify(_this.webExSiteSettingsObj.siteInfoCardObj.iframeLinkObj1.iframePageObj);
             // $log.log(logMsg);
 
             logMsg = funcName + ": " + "\n" +
-              "siteFeaturePageObj=" + JSON.stringify(_this.webExSiteSettingsObj.siteInfoCardObj.siteFeaturePageObj);
+              "iframeLinkObj2.iframePageObj=" + JSON.stringify(_this.webExSiteSettingsObj.siteInfoCardObj.iframeLinkObj2.iframePageObj);
             // $log.log(logMsg);
           } // updateSiteInfoCardObj()
 
@@ -649,7 +623,7 @@
         }, // getCategoryObj()
 
         getSiteSettingsInfoXml: function () {
-          var siteInfoXml = WebExXmlApiFact.getSiteInfo(webExXmlApiInfoObj);
+          // var siteInfoXml = WebExXmlApiFact.getSiteInfo(webExXmlApiInfoObj);
           // var meetingTypesInfoXml = WebExXmlApiFact.getMeetingTypeInfo(webExXmlApiInfoObj);
           var settingPagesInfoXml = WebExXmlApiFact.getAdminPagesInfo(
             true,
