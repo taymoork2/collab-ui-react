@@ -424,7 +424,7 @@
           onClick: function (options, scope) {
             vm.gridData = null;
             CdrService.query(scope.model).then(function (response) {
-              if (response !== ABORT){
+              if (response !== ABORT) {
                 vm.selectedCDR = null;
                 vm.gridData = response;
                 setupScrolling(vm.gridData);
