@@ -8,7 +8,7 @@
     'Orgservice',
     'WebExXmlApiFact',
     'WebExXmlApiInfoSvc',
-    function (
+    function webexUtilsFact(
       $q,
       $log,
       Authinfo,
@@ -347,6 +347,6 @@
       }; // isSiteSupportsIframe()
 
       return obj;
-    }
+    } // webexUtilsFact()
   ]);
 })();
