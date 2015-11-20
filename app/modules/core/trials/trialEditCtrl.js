@@ -15,16 +15,8 @@
     vm.disableSquaredUCCheckBox = false;
     vm.offers = {};
 
-    var messagingLabel = $translate.instant('trials.collab');
-
     FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials).then(function (result) {
       vm.showRoomSystems = result;
-    });
-
-    FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
-      if (result) {
-        messagingLabel = $translate.instant('partnerHomePage.message');
-      }
     });
 
     vm.roomSystemOptions = [5, 10, 15, 20, 25];
@@ -56,13 +48,18 @@
       model: vm.offers,
       defaultValue: _.get(vm, 'currentTrial.communications.status') === 'ACTIVE',
       templateOptions: {
-        label: messagingLabel,
+        label: $translate.instant('trials.collab'),
         id: 'squaredTrial',
-        class: 'small-offset-1 columns',
+        class: 'small-offset-1 columns'
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
-          return _.get(vm, 'currentTrial.communications.status') === 'ACTIVE';
+          return vm.isSquaredUCEnabled() || _.get(vm, 'currentTrial.communications.status') === 'ACTIVE';
+        },
+        'templateOptions.label': function () {
+          return FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
+            return result ? $translate.instant('partnerHomePage.message') : $translate.instant('trials.collab');
+          });
         },
       },
     }, {
@@ -70,13 +67,18 @@
       type: 'checkbox',
       model: vm.offers,
       templateOptions: {
-        label: $translate.instant('partnerHomePage.call'),
+        label: $translate.instant('trials.squaredUC'),
         id: 'squaredUCTrial',
         class: 'small-offset-1 columns'
       },
       expressionProperties: {
         'hide': function () {
           return !vm.isSquaredUC();
+        },
+        'templateOptions.label': function () {
+          return FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
+            return result ? $translate.instant('partnerHomePage.call') : $translate.instant('trials.squaredUC');
+          });
         },
       },
     }];
