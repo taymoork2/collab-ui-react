@@ -46,14 +46,14 @@
       "id": "ce8d17f8-1734-4a54-8510-fae65acc505e",
       "displayName": "Marvel Partners (Mock)",
       "isPartner": true,
-      "entitlements": [
+      "services": [
         "squared-fusion-cal",
         "webex-squared",
         "squared-fusion-mgmt"
       ],
       "contact": "MOCK tywin.lannister@kingslanding.com",
       "claimedDomains": ["MOCK kingslanding.com", "MOCK kingslanding2.com"],
-      "partners": ["MOCK Drogon Solutions", "MOCK Red Keep Global"],
+      "manages": ["MOCK Drogon Solutions", "MOCK Red Keep Global"],
       "administratorUsers": ["MOCK Lannister Administrator 1", "MOCK Lannister Administrator 2"]
     },
     devices: {

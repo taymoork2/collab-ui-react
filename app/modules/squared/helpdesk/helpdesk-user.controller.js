@@ -22,7 +22,7 @@
     }, function (err) {
       XhrNotificationService.notify(err);
     });
-
+    
     function showCard(type) {
       var entitlements = vm.user.entitlements;
       switch (type) {
@@ -41,8 +41,7 @@
     }
 
     function resendInviteEmail() {
-      HelpdeskService.resendInviteEmail(vm.user.displayName, vm.user.userName).then(function (res) {
-      }, function (err) {
+      HelpdeskService.resendInviteEmail(vm.user.displayName, vm.user.userName).then(function (res) {}, function (err) {
         XhrNotificationService.notify(err);
       });
     }

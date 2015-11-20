@@ -2,33 +2,11 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskOrgController(HelpdeskMockData, Config, $stateParams, HelpdeskService, XhrNotificationService, ServiceDescriptor, Authinfo) {
+  function HelpdeskOrgController(Config, $stateParams, HelpdeskService, XhrNotificationService) {
     var vm = this;
-
     vm.org = $stateParams.org;
     vm.orgId = vm.org.id;
-
     vm.showCard = showCard;
-
-    /*
-    vm.messageLicences = {
-      total: 1000,
-      used: 190
-    };
-    vm.meetingLicences = {
-      total: 1000,
-      used: 658
-    };
-    vm.roomSystemsLicences = {
-      total: 1000,
-      used: 989
-    };
-    vm.hybridServicesLicences = {
-      total: 100,
-      used: 50
-    };
-*/
-    var urlBase = Config.getAdminServiceUrl();
 
     HelpdeskService.getOrg(vm.org.id).then(function (res) {
       vm.org = res;
@@ -36,28 +14,35 @@
       XhrNotificationService.notify(err);
     });
 
-    HelpdeskService.getHybridServices(vm.org.id).then(function (services) {
+    // Not needed ?
+    HelpdeskService.getHybridServices(vm.orgId).then(function (services) {
       vm.hybridServices = services;
     }, function (err) {
       XhrNotificationService.notify(err);
     });
 
+    /*
+      message : entitlement = "webex-squared" ?
+      meeting (webex) : entitlement = "webex-messenger" ?
+      call(huron) : authinfo.issquareduc()
+      hybrid: Authinfo.isFusion()
+      room (cloudberry): Authinfo.isDeviceManagement()
+     */
+    // TODO: Move and and reuse between user and org ?
     function showCard(type) {
-      var entitlements = vm.org.entitlements;
+      var entitlements = vm.org.services;
       switch (type) {
         //TODO: Check for the CORRECT entitlements !!!
       case 'message':
-        return _.includes(entitlements, "webex-squared"); //???
+        return _.includes(entitlements, Config.entitlements.squared); //???
       case 'meeting':
-        return _.includes(entitlements, "webex-squared"); //???
+        return _.includes(entitlements, "webex-messenger"); // ???
       case 'call':
-        return _.includes(entitlements, "squared-call-initiation");
+        return _.includes(entitlements, Config.entitlements.huron);
       case 'hybrid':
-        return _.includes(entitlements, "squared-fusion-cal") || _.includes(entitlements, "squared-fusion-uc");
+        return _.includes(entitlements, Config.entitlements.fusion_mgmt);
       case 'room':
-        return _.includes(entitlements, "webex-squared"); //???
-      case 'users':
-        return _.includes(entitlements, "webex-squared"); //???
+        return _.includes(entitlements, Config.entitlements.device_mgmt);
       }
       return true;
     }
