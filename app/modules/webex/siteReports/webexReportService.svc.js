@@ -334,8 +334,6 @@ angular.module('WebExReports').service('WebexReportService', [
         "icon icon-circle-clock"
       );
 
-      infoCardObj.label = siteUrl;
-
       infoCardObj.iframeLinkObj1.iframePageObj = {
         id: "infoCardMeetingInProgress",
         label: $translate.instant("webexSiteReports.meeting_in_progess"),
