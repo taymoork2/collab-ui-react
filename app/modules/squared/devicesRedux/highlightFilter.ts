@@ -1,4 +1,4 @@
-module devicesRedux {
+namespace devicesRedux {
   angular
     .module('Squared')
     .filter('highlight', highlightFilter);

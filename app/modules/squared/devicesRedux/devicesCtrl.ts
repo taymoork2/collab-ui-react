@@ -1,4 +1,4 @@
-module devicesRedux {
+namespace devicesRedux {
 
   class DevicesReduxCtrl {
 

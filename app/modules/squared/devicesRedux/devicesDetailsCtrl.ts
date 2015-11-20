@@ -1,4 +1,4 @@
-module devicesRedux {
+namespace devicesRedux {
 
   /* @ngInject */
   function TagFactory (XhrNotificationService, CsdmCodeService, CsdmDeviceService) {
