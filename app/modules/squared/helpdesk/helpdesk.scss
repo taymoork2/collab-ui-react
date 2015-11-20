@@ -138,6 +138,16 @@
         }
       }
     }
+    .cs-card{
+      .clickable-area{
+        display: block;
+        background-color: rgba(0,0,0,0);
+        width: 85%;
+        height: 53px;
+        position: absolute;
+        top: 0;
+      }
+    }
     .cs-card:hover {
       article {
         border: 1px solid $brand-primary;
