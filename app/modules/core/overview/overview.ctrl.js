@@ -18,16 +18,14 @@
       new RoomSystemCard()
     ];
 
-    var licenses = Authinfo.getLicenses();
+    vm.userCard = new UserCard();
+    vm.hybridCard = new HybridServicesCard();
 
     _.each(vm.cards, function (card) {
       if (card.licenseEventHandler) {
-        card.licenseEventHandler(licenses);
+        card.licenseEventHandler(Authinfo.getLicenses());
       }
     });
-
-    vm.userCard = new UserCard();
-    vm.hybridCard = new HybridServicesCard();
 
     vm.statusPageUrl = Config.getStatusPageUrl();
 
@@ -47,7 +45,14 @@
 
     ReportsService.getOverviewMetrics(true);
 
-    Orgservice.getOrg(vm.userCard.orgEventHandler);
+    Orgservice.getOrg(function (orgData) {
+      _.each(vm.cards, function (card) {
+        if (card.orgEventHandler) {
+          card.orgEventHandler(orgData);
+        }
+      });
+      vm.userCard.orgEventHandler(orgData);
+    });
     Orgservice.getUnlicensedUsers(vm.userCard.unlicensedUsersHandler);
 
     ReportsService.healthMonitor(function (data, status) {
@@ -114,7 +119,7 @@
     this.currentTitle = 'overview.cards.message.currentTitle';
     this.previousTitle = 'overview.cards.message.previousTitle';
     this.trial = false;
-    this.enabled = true;
+    this.enabled = false;
 
     this.reportDataEventHandler = function (event, response) {
 
@@ -134,10 +139,24 @@
     };
 
     this.licenseEventHandler = function (licenses) {
-      card.trial = _.any(licenses, {
-        'offerName': 'MS',
-        'isTrial': true
+      this.allLicenses = licenses;
+      card.trial = _.any(filterLicenses(licenses), {'isTrial': true});
+
+      if (filterLicenses(licenses).length > 0) {
+        card.enabled = true; //don't disable if no licenses in case test org..
+      }
+    };
+
+    function filterLicenses(licenses) {
+      return _.filter(licenses, function (l) {
+        return l.licenseType === 'MESSAGING' && !(l.status === 'CANCELLED' || l.status === 'SUSPENDED');
       });
+    };
+
+    this.orgEventHandler = function (data) {
+      if (data.success && data.isTestOrg && this.allLicenses && this.allLicenses.length === 0) {
+        this.enabled = true;//If we are a test org and allLicenses is empty, enable the card.
+      }
     };
   }
 
@@ -150,27 +169,45 @@
     this.notEnabledText = 'overview.cards.meeting.notEnabledText';
     this.notEnabledFooter = 'overview.contactPartner';
     this.trial = false;
-    this.enabled = true;
+    this.enabled = false;
     this.settingsUrl = '';
     this.healthStatusUpdatedHandler = _.partial(meeetingHealthEventHandler, card);
 
     this.reportDataEventHandler = function (event, response) {
       if (!response.data.success) return;
-      if (event.name == 'groupCallsLoaded' && response.data.spanType == 'month' && response.data.intervalCount >= 2) {
+      if (event.name === 'groupCallsLoaded' && response.data.spanType === 'month' && response.data.intervalCount >= 2) {
         card.current = Math.round(response.data.data[response.data.data.length - 1].count);
         card.previous = Math.round(response.data.data[response.data.data.length - 2].count);
       }
     };
 
     this.licenseEventHandler = function (licenses) {
-      card.trial = _.any(licenses, function (l) {
-        return l.isTrial && _(['CF', 'EE', 'MC', 'SC', 'TC', 'EC']).contains(l.offername);
-      });
+      this.allLicenses = licenses;
+
+      card.trial = _.some(filterLicenses(licenses), {'isTrial': true});
 
       var hasSites = _.some(licenses, function (l) {
         return l.siteUrl;
       });
+
       this.settingsUrl = hasSites ? '#/site-list' : '';
+
+      if (filterLicenses(licenses).length > 0) {
+        card.enabled = true; //don't disable if no licenses in case test org..
+      }
+    };
+
+    this.orgEventHandler = function (data) {
+      if (data.success && data.isTestOrg && this.allLicenses && this.allLicenses.length === 0) {
+        this.enabled = true;//If we are a test org and allLicenses is empty, enable the card.
+      }
+    };
+
+    function filterLicenses(licenses) {
+      return _.filter(licenses, function (l) {
+        //    (['CF', 'EE', 'MC', 'SC', 'TC', 'EC']).contains(l.offername);
+        return l.licenseType === 'CONFERENCING' && !(l.status === 'CANCELLED' || l.status === 'SUSPENDED');
+      });
     };
   }
 
@@ -183,7 +220,7 @@
     this.name = 'overview.cards.call.title';
     this.cardClass = 'people';
     this.trial = false;
-    this.enabled = true;
+    this.enabled = false;
     this.notEnabledText = 'overview.cards.call.notEnabledText';
     this.notEnabledFooter = 'overview.contactPartner';
     this.settingsUrl = '#/hurondetails/settings';
@@ -197,8 +234,25 @@
     };
 
     this.licenseEventHandler = function (licenses) {
-      card.trial = _.any(licenses, function (l) {
-        return l.offerName == 'CO' && l.isTrial;
+      this.allLicenses = licenses;
+
+      card.trial = _.any(filterLicenses(licenses), {'isTrial': true});
+
+      if (filterLicenses(licenses).length > 0) {
+        card.enabled = true; //don't disable if no licenses in case test org..
+      }
+    };
+
+    this.orgEventHandler = function (data) {
+      if (data.success && data.isTestOrg && this.allLicenses && this.allLicenses.length === 0) {
+        this.enabled = true;//If we are a test org and allLicenses is empty, enable the card.
+      }
+    };
+
+    function filterLicenses(licenses) {
+      return _.filter(licenses, function (l) {
+        //  return l.offerName === 'CO'
+        return l.licenseType === 'COMMUNICATION' && !(l.status === 'CANCELLED' || l.status === 'SUSPENDED');
       });
     };
   }
@@ -209,7 +263,8 @@
     this.desc = 'overview.cards.roomSystem.desc';
     this.name = 'overview.cards.roomSystem.title';
     this.cardClass = 'gray';
-    this.enabled = true;
+    this.enabled = false;
+    this.trial = false;
     this.notEnabledText = 'overview.cards.roomSystem.notEnabledText';
     this.notEnabledFooter = 'overview.contactPartner';
     this.currentTitle = 'overview.cards.roomSystem.currentTitle';
@@ -235,10 +290,24 @@
     };
 
     this.licenseEventHandler = function (licenses) {
-      card.trial = _.any(licenses, {
-        'offerName': 'SD',
-        'isTrial': true
-      }); //SD = Shared Devices
+      this.allLicenses = licenses;
+      card.trial = _.some(filterLicenses(licenses), {'isTrial': true});
+
+      if (filterLicenses(licenses).length > 0) {
+        card.enabled = true; //don't disable if no licenses in case test org..
+      }
+    };
+
+    function filterLicenses(licenses) {
+      return _.filter(licenses, function (l) {
+        return l.offerName === 'SD' && !(l.status === 'CANCELLED' || l.status === 'SUSPENDED');//SD = Shared Devices
+      });
+    };
+
+    this.orgEventHandler = function (data) {
+      if (data.success && data.isTestOrg && this.allLicenses && this.allLicenses.length === 0) {
+        this.enabled = true;//If we are a test org and allLicenses is empty, enable the card.
+      }
     };
   }
 
@@ -274,3 +343,4 @@
     };
   }
 })();
+
