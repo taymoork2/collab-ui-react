@@ -917,11 +917,11 @@
       "error": "Error"
     },
     "serviceNames": {
-      "squared-fusion-uc": "Call Service",
+      "squared-fusion-uc": "Call Service: Aware",
       "squared-fusion-cal": "Calendar Service",
       "squared-fusion-media": "Media Service",
       "contact-center-context": "Context Center Service",
-      "squared-fusion-ec": "Call Service Connect",
+      "squared-fusion-ec": "Call Service: Connect",
       "squared-fusion-mgmt": "Expressway Management Service"
     },
     "serviceDescriptions": {

@@ -152,6 +152,13 @@ var UsersPage = function () {
 
   this.selectedRow = element(by.css('[ng-repeat="row in renderedRows"].selected'));
 
+  // Hybrid Services
+  this.hybridServices_Cal = element(by.css('label[for="squared-fusion-cal"]'));
+  this.hybridServices_UC = element(by.css('label[for="squared-fusion-uc"]'));
+
+  this.hybridServices_sidePanel_Calendar = element(by.id('squared-fusion-cal-status'));
+  this.hybridServices_sidePanel_UC = element(by.id('squared-fusion-uc-status'));
+
   this.assertSorting = function (nameToSort) {
     this.queryResults.getAttribute('value').then(function (value) {
       var queryresults = parseInt(value, 10);

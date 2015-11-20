@@ -37,6 +37,9 @@ describe('Invite User and Check Buckets', function () {
         utils.expectIsDisplayed(users.messageLicenses);
         utils.expectIsDisplayed(users.conferenceLicenses);
         utils.expectIsDisplayed(users.communicationLicenses);
+        // Hybrid services
+        utils.expectIsDisplayed(users.hybridServices_Cal);
+        utils.expectIsDisplayed(users.hybridServices_UC);
       });
 
       it('should add users successfully', function () {
