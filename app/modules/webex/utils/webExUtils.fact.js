@@ -18,6 +18,53 @@
     ) {
       var obj = {};
 
+      obj.getSiteName = function (siteUrl) {
+        var index = siteUrl.indexOf(".");
+        var siteName = siteUrl.slice(0, index);
+
+        return siteName;
+      }; // getSiteName()
+
+      obj.getNewInfoCardObj = function (
+        label,
+        iconClass1,
+        iconClass2
+      ) {
+
+        var infoCardObj = {
+          id: "SiteInfo",
+          label: label,
+
+          licensesTotal: {
+            id: "licensesTotal",
+            count: "---"
+          },
+
+          licensesUsage: {
+            id: "licensesUsage",
+            count: "---"
+          },
+
+          licensesAvailable: {
+            id: "licensesAvailable",
+            count: "---"
+          },
+
+          iframeLinkObj1: {
+            iconClass: iconClass1,
+            iframePageObj: null,
+          },
+
+          iframeLinkObj2: {
+            iconClass: iconClass2,
+            iframePageObj: null,
+          },
+        };
+
+        return infoCardObj;
+
+      }; // getNewInfoObj()
+
       obj.validateXmlData = function (
         commentText,
         infoXml,
@@ -127,13 +174,6 @@
 
         return adminPagesInfo;
       }; // validateAdminPagesInfoXmlData()
-
-      obj.getSiteName = function (siteUrl) {
-        var index = siteUrl.indexOf(".");
-        var siteName = siteUrl.slice(0, index);
-
-        return siteName;
-      }; // getSiteName()
 
       obj.getSiteVersion = function (siteVersionJsonObj) {
         var funcName = "getSiteVersion()";

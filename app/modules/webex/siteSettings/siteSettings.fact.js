@@ -21,18 +21,29 @@
       webExXmlApiInfoObj
     ) {
       return {
-        newWebExSiteSettingsObj: function () {
+        newWebExSiteSettingsObj: function (
+          siteUrl,
+          siteName,
+          pageTitle,
+          pageTitleFull
+        ) {
+          var infoCardObj = WebExUtilsFact.getNewInfoCardObj(
+            siteUrl,
+            "icon icon-circle-webex",
+            "icon icon-circle-star"
+          );
+
           var webExSiteSettingsObj = {
             viewReady: false,
             hasLoadError: false,
             sessionTicketError: false,
             allowRetry: false,
             errMsg: "",
-            pageTitle: null,
-            pageTitleFull: null,
+            pageTitle: pageTitle,
+            pageTitleFull: pageTitleFull,
 
-            siteUrl: null,
-            siteName: null,
+            siteUrl: siteUrl,
+            siteName: siteName,
 
             // siteInfo: null,
             // meetingTypesInfo: null,
@@ -44,35 +55,7 @@
               pageObj: null,
             }, // emailAllHostsBtnObj
 
-            siteInfoCardObj: {
-              id: "SiteInfo",
-              label: null,
-
-              licensesTotal: {
-                id: "licensesTotal",
-                count: null
-              },
-
-              licensesUsage: {
-                id: "licensesUsage",
-                count: null
-              },
-
-              licensesAvailable: {
-                id: "licensesAvailable",
-                count: null
-              },
-
-              iframeLinkObj1: {
-                iconClass: "icon icon-circle-webex",
-                iframePageObj: null,
-              },
-
-              iframeLinkObj2: {
-                iconClass: "icon icon-circle-star",
-                iframePageObj: null,
-              },
-            }, // siteInfoCardObj
+            siteInfoCardObj: infoCardObj,
 
             siteSettingCardObjs: [],
             categoryObjs: [],
@@ -151,9 +134,7 @@
 
           var _this = this;
 
-          _this.webExSiteSettingsObj = _this.newWebExSiteSettingsObj();
-
-          var siteUrl = (!$stateParams.siteUrl) ? '' : $stateParams.siteUrl;
+          var siteUrl = $stateParams.siteUrl || "";
           var siteName = WebExUtilsFact.getSiteName(siteUrl);
           var pageTitle = $translate.instant("webexSiteSettingsLabels.siteSettingsIndexPageTitle");
           var pageTitleFull = $translate.instant(
@@ -169,11 +150,15 @@
             "pageTitleFull=" + pageTitleFull;
           $log.log(logMsg);
 
-          _this.webExSiteSettingsObj.siteUrl = siteUrl;
-          _this.webExSiteSettingsObj.siteName = siteName;
+          _this.webExSiteSettingsObj = _this.newWebExSiteSettingsObj(
+            siteUrl,
+            siteName,
+            pageTitle,
+            pageTitleFull
+          );
+
           _this.webExSiteSettingsObj.pageTitle = pageTitle;
           _this.webExSiteSettingsObj.pageTitleFull = pageTitleFull;
-          _this.webExSiteSettingsObj.siteInfoCardObj.label = siteUrl;
 
           _this.getSessionTicket(siteUrl).then(
             function getSessionTicketSuccess(sessionTicket) {

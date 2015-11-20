@@ -323,66 +323,42 @@ angular.module('WebExReports').service('WebexReportService', [
       var funcName = "initReportsObject()";
       var logMsg = funcName;
 
-      var reportsObject = {
-        viewReady: false,
-        
-        infoCardObj: {
-          id: "SiteInfo",
-          label: "sjsite14.webex.com",
-          
-          licensesTotal: {
-            id: "licensesTotal",
-            count: null
-          },
-          
-          licensesUsage: {
-            id: "licensesUsage",
-            count: null
-          },
-          
-          licensesAvailable: {
-            id: "licensesAvailable",
-            count: null
-          },
-          
-          iframeLinkObj1: {
-            iconClass: "icon icon-circle-comp-pos",
-            iframePageObj: {
-              id: "infoCardMeetingInProgress",
-              label: $translate.instant("webexSiteReports.meeting_in_progess"),
-              uiSref: null
-            }
-          },
-          
-          iframeLinkObj2: {
-            iconClass: "icon icon-circle-clock",
-            iframePageObj: {
-              id: "infoCardMeetingUsage",
-              label: $translate.instant("webexSiteReports.meeting_usage"),
-              uiSref: null
-            }
-          }
-        }
-      };
-
       var _this = this;
       var displayLabel = null;
-
       var siteUrl = requestedSiteUrl || '';
       var siteName = WebExUtilsFact.getSiteName(siteUrl);
-      
-      logMsg = funcName + ": " + "\n" +
-        "siteUrl=" + siteUrl + "; " +
-        "siteName=" + siteName;
-      $log.log(logMsg);
 
-      reportsObject["siteUrl"] = siteUrl;
-      reportsObject["siteName"] = siteName;
-      
+      var infoCardObj = WebExUtilsFact.getNewInfoCardObj(
+        siteUrl,
+        "icon icon-circle-comp-pos",
+        "icon icon-circle-clock"
+      );
+
+      infoCardObj.label = siteUrl;
+
+      infoCardObj.iframeLinkObj1.iframePageObj = {
+        id: "infoCardMeetingInProgress",
+        label: $translate.instant("webexSiteReports.meeting_in_progess"),
+        uiSref: null
+      };
+
+      infoCardObj.iframeLinkObj2.iframePageObj = {
+        id: "infoCardMeetingUsage",
+        label: $translate.instant("webexSiteReports.meeting_usage"),
+        uiSref: null
+      };
+
+      var reportsObject = {
+        viewReady: false,
+        siteUrl: siteUrl,
+        siteName: siteName,
+        infoCardObj: infoCardObj
+      };
+
       // TODO: fix the following settings
-      reportsObject.infoCardObj.licensesTotal.count = "---";
-      reportsObject.infoCardObj.licensesUsage.count = "---";
-      reportsObject.infoCardObj.licensesAvailable.count = "---";
+      reportsObject.infoCardObj.licensesTotal.count = "?";
+      reportsObject.infoCardObj.licensesUsage.count = "?";
+      reportsObject.infoCardObj.licensesAvailable.count = "?";
 
       WebExXmlApiFact.getSessionTicket(siteUrl).then(
         function getSessionTicketSuccess(sessionTicket) {
