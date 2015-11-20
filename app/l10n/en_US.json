@@ -2801,6 +2801,23 @@
     "meeting": "Meeting",
     "call": "Call",
     "rooms": "Rooms",
-    "hybridServices": "Hybrid Services"
+    "hybridServices": "Hybrid Services",
+    "entitlements": {
+      "webex-squared": "Free Spark Messaging",
+      "squared-syncup.paid": "25 Party Meetings",
+      "squared-syncup.free": "Free 3 Party Spark Meetings",
+      "squared-room-moderation.paid": "Standard Team Rooms",
+      "squared-room-moderation.free": "Free Spark Messaging",
+      "ciscouc.paid": "Advanced Spark Call",
+      "ciscouc.free": "Free 1:1 Spark Call"
+    },
+    "userStatuses": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "pending": "Invite Pending",
+      "transient": "Transient",
+      "fraud": "Fraud",
+      "compliance": "Compliance"
+    }
   }
 }

@@ -1,5 +1,5 @@
-<cs-card-layout block-view="true">
-  <cs-card class="large header-bar user-card" ng-show="helpdeskUserCtrl.showCard('message')">
+<cs-card-layout block-view="true" class="helpdesk-cards">
+  <cs-card class="large header-bar primary" ng-if="helpdeskUserCtrl.messaging.entitled">
     <article>
       <header class="align-center">
         <h4>
@@ -8,13 +8,17 @@
         </h4>
       </header>
       <section>
-        <p></p>
+        <h5>Entitlements</h5>
+
+        <div ng-repeat="entitlement in helpdeskUserCtrl.messaging.entitlements">
+          <span>{{entitlement}}</span>
+        </div>
       </section>
       <footer></footer>
     </article>
   </cs-card>
 
-  <cs-card class="large header-bar user-card" ng-show="helpdeskUserCtrl.showCard('meeting')">
+  <cs-card class="large header-bar meetings" ng-if="helpdeskUserCtrl.meeting.entitled">
     <article>
       <header class="align-center">
         <h4>
@@ -23,13 +27,17 @@
         </h4>
       </header>
       <section>
-        <p></p>
+        <h5>Entitlements</h5>
+
+        <div ng-repeat="entitlement in helpdeskUserCtrl.meeting.entitlements">
+          <span>{{entitlement}}</span>
+        </div>
       </section>
       <footer></footer>
     </article>
   </cs-card>
 
-  <cs-card class="large header-bar user-card" ng-show="helpdeskUserCtrl.showCard('call')">
+  <cs-card class="large header-bar people" ng-if="helpdeskUserCtrl.call.entitled">
     <article>
       <header class="align-center">
         <h4>
@@ -38,13 +46,17 @@
         </h4>
       </header>
       <section>
-        <p></p>
+        <h5>Entitlements</h5>
+
+        <div ng-repeat="entitlement in helpdeskUserCtrl.call.entitlements">
+          <span>{{entitlement}}</span>
+        </div>
       </section>
       <footer></footer>
     </article>
   </cs-card>
 
-  <cs-card class="large header-bar user-card" ng-show="helpdeskUserCtrl.showCard('hybrid')">
+  <cs-card class="large header-bar" ng-if="helpdeskUserCtrl.hybrid.entitled">
     <article>
       <header class="align-center">
         <h4>
@@ -53,7 +65,24 @@
         </h4>
       </header>
       <section>
-        <p></p>
+        <div ng-if="helpdeskUserCtrl.hybrid.cal.entitled">
+          <h5 translate="hercules.serviceNames.squared-fusion-cal"></h5>
+          <span ng-if="!helpdeskUserCtrl.hybrid.cal.status" translate="common.on"></span>
+          <span ng-if="helpdeskUserCtrl.hybrid.cal.status"
+                translate="hercules.activationStatus.{{helpdeskUserCtrl.hybrid.cal.status.collapsedState}}"></span>
+        </div>
+        <div ng-if="helpdeskUserCtrl.hybrid.uc.entitled">
+          <h5 translate="hercules.serviceNames.squared-fusion-uc"></h5>
+          <span ng-if="!helpdeskUserCtrl.hybrid.uc.status" translate="common.on"></span>
+          <span ng-if="helpdeskUserCtrl.hybrid.uc.status"
+                translate="hercules.activationStatus.{{helpdeskUserCtrl.hybrid.uc.status.collapsedState}}"></span>
+        </div>
+        <div ng-if="helpdeskUserCtrl.hybrid.ec.entitled">
+          <h5 translate="hercules.serviceNames.squared-fusion-ec"></h5>
+          <span ng-if="!helpdeskUserCtrl.hybrid.ec.status" translate="common.on"></span>
+          <span ng-if="helpdeskUserCtrl.hybrid.ec.status"
+                translate="hercules.activationStatus.{{helpdeskUserCtrl.hybrid.ec.status.collapsedState}}"></span>
+        </div>
       </section>
       <footer></footer>
     </article>

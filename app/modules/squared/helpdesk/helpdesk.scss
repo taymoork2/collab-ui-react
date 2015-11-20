@@ -173,38 +173,16 @@
     }
   }
 }
-.helpdesk-details {
-  h2 {
-    margin-bottom: 1.5rem;
-  }
-  p {
-    margin-bottom: 1rem;
-  }
-  table {
-    tbody {
-      tr {
-        border-top: transparent;
-      }
-      td {
-        padding-left: 0;
-      }
-      td a,
-      .td a {
-        color: $anchor-font-color;
-      }
-      td a:hover,
-      .td a:hover {
-        color: $anchor-font-color-hover;
-      }
-    }
-  }
-  .card-list {
+
+.helpdesk-cards {
+  .cs-card section {
     text-align: left;
-    margin-left: 1.5rem;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+    padding-bottom: 1rem;
+    overflow: hidden;
   }
 }
+
 .helpdesk-red {
   color: $color-negative-base;
 }

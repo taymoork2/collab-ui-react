@@ -17,9 +17,13 @@
       </div>
       <div class="user-info">
         <span translate="helpdesk.userStatus"></span>:
-        <span class="user-value">{{helpdeskUserCtrl.user.status}}</span>
-        <button class="action secondary right" type="button" ng-click="helpdeskUserCtrl.resendInviteEmail()">Re-send
+        <button class="action secondary right" type="button" ng-click="helpdeskUserCtrl.resendInviteEmail()"
+                style="margin-left: 1rem;"
+                ng-if="helpdeskUserCtrl.resendInviteEnabled">Re-send
         </button>
+        <span class="user-value right"
+              ng-repeat="status in helpdeskUserCtrl.user.statuses">{{status }}{{$last ? '' : ', '}}</span>
+
       </div>
       <div class="user-info">
         <span translate="common.email"></span>:
