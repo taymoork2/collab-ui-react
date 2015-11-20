@@ -21,16 +21,8 @@
       licenseDuration: 90,
     };
 
-    var messagingLabel = $translate.instant('trials.collab');
-
     FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials).then(function (result) {
       vm.showRoomSystems = result;
-    });
-
-    FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
-      if (result) {
-        messagingLabel = $translate.instant('partnerHomePage.message');
-      }
     });
 
     vm.custInfoFields = [{
@@ -84,7 +76,7 @@
       type: 'checkbox',
       model: vm.offers,
       templateOptions: {
-        label: messagingLabel,
+        label: $translate.instant('trials.collab'),
         id: 'squaredTrial',
         class: 'small-offset-1 columns'
       },
@@ -92,19 +84,29 @@
         'templateOptions.disabled': function () {
           return vm.isSquaredUCEnabled();
         },
+        'templateOptions.label': function () {
+          return FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
+            return result ? $translate.instant('partnerHomePage.message') : $translate.instant('trials.collab');
+          });
+        },
       },
     }, {
       key: 'SQUAREDUC',
       type: 'checkbox',
       model: vm.offers,
       templateOptions: {
-        label: $translate.instant('partnerHomePage.call'),
+        label: $translate.instant('trials.squaredUC'),
         id: 'squaredUCTrial',
         class: 'small-offset-1 columns',
       },
       expressionProperties: {
         'hide': function () {
           return !vm.isSquaredUC();
+        },
+        'templateOptions.label': function () {
+          return FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
+            return result ? $translate.instant('partnerHomePage.call') : $translate.instant('trials.squaredUC');
+          });
         },
       },
     }];

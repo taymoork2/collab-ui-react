@@ -6,6 +6,7 @@
 <div class="pilot-number-details">
   <div class="typeahead-large">
     <input id="numberInput" type="text" ng-model="huntGroupSA.selectedPilotNumber"
+           ng-class="{'error': huntGroupSA.errorNumberInput}"
            typeahead="num for num in huntGroupSA.fetchNumbers($viewValue) | limitTo:10"
            typeahead-on-select="huntGroupSA.selectPilotNumber($item)"
            typeahead-template-url="numberTemplate.html" placeholder="{{:: 'huronHuntGroup.numberPlaceholder' | translate}}"
