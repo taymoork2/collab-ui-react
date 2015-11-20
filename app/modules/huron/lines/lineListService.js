@@ -66,8 +66,8 @@
         break;
       }
 
-      queryString.start = startIndex;
-      queryString.max = count;
+      queryString.offset = startIndex;
+      queryString.limit = count;
       queryString.order = sortBy + sortOrder;
 
       return UserLineAssociationService.query(queryString)

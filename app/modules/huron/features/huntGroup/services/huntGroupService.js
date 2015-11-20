@@ -24,6 +24,7 @@
       getHuntMembers: getHuntMembers,
       isFallbackNumberValid: isFallbackNumberValid,
       getHuntMethods: getHuntMethods,
+      suggestionsNeeded: suggestionsNeeded,
       getHuntMemberWithSelectedNumber: getHuntMemberWithSelectedNumber,
       NUMBER_FORMAT_DIRECT_LINE: "NUMBER_FORMAT_DIRECT_LINE",
       NUMBER_FORMAT_EXTENSION: "NUMBER_FORMAT_EXTENSION"

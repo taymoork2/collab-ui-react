@@ -316,6 +316,43 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Fallback Destination', funct
       fallbackMember1.selectableNumber.uuid);
   });
 
+  it("shows primary indicator when input typed is less than 3",
+    function () {
+      controller.fetchFallbackDestination("s");
+      $scope.$apply();
+      expect(controller.isErrorFallbackInput()).toBeFalsy();
+
+      controller.fetchFallbackDestination("su");
+      $scope.$apply();
+      expect(controller.isErrorFallbackInput()).toBeFalsy();
+    }
+  );
+
+  it("shows danger indicator when input typed is >= 3 and no valid suggestions.", function () {
+    var noSuggestion = {
+      "users": []
+    };
+    $httpBackend.expectGET(MemberLookupUrl).respond(200, noSuggestion);
+    controller.fetchFallbackDestination("sun");
+    $scope.$apply();
+    $httpBackend.flush(); // Request made.
+    expect(controller.isErrorFallbackInput()).toBeUndefined();
+
+    $httpBackend.expectGET(MemberLookupUrl).respond(200, successResponse);
+    controller.fetchFallbackDestination("sun");
+    $scope.$apply();
+    $httpBackend.flush(); // Request made.
+    expect(controller.isErrorFallbackInput()).toBeFalsy();
+  });
+
+  it("shows primary indicator when input typed is a valid external number.", function () {
+    controller.selectedFallbackNumber = "8179325798";
+    controller.validateFallbackNumber();
+    $scope.$apply();
+
+    expect(controller.isErrorFallbackInput()).toBeFalsy();
+  });
+
   function expectFallbackNumberSuggestion(inNumber, outArray) {
     controller.selectedFallbackNumber = inNumber;
     $httpBackend.expectGET(GetNumberUrl).respond(200, {

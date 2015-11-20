@@ -2669,8 +2669,6 @@
     "featureListingError": "Failed to retrieve the feature list.",
     "numberFetchFailure": "Unable to get numbers.",
     "newFeatureButtonText": "New",
-    "remove": "Remove",
-    "removeMember": "Remove Member",
     "newFeatureModalTitle": "Create New Feature",
     "featuresNotYetConfiguredPage": {
       "nothingToSee": "Nothing here to see yet.",
