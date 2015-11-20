@@ -200,11 +200,25 @@ angular.module('Core')
           siteAdminDeepUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage'
         },
 
+        wdmUrl: {
+          dev: 'https://wdm-a.wbx2.com/wdm/api/v1',
+          cfe: 'http://wdm.cfe.wbx2.com/wdm/api/v1',
+          integration: 'http://wdm.integration.wbx2.com/wdm/api/v1',
+          prod: 'http://wdm.cfa.wbx2.com/wdm/api/v1',
+        },
+
         sunlightConfigServiceUrl: {
           dev: 'https://config.integration-tx1.thunderhead.io/config/v1',
           cfe: 'https://config.integration-tx1.thunderhead.io/config/v1',
           integration: 'https://config.integration-tx1.thunderhead.io/config/v1',
           prod: 'https://config.integration-tx1.thunderhead.io/config/v1' //This will change to prod later in future
+        },
+
+        calliopeUrl: {
+          dev: 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1',
+          cfe: 'https://calliope-e.wbx2.com/calliope/api/authorization/v1',
+          integration: 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1',
+          prod: 'https://calliope-a.wbx2.com/calliope/api/authorization/v1'
         },
 
         scimSchemas: [
@@ -820,8 +834,16 @@ angular.module('Core')
           return this.ussUrl[this.getEnv()];
         },
 
+        getCalliopeUrl: function () {
+          return this.calliopeUrl[this.getEnv()];
+        },
+
         getCertsUrl: function () {
           return this.certsUrl[this.getEnv()];
+        },
+
+        getWdmUrl: function () {
+          return this.wdmUrl.dev;
         },
 
         getDefaultEntitlements: function () {

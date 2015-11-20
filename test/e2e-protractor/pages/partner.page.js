@@ -59,6 +59,7 @@ var PartnerHomePage = function () {
   this.customerDidInput = element(by.id('didAddField-tokenfield'));
   this.customerEmailInput = element(by.id('customerEmail'));
   this.licenseCount = element(by.id('licenseCount'));
+  this.trialRoomSystemsAmount = element(by.id('trialRoomSystemsAmount'));
   this.licenseDuration = element(by.id('licenseDuration'));
   this.editTrialButton = element(by.id('editTrialButton'));
   this.newTrialName = element(by.binding('trial.'));
@@ -97,6 +98,7 @@ var PartnerHomePage = function () {
   this.trialFilter = element(by.cssContainingText('.filter', 'Trial'));
   this.partnerEmail = element.all(by.binding('userName'));
   this.squaredTrialCheckbox = element(by.css('label[for="squaredTrial"]'));
+  this.roomSystemsCheckbox = element(by.css('label[for="trialRoomSystemsChecked"]'));
   this.squaredUCTrialCheckbox = element(by.css('label[for="squaredUCTrial"]'));
   this.customerNameHeader = element(by.cssContainingText('.ngHeaderText ', 'Customer Name'));
 

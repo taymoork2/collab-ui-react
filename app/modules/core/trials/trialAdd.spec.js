@@ -47,6 +47,14 @@ describe('Controller: TrialAddCtrl', function () {
     expect($state.go).toHaveBeenCalledWith('trialAdd.addNumbers');
   });
 
+  it('should enable reset room systems amount when room systems is set to false', function () {
+    controller.model.roomSystemsEnabled = true;
+    controller.model.roomSystems = 5;
+    controller.model.roomSystemsEnabled = false;
+    controller.roomSystemsChecked();
+    expect(controller.model.roomSystems).toBe(0);
+  });
+
   describe('Start a new trial', function () {
     beforeEach(function () {
       spyOn(TrialService, "startTrial").and.returnValue($q.when(getJSONFixture('core/json/trials/trialAddResponse.json')));

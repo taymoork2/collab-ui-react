@@ -6,6 +6,7 @@ angular.module('Mediafusion')
 
       var baseHerculesUrl = Config.getHerculesUrl();
       var baseUssUrl = Config.getUssUrl();
+      var baseCalliopeUrl = Config.getCalliopeUrl();
 
       var getUrl = function () {
         return baseHerculesUrl;
@@ -13,10 +14,14 @@ angular.module('Mediafusion')
       var getUSSUrl = function () {
         return baseUssUrl + 'uss/api/v1';
       };
+      var getCalliopeUrl = function () {
+        return baseCalliopeUrl;
+      };
 
       return {
         getUrl: getUrl,
-        getUSSUrl: getUSSUrl
+        getUSSUrl: getUSSUrl,
+        getCalliopeUrl: getCalliopeUrl
       };
     }
   ]);
