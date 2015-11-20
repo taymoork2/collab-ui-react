@@ -2,16 +2,15 @@
      name="webexSiteSettings">
 
   <div id="pageTitle"
-       name="pageTitle" >
+       name="pageTitle" class="row page-header">
        
-    <div class="row page-header">
-      <div class="page-title small-5 columns">
+      <div class="page-title small-7 columns">
         <span class="title-heading">
           {{siteSettingsObj.pageTitle}}
         </span>
       </div>
     
-      <div class="small-7 columns"
+      <div class="small-5 columns"
            ng-if="siteSettingsObj.viewReady">
            
         <div class="page-option-buttons" ng-controller="ExportUsersCtrl">
@@ -23,15 +22,13 @@
           </button>
         </div>
       </div>
-    </div>
   </div>
 
-  <cs-container>
-    <!-- start of breadcrumbs -->
-    <div id="siteSettingsBreadCrumbs"
-         name="siteSettingsBreadCrumbs" >
-         
-      <ul class="breadcrumbs" title="{{'webexCommon.breadcrumbsAltText' | translate}}">
+    <!-- start of breadcrumbs -->     
+      <ul id="siteSettingsBreadCrumbs"
+          name="siteSettingsBreadCrumbs"      
+          class="breadcrumbs webexPage" 
+          title="{{'webexCommon.breadcrumbsAltText' | translate}}">
         <li>
           <a id="siteListCrumb"
              name="siteListCrumb"
@@ -47,12 +44,10 @@
           {{siteSettingsObj.pageTitleFull}}
         </li>
       </ul>
-    </div>
     <!-- end of breadcrumbs -->
 
     <!-- start of cards loading -->
     <div ng-if="!siteSettingsObj.viewReady"
-         class="center"
          id="loadingSection"
          name="loadingSection" >
          
@@ -87,14 +82,13 @@
          id="cardsSection"
          name="cardsSection">
            
-      <cs-card-layout>
-        <div ng-include="'modules/webex/siteSettings/siteInfoCard.tpl.html'"></div>
-      </cs-card-layout>
-
-      <cs-card-layout>
-        <div ng-include="'modules/webex/siteSettings/siteSettingCards.tpl.html'"></div>
-      </cs-card-layout>
-    </div>
+     <div class="cs-card-container">
+             <div ng-include="'modules/webex/siteSettings/siteInfoCard.tpl.html'"></div>
+</div>
+     <div class="cs-card-container">
+             <div ng-include="'modules/webex/siteSettings/siteSettingCards.tpl.html'"></div>
+</div>    
+</div>
     <!-- end of card containers -->
 
     <!-- WebEx site admin cross launch -->
@@ -107,7 +101,6 @@
         Launch&nbsp;WebEx&nbsp;Site&nbsp;Admin
       </a>
     </p>
-  </cs-container>
 </div>
 
 <!-- WebEx site admin cross launch form -->
@@ -126,8 +119,8 @@
          type="hidden"
          value="{{localeParam}}" />
 
-  <input id="siteurl"
-         name="siteurl"
+  <input id="ngxsiteurl"
+         name="ngxsiteurl"
          type="hidden"
          value="{{siteName}}" />
 

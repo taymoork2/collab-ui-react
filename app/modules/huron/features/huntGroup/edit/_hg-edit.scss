@@ -3,7 +3,7 @@
 }
 
 .hg-edit {
-  height: calc(100vh - #{($navbar-height + $page-header-height + 1px)}) !important;
+  height: calc(100vh - #{($top-bar-height + $page-header-height)}) !important;
   overflow-y: auto;
   position: relative;
   background: $color-white;

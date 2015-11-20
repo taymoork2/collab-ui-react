@@ -2,7 +2,7 @@
   'use strict';
 
   /*ngInject*/
-  function HelpdeskService($http, Config, $q, HelpdeskMockData, CsdmConfigService) {
+  function HelpdeskService($http, Config, $q, HelpdeskMockData, CsdmConfigService, CsdmConverter) {
     var urlBase = Config.getAdminServiceUrl();
 
     function extractItems(res) {
@@ -48,9 +48,31 @@
     }
 
     function searchCloudberryDevices(searchString, orgId) {
+      if (HelpdeskMockData.use) {
+        var deferred = $q.defer();
+        deferred.resolve(filterDevices(searchString, CsdmConverter.convertDevices(HelpdeskMockData.devices)));
+        return deferred.promise;
+      }
       return $http
         .get(CsdmConfigService.getUrl() + '/organization/' + orgId + '/devices?checkOnline=false')
-        .then(extractData);
+        .then(function (res) {
+          return filterDevices(searchString, CsdmConverter.convertDevices(res.data));
+        });
+    }
+
+    function filterDevices(searchString, devices) {
+      searchString = searchString.toLowerCase();
+      var filteredDevices = [];
+      _.each(devices, function (device) {
+        if ((device.displayName || '').toLowerCase().indexOf(searchString) != -1 || (device.mac || '').toLowerCase().indexOf(searchString) != -1 || (device.serial || '').toLowerCase().indexOf(searchString) != -1) {
+          if (_.size(filterDevices) < 5) {
+            filteredDevices.push(device);
+          } else {
+            return false;
+          }
+        }
+      });
+      return filteredDevices;
     }
 
     return {

@@ -186,4 +186,34 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Member Lookup', functio
     controller.toggleMemberPanel(user);
     $httpBackend.flush();
   }
+
+  it("shows primary indicator when input typed is less than 3",
+    function () {
+      controller.fetchHuntMembers("s");
+      $scope.$apply();
+      expect(controller.errorMemberInput).toBeFalsy();
+
+      controller.fetchHuntMembers("su");
+      $scope.$apply();
+      expect(controller.errorMemberInput).toBeFalsy();
+    }
+  );
+
+  it("shows danger indicator when input typed is >= 3 and no valid suggestions.", function () {
+    controller.selectHuntGroupMember(member1);
+    var noSuggestion = {
+      "users": []
+    };
+    $httpBackend.expectGET(MemberLookupUrl).respond(200, noSuggestion);
+    controller.fetchHuntMembers("sun");
+    $scope.$apply();
+    $httpBackend.flush(); // Request made.
+    expect(controller.errorMemberInput).toBeTruthy();
+
+    $httpBackend.expectGET(MemberLookupUrl).respond(200, successResponse);
+    controller.fetchHuntMembers("sun");
+    $scope.$apply();
+    $httpBackend.flush(); // Request made.
+    expect(controller.errorMemberInput).toBeFalsy();
+  });
 });

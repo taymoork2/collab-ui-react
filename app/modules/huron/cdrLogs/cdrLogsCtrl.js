@@ -8,6 +8,7 @@
   /* @ngInject */
   function CdrLogsCtrl($scope, $state, $translate, $timeout, Config, formlyValidationMessages, formlyConfig, CdrService, Notification) {
     var vm = this;
+    var ABORT = 'ABORT';
     var SEARCH = "SEARCH";
     var UPLOAD = "UPLOAD";
     var timeFormat = 'hh:mm:ss A';
@@ -35,11 +36,23 @@
     });
 
     var validations = {
-      callingNumber: function (viewValue, modelValue, scope) {
+      callingUser: function (viewValue, modelValue, scope) {
         var value = viewValue || modelValue;
         if (!angular.isUndefined(scope.fields[3].formControl)) {
-          scope.model.callingPartyNumber = value;
+          scope.model.callingUser = value;
           scope.fields[3].formControl.$validate();
+        }
+        return /^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$/.test(value) || (value === undefined) || (value === "");
+      },
+      calledUser: function (viewValue, modelValue, scope) {
+        var value = viewValue || modelValue;
+        return (/^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$/.test(value) && (value !== scope.model.callingUser)) || (value === undefined) || (value === "");
+      },
+      callingNumber: function (viewValue, modelValue, scope) {
+        var value = viewValue || modelValue;
+        if (!angular.isUndefined(scope.fields[5].formControl)) {
+          scope.model.callingPartyNumber = value;
+          scope.fields[5].formControl.$validate();
         }
         return /^(\+1)?([0-9]+)$/.test(value) || (value === undefined) || (value === "");
       },
@@ -49,9 +62,9 @@
       },
       callingDevice: function (viewValue, modelValue, scope) {
         var value = viewValue || modelValue;
-        if (!angular.isUndefined(scope.fields[5].formControl)) {
+        if (!angular.isUndefined(scope.fields[7].formControl)) {
           scope.model.callingPartyDevice = value;
-          scope.fields[5].formControl.$validate();
+          scope.fields[7].formControl.$validate();
         }
         return true;
       },
@@ -61,9 +74,9 @@
       },
       startTime: function (viewValue, modelValue, scope) {
         var value = viewValue || modelValue;
-        if (!angular.isUndefined(scope.fields[7].formControl)) {
+        if (!angular.isUndefined(scope.fields[9].formControl)) {
           scope.model.startTime = value;
-          scope.fields[7].formControl.$validate();
+          scope.fields[9].formControl.$validate();
         }
         return /([0-2][0-9][:])([0-5][0-9][:])([0-5][0-9])([ ][apAP][mM])?/.test(value);
       },
@@ -79,10 +92,10 @@
         var value = viewValue || modelValue;
         scope.model.startDate = value;
         var noError = moment(today).format() >= moment(value).format();
-        if (noError && !angular.isUndefined(scope.fields[7].formControl)) {
+        if (noError && !angular.isUndefined(scope.fields[9].formControl)) {
           scope.fields[7].formControl.$validate();
         }
-        if (noError && !angular.isUndefined(scope.fields[9].formControl)) {
+        if (noError && !angular.isUndefined(scope.fields[11].formControl)) {
           scope.fields[9].formControl.$validate();
         }
         vm.searchAndUploadForm.$setDirty();
@@ -93,7 +106,7 @@
         var value = viewValue || modelValue;
         scope.model.endDate = value;
         var noError = (moment(value).format() >= moment(scope.model.startDate).format()) && (moment(today).format() >= moment(value).format());
-        if (noError && !angular.isUndefined(scope.fields[7].formControl)) {
+        if (noError && !angular.isUndefined(scope.fields[9].formControl)) {
           scope.fields[7].formControl.$validate();
         }
         vm.searchAndUploadForm.$setDirty();
@@ -109,6 +122,17 @@
     var messages = {
       blank: function () {
         return "";
+      },
+      callingUser: function () {
+        return $translate.instant('cdrLogs.userUuidError');
+      },
+      calledUser: function (viewValue, modelValue, scope) {
+        var value = viewValue || modelValue;
+        if (value === scope.model.callingUser) {
+          return $translate.instant('cdrLogs.userUuidMatchError');
+        } else {
+          return $translate.instant('cdrLogs.userUuidError');
+        }
       },
       callingNumber: function () {
         return $translate.instant('cdrLogs.phoneNumberError');
@@ -186,6 +210,43 @@
           label: $translate.instant('cdrLogs.uploadFile'),
           value: UPLOAD,
           model: 'searchUpload'
+        }
+      }, {
+        key: 'callingUser',
+        type: 'input',
+        className: 'search-display search-indent',
+        validators: {
+          user: {
+            expression: validations.callingUser,
+            message: messages.callingUser
+          }
+        },
+        templateOptions: {
+          label: $translate.instant('cdrLogs.userLabel'),
+          type: 'text',
+          maxlength: 36,
+          placeholder: $translate.instant('cdrLogs.callingParty')
+        },
+        expressionProperties: {
+          'hide': expression.hideSearch
+        }
+      }, {
+        key: 'calledUser',
+        type: 'input',
+        className: 'search-display',
+        validators: {
+          user: {
+            expression: validations.calledUser,
+            message: messages.calledUser
+          }
+        },
+        templateOptions: {
+          type: 'text',
+          maxlength: 36,
+          placeholder: $translate.instant('cdrLogs.calledParty')
+        },
+        expressionProperties: {
+          'hide': expression.hideSearch
         }
       }, {
         key: 'callingPartyNumber',
@@ -363,9 +424,11 @@
           onClick: function (options, scope) {
             vm.gridData = null;
             CdrService.query(scope.model).then(function (response) {
-              vm.selectedCDR = null;
-              vm.gridData = response;
-              setupScrolling(vm.gridData);
+              if (response !== ABORT) {
+                vm.selectedCDR = null;
+                vm.gridData = response;
+                setupScrolling(vm.gridData);
+              }
             });
           }
         },
@@ -381,6 +444,10 @@
           btnClass: 'btn btn-primary search-button',
           label: $translate.instant('cdrLogs.reset'),
           onClick: function (options, scope) {
+            vm.selectedCDR = null;
+
+            vm.model.callingUser = "";
+            vm.model.calledUser = "";
             vm.model.callingPartyNumber = "";
             vm.model.calledPartyNumber = "";
             vm.model.callingPartyDevice = "";
@@ -429,6 +496,7 @@
           btnClass: 'btn btn-primary search-button',
           label: $translate.instant('cdrLogs.upload'),
           onClick: function (options, scope) {
+            vm.selectedCDR = null;
             try {
               var jsonData = JSON.parse(scope.model.uploadFile);
               vm.gridData = [];

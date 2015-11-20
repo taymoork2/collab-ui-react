@@ -14,19 +14,22 @@
       services: []
     };
 
-    vm.commServices = {
-      isNewTrial: false,
-      services: []
-    };
-
-    // AFAIK webex conferencing will never have trials
-    // so no need to check if it's a new trial.
     vm.confServices = {
       isNewTrial: false,
       services: []
     };
 
+    vm.commServices = {
+      isNewTrial: false,
+      services: []
+    };
+
     vm.cmrServices = {
+      isNewTrial: false,
+      services: []
+    };
+
+    vm.roomServices = {
       isNewTrial: false,
       services: []
     };
@@ -37,52 +40,67 @@
     vm.trialDaysRemaining = 0;
     vm.trialUsedPercentage = 0;
     vm.isInitialized = false; // invert the logic and initialize to false so the template doesn't flicker before spinner
+    vm.isStormBranding = false;
 
     init();
 
+    FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
+      vm.isStormBranding = result;
+    });
+
     function init() {
-      vm.messagingServices.services = Authinfo.getMessageServices();
-      if (vm.messagingServices.services) {
-        angular.forEach(vm.messagingServices.services, function (service) {
-          if (service.license.isTrial) {
+      vm.messagingServices.services = Authinfo.getMessageServices() || [];
+      angular.forEach(vm.messagingServices.services, function (service) {
+        if (service.license.isTrial) {
+          vm.trialExists = true;
+          vm.trialId = service.license.trialId;
+
+          if (service.license.status === 'PENDING') {
+            vm.messagingServices.isNewTrial = true;
+          }
+        }
+      });
+
+      vm.confServices.services = Authinfo.getConferenceServices() || [];
+      angular.forEach(vm.confServices.services, function (service) {
+        if (service.label.indexOf('Meeting Center') != -1) {
+          service.label = 'Meeting Center';
+        }
+        if (service.license.isTrial) {
+          vm.trialExists = true;
+          vm.trialId = service.license.trialId;
+          if (service.license.status === 'PENDING') {
+            vm.confServices.isNewTrial = true;
+          }
+        }
+      });
+
+      vm.commServices.services = Authinfo.getCommunicationServices() || [];
+      angular.forEach(vm.commServices.services, function (service) {
+        if (service.license.isTrial) {
+          vm.trialExists = true;
+          vm.trialId = service.license.trialId;
+
+          if (service.license.status === 'PENDING') {
+            vm.commServices.isNewTrial = true;
+          }
+        }
+      });
+
+      vm.roomServices.services = Authinfo.getLicenses() || [];
+      angular.forEach(vm.roomServices.services, function (service) {
+        if (service.licenseType === "SHARED_DEVICES") {
+          if (service.isTrial) {
             vm.trialExists = true;
             vm.trialId = service.license.trialId;
 
-            if (service.license.status === 'PENDING') {
-              vm.messagingServices.isNewTrial = true;
+            if (service.status === 'PENDING') {
+              vm.roomServices.isNewTrial = true;
             }
           }
-        });
-      }
+        }
+      });
 
-      vm.commServices.services = Authinfo.getCommunicationServices();
-      if (vm.commServices.services) {
-        angular.forEach(vm.commServices.services, function (service) {
-          if (service.license.isTrial) {
-            vm.trialExists = true;
-            vm.trialId = service.license.trialId;
-
-            if (service.license.status === 'PENDING') {
-              vm.commServices.isNewTrial = true;
-            }
-          }
-        });
-      }
-
-      // AFAIK webex conferencing will never have trials
-      // so no need to check if it's a new trial.
-      vm.confServices.services = Authinfo.getConferenceServices();
-      if (vm.confServices.services) {
-        angular.forEach(vm.confServices.services, function (service) {
-          if (service.license.isTrial) {
-            vm.trialExists = true;
-            vm.trialId = service.license.trialId;
-            if (service.license.status === 'PENDING') {
-              vm.confServices.isNewTrial = true;
-            }
-          }
-        });
-      }
       //check if the trial exists
       if (vm.trialExists) {
         TrialService.getTrial(vm.trialId).then(function (trial) {

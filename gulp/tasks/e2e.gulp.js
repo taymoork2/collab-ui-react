@@ -5,7 +5,7 @@
 
 var gulp = require('gulp');
 var config = require('../gulp.config')();
-var $ = require('gulp-load-plugins')({ lazy: true });
+var $ = require('gulp-load-plugins')({lazy: true});
 var args = require('yargs').argv;
 var del = require('del');
 var fs = require('fs');
@@ -185,6 +185,7 @@ gulp.task('sauce:stop', function () {
 });
 
 // Get an authenticated url for sauce job results
+// gulp sauce:job --http://saucelabs.com/jobs/<id>
 gulp.task('sauce:job', function () {
   sourceSauce();
   var arg = process.argv.pop();

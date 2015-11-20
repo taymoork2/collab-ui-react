@@ -15,7 +15,7 @@
       searchString: '',
       userSearchResults: null,
       orgSearchResults: null,
-      deviceSearchResult: null,
+      deviceSearchResults: null,
       userSearchFailure: null,
       orgSearchFailure: null,
       deviceSearchFailure: null,
@@ -68,11 +68,11 @@
       } else {
         vm.searchingForDevices = true;
         HelpdeskService.searchCloudberryDevices(vm.searchString, orgFilterId).then(function (res) {
-          vm.currentSearch.deviceSearchResult = res;
+          vm.currentSearch.deviceSearchResults = res;
           vm.searchingForDevices = false;
         }, function (err) {
           vm.searchingForDevices = false;
-          vm.currentSearch.deviceSearchResult = null;
+          vm.currentSearch.deviceSearchResults = null;
           vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
           $log.error(err);
         });

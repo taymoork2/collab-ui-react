@@ -145,6 +145,7 @@
         listOfAllFeatures = listOfAllFeatures.concat(list);
       } else if (list.length === 0) {
         feature.isEmpty = true;
+        showReloadPageIfNeeded();
       }
     }
 

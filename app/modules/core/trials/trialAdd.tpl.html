@@ -7,12 +7,31 @@
     <h3 class="modal-title" translate="partnerHomePage.dialogTitle"></h3>
   </div>
   <div class="modal-body">
-    <h4 class="section-title" translate="partnerHomePage.customerInformation"></h4>
+    <div class="h4 section-title" translate="partnerHomePage.customerInformation"></div>
     <formly-form model="trial.model" fields="trial.custInfoFields">
     </formly-form>
   </div>
   <div class="modal-body">
-    <h4 class="section-title" translate="partnerHomePage.termsOfTrial"></h4>
+    <div class="h4 section-title" translate="partnerHomePage.trialServices"></div>
+    <label translate="partnerHomePage.individualUserServices"></label>
+    <formly-form model="trial.model" fields="trial.individualServices">
+    </formly-form>
+    <div ng-if="trial.showRoomSystems">
+      <label translate="partnerHomePage.roomSystems"></label>
+      <form class="form-inline" role="form">
+        <div class="row">
+          <cs-checkbox ckid="trialRoomSystemsChecked" ng-click="trial.roomSystemsChecked()" ng-model="trial.model.roomSystemsEnabled" label="{{'partnerHomePage.roomSystem' | translate}}" class="small-offset-1 columns small-3"></cs-checkbox>
+          <div class="columns small-5">
+            <cs-select id="trialRoomSystemsAmount" ng-model="trial.model.roomSystems" options="trial.roomSystemOptions" placeholder="0" is-disabled="!trial.model.roomSystemsEnabled">
+            </cs-select>
+          </div>
+          <label class="columns small-3" translate="common.devices"></label>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="h4 section-title" translate="partnerHomePage.termsOfTrial"></div>
     <formly-form model="trial.model" fields="trial.trialTermsFields">
     </formly-form>
   </div>

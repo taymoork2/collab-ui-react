@@ -35,15 +35,15 @@ angular.module('Core')
         $scope.noSearchesYet = false;
         var startIndex = startAt || 0;
 
-        Orgservice.listOrgs($scope.searchStr, function (data, status) {
+        Orgservice.listOrgs($scope.searchStr).then(function (response) {
+          var data = response.data;
+          $scope.gridData = data.organizations;
+          $scope.placeholder.count = data.organizations.length;
+          $scope.noSearchResults = data.organizations.length === 0;
           $scope.gridRefresh = false;
-          if (data.success) {
-            $scope.gridData = data.organizations;
-            $scope.placeholder.count = data.organizations.length;
-            $scope.noSearchResults = data.organizations.length === 0;
-          } else {
-            Log.debug('Get existing org failed. Status: ' + status);
-          }
+        }).catch(function (err) {
+          Log.debug('Get existing org failed. Status: ' + err);
+          $scope.gridRefresh = false;
         });
       };
 

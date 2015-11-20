@@ -4,38 +4,14 @@
     vertical-align:text-bottom;
 }
 
-.configure-card{
-    div {
-        &.right-side {
-            i {
-                @include vr-spacing(pt, 1);
-                font-size: rem(48);
-                line-height: 1;
-                display: flex;
-                flex-direction: column;
-                cursor: pointer;
-                color: $text-color;
-                &:hover {
-                  color: $anchor-font-color-hover;
-                }
-            }
-        }
-    }
+#webexSiteSettings {
+  .page-option-buttons {
+      padding-right: $page-side-padding;
+  }
 }
 
-.nodata-icon {
-  margin-top: 50px;
-  margin-bottom: 30px;
-  font-size: 100px;
-  color: $gray-light;
+.webexPage {
+  padding-left: $page-side-padding;
+  padding-top: 0px;
 }
 
-.nodata-message {
-  width: 300px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-bottom: 30px;
-  font-family: $brand-font-extra-light;
-  font-size: 18px;
-  color: $gray-darkest;
-}

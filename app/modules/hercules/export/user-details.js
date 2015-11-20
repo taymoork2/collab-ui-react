@@ -19,7 +19,7 @@ angular.module('Hercules').service('UserDetails',
     };
 
     var getCSVColumnHeaders = function (serviceName) {
-      return ["id", "email", "connector", serviceName + " state", "message"];
+      return ["Id", "Username", "Connector", serviceName + " State", "Message"];
     };
 
     var getUsers = function (stateInfos, orgId, callback) {
@@ -44,7 +44,7 @@ angular.module('Hercules').service('UserDetails',
               result.details = {
                 id: userIds[index],
                 userName: foundUser[0].userName,
-                connector: stateInfos[index].connector,
+                connector: stateInfos[index].connector || "not found(id=" + stateInfos[index].connectorId + ")",
                 state: stateInfos[index].state == "notActivated" ? "Pending Activation" : stateInfos[index].state,
                 message: stateInfos[index].state == "error" ? stateInfos[index].description.defaultMessage : "-"
               };
@@ -52,8 +52,8 @@ angular.module('Hercules').service('UserDetails',
               result.success = false;
               result.details = {
                 id: userIds[index],
-                userName: "username not found",
-                connector: stateInfos[index].connector,
+                userName: "Not found",
+                connector: stateInfos[index].connector || "not found(id=" + stateInfos[index].connectorId + ")",
                 state: stateInfos[index].state == "notActivated" ? "Pending Activation" : stateInfos[index].state,
                 message: stateInfos[index].state == "error" ? stateInfos[index].description.defaultMessage : "-"
               };
