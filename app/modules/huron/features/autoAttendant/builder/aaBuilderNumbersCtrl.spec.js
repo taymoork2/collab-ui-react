@@ -188,6 +188,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
       // add a number
       controller.addNumber("2064261234");
+      $httpBackend.flush();
       $scope.$apply();
 
       // and we should be down to 2 available now
@@ -195,6 +196,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
       // add internal
       controller.addNumber("1234");
+      $httpBackend.flush();
       $scope.$apply();
 
       // we should be down to 1 available
@@ -202,6 +204,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
       // add another
       controller.addNumber("1234567");
+      $httpBackend.flush();
       $scope.$apply();
 
       // we should be down to 0 available

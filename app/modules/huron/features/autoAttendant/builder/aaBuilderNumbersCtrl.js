@@ -23,7 +23,6 @@
     vm.numberTypeList = {};
 
     vm.availablePhoneNums = [];
-    vm.assignedPhoneNums = [];
 
     vm.selectPlaceHolder = $translate.instant('autoAttendant.selectPlaceHolder');
 
@@ -70,13 +69,6 @@
 
     }
 
-    function removeAssignedNumbers() {
-      vm.assignedPhoneNums.forEach(function (number) {
-        removeNumber(number);
-      });
-
-    }
-
     // Remove number, top-level method called by UI
     function removeNumber(number) {
 
@@ -117,33 +109,14 @@
       // add to the resource list
       var resources;
 
-      // angular.copy(vm.ui.ceInfo.getResources(), resources);
       resources = vm.ui.ceInfo.getResources();
 
       resources.push(resource);
 
       AANumberAssignmentService.setAANumberAssignment(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources).then(
+
         function (response) {
-          // if it's longer than 2, we sort it
-          if (resources.length > 2) {
-
-            // but we don't change the first top-line number, which is also shown in the header, so
-            // get a temp list without that first number
-            var tmp = _.rest(resources);
-
-            // and sort it
-            tmp.sort(function (a, b) {
-              return compareNumbersExternalThenInternal(a.number, b.number);
-            });
-
-            // we have a sorted list, take out the old unsorted ones, put in the sorted ones
-            resources.splice(1, resources.length - 1);
-            _.forEach(tmp, function (n) {
-              resources.push(n);
-            });
-          }
-          vm.assignedPhoneNums.push(number);
-
+          sortAssignedResources(resources);
         },
         function (response) {
           Notification.error('autoAttendant.errorAddCMI', {
@@ -173,11 +146,7 @@
         vm.aaModel.aaRecordUUID, resources).then(
         function (response) {},
         function (response) {
-          Notification.error('autoAttendant.errorRemoveCMI', {
-            phoneNumber: number,
-            statusText: response.statusText,
-            status: response.status
-          });
+          Notification.error('autoAttendant.errorRemoveCMI');
         });
 
     }
@@ -191,6 +160,28 @@
       });
       return isNumberInUseOtherAA;
 
+    }
+
+    function sortAssignedResources(resources) {
+
+      // if it's longer than 2, we sort it
+      if (resources.length > 2) {
+
+        // but we don't change the first top-line number, which is also shown in the header, so
+        // get a temp list without that first number
+        var tmp = _.rest(resources);
+
+        // and sort it
+        tmp.sort(function (a, b) {
+          return compareNumbersExternalThenInternal(a.number, b.number);
+        });
+
+        // we have a sorted list, take out the old unsorted ones, put in the sorted ones
+        resources.splice(1, resources.length - 1);
+        _.forEach(tmp, function (n) {
+          resources.push(n);
+        });
+      }
     }
 
     // A comparison method used in sorting to make external numbers first, internal numbers last

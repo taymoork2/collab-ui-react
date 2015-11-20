@@ -34,7 +34,12 @@
     function unAssignAssigned() {
       if (vm.aaModel.aaRecord.assignedResources.length < vm.ui.ceInfo.getResources().length) {
         var ceInfo = AutoAttendantCeInfoModelService.getCeInfo(vm.aaModel.aaRecord);
-        AANumberAssignmentService.setAANumberAssignment(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, ceInfo);
+        AANumberAssignmentService.setAANumberAssignment(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, ceInfo).then(
+          function (response) {},
+          function (response) {
+            Notification.error('autoAttendant.errorResetCMI');
+          }
+        );
       }
     }
 
