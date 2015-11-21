@@ -13,7 +13,8 @@ describe('Controller: PartnerHomeCtrl', function () {
     getOrgId: sinon.stub().returns('5632f806-ad09-4a26-a0c0-a49a13f38873'),
     getMessageServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/messagingServices.json')),
     getCommunicationServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/commServices.json')),
-    getConferenceServices: sinon.stub()
+    getConferenceServices: sinon.stub(),
+    isPartnerAdmin: sinon.stub()
   };
 
   beforeEach(module(function ($provide) {
@@ -69,7 +70,7 @@ describe('Controller: PartnerHomeCtrl', function () {
     it('should be created successfully', function () {
       expect(controller).toBeDefined();
       expect($scope.totalTrials).toEqual(2);
-      expect($scope.totalOrgs).toEqual(3);
+      expect($scope.totalOrgs).toEqual(2);
     });
 
     it('should set the first row licenses states to trial', function () {
@@ -82,6 +83,10 @@ describe('Controller: PartnerHomeCtrl', function () {
       expect($scope.trialsList[1].messaging.sortOrder).toEqual(99);
       expect($scope.trialsList[1].conferencing.sortOrder).toEqual(99);
       expect($scope.trialsList[1].communications.sortOrder).toEqual(99);
+    });
+
+    it('should call isLicenseInfoAvailable', function () {
+      expect($scope.isLicenseInfoAvailable(['one', 'two'])).toEqual(true);
     });
 
   });

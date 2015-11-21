@@ -22,6 +22,7 @@ angular.module('Core')
       $scope.currentTrial = null;
       $scope.showTrialsRefresh = true;
       $scope.activeBadge = false;
+      $scope.isLicenseInfoAvailable = isLicenseInfoAvailable;
       $scope.filter = 'ALL';
       $scope.isCustomerPartner = Authinfo.isCustomerPartner ? true : false;
       setNotesTextOrder();
@@ -99,14 +100,17 @@ angular.module('Core')
       function getManagedOrgsList() {
         $scope.showManagedOrgsRefresh = true;
         $scope.managedOrgsList = [];
-        var accountId = Authinfo.getOrgId();
-        Orgservice.getAdminOrg(function (data, status) {
-          if (status === 200) {
-            loadRetrievedDataToList([data], $scope.managedOrgsList, false);
-          } else {
-            Log.debug('Failed to retrieve partner org information. Status: ' + status);
-          }
-        }, accountId);
+        var isPartnerAdmin = Authinfo.isPartnerAdmin();
+        if (isPartnerAdmin) {
+          var accountId = Authinfo.getOrgId();
+          Orgservice.getAdminOrg(function (data, status) {
+            if (status === 200) {
+              loadRetrievedDataToList([data], $scope.managedOrgsList, false);
+            } else {
+              Log.debug('Failed to retrieve partner org information. Status: ' + status);
+            }
+          }, accountId);
+        }
         PartnerService.getManagedOrgsList(function (data, status) {
           $scope.showManagedOrgsRefresh = false;
           if (data.success && data.organizations) {
@@ -296,6 +300,7 @@ angular.module('Core')
         }
       }
 
+      // Sort function to keep partner org at top
       function partnerAtTopSort(a, b) {
         var orgName = Authinfo.getOrgName();
         if (a === orgName || b === orgName) {

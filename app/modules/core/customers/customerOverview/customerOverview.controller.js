@@ -21,6 +21,7 @@
     vm.allowCustomerLogos = false;
     vm.logoOverride = false;
     vm.isOrgSetup = isOrgSetup;
+    vm.isOwnOrg = isOwnOrg;
 
     initCustomer();
     getLogoSettings();
@@ -141,6 +142,10 @@
       return _.every(vm.currentCustomer.unmodifiedLicenses, {
         status: 'ACTIVE'
       });
+    }
+
+    function isOwnOrg() {
+      return vm.currentCustomer.customerName === Authinfo.getOrgName();
     }
   }
 })();
