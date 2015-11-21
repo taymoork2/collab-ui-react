@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskOrgController(Config, $stateParams, HelpdeskService, XhrNotificationService) {
+  function HelpdeskOrgController(Config, $stateParams, HelpdeskService, XhrNotificationService, Authinfo) {
     var vm = this;
     vm.org = $stateParams.org;
     vm.orgId = vm.org.id;
@@ -14,12 +14,14 @@
       XhrNotificationService.notify(err);
     });
 
-    // Not needed ?
-    HelpdeskService.getHybridServices(vm.orgId).then(function (services) {
-      vm.hybridServices = services;
-    }, function (err) {
-      XhrNotificationService.notify(err);
-    });
+    if (hasEntitlement(Config.entitlements.fusion_mgmt)) {
+      HelpdeskService.getHybridServices(vm.orgId).then(function (services) {
+        console.log(services);
+        vm.enabledHybridServices = _.filter(services, {enabled: true});
+      }, function (err) {
+        XhrNotificationService.notify(err);
+      });
+    }
 
     /*
       message : entitlement = "webex-squared" ?
@@ -30,21 +32,27 @@
      */
     // TODO: Move and and reuse between user and org ?
     function showCard(type) {
-      var entitlements = vm.org.services;
       switch (type) {
         //TODO: Check for the CORRECT entitlements !!!
       case 'message':
-        return _.includes(entitlements, Config.entitlements.squared); //???
+        return hasEntitlement(Config.entitlements.squared); //???
       case 'meeting':
-        return _.includes(entitlements, "webex-messenger"); // ???
+        return hasEntitlement("webex-messenger"); // ???
       case 'call':
-        return _.includes(entitlements, Config.entitlements.huron);
+        return hasEntitlement(Config.entitlements.huron);
       case 'hybrid':
-        return _.includes(entitlements, Config.entitlements.fusion_mgmt);
+        return hasEntitlement(Config.entitlements.fusion_mgmt);
       case 'room':
-        return _.includes(entitlements, Config.entitlements.device_mgmt);
+        return hasEntitlement(Config.entitlements.device_mgmt);
       }
       return true;
+    }
+
+    function hasEntitlement(entitlement) {
+      if (vm.org && vm.org.services) {
+        return _.includes(vm.org.services, entitlement);
+      }
+      return false;
     }
   }
 

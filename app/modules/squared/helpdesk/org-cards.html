@@ -1,8 +1,11 @@
-<cs-card-layout block-view="true">
-  <cs-card class="large header-bar" ng-show="helpdeskOrgCtrl.showCard('message')">
+<cs-card-layout block-view="true" class="helpdesk-cards">
+  <cs-card class="large header-bar primary" ng-show="helpdeskOrgCtrl.showCard('message')">
     <article>
       <header class="align-center">
-        <h4><i class="icon icon-circle-message"/>Message</h4>
+        <h4>
+          <i class="icon icon-circle-message"/>
+          {{'helpdesk.message' | translate}}
+        </h4>
       </header>
       <section>
         <p>Nothing here yet</p>
@@ -11,10 +14,13 @@
     </article>
   </cs-card>
 
-  <cs-card class="large header-bar" ng-show="helpdeskOrgCtrl.showCard('meeting')">
+  <cs-card class="large header-bar meetings" ng-show="helpdeskOrgCtrl.showCard('meeting')">
     <article>
       <header class="align-center">
-        <h4><i class="icon icon-circle-group"/>Meeting</h4>
+        <h4>
+          <i class="icon icon-circle-group"/>
+          {{'helpdesk.meeting' | translate}}
+        </h4>
       </header>
       <section>
         <p>Nothing here yet</p>
@@ -23,10 +29,13 @@
     </article>
   </cs-card>
 
-  <cs-card class="large header-bar" ng-show="helpdeskOrgCtrl.showCard('call')">
+  <cs-card class="large header-bar people" ng-show="helpdeskOrgCtrl.showCard('call')">
     <article>
       <header class="align-center">
-        <h4><i class="icon icon-circle-call"/>Call</h4>
+        <h4>
+          <i class="icon icon-circle-call"/>
+          {{'helpdesk.call' | translate}}
+        </h4>
       </header>
       <section>
         <p>Nothing here yet</p>
@@ -35,10 +44,13 @@
     </article>
   </cs-card>
 
-  <cs-card class="large header-bar" ng-show="helpdeskOrgCtrl.showCard('room')">
+  <cs-card class="large header-bar grey" ng-show="helpdeskOrgCtrl.showCard('room')">
     <article>
       <header class="align-center">
-        <h4><i class="icon icon-circle-telepresence"/>Rooms</h4>
+        <h4>
+          <i class="icon icon-circle-telepresence"/>
+          {{'helpdesk.rooms' | translate}}
+        </h4>
       </header>
       <section>
         <p>Nothing here yet</p>
@@ -47,28 +59,44 @@
     </article>
   </cs-card>
 
-  <cs-card class="large header-bar gray" ng-show="helpdeskOrgCtrl.showCard('hybrid')">
+  <cs-card class="large header-bar cta" ng-show="helpdeskOrgCtrl.showCard('hybrid')">
     <article>
       <header class="align-center">
-        <h4><i class="icon icon-circle-world"/>Hybrid Services</h4>
+        <h4>
+          <i class="icon icon-circle-world"/>
+          {{'helpdesk.hybridServices' | translate}}
+        </h4>
       </header>
       <section>
-        <p>Enabled services:</p>
-        <div ng-repeat="hybridService in helpdeskOrgCtrl.hybridServices">
-          <p>{{hybridService}}</p>
+        <h5 translate="helpdesk.enabledServices"></h5>
+
+        <div ng-repeat="hybridService in helpdeskOrgCtrl.enabledHybridServices">
+          <span translate="{{'hercules.serviceNames.' + hybridService.id}}"></span>
+        </div>
+        <div ng-if="!helpdeskOrgCtrl.enabledHybridServices || helpdeskOrgCtrl.enabledHybridServices.length === 0">
+          <span translate="helpdesk.none"></span>
         </div>
       </section>
       <footer></footer>
     </article>
   </cs-card>
 
-  <cs-card class="large header-bar" ng-show="helpdeskOrgCtrl.showCard('users')">
+  <cs-card class="large" ng-show="helpdeskOrgCtrl.showCard('users')">
     <article>
       <header class="align-center">
-        <h4>Users</h4>
+        <h4 translate="helpdesk.users"></h4>
       </header>
       <section>
-        <p>Nothing here yet</p>
+        <div>
+          <span><i class="icon icon-circle"
+                   ng-class="helpdeskOrgCtrl.org.dirsyncEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i></span>
+          <span translate="helpdesk.dirSync"></span>
+        </div>
+        <div>
+          <span><i class="icon icon-circle"
+                   ng-class="helpdeskOrgCtrl.org.ssoEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i></span>
+          <span translate="helpdesk.sso"></span>
+        </div>
       </section>
       <footer></footer>
     </article>

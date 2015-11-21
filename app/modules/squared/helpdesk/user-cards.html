@@ -4,11 +4,11 @@
       <header class="align-center">
         <h4>
           <i class="icon icon-circle-message icon-lg"></i>
-          Message
+          {{'helpdesk.message' | translate}}
         </h4>
       </header>
       <section>
-        <h5>Entitlements</h5>
+        <h5 translate="helpdesk.entitlementsHeading"></h5>
 
         <div ng-repeat="entitlement in helpdeskUserCtrl.messaging.entitlements">
           <span>{{entitlement}}</span>
@@ -23,11 +23,11 @@
       <header class="align-center">
         <h4>
           <i class="icon icon-circle-group icon-lg"></i>
-          Meeting
+          {{'helpdesk.meeting' | translate}}
         </h4>
       </header>
       <section>
-        <h5>Entitlements</h5>
+        <h5 translate="helpdesk.entitlementsHeading"></h5>
 
         <div ng-repeat="entitlement in helpdeskUserCtrl.meeting.entitlements">
           <span>{{entitlement}}</span>
@@ -42,11 +42,11 @@
       <header class="align-center">
         <h4>
           <i class="icon icon-circle-call icon-lg"></i>
-          Call
+          {{'helpdesk.call' | translate}}
         </h4>
       </header>
       <section>
-        <h5>Entitlements</h5>
+        <h5 translate="helpdesk.entitlementsHeading"></h5>
 
         <div ng-repeat="entitlement in helpdeskUserCtrl.call.entitlements">
           <span>{{entitlement}}</span>
@@ -56,12 +56,12 @@
     </article>
   </cs-card>
 
-  <cs-card class="large header-bar" ng-if="helpdeskUserCtrl.hybrid.entitled">
+  <cs-card class="large header-bar cta" ng-if="helpdeskUserCtrl.hybrid.entitled">
     <article>
       <header class="align-center">
-        <h4>
+        <h4 tranlate="helpdesk.hybridServices">
           <i class="icon icon-circle-world icon-lg"></i>
-          Hybrid Services
+          {{'helpdesk.hybridServices' | translate}}
         </h4>
       </header>
       <section>

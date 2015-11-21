@@ -22,7 +22,7 @@
                 ng-if="helpdeskUserCtrl.resendInviteEnabled">Re-send
         </button>
         <span class="user-value right"
-              ng-repeat="status in helpdeskUserCtrl.user.statuses">{{status }}{{$last ? '' : ', '}}</span>
+              ng-repeat="status in helpdeskUserCtrl.user.statuses">{{status | translate}}{{$last ? '' : ', '}}</span>
 
       </div>
       <div class="user-info">

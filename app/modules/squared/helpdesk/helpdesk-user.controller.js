@@ -39,7 +39,7 @@
     HelpdeskService.getUser(orgId, userId).then(function (res) {
       vm.user = res;
       reviewEntitlementsAndLicenses();
-      setUserStatuses(vm.user);
+      vm.resendInviteEnabled = _.includes(user.statuses, 'pending');
     }, function (err) {
       XhrNotificationService.notify(err);
     });
@@ -135,22 +135,6 @@
         }
       }
       return false;
-    }
-
-    function setUserStatuses(user) {
-      if (!user.accountStatus) {
-        user.statuses = [];
-        if (user.active) {
-          user.statuses.push($translate.instant('helpdesk.userStatuses.active'));
-        } else {
-          user.statuses.push($translate.instant('helpdesk.userStatuses.inactive'));
-        }
-      } else {
-        user.statuses = _.map(user.accountStatus, function (status) {
-          return $translate.instant('helpdesk.userStatuses.' + status);
-        });
-        vm.resendInviteEnabled = _.includes(user.statuses, 'pending');
-      }
     }
   }
 

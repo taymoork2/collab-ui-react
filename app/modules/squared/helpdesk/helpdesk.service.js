@@ -42,7 +42,7 @@
     function getUser(orgId, userId) {
       return $http
         .get(urlBase + 'helpdesk/organizations/' + orgId + '/users/' + userId)
-        .then(extractData);
+        .then(extractUserAndSetUserStatuses);
     }
 
     function getOrg(orgId) {
@@ -56,26 +56,13 @@
         .then(extractData);
     }
 
-    function filterHybridServices(entitlements) {
-      // Use existing methods, such as in filter in service-descriptor, instead ???
-      var services = [];
-      if (_.includes(entitlements, "squared-fusion-mgmt")) {
-        services = _.filter(entitlements, function (service) {
-          return service === 'squared-fusion-cal' || service === 'squared-fusion-uc';
-        });
-      }
-      return services;
-    }
-
     function getHybridServices(orgId) {
-      // Use existing methods, such as in service-descriptor, instead ???
       if (useMock()) {
         var deferred = $q.defer();
-        deferred.resolve(filterHybridServices(HelpdeskMockData.org.services));
+        deferred.resolve(ServiceDescriptor.filterAllExceptManagement(HelpdeskMockData.org.services));
         return deferred.promise;
-      } else return ServiceDescriptor.servicesInOrg(orgId).then(function (services) {
-        filterHybridServices(services);
-      });
+      }
+      return ServiceDescriptor.servicesInOrg(orgId).then(ServiceDescriptor.filterAllExceptManagement);
     }
 
     function searchCloudberryDevices(searchString, orgId) {
@@ -104,6 +91,23 @@
         }
       });
       return filteredDevices;
+    }
+
+    function extractUserAndSetUserStatuses(res) {
+      var user = res.data;
+      if (!user.accountStatus) {
+        user.statuses = [];
+        if (user.active) {
+          user.statuses.push('helpdesk.userStatuses.active');
+        } else {
+          user.statuses.push('helpdesk.userStatuses.inactive');
+        }
+      } else {
+        user.statuses = _.map(user.accountStatus, function (status) {
+          return 'helpdesk.userStatuses.' + status;
+        });
+      }
+      return user;
     }
 
     function resendInviteEmail(displayName, email) {

@@ -181,6 +181,14 @@
     padding-bottom: 1rem;
     overflow: hidden;
   }
+  // Reset the weird cta class that messes up the hybrid services card
+  .cta {
+    padding: 0;
+    border-bottom: 0;
+  }
+  h5 {
+    margin-top: 0.5rem;
+  }
 }
 
 .helpdesk-red {

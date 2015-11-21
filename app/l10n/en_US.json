@@ -2776,9 +2776,8 @@
     "searchInputDescription": "Search and view a user or a customer.",
     "roles": "Roles",
     "backToSearchResults": "Back to search results",
-    "sso": "SSO",
-    "dirSync": "Directory Sync",
-    "createdAt": "Created At",
+    "sso": "Single Sign On (SSO)",
+    "dirSync": "Directory Synchronization",
     "type": "Type",
     "partner": "Partner",
     "customer": "Customer",
@@ -2818,6 +2817,9 @@
       "transient": "Transient",
       "fraud": "Fraud",
       "compliance": "Compliance"
-    }
+    },
+    "entitlementsHeading": "Entitlements",
+    "enabledServices": "Enabled Services",
+    "none": "None"
   }
 }
