@@ -1,0 +1,24 @@
+[{
+  "ticketId": "abcd",
+  "trackingId": "43755d54-73ce-44bd-99ce-e4aed22c5284",
+  "userName": "joe@company.com",
+  "status": "sent",
+  "commandType": "epLog",
+  "results": "https://ccs.cisco.com/rcdn-01/sftp/SEP123898_0702_2015_214517",
+  "events": [{
+    "event": "command init",
+    "date": "Jul 2, 2015 : 21:43:21 CST",
+    "trackingId": "updm_124",
+    "status": "continue"
+  }, {
+    "event": "command sent",
+    "date": "Jul 2, 2015 : 21:43:32 CST",
+    "trackingId": "cms_124:43755d54-73ce-44bd-99ce-e4aed22c5284",
+    "status": "continue"
+  }, {
+    "event": "command accepted",
+    "date": "Jul 2, 2015 : 21:45:18 CST",
+    "trackingId": "cms_124:43755d54-73ce-44bd-99ce-e4aed22c5284",
+    "status": "continue"
+  }]
+}]

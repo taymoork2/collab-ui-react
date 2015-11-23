@@ -64,26 +64,19 @@
       }
 
       var screenAvailHeight = window.screen.availHeight;
-      var innerHeight = window.innerHeight;
-      $scope.iframeHeight = (200 >= innerHeight) ? 0 : innerHeight - 200;
 
       // iframe request variables
       $scope.trustIframeUrl = $sce.trustAsResourceUrl(iframeUrl);
       $scope.adminEmail = Authinfo.getPrimaryEmail();
       $scope.authToken = $rootScope.token;
       $scope.locale = ("es_LA" == $translate.use()) ? "es_MX" : $translate.use();
-      $scope.siteName = $stateParams.siteUrl.substring(
-        0,
-        $stateParams.siteUrl.indexOf('.')
-      );
+      $scope.siteName = $stateParams.siteUrl;
 
       _this.logMsg = _this.funcName + ": " + "\n" +
         "siteSettingId=" + $scope.siteSettingId + "\n" +
         "siteSettingLabel=" + $scope.siteSettingLabel + "\n" +
         "iframeUrl=" + iframeUrl + "\n" +
         "screenAvailHeight=" + screenAvailHeight + "\n" +
-        "innerHeight=" + innerHeight + "\n" +
-        "iframeHeight=" + $scope.iframeHeight + "\n" +
         "trustIframeUrl=" + $scope.trustIframeUrl + "\n" +
         "adminEmail=" + $scope.adminEmail + "\n" +
         "authToken=" + $scope.authToken + "\n" +

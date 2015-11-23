@@ -1,5 +1,7 @@
-<div ng-repeat="siteSettingCardObj in siteSettingsObj.siteSettingCardObjs">
-  <cs-card class="medium"
+<div class="cs-card-container">
+<cs-card-layout>
+  <cs-card ng-repeat="siteSettingCardObj in siteSettingsObj.siteSettingCardObjs"
+  		   class="medium"
            id={{siteSettingCardObj.id}}-card
            name={{siteSettingCardObj.id}}-card
            ng-if="0 <siteSettingCardObj.pageObjs.length">
@@ -15,8 +17,7 @@
       
       <section>
         <ul class="no-bullet" title="{{siteSettingCardObj.label}}">
-          <div ng-repeat="pageObj in siteSettingCardObj.pageObjs">
-          <li>
+          <li ng-repeat="pageObj in siteSettingCardObj.pageObjs">
             <a id={{pageObj.id}}
                name={{pageObj.id}}
                ui-sref={{pageObj.uiSref}}
@@ -25,15 +26,12 @@
               {{pageObj.label}}
             </a>
             </li>
-          </div>
           
-          <div ng-repeat="subSectionObj in siteSettingCardObj.subSectionObjs">
-            <h4 h3 xml:lang="{{subSectionObj.lang}}">
+            <h4 ng-repeat-start="subSectionObj in siteSettingCardObj.subSectionObjs" xml:lang="{{subSectionObj.lang}}">
               {{subSectionObj.label}}
             </h4>
             
-            <div ng-repeat="pageObj in subSectionObj.pageObjs">
-            <li>
+            <li ng-repeat="pageObj in subSectionObj.pageObjs">
               <a id={{pageObj.id}}
                  name={{pageObj.id}}
                  ui-sref={{pageObj.uiSref}}
@@ -42,10 +40,10 @@
                 {{pageObj.label}}
               </a>
               </li>
-            </div>
-          </div>
+              <div hidden ng-repeat-end style="display: none;"></div>
         </ul>
       </section>
     </article>
   </cs-card>
+</cs-card-layout>
 </div>

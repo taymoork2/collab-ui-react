@@ -7,9 +7,9 @@
   <!-- cluster overview -->
   <cs-sp-section>
     <div class="overview" style="font-size: xs"> 
-      <div>Host Name / IP Address: {{connector.hosts[0].host_name}}</div>
-      <div>Status: {{connector.needs_attention ? 'Offline' : 'Active'}}</div>
-      <div>Version: {{connector.version}}</div>
+      <div>{{'mediaFusion.ipAddr' | translate}}: {{connector.hosts[0].host_name}}</div>
+      <div>{{'mediaFusion.connectors.status' | translate}}: {{connector.needs_attention ? 'Offline' : 'Active'}}</div>
+      <div>{{'mediaFusion.connectors.version' | translate}}: {{connector.version}}</div>
     </div>
   </cs-sp-section> 
 
@@ -17,7 +17,7 @@
   <cs-sp-section>
     <div class="form-horizontal " style="font-size: xs; padding: 15px 0;">
       <div class="form-group form-group-sm" >
-          <div class="col-sm-2 control-label" style="margin-left: -12px;">
+          <div class="col-sm-6 control-label" style="margin-left: -12px;">
             {{'mediaFusion.cluster' | translate}}
           </div>
           <div class="typeahead-group columns medium-5 col-sm-6">
@@ -33,11 +33,11 @@
   <!-- Role switching dropdown -->
   <cs-sp-section>
     <div class="form-horizontal " style="font-size: xs; padding: 15px 0;">
-      <div class="form-group form-group-wrapper" >
-        <div class="col-sm-2 control-label" style="margin-left: -12px;">
+      <div class="form-group form-group-sm" >
+        <div class="col-sm-6 control-label" style="margin-left: -12px;">
           {{'mediaFusion.role' | translate}}
         </div>
-        <div class="col-sm-6 columns">
+        <div class="col-sm-6 columns medium-5">
           <select name="roleSelect" ng-model="roleSelected" ng-change="changeRole(roleSelected)">
             <option value="Switching">{{'mediaFusion.switching' | translate}}</option>
             <option value="Transcoding">{{'mediaFusion.transcoding' | translate}}</option>
@@ -51,13 +51,13 @@
   <div class="alarms" ng-show="connector.alarms_present">
     <cs-sp-section>
       <div class="section-name" style="padding: 15px 0;">
-        Alarms
+        {{'mediaFusion.connectors.alarms' | translate}}
       </div>
       <div class="sw-upgrade clearfix" style="font-size: xs">
         <a ui-sref="connector-details.alarms({connectorId: connector.id})" >
           <i class="fa fa-circle connector-status-yellow" /> 
-          <span ng-show="connector.alarm_count==1"> {{connector.alarm_count}} reported alarm. </span>
-          <span ng-hide="connector.alarm_count==1"> {{connector.alarm_count}} reported alarms. </span>
+          <span ng-show="connector.alarm_count==1"> {{connector.alarm_count}} {{'mediaFusion.connectors.reportAlarm' | translate}} </span>
+          <span ng-hide="connector.alarm_count==1"> {{connector.alarm_count}} {{'mediaFusion.connectors.reportAlarms' | translate}} </span>
           <i class="feature-arrow"></i>
         </a>
       </div> 

@@ -26,18 +26,33 @@ describe('Huron Auto Attendant', function () {
 
       navigation.clickAutoAttendant();
 
-      utils.wait(autoattendant.newFeatureButton, 12000);
+      utils.wait(autoattendant.newFeatureButton, 15000);
       utils.click(autoattendant.newFeatureButton);
 
-      utils.wait(autoattendant.featureTypeAA, 8000);
+      utils.wait(autoattendant.featureTypeAA, 12000);
       utils.click(autoattendant.featureTypeAA);
 
-      utils.sendKeys(autoattendant.name, deleteUtils.testAAName);
-      utils.sendKeys(autoattendant.name, protractor.Key.ENTER);
+      utils.sendKeys(autoattendant.newAAname, deleteUtils.testAAName);
+      utils.sendKeys(autoattendant.newAAname, protractor.Key.ENTER);
 
-      utils.wait(autoattendant.addAANumbers, 8000);
+      utils.wait(autoattendant.addAANumbers, 12000);
       utils.expectIsDisplayed(autoattendant.addAANumbers);
+
     });
+
+    it('should add a single phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+
+      utils.click(autoattendant.numberDropDownArrow);
+
+      // we are going to arbitrarily select the first one
+      utils.click(autoattendant.numberDropDownOptions.get(0));
+
+      utils.click(autoattendant.saveButton);
+
+      notifications.assertSuccess(deleteUtils.testAAName + ' updated successfully');
+
+    });
+
   });
 
 });

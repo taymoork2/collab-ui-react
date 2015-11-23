@@ -86,7 +86,7 @@
         for (var i = 7; i >= 1; i--) {
           abs = 7 - i;
           dummyGraph.push({
-            modifiedDate: moment().subtract(i, 'day').format(dayFormat),
+            modifiedDate: moment().subtract(i + 1, 'day').format(dayFormat),
             totalDurationSum: (25 + (15 * abs)) + (15 + (10 * abs)) + (5 + (5 * abs)),
             goodQualityDurationSum: 25 + (15 * abs),
             fairQualityDurationSum: 15 + (10 * abs),

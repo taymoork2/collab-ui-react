@@ -256,4 +256,20 @@ describe('CsdmConverterSpec', function () {
       expect(converter.convertDevices(arr)[0].hasIssues).toBeFalsy();
     });
   });
+
+  describe("remote support user", function () {
+    it('rsuKey is taken from remoteSupportUser on device', function () {
+      var token = 'this_is_a_very_secret_token';
+      var arr = [{
+        remoteSupportUser: {
+          token: token
+        }
+      }];
+      expect(converter.convertDevices(arr)[0].rsuKey).toBe(token);
+    });
+
+    it('no remoteSupportUser means no rsuKey, no nullReferences', function () {
+      expect(converter.convertDevices([{}]).rsuKey).toBeFalsy();
+    });
+  });
 });

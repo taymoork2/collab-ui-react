@@ -13,13 +13,9 @@
     </div>
   </div>
   
-  <cs-container>
-    <!-- breadcrumbs -->
-    <div id="siteSettingBreadCrumbs"
-         name="siteSettingBreadCrumbs"
-         class="breadcrumb-container">
-         
-      <ul class="breadcrumbs">
+    <!-- breadcrumbs -->     
+      <ul class="breadcrumbs webexPage" title="{{'webexCommon.breadcrumbsAltText' | translate}}" id="siteSettingBreadCrumbs"
+         name="siteSettingBreadCrumbs">
         <li>
           <a id="siteListCrumb"
              name="siteListCrumb"
@@ -45,12 +41,10 @@
           {{siteSettingLabel}}
         </li>
       </ul>
-    </div>
   
     <div id={{iframeUrlType}}
          name={{iframeUrlType}}>
          
-      <div ng-include="'modules/webex/iframeContainer/iframeContainer.tpl.html'"></div> 
+      <div ng-include="'modules/webex/views/iframeContainer.tpl.html'"></div> 
     </div>
-  </cs-container>
 </div>

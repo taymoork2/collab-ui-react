@@ -9,13 +9,15 @@
     .controller('HuronFeatureDeleteCtrl', HuronFeatureDeleteCtrl);
 
   /* @ngInject */
-  function HuronFeatureDeleteCtrl($rootScope, $scope, $stateParams, $timeout, $translate, AAModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, Notification, Log) {
+  function HuronFeatureDeleteCtrl($rootScope, $scope, $stateParams, $timeout, $translate, AAModelService, HuntGroupService, AutoAttendantCeService, AutoAttendantCeInfoModelService, Notification, Log) {
     var vm = this;
+    vm.deleteBtnDisabled = false;
+    vm.deleteFeature = deleteFeature;
     vm.featureId = $stateParams.deleteFeatureId;
     vm.featureName = $stateParams.deleteFeatureName;
     vm.featureFilter = $stateParams.deleteFeatureType;
     vm.featureType = vm.featureFilter === 'AA' ? $translate.instant('autoAttendant.title') : vm.featureFilter === 'HG' ?
-      $translate.instant('huntGroup.title') : 'Feature';
+      $translate.instant('huronHuntGroup.title') : 'Feature';
 
     vm.deleteBtnDisabled = false;
 
@@ -24,7 +26,6 @@
     vm.deleteError = deleteError;
 
     function deleteFeature() {
-
       vm.deleteBtnDisabled = true;
 
       if (vm.featureFilter === 'AA') {
@@ -58,15 +59,18 @@
             deleteError(response);
           }
         );
-      }
-      // else if (vm.featureFilter === 'hg') {
-      // } else if (vm.featureFilter === 'cp') {
-      //   //
-      // } 
-      else {
+      } else if (vm.featureFilter === 'HG') {
+        HuntGroupService.deleteHuntGroup(vm.featureId).then(
+          function (data) {
+            deleteSuccess();
+          },
+          function (response) {
+            deleteError(response);
+          }
+        );
+      } else {
         return;
       }
-
     }
 
     function deleteSuccess() {
@@ -77,7 +81,7 @@
       }
 
       $timeout(function () {
-        $rootScope.$broadcast('HUNT_GROUP_DELETED');
+        $rootScope.$broadcast('HURON_FEATURE_DELETED');
         Notification.success('huronFeatureDetails.deleteSuccessText', {
           featureName: vm.featureName,
           featureType: vm.featureType

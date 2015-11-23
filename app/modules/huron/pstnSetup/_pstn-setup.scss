@@ -118,6 +118,9 @@
   .label-height-offset {
     margin-top: #{$form-label-line-height}em;
   }
+  .search-button {
+    align-self: center;
+  }
   .text-label-height-offset {
     @extend .label-height-offset;
     padding-top: calc((#{$input-height-base} - #{$base-line-height-ratio}em)/2);

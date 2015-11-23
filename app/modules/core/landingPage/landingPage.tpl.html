@@ -63,17 +63,17 @@
 
         <section class="monitoring-panel small-12 column">
           <h4 class="monitoring-section" translate="homePage.status"></h4>
-          <ul>
+          <ul class="icon-ul">
           <li ng-class="{'success':'green'}[healthStatus]">
             <a ng-href="{{statusPageUrl}}" target="_blank" class="monitoring-cell">
-              <i class="fa fa-circle" ng-class="{'warning':'yellow','danger':'red'}[healthStatus]"></i><span translate="homePage.spark"></span>
+              <i class="icon-li icon icon-circle" ng-class="{'warning':'yellow','danger':'red'}[healthStatus]"></i><span translate="homePage.spark"></span>
             </a>
           </li>
           <li target="_blank" ng-class="{'green': sso}">
-              <i class="fa fa-circle" ng-class="{'gray': !sso}"></i><span translate="homePage.sso"></span>
+              <i class="icon-li icon icon-circle" ng-class="{'gray': !sso}"></i><span translate="homePage.sso"></span>
           </li>
            <li target="_blank" ng-class="{'green': dirsync}">
-              <i class="fa fa-circle" ng-class="{'gray': !dirsync}"></i><span translate="homePage.dirsync"></span>
+              <i class="icon-li icon icon-circle" ng-class="{'gray': !dirsync}"></i><span translate="homePage.dirsync"></span>
           </li>
           </ul>
         </section>
@@ -103,21 +103,21 @@
         </section> -->
         <section class="quick-links small-12 column" ng-controller="QuikLinksCtrl">
           <h4 translate="homePage.quickLinksText"></h4>
-          <ul class="list-group">
+          <ul class="no-bullet">
             <li ng-if="isPageActive('users')">
-              <a id="addUserQuickLink" href="" ui-sref="users.list({ showAddUsers: 'add' })" class="list-group-item" translate="homePage.addUserText"></a>
+              <a id="addUserQuickLink" href="" ui-sref="users.list({ showAddUsers: 'add' })" translate="homePage.addUserText"></a>
             </li>
             <li ng-if="false">
-              <a id="installDeviceQuickLink" class="list-group-item" translate="homePage.installDeviceText"></a>
+              <a id="installDeviceQuickLink" translate="homePage.installDeviceText"></a>
             </li>
             <li ng-if="isPageActive('devices')">
-              <a id="installDeviceSharedSpaceQuickLink" ui-sref="devices" class="list-group-item" translate="homePage.installSharedSpaceText"></a>
+              <a id="installDeviceSharedSpaceQuickLink" ui-sref="devices" translate="homePage.installSharedSpaceText"></a>
             </li>
             <li ng-if="false">
-              <a id="autoAttendantQuickLink" class="list-group-item" translate="homePage.autoAttendantText"></a>
+              <a id="autoAttendantQuickLink" translate="homePage.autoAttendantText"></a>
             </li>
             <li ng-if="isPageActive('support')">
-              <a id="deviceLogsQuickLink" ui-sref="support" class="list-group-item" translate="homePage.searchLogsText"></a>
+              <a id="deviceLogsQuickLink" ui-sref="support" translate="homePage.searchLogsText"></a>
             </li>
           </ul>
         </section>

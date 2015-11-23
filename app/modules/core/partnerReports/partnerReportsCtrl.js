@@ -126,19 +126,23 @@
       setAllDummyData();
       setTimeBasedText();
 
-      vm.activeUsersRefresh = REFRESH;
-      vm.activeUserPopulationRefresh = REFRESH;
-      vm.mostActiveDescription = "";
-      getActiveUserReports();
+      if (vm.customerSelected.value !== 0) {
+        vm.activeUsersRefresh = REFRESH;
+        vm.activeUserPopulationRefresh = REFRESH;
+        vm.mostActiveDescription = "";
+        getActiveUserReports();
 
-      vm.callMetricsRefresh = REFRESH;
-      getCallMetricsReports();
+        vm.callMetricsRefresh = REFRESH;
+        getCallMetricsReports();
 
-      vm.mediaQualityRefresh = REFRESH;
-      getMediaQualityReports();
+        vm.mediaQualityRefresh = REFRESH;
+        getMediaQualityReports();
 
-      vm.endpointRefresh = REFRESH;
-      getRegisteredEndpoints();
+        vm.endpointRefresh = REFRESH;
+        getRegisteredEndpoints();
+      } else {
+        setAllNoData();
+      }
     };
 
     init();
@@ -152,11 +156,23 @@
       PartnerReportService.getOverallActiveUserData(vm.timeSelected);
       PartnerReportService.getCustomerList().then(function (response) {
         updateCustomerFilter(response);
-        getRegisteredEndpoints();
-        getMediaQualityReports();
-        getActiveUserReports();
-        getCallMetricsReports();
+        if (vm.customerSelected.value !== 0) {
+          getRegisteredEndpoints();
+          getMediaQualityReports();
+          getActiveUserReports();
+          getCallMetricsReports();
+        } else {
+          setAllNoData();
+        }
       });
+    }
+
+    function setAllNoData() {
+      vm.activeUserPopulationRefresh = EMPTY;
+      vm.activeUsersRefresh = EMPTY;
+      vm.mediaQualityRefresh = EMPTY;
+      vm.callMetricsRefresh = EMPTY;
+      vm.endpointRefresh = EMPTY;
     }
 
     function updateCustomerFilter(orgsData) {
@@ -165,7 +181,8 @@
       angular.forEach(orgsData, function (org) {
         customers.push({
           value: org.customerOrgId,
-          label: org.customerName
+          label: org.customerName,
+          isAllowedToManage: org.isAllowedToManage
         });
       });
 
@@ -178,7 +195,8 @@
       } else {
         vm.customerSelected = {
           value: 0,
-          label: ""
+          label: "",
+          isAllowedToManage: false
         };
       }
     }
@@ -220,9 +238,10 @@
           setActivePopulationGraph(response.populationGraph, response.overallPopulation);
 
           vm.mostActiveUsers = [];
-          if (angular.isDefined(response.tableData)) {
+          if (vm.customerSelected.isAllowedToManage && angular.isDefined(response.tableData)) {
             vm.mostActiveUsers = response.tableData;
           }
+
           vm.displayMostActive = false;
           if (angular.isArray(vm.mostActiveUsers) && (vm.mostActiveUsers.length > 0)) {
             vm.displayMostActive = true;

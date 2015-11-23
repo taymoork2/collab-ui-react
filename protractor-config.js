@@ -26,7 +26,7 @@ exports.config = {
       'args': ['--disable-extensions', '--start-fullscreen']
     },
     shardTestFiles: true,
-    maxInstances: process.env.SAUCE_MAX_INSTANCES ? process.env.SAUCE_MAX_INSTANCES : process.env.SAUCE_USERNAME ? 5 : 1
+    maxInstances: process.env.SAUCE_MAX_INSTANCES ? process.env.SAUCE_MAX_INSTANCES : process.env.SAUCE_USERNAME ? 10 : 1
   },
 
   // A base URL for your application under test. Calls to protractor.get()
@@ -130,7 +130,7 @@ exports.config = {
     var TrialExtInterestPage = require('./test/e2e-protractor/pages/trialExtInterest.page.js');
     var InviteUsers = require('./test/e2e-protractor/pages/inviteusers.page.js');
     var HuronFeatures = require('./test/e2e-protractor/pages/huronFeatures.page.js');
-    var CreateHuntGroup = require('./test/e2e-protractor/pages/createHuntGroup.page.js');
+    var HuntGroup = require('./test/e2e-protractor/pages/HuntGroup.page.js');
 
     global.notifications = new Notifications();
     global.navigation = new Navigation();
@@ -167,7 +167,7 @@ exports.config = {
     global.trialextinterest = new TrialExtInterestPage();
     global.inviteusers = new InviteUsers();
     global.huronFeatures = new HuronFeatures();
-    global.huntGroup = new CreateHuntGroup();
+    global.huntGroup = new HuntGroup();
 
     return browser.getCapabilities().then(function (capabilities) {
       if (capabilities.caps_.browserName === 'firefox') {

@@ -76,7 +76,9 @@
           callback(data, status);
         })
         .error(function (data, status) {
-          data = data || {};
+          if (!data || !(data instanceof Object)) {
+            data = {};
+          }
           data.success = false;
           data.status = status;
           callback(data, status);
@@ -202,20 +204,9 @@
         callback('error', 100);
         return;
       }
-      var orgUrl = Config.getProdAdminServiceUrl() + 'organizationstemp?displayName=' + filter;
+      var orgUrl = Config.getProdAdminServiceUrl() + 'organizations?displayName=' + filter;
 
-      $http.get(orgUrl)
-        .success(function (data, status) {
-          data = data || {};
-          data.success = true;
-          callback(data, status);
-        })
-        .error(function (data, status) {
-          data = data || {};
-          data.success = false;
-          data.status = status;
-          callback(data, status);
-        });
+      return $http.get(orgUrl);
     }
 
     function getOrgCacheOption(callback, oid, config) {

@@ -11,7 +11,8 @@
       autoAttendants: autoAttendants,
       callParks: callParks,
       huntGroups: huntGroups,
-      orderBy: orderBy
+      filterCards: filterCards,
+      orderByFilter: orderByFilter
     };
 
     var formattedCard = {
@@ -21,11 +22,7 @@
       // 'filterValue': ''
     };
 
-    var orderByFilter = $filter('orderBy');
-
     return service;
-
-    ////////////////
 
     function autoAttendants(data) {
       var formattedList = [];
@@ -38,7 +35,7 @@
         formattedList.push(formattedCard);
         formattedCard = {};
       });
-      return orderBy(formattedList, 'cardName');
+      return orderByCardName(formattedList);
     }
 
     function callParks() {
@@ -47,22 +44,55 @@
 
     function huntGroups(data) {
       var formattedList = [];
-      _.forEach(data.items, function (huntGroup) {
+      _.forEach(data, function (huntGroup) {
         formattedCard.cardName = huntGroup.name;
         formattedCard.numbers = huntGroup.numbers;
         formattedCard.memberCount = huntGroup.memberCount;
-        formattedCard.huntGroupId = huntGroup.uuid;
+        formattedCard.id = huntGroup.uuid;
         formattedCard.featureName = 'huronHuntGroup.hg';
         formattedCard.filterValue = 'HG';
         formattedList.push(formattedCard);
         formattedCard = {};
       });
-      return orderBy(formattedList, 'cardName');
+      return orderByCardName(formattedList);
     }
 
-    function orderBy(list, predicate) {
-      return orderByFilter(list, predicate, false);
+    /*
+     Card can be searched by cardName, numbers, and memberCount (if Hunt Group Card)
+     Card can be filtered by the specifying the filterValue (ex: AA, HG, CP)
+     */
+    function filterCards(list, filterValue, filterText) {
+      var filter = (filterValue === 'all') ? '' : filterValue;
+
+      var cardsFilteredByName = $filter('filter')(list, {
+        cardName: filterText,
+        filterValue: filter
+      });
+
+      var cardsFilteredByNumber = $filter('filter')(list, {
+        cardName: "!" + filterText,
+        numbers: filterText,
+        filterValue: filter
+      });
+
+      var cardsFilteredByMemberCount = $filter('filter')(list, {
+        cardName: "!" + filterText,
+        numbers: "!" + filterText,
+        memberCount: filterText,
+        filterValue: filter
+      });
+      return orderByFilter(cardsFilteredByName.concat(cardsFilteredByNumber, cardsFilteredByMemberCount));
     }
 
+    function orderByCardName(list) {
+      return _.sortBy(list, function (item) {
+        //converting cardName to lower case as _.sortByAll by default does a case sensitive sorting
+        return item.cardName.toLowerCase();
+      });
+    }
+
+    function orderByFilter(list) {
+      return _.sortBy(list, 'filterValue');
+    }
   }
 })();

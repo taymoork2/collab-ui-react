@@ -17,58 +17,51 @@
     vm.reload = reload;
     vm.filters = [];
     vm.listOfFeatures = [];
+    var listOfAllFeatures = [];
     vm.pageState = '';
     vm.filterText = '';
     vm.placeholder = {};
     vm.cardColor = {};
     vm.aaModel = {};
+    var featureToBeDeleted = {};
     vm.placeholder = {
       'name': 'Search'
     };
     vm.filters = [{
-        name: 'All',
-        filterValue: 'all'
-      }, {
-        name: 'Auto Attendant',
-        filterValue: 'AA'
-      }, {
-        name: 'Hunt Group',
-        filterValue: 'HG'
-      }
-      //  {
-      //  name: 'Call Park',
-      //  filterValue: 'CP'
-      //}
-    ];
-    var listOfAllFeatures = [];
-    var featureToBeDeleted = {};
-    var customerId = Authinfo.getOrgId();
-
+      name: 'All',
+      filterValue: 'all'
+    }, {
+      name: 'Auto Attendant',
+      filterValue: 'AA'
+    }, {
+      name: 'Hunt Group',
+      filterValue: 'HG'
+    }];
     /* LIST OF FEATURES
      *
      *  To add a New Feature
      *  1. Define the service to get the list of feature
      *  2. Inject the features Service into the Controller
      *  3. Add the Object for the feature in the format of the Features Array Object (features)
-     *  4. Define the SuccessHandler
+     *  4. Define the formatter
      * */
     var features = [{
       name: 'AA',
-      service: AutoAttendantCeInfoModelService.getCeInfosList,
-      successHandler: HuronFeaturesListService.autoAttendants,
+      getFeature: AutoAttendantCeInfoModelService.getCeInfosList,
+      formatter: HuronFeaturesListService.autoAttendants,
       isEmpty: false,
       i18n: 'huronFeatureDetails.aaName',
       color: 'primary'
     }, {
       name: 'HG',
-      service: HuntGroupService.getListOfHuntGroups,
-      successHandler: HuronFeaturesListService.huntGroups,
+      getFeature: HuntGroupService.getListOfHuntGroups,
+      formatter: HuronFeaturesListService.huntGroups,
       isEmpty: false,
       i18n: 'huronFeatureDetails.hgName',
       color: 'alerts'
     }];
 
-    angular.forEach(features, function (feature) {
+    _.forEach(features, function (feature) {
       vm.cardColor[feature.name] = feature.color;
     });
 
@@ -82,43 +75,19 @@
       handleFeaturePromises(featuresPromises);
 
       $q.all(featuresPromises).then(function (responses) {
-        isFeatureListEmpty();
+        showNewFeaturePageIfNeeded();
       });
     }
 
-    var filterCards = function (filterValue) {
-      var filter = (filterValue === 'all') ? '' : filterValue;
-
-      var cardsFilteredByName = $filter('filter')(listOfAllFeatures, {
-        cardName: vm.filterText,
-        filterValue: filter
-      });
-
-      var cardsFilteredByNumber = $filter('filter')(listOfAllFeatures, {
-        cardName: "!" + vm.filterText,
-        numbers: vm.filterText,
-        filterValue: filter
-      });
-
-      var cardsFilteredByMemberCount = $filter('filter')(listOfAllFeatures, {
-        cardName: "!" + vm.filterText,
-        numbers: "!" + vm.filterText,
-        memberCount: vm.filterText,
-        filterValue: filter
-      });
-
-      return cardsFilteredByName.concat(cardsFilteredByNumber, cardsFilteredByMemberCount);
-    };
-
     //Switches Data that populates the Features tab
     function setFilter(filterValue) {
-      vm.listOfFeatures = filterCards(filterValue);
+      vm.listOfFeatures = HuronFeaturesListService.filterCards(listOfAllFeatures, filterValue, vm.filterText);
     }
 
     /* This function does an in-page search for the string typed in search box*/
     function searchData(searchStr) {
       vm.filterText = searchStr;
-      vm.listOfFeatures = filterCards('all');
+      vm.listOfFeatures = HuronFeaturesListService.filterCards(listOfAllFeatures, 'all', vm.filterText);
     }
 
     function reload() {
@@ -128,13 +97,13 @@
     function getListOfFeatures() {
       var promises = [];
       features.forEach(function (value) {
-        promises.push(value.service(customerId));
+        promises.push(value.getFeature());
       });
       return promises;
     }
 
     function handleFeaturePromises(promises) {
-      angular.forEach(features, function (feature, index) {
+      _.forEach(features, function (feature, index) {
         promises[index].then(function (data) {
           handleFeatureData(data, feature);
         }, function (response) {
@@ -162,7 +131,7 @@
         vm.aaModel = data;
       }
 
-      var list = feature.successHandler(data);
+      var list = feature.formatter(data);
       if (list.length > 0) {
 
         if (feature.name === 'AA') {
@@ -172,10 +141,11 @@
         vm.pageState = 'showFeatures';
         feature.isEmpty = false;
         vm.listOfFeatures = vm.listOfFeatures.concat(list);
-        vm.listOfFeatures = HuronFeaturesListService.orderBy(vm.listOfFeatures, 'filterValue');
+        vm.listOfFeatures = HuronFeaturesListService.orderByFilter(vm.listOfFeatures);
         listOfAllFeatures = listOfAllFeatures.concat(list);
       } else if (list.length === 0) {
         feature.isEmpty = true;
+        showReloadPageIfNeeded();
       }
     }
 
@@ -190,40 +160,26 @@
           feature: feature
         });
       }
-      // else if (feature.filterValue === 'CP') {
-      //  //Call CallPark Edit Controller
-      //}
     };
 
     vm.deleteHuronFeature = function (feature) {
-      if (feature.filterValue === 'HG') {
-        featureToBeDeleted = feature;
-        $state.go('huronfeatures.deleteHuntGroup', {
-          deleteHuntGroupName: feature.cardName,
-          deleteHuntGroupId: feature.huntGroupId
-        });
-      } else if (feature.filterValue === 'AA') {
-        featureToBeDeleted = feature;
-        $state.go('huronfeatures.deleteFeature', {
-          deleteFeatureName: feature.cardName,
-          deleteFeatureId: feature.id,
-          deleteFeatureType: feature.filterValue
-        });
-      }
-      // else if (feature.filterValue === 'CP') {
-      //  //goto Delete CallPark Controller
-      //}
+      featureToBeDeleted = feature;
+      $state.go('huronfeatures.deleteFeature', {
+        deleteFeatureName: feature.cardName,
+        deleteFeatureId: feature.id,
+        deleteFeatureType: feature.filterValue
+      });
     };
 
     function areFeaturesEmpty() {
       var isEmpty = true;
-      features.forEach(function (feature) {
+      _.forEach(features, function (feature) {
         isEmpty = isEmpty && feature.isEmpty;
       });
       return isEmpty;
     }
 
-    function isFeatureListEmpty() {
+    function showNewFeaturePageIfNeeded() {
 
       if (vm.pageState !== 'showFeatures' && areFeaturesEmpty() && vm.listOfFeatures.length === 0) {
         vm.pageState = 'NewFeature';
@@ -236,8 +192,8 @@
       }
     }
 
-    //list is updated by deleting a hunt group
-    $scope.$on('HUNT_GROUP_DELETED', function () {
+    //list is updated by deleting a feature
+    $scope.$on('HURON_FEATURE_DELETED', function () {
       vm.listOfFeatures.splice(vm.listOfFeatures.indexOf(featureToBeDeleted), 1);
       listOfAllFeatures.splice(listOfAllFeatures.indexOf(featureToBeDeleted), 1);
       featureToBeDeleted = {};

@@ -759,7 +759,8 @@ angular
         })
 
       /*
-        devices redux prototypes
+       devices
+       prototypes
       */
       .state('main-redux', {
           views: {
@@ -985,6 +986,45 @@ angular
           templateUrl: 'modules/squared/views/trialExtInterest.html',
           controller: 'TrialExtInterestCtrl',
           parent: 'main'
+        })
+        .state('helpdesk-main', {
+          views: {
+            'main@': {
+              templateUrl: 'modules/squared/views/helpdesk.tpl.html'
+            }
+          },
+          abstract: true,
+          sticky: true
+        })
+        .state('helpdesk', {
+          url: '/helpdesk',
+          template: '<div ui-view></div>',
+          controller: 'HelpdeskController',
+          controllerAs: 'helpdeskCtrl',
+          abstract: true,
+          parent: 'helpdesk-main'
+        })
+        .state('helpdesk.search', {
+          url: '/',
+          templateUrl: 'modules/squared/helpdesk/helpdesk-search.html'
+        })
+        .state('helpdesk.user', {
+          url: '/user',
+          templateUrl: 'modules/squared/helpdesk/helpdesk-user.html',
+          controller: 'HelpdeskUserController',
+          controllerAs: 'helpdeskUserCtrl',
+          params: {
+            user: null
+          }
+        })
+        .state('helpdesk.org', {
+          url: '/org',
+          templateUrl: 'modules/squared/helpdesk/helpdesk-org.html',
+          controller: 'HelpdeskOrgController',
+          controllerAs: 'helpdeskOrgCtrl',
+          params: {
+            org: null
+          }
         });
     }
   ]);
@@ -1336,31 +1376,17 @@ angular
             deleteFeatureType: null
           }
         })
-        .state('huronfeatures.deleteHuntGroup', {
-          parent: 'modal',
-          views: {
-            'modal@': {
-              controller: 'HuntGroupDeleteCtrl',
-              controllerAs: 'huntGroupDeleteCtrl',
-              templateUrl: 'modules/huron/features/huntGroup/huntGroupDeleteModal.tpl.html'
-            }
-          },
-          params: {
-            deleteHuntGroupName: null,
-            deleteHuntGroupId: null
-          }
-        })
         .state('huronHuntGroup', {
           url: '/huronHuntGroup',
           parent: 'hurondetails',
-          templateUrl: 'modules/huron/features/huntGroup/huntGroupSetupAssistant.tpl.html',
+          templateUrl: 'modules/huron/features/huntGroup/hgSetupAssistant.tpl.html',
           controller: 'HuntGroupSetupAssistantCtrl',
           controllerAs: 'huntGroupSA'
         })
         .state('huntgroupedit', {
           url: '/features/hg/edit',
           parent: 'main',
-          templateUrl: 'modules/huron/features/edit/huntgroupedit.tpl.html',
+          templateUrl: 'modules/huron/features/huntGroup/edit/hgEdit.tpl.html',
           controller: 'HuntGroupEditCtrl',
           controllerAs: 'hge',
           params: {

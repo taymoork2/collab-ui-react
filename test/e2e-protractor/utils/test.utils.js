@@ -175,17 +175,14 @@ exports.expectIsDisplayed = function (elem) {
 };
 
 exports.expectAllDisplayed = function (elems) {
-  this.wait(elems);
-  elems.each().then(function (elem) {
-    expect(elem.isDisplayed()).toBeTruthy();
+  this.wait(elems).then(function () {
+    elems.each(function (elem) {
+      expect(elem.isDisplayed()).toBeTruthy();
+    });
   });
 };
 
-exports.expectAllNotDisplayed = function (elems) {
-  elems.each().then(function (elem) {
-    expect(elem.isDisplayed()).toBeFalsy();
-  });
-};
+exports.expectAllNotDisplayed = this.expectIsNotDisplayed;
 
 exports.expectIsDisabled = function (elem) {
   this.wait(elem).then(function () {
@@ -223,7 +220,7 @@ exports.expectIsNotDisplayed = function (elem, timeout) {
   }
 
   function logAndWait() {
-    log('Waiting for element to be invisible: ' + elem.locator());
+    log('Waiting for element not to be invisible: ' + elem.locator());
     return EC.invisibilityOf(elem)().thenCatch(function () {
       // Handle stale element reference
       return EC.stalenessOf(elem)();
@@ -326,6 +323,14 @@ exports.clickLast = function (elem) {
   });
 };
 
+exports.clickAll = function (elems) {
+  return this.wait(elems).then(function () {
+    elems.each(function (elem, index) {
+      return exports.click(elem);
+    });
+  })
+};
+
 exports.isSelected = function (elem) {
   return this.wait(elem).then(function () {
     return elem.isSelected();
@@ -372,7 +377,7 @@ exports.expectAttribute = function (elem, attr, value) {
 };
 
 exports.expectText = function (elem, value, value2) {
-  this.wait(elem).then(function () {
+  return this.wait(elem).then(function () {
     expect(elem.getText()).toContain(value);
     if (value2) {
       expect(elem.getText()).toContain(value2);

@@ -90,12 +90,14 @@
       "actions": [{
         "name": "play",
         "value": "file2.avi",
-        "description": "menu instruction"
+        "description": "menu instruction",
+        "voice": ""
       }],
       "timeout": "",
       "username": "",
       "password": "",
-      "url": ""
+      "url": "",
+      "language": ""
     }, {
       "description": "",
       "isConfigured": true,
@@ -105,12 +107,14 @@
       "actions": [{
         "name": "repeatActionsOnInput",
         "value": "",
-        "description": "Invalid input action"
+        "description": "Invalid input action",
+        "voice": ""
       }],
       "timeout": "",
       "username": "",
       "password": "",
-      "url": ""
+      "url": "",
+      "language": ""
     }],
     "entries": [{
       "description": "Play office hours",
@@ -121,12 +125,14 @@
       "actions": [{
         "name": "play",
         "value": "file3.avi",
-        "description": ""
+        "description": "",
+        "voice": ""
       }],
       "timeout": "",
       "username": "",
       "password": "",
-      "url": ""
+      "url": "",
+      "language": ""
     }, {
       "description": "Operator",
       "isConfigured": true,
@@ -136,12 +142,14 @@
       "actions": [{
         "name": "route",
         "value": "1111",
-        "description": ""
+        "description": "",
+        "voice": ""
       }],
       "timeout": "",
       "username": "",
       "password": "",
-      "url": ""
+      "url": "",
+      "language": ""
     }, {
       "description": "Leave voicemail",
       "isConfigured": true,
@@ -151,12 +159,14 @@
       "actions": [{
         "name": "routeToMailbox",
         "value": "1111",
-        "description": ""
+        "description": "",
+        "voice": ""
       }],
       "timeout": "",
       "username": "",
       "password": "",
-      "url": ""
+      "url": "",
+      "language": ""
     }, {
       "description": "Repeat instruction",
       "isConfigured": true,
@@ -166,12 +176,14 @@
       "actions": [{
         "name": "repeatActionsOnInput",
         "value": "",
-        "description": ""
+        "description": "",
+        "voice": ""
       }],
       "timeout": "",
       "username": "",
       "password": "",
-      "url": ""
+      "url": "",
+      "language": ""
     }, {
       "description": "Call dialed number",
       "isConfigured": true,
@@ -181,12 +193,14 @@
       "actions": [{
         "name": "routeToDialed",
         "value": "",
-        "description": ""
+        "description": "",
+        "voice": ""
       }],
       "timeout": "",
       "username": "",
       "password": "",
-      "url": ""
+      "url": "",
+      "language": ""
     }, {
       "description": "Call dialed mailbox",
       "isConfigured": true,
@@ -196,12 +210,14 @@
       "actions": [{
         "name": "routeToDialedMailbox",
         "value": "",
-        "description": ""
+        "description": "",
+        "voice": ""
       }],
       "timeout": "",
       "username": "",
       "password": "",
-      "url": ""
+      "url": "",
+      "language": ""
     }]
   }
 }

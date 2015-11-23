@@ -1,0 +1,73 @@
+<div class="helpdesk-details">
+  <h2>{{helpdeskOrgCtrl.org.displayName}} <span style="margin-left: 3rem;"><i class="icon icon-search"></i><a
+    ui-sref="helpdesk.search" translate="helpdesk.goToSearch"></a></span></h2>
+
+  <div class="medium-6 columns">
+    <table class="table">
+      <tbody>
+      <tr>
+        <td>
+          <span translate="common.id"></span>
+        </td>
+        <td>
+          <span>{{helpdeskOrgCtrl.org.id}}</span>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span translate="helpdesk.type"></span>
+        </td>
+        <td>
+          <span ng-if="helpdeskOrgCtrl.org.manages && helpdeskOrgCtrl.org.manages.length > 0"
+                translate="helpdesk.partner"></span>
+          <span ng-if="!helpdeskOrgCtrl.org.manages || helpdeskOrgCtrl.org.manages.length == 0"
+                translate="helpdesk.customer"></span>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="medium-6 columns">
+    <table class="table">
+      <tbody>
+      <tr>
+        <td>
+          <i class="icon icon-circle"
+             ng-class="helpdeskOrgCtrl.org.ssoEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
+          <span translate="helpdesk.sso"></span>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <i class="icon icon-circle"
+             ng-class="helpdeskOrgCtrl.org.dirsyncEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
+          <span translate="helpdesk.dirSync"></span>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <cs-card class="large header-bar">
+    <article>
+      <header>
+        <h4 translate="cloudExtensions.cloudExtensions"></h4>
+      </header>
+      <section>
+        <div ng-if="!helpdeskOrgCtrl.hybridServicesEntitled" class="card-list">
+          <span class="helpdesk-yellow"><i
+            class="icon icon-warning helpdesk-yellow"></i>Not entitled to this service</span>
+        </div>
+        <div class="card-list"
+             ng-repeat="service in helpdeskOrgCtrl.hybridServices"
+             ng-if="helpdeskOrgCtrl.hybridServicesEntitled">
+          <span translate="hercules.serviceNames.{{service.id}}"></span>
+          <span ng-if="service.enabled" class="helpdesk-green">(Enabled)</span>
+          <span ng-if="!service.enabled" class="helpdesk-yellow">(Disabled)</span>
+        </div>
+      </section>
+    </article>
+  </cs-card>
+
+</div>

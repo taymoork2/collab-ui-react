@@ -11,7 +11,7 @@
   overflow-y: auto;
   overflow-x: hidden;
   .cdr-content {
-    min-height: 500px;
+    min-height: vr-adjust(500);
     background-color: $brand-white;
     width: 100%;
     margin: 0;
@@ -24,7 +24,7 @@
       top: rem-calc(-20);
       margin-bottom: rem-calc(10);
       width: rem-calc(675);
-      height: vr-adjust(275);
+      height: vr-adjust(300);
       .upload-radio {
         margin-left: rem-calc(30);
       }

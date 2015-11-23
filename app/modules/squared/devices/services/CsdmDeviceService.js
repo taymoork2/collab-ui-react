@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmDeviceService($http, $log, Authinfo, CsdmConfigService, CsdmCacheUpdater, CsdmConverter, CsdmCacheFactory) {
+  function CsdmDeviceService($http, $log, Authinfo, CsdmConfigService, CsdmCacheUpdater, CsdmConverter, CsdmCacheFactory, Utils) {
     var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/devices?checkOnline=true';
 
     var deviceCache = CsdmCacheFactory.create({
@@ -78,6 +78,16 @@
       });
     }
 
+    function renewRsuKey(deviceUrl, feedbackId, email) {
+      return notifyDevice(deviceUrl, {
+        command: "renewRSU",
+        eventType: "room.renewRSU",
+        feedbackId: feedbackId,
+        email: email,
+        message: Utils.getUUID()
+      });
+    }
+
     return {
       on: deviceCache.on,
       getDevice: getDevice,
@@ -85,7 +95,8 @@
       updateTags: updateTags,
       deleteDevice: deleteDevice,
       getDeviceList: getDeviceList,
-      updateDeviceName: updateDeviceName
+      updateDeviceName: updateDeviceName,
+      renewRsuKey: renewRsuKey
     };
   }
 

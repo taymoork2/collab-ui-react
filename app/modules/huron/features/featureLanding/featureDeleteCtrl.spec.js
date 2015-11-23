@@ -96,7 +96,7 @@ describe('Controller: HuronFeatureDeleteCtrl', function () {
       expect(Notification.error).not.toHaveBeenCalled();
       expect(aaModel.ceInfos.length).toEqual(1);
       expect(AutoAttendantCeInfoModelService.deleteCeInfo).toHaveBeenCalled();
-      expect($rootScope.$broadcast).toHaveBeenCalledWith('HUNT_GROUP_DELETED');
+      expect($rootScope.$broadcast).toHaveBeenCalledWith('HURON_FEATURE_DELETED');
 
     });
 
@@ -115,7 +115,7 @@ describe('Controller: HuronFeatureDeleteCtrl', function () {
       expect(aaModel.ceInfos.length).toEqual(2);
       expect(Notification.error).toHaveBeenCalledWith(jasmine.any(String));
       expect(AutoAttendantCeInfoModelService.deleteCeInfo).not.toHaveBeenCalled();
-      expect($rootScope.$broadcast).not.toHaveBeenCalledWith('HUNT_GROUP_DELETED');
+      expect($rootScope.$broadcast).not.toHaveBeenCalledWith('HURON_FEATURE_DELETED');
 
     });
 
@@ -129,8 +129,101 @@ describe('Controller: HuronFeatureDeleteCtrl', function () {
       expect(aaModel.ceInfos.length).toEqual(2);
       expect(Notification.error).toHaveBeenCalledWith('huronFeatureDetails.deleteFailedText');
       expect(AutoAttendantCeInfoModelService.deleteCeInfo).not.toHaveBeenCalled();
-      expect($rootScope.$broadcast).not.toHaveBeenCalledWith('HUNT_GROUP_DELETED');
+      expect($rootScope.$broadcast).not.toHaveBeenCalledWith('HURON_FEATURE_DELETED');
 
     });
   });
+});
+
+describe('Huron Feature DeleteCtrl', function () {
+
+  var featureDeleteCtrl, rootScope, $scope, $stateParams, $q, $timeout, $translate, Authinfo, huntGroupService, autoAttendantCeService, Notification, Log, featureDelDeferred;
+  var spiedAuthinfo = {
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
+  };
+  var successResponse = {
+    'status': 200,
+    'statusText': 'OK'
+  };
+  var failureResponse = {
+    'data': 'Internal Server Error',
+    'status': 500,
+    'statusText': 'Internal Server Error'
+  };
+
+  beforeEach(module('Huron'));
+  beforeEach(module(function ($provide) {
+    $provide.value("Authinfo", spiedAuthinfo);
+  }));
+
+  beforeEach(inject(function (_$rootScope_, $controller, _$timeout_, _$translate_, _$q_, Authinfo, _HuntGroupService_, _AutoAttendantCeService_, _Notification_, _Log_) {
+    rootScope = _$rootScope_;
+    $scope = rootScope.$new();
+    $q = _$q_;
+    $translate = _$translate_;
+    $timeout = _$timeout_;
+    Authinfo = Authinfo;
+    huntGroupService = _HuntGroupService_;
+    autoAttendantCeService = _AutoAttendantCeService_;
+    Notification = _Notification_;
+    Log = _Log_;
+
+    featureDelDeferred = $q.defer();
+    spyOn(huntGroupService, 'deleteHuntGroup').and.returnValue(featureDelDeferred.promise);
+    spyOn(Notification, 'success');
+    spyOn(Notification, 'error');
+    spyOn(rootScope, '$broadcast').and.callThrough();
+
+    $stateParams = {
+      deleteFeatureId: 123,
+      deleteFeatureName: 'Technical Support',
+      deleteFeatureType: 'HG'
+    };
+
+    featureDeleteCtrl = $controller('HuronFeatureDeleteCtrl', {
+      $rootScope: rootScope,
+      $scope: $scope,
+      $stateParams: $stateParams,
+      $timeout: $timeout,
+      $translate: $translate,
+      Authinfo: Authinfo,
+      HuntGroupService: huntGroupService,
+      AutoAttendantCeService: autoAttendantCeService,
+      Log: Log,
+      Notification: Notification
+    });
+
+  }));
+
+  it('should broadcast HURON_FEATURE_DELETED event when hunt group is deleted successfully', function () {
+
+    featureDeleteCtrl.deleteFeature();
+
+    featureDelDeferred.resolve(successResponse);
+    $scope.$apply();
+    $timeout.flush();
+
+    expect(rootScope.$broadcast).toHaveBeenCalledWith('HURON_FEATURE_DELETED');
+
+  });
+
+  it('should give a successful notification when hunt group is deleted successfully', function () {
+    featureDeleteCtrl.deleteFeature();
+    featureDelDeferred.resolve(successResponse);
+    $scope.$apply();
+    $timeout.flush();
+    expect(Notification.success).toHaveBeenCalledWith(jasmine.any(String), {
+      featureName: $stateParams.deleteFeatureName,
+      featureType: jasmine.any(String)
+    });
+  });
+
+  it('should give the an error notification when hunt group deletion fails', function () {
+    featureDeleteCtrl.deleteFeature();
+    featureDelDeferred.reject(failureResponse);
+    $scope.$apply();
+    $timeout.flush();
+    expect(Notification.error).toHaveBeenCalledWith(jasmine.any(String));
+  });
+
 });

@@ -1,0 +1,21 @@
+[{
+  "type": "INTERNAL",
+  "number": "1001",
+  "uuid": "ee43083f-95d7-4994-bbe9-dd833a99252c",
+  "assigned": false
+}, {
+  "type": "INTERNAL",
+  "number": "1002",
+  "uuid": "68a3c1f2-72c5-4c1e-9166-374e66f97155",
+  "assigned": false
+}, {
+  "type": "INTERNAL",
+  "number": "1005",
+  "uuid": "5d5c7df1-2c98-48f4-bbd4-04efbbe121d2",
+  "assigned": false
+}, {
+  "type": "INTERNAL",
+  "number": "1006",
+  "uuid": "aced8976-425a-4b7a-ae77-fb3d5b1b51a8",
+  "assigned": false
+}]

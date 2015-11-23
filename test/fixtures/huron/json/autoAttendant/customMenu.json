@@ -41,7 +41,8 @@
       "timeout": "",
       "username": "",
       "password": "",
-      "url": ""
+      "url": "",
+      "language": ""
     }]
   },
 
@@ -58,7 +59,8 @@
       "timeout": "",
       "username": "userabc",
       "password": "passwordabc",
-      "url": "https://aws/custom/menu"
+      "url": "https://aws/custom/menu",
+      "language": ""
     }]
   }
 }

@@ -25,6 +25,7 @@ angular.module('Squared').service('CsdmConverter',
       this.needsActivation = getNeedsActivation(obj);
       this.diagnosticsEvents = getDiagnosticsEvents(obj);
       this.readableActivationCode = getReadableActivationCode(obj);
+      this.rsuKey = obj.remoteSupportUser && obj.remoteSupportUser.token;
       this.update = function (updated) {
         this.displayName = updated.displayName;
       };
