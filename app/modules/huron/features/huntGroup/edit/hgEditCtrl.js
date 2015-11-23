@@ -5,7 +5,7 @@
     .controller('HuntGroupEditCtrl', HuntGroupEditCtrl);
 
   /* @ngInject */
-  function HuntGroupEditCtrl($state, $stateParams, $translate,
+  function HuntGroupEditCtrl($state, $q, $stateParams, $translate,
     Authinfo, HuntGroupService, Notification, HuntGroupFallbackDataService,
     HuntGroupMemberDataService, HuntGroupEditDataService) {
     var vm = this;
@@ -15,7 +15,7 @@
     vm.callback = callback;
     vm.isLoadingCompleted = false;
     vm.back = true;
-    vm.backUrl = 'huronfeatures';
+    vm.huronFeaturesUrl = 'huronfeatures';
     vm.hgMethods = HuntGroupService.getHuntMethods();
 
     // Hunt Pilot controller functions.
@@ -32,7 +32,7 @@
     vm.isMembersInvalid = isMembersInvalid;
     vm.checkMemberDirtiness = checkMemberDirtiness;
     vm.userSelected = undefined;
-    vm.selectedHuntMembers = [];
+    vm.selectedHuntMembers = undefined;
     vm.openMemberPanelUuid = undefined;
 
     // Fallback destination controller functions
@@ -56,9 +56,10 @@
 
     if ($stateParams.feature && $stateParams.feature.id) {
       vm.hgId = $stateParams.feature.id;
+      vm.model.name = $stateParams.feature.cardName;
       init();
     } else {
-      $state.go('huronfeatures');
+      $state.go(vm.huronFeaturesUrl);
     }
 
     ////////////////
@@ -75,14 +76,13 @@
             });
 
             updateModal(pristineData, true);
-            initializeFields();
           });
         })
         .catch(function (error) {
           Notification.errorResponse(error, 'huronHuntGroup.huntGroupFetchFailure', {
             huntGroupName: vm.model.name
           });
-          $state.go('huronfeatures');
+          $state.go(vm.huronFeaturesUrl);
         });
     }
 
@@ -90,16 +90,24 @@
       HuntGroupFallbackDataService.reset(resetFromBackend);
       HuntGroupMemberDataService.reset(resetFromBackend);
 
-      vm.model = pristineData;
-      updatePilotNumbers(pristineData);
-
-      HuntGroupFallbackDataService.setFallbackDestinationJSON(
+      var fetchFallbackPromise = HuntGroupFallbackDataService.setFallbackDestinationJSON(
         pristineData.fallbackDestination, resetFromBackend);
-      HuntGroupMemberDataService.setMemberJSON(pristineData.members, resetFromBackend);
+      var fetchMemberPromise = HuntGroupMemberDataService.setMemberJSON(pristineData.members,
+        resetFromBackend);
 
-      vm.selectedHuntMembers = HuntGroupMemberDataService.getHuntMembers();
-      vm.selectedFallbackNumber = HuntGroupFallbackDataService.getFallbackNumber();
-      vm.selectedFallbackMember = HuntGroupFallbackDataService.getFallbackMember();
+      $q.all([fetchFallbackPromise, fetchMemberPromise]).then(function () {
+        vm.model = pristineData;
+        updatePilotNumbers(pristineData);
+        vm.selectedHuntMembers = HuntGroupMemberDataService.getHuntMembers();
+        vm.selectedFallbackNumber = HuntGroupFallbackDataService.getFallbackNumber();
+        vm.selectedFallbackMember = HuntGroupFallbackDataService.getFallbackMember();
+
+        if (resetFromBackend) {
+          initializeFields();
+        }
+      }, function () {
+        $state.go(vm.huronFeaturesUrl);
+      });
     }
 
     function updatePilotNumbers(pristineData) {

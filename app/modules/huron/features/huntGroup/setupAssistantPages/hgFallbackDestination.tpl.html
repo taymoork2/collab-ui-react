@@ -1,6 +1,7 @@
 <div>
   <div class="typeahead-large">
-    <input type="text" ng-model="huntGroupSA.selectedFallbackNumber" class="form-control"
+    <input type="text" ng-model="huntGroupSA.selectedFallbackNumber"
+           ng-class="{'error': huntGroupSA.isErrorFallbackInput()}"
            typeahead="user for user in huntGroupSA.fetchFallbackDestination($viewValue) | limitTo:10"
            typeahead-on-select="huntGroupSA.selectFallback($item)"
            typeahead-template-url="userTemplate.html"
@@ -36,7 +37,7 @@
                         id="number.uuid"
                         ng-model="huntGroupSA.selectedFallbackMember.member.selectableNumber"></cs-radio>
               <p>
-                <a href ng-click="huntGroupSA.removeFallbackDest()">Remove Member</a>
+                <a href ng-click="huntGroupSA.removeFallbackDest()">{{:: 'huronHuntGroup.remove' | translate}}</a>
               </p>
             </fieldset>
           </section>
