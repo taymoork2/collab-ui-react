@@ -6,7 +6,7 @@
 describe('Hunt Group EditCtrl Controller', function () {
 
   var hgEditCtrl, controller, $httpBackend, $rootScope, $scope, $q, $state, $stateParams, $timeout, Authinfo,
-    HuntGroupService, HuntGroupEditDataService, Notification, form;
+    HuntGroupService, HuntGroupEditDataService, HuntGroupMemberDataService, Notification, form;
   var hgFeature = getJSONFixture('huron/json/features/edit/featureDetails.json');
   var pilotNumbers = getJSONFixture('huron/json/features/edit/pilotNumbers.json');
   var GetMember1Url = new RegExp(".*/api/v2/customers/1/users/ba6c9d76-bed9-413f-a373-054a40df7095.*");
@@ -42,7 +42,7 @@ describe('Hunt Group EditCtrl Controller', function () {
   };
 
   beforeEach(inject(function (_$rootScope_, $controller, _$httpBackend_, _$q_, _$state_, _$timeout_, _Authinfo_,
-    _HuntGroupService_, _HuntGroupEditDataService_, _Notification_) {
+    _HuntGroupService_, _HuntGroupEditDataService_, _HuntGroupMemberDataService_, _Notification_) {
     controller = $controller;
     $scope = _$rootScope_.$new();
     $state = _$state_;
@@ -53,6 +53,8 @@ describe('Hunt Group EditCtrl Controller', function () {
     HuntGroupService = _HuntGroupService_;
     Notification = _Notification_;
     HuntGroupEditDataService = _HuntGroupEditDataService_;
+    HuntGroupMemberDataService = _HuntGroupMemberDataService_;
+
     var emptyForm = function () {
       return true;
     };
@@ -364,4 +366,53 @@ describe('Hunt Group EditCtrl Controller', function () {
     expect(Notification.errorResponse).toHaveBeenCalled();
   });
 
+  it('able to get the right order of members from member data services if there are' +
+    ' network delays fetching individual members asynchronously',
+    function () {
+      var member1 = {
+        uuid: user1.uuid,
+        displayUser: true,
+        user: user1,
+        selectableNumber: user1.numbers[0]
+      };
+
+      var member2 = {
+        uuid: user2.uuid,
+        displayUser: true,
+        user: user2,
+        selectableNumber: user2.numbers[0]
+      };
+
+      HuntGroupMemberDataService.reset(false); // removes all members.
+
+      // network responses came out of order:
+      // check setMemberJson -> getMemberAsynchronously
+      HuntGroupMemberDataService.selectMember(member2);
+      HuntGroupMemberDataService.selectMember(member1);
+
+      expect(
+        HuntGroupMemberDataService.getHuntMembers()[0].uuid).toEqual(member2.uuid);
+      expect(
+        HuntGroupMemberDataService.getHuntMembers()[1].uuid).toEqual(member1.uuid);
+
+      // this is the order that JSON expects in huntgroup:
+      var usersJSON = [{
+        "userName": user1.firstName + " " + user1.lastName,
+        "userUuid": user1.uuid,
+        "number": user1.numbers[0].number,
+        "numberUuid": user1.numbers[0].uuid
+      }, {
+        "userName": user2.firstName + " " + user2.lastName,
+        "userUuid": user2.uuid,
+        "number": user2.numbers[0].number,
+        "numberUuid": user2.numbers[0].uuid
+      }];
+
+      // rearrangeResponsesInSequence corrects the order:
+      HuntGroupMemberDataService.rearrangeResponsesInSequence(usersJSON);
+      expect(
+        HuntGroupMemberDataService.getHuntMembers()[0].uuid).toEqual(member1.uuid);
+      expect(
+        HuntGroupMemberDataService.getHuntMembers()[1].uuid).toEqual(member2.uuid);
+    });
 });

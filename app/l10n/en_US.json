@@ -483,6 +483,7 @@
     "searchForm": "Search Form",
     "search": "Search",
     "reset": "Reset",
+    "userLabel": "User UUID:",
     "number": "Number:",
     "device": "Device:",
     "callingParty": "Calling Party",
@@ -516,6 +517,8 @@
     "cdr401Unauthorized": "User not authorized to retrieve CDR records.",
     "cdrRecursiveError": "Record size requested too large to retrieve all related CDR data.  To retrieve data, lower the 'Hit Size' count and resubmit.",
     "required": "This field is required.",
+    "userUuidError": "Input User UUIDs only.",
+    "userUuidMatchError": "User UUIDs for the calling party and called party should not match.",
     "invalidDate": "End date should be the same day as, or any day after, the start date.",
     "tomorrowError": "Select today's date or any date before today's date.",
     "invalidTime": "Please follow 'hh:mm:ss AM/PM' format.  If 'AM/PM' is ommited, it will be assumed that 24-hour time is being used.",
@@ -2724,8 +2727,8 @@
   },
   "overview": {
     "pageTitle": "Overview",
-    "thisMonth": "This Month",
-    "lastMonth": "Last Month",
+    "thisMonth": "This month",
+    "lastMonth": "Last month:",
     "cards": {
       "users": {
         "title": "Users",
@@ -2736,7 +2739,10 @@
       },
       "message": {
         "title": "Message",
-        "desc": "Active Rooms"
+        "desc": "Active Rooms",
+        "currentTitle": "Active rooms this week",
+        "previousTitle": "Last week:"
+
       },
       "meeting": {
         "title": "Meeting",
@@ -2749,8 +2755,8 @@
       "roomSystem": {
         "title": "Room Systems",
         "desc": "Registered Systems",
-        "currentTitle": "Last 30 days",
-        "previousTitle": "Total"
+        "currentTitle": "Online this week",
+        "previousTitle": "Last week:"
       },
       "hybrid": {
         "title": "Hybrid Services"

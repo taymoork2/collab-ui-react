@@ -148,6 +148,16 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
     });
   });
 
+  describe('deleteCombinedMenu', function () {
+    it('should delete associated actionSet in a given ceRecord', function () {
+      ceWelcome2.callExperienceName = 'AA Option';
+      var _ceRecord = angular.copy(ceOption);
+      var deleteSuccess = AutoAttendantCeMenuModelService.deleteCombinedMenu(_ceRecord, 'regularOpenActions');
+      expect(deleteSuccess).toBe(true);
+      expect(_ceRecord.actionSets.length).toEqual(0);
+    });
+  });
+
   describe('newCeActionEntry', function () {
     it('should have get and set methods defined for each attribute and be cloned successfully', function () {
 

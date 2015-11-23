@@ -1,0 +1,92 @@
+<div class="cs-card-container">
+<cs-card-layout>
+  <cs-card class="full header-background"
+           id="{{infoCardObj.id}}-card"
+           name="{{infoCardObj.id}}-card">
+           
+    <article>
+      <header>
+        <h4>
+          {{infoCardObj.label}}
+        </h4>
+      </header>
+      
+      <section>
+        <div class="configure-card">
+          <div class="left-side">
+            <div class="service-name">
+              <img src="/images/webex_logo_48px.png" 
+                   class="webexlogo"
+                   id="webexLogo"
+                   name="webexLogo"
+                   alt="{{'webexCommon.logoAltText' | translate}}" />
+                
+              <span xml:lang="en">
+                WebEx
+              </span>
+            </div>
+          </div>
+          
+          <div class="right-side">                                                    
+            <div class="configure-card-heading" 
+                 translate="webexSiteSettingsLabels.hostAccountsTitle">
+            </div>
+            
+            <div class="configure-content">
+              <div class="text-center">
+                <div class="overview-count">
+                  {{infoCardObj.licensesUsage.count}}
+                </div>
+                
+                <div translate="webexSiteSettingsLabels.activeTitle"></div>
+              </div>
+                
+              <div class="text-center">
+                <div class="overview-count">
+                  {{infoCardObj.licensesAvailable.count}}
+                </div>
+                  
+                <div translate="webexSiteSettingsLabels.availableTitle"></div>
+              </div>
+                
+              <div  class="overview-icon text-center">
+                <a ui-sref={{infoCardObj.iframeLinkObj1.iframePageObj.uiSref}}
+                   href=""
+                   title={{infoCardObj.iframeLinkObj1.iframePageObj.label}}>
+                   
+                  <i class={{infoCardObj.iframeLinkObj1.iconClass}}></i>
+                </a>
+                
+                <a id={{infoCardObj.iframeLinkObj1.iframePageObj.id}}
+                   name={{infoCardObj.iframeLinkObj1.iframePageObj.id}}
+                   ui-sref={{infoCardObj.iframeLinkObj1.iframePageObj.uiSref}}
+                   href="">
+                    
+                  {{infoCardObj.iframeLinkObj1.iframePageObj.label}}
+                </a>
+              </div>
+              
+              <div  class="overview-icon text-center">
+                <a ui-sref={{infoCardObj.iframeLinkObj2.iframePageObj.uiSref}}
+                   href=""
+                   title={{infoCardObj.iframeLinkObj2.iframePageObj.label}}>
+                   
+                  <i class={{infoCardObj.iframeLinkObj2.iconClass}}></i>
+                </a>
+                
+                <a id={{infoCardObj.iframeLinkObj2.iframePageObj.id}}
+                   name={{infoCardObj.iframeLinkObj2.iframePageObj.id}}
+                   ui-sref={{infoCardObj.iframeLinkObj2.iframePageObj.uiSref}}
+                   href="">
+                  
+                  {{infoCardObj.iframeLinkObj2.iframePageObj.label}}                  
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </article>
+  </cs-card>
+</cs-card-layout>
+</div>

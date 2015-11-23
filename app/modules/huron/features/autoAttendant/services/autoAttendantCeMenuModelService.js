@@ -279,6 +279,7 @@
       updateMenu: updateMenu,
       updateCombinedMenu: updateCombinedMenu,
       deleteMenu: deleteMenu,
+      deleteCombinedMenu: deleteCombinedMenu,
 
       newCeMenu: function () {
         return new CeMenu();
@@ -751,7 +752,7 @@
       var len = aaActionArray.length;
       if (len > 0) {
         // if there is a custom menu or a main menu at the end of the action array,
-        // retain it and copy over. 
+        // retain it and copy over.
         for (var j = 0; j < len; j++) {
           if (angular.isDefined(aaActionArray[j].runCustomActions) ||
             (foundOptionMenu && angular.isDefined(aaActionArray[j].runActionsOnInput))) {
@@ -952,6 +953,31 @@
       if (i >= 0) {
         aaActionArray.splice(i, 1);
         return true;
+      }
+      return false;
+    }
+
+    /*
+     * actionSetName: 'regularOpenActions'
+     * ceRecord: a customer AA record
+     */
+    function deleteCombinedMenu(ceRecord, actionSetName) {
+
+      if (angular.isUndefined(actionSetName) || actionSetName === null) {
+        return false;
+      }
+
+      if (angular.isUndefined(ceRecord) || ceRecord === null) {
+        return false;
+      }
+
+      // get the action object of actionSetName
+      //
+      for (var i = 0; i < ceRecord.actionSets.length; i++) {
+        if (ceRecord.actionSets[i].name === actionSetName) {
+          ceRecord.actionSets.splice(i, 1);
+          return true;
+        }
       }
       return false;
     }

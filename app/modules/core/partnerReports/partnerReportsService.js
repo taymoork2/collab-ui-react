@@ -110,9 +110,9 @@
                 }
 
                 if (activeUsers !== 0 || totalRegisteredUsers !== 0) {
-                  var modifiedDate = moment.tz(item.date, timezone).add(1, 'day').format(monthFormat);
+                  var modifiedDate = moment.tz(item.date, timezone).format(monthFormat);
                   if (time.value === 0 || time.value === 1) {
-                    modifiedDate = moment.tz(item.date, timezone).add(1, 'day').format(dayFormat);
+                    modifiedDate = moment.tz(item.date, timezone).format(dayFormat);
                   }
 
                   graphData.push({
