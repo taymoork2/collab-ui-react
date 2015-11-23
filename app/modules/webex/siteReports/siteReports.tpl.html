@@ -1,11 +1,17 @@
 <div id="webexSiteReports"
      name="webexSiteReports"
-     class="cs-card-container multiple-layouts" 
-     ng-if="webexReportsObject.viewReady"  >
-     
-  <cs-card-layout class="third" >
-    <div ng-repeat="sec in webexReportsObject.reports.sections">
-        <cs-card class="full header-bar"  ng-if="$index === 0">
+     ng-if="webexReportsObject.viewReady">
+  
+  <!--
+  <div ng-include="'modules/webex/views/infoCard.tpl.html'"></div>
+  -->
+
+  <div class="cs-card-container multiple-layouts">
+    <cs-card-layout class="third" >
+      <div ng-repeat="sec in webexReportsObject.reports.sections">
+        <cs-card class="full header-bar"  
+                 ng-if="$index === 0">
+                 
           <article>
             <header id={{sec.section_name}}
                     name={{sec.section_name}}
@@ -17,11 +23,13 @@
             </header>
 
             <section id="siteSettingsCardSection">
-              <ul class="no-bullet" title="{{sec.section_name_translated}}">
+              <ul class="no-bullet" 
+                  title={{sec.section_name_translated}}>
+                  
                 <li ng-repeat="sref in sec.uisrefs">
-                  <a id="{{sref.reportPageId}}"
-                     name="{{sref.reportPageId}}"
-                     ui-sref="{{sref.uisrefString}}">
+                  <a id={{sref.reportPageId}}
+                     name={{sref.reportPageId}}
+                     ui-sref={{sref.uisrefString}}>
 
                     {{sref.reportPageId_translated}}
                   </a>
@@ -30,21 +38,28 @@
             </section>
           </article>
         </cs-card>
-        </div>
+      </div>
     </cs-card-layout>
+    
     <cs-card-layout class="two-thirds">
-        <div ng-repeat="sec in webexReportsObject.reports.sections">
-        <cs-card class="large" ng-if="$index != 0">
+      <div ng-repeat="sec in webexReportsObject.reports.sections">
+        <cs-card class="large" 
+                 ng-if="$index != 0">
+                 
           <article>
             <header id={{sec.section_name}}
-                  name={{sec.section_name}}
-                  class="no-bullet">
-              <h3 xml:lang="{{sec.lang}}">
+                    name={{sec.section_name}}
+                    class="no-bullet">
+                    
+              <h3 xml:lang={{sec.lang}}>
                 {{sec.section_name_translated}}
               </h3>
             </header>
+            
             <section id="siteSettingsCardSection">
-              <ul class="no-bullet" title="{{sec.section_name_translated}}">
+              <ul class="no-bullet" 
+                  title="{{sec.section_name_translated}}">
+                  
                 <li ng-repeat="sref in sec.uisrefs">
                   <a id="{{sref.reportPageId}}"
                      name="{{sref.reportPageId}}"
@@ -52,26 +67,31 @@
 
                     {{sref.reportPageId_translated}}
                   </a>
-                  </li>
+                </li>
 
-                  <h4 ng-repeat-start="s in sec.subsections" id="{{s.section_name}}"
-                      name="{{s.section_name}}" xml:lang="{{s.lang}}">
-                   {{s.section_name_translated}}
-                  </h4>
-                  <li ng-repeat="sref in s.uisrefs">
-                    <a id="{{sref.reportPageId}}"
-                       name="{{sref.reportPageId}}"
-                       ui-sref="{{sref.uisrefString}}">
+                <h4 ng-repeat-start="s in sec.subsections" 
+                    id={{s.section_name}}
+                    name={{s.section_name}} 
+                    xml:lang={{s.lang}}>
+                    
+                  {{s.section_name_translated}}
+                </h4>
+                
+                <li ng-repeat="sref in s.uisrefs">
+                  <a id="{{sref.reportPageId}}"
+                     name="{{sref.reportPageId}}"
+                     ui-sref="{{sref.uisrefString}}">
 
-                      {{sref.reportPageId_translated}}
-                    </a>
-                    </li>
-                    <div hidden ng-repeat-end style="display: none;"></div>
+                    {{sref.reportPageId_translated}}
+                  </a>
+                </li>
+                
+                <div hidden ng-repeat-end style="display: none;"></div>
               </ul>
             </section>
           </article>
         </cs-card>
-        </div>
+      </div>
     </cs-card-layout>
-    </div>
+  </div>
 </div>

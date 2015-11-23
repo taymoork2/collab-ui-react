@@ -30,7 +30,8 @@
       setMemberJSON: setMemberJSON,
       getHuntMembers: getHuntMembers,
       isMemberDirty: isMemberDirty,
-      setAsPristine: setAsPristine
+      setAsPristine: setAsPristine,
+      rearrangeResponsesInSequence: rearrangeResponsesInSequence // elevated for unit testing
     };
 
     ////////////////
@@ -63,6 +64,21 @@
       });
     }
 
+    function rearrangeResponsesInSequence(users) {
+      var tempArray = angular.copy(selectedHuntMembers);
+      selectedHuntMembers.splice(0, selectedHuntMembers.length);
+
+      users.forEach(function (user) {
+        tempArray.some(function (u) {
+          var found = (user.userUuid === u.uuid);
+          if (found) {
+            selectedHuntMembers.push(u);
+          }
+          return found;
+        });
+      });
+    }
+
     /**
      * Given hunt members "members" field JSON received from
      * GET /huntgroups/{id} initialize the data model for the UI
@@ -80,6 +96,13 @@
         });
 
         $q.all(promises).then(function () {
+          /**
+           * Rearrange responses in the right order as it is found in
+           * parameter json. Note that members are fetched asynchronously,
+           * so there is no conformance that responses will be sequentially
+           * aligned.
+           */
+          rearrangeResponsesInSequence(users);
           pristineSelectedHuntMembers = angular.copy(selectedHuntMembers);
           asyncTask.resolve(selectedHuntMembers);
         }, memberFailureResponse(asyncTask));
