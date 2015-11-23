@@ -24,7 +24,7 @@
         return deferred.promise;
       }
       return $http
-        .get(urlBase + 'helpdesk/search/users?phrase=' + searchString + '&limit=5' + (orgId ? '&orgId=' + orgId : ''))
+        .get(urlBase + 'helpdesk/search/users?phrase=' + encodeURIComponent(searchString) + '&limit=5' + (orgId ? '&orgId=' + encodeURIComponent(orgId) : ''))
         .then(extractItems);
     }
 
@@ -35,13 +35,13 @@
         return deferred.promise;
       }
       return $http
-        .get(urlBase + 'helpdesk/search/organizations?phrase=' + searchString + '&limit=5')
+        .get(urlBase + 'helpdesk/search/organizations?phrase=' + encodeURIComponent(searchString) + '&limit=5')
         .then(extractItems);
     }
 
     function getUser(orgId, userId) {
       return $http
-        .get(urlBase + 'helpdesk/organizations/' + orgId + '/users/' + userId)
+        .get(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId) + '/users/' + encodeURIComponent(userId))
         .then(extractUserAndSetUserStatuses);
     }
 
@@ -52,7 +52,7 @@
         return deferred.promise;
       }
       return $http
-        .get(urlBase + 'helpdesk/organizations/' + orgId)
+        .get(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId))
         .then(extractData);
     }
 
@@ -72,7 +72,7 @@
         return deferred.promise;
       }
       return $http
-        .get(CsdmConfigService.getUrl() + '/organization/' + orgId + '/devices?checkOnline=false&isHelpDesk=true')
+        .get(CsdmConfigService.getUrl() + '/organization/' + encodeURIComponent(orgId) + '/devices?checkOnline=false&isHelpDesk=true')
         .then(function (res) {
           return filterDevices(searchString, CsdmConverter.convertDevices(res.data));
         });
