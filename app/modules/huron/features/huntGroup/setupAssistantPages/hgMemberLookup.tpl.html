@@ -11,7 +11,8 @@
 
 <div class="hunt-member-lookup">
   <div class="typeahead-large">
-    <input id="userInput" type="text" ng-model="huntGroupSA.userSelected" class="form-control"
+    <input id="userInput" type="text" ng-model="huntGroupSA.userSelected"
+           ng-class="{'error': huntGroupSA.errorMemberInput}"
            typeahead="user for user in huntGroupSA.fetchHuntMembers($viewValue) | limitTo:10"
            typeahead-on-select="huntGroupSA.selectHuntGroupMember($item)"
            typeahead-template-url="userTemplate.html"
@@ -46,7 +47,7 @@
                       id="number.uuid"
                       ng-model="member.selectableNumber"></cs-radio>
             <p>
-              <a href ng-click="huntGroupSA.unSelectHuntGroupMember(member)">Remove Member</a>
+              <a href ng-click="huntGroupSA.unSelectHuntGroupMember(member)">{{:: 'huronHuntGroup.removeMem' | translate}}</a>
             </p>
           </fieldset>
         </section>

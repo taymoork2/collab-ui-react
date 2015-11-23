@@ -6,7 +6,7 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($scope, Log, $translate, $state, ReportsService, Orgservice, CsdmDeviceService, Config) {
+  function OverviewCtrl($scope, Log, Authinfo, $translate, $state, ReportsService, Orgservice, ServiceDescriptor, Config) {
     var vm = this;
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
@@ -18,7 +18,16 @@
       new RoomSystemCard()
     ];
 
+    var licenses = Authinfo.getLicenses();
+
+    _.each(vm.cards, function (card) {
+      if (card.licenseEventHandler) {
+        card.licenseEventHandler(licenses);
+      }
+    });
+
     vm.userCard = new UserCard();
+    vm.hybridCard = new HybridServicesCard();
 
     vm.statusPageUrl = Config.getStatusPageUrl();
 
@@ -26,11 +35,11 @@
       $state.go('users.convert', {});
     };
 
-    _.each(['callsLoaded', 'conversationsLoaded'], function (eventType) {
+    _.each(['oneOnOneCallsLoaded', 'groupCallsLoaded', 'conversationsLoaded', 'activeRoomsLoaded'], function (eventType) {
       $scope.$on(eventType, function (event, response) {
         _.each(vm.cards, function (card) {
-          if (card.eventHandler) {
-            card.eventHandler(event, response);
+          if (card.reportDataEventHandler) {
+            card.reportDataEventHandler(event, response);
           }
         });
       });
@@ -39,17 +48,7 @@
     ReportsService.getOverviewMetrics(true);
 
     Orgservice.getOrg(vm.userCard.orgEventHandler);
-    Orgservice.getUnlicensedUsers(vm.userCard.unlicencedUsersHandler);
-
-    CsdmDeviceService.on('data', function (data) {
-      _.each(vm.cards, function (card) {
-        if (card.deviceUpdateEventHandler) {
-          card.deviceUpdateEventHandler(data);
-        }
-      });
-    }, {
-      scope: $scope
-    });
+    Orgservice.getUnlicensedUsers(vm.userCard.unlicensedUsersHandler);
 
     ReportsService.healthMonitor(function (data, status) {
       if (data.success) {
@@ -62,6 +61,34 @@
         Log.error("Get health status failed. Status: " + status);
       }
     });
+
+    ServiceDescriptor.services(function (err, services) {
+      if (!err) {
+        if (vm.hybridCard.hybridStatusEventHandler) {
+          vm.hybridCard.hybridStatusEventHandler(services);
+        }
+      }
+    });
+
+    vm.isCalendarAcknowledged = true;
+    vm.isCallAcknowledged = true;
+
+    Orgservice.getHybridServiceAcknowledged().then(function (response) {
+      if (response.status === 200 && response.data.items) {
+        vm.isCalendarAcknowledged = !!_.chain(response.data.items).find({
+          id: 'sqared-fusion-cal'
+        }).get('acknowledged', true).value();
+        vm.isCallAcknowledged = !!_.chain(response.data.items).find({
+          id: 'sqared-fusion-uc'
+        }).get('acknowledged', true).value();
+      } else {
+        Log.error("Error in GET service acknowledged status");
+      }
+    });
+
+    vm.setupNotDone = function () {
+      return !!(!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin());
+    };
   }
 
   function mapStatus(oldStatus, componentStatus) {
@@ -84,31 +111,61 @@
     this.icon = 'icon-circle-message';
     this.desc = 'overview.cards.message.desc';
     this.name = 'overview.cards.message.title';
-    this.eventHandler = messageEventHandler;
-    this.healthStatusUpdatedHandler = messageHealthEventHandler;
+    this.currentTitle = 'overview.cards.message.currentTitle';
+    this.previousTitle = 'overview.cards.message.previousTitle';
+    this.trial = false;
 
-    function messageEventHandler(event, response) {
+    this.reportDataEventHandler = function (event, response) {
+
       if (!response.data.success) return;
-      if (event.name == 'conversationsLoaded' && response.data.spanType == 'month' && response.data.intervalCount >= 2) {
-        card.current = Math.round(response.data.data[0].count);
-        card.previous = Math.round(response.data.data[1].count);
+      if (event.name == 'conversationsLoaded' && response.data.spanType == 'week' && response.data.intervalCount >= 2) {
+        card.current = Math.round(response.data.data[response.data.data.length - 1].count);
+        card.previous = Math.round(response.data.data[response.data.data.length - 2].count);
       }
-    }
+    };
 
-    function messageHealthEventHandler(data) {
+    this.healthStatusUpdatedHandler = function messageHealthEventHandler(data) {
       _.each(data.components, function (component) {
         if (component.name == 'Mobile Clients' || component.name == 'Rooms' || component.name == 'Web and Desktop Clients') {
           card.healthStatus = mapStatus(card.healthStatus, component.status);
         }
       });
-    }
+    };
+
+    this.licenseEventHandler = function (licenses) {
+      card.trial = _.any(licenses, {
+        'offerName': 'MS',
+        'isTrial': true
+      });
+    };
   }
 
   function MeetingCard() {
+    var card = this;
     this.icon = 'icon-circle-group';
     this.desc = 'overview.cards.meeting.desc';
     this.name = 'overview.cards.meeting.title';
-    this.healthStatusUpdatedHandler = _.partial(meeetingHealthEventHandler, this);
+    this.cardClass = 'meetings';
+    this.trial = false;
+    this.settingsUrl = '#/site-list';
+    this.healthStatusUpdatedHandler = _.partial(meeetingHealthEventHandler, card);
+
+    this.reportDataEventHandler = function (event, response) {
+      if (!response.data.success) return;
+      if (event.name == 'groupCallsLoaded' && response.data.spanType == 'month' && response.data.intervalCount >= 2) {
+        card.current = Math.round(response.data.data[response.data.data.length - 1].count);
+        card.previous = Math.round(response.data.data[response.data.data.length - 2].count);
+      }
+    };
+
+    this.licenseEventHandler = function (licenses) {
+      card.trial = _.any(licenses, function (l) {
+        return (
+          l.offerName == 'CF' ||
+          l.offerName == 'EE' ||
+          l.offerName == 'MC') && l.isTrial;
+      }); //list: https://sqbu-github.cisco.com/WebExSquared/wx2-admin-service/blob/master/common/src/main/java/com/cisco/wx2/atlas/common/bean/order/OfferCode.java
+    };
   }
 
   function CallCard() {
@@ -116,16 +173,17 @@
     this.icon = 'icon-circle-call';
     this.desc = 'overview.cards.call.desc';
     this.name = 'overview.cards.call.title';
+    this.cardClass = 'people';
+    this.trial = false;
+    this.settingsUrl = '#/hurondetails/settings';
     this.healthStatusUpdatedHandler = _.partial(meeetingHealthEventHandler, card);
-    this.eventHandler = callEventHandler;
-
-    function callEventHandler(event, response) {
+    this.reportDataEventHandler = function (event, response) {
       if (!response.data.success) return;
-      if (event.name == 'callsLoaded' && response.data.spanType == 'month' && response.data.intervalCount >= 2) {
-        card.current = Math.round(response.data.data[0].count);
-        card.previous = Math.round(response.data.data[1].count);
+      if (event.name == 'oneOnOneCallsLoaded' && response.data.spanType == 'month' && response.data.intervalCount >= 2) {
+        card.current = Math.round(response.data.data[response.data.data.length - 1].count);
+        card.previous = Math.round(response.data.data[response.data.data.length - 2].count);
       }
-    }
+    };
   }
 
   function RoomSystemCard() {
@@ -133,40 +191,62 @@
     this.icon = 'icon-circle-telepresence';
     this.desc = 'overview.cards.roomSystem.desc';
     this.name = 'overview.cards.roomSystem.title';
+    this.cardClass = 'gray';
     this.currentTitle = 'overview.cards.roomSystem.currentTitle';
     this.previousTitle = 'overview.cards.roomSystem.previousTitle';
     this.settingsUrl = '#/devices';
-    this.deviceUpdateEventHandler = deviceUpdateEventHandler;
 
-    function deviceUpdateEventHandler(response) {
-      if (response.data) {
-        card.current = _.size(response.data);
-        var last30Days = new Date(new Date().getTime() - (1000 * 60 * 60 * 24 * 30));
-        var filteredRes = _.filter(response.data, function (value, key) {
-          return new Date(value.createTime) > last30Days;
-        });
-        card.previous = _.size(filteredRes);
+    this.healthStatusUpdatedHandler = function roomSystemHealthEventHandler(data) {
+      var room = _.find(data.components, {
+        name: 'Rooms'
+      });
+      if (room) {
+        card.healthStatus = mapStatus(card.healthStatus, room.status);
       }
-    }
+    };
+
+    this.reportDataEventHandler = function (event, response) {
+
+      if (!response.data.success) return;
+      if (event.name == 'activeRoomsLoaded' && response.data.spanType == 'week' && response.data.intervalCount >= 2) {
+        card.current = Math.round(response.data.data[response.data.data.length - 1].count);
+        card.previous = Math.round(response.data.data[response.data.data.length - 2].count);
+      }
+    };
+
+    this.licenseEventHandler = function (licenses) {
+      card.trial = _.any(licenses, {
+        'offerName': 'SD',
+        'isTrial': true
+      }); //SD = Shared Devices
+    };
   }
 
   function UserCard() {
     var card = this;
-    this.orgEventHandler = orgEventHandler;
-    this.unlicencedUsersHandler = unlicencedUsersHandler;
 
-    function unlicencedUsersHandler(data) {
-      if (data.success && data.resources) {
-        card.usersToConvert = data.resources.length; // for now use the length to get the count as there is a bug in CI and totalResults is not accurate.
+    this.unlicensedUsersHandler = function (data) {
+      if (data.success) {
+        card.usersToConvert = (data.resources || []).length; // for now use the length to get the count as there is a bug in CI and totalResults is not accurate.
       }
-    }
+    };
 
-    function orgEventHandler(data) {
+    this.orgEventHandler = function (data) {
       if (data.success) {
         card.ssoEnabled = data.ssoEnabled || false;
         card.dirsyncEnabled = data.dirsyncEnabled || false;
       }
-    }
+    };
   }
 
+  function HybridServicesCard() {
+    var card = this;
+    this.icon = 'icon-circle-data';
+    this.hybridStatusEventHandler = function (services) {
+      _.each(services, function (service) {
+        service.statusIcon = !service.enabled || !service.acknowledged ? 'warning' : 'success';
+      });
+      card.services = services;
+    };
+  }
 })();
