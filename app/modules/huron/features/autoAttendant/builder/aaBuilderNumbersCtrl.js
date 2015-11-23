@@ -116,6 +116,10 @@
       AANumberAssignmentService.setAANumberAssignment(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources).then(
 
         function (response) {
+
+          sortAssignedResources(resources);
+
+        function (response) {
           sortAssignedResources(resources);
         },
         function (response) {
