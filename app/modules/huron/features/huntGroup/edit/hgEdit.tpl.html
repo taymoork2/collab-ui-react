@@ -45,12 +45,14 @@
           <div class="clearfix">
             <div class="small header-background primary cs-card hunt-member-card">
               <article>
-                <header ng-click="hge.toggleFallback()">
-                  <div class="header-with-right-icon">
-                    <h5 class="ellipsis">{{hge.getDisplayName(hge.selectedFallbackMember.member.user)}}</h5>
-                    <i class="icon icon-chevron-down"></i>
-                  </div>
-                </header>
+                <a href ng-click="hge.toggleFallback()">
+                  <header>
+                    <div class="header-with-right-icon">
+                      <h5 class="ellipsis">{{hge.getDisplayName(hge.selectedFallbackMember.member.user)}}</h5>
+                      <i class="icon icon-chevron-down"></i>
+                    </div>
+                  </header>
+                </a>
                 <section ng-if="hge.selectedFallbackMember.openPanel">
                   <p class="email">{{hge.selectedFallbackMember.member.user.email}}
                   <fieldset>
@@ -118,18 +120,19 @@
           </div>
           <p>{{:: 'huronHuntGroup.membersDesc' | translate}}</p>
           <div drop-list="hge.selectedHuntMembers" callback="hge.callback()" unique="uuid">
-            <div ng-repeat="member in hge.selectedHuntMembers" drag-drop draggable="member" class="clearfix hgmember">
+            <div ng-repeat="member in hge.selectedHuntMembers"
+                 drag-drop draggable="member" class="clearfix hgmember"
+                 on-enter-key="hge.toggleMemberPanel(member.user)">
               <div class="small header-background primary cs-card hunt-member-card" class="large header-background primary">
                 <article>
-                  <header ng-click="hge.toggleMemberPanel(member.user)"
-                          ng-class="{'open-panel' : hge.openMemberPanelUuid === member.user.uuid}">
+                  <header ng-class="{'open-panel' : hge.openMemberPanelUuid === member.user.uuid}">
                     <div class="header-with-right-icon">
                       <h5 class="ellipsis"
                           title="{{hge.getDisplayName(member.user)}}">
                         {{hge.getDisplayName(member.user)}}</h5>
-                        <span dropdown>
-                          <i class="icon icon-chevron-down icon-lg"></i>
-                        </span>
+                      <span dropdown>
+                        <i class="icon icon-chevron-down icon-lg"></i>
+                      </span>
                     </div>
                   </header>
                   <section ng-if="(hge.openMemberPanelUuid === member.user.uuid)">
