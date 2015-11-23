@@ -32,6 +32,14 @@
         <div ng-repeat="entitlement in helpdeskUserCtrl.meeting.entitlements">
           <span>{{entitlement}}</span>
         </div>
+
+        <div ng-if="helpdeskUserCtrl.user.trainSiteNames && helpdeskUserCtrl.user.trainSiteNames.length > 0">
+          <h5 translate="helpdesk.webexsites"></h5>
+
+          <div ng-repeat="webExSiteName in helpdeskUserCtrl.user.trainSiteNames">
+            <span>{{webExSiteName}}</span>
+          </div>
+        </div>
       </section>
       <footer></footer>
     </article>

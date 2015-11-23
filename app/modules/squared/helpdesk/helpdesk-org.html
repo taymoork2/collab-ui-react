@@ -15,7 +15,7 @@
       <h3>{{helpdeskOrgCtrl.org.displayName}}</h3>
 
 
-      <div class="row">
+      <div class="row" ng-if="helpdeskOrgCtrl.org.email">
         <div class="large-5 columns">
           <p>Contact:</p>
         </div>
@@ -32,6 +32,7 @@
           <span ng-repeat="domain in helpdeskOrgCtrl.org.domains">
             {{domain}}{{$last ? '' : ', '}}
           </span>
+          <span ng-if="!helpdeskOrgCtrl.org.domains" translate="helpdesk.none"></span>
         </div>
       </div>
 

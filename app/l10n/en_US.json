@@ -2820,6 +2820,7 @@
     },
     "entitlementsHeading": "Entitlements",
     "enabledServices": "Enabled Services",
-    "none": "None"
+    "none": "None",
+    "webexsites": "WebEx Sites"
   }
 }
