@@ -1020,12 +1020,13 @@ angular
           }
         })
         .state('helpdesk.org', {
-          url: '/org',
+          url: '/org/:id',
           templateUrl: 'modules/squared/helpdesk/helpdesk-org.html',
           controller: 'HelpdeskOrgController',
           controllerAs: 'helpdeskOrgCtrl',
           params: {
-            org: null
+            org: null,
+            id: null
           }
         });
     }

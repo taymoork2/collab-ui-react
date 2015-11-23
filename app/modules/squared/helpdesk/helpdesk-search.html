@@ -84,7 +84,7 @@
 
         <cs-card-layout ng-if="helpdeskCtrl.currentSearch.orgSearchResults.length > 0">
           <cs-card class="full" ng-repeat="org in helpdeskCtrl.currentSearch.orgSearchResults">
-            <article tabindex="{{$index + 1}}" ui-sref="helpdesk.org({org:org})">
+            <article tabindex="{{$index + 1}}" ui-sref="helpdesk.org({org:org, id: org.id})">
               <header>
                 <h5>
                   {{org.displayName}}
@@ -94,7 +94,7 @@
               </header>
               <section class="card-section">
               </section>
-              <section class="clickable-area" ui-sref="helpdesk.org({org:org})"></section>
+              <section class="clickable-area" ui-sref="helpdesk.org({org:org, id: org.id})"></section>
             </article>
           </cs-card>
         </cs-card-layout>
