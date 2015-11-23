@@ -72,11 +72,11 @@
 
         elem.on('keydown', function (event) {
           scope.$apply(function () {
-            if(event.keyCode === 13 && event.target === event.currentTarget) {
+            if (event.keyCode === 13 && event.target === event.currentTarget) {
               scope.onEnterKey();
-            } else if(event.keyCode === 38 && event.target !== event.currentTarget) {
+            } else if (event.keyCode === 38 && event.target !== event.currentTarget) {
               event.stopPropagation();
-            } else if(event.keyCode === 40 && event.target !== event.currentTarget) {
+            } else if (event.keyCode === 40 && event.target !== event.currentTarget) {
               event.stopPropagation();
             }
           });
