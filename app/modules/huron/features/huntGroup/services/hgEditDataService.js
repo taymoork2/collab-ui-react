@@ -14,8 +14,7 @@
   /* @ngInject */
 
   function HuntGroupEditDataService(HuntGroupService, HuntGroupMemberDataService,
-    HuntGroupFallbackDataService,
-    Notification, $q) {
+    HuntGroupFallbackDataService, TelephoneNumberService, Notification, $q) {
 
     var pristineHGData = {};
 
@@ -78,12 +77,23 @@
       };
     }
 
+    function updatePilotNumberType(updatedHG) {
+      updatedHG.numbers.forEach(function (n) {
+        if (TelephoneNumberService.validateDID(n.number)) {
+          n.type = HuntGroupService.NUMBER_FORMAT_DIRECT_LINE;
+        } else {
+          n.type = HuntGroupService.NUMBER_FORMAT_EXTENSION;
+        }
+      });
+    }
+
     function reset() {
       pristineHGData = {};
     }
 
     function fetchHuntGroup(customerId, hgId) {
       return HuntGroupService.getDetails(customerId, hgId).then(function (backendData) {
+        updatePilotNumberType(backendData);
         updateAllTimeoutFields(backendData);
         pristineHGData = backendData;
         return getPristine();

@@ -4,17 +4,66 @@
   angular.module('WebExUtils').factory('WebExUtilsFact', [
     '$q',
     '$log',
+    'Authinfo',
+    'Orgservice',
     'WebExXmlApiFact',
     'WebExXmlApiInfoSvc',
-    'Authinfo',
-    function (
+    function webexUtilsFact(
       $q,
       $log,
+      Authinfo,
+      Orgservice,
       WebExXmlApiFact,
-      webExXmlApiInfoObj,
-      Authinfo
+      webExXmlApiInfoObj
     ) {
       var obj = {};
+
+      obj.getSiteName = function (siteUrl) {
+        var index = siteUrl.indexOf(".");
+        var siteName = siteUrl.slice(0, index);
+
+        return siteName;
+      }; // getSiteName()
+
+      obj.getNewInfoCardObj = function (
+        label,
+        iconClass1,
+        iconClass2
+      ) {
+
+        var infoCardObj = {
+          id: "SiteInfo",
+          label: label,
+
+          licensesTotal: {
+            id: "licensesTotal",
+            count: "---"
+          },
+
+          licensesUsage: {
+            id: "licensesUsage",
+            count: "---"
+          },
+
+          licensesAvailable: {
+            id: "licensesAvailable",
+            count: "---"
+          },
+
+          iframeLinkObj1: {
+            iconClass: iconClass1,
+            iframePageObj: null,
+          },
+
+          iframeLinkObj2: {
+            iconClass: iconClass2,
+            iframePageObj: null,
+          },
+        };
+
+        return infoCardObj;
+
+      }; // getNewInfoObj()
 
       obj.validateXmlData = function (
         commentText,
@@ -126,13 +175,6 @@
         return adminPagesInfo;
       }; // validateAdminPagesInfoXmlData()
 
-      obj.getSiteName = function (siteUrl) {
-        var index = siteUrl.indexOf(".");
-        var siteName = siteUrl.slice(0, index);
-
-        return siteName;
-      }; // getSiteName()
-
       obj.getSiteVersion = function (siteVersionJsonObj) {
         var funcName = "getSiteVersion()";
         var logMsg = "";
@@ -160,8 +202,66 @@
         return trainReleaseJson;
       }; // getSiteVersion()
 
+      obj.getWebexLicenseInfo = function (siteUrl) {
+        var deferredGetWebexLicenseInfo = $q.defer();
+
+        Orgservice.getValidLicenses().then(
+          function getValidLicensesSuccess(licenses) {
+            var funcName = "getValidLicensesSuccess()";
+            var logMsg = "";
+
+            logMsg = funcName + ": " + "\n" +
+              "licenses=" + JSON.stringify(licenses);
+            $log.log(logMsg);
+
+            var licenseInfo = null;
+
+            licenses.forEach(
+              function checkLicense(license) {
+                logMsg = funcName + ": " + "\n" +
+                  "license=" + JSON.stringify(license);
+                // $log.log(logMsg);
+
+                if (
+                  ("CONFERENCING" == license.licenseType) &&
+                  (0 <= license.licenseId.indexOf(siteUrl))
+                ) {
+
+                  var licenseVolume = license.volume;
+                  var licenseUsage = license.usage;
+                  var licensesAvailable = licenseVolume - licenseUsage;
+
+                  licenseInfo = {
+                    volume: licenseVolume,
+                    usage: licenseUsage,
+                    available: licensesAvailable
+                  };
+
+                  deferredGetWebexLicenseInfo.resolve(licenseInfo);
+                }
+              } // checkLicense()
+            ); // licenses.forEach()
+
+            deferredGetWebexLicenseInfo.reject(licenseInfo);
+          }, // getValidLicensesSuccess()
+
+          function getValidLicensesError(info) {
+            var funcName = "getValidLicensesError()";
+            var logMsg = "";
+
+            logMsg = funcName + ": " + "\n" +
+              "info=" + JSON.stringify(info);
+            $log.log(logMsg);
+
+            deferredGetWebexLicenseInfo.reject(info);
+          } // getValidLicensesError()
+        ); // Orgservice.getValidLicenses().then()
+
+        return deferredGetWebexLicenseInfo.promise;
+      }; // getWebexLicenseInfo()
+
       obj.isSiteSupportsIframe = function (siteUrl) {
-        var deferred = $q.defer();
+        var deferredIsSiteSupportsIframe = $q.defer();
 
         getSessionTicket().then(
           function getSessionTicketSuccess(response) {
@@ -188,7 +288,7 @@
                   "result=" + JSON.stringify(result);
                 $log.log(logMsg);
 
-                deferred.resolve(result);
+                deferredIsSiteSupportsIframe.resolve(result);
               }, // getSiteDataSuccess()
 
               function getSiteDataError(response) {
@@ -196,6 +296,7 @@
                 var logMsg = "";
 
                 var result = {
+                  siteUrl: siteUrl,
                   error: "getSiteDataError",
                   response: response
                 };
@@ -205,7 +306,7 @@
                   "result=" + JSON.stringify(result);
                 $log.log(logMsg);
 
-                deferred.reject(result);
+                deferredIsSiteSupportsIframe.reject(result);
               } // getSiteDataError()
             ); // getSiteData().then
           }, // getSessionTicketSuccess()
@@ -225,7 +326,7 @@
               "result=" + JSON.stringify(result);
             $log.log(logMsg);
 
-            deferred.reject(result);
+            deferredIsSiteSupportsIframe.reject(result);
           } // getSessionTicketError()
         ); // getSessionTicket(siteUrl).then()
 
@@ -282,10 +383,10 @@
           return isAdminReportEnabled;
         } // isAdminReportEnabledCheck()
 
-        return deferred.promise;
-      };
+        return deferredIsSiteSupportsIframe.promise;
+      }; // isSiteSupportsIframe()
 
       return obj;
-    }
+    } // webexUtilsFact()
   ]);
 })();
