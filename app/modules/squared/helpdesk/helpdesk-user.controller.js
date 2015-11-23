@@ -35,11 +35,10 @@
       }
     };
 
-
     HelpdeskService.getUser(orgId, userId).then(function (res) {
       vm.user = res;
       reviewEntitlementsAndLicenses();
-      vm.resendInviteEnabled = _.includes(user.statuses, 'pending');
+      vm.resendInviteEnabled = _.includes(vm.user.statuses, 'pending');
     }, function (err) {
       XhrNotificationService.notify(err);
     });
@@ -98,15 +97,15 @@
           _.each(statuses, function (status) {
             status.collapsedState = USSService2.decorateWithStatus(status);
             switch (status.serviceId) {
-              case 'squared-fusion-cal':
-                vm.hybrid.cal.status = status;
-                break;
-              case 'squared-fusion-uc':
-                vm.hybrid.uc.status = status;
-                break;
-              case 'squared-fusion-ec':
-                vm.hybrid.ec.status = status;
-                break;
+            case 'squared-fusion-cal':
+              vm.hybrid.cal.status = status;
+              break;
+            case 'squared-fusion-uc':
+              vm.hybrid.uc.status = status;
+              break;
+            case 'squared-fusion-ec':
+              vm.hybrid.ec.status = status;
+              break;
             }
           });
         }, function (err) {

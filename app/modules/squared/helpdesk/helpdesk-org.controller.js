@@ -16,8 +16,9 @@
 
     if (hasEntitlement(Config.entitlements.fusion_mgmt)) {
       HelpdeskService.getHybridServices(vm.orgId).then(function (services) {
-        console.log(services);
-        vm.enabledHybridServices = _.filter(services, {enabled: true});
+        vm.enabledHybridServices = _.filter(services, {
+          enabled: true
+        });
       }, function (err) {
         XhrNotificationService.notify(err);
       });
