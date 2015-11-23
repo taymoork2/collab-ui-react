@@ -22,7 +22,6 @@ angular.module('Core')
       $scope.isCalendarAcknowledged = true;
       $scope.isCallAwareAcknowledged = true;
       $scope.isCallConnectAcknowledged = true;
-      var extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-uc', 'squared-fusion-ec'];
 
       $scope.currentDate = moment().subtract(1, 'months').format('LL');
       var weekOf = $translate.instant('reports.weekOf');
@@ -270,11 +269,11 @@ angular.module('Core')
         Orgservice.getHybridServiceAcknowledged().then(function (response) {
           if (response.status === 200) {
             angular.forEach(response.data.items, function (items) {
-              if (items.id === extensionEntitlements[0]) {
+              if (items.id === Config.entitlements.fusion_cal) {
                 $scope.isCalendarAcknowledged = items.acknowledged;
-              } else if (items.id === extensionEntitlements[1]) {
+              } else if (items.id === Config.entitlements.fusion_uc) {
                 $scope.isCallAwareAcknowledged = items.acknowledged;
-              } else if (items.id === extensionEntitlements[2]) {
+              } else if (items.id === Config.entitlements.fusion_ec) {
                 $scope.isCallConnectAcknowledged = items.acknowledged;
               }
             });

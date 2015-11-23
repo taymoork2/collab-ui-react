@@ -646,7 +646,7 @@
     "spark": "Spark",
     "sso": "Single Sign On (SSO)",
     "dirsync": "Directory Synchronization",
-    "setUpCalendarService": "Calendar Service is available. Just add @spark to create a Spark room. Add @webex to attach a WebEx to your invitation.",
+    "setUpCalendarService": "Calendar Service is available. Users can add @spark to create a Cisco Spark room, and @webex to attach a WebEx to an invitation.",
     "setUpCallAwareService": "Call Service Aware is available. Users can instantly share their desktops from their Cisco Spark clients while on a call.",
     "setUpCallConnectService": "Call Service Connect is available. Users can answer calls to their work phones on their Cisco Spark clients, and place calls to others' work phones from their Cisco Spark clients.",
     "getStarted": "Get Started"

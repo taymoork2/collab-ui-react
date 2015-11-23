@@ -7,8 +7,6 @@ describe('orgService', function () {
 
   var httpBackend, Orgservice, Auth, Authinfo, Config, Log;
 
-  var extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-uc', 'squared-fusion-ec'];
-
   beforeEach(function () {
     module(function ($provide) {
       Auth = {
@@ -28,6 +26,16 @@ describe('orgService', function () {
         },
         getHerculesUrl: function () {
           return '/hercules';
+        },
+        entitlements: {
+          huron: 'ciscouc',
+          squared: 'webex-squared',
+          fusion_uc: 'squared-fusion-uc',
+          fusion_cal: 'squared-fusion-cal',
+          mediafusion: 'squared-fusion-media',
+          fusion_mgmt: 'squared-fusion-mgmt',
+          device_mgmt: 'spark-device-mgmt',
+          fusion_ec: 'squared-fusion-ec'
         }
       };
       Log = {
@@ -262,11 +270,11 @@ describe('orgService', function () {
     var response = Orgservice.getHybridServiceAcknowledged();
     httpBackend.flush();
     angular.forEach(response.items, function (items) {
-      if (items.id === extensionEntitlements[0]) {
+      if (items.id === Config.entitlements.fusion_cal) {
         expect(items.acknowledged).toBe(true);
-      } else if (items.id === extensionEntitlements[1]) {
+      } else if (items.id === Config.entitlements.fusion_uc) {
         expect(items.acknowledged).toBe(false);
-      } else if (items.id === extensionEntitlements[2]) {
+      } else if (items.id === Config.entitlements.fusion_ec) {
         expect(items.acknowledged).toBe(true);
       }
     });
@@ -276,7 +284,7 @@ describe('orgService', function () {
     var data = {
       "acknowledged": true
     };
-    httpBackend.when('PATCH', Config.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + extensionEntitlements[0], data).respond(200, {});
+    httpBackend.when('PATCH', Config.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + Config.entitlements.fusion_cal, data).respond(200, {});
     Orgservice.setHybridServiceAcknowledged('calendar-service');
     expect(httpBackend.flush).not.toThrow();
   });

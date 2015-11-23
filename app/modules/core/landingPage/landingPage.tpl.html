@@ -53,35 +53,12 @@
             </span>
           </div>
 
-          <div class="notification-style" ng-show="!isCalendarAcknowledged">
-            <span class="badge success" translate="common.new"></span>
-            <div class="notification-spacing">
-              <span translate="homePage.setUpCalendarService"></span>
-              <a ng-click="showServiceActivationPage('calendar-service')" translate="homePage.getStarted"></a>
-            </div>
-            <button id="convertModalClose" type="button" class="close" ng-click="setHybridAcknowledged('calendar-service')">
-            </button>
+          <div ng-controller="NewServiceNotificationCtrl">
+            <new-service-notification ng-if="!isCalendarAcknowledged" info="CalendarService" click-setup="showServiceActivationPage('calendar-service')" click-close="setHybridAcknowledged('calendar-service')"></new-service-notification>
+            <new-service-notification ng-if="!isCallAwareAcknowledged" info="CallAwareService" click-setup="showServiceActivationPage('call-aware-service')" click-close="setHybridAcknowledged('call-aware-service')"></new-service-notification>
+            <new-service-notification ng-if="!isCallConnectAcknowledged" info="CallConnectService" click-setup="showServiceActivationPage('call-connect-service')" click-close="setHybridAcknowledged('call-connect-service')"></new-service-notification>
           </div>
-
-          <div class="notification-style" ng-show="!isCallAwareAcknowledged">
-            <span class="badge success" translate="common.new"></span>
-            <div class="notification-spacing">
-              <span translate="homePage.setUpCallAwareService"></span>
-              <a ng-click="showServiceActivationPage('call-aware-service')" translate="homePage.getStarted"></a>
-            </div>
-            <button id="convertModalClose" type="button" class="close" ng-click="setHybridAcknowledged('call-aware-service')">
-            </button>
-          </div>
-
-          <div class="notification-style" ng-show="!isCallConnectAcknowledged">
-            <span class="badge success" translate="common.new"></span>
-            <div class="notification-spacing">
-              <span translate="homePage.setUpCallConnectService"></span>
-              <a ng-click="showServiceActivationPage('call-connect-service')" translate="homePage.getStarted"></a>
-            </div>
-            <button id="convertModalClose" type="button" class="close" ng-click="setHybridAcknowledged('call-service')">
-            </button>
-          </div>
+          
         </section>
 
         <section class="monitoring-panel small-12 column">
