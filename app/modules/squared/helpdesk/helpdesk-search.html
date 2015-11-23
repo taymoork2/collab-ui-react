@@ -49,7 +49,7 @@
 
         <cs-card-layout ng-if="helpdeskCtrl.currentSearch.userSearchResults.length > 0">
           <cs-card class="full" ng-repeat="user in helpdeskCtrl.currentSearch.userSearchResults">
-            <article tabindex="{{$index + 1}}" ui-sref="helpdesk.user({user:user})">
+            <article tabindex="{{$index + 1}}" ui-sref="helpdesk.user({user:user, id: user.id, orgId: user.organization.id})">
               <header>
                 <h5>{{user.displayName}}</h5>
               </header>
