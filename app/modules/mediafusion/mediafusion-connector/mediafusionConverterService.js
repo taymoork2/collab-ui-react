@@ -104,7 +104,7 @@ angular.module('Mediafusion')
       };
 
       function serviceAndClusterNeedsAttention(service, cluster) {
-        cluster.needs_attention = true;
+        // cluster.needs_attention = true;
         service.needs_attention = true;
       }
 

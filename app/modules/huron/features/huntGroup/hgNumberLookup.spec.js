@@ -129,14 +129,30 @@ describe('Controller: HuntGroupSetupAssistantCtrl - Hunt Pilot Number Lookup', f
     $httpBackend.flush(); // Request made.
   });
 
-  //it("formats the number based on US region code if filter called from UI.", function () {
-  //
-  //  $httpBackend.expectGET(NumberLookupUrl).respond(200, {"numbers": [usRegionNumber]});
-  //
-  //  controller.fetchNumbers("110").then(function (dropdownList) {
-  //    expect(HuntMemberTelephoneFilter(dropdownList[0].number)).toBe("(972) 405-2110");
-  //  });
-  //
-  //  $httpBackend.flush();
-  //});
+  it("shows primary indicator when input typed is less than 3", function () {
+    controller.fetchNumbers("1");
+    expect(controller.errorNumberInput).toBeFalsy();
+    $scope.$apply();
+
+    controller.fetchNumbers("12");
+    expect(controller.errorNumberInput).toBeFalsy();
+    $scope.$apply();
+  });
+
+  it("shows danger indicator when input typed is >= 3 and no valid suggestions.", function () {
+    var noSuggestion = {
+      "numbers": []
+    };
+    $httpBackend.expectGET(NumberLookupUrl).respond(200, noSuggestion);
+    controller.fetchNumbers("123");
+    $scope.$apply();
+    $httpBackend.flush(); // Request made.
+    expect(controller.errorNumberInput).toBeTruthy();
+
+    $httpBackend.expectGET(NumberLookupUrl).respond(200, successResponse);
+    controller.fetchNumbers("123");
+    $scope.$apply();
+    $httpBackend.flush(); // Request made.
+    expect(controller.errorNumberInput).toBeFalsy();
+  });
 });
