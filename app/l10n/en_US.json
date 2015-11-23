@@ -39,6 +39,7 @@
     "duplicateDidFound": "Duplicate Direct Line entered.",
     "noUsersInput": "No users were entered.",
     "csvBtnTitle": "Export to CSV",
+    "csvBtnExportingTitle": "Export in progress",
     "csvFilename": "exported_users.csv",
     "csvHeaderName": "Name",
     "csvHeaderEmailAddress": "Email Address",
