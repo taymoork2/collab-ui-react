@@ -67,17 +67,18 @@
         vm.ui.openHours = AutoAttendantCeMenuModelService.newCeMenu();
         vm.ui.openHours.setType('MENU_WELCOME');
       }
-      vm.ui.isClosedHours = false;
-      vm.ui.isHolidays = false;
-      if (angular.isDefined(vm.ui.closedHours) && vm.ui.closedHours.entries.length > 0) {
+
+      if (angular.isDefined(vm.ui.closedHours)) {
         vm.ui.isClosedHours = true;
       } else {
+        vm.ui.isClosedHours = false;
         vm.ui.closedHours = AutoAttendantCeMenuModelService.newCeMenu();
         vm.ui.closedHours.setType('MENU_WELCOME');
       }
-      if (angular.isDefined(vm.ui.holidays) && vm.ui.holidays.entries.length > 0) {
+      if (angular.isDefined(vm.ui.holidays)) {
         vm.ui.isHolidays = true;
       } else {
+        vm.ui.isHolidays = false;
         vm.ui.holidays = AutoAttendantCeMenuModelService.newCeMenu();
         vm.ui.holidays.setType('MENU_WELCOME');
       }
@@ -96,16 +97,16 @@
       if (vm.ui.isClosedHours && angular.isDefined(vm.ui.closedHours)) {
         AutoAttendantCeMenuModelService.updateCombinedMenu(vm.aaModel.aaRecord, 'closedHours', vm.ui.closedHours);
       } else {
+        AutoAttendantCeMenuModelService.deleteCombinedMenu(vm.aaModel.aaRecord, 'closedHours');
         vm.ui.closedHours = AutoAttendantCeMenuModelService.newCeMenu();
         vm.ui.closedHours.setType('MENU_WELCOME');
-        AutoAttendantCeMenuModelService.updateCombinedMenu(vm.aaModel.aaRecord, 'closedHours', vm.ui.closedHours);
       }
       if (vm.ui.isHolidays && angular.isDefined(vm.ui.holidays)) {
         AutoAttendantCeMenuModelService.updateCombinedMenu(vm.aaModel.aaRecord, 'holidays', vm.ui.holidays);
       } else {
+        AutoAttendantCeMenuModelService.deleteCombinedMenu(vm.aaModel.aaRecord, 'holidays');
         vm.ui.holidays = AutoAttendantCeMenuModelService.newCeMenu();
         vm.ui.holidays.setType('MENU_WELCOME');
-        AutoAttendantCeMenuModelService.updateCombinedMenu(vm.aaModel.aaRecord, 'holidays', vm.ui.holidays);
       }
     }
 
@@ -209,7 +210,7 @@
       vm.aaModel.aaName = aaName;
       if (angular.isUndefined(vm.aaModel.aaRecord)) {
         if (aaName === '') {
-          vm.aaModel.aaRecord = AAModelService.newAARecord();
+          vm.aaModel.aaRecord = AAModelService.getNewAARecord();
           vm.aaModel.aaRecordUUID = "";
         } else {
           for (var i = 0; i < vm.aaModel.aaRecords.length; i++) {
