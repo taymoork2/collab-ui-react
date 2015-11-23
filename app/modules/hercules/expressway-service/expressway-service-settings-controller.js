@@ -6,7 +6,7 @@
     MailValidatorService, XhrNotificationService, CertService, Notification, HelperNuggetsService) {
     var vm = this;
     vm.config = "";
-    vm.wx2users = "";
+    vm.emailSubscribers = "";
     vm.serviceType = $stateParams.serviceType;
     vm.serviceId = HelperNuggetsService.serviceType2ServiceId(vm.serviceType);
 
@@ -64,33 +64,29 @@
     };
 
     vm.config = "";
-    NotificationConfigService.read(function (err, config) {
-      vm.loading = false;
-      if (err) {
-        return XhrNotificationService.notify(err);
-      }
-      vm.config = config || {};
-      if (vm.config.wx2users.length > 0) {
-        vm.wx2users = _.map(vm.config.wx2users.split(','), function (user) {
+    ServiceDescriptor.getEmailSubscribers(vm.serviceId, function (error, emailSubscribers) {
+      if (!error) {
+        vm.emailSubscribers = _.map(emailSubscribers.split(','), function (user) {
           return {
             text: user
           };
         });
       } else {
-        vm.wx2users = [];
+        vm.emailSubscribers = [];
       }
     });
+
     vm.cluster = $stateParams.cluster;
 
     vm.writeConfig = function () {
-      vm.config.wx2users = _.map(vm.wx2users, function (data) {
+      var emailSubscribers = _.map(vm.emailSubscribers, function (data) {
         return data.text;
       }).toString();
-      if (vm.config.wx2users && !MailValidatorService.isValidEmailCsv(vm.config.wx2users)) {
+      if (emailSubscribers && !MailValidatorService.isValidEmailCsv(emailSubscribers)) {
         Notification.error("hercules.errors.invalidEmail");
       } else {
         vm.savingEmail = true;
-        NotificationConfigService.write(vm.config, function (err) {
+        ServiceDescriptor.setEmailSubscribers(vm.serviceId, emailSubscribers, function (err) {
           vm.savingEmail = false;
           if (err) {
             return XhrNotificationService.notify(err);
