@@ -15,7 +15,9 @@
       <p>Showing {{userErrorsCtrl.totalCount > userErrorsCtrl.limit ? userErrorsCtrl.limit : userErrorsCtrl.totalCount}}
         out of {{userErrorsCtrl.totalCount}} errors.
         <span
-          ng-if="userErrorsCtrl.totalCount > userErrorsCtrl.limit">The user status report has more information.</span>
+          ng-if="userErrorsCtrl.totalCount > userErrorsCtrl.limit">The
+          <a href ng-click="$parent.modal.close();exp.openUserStatusReportModal(exp.currentServiceId);">user status
+            report</a> has more information.</span>
       </p>
 
       <p ng-repeat="status in userErrorsCtrl.userStatuses" style="padding-top:10px;">
