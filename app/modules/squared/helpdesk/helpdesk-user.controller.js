@@ -4,8 +4,15 @@
   /* @ngInject */
   function HelpdeskUserController($stateParams, HelpdeskService, XhrNotificationService, $translate, USSService2) {
     var vm = this;
-    var userId = $stateParams.user.id;
-    var orgId = $stateParams.user.organization.id;
+    var userId = null;
+    var orgId = null;
+    if ($stateParams.user) {
+      userId = $stateParams.user.id;
+      orgId = $stateParams.user.organization.id;
+    } else {
+      userId = $stateParams.id;
+      orgId = $stateParams.orgId;
+    }
 
     vm.resendInviteEmail = resendInviteEmail;
     vm.user = $stateParams.user;

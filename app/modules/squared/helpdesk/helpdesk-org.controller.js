@@ -10,6 +10,7 @@
 
     HelpdeskService.getOrg(vm.org.id).then(function (res) {
       vm.org = res;
+      findPartners(vm.org);
     }, function (err) {
       XhrNotificationService.notify(err);
     });
@@ -54,6 +55,19 @@
         return _.includes(vm.org.services, entitlement);
       }
       return false;
+    }
+
+    function findPartners(org) {
+      if (org.managedBy && org.managedBy.length > 0) {
+        org.partners = [];
+        _.each(org.managedBy, function (parnterOrg) {
+          HelpdeskService.getOrg(parnterOrg.orgId).then(function (res) {
+            org.partners.push(res);
+          }, function (err) {
+            XhrNotificationService.notify(err);
+          });
+        });
+      }
     }
   }
 

@@ -1009,12 +1009,14 @@ angular
           templateUrl: 'modules/squared/helpdesk/helpdesk-search.html'
         })
         .state('helpdesk.user', {
-          url: '/user',
+          url: '/user/:orgId/:id',
           templateUrl: 'modules/squared/helpdesk/helpdesk-user.html',
           controller: 'HelpdeskUserController',
           controllerAs: 'helpdeskUserCtrl',
           params: {
-            user: null
+            user: null,
+            id: null,
+            orgId: null
           }
         })
         .state('helpdesk.org', {
