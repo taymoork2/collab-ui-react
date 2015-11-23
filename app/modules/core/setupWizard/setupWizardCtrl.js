@@ -27,17 +27,6 @@ angular.module('Core')
           template: 'modules/core/setupWizard/messagingSetup.tpl.html'
         }]
       }, {
-        name: 'communications',
-        label: 'firstTimeWizard.communications',
-        description: 'firstTimeWizard.communicationsSub',
-        icon: 'icon-phone',
-        title: 'firstTimeWizard.claimSipUrl',
-        controller: 'CommunicationsCtrl as communicationsCtrl',
-        steps: [{
-          name: 'claimSipUrl',
-          template: 'modules/core/setupWizard/claimSipUrl.tpl.html'
-        }]
-      }, {
         name: 'enterpriseSettings',
         label: 'firstTimeWizard.enterpriseSettings',
         description: 'firstTimeWizard.enterpriseSettingsSub',
@@ -67,11 +56,17 @@ angular.module('Core')
       }];
 
       $scope.isDirSyncEnabled = false;
-      FeatureToggleService.supportsDirSync().then(function (dirSyncEnabled) {
-        $scope.isDirSyncEnabled = dirSyncEnabled;
-      }).finally(function () {
-        init();
-      });
+      $scope.addClaimSipUrl = false;
+
+      $q.all([FeatureToggleService.supportsDirSync(),
+          FeatureToggleService.supports(FeatureToggleService.features.atlasSipUriDomain)
+        ])
+        .then(function (results) {
+          $scope.isDirSyncEnabled = results[0];
+          $scope.addClaimSipUrl = results[1];
+        }).finally(function () {
+          init();
+        });
 
       function init() {
         setupAddUserSubTabs();
@@ -88,9 +83,6 @@ angular.module('Core')
             controller: 'ServiceSetupCtrl as squaredUcSetup',
             controllerAs: 'squaredUcSetup',
             steps: [{
-              name: 'claimSipUrl',
-              template: 'modules/core/setupWizard/claimSipUrl.tpl.html'
-            }, {
               name: 'init',
               template: 'modules/core/setupWizard/serviceSetup.tpl.html'
             }]
@@ -112,28 +104,38 @@ angular.module('Core')
           });
         }
 
-        var showSipUrl = false;
-        // angular.forEach(Authinfo.getServices(), function (service) {
-        //   // if it is not entitled, it wouldn't be in this list
-        //   if (service.serviceId === 'squaredFusionUC') {
-        //     showSipUrl = true;
-        //   }
-        // });
+        var claimSipUrlStep = {
+          name: 'claimSipUrl',
+          template: 'modules/core/setupWizard/claimSipUrl.tpl.html'
+        };
 
-        if (!showSipUrl) {
-          angular.forEach($scope.tabs, function (tab, index) {
-            angular.forEach(tab.steps, function (step, subIndex) {
-              if (step.name === 'claimSipUrl') {
-                tab.steps.splice(subIndex, 1);
+        if ($scope.addClaimSipUrl && !Authinfo.isSquaredUC()) {
+          var communicationsStep = {
+            name: 'communications',
+            label: 'firstTimeWizard.communications',
+            description: 'firstTimeWizard.communicationsSub',
+            icon: 'icon-phone',
+            title: 'firstTimeWizard.claimSipUrl',
+            controller: 'CommunicationsCtrl as communicationsCtrl',
+            steps: [claimSipUrlStep]
+          };
 
-                // if there are no more steps then this page is blank, so remove it
-                if (tab.steps.length === 0) {
-                  $scope.tabs.splice(index, 1);
-                }
-              }
-            });
+          $scope.tabs.splice(2, 0, communicationsStep);
+        } else if ($scope.addClaimSipUrl && Authinfo.isSquaredUC()) {
+          var communicationsTab = _.find($scope.tabs, {
+            name: 'serviceSetup'
           });
+          if (angular.isDefined(communicationsTab)) {
+            communicationsTab.steps.splice(1, 0, claimSipUrlStep);
+          }
         }
+
+        // if we have any step thats is empty, we remove the tab
+        _.forEach($scope.tabs, function (tab, index) {
+          if (tab.steps.length === 0) {
+            $scope.tabs.splice(index, 1);
+          }
+        });
       }
 
       function setupAddUserSubTabs() {
