@@ -9,7 +9,7 @@
     .controller('HuronFeatureDeleteCtrl', HuronFeatureDeleteCtrl);
 
   /* @ngInject */
-  function HuronFeatureDeleteCtrl($rootScope, $scope, $stateParams, $timeout, $translate, AAModelService, HuntGroupService, AutoAttendantCeService, AutoAttendantCeInfoModelService, Notification, Log) {
+  function HuronFeatureDeleteCtrl($rootScope, $scope, $stateParams, $timeout, $translate, AAModelService, HuntGroupService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AANumberAssignmentService, Authinfo, Notification, Log) {
     var vm = this;
     vm.deleteBtnDisabled = false;
     vm.deleteFeature = deleteFeature;
@@ -48,6 +48,8 @@
           deleteError();
           return;
         }
+
+        AANumberAssignmentService.deleteAANumberAssignments(Authinfo.getOrgId(), vm.featureId);
 
         AutoAttendantCeService.deleteCe(ceInfoToDelete.getCeUrl()).then(
           function (data) {
