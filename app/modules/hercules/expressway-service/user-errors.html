@@ -13,7 +13,9 @@
     </div>
     <div ng-hide="loading">
       <p>Showing {{userErrorsCtrl.totalCount > userErrorsCtrl.limit ? userErrorsCtrl.limit : userErrorsCtrl.totalCount}}
-        out of {{userErrorsCtrl.totalCount}} errors.</p>
+        out of {{userErrorsCtrl.totalCount}} errors. <a
+          ng-click="$parent.modal.close();exp.openUserStatusReportModal(exp.currentServiceId);">View user
+          status report...</a></p>
 
       <p ng-repeat="status in userErrorsCtrl.userStatuses" style="padding-top:10px;">
         <span class="small">
