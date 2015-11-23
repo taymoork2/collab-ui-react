@@ -35,35 +35,35 @@ describe('Service: LineListService', function () {
 
   describe('getLineList', function () {
     it('should use default search criteria', function () {
-      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?max=100&order=userid-asc&start=0').respond(lines);
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?limit=100&offset=0&order=userid-asc').respond(lines);
       LineListService.getLineList(0, 100, 'userid', '-asc', '', 'all').then(function (response) {
         expect(angular.equals(response, lines)).toBe(true);
       });
     });
 
     it('should set search criteria order=internalnumber-desc', function () {
-      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/1/userlineassociations?max=100&order=internalnumber-desc&start=0').respond(lines);
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/1/userlineassociations?limit=100&offset=0&order=internalnumber-desc').respond(lines);
       LineListService.getLineList(0, 100, 'internalnumber', '-desc', '', 'all').then(function (response) {
         expect(angular.equals(response, lines)).toBe(true);
       });
     });
 
     it('should set search filter, search criteria', function () {
-      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?externalnumber=%25asuna%25&internalnumber=%25asuna%25&max=100&order=userid-asc&predicatejoinoperator=or&start=0&userid=%25asuna%25').respond(lines);
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?externalnumber=%25asuna%25&internalnumber=%25asuna%25&limit=100&offset=0&order=userid-asc&predicatejoinoperator=or&userid=%25asuna%25').respond(lines);
       LineListService.getLineList(0, 100, 'userid', '-asc', 'asuna', 'all').then(function (response) {
         expect(angular.equals(response, lines)).toBe(true);
       });
     });
 
     it('should set seach criteria assignedlines=true', function () {
-      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?assignedlines=false&max=100&order=userid-asc&start=0').respond(lines);
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?assignedlines=false&limit=100&offset=0&order=userid-asc').respond(lines);
       LineListService.getLineList(0, 100, 'userid', '-asc', '', 'unassignedLines').then(function (response) {
         expect(angular.equals(response, lines)).toBe(true);
       });
     });
 
     it('should set seach criteria assignedlines=false', function () {
-      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?assignedlines=true&max=100&order=userid-asc&start=0').respond(lines);
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?assignedlines=true&limit=100&offset=0&order=userid-asc').respond(lines);
       LineListService.getLineList(0, 100, 'userid', '-asc', '', 'assignedLines').then(function (response) {
         expect(angular.equals(response, lines)).toBe(true);
       });
@@ -87,8 +87,8 @@ describe('Service: LineListService', function () {
   });
 
   it('should exportCSV', function () {
-    $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?max=100&order=internalnumber-asc&start=0').respond(lines);
-    $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?max=100&order=internalnumber-asc&start=101').respond([]);
+    $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?limit=100&offset=0&order=internalnumber-asc').respond(lines);
+    $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?limit=100&offset=101&order=internalnumber-asc').respond([]);
     LineListService.exportCSV({})
       .then(function (response) {
         expect(response.length).toBe(linesExport.length);

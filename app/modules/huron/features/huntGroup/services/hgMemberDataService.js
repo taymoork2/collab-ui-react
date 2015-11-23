@@ -30,7 +30,8 @@
       setMemberJSON: setMemberJSON,
       getHuntMembers: getHuntMembers,
       isMemberDirty: isMemberDirty,
-      setAsPristine: setAsPristine
+      setAsPristine: setAsPristine,
+      rearrangeResponsesInSequence: rearrangeResponsesInSequence // elevated for unit testing
     };
 
     ////////////////
@@ -43,7 +44,7 @@
       var dirty = false;
       selectedHuntMembers.some(function (m) {
         if (pristineMember.userUuid === m.user.uuid) {
-          dirty = (pristineMember.numberUuid === m.selectableNumber.uuid);
+          dirty = (pristineMember.numberUuid !== m.selectableNumber.uuid);
         }
         return dirty;
       });
@@ -54,6 +55,30 @@
       return selectedHuntMembers;
     }
 
+    function getMemberAsynchronously(user, async) {
+      HuntGroupService.getHuntMemberWithSelectedNumber(user).then(function (m) {
+        selectedHuntMembers.push(m);
+        async.resolve();
+      }, function () {
+        async.reject();
+      });
+    }
+
+    function rearrangeResponsesInSequence(users) {
+      var tempArray = angular.copy(selectedHuntMembers);
+      selectedHuntMembers.splice(0, selectedHuntMembers.length);
+
+      users.forEach(function (user) {
+        tempArray.some(function (u) {
+          var found = (user.userUuid === u.uuid);
+          if (found) {
+            selectedHuntMembers.push(u);
+          }
+          return found;
+        });
+      });
+    }
+
     /**
      * Given hunt members "members" field JSON received from
      * GET /huntgroups/{id} initialize the data model for the UI
@@ -61,17 +86,32 @@
     function setMemberJSON(users, resetFromBackend) {
       reset(resetFromBackend);
 
+      var asyncTask = $q.defer();
       if (resetFromBackend) {
+        var promises = [];
         users.forEach(function (user) {
-          HuntGroupService.getHuntMemberWithSelectedNumber(user).then(function (m) {
-            selectedHuntMembers.push(m);
-            pristineSelectedHuntMembers = angular.copy(selectedHuntMembers);
-          });
+          var async = $q.defer();
+          promises.push(async.promise);
+          getMemberAsynchronously(user, async);
         });
+
+        $q.all(promises).then(function () {
+          /**
+           * Rearrange responses in the right order as it is found in
+           * parameter json. Note that members are fetched asynchronously,
+           * so there is no conformance that responses will be sequentially
+           * aligned.
+           */
+          rearrangeResponsesInSequence(users);
+          pristineSelectedHuntMembers = angular.copy(selectedHuntMembers);
+          asyncTask.resolve(selectedHuntMembers);
+        }, memberFailureResponse(asyncTask));
+
       } else {
         selectedHuntMembers = angular.copy(pristineSelectedHuntMembers);
+        asyncTask.resolve(selectedHuntMembers);
       }
-      return selectedHuntMembers;
+      return asyncTask.promise;
     }
 
     /**
@@ -148,9 +188,7 @@
       var GetHuntMembers = HuntGroupService.getHuntMembers(nameHint);
 
       if (GetHuntMembers) {
-        GetHuntMembers.setOnFailure(function (response) {
-          Notification.errorResponse(response, 'huronHuntGroup.memberFetchFailure');
-        });
+        GetHuntMembers.setOnFailure(memberFailureResponse());
         if (filter) {
           GetHuntMembers.setFilter(filter);
         }
@@ -158,6 +196,15 @@
       }
 
       return [];
+    }
+
+    function memberFailureResponse(asyncTask) {
+      return function (response) {
+        Notification.errorResponse(response, 'huronHuntGroup.memberFetchFailure');
+        if (asyncTask) {
+          asyncTask.reject();
+        }
+      };
     }
 
     /**

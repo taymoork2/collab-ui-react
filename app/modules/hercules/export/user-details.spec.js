@@ -144,7 +144,7 @@ describe('Service: UserDetails', function () {
       var userDetails = callback.args[0][0];
 
       expect(userDetails[0].details.id).toBe('111');
-      expect(userDetails[0].details.userName).toBe('username not found');
+      expect(userDetails[0].details.userName).toBe('Not found');
       //expect(userDetails[0].details.entitled).toBe('Entitled');
       expect(userDetails[0].details.state).toBe('whatever');
     });
