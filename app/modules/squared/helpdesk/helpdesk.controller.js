@@ -94,31 +94,31 @@
       vm.currentSearch.orgFilter = null;
     }
 
-    function keypressValidation(event){
+    function keypressValidation(event) {
       var activeCard = angular.element(document.activeElement)[0]["tabIndex"];
       var newTabIndex = activeCard;
-      switch(event.keyCode.toString()){
-        case "37":
+      switch (event.keyCode.toString()) {
+      case "37":
         //left
         newTabIndex = parseInt(activeCard) - 1;
         break;
 
-        case "38":
+      case "38":
         //up
         newTabIndex = parseInt(activeCard) - 10;
         break;
 
-        case "39":
+      case "39":
         //right
         newTabIndex = parseInt(activeCard) + 1;
         break;
 
-        case "40":
+      case "40":
         //down
         newTabIndex = parseInt(activeCard) + 10;
         break;
       }
-      $('[tabindex='+newTabIndex+']').focus();
+      $('[tabindex=' + newTabIndex + ']').focus();
     }
   }
 
