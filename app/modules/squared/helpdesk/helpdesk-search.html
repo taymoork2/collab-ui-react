@@ -1,4 +1,4 @@
-<div class="helpdesk-landing centered">
+<div class="helpdesk-landing centered" tabindex="1" ng-keyup="helpdeskCtrl.keypressValidation($event)">
 
   <h1 translate="helpdesk.helpdesk"></h1>
 
@@ -49,7 +49,7 @@
 
         <cs-card-layout ng-if="helpdeskCtrl.currentSearch.userSearchResults.length > 0">
           <cs-card class="full" ng-repeat="user in helpdeskCtrl.currentSearch.userSearchResults">
-            <article tabindex="{{$index + 1}}" ui-sref="helpdesk.user({user:user})">
+            <article tabindex="{{$index * 10 + 1}}" ui-sref="helpdesk.user({user:user})">
               <header>
                 <h5>{{user.displayName}}</h5>
               </header>
@@ -84,7 +84,7 @@
 
         <cs-card-layout ng-if="helpdeskCtrl.currentSearch.orgSearchResults.length > 0">
           <cs-card class="full" ng-repeat="org in helpdeskCtrl.currentSearch.orgSearchResults">
-            <article tabindex="{{$index + 1}}" ui-sref="helpdesk.org({org:org})">
+            <article tabindex="{{$index * 10 + 2}}" ui-sref="helpdesk.org({org:org})">
               <header>
                 <h5>
                   {{org.displayName}}
@@ -128,7 +128,7 @@
 
         <cs-card-layout ng-if="helpdeskCtrl.currentSearch.deviceSearchResults.length > 0">
           <cs-card class="full" ng-repeat="device in helpdeskCtrl.currentSearch.deviceSearchResults">
-            <article tabindex="{{$index + 1}}" ui-sref="helpdesk.device({device:device})">
+            <article tabindex="{{$index * 10 + 3}}" ui-sref="helpdesk.device({device:device})">
               <header>
                 <h5>{{device.displayName}}</h5>
               </header>
