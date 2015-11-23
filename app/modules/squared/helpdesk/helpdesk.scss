@@ -203,3 +203,8 @@
 .helpdesk-yellow {
   color: $color-attention-base;
 }
+
+.helpdesk-landing:focus{
+  outline: none !important;
+  outline: 0 !important;
+}
