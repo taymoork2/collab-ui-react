@@ -20,7 +20,7 @@
     "angular-translate-loader-static-files": "~2.7.2",
     "angular-translate-interpolation-messageformat": "~2.7.2",
     "angular-ui-router": "=0.2.13",
-    "ui-router-extras": "=0.0.13",
+    "ui-router-extras": "=0.0.14",
     "angular-wizard": "~0.4.0",
     "base64": "~0.2.0",
     "angular-formly": "~6.11.0",

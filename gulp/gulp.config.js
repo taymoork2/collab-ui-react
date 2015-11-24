@@ -143,6 +143,7 @@ module.exports = function() {
         vendor + '/ui-router-extras/release/modular/ct-ui-router-extras.core.js',
         vendor + '/ui-router-extras/release/modular/ct-ui-router-extras.sticky.js',
         vendor + '/ui-router-extras/release/modular/ct-ui-router-extras.transition.js',
+        vendor + '/ui-router-extras/release/modular/ct-ui-router-extras.future.js',
         vendor + '/ui-router-extras/release/modular/ct-ui-router-extras.previous.js',
         vendor + '/ng-csv/build/ng-csv.min.js',
         vendor + '/api-check/dist/api-check.js',

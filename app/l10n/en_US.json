@@ -2730,6 +2730,7 @@
     "pageTitle": "Overview",
     "thisMonth": "This month",
     "lastMonth": "Last month:",
+    "contactPartner": "Contact your partner or Cisco Sales for more information",
     "cards": {
       "users": {
         "title": "Users",
@@ -2740,27 +2741,28 @@
       },
       "message": {
         "title": "Message",
-        "desc": "Active Rooms",
-        "currentTitle": "Active rooms this week",
+        "notEnabledText": " Use Team Rooms with content storage to easily collaborate from any device to any user inside or outside your organization.",
+        "currentTitle": "New rooms this week",
         "previousTitle": "Last week:"
-
       },
       "meeting": {
         "title": "Meeting",
-        "desc": "Meetings"
+        "notEnabledText": "Join up to 25 colleagues in a Team Room Sync-up or many more in a WebEx Meeting Center."
       },
       "call": {
         "title": "Call",
-        "desc": "Calls"
+        "notEnabledText": "Basic external calling and full Unified Communications enabled for your organization."
       },
       "roomSystem": {
         "title": "Room Systems",
-        "desc": "Registered Systems",
         "currentTitle": "Online this week",
-        "previousTitle": "Last week:"
+        "previousTitle": "Last week:",
+        "notEnabledText": "Meeting room video endpoints that seamlessly integrate with your cloud collaboration."
       },
       "hybrid": {
-        "title": "Hybrid Services"
+        "title": "Hybrid Services",
+        "notEnabledText": "Hybrid Services allow you to integrate on-premise systems to the Cisco Collaboration Platform.",
+        "notEnabledActionText": "Learn More"
       }
     }
   },
