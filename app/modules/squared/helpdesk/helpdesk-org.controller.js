@@ -68,8 +68,7 @@
         _.each(org.managedBy, function (parnterOrg) {
           HelpdeskService.getOrg(parnterOrg.orgId).then(function (res) {
             org.partners.push(res);
-          }, function (err) {
-          });
+          }, function (err) {});
         });
       }
     }
