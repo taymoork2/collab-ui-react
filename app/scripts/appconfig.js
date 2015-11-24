@@ -159,6 +159,13 @@ angular
 
       $futureStateProvider.stateFactory(futureOverviewState.type, function ($q, $timeout, futureState, FeatureToggleService) {
         return FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (useStormBranding) {
+
+          if (document.URL.indexOf('newoverview=1') > 0){
+            useStormBranding = true;
+          } else if (document.URL.indexOf('newoverview=0') > 0){
+            useStormBranding = false;
+          }
+
           return {
             name: futureState.stateName,
             url: futureState.url,
