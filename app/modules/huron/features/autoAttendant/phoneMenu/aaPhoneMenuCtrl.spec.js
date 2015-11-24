@@ -91,15 +91,6 @@ describe('Controller: AAPhoneMenuCtrl', function () {
     });
   });
 
-  describe('timeoutActionChanged ', function () {
-    it('should change the attempts attribute', function () {
-      controller.menuEntry = angular.copy(data.ceMenu);
-      controller.selectedTimeout = data.selectedTimeout;
-      controller.timeoutActionChanged();
-      expect(controller.menuEntry.attempts).toEqual(controller.selectedTimeout.value);
-    });
-  });
-
   describe('keyChanged', function () {
     it('should change the key for an existing action', function () {
       controller.menuEntry = angular.copy(data.ceMenu);
@@ -122,6 +113,42 @@ describe('Controller: AAPhoneMenuCtrl', function () {
 
   describe('populateOptionMenu', function () {
 
+    it('should read the CeMenu with attempts 1 and set UI to Continue-To-Next-Step (Timeout/Invalid)', function () {
+      controller.menuEntry = angular.copy(data.ceMenuAttempt);
+      controller.selectedTimeout = [];
+      controller.populateOptionMenu();
+
+      var expectedActions = angular.copy(controller.timeoutActions[0]);
+
+      expect(angular.equals(expectedActions, controller.selectedTimeout)).toEqual(true);
+    });
+
+    it('should read the CeMenu with attempts 2 and set UI to Repeat-Menu-Once (Timeout/Invalid)', function () {
+      controller.menuEntry = angular.copy(data.ceMenuAttempt);
+      controller.menuEntry.attempts = 2;
+      controller.selectedTimeout = [];
+      controller.populateOptionMenu();
+
+      var expectedActions = angular.copy(controller.timeoutActions[1]);
+      expectedActions.childOptions = angular.copy(controller.repeatOptions);
+      expectedActions.selectedChild = angular.copy(controller.repeatOptions[0]);
+
+      expect(angular.equals(expectedActions, controller.selectedTimeout)).toEqual(true);
+    });
+
+    it('should read the CeMenu with attempts 6 and set UI to Repeat-Menu-Five (Timeout/Invalid)', function () {
+      controller.menuEntry = angular.copy(data.ceMenuAttempt);
+      controller.menuEntry.attempts = 6;
+      controller.selectedTimeout = [];
+      controller.populateOptionMenu();
+
+      var expectedActions = angular.copy(controller.timeoutActions[1]);
+      expectedActions.childOptions = angular.copy(controller.repeatOptions);
+      expectedActions.selectedChild = angular.copy(controller.repeatOptions[4]);
+
+      expect(angular.equals(expectedActions, controller.selectedTimeout)).toEqual(true);
+    });
+
     it('should read the CeMenu and populate the Option menu', function () {
       controller.menuEntry = angular.copy(data.ceMenu);
       controller.selectedActions = [];
@@ -134,6 +161,60 @@ describe('Controller: AAPhoneMenuCtrl', function () {
   });
 
   describe('saveUiModel', function () {
+
+    it('should write Continue-To-Next-Step (Timeout/Invalid action) to the model', function () {
+      var ceMenu = angular.copy(data.ceMenu);
+      // phone menu at entry 0
+      controller.uiMenu = {};
+      controller.uiMenu.entries = [{
+        "type": "MENU_OPTION",
+        "entries": [],
+        "headers": []
+      }];
+      $scope.index = 0;
+      controller.menuEntry = controller.uiMenu.entries[$scope.index];
+      controller.selectedTimeout = angular.copy(controller.timeoutActions[0]);
+      controller.saveUIModel();
+      expect(controller.uiMenu.entries[0].attempts).toEqual(1);
+    });
+
+    it('should write Repeat-Menu-Once (Timeout/Invalid action) to the model', function () {
+      var ceMenu = angular.copy(data.ceMenu);
+      // phone menu at entry 0
+      controller.uiMenu = {};
+      controller.uiMenu.entries = [{
+        "type": "MENU_OPTION",
+        "entries": [],
+        "headers": []
+      }];
+      $scope.index = 0;
+      controller.menuEntry = controller.uiMenu.entries[$scope.index];
+      controller.selectedTimeout = angular.copy(controller.timeoutActions[1]);
+      controller.selectedTimeout.childOptions = angular.copy(controller.repeatOptions);
+      controller.selectedTimeout.selectedChild = angular.copy(controller.repeatOptions[0]);
+
+      controller.saveUIModel();
+      expect(controller.uiMenu.entries[0].attempts).toEqual(2);
+    });
+
+    it('should write Repeat-Menu-Five-Times (Timeout/Invalid action) to the model', function () {
+      var ceMenu = angular.copy(data.ceMenu);
+      // phone menu at entry 0
+      controller.uiMenu = {};
+      controller.uiMenu.entries = [{
+        "type": "MENU_OPTION",
+        "entries": [],
+        "headers": []
+      }];
+      $scope.index = 0;
+      controller.menuEntry = controller.uiMenu.entries[$scope.index];
+      controller.selectedTimeout = angular.copy(controller.timeoutActions[1]);
+      controller.selectedTimeout.childOptions = angular.copy(controller.repeatOptions);
+      controller.selectedTimeout.selectedChild = angular.copy(controller.repeatOptions[4]);
+
+      controller.saveUIModel();
+      expect(controller.uiMenu.entries[0].attempts).toEqual(6);
+    });
 
     it('should write Repeat-this-Menu action to the model', function () {
       var ceMenu = angular.copy(data.ceMenu);
