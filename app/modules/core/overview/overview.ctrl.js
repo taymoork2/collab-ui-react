@@ -143,7 +143,9 @@
 
     this.licenseEventHandler = function (licenses) {
       this.allLicenses = licenses;
-      card.trial = _.any(filterLicenses(licenses), {'isTrial': true});
+      card.trial = _.any(filterLicenses(licenses), {
+        'isTrial': true
+      });
 
       if (filterLicenses(licenses).length > 0) {
         card.enabled = true; //don't disable if no licenses in case test org..
@@ -154,11 +156,10 @@
       return _.filter(licenses, function (l) {
         return l.licenseType === 'MESSAGING' && !(l.status === 'CANCELLED' || l.status === 'SUSPENDED');
       });
-    };
-
+    }
     this.orgEventHandler = function (data) {
       if (data.success && data.isTestOrg && this.allLicenses && this.allLicenses.length === 0) {
-        this.enabled = true;//If we are a test org and allLicenses is empty, enable the card.
+        this.enabled = true; //If we are a test org and allLicenses is empty, enable the card.
       }
     };
   }
@@ -187,7 +188,9 @@
     this.licenseEventHandler = function (licenses) {
       this.allLicenses = licenses;
 
-      card.trial = _.some(filterLicenses(licenses), {'isTrial': true});
+      card.trial = _.some(filterLicenses(licenses), {
+        'isTrial': true
+      });
 
       var hasSites = _.some(licenses, function (l) {
         return l.siteUrl;
@@ -202,7 +205,7 @@
 
     this.orgEventHandler = function (data) {
       if (data.success && data.isTestOrg && this.allLicenses && this.allLicenses.length === 0) {
-        this.enabled = true;//If we are a test org and allLicenses is empty, enable the card.
+        this.enabled = true; //If we are a test org and allLicenses is empty, enable the card.
       }
     };
 
@@ -211,7 +214,7 @@
         //    (['CF', 'EE', 'MC', 'SC', 'TC', 'EC']).contains(l.offername);
         return l.licenseType === 'CONFERENCING' && !(l.status === 'CANCELLED' || l.status === 'SUSPENDED');
       });
-    };
+    }
   }
 
   //list: https://sqbu-github.cisco.com/WebExSquared/wx2-admin-service/blob/master/common/src/main/java/com/cisco/wx2/atlas/common/bean/order/OfferCode.java
@@ -239,7 +242,9 @@
     this.licenseEventHandler = function (licenses) {
       this.allLicenses = licenses;
 
-      card.trial = _.any(filterLicenses(licenses), {'isTrial': true});
+      card.trial = _.any(filterLicenses(licenses), {
+        'isTrial': true
+      });
 
       if (filterLicenses(licenses).length > 0) {
         card.enabled = true; //don't disable if no licenses in case test org..
@@ -248,7 +253,7 @@
 
     this.orgEventHandler = function (data) {
       if (data.success && data.isTestOrg && this.allLicenses && this.allLicenses.length === 0) {
-        this.enabled = true;//If we are a test org and allLicenses is empty, enable the card.
+        this.enabled = true; //If we are a test org and allLicenses is empty, enable the card.
       }
     };
 
@@ -257,7 +262,7 @@
         //  return l.offerName === 'CO'
         return l.licenseType === 'COMMUNICATION' && !(l.status === 'CANCELLED' || l.status === 'SUSPENDED');
       });
-    };
+    }
   }
 
   function RoomSystemCard() {
@@ -294,7 +299,9 @@
 
     this.licenseEventHandler = function (licenses) {
       this.allLicenses = licenses;
-      card.trial = _.some(filterLicenses(licenses), {'isTrial': true});
+      card.trial = _.some(filterLicenses(licenses), {
+        'isTrial': true
+      });
 
       if (filterLicenses(licenses).length > 0) {
         card.enabled = true; //don't disable if no licenses in case test org..
@@ -303,13 +310,12 @@
 
     function filterLicenses(licenses) {
       return _.filter(licenses, function (l) {
-        return l.offerName === 'SD' && !(l.status === 'CANCELLED' || l.status === 'SUSPENDED');//SD = Shared Devices
+        return l.offerName === 'SD' && !(l.status === 'CANCELLED' || l.status === 'SUSPENDED'); //SD = Shared Devices
       });
-    };
-
+    }
     this.orgEventHandler = function (data) {
       if (data.success && data.isTestOrg && this.allLicenses && this.allLicenses.length === 0) {
-        this.enabled = true;//If we are a test org and allLicenses is empty, enable the card.
+        this.enabled = true; //If we are a test org and allLicenses is empty, enable the card.
       }
     };
   }
@@ -394,4 +400,3 @@
 
   }
 })();
-
