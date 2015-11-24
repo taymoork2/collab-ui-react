@@ -106,6 +106,10 @@
     return "error";
   }
 
+  function isntCancelledOrSuspended(license){
+    return !(license.status === 'CANCELLED' || license.status === 'SUSPENDED');
+  }
+
   function meeetingHealthEventHandler(card, data) {
     _.each(data.components, function (component) {
       if (component.name == 'Media/Calling') {
@@ -154,7 +158,7 @@
 
     function filterLicenses(licenses) {
       return _.filter(licenses, function (l) {
-        return l.licenseType === 'MESSAGING' && !(l.status === 'CANCELLED' || l.status === 'SUSPENDED');
+        return l.licenseType === 'MESSAGING' && isntCancelledOrSuspended(l);
       });
     }
     this.orgEventHandler = function (data) {
@@ -212,7 +216,7 @@
     function filterLicenses(licenses) {
       return _.filter(licenses, function (l) {
         //    (['CF', 'EE', 'MC', 'SC', 'TC', 'EC']).contains(l.offername);
-        return l.licenseType === 'CONFERENCING' && !(l.status === 'CANCELLED' || l.status === 'SUSPENDED');
+        return l.licenseType === 'CONFERENCING' && isntCancelledOrSuspended(l);
       });
     }
   }
@@ -260,7 +264,7 @@
     function filterLicenses(licenses) {
       return _.filter(licenses, function (l) {
         //  return l.offerName === 'CO'
-        return l.licenseType === 'COMMUNICATION' && !(l.status === 'CANCELLED' || l.status === 'SUSPENDED');
+        return l.licenseType === 'COMMUNICATION' && isntCancelledOrSuspended(l);
       });
     }
   }
@@ -310,7 +314,7 @@
 
     function filterLicenses(licenses) {
       return _.filter(licenses, function (l) {
-        return l.offerName === 'SD' && !(l.status === 'CANCELLED' || l.status === 'SUSPENDED'); //SD = Shared Devices
+        return l.offerName === 'SD' && isntCancelledOrSuspended(l); //SD = Shared Devices
       });
     }
     this.orgEventHandler = function (data) {
