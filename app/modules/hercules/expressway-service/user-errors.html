@@ -13,21 +13,30 @@
     </div>
     <div ng-hide="loading">
       <p>Showing {{userErrorsCtrl.totalCount > userErrorsCtrl.limit ? userErrorsCtrl.limit : userErrorsCtrl.totalCount}}
-        out of {{userErrorsCtrl.totalCount}} errors.</p>
+        out of {{userErrorsCtrl.totalCount}} errors.
+        <span
+          ng-if="userErrorsCtrl.totalCount > userErrorsCtrl.limit">The
+          <a href ng-click="$parent.modal.close();exp.openUserStatusReportModal(exp.currentServiceId);">user status
+            report</a> has more information.</span>
+      </p>
 
-      <p ng-repeat="status in userErrorsCtrl.userStatuses">
-        <span style="text-decoration: underline;">{{status.displayName}}</span>
-        <br ng-show="status.connector"/>
-        <span ng-show="status.connector">
-          Host: <a href="https://{{status.connector.host_name}}" target="_blank" style="color: #3ca8e8">{{status.connector.host_name}}</a>
-        </span>
+      <p ng-repeat="status in userErrorsCtrl.userStatuses" style="padding-top:10px;">
+        <span class="small">
+        <span style="font-weight:bold;" class="small">{{status.displayName}}</span> on <a
+          href="https://{{status.connector.host_name}}" target="_blank" style="color: #3ca8e8">{{status.connector.host_name}}</a>
         <br/>
-        <em class="red">{{status.description.defaultMessage}}</em>
+        {{status.description.defaultMessage}}
+        </span>
       </p>
     </div>
   </div>
   <div class="modal-footer">
-    <button id="convertCancelButton" class="btn btn-default pull-right" ng-click="$parent.modal.close()">
+    <button id="openUserStatusReport" class="btn btn-default pull-right"
+            ng-click="$parent.modal.close();exp.openUserStatusReportModal(exp.currentServiceId);">
+      <span>Open User Status Report</span>
+    </button>
+    <button id="convertCancelButton" class="btn btn-primary pull-right" ng-click="$parent.modal.close()"
+            style="margin-right: 10px">
       <span>Close</span>
     </button>
   </div>

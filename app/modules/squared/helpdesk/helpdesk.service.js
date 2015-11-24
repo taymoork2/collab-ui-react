@@ -2,8 +2,8 @@
   'use strict';
 
   /*ngInject*/
-  function HelpdeskService($http, Config, $q, HelpdeskMockData, CsdmConfigService, CsdmConverter) {
-    var urlBase = Config.getAdminServiceUrl();
+  function HelpdeskService(ServiceDescriptor, $location, $http, Config, $q, HelpdeskMockData, CsdmConfigService, CsdmConverter) {
+    var urlBase = Config.getAdminServiceUrl(); //"http://localhost:8080/admin/api/v1/"
 
     function extractItems(res) {
       return res.data.items;
@@ -13,38 +13,56 @@
       return res.data;
     }
 
+    function useMock() {
+      return $location.absUrl().match(/helpdesk-backend=mock/);
+    }
+
     function searchUsers(searchString, orgId) {
-      if (HelpdeskMockData.use) {
+      if (useMock()) {
         var deferred = $q.defer();
         deferred.resolve(HelpdeskMockData.users);
         return deferred.promise;
       }
       return $http
-        .get(urlBase + 'helpdesk/search/users?phrase=' + searchString + '&limit=5' + (orgId ? '&orgId=' + orgId : ''))
+        .get(urlBase + 'helpdesk/search/users?phrase=' + encodeURIComponent(searchString) + '&limit=5' + (orgId ? '&orgId=' + encodeURIComponent(orgId) : ''))
         .then(extractItems);
     }
 
     function searchOrgs(searchString) {
-      if (HelpdeskMockData.use) {
+      if (useMock()) {
         var deferred = $q.defer();
         deferred.resolve(HelpdeskMockData.orgs);
         return deferred.promise;
       }
       return $http
-        .get(urlBase + 'helpdesk/search/organizations?phrase=' + searchString + '&limit=5')
+        .get(urlBase + 'helpdesk/search/organizations?phrase=' + encodeURIComponent(searchString) + '&limit=5')
         .then(extractItems);
     }
 
     function getUser(orgId, userId) {
       return $http
-        .get(urlBase + 'helpdesk/organizations/' + orgId + '/users/' + userId)
-        .then(extractData);
+        .get(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId) + '/users/' + encodeURIComponent(userId))
+        .then(extractUserAndSetUserStatuses);
     }
 
     function getOrg(orgId) {
+      if (useMock()) {
+        var deferred = $q.defer();
+        deferred.resolve(HelpdeskMockData.org);
+        return deferred.promise;
+      }
       return $http
-        .get(urlBase + 'helpdesk/organizations/' + orgId)
+        .get(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId))
         .then(extractData);
+    }
+
+    function getHybridServices(orgId) {
+      if (useMock()) {
+        var deferred = $q.defer();
+        deferred.resolve(ServiceDescriptor.filterAllExceptManagement(HelpdeskMockData.org.services));
+        return deferred.promise;
+      }
+      return ServiceDescriptor.servicesInOrg(orgId).then(ServiceDescriptor.filterAllExceptManagement);
     }
 
     function searchCloudberryDevices(searchString, orgId) {
@@ -54,7 +72,7 @@
         return deferred.promise;
       }
       return $http
-        .get(CsdmConfigService.getUrl() + '/organization/' + orgId + '/devices?checkOnline=false')
+        .get(CsdmConfigService.getUrl() + '/organization/' + encodeURIComponent(orgId) + '/devices?checkOnline=false&isHelpDesk=true')
         .then(function (res) {
           return filterDevices(searchString, CsdmConverter.convertDevices(res.data));
         });
@@ -75,12 +93,42 @@
       return filteredDevices;
     }
 
+    function extractUserAndSetUserStatuses(res) {
+      var user = res.data;
+      if (!user.accountStatus) {
+        user.statuses = [];
+        if (user.active) {
+          user.statuses.push('helpdesk.userStatuses.active');
+        } else {
+          user.statuses.push('helpdesk.userStatuses.inactive');
+        }
+      } else {
+        user.statuses = _.map(user.accountStatus, function (status) {
+          return 'helpdesk.userStatuses.' + status;
+        });
+      }
+      return user;
+    }
+
+    function resendInviteEmail(displayName, email) {
+      return $http
+        .post(urlBase + 'helpdesk/actions/resendinvitation/invoke', {
+          inviteList: [{
+            displayName: displayName,
+            email: email
+          }]
+        })
+        .then(extractData);
+    }
+
     return {
       searchUsers: searchUsers,
       searchOrgs: searchOrgs,
       getUser: getUser,
       getOrg: getOrg,
-      searchCloudberryDevices: searchCloudberryDevices
+      searchCloudberryDevices: searchCloudberryDevices,
+      getHybridServices: getHybridServices,
+      resendInviteEmail: resendInviteEmail
     };
 
   }

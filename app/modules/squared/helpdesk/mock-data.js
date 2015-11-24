@@ -2,14 +2,13 @@
   'use strict';
 
   var mockData = {
-    use: false,
     users: [{
       "id": "ddb4dd78-26a2-45a2-8ad8-4c181c5b3f0a",
       "organization": {
         id: "ce8d17f8-1734-4a54-8510-fae65acc505e"
       },
       "userName": "tom.vasset+marvelhelpdesk@gmail.com",
-      "displayName": "Tom Vasset",
+      "displayName": "Tom Vasset (mock)",
       "phoneNumbers": [{
         "type": "work",
         "value": "+47 67 51 14 67"
@@ -36,13 +35,27 @@
     }],
     orgs: [{
       "id": "ce8d17f8-1734-4a54-8510-fae65acc505e",
-      "displayName": "Marvel Partners",
+      "displayName": "Marvel Partners (Mock)",
       "isPartner": true
     }, {
       "id": "bc1d8493-69a7-4ba7-a0c0-62abf1b57ac6",
       "displayName": "Autobots",
       "isPartner": false
     }],
+    org: {
+      "id": "ce8d17f8-1734-4a54-8510-fae65acc505e",
+      "displayName": "Marvel Partners (Mock)",
+      "isPartner": true,
+      "services": [
+        "squared-fusion-cal",
+        "webex-squared",
+        "squared-fusion-mgmt"
+      ],
+      "contact": "MOCK tywin.lannister@kingslanding.com",
+      "claimedDomains": ["MOCK kingslanding.com", "MOCK kingslanding2.com"],
+      "manages": ["MOCK Drogon Solutions", "MOCK Red Keep Global"],
+      "administratorUsers": ["MOCK Lannister Administrator 1", "MOCK Lannister Administrator 2"]
+    },
     devices: {
       "https://csdm-a.wbx2.com/csdm/api/v1/organization/4214d345-7caf-4e32-b015-34de878d1158/devices/94b3e13c-b1dd-5e2a-9b64-e3ca02de51d3": {
         "displayName": "Testing DR",

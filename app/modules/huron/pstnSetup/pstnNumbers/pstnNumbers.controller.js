@@ -32,6 +32,7 @@
     vm.removeOrder = removeOrder;
     vm.goToReview = goToReview;
     vm.hasCarriers = PstnSetup.isCarrierExists;
+    vm.singleCarrierReseller = PstnSetup.isSingleCarrierReseller;
 
     vm.isConsecutiveArray = isConsecutiveArray;
     vm.formatTelephoneNumber = formatTelephoneNumber;
