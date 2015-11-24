@@ -38,37 +38,6 @@ describe('Service: ServiceStatusDecriptor', function () {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  it('should fetch and return data from the correct backend', function () {
-    $httpBackend
-      .when('GET', rootPath + orgPath)
-      .respond('{"clusters":[{"connectors":[{"id":"foo bar"}]}]}');
-
-    var callback = sinon.stub();
-    Service.servicesInOrgWithStatus().then(callback);
-
-    $httpBackend.flush();
-    //console.log('',callback,'dd',callback.args[0],'con',callback.args[0][0].connectors);
-    expect(callback.callCount).toBe(1);
-    expect(callback.args[0][0].connectors[0].id).toBe('foo bar');
-  });
-
-  it('should extract connectors with status ', function () {
-    $httpBackend
-      .when('GET', rootPath + orgPath)
-      .respond(orgData);
-
-    var callback = sinon.stub();
-    Service.servicesInOrgWithStatus().then(callback);
-    $httpBackend.flush();
-    var connectors = callback.args[0][0].connectors;
-    expect(callback.callCount).toBe(1);
-    expect(_.find(connectors, {
-      id: "c_ucmc@058CA109"
-    })).toBeDefined();
-    expect(_.find(connectors, {
-      id: "c_ucmc@058CA109"
-    }).operational).toBe(true);
-  });
 
   it('should create serviceType status map', function () {
     $httpBackend
@@ -78,15 +47,46 @@ describe('Service: ServiceStatusDecriptor', function () {
     var callback = sinon.stub();
     Service.servicesInOrgWithStatus().then(callback);
     $httpBackend.flush();
-    var res = callback.args[0][0].status;
-    var connectors = callback.args[0][0].connectors;
+    var res = callback.args[0][0];
     expect(callback.callCount).toBe(1);
 
     expect(res.c_ucmc).toBeDefined();
     expect(res.c_ucmc).toBeTruthy();
-    expect(_.find(connectors, {
-      id: "c_ucmc@058CA109"
-    }).operational).toBe(true);
+
+  });
+
+  it('should create empty serviceType status map given empty data', function () {
+    $httpBackend
+      .when('GET', rootPath + orgPath)
+      .respond('');
+
+    var callback = sinon.stub();
+    Service.servicesInOrgWithStatus().then(callback);
+    $httpBackend.flush();
+    var res = callback.args[0][0];
+    expect(callback.callCount).toBe(1);
+
+    expect(res).toBeDefined();
+    expect(res.c_ucmc).toBeUndefined();
+    expect(res.c_ucmc).toBeUndefined();
+
+  });
+
+  it('should create empty serviceType status map given broken data', function () {
+    $httpBackend
+      .when('GET', rootPath + orgPath)
+      .respond('dda');
+
+    var callback = sinon.stub();
+    Service.servicesInOrgWithStatus().then(callback);
+    $httpBackend.flush();
+    var res = callback.args[0][0];
+    expect(callback.callCount).toBe(1);
+
+    expect(res).toBeDefined();
+    expect(res.c_ucmc).toBeUndefined();
+    expect(res.c_ucmc).toBeUndefined();
+
   });
 
   var orgData = '{"id":"fe5acf7a-6246-484f-8f43-3e8c910fc50d","clusters":[{"id":"8a27c29c-8c5d-11e5-ba85-005056b1274b","connectors":[{"id":"c_ucmc@058CA109","type":"c_ucmc","operational":true},{"id":"c_mgmt@058CA109","type":"c_mgmt","operational":true},{"id":"c_cal@058CA109","type":"c_cal","operational":false}],"properties":{},"assignedPropertySets":[]},{"id":"07ee39f8-8dfe-11e5-adbc-005056b12db1","connectors":[{"id":"c_mgmt@0A5E3DE8","type":"c_mgmt","operational":false},{"id":"c_cal@0A5E3DE8","type":"c_cal","operational":false},{"id":"c_ucmc@0A5E3DE8","type":"c_ucmc","operational":true}],"properties":{},"assignedPropertySets":[]}]}';

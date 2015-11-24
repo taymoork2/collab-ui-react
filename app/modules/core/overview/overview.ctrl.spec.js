@@ -76,9 +76,7 @@ describe('Controller: OverviewCtrl', function () {
       serviceMap['c_ucmc'] = true;
       serviceMap['c_cal'] = false;
 
-      hybridCard.adminOrgServiceStatusEventHandler({
-        status: serviceMap
-      });
+      hybridCard.adminOrgServiceStatusEventHandler(serviceMap);
       expect(hybridCard.services).toBeDefined();
 
       var testService = function (name, expectedHealth) {
@@ -131,10 +129,7 @@ describe('Controller: OverviewCtrl', function () {
     ServiceStatusDecriptor = {
       servicesInOrgWithStatus: function () {
         var defer = $q.defer();
-        var serviceMap = {};
-        serviceMap['fake.service.operational'] = true;
-        serviceMap['fake.service.nonoperational'] = false;
-        defer.resolve(serviceMap);
+        defer.resolve(null);
         return defer.promise;
       }
     };

@@ -353,8 +353,8 @@
       card.populateServicesWithHealth();
     };
 
-    this.adminOrgServiceStatusEventHandler = function (data) {
-      card.servicesStatus = data.status;
+    this.adminOrgServiceStatusEventHandler = function (status) {
+      card.servicesStatus = status;
       card.populateServicesWithHealth();
     };
 

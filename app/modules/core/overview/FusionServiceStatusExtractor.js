@@ -11,27 +11,20 @@ angular.module('Core')
       };
 
       function extractConnectors(res) {
+        var result = _.chain(res).get('data.clusters')
+          .pluck('connectors')
+          .flatten()
+          .groupBy('type')
+          .mapValues(
+            function (v) {
+              return _.all(v, function (x) {
+                return x.operational;
+              });
+            })
+          .value();
 
-        if (res.data && res.data.clusters) {
 
-          var result = {
-            connectors: _.chain(res.data.clusters).pluck('connectors').flatten().value(),
-            status: _.chain(res.data.clusters)
-              .pluck('connectors')
-              .flatten()
-              .groupBy('type')
-              .mapValues(
-                function (v) {
-                  return _.all(v, function (x) {
-                    return x.operational;
-                  });
-                })
-              .value()
-          };
-
-          return result;
-        }
-        return [];
+        return result;
       }
 
       var servicesInOrgWithStatus = function () {
