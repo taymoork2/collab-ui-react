@@ -450,12 +450,12 @@
         });
       }).then(function () {
         return initTimeZone();
+      }).catch(function (response) {
+        errors.push(Notification.errorResponse(response, 'serviceSetupModal.customerGetError'));
       }).then(function () {
         return listInternalExtensionRanges();
       }).then(function () {
         return setServiceValues();
-      }).catch(function (response) {
-        errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.customerGetError'));
       }).then(function () {
         return ServiceSetup.listSites().then(function () {
           if (ServiceSetup.sites.length !== 0) {
