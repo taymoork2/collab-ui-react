@@ -13,6 +13,7 @@ describe('Service: PstnSetupService', function () {
   var customerOrderList = getJSONFixture('huron/json/pstnSetup/customerOrderList.json');
   var customerOrder = getJSONFixture('huron/json/pstnSetup/customerOrder.json');
   var carrierIntelepeer = getJSONFixture('huron/json/pstnSetup/carrierIntelepeer.json');
+  var resellerCarrierList = getJSONFixture('huron/json/pstnSetup/resellerCarrierList.json');
 
   var customerPayload = {
     uuid: customerId,
@@ -49,7 +50,15 @@ describe('Service: PstnSetupService', function () {
     "serviceZip": "75082"
   };
 
+  var Authinfo = {
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue(partnerId)
+  };
+
   beforeEach(module('Huron'));
+
+  beforeEach(module(function ($provide) {
+    $provide.value("Authinfo", Authinfo);
+  }));
 
   beforeEach(inject(function (_$httpBackend_, _HuronConfig_, _PstnSetupService_) {
     $httpBackend = _$httpBackend_;
@@ -83,9 +92,22 @@ describe('Service: PstnSetupService', function () {
     $httpBackend.flush();
   });
 
-  it('should retrieve available carriers', function () {
-    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/carriers').respond(200);
-    PstnSetupService.listCarriers();
+  it('should retrieve available default carriers', function () {
+    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/carriers?defaultOffer=true&service=PSTN').respond(200);
+    PstnSetupService.listDefaultCarriers();
+    $httpBackend.flush();
+  });
+
+  it('should retrieve a resellers\'s carriers', function () {
+    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/resellers/' + partnerId + '/carriers').respond(resellerCarrierList);
+    $httpBackend.expectGET(HuronConfig.getTerminusUrl() + '/carriers/' + carrierId).respond(carrierIntelepeer);
+
+    var promise = PstnSetupService.listResellerCarriers();
+    promise.then(function (carrierList) {
+      expect(carrierList).toContain(jasmine.objectContaining({
+        vendor: 'INTELEPEER'
+      }));
+    });
     $httpBackend.flush();
   });
 
