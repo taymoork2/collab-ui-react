@@ -60,7 +60,6 @@ describe('Service: ServiceStatusDecriptor', function () {
     var callback = sinon.stub();
     Service.servicesInOrgWithStatus().then(callback);
     $httpBackend.flush();
-    //console.log('',callback,'dd',callback.args[0],'con',callback.args[0][0]);
     var connectors = callback.args[0][0].connectors;
     expect(callback.callCount).toBe(1);
     expect(_.find(connectors, {
@@ -81,12 +80,10 @@ describe('Service: ServiceStatusDecriptor', function () {
     $httpBackend.flush();
     var res = callback.args[0][0].status;
     var connectors = callback.args[0][0].connectors;
-    //console.log("status",res);
     expect(callback.callCount).toBe(1);
 
     expect(res.c_ucmc).toBeDefined();
     expect(res.c_ucmc).toBeTruthy();
-    //console.log(_.find(res,"c_ucmc"));
     expect(_.find(connectors, {
       id: "c_ucmc@058CA109"
     }).operational).toBe(true);

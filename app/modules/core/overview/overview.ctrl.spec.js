@@ -62,23 +62,6 @@ describe('Controller: OverviewCtrl', function () {
 
     it('should set the serviceHealth on each service based on enabled and ack on each service', function () {
       var hybridCard = controller.hybridCard;
-      //hybridCard.hybridStatusEventHandler([{
-      //  name: 'fake.service.enabled.ack',
-      //  enabled: true,
-      //  acknowledged: true
-      //}, {
-      //  name: 'fake.service.ack',
-      //  enabled: false,
-      //  acknowledged: true
-      //}, {
-      //  name: 'fake.service.enabled',
-      //  enabled: true,
-      //  acknowledged: false
-      //}, {
-      //  name: 'fake.service',
-      //  enabled: false,
-      //  acknowledged: false
-      //}]);
 
       hybridCard.hybridStatusEventHandler([{
         id: 'squared-fusion-mgmt'
@@ -92,10 +75,6 @@ describe('Controller: OverviewCtrl', function () {
       serviceMap['c_mgmt'] = true;
       serviceMap['c_ucmc'] = true;
       serviceMap['c_cal'] = false;
-
-      //hybridCard.serviceToTypeMap = {};
-      //hybridCard.serviceToTypeMap['fake.service.nonoperational'] = 'c_ucmc';
-      //hybridCard.serviceToTypeMap['fake.service.operational'] = 'c_cal';
 
       hybridCard.adminOrgServiceStatusEventHandler({
         status: serviceMap

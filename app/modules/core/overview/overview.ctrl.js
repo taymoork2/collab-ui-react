@@ -351,17 +351,7 @@
 
     this.adminOrgServiceStatusEventHandler = function (data) {
       card.servicesStatus = data.status;
-      //console.log(data.status);
       card.populateServicesWithHealth();
-
-      //if (data.success) {
-      //  console.log(data);
-      //  card.connectors = _.reduce(data.clusters, function (result, current) {
-      //    result = result || [];
-      //    return result;
-      //  });
-      //}
-
     };
 
     this.populateServicesWithHealth = function () {
@@ -378,25 +368,8 @@
     serviceToTypeMap['squared-fusion-uc'] = "c_ucmc";
     serviceToTypeMap['squared-fusion-cal'] = "c_cal";
     serviceToTypeMap['squared-fusion-media'] = "mf_mgmt";
-    //:  "cs_mgmt",
+    //:  "cs_mgmt",  not mapped
     serviceToTypeMap['center-context'] = "cs_context";
-    //"d_openj"
-
-    //var serviceStatusFromConnector = function (service) {
-    //  //console.log("service", service, 'cardss', card.servicesStatus, 'dd', serviceToTypeMap, service.id);
-    //  //console.log('ddafa', card.servicesStatus[serviceToTypeMap[service.id]]);
-    //  return (serviceToTypeMap[service.id] && card.servicesStatus && card.servicesStatus[serviceToTypeMap[service.id]]) ? 'success' : 'warning';
-
-    //var connector = _(card.connectors).filter(function (connector) {
-    //  return connector.name == service.id;
-    //}).first();
-    //if (connector) {
-    //  return connector.isOperational ? 'success' : 'warning';
-    //} else {
-    //  return 'danger';
-    //}
-
-    //};
-
+    //"d_openj"  not mapped
   }
 })();
