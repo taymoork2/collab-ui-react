@@ -66,7 +66,7 @@
     vm.config = "";
     ServiceDescriptor.getEmailSubscribers(vm.serviceId, function (error, emailSubscribers) {
       if (!error) {
-        vm.emailSubscribers = _.map(emailSubscribers.split(','), function (user) {
+        vm.emailSubscribers = _.map(_.without(emailSubscribers.split(','), ''), function (user) {
           return {
             text: user
           };
