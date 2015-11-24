@@ -481,6 +481,7 @@
   "cdrLogs": {
     "title": "CDR Call Flow",
     "searchForm": "Search Form",
+    "noData": "No CDR data matches the search parameters.  Please adjust your criteria and retry.",
     "search": "Search",
     "reset": "Reset",
     "userLabel": "User UUID:",
