@@ -106,7 +106,7 @@
     return "error";
   }
 
-  function isntCancelledOrSuspended(license){
+  function isntCancelledOrSuspended(license) {
     return !(license.status === 'CANCELLED' || license.status === 'SUSPENDED');
   }
 

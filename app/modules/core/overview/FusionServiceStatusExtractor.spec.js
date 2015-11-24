@@ -38,7 +38,6 @@ describe('Service: ServiceStatusDecriptor', function () {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-
   it('should create serviceType status map', function () {
     $httpBackend
       .when('GET', rootPath + orgPath)

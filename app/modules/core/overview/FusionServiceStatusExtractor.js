@@ -23,7 +23,6 @@ angular.module('Core')
             })
           .value();
 
-
         return result;
       }
 
