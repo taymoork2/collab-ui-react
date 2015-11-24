@@ -3,17 +3,17 @@
 
   <div id="pageTitle"
        name="pageTitle" class="row page-header">
-       
+
       <div class="page-title small-7 columns">
         <span class="title-heading">
           {{siteSettingsObj.pageTitle}}
         </span>
       </div>
-    
+
       <div class="small-5 columns"
            ng-if="siteSettingsObj.viewReady">
-           
-        <div class="page-option-buttons" ng-controller="ExportUsersCtrl">
+
+        <div class="page-option-buttons" ng-controller="ExportCSVCtrl">
           <button id={{siteSettingsObj.emailAllHostsBtnObj.id}}
                   name={{siteSettingsObj.emailAllHostsBtnObj.id}}
                   ui-sref={{siteSettingsObj.emailAllHostsBtnObj.pageObj.uiSref}}
@@ -24,12 +24,12 @@
       </div>
   </div>
 
-  <!-- start of breadcrumbs -->     
+  <!-- start of breadcrumbs -->
   <ul id="siteSettingsBreadCrumbs"
-      name="siteSettingsBreadCrumbs"      
-      class="breadcrumbs webexPage" 
+      name="siteSettingsBreadCrumbs"
+      class="breadcrumbs webexPage"
       title="{{'webexCommon.breadcrumbsAltText' | translate}}">
-      
+
     <li>
       <a id="siteListCrumb"
          name="siteListCrumb"
@@ -41,7 +41,7 @@
     <li class="current"
         id="siteSettingsCrumb"
         name="siteSettingsCrumb">
-          
+
       {{siteSettingsObj.pageTitleFull}}
     </li>
   </ul>
@@ -51,20 +51,20 @@
   <div ng-if="!siteSettingsObj.viewReady"
        id="loadingSection"
        name="loadingSection" >
-         
+
     <div id="loadingInprogressSection"
          name="loadingInprogressSection"
          ng-if="!siteSettingsObj.hasLoadError" >
-             
+
       <br><br><br>
       <i class="icon icon-spinner icon-3x"></i>
       <br><br><br>
     </div>
-      
+
     <div id="loadErrSection"
          name="loadErrSection"
          ng-if="siteSettingsObj.hasLoadError" >
-                   
+
       <div class="nodata-icon" >
         <i class="icon icon-circle-clock" ></i>
       </div>
@@ -77,12 +77,12 @@
     </div>
   </div>
   <!-- end of cards loading -->
-    
+
   <!-- start of card containers -->
-  <div ng-if="siteSettingsObj.viewReady" 
+  <div ng-if="siteSettingsObj.viewReady"
        id="cardsSection"
        name="cardsSection">
-           
+
     <div ng-include="'modules/webex/views/infoCard.tpl.html'"></div>
     <div ng-include="'modules/webex/siteSettings/siteSettingCards.tpl.html'"></div>
   </div>
