@@ -342,7 +342,7 @@
     this.icon = 'icon-circle-data';
     this.enabled = true;
     this.notEnabledText = 'overview.cards.hybrid.notEnabledText';
-    this.notEnabledAction = '#overview-nm';
+    this.notEnabledAction = '#overview';
     this.notEnabledActionText = 'overview.cards.hybrid.notEnabledActionText';
     this.hybridStatusEventHandler = function (services) {
       card.services = services;
