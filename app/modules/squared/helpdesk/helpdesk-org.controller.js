@@ -69,7 +69,6 @@
           HelpdeskService.getOrg(parnterOrg.orgId).then(function (res) {
             org.partners.push(res);
           }, function (err) {
-            XhrNotificationService.notify(err);
           });
         });
       }
