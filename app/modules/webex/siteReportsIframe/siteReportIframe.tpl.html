@@ -1,23 +1,16 @@
-
-
 <div id=webexSiteReportIframe-{{reportPageId}}
      name=webexSiteReportIframe-{{reportPageId}}>
 
-  <div class="page-header row">
-
-      <div class="page-title col-xs-12">
-        <span id={{reportPageId}}
-              name={{reportPageId}}
-              class="title-heading">
-
-          {{reportPageTitle}}
-        </span>
-
-        <span class="search-title">
-          <!-- {{siteUrl}} --><!-- DON'T display for now -->
-        </span>
-      </div>
+  <cs-page-header 
+   id={{reportPageId}} 
+   name={{reportPageId}} 
+   title="{{reportPageTitle}}">
+  </cs-page-header>
+  <!-- <div class="page-sub-header__left">
+    {{siteUrl}}
   </div>
+  <div class="page-sub-header__right">
+  </div> --><!-- DON'T display for now -->
 
   <ul class="breadcrumbs webexPage" 
       id="webexReportIFrameBreadCrumbs" 
@@ -40,6 +33,3 @@
 </div>
 
 <div ng-include="'modules/webex/views/iframeContainer.tpl.html'"></div>
-
-
-

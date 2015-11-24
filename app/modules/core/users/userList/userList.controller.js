@@ -8,6 +8,7 @@
   /* @ngInject */
   function UserListCtrl($scope, $rootScope, $state, $location, $dialogs, $timeout, $translate, Userservice, UserListService, Log, Storage, Config, Notification, Orgservice, Authinfo, LogMetricsService, Utils, HuronUser) {
     //Initialize data variables
+    $scope.pageTitle = $translate.instant('usersPage.manageUsers');
     $scope.load = true;
     $scope.page = 1;
     $scope.status = null;

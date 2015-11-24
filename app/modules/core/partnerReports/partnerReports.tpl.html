@@ -1,7 +1,7 @@
 <div class="partner-reports">
-  <div class="reports-header row page-header">
-    <div class="page-title columns medium-6">
-      <h2 class="title-heading" translate="reportsPage.pageTitle"></h2>
+  <cs-page-header title="{{'reportsPage.pageTitle' | translate}}"></cs-page-header>
+  <cs-page-sub-header class="page-sub-header">
+    <div class="page-sub-header__left">
       <span class="sync">
         <div class="report-filter-link">
           <a id="allReports" class="report-link" ng-click="nav.showEngagement = true; nav.showQuality = true;" translate="reportsPage.all"
@@ -17,17 +17,10 @@
         </div>
       </span>
     </div>
-    <div class="columns medium-6 report-filters">
-      <div class="row">
-        <div class="large-4 large-offset-3 columns">
-          <cs-select id="timeFilter" name="timeFilter" ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.updateReports()" is-disabled="nav.customersSet()"></cs-select>
-        </div>
-        <div class="large-5 columns">
-          <cs-select id="customerFilter" name="customerFilter" ng-model="nav.customerSelected" options="nav.customerOptions" on-change-fn="nav.updateReports()" is-disabled="nav.customersSet()" filter="true"></cs-select>
-        </div>
-      </div>
+    <div class="page-sub-header__left">
+      <cs-select id="customerFilter" name="customerFilter" ng-model="nav.customerSelected" options="nav.customerOptions" on-change-fn="nav.updateReports()" is-disabled="nav.customersSet()" filter="true"></cs-select>
     </div>
-  </div>
+  </cs-page-sub-header>
   <div class="row">
     <div class="columns medium-6 report-space">
       <div class="report-box" ng-show="nav.showEngagement">

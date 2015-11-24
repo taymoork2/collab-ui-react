@@ -1,12 +1,16 @@
 <div class="small-12 columns">
-  <div class="row">
-    <div ng-click="manualReload(false)" class="overview-updated columns small-12" id="reports-click-div">
-      <cr-reload-data id="reportsRefreshData" last-updated-time="reportsRefreshTime" ng-if="!showWebexReports">
-      </cr-reload-data>
-    </div>
-  </div>
   <!-- dont show if there is only one option, aka if webex does not show -->
-<cs-page-header id="reportsPanel" title="repPageHeader_pageTitle" back="repPageHeader_back" tabs="repPageHeader_tabs"></cs-page-header>
+  <cs-page-header id="reportsPanel" title="{{repPageHeader_pageTitle}}" back="repPageHeader_back" tabs="repPageHeader_tabs"></cs-page-header>
+  <cs-page-sub-header class="page-sub-header">
+    <div class="page-sub-header__left">
+      <div ng-click="manualReload(false)" class="overview-updated columns small-12" id="reports-click-div">
+        <cr-reload-data id="reportsRefreshData" last-updated-time="reportsRefreshTime" ng-if="!showWebexReports">
+        </cr-reload-data>
+      </div>
+    </div>
+    <div class="page-sub-header__right">
+    </div>
+  </cs-page-sub-header>
 
   <div class="row" ng-show="showEngagement">
     <div class="all-reports columns small-12">

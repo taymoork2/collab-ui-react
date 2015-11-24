@@ -1,22 +1,14 @@
 <div class="sq-devices-page">
-  <div class="row page-header">
-    <div class="page-title col-md-12 col-sm-12">
-      <span class="title-heading">
-        {{'spacesPage.title' | translate}}
-      </span>
-
-      <cs-searchfilter
-          filters="sc.deviceFilter.getFilters()"
-          search-item-fn="sc.deviceFilter.setCurrentSearch(searchStr)"
-          set-filter-fn="sc.deviceFilter.setCurrentFilter(filter.filterValue)">
+  <cs-page-header title="{{'spacesPage.title' | translate}}"></cs-page-header>
+  <cs-page-sub-header class="page-sub-header">
+    <div class="page-sub-header__left">
+      <cs-searchfilter filters="sc.deviceFilter.getFilters()" search-item-fn="sc.deviceFilter.setCurrentSearch(searchStr)" set-filter-fn="sc.deviceFilter.setCurrentFilter(filter.filterValue)">{}
       </cs-searchfilter>
-
-      <button
-          class="btn btn--large btn--people add-button"
-          ng-click="sc.showAddDeviceDialog()">
+    </div>
+    <div class="page-sub-header__right">
+      <button class="btn btn--people add-button" ng-click="sc.showAddDeviceDialog()">
         Add Device
       </button>
-
     </div>
   </div>
 
@@ -41,7 +33,6 @@
       </div>
     </div>
   </div>
-
   <div ng-if="sc.codesListSubscription.currentError || sc.deviceListSubscription.currentError">
     <div class="error-spinner">
       <i class="icon icon-2x icon-spinner" />
@@ -61,6 +52,5 @@
       <div gridscrollbar class="gridStyle col-md-12" ng-grid="sc.gridOptions"></div>
     </div>
   </div>
-
   <squared-add-device></squared-add-device>
 </div>

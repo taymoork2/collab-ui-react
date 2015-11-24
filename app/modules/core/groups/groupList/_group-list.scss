@@ -19,13 +19,6 @@
   }
 }
 
-#addGroups {
-  cursor: pointer;
-  a {
-    color: $gray-lightest;
-  }
-}
-
 .btn--icon {
   background: none;
   border: none;
@@ -39,20 +32,6 @@
   }
 }
 
-// .admin-name{
-//   color: $gray-dark;
-//   font-family: $brand-font-cisco-TT-Extra-Light;
-//   font-size: 16px;
-//   line-height: 1;
-// }
-.btn--actions {
-  float: right;
-  padding: 15px 30px;
-}
-
-// .user-status{
-//   padding: 14px 20px 14px 20px;
-// }
 .filter {
   top: 35px;
 }

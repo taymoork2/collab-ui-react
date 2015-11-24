@@ -5,16 +5,6 @@
   .ngHeaderText.colt5 {
     text-align: left;
   }
-  .user-img {
-    height: 35px;
-    width: 35px;
-    margin: 4px 5px 4px 30px;
-    .icon {
-      font-size: 30px;
-      line-height: 35px;
-      bottom: -5px;
-    }
-  }
   .ngCell.colt5 {
     overflow: visible;
     .dropdown-menu {
@@ -23,28 +13,13 @@
       top: 70%;
     }
   }
-  .btn--icon {
-    background: none;
-    border: none;
-    box-shadow: none;
-    width: 100%;
-    text-align: center;
-    &:hover, &:focus, &.active:focus {
-      border: none;
-      box-shadow: none;
-      outline: 0;
-    }
-  }
 }
 
-.export-users {
-  color: $gray-dark;
-  font-size: 30px;
-  display: inline-block;
-  vertical-align: middle;
-  padding-left: 20px;
-  margin-left: 10px;
-  border-left: solid 1px $gray-lighter;
+.export-users i {
+  color: $gray;
+  font-size: 1.25rem;
+  padding-left: 1rem;
+  margin-left: 1rem;
   cursor: pointer;
   &:hover {
     color: $brand-primary;
@@ -59,36 +34,4 @@
   right: 0;
   text-align: center;
   color: $gray-darker;
-}
-
-#addUsers {
-  cursor: pointer;
-  a {
-    color: $gray-lightest;
-  }
-}
-
-.admin-name {
-  color: $gray-dark;
-  font-family: $brand-font-cisco-TT-Extra-Light;
-  font-size: 16px;
-  line-height: 1;
-}
-
-.btn--actions {
-  float: right;
-  padding: 15px 30px;
-  text-align: center;
-}
-
-.user-status {
-  padding: 14px 20px 14px 20px;
-}
-
-.filter {
-  top: 35px;
-}
-
-.all-filter {
-  text-align: right;
 }

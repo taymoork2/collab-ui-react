@@ -1,7 +1,7 @@
 .dashboard-info-panel {
   background: white;
   border: 1px solid $gray-lighter;
-  margin-bottom: 10px;
+  margin: 1rem 0;
 
   &:first-child {
     background: $brand-white;
@@ -69,8 +69,8 @@
   position: absolute;
   border-left: 17px solid transparent;
   border-right: 17px solid transparent;
-  bottom: 100%;
-  right: vr-adjust(70);
+  top: 0;
+  right: vr-adjust(50);
   border-bottom: 17px solid #FFF;
   margin-top: 0px;
   z-index: 1;
@@ -82,8 +82,8 @@
   position: absolute;
   border-left: 17px solid transparent;
   border-right: 17px solid transparent;
-  bottom: 100%;
-  right: vr-adjust(70);
+  top: -1px;
+  right: vr-adjust(50);
   margin-top: 0px;
   z-index: 1;
   border-bottom: 17px solid $gray-lighter;

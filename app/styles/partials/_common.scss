@@ -21,11 +21,6 @@ body {
   padding: 0;
 }
 
-.page-option-buttons {
-  padding-top: 27px;
-  float: right;
-}
-
 .page-options-bar {}
 
 .content-view {
@@ -51,9 +46,9 @@ body {
 
 .icon {
   .icon-export & {
-    @include vr-spacing(mr, 1.875);
-    line-height: 2.813rem;
-    color: $brand-info;
+    // @include vr-spacing(mr, 1.875);
+    // line-height: 2.813rem;
+    // color: $brand-info;
   }
 }
 

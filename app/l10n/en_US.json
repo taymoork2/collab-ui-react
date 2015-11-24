@@ -616,6 +616,8 @@
     "new": "New",
     "devices": "Devices",
     "users": "Users",
+    "settings": "Settings",
+    "resources": "Resources",
     "download": "Download"
   },
   "notifications": {
