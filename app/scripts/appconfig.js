@@ -36,7 +36,6 @@ angular
           authenticate: false
         })
         .state('main', {
-          url: '',
           views: {
             'main@': {
               templateUrl: 'modules/core/views/main.tpl.html'
@@ -153,9 +152,7 @@ angular
       var futureOverviewState = {
         type: 'futureOverview',
         stateName: 'overview',
-        url: '/overview',
-        controllerAs: 'overview',
-        parent: 'main'
+        url: '/overview'
       };
 
       $futureStateProvider.futureState(futureOverviewState);
