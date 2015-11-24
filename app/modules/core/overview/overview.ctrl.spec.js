@@ -5,7 +5,7 @@ describe('Controller: OverviewCtrl', function () {
   // load the controller's module
   beforeEach(module('Core'));
 
-  var controller, $scope, $q, $state, ReportsService, Orgservice, ServiceDescriptor, Log, Config, $translate, CannedDataService, WebexReportService, WebExUtilsFact, Authinfo;
+  var controller, $scope, $q, $state, ReportsService, Orgservice, ServiceDescriptor, ServiceStatusDecriptor, Log, Config, $translate, CannedDataService, WebexReportService, WebExUtilsFact, Authinfo;
 
   describe('Wire up', function () {
     beforeEach(inject(defaultWireUpFunc));
@@ -62,38 +62,58 @@ describe('Controller: OverviewCtrl', function () {
 
     it('should set the serviceHealth on each service based on enabled and ack on each service', function () {
       var hybridCard = controller.hybridCard;
+      //hybridCard.hybridStatusEventHandler([{
+      //  name: 'fake.service.enabled.ack',
+      //  enabled: true,
+      //  acknowledged: true
+      //}, {
+      //  name: 'fake.service.ack',
+      //  enabled: false,
+      //  acknowledged: true
+      //}, {
+      //  name: 'fake.service.enabled',
+      //  enabled: true,
+      //  acknowledged: false
+      //}, {
+      //  name: 'fake.service',
+      //  enabled: false,
+      //  acknowledged: false
+      //}]);
+
       hybridCard.hybridStatusEventHandler([{
-        name: 'fake.service.enabled.ack',
-        enabled: true,
-        acknowledged: true
+        id: 'squared-fusion-mgmt'
       }, {
-        name: 'fake.service.ack',
-        enabled: false,
-        acknowledged: true
+        id: 'squared-fusion-media'
       }, {
-        name: 'fake.service.enabled',
-        enabled: true,
-        acknowledged: false
-      }, {
-        name: 'fake.service',
-        enabled: false,
-        acknowledged: false
+        id: 'fake.service.nostatus'
       }]);
 
+      var serviceMap = {};
+      serviceMap['c_mgmt'] = true;
+      serviceMap['c_ucmc'] = true;
+      serviceMap['c_cal'] = false;
+
+      //hybridCard.serviceToTypeMap = {};
+      //hybridCard.serviceToTypeMap['fake.service.nonoperational'] = 'c_ucmc';
+      //hybridCard.serviceToTypeMap['fake.service.operational'] = 'c_cal';
+
+      hybridCard.adminOrgServiceStatusEventHandler({
+        status: serviceMap
+      });
       expect(hybridCard.services).toBeDefined();
 
       var testService = function (name, expectedHealth) {
         var serviceInTest = _(hybridCard.services).filter(function (service) {
-          return service.name == name;
+          return service.id == name;
         }).first();
         expect(serviceInTest).toBeDefined();
         expect(serviceInTest.healthStatus).toEqual(expectedHealth);
       };
 
-      testService('fake.service.enabled.ack', 'success');
-      testService('fake.service.ack', 'warning');
-      testService('fake.service.enabled', 'warning');
-      testService('fake.service', 'warning');
+      testService('squared-fusion-mgmt', 'success');
+      testService('squared-fusion-media', 'warning');
+      testService('fake.service.nostatus', 'warning');
+      //testService('fake.service', 'warning');
 
     });
   });
@@ -103,17 +123,17 @@ describe('Controller: OverviewCtrl', function () {
     it('should update the list of services from an hybridStatusEvent', function () {
       var hybridCard = controller.hybridCard;
       hybridCard.hybridStatusEventHandler([{
-        name: 'fake.service',
+        id: 'fake.service',
         enabled: true,
         acknowledged: true
       }]);
 
       expect(hybridCard.services).toBeDefined();
       var fakeService = _(hybridCard.services).filter(function (service) {
-        return service.name == 'fake.service';
+        return service.id == 'fake.service';
       }).first();
       expect(fakeService).toBeDefined();
-      expect(fakeService.healthStatus).toEqual('success');
+      expect(fakeService.healthStatus).toBeUndefined();
     });
   });
 
@@ -129,6 +149,16 @@ describe('Controller: OverviewCtrl', function () {
       services: function (eventHandler) {}
     };
 
+    ServiceStatusDecriptor = {
+      servicesInOrgWithStatus: function () {
+        var defer = $q.defer();
+        var serviceMap = {};
+        serviceMap['fake.service.operational'] = true;
+        serviceMap['fake.service.nonoperational'] = false;
+        defer.resolve(serviceMap);
+        return defer.promise;
+      }
+    };
     Orgservice = {
       getOrg: function (orgEventHandler) {},
       getUnlicensedUsers: function (unlicencedUsersHandler) {},
@@ -186,6 +216,7 @@ describe('Controller: OverviewCtrl', function () {
       ReportsService: ReportsService,
       Orgservice: Orgservice,
       ServiceDescriptor: ServiceDescriptor,
+      ServiceStatusDecriptor: ServiceStatusDecriptor,
       Config: Config
     });
     $scope.$apply();

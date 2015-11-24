@@ -76,7 +76,7 @@
             <ul>
               <li ng-repeat="service in overview.hybridCard.services">
                 <!--<i class="icon icon-circle" ng-class="service.healthStatus || 'disabled'"></i>-->
-                <i class="icon icon-circle" ng-class="service.healthStatus || 'success'"></i>
+                <i class="icon icon-circle" ng-class="service.healthStatus || 'error'"></i>
                 <span>{{ 'hercules.serviceNames.'+ service.id | translate}}</span>
               </li>
             </ul>

@@ -6,7 +6,7 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($scope, Log, Authinfo, $translate, $state, ReportsService, Orgservice, ServiceDescriptor, Config) {
+  function OverviewCtrl($scope, Log, Authinfo, $translate, $state, ReportsService, Orgservice, ServiceDescriptor, ServiceStatusDecriptor, Config) {
     var vm = this;
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
@@ -94,6 +94,9 @@
     vm.setupNotDone = function () {
       return !!(!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin());
     };
+
+    ServiceStatusDecriptor.servicesInOrgWithStatus().then(vm.hybridCard.adminOrgServiceStatusEventHandler);
+
   }
 
   function mapStatus(oldStatus, componentStatus) {
@@ -336,11 +339,59 @@
     this.notEnabledAction = '#overview-nm';
     this.notEnabledActionText = 'overview.cards.hybrid.notEnabledActionText';
     this.hybridStatusEventHandler = function (services) {
-      _.each(services, function (service) {
-        service.healthStatus = !service.enabled || !service.acknowledged ? 'warning' : 'success';
-      });
       card.services = services;
+      card.populateServicesWithHealth();
     };
+
+    this.adminOrgServiceStatusEventHandler = function (data) {
+      card.servicesStatus = data.status;
+      //console.log(data.status);
+      card.populateServicesWithHealth();
+
+      //if (data.success) {
+      //  console.log(data);
+      //  card.connectors = _.reduce(data.clusters, function (result, current) {
+      //    result = result || [];
+      //    return result;
+      //  });
+      //}
+
+    };
+
+    this.populateServicesWithHealth = function () {
+      if (card.services && card.servicesStatus) {
+        _.each(card.services, function (service) {
+          service.healthStatus = (serviceToTypeMap[service.id] && card.servicesStatus && card.servicesStatus[serviceToTypeMap[service.id]]) ? 'success' : 'warning';
+        });
+      }
+    };
+
+    var serviceToTypeMap = {};
+
+    serviceToTypeMap['squared-fusion-mgmt'] = "c_mgmt";
+    serviceToTypeMap['squared-fusion-uc'] = "c_ucmc";
+    serviceToTypeMap['squared-fusion-cal'] = "c_cal";
+    serviceToTypeMap['squared-fusion-media'] = "mf_mgmt";
+    //:  "cs_mgmt",
+    serviceToTypeMap['center-context'] = "cs_context";
+    //"d_openj"
+
+    //var serviceStatusFromConnector = function (service) {
+    //  //console.log("service", service, 'cardss', card.servicesStatus, 'dd', serviceToTypeMap, service.id);
+    //  //console.log('ddafa', card.servicesStatus[serviceToTypeMap[service.id]]);
+    //  return (serviceToTypeMap[service.id] && card.servicesStatus && card.servicesStatus[serviceToTypeMap[service.id]]) ? 'success' : 'warning';
+
+    //var connector = _(card.connectors).filter(function (connector) {
+    //  return connector.name == service.id;
+    //}).first();
+    //if (connector) {
+    //  return connector.isOperational ? 'success' : 'warning';
+    //} else {
+    //  return 'danger';
+    //}
+
+    //};
+
   }
 })();
 
