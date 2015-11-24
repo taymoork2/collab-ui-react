@@ -163,7 +163,7 @@
     }
     this.orgEventHandler = function (data) {
       if (data.success && data.isTestOrg && this.allLicenses && this.allLicenses.length === 0) {
-        this.enabled = true; //If we are a test org and allLicenses is empty, enable the card.
+        card.enabled = true; //If we are a test org and allLicenses is empty, enable the card.
       }
     };
   }
@@ -209,7 +209,7 @@
 
     this.orgEventHandler = function (data) {
       if (data.success && data.isTestOrg && this.allLicenses && this.allLicenses.length === 0) {
-        this.enabled = true; //If we are a test org and allLicenses is empty, enable the card.
+        card.enabled = true; //If we are a test org and allLicenses is empty, enable the card.
       }
     };
 
@@ -257,7 +257,7 @@
 
     this.orgEventHandler = function (data) {
       if (data.success && data.isTestOrg && this.allLicenses && this.allLicenses.length === 0) {
-        this.enabled = true; //If we are a test org and allLicenses is empty, enable the card.
+        card.enabled = true; //If we are a test org and allLicenses is empty, enable the card.
       }
     };
 
@@ -319,7 +319,7 @@
     }
     this.orgEventHandler = function (data) {
       if (data.success && data.isTestOrg && this.allLicenses && this.allLicenses.length === 0) {
-        this.enabled = true; //If we are a test org and allLicenses is empty, enable the card.
+        card.enabled = true; //If we are a test org and allLicenses is empty, enable the card.
       }
     };
   }
