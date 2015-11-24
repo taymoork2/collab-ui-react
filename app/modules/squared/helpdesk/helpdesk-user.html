@@ -12,6 +12,11 @@
     <div class="columns large-4 medium-5">
       <h3 class="display-name ellipsis">{{helpdeskUserCtrl.user.displayName}}</h3>
       <div class="user-info">
+        <span class="date-created" translate="helpdesk.accountCreated"></span>
+        <span class="date-created">:</span>
+        <span class="date-created user-value right">{{helpdeskUserCtrl.user.meta.created | date : 'shortDate'}}</span>
+      </div>
+      <div class="user-info">
         <span translate="helpdesk.userId"></span>:
         <span class="user-value right">{{helpdeskUserCtrl.user.id}}</span>
       </div>

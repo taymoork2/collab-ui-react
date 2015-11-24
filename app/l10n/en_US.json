@@ -2798,6 +2798,7 @@
     "userStatus": "Status",
     "userId": "Id",
     "organization": "Customer",
+    "accountCreated": "Account Created",
     "customerPortalLaunch": "Launch Customer Portal",
     "contact": "Contact",
     "claimedDomain": "Claimed Domain",
