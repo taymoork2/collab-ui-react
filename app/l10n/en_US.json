@@ -2740,12 +2740,13 @@
       },
       "message": {
         "title": "Message",
+        "notEnabledText": " Use Team Rooms with content storage to easily collaborate from any device to any user inside or outside your organization.",
         "currentTitle": "New rooms this week",
         "previousTitle": "Last week:"
       },
       "meeting": {
         "title": "Meeting",
-        "notEnabledText": "Hybrid Services allow you to integrate on-premise systems to the Cisco Collaboration Platform."
+        "notEnabledText": "Join up to 25 colleagues in a Team Room Sync-up or many more in a WebEx Meeting Center."
       },
       "call": {
         "title": "Call",

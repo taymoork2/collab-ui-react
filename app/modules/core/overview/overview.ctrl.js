@@ -125,6 +125,8 @@
     this.name = 'overview.cards.message.title';
     this.currentTitle = 'overview.cards.message.currentTitle';
     this.previousTitle = 'overview.cards.message.previousTitle';
+    this.notEnabledText = 'overview.cards.message.notEnabledText';
+    this.notEnabledFooter = 'overview.contactPartner';
     this.trial = false;
     this.enabled = false;
 
