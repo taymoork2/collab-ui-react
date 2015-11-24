@@ -923,6 +923,7 @@
     },
     "serviceNames": {
       "squared-fusion-uc": "Call Service",
+      "squared-fusion-uc.full": "Call Service Aware",
       "squared-fusion-cal": "Calendar Service",
       "squared-fusion-media": "Media Service",
       "contact-center-context": "Context Center Service",
