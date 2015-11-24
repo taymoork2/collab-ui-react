@@ -76,8 +76,9 @@ describe('ServiceDescriptor', function () {
   it("should set the email subscribers for a given service using a PATCH request", function (done) {
     $httpBackend
       .expectPATCH(
-        'https://hercules-integration.wbx2.com/v1/organizations/12345/services/squared-fusion-mgmt',
-        {emailSubscribers: "alvar@example.org"})
+        'https://hercules-integration.wbx2.com/v1/organizations/12345/services/squared-fusion-mgmt', {
+          emailSubscribers: "alvar@example.org"
+        })
       .respond(204, '');
     Service.setEmailSubscribers("squared-fusion-mgmt", "alvar@example.org", function (err) {
       expect(err).toBeNull();
