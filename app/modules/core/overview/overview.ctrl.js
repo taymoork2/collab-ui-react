@@ -6,7 +6,7 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($scope, Log, Authinfo, $translate, $state, ReportsService, Orgservice, ServiceDescriptor, Config) {
+  function OverviewCtrl($scope, Log, Authinfo, $translate, $state, ReportsService, Orgservice, ServiceDescriptor, ServiceStatusDecriptor, Config) {
     var vm = this;
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
@@ -18,16 +18,14 @@
       new RoomSystemCard()
     ];
 
-    var licenses = Authinfo.getLicenses();
+    vm.userCard = new UserCard();
+    vm.hybridCard = new HybridServicesCard();
 
     _.each(vm.cards, function (card) {
       if (card.licenseEventHandler) {
-        card.licenseEventHandler(licenses);
+        card.licenseEventHandler(Authinfo.getLicenses());
       }
     });
-
-    vm.userCard = new UserCard();
-    vm.hybridCard = new HybridServicesCard();
 
     vm.statusPageUrl = Config.getStatusPageUrl();
 
@@ -47,7 +45,14 @@
 
     ReportsService.getOverviewMetrics(true);
 
-    Orgservice.getOrg(vm.userCard.orgEventHandler);
+    Orgservice.getOrg(function (orgData) {
+      _.each(vm.cards, function (card) {
+        if (card.orgEventHandler) {
+          card.orgEventHandler(orgData);
+        }
+      });
+      vm.userCard.orgEventHandler(orgData);
+    });
     Orgservice.getUnlicensedUsers(vm.userCard.unlicensedUsersHandler);
 
     ReportsService.healthMonitor(function (data, status) {
@@ -89,6 +94,9 @@
     vm.setupNotDone = function () {
       return !!(!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin());
     };
+
+    ServiceStatusDecriptor.servicesInOrgWithStatus().then(vm.hybridCard.adminOrgServiceStatusEventHandler);
+
   }
 
   function mapStatus(oldStatus, componentStatus) {
@@ -96,6 +104,10 @@
     if (componentStatus == "partial_outage" || oldStatus == 'warning') return "warning";
     if (componentStatus == "operational") return "success";
     return "error";
+  }
+
+  function isntCancelledOrSuspended(license) {
+    return !(license.status === 'CANCELLED' || license.status === 'SUSPENDED');
   }
 
   function meeetingHealthEventHandler(card, data) {
@@ -113,7 +125,10 @@
     this.name = 'overview.cards.message.title';
     this.currentTitle = 'overview.cards.message.currentTitle';
     this.previousTitle = 'overview.cards.message.previousTitle';
+    this.notEnabledText = 'overview.cards.message.notEnabledText';
+    this.notEnabledFooter = 'overview.contactPartner';
     this.trial = false;
+    this.enabled = false;
 
     this.reportDataEventHandler = function (event, response) {
 
@@ -133,10 +148,25 @@
     };
 
     this.licenseEventHandler = function (licenses) {
-      card.trial = _.any(licenses, {
-        'offerName': 'MS',
+      this.allLicenses = licenses;
+      card.trial = _.any(filterLicenses(licenses), {
         'isTrial': true
       });
+
+      if (filterLicenses(licenses).length > 0) {
+        card.enabled = true; //don't disable if no licenses in case test org..
+      }
+    };
+
+    function filterLicenses(licenses) {
+      return _.filter(licenses, function (l) {
+        return l.licenseType === 'MESSAGING' && isntCancelledOrSuspended(l);
+      });
+    }
+    this.orgEventHandler = function (data) {
+      if (data.success && data.isTestOrg && this.allLicenses && this.allLicenses.length === 0) {
+        card.enabled = true; //If we are a test org and allLicenses is empty, enable the card.
+      }
     };
   }
 
@@ -146,27 +176,54 @@
     this.desc = 'overview.cards.meeting.desc';
     this.name = 'overview.cards.meeting.title';
     this.cardClass = 'meetings';
+    this.notEnabledText = 'overview.cards.meeting.notEnabledText';
+    this.notEnabledFooter = 'overview.contactPartner';
     this.trial = false;
-    this.settingsUrl = '#/site-list';
+    this.enabled = false;
+    this.settingsUrl = '';
     this.healthStatusUpdatedHandler = _.partial(meeetingHealthEventHandler, card);
 
     this.reportDataEventHandler = function (event, response) {
       if (!response.data.success) return;
-      if (event.name == 'groupCallsLoaded' && response.data.spanType == 'month' && response.data.intervalCount >= 2) {
+      if (event.name === 'groupCallsLoaded' && response.data.spanType === 'month' && response.data.intervalCount >= 2) {
         card.current = Math.round(response.data.data[response.data.data.length - 1].count);
         card.previous = Math.round(response.data.data[response.data.data.length - 2].count);
       }
     };
 
     this.licenseEventHandler = function (licenses) {
-      card.trial = _.any(licenses, function (l) {
-        return (
-          l.offerName == 'CF' ||
-          l.offerName == 'EE' ||
-          l.offerName == 'MC') && l.isTrial;
-      }); //list: https://sqbu-github.cisco.com/WebExSquared/wx2-admin-service/blob/master/common/src/main/java/com/cisco/wx2/atlas/common/bean/order/OfferCode.java
+      this.allLicenses = licenses;
+
+      card.trial = _.some(filterLicenses(licenses), {
+        'isTrial': true
+      });
+
+      var hasSites = _.some(licenses, function (l) {
+        return l.siteUrl;
+      });
+
+      this.settingsUrl = hasSites ? '#/site-list' : '';
+
+      if (filterLicenses(licenses).length > 0) {
+        card.enabled = true; //don't disable if no licenses in case test org..
+      }
     };
+
+    this.orgEventHandler = function (data) {
+      if (data.success && data.isTestOrg && this.allLicenses && this.allLicenses.length === 0) {
+        card.enabled = true; //If we are a test org and allLicenses is empty, enable the card.
+      }
+    };
+
+    function filterLicenses(licenses) {
+      return _.filter(licenses, function (l) {
+        //    (['CF', 'EE', 'MC', 'SC', 'TC', 'EC']).contains(l.offername);
+        return l.licenseType === 'CONFERENCING' && isntCancelledOrSuspended(l);
+      });
+    }
   }
+
+  //list: https://sqbu-github.cisco.com/WebExSquared/wx2-admin-service/blob/master/common/src/main/java/com/cisco/wx2/atlas/common/bean/order/OfferCode.java
 
   function CallCard() {
     var card = this;
@@ -175,6 +232,9 @@
     this.name = 'overview.cards.call.title';
     this.cardClass = 'people';
     this.trial = false;
+    this.enabled = false;
+    this.notEnabledText = 'overview.cards.call.notEnabledText';
+    this.notEnabledFooter = 'overview.contactPartner';
     this.settingsUrl = '#/hurondetails/settings';
     this.healthStatusUpdatedHandler = _.partial(meeetingHealthEventHandler, card);
     this.reportDataEventHandler = function (event, response) {
@@ -184,6 +244,31 @@
         card.previous = Math.round(response.data.data[response.data.data.length - 2].count);
       }
     };
+
+    this.licenseEventHandler = function (licenses) {
+      this.allLicenses = licenses;
+
+      card.trial = _.any(filterLicenses(licenses), {
+        'isTrial': true
+      });
+
+      if (filterLicenses(licenses).length > 0) {
+        card.enabled = true; //don't disable if no licenses in case test org..
+      }
+    };
+
+    this.orgEventHandler = function (data) {
+      if (data.success && data.isTestOrg && this.allLicenses && this.allLicenses.length === 0) {
+        card.enabled = true; //If we are a test org and allLicenses is empty, enable the card.
+      }
+    };
+
+    function filterLicenses(licenses) {
+      return _.filter(licenses, function (l) {
+        //  return l.offerName === 'CO'
+        return l.licenseType === 'COMMUNICATION' && isntCancelledOrSuspended(l);
+      });
+    }
   }
 
   function RoomSystemCard() {
@@ -192,6 +277,10 @@
     this.desc = 'overview.cards.roomSystem.desc';
     this.name = 'overview.cards.roomSystem.title';
     this.cardClass = 'gray';
+    this.enabled = false;
+    this.trial = false;
+    this.notEnabledText = 'overview.cards.roomSystem.notEnabledText';
+    this.notEnabledFooter = 'overview.contactPartner';
     this.currentTitle = 'overview.cards.roomSystem.currentTitle';
     this.previousTitle = 'overview.cards.roomSystem.previousTitle';
     this.settingsUrl = '#/devices';
@@ -215,10 +304,25 @@
     };
 
     this.licenseEventHandler = function (licenses) {
-      card.trial = _.any(licenses, {
-        'offerName': 'SD',
+      this.allLicenses = licenses;
+      card.trial = _.some(filterLicenses(licenses), {
         'isTrial': true
-      }); //SD = Shared Devices
+      });
+
+      if (filterLicenses(licenses).length > 0) {
+        card.enabled = true; //don't disable if no licenses in case test org..
+      }
+    };
+
+    function filterLicenses(licenses) {
+      return _.filter(licenses, function (l) {
+        return l.offerName === 'SD' && isntCancelledOrSuspended(l); //SD = Shared Devices
+      });
+    }
+    this.orgEventHandler = function (data) {
+      if (data.success && data.isTestOrg && this.allLicenses && this.allLicenses.length === 0) {
+        card.enabled = true; //If we are a test org and allLicenses is empty, enable the card.
+      }
     };
   }
 
@@ -242,11 +346,36 @@
   function HybridServicesCard() {
     var card = this;
     this.icon = 'icon-circle-data';
+    this.enabled = true;
+    this.notEnabledText = 'overview.cards.hybrid.notEnabledText';
+    this.notEnabledAction = '#overview';
+    this.notEnabledActionText = 'overview.cards.hybrid.notEnabledActionText';
     this.hybridStatusEventHandler = function (services) {
-      _.each(services, function (service) {
-        service.statusIcon = !service.enabled || !service.acknowledged ? 'warning' : 'success';
-      });
       card.services = services;
+      card.populateServicesWithHealth();
     };
+
+    this.adminOrgServiceStatusEventHandler = function (status) {
+      card.servicesStatus = status;
+      card.populateServicesWithHealth();
+    };
+
+    this.populateServicesWithHealth = function () {
+      if (card.services && card.servicesStatus) {
+        _.each(card.services, function (service) {
+          service.healthStatus = (serviceToTypeMap[service.id] && card.servicesStatus && card.servicesStatus[serviceToTypeMap[service.id]]) ? 'success' : 'warning';
+        });
+      }
+    };
+
+    var serviceToTypeMap = {};
+
+    serviceToTypeMap['squared-fusion-mgmt'] = "c_mgmt";
+    serviceToTypeMap['squared-fusion-uc'] = "c_ucmc";
+    serviceToTypeMap['squared-fusion-cal'] = "c_cal";
+    serviceToTypeMap['squared-fusion-media'] = "mf_mgmt";
+    //:  "cs_mgmt",  not mapped
+    serviceToTypeMap['center-context'] = "cs_context";
+    //"d_openj"  not mapped
   }
 })();

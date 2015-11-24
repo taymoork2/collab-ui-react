@@ -923,6 +923,7 @@
     },
     "serviceNames": {
       "squared-fusion-uc": "Call Service",
+      "squared-fusion-uc.full": "Call Service Aware",
       "squared-fusion-cal": "Calendar Service",
       "squared-fusion-media": "Media Service",
       "contact-center-context": "Context Center Service",
@@ -1779,7 +1780,7 @@
     "emailSuccessText": "Email successfully sent to customer.",
     "emailFailText": "Error sending email",
     "inputPlacehoder": "Enter phone numbers separated by commas",
-    "didFormatHelpText": "For example: 15556667777, +15556667777, 1-555-666-7777, +1 (555) 666-7777",
+    "didFormatHelpText": "For example: {{examples}}",
     "didAlreadyExist": "Phone number already exists."
   },
   "deviceDetailPage": {
@@ -2728,6 +2729,7 @@
     "pageTitle": "Overview",
     "thisMonth": "This month",
     "lastMonth": "Last month:",
+    "contactPartner": "Contact your partner or Cisco Sales for more information",
     "cards": {
       "users": {
         "title": "Users",
@@ -2738,27 +2740,28 @@
       },
       "message": {
         "title": "Message",
-        "desc": "Active Rooms",
-        "currentTitle": "Active rooms this week",
+        "notEnabledText": " Use Team Rooms with content storage to easily collaborate from any device to any user inside or outside your organization.",
+        "currentTitle": "New rooms this week",
         "previousTitle": "Last week:"
-
       },
       "meeting": {
         "title": "Meeting",
-        "desc": "Meetings"
+        "notEnabledText": "Join up to 25 colleagues in a Team Room Sync-up or many more in a WebEx Meeting Center."
       },
       "call": {
         "title": "Call",
-        "desc": "Calls"
+        "notEnabledText": "Basic external calling and full Unified Communications enabled for your organization."
       },
       "roomSystem": {
         "title": "Room Systems",
-        "desc": "Registered Systems",
         "currentTitle": "Online this week",
-        "previousTitle": "Last week:"
+        "previousTitle": "Last week:",
+        "notEnabledText": "Meeting room video endpoints that seamlessly integrate with your cloud collaboration."
       },
       "hybrid": {
-        "title": "Hybrid Services"
+        "title": "Hybrid Services",
+        "notEnabledText": "Hybrid Services allow you to integrate on-premise systems to the Cisco Collaboration Platform.",
+        "notEnabledActionText": "Learn More"
       }
     }
   },
@@ -2780,10 +2783,9 @@
     "noSearchHits": "No matches found. Try to narrow your search...",
     "searchInputDescription": "Search and view a user or a customer.",
     "roles": "Roles",
-    "goToSearch": "Go to Search",
-    "sso": "SSO",
-    "dirSync": "Directory Sync",
-    "createdAt": "Created At",
+    "backToSearchResults": "Back to search results",
+    "sso": "Single Sign On (SSO)",
+    "dirSync": "Directory Synchronization",
     "type": "Type",
     "partner": "Partner",
     "customer": "Customer",
@@ -2793,6 +2795,40 @@
     "mobile": "mobile",
     "work": "work",
     "fax": "fax",
-    "searchingOrg": "Searching {{name}}"
+    "searchingOrg": "Searching {{name}}",
+    "userStatus": "Status",
+    "userId": "Id",
+    "organization": "Customer",
+    "customerPortalLaunch": "Launch Customer Portal",
+    "contact": "Contact",
+    "claimedDomain": "Claimed Domain",
+    "partners": "Partners",
+    "administratorUsers": "Administrator Users",
+    "message": "Message",
+    "meeting": "Meeting",
+    "call": "Call",
+    "rooms": "Rooms",
+    "hybridServices": "Hybrid Services",
+    "entitlements": {
+      "webex-squared": "Free Spark Messaging",
+      "squared-syncup.paid": "25 Party Meetings",
+      "squared-syncup.free": "Free 3 Party Spark Meetings",
+      "squared-room-moderation.paid": "Standard Team Rooms",
+      "squared-room-moderation.free": "Free Spark Messaging",
+      "ciscouc.paid": "Advanced Spark Call",
+      "ciscouc.free": "Free 1:1 Spark Call"
+    },
+    "userStatuses": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "pending": "Invite Pending",
+      "transient": "Transient",
+      "fraud": "Fraud",
+      "compliance": "Compliance"
+    },
+    "entitlementsHeading": "Entitlements",
+    "enabledServices": "Enabled Services",
+    "none": "None",
+    "webexsites": "WebEx Sites"
   }
 }

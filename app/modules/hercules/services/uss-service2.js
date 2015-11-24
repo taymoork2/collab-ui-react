@@ -46,8 +46,12 @@
     }
 
     function getStatusesForUser(userId) {
+      return getStatusesForUserInOrg(userId, Authinfo.getOrgId());
+    }
+
+    function getStatusesForUserInOrg(userId, orgId) {
       return $http
-        .get(ConfigService.getUSSUrl() + '/userStatuses?userId=' + userId + '&orgId=' + Authinfo.getOrgId())
+        .get(ConfigService.getUSSUrl() + '/userStatuses?userId=' + userId + '&orgId=' + orgId)
         .then(function (res) {
           return _.filter(res.data.userStatuses, function (nugget) {
             return nugget.entitled || (nugget.entitled === false && nugget.state != "deactivated");
@@ -83,7 +87,8 @@
       updateOrg: updateOrg,
       getStatusesSummary: getStatusesSummary,
       getStatuses: getStatuses,
-      subscribeStatusesSummary: hub.on
+      subscribeStatusesSummary: hub.on,
+      getStatusesForUserInOrg: getStatusesForUserInOrg
     };
   }
 
