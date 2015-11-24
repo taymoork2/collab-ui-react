@@ -11,6 +11,7 @@
     vm.searchingForOrgs = false;
     vm.searchingForDevices = false;
     vm.searchString = '';
+    vm.keypressValidation = keypressValidation;
     vm.currentSearch = {
       searchString: '',
       userSearchResults: null,
@@ -24,8 +25,10 @@
         this.searchString = searchString;
         this.userSearchResults = null;
         this.orgSearchResults = null;
+        this.deviceSearchResults = null;
         this.userSearchFailure = null;
         this.orgSearchFailure = null;
+        this.deviceSearchFailure = null;
       }
     };
     angular.element('#searchInput').focus();
@@ -89,6 +92,48 @@
       vm.searchString = '';
       vm.currentSearch.initSearch('');
       vm.currentSearch.orgFilter = null;
+    }
+
+    function keypressValidation(event) {
+      var activeCard = angular.element(document.activeElement)[0]["tabIndex"];
+      var newTabIndex = activeCard;
+      switch (event.keyCode.toString()) {
+      case "37":
+        newTabIndex = parseInt(activeCard) - 1;
+        break;
+
+      case "38":
+        newTabIndex = parseInt(activeCard) - 10;
+        break;
+
+      case "39":
+        newTabIndex = parseInt(activeCard) + 1;
+        break;
+
+      case "40":
+        newTabIndex = parseInt(activeCard) + 10;
+        break;
+
+      case "27":
+        if (angular.element(document.activeElement)[0]["id"] == "searchInput") {
+          angular.element('#searchInput').val("");
+        } else {
+          angular.element('#searchInput').focus().select();
+          newTabIndex = "-1";
+        }
+        break;
+
+      case "13":
+        if (angular.element(document.activeElement)[0]["id"] == "searchInput") {
+          newTabIndex = 1;
+        } else {
+          angular.element(document.activeElement).click();
+        }
+        break;
+      }
+      if (newTabIndex != "-1") {
+        $('[tabindex=' + newTabIndex + ']').focus();
+      }
     }
   }
 

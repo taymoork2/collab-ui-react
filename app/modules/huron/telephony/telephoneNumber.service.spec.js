@@ -7,6 +7,8 @@ describe('Service: TelephoneNumberService', function () {
   var invalidNumberNoFormat = '2005251111';
   var validE164 = '+14695251111';
   var invalidE164 = '+12005251111';
+  var tollFreeNumber = '+18003287448';
+  var premiumNumber = '+19003287448';
 
   beforeEach(module('Huron'));
 
@@ -47,6 +49,14 @@ describe('Service: TelephoneNumberService', function () {
   it('should not transform an invalid E164', function () {
     expect(TelephoneNumberService.validateDID(invalidE164)).toEqual(false);
     expect(TelephoneNumberService.getDIDLabel(invalidE164)).toEqual(invalidE164);
+  });
+
+  it('should reject a toll free number', function () {
+    expect(TelephoneNumberService.validateDID(tollFreeNumber)).toEqual(false);
+  });
+
+  it('should reject a premium rate number', function () {
+    expect(TelephoneNumberService.validateDID(premiumNumber)).toEqual(false);
   });
 
 });
