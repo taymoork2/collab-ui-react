@@ -65,7 +65,8 @@
     </div>
     <div class="row collapse">
       <div class="small-12 columns">
-          <a class="aa-pm-primary-text" ng-click="aaPhoneMenu.addKeyAction()"><span class="aa-pm-add-key-icon aa-pm-vertical-line"></span>{{ :: 'autoAttendant.phoneMenuAddDigit' | translate }}</a>
+        <a class="aa-pm-primary-text" ng-click="aaPhoneMenu.addKeyAction()">
+          <span class="aa-pm-add-key-icon aa-pm-vertical-line"></span>{{ :: 'autoAttendant.phoneMenuAddDigit' | translate }}</a>
       </div>
     </div>
   </div>
@@ -76,9 +77,8 @@
         <label class="control-label" for="timeoutSelect" translate="autoAttendant.phoneMenuTimeout"></label>
       </div>
       <div class="small-8 columns">
-        <select class="form-control" id="timeoutSelect" name="timeoutSelect" ng-model="aaPhoneMenu.selectedTimeout.name" ng-options="action.name as action.label for action in aaPhoneMenu.timeoutActions" ng-change="aaPhoneMenu.timeoutActionChanged()">
-          <option value="" disabled selected style="display: none;">{{ :: aaPhoneMenu.actionPlaceholder }}</option>
-        </select>
+        <cs-select ng-model="aaPhoneMenu.selectedTimeout" options="aaPhoneMenu.timeoutActions" placeholder="aaPhoneMenu.actionPlaceholder" nested="true" icon="icon-chevron-down" iconnested="icon-chevron-right" ng-change="aaPhoneMenu.saveUIModel()">
+        </cs-select>
       </div>
     </div>
   </div>

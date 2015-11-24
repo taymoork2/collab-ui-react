@@ -44,7 +44,7 @@
   },
   "ceMenu": {
     "type": "MENU_OPTION",
-    "attempts": "1",
+    "attempts": 1,
     "entries": [{
       "description": "phoneMenuRepeatMenu",
       "isConfigured": true,
@@ -96,5 +96,11 @@
       "type": "MENU_OPTION_ANNOUNCEMENT",
       "url": ""
     }]
+  },
+  "ceMenuAttempt": {
+    "type": "MENU_OPTION",
+    "attempts": 1,
+    "entries": [],
+    "headers": []
   }
 }

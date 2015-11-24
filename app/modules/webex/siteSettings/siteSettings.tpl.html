@@ -87,43 +87,4 @@
     <div ng-include="'modules/webex/siteSettings/siteSettingCards.tpl.html'"></div>
   </div>
   <!-- end of card containers -->
-
-  <!-- WebEx site admin cross launch -->
-  <p>
-    <br>&nbsp;&nbsp;
-    
-    <a href=""
-       onClick="document.getElementById('hiddenButton').click();" >
-
-      Launch&nbsp;WebEx&nbsp;Site&nbsp;Admin
-    </a>
-  </p>
 </div>
-
-<!-- WebEx site admin cross launch form -->
-<form name="siteAdminLink"
-      action="{{webexAdvancedUrl}}"
-      method="post"
-      target="webexSiteAdmin">
-
-  <input id="adminEmail"
-         name="adminEmail"
-         type="hidden"
-         value="{{adminEmailParam}}" />
-
-  <input id="locale" type="hidden"
-         name="locale"
-         type="hidden"
-         value="{{localeParam}}" />
-
-  <input id="ngxsiteurl"
-         name="ngxsiteurl"
-         type="hidden"
-         value="{{siteName}}" />
-
-  <button id="hiddenButton"
-          type="submit"
-          onclick="this.parentElement.submit();"
-          style="background-color:#ff00ff; cursor:pointer; width:100px; display:none;">
-  </button>
-</form>

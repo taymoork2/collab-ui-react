@@ -27,7 +27,7 @@
             </a>
             </li>
           
-            <h4 ng-repeat-start="subSectionObj in siteSettingCardObj.subSectionObjs" xml:lang="{{subSectionObj.lang}}">
+            <h4 ng-repeat-start="subSectionObj in siteSettingCardObj.subSectionObjs" ng-if="subSectionObj.pageObjs.length>0" xml:lang="{{subSectionObj.lang}}">
               {{subSectionObj.label}}
             </h4>
             
