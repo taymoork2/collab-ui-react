@@ -36,6 +36,7 @@ angular
           authenticate: false
         })
         .state('main', {
+          url: '',
           views: {
             'main@': {
               templateUrl: 'modules/core/views/main.tpl.html'
@@ -114,7 +115,7 @@ angular
 
 angular
   .module('Squared')
-  .config(['$urlRouterProvider', '$stateProvider','$futureStateProvider',
+  .config(['$urlRouterProvider', '$stateProvider', '$futureStateProvider',
     function ($urlRouterProvider, $stateProvider, $futureStateProvider) {
       var modalMemo = 'modalMemo';
       var wizardmodalMemo = 'wizardmodalMemo';
