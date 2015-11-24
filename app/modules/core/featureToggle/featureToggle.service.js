@@ -69,7 +69,7 @@
     }
 
     function getFeatures(isUser, id) {
-      if (angular.isUndefined(id) || !id) {
+      if (!id) {
         return $q.reject('id is undefined');
       }
 
@@ -84,7 +84,7 @@
     }
 
     function getFeature(isUser, id, feature) {
-      if (angular.isUndefined(feature) || !feature) {
+      if (!feature) {
         return $q.reject('feature is undefined');
       }
 
