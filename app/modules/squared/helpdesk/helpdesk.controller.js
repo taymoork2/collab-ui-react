@@ -99,26 +99,41 @@
       var newTabIndex = activeCard;
       switch(event.keyCode.toString()){
         case "37":
-        //left
-        newTabIndex = parseInt(activeCard) - 1;
+          newTabIndex = parseInt(activeCard) - 1;
         break;
 
         case "38":
-        //up
-        newTabIndex = parseInt(activeCard) - 10;
+          newTabIndex = parseInt(activeCard) - 10;
         break;
 
         case "39":
-        //right
-        newTabIndex = parseInt(activeCard) + 1;
+          newTabIndex = parseInt(activeCard) + 1;
         break;
 
         case "40":
-        //down
-        newTabIndex = parseInt(activeCard) + 10;
+          newTabIndex = parseInt(activeCard) + 10;
+        break;
+
+        case "27":
+          if(angular.element(document.activeElement)[0]["id"] == "searchInput"){
+            angular.element('#searchInput').val("");
+          }else{
+            angular.element('#searchInput').focus().select();
+            newTabIndex = "-1";
+          }
+        break;
+
+        case "13":
+          if(angular.element(document.activeElement)[0]["id"] == "searchInput"){
+            newTabIndex = 1;
+          }else{
+            angular.element(document.activeElement).click();
+          }
         break;
       }
-      $('[tabindex='+newTabIndex+']').focus();
+      if(newTabIndex!="-1"){
+        $('[tabindex='+newTabIndex+']').focus();
+      }
     }
   }
 
