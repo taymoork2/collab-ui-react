@@ -451,7 +451,7 @@
       }).then(function () {
         return initTimeZone();
       }).catch(function (response) {
-        errors.push(Notification.errorResponse(response, 'serviceSetupModal.customerGetError'));
+        errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.customerGetError'));
       }).then(function () {
         return listInternalExtensionRanges();
       }).then(function () {
