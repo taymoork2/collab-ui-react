@@ -94,7 +94,7 @@
       vm.currentSearch.orgFilter = null;
     }
 
-    function keypressValidation(event){
+    function keypressValidation(event) {
       var activeCard = angular.element(document.activeElement)[0]["tabIndex"];
       var newTabIndex = activeCard;
       switch(event.keyCode.toString()){

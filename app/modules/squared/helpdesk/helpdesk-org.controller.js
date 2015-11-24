@@ -4,11 +4,16 @@
   /* @ngInject */
   function HelpdeskOrgController(Config, $stateParams, HelpdeskService, XhrNotificationService, Authinfo) {
     var vm = this;
-    vm.org = $stateParams.org;
-    vm.orgId = vm.org.id;
+    var orgId = null;
+    if ($stateParams.org) {
+      vm.org = $stateParams.org;
+      orgId = vm.org.id;
+    } else {
+      orgId = $stateParams.id;
+    }
     vm.showCard = showCard;
 
-    HelpdeskService.getOrg(vm.org.id).then(function (res) {
+    HelpdeskService.getOrg(orgId).then(function (res) {
       vm.org = res;
       findPartners(vm.org);
     }, function (err) {
@@ -16,7 +21,7 @@
     });
 
     if (hasEntitlement(Config.entitlements.fusion_mgmt)) {
-      HelpdeskService.getHybridServices(vm.orgId).then(function (services) {
+      HelpdeskService.getHybridServices(orgId).then(function (services) {
         vm.enabledHybridServices = _.filter(services, {
           enabled: true
         });
@@ -63,9 +68,7 @@
         _.each(org.managedBy, function (parnterOrg) {
           HelpdeskService.getOrg(parnterOrg.orgId).then(function (res) {
             org.partners.push(res);
-          }, function (err) {
-            XhrNotificationService.notify(err);
-          });
+          }, function (err) {});
         });
       }
     }

@@ -320,23 +320,43 @@ angular.module('WebExReports').service('WebexReportService', [
     };
 
     this.initReportsObject = function (requestedSiteUrl) {
-      var reportsObject = {};
       var funcName = "initReportsObject()";
       var logMsg = funcName;
 
       var _this = this;
       var displayLabel = null;
-
       var siteUrl = requestedSiteUrl || '';
       var siteName = WebExUtilsFact.getSiteName(siteUrl);
-      logMsg = funcName + ": " + "\n" +
-        "siteUrl=" + siteUrl + "; " +
-        "siteName=" + siteName;
-      $log.log(logMsg);
 
-      reportsObject["siteUrl"] = siteUrl;
-      reportsObject["siteName"] = siteName;
-      reportsObject["viewReady"] = false;
+      var infoCardObj = WebExUtilsFact.getNewInfoCardObj(
+        siteUrl,
+        "icon icon-circle-comp-pos",
+        "icon icon-circle-clock"
+      );
+
+      infoCardObj.iframeLinkObj1.iframePageObj = {
+        id: "infoCardMeetingInProgress",
+        label: $translate.instant("webexSiteReports.meeting_in_progess"),
+        uiSref: null
+      };
+
+      infoCardObj.iframeLinkObj2.iframePageObj = {
+        id: "infoCardMeetingUsage",
+        label: $translate.instant("webexSiteReports.meeting_usage"),
+        uiSref: null
+      };
+
+      var reportsObject = {
+        viewReady: false,
+        siteUrl: siteUrl,
+        siteName: siteName,
+        infoCardObj: infoCardObj
+      };
+
+      // TODO: fix the following settings
+      reportsObject.infoCardObj.licensesTotal.count = "?";
+      reportsObject.infoCardObj.licensesUsage.count = "?";
+      reportsObject.infoCardObj.licensesAvailable.count = "?";
 
       WebExXmlApiFact.getSessionTicket(siteUrl).then(
         function getSessionTicketSuccess(sessionTicket) {
@@ -354,18 +374,22 @@ angular.module('WebExReports').service('WebexReportService', [
 
           navInfoDef.then(function (result) {
             var resultString = JSON.stringify(result);
-            $log.log("Result is ----**** " + resultString);
+            // $log.log("Result is ----**** " + resultString);
 
             var y = WebExUtilsFact.validateAdminPagesInfoXmlData(result.reportPagesInfoXml);
 
-            $log.log("Validated Result is ==== " + JSON.stringify(y.bodyJson));
+            // $log.log("Validated Result is ==== " + JSON.stringify(y.bodyJson));
 
             reportsObject["mapJson"] = y;
 
             var rpts = self.getReports(siteUrl, y);
             reportsObject["reports"] = rpts;
-            reportsObject["viewReady"] = true;
 
+            // TODO: fix the following settings
+            reportsObject.infoCardObj.iframeLinkObj1.iframePageObj.uiSref = "webex-reports({siteUrl:siteUrl})";
+            reportsObject.infoCardObj.iframeLinkObj2.iframePageObj.uiSref = "webex-reports({siteUrl:siteUrl})";
+
+            reportsObject["viewReady"] = true;
           });
 
           // what is purpose of this???

@@ -12,7 +12,6 @@
     vm.currentUser = $stateParams.currentUser;
     vm.device = $stateParams.device;
     vm.retrieveLog = retrieveLog;
-    vm.refreshLogList = refreshLogList;
     vm.viewPreviousLog = viewPreviousLog;
     vm.isPolling = isPolling;
     vm.interval = 5000; //5 seconds
@@ -32,15 +31,17 @@
     function retrieveLog() {
       resetState();
       vm.loading = true;
-      //The eventTimeout is needed for multiple calls of this method.
-      //Multiple calls without timeout will cause a false positive of the previous call
-      vm.eventTimeout = TIMEOUT_PREFIX + Date.now();
+
       DeviceLogService.retrieveLog(vm.currentUser.id, vm.device.uuid)
         .then(function (response) {
           vm.active = true;
+          //The eventTimeout is needed for multiple calls of this method.
+          //Multiple calls without timeout will cause a false positive of the previous call
+          vm.eventTimeout = TIMEOUT_PREFIX + Date.now();
           return refreshLogList();
         })
         .catch(function (response) {
+          resetState();
           Notification.errorResponse(response);
         })
         .finally(function () {
@@ -61,6 +62,7 @@
           //build log list
           var logs = response;
           if (!Array.isArray(logs) || logs.length < 1) {
+            resetState();
             Notification.error('deviceDetailPage.errorLogInvaidMsg');
             return;
           }
@@ -71,9 +73,9 @@
                 removePolling(log.trackingId);
               } else {
                 if (log.events.length === 0) {
-                  Notification.error();
                   removePolling(log.trackingId);
-                  resetState('deviceDetailPage.errorLogNotFound');
+                  resetState();
+                  Notification.error('deviceDetailPage.errorLogNotFound');
                 }
               }
             } else {
@@ -82,6 +84,7 @@
           });
         })
         .catch(function (response) {
+          resetState();
           Notification.errorResponse(response);
           //stop polling
           removeAllPolling();

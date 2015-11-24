@@ -42,6 +42,9 @@
 .helpdesk-landing {
   padding-top: 1rem;
   text-align: center;
+  .pointer {
+    cursor: pointer;
+  }
   table {
     tbody {
       tr {
