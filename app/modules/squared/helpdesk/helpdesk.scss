@@ -42,6 +42,27 @@
       margin-top: 2rem;
     }
   }
+  .org-view {
+    @extend .user-view;
+    .org-card-footer {
+      background-color: $gray-light-4;
+      padding-bottom: 0.2rem;
+      padding-top: 0.2rem;
+      padding-right: 0.2rem;
+      i {
+        line-height: inherit;
+      }
+      .operational {
+        color: $color-cta-base;
+      }
+      .warning, .partial_outage {
+        color: $color-attention-base
+      }
+      .error {
+        color: $color-alerts-base;
+      }
+    }
+  }
 }
 .helpdesk-landing {
   padding-top: 1rem;
