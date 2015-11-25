@@ -13,8 +13,8 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button id="addDidDismissButton" class="btn btn-default" ng-click="$dismiss()" translate="common.cancel"></button>
-            <button id="addDidButton" class="btn btn-primary" ng-disabled="!didAdd.submitBtnStatus" ng-click="!didAdd.submitBtnStatus || didAdd.confirmSubmit()" translate="common.save"></button>
+            <button id="addDidDismissButton" class="btn" ng-click="$dismiss()" translate="common.cancel"></button>
+            <button id="addDidButton" class="btn btn--primary" ng-disabled="!didAdd.submitBtnStatus" ng-click="!didAdd.submitBtnStatus || didAdd.confirmSubmit()" translate="common.save"></button>
         </div>
     </div>
     <div id="removeDidPanel" class="delete-numbers" ng-show="didAdd.deleteNumbers">
@@ -23,8 +23,8 @@
             <span class="badge badge-default did-badge" ng-repeat="did in didAdd.deletedNumbers">{{did}}</span>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-default" ng-click="didAdd.goBackToAddNumber()" translate="common.back"></button>
-            <button id="removeDidButton" class="btn btn-danger" ng-click="didAdd.submit()" translate="didManageModal.removeNumbers"></button>
+            <button class="btn" ng-click="didAdd.goBackToAddNumber()" translate="common.back"></button>
+            <button id="removeDidButton" class="btn btn--negative" ng-click="didAdd.submit()" translate="didManageModal.removeNumbers"></button>
         </div>
     </div>
     <div class="adding-numbers" ng-show="didAdd.processing">
@@ -41,7 +41,7 @@
             <p ng-if="didAdd.unchangedCount" translate="didManageModal.existingDidText" translate-values="{count: didAdd.unchangedCount}"></p>
             <p ng-if="didAdd.addedCount" translate="didManageModal.newDidText" translate-values="{count: didAdd.addedCount}"></p>
             <p ng-if="didAdd.deletedCount" translate="didManageModal.deleteDidText" translate-values="{count: didAdd.deletedCount}"></p>
-            <button class="btn btn-info" ng-click="didAdd.sendEmail()" translate="didManageModal.sendEmail"></button>
+            <button class="btn btn--people" ng-click="didAdd.sendEmail()" translate="didManageModal.sendEmail"></button>
         </div>
         <div class="modal-footer">
             <a id="notifyCustLaterLink" href ng-click="$dismiss()" translate="didManageModal.notifyCustLater"></a>

@@ -20,8 +20,8 @@ angular.module('Core')
       };
 
       $scope.isCalendarAcknowledged = true;
-      $scope.isCallAcknowledged = true;
-      var extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-uc'];
+      $scope.isCallAwareAcknowledged = true;
+      $scope.isCallConnectAcknowledged = true;
 
       $scope.currentDate = moment().subtract(1, 'months').format('LL');
       var weekOf = $translate.instant('reports.weekOf');
@@ -40,7 +40,13 @@ angular.module('Core')
       }];
 
       $scope.showServiceActivationPage = function (serviceName) {
-        $state.go(serviceName + '.list');
+        if (serviceName === 'calendar-service') {
+          $state.go('calendar-service.list');
+        } else if (serviceName === 'call-aware-service') {
+          $state.go('call-service.list');
+        } else if (serviceName === 'call-connect-service') {
+          $state.go('call-service.list');
+        }
         $scope.setHybridAcknowledged(serviceName);
       };
 
@@ -263,10 +269,12 @@ angular.module('Core')
         Orgservice.getHybridServiceAcknowledged().then(function (response) {
           if (response.status === 200) {
             angular.forEach(response.data.items, function (items) {
-              if (items.id === extensionEntitlements[0]) {
+              if (items.id === Config.entitlements.fusion_cal) {
                 $scope.isCalendarAcknowledged = items.acknowledged;
-              } else if (items.id === extensionEntitlements[1]) {
-                $scope.isCallAcknowledged = items.acknowledged;
+              } else if (items.id === Config.entitlements.fusion_uc) {
+                $scope.isCallAwareAcknowledged = items.acknowledged;
+              } else if (items.id === Config.entitlements.fusion_ec) {
+                $scope.isCallConnectAcknowledged = items.acknowledged;
               }
             });
           } else {
@@ -278,8 +286,10 @@ angular.module('Core')
       $scope.setHybridAcknowledged = function (serviceName) {
         if (serviceName === 'calendar-service') {
           $scope.isCalendarAcknowledged = true;
-        } else if (serviceName === 'call-service') {
-          $scope.isCallAcknowledged = true;
+        } else if (serviceName === 'call-aware-service') {
+          $scope.isCallAwareAcknowledged = true;
+        } else if (serviceName === 'call-connect-service') {
+          $scope.isCallConnectAcknowledged = true;
         }
         Orgservice.setHybridServiceAcknowledged(serviceName);
       };

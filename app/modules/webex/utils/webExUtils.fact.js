@@ -4,17 +4,66 @@
   angular.module('WebExUtils').factory('WebExUtilsFact', [
     '$q',
     '$log',
+    'Authinfo',
+    'Orgservice',
     'WebExXmlApiFact',
     'WebExXmlApiInfoSvc',
-    'Authinfo',
-    function (
+    function webexUtilsFact(
       $q,
       $log,
+      Authinfo,
+      Orgservice,
       WebExXmlApiFact,
-      webExXmlApiInfoObj,
-      Authinfo
+      webExXmlApiInfoObj
     ) {
       var obj = {};
+
+      obj.getSiteName = function (siteUrl) {
+        var index = siteUrl.indexOf(".");
+        var siteName = siteUrl.slice(0, index);
+
+        return siteName;
+      }; // getSiteName()
+
+      obj.getNewInfoCardObj = function (
+        label,
+        iconClass1,
+        iconClass2
+      ) {
+
+        var infoCardObj = {
+          id: "SiteInfo",
+          label: label,
+
+          licensesTotal: {
+            id: "licensesTotal",
+            count: "---"
+          },
+
+          licensesUsage: {
+            id: "licensesUsage",
+            count: "---"
+          },
+
+          licensesAvailable: {
+            id: "licensesAvailable",
+            count: "---"
+          },
+
+          iframeLinkObj1: {
+            iconClass: iconClass1,
+            iframePageObj: null,
+          },
+
+          iframeLinkObj2: {
+            iconClass: iconClass2,
+            iframePageObj: null,
+          },
+        };
+
+        return infoCardObj;
+
+      }; // getNewInfoObj()
 
       obj.validateXmlData = function (
         commentText,
@@ -126,13 +175,6 @@
         return adminPagesInfo;
       }; // validateAdminPagesInfoXmlData()
 
-      obj.getSiteName = function (siteUrl) {
-        var index = siteUrl.indexOf(".");
-        var siteName = siteUrl.slice(0, index);
-
-        return siteName;
-      }; // getSiteName()
-
       obj.getSiteVersion = function (siteVersionJsonObj) {
         var funcName = "getSiteVersion()";
         var logMsg = "";
@@ -160,8 +202,66 @@
         return trainReleaseJson;
       }; // getSiteVersion()
 
+      obj.getWebexLicenseInfo = function (siteUrl) {
+        var deferredGetWebexLicenseInfo = $q.defer();
+
+        Orgservice.getValidLicenses().then(
+          function getValidLicensesSuccess(licenses) {
+            var funcName = "getValidLicensesSuccess()";
+            var logMsg = "";
+
+            logMsg = funcName + ": " + "\n" +
+              "licenses=" + JSON.stringify(licenses);
+            $log.log(logMsg);
+
+            var licenseInfo = null;
+
+            licenses.forEach(
+              function checkLicense(license) {
+                logMsg = funcName + ": " + "\n" +
+                  "license=" + JSON.stringify(license);
+                // $log.log(logMsg);
+
+                if (
+                  ("CONFERENCING" == license.licenseType) &&
+                  (0 <= license.licenseId.indexOf(siteUrl))
+                ) {
+
+                  var licenseVolume = license.volume;
+                  var licenseUsage = license.usage;
+                  var licensesAvailable = licenseVolume - licenseUsage;
+
+                  licenseInfo = {
+                    volume: licenseVolume,
+                    usage: licenseUsage,
+                    available: licensesAvailable
+                  };
+
+                  deferredGetWebexLicenseInfo.resolve(licenseInfo);
+                }
+              } // checkLicense()
+            ); // licenses.forEach()
+
+            deferredGetWebexLicenseInfo.reject(licenseInfo);
+          }, // getValidLicensesSuccess()
+
+          function getValidLicensesError(info) {
+            var funcName = "getValidLicensesError()";
+            var logMsg = "";
+
+            logMsg = funcName + ": " + "\n" +
+              "info=" + JSON.stringify(info);
+            $log.log(logMsg);
+
+            deferredGetWebexLicenseInfo.reject(info);
+          } // getValidLicensesError()
+        ); // Orgservice.getValidLicenses().then()
+
+        return deferredGetWebexLicenseInfo.promise;
+      }; // getWebexLicenseInfo()
+
       obj.isSiteSupportsIframe = function (siteUrl) {
-        var deferred = $q.defer();
+        var deferredIsSiteSupportsIframe = $q.defer();
 
         getSessionTicket().then(
           function getSessionTicketSuccess(response) {
@@ -177,10 +277,20 @@
                 var funcName = "getSiteDataSuccess()";
                 var logMsg = "";
 
+                var siteVersionJsonObj = obj.validateSiteVersionXmlData(response.siteVersionXml);
+                var siteInfoJsonObj = obj.validateSiteInfoXmlData(response.siteInfoXml);
+
+                var isIframeSupported = isIframeSupportedCheck(
+                  siteVersionJsonObj,
+                  siteInfoJsonObj
+                );
+
+                var isAdminReportEnabled = isAdminReportEnabledCheck(siteInfoJsonObj);
+
                 var result = {
                   siteUrl: siteUrl,
-                  isIframeSupported: iframeSupportedSiteVersionCheck(response),
-                  isAdminReportEnabled: isAdminReportEnabledCheck(response)
+                  isIframeSupported: isIframeSupported,
+                  isAdminReportEnabled: isAdminReportEnabled
                 };
 
                 logMsg = funcName + ": " + "\n" +
@@ -188,7 +298,7 @@
                   "result=" + JSON.stringify(result);
                 $log.log(logMsg);
 
-                deferred.resolve(result);
+                deferredIsSiteSupportsIframe.resolve(result);
               }, // getSiteDataSuccess()
 
               function getSiteDataError(response) {
@@ -206,7 +316,7 @@
                   "result=" + JSON.stringify(result);
                 $log.log(logMsg);
 
-                deferred.reject(result);
+                deferredIsSiteSupportsIframe.reject(result);
               } // getSiteDataError()
             ); // getSiteData().then
           }, // getSessionTicketSuccess()
@@ -226,7 +336,7 @@
               "result=" + JSON.stringify(result);
             $log.log(logMsg);
 
-            deferred.reject(result);
+            deferredIsSiteSupportsIframe.reject(result);
           } // getSessionTicketError()
         ); // getSessionTicket(siteUrl).then()
 
@@ -244,33 +354,53 @@
           });
         } // getSiteData()
 
-        function iframeSupportedSiteVersionCheck(getInfoResult) {
-          var funcName = "iframeSupportedSiteVersionCheck()";
+        function isIframeSupportedCheck(
+          siteVersionJsonObj,
+          siteInfoJsonObj
+        ) {
+
+          var funcName = "isIframeSupportedCheck()";
           var logMsg = "";
 
-          var siteVersionJsonObj = obj.validateSiteVersionXmlData(getInfoResult.siteVersionXml);
-          var trainReleaseJsonObj = obj.getSiteVersion(siteVersionJsonObj);
+          var isIframeEnabledT30 = false;
+          var isIframeSupportedVersion = false;
 
-          var trainReleaseVersion = trainReleaseJsonObj.trainReleaseVersion;
-          var trainReleaseOrder = trainReleaseJsonObj.trainReleaseOrder;
-          var iframeSupportedSiteVersion = (
-            (null != trainReleaseOrder) &&
-            (400 <= +trainReleaseOrder)
-          ) ? true : false;
+          if ("" === siteVersionJsonObj.errId) { // got a good response
+            var trainReleaseJsonObj = obj.getSiteVersion(siteVersionJsonObj);
+
+            var trainReleaseVersion = trainReleaseJsonObj.trainReleaseVersion;
+            var trainReleaseOrder = trainReleaseJsonObj.trainReleaseOrder;
+
+            isIframeSupportedVersion = (
+              (null != trainReleaseOrder) &&
+              (400 <= +trainReleaseOrder)
+            ) ? true : false;
+
+            // do additional checks for a t30 site
+            if (!isIframeSupportedVersion) {
+              if ("" === siteInfoJsonObj.errId) { // got a good response
+                isIframeEnabledT30 = false; // TODO
+              }
+            }
+          }
+
+          var isIframeSupported = isIframeEnabledT30 || isIframeSupportedVersion;
 
           logMsg = funcName + ": " + "\n" +
             "siteUrl=" + siteUrl + "\n" +
-            "trainReleaseVersion=" + trainReleaseVersion + "\n" +
-            "trainReleaseOrder=" + trainReleaseOrder + "\n" +
-            "iframeSupportedSiteVersion=" + iframeSupportedSiteVersion;
-          $log.log(logMsg);
+            "isIframeSupportedVersion=" + isIframeSupportedVersion + "\n" +
+            "isIframeEnabledT30=" + isIframeEnabledT30 + "\n" +
+            "isIframeSupported=" + isIframeSupported;
+          // $log.log(logMsg);
 
-          return iframeSupportedSiteVersion;
-        } // iframeSupportedSiteVersionCheck()
+          return isIframeSupported;
+        } // isIframeSupportedCheck()
 
-        function isAdminReportEnabledCheck(getInfoResult) {
+        function isAdminReportEnabledCheck(siteInfoJsonObj) {
+          var funcName = "isAdminReportEnabledCheck()";
+          var logMsg = "";
+
           var isAdminReportEnabled = false;
-          var siteInfoJsonObj = obj.validateSiteInfoXmlData(getInfoResult.siteInfoXml);
 
           if ("" === siteInfoJsonObj.errId) { // got a good response
             var siteInfoJson = siteInfoJsonObj.bodyJson;
@@ -283,10 +413,10 @@
           return isAdminReportEnabled;
         } // isAdminReportEnabledCheck()
 
-        return deferred.promise;
-      };
+        return deferredIsSiteSupportsIframe.promise;
+      }; // isSiteSupportsIframe()
 
       return obj;
-    }
+    } // webexUtilsFact()
   ]);
 })();

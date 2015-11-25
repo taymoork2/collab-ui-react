@@ -93,7 +93,7 @@
       });
       */
 
-      toaster.pop('warning', null, message + '<br/> <div class="clearfix"><button type="button" class="btn btn-danger ui-ml notification-yes right">' + $translate.instant('common.yes') + '</button>' + '<button type="button" class="btn btn-default right notification-no">' + $translate.instant('common.no') + '</button></div>');
+      toaster.pop('warning', null, message + '<br/> <div class="clearfix"><button type="button" class="btn btn--negative ui-ml notification-yes right">' + $translate.instant('common.yes') + '</button>' + '<button type="button" class="btn right notification-no">' + $translate.instant('common.no') + '</button></div>');
       $timeout(function () {
         angular.element('.notification-yes').on('click', function () {
           toaster.clear('*');

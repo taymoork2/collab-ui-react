@@ -1,34 +1,7 @@
+<aa-say-message aa-schedule="{{schedule}}" aa-index="index" aa-header="true"></aa-say-message>
 <div class="aa-phone-menu">
-  <div class="row collapse">
-    <div class="small-12 columns">
-      <label class="control-label" disabled for="sayMessageInput" translate="autoAttendant.actionSayMessage"></label>
-      <textarea class="control-text" type="text" id="sayMessageInput" name="sayMessageInput" ng-model="aaPhoneMenu.sayMessage" ng-blur="aaPhoneMenu.saveUIModel()" required placeholder="{{ :: 'autoAttendant.phoneMenuSayPlaceholder' | translate }}" cols="60" rows="4" />
-    </div>
-  </div>
-  <div class="row collapse-both">
-    <div class="small-6 columns">
-      <label class="control-label" disabled for="sayMessageLanguage" translate="common.language"></label>
-      <select class="aa-pm-language-select" id="sayMessageLanguage" name="sayMessageLanguage" ng-model="languages" ng-options="language for language in aaPhoneMenu.languages">
-        <option value="" disabled selected style="display: none;">{{ :: aaPhoneMenu.selectPlaceholder }}</option>
-      </select>
-    </div>
-    <div class="small-6 columns">
-      <label class="control-label" disabled for="sayMessageVoice" translate="common.voice"></label>
-      <select class="aa-pm-voice-select" id="sayMessageVoice" name="sayMessageVoice" ng-model="voices" ng-options="voice for voice in aaPhoneMenu.voices">
-        <option value="" disabled selected style="display: none;">{{ :: aaPhoneMenu.selectPlaceholder }}</option>
-      </select>
-    </div>
-  </div>
-  <!-- we have key actions -->
-  <div ng-show="aaPhoneMenu.selectedActions.length">
-    <div class="row collapse">
-      <div class="small-12 columns">
-        <label class="control-label" disabled translate="autoAttendant.phoneMenuListening"></label>
-      </div>
-    </div>
-  </div>
   <div class="panel">
-    <div ng-show="aaPhoneMenu.selectedActions.length">
+    <div ng-if="aaPhoneMenu.selectedActions.length">
       <div class="row collapse-left" ng-repeat="keyAction in aaPhoneMenu.selectedActions">
         <div class="small-3 columns">
           <select class="aa-pm-key-select" id="keySelect" name="keySelect" ng-model="keyAction.key" ng-options="key for key in keyAction.keys" ng-change="aaPhoneMenu.keyChanged($index, keyAction.key)">
@@ -46,7 +19,7 @@
       </div>
     </div>
     <!-- we do not have any key actions -->
-    <div ng-show="!aaPhoneMenu.selectedActions.length">
+    <div ng-if="!aaPhoneMenu.selectedActions.length">
       <div class="row collapse-left" ng-repeat="keyAction in aaPhoneMenu.selectedActions">
         <div class="small-3 columns">
           <select id="actionAdd" name="actionAdd" ng-model="aaPhoneMenu.selectedAction" ng-options="action.label for action in aaPhoneMenu.keyActions">
@@ -65,7 +38,8 @@
     </div>
     <div class="row collapse">
       <div class="small-12 columns">
-          <a class="aa-pm-primary-text" ng-click="aaPhoneMenu.addKeyAction()"><span class="aa-pm-add-key-icon aa-pm-vertical-line"></span>{{ :: 'autoAttendant.phoneMenuAddDigit' | translate }}</a>
+        <a class="aa-pm-primary-text" ng-click="aaPhoneMenu.addKeyAction()">
+          <span class="aa-pm-add-key-icon aa-pm-vertical-line"></span>{{ :: 'autoAttendant.phoneMenuAddDigit' | translate }}</a>
       </div>
     </div>
   </div>
@@ -76,9 +50,8 @@
         <label class="control-label" for="timeoutSelect" translate="autoAttendant.phoneMenuTimeout"></label>
       </div>
       <div class="small-8 columns">
-        <select class="form-control" id="timeoutSelect" name="timeoutSelect" ng-model="aaPhoneMenu.selectedTimeout.name" ng-options="action.name as action.label for action in aaPhoneMenu.timeoutActions" ng-change="aaPhoneMenu.timeoutActionChanged()">
-          <option value="" disabled selected style="display: none;">{{ :: aaPhoneMenu.actionPlaceholder }}</option>
-        </select>
+        <cs-select ng-model="aaPhoneMenu.selectedTimeout" options="aaPhoneMenu.timeoutActions" placeholder="aaPhoneMenu.actionPlaceholder" nested="true" icon="icon-chevron-down" iconnested="icon-chevron-right" ng-change="aaPhoneMenu.saveUIModel()">
+        </cs-select>
       </div>
     </div>
   </div>

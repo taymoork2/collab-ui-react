@@ -10,12 +10,12 @@
   <div class="modal-body no-bkgd" ng-if="moh.playlists[0]">
     <div class="row">
       <div class="col-xs-4 playlist-list">
-        <a class="btn btn-sm btn-info new-playlist" translate="mohManagement.newPlaylistButton"></a>
+        <a class="btn btn--people new-playlist" translate="mohManagement.newPlaylistButton"></a>
         <ul>
           <li ng-repeat="playlist in moh.playlists" ng-class="{selected: playlist.uuid === moh.selectedUuid}" class="playlist-item" ng-click="moh.selectPlaylist(playlist.uuid, playlist.name)">
             <span class="playlist-name">{{playlist.name}}</span>
             <span class="actions-menu dropdown">
-            <button class="actions-button btn-none dropdown-toggle" aria-haspopup="true" aria-expanded="false">
+            <button class="actions-button btn--none dropdown-toggle" aria-haspopup="true" aria-expanded="false">
             <i class="icon icon-three-dots"></i>
             </button>
             <ul class="dropdown-menu dropdown-primary actions-playlist">
@@ -34,7 +34,7 @@
         <div class="playlist-detail" ng-if="moh.tracks[0]">
         <div class="row">
           <div class="col-sm-8 playlist-title">
-            <span class="">{{moh.selectedList.name}}</span>
+            <span>{{moh.selectedList.name}}</span>
           </div>
           <div class="col-sm-4 playlist-info">
             <span class="status">Saved</span>
@@ -54,7 +54,7 @@
               <span class="track-number">{{$index + 1}}.</span>
               <span class="track-name">{{track.name}}</span>
               <span class="actions-menu dropdown">
-              <button class="actions-button btn-none dropdown-toggle" aria-haspopup="true" aria-expanded="false">
+              <button class="actions-button btn--none dropdown-toggle" aria-haspopup="true" aria-expanded="false">
               <i class="icon icon-three-dots"></i>
               </button>
               <ul class="dropdown-menu dropdown-primary actions-tracklist">
@@ -71,6 +71,6 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button class="btn btn-primary btn-lg" ng-click="moh.close()">{{'common.done' | translate}}</button>
+    <button class="btn btn--primary btn--large" ng-click="moh.close()">{{'common.done' | translate}}</button>
   </div>
 </div>

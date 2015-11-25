@@ -11,7 +11,8 @@
 
 <div class="hunt-member-lookup">
   <div class="typeahead-large">
-    <input id="userInput" type="text" ng-model="huntGroupSA.userSelected" class="form-control"
+    <input id="userInput" type="text" ng-model="huntGroupSA.userSelected"
+           ng-class="{'error': huntGroupSA.errorMemberInput}"
            typeahead="user for user in huntGroupSA.fetchHuntMembers($viewValue) | limitTo:10"
            typeahead-on-select="huntGroupSA.selectHuntGroupMember($item)"
            typeahead-template-url="userTemplate.html"
@@ -25,17 +26,18 @@
     <cs-card class="small header-background primary hunt-member-card"
              ng-repeat="member in huntGroupSA.selectedHuntMembers">
       <article>
-        <header ng-click="huntGroupSA.toggleMemberPanel(member.user)"
-                ng-class="{'open-panel' : huntGroupSA.openMemberPanelUuid === member.user.uuid}">
-          <div class="header-with-right-icon">
-            <h5 class="ellipsis"
-                title="{{huntGroupSA.getDisplayName(member.user)}}">
-              {{huntGroupSA.getDisplayName(member.user)}}</h5>
+        <a href ng-click="huntGroupSA.toggleMemberPanel(member.user)">
+          <header ng-class="{'open-panel' : huntGroupSA.openMemberPanelUuid === member.user.uuid}">
+            <div class="header-with-right-icon">
+              <h5 class="ellipsis"
+                  title="{{huntGroupSA.getDisplayName(member.user)}}">
+                {{huntGroupSA.getDisplayName(member.user)}}</h5>
             <span dropdown>
               <i class="icon icon-chevron-down icon-lg"></i>
             </span>
-          </div>
-        </header>
+            </div>
+          </header>
+        </a>
         <section ng-if="(huntGroupSA.openMemberPanelUuid === member.user.uuid)">
           <p class="email">{{member.user.email}}</p>
           <fieldset>
@@ -46,7 +48,7 @@
                       id="number.uuid"
                       ng-model="member.selectableNumber"></cs-radio>
             <p>
-              <a href ng-click="huntGroupSA.unSelectHuntGroupMember(member)">Remove Member</a>
+              <a href ng-click="huntGroupSA.unSelectHuntGroupMember(member)">{{:: 'huronHuntGroup.removeMem' | translate}}</a>
             </p>
           </fieldset>
         </section>

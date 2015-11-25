@@ -1,6 +1,7 @@
 <div>
   <div class="typeahead-large">
-    <input type="text" ng-model="huntGroupSA.selectedFallbackNumber" class="form-control"
+    <input type="text" ng-model="huntGroupSA.selectedFallbackNumber"
+           ng-class="{'error': huntGroupSA.isErrorFallbackInput()}"
            typeahead="user for user in huntGroupSA.fetchFallbackDestination($viewValue) | limitTo:10"
            typeahead-on-select="huntGroupSA.selectFallback($item)"
            typeahead-template-url="userTemplate.html"
@@ -15,17 +16,18 @@
     <cs-card-layout block-view="true" ng-if="huntGroupSA.selectedFallbackMember">
       <cs-card class="small header-background primary hunt-member-card">
         <article>
-          <header ng-click="huntGroupSA.toggleFallback()"
-                  ng-class="{'open-panel' : huntGroupSA.selectedFallbackMember.openPanel}">
-            <div class="header-with-right-icon">
-              <h5 class="ellipsis"
-                  title="{{huntGroupSA.getDisplayName(huntGroupSA.selectedFallbackMember.member.user)}}">
-                {{huntGroupSA.getDisplayName(huntGroupSA.selectedFallbackMember.member.user)}}</h5>
+          <a href ng-click="huntGroupSA.toggleFallback()">
+            <header ng-class="{'open-panel' : huntGroupSA.selectedFallbackMember.openPanel}">
+              <div class="header-with-right-icon">
+                <h5 class="ellipsis"
+                    title="{{huntGroupSA.getDisplayName(huntGroupSA.selectedFallbackMember.member.user)}}">
+                  {{huntGroupSA.getDisplayName(huntGroupSA.selectedFallbackMember.member.user)}}</h5>
               <span dropdown>
                 <i class="icon icon-chevron-down icon-lg"></i>
               </span>
-            </div>
-          </header>
+              </div>
+            </header>
+          </a>
           <section ng-if="huntGroupSA.selectedFallbackMember.openPanel">
             <p class="email">{{huntGroupSA.selectedFallbackMember.member.user.email}}
             <fieldset>
@@ -36,7 +38,7 @@
                         id="number.uuid"
                         ng-model="huntGroupSA.selectedFallbackMember.member.selectableNumber"></cs-radio>
               <p>
-                <a href ng-click="huntGroupSA.removeFallbackDest()">Remove Member</a>
+                <a href ng-click="huntGroupSA.removeFallbackDest()">{{:: 'huronHuntGroup.remove' | translate}}</a>
               </p>
             </fieldset>
           </section>
@@ -51,9 +53,9 @@
       </cs-checkbox>
     </div>
     <div class="text-center fallback-container-item">
-      <button class="button" cs-btn loading="huntGroupSA.saveProgress"
+      <button class="btn" cs-btn loading="huntGroupSA.saveProgress"
               ng-click="huntGroupSA.saveHuntGroup()"
-              ng-class="{success: (huntGroupSA.isFallbackValid()), disabled: (!huntGroupSA.isFallbackValid())}">
+              ng-class="{btn--success: (huntGroupSA.isFallbackValid()), disabled: (!huntGroupSA.isFallbackValid())}">
         <span translate="huronHuntGroup.createGroupLabel"></span>
       </button>
     </div>
