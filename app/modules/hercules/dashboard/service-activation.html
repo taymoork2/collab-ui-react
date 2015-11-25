@@ -43,19 +43,19 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button ng-disabled="loading || saving" ng-hide="confirmRemove" id="convertActionButton" class="btn btn-primary pull-right" ng-click="save()">
+    <button ng-disabled="loading || saving" ng-hide="confirmRemove" id="convertActionButton" class="btn btn--primary pull-right" ng-click="save()">
       <span ng-hide="saving">Save</span>
       <span ng-show="saving">
         <i class="icon icon-spinner" />
       </span>
     </button>
-    <button ng-disabled="loading || saving" ng-show="confirmRemove" id="confirmButton" class="btn btn-danger pull-right" ng-click="confirm()">
+    <button ng-disabled="loading || saving" ng-show="confirmRemove" id="confirmButton" class="btn btn--negative pull-right" ng-click="confirm()">
       <span ng-hide="saving">Confirm</span>
       <span ng-show="saving">
         <i class="icon icon-spinner" />
       </span>
     </button>
-    <button id="convertCancelButton" class="btn btn-default pull-right" ng-click="$parent.modal.close()" style="margin-right: 10px">
+    <button id="convertCancelButton" class="btn pull-right" ng-click="$parent.modal.close()" style="margin-right: 10px">
       <span ng-hide="confirmRemove">Close</span>
       <span ng-show="confirmRemove">Cancel</span>
     </button>

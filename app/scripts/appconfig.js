@@ -57,21 +57,6 @@ angular
           parent: 'main',
           abstract: true
         })
-        .state('helpdesk-main', {
-          views: {
-            'main@': {
-              templateUrl: 'modules/squared/views/helpdesk.tpl.html'
-            }
-          },
-          abstract: true,
-          sticky: true
-        })
-        .state('helpdesk', {
-          template: '<div ui-view></div>',
-          url: '/helpdesk',
-          parent: 'helpdesk-main',
-          abstract: true
-        })
         .state('sidepanel', {
           abstract: true,
           onEnter: /* @ngInject */ function ($modal, $state, $previousState) {
@@ -129,8 +114,8 @@ angular
 
 angular
   .module('Squared')
-  .config(['$urlRouterProvider', '$stateProvider',
-    function ($urlRouterProvider, $stateProvider) {
+  .config(['$urlRouterProvider', '$stateProvider', '$futureStateProvider',
+    function ($urlRouterProvider, $stateProvider, $futureStateProvider) {
       var modalMemo = 'modalMemo';
       var wizardmodalMemo = 'wizardmodalMemo';
 
@@ -163,6 +148,34 @@ angular
           }.bind($state.modal));
         };
       }
+
+      var futureOverviewState = {
+        type: 'futureOverview',
+        stateName: 'overview',
+        url: '/overview'
+      };
+
+      $futureStateProvider.futureState(futureOverviewState);
+
+      $futureStateProvider.stateFactory(futureOverviewState.type, function ($q, $timeout, futureState, FeatureToggleService) {
+        return FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (useStormBranding) {
+
+          if (document.URL.indexOf('newoverview=1') > 0) {
+            useStormBranding = true;
+          } else if (document.URL.indexOf('newoverview=0') > 0) {
+            useStormBranding = false;
+          }
+
+          return {
+            name: futureState.stateName,
+            url: futureState.url,
+            templateUrl: useStormBranding ? 'modules/core/overview/overview.tpl.html' : 'modules/core/landingPage/landingPage.tpl.html',
+            controller: useStormBranding ? 'OverviewCtrl' : 'LandingPageCtrl',
+            controllerAs: 'overview',
+            parent: 'main'
+          };
+        });
+      });
 
       /* @ngInject */
       function modalOnExit($state, $previousState) {
@@ -232,19 +245,6 @@ angular
           controller: 'ProcessorderCtrl',
           parent: 'main',
           authenticate: false
-        })
-        .state('overview', {
-          url: '/overview',
-          templateUrl: 'modules/core/landingPage/landingPage.tpl.html',
-          controller: 'LandingPageCtrl',
-          parent: 'main'
-        })
-        .state('overview-nm', {
-          url: '/overview-nm',
-          templateUrl: 'modules/core/overview/overview.tpl.html',
-          controller: 'OverviewCtrl',
-          controllerAs: 'overview',
-          parent: 'main'
         })
         .state('users', {
           abstract: true,
@@ -774,7 +774,8 @@ angular
         })
 
       /*
-        devices redux prototypes
+       devices
+       prototypes
       */
       .state('main-redux', {
           views: {
@@ -1001,26 +1002,46 @@ angular
           controller: 'TrialExtInterestCtrl',
           parent: 'main'
         })
-        .state('helpdesk.landing', {
-          url: '/landing',
-          templateUrl: 'modules/squared/helpdesk/helpdesk-landing.html',
-          controller: 'HelpdeskLandingController',
-          controllerAs: 'helpdeskLandingCtrl'
+        .state('helpdesk-main', {
+          views: {
+            'main@': {
+              templateUrl: 'modules/squared/views/helpdesk.tpl.html'
+            }
+          },
+          abstract: true,
+          sticky: true
+        })
+        .state('helpdesk', {
+          url: '/helpdesk',
+          template: '<div ui-view></div>',
+          controller: 'HelpdeskController',
+          controllerAs: 'helpdeskCtrl',
+          abstract: true,
+          parent: 'helpdesk-main'
+        })
+        .state('helpdesk.search', {
+          url: '/',
+          templateUrl: 'modules/squared/helpdesk/helpdesk-search.html'
         })
         .state('helpdesk.user', {
+          url: '/user/:orgId/:id',
           templateUrl: 'modules/squared/helpdesk/helpdesk-user.html',
           controller: 'HelpdeskUserController',
           controllerAs: 'helpdeskUserCtrl',
           params: {
-            user: null
+            user: null,
+            id: null,
+            orgId: null
           }
         })
         .state('helpdesk.org', {
+          url: '/org/:id',
           templateUrl: 'modules/squared/helpdesk/helpdesk-org.html',
           controller: 'HelpdeskOrgController',
           controllerAs: 'helpdeskOrgCtrl',
           params: {
-            org: null
+            org: null,
+            id: null
           }
         });
     }

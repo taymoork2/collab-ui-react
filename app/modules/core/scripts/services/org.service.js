@@ -7,8 +7,6 @@
     .module('Core')
     .factory('Orgservice', Orgservice);
 
-  var extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-uc'];
-
   /* @ngInject */
   function Orgservice($http, $location, $q, $rootScope, Auth, Authinfo, Config, Log, Storage) {
     var service = {
@@ -206,20 +204,9 @@
         callback('error', 100);
         return;
       }
-      var orgUrl = Config.getProdAdminServiceUrl() + 'organizationstemp?displayName=' + filter;
+      var orgUrl = Config.getProdAdminServiceUrl() + 'organizations?displayName=' + filter;
 
-      $http.get(orgUrl)
-        .success(function (data, status) {
-          data = data || {};
-          data.success = true;
-          callback(data, status);
-        })
-        .error(function (data, status) {
-          data = data || {};
-          data.success = false;
-          data.status = status;
-          callback(data, status);
-        });
+      return $http.get(orgUrl);
     }
 
     function getOrgCacheOption(callback, oid, config) {
@@ -259,9 +246,11 @@
     function setHybridServiceAcknowledged(serviceName) {
       var serviceUrl = Config.getHerculesUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/';
       if (serviceName === 'calendar-service') {
-        serviceUrl = serviceUrl.concat(extensionEntitlements[0]);
-      } else if (serviceName === 'call-service') {
-        serviceUrl = serviceUrl.concat(extensionEntitlements[1]);
+        serviceUrl = serviceUrl.concat(Config.entitlements.fusion_cal);
+      } else if (serviceName === 'call-aware-service') {
+        serviceUrl = serviceUrl.concat(Config.entitlements.fusion_uc);
+      } else if (serviceName === 'call-connect-service') {
+        serviceUrl = serviceUrl.concat(Config.entitlements.fusion_ec);
       } else {
         return $q(function (resolve, reject) {
           reject('serviceName is invalid: ' + serviceName);

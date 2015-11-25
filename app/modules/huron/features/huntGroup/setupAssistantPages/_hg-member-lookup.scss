@@ -41,6 +41,8 @@
 .hunt-member-card {
   position: static !important;
   width: rem-calc(250) !important;
+  @include vr-spacing(mt, 0.5);
+  @include vr-spacing(ph, 0.25);
 
   & .email {
     color: $gray-light-1;
@@ -52,7 +54,7 @@
     box-shadow: 0px 0px 0px;
   }
 
-  & article > header {
+  & article header {
     z-index: 100;
     cursor: pointer;
     border-radius: 0.25rem !important;
@@ -61,7 +63,12 @@
     }
   }
 
-  & article > .open-panel {
+  & a:focus {
+    border-radius: 0.25rem !important;
+    @include box-shadow(0px 1px 2px 2px rgba(52, 53, 55, 0.18));
+  }
+
+  & article .open-panel {
     border-radius: 0.25rem 0.25rem 0 0 !important;
   }
 

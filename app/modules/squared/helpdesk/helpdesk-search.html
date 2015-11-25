@@ -1,0 +1,146 @@
+<div class="helpdesk-landing centered" tabindex="1" ng-keyup="helpdeskCtrl.keypressValidation($event)">
+
+  <h1 translate="helpdesk.helpdesk"></h1>
+
+  <div class="typeahead-large" style="text-align: left;">
+    <input id="searchInput" type="text"
+           placeholder=""
+           ng-model="helpdeskCtrl.searchString" ,
+           ng-keypress="($event.which === 13) ? helpdeskCtrl.search() : 0" autofocus="true" />
+    <button type="button" tabindex="-1" class="btn btn--circle btn--primary icon icon-search" ng-click="helpdeskCtrl.search()" ng-disabled="helpdeskCtrl.searchString == ''" ></button>
+
+    <div class="input-description">
+      <p>
+        <span translate="helpdesk.searchInputDescription"></span>
+        <a href popover="{{'helpdesk.searchInfo' | translate}}"
+           popover-placement="bottom" tabindex="-1">
+          <span translate="helpdesk.searchCriteriaLink"></span>
+        </a>
+      </p>
+
+      <div ng-if="helpdeskCtrl.currentSearch.orgFilter" class="helpdesk-tile">
+        <span translate="helpdesk.searchingOrg"
+              translate-value-name="{{helpdeskCtrl.currentSearch.orgFilter.displayName}}"></span>
+        <i class="icon icon-close" ng-click="helpdeskCtrl.clearOrgFilter()"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="row full">
+    <div class="medium-12 xlarge-10 xxlarge-8 centered columns no-top-margin search-results">
+      <div class="medium-6 large-4 columns"
+           ng-class="helpdeskCtrl.currentSearch.orgFilter ? 'large-offset-2' : ''"
+           ng-if="helpdeskCtrl.searchingForUsers || helpdeskCtrl.currentSearch.userSearchResults || helpdeskCtrl.currentSearch.userSearchFailure">
+        <h4 translate="helpdesk.users"></h4>
+
+        <div ng-if="helpdeskCtrl.searchingForUsers">
+          <span><i class="icon icon-spinner icon-2x"></i></span>
+
+          <p translate="helpdesk.searchingPleaseWait"></p>
+        </div>
+        <div ng-if="helpdeskCtrl.currentSearch.userSearchFailure">
+          <p class="helpdesk-red">{{helpdeskCtrl.currentSearch.userSearchFailure}}</p>
+        </div>
+        <div
+          ng-if="!helpdeskCtrl.searchingForUsers && helpdeskCtrl.currentSearch.userSearchResults.length == 0">
+          <p translate="helpdesk.noSearchHits"></p>
+        </div>
+
+        <cs-card-layout ng-if="helpdeskCtrl.currentSearch.userSearchResults.length > 0">
+          <cs-card class="full pointer" ng-repeat="user in helpdeskCtrl.currentSearch.userSearchResults">
+            <article tabindex="{{$index * 10 + 1}}"  ui-sref="helpdesk.user({user:user, id: user.id, orgId: user.organization.id})">
+              <header>
+                <h5>{{user.displayName}}</h5>
+              </header>
+              <section class="card-section">
+                <div><span>{{user.userName}}</span></div>
+                <div ng-repeat="number in user.phoneNumbers">
+                  <span>{{number.value}} ({{'helpdesk.' + number.type | translate}})</span>
+                </div>
+              </section>
+            </article>
+          </cs-card>
+        </cs-card-layout>
+      </div>
+
+      <div class="medium-6 large-4 columns"
+           ng-if="helpdeskCtrl.searchingForOrgs || helpdeskCtrl.currentSearch.orgSearchResults || helpdeskCtrl.currentSearch.orgSearchFailure">
+
+        <h4 translate="helpdesk.customers"></h4>
+
+        <div ng-if="helpdeskCtrl.searchingForOrgs">
+          <span><i class="icon icon-spinner icon-2x"></i></span>
+
+          <p translate="helpdesk.searchingPleaseWait"></p>
+        </div>
+        <div ng-if="helpdeskCtrl.currentSearch.orgSearchFailure">
+          <p class="helpdesk-red">{{helpdeskCtrl.currentSearch.orgSearchFailure}}</p>
+        </div>
+        <div
+          ng-if="!helpdeskCtrl.searchingForOrgs && helpdeskCtrl.currentSearch.orgSearchResults.length == 0">
+          <p translate="helpdesk.noSearchHits"></p>
+        </div>
+
+        <cs-card-layout ng-if="helpdeskCtrl.currentSearch.orgSearchResults.length > 0">
+          <cs-card class="full pointer" ng-repeat="org in helpdeskCtrl.currentSearch.orgSearchResults">
+            <article tabindex="{{$index * 10 + 2}}" ui-sref="helpdesk.org({org:org, id: org.id})">
+              <header>
+                <h5>
+                  {{org.displayName}}
+                  <a tabindex="-1" href class="right" ng-click="helpdeskCtrl.setOrgFilter(org)"><i
+                    class="icon icon-search"></i></a>
+                </h5>
+              </header>
+              <section class="card-section">
+              </section>
+              <section class="clickable-area" ui-sref="helpdesk.org({org:org, id: org.id})"></section>
+            </article>
+          </cs-card>
+        </cs-card-layout>
+      </div>
+
+      <div class="medium-6 large-4 columns"
+           ng-class="(helpdeskCtrl.currentSearch.orgFilter) ? 'end' : ''"
+           ng-if="(helpdeskCtrl.currentSearch.orgFilter && (helpdeskCtrl.searchingForDevices || helpdeskCtrl.currentSearch.deviceSearchResults || helpdeskCtrl.currentSearch.deviceSearchFailure)) || (helpdeskCtrl.searchingForOrgs || helpdeskCtrl.currentSearch.orgSearchResults || helpdeskCtrl.currentSearch.orgSearchFailurehelpdeskCtrl.searchingForOrgs || helpdeskCtrl.currentSearch.orgSearchResults || helpdeskCtrl.currentSearch.orgSearchFailurehelpdeskCtrl.searchingForOrgs || helpdeskCtrl.currentSearch.orgSearchResults || helpdeskCtrl.currentSearch.orgSearchFailure)">
+        <h4 translate="helpdesk.devices"></h4>
+
+        <div ng-if="helpdeskCtrl.searchingForDevices">
+          <span><i class="icon icon-spinner icon-2x"></i></span>
+
+          <p translate="helpdesk.searchingPleaseWait"></p>
+        </div>
+
+        <div ng-if="!helpdeskCtrl.currentSearch.orgFilter">
+          <p>Global device search is not supported yet.</p>
+
+          <p>Find the customer first and then search for devices.</p>
+        </div>
+
+        <div ng-if="helpdeskCtrl.currentSearch.deviceSearchFailure">
+          <p class="helpdesk-red">{{helpdeskCtrl.currentSearch.deviceSearchFailure}}</p>
+        </div>
+
+        <div
+          ng-if="!helpdeskCtrl.searchingForDevices && helpdeskCtrl.currentSearch.deviceSearchResults.length == 0">
+          <p translate="helpdesk.noSearchHits"></p>
+        </div>
+
+        <cs-card-layout ng-if="helpdeskCtrl.currentSearch.deviceSearchResults.length > 0">
+          <cs-card class="full pointer" ng-repeat="device in helpdeskCtrl.currentSearch.deviceSearchResults">
+            <article tabindex="{{$index * 10 + 3}}" ui-sref="helpdesk.device({device:device})">
+              <header>
+                <h5>{{device.displayName}}</h5>
+              </header>
+              <section class="card-section">
+                <div ng-if="device.product"><span>{{device.product}}</span></div>
+                <div ng-if="device.serial"><span>{{device.serial}}</span></div>
+                <div ng-if="device.mac"><span>{{device.mac}}</span></div>
+              </section>
+            </article>
+          </cs-card>
+        </cs-card-layout>
+      </div>
+
+    </div>
+  </div>
+</div>

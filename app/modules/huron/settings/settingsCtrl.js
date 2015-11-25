@@ -6,7 +6,7 @@
 
   /* @ngInject */
   function HuronSettingsCtrl($scope, Authinfo, $q, $translate, HttpUtils, Notification, ServiceSetup,
-    CallerId, ExternalNumberService, HuronCustomer, ValidationService, TelephoneNumberService) {
+    CallerId, ExternalNumberService, HuronCustomer, ValidationService, TelephoneNumberService, DialPlanService) {
 
     var vm = this;
     var DEFAULT_SITE_INDEX = '000001';
@@ -22,6 +22,7 @@
     var DEFAULT_TO = '5999';
     var companyCallerIdType = 'Company Caller ID';
     vm.processing = false;
+    vm.hideFieldSteeringDigit = undefined;
     vm.loading = true;
     vm.init = init;
     vm.save = save;
@@ -191,6 +192,9 @@
           options: vm.steeringDigits
         },
         expressionProperties: {
+          'hide': function () {
+            return vm.hideFieldSteeringDigit;
+          },
           'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
             return true;
           }
@@ -200,6 +204,9 @@
       key: 'displayNumberRanges',
       type: 'repeater',
       className: 'service-setup service-setup-extension',
+      hideExpression: function () {
+        return vm.hideFieldInternalNumberRange;
+      },
       templateOptions: {
         label: $translate.instant('serviceSetupModal.internalExtensionRange'),
         description: $translate.instant('serviceSetupModal.internalNumberRangeDescription'),
@@ -345,7 +352,13 @@
         }
       },
       expressionProperties: {
-        'hide': 'model.displayNumberRanges.length > 9'
+        'hide': function () {
+          if (vm.model.displayNumberRanges.length > 9) {
+            return true;
+          } else {
+            return vm.hideFieldInternalNumberRange;
+          }
+        }
       }
     }];
 
@@ -370,11 +383,11 @@
           },
           expressionProperties: {
             'templateOptions.required': function () {
-              if (vm.model.callerId.callerIdNumber) {
+              if (vm.model.callerId.callerIdEnabled) {
                 return true;
               }
             },
-            'templateOptions.disabled': function () {
+            'hide': function () {
               return !vm.model.callerId.callerIdEnabled;
             }
           }
@@ -397,11 +410,11 @@
           },
           expressionProperties: {
             'templateOptions.required': function (newValue, oldValue) {
-              if (vm.model.callerId.callerIdName) {
+              if (vm.model.callerId.callerIdEnabled) {
                 return true;
               }
             },
-            'templateOptions.disabled': function () {
+            'hide': function () {
               return !vm.model.callerId.callerIdEnabled;
             }
           },
@@ -426,7 +439,6 @@
       var promises = [];
       vm.loading = true;
       var errors = [];
-
       promises.push(HuronCustomer.get().then(function (customer) {
         vm.customer = customer;
         angular.forEach(customer.links, function (service) {
@@ -438,10 +450,12 @@
         });
       }).then(function () {
         return initTimeZone();
-      }).then(function () {
-        return listInternalExtensionRanges();
       }).catch(function (response) {
         errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.customerGetError'));
+      }).then(function () {
+        return listInternalExtensionRanges();
+      }).then(function () {
+        return setServiceValues();
       }).then(function () {
         return ServiceSetup.listSites().then(function () {
           if (ServiceSetup.sites.length !== 0) {
@@ -682,15 +696,43 @@
       });
     }
 
+    function setServiceValues() {
+      DialPlanService.getCustomerDialPlanDetails(Authinfo.getOrgId()).then(function (response) {
+        if (response.extensionGenerated === 'true') {
+          vm.hideFieldInternalNumberRange = true;
+        } else {
+          vm.hideFieldInternalNumberRange = false;
+        }
+        if (response.steeringDigitRequired === 'true') {
+          vm.hideFieldSteeringDigit = false;
+        } else {
+          vm.hideFieldSteeringDigit = true;
+        }
+      }).catch(function (response) {
+        vm.hideFieldInternalNumberRange = false;
+        vm.hideFieldSteeringDigit = false;
+        Notification.errorResponse(response, 'serviceSetupModal.customerDialPlanDetailsGetError');
+      });
+    }
+
     function saveCompanyCallerId() {
       var rawPattern = '';
       var uuidExternalNumber = '';
       var data;
+      var deferred = $q.defer();
 
-      if (!vm.model.callerId.callerIdEnabled && vm.model.callerId.uuid) {
-        return CallerId.deleteCompanyNumber(vm.model.callerId.uuid).then(function () {
+      if (!vm.model.callerId.callerIdEnabled) {
+        if (vm.model.callerId.uuid) {
+          CallerId.deleteCompanyNumber(vm.model.callerId.uuid).then(function () {
+            clearCallerIdFields();
+            deferred.resolve();
+          }).catch(function (response) {
+            deferred.reject(response);
+          });
+        } else {
           clearCallerIdFields();
-        });
+          deferred.resolve();
+        }
       } else {
         vm.model.callerId.callerIdNumber = TelephoneNumberService.getDIDLabel(vm.model.callerId.callerIdNumber);
         rawPattern = TelephoneNumberService.getDIDValue(vm.model.callerId.callerIdNumber);
@@ -713,18 +755,26 @@
 
         if (vm.model.callerId.callerIdEnabled && !vm.model.callerId.uuid) {
           if (vm.model.callerId.callerIdName && vm.model.callerId.callerIdNumber) {
-            return CallerId.saveCompanyNumber(data).then(function () {
-              return getCompanyCallerId();
+            CallerId.saveCompanyNumber(data).then(function () {
+              getCompanyCallerId();
+              deferred.resolve();
+            }).catch(function (response) {
+              deferred.reject(response);
             });
           }
         } else if (vm.model.callerId.callerIdEnabled && vm.model.callerId.uuid) {
           if (vm.model.callerId.callerIdName && vm.model.callerId.callerIdNumber) {
-            return CallerId.updateCompanyNumber(vm.model.callerId.uuid, data);
+            CallerId.updateCompanyNumber(vm.model.callerId.uuid, data).then(function () {
+              deferred.resolve();
+            }).catch(function (response) {
+              deferred.reject(response);
+            });
           }
         } else {
-          return $q.when();
+          deferred.resolve();
         }
       }
+      return deferred.promise;
     }
 
     function resetForm() {

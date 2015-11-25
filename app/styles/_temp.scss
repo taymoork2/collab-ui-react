@@ -431,10 +431,6 @@ td a {
   left: 265px;
 }
 
-.navbar-header {
-  margin-left: -56px;
-}
-
 #details-table {
   .tab-pane {
     background-color: #F8F8F8;
@@ -613,11 +609,6 @@ input[type="file"]::-webkit-file-upload-button{
     overflow-x: hidden;
   }
 }
-
-.navbar-admin .btn {
-  margin: 0;
-}
-
 
 /************ Initial Setup ************/
 
@@ -1042,15 +1033,15 @@ a:active.ftwNavLink {
   right: 0px;
 }
 
-.btn-white {
+.btn--white {
   background-color: white !important;
   color: #888 !important;
   border: 1px solid #ccc !important;
 }
 
-.btn-white:active,
-.btn-white:focus,
-.btn-white:hover {
+.btn--white:active,
+.btn--white:focus,
+.btn--white:hover {
   background-color: white !important;
   color: #888 !important;
   border: 1px solid #3086BA !important;

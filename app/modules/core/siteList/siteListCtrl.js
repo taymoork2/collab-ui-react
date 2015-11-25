@@ -17,20 +17,37 @@ angular.module('Core')
         userEmailParam: null,
       };
 
-      vm.gridData = Authinfo.getConferenceServicesWithoutSiteUrl();
+      vm.gridData = [];
+      var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl();
 
-      vm.gridData.forEach(
-        function initGrid(grid) {
-          grid.showSiteLink = false;
-          grid.isIframeSupported = false;
-          grid.isAdminReportEnabled = false;
-          grid.webExSessionTicket = null;
+      conferenceServices.forEach(
+        function checkConferenceService(conferenceService) {
+          var newSiteUrl = conferenceService.license.siteUrl;
+          var isNewSiteUrl = true;
 
-          logMsg = funcName + ": " + "\n" +
-            "grid=" + JSON.stringify(grid);
-          // $log.log(logMsg);
-        } // initGrid()
-      ); // vm.gridData.forEach()
+          vm.gridData.forEach(
+            function checkGrid(grid) {
+              if (newSiteUrl == grid.license.siteUrl) {
+                isNewSiteUrl = false;
+
+                logMsg = funcName + ": " + "\n" +
+                  "Duplicate webex site url detected and skipped." + "\n" +
+                  "newSiteUrl=" + newSiteUrl;
+                $log.log(logMsg);
+              }
+            }
+          );
+
+          if (isNewSiteUrl) {
+            conferenceService.showSiteLinks = false;
+            conferenceService.isIframeSupported = false;
+            conferenceService.isAdminReportEnabled = false;
+            conferenceService.webExSessionTicket = null;
+
+            vm.gridData.push(conferenceService);
+          }
+        }
+      );
 
       // Start of grid set up
       var rowTemplate =
@@ -141,7 +158,9 @@ angular.module('Core')
       });
       // End of grid set up
 
-      if (_.isUndefined(Authinfo.getPrimaryEmail())) {
+      if (!_.isUndefined(Authinfo.getPrimaryEmail())) {
+        getInfoFromXmlApi();
+      } else {
         Userservice.getUser('me', function (data, status) {
           if (data.success) {
             if (data.emails) {
@@ -151,8 +170,6 @@ angular.module('Core')
             }
           }
         });
-      } else {
-        getInfoFromXmlApi();
       }
 
       function getInfoFromXmlApi() {

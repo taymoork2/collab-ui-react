@@ -1,5 +1,8 @@
 <div id="deleteHuronFeatureModal">
   <div class="modal-header">
+    <button type="button" class="close" ng-click="$dismiss()">
+      <span class="sr-only">Close</span>
+    </button>
     <p class="h3 modal-title"
        translate="huronFeatureDetails.deleteFeature"
        translate-values="{featureType : huronFeatureDelete.featureType}"></p>
@@ -9,8 +12,8 @@
              translate-values="{featureName : huronFeatureDelete.featureName, featureType : huronFeatureDelete.featureType }"></span></p>
   </div>
   <div class="modal-footer">
-    <button id="cancelDeleteFeature" class="btn btn-default" ng-click="$dismiss();" translate="common.cancel"></button>
-    <button id="deleteFeature" class="btn btn-danger" loading="huronFeatureDelete.deleteBtnDisabled" cs-btn type="button" ng-click="huronFeatureDelete.deleteFeature();">
+    <button id="cancelDeleteFeature" class="btn" ng-click="$dismiss();" translate="common.cancel"></button>
+    <button id="deleteFeature" class="btn btn--negative" loading="huronFeatureDelete.deleteBtnDisabled" cs-btn type="button" ng-click="huronFeatureDelete.deleteFeature();">
       <span translate="huronFeatureDetails.deleteFeature"
             translate-values="{featureType : huronFeatureDelete.featureType }"></span>
     </button>

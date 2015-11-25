@@ -19,11 +19,18 @@ describe('Controller: PartnerHomeCtrl', function () {
 
   beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _Config_) {
     $scope = $rootScope.$new();
+    $rootScope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     Config = _Config_;
 
+    $rootScope.typeOfExport = {
+      USER: 1,
+      CUSTOMER: 2
+    };
+
     controller = $controller('PartnerHomeCtrl', {
-      $scope: $scope
+      $scope: $scope,
+      $rootScope: $rootScope
     });
   }));
 

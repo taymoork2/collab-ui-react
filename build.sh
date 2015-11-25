@@ -62,6 +62,7 @@ fi
 # -----
 # Phase 3: Build
 gulp clean || exit $?
+gulp tsd || exit $?
 gulp jsb:verify || exit $?
 gulp e2e --sauce --production-backend --nolint || exit $?
 

@@ -6,7 +6,7 @@
     .controller('LineSettingsCtrl', LineSettingsCtrl);
 
   /* @ngInject */
-  function LineSettingsCtrl($scope, $rootScope, $state, $stateParams, $translate, $q, $modal, Notification, DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HuronUser, HttpUtils, UserListService, SharedLineInfoService, ValidationService, CallerId, DeviceService) {
+  function LineSettingsCtrl($scope, $rootScope, $state, $stateParams, $translate, $q, $modal, Notification, DirectoryNumber, TelephonyInfoService, LineSettings, HuronAssignedLine, HuronUser, HttpUtils, UserListService, SharedLineInfoService, ValidationService, CallerId, DeviceService, DialPlanService) {
     var vm = this;
 
     vm.cfModel = {
@@ -29,10 +29,12 @@
     vm.cbAddText = $translate.instant('callForwardPanel.addNew');
     vm.title = $translate.instant('directoryNumberPanel.title');
     vm.vmFwdMismatch = $translate.instant('callForwardPanel.forwardVoicemailDisabled');
+    vm.internalNumberLabel = $translate.instant('directoryNumberPanel.internalNumberExtension');
     vm.validForwardOptions = [];
     vm.directoryNumber = DirectoryNumber.getNewDirectoryNumber();
     vm.internalNumberPool = [];
     vm.externalNumberPool = [];
+    vm.showExtensions = true;
 
     vm.placeholder = $translate.instant('directoryNumberPanel.chooseNumber');
     vm.inputPlaceholder = $translate.instant('directoryNumberPanel.searchNumber');
@@ -44,6 +46,7 @@
     vm.callerIdOptions = [];
     vm.assignedExternalNumberChange = assignedExternalNumberChange;
     vm.checkDnOverlapsSteeringDigit = checkDnOverlapsSteeringDigit;
+    vm.syncDidDn = syncDidDn;
     // The following are for externalCallerIdType in DB, no translation needed
     var directLine_type = 'Direct Line';
     var blockedCallerId_type = 'Blocked Outbound Caller ID';
@@ -77,7 +80,7 @@
 
     vm.additionalBtn = {
       label: 'directoryNumberPanel.removeNumber',
-      btnclass: 'btn btn-default btn-remove',
+      btnclass: 'btn btn-remove',
       id: 'btn-remove'
     };
 
@@ -328,6 +331,7 @@
       vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
       vm.internalNumberPool = TelephonyInfoService.getInternalNumberPool();
       vm.externalNumberPool = TelephonyInfoService.getExternalNumberPool();
+      toggleShowExtensions();
 
       if (vm.telephonyInfo.voicemail === 'On') {
         if (!_.contains(vm.validForwardOptions, 'Voicemail')) {
@@ -409,6 +413,52 @@
         }
         TelephonyInfoService.updateAlternateDirectoryNumber(directoryNumber.altDnUuid, directoryNumber.altDnPattern);
         TelephonyInfoService.updateCurrentDirectoryNumber(directoryNumber.uuid, directoryNumber.pattern, directoryNumber.dnUsage, directoryNumber.userDnUuid, directoryNumber.dnSharedUsage);
+      }
+    }
+
+    // triggers UI changes to show or hide DID and DN elements
+    function toggleShowExtensions() {
+      return DialPlanService.getCustomerDialPlanDetails().then(function (response) {
+        if (response.extensionGenerated === "true") {
+          vm.showExtensions = false;
+          vm.internalNumberLabel = $translate.instant('directoryNumberPanel.externalNumberLabel');
+        } else {
+          vm.showExtensions = true;
+          vm.internalNumberLabel = $translate.instant('directoryNumberPanel.internalNumberExtension');
+        }
+      }).catch(function (response) {
+        Notification.errorResponse(response, 'serviceSetupModal.customerDialPlanDetailsGetError');
+      });
+    }
+
+    // Synchronize the DIDs and DNs on the Line Settings page when selections change
+    function syncDidDn(modifiedFieldName) {
+      if (vm.showExtensions === false) {
+        var dnLength = vm.assignedInternalNumber.pattern.length;
+        // if the internalNumber was changed, find a matching DID and set the externalNumber to match
+        if (modifiedFieldName === "internalNumber") {
+          var matchingDid = _.find(vm.externalNumberPool, function (extNum) {
+            return extNum.pattern.substr(-dnLength) === vm.assignedInternalNumber.pattern;
+          });
+          if (matchingDid) {
+            vm.assignedExternalNumber = matchingDid;
+            assignedExternalNumberChange();
+          }
+        }
+        // if the externalNumber was changed, find a matching DN and set the internalNumber to match
+        if (modifiedFieldName === "externalNumber") {
+          assignedExternalNumberChange();
+          var matchingDn = _.find(vm.internalNumberPool, {
+            pattern: vm.assignedExternalNumber.pattern.substr(-dnLength)
+          });
+          if (matchingDn) {
+            vm.assignedInternalNumber = matchingDn;
+          }
+        }
+      } else {
+        if (modifiedFieldName === "externalNumber") {
+          assignedExternalNumberChange();
+        }
       }
     }
 

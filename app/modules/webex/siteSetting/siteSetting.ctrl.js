@@ -13,7 +13,7 @@
     '$timeout',
     'Authinfo',
     'Config',
-    function (
+    function webexSiteSettingCtrl(
       $scope,
       $rootScope,
       $log,
@@ -32,7 +32,11 @@
       _this.funcName = "WebExSiteSettingCtrl()";
       _this.logMsg = "";
 
+      var translateUse = $translate.use();
+      var iframeUrl = $stateParams.settingPageIframeUrl;
+
       _this.logMsg = _this.funcName + ": " + "\n" +
+        "translateUse=" + translateUse + "\n" +
         "stateParams=" + JSON.stringify($stateParams);
       $log.log(_this.logMsg);
 
@@ -45,8 +49,6 @@
           siteUrl: $stateParams.siteUrl
         }
       );
-
-      var iframeUrl = $stateParams.settingPageIframeUrl;
 
       if (
         (null == iframeUrl) ||
@@ -63,30 +65,23 @@
         $scope.iframeUrlType = "validIframeUrl";
       }
 
-      var screenAvailHeight = window.screen.availHeight;
-
       // iframe request variables
       $scope.trustIframeUrl = $sce.trustAsResourceUrl(iframeUrl);
       $scope.adminEmail = Authinfo.getPrimaryEmail();
       $scope.authToken = $rootScope.token;
-      $scope.locale = ("es_LA" == $translate.use()) ? "es_MX" : $translate.use();
-      $scope.siteName = $stateParams.siteUrl.substring(
-        0,
-        $stateParams.siteUrl.indexOf('.')
-      );
+      $scope.siteName = $stateParams.siteUrl;
+      $scope.locale = (
+        "es_LA" == translateUse
+      ) ? "es_MX" : translateUse;
 
       _this.logMsg = _this.funcName + ": " + "\n" +
-        "siteSettingId=" + $scope.siteSettingId + "\n" +
-        "siteSettingLabel=" + $scope.siteSettingLabel + "\n" +
-        "iframeUrl=" + iframeUrl + "\n" +
-        "screenAvailHeight=" + screenAvailHeight + "\n" +
-        "trustIframeUrl=" + $scope.trustIframeUrl + "\n" +
-        "adminEmail=" + $scope.adminEmail + "\n" +
-        "authToken=" + $scope.authToken + "\n" +
-        "locale=" + $scope.locale + "\n" +
-        "siteName=" + $scope.siteName + "\n" +
-        "siteSettingsBreadcrumbUiSref=" + $scope.siteSettingsBreadcrumbUiSref + "\n" +
-        "siteSettingsBreadcrumbLabel=" + $scope.siteSettingsBreadcrumbLabel;
+        "scope.siteSettingLabel=" + $scope.siteSettingLabel + "\n" +
+        "scope.trustIframeUrl=" + $scope.trustIframeUrl + "\n" +
+        "scope.adminEmail=" + $scope.adminEmail + "\n" +
+        "scope.authToken=" + $scope.authToken + "\n" +
+        "scope.locale=" + $scope.locale + "\n" +
+        "scope.siteSettingsBreadcrumbUiSref=" + $scope.siteSettingsBreadcrumbUiSref + "\n" +
+        "scope.siteSettingsBreadcrumbLabel=" + $scope.siteSettingsBreadcrumbLabel;
       // $log.log(_this.logMsg);
 
       $timeout(
@@ -97,6 +92,6 @@
 
         0
       );
-    } // function()
+    } // webexSiteSettingCtrl()
   ]); // angular.module().controller()
 })(); // function()

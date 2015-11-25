@@ -28,6 +28,12 @@
     }];
   }
 
+  function AARecordWithEmptyActionSets() {
+    this.callExperienceName = "";
+    this.assignedResources = [];
+    this.actionSets = [];
+  }
+
   function AAModel() {
     this.aaRecord = new AARecord();
     this.aaRecords = [];
@@ -47,6 +53,10 @@
 
       newAARecord: function () {
         return new AARecord();
+      },
+
+      getNewAARecord: function () {
+        return new AARecordWithEmptyActionSets();
       }
     };
 

@@ -17,7 +17,7 @@
   <cs-sp-section>
     <div class="form-horizontal " style="font-size: xs; padding: 15px 0;">
       <div class="form-group form-group-sm" >
-          <div class="col-sm-2 control-label" style="margin-left: -12px;">
+          <div class="col-sm-6 control-label" style="margin-left: -12px;">
             {{'mediaFusion.cluster' | translate}}
           </div>
           <div class="typeahead-group columns medium-5 col-sm-6">
@@ -33,11 +33,11 @@
   <!-- Role switching dropdown -->
   <cs-sp-section>
     <div class="form-horizontal " style="font-size: xs; padding: 15px 0;">
-      <div class="form-group form-group-wrapper" >
-        <div class="col-sm-2 control-label" style="margin-left: -12px;">
+      <div class="form-group form-group-sm" >
+        <div class="col-sm-6 control-label" style="margin-left: -12px;">
           {{'mediaFusion.role' | translate}}
         </div>
-        <div class="col-sm-6 columns">
+        <div class="col-sm-6 columns medium-5">
           <select name="roleSelect" ng-model="roleSelected" ng-change="changeRole(roleSelected)">
             <option value="Switching">{{'mediaFusion.switching' | translate}}</option>
             <option value="Transcoding">{{'mediaFusion.transcoding' | translate}}</option>
@@ -67,8 +67,8 @@
   <!-- Submit/Cancel buttons for confirming cluster changes -->
   <cs-sp-section>
     <cs-sp-buttons  ng-show="showbutton" title="{{'mediaFusion.confirmCluster' | translate}}">
-      <button id="saveButton" class="btn-primary" translate="common.save" ng-click="updateCluster(displayName, $event)" type="submit" ></button>
-      <button id="cancelButton" class="btn-default" translate="common.cancel" ng-click="resetCluster()"></button>
+      <button id="saveButton" class="btn btn--primary" translate="common.save" ng-click="updateCluster(displayName, $event)" type="submit" ></button>
+      <button id="cancelButton" translate="common.cancel" ng-click="resetCluster()"></button>
     </cs-sp-buttons>
   </cs-sp-section>
 

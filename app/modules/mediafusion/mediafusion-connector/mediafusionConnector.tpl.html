@@ -1,3 +1,4 @@
+<div ng-show="serviceEnabled">
 <div id="fusion-root">
 
   <!-- header -->
@@ -8,7 +9,7 @@
     <div ng-hide="shouldShowWelcomeScreen()" class="small-5 columns page-option-buttons" style="white-space: nowrap">
     <div style="border-right: solid 1px #dddddd; padding-right: 15px; margin-right: 33px; display: inline-block; white-space: nowrap">
       <button 
-        class="btn btn-primary"
+        class="btn btn--primary"
         ng-click="showInfoPanel = !showInfoPanel">
         <i class="fa fa-info" />
       </button>
@@ -90,7 +91,7 @@
               </div>
               <div class="col-sm-1 col-xs-1">
                 <span dropdown>
-                  <button id="actionsButton" type="button" class="btn-none btn-icon btn-actions dropdown-toggle" ng-class="dropdown-toggle" ng-click="$event.stopPropagation()">
+                  <button id="actionsButton" type="button" class="btn--none btn--icon btn--actions dropdown-toggle" ng-class="dropdown-toggle" ng-click="$event.stopPropagation()">
                     <i class="icon icon-three-dots"></i>
                   </button>
                   <div class="dropdown" class="connector-align-ellipses">
@@ -119,7 +120,7 @@
       </div>
     </div>
   </div>
-</div>
+
 
 <!-- Delete Room Modal -->
 <div class="modal fade" id="deleteConnectorModal" tabindex="-1" role="dialog" aria-labelledby="deleteRoomTitle" aria-hidden="true">
@@ -139,13 +140,31 @@
         </p>
       </div>
       <div class="modal-footer">
-        <button id="cancelButton" class="btn btn-default" ng-click="cancelDelete()" data-dismiss="modal">
+        <button id="cancelButton" class="btn" ng-click="cancelDelete()" data-dismiss="modal">
           <span translate="mediaFusion.cancel"></span>
         </button>
         <button id="deleteButton" class="btn toast-error icon-inverse" ng-click="defuseConnector(deleteClusterId)" data-dismiss="modal">
           <span translate="mediaFusion.yesDefuse"></span>
         </button>
       </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div ng-show="!loading && !serviceEnabled">
+  <div class="hercules">
+    <div class="centered-info-pane full-height">
+      <div ng-include src="'modules/mediafusion/mediafusion-connector/activate-media-service.html'"></div>
+    </div>
+  </div>
+</div>
+
+<div ng-show="loading">
+  <div class="hercules">
+    <div class="centered-info-pane full-height">
+      <i class="icon icon-spinner icon-2x"></i>
+      <p>Loading, please wait...</p>
     </div>
   </div>
 </div>

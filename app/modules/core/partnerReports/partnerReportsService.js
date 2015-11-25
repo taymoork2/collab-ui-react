@@ -109,10 +109,10 @@
                   }
                 }
 
-                if (activeUsers !== 0 && totalRegisteredUsers !== 0) {
-                  var modifiedDate = moment(item.date).add(1, 'day').format(monthFormat);
+                if (activeUsers !== 0 || totalRegisteredUsers !== 0) {
+                  var modifiedDate = moment.tz(item.date, timezone).format(monthFormat);
                   if (time.value === 0 || time.value === 1) {
-                    modifiedDate = moment(item.date).add(1, 'day').format(dayFormat);
+                    modifiedDate = moment.tz(item.date, timezone).format(dayFormat);
                   }
 
                   graphData.push({
@@ -164,7 +164,11 @@
     }
 
     function returnErrorCheck(error, debug, message, returnItem) {
-      if (error.status !== 0) {
+      if (error.status === 401 || error.status === 403) {
+        Log.debug('User not authorized to access reports.  Status: ' + error.status);
+        Notification.notify([$translate.instant('reportsPage.unauthorizedError')], 'error');
+        return returnItem;
+      } else if (error.status !== 0) {
         Log.debug(debug + '  Status: ' + error.status + ' Response: ' + error.message);
         Notification.notify([message], 'error');
         return returnItem;
@@ -346,7 +350,8 @@
         }
 
         for (var i = 6; i >= 0; i--) {
-          dataPoint.modifiedDate = moment().subtract(i + offset, 'day').format(dayFormat);
+          dataPoint.modifiedDate = moment().tz(timezone).subtract(i + offset, 'day').format(dayFormat);
+          dataPoint.date = moment().tz(timezone).subtract(i + offset, 'day').format();
           graph.push(angular.copy(dataPoint));
         }
       } else if (time.value === 1) {
@@ -358,12 +363,14 @@
         }
 
         for (var x = 3; x >= 0; x--) {
-          dataPoint.modifiedDate = moment().startOf('week').subtract(dayOffset + (x * 7), 'day').format(dayFormat);
+          dataPoint.modifiedDate = moment().tz(timezone).startOf('week').subtract(dayOffset + (x * 7), 'day').format(dayFormat);
+          dataPoint.date = moment().tz(timezone).startOf('week').subtract(dayOffset + (x * 7), 'day').format();
           graph.push(angular.copy(dataPoint));
         }
       } else {
         for (var y = 2; y >= 0; y--) {
-          dataPoint.modifiedDate = moment().subtract(y, 'month').startOf('month').format(monthFormat);
+          dataPoint.modifiedDate = moment().tz(timezone).subtract(y, 'month').startOf('month').format(monthFormat);
+          dataPoint.date = moment().tz(timezone).subtract(y, 'month').startOf('month').format();
           graph.push(angular.copy(dataPoint));
         }
       }
@@ -446,7 +453,7 @@
               var poorSum = parseInt(index.details.poorQualityDurationSum);
 
               if (totalSum > 0 || goodSum > 0 || fairSum > 0 || poorSum > 0) {
-                var modifiedDate = moment(index.date).format(monthFormat);
+                var modifiedDate = moment.tz(index.date, timezone).format(monthFormat);
                 if (time.value === 0 || time.value === 1) {
                   modifiedDate = moment.tz(index.date, timezone).format(dayFormat);
                 }
@@ -467,6 +474,11 @@
               angular.forEach(graph, function (index) {
                 graphBase = combineQualityGraphs(graphBase, index);
               });
+
+              if (time.value === 0) {
+                graphBase = setDates(graphBase);
+              }
+
               return graphBase;
             }
           }
@@ -478,6 +490,15 @@
         });
         return returnErrorCheck(error, 'Loading call quality data for customer ' + customer.label + ' failed.', errorMessage, []);
       });
+    }
+
+    function setDates(graphData) {
+      angular.forEach(graphData, function (item, index, array) {
+        var date = moment.tz(item.date, timezone).subtract(1, 'day').format();
+        item.modifiedDate = moment.tz(date, timezone).format(dayFormat);
+      });
+
+      return graphData;
     }
 
     function combineQualityGraphs(graph, option) {

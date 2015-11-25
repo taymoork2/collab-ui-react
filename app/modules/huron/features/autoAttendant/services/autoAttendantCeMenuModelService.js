@@ -33,6 +33,7 @@
   //     actions: Action[]
   //     timeout: String
   //     language: String
+  //     voice: String
   //
   //     username: String
   //     password: String
@@ -109,6 +110,7 @@
     this.actions = [];
     this.timeout = '';
     this.language = '';
+    this.voice = '';
 
     //
     // custom menu entry
@@ -132,6 +134,7 @@
     }
     newObj.setTimeout(this.timeout);
     newObj.setLanguage(this.language);
+    newObj.setVoice(this.voice);
 
     newObj.setUsername(this.username);
     newObj.setPassword(this.password);
@@ -194,6 +197,14 @@
 
   CeMenuEntry.prototype.getLanguage = function () {
     return this.language;
+  };
+
+  CeMenuEntry.prototype.setVoice = function (voice) {
+    this.voice = voice;
+  };
+
+  CeMenuEntry.prototype.getVoice = function () {
+    return this.voice;
   };
 
   CeMenuEntry.prototype.setPassword = function (password) {
@@ -279,6 +290,7 @@
       updateMenu: updateMenu,
       updateCombinedMenu: updateCombinedMenu,
       deleteMenu: deleteMenu,
+      deleteCombinedMenu: deleteCombinedMenu,
 
       newCeMenu: function () {
         return new CeMenu();
@@ -298,37 +310,37 @@
 
     /////////////////////
 
-    function parseObject(menuEntry, inObject) {
+    function parseSayObject(menuEntry, inObject) {
       var action;
-      // convert file url to unique filename
-      // var filename = MediaResourceService.getFileName(inObject.url);
-      action = new Action('play', inObject.url);
-      if (angular.isDefined(inObject.description)) {
-        action.setDescription(inObject.description);
+      action = new Action('say', inObject.value);
+      if (angular.isDefined(inObject.voice)) {
+        action.setVoice(inObject.voice);
       }
       menuEntry.addAction(action);
     }
 
-    function parsePlayList(menuEntry, objects) {
+    function parseSayList(menuEntry, objects) {
       for (var i = 0; i < objects.length; i++) {
-        parseObject(menuEntry, objects[i]);
+        parseSayObject(menuEntry, objects[i]);
       }
     }
 
-    function createPlayList(actions) {
+    function createSayList(actions) {
       var newActionArray = [];
       for (var i = 0; i < actions.length; i++) {
         newActionArray[i] = {};
-        var val = actions[i].getValue();
-        // convert unique filename to corresponding URL
-        // newActionArray[i].url = MediaResourceService.getFileUrl(val);
-        newActionArray[i].url = val;
-
-        if (angular.isDefined(actions[i].description) && actions[i].description.length > 0) {
-          newActionArray[i].description = actions[i].description;
+        newActionArray[i].value = (actions[i].getValue() ? actions[i].getValue() : '');
+        if (angular.isDefined(actions[i].voice) && actions[i].voice.length > 0) {
+          newActionArray[i].voice = actions[i].voice;
         }
       }
       return newActionArray;
+    }
+
+    function setDescription(action, task) {
+      if (angular.isDefined(task.description)) {
+        action.setDescription(task.description);
+      }
     }
 
     function parseAction(menuEntry, inAction) {
@@ -337,46 +349,42 @@
         // convert file url to unique filename
         // var filename = MediaResourceService.getFileName(inAction.play.url);
         action = new Action('play', inAction.play.url);
-        if (angular.isDefined(inAction.play.description)) {
-          action.setDescription(inAction.play.description);
-        }
+        setDescription(action, inAction.play);
         menuEntry.addAction(action);
       } else if (angular.isDefined(inAction.say)) {
         action = new Action('say', inAction.say.value);
+        setDescription(action, inAction.say);
         if (angular.isDefined(inAction.say.voice)) {
           action.setVoice(inAction.say.voice);
         }
-        // language handling
         menuEntry.addAction(action);
       } else if (angular.isDefined(inAction.route)) {
         action = new Action('route', inAction.route.destination);
-        if (angular.isDefined(inAction.route.description)) {
-          action.setDescription(inAction.route.description);
-        }
+        setDescription(action, inAction.route);
+        menuEntry.addAction(action);
+      } else if (angular.isDefined(inAction.routeToExtension)) {
+        action = new Action('routeToExtension', inAction.routeToExtension.destination);
+        setDescription(action, inAction.routeToExtension);
+        menuEntry.addAction(action);
+      } else if (angular.isDefined(inAction.routeToHuntGroup)) {
+        action = new Action('routeToHuntGroup', inAction.routeToHuntGroup.destination);
+        setDescription(action, inAction.routeToHuntGroup);
         menuEntry.addAction(action);
       } else if (angular.isDefined(inAction.routeToMailbox)) {
         action = new Action('routeToMailbox', inAction.routeToMailbox.mailbox);
-        if (angular.isDefined(inAction.routeToMailbox.description)) {
-          action.setDescription(inAction.routeToMailbox.description);
-        }
+        setDescription(action, inAction.routeToMailbox);
         menuEntry.addAction(action);
       } else if (angular.isDefined(inAction.repeatActionsOnInput)) {
         action = new Action('repeatActionsOnInput', '');
-        if (angular.isDefined(inAction.repeatActionsOnInput.description)) {
-          action.setDescription(inAction.repeatActionsOnInput.description);
-        }
+        setDescription(action, inAction.repeatActionsOnInput);
         menuEntry.addAction(action);
       } else if (angular.isDefined(inAction.routeToCollectedNumber)) {
         action = new Action('routeToCollectedNumber', '');
-        if (angular.isDefined(inAction.routeToCollectedNumber.description)) {
-          action.setDescription(inAction.routeToCollectedNumber.description);
-        }
+        setDescription(action, inAction.routeToCollectedNumber);
         menuEntry.addAction(action);
       } else if (angular.isDefined(inAction.routeToDialedMailbox)) {
         action = new Action('routeToDialedMailbox', '');
-        if (angular.isDefined(inAction.routeToDialedMailbox.description)) {
-          action.setDescription(inAction.routeToDialedMailbox.description);
-        }
+        setDescription(action, inAction.routeToDialedMailbox);
         menuEntry.addAction(action);
       } else if (angular.isDefined(inAction.disconnect)) {
         action = new Action('disconnect', '');
@@ -391,8 +399,12 @@
         menuEntry.addAction(action);
       } else if (angular.isDefined(inAction.routeToDialed)) {
         action = new Action('routeToDialed', '');
-        if (angular.isDefined(inAction.routeToDialed.description)) {
-          action.setDescription(inAction.routeToDialed.description);
+        setDescription(action, inAction.routeToDialed);
+        menuEntry.addAction(action);
+      } else if (angular.isDefined(inAction.runActionsOnInput)) {
+        action = new Action('runActionsOnInput', '');
+        if (angular.isDefined(inAction.runActionsOnInput.inputType)) {
+          action.inputType = inAction.runActionsOnInput.inputType;
         }
         menuEntry.addAction(action);
       } else {
@@ -480,9 +492,16 @@
           if (angular.isDefined(ceActionsOnInput.prompts.description)) {
             announcementMenuEntry.setDescription(ceActionsOnInput.prompts.description);
           }
-          if (angular.isDefined(ceActionsOnInput.prompts.playList)) {
-            parsePlayList(announcementMenuEntry, ceActionsOnInput.prompts.playList);
+          if (angular.isDefined(ceActionsOnInput.prompts.sayList)) {
+            parseSayList(announcementMenuEntry, ceActionsOnInput.prompts.sayList);
           }
+        }
+
+        if (angular.isDefined(ceActionsOnInput.language)) {
+          announcementMenuEntry.setLanguage(ceActionsOnInput.language);
+        }
+        if (angular.isDefined(ceActionsOnInput.voice)) {
+          announcementMenuEntry.setVoice(ceActionsOnInput.voice);
         }
 
         // Collect default handling actions
@@ -494,6 +513,10 @@
         var timeoutMenuEntry = new CeMenuEntry();
         timeoutMenuEntry.setType('MENU_OPTION_TIMEOUT');
         timeoutMenuEntry.setTimeout(ceActionsOnInput.timeoutInSeconds || 10);
+
+        if (angular.isDefined(ceActionsOnInput.attempts)) {
+          menu.attempts = ceActionsOnInput.attempts;
+        }
 
         // Collect the main menu's options
         if (angular.isDefined(ceActionsOnInput.inputs)) {
@@ -561,11 +584,7 @@
     function getCombinedMenu(ceRecord, actionSetName) {
 
       var welcomeMenu = getWelcomeMenu(ceRecord, actionSetName);
-      var optionMenu = getOptionMenu(ceRecord, actionSetName);
       if (angular.isDefined(welcomeMenu)) {
-        if (angular.isDefined(optionMenu)) {
-          welcomeMenu.addEntry(optionMenu);
-        }
         // remove the disconnect action because we manually add it to the UI
         var entries = welcomeMenu.entries;
         if (entries.length > 0) {
@@ -577,8 +596,14 @@
             }
           }
         }
-        return welcomeMenu;
       }
+      var optionMenu = getOptionMenu(ceRecord, actionSetName);
+      if (angular.isDefined(welcomeMenu)) {
+        if (angular.isDefined(optionMenu)) {
+          welcomeMenu.addEntry(optionMenu);
+        }
+      }
+      return welcomeMenu;
     }
 
     function addDisconnectAction(actions) {
@@ -599,8 +624,10 @@
       }
       // manually add a disconnect action to each defined actionSet
       var actionSet = getActionSet(ceRecord, actionSetName);
-      if (actionSet.actions.length > 0) {
-        addDisconnectAction(actionSet.actions);
+      if (actionSet.actions && actionSet.actions.length > 0) {
+        if (angular.isUndefined(actionSet.actions[actionSet.actions.length - 1].disconnect)) {
+          addDisconnectAction(actionSet.actions);
+        }
       }
     }
 
@@ -705,28 +732,34 @@
 
     function createWelcomeMenu(aaActionArray, aaMenu) {
       var newActionArray = [];
+      var foundOptionMenu = false;
       for (var i = 0; i < aaMenu.entries.length; i++) {
         var menuEntry = aaMenu.entries[i];
-        newActionArray[i] = {};
-        if (angular.isDefined(menuEntry.actions[0])) {
-          var actionName = menuEntry.actions[0].getName();
-          newActionArray[i][actionName] = {};
-          if (angular.isDefined(menuEntry.actions[0].description) && menuEntry.actions[0].description.length > 0) {
-            newActionArray[i][actionName].description = menuEntry.actions[0].description;
-          }
-          if (actionName === 'say') {
-            newActionArray[i][actionName].value = menuEntry.actions[0].getValue();
-            newActionArray[i][actionName].voice = menuEntry.actions[0].voice;
-          } else if (actionName === 'play') {
-            newActionArray[i][actionName].url = menuEntry.actions[0].getValue();
-            // newActionArray[i][actionName].url = MediaResourceService.getFileUrl(menuEntry.actions[0].getValue());
-          } else if (actionName === 'route') {
-            newActionArray[i][actionName].destination = menuEntry.actions[0].getValue();
-          } else if (actionName === 'routeToMailbox') {
-            newActionArray[i][actionName].mailbox = menuEntry.actions[0].getValue();
-          } else if (actionName === 'disconnect') {
-            if (menuEntry.actions[0].getValue() && menuEntry.actions[0].getValue() !== 'none') {
-              newActionArray[i][actionName].treatment = menuEntry.actions[0].getValue();
+        if (menuEntry.type === 'MENU_OPTION') {
+          // the option menu will be added down below
+          foundOptionMenu = true;
+        } else {
+          newActionArray[i] = {};
+          if (angular.isDefined(menuEntry.actions) && menuEntry.actions.length > 0) {
+            var actionName = menuEntry.actions[0].getName();
+            newActionArray[i][actionName] = {};
+            if (angular.isDefined(menuEntry.actions[0].description) && menuEntry.actions[0].description.length > 0) {
+              newActionArray[i][actionName].description = menuEntry.actions[0].description;
+            }
+            if (actionName === 'say') {
+              newActionArray[i][actionName].value = menuEntry.actions[0].getValue();
+              newActionArray[i][actionName].voice = menuEntry.actions[0].voice;
+            } else if (actionName === 'play') {
+              newActionArray[i][actionName].url = menuEntry.actions[0].getValue();
+              // newActionArray[i][actionName].url = MediaResourceService.getFileUrl(menuEntry.actions[0].getValue());
+            } else if (actionName === 'route') {
+              newActionArray[i][actionName].destination = menuEntry.actions[0].getValue();
+            } else if (actionName === 'routeToMailbox') {
+              newActionArray[i][actionName].mailbox = menuEntry.actions[0].getValue();
+            } else if (actionName === 'disconnect') {
+              if (menuEntry.actions[0].getValue() && menuEntry.actions[0].getValue() !== 'none') {
+                newActionArray[i][actionName].treatment = menuEntry.actions[0].getValue();
+              }
             }
           }
         }
@@ -735,8 +768,11 @@
       if (len > 0) {
         // if there is a custom menu or a main menu at the end of the action array,
         // retain it and copy over.
-        if (angular.isDefined(aaActionArray[len - 1].runCustomActions) || angular.isDefined(aaActionArray[len - 1].runActionsOnInput)) {
-          newActionArray.push(aaActionArray[len - 1]);
+        for (var j = 0; j < len; j++) {
+          if (angular.isDefined(aaActionArray[j].runCustomActions) ||
+            (foundOptionMenu && angular.isDefined(aaActionArray[j].runActionsOnInput))) {
+            newActionArray.push(aaActionArray[j]);
+          }
         }
       }
       return newActionArray;
@@ -773,11 +809,17 @@
           // newActionArray[i][actionName].url = MediaResourceService.getFileUrl(val);
         } else if (actionName === 'route') {
           newActionArray[i][actionName].destination = val;
+        } else if (actionName === 'routeToExtension') {
+          newActionArray[i][actionName].destination = val;
         } else if (actionName === 'routeToMailbox') {
           newActionArray[i][actionName].mailbox = val;
         } else if (actionName === 'disconnect') {
           if (val && val !== 'none') {
             newActionArray[i][actionName].treatment = val;
+          }
+        } else if (actionName === 'runActionsOnInput') {
+          if (actions[i].inputType) {
+            newActionArray[i][actionName].inputType = actions[i].inputType;
           }
         }
         if (angular.isDefined(actions[i].description) && actions[i].description.length > 0) {
@@ -805,21 +847,27 @@
       }
 
       // create prompts section
-      menuEntry = aaMenu.headers[0];
-      inputAction.prompts = {};
-      inputAction.prompts.description = menuEntry.description;
-      inputAction.prompts.playList = createPlayList(menuEntry.actions);
+      if (aaMenu.headers.length > 0) {
+        menuEntry = aaMenu.headers[0];
+        inputAction.prompts = {};
+        inputAction.prompts.description = menuEntry.description;
+        inputAction.prompts.sayList = createSayList(menuEntry.actions);
+        inputAction.attempts = aaMenu.attempts;
+        inputAction.language = menuEntry.getLanguage();
+        inputAction.voice = menuEntry.getVoice();
+      }
 
-      // create default action
-      i = aaMenu.entries.length;
-      menuEntry = aaMenu.headers[1];
-      newOptionArray[i] = {};
-      newOptionArray[i].description = menuEntry.description;
-      newOptionArray[i].input = 'default';
-      newOptionArray[i].actions = createActionArray(menuEntry.actions);
-
-      // create language section
-      // todo
+      if (aaMenu.headers.length > 1) {
+        // create default action
+        i = aaMenu.entries.length;
+        menuEntry = aaMenu.headers[1];
+        if (angular.isDefined(menuEntry.actions) && menuEntry.actions.length > 0) {
+          newOptionArray[i] = {};
+          newOptionArray[i].description = menuEntry.description;
+          newOptionArray[i].input = 'default';
+          newOptionArray[i].actions = createActionArray(menuEntry.actions);
+        }
+      }
 
       // create timeout section
       // i = aaMenu.entries.length;
@@ -855,16 +903,25 @@
       if (angular.isUndefined(aaMenu.type) || aaMenu.type === null) {
         return false;
       }
-      if (aaMenu.type === 'MENU_CUSTOM') {
-        return updateCustomMenu(ceRecord, actionSetName, aaMenu);
+      for (var i = 0; i < aaMenu.entries.length; i++) {
+        var menu = aaMenu.entries[i];
+        if (menu.type === 'MENU_CUSTOM' && menu.entries) {
+          updateCustomMenu(ceRecord, actionSetName, menu);
+        }
+        if (menu.type == 'MENU_OPTION' && menu.entries) {
+          updateOptionMenu(ceRecord, actionSetName, menu);
+        }
       }
       if (aaMenu.type == 'MENU_WELCOME') {
-        return updateWelcomeMenu(ceRecord, actionSetName, aaMenu);
+        updateWelcomeMenu(ceRecord, actionSetName, aaMenu);
       }
       if (aaMenu.type == 'MENU_OPTION') {
-        return updateOptionMenu(ceRecord, actionSetName, aaMenu);
+        updateOptionMenu(ceRecord, actionSetName, aaMenu);
       }
-      return false;
+      if (aaMenu.type == 'MENU_CUSTOM') {
+        updateCustomMenu(ceRecord, actionSetName, aaMenu);
+      }
+      return true;
     }
 
     /*
@@ -910,6 +967,31 @@
       if (i >= 0) {
         aaActionArray.splice(i, 1);
         return true;
+      }
+      return false;
+    }
+
+    /*
+     * actionSetName: 'regularOpenActions'
+     * ceRecord: a customer AA record
+     */
+    function deleteCombinedMenu(ceRecord, actionSetName) {
+
+      if (angular.isUndefined(actionSetName) || actionSetName === null) {
+        return false;
+      }
+
+      if (angular.isUndefined(ceRecord) || ceRecord === null) {
+        return false;
+      }
+
+      // get the action object of actionSetName
+      //
+      for (var i = 0; i < ceRecord.actionSets.length; i++) {
+        if (ceRecord.actionSets[i].name === actionSetName) {
+          ceRecord.actionSets.splice(i, 1);
+          return true;
+        }
       }
       return false;
     }

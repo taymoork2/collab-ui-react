@@ -21,13 +21,16 @@ describe('Controller: Partner Reports', function () {
   };
   var customerOptions = [{
     value: 'a7cba512-7b62-4f0a-a869-725b413680e4',
-    label: 'Test Org One'
+    label: 'Test Org One',
+    isAllowedToManage: true
   }, {
     value: '1896f9dc-c5a4-4041-8257-b3adfe3cf9a4',
-    label: 'Test Org Three'
+    label: 'Test Org Three',
+    isAllowedToManage: true
   }, {
     value: 'b7e25333-6750-4b17-841c-ce5124f8ddbb',
-    label: 'Test Org Two'
+    label: 'Test Org Two',
+    isAllowedToManage: true
   }];
   var endpointResponse = [{
     orgId: '6f631c7b-04e5-4dfe-b359-47d5fa9f4837',
@@ -268,32 +271,7 @@ describe('Controller: Partner Reports', function () {
       DonutChartService = _DonutChartService_;
 
       spyOn(PartnerReportService, 'getOverallActiveUserData').and.returnValue($q.when({}));
-      spyOn(PartnerReportService, 'getActiveUserData').and.returnValue($q.when({
-        graphData: [],
-        tableData: [],
-        populationGraph: [],
-        overallPopulation: 0
-      }));
       spyOn(PartnerReportService, 'getCustomerList').and.returnValue($q.when([]));
-      spyOn(PartnerReportService, 'getMediaQualityMetrics').and.returnValue($q.when(dummyMediaQualityGraphData));
-      spyOn(PartnerReportService, 'getCallMetricsData').and.returnValue($q.when({
-        data: dummycallMetricsData
-      }));
-      spyOn(PartnerReportService, 'getRegisteredEndpoints').and.returnValue($q.when([]));
-
-      spyOn(GraphService, 'updateActiveUsersGraph');
-      spyOn(GraphService, 'createActiveUsersGraph').and.returnValue({
-        'dataProvider': dummyGraphData,
-        invalidateSize: validateService.invalidate
-      });
-
-      spyOn(GraphService, 'updateMediaQualityGraph');
-      spyOn(GraphService, 'createMediaQualityGraph').and.returnValue({
-        'dataProvider': dummyMediaQualityGraphData,
-        invalidateSize: validateService.invalidate
-      });
-
-      spyOn(DonutChartService, 'createCallMetricsDonutChart');
 
       spyOn(DummyReportService, 'dummyActiveUserData').and.returnValue(dummyData.activeUser.one);
       spyOn(DummyReportService, 'dummyActivePopulationData').and.returnValue(dummyData.activeUserPopulation);
@@ -316,14 +294,8 @@ describe('Controller: Partner Reports', function () {
       it('should be created successfully and all expected calls completed', function () {
         expect(controller).toBeDefined();
 
-        expect(PartnerReportService.getActiveUserData).toHaveBeenCalled();
+        expect(PartnerReportService.getOverallActiveUserData).toHaveBeenCalled();
         expect(PartnerReportService.getCustomerList).toHaveBeenCalled();
-        expect(PartnerReportService.getMediaQualityMetrics).toHaveBeenCalled();
-        expect(PartnerReportService.getRegisteredEndpoints).toHaveBeenCalled();
-
-        expect(GraphService.createActiveUsersGraph).toHaveBeenCalled();
-        expect(GraphService.createMediaQualityGraph).toHaveBeenCalled();
-        expect(DonutChartService.createCallMetricsDonutChart).toHaveBeenCalled();
       });
 
       it('should set all page variables empty defaults', function () {
@@ -333,7 +305,8 @@ describe('Controller: Partner Reports', function () {
         expect(controller.customerOptions).toEqual([]);
         expect(controller.customerSelected).toEqual({
           value: 0,
-          label: ''
+          label: '',
+          isAllowedToManage: false
         });
         expect(controller.timeSelected).toEqual(controller.timeOptions[0]);
       });

@@ -14,6 +14,16 @@ angular.module('Hercules')
           });
       };
 
+      function extractData(res) {
+        return res.data.items;
+      }
+
+      var servicesInOrg = function (orgId) {
+        return $http
+          .get(config.getUrl() + '/organizations/' + orgId + '/services')
+          .then(extractData);
+      };
+
       var filterEnabledServices = function (services) {
         return _.filter(services, function (service) {
           return service.id != 'squared-fusion-mgmt' && service.enabled;
@@ -34,6 +44,37 @@ angular.module('Hercules')
             callback(services.length > 0);
           }
         });
+      };
+
+      var getEmailSubscribers = function (serviceId, callback) {
+        $http
+          .get(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services')
+          .success(function (data) {
+            var service = _.find(data.items, {
+              id: serviceId
+            });
+            if (service === undefined) {
+              callback(false);
+            } else {
+              callback(null, service.emailSubscribers);
+            }
+          })
+          .error(function () {
+            callback(arguments);
+          });
+      };
+
+      var setEmailSubscribers = function (serviceId, emailSubscribers, callback) {
+        $http
+          .patch(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
+            emailSubscribers: emailSubscribers
+          })
+          .success(function () {
+            callback(null);
+          })
+          .error(function () {
+            callback(arguments);
+          });
       };
 
       var setServiceEnabled = function (serviceId, enabled, callback) {
@@ -100,8 +141,10 @@ angular.module('Hercules')
         isServiceEnabled: isServiceEnabled,
         setServiceEnabled: setServiceEnabled,
         serviceIcon: serviceIcon,
-        acknowledgeService: acknowledgeService
+        acknowledgeService: acknowledgeService,
+        servicesInOrg: servicesInOrg,
+        getEmailSubscribers: getEmailSubscribers,
+        setEmailSubscribers: setEmailSubscribers,
       };
-
     }
   ]);

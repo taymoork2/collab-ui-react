@@ -39,7 +39,8 @@
     return {
       restrict: 'A',
       scope: {
-        draggable: '='
+        draggable: '=',
+        onEnterKey: '&'
       },
       link: function (scope, elem, attrs) {
         elem.attr('draggable', true);
@@ -67,6 +68,18 @@
             elem.removeClass("dragging-source");
           }, 0);
           event.stopPropagation();
+        });
+
+        elem.on('keydown', function (event) {
+          scope.$apply(function () {
+            if (event.keyCode === 13 && event.target === event.currentTarget) {
+              scope.onEnterKey();
+            } else if (event.keyCode === 38 && event.target !== event.currentTarget) {
+              event.stopPropagation();
+            } else if (event.keyCode === 40 && event.target !== event.currentTarget) {
+              event.stopPropagation();
+            }
+          });
         });
       }
     };
@@ -97,6 +110,7 @@
                 obj = scope.dropList[objIndex - 1];
                 scope.dropList[objIndex - 1] = scope.dropList[objIndex];
                 scope.dropList[objIndex] = obj;
+                scope.callback();
                 $timeout(function () {
                   DragDropService.getElement().focus();
                 }, 0);
@@ -107,6 +121,7 @@
                 obj = scope.dropList[objIndex + 1];
                 scope.dropList[objIndex + 1] = scope.dropList[objIndex];
                 scope.dropList[objIndex] = obj;
+                scope.callback();
               }
             }
           });

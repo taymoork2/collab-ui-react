@@ -12,7 +12,8 @@ describe('Controller: PlanReviewCtrl', function () {
     getMessageServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/messagingServices.json')),
     getCommunicationServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/commServices.json')),
     getConferenceServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/confServices.json')),
-    getCmrServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/cmrServices.json'))
+    getCmrServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/cmrServices.json')),
+    getLicenses: sinon.stub().returns(getJSONFixture('core/json/authInfo/licenseServices.json'))
   };
 
   beforeEach(module(function ($provide) {
@@ -27,14 +28,13 @@ describe('Controller: PlanReviewCtrl', function () {
     Userservice = _Userservice_;
     FeatureToggleService = _FeatureToggleService_;
 
-    var deferred = $q.defer();
-    deferred.resolve('true');
     getUserMe = getJSONFixture('core/json/users/me.json');
 
     spyOn(Userservice, 'getUser').and.callFake(function (uid, callback) {
       callback(getUserMe, 200);
     });
-    spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue(deferred.promise);
+    spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
 
     controller = $controller('PlanReviewCtrl', {
       $scope: $scope

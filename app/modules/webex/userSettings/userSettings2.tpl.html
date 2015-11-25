@@ -1,7 +1,7 @@
 <cs-sp-buttons ng-if="userSettingsView.form.$dirty">
   <button id="saveBtn2"
           name="saveBtn2"
-          class="btn-primary"
+          class="btn btn--primary"
           translate="common.save"
           data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>"
           type="submit"
@@ -11,7 +11,7 @@
   
   <button id="resetBtn2" 
           name="resetBtn2"
-          class="btn-default"
+         
           translate="common.cancel"
           data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>"
           ng-click="WebExUserSettings2.btnReset2(userSettingsView.form)"
@@ -38,14 +38,14 @@
           <button id="cancelBtn"
                   name="cancelBtn"
                   translate="webexUserSettings.cancel"
-                  class="btn btn-default wiz-onboard-btn"
+                  class="btn wiz-onboard-btn"
                   ui-sref="user-overview.conferencing">
           </button>
           
           <button id="reloadBtn2"
                   name="reloadBtn2"
                   translate="webexUserSettings.reload"
-                  class="btn btn-info wiz-onboard-btn"
+                  class="btn btn--people wiz-onboard-btn"
                   ng-if="WebExUserSettings2.userSettingsModel.allowRetry"
                   ng-click="WebExUserSettings2.btnReload2()"
                   data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>">

@@ -1,13 +1,13 @@
 'use strict';
 
 describe('Controller: HuronSettingsCtrl', function () {
-  var controller, $controller, $scope, $q, CallerId, ExternalNumberService, Notification;
+  var controller, $controller, $scope, $q, CallerId, ExternalNumberService, Notification, DialPlanService;
   var HuronCustomer, ServiceSetup;
   var customer, timezones, timezone, voicemailCustomer, internalNumberRanges, sites, site, companyNumbers;
 
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _CallerId_, _ExternalNumberService_,
+  beforeEach(inject(function ($rootScope, _$controller_, _$q_, _CallerId_, _ExternalNumberService_, _DialPlanService_,
     _Notification_, _HuronCustomer_, _ServiceSetup_) {
 
     $scope = $rootScope.$new();
@@ -16,6 +16,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     ExternalNumberService = _ExternalNumberService_;
     Notification = _Notification_;
     HuronCustomer = _HuronCustomer_;
+    DialPlanService = _DialPlanService_;
     ServiceSetup = _ServiceSetup_;
     $q = _$q_;
 
@@ -32,6 +33,9 @@ describe('Controller: HuronSettingsCtrl', function () {
     spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.when(timezones));
     spyOn(ServiceSetup, 'listVoicemailTimezone').and.returnValue($q.when(timezone));
     spyOn(ServiceSetup, 'listInternalNumberRanges').and.returnValue($q.when(internalNumberRanges));
+    spyOn(DialPlanService, 'getCustomerDialPlanDetails').and.returnValue($q.when({
+      extensionGenerated: true
+    }));
     spyOn(ServiceSetup, 'listSites').and.returnValue($q.when(sites));
     spyOn(ServiceSetup, 'getSite').and.returnValue($q.when(site));
     spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.when(voicemailCustomer));
@@ -127,7 +131,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     controller.externalNumberPool = [{
       uuid: '1234',
       pattern: '+12292291234'
-    }]
+    }];
     controller.hasVoicemailService = true;
     controller.pilotNumberSelected.uuid = '1234';
     controller.pilotNumberSelected.pattern = '(229) 229-1234';

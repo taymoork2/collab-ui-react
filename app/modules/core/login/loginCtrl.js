@@ -57,7 +57,7 @@ angular.module('Core')
                 }
                 state = 'partneroverview';
               } else if (Authinfo.isHelpDeskUser()) {
-                state = 'helpdesk.landing';
+                state = 'helpdesk.search';
               } else if (Authinfo.isPartnerUser()) {
                 state = 'partnercustomers.list';
               } else if (Authinfo.isSupportUser()) {

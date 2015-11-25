@@ -34,7 +34,6 @@ module.exports = function() {
       js: [
         app + '/modules/**/*.js',
         app + '/scripts/**/*.js',
-        '!' + app + '/modules/**/*.spec.js',
       ],
       ts: [app + '/**/*.ts'],
       json: [app + '/**/*.json'],
@@ -65,7 +64,7 @@ module.exports = function() {
       },
       dest: build + '/modules/core/templates',
     },
-    
+
     typeDefs: ['typings/**/*.ts'],
 
     testFiles: {
@@ -82,6 +81,7 @@ module.exports = function() {
         vendor + '/sinon-ng/sinon-ng.js',
         vendor + '/es5-shim/es5-shim.js',
         node_modules + '/jasmine-promise-matchers/dist/jasmine-promise-matchers.js',
+        vendor + '/bardjs/dist/bard.js',
       ],
       global: [
         test + '/global.spec.js',
@@ -143,6 +143,7 @@ module.exports = function() {
         vendor + '/ui-router-extras/release/modular/ct-ui-router-extras.core.js',
         vendor + '/ui-router-extras/release/modular/ct-ui-router-extras.sticky.js',
         vendor + '/ui-router-extras/release/modular/ct-ui-router-extras.transition.js',
+        vendor + '/ui-router-extras/release/modular/ct-ui-router-extras.future.js',
         vendor + '/ui-router-extras/release/modular/ct-ui-router-extras.previous.js',
         vendor + '/ng-csv/build/ng-csv.min.js',
         vendor + '/api-check/dist/api-check.js',

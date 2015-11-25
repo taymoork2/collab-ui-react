@@ -6,21 +6,41 @@
     </button>
     <h3 class="modal-title" translate="partnerHomePage.dialogTitle"></h3>
   </div>
-  <div class="modal-body">
-    <h4 class="section-title" translate="partnerHomePage.customerInformation"></h4>
+  <section class="modal-body">
+    <h4 translate="partnerHomePage.customerInformation"></h4>
     <formly-form model="trial.model" fields="trial.custInfoFields">
     </formly-form>
-  </div>
-  <div class="modal-body">
-    <h4 class="section-title" translate="partnerHomePage.termsOfTrial"></h4>
+  </section>
+  <section class="modal-body">
+    <h4 translate="partnerHomePage.trialServices"></h4>
+    <section>
+      <h5 translate="partnerHomePage.individualUserServices"></h5>
+      <formly-form model="trial.model" fields="trial.individualServices">
+      </formly-form>
+    </section>
+    <section ng-if="trial.showRoomSystems" class="row">
+      <h5 translate="partnerHomePage.roomSystems"></h5>
+      <div class="columns small-offset-1 small-8">
+        <div class="row">
+          <cs-checkbox class="columns small-5" ckid="trialRoomSystemsChecked" ng-click="trial.roomSystemsChecked()" ng-model="trial.model.roomSystemsEnabled" label="{{'partnerHomePage.roomSystem' | translate}}"></cs-checkbox>
+          <div class="columns small-7">
+            <cs-select id="trialRoomSystemsAmount" ng-model="trial.model.roomSystems" options="trial.roomSystemOptions" placeholder="0" is-disabled="!trial.model.roomSystemsEnabled" secondary-label="{{::'common.devices' | translate}}">
+            </cs-select>
+          </div>
+        </div>
+      </div>
+    </section>
+  </section>
+  <section class="modal-body">
+    <h4 translate="partnerHomePage.termsOfTrial"></h4>
     <formly-form model="trial.model" fields="trial.trialTermsFields">
     </formly-form>
-  </div>
+  </section>
   <div class="modal-footer">
-    <button id="cancelNewTrialButton" class="btn btn-default" ng-click="$dismiss()">
+    <button id="cancelNewTrialButton" class="btn" ng-click="$dismiss()">
       <span translate="partnerHomePage.cancel"></span>
     </button>
-    <button type="button" id="startTrialButton" cs-btn loading="trial.startTrialButtonLoad" class="btn btn-primary" ng-click="trialForm.$setPristine(true); trial.clickStartTrial();" ng-disabled="trialForm.$invalid || trial.isOffersEmpty()">
+    <button type="button" id="startTrialButton" cs-btn loading="trial.startTrialButtonLoad" class="btn btn--primary" ng-click="trialForm.$setPristine(true); trial.clickStartTrial();" ng-disabled="trialForm.$invalid || trial.isOffersEmpty()">
       <span ng-if="!trial.isSquaredUCEnabled()" translate="partnerHomePage.startTrial"></span>
       <span ng-if="trial.isSquaredUCEnabled()">
         <span cr-feature-toggle feature-show="pstnSetup" translate="partnerHomePage.startTrial"></span>

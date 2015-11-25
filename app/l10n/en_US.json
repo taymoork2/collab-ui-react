@@ -41,6 +41,9 @@
     "csvBtnTitle": "Export to CSV",
     "csvBtnExportingTitle": "Export in progress",
     "csvFilename": "exported_users.csv",
+    "csvHeaderName": "Name",
+    "csvHeaderEmailAddress": "Email Address",
+    "csvHeaderEntitlements": "Entitlements",
     "emailSent": "{{email}} email sent successfully",
     "emailFailed": "{{email}} email not sent, {{message}}",
     "entitled": "{{email}} is already entitled",
@@ -116,6 +119,12 @@
     "messaging": "Messaging",
     "conferencing": "Conferencing",
     "communications": "Communications",
+    "message": "Message",
+    "meeting": "Meeting",
+    "call": "Call",
+    "hybridServices": "Hybrid Services",
+    "freeCollab": "Free Public Collaboration Services",
+    "licCollab": "Licensed Collaboration Services",
     "contactCenter": "Contact Center",
     "entitlements": "User Entitlements",
     "saveBtn": "Save",
@@ -126,13 +135,16 @@
     "freeMsg": "Free Spark Messaging",
     "freeConf": "Free 3 Party Spark Meet",
     "freeComm": "Free 1:1 Spark Call",
+    "msgFree": "Message Free",
+    "mtgFree": "Meeting Free 3 Party",
+    "callFree": "Call Free",
     "freeContactCenter": "Free Chat, Email, Voice",
     "paidMsg": "Standard Team Rooms",
     "paidConf": "25 Party Meetings",
     "paidComm": "Advanced Spark Call",
     "paidContactCenter": "Chat, Email, Voice",
     "freeSpark": "Free Spark Messaging",
-    "enterpriseEdition": "Enterprise Edition",
+    "enterpriseEdition": "Enterprise Edition {{capacity}}",
     "meetingCenter": "Meeting Center {{capacity}}",
     "supportCenter": "Support Center {{capacity}}",
     "trainingCenter": "Training Center {{capacity}}",
@@ -196,8 +208,8 @@
     "addOrganizationTabDesc": "Add a new organization to this account",
     "fusionDetailsTab": "Connector Management",
     "fusionDetailsTabDesc": "Connector Management",
-    "huronLineDetailsTab": "Communication",
-    "huronLineDetailsTabDesc": "Communication Details",
+    "huronLineDetailsTab": "Call",
+    "huronLineDetailsTabDesc": "Numbers and Settings",
     "MediafusionDetailsTab": "Media Service Management",
     "MediafusionDetailsTabDesc": "Media Service Management",
     "callRoutingTab": "Call Routing",
@@ -335,7 +347,8 @@
     "highQuality": "5 Highest Quality",
     "leastQuality": "5 Lowest Quality",
     "customerLoadError": "There was an error while loading the customer list.",
-    "webex": "WebEx Reports"
+    "unauthorizedError": "User is not authorized to access the customer reports.",
+    "webex": "Webex Reports"
   },
   "activeUsers": {
     "active": "Active",
@@ -481,8 +494,10 @@
   "cdrLogs": {
     "title": "CDR Call Flow",
     "searchForm": "Search Form",
+    "noData": "No CDR data matches the search parameters.  Please adjust your criteria and retry.",
     "search": "Search",
     "reset": "Reset",
+    "userLabel": "User UUID:",
     "number": "Number:",
     "device": "Device:",
     "callingParty": "Calling Party",
@@ -493,7 +508,7 @@
     "startDate": "Start Date:",
     "endDate": "End Date:",
     "dateExample": "Choose a Date",
-    "size": "Calls Per Server:",
+    "size": "Hit Size:",
     "uploadFile": "Upload CDR File",
     "uploadDescription": "CDRs previously saved in json form can be uploaded for reinspection.",
     "upload": "Upload",
@@ -512,9 +527,12 @@
     "callsSubtitle": "Call List",
     "sessionIds": "Session Ids",
     "cdrTableTitle": "CDRs Generated During Call",
-    "cdrRetrievalError": "Error encountered while retrieving CDR records from {{server}}.",
-    "cdrRecursiveError": "Record size requested too large to retrieve all related CDR data from {{server}}.  To retrieve data from {{server}} lower the 'Size Per Server' count and resubmit.",
+    "cdrRetrievalError": "Error encountered while retrieving CDR records.",
+    "cdr401Unauthorized": "User not authorized to retrieve CDR records.",
+    "cdrRecursiveError": "Record size requested too large to retrieve all related CDR data.  To retrieve data, lower the 'Hit Size' count and resubmit.",
     "required": "This field is required.",
+    "userUuidError": "Input User UUIDs only.",
+    "userUuidMatchError": "User UUIDs for the calling party and called party should not match.",
     "invalidDate": "End date should be the same day as, or any day after, the start date.",
     "tomorrowError": "Select today's date or any date before today's date.",
     "invalidTime": "Please follow 'hh:mm:ss AM/PM' format.  If 'AM/PM' is ommited, it will be assumed that 24-hour time is being used.",
@@ -522,7 +540,7 @@
     "phoneNumberError": "Please enter a valid phone number using the numbers [0-9].",
     "phoneNumberErrorTwo": "Calling Party Number and Called Party Number should not match.",
     "deviceNameError": "Calling Party Device and Called Party Device should not match.",
-    "hitSizeError": "The request size per server should be between 1 and 50.",
+    "hitSizeError": "The request hit size should be between 1 and 50.",
     "advancedCDR": "Advanced CDR Report",
     "local": "Local:",
     "remote": "Remote:",
@@ -561,6 +579,7 @@
     "back": "Back",
     "finish": "Finish",
     "language": "Language",
+    "voice": "Voice",
     "selectLanguage": "Select a language",
     "select": "Select",
     "invalidPhoneNumber": "Incorrect Phone Number",
@@ -591,7 +610,9 @@
     "lastName": "Last Name",
     "email": "Email",
     "id": "ID",
-    "new": "New"
+    "new": "New",
+    "devices": "Devices",
+    "users": "Users"
   },
   "notifications": {
     "success": "Success notifications",
@@ -650,8 +671,9 @@
     "spark": "Spark",
     "sso": "Single Sign On (SSO)",
     "dirsync": "Directory Synchronization",
-    "setUpCalendarService": "Calendar Service is available. Use @spark and @webex to enhance your collaboration experience.",
-    "setUpCallService": "Call Service (Aware) is available. Effortlessly share your desktop with Spark while you are on your work phone.",
+    "setUpCalendarService": "Calendar Service is available. Users can add @spark to create a Cisco Spark room, and @webex to attach a WebEx to an invitation.",
+    "setUpCallAwareService": "Call Service Aware is available. Users can instantly share their desktops from their Cisco Spark clients while on a call.",
+    "setUpCallConnectService": "Call Service Connect is available. Users can answer calls to their work phones on their Cisco Spark clients, and place calls to others' work phones from their Cisco Spark clients.",
     "getStarted": "Get Started"
   },
   "inviteModal": {
@@ -804,7 +826,8 @@
     "expired": "Your session is expired or unauthorized. You will automatically be logged out in a few seconds. Please login again to continue using the service.",
     "unsupported": "You are using an <strong>outdated</strong> version of Internet Explorer. Please <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>upgrade your browser</a> to version 11 or higher.",
     "status404": "Requested resource not found.",
-    "statusError": "Request failed with status: {{status}}."
+    "statusError": "Request failed with status: {{status}}.",
+    "csvError": "Export failed."
   },
   "spacesPage": {
     "title": "Devices",
@@ -916,6 +939,7 @@
     },
     "serviceNames": {
       "squared-fusion-uc": "Call Service",
+      "squared-fusion-uc.full": "Call Service Aware",
       "squared-fusion-cal": "Calendar Service",
       "squared-fusion-media": "Media Service",
       "contact-center-context": "Context Center Service",
@@ -1047,16 +1071,25 @@
     "needHelpExplain": "Search the knowledge base.",
     "planReview": "Plan Review",
     "spark": "Spark",
-    "sparkMsg": "Spark Messaging",
+    "sparkMsg": "Free Spark Messaging",
     "sparkStub": "Set up Spark",
     "webex": "WebEx",
     "webexMsg": "Webex Conferencing",
     "webexStub": "Set up Webex",
     "calling": "Calling",
     "callingMsg": "Cloud Calling",
+    "message": "Message",
+    "meeting": "Meeting",
+    "call": "Call",
     "messaging": "Messaging",
     "conferencing": "Conferencing",
     "communications": "Communications",
+    "roomSystems": "Room Systems",
+    "freeMsg": "Message Free",
+    "freeMtg": "Meeting Free 3 Party",
+    "freeCall": "Call Free",
+    "confMsg": "Free 3 Party Spark Meet",
+    "commMsg": "Free 1:1 Spark Call",
     "communicationsSub": "Setup calling service",
     "claimSipUrl": "Claim SIP URI Domain",
     "claimSipUriTitle": "Customize your company’s SIP URI domain name. This domain will be used to create a universally reachable URI for each user in your company.",
@@ -1318,6 +1351,26 @@
     "scheduleHolidays": "Holidays",
     "invalidBuilderNameMissing": "Enter an Auto Attendant Name.",
     "invalidBuilderNameNotUnique": "This Auto Attendant Name is already in use. Please enter a unique Auto Attendant Name.",
+    "phoneMenuAddDigit": "Add another input digit",
+    "phoneMenuTimeout": "Timeout/Invalid",
+    "phoneMenuContinue": "Continue To Next Step",
+    "phoneMenuRepeatContinue": "Repeat and Continue To Next Step",
+    "phoneMenuReturnToPrev": "Return to Previous Menu",
+    "phoneMenuPlaySubmenu": "Play Submenu",
+    "phoneMenuRepeatMenu": "Repeat this Menu",
+    "phoneMenuDialExt": "Dial by Extension",
+    "phoneMenuRouteUser": "Route to User",
+    "phoneMenuRouteHunt": "Route to Hunt Group",
+    "phoneMenuRouteVM": "Route to Voicemail",
+    "phoneMenuRouteAA": "Route to Auto Attendant",
+    "phoneMenuAddDigit": "Add another input digit",
+    "phoneMenuListening": "While listening for the following user input",
+    "phoneMenuRepeatOnce": "Once",
+    "phoneMenuRepeatTwice": "Twice",
+    "phoneMenuRepeatThree": "Three Times",
+    "phoneMenuRepeatFour": "Four Times",
+    "phoneMenuRepeatFive": "Five Times",
+    "phoneMenuHelp": "Select the desired language and voice which is used to speak the phrase to the caller. Say message is optional. If no message is entered, we will still listen for the caller's input.",
     "addNumberMsg": "This auto attendant will answer all calls to the following numbers. You can add or remove numbers at any time.",
     "numberInfoPopover": "If you don’t enter a number here, it’s okay. Calls may still come through from another Auto Attendant.",
     "selectPlaceHolder": "Search or Select a Number",
@@ -1326,7 +1379,7 @@
     "sayMessagePlaceholder": "Enter your message here.",
     "sayMessageUninterrupt": "Message playback will be uninterruptable.",
     "sayMessageVoice": "Voice",
-    "sayMessageSelectPlaceholder": "Select...",
+    "selectPlaceholder": "Select...",
     "voices": {
       "male": "male",
       "female": "female",
@@ -1450,6 +1503,7 @@
     "externalNumberTooltip": "Use the direct line to reach this line from outside of the company.",
     "externalNumberPoolError": "Direct lines failed to load.",
     "externalNumberMappingError": "Direct line Mappings failed to load.",
+    "nationalNumberLabel": "National Number",
     "chooseNumber": "Choose a Number",
     "searchNumber": "Search for a number...",
     "addNewNumber": "Add a New Number",
@@ -1608,7 +1662,9 @@
     "oneHundred": "100",
     "twoHundred": "200",
     "fiveHundred": "500",
-    "duration": "Trial Duration (days)",
+    "duration": "Duration of the Trial",
+    "durationHelp": "Days",
+    "message": "Message",
     "thirtyDays": "30 Days",
     "sixtyDays": "60 Days",
     "ninetyDays": "90",
@@ -1618,6 +1674,8 @@
     "startTrial": "Start Trial",
     "customerInformation": "Customer Information",
     "termsOfTrial": "Terms of Trial",
+    "trialServices": "Trial Services",
+    "sparkRoomSystem": "Room Systems",
     "trialButton": "Add Trial Customer",
     "dialogTitle": "Add New Trial",
     "customerName": "Company Name",
@@ -1632,7 +1690,11 @@
     "averageCallsTitle": "Average Calls Per User",
     "contentSharedTitle": "Files Shared",
     "errGetPhoneNumberCount": "Failed to retrieve phone number count.",
-    "invalidTrialLicenseCount": "Number of Licenses should be greater than 0 and less than 1000."
+    "invalidTrialLicenseCount": "Number of Licenses should be greater than 0 and less than 1000.",
+    "individualUserServices": "Individual User Services",
+    "roomSystems": "Room Systems",
+    "roomSystem": "Room System",
+    "call": "Call"
   },
   "trialModal": {
     "trialSuccess": "You have set up your trial successfully.",
@@ -1679,7 +1741,13 @@
     "actionHeader": "Actions",
     "addTrial": "Start a Trial",
     "csvBtnTitle": "Export to CSV",
+    "csvBtnExportingTitle": "Export in progress",
     "csvFilename": "exported_customers.csv",
+    "csvHeaderCustomerName": "Customer Name",
+    "csvHeaderAdminEmail": "Admin Email",
+    "csvHeaderMessagingEntitlements": "Messaging Entitlements",
+    "csvHeaderConferencingEntitlements": "Conferencing Entitlements",
+    "csvHeaderCommunicationsEntitlements": "Communications Entitlements",
     "custDetail": "Customer Detail",
     "contactName": "Contact Name",
     "contactEmail": "Email",
@@ -1734,7 +1802,7 @@
     "emailSuccessText": "Email successfully sent to customer.",
     "emailFailText": "Error sending email",
     "inputPlacehoder": "Enter phone numbers separated by commas",
-    "didFormatHelpText": "For example: 15556667777, +15556667777, 1-555-666-7777, +1 (555) 666-7777",
+    "didFormatHelpText": "For example: {{examples}}",
     "didAlreadyExist": "Phone number already exists."
   },
   "deviceDetailPage": {
@@ -1913,6 +1981,15 @@
       "reportAlarm": "reported alarm.",
       "reportAlarms": "reported alarms."
     },
+    "activateService": {
+      "ingress": "Extend the Cloud to Your On-Premises Environment",
+      "serviceName": "Media Service Activation",
+      "label": "ACTIVATE AND BEGIN SETUP"
+    },
+    "mediaServiceActivationFailure": "Problems enabling the service",
+    "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
+    "serviceName": "Media Service",
+    "serviceDescription": "Media Service complement your on-premises conferencing environment and add further flexibility to your existing configuration. With Media Services, you can be certain that your meetings can happen anywhere and that the cloud resources will jump in to help when you need them.",
     "delete": "Delete",
     "cancel": "Cancel",
     "actionsHeader": "Actions",
@@ -2044,8 +2121,9 @@
     "010086": "The site does not support hybrid audio",
     "110055": "User limit exceeded for the session type \"{{sessionTypeName}}\".",
     "defaultProcessError": "Unable to process request.",
+    "defaultNotWebExAdminError": "You have not yet been provisioned to this site as an administrator. This process may take a moment.",
     "defaultAccessError": "Unable to access server at this time.",
-    "defaultNotWebExAdminError": "You have not yet been provisioned to this site as an administrator. This process may take a moment."
+    "defaultReloadMsg": "Please try reloading the page."
   },
   "webexUserSettingLabels": {
     "sessionEnablementLabel": "Session Type Enablement",
@@ -2070,7 +2148,8 @@
     "advancedLinkLabel": "Advanced Settings"
   },
   "webexCommon": {
-    "logoAltText": "Cisco WebEx"
+    "logoAltText": "Cisco WebEx",
+    "breadcrumbsAltText": "You are here"
   },
   "webexSiteSettingsLabels": {
     "siteSettingsIndexPageTitle": "Configure",
@@ -2194,7 +2273,7 @@
     "support_center": "Support Center",
     "remote_access": "Remote Access",
 
-    "meeting_in_progess": "Meetings in Progess",
+    "meeting_in_progess": "Meetings in Progress",
     "meeting_usage": "Meeting Usage",
     "recordings_storage_usage": "Storage Usage",
     "recording_usage": "Recording Usage",
@@ -2505,7 +2584,7 @@
   },
 
   "huronDetails": {
-    "title": "Communication",
+    "title": "Call",
     "linesTitle": "Numbers",
     "settingsTitle": "Settings",
     "featuresTitle": "Features"
@@ -2538,9 +2617,8 @@
     "assignedLines": "Assigned",
     "csvBtnTitle": "Export to CSV",
     "csvFilename": "exported_lines.csv",
-    "internalNumberHeader": "Internal Extensions",
-    "externalNumberHeader": "Phone Number",
-    "deviceHeader": "Devices",
+    "internalNumberHeader": "Internal Extension",
+    "externalNumberHeader": "Direct Line",
     "userEmailHeader": "User",
     "actionHeader": "Actions",
     "lineListError": "Error retrieving the user line association list. Please try reloading the page.",
@@ -2583,7 +2661,7 @@
   },
 
   "huronHuntGroup": {
-    "title": "Hunt Group",
+    "title": "hunt group",
     "createTitle": "Create Hunt Group",
     "namePlaceholder": "Name the Hunt Group",
     "nameHint": "This hunt group name will also be the name callers see on their device (i.e. alerting name)",
@@ -2608,7 +2686,6 @@
     "deleteHuntGroupConfText": "Are you sure you want to delete the {{ huntGroupName }} hunt group?",
     "messageError": "Message {{ message }}",
     "code": "HG",
-    "title": "Hunt Group",
     "modalDescription": "Hunt groups (or line hunting) allow you to customize the distribution of incoming phone calls to users' phone lines in a specific order.",
     "featureListingError": "Failed to retrieve the feature list.",
     "numberFetchFailure": "Unable to get numbers.",
@@ -2655,23 +2732,25 @@
     "remove": "Remove",
     "removeMem": "Remove Member",
     "addMemberLabel": "Add & Search Members",
-    "successSave": "{{huntGroupName}} Hunt Group has been created successfully",
-    "successUpdate": "{{huntGroupName}} Hunt Group has been updated successfully",
-    "errorSave": "Failed to create the {{huntGroupName}} Hunt Group",
-    "errorUpdate": "Failed to update the {{huntGroupName}} Hunt Group",
+    "successSave": "'{{huntGroupName}}' hunt group has been created successfully",
+    "successUpdate": "'{{huntGroupName}}' hunt group has been updated successfully",
+    "errorSave": "Failed to create the '{{huntGroupName}}' Hunt Group",
+    "errorUpdate": "Failed to update the '{{huntGroupName}}' Hunt Group",
     "numberLabel": "Select Numbers",
     "cancelHeader": "Cancel Hunt Group Creation",
     "cancelDialog": "Are you sure you wish to cancel hunt group creation? This hunt group will not be saved.",
     "confirmButton": "Cancel Creation",
     "continueButton": "Continue Creation",
     "memberFetchFailure": "Unable to get members.",
+    "huntGroupFetchFailure": "Failed to fetch hunt group details '{{huntGroupName}}'.",
     "invalidMember": "Select atleast one member",
     "invalidFallback": "Select a number or enter a new valid number"
   },
   "overview": {
     "pageTitle": "Overview",
-    "thisMonth": "This Month",
-    "lastMonth": "Last Month",
+    "thisMonth": "This month",
+    "lastMonth": "Last month:",
+    "contactPartner": "Contact your partner or Cisco Sales for more information",
     "cards": {
       "users": {
         "title": "Users",
@@ -2682,51 +2761,95 @@
       },
       "message": {
         "title": "Message",
-        "desc": "Active Rooms"
+        "notEnabledText": " Use Team Rooms with content storage to easily collaborate from any device to any user inside or outside your organization.",
+        "currentTitle": "New rooms this week",
+        "previousTitle": "Last week:"
       },
       "meeting": {
         "title": "Meeting",
-        "desc": "Meetings"
+        "notEnabledText": "Join up to 25 colleagues in a Team Room Sync-up or many more in a WebEx Meeting Center."
       },
       "call": {
         "title": "Call",
-        "desc": "Calls"
+        "notEnabledText": "Basic external calling and full Unified Communications enabled for your organization."
       },
       "roomSystem": {
         "title": "Room Systems",
-        "desc": "Registered Systems",
-        "currentTitle": "Last 30 days",
-        "previousTitle": "Total"
+        "currentTitle": "Online this week",
+        "previousTitle": "Last week:",
+        "notEnabledText": "Meeting room video endpoints that seamlessly integrate with your cloud collaboration."
       },
       "hybrid": {
-        "title": "Hybrid Services"
+        "title": "Hybrid Services",
+        "notEnabledText": "Hybrid Services allow you to integrate on-premise systems to the Cisco Collaboration Platform.",
+        "notEnabledActionText": "Learn More"
       }
     }
   },
   "roles": {
     "atlas-portal.support": "Billing Administrator",
     "atlas-portal.reports": "Support Administrator",
-    "atlas-portal.helpdesk": "Help Desk Support",
+    "atlas-portal.partner.helpdesk": "Help Desk Support",
     "id_full_admin": "Full Administrator",
     "user": "User"
   },
   "helpdesk": {
     "navHeaderTitle": "Cloud Collaboration Help Desk",
-    "helpdesk": "Help Desk",
+    "helpdesk": "Help Desk Support",
     "users": "Users",
     "customers": "Customers",
     "badUserSearchInput": "Searching for users requires a minimum of three characters. Name and email searches requires a minimum of two words, e.g. john.doe or John Doe.",
     "unexpectedError": "An unexpected error occurred",
     "searchingPleaseWait": "Searching, please wait...",
     "noSearchHits": "No matches found. Try to narrow your search...",
-    "searchInputDescription": "Search users (name, email address, phone number) or customers (name)",
+    "searchInputDescription": "Search and view a user or a customer.",
     "roles": "Roles",
-    "goToSearch": "Go to Search",
-    "sso": "SSO",
-    "dirSync": "Directory Sync",
-    "createdAt": "Created At",
+    "backToSearchResults": "Back to search results",
+    "sso": "Single Sign On (SSO)",
+    "dirSync": "Directory Synchronization",
     "type": "Type",
     "partner": "Partner",
-    "customer": "Customer"
+    "customer": "Customer",
+    "searchCriteriaLink": "Show supported search criteria.",
+    "searchInfo": "Search users by Email, Phone Number or Display Name (two words required). Search company by Display Name.",
+    "devices": "Devices",
+    "mobile": "mobile",
+    "work": "work",
+    "fax": "fax",
+    "searchingOrg": "Searching {{name}}",
+    "userStatus": "Status",
+    "userId": "Id",
+    "organization": "Customer",
+    "customerPortalLaunch": "Launch Customer Portal",
+    "contact": "Contact",
+    "claimedDomain": "Claimed Domain",
+    "partners": "Partners",
+    "administratorUsers": "Administrator Users",
+    "message": "Message",
+    "meeting": "Meeting",
+    "call": "Call",
+    "rooms": "Rooms",
+    "hybridServices": "Hybrid Services",
+    "entitlements": {
+      "webex-squared": "Free Spark Messaging",
+      "squared-syncup.paid": "25 Party Meetings",
+      "squared-syncup.free": "Free 3 Party Spark Meetings",
+      "squared-room-moderation.paid": "Standard Team Rooms",
+      "squared-room-moderation.free": "Free Spark Messaging",
+      "ciscouc.paid": "Advanced Spark Call",
+      "ciscouc.free": "Free 1:1 Spark Call"
+    },
+    "userStatuses": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "pending": "Invite Pending",
+      "transient": "Transient",
+      "fraud": "Fraud",
+      "compliance": "Compliance"
+    },
+    "entitlementsHeading": "Entitlements",
+    "enabledServices": "Enabled Services",
+    "none": "None",
+    "webexsites": "WebEx Sites"
   }
 }

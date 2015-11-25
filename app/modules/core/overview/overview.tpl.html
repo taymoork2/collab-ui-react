@@ -1,67 +1,213 @@
 <div class="overview-page">
   <cs-page-header title="overview.pageTitle"></cs-page-header>
-  <cs-card-layout block-view="true" class="overview-layout">
-    <cs-card class="large menu-card" ng-repeat="card in overview.cards">
-      <article>
-        <section>
-          <div class="service-card">
-            <div class="left-side">
-              <div class="service-name">
-                <i class="icon" ng-class="card.icon"></i>
-                <span>{{card.name | translate}}</span>
+  <div class="cs-card-container multiple-layouts">
+    <cs-card-layout class="three-fourths">
+      <cs-card class="medium menu-card header-bar overview-card cs-card" ng-class="card.cardClass"
+               ng-repeat="card in overview.cards">
+        <article>
+          <header>
+            <div class="overview-header">
+              <i class="icon" ng-class="card.icon"></i>{{card.name | translate}}
+            </div>
+          </header>
+          <section ng-if="card.enabled">
+            <div class="overview-info">
+              <div>{{(card.currentTitle || 'overview.thisMonth') | translate }}</div>
+              <div class="overview-count">{{(card.current | number) || 'N/A'}}</div>
+              <div>{{(card.previousTitle || 'overview.lastMonth') | translate }} {{(card.previous | number) || 'N/A'}}
               </div>
             </div>
-            <div class="right-side">
-              <div class="overview-title">{{card.desc | translate}}</div>
-              <div class="overview-count current">{{(card.current | number) || 'N/A'}}</div>
-              <div class="overview-time current">{{(card.currentTitle || 'overview.thisMonth') | translate }}</div>
-              <div class="overview-count last">{{(card.previous | number) || 'N/A'}}</div>
-              <div class="overview-time last" >{{(card.previousTitle || 'overview.lastMonth') | translate }}</div>
+          </section>
+          <footer class="footer-menu ng-isolate-scope overview-footer-content-trial"
+                  ng-class="{'overview-footer-content-trial' : card.trial ,  'overview-footer-content'  : !card.trial }"
+                  ng-if="card.enabled">
+            <span class="footer-content">
+              <span class="label warning ng-scope" ng-if="card.trial">Trial</span>
+              <a ng-href="{{overview.statusPageUrl}}" target="_blank" class="monitoring-cell">
+                <i class="icon icon-circle" ng-class="card.healthStatus || 'disabled'"></i>
+                <span>{{card.levelText}}</span>
+              </a>
+            </span>
+            <span class="footer-icons">
+              <a ng-href="{{card.settingsUrl}}">
+                &nbsp;<i class="icon icon-tools" ng-if="card.settingsUrl"></i>
+              </a>
+            </span>
+          </footer>
+          <section class="card-menu ng-isolate-scope" ng-class="{ open: cm.menuOpen === true }" menutitle="card.name" ng-if="card.enabled">
+            <div class="card-menu-heading">
+              <span class="ng-binding">SETTINGS</span>
+              <button type="button" class="close" ng-click="cm.toggleSettings()"><span class="sr-only">Close</span>
+              </button>
             </div>
-          </div>
-        </section>
-        <footer class="footer-menu">
-          <span class="footer-content">
-            <a ng-href="{{overview.statusPageUrl}}" target="_blank" class="monitoring-cell">
-              <i class="icon icon-circle" ng-class="card.healthStatus || 'disabled'"></i>
-              <span>{{card.levelText}}</span>
-            </a>
-          </span>
-          <span class="footer-icons">
-            <a ng-href="{{card.settingsUrl}}">
-              &nbsp;<i class="icon icon-settings" ng-if="card.settingsUrl"></i>
-            </a>
-          </span>
-        </footer>
-      </article>
-    </cs-card>
-    <cs-card class="large menu-card users-card">
-      <article>
-        <header><h4 translate="overview.cards.users.title"></h4></header>
-        <section>
-          <ul>
-            <li>
-              <i class="icon icon-circle" ng-class="overview.userCard.dirsyncEnabled ? 'success' : 'disabled'"></i>
-              <span translate="overview.cards.users.directorySynchronization"></span>
-            </li>
-            <li>
-              <i class="icon icon-circle" ng-class="overview.userCard.ssoEnabled ? 'success' : 'disabled' "></i>
-              <span translate="overview.cards.users.singleSignOn"></span>
-            </li>
-          </ul>
-          <hr/>
-          <div class="bottom">
+            <div>
+              <ul class="service-menu-list no-bullet ng-scope">
+                <!-- ngRepeat: item in cd.CallMenuItems -->
+                <li ng-repeat="item in cd.CallMenuItems" class="ng-scope">
+                  <a class="service-menu-item ng-binding" href="">item 1</a>
+                </li><!-- end ngRepeat: item in cd.CallMenuItems -->
+                <li ng-repeat="item in cd.CallMenuItems" class="ng-scope">
+                  <a class="service-menu-item ng-binding" href="">item 2</a>
+                </li><!-- end ngRepeat: item in cd.CallMenuItems -->
+                <li ng-repeat="item in cd.CallMenuItems" class="ng-scope">
+                  <a class="service-menu-item ng-binding" href="">item 3</a>
+                </li><!-- end ngRepeat: item in cd.CallMenuItems -->
+              </ul>
+            </div>
+          </section>
+          <section ng-if="!card.enabled" class="disabled-section">
+            <span>{{(card.notEnabledText || 'overview.notEnabledText') | translate}}</span>
+            <a ng-href="card.notEnabledAction" ng-if="card.notEnabledAction">{{card.notEnabledActionText | translate}}</a>
+          </section>
+          <footer ng-if="!card.enabled && card.notEnabledFooter" class="disabled-footer">
+            <p>{{card.notEnabledFooter| translate}}</p>
+          </footer>
+        </article>
+      </cs-card>
+      <cs-card class="medium menu-card header-bar cta-base overview-card hybrid-card">
+        <article>
+          <header>
+            <div class="overview-header">
+              <i class="icon" ng-class="overview.hybridCard.icon"></i>{{ 'overview.cards.hybrid.title' | translate}}
+            </div>
+          </header>
+          <section ng-if="overview.hybridCard.enabled">
+            <h6>Active:</h6>
+            <ul>
+              <li ng-repeat="service in overview.hybridCard.services">
+                <!--<i class="icon icon-circle" ng-class="service.healthStatus || 'disabled'"></i>-->
+                <i class="icon icon-circle" ng-class="service.healthStatus || 'error'"></i>
+                <span>{{ 'hercules.serviceNames.'+ service.id | translate}}</span>
+              </li>
+            </ul>
+            <span>{{overview.hybridCard.status}}</span>
+            <!--<span>N/A</span>-->
+          </section>
+          <footer class="footer-menu ng-isolate-scope overview-footer-content-trial"
+                  ng-class="{'overview-footer-content-trial' : card.trial ,  'overview-footer-content'  : !card.trial }"
+                  ng-if="overview.hybridCard.enabled">
+            <span class="footer-content">
+              <span class="label warning ng-scope" ng-if="card.trial">Trial</span>
+              <a ng-href="{{overview.statusPageUrl}}" target="_blank" class="monitoring-cell">
+                <i class="icon icon-circle" ng-class="card.healthStatus || 'disabled'"></i>
+                <span>{{card.levelText}}</span>
+              </a>
+            </span>
+            <span class="footer-icons">
+              <a ng-href="{{card.settingsUrl}}" ng-click="cm.menuOpen = true">
+                &nbsp;<i class="icon icon-tools"></i>
+              </a>
+            </span>
+          </footer>
+          <section class="card-menu ng-isolate-scope" ng-class="{ open: cm.menuOpen === true }"
+                   menutitle="card.name">
+            <div class="card-menu-heading">
+              <span class="ng-binding">SETTINGS</span>
+              <button type="button" class="close" ng-click="cm.toggleSettings(); cm.menuOpen = false;"><span
+                class="sr-only">Close</span>
+              </button>
+            </div>
+            <div>
+              <ul class="service-menu-list no-bullet ng-scope">
+                <!-- Placeholder: Start -->
+                <li><a href="">Item1</a></li>
+                <li><a href="">Item2</a></li>
+                <li><a href="">Item3</a></li>
+                <li><a href="">Item4</a></li>
+                <!-- Placeholder: End -->
+
+
+                <!-- ngRepeat: item in cd.CallMenuItems -->
+                <li ng-repeat="item in cd.CallMenuItems" class="ng-scope">
+                  <a class="service-menu-item ng-binding" href="">item 1</a>
+                </li><!-- end ngRepeat: item in cd.CallMenuItems -->
+                <li ng-repeat="item in cd.CallMenuItems" class="ng-scope">
+                  <a class="service-menu-item ng-binding" href="">item 2</a>
+                </li><!-- end ngRepeat: item in cd.CallMenuItems -->
+                <li ng-repeat="item in cd.CallMenuItems" class="ng-scope">
+                  <a class="service-menu-item ng-binding" href="">item 3</a>
+                </li><!-- end ngRepeat: item in cd.CallMenuItems -->
+              </ul>
+            </div>
+          </section>
+          <section ng-if="!overview.hybridCard.enabled">
+            <span>{{(overview.hybridCard.notEnabledText || 'overview.notEnabledText') | translate}}</span>
+            <a ng-href="overview.hybridCard.notEnabledAction" ng-if="overview.hybridCard.notEnabledAction">{{overview.hybridCard.notEnabledActionText | translate}}</a>
+          </section>
+          <footer ng-if="!overview.hybridCard.enabled && overview.hybridCard.notEnabledFooter">
+            <span>{{overview.hybridCard.notEnabledFooter | translate}}</span>
+          </footer>
+        </article>
+      </cs-card>
+      <cs-card class="medium menu-card overview-card user-card">
+        <article>
+          <header><h4 translate="overview.cards.users.title"></h4></header>
+          <section>
             <h4>{{(overview.userCard.usersToConvert | number) || 'N/A'}}</h4>
-            <div translate="overview.cards.users.convertText"></div>
+
+            <div translate="overview.cards.users.convertText" id="convertText"></div>
             <button
-              class="btn btn-success"
+              class="btn btn--cta"
               translate="overview.cards.users.convertButton"
               ng-click="overview.openConvertModal()"
               ng-disabled="!overview.userCard.usersToConvert">
             </button>
-          </div>
-        </section>
-      </article>
-    </cs-card>
-  </cs-card-layout>
+            <hr/>
+            <div class="bottom">
+              <ul>
+                <li>
+                  <i class="icon icon-circle" ng-class="overview.userCard.dirsyncEnabled ? 'success' : 'disabled'"></i>
+                  <span translate="overview.cards.users.directorySynchronization"></span>
+                </li>
+                <li>
+                  <i class="icon icon-circle" ng-class="overview.userCard.ssoEnabled ? 'success' : 'disabled' "></i>
+                  <span translate="overview.cards.users.singleSignOn"></span>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </article>
+      </cs-card>
+    </cs-card-layout>
+    <cs-card-layout block-view="true" class="fourth">
+      <cs-card class="full side-info-card">
+        <article>
+          <header>
+            <div>Notifications</div>
+          </header>
+          <section class="monitoring-panel small-3 medium-12 column"
+                   ng-show="overview.setupNotDone || !(overview.isCalendarAcknowledged && overview.isCallAcknowledged)"
+                   ng-hide="!overview.setupNotDone && (overview.isCalendarAcknowledged && overview.isCallAcknowledged)">
+            <div class="notification-style" ng-show="overview.setupNotDone">
+              <span class="badge badge-warning" translate="homePage.todo"></span>
+            <span class="notification-spacing">
+              <span translate="homePage.setUpYourTrial"></span>
+              <a ng-click="openFirstTimeSetupWiz()" translate="homePage.beginTrial"></a>
+            </span>
+            </div>
+            <div class="notification-style" ng-show="!overview.isCalendarAcknowledged">
+              <span class="badge success" translate="common.new"></span>
+
+              <div class="notification-spacing">
+                <span translate="homePage.setUpCalendarService"></span>
+                <a ng-click="showServiceActivationPage('calendar-service')" translate="homePage.getStarted"></a>
+              </div>
+              <!--<button type="button" class="close" ng-click="overview.setHybridAcknowledged('calendar-service')">
+              </button>-->
+            </div>
+            <div class="notification-style" ng-show="!overview.isCallAcknowledged">
+              <span class="badge success" translate="common.new"></span>
+
+              <div class="notification-spacing">
+                <span translate="homePage.setUpCallService"></span>
+                <a ng-click="showServiceActivationPage('call-service')" translate="homePage.getStarted"></a>
+              </div>
+              <!--<button type="button" class="close" ng-click="overview.setHybridAcknowledged('call-service')">
+              </button>-->
+            </div>
+          </section>
+        </article>
+      </cs-card>
+    </cs-card-layout>
+  </div>
 </div>

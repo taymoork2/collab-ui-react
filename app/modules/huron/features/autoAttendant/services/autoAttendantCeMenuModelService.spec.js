@@ -103,7 +103,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       var _ceRecord = angular.copy(ceInfos[0]);
       _ceRecord.callExperienceName = 'AA Custom';
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcome, 'regularOpenActions');
-      _welcomeMenu.entries.splice(1, 1);
+      _welcomeMenu.entries.splice(1, 2);
       var welcomeMenuSuccess = AutoAttendantCeMenuModelService.updateMenu(_ceRecord, 'regularOpenActions', _welcomeMenu);
       var _customMenu = AutoAttendantCeMenuModelService.getCustomMenu(ceCustom, 'regularOpenActions');
       var customMenuSuccess = AutoAttendantCeMenuModelService.updateMenu(_ceRecord, 'regularOpenActions', _customMenu);
@@ -118,7 +118,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       var _ceRecord = angular.copy(ceInfos[0]);
       _ceRecord.callExperienceName = 'AA Option';
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcome, 'regularOpenActions');
-      _welcomeMenu.entries.splice(1, 1);
+      _welcomeMenu.entries.splice(1, 2);
       var welcomeMenuSuccess = AutoAttendantCeMenuModelService.updateMenu(_ceRecord, 'regularOpenActions', _welcomeMenu);
       var _optionMenu = AutoAttendantCeMenuModelService.getOptionMenu(ceOption, 'regularOpenActions');
       var optionMenuSuccess = AutoAttendantCeMenuModelService.updateMenu(_ceRecord, 'regularOpenActions', _optionMenu);
@@ -145,6 +145,16 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       var deleteSuccess = AutoAttendantCeMenuModelService.deleteMenu(_ceRecord, 'regularOpenActions', 'MENU_OPTION');
       expect(deleteSuccess).toBe(true);
       expect(angular.equals(_ceRecord, ceWelcome2)).toBe(true);
+    });
+  });
+
+  describe('deleteCombinedMenu', function () {
+    it('should delete associated actionSet in a given ceRecord', function () {
+      ceWelcome2.callExperienceName = 'AA Option';
+      var _ceRecord = angular.copy(ceOption);
+      var deleteSuccess = AutoAttendantCeMenuModelService.deleteCombinedMenu(_ceRecord, 'regularOpenActions');
+      expect(deleteSuccess).toBe(true);
+      expect(_ceRecord.actionSets.length).toEqual(0);
     });
   });
 

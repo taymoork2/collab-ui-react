@@ -17,15 +17,29 @@
       saveHuntGroup: saveHuntGroup,
       updateHuntGroup: updateHuntGroup,
       getDetails: getDetails,
-      getNumbersWithSelection: getNumbersWithSelection,
+      getAllUnassignedPilotNumbers: getAllUnassignedPilotNumbers,
       getMemberInfo: getMemberInfo,
       updateMemberEmail: updateMemberEmail,
       getPilotNumberSuggestions: getPilotNumberSuggestions,
       getHuntMembers: getHuntMembers,
-      isFallbackNumberValid: isFallbackNumberValid
+      isFallbackNumberValid: isFallbackNumberValid,
+      getHuntMethods: getHuntMethods,
+      suggestionsNeeded: suggestionsNeeded,
+      getHuntMemberWithSelectedNumber: getHuntMemberWithSelectedNumber,
+      NUMBER_FORMAT_DIRECT_LINE: "NUMBER_FORMAT_DIRECT_LINE",
+      NUMBER_FORMAT_EXTENSION: "NUMBER_FORMAT_EXTENSION"
     };
 
     return service;
+
+    function getHuntMethods() {
+      return {
+        longestIdle: "DA_LONGEST_IDLE_TIME",
+        broadcast: "DA_BROADCAST",
+        circular: "DA_CIRCULAR",
+        topDown: "DA_TOP_DOWN"
+      };
+    }
 
     /**
      * Function to update the user email in a promise when a member
@@ -230,13 +244,29 @@
       return huntMembers;
     }
 
+    function getHuntMemberWithSelectedNumber(user) {
+      var huntMember = {};
+      return getMemberInfo(customerId, user.userUuid).then(function (u) {
+        huntMember.uuid = user.userUuid;
+        huntMember.user = u;
+        u.numbers.some(function (num) {
+          var isSelectedNumber = (user.numberUuid === num.uuid);
+          if (isSelectedNumber) {
+            huntMember.selectableNumber = num;
+          }
+          return isSelectedNumber;
+        });
+        return huntMember;
+      });
+    }
+
     function suggestionsNeeded(typedText) {
       return (typedText && typedText.length >= 3);
     }
 
     function getListOfHuntGroups() {
 
-      return HuntGroupServiceV2.get({
+      return HuntGroupServiceV2.query({
         customerId: customerId
       }).$promise;
     }
@@ -262,30 +292,19 @@
       }, huntGroupData).$promise;
     }
 
-    // TODO: Get only unassigned numbers as this is apparently for Edit
-    // page to change the pilot numbers.
-    function getNumbersWithSelection(numbers) {
-      var deferred = $q.defer();
-
-      $http.get('https://mock-hg.de-ams.thunderhead.io/api/v2/customers/fb7d9045-921f-4628-ba60-f46d45c04c6d/numbers?secret=sunlight').then(function (data) {
-        data.data.numbers.forEach(function (value, index) {
-          value.isSelected = false;
-          numbers.forEach(function (value1, index1) {
-            if (value.number === value1.number) {
-              value.isSelected = true;
-            }
-            if (index === data.data.numbers.length - 1 && index1 === numbers.length - 1) {
-              deferred.resolve(data.data.numbers);
-            }
-          });
-        });
-
+    function getAllUnassignedPilotNumbers() {
+      var helper = getNumbers();
+      helper.setApiArgs({
+        number: '',
+        assigned: false
       });
-      return deferred.promise;
+
+      return helper.fetch().then(function (nums) {
+        return nums;
+      });
     }
 
     function getDetails(customerId, huntGroupId) {
-
       return HuntGroupServiceV2.get({
         customerId: customerId,
         huntGroupId: huntGroupId

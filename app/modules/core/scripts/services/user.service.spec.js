@@ -1,27 +1,14 @@
+/* globals $httpBackend, $rootScope, Authinfo, Config, Userservice */
 'use strict';
 
 describe('User Service', function () {
-  beforeEach(module('Core'));
-  beforeEach(module('Huron'));
 
-  var $httpBackend, Config, Userservice, HuronConfig, rootScope;
-
-  var Authinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
-  };
-
-  beforeEach(module(function ($provide) {
-    $provide.value("Authinfo", Authinfo);
-  }));
-
-  beforeEach(inject(function (_$httpBackend_, $injector, _Config_, _HuronConfig_, _$rootScope_) {
-    $httpBackend = _$httpBackend_;
-    Userservice = $injector.get("Userservice");
-    rootScope = _$rootScope_;
-    spyOn(rootScope, '$broadcast').and.returnValue({});
-    Config = _Config_;
-    HuronConfig = _HuronConfig_;
-  }));
+  beforeEach(function () {
+    bard.appModule('Huron');
+    bard.inject(this, '$httpBackend', '$injector', '$rootScope', 'Authinfo', 'Config', 'Userservice');
+    spyOn($rootScope, '$broadcast').and.returnValue({});
+    spyOn(Authinfo, 'getOrgId').and.returnValue('abc123efg456');
+  });
 
   afterEach(function () {
     $httpBackend.verifyNoOutstandingExpectation();
@@ -37,7 +24,7 @@ describe('User Service', function () {
     $httpBackend.flush();
   });
 
-  it('updateUsers should send POST request to create user', function () {
+  it('updateUsers should send PATCH request to update user', function () {
     var users = [{
       address: 'dntodid@gmail.com',
       assignedDn: {
@@ -68,7 +55,7 @@ describe('User Service', function () {
     });
     Userservice.updateUsers(users);
     $httpBackend.flush();
-    expect(rootScope.$broadcast).toHaveBeenCalledWith('Userservice::updateUsers');
+    expect($rootScope.$broadcast).toHaveBeenCalledWith('Userservice::updateUsers');
   });
 
 });

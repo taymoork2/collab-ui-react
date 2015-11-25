@@ -141,7 +141,7 @@ angular.module('Core')
           dev: 'https://identity.webex.com/identity/config/%s/v1/UserReports',
           cfe: 'https://identitybts.webex.com/identity/config/%s/v1/UserReports',
           integration: 'https://identity.webex.com/identity/config/%s/v1/UserReports',
-          prod: 'https://identity.webex.com/identity/config/%s/v1/UserReports',
+          prod: 'https://identity.webex.com/identity/config/%s/v1/UserReports'
         },
 
         scomUrl: {
@@ -200,11 +200,25 @@ angular.module('Core')
           siteAdminDeepUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage'
         },
 
+        wdmUrl: {
+          dev: 'https://wdm-a.wbx2.com/wdm/api/v1',
+          cfe: 'http://wdm.cfe.wbx2.com/wdm/api/v1',
+          integration: 'http://wdm.integration.wbx2.com/wdm/api/v1',
+          prod: 'http://wdm.cfa.wbx2.com/wdm/api/v1',
+        },
+
         sunlightConfigServiceUrl: {
           dev: 'https://config.integration-tx1.thunderhead.io/config/v1',
           cfe: 'https://config.integration-tx1.thunderhead.io/config/v1',
           integration: 'https://config.integration-tx1.thunderhead.io/config/v1',
           prod: 'https://config.integration-tx1.thunderhead.io/config/v1' //This will change to prod later in future
+        },
+
+        calliopeUrl: {
+          dev: 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1',
+          cfe: 'https://calliope-e.wbx2.com/calliope/api/authorization/v1',
+          integration: 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1',
+          prod: 'https://calliope-a.wbx2.com/calliope/api/authorization/v1'
         },
 
         scimSchemas: [
@@ -438,7 +452,7 @@ angular.module('Core')
           application: 'atlas-portal.application',
           reports: 'atlas-portal.reports',
           sales: 'atlas-portal.partner.salesadmin',
-          helpdesk: 'atlas-portal.helpdesk'
+          helpdesk: 'atlas-portal.partner.helpdesk'
         },
 
         roles: {
@@ -820,8 +834,16 @@ angular.module('Core')
           return this.ussUrl[this.getEnv()];
         },
 
+        getCalliopeUrl: function () {
+          return this.calliopeUrl[this.getEnv()];
+        },
+
         getCertsUrl: function () {
           return this.certsUrl[this.getEnv()];
+        },
+
+        getWdmUrl: function () {
+          return this.wdmUrl.dev;
         },
 
         getDefaultEntitlements: function () {
@@ -881,7 +903,6 @@ angular.module('Core')
       config.roleStates = {
         Full_Admin: [ // Customer Admin
           'overview',
-          'overview-nm',
           'users',
           'user-overview',
           'userprofile',
@@ -912,7 +933,7 @@ angular.module('Core')
           'example'
         ],
         Application: ['organizations', 'organization-overview'],
-        Help_Desk: ['helpdesk', 'helpdesk.landing', 'helpdesk.user', 'helpdesk.org']
+        Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org']
       };
 
       config.serviceStates = {
@@ -933,16 +954,15 @@ angular.module('Core')
           'huronsettings',
           'huronfeatures',
           'huronnewfeature',
-          'cdr-overview',
           'huronHuntGroup',
           'huntgroupedit',
-          'cdrsupport'
+          'cdrsupport',
+          'cdr-overview'
         ],
         'squared-fusion-mgmt': [
-          //'fusion',
           'cluster-details',
-          'cluster-details-new'
-          // 'management-service',
+          'cluster-details-new',
+          'management-service',
         ],
         'spark-device-mgmt': [
           'devices',
@@ -952,10 +972,11 @@ angular.module('Core')
         'squared-fusion-uc': [
           'devices',
           'device-overview',
-          'devices-redux'
+          'devices-redux',
+          'call-service'
         ],
         'squared-fusion-cal': [
-          // 'calendar-service'
+          'calendar-service'
         ],
         'squared-team-member': [
           'organization'
@@ -977,22 +998,6 @@ angular.module('Core')
         ]
       };
 
-      // Poor mans feature toggle... (preliminary...)
-      if (!config.isIntegration()) {
-        // Old fusion menu will not be shown in integration... soon to removed from production as well...
-        var mgmtState = config.serviceStates['squared-fusion-mgmt'];
-        mgmtState.push('fusion');
-      }
-      if (!config.isProd()) {
-        // Experimental, not to be enabled in production (yet)
-        var calStates = config.serviceStates['squared-fusion-cal'];
-        calStates.push('calendar-service');
-        var ucStates = config.serviceStates['squared-fusion-uc'];
-        ucStates.push('call-service');
-        var mgmtStates = config.serviceStates['squared-fusion-mgmt'];
-        mgmtStates.push('management-service');
-      }
-
       // These states are not allowed in specific views
       // (i.e. devices are not allowed in partner)
       config.restrictedStates = {
@@ -1009,11 +1014,11 @@ angular.module('Core')
           'mediafusionconnector',
           'hurondetails',
           'huronsettings',
-          'cdrsupport',
-          'cdr-overview',
           'calendar-service',
           'call-service',
-          'management-service'
+          'management-service',
+          'cdrsupport',
+          'cdr-overview'
         ]
       };
 

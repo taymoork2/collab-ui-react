@@ -9,7 +9,7 @@
               <cr-reload-data id="partnerRefreshData" last-updated-time="refreshTime"></cr-reload-data>
             </span>
             <div class="columns small-6 right" dropdown is-open="db.isOpen">
-              <button id="customerDropdown" type="button" class="btn btn-white dropdown-toggle pull-right" ng-disabled="db.disabled">
+              <button id="customerDropdown" type="button" class="btn btn--white dropdown-toggle pull-right" ng-disabled="db.disabled">
               <span>{{currentSelection | translate}}</span><span class="caret"></span>
               </button>
               <ul class="dropdown-menu reports-customer-dropdown" role="menu">
@@ -77,7 +77,7 @@
     <section class = "columns small-12 medium-5 large-4">
       <section id="activeTrials" class="trialTitle">
           <span class="h4">{{'partnerHomePage.trialsHeading' | translate}}</span>
-          <button id="trialAddButton" class="btn btn-info btn right" translate="partnerHomePage.addTrial" ng-click="openAddTrialModal()"></button>
+          <button id="trialAddButton" class="btn btn--people btn right" translate="partnerHomePage.addTrial" ng-click="openAddTrialModal()"></button>
       </section>
 
       <section class="trialsPanel">

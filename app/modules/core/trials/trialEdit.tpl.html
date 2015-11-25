@@ -30,8 +30,8 @@
       </div>
     </div>
   </div>
-  <div class="modal-body">
-    <h4 class="section-title" translate="partnerHomePage.customerInformation"></h4>
+  <section class="modal-body">
+    <h4 translate="partnerHomePage.customerInformation"></h4>
     <div class="row">
       <div class="small-4 columns">
         <label class="control-label right" translate="partnerHomePage.name"></label>
@@ -48,41 +48,38 @@
         <p class="form-control-static">{{trial.currentTrial.customerEmail}}</p>
       </div>
     </div>
-  </div>
-  <div class="modal-body">
-    <div class="pull-right" ng-show="trial.editTerms && !trial.showPartnerEdit">
-      <button id="editTrialButton" class="btn btn-primary" ng-click="trial.editTerms = false" translate="partnerHomePage.edit"></button>
-    </div>
-    <h4 class="section-title" translate="partnerHomePage.termsOfTrial"></h4>
-    <div ng-show="trial.editTerms && !trial.showPartnerEdit">
-      <div class="row">
-        <div class="small-4 columns">
-          <label class="control-label right" translate="partnerHomePage.duration"></label>
-        </div>
-        <div class="small-8 columns">
-          <p class="form-control-static">{{trial.currentTrial.duration}} Days</p>
-        </div>
-      </div>
-      <div class="row">
-        <div class="small-4 columns">
-          <label class="control-label right" translate="partnerHomePage.numberOfLicenses"></label>
-        </div>
-        <div class="small-8 columns">
-          <p class="form-control-static">{{trial.currentTrial.licenses}}</p>
-        </div>
-      </div>
-    </div>
-    <div class="row" ng-show="!trial.editTerms || trial.showPartnerEdit">
-      <formly-form model="trial.currentTrial" fields="trial.trialTermsFields">
+  </section>
+  <section class="modal-body">
+    <h4 translate="partnerHomePage.trialServices"></h4>
+    <section>
+      <h5 translate="partnerHomePage.individualUserServices"></h5>
+      <formly-form model="trial.model" fields="trial.individualServices">
       </formly-form>
-    </div>
-  </div>
+    </section>
+    <section ng-if="trial.showRoomSystems" class="row">
+      <h5 translate="partnerHomePage.roomSystems"></h5>
+      <div class="columns small-offset-1 small-8">
+        <div class="row">
+          <cs-checkbox class="columns small-5" ckid="trialRoomSystemsChecked" ng-click="trial.roomSystemsChecked()" ng-model="trial.model.roomSystemsEnabled" label="{{'partnerHomePage.roomSystem' | translate}}" ng-disabled="trial.currentTrial.roomSystems > 0"></cs-checkbox>
+          <div class="columns small-7">
+            <cs-select id="trialRoomSystemsAmount" ng-model="trial.model.roomSystems" options="trial.roomSystemOptions" placeholder="0" is-disabled="!trial.model.roomSystemsEnabled || trial.currentTrial.roomSystems > 0" secondary-label="{{::'common.devices' | translate}}">
+            </cs-select>
+          </div>
+        </div>
+      </div>
+    </section>
+  </section>
+  <section class="modal-body">
+    <h4 translate="partnerHomePage.termsOfTrial"></h4>
+    <formly-form model="trial.model" fields="trial.trialTermsFields">
+    </formly-form>
+  </section>
   <div class="modal-footer">
     <div ng-show="!trial.editTerms || trial.showPartnerEdit">
-      <button id="cancelTrialButton" class="btn btn-default" ng-click="$dismiss()">
+      <button id="cancelTrialButton" class="btn" ng-click="$dismiss()">
         <span translate="partnerHomePage.cancel"></span>
       </button>
-      <button id="saveUpdateButton" cs-btn loading="trial.saveUpdateButtonLoad" class="btn btn-primary" ng-click="trialForm.$setPristine(true); trial.clickUpdateButton();" ng-disabled="trialForm.$invalid">
+      <button id="saveUpdateButton" cs-btn loading="trial.saveUpdateButtonLoad" class="btn btn--primary" ng-click="trialForm.$setPristine(true); trial.clickUpdateButton();" ng-disabled="trialForm.$invalid">
         <span ng-if="trial.disableSquaredUCCheckBox || !trial.isSquaredUCEnabled()" translate="common.save"></span>
         <span ng-if="!trial.disableSquaredUCCheckBox && trial.isSquaredUCEnabled()">
           <span cr-feature-toggle feature-show="pstnSetup" translate="common.save"></span>

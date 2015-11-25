@@ -6,7 +6,7 @@
     .controller('HuntGroupSetupAssistantCtrl', HuntGroupSetupAssistantCtrl);
 
   /* @ngInject */
-  function HuntGroupSetupAssistantCtrl($scope, $state, Config, $modal, $timeout, $translate,
+  function HuntGroupSetupAssistantCtrl($scope, $q, $state, Config, $modal, $timeout, $translate,
     Authinfo, Notification, HuntGroupService,
     HuntGroupFallbackDataService, HuntGroupMemberDataService) {
     var vm = this;
@@ -34,14 +34,10 @@
     vm.unSelectPilotNumber = unSelectPilotNumber;
     vm.selectedPilotNumber = undefined;
     vm.selectedPilotNumbers = [];
+    vm.errorNumberInput = false;
 
     // Hunt Methods controller functions
-    vm.hgMethods = {
-      longestIdle: "DA_LONGEST_IDLE_TIME",
-      broadcast: "DA_BROADCAST",
-      circular: "DA_CIRCULAR",
-      topDown: "DA_TOP_DOWN"
-    };
+    vm.hgMethods = HuntGroupService.getHuntMethods();
     vm.huntGroupMethod = vm.hgMethods.longestIdle;
     vm.setHuntMethod = setHuntMethod;
 
@@ -54,6 +50,7 @@
     vm.selectedHuntMembers = [];
     vm.openMemberPanelUuid = undefined;
     vm.userSelected = undefined;
+    vm.errorMemberInput = false;
 
     // Hunt fallback destination controller functions
     vm.selectedFallbackMember = undefined;
@@ -64,6 +61,8 @@
     vm.validateFallbackNumber = validateFallbackNumber;
     vm.toggleFallback = toggleFallback;
     vm.removeFallbackDest = removeFallbackDest;
+    vm.isErrorFallbackInput = isErrorFallbackInput;
+    vm.fallbackSuggestionsAvailable = false;
 
     // ==================================================
     // The below methods have elevated access only to be
@@ -82,6 +81,7 @@
 
     function fetchNumbers(typedNumber) {
 
+      vm.errorNumberInput = false;
       var GetPilotNumbers = HuntGroupService.getPilotNumberSuggestions(typedNumber);
 
       if (GetPilotNumbers) {
@@ -94,7 +94,10 @@
           dataToStrip: vm.selectedPilotNumbers
         });
 
-        return GetPilotNumbers.fetch();
+        return GetPilotNumbers.fetch().then(function (numbers) {
+          vm.errorNumberInput = (numbers && numbers.length === 0);
+          return numbers;
+        });
       }
 
       return [];
@@ -235,7 +238,14 @@
     }
 
     function fetchHuntMembers(nameHint) {
-      return HuntGroupMemberDataService.fetchHuntMembers(nameHint);
+      return $q.when(HuntGroupMemberDataService.fetchHuntMembers(nameHint)).then(function (members) {
+        if (HuntGroupService.suggestionsNeeded(nameHint)) {
+          vm.errorMemberInput = (members && members.length === 0);
+        } else {
+          vm.errorMemberInput = false;
+        }
+        return members;
+      });
     }
 
     function toggleMemberPanel(user) {
@@ -261,7 +271,7 @@
     }
 
     function isFallbackValid() {
-      return HuntGroupFallbackDataService.isFallbackValid();
+      return !HuntGroupFallbackDataService.isFallbackInvalid();
     }
 
     function validateFallbackNumber() {
@@ -269,8 +279,17 @@
         HuntGroupFallbackDataService.validateFallbackNumber(vm.selectedFallbackNumber);
     }
 
+    function isErrorFallbackInput() {
+      return (HuntGroupService.suggestionsNeeded(vm.selectedFallbackNumber) &&
+        !vm.fallbackSuggestionsAvailable &&
+        !isFallbackValid());
+    }
+
     function fetchFallbackDestination(nameHint) {
-      return HuntGroupMemberDataService.fetchMembers(nameHint);
+      return $q.when(HuntGroupMemberDataService.fetchMembers(nameHint)).then(function (mems) {
+        vm.fallbackSuggestionsAvailable = (mems && mems.length > 0);
+        return mems;
+      });
     }
 
     function toggleFallback() {
@@ -281,7 +300,7 @@
     }
 
     function removeFallbackDest() {
-      vm.selectedFallbackMember = undefined;
+      vm.selectedFallbackMember = HuntGroupFallbackDataService.removeFallbackMember();
     }
 
     function populateFallbackDestination(data) {

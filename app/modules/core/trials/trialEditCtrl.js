@@ -15,64 +15,22 @@
     vm.disableSquaredUCCheckBox = false;
     vm.offers = {};
 
-    vm.trialTermsFields = [{
-      key: 'COLLAB',
-      type: 'checkbox',
-      model: vm.offers,
-      templateOptions: {
-        disabled: true,
-        label: $translate.instant('trials.collab'),
-        id: 'squaredTrial',
-        class: 'small-8 small-offset-4 columns'
-      }
-    }, {
-      key: 'SQUAREDUC',
-      type: 'checkbox',
-      model: vm.offers,
-      templateOptions: {
-        label: $translate.instant('trials.squaredUC'),
-        id: 'squaredUCTrial',
-        class: 'small-8 small-offset-4 columns'
-      },
-      expressionProperties: {
-        'hide': function () {
-          return !vm.isSquaredUC();
-        },
-        'templateOptions.disabled': function () {
-          return vm.disableSquaredUCCheckBox || (!vm.showPartnerEdit && vm.editTerms);
-        }
-      }
-    }, {
-      key: 'duration',
-      type: 'radio-list',
-      templateOptions: {
-        horizontal: true,
-        label: $translate.instant('partnerHomePage.duration'),
-        labelClass: 'small-4 columns',
-        inputClass: 'small-7 columns left',
-        options: [{
-          label: $translate.instant('partnerHomePage.ninetyDays'),
-          value: 90,
-          id: 'trial90'
-        }, {
-          label: $translate.instant('partnerHomePage.onehundredtwentyDays'),
-          value: 120,
-          id: 'trial120'
-        }, {
-          label: $translate.instant('partnerHomePage.onehundredeightyDays'),
-          value: 180,
-          id: 'trial180'
-        }]
-      }
-    }, {
-      key: 'licenses',
+    FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials).then(function (result) {
+      vm.showRoomSystems = result;
+    });
+
+    vm.roomSystemOptions = [5, 10, 15, 20, 25];
+    vm.individualServices = [{
+      key: 'licenseCount',
       type: 'input',
+      defaultValue: vm.currentTrial.licenses,
       templateOptions: {
-        label: $translate.instant('partnerHomePage.numberOfLicenses'),
+        label: $translate.instant('siteList.licenseCount'),
         labelClass: 'small-4 columns',
         inputClass: 'small-3 columns left',
+        secondaryLabel: $translate.instant('common.users'),
         type: 'number',
-        required: true
+        required: true,
       },
       validators: {
         count: {
@@ -81,9 +39,63 @@
           },
           message: function () {
             return $translate.instant('partnerHomePage.invalidTrialLicenseCount');
-          }
-        }
-      }
+          },
+        },
+      },
+    }, {
+      key: 'COLLAB',
+      type: 'checkbox',
+      model: vm.offers,
+      defaultValue: _.get(vm, 'currentTrial.communications.status') === 'ACTIVE',
+      templateOptions: {
+        label: $translate.instant('trials.collab'),
+        id: 'squaredTrial',
+        class: 'small-offset-1 columns'
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function () {
+          return vm.isSquaredUCEnabled() || _.get(vm, 'currentTrial.communications.status') === 'ACTIVE';
+        },
+        'templateOptions.label': function () {
+          return FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
+            return result ? $translate.instant('partnerHomePage.message') : $translate.instant('trials.collab');
+          });
+        },
+      },
+    }, {
+      key: 'SQUAREDUC',
+      type: 'checkbox',
+      model: vm.offers,
+      templateOptions: {
+        label: $translate.instant('trials.squaredUC'),
+        id: 'squaredUCTrial',
+        class: 'small-offset-1 columns'
+      },
+      expressionProperties: {
+        'hide': function () {
+          return !vm.isSquaredUC();
+        },
+        'templateOptions.label': function () {
+          return FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
+            return result ? $translate.instant('partnerHomePage.call') : $translate.instant('trials.squaredUC');
+          });
+        },
+      },
+    }];
+
+    vm.trialTermsFields = [{
+      key: 'licenseDuration',
+      type: 'select',
+      defaultValue: 30,
+      templateOptions: {
+        labelfield: 'label',
+        required: true,
+        label: $translate.instant('partnerHomePage.duration'),
+        secondaryLabel: $translate.instant('partnerHomePage.durationHelp'),
+        labelClass: 'small-4 columns',
+        inputClass: 'small-3 columns left',
+        options: [30, 60, 90],
+      },
     }];
 
     vm.isSquaredUC = Authinfo.isSquaredUC;
@@ -115,6 +127,10 @@
     function isSquaredUCEnabled() {
       return vm.offers[Config.trials.squaredUC];
     }
+
+    vm.roomSystemsChecked = function () {
+      vm.model.roomSystems = vm.model.roomSystemsEnabled ? vm.roomSystemOptions[0] : 0;
+    };
 
     function clickUpdateButton() {
       if (isSquaredUCEnabled() && !vm.disableSquaredUCCheckBox) {
