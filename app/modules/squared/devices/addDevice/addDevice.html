@@ -63,7 +63,7 @@
     </button>
     <button
       type="button"
-      class="btn btn-primary"
+      class="btn btn--primary"
       ng-click="$dismiss()"
       ng-if="!adc.showAdd"
       translate="spacesPage.done">
@@ -71,7 +71,7 @@
     <button
       ng-if="adc.showAdd"
       id="create-code-button"
-      class="btn btn-primary"
+      class="btn btn--primary"
       sq-click-promise="adc.addDevice()"
       ng-disabled="!adc.isNameValid()">
       <span

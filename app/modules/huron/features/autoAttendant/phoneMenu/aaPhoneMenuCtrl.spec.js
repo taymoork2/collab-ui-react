@@ -157,8 +157,6 @@ describe('Controller: AAPhoneMenuCtrl', function () {
       expectedActions.push(data.selectedActionsRepeatMenu[0]);
       expectedActions.push(data.selectedActionsDialExt[0]);
       expect(angular.equals(expectedActions, controller.selectedActions)).toEqual(true);
-      var expectedSayMessage = controller.menuEntry.headers[0].actions[0].value;
-      expect(angular.equals(expectedSayMessage, controller.sayMessage)).toEqual(true);
     });
   });
 

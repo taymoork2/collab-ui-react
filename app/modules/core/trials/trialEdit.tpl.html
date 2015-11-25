@@ -76,10 +76,10 @@
   </section>
   <div class="modal-footer">
     <div ng-show="!trial.editTerms || trial.showPartnerEdit">
-      <button id="cancelTrialButton" class="btn btn-default" ng-click="$dismiss()">
+      <button id="cancelTrialButton" class="btn" ng-click="$dismiss()">
         <span translate="partnerHomePage.cancel"></span>
       </button>
-      <button id="saveUpdateButton" cs-btn loading="trial.saveUpdateButtonLoad" class="btn btn-primary" ng-click="trialForm.$setPristine(true); trial.clickUpdateButton();" ng-disabled="trialForm.$invalid">
+      <button id="saveUpdateButton" cs-btn loading="trial.saveUpdateButtonLoad" class="btn btn--primary" ng-click="trialForm.$setPristine(true); trial.clickUpdateButton();" ng-disabled="trialForm.$invalid">
         <span ng-if="trial.disableSquaredUCCheckBox || !trial.isSquaredUCEnabled()" translate="common.save"></span>
         <span ng-if="!trial.disableSquaredUCCheckBox && trial.isSquaredUCEnabled()">
           <span cr-feature-toggle feature-show="pstnSetup" translate="common.save"></span>

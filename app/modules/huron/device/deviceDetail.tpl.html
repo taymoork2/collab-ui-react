@@ -1,14 +1,14 @@
 <form name="ucDeviceDetail.form" class="form-horizontal" role="form">
   <cs-sp-buttons ng-show="ucDeviceDetail.form.$dirty">
-    <button class="btn-primary" translate="common.save" ng-click="ucDeviceDetail.save()" type="submit"></button>
-    <button class="btn-default" translate="common.cancel" ng-click="ucDeviceDetail.reset()"></button>
+    <button class="btn btn--primary" translate="common.save" ng-click="ucDeviceDetail.save()" type="submit"></button>
+    <button translate="common.cancel" ng-click="ucDeviceDetail.reset()"></button>
   </cs-sp-buttons>
   <cs-sp-container>
     <cs-sp-section>
       <div class="section-title-row">
         <span class="section-name" translate="deviceDetailPage.deviceConfig"></span>
         <span class="actions-menu dropdown pull-right">
-          <button class="actions-button btn-none dropdown-toggle">
+          <button class="actions-button btn--none dropdown-toggle">
             <i class="icon icon-three-dots"></i>
           </button>
           <ul class="dropdown-menu dropdown-primary actions-services">

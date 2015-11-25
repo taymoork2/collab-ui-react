@@ -18,6 +18,11 @@
           "description": "Operator",
           "destination": "1111"
         }
+      }, {
+        "say": {
+          "value": "Welcome to the AA",
+          "voice": "Kate"
+        }
       }]
     }]
   },
@@ -41,7 +46,8 @@
       "username": "",
       "password": "",
       "url": "",
-      "language": ""
+      "language": "",
+      "voice": ""
     }, {
       "description": "",
       "isConfigured": true,
@@ -58,7 +64,26 @@
       "username": "",
       "password": "",
       "url": "",
-      "language": ""
+      "language": "",
+      "voice": ""
+    }, {
+      "description": "",
+      "isConfigured": true,
+      "type": "",
+      "isTouched": false,
+      "key": "",
+      "actions": [{
+        "name": "say",
+        "value": "Welcome to the AA",
+        "description": "",
+        "voice": "Kate"
+      }],
+      "timeout": "",
+      "username": "",
+      "password": "",
+      "url": "",
+      "language": "",
+      "voice": ""
     }]
   }
 }
