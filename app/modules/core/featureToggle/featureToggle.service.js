@@ -5,7 +5,7 @@
     .service('FeatureToggleService', FeatureToggleService);
 
   /* @ngInject */
-  function FeatureToggleService($resource, $q, Config, Authinfo, Orgservice) {
+  function FeatureToggleService($resource, $q, Config, Authinfo, Orgservice, Userservice) {
     var features = {
       pstnSetup: 'pstnSetup',
       csvUpload: 'csvUpload',
@@ -69,7 +69,7 @@
     }
 
     function getFeatures(isUser, id) {
-      if (angular.isUndefined(id)) {
+      if (!id) {
         return $q.reject('id is undefined');
       }
 
@@ -84,7 +84,7 @@
     }
 
     function getFeature(isUser, id, feature) {
-      if (angular.isUndefined(feature)) {
+      if (!feature) {
         return $q.reject('feature is undefined');
       }
 
@@ -118,20 +118,20 @@
           } else {
             resolve(false);
           }
-        } else if (feature === features.atlasStormBranding) {
-          resolve(false);
         } else {
-          var userId = Authinfo.getUserId();
           var orgId = Authinfo.getOrgId();
 
-          getFeatureForUser(userId, feature).then(function (userResult) {
-            if (!userResult) {
-              getFeatureForOrg(orgId, feature).then(function (orgResult) {
-                resolve(orgResult);
-              });
-            } else {
-              resolve(userResult);
-            }
+          Userservice.getUser('me', function (data, status) {
+            var userId = data.id;
+            getFeatureForUser(userId, feature).then(function (userResult) {
+              if (!userResult) {
+                getFeatureForOrg(orgId, feature).then(function (orgResult) {
+                  resolve(orgResult);
+                });
+              } else {
+                resolve(userResult);
+              }
+            });
           });
         }
       });

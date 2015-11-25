@@ -106,10 +106,10 @@
             </div>
         </div>
         <div class="modal-footer aa-tooltip">
-          <button id="cancelButton" class="btn btn-default" type="button" ng-click="welcomeForm.$setUntouched();welcomeForm.$setPristine(); aaWelcome.closeMenuOption()" translate='common.cancel'></button>
+          <button id="cancelButton" class="btn" type="button" ng-click="welcomeForm.$setUntouched();welcomeForm.$setPristine(); aaWelcome.closeMenuOption()" translate='common.cancel'></button>
           <div class="aa-tooltip-wrapper" tooltip-html-unsafe="{{ welcomeForm.$invalid ? ( 'autoAttendant.invalidRequiredFields' | translate ) : '' }}" tooltip-trigger="mouseenter" tooltip-placement="top">
           <!---welcomeForm.$pristine not used for ng-disabled since disconnect has default option selected-->
-          <button id="aaSaveButton" class="btn btn-primary btn-save" type="submit" ng-click="aaWelcome.saveMenuOption(aaWelcome.welcomeDialogMenuEntry);welcomeForm.$setUntouched();welcomeForm.$setPristine(); aaWelcome.closeMenuOption()" ng-disabled="welcomeForm.$invalid" translate='common.save'></button>
+          <button id="aaSaveButton" class="btn btn--primary btn-save" type="submit" ng-click="aaWelcome.saveMenuOption(aaWelcome.welcomeDialogMenuEntry);welcomeForm.$setUntouched();welcomeForm.$setPristine(); aaWelcome.closeMenuOption()" ng-disabled="welcomeForm.$invalid" translate='common.save'></button>
           </div>
         </div>
       </form>

@@ -112,6 +112,10 @@
         }
       }
     }
+    .cdr-no-data {
+      font-family: $brand-font-cisco-TT-Light;
+      font-size: rem-calc(20);
+    }
     .cdrTable {
       max-height: vr-adjust(200);
       min-width: rem-calc(1400);

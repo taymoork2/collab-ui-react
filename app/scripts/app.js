@@ -25,6 +25,7 @@ angular.module('Core', [
   'ipCookie',
   'ui.router',
   'ct.ui.router.extras.sticky',
+  'ct.ui.router.extras.future',
   'ct.ui.router.extras.previous',
   'ngGrid',
   'mgo-angular-wizard',

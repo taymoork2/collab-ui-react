@@ -145,7 +145,7 @@
           key: 'searchBtn',
           className: 'search-button',
           templateOptions: {
-            btnClass: 'circle-small secondary',
+            btnClass: 'circle-small primary',
             spanClass: 'icon icon-search',
             onClick: searchCarrierInventory
           },

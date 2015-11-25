@@ -78,21 +78,21 @@
       <div class="panel-buttons">
         <button
           ng-click="deviceOverview.deleteDevice()"
-          class="btn btn-primary">
+          class="btn btn--primary">
           <span
             translate="spacesPage.delete">
           </span>
         </button>
 
         <button
-          class="btn btn-primary"
+          class="btn btn--primary"
           sq-click-promise="deviceOverview.reportProblem()"
           ng-if="!deviceOverview.currentDevice.needsActivation">
           <span translate="spacesPage.reportProblem"></span>
         </button>
 
         <button
-          class="btn btn-primary"
+          class="btn btn--primary"
           sq-click-promise="deviceOverview.showRemoteSupportDialog()">
           <span translate="spacesPage.remoteSupport"></span>
         </button>

@@ -1,7 +1,7 @@
 <div  ng-if="false">
   <div class="callrouting-main-header">
     <div class="new-button">
-      <button type="button" class="btn btn-info" ng-click="cp.addCallPark()" translate="callPark.newCallPark"></button>
+      <button type="button" class="btn btn--people" ng-click="cp.addCallPark()" translate="callPark.newCallPark"></button>
       <i class="info-icon" ng-class="{'info-icon-inactive': !cp.showInformation, 'info-icon-active': cp.showInformation}" ng-click="cp.toggleInformation()" alt="{{'callPark.callParkInformation' | translate}}"></i>
     </div>
     <div class="callrouting-main-information" ng-show="cp.showInformation">

@@ -31,12 +31,15 @@
       </ul>
     </div> -->
     <div class="small-12 medium-4 large-4 columns">
-      <div class="page-option-buttons">
+      <div class="page-option-buttons" ng-controller="ExportCSVCtrl">
 
-        <button id="addTrial" ng-if="!isCustomerPartner" ng-click="openAddTrialModal()" class="btn btn btn-info add-button" translate="customerPage.addTrial"></button>
-         <a id="export-btn" ng-csv="exportCSV()" filename="{{'customerPage.csvFilename' | translate}}" class="export-users" ng-disabled="exportBtn.disabled">
-            <span id="export-icon" ><i class="icon icon-content-share" tooltip-placement="top" tooltip="{{'customerPage.csvBtnTitle' | translate}}" tooltip-animation="false"  tooltip-append-to-body="true"></i></span>
+        <button id="addTrial" class="btn btn--large btn--people add-button" ng-if="!isCustomerPartner" ng-click="openAddTrialModal()" translate="customerPage.addTrial"></button>
+         <a id="export-btn" class="export-users" ng-if="!exporting" ng-csv="exportCSV()" filename="{{'customerPage.csvFilename' | translate}}">
+            <span id="export-icon" class="icon-export"><i class="icon icon-content-share icon-lg" tooltip-placement="top" tooltip="{{'customerPage.csvBtnTitle' | translate}}" tooltip-animation="false"  tooltip-append-to-body="true"></i></span>
           </a>
+        <a id="export-in-progress" class="export-users" ng-if="exporting">
+          <span id="exporting-icon" class="icon-export"><i class="icon icon-spinner icon-lg" tooltip-placement="top" tooltip="{{'customerPage.csvBtnExportingTitle' | translate}}" tooltip-animation="false"  tooltip-append-to-body="true"></i></span>
+        </a>
 
       </div>
     </div>
