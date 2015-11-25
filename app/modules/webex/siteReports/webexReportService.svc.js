@@ -363,7 +363,7 @@ angular.module('WebExReports').service('WebexReportService', [
           reportsObject.infoCardObj.licensesAvailable.count = licenseInfo.available;
 
           logMsg = funcName + ": " + "\n" +
-            "reportInfoCardObj=" + JSON.stringify(_this.webExSiteSettingsObj.siteInfoCardObj);
+            "reportInfoCardObj=" + JSON.stringify(reportsObject.siteInfoCardObj);
           $log.log(logMsg);
         }, // getWebexLicenseInfoSuccess()
 
