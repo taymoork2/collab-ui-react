@@ -49,7 +49,7 @@ describe('Controller: mediafusionConnectorCtrl', function () {
       //Authinfo: Authinfo,
       $scope: $scope,
       $state: $state,
-      MediaServiceDescriptor: MediaServiceDescriptor
+      MediaServiceDescriptor: MediaServiceDescriptor,
       MediafusionProxy: proxy
     });
     $httpBackend.when('GET', 'l10n/en_US.json').respond({});
