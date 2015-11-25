@@ -34,7 +34,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     spyOn(ServiceSetup, 'listVoicemailTimezone').and.returnValue($q.when(timezone));
     spyOn(ServiceSetup, 'listInternalNumberRanges').and.returnValue($q.when(internalNumberRanges));
     spyOn(DialPlanService, 'getCustomerDialPlanDetails').and.returnValue($q.when({
-      extensionGenerated: 'true'
+      extensionGenerated: true
     }));
     spyOn(ServiceSetup, 'listSites').and.returnValue($q.when(sites));
     spyOn(ServiceSetup, 'getSite').and.returnValue($q.when(site));
