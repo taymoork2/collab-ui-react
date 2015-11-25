@@ -82,6 +82,28 @@ describe('WebEx site reports iframe', function () {
     utils.wait(sitereports.webexSiteReportsPanel);
   });
 
+  it('click on common reports meetings in progress link in wide card and should navigate to the correct site report', function () {
+    utils.click(sitereports.webexCommonInfoCardMeetingInProgress);
+    utils.wait(sitereports.webexReportCrumb2);
+    expect(sitereports.webexCommonMeetingsInProgressId.isPresent()).toBeTruthy();
+  });
+
+  it('click on reports index breadcrumb and should navigate to site reports index', function () {
+    utils.click(sitereports.webexReportCrumb2);
+    utils.wait(sitereports.webexSiteReportsPanel);
+  });
+
+  it('click on common reports meetings usage link in wide card and should navigate to the correct site report', function () {
+    utils.click(sitereports.webexCommonInfoCardMeetingUsage);
+    utils.wait(sitereports.webexReportCrumb2);
+    expect(sitereports.webexCommonMeetingUsageId.isPresent()).toBeTruthy();
+  });
+
+  it('click on reports index breadcrumb and should navigate to site reports index', function () {
+    utils.click(sitereports.webexReportCrumb2);
+    utils.wait(sitereports.webexSiteReportsPanel);
+  });
+
   /**  
     it('should pause', function () {
       browser.pause()
