@@ -45,7 +45,7 @@
 
     ReportsService.getOverviewMetrics(true);
 
-    Orgservice.getOrg(function (orgData) {
+    Orgservice.getAdminOrg(function (orgData) {
       _.each(vm.cards, function (card) {
         if (card.orgEventHandler) {
           card.orgEventHandler(orgData);
