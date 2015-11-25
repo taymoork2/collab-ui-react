@@ -45,7 +45,7 @@
     HelpdeskService.getUser(orgId, userId).then(function (res) {
       vm.user = res;
       reviewEntitlementsAndLicenses();
-      vm.resendInviteEnabled = _.includes(vm.user.statuses, 'pending');
+      vm.resendInviteEnabled = _.includes(vm.user.statuses, 'helpdesk.userStatuses.pending');
     }, function (err) {
       XhrNotificationService.notify(err);
     });
