@@ -56,7 +56,7 @@
       templateOptions: {
         label: $translate.instant('siteList.licenseCount'),
         labelClass: 'small-4 columns',
-        inputClass: 'small-3 columns left',
+        inputClass: 'small-4 columns left',
         secondaryLabel: $translate.instant('common.users'),
         type: 'number',
         required: true,
@@ -121,7 +121,7 @@
         label: $translate.instant('partnerHomePage.duration'),
         secondaryLabel: $translate.instant('partnerHomePage.durationHelp'),
         labelClass: 'small-4 columns',
-        inputClass: 'small-3 columns left',
+        inputClass: 'small-4 columns left',
         options: [30, 60, 90],
       },
     }];
