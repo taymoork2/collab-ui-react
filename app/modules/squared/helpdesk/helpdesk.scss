@@ -190,8 +190,11 @@
   }
   // Reset the weird cta class that messes up the hybrid services card
   .cta {
-    padding: 0;
     border-bottom: 0;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    padding-top: 0;
+    padding-bottom: 0;
   }
   h5 {
     margin-top: 0.5rem;
