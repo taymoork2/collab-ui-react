@@ -22,6 +22,8 @@
     vm.logoOverride = false;
     vm.isOrgSetup = isOrgSetup;
     vm.isOwnOrg = isOwnOrg;
+    vm.partnerOrgId = Authinfo.getOrgId();
+    vm.partnerOrgName = Authinfo.getOrgName();
 
     initCustomer();
     getLogoSettings();

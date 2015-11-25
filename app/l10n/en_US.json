@@ -1754,6 +1754,7 @@
     "contactPhone": "Phone",
     "launchButton": "View Customer",
     "setupButton": "Setup Customer",
+    "myOrgButton": "View My Organization",
     "edit": "Edit Terms of Trial",
     "trialTerms": "Terms of Trial",
     "trialOverview": "Trial",

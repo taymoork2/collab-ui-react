@@ -22,8 +22,8 @@ angular.module('Core')
       $scope.currentTrial = null;
       $scope.showTrialsRefresh = true;
       $scope.activeBadge = false;
-      $scope.isLicenseInfoAvailable = isLicenseInfoAvailable;
       $scope.filter = 'ALL';
+      $scope.trialsList = [];
       $scope.isCustomerPartner = Authinfo.isCustomerPartner ? true : false;
       setNotesTextOrder();
 
@@ -71,7 +71,7 @@ angular.module('Core')
           $scope.showTrialsRefresh = false;
           if (data.success && data.trials) {
             if (data.trials.length > 0) {
-              $scope.trialsList = PartnerService.loadRetrievedDataToList(data.trials, true);
+              PartnerService.loadRetrievedDataToList(data.trials, $scope.trialsList, true);
               $scope.activeList = _.filter($scope.trialsList, {
                 state: "ACTIVE"
               });
@@ -105,7 +105,7 @@ angular.module('Core')
           var accountId = Authinfo.getOrgId();
           Orgservice.getAdminOrg(function (data, status) {
             if (status === 200) {
-              loadRetrievedDataToList([data], $scope.managedOrgsList, false);
+              PartnerService.loadRetrievedDataToList([data], $scope.managedOrgsList, false);
             } else {
               Log.debug('Failed to retrieve partner org information. Status: ' + status);
             }
@@ -115,7 +115,7 @@ angular.module('Core')
           $scope.showManagedOrgsRefresh = false;
           if (data.success && data.organizations) {
             if (data.organizations.length > 0) {
-              $scope.managedOrgsList = PartnerService.loadRetrievedDataToList(data.organizations, false);
+              PartnerService.loadRetrievedDataToList(data.organizations, $scope.managedOrgsList, false);
               Log.debug('total managed orgs records found:' + $scope.managedOrgsList.length);
             } else {
               Log.debug('No managed orgs records found');
@@ -190,7 +190,7 @@ angular.module('Core')
 
       var nameTemplate = '<div class="ngCellText" ng-click="partnerClicked(row.entity.customerOrgId)">' +
         '<span translate="{{row.entity.customerName}}"></span>' +
-        '<span ng-if="isPartnerOrg(row.entity.customerOrgId)" class="label label-managed" ng-class="activeBadge ? \'active\' : \'inactive\'" translate="customerPage.myOrganization"></span>' +
+        '<span ng-if="isPartnerOrg(row.entity.customerOrgId)" id="partner" class="label label-managed" ng-class="activeBadge ? \'active\' : \'inactive\'" translate="customerPage.myOrganization"></span>' +
         '</div>';
 
       var serviceTemplate = '<div class="ngCellText align-center">' +
