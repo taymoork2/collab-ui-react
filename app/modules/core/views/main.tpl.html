@@ -8,7 +8,7 @@
         <cs-header-push-trigger state="state" label="label"></cs-header-push-trigger>
       </div>
       <div class="settings-menu dropdown" ng-controller="SettingsMenuCtrl as settings" ng-if="Utils.isAdminPage()">
-        <button class="btn btn-header dropdown-toggle"><i class="icon-settings icon"></i>
+        <button class="btn btn--header dropdown-toggle"><i class="icon-settings icon"></i>
         <span class="header-label">{{settings.label}}</span></button>
         <ul class="dropdown-menu" role="menu">
           <li ng-repeat="item in menuItems">

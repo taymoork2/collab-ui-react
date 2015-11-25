@@ -6,9 +6,8 @@
     <input id="searchInput" type="text"
            placeholder=""
            ng-model="helpdeskCtrl.searchString" ,
-           ng-keypress="($event.which === 13) ? helpdeskCtrl.search() : 0" autofocus="true"/>
-    <button type="button" tabindex="-1" class="circle-small secondary icon icon-search" ng-click="helpdeskCtrl.search()"
-            ng-disabled="helpdeskCtrl.searchString == ''"></button>
+           ng-keypress="($event.which === 13) ? helpdeskCtrl.search() : 0" autofocus="true" />
+    <button type="button" tabindex="-1" class="btn btn--circle btn--primary icon icon-search" ng-click="helpdeskCtrl.search()" ng-disabled="helpdeskCtrl.searchString == ''" ></button>
 
     <div class="input-description">
       <p>

@@ -4,7 +4,7 @@
   <div ng-if="huronFeaturesCtrl.pageState == 'NewFeature'" class="no-features-available">
     <div class="h4 nothing-to-see" translate="huronHuntGroup.featuresNotYetConfiguredPage.nothingToSee"></div>
     <div class="h1 lets-customize" translate="huronHuntGroup.featuresNotYetConfiguredPage.letsCustomize"></div>
-    <div><button class="button info large" ng-click="huronFeaturesCtrl.openModal()" translate="huronHuntGroup.newFeatureButtonText"></button></div>
+    <div><button class="btn btn--people btn--large" ng-click="huronFeaturesCtrl.openModal()" translate="huronHuntGroup.newFeatureButtonText"></button></div>
   </div>
 
   <div ng-if="huronFeaturesCtrl.pageState !== 'NewFeature'" class="feature-header">
@@ -12,7 +12,7 @@
         <cs-searchfilter filters="huronFeaturesCtrl.filters" set-filter-fn="huronFeaturesCtrl.setFilter(filter.filterValue)" search-item-fn="huronFeaturesCtrl.searchData(searchStr)" placeholder-text="{{huronFeaturesCtrl.placeholder.name}}" hide-count="true">
         </cs-searchfilter>
       </span>
-    <span><button type="button" class="button info new-feature-button" ng-click="huronFeaturesCtrl.openModal()">New</button></span>
+    <span><button type="button" class="btn btn--people new-feature-button" ng-click="huronFeaturesCtrl.openModal()">New</button></span>
   </div>
 
   <div class="features-content">
@@ -21,7 +21,7 @@
       <div class="features-reload">
         <p class="h4" translate="huronFeatureDetails.sorryMessage"></p>
         <div class="h2" translate="huronFeatureDetails.reloadMessage"></div>
-        <button type="button" class="button btn-link" ng-click="huronFeaturesCtrl.reload()">Reload</button>
+        <button type="button" class="btn btn--link" ng-click="huronFeaturesCtrl.reload()">Reload</button>
       </div>
     </div>
     <!--Show Spinner Icon until controller receives data from back-end-->

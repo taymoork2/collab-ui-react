@@ -99,7 +99,7 @@
         <!-- <section class="help small-4 medium-12" ng-controller="SupportCtrl">
           <h4>Need Help?</h4>
           <p class="no-cases">There are no open cases</p>
-          <button class="btn btn-sm btn-default">Open a Case</button>
+          <button class="btn">Open a Case</button>
         </section> -->
         <section class="quick-links small-12 column" ng-controller="QuikLinksCtrl">
           <h4 translate="homePage.quickLinksText"></h4>
@@ -133,7 +133,7 @@
             <h4>{{licenses.unlicensed}} {{'homePage.unlicensedText' | translate}}</h4>
             <p class="no-cases" translate="homePage.convertText"></p>
           </div>
-          <button id="convertButton" class="btn btn-sm btn-default" translate="homePage.convert" ng-click="openConvertModal()" ng-disabled="licenses.unlicensed === 0"></button>
+          <button id="convertButton" class="btn" translate="homePage.convert" ng-click="openConvertModal()" ng-disabled="licenses.unlicensed === 0"></button>
         </section>
       </div>
       </div>

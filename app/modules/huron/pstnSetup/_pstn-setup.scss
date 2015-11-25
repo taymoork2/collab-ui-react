@@ -115,18 +115,10 @@
   .formly-field-inline {
     align-items: flex-start;
   }
-  .label-height-offset {
-    margin-top: #{$form-label-line-height}em;
-  }
-  .search-button {
-    align-self: center;
-  }
-  .text-label-height-offset {
-    @extend .label-height-offset;
-    padding-top: calc((#{$input-height-base} - #{$base-line-height-ratio}em)/2);
-    margin-right: 25px;
-  }
 
+  .search-button {
+    margin-top: calc(#{$form-label-line-height}em - (50px - #{$input-height-base})/2);
+  }
 }
 
 .pstn-review {

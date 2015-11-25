@@ -420,7 +420,7 @@
         type: 'button',
         className: 'form-button',
         templateOptions: {
-          btnClass: 'btn btn-primary search-button',
+          btnClass: 'btn btn--primary search-button',
           label: $translate.instant('cdrLogs.search'),
           onClick: function (options, scope) {
             vm.gridData = null;
@@ -447,7 +447,7 @@
         type: 'button',
         className: 'form-button',
         templateOptions: {
-          btnClass: 'btn btn-primary search-button',
+          btnClass: 'btn btn--primary search-button',
           label: $translate.instant('cdrLogs.reset'),
           onClick: function (options, scope) {
             vm.selectedCDR = null;
@@ -499,7 +499,7 @@
         type: 'button',
         className: 'form-button',
         templateOptions: {
-          btnClass: 'btn btn-primary search-button',
+          btnClass: 'btn btn--primary search-button',
           label: $translate.instant('cdrLogs.upload'),
           onClick: function (options, scope) {
             vm.selectedCDR = null;
