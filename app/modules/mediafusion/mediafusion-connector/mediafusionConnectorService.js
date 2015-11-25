@@ -1,15 +1,15 @@
 'use strict';
 
 angular.module('Mediafusion')
-  .service('MediafusionClusterService', ['$http', '$location', 'MediafusionConnectorMock', 'MediafusionConverterService', 'MediafusionConfigService', 'XhrNotificationService', 'Authinfo',
-    function MediafusionClusterService($http, $location, mock, converter, config, notification, Authinfo) {
+  .service('MediafusionClusterService', ['$http', '$q', '$location', 'MediafusionConnectorMock', 'MediafusionConverterService', 'MediafusionConfigService', 'XhrNotificationService', 'Authinfo',
+    function MediafusionClusterService($http, $q, $location, mock, converter, config, notification, Authinfo) {
       var lastClusterResponse = [];
 
       function extractDataFromResponse(res) {
         return res.data;
       }
 
-      var fetch = function (callback, opts) {
+      var fetch = function (callback) {
         var searchObject = $location.search();
         var backend = searchObject['hercules-backend'];
         if (angular.isDefined(backend) && backend === 'mock') {
@@ -19,7 +19,7 @@ angular.module('Mediafusion')
           return callback(null, []);
         }
 
-        var errorCallback = (function () {
+        /*var errorCallback = (function () {
           if (opts && opts.squelchErrors) {
             return function () {
               callback(arguments);
@@ -27,7 +27,7 @@ angular.module('Mediafusion')
           } else {
             return createErrorHandler('Unable to fetch data from backend', callback);
           }
-        }());
+        }());*/
 
         $http
           .get(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters')
@@ -36,7 +36,7 @@ angular.module('Mediafusion')
             lastClusterResponse = converted;
             callback(null, converted);
           })
-          .error(errorCallback);
+          //.error(errorCallback);
 
         return lastClusterResponse;
       };
