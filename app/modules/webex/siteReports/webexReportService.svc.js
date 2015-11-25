@@ -353,10 +353,6 @@ angular.module('WebExReports').service('WebexReportService', [
         infoCardObj: infoCardObj
       };
 
-      reportsObject.infoCardObj.licensesTotal.count = "--";
-      reportsObject.infoCardObj.licensesUsage.count = "--";
-      reportsObject.infoCardObj.licensesAvailable.count = "--";
-
       WebExUtilsFact.getWebexLicenseInfo(reportsObject.siteUrl).then(
         function getWebexLicenseInfoSuccess(licenseInfo) {
           var funcName = "getWebexLicenseInfoSuccess()";
@@ -411,18 +407,13 @@ angular.module('WebExReports').service('WebexReportService', [
             var i = 0;
             var j = 0;
 
-            for (i = 0; i < rpts.sections.length; i++)
-            {
-              if (rpts.sections[i].section_name === "common_reports")
-              {
-                for (j = 0; j < rpts.sections[i].uisrefs.length; j++)
-                {
-                  if (rpts.sections[i].uisrefs[j].reportPageId === "meeting_in_progess")
-                  {
+            for (i = 0; i < rpts.sections.length; i++) {
+              if (rpts.sections[i].section_name === "common_reports") {
+                for (j = 0; j < rpts.sections[i].uisrefs.length; j++) {
+                  if (rpts.sections[i].uisrefs[j].reportPageId === "meeting_in_progess") {
                     reportsObject.infoCardObj.iframeLinkObj1.iframePageObj.uiSref = rpts.sections[i].uisrefs[j].toUIsrefString();
                   }
-                  if (rpts.sections[i].uisrefs[j].reportPageId === "meeting_usage")
-                  {
+                  if (rpts.sections[i].uisrefs[j].reportPageId === "meeting_usage") {
                     reportsObject.infoCardObj.iframeLinkObj2.iframePageObj.uiSref = rpts.sections[i].uisrefs[j].toUIsrefString();
                   }
                 }
