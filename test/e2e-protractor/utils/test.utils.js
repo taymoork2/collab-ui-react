@@ -31,10 +31,6 @@ exports.randomTestGmail = function () {
   return 'collabctg+' + this.randomId() + '@gmail.com';
 };
 
-exports.specificTestGmail = function (salt) {
-  return 'collabctg+' + salt + '@gmail.com';
-}
-
 exports.sendRequest = function (options) {
   var flow = protractor.promise.controlFlow();
   return flow.execute(function () {

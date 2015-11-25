@@ -28,6 +28,13 @@ var Navigation = function () {
   this.enterpriseResourcesTab = element(by.css('a[href="#vts"]'));
   this.utilizationTab = element(by.css('a[href="#utilization"]'));
 
+  // hybrid services
+  this.calendarServicePage = element(by.css('a[href="#/services/calendar"]'));
+  this.calendarServicePageSettings = element(by.css('a[href="#/services/calendar/settings"]'));
+
+  this.callServicePage = element(by.css('a[href="#/services/call"]'));
+  this.callServicePageSettings = element(by.css('a[href="#/services/call/settings"]'));
+
   this.settings = element(by.id('setting-bar'));
   this.feedbackLink = element(by.id('feedback-lnk'));
   this.supportLink = element(by.id('support-lnk'));

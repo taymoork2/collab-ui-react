@@ -5,7 +5,7 @@
 /* global it */
 
 describe('Configuring services per-user', function () {
-  var testUser = utils.specificTestGmail( 'configure_user_services');
+  var testUser = utils.randomTestGmail();
 
   afterEach(function () {
     utils.dumpConsoleErrors();
@@ -15,11 +15,20 @@ describe('Configuring services per-user', function () {
     login.login('account-admin', '#/users');
   });
 
-  it ('should remove any pre-existing instance of user "' + testUser + '"', function() {
-    deleteUtils.deleteUser(testUser);  
+  it('should ensure calendar service enabled', function () {
+    navigation.clickServicesTab();
+    utils.click(navigation.calendarServicePage);
+    utils.click(navigation.calendarServicePageSettings);
+  });
+
+  it('should ensure call service enabled', function () {
+    navigation.clickServicesTab();
+    utils.click(navigation.callServicePage);
+    utils.click(navigation.callServicePageSettings);
   });
 
   it('should add a user and select hybrid services', function () {
+    navigation.clickUsers();
     utils.click(users.addUsers);
     utils.expectIsDisplayed(users.manageDialog);
     utils.sendKeys(users.addUsersField, testUser);
@@ -34,7 +43,7 @@ describe('Configuring services per-user', function () {
     utils.expectIsNotDisplayed(users.manageDialog);
   });
 
-  it('should confirm hybrid services set', function() {
+  it('should confirm hybrid services set', function () {
     utils.searchAndClick(testUser);
     utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
     utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'Off');
