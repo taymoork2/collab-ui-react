@@ -35,7 +35,7 @@ angular.module('Mediafusion')
             var converted = converter.convertClusters(data);
             lastClusterResponse = converted;
             callback(null, converted);
-          })
+          });
           //.error(errorCallback);
 
         return lastClusterResponse;
