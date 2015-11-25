@@ -20,6 +20,25 @@
     </div>
   </div>
 
+  <cs-accordion id="configureConnectorsAction"
+                ng-show="sc.showLicenseWarning">
+    <cs-accordion-group
+        show-caret="true"
+        display-status="warning">
+
+      <cs-accordion-heading style="background: white;">
+        <span class="badge badge-custom-warn">License</span>
+        <span>There seems to be a problem with the Cloudberry license</span>
+      </cs-accordion-heading>
+
+      <p>Your cloudberry license is {{sc.licenseError}}. Next steps:</p>
+      <ol>
+        <li>Please pay.
+        </li>
+      </ol>
+    </cs-accordion-group>
+  </cs-accordion>
+
   <div ng-if="sc.codesListSubscription.eventCount == 0 || sc.deviceListSubscription.eventCount == 0">
     <div class="message-container">
       <div class="empty-devices-content">

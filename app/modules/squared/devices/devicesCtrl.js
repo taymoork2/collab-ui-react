@@ -4,8 +4,32 @@ angular.module('Squared')
   .controller('DevicesCtrl',
 
     /* @ngInject */
-    function ($scope, $state, $templateCache, DeviceFilter, CsdmCodeService, CsdmDeviceService, AddDeviceModal) {
+    function ($scope, $state, $templateCache, DeviceFilter, CsdmCodeService, CsdmDeviceService, AddDeviceModal, Authinfo, AccountOrgService) {
       var vm = this;
+
+      var checkLicense = function () {
+        vm.showLicenseWarning = false;
+
+        AccountOrgService.getAccount(Authinfo.getOrgId()).success(function (data) {
+          var showWarning = true;
+          vm.licenseError = "unknown";
+          var d = data;
+          angular.forEach(d.accounts, function(account) {
+            angular.forEach(account.licenses, function(license) {
+              if (license.offerName == "ST") {
+                // PENDING, ACTIVE, CANCELLED, SUSPENDED
+                if (license.status == "ACTIVE") {
+                  showWarning = false;
+                } else {
+                  vm.licenseError = license.status;
+                }
+              }
+            });
+          });
+          vm.showLicenseWarning = showWarning;
+        });
+      };
+      checkLicense();
 
       vm.deviceFilter = DeviceFilter;
 
