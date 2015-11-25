@@ -163,6 +163,7 @@
         return l.licenseType === 'MESSAGING' && isntCancelledOrSuspended(l);
       });
     }
+
     this.orgEventHandler = function (data) {
       if (data.success && data.isTestOrg && this.allLicenses && this.allLicenses.length === 0) {
         card.enabled = true; //If we are a test org and allLicenses is empty, enable the card.
@@ -319,6 +320,7 @@
         return l.offerName === 'SD' && isntCancelledOrSuspended(l); //SD = Shared Devices
       });
     }
+
     this.orgEventHandler = function (data) {
       if (data.success && data.isTestOrg && this.allLicenses && this.allLicenses.length === 0) {
         card.enabled = true; //If we are a test org and allLicenses is empty, enable the card.
@@ -331,7 +333,8 @@
 
     this.unlicensedUsersHandler = function (data) {
       if (data.success) {
-        card.usersToConvert = (data.resources || []).length; // for now use the length to get the count as there is a bug in CI and totalResults is not accurate.
+        card.usersToConvert = Math.max((data.resources || []).length, data.totalResults);
+        // for now use the length to get the count as there is a bug in CI and totalResults is not accurate.
       }
     };
 
