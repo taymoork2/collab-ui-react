@@ -2830,6 +2830,8 @@
     "meeting": "Meeting",
     "call": "Call",
     "rooms": "Rooms",
+    "claimedDomain": "Claimed Domain",
+    "orgId": "Org. ID",
     "hybridServices": "Hybrid Services",
     "entitlements": {
       "webex-squared": "Free Spark Messaging",
