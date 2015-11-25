@@ -353,10 +353,29 @@ angular.module('WebExReports').service('WebexReportService', [
         infoCardObj: infoCardObj
       };
 
-      // TODO: fix the following settings
-      reportsObject.infoCardObj.licensesTotal.count = "?";
-      reportsObject.infoCardObj.licensesUsage.count = "?";
-      reportsObject.infoCardObj.licensesAvailable.count = "?";
+      WebExUtilsFact.getWebexLicenseInfo(reportsObject.siteUrl).then(
+        function getWebexLicenseInfoSuccess(licenseInfo) {
+          var funcName = "getWebexLicenseInfoSuccess()";
+          var logMsg = "";
+
+          reportsObject.infoCardObj.licensesTotal.count = licenseInfo.volume;
+          reportsObject.infoCardObj.licensesUsage.count = licenseInfo.usage;
+          reportsObject.infoCardObj.licensesAvailable.count = licenseInfo.available;
+
+          logMsg = funcName + ": " + "\n" +
+            "reportInfoCardObj=" + JSON.stringify(_this.webExSiteSettingsObj.siteInfoCardObj);
+          $log.log(logMsg);
+        }, // getWebexLicenseInfoSuccess()
+
+        function getWebexLicenseInfoError(result) {
+          var funcName = "getWebexLicenseInfoError()";
+          var logMsg = "";
+
+          logMsg = funcName + ": " + "\n" +
+            "result=" + JSON.stringfy(result);
+          $log.log(logMsg);
+        } // getWebexLicenseInfoError()
+      );
 
       WebExXmlApiFact.getSessionTicket(siteUrl).then(
         function getSessionTicketSuccess(sessionTicket) {
@@ -385,9 +404,21 @@ angular.module('WebExReports').service('WebexReportService', [
             var rpts = self.getReports(siteUrl, y);
             reportsObject["reports"] = rpts;
 
-            // TODO: fix the following settings
-            reportsObject.infoCardObj.iframeLinkObj1.iframePageObj.uiSref = "webex-reports({siteUrl:siteUrl})";
-            reportsObject.infoCardObj.iframeLinkObj2.iframePageObj.uiSref = "webex-reports({siteUrl:siteUrl})";
+            var i = 0;
+            var j = 0;
+
+            for (i = 0; i < rpts.sections.length; i++) {
+              if (rpts.sections[i].section_name === "common_reports") {
+                for (j = 0; j < rpts.sections[i].uisrefs.length; j++) {
+                  if (rpts.sections[i].uisrefs[j].reportPageId === "meeting_in_progess") {
+                    reportsObject.infoCardObj.iframeLinkObj1.iframePageObj.uiSref = rpts.sections[i].uisrefs[j].toUIsrefString();
+                  }
+                  if (rpts.sections[i].uisrefs[j].reportPageId === "meeting_usage") {
+                    reportsObject.infoCardObj.iframeLinkObj2.iframePageObj.uiSref = rpts.sections[i].uisrefs[j].toUIsrefString();
+                  }
+                }
+              }
+            }
 
             reportsObject["viewReady"] = true;
           });
