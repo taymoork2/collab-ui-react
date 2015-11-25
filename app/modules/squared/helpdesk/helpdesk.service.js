@@ -59,10 +59,10 @@
     function getHybridServices(orgId) {
       if (useMock()) {
         var deferred = $q.defer();
-        deferred.resolve(ServiceDescriptor.filterAllExceptManagement(HelpdeskMockData.org.services));
+        deferred.resolve(ServiceDescriptor.filterAllRelevantToExpressway(HelpdeskMockData.org.services));
         return deferred.promise;
       }
-      return ServiceDescriptor.servicesInOrg(orgId).then(ServiceDescriptor.filterAllExceptManagement);
+      return ServiceDescriptor.servicesInOrg(orgId).then(ServiceDescriptor.filterAllRelevantToExpressway);
     }
 
     function searchCloudberryDevices(searchString, orgId) {

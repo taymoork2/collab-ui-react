@@ -76,6 +76,15 @@
         <div ng-if="!helpdeskOrgCtrl.enabledHybridServices || helpdeskOrgCtrl.enabledHybridServices.length === 0">
           <span translate="helpdesk.none"></span>
         </div>
+
+        <h5 translate="helpdesk.availableServices"></h5>
+
+        <div ng-if="!helpdeskOrgCtrl.availableHybridServices || helpdeskOrgCtrl.availableHybridServices.length === 0">
+          <span translate="helpdesk.none"></span>
+        </div>
+        <div ng-repeat="hybridService in helpdeskOrgCtrl.availableHybridServices">
+          <span translate="{{'hercules.serviceNames.' + hybridService.id}}"></span>
+        </div>
       </section>
       <footer></footer>
     </article>

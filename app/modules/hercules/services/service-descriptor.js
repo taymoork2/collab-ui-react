@@ -36,6 +36,12 @@ angular.module('Hercules')
         });
       };
 
+      var filterAllRelevantToExpressway = function (services) {
+        return _.filter(services, function (service) {
+          return service.id === 'squared-fusion-cal' || service.id === 'squared-fusion-uc' || service.id === 'squared-fusion-mgmt';
+        });
+      };
+
       var isFusionEnabled = function (callback) {
         services(function (error, services) {
           if (error) {
@@ -145,6 +151,7 @@ angular.module('Hercules')
         servicesInOrg: servicesInOrg,
         getEmailSubscribers: getEmailSubscribers,
         setEmailSubscribers: setEmailSubscribers,
+        filterAllRelevantToExpressway: filterAllRelevantToExpressway
       };
     }
   ]);

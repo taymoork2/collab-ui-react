@@ -2849,7 +2849,8 @@
       "compliance": "Compliance"
     },
     "entitlementsHeading": "Entitlements",
-    "enabledServices": "Enabled Services",
+    "enabledServices": "Active",
+    "availableServices": "Available",
     "none": "None",
     "webexsites": "WebEx Sites"
   }

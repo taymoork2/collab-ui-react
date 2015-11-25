@@ -22,8 +22,15 @@
 
     if (hasEntitlement(Config.entitlements.fusion_mgmt)) {
       HelpdeskService.getHybridServices(orgId).then(function (services) {
-        vm.enabledHybridServices = _.filter(services, {
+        var enabledHybridServices = _.filter(services, {
           enabled: true
+        });
+        if (enabledHybridServices.length === 1 && enabledHybridServices[0].id === "squared-fusion-mgmt") {
+          enabledHybridServices = []; // Don't show the management service if none of the others are enabled.
+        }
+        vm.enabledHybridServices = enabledHybridServices;
+        vm.availableHybridServices = _.filter(services, {
+          enabled: false
         });
       }, function (err) {
         XhrNotificationService.notify(err);
