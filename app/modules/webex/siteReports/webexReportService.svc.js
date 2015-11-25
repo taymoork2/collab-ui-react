@@ -328,8 +328,6 @@ angular.module('WebExReports').service('WebexReportService', [
       var siteUrl = requestedSiteUrl || '';
       var siteName = WebExUtilsFact.getSiteName(siteUrl);
 
-      $log.log("");
-
       var infoCardObj = WebExUtilsFact.getNewInfoCardObj(
         siteUrl,
         "icon icon-circle-comp-pos",
