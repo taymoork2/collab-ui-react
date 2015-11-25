@@ -32,6 +32,7 @@
     vm.keyActionChanged = keyActionChanged;
     vm.saveUIModel = saveUIModel;
     vm.populateOptionMenu = populateOptionMenu;
+    vm.createOptionMenu = createOptionMenu;
 
     vm.repeatOptions = [{
       label: $translate.instant('autoAttendant.phoneMenuRepeatOnce'),
@@ -69,37 +70,44 @@
     }];
 
     // TBD means the action isn't supported in the backend yet
-    vm.keyActions = [{
-      label: $translate.instant('autoAttendant.phoneMenuPlaySubmenu'),
-      name: 'phoneMenuPlaySubmenu',
-      action: 'runActionsOnInput',
-      inputType: 1
-    }, {
-      label: $translate.instant('autoAttendant.phoneMenuRepeatMenu'),
-      name: 'phoneMenuRepeatMenu',
-      action: 'repeatActionsOnInput'
-    }, {
-      label: $translate.instant('autoAttendant.phoneMenuDialExt'),
-      name: 'phoneMenuDialExt',
-      action: 'runActionsOnInput',
-      inputType: '2'
-    }, {
-      label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
-      name: 'phoneMenuRouteUser',
-      action: 'TBD'
-    }, {
-      label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
-      name: 'phoneMenuRouteHunt',
-      action: 'routeToHuntGroup'
-    }, {
-      label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
-      name: 'phoneMenuRouteVM',
-      action: 'TBD'
-    }, {
-      label: $translate.instant('autoAttendant.phoneMenuRouteAA'),
-      name: 'phoneMenuRouteAA',
-      action: 'goto'
-    }];
+    vm.keyActions = [
+      // {
+      //   label: $translate.instant('autoAttendant.phoneMenuPlaySubmenu'),
+      //   name: 'phoneMenuPlaySubmenu',
+      //   action: 'runActionsOnInput',
+      //   inputType: 1
+      // },
+      {
+        label: $translate.instant('autoAttendant.phoneMenuRepeatMenu'),
+        name: 'phoneMenuRepeatMenu',
+        action: 'repeatActionsOnInput'
+      }, {
+        label: $translate.instant('autoAttendant.phoneMenuDialExt'),
+        name: 'phoneMenuDialExt',
+        action: 'runActionsOnInput',
+        inputType: '2'
+      },
+      // {
+      //   label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
+      //   name: 'phoneMenuRouteUser',
+      //   action: 'TBD'
+      // },
+      {
+        label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
+        name: 'phoneMenuRouteHunt',
+        action: 'routeToHuntGroup'
+      },
+      // {
+      //   label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
+      //   name: 'phoneMenuRouteVM',
+      //   action: 'TBD'
+      // },
+      {
+        label: $translate.instant('autoAttendant.phoneMenuRouteAA'),
+        name: 'phoneMenuRouteAA',
+        action: 'goto'
+      }
+    ];
 
     // search for a key action by its name
     function findKeyAction(name) {
@@ -266,6 +274,11 @@
       var emptyAction = AutoAttendantCeMenuModelService.newCeActionEntry();
       keyEntry.addAction(emptyAction);
       menu.entries.push(keyEntry);
+
+      menu.attempts = 4;
+      vm.selectedTimeout = angular.copy(vm.timeoutActions[0]);
+      vm.selectedTimeout.childOptions = angular.copy(vm.repeatOptions);
+      vm.selectedTimeout.selectedChild = angular.copy(vm.repeatOptions[2]);
     }
 
     /////////////////////

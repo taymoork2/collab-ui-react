@@ -111,6 +111,18 @@ describe('Controller: AAPhoneMenuCtrl', function () {
     });
   });
 
+  describe('createOptionMenu', function () {
+    it('should initialize CeMenu Timeout/Invalid input with repeat-menu-3 times', function () {
+      controller.createOptionMenu();
+
+      var expectedActions = angular.copy(controller.timeoutActions[0]);
+      expectedActions.childOptions = angular.copy(controller.repeatOptions);
+      expectedActions.selectedChild = angular.copy(controller.repeatOptions[2]);
+
+      expect(angular.equals(expectedActions, controller.selectedTimeout)).toEqual(true);
+    });
+  });
+
   describe('populateOptionMenu', function () {
 
     it('should read the CeMenu with attempts 1 and set UI to Continue-To-Next-Step (Timeout/Invalid)', function () {
