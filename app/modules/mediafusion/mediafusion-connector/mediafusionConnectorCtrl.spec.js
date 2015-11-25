@@ -6,9 +6,19 @@ describe('Controller: mediafusionConnectorCtrl', function () {
   // load the controller's module
   beforeEach(module('wx2AdminWebClientApp'));
   //Initialize variables
-  var Authinfo, controller, $scope, $state, MediaServiceDescriptor, $httpBackend, authinfo, $q, Notification, XhrNotificationService;
+  var Authinfo, controller, $scope, $state, MediaServiceDescriptor, $httpBackend, authinfo, $q, Notification, XhrNotificationService, proxy;
   var mediaAgentOrgIds = ['mediafusion'];
   var serviceId = "squared-fusion-media";
+  var clusterId = "367dd49b-212d-4e7e-ac12-24eb8ee9d504";
+  var connectorName = "MF_Connector";
+  var connector = {
+    id: 'a3628a9d-feff-4820-aa4c-3d887c260150',
+    roleSelected: 'Something',
+    properties: {
+      displayName: 'MF_TEAM'
+    }
+
+  };
 
   beforeEach(function () {
     module(function ($provide) {
@@ -28,11 +38,19 @@ describe('Controller: mediafusionConnectorCtrl', function () {
     MediaServiceDescriptor = _MediaServiceDescriptor_;
     Notification = _Notification_;
     //XhrNotificationService = _XhrNotificationService_;
+    proxy = {
+      stopPolling: sinon.stub(),
+      startPolling: sinon.stub(),
+      defuseConnector: sinon.stub(),
+      getClusters: sinon.stub()
+    };
+
     controller = $controller('mediafusionConnectorCtrl', {
       //Authinfo: Authinfo,
       $scope: $scope,
       $state: $state,
       MediaServiceDescriptor: MediaServiceDescriptor
+      MediafusionProxy: proxy
     });
     $httpBackend.when('GET', 'l10n/en_US.json').respond({});
     spyOn(Notification, 'notify');
@@ -61,6 +79,52 @@ describe('Controller: mediafusionConnectorCtrl', function () {
     //expect(scope.gridOptions).toBeDefined();
   });
 
+it('should startpolling', function () {
+    expect($scope.loading).toBe(true);
+    expect(proxy.startPolling.callCount).toBe(1);
+    proxy.startPolling.callArgWith(0, null, {
+      foo: 'bar'
+    });
+    expect($scope.loading).toBe(false);
+  });
+
+  it('Show Connector Details', function () {
+    //expect(scope.showPreview).toBeFalsy();
+
+    //$scope.showConnectorsDetails(connector);
+    expect($scope.showPreview).toBeTruthy();
+    //expect($scope.connector).toBe(connector);
+
+  });
+
+  it('Deregister a Connector', function () {
+
+    $scope.setDeregisterConnector(clusterId, connectorName);
+    expect($scope.showPreview).toBeFalsy();
+    expect($scope.deleteClusterId).toBe(clusterId);
+    expect($scope.deleteConnectorName).toBe(connectorName);
+    expect($scope.showPreview).toBeFalsy();
+  });
+
+  it('Cancel Delete Have Been called', function () {
+
+    var deleteClusterId = null;
+    var deleteConnectorName = null;
+    //scope.cancelDelete();
+    spyOn($scope, 'cancelDelete');
+    $scope.cancelDelete();
+    expect($scope.cancelDelete).toHaveBeenCalled();
+    //expect(state.go).toHaveBeenCalledWith(mediafusionconnector);
+
+  });
+
+  it('Defusing a Connector', function () {
+
+    $scope.defuseConnector(clusterId);
+    expect(proxy.defuseConnector.callCount).toBe(1);
+
+  });
+  
   it('should enable media service', function () {
     spyOn(MediaServiceDescriptor, 'setServiceEnabled').and.returnValue($q.when());
     spyOn(MediaServiceDescriptor, 'getUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.when(
