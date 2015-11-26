@@ -145,7 +145,6 @@ angular.module('Hercules')
         servicesInOrg: servicesInOrg,
         getEmailSubscribers: getEmailSubscribers,
         setEmailSubscribers: setEmailSubscribers,
-        filterAllRelevantToExpressway: filterAllRelevantToExpressway
       };
     }
   ]);
