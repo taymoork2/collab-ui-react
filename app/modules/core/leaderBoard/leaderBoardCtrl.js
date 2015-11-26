@@ -50,76 +50,11 @@ angular.module('Core')
 
         storage: {
           services: []
-        }
+        },
+
+        sites: {}
 
       };
-
-      $scope.vm = {
-        trialId: '',
-        trial: {},
-        trialExists: false,
-        trialDaysRemaining: 0,
-        trialUsedPercentage: 0,
-        isInitialized: false,
-      };
-      $scope.vm.messagingServices = {
-        title: $filter('translate')('leaderBoard.messagingTitle'),
-        unlimited: false,
-        visible: false,
-        isNewTrial: false,
-        services: []
-      };
-
-      $scope.vm.commServices = {
-        title: $filter('translate')('leaderBoard.communicationTitle'),
-        unlimited: false,
-        visible: false,
-        isNewTrial: false,
-        services: []
-      };
-
-      // AFAIK webex conferencing will never have trials
-      // so no need to check if it's a new trial.
-      $scope.vm.confServices = {
-        title: $filter('translate')('leaderBoard.conferencingTitle'),
-        unlimited: false,
-        visible: false,
-        isNewTrial: false,
-        services: []
-      };
-
-      $scope.vm.webexServices = {
-        title: $filter('translate')('leaderBoard.conferencingTitle'),
-        unlimited: false,
-        visible: false,
-        isNewTrial: false,
-        services: []
-      };
-
-      $scope.vm.cmrServices = {
-        title: $filter('translate')('leaderBoard.shared_devicesTitle'),
-        unlimited: false,
-        visible: false,
-        isNewTrial: false,
-        services: []
-      };
-
-      $scope.vm.sdServices = {
-        title: $filter('translate')('leaderBoard.shared_devicesTitle'),
-        unlimited: false,
-        visible: false,
-        isNewTrial: false,
-        services: []
-      };
-
-      function populateTrialData(trial) {
-        $scope.vm.trial = trial;
-        var now = moment().format('MMM D, YYYY');
-        var start = moment($scope.vm.trial.startDate).format('MMM D, YYYY');
-        var daysUsed = moment(now).diff(start, 'days');
-        $scope.vm.trialDaysRemaining = ($scope.vm.trial.trialPeriod - daysUsed);
-        $scope.vm.trialUsedPercentage = Math.round((daysUsed / $scope.vm.trial.trialPeriod) * 100);
-      }
 
       // for explicit ordering:
       $scope.bucketKeys = [
@@ -128,22 +63,9 @@ angular.module('Core')
         'conferencing',
         'communication',
         'shared_devices',
-        'storage'
+        'storage',
+        'sites'
       ];
-
-      var map = {
-        "MS": "Message",
-        "CF": "Meeting 25 Party",
-        "MC": "Meeting 25 Party with WebEx Meeting Center",
-        "SC": "WebEx Support Center",
-        "TC": "WebEx Training Center",
-        "EC": "WebEx Event Center",
-        "EE": "Meeting 25 Party with Webex Enterprise Edition",
-        "CMR": "WebEx Collaboration Meeting Room",
-        "CO": "Call",
-        "ST": "Storage",
-        "SD": "Spark Room System"
-      };
 
       var getLicenses = function () {
 
@@ -157,9 +79,15 @@ angular.module('Core')
               if (license.licenseId.lastIndexOf('CMR', 0) === 0) return;
               var bucket = license.licenseType.toLowerCase();
               var offerName = license.offerName;
-              license.label = map[offerName];
               if (license.offerName !== "CF") {
-                $scope.buckets[bucket].services.push(license);
+                if (license.siteUrl) {
+                  if (!$scope.buckets.sites[license.siteUrl]) {
+                    $scope.buckets.sites[license.siteUrl] = [];
+                  }
+                  $scope.buckets.sites[license.siteUrl].push(license);
+                } else {
+                  $scope.buckets[bucket].services.push(license);
+                }
               } else {
                 $scope.buckets.cf.services.push(license);
               }

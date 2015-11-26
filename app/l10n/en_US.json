@@ -2422,7 +2422,18 @@
     "conferencingSubtitle": "Meeting Center",
     "conferencingDesc": "Join up to 25 colleagues in a Team Room Sync-up or many more in a WebEx Meeting Center.",
     "shared_devicesTitle": "Room Systems",
-    "shared_devicesSubtitle": "Shared Devices"
+    "shared_devicesSubtitle": "Shared Devices",
+    "MS": "Masdfge",
+    "CF": "Meeting 25 Party",
+    "MC": "Meeting 25 Party with WebEx Meeting Center",
+    "SC": "WebEx Support Center",
+    "TC": "WebEx Training Center",
+    "EC": "WebEx Event Center",
+    "EE": "Meeting 25 Party with Webex Enterprise Edition",
+    "CMR": "WebEx Collaboration Meeting Room",
+    "CO": "Call",
+    "ST": "Storage",
+    "SD": "Spark Room System"
   },
   "partnerProfile": {
     "link": "Partner Profile",

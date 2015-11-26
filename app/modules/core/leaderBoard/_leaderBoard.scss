@@ -6,6 +6,15 @@
   margin-bottom: 40px;
 }
 
+ .site-info{
+  margin-top: 0px;
+  color: #049fd9;
+ }
+
+ .number{
+  font-size: 12px;
+ }
+
  .badge-trial {
     @extend .badge.badge-warning;
   }
@@ -13,7 +22,7 @@
 .leader-board {
   padding: 30px;
 
-  .total-count {
+.total-count {
     color: $gray-dark;
   }
 }
@@ -21,6 +30,14 @@
 .donut {
   width: 125px;
   float: left;
+}
+
+.cs-donut-svg{
+  margin-left: 10px;
+}
+
+.sub-item{
+  min-height: 64px;
 }
 
 .bucket-info {
@@ -33,17 +50,12 @@
 }
 
 .text-center{
-  padding-top: 10px;
+  font-size: 12px;
 }
 
-.cs-donut-svg {
-  margin-left: 8px;
-  margin-top: 10px;
-}
 
 .header-section {
   padding-bottom: 8px;
-  margin-bottom: 19px;
 }
 
 .site-info {
@@ -122,4 +134,12 @@
   font-size: 13px;
   padding-left: 12px;
   padding-right: 12px;
+}
+
+.quantity-padding{
+  font-size: 12px;
+}
+
+.quantity{
+  font-size: 12px;
 }

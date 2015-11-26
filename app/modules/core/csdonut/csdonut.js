@@ -23,7 +23,8 @@
         value: '=',
         max: '=',
         unlimited: '=',
-        ssize: '='
+        ssize: '=',
+        tsize: '='
       },
 
       controller: ['$scope', function controller($scope) {
@@ -31,7 +32,7 @@
         //Unique donut id
         $scope.donutId = 'csDonut_' + (Math.floor(Math.random() * 100)).toString();
         //Settings defaults
-        $scope.colours = ['#3CA8E8', 'lightgray'];
+        $scope.colours = ['#43a942', '#ebebec'];
         if (!$scope.height) {
           $scope.height = 85;
         }
@@ -46,13 +47,17 @@
           x: 0,
           y: 14,
           content: '',
-          color: '#3CA8E8'
+          color: '#6A6B6C'
         };
 
         var colour = $d3.scale.category20();
         $scope.currentAngles = {};
 
-        $scope.computeTextProperties = function (value, unlimited) {
+        $scope.computeTextProperties = function (value, unlimited, tsize) {
+          if(tsize !== 'undefiend'){
+            $scope.text.size = 12;
+            $scope.text.y = 4;
+          }
           if (typeof unlimited !== 'undefined' && unlimited === true) {
             $scope.text.size = 18;
             $scope.text.y = 6;
@@ -60,8 +65,8 @@
             $scope.text.size = 32;
             $scope.text.y = 12;
           } else {
-            $scope.text.size = 34;
-            $scope.text.y = 13;
+            $scope.text.size = 26;
+            $scope.text.y = 10;
           }
         };
 
@@ -72,8 +77,8 @@
           }
           if (typeof unlimited !== 'undefined' && unlimited === true) {
             $scope.text.content = 'Unlimited';
-            $scope.colours = ['#3CA8E8'];
-            $scope.text.color = '#3CA8E8';
+            $scope.colours = ['#43a942'];
+            $scope.text.color = '#6A6B6C';
             $scope.dataset = [1];
           } else if (typeof value === 'undefined' || typeof max === 'undefined' || value > 9999 || max > 9999 || value <= 0 || max <= 0) {
             $scope.text.content = 0;
@@ -82,7 +87,7 @@
           } else {
             var fillValue = max - value;
             $scope.text.content = value;
-            $scope.text.color = '#3CA8E8';
+            $scope.text.color = '#6A6B6C';
             $scope.dataset = [value, fillValue];
             if (value > max) {
               $scope.colours = ['#f05d3b'];
@@ -165,7 +170,7 @@
 
         var radius, pie, arc, svg, path, text;
         scope.computeDataset(scope.value, scope.max, scope.unlimited, scope.ssize);
-        scope.computeTextProperties(scope.value, scope.unlimited);
+        scope.computeTextProperties(scope.value, scope.unlimited, scope.tsize);
         scope.createDonut = function createDonut() {
           radius = Math.min(scope.getWidth(), scope.getHeight()) / 2;
           pie = $d3.layout.pie().sort(null).value(function value(model) {
@@ -184,7 +189,7 @@
             .attr('x', scope.text.x).attr('y', scope.text.y)
             .attr('text-anchor', 'middle')
             .attr('class', 'cs-donut-text')
-            .attr('style', 'fill:' + scope.text.color + '; font-size:' + scope.text.size + 'px; font-family: CiscoSansTT, Thin')
+            .attr('style', 'fill:' + scope.text.color + '; font-size:' + scope.text.size + 'px; font-family: $brand-font-extra-light')
             .text(scope.text.content);
 
           path = svg.selectAll('path')
@@ -238,7 +243,7 @@
           path.data(pie(scope.clean(scope.dataset)));
           path.transition().duration(750).attrTween('d', scope.tweenArc).each('end', function () {
             text.text(scope.text.content)
-              .attr('style', 'fill:' + scope.text.color + '; font-size:' + scope.text.size + 'px; font-family: CiscoSansTT, Thin')
+              .attr('style', 'fill:' + scope.text.color + '; font-size:' + scope.text.size + 'px; font-family: $brand-font-extra-light;')
               .attr('y', scope.text.y);
             path.attr('fill', function (d, i) {
               return scope.getColour(i);
