@@ -11,6 +11,7 @@
       createCard: function createCard() {
 
         var card = {};
+        card.template = 'modules/core/overview/genericCard.tpl.html';
         card.icon = 'icon-circle-message';
         card.desc = 'overview.cards.message.desc';
         card.name = 'overview.cards.message.title';

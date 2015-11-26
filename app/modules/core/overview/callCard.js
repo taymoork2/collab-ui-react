@@ -10,6 +10,7 @@
     return {
       createCard: function createCard() {
         var card = {};
+        card.template = 'modules/core/overview/genericCard.tpl.html';
         card.icon = 'icon-circle-call';
         card.desc = 'overview.cards.call.desc';
         card.name = 'overview.cards.call.title';

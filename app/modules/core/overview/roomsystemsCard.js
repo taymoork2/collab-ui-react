@@ -11,6 +11,7 @@
       createCard: function createCard() {
 
         var card = {};
+        card.template = 'modules/core/overview/genericCard.tpl.html';
         card.icon = 'icon-circle-telepresence';
         card.desc = 'overview.cards.roomSystem.desc';
         card.name = 'overview.cards.roomSystem.title';

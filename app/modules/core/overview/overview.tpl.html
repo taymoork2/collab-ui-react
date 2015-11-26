@@ -4,7 +4,7 @@
     <cs-card-layout class="three-fourths">
 
       <cs-card class="medium menu-card overview-card" ng-class="card.cardClass" ng-repeat="card in overview.cards">
-        <article ng-include="card.template || 'modules/core/overview/genericCard.tpl.html'" ></article>
+        <article ng-include="card.template" ></article>
       </cs-card>
 
     </cs-card-layout>
