@@ -127,6 +127,17 @@
         .then(extractData);
     }
 
+    function getWebExSites(orgId) {
+      if (useMock()) {
+        var deferred = $q.defer();
+        deferred.resolve(HelpdeskMockData.webExSites);
+        return deferred.promise;
+      }
+      return $http
+        .get(urlBase + 'helpdesk/webexsites/' + encodeURIComponent(orgId))
+        .then(extractItems);
+    }
+
     return {
       searchUsers: searchUsers,
       searchOrgs: searchOrgs,
@@ -134,7 +145,8 @@
       getOrg: getOrg,
       searchCloudberryDevices: searchCloudberryDevices,
       getHybridServices: getHybridServices,
-      resendInviteEmail: resendInviteEmail
+      resendInviteEmail: resendInviteEmail,
+      getWebExSites: getWebExSites
     };
 
   }

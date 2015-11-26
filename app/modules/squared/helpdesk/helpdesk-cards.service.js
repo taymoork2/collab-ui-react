@@ -241,7 +241,8 @@
       getCallCardForOrg: getCallCardForOrg,
       getHybridServicesCardForOrg: getHybridServicesCardForOrg,
       getRoomSystemsCardForOrg: getRoomSystemsCardForOrg,
-      getHealthStatuses: getHealthStatuses
+      getHealthStatuses: getHealthStatuses,
+      orgIsEntitledTo: orgIsEntitledTo
     };
   }
 

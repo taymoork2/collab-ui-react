@@ -34,6 +34,7 @@
       vm.hybridServicesCard = HelpdeskCardsService.getHybridServicesCardForOrg(org);
       vm.roomSystemsCard = HelpdeskCardsService.getRoomSystemsCardForOrg(org);
       findPartners(org);
+      findWebExSites(org);
     }
 
     function initHealth(healthStatuses) {
@@ -42,12 +43,20 @@
 
     function findPartners(org) {
       if (org.managedBy && org.managedBy.length > 0) {
-        org.partners = [];
+        org.managedByOrgs = [];
         _.each(org.managedBy, function (parnterOrg) {
           HelpdeskService.getOrg(parnterOrg.orgId).then(function (res) {
-            org.partners.push(res);
+            org.managedByOrgs.push(res);
           }, angular.noop);
         });
+      }
+    }
+
+    function findWebExSites(org) {
+      if (HelpdeskCardsService.orgIsEntitledTo(org, 'cloudmeetings')) {
+        HelpdeskService.getWebExSites(vm.orgId).then(function (sites) {
+          vm.org.webExSites = sites;
+        }, XhrNotificationService.notify);
       }
     }
   }
