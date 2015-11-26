@@ -168,6 +168,7 @@ angular.module('Squared').controller('ReportsCtrl', [
       $log.log(logMsg);
 
       $scope.webexReportsObject = WebexReportService.initReportsObject(scopeWebexSelected);
+      $scope.infoCardObj = $scope.webexReportsObject.infoCardObj;
 
       if (scopeWebexSelected !== storageReportsSiteUrl) {
         Storage.put('webexReportsSiteUrl', scopeWebexSelected);
