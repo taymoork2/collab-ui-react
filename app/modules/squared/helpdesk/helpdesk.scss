@@ -14,12 +14,17 @@
     margin-bottom: 1rem;
   }
   .user-view {
+    h3{
+      color:$gray-dark-4;
+    }
     .vw-90 {
       max-width: 90vw;
     }
     .user-info {
       margin-bottom: 0.5rem;
       font-size: 0.875rem;
+      position: relative;
+      color: $gray-dark-2;
       .action {
         padding: 2px;
         width: 5rem;
@@ -27,7 +32,13 @@
       span {
         font-size: inherit;
       }
+      .user-infotitle{
+        min-width: 80px;
+        width:auto;
+        float: left;
+      }
       .user-value {
+
       }
     }
     .display-name {
@@ -37,6 +48,12 @@
       margin-bottom: 1rem;
       margin-top: 2rem;
     }
+  }
+  .helpdesk-org{
+    h3{
+      margin-bottom: 1rem;
+    }
+
   }
 }
 .helpdesk-landing {
@@ -211,4 +228,100 @@
   outline: none !important;
   outline: 0 !important;
   border: 0 !important;
+}
+@media only screen and (max-width: 1160px){
+  .helpdesk-content-view {
+    .user-view {
+      .user-info{
+        .user-value{
+          display: block;
+        }
+        .user-infotitle{
+          float: none !important;
+        }
+      }
+    }
+  }
+}
+@media only screen and (max-width: 1024px){
+  .org-value{
+    margin-top: -1rem;
+    margin-bottom: 2rem;
+    width: 100%;
+    display: block;
+  }
+  .helpdesk-org{
+    .cs-card{
+      padding:0;
+      article{
+        width: 100%;
+      }
+    }
+  }
+}
+@media only screen and (max-width: 800px){
+  .helpdesk-content-view {
+    .user-view {
+      .user-info{
+        .user-value{
+          display:  inline;
+        }
+        .user-infotitle{
+          float: left !important;
+        }
+      }
+      .info-panel,.card-panel{
+        width:100%;
+      }
+      .card-panel{
+        padding:0;
+        .cs-card-layout{
+          padding:0;
+          .cs-card{
+            width:50%;
+          }
+        }
+      }
+    }
+    .helpdesk-org{
+      .cs-card-layout{
+        width: 100%;
+        .cs-card{
+          width:50%;
+          max-width: calc(50% - 1rem);
+          margin-left:1rem;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 500px){
+  .helpdesk-content-view {
+    .user-view {
+      .user-info{
+        .user-value{
+          display:  inline;
+        }
+        .user-infotitle{
+          float: none !important;
+        }
+      }
+      .card-panel{
+        .cs-card-layout{
+          .cs-card{
+            width:100%;
+          }
+        }
+      }
+    }
+    .helpdesk-org{
+      .cs-card-layout{
+        .cs-card{
+          width:100%;
+          max-width: 100%;
+        }
+      }
+    }
+  }
 }

@@ -1,5 +1,4 @@
-
-<div class="user-view">
+<div class="user-view helpdesk-org">
   <div class="row head full">
     <div class="columns large-12">
       <a ui-sref="helpdesk.search">
@@ -19,7 +18,7 @@
         <div class="large-5 columns">
           <p>Contact:</p>
         </div>
-        <div class="large-7 columns">
+        <div class="large-7 columns org-value">
           <span><a href="mailto:{{helpdeskOrgCtrl.org.email}}">{{helpdeskOrgCtrl.org.email}}</a></span>
         </div>
       </div>
@@ -28,7 +27,7 @@
         <div class="large-5 columns">
           <p>Domains:</p>
         </div>
-        <div class="large-7 columns">
+        <div class="large-7 columns org-value">
           <span ng-repeat="domain in helpdeskOrgCtrl.org.domains">
             {{domain}}{{$last ? '' : ', '}}
           </span>
@@ -40,7 +39,7 @@
         <div class="medium-5 columns">
           <p>Org. ID:</p>
         </div>
-        <div class="medium-7 columns">
+        <div class="medium-7 columns org-value">
           <span>{{helpdeskOrgCtrl.org.id}}</span>
         </div>
       </div>
@@ -49,7 +48,7 @@
         <div class="medium-5 columns">
           <p>Partners:</p>
         </div>
-        <div class="medium-7 columns">
+        <div class="medium-7 columns org-value">
           <div ng-repeat="partner in helpdeskOrgCtrl.org.partners">
             <span>
               <a ui-sref="helpdesk.org({org:partner})">
@@ -95,7 +94,7 @@
 
     </div>
 
-    <div class="columns large-8 medium-7" ng-include src="'modules/squared/helpdesk/org-cards.html'">
+    <div class="columns large-8 medium-7 card-panel" ng-include src="'modules/squared/helpdesk/org-cards.html'">
 
     </div>
 
