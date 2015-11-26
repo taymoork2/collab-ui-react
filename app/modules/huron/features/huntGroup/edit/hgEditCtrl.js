@@ -56,7 +56,7 @@
 
     if ($stateParams.feature && $stateParams.feature.id) {
       vm.hgId = $stateParams.feature.id;
-      vm.model.name = $stateParams.feature.cardName;
+      vm.title = $stateParams.feature.cardName;
       init();
     } else {
       $state.go(vm.huronFeaturesUrl);
@@ -97,6 +97,7 @@
 
       $q.all([fetchFallbackPromise, fetchMemberPromise]).then(function () {
         vm.model = pristineData;
+        vm.title = vm.model.name;
         updatePilotNumbers(pristineData);
         vm.selectedHuntMembers = HuntGroupMemberDataService.getHuntMembers();
         vm.selectedFallbackNumber = HuntGroupFallbackDataService.getFallbackNumber();
@@ -322,7 +323,8 @@
           label: $translate.instant('huronHuntGroup.ringTimeLabel'),
           description: $translate.instant('huronHuntGroup.ringTimeDesc'),
           labelfield: 'label',
-          valuefield: 'value'
+          valuefield: 'value',
+          secondaryLabel: $translate.instant('huronHuntGroup.ringTimeSecondaryLabel')
         },
         controller: /* @ngInject */ function ($scope) {
           $scope.to.options = HuntGroupEditDataService.getMaxRingSecsOptions();
@@ -335,7 +337,8 @@
           label: $translate.instant('huronHuntGroup.waitTimeLabel'),
           description: $translate.instant('huronHuntGroup.waitTimeDesc'),
           labelfield: 'label',
-          valuefield: 'value'
+          valuefield: 'value',
+          secondaryLabel: $translate.instant('huronHuntGroup.waitTimeSecondaryLabel')
         },
         controller: /* @ngInject */ function ($scope) {
           $scope.to.options = HuntGroupEditDataService.getMaxWaitMinsOptions();

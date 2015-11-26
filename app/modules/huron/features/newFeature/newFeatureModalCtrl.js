@@ -18,7 +18,7 @@
       }, {
         cssClass: 'HG',
         code: 'huronHuntGroup.code',
-        label: 'huronHuntGroup.title',
+        label: 'huronHuntGroup.modalTitle',
         description: 'huronHuntGroup.modalDescription'
       }
       //  , {

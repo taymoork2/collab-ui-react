@@ -1,17 +1,15 @@
-(function () {
-  'use strict';
-
+namespace devicesRedux {
   angular
     .module('Squared')
-    .filter('highlight', HighlightFilter);
+    .filter('highlight', highlightFilter);
 
-  function HighlightFilter() {
+  function highlightFilter () {
     return function (input, term) {
       if (input && term) {
-        var regex = new RegExp('(' + term + ')', 'gi');
+        const regex = new RegExp('(' + term + ')', 'gi');
         return input.replace(regex, "<span class='hl'>$1</span>");
       }
       return input;
-    };
+    }
   }
-})();
+}
