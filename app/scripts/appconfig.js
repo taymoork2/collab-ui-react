@@ -114,8 +114,8 @@ angular
 
 angular
   .module('Squared')
-  .config(['$urlRouterProvider', '$stateProvider',
-    function ($urlRouterProvider, $stateProvider) {
+  .config(['$urlRouterProvider', '$stateProvider', '$futureStateProvider',
+    function ($urlRouterProvider, $stateProvider, $futureStateProvider) {
       var modalMemo = 'modalMemo';
       var wizardmodalMemo = 'wizardmodalMemo';
 
@@ -148,6 +148,34 @@ angular
           }.bind($state.modal));
         };
       }
+
+      var futureOverviewState = {
+        type: 'futureOverview',
+        stateName: 'overview',
+        url: '/overview'
+      };
+
+      $futureStateProvider.futureState(futureOverviewState);
+
+      $futureStateProvider.stateFactory(futureOverviewState.type, function ($q, $timeout, futureState, FeatureToggleService) {
+        return FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (useStormBranding) {
+
+          if (document.URL.indexOf('newoverview=1') > 0) {
+            useStormBranding = true;
+          } else if (document.URL.indexOf('newoverview=0') > 0) {
+            useStormBranding = false;
+          }
+
+          return {
+            name: futureState.stateName,
+            url: futureState.url,
+            templateUrl: useStormBranding ? 'modules/core/overview/overview.tpl.html' : 'modules/core/landingPage/landingPage.tpl.html',
+            controller: useStormBranding ? 'OverviewCtrl' : 'LandingPageCtrl',
+            controllerAs: 'overview',
+            parent: 'main'
+          };
+        });
+      });
 
       /* @ngInject */
       function modalOnExit($state, $previousState) {
@@ -217,19 +245,6 @@ angular
           controller: 'ProcessorderCtrl',
           parent: 'main',
           authenticate: false
-        })
-        .state('overview', {
-          url: '/overview',
-          templateUrl: 'modules/core/landingPage/landingPage.tpl.html',
-          controller: 'LandingPageCtrl',
-          parent: 'main'
-        })
-        .state('overview-nm', {
-          url: '/overview-nm',
-          templateUrl: 'modules/core/overview/overview.tpl.html',
-          controller: 'OverviewCtrl',
-          controllerAs: 'overview',
-          parent: 'main'
         })
         .state('users', {
           abstract: true,
@@ -812,12 +827,6 @@ angular
         .state('partnerreports', {
           parent: 'partner',
           url: '/reports',
-          templateUrl: 'modules/squared/views/partnerreports.html',
-          controller: 'PartnerReportsCtrl'
-        })
-        .state('newpartnerreports', {
-          parent: 'partner',
-          url: '/newreports',
           templateUrl: 'modules/core/partnerReports/partnerReports.tpl.html',
           controller: 'PartnerReportCtrl',
           controllerAs: 'nav'
@@ -1009,21 +1018,24 @@ angular
           templateUrl: 'modules/squared/helpdesk/helpdesk-search.html'
         })
         .state('helpdesk.user', {
-          url: '/user',
+          url: '/user/:orgId/:id',
           templateUrl: 'modules/squared/helpdesk/helpdesk-user.html',
           controller: 'HelpdeskUserController',
           controllerAs: 'helpdeskUserCtrl',
           params: {
-            user: null
+            user: null,
+            id: null,
+            orgId: null
           }
         })
         .state('helpdesk.org', {
-          url: '/org',
+          url: '/org/:id',
           templateUrl: 'modules/squared/helpdesk/helpdesk-org.html',
           controller: 'HelpdeskOrgController',
           controllerAs: 'helpdeskOrgCtrl',
           params: {
-            org: null
+            org: null,
+            id: null
           }
         });
     }

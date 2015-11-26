@@ -1,8 +1,8 @@
 <cs-sp-buttons ng-if="expresswayClusterSettingsCtrl.showButtons">
-  <button id="btn-save" class="btn-primary btn-save" translate="common.save"
+  <button id="btn-save" class="btn--primary btn-save" translate="common.save"
           data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>"
           ng-click="expresswayClusterSettingsCtrl.save()"></button>
-  <button id="btn-cancel" ng-disabled="saving" class="btn-default" translate="common.cancel"
+  <button id="btn-cancel" ng-disabled="saving" translate="common.cancel"
           ng-click="expresswayClusterSettingsCtrl.cancel()"></button>
 </cs-sp-buttons>
 <cs-sp-container>
@@ -31,9 +31,9 @@
 
   <cs-sp-section>
     <div>
-      <button id="btn-primary"
+      <button id="btn--primary"
               ng-disabled="saving"
-              class="btn btn-danger"
+              class="btn btn--negative"
               style="margin-top: 15px;"
               ng-click="sp.close(); expresswayClusterSettingsCtrl.showDeregisterDialog();">
         Deregister Cluster

@@ -5,7 +5,7 @@
     .service('CdrService', CdrService);
 
   /* @ngInject */
-  function CdrService($translate, $http, $q, Config, Notification, Log) {
+  function CdrService($translate, $http, $q, Authinfo, Config, Notification, Log) {
     var proxyData = [];
     var ABORT = 'ABORT';
     var LOCAL = 'localSessionID';
@@ -22,6 +22,7 @@
 
     var retryError = "ElasticSearch GET request failed for reason: Observable onError";
     var cancelPromise = null;
+    var currentJob = null;
 
     var cdrUrl = {
       dev: 'https://hades.huron-int.com/api/v1/elasticsearch/_all/_search?pretty',
@@ -72,17 +73,20 @@
         cancelPromise.resolve(ABORT);
       }
       cancelPromise = $q.defer();
+      currentJob = Math.random();
+      var thisJob = angular.copy(currentJob);
 
       var startTimeUtc = formDate(model.startDate, model.startTime);
       var endTimeUtc = formDate(model.endDate, model.endTime);
       var timeStamp = '"from":' + startTimeUtc + ',"to":' + endTimeUtc;
       var devicesQuery = [];
 
+      devicesQuery.push(deviceQuery(tenant, Authinfo.getOrgId()));
       if (angular.isDefined(model.callingUser) && (model.callingUser !== '')) {
-        devicesQuery.push(deviceQuery(callingUser, model.callingUser));
+        devicesQuery.push(deviceQuery(callingUser, convertUuid(model.callingUser)));
       }
       if (angular.isDefined(model.calledUser) && (model.calledUser !== '')) {
-        devicesQuery.push(deviceQuery(calledUser, model.calledUser));
+        devicesQuery.push(deviceQuery(calledUser, convertUuid(model.calledUser)));
       }
       if (angular.isDefined(model.callingPartyDevice) && (model.callingPartyDevice !== '')) {
         devicesQuery.push(deviceQuery(callingDevice, model.callingPartyDevice));
@@ -106,12 +110,12 @@
       jsQuery += '}}} },"size": ' + model.hitSize + ',"sort": [{"@timestamp": {"order": "desc"}}]}';
 
       var results = [];
-      return proxy(jsQuery).then(function (response) {
+      return proxy(jsQuery, angular.copy(thisJob)).then(function (response) {
           if (!angular.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
             for (var i = 0; i < response.hits.hits.length; i++) {
               results.push(response.hits.hits[i]._source);
             }
-            return recursiveQuery(results).then(function (response) {
+            return recursiveQuery(results, thisJob).then(function (response) {
               if (response !== ABORT) {
                 return proxyData;
               } else {
@@ -142,6 +146,14 @@
         });
     }
 
+    function convertUuid(uuid) {
+      if (uuid.length === 36) {
+        return uuid;
+      } else {
+        return [uuid.slice(0, 7), uuid.slice(8, 11), uuid.slice(12, 15), uuid.slice(16, 19), uuid.slice(20, 31), ].join('-');
+      }
+    }
+
     function generateHosts() {
       var hostsJson = '{"query_string":{"query":"id:CDR.CDR"}},';
       angular.forEach(serverHosts, function (host, index, array) {
@@ -157,7 +169,7 @@
       return '{"fquery":{"query":{"query_string":{"query":"dataParam.' + callType + ':(\\"' + item + '\\")"}},"_cache":true}}';
     }
 
-    function recursiveQuery(cdrArray) {
+    function recursiveQuery(cdrArray, thisJob) {
       var sessionIds = extractUniqueIds(cdrArray);
       var queries = [];
       var x = 0;
@@ -180,11 +192,11 @@
         }
       }
 
-      return secondaryQuery(queries).then(function (newCdrArray) {
+      return secondaryQuery(queries, thisJob).then(function (newCdrArray) {
         if (newCdrArray !== ABORT) {
           var newSessionIds = extractUniqueIds(newCdrArray);
           if (newSessionIds.sort().join(',') !== sessionIds.sort().join(',')) {
-            return recursiveQuery(newCdrArray);
+            return recursiveQuery(newCdrArray, thisJob);
           } else {
             groupCdrsIntoCalls(newCdrArray);
             return;
@@ -195,12 +207,12 @@
       });
     }
 
-    function secondaryQuery(queryArray) {
+    function secondaryQuery(queryArray, thisJob) {
       var cdrArray = [];
       var item = queryArray.shift() + '"}},"_cache":true}}';
       var jsQuery = '{"query": {"filtered": {"query": {"bool": {"should": [' + generateHosts() + ']} },"filter": {"bool": {"should":[' + item + ']}}}},"size": 2000,"sort": [{"@timestamp": {"order": "desc"}}]}';
 
-      return proxy(jsQuery).then(function (response) {
+      return proxy(jsQuery, thisJob).then(function (response) {
           if (!angular.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
             for (var i = 0; i < response.hits.hits.length; i++) {
               cdrArray.push(response.hits.hits[i]._source);
@@ -208,7 +220,7 @@
           }
 
           if (queryArray.length > 0) {
-            return secondaryQuery(queryArray).then(function (newCdrArray) {
+            return secondaryQuery(queryArray, thisJob).then(function (newCdrArray) {
               if (angular.isDefined(newCdrArray)) {
                 cdrArray.concat(newCdrArray);
               }
@@ -308,38 +320,45 @@
       return callLegs;
     }
 
-    function proxy(query) {
+    function proxy(query, thisJob) {
       var defer = $q.defer();
-      $http({
-        method: "POST",
-        url: getCdrUrl(),
-        data: query,
-        timeout: cancelPromise.promise
-      }).success(function (response) {
-        defer.resolve(response);
-      }).error(function (response, status) {
-        // if this specific error is received, retry once; error cause unknown
-        if (status === 500 && response === retryError) {
-          $http({
-            method: "POST",
-            url: getCdrUrl(),
-            data: query,
-            timeout: cancelPromise.promise
-          }).success(function (secondaryResponse) {
-            defer.resolve(secondaryResponse);
-          }).error(function (secondaryResponse, secondaryStatus) {
-            defer.reject({
-              'response': secondaryResponse,
-              'status': secondaryStatus
+      if (thisJob === currentJob) {
+        $http({
+          method: "POST",
+          url: getCdrUrl(),
+          data: query,
+          timeout: cancelPromise.promise
+        }).success(function (response) {
+          defer.resolve(response);
+        }).error(function (response, status) {
+          // if this specific error is received, retry once; error cause unknown
+          if (status === 500 && response === retryError) {
+            $http({
+              method: "POST",
+              url: getCdrUrl(),
+              data: query,
+              timeout: cancelPromise.promise
+            }).success(function (secondaryResponse) {
+              defer.resolve(secondaryResponse);
+            }).error(function (secondaryResponse, secondaryStatus) {
+              defer.reject({
+                'response': secondaryResponse,
+                'status': secondaryStatus
+              });
             });
-          });
-        } else {
-          defer.reject({
-            'response': response,
-            'status': status
-          });
-        }
-      });
+          } else {
+            defer.reject({
+              'response': response,
+              'status': status
+            });
+          }
+        });
+      } else {
+        defer.reject({
+          'response': "",
+          'status': -1
+        });
+      }
 
       return defer.promise;
     }

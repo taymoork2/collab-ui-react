@@ -2,26 +2,26 @@
   <form>
     <div class="row">
       <div class="small-12 columns">
-        <label for="sayMessageInput" translate="autoAttendant.sayMessage"></label>
-        <textarea class="aa-message-textarea" ng-blur="aaSay.saveUiModel()" ng-model="aaSay.messageInput" type="text" id="sayMessageInput" name="sayMessageInput" placeholder="{{ :: aaSay.messageInputPlaceholder }}" cols="50" rows="4" maxlength="2000"></textarea>
+        <label for="sayMessageInput{{ schedule + index }}" translate="{{ :: aaSay.isMenuHeader ? 'autoAttendant.actionSayMessage' : 'autoAttendant.sayMessage' }} "></label>
+        <textarea class="aa-message-textarea" ng-blur="aaSay.saveUiModel()" ng-model="aaSay.messageInput" type="text" id="sayMessageInput{{ schedule + index }}" name="sayMessageInput" placeholder="{{ :: aaSay.messageInputPlaceholder }}" cols="50" rows="4" maxlength="2000"></textarea>
       </div>
     </div>
     <div class="row">
       <div class="large-6 small-12 columns aa-message-select-list">
-        <label for="languageSelect" translate="common.language"></label>
-        <cs-select id="languageSelect" name="languageSelect" ng-model="aaSay.languageOption" options="aaSay.languageOptions" labelfield="label" valuefield="value" placeholder="aaSay.languagePlaceholder" ng-change="aaSay.setVoiceOptions()">
+        <label for="languageSelect{{ schedule + index }}" translate="common.language"></label>
+        <cs-select id="languageSelect{{ schedule + index }}" name="languageSelect" ng-model="aaSay.languageOption" options="aaSay.languageOptions" labelfield="label" valuefield="value" placeholder="aaSay.languagePlaceholder" ng-change="aaSay.setVoiceOptions()">
         </cs-select>
       </div>
       <div class="large-6 small-12 columns aa-message-select-list">
-        <label for="voiceSelect" translate="autoAttendant.sayMessageVoice"></label>
-        <cs-select id="voiceSelect" name="voiceSelect" options="aaSay.voiceOptions"  labelfield="label" valuefield="value" ng-model="aaSay.voiceOption" placeholder="aaSay.voicePlaceholder" ng-change="aaSay.saveUiModel()">
+        <label for="voiceSelect{{ schedule + index }}" translate="autoAttendant.sayMessageVoice"></label>
+        <cs-select id="voiceSelect{{ schedule + index }}" name="voiceSelect" options="aaSay.voiceOptions"  labelfield="label" valuefield="value" ng-model="aaSay.voiceOption" placeholder="aaSay.voicePlaceholder" ng-change="aaSay.saveUiModel()">
         </cs-select>
-      </div>
-    </div>
-    <div class="row">
-      <div class="small-12 columns">
-        <h6 class="small aa-message-footer" translate="autoAttendant.sayMessageUninterrupt"></h6>
       </div>
     </div>
   </form>
+    <div class="row" >
+      <div class="small-12 columns">
+        <h6 class="small aa-message-footer" translate="{{ :: aaSay.isMenuHeader ? 'autoAttendant.phoneMenuListening' : 'autoAttendant.sayMessageUninterrupt' }}"></h6>
+      </div>
+    </div>
 </div>

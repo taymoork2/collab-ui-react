@@ -39,7 +39,11 @@
     "duplicateDidFound": "Duplicate Direct Line entered.",
     "noUsersInput": "No users were entered.",
     "csvBtnTitle": "Export to CSV",
+    "csvBtnExportingTitle": "Export in progress",
     "csvFilename": "exported_users.csv",
+    "csvHeaderName": "Name",
+    "csvHeaderEmailAddress": "Email Address",
+    "csvHeaderEntitlements": "Entitlements",
     "emailSent": "{{email}} email sent successfully",
     "emailFailed": "{{email}} email not sent, {{message}}",
     "entitled": "{{email}} is already entitled",
@@ -115,6 +119,12 @@
     "messaging": "Messaging",
     "conferencing": "Conferencing",
     "communications": "Communications",
+    "message": "Message",
+    "meeting": "Meeting",
+    "call": "Call",
+    "hybridServices": "Hybrid Services",
+    "freeCollab": "Free Public Collaboration Services",
+    "licCollab": "Licensed Collaboration Services",
     "contactCenter": "Contact Center",
     "entitlements": "User Entitlements",
     "saveBtn": "Save",
@@ -125,6 +135,9 @@
     "freeMsg": "Free Spark Messaging",
     "freeConf": "Free 3 Party Spark Meet",
     "freeComm": "Free 1:1 Spark Call",
+    "msgFree": "Message Free",
+    "mtgFree": "Meeting Free 3 Party",
+    "callFree": "Call Free",
     "freeContactCenter": "Free Chat, Email, Voice",
     "paidMsg": "Standard Team Rooms",
     "paidConf": "25 Party Meetings",
@@ -481,6 +494,7 @@
   "cdrLogs": {
     "title": "CDR Call Flow",
     "searchForm": "Search Form",
+    "noData": "No CDR data matches the search parameters.  Please adjust your criteria and retry.",
     "search": "Search",
     "reset": "Reset",
     "userLabel": "User UUID:",
@@ -657,8 +671,9 @@
     "spark": "Spark",
     "sso": "Single Sign On (SSO)",
     "dirsync": "Directory Synchronization",
-    "setUpCalendarService": "Calendar Service is available. Use @spark and @webex to enhance your collaboration experience.",
-    "setUpCallService": "Call Service (Aware) is available. Effortlessly share your desktop with Spark while you are on your work phone.",
+    "setUpCalendarService": "Calendar Service is available. Users can add @spark to create a Cisco Spark room, and @webex to attach a WebEx to an invitation.",
+    "setUpCallAwareService": "Call Service Aware is available. Users can instantly share their desktops from their Cisco Spark clients while on a call.",
+    "setUpCallConnectService": "Call Service Connect is available. Users can answer calls to their work phones on their Cisco Spark clients, and place calls to others' work phones from their Cisco Spark clients.",
     "getStarted": "Get Started"
   },
   "inviteModal": {
@@ -811,7 +826,8 @@
     "expired": "Your session is expired or unauthorized. You will automatically be logged out in a few seconds. Please login again to continue using the service.",
     "unsupported": "You are using an <strong>outdated</strong> version of Internet Explorer. Please <a href='http://windows.microsoft.com/en-us/internet-explorer/download-ie' target='_blank'>upgrade your browser</a> to version 11 or higher.",
     "status404": "Requested resource not found.",
-    "statusError": "Request failed with status: {{status}}."
+    "statusError": "Request failed with status: {{status}}.",
+    "csvError": "Export failed."
   },
   "spacesPage": {
     "title": "Devices",
@@ -923,6 +939,7 @@
     },
     "serviceNames": {
       "squared-fusion-uc": "Call Service",
+      "squared-fusion-uc.full": "Call Service Aware",
       "squared-fusion-cal": "Calendar Service",
       "squared-fusion-media": "Media Service",
       "contact-center-context": "Context Center Service",
@@ -1334,7 +1351,6 @@
     "scheduleHolidays": "Holidays",
     "invalidBuilderNameMissing": "Enter an Auto Attendant Name.",
     "invalidBuilderNameNotUnique": "This Auto Attendant Name is already in use. Please enter a unique Auto Attendant Name.",
-    "phoneMenuSayPlaceholder": "Enter your message here.",
     "phoneMenuAddDigit": "Add another input digit",
     "phoneMenuTimeout": "Timeout/Invalid",
     "phoneMenuContinue": "Continue To Next Step",
@@ -1363,7 +1379,7 @@
     "sayMessagePlaceholder": "Enter your message here.",
     "sayMessageUninterrupt": "Message playback will be uninterruptable.",
     "sayMessageVoice": "Voice",
-    "sayMessageSelectPlaceholder": "Select...",
+    "selectPlaceholder": "Select...",
     "voices": {
       "male": "male",
       "female": "female",
@@ -1725,7 +1741,13 @@
     "actionHeader": "Actions",
     "addTrial": "Start a Trial",
     "csvBtnTitle": "Export to CSV",
+    "csvBtnExportingTitle": "Export in progress",
     "csvFilename": "exported_customers.csv",
+    "csvHeaderCustomerName": "Customer Name",
+    "csvHeaderAdminEmail": "Admin Email",
+    "csvHeaderMessagingEntitlements": "Messaging Entitlements",
+    "csvHeaderConferencingEntitlements": "Conferencing Entitlements",
+    "csvHeaderCommunicationsEntitlements": "Communications Entitlements",
     "custDetail": "Customer Detail",
     "contactName": "Contact Name",
     "contactEmail": "Email",
@@ -1780,7 +1802,7 @@
     "emailSuccessText": "Email successfully sent to customer.",
     "emailFailText": "Error sending email",
     "inputPlacehoder": "Enter phone numbers separated by commas",
-    "didFormatHelpText": "For example: 15556667777, +15556667777, 1-555-666-7777, +1 (555) 666-7777",
+    "didFormatHelpText": "For example: {{examples}}",
     "didAlreadyExist": "Phone number already exists."
   },
   "deviceDetailPage": {
@@ -2595,9 +2617,8 @@
     "assignedLines": "Assigned",
     "csvBtnTitle": "Export to CSV",
     "csvFilename": "exported_lines.csv",
-    "internalNumberHeader": "Internal Extensions",
-    "externalNumberHeader": "Phone Number",
-    "deviceHeader": "Devices",
+    "internalNumberHeader": "Internal Extension",
+    "externalNumberHeader": "Direct Line",
     "userEmailHeader": "User",
     "actionHeader": "Actions",
     "lineListError": "Error retrieving the user line association list. Please try reloading the page.",
@@ -2732,6 +2753,7 @@
     "pageTitle": "Overview",
     "thisMonth": "This month",
     "lastMonth": "Last month:",
+    "contactPartner": "Contact your partner or Cisco Sales for more information",
     "cards": {
       "users": {
         "title": "Users",
@@ -2742,27 +2764,28 @@
       },
       "message": {
         "title": "Message",
-        "desc": "Active Rooms",
-        "currentTitle": "Active rooms this week",
+        "notEnabledText": " Use Team Rooms with content storage to easily collaborate from any device to any user inside or outside your organization.",
+        "currentTitle": "New rooms this week",
         "previousTitle": "Last week:"
-
       },
       "meeting": {
         "title": "Meeting",
-        "desc": "Meetings"
+        "notEnabledText": "Join up to 25 colleagues in a Team Room Sync-up or many more in a WebEx Meeting Center."
       },
       "call": {
         "title": "Call",
-        "desc": "Calls"
+        "notEnabledText": "Basic external calling and full Unified Communications enabled for your organization."
       },
       "roomSystem": {
         "title": "Room Systems",
-        "desc": "Registered Systems",
         "currentTitle": "Online this week",
-        "previousTitle": "Last week:"
+        "previousTitle": "Last week:",
+        "notEnabledText": "Meeting room video endpoints that seamlessly integrate with your cloud collaboration."
       },
       "hybrid": {
-        "title": "Hybrid Services"
+        "title": "Hybrid Services",
+        "notEnabledText": "Hybrid Services allow you to integrate on-premise systems to the Cisco Collaboration Platform.",
+        "notEnabledActionText": "Learn More"
       }
     }
   },
@@ -2784,10 +2807,9 @@
     "noSearchHits": "No matches found. Try to narrow your search...",
     "searchInputDescription": "Search and view a user or a customer.",
     "roles": "Roles",
-    "goToSearch": "Go to Search",
-    "sso": "SSO",
-    "dirSync": "Directory Sync",
-    "createdAt": "Created At",
+    "backToSearchResults": "Back to search results",
+    "sso": "Single Sign On (SSO)",
+    "dirSync": "Directory Synchronization",
     "type": "Type",
     "partner": "Partner",
     "customer": "Customer",
@@ -2797,6 +2819,40 @@
     "mobile": "mobile",
     "work": "work",
     "fax": "fax",
-    "searchingOrg": "Searching {{name}}"
+    "searchingOrg": "Searching {{name}}",
+    "userStatus": "Status",
+    "userId": "Id",
+    "organization": "Customer",
+    "customerPortalLaunch": "Launch Customer Portal",
+    "contact": "Contact",
+    "claimedDomain": "Claimed Domain",
+    "partners": "Partners",
+    "administratorUsers": "Administrator Users",
+    "message": "Message",
+    "meeting": "Meeting",
+    "call": "Call",
+    "rooms": "Rooms",
+    "hybridServices": "Hybrid Services",
+    "entitlements": {
+      "webex-squared": "Free Spark Messaging",
+      "squared-syncup.paid": "25 Party Meetings",
+      "squared-syncup.free": "Free 3 Party Spark Meetings",
+      "squared-room-moderation.paid": "Standard Team Rooms",
+      "squared-room-moderation.free": "Free Spark Messaging",
+      "ciscouc.paid": "Advanced Spark Call",
+      "ciscouc.free": "Free 1:1 Spark Call"
+    },
+    "userStatuses": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "pending": "Invite Pending",
+      "transient": "Transient",
+      "fraud": "Fraud",
+      "compliance": "Compliance"
+    },
+    "entitlementsHeading": "Entitlements",
+    "enabledServices": "Enabled Services",
+    "none": "None",
+    "webexsites": "WebEx Sites"
   }
 }

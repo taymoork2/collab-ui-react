@@ -2,21 +2,30 @@
 
 describe('FeatureToggleService', function () {
   beforeEach(module('Core'));
+  beforeEach(module('Huron'));
 
-  var httpBackend, $q, Config, AuthInfo, FeatureToggleService;
+  var httpBackend, $q, Config, AuthInfo, Userservice, FeatureToggleService;
   var forOrg = false;
   var forUser = true;
   var userId = '1';
   var orgId = '2';
+  var getUserMe;
   var getUserFeatureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
   var userRegex = /.*\/locus\/api\/v1\/features\/users\.*/;
 
-  beforeEach(inject(function (_$httpBackend_, _$q_, _Config_, _Authinfo_, _FeatureToggleService_) {
+  beforeEach(inject(function (_$httpBackend_, _$q_, _Config_, _Authinfo_, _Userservice_, _FeatureToggleService_) {
     httpBackend = _$httpBackend_;
     $q = _$q_;
     Config = _Config_;
     AuthInfo = _Authinfo_;
+    Userservice = _Userservice_;
     FeatureToggleService = _FeatureToggleService_;
+
+    getUserMe = getJSONFixture('core/json/users/me.json');
+
+    spyOn(Userservice, 'getUser').and.callFake(function (uid, callback) {
+      callback(getUserMe, 200);
+    });
   }));
 
   afterEach(function () {

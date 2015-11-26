@@ -12,7 +12,12 @@
         "givenName": "SQ",
         "familyName": "Doe"
       },
-      "entitlements": ["squared-room-moderation", "squared-call-initiation", "webex-squared", "squared-syncup"],
+      "entitlements": [
+        "squared-room-moderation",
+        "squared-call-initiation",
+        "webex-squared",
+        "squared-syncup"
+      ],
       "id": "e068f40b-c6e2-4051-af50-95bef3f0ea67",
       "meta": {
         "created": "2015-04-13T22:00:56.496Z",
@@ -34,7 +39,10 @@
         "givenName": "Jackson",
         "familyName": "Smith"
       },
-      "entitlements": ["squared-call-initiation", "webex-squared"],
+      "entitlements": [
+        "squared-call-initiation",
+        "webex-squared"
+      ],
       "id": "17256dc8-db74-41b5-8a7c-e20e4f594a0a",
       "meta": {
         "created": "2014-10-20T22:40:57.142Z",
@@ -61,20 +69,29 @@
       "active": true,
       "avatarSyncEnabled": false
     }],
-    "schemas": ["urn:scim:schemas:core:1.0", "urn:scim:schemas:extension:cisco:commonidentity:1.0"]
+    "schemas": [
+      "urn:scim:schemas:core:1.0",
+      "urn:scim:schemas:extension:cisco:commonidentity:1.0"
+    ]
   },
   "exportCSV": {
     "id": "54321",
     "report": "H4sIAAAAAAAAAM1UTU/cMBD9KyhnHNmOnTg+FfXjgETVavdUtEKOMwGLxFliZ2GF+t9rh90t7ALbQ6X2FGU8bzxv5vldPiZO30CnXCIvk3Gw0mnTyU1M6n4ASVKcnB6ewYMH60xvpTZO9yG363prarDe+PWEWgSYg+Gr6iCRifKtcks1eAuDqjtjP0yR1IPzaUCHS+yU+ZhcmxXYDexc6VvX23DaqM6060141hl/k/w8Tab7WujCdyLh7kY1QI20altkrPFGeTPh76GCB7Q5j82ZOhQiBeV5rQWqq4IhRiqOhCo0AoqBNbxkCqsA7sCr2JoeQHmIQIoJQwQjiueUSoYlL1LC6I+QHGj5i742jdlm8piJ8znJJctlRlPBeMxcwRBnGPvghRBlVlKa802JGQwro+FMa3BubiLvy8fEr5dxABObJzKxjmpHeH4Vn1MiKZNUpCQrf4RJ7ZDTvka9j8IFosWciIgiIsV7qC9jbPRjby1o3w8XyqrraeoHdUpEikiUM8lFyjh/UWe7n2aqh0bnjhQoSxIKLMKqa+OWrdoq4NuTlE7OopaM84MKbYVaQ9/CpARTXzVj215NYov7VtoHYSXSDyOEv5Xyapitrf5sVdXGTTWqdRB7/SePIoYP30SMzrzyY+gmWYKtjb1ONtptgnCbAhMEdUEQK3WJlCYCsargTVWxOgP9lnbDnFkY9ZxiSXOJecqpeEu7u8wslyRPhWB72mUZF4KK8JSSgz0dp7jdyzT++Bvkaf2W9OWO9eI/WZq7Q7H7pTL164Re87HZ930L+9TDewY29H2Hur4ObrkxsD+1tt+ZLgxqXO68DnAuGoYrpHOgiGFOkGo4RiWvoMkaDCov3tULyaLX4eB1ecrK/LjX8aisktCXeqHB5nDwOsbzv2B14aagzOAVWVrkr3vFeX9jT8K8T+7JrVvly4fnsjtiB4tf53Vw9CUHAAA=",
     "filter": "",
     "users": [{
-      "schemas": ["urn:scim:schemas:core:1.0", "urn:scim:schemas:extension:cisco:commonidentity:1.0"],
+      "schemas": [
+        "urn:scim:schemas:core:1.0",
+        "urn:scim:schemas:extension:cisco:commonidentity:1.0"
+      ],
       "userName": "atlaspartneradmin@atlas.test.com",
       "name": {
         "givenName": "Jackson",
         "familyName": "Smith"
       },
-      "entitlements": ["squared-call-initiation", "webex-squared"],
+      "entitlements": [
+        "squared-call-initiation",
+        "webex-squared"
+      ],
       "id": "17256dc8-db74-41b5-8a7c-e20e4f594a0a",
       "meta": {
         "created": "2014-10-20T22:40:57.142Z",
@@ -99,13 +116,21 @@
       "active": true,
       "avatarSyncEnabled": false
     }, {
-      "schemas": ["urn:scim:schemas:core:1.0", "urn:scim:schemas:extension:cisco:commonidentity:1.0"],
+      "schemas": [
+        "urn:scim:schemas:core:1.0",
+        "urn:scim:schemas:extension:cisco:commonidentity:1.0"
+      ],
       "userName": "sq-testpaiduser@atlas.test.com",
       "name": {
         "givenName": "SQ",
         "familyName": "Doe"
       },
-      "entitlements": ["squared-room-moderation", "squared-call-initiation", "webex-squared", "squared-syncup"],
+      "entitlements": [
+        "squared-room-moderation",
+        "squared-call-initiation",
+        "webex-squared",
+        "squared-syncup"
+      ],
       "id": "e068f40b-c6e2-4051-af50-95bef3f0ea67",
       "meta": {
         "created": "2015-04-13T22:00:56.496Z",
@@ -121,16 +146,23 @@
       "avatarSyncEnabled": false
     }],
     "usersToExport": [{
-      "userName": "atlaspartneradmin@atlas.test.com",
-      "name": "Jackson Smith",
-      "entitlements": "squared-call-initiation webex-squared "
+      "name": "usersPage.csvHeaderName",
+      "email": "usersPage.csvHeaderEmailAddress",
+      "entitlements": "usersPage.csvHeaderEntitlements"
     }, {
-      "userName": "sq-testpaiduser@atlas.test.com",
+      "name": "Jackson Smith",
+      "email": "atlaspartneradmin@atlas.test.com",
+      "entitlements": "squared-call-initiation webex-squared"
+    }, {
       "name": "SQ Doe",
-      "entitlements": "squared-room-moderation squared-call-initiation webex-squared squared-syncup "
+      "email": "sq-testpaiduser@atlas.test.com",
+      "entitlements": "squared-room-moderation squared-call-initiation webex-squared squared-syncup"
     }]
   },
   "listPartners": {
-    "partners": ["testParnter1", "testPartner2"]
+    "partners": [
+      "testParnter1",
+      "testPartner2"
+    ]
   }
 }

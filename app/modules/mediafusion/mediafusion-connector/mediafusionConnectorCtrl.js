@@ -160,14 +160,25 @@ angular.module('Mediafusion')
         MediaServiceDescriptor.getUserIdentityOrgToMediaAgentOrgMapping().then(
           function success(response) {
             var mediaAgentOrgIdsArray = [];
+            var orgId = Authinfo.getOrgId();
+            var updateMediaAgentOrgId = false;
             mediaAgentOrgIdsArray = response.data.mediaAgentOrgIds;
             //$log.log("User's Indentity Org to Calliope Media Agent Org mapping:", response);
             //$log.log("Identity Org Id:", response.data.identityOrgId);
             //$log.log("Media Agent Org Ids Array:", mediaAgentOrgIdsArray);
 
-            // See if "mediafusion" org id is already mapped to user org id 
-            if (mediaAgentOrgIdsArray.indexOf("mediafusion") == -1) {
-              mediaAgentOrgIdsArray.push("mediafusion");
+            // See if org id is already mapped to user org id 
+            if (mediaAgentOrgIdsArray.indexOf(orgId) == -1) {
+              mediaAgentOrgIdsArray.push(orgId);
+              updateMediaAgentOrgId = true;
+            }
+            // See if "squared" org id is already mapped to user org id 
+            if (mediaAgentOrgIdsArray.indexOf("squared") == -1) {
+              mediaAgentOrgIdsArray.push("squared");
+              updateMediaAgentOrgId = true;
+            }
+
+            if (updateMediaAgentOrgId) {
               //$log.log("Updated Media Agent Org Ids Array:", mediaAgentOrgIdsArray);
               $scope.addUserIdentityToMediaAgentOrgMapping(mediaAgentOrgIdsArray);
             }
@@ -176,7 +187,9 @@ angular.module('Mediafusion')
           function error(errorResponse, status) {
             // Unable to find identityOrgId, add identityOrgId -> mediaAgentOrgId mapping
             var mediaAgentOrgIdsArray = [];
-            mediaAgentOrgIdsArray.push("mediafusion");
+            mediaAgentOrgIdsArray.push(Authinfo.getOrgId());
+            mediaAgentOrgIdsArray.push("squared");
+
             $scope.addUserIdentityToMediaAgentOrgMapping(mediaAgentOrgIdsArray);
           });
       };

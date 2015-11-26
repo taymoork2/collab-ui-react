@@ -28,13 +28,13 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button ng-csv="exportCSV()" csv-header="getHeader()" filename="{{'user_status_report' | translate}}" ng-disabled="loading || exportingUserStatusReport || nothingToExport" id="convertActionButton" class="btn btn-primary pull-right">
+    <button ng-csv="exportCSV()" csv-header="getHeader()" filename="{{'user_status_report' | translate}}" ng-disabled="loading || exportingUserStatusReport || nothingToExport" id="convertActionButton" class="btn btn--primary pull-right">
       <span ng-hide="exportingUserStatusReport">Export to CSV</span>
       <span ng-show="exportingUserStatusReport">
         <i class="icon icon-spinner" />
       </span>
     </button>
-    <button id="convertCancelButton" class="btn btn-default pull-right" ng-click="$parent.modal.close()" style="margin-right: 10px">
+    <button id="convertCancelButton" class="btn pull-right" ng-click="$parent.modal.close()" style="margin-right: 10px">
       <span>Close</span>
     </button>
   </div>

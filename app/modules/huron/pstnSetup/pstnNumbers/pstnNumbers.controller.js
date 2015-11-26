@@ -32,6 +32,7 @@
     vm.removeOrder = removeOrder;
     vm.goToReview = goToReview;
     vm.hasCarriers = PstnSetup.isCarrierExists;
+    vm.singleCarrierReseller = PstnSetup.isSingleCarrierReseller;
 
     vm.isConsecutiveArray = isConsecutiveArray;
     vm.formatTelephoneNumber = formatTelephoneNumber;
@@ -144,7 +145,7 @@
           key: 'searchBtn',
           className: 'search-button',
           templateOptions: {
-            btnClass: 'circle-small secondary',
+            btnClass: 'circle-small primary',
             spanClass: 'icon icon-search',
             onClick: searchCarrierInventory
           },

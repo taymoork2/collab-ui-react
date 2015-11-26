@@ -43,7 +43,7 @@
     <div class="row collapse">
       <div class="small-12 columns background-white">
 
-        <section class="monitoring-panel small-3 medium-12 column" ng-show="setupNotDone || !(isCalendarAcknowledged && isCallAcknowledged)" ng-hide="!setupNotDone && (isCalendarAcknowledged && isCallAcknowledged)">
+        <section class="monitoring-panel small-3 medium-12 column" ng-show="setupNotDone || !(isCalendarAcknowledged && isCallAwareAcknowledged && isCallConnectAcknowledged)">
           <h4 class="monitoring-section" translate="homePage.notifications"></h4>
           <div class="notification-style" ng-show="setupNotDone">
             <span class="badge badge-warning" translate="homePage.todo"></span>
@@ -53,25 +53,12 @@
             </span>
           </div>
 
-          <div class="notification-style" ng-show="!isCalendarAcknowledged">
-            <span class="badge success" translate="common.new"></span>
-            <div class="notification-spacing">
-              <span translate="homePage.setUpCalendarService"></span>
-              <a ng-click="showServiceActivationPage('calendar-service')" translate="homePage.getStarted"></a>
-            </div>
-            <button id="convertModalClose" type="button" class="close" ng-click="setHybridAcknowledged('calendar-service')">
-            </button>
+          <div ng-controller="NewServiceNotificationCtrl">
+            <new-service-notification ng-if="!isCalendarAcknowledged" info="CalendarService" click-setup="showServiceActivationPage('calendar-service')" click-close="setHybridAcknowledged('calendar-service')"></new-service-notification>
+            <new-service-notification ng-if="!isCallAwareAcknowledged" info="CallAwareService" click-setup="showServiceActivationPage('call-aware-service')" click-close="setHybridAcknowledged('call-aware-service')"></new-service-notification>
+            <new-service-notification ng-if="!isCallConnectAcknowledged" info="CallConnectService" click-setup="showServiceActivationPage('call-connect-service')" click-close="setHybridAcknowledged('call-connect-service')"></new-service-notification>
           </div>
-
-          <div class="notification-style" ng-show="!isCallAcknowledged">
-            <span class="badge success" translate="common.new"></span>
-            <div class="notification-spacing">
-              <span translate="homePage.setUpCallService"></span>
-              <a ng-click="showServiceActivationPage('call-service')" translate="homePage.getStarted"></a>
-            </div>
-            <button id="convertModalClose" type="button" class="close" ng-click="setHybridAcknowledged('call-service')">
-            </button>
-          </div>
+          
         </section>
 
         <section class="monitoring-panel small-12 column">
@@ -112,7 +99,7 @@
         <!-- <section class="help small-4 medium-12" ng-controller="SupportCtrl">
           <h4>Need Help?</h4>
           <p class="no-cases">There are no open cases</p>
-          <button class="btn btn-sm btn-default">Open a Case</button>
+          <button class="btn">Open a Case</button>
         </section> -->
         <section class="quick-links small-12 column" ng-controller="QuikLinksCtrl">
           <h4 translate="homePage.quickLinksText"></h4>
@@ -146,7 +133,7 @@
             <h4>{{licenses.unlicensed}} {{'homePage.unlicensedText' | translate}}</h4>
             <p class="no-cases" translate="homePage.convertText"></p>
           </div>
-          <button id="convertButton" class="btn btn-sm btn-default" translate="homePage.convert" ng-click="openConvertModal()" ng-disabled="licenses.unlicensed === 0"></button>
+          <button id="convertButton" class="btn" translate="homePage.convert" ng-click="openConvertModal()" ng-disabled="licenses.unlicensed === 0"></button>
         </section>
       </div>
       </div>

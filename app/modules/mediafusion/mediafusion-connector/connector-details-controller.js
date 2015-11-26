@@ -16,6 +16,7 @@ angular.module('Mediafusion')
       $scope.oldClusterVal = '';
       $scope.roleSelected = '';
       $scope.displayName1 = "Initial";
+
       $scope.$watch(MediafusionProxy.getClusters, function (data) {
         $scope.connector = _.find(data.clusters || [], function (c) {
           $scope.selectedCluster = $stateParams.connectorId;

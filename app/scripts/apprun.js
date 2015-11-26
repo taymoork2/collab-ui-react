@@ -9,6 +9,11 @@ angular
       $rootScope.services = [];
       $rootScope.exporting = false;
 
+      $rootScope.typeOfExport = {
+        USER: 1,
+        CUSTOMER: 2
+      };
+
       //Enable logging
       $rootScope.debug = false;
 

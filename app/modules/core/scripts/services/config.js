@@ -396,11 +396,6 @@ angular.module('Core')
             state: 'vts',
             link: '#vts'
           }, {
-            title: 'tabs.reportTab',
-            desc: 'New Reports',
-            state: 'newpartnerreports',
-            link: '#partner/newreports'
-          }, {
             title: 'tabs.cdrTab',
             desc: 'tabs.cdrLogsTabDesc',
             state: 'cdrsupport',
@@ -903,7 +898,6 @@ angular.module('Core')
       config.roleStates = {
         Full_Admin: [ // Customer Admin
           'overview',
-          'overview-nm',
           'users',
           'user-overview',
           'userprofile',
@@ -923,6 +917,7 @@ angular.module('Core')
         WX2_SquaredInviter: [],
         PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup'],
         PARTNER_USER: ['partnercustomers', 'customer-overview', 'trialAdd', 'trialEdit'],
+        PARTNER_SALES_ADMIN: ['partnerreports'],
         CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
         User: [],
         Site_Admin: [
@@ -949,7 +944,6 @@ angular.module('Core')
           'paginggroups',
           'huntgroups',
           'didadd',
-          'newpartnerreports',
           'hurondetails',
           'huronlines',
           'huronsettings',
@@ -1004,8 +998,7 @@ angular.module('Core')
       config.restrictedStates = {
         'customer': [
           'partneroverview',
-          'partnerreports',
-          'newpartnerreports'
+          'partnerreports'
         ],
         'partner': [
           'overview',

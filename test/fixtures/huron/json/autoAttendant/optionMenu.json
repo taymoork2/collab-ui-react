@@ -18,12 +18,14 @@
           "description": "",
           "prompts": {
             "description": "",
-            "playList": [{
-              "url": "file2.avi",
-              "description": "menu instruction"
+            "sayList": [{
+              "value": "file2.avi",
+              "voice": "menu instruction"
             }]
           },
           "timeoutInSeconds": 30,
+          "language": "",
+          "voice": "",
           "inputs": [{
             "description": "Play office hours",
             "input": "0",
@@ -88,16 +90,17 @@
       "isTouched": false,
       "key": "",
       "actions": [{
-        "name": "play",
+        "name": "say",
         "value": "file2.avi",
-        "description": "menu instruction",
-        "voice": ""
+        "voice": "menu instruction",
+        "description": ""
       }],
       "timeout": "",
       "username": "",
       "password": "",
       "url": "",
-      "language": ""
+      "language": "",
+      "voice": ""
     }, {
       "description": "",
       "isConfigured": true,
@@ -114,7 +117,8 @@
       "username": "",
       "password": "",
       "url": "",
-      "language": ""
+      "language": "",
+      "voice": ""
     }],
     "entries": [{
       "description": "Play office hours",
@@ -132,7 +136,8 @@
       "username": "",
       "password": "",
       "url": "",
-      "language": ""
+      "language": "",
+      "voice": ""
     }, {
       "description": "Operator",
       "isConfigured": true,
@@ -149,7 +154,8 @@
       "username": "",
       "password": "",
       "url": "",
-      "language": ""
+      "language": "",
+      "voice": ""
     }, {
       "description": "Leave voicemail",
       "isConfigured": true,
@@ -166,7 +172,8 @@
       "username": "",
       "password": "",
       "url": "",
-      "language": ""
+      "language": "",
+      "voice": ""
     }, {
       "description": "Repeat instruction",
       "isConfigured": true,
@@ -183,7 +190,8 @@
       "username": "",
       "password": "",
       "url": "",
-      "language": ""
+      "language": "",
+      "voice": ""
     }, {
       "description": "Call dialed number",
       "isConfigured": true,
@@ -200,7 +208,8 @@
       "username": "",
       "password": "",
       "url": "",
-      "language": ""
+      "language": "",
+      "voice": ""
     }, {
       "description": "Call dialed mailbox",
       "isConfigured": true,
@@ -217,7 +226,8 @@
       "username": "",
       "password": "",
       "url": "",
-      "language": ""
+      "language": "",
+      "voice": ""
     }]
   }
 }
