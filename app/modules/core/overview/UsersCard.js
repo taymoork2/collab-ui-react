@@ -7,22 +7,26 @@
 
   /* @ngInject */
   function OverviewUsersCard() {
-    var card = this;
+    return {
+      createCard: function createCard() {
+        var card = {};
 
-    this.unlicensedUsersHandler = function (data) {
-      if (data.success) {
-        card.usersToConvert = Math.max((data.resources || []).length, data.totalResults);
-        // for now use the length to get the count as there is a bug in CI and totalResults is not accurate.
+        card.unlicensedUsersHandler = function (data) {
+          if (data.success) {
+            card.usersToConvert = Math.max((data.resources || []).length, data.totalResults);
+            // for now use the length to get the count as there is a bug in CI and totalResults is not accurate.
+          }
+        };
+
+        card.orgEventHandler = function (data) {
+          if (data.success) {
+            card.ssoEnabled = data.ssoEnabled || false;
+            card.dirsyncEnabled = data.dirsyncEnabled || false;
+          }
+        };
+
+        return card;
       }
     };
-
-    this.orgEventHandler = function (data) {
-      if (data.success) {
-        card.ssoEnabled = data.ssoEnabled || false;
-        card.dirsyncEnabled = data.dirsyncEnabled || false;
-      }
-    };
-
-    return card;
   }
 })();

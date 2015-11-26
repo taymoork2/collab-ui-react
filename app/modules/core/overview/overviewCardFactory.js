@@ -7,14 +7,13 @@
 
   /* @ngInject */
   function OverviewCardFactory(OverviewCallCard, OverviewMeetingCard, OverviewRoomSystemsCard, OverviewMessageCard, OverviewHybridServicesCard, OverviewUsersCard) {
-
     return {
-      messageCard: OverviewMessageCard,
-      meetingCard: OverviewMeetingCard,
-      callCard: OverviewCallCard,
-      roomSystemsCard: OverviewRoomSystemsCard,
-      hybridServicesCard: OverviewHybridServicesCard,
-      usersCard: OverviewUsersCard
+      createMessageCard: OverviewMessageCard.createCard,
+      createMeetingCard: OverviewMeetingCard.createCard,
+      createCallCard: OverviewCallCard.createCard,
+      createRoomSystemsCard: OverviewRoomSystemsCard.createCard,
+      createHybridServicesCard: OverviewHybridServicesCard.createCard,
+      createUsersCard: OverviewUsersCard.createCard
     };
   }
 })();

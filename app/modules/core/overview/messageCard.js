@@ -7,58 +7,63 @@
 
   /* @ngInject */
   function OverviewMessageCard(OverviewHelper) {
-    var card = this;
-    this.icon = 'icon-circle-message';
-    this.desc = 'overview.cards.message.desc';
-    this.name = 'overview.cards.message.title';
-    this.currentTitle = 'overview.cards.message.currentTitle';
-    this.previousTitle = 'overview.cards.message.previousTitle';
-    this.notEnabledText = 'overview.cards.message.notEnabledText';
-    this.notEnabledFooter = 'overview.contactPartner';
-    this.trial = false;
-    this.enabled = false;
-    this.helper = OverviewHelper;
+    return {
+      createCard: function createCard() {
 
-    this.reportDataEventHandler = function (event, response) {
+        var card = {};
+        card.icon = 'icon-circle-message';
+        card.desc = 'overview.cards.message.desc';
+        card.name = 'overview.cards.message.title';
+        card.currentTitle = 'overview.cards.message.currentTitle';
+        card.previousTitle = 'overview.cards.message.previousTitle';
+        card.notEnabledText = 'overview.cards.message.notEnabledText';
+        card.notEnabledFooter = 'overview.contactPartner';
+        card.trial = false;
+        card.enabled = false;
+        card.helper = OverviewHelper;
 
-      if (!response.data.success) return;
-      if (event.name == 'conversationsLoaded' && response.data.spanType == 'week' && response.data.intervalCount >= 2) {
-        card.current = Math.round(response.data.data[response.data.data.length - 1].count);
-        card.previous = Math.round(response.data.data[response.data.data.length - 2].count);
-      }
-    };
+        card.reportDataEventHandler = function (event, response) {
 
-    this.healthStatusUpdatedHandler = function messageHealthEventHandler(data) {
-      _.each(data.components, function (component) {
-        if (component.name == 'Mobile Clients' || component.name == 'Rooms' || component.name == 'Web and Desktop Clients') {
-          card.healthStatus = card.helper.mapStatus(card.healthStatus, component.status);
+          if (!response.data.success) return;
+          if (event.name == 'conversationsLoaded' && response.data.spanType == 'week' && response.data.intervalCount >= 2) {
+            card.current = Math.round(response.data.data[response.data.data.length - 1].count);
+            card.previous = Math.round(response.data.data[response.data.data.length - 2].count);
+          }
+        };
+
+        card.healthStatusUpdatedHandler = function messageHealthEventHandler(data) {
+          _.each(data.components, function (component) {
+            if (component.name == 'Mobile Clients' || component.name == 'Rooms' || component.name == 'Web and Desktop Clients') {
+              card.healthStatus = card.helper.mapStatus(card.healthStatus, component.status);
+            }
+          });
+        };
+
+        card.licenseEventHandler = function (licenses) {
+          card.allLicenses = licenses;
+          card.trial = _.any(filterLicenses(licenses), {
+            'isTrial': true
+          });
+
+          if (filterLicenses(licenses).length > 0) {
+            card.enabled = true; //don't disable if no licenses in case test org..
+          }
+        };
+
+        function filterLicenses(licenses) {
+          return _.filter(licenses, function (l) {
+            return l.licenseType === 'MESSAGING' && card.helper.isntCancelledOrSuspended(l);
+          });
         }
-      });
-    };
 
-    this.licenseEventHandler = function (licenses) {
-      this.allLicenses = licenses;
-      card.trial = _.any(filterLicenses(licenses), {
-        'isTrial': true
-      });
+        card.orgEventHandler = function (data) {
+          if (data.success && data.isTestOrg && card.allLicenses && card.allLicenses.length === 0) {
+            card.enabled = true; //If we are a test org and allLicenses is empty, enable the card.
+          }
+        };
 
-      if (filterLicenses(licenses).length > 0) {
-        card.enabled = true; //don't disable if no licenses in case test org..
+        return card;
       }
     };
-
-    function filterLicenses(licenses) {
-      return _.filter(licenses, function (l) {
-        return l.licenseType === 'MESSAGING' && card.helper.isntCancelledOrSuspended(l);
-      });
-    }
-
-    this.orgEventHandler = function (data) {
-      if (data.success && data.isTestOrg && this.allLicenses && this.allLicenses.length === 0) {
-        card.enabled = true; //If we are a test org and allLicenses is empty, enable the card.
-      }
-    };
-
-    return card;
   }
 })();

@@ -12,14 +12,14 @@
     vm.pageTitle = $translate.instant('overview.pageTitle');
 
     vm.cards = [
-      OverviewCardFactory.messageCard,
-      OverviewCardFactory.meetingCard,
-      OverviewCardFactory.callCard,
-      OverviewCardFactory.roomSystemsCard,
+      OverviewCardFactory.createMessageCard(),
+      OverviewCardFactory.createMeetingCard(),
+      OverviewCardFactory.createCallCard(),
+      OverviewCardFactory.createRoomSystemsCard()
     ];
 
-    vm.userCard = OverviewCardFactory.usersCard;
-    vm.hybridCard = OverviewCardFactory.hybridServicesCard;
+    vm.userCard = OverviewCardFactory.createUsersCard();
+    vm.hybridCard = OverviewCardFactory.createHybridServicesCard();
 
     _.each(vm.cards, function (card) {
       if (card.licenseEventHandler) {
