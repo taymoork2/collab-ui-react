@@ -624,19 +624,19 @@ exports.deleteIfUserExists = function (name) {
     this.sendKeys(this.searchField, name);
     utils.expectIsPresent(element(by.css('.icon-spinner')));
     utils.expectIsNotPresent(element(by.css('.icon-spinner')));
-    waitUntilElemIsPresent(users.userListAction, 2000).then(function(){
-        exports.click(users.userListAction);
-        exports.click(users.deleteUserOption);
-        exports.expectIsDisplayed(users.deleteUserModal);
-        exports.click(users.deleteUserButton);
-        notifications.assertSuccess(name, 'deleted successfully');
-      }, function(){
-        log('user is not present');
+    waitUntilElemIsPresent(users.userListAction, 2000).then(function () {
+      exports.click(users.userListAction);
+      exports.click(users.deleteUserOption);
+      exports.expectIsDisplayed(users.deleteUserModal);
+      exports.click(users.deleteUserButton);
+      notifications.assertSuccess(name, 'deleted successfully');
+    }, function () {
+      log('user is not present');
     });
   }
 
-  function waitUntilElemIsPresent(elem, timeout){
-    return exports.wait(elem, timeout).then(function(){
+  function waitUntilElemIsPresent(elem, timeout) {
+    return exports.wait(elem, timeout).then(function () {
       return elem.isDisplayed();
     })
   }
