@@ -1,7 +1,7 @@
 <form novalidate name="snr.form" novalidate role="form">
   <cs-sp-buttons ng-show="snr.form.$dirty">
-    <button class="btn-primary" ng-click="snr.saveSingleNumberReach()" ng-disabled="snr.form.$invalid" type="submit" translate="common.save"></button>
-    <button class="btn-default" ng-click="snr.reset(snr.form)" translate="common.cancel"></button>
+    <button class="btn btn--primary" ng-click="snr.saveSingleNumberReach()" ng-disabled="snr.form.$invalid" type="submit" translate="common.save"></button>
+    <button ng-click="snr.reset(snr.form)" translate="common.cancel"></button>
   </cs-sp-buttons>
   <cs-sp-container>
     <cs-sp-section class="snr-panel">

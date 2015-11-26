@@ -27,13 +27,13 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button ng-disabled="loading || saving" id="convertActionButton" class="btn btn-primary pull-right" ng-click="update()">
+    <button ng-disabled="loading || saving" id="convertActionButton" class="btn btn--primary pull-right" ng-click="update()">
       <span ng-hide="saving">Save</span>
       <span ng-show="saving">
         <i class="icon icon-spinner" />
       </span>
     </button>
-    <button id="convertCancelButton" class="btn btn-default pull-right" ng-click="$parent.modal.close()" style="margin-right: 10px">
+    <button id="convertCancelButton" class="btn pull-right" ng-click="$parent.modal.close()" style="margin-right: 10px">
       <span>Cancel</span>
     </button>
   </div>

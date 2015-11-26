@@ -8,9 +8,10 @@
         </h4>
       </header>
       <section>
-        <p>Nothing here yet</p>
       </section>
-      <footer></footer>
+      <footer class="org-card-footer">
+        <i class="icon icon-circle right" ng-class="helpdeskOrgCtrl.healthStatuses.message"></i>
+      </footer>
     </article>
   </cs-card>
 
@@ -23,9 +24,10 @@
         </h4>
       </header>
       <section>
-        <p>Nothing here yet</p>
       </section>
-      <footer></footer>
+      <footer class="org-card-footer">
+        <i class="icon icon-circle right" ng-class="helpdeskOrgCtrl.healthStatuses.meeting"></i>
+      </footer>
     </article>
   </cs-card>
 
@@ -38,9 +40,10 @@
         </h4>
       </header>
       <section>
-        <p>Nothing here yet</p>
       </section>
-      <footer></footer>
+      <footer class="org-card-footer">
+        <i class="icon icon-circle right" ng-class="helpdeskOrgCtrl.healthStatuses.call"></i>
+      </footer>
     </article>
   </cs-card>
 
@@ -53,9 +56,10 @@
         </h4>
       </header>
       <section>
-        <p>Nothing here yet</p>
       </section>
-      <footer></footer>
+      <footer class="org-card-footer">
+        <i class="icon icon-circle right" ng-class="helpdeskOrgCtrl.healthStatuses.room"></i>
+      </footer>
     </article>
   </cs-card>
 
@@ -76,8 +80,19 @@
         <div ng-if="!helpdeskOrgCtrl.enabledHybridServices || helpdeskOrgCtrl.enabledHybridServices.length === 0">
           <span translate="helpdesk.none"></span>
         </div>
+
+        <h5 translate="helpdesk.availableServices"></h5>
+
+        <div ng-if="!helpdeskOrgCtrl.availableHybridServices || helpdeskOrgCtrl.availableHybridServices.length === 0">
+          <span translate="helpdesk.none"></span>
+        </div>
+        <div ng-repeat="hybridService in helpdeskOrgCtrl.availableHybridServices">
+          <span translate="{{'hercules.serviceNames.' + hybridService.id}}"></span>
+        </div>
       </section>
-      <footer></footer>
+      <footer class="org-card-footer">
+        <i class="icon icon-circle right" ng-class="helpdeskOrgCtrl.healthStatuses.hybrid"></i>
+      </footer>
     </article>
   </cs-card>
 

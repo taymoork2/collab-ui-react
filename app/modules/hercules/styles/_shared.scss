@@ -108,10 +108,10 @@
     min-height: calc(100vh - 150px);
   }
 
-  .button.alert{
+  .btn--alert{
     margin-left:0;
   }
-  .btn-primary,.button.alert,.button.secondary{
+  .btn--primary,.btn--alert {
     margin-top: 1rem;
     margin-bottom: 1rem;
   }

@@ -27,8 +27,8 @@
   <div ui-view="tabContent" autoscroll="false"></div>
 </div>
 <div class="modal-footer aa-tooltip">
-  <button type="button" class="btn btn-primary" ng-click="$dismiss()" translate="common.cancel"></button>
+  <button type="button" class="btn btn--primary" ng-click="$dismiss()" translate="common.cancel"></button>
   <div class="aa-tooltip-wrapper" tooltip-html-unsafe="{{aaMain.getSaveErrorMessages()}}" tooltip-trigger="mouseenter" tooltip-placement="top">
-    <button type="button" name="saveButton" class="btn btn-primary" ng-disabled="!aaMain.canSaveAA()" ng-click="aaMain.saveAARecords()" translate="common.save"></button>
+    <button type="button" name="saveButton" class="btn btn--primary" ng-disabled="!aaMain.canSaveAA()" ng-click="aaMain.saveAARecords()" translate="common.save"></button>
   </div>
 </div>

@@ -59,11 +59,17 @@
     function getHybridServices(orgId) {
       if (useMock()) {
         var deferred = $q.defer();
-        deferred.resolve(ServiceDescriptor.filterAllExceptManagement(HelpdeskMockData.org.services));
+        deferred.resolve(ServiceDescriptor.filterAllRelevantToExpressway(HelpdeskMockData.org.services));
         return deferred.promise;
       }
-      return ServiceDescriptor.servicesInOrg(orgId).then(ServiceDescriptor.filterAllExceptManagement);
+      return ServiceDescriptor.servicesInOrg(orgId, true).then(filterRelevantServices);
     }
+
+    var filterRelevantServices = function (services) {
+      return _.filter(services, function (service) {
+        return service.id === 'squared-fusion-cal' || service.id === 'squared-fusion-uc' || service.id === 'squared-fusion-ec' || service.id === 'squared-fusion-mgmt';
+      });
+    };
 
     function searchCloudberryDevices(searchString, orgId) {
       if (HelpdeskMockData.use) {

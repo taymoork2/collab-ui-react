@@ -13,6 +13,9 @@
       <div class="spinner-position" ng-if="cdr.gridData === null">
         <i class='icon icon-spinner icon-2x'></i>
       </div>
+      <div ng-if="cdr.dataState === 0">
+        <span class="cdr-no-data" translate="cdrLogs.noData"></span>
+      </div>
       <cs-accordion close-others="true">
         <cs-accordion-group ng-repeat="call in cdr.gridData" display-status="{{cdr.statusAvalibility(call)}}" show-caret="true">
           <cs-accordion-heading>

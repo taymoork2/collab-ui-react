@@ -28,14 +28,13 @@ describe('Controller: PlanReviewCtrl', function () {
     Userservice = _Userservice_;
     FeatureToggleService = _FeatureToggleService_;
 
-    var deferred = $q.defer();
-    deferred.resolve('true');
     getUserMe = getJSONFixture('core/json/users/me.json');
 
     spyOn(Userservice, 'getUser').and.callFake(function (uid, callback) {
       callback(getUserMe, 200);
     });
-    spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue(deferred.promise);
+    spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
 
     controller = $controller('PlanReviewCtrl', {
       $scope: $scope
@@ -64,7 +63,7 @@ describe('Controller: PlanReviewCtrl', function () {
     });
 
     it('should calculate trial days remaining correctly', function () {
-      // trial length is 180 days, so expecting 180 - 100 = 80 days.     
+      // trial length is 180 days, so expecting 180 - 100 = 80 days.
       expect(controller.trialDaysRemaining).toEqual(80);
     });
 

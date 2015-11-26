@@ -10,11 +10,11 @@
     </div>
     <div class="did-input">
       <cs-token-field tokens="pstnSwivelNumbers.swivelNumbers" tokenfieldid="pstnSwivelNumbers.tokenfieldid" tokenplaceholder="pstnSwivelNumbers.tokenplaceholder" tokenoptions="pstnSwivelNumbers.tokenoptions" tokenmethods="pstnSwivelNumbers.tokenmethods"></cs-token-field>
-      <p class="modal-note " translate="didManageModal.didFormatHelpText" translate-values="{examples: pstnSwivelNumbers.provider.exampleNumbers}"/></p>
+      <p class="modal-note " translate="didManageModal.didFormatHelpText"/></p>
     </div>
   </div>
   <div class="modal-footer">
-    <button class="btn btn-default" ng-if="!pstnSwivelNumbers.hasCarriers() && !pstnSwivelNumbers.singleCarrierReseller()" ui-sref="pstnSetup" translate="common.back"></button>
-    <button class="btn btn-primary" ng-click="pstnSwivelNumbers.validateSwivelNumbers()" translate="common.next"></button>
+    <button class="btn" ng-if="!pstnSwivelNumbers.hasCarriers()" ui-sref="pstnSetup" translate="common.back"></button>
+    <button class="btn btn--primary" ng-click="pstnSwivelNumbers.validateSwivelNumbers()" translate="common.next"></button>
   </div>
 </div>

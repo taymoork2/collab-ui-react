@@ -31,9 +31,9 @@
 
     <div>
       <a target="_blank" ng-href="https://{{hostDetailsCtrl.connector().host.host_name}}/"
-         class="btn btn-primary btn-sm" translate="hercules.connectors.goToHost"></a>
+         class="btn btn--primary" translate="hercules.connectors.goToHost"></a>
       <a href
-         class="btn btn-danger btn-sm"
+         class="btn btn--negative"
          sq-click-promise="hostDetailsCtrl.deleteHost()"
          ng-if="hostDetailsCtrl.connector().state == 'offline'"
          translate="hercules.connectors.remove"></a>

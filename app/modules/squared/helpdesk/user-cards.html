@@ -1,5 +1,5 @@
 <cs-card-layout block-view="true" class="helpdesk-cards">
-  <cs-card class="large header-bar primary" ng-if="helpdeskUserCtrl.messaging.entitled">
+  <cs-card class="large header-bar primary" ng-if="helpdeskUserCtrl.messageCard.entitled">
     <article>
       <header class="align-center">
         <h4>
@@ -10,15 +10,15 @@
       <section>
         <h5 translate="helpdesk.entitlementsHeading"></h5>
 
-        <div ng-repeat="entitlement in helpdeskUserCtrl.messaging.entitlements">
-          <span>{{entitlement}}</span>
+        <div ng-repeat="entitlement in helpdeskUserCtrl.messageCard.entitlements">
+          <span translate="{{entitlement}}"></span>
         </div>
       </section>
       <footer></footer>
     </article>
   </cs-card>
 
-  <cs-card class="large header-bar meetings" ng-if="helpdeskUserCtrl.meeting.entitled">
+  <cs-card class="large header-bar meetings" ng-if="helpdeskUserCtrl.meetingCard.entitled">
     <article>
       <header class="align-center">
         <h4>
@@ -29,8 +29,8 @@
       <section>
         <h5 translate="helpdesk.entitlementsHeading"></h5>
 
-        <div ng-repeat="entitlement in helpdeskUserCtrl.meeting.entitlements">
-          <span>{{entitlement}}</span>
+        <div ng-repeat="entitlement in helpdeskUserCtrl.meetingCard.entitlements">
+          <span translate="{{entitlement}}"></span>
         </div>
 
         <div ng-if="helpdeskUserCtrl.user.trainSiteNames && helpdeskUserCtrl.user.trainSiteNames.length > 0">
@@ -45,7 +45,7 @@
     </article>
   </cs-card>
 
-  <cs-card class="large header-bar people" ng-if="helpdeskUserCtrl.call.entitled">
+  <cs-card class="large header-bar people" ng-if="helpdeskUserCtrl.callCard.entitled">
     <article>
       <header class="align-center">
         <h4>
@@ -56,15 +56,15 @@
       <section>
         <h5 translate="helpdesk.entitlementsHeading"></h5>
 
-        <div ng-repeat="entitlement in helpdeskUserCtrl.call.entitlements">
-          <span>{{entitlement}}</span>
+        <div ng-repeat="entitlement in helpdeskUserCtrl.callCard.entitlements">
+          <span translate="{{entitlement}}"></span>
         </div>
       </section>
       <footer></footer>
     </article>
   </cs-card>
 
-  <cs-card class="large header-bar cta" ng-if="helpdeskUserCtrl.hybrid.entitled">
+  <cs-card class="large header-bar cta" ng-if="helpdeskUserCtrl.hybridServicesCard.entitled">
     <article>
       <header class="align-center">
         <h4 tranlate="helpdesk.hybridServices">
@@ -73,23 +73,23 @@
         </h4>
       </header>
       <section>
-        <div ng-if="helpdeskUserCtrl.hybrid.cal.entitled">
+        <div ng-if="helpdeskUserCtrl.hybridServicesCard.cal.entitled">
           <h5 translate="hercules.serviceNames.squared-fusion-cal"></h5>
-          <span ng-if="!helpdeskUserCtrl.hybrid.cal.status" translate="common.on"></span>
-          <span ng-if="helpdeskUserCtrl.hybrid.cal.status"
-                translate="hercules.activationStatus.{{helpdeskUserCtrl.hybrid.cal.status.collapsedState}}"></span>
+          <span ng-if="!helpdeskUserCtrl.hybridServicesCard.cal.status" translate="common.on"></span>
+          <span ng-if="helpdeskUserCtrl.hybridServicesCard.cal.status"
+                translate="hercules.activationStatus.{{helpdeskUserCtrl.hybridServicesCard.cal.status.collapsedState}}"></span>
         </div>
-        <div ng-if="helpdeskUserCtrl.hybrid.uc.entitled">
+        <div ng-if="helpdeskUserCtrl.hybridServicesCard.uc.entitled">
           <h5 translate="hercules.serviceNames.squared-fusion-uc.full"></h5>
-          <span ng-if="!helpdeskUserCtrl.hybrid.uc.status" translate="common.on"></span>
-          <span ng-if="helpdeskUserCtrl.hybrid.uc.status"
-                translate="hercules.activationStatus.{{helpdeskUserCtrl.hybrid.uc.status.collapsedState}}"></span>
+          <span ng-if="!helpdeskUserCtrl.hybridServicesCard.uc.status" translate="common.on"></span>
+          <span ng-if="helpdeskUserCtrl.hybridServicesCard.uc.status"
+                translate="hercules.activationStatus.{{helpdeskUserCtrl.hybridServicesCard.uc.status.collapsedState}}"></span>
         </div>
-        <div ng-if="helpdeskUserCtrl.hybrid.ec.entitled">
+        <div ng-if="helpdeskUserCtrl.hybridServicesCard.ec.entitled">
           <h5 translate="hercules.serviceNames.squared-fusion-ec"></h5>
-          <span ng-if="!helpdeskUserCtrl.hybrid.ec.status" translate="common.on"></span>
-          <span ng-if="helpdeskUserCtrl.hybrid.ec.status"
-                translate="hercules.activationStatus.{{helpdeskUserCtrl.hybrid.ec.status.collapsedState}}"></span>
+          <span ng-if="!helpdeskUserCtrl.hybridServicesCard.ec.status" translate="common.on"></span>
+          <span ng-if="helpdeskUserCtrl.hybridServicesCard.ec.status"
+                translate="hercules.activationStatus.{{helpdeskUserCtrl.hybridServicesCard.ec.status.collapsedState}}"></span>
         </div>
       </section>
       <footer></footer>

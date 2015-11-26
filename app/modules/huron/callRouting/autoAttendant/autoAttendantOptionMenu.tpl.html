@@ -153,10 +153,10 @@
           </div>
         </div>
         <div class="modal-footer aa-tooltip">
-          <button id="cancelButton" class="btn btn-default" type="button" ng-click="optionForm.$setUntouched();optionForm.$setPristine();aaOption.closeMenuOption()" translate="common.cancel"></button>
+          <button id="cancelButton" class="btn" type="button" ng-click="optionForm.$setUntouched();optionForm.$setPristine();aaOption.closeMenuOption()" translate="common.cancel"></button>
           <div class="aa-tooltip-wrapper" tooltip-html-unsafe="{{optionForm.$invalid ? ('autoAttendant.invalidRequiredFields'| translate) : '' }}" tooltip-trigger="mouseenter" tooltip-popup-delay='800' tooltip-placement="top">
           <!---optionForm.$pristine not used for ng-disabled since disconnect already has option selected -->
-          <button id="aaSaveButton" class="btn btn-primary btn-save" type="submit" ng-click="aaOption.saveMenuOption(aaOption.optionDialogMenuEntry);optionForm.$setUntouched();optionForm.$setPristine();aaOption.closeMenuOption()" ng-disabled="optionForm.$invalid" translate="common.save"></button>
+          <button id="aaSaveButton" class="btn btn--primary btn-save" type="submit" ng-click="aaOption.saveMenuOption(aaOption.optionDialogMenuEntry);optionForm.$setUntouched();optionForm.$setPristine();aaOption.closeMenuOption()" ng-disabled="optionForm.$invalid" translate="common.save"></button>
           </div>
         </div>
       </form>

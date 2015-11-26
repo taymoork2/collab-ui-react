@@ -33,7 +33,7 @@
             return options.dismiss || $translate.instant('common.cancel');
           },
           type: function () {
-            return 'btn-' + (options.type || 'primary');
+            return 'btn--' + (options.type || 'primary');
           }
         }
       });

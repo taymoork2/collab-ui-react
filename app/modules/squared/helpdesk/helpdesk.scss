@@ -27,7 +27,7 @@
       color: $gray-dark-2;
       .action {
         padding: 2px;
-        width: 5rem;
+        font-size: 0.875rem;
       }
       span {
         font-size: inherit;
@@ -39,6 +39,10 @@
       }
       .user-value {
 
+      }
+      .date-created {
+        font-size: 0.75rem;
+        color: $gray-base;
       }
     }
     .display-name {
@@ -53,8 +57,28 @@
     h3{
       margin-bottom: 1rem;
     }
-
   }
+  /*.org-view {
+    @extend .user-view;
+    .org-card-footer {
+      background-color: $gray-light-4;
+      padding-bottom: 0.2rem;
+      padding-top: 0.2rem;
+      padding-right: 0.2rem;
+      i {
+        line-height: inherit;
+      }
+      .operational {
+        color: $color-cta-base;
+      }
+      .warning, .partial_outage {
+        color: $color-attention-base
+      }
+      .error {
+        color: $color-alerts-base;
+      }
+    }
+  }*/
 }
 .helpdesk-landing {
   padding-top: 1rem;
@@ -63,6 +87,8 @@
     cursor: pointer;
   }
   table {
+    margin-left: auto;
+    margin-right: auto;
     tbody {
       tr {
         border-top: transparent;
@@ -76,8 +102,6 @@
         color: $anchor-font-color-hover;
       }
     }
-    margin-left: auto;
-    margin-right: auto;
   }
   .card-section {
     text-align: left;
@@ -201,10 +225,12 @@
     padding-bottom: 1rem;
     overflow: hidden;
   }
-  // Reset the weird cta class that messes up the hybrid services card
   .cta {
-    padding: 0;
     border-bottom: 0;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    padding-top: 0;
+    padding-bottom: 0;
   }
   h5 {
     margin-top: 0.5rem;

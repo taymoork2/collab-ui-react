@@ -109,7 +109,7 @@ describe('User List Service', function () {
     expect(userReports).toEqual(testData.exportCSV.users);
   });
 
-  it('should successfully return an array of 2 users from calling exportCSV', function () {
+  it('should successfully return an array of 2 users with headers from calling exportCSV', function () {
     var generateUserReportsUrl = Config.getUserReportsUrl(Authinfo.getOrgId());
     var getUserReportsUrl = generateUserReportsUrl + '/' + testData.exportCSV.id;
 
