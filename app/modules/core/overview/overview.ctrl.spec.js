@@ -134,7 +134,7 @@ describe('Controller: OverviewCtrl', function () {
       }
     };
     Orgservice = {
-      getOrg: function (orgEventHandler) {},
+      getAdminOrg: function (orgEventHandler) {},
       getUnlicensedUsers: function (unlicencedUsersHandler) {},
       getHybridServiceAcknowledged: function () {
         var defer = $q.defer();
