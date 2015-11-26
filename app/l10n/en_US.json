@@ -2833,7 +2833,7 @@
     "meeting": "Meeting",
     "call": "Call",
     "rooms": "Rooms",
-    "claimedDomain": "Claimed Domain",
+    "claimedDomain": "Claimed Domains",
     "orgId": "Org. ID",
     "hybridServices": "Hybrid Services",
     "entitlements": {

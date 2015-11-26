@@ -235,6 +235,18 @@
   color: $color-attention-base;
 }
 
+.helpdesk-error {
+  color: $color-negative-base;
+}
+
+.helpdesk-ok {
+  color: $color-cta-base;
+}
+
+.helpdesk-warn {
+  color: $color-attention-base;
+}
+
 .helpdesk-landing:focus{
   outline: none !important;
   outline: 0 !important;

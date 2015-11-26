@@ -11,6 +11,7 @@
   <div class="row full">
     <div class="columns large-4 medium-5">
       <h3 class="display-name ellipsis">{{helpdeskUserCtrl.user.displayName}}</h3>
+
       <div class="user-info">
         <span class="date-created" translate="helpdesk.accountCreated"></span>
         <span class="date-created">:</span>
@@ -32,12 +33,14 @@
       </div>
       <div class="user-info">
         <span translate="common.email"></span>:
-        <span class="user-value right">{{helpdeskUserCtrl.user.userName}}</span>
+        <span class="user-value right"><a href="mailto:{{helpdeskUserCtrl.user.userName}}">{{helpdeskUserCtrl.user.userName}}</a></span>
       </div>
       <div class="user-info">
         <span translate="helpdesk.roles"></span>:
-        <span class="user-value right" ng-if="helpdeskUserCtrl.user.roles.length > 0" ng-repeat="role in helpdeskUserCtrl.user.roles">{{'roles.' + role | translate }}{{$last ? '' : ', '}}</span>
-        <span class="user-value right" ng-if="!helpdeskUserCtrl.user.roles || helpdeskUserCtrl.user.roles.length == 0" translate="roles.user"></span>
+        <span class="user-value right" ng-if="helpdeskUserCtrl.user.roles.length > 0"
+              ng-repeat="role in helpdeskUserCtrl.user.roles">{{'roles.' + role | translate }}{{$last ? '' : ', '}}</span>
+        <span class="user-value right" ng-if="!helpdeskUserCtrl.user.roles || helpdeskUserCtrl.user.roles.length == 0"
+              translate="roles.user"></span>
       </div>
       <div class="user-info">
         <span translate="helpdesk.phoneNumbers"></span>:
@@ -45,7 +48,9 @@
           <div ng-repeat="number in helpdeskUserCtrl.user.phoneNumbers">
             <span>{{number.value}} ({{'helpdesk.' + number.type | translate}})</span>
           </div>
-          <span class="user-value right" ng-if="!helpdeskUserCtrl.user.phoneNumbers || helpdeskUserCtrl.user.phoneNumbers.length == 0" translate="helpdesk.none"></span>
+          <span class="user-value right"
+                ng-if="!helpdeskUserCtrl.user.phoneNumbers || helpdeskUserCtrl.user.phoneNumbers.length == 0"
+                translate="helpdesk.none"></span>
         </span>
       </div>
       <div class="user-info">
