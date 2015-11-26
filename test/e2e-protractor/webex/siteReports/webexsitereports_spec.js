@@ -24,7 +24,7 @@ describe('WebEx site reports iframe', function () {
     login.loginThroughGui(sitereports.testAdmin.username, sitereports.testAdmin.password);
   });
 
-  it('should navigate to reports engagement', function () {
+  xit('should navigate to reports engagement', function () {
     navigation.clickReports();
     utils.wait(sitereports.webexReportsLink);
   });
@@ -104,7 +104,7 @@ describe('WebEx site reports iframe', function () {
     utils.wait(sitereports.webexSiteReportsPanel);
   });
 
-  /**  
+  /**
     it('should pause', function () {
       browser.pause()
     });
