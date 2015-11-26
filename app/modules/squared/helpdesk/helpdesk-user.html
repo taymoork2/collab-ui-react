@@ -40,6 +40,15 @@
         <span class="user-value right" ng-if="!helpdeskUserCtrl.user.roles || helpdeskUserCtrl.user.roles.length == 0" translate="roles.user"></span>
       </div>
       <div class="user-info">
+        <span translate="helpdesk.phoneNumbers"></span>:
+        <span class="user-value right">
+          <div ng-repeat="number in helpdeskUserCtrl.user.phoneNumbers">
+            <span>{{number.value}} ({{'helpdesk.' + number.type | translate}})</span>
+          </div>
+          <span class="user-value right" ng-if="!helpdeskUserCtrl.user.phoneNumbers || helpdeskUserCtrl.user.phoneNumbers.length == 0" translate="helpdesk.none"></span>
+        </span>
+      </div>
+      <div class="user-info">
         <span translate="helpdesk.organization"></span>:
         <span class="user-value right">
           <a ui-sref="helpdesk.org({org:helpdeskUserCtrl.org, id:helpdeskUserCtrl.org.id})">

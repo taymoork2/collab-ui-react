@@ -2857,6 +2857,7 @@
     "enabledServices": "Active",
     "availableServices": "Available",
     "none": "None",
-    "webexsites": "WebEx Sites"
+    "webexsites": "WebEx Sites",
+    "phoneNumbers": "Phone Numbers"
   }
 }
