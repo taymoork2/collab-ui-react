@@ -18,9 +18,9 @@ angular.module('Hercules')
         return res.data.items;
       }
 
-      var servicesInOrg = function (orgId) {
+      var servicesInOrg = function (orgId, includeStatus) {
         return $http
-          .get(config.getUrl() + '/organizations/' + orgId + '/services')
+          .get(config.getUrl() + '/organizations/' + orgId + '/services' + (includeStatus ? '?fields=status' : ''))
           .then(extractData);
       };
 
@@ -33,12 +33,6 @@ angular.module('Hercules')
       var filterAllExceptManagement = function (services) {
         return _.filter(services, function (service) {
           return service.id === 'squared-fusion-cal' || service.id === 'squared-fusion-uc';
-        });
-      };
-
-      var filterAllRelevantToExpressway = function (services) {
-        return _.filter(services, function (service) {
-          return service.id === 'squared-fusion-cal' || service.id === 'squared-fusion-uc' || service.id === 'squared-fusion-mgmt';
         });
       };
 
