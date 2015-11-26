@@ -29,7 +29,7 @@ describe('WebEx site reports iframe', function () {
     utils.wait(sitereports.webexReportsLink);
   });
 
-  it('should navigate to webex reports index', function () {
+  xit('should navigate to webex reports index', function () {
     utils.click(sitereports.webexReportsLink);
     utils.wait(sitereports.webexSiteReportsPanel);
   });

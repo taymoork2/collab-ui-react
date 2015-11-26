@@ -29,7 +29,7 @@ describe('WebEx site settings iframe', function () {
     utils.wait(sitesettings.configureSJSITE14);
   });
 
-  it('should click on configure site cog and navigate to site settings index', function () {
+  xit('should click on configure site cog and navigate to site settings index', function () {
     utils.click(sitesettings.configureSJSITE14);
     utils.wait(sitesettings.siteSettingsPanel);
     expect(sitesettings.siteInfoCardId.isPresent).toBeTruthy();
@@ -42,7 +42,7 @@ describe('WebEx site settings iframe', function () {
     expect(sitesettings.configureSJSITE14.isPresent).toBeTruthy();
   });
 
-  it('should click on configure site cog and navigate to site settings index', function () {
+  xit('should click on configure site cog and navigate to site settings index', function () {
     utils.click(sitesettings.configureSJSITE14);
     utils.wait(sitesettings.siteSettingsPanel);
     expect(sitesettings.siteInfoCardId.isPresent).toBeTruthy();
