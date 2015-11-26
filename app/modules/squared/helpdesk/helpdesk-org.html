@@ -35,7 +35,7 @@
         </div>
       </div>
 
-      <div class="row" ng-if="helpdeskOrgCtrl.org.webExSites && helpdeskOrgCtrl.org.webExSites.length > 0">
+      <div class="row" ng-if="helpdeskOrgCtrl.org.webExSites">
         <div class="large-5 columns">
           <p>{{'helpdesk.webexsites' | translate}}:</p>
         </div>
@@ -43,6 +43,7 @@
           <span ng-repeat="site in helpdeskOrgCtrl.org.webExSites">
             {{site.siteUrl}}{{$last ? '' : ', '}}
           </span>
+          <span ng-if="helpdeskOrgCtrl.org.webExSites.length == 0" translate="helpdesk.none"></span>
         </div>
       </div>
 

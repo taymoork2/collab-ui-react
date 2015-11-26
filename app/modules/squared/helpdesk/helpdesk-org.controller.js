@@ -53,7 +53,7 @@
     }
 
     function findWebExSites(org) {
-      if (HelpdeskCardsService.orgIsEntitledTo(org, 'cloudmeetings')) {
+      if (HelpdeskCardsService.orgIsEntitledTo(org, 'cloudMeetings')) {
         HelpdeskService.getWebExSites(vm.orgId).then(function (sites) {
           vm.org.webExSites = sites;
         }, XhrNotificationService.notify);
