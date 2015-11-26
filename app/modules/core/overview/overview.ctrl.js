@@ -15,11 +15,10 @@
       OverviewCardFactory.createMessageCard(),
       OverviewCardFactory.createMeetingCard(),
       OverviewCardFactory.createCallCard(),
-      OverviewCardFactory.createRoomSystemsCard()
+      OverviewCardFactory.createRoomSystemsCard(),
+      OverviewCardFactory.createHybridServicesCard(),
+      OverviewCardFactory.createUsersCard()
     ];
-
-    vm.userCard = OverviewCardFactory.createUsersCard();
-    vm.hybridCard = OverviewCardFactory.createHybridServicesCard();
 
     _.each(vm.cards, function (card) {
       if (card.licenseEventHandler) {
@@ -28,10 +27,6 @@
     });
 
     vm.statusPageUrl = Config.getStatusPageUrl();
-
-    vm.openConvertModal = function () {
-      $state.go('users.convert', {});
-    };
 
     _.each(['oneOnOneCallsLoaded', 'groupCallsLoaded', 'conversationsLoaded', 'activeRoomsLoaded'], function (eventType) {
       $scope.$on(eventType, function (event, response) {
@@ -45,15 +40,21 @@
 
     ReportsService.getOverviewMetrics(true);
 
-    Orgservice.getAdminOrg(function (orgData) {
+    Orgservice.getAdminOrg(function (data) {
       _.each(vm.cards, function (card) {
         if (card.orgEventHandler) {
-          card.orgEventHandler(orgData);
+          card.orgEventHandler(data);
         }
       });
-      vm.userCard.orgEventHandler(orgData);
     });
-    Orgservice.getUnlicensedUsers(vm.userCard.unlicensedUsersHandler);
+
+    Orgservice.getUnlicensedUsers(function (data) {
+      _.each(vm.cards, function (card) {
+        if (card.unlicensedUsersHandler) {
+          card.unlicensedUsersHandler(data);
+        }
+      });
+    });
 
     ReportsService.healthMonitor(function (data, status) {
       if (data.success) {
@@ -69,9 +70,11 @@
 
     ServiceDescriptor.services(function (err, services) {
       if (!err) {
-        if (vm.hybridCard.hybridStatusEventHandler) {
-          vm.hybridCard.hybridStatusEventHandler(services);
-        }
+        _.each(vm.cards, function (card) {
+          if (card.hybridStatusEventHandler) {
+            card.hybridStatusEventHandler(services);
+          }
+        });
       }
     });
 
@@ -95,10 +98,12 @@
       return !!(!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin());
     };
 
-    ServiceStatusDecriptor.servicesInOrgWithStatus().then(vm.hybridCard.adminOrgServiceStatusEventHandler);
-
+    ServiceStatusDecriptor.servicesInOrgWithStatus().then(function (status) {
+      _.each(vm.cards, function (card) {
+        if (card.adminOrgServiceStatusEventHandler) {
+          card.adminOrgServiceStatusEventHandler(status);
+        }
+      });
+    });
   }
-
-  //list: https://sqbu-github.cisco.com/WebExSquared/wx2-admin-service/blob/master/common/src/main/java/com/cisco/wx2/atlas/common/bean/order/OfferCode.java
-
 })();

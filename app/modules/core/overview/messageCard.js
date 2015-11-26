@@ -20,6 +20,7 @@
         card.notEnabledFooter = 'overview.contactPartner';
         card.trial = false;
         card.enabled = false;
+        card.cardClass = 'cs-card header-bar';
         card.helper = OverviewHelper;
 
         card.reportDataEventHandler = function (event, response) {

@@ -13,7 +13,7 @@
         card.icon = 'icon-circle-group';
         card.desc = 'overview.cards.meeting.desc';
         card.name = 'overview.cards.meeting.title';
-        card.cardClass = 'meetings';
+        card.cardClass = 'cs-card header-bar meetings';
         card.notEnabledText = 'overview.cards.meeting.notEnabledText';
         card.notEnabledFooter = 'overview.contactPartner';
         card.trial = false;

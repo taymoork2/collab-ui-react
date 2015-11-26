@@ -13,7 +13,7 @@
         card.icon = 'icon-circle-call';
         card.desc = 'overview.cards.call.desc';
         card.name = 'overview.cards.call.title';
-        card.cardClass = 'people';
+        card.cardClass = 'cs-card header-bar people';
         card.trial = false;
         card.enabled = false;
         card.notEnabledText = 'overview.cards.call.notEnabledText';

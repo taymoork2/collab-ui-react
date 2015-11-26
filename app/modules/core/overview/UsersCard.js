@@ -6,10 +6,14 @@
     .factory('OverviewUsersCard', OverviewUsersCard);
 
   /* @ngInject */
-  function OverviewUsersCard() {
+  function OverviewUsersCard($state) {
     return {
       createCard: function createCard() {
         var card = {};
+
+        card.name = 'overview.cards.users.title';
+        card.template = 'modules/core/overview/usersCard.tpl.html';
+        card.cardClass = 'user-card';
 
         card.unlicensedUsersHandler = function (data) {
           if (data.success) {
@@ -23,6 +27,10 @@
             card.ssoEnabled = data.ssoEnabled || false;
             card.dirsyncEnabled = data.dirsyncEnabled || false;
           }
+        };
+
+        card.openConvertModal = function () {
+          $state.go('users.convert', {});
         };
 
         return card;

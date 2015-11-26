@@ -10,6 +10,9 @@
     return {
       createCard: function createCard() {
         var card = {};
+        card.name = 'overview.cards.hybrid.title';
+        card.cardClass = 'header-bar cta-base hybrid-card';
+        card.template = 'modules/core/overview/hybridServicesCard.tpl.html';
         card.icon = 'icon-circle-data';
         card.enabled = true;
         card.notEnabledText = 'overview.cards.hybrid.notEnabledText';

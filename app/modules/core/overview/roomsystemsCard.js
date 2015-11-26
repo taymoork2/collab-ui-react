@@ -14,7 +14,7 @@
         card.icon = 'icon-circle-telepresence';
         card.desc = 'overview.cards.roomSystem.desc';
         card.name = 'overview.cards.roomSystem.title';
-        card.cardClass = 'gray';
+        card.cardClass = 'cs-card header-bar gray';
         card.enabled = false;
         card.trial = false;
         card.notEnabledText = 'overview.cards.roomSystem.notEnabledText';
@@ -59,6 +59,8 @@
             return l.offerName === 'SD' && card.helper.isntCancelledOrSuspended(l); //SD = Shared Devices
           });
         }
+
+        //list: https://sqbu-github.cisco.com/WebExSquared/wx2-admin-service/blob/master/common/src/main/java/com/cisco/wx2/atlas/common/bean/order/OfferCode.java
 
         card.orgEventHandler = function (data) {
           if (data.success && data.isTestOrg && card.allLicenses && card.allLicenses.length === 0) {
