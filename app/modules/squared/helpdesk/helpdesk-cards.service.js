@@ -2,7 +2,7 @@
   'use strict';
 
   /*ngInject*/
-  function HelpdeskCardsService() {
+  function HelpdeskCardsService(HelpdeskService, XhrNotificationService) {
 
     function getMessageCardForUser(user) {
       var messageCard = {
@@ -93,11 +93,82 @@
       return false;
     }
 
+    function getMessageCardForOrg(org) {
+      var messageCard = {
+        entitled: false
+      };
+      if (orgIsEntitledTo(org, 'webex-squared')) {
+        messageCard.entitled = true;
+      }
+      return messageCard;
+    }
+
+    function getMeetingCardForOrg(org) {
+      var meetingCard = {
+        entitled: true
+      };
+      return meetingCard;
+    }
+
+    function getCallCardForOrg(org) {
+      var callCard = {
+        entitled: false
+      };
+      if (orgIsEntitledTo(org, 'ciscouc')) {
+        callCard.entitled = true;
+      }
+      return callCard;
+    }
+
+    function getHybridServicesCardForOrg(org) {
+      var hybridServicesCard = {
+        entitled: false
+      };
+      if (orgIsEntitledTo(org, 'squared-fusion-mgmt') && (orgIsEntitledTo(org, 'squared-fusion-cal') || orgIsEntitledTo(org, 'squared-fusion-uc'))) {
+        hybridServicesCard.entitled = true;
+        HelpdeskService.getHybridServices(org.id).then(function (services) {
+          var enabledHybridServices = _.filter(services, {
+            enabled: true
+          });
+          if (enabledHybridServices.length === 1 && enabledHybridServices[0].id === "squared-fusion-mgmt") {
+            enabledHybridServices = []; // Don't show the management service if none of the others are enabled.
+          }
+          hybridServicesCard.enabledHybridServices = enabledHybridServices;
+          hybridServicesCard.availableHybridServices = _.filter(services, {
+            enabled: false
+          });
+        }, XhrNotificationService.notify);
+      }
+      return hybridServicesCard;
+    }
+
+    function getRoomSystemsCardForOrg(org) {
+      var roomSystemsCard = {
+        entitled: false
+      };
+      if (orgIsEntitledTo(org, 'spark-device-mgmt')) {
+        roomSystemsCard.entitled = true;
+      }
+      return roomSystemsCard;
+    }
+
+    function orgIsEntitledTo(org, entitlement) {
+      if (org && org.services) {
+        return _.includes(org.services, entitlement);
+      }
+      return false;
+    }
+
     return {
       getMessageCardForUser: getMessageCardForUser,
       getMeetingCardForUser: getMeetingCardForUser,
       getCallCardForUser: getCallCardForUser,
-      getHybridServicesCardForUser: getHybridServicesCardForUser
+      getHybridServicesCardForUser: getHybridServicesCardForUser,
+      getMessageCardForOrg: getMessageCardForOrg,
+      getMeetingCardForOrg: getMeetingCardForOrg,
+      getCallCardForOrg: getCallCardForOrg,
+      getHybridServicesCardForOrg: getHybridServicesCardForOrg,
+      getRoomSystemsCardForOrg: getRoomSystemsCardForOrg
     };
 
   }
