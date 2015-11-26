@@ -12,8 +12,6 @@
       <span>{{ 'hercules.serviceNames.'+ service.id | translate}}</span>
     </li>
   </ul>
-  <span>{{overview.hybridCard.status}}</span>
-  <!--<span>N/A</span>-->
 </section>
 <footer class="footer-menu ng-isolate-scope overview-footer-content-trial"
         ng-class="{'overview-footer-content-trial' : card.trial ,  'overview-footer-content'  : !card.trial }"
@@ -62,10 +60,10 @@
     </ul>
   </div>
 </section>
-<section ng-if="!overview.hybridCard.enabled">
-  <span>{{(overview.hybridCard.notEnabledText || 'overview.notEnabledText') | translate}}</span>
-  <a ng-href="overview.hybridCard.notEnabledAction" ng-if="overview.hybridCard.notEnabledAction">{{overview.hybridCard.notEnabledActionText | translate}}</a>
+<section ng-if="!card.enabled">
+  <span>{{(card.notEnabledText || 'overview.notEnabledText') | translate}}</span>
+  <a ng-href="card.notEnabledAction" ng-if="card.notEnabledAction">{{card.notEnabledActionText | translate}}</a>
 </section>
-<footer ng-if="!overview.hybridCard.enabled && overview.hybridCard.notEnabledFooter">
-  <span>{{overview.hybridCard.notEnabledFooter | translate}}</span>
+<footer ng-if="!card.enabled && card.notEnabledFooter">
+  <span>{{card.notEnabledFooter | translate}}</span>
 </footer>
