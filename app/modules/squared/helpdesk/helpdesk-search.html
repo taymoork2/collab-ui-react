@@ -1,4 +1,4 @@
-<div class="helpdesk-landing centered" tabindex="1" ng-keyup="helpdeskCtrl.keypressValidation($event)">
+<div class="helpdesk-search centered" tabindex="1" ng-keyup="helpdeskCtrl.keypressValidation($event)">
 
   <h1 translate="helpdesk.helpdesk"></h1>
 
@@ -52,7 +52,7 @@
               <header>
                 <h5>{{user.displayName}}</h5>
               </header>
-              <section class="card-section">
+              <section>
                 <div><span>{{user.userName}}</span></div>
                 <div ng-repeat="number in user.phoneNumbers">
                   <span>{{number.value}} ({{'helpdesk.' + number.type | translate}})</span>
@@ -91,7 +91,7 @@
                     class="icon icon-search"></i></a>
                 </h5>
               </header>
-              <section class="card-section">
+              <section>
               </section>
               <section class="clickable-area" ui-sref="helpdesk.org({org:org, id: org.id})"></section>
             </article>
@@ -131,7 +131,7 @@
               <header>
                 <h5>{{device.displayName}}</h5>
               </header>
-              <section class="card-section">
+              <section>
                 <div ng-if="device.product"><span>{{device.product}}</span></div>
                 <div ng-if="device.serial"><span>{{device.serial}}</span></div>
                 <div ng-if="device.mac"><span>{{device.mac}}</span></div>

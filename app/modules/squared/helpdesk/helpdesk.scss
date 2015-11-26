@@ -81,7 +81,8 @@
     }
   }
 }
-.helpdesk-landing {
+
+.helpdesk-search {
   padding-top: 1rem;
   text-align: center;
   .pointer {
@@ -103,12 +104,6 @@
         color: $anchor-font-color-hover;
       }
     }
-  }
-  .card-section {
-    text-align: left;
-    padding-left: 1.5rem;
-    padding-bottom: 1rem;
-    overflow: hidden;
   }
   h1 {
     margin-bottom: 1rem;
@@ -177,6 +172,11 @@
         }
       }
       section {
+        text-align: left;
+        padding-left: 1.5rem;
+        padding-bottom: 1rem;
+        overflow: hidden;
+        color: $gray-base;
         div,
         span {
           font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -263,7 +263,7 @@
   color: $color-attention-base;
 }
 
-.helpdesk-landing:focus{
+.helpdesk-search:focus {
   outline: none !important;
   outline: 0 !important;
   border: 0 !important;
