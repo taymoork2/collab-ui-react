@@ -6,7 +6,7 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($scope, Log, Authinfo, $translate, $state, ReportsService, Orgservice, ServiceDescriptor, ServiceStatusDecriptor, Config, OverviewCardFactory) {
+  function OverviewCtrl($scope, Log, Authinfo, $translate, ReportsService, Orgservice, ServiceDescriptor, ServiceStatusDecriptor, Config, OverviewCardFactory) {
     var vm = this;
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
@@ -20,9 +20,10 @@
       OverviewCardFactory.createUsersCard()
     ];
 
+    var licenses = Authinfo.getLicenses();
     _.each(vm.cards, function (card) {
       if (card.licenseEventHandler) {
-        card.licenseEventHandler(Authinfo.getLicenses());
+        card.licenseEventHandler(licenses);
       }
     });
 
