@@ -60,14 +60,16 @@ angular.module('Squared')
           var changedKey = Utils.changedKey(newEntitlements, oldEntitlements);
           if (changedKey === 'webExSquared' && !newEntitlements.webExSquared && Utils.areEntitlementsActive($scope.entitlements)) {
             for (var key in $scope.entitlements) {
-              if (key !== 'webExSquared') {
+              if (key !== 'webExSquared' && key !== 'jabberMessenger') {
                 $scope.entitlements[key] = false;
                 flag = true;
               }
             }
             $scope.saveDisabled = false;
           } else if (!$scope.entitlements.webExSquared && !oldEntitlements[changedKey] && changedKey !== 'webExSquared' && Utils.areEntitlementsActive($scope.entitlements)) {
-            $scope.entitlements.webExSquared = true;
+            if (changedKey !== 'jabberMessenger') {
+              $scope.entitlements.webExSquared = true;
+            }
             $scope.saveDisabled = false;
           } else if (newEntitlements !== oldEntitlements) {
             $scope.saveDisabled = false;

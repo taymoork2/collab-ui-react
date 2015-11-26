@@ -2661,6 +2661,7 @@
   },
 
   "huronHuntGroup": {
+    "modalTitle": "Hunt Group",
     "title": "hunt group",
     "createTitle": "Create Hunt Group",
     "namePlaceholder": "Name the Hunt Group",
@@ -2720,8 +2721,10 @@
     "numberPlural": "Numbers",
     "numbersInputPlaceHolder": "Start typing here",
     "ringTimeLabel": "Member's Max Ring Time",
+    "ringTimeSecondaryLabel": "secs",
     "ringTimeDesc": "The maximum amount of time a member's line will ring before it sent to the next number.",
     "waitTimeLabel": "Caller Max Wait Time",
+    "waitTimeSecondaryLabel": "mins",
     "waitTimeDesc": "The maximum time a caller will be in waiting before sent to fallback destination.",
     "fallbackLabel": "Fallback Destination",
     "fallbackDesc": "This is where the call goes if it was not answered by this hunt group.",
