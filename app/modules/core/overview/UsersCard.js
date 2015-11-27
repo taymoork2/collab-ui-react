@@ -14,7 +14,7 @@
         card.name = 'overview.cards.users.title';
         card.template = 'modules/core/overview/usersCard.tpl.html';
         card.cardClass = 'user-card';
-        card.icon = 'icon-circle-group';
+        card.icon = 'icon-circle-user';
 
         card.unlicensedUsersHandler = function (data) {
           if (data.success) {
