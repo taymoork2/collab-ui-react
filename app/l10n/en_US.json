@@ -2810,9 +2810,8 @@
     "backToSearchResults": "Back to search results",
     "sso": "Single Sign On (SSO)",
     "dirSync": "Directory Synchronization",
-    "type": "Type",
-    "partner": "Partner",
-    "customer": "Customer",
+    "partner": "Partner Organization",
+    "customer": "Customer Organization",
     "searchCriteriaLink": "Show supported search criteria.",
     "searchInfo": "Search users by Email, Phone Number or Display Name (two words required). Search company by Display Name. Search devices by Display Name, Serial or MAC Address (Note: device search is supported only when searching a specific customer).",
     "devices": "Devices",
@@ -2862,6 +2861,7 @@
     "macAddress": "MAC Address",
     "badOrgSearchInput": "Searching for customers requires a minimum of three characters.",
     "unknown": "Unknown",
-    "showMore": "Show more results"
+    "showMore": "Show more results",
+    "delegatedAdministration": "manages {{numManages}} organizations"
   }
 }

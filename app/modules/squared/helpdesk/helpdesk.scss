@@ -57,7 +57,7 @@
     }
   }
   .helpdesk-org{
-    h3{
+    h3 {
       margin-bottom: 1rem;
     }
     .org-card-footer{
@@ -81,6 +81,12 @@
       .unknown {
         color: $gray-base;
       }
+    }
+    .customer-or-partner {
+      font-size: 0.75rem;
+      color: $gray-base;
+      margin-top: -0.5rem;
+      margin-bottom: 1rem;
     }
   }
 }

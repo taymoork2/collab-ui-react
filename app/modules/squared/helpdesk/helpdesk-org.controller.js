@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsService) {
+  function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsService, Config, $translate) {
     var vm = this;
     if ($stateParams.org) {
       vm.org = $stateParams.org;
@@ -22,6 +22,7 @@
       room: 'unknown',
       hybrid: 'unknown'
     };
+    vm.statusPageUrl = Config.getStatusPageUrl();
 
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
     HelpdeskCardsService.getHealthStatuses().then(initHealth, angular.noop);
@@ -33,7 +34,10 @@
       vm.callCard = HelpdeskCardsService.getCallCardForOrg(org);
       vm.hybridServicesCard = HelpdeskCardsService.getHybridServicesCardForOrg(org);
       vm.roomSystemsCard = HelpdeskCardsService.getRoomSystemsCardForOrg(org);
-      findPartners(org);
+      vm.delegatedAdministration = org.delegatedAdministration
+        ? $translate.instant('helpdesk.delegatedAdministration', {numManages: org.manages ? org.manages.length : 0})
+        : null;
+      findManagedByOrgs(org);
       findWebExSites(org);
     }
 
@@ -41,7 +45,7 @@
       vm.healthStatuses = healthStatuses;
     }
 
-    function findPartners(org) {
+    function findManagedByOrgs(org) {
       if (org.managedBy && org.managedBy.length > 0) {
         org.managedByOrgs = [];
         _.each(org.managedBy, function (parnterOrg) {
