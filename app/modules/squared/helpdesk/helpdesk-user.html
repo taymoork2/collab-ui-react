@@ -46,14 +46,12 @@
       </div>
       <div class="user-info">
         <span class="user-infotitle"><span translate="helpdesk.phoneNumbers"></span>:</span>
-        <span class="user-value">
-          <div ng-repeat="number in helpdeskUserCtrl.user.phoneNumbers">
-            <span>{{number.value}} ({{'helpdesk.' + number.type | translate}})</span>
-          </div>
-          <span class="user-value"
-                ng-if="!helpdeskUserCtrl.user.phoneNumbers || helpdeskUserCtrl.user.phoneNumbers.length == 0"
-                translate="helpdesk.none"></span>
+        <span class="user-value" ng-repeat="number in helpdeskUserCtrl.user.phoneNumbers">
+          {{number.value}} ({{'helpdesk.' + number.type | translate}}){{$last ? '' : ', '}}
         </span>
+        <span class="user-value"
+              ng-if="!helpdeskUserCtrl.user.phoneNumbers || helpdeskUserCtrl.user.phoneNumbers.length == 0"
+              translate="helpdesk.none"></span>
       </div>
       <div class="user-info">
         <span class="user-infotitle"><span translate="helpdesk.organization"></span>:</span>
