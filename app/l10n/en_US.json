@@ -1967,7 +1967,7 @@
     "deleteResource": "Decomission Resource"
   },
   "mediaFusion": {
-    "page_title": "Media Service Management",
+    "page_title": "Media Service",
     "connectors": {
       "group_by": "Group services by:",
       "cluster_id": "Cluster",
@@ -1985,6 +1985,20 @@
       "ingress": "Extend the Cloud to Your On-Premises Environment",
       "serviceName": "Media Service Activation",
       "label": "ACTIVATE AND BEGIN SETUP"
+    },
+    "settings": {
+      "deactivateServiceHeading": "Deactivate Service",
+      "deactivateService": "Deactivating a service requires another confirm step and will remove any service related functionality from your users.",
+      "deactivate": "Deactivate",
+      "emailNotificationsHeading": "Email Notifications",
+      "emailNotifications": "Add email addresses to receive email notifications about Service impacting Alarms and Software Upgrades.",
+      "emailExample": "For example: John Doe john.doe@email.com, Kate Williams kate.williams@email.com",
+      "documentationHeading": "Documentation and software",
+      "documentation_1": "Go to",
+      "documentation_2": "Help Central",
+      "documentation_3": "for prerequisites and help installing and using Hybrid Services.",
+      "documentation_4": "Download Media Service OVA from",
+      "documentation_5": "software.cisco.com"
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
     "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
