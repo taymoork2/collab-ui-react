@@ -20,11 +20,11 @@
         <span class="date-created user-value">{{helpdeskUserCtrl.user.meta.created | date : 'shortDate'}}</span>
       </div>
       <div class="user-info">
-        <span class="user-infotitle"><span translate="helpdesk.userId"></span>:</span>
+        <span class="user-infotitle"><span translate="common.id"></span>:</span>
         <span class="user-value">{{helpdeskUserCtrl.user.id}}</span>
       </div>
       <div class="user-info">
-        <span class="user-infotitle"><span translate="helpdesk.userStatus"></span>:</span>
+        <span class="user-infotitle"><span translate="helpdesk.status"></span>:</span>
         <button class="action secondary" type="button" ng-click="helpdeskUserCtrl.resendInviteEmail()"
                 style="margin-left: 1rem;"
                 ng-if="helpdeskUserCtrl.resendInviteEnabled">Re-send

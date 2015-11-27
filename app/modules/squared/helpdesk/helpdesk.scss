@@ -13,6 +13,9 @@
   p {
     margin-bottom: 1rem;
   }
+  .circle-status-icon {
+    font-size: 0.575rem;
+  }
   .user-view {
     h3{
       color:$gray-dark-4;
@@ -21,7 +24,7 @@
       max-width: 90vw;
     }
     .user-info {
-      margin-bottom: 0.5rem;
+      margin-bottom: 1.0rem;
       font-size: 0.875rem;
       position: relative;
       color: $gray-dark-2;

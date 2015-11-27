@@ -13,6 +13,10 @@
       return res.data;
     }
 
+    function extractDevice(res) {
+      return CsdmConverter.convertDevice(res.data);
+    }
+
     function useMock() {
       return $location.absUrl().match(/helpdesk-backend=mock/);
     }
@@ -72,7 +76,7 @@
     };
 
     function searchCloudberryDevices(searchString, orgId) {
-      if (HelpdeskMockData.use) {
+      if (useMock()) {
         var deferred = $q.defer();
         deferred.resolve(filterDevices(searchString, CsdmConverter.convertDevices(HelpdeskMockData.devices)));
         return deferred.promise;
@@ -84,12 +88,19 @@
         });
     }
 
+    function getCloudberryDevice(orgId, deviceId) {
+      return $http
+        .get(CsdmConfigService.getUrl() + '/organization/' + orgId + '/devices/' + deviceId + '?isHelpDesk=true&checkOnline=true')
+        .then(extractDevice);
+    }
+
     function filterDevices(searchString, devices) {
       searchString = searchString.toLowerCase();
       var filteredDevices = [];
       _.each(devices, function (device) {
         if ((device.displayName || '').toLowerCase().indexOf(searchString) != -1 || (device.mac || '').toLowerCase().indexOf(searchString) != -1 || (device.serial || '').toLowerCase().indexOf(searchString) != -1) {
-          if (_.size(filterDevices) < 5) {
+          if (_.size(filteredDevices) < 5) {
+            device.id = device.url.split('/').pop();
             filteredDevices.push(device);
           } else {
             return false;
@@ -146,7 +157,8 @@
       searchCloudberryDevices: searchCloudberryDevices,
       getHybridServices: getHybridServices,
       resendInviteEmail: resendInviteEmail,
-      getWebExSites: getWebExSites
+      getWebExSites: getWebExSites,
+      getCloudberryDevice: getCloudberryDevice
     };
 
   }
