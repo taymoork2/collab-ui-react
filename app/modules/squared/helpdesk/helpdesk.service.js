@@ -2,8 +2,22 @@
   'use strict';
 
   /*ngInject*/
-  function HelpdeskService(ServiceDescriptor, $location, $http, Config, $q, HelpdeskMockData, CsdmConfigService, CsdmConverter) {
+  function HelpdeskService(ServiceDescriptor, $location, $http, Config, $q, HelpdeskMockData, CsdmConfigService, CsdmConverter, CacheFactory) {
     var urlBase = Config.getAdminServiceUrl(); //"http://localhost:8080/admin/api/v1/"
+    var orgCache = CacheFactory.get('helpdeskOrgCache');
+    if (!orgCache) {
+      orgCache = new CacheFactory('helpdeskOrgCache', {
+        maxAge: 60 * 1000,
+        deleteOnExpire: 'aggressive'
+      });
+    }
+    var devicesInOrgCache = CacheFactory.get('helpdeskDevicesInOrgCache');
+    if (!devicesInOrgCache) {
+      devicesInOrgCache = new CacheFactory('helpdeskDevicesInOrgCache', {
+        maxAge: 120 * 1000,
+        deleteOnExpire: 'aggressive'
+      });
+    }
 
     function extractItems(res) {
       return res.data.items;
@@ -17,15 +31,19 @@
       return CsdmConverter.convertDevice(res.data);
     }
 
+    function extractOrg(res) {
+      var org = res.data;
+      orgCache.put(org.id, org);
+      return org;
+    }
+
     function useMock() {
       return $location.absUrl().match(/helpdesk-backend=mock/);
     }
 
     function searchUsers(searchString, orgId, limit) {
       if (useMock()) {
-        var deferred = $q.defer();
-        deferred.resolve(HelpdeskMockData.users);
-        return deferred.promise;
+        return deferredResolve(HelpdeskMockData.users);
       }
       return $http
         .get(urlBase + 'helpdesk/search/users?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit + (orgId ? '&orgId=' + encodeURIComponent(orgId) : ''))
@@ -34,9 +52,7 @@
 
     function searchOrgs(searchString, limit) {
       if (useMock()) {
-        var deferred = $q.defer();
-        deferred.resolve(HelpdeskMockData.orgs);
-        return deferred.promise;
+        deferredResolve(HelpdeskMockData.orgs);
       }
       return $http
         .get(urlBase + 'helpdesk/search/organizations?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit)
@@ -51,20 +67,20 @@
 
     function getOrg(orgId) {
       if (useMock()) {
-        var deferred = $q.defer();
-        deferred.resolve(HelpdeskMockData.org);
-        return deferred.promise;
+        return deferredResolve(HelpdeskMockData.org);
+      }
+      var cachedOrg = orgCache.get(orgId);
+      if (cachedOrg) {
+        return deferredResolve(cachedOrg);
       }
       return $http
         .get(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId))
-        .then(extractData);
+        .then(extractOrg);
     }
 
     function getHybridServices(orgId) {
       if (useMock()) {
-        var deferred = $q.defer();
-        deferred.resolve(ServiceDescriptor.filterAllRelevantToExpressway(HelpdeskMockData.org.services));
-        return deferred.promise;
+        return deferredResolve(filterRelevantServices(HelpdeskMockData.org.services));
       }
       return ServiceDescriptor.servicesInOrg(orgId, true).then(filterRelevantServices);
     }
@@ -77,14 +93,18 @@
 
     function searchCloudberryDevices(searchString, orgId, limit) {
       if (useMock()) {
-        var deferred = $q.defer();
-        deferred.resolve(filterDevices(searchString, CsdmConverter.convertDevices(HelpdeskMockData.devices, limit)));
-        return deferred.promise;
+        return deferredResolve(filterDevices(searchString, CsdmConverter.convertDevices(HelpdeskMockData.devices, limit)));
+      }
+      var devices = devicesInOrgCache.get(orgId);
+      if (devices) {
+        return deferredResolve(filterDevices(searchString, devices, limit));
       }
       return $http
         .get(CsdmConfigService.getUrl() + '/organization/' + encodeURIComponent(orgId) + '/devices?checkOnline=false&isHelpDesk=true')
         .then(function (res) {
-          return filterDevices(searchString, CsdmConverter.convertDevices(res.data), limit);
+          var devices = CsdmConverter.convertDevices(res.data);
+          devicesInOrgCache.put(orgId, devices);
+          return filterDevices(searchString, devices, limit);
         });
     }
 
@@ -149,6 +169,12 @@
         .then(extractItems);
     }
 
+    function deferredResolve(resolved) {
+      var deferred = $q.defer();
+      deferred.resolve(resolved);
+      return deferred.promise;
+    }
+
     return {
       searchUsers: searchUsers,
       searchOrgs: searchOrgs,
@@ -160,7 +186,6 @@
       getWebExSites: getWebExSites,
       getCloudberryDevice: getCloudberryDevice
     };
-
   }
 
   angular.module('Squared')

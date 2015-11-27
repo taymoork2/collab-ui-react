@@ -248,17 +248,13 @@
       var parts = licenseString.split('_');
       this.offerCode = parts[0]; // See Config.offerCodes
       this.id = parts[1];
-      if (this.offerCode === Config.offerCodes.MC
-        || this.offerCode === Config.offerCodes.SC
-        || this.offerCode === Config.offerCodes.TC
-        || this.offerCode === Config.offerCodes.EC
-        || this.offerCode === Config.offerCodes.EE) {
+      if (this.offerCode === Config.offerCodes.MC || this.offerCode === Config.offerCodes.SC || this.offerCode === Config.offerCodes.TC || this.offerCode === Config.offerCodes.EC || this.offerCode === Config.offerCodes.EE) {
         this.volume = parts[2];
         this.webExSite = parts[3];
       }
       this.displayName = $translate.instant(Config.confMap[this.offerCode], {
         capacity: this.volume
-      })
+      });
     }
 
     return {

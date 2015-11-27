@@ -2810,6 +2810,7 @@
     "backToSearchResults": "Back to search results",
     "sso": "Single Sign On (SSO)",
     "dirSync": "Directory Synchronization",
+    "type": "Type",
     "partner": "Partner Organization",
     "customer": "Customer Organization",
     "searchCriteriaLink": "Show supported search criteria.",

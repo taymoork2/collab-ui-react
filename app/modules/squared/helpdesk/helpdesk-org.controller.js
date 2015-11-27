@@ -34,9 +34,9 @@
       vm.callCard = HelpdeskCardsService.getCallCardForOrg(org);
       vm.hybridServicesCard = HelpdeskCardsService.getHybridServicesCardForOrg(org);
       vm.roomSystemsCard = HelpdeskCardsService.getRoomSystemsCardForOrg(org);
-      vm.delegatedAdministration = org.delegatedAdministration
-        ? $translate.instant('helpdesk.delegatedAdministration', {numManages: org.manages ? org.manages.length : 0})
-        : null;
+      vm.delegatedAdministration = org.delegatedAdministration ? $translate.instant('helpdesk.delegatedAdministration', {
+        numManages: org.manages ? org.manages.length : 0
+      }) : null;
       findManagedByOrgs(org);
       findWebExSites(org);
     }
