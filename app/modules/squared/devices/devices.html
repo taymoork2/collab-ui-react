@@ -25,17 +25,11 @@
     <cs-accordion-group
         show-caret="true"
         display-status="warning">
-
       <cs-accordion-heading style="background: white;">
         <span class="badge badge-custom-warn">License</span>
-        <span>There seems to be a problem with the Cloudberry license</span>
+        <span>There is a problem with the license for this service.</span>
       </cs-accordion-heading>
-
-      <p>Your cloudberry license is {{sc.licenseError}}. Next steps:</p>
-      <ol>
-        <li>Please pay.
-        </li>
-      </ol>
+      <p>Your license status is: {{sc.licenseError}}</p>
     </cs-accordion-group>
   </cs-accordion>
 

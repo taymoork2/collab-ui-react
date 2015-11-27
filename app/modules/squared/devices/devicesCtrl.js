@@ -12,16 +12,16 @@ angular.module('Squared')
 
         AccountOrgService.getAccount(Authinfo.getOrgId()).success(function (data) {
           var showWarning = true;
-          vm.licenseError = "unknown";
+          vm.licenseError = "no license";
           var d = data;
           angular.forEach(d.accounts, function(account) {
             angular.forEach(account.licenses, function(license) {
-              if (license.offerName == "ST") {
+              if (license.offerName == "SD") {
                 // PENDING, ACTIVE, CANCELLED, SUSPENDED
-                if (license.status == "ACTIVE") {
+                if (license.isTrial || license.status == "ACTIVE") {
                   showWarning = false;
                 } else {
-                  vm.licenseError = license.status;
+                  vm.licenseError = license.status.toLowerCase();
                 }
               }
             });
