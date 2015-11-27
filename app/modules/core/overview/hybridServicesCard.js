@@ -18,7 +18,7 @@
         card.notEnabledText = 'overview.cards.hybrid.notEnabledText';
         card.notEnabledAction = '#overview';
         card.notEnabledActionText = 'overview.cards.hybrid.notEnabledActionText';
-        card.hybridStatusEventHandler = function (services) {
+        card.hybridStatusEventHandler = function (err, services) {
           card.services = services;
           card.populateServicesWithHealth();
         };

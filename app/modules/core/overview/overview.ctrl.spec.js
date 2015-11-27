@@ -50,7 +50,7 @@ describe('Controller: OverviewCtrl', function () {
 
       var hybridCard = getCard('overview.cards.hybrid.title');
 
-      hybridCard.hybridStatusEventHandler([{
+      hybridCard.hybridStatusEventHandler('', [{
         name: 'fake.service'
       }]);
 
@@ -63,7 +63,7 @@ describe('Controller: OverviewCtrl', function () {
     it('should set the serviceHealth on each service based on enabled and ack on each service', function () {
       var hybridCard = getCard('overview.cards.hybrid.title');
 
-      hybridCard.hybridStatusEventHandler([{
+      hybridCard.hybridStatusEventHandler('', [{
         id: 'squared-fusion-mgmt'
       }, {
         id: 'squared-fusion-media'
@@ -99,7 +99,7 @@ describe('Controller: OverviewCtrl', function () {
     beforeEach(inject(defaultWireUpFunc));
     it('should update the list of services from an hybridStatusEvent', function () {
       var hybridCard = getCard('overview.cards.hybrid.title');
-      hybridCard.hybridStatusEventHandler([{
+      hybridCard.hybridStatusEventHandler('', [{
         id: 'fake.service',
         enabled: true,
         acknowledged: true

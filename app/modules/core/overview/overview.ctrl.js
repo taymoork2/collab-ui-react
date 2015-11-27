@@ -20,64 +20,34 @@
       OverviewCardFactory.createUsersCard()
     ];
 
-    var licenses = Authinfo.getLicenses();
-    _.each(vm.cards, function (card) {
-      if (card.licenseEventHandler) {
-        card.licenseEventHandler(licenses);
-      }
-    });
+    function forwardEvent(handlerName) {
+
+      var eventArgs = [].slice.call(arguments, 1);
+
+      _.each(vm.cards, function (card) {
+        if (typeof (card[handlerName]) === 'function') {
+          card[handlerName].apply(card, eventArgs);
+        }
+      });
+    }
+
+    forwardEvent('licenseEventHandler', Authinfo.getLicenses());
 
     vm.statusPageUrl = Config.getStatusPageUrl();
 
     _.each(['oneOnOneCallsLoaded', 'groupCallsLoaded', 'conversationsLoaded', 'activeRoomsLoaded'], function (eventType) {
-      $scope.$on(eventType, function (event, response) {
-        _.each(vm.cards, function (card) {
-          if (card.reportDataEventHandler) {
-            card.reportDataEventHandler(event, response);
-          }
-        });
-      });
+      $scope.$on(eventType, _.partial(forwardEvent, 'reportDataEventHandler'));
     });
 
     ReportsService.getOverviewMetrics(true);
 
-    Orgservice.getAdminOrg(function (data) {
-      _.each(vm.cards, function (card) {
-        if (card.orgEventHandler) {
-          card.orgEventHandler(data);
-        }
-      });
-    });
+    Orgservice.getAdminOrg(_.partial(forwardEvent, 'orgEventHandler'));
 
-    Orgservice.getUnlicensedUsers(function (data) {
-      _.each(vm.cards, function (card) {
-        if (card.unlicensedUsersHandler) {
-          card.unlicensedUsersHandler(data);
-        }
-      });
-    });
+    Orgservice.getUnlicensedUsers(_.partial(forwardEvent, 'unlicensedUsersHandler'));
 
-    ReportsService.healthMonitor(function (data, status) {
-      if (data.success) {
-        _.each(vm.cards, function (card) {
-          if (card.healthStatusUpdatedHandler) {
-            card.healthStatusUpdatedHandler(data);
-          }
-        });
-      } else {
-        Log.error("Get health status failed. Status: " + status);
-      }
-    });
+    ReportsService.healthMonitor(_.partial(forwardEvent, 'healthStatusUpdatedHandler'));
 
-    ServiceDescriptor.services(function (err, services) {
-      if (!err) {
-        _.each(vm.cards, function (card) {
-          if (card.hybridStatusEventHandler) {
-            card.hybridStatusEventHandler(services);
-          }
-        });
-      }
-    });
+    ServiceDescriptor.services(_.partial(forwardEvent, 'hybridStatusEventHandler'));
 
     vm.isCalendarAcknowledged = true;
     vm.isCallAcknowledged = true;
@@ -99,12 +69,6 @@
       return !!(!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin());
     };
 
-    ServiceStatusDecriptor.servicesInOrgWithStatus().then(function (status) {
-      _.each(vm.cards, function (card) {
-        if (card.adminOrgServiceStatusEventHandler) {
-          card.adminOrgServiceStatusEventHandler(status);
-        }
-      });
-    });
+    ServiceStatusDecriptor.servicesInOrgWithStatus().then(_.partial(forwardEvent, 'adminOrgServiceStatusEventHandler'));
   }
 })();
