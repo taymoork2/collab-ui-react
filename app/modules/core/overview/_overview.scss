@@ -115,9 +115,9 @@
     }
   }
   .user-card{
-    height:auto;
+    /*height:auto;*/
     header{
-      text-align: left;
+      /*text-align: left;*/
       h4{
         font-size: 1.25rem;
         font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -135,6 +135,16 @@
         margin-left: auto;
         margin-right: auto;
         margin-bottom: 1rem;
+      }
+      .convert-block{
+        width: 60%;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 1rem;
+        .convert-nr{
+          font-weight: bold;
+          color: $color-attention-base;
+        }
       }
       hr{
         margin-bottom: 0rem;
