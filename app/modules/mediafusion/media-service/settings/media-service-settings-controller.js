@@ -2,8 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceSettingsController($state, $modal, MediaServiceDescriptor, Authinfo, $stateParams, NotificationConfigService,
-    MailValidatorService, XhrNotificationService, Notification) {
+  function MediaServiceSettingsController($state, $modal, MediaServiceDescriptor, Authinfo, $stateParams, NotificationConfigService, $log, MailValidatorService, XhrNotificationService, Notification) {
     var vm = this;
     vm.config = "";
     vm.wx2users = "";
@@ -26,9 +25,10 @@
     };
 
     vm.confirmDisable = function (serviceId) {
+      $log.log("inside");
       $modal.open({
         // TODO: update correct disable-dialog html
-        templateUrl: "modules/mediafusion/media-service/confirm-disable-dialog.html",
+        templateUrl: "modules/mediafusion/media-service/settings/confirm-disable-dialog.html",
         controller: DisableConfirmController,
         controllerAs: "disableConfirmDialog",
       }).result.then(function () {
@@ -78,7 +78,8 @@
   /* @ngInject */
   function DisableConfirmController(MediaServiceDescriptor, $modalInstance) {
     var modalVm = this;
-    modalVm.serviceIconClass = MediaServiceDescriptor.serviceIcon();
+   //TODO:check this
+    // modalVm.serviceIconClass = MediaServiceDescriptor.serviceIcon();
 
     modalVm.ok = function () {
       $modalInstance.close();

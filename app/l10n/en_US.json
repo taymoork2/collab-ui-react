@@ -1998,7 +1998,11 @@
       "documentation_2": "Help Central",
       "documentation_3": "for prerequisites and help installing and using Hybrid Services.",
       "documentation_4": "Download Media Service OVA from",
-      "documentation_5": "software.cisco.com"
+      "documentation_5": "software.cisco.com",
+      "deactivate": "DEACTIVATE",
+      "cancelCaps": "CANCEL",
+      "deactivateBody_1": "You are about to remove the following Hybrid Service for your organization:",
+      "deactivateBody_2": "Deaactivating a service will remove any service-related activity from your users. Additional steps are required to remove the service from your on-premises resources."
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
     "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
