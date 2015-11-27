@@ -11,8 +11,6 @@ describe('Controller: OverviewCtrl', function () {
     beforeEach(inject(defaultWireUpFunc));
 
     it('should define all cards', function () {
-      expect(controller.userCard).toBeDefined();
-      expect(controller.hybridCard).toBeDefined();
       expect(controller.cards).toBeDefined();
 
       var cardnames = _.map(controller.cards, function (card) {
@@ -22,6 +20,8 @@ describe('Controller: OverviewCtrl', function () {
       expect(_.contains(cardnames, 'overview.cards.meeting.title')).toBeTruthy();
       expect(_.contains(cardnames, 'overview.cards.roomSystem.title')).toBeTruthy();
       expect(_.contains(cardnames, 'overview.cards.call.title')).toBeTruthy();
+      expect(_.contains(cardnames, 'overview.cards.hybrid.title')).toBeTruthy();
+      expect(_.contains(cardnames, 'overview.cards.users.title')).toBeTruthy();
       expect(_.contains(cardnames, 'overview.cards.undefined.title')).toBeFalsy();
     });
   });
@@ -30,9 +30,7 @@ describe('Controller: OverviewCtrl', function () {
     beforeEach(inject(defaultWireUpFunc));
     it('should update its status', function () {
 
-      var callCard = _(controller.cards).filter(function (card) {
-        return card.name == 'overview.cards.call.title';
-      }).first();
+      var callCard = getCard('overview.cards.call.title');
 
       callCard.healthStatusUpdatedHandler({
         components: [{
@@ -49,8 +47,10 @@ describe('Controller: OverviewCtrl', function () {
   describe('HybridCard with hybridStatusEvent', function () {
     beforeEach(inject(defaultWireUpFunc));
     it('should update the list of services', function () {
-      var hybridCard = controller.hybridCard;
-      hybridCard.hybridStatusEventHandler([{
+
+      var hybridCard = getCard('overview.cards.hybrid.title');
+
+      hybridCard.hybridStatusEventHandler('', [{
         name: 'fake.service'
       }]);
 
@@ -61,9 +61,9 @@ describe('Controller: OverviewCtrl', function () {
     });
 
     it('should set the serviceHealth on each service based on enabled and ack on each service', function () {
-      var hybridCard = controller.hybridCard;
+      var hybridCard = getCard('overview.cards.hybrid.title');
 
-      hybridCard.hybridStatusEventHandler([{
+      hybridCard.hybridStatusEventHandler('', [{
         id: 'squared-fusion-mgmt'
       }, {
         id: 'squared-fusion-media'
@@ -98,8 +98,8 @@ describe('Controller: OverviewCtrl', function () {
   describe('HybridCard', function () {
     beforeEach(inject(defaultWireUpFunc));
     it('should update the list of services from an hybridStatusEvent', function () {
-      var hybridCard = controller.hybridCard;
-      hybridCard.hybridStatusEventHandler([{
+      var hybridCard = getCard('overview.cards.hybrid.title');
+      hybridCard.hybridStatusEventHandler('', [{
         id: 'fake.service',
         enabled: true,
         acknowledged: true
@@ -113,6 +113,12 @@ describe('Controller: OverviewCtrl', function () {
       expect(fakeService.healthStatus).toBeUndefined();
     });
   });
+
+  function getCard(filter) {
+    return _(controller.cards).filter(function (card) {
+      return card.name == filter;
+    }).first();
+  }
 
   function defaultWireUpFunc($rootScope, $controller, _$state_, _$stateParams_, _$q_, _Log_, _Config_, _$translate_, _CannedDataService_) {
     $scope = $rootScope.$new();
@@ -134,7 +140,7 @@ describe('Controller: OverviewCtrl', function () {
       }
     };
     Orgservice = {
-      getOrg: function (orgEventHandler) {},
+      getAdminOrg: function (orgEventHandler) {},
       getUnlicensedUsers: function (unlicencedUsersHandler) {},
       getHybridServiceAcknowledged: function () {
         var defer = $q.defer();

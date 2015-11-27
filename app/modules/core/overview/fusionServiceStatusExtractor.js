@@ -16,10 +16,8 @@ angular.module('Core')
           .flatten()
           .groupBy('type')
           .mapValues(
-            function (v) {
-              return _.all(v, function (x) {
-                return x.operational;
-              });
+            function (connector) {
+              return _.every(connector, 'operational');
             })
           .value();
 

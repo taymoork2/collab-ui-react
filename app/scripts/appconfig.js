@@ -166,6 +166,8 @@ angular
             useStormBranding = false;
           }
 
+          useStormBranding = true;
+
           return {
             name: futureState.stateName,
             url: futureState.url,
