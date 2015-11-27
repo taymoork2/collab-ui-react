@@ -21,25 +21,25 @@
       return $location.absUrl().match(/helpdesk-backend=mock/);
     }
 
-    function searchUsers(searchString, orgId) {
+    function searchUsers(searchString, orgId, limit) {
       if (useMock()) {
         var deferred = $q.defer();
         deferred.resolve(HelpdeskMockData.users);
         return deferred.promise;
       }
       return $http
-        .get(urlBase + 'helpdesk/search/users?phrase=' + encodeURIComponent(searchString) + '&limit=5' + (orgId ? '&orgId=' + encodeURIComponent(orgId) : ''))
+        .get(urlBase + 'helpdesk/search/users?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit + (orgId ? '&orgId=' + encodeURIComponent(orgId) : ''))
         .then(extractItems);
     }
 
-    function searchOrgs(searchString) {
+    function searchOrgs(searchString, limit) {
       if (useMock()) {
         var deferred = $q.defer();
         deferred.resolve(HelpdeskMockData.orgs);
         return deferred.promise;
       }
       return $http
-        .get(urlBase + 'helpdesk/search/organizations?phrase=' + encodeURIComponent(searchString) + '&limit=5')
+        .get(urlBase + 'helpdesk/search/organizations?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit)
         .then(extractItems);
     }
 
@@ -75,16 +75,16 @@
       });
     };
 
-    function searchCloudberryDevices(searchString, orgId) {
+    function searchCloudberryDevices(searchString, orgId, limit) {
       if (useMock()) {
         var deferred = $q.defer();
-        deferred.resolve(filterDevices(searchString, CsdmConverter.convertDevices(HelpdeskMockData.devices)));
+        deferred.resolve(filterDevices(searchString, CsdmConverter.convertDevices(HelpdeskMockData.devices, limit)));
         return deferred.promise;
       }
       return $http
         .get(CsdmConfigService.getUrl() + '/organization/' + encodeURIComponent(orgId) + '/devices?checkOnline=false&isHelpDesk=true')
         .then(function (res) {
-          return filterDevices(searchString, CsdmConverter.convertDevices(res.data));
+          return filterDevices(searchString, CsdmConverter.convertDevices(res.data), limit);
         });
     }
 
@@ -94,12 +94,12 @@
         .then(extractDevice);
     }
 
-    function filterDevices(searchString, devices) {
+    function filterDevices(searchString, devices, limit) {
       searchString = searchString.toLowerCase();
       var filteredDevices = [];
       _.each(devices, function (device) {
         if ((device.displayName || '').toLowerCase().indexOf(searchString) != -1 || (device.mac || '').toLowerCase().indexOf(searchString) != -1 || (device.serial || '').toLowerCase().indexOf(searchString) != -1) {
-          if (_.size(filteredDevices) < 5) {
+          if (_.size(filteredDevices) < limit) {
             device.id = device.url.split('/').pop();
             filteredDevices.push(device);
           } else {
@@ -107,7 +107,7 @@
           }
         }
       });
-      return filteredDevices;
+      return _.sortBy(filteredDevices, 'displayName');
     }
 
     function extractUserAndSetUserStatuses(res) {

@@ -2814,7 +2814,7 @@
     "partner": "Partner",
     "customer": "Customer",
     "searchCriteriaLink": "Show supported search criteria.",
-    "searchInfo": "Search users by Email, Phone Number or Display Name (two words required). Search company by Display Name.",
+    "searchInfo": "Search users by Email, Phone Number or Display Name (two words required). Search company by Display Name. Search devices by Display Name, Serial or MAC Address (Note: device search is supported only when searching a specific customer).",
     "devices": "Devices",
     "mobile": "mobile",
     "work": "work",
@@ -2861,6 +2861,7 @@
     "serial": "Serial",
     "macAddress": "MAC Address",
     "badOrgSearchInput": "Searching for customers requires a minimum of three characters.",
-    "unknown": "Unknown"
+    "unknown": "Unknown",
+    "showMore": "Show more results"
   }
 }
