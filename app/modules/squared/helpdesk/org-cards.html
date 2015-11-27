@@ -2,10 +2,9 @@
   <cs-card class="large header-bar primary" ng-if="helpdeskOrgCtrl.messageCard.entitled">
     <article>
       <header class="align-center">
-        <h4>
-          <i class="icon icon-circle-message"/>
-          {{'helpdesk.message' | translate}}
-        </h4>
+        <div class="overview-header">
+          <i class="icon icon-circle-message"></i>{{'helpdesk.message' | translate}}
+        </div>
       </header>
       <section>
       </section>
@@ -21,10 +20,9 @@
   <cs-card class="large header-bar meetings" ng-show="helpdeskOrgCtrl.meetingCard.entitled">
     <article>
       <header class="align-center">
-        <h4>
-          <i class="icon icon-circle-group"/>
-          {{'helpdesk.meeting' | translate}}
-        </h4>
+        <div class="overview-header">
+          <i class="icon icon-circle-group"></i>{{'helpdesk.meeting' | translate}}
+        </div>
       </header>
       <section>
       </section>
@@ -37,10 +35,9 @@
   <cs-card class="large header-bar people" ng-show="helpdeskOrgCtrl.callCard.entitled">
     <article>
       <header class="align-center">
-        <h4>
-          <i class="icon icon-circle-call"/>
-          {{'helpdesk.call' | translate}}
-        </h4>
+        <div class="overview-header">
+          <i class="icon icon-circle-call"></i>{{'helpdesk.call' | translate}}
+        </div>
       </header>
       <section>
       </section>
@@ -53,10 +50,9 @@
   <cs-card class="large header-bar grey" ng-show="helpdeskOrgCtrl.roomSystemsCard.entitled">
     <article>
       <header class="align-center">
-        <h4>
-          <i class="icon icon-circle-telepresence"/>
-          {{'helpdesk.rooms' | translate}}
-        </h4>
+        <div class="overview-header">
+          <i class="icon icon-circle-telepresence"></i>{{'helpdesk.rooms' | translate}}
+        </div>
       </header>
       <section>
       </section>
@@ -69,10 +65,9 @@
   <cs-card class="large header-bar cta" ng-show="helpdeskOrgCtrl.hybridServicesCard.entitled">
     <article>
       <header class="align-center">
-        <h4>
-          <i class="icon icon-circle-data"/>
-          {{'helpdesk.hybridServices' | translate}}
-        </h4>
+        <div class="overview-header">
+          <i class="icon icon-circle-data"></i>{{'helpdesk.hybridServices' | translate}}
+        </div>
       </header>
       <section>
         <h5 translate="helpdesk.enabledServices"></h5>
@@ -110,7 +105,9 @@
   <cs-card class="large">
     <article>
       <header class="align-center">
-        <h4 translate="helpdesk.users"></h4>
+        <div class="overview-header">
+          <i class="icon icon-circle-user"></i>{{'helpdesk.users' | translate}}
+        </div>
       </header>
       <section>
         <div>

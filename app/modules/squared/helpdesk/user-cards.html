@@ -2,10 +2,9 @@
   <cs-card class="large header-bar primary" ng-if="helpdeskUserCtrl.messageCard.entitled">
     <article>
       <header class="align-center">
-        <h4>
-          <i class="icon icon-circle-message icon-lg"></i>
-          {{'helpdesk.message' | translate}}
-        </h4>
+        <div class="overview-header">
+          <i class="icon icon-circle-message icon-lg"></i>{{'helpdesk.message' | translate}}
+        </div>
       </header>
       <section>
         <h5 translate="helpdesk.entitlementsHeading"></h5>
@@ -20,10 +19,9 @@
   <cs-card class="large header-bar meetings" ng-if="helpdeskUserCtrl.meetingCard.entitled">
     <article>
       <header class="align-center">
-        <h4>
-          <i class="icon icon-circle-group icon-lg"></i>
-          {{'helpdesk.meeting' | translate}}
-        </h4>
+        <div class="overview-header">
+          <i class="icon icon-circle-group icon-lg"></i>{{'helpdesk.meeting' | translate}}
+        </div>
       </header>
       <section>
         <h5 translate="helpdesk.entitlementsHeading"></h5>
@@ -46,10 +44,9 @@
   <cs-card class="large header-bar people" ng-if="helpdeskUserCtrl.callCard.entitled">
     <article>
       <header class="align-center">
-        <h4>
-          <i class="icon icon-circle-call icon-lg"></i>
-          {{'helpdesk.call' | translate}}
-        </h4>
+        <div class="overview-header">
+          <i class="icon icon-circle-call icon-lg"></i>{{'helpdesk.call' | translate}}
+        </div>
       </header>
       <section>
         <h5 translate="helpdesk.entitlementsHeading"></h5>
@@ -64,10 +61,9 @@
   <cs-card class="large header-bar cta" ng-if="helpdeskUserCtrl.hybridServicesCard.entitled">
     <article>
       <header class="align-center">
-        <h4 tranlate="helpdesk.hybridServices">
-          <i class="icon icon-circle-data icon-lg"></i>
-          {{'helpdesk.hybridServices' | translate}}
-        </h4>
+        <div class="overview-header">
+          <i class="icon icon-circle-data icon-lg"></i>{{'helpdesk.hybridServices' | translate}}
+        </div>
       </header>
       <section>
         <div ng-if="helpdeskUserCtrl.hybridServicesCard.cal.entitled">
