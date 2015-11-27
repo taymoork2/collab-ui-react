@@ -2,7 +2,7 @@
   'use strict';
 
   /*ngInject*/
-  function HelpdeskCardsService(HelpdeskService, XhrNotificationService, $q, ReportsService) {
+  function HelpdeskCardsService(HelpdeskService, XhrNotificationService, $q, ReportsService, Config, $translate) {
 
     var healthComponentMapping = {
       message: ['Mobile Clients', 'Rooms', 'Web and Desktop Clients'],
@@ -21,7 +21,7 @@
       if (userIsEntitledTo(user, 'webex-squared')) {
         messageCard.entitled = true;
         if (userIsEntitledTo(user, 'squared-room-moderation')) {
-          paidOrFree = userIsLicensedFor(user, 'MS') ? 'paid' : 'free';
+          paidOrFree = userIsLicensedFor(user, Config.offerCodes.MS) ? 'paid' : 'free';
           messageCard.entitlements.push('helpdesk.entitlements.squared-room-moderation.' + paidOrFree);
         } else {
           messageCard.entitlements.push('helpdesk.entitlements.webex-squared');
@@ -33,12 +33,24 @@
     function getMeetingCardForUser(user) {
       var meetingCard = {
         entitled: false,
-        entitlements: []
+        entitlements: [],
+        licensesByWebExSite: {}
       };
       if (userIsEntitledTo(user, 'squared-syncup')) {
         meetingCard.entitled = true;
-        var paidOrFree = userIsLicensedFor(user, 'CF') ? 'paid' : 'free';
+        var paidOrFree = userIsLicensedFor(user, Config.offerCodes.CF) ? 'paid' : 'free';
         meetingCard.entitlements.push('helpdesk.entitlements.squared-syncup.' + paidOrFree);
+        if (user.licenseID) {
+          meetingCard.licensesByWebExSite = _.chain(user.licenseID)
+            .map(function (license) {
+              return new UserLicense(license);
+            })
+            .filter(function (license) {
+              return angular.isDefined(license.webExSite);
+            })
+            .groupBy('webExSite')
+            .value();
+        }
       }
       return meetingCard;
     }
@@ -50,7 +62,7 @@
       };
       if (userIsEntitledTo(user, 'ciscouc')) {
         callCard.entitled = true;
-        var paidOrFree = userIsLicensedFor(user, 'CO') ? 'paid' : 'free';
+        var paidOrFree = userIsLicensedFor(user, Config.offerCodes.CO) ? 'paid' : 'free';
         callCard.entitlements.push('helpdesk.entitlements.ciscouc.' + paidOrFree);
       }
       return callCard;
@@ -229,6 +241,24 @@
       healthStatuses.room = deduceHealthStatus(result.room);
       healthStatuses.hybrid = deduceHealthStatus(result.hybrid);
       return healthStatuses;
+    }
+
+    // E.g. MC_f36c1a2c-20d6-460d-9f55-01fc85d52e04_100_t30citest.webex.com, "MS_62b343df-bdd5-463b-8895-d07fc3a94832"
+    function UserLicense(licenseString) {
+      var parts = licenseString.split('_');
+      this.offerCode = parts[0]; // See Config.offerCodes
+      this.id = parts[1];
+      if (this.offerCode === Config.offerCodes.MC
+        || this.offerCode === Config.offerCodes.SC
+        || this.offerCode === Config.offerCodes.TC
+        || this.offerCode === Config.offerCodes.EC
+        || this.offerCode === Config.offerCodes.EE) {
+        this.volume = parts[2];
+        this.webExSite = parts[3];
+      }
+      this.displayName = $translate.instant(Config.confMap[this.offerCode], {
+        capacity: this.volume
+      })
     }
 
     return {

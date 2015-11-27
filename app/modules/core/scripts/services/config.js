@@ -490,6 +490,7 @@ angular.module('Core')
         },
 
         confMap: {
+          MS: 'onboardModal.paidMsg',
           CF: 'onboardModal.paidConf',
           EE: 'onboardModal.enterpriseEdition',
           MC: 'onboardModal.meetingCenter',
@@ -497,6 +498,17 @@ angular.module('Core')
           TC: 'onboardModal.trainingCenter',
           EC: 'onboardModal.eventCenter',
           CO: 'onboardModal.communication'
+        },
+
+        offerCodes: {
+          MS: 'MS', // Messaging
+          CF: 'CF', // Conferencing
+          EE: 'EE', // Enterprise Edition (WebEx)
+          MC: 'MC', // Meeting Center (WebEx)
+          SC: 'SC', // Support Center (WebEx)
+          TC: 'TC', // Training Center (WebEx)
+          EC: 'EC', // Event Center (WebEx)
+          CO: 'CO' // Communication
         },
 
         defaultEntitlements: ['webex-squared', 'squared-call-initiation'],
