@@ -40,7 +40,7 @@
 
         card.healthStatusUpdatedHandler = function messageHealthEventHandler(data) {
           _.each(data.components, function (component) {
-            if (component.name == 'Calendar Service' || component.name == 'Cloud Hybrid Services Management') {
+            if (component.id === OverviewHelper.statusIds.CalendarService || component.id === OverviewHelper.statusIds.CloudHybridServicesManagement) {
               card.healthStatus = card.helper.mapStatus(card.healthStatus, component.status);
             }
           });

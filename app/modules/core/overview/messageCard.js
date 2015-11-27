@@ -35,7 +35,7 @@
 
         card.healthStatusUpdatedHandler = function messageHealthEventHandler(data) {
           _.each(data.components, function (component) {
-            if (component.name == 'Mobile Clients' || component.name == 'Rooms' || component.name == 'Web and Desktop Clients') {
+            if (component.id === card.helper.statusIds.MobileClients || component.id === card.helper.statusIds.Rooms || component.id === card.helper.statusIds.WebAndDesktopClients) {
               card.healthStatus = card.helper.mapStatus(card.healthStatus, component.status);
             }
           });
