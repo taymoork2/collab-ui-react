@@ -827,12 +827,6 @@ angular
         .state('partnerreports', {
           parent: 'partner',
           url: '/reports',
-          templateUrl: 'modules/squared/views/partnerreports.html',
-          controller: 'PartnerReportsCtrl'
-        })
-        .state('newpartnerreports', {
-          parent: 'partner',
-          url: '/newreports',
           templateUrl: 'modules/core/partnerReports/partnerReports.tpl.html',
           controller: 'PartnerReportCtrl',
           controllerAs: 'nav'
@@ -1042,6 +1036,17 @@ angular
           params: {
             org: null,
             id: null
+          }
+        })
+        .state('helpdesk.device', {
+          url: '/device/:orgId/:id',
+          templateUrl: 'modules/squared/helpdesk/helpdesk-device.html',
+          controller: 'HelpdeskDeviceController',
+          controllerAs: 'helpdeskDeviceCtrl',
+          params: {
+            device: null,
+            id: null,
+            orgId: null
           }
         });
     }

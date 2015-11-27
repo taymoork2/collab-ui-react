@@ -18,9 +18,9 @@ angular.module('Hercules')
         return res.data.items;
       }
 
-      var servicesInOrg = function (orgId) {
+      var servicesInOrg = function (orgId, includeStatus) {
         return $http
-          .get(config.getUrl() + '/organizations/' + orgId + '/services')
+          .get(config.getUrl() + '/organizations/' + orgId + '/services' + (includeStatus ? '?fields=status' : ''))
           .then(extractData);
       };
 

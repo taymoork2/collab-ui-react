@@ -2,7 +2,7 @@
 
 /* global describe, it, expect, login */
 
-describe('WebEx site reports cross-launch', function () {
+xdescribe('WebEx site reports cross-launch', function () {
   it('should login as t30citestprov9@mailinator.com', function () {
     login.loginThroughGui(sitereports.testAdmin2.username, sitesettings.testAdmin2.password);
   });
@@ -19,17 +19,17 @@ describe('WebEx site reports cross-launch', function () {
   });
 });
 
-describe('WebEx site reports iframe', function () {
+xdescribe('WebEx site reports iframe', function () {
   it('should login as sjsite14@mailinator.com and navigate to reports engagement', function () {
     login.loginThroughGui(sitereports.testAdmin.username, sitereports.testAdmin.password);
   });
 
-  it('should navigate to reports engagement', function () {
+  xit('should navigate to reports engagement', function () {
     navigation.clickReports();
     utils.wait(sitereports.webexReportsLink);
   });
 
-  it('should navigate to webex reports index', function () {
+  xit('should navigate to webex reports index', function () {
     utils.click(sitereports.webexReportsLink);
     utils.wait(sitereports.webexSiteReportsPanel);
   });
@@ -82,7 +82,29 @@ describe('WebEx site reports iframe', function () {
     utils.wait(sitereports.webexSiteReportsPanel);
   });
 
-  /**  
+  it('click on common reports meetings in progress link in wide card and should navigate to the correct site report', function () {
+    utils.click(sitereports.webexCommonInfoCardMeetingInProgress);
+    utils.wait(sitereports.webexReportCrumb2);
+    expect(sitereports.webexCommonMeetingsInProgressId.isPresent()).toBeTruthy();
+  });
+
+  it('click on reports index breadcrumb and should navigate to site reports index', function () {
+    utils.click(sitereports.webexReportCrumb2);
+    utils.wait(sitereports.webexSiteReportsPanel);
+  });
+
+  it('click on common reports meetings usage link in wide card and should navigate to the correct site report', function () {
+    utils.click(sitereports.webexCommonInfoCardMeetingUsage);
+    utils.wait(sitereports.webexReportCrumb2);
+    expect(sitereports.webexCommonMeetingUsageId.isPresent()).toBeTruthy();
+  });
+
+  it('click on reports index breadcrumb and should navigate to site reports index', function () {
+    utils.click(sitereports.webexReportCrumb2);
+    utils.wait(sitereports.webexSiteReportsPanel);
+  });
+
+  /**
     it('should pause', function () {
       browser.pause()
     });

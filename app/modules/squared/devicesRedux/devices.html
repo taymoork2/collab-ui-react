@@ -33,7 +33,7 @@
           <div class="devices-search">
             <form ng-class="{
               'active': devices.search || devices.inputActive,
-              'no-match': (devices.search) && !(devices.groupedDevices.count + devices.deviceList.length)
+              'no-match': devices.search && !devices.groupedDevices.length
             }">
 
               <input
@@ -55,7 +55,7 @@
 
             </form>
           </div>
-          <div ng-if="!(devices.groupedDevices.count + devices.deviceList.length)">
+          <div ng-if="!devices.groupedDevices.length">
             <p class="no-results-matched-search">No devices found...</p>
           </div>
         </div>

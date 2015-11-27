@@ -20,24 +20,24 @@
 
     var maxRingSecsValue = [{
       value: 10,
-      label: "10 secs"
+      label: "10"
     }, {
       value: 15,
-      label: "15 secs"
+      label: "15"
     }, {
       value: 20,
-      label: "20 secs"
+      label: "20"
     }];
 
     var maxWaitMinsValue = [{
       value: 1,
-      label: "1 mins"
+      label: "1"
     }, {
       value: 2,
-      label: "2 mins"
+      label: "2"
     }, {
       value: 3,
-      label: "3 mins"
+      label: "3"
     }];
 
     return {
@@ -69,11 +69,11 @@
     function updateAllTimeoutFields(updatedHG) {
       updatedHG.maxRingSecs = {
         value: updatedHG.maxRingSecs,
-        label: updatedHG.maxRingSecs + " secs"
+        label: updatedHG.maxRingSecs
       };
       updatedHG.maxWaitMins = {
         value: updatedHG.maxWaitMins,
-        label: updatedHG.maxWaitMins + " mins"
+        label: updatedHG.maxWaitMins
       };
     }
 

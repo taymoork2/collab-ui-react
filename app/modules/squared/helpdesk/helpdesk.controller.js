@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskController(HelpdeskService, $log, $translate) {
+  function HelpdeskController(HelpdeskService, $translate) {
     var vm = this;
     vm.search = search;
     vm.setOrgFilter = setOrgFilter;
@@ -51,23 +51,25 @@
           } else {
             vm.currentSearch.userSearchFailure = $translate.instant('helpdesk.unexpectedError');
           }
-          $log.error(err);
         });
       } else {
         vm.currentSearch.userSearchFailure = $translate.instant('helpdesk.badUserSearchInput');
       }
 
       if (!orgFilterId) {
-        vm.searchingForOrgs = true;
-        HelpdeskService.searchOrgs(vm.searchString).then(function (res) {
-          vm.currentSearch.orgSearchResults = res;
-          vm.searchingForOrgs = false;
-        }, function (err) {
-          vm.searchingForOrgs = false;
-          vm.currentSearch.orgSearchResults = null;
-          vm.currentSearch.orgSearchFailure = $translate.instant('helpdesk.unexpectedError');
-          $log.error(err);
-        });
+        if (vm.searchString.length >= 3) {
+          vm.searchingForOrgs = true;
+          HelpdeskService.searchOrgs(vm.searchString).then(function (res) {
+            vm.currentSearch.orgSearchResults = res;
+            vm.searchingForOrgs = false;
+          }, function (err) {
+            vm.searchingForOrgs = false;
+            vm.currentSearch.orgSearchResults = null;
+            vm.currentSearch.orgSearchFailure = $translate.instant('helpdesk.unexpectedError');
+          });
+        } else {
+          vm.currentSearch.orgSearchFailure = $translate.instant('helpdesk.badOrgSearchInput');
+        }
       } else {
         vm.searchingForDevices = true;
         HelpdeskService.searchCloudberryDevices(vm.searchString, orgFilterId).then(function (res) {
@@ -77,7 +79,6 @@
           vm.searchingForDevices = false;
           vm.currentSearch.deviceSearchResults = null;
           vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
-          $log.error(err);
         });
       }
     }
@@ -86,12 +87,14 @@
       vm.searchString = '';
       vm.currentSearch.initSearch('');
       vm.currentSearch.orgFilter = org;
+      angular.element('#searchInput').focus();
     }
 
     function clearOrgFilter() {
       vm.searchString = '';
       vm.currentSearch.initSearch('');
       vm.currentSearch.orgFilter = null;
+      angular.element('#searchInput').focus();
     }
 
     function keypressValidation(event) {
