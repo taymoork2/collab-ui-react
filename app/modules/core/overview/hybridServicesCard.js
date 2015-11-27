@@ -6,7 +6,7 @@
     .factory('OverviewHybridServicesCard', OverviewHybridServicesCard);
 
   /* @ngInject */
-  function OverviewHybridServicesCard() {
+  function OverviewHybridServicesCard(OverviewHelper) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -18,6 +18,8 @@
         card.notEnabledText = 'overview.cards.hybrid.notEnabledText';
         card.notEnabledAction = '#overview';
         card.notEnabledActionText = 'overview.cards.hybrid.notEnabledActionText';
+        card.helper = OverviewHelper;
+
         card.hybridStatusEventHandler = function (err, services) {
           card.services = services;
           card.populateServicesWithHealth();
@@ -34,6 +36,14 @@
               service.healthStatus = (serviceToTypeMap[service.id] && card.servicesStatus && card.servicesStatus[serviceToTypeMap[service.id]]) ? 'success' : 'warning';
             });
           }
+        };
+
+        card.healthStatusUpdatedHandler = function messageHealthEventHandler(data) {
+          _.each(data.components, function (component) {
+            if (component.id === OverviewHelper.statusIds.CalendarService || component.id === OverviewHelper.statusIds.CloudHybridServicesManagement) {
+              card.healthStatus = card.helper.mapStatus(card.healthStatus, component.status);
+            }
+          });
         };
 
         var serviceToTypeMap = {};

@@ -32,7 +32,7 @@
 
         card.healthStatusUpdatedHandler = function messageHealthEventHandler(data) {
           _.each(data.components, function (component) {
-            if (component.name == 'Media/Calling') {
+            if (component.id === card.helper.statusIds.MediaCalling) {
               card.healthStatus = card.helper.mapStatus(card.healthStatus, component.status);
             }
           });

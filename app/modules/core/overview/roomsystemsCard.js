@@ -27,7 +27,7 @@
 
         card.healthStatusUpdatedHandler = function (data) {
           var room = _.find(data.components, {
-            name: 'Rooms'
+            id: card.helper.statusIds.Rooms
           });
           if (room) {
             card.healthStatus = card.helper.mapStatus(card.healthStatus, room.status);
