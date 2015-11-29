@@ -1433,9 +1433,13 @@
       "empar": "Empar"
     },
     "sayMessageHelp": "Select the desired language and voice which is used to speak the phrase to the caller. Say message is optional. If no message is entered, the conversation will continue to the next step.",
+    "errorReadCMI": "Unable to load assigned phone numbers",
     "errorAddCMI": "Unable to assign phone number {{phoneNumber}}: {{statusText}} ({{status}}).",
     "errorRemoveCMI": "Unable to remove assigned phone number(s).",
-    "errorResetCMI": "Unable to reset to previously assigned phone number(s)."
+    "errorResetCMI": "Unable to reset to previously assigned phone number(s).",
+    "errorFailedToAssignNumbers": "Unable to assign number(s): {{phoneNumbers}}",
+    "errorNumbersCMIOnly": "Number(s) are assigned but not in AA: {{phoneNumbers}}",
+    "errorNumbersCESOnly": "Number(s) are in AA but are not assigned: {{phoneNumbers}}"
   },
   "callPark": {
     "code": "CP",

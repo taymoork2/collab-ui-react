@@ -31,10 +31,11 @@
       vm.aaNameFocus = true;
     }
 
+    // Save the phone number resources originally in the CE (used on exit with no save, and on save error)
     function unAssignAssigned() {
-      if (vm.aaModel.aaRecord.assignedResources.length < vm.ui.ceInfo.getResources().length) {
+      if (vm.aaModel.aaRecord.assignedResources.length !== vm.ui.ceInfo.getResources().length) {
         var ceInfo = AutoAttendantCeInfoModelService.getCeInfo(vm.aaModel.aaRecord);
-        AANumberAssignmentService.setAANumberAssignment(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, ceInfo).then(
+        AANumberAssignmentService.setAANumberAssignment(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, ceInfo.getResources()).then(
           function (response) {},
           function (response) {
             Notification.error('autoAttendant.errorResetCMI');
@@ -110,6 +111,21 @@
       }
     }
 
+    // Set the numbers in CMI with error details (involves multiple saves in the AANumberAssignmentService service)
+    // Notify the user of any numbers that failed
+    function saveAANumberAssignmentWithErrorDetail(resources, workingResources, failedResources) {
+
+      AANumberAssignmentService.setAANumberAssignmentWithErrorDetail(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources, workingResources, failedResources).then(
+
+        function (response) {},
+        function (response) {
+          Notification.error('autoAttendant.errorFailedToAssignNumbers', {
+            phoneNumbers: failedResources
+          });
+        });
+
+    }
+
     function saveAARecords() {
 
       var aaRecords = vm.aaModel.aaRecords;
@@ -167,6 +183,15 @@
           }
         );
       } else {
+
+        // If a possible discrepancy was found between the phone number list in CE and the one stored in CMI
+        // Try a complete save here and report error details
+        if (vm.aaModel.possibleNumberDiscrepancy) {
+          var workingResources = [];
+          var failedResources = [];
+          saveAANumberAssignmentWithErrorDetail(vm.aaModel.ceInfos[i].getResources(), workingResources, failedResources);
+        }
+
         var updateResponsePromise = AutoAttendantCeService.updateCe(
           aaRecords[i].callExperienceURL,
           _aaRecord);
