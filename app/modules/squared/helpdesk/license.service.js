@@ -13,13 +13,11 @@
 
     function userIsLicensedFor(user, offerCode) {
       if (user && user.licenseID) {
-        var userLicenses = user.licenseID;
-        for (var l = userLicenses.length - 1; l >= 0; l--) {
-          var prefix = userLicenses[l].substring(0, 2);
-          if (prefix === offerCode) {
+        _.any(user.licenseID, function (license) {
+          if (license.substring(0, 2) === offerCode) {
             return true;
           }
-        }
+        });
       }
       return false;
     }
