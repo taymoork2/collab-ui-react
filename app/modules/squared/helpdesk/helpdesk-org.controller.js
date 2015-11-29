@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsService, Config, $translate) {
+  function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsService, Config, $translate, LicenseService) {
     var vm = this;
     if ($stateParams.org) {
       vm.org = $stateParams.org;
@@ -29,16 +29,20 @@
 
     function initOrgView(org) {
       vm.org = org;
-      vm.messageCard = HelpdeskCardsService.getMessageCardForOrg(org);
-      vm.meetingCard = HelpdeskCardsService.getMeetingCardForOrg(org);
-      vm.callCard = HelpdeskCardsService.getCallCardForOrg(org);
-      vm.hybridServicesCard = HelpdeskCardsService.getHybridServicesCardForOrg(org);
-      vm.roomSystemsCard = HelpdeskCardsService.getRoomSystemsCardForOrg(org);
       vm.delegatedAdministration = org.delegatedAdministration ? $translate.instant('helpdesk.delegatedAdministration', {
         numManages: org.manages ? org.manages.length : 0
       }) : null;
+      HelpdeskService.getLicensesInOrg(vm.orgId).then(initCards, XhrNotificationService.notify);
       findManagedByOrgs(org);
       findWebExSites(org);
+    }
+
+    function initCards(licenses) {
+      vm.messageCard = HelpdeskCardsService.getMessageCardForOrg(vm.org, licenses);
+      vm.meetingCard = HelpdeskCardsService.getMeetingCardForOrg(vm.org, licenses);
+      vm.callCard = HelpdeskCardsService.getCallCardForOrg(vm.org, licenses);
+      vm.hybridServicesCard = HelpdeskCardsService.getHybridServicesCardForOrg(vm.org);
+      vm.roomSystemsCard = HelpdeskCardsService.getRoomSystemsCardForOrg(vm.org, licenses);
     }
 
     function initHealth(healthStatuses) {
@@ -57,7 +61,7 @@
     }
 
     function findWebExSites(org) {
-      if (HelpdeskCardsService.orgIsEntitledTo(org, 'cloudMeetings')) {
+      if (LicenseService.orgIsEntitledTo(org, 'cloudMeetings')) {
         HelpdeskService.getWebExSites(vm.orgId).then(function (sites) {
           vm.org.webExSites = sites;
         }, XhrNotificationService.notify);

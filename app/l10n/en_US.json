@@ -2863,6 +2863,14 @@
     "badOrgSearchInput": "Searching for customers requires a minimum of three characters.",
     "unknown": "Unknown",
     "showMore": "Show more results",
-    "delegatedAdministration": "manages {{numManages}} organizations"
+    "delegatedAdministration": "manages {{numManages}} organizations",
+    "licenses": "Licenses",
+    "licenseTypes": {
+      "MESSAGING": "{{volume}} Standard Team Rooms",
+      "CONFERENCING": "{{volume}} 25 Party Meetings",
+      "COMMUNICATIONS": "{{volume}} Advanced Spark Call",
+      "SHARED_DEVICES": "{{volume}} Room Devices"
+    },
+    "trial": "Trial"
   }
 }

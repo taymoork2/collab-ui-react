@@ -80,7 +80,7 @@
 
     function getHybridServices(orgId) {
       if (useMock()) {
-        return deferredResolve(filterRelevantServices(HelpdeskMockData.org.services));
+        return deferredResolve(filterRelevantServices(HelpdeskMockData.hybridServices));
       }
       return ServiceDescriptor.servicesInOrg(orgId, true).then(filterRelevantServices);
     }
@@ -169,6 +169,17 @@
         .then(extractItems);
     }
 
+    function getLicensesInOrg(orgId) {
+      if (useMock()) {
+        var deferred = $q.defer();
+        deferred.resolve(HelpdeskMockData.licenses);
+        return deferred.promise;
+      }
+      return $http
+        .get(urlBase + 'helpdesk/licenses/' + encodeURIComponent(orgId))
+        .then(extractData);
+    }
+
     function deferredResolve(resolved) {
       var deferred = $q.defer();
       deferred.resolve(resolved);
@@ -184,7 +195,8 @@
       getHybridServices: getHybridServices,
       resendInviteEmail: resendInviteEmail,
       getWebExSites: getWebExSites,
-      getCloudberryDevice: getCloudberryDevice
+      getCloudberryDevice: getCloudberryDevice,
+      getLicensesInOrg: getLicensesInOrg
     };
   }
 

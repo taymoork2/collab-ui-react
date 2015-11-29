@@ -511,6 +511,15 @@ angular.module('Core')
           CO: 'CO' // Communication
         },
 
+        licenseTypes: {
+          MESSAGING: 'MESSAGING',
+          CONFERENCING: 'CONFERENCING',
+          COMMUNICATIONS: 'COMMUNICATIONS',
+          STORAGE: 'STORAGE',
+          SHARED_DEVICES: 'SHARED_DEVICES',
+          CMR: 'CMR'
+        },
+
         defaultEntitlements: ['webex-squared', 'squared-call-initiation'],
 
         batchSize: 10,
