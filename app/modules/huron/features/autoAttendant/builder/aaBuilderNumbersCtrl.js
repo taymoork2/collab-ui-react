@@ -20,8 +20,10 @@
     vm.addToAvailableNumberList = addToAvailableNumberList;
     vm.compareNumbersExternalThenInternal = compareNumbersExternalThenInternal;
 
+    // a mapping of numbers to their type (internal or external)
     vm.numberTypeList = {};
 
+    // available number list offered in GUI
     vm.availablePhoneNums = [];
 
     vm.selectPlaceHolder = $translate.instant('autoAttendant.selectPlaceHolder');
@@ -113,6 +115,7 @@
 
       resources.push(resource);
 
+      // Assign the number in CMI
       AANumberAssignmentService.setAANumberAssignment(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources).then(
 
         function (response) {
@@ -135,6 +138,7 @@
     function deleteAAResource(number) {
       var i = 0;
 
+      // remove number from resources list
       var resources = vm.ui.ceInfo.getResources();
       for (i = 0; i < resources.length; i++) {
         if (resources[i].getNumber() === number) {
@@ -142,6 +146,7 @@
         }
       }
 
+      // Un-Assign the number in CMI by setting with resource removed
       AANumberAssignmentService.setAANumberAssignment(Authinfo.getOrgId(),
         vm.aaModel.aaRecordUUID, resources).then(
         function (response) {},
@@ -164,7 +169,9 @@
 
     function sortAssignedResources(resources) {
 
-      // if it's longer than 2, we sort it
+      // We don't change the top-line "preferred" number in the header
+      // Further the first number after that would be "sorted", since it can't swap with the "preferred" number
+      // so if it's longer than 2, we sort it
       if (resources.length > 2) {
 
         // but we don't change the first top-line number, which is also shown in the header, so
@@ -263,6 +270,33 @@
         });
     }
 
+    // Warn the user when discrepancies are found between CMI and CES number assignment
+    function warnOnAssignedNumberDiscrepancies() {
+      var onlyResources = [];
+      var onlyCMI = [];
+      AANumberAssignmentService.checkAANumberAssignments(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, vm.ui.ceInfo.getResources(), onlyResources, onlyCMI).then(
+
+        function (response) {
+          if (onlyCMI.length > 0) {
+            vm.aaModel.possibleNumberDiscrepancy = true;
+            Notification.error('autoAttendant.errorNumbersCMIOnly', {
+              phoneNumbers: onlyCMI
+            });
+          }
+          if (onlyResources.length > 0) {
+            vm.aaModel.possibleNumberDiscrepancy = true;
+            Notification.error('autoAttendant.errorNumbersCESOnly', {
+              phoneNumbers: onlyResources
+            });
+          }
+        },
+        function (response) {
+          // if we failed to read CMI, we might have discrepancy, and should warn user
+          vm.aaModel.possibleNumberDiscrepancy = true;
+          Notification.error('autoAttendant.errorReadCMI');
+        });
+    }
+
     function activate() {
 
       vm.aaModel = AAModelService.getAAModel();
@@ -270,6 +304,9 @@
       vm.ui = AAUiModelService.getUiModel();
 
       loadNums();
+
+      vm.aaModel.possibleNumberDiscrepancy = false;
+      warnOnAssignedNumberDiscrepancies();
 
     }
 
