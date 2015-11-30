@@ -72,4 +72,43 @@ describe('LicenseService', function () {
     expect(license.webExSite).toEqual('t30citest.webex.com');
   });
 
+  it('Should filterLicensesAndSetDisplayName correctly', function () {
+    var licenses = [{
+      "type": "MESSAGING",
+      "name": "Messaging",
+      "status": "ACTIVE",
+      "volume": 10,
+      "isTrial": false
+    }, {
+      "type": "CONFERENCING",
+      "name": "Conferencing",
+      "status": "ACTIVE",
+      "volume": 100,
+      "isTrial": true,
+      "trialExpiresInDays": 49
+    }, {
+      "type": "COMMUNICATIONS",
+      "name": "Communications",
+      "status": "ACTIVE",
+      "volume": 1000,
+      "isTrial": true,
+      "trialExpiresInDays": 100
+    }, {
+      "type": "SHARED_DEVICES",
+      "name": "Shared Devices",
+      "status": "ACTIVE",
+      "volume": 50,
+      "isTrial": false
+    }];
+    var filtered = LicenseService.filterLicensesAndSetDisplayName(licenses, 'MESSAGING');
+    expect(filtered.length).toEqual(1);
+    expect(filtered[0].volume).toEqual(10);
+    expect(filtered[0].displayName).toEqual('helpdesk.licenseTypes.MESSAGING');
+
+    filtered = LicenseService.filterLicensesAndSetDisplayName(licenses, 'CONFERENCING');
+    expect(filtered.length).toEqual(1);
+    expect(filtered[0].volume).toEqual(100);
+    expect(filtered[0].displayName).toEqual('helpdesk.licenseTypes.CONFERENCING');
+  });
+
 });

@@ -13,10 +13,8 @@
 
     function userIsLicensedFor(user, offerCode) {
       if (user && user.licenseID) {
-        _.any(user.licenseID, function (license) {
-          if (license.substring(0, 2) === offerCode) {
-            return true;
-          }
+        return _.any(user.licenseID, function (license) {
+          return license.substring(0, 2) === offerCode;
         });
       }
       return false;
@@ -43,7 +41,7 @@
       });
     }
 
-    function findAndPrepareLicenses(licenses, type) {
+    function filterLicensesAndSetDisplayName(licenses, type) {
       var matchingLicenses = _.filter(licenses, function (l) {
         return l.type === type && !(l.status === 'CANCELLED' || l.status === 'SUSPENDED');
       });
@@ -59,7 +57,7 @@
       userIsEntitledTo: userIsEntitledTo,
       userIsLicensedFor: userIsLicensedFor,
       orgIsEntitledTo: orgIsEntitledTo,
-      findAndPrepareLicenses: findAndPrepareLicenses,
+      filterLicensesAndSetDisplayName: filterLicensesAndSetDisplayName,
       UserLicense: UserLicense
     };
   }

@@ -116,7 +116,7 @@
 
     function OrgCard(entitled, licenses, licenseType) {
       this.entitled = entitled;
-      this.licenses = LicenseService.findAndPrepareLicenses(licenses, licenseType);
+      this.licenses = LicenseService.filterLicensesAndSetDisplayName(licenses, licenseType);
       this.isTrial = _.any(this.licenses, {
         'isTrial': true
       });
