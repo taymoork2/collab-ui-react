@@ -6,7 +6,7 @@
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($scope, Log, Authinfo, $translate, ReportsService, Orgservice, ServiceDescriptor, ServiceStatusDecriptor, Config, OverviewCardFactory) {
+  function OverviewCtrl($scope, Log, Authinfo, $translate, ReportsService, Orgservice, ServiceDescriptor, Config, OverviewCardFactory) {
     var vm = this;
 
     vm.pageTitle = $translate.instant('overview.pageTitle');
@@ -47,7 +47,7 @@
 
     ReportsService.healthMonitor(_.partial(forwardEvent, 'healthStatusUpdatedHandler'));
 
-    ServiceDescriptor.services(_.partial(forwardEvent, 'hybridStatusEventHandler'));
+    ServiceDescriptor.services(_.partial(forwardEvent, 'hybridStatusEventHandler'), true);
 
     vm.isCalendarAcknowledged = true;
     vm.isCallAcknowledged = true;
@@ -68,7 +68,5 @@
     vm.setupNotDone = function () {
       return !!(!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin());
     };
-
-    ServiceStatusDecriptor.servicesInOrgWithStatus().then(_.partial(forwardEvent, 'adminOrgServiceStatusEventHandler'));
   }
 })();
