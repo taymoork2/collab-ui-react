@@ -59,6 +59,9 @@
                 <div ng-repeat="number in user.phoneNumbers">
                   <span>{{number.value}} ({{'helpdesk.' + number.type | translate}})</span>
                 </div>
+                <div ng-if="user.organization.displayName" class="right">
+                  <span class="belongs-to-org">{{user.organization.displayName}}</span>
+                </div>
               </section>
             </article>
           </cs-card>
@@ -152,6 +155,9 @@
                 <div ng-if="device.product"><span>{{device.product}}</span></div>
                 <div ng-if="device.serial"><span>{{device.serial}}</span></div>
                 <div ng-if="device.mac"><span>{{device.mac}}</span></div>
+                <div ng-if="device.organization.displayName" class="right">
+                  <span class="belongs-to-org">{{device.organization.displayName}}</span>
+                </div>
               </section>
             </article>
           </cs-card>

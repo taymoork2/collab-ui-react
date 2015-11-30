@@ -13,6 +13,7 @@
     }
     vm.resendInviteEmail = resendInviteEmail;
     vm.user = $stateParams.user;
+    vm.org = $stateParams.user.organization;
     vm.resendInviteEnabled = false;
     vm.messageCard = {};
     vm.meetingCard = {};
@@ -21,9 +22,12 @@
 
     HelpdeskService.getUser(vm.orgId, vm.userId).then(initUserView, XhrNotificationService.notify);
 
-    HelpdeskService.getOrg(vm.orgId).then(function (res) {
-      vm.org = res;
-    }, XhrNotificationService.notify);
+    if (!vm.org || !vm.org.displayName) {
+      // Only if there is no displayName. If set, the org has already been read (on the search page)
+      HelpdeskService.getOrg(vm.orgId).then(function (res) {
+        vm.org = res;
+      }, XhrNotificationService.notify);
+    }
 
     function resendInviteEmail() {
       HelpdeskService.resendInviteEmail(vm.user.displayName, vm.user.userName).then(angular.noop, XhrNotificationService.notify);

@@ -4,9 +4,56 @@ describe('LicenseService', function () {
 
   var LicenseService;
 
-  beforeEach(inject(function (_LicenseService_) {
+  beforeEach(inject(function (_LicenseService_, _$q_) {
     LicenseService = _LicenseService_;
   }));
+
+  describe('Fetching data from helpdesk backend', function () {
+
+    var $httpBackend, urlBase, q;
+    beforeEach(inject(function (_Config_, _LicenseService_, _$q_, _$httpBackend_) {
+      q = _$q_;
+      urlBase = _Config_.getAdminServiceUrl();
+      $httpBackend = _$httpBackend_;
+      $httpBackend
+        .when('GET', 'l10n/en_US.json')
+        .respond({});
+    }));
+
+    it('should get backend data from helpdesk/licences/<orgId>', function () {
+      var licensesMock = [{
+        "type": "MESSAGING",
+        "name": "Messaging",
+        "status": "ACTIVE",
+        "volume": 100,
+        "isTrial": false
+      }, {
+        "type": "CONFERENCING",
+        "name": "Conferencing",
+        "status": "ACTIVE",
+        "volume": 100,
+        "isTrial": true,
+        "trialExpiresInDays": 49
+      }];
+
+      $httpBackend
+        .when('GET', urlBase + 'helpdesk/licenses/1234')
+        .respond(licensesMock);
+
+      LicenseService.getLicensesInOrg('1234').then(function (res) {
+        expect(res.length).toBe(2);
+        expect(res[0].volume).toBe(100);
+      });
+
+    });
+
+    afterEach(function () {
+      $httpBackend.flush();
+      $httpBackend.verifyNoOutstandingExpectation();
+      $httpBackend.verifyNoOutstandingRequest();
+    });
+
+  });
 
   it('Should return the expected result when userIsEntitledTo', function () {
     expect(LicenseService.userIsEntitledTo(null, 'squared-fusion-mgmt')).toBeFalsy();

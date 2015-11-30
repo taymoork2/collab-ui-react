@@ -1,4 +1,4 @@
-<div class="org-view user-view helpdesk-org">
+<div class="helpdesk-details">
   <div class="row head full">
     <div class="columns large-12">
       <a ui-sref="helpdesk.search">
@@ -19,28 +19,28 @@
         <span ng-if="helpdeskOrgCtrl.delegatedAdministration"> ({{helpdeskOrgCtrl.delegatedAdministration}})</span>
       </div>
       <div class="row">
-        <div class="medium-5 columns">
-          <p>{{'common.id' | translate}}:</p>
+        <div class="medium-5 columns details-heading">
+          <span>{{'common.id' | translate}}:</span>
         </div>
-        <div class="medium-7 columns org-value">
+        <div class="medium-7 columns details-value">
           <span>{{helpdeskOrgCtrl.org.id}}</span>
         </div>
       </div>
 
       <div class="row" ng-if="helpdeskOrgCtrl.org.email">
-        <div class="large-5 columns">
-          <p>{{'helpdesk.contact' | translate}}:</p>
+        <div class="large-5 columns details-heading">
+          <span>{{'helpdesk.contact' | translate}}:</span>
         </div>
-        <div class="large-7 columns org-value">
+        <div class="large-7 columns details-value">
           <span><a href="mailto:{{helpdeskOrgCtrl.org.email}}">{{helpdeskOrgCtrl.org.email}}</a></span>
         </div>
       </div>
 
       <div class="row">
-        <div class="large-5 columns">
-          <p>{{'helpdesk.claimedDomain' | translate}}:</p>
+        <div class="large-5 columns details-heading">
+          <span>{{'helpdesk.claimedDomain' | translate}}:</span>
         </div>
-        <div class="large-7 columns org-value">
+        <div class="large-7 columns details-value">
           <span ng-repeat="domain in helpdeskOrgCtrl.org.domains">
             {{domain}}{{$last ? '' : ', '}}
           </span>
@@ -49,10 +49,10 @@
       </div>
 
       <div class="row" ng-if="helpdeskOrgCtrl.org.webExSites">
-        <div class="large-5 columns">
-          <p>{{'helpdesk.webexsites' | translate}}:</p>
+        <div class="large-5 columns details-heading">
+          <span>{{'helpdesk.webexsites' | translate}}:</span>
         </div>
-        <div class="large-7 columns org-value">
+        <div class="large-7 columns details-value">
           <span ng-repeat="site in helpdeskOrgCtrl.org.webExSites">
             {{site.siteUrl}}{{$last ? '' : ', '}}
           </span>
@@ -61,10 +61,10 @@
       </div>
 
       <div class="row" ng-if="helpdeskOrgCtrl.org.managedByOrgs && helpdeskOrgCtrl.org.managedByOrgs.length > 0">
-        <div class="medium-5 columns">
-          <p>{{'helpdesk.managedBy' | translate}}:</p>
+        <div class="medium-5 columns details-heading">
+          <span>{{'helpdesk.managedBy' | translate}}:</span>
         </div>
-        <div class="medium-7 columns org-value">
+        <div class="medium-7 columns details-value">
           <div ng-repeat="managingOrg in helpdeskOrgCtrl.org.managedByOrgs">
             <span>
               <a ui-sref="helpdesk.org({org:managingOrg})">
@@ -77,7 +77,8 @@
 
     </div>
 
-    <div class="columns large-8 medium-7 card-panel" ng-include src="'modules/squared/helpdesk/org-cards.html'">
+    <div class="columns large-8 medium-7 card-panel" ng-include
+         src="'modules/squared/helpdesk/org-cards.html'">
 
     </div>
 
