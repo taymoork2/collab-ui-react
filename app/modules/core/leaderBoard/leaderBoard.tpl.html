@@ -19,15 +19,15 @@
 </cs-card>
 
 
-<cs-card class="small header-bar meetings" ng-show = "buckets.cf.services.length !== 0 " >
+<cs-card class="small header-bar meetings" ng-show = "buckets.cf.services.length !== 0 || buckets.sites.length !== 0" >
 <article>
   <header class="header-section align-center">
     <span class="bucket-header">{{buckets.conferencing.title | translate}}</span>
   </header> 
 
-  <section ng-if="buckets.cf.services.length !== 0"class="bucket-info">
+  <section ng-show="buckets.cf.services.length !== 0"class="bucket-info">
     <div class="text-center" class="item-paid" ng-repeat="service in buckets.cf.services">
-      <cs-donut value="service.usage" tsize="12" max="service.volume" ssize="72" class="text-center">
+      <cs-donut value="service.usage" max="service.volume" ssize="72" class="text-center">
     </cs-donut> 
     <div class = "text-center">
       <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
@@ -36,17 +36,31 @@
   </div>
   </section>
 
-  <section class="bucket-info">
+  <section  class="bucket-info" ng-show="buckets.cf.services.length === 0 && buckets.count === 1">
+    <div class="text-center" class="item-paid" ng-repeat="(siteUrl,services) in buckets.sites">
+      <div class="sub-item" ng-repeat="service in services">
+      <cs-donut value="service.usage" max="service.volume" ssize="72" class="text-center">
+      </cs-donut> 
+      <div class = "text-center">
+      <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
+      <span class="quantity" >{{service.volume}}</span>
+    </div>
+    <div class="text-center" class="item-paid" ng-repeat= "(siteUrl,services) in buckets.sites" >
+    <div class = "site-url"> {{siteUrl}} </div>
+     <div translate="leaderBoard.{{service.offerName}}"> </div>
+     </div>
+    </div>
+  </div>
+  </section>
+
+  <section ng-if=" !(buckets.cf.services.length === 0 && buckets.count === 1) && (buckets.count !== 0)" class="bucket-info" >
       <div class="text-center" class="item-paid" ng-repeat= "(siteUrl,services) in buckets.sites" >
         <div class="site-info"> {{siteUrl}} </div>
         <div class="sub-item text-left" ng-repeat="service in services">
           <div class = "service-bucket">
-            <div style="width:64px;float:left;">
-              <cs-donut value="service.usage" max="service.volume" ssize="48" class="text-center">
+              <cs-donut value="service.usage" max="service.volume" ssize="48" tsize="16" class="text-center small-donut">
               </cs-donut>
-
-            </div> 
-            <div style="margin-left:80px" >
+            <div class="webex">
               <div translate="leaderBoard.{{service.offerName}}"> </div>
               <span class = "quantity" translate="firstTimeWizard.quantity"> </span>          
               <span class = "quantity" ng-if="!service.trial">{{service.volume}}</span>
@@ -65,7 +79,7 @@
       </header> 
       <section class="bucket-info">
         <div class="text-center" class="item-paid" ng-repeat="service in buckets.communication.services">
-          <cs-donut value="service.usage" max="service.volume" ssize="72" tsize="12" class="text-center">
+          <cs-donut value="service.usage" max="service.volume" ssize="72" class="text-center">
         </cs-donut> 
         <div class = "text-center">
           <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
@@ -83,7 +97,7 @@
       </header> 
       <section class="bucket-info">
         <div class="text-center" class="item-paid" ng-repeat="service in buckets.shared_devices.services">
-          <cs-donut value="service.usage" max="service.volume" ssize="72" tsize="12" class="text-center">
+          <cs-donut value="service.usage" max="service.volume" ssize="72" class="text-center">
         </cs-donut> 
         <div class = "text-center">
           <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>

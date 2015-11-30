@@ -92,6 +92,7 @@ angular.module('Core')
                 $scope.buckets.cf.services.push(license);
               }
             });
+            $scope.buckets.count = Object.keys($scope.buckets.sites).length;
           }
         });
       };

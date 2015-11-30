@@ -6,11 +6,6 @@
   margin-bottom: 40px;
 }
 
- .site-info{
-  margin-top: 0px;
-  color: #049fd9;
- }
-
  .number{
   font-size: 12px;
  }
@@ -59,10 +54,16 @@
 }
 
 .site-info {
-  border-top: $gray-lighter solid 1px;
+  color: $color-primary-base;
   padding-top: 10px;
-  margin-top: 15px;
   margin-bottom: 15px;
+  border-top: $gray-lighter solid 1px;
+}
+
+.site-url{
+  padding-top: 10px;
+  padding-bottom: 4px; 
+  color: #049fd9;
 }
 
 
@@ -142,4 +143,13 @@
 
 .quantity{
   font-size: 12px;
+}
+
+.webex{
+  margin-left:80px;
+}
+
+.small-donut{
+  width:64px;
+  float:left;
 }

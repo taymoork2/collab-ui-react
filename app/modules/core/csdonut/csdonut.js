@@ -54,10 +54,6 @@
         $scope.currentAngles = {};
 
         $scope.computeTextProperties = function (value, unlimited, tsize) {
-          if(tsize !== 'undefiend'){
-            $scope.text.size = 12;
-            $scope.text.y = 4;
-          }
           if (typeof unlimited !== 'undefined' && unlimited === true) {
             $scope.text.size = 18;
             $scope.text.y = 6;
@@ -65,9 +61,15 @@
             $scope.text.size = 32;
             $scope.text.y = 12;
           } else {
-            $scope.text.size = 26;
-            $scope.text.y = 10;
+            if (tsize) {
+              $scope.text.size = tsize;
+              $scope.text.y = 5;
+            } else {
+              $scope.text.size = 26;
+              $scope.text.y = 10;
+            }
           }
+
         };
 
         $scope.computeDataset = function (value, max, unlimited, ssize) {
