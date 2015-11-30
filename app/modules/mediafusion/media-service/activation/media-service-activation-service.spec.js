@@ -67,16 +67,17 @@ describe('MediaServiceDescriptor', function () {
     expect($httpBackend.flush).not.toThrow();
   });
 
-  it('should return the user identity org to media agent org id mapping', function (done) {
+    it('should return the user identity org to media agent org id mapping', function (done) {
+
     $httpBackend
-      .when('GET', 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1/identity2agent/' + authinfo.getOrgId)
+      .expect('GET', 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1/identity2agent/' + authinfo.getOrgId())
       .respond(200, {
         statusCode: 0,
-        identityOrgId: authinfo.getOrgId,
+        identityOrgId: authinfo.getOrgId(),
         mediaAgentOrgIds: mediaAgentOrgIds
       });
-    Service.getUserIdentityOrgToMediaAgentOrgMapping();
-    done();
+    Service.getUserIdentityOrgToMediaAgentOrgMapping().then(done);
+
     //expect(response.data.mediaAgentOrgIds).toEqual(mediaAgentOrgIds);
     $httpBackend.flush();
   });
