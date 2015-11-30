@@ -125,32 +125,22 @@
         customerId = $stateParams.currentOrg.customerOrgId;
       }
       if (angular.isDefined(customerId)) {
-        DialPlanService.getCustomerDialPlanDetails($stateParams.currentOrg.customerOrgId).then(function (response) {
-          var countryCode = response.countryCode;
-          if (_.startsWith(countryCode, '+')) {
-            countryCode = countryCode.substr(1); // remove first character, i.e. the '+' sign
-          }
-          // TODO: Find an alternative method for determining the country to validate phone numbers agains.
-          if (countryCode === "1") {
-            // country code "1" is shared by Canada, Dominica Republic, and US. Set to US.
-            TelephoneNumberService.setRegionCode("us");
-          } else {
-            TelephoneNumberService.setCountryCode(countryCode);
-          }
-        }).catch(function (response) {
-          Notification.errorResponse(response, 'serviceSetupModal.customerDialPlanDetailsGetError');
-        }).then(function () {
-          return ExternalNumberPool.getAll(customerId);
-        }).then(function (results) {
-          if (angular.isArray(results)) {
-            $timeout(function () {
-              angular.forEach(results, function (did) {
-                addToTokenField(did.pattern);
+        DialPlanService.getCustomerDialPlanCountryCode($stateParams.currentOrg.customerOrgId)
+          .then(TelephoneNumberService.setCountryCode)
+          .catch(function (response) {
+            Notification.errorResponse(response, 'serviceSetupModal.customerDialPlanDetailsGetError');
+          }).then(function () {
+            return ExternalNumberPool.getAll(customerId);
+          }).then(function (results) {
+            if (angular.isArray(results)) {
+              $timeout(function () {
+                angular.forEach(results, function (did) {
+                  addToTokenField(did.pattern);
+                });
+                vm.didObjectsFromCmi = results;
               });
-              vm.didObjectsFromCmi = results;
-            });
-          }
-        });
+            }
+          });
       } else {
         var dids = DidService.getDidList();
         $timeout(function () {

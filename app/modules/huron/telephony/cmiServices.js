@@ -339,6 +339,12 @@
   .factory('ClusterCommonCmiService', function ($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/common/clusters/:clusterId', {
       clusterId: '@clusterId',
+    }, {
+      query: {
+        method: 'GET',
+        isArray: true,
+        cache: true
+      }
     });
   })
 
