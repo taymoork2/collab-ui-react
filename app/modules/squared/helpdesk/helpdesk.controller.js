@@ -60,6 +60,7 @@
         HelpdeskService.searchUsers(searchString, orgId, searchResultsLimit).then(function (res) {
           vm.currentSearch.userSearchResults = res;
           vm.searchingForUsers = false;
+          findAndResolveOrgsForUserResults(vm.currentSearch.userSearchResults);
         }, function (err) {
           vm.searchingForUsers = false;
           vm.currentSearch.userSearchResults = null;
@@ -95,6 +96,7 @@
       HelpdeskService.searchCloudberryDevices(searchString, orgId, searchResultsLimit).then(function (res) {
         vm.currentSearch.deviceSearchResults = res;
         vm.searchingForDevices = false;
+        setOrgOnDeviceSearchResults(vm.currentSearch.deviceSearchResults);
       }, function (err) {
         vm.searchingForDevices = false;
         vm.currentSearch.deviceSearchResults = null;
@@ -128,6 +130,37 @@
         vm.currentSearch.deviceLimit += searchResultsPageSize;
         break;
       }
+    }
+
+    function findAndResolveOrgsForUserResults(userSearchResults) {
+      if (_.size(userSearchResults) > 0) {
+        if (vm.currentSearch.orgFilter) {
+          _.each(userSearchResults, function (user) {
+            user.organization = vm.currentSearch.orgFilter;
+          });
+        } else {
+          var orgs = [];
+          _.each(userSearchResults, function (user) {
+            orgs.push(user.organization.id);
+          });
+          _.each(_.uniq(orgs), function (orgId) {
+            HelpdeskService.getOrg(orgId).then(function (res) {
+              _.each(userSearchResults, function (user) {
+                if (user.organization && user.organization.id === orgId) {
+                  user.organization = res;
+                }
+              });
+            }, angular.noop);
+          });
+        }
+
+      }
+    }
+
+    function setOrgOnDeviceSearchResults(deviceSearchResults) {
+      _.each(deviceSearchResults, function (device) {
+        device.organization = vm.currentSearch.orgFilter;
+      });
     }
 
     function keypressValidation(event) {
