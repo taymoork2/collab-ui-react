@@ -18,6 +18,7 @@
     var today = moment().format(dateFormat);
 
     vm.gridData = [];
+    vm.dataState = null;
     vm.selectedCDR = null;
     vm.model = {
       'searchUpload': SEARCH,
@@ -42,11 +43,11 @@
           scope.model.callingUser = value;
           scope.fields[3].formControl.$validate();
         }
-        return /^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$/.test(value) || (value === undefined) || (value === "");
+        return /^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$/.test(value) || /^[0-9a-fA-F]{32}$/.test(value) || (value === undefined) || (value === "");
       },
       calledUser: function (viewValue, modelValue, scope) {
         var value = viewValue || modelValue;
-        return (/^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$/.test(value) && (value !== scope.model.callingUser)) || (value === undefined) || (value === "");
+        return ((/^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$/.test(value) || /^[0-9a-fA-F]{32}$/.test(value)) && (value !== scope.model.callingUser)) || (value === undefined) || (value === "");
       },
       callingNumber: function (viewValue, modelValue, scope) {
         var value = viewValue || modelValue;
@@ -419,15 +420,20 @@
         type: 'button',
         className: 'form-button',
         templateOptions: {
-          btnClass: 'btn btn-primary search-button',
+          btnClass: 'btn btn--primary search-button',
           label: $translate.instant('cdrLogs.search'),
           onClick: function (options, scope) {
             vm.gridData = null;
+            vm.dataState = 1;
+            vm.selectedCDR = null;
             CdrService.query(scope.model).then(function (response) {
               if (response !== ABORT) {
-                vm.selectedCDR = null;
                 vm.gridData = response;
-                setupScrolling(vm.gridData);
+                if (angular.isDefined(vm.gridData) && (vm.gridData.length > 0)) {
+                  setupScrolling(vm.gridData);
+                } else {
+                  vm.dataState = 0;
+                }
               }
             });
           }
@@ -441,7 +447,7 @@
         type: 'button',
         className: 'form-button',
         templateOptions: {
-          btnClass: 'btn btn-primary search-button',
+          btnClass: 'btn btn--primary search-button',
           label: $translate.instant('cdrLogs.reset'),
           onClick: function (options, scope) {
             vm.selectedCDR = null;
@@ -493,7 +499,7 @@
         type: 'button',
         className: 'form-button',
         templateOptions: {
-          btnClass: 'btn btn-primary search-button',
+          btnClass: 'btn btn--primary search-button',
           label: $translate.instant('cdrLogs.upload'),
           onClick: function (options, scope) {
             vm.selectedCDR = null;

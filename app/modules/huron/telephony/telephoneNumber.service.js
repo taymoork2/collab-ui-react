@@ -18,6 +18,8 @@
       getDIDValue: getDIDValue,
       getDIDLabel: getDIDLabel
     };
+    var TOLL_FREE = 'TOLL_FREE';
+    var PREMIUM_RATE = 'PREMIUM_RATE';
 
     // Default
     setRegionCode('us');
@@ -47,9 +49,20 @@
     }
 
     function validateDID(number) {
-      var res;
+      var res = false;
       try {
-        res = phoneUtils.isValidNumberForRegion(number, regionCode);
+        var phoneNumberType;
+        if (phoneUtils.isValidNumberForRegion(number, regionCode)) {
+          phoneNumberType = phoneUtils.getNumberType(number, regionCode);
+          switch (phoneNumberType) {
+          case TOLL_FREE:
+          case PREMIUM_RATE:
+            res = false;
+            break;
+          default:
+            res = true;
+          }
+        }
       } catch (e) {
         res = false;
       }

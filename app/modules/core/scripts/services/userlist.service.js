@@ -7,7 +7,7 @@
     .factory('UserListService', UserListService);
 
   /* @ngInject */
-  function UserListService($http, $rootScope, $location, $q, $filter, $compile, $timeout, Storage, Config, Authinfo, Log, Utils, Auth, pako) {
+  function UserListService($http, $rootScope, $location, $q, $filter, $compile, $timeout, $translate, Storage, Config, Authinfo, Log, Utils, Auth, pako) {
     var searchFilter = 'filter=active%20eq%20true%20and%20userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22%20or%20displayName%20sw%20%22%s%22';
     var attributes = 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID';
     var scimUrl = Config.getScimUrl(Authinfo.getOrgId()) + '?' + '&' + attributes;
@@ -216,35 +216,34 @@
               if (users.length === 0) {
                 Log.debug('No users found.');
               } else {
+                // header line for CSV file
+                var header = {};
+                header.name = $translate.instant('usersPage.csvHeaderName');
+                header.email = $translate.instant('usersPage.csvHeaderEmailAddress');
+                header.entitlements = $translate.instant('usersPage.csvHeaderEntitlements');
+                exportedUsers.push(header);
+
                 //formatting the data for export
                 for (var i = 0; i < users.length; i++) {
                   var exportedUser = {};
                   var entitlements = '';
-                  exportedUser.userName = users[i].userName;
                   if (users[i].hasOwnProperty('name') && users[i].name.familyName !== '' && users[i].name.givenName !== '') {
                     exportedUser.name = users[i].name.givenName + ' ' + users[i].name.familyName;
                   } else {
                     exportedUser.name = 'N/A';
                   }
-                  for (var entitlement in users[i].entitlements) {
-                    entitlements += users[i].entitlements[entitlement] + ' ';
-                  }
-                  exportedUser.entitlements = entitlements;
+                  exportedUser.email = users[i].userName;
+                  exportedUser.entitlements = angular.isArray(users[i].entitlements) ? users[i].entitlements.join(' ') : '';
                   exportedUsers.push(exportedUser);
                 }
               }
 
-              $rootScope.exporting = false;
-              $rootScope.$broadcast('EXPORT_FINISHED');
-
               deferred.resolve(exportedUsers);
             } else {
-              Log.debug('Get user reports failed. Status ' + status);
               deferred.reject('Get user reports failed. Status ' + status);
             }
           });
         } else {
-          Log.debug('Generate user reports failed. Status ' + status);
           deferred.reject('Generate user reports failed. Status ' + status);
         }
       });

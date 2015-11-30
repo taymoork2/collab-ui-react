@@ -12,11 +12,11 @@
 
       <!-- save / cancel button -->
       <div class="columns small-6 save-button">
-        <button id="orgProfileSaveBtn" cs-btn loading="orgProfileSaveLoad" ng-click="validation()" class="btn btn-primary pull-right" 
+        <button id="orgProfileSaveBtn" cs-btn loading="orgProfileSaveLoad" ng-click="validation()" class="btn btn--primary pull-right" 
             ng-disabled="isBtnDisabled()">
           <span translate="partnerProfile.save"></span>
         </button>
-        <button id="orgProfileCancelBtn" ng-click="init()" class="btn btn-default pull-right left-btn" ng-disabled="isBtnDisabled()">
+        <button id="orgProfileCancelBtn" ng-click="init()" class="btn pull-right left-btn" ng-disabled="isBtnDisabled()">
           <span translate="partnerProfile.cancel"></span>
         </button>
       </div>
@@ -115,7 +115,7 @@
               </div>
             </div>
             <div class="small-2 columns">
-              <div class="button secondary" name="file" accept="image/png" ngf-select="upload($file, $event)"
+              <div class="btn btn--primary" name="file" accept="image/png" ngf-select="upload($file, $event)"
                ng-model="logoFile" ngf-validate="{{logoCriteria}}">
                 <span translate="partnerProfile.chooseFile"></span>
               </div>

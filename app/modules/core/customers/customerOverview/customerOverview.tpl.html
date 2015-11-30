@@ -42,7 +42,7 @@
       <div class="section-title-row">
         <span class="section-name" translate="customerPage.trialTerms"></span>
         <span class="actions-menu dropdown pull-right">
-          <button class="actions-button btn-none dropdown-toggle">
+          <button class="actions-button btn--none dropdown-toggle">
             <i class="icon icon-three-dots"></i>
           </button>
           <ul class="dropdown-menu dropdown-primary actions-services">
@@ -67,7 +67,7 @@
 
     <uc-external-number-overview ng-if="customerOverview.isSquaredUC"></uc-external-number-overview>
 
-    <button id="launchCustomer" class="btn btn-lg btn-primary text-center launchCustomer"
+    <button id="launchCustomer" class="btn btn--large btn--primary text-center launchCustomer"
       ng-disabled="!customerOverview.currentCustomer.isAllowedToManage"
       ng-click="customerOverview.launchCustomerPortal()">
       <span ng-if="customerOverview.isOrgSetup()" translate="customerPage.launchButton"></span>

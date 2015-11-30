@@ -80,7 +80,7 @@
 
     vm.additionalBtn = {
       label: 'directoryNumberPanel.removeNumber',
-      btnclass: 'btn btn-default btn-remove',
+      btnclass: 'btn btn-remove',
       id: 'btn-remove'
     };
 

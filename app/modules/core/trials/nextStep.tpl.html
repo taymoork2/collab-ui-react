@@ -10,18 +10,18 @@
     <div class="next-steps">
       <div class="step">
         <div translate="trialModal.sendWelcomePrompt"></div>
-        <button id="trialNotifyCustomer"class="button info expand" ng-click="didAdd.emailNotifyTrialCustomer()" translate="trialModal.sendWelcome"></button>
+        <button id="trialNotifyCustomer"class="btn btn--people btn--expand" ng-click="didAdd.emailNotifyTrialCustomer()" translate="trialModal.sendWelcome"></button>
       </div>
       <span class="conjunction" translate="trialModal.or"></span>
       <div class="step">
         <div translate="trialModal.launchPortalPrompt"></div>
-        <button class="button info expand" ng-click="didAdd.launchCustomerPortal()" translate="trialModal.launchPortal">
+        <button class="btn btn--people btn--expand" ng-click="didAdd.launchCustomerPortal()" translate="trialModal.launchPortal">
         </button>
       </div>
     </div>
   </div>
   <div class="modal-footer">
-    <button cr-feature-toggle feature-show="pstnSetup" class="btn btn-info" ng-click="didAdd.setupPstnService()" translate="pstnSetup.setupService"></button>
-    <button id="trialDone" class="btn btn-primary" ng-click="$close()" translate="common.done"></button>
+    <button cr-feature-toggle feature-show="pstnSetup" class="btn btn--people" ng-click="didAdd.setupPstnService()" translate="pstnSetup.setupService"></button>
+    <button id="trialDone" class="btn btn--primary" ng-click="$close()" translate="common.done"></button>
   </div>
 </div>

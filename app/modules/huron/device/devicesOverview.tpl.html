@@ -6,7 +6,7 @@
         <div class="activation-code-expires">
           {{'usersPreview.expires' | translate}}:  {{otp.friendlyExpiresOn}}
         </div>
-        <button class="btn btn-info btn-sm" ui-sref="generateauthcode({currentUser: ucDevices.currentUser, activationCode: otp})">{{otp.friendlyCode}}</button>
+        <button class="btn btn--people" ui-sref="generateauthcode({currentUser: ucDevices.currentUser, activationCode: otp})">{{otp.friendlyCode}}</button>
       </div>
     </div>
   </div>
@@ -14,7 +14,7 @@
 <div ng-if="ucDevices.showGenerateOtpButton">
   <div class="section-content">
     <div class="generate-activation-code" translate="usersPreview.generateActivationCodeText"></div>
-    <button class="btn btn-info btn-center" ui-sref="generateauthcode({currentUser: ucDevices.currentUser, activationCode: 'new'})" translate="usersPreview.generateActivationCode"></button>
+    <button class="btn btn--people btn-center" ui-sref="generateauthcode({currentUser: ucDevices.currentUser, activationCode: 'new'})" translate="usersPreview.generateActivationCode"></button>
     </div>
 </div>
 <div class="feature-list">

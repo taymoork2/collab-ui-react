@@ -14,7 +14,7 @@
       <div class="modal-body" ng-if="pstnNumbers.searchResults.length > 0">
         <div class="provider-flex">
           <h5 translate="pstnSetup.searchResults"></h5>
-          <button type="button" class="button info" ng-click="pstnNumbers.addToOrder()" cs-btn loading="pstnNumbers.addLoading" ng-disabled="pstnNumbers.addDisabled"><span translate="common.add"></span></button>
+          <button type="button" class="btn btn--people" ng-click="pstnNumbers.addToOrder()" cs-btn loading="pstnNumbers.addLoading" ng-disabled="pstnNumbers.addDisabled"><span translate="common.add"></span></button>
         </div>
         <ul class="small-block-grid-3 search-results">
           <li ng-repeat="searchResult in pstnNumbers.searchResults | startFrom: pstnNumbers.paginateOptions.currentPage*pstnNumbers.paginateOptions.pageSize | limitTo: pstnNumbers.paginateOptions.pageSize">
@@ -22,8 +22,8 @@
           </li>
         </ul>
         <div class="provider-flex">
-          <button type="button" class="circle-small secondary icon icon-chevron-left" ng-click="pstnNumbers.paginateOptions.previousPage()" ng-class="{invisible: pstnNumbers.paginateOptions.currentPage === 0}"><span class="sr-only" translate="common.back"></span></button>
-          <button type="button" class="circle-small secondary icon icon-chevron-right" ng-click="pstnNumbers.paginateOptions.nextPage()" ng-class="{invisible: pstnNumbers.paginateOptions.currentPage >= pstnNumbers.searchResults.length/pstnNumbers.paginateOptions.pageSize - 1}"><span class="sr-only" translate="common.next"></span></button>
+          <button type="button" class="btn--circle btn--primary icon icon-chevron-left" ng-click="pstnNumbers.paginateOptions.previousPage()" ng-class="{invisible: pstnNumbers.paginateOptions.currentPage === 0}"><span class="sr-only" translate="common.back"></span></button>
+          <button type="button" class="btn--circle btn--primary icon icon-chevron-right" ng-click="pstnNumbers.paginateOptions.nextPage()" ng-class="{invisible: pstnNumbers.paginateOptions.currentPage >= pstnNumbers.searchResults.length/pstnNumbers.paginateOptions.pageSize - 1}"><span class="sr-only" translate="common.next"></span></button>
         </div>
       </div>
       <div class="modal-body" ng-if="pstnNumbers.searchResults.length === 0">
@@ -41,7 +41,7 @@
     </section>
   </div>
   <div class="modal-footer">
-    <button class="btn btn-default" ng-if="!pstnNumbers.hasCarriers()" ui-sref="pstnSetup" translate="common.back"></button>
-    <button class="btn btn-primary" ng-click="pstnNumbers.goToReview()" translate="common.next"></button>
+    <button class="btn" ng-if="!pstnNumbers.hasCarriers()" ui-sref="pstnSetup" translate="common.back"></button>
+    <button class="btn btn--primary" ng-click="pstnNumbers.goToReview()" translate="common.next"></button>
   </div>
 </div>

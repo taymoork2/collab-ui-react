@@ -9,6 +9,7 @@
     var vm = this;
 
     vm.hasCarriers = PstnSetup.isCarrierExists;
+    vm.singleCarrierReseller = PstnSetup.isSingleCarrierReseller;
     vm.validateSwivelNumbers = validateSwivelNumbers;
 
     vm.tokenfieldid = 'swivelAddNumbers';
@@ -34,6 +35,7 @@
     function init() {
       vm.provider = PstnSetup.getProvider();
       vm.swivelNumbers = PstnSetup.getNumbers();
+      TelephoneNumberService.setRegionCode(vm.provider.country);
       $timeout(function () {
         setSwivelNumberTokens(vm.swivelNumbers);
       }, 100);

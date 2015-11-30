@@ -53,6 +53,37 @@ angular.module('Hercules')
         });
       };
 
+      var getEmailSubscribers = function (serviceId, callback) {
+        $http
+          .get(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services')
+          .success(function (data) {
+            var service = _.find(data.items, {
+              id: serviceId
+            });
+            if (service === undefined) {
+              callback(false);
+            } else {
+              callback(null, service.emailSubscribers);
+            }
+          })
+          .error(function () {
+            callback(arguments);
+          });
+      };
+
+      var setEmailSubscribers = function (serviceId, emailSubscribers, callback) {
+        $http
+          .patch(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
+            emailSubscribers: emailSubscribers
+          })
+          .success(function () {
+            callback(null);
+          })
+          .error(function () {
+            callback(arguments);
+          });
+      };
+
       var setServiceEnabled = function (serviceId, enabled, callback) {
         $http
           .patch(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services/' + serviceId, {
@@ -119,8 +150,9 @@ angular.module('Hercules')
         serviceIcon: serviceIcon,
         acknowledgeService: acknowledgeService,
         getServices: getServices,
-        servicesInOrg: servicesInOrg
+        servicesInOrg: servicesInOrg,
+        getEmailSubscribers: getEmailSubscribers,
+        setEmailSubscribers: setEmailSubscribers
       };
-
     }
   ]);
