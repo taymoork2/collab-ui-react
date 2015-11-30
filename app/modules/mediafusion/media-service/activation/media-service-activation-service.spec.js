@@ -67,7 +67,7 @@ describe('MediaServiceDescriptor', function () {
     expect($httpBackend.flush).not.toThrow();
   });
 
-    it('should return the user identity org to media agent org id mapping', function (done) {
+  it('should return the user identity org to media agent org id mapping', function (done) {
 
     $httpBackend
       .expect('GET', 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1/identity2agent/' + authinfo.getOrgId())
