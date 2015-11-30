@@ -5,18 +5,6 @@
     float: right;
     text-align: center;
   }
-  & .btn--icon {
-    background: none;
-    border: none;
-    box-shadow: none;
-    width: 100%;
-    text-align: center;
-    &:hover, &:focus, &.active:focus {
-      border: none;
-      box-shadow: none;
-      outline: 0;
-    }
-  }
   & .content-header {
     @include vr-spacing(pv, 0.625);
     @include vr-spacing(pr, 0.625);

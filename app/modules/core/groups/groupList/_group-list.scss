@@ -19,19 +19,6 @@
   }
 }
 
-.btn--icon {
-  background: none;
-  border: none;
-  box-shadow: none;
-  width: 100%;
-  text-align: right;
-  &:hover, &:focus, &.active:focus {
-    border: none;
-    box-shadow: none;
-    outline: 0;
-  }
-}
-
 .filter {
   top: 35px;
 }

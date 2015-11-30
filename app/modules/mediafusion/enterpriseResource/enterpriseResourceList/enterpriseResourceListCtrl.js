@@ -118,7 +118,7 @@ angular.module('Mediafusion')
         '<div ng-class="\'device-status-nocode\'"><p>{{row.getProperty(col.field)|status}}</p></div>';
 
       var actionsTemplate = '<span dropdown class="device-align-ellipses">' +
-        '<button id="actionlink" class="btn--icon btn--actions dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
+        '<button id="actionlink" class="btn--none btn--actions dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
         '<i class="icon icon-three-dots"></i>' +
         '</button>' +
         '<ul class="dropdown-menu dropdown-primary" role="menu">' +

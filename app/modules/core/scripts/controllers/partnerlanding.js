@@ -171,7 +171,7 @@ angular.module('Core')
       };
 
       var actionsTemplate = '<span dropdown>' +
-        '<button id="{{row.entity.customerName}}ActionsButton" class="btn--icon btn--actions dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
+        '<button id="{{row.entity.customerName}}ActionsButton" class="btn--none btn--actions dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
         '<i class="icon icon-three-dots"></i>' +
         '</button>' +
         '<ul class="dropdown-menu dropdown-primary" role="menu">' +
