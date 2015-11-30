@@ -49,12 +49,19 @@
       "services": [
         "squared-fusion-cal",
         "webex-squared",
-        "squared-fusion-mgmt"
+        "squared-fusion-mgmt",
+        "squared-fusion-cal",
+        "squared-fusion-uc",
+        "squared-fusion-ec",
+        "ciscouc",
+        "cloudMeetings",
+        "spark-device-mgmt"
       ],
-      "contact": "MOCK tywin.lannister@kingslanding.com",
-      "claimedDomains": ["MOCK kingslanding.com", "MOCK kingslanding2.com"],
-      "manages": ["MOCK Drogon Solutions", "MOCK Red Keep Global"],
-      "administratorUsers": ["MOCK Lannister Administrator 1", "MOCK Lannister Administrator 2"]
+      "contact": "tywin.lannister@kingslanding.com",
+      "domains": ["kingslanding.com", "kingslanding2.com"],
+      "manages": ["bc1d8493-69a7-4ba7-a0c0-62abf1b57ac6"],
+      "dirsyncEnabled": true,
+      "ssoEnabled": true
     },
     devices: {
       "https://csdm-a.wbx2.com/csdm/api/v1/organization/4214d345-7caf-4e32-b015-34de878d1158/devices/94b3e13c-b1dd-5e2a-9b64-e3ca02de51d3": {
@@ -201,6 +208,49 @@
       "siteUrl": "mock1.webex.com"
     }, {
       "siteUrl": "mock2.webex.com"
+    }],
+    licenses: [{
+      "type": "MESSAGING",
+      "name": "Messaging",
+      "status": "ACTIVE",
+      "volume": 100,
+      "isTrial": false
+    }, {
+      "type": "CONFERENCING",
+      "name": "Conferencing",
+      "status": "ACTIVE",
+      "volume": 100,
+      "isTrial": true,
+      "trialExpiresInDays": 49
+    }, {
+      "type": "COMMUNICATIONS",
+      "name": "Communications",
+      "status": "ACTIVE",
+      "volume": 1000,
+      "isTrial": true,
+      "trialExpiresInDays": 100
+    }, {
+      "type": "SHARED_DEVICES",
+      "name": "Shared Devices",
+      "status": "ACTIVE",
+      "volume": 50,
+      "isTrial": false
+    }],
+    hybridServices: [{
+      "id": "squared-fusion-mgmt",
+      "enabled": true,
+      "status": "error"
+    }, {
+      "id": "squared-fusion-cal",
+      "enabled": true,
+      "status": "ok"
+    }, {
+      "id": "squared-fusion-uc",
+      "enabled": true,
+      "status": "warning"
+    }, {
+      "id": "squared-fusion-ec",
+      "enabled": false
     }]
   };
   angular.module('Squared').constant('HelpdeskMockData', mockData);
