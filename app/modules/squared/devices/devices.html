@@ -20,7 +20,7 @@
     </div>
   </div>
 
-  <div ng-if="sc.codesListSubscription.eventCount == 0 || sc.deviceListSubscription.eventCount == 0">
+  <div ng-if="!sc.shouldShowList()">
     <div class="message-container">
       <div class="empty-devices-content">
         <i class="icon icon-2x icon-spinner" />
@@ -34,7 +34,7 @@
     </div>
   </div>
 
-  <div ng-if="sc.codesListSubscription.eventCount != 0 && sc.deviceListSubscription.eventCount != 0">
+  <div ng-if="sc.shouldShowList()">
     <div ng-hide="sc.updateListAndFilter().length" class="message-container">
       <div class="empty-devices-content">
         <img ng-src="images/devices/cisco_sx10.png" />

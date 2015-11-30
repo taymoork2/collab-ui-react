@@ -1,6 +1,6 @@
 last_refreshed_file=".last-refreshed"
 manifest_checksums_file=".manifest-checksums"
-manifest_files="package.json bower.json"
+manifest_files="package.json bower.json config/tsd.json"
 dependency_dirs="./node_modules ./bower_components"
 
 # generate a new timestamp file
