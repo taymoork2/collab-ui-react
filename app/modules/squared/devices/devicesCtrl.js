@@ -14,8 +14,8 @@ angular.module('Squared')
           var showWarning = true;
           vm.licenseError = "no license";
           var d = data;
-          angular.forEach(d.accounts, function(account) {
-            angular.forEach(account.licenses, function(license) {
+          angular.forEach(d.accounts, function (account) {
+            angular.forEach(account.licenses, function (license) {
               if (license.offerName == "SD") {
                 // PENDING, ACTIVE, CANCELLED, SUSPENDED
                 if (license.isTrial || license.status == "ACTIVE") {
