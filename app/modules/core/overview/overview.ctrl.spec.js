@@ -5,7 +5,7 @@ describe('Controller: OverviewCtrl', function () {
   // load the controller's module
   beforeEach(module('Core'));
 
-  var controller, $scope, $q, $state, ReportsService, Orgservice, ServiceDescriptor, ServiceStatusDecriptor, Log, Config, $translate, CannedDataService, WebexReportService, WebExUtilsFact, Authinfo;
+  var controller, $scope, $q, $state, ReportsService, Orgservice, ServiceDescriptor, ServiceStatusDecriptor, Log, Config, $translate, Authinfo;
 
   describe('Wire up', function () {
     beforeEach(inject(defaultWireUpFunc));
@@ -34,13 +34,13 @@ describe('Controller: OverviewCtrl', function () {
 
       callCard.healthStatusUpdatedHandler({
         components: [{
-          name: 'Mobile Clients',
-          status: 'error'
+          name: 'Media/Calling',
+          status: 'error',
+          id:'bn5g1kfrkn9z'
         }]
       });
 
-      //TODO this isn't giving the status as expected, its undefined.
-      //expect(callCard.healthStatus).toEqual('error');
+      expect(callCard.healthStatus).toEqual('error');
     });
   });
 
@@ -163,7 +163,7 @@ describe('Controller: OverviewCtrl', function () {
       healthMonitor: function (eventHandler) {}
     };
 
-    var Authinfo = {
+    Authinfo = {
       getConferenceServicesWithoutSiteUrl: function () {
         return [{
           license: {
