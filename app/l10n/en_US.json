@@ -1754,6 +1754,7 @@
     "contactPhone": "Phone",
     "launchButton": "View Customer",
     "setupButton": "Setup Customer",
+    "myOrgButton": "View My Organization",
     "edit": "Edit Terms of Trial",
     "trialTerms": "Terms of Trial",
     "trialOverview": "Trial",
@@ -1773,7 +1774,8 @@
     "none": "None",
     "partnerLogo": "Partner Logo",
     "logoOverride": "Customer Logo Override",
-    "allowCustomerLogo": "Enable Customer Logo for {{customer}}"
+    "allowCustomerLogo": "Enable Customer Logo for {{customer}}",
+    "myOrganization": "My Organization"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
@@ -2047,6 +2049,7 @@
   },
   "webexUserSettingsAccessErrors": {
     "000001": "Access denied, additional privileges are required.",
+    "000003": "SQL Exception.",
     "030001": "{{givenName}} {{familyName}} has not yet been provisioned to this site. This process may take a moment.",
     "030002": "Invalid Password",
     "030003": "The password should be at least 6 characters long.",

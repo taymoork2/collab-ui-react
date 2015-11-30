@@ -415,6 +415,20 @@ li.monitoring-cell {
       color: $gray-lighter;
     }
 
+    .label-managed {     
+      margin-left: 12px; 
+    }
+
+    .inactive {
+      background-color: $gray-light-3;
+      color: $gray-dark-1;
+    }
+
+    .active {
+      background-color: $color-primary-darker;
+      color: $brand-white;
+    }
+
     .free {
       color: $gray;
     }
