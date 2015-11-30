@@ -1,0 +1,76 @@
+<div class="user-view">
+  <div class="row head full">
+    <div class="columns large-12">
+      <a ui-sref="helpdesk.search">
+        <i class="icon icon-back icon-lg"></i>
+        <span translate="helpdesk.backToSearchResults"></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="row full">
+    <div class="columns medium-12 info-panel">
+      <h3 class="display-name ellipsis">{{helpdeskDeviceCtrl.device.displayName}}</h3>
+
+      <div class="user-info">
+        <span class="user-infotitle"><span translate="common.id"></span>:</span>
+        <span class="user-value">{{helpdeskDeviceCtrl.deviceId}}</span>
+      </div>
+      <div class="user-info">
+        <span class="user-infotitle"><span translate="helpdesk.type"></span>:</span>
+        <span class="user-value">
+          <img
+            ng-if="helpdeskDeviceCtrl.device.image"
+            ng-src="{{helpdeskDeviceCtrl.device.image}}"
+            style="width: 50px;"
+            /> {{helpdeskDeviceCtrl.device.product}}
+        </span>
+      </div>
+      <div class="user-info">
+        <span class="user-infotitle"><span translate="helpdesk.status"></span>:</span>
+        <span class="user-value">
+          <i class="icon icon-circle circle-status-icon" ng-class="helpdeskDeviceCtrl.device.cssColorClass"></i>{{helpdeskDeviceCtrl.device.readableState}}
+        </span>
+      </div>
+      <div class="user-info">
+        <span class="user-infotitle"><span translate="helpdesk.software"></span>:</span>
+        <span class="user-value"
+              ng-if="helpdeskDeviceCtrl.device.software">{{helpdeskDeviceCtrl.device.software}}</span>
+        <span class="user-value" ng-if="!helpdeskDeviceCtrl.device.software" translate="helpdesk.unknown"></span>
+      </div>
+      <div class="user-info">
+        <span class="user-infotitle"><span translate="helpdesk.serial"></span>:</span>
+        <span class="user-value">{{helpdeskDeviceCtrl.device.serial}}</span>
+      </div>
+      <div class="user-info">
+        <span class="user-infotitle"><span translate="helpdesk.macAddress"></span>:</span>
+        <span class="user-value">{{helpdeskDeviceCtrl.device.mac}}</span>
+      </div>
+      <div class="user-info">
+        <span class="user-infotitle"><span translate="helpdesk.organization"></span>:</span>
+        <span class="user-value">
+          <a ui-sref="helpdesk.org({org:helpdeskDeviceCtrl.org, id:helpdeskDeviceCtrl.org.id})">
+            {{helpdeskDeviceCtrl.org.displayName}}
+          </a>
+        </span>
+      </div>
+      <div class="user-info" ng-if="helpdeskDeviceCtrl.device.hasIssues">
+        <span class="user-infotitle"><span translate="deviceOverviewPage.issues"></span>:</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row full" ng-if="helpdeskDeviceCtrl.device.hasIssues">
+    <div class="columns medium-12 info-panel">
+      <div style="margin-top: 1rem;">
+        <div ng-repeat="event in helpdeskDeviceCtrl.device.diagnosticsEvents" style="padding-bottom: 10px">
+          <span>
+            <i class="icon icon-circle circle-status-icon helpdesk-red"></i>{{event.type}}
+          </span>
+
+          <p>{{event.message}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

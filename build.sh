@@ -19,17 +19,14 @@ done
 source ./bin/setup-helpers
 
 # ex.
-echo "Inspecting checksums of 'package.json' and 'bower.json' from last successful build... "
-manifest_checksums_file=".manifest-checksums"
+echo "Inspecting checksums of $manifest_files from last successful build... "
 checksums_ok=`is_checksums_ok $manifest_checksums_file && echo "true" || echo "false"`
 
 echo "Checking dependency dirs ('node_modules' and 'bower_components') still exist..."
-dependency_dirs="./node_modules ./bower_components"
 dirs_ok=`dirs_exist $dependency_dirs && echo "true" || echo "false"`
 
 echo "Checking if it is time to refresh..."
 min_refresh_period=$(( 60 * 60 * 24 ))  # 24 hours
-last_refreshed_file=".last-refreshed"
 time_to_refresh=`is_time_to_refresh $min_refresh_period $last_refreshed_file \
     && echo "true" || echo "false"`
 
@@ -53,7 +50,6 @@ else
         exit 1
     else
         # setup succeeded, update checksums file and timestamp of last refresh
-        manifest_files="package.json bower.json"
         mk_checksum_file $manifest_checksums_file $manifest_files
         mk_last_refreshed_file $last_refreshed_file
     fi
@@ -62,7 +58,6 @@ fi
 # -----
 # Phase 3: Build
 gulp clean || exit $?
-gulp tsd || exit $?
 gulp jsb:verify || exit $?
 gulp e2e --sauce --production-backend --nolint || exit $?
 

@@ -13,6 +13,10 @@
       return res.data;
     }
 
+    function extractDevice(res) {
+      return CsdmConverter.convertDevice(res.data);
+    }
+
     function useMock() {
       return $location.absUrl().match(/helpdesk-backend=mock/);
     }
@@ -59,14 +63,20 @@
     function getHybridServices(orgId) {
       if (useMock()) {
         var deferred = $q.defer();
-        deferred.resolve(ServiceDescriptor.filterAllExceptManagement(HelpdeskMockData.org.services));
+        deferred.resolve(ServiceDescriptor.filterAllRelevantToExpressway(HelpdeskMockData.org.services));
         return deferred.promise;
       }
-      return ServiceDescriptor.servicesInOrg(orgId).then(ServiceDescriptor.filterAllExceptManagement);
+      return ServiceDescriptor.servicesInOrg(orgId, true).then(filterRelevantServices);
     }
 
+    var filterRelevantServices = function (services) {
+      return _.filter(services, function (service) {
+        return service.id === 'squared-fusion-cal' || service.id === 'squared-fusion-uc' || service.id === 'squared-fusion-ec' || service.id === 'squared-fusion-mgmt';
+      });
+    };
+
     function searchCloudberryDevices(searchString, orgId) {
-      if (HelpdeskMockData.use) {
+      if (useMock()) {
         var deferred = $q.defer();
         deferred.resolve(filterDevices(searchString, CsdmConverter.convertDevices(HelpdeskMockData.devices)));
         return deferred.promise;
@@ -78,12 +88,19 @@
         });
     }
 
+    function getCloudberryDevice(orgId, deviceId) {
+      return $http
+        .get(CsdmConfigService.getUrl() + '/organization/' + orgId + '/devices/' + deviceId + '?isHelpDesk=true&checkOnline=true')
+        .then(extractDevice);
+    }
+
     function filterDevices(searchString, devices) {
       searchString = searchString.toLowerCase();
       var filteredDevices = [];
       _.each(devices, function (device) {
         if ((device.displayName || '').toLowerCase().indexOf(searchString) != -1 || (device.mac || '').toLowerCase().indexOf(searchString) != -1 || (device.serial || '').toLowerCase().indexOf(searchString) != -1) {
-          if (_.size(filterDevices) < 5) {
+          if (_.size(filteredDevices) < 5) {
+            device.id = device.url.split('/').pop();
             filteredDevices.push(device);
           } else {
             return false;
@@ -121,6 +138,17 @@
         .then(extractData);
     }
 
+    function getWebExSites(orgId) {
+      if (useMock()) {
+        var deferred = $q.defer();
+        deferred.resolve(HelpdeskMockData.webExSites);
+        return deferred.promise;
+      }
+      return $http
+        .get(urlBase + 'helpdesk/webexsites/' + encodeURIComponent(orgId))
+        .then(extractItems);
+    }
+
     return {
       searchUsers: searchUsers,
       searchOrgs: searchOrgs,
@@ -128,7 +156,9 @@
       getOrg: getOrg,
       searchCloudberryDevices: searchCloudberryDevices,
       getHybridServices: getHybridServices,
-      resendInviteEmail: resendInviteEmail
+      resendInviteEmail: resendInviteEmail,
+      getWebExSites: getWebExSites,
+      getCloudberryDevice: getCloudberryDevice
     };
 
   }

@@ -196,7 +196,12 @@
         "product": "Cisco TelePresence SX10",
         "state": "CLAIMED"
       }
-    }
+    },
+    webExSites: [{
+      "siteUrl": "mock1.webex.com"
+    }, {
+      "siteUrl": "mock2.webex.com"
+    }]
   };
   angular.module('Squared').constant('HelpdeskMockData', mockData);
 }());

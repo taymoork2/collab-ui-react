@@ -2,74 +2,61 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskOrgController(Config, $stateParams, HelpdeskService, XhrNotificationService, Authinfo) {
+  function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsService) {
     var vm = this;
-    var orgId = null;
     if ($stateParams.org) {
       vm.org = $stateParams.org;
-      orgId = vm.org.id;
+      vm.orgId = vm.org.id;
     } else {
-      orgId = $stateParams.id;
+      vm.orgId = $stateParams.id;
     }
-    vm.showCard = showCard;
+    vm.messageCard = {};
+    vm.meetingCard = {};
+    vm.callCard = {};
+    vm.hybridServicesCard = {};
+    vm.roomSystemsCard = {};
+    vm.healthStatuses = {
+      message: 'unknown',
+      meeting: 'unknown',
+      call: 'unknown',
+      room: 'unknown',
+      hybrid: 'unknown'
+    };
 
-    HelpdeskService.getOrg(orgId).then(function (res) {
-      vm.org = res;
-      findPartners(vm.org);
-    }, function (err) {
-      XhrNotificationService.notify(err);
-    });
+    HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
+    HelpdeskCardsService.getHealthStatuses().then(initHealth, angular.noop);
 
-    if (hasEntitlement(Config.entitlements.fusion_mgmt)) {
-      HelpdeskService.getHybridServices(orgId).then(function (services) {
-        vm.enabledHybridServices = _.filter(services, {
-          enabled: true
-        });
-      }, function (err) {
-        XhrNotificationService.notify(err);
-      });
-    }
-
-    /*
-      message : entitlement = "webex-squared" ?
-      meeting (webex) : entitlement = "webex-messenger" ?
-      call(huron) : authinfo.issquareduc()
-      hybrid: Authinfo.isFusion()
-      room (cloudberry): Authinfo.isDeviceManagement()
-     */
-    // TODO: Move and and reuse between user and org ?
-    function showCard(type) {
-      switch (type) {
-        //TODO: Check for the CORRECT entitlements !!!
-      case 'message':
-        return hasEntitlement(Config.entitlements.squared); //???
-      case 'meeting':
-        return hasEntitlement("webex-messenger"); // ???
-      case 'call':
-        return hasEntitlement(Config.entitlements.huron);
-      case 'hybrid':
-        return hasEntitlement(Config.entitlements.fusion_mgmt);
-      case 'room':
-        return hasEntitlement(Config.entitlements.device_mgmt);
-      }
-      return true;
+    function initOrgView(org) {
+      vm.org = org;
+      vm.messageCard = HelpdeskCardsService.getMessageCardForOrg(org);
+      vm.meetingCard = HelpdeskCardsService.getMeetingCardForOrg(org);
+      vm.callCard = HelpdeskCardsService.getCallCardForOrg(org);
+      vm.hybridServicesCard = HelpdeskCardsService.getHybridServicesCardForOrg(org);
+      vm.roomSystemsCard = HelpdeskCardsService.getRoomSystemsCardForOrg(org);
+      findPartners(org);
+      findWebExSites(org);
     }
 
-    function hasEntitlement(entitlement) {
-      if (vm.org && vm.org.services) {
-        return _.includes(vm.org.services, entitlement);
-      }
-      return false;
+    function initHealth(healthStatuses) {
+      vm.healthStatuses = healthStatuses;
     }
 
     function findPartners(org) {
       if (org.managedBy && org.managedBy.length > 0) {
-        org.partners = [];
+        org.managedByOrgs = [];
         _.each(org.managedBy, function (parnterOrg) {
           HelpdeskService.getOrg(parnterOrg.orgId).then(function (res) {
-            org.partners.push(res);
-          }, function (err) {});
+            org.managedByOrgs.push(res);
+          }, angular.noop);
         });
+      }
+    }
+
+    function findWebExSites(org) {
+      if (HelpdeskCardsService.orgIsEntitledTo(org, 'cloudMeetings')) {
+        HelpdeskService.getWebExSites(vm.orgId).then(function (sites) {
+          vm.org.webExSites = sites;
+        }, XhrNotificationService.notify);
       }
     }
   }
