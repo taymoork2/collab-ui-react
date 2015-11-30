@@ -1,5 +1,5 @@
 'use strict';
-describe('HelpdeskCardsService', function() {
+fdescribe('HelpdeskCardsService', function() {
   beforeEach(module('wx2AdminWebClientApp'));
 
   var HelpdeskCardsService;
@@ -39,22 +39,22 @@ describe('HelpdeskCardsService', function() {
   describe('User Cards', function() {
 
     it('handle card for undefined or empty user', function() {
-      var mc1 = HelpdeskCardsService.getMessageCardForUser(null);
-      var mc2 = HelpdeskCardsService.getMessageCardForUser({});
-      var mc3 = HelpdeskCardsService.getMeetingCardForUser(null);
-      var mc4 = HelpdeskCardsService.getMeetingCardForUser({});
-      var mc5 = HelpdeskCardsService.getCallCardForUser(null);
-      var mc6 = HelpdeskCardsService.getCallCardForUser({});
-      var mc7 = HelpdeskCardsService.getHybridServicesCardForUser(null);
-      var mc8 = HelpdeskCardsService.getHybridServicesCardForUser({});
-      expect(mc1).toEqual(emptyCard());
-      expect(mc2).toEqual(emptyCard());
-      expect(mc3).toEqual(emptyMeetingCard());
-      expect(mc4).toEqual(emptyMeetingCard());
-      expect(mc5).toEqual(emptyCard());
-      expect(mc6).toEqual(emptyCard());
-      expect(mc7).toEqual(emptyHybridCard());
-      expect(mc8).toEqual(emptyHybridCard());
+      var messageCard = HelpdeskCardsService.getMessageCardForUser(null);
+      expect(messageCard).toEqual(emptyCard());
+      messageCard = HelpdeskCardsService.getMessageCardForUser({});
+      expect(messageCard).toEqual(emptyCard());
+      var meetingCard = HelpdeskCardsService.getMeetingCardForUser(null);
+      expect(meetingCard).toEqual(emptyMeetingCard());
+      meetingCard = HelpdeskCardsService.getMeetingCardForUser({});
+      expect(meetingCard).toEqual(emptyMeetingCard());
+      var callCard = HelpdeskCardsService.getCallCardForUser(null);
+      expect(callCard).toEqual(emptyCard());
+      callCard = HelpdeskCardsService.getCallCardForUser({});
+      expect(callCard).toEqual(emptyCard());
+      var hybridCard = HelpdeskCardsService.getHybridServicesCardForUser(null);
+      expect(hybridCard).toEqual(emptyHybridCard());
+      hybridCard = HelpdeskCardsService.getHybridServicesCardForUser({});
+      expect(hybridCard).toEqual(emptyHybridCard());
     });
 
     it('Should return correct message card for user', function() {
