@@ -19,19 +19,22 @@
       </div>
   </div>
 
-    <ul class="breadcrumbs webexPage" id="webexReportIFrameBreadCrumbs" title="{{'webexCommon.breadcrumbsAltText' | translate}}">
-      <li>
-        <a id="webexReportIFrameCrumb2" 
-           ui-sref="webex-reports({siteUrl:siteUrl})">
-           
-          WebEx {{('webexSiteReports.title' | translate) + ' | ' + siteUrl}}
-        </a>
-      </</li>
+  <ul class="breadcrumbs webexPage" 
+      id="webexReportIFrameBreadCrumbs" 
+      title="{{'webexCommon.breadcrumbsAltText' | translate}}">
       
-      <li class="current">
-        {{reportPageTitle}}
-      </li>
-    </ul>
+    <li>
+      <a id="webexReportIFrameCrumb2" 
+         ui-sref="webex-reports({siteUrl:siteUrl})">
+           
+        {{('webexSiteReports.title' | translate) + ' ' + siteUrl}}
+      </a>
+    </</li>
+      
+    <li class="current">
+      {{reportPageTitle}}
+    </li>
+  </ul>
 
   <!-- <cs-breadcrumbs displayname-property="data.displayName"></cs-breadcrumbs> -->
 </div>
