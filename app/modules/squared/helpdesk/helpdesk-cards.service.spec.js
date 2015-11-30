@@ -13,17 +13,23 @@ describe('HelpdeskCardsService', function () {
     expect(card.entitled).toBeFalsy();
     expect(card.entitlements.length).toEqual(0);
 
-    card = HelpdeskCardsService.getMessageCardForUser({entitlements: []});
+    card = HelpdeskCardsService.getMessageCardForUser({
+      entitlements: []
+    });
     expect(card.entitled).toBeFalsy();
     expect(card.entitlements.length).toEqual(0);
 
-    card = HelpdeskCardsService.getMessageCardForUser({entitlements: ['webex-squared']});
+    card = HelpdeskCardsService.getMessageCardForUser({
+      entitlements: ['webex-squared']
+    });
     expect(card.entitled).toBeTruthy();
     expect(card.entitlements.length).toEqual(1);
     expect(card.entitlements[0]).toEqual('helpdesk.entitlements.webex-squared');
 
     // Entitled, but no license (free)
-    card = HelpdeskCardsService.getMessageCardForUser({entitlements: ['webex-squared', 'squared-room-moderation']});
+    card = HelpdeskCardsService.getMessageCardForUser({
+      entitlements: ['webex-squared', 'squared-room-moderation']
+    });
     expect(card.entitled).toBeTruthy();
     expect(card.entitlements.length).toEqual(1);
     expect(card.entitlements[0]).toEqual('helpdesk.entitlements.squared-room-moderation.free');
