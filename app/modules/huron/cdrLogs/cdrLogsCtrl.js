@@ -503,11 +503,13 @@
           label: $translate.instant('cdrLogs.upload'),
           onClick: function (options, scope) {
             vm.selectedCDR = null;
+            vm.dataState = 1;
             try {
               var jsonData = JSON.parse(scope.model.uploadFile);
               vm.gridData = [];
-              vm.gridData.push(jsonData.cdrs);
+              vm.gridData.push(addNames(jsonData.cdrs));
             } catch (SyntaxError) {
+              vm.dataState = 0;
               Notification.notify($translate.instant('cdrLogs.jsonSyntaxError'), 'error');
             }
           }
@@ -522,6 +524,18 @@
     vm.statusAvalibility = statusAvalibility;
     vm.getAccordionHeader = getAccordionHeader;
     vm.selectCDR = selectCDR;
+
+    function addNames(cdrArray) {
+      var x = 0;
+      angular.forEach(cdrArray, function(cdr, index, array) {
+        angular.forEach(cdr, function(item, itemIndex, itemArray) {
+          item.name = "call0CDR" + x;
+          x++;
+        });
+      });
+
+      return cdrArray;
+    }
 
     function statusAvalibility(cdrArray) {
       // returns danger if both the calling and called cause codes for each cdr in the array is in the errorStatus array
