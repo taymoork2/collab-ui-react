@@ -1,4 +1,4 @@
-(function () {
+(function() {
   'use strict';
 
   /* @ngInject */
@@ -11,7 +11,7 @@
     vm.cluster = $stateParams.cluster;
     vm.currentServiceId = "squared-fusion-media";
 
-    vm.disableMediaService = function (serviceId) {
+    vm.disableMediaService = function(serviceId) {
       MediaServiceActivation.setServiceEnabled(vm.currentServiceId, false).then(
         function success() {
           $state.go("media-service.list", {
@@ -25,25 +25,25 @@
         });
     };
 
-    vm.confirmDisable = function (serviceId) {
+    vm.confirmDisable = function(serviceId) {
       $modal.open({
         // TODO: update correct disable-dialog html
         templateUrl: "modules/mediafusion/media-service/settings/confirm-disable-dialog.html",
         controller: DisableConfirmController,
         controllerAs: "disableConfirmDialog",
-      }).result.then(function () {
+      }).result.then(function() {
         vm.disableMediaService(serviceId);
       });
     };
 
-    NotificationConfigService.read(function (err, config) {
+    NotificationConfigService.read(function(err, config) {
       vm.loading = false;
       if (err) {
         return XhrNotificationService.notify(err);
       }
       vm.config = config || {};
       if (vm.config.wx2users.length > 0) {
-        vm.wx2users = _.map(vm.config.wx2users.split(','), function (user) {
+        vm.wx2users = _.map(vm.config.wx2users.split(','), function(user) {
           return {
             text: user
           };
@@ -53,17 +53,17 @@
       }
     });
 
-    vm.writeConfig = function () {
+    vm.writeConfig = function() {
       $log.log("inside");
-      vm.config.wx2users = _.map(vm.wx2users, function (data) {
+      vm.config.wx2users = _.map(vm.wx2users, function(data) {
         return data.text;
       }).toString();
-      $log.log("value of wx2users",vm.config.wx2users);
+      $log.log("value of wx2users", vm.config.wx2users);
       if (vm.config.wx2users && !MailValidatorService.isValidEmailCsv(vm.config.wx2users)) {
         Notification.error("hercules.errors.invalidEmail");
       } else {
         vm.savingEmail = true;
-        NotificationConfigService.write(vm.config, function (err) {
+        NotificationConfigService.write(vm.config, function(err) {
           vm.savingEmail = false;
           if (err) {
             return XhrNotificationService.notify(err);
@@ -72,7 +72,7 @@
       }
     };
 
-    vm.invalidEmail = function (tag) {
+    vm.invalidEmail = function(tag) {
       Notification.error(tag.text + " is not a valid email");
     };
   }
@@ -83,10 +83,10 @@
     //TODO:check this
     // modalVm.serviceIconClass = MediaServiceDescriptor.serviceIcon();
 
-    modalVm.ok = function () {
+    modalVm.ok = function() {
       $modalInstance.close();
     };
-    modalVm.cancel = function () {
+    modalVm.cancel = function() {
       $modalInstance.dismiss();
     };
   }
