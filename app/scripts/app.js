@@ -37,7 +37,8 @@ angular.module('Core', [
   'timer',
   'angular-nicescroll',
   'cwill747.phonenumber',
-  'toaster'
+  'toaster',
+  'angular-cache'
 ]).constant('pako', window.pako);
 
 angular.module('Squared', ['Core']);
