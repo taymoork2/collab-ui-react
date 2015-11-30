@@ -93,7 +93,7 @@
 
     function searchCloudberryDevices(searchString, orgId, limit) {
       if (useMock()) {
-        return deferredResolve(filterDevices(searchString, CsdmConverter.convertDevices(HelpdeskMockData.devices, limit)));
+        return deferredResolve(filterDevices(searchString, CsdmConverter.convertDevices(HelpdeskMockData.devices), limit));
       }
       var devices = devicesInOrgCache.get(orgId);
       if (devices) {
