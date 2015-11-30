@@ -32,6 +32,7 @@
     vm.keyActionChanged = keyActionChanged;
     vm.saveUIModel = saveUIModel;
     vm.populateOptionMenu = populateOptionMenu;
+    vm.createOptionMenu = createOptionMenu;
 
     vm.repeatOptions = [{
       label: $translate.instant('autoAttendant.phoneMenuRepeatOnce'),
@@ -69,37 +70,44 @@
     }];
 
     // TBD means the action isn't supported in the backend yet
-    vm.keyActions = [{
-      label: $translate.instant('autoAttendant.phoneMenuPlaySubmenu'),
-      name: 'phoneMenuPlaySubmenu',
-      action: 'runActionsOnInput',
-      inputType: 1
-    }, {
-      label: $translate.instant('autoAttendant.phoneMenuRepeatMenu'),
-      name: 'phoneMenuRepeatMenu',
-      action: 'repeatActionsOnInput'
-    }, {
-      label: $translate.instant('autoAttendant.phoneMenuDialExt'),
-      name: 'phoneMenuDialExt',
-      action: 'runActionsOnInput',
-      inputType: '2'
-    }, {
-      label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
-      name: 'phoneMenuRouteUser',
-      action: 'TBD'
-    }, {
-      label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
-      name: 'phoneMenuRouteHunt',
-      action: 'routeToHuntGroup'
-    }, {
-      label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
-      name: 'phoneMenuRouteVM',
-      action: 'TBD'
-    }, {
-      label: $translate.instant('autoAttendant.phoneMenuRouteAA'),
-      name: 'phoneMenuRouteAA',
-      action: 'goto'
-    }];
+    vm.keyActions = [
+      // {
+      //   label: $translate.instant('autoAttendant.phoneMenuPlaySubmenu'),
+      //   name: 'phoneMenuPlaySubmenu',
+      //   action: 'runActionsOnInput',
+      //   inputType: 1
+      // },
+      {
+        label: $translate.instant('autoAttendant.phoneMenuRepeatMenu'),
+        name: 'phoneMenuRepeatMenu',
+        action: 'repeatActionsOnInput'
+      }, {
+        label: $translate.instant('autoAttendant.phoneMenuDialExt'),
+        name: 'phoneMenuDialExt',
+        action: 'runActionsOnInput',
+        inputType: '2'
+      },
+      // {
+      //   label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
+      //   name: 'phoneMenuRouteUser',
+      //   action: 'TBD'
+      // },
+      {
+        label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
+        name: 'phoneMenuRouteHunt',
+        action: 'routeToHuntGroup'
+      },
+      // {
+      //   label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
+      //   name: 'phoneMenuRouteVM',
+      //   action: 'TBD'
+      // },
+      {
+        label: $translate.instant('autoAttendant.phoneMenuRouteAA'),
+        name: 'phoneMenuRouteAA',
+        action: 'goto'
+      }
+    ];
 
     // search for a key action by its name
     function findKeyAction(name) {
@@ -253,6 +261,28 @@
         // remove keys that are in use from the selection widget
         setAvailableKeys();
       }
+      //
+      // Workaround for Problem I: A save failure is seen when phone menu is first created without any further inputs and save
+      // button is clicked.
+      //
+      // This is a result of Problem II: createOptionMenu always initializes the menu with an emtpy key VIA the global UI model.
+      // The right way to do this is to initializes the menu with an emtpy key VIA vm.selectedActions, the local UI model.
+      // However, this problem cannot be fixed because of the following bigger combinedMenu infrastructure problem,
+      // welcomeMenu contains optionMenu:
+      //
+      // Problem III: A combinedMenu is a welcomeMenu which contains an array of ceMenuEntry with one of ceMenu.
+      // Such mixture of array elements results into two AAPhoneMenuCtrl creation when defining a new phone menu:
+      //
+      // 1) AAPhoneMenuCtrl is instantiated and invoke creatOptionMenu(), creating an empty menu in the UI model
+      // 2) vm.entries[$scope.index] is assigned new ceMenu object (third line in creatOptionMenu())
+      // 3) AAPhoneMenuCtrl is instantiated again and invoke populateOptionMenu(), because it sees a menu defined in UI model.
+      //
+      // Problem II cannot be fixed without fixing Problem III first which requires more time.  The proper fix for Problem III is to
+      // store the reference to the optionMenu in a ceMenu entry in welcomeMenu.
+      //
+      // The following workaround (writing local UI model into the global UI model) will erase the invalid empty key entry in the global
+      // UI model.
+      vm.saveUIModel();
     }
 
     function createOptionMenu() {
@@ -266,6 +296,11 @@
       var emptyAction = AutoAttendantCeMenuModelService.newCeActionEntry();
       keyEntry.addAction(emptyAction);
       menu.entries.push(keyEntry);
+
+      menu.attempts = 4;
+      vm.selectedTimeout = angular.copy(vm.timeoutActions[0]);
+      vm.selectedTimeout.childOptions = angular.copy(vm.repeatOptions);
+      vm.selectedTimeout.selectedChild = angular.copy(vm.repeatOptions[2]);
     }
 
     /////////////////////
