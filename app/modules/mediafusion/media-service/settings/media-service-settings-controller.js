@@ -27,7 +27,6 @@
 
     vm.confirmDisable = function(serviceId) {
       $modal.open({
-        // TODO: update correct disable-dialog html
         templateUrl: "modules/mediafusion/media-service/settings/confirm-disable-dialog.html",
         controller: DisableConfirmController,
         controllerAs: "disableConfirmDialog",
@@ -54,11 +53,9 @@
     });
 
     vm.writeConfig = function() {
-      $log.log("inside");
       vm.config.wx2users = _.map(vm.wx2users, function(data) {
         return data.text;
       }).toString();
-      $log.log("value of wx2users", vm.config.wx2users);
       if (vm.config.wx2users && !MailValidatorService.isValidEmailCsv(vm.config.wx2users)) {
         Notification.error("hercules.errors.invalidEmail");
       } else {
@@ -80,9 +77,6 @@
   /* @ngInject */
   function DisableConfirmController(MediaServiceActivation, $modalInstance) {
     var modalVm = this;
-    //TODO:check this
-    // modalVm.serviceIconClass = MediaServiceDescriptor.serviceIcon();
-
     modalVm.ok = function() {
       $modalInstance.close();
     };
