@@ -3,9 +3,9 @@
 angular.module('Hercules')
   .service('ServiceDescriptor', ['$http', 'ConfigService', 'Authinfo',
     function ServiceDescriptor($http, config, Authinfo) {
-      var services = function (callback) {
+      var services = function (callback, includeStatus) {
         $http
-          .get(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services')
+          .get(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services' + (includeStatus ? '?fields=status' : ''))
           .success(function (data) {
             callback(null, data.items || []);
           })
