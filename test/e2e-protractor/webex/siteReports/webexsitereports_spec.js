@@ -104,7 +104,7 @@ describe('WebEx site reports iframe', function () {
     utils.wait(sitereports.webexSiteReportsPanel);
   });
 
-  /**  
+  /**
     it('should pause', function () {
       browser.pause()
     });

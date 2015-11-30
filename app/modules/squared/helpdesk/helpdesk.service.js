@@ -2,8 +2,22 @@
   'use strict';
 
   /*ngInject*/
-  function HelpdeskService(ServiceDescriptor, $location, $http, Config, $q, HelpdeskMockData, CsdmConfigService, CsdmConverter) {
+  function HelpdeskService(ServiceDescriptor, $location, $http, Config, $q, HelpdeskMockData, CsdmConfigService, CsdmConverter, CacheFactory) {
     var urlBase = Config.getAdminServiceUrl(); //"http://localhost:8080/admin/api/v1/"
+    var orgCache = CacheFactory.get('helpdeskOrgCache');
+    if (!orgCache) {
+      orgCache = new CacheFactory('helpdeskOrgCache', {
+        maxAge: 60 * 1000,
+        deleteOnExpire: 'aggressive'
+      });
+    }
+    var devicesInOrgCache = CacheFactory.get('helpdeskDevicesInOrgCache');
+    if (!devicesInOrgCache) {
+      devicesInOrgCache = new CacheFactory('helpdeskDevicesInOrgCache', {
+        maxAge: 120 * 1000,
+        deleteOnExpire: 'aggressive'
+      });
+    }
 
     function extractItems(res) {
       return res.data.items;
@@ -13,29 +27,35 @@
       return res.data;
     }
 
+    function extractDevice(res) {
+      return CsdmConverter.convertDevice(res.data);
+    }
+
+    function extractOrg(res) {
+      var org = res.data;
+      orgCache.put(org.id, org);
+      return org;
+    }
+
     function useMock() {
       return $location.absUrl().match(/helpdesk-backend=mock/);
     }
 
-    function searchUsers(searchString, orgId) {
+    function searchUsers(searchString, orgId, limit) {
       if (useMock()) {
-        var deferred = $q.defer();
-        deferred.resolve(HelpdeskMockData.users);
-        return deferred.promise;
+        return deferredResolve(HelpdeskMockData.users);
       }
       return $http
-        .get(urlBase + 'helpdesk/search/users?phrase=' + encodeURIComponent(searchString) + '&limit=5' + (orgId ? '&orgId=' + encodeURIComponent(orgId) : ''))
+        .get(urlBase + 'helpdesk/search/users?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit + (orgId ? '&orgId=' + encodeURIComponent(orgId) : ''))
         .then(extractItems);
     }
 
-    function searchOrgs(searchString) {
+    function searchOrgs(searchString, limit) {
       if (useMock()) {
-        var deferred = $q.defer();
-        deferred.resolve(HelpdeskMockData.orgs);
-        return deferred.promise;
+        deferredResolve(HelpdeskMockData.orgs);
       }
       return $http
-        .get(urlBase + 'helpdesk/search/organizations?phrase=' + encodeURIComponent(searchString) + '&limit=5')
+        .get(urlBase + 'helpdesk/search/organizations?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit)
         .then(extractItems);
     }
 
@@ -47,50 +67,67 @@
 
     function getOrg(orgId) {
       if (useMock()) {
-        var deferred = $q.defer();
-        deferred.resolve(HelpdeskMockData.org);
-        return deferred.promise;
+        return deferredResolve(HelpdeskMockData.org);
+      }
+      var cachedOrg = orgCache.get(orgId);
+      if (cachedOrg) {
+        return deferredResolve(cachedOrg);
       }
       return $http
         .get(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId))
-        .then(extractData);
+        .then(extractOrg);
     }
 
     function getHybridServices(orgId) {
       if (useMock()) {
-        var deferred = $q.defer();
-        deferred.resolve(ServiceDescriptor.filterAllExceptManagement(HelpdeskMockData.org.services));
-        return deferred.promise;
+        return deferredResolve(filterRelevantServices(HelpdeskMockData.hybridServices));
       }
-      return ServiceDescriptor.servicesInOrg(orgId).then(ServiceDescriptor.filterAllExceptManagement);
+      return ServiceDescriptor.servicesInOrg(orgId, true).then(filterRelevantServices);
     }
 
-    function searchCloudberryDevices(searchString, orgId) {
-      if (HelpdeskMockData.use) {
-        var deferred = $q.defer();
-        deferred.resolve(filterDevices(searchString, CsdmConverter.convertDevices(HelpdeskMockData.devices)));
-        return deferred.promise;
+    var filterRelevantServices = function (services) {
+      return _.filter(services, function (service) {
+        return service.id === 'squared-fusion-cal' || service.id === 'squared-fusion-uc' || service.id === 'squared-fusion-ec' || service.id === 'squared-fusion-mgmt';
+      });
+    };
+
+    function searchCloudberryDevices(searchString, orgId, limit) {
+      if (useMock()) {
+        return deferredResolve(filterDevices(searchString, CsdmConverter.convertDevices(HelpdeskMockData.devices), limit));
+      }
+      var devices = devicesInOrgCache.get(orgId);
+      if (devices) {
+        return deferredResolve(filterDevices(searchString, devices, limit));
       }
       return $http
         .get(CsdmConfigService.getUrl() + '/organization/' + encodeURIComponent(orgId) + '/devices?checkOnline=false&isHelpDesk=true')
         .then(function (res) {
-          return filterDevices(searchString, CsdmConverter.convertDevices(res.data));
+          var devices = CsdmConverter.convertDevices(res.data);
+          devicesInOrgCache.put(orgId, devices);
+          return filterDevices(searchString, devices, limit);
         });
     }
 
-    function filterDevices(searchString, devices) {
+    function getCloudberryDevice(orgId, deviceId) {
+      return $http
+        .get(CsdmConfigService.getUrl() + '/organization/' + orgId + '/devices/' + deviceId + '?isHelpDesk=true&checkOnline=true')
+        .then(extractDevice);
+    }
+
+    function filterDevices(searchString, devices, limit) {
       searchString = searchString.toLowerCase();
       var filteredDevices = [];
       _.each(devices, function (device) {
         if ((device.displayName || '').toLowerCase().indexOf(searchString) != -1 || (device.mac || '').toLowerCase().indexOf(searchString) != -1 || (device.serial || '').toLowerCase().indexOf(searchString) != -1) {
-          if (_.size(filterDevices) < 5) {
+          if (_.size(filteredDevices) < limit) {
+            device.id = device.url.split('/').pop();
             filteredDevices.push(device);
           } else {
             return false;
           }
         }
       });
-      return filteredDevices;
+      return _.sortBy(filteredDevices, 'displayName');
     }
 
     function extractUserAndSetUserStatuses(res) {
@@ -121,6 +158,23 @@
         .then(extractData);
     }
 
+    function getWebExSites(orgId) {
+      if (useMock()) {
+        var deferred = $q.defer();
+        deferred.resolve(HelpdeskMockData.webExSites);
+        return deferred.promise;
+      }
+      return $http
+        .get(urlBase + 'helpdesk/webexsites/' + encodeURIComponent(orgId))
+        .then(extractItems);
+    }
+
+    function deferredResolve(resolved) {
+      var deferred = $q.defer();
+      deferred.resolve(resolved);
+      return deferred.promise;
+    }
+
     return {
       searchUsers: searchUsers,
       searchOrgs: searchOrgs,
@@ -128,9 +182,10 @@
       getOrg: getOrg,
       searchCloudberryDevices: searchCloudberryDevices,
       getHybridServices: getHybridServices,
-      resendInviteEmail: resendInviteEmail
+      resendInviteEmail: resendInviteEmail,
+      getWebExSites: getWebExSites,
+      getCloudberryDevice: getCloudberryDevice
     };
-
   }
 
   angular.module('Squared')

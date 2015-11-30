@@ -4,8 +4,9 @@ namespace devicesRedux {
 
     private _search;
     private groupedDevices;
-    private codesListSubscription
+    private codesListSubscription;
     private deviceListSubscription;
+    private huronDeviceListSubscription;
 
     private deviceProps = {
       product: 'Product',
@@ -38,7 +39,8 @@ namespace devicesRedux {
                 private $rootScope,
                 private AddDeviceModal,
                 private CsdmCodeService,
-                private CsdmDeviceService) {
+                private CsdmDeviceService,
+                private CsdmHuronDeviceService) {
 
       // hack until toolkit supports #fff background
       $('body').css('background', 'white');
@@ -48,6 +50,10 @@ namespace devicesRedux {
       });
 
       this.deviceListSubscription = CsdmDeviceService.on('data', this.updateCodesAndDevices.bind(this), {
+        scope: $scope
+      });
+
+      this.huronDeviceListSubscription = CsdmHuronDeviceService.on('data', this.updateCodesAndDevices.bind(this), {
         scope: $scope
       });
     }
@@ -64,6 +70,7 @@ namespace devicesRedux {
       const devicesAndCodesArr = _({})
         .extend(this.CsdmDeviceService.getDeviceList())
         .extend(this.CsdmCodeService.getCodeList())
+        .extend(this.CsdmHuronDeviceService.getDeviceList())
         .values()
         .filter(this.filterOnSearchQuery.bind(this))
         .sortBy(this.displayNameSorter.bind(this))

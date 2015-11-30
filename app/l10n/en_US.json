@@ -1967,7 +1967,7 @@
     "deleteResource": "Decomission Resource"
   },
   "mediaFusion": {
-    "page_title": "Media Service Management",
+    "page_title": "Media Service",
     "connectors": {
       "group_by": "Group services by:",
       "cluster_id": "Cluster",
@@ -1985,6 +1985,24 @@
       "ingress": "Extend the Cloud to Your On-Premises Environment",
       "serviceName": "Media Service Activation",
       "label": "ACTIVATE AND BEGIN SETUP"
+    },
+    "settings": {
+      "deactivateServiceHeading": "Deactivate Service",
+      "deactivateService": "Deactivating a service requires another confirm step and will remove any service related functionality from your users.",
+      "deactivate": "Deactivate",
+      "emailNotificationsHeading": "Email Notifications",
+      "emailNotifications": "Add email addresses to receive email notifications about Service impacting Alarms and Software Upgrades.",
+      "emailExample": "For example: John Doe john.doe@email.com, Kate Williams kate.williams@email.com",
+      "documentationHeading": "Documentation and software",
+      "documentation_1": "Go to",
+      "documentation_2": "Help Central",
+      "documentation_3": "for prerequisites and help installing and using Hybrid Services.",
+      "documentation_4": "Download Media Service OVA from",
+      "documentation_5": "software.cisco.com",
+      "deactivate": "DEACTIVATE",
+      "cancelCaps": "CANCEL",
+      "deactivateBody_1": "You are about to remove the following Hybrid Service for your organization:",
+      "deactivateBody_2": "Deaactivating a service will remove any service-related activity from your users. Additional steps are required to remove the service from your on-premises resources."
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
     "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
@@ -2661,6 +2679,7 @@
   },
 
   "huronHuntGroup": {
+    "modalTitle": "Hunt Group",
     "title": "hunt group",
     "createTitle": "Create Hunt Group",
     "namePlaceholder": "Name the Hunt Group",
@@ -2720,8 +2739,10 @@
     "numberPlural": "Numbers",
     "numbersInputPlaceHolder": "Start typing here",
     "ringTimeLabel": "Member's Max Ring Time",
+    "ringTimeSecondaryLabel": "secs",
     "ringTimeDesc": "The maximum amount of time a member's line will ring before it sent to the next number.",
     "waitTimeLabel": "Caller Max Wait Time",
+    "waitTimeSecondaryLabel": "mins",
     "waitTimeDesc": "The maximum time a caller will be in waiting before sent to fallback destination.",
     "fallbackLabel": "Fallback Destination",
     "fallbackDesc": "This is where the call goes if it was not answered by this hunt group.",
@@ -2777,7 +2798,7 @@
         "title": "Room Systems",
         "currentTitle": "Online this week",
         "previousTitle": "Last week:",
-        "notEnabledText": "Meeting room video endpoints that seamlessly integrate with your cloud collaboration."
+        "notEnabledText": "Meeting room systems seamlessly integrated with the Spark app."
       },
       "hybrid": {
         "title": "Hybrid Services",
@@ -2808,27 +2829,28 @@
     "sso": "Single Sign On (SSO)",
     "dirSync": "Directory Synchronization",
     "type": "Type",
-    "partner": "Partner",
-    "customer": "Customer",
+    "partner": "Partner Organization",
+    "customer": "Customer Organization",
     "searchCriteriaLink": "Show supported search criteria.",
-    "searchInfo": "Search users by Email, Phone Number or Display Name (two words required). Search company by Display Name.",
+    "searchInfo": "Search users by Email, Phone Number or Display Name (two words required). Search company by Display Name. Search devices by Display Name, Serial or MAC Address (Note: device search is supported only when searching a specific customer).",
     "devices": "Devices",
     "mobile": "mobile",
     "work": "work",
     "fax": "fax",
     "searchingOrg": "Searching {{name}}",
-    "userStatus": "Status",
-    "userId": "Id",
+    "status": "Status",
     "organization": "Customer",
+    "accountCreated": "Account Created",
     "customerPortalLaunch": "Launch Customer Portal",
     "contact": "Contact",
     "claimedDomain": "Claimed Domain",
-    "partners": "Partners",
+    "managedBy": "Managed By",
     "administratorUsers": "Administrator Users",
     "message": "Message",
     "meeting": "Meeting",
     "call": "Call",
     "rooms": "Rooms",
+    "claimedDomain": "Claimed Domains",
     "hybridServices": "Hybrid Services",
     "entitlements": {
       "webex-squared": "Free Spark Messaging",
@@ -2848,8 +2870,25 @@
       "compliance": "Compliance"
     },
     "entitlementsHeading": "Entitlements",
-    "enabledServices": "Enabled Services",
+    "enabledServices": "Active",
+    "availableServices": "Available",
     "none": "None",
-    "webexsites": "WebEx Sites"
+    "webexsites": "WebEx Sites",
+    "phoneNumbers": "Phone Numbers",
+    "software": "Software",
+    "serial": "Serial",
+    "macAddress": "MAC Address",
+    "badOrgSearchInput": "Searching for customers requires a minimum of three characters.",
+    "unknown": "Unknown",
+    "showMore": "Show more results",
+    "delegatedAdministration": "manages {{numManages}} organizations",
+    "licenses": "Licenses",
+    "licenseTypes": {
+      "MESSAGING": "{{volume}} Standard Team Rooms",
+      "CONFERENCING": "{{volume}} 25 Party Meetings",
+      "COMMUNICATIONS": "{{volume}} Advanced Spark Call",
+      "SHARED_DEVICES": "{{volume}} Room Devices"
+    },
+    "trial": "Trial"
   }
 }
