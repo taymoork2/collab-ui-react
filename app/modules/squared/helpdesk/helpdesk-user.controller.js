@@ -7,13 +7,13 @@
     if ($stateParams.user) {
       vm.userId = $stateParams.user.id;
       vm.orgId = $stateParams.user.organization.id;
+      vm.org = $stateParams.user.organization;
     } else {
       vm.userId = $stateParams.id;
       vm.orgId = $stateParams.orgId;
     }
     vm.resendInviteEmail = resendInviteEmail;
     vm.user = $stateParams.user;
-    vm.org = $stateParams.user.organization;
     vm.resendInviteEnabled = false;
     vm.messageCard = {};
     vm.meetingCard = {};

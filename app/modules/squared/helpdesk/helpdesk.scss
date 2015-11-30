@@ -25,58 +25,54 @@
       margin-bottom: 1rem;
       margin-top: 2rem;
     }
-  }
-  .helpdesk-org {
-    h3 {
+    .org-card-footer {
+      background-color: $gray-light-4;
+      padding-bottom: 0.5rem;
+      padding-top: 0.5rem;
+      padding-right: 1rem;
+      border-radius: 0 0 3px 3px;
+      font-size: 0.675rem;
+      .trial {
+        border-radius: 3px;
+        background-color: $color-attention-base;
+        color: $white;
+        line-height: 1rem;
+        padding-left: 0.2rem;
+        padding-right: 0.2rem;
+      }
+      .status {
+        line-height: 1rem;
+      }
+      .operational {
+        color: $color-cta-base;
+      }
+      .warning,
+      .partial_outage {
+        color: $color-attention-base;
+      }
+      .error {
+        color: $color-alerts-base;
+      }
+      .unknown {
+        color: $gray-base;
+      }
+    }
+    .customer-or-partner {
+      font-size: 0.75rem;
+      color: $gray-base;
+      margin-top: -0.5rem;
       margin-bottom: 1rem;
     }
-  }
-  .org-card-footer {
-    background-color: $gray-light-4;
-    padding-bottom: 0.5rem;
-    padding-top: 0.5rem;
-    padding-right: 1rem;
-    border-radius: 0 0 3px 3px;
-    font-size: 0.675rem;
-    .trial {
-      border-radius: 3px;
-      background-color: $color-attention-base;
-      color: $white;
-      line-height: 1rem;
-      padding-left: 0.2rem;
-      padding-right: 0.2rem;
+    .details-heading {
+      margin-bottom: 1rem;
     }
-    .status {
-      line-height: 1rem;
+    .cs-card-layout.cs-card-block {
+      padding-right: 0;
+      padding-left: 0.5rem;
     }
-    .operational {
-      color: $color-cta-base;
-    }
-    .warning,
-    .partial_outage {
-      color: $color-attention-base;
-    }
-    .error {
-      color: $color-alerts-base;
-    }
-    .unknown {
-      color: $gray-base;
-    }
-  }
-  .customer-or-partner {
-    font-size: 0.75rem;
-    color: $gray-base;
-    margin-top: -0.5rem;
-    margin-bottom: 1rem;
-  }
-  .details-heading {
-    margin-bottom: 1rem;
-  }
-  .cs-card-layout.cs-card-block {
-    padding-right: 0;
-    padding-left: 0.5rem;
   }
 }
+
 .helpdesk-search {
   padding-top: 1rem;
   text-align: center;
