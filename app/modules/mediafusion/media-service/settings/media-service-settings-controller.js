@@ -2,18 +2,19 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceSettingsController($state, $modal, MediaServiceDescriptor, Authinfo, $stateParams, NotificationConfigService, $log, MailValidatorService, XhrNotificationService, Notification) {
+  function MediaServiceSettingsController($state, $modal, MediaServiceActivation, Authinfo, $stateParams, NotificationConfigService, $log, MailValidatorService, XhrNotificationService, Notification) {
     var vm = this;
     vm.config = "";
     vm.wx2users = "";
     vm.serviceType = "mf_mgmt";
     vm.serviceId = "squared-fusion-media";
     vm.cluster = $stateParams.cluster;
+    vm.currentServiceId = "squared-fusion-media";
 
     vm.disableMediaService = function (serviceId) {
-      MediaServiceDescriptor.setServiceEnabled(serviceId, false).then(
+      MediaServiceActivation.setServiceEnabled(vm.currentServiceId, false).then(
         function success() {
-          $state.go("mediafusion.list", {
+          $state.go("media-service.list", {
             serviceType: "mf_mgmt"
           }, {
             reload: true
@@ -25,9 +26,7 @@
     };
 
     vm.confirmDisable = function (serviceId) {
-      $log.log("inside");
       $modal.open({
-        // TODO: update correct disable-dialog html
         templateUrl: "modules/mediafusion/media-service/settings/confirm-disable-dialog.html",
         controller: DisableConfirmController,
         controllerAs: "disableConfirmDialog",
@@ -76,11 +75,8 @@
   }
 
   /* @ngInject */
-  function DisableConfirmController(MediaServiceDescriptor, $modalInstance) {
+  function DisableConfirmController(MediaServiceActivation, $modalInstance) {
     var modalVm = this;
-    //TODO:check this
-    // modalVm.serviceIconClass = MediaServiceDescriptor.serviceIcon();
-
     modalVm.ok = function () {
       $modalInstance.close();
     };

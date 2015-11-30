@@ -2798,7 +2798,7 @@
         "title": "Room Systems",
         "currentTitle": "Online this week",
         "previousTitle": "Last week:",
-        "notEnabledText": "Meeting room video endpoints that seamlessly integrate with your cloud collaboration."
+        "notEnabledText": "Meeting room systems seamlessly integrated with the Spark app."
       },
       "hybrid": {
         "title": "Hybrid Services",
@@ -2829,10 +2829,10 @@
     "sso": "Single Sign On (SSO)",
     "dirSync": "Directory Synchronization",
     "type": "Type",
-    "partner": "Partner",
-    "customer": "Customer",
+    "partner": "Partner Organization",
+    "customer": "Customer Organization",
     "searchCriteriaLink": "Show supported search criteria.",
-    "searchInfo": "Search users by Email, Phone Number or Display Name (two words required). Search company by Display Name.",
+    "searchInfo": "Search users by Email, Phone Number or Display Name (two words required). Search company by Display Name. Search devices by Display Name, Serial or MAC Address (Note: device search is supported only when searching a specific customer).",
     "devices": "Devices",
     "mobile": "mobile",
     "work": "work",
@@ -2879,6 +2879,16 @@
     "serial": "Serial",
     "macAddress": "MAC Address",
     "badOrgSearchInput": "Searching for customers requires a minimum of three characters.",
-    "unknown": "Unknown"
+    "unknown": "Unknown",
+    "showMore": "Show more results",
+    "delegatedAdministration": "manages {{numManages}} organizations",
+    "licenses": "Licenses",
+    "licenseTypes": {
+      "MESSAGING": "{{volume}} Standard Team Rooms",
+      "CONFERENCING": "{{volume}} 25 Party Meetings",
+      "COMMUNICATIONS": "{{volume}} Advanced Spark Call",
+      "SHARED_DEVICES": "{{volume}} Room Devices"
+    },
+    "trial": "Trial"
   }
 }
