@@ -47,10 +47,11 @@
   </ul>
   <!-- end of breadcrumbs -->
 
-  <!-- start of cards loading -->
+  <!-- start of loading info -->
   <div ng-if="!siteSettingsObj.viewReady"
        id="loadingSection"
-       name="loadingSection" >
+       name="loadingSection"
+       align="center" >
 
     <div id="loadingInprogressSection"
          name="loadingInprogressSection"
@@ -76,7 +77,7 @@
       </div>
     </div>
   </div>
-  <!-- end of cards loading -->
+  <!-- end of loading info -->
 
   <!-- start of card containers -->
   <div ng-if="siteSettingsObj.viewReady"
