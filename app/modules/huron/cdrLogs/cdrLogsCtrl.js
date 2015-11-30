@@ -527,8 +527,8 @@
 
     function addNames(cdrArray) {
       var x = 0;
-      angular.forEach(cdrArray, function(cdr, index, array) {
-        angular.forEach(cdr, function(item, itemIndex, itemArray) {
+      angular.forEach(cdrArray, function (cdr, index, array) {
+        angular.forEach(cdr, function (item, itemIndex, itemArray) {
           item.name = "call0CDR" + x;
           x++;
         });
