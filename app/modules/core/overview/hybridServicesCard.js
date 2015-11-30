@@ -33,7 +33,7 @@
         card.populateServicesWithHealth = function () {
           if (card.services) {
             _.each(card.services, function (service) {
-              service.healthStatus = serviceStatusToCss[service.status];
+              service.healthStatus = serviceStatusToCss[service.status] || serviceStatusToCss['undefined'];
             });
           }
         };
