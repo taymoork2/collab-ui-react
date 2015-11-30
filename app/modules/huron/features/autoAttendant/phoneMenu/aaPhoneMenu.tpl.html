@@ -11,7 +11,7 @@
         ng-model="keyAction.key"
         options="keyAction.keys"
         placeholder="aaPhoneMenu.selectPlaceholder"
-        change="aaPhoneMenu.keyChanged($index, keyAction.key)"
+        on-change-fn="aaPhoneMenu.keyChanged($index, keyAction.key)"
         class="aa-pm-key-select"
         icon="icon-chevron-down"
         >
@@ -28,7 +28,7 @@
         ng-model="keyAction.name"
         options="aaPhoneMenu.keyActions"
         placeholder="aaPhoneMenu.actionPlaceholder"
-        change="aaPhoneMenu.keyChanged($index, keyAction.key)"
+        on-change-fn="aaPhoneMenu.keyChanged($index, keyAction.key)"
         class="aa-pm-action-select"
         icon="icon-chevron-down"
         >
