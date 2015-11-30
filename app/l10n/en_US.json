@@ -1390,6 +1390,7 @@
     "numberInfoPopover": "If you don’t enter a number here, it’s okay. Calls may still come through from another Auto Attendant.",
     "selectPlaceHolder": "Search or Select a Number",
     "inputPlaceHolder": "Start typing here",
+    "selectAAPlaceHolder": "Search or Select an Auto Attendant",
     "sayMessage": "Message",
     "sayMessagePlaceholder": "Enter your message here.",
     "sayMessageUninterrupt": "Message playback will be uninterruptable.",

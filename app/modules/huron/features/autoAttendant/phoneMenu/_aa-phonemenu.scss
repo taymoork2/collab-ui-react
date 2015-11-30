@@ -1,3 +1,10 @@
+%aa-pm-vertical-line {
+  background-image: linear-gradient(180deg, transparent, $aa-builder-border-color, transparent);
+  background-position: 2rem 50%;
+  background-repeat: repeat-y;
+  background-size: $aa-builder-border-size $aa-builder-border-size;
+}
+
 .aa-phone-menu {
   min-width: vr-adjust(340);
 
@@ -24,10 +31,9 @@
     }
 
     .aa-pm-vertical-line {
-      background-image: linear-gradient(180deg, transparent, $aa-builder-border-color, transparent);
-      background-position: 1.5rem 50%;
-      background-repeat: repeat-y;
-      background-size: $aa-builder-border-size $aa-builder-border-size;
+      @include vr-spacing(pb, 1);
+
+      @extend %aa-pm-vertical-line;
     }
   }
 
@@ -46,6 +52,18 @@
       &.icon {
         right: -0.25rem;
       }
+    }
+  }
+
+  & .aa-trash-icon {
+    padding-left: 0;
+    padding-top: 0;
+    top: 0.25rem;
+  }
+
+  & .aa-route-to-aa {
+    & .csSelect-container {
+      @include vr-spacing(pt, 1);
     }
   }
 
@@ -142,10 +160,8 @@
         left: 0;
         width: 100%;
         height: 1.05rem;
-        background-image: linear-gradient(180deg, transparent, $aa-builder-border-color, transparent);
-        background-position: 1.5rem 50%;
-        background-repeat: repeat-y;
-        background-size: $aa-builder-border-size $aa-builder-border-size;
+
+        @extend %aa-pm-vertical-line;
       }
     }
   }

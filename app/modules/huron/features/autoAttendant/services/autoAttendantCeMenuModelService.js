@@ -407,6 +407,12 @@
           action.inputType = inAction.runActionsOnInput.inputType;
         }
         menuEntry.addAction(action);
+      } else if (angular.isDefined(inAction.goto)) {
+        action = new Action('goto', inAction.goto.ceid);
+        if (angular.isDefined(inAction.goto.description)) {
+          setDescription(action, inAction.goto.description);
+        }
+        menuEntry.addAction(action);
       } else {
         // insert an empty action
         action = new Action('', '');
@@ -813,6 +819,8 @@
           newActionArray[i][actionName].destination = val;
         } else if (actionName === 'routeToMailbox') {
           newActionArray[i][actionName].mailbox = val;
+        } else if (actionName === 'goto') {
+          newActionArray[i][actionName].ceid = val;
         } else if (actionName === 'disconnect') {
           if (val && val !== 'none') {
             newActionArray[i][actionName].treatment = val;
