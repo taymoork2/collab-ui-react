@@ -2,18 +2,23 @@
   <cs-card class="large header-bar primary" ng-if="helpdeskOrgCtrl.messageCard.entitled">
     <article>
       <header class="align-center">
-        <h4>
-          <i class="icon icon-circle-message"/>
-          {{'helpdesk.message' | translate}}
-        </h4>
+        <div class="overview-header">
+          <i class="icon icon-circle-message"></i>{{'helpdesk.message' | translate}}
+        </div>
       </header>
       <section>
+        <h5 translate="helpdesk.licenses"></h5>
+        <span ng-if="helpdeskOrgCtrl.messageCard.licenses.length === 0" translate="helpdesk.none"></span>
+
+        <div ng-repeat="license in helpdeskOrgCtrl.messageCard.licenses">
+          <span>{{license.displayName}}</span>
+        </div>
       </section>
-      <!--<footer class="org-card-footer">
-        <span><i class="icon icon-circle right" ng-class="helpdeskOrgCtrl.healthStatuses.message"></i></span>
-      </footer>-->
       <footer class="org-card-footer">
-          <i class="icon icon-circle right" ng-class="helpdeskOrgCtrl.healthStatuses.message"></i>
+        <!-- Fix layout: <span class="label warning" ng-if="helpdeskOrgCtrl.messageCard.isTrial" translate="helpdesk.trial"></span> -->
+        <a ng-href="{{helpdeskOrgCtrl.statusPageUrl}}" target="_blank">
+          <span><i class="icon icon-circle right" ng-class="helpdeskOrgCtrl.healthStatuses.message"></i></span>
+        </a>
       </footer>
     </article>
   </cs-card>
@@ -21,15 +26,23 @@
   <cs-card class="large header-bar meetings" ng-show="helpdeskOrgCtrl.meetingCard.entitled">
     <article>
       <header class="align-center">
-        <h4>
-          <i class="icon icon-circle-group"/>
-          {{'helpdesk.meeting' | translate}}
-        </h4>
+        <div class="overview-header">
+          <i class="icon icon-circle-group"></i>{{'helpdesk.meeting' | translate}}
+        </div>
       </header>
       <section>
+        <h5 translate="helpdesk.licenses"></h5>
+        <span ng-if="helpdeskOrgCtrl.meetingCard.licenses.length === 0" translate="helpdesk.none"></span>
+
+        <div ng-repeat="license in helpdeskOrgCtrl.meetingCard.licenses">
+          <span>{{license.displayName}}</span>
+        </div>
       </section>
       <footer class="org-card-footer">
-        <span><i class="icon icon-circle right" ng-class="helpdeskOrgCtrl.healthStatuses.meeting"></i></span>
+        <!-- Fix layout: <span class="label warning" ng-if="helpdeskOrgCtrl.meetingCard.isTrial" translate="helpdesk.trial"></span> -->
+        <a ng-href="{{helpdeskOrgCtrl.statusPageUrl}}" target="_blank">
+          <span><i class="icon icon-circle right" ng-class="helpdeskOrgCtrl.healthStatuses.meeting"></i></span>
+        </a>
       </footer>
     </article>
   </cs-card>
@@ -37,15 +50,23 @@
   <cs-card class="large header-bar people" ng-show="helpdeskOrgCtrl.callCard.entitled">
     <article>
       <header class="align-center">
-        <h4>
-          <i class="icon icon-circle-call"/>
-          {{'helpdesk.call' | translate}}
-        </h4>
+        <div class="overview-header">
+          <i class="icon icon-circle-call"></i>{{'helpdesk.call' | translate}}
+        </div>
       </header>
       <section>
+        <h5 translate="helpdesk.licenses"></h5>
+        <span ng-if="helpdeskOrgCtrl.callCard.licenses.length === 0" translate="helpdesk.none"></span>
+
+        <div ng-repeat="license in helpdeskOrgCtrl.callCard.licenses">
+          <span>{{license.displayName}}</span>
+        </div>
       </section>
       <footer class="org-card-footer">
-        <span><i class="icon icon-circle right" ng-class="helpdeskOrgCtrl.healthStatuses.call"></i></span>
+        <!-- Fix layout: <span class="label warning" ng-if="helpdeskOrgCtrl.callCard.isTrial" translate="helpdesk.trial"></span> -->
+        <a ng-href="{{helpdeskOrgCtrl.statusPageUrl}}" target="_blank">
+          <span><i class="icon icon-circle right" ng-class="helpdeskOrgCtrl.healthStatuses.call"></i></span>
+        </a>
       </footer>
     </article>
   </cs-card>
@@ -53,15 +74,23 @@
   <cs-card class="large header-bar grey" ng-show="helpdeskOrgCtrl.roomSystemsCard.entitled">
     <article>
       <header class="align-center">
-        <h4>
-          <i class="icon icon-circle-telepresence"/>
-          {{'helpdesk.rooms' | translate}}
-        </h4>
+        <div class="overview-header">
+          <i class="icon icon-circle-telepresence"></i>{{'helpdesk.rooms' | translate}}
+        </div>
       </header>
       <section>
+        <h5 translate="helpdesk.licenses"></h5>
+        <span ng-if="helpdeskOrgCtrl.roomSystemsCard.licenses.length === 0" translate="helpdesk.none"></span>
+
+        <div ng-repeat="license in helpdeskOrgCtrl.roomSystemsCard.licenses">
+          <span>{{license.displayName}}</span>
+        </div>
       </section>
       <footer class="org-card-footer">
-        <span><i class="icon icon-circle right" ng-class="helpdeskOrgCtrl.healthStatuses.room"></i></span>
+        <!-- Fix layout: <span class="label warning" ng-if="helpdeskOrgCtrl.roomSystemsCard.isTrial" translate="helpdesk.trial"></span> -->
+        <a ng-href="{{helpdeskOrgCtrl.statusPageUrl}}" target="_blank">
+          <span><i class="icon icon-circle right" ng-class="helpdeskOrgCtrl.healthStatuses.room"></i></span>
+        </a>
       </footer>
     </article>
   </cs-card>
@@ -69,10 +98,9 @@
   <cs-card class="large header-bar cta" ng-show="helpdeskOrgCtrl.hybridServicesCard.entitled">
     <article>
       <header class="align-center">
-        <h4>
-          <i class="icon icon-circle-data"/>
-          {{'helpdesk.hybridServices' | translate}}
-        </h4>
+        <div class="overview-header">
+          <i class="icon icon-circle-data"></i>{{'helpdesk.hybridServices' | translate}}
+        </div>
       </header>
       <section>
         <h5 translate="helpdesk.enabledServices"></h5>
@@ -81,7 +109,10 @@
           <span><i class="icon icon-circle"
                    ng-class="hybridService.status ? ('helpdesk-' + hybridService.status) : 'helpdesk-grey'"></i>
           </span>
-          <span translate="{{'hercules.serviceNames.' + hybridService.id}}"></span>
+          <span ng-if="hybridService.id != 'squared-fusion-uc'"
+                translate="{{'hercules.serviceNames.' + hybridService.id}}"></span>
+          <span ng-if="hybridService.id == 'squared-fusion-uc'"
+                translate="hercules.serviceNames.squared-fusion-uc.full"></span>
         </div>
         <div
           ng-if="!helpdeskOrgCtrl.hybridServicesCard.enabledHybridServices || helpdeskOrgCtrl.hybridServicesCard.enabledHybridServices.length === 0">
@@ -102,7 +133,9 @@
         </div>
       </section>
       <footer class="org-card-footer">
-        <span><i class="icon icon-circle right" ng-class="helpdeskOrgCtrl.healthStatuses.hybrid"></i></span>
+        <a ng-href="{{helpdeskOrgCtrl.statusPageUrl}}" target="_blank">
+          <span><i class="icon icon-circle right" ng-class="helpdeskOrgCtrl.healthStatuses.hybrid"></i></span>
+        </a>
       </footer>
     </article>
   </cs-card>
@@ -110,7 +143,9 @@
   <cs-card class="large">
     <article>
       <header class="align-center">
-        <h4 translate="helpdesk.users"></h4>
+        <div class="overview-header">
+          <i class="icon icon-circle-user"></i>{{'helpdesk.users' | translate}}
+        </div>
       </header>
       <section>
         <div>
