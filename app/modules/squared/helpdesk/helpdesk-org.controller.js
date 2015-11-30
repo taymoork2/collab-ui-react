@@ -32,7 +32,7 @@
       vm.delegatedAdministration = org.delegatedAdministration ? $translate.instant('helpdesk.delegatedAdministration', {
         numManages: org.manages ? org.manages.length : 0
       }) : null;
-      HelpdeskService.getLicensesInOrg(vm.orgId).then(initCards, XhrNotificationService.notify);
+      LicenseService.getLicensesInOrg(vm.orgId).then(initCards, XhrNotificationService.notify);
       findManagedByOrgs(org);
       findWebExSites(org);
     }

@@ -2,7 +2,23 @@
   'use strict';
 
   /*ngInject*/
-  function LicenseService(Config, $translate) {
+  function LicenseService(Config, $translate, $q, $http, $location, HelpdeskMockData) {
+    var urlBase = Config.getAdminServiceUrl();
+
+    function extractData(res) {
+      return res.data;
+    }
+
+    function getLicensesInOrg(orgId) {
+      if (useMock()) {
+        var deferred = $q.defer();
+        deferred.resolve(HelpdeskMockData.licenses);
+        return deferred.promise;
+      }
+      return $http
+        .get(urlBase + 'helpdesk/licenses/' + encodeURIComponent(orgId))
+        .then(extractData);
+    }
 
     function userIsEntitledTo(user, entitlement) {
       if (user && user.entitlements) {
@@ -53,12 +69,17 @@
       return matchingLicenses;
     }
 
+    function useMock() {
+      return $location.absUrl().match(/helpdesk-backend=mock/);
+    }
+
     return {
       userIsEntitledTo: userIsEntitledTo,
       userIsLicensedFor: userIsLicensedFor,
       orgIsEntitledTo: orgIsEntitledTo,
       filterLicensesAndSetDisplayName: filterLicensesAndSetDisplayName,
-      UserLicense: UserLicense
+      UserLicense: UserLicense,
+      getLicensesInOrg: getLicensesInOrg
     };
   }
 

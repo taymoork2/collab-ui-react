@@ -169,17 +169,6 @@
         .then(extractItems);
     }
 
-    function getLicensesInOrg(orgId) {
-      if (useMock()) {
-        var deferred = $q.defer();
-        deferred.resolve(HelpdeskMockData.licenses);
-        return deferred.promise;
-      }
-      return $http
-        .get(urlBase + 'helpdesk/licenses/' + encodeURIComponent(orgId))
-        .then(extractData);
-    }
-
     function deferredResolve(resolved) {
       var deferred = $q.defer();
       deferred.resolve(resolved);
@@ -195,8 +184,7 @@
       getHybridServices: getHybridServices,
       resendInviteEmail: resendInviteEmail,
       getWebExSites: getWebExSites,
-      getCloudberryDevice: getCloudberryDevice,
-      getLicensesInOrg: getLicensesInOrg
+      getCloudberryDevice: getCloudberryDevice
     };
   }
 
