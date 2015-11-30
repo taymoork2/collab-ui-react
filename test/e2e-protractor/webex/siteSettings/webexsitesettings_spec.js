@@ -18,12 +18,12 @@ describe('WebEx site settings cross-launch', function () {
   });
 });
 
-describe('WebEx site settings iframe', function () {
+xdescribe('WebEx site settings iframe', function () {
   it('should login as sjsite14@mailinator.com ', function () {
     login.loginThroughGui(sitesettings.testAdmin.username, sitesettings.testAdmin.password);
   });
 
-  it('should navigate to webex site list and find configure site cog', function () {
+  xit('should navigate to webex site list and find configure site cog', function () {
     navigation.clickServicesTab();
     utils.click(sitesettings.conferencing);
     utils.wait(sitesettings.configureSJSITE14);
@@ -289,7 +289,7 @@ describe('WebEx site settings iframe', function () {
     utils.wait(sitesettings.configureSJSITE14);
   });
 
-  /**  
+  /**
     it('should pause', function () {
       browser.pause()
     });

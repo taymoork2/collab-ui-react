@@ -50,7 +50,7 @@
         <label class="control-label" for="timeoutSelect" translate="autoAttendant.phoneMenuTimeout"></label>
       </div>
       <div class="small-8 columns">
-        <cs-select ng-model="aaPhoneMenu.selectedTimeout" options="aaPhoneMenu.timeoutActions" placeholder="aaPhoneMenu.actionPlaceholder" nested="true" icon="icon-chevron-down" iconnested="icon-chevron-right" ng-change="aaPhoneMenu.saveUIModel()">
+        <cs-select ng-model="aaPhoneMenu.selectedTimeout" options="aaPhoneMenu.timeoutActions" placeholder="aaPhoneMenu.actionPlaceholder" nested="true" icon="icon-chevron-down" iconnested="icon-chevron-right" on-change-fn="aaPhoneMenu.saveUIModel()">
         </cs-select>
       </div>
     </div>
