@@ -31,30 +31,19 @@
         };
 
         card.populateServicesWithHealth = function () {
-          if (card.services && card.servicesStatus) {
+          if (card.services) {
             _.each(card.services, function (service) {
-              service.healthStatus = (serviceToTypeMap[service.id] && card.servicesStatus && card.servicesStatus[serviceToTypeMap[service.id]]) ? 'success' : 'warning';
+              service.healthStatus = serviceStatusToCss[service.status];
             });
           }
         };
 
-        card.healthStatusUpdatedHandler = function messageHealthEventHandler(data) {
-          _.each(data.components, function (component) {
-            if (component.id === OverviewHelper.statusIds.CalendarService || component.id === OverviewHelper.statusIds.CloudHybridServicesManagement) {
-              card.healthStatus = card.helper.mapStatus(card.healthStatus, component.status);
-            }
-          });
+        var serviceStatusToCss = {
+          ok: 'success',
+          warn: 'warning',
+          error: 'danger',
+          undefined: 'warning'
         };
-
-        var serviceToTypeMap = {};
-
-        serviceToTypeMap['squared-fusion-mgmt'] = "c_mgmt";
-        serviceToTypeMap['squared-fusion-uc'] = "c_ucmc";
-        serviceToTypeMap['squared-fusion-cal'] = "c_cal";
-        serviceToTypeMap['squared-fusion-media'] = "mf_mgmt";
-        //:  "cs_mgmt",  not mapped
-        serviceToTypeMap['center-context'] = "cs_context";
-        //"d_openj"  not mapped
 
         return card;
       }

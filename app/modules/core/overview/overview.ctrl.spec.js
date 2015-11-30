@@ -5,7 +5,7 @@ describe('Controller: OverviewCtrl', function () {
   // load the controller's module
   beforeEach(module('Core'));
 
-  var controller, $scope, $q, $state, ReportsService, Orgservice, ServiceDescriptor, ServiceStatusDecriptor, Log, Config, $translate, CannedDataService, WebexReportService, WebExUtilsFact, Authinfo;
+  var controller, $scope, $q, $state, ReportsService, Orgservice, ServiceDescriptor, ServiceStatusDecriptor, Log, Config, $translate, Authinfo;
 
   describe('Wire up', function () {
     beforeEach(inject(defaultWireUpFunc));
@@ -34,13 +34,13 @@ describe('Controller: OverviewCtrl', function () {
 
       callCard.healthStatusUpdatedHandler({
         components: [{
-          name: 'Mobile Clients',
-          status: 'error'
+          name: 'Media/Calling',
+          status: 'error',
+          id:'bn5g1kfrkn9z'
         }]
       });
 
-      //TODO this isn't giving the status as expected, its undefined.
-      //expect(callCard.healthStatus).toEqual('error');
+      expect(callCard.healthStatus).toEqual('error');
     });
   });
 
@@ -64,19 +64,19 @@ describe('Controller: OverviewCtrl', function () {
       var hybridCard = getCard('overview.cards.hybrid.title');
 
       hybridCard.hybridStatusEventHandler('', [{
-        id: 'squared-fusion-mgmt'
+        id: 'squared-fusion-mgmt',
+        status: 'ok'
       }, {
-        id: 'squared-fusion-media'
+        id: 'squared-fusion-media',
+        status: 'warn'
       }, {
         id: 'fake.service.nostatus'
+      }, {
+        id: 'fake.service.errorstatus',
+        status: 'error'
+
       }]);
 
-      var serviceMap = {};
-      serviceMap['c_mgmt'] = true;
-      serviceMap['c_ucmc'] = true;
-      serviceMap['c_cal'] = false;
-
-      hybridCard.adminOrgServiceStatusEventHandler(serviceMap);
       expect(hybridCard.services).toBeDefined();
 
       var testService = function (name, expectedHealth) {
@@ -90,6 +90,7 @@ describe('Controller: OverviewCtrl', function () {
       testService('squared-fusion-mgmt', 'success');
       testService('squared-fusion-media', 'warning');
       testService('fake.service.nostatus', 'warning');
+      testService('fake.service.errorstatus', 'danger');
       //testService('fake.service', 'warning');
 
     });
@@ -103,6 +104,7 @@ describe('Controller: OverviewCtrl', function () {
         id: 'fake.service',
         enabled: true,
         acknowledged: true
+          //status:'ok'  undefined status
       }]);
 
       expect(hybridCard.services).toBeDefined();
@@ -110,7 +112,8 @@ describe('Controller: OverviewCtrl', function () {
         return service.id == 'fake.service';
       }).first();
       expect(fakeService).toBeDefined();
-      expect(fakeService.healthStatus).toBeUndefined();
+      expect(fakeService.healthStatus).toBeDefined();
+      expect(fakeService.healthStatus).toEqual('warning'); //warn when undefined status
     });
   });
 
@@ -160,7 +163,7 @@ describe('Controller: OverviewCtrl', function () {
       healthMonitor: function (eventHandler) {}
     };
 
-    var Authinfo = {
+    Authinfo = {
       getConferenceServicesWithoutSiteUrl: function () {
         return [{
           license: {
