@@ -15,10 +15,12 @@
         </div>
       </section>
       <footer class="org-card-footer">
-        <!-- Fix layout: <span class="label warning" ng-if="helpdeskOrgCtrl.messageCard.isTrial" translate="helpdesk.trial"></span> -->
-        <a ng-href="{{helpdeskOrgCtrl.statusPageUrl}}" target="_blank">
-          <span><i class="icon icon-circle right" ng-class="helpdeskOrgCtrl.healthStatuses.message"></i></span>
-        </a>
+        <span class="trial left" ng-if="helpdeskOrgCtrl.messageCard.isTrial" translate="helpdesk.trial"></span>
+        <span class="status right">
+          <a ng-href="{{helpdeskOrgCtrl.statusPageUrl}}" target="_blank">
+            <i class="icon icon-circle" ng-class="helpdeskOrgCtrl.healthStatuses.message"></i>
+          </a>
+        </span>
       </footer>
     </article>
   </cs-card>
@@ -39,10 +41,12 @@
         </div>
       </section>
       <footer class="org-card-footer">
-        <!-- Fix layout: <span class="label warning" ng-if="helpdeskOrgCtrl.meetingCard.isTrial" translate="helpdesk.trial"></span> -->
-        <a ng-href="{{helpdeskOrgCtrl.statusPageUrl}}" target="_blank">
-          <span><i class="icon icon-circle right" ng-class="helpdeskOrgCtrl.healthStatuses.meeting"></i></span>
-        </a>
+        <span class="trial left" ng-if="helpdeskOrgCtrl.meetingCard.isTrial" translate="helpdesk.trial"></span>
+        <span class="status right">
+          <a ng-href="{{helpdeskOrgCtrl.statusPageUrl}}" target="_blank">
+            <i class="icon icon-circle" ng-class="helpdeskOrgCtrl.healthStatuses.meeting"></i>
+          </a>
+        </span>
       </footer>
     </article>
   </cs-card>
@@ -63,10 +67,12 @@
         </div>
       </section>
       <footer class="org-card-footer">
-        <!-- Fix layout: <span class="label warning" ng-if="helpdeskOrgCtrl.callCard.isTrial" translate="helpdesk.trial"></span> -->
-        <a ng-href="{{helpdeskOrgCtrl.statusPageUrl}}" target="_blank">
-          <span><i class="icon icon-circle right" ng-class="helpdeskOrgCtrl.healthStatuses.call"></i></span>
-        </a>
+        <span class="trial left" ng-if="helpdeskOrgCtrl.callCard.isTrial" translate="helpdesk.trial"></span>
+        <span class="status right">
+          <a ng-href="{{helpdeskOrgCtrl.statusPageUrl}}" target="_blank">
+            <i class="icon icon-circle" ng-class="helpdeskOrgCtrl.healthStatuses.call"></i>
+          </a>
+        </span>
       </footer>
     </article>
   </cs-card>
@@ -87,10 +93,12 @@
         </div>
       </section>
       <footer class="org-card-footer">
-        <!-- Fix layout: <span class="label warning" ng-if="helpdeskOrgCtrl.roomSystemsCard.isTrial" translate="helpdesk.trial"></span> -->
-        <a ng-href="{{helpdeskOrgCtrl.statusPageUrl}}" target="_blank">
-          <span><i class="icon icon-circle right" ng-class="helpdeskOrgCtrl.healthStatuses.room"></i></span>
-        </a>
+        <span class="trial left" ng-if="helpdeskOrgCtrl.roomSystemsCard.isTrial" translate="helpdesk.trial"></span>
+        <span class="status right">
+          <a ng-href="{{helpdeskOrgCtrl.statusPageUrl}}" target="_blank">
+            <i class="icon icon-circle" ng-class="helpdeskOrgCtrl.healthStatuses.room"></i>
+          </a>
+        </span>
       </footer>
     </article>
   </cs-card>
@@ -106,36 +114,34 @@
         <h5 translate="helpdesk.enabledServices"></h5>
 
         <div ng-repeat="hybridService in helpdeskOrgCtrl.hybridServicesCard.enabledHybridServices">
-          <span><i class="icon icon-circle"
-                   ng-class="hybridService.status ? ('helpdesk-' + hybridService.status) : 'helpdesk-grey'"></i>
+          <span>
+            <i class="icon icon-circle" ng-class="hybridService.status ? ('helpdesk-' + hybridService.status) : 'helpdesk-grey'"></i>
           </span>
-          <span ng-if="hybridService.id != 'squared-fusion-uc'"
-                translate="{{'hercules.serviceNames.' + hybridService.id}}"></span>
-          <span ng-if="hybridService.id == 'squared-fusion-uc'"
-                translate="hercules.serviceNames.squared-fusion-uc.full"></span>
+          <span ng-if="hybridService.id != 'squared-fusion-uc'" translate="{{'hercules.serviceNames.' + hybridService.id}}"></span>
+          <span ng-if="hybridService.id == 'squared-fusion-uc'" translate="hercules.serviceNames.squared-fusion-uc.full"></span>
         </div>
-        <div
-          ng-if="!helpdeskOrgCtrl.hybridServicesCard.enabledHybridServices || helpdeskOrgCtrl.hybridServicesCard.enabledHybridServices.length === 0">
+        <div ng-if="!helpdeskOrgCtrl.hybridServicesCard.enabledHybridServices || helpdeskOrgCtrl.hybridServicesCard.enabledHybridServices.length === 0">
           <span translate="helpdesk.none"></span>
         </div>
 
         <h5 translate="helpdesk.availableServices"></h5>
 
-        <div
-          ng-if="!helpdeskOrgCtrl.hybridServicesCard.availableHybridServices || helpdeskOrgCtrl.hybridServicesCard.availableHybridServices.length === 0">
+        <div ng-if="!helpdeskOrgCtrl.hybridServicesCard.availableHybridServices || helpdeskOrgCtrl.hybridServicesCard.availableHybridServices.length === 0">
           <span translate="helpdesk.none"></span>
         </div>
         <div ng-repeat="hybridService in helpdeskOrgCtrl.hybridServicesCard.availableHybridServices">
-          <span ng-if="hybridService.id != 'squared-fusion-uc'"
-                translate="{{'hercules.serviceNames.' + hybridService.id}}"></span>
-          <span ng-if="hybridService.id == 'squared-fusion-uc'"
-                translate="hercules.serviceNames.squared-fusion-uc.full"></span>
+          <span ng-if="hybridService.id != 'squared-fusion-uc'" translate="{{'hercules.serviceNames.' + hybridService.id}}"></span>
+          <span ng-if="hybridService.id == 'squared-fusion-uc'" translate="hercules.serviceNames.squared-fusion-uc.full"></span>
         </div>
       </section>
       <footer class="org-card-footer">
-        <a ng-href="{{helpdeskOrgCtrl.statusPageUrl}}" target="_blank">
-          <span><i class="icon icon-circle right" ng-class="helpdeskOrgCtrl.healthStatuses.hybrid"></i></span>
-        </a>
+        <span class="status right">
+          <a ng-href="{{helpdeskOrgCtrl.statusPageUrl}}" target="_blank">
+            <span>
+              <i class="icon icon-circle right" ng-class="helpdeskOrgCtrl.healthStatuses.hybrid"></i>
+            </span>
+          </a>
+        </span>
       </footer>
     </article>
   </cs-card>
@@ -149,13 +155,15 @@
       </header>
       <section>
         <div>
-          <span><i class="icon icon-circle"
-                   ng-class="helpdeskOrgCtrl.org.dirsyncEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i></span>
+          <span>
+            <i class="icon icon-circle" ng-class="helpdeskOrgCtrl.org.dirsyncEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
+          </span>
           <span translate="helpdesk.dirSync"></span>
         </div>
         <div>
-          <span><i class="icon icon-circle"
-                   ng-class="helpdeskOrgCtrl.org.ssoEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i></span>
+          <span>
+            <i class="icon icon-circle" ng-class="helpdeskOrgCtrl.org.ssoEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
+          </span>
           <span translate="helpdesk.sso"></span>
         </div>
       </section>

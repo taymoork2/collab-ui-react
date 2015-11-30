@@ -60,20 +60,32 @@
     h3 {
       margin-bottom: 1rem;
     }
-    .org-card-footer{
+    .org-card-footer {
       background-color: $gray-light-4;
-      padding-bottom: 1rem;
-      padding-top: 1rem;
+      padding-bottom: 0.5rem;
+      padding-top: 0.5rem;
       padding-right: 1rem;
       border-radius: 0px 0px 3px 3px;
-      .icon{
-        font-size: 0.575rem;
+      font-size: 0.675rem;
+      .icon {
+        line-height: 1rem;
+      }
+      .trial {
+        border-radius: 3px;
+        background-color: $color-attention-base;
+        color: $white;
+        line-height: 1rem;
+        padding-left: 0.2rem;
+        padding-right: 0.2rem;
+      }
+      .status {
+        line-height: 1rem;
       }
       .operational {
         color: $color-cta-base;
       }
       .warning, .partial_outage {
-        color: $color-attention-base
+        color: $color-attention-base;
       }
       .error {
         color: $color-alerts-base;
