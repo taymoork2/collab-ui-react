@@ -9,12 +9,12 @@
     <div class="row">
       <div class="large-6 small-12 columns aa-message-select-list">
         <label for="languageSelect{{ schedule + index }}" translate="common.language"></label>
-        <cs-select id="languageSelect{{ schedule + index }}" name="languageSelect" ng-model="aaSay.languageOption" options="aaSay.languageOptions" labelfield="label" valuefield="value" placeholder="aaSay.languagePlaceholder" ng-change="aaSay.setVoiceOptions()">
+        <cs-select id="languageSelect{{ schedule + index }}" name="languageSelect" ng-model="aaSay.languageOption" options="aaSay.languageOptions" icon="icon-chevron-down" labelfield="label" valuefield="value" placeholder="aaSay.languagePlaceholder" ng-change="aaSay.setVoiceOptions(); aaSay.saveUiModel()">
         </cs-select>
       </div>
       <div class="large-6 small-12 columns aa-message-select-list">
         <label for="voiceSelect{{ schedule + index }}" translate="autoAttendant.sayMessageVoice"></label>
-        <cs-select id="voiceSelect{{ schedule + index }}" name="voiceSelect" options="aaSay.voiceOptions"  labelfield="label" valuefield="value" ng-model="aaSay.voiceOption" placeholder="aaSay.voicePlaceholder" ng-change="aaSay.saveUiModel()">
+        <cs-select id="voiceSelect{{ schedule + index }}" name="voiceSelect" options="aaSay.voiceOptions" icon="icon-chevron-down" labelfield="label" valuefield="value" ng-model="aaSay.voiceOption" placeholder="aaSay.voicePlaceholder" ng-change="aaSay.saveUiModel()">
         </cs-select>
       </div>
     </div>
