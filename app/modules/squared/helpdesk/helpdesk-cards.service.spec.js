@@ -1,10 +1,10 @@
 'use strict';
-fdescribe('HelpdeskCardsService', function() {
+describe('HelpdeskCardsService', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   var HelpdeskCardsService;
 
-  beforeEach(inject(function(_HelpdeskCardsService_) {
+  beforeEach(inject(function (_HelpdeskCardsService_) {
     HelpdeskCardsService = _HelpdeskCardsService_;
   }));
 
@@ -36,9 +36,9 @@ fdescribe('HelpdeskCardsService', function() {
     };
   }
 
-  describe('User Cards', function() {
+  describe('User Cards', function () {
 
-    it('handle card for undefined or empty user', function() {
+    it('handle card for undefined or empty user', function () {
       var messageCard = HelpdeskCardsService.getMessageCardForUser(null);
       expect(messageCard).toEqual(emptyCard());
       messageCard = HelpdeskCardsService.getMessageCardForUser({});
@@ -57,7 +57,7 @@ fdescribe('HelpdeskCardsService', function() {
       expect(hybridCard).toEqual(emptyHybridCard());
     });
 
-    it('Should return correct message card for user', function() {
+    it('Should return correct message card for user', function () {
       var card = HelpdeskCardsService.getMessageCardForUser({});
       expect(card.entitled).toBeFalsy();
       expect(card.entitlements.length).toEqual(0);
@@ -94,7 +94,7 @@ fdescribe('HelpdeskCardsService', function() {
     });
   });
 
-  describe('Org Cards', function() {
+  describe('Org Cards', function () {
 
   });
 
