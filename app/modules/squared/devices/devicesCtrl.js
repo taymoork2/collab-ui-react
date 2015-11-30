@@ -17,6 +17,10 @@ angular.module('Squared')
         scope: $scope
       });
 
+      vm.areAnyDevicesLoaded = function () {
+        return CsdmDeviceService.getDeviceList().length > 0;
+      };
+
       vm.updateListAndFilter = function () {
         var filtered = _.chain({})
           .extend(CsdmDeviceService.getDeviceList())
