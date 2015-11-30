@@ -10,11 +10,11 @@
             on-invalid-tag="mediaServiceSettings.invalidEmail($tag)"
             placeholder="Add email addresses"
             ng-disabled="mediaServiceSettings.savingEmail"
-            ng-model="mediaServiceSettings.emailSubscribers"
+            ng-model="mediaServiceSettings.wx2users"
             type="email"
             allowed-tags-pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"></tags-input>
 <i>{{'mediaFusion.settings.emailExample' | translate}}</i>
-<span class="right" ng-show="expresswayServiceSettings.savingEmail">
+<span class="right" ng-show="mediaServiceSettings.savingEmail">
   Saving <i class="icon icon-spinner"/>
 </span>
 
