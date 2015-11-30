@@ -36,7 +36,7 @@ describe('Controller: OverviewCtrl', function () {
         components: [{
           name: 'Media/Calling',
           status: 'error',
-          id:'bn5g1kfrkn9z'
+          id: 'bn5g1kfrkn9z'
         }]
       });
 
