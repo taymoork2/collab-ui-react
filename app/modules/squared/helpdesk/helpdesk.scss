@@ -26,60 +26,60 @@
       margin-top: 2rem;
     }
   }
-  .helpdesk-org{
+  .helpdesk-org {
     h3 {
       margin-bottom: 1rem;
     }
-    .org-card-footer{
-      background-color: $gray-light-4;
-      padding-bottom: 0.5rem;
-      padding-top: 0.5rem;
-      padding-right: 1rem;
-      border-radius: 0px 0px 3px 3px;
-      font-size: 0.675rem;
-      .icon {
-        line-height: 1rem;
-      }
-      .trial {
-        border-radius: 3px;
-        background-color: $color-attention-base;
-        color: $white;
-        line-height: 1rem;
-        padding-left: 0.2rem;
-        padding-right: 0.2rem;
-      }
-      .status {
-        line-height: 1rem;
-      }
-      .operational {
-        color: $color-cta-base;
-      }
-      .warning, .partial_outage {
-        color: $color-attention-base;
-      }
-      .error {
-        color: $color-alerts-base;
-      }
-      .unknown {
-        color: $gray-base;
-      }
+  }
+  .org-card-footer {
+    background-color: $gray-light-4;
+    padding-bottom: 0.5rem;
+    padding-top: 0.5rem;
+    padding-right: 1rem;
+    border-radius: 0 0 3px 3px;
+    font-size: 0.675rem;
+    .icon {
+      line-height: 1rem;
     }
-    .customer-or-partner {
-      font-size: 0.75rem;
+    .trial {
+      border-radius: 3px;
+      background-color: $color-attention-base;
+      color: $white;
+      line-height: 1rem;
+      padding-left: 0.2rem;
+      padding-right: 0.2rem;
+    }
+    .status {
+      line-height: 1rem;
+    }
+    .operational {
+      color: $color-cta-base;
+    }
+    .warning,
+    .partial_outage {
+      color: $color-attention-base;
+    }
+    .error {
+      color: $color-alerts-base;
+    }
+    .unknown {
       color: $gray-base;
-      margin-top: -0.5rem;
-      margin-bottom: 1rem;
-    }
-    .details-heading {
-      margin-bottom: 1rem;
-    }
-    .cs-card-layout.cs-card-block {
-      padding-right: 0;
-      padding-left: 0.5rem;
     }
   }
+  .customer-or-partner {
+    font-size: 0.75rem;
+    color: $gray-base;
+    margin-top: -0.5rem;
+    margin-bottom: 1rem;
+  }
+  .details-heading {
+    margin-bottom: 1rem;
+  }
+  .cs-card-layout.cs-card-block {
+    padding-right: 0;
+    padding-left: 0.5rem;
+  }
 }
-
 .helpdesk-search {
   padding-top: 1rem;
   text-align: center;
@@ -128,7 +128,7 @@
     max-width: 100%;
     margin-left: auto;
     margin-right: auto;
-    input{
+    input {
       display: block;
       position: relative;
       z-index: 1;
@@ -141,7 +141,7 @@
       height: 2.5rem;
       z-index: 3;
       @media screen and (-moz-images-in-menus:0) {
-        top: 0rem !important;
+        top: 0 !important;
       }
     }
     .helpdesk-tile {
@@ -174,7 +174,8 @@
     }
     .cs-card {
       header {
-        h5, h5 a {
+        h5,
+        h5 a {
           color: $gray-dark-3;
           padding-left: 0.5rem;
           font-size: 0.875rem;
@@ -197,8 +198,8 @@
         }
       }
     }
-    .cs-card{
-      .clickable-area{
+    .cs-card {
+      .clickable-area {
         display: block;
         background-color: rgba(0,0,0,0);
         width: 85%;
@@ -238,7 +239,6 @@
     margin-bottom: 1rem;
   }
 }
-
 .helpdesk-cards {
   .cs-card section {
     text-align: left;
@@ -257,7 +257,6 @@
     margin-top: 0.5rem;
   }
 }
-
 .helpdesk-red {
   color: $color-negative-base;
 }
@@ -270,26 +269,21 @@
 .helpdesk-yellow {
   color: $color-attention-base;
 }
-
 .helpdesk-error {
   color: $color-negative-base;
 }
-
 .helpdesk-ok {
   color: $color-cta-base;
 }
-
 .helpdesk-warning {
   color: $color-attention-base;
 }
-
 .helpdesk-search:focus {
   outline: none !important;
   outline: 0 !important;
   border: 0 !important;
 }
-
-@media only screen and (max-width: 1024px){
+@media only screen and (max-width: 1024px) {
   .helpdesk-details {
     .details-value {
       margin-top: -1rem;
@@ -299,17 +293,16 @@
     }
   }
   .helpdesk-cards {
-    .cs-card{
-      padding:0;
+    .cs-card {
+      padding: 0;
       width: 100%;
-      article{
+      article {
         width: 100%;
       }
     }
   }
 }
-
-@media only screen and (max-width: 800px){
+@media only screen and (max-width: 800px) {
   .helpdesk-cards {
     .cs-card-layout {
       width: 100%;
@@ -319,14 +312,13 @@
     }
   }
 }
-
-@media only screen and (max-width: 640px){
+@media only screen and (max-width: 640px) {
   .helpdesk-app-container {
-    .fixed.top-bar-{
-      .top-bar .left .name .header-title{
+    .fixed.top-bar- {
+      .top-bar .left .name .header-title {
         display: none;
       }
-      .top-bar .right .dropdown-menu{
+      .top-bar .right .dropdown-menu {
         position: fixed !important;
         right: 0.5rem;
         top: 3.5rem;
@@ -334,8 +326,7 @@
     }
   }
 }
-
-@media only screen and (max-width: 500px){
+@media only screen and (max-width: 500px) {
   .helpdesk-cards {
     .cs-card-layout {
       .cs-card {
