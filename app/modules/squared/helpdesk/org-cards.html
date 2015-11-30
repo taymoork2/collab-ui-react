@@ -18,7 +18,7 @@
         <span class="trial left" ng-if="helpdeskOrgCtrl.messageCard.isTrial" translate="helpdesk.trial"></span>
         <span class="status right">
           <a ng-href="{{helpdeskOrgCtrl.statusPageUrl}}" target="_blank">
-            <i class="icon icon-circle" ng-class="helpdeskOrgCtrl.healthStatuses.message"></i>
+            <i class="icon icon-circle circle-status-icon" ng-class="helpdeskOrgCtrl.healthStatuses.message"></i>
           </a>
         </span>
       </footer>
@@ -44,7 +44,7 @@
         <span class="trial left" ng-if="helpdeskOrgCtrl.meetingCard.isTrial" translate="helpdesk.trial"></span>
         <span class="status right">
           <a ng-href="{{helpdeskOrgCtrl.statusPageUrl}}" target="_blank">
-            <i class="icon icon-circle" ng-class="helpdeskOrgCtrl.healthStatuses.meeting"></i>
+            <i class="icon icon-circle circle-status-icon" ng-class="helpdeskOrgCtrl.healthStatuses.meeting"></i>
           </a>
         </span>
       </footer>
@@ -70,7 +70,7 @@
         <span class="trial left" ng-if="helpdeskOrgCtrl.callCard.isTrial" translate="helpdesk.trial"></span>
         <span class="status right">
           <a ng-href="{{helpdeskOrgCtrl.statusPageUrl}}" target="_blank">
-            <i class="icon icon-circle" ng-class="helpdeskOrgCtrl.healthStatuses.call"></i>
+            <i class="icon icon-circle circle-status-icon" ng-class="helpdeskOrgCtrl.healthStatuses.call"></i>
           </a>
         </span>
       </footer>
@@ -96,7 +96,7 @@
         <span class="trial left" ng-if="helpdeskOrgCtrl.roomSystemsCard.isTrial" translate="helpdesk.trial"></span>
         <span class="status right">
           <a ng-href="{{helpdeskOrgCtrl.statusPageUrl}}" target="_blank">
-            <i class="icon icon-circle" ng-class="helpdeskOrgCtrl.healthStatuses.room"></i>
+            <i class="icon icon-circle circle-status-icon" ng-class="helpdeskOrgCtrl.healthStatuses.room"></i>
           </a>
         </span>
       </footer>
@@ -115,7 +115,7 @@
 
         <div ng-repeat="hybridService in helpdeskOrgCtrl.hybridServicesCard.enabledHybridServices">
           <span>
-            <i class="icon icon-circle" ng-class="hybridService.status ? ('helpdesk-' + hybridService.status) : 'helpdesk-grey'"></i>
+            <i class="icon icon-circle circle-status-icon" ng-class="hybridService.status ? ('helpdesk-' + hybridService.status) : 'helpdesk-grey'"></i>
           </span>
           <span ng-if="hybridService.id != 'squared-fusion-uc'" translate="{{'hercules.serviceNames.' + hybridService.id}}"></span>
           <span ng-if="hybridService.id == 'squared-fusion-uc'" translate="hercules.serviceNames.squared-fusion-uc.full"></span>
@@ -138,7 +138,7 @@
         <span class="status right">
           <a ng-href="{{helpdeskOrgCtrl.statusPageUrl}}" target="_blank">
             <span>
-              <i class="icon icon-circle right" ng-class="helpdeskOrgCtrl.healthStatuses.hybrid"></i>
+              <i class="icon icon-circle circle-status-icon right" ng-class="helpdeskOrgCtrl.healthStatuses.hybrid"></i>
             </span>
           </a>
         </span>
@@ -156,13 +156,15 @@
       <section>
         <div>
           <span>
-            <i class="icon icon-circle" ng-class="helpdeskOrgCtrl.org.dirsyncEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
+            <i class="icon icon-circle circle-status-icon"
+               ng-class="helpdeskOrgCtrl.org.dirsyncEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
           </span>
           <span translate="helpdesk.dirSync"></span>
         </div>
         <div>
           <span>
-            <i class="icon icon-circle" ng-class="helpdeskOrgCtrl.org.ssoEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
+            <i class="icon icon-circle circle-status-icon"
+               ng-class="helpdeskOrgCtrl.org.ssoEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
           </span>
           <span translate="helpdesk.sso"></span>
         </div>
