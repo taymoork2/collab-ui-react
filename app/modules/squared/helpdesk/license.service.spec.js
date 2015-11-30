@@ -39,9 +39,7 @@ describe('LicenseService', function () {
       $httpBackend
         .when('GET', urlBase + 'helpdesk/licenses/1234')
         .respond(licensesMock);
-
-      LicenseService.getLicensesInOrg("1234");
-
+      
       LicenseService.getLicensesInOrg('1234').then(function (res) {
         expect(res.length).toBe(2);
         expect(res[0].volume).toBe(100);
