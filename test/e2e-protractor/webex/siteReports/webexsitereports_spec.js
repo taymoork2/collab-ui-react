@@ -71,6 +71,10 @@ describe('WebEx site reports iframe', function () {
     utils.wait(sitereports.webexSiteReportsPanel);
   });
 
+  it('reports index page should contain the page load indicator', function () {
+    expect(sitereports.webexReportsIndexLoading.isPresent()).toBeTruthy();
+  });
+
   it('click on common reports storage usage link and should navigate to the correct site report', function () {
     utils.click(sitereports.webexCommonStorageUsageLink);
     utils.wait(sitereports.webexReportCrumb2);

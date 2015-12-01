@@ -466,15 +466,14 @@ angular.module('Core')
         getAccountServices();
       }
 
-      $scope.groups = [];
       GroupService.getGroupList(function (data, status) {
         if (data.success) {
-          $scope.groups = data.groups;
-          if (data.groups && data.groups.length === 0) {
+          $scope.groups = data.groups || [];
+          if ($scope.groups && $scope.groups.length === 0) {
             var defaultGroup = {
               displayName: 'Default License Group'
             };
-            data.groups.push(defaultGroup);
+            $scope.groups.push(defaultGroup);
           }
           $scope.selectedGroup = $scope.groups[0];
         } else {
