@@ -86,6 +86,15 @@ angular.module('WebExReports').service('WebexReportService', [
       "training_usage": "tc_usage"
     };
 
+    //All card names are hard coded in all languages except for the commom 
+    //reports tag.
+    var card_name_translations = {
+      "training_center": "Traning Center",
+      "support_center": "Support Center",
+      "event_center": "Event Center",
+      "remote_access": "Remote Access"
+    };
+
     /*var pinnnedItems = ["meeting_usage", "attendee", "event_center_overview",
       "support_center_allocation_queue"
     ];*/
@@ -194,7 +203,22 @@ angular.module('WebExReports').service('WebexReportService', [
       this.report_links = reportLinks;
       this.category_Name = categoryName;
       this.lang = lang;
-      this.section_name_translated = $translate.instant("webexSiteReports." + this.section_name);
+
+      this.translate_section_name = function (sec_name) {
+        var translated_name = sec_name;
+        //only translate common reports
+
+        var name = sec_name.toLowerCase();
+        var isCommonReport = (name == "common_reports");
+        if (isCommonReport) {
+          translated_name = $translate.instant("webexSiteReports." + self.section_name);
+        } else {
+          translated_name = card_name_translations[sec_name];
+        }
+        return translated_name;
+      };
+      this.section_name_translated = this.translate_section_name(this.section_name);
+
       //We have to rewrite this with the actual uirefs with proper reportids
       //right now I've hardcoded as reportID.
       this.uisrefs = self.report_links.map(function (thelink) {
@@ -348,6 +372,8 @@ angular.module('WebExReports').service('WebexReportService', [
 
       var reportsObject = {
         viewReady: false,
+        hasLoadError: false,
+        sessionTicketError: false,
         siteUrl: siteUrl,
         siteName: siteName,
         infoCardObj: infoCardObj
@@ -382,8 +408,6 @@ angular.module('WebExReports').service('WebexReportService', [
           var funcName = "initReportsObject().getSessionTicketSuccess()";
           var logMsg = "";
 
-          reportsObject["sessionTicketError"] = false;
-
           webExXmlApiInfoObj.xmlServerURL = "https://" + siteUrl + "/WBXService/XMLService";
           webExXmlApiInfoObj.webexSiteName = siteName;
           webExXmlApiInfoObj.webexAdminID = Authinfo.getPrimaryEmail();
@@ -391,37 +415,51 @@ angular.module('WebExReports').service('WebexReportService', [
 
           var navInfoDef = self.getNaviationInfo();
 
-          navInfoDef.then(function (result) {
-            var resultString = JSON.stringify(result);
-            // $log.log("Result is ----**** " + resultString);
+          navInfoDef.then(
+            function getNaviationInfoSuccess(result) {
+              var resultString = JSON.stringify(result);
+              // $log.log("Result is ----**** " + resultString);
 
-            var y = WebExUtilsFact.validateAdminPagesInfoXmlData(result.reportPagesInfoXml);
+              var y = WebExUtilsFact.validateAdminPagesInfoXmlData(result.reportPagesInfoXml);
 
-            // $log.log("Validated Result is ==== " + JSON.stringify(y.bodyJson));
+              if (
+                ("" !== y.errId) ||
+                ("" !== y.errReason)
+              ) {
 
-            reportsObject["mapJson"] = y;
+                _this.webExSiteSettingsObj.hasLoadError = true;
+              } else {
+                // $log.log("Validated Result is ==== " + JSON.stringify(y.bodyJson));
 
-            var rpts = self.getReports(siteUrl, y);
-            reportsObject["reports"] = rpts;
+                reportsObject["mapJson"] = y;
 
-            var i = 0;
-            var j = 0;
+                var rpts = self.getReports(siteUrl, y);
+                reportsObject["reports"] = rpts;
 
-            for (i = 0; i < rpts.sections.length; i++) {
-              if (rpts.sections[i].section_name === "common_reports") {
-                for (j = 0; j < rpts.sections[i].uisrefs.length; j++) {
-                  if (rpts.sections[i].uisrefs[j].reportPageId === "meeting_in_progess") {
-                    reportsObject.infoCardObj.iframeLinkObj1.iframePageObj.uiSref = rpts.sections[i].uisrefs[j].toUIsrefString();
-                  }
-                  if (rpts.sections[i].uisrefs[j].reportPageId === "meeting_usage") {
-                    reportsObject.infoCardObj.iframeLinkObj2.iframePageObj.uiSref = rpts.sections[i].uisrefs[j].toUIsrefString();
+                var i = 0;
+                var j = 0;
+
+                for (i = 0; i < rpts.sections.length; i++) {
+                  if (rpts.sections[i].section_name === "common_reports") {
+                    for (j = 0; j < rpts.sections[i].uisrefs.length; j++) {
+                      if (rpts.sections[i].uisrefs[j].reportPageId === "meeting_in_progess") {
+                        reportsObject.infoCardObj.iframeLinkObj1.iframePageObj.uiSref = rpts.sections[i].uisrefs[j].toUIsrefString();
+                      }
+                      if (rpts.sections[i].uisrefs[j].reportPageId === "meeting_usage") {
+                        reportsObject.infoCardObj.iframeLinkObj2.iframePageObj.uiSref = rpts.sections[i].uisrefs[j].toUIsrefString();
+                      }
+                    }
                   }
                 }
-              }
-            }
 
-            reportsObject["viewReady"] = true;
-          });
+                reportsObject["viewReady"] = true;
+              }
+            }, // getNaviationInfoSuccess()
+
+            function getNaviationInfoError(result) {
+              _this.webExSiteSettingsObj.hasLoadError = true;
+            } // getNaviationInfoError()
+          );
 
           // what is purpose of this???
           //_this.getSiteSettingsInfo();
@@ -435,6 +473,7 @@ angular.module('WebExReports').service('WebexReportService', [
           $log.log(logMsg);
 
           reportsObject["sessionTicketError"] = true;
+          reportsObject["hasLoadError"] = true;
         } // getSessionTicketError()
       ); // _this.getSessionTicket().then()
 
