@@ -3,6 +3,7 @@
 
   /* @ngInject */
   function HelpdeskUserController($stateParams, HelpdeskService, XhrNotificationService, USSService2, HelpdeskCardsService) {
+    $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.user) {
       vm.userId = $stateParams.user.id;

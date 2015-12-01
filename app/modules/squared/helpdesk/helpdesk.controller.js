@@ -3,6 +3,8 @@
 
   /* @ngInject */
   function HelpdeskController(HelpdeskService, $translate) {
+    $('body').css('background', 'white');
+    angular.element('#searchInput').focus();
     var vm = this;
     var searchResultsPageSize = 5;
     var searchResultsLimit = 20;
@@ -40,7 +42,6 @@
         this.deviceLimit = searchResultsPageSize;
       }
     };
-    angular.element('#searchInput').focus();
 
     function search() {
       if (!vm.searchString) return;
