@@ -690,7 +690,7 @@
             });
             deferreds.push(promise);
           } else {
-            var pilotNumberValue = undefined;
+            var pilotNumberValue = null;
             if (vm.pilotNumberSelected) {
               pilotNumberValue = TelephoneNumberService.getDIDValue(vm.pilotNumberSelected.pattern);
             }
