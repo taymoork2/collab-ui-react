@@ -29,7 +29,6 @@ angular.module('Core')
           isNewTrial: false,
           services: []
         },
-
         conferencing: {
           title: $filter('translate')('leaderBoard.conferencingTitle'),
           subtitle: $filter('translate')('leaderBoard.conferencingSubtitle'),
@@ -38,7 +37,6 @@ angular.module('Core')
           isNewTrial: false,
           services: []
         },
-
         shared_devices: {
           title: $filter('translate')('leaderBoard.shared_devicesTitle'),
           subtitle: $filter('translate')('leaderBoard.shared_devicesSubtitle'),
@@ -47,13 +45,10 @@ angular.module('Core')
           isNewTrial: false,
           services: []
         },
-
         storage: {
           services: []
         },
-
         sites: {}
-
       };
 
       // for explicit ordering:
@@ -68,7 +63,6 @@ angular.module('Core')
       ];
 
       var getLicenses = function () {
-
         Orgservice.getLicensesUsage().then(function (licenses) {
           if (licenses.length === 0) {
             $scope.bucketKeys.forEach(function (bucket) {
@@ -77,13 +71,13 @@ angular.module('Core')
           } else {
             licenses.forEach(function (license) {
               var bucket = license.licenseType.toLowerCase();
-              var offerName = license.offerName;
               if (license.offerName !== "CF") {
                 if (license.siteUrl) {
                   if (!$scope.buckets.sites[license.siteUrl]) {
                     $scope.buckets.sites[license.siteUrl] = [];
                   }
                   $scope.buckets.sites[license.siteUrl].push(license);
+                  $scope.buckets.licensesCount = $scope.buckets.sites[license.siteUrl].length;
                 } else {
                   $scope.buckets[bucket].services.push(license);
                 }
@@ -103,7 +97,6 @@ angular.module('Core')
       $scope.$on('Userservice::updateUsers', function () {
         getLicenses();
       });
-
     }
   ])
   .directive('leaderBoardBucket', function () {

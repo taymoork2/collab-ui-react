@@ -26,7 +26,6 @@
   <header class="header-section align-center">
     <span class="bucket-header">{{buckets.conferencing.title | translate}}</span>
   </header> 
-
   <section ng-show="buckets.cf.services.length !== 0"class="bucket-info">
     <div class="text-center" class="item-paid" ng-repeat="service in buckets.cf.services">
       <cs-donut value="service.usage" max="service.volume" ssize="72" class="text-center">
@@ -40,7 +39,7 @@
     </div>
   </section>
 
-  <section  class="bucket-info" ng-show="buckets.cf.services.length === 0 && buckets.count === 1">
+  <section  class="bucket-info" ng-show="buckets.cf.services.length === 0 && buckets.count === 1 && buckets.licensesCount == 1">
     <div class="text-center" class="item-paid" ng-repeat="(siteUrl,services) in buckets.sites">
       <div class="sub-item" ng-repeat="service in services">
       <cs-donut value="service.usage" max="service.volume" ssize="72" class="text-center">
@@ -59,7 +58,7 @@
   </div>
   </section>
 
-  <section ng-if=" !(buckets.cf.services.length === 0 && buckets.count === 1) && (buckets.count !== 0)" class="bucket-info" >
+  <section ng-if=" !(buckets.cf.services.length === 0 && buckets.count === 1 && buckets.licensesCount == 1) && (buckets.count !== 0)" class="bucket-info" >
       <div class="text-center" class="item-paid" ng-repeat= "(siteUrl,services) in buckets.sites" >
         <div class="site-info"> {{siteUrl}} </div>
         <div class="sub-item text-left" ng-repeat="service in services">
