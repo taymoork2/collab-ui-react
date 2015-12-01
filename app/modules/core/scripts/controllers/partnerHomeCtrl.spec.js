@@ -3,6 +3,9 @@
 describe('Controller: PartnerHomeCtrl', function () {
   var $scope, controller, $httpBackend, Config;
 
+  var Orgservice;
+  var adminJSONFixture = getJSONFixture('core/json/organizations/adminServices.json');
+
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
 
@@ -10,18 +13,24 @@ describe('Controller: PartnerHomeCtrl', function () {
     getOrgId: sinon.stub().returns('5632f806-ad09-4a26-a0c0-a49a13f38873'),
     getMessageServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/messagingServices.json')),
     getCommunicationServices: sinon.stub().returns(getJSONFixture('core/json/authInfo/commServices.json')),
-    getConferenceServices: sinon.stub()
+    getConferenceServices: sinon.stub(),
+    isPartnerAdmin: sinon.stub()
   };
 
   beforeEach(module(function ($provide) {
     $provide.value("Authinfo", authInfo);
   }));
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _Config_) {
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _Config_, _Orgservice_) {
     $scope = $rootScope.$new();
     $rootScope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     Config = _Config_;
+    Orgservice = _Orgservice_;
+
+    spyOn(Orgservice, 'getAdminOrg').and.callFake(function (callback, status) {
+      callback(adminJSONFixture.getAdminOrg, 200);
+    });
 
     $rootScope.typeOfExport = {
       USER: 1,
@@ -30,8 +39,10 @@ describe('Controller: PartnerHomeCtrl', function () {
 
     controller = $controller('PartnerHomeCtrl', {
       $scope: $scope,
-      $rootScope: $rootScope
+      $rootScope: $rootScope,
+      Orgservice: Orgservice
     });
+
   }));
 
   beforeEach(function () {
@@ -72,6 +83,10 @@ describe('Controller: PartnerHomeCtrl', function () {
       expect($scope.trialsList[1].messaging.sortOrder).toEqual(99);
       expect($scope.trialsList[1].conferencing.sortOrder).toEqual(99);
       expect($scope.trialsList[1].communications.sortOrder).toEqual(99);
+    });
+
+    it('should call isLicenseInfoAvailable', function () {
+      expect($scope.isLicenseInfoAvailable(['one', 'two'])).toEqual(true);
     });
 
   });

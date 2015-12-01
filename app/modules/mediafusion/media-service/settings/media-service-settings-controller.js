@@ -2,18 +2,18 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceSettingsController($state, $modal, MediaServiceActivation, Authinfo, $stateParams, NotificationConfigService, $log, MailValidatorService, XhrNotificationService, Notification) {
+  function MediaServiceSettingsController($state, $modal, MediaServiceActivation, Authinfo, $stateParams, $translate, NotificationConfigService, $log, MailValidatorService, XhrNotificationService, Notification) {
     var vm = this;
     vm.config = "";
     vm.wx2users = "";
     vm.serviceType = "mf_mgmt";
     vm.serviceId = "squared-fusion-media";
     vm.cluster = $stateParams.cluster;
-    vm.currentServiceId = "squared-fusion-media";
 
     vm.disableMediaService = function (serviceId) {
-      MediaServiceActivation.setServiceEnabled(vm.currentServiceId, false).then(
+      MediaServiceActivation.setServiceEnabled(vm.serviceId, false).then(
         function success() {
+          vm.disableOrpheusForMediaFusion();
           $state.go("media-service.list", {
             serviceType: "mf_mgmt"
           }, {
@@ -33,6 +33,43 @@
       }).result.then(function () {
         vm.disableMediaService(serviceId);
       });
+    };
+
+    vm.disableOrpheusForMediaFusion = function () {
+      //$log.log("Entered disableOrpheusForMediaFusion");
+      MediaServiceActivation.getUserIdentityOrgToMediaAgentOrgMapping().then(
+        function success(response) {
+          var mediaAgentOrgIdsArray = [];
+          var orgId = Authinfo.getOrgId();
+          var updateMediaAgentOrgId = false;
+          mediaAgentOrgIdsArray = response.data.mediaAgentOrgIds;
+          //$log.log("Media Agent Org Ids Array:", mediaAgentOrgIdsArray);
+
+          var index = mediaAgentOrgIdsArray.indexOf(orgId);
+          mediaAgentOrgIdsArray.splice(index, 1);
+
+          index = mediaAgentOrgIdsArray.indexOf("squared");
+          mediaAgentOrgIdsArray.splice(index, 1);
+
+          if (mediaAgentOrgIdsArray.length > 0) {
+            //$log.log("Updated Media Agent Org Ids Array:", mediaAgentOrgIdsArray);
+            MediaServiceActivation.setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
+              function success(response) {},
+              function error(errorResponse, status) {
+                Notification.notify([$translate.instant('mediaFusion.mediaAgentOrgMappingFailure', {
+                  failureMessage: errorResponse.message
+                })], 'error');
+              });
+          } else {
+            MediaServiceActivation.deleteUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
+              function success(response) {},
+              function error(errorResponse, status) {
+                Notification.notify([$translate.instant('mediaFusion.mediaAgentOrgMappingFailure', {
+                  failureMessage: errorResponse.message
+                })], 'error');
+              });
+          }
+        });
     };
 
     NotificationConfigService.read(function (err, config) {

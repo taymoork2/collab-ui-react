@@ -3,6 +3,7 @@
 
   /* @ngInject */
   function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsService, Config, $translate, LicenseService) {
+    $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.org) {
       vm.org = $stateParams.org;
@@ -23,6 +24,8 @@
       hybrid: 'unknown'
     };
     vm.statusPageUrl = Config.getStatusPageUrl();
+    vm.adminUserLimit = 3;
+    vm.showAllAdminUsers = showAllAdminUsers;
 
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
     HelpdeskCardsService.getHealthStatuses().then(initHealth, angular.noop);
@@ -35,6 +38,7 @@
       LicenseService.getLicensesInOrg(vm.orgId).then(initCards, XhrNotificationService.notify);
       findManagedByOrgs(org);
       findWebExSites(org);
+      findAdminUsers(org);
     }
 
     function initCards(licenses) {
@@ -53,8 +57,11 @@
       if (org.managedBy && org.managedBy.length > 0) {
         org.managedByOrgs = [];
         _.each(org.managedBy, function (parnterOrg) {
-          HelpdeskService.getOrg(parnterOrg.orgId).then(function (res) {
-            org.managedByOrgs.push(res);
+          HelpdeskService.getOrgDisplayName(parnterOrg.orgId).then(function (displayName) {
+            org.managedByOrgs.push({
+              id: parnterOrg.orgId,
+              displayName: displayName
+            });
           }, angular.noop);
         });
       }
@@ -66,6 +73,19 @@
           vm.org.webExSites = sites;
         }, XhrNotificationService.notify);
       }
+    }
+
+    function findAdminUsers(org) {
+      HelpdeskService.searchUsers('', org.id, 100, 'id_full_admin').then(function (users) {
+        vm.adminUsers = users;
+        vm.showAllAdminUsersText = $translate.instant('helpdesk.showAllAdminUsers', {
+          numUsers: users.length
+        });
+      }, XhrNotificationService.notify);
+    }
+
+    function showAllAdminUsers() {
+      vm.adminUserLimit = vm.adminUsers.length;
     }
   }
 

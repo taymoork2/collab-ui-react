@@ -1756,6 +1756,7 @@
     "contactPhone": "Phone",
     "launchButton": "View Customer",
     "setupButton": "Setup Customer",
+    "myOrgButton": "View My Organization",
     "edit": "Edit Terms of Trial",
     "trialTerms": "Terms of Trial",
     "trialOverview": "Trial",
@@ -1775,7 +1776,8 @@
     "none": "None",
     "partnerLogo": "Partner Logo",
     "logoOverride": "Customer Logo Override",
-    "allowCustomerLogo": "Enable Customer Logo for {{customer}}"
+    "allowCustomerLogo": "Enable Customer Logo for {{customer}}",
+    "myOrganization": "My Organization"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
@@ -2006,6 +2008,27 @@
       "deactivateBody_1": "You are about to remove the following Hybrid Service for your organization:",
       "deactivateBody_2": "Deaactivating a service will remove any service-related activity from your users. Additional steps are required to remove the service from your on-premises resources."
     },
+    "serviceStatus": {
+      "unknown": "Status unknown",
+      "not_configured": "Not configured",
+      "installing": "Installing",
+      "disabled": "Disabled",
+      "not_installed": "Not installed",
+      "stopped": "Stopped",
+      "offline": "Offline",
+      "registered": "Registered",
+      "downloading": "Downloading",
+      "uninstalling": "Uninstalling",
+      "running": "Running",
+      "needs_attention": "Needs attention",
+      "alarm": "Alarm"
+    },
+    "clusters": {
+      "listing": {
+        "no_clusters_heading": "No Media Service clusters registered",
+        "no_clusters_text": "See required actions above and documentation to get started."
+      }
+    },
     "mediaServiceActivationFailure": "Problems enabling the service",
     "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
     "serviceName": "Media Service",
@@ -2042,6 +2065,7 @@
     "sessionEnablementUpdateSuccess": "Session type enablement updated.",
     "privilegesUpdateSuccess": "Privileges updated.",
     "pmrErrorTelephonyPrivileges": "Before you can create a Personal Room, set up telephony privileges for this user.",
+    "pmrErrorTelephonyPrivilegesHybridVOIP": "Before you can create a Personal Room, set up telephony privileges or integrated VoIP for this user.",
     "pmrErrorHybridAudio": "Before you can create a Personal Room, WebEx Audio must be enabled. Contact WebEx support for more information.",
     "mustHavePROorSTDifPMRenabled": "To create a Personal Room for this user, select the correct Meeting Center meeting type for Personal Room.",
     "reload": "Try Again",
@@ -2049,6 +2073,7 @@
   },
   "webexUserSettingsAccessErrors": {
     "000001": "Access denied, additional privileges are required.",
+    "000003": "SQL Exception.",
     "030001": "{{givenName}} {{familyName}} has not yet been provisioned to this site. This process may take a moment.",
     "030002": "Invalid Password",
     "030003": "The password should be at least 6 characters long.",
@@ -2550,20 +2575,28 @@
     },
     "errorCodes": {
       "mediaProtocol": {
-        "type": "Potential loss of video quality",
-        "message": "This device is communicating via the {{mediaProtocol}} protocol, which could cause higher latency and therefore reduced media streaming experience. If you are experiencing issues with your media streaming, you can try to open UDP port 33434 on your local firewall to aid media streaming issues."
+        "type": "Network Ports Blocked",
+        "message": "Firewall may be blocking media on UDP port 33434. Call quality may be impacted."
+      },
+      "TCPMediaFallback": {
+        "type": "Network Ports Blocked",
+        "message": "Firewall may be blocking media on UDP port 33434. Call quality may be impacted."
+      },
+      "MediaBlockingDetected": {
+        "type": "Network Ports Blocked",
+        "message": "Firewall may be blocking media on UDP and TCP port 33434. Calls will fail to connect."
       },
       "TemperatureCheck": {
         "type": "High temperature",
-        "message": "The system temperature is high, this may cause a system shut down."
+        "message": "System temperature is too high."
       },
       "OSDVideoOutput": {
-        "type": "No monitor connected",
-        "message": "Verify that the monitor is turned on and check the HDMI connection between the video endpoint and the monitor."
+        "type": "Main Display Not Detected",
+        "message": "Verify that the main display is turned on and connected to the correct display output on the video system."
       },
       "noupgrade": {
-        "type": "System does not automatically update",
-        "message": "The system is set up to not receive automatic updates."
+        "type": "Automatic Updates Disabled",
+        "message": "System software will not be updated."
       },
       "unknown": {
         "type": "Unknown Error Occurred",
@@ -2831,8 +2864,8 @@
     "sso": "Single Sign On (SSO)",
     "dirSync": "Directory Synchronization",
     "type": "Type",
-    "partner": "Partner Organization",
-    "customer": "Customer Organization",
+    "partner": "Partner",
+    "customer": "Customer",
     "searchCriteriaLink": "Show supported search criteria.",
     "searchInfo": "Search users by Email, Phone Number or Display Name (two words required). Search company by Display Name. Search devices by Display Name, Serial or MAC Address (Note: device search is supported only when searching a specific customer).",
     "devices": "Devices",
@@ -2891,6 +2924,8 @@
       "COMMUNICATIONS": "{{volume}} Advanced Spark Call",
       "SHARED_DEVICES": "{{volume}} Room Devices"
     },
-    "trial": "Trial"
+    "trial": "Trial",
+    "adminUsers": "Administrators",
+    "showAllAdminUsers": "Show all {{numUsers}} users"
   }
 }
