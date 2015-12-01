@@ -188,10 +188,7 @@
         return scope.model.searchUpload !== UPLOAD;
       },
       searchDisabled: function (viewValue, modelValue, scope) {
-        return vm.searchAndUploadForm.$invalid || vm.listRetrieved;
-      },
-      listRetrieved: function (viewValue, modelValue, scope) {
-        return vm.listRetrieved;
+        return vm.searchAndUploadForm.$invalid;
       },
       uploadDisabled: function (viewValue, modelValue, scope) {
         return angular.isUndefined(scope.model.uploadFile);
@@ -473,8 +470,7 @@
           }
         },
         expressionProperties: {
-          'hide': expression.hideSearch,
-          'templateOptions.disabled': expression.listRetrieved
+          'hide': expression.hideSearch
         }
       }, {
         key: 'uploadFile',
@@ -532,15 +528,13 @@
     vm.selectCDR = selectCDR;
 
     function inUserList(userName) {
-      var user = _.find(userList, {
-        'userName': userName
+      var inArray = false;
+      angular.forEach(userList, function (user, index, array) {
+        if (user.userName === userName) {
+          inArray = true;
+        }
       });
-
-      if (angular.isDefined(user)) {
-        return true;
-      } else {
-        return false;
-      }
+      return inArray;
     }
 
     function addNames(cdrArray) {
