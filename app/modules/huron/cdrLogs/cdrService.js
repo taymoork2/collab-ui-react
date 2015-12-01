@@ -33,8 +33,39 @@
     return {
       query: query,
       formDate: formDate,
-      createDownload: createDownload
+      createDownload: createDownload,
+      getUserList: getUserList
     };
+
+    function getUserList(start) {
+      var defer = $q.defer();
+
+      var url = Config.getScimUrl(Authinfo.getOrgId()) + '?&sortBy=name&sortOrder=ascending';
+      if (((start !== null) && angular.isDefined(start))) {
+        url += "&startIndex=" + start;
+      }
+
+      $http.get(url).success(function (data, status) {
+        if (parseInt(data.totalResults) > (parseInt(data.startIndex) + parseInt(data.itemsPerPage) - 1)) {
+          var userList = data.Resources;
+          if ((start === null) || !angular.isDefined(start)) {
+            start = 1;
+          }
+
+          getUserList(start + parseInt(data.itemsPerPage)).then(function (response) {
+            defer.resolve(userList.concat(response));
+          });
+        } else {
+          defer.resolve(data.Resources);
+        }
+      }).error(function (data, status) {
+        Log.debug('Failed to retrieve user data. Status: ' + status);
+        Notification.notify([$translate.instant('cdrLogs.userDataError')], 'error');
+        defer.reject([]);
+      });
+
+      return defer.promise;
+    }
 
     function getCdrUrl() {
       if (Config.isDev()) {
@@ -68,7 +99,7 @@
       return returnDate.utc();
     }
 
-    function query(model) {
+    function query(model, userList) {
       if (cancelPromise !== null && cancelPromise !== undefined) {
         cancelPromise.resolve(ABORT);
       }
@@ -83,10 +114,16 @@
 
       devicesQuery.push(deviceQuery(tenant, Authinfo.getOrgId()));
       if (angular.isDefined(model.callingUser) && (model.callingUser !== '')) {
-        devicesQuery.push(deviceQuery(callingUser, convertUuid(model.callingUser)));
+        var callingUUID = convertUuid(model.callingUser, userList);
+        if (callingUUID !== "") {
+          devicesQuery.push(deviceQuery(callingUser, callingUUID));
+        }
       }
       if (angular.isDefined(model.calledUser) && (model.calledUser !== '')) {
-        devicesQuery.push(deviceQuery(calledUser, convertUuid(model.calledUser)));
+        var calledUUID = convertUuid(model.calledUser, userList);
+        if (calledUUID !== "") {
+          devicesQuery.push(deviceQuery(callingUser, calledUUID));
+        }
       }
       if (angular.isDefined(model.callingPartyDevice) && (model.callingPartyDevice !== '')) {
         devicesQuery.push(deviceQuery(callingDevice, model.callingPartyDevice));
@@ -146,11 +183,18 @@
         });
     }
 
-    function convertUuid(uuid) {
-      if (uuid.length === 36) {
+    function convertUuid(uuid, userList) {
+      var userUuid = "";
+      angular.forEach(userList, function (user, index, array) {
+        if (user.userName === uuid) {
+          userUuid = user.id;
+        }
+      });
+
+      if ((userUuid === "") && (uuid.length === 36) && /^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$/.test(uuid)) {
         return uuid;
       } else {
-        return [uuid.slice(0, 7), uuid.slice(8, 11), uuid.slice(12, 15), uuid.slice(16, 19), uuid.slice(20, 31), ].join('-');
+        return userUuid;
       }
     }
 

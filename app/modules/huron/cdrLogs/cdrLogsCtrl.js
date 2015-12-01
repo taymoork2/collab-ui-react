@@ -16,7 +16,9 @@
     var filetype = "text/json, application/json";
     var errorStatus = [16, 19, 393216, 0, 17, 1, 21];
     var today = moment().format(dateFormat);
+    var userList = [];
 
+    vm.listRetrieved = false;
     vm.gridData = [];
     vm.dataState = null;
     vm.selectedCDR = null;
@@ -43,11 +45,11 @@
           scope.model.callingUser = value;
           scope.fields[3].formControl.$validate();
         }
-        return /^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$/.test(value) || /^[0-9a-fA-F]{32}$/.test(value) || (value === undefined) || (value === "");
+        return /^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$/.test(value) || inUserList(value) || (value === undefined) || (value === "");
       },
       calledUser: function (viewValue, modelValue, scope) {
         var value = viewValue || modelValue;
-        return ((/^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$/.test(value) || /^[0-9a-fA-F]{32}$/.test(value)) && (value !== scope.model.callingUser)) || (value === undefined) || (value === "");
+        return (/^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$/.test(value) || inUserList(value)) && (value !== scope.model.callingUser) || (value === undefined) || (value === "");
       },
       callingNumber: function (viewValue, modelValue, scope) {
         var value = viewValue || modelValue;
@@ -186,7 +188,10 @@
         return scope.model.searchUpload !== UPLOAD;
       },
       searchDisabled: function (viewValue, modelValue, scope) {
-        return vm.searchAndUploadForm.$invalid;
+        return vm.searchAndUploadForm.$invalid || vm.listRetrieved;
+      },
+      listRetrieved: function (viewValue, modelValue, scope) {
+        return vm.listRetrieved;
       },
       uploadDisabled: function (viewValue, modelValue, scope) {
         return angular.isUndefined(scope.model.uploadFile);
@@ -426,7 +431,7 @@
             vm.gridData = null;
             vm.dataState = 1;
             vm.selectedCDR = null;
-            CdrService.query(scope.model).then(function (response) {
+            CdrService.query(scope.model, userList).then(function (response) {
               if (response !== ABORT) {
                 vm.gridData = response;
                 if (angular.isDefined(vm.gridData) && (vm.gridData.length > 0)) {
@@ -468,7 +473,8 @@
           }
         },
         expressionProperties: {
-          'hide': expression.hideSearch
+          'hide': expression.hideSearch,
+          'templateOptions.disabled': expression.listRetrieved
         }
       }, {
         key: 'uploadFile',
@@ -524,6 +530,16 @@
     vm.statusAvalibility = statusAvalibility;
     vm.getAccordionHeader = getAccordionHeader;
     vm.selectCDR = selectCDR;
+
+    function inUserList(userName) {
+      var inArray = false;
+      angular.forEach(userList, function (user, index, array) {
+        if (user.userName === userName) {
+          inArray = true;
+        }
+      });
+      return inArray;
+    }
 
     function addNames(cdrArray) {
       var x = 0;
@@ -609,5 +625,14 @@
         call: callCopy
       });
     }
+
+    function init() {
+      CdrService.getUserList().then(function (response) {
+        userList = response;
+        vm.listRetrieved = true;
+      });
+    }
+
+    init();
   }
 })();
