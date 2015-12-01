@@ -6,7 +6,9 @@
     .controller('ServiceSetupCtrl', ServiceSetupCtrl);
 
   /* @ngInject*/
-  function ServiceSetupCtrl($q, $state, ServiceSetup, HttpUtils, Notification, Authinfo, $translate, HuronCustomer, ValidationService, ExternalNumberPool, DialPlanService) {
+  function ServiceSetupCtrl($q, $state, ServiceSetup, HttpUtils, Notification, Authinfo, $translate,
+    HuronCustomer, ValidationService, ExternalNumberPool, DialPlanService, TelephoneNumberService,
+    ExternalNumberService) {
     var vm = this;
     var DEFAULT_SITE_INDEX = '000001';
     var DEFAULT_TZ = {
@@ -34,6 +36,7 @@
     vm.processing = true;
     vm.pilotNumberSelected = undefined;
     vm.externalNumberPool = [];
+    vm.externalNumberPoolBeautified = [];
     vm.inputPlaceholder = $translate.instant('directoryNumberPanel.searchNumber');
     vm.steeringDigits = [
       '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
@@ -483,7 +486,7 @@
               vm.model.site.voicemailPilotNumber = voicemail.pilotNumber;
               vm.pilotNumberSelected = {
                 uuid: voicemail.name,
-                pattern: voicemail.pilotNumber
+                pattern: TelephoneNumberService.getDIDLabel(voicemail.pilotNumber)
               };
             }
           }).catch(function (response) {
@@ -500,27 +503,13 @@
     }
 
     function loadExternalNumberPool(pattern) {
-      ServiceSetup.loadExternalNumberPool(pattern).then(function () {
-
-        var selectedVoicemailObject;
-        vm.externalNumberPool = ServiceSetup.externalNumberPool;
-        // if there's nothing selected yet, make the first of list selected
-        if (vm.externalNumberPool.length > 0) {
-          if (!vm.pilotNumberSelected) {
-            vm.pilotNumberSelected = vm.externalNumberPool[0];
-          }
-        }
-        // put the existing pilot number to the end of list
-        if (vm.model.site.voicemailPilotNumber) {
-          angular.forEach(vm.externalNumberPool, function (value, index) {
-            // removes the pilot number from the pool and adds it to the end of list
-            if (value.pattern === vm.model.site.voicemailPilotNumber) {
-              selectedVoicemailObject = value;
-              vm.externalNumberPool.splice(index, 1);
-            }
-          });
-          vm.externalNumberPool.push(selectedVoicemailObject || vm.pilotNumberSelected);
-        }
+      return ExternalNumberService.refreshNumbers(Authinfo.getOrgId()).then(function () {
+        vm.externalNumberPool = ExternalNumberService.getAllNumbers();
+        vm.externalNumberPoolBeautified = _.map(vm.externalNumberPool, function (en) {
+          var externalNumber = angular.copy(en);
+          externalNumber.pattern = TelephoneNumberService.getDIDLabel(externalNumber.pattern);
+          return externalNumber;
+        });
       }).catch(function (response) {
         vm.externalNumberPool = [];
         Notification.errorResponse(response, 'directoryNumberPanel.externalNumberPoolError');
@@ -670,7 +659,7 @@
         return voicePromise.then(function () {
           if (!vm.hasSites) {
             if (vm.pilotNumberSelected) {
-              vm.model.site.voicemailPilotNumber = vm.pilotNumberSelected.pattern;
+              vm.model.site.voicemailPilotNumber = TelephoneNumberService.getDIDValue(vm.pilotNumberSelected.pattern);
             } else {
               delete vm.model.site.voicemailPilotNumber;
             }
@@ -679,10 +668,10 @@
             promise = ServiceSetup.createSite(currentSite).then(function () {
               var promises = [];
               // Check for voicemailService before updating voicemailpilot number on common/customer
-              if (vm.hasVoicemailService && vm.pilotNumberSelected) {
+              if (vm.hasVoicemailService && vm.model.site.voicemailPilotNumber) {
                 promises.push(ServiceSetup.updateCustomerVoicemailPilotNumber({
                   voicemail: {
-                    pilotNumber: vm.pilotNumberSelected.pattern
+                    pilotNumber: vm.model.site.voicemailPilotNumber
                   }
                 }).catch(function (response) {
                   errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.voicemailUpdateError'));
@@ -700,15 +689,21 @@
               errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.siteError'));
             });
             deferreds.push(promise);
-          } else if (vm.hasVoicemailService && vm.pilotNumberSelected && vm.pilotNumberSelected.pattern !== vm.model.site.voicemailPilotNumber) {
-            promise = ServiceSetup.updateCustomerVoicemailPilotNumber({
-              voicemail: {
-                pilotNumber: vm.pilotNumberSelected.pattern
-              }
-            }).catch(function (response) {
-              errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.voicemailUpdateError'));
-            });
-            deferreds.push(promise);
+          } else {
+            var pilotNumberValue = undefined;
+            if (vm.pilotNumberSelected) {
+              pilotNumberValue = TelephoneNumberService.getDIDValue(vm.pilotNumberSelected.pattern);
+            }
+            if (vm.hasVoicemailService && vm.pilotNumberSelected && pilotNumberValue !== vm.model.site.voicemailPilotNumber) {
+              promise = ServiceSetup.updateCustomerVoicemailPilotNumber({
+                voicemail: {
+                  pilotNumber: pilotNumberValue
+                }
+              }).catch(function (response) {
+                errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.voicemailUpdateError'));
+              });
+              deferreds.push(promise);
+            }
           }
 
           if (angular.isArray(vm.model.displayNumberRanges) && (vm.hideFieldInternalNumberRange !== true)) {
