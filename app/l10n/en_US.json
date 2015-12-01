@@ -2862,8 +2862,8 @@
     "sso": "Single Sign On (SSO)",
     "dirSync": "Directory Synchronization",
     "type": "Type",
-    "partner": "Partner Organization",
-    "customer": "Customer Organization",
+    "partner": "Partner",
+    "customer": "Customer",
     "searchCriteriaLink": "Show supported search criteria.",
     "searchInfo": "Search users by Email, Phone Number or Display Name (two words required). Search company by Display Name. Search devices by Display Name, Serial or MAC Address (Note: device search is supported only when searching a specific customer).",
     "devices": "Devices",
@@ -2922,6 +2922,8 @@
       "COMMUNICATIONS": "{{volume}} Advanced Spark Call",
       "SHARED_DEVICES": "{{volume}} Room Devices"
     },
-    "trial": "Trial"
+    "trial": "Trial",
+    "adminUsers": "Administrators",
+    "showAllAdminUsers": "Show all {{numUsers}} users"
   }
 }

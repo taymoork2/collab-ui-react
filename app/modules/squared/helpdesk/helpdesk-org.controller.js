@@ -23,6 +23,8 @@
       hybrid: 'unknown'
     };
     vm.statusPageUrl = Config.getStatusPageUrl();
+    vm.adminUserLimit = 1;
+    vm.showAllAdminUsers = showAllAdminUsers;
 
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
     HelpdeskCardsService.getHealthStatuses().then(initHealth, angular.noop);
@@ -35,6 +37,7 @@
       LicenseService.getLicensesInOrg(vm.orgId).then(initCards, XhrNotificationService.notify);
       findManagedByOrgs(org);
       findWebExSites(org);
+      findAdminUsers(org);
     }
 
     function initCards(licenses) {
@@ -69,6 +72,19 @@
           vm.org.webExSites = sites;
         }, XhrNotificationService.notify);
       }
+    }
+
+    function findAdminUsers(org) {
+      HelpdeskService.searchUsers('', org.id, 100, 'id_full_admin').then(function (users) {
+        vm.adminUsers = users;
+        vm.showAllAdminUsersText = $translate.instant('helpdesk.showAllAdminUsers', {
+          numUsers: users.length
+        });
+      }, XhrNotificationService.notify);
+    }
+
+    function showAllAdminUsers() {
+      vm.adminUserLimit = vm.adminUsers.length;
     }
   }
 

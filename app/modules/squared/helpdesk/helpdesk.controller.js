@@ -215,5 +215,11 @@
 
   angular
     .module('Squared')
-    .controller('HelpdeskController', HelpdeskController);
+    .controller('HelpdeskController', HelpdeskController)
+    .config([
+      '$compileProvider',
+      function ($compileProvider) {
+        $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|mailto):/);
+      }
+    ]);
 }());

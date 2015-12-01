@@ -49,12 +49,12 @@
       return $location.absUrl().match(/helpdesk-backend=mock/);
     }
 
-    function searchUsers(searchString, orgId, limit) {
+    function searchUsers(searchString, orgId, limit, role) {
       if (useMock()) {
         return deferredResolve(HelpdeskMockData.users);
       }
       return $http
-        .get(urlBase + 'helpdesk/search/users?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit + (orgId ? '&orgId=' + encodeURIComponent(orgId) : ''))
+        .get(urlBase + 'helpdesk/search/users?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit + (orgId ? '&orgId=' + encodeURIComponent(orgId) : '') + (role ? '&role=' + encodeURIComponent(role) : ''))
         .then(extractItems);
     }
 
