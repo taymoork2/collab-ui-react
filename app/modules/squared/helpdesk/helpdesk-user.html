@@ -32,11 +32,11 @@
           <span>{{'helpdesk.status' | translate}}:</span>
         </div>
         <div class="large-7 columns details-value">
-          <button class="action secondary" type="button" ng-click="helpdeskUserCtrl.resendInviteEmail()"
+          <span ng-repeat="status in helpdeskUserCtrl.user.statuses">{{status | translate}}{{$last ? '' : ', '}}</span>
+          <button class="action secondary small" type="button" ng-click="helpdeskUserCtrl.resendInviteEmail()"
                   style="margin-left: 1rem;"
                   ng-if="helpdeskUserCtrl.resendInviteEnabled">Re-send
           </button>
-          <span ng-repeat="status in helpdeskUserCtrl.user.statuses">{{status | translate}}{{$last ? '' : ', '}}</span>
         </div>
       </div>
 
