@@ -23,7 +23,7 @@
       hybrid: 'unknown'
     };
     vm.statusPageUrl = Config.getStatusPageUrl();
-    vm.adminUserLimit = 1;
+    vm.adminUserLimit = 3;
     vm.showAllAdminUsers = showAllAdminUsers;
 
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
