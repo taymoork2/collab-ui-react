@@ -44,6 +44,11 @@ angular.module('Mediafusion')
           });
       };
 
+      var deleteUserIdentityOrgToMediaAgentOrgMapping = function () {
+        var url = config.getCalliopeUrl() + '/identity2agent/' + Authinfo.getOrgId();
+        return $http.delete(url);
+      };
+
       return {
         isServiceEnabled: isServiceEnabled,
         setServiceEnabled: setServiceEnabled,
