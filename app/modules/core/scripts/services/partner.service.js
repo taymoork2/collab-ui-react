@@ -105,7 +105,7 @@
     }
 
     function isLicenseInfoAvailable(licenses) {
-      return angular.isArray(licenses) && licenses.length > 0;
+      return angular.isArray(licenses);
     }
 
     function setServiceSortOrder(license) {
@@ -154,17 +154,17 @@
       }
     }
 
-    function loadRetrievedDataToList(retrievedData, isTrialData) {
-      var list = [];
+    function loadRetrievedDataToList(retrievedData, basicList, isTrialData) {
+      var list = basicList || [];
 
       for (var index in retrievedData) {
         var data = retrievedData[index];
         var edate = moment(data.startDate).add(data.trialPeriod, 'days').format('MMM D, YYYY');
         var dataObj = {
           trialId: data.trialId,
-          customerOrgId: data.customerOrgId,
-          customerName: data.customerName,
-          customerEmail: data.customerEmail,
+          customerOrgId: data.customerOrgId || data.id,
+          customerName: data.customerName || data.displayName,
+          customerEmail: data.customerEmail || data.email,
           endDate: edate,
           numUsers: data.licenseCount,
           daysLeft: 0,

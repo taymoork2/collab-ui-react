@@ -56,15 +56,15 @@
             <div id="messaging" class="col-sm-4 col-paid">
                 <div class="entitle-check-grp" ng-repeat="msgFeature in messageFeatures">
                     <div ng-if="msgFeature.licenses">
-                        <cs-checkbox ckid="paid-msg"
-                            ng-if="msgFeature.licenses.length === 1"
-                            ng-model="radioStates.msgRadio"
-                            label="{{msgFeature.label}}">
-                        </cs-checkbox>
+                        <div class="ckbx" ng-if="msgFeature.licenses.length === 1">
+                            <cs-checkbox ckid="paid-msg"
+                                ng-model="radioStates.msgRadio"
+                                label="{{msgFeature.label}}">
+                            </cs-checkbox>
+                        </div>
                         <div ng-if="msgFeature.licenses.length > 1">
                             <div class="ckbx" for="{{license.licenseId}}" ng-repeat="license in msgFeature.licenses | filter:isSubscribeable | orderBy:'billingServiceId'">
-                                <cs-checkbox ckid="{{license.licenseId}}" ng-model="checkboxMsg"></cs-checkbox>
-                                <span>{{license.billingServiceId}} ({{license.volume}})</span>
+                                <cs-checkbox ckid="{{license.licenseId}}" ng-model="checkboxMsg" label="{{license.billingServiceId}} ({{license.volume}})"></cs-checkbox>
                             </div>
                         </div>
                     </div>
@@ -78,12 +78,11 @@
                             <div class="sub-line"></div>
                             {{cf.confFeature.license.siteUrl}}
                         </div>
-                        <div>              
-                            <cs-checkbox ckid="{{cf.confFeature.license.licenseId}}" ng-model="checkboxConf"></cs-checkbox>      
-                            <span>{{cf.confFeature.label}}</span>                  
+                        <div>
+                            <cs-checkbox ckid="{{cf.confFeature.license.licenseId}}" ng-model="cf.confModel" label="{{cf.confFeature.label}}"></cs-checkbox>
                         </div>
                         <div ng-if="cf.cmrFeature">
-                            <cs-checkbox ck-id="{{cf.cmrId}}" class="indentedCheckbox" ng-click="licenseHandler(cf.cmrFeature.license.licenseId); cf.confModel = true; cf.cmrModel = !cf.cmrModel" ng-model="cf.cmrModel" label="{{cf.cmrFeature.label}}" isdisabled="false"><cs-checkbox>
+                            <cs-checkbox ckid="{{cf.cmrId}}" class="indentedCheckbox" ng-click="licenseHandler(cf.cmrFeature.license.licenseId); cf.confModel = true; cf.cmrModel = !cf.cmrModel" ng-model="cf.cmrModel" label="{{cf.cmrFeature.label}}" isdisabled="false"><cs-checkbox>
                         </div>
                     </div>
                 </div>
