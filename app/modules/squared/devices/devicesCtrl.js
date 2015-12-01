@@ -13,9 +13,7 @@ angular.module('Squared')
         Orgservice.getOrg(function (data, status) {
           if (status === 200) {
             var showWarning = true;
-            if (data.isTestOrg) {
-              showWarning = false;
-            } else {
+            if (!data.isTestOrg) {
               Orgservice.getValidLicenses().then(function (licenses) {
                 licenses.forEach(function (license) {
                   if (license.licenseType == "ROOMSYSTEMS") {
