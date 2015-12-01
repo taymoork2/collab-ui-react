@@ -9,10 +9,9 @@
     vm.serviceType = "mf_mgmt";
     vm.serviceId = "squared-fusion-media";
     vm.cluster = $stateParams.cluster;
-    vm.currentServiceId = "squared-fusion-media";
 
     vm.disableMediaService = function (serviceId) {
-      MediaServiceActivation.setServiceEnabled(vm.currentServiceId, false).then(
+      MediaServiceActivation.setServiceEnabled(vm.serviceId, false).then(
         function success() {
           vm.disableOrpheusForMediaFusion();
           $state.go("media-service.list", {

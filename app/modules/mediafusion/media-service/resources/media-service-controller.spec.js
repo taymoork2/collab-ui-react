@@ -59,10 +59,6 @@ describe('Controller: MediaServiceController', function () {
     expect($scope).toBeDefined();
   });
 
-  it('grid oprions should be defined', function () {
-    //expect(scope.gridOptions).toBeDefined();
-  });
-
   it('should enable media service', function () {
     spyOn(MediaServiceActivation, 'setServiceEnabled').and.returnValue($q.when());
     spyOn(MediaServiceActivation, 'getUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.when(

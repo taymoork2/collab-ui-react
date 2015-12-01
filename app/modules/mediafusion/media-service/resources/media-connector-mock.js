@@ -10,9 +10,7 @@
   var createHost = function (name) {
     return {
       "host_name": name,
-      "serial": "123456789" + name //rnd()
-        //"serial": rnd()
-
+      "serial": "123456789" + name
     };
   };
 
@@ -108,8 +106,8 @@
       "service_type": "mf_mgmt",
       "display_name": "Media Service"
     },
-    "tlp_url": "gopher://whatever/c_cal_8.2-2.1.tlp",
-    "version": "8.2-2.1",
+    "tlp_url": "http://example.org/linus/2_0.docker",
+    "version": "0.9",
     "release_notes": "foo"
   };
 
@@ -118,7 +116,7 @@
       "service_type": "mf_mgmt",
       "display_name": "Media Service"
     },
-    "tlp_url": "gopher://whatever/c_cal_8.2-2.1.tlp",
+    "tlp_url": "http://example.org/linus/2_0.docker",
     "version": '1.' + Math.floor(Math.random() * 10) + '.0'
   };
 

@@ -52,7 +52,7 @@ describe('Service: MediaClusterService', function () {
   });
 
   it('should be possible to set mock backend', function () {
-    $location.search('hercules-backend', 'mock');
+    $location.search('mediaservice-backend', 'mock');
     converter.convertClusters.returns('foo');
 
     var callback = sinon.stub();
@@ -67,7 +67,7 @@ describe('Service: MediaClusterService', function () {
   });
 
   it('should be possible to set empty backend', function () {
-    $location.search('hercules-backend', 'nodata');
+    $location.search('mediaservice-backend', 'nodata');
 
     var callback = sinon.stub();
     Service.fetch().then(callback);

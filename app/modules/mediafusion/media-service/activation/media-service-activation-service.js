@@ -53,7 +53,8 @@ angular.module('Mediafusion')
         isServiceEnabled: isServiceEnabled,
         setServiceEnabled: setServiceEnabled,
         getUserIdentityOrgToMediaAgentOrgMapping: getUserIdentityOrgToMediaAgentOrgMapping,
-        setUserIdentityOrgToMediaAgentOrgMapping: setUserIdentityOrgToMediaAgentOrgMapping
+        setUserIdentityOrgToMediaAgentOrgMapping: setUserIdentityOrgToMediaAgentOrgMapping,
+        deleteUserIdentityOrgToMediaAgentOrgMapping: deleteUserIdentityOrgToMediaAgentOrgMapping
       };
     }
   ]);

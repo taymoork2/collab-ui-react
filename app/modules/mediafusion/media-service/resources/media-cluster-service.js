@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaClusterService($q, $http, $location, $log, CsdmPoller, CsdmCacheUpdater, ConnectorMock, MediaConverterService, MediaConfigService, Authinfo, CsdmHubFactory, Notification) {
+  function MediaClusterService($q, $http, $location, $log, CsdmPoller, CsdmCacheUpdater, MediaConnectorMock, MediaConverterService, MediaConfigService, Authinfo, CsdmHubFactory, Notification) {
     var clusterCache = {};
 
     function extractDataFromResponse(res) {
@@ -10,15 +10,15 @@
     }
 
     var fetch = function () {
-      if ($location.absUrl().match(/hercules-backend=mock/)) {
-        var data = MediaConverterService.convertClusters(ConnectorMock.mockData());
+      if ($location.absUrl().match(/mediaservice-backend=mock/)) {
+        var data = MediaConverterService.convertClusters(MediaConnectorMock.mockData());
         var defer = $q.defer();
         defer.resolve(data);
         CsdmCacheUpdater.update(clusterCache, data);
         return defer.promise;
       }
 
-      if ($location.absUrl().match(/hercules-backend=nodata/)) {
+      if ($location.absUrl().match(/mediaservice-backend=nodata/)) {
         var defer2 = $q.defer();
         defer2.resolve([]);
         return defer2.promise;

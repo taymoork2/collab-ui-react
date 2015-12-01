@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceController(XhrNotificationService, ServiceStateChecker, MediaServiceActivation, $state,
+  function MediaServiceController(XhrNotificationService, MediaServiceActivation, $state,
     $modal, $scope, $log, $translate, Authinfo, MediaClusterService) {
 
     MediaClusterService.subscribe('data', clustersUpdated, {
@@ -92,7 +92,7 @@
     }
 
     function enableMediaService(serviceId) {
-      $log.log("Entered enableMediaService");
+      //$log.log("Entered enableMediaService");
       vm.waitForEnabled = true;
       MediaServiceActivation.setServiceEnabled(serviceId, true).then(
         function success() {
@@ -110,7 +110,7 @@
     }
 
     function enableOrpheusForMediaFusion() {
-      $log.log("Entered enableOrpheusForMediaFusion");
+      //$log.log("Entered enableOrpheusForMediaFusion");
       MediaServiceActivation.getUserIdentityOrgToMediaAgentOrgMapping().then(
         function success(response) {
           var mediaAgentOrgIdsArray = [];
