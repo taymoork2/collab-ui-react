@@ -16,7 +16,8 @@
     var calledDevice = 'called_deviceName';
     var callingNumber = 'calling_partyNumber';
     var calledNumber = 'called_partyNumber';
-    var tenant = 'calling_customerUUID';
+    var callingTenant = 'calling_customerUUID';
+    var calledTenant = 'called_customerUUID';
     var emptyId = "00000000000000000000000000000000";
     var serverHosts = ['SME-01', 'SME-02', 'CMS-01', 'CMS-02'];
 
@@ -111,43 +112,57 @@
       var endTimeUtc = formDate(model.endDate, model.endTime);
       var timeStamp = '"from":' + startTimeUtc + ',"to":' + endTimeUtc;
       var devicesQuery = [];
+      var secondaryDevicesQuery = [];
 
-      devicesQuery.push(deviceQuery(tenant, Authinfo.getOrgId()));
+      // seperate queries search for callingTenant and calledTenant so as not to only get external calls as well as internal calls
+      devicesQuery.push(deviceQuery(callingTenant, Authinfo.getOrgId()));
+      secondaryDevicesQuery.push(deviceQuery(calledTenant, Authinfo.getOrgId()));
       if (angular.isDefined(model.callingUser) && (model.callingUser !== '')) {
         var callingUUID = convertUuid(model.callingUser, userList);
         if (callingUUID !== "") {
           devicesQuery.push(deviceQuery(callingUser, callingUUID));
+          secondaryDevicesQuery.push(deviceQuery(callingUser, callingUUID));
         }
       }
       if (angular.isDefined(model.calledUser) && (model.calledUser !== '')) {
         var calledUUID = convertUuid(model.calledUser, userList);
         if (calledUUID !== "") {
           devicesQuery.push(deviceQuery(callingUser, calledUUID));
+          secondaryDevicesQuery.push(deviceQuery(callingUser, calledUUID));
         }
       }
       if (angular.isDefined(model.callingPartyDevice) && (model.callingPartyDevice !== '')) {
         devicesQuery.push(deviceQuery(callingDevice, model.callingPartyDevice));
+        secondaryDevicesQuery.push(deviceQuery(callingDevice, model.callingPartyDevice));
       }
       if (angular.isDefined(model.calledPartyDevice) && (model.calledPartyDevice !== '')) {
         devicesQuery.push(deviceQuery(calledDevice, model.calledPartyDevice));
+        secondaryDevicesQuery.push(deviceQuery(calledDevice, model.calledPartyDevice));
       }
       if (angular.isDefined(model.callingPartyNumber) && (model.callingPartyNumber !== '')) {
         devicesQuery.push(deviceQuery(callingNumber, model.callingPartyNumber));
+        secondaryDevicesQuery.push(deviceQuery(callingNumber, model.callingPartyNumber));
       }
       if (angular.isDefined(model.calledPartyNumber) && (model.calledPartyNumber !== '')) {
         devicesQuery.push(deviceQuery(calledNumber, model.calledPartyNumber));
+        secondaryDevicesQuery.push(deviceQuery(calledNumber, model.calledPartyNumber));
       }
 
       //finalize the JSON Query
       var jsQuery = '{"query": {"filtered": {"query": {"bool": {"should": [' + generateHosts() + ']}},"filter": {"bool": {"must": [{"range": {"@timestamp":{' + timeStamp + '}}}]';
+      var secondaryJsQuery = '{"query": {"filtered": {"query": {"bool": {"should": [' + generateHosts() + ']}},"filter": {"bool": {"must": [{"range": {"@timestamp":{' + timeStamp + '}}}]';
 
       if (devicesQuery.length > 0) {
         jsQuery += ',"should":[' + devicesQuery + ']';
+        secondaryJsQuery += ',"should":[' + secondaryDevicesQuery + ']';
       }
       jsQuery += '}}} },"size": ' + model.hitSize + ',"sort": [{"@timestamp": {"order": "desc"}}]}';
+      secondaryJsQuery += '}}} },"size": ' + model.hitSize + ',"sort": [{"@timestamp": {"order": "desc"}}]}';
 
       var results = [];
-      return proxy(jsQuery, angular.copy(thisJob)).then(function (response) {
+      var promises = [];
+      var returnResponse = [];
+      var callingPromise = proxy(jsQuery, angular.copy(thisJob)).then(function (response) {
           if (!angular.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
             for (var i = 0; i < response.hits.hits.length; i++) {
               results.push(response.hits.hits[i]._source);
@@ -181,6 +196,47 @@
             return;
           }
         });
+      promises.push(callingPromise);
+
+      var calledPromise = proxy(jsQuery, angular.copy(thisJob)).then(function (response) {
+          if (!angular.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
+            for (var i = 0; i < response.hits.hits.length; i++) {
+              results.push(response.hits.hits[i]._source);
+            }
+            return recursiveQuery(results, thisJob).then(function (response) {
+              if (response !== ABORT) {
+                return proxyData;
+              } else {
+                return response;
+              }
+            }, function (response) {
+              if (response !== ABORT) {
+                return;
+              } else {
+                return response;
+              }
+            });
+          }
+          return;
+        },
+        function (response) {
+          if (response.status === -1) {
+            return ABORT;
+          } else if (response.status === 401) {
+            Log.debug('User unauthorized to retrieve cdr data from server. Status: ' + response.status);
+            Notification.notify([$translate.instant('cdrLogs.cdr401Unauthorized')], 'error');
+            return;
+          } else {
+            Log.debug('Failed to retrieve cdr data from server. Status: ' + response.status);
+            Notification.notify([$translate.instant('cdrLogs.cdrRetrievalError')], 'error');
+            return;
+          }
+        });
+      promises.push(calledPromise);
+
+      return $q.all(promises).then(function () {
+        return proxyData;
+      });
     }
 
     function convertUuid(uuid, userList) {

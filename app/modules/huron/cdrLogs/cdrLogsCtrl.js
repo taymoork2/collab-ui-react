@@ -532,13 +532,15 @@
     vm.selectCDR = selectCDR;
 
     function inUserList(userName) {
-      var inArray = false;
-      angular.forEach(userList, function (user, index, array) {
-        if (user.userName === userName) {
-          inArray = true;
-        }
+      var user = _.find(userList, {
+        'userName': userName
       });
-      return inArray;
+
+      if (angular.isDefined(user)) {
+        return true;
+      } else {
+        return false;
+      }
     }
 
     function addNames(cdrArray) {
