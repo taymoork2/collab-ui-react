@@ -53,7 +53,7 @@ angular.module('Core')
         '</div>';
 
       var actionsTemplate = '<span dropdown>' +
-        '<button id="actionsButton" class="btn--none btn--actions dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
+        '<button id="actionsButton" class="btn--none dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
         '<i class="icon icon-three-dots"></i>' +
         '</button>' +
         '</span>';

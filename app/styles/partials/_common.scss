@@ -44,14 +44,6 @@ body {
   }
 }
 
-.icon {
-  .icon-export & {
-    // @include vr-spacing(mr, 1.875);
-    // line-height: 2.813rem;
-    // color: $brand-info;
-  }
-}
-
 // Common ngGrid Styles
 
 div[gridscrollbar] {
@@ -61,7 +53,7 @@ div[gridscrollbar] {
 .ngCellText,
 .ngHeaderText {
   &.colt0 {
-    padding-left: 30px;
+    padding-left: 1rem;
   }
 }
 
