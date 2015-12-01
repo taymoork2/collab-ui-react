@@ -4,31 +4,57 @@ angular.module('Squared')
   .controller('DevicesCtrl',
 
     /* @ngInject */
-    function ($scope, $state, $templateCache, DeviceFilter, CsdmCodeService, CsdmHuronDeviceService, CsdmDeviceService, AddDeviceModal, Authinfo, AccountOrgService) {
+    function ($scope, $state, $templateCache, DeviceFilter, CsdmCodeService, CsdmHuronDeviceService, CsdmDeviceService, AddDeviceModal, Authinfo, Orgservice) {
       var vm = this;
 
       var checkLicense = function () {
         vm.showLicenseWarning = false;
-
-        AccountOrgService.getAccount(Authinfo.getOrgId()).success(function (data) {
-          var showWarning = true;
-          vm.licenseError = "no license";
-          var d = data;
-          angular.forEach(d.accounts, function (account) {
-            angular.forEach(account.licenses, function (license) {
-              if (license.offerName == "SD") {
-                // PENDING, ACTIVE, CANCELLED, SUSPENDED
-                if (license.isTrial || license.status == "ACTIVE") {
-                  showWarning = false;
-                } else {
-                  vm.licenseError = license.status.toLowerCase();
-                }
-              }
-            });
-          });
-          vm.showLicenseWarning = showWarning;
+        vm.licenseError = "no valid license for room systems";
+        Orgservice.getOrg(function (data, status) {
+          if (status === 200) {
+            var showWarning = true;
+            if (data.isTestOrg) {
+              showWarning = false;
+            } else {
+              Orgservice.getValidLicenses().then(function (licenses) {
+                licenses.forEach(function (license) {
+                  if (license.licenseType == "ROOMSYSTEMS") {
+                    if (license.volume >= license.usage) {
+                      showWarning = false;
+                    } else {
+                      vm.licenseError = "There are more devices registered than you have licenses for.";
+                    }
+                  }
+                });
+                vm.showLicenseWarning = showWarning;
+              });
+            }
+          }
         });
       };
+
+      //var checkLicense = function () {
+      //  vm.showLicenseWarning = false;
+      //
+      //  AccountOrgService.getAccount(Authinfo.getOrgId()).success(function (data) {
+      //    var showWarning = true;
+      //    vm.licenseError = "no license";
+      //    var d = data;
+      //    angular.forEach(d.accounts, function (account) {
+      //      angular.forEach(account.licenses, function (license) {
+      //        if (license.offerName == "SD") {
+      //          // PENDING, ACTIVE, CANCELLED, SUSPENDED
+      //          if (license.isTrial || license.status == "ACTIVE") {
+      //            showWarning = false;
+      //          } else {
+      //            vm.licenseError = license.status.toLowerCase();
+      //          }
+      //        }
+      //      });
+      //    });
+      //    vm.showLicenseWarning = showWarning;
+      //  });
+      //};
       checkLicense();
 
       vm.deviceFilter = DeviceFilter;
