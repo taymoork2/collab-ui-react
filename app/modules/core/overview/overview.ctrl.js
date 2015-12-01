@@ -21,9 +21,7 @@
     ];
 
     function forwardEvent(handlerName) {
-
       var eventArgs = [].slice.call(arguments, 1);
-
       _.each(vm.cards, function (card) {
         if (typeof (card[handlerName]) === 'function') {
           card[handlerName].apply(card, eventArgs);
@@ -46,6 +44,7 @@
     Orgservice.getUnlicensedUsers(_.partial(forwardEvent, 'unlicensedUsersHandler'));
 
     ReportsService.healthMonitor(_.partial(forwardEvent, 'healthStatusUpdatedHandler'));
+    ReportsService.huronHealthMonitor(_.partial(forwardEvent, 'healthStatusUpdatedHandler'));
 
     ServiceDescriptor.services(_.partial(forwardEvent, 'hybridStatusEventHandler'), true);
 

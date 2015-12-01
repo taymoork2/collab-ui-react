@@ -160,7 +160,8 @@ describe('Controller: OverviewCtrl', function () {
         return null;
       },
       getOverviewMetrics: function (backendCach) {},
-      healthMonitor: function (eventHandler) {}
+      healthMonitor: function (eventHandler) {},
+      huronHealthMonitor: function (eventHandler) {}
     };
 
     Authinfo = {

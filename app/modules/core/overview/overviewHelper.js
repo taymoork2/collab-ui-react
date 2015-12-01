@@ -27,7 +27,16 @@
           WebAndDesktopClients: 'nnpr95kck99p',
           CalendarService: 'kwyx8ylxsbvb',
           CloudHybridServicesManagement: '46zcdvc5cxcd',
-          SparkDeveloperAPI: 'vn0b18kjj7nf'
+          SparkDeveloperAPI: 'vn0b18kjj7nf',
+
+          //huron status ids:
+          huronAdministrationPortal: '7wsvlx8l1jrt',
+          huronExternalNetworks: 's74l4c9767vr',
+          huronPhoneCalls: 'hj719nnf2x53',
+          huronEndUserPortal: 'tf9lqz2w33h6',
+          huronDeviceOnboarding: 'd2v3k4zvtd5h',
+          huronMediaService: 'y3pns3gxww3h',
+          huronVoicemailService: 'lc8wl40ssck0'
         };
 
         return {

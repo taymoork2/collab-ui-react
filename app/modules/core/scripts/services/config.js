@@ -174,6 +174,13 @@ angular.module('Core')
           prod: 'https://ciscospark.statuspage.io/index.json'
         },
 
+        huronHealthCheckUrl: {
+          dev: 'https://squareduc.statuspage.io/index.json',
+          cfe: 'https://squareduc.statuspage.io/index.json',
+          integration: 'https://squareduc.statuspage.io/index.json',
+          prod: 'https://squareduc.statuspage.io/index.json'
+        },
+
         herculesUrl: {
           dev: 'https://hercules-integration.wbx2.com/v1',
           cfe: 'https://hercules-e.wbx2.com/v1',
@@ -784,6 +791,17 @@ angular.module('Core')
             'cfe': this.healthCheckUrl.cfe,
             'integration': this.healthCheckUrl.integration,
             'prod': this.healthCheckUrl.prod
+          };
+
+          return healthCheckServiceUrl[this.getEnv()];
+        },
+
+        getHuronHealthCheckUrlServiceUrl: function () {
+          var healthCheckServiceUrl = {
+            'dev': this.huronHealthCheckUrl.dev,
+            'cfe': this.huronHealthCheckUrl.cfe,
+            'integration': this.huronHealthCheckUrl.integration,
+            'prod': this.huronHealthCheckUrl.prod
           };
 
           return healthCheckServiceUrl[this.getEnv()];
