@@ -1,7 +1,7 @@
 <div class="partner-reports">
   <cs-page-header title="{{'reportsPage.pageTitle' | translate}}"></cs-page-header>
-  <cs-page-sub-header class="page-sub-header">
-    <div class="page-sub-header__left">
+  <cs-page-sub-header>
+    <cs-page-sub-header-left>
       <span class="sync">
         <div class="report-filter-link">
           <a id="allReports" class="report-link" ng-click="nav.showEngagement = true; nav.showQuality = true;" translate="reportsPage.all"
@@ -16,10 +16,10 @@
             ng-class="{'selected-link': nav.showEngagement === false && nav.showQuality === true, 'not-selected': !(nav.showEngagement === false && nav.showQuality === true)}"></a>
         </div>
       </span>
-    </div>
-    <div class="page-sub-header__left">
+    </cs-page-sub-header-left>
+    <cs-page-sub-header-right>
       <cs-select id="customerFilter" name="customerFilter" ng-model="nav.customerSelected" options="nav.customerOptions" on-change-fn="nav.updateReports()" is-disabled="nav.customersSet()" filter="true"></cs-select>
-    </div>
+    </cs-page-sub-header-right>
   </cs-page-sub-header>
   <div class="row">
     <div class="columns medium-6 report-space">

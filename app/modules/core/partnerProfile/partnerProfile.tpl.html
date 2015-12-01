@@ -3,10 +3,8 @@
   <!-- page title -->
   <cs-page-header id="orgProfilePageTitle" title="{{'partnerProfile.title' | translate}}">
   </cs-page-header>
-  <cs-page-sub-header class="page-sub-header">
-    <div class="page-sub-header__left">
-    </div>
-    <div class="page-sub-header__right">
+  <cs-page-sub-header>
+    <cs-page-sub-header-right>
       <!-- save / cancel button -->
       <button id="orgProfileCancelBtn" ng-click="init()" class="btn" ng-disabled="isBtnDisabled()">
         <span translate="partnerProfile.cancel"></span>
@@ -14,7 +12,7 @@
       <button id="orgProfileSaveBtn" cs-btn loading="orgProfileSaveLoad" ng-click="validation()" class="btn btn--primary" ng-disabled="isBtnDisabled()">
         <span translate="partnerProfile.save"></span>
       </button>
-    </div>
+    </cs-page-sub-header-right>
   </cs-page-sub-header>
   <div class="partner-profile">
     <!-- company name / account number -->

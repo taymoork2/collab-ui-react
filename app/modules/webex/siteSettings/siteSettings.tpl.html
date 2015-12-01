@@ -1,10 +1,8 @@
 <div id="webexSiteSettings" name="webexSiteSettings">
 
      <cs-page-header title="{{siteSettingsObj.pageTitle}}"></cs-page-header>
-     <cs-page-sub-header class="page-sub-header" ng-if="siteSettingsObj.viewReady">
-       <div class="page-sub-header__left">
-       </div>
-       <div class="page-sub-header__right">
+     <cs-page-sub-header ng-if="siteSettingsObj.viewReady">
+       <cs-page-sub-header-right>
         <button 
           id={{siteSettingsObj.emailAllHostsBtnObj.id}} 
           name={{siteSettingsObj.emailAllHostsBtnObj.id}} 
@@ -12,7 +10,7 @@
           class="btn btn--people" 
           translate="webexSiteSettingsLabels.emailAllHostsBtnTitle">
         </button>
-       </div>
+       </cs-page-sub-header-right>
      </cs-page-sub-header>
 
   <!-- start of breadcrumbs -->

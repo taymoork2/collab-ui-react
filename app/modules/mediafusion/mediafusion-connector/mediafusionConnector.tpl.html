@@ -2,14 +2,12 @@
   <div id="fusion-root">
     <!-- header -->
     <cs-page-header title="{{'mediaFusion.page_title' | translate}}"></cs-page-header>
-    <cs-page-sub-header class="page-sub-header">
-      <div class="page-sub-header__left">
-      </div>
-      <div class="page-sub-header__right" ng-hide="shouldShowWelcomeScreen()">
+    <cs-page-sub-header>
+      <cs-page-sub-header-right ng-hide="shouldShowWelcomeScreen()">
         <button class="btn btn--primary" ng-click="showInfoPanel = !showInfoPanel">
           <i class="fa fa-info" />
         </button>
-      </div>
+      </cs-page-sub-header-right>
     </cs-page-sub-header>
     <!-- content -->
     <div class="row">

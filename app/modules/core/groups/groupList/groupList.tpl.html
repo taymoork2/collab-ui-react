@@ -1,7 +1,7 @@
 <div class="group-list">
   <cs-page-header title="{{'groupsPage.manageGroups' | translate}}"></cs-page-header>
-  <cs-page-sub-header class="page-sub-header">
-    <div class="page-sub-header__left">
+  <cs-page-sub-header>
+    <cs-page-sub-header-left>
       <div dropdown class="grid-filter" ng-class="{'dropdown' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }" ng-show="Utils.isAdminPage()">
         <div class="dropdown-toggle filter" ng-if="breakpoint === 'screen-xs' || breakpoint === 'screen-sm'">
           <span class="name" ng-if="activeFilter === 'all'" translate="groupsPage.all"></span>
@@ -16,9 +16,7 @@
           </li>
         </ul>
       </div>
-    </div>
-    <div class="page-sub-header__right">
-    </div>
+    </cs-page-sub-header-left>
   </cs-page-sub-header>
   <div id="groupsListPanel" class="row">
     <div gridscrollbar class="gridStyle col-md-12" ng-grid="gridOptions"></div>
