@@ -1,0 +1,27 @@
+<div class="trial-modal">
+  <div class="modal-header"></div>
+  <div class="modal-body">
+    <section class="text-center">
+      <i class="icon icon-circle-comp-pos icon-5x"></i>
+    </section>
+    <section class="text-center">
+      <p translate="trialModal.trialSuccess"></p>
+      <p translate="trialModal.nextStepPrompt"></p>
+    </section>
+    <section>
+      <div class="row">
+        <div class="columns medium-6 small-12">
+          <button id="trialNotifyCustomer" class="btn btn--expand"
+            ng-click="didAdd.emailNotifyTrialCustomer()" translate="trialModal.setupLater">
+          </button>
+        </div>
+        <div class="columns medium-6 small-12">
+          <button class="btn btn--people btn--expand"
+            ng-click="didAdd.launchCustomerPortal()" translate="trialModal.setupNow">
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="modal-footer"></div>
+</div>

@@ -1,45 +1,26 @@
 .trial-modal {
-  .icon.icon-check {
-    color: $gray-dark;
-    font-size: 75px;
-    margin: 15px auto 25px;
-    display: block;
-    text-align: center;
+  .icon {
+    color: $gray-dark-1;
   }
+
   p {
-    text-align: center;
+    @include vr-spacing(m, 0.5);
   }
-  #nextStep {
-    margin-top: 60px;
-    margin-bototm: 25px;
+
+  h4, h5 {
+    @include vr-spacing(mb, 1);
   }
-  .next-steps {
-    display: flex;
-    margin-top: 25px;
-    .step {
-      text-align: center;
-      flex: 1;
-      align-self: flex-end;
-      div {
-        font-family: Arial;
-        color: $gray-darkest;
-        font-size: 14px;
-        line-height: 18px;
-        text-align: left;
-        margin: 0 auto 20px auto;
-        width: 71%;
-      }
-    }
-    .conjunction {
-      font-style: italic;
-      align-self: center;
-      font-family: Arial;
-      color: $gray-darkest;
-      font-size: 14px;
-      line-height: 18px;
-      width: 32px;
-      text-align: center;
-    }
+
+  select {
+    background-color: $white;
+  }
+
+  .noresize textarea {
+    resize: none;
+  }
+
+  .collapse-fields .formly-field {
+    max-height: 40px;
   }
 }
 

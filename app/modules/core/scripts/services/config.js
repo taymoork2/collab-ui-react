@@ -437,10 +437,10 @@ angular.module('Core')
         },
 
         trials: {
-          collab: 'COLLAB',
-          squaredUC: 'SQUAREDUC',
-          webex: 'WEBEXTRIALS',
-          cloudberry: 'ROOMSYSTEMS',
+          message: 'COLLAB',
+          meeting: 'WEBEXTRIALS',
+          call: 'SQUAREDUC',
+          roomSystems: 'ROOMSYSTEMS',
         },
 
         organizations: {
