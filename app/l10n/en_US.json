@@ -2006,6 +2006,27 @@
       "deactivateBody_1": "You are about to remove the following Hybrid Service for your organization:",
       "deactivateBody_2": "Deaactivating a service will remove any service-related activity from your users. Additional steps are required to remove the service from your on-premises resources."
     },
+    "serviceStatus": {
+      "unknown": "Status unknown",
+      "not_configured": "Not configured",
+      "installing": "Installing",
+      "disabled": "Disabled",
+      "not_installed": "Not installed",
+      "stopped": "Stopped",
+      "offline": "Offline",
+      "registered": "Registered",
+      "downloading": "Downloading",
+      "uninstalling": "Uninstalling",
+      "running": "Running",
+      "needs_attention": "Needs attention",
+      "alarm": "Alarm"
+    },
+    "clusters": {
+      "listing": {
+        "no_clusters_heading": "No Media Service clusters registered",
+        "no_clusters_text": "See required actions above and documentation to get started."
+      }
+    },
     "mediaServiceActivationFailure": "Problems enabling the service",
     "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
     "serviceName": "Media Service",
