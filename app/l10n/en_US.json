@@ -1754,6 +1754,7 @@
     "contactPhone": "Phone",
     "launchButton": "View Customer",
     "setupButton": "Setup Customer",
+    "myOrgButton": "View My Organization",
     "edit": "Edit Terms of Trial",
     "trialTerms": "Terms of Trial",
     "trialOverview": "Trial",
@@ -1773,7 +1774,8 @@
     "none": "None",
     "partnerLogo": "Partner Logo",
     "logoOverride": "Customer Logo Override",
-    "allowCustomerLogo": "Enable Customer Logo for {{customer}}"
+    "allowCustomerLogo": "Enable Customer Logo for {{customer}}",
+    "myOrganization": "My Organization"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
@@ -2040,6 +2042,7 @@
     "sessionEnablementUpdateSuccess": "Session type enablement updated.",
     "privilegesUpdateSuccess": "Privileges updated.",
     "pmrErrorTelephonyPrivileges": "Before you can create a Personal Room, set up telephony privileges for this user.",
+    "pmrErrorTelephonyPrivilegesHybridVOIP": "Before you can create a Personal Room, set up telephony privileges or integrated VoIP for this user.",
     "pmrErrorHybridAudio": "Before you can create a Personal Room, WebEx Audio must be enabled. Contact WebEx support for more information.",
     "mustHavePROorSTDifPMRenabled": "To create a Personal Room for this user, select the correct Meeting Center meeting type for Personal Room.",
     "reload": "Try Again",
@@ -2047,6 +2050,7 @@
   },
   "webexUserSettingsAccessErrors": {
     "000001": "Access denied, additional privileges are required.",
+    "000003": "SQL Exception.",
     "030001": "{{givenName}} {{familyName}} has not yet been provisioned to this site. This process may take a moment.",
     "030002": "Invalid Password",
     "030003": "The password should be at least 6 characters long.",
@@ -2829,10 +2833,10 @@
     "sso": "Single Sign On (SSO)",
     "dirSync": "Directory Synchronization",
     "type": "Type",
-    "partner": "Partner",
-    "customer": "Customer",
+    "partner": "Partner Organization",
+    "customer": "Customer Organization",
     "searchCriteriaLink": "Show supported search criteria.",
-    "searchInfo": "Search users by Email, Phone Number or Display Name (two words required). Search company by Display Name.",
+    "searchInfo": "Search users by Email, Phone Number or Display Name (two words required). Search company by Display Name. Search devices by Display Name, Serial or MAC Address (Note: device search is supported only when searching a specific customer).",
     "devices": "Devices",
     "mobile": "mobile",
     "work": "work",
@@ -2879,6 +2883,16 @@
     "serial": "Serial",
     "macAddress": "MAC Address",
     "badOrgSearchInput": "Searching for customers requires a minimum of three characters.",
-    "unknown": "Unknown"
+    "unknown": "Unknown",
+    "showMore": "Show more results",
+    "delegatedAdministration": "manages {{numManages}} organizations",
+    "licenses": "Licenses",
+    "licenseTypes": {
+      "MESSAGING": "{{volume}} Standard Team Rooms",
+      "CONFERENCING": "{{volume}} 25 Party Meetings",
+      "COMMUNICATIONS": "{{volume}} Advanced Spark Call",
+      "SHARED_DEVICES": "{{volume}} Room Devices"
+    },
+    "trial": "Trial"
   }
 }

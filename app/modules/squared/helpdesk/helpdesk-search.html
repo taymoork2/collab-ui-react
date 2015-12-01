@@ -46,8 +46,9 @@
           <p translate="helpdesk.noSearchHits"></p>
         </div>
 
-        <cs-card-layout ng-if="helpdeskCtrl.currentSearch.userSearchResults.length > 0">
-          <cs-card class="full pointer" ng-repeat="user in helpdeskCtrl.currentSearch.userSearchResults">
+        <div ng-if="helpdeskCtrl.currentSearch.userSearchResults.length > 0">
+          <cs-card class="full pointer"
+                   ng-repeat="user in helpdeskCtrl.currentSearch.userSearchResults | limitTo:helpdeskCtrl.currentSearch.userLimit">
             <article tabindex="{{$index * 10 + 1}}"
                      ui-sref="helpdesk.user({user:user, id:user.id, orgId:user.organization.id})">
               <header>
@@ -58,10 +59,19 @@
                 <div ng-repeat="number in user.phoneNumbers">
                   <span>{{number.value}} ({{'helpdesk.' + number.type | translate}})</span>
                 </div>
+                <div ng-if="user.organization.displayName" class="right">
+                  <span class="belongs-to-org">{{user.organization.displayName}}</span>
+                </div>
               </section>
             </article>
           </cs-card>
-        </cs-card-layout>
+        </div>
+
+        <div ng-if="helpdeskCtrl.currentSearch.userSearchResults.length > helpdeskCtrl.currentSearch.userLimit"
+             class="show-more-results">
+          <a href ng-click="helpdeskCtrl.showMoreResults('user')" translate="helpdesk.showMore"></a>
+        </div>
+
       </div>
 
       <div class="medium-6 large-4 columns"
@@ -82,8 +92,9 @@
           <p translate="helpdesk.noSearchHits"></p>
         </div>
 
-        <cs-card-layout ng-if="helpdeskCtrl.currentSearch.orgSearchResults.length > 0">
-          <cs-card class="full pointer" ng-repeat="org in helpdeskCtrl.currentSearch.orgSearchResults">
+        <div ng-if="helpdeskCtrl.currentSearch.orgSearchResults.length > 0">
+          <cs-card class="full pointer"
+                   ng-repeat="org in helpdeskCtrl.currentSearch.orgSearchResults | limitTo:helpdeskCtrl.currentSearch.orgLimit">
             <article tabindex="{{$index * 10 + 2}}" ui-sref="helpdesk.org({org:org, id:org.id})">
               <header>
                 <h5>
@@ -97,7 +108,13 @@
               <section class="clickable-area" ui-sref="helpdesk.org({org:org, id:org.id})"></section>
             </article>
           </cs-card>
-        </cs-card-layout>
+        </div>
+
+        <div ng-if="helpdeskCtrl.currentSearch.orgSearchResults.length > helpdeskCtrl.currentSearch.orgLimit"
+             class="show-more-results">
+          <a href ng-click="helpdeskCtrl.showMoreResults('org')" translate="helpdesk.showMore"></a>
+        </div>
+
       </div>
 
       <div class="medium-6 large-4 columns"
@@ -114,7 +131,7 @@
         <div ng-if="!helpdeskCtrl.currentSearch.orgFilter">
           <p>Global device search is not supported yet.</p>
 
-          <p>Find the customer first and then search for devices.</p>
+          <p>Find the customer first, click the search icon and then search for devices.</p>
         </div>
 
         <div ng-if="helpdeskCtrl.currentSearch.deviceSearchFailure">
@@ -126,8 +143,9 @@
           <p translate="helpdesk.noSearchHits"></p>
         </div>
 
-        <cs-card-layout ng-if="helpdeskCtrl.currentSearch.deviceSearchResults.length > 0">
-          <cs-card class="full pointer" ng-repeat="device in helpdeskCtrl.currentSearch.deviceSearchResults">
+        <div ng-if="helpdeskCtrl.currentSearch.deviceSearchResults.length > 0">
+          <cs-card class="full pointer"
+                   ng-repeat="device in helpdeskCtrl.currentSearch.deviceSearchResults | limitTo:helpdeskCtrl.currentSearch.deviceLimit">
             <article tabindex="{{$index * 10 + 3}}"
                      ui-sref="helpdesk.device({device:device, id:device.id, orgId:helpdeskCtrl.currentSearch.orgFilter.id})">
               <header>
@@ -137,10 +155,19 @@
                 <div ng-if="device.product"><span>{{device.product}}</span></div>
                 <div ng-if="device.serial"><span>{{device.serial}}</span></div>
                 <div ng-if="device.mac"><span>{{device.mac}}</span></div>
+                <div ng-if="device.organization.displayName" class="right">
+                  <span class="belongs-to-org">{{device.organization.displayName}}</span>
+                </div>
               </section>
             </article>
           </cs-card>
-        </cs-card-layout>
+        </div>
+
+        <div ng-if="helpdeskCtrl.currentSearch.deviceSearchResults.length > helpdeskCtrl.currentSearch.deviceLimit"
+             class="show-more-results">
+          <a href ng-click="helpdeskCtrl.showMoreResults('device')" translate="helpdesk.showMore"></a>
+        </div>
+
       </div>
 
     </div>

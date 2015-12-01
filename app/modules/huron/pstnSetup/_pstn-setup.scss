@@ -104,10 +104,6 @@
     margin-top: rem-calc(15);
   }
 
-  .form .has-feedback .form-control-feedback {
-      top: 6px;
-  }
-
   .form-inline.formly-field-select {
     flex: 1;
   }
@@ -117,7 +113,7 @@
   }
 
   .search-button {
-    margin-top: calc(#{$form-label-line-height}em - (50px - #{$input-height-base})/2);
+    margin-top: calc(#{$form-label-line-height}em - (50px - #{$input-height-base}) / 2);
   }
 }
 

@@ -26,6 +26,15 @@
     }
 
     var hub = CsdmHubFactory.create();
+    if (opts.initializeData) {
+      opts.initializeData.then(function (data) {
+        CsdmCacheUpdater.update(cache, data);
+        hub.emit('data', {
+          data: data
+        });
+      });
+    }
+
     var poller = CsdmPoller.create(fetch, hub);
 
     function list() {

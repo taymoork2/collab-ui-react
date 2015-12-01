@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsService) {
+  function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsService, Config, $translate, LicenseService) {
     var vm = this;
     if ($stateParams.org) {
       vm.org = $stateParams.org;
@@ -22,26 +22,34 @@
       room: 'unknown',
       hybrid: 'unknown'
     };
+    vm.statusPageUrl = Config.getStatusPageUrl();
 
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
     HelpdeskCardsService.getHealthStatuses().then(initHealth, angular.noop);
 
     function initOrgView(org) {
       vm.org = org;
-      vm.messageCard = HelpdeskCardsService.getMessageCardForOrg(org);
-      vm.meetingCard = HelpdeskCardsService.getMeetingCardForOrg(org);
-      vm.callCard = HelpdeskCardsService.getCallCardForOrg(org);
-      vm.hybridServicesCard = HelpdeskCardsService.getHybridServicesCardForOrg(org);
-      vm.roomSystemsCard = HelpdeskCardsService.getRoomSystemsCardForOrg(org);
-      findPartners(org);
+      vm.delegatedAdministration = org.delegatedAdministration ? $translate.instant('helpdesk.delegatedAdministration', {
+        numManages: org.manages ? org.manages.length : 0
+      }) : null;
+      LicenseService.getLicensesInOrg(vm.orgId).then(initCards, XhrNotificationService.notify);
+      findManagedByOrgs(org);
       findWebExSites(org);
+    }
+
+    function initCards(licenses) {
+      vm.messageCard = HelpdeskCardsService.getMessageCardForOrg(vm.org, licenses);
+      vm.meetingCard = HelpdeskCardsService.getMeetingCardForOrg(vm.org, licenses);
+      vm.callCard = HelpdeskCardsService.getCallCardForOrg(vm.org, licenses);
+      vm.hybridServicesCard = HelpdeskCardsService.getHybridServicesCardForOrg(vm.org);
+      vm.roomSystemsCard = HelpdeskCardsService.getRoomSystemsCardForOrg(vm.org, licenses);
     }
 
     function initHealth(healthStatuses) {
       vm.healthStatuses = healthStatuses;
     }
 
-    function findPartners(org) {
+    function findManagedByOrgs(org) {
       if (org.managedBy && org.managedBy.length > 0) {
         org.managedByOrgs = [];
         _.each(org.managedBy, function (parnterOrg) {
@@ -53,7 +61,7 @@
     }
 
     function findWebExSites(org) {
-      if (HelpdeskCardsService.orgIsEntitledTo(org, 'cloudMeetings')) {
+      if (LicenseService.orgIsEntitledTo(org, 'cloudMeetings')) {
         HelpdeskService.getWebExSites(vm.orgId).then(function (sites) {
           vm.org.webExSites = sites;
         }, XhrNotificationService.notify);

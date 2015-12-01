@@ -26,6 +26,10 @@ angular.module('Squared').service('CsdmConverter',
       this.diagnosticsEvents = getDiagnosticsEvents(obj);
       this.readableActivationCode = getReadableActivationCode(obj);
       this.rsuKey = obj.remoteSupportUser && obj.remoteSupportUser.token;
+      this.canDelete = true;
+      this.canReportProblem = true;
+      this.hasRemoteSupport = true;
+      this.canEditDisplayName = true;
       this.update = function (updated) {
         this.displayName = updated.displayName;
       };
@@ -37,6 +41,19 @@ angular.module('Squared').service('CsdmConverter',
           return "images/devices-hi/unknown.png";
         }
       }());
+    }
+
+    function HuronDevice(obj) {
+      this.url = getHuronUrl(obj);
+      this.mac = obj.mac;
+      this.ip = obj.ipAddress;
+      this.cisUuid = obj.userUuid;
+      this.product = obj.model;
+      this.isOnline = getIsHuronOnline(obj);
+      this.displayName = obj.description;
+      this.cssColorClass = getHuronCssColorClass(obj);
+      this.readableState = getHuronReadableState(obj);
+      this.image = "images/devices-hi/unknown.png";
     }
 
     function Code(obj) {
@@ -53,6 +70,8 @@ angular.module('Squared').service('CsdmConverter',
       this.cssColorClass = getCssColorClass(obj);
       this.needsActivation = getNeedsActivation(obj);
       this.readableActivationCode = getReadableActivationCode(obj);
+      this.canDelete = true;
+      this.canEditDisplayName = true;
       this.updateName = function (newName) {
         this.displayName = newName;
       };
@@ -66,8 +85,16 @@ angular.module('Squared').service('CsdmConverter',
       return _.mapValues(data, convertDevice);
     }
 
+    function convertHuronDevices(data) {
+      return _.mapValues(data, convertHuronDevice);
+    }
+
     function convertDevice(data) {
       return new Device(data);
+    }
+
+    function convertHuronDevice(data) {
+      return new HuronDevice(data);
     }
 
     function convertCode(data) {
@@ -236,11 +263,40 @@ angular.module('Squared').service('CsdmConverter',
       return tags.join(', ');
     }
 
+    function getHuronUrl(obj) {
+      return obj.actions && obj.actions.href;
+    }
+
+    function getIsHuronOnline(obj) {
+      return obj.state == 'Registered';
+    }
+
+    function getHuronCssColorClass(obj) {
+      if (obj.state == 'Registered') {
+        return 'device-status-green';
+      } else if (obj.state == 'Unregistered') {
+        return 'device-status-gray';
+      }
+      return 'device-status-yellow';
+    }
+
+    var getHuronReadableState = function (obj) {
+      switch (obj.state) {
+      case 'Registered':
+        return t('CsdmStatus.Online');
+      case 'Unregistered':
+        return t('CsdmStatus.Offline');
+      }
+      return t('CsdmStatus.Unknown');
+    };
+
     return {
       convertCode: convertCode,
       convertCodes: convertCodes,
       convertDevice: convertDevice,
       convertDevices: convertDevices,
+      convertHuronDevice: convertHuronDevice,
+      convertHuronDevices: convertHuronDevices,
     };
 
   }

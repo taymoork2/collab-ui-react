@@ -97,7 +97,7 @@ describe('Partner Service', function () {
 
   it('should successfully return a boolean on whether or not a license is available from calling isLicenseInfoAvailable', function () {
     var licenses = [];
-    expect(PartnerService.isLicenseInfoAvailable(licenses)).toBe(false);
+    expect(PartnerService.isLicenseInfoAvailable(licenses)).toBe(true);
     expect(PartnerService.isLicenseInfoAvailable(testData.licenses)).toBe(true);
   });
 
@@ -169,7 +169,7 @@ describe('Partner Service', function () {
   });
 
   it('should successfully return an array of customers with additional properties from calling loadRetrievedDataToList', function () {
-    var returnList = PartnerService.loadRetrievedDataToList(testData.managedOrgsResponse.data.organizations, true);
+    var returnList = PartnerService.loadRetrievedDataToList(testData.managedOrgsResponse.data.organizations, [], true);
     var activeList = _.filter(returnList, {
       state: "ACTIVE"
     });

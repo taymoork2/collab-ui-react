@@ -278,6 +278,8 @@
           var siteVersionInfoJson = webExUserSettingsModel.siteVersionInfo.bodyJson;
 
           // Start of Telephony privileges
+          webExUserSettingsModel.telephonyPriviledge.hybridVoipOnly.isSiteEnabled = ("true" === siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_hybridVoipOnly);
+
           webExUserSettingsModel.telephonyPriviledge.hybridAudio.isSiteEnabled = (
             "true" == siteInfoJson.ns1_siteInstance.ns1_telephonyConfig.ns1_hybridTeleconference
           ) ? true : false;
@@ -859,19 +861,32 @@
 
           var okToUpdate = true;
           var notificationMsg;
-          if ((webExUserSettingsModel.pmr.value === true) && (webExUserSettingsModel.cmr.value === true) && (webExUserSettingsModel.telephonyPriviledge.callInTeleconf.value === false)) {
-            notificationMsg = $translate.instant("webexUserSettings.pmrErrorTelephonyPrivileges");
-            _self.notifyError(notificationMsg);
-            okToUpdate = false;
+
+          if (webExUserSettingsModel.isT31Site) {
+            if (webExUserSettingsModel.telephonyPriviledge.hybridVoipOnly.isSiteEnabled) {
+              if ((webExUserSettingsModel.pmr.value === true) && (webExUserSettingsModel.cmr.value === true) && (webExUserSettingsModel.telephonyPriviledge.callInTeleconf.value === false) && (webExUserSettingsModel.telephonyPriviledge.integratedVoIP.value === false)) {
+                notificationMsg = $translate.instant("webexUserSettings.pmrErrorTelephonyPrivilegesHybridVOIP");
+                _self.notifyError(notificationMsg);
+                okToUpdate = false;
+              }
+            }
+          } else {
+            if ((webExUserSettingsModel.pmr.value === true) && (webExUserSettingsModel.cmr.value === true) && (webExUserSettingsModel.telephonyPriviledge.callInTeleconf.value === false)) {
+              notificationMsg = $translate.instant("webexUserSettings.pmrErrorTelephonyPrivileges");
+              _self.notifyError(notificationMsg);
+              okToUpdate = false;
+            }
           }
 
-          if ((webExUserSettingsModel.pmr.value === true) && (webExUserSettingsModel.cmr.value === true) &&
-            webExUserSettingsModel.telephonyPriviledge.telephonyType.isWebExAudio &&
-            !webExUserSettingsModel.telephonyPriviledge.hybridAudio.isSiteEnabled) {
-            notificationMsg = $translate.instant("webexUserSettings.pmrErrorHybridAudio");
-            webExUserSettingsModel.pmr.value = false; //un-check the PMR option
-            _self.notifyError(notificationMsg);
-            okToUpdate = false;
+          if (okToUpdate) {
+            if ((webExUserSettingsModel.pmr.value === true) && (webExUserSettingsModel.cmr.value === true) &&
+              webExUserSettingsModel.telephonyPriviledge.telephonyType.isWebExAudio &&
+              !webExUserSettingsModel.telephonyPriviledge.hybridAudio.isSiteEnabled) {
+              notificationMsg = $translate.instant("webexUserSettings.pmrErrorHybridAudio");
+              webExUserSettingsModel.pmr.value = false; //un-check the PMR option
+              _self.notifyError(notificationMsg);
+              okToUpdate = false;
+            }
           }
 
           if (okToUpdate) {

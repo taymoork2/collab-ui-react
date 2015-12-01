@@ -1,18 +1,19 @@
 'use strict';
 
 describe('Controller: ExternalNumberDetailCtrl', function () {
-  var controller, $controller, $scope, $stateParams, $q, ModalService, ExternalNumberService, Notification;
+  var controller, $controller, $scope, $stateParams, $q, ModalService, ExternalNumberService, DialPlanService, Notification;
 
   var externalNumbers, modalDefer;
 
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _$stateParams_, _$q_, _ModalService_, _ExternalNumberService_, _Notification_) {
+  beforeEach(inject(function ($rootScope, _$controller_, _$stateParams_, _$q_, _ModalService_, _ExternalNumberService_, _DialPlanService_, _Notification_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $stateParams = _$stateParams_;
     ModalService = _ModalService_;
     ExternalNumberService = _ExternalNumberService_;
+    DialPlanService = _DialPlanService_;
     Notification = _Notification_;
     $q = _$q_;
 
@@ -36,6 +37,7 @@ describe('Controller: ExternalNumberDetailCtrl', function () {
     });
     spyOn(Notification, 'success');
     spyOn(Notification, 'errorResponse');
+    spyOn(DialPlanService, 'getCustomerDialPlanCountryCode').and.returnValue($q.when('+1'));
 
     controller = $controller('ExternalNumberDetailCtrl', {
       $scope: $scope
