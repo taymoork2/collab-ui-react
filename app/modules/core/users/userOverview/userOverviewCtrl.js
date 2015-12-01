@@ -62,7 +62,12 @@
         }
         vm.services.push(msgState);
       }
-      if (hasEntitlement('squared-syncup')) {
+      if (hasEntitlement('cloudmeetings')) {
+        if (getServiceDetails('MC')) {
+          confState.detail = $translate.instant('onboardModal.paidConfWebEx');
+        }
+        vm.services.push(confState);
+      } else if (hasEntitlement('squared-syncup')) {
         if (getServiceDetails('CF')) {
           confState.detail = $translate.instant('onboardModal.paidConf');
         }
