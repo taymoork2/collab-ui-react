@@ -84,6 +84,10 @@ angular.module('WebExUserSettings')
         telephonyPriviledge: {
           label: "",
 
+          hybridVoipOnly: {
+            isSiteEnabled: false
+          },
+
           hybridAudio: {
             isSiteEnabled: false
           },

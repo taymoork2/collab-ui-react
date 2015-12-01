@@ -42,6 +42,9 @@ describe('Controller: CustomerOverviewCtrl', function () {
       },
       getOrgId: function () {
         return '1A2B3C4D';
+      },
+      getOrgName: function () {
+        return "xyz123";
       }
     };
     BrandService = {

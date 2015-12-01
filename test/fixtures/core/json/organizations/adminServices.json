@@ -1,0 +1,38 @@
+{
+  "getAdminOrg": {
+    "id": "739a36a7-5164-4c8d-b657-2ae032311f6d",
+    "displayName": "47ciscocomCmiPartnerOrg",
+    "success": true,
+    "meta": {
+      "created": "2015-05-28T13:16:38.731Z",
+      "uri": "https://identity.webex.com/organization/scim/v1/Orgs/4d510f20-ccab-4803-84d9-57ff6400fcfd"
+    },
+    "zone": "AllZone",
+    "ssoEnabled": false,
+    "dirsyncEnabled": false,
+    "schemas": ["urn:cisco:codev:identity:organization:core:1.0"],
+    "services": ["squared=call-initiation", "atlas-portal", "squared-fusion-uc"],
+    "selfSubscribeServices": ["webex-squared", "ciscouc"],
+    "manages": [{
+      "orgId": "aed98e0f-485b-46b5-8623-ed48bab2f882",
+      "roles": ["id_full_admin"]
+    }, {
+      "orgId": "192e66a3-3f63-45a2-a0a3-e2c5f1a97396",
+      "roles": ["id_full_admin"]
+    }],
+    "isPartner": false,
+    "delegatedAdministration": true,
+    "isTestOrg": true,
+    "orgSettings": ["{\"reportingSiteUrl\": \"mailto:junoh@cisco.com\"}"],
+    "squaredUsageCount": 99,
+    "licenses": {
+      "features": [
+        "webex-squared",
+        "squared-call-initiation",
+        "messenger-interop",
+        "webex-messenger",
+        "squared-room-moderation"
+      ]
+    }
+  }
+}
