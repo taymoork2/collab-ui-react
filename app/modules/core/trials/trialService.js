@@ -32,7 +32,7 @@
       }).$promise;
     }
 
-    function editTrial(id, trialPeriod, licenseCount, usageCount, corgId, offersList) {
+    function editTrial(id, trialPeriod, licenseCount, usageCount, roomSystemCount, corgId, offersList) {
       var editTrialData = {
         'trialPeriod': trialPeriod,
         'customerOrgId': corgId,
