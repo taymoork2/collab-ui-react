@@ -2,9 +2,9 @@
 /* global moment */
 
 angular.module('Core')
-  .controller('PartnerHomeCtrl', ['$scope', '$rootScope', '$stateParams', 'Notification', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'PartnerService', '$filter', '$state', 'ExternalNumberPool', 'LogMetricsService', '$log',
+  .controller('PartnerHomeCtrl', ['$scope', '$rootScope', '$stateParams', 'Notification', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'PartnerService', 'Orgservice', '$filter', '$state', 'ExternalNumberPool', 'LogMetricsService', '$log',
 
-    function ($scope, $rootScope, $stateParams, Notification, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, PartnerService, $filter, $state, ExternalNumberPool, LogMetricsService, $log) {
+    function ($scope, $rootScope, $stateParams, Notification, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, PartnerService, Orgservice, $filter, $state, ExternalNumberPool, LogMetricsService, $log) {
 
       $scope.load = true;
       $scope.currentDataPosition = 0;
@@ -21,7 +21,9 @@ angular.module('Core')
       $scope.expiredRows = 3;
       $scope.currentTrial = null;
       $scope.showTrialsRefresh = true;
+      $scope.activeBadge = false;
       $scope.filter = 'ALL';
+      $scope.trialsList = [];
       $scope.isCustomerPartner = Authinfo.isCustomerPartner ? true : false;
       setNotesTextOrder();
 
@@ -69,7 +71,7 @@ angular.module('Core')
           $scope.showTrialsRefresh = false;
           if (data.success && data.trials) {
             if (data.trials.length > 0) {
-              $scope.trialsList = PartnerService.loadRetrievedDataToList(data.trials, true);
+              PartnerService.loadRetrievedDataToList(data.trials, $scope.trialsList, true);
               $scope.activeList = _.filter($scope.trialsList, {
                 state: "ACTIVE"
               });
@@ -97,11 +99,23 @@ angular.module('Core')
 
       function getManagedOrgsList() {
         $scope.showManagedOrgsRefresh = true;
+        $scope.managedOrgsList = [];
+        var isPartnerAdmin = Authinfo.isPartnerAdmin();
+        if (isPartnerAdmin) {
+          var accountId = Authinfo.getOrgId();
+          Orgservice.getAdminOrg(function (data, status) {
+            if (status === 200) {
+              PartnerService.loadRetrievedDataToList([data], $scope.managedOrgsList, false);
+            } else {
+              Log.debug('Failed to retrieve partner org information. Status: ' + status);
+            }
+          }, accountId);
+        }
         PartnerService.getManagedOrgsList(function (data, status) {
           $scope.showManagedOrgsRefresh = false;
           if (data.success && data.organizations) {
             if (data.organizations.length > 0) {
-              $scope.managedOrgsList = PartnerService.loadRetrievedDataToList(data.organizations, false);
+              PartnerService.loadRetrievedDataToList(data.organizations, $scope.managedOrgsList, false);
               Log.debug('total managed orgs records found:' + $scope.managedOrgsList.length);
             } else {
               Log.debug('No managed orgs records found');
@@ -174,6 +188,11 @@ angular.module('Core')
         '<div ng-cell></div>' +
         '</div>';
 
+      var nameTemplate = '<div class="ngCellText" ng-click="partnerClicked(row.entity.customerOrgId)">' +
+        '<span translate="{{row.entity.customerName}}"></span>' +
+        '<span ng-if="isPartnerOrg(row.entity.customerOrgId)" id="partner" class="label label-managed" ng-class="activeBadge ? \'active\' : \'inactive\'" translate="customerPage.myOrganization"></span>' +
+        '</div>';
+
       var serviceTemplate = '<div class="ngCellText align-center">' +
         '<span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && isLicenseTypeActive(row.entity, col.field)"' +
         ' class="badge" ng-class="{\'badge-active\': row.entity.status != \'CANCELED\', \'badge-disabled\': row.entity.status === \'CANCELED\'}"' +
@@ -211,7 +230,9 @@ angular.module('Core')
         columnDefs: [{
           field: 'customerName',
           displayName: $translate.instant('customerPage.customerNameHeader'),
-          width: '25%'
+          width: '25%',
+          cellTemplate: nameTemplate,
+          sortFn: partnerAtTopSort
         }, {
           field: 'messaging',
           displayName: $translate.instant('customerPage.messaging'),
@@ -268,12 +289,24 @@ angular.module('Core')
       }
 
       function sortByName(a, b) {
-        if (a.customerName.toLowerCase() > b.customerName.toLowerCase()) {
+        var first = a.customerName || a;
+        var second = b.customerName || b;
+        if (first.toLowerCase() > second.toLowerCase()) {
           return 1;
-        } else if (a.customerName.toLowerCase() < b.customerName.toLowerCase()) {
+        } else if (first.toLowerCase() < second.toLowerCase()) {
           return -1;
         } else {
           return 0;
+        }
+      }
+
+      // Sort function to keep partner org at top
+      function partnerAtTopSort(a, b) {
+        var orgName = Authinfo.getOrgName();
+        if (a === orgName || b === orgName) {
+          return -1;
+        } else {
+          return sortByName(a, b);
         }
       }
 
@@ -375,6 +408,14 @@ angular.module('Core')
 
       $scope.isLicenseTypeFree = function (rowData, licenseTypeField) {
         return PartnerService.isLicenseFree(getLicenseObj(rowData, licenseTypeField));
+      };
+
+      $scope.isPartnerOrg = function (rowData) {
+        return rowData === Authinfo.getOrgId();
+      };
+
+      $scope.partnerClicked = function (rowData) {
+        $scope.activeBadge = rowData === Authinfo.getOrgId();
       };
 
       if ($state.current.name === "partnercustomers.list") {

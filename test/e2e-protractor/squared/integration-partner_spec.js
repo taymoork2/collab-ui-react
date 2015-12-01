@@ -191,7 +191,9 @@ describe('Partner flow', function () {
       appWindow = browser.getWindowHandle();
 
       utils.expectIsDisplayed(navigation.userInfoButton);
-      navigation.launchPartnerOrgPortal();
+      utils.click(partner.allFilter);
+      utils.click(partner.myOrganization);
+      utils.click(partner.launchButton);
 
       utils.switchToNewWindow().then(function () {
 
