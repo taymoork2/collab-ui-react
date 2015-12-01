@@ -4,7 +4,7 @@ angular.module('Squared')
   .controller('DevicesCtrl',
 
     /* @ngInject */
-    function ($scope, $state, $templateCache, DeviceFilter, CsdmCodeService, CsdmDeviceService, AddDeviceModal, Authinfo, AccountOrgService) {
+    function ($scope, $state, $templateCache, DeviceFilter, CsdmCodeService, CsdmHuronDeviceService, CsdmDeviceService, AddDeviceModal, Authinfo, AccountOrgService) {
       var vm = this;
 
       var checkLicense = function () {
@@ -41,9 +41,20 @@ angular.module('Squared')
         scope: $scope
       });
 
+      vm.huronDeviceListSubscription = CsdmHuronDeviceService.on('data', angular.noop, {
+        scope: $scope
+      });
+
+      vm.shouldShowList = function () {
+        return vm.codesListSubscription.eventCount !== 0 &&
+          vm.huronDeviceListSubscription.eventCount !== 0 &&
+          (vm.deviceListSubscription.eventCount !== 0 || CsdmDeviceService.getDeviceList().length > 0);
+      };
+
       vm.updateListAndFilter = function () {
         var filtered = _.chain({})
           .extend(CsdmDeviceService.getDeviceList())
+          .extend(CsdmHuronDeviceService.getDeviceList())
           .extend(CsdmCodeService.getCodeList())
           .values()
           .value();

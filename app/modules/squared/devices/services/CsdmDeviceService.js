@@ -4,6 +4,11 @@
   /* @ngInject  */
   function CsdmDeviceService($http, $log, Authinfo, CsdmConfigService, CsdmCacheUpdater, CsdmConverter, CsdmCacheFactory, Utils) {
     var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/devices?checkOnline=true';
+    var devicesFastUrl = devicesUrl + "&checkDisplayName=false";
+
+    var initialDataPromise = $http.get(devicesFastUrl).then(function (res) {
+      return CsdmConverter.convertDevices(res.data);
+    });
 
     var deviceCache = CsdmCacheFactory.create({
       remove: function (url) {
@@ -36,7 +41,8 @@
         return $http.get(devicesUrl).then(function (res) {
           return CsdmConverter.convertDevices(res.data);
         });
-      }
+      },
+      initializeData: initialDataPromise
     });
 
     function getDeviceList() {

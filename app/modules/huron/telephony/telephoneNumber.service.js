@@ -27,10 +27,15 @@
     return service;
 
     function setCountryCode(value) {
-      countryCode = value;
-      regionCode = _.result(_.findWhere(CountryCodes, {
-        number: countryCode
-      }), 'code');
+      if (value === '1' || value === 1) {
+        // Default to US due to shared codes
+        setRegionCode('us');
+      } else {
+        countryCode = value;
+        regionCode = _.result(_.findWhere(CountryCodes, {
+          number: countryCode
+        }), 'code');
+      }
     }
 
     function getCountryCode() {

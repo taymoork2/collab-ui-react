@@ -96,6 +96,10 @@
 
 /* widgets */
 
+div#header-title {
+  font-size: 22px;
+}
+
 .editable-input {
   padding-top: 5px;
   &, .read-only-value, form {
