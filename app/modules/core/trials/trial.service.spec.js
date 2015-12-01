@@ -3,6 +3,7 @@
 describe('Service: Trial Service', function () {
   var $httpBackend, TrialService, Config;
 
+  beforeEach(module('core.trial'));
   beforeEach(module('Core'));
 
   var trialAddResponse = getJSONFixture('core/json/trials/trialAddResponse.json');

@@ -1714,21 +1714,50 @@
     "call": "Call"
   },
   "trialModal": {
-    "trialSuccess": "You have set up your trial successfully.",
-    "nextStep": "Next Step",
-    "sendWelcome": "Send Welcome Message",
-    "sendWelcomePrompt": "If you want the customer to set up the service:",
-    "launchPortal": "Launch Company Portal",
-    "launchPortalPrompt": "If you want to set up the service for the customer:",
-    "or": "or",
-    "squareducError": "Created trial, but unable to provision Spark UC.",
+    "addTrial": {
+      "title": "Start New Trial"
+    },
+    "meeting": {
+      "title": "Start New Trial - Meeting Setup",
+      "webexHeader": "WebEx License Type",
+      "webexDetails": "Meeting trials enable Enterprise Edition WebEx licenses. This includes: Meeting Center, Event Center, Training Center, and Support Center.",
+      "siteUrl": "Site URL",
+      "timezone": "Time Zone",
+      "default": "Set as default",
+      "timezonePlaceholder": "Select a timezone"
+    },
+    "call": {
+      "title": "Start New Trial - Add Devices",
+      "selectDevicesHeader": "Select Devices",
+      "meetingRoomCamera": "Spark Meeting Room Camera",
+      "deskPhones": "Personal & Shared Desk Phones",
+      "sx10": "SX10",
+      "phone8865": "8865",
+      "phone8845": "8845",
+      "phone7861": "7861",
+      "phone7841": "7841",
+      "quantity": "Quantity",
+      "shippingInfo": "Shipping Information",
+      "address": "Enter Shipping Address",
+      "recipient": "Where will the devices be shipped?",
+      "customer": "Customer",
+      "partner": "Partner"
+    },
+    "trialSuccess": "Your trial is ready to setup",
+    "nextStepPrompt": "Do you want to setup services for the customer?",
+    "setupLater": "No, I'm done for now",
+    "setupNow": "Yes, setup the services",
+    "squareducError": "Created trial, but unable to provision Spark UC",
     "addSuccess": "A trial was successfully started for {{customerName}} with {{licenseCount}} licenses for {{licenseDuration}} days.",
     "editSuccess": "You have successfully edited a trial for {{customerName}} with {{licenseCount}} licenses for {{licenseDuration}} days."
   },
   "trials": {
     "collab": "Standard Team Rooms + 25 Party Meetings",
     "squaredUC": "Advanced Spark Call",
-    "meet": "Meeting and WebEx"
+    "meet": "Meeting and WebEx",
+    "message": "Message",
+    "meeting": "Meeting",
+    "call": "Call"
   },
   "status": {
     "noResults": "No results available.",
