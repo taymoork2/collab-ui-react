@@ -1,9 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('leaderBoardCtrl', ['$scope', 'Log', 'Orgservice', '$filter', 'Authinfo', 'TrialService', '$translate',
-    function ($scope, Log, Orgservice, $filter, Authinfo, TrialService, $translate) {
-
+  .controller('leaderBoardCtrl', ['$scope', 'Log', 'Orgservice', '$filter', 'Authinfo', 'TrialService', 'FeatureToggleService', '$translate',
+    function ($scope, Log, Orgservice, $filter, Authinfo, TrialService, FeatureToggleService, $translate) {
       $scope.buckets = {
         messaging: {
           title: $filter('translate')('leaderBoard.messagingTitle'),
@@ -61,6 +60,11 @@ angular.module('Core')
         'storage',
         'sites'
       ];
+
+      $scope.isStormBranding = false;
+      FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
+        $scope.isStormBranding = result;
+      });
 
       var getLicenses = function () {
         Orgservice.getLicensesUsage().then(function (licenses) {
