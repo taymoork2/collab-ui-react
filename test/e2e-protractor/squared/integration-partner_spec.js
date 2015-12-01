@@ -83,7 +83,7 @@ describe('Partner flow', function () {
 
       utils.sendKeys(partner.customerNameInput, partner.newTrial.customerName);
       utils.sendKeys(partner.customerEmailInput, partner.newTrial.customerEmail);
-      utils.click(partner.squaredTrialCheckbox);
+      utils.click(partner.roomSystemsCheckbox);
 
       utils.click(partner.startTrialButton);
       notifications.assertSuccess(partner.newTrial.customerName, 'A trial was successfully started');

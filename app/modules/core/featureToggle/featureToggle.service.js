@@ -13,6 +13,7 @@
       atlasCloudberryTrials: 'atlas-cloudberry-trials',
       atlasStormBranding: 'atlas-2015-storm-launch',
       atlasSipUriDomain: 'atlas-sip-uri-domain',
+      atlasWebexTrials: 'atlas-webex-trials',
     };
 
     var service = {
