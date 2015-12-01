@@ -38,6 +38,14 @@
           }
         };
 
+        card.healthStatusUpdatedHandler = function messageHealthEventHandler(data) {
+          _.each(data.components, function (component) {
+            if (component.id === card.helper.statusIds.CalendarService || component.id === card.helper.statusIds.CloudHybridServicesManagement) {
+              card.healthStatus = card.helper.mapStatus(card.healthStatus, component.status);
+            }
+          });
+        };
+
         var serviceStatusToCss = {
           ok: 'success',
           warn: 'warning',
