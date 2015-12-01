@@ -122,6 +122,7 @@
       switch (type) {
       case 'user':
         vm.currentSearch.userLimit += searchResultsPageSize;
+        findAndResolveOrgsForUserResults(vm.currentSearch.userSearchResults);
         break;
       case 'org':
         vm.currentSearch.orgLimit += searchResultsPageSize;
@@ -136,18 +137,21 @@
       if (_.size(userSearchResults) > 0) {
         if (vm.currentSearch.orgFilter) {
           _.each(userSearchResults, function (user) {
-            user.organization = vm.currentSearch.orgFilter;
+            user.organization.displayName = vm.currentSearch.orgFilter.displayName;
           });
         } else {
           var orgs = [];
-          _.each(userSearchResults, function (user) {
-            orgs.push(user.organization.id);
+          var currentResults = _.take(userSearchResults, vm.currentSearch.userLimit);
+          _.each(currentResults, function (user) {
+            if (!user.organization.displayName) {
+              orgs.push(user.organization.id);
+            }
           });
           _.each(_.uniq(orgs), function (orgId) {
-            HelpdeskService.getOrg(orgId).then(function (res) {
+            HelpdeskService.getOrgDisplayName(orgId).then(function (displayName) {
               _.each(userSearchResults, function (user) {
                 if (user.organization && user.organization.id === orgId) {
-                  user.organization = res;
+                  user.organization.displayName = displayName;
                 }
               });
             }, angular.noop);
@@ -159,7 +163,10 @@
 
     function setOrgOnDeviceSearchResults(deviceSearchResults) {
       _.each(deviceSearchResults, function (device) {
-        device.organization = vm.currentSearch.orgFilter;
+        device.organization = {
+          id: vm.currentSearch.orgFilter.id,
+          displayName: vm.currentSearch.orgFilter.displayName
+        };
       });
     }
 

@@ -11,6 +11,9 @@
     } else {
       vm.userId = $stateParams.id;
       vm.orgId = $stateParams.orgId;
+      vm.org = {
+        id: $stateParams.orgId
+      };
     }
     vm.resendInviteEmail = resendInviteEmail;
     vm.user = $stateParams.user;
@@ -21,13 +24,6 @@
     vm.hybridServicesCard = {};
 
     HelpdeskService.getUser(vm.orgId, vm.userId).then(initUserView, XhrNotificationService.notify);
-
-    if (!vm.org || !vm.org.displayName) {
-      // Only if there is no displayName. If set, the org has already been read (on the search page)
-      HelpdeskService.getOrg(vm.orgId).then(function (res) {
-        vm.org = res;
-      }, XhrNotificationService.notify);
-    }
 
     function resendInviteEmail() {
       HelpdeskService.resendInviteEmail(vm.user.displayName, vm.user.userName).then(angular.noop, XhrNotificationService.notify);
@@ -57,6 +53,13 @@
               break;
             }
           });
+        }, XhrNotificationService.notify);
+      }
+
+      if (!vm.org.displayName) {
+        // Only if there is no displayName. If set, the org name has already been read (on the search page)
+        HelpdeskService.getOrgDisplayName(vm.orgId).then(function (displayName) {
+          vm.org.displayName = displayName;
         }, XhrNotificationService.notify);
       }
     }

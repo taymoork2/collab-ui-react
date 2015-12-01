@@ -7,14 +7,21 @@
     var orgCache = CacheFactory.get('helpdeskOrgCache');
     if (!orgCache) {
       orgCache = new CacheFactory('helpdeskOrgCache', {
-        maxAge: 60 * 1000,
+        maxAge: 120 * 1000,
+        deleteOnExpire: 'aggressive'
+      });
+    }
+    var orgDisplayNameCache = CacheFactory.get('helpdeskOrgDisplayNameCache');
+    if (!orgDisplayNameCache) {
+      orgDisplayNameCache = new CacheFactory('helpdeskOrgDisplayNameCache', {
+        maxAge: 10 * 60 * 1000,
         deleteOnExpire: 'aggressive'
       });
     }
     var devicesInOrgCache = CacheFactory.get('helpdeskDevicesInOrgCache');
     if (!devicesInOrgCache) {
       devicesInOrgCache = new CacheFactory('helpdeskDevicesInOrgCache', {
-        maxAge: 120 * 1000,
+        maxAge: 180 * 1000,
         deleteOnExpire: 'aggressive'
       });
     }
@@ -34,6 +41,7 @@
     function extractOrg(res) {
       var org = res.data;
       orgCache.put(org.id, org);
+      orgDisplayNameCache.put(org.id, org.displayName);
       return org;
     }
 
@@ -76,6 +84,20 @@
       return $http
         .get(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId))
         .then(extractOrg);
+    }
+
+    function getOrgDisplayName(orgId) {
+      if (useMock()) {
+        return deferredResolve(HelpdeskMockData.org.displayName);
+      }
+      var cachedDisplayName = orgDisplayNameCache.get(orgId);
+      if (cachedDisplayName) {
+        return deferredResolve(cachedDisplayName);
+      }
+      // TODO: Replace with display name lookup
+      return getOrg(orgId).then(function (org) {
+        return org.displayName;
+      });
     }
 
     function getHybridServices(orgId) {
@@ -184,7 +206,8 @@
       getHybridServices: getHybridServices,
       resendInviteEmail: resendInviteEmail,
       getWebExSites: getWebExSites,
-      getCloudberryDevice: getCloudberryDevice
+      getCloudberryDevice: getCloudberryDevice,
+      getOrgDisplayName: getOrgDisplayName
     };
   }
 
