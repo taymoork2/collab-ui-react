@@ -3,6 +3,7 @@
 
   /* @ngInject */
   function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsService, Config, $translate, LicenseService) {
+    $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.org) {
       vm.org = $stateParams.org;
