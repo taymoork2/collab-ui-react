@@ -76,7 +76,6 @@ angular.module('Core')
             });
           } else {
             licenses.forEach(function (license) {
-              if (license.licenseId.lastIndexOf('CMR', 0) === 0) return;
               var bucket = license.licenseType.toLowerCase();
               var offerName = license.offerName;
               if (license.offerName !== "CF") {

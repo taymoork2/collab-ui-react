@@ -9,9 +9,11 @@
         <div class="text-center" class="item-paid" ng-repeat="service in buckets.messaging.services">
           <cs-donut value="service.usage" max="service.volume" ssize="72" class="text-center">
         </cs-donut> 
-        <div class = "text-center" class="quantity">
+        <div class = "text-center quantity number">
           <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
           <span class="quantity" >{{service.volume}}</span>
+          <p ng-show = "service.isTrial" class = "text-center trial">
+          <span class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"></span> </p>
         </div>
       </div>
     </section>
@@ -29,11 +31,13 @@
     <div class="text-center" class="item-paid" ng-repeat="service in buckets.cf.services">
       <cs-donut value="service.usage" max="service.volume" ssize="72" class="text-center">
     </cs-donut> 
-    <div class = "text-center">
+    <div class = "text-center quantity number">
       <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
-    <span class="quantity" >{{service.volume}}</span>
+      <span class="quantity" >{{service.volume}}</span>
+      <p ng-show = "service.isTrial" class = "text-center trial">
+        <span class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"></span> </p>
+      </div>
     </div>
-  </div>
   </section>
 
   <section  class="bucket-info" ng-show="buckets.cf.services.length === 0 && buckets.count === 1">
@@ -44,6 +48,8 @@
       <div class = "text-center">
       <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
       <span class="quantity" >{{service.volume}}</span>
+      <p ng-show = "service.isTrial" class = "text-center trial">
+      <span class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"></span> </p>
     </div>
     <div class="text-center" class="item-paid" ng-repeat= "(siteUrl,services) in buckets.sites" >
     <div class = "site-url"> {{siteUrl}} </div>
@@ -61,9 +67,10 @@
               <cs-donut value="service.usage" max="service.volume" ssize="48" tsize="16" class="text-center small-donut">
               </cs-donut>
             <div class="webex">
-              <div translate="leaderBoard.{{service.offerName}}"> </div>
-              <span class = "quantity" translate="firstTimeWizard.quantity"> </span>          
-              <span class = "quantity" ng-if="!service.trial">{{service.volume}}</span>
+              <div translate="leaderBoard.{{service.offerName}}"></div>
+              <span ng-if="service.trial" class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"></span>         
+              <span class = "quantity" translate="firstTimeWizard.quantity"></span>
+              <span class ="quantity"> {{service.volume}} </span>
             </div>
           </div>
         </div>
@@ -81,7 +88,7 @@
         <div class="text-center" class="item-paid" ng-repeat="service in buckets.communication.services">
           <cs-donut value="service.usage" max="service.volume" ssize="72" class="text-center">
         </cs-donut> 
-        <div class = "text-center">
+        <div class = "text-center quantity number" >
           <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
           <span class="quantity">{{service.volume}}</span>
         </div>
@@ -99,9 +106,11 @@
         <div class="text-center" class="item-paid" ng-repeat="service in buckets.shared_devices.services">
           <cs-donut value="service.usage" max="service.volume" ssize="72" class="text-center">
         </cs-donut> 
-        <div class = "text-center">
+        <div class = "text-center quantity number">
           <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
           <span  class="quantity">{{service.volume}}</span>
+          <p ng-show = "service.isTrial" class = "text-center trial">
+          <span class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"></span> </p>
         </div>
       </div>
     </section>
