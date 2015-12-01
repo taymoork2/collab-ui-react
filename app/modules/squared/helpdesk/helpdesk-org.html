@@ -67,7 +67,7 @@
         <div class="medium-7 columns details-value">
           <div ng-repeat="managingOrg in helpdeskOrgCtrl.org.managedByOrgs">
             <span>
-              <a ui-sref="helpdesk.org({org:managingOrg})">
+              <a ui-sref="helpdesk.org({org:managingOrg, id:managingOrg.id})">
                 {{managingOrg.displayName}}
               </a>
             </span>

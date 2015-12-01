@@ -94,9 +94,14 @@
       if (cachedDisplayName) {
         return deferredResolve(cachedDisplayName);
       }
-      // TODO: Replace with display name lookup
-      return getOrg(orgId).then(function (org) {
-        return org.displayName;
+      // Use the search function as it returns a lot less data
+      return searchOrgs(orgId, 1).then(function (result) {
+        if (result.length > 0) {
+          var org = result[0];
+          orgDisplayNameCache.put(org.id, org.displayName);
+          return org.displayName;
+        }
+        return '';
       });
     }
 

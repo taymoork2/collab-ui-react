@@ -53,8 +53,11 @@
       if (org.managedBy && org.managedBy.length > 0) {
         org.managedByOrgs = [];
         _.each(org.managedBy, function (parnterOrg) {
-          HelpdeskService.getOrg(parnterOrg.orgId).then(function (res) {
-            org.managedByOrgs.push(res);
+          HelpdeskService.getOrgDisplayName(parnterOrg.orgId).then(function (displayName) {
+            org.managedByOrgs.push({
+              id: parnterOrg.orgId,
+              displayName: displayName
+            });
           }, angular.noop);
         });
       }
