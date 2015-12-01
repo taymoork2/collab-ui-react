@@ -22,6 +22,8 @@ describe('Service: AANumberAssignmentService', function () {
   };
 
   var cmiAAAsignments = [cmiAAAsignment];
+  var onlyCMI = [];
+  var $q;
 
   var successSpy;
   var failureSpy;
@@ -33,13 +35,14 @@ describe('Service: AANumberAssignmentService', function () {
     $provide.value("Authinfo", Authinfo);
   }));
 
-  beforeEach(inject(function (_AANumberAssignmentService_, _$httpBackend_, _HuronConfig_, _AutoAttendantCeInfoModelService_) {
+  beforeEach(inject(function (_AANumberAssignmentService_, _$httpBackend_, _HuronConfig_, _$q_, _AutoAttendantCeInfoModelService_) {
     AANumberAssignmentService = _AANumberAssignmentService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     $httpBackend = _$httpBackend_;
     HuronConfig = _HuronConfig_;
     url = HuronConfig.getCmiV2Url() + '/customers/' + Authinfo.getOrgId() + '/features/autoattendants';
     cmiAAAsignmentURL = url + '/' + '004' + '/numbers';
+    $q = _$q_;
 
     successSpy = jasmine.createSpy('success');
     failureSpy = jasmine.createSpy('failure');
@@ -50,18 +53,80 @@ describe('Service: AANumberAssignmentService', function () {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  describe('getListOfAANumberAssignments', function () {
-    it('should list all CMI Assigned Auto Attendants', function () {
+  describe('checkAANumberAssignments', function () {
+    it('should check all CMI Assigned Auto Attendants', function () {
+
+      var resource = AutoAttendantCeInfoModelService.newResource();
+      resource.setType(aCe.assignedResources.type);
+      resource.setId(aCe.assignedResources.id);
+      var resources = [];
+      resources.push(resource);
 
       $httpBackend.whenGET(cmiAAAsignmentURL).respond(cmiAAAsignments);
 
-      AANumberAssignmentService.getListOfAANumberAssignments(Authinfo.getOrgId(), '004').then(
+      AANumberAssignmentService.checkAANumberAssignments(Authinfo.getOrgId(), '004', resources, cmiAAAsignments, onlyCMI).then(
         successSpy,
         failureSpy
       );
       $httpBackend.flush();
       var args = successSpy.calls.mostRecent().args;
       expect(angular.equals(args[0], cmiAAAsignedNumbers)).toEqual(true);
+      expect(failureSpy).not.toHaveBeenCalled();
+    });
+
+  });
+  describe('setAANumberAssignmentWithErrorDetail', function () {
+    it('should set AA Number Assignment to one in working', function () {
+
+      var resource = AutoAttendantCeInfoModelService.newResource();
+      resource.setType(aCe.assignedResources.type);
+      resource.setId(aCe.assignedResources.id);
+      resource.setNumber(aCe.assignedResources.number);
+
+      var resources = [];
+      resources.push(resource);
+
+      var working = [];
+
+      var failed = [];
+
+      $httpBackend.whenPUT(cmiAAAsignmentURL).respond(200);
+
+      AANumberAssignmentService.setAANumberAssignmentWithErrorDetail(Authinfo.getOrgId(), '004', resources, working, failed).then(
+        successSpy,
+        failureSpy
+      );
+      $httpBackend.flush();
+
+      var args = successSpy.calls.mostRecent().args;
+      expect(working.length).toEqual(1);
+      expect(failureSpy).not.toHaveBeenCalled();
+    });
+
+    it('should set AA Number Assignment to one in failed', function () {
+
+      var resource = AutoAttendantCeInfoModelService.newResource();
+      resource.setType(aCe.assignedResources.type);
+      resource.setId(aCe.assignedResources.id);
+      resource.setNumber(aCe.assignedResources.number);
+
+      var resources = [];
+      resources.push(resource);
+
+      var working = [];
+
+      var failed = [];
+
+      $httpBackend.whenPUT(cmiAAAsignmentURL).respond(500);
+
+      AANumberAssignmentService.setAANumberAssignmentWithErrorDetail(Authinfo.getOrgId(), '004', resources, working, failed).then(
+        successSpy,
+        failureSpy
+      );
+      $httpBackend.flush();
+
+      var args = successSpy.calls.mostRecent().args;
+      expect(working.length).toEqual(0);
       expect(failureSpy).not.toHaveBeenCalled();
     });
 

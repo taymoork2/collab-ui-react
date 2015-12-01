@@ -2,7 +2,7 @@
 
 describe('Controller: AABuilderMainCtrl', function () {
   var controller, Notification, AutoAttendantCeService;
-  var AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAValidationService;
+  var AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAValidationService, AANumberAssignmentService;
   var $rootScope, $scope, $q, $translate, $stateParams;
 
   var ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
@@ -42,7 +42,7 @@ describe('Controller: AABuilderMainCtrl', function () {
   beforeEach(module('Huron'));
 
   beforeEach(inject(function (_$rootScope_, _$q_, _$stateParams_, $controller, _$translate_, _Notification_,
-    _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAUiModelService_, _AAModelService_, _AutoAttendantCeService_, _AAValidationService_) {
+    _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAUiModelService_, _AAModelService_, _AANumberAssignmentService_, _AutoAttendantCeService_, _AAValidationService_) {
     $rootScope = _$rootScope_;
     $q = _$q_;
     $scope = $rootScope.$new();
@@ -57,6 +57,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
     AAValidationService = _AAValidationService_;
     AutoAttendantCeService = _AutoAttendantCeService_;
+    AANumberAssignmentService = _AANumberAssignmentService_;
     Notification = _Notification_;
 
     // aaModel.dataReadyPromise = $q(function () {});
@@ -89,6 +90,8 @@ describe('Controller: AABuilderMainCtrl', function () {
       spyOn(Notification, 'success');
       spyOn(Notification, 'error');
       spyOn($scope.vm, 'saveUiModel');
+      spyOn(AANumberAssignmentService, 'setAANumberAssignment').and.returnValue($q.when());
+
       nameValidationSpy = spyOn(AAValidationService, 'isNameValidationSuccess').and.returnValue(true);
       aaModel.ceInfos = [];
       aaModel.aaRecords = [];

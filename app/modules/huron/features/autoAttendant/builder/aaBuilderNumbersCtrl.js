@@ -274,8 +274,12 @@
     function warnOnAssignedNumberDiscrepancies() {
       var onlyResources = [];
       var onlyCMI = [];
-      AANumberAssignmentService.checkAANumberAssignments(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, vm.ui.ceInfo.getResources(), onlyResources, onlyCMI).then(
 
+      if (angular.isUndefined(vm.ui.ceInfo) || angular.isUndefined(vm.ui.ceInfo.resources)) {
+        return;
+      }
+
+      AANumberAssignmentService.checkAANumberAssignments(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, vm.ui.ceInfo.getResources(), onlyResources, onlyCMI).then(
         function (response) {
           if (onlyCMI.length > 0) {
             vm.aaModel.possibleNumberDiscrepancy = true;

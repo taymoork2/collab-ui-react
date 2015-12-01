@@ -3,7 +3,7 @@
 describe('Controller: AABuilderNumbersCtrl', function () {
   var handler;
   var controller, Notification, AutoAttendantCeService, ExternalNumberPoolService;
-  var AAModelService, AutoAttendantCeInfoModelService, Authinfo, AAUiModelService;
+  var AAModelService, AutoAttendantCeInfoModelService, Authinfo, AAUiModelService, AANumberAssignmentService;
   var $rootScope, $scope, $q, deferred, $translate, $stateParams;
   var $httpBackend, HuronConfig, Config;
 
@@ -56,7 +56,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
   }));
 
   beforeEach(inject(function (_$rootScope_, _$q_, $controller, _$httpBackend_, _HuronConfig_, _Config_, _AAUiModelService_, _AutoAttendantCeInfoModelService_,
-    _AAModelService_, _ExternalNumberPoolService_, _Authinfo_, _Notification_) {
+    _AAModelService_, _AANumberAssignmentService_, _ExternalNumberPoolService_, _Authinfo_, _Notification_) {
     $rootScope = _$rootScope_;
     $q = _$q_;
     $scope = $rootScope;
@@ -67,7 +67,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
     Config = _Config_;
 
     AAUiModelService = _AAUiModelService_;
-
+    AANumberAssignmentService = _AANumberAssignmentService_;
     AAModelService = _AAModelService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     Authinfo = _Authinfo_;
@@ -75,6 +75,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
     Notification = _Notification_;
 
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
+    spyOn(AANumberAssignmentService, 'checkAANumberAssignments').and.returnValue($q.when("{}"));
 
     $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?order=pattern').respond(200, [{
       'pattern': '+9999999991',
