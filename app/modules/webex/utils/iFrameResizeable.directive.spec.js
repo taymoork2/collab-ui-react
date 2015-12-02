@@ -33,6 +33,6 @@ describe('iFrameResizable directive', function () {
   }));
 
   it('should set the iframeHeight property', inject(function ($rootScope) {
-    expect($rootScope.iframeHeight).toEqual(window.innerHeight - 200);
+    expect($rootScope.iframeHeight).toEqual(window.innerHeight - 240);
   }));
 });
