@@ -38,7 +38,12 @@
       vm.delegatedAdministration = org.delegatedAdministration ? $translate.instant('helpdesk.delegatedAdministration', {
         numManages: org.manages ? org.manages.length : 0
       }) : null;
-      LicenseService.getLicensesInOrg(vm.orgId).then(initCards, XhrNotificationService.notify);
+
+      LicenseService.getLicensesInOrg(vm.orgId).then(function (licenses) {
+        initCards(licenses);
+        findLicenseUsage();
+      }, XhrNotificationService.notify);
+
       findManagedByOrgs(org);
       findWebExSites(org);
       findAdminUsers(org);
@@ -87,6 +92,12 @@
           numUsers: users.length
         });
       }, XhrNotificationService.notify);
+    }
+
+    function findLicenseUsage() {
+      if (vm.orgId != Config.ciscoOrgId) {
+        LicenseService.getLicensesInOrg(vm.orgId, true).then(initCards, XhrNotificationService.notify);
+      }
     }
 
     function showAllAdminUsers() {
