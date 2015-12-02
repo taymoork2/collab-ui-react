@@ -431,7 +431,9 @@ angular.module('Core')
 
         trials: {
           collab: 'COLLAB',
-          squaredUC: 'SQUAREDUC'
+          squaredUC: 'SQUAREDUC',
+          webex: 'WEBEXTRIALS',
+          cloudberry: 'ROOMSYSTEMS',
         },
 
         organizations: {

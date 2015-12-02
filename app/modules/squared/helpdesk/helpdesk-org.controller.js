@@ -3,6 +3,7 @@
 
   /* @ngInject */
   function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsService, Config, $translate, LicenseService) {
+    $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.org) {
       vm.org = $stateParams.org;
@@ -23,6 +24,11 @@
       hybrid: 'unknown'
     };
     vm.statusPageUrl = Config.getStatusPageUrl();
+    vm.initialAdminUserLimit = 3;
+    vm.adminUserLimit = vm.initialAdminUserLimit;
+    vm.showAllAdminUsers = showAllAdminUsers;
+    vm.hideAllAdminUsers = hideAllAdminUsers;
+    vm.daysLeftText = daysLeftText;
 
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
     HelpdeskCardsService.getHealthStatuses().then(initHealth, angular.noop);
@@ -35,6 +41,7 @@
       LicenseService.getLicensesInOrg(vm.orgId).then(initCards, XhrNotificationService.notify);
       findManagedByOrgs(org);
       findWebExSites(org);
+      findAdminUsers(org);
     }
 
     function initCards(licenses) {
@@ -52,9 +59,14 @@
     function findManagedByOrgs(org) {
       if (org.managedBy && org.managedBy.length > 0) {
         org.managedByOrgs = [];
-        _.each(org.managedBy, function (parnterOrg) {
-          HelpdeskService.getOrg(parnterOrg.orgId).then(function (res) {
-            org.managedByOrgs.push(res);
+        _.each(org.managedBy, function (managingOrg) {
+          HelpdeskService.getOrgDisplayName(managingOrg.orgId).then(function (displayName) {
+            if (displayName) {
+              org.managedByOrgs.push({
+                id: managingOrg.orgId,
+                displayName: displayName
+              });
+            }
           }, angular.noop);
         });
       }
@@ -66,6 +78,29 @@
           vm.org.webExSites = sites;
         }, XhrNotificationService.notify);
       }
+    }
+
+    function findAdminUsers(org) {
+      HelpdeskService.searchUsers('', org.id, 100, 'id_full_admin').then(function (users) {
+        vm.adminUsers = users;
+        vm.showAllAdminUsersText = $translate.instant('helpdesk.showAllAdminUsers', {
+          numUsers: users.length
+        });
+      }, XhrNotificationService.notify);
+    }
+
+    function showAllAdminUsers() {
+      vm.adminUserLimit = vm.adminUsers.length;
+    }
+
+    function hideAllAdminUsers() {
+      vm.adminUserLimit = vm.initialAdminUserLimit;
+    }
+
+    function daysLeftText(license) {
+      return $translate.instant('helpdesk.numDaysLeft', {
+        days: license.trialExpiresInDays
+      });
     }
   }
 

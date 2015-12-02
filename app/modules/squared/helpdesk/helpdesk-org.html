@@ -1,7 +1,7 @@
-<div class="helpdesk-details">
+<div id="detailsDiv" class="helpdesk-details">
   <div class="row head full">
     <div class="columns large-12">
-      <a ui-sref="helpdesk.search">
+      <a id="backToSearchLink" ui-sref="helpdesk.search">
         <i class="icon icon-back icon-lg"></i>
         <span translate="helpdesk.backToSearchResults"></span>
       </a>
@@ -32,7 +32,7 @@
           <span>{{'helpdesk.contact' | translate}}:</span>
         </div>
         <div class="large-7 columns details-value">
-          <span><a href="mailto:{{helpdeskOrgCtrl.org.email}}">{{helpdeskOrgCtrl.org.email}}</a></span>
+          <span><a ng-href="mailto:{{helpdeskOrgCtrl.org.email}}">{{helpdeskOrgCtrl.org.email}}</a></span>
         </div>
       </div>
 
@@ -67,7 +67,7 @@
         <div class="medium-7 columns details-value">
           <div ng-repeat="managingOrg in helpdeskOrgCtrl.org.managedByOrgs">
             <span>
-              <a ui-sref="helpdesk.org({org:managingOrg})">
+              <a ui-sref="helpdesk.org({org:managingOrg, id:managingOrg.id})">
                 {{managingOrg.displayName}}
               </a>
             </span>
@@ -75,11 +75,37 @@
         </div>
       </div>
 
+      <div class="row" ng-if="helpdeskOrgCtrl.adminUsers && helpdeskOrgCtrl.adminUsers.length > 0">
+        <div class="medium-12 columns">
+          <h4 translate="helpdesk.adminUsers"></h4>
+
+          <div ng-repeat="user in helpdeskOrgCtrl.adminUsers | limitTo:helpdeskOrgCtrl.adminUserLimit">
+            <span>
+              <a ui-sref="helpdesk.user({user:user, id:user.id, orgId:user.organization.id})">
+                {{user.displayName | limitTo: 40}}{{user.displayName.length > 40 ? '...' : ''}}
+              </a>
+            </span>
+          </div>
+
+          <div ng-if="helpdeskOrgCtrl.adminUsers.length > helpdeskOrgCtrl.adminUserLimit" style="margin-top: 1.0rem;">
+            <span><a href
+                     ng-click="helpdeskOrgCtrl.showAllAdminUsers()">{{helpdeskOrgCtrl.showAllAdminUsersText}}</a></span>
+          </div>
+
+          <div ng-if="helpdeskOrgCtrl.adminUserLimit > helpdeskOrgCtrl.initialAdminUserLimit"
+               style="margin-top: 1.0rem;">
+            <span><a href
+                     ng-click="helpdeskOrgCtrl.hideAllAdminUsers()"
+                     translate="helpdesk.hideAllAdminUsers"></a></span>
+          </div>
+
+        </div>
+      </div>
+
     </div>
 
     <div class="columns large-8 medium-7 card-panel" ng-include
          src="'modules/squared/helpdesk/org-cards.html'">
-
     </div>
 
   </div>

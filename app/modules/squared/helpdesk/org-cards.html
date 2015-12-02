@@ -11,11 +11,18 @@
         <span ng-if="helpdeskOrgCtrl.messageCard.licenses.length === 0" translate="helpdesk.none"></span>
 
         <div ng-repeat="license in helpdeskOrgCtrl.messageCard.licenses">
+          <span class="label warning" ng-if="license.isTrial" translate="helpdesk.trial"></span>
           <span>{{license.displayName}}</span>
+          <span ng-if="license.isTrial || license.status !== 'ACTIVE'">| </span>
+          <span
+            ng-if="license.isTrial && license.trialExpiresInDays > 0">{{helpdeskOrgCtrl.daysLeftText(license)}}</span>
+          <span ng-if="license.isTrial && license.trialExpiresInDays == 0"
+                class="red">{{'helpdesk.licenseStatus.expired' |  translate}}</span>
+          <span ng-if="license.status && license.status !== 'ACTIVE'"
+                class="red">{{'helpdesk.licenseStatus.' + (license.status | lowercase) | translate}}</span>
         </div>
       </section>
       <footer class="org-card-footer">
-        <span class="trial left" ng-if="helpdeskOrgCtrl.messageCard.isTrial" translate="helpdesk.trial"></span>
         <span class="status right">
           <a ng-href="{{helpdeskOrgCtrl.statusPageUrl}}" target="_blank">
             <i class="icon icon-circle circle-status-icon" ng-class="helpdeskOrgCtrl.healthStatuses.message"></i>
@@ -37,11 +44,18 @@
         <span ng-if="helpdeskOrgCtrl.meetingCard.licenses.length === 0" translate="helpdesk.none"></span>
 
         <div ng-repeat="license in helpdeskOrgCtrl.meetingCard.licenses">
+          <span class="label warning" ng-if="license.isTrial" translate="helpdesk.trial"></span>
           <span>{{license.displayName}}</span>
+          <span ng-if="license.isTrial || license.status !== 'ACTIVE'">| </span>
+          <span
+            ng-if="license.isTrial && license.trialExpiresInDays > 0">{{helpdeskOrgCtrl.daysLeftText(license)}}</span>
+          <span ng-if="license.isTrial && license.trialExpiresInDays == 0"
+                class="red">{{'helpdesk.licenseStatus.expired' |  translate}}</span>
+          <span ng-if="license.status && license.status !== 'ACTIVE'"
+                class="red">{{'helpdesk.licenseStatus.' + (license.status | lowercase)| translate}}</span>
         </div>
       </section>
       <footer class="org-card-footer">
-        <span class="trial left" ng-if="helpdeskOrgCtrl.meetingCard.isTrial" translate="helpdesk.trial"></span>
         <span class="status right">
           <a ng-href="{{helpdeskOrgCtrl.statusPageUrl}}" target="_blank">
             <i class="icon icon-circle circle-status-icon" ng-class="helpdeskOrgCtrl.healthStatuses.meeting"></i>
@@ -63,11 +77,18 @@
         <span ng-if="helpdeskOrgCtrl.callCard.licenses.length === 0" translate="helpdesk.none"></span>
 
         <div ng-repeat="license in helpdeskOrgCtrl.callCard.licenses">
+          <span class="label warning" ng-if="license.isTrial" translate="helpdesk.trial"></span>
           <span>{{license.displayName}}</span>
+          <span ng-if="license.isTrial || license.status !== 'ACTIVE'">| </span>
+          <span
+            ng-if="license.isTrial && license.trialExpiresInDays > 0">{{helpdeskOrgCtrl.daysLeftText(license)}}</span>
+          <span ng-if="license.isTrial && license.trialExpiresInDays == 0"
+                class="red">{{'helpdesk.licenseStatus.expired' |  translate}}</span>
+          <span ng-if="license.status && license.status !== 'ACTIVE'"
+                class="red">{{'helpdesk.licenseStatus.' + (license.status | lowercase) | translate}}</span>
         </div>
       </section>
       <footer class="org-card-footer">
-        <span class="trial left" ng-if="helpdeskOrgCtrl.callCard.isTrial" translate="helpdesk.trial"></span>
         <span class="status right">
           <a ng-href="{{helpdeskOrgCtrl.statusPageUrl}}" target="_blank">
             <i class="icon icon-circle circle-status-icon" ng-class="helpdeskOrgCtrl.healthStatuses.call"></i>
@@ -89,11 +110,18 @@
         <span ng-if="helpdeskOrgCtrl.roomSystemsCard.licenses.length === 0" translate="helpdesk.none"></span>
 
         <div ng-repeat="license in helpdeskOrgCtrl.roomSystemsCard.licenses">
+          <span class="label warning" ng-if="license.isTrial" translate="helpdesk.trial"></span>
           <span>{{license.displayName}}</span>
+          <span ng-if="license.isTrial || license.status !== 'ACTIVE'">| </span>
+          <span
+            ng-if="license.isTrial && license.trialExpiresInDays > 0">{{helpdeskOrgCtrl.daysLeftText(license)}}</span>
+          <span ng-if="license.isTrial && license.trialExpiresInDays == 0"
+                class="red">{{'helpdesk.licenseStatus.expired' |  translate}}</span>
+          <span ng-if="license.status && license.status !== 'ACTIVE'"
+                class="red">{{'helpdesk.licenseStatus.' + (license.status | lowercase) | translate}}</span>
         </div>
       </section>
       <footer class="org-card-footer">
-        <span class="trial left" ng-if="helpdeskOrgCtrl.roomSystemsCard.isTrial" translate="helpdesk.trial"></span>
         <span class="status right">
           <a ng-href="{{helpdeskOrgCtrl.statusPageUrl}}" target="_blank">
             <i class="icon icon-circle circle-status-icon" ng-class="helpdeskOrgCtrl.healthStatuses.room"></i>
