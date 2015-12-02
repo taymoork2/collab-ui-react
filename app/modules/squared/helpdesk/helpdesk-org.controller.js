@@ -24,8 +24,10 @@
       hybrid: 'unknown'
     };
     vm.statusPageUrl = Config.getStatusPageUrl();
-    vm.adminUserLimit = 3;
+    vm.initialAdminUserLimit = 3;
+    vm.adminUserLimit = vm.initialAdminUserLimit;
     vm.showAllAdminUsers = showAllAdminUsers;
+    vm.hideAllAdminUsers = hideAllAdminUsers;
 
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
     HelpdeskCardsService.getHealthStatuses().then(initHealth, angular.noop);
@@ -56,12 +58,14 @@
     function findManagedByOrgs(org) {
       if (org.managedBy && org.managedBy.length > 0) {
         org.managedByOrgs = [];
-        _.each(org.managedBy, function (parnterOrg) {
-          HelpdeskService.getOrgDisplayName(parnterOrg.orgId).then(function (displayName) {
-            org.managedByOrgs.push({
-              id: parnterOrg.orgId,
-              displayName: displayName
-            });
+        _.each(org.managedBy, function (managingOrg) {
+          HelpdeskService.getOrgDisplayName(managingOrg.orgId).then(function (displayName) {
+            if (displayName) {
+              org.managedByOrgs.push({
+                id: managingOrg.orgId,
+                displayName: displayName
+              });
+            }
           }, angular.noop);
         });
       }
@@ -86,6 +90,10 @@
 
     function showAllAdminUsers() {
       vm.adminUserLimit = vm.adminUsers.length;
+    }
+
+    function hideAllAdminUsers() {
+      vm.adminUserLimit = vm.initialAdminUserLimit;
     }
   }
 

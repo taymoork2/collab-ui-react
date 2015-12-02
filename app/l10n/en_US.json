@@ -2922,13 +2922,14 @@
     "delegatedAdministration": "manages {{numManages}} organizations",
     "licenses": "Licenses",
     "licenseTypes": {
-      "MESSAGING": "{{volume}} Standard Team Rooms",
-      "CONFERENCING": "{{volume}} 25 Party Meetings",
-      "COMMUNICATIONS": "{{volume}} Advanced Spark Call",
-      "SHARED_DEVICES": "{{volume}} Room Devices"
+      "MESSAGING": "{{volume}} x Standard Team Rooms",
+      "CONFERENCING": "{{volume}} x 25 Party Meetings",
+      "COMMUNICATIONS": "{{volume}} x Advanced Spark Call",
+      "SHARED_DEVICES": "{{volume}} x Room Devices"
     },
     "trial": "Trial",
     "adminUsers": "Administrators",
-    "showAllAdminUsers": "Show all {{numUsers}} users"
+    "showAllAdminUsers": "Show all {{numUsers}} administrators",
+    "hideAllAdminUsers": "Hide administrators"
   }
 }
