@@ -12,8 +12,10 @@ $aa-builder-icon-color: $gray-base;
 @mixin aa-builder-height($rem_offset) {
   /* base-offset includes top-bar, overlay-heading and aa-builder-header (elements from top of page) */
   $overlay-heading-height: 93px;
+
   /* no global variable */
   $aa-builder-base-offset: rem($top-bar-height + $overlay-heading-height + $aa-builder-header-height);
+
   /* add to offset any additional value */
   $aa-builder-offset: $aa-builder-base-offset + $rem_offset;
 
@@ -37,10 +39,13 @@ $aa-builder-icon-color: $gray-base;
     background-color: $gray-lightest;
     overflow-y: auto;
     overflow-x: hidden;
-    $margin-top: .125rem;
+
+    $margin-top: 0.125rem;
+
     margin-top: $margin-top;
+
     /* allows aa-builder-frame box-shadow to show */
-    @include aa-builder-height($frame-margin-size + (2 * $frame-border-size) + $margin-top);
+    @include aa-builder-height($frame-margin-size + 2 * $frame-border-size + $margin-top);
   }
 }
 
@@ -113,6 +118,7 @@ $aa-builder-icon-color: $gray-base;
   padding-left: .25rem;
   padding-top: .25rem;
   margin-bottom: 1rem;
+
   &:hover {
     cursor: pointer;
     color: $brand-primary;
@@ -155,16 +161,19 @@ $aa-builder-icon-color: $gray-base;
   padding-left: .25rem;
   padding-top: .25rem;
   margin-top: .25rem;
+
   &:hover {
     cursor: pointer;
     color: $brand-primary;
   }
 }
+
 .aa-builder-number-tile {
   height: 2rem;
   width: 16rem;
   padding: .5rem;
   margin: .125rem 0;
+
   /* set to match the select-box's 3px radius */
   border-radius: .188rem;
   color: $brand-white;
@@ -172,9 +181,11 @@ $aa-builder-icon-color: $gray-base;
   display: inline-block;
   vertical-align: top;
   transition: all 0.2s ease-in-out;
+
   &:hover {
     background-color: $gray;
   }
+
   .icon {
     float: right;
     font-size: 1rem;
@@ -218,8 +229,10 @@ $aa-builder-icon-color: $gray-base;
 
 .aa-name-edit {
   @extend h2;
+
   min-width: 1rem;
   white-space: nowrap;
+
   &:focus {
     outline-style: solid;
     outline-width: 1px;
@@ -233,14 +246,15 @@ $aa-builder-icon-color: $gray-base;
 
 .aa-selected-phones {
   margin-top: 1rem;
-  width:17.9rem;
+  width: 17.9rem;
 }
 
 .aa-panel-numbers {
   @extend .panel;
+
   width: 16rem;
-  margin-top : 1rem;
-  margin-bottom : 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 .aa-container {
@@ -335,8 +349,10 @@ $aa-builder-icon-color: $gray-base;
     @extend .icon;
 
     @extend .icon-close;
+
     color: transparent;
     font-size: 1.5rem;
+
     &:hover {
       cursor: pointer;
       color: $gray-light;
