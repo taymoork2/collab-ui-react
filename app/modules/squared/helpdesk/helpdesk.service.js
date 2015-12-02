@@ -45,6 +45,28 @@
       return org;
     }
 
+    function extractUsers(res) {
+      var users = res.data.items;
+      _.each(users, function(user) {
+        user.displayName = getCorrectedDisplayName(user);
+      });
+      return users;
+    }
+
+    function getCorrectedDisplayName(user) {
+      var displayName = "";
+
+      if (user.name != null) {
+        displayName = user.name.givenName + " " + user.name.familyName;
+      }
+
+      if (displayName == "") {
+        return user.displayName;
+      }
+
+      return displayName;
+    }
+
     function useMock() {
       return $location.absUrl().match(/helpdesk-backend=mock/);
     }
@@ -55,7 +77,7 @@
       }
       return $http
         .get(urlBase + 'helpdesk/search/users?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit + (orgId ? '&orgId=' + encodeURIComponent(orgId) : '') + (role ? '&role=' + encodeURIComponent(role) : ''))
-        .then(extractItems);
+        .then(extractUsers);
     }
 
     function searchOrgs(searchString, limit) {
@@ -159,6 +181,7 @@
 
     function extractUserAndSetUserStatuses(res) {
       var user = res.data;
+      user.displayName = getCorrectedDisplayName(user);
       if (!user.accountStatus) {
         user.statuses = [];
         if (user.active) {
