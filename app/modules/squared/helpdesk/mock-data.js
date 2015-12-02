@@ -231,9 +231,8 @@
     }, {
       "type": "COMMUNICATIONS",
       "name": "Communications",
-      "status": "ACTIVE",
+      "status": "SUSPENDED",
       "volume": 1000,
-      "isTrial": true,
       "trialExpiresInDays": 100
     }, {
       "type": "SHARED_DEVICES",

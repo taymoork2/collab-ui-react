@@ -58,9 +58,7 @@
     }
 
     function filterLicensesAndSetDisplayName(licenses, type) {
-      var matchingLicenses = _.filter(licenses, function (l) {
-        return l.type === type && !(l.status === 'CANCELLED' || l.status === 'SUSPENDED');
-      });
+      var matchingLicenses = _.filter(licenses, {type: type});
       _.each(matchingLicenses, function (l) {
         l.displayName = $translate.instant('helpdesk.licenseTypes.' + type, {
           volume: l.volume

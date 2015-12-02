@@ -28,6 +28,7 @@
     vm.adminUserLimit = vm.initialAdminUserLimit;
     vm.showAllAdminUsers = showAllAdminUsers;
     vm.hideAllAdminUsers = hideAllAdminUsers;
+    vm.daysLeftText = daysLeftText;
 
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
     HelpdeskCardsService.getHealthStatuses().then(initHealth, angular.noop);
@@ -94,6 +95,12 @@
 
     function hideAllAdminUsers() {
       vm.adminUserLimit = vm.initialAdminUserLimit;
+    }
+
+    function daysLeftText(license) {
+      return $translate.instant('helpdesk.numDaysLeft', {
+        days: license.trialExpiresInDays
+      });
     }
   }
 

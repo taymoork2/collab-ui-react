@@ -2930,6 +2930,12 @@
     "trial": "Trial",
     "adminUsers": "Administrators",
     "showAllAdminUsers": "Show all {{numUsers}} administrators",
-    "hideAllAdminUsers": "Hide administrators"
+    "hideAllAdminUsers": "Hide administrators",
+    "numDaysLeft": "{{days}} day(s) left",
+    "licenseStatus": {
+      "expired": "Expired",
+      "cancelled": "Cancelled",
+      "suspended": "Suspended"
+    }
   }
 }
