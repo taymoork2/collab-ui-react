@@ -4,18 +4,17 @@ angular.module('Squared')
   .controller('DevicesCtrl',
 
     /* @ngInject */
-    function ($scope, $state, $templateCache, DeviceFilter, CsdmCodeService, CsdmHuronDeviceService, CsdmDeviceService, AddDeviceModal, Authinfo, AccountOrgService) {
+    function ($scope, $state, $translate, $templateCache, DeviceFilter, CsdmCodeService, CsdmHuronDeviceService, CsdmDeviceService, AddDeviceModal, Authinfo, AccountOrgService) {
       var vm = this;
 
       AccountOrgService.getAccount(Authinfo.getOrgId()).success(function (data) {
         vm.showLicenseWarning = !!_.find(data.accounts, {
-            licenses: [{
-              offerName: "SD",
-              status: "SUSPENDED"
-            }]
-          }
-        );
-        vm.licenseError = vm.showLicenseWarning ? "Your cloudberry license is suspended." : "";
+          licenses: [{
+            offerName: "SD",
+            status: "SUSPENDED"
+          }]
+        });
+        vm.licenseError = vm.showLicenseWarning ? $translate.instant('spacesPage.licenseSuspendedWarning') : "";
       });
 
       vm.deviceFilter = DeviceFilter;

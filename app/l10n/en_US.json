@@ -867,7 +867,10 @@
     "rsuKeyDesc": "This will give Cisco Support full access to your device. Use the 'Reset' button to create a new Remote Support Access Key and invalidate any previous key you may have shared with Cisco Support.",
     "reset": "Reset",
     "rsuKeyWasReset": "The remote support key was reset. Any key you may have shared with Cisco Support is now not usable anymore.",
-    "rsuKeyResetFailed": "The remote support key reset failed, the device did not return a new key in time."
+    "rsuKeyResetFailed": "The remote support key reset failed, the device did not return a new key in time.",
+    "licenseWarningTitle": "License",
+    "licenseWarningHeader": "There is a problem with the license for this service.",
+    "licenseSuspendedWarning": "Your cloudberry license is suspended."
   },
   "hercules": {
     "page_title": "Connector Management",
