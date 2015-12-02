@@ -35,12 +35,12 @@
       _this.logMsg = "";
 
       $scope.showSpinner = (
-    	("storage_utilization" == $stateParams.reportPageId) ||
-    	("support_center_support_sessions" == $stateParams.reportPageId) ||
-    	("support_center_allocation_queue" == $stateParams.reportPageId) ||
-    	("support_center_call_volume" == $stateParams.reportPageId) ||
-    	("support_center_csr_activity" == $stateParams.reportPageId) ||
-    	("support_center_url_referral" == $stateParams.reportPageId)
+        ("storage_utilization" == $stateParams.reportPageId) ||
+        ("support_center_support_sessions" == $stateParams.reportPageId) ||
+        ("support_center_allocation_queue" == $stateParams.reportPageId) ||
+        ("support_center_call_volume" == $stateParams.reportPageId) ||
+        ("support_center_csr_activity" == $stateParams.reportPageId) ||
+        ("support_center_url_referral" == $stateParams.reportPageId)
       ) ? false : true;
 
       $scope.siteUrl = $stateParams.siteUrl;
