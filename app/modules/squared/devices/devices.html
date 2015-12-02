@@ -6,19 +6,33 @@
       </span>
 
       <cs-searchfilter
-        filters="sc.deviceFilter.getFilters()"
-        search-item-fn="sc.deviceFilter.setCurrentSearch(searchStr)"
-        set-filter-fn="sc.deviceFilter.setCurrentFilter(filter.filterValue)">
+          filters="sc.deviceFilter.getFilters()"
+          search-item-fn="sc.deviceFilter.setCurrentSearch(searchStr)"
+          set-filter-fn="sc.deviceFilter.setCurrentFilter(filter.filterValue)">
       </cs-searchfilter>
 
       <button
-        class="btn btn--large btn--people add-button"
-        ng-click="sc.showAddDeviceDialog()">
+          class="btn btn--large btn--people add-button"
+          ng-click="sc.showAddDeviceDialog()">
         Add Device
       </button>
 
     </div>
   </div>
+
+  <cs-accordion
+      id="licenseWarning"
+      ng-show="sc.showLicenseWarning">
+    <cs-accordion-group
+        show-caret="true"
+        display-status="warning">
+      <cs-accordion-heading>
+        <span class="badge badge-custom-warn">{{'spacesPage.licenseWarningTitle' | translate}}</span>
+        <span>{{'spacesPage.licenseWarningHeader' | translate}}</span>
+      </cs-accordion-heading>
+      <p>{{sc.licenseError}}</p>
+    </cs-accordion-group>
+  </cs-accordion>
 
   <div ng-if="!sc.shouldShowList()">
     <div class="message-container">
