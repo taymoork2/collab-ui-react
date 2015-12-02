@@ -220,7 +220,8 @@
       "name": "Messaging",
       "status": "ACTIVE",
       "volume": 100,
-      "isTrial": false
+      "isTrial": false,
+      "usage": 10
     }, {
       "type": "CONFERENCING",
       "name": "Conferencing",
@@ -233,7 +234,8 @@
       "name": "Communications",
       "status": "SUSPENDED",
       "volume": 1000,
-      "trialExpiresInDays": 100
+      "trialExpiresInDays": 100,
+      "usage": "950"
     }, {
       "type": "SHARED_DEVICES",
       "name": "Shared Devices",

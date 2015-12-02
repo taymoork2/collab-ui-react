@@ -2884,7 +2884,6 @@
     "accountCreated": "Account Created",
     "customerPortalLaunch": "Launch Customer Portal",
     "contact": "Contact",
-    "claimedDomain": "Claimed Domain",
     "managedBy": "Managed By",
     "administratorUsers": "Administrator Users",
     "message": "Message",
@@ -2938,7 +2937,8 @@
     "licenseStatus": {
       "expired": "Expired",
       "cancelled": "Cancelled",
-      "suspended": "Suspended"
+      "suspended": "Suspended",
+      "pending": "Pending"
     }
   }
 }
