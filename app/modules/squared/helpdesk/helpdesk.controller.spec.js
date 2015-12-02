@@ -28,7 +28,7 @@ describe('Controller: HelpdeskController', function () {
   var validSearchString = "bill gates";
   var lessThanThreeCharacterSearchString = "bi";
 
-  beforeEach(inject(function ($translateProvider, _$translate_, $httpBackend, _$rootScope_, _HelpdeskService_, _$controller_, _$q_) {
+  beforeEach(inject(function (_$translate_, $httpBackend, _$rootScope_, _HelpdeskService_, _$controller_, _$q_) {
     HelpdeskService = _HelpdeskService_;
     q = _$q_;
     $scope = _$rootScope_.$new();
