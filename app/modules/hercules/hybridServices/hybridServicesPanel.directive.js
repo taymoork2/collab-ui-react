@@ -42,9 +42,9 @@
           });
           vm.extensions = extensions || [];
           // Sort items so they show in proper order (UC first, Calendar Last, everything else in the middle)
-          vm.extensions.sort( function(a,b) { 
-            if ( a.id == 'squared-fusion-uc' ) return -1;
-            if ( a.id == 'squared-fusion-cal' ) return 1;
+          vm.extensions.sort(function (a, b) {
+            if (a.id == 'squared-fusion-uc') return -1;
+            if (a.id == 'squared-fusion-cal') return 1;
             return 0;
           });
         });

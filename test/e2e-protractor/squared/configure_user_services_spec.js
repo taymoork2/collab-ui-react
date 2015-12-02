@@ -1,8 +1,6 @@
 'use strict';
 /*jshint loopfunc: true */
-
-/* global describe */
-/* global it */
+/* global describe, it */
 
 describe('Configuring services per-user', function () {
   var testUser = utils.randomTestGmail();
@@ -16,15 +14,11 @@ describe('Configuring services per-user', function () {
   });
 
   it('should ensure calendar service enabled', function () {
-    navigation.clickServicesTab();
-    utils.click(navigation.calendarServicePage);
-    utils.click(navigation.calendarServicePageSettings);
+    navigation.ensureHybridService( navigation.calendarServicePage );
   });
 
   it('should ensure call service enabled', function () {
-    navigation.clickServicesTab();
-    utils.click(navigation.callServicePage);
-    utils.click(navigation.callServicePageSettings);
+    navigation.ensureHybridService( navigation.callServicePage );
   });
 
   it('should add a user and select hybrid services', function () {
