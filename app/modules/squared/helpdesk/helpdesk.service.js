@@ -47,23 +47,20 @@
 
     function extractUsers(res) {
       var users = res.data.items;
-      _.each(users, function(user) {
+      _.each(users, function (user) {
         user.displayName = getCorrectedDisplayName(user);
       });
       return users;
     }
 
     function getCorrectedDisplayName(user) {
-      var displayName = "";
-
+      var displayName = '';
       if (user.name != null) {
-        displayName = user.name.givenName + " " + user.name.familyName;
+        displayName = user.name.givenName + ' ' + user.name.familyName;
       }
-
-      if (displayName == "") {
+      if (!displayName) {
         return user.displayName;
       }
-
       return displayName;
     }
 
