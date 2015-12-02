@@ -74,17 +74,10 @@
       return (dnUsage === 'Primary') ? 'Primary' : '';
     }
 
+    //TODO Need to cleanup/remove this function.
     function getTelephonyInfo() {
       if (telephonyInfo.siteSteeringDigit === '') {
-        ServiceSetup.listSites().then(function () {
-          if (ServiceSetup.sites.length !== 0) {
-            ServiceSetup.getSite(ServiceSetup.sites[0].uuid).then(function (site) {
-              telephonyInfo.steeringDigit = site.steeringDigit;
-              telephonyInfo.siteSteeringDigit = site.siteSteeringDigit;
-              telephonyInfo.siteCode = site.siteCode;
-            });
-          }
-        });
+        getPrimarySiteInfo();
       }
       if (angular.isUndefined(telephonyInfo.hasCustomerVoicemail)) {
         checkCustomerVoicemail();

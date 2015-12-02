@@ -290,8 +290,9 @@
                 return angular.isDefined(scope.model.uuid);
               },
               'templateOptions.isWarn': function ($viewValue, $modelValue, scope) {
-                if (angular.isDefined(vm.model.site.steeringDigit) && vm.model.site.steeringDigit.length > 0) {
-                  if ((angular.isDefined(scope.model.beginNumber) && scope.model.beginNumber.length > 0 && scope.model.beginNumber.charAt(0) === vm.model.site.steeringDigit) || (angular.isDefined(scope.model.endNumber) && scope.model.endNumber.length > 0 && scope.model.endNumber.charAt(0) === vm.model.site.steeringDigit)) {
+                if (_.get(vm, 'model.site.steeringDigit.length') > 0 ) {
+                  if ((_.startsWith(_.get(scope, 'model.beginNumber'), _.get(vm, 'model.site.steeringDigit'))) || 
+                    (_.startsWith(_.get(scope, 'model.endNumber'), _.get(vm, 'model.site.steeringDigit')))) {
                     return true;
                   }
                 }
@@ -359,8 +360,9 @@
                 return scope.fc && scope.fc.$validate();
               },
               'templateOptions.isWarn': function ($viewValue, $modelValue, scope) {
-                if (angular.isDefined(vm.model.site.steeringDigit) && vm.model.site.steeringDigit.length > 0) {
-                  if ((angular.isDefined(scope.model.beginNumber) && scope.model.beginNumber.length > 0 && scope.model.beginNumber.charAt(0) === vm.model.site.steeringDigit) || (angular.isDefined(scope.model.endNumber) && scope.model.endNumber.length > 0 && scope.model.endNumber.charAt(0) === vm.model.site.steeringDigit)) {
+                if (_.get(vm, 'model.site.steeringDigit.length') > 0 ) {
+                  if ((_.startsWith(_.get(scope, 'model.beginNumber'), _.get(vm, 'model.site.steeringDigit'))) || 
+                    (_.startsWith(_.get(scope, 'model.endNumber'), _.get(vm, 'model.site.steeringDigit')))) {
                     return true;
                   }
                 }
