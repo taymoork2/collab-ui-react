@@ -2,9 +2,11 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskController(HelpdeskService, $translate) {
+  function HelpdeskController(HelpdeskService, $translate, $scope) {
     $('body').css('background', 'white');
-    angular.element('#searchInput').focus();
+    $scope.$on('$viewContentLoaded', function () {
+      angular.element('#searchInput').focus();
+    });
     var vm = this;
     var searchResultsPageSize = 5;
     var searchResultsLimit = 20;
@@ -15,7 +17,7 @@
     vm.searchingForOrgs = false;
     vm.searchingForDevices = false;
     vm.searchString = '';
-    vm.keypressValidation = keypressValidation;
+    vm.keyPressHandler = keyPressHandler;
     vm.showMoreResults = showMoreResults;
     vm.currentSearch = {
       searchString: '',
@@ -40,6 +42,7 @@
         this.orgLimit = searchResultsPageSize;
         this.userLimit = searchResultsPageSize;
         this.deviceLimit = searchResultsPageSize;
+        angular.element('#searchInput').focus();
       }
     };
 
@@ -109,14 +112,12 @@
       vm.searchString = '';
       vm.currentSearch.initSearch('');
       vm.currentSearch.orgFilter = org;
-      angular.element('#searchInput').focus();
     }
 
     function clearOrgFilter() {
       vm.searchString = '';
       vm.currentSearch.initSearch('');
       vm.currentSearch.orgFilter = null;
-      angular.element('#searchInput').focus();
     }
 
     function showMoreResults(type) {
@@ -171,37 +172,34 @@
       });
     }
 
-    function keypressValidation(event) {
+    function keyPressHandler(event) {
       var activeCard = angular.element(document.activeElement)[0]["tabIndex"];
       var newTabIndex = activeCard;
-      switch (event.keyCode.toString()) {
-      case "37":
+      switch (event.keyCode) {
+      case 37: // Left arrow
         newTabIndex = parseInt(activeCard) - 1;
         break;
 
-      case "38":
+      case 38: // Up arrow
         newTabIndex = parseInt(activeCard) - 10;
         break;
 
-      case "39":
+      case 39: // Right arrow
         newTabIndex = parseInt(activeCard) + 1;
         break;
 
-      case "40":
+      case 40: // Down arrow
         newTabIndex = parseInt(activeCard) + 10;
         break;
 
-      case "27":
-        if (angular.element(document.activeElement)[0]["id"] == "searchInput") {
-          angular.element('#searchInput').val("");
-        } else {
-          angular.element('#searchInput').focus().select();
-          newTabIndex = "-1";
-        }
+      case 27: // Esc
+        newTabIndex = "-1";
+        vm.searchString = '';
+        vm.currentSearch.initSearch('');
         break;
 
-      case "13":
-        if (angular.element(document.activeElement)[0]["id"] == "searchInput") {
+      case 13: // Enter
+        if (angular.element(document.activeElement)[0]["id"] !== "searchInput") {
           newTabIndex = 1;
         } else {
           angular.element(document.activeElement).click();

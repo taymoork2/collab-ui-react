@@ -3,6 +3,7 @@
 
   var mockData = {
     users: [{
+      "active": true,
       "id": "ddb4dd78-26a2-45a2-8ad8-4c181c5b3f0a",
       "organization": {
         id: "ce8d17f8-1734-4a54-8510-fae65acc505e"
@@ -15,23 +16,28 @@
       }, {
         "type": "mobile",
         "value": "+47 92 01 30 30"
-      }]
+      }],
+      "url": "whatever.com"
     }, {
+      "active": false,
       "id": "335bf4a2-a09c-45ba-a72a-e3f1de613295",
       "organization": {
         "id": "ce8d17f8-1734-4a54-8510-fae65acc505e"
       },
       "userName": "jayScott@marvel.com",
-      "displayName": "Jay Scott",
-      "phoneNumbers": []
+      "displayName": "Jay Scott (mock)",
+      "phoneNumbers": [],
+      "url": "whatever.com"
     }, {
+      "active": true,
       "id": "2f4c85f7-e827-4b28-b567-0e49693b3f75",
       "organization": {
         "id": "ce8d17f8-1734-4a54-8510-fae65acc505e"
       },
       "userName": "shamim.pirzada+marvelenduser@gmail.com",
-      "displayName": "Shamim",
-      "phoneNumbers": []
+      "displayName": "Shamim (mock)",
+      "phoneNumbers": [],
+      "url": "whatever.com"
     }],
     orgs: [{
       "id": "ce8d17f8-1734-4a54-8510-fae65acc505e",
@@ -225,9 +231,8 @@
     }, {
       "type": "COMMUNICATIONS",
       "name": "Communications",
-      "status": "ACTIVE",
+      "status": "SUSPENDED",
       "volume": 1000,
-      "isTrial": true,
       "trialExpiresInDays": 100
     }, {
       "type": "SHARED_DEVICES",
