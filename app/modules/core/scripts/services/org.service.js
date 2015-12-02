@@ -12,7 +12,9 @@
     var service = {
       'getOrg': getOrg,
       'getAdminOrg': getAdminOrg,
+      'getAdminOrgUsage': getAdminOrgUsage,
       'getValidLicenses': getValidLicenses,
+      'getLicensesUsage': getLicensesUsage,
       'getUnlicensedUsers': getUnlicensedUsers,
       'setSetupDone': setSetupDone,
       'setOrgSettings': setOrgSettings,
@@ -85,9 +87,29 @@
         });
     }
 
-    /**
-     * Compare the two lists of licenses and filter out invalid ones
-     */
+    function getAdminOrgUsage(oid) {
+      var orgId = oid || Authinfo.getOrgId();
+      var adminUrl = Config.getAdminServiceUrl() + 'customers/' + orgId + '/usage';
+      return $http.get(adminUrl);
+    }
+
+    function getLicensesUsage() {
+      return getAdminOrgUsage().then(function (response) {
+        var usageLicenses = response.data[0].licenses || [];
+        var statusLicenses = Authinfo.getLicenses();
+
+        return _.filter(usageLicenses, function (license) {
+          var match = _.find(statusLicenses, {
+            'licenseId': license.licenseId
+          });
+          return !(match.status === 'CANCELLED' || match.status === 'SUSPENDED');
+        });
+      }).catch(function (err) {
+        Log.debug('Get existing admin org failed. Status: ' + err);
+        throw err;
+      });
+    }
+
     function getValidLicenses() {
       var d = $q.defer();
 

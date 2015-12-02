@@ -21,11 +21,6 @@ body {
   padding: 0;
 }
 
-.page-option-buttons {
-  padding-top: 27px;
-  float: right;
-}
-
 .page-options-bar {}
 
 .content-view {
@@ -49,26 +44,7 @@ body {
   }
 }
 
-.icon {
-  .icon-export & {
-    @include vr-spacing(mr, 1.875);
-    line-height: 2.813rem;
-    color: $brand-info;
-  }
-}
-
 // Common ngGrid Styles
-
-div[gridscrollbar] {
-  height: calc(100vh - 150px);
-}
-
-.ngCellText,
-.ngHeaderText {
-  &.colt0 {
-    padding-left: 30px;
-  }
-}
 
 @media screen {
   #printSection {
