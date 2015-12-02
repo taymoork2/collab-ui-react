@@ -7,27 +7,16 @@ angular.module('Squared')
     function ($scope, $state, $templateCache, DeviceFilter, CsdmCodeService, CsdmHuronDeviceService, CsdmDeviceService, AddDeviceModal, Authinfo, AccountOrgService) {
       var vm = this;
 
-      var checkLicense = function () {
-        vm.showLicenseWarning = false;
-
-        AccountOrgService.getAccount(Authinfo.getOrgId()).success(function (data) {
-          var showWarning = false;
-          vm.licenseError = "";
-          angular.forEach(data.accounts, function (account) {
-            angular.forEach(account.licenses, function (license) {
-              if (license.offerName == "SD") {
-                // PENDING, ACTIVE, CANCELLED, SUSPENDED
-                if (license.status == "SUSPENDED") {
-                  showWarning = true;
-                  vm.licenseError = "Your cloudberry license is suspended.";
-                }
-              }
-            });
-          });
-          vm.showLicenseWarning = showWarning;
-        });
-      };
-      checkLicense();
+      AccountOrgService.getAccount(Authinfo.getOrgId()).success(function (data) {
+        vm.showLicenseWarning = !!_.find(data.accounts, {
+            licenses: [{
+              offerName: "SD",
+              status: "SUSPENDED"
+            }]
+          }
+        );
+        vm.licenseError = vm.showLicenseWarning ? "Your cloudberry license is suspended." : "";
+      });
 
       vm.deviceFilter = DeviceFilter;
 
