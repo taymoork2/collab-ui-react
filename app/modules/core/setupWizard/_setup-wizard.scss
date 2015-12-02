@@ -267,10 +267,6 @@
     margin-right: 0;
   }
 
-  .has-feedback .form-control-feedback {
-    right: 0;
-  }
-
   .service-setup {
     label {
       font-size: 24px;
@@ -307,6 +303,12 @@
 
     .service-setup-extension-range {
       width: 375px;
+      .cs-input {
+        width: calc(100% - 30px);
+        input {
+          width: 100%;
+        }
+      }
     }
 
     .service-setup-extension-range-to {

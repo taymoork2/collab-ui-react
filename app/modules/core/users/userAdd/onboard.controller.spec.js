@@ -11,6 +11,7 @@ describe('OnboardCtrl: Ctrl', function () {
   var getUserMe;
   var getMigrateUsers;
   var getMyFeatureToggles;
+  var sites;
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
   beforeEach(module('Messenger'));
@@ -48,6 +49,7 @@ describe('OnboardCtrl: Ctrl', function () {
     getUserMe = getJSONFixture('core/json/users/me.json');
     getMigrateUsers = getJSONFixture('core/json/users/migrate.json');
     getMyFeatureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
+    sites = getJSONFixture('huron/json/settings/sites.json');
 
     spyOn(Notification, 'notify');
     spyOn(Userservice, 'onboardUsers');
@@ -65,6 +67,7 @@ describe('OnboardCtrl: Ctrl', function () {
     spyOn(Userservice, 'getUser').and.returnValue(getUserMe);
     spyOn(Userservice, 'migrateUsers').and.returnValue(getMigrateUsers);
     spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(getMyFeatureToggles);
+    spyOn(TelephonyInfoService, 'getPrimarySiteInfo').and.returnValue($q.when(sites));
 
     controller = $controller('OnboardCtrl', {
       $scope: $scope,

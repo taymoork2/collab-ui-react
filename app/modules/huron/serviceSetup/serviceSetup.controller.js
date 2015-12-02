@@ -280,11 +280,22 @@
             templateOptions: {
               required: true,
               maxlength: 4,
-              minlength: 4
+              minlength: 4,
+              warnMsg: $translate.instant('directoryNumberPanel.steeringDigitOverlapWarning', {
+                steeringDigitInTranslation: vm.model.site.steeringDigit
+              })
             },
             expressionProperties: {
               'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
                 return angular.isDefined(scope.model.uuid);
+              },
+              'templateOptions.isWarn': function ($viewValue, $modelValue, scope) {
+                if (angular.isDefined(vm.model.site.steeringDigit) && vm.model.site.steeringDigit.length > 0) {
+                  if ((angular.isDefined(scope.model.beginNumber) && scope.model.beginNumber.length > 0 && scope.model.beginNumber.charAt(0) === vm.model.site.steeringDigit) || (angular.isDefined(scope.model.endNumber) && scope.model.endNumber.length > 0 && scope.model.endNumber.charAt(0) === vm.model.site.steeringDigit)) {
+                    return true;
+                  }
+                }
+                return false;
               }
             }
           }, {
@@ -333,6 +344,9 @@
             templateOptions: {
               maxlength: 4,
               minlength: 4,
+              warnMsg: $translate.instant('directoryNumberPanel.steeringDigitOverlapWarning', {
+                steeringDigitInTranslation: vm.model.site.steeringDigit
+              }),
               required: true
             },
             expressionProperties: {
@@ -343,6 +357,14 @@
               // it retriggers validation
               'data.validate': function (viewValue, modelValue, scope) {
                 return scope.fc && scope.fc.$validate();
+              },
+              'templateOptions.isWarn': function ($viewValue, $modelValue, scope) {
+                if (angular.isDefined(vm.model.site.steeringDigit) && vm.model.site.steeringDigit.length > 0) {
+                  if ((angular.isDefined(scope.model.beginNumber) && scope.model.beginNumber.length > 0 && scope.model.beginNumber.charAt(0) === vm.model.site.steeringDigit) || (angular.isDefined(scope.model.endNumber) && scope.model.endNumber.length > 0 && scope.model.endNumber.charAt(0) === vm.model.site.steeringDigit)) {
+                    return true;
+                  }
+                }
+                return false;
               }
             }
           }, {
