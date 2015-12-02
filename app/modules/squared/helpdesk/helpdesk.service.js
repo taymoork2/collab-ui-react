@@ -7,14 +7,21 @@
     var orgCache = CacheFactory.get('helpdeskOrgCache');
     if (!orgCache) {
       orgCache = new CacheFactory('helpdeskOrgCache', {
-        maxAge: 60 * 1000,
+        maxAge: 120 * 1000,
+        deleteOnExpire: 'aggressive'
+      });
+    }
+    var orgDisplayNameCache = CacheFactory.get('helpdeskOrgDisplayNameCache');
+    if (!orgDisplayNameCache) {
+      orgDisplayNameCache = new CacheFactory('helpdeskOrgDisplayNameCache', {
+        maxAge: 10 * 60 * 1000,
         deleteOnExpire: 'aggressive'
       });
     }
     var devicesInOrgCache = CacheFactory.get('helpdeskDevicesInOrgCache');
     if (!devicesInOrgCache) {
       devicesInOrgCache = new CacheFactory('helpdeskDevicesInOrgCache', {
-        maxAge: 120 * 1000,
+        maxAge: 180 * 1000,
         deleteOnExpire: 'aggressive'
       });
     }
@@ -34,6 +41,7 @@
     function extractOrg(res) {
       var org = res.data;
       orgCache.put(org.id, org);
+      orgDisplayNameCache.put(org.id, org.displayName);
       return org;
     }
 
@@ -41,12 +49,12 @@
       return $location.absUrl().match(/helpdesk-backend=mock/);
     }
 
-    function searchUsers(searchString, orgId, limit) {
+    function searchUsers(searchString, orgId, limit, role) {
       if (useMock()) {
         return deferredResolve(HelpdeskMockData.users);
       }
       return $http
-        .get(urlBase + 'helpdesk/search/users?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit + (orgId ? '&orgId=' + encodeURIComponent(orgId) : ''))
+        .get(urlBase + 'helpdesk/search/users?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit + (orgId ? '&orgId=' + encodeURIComponent(orgId) : '') + (role ? '&role=' + encodeURIComponent(role) : ''))
         .then(extractItems);
     }
 
@@ -76,6 +84,25 @@
       return $http
         .get(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId))
         .then(extractOrg);
+    }
+
+    function getOrgDisplayName(orgId) {
+      if (useMock()) {
+        return deferredResolve(HelpdeskMockData.org.displayName);
+      }
+      var cachedDisplayName = orgDisplayNameCache.get(orgId);
+      if (cachedDisplayName) {
+        return deferredResolve(cachedDisplayName);
+      }
+      // Use the search function as it returns a lot less data
+      return searchOrgs(orgId, 1).then(function (result) {
+        if (result.length > 0) {
+          var org = result[0];
+          orgDisplayNameCache.put(org.id, org.displayName);
+          return org.displayName;
+        }
+        return '';
+      });
     }
 
     function getHybridServices(orgId) {
@@ -184,7 +211,8 @@
       getHybridServices: getHybridServices,
       resendInviteEmail: resendInviteEmail,
       getWebExSites: getWebExSites,
-      getCloudberryDevice: getCloudberryDevice
+      getCloudberryDevice: getCloudberryDevice,
+      getOrgDisplayName: getOrgDisplayName
     };
   }
 

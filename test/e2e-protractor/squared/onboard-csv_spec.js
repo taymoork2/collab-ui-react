@@ -45,14 +45,12 @@ describe('Onboard Users using uploading CSV File', function () {
 
   it('should land to upload result page', function () {
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Upload Result');
+    utils.click(inviteusers.finishButton);
   });
 
   it('should find all ' + userList.length + ' users created', function () {
-    utils.click(inviteusers.finishButton);
     for (i = 0; i < userList.length; i++) {
-      utils.searchAndClick(userList[i]);
-      utils.expectIsDisplayed(users.servicesPanel);
-      utils.click(users.closeSidePanel);
+      utils.searchForSingleResult(userList[i]);
     }
   }, LONG_TIMEOUT); // increase time for 5 users
 

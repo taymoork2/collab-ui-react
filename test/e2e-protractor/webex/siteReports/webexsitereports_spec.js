@@ -34,6 +34,10 @@ describe('WebEx site reports iframe', function () {
     utils.wait(sitereports.webexSiteReportsPanel);
   });
 
+  xit('reports index page should contain the page load indicator', function () {
+    expect(sitereports.webexReportsIndexLoading.isPresent()).toBeTruthy();
+  });
+
   it('should not see last sync text or link', function () {
     expect(sitereports.lastSyncElement.isPresent()).toBeFalsy();
   });
@@ -69,10 +73,6 @@ describe('WebEx site reports iframe', function () {
   it('click on reports index breadcrumb and should navigate to site reports index', function () {
     utils.click(sitereports.webexReportCrumb2);
     utils.wait(sitereports.webexSiteReportsPanel);
-  });
-
-  it('reports index page should contain the page load indicator', function () {
-    expect(sitereports.webexReportsIndexLoading.isPresent()).toBeTruthy();
   });
 
   it('click on common reports storage usage link and should navigate to the correct site report', function () {

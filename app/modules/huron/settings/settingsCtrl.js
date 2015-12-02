@@ -365,6 +365,7 @@
     vm.rightPanelFields = [{
       key: 'callerId',
       type: 'nested',
+      className: 'caller-id',
       templateOptions: {
         label: $translate.instant('companyCallerId.companyCallerId'),
         description: $translate.instant('companyCallerId.companyCallerIdDesc')
@@ -376,7 +377,7 @@
         }, {
           key: 'callerIdName',
           type: 'input',
-          className: 'caller-id-name nested',
+          className: 'caller-id-name',
           templateOptions: {
             label: $translate.instant('companyCallerId.callerIdName'),
             type: 'text'
@@ -393,8 +394,8 @@
           }
         }, {
           key: 'callerIdNumber',
-          type: 'custom-combobox',
-          className: 'caller-id-number nested',
+          type: 'select',
+          className: 'caller-id-number',
           validators: {
             phoneNumber: {
               expression: vm.validations.phoneNumber,
@@ -426,7 +427,7 @@
                 externalNumber.pattern = TelephoneNumberService.getDIDLabel(externalNumber.pattern);
                 return externalNumber;
               });
-              $scope.to.list = _.map(vm.externalNumberPool, function (en) {
+              $scope.to.options = _.map(vm.externalNumberPool, function (en) {
                 return TelephoneNumberService.getDIDLabel(en.pattern);
               });
             });

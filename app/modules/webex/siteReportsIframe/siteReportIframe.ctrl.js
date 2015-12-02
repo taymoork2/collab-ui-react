@@ -34,6 +34,10 @@
       _this.funcName = "ReportsIframeCtrl()";
       _this.logMsg = "";
 
+      $scope.showSpinner = (
+        "storage_utilization" == $stateParams.reportPageId
+      ) ? false : true;
+
       $scope.siteUrl = $stateParams.siteUrl;
       $scope.indexPageSref = "webex-reports({siteUrl:'" + $stateParams.siteUrl + "'})";
       $scope.reportPageId = $stateParams.reportPageId;
@@ -41,7 +45,9 @@
       $scope.reportPageIframeUrl = $stateParams.reportPageIframeUrl;
       $scope.iframeUrl = $stateParams.reportPageIframeUrl;
 
-      $scope.webexAdvancedUrl = Config.getWebexAdvancedEditUrl($stateParams.siteUrl);
+      if ($scope.reportPageId != "storage_utilization") {
+        $scope.showSpinner = true;
+      }
 
       // for iframe request
       $scope.trustIframeUrl = $sce.trustAsResourceUrl($scope.iframeUrl);
