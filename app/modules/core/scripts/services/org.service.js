@@ -87,49 +87,29 @@
         });
     }
 
-    function getAdminOrgUsage(callback, oid) {
+    function getAdminOrgUsage(oid) {
       var orgId = oid || Authinfo.getOrgId();
       var adminUrl = Config.getAdminServiceUrl() + 'customers/' + orgId + '/usage';
-
-      $http.get(adminUrl)
-        .then(function (response) {
-          callback(response.data, true, response.status);
-        })
-        .catch(function (response) {
-          callback(response.data, false, response.status);
-        });
+      return $http.get(adminUrl);
     }
 
     function getLicensesUsage() {
-      var d = $q.defer();
-
-      getAdminOrgUsage(function (data, success, status) {
-        if (!success) {
-          Log.debug('Get existing admin org failed. Status: ' + status);
-          d.reject(status);
-          return;
-        }
-
-        var validLicenses;
-        var usageLicenses = data[0].licenses || [];
+      return getAdminOrgUsage().then(function (response) {
+        var usageLicenses = response.data[0].licenses || [];
         var statusLicenses = Authinfo.getLicenses();
 
-        validLicenses = _.filter(usageLicenses, function (license) {
+        return _.filter(usageLicenses, function (license) {
           var match = _.find(statusLicenses, {
             'licenseId': license.licenseId
           });
-          // If the license is not valid do not add to list
           return !(match.status === 'CANCELLED' || match.status === 'SUSPENDED');
         });
-
-        d.resolve(validLicenses);
+      }).catch(function (err) {
+        Log.debug('Get existing admin org failed. Status: ' + err);
+        throw err;
       });
-
-      return d.promise;
     }
-    /**
-     * Compare the two lists of licenses and filter out invalid ones
-     */
+
     function getValidLicenses() {
       var d = $q.defer();
 

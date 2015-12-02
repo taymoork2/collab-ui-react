@@ -191,7 +191,7 @@
             .attr('x', scope.text.x).attr('y', scope.text.y)
             .attr('text-anchor', 'middle')
             .attr('class', 'cs-donut-text')
-            .attr('style', 'fill:' + scope.text.color + '; font-size:' + scope.text.size + 'px; font-family: $brand-font-extra-light')
+            .attr('style', 'fill:' + scope.text.color + '; font-size:' + scope.text.size + 'px; font-family:CiscoSansTT Extra Light')
             .text(scope.text.content);
 
           path = svg.selectAll('path')
@@ -245,7 +245,7 @@
           path.data(pie(scope.clean(scope.dataset)));
           path.transition().duration(750).attrTween('d', scope.tweenArc).each('end', function () {
             text.text(scope.text.content)
-              .attr('style', 'fill:' + scope.text.color + '; font-size:' + scope.text.size + 'px; font-family: $brand-font-extra-light;')
+              .attr('style', 'fill:' + scope.text.color + '; font-size:' + scope.text.size + 'px; font-family: CiscoSansTT Extra Light;')
               .attr('y', scope.text.y);
             path.attr('fill', function (d, i) {
               return scope.getColour(i);
