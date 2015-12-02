@@ -37,7 +37,6 @@
             viewReady: false,
             hasLoadError: false,
             sessionTicketError: false,
-            allowRetry: false,
             errMsg: "",
             pageTitle: pageTitle,
             pageTitleFull: pageTitleFull,

@@ -26,7 +26,7 @@
     "angular-formly": "~6.11.0",
     "api-check": "~7.0.0",
     "cisco-formly": "=1.0.20",
-    "cisco-ui": "~2.7.6",
+    "cisco-ui": "~2.7.5",
     "bootstrap-tokenfield": "~0.12.x",
     "components-font-awesome": "~4.0.3",
     "draggable": "~1.0.0",

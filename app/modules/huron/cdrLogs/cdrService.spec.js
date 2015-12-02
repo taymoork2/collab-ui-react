@@ -4,9 +4,11 @@ describe('Controller: CdrService', function () {
   beforeEach(module('uc.cdrlogsupport'));
   beforeEach(module('Huron'));
 
-  var $httpBackend, $q, CdrService, Notification;
+  var $httpBackend, $q, CdrService, Notification, Authinfo;
   var proxyResponse = getJSONFixture('huron/json/cdrLogs/proxyResponse.json');
   var proxyUrl = 'https://hades.huron-int.com/api/v1/elasticsearch/_all/_search?pretty';
+  var scimUrl = 'https://identity.webex.com/identity/scim/1/v1/Users?&sortBy=name&sortOrder=ascending';
+  var scimResponse = getJSONFixture('huron/json/cdrLogs/scimResponse.json');
   var name = 'call0CDR0';
 
   var model = {
@@ -30,13 +32,15 @@ describe('Controller: CdrService', function () {
     return returnDate.utc().format();
   };
 
-  beforeEach(inject(function (_$httpBackend_, _$q_, _CdrService_, _Notification_) {
+  beforeEach(inject(function (_$httpBackend_, _$q_, _CdrService_, _Notification_, _Authinfo_) {
     CdrService = _CdrService_;
     Notification = _Notification_;
     $q = _$q_;
     $httpBackend = _$httpBackend_;
+    Authinfo = _Authinfo_;
 
     spyOn(Notification, 'notify');
+    spyOn(Authinfo, 'getOrgId').and.returnValue('1');
   }));
 
   afterEach(function () {
@@ -62,5 +66,15 @@ describe('Controller: CdrService', function () {
 
   it('should return a date from a yyyy-mm-dd and hh:mm:ss', function () {
     expect(CdrService.formDate(model.startDate, model.startTime).format()).toEqual(formDate(model.startDate, model.startTime));
+  });
+
+  it('should return userList for getUserList', function () {
+    $httpBackend.whenGET(scimUrl).respond(scimResponse);
+
+    CdrService.getUserList().then(function (response) {
+      expect(response).toEqual(scimResponse.Resources);
+    });
+
+    $httpBackend.flush();
   });
 });

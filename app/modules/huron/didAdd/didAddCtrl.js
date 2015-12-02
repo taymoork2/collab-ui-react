@@ -38,6 +38,7 @@
     vm.tokenplaceholder = $translate.instant('didManageModal.inputPlacehoder');
     vm.fromEditTrial = $stateParams.fromEditTrial;
     vm.currentTrial = angular.copy($stateParams.currentTrial);
+    vm.getExampleNumbers = TelephoneNumberService.getExampleNumbers;
 
     vm.tokenoptions = {
       delimiter: [',', ';'],
