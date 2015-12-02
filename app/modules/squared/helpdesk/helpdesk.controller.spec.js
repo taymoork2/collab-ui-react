@@ -77,16 +77,18 @@ describe('Controller: HelpdeskController', function () {
 
     beforeEach(function () {
       sinon.stub(HelpdeskService, 'searchUsers');
+      sinon.stub(HelpdeskService, 'searchOrgs');
+      sinon.stub(HelpdeskService, 'findAndResolveOrgsForUserResults');
+
       var deferredUserResult = q.defer();
       deferredUserResult.resolve(userSearchResult);
       HelpdeskService.searchUsers.returns(deferredUserResult.promise);
 
-      sinon.stub(HelpdeskService, 'searchOrgs');
-      sinon.stub(HelpdeskService, 'getOrgDisplayName');
-      var deferredOrgResult = q.defer();
-      deferredOrgResult.resolve(orgSearchResult);
-      HelpdeskService.searchOrgs.returns(deferredOrgResult.promise);
-      HelpdeskService.getOrgDisplayName.returns(deferredOrgResult.promise);
+      var deferredOrgsResult = q.defer();
+      deferredOrgsResult.resolve(orgSearchResult);
+      HelpdeskService.searchOrgs.returns(deferredOrgsResult.promise);
+
+      HelpdeskService.findAndResolveOrgsForUserResults.returns(deferredUserResult.promise);
 
       controller = $controller('HelpdeskController', {
         HelpdeskService: HelpdeskService,
@@ -107,7 +109,6 @@ describe('Controller: HelpdeskController', function () {
       expect(controller.searchingForUsers).toBeFalsy();
       expect(controller.searchingForOrgs).toBeFalsy();
       expect(controller.currentSearch.userSearchResults[0].displayName).toEqual("Bill Gates");
-      expect(controller.currentSearch.userSearchResults[0].organization.displayName[0].displayName).toEqual("Bill Gates Foundation");
       expect(controller.currentSearch.orgSearchResults[0].displayName).toEqual("Bill Gates Foundation");
     });
 
