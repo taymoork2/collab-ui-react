@@ -97,7 +97,7 @@
 
     function findLicenseUsage() {
       if (vm.orgId != Config.ciscoOrgId) {
-        LicenseService.getLicensesInOrg(vm.orgId, true).then(function(licenses) {
+        LicenseService.getLicensesInOrg(vm.orgId, true).then(function (licenses) {
           initCards(licenses);
           vm.licenseUsageReady = true;
         }, XhrNotificationService.notify);
