@@ -103,7 +103,8 @@
           country: carrier.country,
           logoSrc: 'images/carriers/logo_intelepeer.svg',
           logoAlt: 'IntelePeer',
-          title: 'IntelePeer Pro6S',
+          docSrc: 'docs/carriers/IntelePeerVoicePackage.pdf',
+          title: 'Voice Services Bundle',
           features: [
             $translate.instant('intelepeerFeatures.feature1'),
             $translate.instant('intelepeerFeatures.feature2'),
