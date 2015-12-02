@@ -4,6 +4,30 @@ describe('Controller: HelpdeskController', function () {
 
   var HelpdeskService, $controller, q, $translate, $scope, httpBackend, controller;
 
+  var createUserMockData = function (name, orgId) {
+    return {
+      "active": true,
+      "id": "dcba4321_" + name,
+      "organization": {
+        id: orgId
+      },
+      "userName": name,
+      "displayName": name.replace(".", " ")
+    };
+  };
+
+  var createOrgMockData = function (name, orgId) {
+    return {
+      "id": orgId,
+      "displayName": name,
+      "isPartner": false,
+      "isTestOrg": false
+    };
+  };
+
+  var validSearchString = "bill gates";
+  var lessThanThreeCharacterSearchString = "bi";
+
   beforeEach(inject(function (_$translate_, $httpBackend, _$rootScope_, _HelpdeskService_, _$controller_, _$q_) {
     HelpdeskService = _HelpdeskService_;
     q = _$q_;
@@ -52,7 +76,6 @@ describe('Controller: HelpdeskController', function () {
     }];
 
     beforeEach(function () {
-
       sinon.stub(HelpdeskService, 'searchUsers');
       var deferredUserResult = q.defer();
       deferredUserResult.resolve(userSearchResult);
@@ -67,7 +90,8 @@ describe('Controller: HelpdeskController', function () {
 
       controller = $controller('HelpdeskController', {
         HelpdeskService: HelpdeskService,
-        $translate: $translate
+        $translate: $translate,
+        $scope: $scope
       });
 
       controller.setOrgFilter(null);
@@ -84,18 +108,39 @@ describe('Controller: HelpdeskController', function () {
       expect(controller.searchingForOrgs).toBeFalsy();
       expect(controller.currentSearch.userSearchResults[0].displayName).toEqual("Bill Gates");
       expect(controller.currentSearch.userSearchResults[0].organization.displayName[0].displayName).toEqual("Bill Gates Foundation");
-
       expect(controller.currentSearch.orgSearchResults[0].displayName).toEqual("Bill Gates Foundation");
-
     });
 
-    it('simple search with less than characters gives search failure directly', function () {
-      controller.searchString = "bi";
+    it('simple search with less than three characters gives search failure directly', function () {
+      controller.searchString = lessThanThreeCharacterSearchString;
       controller.search();
+      expect(controller.searchingForUsers).toBeFalsy();
+      expect(controller.searchingForOrgs).toBeFalsy();
       expect(controller.currentSearch.userSearchFailure).toEqual("helpdesk.badUserSearchInput");
       expect(controller.currentSearch.orgSearchFailure).toEqual("helpdesk.badOrgSearchInput");
     });
 
+    it('multiple search results', function () {
+      userSearchResult.push(createUserMockData("bill.gate", "11ac8f0b-6cea-492d-875d-8edf159a844c"));
+      userSearchResult.push(createUserMockData("bill.gator", "22ac8f0b-6cea-492d-875d-8edf159a844c"));
+      userSearchResult.push(createUserMockData("bill.gattar", "33ac8f0b-6cea-492d-875d-8edf159a844c"));
+      userSearchResult.push(createUserMockData("bil.gattes", "44ac8f0b-6cea-492d-875d-8edf159a844c"));
+
+      orgSearchResult.push(createOrgMockData("Bill Gate Foundation", "11ac8f0b-6cea-492d-875d-8edf159a844c"));
+      orgSearchResult.push(createOrgMockData("Bill Gator Foundation", "22ac8f0b-6cea-492d-875d-8edf159a844c"));
+      orgSearchResult.push(createOrgMockData("Bill Gat Helthcare", "66ac8f0b-6cea-492d-875d-8edf159a844c"));
+      controller.searchString = validSearchString;
+      controller.search();
+
+      expect(controller.searchingForUsers).toBeTruthy();
+      expect(controller.searchingForOrgs).toBeTruthy();
+      $scope.$apply();
+      expect(controller.searchingForUsers).toBeFalsy();
+      expect(controller.searchingForOrgs).toBeFalsy();
+
+      expect(controller.currentSearch.userSearchResults.length).toEqual(5);
+      expect(controller.currentSearch.orgSearchResults.length).toEqual(4);
+    });
   });
 
   describe("backend http error", function () {
@@ -112,10 +157,11 @@ describe('Controller: HelpdeskController', function () {
 
       controller = $controller('HelpdeskController', {
         HelpdeskService: HelpdeskService,
-        $translate: $translate
+        $translate: $translate,
+        $scope: $scope
       });
 
-      controller.searchString = "bill gates";
+      controller.searchString = validSearchString;
       controller.search();
       expect(controller.searchingForUsers).toBeTruthy();
       expect(controller.searchingForOrgs).toBeTruthy();
@@ -139,10 +185,11 @@ describe('Controller: HelpdeskController', function () {
 
       controller = $controller('HelpdeskController', {
         HelpdeskService: HelpdeskService,
-        $translate: $translate
+        $translate: $translate,
+        $scope: $scope
       });
 
-      controller.searchString = "bill gates";
+      controller.searchString = validSearchString;
       controller.search();
       expect(controller.searchingForUsers).toBeTruthy();
       expect(controller.searchingForOrgs).toBeTruthy();

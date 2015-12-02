@@ -71,7 +71,7 @@ angular.module('Core')
           $scope.showTrialsRefresh = false;
           if (data.success && data.trials) {
             if (data.trials.length > 0) {
-              PartnerService.loadRetrievedDataToList(data.trials, $scope.trialsList, true);
+              $scope.trialsList = PartnerService.loadRetrievedDataToList(data.trials, [], true);
               $scope.activeList = _.filter($scope.trialsList, {
                 state: "ACTIVE"
               });

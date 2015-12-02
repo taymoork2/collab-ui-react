@@ -9,7 +9,6 @@
   function CommunicationsCtrl($log, $scope, $translate, AccountOrgService, Authinfo, Notification, Orgservice) {
     var vm = this;
     vm.cloudSipFlag = false;
-    vm.isTestOrg = false;
     /*jshint validthis: true */
 
     var orgId = Authinfo.getOrgId();
@@ -23,12 +22,6 @@
           vm.cloudSipFlag = true;
         }
       });
-
-    Orgservice.getOrg(function (data, status) {
-      if (data.success) {
-        vm.isTestOrg = data.isTestOrg;
-      }
-    });
 
     $scope.$on('wizard-claim-sip-uri-event', function () {
       var orgId = Authinfo.getOrgId();

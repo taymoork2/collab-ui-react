@@ -867,7 +867,10 @@
     "rsuKeyDesc": "This will give Cisco Support full access to your device. Use the 'Reset' button to create a new Remote Support Access Key and invalidate any previous key you may have shared with Cisco Support.",
     "reset": "Reset",
     "rsuKeyWasReset": "The remote support key was reset. Any key you may have shared with Cisco Support is now not usable anymore.",
-    "rsuKeyResetFailed": "The remote support key reset failed, the device did not return a new key in time."
+    "rsuKeyResetFailed": "The remote support key reset failed, the device did not return a new key in time.",
+    "licenseWarningTitle": "License",
+    "licenseWarningHeader": "There is a problem with the license for this service.",
+    "licenseSuspendedWarning": "Your cloudberry license is suspended."
   },
   "hercules": {
     "page_title": "Connector Management",
@@ -1094,7 +1097,7 @@
     "confMsg": "Free 3 Party Spark Meet",
     "commMsg": "Free 1:1 Spark Call",
     "communicationsSub": "Setup calling service",
-    "claimSipUrl": "Claim SIP URI Domain",
+    "claimSipUrl": "Customize SIP URI Domain",
     "claimSipUriTitle": "Customize your company’s SIP URI domain name. This domain will be used to create a universally reachable URI for each user in your company.",
     "claimSipUriDesc": "This URI is used to receive calls from any standards-based SIP calling service. (e.g. myuser@mycompany.ciscospark.com).",
     "claimSipUriWarning": "This cannot be edited later.",
@@ -1678,7 +1681,7 @@
     "customerInformation": "Customer Information",
     "termsOfTrial": "Terms of Trial",
     "trialServices": "Trial Services",
-    "sparkRoomSystem": "Room Systems",
+    "sparkRoomSystem": "Spark Room System",
     "trialButton": "Add Trial Customer",
     "dialogTitle": "Add New Trial",
     "customerName": "Company Name",
@@ -1697,6 +1700,7 @@
     "individualUserServices": "Individual User Services",
     "roomSystems": "Room Systems",
     "roomSystem": "Room System",
+    "deviceBasedServices": "Device-based Services",
     "call": "Call"
   },
   "trialModal": {
@@ -1713,7 +1717,8 @@
   },
   "trials": {
     "collab": "Standard Team Rooms + 25 Party Meetings",
-    "squaredUC": "Advanced Spark Call"
+    "squaredUC": "Advanced Spark Call",
+    "meet": "Meeting and WebEx"
   },
   "status": {
     "noResults": "No results available.",
@@ -2879,7 +2884,6 @@
     "accountCreated": "Account Created",
     "customerPortalLaunch": "Launch Customer Portal",
     "contact": "Contact",
-    "claimedDomain": "Claimed Domain",
     "managedBy": "Managed By",
     "administratorUsers": "Administrator Users",
     "message": "Message",
@@ -2920,13 +2924,21 @@
     "delegatedAdministration": "manages {{numManages}} organizations",
     "licenses": "Licenses",
     "licenseTypes": {
-      "MESSAGING": "{{volume}} Standard Team Rooms",
-      "CONFERENCING": "{{volume}} 25 Party Meetings",
-      "COMMUNICATIONS": "{{volume}} Advanced Spark Call",
-      "SHARED_DEVICES": "{{volume}} Room Devices"
+      "MESSAGING": "{{volume}} x Standard Team Rooms",
+      "CONFERENCING": "{{volume}} x 25 Party Meetings",
+      "COMMUNICATIONS": "{{volume}} x Advanced Spark Call",
+      "SHARED_DEVICES": "{{volume}} x Room Devices"
     },
     "trial": "Trial",
     "adminUsers": "Administrators",
-    "showAllAdminUsers": "Show all {{numUsers}} users"
+    "showAllAdminUsers": "Show all {{numUsers}} administrators",
+    "hideAllAdminUsers": "Hide administrators",
+    "numDaysLeft": "{{days}} day(s) left",
+    "licenseStatus": {
+      "expired": "Expired",
+      "cancelled": "Cancelled",
+      "suspended": "Suspended",
+      "pending": "Pending"
+    }
   }
 }

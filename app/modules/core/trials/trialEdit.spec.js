@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: TrialEditCtrl', function () {
-  var controller, $scope, $state, $q, $translate, Notification, TrialService, HuronCustomer;
+  var controller, $scope, $state, $q, $translate, Notification, TrialService, HuronCustomer, FeatureToggleService;
 
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
@@ -15,7 +15,7 @@ describe('Controller: TrialEditCtrl', function () {
     }
   };
 
-  beforeEach(inject(function ($rootScope, $controller, _$state_, _$q_, _$translate_, _Notification_, _TrialService_, _HuronCustomer_) {
+  beforeEach(inject(function ($rootScope, $controller, _$state_, _$q_, _$translate_, _Notification_, _TrialService_, _HuronCustomer_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
     $state = _$state_;
     $q = _$q_;
@@ -23,8 +23,10 @@ describe('Controller: TrialEditCtrl', function () {
     Notification = _Notification_;
     TrialService = _TrialService_;
     HuronCustomer = _HuronCustomer_;
+    FeatureToggleService = _FeatureToggleService_;
 
     spyOn(Notification, 'notify');
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
     $state.modal = jasmine.createSpyObj('modal', ['close']);
 
     controller = $controller('TrialEditCtrl', {
@@ -33,7 +35,8 @@ describe('Controller: TrialEditCtrl', function () {
       $stateParams: stateParams,
       TrialService: TrialService,
       Notification: Notification,
-      HuronCustomer: HuronCustomer
+      HuronCustomer: HuronCustomer,
+      FeatureToggleService: FeatureToggleService,
     });
     $scope.$apply();
   }));
