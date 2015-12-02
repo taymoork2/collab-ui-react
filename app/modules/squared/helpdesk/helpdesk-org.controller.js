@@ -29,6 +29,7 @@
     vm.showAllAdminUsers = showAllAdminUsers;
     vm.hideAllAdminUsers = hideAllAdminUsers;
     vm.daysLeftText = daysLeftText;
+    vm.licenseUsageReady = false;
 
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
     HelpdeskCardsService.getHealthStatuses().then(initHealth, angular.noop);
@@ -96,7 +97,10 @@
 
     function findLicenseUsage() {
       if (vm.orgId != Config.ciscoOrgId) {
-        LicenseService.getLicensesInOrg(vm.orgId, true).then(initCards, XhrNotificationService.notify);
+        LicenseService.getLicensesInOrg(vm.orgId, true).then(function(licenses) {
+          initCards(licenses);
+          vm.licenseUsageReady = true;
+        }, XhrNotificationService.notify);
       }
     }
 
