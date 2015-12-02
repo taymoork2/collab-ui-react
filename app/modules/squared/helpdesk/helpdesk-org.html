@@ -1,8 +1,7 @@
-
-<div class="user-view">
+<div id="detailsDiv" class="helpdesk-details">
   <div class="row head full">
     <div class="columns large-12">
-      <a ui-sref="helpdesk.search">
+      <a id="backToSearchLink" ui-sref="helpdesk.search">
         <i class="icon icon-back icon-lg"></i>
         <span translate="helpdesk.backToSearchResults"></span>
       </a>
@@ -14,21 +13,34 @@
 
       <h3>{{helpdeskOrgCtrl.org.displayName}}</h3>
 
+      <div class="customer-or-partner">
+        <span ng-if="!helpdeskOrgCtrl.org.isPartner" translate="helpdesk.customer"></span>
+        <span ng-if="helpdeskOrgCtrl.org.isPartner" translate="helpdesk.partner"></span>
+        <span ng-if="helpdeskOrgCtrl.delegatedAdministration"> ({{helpdeskOrgCtrl.delegatedAdministration}})</span>
+      </div>
+      <div class="row">
+        <div class="medium-5 columns details-heading">
+          <span>{{'common.id' | translate}}:</span>
+        </div>
+        <div class="medium-7 columns details-value">
+          <span>{{helpdeskOrgCtrl.org.id}}</span>
+        </div>
+      </div>
 
       <div class="row" ng-if="helpdeskOrgCtrl.org.email">
-        <div class="large-5 columns">
-          <p>Contact:</p>
+        <div class="large-5 columns details-heading">
+          <span>{{'helpdesk.contact' | translate}}:</span>
         </div>
-        <div class="large-7 columns">
-          <span><a href="mailto:{{helpdeskOrgCtrl.org.email}}">{{helpdeskOrgCtrl.org.email}}</a></span>
+        <div class="large-7 columns details-value">
+          <span><a ng-href="mailto:{{helpdeskOrgCtrl.org.email}}">{{helpdeskOrgCtrl.org.email}}</a></span>
         </div>
       </div>
 
       <div class="row">
-        <div class="large-5 columns">
-          <p>Domains:</p>
+        <div class="large-5 columns details-heading">
+          <span>{{'helpdesk.claimedDomain' | translate}}:</span>
         </div>
-        <div class="large-7 columns">
+        <div class="large-7 columns details-value">
           <span ng-repeat="domain in helpdeskOrgCtrl.org.domains">
             {{domain}}{{$last ? '' : ', '}}
           </span>
@@ -36,67 +48,64 @@
         </div>
       </div>
 
-      <div class="row">
-        <div class="medium-5 columns">
-          <p>Org. ID:</p>
+      <div class="row" ng-if="helpdeskOrgCtrl.org.webExSites">
+        <div class="large-5 columns details-heading">
+          <span>{{'helpdesk.webexsites' | translate}}:</span>
         </div>
-        <div class="medium-7 columns">
-          <span>{{helpdeskOrgCtrl.org.id}}</span>
+        <div class="large-7 columns details-value">
+          <span ng-repeat="site in helpdeskOrgCtrl.org.webExSites">
+            {{site.siteUrl}}{{$last ? '' : ', '}}
+          </span>
+          <span ng-if="helpdeskOrgCtrl.org.webExSites.length == 0" translate="helpdesk.none"></span>
         </div>
       </div>
 
-      <div class="row">
-        <div class="medium-5 columns">
-          <p>Partners:</p>
+      <div class="row" ng-if="helpdeskOrgCtrl.org.managedByOrgs && helpdeskOrgCtrl.org.managedByOrgs.length > 0">
+        <div class="medium-5 columns details-heading">
+          <span>{{'helpdesk.managedBy' | translate}}:</span>
         </div>
-        <div class="medium-7 columns">
-          <div ng-repeat="partner in helpdeskOrgCtrl.org.partners">
+        <div class="medium-7 columns details-value">
+          <div ng-repeat="managingOrg in helpdeskOrgCtrl.org.managedByOrgs">
             <span>
-              <a ui-sref="helpdesk.org({org:partner})">
-                {{partner.displayName}}
+              <a ui-sref="helpdesk.org({org:managingOrg, id:managingOrg.id})">
+                {{managingOrg.displayName}}
               </a>
             </span>
           </div>
         </div>
       </div>
 
+      <div class="row" ng-if="helpdeskOrgCtrl.adminUsers && helpdeskOrgCtrl.adminUsers.length > 0">
+        <div class="medium-12 columns">
+          <h4 translate="helpdesk.adminUsers"></h4>
 
-      <!--
-            <h4>Administrator Users <b>{{helpdeskOrgCtrl.partners.length}}</b></h4>
-            <div ng-repeat="administratorUser in helpdeskOrgCtrl.org.administratorUsers">
-              <p>{{administratorUser}}</p>
-            </div>
+          <div ng-repeat="user in helpdeskOrgCtrl.adminUsers | limitTo:helpdeskOrgCtrl.adminUserLimit">
+            <span>
+              <a ui-sref="helpdesk.user({user:user, id:user.id, orgId:user.organization.id})">
+                {{user.displayName | limitTo: 40}}{{user.displayName.length > 40 ? '...' : ''}}
+              </a>
+            </span>
+          </div>
 
-            <h3 class="display-name ellipsis">{{helpdeskOrgCtrl.org.displayName}}</h3>
-            <div class="user-info">
-              <span translate="helpdesk.contact"></span>:
-              <span class="user-value right">{{helpdeskOrgCtrl.org.contact}}</span>
-            </div>
-            <div class="user-info">
-              <span translate="helpdesk.claimedDomain"></span>:
-              <span class="user-value right" ng-repeat="claimedDomain in helpdeskOrgCtrl.org.claimedDomains">
-                {{claimedDomain}}
-              </span>
-            </div>
-            <div class="user-info">
-              <span translate="helpdesk.partners"></span>:
-              <span class="user-value right" ng-repeat="partner in helpdeskOrgCtrl.org.partners">
-                {{partner}}
-              </span>
-            </div>
-            <div class="user-info">
-              <span translate="helpdesk.administratorUsers"></span>:
-              <span class="user-value right" ng-repeat="administratorUser in helpdeskOrgCtrl.org.administratorUsers">
-                {{administratorUser}}
-              </span>
-            </div>
+          <div ng-if="helpdeskOrgCtrl.adminUsers.length > helpdeskOrgCtrl.adminUserLimit" style="margin-top: 1.0rem;">
+            <span><a href
+                     ng-click="helpdeskOrgCtrl.showAllAdminUsers()">{{helpdeskOrgCtrl.showAllAdminUsersText}}</a></span>
+          </div>
 
-           -->
+          <div ng-if="helpdeskOrgCtrl.adminUserLimit > helpdeskOrgCtrl.initialAdminUserLimit"
+               style="margin-top: 1.0rem;">
+            <span><a href
+                     ng-click="helpdeskOrgCtrl.hideAllAdminUsers()"
+                     translate="helpdesk.hideAllAdminUsers"></a></span>
+          </div>
+
+        </div>
+      </div>
 
     </div>
 
-    <div class="columns large-8 medium-7" ng-include src="'modules/squared/helpdesk/org-cards.html'">
-
+    <div class="columns large-8 medium-7 card-panel" ng-include
+         src="'modules/squared/helpdesk/org-cards.html'">
     </div>
 
   </div>

@@ -13,11 +13,39 @@
 
     vm.editTerms = true;
     vm.disableSquaredUCCheckBox = false;
-    vm.offers = {};
+    $scope.offers = {};
+    vm.showWebex = false;
+    vm.showRoomSystems = false;
+    vm.model = {
+      roomSystems: 0,
+    };
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials).then(function (result) {
       vm.showRoomSystems = result;
     });
+
+    FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials).then(function (result) {
+      vm.showWebex = result;
+      if (result) {
+        vm.individualServices.splice(2, 0, webexField);
+      }
+    });
+
+    var webexField = {
+      key: 'WEBEXTRIALS',
+      type: 'checkbox',
+      model: $scope.offers,
+      templateOptions: {
+        label: $translate.instant('trials.meet'),
+        id: 'webexTrialCB',
+        class: 'small-offset-1 columns',
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function () {
+          return vm.isSquaredUCEnabled() || vm.isRoomSystemsTrialsEnabled();
+        },
+      },
+    };
 
     vm.roomSystemOptions = [5, 10, 15, 20, 25];
     vm.individualServices = [{
@@ -27,8 +55,7 @@
       templateOptions: {
         label: $translate.instant('siteList.licenseCount'),
         labelClass: 'small-4 columns',
-        inputClass: 'small-3 columns left',
-        secondaryLabel: $translate.instant('common.users'),
+        inputClass: 'small-4 columns left',
         type: 'number',
         required: true,
       },
@@ -45,7 +72,7 @@
     }, {
       key: 'COLLAB',
       type: 'checkbox',
-      model: vm.offers,
+      model: $scope.offers,
       defaultValue: _.get(vm, 'currentTrial.communications.status') === 'ACTIVE',
       templateOptions: {
         label: $translate.instant('trials.collab'),
@@ -54,7 +81,7 @@
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
-          return vm.isSquaredUCEnabled() || _.get(vm, 'currentTrial.communications.status') === 'ACTIVE';
+          return vm.isSquaredUCEnabled() || vm.isRoomSystemsTrialsEnabled() || _.get(vm, 'currentTrial.communications.status') === 'ACTIVE';
         },
         'templateOptions.label': function () {
           return FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
@@ -65,7 +92,7 @@
     }, {
       key: 'SQUAREDUC',
       type: 'checkbox',
-      model: vm.offers,
+      model: $scope.offers,
       templateOptions: {
         label: $translate.instant('trials.squaredUC'),
         id: 'squaredUCTrial',
@@ -93,7 +120,7 @@
         label: $translate.instant('partnerHomePage.duration'),
         secondaryLabel: $translate.instant('partnerHomePage.durationHelp'),
         labelClass: 'small-4 columns',
-        inputClass: 'small-3 columns left',
+        inputClass: 'small-4 columns left',
         options: [30, 60, 90],
       },
     }];
@@ -103,8 +130,18 @@
     vm.editTrial = editTrial;
     vm.squaredUCOfferID = Config.trials.squaredUC;
     vm.isSquaredUCEnabled = isSquaredUCEnabled;
+    vm.isRoomSystemsTrialsEnabled = isRoomSystemsTrialsEnabled;
     vm.gotoAddNumber = gotoAddNumber;
     vm.clickUpdateButton = clickUpdateButton;
+
+    $scope.$watchCollection('offers', function (newOffers) {
+      if (newOffers[Config.trials.cloudberry] || newOffers[Config.trials.squaredUC]) {
+        $scope.offers[Config.trials.collab] = true;
+        if (vm.showWebex) {
+          $scope.offers[Config.trials.webex] = true;
+        }
+      }
+    });
 
     initializeOffers();
 
@@ -115,7 +152,7 @@
         for (var i in vm.currentTrial.offers) {
           var offer = vm.currentTrial.offers[i];
           if (offer && offer.id) {
-            vm.offers[offer.id] = true;
+            $scope.offers[offer.id] = true;
             if (offer.id === vm.squaredUCOfferID) {
               vm.disableSquaredUCCheckBox = true;
             }
@@ -125,11 +162,16 @@
     }
 
     function isSquaredUCEnabled() {
-      return vm.offers[Config.trials.squaredUC];
+      return $scope.offers[Config.trials.squaredUC] || false;
+    }
+
+    function isRoomSystemsTrialsEnabled() {
+      return $scope.offers[Config.trials.cloudberry] || false;
     }
 
     vm.roomSystemsChecked = function () {
       vm.model.roomSystems = vm.model.roomSystemsEnabled ? vm.roomSystemOptions[0] : 0;
+      $scope.offers[Config.trials.cloudberry] = vm.model.roomSystemsEnabled;
     };
 
     function clickUpdateButton() {
@@ -167,13 +209,13 @@
       vm.saveUpdateButtonLoad = true;
 
       var offersList = [];
-      for (var i in vm.offers) {
-        if (vm.offers[i]) {
+      for (var i in $scope.offers) {
+        if ($scope.offers[i]) {
           offersList.push(i);
         }
       }
 
-      return TrialService.editTrial(vm.currentTrial.trialId, vm.currentTrial.duration, vm.currentTrial.licenses, vm.currentTrial.usage, vm.currentTrial.customerOrgId, offersList)
+      return TrialService.editTrial(vm.currentTrial.trialId, vm.currentTrial.duration, vm.currentTrial.licenses, vm.currentTrial.usage, vm.model.roomSystems, vm.currentTrial.customerOrgId, offersList)
         .catch(function (response) {
           vm.saveUpdateButtonLoad = false;
           Notification.notify([response.data.message], 'error');

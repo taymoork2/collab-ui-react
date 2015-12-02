@@ -18,9 +18,9 @@ auth =
     org:  'c054027f-c5bd-4598-8cd8-07c08163e8cd'
 
   'partner-reports':
-    user: 'partner-admin@huron-int.com'
+    user: 'admin@sparkucreports-testpartner.com'
     pass: 'Cisco123!'
-    org:  '21e30827-4c16-4fed-b025-e1342508c380'
+    org:  'd71b4d69-721a-41b1-ae4b-6e0305eab12b'
 
   'partner-sales-user':
     user: 'phtest77+salesadmin@gmail.com'

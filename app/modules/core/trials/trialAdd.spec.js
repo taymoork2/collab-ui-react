@@ -1,12 +1,12 @@
 'use strict';
 
 describe('Controller: TrialAddCtrl', function () {
-  var controller, $scope, $q, $translate, $state, Notification, TrialService, HuronCustomer, EmailService;
+  var controller, $scope, $q, $translate, $state, Notification, TrialService, HuronCustomer, EmailService, FeatureToggleService;
 
   beforeEach(module('Huron'));
   beforeEach(module('Core'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _$state_, _Notification_, _TrialService_, _HuronCustomer_, _EmailService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _$state_, _Notification_, _TrialService_, _HuronCustomer_, _EmailService_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
     $q = _$q_;
     $translate = _$translate_;
@@ -15,12 +15,14 @@ describe('Controller: TrialAddCtrl', function () {
     TrialService = _TrialService_;
     HuronCustomer = _HuronCustomer_;
     EmailService = _EmailService_;
+    FeatureToggleService = _FeatureToggleService_;
 
     spyOn(Notification, 'notify');
     spyOn(Notification, 'errorResponse');
     $state.modal = jasmine.createSpyObj('modal', ['close']);
     spyOn($state, 'go');
     spyOn(EmailService, 'emailNotifyTrialCustomer').and.returnValue($q.when());
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
 
     controller = $controller('TrialAddCtrl', {
       $scope: $scope,
@@ -29,7 +31,8 @@ describe('Controller: TrialAddCtrl', function () {
       TrialService: TrialService,
       HuronCustomer: HuronCustomer,
       Notification: Notification,
-      EmailService: _EmailService_
+      EmailService: EmailService,
+      FeatureToggleService: FeatureToggleService,
     });
     $scope.$apply();
   }));
@@ -38,8 +41,8 @@ describe('Controller: TrialAddCtrl', function () {
     expect(controller).toBeDefined();
   });
 
-  it('should have empty offers', function () {
-    expect(controller.isOffersEmpty()).toBeTruthy();
+  it('should have default offers', function () {
+    expect(controller.isOffersEmpty()).toBeFalsy();
   });
 
   it('should transition state', function () {
@@ -96,9 +99,11 @@ describe('Controller: TrialAddCtrl', function () {
 
     describe('With Squared UC', function () {
       beforeEach(function () {
-        controller.offers = {
+        $scope.offers = {
           COLLAB: true,
-          SQUAREDUC: true
+          SQUAREDUC: true,
+          ROOMSYSTEMS: false,
+          WEBEXTRIALS: false,
         };
       });
 

@@ -6,21 +6,35 @@
       </span>
 
       <cs-searchfilter
-        filters="sc.deviceFilter.getFilters()"
-        search-item-fn="sc.deviceFilter.setCurrentSearch(searchStr)"
-        set-filter-fn="sc.deviceFilter.setCurrentFilter(filter.filterValue)">
+          filters="sc.deviceFilter.getFilters()"
+          search-item-fn="sc.deviceFilter.setCurrentSearch(searchStr)"
+          set-filter-fn="sc.deviceFilter.setCurrentFilter(filter.filterValue)">
       </cs-searchfilter>
 
       <button
-        class="btn btn--large btn--people add-button"
-        ng-click="sc.showAddDeviceDialog()">
+          class="btn btn--large btn--people add-button"
+          ng-click="sc.showAddDeviceDialog()">
         Add Device
       </button>
 
     </div>
   </div>
 
-  <div ng-if="sc.codesListSubscription.eventCount == 0 || sc.deviceListSubscription.eventCount == 0">
+  <cs-accordion
+      id="licenseWarning"
+      ng-show="sc.showLicenseWarning">
+    <cs-accordion-group
+        show-caret="true"
+        display-status="warning">
+      <cs-accordion-heading>
+        <span class="badge badge-custom-warn">{{'spacesPage.licenseWarningTitle' | translate}}</span>
+        <span>{{'spacesPage.licenseWarningHeader' | translate}}</span>
+      </cs-accordion-heading>
+      <p>{{sc.licenseError}}</p>
+    </cs-accordion-group>
+  </cs-accordion>
+
+  <div ng-if="!sc.shouldShowList()">
     <div class="message-container">
       <div class="empty-devices-content">
         <i class="icon icon-2x icon-spinner" />
@@ -34,7 +48,7 @@
     </div>
   </div>
 
-  <div ng-if="sc.codesListSubscription.eventCount != 0 && sc.deviceListSubscription.eventCount != 0">
+  <div ng-if="sc.shouldShowList()">
     <div ng-hide="sc.updateListAndFilter().length" class="message-container">
       <div class="empty-devices-content">
         <img ng-src="images/devices/cisco_sx10.png" />

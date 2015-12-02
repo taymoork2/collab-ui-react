@@ -12,18 +12,39 @@
     vm.emailError = false;
     vm.supportsPstnSetup = false;
     vm.startDate = new Date();
-    vm.offers = {};
+    $scope.offers = {};
     vm.showRoomSystems = false;
+    vm.showWebex = false;
 
     vm.model = {
+      roomSystemsEnabled: true,
       roomSystems: 0,
       licenseCount: 100,
       licenseDuration: 90,
     };
 
-    FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials).then(function (result) {
-      vm.showRoomSystems = result;
-    });
+    var webexField = {
+      key: Config.trials.webex,
+      type: 'checkbox',
+      model: $scope.offers,
+      templateOptions: {
+        label: $translate.instant('trials.meet'),
+        id: 'webexTrialCB',
+        class: 'small-offset-1 columns',
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function () {
+          var disabled = false;
+          if (vm.isSquaredUC()) {
+            disabled = vm.isSquaredUCEnabled();
+          }
+          if (vm.showRoomSystems) {
+            disabled = disabled || vm.isRoomSystemsTrialsEnabled();
+          }
+          return disabled;
+        },
+      },
+    };
 
     vm.custInfoFields = [{
       key: 'customerName',
@@ -56,8 +77,7 @@
       templateOptions: {
         label: $translate.instant('siteList.licenseCount'),
         labelClass: 'small-4 columns',
-        inputClass: 'small-3 columns left',
-        secondaryLabel: $translate.instant('common.users'),
+        inputClass: 'small-4 columns left',
         type: 'number',
         required: true,
       },
@@ -72,9 +92,10 @@
         },
       },
     }, {
-      key: 'COLLAB',
+      key: Config.trials.collab,
       type: 'checkbox',
-      model: vm.offers,
+      model: $scope.offers,
+      defaultValue: true,
       templateOptions: {
         label: $translate.instant('trials.collab'),
         id: 'squaredTrial',
@@ -82,7 +103,14 @@
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
-          return vm.isSquaredUCEnabled();
+          var disabled = false;
+          if (vm.isSquaredUC()) {
+            disabled = vm.isSquaredUCEnabled();
+          }
+          if (vm.showRoomSystems) {
+            disabled = disabled || vm.isRoomSystemsTrialsEnabled();
+          }
+          return disabled;
         },
         'templateOptions.label': function () {
           return FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
@@ -91,9 +119,9 @@
         },
       },
     }, {
-      key: 'SQUAREDUC',
+      key: Config.trials.squaredUC,
       type: 'checkbox',
-      model: vm.offers,
+      model: $scope.offers,
       templateOptions: {
         label: $translate.instant('trials.squaredUC'),
         id: 'squaredUCTrial',
@@ -121,20 +149,22 @@
         label: $translate.instant('partnerHomePage.duration'),
         secondaryLabel: $translate.instant('partnerHomePage.durationHelp'),
         labelClass: 'small-4 columns',
-        inputClass: 'small-3 columns left',
+        inputClass: 'small-4 columns left',
         options: [30, 60, 90],
       },
     }];
 
     vm.roomSystemsChecked = function () {
       vm.model.roomSystems = vm.model.roomSystemsEnabled ? vm.roomSystemOptions[0] : 0;
+      $scope.offers[Config.trials.cloudberry] = vm.model.roomSystemsEnabled;
     };
 
-    $scope.$watch(function () {
-      return vm.offers[Config.trials.squaredUC];
-    }, function (newValue) {
-      if (newValue) {
-        vm.offers[Config.trials.collab] = true;
+    $scope.$watchCollection('offers', function (newOffers) {
+      if (newOffers[Config.trials.cloudberry] || newOffers[Config.trials.squaredUC]) {
+        $scope.offers[Config.trials.collab] = true;
+        if (vm.showWebex) {
+          $scope.offers[Config.trials.webex] = true;
+        }
       }
     });
 
@@ -143,6 +173,7 @@
 
     vm.startTrial = startTrial;
     vm.isSquaredUCEnabled = isSquaredUCEnabled;
+    vm.isRoomSystemsTrialsEnabled = isRoomSystemsTrialsEnabled;
     vm.gotoAddNumber = gotoAddNumber;
     vm.clickStartTrial = clickStartTrial;
 
@@ -151,8 +182,32 @@
     ///////////////////////
 
     function init() {
-      FeatureToggleService.supportsPstnSetup().then(function (isSupported) {
-        vm.supportsPstnSetup = isSupported;
+      function setDefault(isTrue, object) {
+        if (object) {
+          object.defaultValue = isTrue;
+        }
+      }
+
+      setDefault(vm.isSquaredUC(), _.find(vm.individualServices, {
+        key: Config.trials.squaredUC,
+      }));
+
+      $q.all([
+        FeatureToggleService.supportsPstnSetup(),
+        FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials),
+        FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials)
+      ]).then(function (results) {
+        vm.supportsPstnSetup = results[0];
+        vm.showRoomSystems = results[1];
+        vm.showWebex = results[2];
+        if (vm.showWebex) {
+          vm.individualServices.splice(2, 0, webexField);
+        }
+        setDefault(vm.showWebex, _.find(vm.individualServices, {
+          key: Config.trials.webex,
+        }));
+        vm.model.roomSystemsEnabled = vm.showRoomSystems;
+        vm.roomSystemsChecked();
       });
     }
 
@@ -169,11 +224,15 @@
     }
 
     function isOffersEmpty() {
-      return !(vm.offers[Config.trials.collab] || vm.offers[Config.trials.squaredUC]);
+      return !($scope.offers[Config.trials.collab] || $scope.offers[Config.trials.squaredUC]);
     }
 
     function isSquaredUCEnabled() {
-      return vm.offers[Config.trials.squaredUC];
+      return $scope.offers[Config.trials.squaredUC] || false;
+    }
+
+    function isRoomSystemsTrialsEnabled() {
+      return $scope.offers[Config.trials.cloudberry] || false;
     }
 
     function gotoAddNumber() {
@@ -192,8 +251,8 @@
       }
 
       var offersList = [];
-      for (var i in vm.offers) {
-        if (vm.offers[i]) {
+      for (var i in $scope.offers) {
+        if ($scope.offers[i]) {
           offersList.push(i);
         }
       }

@@ -47,18 +47,18 @@
   </ul>
   <!-- end of breadcrumbs -->
 
-  <!-- start of cards loading -->
+  <!-- start of loading info -->
   <div ng-if="!siteSettingsObj.viewReady"
        id="loadingSection"
-       name="loadingSection" >
+       name="loadingSection"
+       align="center">
 
     <div id="loadingInprogressSection"
          name="loadingInprogressSection"
          ng-if="!siteSettingsObj.hasLoadError" >
 
       <br><br><br>
-      <i class="icon icon-spinner icon-3x"></i>
-      <br><br><br>
+      <i class="icon icon-spinner icon-2x"></i>
     </div>
 
     <div id="loadErrSection"
@@ -76,7 +76,7 @@
       </div>
     </div>
   </div>
-  <!-- end of cards loading -->
+  <!-- end of loading info -->
 
   <!-- start of card containers -->
   <div ng-if="siteSettingsObj.viewReady"

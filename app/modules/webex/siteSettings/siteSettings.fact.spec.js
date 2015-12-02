@@ -41,9 +41,6 @@ describe('WebExSiteSettingsFact Test', function () {
     expect(siteSettingsObj.sessionTicketError).toBeDefined();
     expect(siteSettingsObj.sessionTicketError).toEqual(false);
 
-    expect(siteSettingsObj.allowRetry).toBeDefined();
-    expect(siteSettingsObj.allowRetry).toEqual(false);
-
     expect(siteSettingsObj.viewReady).toBeDefined();
     expect(siteSettingsObj.viewReady).toEqual(false);
 

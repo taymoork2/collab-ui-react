@@ -289,7 +289,7 @@ describe('WebEx site settings iframe', function () {
     utils.wait(sitesettings.configureSJSITE14);
   });
 
-  /**  
+  /**
     it('should pause', function () {
       browser.pause()
     });

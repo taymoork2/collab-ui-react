@@ -105,9 +105,21 @@ describe('Controller: AAPhoneMenuCtrl', function () {
     it('should change the action for an existing key', function () {
       controller.menuEntry = angular.copy(data.ceMenu);
       controller.selectedActions = angular.copy(data.selectedActions);
-      var newAction = data.selectedActionsHuntGroup;
+      var newAction = data.selectedActionsHuntGroup.action;
       controller.keyActionChanged(0, newAction);
-      expect(controller.selectedActions[0].value).toEqual(newAction);
+      expect(controller.selectedActions[0].value).toEqual(newAction.name);
+    });
+  });
+
+  describe('createOptionMenu', function () {
+    it('should initialize CeMenu Timeout/Invalid input with repeat-menu-3 times', function () {
+      controller.createOptionMenu();
+
+      var expectedActions = angular.copy(controller.timeoutActions[0]);
+      expectedActions.childOptions = angular.copy(controller.repeatOptions);
+      expectedActions.selectedChild = angular.copy(controller.repeatOptions[2]);
+
+      expect(angular.equals(expectedActions, controller.selectedTimeout)).toEqual(true);
     });
   });
 

@@ -141,6 +141,7 @@
     "freeContactCenter": "Free Chat, Email, Voice",
     "paidMsg": "Standard Team Rooms",
     "paidConf": "25 Party Meetings",
+    "paidConfWebEx": "WebEx Meetings",
     "paidComm": "Advanced Spark Call",
     "paidContactCenter": "Chat, Email, Voice",
     "freeSpark": "Free Spark Messaging",
@@ -495,9 +496,10 @@
     "title": "CDR Call Flow",
     "searchForm": "Search Form",
     "noData": "No CDR data matches the search parameters.  Please adjust your criteria and retry.",
+    "retrievingList": "Retrieving background data necessary to complete user searches.",
     "search": "Search",
     "reset": "Reset",
-    "userLabel": "User UUID:",
+    "userLabel": "User ID:",
     "number": "Number:",
     "device": "Device:",
     "callingParty": "Calling Party",
@@ -531,8 +533,9 @@
     "cdr401Unauthorized": "User not authorized to retrieve CDR records.",
     "cdrRecursiveError": "Record size requested too large to retrieve all related CDR data.  To retrieve data, lower the 'Hit Size' count and resubmit.",
     "required": "This field is required.",
-    "userUuidError": "Input User UUIDs only.",
-    "userUuidMatchError": "User UUIDs for the calling party and called party should not match.",
+    "userDataError": "Failed to retrieve data for all users.  If the user's ID fails to work, please input the UUID instead.",
+    "userUuidError": "Input a User ID or 36 character UUID.",
+    "userUuidMatchError": "User IDs or UUIDs for the calling party and called party should not match.",
     "invalidDate": "End date should be the same day as, or any day after, the start date.",
     "tomorrowError": "Select today's date or any date before today's date.",
     "invalidTime": "Please follow 'hh:mm:ss AM/PM' format.  If 'AM/PM' is ommited, it will be assumed that 24-hour time is being used.",
@@ -864,7 +867,10 @@
     "rsuKeyDesc": "This will give Cisco Support full access to your device. Use the 'Reset' button to create a new Remote Support Access Key and invalidate any previous key you may have shared with Cisco Support.",
     "reset": "Reset",
     "rsuKeyWasReset": "The remote support key was reset. Any key you may have shared with Cisco Support is now not usable anymore.",
-    "rsuKeyResetFailed": "The remote support key reset failed, the device did not return a new key in time."
+    "rsuKeyResetFailed": "The remote support key reset failed, the device did not return a new key in time.",
+    "licenseWarningTitle": "License",
+    "licenseWarningHeader": "There is a problem with the license for this service.",
+    "licenseSuspendedWarning": "Your cloudberry license is suspended."
   },
   "hercules": {
     "page_title": "Connector Management",
@@ -1091,7 +1097,7 @@
     "confMsg": "Free 3 Party Spark Meet",
     "commMsg": "Free 1:1 Spark Call",
     "communicationsSub": "Setup calling service",
-    "claimSipUrl": "Claim SIP URI Domain",
+    "claimSipUrl": "Customize SIP URI Domain",
     "claimSipUriTitle": "Customize your company’s SIP URI domain name. This domain will be used to create a universally reachable URI for each user in your company.",
     "claimSipUriDesc": "This URI is used to receive calls from any standards-based SIP calling service. (e.g. myuser@mycompany.ciscospark.com).",
     "claimSipUriWarning": "This cannot be edited later.",
@@ -1675,7 +1681,7 @@
     "customerInformation": "Customer Information",
     "termsOfTrial": "Terms of Trial",
     "trialServices": "Trial Services",
-    "sparkRoomSystem": "Room Systems",
+    "sparkRoomSystem": "Spark Room System",
     "trialButton": "Add Trial Customer",
     "dialogTitle": "Add New Trial",
     "customerName": "Company Name",
@@ -1694,6 +1700,7 @@
     "individualUserServices": "Individual User Services",
     "roomSystems": "Room Systems",
     "roomSystem": "Room System",
+    "deviceBasedServices": "Device-based Services",
     "call": "Call"
   },
   "trialModal": {
@@ -1710,7 +1717,8 @@
   },
   "trials": {
     "collab": "Standard Team Rooms + 25 Party Meetings",
-    "squaredUC": "Advanced Spark Call"
+    "squaredUC": "Advanced Spark Call",
+    "meet": "Meeting and WebEx"
   },
   "status": {
     "noResults": "No results available.",
@@ -1754,6 +1762,7 @@
     "contactPhone": "Phone",
     "launchButton": "View Customer",
     "setupButton": "Setup Customer",
+    "myOrgButton": "View My Organization",
     "edit": "Edit Terms of Trial",
     "trialTerms": "Terms of Trial",
     "trialOverview": "Trial",
@@ -1773,7 +1782,8 @@
     "none": "None",
     "partnerLogo": "Partner Logo",
     "logoOverride": "Customer Logo Override",
-    "allowCustomerLogo": "Enable Customer Logo for {{customer}}"
+    "allowCustomerLogo": "Enable Customer Logo for {{customer}}",
+    "myOrganization": "My Organization"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
@@ -1967,7 +1977,7 @@
     "deleteResource": "Decomission Resource"
   },
   "mediaFusion": {
-    "page_title": "Media Service Management",
+    "page_title": "Media Service",
     "connectors": {
       "group_by": "Group services by:",
       "cluster_id": "Cluster",
@@ -1985,6 +1995,45 @@
       "ingress": "Extend the Cloud to Your On-Premises Environment",
       "serviceName": "Media Service Activation",
       "label": "ACTIVATE AND BEGIN SETUP"
+    },
+    "settings": {
+      "deactivateServiceHeading": "Deactivate Service",
+      "deactivateService": "Deactivating a service requires another confirm step and will remove any service related functionality from your users.",
+      "deactivate": "Deactivate",
+      "emailNotificationsHeading": "Email Notifications",
+      "emailNotifications": "Add email addresses to receive email notifications about Service impacting Alarms and Software Upgrades.",
+      "emailExample": "For example: John Doe john.doe@email.com, Kate Williams kate.williams@email.com",
+      "documentationHeading": "Documentation and software",
+      "documentation_1": "Go to",
+      "documentation_2": "Help Central",
+      "documentation_3": "for prerequisites and help installing and using Hybrid Services.",
+      "documentation_4": "Download Media Service OVA from",
+      "documentation_5": "software.cisco.com",
+      "deactivate": "DEACTIVATE",
+      "cancelCaps": "CANCEL",
+      "deactivateBody_1": "You are about to remove the following Hybrid Service for your organization:",
+      "deactivateBody_2": "Deaactivating a service will remove any service-related activity from your users. Additional steps are required to remove the service from your on-premises resources."
+    },
+    "serviceStatus": {
+      "unknown": "Status unknown",
+      "not_configured": "Not configured",
+      "installing": "Installing",
+      "disabled": "Disabled",
+      "not_installed": "Not installed",
+      "stopped": "Stopped",
+      "offline": "Offline",
+      "registered": "Registered",
+      "downloading": "Downloading",
+      "uninstalling": "Uninstalling",
+      "running": "Running",
+      "needs_attention": "Needs attention",
+      "alarm": "Alarm"
+    },
+    "clusters": {
+      "listing": {
+        "no_clusters_heading": "No Media Service clusters registered",
+        "no_clusters_text": "See required actions above and documentation to get started."
+      }
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
     "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
@@ -2022,6 +2071,7 @@
     "sessionEnablementUpdateSuccess": "Session type enablement updated.",
     "privilegesUpdateSuccess": "Privileges updated.",
     "pmrErrorTelephonyPrivileges": "Before you can create a Personal Room, set up telephony privileges for this user.",
+    "pmrErrorTelephonyPrivilegesHybridVOIP": "Before you can create a Personal Room, set up telephony privileges or integrated VoIP for this user.",
     "pmrErrorHybridAudio": "Before you can create a Personal Room, WebEx Audio must be enabled. Contact WebEx support for more information.",
     "mustHavePROorSTDifPMRenabled": "To create a Personal Room for this user, select the correct Meeting Center meeting type for Personal Room.",
     "reload": "Try Again",
@@ -2029,6 +2079,7 @@
   },
   "webexUserSettingsAccessErrors": {
     "000001": "Access denied, additional privileges are required.",
+    "000003": "SQL Exception.",
     "030001": "{{givenName}} {{familyName}} has not yet been provisioned to this site. This process may take a moment.",
     "030002": "Invalid Password",
     "030003": "The password should be at least 6 characters long.",
@@ -2530,20 +2581,28 @@
     },
     "errorCodes": {
       "mediaProtocol": {
-        "type": "Potential loss of video quality",
-        "message": "This device is communicating via the {{mediaProtocol}} protocol, which could cause higher latency and therefore reduced media streaming experience. If you are experiencing issues with your media streaming, you can try to open UDP port 33434 on your local firewall to aid media streaming issues."
+        "type": "Network Ports Blocked",
+        "message": "Firewall may be blocking media on UDP port 33434. Call quality may be impacted."
+      },
+      "TCPMediaFallback": {
+        "type": "Network Ports Blocked",
+        "message": "Firewall may be blocking media on UDP port 33434. Call quality may be impacted."
+      },
+      "MediaBlockingDetected": {
+        "type": "Network Ports Blocked",
+        "message": "Firewall may be blocking media on UDP and TCP port 33434. Calls will fail to connect."
       },
       "TemperatureCheck": {
         "type": "High temperature",
-        "message": "The system temperature is high, this may cause a system shut down."
+        "message": "System temperature is too high."
       },
       "OSDVideoOutput": {
-        "type": "No monitor connected",
-        "message": "Verify that the monitor is turned on and check the HDMI connection between the video endpoint and the monitor."
+        "type": "Main Display Not Detected",
+        "message": "Verify that the main display is turned on and connected to the correct display output on the video system."
       },
       "noupgrade": {
-        "type": "System does not automatically update",
-        "message": "The system is set up to not receive automatic updates."
+        "type": "Automatic Updates Disabled",
+        "message": "System software will not be updated."
       },
       "unknown": {
         "type": "Unknown Error Occurred",
@@ -2661,6 +2720,7 @@
   },
 
   "huronHuntGroup": {
+    "modalTitle": "Hunt Group",
     "title": "hunt group",
     "createTitle": "Create Hunt Group",
     "namePlaceholder": "Name the Hunt Group",
@@ -2720,8 +2780,10 @@
     "numberPlural": "Numbers",
     "numbersInputPlaceHolder": "Start typing here",
     "ringTimeLabel": "Member's Max Ring Time",
+    "ringTimeSecondaryLabel": "secs",
     "ringTimeDesc": "The maximum amount of time a member's line will ring before it sent to the next number.",
     "waitTimeLabel": "Caller Max Wait Time",
+    "waitTimeSecondaryLabel": "mins",
     "waitTimeDesc": "The maximum time a caller will be in waiting before sent to fallback destination.",
     "fallbackLabel": "Fallback Destination",
     "fallbackDesc": "This is where the call goes if it was not answered by this hunt group.",
@@ -2777,7 +2839,7 @@
         "title": "Room Systems",
         "currentTitle": "Online this week",
         "previousTitle": "Last week:",
-        "notEnabledText": "Meeting room video endpoints that seamlessly integrate with your cloud collaboration."
+        "notEnabledText": "Meeting room systems seamlessly integrated with the Spark app."
       },
       "hybrid": {
         "title": "Hybrid Services",
@@ -2811,24 +2873,24 @@
     "partner": "Partner",
     "customer": "Customer",
     "searchCriteriaLink": "Show supported search criteria.",
-    "searchInfo": "Search users by Email, Phone Number or Display Name (two words required). Search company by Display Name.",
+    "searchInfo": "Search users by Email, Phone Number or Display Name (two words required). Search company by Display Name. Search devices by Display Name, Serial or MAC Address (Note: device search is supported only when searching a specific customer).",
     "devices": "Devices",
     "mobile": "mobile",
     "work": "work",
     "fax": "fax",
     "searchingOrg": "Searching {{name}}",
-    "userStatus": "Status",
-    "userId": "Id",
+    "status": "Status",
     "organization": "Customer",
+    "accountCreated": "Account Created",
     "customerPortalLaunch": "Launch Customer Portal",
     "contact": "Contact",
-    "claimedDomain": "Claimed Domain",
-    "partners": "Partners",
+    "managedBy": "Managed By",
     "administratorUsers": "Administrator Users",
     "message": "Message",
     "meeting": "Meeting",
     "call": "Call",
     "rooms": "Rooms",
+    "claimedDomain": "Claimed Domains",
     "hybridServices": "Hybrid Services",
     "entitlements": {
       "webex-squared": "Free Spark Messaging",
@@ -2848,8 +2910,35 @@
       "compliance": "Compliance"
     },
     "entitlementsHeading": "Entitlements",
-    "enabledServices": "Enabled Services",
+    "enabledServices": "Active",
+    "availableServices": "Available",
     "none": "None",
-    "webexsites": "WebEx Sites"
+    "webexsites": "WebEx Sites",
+    "phoneNumbers": "Phone Numbers",
+    "software": "Software",
+    "serial": "Serial",
+    "macAddress": "MAC Address",
+    "badOrgSearchInput": "Searching for customers requires a minimum of three characters.",
+    "unknown": "Unknown",
+    "showMore": "Show more results",
+    "delegatedAdministration": "manages {{numManages}} organizations",
+    "licenses": "Licenses",
+    "licenseTypes": {
+      "MESSAGING": "{{volume}} x Standard Team Rooms",
+      "CONFERENCING": "{{volume}} x 25 Party Meetings",
+      "COMMUNICATIONS": "{{volume}} x Advanced Spark Call",
+      "SHARED_DEVICES": "{{volume}} x Room Devices"
+    },
+    "trial": "Trial",
+    "adminUsers": "Administrators",
+    "showAllAdminUsers": "Show all {{numUsers}} administrators",
+    "hideAllAdminUsers": "Hide administrators",
+    "numDaysLeft": "{{days}} day(s) left",
+    "licenseStatus": {
+      "expired": "Expired",
+      "cancelled": "Cancelled",
+      "suspended": "Suspended",
+      "pending": "Pending"
+    }
   }
 }

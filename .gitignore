@@ -14,6 +14,7 @@
 .bower-cache
 .bower-registry
 .e2e-fail-notify
+.oauth_token_metadata
 
 build
 coverage

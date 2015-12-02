@@ -1,51 +1,97 @@
 .helpdesk-app-container {
   background-color: $brand-white;
-  height: 100%;
-  overflow: hidden;
+  overflow-x: hidden; // Remove horizontal IE/Edge scrollbar
 }
 .helpdesk-content-view {
+  font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
   background-color: $brand-white;
-  height: 100%;
-  min-height: 100vh;
   margin-left: 2rem;
   margin-right: 2rem;
   padding-top: 4rem;
+  padding-bottom: 2rem;
+  min-height: 95vh;
+  a:focus {
+    outline: none;
+    box-shadow: none;
+  }
   p {
     margin-bottom: 1rem;
   }
-  .user-view {
-    .vw-90 {
-      max-width: 90vw;
+  .circle-status-icon {
+    font-size: 0.575rem;
+  }
+  .helpdesk-details {
+    h3 {
+      color: $gray-dark-4;
+      margin-bottom: 1rem;
     }
-    .user-info {
-      margin-bottom: 0.5rem;
-      font-size: 0.875rem;
-      .action {
-        padding: 2px;
-        width: 5rem;
-      }
-      span {
-        font-size: inherit;
-      }
-      .user-value {
-      }
-    }
-    .display-name {
-      margin-bottom: 0.5rem;
+    h4 {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
     }
     .head {
       margin-bottom: 1rem;
       margin-top: 2rem;
     }
+    .org-card-footer {
+      background-color: $gray-light-4;
+      padding-bottom: 0.5rem;
+      padding-top: 0.5rem;
+      padding-right: 1rem;
+      border-radius: 0 0 3px 3px;
+      font-size: 0.675rem;
+      .status {
+        line-height: 1rem;
+      }
+      .operational {
+        color: $color-cta-base;
+      }
+      .warning,
+      .partial_outage {
+        color: $color-attention-base;
+      }
+      .error {
+        color: $color-alerts-base;
+      }
+      .unknown {
+        color: $gray-base;
+      }
+    }
+    .customer-or-partner {
+      font-size: 0.75rem;
+      color: $gray-dark-1;
+      margin-top: -0.5rem;
+      margin-bottom: 1rem;
+    }
+    .details-heading {
+      margin-bottom: 1rem;
+    }
+    .details-value {
+      color: $gray-dark-1;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+    }
+    .details-value-device {
+      color: $gray-dark-1;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+    }
+    .cs-card-layout.cs-card-block {
+      padding-right: 0;
+      padding-left: 0.5rem;
+    }
   }
 }
-.helpdesk-landing {
+
+.helpdesk-search {
   padding-top: 1rem;
   text-align: center;
   .pointer {
     cursor: pointer;
   }
   table {
+    margin-left: auto;
+    margin-right: auto;
     tbody {
       tr {
         border-top: transparent;
@@ -59,14 +105,6 @@
         color: $anchor-font-color-hover;
       }
     }
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .card-section {
-    text-align: left;
-    padding-left: 1.5rem;
-    padding-bottom: 1rem;
-    overflow: hidden;
   }
   h1 {
     margin-bottom: 1rem;
@@ -93,12 +131,23 @@
     max-width: 100%;
     margin-left: auto;
     margin-right: auto;
+    input {
+      display: block;
+      position: relative;
+      z-index: 1;
+    }
     .icon-search {
       position: absolute;
       right: 0;
+      top: 0;
       font-size: 1rem;
       width: 2.5rem;
       height: 2.5rem;
+      z-index: 3;
+      min-width: 2.5rem;
+      @media screen and (-moz-images-in-menus:0) {
+        top: 0 !important;
+      }
     }
     .helpdesk-tile {
       height: 2.25rem;
@@ -125,30 +174,46 @@
     .cs-card:first-child {
       margin-top: 0;
     }
+    .cs-card:last-child {
+      margin-bottom: 1rem;
+    }
     .cs-card {
       header {
-        h5, h5 a {
+        h5,
+        h5 a {
+          color: $gray-dark-3;
           padding-left: 0.5rem;
           font-size: 0.875rem;
           font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
-          color: $gray-dark-3;
         }
       }
       section {
+        text-align: left;
+        padding-left: 1.5rem;
+        padding-bottom: 1rem;
+        overflow: hidden;
+        color: $gray-base;
         div,
         span {
           font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
         }
+        .belongs-to-org {
+          padding-right: 0.5rem;
+          font-size: 0.75rem;
+        }
       }
     }
-    .cs-card{
-      .clickable-area{
+    .cs-card {
+      .clickable-area {
         display: block;
         background-color: rgba(0,0,0,0);
         width: 85%;
         height: 53px;
         position: absolute;
         top: 0;
+      }
+      article {
+        border: 1px solid white;
       }
     }
     .cs-card:hover {
@@ -175,25 +240,47 @@
       }
     }
   }
+  .show-more-results {
+    margin-bottom: 1rem;
+  }
 }
-
 .helpdesk-cards {
   .cs-card section {
     text-align: left;
     padding-left: 1.5rem;
     padding-bottom: 1rem;
+    padding-right: 1.5rem;
     overflow: hidden;
+    color: $gray-dark-1;
+    font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    .red {
+      color: $color-alerts-base;
+    }
   }
-  // Reset the weird cta class that messes up the hybrid services card
   .cta {
-    padding: 0;
     border-bottom: 0;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    padding-top: 0;
+    padding-bottom: 0;
   }
   h5 {
     margin-top: 0.5rem;
+    color: black;
+  }
+  .label {
+    margin-bottom: 0;
+    padding: 0.1rem 0.5rem 0.1rem;
+    margin-right: 0.5rem;
+  }
+  .cs-donut-svg {
+    margin-top: 1rem;
+    margin-left: 0;
+  }
+  .cs-donut-text {
+    font-size: 4rem;
   }
 }
-
 .helpdesk-red {
   color: $color-negative-base;
 }
@@ -206,9 +293,93 @@
 .helpdesk-yellow {
   color: $color-attention-base;
 }
-
-.helpdesk-landing:focus{
+.helpdesk-error {
+  color: $color-negative-base;
+}
+.helpdesk-ok {
+  color: $color-cta-base;
+}
+.helpdesk-warning {
+  color: $color-attention-base;
+}
+.helpdesk-search:focus {
   outline: none !important;
   outline: 0 !important;
   border: 0 !important;
+}
+@media only screen and (max-width: 1024px) {
+  .helpdesk-details {
+    .details-value {
+      margin-top: -1rem;
+      margin-bottom: 1rem;
+      width: 100%;
+      display: block;
+    }
+  }
+  .helpdesk-cards {
+    .cs-card {
+      padding: 0;
+      width: 100%;
+      article {
+        width: 100%;
+      }
+    }
+  }
+}
+@media only screen and (max-width: 800px) {
+  .helpdesk-cards {
+    .cs-card-layout {
+      width: 100%;
+      .cs-card {
+        width: 100%;
+      }
+    }
+  }
+}
+@media only screen and (max-width: 640px) {
+  .helpdesk-app-container {
+    .fixed.top-bar- {
+      .top-bar .left .name .header-title {
+        display: none;
+      }
+      .top-bar .right .dropdown-menu {
+        position: fixed !important;
+        right: 0.5rem;
+        top: 3.5rem;
+      }
+    }
+  }
+}
+@media only screen and (max-width: 500px) {
+  .helpdesk-cards {
+    .cs-card-layout {
+      .cs-card {
+        width: 100%;
+        max-width: 100%;
+      }
+    }
+  }
+  .details-value-device {
+    margin-top: -1rem;
+    margin-bottom: 1rem;
+    width: 100%;
+    display: block;
+  }
+  .helpdesk-search {
+    padding-top: 0;
+    h1 {
+      font-size: 30px;
+    }
+    .typeahead-large {
+      input {
+        font-size: 20px;
+      }
+      .icon-search {
+        font-size: 0.75rem;
+        width: 1.5rem;
+        height: 1.5rem;
+        min-width: 1.5rem;
+      }
+    }
+  }
 }

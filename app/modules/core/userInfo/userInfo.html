@@ -25,12 +25,6 @@
         {{'index.support' | translate}}
       </a>
     </li>
-    <li id="launch-partner-btn" ng-show="isPartner">
-      <a ui-sref="launch_partner_org({partnerOrgId: orgId, partnerOrgName: orgname, launchPartner: true})" tabindex="0" target="_blank">
-        <i class="fa fa-external-link fa-lg" style="padding:10px;"></i>
-        {{'index.launchPartner' | translate}}
-      </a>
-    </li>
     <li id="logout-btn" ng-show="loggedIn">
       <a ng-click="logout()" tabindex="0">
         <i class="fa fa-sign-out fa-lg" style="padding:10px;"></i>

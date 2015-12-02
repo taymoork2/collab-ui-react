@@ -83,7 +83,7 @@ describe('Partner flow', function () {
 
       utils.sendKeys(partner.customerNameInput, partner.newTrial.customerName);
       utils.sendKeys(partner.customerEmailInput, partner.newTrial.customerEmail);
-      utils.click(partner.squaredTrialCheckbox);
+      utils.click(partner.roomSystemsCheckbox);
 
       utils.click(partner.startTrialButton);
       notifications.assertSuccess(partner.newTrial.customerName, 'A trial was successfully started');
@@ -191,7 +191,9 @@ describe('Partner flow', function () {
       appWindow = browser.getWindowHandle();
 
       utils.expectIsDisplayed(navigation.userInfoButton);
-      navigation.launchPartnerOrgPortal();
+      utils.click(partner.allFilter);
+      utils.click(partner.myOrganization);
+      utils.click(partner.launchButton);
 
       utils.switchToNewWindow().then(function () {
 

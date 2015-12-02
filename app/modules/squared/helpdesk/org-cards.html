@@ -1,100 +1,210 @@
 <cs-card-layout block-view="true" class="helpdesk-cards">
-  <cs-card class="large header-bar primary" ng-show="helpdeskOrgCtrl.showCard('message')">
+  <cs-card class="large header-bar primary" ng-if="helpdeskOrgCtrl.messageCard.entitled">
     <article>
       <header class="align-center">
-        <h4>
-          <i class="icon icon-circle-message"/>
-          {{'helpdesk.message' | translate}}
-        </h4>
+        <div class="overview-header">
+          <i class="icon icon-circle-message"></i>{{'helpdesk.message' | translate}}
+        </div>
       </header>
       <section>
-        <p>Nothing here yet</p>
+        <h5 translate="helpdesk.licenses"></h5>
+        <span ng-if="helpdeskOrgCtrl.messageCard.licenses.length === 0" translate="helpdesk.none"></span>
+
+        <div ng-repeat="license in helpdeskOrgCtrl.messageCard.licenses">
+          <span class="label warning" ng-if="license.isTrial" translate="helpdesk.trial"></span>
+          <span>{{license.displayName}}</span>
+          <span ng-if="license.isTrial || license.status !== 'ACTIVE'">| </span>
+          <span
+            ng-if="license.isTrial && license.trialExpiresInDays > 0">{{helpdeskOrgCtrl.daysLeftText(license)}}</span>
+          <span ng-if="license.isTrial && license.trialExpiresInDays == 0"
+                class="red">{{'helpdesk.licenseStatus.expired' |  translate}}</span>
+          <span ng-if="license.status && license.status !== 'ACTIVE'"
+                class="red">{{'helpdesk.licenseStatus.' + (license.status | lowercase) | translate}}</span>
+          <span ng-if="helpdeskOrgCtrl.licenseUsageReady">| Using {{license.usage || 0}} ({{(license.usage*100)/license.volume || 0}}%)</span>
+        </div>
       </section>
-      <footer></footer>
+      <footer class="org-card-footer">
+        <span class="status right">
+          <a ng-href="{{helpdeskOrgCtrl.statusPageUrl}}" target="_blank">
+            <i class="icon icon-circle circle-status-icon" ng-class="helpdeskOrgCtrl.healthStatuses.message"></i>
+          </a>
+        </span>
+      </footer>
     </article>
   </cs-card>
 
-  <cs-card class="large header-bar meetings" ng-show="helpdeskOrgCtrl.showCard('meeting')">
+  <cs-card class="large header-bar meetings" ng-show="helpdeskOrgCtrl.meetingCard.entitled">
     <article>
       <header class="align-center">
-        <h4>
-          <i class="icon icon-circle-group"/>
-          {{'helpdesk.meeting' | translate}}
-        </h4>
+        <div class="overview-header">
+          <i class="icon icon-circle-group"></i>{{'helpdesk.meeting' | translate}}
+        </div>
       </header>
       <section>
-        <p>Nothing here yet</p>
+        <h5 translate="helpdesk.licenses"></h5>
+        <span ng-if="helpdeskOrgCtrl.meetingCard.licenses.length === 0" translate="helpdesk.none"></span>
+
+        <div ng-repeat="license in helpdeskOrgCtrl.meetingCard.licenses">
+          <span class="label warning" ng-if="license.isTrial" translate="helpdesk.trial"></span>
+          <span>{{license.displayName}}</span>
+          <span ng-if="license.isTrial || license.status !== 'ACTIVE'">| </span>
+          <span
+            ng-if="license.isTrial && license.trialExpiresInDays > 0">{{helpdeskOrgCtrl.daysLeftText(license)}}</span>
+          <span ng-if="license.isTrial && license.trialExpiresInDays == 0"
+                class="red">{{'helpdesk.licenseStatus.expired' |  translate}}</span>
+          <span ng-if="license.status && license.status !== 'ACTIVE'"
+                class="red">{{'helpdesk.licenseStatus.' + (license.status | lowercase)| translate}}</span>
+          <span ng-if="helpdeskOrgCtrl.licenseUsageReady">| Using {{license.usage || 0}} ({{(license.usage*100)/license.volume || 0}}%)</span>
+        </div>
       </section>
-      <footer></footer>
+      <footer class="org-card-footer">
+        <span class="status right">
+          <a ng-href="{{helpdeskOrgCtrl.statusPageUrl}}" target="_blank">
+            <i class="icon icon-circle circle-status-icon" ng-class="helpdeskOrgCtrl.healthStatuses.meeting"></i>
+          </a>
+        </span>
+      </footer>
     </article>
   </cs-card>
 
-  <cs-card class="large header-bar people" ng-show="helpdeskOrgCtrl.showCard('call')">
+  <cs-card class="large header-bar people" ng-show="helpdeskOrgCtrl.callCard.entitled">
     <article>
       <header class="align-center">
-        <h4>
-          <i class="icon icon-circle-call"/>
-          {{'helpdesk.call' | translate}}
-        </h4>
+        <div class="overview-header">
+          <i class="icon icon-circle-call"></i>{{'helpdesk.call' | translate}}
+        </div>
       </header>
       <section>
-        <p>Nothing here yet</p>
+        <h5 translate="helpdesk.licenses"></h5>
+        <span ng-if="helpdeskOrgCtrl.callCard.licenses.length === 0" translate="helpdesk.none"></span>
+
+        <div ng-repeat="license in helpdeskOrgCtrl.callCard.licenses">
+          <span class="label warning" ng-if="license.isTrial" translate="helpdesk.trial"></span>
+          <span>{{license.displayName}}</span>
+          <span ng-if="license.isTrial || license.status !== 'ACTIVE'">| </span>
+          <span
+            ng-if="license.isTrial && license.trialExpiresInDays > 0">{{helpdeskOrgCtrl.daysLeftText(license)}}</span>
+          <span ng-if="license.isTrial && license.trialExpiresInDays == 0"
+                class="red">{{'helpdesk.licenseStatus.expired' |  translate}}</span>
+          <span ng-if="license.status && license.status !== 'ACTIVE'"
+                class="red">{{'helpdesk.licenseStatus.' + (license.status | lowercase) | translate}}</span>
+          <span ng-if="helpdeskOrgCtrl.licenseUsageReady">| Using {{license.usage || 0}} ({{(license.usage*100)/license.volume || 0}}%)</span>
+        </div>
       </section>
-      <footer></footer>
+      <footer class="org-card-footer">
+        <span class="status right">
+          <a ng-href="{{helpdeskOrgCtrl.statusPageUrl}}" target="_blank">
+            <i class="icon icon-circle circle-status-icon" ng-class="helpdeskOrgCtrl.healthStatuses.call"></i>
+          </a>
+        </span>
+      </footer>
     </article>
   </cs-card>
 
-  <cs-card class="large header-bar grey" ng-show="helpdeskOrgCtrl.showCard('room')">
+  <cs-card class="large header-bar grey" ng-show="helpdeskOrgCtrl.roomSystemsCard.entitled">
     <article>
       <header class="align-center">
-        <h4>
-          <i class="icon icon-circle-telepresence"/>
-          {{'helpdesk.rooms' | translate}}
-        </h4>
+        <div class="overview-header">
+          <i class="icon icon-circle-telepresence"></i>{{'helpdesk.rooms' | translate}}
+        </div>
       </header>
       <section>
-        <p>Nothing here yet</p>
+        <h5 translate="helpdesk.licenses"></h5>
+        <span ng-if="helpdeskOrgCtrl.roomSystemsCard.licenses.length === 0" translate="helpdesk.none"></span>
+
+        <div ng-repeat="license in helpdeskOrgCtrl.roomSystemsCard.licenses">
+          <span class="label warning" ng-if="license.isTrial" translate="helpdesk.trial"></span>
+          <span>{{license.displayName}}</span>
+          <span ng-if="license.isTrial || license.status !== 'ACTIVE'">| </span>
+          <span
+            ng-if="license.isTrial && license.trialExpiresInDays > 0">{{helpdeskOrgCtrl.daysLeftText(license)}}</span>
+          <span ng-if="license.isTrial && license.trialExpiresInDays == 0"
+                class="red">{{'helpdesk.licenseStatus.expired' |  translate}}</span>
+          <span ng-if="license.status && license.status !== 'ACTIVE'"
+                class="red">{{'helpdesk.licenseStatus.' + (license.status | lowercase) | translate}}</span>
+          <span ng-if="helpdeskOrgCtrl.licenseUsageReady">| Using {{license.usage || 0}} ({{(license.usage*100)/license.volume || 0}}%)</span>
+        </div>
       </section>
-      <footer></footer>
+      <footer class="org-card-footer">
+        <span class="status right">
+          <a ng-href="{{helpdeskOrgCtrl.statusPageUrl}}" target="_blank">
+            <i class="icon icon-circle circle-status-icon" ng-class="helpdeskOrgCtrl.healthStatuses.room"></i>
+          </a>
+        </span>
+      </footer>
     </article>
   </cs-card>
 
-  <cs-card class="large header-bar cta" ng-show="helpdeskOrgCtrl.showCard('hybrid')">
+  <cs-card class="large header-bar cta" ng-show="helpdeskOrgCtrl.hybridServicesCard.entitled">
     <article>
       <header class="align-center">
-        <h4>
-          <i class="icon icon-circle-world"/>
-          {{'helpdesk.hybridServices' | translate}}
-        </h4>
+        <div class="overview-header">
+          <i class="icon icon-circle-data"></i>{{'helpdesk.hybridServices' | translate}}
+        </div>
       </header>
       <section>
         <h5 translate="helpdesk.enabledServices"></h5>
 
-        <div ng-repeat="hybridService in helpdeskOrgCtrl.enabledHybridServices">
-          <span translate="{{'hercules.serviceNames.' + hybridService.id}}"></span>
+        <div ng-repeat="hybridService in helpdeskOrgCtrl.hybridServicesCard.enabledHybridServices">
+          <span>
+            <i class="icon icon-circle circle-status-icon"
+               ng-class="hybridService.status ? ('helpdesk-' + hybridService.status) : 'helpdesk-grey'"></i>
+          </span>
+          <span ng-if="hybridService.id != 'squared-fusion-uc'"
+                translate="{{'hercules.serviceNames.' + hybridService.id}}"></span>
+          <span ng-if="hybridService.id == 'squared-fusion-uc'"
+                translate="hercules.serviceNames.squared-fusion-uc.full"></span>
         </div>
-        <div ng-if="!helpdeskOrgCtrl.enabledHybridServices || helpdeskOrgCtrl.enabledHybridServices.length === 0">
+        <div
+          ng-if="!helpdeskOrgCtrl.hybridServicesCard.enabledHybridServices || helpdeskOrgCtrl.hybridServicesCard.enabledHybridServices.length === 0">
           <span translate="helpdesk.none"></span>
         </div>
+
+        <h5 translate="helpdesk.availableServices"></h5>
+
+        <div
+          ng-if="!helpdeskOrgCtrl.hybridServicesCard.availableHybridServices || helpdeskOrgCtrl.hybridServicesCard.availableHybridServices.length === 0">
+          <span translate="helpdesk.none"></span>
+        </div>
+        <div ng-repeat="hybridService in helpdeskOrgCtrl.hybridServicesCard.availableHybridServices">
+          <span ng-if="hybridService.id != 'squared-fusion-uc'"
+                translate="{{'hercules.serviceNames.' + hybridService.id}}"></span>
+          <span ng-if="hybridService.id == 'squared-fusion-uc'"
+                translate="hercules.serviceNames.squared-fusion-uc.full"></span>
+        </div>
       </section>
-      <footer></footer>
+      <footer class="org-card-footer">
+        <span class="status right">
+          <a ng-href="{{helpdeskOrgCtrl.statusPageUrl}}" target="_blank">
+            <span>
+              <i class="icon icon-circle circle-status-icon right" ng-class="helpdeskOrgCtrl.healthStatuses.hybrid"></i>
+            </span>
+          </a>
+        </span>
+      </footer>
     </article>
   </cs-card>
 
-  <cs-card class="large" ng-show="helpdeskOrgCtrl.showCard('users')">
+  <cs-card class="large">
     <article>
       <header class="align-center">
-        <h4 translate="helpdesk.users"></h4>
+        <div class="overview-header">
+          <i class="icon icon-circle-user"></i>{{'helpdesk.users' | translate}}
+        </div>
       </header>
       <section>
         <div>
-          <span><i class="icon icon-circle"
-                   ng-class="helpdeskOrgCtrl.org.dirsyncEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i></span>
+          <span>
+            <i class="icon icon-circle circle-status-icon"
+               ng-class="helpdeskOrgCtrl.org.dirsyncEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
+          </span>
           <span translate="helpdesk.dirSync"></span>
         </div>
         <div>
-          <span><i class="icon icon-circle"
-                   ng-class="helpdeskOrgCtrl.org.ssoEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i></span>
+          <span>
+            <i class="icon icon-circle circle-status-icon"
+               ng-class="helpdeskOrgCtrl.org.ssoEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
+          </span>
           <span translate="helpdesk.sso"></span>
         </div>
       </section>

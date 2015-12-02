@@ -34,14 +34,21 @@
       _this.funcName = "ReportsIframeCtrl()";
       _this.logMsg = "";
 
+      $scope.showSpinner = (
+        ("storage_utilization" == $stateParams.reportPageId) ||
+        ("support_center_support_sessions" == $stateParams.reportPageId) ||
+        ("support_center_allocation_queue" == $stateParams.reportPageId) ||
+        ("support_center_call_volume" == $stateParams.reportPageId) ||
+        ("support_center_csr_activity" == $stateParams.reportPageId) ||
+        ("support_center_url_referral" == $stateParams.reportPageId)
+      ) ? false : true;
+
       $scope.siteUrl = $stateParams.siteUrl;
       $scope.indexPageSref = "webex-reports({siteUrl:'" + $stateParams.siteUrl + "'})";
       $scope.reportPageId = $stateParams.reportPageId;
       $scope.reportPageTitle = $translate.instant("webexReportsPageTitles." + $scope.reportPageId);
       $scope.reportPageIframeUrl = $stateParams.reportPageIframeUrl;
       $scope.iframeUrl = $stateParams.reportPageIframeUrl;
-
-      $scope.webexAdvancedUrl = Config.getWebexAdvancedEditUrl($stateParams.siteUrl);
 
       // for iframe request
       $scope.trustIframeUrl = $sce.trustAsResourceUrl($scope.iframeUrl);

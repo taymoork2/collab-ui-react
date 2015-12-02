@@ -2,75 +2,120 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskOrgController(Config, $stateParams, HelpdeskService, XhrNotificationService, Authinfo) {
+  function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsService, Config, $translate, LicenseService) {
+    $('body').css('background', 'white');
     var vm = this;
-    var orgId = null;
     if ($stateParams.org) {
       vm.org = $stateParams.org;
-      orgId = vm.org.id;
+      vm.orgId = vm.org.id;
     } else {
-      orgId = $stateParams.id;
+      vm.orgId = $stateParams.id;
     }
-    vm.showCard = showCard;
+    vm.messageCard = {};
+    vm.meetingCard = {};
+    vm.callCard = {};
+    vm.hybridServicesCard = {};
+    vm.roomSystemsCard = {};
+    vm.healthStatuses = {
+      message: 'unknown',
+      meeting: 'unknown',
+      call: 'unknown',
+      room: 'unknown',
+      hybrid: 'unknown'
+    };
+    vm.statusPageUrl = Config.getStatusPageUrl();
+    vm.initialAdminUserLimit = 3;
+    vm.adminUserLimit = vm.initialAdminUserLimit;
+    vm.showAllAdminUsers = showAllAdminUsers;
+    vm.hideAllAdminUsers = hideAllAdminUsers;
+    vm.daysLeftText = daysLeftText;
+    vm.licenseUsageReady = false;
 
-    HelpdeskService.getOrg(orgId).then(function (res) {
-      vm.org = res;
-      findPartners(vm.org);
-    }, function (err) {
-      XhrNotificationService.notify(err);
-    });
+    HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
+    HelpdeskCardsService.getHealthStatuses().then(initHealth, angular.noop);
 
-    if (hasEntitlement(Config.entitlements.fusion_mgmt)) {
-      HelpdeskService.getHybridServices(orgId).then(function (services) {
-        vm.enabledHybridServices = _.filter(services, {
-          enabled: true
-        });
-      }, function (err) {
-        XhrNotificationService.notify(err);
-      });
-    }
+    function initOrgView(org) {
+      vm.org = org;
+      vm.delegatedAdministration = org.delegatedAdministration ? $translate.instant('helpdesk.delegatedAdministration', {
+        numManages: org.manages ? org.manages.length : 0
+      }) : null;
 
-    /*
-      message : entitlement = "webex-squared" ?
-      meeting (webex) : entitlement = "webex-messenger" ?
-      call(huron) : authinfo.issquareduc()
-      hybrid: Authinfo.isFusion()
-      room (cloudberry): Authinfo.isDeviceManagement()
-     */
-    // TODO: Move and and reuse between user and org ?
-    function showCard(type) {
-      switch (type) {
-        //TODO: Check for the CORRECT entitlements !!!
-      case 'message':
-        return hasEntitlement(Config.entitlements.squared); //???
-      case 'meeting':
-        return hasEntitlement("webex-messenger"); // ???
-      case 'call':
-        return hasEntitlement(Config.entitlements.huron);
-      case 'hybrid':
-        return hasEntitlement(Config.entitlements.fusion_mgmt);
-      case 'room':
-        return hasEntitlement(Config.entitlements.device_mgmt);
-      }
-      return true;
+      LicenseService.getLicensesInOrg(vm.orgId).then(function (licenses) {
+        initCards(licenses);
+        findLicenseUsage();
+      }, XhrNotificationService.notify);
+
+      findManagedByOrgs(org);
+      findWebExSites(org);
+      findAdminUsers(org);
     }
 
-    function hasEntitlement(entitlement) {
-      if (vm.org && vm.org.services) {
-        return _.includes(vm.org.services, entitlement);
-      }
-      return false;
+    function initCards(licenses) {
+      vm.messageCard = HelpdeskCardsService.getMessageCardForOrg(vm.org, licenses);
+      vm.meetingCard = HelpdeskCardsService.getMeetingCardForOrg(vm.org, licenses);
+      vm.callCard = HelpdeskCardsService.getCallCardForOrg(vm.org, licenses);
+      vm.hybridServicesCard = HelpdeskCardsService.getHybridServicesCardForOrg(vm.org);
+      vm.roomSystemsCard = HelpdeskCardsService.getRoomSystemsCardForOrg(vm.org, licenses);
     }
 
-    function findPartners(org) {
+    function initHealth(healthStatuses) {
+      vm.healthStatuses = healthStatuses;
+    }
+
+    function findManagedByOrgs(org) {
       if (org.managedBy && org.managedBy.length > 0) {
-        org.partners = [];
-        _.each(org.managedBy, function (parnterOrg) {
-          HelpdeskService.getOrg(parnterOrg.orgId).then(function (res) {
-            org.partners.push(res);
-          }, function (err) {});
+        org.managedByOrgs = [];
+        _.each(org.managedBy, function (managingOrg) {
+          HelpdeskService.getOrgDisplayName(managingOrg.orgId).then(function (displayName) {
+            if (displayName) {
+              org.managedByOrgs.push({
+                id: managingOrg.orgId,
+                displayName: displayName
+              });
+            }
+          }, angular.noop);
         });
       }
+    }
+
+    function findWebExSites(org) {
+      if (LicenseService.orgIsEntitledTo(org, 'cloudMeetings')) {
+        HelpdeskService.getWebExSites(vm.orgId).then(function (sites) {
+          vm.org.webExSites = sites;
+        }, XhrNotificationService.notify);
+      }
+    }
+
+    function findAdminUsers(org) {
+      HelpdeskService.searchUsers('', org.id, 100, 'id_full_admin').then(function (users) {
+        vm.adminUsers = users;
+        vm.showAllAdminUsersText = $translate.instant('helpdesk.showAllAdminUsers', {
+          numUsers: users.length
+        });
+      }, XhrNotificationService.notify);
+    }
+
+    function findLicenseUsage() {
+      if (vm.orgId != Config.ciscoOrgId) {
+        LicenseService.getLicensesInOrg(vm.orgId, true).then(function (licenses) {
+          initCards(licenses);
+          vm.licenseUsageReady = true;
+        }, XhrNotificationService.notify);
+      }
+    }
+
+    function showAllAdminUsers() {
+      vm.adminUserLimit = vm.adminUsers.length;
+    }
+
+    function hideAllAdminUsers() {
+      vm.adminUserLimit = vm.initialAdminUserLimit;
+    }
+
+    function daysLeftText(license) {
+      return $translate.instant('helpdesk.numDaysLeft', {
+        days: license.trialExpiresInDays
+      });
     }
   }
 

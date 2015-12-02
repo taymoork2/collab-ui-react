@@ -1,4 +1,4 @@
-<div class="helpdesk-landing centered" tabindex="1" ng-keyup="helpdeskCtrl.keypressValidation($event)">
+<div class="helpdesk-search centered" tabindex="1" ng-keyup="helpdeskCtrl.keyPressHandler($event)">
 
   <h1 translate="helpdesk.helpdesk"></h1>
 
@@ -7,7 +7,9 @@
            placeholder=""
            ng-model="helpdeskCtrl.searchString" ,
            ng-keypress="($event.which === 13) ? helpdeskCtrl.search() : 0" autofocus="true" />
-    <button type="button" tabindex="-1" class="btn btn--circle btn--primary icon icon-search" ng-click="helpdeskCtrl.search()" ng-disabled="helpdeskCtrl.searchString == ''" ></button>
+
+    <button type="button" tabindex="-1" class="btn btn--circle btn--primary icon icon-search"
+            ng-click="helpdeskCtrl.search()" ng-disabled="helpdeskCtrl.searchString == ''"></button>
 
     <div class="input-description">
       <p>
@@ -46,21 +48,32 @@
           <p translate="helpdesk.noSearchHits"></p>
         </div>
 
-        <cs-card-layout ng-if="helpdeskCtrl.currentSearch.userSearchResults.length > 0">
-          <cs-card class="full pointer" ng-repeat="user in helpdeskCtrl.currentSearch.userSearchResults">
-            <article tabindex="{{$index * 10 + 1}}"  ui-sref="helpdesk.user({user:user, id: user.id, orgId: user.organization.id})">
+        <div ng-if="helpdeskCtrl.currentSearch.userSearchResults.length > 0">
+          <cs-card class="full pointer"
+                   ng-repeat="user in helpdeskCtrl.currentSearch.userSearchResults | limitTo:helpdeskCtrl.currentSearch.userLimit">
+            <article tabindex="{{$index * 10 + 1}}"
+                     ui-sref="helpdesk.user({user:user, id:user.id, orgId:user.organization.id})">
               <header>
                 <h5>{{user.displayName}}</h5>
               </header>
-              <section class="card-section">
+              <section>
                 <div><span>{{user.userName}}</span></div>
                 <div ng-repeat="number in user.phoneNumbers">
                   <span>{{number.value}} ({{'helpdesk.' + number.type | translate}})</span>
                 </div>
+                <div ng-if="user.organization.displayName" class="right">
+                  <span class="belongs-to-org">{{user.organization.displayName}}</span>
+                </div>
               </section>
             </article>
           </cs-card>
-        </cs-card-layout>
+        </div>
+
+        <div ng-if="helpdeskCtrl.currentSearch.userSearchResults.length > helpdeskCtrl.currentSearch.userLimit"
+             class="show-more-results">
+          <span><a href ng-click="helpdeskCtrl.showMoreResults('user')" translate="helpdesk.showMore"></a></span>
+        </div>
+
       </div>
 
       <div class="medium-6 large-4 columns"
@@ -81,9 +94,10 @@
           <p translate="helpdesk.noSearchHits"></p>
         </div>
 
-        <cs-card-layout ng-if="helpdeskCtrl.currentSearch.orgSearchResults.length > 0">
-          <cs-card class="full pointer" ng-repeat="org in helpdeskCtrl.currentSearch.orgSearchResults">
-            <article tabindex="{{$index * 10 + 2}}" ui-sref="helpdesk.org({org:org, id: org.id})">
+        <div ng-if="helpdeskCtrl.currentSearch.orgSearchResults.length > 0">
+          <cs-card class="full pointer"
+                   ng-repeat="org in helpdeskCtrl.currentSearch.orgSearchResults | limitTo:helpdeskCtrl.currentSearch.orgLimit">
+            <article tabindex="{{$index * 10 + 2}}" ui-sref="helpdesk.org({org:org, id:org.id})">
               <header>
                 <h5>
                   {{org.displayName}}
@@ -91,12 +105,18 @@
                     class="icon icon-search"></i></a>
                 </h5>
               </header>
-              <section class="card-section">
+              <section>
               </section>
-              <section class="clickable-area" ui-sref="helpdesk.org({org:org, id: org.id})"></section>
+              <section class="clickable-area" ui-sref="helpdesk.org({org:org, id:org.id})"></section>
             </article>
           </cs-card>
-        </cs-card-layout>
+        </div>
+
+        <div ng-if="helpdeskCtrl.currentSearch.orgSearchResults.length > helpdeskCtrl.currentSearch.orgLimit"
+             class="show-more-results">
+          <span><a href ng-click="helpdeskCtrl.showMoreResults('org')" translate="helpdesk.showMore"></a></span>
+        </div>
+
       </div>
 
       <div class="medium-6 large-4 columns"
@@ -113,7 +133,7 @@
         <div ng-if="!helpdeskCtrl.currentSearch.orgFilter">
           <p>Global device search is not supported yet.</p>
 
-          <p>Find the customer first and then search for devices.</p>
+          <p>Find the customer first, click the search icon and then search for devices.</p>
         </div>
 
         <div ng-if="helpdeskCtrl.currentSearch.deviceSearchFailure">
@@ -125,20 +145,31 @@
           <p translate="helpdesk.noSearchHits"></p>
         </div>
 
-        <cs-card-layout ng-if="helpdeskCtrl.currentSearch.deviceSearchResults.length > 0">
-          <cs-card class="full pointer" ng-repeat="device in helpdeskCtrl.currentSearch.deviceSearchResults">
-            <article tabindex="{{$index * 10 + 3}}" ui-sref="helpdesk.device({device:device})">
+        <div ng-if="helpdeskCtrl.currentSearch.deviceSearchResults.length > 0">
+          <cs-card class="full pointer"
+                   ng-repeat="device in helpdeskCtrl.currentSearch.deviceSearchResults | limitTo:helpdeskCtrl.currentSearch.deviceLimit">
+            <article tabindex="{{$index * 10 + 3}}"
+                     ui-sref="helpdesk.device({device:device, id:device.id, orgId:helpdeskCtrl.currentSearch.orgFilter.id})">
               <header>
                 <h5>{{device.displayName}}</h5>
               </header>
-              <section class="card-section">
+              <section>
                 <div ng-if="device.product"><span>{{device.product}}</span></div>
                 <div ng-if="device.serial"><span>{{device.serial}}</span></div>
                 <div ng-if="device.mac"><span>{{device.mac}}</span></div>
+                <div ng-if="device.organization.displayName" class="right">
+                  <span class="belongs-to-org">{{device.organization.displayName}}</span>
+                </div>
               </section>
             </article>
           </cs-card>
-        </cs-card-layout>
+        </div>
+
+        <div ng-if="helpdeskCtrl.currentSearch.deviceSearchResults.length > helpdeskCtrl.currentSearch.deviceLimit"
+             class="show-more-results">
+          <span><a href ng-click="helpdeskCtrl.showMoreResults('device')" translate="helpdesk.showMore"></a></span>
+        </div>
+
       </div>
 
     </div>

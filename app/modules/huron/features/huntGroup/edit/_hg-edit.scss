@@ -49,7 +49,7 @@
     font-size: $font-size-base;
   }
   .hg-time .formly-input-wrapper {
-    width: 9rem;
+    width: 8.5rem;
     font-family: $brand-font-light;
     font-size: $font-size-base;
   }
@@ -126,7 +126,6 @@
 .hgmethod {
   display: flex !important;
   flex: none;
-  @include vr-spacing(pr, 0);
   &.current {
     > a {
       background: $gray-light-4;

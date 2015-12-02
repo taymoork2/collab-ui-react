@@ -11,9 +11,6 @@
     vm.loading = true;
     vm.selectProvider = selectProvider;
 
-    var exampleNumbers_US = "15556667777, +15556667777, 1-555-666-7777, +1 (555) 666-7777";
-    var exampleNumbers_AU = "61255566777, +61255566777, +61 2 5556 6777";
-
     init();
 
     ////////////////////////
@@ -104,7 +101,6 @@
           vendor: carrier.vendor,
           countryCode: carrier.countryCode,
           country: carrier.country,
-          exampleNumbers: exampleNumbers_US,
           logoSrc: 'images/carriers/logo_intelepeer.svg',
           logoAlt: 'IntelePeer',
           title: 'IntelePeer Pro6S',
@@ -124,7 +120,6 @@
           vendor: carrier.vendor,
           countryCode: carrier.countryCode,
           country: carrier.country,
-          exampleNumbers: exampleNumbers_US,
           logoSrc: 'images/carriers/logo_tata_comm.svg',
           logoAlt: 'Tata',
           title: 'Tata Smart Voice Bundle',
@@ -145,7 +140,6 @@
           vendor: carrier.vendor,
           countryCode: carrier.countryCode,
           country: carrier.country,
-          exampleNumbers: exampleNumbers_AU,
           logoSrc: 'images/carriers/logo_telstra.svg',
           logoAlt: 'Telstra',
           title: 'Telstra',
