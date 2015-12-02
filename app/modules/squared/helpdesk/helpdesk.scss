@@ -148,6 +148,7 @@
       width: 2.5rem;
       height: 2.5rem;
       z-index: 3;
+      min-width: 2.5rem;
       @media screen and (-moz-images-in-menus:0) {
         top: 0 !important;
       }
@@ -351,5 +352,22 @@
     margin-bottom: 1rem;
     width: 100%;
     display: block;
+  }
+  .helpdesk-search {
+    padding-top: 0;
+    h1 {
+      font-size: 30px;
+    }
+    .typeahead-large {
+      input {
+        font-size: 20px;
+      }
+      .icon-search {
+        font-size: 0.75rem;
+        width: 1.5rem;
+        height: 1.5rem;
+        min-width: 1.5rem;
+      }
+    }
   }
 }
