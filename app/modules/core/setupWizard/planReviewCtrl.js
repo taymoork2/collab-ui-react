@@ -64,7 +64,7 @@
       vm.confServices.services = Authinfo.getConferenceServices() || [];
       angular.forEach(vm.confServices.services, function (service) {
         if (service.label.indexOf('Meeting Center') != -1) {
-          service.label = 'Meeting Center';
+          service.label = 'Meeting Center' + ' ' + service.license.capacity;
         }
         if (service.license.isTrial) {
           vm.trialExists = true;
@@ -133,7 +133,7 @@
               if (!vm.sites[service.license.siteUrl]) {
                 vm.sites[service.license.siteUrl] = [];
               }
-              service.label = $translate.instant('onboardModal.cmr');
+              service.label = $translate.instant('onboardModal.cmr') + ' ' + service.license.capacity;
               vm.sites[service.license.siteUrl].push(service);
             }
           }
@@ -144,7 +144,7 @@
           if (!vm.sites[cmrService.license.siteUrl]) {
             vm.sites[cmrService.license.siteUrl] = [];
           }
-          cmrService.label = $translate.instant('onboardModal.cmr');
+          cmrService.label = $translate.instant('onboardModal.cmr') + ' ' + cmrService.license.capacity;
           vm.sites[cmrService.license.siteUrl].push(cmrService);
         }
       }

@@ -141,7 +141,7 @@
     "callFree": "Call Free",
     "freeContactCenter": "Free Chat, Email, Voice",
     "paidMsg": "Standard Team Rooms",
-    "paidConf": "25 Party Meetings",
+    "paidConf": "Meeting 25 Party",
     "paidConfWebEx": "WebEx Meetings",
     "paidComm": "Advanced Spark Call",
     "paidContactCenter": "Chat, Email, Voice",
@@ -153,7 +153,7 @@
     "eventCenter": "Event Center {{capacity}}",
     "communication": "Communication",
     "cloudExtensions": "Hybrid Services",
-    "cmr": "Collaboration Meeting Rooms"
+    "cmr": "Collaboration Meeting Room"
   },
   "usersPreview": {
     "groupPreview": "Group:",
@@ -243,7 +243,7 @@
     "messengerTabDesc": "Webex Messenger Administration",
     "calendarServiceTab": "Calendar",
     "calendarServiceTabDesc": "Calendar Service",
-    "callServiceTab": "Call",
+    "callServiceTab": "Call Service",
     "callServiceTabDesc": "Call Service",
     "expresswayManagementServiceTab": "Management Service",
     "expresswayManagementServiceTabDesc": "Expressway Management Service"
@@ -1099,6 +1099,7 @@
     "conferencing": "Conferencing",
     "communications": "Communications",
     "roomSystems": "Room Systems",
+    "sparkRoomSystem": "Spark Room System",
     "freeMsg": "Message Free",
     "freeMtg": "Meeting Free 3 Party",
     "freeCall": "Call Free",
