@@ -86,6 +86,15 @@ angular.module('WebExReports').service('WebexReportService', [
       "training_usage": "tc_usage"
     };
 
+    //All card names are hard coded in all languages except for the commom 
+    //reports tag.
+    var card_name_translations = {
+      "training_center": "Traning Center",
+      "support_center": "Support Center",
+      "event_center": "Event Center",
+      "remote_access": "Remote Access"
+    };
+
     /*var pinnnedItems = ["meeting_usage", "attendee", "event_center_overview",
       "support_center_allocation_queue"
     ];*/
@@ -194,7 +203,22 @@ angular.module('WebExReports').service('WebexReportService', [
       this.report_links = reportLinks;
       this.category_Name = categoryName;
       this.lang = lang;
-      this.section_name_translated = $translate.instant("webexSiteReports." + this.section_name);
+
+      this.translate_section_name = function (sec_name) {
+        var translated_name = sec_name;
+        //only translate common reports
+
+        var name = sec_name.toLowerCase();
+        var isCommonReport = (name == "common_reports");
+        if (isCommonReport) {
+          translated_name = $translate.instant("webexSiteReports." + self.section_name);
+        } else {
+          translated_name = card_name_translations[sec_name];
+        }
+        return translated_name;
+      };
+      this.section_name_translated = this.translate_section_name(this.section_name);
+
       //We have to rewrite this with the actual uirefs with proper reportids
       //right now I've hardcoded as reportID.
       this.uisrefs = self.report_links.map(function (thelink) {

@@ -437,7 +437,15 @@ exports.expectSwitchState = function (elem, value) {
   });
 };
 
-exports.expectCheckbox = exports.expectSwitchState;
+exports.expectCheckbox = function (elem, value) {
+  return this.wait(elem).then(function () {
+    log('Waiting for element to be checked: ' + elem.locator() + ' ' + value);
+    var input = elem.element(by.tagName('input'));
+    return input.isSelected().then(function (isSelected) {
+      return value === isSelected;
+    });
+  });
+};
 
 exports.expectRadioSelected = function (elem) {
   return this.wait(elem).then(function () {

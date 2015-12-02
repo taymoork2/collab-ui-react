@@ -1,4 +1,7 @@
-@import 'customCombobox/_custom-combobox';
+.huronsettings {
+  @extend %content-header;
+  @extend %page-background-white;
+}
 
 .huron-settings {
   position: relative;
@@ -23,43 +26,55 @@
     }
 
     label {
-      font-size: 1.5rem;
+      font-size: 1.1rem;
     }
 
     .service-setup-timezone-column {
       .formly-input-wrapper {
-        width: 100%
+        width: calc(100% - 1rem);
       }
     }
 
-    .nested {
-      label {
-        font-size: 1rem;
-      }
-    }
-
-    .caller-id-name {
-      .formly-input-wrapper {
-        width: 50%
-      }
-    }
-
-    .caller-id-number {
-      .formly-input-wrapper {
-        width: 55%;
+    .formly-field-nested {
+      .formly-template-wrapper {
+        margin-bottom: 1rem;
       }
     }
 
     .trash-icon {
       @extend .icon;
       @extend .icon-trash;
-      font-size: 1.8rem;
+      font-size: 1.7rem;
     }
 
-    .icon-button-delete {
+    .icon-button-delete, .service-setup-extension {
       .formly-template-wrapper {
         margin-bottom: 0;
       }
+    }
+
+    .formly-template-wrapper {
+      margin-bottom: 3rem;
+    }
+
+    .formly-template-wrapper, .service-setup {
+      label {
+        margin-bottom: 1rem;
+      }
+    }
+
+    .caller-id ng-form {
+      width: 100%;
+      .caller-id-name {
+        width: 70%;
+      }
+      .caller-id-number {
+        width: 40%;
+      }
+    }
+
+    .company-voicemail {
+      margin-top: 3rem;
     }
   }
 

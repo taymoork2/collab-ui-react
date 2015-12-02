@@ -65,7 +65,7 @@ angular.module('Squared')
         '</div>';
 
       var actionsTemplate = '<span dropdown>' +
-        '<button id="actionsButton" class="btn--icon btn--actions dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
+        '<button id="actionsButton" class="btn--none dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
         '<i class="icon icon-three-dots"></i>' +
         '</button>' +
         '<ul class="dropdown-menu dropdown-primary" role="menu">' +

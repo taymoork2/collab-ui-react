@@ -1,11 +1,6 @@
 <div class="vts-list">
-<div class="row page-header">
-    <div class="page-title col-md-8 col-sm-8">
-      <!--span class="title">{{'vtsPage.enterpriseResources' | translate}}</span-->
-	   <h2 class="title-heading">{{'vtsPage.enterpriseResources' | translate}}&nbsp;&nbsp;<small class="count">All {{totalResults}}</small></h2>
-    </div>
- </div>
- <div class="row">
+ <cs-page-header title="{{::'vtsPage.enterpriseResources' | translate}}"></cs-page-header>
+<div class="row">
     <div gridscrollbar class="gridStyle col-md-12" ng-grid="gridOptions">
     </div>
 </div>

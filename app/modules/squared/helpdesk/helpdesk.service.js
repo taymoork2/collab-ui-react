@@ -45,6 +45,25 @@
       return org;
     }
 
+    function extractUsers(res) {
+      var users = res.data.items;
+      _.each(users, function (user) {
+        user.displayName = getCorrectedDisplayName(user);
+      });
+      return users;
+    }
+
+    function getCorrectedDisplayName(user) {
+      var displayName = '';
+      if (user.name != null) {
+        displayName = user.name.givenName + ' ' + user.name.familyName;
+      }
+      if (!displayName) {
+        return user.displayName;
+      }
+      return displayName;
+    }
+
     function useMock() {
       return $location.absUrl().match(/helpdesk-backend=mock/);
     }
@@ -55,7 +74,7 @@
       }
       return $http
         .get(urlBase + 'helpdesk/search/users?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit + (orgId ? '&orgId=' + encodeURIComponent(orgId) : '') + (role ? '&role=' + encodeURIComponent(role) : ''))
-        .then(extractItems);
+        .then(extractUsers);
     }
 
     function searchOrgs(searchString, limit) {
@@ -159,6 +178,7 @@
 
     function extractUserAndSetUserStatuses(res) {
       var user = res.data;
+      user.displayName = getCorrectedDisplayName(user);
       if (!user.accountStatus) {
         user.statuses = [];
         if (user.active) {
@@ -172,6 +192,34 @@
         });
       }
       return user;
+    }
+
+    function findAndResolveOrgsForUserResults(userSearchResults, orgFilter, userLimit) {
+      if (_.size(userSearchResults) > 0) {
+        if (orgFilter) {
+          _.each(userSearchResults, function (user) {
+            user.organization.displayName = orgFilter.displayName;
+          });
+        } else {
+          var orgs = [];
+          var currentResults = _.take(userSearchResults, userLimit);
+          _.each(currentResults, function (user) {
+            if (!user.organization.displayName) {
+              orgs.push(user.organization.id);
+            }
+          });
+          _.each(_.uniq(orgs), function (orgId) {
+            getOrgDisplayName(orgId).then(function (displayName) {
+              _.each(userSearchResults, function (user) {
+                if (user.organization && user.organization.id === orgId) {
+                  user.organization.displayName = displayName;
+                }
+              });
+            }, angular.noop);
+          });
+        }
+
+      }
     }
 
     function resendInviteEmail(displayName, email) {
@@ -212,7 +260,8 @@
       resendInviteEmail: resendInviteEmail,
       getWebExSites: getWebExSites,
       getCloudberryDevice: getCloudberryDevice,
-      getOrgDisplayName: getOrgDisplayName
+      getOrgDisplayName: getOrgDisplayName,
+      findAndResolveOrgsForUserResults: findAndResolveOrgsForUserResults
     };
   }
 

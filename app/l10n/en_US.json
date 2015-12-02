@@ -496,9 +496,10 @@
     "title": "CDR Call Flow",
     "searchForm": "Search Form",
     "noData": "No CDR data matches the search parameters.  Please adjust your criteria and retry.",
+    "nonexistentUser": "{{calltype}} User Id is incorrect or does not exist for this customer.  Please verify the field and retry.",
     "search": "Search",
     "reset": "Reset",
-    "userLabel": "User UUID:",
+    "userLabel": "User ID:",
     "number": "Number:",
     "device": "Device:",
     "callingParty": "Calling Party",
@@ -532,8 +533,9 @@
     "cdr401Unauthorized": "User not authorized to retrieve CDR records.",
     "cdrRecursiveError": "Record size requested too large to retrieve all related CDR data.  To retrieve data, lower the 'Hit Size' count and resubmit.",
     "required": "This field is required.",
-    "userUuidError": "Input User UUIDs only.",
-    "userUuidMatchError": "User UUIDs for the calling party and called party should not match.",
+    "userDataError": "Failed to retrieve data for the user ID(s).  Please verify the user's ID and try again, or use the UUID if you have it.",
+    "userUuidError": "Input a User ID or 36 character UUID.",
+    "userUuidMatchError": "User IDs or UUIDs for the calling party and called party should not match.",
     "invalidDate": "End date should be the same day as, or any day after, the start date.",
     "tomorrowError": "Select today's date or any date before today's date.",
     "invalidTime": "Please follow 'hh:mm:ss AM/PM' format.  If 'AM/PM' is ommited, it will be assumed that 24-hour time is being used.",
@@ -613,7 +615,10 @@
     "id": "ID",
     "new": "New",
     "devices": "Devices",
-    "users": "Users"
+    "users": "Users",
+    "settings": "Settings",
+    "resources": "Resources",
+    "download": "Download"
   },
   "notifications": {
     "success": "Success notifications",
@@ -834,7 +839,7 @@
     "title": "Devices",
     "modalTitle": "Activate a New Device",
     "add": "Activate a New Device",
-    "addBtn": "Generate activation code",
+    "addBtn": "Add Device",
     "cancel": "Cancel",
     "delete": "Delete",
     "deleteActivationCode": "Delete Activation Code",
@@ -865,7 +870,11 @@
     "rsuKeyDesc": "This will give Cisco Support full access to your device. Use the 'Reset' button to create a new Remote Support Access Key and invalidate any previous key you may have shared with Cisco Support.",
     "reset": "Reset",
     "rsuKeyWasReset": "The remote support key was reset. Any key you may have shared with Cisco Support is now not usable anymore.",
-    "rsuKeyResetFailed": "The remote support key reset failed, the device did not return a new key in time."
+    "rsuKeyResetFailed": "The remote support key reset failed, the device did not return a new key in time.",
+    "noDevices": "No devices found...",
+    "licenseWarningTitle": "License",
+    "licenseWarningHeader": "There is a problem with the license for this service.",
+    "licenseSuspendedWarning": "Your cloudberry license is suspended."
   },
   "hercules": {
     "page_title": "Connector Management",
@@ -1092,7 +1101,7 @@
     "confMsg": "Free 3 Party Spark Meet",
     "commMsg": "Free 1:1 Spark Call",
     "communicationsSub": "Setup calling service",
-    "claimSipUrl": "Claim SIP URI Domain",
+    "claimSipUrl": "Customize SIP URI Domain",
     "claimSipUriTitle": "Customize your company’s SIP URI domain name. This domain will be used to create a universally reachable URI for each user in your company.",
     "claimSipUriDesc": "This URI is used to receive calls from any standards-based SIP calling service. (e.g. myuser@mycompany.ciscospark.com).",
     "claimSipUriWarning": "This cannot be edited later.",
@@ -1676,7 +1685,7 @@
     "customerInformation": "Customer Information",
     "termsOfTrial": "Terms of Trial",
     "trialServices": "Trial Services",
-    "sparkRoomSystem": "Room Systems",
+    "sparkRoomSystem": "Spark Room System",
     "trialButton": "Add Trial Customer",
     "dialogTitle": "Add New Trial",
     "customerName": "Company Name",
@@ -1695,6 +1704,7 @@
     "individualUserServices": "Individual User Services",
     "roomSystems": "Room Systems",
     "roomSystem": "Room System",
+    "deviceBasedServices": "Device-based Services",
     "call": "Call"
   },
   "trialModal": {
@@ -1711,7 +1721,8 @@
   },
   "trials": {
     "collab": "Standard Team Rooms + 25 Party Meetings",
-    "squaredUC": "Advanced Spark Call"
+    "squaredUC": "Advanced Spark Call",
+    "meet": "Meeting and WebEx"
   },
   "status": {
     "noResults": "No results available.",
@@ -2918,13 +2929,21 @@
     "delegatedAdministration": "manages {{numManages}} organizations",
     "licenses": "Licenses",
     "licenseTypes": {
-      "MESSAGING": "{{volume}} Standard Team Rooms",
-      "CONFERENCING": "{{volume}} 25 Party Meetings",
-      "COMMUNICATIONS": "{{volume}} Advanced Spark Call",
-      "SHARED_DEVICES": "{{volume}} Room Devices"
+      "MESSAGING": "{{volume}} x Standard Team Rooms",
+      "CONFERENCING": "{{volume}} x 25 Party Meetings",
+      "COMMUNICATIONS": "{{volume}} x Advanced Spark Call",
+      "SHARED_DEVICES": "{{volume}} x Room Devices"
     },
     "trial": "Trial",
     "adminUsers": "Administrators",
-    "showAllAdminUsers": "Show all {{numUsers}} users"
+    "showAllAdminUsers": "Show all {{numUsers}} administrators",
+    "hideAllAdminUsers": "Hide administrators",
+    "numDaysLeft": "{{days}} day(s) left",
+    "licenseStatus": {
+      "expired": "Expired",
+      "cancelled": "Cancelled",
+      "suspended": "Suspended",
+      "pending": "Pending"
+    }
   }
 }

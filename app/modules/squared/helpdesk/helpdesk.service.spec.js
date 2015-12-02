@@ -70,8 +70,47 @@ describe('HelpdeskService', function () {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  it("list hybrid services", function () {
+  it('resolves org displayname for user', function () {
+    var orgSearchResponseMock = {
+      "items": [{
+        "id": "2222",
+        "displayName": "Bill Gates Foundation"
+      }]
+    };
+
+    var userSearchResult = [{
+      "active": true,
+      "id": "1111",
+      "organization": {
+        id: "2222"
+      },
+      "userName": "bill.gates",
+      "displayName": "Bill Gates"
+    }];
+
+    $httpBackend
+      .when('GET', urlBase + 'helpdesk/search/organizations?phrase=2222&limit=1')
+      .respond(orgSearchResponseMock);
+
+    expect(userSearchResult[0].organization.displayName).toBeFalsy();
+
+    Service.findAndResolveOrgsForUserResults(userSearchResult, null, 10);
+
+    $httpBackend.flush();
+
+    expect(userSearchResult[0].organization.displayName).toEqual("Bill Gates Foundation");
+
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
+  it("get list of hybrid services relevant services in an org", function () {
     var serviceDescriptionsMock = [{
+      "acknowledged": false,
+      "emailSubscribers": "",
+      "enabled": false,
+      "id": "squared-not-fusion",
+    }, {
       "acknowledged": false,
       "emailSubscribers": "",
       "enabled": false,
@@ -90,7 +129,7 @@ describe('HelpdeskService', function () {
       "acknowledged": false,
       "emailSubscribers": "",
       "enabled": false,
-      "id": "squared-fusion-irrelevant",
+      "id": "squared-a-cool-service",
     }];
 
     sinon.stub(ServiceDescriptor, 'servicesInOrg');
@@ -104,6 +143,7 @@ describe('HelpdeskService', function () {
     });
 
     $scope.$apply();
+    expect(result.length).toBe(3);
     expect(result[0].id).toEqual("squared-fusion-uc");
     expect(result[1].id).toEqual("squared-fusion-cal");
     expect(result[2].id).toEqual("squared-fusion-mgmt");

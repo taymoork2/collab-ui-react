@@ -297,6 +297,9 @@ Run the protractor e2e test:
 * Skips the e2e setup task
 * You will need to have started a server manually using the `gulp connect` task
 
+##### `gulp e2e --nofailfast`
+* Runs tests without skipping after first failure
+
 ##### `gulp e2e --debug`
 * Runs protractor in 'debug' mode
 * See [Debugging Protractor Tests](https://github.com/angular/protractor/blob/master/docs/debugging.md) for details

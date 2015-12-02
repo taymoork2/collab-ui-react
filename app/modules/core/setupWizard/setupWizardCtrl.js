@@ -93,7 +93,6 @@ angular.module('Core')
         setupAddUserSubTabs();
 
         if (Authinfo.isSquaredUC()) {
-          $scope.tabs.splice(2, 1);
           $scope.tabs.splice(1, 0, {
             name: 'serviceSetup',
             required: true,
@@ -136,7 +135,7 @@ angular.module('Core')
               name: 'serviceSetup',
             });
             if (angular.isDefined(communicationsTab)) {
-              communicationsTab.steps.splice(1, 0, claimSipUrlStep);
+              communicationsTab.steps.splice(0, 0, claimSipUrlStep);
             }
           } else {
             var communicationsStep = {

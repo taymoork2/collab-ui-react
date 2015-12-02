@@ -1,8 +1,12 @@
+.profile {
+  @extend %content-subheader;
+  @extend %page-content-padding;
+  @extend %page-background-white;
+}
+
 .partner-profile {
-  padding-left: 40px;
-  .partner-page-title {
-    margin-bottom: 30px;
-  }
+  padding: 2rem 1.5rem;
+  background: $white;
 
   .nav {
     float: left;
@@ -40,10 +44,6 @@
     }
   }
 
-  .save-row {
-    margin-top: 25px;
-  }
-
   .add-link {
     margin-top: 10px;
   }
@@ -72,14 +72,6 @@
     padding-right: 50px;
   }
 
-  .save-button {
-    padding: 20px;
-  }
-
-  .page-title {
-    padding: 28px 0 28px 0px;
-  }
-
   .grant-row {
     padding-top: 20px;
   }
@@ -91,7 +83,7 @@
 
   .radio-column {
     width: 10px;
-    padding-right: 40px;
+    padding-right: 1rem;
   }
 
   .optional-row {
