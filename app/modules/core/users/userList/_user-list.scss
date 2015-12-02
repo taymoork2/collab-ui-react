@@ -1,4 +1,7 @@
 .user-list {
+  @extend %grid-subheader;
+  @extend %page-background-white;
+
   .ngCell.col0 .ngVerticalBar, .ngHeaderCell.col0 .ngVerticalBar {
     display: none;
   }

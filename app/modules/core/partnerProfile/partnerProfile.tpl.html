@@ -14,199 +14,201 @@
       </button>
     </cs-page-sub-header-right>
   </cs-page-sub-header>
-  <div class="partner-profile">
-    <!-- company name / account number -->
-    <div class="row" id="companyInfoPanel">
-      <div class="columns small-7">
-        <h2 translate="partnerProfile.companyInfo"></h2>
-        <div class="form-group">
-          <!-- <div class="columns small-4"> -->
-          <label for="company-name" translate="partnerProfile.name"></label>
-          <input class="form-control" name="test2" type="text" ng-model="companyName" disabled="true" id="company-name">
-          <!-- </div> -->
-        </div>
-        <div class="form-group">
-          <!-- <div class="columns small-4"> -->
-          <label for="company-id" translate="partnerProfile.id"></label>
-          <input id="company-id" class="form-control" type="text" disabled="true">
-          <!-- </div> -->
-        </div>
-      </div>
-    </div>
-    <!-- cisco rep -->
-    <div class="row cisco-rep-panel" id="ciscoRepPanel" ng-show="rep !== null || partner !== null">
-      <div class="columns small-12 form-section">
-        <h2 ng-if="isPartner" translate="partnerProfile.ciscoRep"></h2>
-        <h2 ng-if="!isPartner" translate="customerProfile.supportContacts"></h2>
-        <div class="form-spacing">
-          <div ng-show="rep !== null">
-            <h3 ng-if="!isPartner" translate="partnerProfile.ciscoRep"></h3>
-            <span class="rep-info">{{rep.name.givenName | translate}} {{partner.name.familyName | translate}}</span>
-            <span class="rep-info" translate="rep.displayName"></span>
-            <span class="rep-info" translate="rep.userName"></span>
-            <!-- grant cisco access checkbox -->
-            <div class="row grant-row" ng-show="false">
-              <div class="columns small-12">
-                <cs-checkbox ckid="ckbox1" ng-model="cb.checkboxValue0" label="{{grant | translate}}"></cs-checkbox>
-              </div>
-            </div>
+  <div class="content-container">
+    <div class="partner-profile">
+      <!-- company name / account number -->
+      <div class="row" id="companyInfoPanel">
+        <div class="columns small-7">
+          <h2 translate="partnerProfile.companyInfo"></h2>
+          <div class="form-group">
+            <!-- <div class="columns small-4"> -->
+            <label for="company-name" translate="partnerProfile.name"></label>
+            <input class="form-control" name="test2" type="text" ng-model="companyName" disabled="true" id="company-name">
+            <!-- </div> -->
           </div>
-          <div ng-if="!isPartner && partner !== null">
-            <h3 translate="customerProfile.partnerAdmin"></h3>
-            <span class="rep-info">{{partner.displayName}}</span>
-            <span class="rep-info">{{partner.userName}}</span>
+          <div class="form-group">
+            <!-- <div class="columns small-4"> -->
+            <label for="company-id" translate="partnerProfile.id"></label>
+            <input id="company-id" class="form-control" type="text" disabled="true">
+            <!-- </div> -->
           </div>
         </div>
       </div>
-    </div>
-    <!-- branding logo upload -->
-    <div ng-if="isPartner || allowCustomerLogos">
-      <div class="row" id="brandingLogoPanel">
-        <div class="small-7 columns">
-          <h2 translate="partnerProfile.brandingTitle"></h2>
+      <!-- cisco rep -->
+      <div class="row cisco-rep-panel" id="ciscoRepPanel" ng-show="rep !== null || partner !== null">
+        <div class="columns small-12 form-section">
+          <h2 ng-if="isPartner" translate="partnerProfile.ciscoRep"></h2>
+          <h2 ng-if="!isPartner" translate="customerProfile.supportContacts"></h2>
           <div class="form-spacing">
-            <span ng-if="!isPartner" translate="customerProfile.brandingInfo"></span>
-            <span ng-if="isPartner" translate="partnerProfile.brandingInfo"></span>
-          </div>
-        </div>
-      </div>
-      <div class="row form-spacing">
-        <div class="small-12 medium-7 columns">
-          <div class="row">
-            <div class="small-2 columns">
-              <label class="cs-radio" for="partnerLogoRadio">
-                <input type="radio" id="partnerLogoRadio" ng-model="usePartnerLogo" ng-value="true" ng-change="toggleLogo(usePartnerLogo)">
-                <span></span>
-              </label>
-            </div>
-            <div class="small-10 columns">
-              <span ng-if="isPartner" translate="partnerProfile.useCiscoLogo"></span>
-              <span ng-if="!isPartner" translate="customerProfile.usePartnerLogo" translate-value-partner="{{partner.displayName}}"></span>
-            </div>
-          </div>
-          <div class="row">
-            <div class="small-2 columns">
-              <label class="cs-radio" for="customLogoRadio">
-                <input type="radio" id="customLogoRadio" ng-model="usePartnerLogo" ng-value="false" ng-change="toggleLogo(usePartnerLogo)">
-                <span></span>
-              </label>
-            </div>
-            <div class="small-8 columns">
-              <div class="drop-box" ngf-drop="upload($file, $event)" ng-model="logoFile" ngf-drag-over-class="dragover" ngf-validate="{{logoCriteria}}">
-                <img class="thumbnail" alt="newLogo" ngf-src="logoFile" ng-hide="logoError" />
-                <img class="thumbnail" alt="currentLogo" ng-src="{{tempLogoUrl}}" ng-if="!logoFile && tempLogoUrl" onerror="this.style.display='none'" />
-                <p class="vertical-align text-center" translate="partnerProfile.logoPlaceholder" ng-hide="logoFile"></p>
+            <div ng-show="rep !== null">
+              <h3 ng-if="!isPartner" translate="partnerProfile.ciscoRep"></h3>
+              <span class="rep-info">{{rep.name.givenName | translate}} {{partner.name.familyName | translate}}</span>
+              <span class="rep-info" translate="rep.displayName"></span>
+              <span class="rep-info" translate="rep.userName"></span>
+              <!-- grant cisco access checkbox -->
+              <div class="row grant-row" ng-show="false">
+                <div class="columns small-12">
+                  <cs-checkbox ckid="ckbox1" ng-model="cb.checkboxValue0" label="{{grant | translate}}"></cs-checkbox>
+                </div>
               </div>
             </div>
-            <div class="small-2 columns">
-              <div class="btn btn--primary" name="file" accept="image/png" ngf-select="upload($file, $event)" ng-model="logoFile" ngf-validate="{{logoCriteria}}">
-                <span translate="partnerProfile.chooseFile"></span>
-              </div>
+            <div ng-if="!isPartner && partner !== null">
+              <h3 translate="customerProfile.partnerAdmin"></h3>
+              <span class="rep-info">{{partner.displayName}}</span>
+              <span class="rep-info">{{partner.userName}}</span>
             </div>
           </div>
         </div>
       </div>
-      <div class="row form-spacing">
-        <div class="small-12 medium-7 columns">
-          <div class="row" ng-if="isPartner">
-            <div class="small-2 columns">
-              <label class="cs-checkbox" for="allowCustomerLogo">
-                <input type="checkbox" id="allowCustomerLogo" ng-model="allowCustomerLogos" ng-change="toggleAllowCustomerLogos(allowCustomerLogos)">
-                <span></span>
-              </label>
-            </div>
-            <div class="small-10 columns">
-              <span translate="partnerProfile.allowCustomerLogo"></span>
+      <!-- branding logo upload -->
+      <div ng-if="isPartner || allowCustomerLogos">
+        <div class="row" id="brandingLogoPanel">
+          <div class="small-7 columns">
+            <h2 translate="partnerProfile.brandingTitle"></h2>
+            <div class="form-spacing">
+              <span ng-if="!isPartner" translate="customerProfile.brandingInfo"></span>
+              <span ng-if="isPartner" translate="partnerProfile.brandingInfo"></span>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-    <!-- support title / description -->
-    <div class="row main-section" id="supportTitleAndDescPanel">
-      <div class="columns small-7">
-        <h2 translate="partnerProfile.supportTitle"></h2>
-        <div class="form-spacing">
-          <span ng-if="!isPartner" translate="customerProfile.supportInfo" translate-values="{app : appType}"></span>
-          <span ng-if="isPartner" translate="partnerProfile.supportInfo" translate-values="{app : appType}"></span>
-        </div>
-      </div>
-    </div>
-    <!-- trouble ticket reporting location form -->
-    <div class="row" id="troubleReportingPanel">
-      <div class="columns small-12 medium-7 form-section">
-        <h3 translate="partnerProfile.supportSetup"></h3>
-        <!-- partner problem reporting site form -->
-        <div class="row optional-row" id="troubleReportingCiscoPanel">
-          <div class="columns small-12">
+        <div class="row form-spacing">
+          <div class="small-12 medium-7 columns">
             <div class="row">
-              <div class="columns small-2 radio-column">
-                <input type="radio" name="collabRadio3" id="collabRadio3" value="0" ng-model="problemSiteRadioValue">
-                <span id="collabRadioLabel2" class="onboard-radio" ng-click="setProblemRadio(0)">{{collabRadio2.label}}</span>
+              <div class="small-2 columns">
+                <label class="cs-radio" for="partnerLogoRadio">
+                  <input type="radio" id="partnerLogoRadio" ng-model="usePartnerLogo" ng-value="true" ng-change="toggleLogo(usePartnerLogo)">
+                  <span></span>
+                </label>
               </div>
-              <div class="columns small-10 default-link-row">
-                <div class="partner-link">
-                  <a href="" ng-click="sendFeedback()">
-                    <span ng-if="!isManaged" translate="partnerProfile.ciscoProblem"></span>
-                    <span ng-if="isCiscoSupport && isManaged" translate="partnerProfile.ciscoProblem"></span>
-                    <span ng-if="!isCiscoSupport && isManaged" translate="partnerProfile.partnerProblem"></span>
-                  </a>
+              <div class="small-10 columns">
+                <span ng-if="isPartner" translate="partnerProfile.useCiscoLogo"></span>
+                <span ng-if="!isPartner" translate="customerProfile.usePartnerLogo" translate-value-partner="{{partner.displayName}}"></span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="small-2 columns">
+                <label class="cs-radio" for="customLogoRadio">
+                  <input type="radio" id="customLogoRadio" ng-model="usePartnerLogo" ng-value="false" ng-change="toggleLogo(usePartnerLogo)">
+                  <span></span>
+                </label>
+              </div>
+              <div class="small-8 columns">
+                <div class="drop-box" ngf-drop="upload($file, $event)" ng-model="logoFile" ngf-drag-over-class="dragover" ngf-validate="{{logoCriteria}}">
+                  <img class="thumbnail" alt="newLogo" ngf-src="logoFile" ng-hide="logoError" />
+                  <img class="thumbnail" alt="currentLogo" ng-src="{{tempLogoUrl}}" ng-if="!logoFile && tempLogoUrl" onerror="this.style.display='none'" />
+                  <p class="vertical-align text-center" translate="partnerProfile.logoPlaceholder" ng-hide="logoFile"></p>
+                </div>
+              </div>
+              <div class="small-2 columns">
+                <div class="btn btn--primary" name="file" accept="image/png" ngf-select="upload($file, $event)" ng-model="logoFile" ngf-validate="{{logoCriteria}}">
+                  <span translate="partnerProfile.chooseFile"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row form-spacing">
+          <div class="small-12 medium-7 columns">
+            <div class="row" ng-if="isPartner">
+              <div class="small-2 columns">
+                <label class="cs-checkbox" for="allowCustomerLogo">
+                  <input type="checkbox" id="allowCustomerLogo" ng-model="allowCustomerLogos" ng-change="toggleAllowCustomerLogos(allowCustomerLogos)">
+                  <span></span>
+                </label>
+              </div>
+              <div class="small-10 columns">
+                <span translate="partnerProfile.allowCustomerLogo"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- support title / description -->
+      <div class="row main-section" id="supportTitleAndDescPanel">
+        <div class="columns small-7">
+          <h2 translate="partnerProfile.supportTitle"></h2>
+          <div class="form-spacing">
+            <span ng-if="!isPartner" translate="customerProfile.supportInfo" translate-values="{app : appType}"></span>
+            <span ng-if="isPartner" translate="partnerProfile.supportInfo" translate-values="{app : appType}"></span>
+          </div>
+        </div>
+      </div>
+      <!-- trouble ticket reporting location form -->
+      <div class="row" id="troubleReportingPanel">
+        <div class="columns small-12 medium-7 form-section">
+          <h3 translate="partnerProfile.supportSetup"></h3>
+          <!-- partner problem reporting site form -->
+          <div class="row optional-row" id="troubleReportingCiscoPanel">
+            <div class="columns small-12">
+              <div class="row">
+                <div class="columns small-2 radio-column">
+                  <input type="radio" name="collabRadio3" id="collabRadio3" value="0" ng-model="problemSiteRadioValue">
+                  <span id="collabRadioLabel2" class="onboard-radio" ng-click="setProblemRadio(0)">{{collabRadio2.label}}</span>
+                </div>
+                <div class="columns small-10 default-link-row">
+                  <div class="partner-link">
+                    <a href="" ng-click="sendFeedback()">
+                      <span ng-if="!isManaged" translate="partnerProfile.ciscoProblem"></span>
+                      <span ng-if="isCiscoSupport && isManaged" translate="partnerProfile.ciscoProblem"></span>
+                      <span ng-if="!isCiscoSupport && isManaged" translate="partnerProfile.partnerProblem"></span>
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <!-- trouble reporting site url -->
-    <div class="row" id="troubleReportingPartnerPanel">
-      <div class="columns small-12 medium-7">
-        <div class="row">
-          <div class="columns small-2 radio-column">
-            <input type="radio" name="collabRadio" value="1" ng-model="problemSiteRadioValue">
-            <span id="troubleReportingPartnerPanelRadio" ng-click="setProblemRadio(1)" class="onboard-radio">{{collabRadio2.label}}</span>
-          </div>
-          <div class="columns small-10">
-            <div class="input-group">
-              <input type="text" id="partnerSupportUrl" class="form-control" placeholder="{{troubleUrl | translate}}" ng-model="supportUrl">
-              <textarea rows="7" id="partnerSupportText" class="form-control optional-row" placeholder="{{troubleText | translate}}" ng-model="supportText">
-              </textarea>
-            </div>
-          </div>
-        </div>
-        <div class="form-section-last" id="helpPanel">
-          <h3 translate="partnerProfile.helpFaq"></h3>
-          <!-- partner help site form -->
-          <div class="row collapse optional-row" id="helpCiscoPanel">
+      <!-- trouble reporting site url -->
+      <div class="row" id="troubleReportingPartnerPanel">
+        <div class="columns small-12 medium-7">
+          <div class="row">
             <div class="columns small-2 radio-column">
-              <input type="radio" value="0" ng-model="helpSiteRadioValue">
-              <span id="collabRadioLabel2" class="onboard-radio" ng-click="setHelpRadio(0)">{{collabRadio2.label}}</span>
-            </div>
-            <div class="columns small-10 default-link-row">
-              <a ng-href="{{profileHelpUrl}}" target="_blank">
-                <span ng-if="!isManaged" translate="partnerProfile.ciscoHelp"></span>
-                <span ng-if="isCiscoHelp && isManaged" translate="partnerProfile.ciscoHelp"></span>
-                <span ng-if="!isCiscoHelp && isManaged" translate="partnerProfile.partnerHelp"></span>
-              </a>
-            </div>
-          </div>
-          <!-- help site url form -->
-          <div class="row" ng-click="setHelpRadio(1)" id="helpPartnerPanel">
-            <div class="columns small-2 radio-column">
-              <input type="radio" value="1" ng-model="helpSiteRadioValue">
-              <span id="helpPartnerPanelRadio" class="onboard-radio">{{collabRadio2.label}}</span>
+              <input type="radio" name="collabRadio" value="1" ng-model="problemSiteRadioValue">
+              <span id="troubleReportingPartnerPanelRadio" ng-click="setProblemRadio(1)" class="onboard-radio">{{collabRadio2.label}}</span>
             </div>
             <div class="columns small-10">
               <div class="input-group">
-                <input type="text" id="partnerHelpUrl" name="testForm" class="form-control" placeholder="{{helpUrlText | translate}}" ng-model="helpUrl" required>
+                <input type="text" id="partnerSupportUrl" class="form-control" placeholder="{{troubleUrl | translate}}" ng-model="supportUrl">
+                <textarea rows="7" id="partnerSupportText" class="form-control optional-row" placeholder="{{troubleText | translate}}" ng-model="supportText">
+                </textarea>
+              </div>
+            </div>
+          </div>
+          <div class="form-section-last" id="helpPanel">
+            <h3 translate="partnerProfile.helpFaq"></h3>
+            <!-- partner help site form -->
+            <div class="row collapse optional-row" id="helpCiscoPanel">
+              <div class="columns small-2 radio-column">
+                <input type="radio" value="0" ng-model="helpSiteRadioValue">
+                <span id="collabRadioLabel2" class="onboard-radio" ng-click="setHelpRadio(0)">{{collabRadio2.label}}</span>
+              </div>
+              <div class="columns small-10 default-link-row">
+                <a ng-href="{{profileHelpUrl}}" target="_blank">
+                  <span ng-if="!isManaged" translate="partnerProfile.ciscoHelp"></span>
+                  <span ng-if="isCiscoHelp && isManaged" translate="partnerProfile.ciscoHelp"></span>
+                  <span ng-if="!isCiscoHelp && isManaged" translate="partnerProfile.partnerHelp"></span>
+                </a>
+              </div>
+            </div>
+            <!-- help site url form -->
+            <div class="row" ng-click="setHelpRadio(1)" id="helpPartnerPanel">
+              <div class="columns small-2 radio-column">
+                <input type="radio" value="1" ng-model="helpSiteRadioValue">
+                <span id="helpPartnerPanelRadio" class="onboard-radio">{{collabRadio2.label}}</span>
+              </div>
+              <div class="columns small-10">
+                <div class="input-group">
+                  <input type="text" id="partnerHelpUrl" name="testForm" class="form-control" placeholder="{{helpUrlText | translate}}" ng-model="helpUrl" required>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="columns small-12 medium-5">
-        <h5 translate="partnerProfile.matchingTix"></h5>
-        <span translate="partnerProfile.matchingDescr"></span>
+        <div class="columns small-12 medium-5">
+          <h5 translate="partnerProfile.matchingTix"></h5>
+          <span translate="partnerProfile.matchingDescr"></span>
+        </div>
       </div>
     </div>
   </div>

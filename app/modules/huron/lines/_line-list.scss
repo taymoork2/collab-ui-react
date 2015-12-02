@@ -1,9 +1,8 @@
 .line-list {
-  & .gridStyle {
-    height: calc(50vh);
-  }
+  @extend %grid-subheader;
+  @extend %page-background-white;
+
   & .ngGrid {
-    height: calc(90vh);
     & .internalNumberColumn {
       text-align: center;
     }

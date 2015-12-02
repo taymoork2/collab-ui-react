@@ -730,7 +730,10 @@ angular
           templateUrl: 'modules/squared/devices/devices.html',
           controller: 'DevicesCtrl',
           controllerAs: 'sc',
-          parent: 'main'
+          parent: 'main',
+          data: {
+            bodyClass: 'devices-page'
+          }
         })
         .state('device-overview', {
           parent: 'sidepanel',

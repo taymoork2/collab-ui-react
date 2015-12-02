@@ -4,12 +4,8 @@
     vertical-align:text-bottom;
 }
 
-.webexPage {
-  padding-left: $page-side-padding;
-  padding-top: 0px;
+.site-settings,
+.site-settings-site-setting {
+  @extend %content-subheader;
 }
 
-.iframeContainer {
-  position: relative;
-  top: -64px;
-}

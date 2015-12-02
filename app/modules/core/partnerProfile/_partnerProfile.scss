@@ -1,3 +1,9 @@
+.profile {
+  @extend %content-subheader;
+  @extend %page-content-padding;
+  @extend %page-background-white;
+}
+
 .partner-profile {
   padding: 2rem 1.5rem;
   background: $white;

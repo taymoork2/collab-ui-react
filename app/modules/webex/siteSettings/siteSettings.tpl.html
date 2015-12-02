@@ -1,79 +1,50 @@
 <div id="webexSiteSettings" name="webexSiteSettings">
-
-     <cs-page-header title="{{::siteSettingsObj.pageTitle}}"></cs-page-header>
-     <cs-page-sub-header ng-if="siteSettingsObj.viewReady">
-       <cs-page-sub-header-right>
-        <button 
-          id={{siteSettingsObj.emailAllHostsBtnObj.id}} 
-          name={{siteSettingsObj.emailAllHostsBtnObj.id}} 
-          ui-sref={{siteSettingsObj.emailAllHostsBtnObj.pageObj.uiSref}} 
-          class="btn btn--people" 
-          translate="webexSiteSettingsLabels.emailAllHostsBtnTitle">
-        </button>
-       </cs-page-sub-header-right>
-     </cs-page-sub-header>
-
-  <!-- start of breadcrumbs -->
-  <ul id="siteSettingsBreadCrumbs"
-      name="siteSettingsBreadCrumbs"
-      class="breadcrumbs webexPage"
-      title="{{'webexCommon.breadcrumbsAltText' | translate}}">
-
-    <li>
-      <a id="siteListCrumb"
-         name="siteListCrumb"
-         ui-sref="site-list"
-         translate="siteList.conferencing">
-      </a>
-    </li>
-
-    <li class="current"
-        id="siteSettingsCrumb"
-        name="siteSettingsCrumb">
-
-      {{siteSettingsObj.pageTitleFull}}
-    </li>
-  </ul>
-  <!-- end of breadcrumbs -->
-
-  <!-- start of loading info -->
-  <div ng-if="!siteSettingsObj.viewReady"
-       id="loadingSection"
-       name="loadingSection"
-       align="center">
-
-    <div id="loadingInprogressSection"
-         name="loadingInprogressSection"
-         ng-if="!siteSettingsObj.hasLoadError" >
-
-      <br><br><br>
-      <i class="icon icon-spinner icon-2x"></i>
-    </div>
-
-    <div id="loadErrSection"
-         name="loadErrSection"
-         ng-if="siteSettingsObj.hasLoadError" >
-
-      <div class="nodata-icon" >
-        <i class="icon icon-circle-clock" ></i>
-      </div>
-
-      <div class="nodata-message" >
-        <span translate="webexUserSettingsAccessErrors.defaultAccessError" ></span>
+  <cs-page-header title="{{::siteSettingsObj.pageTitle}}"></cs-page-header>
+  <cs-page-sub-header ng-if="siteSettingsObj.viewReady">
+    <cs-page-sub-header-left>
+      <!-- start of breadcrumbs -->
+      <ul id="siteSettingsBreadCrumbs" name="siteSettingsBreadCrumbs" class="breadcrumbs webexPage" title="{{'webexCommon.breadcrumbsAltText' | translate}}">
+        <li>
+          <a id="siteListCrumb" name="siteListCrumb" ui-sref="site-list" translate="siteList.conferencing">
+          </a>
+        </li>
+        <li class="current" id="siteSettingsCrumb" name="siteSettingsCrumb">
+          {{siteSettingsObj.pageTitleFull}}
+        </li>
+      </ul>
+      <!-- end of breadcrumbs -->
+    </cs-page-sub-header-left>
+    <cs-page-sub-header-right>
+      <button id={{siteSettingsObj.emailAllHostsBtnObj.id}} name={{siteSettingsObj.emailAllHostsBtnObj.id}} ui-sref={{siteSettingsObj.emailAllHostsBtnObj.pageObj.uiSref}} class="btn btn--people" translate="webexSiteSettingsLabels.emailAllHostsBtnTitle">
+      </button>
+    </cs-page-sub-header-right>
+  </cs-page-sub-header>
+  <div class="content-container">
+    <!-- start of loading info -->
+    <div ng-if="!siteSettingsObj.viewReady" id="loadingSection" name="loadingSection" align="center">
+      <div id="loadingInprogressSection" name="loadingInprogressSection" ng-if="!siteSettingsObj.hasLoadError">
         <br>
-        <span translate="webexUserSettingsAccessErrors.defaultReloadMsg" ></span>
+        <br>
+        <br>
+        <i class="icon icon-spinner icon-3x"></i>
+      </div>
+      <div id="loadErrSection" name="loadErrSection" ng-if="siteSettingsObj.hasLoadError">
+        <div class="nodata-icon">
+          <i class="icon icon-circle-clock"></i>
+        </div>
+        <div class="nodata-message">
+          <span translate="webexUserSettingsAccessErrors.defaultAccessError"></span>
+          <br>
+          <span translate="webexUserSettingsAccessErrors.defaultReloadMsg"></span>
+        </div>
       </div>
     </div>
+    <!-- end of loading info -->
+    <!-- start of card containers -->
+    <div ng-if="siteSettingsObj.viewReady" id="cardsSection" name="cardsSection">
+      <div ng-include="'modules/webex/views/infoCard.tpl.html'"></div>
+      <div ng-include="'modules/webex/siteSettings/siteSettingCards.tpl.html'"></div>
+    </div>
+    <!-- end of card containers -->
   </div>
-  <!-- end of loading info -->
-
-  <!-- start of card containers -->
-  <div ng-if="siteSettingsObj.viewReady"
-       id="cardsSection"
-       name="cardsSection">
-
-    <div ng-include="'modules/webex/views/infoCard.tpl.html'"></div>
-    <div ng-include="'modules/webex/siteSettings/siteSettingCards.tpl.html'"></div>
-  </div>
-  <!-- end of card containers -->
 </div>

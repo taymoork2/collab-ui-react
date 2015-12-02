@@ -1,35 +1,23 @@
-<div id="webexSiteReportIframe-{{reportPageId}}" 
-     name="webexSiteReportIframe-{{reportPageId}}">
-
-  <cs-page-header 
-   id="{{reportPageId}}" 
-   name="{{reportPageId}}" 
-   title="{{::reportPageTitle}}">
+<div id="webexSiteReportIframe-{{reportPageId}}" name="webexSiteReportIframe-{{reportPageId}}">
+  <cs-page-header id="{{reportPageId}}" name="{{reportPageId}}" title="{{::reportPageTitle}}">
   </cs-page-header>
-  <!-- <cs-page-sub-header-left>
-    {{siteUrl}}
-  </cs-page-sub-header-left>
-  <cs-page-sub-header-right>
-  </cs-page-sub-header-right> --><!-- DON'T display for now -->
-
-  <ul class="breadcrumbs webexPage" 
-      id="webexReportIFrameBreadCrumbs" 
-      title="{{'webexCommon.breadcrumbsAltText' | translate}}">
-      
-    <li>
-      <a id="webexReportIFrameCrumb2" 
-         ui-sref="webex-reports({siteUrl:siteUrl})">
-           
+  <cs-page-sub-header>
+    <cs-page-sub-header-left>
+      <ul class="breadcrumbs webexPage" id="webexReportIFrameBreadCrumbs" title="{{'webexCommon.breadcrumbsAltText' | translate}}">
+        <li>
+          <a id="webexReportIFrameCrumb2" ui-sref="webex-reports({siteUrl:siteUrl})">
         {{('webexSiteReports.title' | translate) + ' ' + siteUrl}}
       </a>
-    </</li>
-      
-    <li class="current">
-      {{reportPageTitle}}
-    </li>
-  </ul>
-
-  <!-- <cs-breadcrumbs displayname-property="data.displayName"></cs-breadcrumbs> -->
+        </li>
+        <li class="current">
+          {{reportPageTitle}}
+        </li>
+      </ul>
+      <!-- <cs-breadcrumbs displayname-property="data.displayName"></cs-breadcrumbs> -->
+      <!-- {{siteUrl}} DON'T display for now -->
+    </cs-page-sub-header-left>
+  </cs-page-sub-header>
+  <div class="content-container">
+    <div ng-include="'modules/webex/views/iframeContainer.tpl.html'"></div>
+  </div>
 </div>
-
-<div ng-include="'modules/webex/views/iframeContainer.tpl.html'"></div>

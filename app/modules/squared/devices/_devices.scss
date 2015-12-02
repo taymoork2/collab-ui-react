@@ -1,4 +1,6 @@
-.sq-devices-page-overview {
+.devices-page {
+  @extend %grid-subheader;
+  @extend %page-background-white;
   table {
     td {
       padding: 10px 10px 10px 0;
@@ -17,10 +19,6 @@
   .activation-code-pane h3 {
     color: #00c1aa;
   }
-
-}
-
-.sq-devices-page {
   .message-container {
     position: absolute;
     left: 0;
@@ -42,13 +40,6 @@
     display: none;
   }
 
-  .title {
-    display: inline-block;
-    vertical-align: middle;
-    height: 60px;
-    line-height: 60px;
-  }
-
   .error-spinner {
     position: fixed;
     bottom: 20px;
@@ -60,12 +51,6 @@
     padding: 9px 10px 6px 10px;
   }
 
-}
-
-.sq-devices-page-overview {
-  .panel-buttons {
-    margin-top: 10px;
-  }
 }
 
 .modal-success, .modal-warning {
@@ -89,11 +74,6 @@
 }
 
 /* widgets */
-
-div#header-title {
-  font-size: 22px;
-}
-
 .editable-input {
   padding-top: 5px;
   &, .read-only-value, form {
