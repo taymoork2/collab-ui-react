@@ -7,9 +7,10 @@ angular.module('WebExUtils').directive('iFrameResizable', function ($window) {
   return function ($scope) {
     $scope.initializeWindowSize = function () {
       var innerHeight = $window.innerHeight;
-      var iframeTop = ($scope.showSpinner) ? 250 : 200;
+      // var iframeTopMargin = ($scope.showSpinner) ? 214 : 200;
+      var iframeTopMargin = 214;
 
-      $scope.iframeHeight = (iframeTop >= innerHeight) ? 0 : innerHeight - iframeTop;
+      $scope.iframeHeight = (iframeTopMargin >= innerHeight) ? 0 : innerHeight - iframeTopMargin;
 
       return $scope.iframeHeight;
     };
