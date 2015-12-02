@@ -67,7 +67,8 @@ describe('Controller: HelpdeskController', function () {
 
       controller = $controller('HelpdeskController', {
         HelpdeskService: HelpdeskService,
-        $translate: $translate
+        $translate: $translate,
+        $scope: $scope
       });
 
       controller.setOrgFilter(null);
