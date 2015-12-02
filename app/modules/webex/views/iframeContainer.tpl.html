@@ -1,10 +1,31 @@
-<iframe i-frame-resizable 
-		ng-style="{'width': '100%', 'height': iframeHeight }"
-		name="webexIframeContainer"
-        id="webexIframeContainer"
-        frameborder="0"
-        title="{{siteSettingLabel}}">
-</iframe>
+
+<div ng-if="showSpinner"
+     align="center">
+     
+  <br><br><br>
+  <i class="icon icon-spinner icon-3x"></i>
+
+  <div class="iframeContainer">
+    <iframe i-frame-resizable 
+		        ng-style="{'width': '100%', 'height': iframeHeight }"
+		        name="webexIframeContainer"
+            id="webexIframeContainer"
+            frameborder="0"
+            title="{{siteSettingLabel}}">
+    </iframe>
+  </div>
+</div>
+
+<div ng-if="!showSpinner">
+  <iframe i-frame-resizable 
+          ng-style="{'width': '100%', 'height': iframeHeight }"
+          name="webexIframeContainer"
+          id="webexIframeContainer"
+          frameborder="0"
+          title="{{siteSettingLabel}}">
+  </iframe>
+</div>
+
 <form name="iframeForm"
       id="iframeForm"
       action={{trustIframeUrl}}
