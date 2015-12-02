@@ -114,11 +114,7 @@
             resolve(enabled);
           });
         } else if (feature === features.atlasCloudberryTrials) {
-          if (Authinfo.getOrgId() === 'c054027f-c5bd-4598-8cd8-07c08163e8cd') {
-            resolve(true);
-          } else {
-            resolve(false);
-          }
+          resolve(Authinfo.getOrgId() === 'c054027f-c5bd-4598-8cd8-07c08163e8cd');
         } else {
           var orgId = Authinfo.getOrgId();
 
