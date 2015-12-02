@@ -615,7 +615,8 @@
     "id": "ID",
     "new": "New",
     "devices": "Devices",
-    "users": "Users"
+    "users": "Users",
+    "download": "Download"
   },
   "notifications": {
     "success": "Success notifications",

@@ -27,6 +27,7 @@ var webdriverUpdate = require('gulp-protractor').webdriver_update;
  * --int                Runs tests against integration atlas
  * --prod               Runs tests against production atlas
  * --nosetup            Runs tests without serving the app
+ * --nofailfast         Runs tests without skipping tests after first failure
  * --specs              Runs tests against specific files or modules
  * --regression         Runs tests in regression folder in addition to any specified tests
  * --build              Runs tests against the build directory
@@ -76,7 +77,8 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
     debug: debug,
     args: [
       '--params.log', !!args.verbose,
-      '--params.isProductionBackend', !!args['production-backend']
+      '--params.isProductionBackend', !!args['production-backend'],
+      '--params.isFailFast', !args.nofailfast //default isFailFast true
     ]
   };
 
@@ -115,7 +117,7 @@ gulp.task('protractor', ['set-env', 'protractor:update'], function () {
       );
     messageLogger('Running End 2 End tests from all modules.');
   }
-  
+
   // Extra regression tests that are not gating
   if (args.regression) {
     messageLogger('Running extra End 2 End tests from: ' + $.util.colors.red(config.testFiles.e2e.regression));
