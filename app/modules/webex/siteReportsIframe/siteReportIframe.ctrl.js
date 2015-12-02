@@ -44,11 +44,10 @@
       $scope.reportPageTitle = $translate.instant("webexReportsPageTitles." + $scope.reportPageId);
       $scope.reportPageIframeUrl = $stateParams.reportPageIframeUrl;
       $scope.iframeUrl = $stateParams.reportPageIframeUrl;
-      
+
       if ($scope.reportPageId != "storage_utilization") {
         $scope.showSpinner = true;
       }
-
 
       // for iframe request
       $scope.trustIframeUrl = $sce.trustAsResourceUrl($scope.iframeUrl);
