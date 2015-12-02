@@ -34,6 +34,7 @@
       _this.funcName = "ReportsIframeCtrl()";
       _this.logMsg = "";
 
+      /*
       $scope.showSpinner = (
         ("storage_utilization" == $stateParams.reportPageId) ||
         ("support_center_support_sessions" == $stateParams.reportPageId) ||
@@ -42,7 +43,8 @@
         ("support_center_csr_activity" == $stateParams.reportPageId) ||
         ("support_center_url_referral" == $stateParams.reportPageId)
       ) ? false : true;
-      // $scope.showSpinner = false;
+      */
+      $scope.showSpinner = false;
 
       $scope.siteUrl = $stateParams.siteUrl;
       $scope.indexPageSref = "webex-reports({siteUrl:'" + $stateParams.siteUrl + "'})";
