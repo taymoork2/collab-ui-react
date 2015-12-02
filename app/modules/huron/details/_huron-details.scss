@@ -3,10 +3,6 @@
 @import '../features/_features';
 @import '../lines/_line-list';
 
-.huron-details {
-  @include vr-spacing(mh, 0.5, 1px, true);
-}
-
 .save-section {
   position: absolute;
   display: flex;

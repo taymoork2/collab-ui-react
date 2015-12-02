@@ -1,22 +1,22 @@
 <div class="user-list">
-  <div class="row page-header">
-    <div class="page-title small-7 columns">
-      <span class="title-heading" translate="usersPage.manageUsers"></span>
-        <cs-searchfilter filters="filters" set-filter-fn="setFilter(filter.filterValue)" ng-model="placeholder.count" search-item-fn="filterList(searchStr)" placeholder-text="{{placeholder.name}}">
-        </cs-searchfilter>
-    </div>
-    <div class="small-5 columns" ng-show="Utils.isAdminPage()">
-      <div class="page-option-buttons" ng-controller="ExportCSVCtrl">
-        <button id="addUsers" class="btn btn--large btn--people" ui-sref="users.add" translate="usersPage.inviteUsers"></button>
-        <a id="export-btn" class="export-users" ng-if="!exporting" ng-csv="exportCSV()" filename="{{'usersPage.csvFilename' | translate}}">
-          <span id="export-icon" class="icon-export" tooltip-placement="top" tooltip="{{'usersPage.csvBtnTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true"><i class="icon icon-content-share icon-lg"></i></span>
-        </a>
-        <a id="export-in-progress" class="export-users" ng-if="exporting">
-          <span id="exporting-icon" class="icon-export" tooltip-placement="top" tooltip="{{'usersPage.csvBtnExportingTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true"><i class="icon icon-spinner icon-lg"></i></span>
-        </a>
-      </div>
-    </div>
-  </div>
+  <cs-page-header title="{{::pageTitle}}"></cs-page-header>
+  <cs-page-sub-header>
+    <cs-page-sub-header-left>
+      <cs-searchfilter filters="filters" set-filter-fn="setFilter(filter.filterValue)" ng-model="placeholder.count" search-item-fn="filterList(searchStr)" placeholder-text="{{placeholder.name}}">
+      </cs-searchfilter>
+    </cs-page-sub-header-left>
+    <cs-page-sub-header-right ng-show="Utils.isAdminPage()">
+      <button id="addUsers" class="btn btn--people" ui-sref="users.add" translate="usersPage.inviteUsers"></button>
+      <a id="export-btn" class="export-users" ng-if="exporting===false" ng-csv="exportCSV()" filename="{{'usersPage.csvFilename' | translate}}">
+        <span id="export-icon" class="icon-export" tooltip-placement="top" tooltip="{{'usersPage.csvBtnTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true"><i class="icon icon-content-share"></i></span>
+      </a>
+      <span id="exporting-icon" class="icon-export" tooltip-placement="top" tooltip="{{'usersPage.csvBtnExportingTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true">
+      <a id="export-in-progress" class="export-users" ng-if="exporting">
+        <i class="icon icon-spinner"></i>
+      </a>
+    </span>
+    </cs-page-sub-header-right>
+  </cs-page-sub-header>
   <div id="usersListPanel" class="row grid">
     <div gridscrollbar class="gridStyle col-md-12" ng-grid="gridOptions"></div>
     <div class="grid-refresh" ng-if="gridRefresh">

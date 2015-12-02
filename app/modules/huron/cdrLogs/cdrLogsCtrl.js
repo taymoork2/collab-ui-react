@@ -43,11 +43,13 @@
           scope.model.callingUser = value;
           scope.fields[3].formControl.$validate();
         }
-        return /^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$/.test(value) || /^[0-9a-fA-F]{32}$/.test(value) || (value === undefined) || (value === "");
+        // name/uuid are now verified only once the search button is clicked and a notification is thrown
+        return true;
       },
       calledUser: function (viewValue, modelValue, scope) {
         var value = viewValue || modelValue;
-        return ((/^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$/.test(value) || /^[0-9a-fA-F]{32}$/.test(value)) && (value !== scope.model.callingUser)) || (value === undefined) || (value === "");
+        // name/uuid are now verified only once the search button is clicked and a notification is thrown
+        return (value !== scope.model.callingUser) || angular.isUndefined(value) || value === "";
       },
       callingNumber: function (viewValue, modelValue, scope) {
         var value = viewValue || modelValue;

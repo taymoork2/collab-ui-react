@@ -24,8 +24,12 @@
       hybrid: 'unknown'
     };
     vm.statusPageUrl = Config.getStatusPageUrl();
-    vm.adminUserLimit = 3;
+    vm.initialAdminUserLimit = 3;
+    vm.adminUserLimit = vm.initialAdminUserLimit;
     vm.showAllAdminUsers = showAllAdminUsers;
+    vm.hideAllAdminUsers = hideAllAdminUsers;
+    vm.daysLeftText = daysLeftText;
+    vm.licenseUsageReady = false;
 
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
     HelpdeskCardsService.getHealthStatuses().then(initHealth, angular.noop);
@@ -35,7 +39,12 @@
       vm.delegatedAdministration = org.delegatedAdministration ? $translate.instant('helpdesk.delegatedAdministration', {
         numManages: org.manages ? org.manages.length : 0
       }) : null;
-      LicenseService.getLicensesInOrg(vm.orgId).then(initCards, XhrNotificationService.notify);
+
+      LicenseService.getLicensesInOrg(vm.orgId).then(function (licenses) {
+        initCards(licenses);
+        findLicenseUsage();
+      }, XhrNotificationService.notify);
+
       findManagedByOrgs(org);
       findWebExSites(org);
       findAdminUsers(org);
@@ -56,12 +65,14 @@
     function findManagedByOrgs(org) {
       if (org.managedBy && org.managedBy.length > 0) {
         org.managedByOrgs = [];
-        _.each(org.managedBy, function (parnterOrg) {
-          HelpdeskService.getOrgDisplayName(parnterOrg.orgId).then(function (displayName) {
-            org.managedByOrgs.push({
-              id: parnterOrg.orgId,
-              displayName: displayName
-            });
+        _.each(org.managedBy, function (managingOrg) {
+          HelpdeskService.getOrgDisplayName(managingOrg.orgId).then(function (displayName) {
+            if (displayName) {
+              org.managedByOrgs.push({
+                id: managingOrg.orgId,
+                displayName: displayName
+              });
+            }
           }, angular.noop);
         });
       }
@@ -84,8 +95,27 @@
       }, XhrNotificationService.notify);
     }
 
+    function findLicenseUsage() {
+      if (vm.orgId != Config.ciscoOrgId) {
+        LicenseService.getLicensesInOrg(vm.orgId, true).then(function (licenses) {
+          initCards(licenses);
+          vm.licenseUsageReady = true;
+        }, XhrNotificationService.notify);
+      }
+    }
+
     function showAllAdminUsers() {
       vm.adminUserLimit = vm.adminUsers.length;
+    }
+
+    function hideAllAdminUsers() {
+      vm.adminUserLimit = vm.initialAdminUserLimit;
+    }
+
+    function daysLeftText(license) {
+      return $translate.instant('helpdesk.numDaysLeft', {
+        days: license.trialExpiresInDays
+      });
     }
   }
 

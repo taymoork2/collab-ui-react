@@ -2,18 +2,12 @@
 
   <div class="hercules hercules-fix-paragraphs">
 
-    <div class="page-header">
-      <div class="page-title">
-
-        <span translate="hercules.serviceNames.{{exp.currentServiceId}}" class="title-heading">
-        </span>
-
-        <!-- TODO: Seems to be problems with positioning with narrow screen
-             TODO: Remove relative div quick hack !           -->
+  <cs-page-header title="{{exp.pageTitle}}" tabs="exp.tabs"></cs-page-header>
+  <cs-page-sub-header>
+    <cs-page-sub-header-left>
         <div style="position:relative">
           <hercules-notifications filter-tag="exp.notificationTag"></hercules-notifications>
         </div>
-
         <div ng-if="exp.currentServiceId !== 'squared-fusion-mgmt'">
           <i class="icon icon-circle-user"/>
           <span>{{exp.userStatusSummary.activated || 0}} activated</span>
@@ -31,14 +25,8 @@
             <i class="icon icon-content-share" ng-click="exp.openUserStatusReportModal(exp.currentServiceId)"></i>
           </span>
         </div>
-
-        <div class="menu">
-          <a id="serviceResources" ui-sref-active="active" ui-sref="{{exp.route}}.list">Resources</a>
-          <a id="serviceSettings" ui-sref-active="active" ui-sref="{{exp.route}}.settings({serviceType:exp.currentServiceType})">Settings</a>
-        </div>
-
-      </div>
-    </div>
+    </cs-page-sub-header-left>
+  </cs-page-sub-header>
 
     <div ui-view="fullPane" class="small-padding-top">
     </div>

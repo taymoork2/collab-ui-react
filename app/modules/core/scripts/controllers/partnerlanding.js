@@ -71,7 +71,7 @@ angular.module('Core')
           $scope.showTrialsRefresh = false;
           if (data.success && data.trials) {
             if (data.trials.length > 0) {
-              PartnerService.loadRetrievedDataToList(data.trials, $scope.trialsList, true);
+              $scope.trialsList = PartnerService.loadRetrievedDataToList(data.trials, [], true);
               $scope.activeList = _.filter($scope.trialsList, {
                 state: "ACTIVE"
               });
@@ -171,7 +171,7 @@ angular.module('Core')
       };
 
       var actionsTemplate = '<span dropdown>' +
-        '<button id="{{row.entity.customerName}}ActionsButton" class="btn--icon btn--actions dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
+        '<button id="{{row.entity.customerName}}ActionsButton" class="btn--none dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
         '<i class="icon icon-three-dots"></i>' +
         '</button>' +
         '<ul class="dropdown-menu dropdown-primary" role="menu">' +

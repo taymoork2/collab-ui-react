@@ -1,24 +1,30 @@
 <div class="sq-devices-page">
-  <div class="row page-header">
-    <div class="page-title col-md-12 col-sm-12">
-      <span class="title-heading">
-        {{'spacesPage.title' | translate}}
-      </span>
-
-      <cs-searchfilter
-        filters="sc.deviceFilter.getFilters()"
-        search-item-fn="sc.deviceFilter.setCurrentSearch(searchStr)"
-        set-filter-fn="sc.deviceFilter.setCurrentFilter(filter.filterValue)">
+  <cs-page-header title="{{::'spacesPage.title' | translate}}"></cs-page-header>
+  <cs-page-sub-header>
+    <cs-page-sub-header-left>
+      <cs-searchfilter filters="sc.deviceFilter.getFilters()" search-item-fn="sc.deviceFilter.setCurrentSearch(searchStr)" set-filter-fn="sc.deviceFilter.setCurrentFilter(filter.filterValue)">{}
       </cs-searchfilter>
-
-      <button
-        class="btn btn--large btn--people add-button"
-        ng-click="sc.showAddDeviceDialog()">
-        Add Device
+    </cs-page-sub-header-left>
+    <cs-page-sub-header-right>
+      <button class="btn btn--people add-button" ng-click="sc.showAddDeviceDialog()">
+        <span translate="spacesPage.addBtn"></span>
       </button>
-
-    </div>
-  </div>
+    </cs-page-sub-header-right>
+  </cs-page-sub-header>
+ <div class="content-container">
+  <cs-accordion
+      id="licenseWarning"
+      ng-show="sc.showLicenseWarning">
+    <cs-accordion-group
+        show-caret="true"
+        display-status="warning">
+      <cs-accordion-heading>
+        <span class="badge badge-custom-warn">{{'spacesPage.licenseWarningTitle' | translate}}</span>
+        <span>{{'spacesPage.licenseWarningHeader' | translate}}</span>
+      </cs-accordion-heading>
+      <p>{{sc.licenseError}}</p>
+    </cs-accordion-group>
+  </cs-accordion>
 
   <div ng-if="!sc.shouldShowList()">
     <div class="message-container">
@@ -27,7 +33,6 @@
       </div>
     </div>
   </div>
-
   <div ng-if="sc.codesListSubscription.currentError || sc.deviceListSubscription.currentError">
     <div class="error-spinner">
       <i class="icon icon-2x icon-spinner" />
@@ -38,15 +43,13 @@
     <div ng-hide="sc.updateListAndFilter().length" class="message-container">
       <div class="empty-devices-content">
         <img ng-src="images/devices/cisco_sx10.png" />
-        <h2 class="empty-device-message">
-          No devices found...
-        </h2>
+        <h2 class="empty-device-message" translate="spacesPage.noDevices"></h2>
       </div>
     </div>
     <div id="roomsListPanel" class="row">
       <div gridscrollbar class="gridStyle col-md-12" ng-grid="sc.gridOptions"></div>
     </div>
   </div>
-
   <squared-add-device></squared-add-device>
+</div>
 </div>

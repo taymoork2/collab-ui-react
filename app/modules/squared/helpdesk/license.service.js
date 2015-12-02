@@ -9,14 +9,14 @@
       return res.data;
     }
 
-    function getLicensesInOrg(orgId) {
+    function getLicensesInOrg(orgId, includeUsage) {
       if (useMock()) {
         var deferred = $q.defer();
         deferred.resolve(HelpdeskMockData.licenses);
         return deferred.promise;
       }
       return $http
-        .get(urlBase + 'helpdesk/licenses/' + encodeURIComponent(orgId))
+        .get(urlBase + 'helpdesk/licenses/' + encodeURIComponent(orgId) + (includeUsage ? '?includeUsage=true' : ''))
         .then(extractData);
     }
 
@@ -58,8 +58,8 @@
     }
 
     function filterLicensesAndSetDisplayName(licenses, type) {
-      var matchingLicenses = _.filter(licenses, function (l) {
-        return l.type === type && !(l.status === 'CANCELLED' || l.status === 'SUSPENDED');
+      var matchingLicenses = _.filter(licenses, {
+        type: type
       });
       _.each(matchingLicenses, function (l) {
         l.displayName = $translate.instant('helpdesk.licenseTypes.' + type, {

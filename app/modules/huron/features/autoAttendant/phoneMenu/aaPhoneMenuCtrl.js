@@ -7,9 +7,12 @@
 
   function KeyAction() {
     this.key = '';
-    this.name = '';
     this.value = '';
     this.keys = [];
+    this.action = {
+      name: '',
+      label: ''
+    };
   }
 
   /* @ngInject */
@@ -139,7 +142,7 @@
 
     // the user has changed the action for an existing key
     function keyActionChanged(index, keyAction) {
-      vm.selectedActions[index].value = keyAction;
+      vm.selectedActions[index].value = keyAction.name;
       saveUIModel();
     }
 
@@ -204,7 +207,7 @@
           var keyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
           keyEntry.type = "MENU_OPTION";
           var keyAction = AutoAttendantCeMenuModelService.newCeActionEntry();
-          var action = findKeyAction(selectedAction.name);
+          var action = findKeyAction(selectedAction.action.name);
           if (angular.isDefined(action) && selectedAction.key !== '') {
             keyAction.name = action.action;
             keyAction.value = selectedAction.value;
@@ -214,7 +217,7 @@
               keyAction.inputType = action.inputType;
             }
             keyEntry.key = selectedAction.key;
-            keyEntry.description = selectedAction.name;
+            keyEntry.description = selectedAction.action.name;
             keyEntry.addAction(keyAction);
             entry.entries.push(keyEntry);
           }
@@ -244,7 +247,6 @@
           }
         }
         var entries = entry.entries;
-        var headers = entry.headers;
         if (entries.length > 0) {
           // add the key/action pairs
           for (var j = 0; j < entries.length; j++) {
@@ -252,7 +254,15 @@
             if (menuEntry.actions.length == 1 && menuEntry.type == "MENU_OPTION") {
               var keyAction = new KeyAction();
               keyAction.key = menuEntry.key;
-              keyAction.name = menuEntry.description;
+              if (angular.isDefined(menuEntry.actions[0].name) && menuEntry.actions[0].name.length > 0) {
+                keyAction.action = _.find(vm.keyActions, function (keyAction) {
+                  return this === keyAction.action;
+                }, menuEntry.actions[0].name);
+              } else {
+                keyAction.action = {};
+                keyAction.action.name = "";
+                keyAction.action.label = "";
+              }
               keyAction.value = menuEntry.actions[0].value;
               vm.selectedActions.push(keyAction);
             }

@@ -32,14 +32,14 @@
     <cs-left-nav pages="tabs" ng-controller="TabsCtrl" ng-if="Utils.isAdminPage()"></cs-left-nav>
     <div class="page-content-wrapper container-fluid">
       <div class="row full">
-        <div class="col-md-12">
+        <div class="medium-12 columns">
           <cs-header-push-container ng-if="Utils.isAdminPage()">
             <leader-board-bucket></leader-board-bucket>
           </cs-header-push-container>
         </div>
       </div>
-      <div class="row full">
-        <div class="col-md-12 content-view" ui-view="">
+      <div class="row full collapse">
+        <div class="medium-12 columns content-view" ui-view="">
         </div>
       </div>
     </div>

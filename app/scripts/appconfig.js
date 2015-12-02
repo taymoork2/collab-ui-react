@@ -730,7 +730,10 @@ angular
           templateUrl: 'modules/squared/devices/devices.html',
           controller: 'DevicesCtrl',
           controllerAs: 'sc',
-          parent: 'main'
+          parent: 'main',
+          data: {
+            bodyClass: 'devices-page'
+          }
         })
         .state('device-overview', {
           parent: 'sidepanel',
@@ -1568,7 +1571,7 @@ angular
         })
         .state('cluster-details-new.host-details', {
           templateUrl: 'modules/hercules/expressway-service/host-details.html',
-          controller: 'HostDetailsController',
+          controller: 'ExpresswayHostDetailsController',
           controllerAs: 'hostDetailsCtrl',
           data: {
             displayName: 'Host'
