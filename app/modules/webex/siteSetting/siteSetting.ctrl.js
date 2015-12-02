@@ -40,6 +40,7 @@
         "stateParams=" + JSON.stringify($stateParams);
       $log.log(_this.logMsg);
 
+      $scope.showSpinner = true;
       $scope.siteSettingId = $stateParams.webexPageId;
       $scope.siteSettingLabel = $translate.instant("webexSiteSettingsLabels.settingPageLabel_" + $stateParams.webexPageId);
 
