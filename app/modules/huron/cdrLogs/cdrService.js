@@ -34,35 +34,28 @@
     return {
       query: query,
       formDate: formDate,
-      createDownload: createDownload,
-      getUserList: getUserList
+      createDownload: createDownload
     };
 
-    function getUserList(start) {
+    function getUser(userName, calltype) {
       var defer = $q.defer();
-
-      var url = Config.getScimUrl(Authinfo.getOrgId()) + '?&sortBy=name&sortOrder=ascending';
-      if (((start !== null) && angular.isDefined(start))) {
-        url += "&startIndex=" + start;
-      }
+      var name = userName.replace(/@/g, '%40').replace(/\+/g, '%2B');
+      var url = Config.getScimUrl(Authinfo.getOrgId()) + '?filter=username eq \"' + name + '\"';
 
       $http.get(url).success(function (data, status) {
-        if (parseInt(data.totalResults) > (parseInt(data.startIndex) + parseInt(data.itemsPerPage) - 1)) {
-          var userList = data.Resources;
-          if ((start === null) || !angular.isDefined(start)) {
-            start = 1;
-          }
-
-          getUserList(start + parseInt(data.itemsPerPage)).then(function (response) {
-            defer.resolve(userList.concat(response));
-          });
+        if (angular.isArray(data.Resources) && (data.Resources.length > 0)) {
+          defer.resolve(data.Resources[0].id);
         } else {
-          defer.resolve(data.Resources);
+          Log.debug('User does not exist in this org.');
+          Notification.notify([$translate.instant('cdrLogs.nonexistentUser', {
+            calltype: calltype
+          })], 'error');
+          defer.reject(null);
         }
       }).error(function (data, status) {
         Log.debug('Failed to retrieve user data. Status: ' + status);
         Notification.notify([$translate.instant('cdrLogs.userDataError')], 'error');
-        defer.reject([]);
+        defer.reject(null);
       });
 
       return defer.promise;
@@ -100,7 +93,8 @@
       return returnDate.utc();
     }
 
-    function query(model, userList) {
+    function query(model) {
+      proxyData = [];
       if (cancelPromise !== null && cancelPromise !== undefined) {
         cancelPromise.resolve(ABORT);
       }
@@ -117,141 +111,161 @@
       // seperate queries search for callingTenant and calledTenant so as not to only get external calls as well as internal calls
       devicesQuery.push(deviceQuery(callingTenant, Authinfo.getOrgId()));
       secondaryDevicesQuery.push(deviceQuery(calledTenant, Authinfo.getOrgId()));
+      var promises = [];
+      var userUuidRetrieved = true;
+
       if (angular.isDefined(model.callingUser) && (model.callingUser !== '')) {
-        var callingUUID = convertUuid(model.callingUser, userList);
-        if (callingUUID !== "") {
-          devicesQuery.push(deviceQuery(callingUser, callingUUID));
-          secondaryDevicesQuery.push(deviceQuery(callingUser, callingUUID));
-        }
+        var callingUserPromse = convertUuid(model.callingUser, $translate.instant('cdrLogs.callingParty')).then(function (callingUUID) {
+          if (callingUUID !== null) {
+            devicesQuery.push(deviceQuery(callingUser, callingUUID));
+            secondaryDevicesQuery.push(deviceQuery(callingUser, callingUUID));
+          } else {
+            userUuidRetrieved = false;
+          }
+        });
+        promises.push(callingUserPromse);
       }
       if (angular.isDefined(model.calledUser) && (model.calledUser !== '')) {
-        var calledUUID = convertUuid(model.calledUser, userList);
-        if (calledUUID !== "") {
-          devicesQuery.push(deviceQuery(callingUser, calledUUID));
-          secondaryDevicesQuery.push(deviceQuery(callingUser, calledUUID));
-        }
-      }
-      if (angular.isDefined(model.callingPartyDevice) && (model.callingPartyDevice !== '')) {
-        devicesQuery.push(deviceQuery(callingDevice, model.callingPartyDevice));
-        secondaryDevicesQuery.push(deviceQuery(callingDevice, model.callingPartyDevice));
-      }
-      if (angular.isDefined(model.calledPartyDevice) && (model.calledPartyDevice !== '')) {
-        devicesQuery.push(deviceQuery(calledDevice, model.calledPartyDevice));
-        secondaryDevicesQuery.push(deviceQuery(calledDevice, model.calledPartyDevice));
-      }
-      if (angular.isDefined(model.callingPartyNumber) && (model.callingPartyNumber !== '')) {
-        devicesQuery.push(deviceQuery(callingNumber, model.callingPartyNumber));
-        secondaryDevicesQuery.push(deviceQuery(callingNumber, model.callingPartyNumber));
-      }
-      if (angular.isDefined(model.calledPartyNumber) && (model.calledPartyNumber !== '')) {
-        devicesQuery.push(deviceQuery(calledNumber, model.calledPartyNumber));
-        secondaryDevicesQuery.push(deviceQuery(calledNumber, model.calledPartyNumber));
-      }
-
-      //finalize the JSON Query
-      var jsQuery = '{"query": {"filtered": {"query": {"bool": {"should": [' + generateHosts() + ']}},"filter": {"bool": {"must": [{"range": {"@timestamp":{' + timeStamp + '}}}]';
-      var secondaryJsQuery = '{"query": {"filtered": {"query": {"bool": {"should": [' + generateHosts() + ']}},"filter": {"bool": {"must": [{"range": {"@timestamp":{' + timeStamp + '}}}]';
-
-      if (devicesQuery.length > 0) {
-        jsQuery += ',"should":[' + devicesQuery + ']';
-        secondaryJsQuery += ',"should":[' + secondaryDevicesQuery + ']';
-      }
-      jsQuery += '}}} },"size": ' + model.hitSize + ',"sort": [{"@timestamp": {"order": "desc"}}]}';
-      secondaryJsQuery += '}}} },"size": ' + model.hitSize + ',"sort": [{"@timestamp": {"order": "desc"}}]}';
-
-      var results = [];
-      var promises = [];
-      var returnResponse = [];
-      var callingPromise = proxy(jsQuery, angular.copy(thisJob)).then(function (response) {
-          if (!angular.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
-            for (var i = 0; i < response.hits.hits.length; i++) {
-              results.push(response.hits.hits[i]._source);
-            }
-            return recursiveQuery(results, thisJob).then(function (response) {
-              if (response !== ABORT) {
-                return proxyData;
-              } else {
-                return response;
-              }
-            }, function (response) {
-              if (response !== ABORT) {
-                return;
-              } else {
-                return response;
-              }
-            });
-          }
-          return;
-        },
-        function (response) {
-          if (response.status === -1) {
-            return ABORT;
-          } else if (response.status === 401) {
-            Log.debug('User unauthorized to retrieve cdr data from server. Status: ' + response.status);
-            Notification.notify([$translate.instant('cdrLogs.cdr401Unauthorized')], 'error');
-            return;
+        var calledUserPromse = convertUuid(model.calledUser, $translate.instant('cdrLogs.calledParty')).then(function (calledUUID) {
+          if (calledUUID !== null) {
+            devicesQuery.push(deviceQuery(calledUser, calledUUID));
+            secondaryDevicesQuery.push(deviceQuery(calledUser, calledUUID));
           } else {
-            Log.debug('Failed to retrieve cdr data from server. Status: ' + response.status);
-            Notification.notify([$translate.instant('cdrLogs.cdrRetrievalError')], 'error');
-            return;
+            userUuidRetrieved = false;
           }
         });
-      promises.push(callingPromise);
-
-      var calledPromise = proxy(jsQuery, angular.copy(thisJob)).then(function (response) {
-          if (!angular.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
-            for (var i = 0; i < response.hits.hits.length; i++) {
-              results.push(response.hits.hits[i]._source);
-            }
-            return recursiveQuery(results, thisJob).then(function (response) {
-              if (response !== ABORT) {
-                return proxyData;
-              } else {
-                return response;
-              }
-            }, function (response) {
-              if (response !== ABORT) {
-                return;
-              } else {
-                return response;
-              }
-            });
-          }
-          return;
-        },
-        function (response) {
-          if (response.status === -1) {
-            return ABORT;
-          } else if (response.status === 401) {
-            Log.debug('User unauthorized to retrieve cdr data from server. Status: ' + response.status);
-            Notification.notify([$translate.instant('cdrLogs.cdr401Unauthorized')], 'error');
-            return;
-          } else {
-            Log.debug('Failed to retrieve cdr data from server. Status: ' + response.status);
-            Notification.notify([$translate.instant('cdrLogs.cdrRetrievalError')], 'error');
-            return;
-          }
-        });
-      promises.push(calledPromise);
+        promises.push(calledUserPromse);
+      }
 
       return $q.all(promises).then(function () {
-        return proxyData;
+        var queryPromises = [];
+
+        if (userUuidRetrieved) {
+          if (angular.isDefined(model.callingPartyDevice) && (model.callingPartyDevice !== '')) {
+            devicesQuery.push(deviceQuery(callingDevice, model.callingPartyDevice));
+            secondaryDevicesQuery.push(deviceQuery(callingDevice, model.callingPartyDevice));
+          }
+          if (angular.isDefined(model.calledPartyDevice) && (model.calledPartyDevice !== '')) {
+            devicesQuery.push(deviceQuery(calledDevice, model.calledPartyDevice));
+            secondaryDevicesQuery.push(deviceQuery(calledDevice, model.calledPartyDevice));
+          }
+          if (angular.isDefined(model.callingPartyNumber) && (model.callingPartyNumber !== '')) {
+            devicesQuery.push(deviceQuery(callingNumber, model.callingPartyNumber));
+            secondaryDevicesQuery.push(deviceQuery(callingNumber, model.callingPartyNumber));
+          }
+          if (angular.isDefined(model.calledPartyNumber) && (model.calledPartyNumber !== '')) {
+            devicesQuery.push(deviceQuery(calledNumber, model.calledPartyNumber));
+            secondaryDevicesQuery.push(deviceQuery(calledNumber, model.calledPartyNumber));
+          }
+
+          //finalize the JSON Query
+          var jsQuery = '{"query": {"filtered": {"query": {"bool": {"should": [' + generateHosts() + ']}},"filter": {"bool": {"must": [{"range": {"@timestamp":{' + timeStamp + '}}}]';
+          var secondaryJsQuery = '{"query": {"filtered": {"query": {"bool": {"should": [' + generateHosts() + ']}},"filter": {"bool": {"must": [{"range": {"@timestamp":{' + timeStamp + '}}}]';
+
+          if (devicesQuery.length > 0) {
+            jsQuery += ',"should":[' + devicesQuery + ']';
+            secondaryJsQuery += ',"should":[' + secondaryDevicesQuery + ']';
+          }
+          jsQuery += '}}} },"size": ' + model.hitSize + ',"sort": [{"@timestamp": {"order": "desc"}}]}';
+          secondaryJsQuery += '}}} },"size": ' + model.hitSize + ',"sort": [{"@timestamp": {"order": "desc"}}]}';
+          var results = [];
+
+          var callingPromise = proxy(jsQuery, angular.copy(thisJob)).then(function (response) {
+              if (!angular.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
+                for (var i = 0; i < response.hits.hits.length; i++) {
+                  results.push(response.hits.hits[i]._source);
+                }
+                return recursiveQuery(results, thisJob).then(function (response) {
+                  if (response !== ABORT) {
+                    return proxyData;
+                  } else {
+                    return response;
+                  }
+                }, function (response) {
+                  if (response !== ABORT) {
+                    return;
+                  } else {
+                    return response;
+                  }
+                });
+              }
+              return;
+            },
+            function (response) {
+              if (response.status === -1) {
+                return ABORT;
+              } else if (response.status === 401) {
+                Log.debug('User unauthorized to retrieve cdr data from server. Status: ' + response.status);
+                Notification.notify([$translate.instant('cdrLogs.cdr401Unauthorized')], 'error');
+                return;
+              } else {
+                Log.debug('Failed to retrieve cdr data from server. Status: ' + response.status);
+                Notification.notify([$translate.instant('cdrLogs.cdrRetrievalError')], 'error');
+                return;
+              }
+            });
+          queryPromises.push(callingPromise);
+
+          var calledPromise = proxy(jsQuery, angular.copy(thisJob)).then(function (response) {
+              if (!angular.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
+                for (var i = 0; i < response.hits.hits.length; i++) {
+                  results.push(response.hits.hits[i]._source);
+                }
+                return recursiveQuery(results, thisJob).then(function (response) {
+                  if (response !== ABORT) {
+                    return proxyData;
+                  } else {
+                    return response;
+                  }
+                }, function (response) {
+                  if (response !== ABORT) {
+                    return;
+                  } else {
+                    return response;
+                  }
+                });
+              }
+              return;
+            },
+            function (response) {
+              if (response.status === -1) {
+                return ABORT;
+              } else if (response.status === 401) {
+                Log.debug('User unauthorized to retrieve cdr data from server. Status: ' + response.status);
+                Notification.notify([$translate.instant('cdrLogs.cdr401Unauthorized')], 'error');
+                return;
+              } else {
+                Log.debug('Failed to retrieve cdr data from server. Status: ' + response.status);
+                Notification.notify([$translate.instant('cdrLogs.cdrRetrievalError')], 'error');
+                return;
+              }
+            });
+          queryPromises.push(calledPromise);
+        }
+
+        return $q.all(queryPromises).then(function () {
+          if (thisJob === currentJob) {
+            return proxyData;
+          } else {
+            return ABORT;
+          }
+        });
       });
     }
 
-    function convertUuid(uuid, userList) {
-      var userUuid = "";
-      angular.forEach(userList, function (user, index, array) {
-        if (user.userName === uuid) {
-          userUuid = user.id;
+    function convertUuid(uuid, calltype) {
+      var defer = $q.defer();
+      getUser(uuid, calltype).then(function (response) {
+        if ((response === null) && (uuid.length === 36) && /^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$/.test(uuid)) {
+          defer.resolve(uuid);
+        } else {
+          defer.resolve(response);
         }
+      }, function (response) {
+        defer.resolve(response);
       });
 
-      if ((userUuid === "") && (uuid.length === 36) && /^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$/.test(uuid)) {
-        return uuid;
-      } else {
-        return userUuid;
-      }
+      return defer.promise;
     }
 
     function generateHosts() {
@@ -359,7 +373,6 @@
     }
 
     function groupCdrsIntoCalls(cdrArray) {
-      proxyData = [];
       var x = 0;
       while (cdrArray.length > 0) {
         var call = [];

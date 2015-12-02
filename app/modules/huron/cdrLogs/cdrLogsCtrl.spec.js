@@ -22,7 +22,6 @@ describe('Controller: CdrLogsCtrl', function () {
     var $q = _$q_;
 
     spyOn(state, "go");
-    spyOn(CdrService, "getUserList").and.returnValue($q.when([]));
 
     controller = $controller('CdrLogsCtrl', {
       $scope: $scope,
