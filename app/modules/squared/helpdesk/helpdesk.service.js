@@ -208,7 +208,6 @@
           var orgs = [];
           var currentResults = _.take(userSearchResults, userLimit);
           _.each(currentResults, function (user) {
-            console.log();
             if (user.organization.id === Config.consumerOrgId) {
               user.organization.displayName = $translate.instant('helpdesk.consumerOrg');
             } else if (!user.organization.displayName) {
