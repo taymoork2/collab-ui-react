@@ -11,8 +11,8 @@
     var searchResultsPageSize = 5;
     var searchResultsLimit = 20;
     vm.search = search;
-    vm.setOrgFilter = setOrgFilter;
-    vm.clearOrgFilter = clearOrgFilter;
+    vm.initSearchWithOrgFilter = initSearchWithOrgFilter;
+    vm.initSearchWithoutOrgFilter = initSearchWithoutOrgFilter;
     vm.searchingForUsers = false;
     vm.searchingForOrgs = false;
     vm.searchingForDevices = false;
@@ -111,13 +111,13 @@
       });
     }
 
-    function setOrgFilter(org) {
+    function initSearchWithOrgFilter(org) {
       vm.searchString = '';
       vm.currentSearch.initSearch('');
       vm.currentSearch.orgFilter = org;
     }
 
-    function clearOrgFilter() {
+    function initSearchWithoutOrgFilter() {
       vm.searchString = '';
       vm.currentSearch.initSearch('');
       vm.currentSearch.orgFilter = null;
