@@ -28,6 +28,7 @@
     vm.adminUserLimit = vm.initialAdminUserLimit;
     vm.showAllAdminUsers = showAllAdminUsers;
     vm.hideAllAdminUsers = hideAllAdminUsers;
+    vm.keyPressHandler = keyPressHandler;
 
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
     HelpdeskCardsService.getHealthStatuses().then(initHealth, angular.noop);
@@ -41,6 +42,7 @@
       findManagedByOrgs(org);
       findWebExSites(org);
       findAdminUsers(org);
+      angular.element(".helpdesk-details").focus();
     }
 
     function initCards(licenses) {
@@ -94,6 +96,15 @@
 
     function hideAllAdminUsers() {
       vm.adminUserLimit = vm.initialAdminUserLimit;
+    }
+
+    function keyPressHandler(event) {
+      var newTabIndex = 0;
+      switch (event.keyCode) {
+      case 27: // Esc
+        window.history.back();
+        break;
+      }
     }
   }
 

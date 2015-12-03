@@ -23,6 +23,7 @@
     vm.meetingCard = {};
     vm.callCard = {};
     vm.hybridServicesCard = {};
+    vm.keyPressHandler = keyPressHandler;
 
     HelpdeskService.getUser(vm.orgId, vm.userId).then(initUserView, XhrNotificationService.notify);
 
@@ -63,6 +64,21 @@
           vm.org.displayName = displayName;
         }, XhrNotificationService.notify);
       }
+
+      angular.element(".helpdesk-details").focus();
+    }
+  }
+
+  function keyPressHandler(event) {
+    var newTabIndex = 0;
+    switch (event.keyCode) {
+    case 27: // Esc
+      newTabIndex = "-1";
+      window.history.back();
+      break;
+    }
+    if (newTabIndex != "-1") {
+      $('[tabindex=' + newTabIndex + ']').focus();
     }
   }
 

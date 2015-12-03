@@ -290,7 +290,7 @@
 .helpdesk-warning {
   color: $color-attention-base;
 }
-.helpdesk-search:focus {
+.helpdesk-search:focus, .helpdesk-details:focus {
   outline: none !important;
   outline: 0 !important;
   border: 0 !important;

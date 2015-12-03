@@ -18,6 +18,7 @@
     vm.searchingForDevices = false;
     vm.searchString = '';
     vm.keyPressHandler = keyPressHandler;
+    vm.focusFirstCard = focusFirstCard;
     vm.showMoreResults = showMoreResults;
     vm.currentSearch = {
       searchString: '',
@@ -172,7 +173,7 @@
       });
     }
 
-    function keyPressHandler(event) {
+    function keyPressHandler(event, page) {
       var activeCard = angular.element(document.activeElement)[0]["tabIndex"];
       var newTabIndex = activeCard;
       switch (event.keyCode) {
@@ -199,7 +200,7 @@
         break;
 
       case 13: // Enter
-        if (angular.element(document.activeElement)[0]["id"] !== "searchInput") {
+        if (angular.element(document.activeElement)[0]["id"] === "searchInput") {
           newTabIndex = 1;
         } else {
           angular.element(document.activeElement).click();
@@ -209,6 +210,11 @@
       if (newTabIndex != "-1") {
         $('[tabindex=' + newTabIndex + ']').focus();
       }
+    }
+
+    function focusFirstCard() {
+      //angular.element('.cs-card:first-child article').focus();
+      angular.element('#user-card-0 article').focus();
     }
   }
 
