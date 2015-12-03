@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceSettingsController($state, $modal, MediaServiceActivation, Authinfo, $stateParams, $translate, NotificationConfigService, $log, MailValidatorService, XhrNotificationService, Notification) {
+  function MediaServiceSettingsController($state, $modal, MediaServiceActivation, Authinfo, $stateParams, $translate, EmailNotificationConfigService, $log, EmailValidatorService, XhrNotificationService, Notification) {
     var vm = this;
     vm.config = "";
     vm.wx2users = "";
@@ -72,7 +72,7 @@
         });
     };
 
-    NotificationConfigService.read(function (err, config) {
+    EmailNotificationConfigService.read(function (err, config) {
       vm.loading = false;
       if (err) {
         return XhrNotificationService.notify(err);
@@ -93,11 +93,11 @@
       vm.config.wx2users = _.map(vm.wx2users, function (data) {
         return data.text;
       }).toString();
-      if (vm.config.wx2users && !MailValidatorService.isValidEmailCsv(vm.config.wx2users)) {
+      if (vm.config.wx2users && !EmailValidatorService.isValidEmailCsv(vm.config.wx2users)) {
         Notification.error("hercules.errors.invalidEmail");
       } else {
         vm.savingEmail = true;
-        NotificationConfigService.write(vm.config, function (err) {
+        EmailNotificationConfigService.write(vm.config, function (err) {
           vm.savingEmail = false;
           if (err) {
             return XhrNotificationService.notify(err);

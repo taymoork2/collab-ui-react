@@ -19,7 +19,7 @@ if [ "${top_dir}" = "/" ]; then
 fi
 
 if [ $# -lt 3 ]; then
-    echo "usage: `basename $0` <usr_label> <method> [...<`basename $0`-options] [...<curl-options>] <atlas_uri>"
+    echo "usage: `basename $0` <usr_label> <method> [...<`basename $0`-options>] [...<curl-options>] <atlas_uri>"
     echo ""
     echo "A wrapper around curl, to simplify REST calls to Atlas."
     echo "- See 'test_helper.coffee' for the user labels available for use."

@@ -4,10 +4,16 @@
 @import 'registeredEndpoints/_registered-endpoints';
 @import 'activeUserPopulation/_active-user-population';
 
+.partnerreports {
+  @extend %content-subheader;
+  // @extend %page-content-padding;
+  // TODO: remove when page is made responsive
+  .content-container {
+    padding: 1.5rem 0;
+  }
+}
 .partner-reports {
-  padding: 0;
-  height: auto;
-  overflow: hidden;
+
   .reports-header {
     @extend .row;
     @extend .page-header;

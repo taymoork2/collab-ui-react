@@ -1,17 +1,17 @@
 <div class="devices-redux">
-  <div ng-if="devices.codesListSubscription.eventCount == 0 || devices.deviceListSubscription.eventCount == 0">
+  <div ng-if="!devices.anyDevicesOrCodesLoaded">
     <div style="padding: 100px; text-align: center;">
       <i class="icon icon-2x icon-spinner" />
     </div>
   </div>
 
-  <div ng-if="devices.codesListSubscription.currentError || devices.deviceListSubscription.currentError">
+  <div ng-if="devices.subscriptionErrorsExist">
     <div class="error-spinner">
       <i class="icon icon-2x icon-spinner" />
     </div>
   </div>
 
-  <div ng-if="devices.codesListSubscription.eventCount != 0 && devices.deviceListSubscription.eventCount != 0">
+  <div ng-if="devices.anyDevicesOrCodesLoaded">
     <div class="devices-header">
       <div class="clearfix row">
         <h1>
@@ -43,7 +43,7 @@
                 ng-blur="devices.inputActive=false"
                 ng-focus="devices.inputActive=true"
                 placeholder="Search for devices..."
-                ng-change="devices.refreshResults()"
+                ng-change="devices.searchChanged()"
                 ng-model-options="{ debounce: { default: 250 } }"
               />
 

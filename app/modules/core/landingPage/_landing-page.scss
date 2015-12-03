@@ -1,14 +1,16 @@
 /******** Home page styles ********/
 
+.overview {
+  @extend %content-header;
+  @extend %page-content-padding;
+}
+
 // Analytics Charts
 .overview-updated {
   cursor: pointer;
   font-family: Arial;
   color: $gray-darker;
   line-height: 40px;
-
-  @extend %ui-pl;
-
   display: inline-block;
 
   .icon-refresh {
@@ -197,7 +199,6 @@
 }
 
 i {
-  margin-right: 5px;
   .green & {
     color: $brand-success;
   }

@@ -95,7 +95,7 @@ npm_duration=$(($time_npm-$time_start))
 echo "npm completed after $(($npm_duration / 60)) minutes and $(($npm_duration % 60)) seconds."
 
 bower cache clean
-bower install && bower update
+(bower install && bower update) || exit $?
 
 time_bower=$(date +"%s")
 bower_duration=$(($time_bower-$time_npm))

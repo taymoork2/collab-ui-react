@@ -2,8 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceController(XhrNotificationService, MediaServiceActivation, $state,
-    $modal, $scope, $log, $translate, Authinfo, MediaClusterService) {
+  function MediaServiceController(XhrNotificationService, MediaServiceActivation, $state, $modal, $scope, $log, $translate, Authinfo, MediaClusterService) {
 
     MediaClusterService.subscribe('data', clustersUpdated, {
       scope: $scope
@@ -91,7 +90,8 @@
       vm.showPreview = true;
     }
 
-    function enableMediaService(serviceId) {
+    vm.enableMediaService = function (serviceId) {
+      //function enableMediaService(serviceId) {
       //$log.log("Entered enableMediaService");
       vm.waitForEnabled = true;
       MediaServiceActivation.setServiceEnabled(serviceId, true).then(
@@ -107,9 +107,9 @@
       vm.serviceEnabled = true;
       vm.waitForEnabled = false;
       //$log.log("Exiting enableMediaService, serviceEnabled:", $scope.serviceEnabled);
-    }
+    };
 
-    function enableOrpheusForMediaFusion() {
+    vm.enableOrpheusForMediaFusion = function () {
       //$log.log("Entered enableOrpheusForMediaFusion");
       MediaServiceActivation.getUserIdentityOrgToMediaAgentOrgMapping().then(
         function success(response) {
@@ -145,9 +145,9 @@
           mediaAgentOrgIdsArray.push("squared");
           vm.addUserIdentityToMediaAgentOrgMapping(mediaAgentOrgIdsArray);
         });
-    }
+    };
 
-    function addUserIdentityToMediaAgentOrgMapping(mediaAgentOrgIdsArray) {
+    vm.addUserIdentityToMediaAgentOrgMapping = function (mediaAgentOrgIdsArray) {
       MediaServiceActivation.setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
         function success(response) {},
         function error(errorResponse, status) {
@@ -155,7 +155,7 @@
             failureMessage: errorResponse.message
           })], 'error');
         });
-    }
+    };
   }
 
   /* @ngInject */
