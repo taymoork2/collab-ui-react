@@ -41,6 +41,7 @@
     vm.trialUsedPercentage = 0;
     vm.isInitialized = false; // invert the logic and initialize to false so the template doesn't flicker before spinner
     vm.isStormBranding = false;
+    vm.roomSystemsExist = false;
 
     init();
 
@@ -90,6 +91,7 @@
       vm.roomServices.services = Authinfo.getLicenses() || [];
       angular.forEach(vm.roomServices.services, function (service) {
         if (service.licenseType === "SHARED_DEVICES") {
+          vm.roomSystemsExist = true;
           if (service.isTrial) {
             vm.trialExists = true;
             vm.trialId = service.license.trialId;

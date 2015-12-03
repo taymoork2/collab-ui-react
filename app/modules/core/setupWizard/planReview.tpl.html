@@ -114,7 +114,7 @@
     </div>
   </div>
 
-  <div ng-if="vm.roomServices.services">
+  <div ng-if="planReview.roomSystemsExist">
     <div class="row row-room" ng-class="{'col-paid' : !planReview.roomServices.isNewTrial, 'col-trial' : planReview.roomServices.isNewTrial}">
       <div class="column-header">
         <i class="icon icon-circle-telepresence"></i>
