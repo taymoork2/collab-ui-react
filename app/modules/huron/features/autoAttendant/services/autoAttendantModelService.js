@@ -41,7 +41,7 @@
 
   function AAModelService() {
 
-    var aaModel = new AAModel();
+    var aaModel = {};
 
     var service = {
       getAAModel: getAAModel,
