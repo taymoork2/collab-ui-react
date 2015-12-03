@@ -2939,6 +2939,7 @@
       "cancelled": "Cancelled",
       "suspended": "Suspended",
       "pending": "Pending"
-    }
+    },
+    "consumerOrg": "Consumer"
   }
 }

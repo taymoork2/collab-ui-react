@@ -61,7 +61,7 @@
     function searchUsers(searchString, orgId) {
       if (searchString.length >= 3) {
         vm.searchingForUsers = true;
-        HelpdeskService.searchUsers(searchString, orgId, searchResultsLimit).then(function (res) {
+        HelpdeskService.searchUsers(searchString, orgId, searchResultsLimit, null, true).then(function (res) {
           vm.currentSearch.userSearchResults = res;
           vm.searchingForUsers = false;
           HelpdeskService.findAndResolveOrgsForUserResults(

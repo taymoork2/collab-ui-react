@@ -122,6 +122,8 @@ angular.module('Core')
 
         ciscoMockOrgId: 'd30a6828-dc35-4753-bab4-f9b468828688',
 
+        consumerOrgId: 'consumer',
+
         logoutUrl: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=',
 
         oauthDeleteTokenUrl: 'https://idbroker.webex.com/idb/oauth2/v1/revoke',
