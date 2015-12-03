@@ -870,6 +870,13 @@
                 okToUpdate = false;
               }
             }
+            else {
+              if ((webExUserSettingsModel.pmr.value === true) && (webExUserSettingsModel.cmr.value === true) && (webExUserSettingsModel.telephonyPriviledge.callInTeleconf.value === false)) {
+                notificationMsg = $translate.instant("webexUserSettings.pmrErrorTelephonyPrivileges");
+                _self.notifyError(notificationMsg);
+                okToUpdate = false;
+              }
+            }
           } else {
             if ((webExUserSettingsModel.pmr.value === true) && (webExUserSettingsModel.cmr.value === true) && (webExUserSettingsModel.telephonyPriviledge.callInTeleconf.value === false)) {
               notificationMsg = $translate.instant("webexUserSettings.pmrErrorTelephonyPrivileges");
