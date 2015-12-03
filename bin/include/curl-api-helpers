@@ -1,4 +1,4 @@
-atlas_api_url=https://atlas-a.wbx2.com/admin/api/v1
+atlas_api_url=${atlas_api_url:-https://atlas-integration.wbx2.com/admin/api/v1}
 ci_url=https://idbroker.webex.com/idb
 ci_cookie_name=cisPRODiPlanetDirectoryPro
 client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec
