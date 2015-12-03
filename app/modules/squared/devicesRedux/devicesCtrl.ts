@@ -3,10 +3,10 @@ namespace devicesRedux {
   class DevicesReduxCtrl {
 
     private _search;
+    private pageSize = 10;
     private groupedDevices;
-    private codesListSubscription;
-    private deviceListSubscription;
-    private huronDeviceListSubscription;
+    private subscriptions = [];
+    private currentOffset = {};
 
     private deviceProps = {
       product: 'Product',
@@ -45,17 +45,17 @@ namespace devicesRedux {
       // hack until toolkit supports #fff background
       $('body').css('background', 'white');
 
-      this.codesListSubscription = CsdmCodeService.on('data', this.updateCodesAndDevices.bind(this), {
+      this.subscriptions.push(CsdmCodeService.on('data', this.updateCodesAndDevices.bind(this), {
         scope: $scope
-      });
+      }));
 
-      this.deviceListSubscription = CsdmDeviceService.on('data', this.updateCodesAndDevices.bind(this), {
+      this.subscriptions.push(CsdmDeviceService.on('data', this.updateCodesAndDevices.bind(this), {
         scope: $scope
-      });
+      }));
 
-      this.huronDeviceListSubscription = CsdmHuronDeviceService.on('data', this.updateCodesAndDevices.bind(this), {
+      this.subscriptions.push(CsdmHuronDeviceService.on('data', this.updateCodesAndDevices.bind(this), {
         scope: $scope
-      });
+      }));
     }
 
     get search() {
@@ -64,6 +64,15 @@ namespace devicesRedux {
 
     set search(search) {
       this._search = search;
+    }
+
+    get anyDevicesOrCodesLoaded() {
+      let total = _.sum(this.groupedDevices, (group:any) => group.devices.length);
+      return total || _.sum(this.subscriptions, 'eventCount') >= 3;
+    }
+
+    get subscriptionErrorsExist() {
+      return _.any(this.subscriptions, 'currentError');
     }
 
     updateCodesAndDevices() {
@@ -113,14 +122,23 @@ namespace devicesRedux {
       });
 
       if (attributeMatches) return device;
-    }
-
-    clearSearch () {
-      this.search = undefined;
-      this.refreshResults();
     };
 
-    refreshResults () {
+    offsetForGroup(group) {
+      return this.currentOffset[group.displayName] || this.pageSize;
+    };
+
+    increaseOffsetForGroup(group) {
+      this.currentOffset[group.displayName] = this.offsetForGroup(group) + this.pageSize;
+    };
+    
+    clearSearch () {
+      this.search = undefined;
+      this.searchChanged();
+    };
+
+    searchChanged() {
+      this.currentOffset = {};
       this.updateCodesAndDevices();
       this.transitionIfSearchOrFilterChanged();
     };
