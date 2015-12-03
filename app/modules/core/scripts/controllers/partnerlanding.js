@@ -222,6 +222,7 @@ angular.module('Core')
         rowTemplate: rowTemplate,
         headerRowHeight: 44,
         useExternalSorting: false,
+        enableColumnResize: true,
         sortInfo: {
           fields: ['customerName'],
           directions: ['asc']

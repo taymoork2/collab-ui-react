@@ -1,4 +1,6 @@
-.partnercustomers-list {
+.partnercustomers-list,
+.partnercustomers,
+.customer-overview {
   @extend %grid-subheader;
   @extend %page-background-white;
 

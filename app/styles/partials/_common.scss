@@ -45,6 +45,11 @@ body {
 }
 
 // Common ngGrid Styles
+.grid-refresh {
+  position: absolute;
+  top: 20rem;
+  left: 50%;
+}
 
 @media screen {
   #printSection {
