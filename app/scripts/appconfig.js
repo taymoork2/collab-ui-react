@@ -1322,7 +1322,8 @@ angular
           parent: 'modalFull',
           params: {
             customerId: {},
-            customerName: {}
+            customerName: {},
+            customerEmail: {}
           },
           views: {
             'modal@': {
@@ -1336,6 +1337,16 @@ angular
               controllerAs: 'pstnProviders'
             }
           }
+        })
+        .state('pstnSetup.contractInfo', {
+          templateUrl: 'modules/huron/pstnSetup/pstnContractInfo/pstnContractInfo.tpl.html',
+          controller: 'PstnContractInfoCtrl',
+          controllerAs: 'pstnContractInfo'
+        })
+        .state('pstnSetup.serviceAddress', {
+          templateUrl: 'modules/huron/pstnSetup/pstnServiceAddress/pstnServiceAddress.tpl.html',
+          controller: 'PstnServiceAddressCtrl',
+          controllerAs: 'pstnServiceAddress'
         })
         .state('pstnSetup.orderNumbers', {
           templateUrl: 'modules/huron/pstnSetup/pstnNumbers/pstnNumbers.tpl.html',

@@ -183,6 +183,7 @@ module.exports = function() {
         vendor + '/ng-tags-input/ng-tags-input.min.js',
         vendor + '/pako/dist/pako.js',
         vendor + '/angular-cache/dist/angular-cache.js',
+        vendor + '/parse-address-bobbr/parse-address.min.js'
       ],
       scss: {
         paths: [
