@@ -1,6 +1,4 @@
-.management-service-list,
-.calendar-service-list,
-.call-service-list {
+.expressway-service {
   @extend %grid-subheader;
   @extend %page-background-white;
 }

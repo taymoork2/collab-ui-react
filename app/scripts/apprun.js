@@ -109,7 +109,7 @@ angular
         LogMetricsService.logMetricsState(toState);
 
         // Add Body Class to the $rootScope on stateChange
-        $rootScope.bodyClass = _.get(toState, 'data.bodyClass') || toState.name.replace(/\./g, '-');
+        $rootScope.bodyClass = _.get(toState, 'data.bodyClass') || toState.name.replace(/\./g, '-' + '-state');
       });
 
       // This is where standard form field validation messages are defined.  Any overrides need to be
