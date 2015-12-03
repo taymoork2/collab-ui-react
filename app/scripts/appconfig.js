@@ -676,12 +676,6 @@ angular
             displayName: 'Reports Page2'
           }
         })
-        .state('templates', {
-          url: '/templates',
-          templateUrl: 'modules/squared/views/templates.html',
-          controller: 'UsersCtrl',
-          parent: 'main'
-        })
         .state('reports', {
           url: '/reports',
           templateUrl: 'modules/squared/views/reports.html',
@@ -730,7 +724,10 @@ angular
           templateUrl: 'modules/squared/devices/devices.html',
           controller: 'DevicesCtrl',
           controllerAs: 'sc',
-          parent: 'main'
+          parent: 'main',
+          data: {
+            bodyClass: 'devices-page'
+          }
         })
         .state('device-overview', {
           parent: 'sidepanel',
@@ -1568,7 +1565,7 @@ angular
         })
         .state('cluster-details-new.host-details', {
           templateUrl: 'modules/hercules/expressway-service/host-details.html',
-          controller: 'HostDetailsController',
+          controller: 'ExpresswayHostDetailsController',
           controllerAs: 'hostDetailsCtrl',
           data: {
             displayName: 'Host'

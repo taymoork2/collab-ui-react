@@ -41,10 +41,7 @@ if [ "$checksums_ok"    = "true" -a \
 else
     ./setup.sh
 
-    # check that npm installed successfully
-    npm_installed=`which npm >/dev/null 2>&1 && echo "true" || echo "false"`
-
-    if [ "$npm_installed" = "false" ]; then
+    if [ $? -ne 0 ]; then
         # setup failed, cleanup checksums file and abort
         rm $manifest_checksums_file
         exit 1

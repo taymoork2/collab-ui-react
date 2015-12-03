@@ -30,7 +30,14 @@
 
 .pstn-provider-card {
   footer {
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .icon-content-share {
+      font-size: 1.25rem;
+      flex: 0;
+      left: 25%;
+    }
   }
   header img {
     @extend .pstn-provider-logo;
