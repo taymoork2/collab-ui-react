@@ -87,10 +87,7 @@ angular.module('Core')
       function checkDnOverlapsSteeringDigit(userEntity) {
         var dnFirstCharacter = "";
         var steeringDigit = $scope.telephonyInfo.steeringDigit;
-        if (_.startsWith(_.get(userEntity, 'assignedDn.pattern'), steeringDigit)) {
-          return true;
-        }
-        return false;
+        return _.startsWith(_.get(userEntity, 'assignedDn.pattern'), steeringDigit);
       }
 
       function returnInternalNumberlist(pattern) {

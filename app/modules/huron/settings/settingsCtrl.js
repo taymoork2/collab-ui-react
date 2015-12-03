@@ -158,6 +158,15 @@
       }
     };
 
+    vm.steerDigitOverLapValidation = function ($viewValue, $modelValue, scope) {
+      if (_.get(vm, 'model.site.steeringDigit.length') > 0 &&
+        ((_.startsWith(_.get(scope, 'model.beginNumber'), _.get(vm, 'model.site.steeringDigit'))) ||
+          (_.startsWith(_.get(scope, 'model.endNumber'), _.get(vm, 'model.site.steeringDigit'))))) {
+        return true;
+      }
+      return false;
+    };
+
     vm.leftPanelFields = [{
       model: vm.model.site,
       className: 'service-setup',
@@ -257,15 +266,7 @@
               'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
                 return angular.isDefined(scope.model.uuid);
               },
-              'templateOptions.isWarn': function ($viewValue, $modelValue, scope) {
-                if (_.get(vm, 'model.site.steeringDigit.length') > 0 ) {
-                  if ((_.startsWith(_.get(scope, 'model.beginNumber'), _.get(vm, 'model.site.steeringDigit'))) || 
-                    (_.startsWith(_.get(scope, 'model.endNumber'), _.get(vm, 'model.site.steeringDigit')))) {
-                    return true;
-                  }
-                }
-                return false;
-              }
+              'templateOptions.isWarn': vm.steerDigitOverLapValidation
             }
           }, {
             className: 'form-inline formly-field service-setup-extension-range-to',
@@ -325,15 +326,7 @@
               'data.validate': function (viewValue, modelValue, scope) {
                 return scope.fc && scope.fc.$validate();
               },
-              'templateOptions.isWarn': function ($viewValue, $modelValue, scope) {
-                if (_.get(vm, 'model.site.steeringDigit.length') > 0 ) {
-                  if ((_.startsWith(_.get(scope, 'model.beginNumber'), _.get(vm, 'model.site.steeringDigit'))) || 
-                    (_.startsWith(_.get(scope, 'model.endNumber'), _.get(vm, 'model.site.steeringDigit')))) {
-                    return true;
-                  }
-                }
-                return false;
-              }
+              'templateOptions.isWarn': vm.steerDigitOverLapValidation
             }
           }, {
             type: 'icon-button',
