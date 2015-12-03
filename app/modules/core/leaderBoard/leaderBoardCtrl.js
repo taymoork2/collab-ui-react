@@ -1,66 +1,95 @@
 'use strict';
 
 angular.module('Core')
-  .controller('leaderBoardCtrl', ['$scope', 'Log', 'Orgservice', '$filter',
-    function ($scope, Log, Orgservice, $filter) {
-
+  .controller('leaderBoardCtrl', ['$scope', 'Log', 'Orgservice', '$filter', 'Authinfo', 'TrialService', 'FeatureToggleService', '$translate',
+    function ($scope, Log, Orgservice, $filter, Authinfo, TrialService, FeatureToggleService, $translate) {
       $scope.buckets = {
         messaging: {
-          currentCount: 0,
-          description: $filter('translate')('leaderBoard.messagingDesc'),
-          subtitle: $filter('translate')('leaderBoard.messagingSubtitle'),
           title: $filter('translate')('leaderBoard.messagingTitle'),
-          totalCount: 0,
+          subtitle: $filter('translate')('leaderBoard.messagingSubtitle'),
           unlimited: false,
-          visible: false
+          visible: false,
+          isNewTrial: false,
+          services: []
         },
-        conferencing: {
-          currentCount: 0,
-          description: $filter('translate')('leaderBoard.conferencingDesc'),
-          subtitle: $filter('translate')('leaderBoard.conferencingSubtitle'),
+        cf: {
           title: $filter('translate')('leaderBoard.conferencingTitle'),
-          totalCount: 0,
+          subtitle: $filter('translate')('leaderBoard.conferencingSubtitle'),
           unlimited: false,
-          visible: false
+          visible: false,
+          isNewTrial: false,
+          services: []
         },
         communication: {
-          currentCount: 0,
-          description: $filter('translate')('leaderBoard.communicationDesc'),
-          subtitle: $filter('translate')('leaderBoard.communicationSubtitle'),
           title: $filter('translate')('leaderBoard.communicationTitle'),
-          totalCount: 0,
+          subtitle: $filter('translate')('leaderBoard.communicationSubtitle'),
           unlimited: false,
-          visible: false
-        }
+          visible: false,
+          isNewTrial: false,
+          services: []
+        },
+        conferencing: {
+          title: $filter('translate')('leaderBoard.conferencingTitle'),
+          subtitle: $filter('translate')('leaderBoard.conferencingSubtitle'),
+          unlimited: false,
+          visible: false,
+          isNewTrial: false,
+          services: []
+        },
+        shared_devices: {
+          title: $filter('translate')('leaderBoard.shared_devicesTitle'),
+          subtitle: $filter('translate')('leaderBoard.shared_devicesSubtitle'),
+          unlimited: false,
+          visible: false,
+          isNewTrial: false,
+          services: []
+        },
+        storage: {
+          services: []
+        },
+        sites: {}
       };
 
       // for explicit ordering:
       $scope.bucketKeys = [
         'messaging',
+        'cf',
         'conferencing',
-        'communication'
+        'communication',
+        'shared_devices',
+        'storage',
+        'sites'
       ];
 
+      $scope.isStormBranding = false;
+      FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
+        $scope.isStormBranding = result;
+      });
+
       var getLicenses = function () {
-        Orgservice.getValidLicenses().then(function (licenses) {
+        Orgservice.getLicensesUsage().then(function (licenses) {
           if (licenses.length === 0) {
             $scope.bucketKeys.forEach(function (bucket) {
               $scope.buckets[bucket].unlimited = true;
             });
           } else {
-            $scope.bucketKeys.forEach(function (bucket) {
-              $scope.buckets[bucket].totalCount = 0;
-              $scope.buckets[bucket].currentCount = 0;
-            });
             licenses.forEach(function (license) {
-              // skip CMR licenses; these should not contribute toward counts
-              if (license.licenseId.lastIndexOf('CMR', 0) === 0) return;
               var bucket = license.licenseType.toLowerCase();
-              if ($scope.buckets[bucket]) {
-                $scope.buckets[bucket].totalCount += license.volume;
-                $scope.buckets[bucket].currentCount += license.usage;
+              if (license.offerName !== "CF") {
+                if (license.siteUrl) {
+                  if (!$scope.buckets.sites[license.siteUrl]) {
+                    $scope.buckets.sites[license.siteUrl] = [];
+                  }
+                  $scope.buckets.sites[license.siteUrl].push(license);
+                  $scope.buckets.licensesCount = $scope.buckets.sites[license.siteUrl].length;
+                } else {
+                  $scope.buckets[bucket].services.push(license);
+                }
+              } else {
+                $scope.buckets.cf.services.push(license);
               }
             });
+            $scope.buckets.count = Object.keys($scope.buckets.sites).length;
           }
         });
       };
@@ -72,7 +101,6 @@ angular.module('Core')
       $scope.$on('Userservice::updateUsers', function () {
         getLicenses();
       });
-
     }
   ])
   .directive('leaderBoardBucket', function () {
