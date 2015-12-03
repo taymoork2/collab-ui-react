@@ -71,6 +71,8 @@
       $scope.adminEmail = Authinfo.getPrimaryEmail();
       $scope.authToken = $rootScope.token;
       $scope.siteName = $stateParams.siteUrl;
+      $scope.fullSparkDNS = window.location.origin;
+
       $scope.locale = (
         "es_LA" == translateUse
       ) ? "es_MX" : translateUse;
