@@ -194,6 +194,34 @@
       return user;
     }
 
+    function findAndResolveOrgsForUserResults(userSearchResults, orgFilter, userLimit) {
+      if (_.size(userSearchResults) > 0) {
+        if (orgFilter) {
+          _.each(userSearchResults, function (user) {
+            user.organization.displayName = orgFilter.displayName;
+          });
+        } else {
+          var orgs = [];
+          var currentResults = _.take(userSearchResults, userLimit);
+          _.each(currentResults, function (user) {
+            if (!user.organization.displayName) {
+              orgs.push(user.organization.id);
+            }
+          });
+          _.each(_.uniq(orgs), function (orgId) {
+            getOrgDisplayName(orgId).then(function (displayName) {
+              _.each(userSearchResults, function (user) {
+                if (user.organization && user.organization.id === orgId) {
+                  user.organization.displayName = displayName;
+                }
+              });
+            }, angular.noop);
+          });
+        }
+
+      }
+    }
+
     function resendInviteEmail(displayName, email) {
       return $http
         .post(urlBase + 'helpdesk/actions/resendinvitation/invoke', {
@@ -232,7 +260,8 @@
       resendInviteEmail: resendInviteEmail,
       getWebExSites: getWebExSites,
       getCloudberryDevice: getCloudberryDevice,
-      getOrgDisplayName: getOrgDisplayName
+      getOrgDisplayName: getOrgDisplayName,
+      findAndResolveOrgsForUserResults: findAndResolveOrgsForUserResults
     };
   }
 

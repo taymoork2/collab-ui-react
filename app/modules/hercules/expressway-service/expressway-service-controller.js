@@ -156,7 +156,7 @@
   }
 
   /* @ngInject */
-  function HostDetailsController($stateParams, $state, ClusterService, XhrNotificationService) {
+  function ExpresswayHostDetailsController($stateParams, $state, ClusterService, XhrNotificationService) {
     var vm = this;
     vm.host = $stateParams.host;
     vm.cluster = ClusterService.getClusters()[$stateParams.clusterId];
@@ -311,6 +311,6 @@
     .controller('ExpresswayServiceController', ExpresswayServiceController)
     .controller('ExpresswayClusterSettingsController', ExpresswayClusterSettingsController)
     .controller('AlarmController', AlarmController)
-    .controller('HostDetailsController', HostDetailsController)
+    .controller('ExpresswayHostDetailsController', ExpresswayHostDetailsController)
     .controller('UserErrorsController', UserErrorsController);
 }());

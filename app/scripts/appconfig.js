@@ -1568,7 +1568,7 @@ angular
         })
         .state('cluster-details-new.host-details', {
           templateUrl: 'modules/hercules/expressway-service/host-details.html',
-          controller: 'HostDetailsController',
+          controller: 'ExpresswayHostDetailsController',
           controllerAs: 'hostDetailsCtrl',
           data: {
             displayName: 'Host'

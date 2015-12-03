@@ -77,16 +77,23 @@ describe('Controller: HelpdeskController', function () {
 
     beforeEach(function () {
       sinon.stub(HelpdeskService, 'searchUsers');
+      sinon.stub(HelpdeskService, 'searchOrgs');
+      sinon.stub(HelpdeskService, 'searchCloudberryDevices');
+      sinon.stub(HelpdeskService, 'findAndResolveOrgsForUserResults');
+
       var deferredUserResult = q.defer();
       deferredUserResult.resolve(userSearchResult);
       HelpdeskService.searchUsers.returns(deferredUserResult.promise);
 
-      sinon.stub(HelpdeskService, 'searchOrgs');
-      sinon.stub(HelpdeskService, 'getOrgDisplayName');
-      var deferredOrgResult = q.defer();
-      deferredOrgResult.resolve(orgSearchResult);
-      HelpdeskService.searchOrgs.returns(deferredOrgResult.promise);
-      HelpdeskService.getOrgDisplayName.returns(deferredOrgResult.promise);
+      var deferredOrgsResult = q.defer();
+      deferredOrgsResult.resolve(orgSearchResult);
+      HelpdeskService.searchOrgs.returns(deferredOrgsResult.promise);
+
+      var deferredDeviceResult = q.defer();
+      deferredDeviceResult.resolve([{}]);
+      HelpdeskService.searchCloudberryDevices.returns(deferredDeviceResult.promise);
+
+      HelpdeskService.findAndResolveOrgsForUserResults.returns(deferredUserResult.promise);
 
       controller = $controller('HelpdeskController', {
         HelpdeskService: HelpdeskService,
@@ -94,7 +101,7 @@ describe('Controller: HelpdeskController', function () {
         $scope: $scope
       });
 
-      controller.setOrgFilter(null);
+      controller.initSearchWithoutOrgFilter();
 
     });
 
@@ -107,8 +114,27 @@ describe('Controller: HelpdeskController', function () {
       expect(controller.searchingForUsers).toBeFalsy();
       expect(controller.searchingForOrgs).toBeFalsy();
       expect(controller.currentSearch.userSearchResults[0].displayName).toEqual("Bill Gates");
-      expect(controller.currentSearch.userSearchResults[0].organization.displayName[0].displayName).toEqual("Bill Gates Foundation");
       expect(controller.currentSearch.orgSearchResults[0].displayName).toEqual("Bill Gates Foundation");
+    });
+
+    it('only a search within org searches for devices', function () {
+      controller.initSearchWithoutOrgFilter();
+      controller.searchString = "Whatever";
+      controller.search();
+      expect(controller.searchingForDevices).toBeFalsy();
+      $scope.$apply();
+      expect(controller.searchingForDevices).toBeFalsy();
+
+      controller.initSearchWithOrgFilter({
+        "id": "1276387"
+      });
+
+      controller.searchString = "Whatever";
+      controller.search();
+      expect(controller.searchingForDevices).toBeTruthy();
+      $scope.$apply();
+      expect(controller.searchingForDevices).toBeFalsy();
+      expect(controller.currentSearch.orgFilter.id).toEqual("1276387");
     });
 
     it('simple search with less than three characters gives search failure directly', function () {
