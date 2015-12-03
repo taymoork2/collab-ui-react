@@ -46,9 +46,16 @@
       for (var i in offersList) {
         editTrialData.offers.push({
           'id': offersList[i],
-          'licenseCount': licenseCount
+          'licenseCount': offersList[i] === Config.trials.roomSystems ? roomSystemCount : licenseCount
         });
       }
+
+      // Since Atlas backend does not support WebEx trials, webex offer is removed from trial data.
+      editTrialData.offers = _.filter(editTrialData.offers, function (offer) {
+        if (offer.id !== Config.trials.webex) {
+          return offer;
+        }
+      });
 
       var editTrialUrl = trialsUrl + '/' + id;
 
@@ -76,9 +83,6 @@
           // TODO: Remove once meeting and room system trials are supported on backend
           .reject({
             type: Config.trials.meeting
-          })
-          .reject({
-            type: Config.trials.roomSystems
           })
           .filter({
             enabled: true

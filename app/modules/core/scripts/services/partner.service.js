@@ -94,6 +94,8 @@
         offerNames = ['MC', 'CF', 'EE', 'TC', 'SC'];
       } else if (licenseTypeField === 'communications') {
         offerNames = ['CO'];
+      } else if (licenseTypeField === 'shared_devices') {
+        offerNames = ['SD'];
       }
 
       if (angular.isDefined(licenses) && angular.isDefined(licenses.length)) {
@@ -170,6 +172,7 @@
           daysLeft: 0,
           usage: 0,
           licenses: 0,
+          deviceLicenses: 0,
           licenseList: [],
           messaging: null,
           conferencing: null,
@@ -202,9 +205,16 @@
               dataObj.isSquaredUcOffer = true;
               offerNames.push($translate.instant('trials.squaredUC'));
               break;
+            case Config.trials.roomSystems:
+              offerNames.push($translate.instant('trials.roomSystem'));
+              break;
             }
             dataObj.usage = offer.usageCount;
-            dataObj.licenses = offer.licenseCount;
+            if (offer.id === Config.trials.roomSystems) {
+              dataObj.deviceLicenses = offer.licenseCount;
+            } else {
+              dataObj.licenses = offer.licenseCount;
+            }
           }
           dataObj.offer = offerNames.join(', ');
         }
@@ -214,6 +224,7 @@
         dataObj.messaging = getLicense(data.licenses, 'messaging');
         dataObj.conferencing = getLicense(data.licenses, 'conferencing');
         dataObj.communications = getLicense(data.licenses, 'communications');
+        dataObj.roomSystems = getLicense(data.licenses, 'shared_devices');
 
         var now = moment().format('MMM D, YYYY');
         var then = edate;
@@ -240,9 +251,11 @@
         angular.extend(dataObj.messaging, tmpServiceObj);
         angular.extend(dataObj.conferencing, tmpServiceObj);
         angular.extend(dataObj.communications, tmpServiceObj);
+        angular.extend(dataObj.roomSystems, tmpServiceObj);
         setServiceSortOrder(dataObj.messaging);
         setServiceSortOrder(dataObj.conferencing);
         setServiceSortOrder(dataObj.communications);
+        setServiceSortOrder(dataObj.roomSystems);
 
         dataObj.notes = {};
         setNotesSortOrder(dataObj);
@@ -282,6 +295,7 @@
             header.messagingEntitlements = $translate.instant('customerPage.csvHeaderMessagingEntitlements');
             header.conferencingEntitlements = $translate.instant('customerPage.csvHeaderConferencingEntitlements');
             header.communicationsEntitlements = $translate.instant('customerPage.csvHeaderCommunicationsEntitlements');
+            header.roomSystemsEntitlements = $translate.instant('customerPage.csvHeaderRoomSystemsEntitlements');
             exportedCustomers.push(header);
 
             // data to export for CSV file customer.conferencing.features[j]
@@ -293,6 +307,7 @@
               exportedCustomer.messagingEntitlements = '';
               exportedCustomer.conferenceEntitlements = '';
               exportedCustomer.communicationsEntitlements = '';
+              exportedCustomer.roomSystemsEntitlements = '';
 
               var messagingLicense = _.find(customers[i].licenses, {
                 licenseType: "MESSAGING"
@@ -303,6 +318,9 @@
               var communicationsLicense = _.find(customers[i].licenses, {
                 licenseType: "COMMUNICATIONS"
               });
+              var roomSystemsLicense = _.find(customers[i].licenses, {
+                licenseType: "SHARED_DEVICES"
+              });
               if (messagingLicense && angular.isArray(messagingLicense.features)) {
                 exportedCustomer.messagingEntitlements = messagingLicense.features.join(' ');
               }
@@ -311,6 +329,9 @@
               }
               if (communicationsLicense && angular.isArray(communicationsLicense.features)) {
                 exportedCustomer.communicationsEntitlements = communicationsLicense.features.join(' ');
+              }
+              if (roomSystemsLicense && angular.isArray(roomSystemsLicense.features)) {
+                exportedCustomer.roomSystemsEntitlements = roomSystemsLicense.features.join(' ');
               }
               exportedCustomers.push(exportedCustomer);
             }
