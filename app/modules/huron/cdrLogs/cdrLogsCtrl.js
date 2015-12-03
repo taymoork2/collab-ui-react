@@ -526,6 +526,7 @@
     vm.statusAvalibility = statusAvalibility;
     vm.getAccordionHeader = getAccordionHeader;
     vm.selectCDR = selectCDR;
+    vm.accordionClicked = accordionClicked;
 
     function addNames(cdrArray) {
       var x = 0;
@@ -610,6 +611,10 @@
         cdrData: vm.selectedCDR,
         call: callCopy
       });
+    }
+
+    function accordionClicked(tableName) {
+      $('#' + tableName).getNiceScroll().resize();
     }
   }
 })();
