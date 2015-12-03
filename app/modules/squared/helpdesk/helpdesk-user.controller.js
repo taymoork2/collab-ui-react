@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskUserController($stateParams, HelpdeskService, XhrNotificationService, USSService2, HelpdeskCardsService) {
+  function HelpdeskUserController($stateParams, HelpdeskService, XhrNotificationService, USSService2, HelpdeskCardsService, Config) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.user) {
@@ -57,7 +57,7 @@
         }, XhrNotificationService.notify);
       }
 
-      if (!vm.org.displayName) {
+      if (!vm.org.displayName && vm.org.id !== Config.consumerOrgId) {
         // Only if there is no displayName. If set, the org name has already been read (on the search page)
         HelpdeskService.getOrgDisplayName(vm.orgId).then(function (displayName) {
           vm.org.displayName = displayName;

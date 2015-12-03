@@ -1,9 +1,8 @@
 
-<div ng-if="showSpinner"
-     align="center">
-     
-  <br>
-  <i class="icon icon-spinner icon-2x"></i>
+<div ng-if="showSpinner">
+  <div align="center">
+    <i class="icon icon-spinner icon-2x"></i>
+  </div>
 
   <iframe class="iframeContainer"
           i-frame-resizable 
@@ -50,6 +49,11 @@
          name="ngxsiteurl"
          type="hidden"
          value={{siteName}} />
+
+  <input id="ngxfullsparkdns"
+         name="ngxfullsparkdns"
+         type="hidden"
+         value={{fullSparkDNS}} />
   
   <button id="submitFormBtn"
           type="submit"

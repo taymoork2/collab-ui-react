@@ -1,6 +1,10 @@
-.devices-page {
+.devices-page,
+.device-overview {
   @extend %grid-subheader;
   @extend %page-background-white;
+}
+
+.sq-devices-page-overview {
   table {
     td {
       padding: 10px 10px 10px 0;
@@ -51,6 +55,9 @@
     padding: 9px 10px 6px 10px;
   }
 
+  .panel-buttons {
+    margin-top: 10px;
+  }
 }
 
 .modal-success, .modal-warning {

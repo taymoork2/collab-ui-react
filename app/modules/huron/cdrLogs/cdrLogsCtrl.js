@@ -13,7 +13,7 @@
     var UPLOAD = "UPLOAD";
     var SPARKTRUNK = 'COMMON_TO_SQUARED_TRUNK';
     var SPARKINTTRUNK = 'COMMON_TO_SQUARED_INT_TRUNK';
-    
+
     var timeFormat = 'hh:mm:ss A';
     var dateFormat = 'YYYY-MM-DD';
     var filetype = "text/json, application/json";

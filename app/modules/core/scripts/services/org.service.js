@@ -12,7 +12,9 @@
     var service = {
       'getOrg': getOrg,
       'getAdminOrg': getAdminOrg,
+      'getAdminOrgUsage': getAdminOrgUsage,
       'getValidLicenses': getValidLicenses,
+      'getLicensesUsage': getLicensesUsage,
       'getUnlicensedUsers': getUnlicensedUsers,
       'setSetupDone': setSetupDone,
       'setOrgSettings': setOrgSettings,
@@ -24,8 +26,6 @@
     };
 
     return service;
-
-    ////////////////
 
     function getOrg(callback, oid, disableCache) {
       var scomUrl = null;
@@ -85,9 +85,35 @@
         });
     }
 
-    /**
-     * Compare the two lists of licenses and filter out invalid ones
-     */
+    function getAdminOrgUsage(oid) {
+      var orgId = oid || Authinfo.getOrgId();
+      var adminUrl = Config.getAdminServiceUrl() + 'customers/' + orgId + '/usage';
+      return $http.get(adminUrl);
+    }
+
+    function getLicensesUsage() {
+      return getAdminOrgUsage().then(function (response) {
+
+        var usageLicenses = [];
+        usageLicenses = response.data || [];
+        var statusLicenses = Authinfo.getLicenses();
+
+        var result = [];
+        for (var index in usageLicenses) {
+          result.push(_.filter(usageLicenses[index].licenses, function (license) {
+            var match = _.find(statusLicenses, {
+              'licenseId': license.licenseId
+            });
+            return !(match.status === 'CANCELLED' || match.status === 'SUSPENDED');
+          }));
+        }
+        return result;
+      }).catch(function (err) {
+        Log.debug('Get existing admin org failed. Status: ' + err);
+        throw err;
+      });
+    }
+
     function getValidLicenses() {
       var d = $q.defer();
 
