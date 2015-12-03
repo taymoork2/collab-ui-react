@@ -552,7 +552,8 @@
     "ladderDiagram": "Ladder Diagram",
     "cdrSave": "Save Call",
     "element": "Element",
-    "value": "Value"
+    "value": "Value",
+    "sparkCall": "(Spark Call)"
   },
   "billingPage": {
     "title": "Order Provisioning",
