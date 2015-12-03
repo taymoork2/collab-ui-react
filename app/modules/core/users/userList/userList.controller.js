@@ -369,6 +369,7 @@
         rowTemplate: rowTemplate,
         headerRowHeight: 44,
         useExternalSorting: false,
+        enableColumnResize: true,
 
         columnDefs: [{
           field: 'photos',

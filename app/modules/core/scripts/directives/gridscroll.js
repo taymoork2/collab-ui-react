@@ -12,6 +12,8 @@ angular.module('Core')
             $('.ngViewport').niceScroll({
               cursoropacitymax: 0.5,
               cursorwidth: 10,
+              horizrailenabled: false,
+              scrollspeed: 120,
             });
           });
         }

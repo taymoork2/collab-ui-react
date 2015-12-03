@@ -28,11 +28,6 @@
         return false;
       }
 
-      if (angular.isUndefined(aaModel.ceInfos)) {
-        // guaranteed unique
-        return true;
-      }
-
       for (var i = 0; i < aaModel.ceInfos.length; i++) {
         if ((uuid !== AutoAttendantCeInfoModelService.extractUUID(aaModel.ceInfos[i].ceUrl)) && (name === aaModel.ceInfos[i].getName())) {
           Notification.error('autoAttendant.invalidBuilderNameNotUnique');

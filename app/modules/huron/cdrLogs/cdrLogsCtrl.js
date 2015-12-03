@@ -11,6 +11,9 @@
     var ABORT = 'ABORT';
     var SEARCH = "SEARCH";
     var UPLOAD = "UPLOAD";
+    var SPARKTRUNK = 'COMMON_TO_SQUARED_TRUNK';
+    var SPARKINTTRUNK = 'COMMON_TO_SQUARED_INT_TRUNK';
+
     var timeFormat = 'hh:mm:ss A';
     var dateFormat = 'YYYY-MM-DD';
     var filetype = "text/json, application/json";
@@ -552,24 +555,42 @@
       return 'primary';
     }
 
+    function isSparkCall(cdrDataParam) {
+      if (cdrDataParam.called_deviceName === SPARKTRUNK || cdrDataParam.called_deviceName === SPARKINTTRUNK) {
+        return true;
+      } else if (cdrDataParam.calling_deviceName === SPARKTRUNK || cdrDataParam.calling_deviceName === SPARKINTTRUNK) {
+        return true;
+      }
+      return false;
+    }
+
     function getAccordionHeader(cdrArray) {
       var firstTimestamp = cdrArray[0][0]['@timestamp'];
       var numberOfCdrs = 0;
       var totalDuration = 0;
+      var sparkCall = false;
+      var header = '';
       for (var callSeg = 0; callSeg < cdrArray.length; callSeg++) {
         for (var i = 0; i < cdrArray[callSeg].length; i++) {
           totalDuration += cdrArray[callSeg][i].dataParam.duration;
           if (cdrArray[callSeg][i]['@timestamp'] < firstTimestamp) {
             firstTimestamp = cdrArray[callSeg][i]['@timestamp'];
           }
+          if (!sparkCall) {
+            sparkCall = isSparkCall(cdrArray[callSeg][i]['dataParam']);
+          }
           numberOfCdrs++;
         }
       }
-      return $translate.instant("cdrLogs.cdrAccordionHeader", {
+      header = $translate.instant("cdrLogs.cdrAccordionHeader", {
         firstTimestamp: firstTimestamp,
         numberOfCdrs: numberOfCdrs,
         totalDuration: totalDuration
       });
+      if (sparkCall) {
+        header += ' ' + $translate.instant("cdrLogs.sparkCall");
+      }
+      return header;
     }
 
     function setupScrolling(gridData) {
