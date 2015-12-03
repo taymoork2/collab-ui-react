@@ -18,11 +18,13 @@
       // to call into service twice.
       TelephonyInfoService.resetTelephonyInfo();
       TelephonyInfoService.getTelephonyUserInfo(vm.currentUser.id);
-      TelephonyInfoService.getUserDnInfo(vm.currentUser.id);
+      TelephonyInfoService.getPrimarySiteInfo()
+        .then(TelephonyInfoService.getUserDnInfo(vm.currentUser.id))
+        .then(TelephonyInfoService.checkCustomerVoicemail());
       TelephonyInfoService.getRemoteDestinationInfo(vm.currentUser.id);
       TelephonyInfoService.loadInternalNumberPool();
       TelephonyInfoService.loadExternalNumberPool();
-      vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
+      vm.telephonyInfo = TelephonyInfoService.getTelephonyInfoObject();
     }
   }
 })();

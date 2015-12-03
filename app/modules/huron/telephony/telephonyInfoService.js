@@ -58,7 +58,10 @@
       loadInternalNumberPool: loadInternalNumberPool,
       getExternalNumberPool: getExternalNumberPool,
       loadExternalNumberPool: loadExternalNumberPool,
-      loadExtPoolWithMapping: loadExtPoolWithMapping
+      loadExtPoolWithMapping: loadExtPoolWithMapping,
+      getPrimarySiteInfo: getPrimarySiteInfo,
+      checkCustomerVoicemail: checkCustomerVoicemail,
+      getTelephonyInfoObject: getTelephonyInfoObject
     };
 
     return telephonyInfoService;
@@ -71,22 +74,19 @@
       return (dnUsage === 'Primary') ? 'Primary' : '';
     }
 
+    //TODO Need to cleanup/remove this function.
     function getTelephonyInfo() {
       if (telephonyInfo.siteSteeringDigit === '') {
-        ServiceSetup.listSites().then(function () {
-          if (ServiceSetup.sites.length !== 0) {
-            ServiceSetup.getSite(ServiceSetup.sites[0].uuid).then(function (site) {
-              telephonyInfo.steeringDigit = site.steeringDigit;
-              telephonyInfo.siteSteeringDigit = site.siteSteeringDigit;
-              telephonyInfo.siteCode = site.siteCode;
-            });
-          }
-        });
+        getPrimarySiteInfo();
       }
       if (angular.isUndefined(telephonyInfo.hasCustomerVoicemail)) {
         checkCustomerVoicemail();
       }
 
+      return telephonyInfo;
+    }
+
+    function getTelephonyInfoObject() {
       return telephonyInfo;
     }
 
@@ -280,6 +280,19 @@
         });
     }
 
+    function getPrimarySiteInfo() {
+      return ServiceSetup.listSites().then(function () {
+        if (ServiceSetup.sites.length !== 0) {
+          return ServiceSetup.getSite(ServiceSetup.sites[0].uuid).then(function (site) {
+            telephonyInfo.steeringDigit = site.steeringDigit;
+            telephonyInfo.siteSteeringDigit = site.siteSteeringDigit;
+            telephonyInfo.siteCode = site.siteCode;
+            return telephonyInfo;
+          });
+        }
+      });
+    }
+
     function getInternalNumberPool() {
       return angular.copy(internalNumberPool);
     }
@@ -373,16 +386,16 @@
     }
 
     function checkCustomerVoicemail() {
-      HuronCustomer.get().then(function (customer) {
+      if (angular.isUndefined(telephonyInfo.hasCustomerVoicemail)) {
+        telephonyInfo.hasCustomerVoicemail = false;
+      }
+      return HuronCustomer.get().then(function (customer) {
         angular.forEach(customer.links, function (service) {
           if (service.rel === 'voicemail') {
             telephonyInfo.hasCustomerVoicemail = true;
           }
         });
       });
-      if (angular.isUndefined(telephonyInfo.hasCustomerVoicemail)) {
-        telephonyInfo.hasCustomerVoicemail = false;
-      }
     }
 
   }
