@@ -65,7 +65,7 @@
       vm.confServices.services = Authinfo.getConferenceServices() || [];
       angular.forEach(vm.confServices.services, function (service) {
         if (service.label.indexOf('Meeting Center') != -1) {
-          service.label = 'Meeting Center' + ' ' + service.license.capacity;
+          service.label = $translate.instant('onboardModal.meetingCenter') + ' ' + service.license.capacity;
         }
         if (service.license.isTrial) {
           vm.trialExists = true;

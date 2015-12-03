@@ -86,7 +86,7 @@
         {{siteUrl}}
         <div class="sub-item" ng-repeat="service in services">
           <div ng-class="{'': 'quantity', 'CMR': 'item-cmr'}[service.license.offerName]">
-            WebEx {{service.label}}
+            {{'firstTimeWizard.webex' | translate}} {{service.label}}
           </div>
           <div ng-if="service.license.isTrial || planReview.confServices.isNewTrial" class="badge badge-trial" translate="firstTimeWizard.trial"></div>
           <div class="quantity">
