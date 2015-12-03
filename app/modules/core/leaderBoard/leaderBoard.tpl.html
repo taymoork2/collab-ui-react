@@ -1,13 +1,13 @@
 <div class="leader-board row" ng-init="init()">
-  <div>
-    <cs-card class="small header-bar" ng-show = "buckets.messaging.services.length !== 0">
+  <div ng-repeat = "subscription in buckets" style="overflow: hidden">
+    <cs-card class="small header-bar" ng-show = "subscription.messaging && subscription.messaging.services.length !== 0">
     <article>
       <header class="header-section align-center title">
         <span ng-if="leaderBoard.isStormBranding" class="bucket-header" translate="firstTimeWizard.message"></span>
         <span ng-if="!leaderBoard.isStormBranding" class="bucket-header" translate="firstTimeWizard.messaging"></span>
       </header>
       <section class="bucket-info">
-        <div class="text-center" class="item-paid" ng-repeat="service in buckets.messaging.services">
+        <div class="text-center" class="item-paid" ng-repeat="service in subscription.messaging.services">
           <cs-donut value="service.usage" max="service.volume" ssize="72" class="text-center">
         </cs-donut>
         <div class = "text-center quantity number">
@@ -22,14 +22,14 @@
 </cs-card>
 
 
-<cs-card class="small header-bar meetings" ng-show = "buckets.cf.services.length !== 0 || buckets.count > 0" >
+<cs-card class="small header-bar meetings" ng-show = "(subscription.cf && subscription.cf.services.length !== 0) || (subscription.count && subscription.count > 0)" >
 <article>
   <header class="header-section align-center">
     <span ng-if="leaderBoard.isStormBranding" class="bucket-header" translate="firstTimeWizard.meeting"></span>
     <span ng-if="!leaderBoard.isStormBranding" class="bucket-header" translate="firstTimeWizard.conferencing"></span>
   </header>
-  <section ng-show="buckets.cf.services.length !== 0"class="bucket-info">
-    <div class="text-center" class="item-paid" ng-repeat="service in buckets.cf.services">
+  <section ng-show="subscription.cf && subscription.cf.services.length !== 0"class="bucket-info">
+    <div class="text-center" class="item-paid" ng-repeat="service in subscription.cf.services">
       <cs-donut value="service.usage" max="service.volume" ssize="72" class="text-center">
     </cs-donut>
     <div class = "text-center quantity number">
@@ -41,8 +41,8 @@
     </div>
   </section>
 
-  <section  class="bucket-info" ng-show="buckets.cf.services.length === 0 && buckets.count === 1 && buckets.licensesCount == 1">
-    <div class="text-center" class="item-paid" ng-repeat="(siteUrl,services) in buckets.sites">
+  <section  class="bucket-info" ng-show="(!subscription.cf.services || subscription.cf.services.length === 0) && subscription.count === 1 && subscription.licensesCount == 1">
+    <div class="text-center" class="item-paid" ng-repeat="(siteUrl,services) in subscription.sites">
       <div class="sub-item" ng-repeat="service in services">
       <cs-donut value="service.usage" max="service.volume" ssize="72" class="text-center">
       </cs-donut>
@@ -52,7 +52,7 @@
       <p ng-show = "service.isTrial" class = "text-center trial">
       <span class="quantity-badge badge badge-warning" translate="firstTimeWizard.trial"></span> </p>
     </div>
-    <div class="text-center" class="item-paid" ng-repeat= "(siteUrl,services) in buckets.sites" >
+    <div class="text-center" class="item-paid" ng-repeat= "(siteUrl,services) in subscription.sites" >
     <div class = "site-url"> {{siteUrl}} </div>
      <div translate="leaderBoard.{{service.offerName}}"> </div>
      </div>
@@ -60,10 +60,10 @@
   </div>
   </section>
 
-  <section ng-if=" !(buckets.cf.services.length === 0 && buckets.count === 1 && buckets.licensesCount == 1) && (buckets.count !== 0)" class="bucket-info" >
-      <div class="text-center" class="item-paid" ng-repeat= "(siteUrl,services) in buckets.sites" >
-        <div ng-if = "!($first && buckets.cf.services.length === 0)" class="site-info"> {{siteUrl}} </div>
-        <div ng-if = "$first && buckets.cf.services.length === 0" class="site-info-noline"> {{siteUrl}} </div>
+  <section class="bucket-info" ng-show = "!((!subscription.cf.services || subscription.cf.services.length === 0) && subscription.count === 1 && subscription.licensesCount == 1) && subscription.count > 0 ">
+      <div class="text-center" class="item-paid" ng-repeat= "(siteUrl,services) in subscription.sites" >
+        <div ng-if = "!($first && !subscription.cf)" class="site-info"> {{siteUrl}} </div>
+        <div ng-if = "$first && !subscription.cf" class="site-info-noline"> {{siteUrl}} </div>
         <div class="sub-item text-left" ng-repeat="service in services">
           <div class = "service-bucket">
               <cs-donut value="service.usage" max="service.volume" ssize="48" tsize="16" class="text-center small-donut">
@@ -82,14 +82,14 @@
 </article>
 </cs-card>
 
-<cs-card class="small header-bar people" ng-show = "buckets.communication.services.length !== 0">
+<cs-card class="small header-bar people" ng-show = "subscription.communication && subscription.communication.services.length !== 0">
     <article>
       <header class="header-section align-center">
         <span ng-if="leaderBoard.isStormBranding" class="bucket-header" translate="firstTimeWizard.call"></span>
         <span ng-if="!leaderBoard.isStormBranding" class="bucket-header" translate="firstTimeWizard.communications"></span>
       </header>
       <section class="bucket-info">
-        <div class="text-center" class="item-paid" ng-repeat="service in buckets.communication.services">
+        <div class="text-center" class="item-paid" ng-repeat="service in subscription.communication.services">
           <cs-donut value="service.usage" max="service.volume" ssize="72" class="text-center">
         </cs-donut>
         <div class = "text-center quantity number" >
@@ -101,13 +101,13 @@
   </article>
 </cs-card>
 
-<cs-card class="small header-bar gray" ng-show = "buckets.shared_devices.services.length !== 0">
+<cs-card class="small header-bar gray" ng-show = "subscription.shared_devices && subscription.shared_devices.services.length !== 0">
     <article>
       <header class="header-section align-center">
-        <span class="bucket-header">{{buckets.shared_devices.title | translate}}</span>
+        <span class="bucket-header" translate="leaderBoard.shared_devicesTitle"></span>
       </header>
       <section class="bucket-info">
-        <div class="text-center" class="item-paid" ng-repeat="service in buckets.shared_devices.services">
+        <div class="text-center" class="item-paid" ng-repeat="service in subscription.shared_devices.services">
           <cs-donut value="service.usage" max="service.volume" ssize="72" class="text-center">
         </cs-donut>
         <div class = "text-center quantity number">
