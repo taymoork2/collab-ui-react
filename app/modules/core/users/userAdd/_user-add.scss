@@ -479,32 +479,6 @@
   padding-right: 6px;
 }
 
-.page-option-buttons {
-  padding-top: 25px;
-  text-align: right;
-  float: none;
-
-  a {
-    font-family: $brand-font-regular;
-    font-size: 14px;
-    text-align: right;
-
-    &.primary {
-      color: $brand-primary;
-    }
-
-    &.disabled {
-      color: $gray;
-      cursor: default;
-    }
-
-    &:focus, &:active {
-      outline: none;
-      box-shadow: none;
-    }
-  }
-}
-
 .did-map-error {
   display: inline-block;
 }

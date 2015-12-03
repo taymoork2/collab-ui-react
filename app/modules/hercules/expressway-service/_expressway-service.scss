@@ -1,3 +1,10 @@
+.management-service-list,
+.calendar-service-list,
+.call-service-list {
+  @extend %grid-subheader;
+  @extend %page-background-white;
+}
+
 .export-users-statuses-icon {
   padding-left:10px;
   cursor: pointer;

@@ -11,8 +11,8 @@
     var searchResultsPageSize = 5;
     var searchResultsLimit = 20;
     vm.search = search;
-    vm.setOrgFilter = setOrgFilter;
-    vm.clearOrgFilter = clearOrgFilter;
+    vm.initSearchWithOrgFilter = initSearchWithOrgFilter;
+    vm.initSearchWithoutOrgFilter = initSearchWithoutOrgFilter;
     vm.searchingForUsers = false;
     vm.searchingForOrgs = false;
     vm.searchingForDevices = false;
@@ -61,10 +61,13 @@
     function searchUsers(searchString, orgId) {
       if (searchString.length >= 3) {
         vm.searchingForUsers = true;
-        HelpdeskService.searchUsers(searchString, orgId, searchResultsLimit).then(function (res) {
+        HelpdeskService.searchUsers(searchString, orgId, searchResultsLimit, null, true).then(function (res) {
           vm.currentSearch.userSearchResults = res;
           vm.searchingForUsers = false;
-          findAndResolveOrgsForUserResults(vm.currentSearch.userSearchResults);
+          HelpdeskService.findAndResolveOrgsForUserResults(
+            vm.currentSearch.userSearchResults,
+            vm.currentSearch.orgFilter,
+            vm.currentSearch.userLimit);
         }, function (err) {
           vm.searchingForUsers = false;
           vm.currentSearch.userSearchResults = null;
@@ -108,13 +111,13 @@
       });
     }
 
-    function setOrgFilter(org) {
+    function initSearchWithOrgFilter(org) {
       vm.searchString = '';
       vm.currentSearch.initSearch('');
       vm.currentSearch.orgFilter = org;
     }
 
-    function clearOrgFilter() {
+    function initSearchWithoutOrgFilter() {
       vm.searchString = '';
       vm.currentSearch.initSearch('');
       vm.currentSearch.orgFilter = null;
@@ -124,7 +127,10 @@
       switch (type) {
       case 'user':
         vm.currentSearch.userLimit += searchResultsPageSize;
-        findAndResolveOrgsForUserResults(vm.currentSearch.userSearchResults);
+        HelpdeskService.findAndResolveOrgsForUserResults(
+          vm.currentSearch.userSearchResults,
+          vm.currentSearch.orgFilter,
+          vm.currentSearch.userLimit);
         break;
       case 'org':
         vm.currentSearch.orgLimit += searchResultsPageSize;
@@ -132,34 +138,6 @@
       case 'device':
         vm.currentSearch.deviceLimit += searchResultsPageSize;
         break;
-      }
-    }
-
-    function findAndResolveOrgsForUserResults(userSearchResults) {
-      if (_.size(userSearchResults) > 0) {
-        if (vm.currentSearch.orgFilter) {
-          _.each(userSearchResults, function (user) {
-            user.organization.displayName = vm.currentSearch.orgFilter.displayName;
-          });
-        } else {
-          var orgs = [];
-          var currentResults = _.take(userSearchResults, vm.currentSearch.userLimit);
-          _.each(currentResults, function (user) {
-            if (!user.organization.displayName) {
-              orgs.push(user.organization.id);
-            }
-          });
-          _.each(_.uniq(orgs), function (orgId) {
-            HelpdeskService.getOrgDisplayName(orgId).then(function (displayName) {
-              _.each(userSearchResults, function (user) {
-                if (user.organization && user.organization.id === orgId) {
-                  user.organization.displayName = displayName;
-                }
-              });
-            }, angular.noop);
-          });
-        }
-
       }
     }
 

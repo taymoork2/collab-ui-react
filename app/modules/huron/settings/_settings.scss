@@ -1,3 +1,8 @@
+.huronsettings {
+  @extend %content-header;
+  @extend %page-background-white;
+}
+
 .huron-settings {
   position: relative;
 
