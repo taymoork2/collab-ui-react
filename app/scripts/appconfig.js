@@ -815,7 +815,18 @@ angular
           end: devices redux prototypes
         */
 
-      .state('partneroverview', {
+      .state('devReports', {
+          url: '/devReports',
+          templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
+          controller: 'CustomerReportsCtrl',
+          controllerAs: 'nav',
+          parent: 'main',
+          params: {
+            tab: null,
+            siteUrl: null
+          }
+        })
+        .state('partneroverview', {
           parent: 'partner',
           url: '/overview',
           templateUrl: 'modules/core/views/partnerlanding.html',
