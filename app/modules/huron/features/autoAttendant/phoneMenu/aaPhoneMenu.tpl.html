@@ -10,9 +10,6 @@
         <div class="small-8 columns">
           <cs-select ng-model="keyAction.action" options="aaPhoneMenu.keyActions" placeholder="aaPhoneMenu.actionPlaceholder" on-change-fn="aaPhoneMenu.keyActionChanged($index, keyAction.action)" class="aa-pm-action-select" icon="icon-chevron-down">
           </cs-select>
-          <div ng-if="keyAction" ng-switch="keyAction.action.name" class="aa-route-to-aa">
-            <aa-route-to-aa ng-switch-when="phoneMenuRouteAA" aa-schedule="{{schedule}}" aa-index="index" aa-key-index="{{$index}}" ></aa-route-to-aa>
-          </div>
         </div>
         <div class="text-right small-1 columns">
           <span class="aa-trash-icon" aria-label="common.delete" ng-click="aaPhoneMenu.deleteKeyAction($index); $event.stopPropagation();"></span>
