@@ -1,14 +1,20 @@
 
-<div ng-if="showSpinner">
-  <div align="center">
-    <i class="icon icon-spinner icon-2x"></i>
-  </div>
+<div ng-if="showLoading && showSpinner" 
+     align="center">
+     
+  <i class="icon icon-spinner icon-2x"></i>
 </div>
 
+<div ng-if="showLoading && !showSpinner" 
+     align="center">
+     
+  <br><br>
+</div>
+    
 <div id="iframeContainer"
      name="iframeContainer">
 
-  <iframe ng-if="showSpinner"
+  <iframe ng-if="showLoading"
           class="iframeContainerShifted"
           i-frame-resizable="iframeContainer"
           ng-style="{'width': '100%', 'height': iframeHeight }"
@@ -18,7 +24,7 @@
           title="{{siteSettingLabel}}">
   </iframe>
 
-  <iframe ng-if="!showSpinner"
+  <iframe ng-if="!showLoading"
           i-frame-resizable="iframeContainer"
           ng-style="{'width': '100%', 'height': iframeHeight }"
           name="webexIframeContainer"

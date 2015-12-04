@@ -7,11 +7,11 @@ angular.module('WebExUtils').directive(
   'iFrameResizable',
   function iFrameResizableDirective($window) {
     return function iFrameResizable(
-      $scope, 
-      element, 
+      $scope,
+      element,
       attributes
     ) {
-    	
+
       $scope.initializeWindowSize = function () {
         var innerHeight = $window.innerHeight;
         var targetElementId = attributes["iFrameResizable"];
