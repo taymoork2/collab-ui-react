@@ -1229,8 +1229,6 @@ angular
         })
         .state('trialAdd.finishSetup', {
           templateUrl: 'modules/core/trials/trialFinishSetup.tpl.html',
-          controller: 'DidAddCtrl',
-          controllerAs: 'didAdd'
         })
         .state('trialAdd.meeting', {
           templateUrl: 'modules/core/trials/trialMeeting.tpl.html',

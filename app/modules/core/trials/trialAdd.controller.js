@@ -5,7 +5,7 @@
     .controller('TrialAddCtrl', TrialAddCtrl);
 
   /* @ngInject */
-  function TrialAddCtrl($q, $scope, $state, $translate, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialService, ValidationService) {
+  function TrialAddCtrl($q, $scope, $state, $translate, $window, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialService, ValidationService) {
     var vm = this;
     // navigate trial modal in this order
     var navOrder = ['trialAdd.info', 'trialAdd.meeting', 'trialAdd.call'];
@@ -21,6 +21,7 @@
 
     vm.nameError = false;
     vm.emailError = false;
+    vm.customerOrgId = undefined;
     vm.showRoomSystems = false;
     vm.details = vm.trialData.details;
     vm.messageTrial = vm.trialData.trials.messageTrial;
@@ -41,7 +42,7 @@
       templateOptions: {
         label: $translate.instant('partnerHomePage.customerName'),
         labelClass: 'columns small-4',
-        inputClass: 'columns small-7',
+        inputClass: 'columns small-8',
         type: 'text',
         required: true,
         maxlength: 50,
@@ -54,7 +55,7 @@
       templateOptions: {
         label: $translate.instant('partnerHomePage.customerEmail'),
         labelClass: 'columns small-4',
-        inputClass: 'columns small-7',
+        inputClass: 'columns small-8',
         type: 'email',
         required: true,
       },
@@ -205,6 +206,8 @@
     vm.hasNextStep = hasNextStep;
     vm.previousStep = previousStep;
     vm.nextStep = nextStep;
+    vm.emailNotifyTrialCustomer = emailNotifyTrialCustomer;
+    vm.launchCustomerPortal = launchCustomerPortal;
 
     $q.all([
       FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials),
@@ -306,13 +309,7 @@
 
     function nextStep() {
       if (!hasNextStep()) {
-        FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials).then(function (enabled) {
-          if (enabled) {
-            finishSetup();
-          } else {
-            startTrial(true);
-          }
-        });
+        startTrial(true);
       } else {
         $state.go(getNextState());
       }
@@ -340,8 +337,6 @@
     }
 
     function startTrial(keepModal) {
-      var customerOrgId;
-
       vm.nameError = false;
       vm.emailError = false;
       vm.startTrialButtonLoad = true;
@@ -358,16 +353,16 @@
           return $q.reject(response);
         })
         .then(function (response) {
-          customerOrgId = response.data.customerOrgId;
+          vm.customerOrgId = response.data.customerOrgId;
           if (vm.callTrial.enabled) {
-            return HuronCustomer.create(customerOrgId, response.data.customerName, response.data.customerEmail)
+            return HuronCustomer.create(vm.customerOrgId, response.data.customerName, response.data.customerEmail)
               .catch(function (response) {
                 vm.startTrialButtonLoad = false;
                 Notification.errorResponse(response, 'trialModal.squareducError');
                 return $q.reject(response);
               });
           } else {
-            return EmailService.emailNotifyTrialCustomer(vm.details.customerEmail, vm.details.licenseDuration, customerOrgId)
+            return EmailService.emailNotifyTrialCustomer()
               .catch(function (response) {
                 Notification.notify([$translate.instant('didManageModal.emailFailText')], 'error');
               });
@@ -388,9 +383,30 @@
           } else {
             $state.modal.close();
           }
-
-          return customerOrgId;
         });
+    }
+
+    function emailNotifyTrialCustomer() {
+      EmailService.emailNotifyTrialCustomer(vm.details.customerEmail,
+          vm.details.licenseDuration, vm.customerOrgId)
+        .then(function (response) {
+          Notification.notify([$translate.instant('didManageModal.emailSuccessText')], 'success');
+        })
+        .catch(function (response) {
+          Notification.notify([$translate.instant('didManageModal.emailFailText')], 'error');
+        }).then(function () {
+          $state.modal.close();
+        });
+    }
+
+    function launchCustomerPortal() {
+      if (angular.isDefined($scope.trial)) {
+        $window.open($state.href('login_swap', {
+          'customerOrgId': vm.customerOrgId,
+          'customerOrgName': vm.details.customerName
+        }));
+        $state.modal.close();
+      }
     }
   }
 })();
