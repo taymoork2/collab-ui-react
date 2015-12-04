@@ -193,17 +193,20 @@
         </div>
       </header>
       <section>
-        <div>
+        <div class="align-center">
+          <div translate="helpdesk.usersWhoMayBelongToTheOrganization">:</div>
+          <h4>{{helpdeskOrgCtrl.userCard.unlicensedUserCount}}</h4>
+          <hr>
           <span>
             <i class="icon icon-circle circle-status-icon"
-               ng-class="helpdeskOrgCtrl.org.dirsyncEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
+               ng-class="helpdeskOrgCtrl.userCard.dirsyncEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
           </span>
           <span translate="helpdesk.dirSync"></span>
         </div>
         <div>
           <span>
             <i class="icon icon-circle circle-status-icon"
-               ng-class="helpdeskOrgCtrl.org.ssoEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
+               ng-class="helpdeskOrgCtrl.userCard.ssoEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
           </span>
           <span translate="helpdesk.sso"></span>
         </div>

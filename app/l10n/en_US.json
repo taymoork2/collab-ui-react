@@ -2959,6 +2959,7 @@
       "suspended": "Suspended",
       "pending": "Pending"
     },
-    "consumerOrg": "Consumer"
+    "consumerOrg": "Consumer",
+    "usersWhoMayBelongToTheOrganization": "Users who may belong to the organization"
   }
 }

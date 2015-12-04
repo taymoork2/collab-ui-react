@@ -69,6 +69,12 @@
       return matchingLicenses;
     }
 
+    function getUnlicensedUsersCount(orgId) {
+      return $http
+        .get(urlBase + 'helpdesk/unlicenseduserscount/' + encodeURIComponent(orgId))
+        .then(extractData);
+    }
+
     function useMock() {
       return $location.absUrl().match(/helpdesk-backend=mock/);
     }
@@ -79,7 +85,8 @@
       orgIsEntitledTo: orgIsEntitledTo,
       filterLicensesAndSetDisplayName: filterLicensesAndSetDisplayName,
       UserLicense: UserLicense,
-      getLicensesInOrg: getLicensesInOrg
+      getLicensesInOrg: getLicensesInOrg,
+      getUnlicensedUsersCount: getUnlicensedUsersCount
     };
   }
 

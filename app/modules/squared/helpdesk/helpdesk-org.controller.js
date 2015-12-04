@@ -16,6 +16,7 @@
     vm.callCard = {};
     vm.hybridServicesCard = {};
     vm.roomSystemsCard = {};
+    vm.usercard = {};
     vm.healthStatuses = {
       message: 'unknown',
       meeting: 'unknown',
@@ -56,6 +57,7 @@
       vm.callCard = HelpdeskCardsService.getCallCardForOrg(vm.org, licenses);
       vm.hybridServicesCard = HelpdeskCardsService.getHybridServicesCardForOrg(vm.org);
       vm.roomSystemsCard = HelpdeskCardsService.getRoomSystemsCardForOrg(vm.org, licenses);
+      vm.userCard = HelpdeskCardsService.getUserCardForOrg(vm.org);
     }
 
     function initHealth(healthStatuses) {

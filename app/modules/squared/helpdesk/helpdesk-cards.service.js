@@ -155,6 +155,18 @@
       return hybridServicesCard;
     }
 
+    function getUserCardForOrg(org) {
+      var userCard = {
+        ssoEnabled: org.ssoEnabled,
+        dirsyncEnabled: org.dirsyncEnabled
+      };
+      LicenseService.getUnlicensedUsersCount(org.id).then(function (licenses) {
+        userCard.unlicensedUserCount = licenses;
+      }, XhrNotificationService.notify);
+
+      return userCard;
+    }
+
     function getHealthStatuses() {
       var deferred = $q.defer();
       ReportsService.healthMonitor(function (data, status) {
@@ -229,6 +241,7 @@
       getCallCardForOrg: getCallCardForOrg,
       getHybridServicesCardForOrg: getHybridServicesCardForOrg,
       getRoomSystemsCardForOrg: getRoomSystemsCardForOrg,
+      getUserCardForOrg: getUserCardForOrg,
       getHealthStatuses: getHealthStatuses
     };
   }
