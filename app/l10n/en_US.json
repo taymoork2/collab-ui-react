@@ -1718,7 +1718,7 @@
       "title": "Start New Trial"
     },
     "meeting": {
-      "title": "Start New Trial - Meeting Setup",
+      "title": "Setup Trial - Meeting and WebEx",
       "webexHeader": "WebEx License Type",
       "webexDetails": "Meeting trials enable Enterprise Edition WebEx licenses. This includes: Meeting Center, Event Center, Training Center, and Support Center.",
       "siteUrl": "Site URL",
@@ -1727,10 +1727,10 @@
       "timezonePlaceholder": "Select a timezone"
     },
     "call": {
-      "title": "Start New Trial - Add Devices",
+      "title": "Setup Trial – Add Devices",
       "selectDevicesHeader": "Select Devices",
       "meetingRoomCamera": "Spark Meeting Room Camera",
-      "deskPhones": "Personal & Shared Desk Phones",
+      "deskPhones": "Personal and Shared Desk Phones",
       "sx10": "SX10",
       "phone8865": "8865",
       "phone8845": "8845",
@@ -1743,7 +1743,7 @@
       "customer": "Customer",
       "partner": "Partner"
     },
-    "trialSuccess": "Your trial is ready to setup",
+    "trialSuccess": "Your trial is ready.",
     "nextStepPrompt": "Do you want to setup services for the customer?",
     "setupLater": "No, I'm done for now",
     "setupNow": "Yes, setup the services",
@@ -1756,7 +1756,7 @@
     "squaredUC": "Advanced Spark Call",
     "meet": "Meeting and WebEx",
     "message": "Message",
-    "meeting": "Meeting",
+    "meeting": "Meeting and WebEx",
     "call": "Call"
   },
   "status": {
