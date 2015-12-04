@@ -762,6 +762,7 @@
     "customerGetError": "Failed to get customer services.",
     "customerPutError": "Failed to update customer services.",
     "customerDialPlanDetailsGetError": "Failed to get customer dial plan details.",
+    "carrierCountryGetError": "Failed to get phone carrier information.",
     "voicemailGetError": "Failed to get company voicemail number.",
     "voicemailUpdateError": "Failed to update company voicemail number.",
     "timezoneUpdateError": "Failed to update company timezone.",

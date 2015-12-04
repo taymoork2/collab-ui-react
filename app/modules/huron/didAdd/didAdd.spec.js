@@ -49,7 +49,7 @@ describe('Controller: DidAddCtrl', function () {
     dialPlanIdNadp: '00000000-0000-0000-0000-000000000010',
   };
 
-  beforeEach(inject(function (_$q_, $rootScope, $controller, _$httpBackend_, _HuronConfig_, _Notification_, _Config_, _EmailService_, $timeout, _$window_, _$state_, _DialPlanService_) {
+  beforeEach(inject(function (_$q_, $rootScope, $controller, _$httpBackend_, _HuronConfig_, _Notification_, _Config_, _EmailService_, $timeout, _$window_, _$state_, _DialPlanService_, _PstnSetupService_) {
     $q = _$q_;
     $scope = $rootScope.$new();
     $scope.trial = trial;
