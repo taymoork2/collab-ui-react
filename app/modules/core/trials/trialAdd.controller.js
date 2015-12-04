@@ -205,23 +205,30 @@
     vm.previousStep = previousStep;
     vm.nextStep = nextStep;
 
-    init();
+    $q.all([
+      FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials),
+      FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials)
+    ]).then(function(results){
+      vm.showRoomSystems = results[0];
+      vm.roomSystemTrial.enabled = results[0];
+      vm.meetingTrial.enabled = results[1];
+      vm.callTrial.enabled = vm.hasCallEntitlement();
+      vm.messageTrial.enabled = true;
+      if (vm.meetingTrial.enabled) {
+        vm.showMeeting = true;
+      // Don't allow navigating to other views
+      } else {
+        navOrder = ['trialAdd.info'];
+      }
+    }).finally(function(){
+      init();
+      vm.roomSystemFields[1].model.quantity = vm.roomSystemTrial.enabled ? vm.roomSystemOptions[0] : 0;
+      toggleTrial();
+    });
 
     ///////////////////////
 
     function init() {
-      FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials).then(function (result) {
-        vm.showRoomSystems = result;
-      });
-
-      FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials).then(function (enabled) {
-        if (enabled) {
-          vm.showMeeting = true;
-          // Don't allow navigating to other views
-        } else {
-          navOrder = ['trialAdd.info'];
-        }
-      });
 
       $scope.$watch(function () {
         return vm.trialData.trials;
