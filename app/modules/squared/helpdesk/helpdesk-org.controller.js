@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsService, Config, $translate, LicenseService) {
+  function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsService, Config, $translate, LicenseService, HelpdeskHealthStatusService) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.org) {
@@ -33,7 +33,7 @@
     vm.licenseUsageReady = false;
 
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
-    HelpdeskCardsService.getHealthStatuses().then(initHealth, angular.noop);
+    HelpdeskHealthStatusService.getHealthStatuses().then(initHealth, angular.noop);
 
     function initOrgView(org) {
       vm.org = org;
