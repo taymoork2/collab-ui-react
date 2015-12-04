@@ -4,10 +4,22 @@ describe('HelpdeskCardsService', function () {
 
   var HelpdeskCardsOrgService;
   var LicenseService;
+  var HelpdeskService;
+  var $scope, q;
+  var $httpBackend;
 
-  beforeEach(inject(function (_HelpdeskCardsOrgService_, _LicenseService_) {
+  beforeEach(inject(function (_$httpBackend_, _HelpdeskCardsOrgService_, _LicenseService_, _HelpdeskService_, _$q_, _$rootScope_) {
     HelpdeskCardsOrgService = _HelpdeskCardsOrgService_;
     LicenseService = _LicenseService_;
+    HelpdeskService = _HelpdeskService_;
+    $scope = _$rootScope_.$new();
+    q = _$q_;
+
+    $httpBackend = _$httpBackend_;
+    $httpBackend
+      .when('GET', 'l10n/en_US.json')
+      .respond({});
+
   }));
 
   describe('Org Cards', function () {
@@ -103,6 +115,54 @@ describe('HelpdeskCardsService', function () {
       expect(license.volume).toEqual(100);
       expect(license.usage).toEqual(50);
       expect(license.displayName).toEqual('helpdesk.licenseTypes.SHARED_DEVICES');
+    });
+
+    it('should return correct hybrid service card for org', function () {
+      sinon.stub(HelpdeskService, 'getHybridServices');
+      var deferred = q.defer();
+      deferred.resolve([{
+        "acknowledged": false,
+        "emailSubscribers": "",
+        "enabled": true,
+        "id": "squared-fusion-uc"
+      }, {
+        "acknowledged": false,
+        "emailSubscribers": "",
+        "enabled": false,
+        "id": "squared-fusion-cal"
+      }]);
+      HelpdeskService.getHybridServices.returns(deferred.promise);
+
+      var org = {
+        services: ['squared-fusion-mgmt', 'squared-fusion-cal']
+      };
+      var card = HelpdeskCardsOrgService.getHybridServicesCardForOrg(org);
+      $scope.$apply();
+
+      expect(card.enabledHybridServices.length).toEqual(1);
+      expect(card.enabledHybridServices[0].id).toEqual("squared-fusion-uc");
+
+      expect(card.availableHybridServices.length).toEqual(1);
+      expect(card.availableHybridServices[0].id).toEqual("squared-fusion-cal");
+
+    });
+
+    it('should return correct user card for org', function () {
+      sinon.stub(LicenseService, 'getUnlicensedUsersCount');
+      var deferred = q.defer();
+      deferred.resolve("42");
+      LicenseService.getUnlicensedUsersCount.returns(deferred.promise);
+
+      org.ssoEnabled = true;
+      org.dirsyncEnabled = true;
+      var card = HelpdeskCardsOrgService.getUserCardForOrg(org);
+
+      $scope.$apply();
+
+      expect(card.ssoEnabled).toBeTruthy();
+      expect(card.dirsyncEnabled).toBeTruthy();
+      expect(card.unlicensedUserCount).toEqual('42');
+
     });
 
   });
