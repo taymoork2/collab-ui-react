@@ -2,7 +2,7 @@
   'use strict';
 
   /*ngInject*/
-  function HelpdeskCardsOrgService(HelpdeskService, XhrNotificationService, $q, ReportsService, Config, LicenseService) {
+  function HelpdeskCardsOrgService(HelpdeskService, XhrNotificationService, Config, LicenseService) {
 
     function getMessageCardForOrg(org, licenses) {
       var entitled = LicenseService.orgIsEntitledTo(org, 'webex-squared');
@@ -26,7 +26,7 @@
 
     function OrgCard(entitled, licenses, licenseType) {
       this.entitled = entitled;
-      this.licenses = LicenseService.filterLicensesAndSetDisplayName(licenses, licenseType);
+      this.licenses = LicenseService.filterAndExtendLicenses(licenses, licenseType);
       this.isTrial = _.any(this.licenses, {
         'isTrial': true
       });

@@ -8,7 +8,7 @@ describe('HelpdeskCardsService', function () {
   var $scope, q;
   var $httpBackend;
 
-  beforeEach(inject(function (_$httpBackend_, _HelpdeskCardsOrgService_, _LicenseService_, _HelpdeskService_, _$q_, _$rootScope_) {
+  beforeEach(inject(function (_$httpBackend_, _HelpdeskCardsOrgService_, _HelpdeskService_, _$q_, _LicenseService_, _$rootScope_) {
     HelpdeskCardsOrgService = _HelpdeskCardsOrgService_;
     LicenseService = _LicenseService_;
     HelpdeskService = _HelpdeskService_;
@@ -27,22 +27,27 @@ describe('HelpdeskCardsService', function () {
       services: ['spark-device-mgmt', 'ciscouc', 'webex-squared', 'rubbish']
     };
     var licenses = [{
+      offerCode: 'MS',
       type: 'MESSAGING',
       volume: 100,
       usage: 50
     }, {
+      offerCode: 'CF',
       type: 'CONFERENCING',
       volume: 100,
       usage: 50
     }, {
+      offerCode: 'CO',
       type: 'COMMUNICATIONS',
       volume: 100,
       usage: 50
     }, {
+      offerCode: 'SD',
       type: 'SHARED_DEVICES',
       volume: 100,
       usage: 50
     }, {
+      offerCode: 'RB',
       type: 'RUBBISH',
       volume: 100,
       usage: 50
@@ -50,13 +55,13 @@ describe('HelpdeskCardsService', function () {
 
     beforeEach(function () {
       spyOn(LicenseService, 'orgIsEntitledTo').and.callThrough();
-      spyOn(LicenseService, 'filterLicensesAndSetDisplayName').and.callThrough();
+      spyOn(LicenseService, 'filterAndExtendLicenses').and.callThrough();
     });
 
     it('should return correct message card for org', function () {
       var card = HelpdeskCardsOrgService.getMessageCardForOrg(org, licenses);
       expect(LicenseService.orgIsEntitledTo).toHaveBeenCalled();
-      expect(LicenseService.filterLicensesAndSetDisplayName).toHaveBeenCalled();
+      expect(LicenseService.filterAndExtendLicenses).toHaveBeenCalled();
       expect(card.entitled).toBeTruthy();
       expect(card.licenses.length).toEqual(1);
       expect(card.totalVolume).toEqual(100);
@@ -66,13 +71,13 @@ describe('HelpdeskCardsService', function () {
       expect(license.type).toEqual('MESSAGING');
       expect(license.volume).toEqual(100);
       expect(license.usage).toEqual(50);
-      expect(license.displayName).toEqual('helpdesk.licenseTypes.MESSAGING');
+      expect(license.displayName).toEqual('helpdesk.licenseDisplayNames.MS');
     });
 
     it('should return correct meeting card for org', function () {
       var card = HelpdeskCardsOrgService.getMeetingCardForOrg(org, licenses);
       //expect(LicenseService.orgIsEntitledTo).toHaveBeenCalled();
-      expect(LicenseService.filterLicensesAndSetDisplayName).toHaveBeenCalled();
+      expect(LicenseService.filterAndExtendLicenses).toHaveBeenCalled();
       expect(card.entitled).toBeTruthy();
       expect(card.licenses.length).toEqual(1);
       expect(card.totalVolume).toEqual(100);
@@ -82,13 +87,13 @@ describe('HelpdeskCardsService', function () {
       expect(license.type).toEqual('CONFERENCING');
       expect(license.volume).toEqual(100);
       expect(license.usage).toEqual(50);
-      expect(license.displayName).toEqual('helpdesk.licenseTypes.CONFERENCING');
+      expect(license.displayName).toEqual('helpdesk.licenseDisplayNames.CF');
     });
 
     it('should return correct call card for org', function () {
       var card = HelpdeskCardsOrgService.getCallCardForOrg(org, licenses);
       expect(LicenseService.orgIsEntitledTo).toHaveBeenCalled();
-      expect(LicenseService.filterLicensesAndSetDisplayName).toHaveBeenCalled();
+      expect(LicenseService.filterAndExtendLicenses).toHaveBeenCalled();
       expect(card.entitled).toBeTruthy();
       expect(card.licenses.length).toEqual(1);
       expect(card.totalVolume).toEqual(100);
@@ -98,13 +103,13 @@ describe('HelpdeskCardsService', function () {
       expect(license.type).toEqual('COMMUNICATIONS');
       expect(license.volume).toEqual(100);
       expect(license.usage).toEqual(50);
-      expect(license.displayName).toEqual('helpdesk.licenseTypes.COMMUNICATIONS');
+      expect(license.displayName).toEqual('helpdesk.licenseDisplayNames.CO');
     });
 
     it('should return correct room systems card for org', function () {
       var card = HelpdeskCardsOrgService.getRoomSystemsCardForOrg(org, licenses);
       expect(LicenseService.orgIsEntitledTo).toHaveBeenCalled();
-      expect(LicenseService.filterLicensesAndSetDisplayName).toHaveBeenCalled();
+      expect(LicenseService.filterAndExtendLicenses).toHaveBeenCalled();
       expect(card.entitled).toBeTruthy();
       expect(card.licenses.length).toEqual(1);
       expect(card.totalVolume).toEqual(100);
@@ -114,7 +119,7 @@ describe('HelpdeskCardsService', function () {
       expect(license.type).toEqual('SHARED_DEVICES');
       expect(license.volume).toEqual(100);
       expect(license.usage).toEqual(50);
-      expect(license.displayName).toEqual('helpdesk.licenseTypes.SHARED_DEVICES');
+      expect(license.displayName).toEqual('helpdesk.licenseDisplayNames.SD');
     });
 
     it('should return correct hybrid service card for org', function () {

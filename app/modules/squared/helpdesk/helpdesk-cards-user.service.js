@@ -2,7 +2,7 @@
   'use strict';
 
   /*ngInject*/
-  function HelpdeskCardsUserService(HelpdeskService, XhrNotificationService, $q, ReportsService, Config, LicenseService) {
+  function HelpdeskCardsUserService(Config, LicenseService) {
 
     function getMessageCardForUser(user) {
       var messageCard = {

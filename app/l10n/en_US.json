@@ -2942,11 +2942,18 @@
     "showMore": "Show more results",
     "delegatedAdministration": "manages {{numManages}} organizations",
     "licenses": "Licenses",
-    "licenseTypes": {
-      "MESSAGING": "{{volume}} x Standard Team Rooms",
-      "CONFERENCING": "{{volume}} x 25 Party Meetings",
-      "COMMUNICATIONS": "{{volume}} x Advanced Spark Call",
-      "SHARED_DEVICES": "{{volume}} x Room Devices"
+    "licenseDisplayNames": {
+      "MC": "{{volume}} x Meeting Center {{capacity}}",
+      "TC": "{{volume}} x Training Center {{capacity}}",
+      "MS": "{{volume}} x Standard Team Rooms",
+      "CF": "{{volume}} x 25 Party Meetings",
+      "EE": "{{volume}} x Enterprise Edition {{capacity}}",
+      "SC": "{{volume}} x Support Center {{capacity}}",
+      "EC": "{{volume}} x Event Center {{capacity}}",
+      "CO": "{{volume}} x Advanced Spark Call",
+      "CMR": "{{volume}} x Collaboration Meeting Rooms",
+      "SD": "{{volume}} x Room Devices",
+      "ST": "{{volume}} x Storage"
     },
     "trial": "Trial",
     "adminUsers": "Administrators",
