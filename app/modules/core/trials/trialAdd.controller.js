@@ -32,6 +32,7 @@
     vm.showMeeting = false;
     vm.canEditMessage = true;
     vm.canEditMeeting = true;
+    vm.startTrial = startTrial;
 
     vm.custInfoFields = [{
       model: vm.details,
@@ -208,7 +209,7 @@
     $q.all([
       FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials),
       FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials)
-    ]).then(function(results){
+    ]).then(function (results) {
       vm.showRoomSystems = results[0];
       vm.roomSystemTrial.enabled = results[0];
       vm.meetingTrial.enabled = results[1];
@@ -216,11 +217,11 @@
       vm.messageTrial.enabled = true;
       if (vm.meetingTrial.enabled) {
         vm.showMeeting = true;
-      // Don't allow navigating to other views
+        // Don't allow navigating to other views
       } else {
         navOrder = ['trialAdd.info'];
       }
-    }).finally(function(){
+    }).finally(function () {
       init();
       vm.roomSystemFields[1].model.quantity = vm.roomSystemTrial.enabled ? vm.roomSystemOptions[0] : 0;
       toggleTrial();
