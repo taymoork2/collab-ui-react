@@ -195,7 +195,7 @@
       <section>
         <div>
           <div class="text-align-center large-number">{{helpdeskOrgCtrl.userCard.unlicensedUserCount}}</div>
-          <div class="text-align-center" translate="helpdesk.unlicensedUsers"></div>
+          <div ng-if="helpdeskOrgCtrl.userCard.unlicensedUserCount != null" class="text-align-center" translate="helpdesk.unlicensedUsers"></div>
           <hr>
           <span>
             <i class="icon icon-circle circle-status-icon"
