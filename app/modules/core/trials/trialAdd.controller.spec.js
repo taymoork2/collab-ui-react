@@ -43,20 +43,20 @@ describe('Controller: TrialAddCtrl', function () {
   });
 
   it('should have default offers', function () {
-    expect(controller.isOffersEmpty()).toBeFalsy();
+    expect(controller.messageTrial.enabled).toBeTruthy();
+    expect(controller.meetingTrial.enabled).toBeTruthy();
+    expect(controller.roomSystemTrial.enabled).toBeTruthy();
+    expect(controller.callTrial.enabled).toBeFalsy();
   });
 
   it('should transition state', function () {
-    controller.gotoAddNumber();
-    expect($state.go).toHaveBeenCalledWith('trialAdd.addNumbers');
+    expect(controller.hasNextStep()).toBeTruthy();
+    controller.nextStep();
+    expect($state.go).toHaveBeenCalledWith('trialAdd.info');
   });
 
-  it('should enable reset room systems amount when room systems is set to false', function () {
-    controller.model.roomSystemsEnabled = true;
-    controller.model.roomSystems = 5;
-    controller.model.roomSystemsEnabled = false;
-    controller.roomSystemsChecked();
-    expect(controller.model.roomSystems).toBe(0);
+  it('should default room system quantity to 0', function () {
+    expect(controller.roomSystemFields[1].model.quantity).toBe(0);
   });
 
   describe('Start a new trial', function () {
@@ -100,20 +100,11 @@ describe('Controller: TrialAddCtrl', function () {
 
     describe('With Squared UC', function () {
       beforeEach(function () {
-        $scope.offers = {
-          COLLAB: true,
-          SQUAREDUC: true,
-          ROOMSYSTEMS: false,
-          WEBEXTRIALS: false,
-        };
-      });
-
-      it('should not have empty offers', function () {
-        expect(controller.isOffersEmpty()).toBeFalsy();
+        controller.callTrial.enabled = true;
       });
 
       it('should have Squared UC offer', function () {
-        expect(controller.isSquaredUCEnabled()).toBeTruthy();
+        expect(controller.callTrial.enabled).toBeTruthy();
       });
 
       it('should notify success', function () {
