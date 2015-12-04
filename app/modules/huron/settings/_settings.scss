@@ -1,6 +1,9 @@
+.huronsettings-state {
+  @extend %page-background-white;
+}
+
 .huron-settings {
   @extend %content-header;
-  @extend %page-background-white;
   position: relative;
 
   .loading {
