@@ -2960,6 +2960,6 @@
       "pending": "Pending"
     },
     "consumerOrg": "Consumer",
-    "usersWhoMayBelongToTheOrganization": "Users who may belong to the organization"
+    "unlicensedUsers": "Unlicensed Users"
   }
 }
