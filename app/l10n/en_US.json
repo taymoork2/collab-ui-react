@@ -2876,6 +2876,7 @@
     "atlas-portal.support": "Billing Administrator",
     "atlas-portal.reports": "Support Administrator",
     "atlas-portal.partner.helpdesk": "Help Desk Support",
+    "atlas-portal.application": "Application",
     "id_full_admin": "Full Administrator",
     "user": "User"
   },
