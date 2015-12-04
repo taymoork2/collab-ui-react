@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsService, Config, $translate, LicenseService, HelpdeskHealthStatusService) {
+  function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsOrgService, Config, $translate, LicenseService, HelpdeskHealthStatusService) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.org) {
@@ -52,12 +52,12 @@
     }
 
     function initCards(licenses) {
-      vm.messageCard = HelpdeskCardsService.getMessageCardForOrg(vm.org, licenses);
-      vm.meetingCard = HelpdeskCardsService.getMeetingCardForOrg(vm.org, licenses);
-      vm.callCard = HelpdeskCardsService.getCallCardForOrg(vm.org, licenses);
-      vm.hybridServicesCard = HelpdeskCardsService.getHybridServicesCardForOrg(vm.org);
-      vm.roomSystemsCard = HelpdeskCardsService.getRoomSystemsCardForOrg(vm.org, licenses);
-      vm.userCard = HelpdeskCardsService.getUserCardForOrg(vm.org);
+      vm.messageCard = HelpdeskCardsOrgService.getMessageCardForOrg(vm.org, licenses);
+      vm.meetingCard = HelpdeskCardsOrgService.getMeetingCardForOrg(vm.org, licenses);
+      vm.callCard = HelpdeskCardsOrgService.getCallCardForOrg(vm.org, licenses);
+      vm.hybridServicesCard = HelpdeskCardsOrgService.getHybridServicesCardForOrg(vm.org);
+      vm.roomSystemsCard = HelpdeskCardsOrgService.getRoomSystemsCardForOrg(vm.org, licenses);
+      vm.userCard = HelpdeskCardsOrgService.getUserCardForOrg(vm.org);
     }
 
     function initHealth(healthStatuses) {
