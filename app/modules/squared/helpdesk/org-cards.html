@@ -48,6 +48,7 @@
         <div ng-repeat="license in helpdeskOrgCtrl.meetingCard.licenses">
           <span class="label warning" ng-if="license.isTrial" translate="helpdesk.trial"></span>
           <span>{{license.displayName}}</span>
+          <span ng-if="license.siteUrl">({{license.siteUrl}})</span>
           <span ng-if="license.isTrial || license.status !== 'ACTIVE'">| </span>
           <span
             ng-if="license.isTrial && license.trialExpiresInDays > 0">{{helpdeskOrgCtrl.daysLeftText(license)}}</span>
