@@ -24,8 +24,9 @@ angular.module('Core')
       var getLicenses = function () {
         Orgservice.getLicensesUsage().then(function (subscriptions) {
           for (var index in subscriptions) {
-            var licenses = subscriptions[index];
+            var licenses = subscriptions[index]['licenses'];
             var subscription = {};
+            subscription['subscriptionId'] = subscriptions[index]['subscriptionId'];
             if (licenses.length === 0) {
               $scope.bucketKeys.forEach(function (bucket) {
                 subscription[bucket] = {};
