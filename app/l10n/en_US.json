@@ -1720,7 +1720,7 @@
     "meeting": {
       "title": "Setup Trial - Meeting and WebEx",
       "webexHeader": "WebEx License Type",
-      "webexDetails": "Meeting trials enable Enterprise Edition WebEx licenses. This includes: Meeting Center, Event Center, Training Center, and Support Center.",
+      "webexDetails": "Meeting and WebEx trials enable Enterprise Edition WebEx licenses.",
       "siteUrl": "Site URL",
       "timezone": "Time Zone",
       "default": "Set as default",
@@ -1729,7 +1729,7 @@
     "call": {
       "title": "Setup Trial – Add Devices",
       "selectDevicesHeader": "Select Devices",
-      "meetingRoomCamera": "Spark Meeting Room Camera",
+      "meetingRoomCamera": "Spark Room System",
       "deskPhones": "Personal and Shared Desk Phones",
       "sx10": "SX10",
       "phone8865": "8865",
@@ -1754,6 +1754,7 @@
   "trials": {
     "collab": "Standard Team Rooms + 25 Party Meetings",
     "squaredUC": "Advanced Spark Call",
+    "licenses": "Licenses",
     "meet": "Meeting and WebEx",
     "message": "Message",
     "meeting": "Meeting and WebEx",

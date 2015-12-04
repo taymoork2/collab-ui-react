@@ -174,7 +174,7 @@
         inputClass: 'columns small-6 small-pull-5',
         labelClass: 'columns small-4 small-push-4',
         labelfield: 'label',
-        label: $translate.instant('common.devices'),
+        label: $translate.instant('trials.licenses'),
         options: vm.roomSystemOptions,
       },
       expressionProperties: {
