@@ -59,8 +59,8 @@
       FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
         if (result) {
           msgState.name = $translate.instant('onboardModal.message');
-          commState.name = $translate.instant('onboardModal.meeting');
-          confState.name = $translate.instant('onboardModal.call');
+          commState.name = $translate.instant('onboardModal.call');
+          confState.name = $translate.instant('onboardModal.meeting');
         }
       });
 
