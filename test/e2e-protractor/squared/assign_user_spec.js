@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 /* global describe */
 /* global it */
@@ -9,19 +9,19 @@ describe('Squared Invite User and Assign Services User Flow', function () {
   var inviteEmail;
 
   it('should login as sqtest org admin and view users', function () {
-    login.login('sqtest-admin', '#/users');
+    login.login('account-admin', '#/users');
+  });
+
+  it('should click on invite users', function () {
+    utils.click(users.addUsers);
+    utils.expectIsDisplayed(users.manageDialog);
+    utils.expectIsDisplayed(users.nextButton);
+    utils.expectIsNotDisplayed(users.onboardButton);
+    utils.expectIsNotDisplayed(users.entitleButton);
+    utils.expectIsNotDisplayed(users.addButton);
   });
 
   describe('Invite users through modal', function () {
-    it('should click on invite users', function () {
-      utils.click(users.addUsers);
-      utils.expectIsDisplayed(users.manageDialog);
-      utils.expectIsDisplayed(users.nextButton);
-      utils.expectIsNotDisplayed(users.onboardButton);
-      utils.expectIsNotDisplayed(users.entitleButton);
-      utils.expectIsNotDisplayed(users.addButton);
-    });
-
     it('should invite a user', function () {
       inviteEmail = utils.randomTestGmail();
 
@@ -33,11 +33,6 @@ describe('Squared Invite User and Assign Services User Flow', function () {
       utils.sendKeys(users.emailAddress, inviteEmail);
       utils.click(users.plusIcon);
       utils.click(users.nextButton);
-    });
-
-    it('should add licenses successfully', function () {
-      //click on license checkbox
-      utils.click(users.confCheckbox);
 
       utils.click(users.onboardButton);
       notifications.assertSuccess('onboarded successfully');
@@ -50,12 +45,27 @@ describe('Squared Invite User and Assign Services User Flow', function () {
 
     it('should show invite pending status on new user', function () {
       utils.search(inviteEmail);
-      utils.expectText(users.userListStatus.first(), 'Invite Pending');
+      utils.expectText(users.userListStatus, 'Invite Pending');
     });
 
-    it('should show conferencing license', function () {
-      users.clickOnUser();
-      utils.expectIsDisplayed(users.conferenceLicenses);
+    it('expect edit services is showing', function () {
+      utils.searchAndClick(inviteEmail);
+      utils.expectIsDisplayed(users.servicesActionButton);
+      utils.click(users.servicesActionButton);
+      utils.click(users.editServicesButton);
+    });
+
+    it('should add licenses successfully', function () {
+      //click on license checkbox
+      utils.click(users.paidMsg);
+      utils.click(users.saveButton);
+      notifications.assertSuccess('entitled successfully');
+      utils.expectIsDisplayed(users.servicesPanel);
+      utils.expectIsDisplayed(users.messageService);
+    });
+
+    afterAll(function () {
+      deleteUtils.deleteUser(inviteEmail);
     });
   });
 });
