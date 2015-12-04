@@ -1,8 +1,10 @@
 /******** Home page styles ********/
 
+.overview-state {
+  @extend %page-content-padding;
+}
 .customer-landing {
   @extend %content-header;
-  @extend %page-content-padding;
 }
 
 // Analytics Charts

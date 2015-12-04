@@ -1,6 +1,9 @@
+.devices-page {
+  @extend %page-background-white;
+}
+
 .sq-devices-page {
   @extend %grid-subheader;
-  @extend %page-background-white;
 }
 
 .sq-devices-page-overview {

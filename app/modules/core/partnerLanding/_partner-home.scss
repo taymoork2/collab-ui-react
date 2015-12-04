@@ -1,11 +1,12 @@
 /*** PARTNERS ***/
 
+.partneroverview-state {
+  @extend %page-content-padding;
+}
+
 .partner-container {
-  width: 100%;
-  padding: 15px;
-  .background-white {
-    background-color: rgb(255, 255, 255);
-  }
+  @extend %content-header;
+
   .tab-reports {
     background-color: transparent;
     margin-top: 40px;
