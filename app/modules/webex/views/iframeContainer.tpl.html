@@ -9,8 +9,8 @@
      name="iframeContainer">
 
   <iframe ng-if="showSpinner"
-          class="iframeContainer"
-          i-frame-resizable 
+          class="iframeContainerShifted"
+          i-frame-resizable="iframeContainer"
           ng-style="{'width': '100%', 'height': iframeHeight }"
           name="webexIframeContainer"
           id="webexIframeContainer"
@@ -19,7 +19,7 @@
   </iframe>
 
   <iframe ng-if="!showSpinner"
-          i-frame-resizable 
+          i-frame-resizable="iframeContainer"
           ng-style="{'width': '100%', 'height': iframeHeight }"
           name="webexIframeContainer"
           id="webexIframeContainer"

@@ -3,29 +3,37 @@
  */
 'use strict';
 
-angular.module('WebExUtils').directive('iFrameResizable', function ($window) {
-  return function iFrameResizable($scope) {
-    $scope.initializeWindowSize = function () {
-      var innerHeight = $window.innerHeight;
+angular.module('WebExUtils').directive(
+  'iFrameResizable',
+  function iFrameResizableDirective($window) {
+    return function iFrameResizable(
+      $scope, 
+      element, 
+      attributes
+    ) {
+    	
+      $scope.initializeWindowSize = function () {
+        var innerHeight = $window.innerHeight;
+        var targetElementId = attributes["iFrameResizable"];
+        var targetElement = document.getElementById(targetElementId).getBoundingClientRect();
+        var targetElementLocation = {
+          left: targetElement.left + window.scrollX,
+          top: targetElement.top + window.scrollY
+        };
 
-      var iframeContainerElement = document.getElementById('iframeContainer').getBoundingClientRect();
-      var elementLocation = {
-        left: iframeContainerElement.left + window.scrollX,
-        top: iframeContainerElement.top + window.scrollY
+        var iframeTopMargin = targetElementLocation.top;
+        var iframeBottomMargin = 14;
+        var iframeTotalMargin = iframeTopMargin + iframeBottomMargin;
+
+        $scope.iframeHeight = (iframeTotalMargin >= innerHeight) ? 0 : innerHeight - iframeTotalMargin;
       };
 
-      var iframeTopMargin = elementLocation.top;
-      var iframeBottomMargin = 14;
-      var iframeTotalMargin = iframeTopMargin + iframeBottomMargin;
-
-      $scope.iframeHeight = (iframeTotalMargin >= innerHeight) ? 0 : innerHeight - iframeTotalMargin;
-    };
-
-    $scope.initializeWindowSize();
-
-    return angular.element($window).bind('resize', function () {
       $scope.initializeWindowSize();
-      return $scope.$apply();
-    });
-  }; // iFrameResizable()
-});
+
+      return angular.element($window).bind('resize', function () {
+        $scope.initializeWindowSize();
+        return $scope.$apply();
+      });
+    }; // iFrameResizable()
+  } // iFrameResizableDirective ()
+);
