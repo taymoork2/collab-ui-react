@@ -1,22 +1,31 @@
 
-<div ng-if="showSpinner"
+<div ng-if="showLoading && showSpinner" 
      align="center">
      
-  <br>
   <i class="icon icon-spinner icon-2x"></i>
+</div>
 
-  <iframe class="iframeContainer"
-          i-frame-resizable 
-		      ng-style="{'width': '100%', 'height': iframeHeight }"
-		      name="webexIframeContainer"
+<div ng-if="showLoading && !showSpinner" 
+     align="center">
+     
+  <br><br>
+</div>
+    
+<div id="iframeContainer"
+     name="iframeContainer">
+
+  <iframe ng-if="showLoading"
+          class="iframeContainerShifted"
+          i-frame-resizable="iframeContainer"
+          ng-style="{'width': '100%', 'height': iframeHeight }"
+          name="webexIframeContainer"
           id="webexIframeContainer"
           frameborder="0"
           title="{{siteSettingLabel}}">
   </iframe>
-</div>
 
-<div ng-if="!showSpinner">
-  <iframe i-frame-resizable 
+  <iframe ng-if="!showLoading"
+          i-frame-resizable="iframeContainer"
           ng-style="{'width': '100%', 'height': iframeHeight }"
           name="webexIframeContainer"
           id="webexIframeContainer"
@@ -50,6 +59,11 @@
          name="ngxsiteurl"
          type="hidden"
          value={{siteName}} />
+
+  <input id="ngxfullsparkdns"
+         name="ngxfullsparkdns"
+         type="hidden"
+         value={{fullSparkDNS}} />
   
   <button id="submitFormBtn"
           type="submit"

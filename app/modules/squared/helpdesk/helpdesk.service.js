@@ -2,7 +2,7 @@
   'use strict';
 
   /*ngInject*/
-  function HelpdeskService(ServiceDescriptor, $location, $http, Config, $q, HelpdeskMockData, CsdmConfigService, CsdmConverter, CacheFactory) {
+  function HelpdeskService(ServiceDescriptor, $location, $http, Config, $q, HelpdeskMockData, CsdmConfigService, CsdmConverter, CacheFactory, $translate) {
     var urlBase = Config.getAdminServiceUrl(); //"http://localhost:8080/admin/api/v1/"
     var orgCache = CacheFactory.get('helpdeskOrgCache');
     if (!orgCache) {
@@ -49,6 +49,9 @@
       var users = res.data.items;
       _.each(users, function (user) {
         user.displayName = getCorrectedDisplayName(user);
+        if (user.organization) {
+          user.isConsumerUser = user.organization.id === Config.consumerOrgId;
+        }
       });
       return users;
     }
@@ -68,12 +71,12 @@
       return $location.absUrl().match(/helpdesk-backend=mock/);
     }
 
-    function searchUsers(searchString, orgId, limit, role) {
+    function searchUsers(searchString, orgId, limit, role, includeUnlicensed) {
       if (useMock()) {
         return deferredResolve(HelpdeskMockData.users);
       }
       return $http
-        .get(urlBase + 'helpdesk/search/users?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit + (orgId ? '&orgId=' + encodeURIComponent(orgId) : '') + (role ? '&role=' + encodeURIComponent(role) : ''))
+        .get(urlBase + 'helpdesk/search/users?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit + (orgId ? '&orgId=' + encodeURIComponent(orgId) : (includeUnlicensed ? '&includeUnlicensed=true' : '')) + (role ? '&role=' + encodeURIComponent(role) : ''))
         .then(extractUsers);
     }
 
@@ -89,7 +92,7 @@
     function getUser(orgId, userId) {
       return $http
         .get(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId) + '/users/' + encodeURIComponent(userId))
-        .then(extractUserAndSetUserStatuses);
+        .then(extractAndMassageUser);
     }
 
     function getOrg(orgId) {
@@ -176,9 +179,10 @@
       return _.sortBy(filteredDevices, 'displayName');
     }
 
-    function extractUserAndSetUserStatuses(res) {
+    function extractAndMassageUser(res) {
       var user = res.data;
       user.displayName = getCorrectedDisplayName(user);
+      user.isConsumerUser = user.orgId === Config.consumerOrgId;
       if (!user.accountStatus) {
         user.statuses = [];
         if (user.active) {
@@ -204,7 +208,9 @@
           var orgs = [];
           var currentResults = _.take(userSearchResults, userLimit);
           _.each(currentResults, function (user) {
-            if (!user.organization.displayName) {
+            if (user.organization.id === Config.consumerOrgId) {
+              user.organization.displayName = $translate.instant('helpdesk.consumerOrg');
+            } else if (!user.organization.displayName) {
               orgs.push(user.organization.id);
             }
           });

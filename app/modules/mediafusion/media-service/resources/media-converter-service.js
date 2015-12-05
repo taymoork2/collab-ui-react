@@ -188,7 +188,6 @@
 
   function AggregateClusters(clusters) {
 
-    //$log.log("In AggregatedClusters");
     var groups = [];
     var clusterArray = [];
 
@@ -206,12 +205,19 @@
     }
 
     function groupBy(attribute) {
+      // First sort the clusters/connectors based on group name
       sortOn(clusterArray, attribute);
       var groupName = "_DEFAULT_GROUP_NAME_";
       var group = "_DEFAULT_GROUP";
+      // Group the sorted cluster/connector based on group name
       for (var i = 0; i < clusterArray.length; i++) {
         var cluster = clusterArray[i];
         var groupDisplayName = cluster.properties["mf.group.displayName"];
+
+        // Filter out the cluster/connector with empty group name
+        if (groupDisplayName == null)
+          continue;
+
         if (groupDisplayName !== groupName) {
           group = {
             groupName: groupDisplayName,
@@ -224,6 +230,7 @@
         group.clusters.push(cluster);
       }
 
+      // Update aggregated service status for each group
       _.each(groups, function (group) {
         group.serviceStatus = clusterAggregatedStatus(group);
       });
@@ -233,7 +240,7 @@
       var clusterStatus = "Unknown";
       var clusters = group.clusters;
 
-      function nrOfConnectorsInState(group, state) {
+      function numberOfConnectorsInState(group, state) {
         var connectorsInState = 0;
         _.each(group.clusters, function (cluster) {
           if (cluster.services[0].connectors[0].state === state) {
@@ -244,7 +251,7 @@
         return connectorsInState;
       }
 
-      function nrOfConnectorsWithAlarm(group) {
+      function numberOfConnectorsWithAlarm(group) {
         var connectorsWithAlarms = 0;
         _.each(group.clusters, function (cluster) {
           if (!(cluster.services[0].connectors[0].alarms === undefined || cluster.services[0].connectors[0].alarms.length === 0)) {
@@ -255,22 +262,23 @@
         return connectorsWithAlarms;
       }
 
-      var nrOfConnectors = clusters.length || 0;
-      if (nrOfConnectorsWithAlarm(group) > 0) {
+      // aggregated service status for each GROUP based on status of each cluster/connector
+      var numberOfConnectors = clusters.length || 0;
+      if (numberOfConnectorsWithAlarm(group) > 0) {
         clusterStatus = "alarm";
-      } else if (nrOfConnectorsInState(group, "running") === nrOfConnectors) {
+      } else if (numberOfConnectorsInState(group, "running") === numberOfConnectors) {
         clusterStatus = "running";
-      } else if (nrOfConnectorsInState(group, "disabled") > 0) {
+      } else if (numberOfConnectorsInState(group, "disabled") > 0) {
         clusterStatus = "disabled";
-      } else if (nrOfConnectorsInState(group, "not_configured") > 0) {
+      } else if (numberOfConnectorsInState(group, "not_configured") > 0) {
         clusterStatus = "not_configured";
-      } else if (nrOfConnectorsInState(group, "uninstalling") > 0 || nrOfConnectorsInState(group, "downloading") > 0 || nrOfConnectorsInState(group, "installing") > 0) {
+      } else if (numberOfConnectorsInState(group, "uninstalling") > 0 || numberOfConnectorsInState(group, "downloading") > 0 || numberOfConnectorsInState(group, "installing") > 0) {
         clusterStatus = "installing";
-      } else if (nrOfConnectorsInState(group, "stopped") > 0) {
+      } else if (numberOfConnectorsInState(group, "stopped") > 0) {
         clusterStatus = "stopped";
-      } else if (nrOfConnectorsInState(group, "offline") > 0) {
+      } else if (numberOfConnectorsInState(group, "offline") > 0) {
         clusterStatus = "offline";
-      } else if (nrOfConnectorsInState(group, "not_installed") > 0) {
+      } else if (numberOfConnectorsInState(group, "not_installed") > 0) {
         clusterStatus = "not_installed";
       }
       return clusterStatus;
@@ -291,6 +299,11 @@
         .indexBy('id')
         .value();
     };
+
+    // FMS Cluster have one-to-one relationship to media connector. Each connector will have unique cluster ID.
+    // Mediafusion Group is different from Cluster and Clusters/Connectors are grouped based on groupName.
+    // Media Clusters displayed in Media Service UI are basically Groups.
+    // Aggregated Service Status is result of aggregation of status of each cluster/connector present in Group.
 
     var aggregateClusters = function (clusters) {
       return new AggregateClusters(clusters);

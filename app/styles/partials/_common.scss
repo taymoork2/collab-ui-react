@@ -12,10 +12,6 @@ body {
   margin: 0;
 }
 
-.page-content-wrapper {
-  padding-left: 0;
-}
-
 .page-header {
   margin: 0;
   padding: 0;
@@ -45,6 +41,11 @@ body {
 }
 
 // Common ngGrid Styles
+.grid-refresh {
+  position: absolute;
+  top: 20rem;
+  left: 50%;
+}
 
 @media screen {
   #printSection {

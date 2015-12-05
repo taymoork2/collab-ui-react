@@ -34,6 +34,7 @@
       _this.funcName = "ReportsIframeCtrl()";
       _this.logMsg = "";
 
+      $scope.showLoading = false;
       $scope.showSpinner = (
         ("storage_utilization" == $stateParams.reportPageId) ||
         ("support_center_support_sessions" == $stateParams.reportPageId) ||
@@ -56,6 +57,7 @@
       $scope.authToken = $rootScope.token;
       $scope.locale = ("es_LA" == $translate.use()) ? "es_MX" : $translate.use();
       $scope.siteName = $stateParams.siteUrl;
+      $scope.fullSparkDNS = window.location.origin;
 
       _this.logMsg = _this.funcName + ": " + "\n" +
         "siteUrl=" + $scope.siteUrl + "\n" +

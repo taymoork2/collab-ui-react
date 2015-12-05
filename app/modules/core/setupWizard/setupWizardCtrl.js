@@ -4,7 +4,8 @@ angular.module('Core')
   .controller('SetupWizardCtrl', ['$scope', 'Authinfo', '$q', 'FeatureToggleService',
     function ($scope, Authinfo, $q, FeatureToggleService) {
 
-      $scope.tabs = [{
+      $scope.tabs = [];
+      var tabs = [{
         name: 'planReview',
         label: 'firstTimeWizard.planReview',
         description: 'firstTimeWizard.planReviewSub',
@@ -77,23 +78,25 @@ angular.module('Core')
       $scope.addClaimSipUrl = false;
       $scope.csvUploadSupport = false;
 
-      $q.all([FeatureToggleService.supportsDirSync(),
-          FeatureToggleService.supports(FeatureToggleService.features.atlasSipUriDomain),
-          FeatureToggleService.supportsCsvUpload(),
-        ])
-        .then(function (results) {
-          $scope.isDirSyncEnabled = results[0];
-          $scope.addClaimSipUrl = results[1];
-          $scope.csvUploadSupport = results[2];
-        }).finally(function () {
-          init();
-        });
+      if (Authinfo.isCustomerAdmin()) {
+        $q.all([FeatureToggleService.supportsDirSync(),
+            FeatureToggleService.supports(FeatureToggleService.features.atlasSipUriDomain),
+            FeatureToggleService.supportsCsvUpload(),
+          ])
+          .then(function (results) {
+            $scope.isDirSyncEnabled = results[0];
+            $scope.addClaimSipUrl = results[1];
+            $scope.csvUploadSupport = results[2];
+          }).finally(function () {
+            init();
+          });
+      }
 
       function init() {
+        $scope.tabs = tabs;
         setupAddUserSubTabs();
 
         if (Authinfo.isSquaredUC()) {
-          $scope.tabs.splice(2, 1);
           $scope.tabs.splice(1, 0, {
             name: 'serviceSetup',
             required: true,

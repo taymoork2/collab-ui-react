@@ -1,78 +1,84 @@
 'use strict';
 
-// TODO : These test cases are not complete... 
-
-//Below is the Test Suit written for mediafusionConnectorCtrl.
 describe('Controller: MediaServiceController', function () {
 
-  // load the controller's module
-  beforeEach(module('wx2AdminWebClientApp'));
-  //Initialize variables
-  var Authinfo, controller, $scope, $state, MediaServiceActivation, $httpBackend, authinfo, $q, Notification, XhrNotificationService;
-  var mediaAgentOrgIds = ['squared'];
+  var Authinfo, controller, $scope, httpMock, $q, $modal, log, $translate, $state;
+  var MediaServiceActivation, MediaClusterService, Notification, XhrNotificationService;
+  var mediaAgentOrgIds = ['mediafusion'];
   var serviceId = "squared-fusion-media";
+  var clusterId = "367dd49b-212d-4e7e-ac12-24eb8ee9d504";
+  var connectorName = "MF_Connector";
 
-  beforeEach(function () {
-    module(function ($provide) {
-      Authinfo = {
-        getOrgId: sinon.stub()
-      };
-      Authinfo.getOrgId.returns("12345");
-      $provide.value('Authinfo', Authinfo);
-    });
-  });
+  //beforeEach(module('Hercules'));
+  beforeEach(module('Squared'));
+  beforeEach(module('Mediafusion'));
 
-  beforeEach(inject(function ($controller, $rootScope, _$state_, _$httpBackend_, _MediaServiceActivation_, _$q_, _Notification_) {
-    $scope = $rootScope.$new();
-    $state = _$state_;
-    $httpBackend = _$httpBackend_;
-    $q = _$q_;
-    MediaServiceActivation = _MediaServiceActivation_;
-    Notification = _Notification_;
-    //XhrNotificationService = _XhrNotificationService_;
-    controller = $controller('MediaServiceController', {
-      //Authinfo: Authinfo,
-      $scope: $scope,
-      $state: $state,
-      MediaServiceActivation: MediaServiceActivation
-    });
-    $httpBackend.when('GET', 'l10n/en_US.json').respond({});
-    spyOn(Notification, 'notify');
-    spyOn(Notification, 'errorResponse');
-    //$scope.$apply();
+  var authInfo = {
+    getOrgId: sinon.stub().returns('5632f806-ad09-4a26-a0c0-a49a13f38873')
+  };
+
+  beforeEach(module(function ($provide) {
+    $provide.value("Authinfo", authInfo);
   }));
 
-  /*
-    afterEach(function () {
-      $httpBackend.verifyNoOutstandingRequest();
-    });*/
+  beforeEach(inject(function ($rootScope, $state, $controller, _$httpBackend_, _$q_, _$modal_, $log, _$translate_, _MediaServiceActivation_, _MediaClusterService_, _XhrNotificationService_, _Notification_) {
+    $scope = $rootScope.$new();
+    $state = $state;
+    log = $log;
+    log.reset();
+    httpMock = _$httpBackend_;
+    $q = _$q_;
+    $modal = _$modal_;
+    $translate = _$translate_;
+
+    MediaClusterService = _MediaClusterService_;
+    MediaServiceActivation = _MediaServiceActivation_;
+    XhrNotificationService = _XhrNotificationService_;
+    Notification = _Notification_;
+
+    //$httpBackend.when('GET', 'l10n/en_US.json').respond({});
+
+    //spyOn(Notification, 'errorResponse');
+
+    controller = $controller('MediaServiceController', {
+      $scope: $scope,
+      $state: $state,
+      httpMock: httpMock,
+      $q: $q,
+      $modal: $modal,
+      log: log,
+      $translate: $translate,
+
+      MediaServiceActivation: MediaServiceActivation,
+      MediaClusterService: MediaClusterService,
+      XhrNotificationService: XhrNotificationService,
+      Notification: Notification
+    });
+
+  }));
+
+  afterEach(function () {
+    httpMock.verifyNoOutstandingRequest();
+  });
 
   it('controller should be defined', function () {
     expect(controller).toBeDefined();
   });
 
-  it('scope should not be null', function () {
-    expect($scope).not.toBeNull();
-  });
-
-  it('scope should be defined', function () {
-    expect($scope).toBeDefined();
-  });
-
   it('should enable media service', function () {
+
     spyOn(MediaServiceActivation, 'setServiceEnabled').and.returnValue($q.when());
     spyOn(MediaServiceActivation, 'getUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.when(
       [{
         statusCode: 0,
-        identityOrgId: "1eb65fdf-9643-417f-9974-ad72cae0eaaa",
-        mediaAgentOrgIds: ["mediafusion"]
+        identityOrgId: "367dd49b-212d-4e7e-ac12-24eb8ee9d504",
+        mediaAgentOrgIds: ["367dd49b-212d-4e7e-ac12-24eb8ee9d504", "squared"]
       }]
     ));
     spyOn(MediaServiceActivation, 'setUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.when());
 
-    //$scope.enableMediaService(serviceId);
-    //$scope.$apply();
-    //expect(MediaServiceActivation.setServiceEnabled).toHaveBeenCalled();
+    controller.enableMediaService(serviceId);
+    expect(MediaServiceActivation.setServiceEnabled).toHaveBeenCalled();
     //expect(Service.getUserIdentityOrgToMediaAgentOrgMapping).toHaveBeenCalled();
     //expect(Service.setUserIdentityOrgToMediaAgentOrgMapping).toHaveBeenCalled();
   });
@@ -82,29 +88,29 @@ describe('Controller: MediaServiceController', function () {
       [{
         statusCode: 0,
         identityOrgId: "1eb65fdf-9643-417f-9974-ad72cae0eaaa",
-        mediaAgentOrgIds: ["mediafusion"]
+        mediaAgentOrgIds: ["367dd49b-212d-4e7e-ac12-24eb8ee9d504", "squared"]
       }]
     ));
     spyOn(MediaServiceActivation, 'setUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.when());
-    //$scope.enableOrpheusForMediaFusion();
-    //$scope.$apply();
-    //expect(MediaServiceActivation.getUserIdentityOrgToMediaAgentOrgMapping).toHaveBeenCalled();
+    controller.enableOrpheusForMediaFusion();
+
+    expect(MediaServiceActivation.getUserIdentityOrgToMediaAgentOrgMapping).toHaveBeenCalled();
     //expect(Service.setUserIdentityOrgToMediaAgentOrgMapping).toHaveBeenCalled();
   });
 
   it('should enable orpheus for mediafusion org', function () {
     spyOn(MediaServiceActivation, 'setUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.when());
-    //$scope.addUserIdentityToMediaAgentOrgMapping(mediaAgentOrgIds);
-    //$scope.$apply();
-    //expect(MediaServiceActivation.setUserIdentityOrgToMediaAgentOrgMapping).toHaveBeenCalled();
+    controller.addUserIdentityToMediaAgentOrgMapping(mediaAgentOrgIds);
+
+    expect(MediaServiceActivation.setUserIdentityOrgToMediaAgentOrgMapping).toHaveBeenCalled();
   });
 
   it('should notify error while enabling orpheus for mediafusion', function () {
     spyOn(MediaServiceActivation, 'setUserIdentityOrgToMediaAgentOrgMapping').and.returnValue($q.reject());
-    //$scope.addUserIdentityToMediaAgentOrgMapping(mediaAgentOrgIds);
-    //$scope.$apply();
+    spyOn(Notification, 'notify');
+    controller.addUserIdentityToMediaAgentOrgMapping(mediaAgentOrgIds);
 
-    //expect(MediaServiceActivation.setUserIdentityOrgToMediaAgentOrgMapping).toHaveBeenCalled();
+    expect(MediaServiceActivation.setUserIdentityOrgToMediaAgentOrgMapping).toHaveBeenCalled();
     //expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
   });
 
