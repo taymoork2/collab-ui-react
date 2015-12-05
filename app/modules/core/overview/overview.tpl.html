@@ -2,11 +2,9 @@
   <cs-page-header title="{{::overview.pageTitle}}"></cs-page-header>
   <div class="cs-card-container multiple-layouts">
     <cs-card-layout class="three-fourths">
-
       <cs-card class="medium menu-card overview-card" ng-class="card.cardClass" ng-repeat="card in overview.cards">
         <article ng-include="card.template" ></article>
       </cs-card>
-
     </cs-card-layout>
     <cs-card-layout block-view="true" class="fourth">
       <cs-card class="full side-info-card">
@@ -24,7 +22,7 @@
               <a ng-click="openFirstTimeSetupWiz()" translate="homePage.beginTrial"></a>
             </span>
             </div>
-            <div class="notification-style" ng-show="!overview.isCalendarAcknowledged">
+            <div class="notification-style" ng-show="overview.isCalendarAcknowledged">
               <span class="badge success" translate="common.new"></span>
 
               <div class="notification-spacing">
@@ -34,7 +32,7 @@
               <!--<button type="button" class="close" ng-click="overview.setHybridAcknowledged('calendar-service')">
               </button>-->
             </div>
-            <div class="notification-style" ng-show="!overview.isCallAcknowledged">
+            <div class="notification-style" ng-show="overview.isCallAcknowledged">
               <span class="badge success" translate="common.new"></span>
 
               <div class="notification-spacing">
