@@ -172,7 +172,8 @@
       type: 'select',
       className: "columns small-6",
       templateOptions: {
-        inputClass: 'columns small-6 small-pull-5',
+        id:'trialRoomSystemsAmount',
+        inputClass: 'columns small-6 small-pull-5 ',
         labelClass: 'columns small-4 small-push-4',
         labelfield: 'label',
         label: $translate.instant('trials.licenses'),

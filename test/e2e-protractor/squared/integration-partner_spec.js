@@ -61,11 +61,6 @@ describe('Partner flow', function () {
         utils.expectIsDisplayed(partner.addTrialForm);
       });
 
-      it('should check the Room Systems Checkbox', function () {
-        utils.click(partner.roomSystemsCheckbox);
-        utils.expectIsEnabled(partner.trialRoomSystemsAmount);
-      });
-
       afterEach(function () {
         utils.click(partner.cancelTrialButton);
       });
@@ -87,6 +82,7 @@ describe('Partner flow', function () {
 
       utils.click(partner.startTrialButton);
       notifications.assertSuccess(partner.newTrial.customerName, 'A trial was successfully started');
+      utils.click(partner.skipCustomerSetup);
     }, LONG_TIMEOUT);
 
     it('should find new trial', function (done) {
@@ -111,7 +107,7 @@ describe('Partner flow', function () {
         utils.expectClass(partner.squaredTrialCheckbox, 'disabled');
 
         utils.click(partner.saveUpdateButton);
-        notifications.assertSuccess(partner.newTrial.customerName, 'You have successfully edited a trial for');
+        notifications.assertSuccess('Email successfully sent to customer');
 
         utils.click(partner.trialFilter);
         utils.expectIsDisplayed(partner.newTrialRow);
