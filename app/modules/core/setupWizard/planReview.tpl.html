@@ -1,7 +1,6 @@
 <div class="loading" ng-if="!planReview.isInitialized">
   <i class="icon icon-spinner"></i>
 </div>
-
 <div class="wizard-plan-review container-fluid" ng-if="planReview.isInitialized">
   <div class="flex-row">
     <div class="small-4 columns column-title">
@@ -26,11 +25,9 @@
       </div>
     </div>
   </div>
-
   <div class="row">
     <div class="column-subsription-header free" translate="firstTimeWizard.freeColumnHeader"></div>
   </div>
-
   <div class="flex-row">
     <div class="small-4 columns column-free">
       <div ng-if="planReview.isStormBranding" class="item-free" translate="firstTimeWizard.freeMsg"></div>
@@ -45,11 +42,9 @@
       <div ng-if="!planReview.isStormBranding" class="item-free" translate="firstTimeWizard.commMsg"></div>
     </div>
   </div>
-
   <div class="row">
     <div class="column-subsription-header paid" translate="firstTimeWizard.paidColumnHeader"></div>
   </div>
-
   <div class="flex-row row-licenses ">
     <div class="small-4 columns" ng-class="{'column-paid' : !planReview.messagingServices.isNewTrial, 'column-trial' : planReview.messagingServices.isNewTrial}">
       <div ng-if="planReview.messagingServices.isNewTrial" class="column-trial-header" translate="firstTimeWizard.startYourTrial" translate-values="{days: planReview.trial.trialPeriod}"></div>
@@ -57,7 +52,7 @@
         <span ng-if="planReview.isStormBranding" translate="firstTimeWizard.message"></span>
         <span ng-if="!planReview.isStormBranding" translate="firstTimeWizard.messaging"></span>
       </div>
-      <div class="item-paid" ng-repeat="service in planReview.messagingServices.services">     
+      <div class="item-paid" ng-repeat="service in planReview.messagingServices.services">
         <div ng-if="service.license.isTrial || planReview.messagingServices.isNewTrial" class="badge badge-trial" translate="firstTimeWizard.trial"></div>
         <div class="quantity">
           <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
@@ -65,7 +60,6 @@
         </div>
       </div>
     </div>
-
     <div class="small-4 columns" ng-class="{'column-mtg' : !planReview.confServices.isNewTrial, 'column-trial' : planReview.confServices.isNewTrial}">
       <div ng-if="planReview.confServices.isNewTrial" class="column-trial-header" translate="firstTimeWizard.startYourTrial" translate-values="{days: planReview.trial.trialPeriod}">
       </div>
@@ -95,7 +89,6 @@
         <div ng-class="{'sub-line':!$last}"></div>
       </div>
     </div>
-
     <div class="small-4 columns" ng-class="{'column-paid' : !planReview.commServices.isNewTrial, 'column-trial' : planReview.commServices.isNewTrial}">
       <div ng-if="planReview.commServices.isNewTrial" class="column-trial-header" translate="firstTimeWizard.startYourTrial" translate-values="{days: planReview.trial.trialPeriod}"></div>
       <div ng-if="planReview.commServices.services.length > 0" class="item-license">
@@ -111,12 +104,13 @@
       </div>
     </div>
   </div>
-
   <div ng-if="planReview.roomSystemsExist">
     <div class="row row-room" ng-class="{'column-paid' : !planReview.roomServices.isNewTrial, 'column-trial' : planReview.roomServices.isNewTrial}">
-      <div class="column-header column-room">
-        <!-- <i class="icon icon-circle-telepresence"></i> -->
+      <div class="column-header column-room small-6 columns">
+        <i class="icon icon-circle-telepresence"></i>
         <h3 translate="firstTimeWizard.roomSystems"></h3>
+      </div>
+      <div class="room-systems small-6 columns">
         <div class="item-sparkRoom" translate="firstTimeWizard.sparkRoomSystem"></div>
         <div ng-repeat="service in planReview.roomServices.services" ng-hide="service.licenseType !== 'SHARED_DEVICES'">
           <div ng-if="service.isTrial || planReview.roomServices.isNewTrial" class="badge badge-trial" translate="firstTimeWizard.trial"></div>
@@ -128,7 +122,6 @@
       </div>
     </div>
   </div>
-
   <div ng-if="planReview.trialExists && !planReview.processing" class="wizard-trial-progress container-fluid">
     <div class="row">
       <div class="small-12 columns">
@@ -139,4 +132,3 @@
     </div>
   </div>
 </div>
-

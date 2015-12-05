@@ -8,7 +8,7 @@
     display: flex;
     .small-4 {
       padding-bottom: 10px;
-      &:not(:last-of-type){
+      &:not(:last-of-type) {
         margin-right: 3px;
       }
     }
@@ -29,7 +29,7 @@
       padding: 0;
       font-size: 14px;
     }
-    .column-mtg{
+    .column-mtg {
       background: $gray-light-4;
       padding: 0;
       font-size: 14px;
@@ -44,19 +44,29 @@
       background: $color-attention;
       color: $white;
     }
-    
     &.row-licenses {
       flex: 1;
     }
   }
   .row-room {
-    margin-top: 3px; 
+    margin-top: 3px;
     background: $gray-light-4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .column-header {
+      padding: 0;
+      border-right: solid 1px $gray-light-2;
+    }
   }
   .column-room {
     padding-top: 12px;
     line-height: 32px;
     text-align: center;
+  }
+  .room-systems {
+    text-align: left;
+    padding: 1.5rem;
   }
   .item-sparkRoom {
     color: $color-primary-base;
@@ -65,12 +75,10 @@
     line-height: 24px;
   }
   .spark-quantity {
-    text-align: center;
     font-size: 14px;
     font-family: $brand-font-light;
     color: $gray-base;
     line-height: 24px;
-    padding-bottom: 16px;
   }
   .badge-trial {
     @extend .badge.badge-warning;
@@ -80,7 +88,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-
     h3 {
       color: $gray-dark-2;
       margin-top: 2px;
@@ -91,12 +98,11 @@
     }
   }
   .column-subsription-header {
-      font-family: $brand-font-regular;
-      font-size: 12px;
-      color: $gray-dark-1;
-      text-align: center;
-      padding: 4px 0 2px;
-
+    font-family: $brand-font-regular;
+    font-size: 12px;
+    color: $gray-dark-1;
+    text-align: center;
+    padding: 4px 0 2px;
     &.free {
       background-color: $color-cta-lighter;
     }
@@ -143,13 +149,12 @@
     line-height: 24px;
     margin-left: 24px;
   }
-  .item-mtg{
+  .item-mtg {
     color: $color-primary-base;
     font-family: $brand-font-light;
     font-size: 14px;
     line-height: 24px;
     margin: 0px 24px 0px 24px;
-
     .sub-item {
       padding-bottom: 24px;
       font-family: $brand-font-light;
@@ -285,66 +290,53 @@
 
 .service-setup-container {
   padding-left: 20px;
-
   .form-group {
     margin-left: 0;
     margin-right: 0;
   }
-
   .service-setup {
     label {
       font-size: 24px;
     }
-
     .hide-delete {
       visibility: hidden;
     }
-
     .service-setup-timezone {
       .formly-input-wrapper {
         width: 50%
       }
     }
-
     .service-setup-steering-digit {
       .formly-input-wrapper {
         width: 100px;
       }
     }
-
     .service-setup-site-code {
       .formly-input-wrapper {
         width: 100px;
       }
     }
-
     &.service-setup-extension {
       .formly-field-group {
         margin-bottom: 10px;
       }
-
     }
-
     .service-setup-extension-range {
       width: 375px;
-        input {
-          width: 100%;
-        }
+      input {
+        width: 100%;
+      }
     }
-
     .service-setup-extension-range-to {
       margin-right: 30px;
       margin-left: 30px;
     }
-
     .service-setup-company-voicemail {
       margin-top: 15px;
-
       .select-dropdown {
         width: 230px;
       }
     }
-
     .service-setup-moh {
       width: 50%;
     }
@@ -361,17 +353,15 @@
   }
   .file-drop {
     border: 1px dashed $gray-light;
-    height : 300px;
+    height: 300px;
     display: flex;
     align-content: center;
     justify-content: center;
-
     &.dragover {
       border-color: $link-hover-color;
       background: $gray-lightest;
     }
   }
-
   .file-drop-content {
     align-self: center;
     .icon-circle-attachment {
@@ -380,11 +370,9 @@
       color: $gray-light;
     }
   }
-
   .file-drop-inactive {
     @extend .file-drop;
     border: 1px solid $gray-light;
-
     .file-drop-content {
       width: 50%;
     }
@@ -396,11 +384,9 @@
       margin-top: -15px;
     }
   }
-
   .download-link {
     margin-top: 10px;
   }
-
   input {
     display: none;
   }
@@ -412,17 +398,14 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
   .icon-circle-group {
     font-size: 100px;
     margin-bottom: 100px;
     color: $gray-light;
   }
-
   .users-process-content {
     width: 50%;
     display: flex;
-
     .progressbar {
       flex: 1;
     }
@@ -431,7 +414,6 @@
       margin-left: 5px;
     }
   }
-
   .time-duration {
     margin-top: -15px;
   }
@@ -501,7 +483,6 @@
     align-self: center;
     margin: 20px 0;
   }
-
   .table-header {
     border: $gray-light solid 1px;
     border-bottom: 0px;
@@ -550,21 +531,27 @@
     .table {
       margin-bottom: 0;
     }
-    .table-bordered > thead > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > th, .table-bordered > tbody > tr > td {
+    .table-bordered > thead > tr > th,
+    .table-bordered > thead > tr > td,
+    .table-bordered > tbody > tr > th,
+    .table-bordered > tbody > tr > td {
       border-bottom-width: 1px;
       border-right: $gray-light solid 1px;
       font-size: 15px;
     }
-    .table-bordered > thead > tr > th:last-of-type, .table-bordered > tbody > tr > td:last-of-type {
-        border-right: none;
-      }
-    .table-bordered > thead > tr:last-of-type > th, .table-bordered > tbody > tr:last-of-type > td {
-        border-bottom-width: 0px;
-      }
-    .table-bordered > thead > tr > th, .table-bordered > tbody > tr > td {
-        border-right: $gray-light solid 1px;
-        border-left: none;
-        border-top: none;
-      }
+    .table-bordered > thead > tr > th:last-of-type,
+    .table-bordered > tbody > tr > td:last-of-type {
+      border-right: none;
+    }
+    .table-bordered > thead > tr:last-of-type > th,
+    .table-bordered > tbody > tr:last-of-type > td {
+      border-bottom-width: 0px;
+    }
+    .table-bordered > thead > tr > th,
+    .table-bordered > tbody > tr > td {
+      border-right: $gray-light solid 1px;
+      border-left: none;
+      border-top: none;
+    }
   }
 }
