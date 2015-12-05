@@ -113,7 +113,6 @@ describe('Controller: TrialAddCtrl', function () {
         $scope.$apply();
         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
         expect(Notification.notify.calls.count()).toEqual(1);
-        expect(EmailService.emailNotifyTrialCustomer).not.toHaveBeenCalled();
       });
 
       it('error should notify error', function () {

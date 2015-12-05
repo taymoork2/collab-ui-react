@@ -205,7 +205,7 @@
     vm.hasNextStep = hasNextStep;
     vm.previousStep = previousStep;
     vm.nextStep = nextStep;
-    vm.emailNotifyTrialCustomer = emailNotifyTrialCustomer;
+    vm.closeDialogBox = closeDialogBox;
     vm.launchCustomerPortal = launchCustomerPortal;
 
     $q.all([
@@ -353,19 +353,21 @@
         })
         .then(function (response) {
           vm.customerOrgId = response.data.customerOrgId;
-          if (vm.callTrial.enabled) {
-            return HuronCustomer.create(vm.customerOrgId, response.data.customerName, response.data.customerEmail)
-              .catch(function (response) {
-                vm.startTrialButtonLoad = false;
-                Notification.errorResponse(response, 'trialModal.squareducError');
-                return $q.reject(response);
-              });
-          } else {
-            return EmailService.emailNotifyTrialCustomer()
-              .catch(function (response) {
-                Notification.notify([$translate.instant('didManageModal.emailFailText')], 'error');
-              });
-          }
+          return EmailService.emailNotifyTrialCustomer(vm.details.customerEmail,
+              vm.details.licenseDuration, vm.customerOrgId)
+            .then(function () {
+              if (vm.callTrial.enabled) {
+                return HuronCustomer.create(vm.customerOrgId, response.data.customerName, response.data.customerEmail)
+                  .catch(function (response) {
+                    vm.startTrialButtonLoad = false;
+                    Notification.errorResponse(response, 'trialModal.squareducError');
+                    return $q.reject(response);
+                  });
+              }
+            })
+            .catch(function (response) {
+              Notification.notify([$translate.instant('didManageModal.emailFailText')], 'error');
+            });
         })
         .then(function () {
           vm.startTrialButtonLoad = false;
@@ -385,17 +387,8 @@
         });
     }
 
-    function emailNotifyTrialCustomer() {
-      EmailService.emailNotifyTrialCustomer(vm.details.customerEmail,
-          vm.details.licenseDuration, vm.customerOrgId)
-        .then(function (response) {
-          Notification.notify([$translate.instant('didManageModal.emailSuccessText')], 'success');
-        })
-        .catch(function (response) {
-          Notification.notify([$translate.instant('didManageModal.emailFailText')], 'error');
-        }).then(function () {
-          $state.modal.close();
-        });
+    function closeDialogBox() {
+      $state.modal.close();
     }
 
     function launchCustomerPortal() {
