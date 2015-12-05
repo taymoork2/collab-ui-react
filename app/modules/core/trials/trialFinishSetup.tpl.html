@@ -1,26 +1,24 @@
-<div class="trial-modal">
+<div class="trial-modal trial-modal--complete">
   <div class="modal-header"></div>
   <div class="modal-body">
     <section class="text-center">
       <i class="icon icon-circle-comp-pos icon-5x"></i>
     </section>
     <section class="text-center">
-      <p translate="trialModal.trialSuccess"></p>
+      <h3 translate="trialModal.trialSuccess"></h3>
       <p translate="trialModal.nextStepPrompt"></p>
     </section>
-    <section>
+    <section class="row">
       <div class="row">
-        <div class="columns medium-6 small-12">
-          <button id="trialNotifyCustomer" class="btn btn--expand"
-            ng-click="trial.emailNotifyTrialCustomer()" translate="trialModal.setupLater">
+        <div class="columns medium-6">
+          <button id="trialNotifyCustomer" class="btn btn--expand" ng-click="trial.emailNotifyTrialCustomer()" translate="trialModal.setupLater">
           </button>
         </div>
-        <div class="columns medium-6 small-12">
-          <button class="btn btn--people btn--expand"
-            ng-click="trial.launchCustomerPortal()" translate="trialModal.setupNow">
+         <div class="columns medium-6">
+          <button class="btn btn--primary btn--expand" ng-click="trial.launchCustomerPortal()" translate="trialModal.setupNow">
           </button>
         </div>
-      </div>
+     </div>
     </section>
   </div>
   <div class="modal-footer"></div>

@@ -38,7 +38,7 @@
       templateOptions: {
         label: $translate.instant('trials.meet'),
         id: 'webexTrialCB',
-        class: 'small-offset-1 columns',
+        class: 'columns medium-12 checkbox-group',
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
@@ -54,8 +54,8 @@
       defaultValue: vm.currentTrial.licenses,
       templateOptions: {
         label: $translate.instant('siteList.licenseCount'),
-        labelClass: 'small-4 columns',
-        inputClass: 'small-4 columns left',
+        labelClass: 'columns medium-5',
+        inputClass: 'columns medium-3',
         type: 'number',
         required: true,
       },
@@ -77,7 +77,7 @@
       templateOptions: {
         label: $translate.instant('trials.collab'),
         id: 'squaredTrial',
-        class: 'small-offset-1 columns'
+        class: 'columns medium-12 checkbox-group',
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
@@ -96,7 +96,7 @@
       templateOptions: {
         label: $translate.instant('trials.squaredUC'),
         id: 'squaredUCTrial',
-        class: 'small-offset-1 columns'
+        class: 'columns medium-12 checkbox-group',
       },
       expressionProperties: {
         'hide': function () {
@@ -119,8 +119,8 @@
         required: true,
         label: $translate.instant('partnerHomePage.duration'),
         secondaryLabel: $translate.instant('partnerHomePage.durationHelp'),
-        labelClass: 'small-4 columns',
-        inputClass: 'small-4 columns left',
+        labelClass: 'columns medium-4',
+        inputClass: 'columns medium-4',
         options: [30, 60, 90],
       },
     }];
