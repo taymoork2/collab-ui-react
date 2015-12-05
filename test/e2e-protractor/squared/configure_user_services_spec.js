@@ -14,11 +14,11 @@ describe('Configuring services per-user', function () {
   });
 
   it('should ensure calendar service enabled', function () {
-    navigation.ensureHybridService( navigation.calendarServicePage );
+    navigation.ensureHybridService(navigation.calendarServicePage);
   });
 
   it('should ensure call service enabled', function () {
-    navigation.ensureHybridService( navigation.callServicePage );
+    navigation.ensureHybridService(navigation.callServicePage);
   });
 
   it('should add a user and select hybrid services', function () {
