@@ -172,7 +172,7 @@
       type: 'select',
       className: "columns small-6",
       templateOptions: {
-        id:'trialRoomSystemsAmount',
+        id: 'trialRoomSystemsAmount',
         inputClass: 'columns small-6 small-pull-5 ',
         labelClass: 'columns small-4 small-push-4',
         labelfield: 'label',
@@ -389,15 +389,15 @@
 
     function emailNotifyTrialCustomer() {
       EmailService.emailNotifyTrialCustomer(vm.details.customerEmail,
-        vm.details.licenseDuration, vm.customerOrgId)
-      .then(function (response) {
-        Notification.notify([$translate.instant('didManageModal.emailSuccessText')], 'success');
-      })
-      .catch(function (response) {
-        Notification.notify([$translate.instant('didManageModal.emailFailText')], 'error');
-      }).then(function() {
-        $state.modal.close();
-      })
+          vm.details.licenseDuration, vm.customerOrgId)
+        .then(function (response) {
+          Notification.notify([$translate.instant('didManageModal.emailSuccessText')], 'success');
+        })
+        .catch(function (response) {
+          Notification.notify([$translate.instant('didManageModal.emailFailText')], 'error');
+        }).then(function () {
+          $state.modal.close();
+        });
     }
 
     function launchCustomerPortal() {
@@ -406,7 +406,7 @@
           'customerOrgId': vm.customerOrgId,
           'customerOrgName': vm.details.customerName
         }));
-      $state.modal.close();
+        $state.modal.close();
       }
     }
   }

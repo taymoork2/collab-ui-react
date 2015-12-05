@@ -56,6 +56,14 @@
         detail: $translate.instant('onboardModal.freeContactCenter')
       };
 
+      FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
+        if (result) {
+          msgState.name = $translate.instant('onboardModal.message');
+          commState.name = $translate.instant('onboardModal.call');
+          confState.name = $translate.instant('onboardModal.meeting');
+        }
+      });
+
       if (hasEntitlement('squared-room-moderation') || !vm.hasAccount) {
         if (getServiceDetails('MS')) {
           msgState.detail = $translate.instant('onboardModal.paidMsg');

@@ -82,7 +82,7 @@ describe('Partner flow', function () {
 
       utils.click(partner.startTrialButton);
       notifications.assertSuccess(partner.newTrial.customerName, 'A trial was successfully started');
-      utils.click(partner.skipCustomerSetup);
+      utils.clickEscape();
     }, LONG_TIMEOUT);
 
     it('should find new trial', function (done) {
@@ -107,8 +107,7 @@ describe('Partner flow', function () {
         utils.expectClass(partner.squaredTrialCheckbox, 'disabled');
 
         utils.click(partner.saveUpdateButton);
-        notifications.assertSuccess('Email successfully sent to customer');
-
+        notifications.assertSuccess(partner.newTrial.customerName, 'You have successfully edited a trial for');
         utils.click(partner.trialFilter);
         utils.expectIsDisplayed(partner.newTrialRow);
       });

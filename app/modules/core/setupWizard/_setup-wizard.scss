@@ -12,18 +12,25 @@
         margin-right: 3px;
       }
     }
+    .col-title {
+      background: $gray-light-4;
+      padding: 12px 0px 14px 0px;
+      line-height: 30px;
+    }
     .col-free {
-      background: $gray-lightest;
+      background: $gray-light-4;
       min-height: 50px;
-      padding-top: 15px;
+      padding: 20px 0px 14px 24px;
+      line-height: 24px;
+      font-size: 14px;
     }
     .col-paid {
-      background: $gray-lightest;
+      background: $gray-light-4;
       padding: 0;
       font-size: 14px;
     }
     .col-mtg{
-      background: $gray-lightest;
+      background: $gray-light-4;
       padding: 0;
       font-size: 14px;
     }
@@ -47,7 +54,26 @@
   }
   .row-room {
     margin-top: 3px; 
-    background: $gray-lightest;
+    background: $gray-light-4;
+  }
+  .col-room {
+    padding-top: 12px;
+    line-height: 32px;
+    text-align: center;
+  }
+  .item-sparkRoom {
+    color: $color-primary-base;
+    font-family: $brand-font-light;
+    font-size: 14px;
+    line-height: 24px;
+  }
+  .spark-quantity {
+    text-align: center;
+    font-size: 14px;
+    font-family: $brand-font-light;
+    color: $gray-base;
+    line-height: 24px;
+    padding-bottom: 16px;
   }
   .badge-trial {
     @extend .badge.badge-warning;
@@ -56,18 +82,21 @@
   .column-header {
     text-align: center;
     h3 {
-      margin-top: 10px;
-      font-family: $brand-font-cisco-TT-Extra-Light;
+      font-family: $brand-font-extra-light;
+      font-size: 26px;
+      color: $gray-dark-2;
       display: inline-block;
     }
     .icon {
-      font-size: 35px;
+      font-size: 32px;
       display: inline-block;
     }
   }
   .column-title {
     h5 { 
-      font-family: Arial;
+      font-family: $brand-font-regular;
+      font-size: 12px;
+      color: $gray-dark-1;
       text-align: center;
     }
     .free {
@@ -79,23 +108,26 @@
   }
   .item-free {
     color: $text-color;
+    font-family: $brand-font-light;
+    line-height: 24px;
   }
   .item-paid {
-    color: $text-color;
-    padding: 0px 15px 20px 15px;
+    padding: 0px 0px 24px 24px;
+    line-height: 24px;
     .sub-item {
-      padding-top: 5px;
-      font-family: Arial;
-      font-size: 13px;
+      font-family: $brand-font-light;
+      font-size: 14px;
       color: $gray-darker;
     }
     .quantity {
-      font-family: Arial;
-      font-size: 13px;
-      color: $gray-darker;
+      font-family: $brand-font-light;
+      font-size: 14px;
+      color: $gray-base;
       display: inline-block;
       .quantity-padding {
         padding-right: 0px;
+        font-size: 14px;
+        color: $gray-base;
       }
       .badge {
         padding: 3px 9px 3px;
@@ -105,40 +137,42 @@
       }
     }
   }
-  .item-cf {
-    color: $color-primary-dark;
-    padding: 20px 15px 0px 15px;
-  }
-  .item-msg {
-    color: $color-primary-dark;
+  .item-license {
+    color: $color-primary-base;
+    font-family: $brand-font-light;
+    font-size: 14px;
     padding: 20px 0px 0px 0px;
-    margin-left: 15px;
+    line-height: 24px;
+    margin-left: 24px;
   }
   .item-mtg{
-    color: $color-primary-dark;
-    padding: 0px;
-    margin-left: 15px;
-    margin-right: 15px;
+    color: $color-primary-base;
+    font-family: $brand-font-light;
+    font-size: 14px;
+    line-height: 24px;
+    margin: 0px 24px 0px 24px;
 
     .sub-item {
-      padding-top: 5px;
-      padding-bottom: 15px;
-      font-family: Arial;
-      font-size: 13px;
-      color: $gray-darker;
+      padding-bottom: 24px;
+      font-family: $brand-font-light;
+      font-size: 14px;
+      color: $gray-base;
+      margin-bottom: 0px;
+    }
+    .item-webex {
+      color: $gray-dark-2;
+      margin-right: 24px;
     }
     .sub-line {
       border-bottom: 1px solid #ccc;
       padding-top: 5px;
       margin-bottom: 20px;
     }
-    .quantity {
-      font-family: Arial;
-      font-size: 13px;
-      color: $gray-darker;
-      .quantity-padding {
-        padding-right: 0px;
-      }
+    .quantity-mtg {
+      font-family: $brand-font-light;
+      font-size: 14px;
+      color: $gray-base;
+      display: inline-block;
       .badge {
         padding: 3px 9px 3px;
       }
@@ -146,15 +180,6 @@
         background: $brand-warning-dark;
       }
     }
-  }
-  .item-call {
-    color: $color-primary-dark;
-    padding: 20px 0px 0px 0px;
-    margin-left: 15px;
-  }
-  .item-cmr {
-    padding: 0px;
-    margin-left: 30px;
   }
 }
 
