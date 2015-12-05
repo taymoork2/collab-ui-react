@@ -197,8 +197,12 @@
 }
 
 .warning-icon {
-  display: inline-block;
-  vertical-align: middle;
+  @extend .icon;
+  @extend .icon-warning;
+  margin-right: 12px;
+  font-size: 15px;
+  color: $brand-warning;
+  float: left;
 }
 
 .service-link-span-box {
@@ -400,7 +404,7 @@
         display: inline-block;
       }
     }
-    
+
     .col-paid {
       background: $gray-lightest;
       padding: 0;
@@ -413,7 +417,7 @@
   }
 
   .column-title {
-    h5 { 
+    h5 {
       font-family: Arial;
       text-align: center;
     }
@@ -430,7 +434,7 @@
   }
 
   .row-hybrid {
-    margin-top: 3px; 
+    margin-top: 3px;
     background: $gray-lightest;
   }
 
