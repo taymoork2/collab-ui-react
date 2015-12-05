@@ -1,26 +1,44 @@
-.trial-modal {
-  .icon {
-    color: $gray-dark-1;
+.trial-modal.form-horizontal {
+  .modal-body {
+    width: auto;
   }
-
-  p {
-    @include vr-spacing(m, 0.5);
+  .formly-field-checkbox {
+    padding-bottom: 0;
+    label,
+    .form-group {
+      margin: 0;
+    }
   }
-
-  h4, h5 {
+  .license-count {
+    .formly-template-wrapper {
+      margin: 0;
+    }
+  }
+  h6 {
+    @include vr-spacing(mv, 0.5);
+  }
+  h4,
+  h5 {
     @include vr-spacing(mb, 1);
   }
-
   select {
     background-color: $white;
   }
-
   .noresize textarea {
     resize: none;
   }
-
+  .control-label {
+    text-align: left;
+  }
   .collapse-fields .formly-field {
-    max-height: 40px;
+    // max-height: 40px;
+  }
+}
+
+.trial-modal--complete {
+  .icon {
+    margin-bottom: 1rem;
+    display: block;
   }
 }
 
@@ -30,4 +48,14 @@
 
 #editTrialForm .progress-bar {
   max-width: 100%;
+}
+.progress-section {
+  margin-top: 1rem;
+}
+.progress {
+  margin-bottom: 0;
+}
+
+.days-left span {
+  @extend .small;
 }

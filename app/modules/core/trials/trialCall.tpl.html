@@ -10,21 +10,21 @@
   </div>
 
   <!-- body -->
-  <section class="modal-body">
-    <h4 translate="trialModal.call.selectDevicesHeader"></h4>
-    <section class="collapse-fields">
-      <h5 translate="trialModal.call.meetingRoomCamera"></h5>
-      <formly-form class="row" model="callTrial.cameras" fields="callTrial.cameraFields" hide-directive="ng-show">
+  <section class="modal-body row">
+    <h5 translate="trialModal.call.selectDevicesHeader"></h5>
+    <section class="collapse-fields medium-11 medium-offset-1 columns">
+      <h6 translate="trialModal.call.meetingRoomCamera"></h6>
+      <formly-form model="callTrial.cameras" fields="callTrial.cameraFields" hide-directive="ng-show">
       </formly-form>
-      <h5 translate="trialModal.call.deskPhones"></h5>
-      <formly-form class="row" model="callTrial.deskPhones" fields="callTrial.deskPhoneFields" hide-directive="ng-show">
+      <h6 translate="trialModal.call.deskPhones"></h6>
+      <formly-form model="callTrial.deskPhones" fields="callTrial.deskPhoneFields" hide-directive="ng-show">
       </formly-form>
     </section>
   </section>
-  <section class="modal-body">
-    <h4 translate="trialModal.call.shippingInfo"></h4>
-    <section class="row">
-      <!-- <h5 translate="trialModal.call.recipient"></h5> -->
+  <section class="modal-body row">
+    <h5 translate="trialModal.call.shippingInfo"></h5>
+    <section class="medium-11 medium-offset-1 columns">
+      <!-- <h6 translate="trialModal.call.recipient"></h6> -->
       <formly-form model="callTrial.shippingInfo" fields="callTrial.shippingFields" hide-directive="ng-show">
       </formly-form>
     </section>

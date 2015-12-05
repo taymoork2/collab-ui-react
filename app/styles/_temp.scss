@@ -849,11 +849,6 @@ a:active.ftwNavLink {
   width: 200px;
 }
 
-.days-left-edit-modal {
-  position: absolute;
-  right: 23px;
-  top: -20px;
-}
 
 .users-edit-modal {
   right: 20px;
@@ -882,12 +877,6 @@ a:active.ftwNavLink {
 .nav > li:active,
 .nav > li.active {
   z-index: 500;
-}
-
-.days-left-trial {
-  position: absolute;
-  left: 17px;
-  top: -20px;
 }
 
 .edit-modal-info {

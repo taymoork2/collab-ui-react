@@ -10,23 +10,23 @@
   </div>
 
   <!-- body -->
-  <section class="modal-body">
-    <h4 translate="trialModal.meeting.webexHeader"></h4>
-    <div translate="trialModal.meeting.webexDetails"></div>
+  <section class="modal-body row">
+    <h5 translate="trialModal.meeting.webexHeader"></h5>
+    <div class="medium-11 medium-offset-1 columns" translate="trialModal.meeting.webexDetails"></div>
   </section>
-  <section class="modal-body collapse-fields">
-    <h4 translate="trialModal.meeting.siteUrl"></h4>
+  <section class="modal-body collapse-fields row">
+    <h5 translate="trialModal.meeting.siteUrl"></h5>
     <section>
-      <formly-form model="meetingTrial.details" fields="meetingTrial.siteUrlFields" hide-directive="ng-show">
+      <formly-form model="meetingTrial.details" fields="meetingTrial.siteUrlFields" hide-directive="ng-show" class="medium-11 medium-offset-1 columns">
       </formly-form>
     </section>
   </section>
-  <section class="modal-body collapse-fields">
-    <h4 translate="trialModal.meeting.timezone"></h4>
+  <section class="modal-body collapse-fields row">
+    <h5 translate="trialModal.meeting.timezone"></h5>
     <!-- <timezone-selector ng-model="meetingTrial.timezone" -->
     <!--   display-utc="true" sort-by="offset" name="timezone" -->
     <!--   translations="meetingTrial.timezone.placeholder"> -->
-    <formly-form model="meetingTrial.details" fields="meetingTrial.timezoneFields">
+    <formly-form model="meetingTrial.details" fields="meetingTrial.timezoneFields" class="medium-11 medium-offset-1 columns">
     </formly-form>
   </section>
 

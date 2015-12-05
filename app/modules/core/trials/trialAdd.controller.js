@@ -41,8 +41,8 @@
       type: 'input',
       templateOptions: {
         label: $translate.instant('partnerHomePage.customerName'),
-        labelClass: 'columns small-4',
-        inputClass: 'columns small-8',
+        labelClass: 'columns medium-4',
+        inputClass: 'columns medium-8',
         type: 'text',
         required: true,
         maxlength: 50,
@@ -54,8 +54,8 @@
       className: 'last-field',
       templateOptions: {
         label: $translate.instant('partnerHomePage.customerEmail'),
-        labelClass: 'columns small-4',
-        inputClass: 'columns small-8',
+        labelClass: 'columns medium-4',
+        inputClass: 'columns medium-8',
         type: 'email',
         required: true,
       },
@@ -65,11 +65,11 @@
       model: vm.details,
       key: 'licenseCount',
       type: 'input',
-      className: 'columns small-12',
+      className: 'columns medium-12 license-count',
       templateOptions: {
         label: $translate.instant('siteList.licenseCount'),
-        labelClass: 'columns small-3',
-        inputClass: 'columns small-2',
+        labelClass: 'columns medium-5',
+        inputClass: 'columns medium-3',
         type: 'number',
         required: true,
       },
@@ -88,11 +88,11 @@
       model: vm.messageTrial,
       key: 'enabled',
       type: 'checkbox',
-      className: 'columns small-12',
+      className: 'columns medium-12',
       templateOptions: {
         label: $translate.instant('trials.collab'),
         id: 'squaredTrial',
-        class: 'columns small-12',
+        class: 'columns medium-12 checkbox-group',
       },
       expressionProperties: {
         'templateOptions.label': function () {
@@ -110,11 +110,11 @@
       key: 'enabled',
       type: 'checkbox',
       hide: true,
-      className: 'columns small-12',
+      className: 'columns medium-12 checkbox-group',
       templateOptions: {
         label: $translate.instant('trials.meeting'),
         id: 'meetingTrial',
-        class: 'columns small-12',
+        class: 'columns medium-12',
       },
       expressionProperties: {
         'hide': function () {
@@ -131,11 +131,11 @@
       model: vm.callTrial,
       key: 'enabled',
       type: 'checkbox',
-      className: 'columns small-12',
+      className: 'columns medium-12 checkbox-group',
       templateOptions: {
         label: $translate.instant('trials.squaredUC'),
         id: 'squaredUCTrial',
-        class: 'columns small-12',
+        class: 'columns medium-12',
       },
       expressionProperties: {
         'hide': function () {
@@ -153,11 +153,11 @@
       model: vm.roomSystemTrial,
       key: 'enabled',
       type: 'checkbox',
-      className: "columns small-5",
+      className: "columns medium-5",
       templateOptions: {
-        label: $translate.instant('partnerHomePage.sparkRoomSystem'),
+        label: $translate.instant('partnerHomePage.roomSystem'),
         id: 'trialRoomSystem',
-        class: 'columns small-10',
+        class: 'columns medium-10',
       },
       watcher: {
         listener: function (field, newValue, oldValue, scope, stopWatching) {
@@ -170,13 +170,11 @@
       model: vm.roomSystemTrial.details,
       key: 'quantity',
       type: 'select',
-      className: "columns small-6",
+      className: "columns medium-7",
       templateOptions: {
         id: 'trialRoomSystemsAmount',
-        inputClass: 'columns small-6 small-pull-5 ',
-        labelClass: 'columns small-4 small-push-4',
-        labelfield: 'label',
-        label: $translate.instant('trials.licenses'),
+        inputClass: 'columns medium-9',
+        secondaryLabel: $translate.instant('trials.licenses'),
         options: vm.roomSystemOptions,
       },
       expressionProperties: {
@@ -196,8 +194,8 @@
         required: true,
         label: $translate.instant('partnerHomePage.duration'),
         secondaryLabel: $translate.instant('partnerHomePage.durationHelp'),
-        labelClass: 'columns small-4',
-        inputClass: 'columns small-4',
+        labelClass: 'columns medium-4',
+        inputClass: 'columns medium-4',
         options: [30, 60, 90],
       },
     }];

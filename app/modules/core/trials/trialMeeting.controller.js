@@ -23,6 +23,7 @@
         label: $translate.instant('trialModal.meeting.siteUrl'),
         labelClass: 'small-3 columns',
         inputClass: 'small-8 columns left',
+        placeholder: 'http://',
         type: 'url',
         required: true,
       },
