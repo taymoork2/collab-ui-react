@@ -355,6 +355,9 @@
           vm.customerOrgId = response.data.customerOrgId;
           return EmailService.emailNotifyTrialCustomer(vm.details.customerEmail,
               vm.details.licenseDuration, vm.customerOrgId)
+            .catch(function (response) {
+              Notification.notify([$translate.instant('didManageModal.emailFailText')], 'error');
+            })
             .then(function () {
               if (vm.callTrial.enabled) {
                 return HuronCustomer.create(vm.customerOrgId, response.data.customerName, response.data.customerEmail)
@@ -364,9 +367,6 @@
                     return $q.reject(response);
                   });
               }
-            })
-            .catch(function (response) {
-              Notification.notify([$translate.instant('didManageModal.emailFailText')], 'error');
             });
         })
         .then(function () {
