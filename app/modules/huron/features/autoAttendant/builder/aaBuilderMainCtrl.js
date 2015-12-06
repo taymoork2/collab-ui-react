@@ -31,9 +31,25 @@
       vm.aaNameFocus = true;
     }
 
+    // Returns true if the provided assigned resources are different in size or in the passed-in field
+    function areAssignedResourcesDifferent(aa1, aa2, tag) {
+
+      // if we have a different number of resources, we definitely have a difference
+      if (aa1.length !== aa2.length) {
+        return true;
+      } else {
+        // otherwise, filter on the passed-in field and compare
+        var a1 = _.pluck(aa1, tag);
+        var a2 = _.pluck(aa2, tag);
+        return (_.difference(a1, a2).length > 0 || _.difference(a2, a1).length > 0);
+      }
+
+    }
+
     // Save the phone number resources originally in the CE (used on exit with no save, and on save error)
     function unAssignAssigned() {
-      if (vm.aaModel.aaRecord.assignedResources.length !== vm.ui.ceInfo.getResources().length) {
+      // check to see if the local assigned list of resources is different than in CE info
+      if (areAssignedResourcesDifferent(vm.aaModel.aaRecord.assignedResources, vm.ui.ceInfo.getResources(), 'id')) {
         var ceInfo = AutoAttendantCeInfoModelService.getCeInfo(vm.aaModel.aaRecord);
         AANumberAssignmentService.setAANumberAssignment(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, ceInfo.getResources()).then(
           function (response) {},

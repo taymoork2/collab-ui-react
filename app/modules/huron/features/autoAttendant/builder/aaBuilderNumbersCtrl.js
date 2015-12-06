@@ -23,6 +23,9 @@
     // a mapping of numbers to their type (internal or external)
     vm.numberTypeList = {};
 
+    // a list of external numbers as they came from CMI
+    vm.externalNumberList = [];
+
     // available number list offered in GUI
     vm.availablePhoneNums = [];
 
@@ -94,6 +97,28 @@
 
     }
 
+    // Save the AA Number Assignments in CMI
+    function saveAANumberAssignments(customerId, aaRecordUUID, resources) {
+      // CMI seems to correctly remove numbers from the number pool when the number is formatted as it came from CMI
+      // So save to CMI with the original CMI format for external numbers (internal extensions have no formatting)
+      var formattedResources = _.map(resources, function (res) {
+        if (res.getType() === "externalNumber") {
+          var fmtRes = angular.copy(res);
+          var extNum = _.find(vm.externalNumberList, function (n) {
+            return n.number.replace(/\D/g, '') == res.number;
+          });
+          if (extNum) {
+            fmtRes.number = extNum.number;
+          }
+          return fmtRes;
+        } else {
+          return res;
+        }
+      });
+
+      return AANumberAssignmentService.setAANumberAssignment(customerId, aaRecordUUID, formattedResources);
+    }
+
     // Add the number to the CE Info resource list
     function addAAResource(number) {
 
@@ -116,7 +141,7 @@
       resources.push(resource);
 
       // Assign the number in CMI
-      AANumberAssignmentService.setAANumberAssignment(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources).then(
+      saveAANumberAssignments(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources).then(
 
         function (response) {
           sortAssignedResources(resources);
@@ -147,7 +172,7 @@
       }
 
       // Un-Assign the number in CMI by setting with resource removed
-      AANumberAssignmentService.setAANumberAssignment(Authinfo.getOrgId(),
+      saveAANumberAssignments(Authinfo.getOrgId(),
         vm.aaModel.aaRecordUUID, resources).then(
         function (response) {},
         function (response) {
@@ -249,10 +274,19 @@
 
       return ExternalNumberPoolService.query({
           customerId: Authinfo.getOrgId(),
+          directorynumber: '',
           order: 'pattern'
         }).$promise
         .then(function (extPool) {
           for (var i = 0; i < extPool.length; i++) {
+
+            var dn = {
+              id: extPool[i].uuid,
+              number: extPool[i].pattern
+            };
+
+            // the externalNumberList will contain the info as it came from CMI
+            vm.externalNumberList.push(dn);
 
             var number = extPool[i].pattern.replace(/\D/g, '');
 
