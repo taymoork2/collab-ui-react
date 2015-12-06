@@ -1,5 +1,5 @@
 <div class="user-info dropdown" ng-show="Utils.isAdminPage()">
-  <button class="btn-user dropdown-toggle">
+  <button class="btn--user dropdown-toggle">
     <img ng-if="image" class="user-img" ng-src="{{image}}" alt=""/>
     <span ng-if="!image" class="user-img">
       <i class="icon icon-user"></i>
@@ -23,12 +23,6 @@
       <a id="support-lnk" href="{{supportUrl}}" target="_blank" tabindex="0">
         <i class="fa fa-question-circle fa-lg" style="padding:10px;"></i>
         {{'index.support' | translate}}
-      </a>
-    </li>
-    <li id="launch-partner-btn" ng-show="isPartner">
-      <a ui-sref="launch_partner_org({partnerOrgId: orgId, partnerOrgName: orgname, launchPartner: true})" tabindex="0" target="_blank">
-        <i class="fa fa-external-link fa-lg" style="padding:10px;"></i>
-        {{'index.launchPartner' | translate}}
       </a>
     </li>
     <li id="logout-btn" ng-show="loggedIn">

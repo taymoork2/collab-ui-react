@@ -80,7 +80,7 @@
 
     vm.additionalBtn = {
       label: 'directoryNumberPanel.removeNumber',
-      btnclass: 'btn btn-default btn-remove',
+      btnclass: 'btn btn-remove',
       id: 'btn-remove'
     };
 
@@ -116,10 +116,10 @@
       }
     }, {
       key: 'forwardAllCalls',
-      type: 'combobox',
+      type: 'select',
       templateOptions: {
-        list: vm.validForwardOptions,
-        addtext: vm.cbAddText,
+        combo: true,
+        options: vm.validForwardOptions,
         required: true,
         maxlength: 50
       },
@@ -146,10 +146,10 @@
       }
     }, {
       key: 'forwardNABCalls',
-      type: 'combobox',
+      type: 'select',
       templateOptions: {
-        list: vm.validForwardOptions,
-        addtext: vm.cbAddText,
+        combo: true,
+        options: vm.validForwardOptions,
         required: true,
         maxlength: 50,
         label: $translate.instant('callForwardPanel.internalAndExternal')
@@ -184,10 +184,10 @@
       }
     }, {
       key: 'forwardExternalNABCalls',
-      type: 'combobox',
+      type: 'select',
       templateOptions: {
-        list: vm.validForwardOptions,
-        addtext: vm.cbAddText,
+        combo: true,
+        options: vm.validForwardOptions,
         required: true,
         maxlength: 50
       },
@@ -517,7 +517,7 @@
 
             promises.push($q.all(dnPromises)
               .then(function () {
-                if (vm.telephonyInfo.currentDirectoryNumber.uuid !== vm.assignedInternalNumber.uuid) { // internal line              
+                if (vm.telephonyInfo.currentDirectoryNumber.uuid !== vm.assignedInternalNumber.uuid) { // internal line
                   return LineSettings.changeInternalLine(vm.telephonyInfo.currentDirectoryNumber.uuid, vm.telephonyInfo.currentDirectoryNumber.dnUsage, vm.assignedInternalNumber.pattern, vm.directoryNumber)
                     .then(function () {
                       vm.telephonyInfo = TelephonyInfoService.getTelephonyInfo();
@@ -769,7 +769,7 @@
         vm.cfModel.forwardExternalNABCalls = vm.directoryNumber.callForwardBusy.destination;
       }
 
-      // error case 
+      // error case
       // throw notification when vm is disabled but is not updated in db cfwdynamic and dnfeaturesettings table.
       if ((vm.telephonyInfo.voicemail === 'Off') && (vm.directoryNumber.callForwardAll.voicemailEnabled === 'true')) {
         Notification.errorResponse(vm.vmFwdMismatch);

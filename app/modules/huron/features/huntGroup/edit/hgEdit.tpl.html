@@ -1,4 +1,4 @@
-<cs-page-header title="(hge.model.name)" back="hge.back" back-url="hge.huronFeaturesUrl"></cs-page-header>
+<cs-page-header title="{{::hge.title}}" back="hge.back" back-url="hge.huronFeaturesUrl"></cs-page-header>
 <script type="text/ng-template" id="userTemplate.html">
   <div class="hunt-member-name" ng-if="match.label.displayUser">
     <span ng-bind-html="match.label.user.firstName | typeaheadHighlight:query"></span>&nbsp;
@@ -13,7 +13,7 @@
   <p class="left">{{:: 'huronHuntGroup.saveLabel' | translate}}</p>
   <div class="right">
     <button ng-click="hge.resetForm()">{{:: 'usersPage.cancel' | translate}}</button>
-    <button class="secondary" cs-btn loading="hge.saveInProgress" ng-click="hge.saveForm()"
+    <button class="btn btn--primary" cs-btn loading="hge.saveInProgress" ng-click="hge.saveForm()"
             ng-disabled="hge.showDisableSave()">{{:: 'usersPage.save' | translate}}
     </button>
   </div>
@@ -45,12 +45,14 @@
           <div class="clearfix">
             <div class="small header-background primary cs-card hunt-member-card">
               <article>
-                <header ng-click="hge.toggleFallback()">
-                  <div class="header-with-right-icon">
-                    <h5 class="ellipsis">{{hge.getDisplayName(hge.selectedFallbackMember.member.user)}}</h5>
-                    <i class="icon icon-chevron-down"></i>
-                  </div>
-                </header>
+                <a href ng-click="hge.toggleFallback()">
+                  <header>
+                    <div class="header-with-right-icon">
+                      <h5 class="ellipsis">{{hge.getDisplayName(hge.selectedFallbackMember.member.user)}}</h5>
+                      <i class="icon icon-chevron-down"></i>
+                    </div>
+                  </header>
+                </a>
                 <section ng-if="hge.selectedFallbackMember.openPanel">
                   <p class="email">{{hge.selectedFallbackMember.member.user.email}}
                   <fieldset>
@@ -84,22 +86,22 @@
         <div class="method-container">
           <ul class="hgmethods large-9 columns medium-centered large-block-grid-4 medium-block-grid-2">
             <li class="hgmethod" ng-class="{current: hge.model.huntMethod === hge.hgMethods.longestIdle}">
-              <a ng-click="hge.selectHuntMethod(hge.hgMethods.longestIdle)"><i class="icon icon-circle-clock-hands"></i>
+              <a href ng-click="hge.selectHuntMethod(hge.hgMethods.longestIdle)"><i class="icon icon-circle-clock-hands"></i>
                 <div translate="huronHuntGroup.hgMethods.longestIdle.name"></div>
               </a>
             </li>
             <li class="hgmethod" ng-class="{current: hge.model.huntMethod === hge.hgMethods.broadcast}">
-              <a ng-click="hge.selectHuntMethod(hge.hgMethods.broadcast)"><i class="icon icon-circle-arrows-cross"></i>
+              <a href ng-click="hge.selectHuntMethod(hge.hgMethods.broadcast)"><i class="icon icon-circle-arrows-cross"></i>
                 <div translate="huronHuntGroup.hgMethods.broadcast.name"></div>
               </a>
             </li>
             <li class="hgmethod" ng-class="{current: hge.model.huntMethod === hge.hgMethods.circular}">
-              <a ng-click="hge.selectHuntMethod(hge.hgMethods.circular)"><i class="icon icon-circle-arrows-circular"></i>
+              <a href ng-click="hge.selectHuntMethod(hge.hgMethods.circular)"><i class="icon icon-circle-arrows-circular"></i>
                 <div translate="huronHuntGroup.hgMethods.circular.name"></div>
               </a>
             </li>
             <li class="hgmethod" ng-class="{current: hge.model.huntMethod === hge.hgMethods.topDown}">
-              <a ng-click="hge.selectHuntMethod(hge.hgMethods.topDown)"><i class="icon icon-circle-arrow-down"></i>
+              <a href ng-click="hge.selectHuntMethod(hge.hgMethods.topDown)"><i class="icon icon-circle-arrow-down"></i>
                 <div translate="huronHuntGroup.hgMethods.topDown.name"></div>
               </a>
             </li>
@@ -118,18 +120,19 @@
           </div>
           <p>{{:: 'huronHuntGroup.membersDesc' | translate}}</p>
           <div drop-list="hge.selectedHuntMembers" callback="hge.callback()" unique="uuid">
-            <div ng-repeat="member in hge.selectedHuntMembers" drag-drop draggable="member" class="clearfix hgmember">
+            <div ng-repeat="member in hge.selectedHuntMembers"
+                 drag-drop draggable="member" class="clearfix hgmember"
+                 on-enter-key="hge.toggleMemberPanel(member.user)">
               <div class="small header-background primary cs-card hunt-member-card" class="large header-background primary">
                 <article>
-                  <header ng-click="hge.toggleMemberPanel(member.user)"
-                          ng-class="{'open-panel' : hge.openMemberPanelUuid === member.user.uuid}">
+                  <header ng-class="{'open-panel' : hge.openMemberPanelUuid === member.user.uuid}">
                     <div class="header-with-right-icon">
                       <h5 class="ellipsis"
                           title="{{hge.getDisplayName(member.user)}}">
                         {{hge.getDisplayName(member.user)}}</h5>
-                        <span dropdown>
-                          <i class="icon icon-chevron-down icon-lg"></i>
-                        </span>
+                      <span dropdown>
+                        <i class="icon icon-chevron-down icon-lg"></i>
+                      </span>
                     </div>
                   </header>
                   <section ng-if="(hge.openMemberPanelUuid === member.user.uuid)">

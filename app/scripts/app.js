@@ -10,6 +10,7 @@
  */
 
 angular.module('Core', [
+  'core.trial',
   'pascalprecht.translate',
   'templates-app',
   'ngAnimate',
@@ -25,6 +26,7 @@ angular.module('Core', [
   'ipCookie',
   'ui.router',
   'ct.ui.router.extras.sticky',
+  'ct.ui.router.extras.future',
   'ct.ui.router.extras.previous',
   'ngGrid',
   'mgo-angular-wizard',
@@ -36,7 +38,8 @@ angular.module('Core', [
   'timer',
   'angular-nicescroll',
   'cwill747.phonenumber',
-  'toaster'
+  'toaster',
+  'angular-cache',
 ]).constant('pako', window.pako);
 
 angular.module('Squared', ['Core']);

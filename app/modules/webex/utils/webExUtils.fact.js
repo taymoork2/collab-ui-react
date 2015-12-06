@@ -229,7 +229,9 @@
 
                   var licenseVolume = license.volume;
                   var licenseUsage = license.usage;
-                  var licensesAvailable = licenseVolume - licenseUsage;
+                  var licensesAvailable = (
+                    (licenseVolume - licenseUsage) < 0
+                  ) ? 0 : licenseVolume - licenseUsage;
 
                   licenseInfo = {
                     volume: licenseVolume,
@@ -277,10 +279,20 @@
                 var funcName = "getSiteDataSuccess()";
                 var logMsg = "";
 
+                var siteVersionJsonObj = obj.validateSiteVersionXmlData(response.siteVersionXml);
+                var siteInfoJsonObj = obj.validateSiteInfoXmlData(response.siteInfoXml);
+
+                var isIframeSupported = isIframeSupportedCheck(
+                  siteVersionJsonObj,
+                  siteInfoJsonObj
+                );
+
+                var isAdminReportEnabled = isAdminReportEnabledCheck(siteInfoJsonObj);
+
                 var result = {
                   siteUrl: siteUrl,
-                  isIframeSupported: iframeSupportedSiteVersionCheck(response),
-                  isAdminReportEnabled: isAdminReportEnabledCheck(response)
+                  isIframeSupported: isIframeSupported,
+                  isAdminReportEnabled: isAdminReportEnabled
                 };
 
                 logMsg = funcName + ": " + "\n" +
@@ -344,33 +356,53 @@
           });
         } // getSiteData()
 
-        function iframeSupportedSiteVersionCheck(getInfoResult) {
-          var funcName = "iframeSupportedSiteVersionCheck()";
+        function isIframeSupportedCheck(
+          siteVersionJsonObj,
+          siteInfoJsonObj
+        ) {
+
+          var funcName = "isIframeSupportedCheck()";
           var logMsg = "";
 
-          var siteVersionJsonObj = obj.validateSiteVersionXmlData(getInfoResult.siteVersionXml);
-          var trainReleaseJsonObj = obj.getSiteVersion(siteVersionJsonObj);
+          var isIframeEnabledT30 = false;
+          var isIframeSupportedVersion = false;
 
-          var trainReleaseVersion = trainReleaseJsonObj.trainReleaseVersion;
-          var trainReleaseOrder = trainReleaseJsonObj.trainReleaseOrder;
-          var iframeSupportedSiteVersion = (
-            (null != trainReleaseOrder) &&
-            (400 <= +trainReleaseOrder)
-          ) ? true : false;
+          if ("" === siteVersionJsonObj.errId) { // got a good response
+            var trainReleaseJsonObj = obj.getSiteVersion(siteVersionJsonObj);
+
+            var trainReleaseVersion = trainReleaseJsonObj.trainReleaseVersion;
+            var trainReleaseOrder = trainReleaseJsonObj.trainReleaseOrder;
+
+            isIframeSupportedVersion = (
+              (null != trainReleaseOrder) &&
+              (400 <= +trainReleaseOrder)
+            ) ? true : false;
+
+            // do additional checks for a t30 site
+            if (!isIframeSupportedVersion) {
+              if ("" === siteInfoJsonObj.errId) { // got a good response
+                isIframeEnabledT30 = false; // TODO
+              }
+            }
+          }
+
+          var isIframeSupported = isIframeEnabledT30 || isIframeSupportedVersion;
 
           logMsg = funcName + ": " + "\n" +
             "siteUrl=" + siteUrl + "\n" +
-            "trainReleaseVersion=" + trainReleaseVersion + "\n" +
-            "trainReleaseOrder=" + trainReleaseOrder + "\n" +
-            "iframeSupportedSiteVersion=" + iframeSupportedSiteVersion;
-          $log.log(logMsg);
+            "isIframeSupportedVersion=" + isIframeSupportedVersion + "\n" +
+            "isIframeEnabledT30=" + isIframeEnabledT30 + "\n" +
+            "isIframeSupported=" + isIframeSupported;
+          // $log.log(logMsg);
 
-          return iframeSupportedSiteVersion;
-        } // iframeSupportedSiteVersionCheck()
+          return isIframeSupported;
+        } // isIframeSupportedCheck()
 
-        function isAdminReportEnabledCheck(getInfoResult) {
+        function isAdminReportEnabledCheck(siteInfoJsonObj) {
+          var funcName = "isAdminReportEnabledCheck()";
+          var logMsg = "";
+
           var isAdminReportEnabled = false;
-          var siteInfoJsonObj = obj.validateSiteInfoXmlData(getInfoResult.siteInfoXml);
 
           if ("" === siteInfoJsonObj.errId) { // got a good response
             var siteInfoJson = siteInfoJsonObj.bodyJson;

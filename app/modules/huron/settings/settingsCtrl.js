@@ -6,7 +6,7 @@
 
   /* @ngInject */
   function HuronSettingsCtrl($scope, Authinfo, $q, $translate, HttpUtils, Notification, ServiceSetup,
-    CallerId, ExternalNumberService, HuronCustomer, ValidationService, TelephoneNumberService) {
+    CallerId, ExternalNumberService, HuronCustomer, ValidationService, TelephoneNumberService, DialPlanService) {
 
     var vm = this;
     var DEFAULT_SITE_INDEX = '000001';
@@ -22,6 +22,7 @@
     var DEFAULT_TO = '5999';
     var companyCallerIdType = 'Company Caller ID';
     vm.processing = false;
+    vm.hideFieldSteeringDigit = undefined;
     vm.loading = true;
     vm.init = init;
     vm.save = save;
@@ -157,6 +158,15 @@
       }
     };
 
+    vm.steerDigitOverLapValidation = function ($viewValue, $modelValue, scope) {
+      if (_.get(vm, 'model.site.steeringDigit.length') > 0 &&
+        ((_.startsWith(_.get(scope, 'model.beginNumber'), _.get(vm, 'model.site.steeringDigit'))) ||
+          (_.startsWith(_.get(scope, 'model.endNumber'), _.get(vm, 'model.site.steeringDigit'))))) {
+        return true;
+      }
+      return false;
+    };
+
     vm.leftPanelFields = [{
       model: vm.model.site,
       className: 'service-setup',
@@ -191,6 +201,9 @@
           options: vm.steeringDigits
         },
         expressionProperties: {
+          'hide': function () {
+            return vm.hideFieldSteeringDigit;
+          },
           'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
             return true;
           }
@@ -200,6 +213,9 @@
       key: 'displayNumberRanges',
       type: 'repeater',
       className: 'service-setup service-setup-extension',
+      hideExpression: function () {
+        return vm.hideFieldInternalNumberRange;
+      },
       templateOptions: {
         label: $translate.instant('serviceSetupModal.internalExtensionRange'),
         description: $translate.instant('serviceSetupModal.internalNumberRangeDescription'),
@@ -241,12 +257,16 @@
             templateOptions: {
               required: true,
               maxlength: 4,
-              minlength: 4
+              minlength: 4,
+              warnMsg: $translate.instant('directoryNumberPanel.steeringDigitOverlapWarning', {
+                steeringDigitInTranslation: vm.model.site.steeringDigit
+              })
             },
             expressionProperties: {
               'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
                 return angular.isDefined(scope.model.uuid);
-              }
+              },
+              'templateOptions.isWarn': vm.steerDigitOverLapValidation
             }
           }, {
             className: 'form-inline formly-field service-setup-extension-range-to',
@@ -294,7 +314,10 @@
             templateOptions: {
               required: true,
               maxlength: 4,
-              minlength: 4
+              minlength: 4,
+              warnMsg: $translate.instant('directoryNumberPanel.steeringDigitOverlapWarning', {
+                steeringDigitInTranslation: vm.model.site.steeringDigit
+              })
             },
             expressionProperties: {
               'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
@@ -302,7 +325,8 @@
               },
               'data.validate': function (viewValue, modelValue, scope) {
                 return scope.fc && scope.fc.$validate();
-              }
+              },
+              'templateOptions.isWarn': vm.steerDigitOverLapValidation
             }
           }, {
             type: 'icon-button',
@@ -345,13 +369,20 @@
         }
       },
       expressionProperties: {
-        'hide': 'model.displayNumberRanges.length > 9'
+        'hide': function () {
+          if (vm.model.displayNumberRanges.length > 9) {
+            return true;
+          } else {
+            return vm.hideFieldInternalNumberRange;
+          }
+        }
       }
     }];
 
     vm.rightPanelFields = [{
       key: 'callerId',
       type: 'nested',
+      className: 'caller-id',
       templateOptions: {
         label: $translate.instant('companyCallerId.companyCallerId'),
         description: $translate.instant('companyCallerId.companyCallerIdDesc')
@@ -363,7 +394,7 @@
         }, {
           key: 'callerIdName',
           type: 'input',
-          className: 'caller-id-name nested',
+          className: 'caller-id-name',
           templateOptions: {
             label: $translate.instant('companyCallerId.callerIdName'),
             type: 'text'
@@ -380,8 +411,8 @@
           }
         }, {
           key: 'callerIdNumber',
-          type: 'custom-combobox',
-          className: 'caller-id-number nested',
+          type: 'select',
+          className: 'caller-id-number',
           validators: {
             phoneNumber: {
               expression: vm.validations.phoneNumber,
@@ -413,7 +444,7 @@
                 externalNumber.pattern = TelephoneNumberService.getDIDLabel(externalNumber.pattern);
                 return externalNumber;
               });
-              $scope.to.list = _.map(vm.externalNumberPool, function (en) {
+              $scope.to.options = _.map(vm.externalNumberPool, function (en) {
                 return TelephoneNumberService.getDIDLabel(en.pattern);
               });
             });
@@ -426,7 +457,6 @@
       var promises = [];
       vm.loading = true;
       var errors = [];
-
       promises.push(HuronCustomer.get().then(function (customer) {
         vm.customer = customer;
         angular.forEach(customer.links, function (service) {
@@ -438,10 +468,12 @@
         });
       }).then(function () {
         return initTimeZone();
-      }).then(function () {
-        return listInternalExtensionRanges();
       }).catch(function (response) {
         errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.customerGetError'));
+      }).then(function () {
+        return listInternalExtensionRanges();
+      }).then(function () {
+        return setServiceValues();
       }).then(function () {
         return ServiceSetup.listSites().then(function () {
           if (ServiceSetup.sites.length !== 0) {
@@ -679,6 +711,25 @@
         } else {
           vm.model.callerId.callerIdEnabled = false;
         }
+      });
+    }
+
+    function setServiceValues() {
+      DialPlanService.getCustomerDialPlanDetails(Authinfo.getOrgId()).then(function (response) {
+        if (response.extensionGenerated === 'true') {
+          vm.hideFieldInternalNumberRange = true;
+        } else {
+          vm.hideFieldInternalNumberRange = false;
+        }
+        if (response.steeringDigitRequired === 'true') {
+          vm.hideFieldSteeringDigit = false;
+        } else {
+          vm.hideFieldSteeringDigit = true;
+        }
+      }).catch(function (response) {
+        vm.hideFieldInternalNumberRange = false;
+        vm.hideFieldSteeringDigit = false;
+        Notification.errorResponse(response, 'serviceSetupModal.customerDialPlanDetailsGetError');
       });
     }
 

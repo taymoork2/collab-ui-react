@@ -2,47 +2,73 @@
   'use strict';
 
   var mockData = {
-    use: false,
     users: [{
+      "active": true,
       "id": "ddb4dd78-26a2-45a2-8ad8-4c181c5b3f0a",
       "organization": {
         id: "ce8d17f8-1734-4a54-8510-fae65acc505e"
       },
       "userName": "tom.vasset+marvelhelpdesk@gmail.com",
-      "displayName": "Tom Vasset",
+      "displayName": "Tom Vasset (mock)",
       "phoneNumbers": [{
         "type": "work",
         "value": "+47 67 51 14 67"
       }, {
         "type": "mobile",
         "value": "+47 92 01 30 30"
-      }]
+      }],
+      "url": "whatever.com"
     }, {
+      "active": false,
       "id": "335bf4a2-a09c-45ba-a72a-e3f1de613295",
       "organization": {
         "id": "ce8d17f8-1734-4a54-8510-fae65acc505e"
       },
       "userName": "jayScott@marvel.com",
-      "displayName": "Jay Scott",
-      "phoneNumbers": []
+      "displayName": "Jay Scott (mock)",
+      "phoneNumbers": [],
+      "url": "whatever.com"
     }, {
+      "active": true,
       "id": "2f4c85f7-e827-4b28-b567-0e49693b3f75",
       "organization": {
         "id": "ce8d17f8-1734-4a54-8510-fae65acc505e"
       },
       "userName": "shamim.pirzada+marvelenduser@gmail.com",
-      "displayName": "Shamim",
-      "phoneNumbers": []
+      "displayName": "Shamim (mock)",
+      "phoneNumbers": [],
+      "url": "whatever.com"
     }],
     orgs: [{
       "id": "ce8d17f8-1734-4a54-8510-fae65acc505e",
-      "displayName": "Marvel Partners",
+      "displayName": "Marvel Partners (Mock)",
       "isPartner": true
     }, {
       "id": "bc1d8493-69a7-4ba7-a0c0-62abf1b57ac6",
       "displayName": "Autobots",
       "isPartner": false
     }],
+    org: {
+      "id": "ce8d17f8-1734-4a54-8510-fae65acc505e",
+      "displayName": "Marvel Partners (Mock)",
+      "isPartner": true,
+      "services": [
+        "squared-fusion-cal",
+        "webex-squared",
+        "squared-fusion-mgmt",
+        "squared-fusion-cal",
+        "squared-fusion-uc",
+        "squared-fusion-ec",
+        "ciscouc",
+        "cloudMeetings",
+        "spark-device-mgmt"
+      ],
+      "contact": "tywin.lannister@kingslanding.com",
+      "domains": ["kingslanding.com", "kingslanding2.com"],
+      "manages": ["bc1d8493-69a7-4ba7-a0c0-62abf1b57ac6"],
+      "dirsyncEnabled": true,
+      "ssoEnabled": true
+    },
     devices: {
       "https://csdm-a.wbx2.com/csdm/api/v1/organization/4214d345-7caf-4e32-b015-34de878d1158/devices/94b3e13c-b1dd-5e2a-9b64-e3ca02de51d3": {
         "displayName": "Testing DR",
@@ -183,7 +209,56 @@
         "product": "Cisco TelePresence SX10",
         "state": "CLAIMED"
       }
-    }
+    },
+    webExSites: [{
+      "siteUrl": "mock1.webex.com"
+    }, {
+      "siteUrl": "mock2.webex.com"
+    }],
+    licenses: [{
+      "type": "MESSAGING",
+      "name": "Messaging",
+      "status": "ACTIVE",
+      "volume": 100,
+      "isTrial": false,
+      "usage": 10
+    }, {
+      "type": "CONFERENCING",
+      "name": "Conferencing",
+      "status": "ACTIVE",
+      "volume": 100,
+      "isTrial": true,
+      "trialExpiresInDays": 49
+    }, {
+      "type": "COMMUNICATIONS",
+      "name": "Communications",
+      "status": "SUSPENDED",
+      "volume": 1000,
+      "trialExpiresInDays": 100,
+      "usage": "950"
+    }, {
+      "type": "SHARED_DEVICES",
+      "name": "Shared Devices",
+      "status": "ACTIVE",
+      "volume": 50,
+      "isTrial": false
+    }],
+    hybridServices: [{
+      "id": "squared-fusion-mgmt",
+      "enabled": true,
+      "status": "error"
+    }, {
+      "id": "squared-fusion-cal",
+      "enabled": true,
+      "status": "ok"
+    }, {
+      "id": "squared-fusion-uc",
+      "enabled": true,
+      "status": "warning"
+    }, {
+      "id": "squared-fusion-ec",
+      "enabled": false
+    }]
   };
   angular.module('Squared').constant('HelpdeskMockData', mockData);
 }());

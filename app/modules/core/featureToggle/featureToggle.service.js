@@ -5,7 +5,7 @@
     .service('FeatureToggleService', FeatureToggleService);
 
   /* @ngInject */
-  function FeatureToggleService($resource, $q, Config, Authinfo, Orgservice) {
+  function FeatureToggleService($resource, $q, Config, Authinfo, Orgservice, Userservice) {
     var features = {
       pstnSetup: 'pstnSetup',
       csvUpload: 'csvUpload',
@@ -13,6 +13,7 @@
       atlasCloudberryTrials: 'atlas-cloudberry-trials',
       atlasStormBranding: 'atlas-2015-storm-launch',
       atlasSipUriDomain: 'atlas-sip-uri-domain',
+      atlasWebexTrials: 'atlas-webex-trials',
     };
 
     var service = {
@@ -69,7 +70,7 @@
     }
 
     function getFeatures(isUser, id) {
-      if (angular.isUndefined(id)) {
+      if (!id) {
         return $q.reject('id is undefined');
       }
 
@@ -84,7 +85,7 @@
     }
 
     function getFeature(isUser, id, feature) {
-      if (angular.isUndefined(feature)) {
+      if (!feature) {
         return $q.reject('feature is undefined');
       }
 
@@ -105,33 +106,29 @@
       return $q(function (resolve, reject) {
         //TODO temporary hardcoded checks for huron
         if (feature === features.pstnSetup) {
-          resolve(Authinfo.getOrgId() === '666a7b2f-f82e-4582-9672-7f22829e728d');
+          return resolve(Authinfo.getOrgId() === '666a7b2f-f82e-4582-9672-7f22829e728d' || Authinfo.getOrgId() === 'a28c73de-8ebe-46b1-867a-a4d8bdac8c3f');
         } else if (feature === features.csvUpload) {
           resolve(true);
         } else if (feature === features.dirSync) {
           supportsDirSync().then(function (enabled) {
-            resolve(enabled && Authinfo.getOrgId() === '4e2befa3-9d82-4fdf-ad31-bb862133f078');
+            resolve(enabled);
           });
-        } else if (feature === features.atlasCloudberryTrials) {
-          if (Authinfo.getOrgId() === 'c054027f-c5bd-4598-8cd8-07c08163e8cd') {
-            resolve(true);
-          } else {
-            resolve(false);
-          }
-        } else if (feature === features.atlasStormBranding) {
-          resolve(false);
+        } else if (feature === features.atlasCloudberryTrials && Authinfo.getOrgId() === 'c054027f-c5bd-4598-8cd8-07c08163e8cd') {
+          resolve(true);
         } else {
-          var userId = Authinfo.getUserId();
           var orgId = Authinfo.getOrgId();
 
-          getFeatureForUser(userId, feature).then(function (userResult) {
-            if (!userResult) {
-              getFeatureForOrg(orgId, feature).then(function (orgResult) {
-                resolve(orgResult);
-              });
-            } else {
-              resolve(userResult);
-            }
+          Userservice.getUser('me', function (data, status) {
+            var userId = data.id;
+            getFeatureForUser(userId, feature).then(function (userResult) {
+              if (!userResult) {
+                getFeatureForOrg(orgId, feature).then(function (orgResult) {
+                  resolve(orgResult);
+                });
+              } else {
+                resolve(userResult);
+              }
+            });
           });
         }
       });
@@ -150,7 +147,7 @@
       var deferred = $q.defer();
       Orgservice.getOrgCacheOption(function (data, status) {
         if (data.success) {
-          deferred.resolve(data.dirsyncEnabled);
+          deferred.resolve(data.dirsyncEnabled && Authinfo.getOrgId() === '151d02da-33a2-45aa-9467-bdaebbaeee76');
         } else {
           deferred.reject(status);
         }

@@ -39,6 +39,7 @@ describe('Controller: UserOverviewCtrl', function () {
     });
     spyOn(FeatureToggleService, 'getFeatureForUser').and.returnValue(deferred.promise);
     spyOn(FeatureToggleService, 'getFeaturesForUser').and.returnValue(deferred2.promise);
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
 
     // eww
     var userUrl = Config.getScimUrl(Authinfo.getOrgId()) + '/' + currentUser.id;

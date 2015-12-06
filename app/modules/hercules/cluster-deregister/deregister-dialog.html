@@ -26,14 +26,14 @@
 
   </div>
   <div class="modal-footer">
-    <button ng-disabled="loading || saving" id="convertActionButton" class="btn btn-danger pull-right"
+    <button ng-disabled="loading || saving" id="convertActionButton" class="btn btn--negative pull-right"
             ng-click="clusterDeregister.deregister()">
       <span ng-hide="saving" translate="hercules.clusters.deregisterConfirm"></span>
         <span ng-show="saving">
           <i class="icon icon-spinner"/>
         </span>
     </button>
-    <button id="convertCancelButton" class="btn btn-default pull-right" ng-click="clusterDeregister.close()"
+    <button id="convertCancelButton" class="btn pull-right" ng-click="clusterDeregister.close()"
             style="margin-right: 10px">
       <span translate="hercules.clusters.deregisterCancel"></span>
     </button>

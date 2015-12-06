@@ -26,6 +26,7 @@ module.exports = function() {
     fonts: 'fonts',
     images: 'images',
     css: 'styles',
+    docs: 'docs',
     cssName: 'main',
     jsIndexName: 'index.scripts',
     jsUnsupportedName: 'unsupported.scripts',
@@ -38,6 +39,7 @@ module.exports = function() {
       ts: [app + '/**/*.ts'],
       json: [app + '/**/*.json'],
       csv: [app + '/**/*.csv'],
+      docs: [app + '/docs/**/*'],
       tpl: [app + '/modules/**/*.html'],
       html: [app + '/*.html'],
       scss: ['styles/app.scss'],
@@ -143,6 +145,7 @@ module.exports = function() {
         vendor + '/ui-router-extras/release/modular/ct-ui-router-extras.core.js',
         vendor + '/ui-router-extras/release/modular/ct-ui-router-extras.sticky.js',
         vendor + '/ui-router-extras/release/modular/ct-ui-router-extras.transition.js',
+        vendor + '/ui-router-extras/release/modular/ct-ui-router-extras.future.js',
         vendor + '/ui-router-extras/release/modular/ct-ui-router-extras.previous.js',
         vendor + '/ng-csv/build/ng-csv.min.js',
         vendor + '/api-check/dist/api-check.js',
@@ -170,6 +173,7 @@ module.exports = function() {
         vendor + '/imagesloaded/imagesloaded.pkgd.js',
         vendor + '/ng-tags-input/ng-tags-input.min.js',
         vendor + '/pako/dist/pako.js',
+        vendor + '/angular-cache/dist/angular-cache.js',
       ],
       scss: {
         paths: [

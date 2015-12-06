@@ -114,15 +114,16 @@ exports.wait = function (elem, timeout) {
   return browser.wait(logAndWait, timeout || TIMEOUT, 'Waiting for element to be visible: ' + elem.locator());
 };
 
-exports.waitForPresence = function (elem) {
+exports.waitForPresence = function (elem, timeout) {
   function logAndWait() {
     log('Waiting for element to be present: ' + elem.locator());
     return EC.presenceOf(elem)().thenCatch(function () {
       // handle a possible stale element
       return false;
+
     });;
   }
-  return browser.wait(logAndWait, TIMEOUT, 'Waiting for element to be present: ' + elem.locator());
+  return browser.wait(logAndWait, timeout || TIMEOUT, 'Waiting for element to be present: ' + elem.locator());
 };
 
 exports.waitUntilEnabled = function (elem) {
@@ -436,7 +437,15 @@ exports.expectSwitchState = function (elem, value) {
   });
 };
 
-exports.expectCheckbox = exports.expectSwitchState;
+exports.expectCheckbox = function (elem, value) {
+  return this.wait(elem).then(function () {
+    log('Waiting for element to be checked: ' + elem.locator() + ' ' + value);
+    var input = elem.element(by.tagName('input'));
+    return input.isSelected().then(function (isSelected) {
+      return value === isSelected;
+    });
+  });
+};
 
 exports.expectRadioSelected = function (elem) {
   return this.wait(elem).then(function () {
@@ -598,8 +607,7 @@ exports.loginToOnboardUsers = function (loginName, userName) {
 exports.deleteUser = function (name, name2) {
   this.clickEscape();
   navigation.clickUsers();
-  this.searchAndClick(name);
-  this.click(users.closeSidePanel);
+  this.searchForSingleResult(name);
   this.click(users.userListAction);
   this.click(users.deleteUserOption);
   this.expectIsDisplayed(users.deleteUserModal);
@@ -615,6 +623,33 @@ exports.deleteUser = function (name, name2) {
   }
 };
 
+exports.deleteIfUserExists = function (name) {
+  this.clickEscape();
+  navigation.clickUsers();
+  this.click(this.searchbox);
+  this.clear(this.searchField);
+  if (name) {
+    this.sendKeys(this.searchField, name);
+    utils.expectIsPresent(element(by.css('.icon-spinner')));
+    utils.expectIsNotPresent(element(by.css('.icon-spinner')));
+    waitUntilElemIsPresent(users.userListAction, 2000).then(function () {
+      exports.click(users.userListAction);
+      exports.click(users.deleteUserOption);
+      exports.expectIsDisplayed(users.deleteUserModal);
+      exports.click(users.deleteUserButton);
+      notifications.assertSuccess(name, 'deleted successfully');
+    }, function () {
+      log('user is not present');
+    });
+  }
+
+  function waitUntilElemIsPresent(elem, timeout) {
+    return exports.wait(elem, timeout).then(function () {
+      return elem.isDisplayed();
+    })
+  }
+};
+
 exports.waitForModal = function () {
   return this.wait(element(by.css('.modal-dialog')));
-}
+};

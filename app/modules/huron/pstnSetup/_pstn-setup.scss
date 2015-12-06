@@ -30,7 +30,14 @@
 
 .pstn-provider-card {
   footer {
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .icon-content-share {
+      font-size: 1.25rem;
+      flex: 0;
+      left: 25%;
+    }
   }
   header img {
     @extend .pstn-provider-logo;
@@ -104,10 +111,6 @@
     margin-top: rem-calc(15);
   }
 
-  .form .has-feedback .form-control-feedback {
-      top: 6px;
-  }
-
   .form-inline.formly-field-select {
     flex: 1;
   }
@@ -115,18 +118,10 @@
   .formly-field-inline {
     align-items: flex-start;
   }
-  .label-height-offset {
-    margin-top: #{$form-label-line-height}em;
-  }
-  .search-button {
-    align-self: center;
-  }
-  .text-label-height-offset {
-    @extend .label-height-offset;
-    padding-top: calc((#{$input-height-base} - #{$base-line-height-ratio}em)/2);
-    margin-right: 25px;
-  }
 
+  .search-button {
+    margin-top: calc(#{$form-label-line-height}em - (50px - #{$input-height-base}) / 2);
+  }
 }
 
 .pstn-review {

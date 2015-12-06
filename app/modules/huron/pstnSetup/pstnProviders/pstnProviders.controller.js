@@ -41,26 +41,45 @@
     }
 
     function init() {
+      // lookup customer carriers
       PstnSetupService.listCustomerCarriers(PstnSetup.getCustomerId())
         .then(function (carriers) {
           PstnSetup.setCustomerExists(true);
-          if (angular.isArray(carriers) && carriers.length === 0) {
-            return PstnSetupService.listCarriers();
-          } else {
+          if (_.isArray(carriers) && carriers.length > 0) {
             PstnSetup.setCarrierExists(true);
-            return carriers;
           }
+          return carriers;
         })
+        // if no customer or reseller error, rethrow
         .catch(function (response) {
-          if (response && response.status === 404) {
-            return PstnSetupService.listCarriers();
-          } else {
+          if (response && response.status !== 404) {
             return $q.reject(response);
           }
         })
+        // if none, lookup reseller carriers
         .then(function (carriers) {
-          angular.forEach(carriers, initCarrier);
-          if (PstnSetup.isCustomerExists() && PstnSetup.isCarrierExists() && angular.isArray(vm.providers) && vm.providers.length === 1) {
+          if (_.isArray(carriers) && carriers.length > 0) {
+            return carriers;
+          } else {
+            return PstnSetupService.listResellerCarriers();
+          }
+        })
+        // if none, lookup default carriers
+        .then(function (carriers) {
+          if (_.isArray(carriers) && carriers.length > 0) {
+            return carriers;
+          } else {
+            return PstnSetupService.listDefaultCarriers();
+          }
+        })
+        // process carriers
+        .then(function (carriers) {
+          _.forEach(carriers, initCarrier);
+          if (PstnSetup.isCustomerExists() && PstnSetup.isCarrierExists() && _.isArray(vm.providers) && vm.providers.length === 1) {
+            selectProvider(vm.providers[0]);
+            goToNumbers();
+          } else if (_.isArray(vm.providers) && vm.providers.length === 1) {
+            PstnSetup.setSingleCarrierReseller(true);
             selectProvider(vm.providers[0]);
             goToNumbers();
           }
@@ -80,9 +99,12 @@
           name: carrier.name,
           apiExists: carrier.apiExists,
           vendor: carrier.vendor,
+          countryCode: carrier.countryCode,
+          country: carrier.country,
           logoSrc: 'images/carriers/logo_intelepeer.svg',
           logoAlt: 'IntelePeer',
-          title: 'IntelePeer Pro6S',
+          docSrc: 'docs/carriers/IntelePeerVoicePackage.pdf',
+          title: 'Voice Services Bundle',
           features: [
             $translate.instant('intelepeerFeatures.feature1'),
             $translate.instant('intelepeerFeatures.feature2'),
@@ -97,6 +119,8 @@
           name: carrier.name,
           apiExists: carrier.apiExists,
           vendor: carrier.vendor,
+          countryCode: carrier.countryCode,
+          country: carrier.country,
           logoSrc: 'images/carriers/logo_tata_comm.svg',
           logoAlt: 'Tata',
           title: 'Tata Smart Voice Bundle',
@@ -107,6 +131,20 @@
             $translate.instant('tataFeatures.feature4'),
             $translate.instant('tataFeatures.feature5')
           ],
+          selectFn: goToSwivelNumbers
+        });
+      } else if (carrier.vendor === PstnSetupService.TELSTRA) {
+        vm.providers.push({
+          uuid: carrier.uuid,
+          name: carrier.name,
+          apiExists: carrier.apiExists,
+          vendor: carrier.vendor,
+          countryCode: carrier.countryCode,
+          country: carrier.country,
+          logoSrc: 'images/carriers/logo_telstra.svg',
+          logoAlt: 'Telstra',
+          title: 'Telstra',
+          features: [],
           selectFn: goToSwivelNumbers
         });
       }

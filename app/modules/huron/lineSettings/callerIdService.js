@@ -136,7 +136,7 @@
             display: userName,
             label: lineTextLabel
           };
-          // Only update on primary line and all secondary lines where there's no primary user.
+          // Only update on primary line and all primary lines where there's no primary user.
           if (userDn.isPrimary || !userDn.hasSharedPrimary) {
             // Update alerting name on DN
             promise = DirectoryNumber.updateDirectoryNumber(userDn.uuid, {

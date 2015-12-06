@@ -122,6 +122,8 @@ angular.module('Core')
 
         ciscoMockOrgId: 'd30a6828-dc35-4753-bab4-f9b468828688',
 
+        consumerOrgId: 'consumer',
+
         logoutUrl: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=',
 
         oauthDeleteTokenUrl: 'https://idbroker.webex.com/idb/oauth2/v1/revoke',
@@ -396,11 +398,6 @@ angular.module('Core')
             state: 'vts',
             link: '#vts'
           }, {
-            title: 'tabs.reportTab',
-            desc: 'New Reports',
-            state: 'newpartnerreports',
-            link: '#partner/newreports'
-          }, {
             title: 'tabs.cdrTab',
             desc: 'tabs.cdrLogsTabDesc',
             state: 'cdrsupport',
@@ -420,6 +417,11 @@ angular.module('Core')
             desc: 'tabs.eventsTabDesc',
             state: 'events',
             link: '#events'
+          }, {
+            title: 'tabs.reportTab',
+            desc: 'reportsPage.devReports',
+            state: 'devReports',
+            link: '#devReports'
           }]
         }],
 
@@ -435,8 +437,10 @@ angular.module('Core')
         },
 
         trials: {
-          collab: 'COLLAB',
-          squaredUC: 'SQUAREDUC'
+          message: 'COLLAB',
+          meeting: 'WEBEXTRIALS',
+          call: 'SQUAREDUC',
+          roomSystems: 'ROOMSYSTEMS',
         },
 
         organizations: {
@@ -495,6 +499,7 @@ angular.module('Core')
         },
 
         confMap: {
+          MS: 'onboardModal.paidMsg',
           CF: 'onboardModal.paidConf',
           EE: 'onboardModal.enterpriseEdition',
           MC: 'onboardModal.meetingCenter',
@@ -502,6 +507,26 @@ angular.module('Core')
           TC: 'onboardModal.trainingCenter',
           EC: 'onboardModal.eventCenter',
           CO: 'onboardModal.communication'
+        },
+
+        offerCodes: {
+          MS: 'MS', // Messaging
+          CF: 'CF', // Conferencing
+          EE: 'EE', // Enterprise Edition (WebEx)
+          MC: 'MC', // Meeting Center (WebEx)
+          SC: 'SC', // Support Center (WebEx)
+          TC: 'TC', // Training Center (WebEx)
+          EC: 'EC', // Event Center (WebEx)
+          CO: 'CO' // Communication
+        },
+
+        licenseTypes: {
+          MESSAGING: 'MESSAGING',
+          CONFERENCING: 'CONFERENCING',
+          COMMUNICATIONS: 'COMMUNICATIONS',
+          STORAGE: 'STORAGE',
+          SHARED_DEVICES: 'SHARED_DEVICES',
+          CMR: 'CMR'
         },
 
         defaultEntitlements: ['webex-squared', 'squared-call-initiation'],
@@ -903,7 +928,6 @@ angular.module('Core')
       config.roleStates = {
         Full_Admin: [ // Customer Admin
           'overview',
-          'overview-nm',
           'users',
           'user-overview',
           'userprofile',
@@ -923,6 +947,7 @@ angular.module('Core')
         WX2_SquaredInviter: [],
         PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup'],
         PARTNER_USER: ['partnercustomers', 'customer-overview', 'trialAdd', 'trialEdit'],
+        PARTNER_SALES_ADMIN: ['partnerreports'],
         CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
         User: [],
         Site_Admin: [
@@ -949,7 +974,6 @@ angular.module('Core')
           'paginggroups',
           'huntgroups',
           'didadd',
-          'newpartnerreports',
           'hurondetails',
           'huronlines',
           'huronsettings',
@@ -957,6 +981,7 @@ angular.module('Core')
           'huronnewfeature',
           'huronHuntGroup',
           'huntgroupedit',
+          'devReports',
           'cdrsupport',
           'cdr-overview'
         ],
@@ -1004,12 +1029,12 @@ angular.module('Core')
       config.restrictedStates = {
         'customer': [
           'partneroverview',
-          'partnerreports',
-          'newpartnerreports'
+          'partnerreports'
         ],
         'partner': [
           'overview',
           'reports',
+          'devReports',
           'devices',
           'fusion',
           'mediafusionconnector',

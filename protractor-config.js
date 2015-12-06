@@ -50,7 +50,7 @@ exports.config = {
       };
 
       this.specDone = function(spec) {
-        if (spec.status === 'failed') {
+        if (spec.status === 'failed' && browser.params.isFailFast === 'true') {
             touch(e2eFailNotify);
         }
       };

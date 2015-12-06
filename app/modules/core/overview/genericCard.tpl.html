@@ -1,0 +1,59 @@
+<header>
+  <div class="overview-header">
+    <i class="icon" ng-class="card.icon"></i>
+    <span>{{card.name | translate}}</span>
+  </div>
+</header>
+<section ng-if="card.enabled">
+  <div class="overview-info">
+    <div>{{(card.currentTitle || 'overview.thisMonth') | translate }}</div>
+    <div class="overview-count">{{(card.current | number) || 'N/A'}}</div>
+    <div class="last-count">{{(card.previousTitle || 'overview.lastMonth') | translate }} {{(card.previous | number) || 'N/A'}}
+    </div>
+  </div>
+</section>
+<footer class="footer-menu ng-isolate-scope overview-footer-content-trial" ng-class="{'overview-footer-content-trial' : card.trial ,  'overview-footer-content'  : !card.trial }" ng-if="card.enabled">
+  <span class="footer-content">
+<span class="label warning ng-scope" ng-if="card.trial">Trial</span>
+  <a ng-href="{{overview.statusPageUrl}}" target="_blank" class="monitoring-cell">
+    <i class="icon icon-circle" ng-class="card.healthStatus || 'disabled'"></i>
+    <span>{{card.levelText}}</span>
+  </a>
+  </span>
+  <span class="footer-icons">
+<a ng-href="{{card.settingsUrl}}">
+&nbsp;<i class="icon icon-tools" ng-if="card.settingsUrl"></i>
+</a>
+</span>
+</footer>
+<section class="card-menu ng-isolate-scope" ng-class="{ open: cm.menuOpen === true }" menutitle="card.name" ng-if="card.enabled">
+  <div class="card-menu-heading">
+    <span class="ng-binding">SETTINGS</span>
+    <button type="button" class="close" ng-click="cm.toggleSettings()"><span class="sr-only">Close</span>
+    </button>
+  </div>
+  <div>
+    <ul class="service-menu-list no-bullet ng-scope">
+      <!-- ngRepeat: item in cd.CallMenuItems -->
+      <li ng-repeat="item in cd.CallMenuItems" class="ng-scope">
+        <a class="service-menu-item ng-binding" href="">item 1</a>
+      </li>
+      <!-- end ngRepeat: item in cd.CallMenuItems -->
+      <li ng-repeat="item in cd.CallMenuItems" class="ng-scope">
+        <a class="service-menu-item ng-binding" href="">item 2</a>
+      </li>
+      <!-- end ngRepeat: item in cd.CallMenuItems -->
+      <li ng-repeat="item in cd.CallMenuItems" class="ng-scope">
+        <a class="service-menu-item ng-binding" href="">item 3</a>
+      </li>
+      <!-- end ngRepeat: item in cd.CallMenuItems -->
+    </ul>
+  </div>
+</section>
+<section ng-if="!card.enabled" class="disabled-section">
+  <span>{{(card.notEnabledText || 'overview.notEnabledText') | translate}}</span>
+  <a ng-href="card.notEnabledAction" ng-if="card.notEnabledAction">{{card.notEnabledActionText | translate}}</a>
+</section>
+<footer ng-if="!card.enabled && card.notEnabledFooter" class="disabled-footer">
+  <p>{{card.notEnabledFooter| translate}}</p>
+</footer>

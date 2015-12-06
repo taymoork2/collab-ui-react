@@ -3,7 +3,7 @@
 
   /* @ngInject */
   function ExpresswayServiceController(XhrNotificationService, ServiceStateChecker, ServiceDescriptor, $state,
-    $modal, $scope, ClusterService, USSService2, ServiceStatusSummaryService, HelperNuggetsService) {
+    $modal, $scope, $translate, ClusterService, USSService2, ServiceStatusSummaryService, HelperNuggetsService) {
 
     ClusterService.subscribe('data', clustersUpdated, {
       scope: $scope
@@ -22,6 +22,16 @@
 
     //TODO: Don't like this linking to routes...
     vm.route = HelperNuggetsService.serviceType2RouteName(vm.currentServiceType);
+
+    // Added for cs-page-header
+    vm.pageTitle = $translate.instant('hercules.serviceNames.' + vm.currentServiceId);
+    vm.tabs = [{
+      title: $translate.instant('common.resources'),
+      state: vm.route + '.list',
+    }, {
+      title: $translate.instant('common.settings'),
+      state: vm.route + '.settings({serviceType:vm.currentServiceType})',
+    }];
 
     vm.notificationTag = vm.currentServiceId;
     vm.clusters = _.values(ClusterService.getClusters());
@@ -156,7 +166,7 @@
   }
 
   /* @ngInject */
-  function HostDetailsController($stateParams, $state, ClusterService, XhrNotificationService) {
+  function ExpresswayHostDetailsController($stateParams, $state, ClusterService, XhrNotificationService) {
     var vm = this;
     vm.host = $stateParams.host;
     vm.cluster = ClusterService.getClusters()[$stateParams.clusterId];
@@ -311,6 +321,6 @@
     .controller('ExpresswayServiceController', ExpresswayServiceController)
     .controller('ExpresswayClusterSettingsController', ExpresswayClusterSettingsController)
     .controller('AlarmController', AlarmController)
-    .controller('HostDetailsController', HostDetailsController)
+    .controller('ExpresswayHostDetailsController', ExpresswayHostDetailsController)
     .controller('UserErrorsController', UserErrorsController);
 }());

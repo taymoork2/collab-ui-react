@@ -1,45 +1,13 @@
+.huronlines-state {
+  @extend %page-background-white;
+}
+
 .line-list {
-  & .btn-actions {
-    @include vr-spacing(pv, 0.9375);
-    @include vr-spacing(ph, 1.875);
-    float: right;
-    text-align: center;
-  }
-  & .btn-icon {
-    background: none;
-    border: none;
-    box-shadow: none;
-    width: 100%;
-    text-align: center;
-    &:hover, &:focus, &.active:focus {
-      border: none;
-      box-shadow: none;
-      outline: 0;
-    }
-  }
-  & .content-header {
-    @include vr-spacing(pv, 0.625);
-    @include vr-spacing(pr, 0.625);
-    @include vr-spacing(pl, 1.5);
-    background: white;
-    border-bottom: 0.0625rem solid $gray-lightest;
-  }
-  & .export-lines {
-    @include vr-spacing(mr, 0.5, 0px, true);
-    @include vr-spacing(mt, 0.5);
-    font-size: 1.5rem;
-    display: inline-block;
-  }
-  & .gridStyle {
-    height: calc(50vh);
-  }
+  @extend %grid-subheader;
+
   & .ngGrid {
-    height: calc(90vh);
     & .internalNumberColumn {
       text-align: center;
     }
-  }
-  & .page-option-buttons {
-    @include vr-spacing(pt, 0);
   }
 }

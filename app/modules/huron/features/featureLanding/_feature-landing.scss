@@ -1,15 +1,9 @@
-
 $page-header-height: 95px;
 $features-header-height : 83px;
 
-.features{
-
-  .features-content {
-    height: calc(100vh - #{($top-bar-height + $page-header-height + $features-header-height)});
-    overflow: auto;
-    background-color: $brand-white;
-    @include vr-spacing(pt, 0);
-  }
+.huronfeatures{
+  @extend %content-subheader;
+  @extend %page-content-padding;
 }
 
 .features-reload {
@@ -17,7 +11,7 @@ $features-header-height : 83px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: calc(100vh - #{($top-bar-height + $page-header-height + $features-header-height)});
+  // height: calc(100vh - #{($top-bar-height + $page-header-height + $features-header-height)});
    >p {
      color: $gray-dark;
    }
@@ -43,9 +37,6 @@ $features-header-height : 83px;
 }
 
 .cards-block{
-
-  @include vr-spacing(pv, 1);
-  @include vr-spacing(ph, 0.5);
 
   .cs-card article {
     height : rem-calc(170);

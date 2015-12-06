@@ -62,9 +62,9 @@
           </div>
         </div>
         <div class="modal-footer aa-tooltip">
-          <button id="cancelButton" class="btn btn-default" type="button" ng-click="customForm.$setUntouched();cancelDelete()" data-dismiss="modal" translate="common.cancel"></button>
+          <button id="cancelButton" class="btn" type="button" ng-click="customForm.$setUntouched();cancelDelete()" data-dismiss="modal" translate="common.cancel"></button>
           <div class="aa-tooltip-wrapper" tooltip-html-unsafe="{{customForm.$invalid ? ( 'autoAttendant.invalidRequiredFields' | translate ) : '' }}" tooltip-trigger="mouseenter" tooltip-placement="top">
-            <button id="aaSaveButton" class="btn btn-primary btn-save" type="submit" ng-click="aaCustom.saveMenuOption(aaCustom.customDialogMenuEntry);customForm.$setUntouched()" data-dismiss="modal" ng-disabled="customForm.$invalid || customForm.$pristine" translate="common.save"></button>
+            <button id="aaSaveButton" class="btn btn--primary btn-save" type="submit" ng-click="aaCustom.saveMenuOption(aaCustom.customDialogMenuEntry);customForm.$setUntouched()" data-dismiss="modal" ng-disabled="customForm.$invalid || customForm.$pristine" translate="common.save"></button>
           </div>
         </div>
       </form>

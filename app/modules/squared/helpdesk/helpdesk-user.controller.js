@@ -2,22 +2,68 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskUserController($stateParams, HelpdeskService, Orgservice, XhrNotificationService) {
+  function HelpdeskUserController($stateParams, HelpdeskService, XhrNotificationService, USSService2, HelpdeskCardsUserService, Config) {
+    $('body').css('background', 'white');
     var vm = this;
+    if ($stateParams.user) {
+      vm.userId = $stateParams.user.id;
+      vm.orgId = $stateParams.user.organization.id;
+      vm.org = $stateParams.user.organization;
+    } else {
+      vm.userId = $stateParams.id;
+      vm.orgId = $stateParams.orgId;
+      vm.org = {
+        id: $stateParams.orgId
+      };
+    }
+    vm.resendInviteEmail = resendInviteEmail;
     vm.user = $stateParams.user;
-    vm.org = {};
+    vm.resendInviteEnabled = false;
+    vm.messageCard = {};
+    vm.meetingCard = {};
+    vm.callCard = {};
+    vm.hybridServicesCard = {};
 
-    HelpdeskService.getUser(vm.user.organization.id, vm.user.id).then(function (res) {
-      vm.user = res;
-    }, function (err) {
-      XhrNotificationService.notify(err);
-    });
+    HelpdeskService.getUser(vm.orgId, vm.userId).then(initUserView, XhrNotificationService.notify);
 
-    HelpdeskService.getOrg(vm.user.organization.id).then(function (res) {
-      vm.org = res;
-    }, function (err) {
-      XhrNotificationService.notify(err);
-    });
+    function resendInviteEmail() {
+      HelpdeskService.resendInviteEmail(vm.user.displayName, vm.user.userName).then(angular.noop, XhrNotificationService.notify);
+    }
+
+    function initUserView(user) {
+      vm.user = user;
+      vm.resendInviteEnabled = _.includes(user.statuses, 'helpdesk.userStatuses.pending');
+      vm.messageCard = HelpdeskCardsUserService.getMessageCardForUser(user);
+      vm.meetingCard = HelpdeskCardsUserService.getMeetingCardForUser(user);
+      vm.callCard = HelpdeskCardsUserService.getCallCardForUser(user);
+      vm.hybridServicesCard = HelpdeskCardsUserService.getHybridServicesCardForUser(user);
+
+      if (vm.hybridServicesCard.entitled) {
+        USSService2.getStatusesForUserInOrg(vm.userId, vm.orgId).then(function (statuses) {
+          _.each(statuses, function (status) {
+            status.collapsedState = USSService2.decorateWithStatus(status);
+            switch (status.serviceId) {
+            case 'squared-fusion-cal':
+              vm.hybridServicesCard.cal.status = status;
+              break;
+            case 'squared-fusion-uc':
+              vm.hybridServicesCard.uc.status = status;
+              break;
+            case 'squared-fusion-ec':
+              vm.hybridServicesCard.ec.status = status;
+              break;
+            }
+          });
+        }, XhrNotificationService.notify);
+      }
+
+      if (!vm.org.displayName && vm.org.id !== Config.consumerOrgId) {
+        // Only if there is no displayName. If set, the org name has already been read (on the search page)
+        HelpdeskService.getOrgDisplayName(vm.orgId).then(function (displayName) {
+          vm.org.displayName = displayName;
+        }, XhrNotificationService.notify);
+      }
+    }
   }
 
   angular

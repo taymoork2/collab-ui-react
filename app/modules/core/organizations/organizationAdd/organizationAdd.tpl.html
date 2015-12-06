@@ -13,10 +13,10 @@
       <h4 class="section-title" translate="organizationsPage.termsOfOrganization"></h4>
       <formly-form model="orgAdd.model" fields="orgAdd.organizationTermsFields">
       </formly-form>
-      <button id="cancelNewOrganizationButton" class="btn btn-default" ng-click="$dismiss()">
+      <button id="cancelNewOrganizationButton" class="btn" ng-click="$dismiss()">
         <span translate="organizationsPage.cancel"></span>
       </button>
-      <button type="button" id="startOrganizationButton" class="btn btn-primary" ng-click="addOrganizationForm.$setPristine(true); orgAdd.startOrganization();" ng-disabled="addOrganizationForm.$invalid || orgAdd.isOffersEmpty()" data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>">
+      <button type="button" id="startOrganizationButton" class="btn btn--primary" ng-click="addOrganizationForm.$setPristine(true); orgAdd.startOrganization();" ng-disabled="addOrganizationForm.$invalid || orgAdd.isOffersEmpty()" data-loading-text="<span class='loading'><span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;<span>&bull;</span>&nbsp;</span>">
         <span translate="organizationsPage.createOrganization"></span>
       </button>
     </form>

@@ -2,7 +2,7 @@
   <div class="section-title-row">
     <span class="section-name" translate="deviceDetailPage.logTitle"></span>
     <span class="actions-menu dropdown pull-right">
-      <button class="actions-button btn-none dropdown-toggle">
+      <button class="actions-button btn--none dropdown-toggle">
         <i class="icon icon-three-dots"></i>
       </button>
       <ul class="dropdown-menu dropdown-primary actions-services">
@@ -14,7 +14,7 @@
   <div id="deviceLogMain" ng-if="!ucDeviceLog.active">
     <p translate="deviceDetailPage.retrieveLogInstructions"></p>
     <div class="device-log-button">
-      <button cs-btn loading="ucDeviceLog.loading" class="button secondary" ng-click="ucDeviceLog.retrieveLog()"><span translate="deviceDetailPage.retrieveLogBttn" ></span></button>
+      <button cs-btn loading="ucDeviceLog.loading" class="btn btn--primary" ng-click="ucDeviceLog.retrieveLog()"><span translate="deviceDetailPage.retrieveLogBttn" ></span></button>
     </div>
   </div>
   <div id="deviceLogList" ng-if="ucDeviceLog.active && !ucDeviceLog.isPolling() && !ucDeviceLog.error">
@@ -29,6 +29,6 @@
     <span translate="deviceDetailPage.logWait"></span>
   </div>
   <div id="deviceLogError" ng-if="ucDeviceLog.active && ucDeviceLog.error">
-    <button cs-btn loading="ucDeviceLog.loading" class="button alert fix-alert-margins" ng-click="ucDeviceLog.retrieveLog()"><span translate="deviceDetailPage.errorLogTryAgain"></span></button>
+    <button cs-btn loading="ucDeviceLog.loading" class="btn btn--alert fix-alert-margins" ng-click="ucDeviceLog.retrieveLog()"><span translate="deviceDetailPage.errorLogTryAgain"></span></button>
   </div>
 </div>

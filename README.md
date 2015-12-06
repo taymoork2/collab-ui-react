@@ -53,7 +53,7 @@ We use pull requests, and consequentially the forking model.  To make a contribu
  - `git remote add upstream git@sqbu-github.cisco.com:WebExSquared/wx2-admin-web-client`
  - `git remote add jenkins ssh://username@sqbu-jenkins.cisco.com:2022/team/atlas/wx2-admin-web-client`
 
-**Note*: If you get a Permission Denied (publickey) then follow these directions in Generating SSH Keys
+**Note**: If you get a Permission Denied (publickey) then follow these directions in Generating SSH Keys
  `https://help.github.com/articles/generating-ssh-keys/`
 
 When you're making changes to your fork, you'll push to your fork with `git push origin master`, and your pull request will get automatically updated with the latest pushes you've made.
@@ -110,7 +110,7 @@ Setup the environment (If necessary)
 TypeScript Definitions
 -----------------
 * Run 'gulp tsd' to install configured TypeScript definitions from tsd.json
-* Definitions (*.d.ts files) are installed under typings directory.
+* Definitions (\*.d.ts files) are installed under typings directory.
 * Microsoft VSCode automatically detects definition files and provides IntelliSense support (https://code.visualstudio.com/Docs/languages/javascript)
 * Add new TypeScript definitions using tsd (TypeScript Definition manager) from DefinitelyTyped (https://github.com/DefinitelyTyped/tsd)
 
@@ -214,7 +214,7 @@ There are several arguments that can be added to the gulp tasks. Arguments are l
 * Builds (copies) files from the development (app) folder into the staging (build) folder
 * Transpiles ES6 and TypeScript code into ES5 JavaScript
 * Compiles HTML templates into JS template file and adds them to the $templatecache
-* Compiles index file by adding CSS links and JS  script tags for dependencies
+* Compiles index file by adding CSS links and JS script tags for dependencies
 * Runs Karma Unit Tests on build folder
 
 (Optional arguments)
@@ -231,7 +231,7 @@ There are several arguments that can be added to the gulp tasks. Arguments are l
 * Combines all JS files into a single file for production (concat)
 * Minifies and Uglifies JS file
 * Revisions files to prevent caching
-* Compiles index file by adding CSS link and JS  script tag for compiled files
+* Compiles index file by adding CSS link and JS script tag for compiled files
 * Minifies HTML files
 
 (Optional arguments)
@@ -296,6 +296,9 @@ Run the protractor e2e test:
 ##### `gulp e2e --nosetup`
 * Skips the e2e setup task
 * You will need to have started a server manually using the `gulp connect` task
+
+##### `gulp e2e --nofailfast`
+* Runs tests without skipping after first failure
 
 ##### `gulp e2e --debug`
 * Runs protractor in 'debug' mode
