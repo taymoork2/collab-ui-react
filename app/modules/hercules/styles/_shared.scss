@@ -108,10 +108,10 @@
     min-height: calc(100vh - 150px);
   }
 
-  .button.alert{
+  .btn--alert{
     margin-left:0;
   }
-  .btn-primary,.button.alert,.button.secondary{
+  .btn--primary,.btn--alert {
     margin-top: 1rem;
     margin-bottom: 1rem;
   }
@@ -144,16 +144,6 @@
   .black-header{
     color:black !important;
   }
-
-/**
- Work around the extra col-md-12 class in views/main.tpl.html
- */
-.hercules {
-  margin: {
-    right: -0.5rem;
-    left: -0.5rem;
-  };
-}
 
 /* Fix alert crap */
 .fix-alert-margins {

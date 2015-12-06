@@ -1,50 +1,27 @@
-
-<div id="siteSetting"
-     name="siteSetting">
-
-  <div class="page-header row full">
-    <div class="page-title col-xs-12">
-      <div class="title-heading"
-           id={{siteSettingId}}
-           name= {{siteSettingId}}>
-           
-        {{siteSettingLabel}}
-      </div>
-    </div>
-  </div>
-  
-    <!-- breadcrumbs -->     
-      <ul class="breadcrumbs webexPage" title="{{'webexCommon.breadcrumbsAltText' | translate}}" id="siteSettingBreadCrumbs"
-         name="siteSettingBreadCrumbs">
+<div id="siteSetting" name="siteSetting" class="webex-site-setting">
+  <cs-page-header title="{{siteSettingLabel}}" id="{{siteSettingId}}" name="{{siteSettingId}}">
+  </cs-page-header>
+  <cs-page-sub-header>
+    <cs-page-sub-header-left>
+      <!-- breadcrumbs -->
+      <ul class="breadcrumbs webexPage" title="{{'webexCommon.breadcrumbsAltText' | translate}}" id="siteSettingBreadCrumbs" name="siteSettingBreadCrumbs">
         <li>
-          <a id="siteListCrumb"
-             name="siteListCrumb"
-             ui-sref="site-list">
-         
+          <a id="siteListCrumb" name="siteListCrumb" ui-sref="site-list">
             <span translate="siteList.conferencing"></span>
           </a>
         </li>
-        
         <li>
-          <a id="siteSettingsCrumb"
-             name="siteSettingsCrumb"
-             ui-sref={{siteSettingsBreadcrumbUiSref}}>
-           
-            {{siteSettingsBreadcrumbLabel}}
-          </a>
+          <a id="siteSettingsCrumb" name="siteSettingsCrumb" ui-sref={{siteSettingsBreadcrumbUiSref}}>
+      {{siteSettingsBreadcrumbLabel}}
+      </a>
         </li>
-        
-        <li class="current"
-            id="siteSettingCrumb"
-            name="siteSettingCrumb">
-            
+        <li class="current" id="siteSettingCrumb" name="siteSettingCrumb">
           {{siteSettingLabel}}
         </li>
       </ul>
-  
-    <div id={{iframeUrlType}}
-         name={{iframeUrlType}}>
-         
-      <div ng-include="'modules/webex/views/iframeContainer.tpl.html'"></div> 
-    </div>
+    </cs-page-sub-header-left>
+  </cs-page-sub-header>
+  <div id="{{iframeUrlType}}" name="{{iframeUrlType}}" class="content-container">
+    <div ng-include="'modules/webex/views/iframeContainer.tpl.html'"></div>
+  </div>
 </div>

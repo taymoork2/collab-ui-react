@@ -28,11 +28,11 @@
       </div>
 
       <div style="padding-top: 20px" class="clearfix">
-        <a target="_blank" ng-href="https://{{host.host_name}}/" class="btn btn-primary btn-sm" style="color: white;">
+        <a target="_blank" ng-href="https://{{host.host_name}}/" class="btn btn--primary" style="color: white;">
           Go to Host
         </a>
         <button
-          class="btn btn-danger btn-sm"
+          class="btn btn--negative"
           sq-click-promise="deleteHost()"
           ng-show="host.state == 'offline'">
             Remove

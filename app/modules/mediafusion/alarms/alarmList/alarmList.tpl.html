@@ -1,28 +1,21 @@
 <div class="alarm-list">
-
-<!-- Alarm List Title Creation Starts-->
-    <div class="row page-header alarm-table">
-        <div class="col-md-9 col-sm-2 alarm-title" ><h3 translate="alarmsPage.alarms"></h3></div>
-<!--Alarm List Search Starts here -->
-        <div class="col-md-2 alarm-search">
-            <input type="text" class="alarm-input" placeholder="Search" ng-model="searchString">
-        </div>
-        <div class="col-sm-1 alarm-search">
-            <button type="button" class="btn btn-default btn-sm alarm-btn" ng-click="searchAlarmList()"><i class="icon icon-search alarm-btn-search">
-            </i></button>
-        </div>
-<!--Alarm List Search Ends here -->
-    </div>
-<!-- Alarm List Title Creation Ends-->
-
-<!-- Alarm List Table creation Starts-->
-    <div id="alarmsListPanel" class="row">
-        <div gridscrollbar class="gridStyle col-md-12" ng-grid="gridOptions"></div>
-    </div>
-<!-- Alarm List Table creation Ends-->
-<!-- Alarm List Table creation Ends -->
-<div ng-class="{preview: alarmPreviewActive}" class="user-management">
-  <div ui-view class="outer-details-div" id="entire-slide"></div>
-</div>
-
+  <!-- Alarm List Title Creation Starts-->
+  <cs-page-header title="{{'alarmsPage.alarms' | translate}}"></cs-page-header>
+  <cs-page-sub-header>
+    <cs-page-sub-header-left>
+      <!--Alarm List Search Starts here -->
+      <cs-searchfilter search-item-fn="searchAlarmList(searchStr)"></cs-searchfilter>
+        <!--Alarm List Search Ends here -->
+    </cs-page-sub-header-left>
+  </cs-page-sub-header>
+  <!-- Alarm List Title Creation Ends-->
+  <!-- Alarm List Table creation Starts-->
+  <div id="alarmsListPanel" class="row">
+    <div gridscrollbar class="gridStyle col-md-12" ng-grid="gridOptions"></div>
+  </div>
+  <!-- Alarm List Table creation Ends-->
+  <!-- Alarm List Table creation Ends -->
+  <div ng-class="{preview: alarmPreviewActive}" class="user-management">
+    <div ui-view class="outer-details-div" id="entire-slide"></div>
+  </div>
 </div>

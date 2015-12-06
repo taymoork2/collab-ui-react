@@ -66,7 +66,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   describe('getOptionMenu', function () {
     it('should return optionMenu from parsing ceOption', function () {
       var _optionMenu = AutoAttendantCeMenuModelService.getOptionMenu(ceOption, 'regularOpenActions');
-      //GW expect(angular.equals(_optionMenu, optionMenu)).toBe(true);
+      expect(angular.equals(_optionMenu, optionMenu)).toBe(true);
     });
   });
 
@@ -103,7 +103,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       var _ceRecord = angular.copy(ceInfos[0]);
       _ceRecord.callExperienceName = 'AA Custom';
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcome, 'regularOpenActions');
-      _welcomeMenu.entries.splice(1, 1);
+      _welcomeMenu.entries.splice(1, 2);
       var welcomeMenuSuccess = AutoAttendantCeMenuModelService.updateMenu(_ceRecord, 'regularOpenActions', _welcomeMenu);
       var _customMenu = AutoAttendantCeMenuModelService.getCustomMenu(ceCustom, 'regularOpenActions');
       var customMenuSuccess = AutoAttendantCeMenuModelService.updateMenu(_ceRecord, 'regularOpenActions', _customMenu);
@@ -118,13 +118,13 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       var _ceRecord = angular.copy(ceInfos[0]);
       _ceRecord.callExperienceName = 'AA Option';
       var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcome, 'regularOpenActions');
-      _welcomeMenu.entries.splice(1, 1);
+      _welcomeMenu.entries.splice(1, 2);
       var welcomeMenuSuccess = AutoAttendantCeMenuModelService.updateMenu(_ceRecord, 'regularOpenActions', _welcomeMenu);
       var _optionMenu = AutoAttendantCeMenuModelService.getOptionMenu(ceOption, 'regularOpenActions');
       var optionMenuSuccess = AutoAttendantCeMenuModelService.updateMenu(_ceRecord, 'regularOpenActions', _optionMenu);
       expect(welcomeMenuSuccess).toBe(true);
       expect(optionMenuSuccess).toBe(true);
-      //GW expect(angular.equals(_ceRecord, ceOption)).toBe(true);
+      expect(angular.equals(_ceRecord, ceOption)).toBe(true);
     });
   });
 

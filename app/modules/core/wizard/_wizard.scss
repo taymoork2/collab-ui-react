@@ -28,7 +28,7 @@
   }
   &:last-child {
     position: relative;
-    background-color: rgba(34, 34, 34, 0.3);
+    background-color: rgba(0,0,0, 0.6);
     height: 280px;
     cursor: default;
     flex: 1;
@@ -36,10 +36,16 @@
       position: absolute;
       bottom: 30px;
       left: 20px;
-      color: $brand-white;
+      color: $gray-light-2;
       cursor: pointer;
       font-family: $brand-font-cisco-TT-Regular;
-      font-size: 13px;
+      font-size: .75rem;
+      span {
+        font-size: inherit;
+      }
+      a {
+        color: $gray-light-2;
+      }
     }
   }
 }
@@ -64,7 +70,8 @@
     font-family: $brand-font-cisco-TT-Regular;
     font-size: 13px;
     color: $gray-dark;
-    margin-top: 11px;
+    margin-top: 10px;
+    line-height: 20px;
   }
   .icon {
     margin-right: 40px;
@@ -110,7 +117,7 @@
   width: calc(100% - 370px);
   height: 94vh;
   color: $gray-darker;
-  padding: 20px 30px 20px 30px;
+  padding: 2rem;
   float: left;
   font-family: $brand-font-cisco-TT-Light;
   overflow: hidden;
@@ -193,7 +200,7 @@
 
 .wizard-main-btns {
   padding-top: 40px;
-  .btn-link {
+  .btn--link {
     margin-right: 30px;
   }
 }

@@ -2,7 +2,7 @@
 
 describe('Controller: ServiceSetup', function () {
   var controller, $scope, $state, $q, $httpBackend, ServiceSetup, Notification, HuronCustomer, DialPlanService;
-  var model, customer, voicemail, externalNumberPool, usertemplate, form, timeZone;
+  var model, customer, voicemail, externalNumberPool, usertemplate, form, timeZone, ExternalNumberService;
 
   var dialPlanDetailsNorthAmerica = [{
     countryCode: "+1",
@@ -14,7 +14,8 @@ describe('Controller: ServiceSetup', function () {
 
   beforeEach(module('Huron'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$q_, _ServiceSetup_, _Notification_, _HuronCustomer_, _DialPlanService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$q_, _ServiceSetup_, _Notification_,
+    _HuronCustomer_, _DialPlanService_, _ExternalNumberService_) {
     $scope = $rootScope.$new();
     // $state = _$state_;
     $q = _$q_;
@@ -22,6 +23,7 @@ describe('Controller: ServiceSetup', function () {
     Notification = _Notification_;
     HuronCustomer = _HuronCustomer_;
     DialPlanService = _DialPlanService_;
+    ExternalNumberService = _ExternalNumberService_;
 
     customer = {
       "uuid": "84562afa-2f35-474f-ba0f-2def42864e12",
@@ -110,6 +112,7 @@ describe('Controller: ServiceSetup', function () {
     spyOn(ServiceSetup, 'loadExternalNumberPool').and.returnValue($q.when(externalNumberPool));
     spyOn(ServiceSetup, 'updateCustomerVoicemailPilotNumber').and.returnValue($q.when());
     spyOn(ServiceSetup, 'updateVoicemailTimezone').and.returnValue($q.when());
+    spyOn(ExternalNumberService, 'refreshNumbers').and.returnValue($q.when());
 
     spyOn(ServiceSetup, 'listInternalNumberRanges').and.callFake(function () {
       ServiceSetup.internalNumberRanges = model.numberRanges;

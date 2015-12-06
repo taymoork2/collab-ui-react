@@ -8,7 +8,7 @@ describe('Controller: CdrLogsCtrl', function () {
   var callLegs = getJSONFixture('huron/json/cdrLogs/callLegs.json');
   var statusResponse = ['primary', 'danger'];
 
-  beforeEach(inject(function ($rootScope, $controller, _$state_, _$translate_, _$timeout_, _Config_, _formlyValidationMessages_, _formlyConfig_, _CdrService_, _Notification_) {
+  beforeEach(inject(function ($rootScope, $controller, _$q_, _$state_, _$translate_, _$timeout_, _Config_, _formlyValidationMessages_, _formlyConfig_, _CdrService_, _Notification_) {
     var $scope = $rootScope.$new();
     state = _$state_;
     translate = _$translate_;
@@ -18,6 +18,8 @@ describe('Controller: CdrLogsCtrl', function () {
     formlyValidationMessages = _formlyValidationMessages_;
     CdrService = _CdrService_;
     Notification = _Notification_;
+
+    var $q = _$q_;
 
     spyOn(state, "go");
 
@@ -46,8 +48,11 @@ describe('Controller: CdrLogsCtrl', function () {
     expect(controller.statusAvalibility(callLegs[1])).toEqual(statusResponse[1]);
   });
 
-  it('getAccordionHeader should return a title', function () {
-    expect(controller.getAccordionHeader(callLegs[0])).toEqual('cdrLogs.cdrAccordionHeader');
+  it('getAccordionHeader should return the correct title', function () {
+    expect(controller.getAccordionHeader(callLegs[0])).toContain('cdrLogs.cdrAccordionHeader');
+    expect(controller.getAccordionHeader(callLegs[0])).toContain('cdrLogs.sparkCall');
+    expect(controller.getAccordionHeader(callLegs[1])).toContain('cdrLogs.cdrAccordionHeader');
+    expect(controller.getAccordionHeader(callLegs[1])).not.toContain('cdrLogs.sparkCall');
   });
 
   it('selectCDR should set selectedCDR', function () {

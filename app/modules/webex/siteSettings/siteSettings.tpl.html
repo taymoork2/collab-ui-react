@@ -1,129 +1,50 @@
-<div id="webexSiteSettings"
-     name="webexSiteSettings">
-
-  <div id="pageTitle"
-       name="pageTitle" class="row page-header">
-       
-      <div class="page-title small-7 columns">
-        <span class="title-heading">
-          {{siteSettingsObj.pageTitle}}
-        </span>
+<div id="webexSiteSettings" name="webexSiteSettings" class="webex-site-settings">
+  <cs-page-header title="{{::siteSettingsObj.pageTitle}}"></cs-page-header>
+  <cs-page-sub-header ng-if="siteSettingsObj.viewReady">
+    <!-- start of breadcrumbs -->
+    <cs-page-sub-header-left>
+      <ul id="siteSettingsBreadCrumbs" name="siteSettingsBreadCrumbs" class="breadcrumbs webexPage" title="{{'webexCommon.breadcrumbsAltText' | translate}}">
+        <li>
+          <a id="siteListCrumb" name="siteListCrumb" ui-sref="site-list" translate="siteList.conferencing">
+          </a>
+        </li>
+        <li class="current" id="siteSettingsCrumb" name="siteSettingsCrumb">
+          {{siteSettingsObj.pageTitleFull}}
+        </li>
+      </ul>
+    </cs-page-sub-header-left>
+    <!-- end of breadcrumbs -->
+    <cs-page-sub-header-right>
+      <button id="{{siteSettingsObj.emailAllHostsBtnObj.id}}" name="{{siteSettingsObj.emailAllHostsBtnObj.id}}" ui-sref="{{siteSettingsObj.emailAllHostsBtnObj.pageObj.uiSref}}" class="btn btn--people" translate="webexSiteSettingsLabels.emailAllHostsBtnTitle">
+      </button>
+    </cs-page-sub-header-right>
+  </cs-page-sub-header>
+  <div class="content-container">
+    <!-- start of loading info -->
+    <div ng-if="!siteSettingsObj.viewReady" id="loadingSection" name="loadingSection" align="center">
+      <div id="loadingInprogressSection" name="loadingInprogressSection" ng-if="!siteSettingsObj.hasLoadError">
+        <br>
+        <br>
+        <br>
+        <i class="icon icon-spinner icon-2x"></i>
       </div>
-    
-      <div class="small-5 columns"
-           ng-if="siteSettingsObj.viewReady">
-           
-        <div class="page-option-buttons" ng-controller="ExportUsersCtrl">
-          <button id={{siteSettingsObj.emailAllHostsBtnObj.id}}
-                  name={{siteSettingsObj.emailAllHostsBtnObj.id}}
-                  ui-sref={{siteSettingsObj.emailAllHostsBtnObj.pageObj.uiSref}}
-                  class="button large"
-                  translate="webexSiteSettingsLabels.emailAllHostsBtnTitle">
-          </button>
+      <div id="loadErrSection" name="loadErrSection" ng-if="siteSettingsObj.hasLoadError">
+        <div class="nodata-icon">
+          <i class="icon icon-circle-clock"></i>
+        </div>
+        <div class="nodata-message">
+          <span translate="webexUserSettingsAccessErrors.defaultAccessError"></span>
+          <br>
+          <span translate="webexUserSettingsAccessErrors.defaultReloadMsg"></span>
         </div>
       </div>
-  </div>
-
-  <!-- start of breadcrumbs -->     
-  <ul id="siteSettingsBreadCrumbs"
-      name="siteSettingsBreadCrumbs"      
-      class="breadcrumbs webexPage" 
-      title="{{'webexCommon.breadcrumbsAltText' | translate}}">
-      
-    <li>
-      <a id="siteListCrumb"
-         name="siteListCrumb"
-         ui-sref="site-list"
-         translate="siteList.conferencing">
-      </a>
-    </li>
-
-    <li class="current"
-        id="siteSettingsCrumb"
-        name="siteSettingsCrumb">
-          
-      {{siteSettingsObj.pageTitleFull}}
-    </li>
-  </ul>
-  <!-- end of breadcrumbs -->
-
-  <!-- start of cards loading -->
-  <div ng-if="!siteSettingsObj.viewReady"
-       id="loadingSection"
-       name="loadingSection" >
-         
-    <div id="loadingInprogressSection"
-         name="loadingInprogressSection"
-         ng-if="!siteSettingsObj.hasLoadError" >
-             
-      <br><br><br>
-      <i class="icon icon-spinner icon-3x"></i>
-      <br><br><br>
     </div>
-      
-    <div id="loadErrSection"
-         name="loadErrSection"
-         ng-if="siteSettingsObj.hasLoadError" >
-                   
-      <div class="nodata-icon" >
-        <i class="icon icon-circle-clock" ></i>
-      </div>
-
-      <div class="nodata-message" >
-        <span translate="webexUserSettingsAccessErrors.defaultAccessError" ></span>
-        <br>
-        <span translate="webexUserSettingsAccessErrors.defaultReloadMsg" ></span>
-      </div>
+    <!-- end of loading info -->
+    <!-- start of card containers -->
+    <div ng-if="siteSettingsObj.viewReady" id="cardsSection" name="cardsSection">
+      <div ng-include="'modules/webex/views/infoCard.tpl.html'"></div>
+      <div ng-include="'modules/webex/siteSettings/siteSettingCards.tpl.html'"></div>
     </div>
+    <!-- end of card containers -->
   </div>
-  <!-- end of cards loading -->
-    
-  <!-- start of card containers -->
-  <div ng-if="siteSettingsObj.viewReady" 
-       id="cardsSection"
-       name="cardsSection">
-           
-    <div ng-include="'modules/webex/views/infoCard.tpl.html'"></div>
-    <div ng-include="'modules/webex/siteSettings/siteSettingCards.tpl.html'"></div>
-  </div>
-  <!-- end of card containers -->
-
-  <!-- WebEx site admin cross launch -->
-  <p>
-    <br>&nbsp;&nbsp;
-    
-    <a href=""
-       onClick="document.getElementById('hiddenButton').click();" >
-
-      Launch&nbsp;WebEx&nbsp;Site&nbsp;Admin
-    </a>
-  </p>
 </div>
-
-<!-- WebEx site admin cross launch form -->
-<form name="siteAdminLink"
-      action="{{webexAdvancedUrl}}"
-      method="post"
-      target="webexSiteAdmin">
-
-  <input id="adminEmail"
-         name="adminEmail"
-         type="hidden"
-         value="{{adminEmailParam}}" />
-
-  <input id="locale" type="hidden"
-         name="locale"
-         type="hidden"
-         value="{{localeParam}}" />
-
-  <input id="ngxsiteurl"
-         name="ngxsiteurl"
-         type="hidden"
-         value="{{siteName}}" />
-
-  <button id="hiddenButton"
-          type="submit"
-          onclick="this.parentElement.submit();"
-          style="background-color:#ff00ff; cursor:pointer; width:100px; display:none;">
-  </button>
-</form>

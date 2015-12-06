@@ -6,6 +6,7 @@ describe('Controller: PstnProvidersCtrl', function () {
   var carrierList = getJSONFixture('huron/json/pstnSetup/carrierList.json');
   var customer = getJSONFixture('huron/json/pstnSetup/customer.json');
   var customerCarrierList = getJSONFixture('huron/json/pstnSetup/customerCarrierList.json');
+  var resellerCarrierList = getJSONFixture('huron/json/pstnSetup/resellerCarrierList.json');
 
   beforeEach(module('Huron'));
 
@@ -22,7 +23,9 @@ describe('Controller: PstnProvidersCtrl', function () {
     PstnSetup.setCustomerName(customer.name);
 
     spyOn(PstnSetupService, 'listCustomerCarriers').and.returnValue($q.when(customerCarrierList));
-    spyOn(PstnSetupService, 'listCarriers').and.returnValue($q.when(carrierList));
+    spyOn(PstnSetupService, 'listResellerCarriers').and.returnValue($q.when(resellerCarrierList));
+    spyOn(PstnSetupService, 'listDefaultCarriers').and.returnValue($q.when(carrierList));
+    spyOn(PstnSetup, 'setSingleCarrierReseller');
     spyOn(Notification, 'errorResponse');
     spyOn($state, 'go');
   }));
@@ -45,6 +48,7 @@ describe('Controller: PstnProvidersCtrl', function () {
       PstnSetupService.listCustomerCarriers.and.returnValue($q.reject({
         status: 404
       }));
+      PstnSetupService.listResellerCarriers.and.returnValue([]);
       controller = $controller('PstnProvidersCtrl', {
         $scope: $scope
       });
@@ -61,8 +65,28 @@ describe('Controller: PstnProvidersCtrl', function () {
       expect($state.go).not.toHaveBeenCalled();
     });
 
+    it('should be initalized with single reseller carrier and skip provider selection', function () {
+      PstnSetupService.listCustomerCarriers.and.returnValue($q.reject({
+        status: 404
+      }));
+      PstnSetupService.listResellerCarriers.and.returnValue(resellerCarrierList);
+      controller = $controller('PstnProvidersCtrl', {
+        $scope: $scope
+      });
+      $scope.$apply();
+      expect(controller.providers).toEqual([jasmine.objectContaining({
+        name: PstnSetupService.INTELEPEER,
+        apiExists: true,
+        vendor: PstnSetupService.INTELEPEER
+      })]);
+      expect(PstnSetup.setSingleCarrierReseller).toHaveBeenCalledWith(true);
+      expect($state.go).toHaveBeenCalledWith('pstnSetup.orderNumbers');
+    });
+
     it('should notify an error if customer carriers fail to load', function () {
-      PstnSetupService.listCustomerCarriers.and.returnValue($q.reject());
+      PstnSetupService.listCustomerCarriers.and.returnValue($q.reject({}));
+      PstnSetupService.listResellerCarriers.and.returnValue([]);
+      PstnSetupService.listDefaultCarriers.and.returnValue([]);
       controller = $controller('PstnProvidersCtrl', {
         $scope: $scope
       });
@@ -71,11 +95,11 @@ describe('Controller: PstnProvidersCtrl', function () {
       expect(Notification.errorResponse).toHaveBeenCalled();
     });
 
-    it('should notify an error if customer doesnt exist and carriers fail to load', function () {
+    it('should notify an error if customer doesnt exist and reseller carriers fail to load', function () {
       PstnSetupService.listCustomerCarriers.and.returnValue($q.reject({
         status: 404
       }));
-      PstnSetupService.listCarriers.and.returnValue($q.reject());
+      PstnSetupService.listResellerCarriers.and.returnValue($q.reject());
       controller = $controller('PstnProvidersCtrl', {
         $scope: $scope
       });

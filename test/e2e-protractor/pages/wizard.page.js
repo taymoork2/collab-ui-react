@@ -10,7 +10,8 @@ var Wizard = function () {
   this.enterpriseTab = element(by.id('wizard-enterpriseSettings-link'));
   this.messagingTab = element(by.id('wizard-messagingSetup-link'));
   this.messageInteropFeature = element(by.id('messenger-interop-feature'));
-  this.addusersTab = element(by.id('wizard-addUsers-link'));
+  // this.addusersTab = element(by.id('wizard-addUsers-link'));
+  this.addusersTab = element(by.css('.icon-add-users'));
   this.mainviewTitle = element(by.css('.wizard-main-title'));
   this.mainviewSubtitle = element(by.css('.wizard h3'));
   this.radiobuttons = element.all(by.css('label.cs-radio'));
@@ -30,6 +31,7 @@ var Wizard = function () {
   this.toInstallConnectorBtn = element.all(by.css('[ng-click="changeStep(\'installConnector\')"]'));
   this.toSyncStatusBtn = element.all(by.css('[ng-click="changeStep(\'syncStatus\')"]'));
   this.finishTab = element(by.id('wizard-finish-link'));
+  this.manualSubtitle = element(by.cssContainingText('.wizard-menu-subtitle', 'Manually invite users'));
 
   this.clickPlanReview = function () {
     utils.click(this.reviewTab);

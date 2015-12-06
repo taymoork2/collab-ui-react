@@ -203,30 +203,6 @@ label {
   padding-right: 9px;
 }
 
-.all-reports {
-  margin-bottom: 50px;
-  border: 1px;
-}
-
-.onboarding-row {
-  margin: 5px;
-  margin-bottom: 30px;
-}
-
-.metrics-refresh {
-  position: relative;
-  top: -255px;
-  text-align: center;
-}
-
-.timechartDiv {
-  width: 100%;
-  height: 450px;
-  font-size: 11px;
-}
-
-.profile-panel {}
-
 .profile-tools-panel {
   position: relative;
   float: right;
@@ -873,11 +849,6 @@ a:active.ftwNavLink {
   width: 200px;
 }
 
-.days-left-edit-modal {
-  position: absolute;
-  right: 23px;
-  top: -20px;
-}
 
 .users-edit-modal {
   right: 20px;
@@ -906,12 +877,6 @@ a:active.ftwNavLink {
 .nav > li:active,
 .nav > li.active {
   z-index: 500;
-}
-
-.days-left-trial {
-  position: absolute;
-  left: 17px;
-  top: -20px;
 }
 
 .edit-modal-info {
@@ -1033,15 +998,15 @@ a:active.ftwNavLink {
   right: 0px;
 }
 
-.btn-white {
+.btn--white {
   background-color: white !important;
   color: #888 !important;
   border: 1px solid #ccc !important;
 }
 
-.btn-white:active,
-.btn-white:focus,
-.btn-white:hover {
+.btn--white:active,
+.btn--white:focus,
+.btn--white:hover {
   background-color: white !important;
   color: #888 !important;
   border: 1px solid #3086BA !important;

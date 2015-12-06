@@ -1,50 +1,22 @@
 <div class="result-pane">
-
-  <div ng-repeat="group in devices.groupedDevices.groups">
+  <div ng-repeat="group in devices.groupedDevices">
     <div ng-if="group.devices.length">
       <strong>{{group.displayName}}</strong>
       <ul class="small-block-grid-1 medium-block-grid-2 large-block-grid-3">
         <li
           ng-click="devices.expandDevice(device)"
-          ng-repeat="device in group.devices">
+          ng-repeat="device in group.devices | limitTo : devices.offsetForGroup(group) : 0">
           <div ng-include="'modules/squared/devicesRedux/deviceCard.html'"></div>
         </li>
       </ul>
-    </div>
-  </div>
-
-  <div ng-if="devices.deviceList.length">
-    <strong>
-      <div ng-if="devices.groupedDevices.count">
-        <i 
-          class="fa" 
-          ng-class="{
-            'fa-caret-right': !devices.toggleDevicesPane, 
-            'fa-caret-down': devices.toggleDevicesPane
-          }" 
-          style="padding-right: 10px" 
-        />
-        <a href ng-click="devices.toggleDevicesPane = !devices.toggleDevicesPane">
-          Devices ({{devices.deviceList.length}})
+      <div 
+        class="pager"
+        ng-if="group.devices.length > devices.offsetForGroup(group)">
+        <a 
+          href ng-click="devices.increaseOffsetForGroup(group)">
+          Load more... 
         </a>
       </div>
-      <div ng-if="!devices.groupedDevices.count">
-        Devices ({{devices.deviceList.length}})
-      </div>
-    </strong>
-    <div ng-if="devices.toggleDevicesPane || !devices.groupedDevices.count">
-      <ul 
-        class="small-block-grid-1 medium-block-grid-2 large-block-grid-3">
-        <li
-          ng-click="devices.expandDevice(device)"
-          ng-repeat="device in devices.deviceList | limitTo: devices.pageSize">
-          <div ng-include="'modules/squared/devicesRedux/deviceCard.html'"></div>
-        </li>
-      </ul>
-      <div class="more-pager" ng-if="devices.pageSize < devices.deviceList.length">
-        <a href ng-click="devices.pageSize = devices.pageSize + devices.defaultPageSize">Load more</a>
-      </div>
     </div>
   </div>
-
 </div>

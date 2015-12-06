@@ -5,7 +5,7 @@
     .controller('ExternalNumberDetailCtrl', ExternalNumberDetail);
 
   /* @ngInject */
-  function ExternalNumberDetail($stateParams, $translate, $q, ExternalNumberService, ModalService, PstnSetupService, Notification, TelephoneNumberService) {
+  function ExternalNumberDetail($stateParams, $translate, $q, ExternalNumberService, ModalService, PstnSetupService, Notification, TelephoneNumberService, DialPlanService) {
     var vm = this;
     vm.currentCustomer = $stateParams.currentCustomer;
 
@@ -26,24 +26,33 @@
 
     vm.isNumberValid = TelephoneNumberService.validateDID;
 
-    listPhoneNumbers();
+    init();
+
+    function init() {
+      setCountryCode()
+        .then(listPhoneNumbers);
+    }
 
     function listPhoneNumbers() {
       if (vm.currentCustomer && vm.currentCustomer.customerOrgId) {
         vm.refresh = true;
-
-        ExternalNumberService.refreshNumbers(vm.currentCustomer.customerOrgId)
+        return ExternalNumberService.refreshNumbers(vm.currentCustomer.customerOrgId)
           .catch(function (response) {
             Notification.errorResponse(response, 'externalNumberPanel.listError');
           })
-          .finally(function () {
-            getNumbers();
-          });
-
+          .finally(getNumbers);
       } else {
         ExternalNumberService.clearNumbers();
         getNumbers();
       }
+    }
+
+    function setCountryCode() {
+      return DialPlanService.getCustomerDialPlanCountryCode(vm.currentCustomer.customerOrgId)
+        .then(TelephoneNumberService.setCountryCode)
+        .catch(function (response) {
+          Notification.errorResponse(response, 'serviceSetupModal.customerDialPlanDetailsGetError');
+        });
     }
 
     function deleteNumber(number) {

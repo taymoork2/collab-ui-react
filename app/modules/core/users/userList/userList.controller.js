@@ -8,6 +8,7 @@
   /* @ngInject */
   function UserListCtrl($scope, $rootScope, $state, $location, $dialogs, $timeout, $translate, Userservice, UserListService, Log, Storage, Config, Notification, Orgservice, Authinfo, LogMetricsService, Utils, HuronUser) {
     //Initialize data variables
+    $scope.pageTitle = $translate.instant('usersPage.manageUsers');
     $scope.load = true;
     $scope.page = 1;
     $scope.status = null;
@@ -49,6 +50,8 @@
       count: 0
     }];
     $scope.dirsyncEnabled = false;
+
+    $scope.exportType = $rootScope.typeOfExport.USER;
 
     // Functions
     $scope.setFilter = setFilter;
@@ -349,7 +352,7 @@
         '</span>';
 
       var actionsTemplate = '<span dropdown ng-if="row.entity.userStatus === \'pending\' || !org.dirsyncEnabled">' +
-        '<button id="actionsButton" class="btn-icon btn-actions dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
+        '<button id="actionsButton" class="btn--none dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
         '<i class="icon icon-three-dots"></i>' +
         '</button>' +
         '<ul class="dropdown-menu dropdown-primary" role="menu">' +
@@ -366,6 +369,7 @@
         rowTemplate: rowTemplate,
         headerRowHeight: 44,
         useExternalSorting: false,
+        enableColumnResize: true,
 
         columnDefs: [{
           field: 'photos',

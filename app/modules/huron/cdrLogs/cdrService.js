@@ -5,7 +5,7 @@
     .service('CdrService', CdrService);
 
   /* @ngInject */
-  function CdrService($translate, $http, $q, Config, Notification, Log) {
+  function CdrService($translate, $http, $q, Authinfo, Config, Notification, Log) {
     var proxyData = [];
     var ABORT = 'ABORT';
     var LOCAL = 'localSessionID';
@@ -16,12 +16,14 @@
     var calledDevice = 'called_deviceName';
     var callingNumber = 'calling_partyNumber';
     var calledNumber = 'called_partyNumber';
-    var tenant = 'calling_customerUUID';
+    var callingTenant = 'calling_customerUUID';
+    var calledTenant = 'called_customerUUID';
     var emptyId = "00000000000000000000000000000000";
     var serverHosts = ['SME-01', 'SME-02', 'CMS-01', 'CMS-02'];
 
     var retryError = "ElasticSearch GET request failed for reason: Observable onError";
     var cancelPromise = null;
+    var currentJob = null;
 
     var cdrUrl = {
       dev: 'https://hades.huron-int.com/api/v1/elasticsearch/_all/_search?pretty',
@@ -34,6 +36,30 @@
       formDate: formDate,
       createDownload: createDownload
     };
+
+    function getUser(userName, calltype) {
+      var defer = $q.defer();
+      var name = userName.replace(/@/g, '%40').replace(/\+/g, '%2B');
+      var url = Config.getScimUrl(Authinfo.getOrgId()) + '?filter=username eq \"' + name + '\"';
+
+      $http.get(url).success(function (data, status) {
+        if (angular.isArray(data.Resources) && (data.Resources.length > 0)) {
+          defer.resolve(data.Resources[0].id);
+        } else {
+          Log.debug('User does not exist in this org.');
+          Notification.notify([$translate.instant('cdrLogs.nonexistentUser', {
+            calltype: calltype
+          })], 'error');
+          defer.reject(null);
+        }
+      }).error(function (data, status) {
+        Log.debug('Failed to retrieve user data. Status: ' + status);
+        Notification.notify([$translate.instant('cdrLogs.userDataError')], 'error');
+        defer.reject(null);
+      });
+
+      return defer.promise;
+    }
 
     function getCdrUrl() {
       if (Config.isDev()) {
@@ -68,78 +94,178 @@
     }
 
     function query(model) {
+      proxyData = [];
       if (cancelPromise !== null && cancelPromise !== undefined) {
         cancelPromise.resolve(ABORT);
       }
       cancelPromise = $q.defer();
+      currentJob = Math.random();
+      var thisJob = angular.copy(currentJob);
 
       var startTimeUtc = formDate(model.startDate, model.startTime);
       var endTimeUtc = formDate(model.endDate, model.endTime);
       var timeStamp = '"from":' + startTimeUtc + ',"to":' + endTimeUtc;
       var devicesQuery = [];
+      var secondaryDevicesQuery = [];
+
+      // seperate queries search for callingTenant and calledTenant so as not to only get external calls as well as internal calls
+      devicesQuery.push(deviceQuery(callingTenant, Authinfo.getOrgId()));
+      secondaryDevicesQuery.push(deviceQuery(calledTenant, Authinfo.getOrgId()));
+      var promises = [];
+      var userUuidRetrieved = true;
 
       if (angular.isDefined(model.callingUser) && (model.callingUser !== '')) {
-        devicesQuery.push(deviceQuery(callingUser, model.callingUser));
-      }
-      if (angular.isDefined(model.calledUser) && (model.calledUser !== '')) {
-        devicesQuery.push(deviceQuery(calledUser, model.calledUser));
-      }
-      if (angular.isDefined(model.callingPartyDevice) && (model.callingPartyDevice !== '')) {
-        devicesQuery.push(deviceQuery(callingDevice, model.callingPartyDevice));
-      }
-      if (angular.isDefined(model.calledPartyDevice) && (model.calledPartyDevice !== '')) {
-        devicesQuery.push(deviceQuery(calledDevice, model.calledPartyDevice));
-      }
-      if (angular.isDefined(model.callingPartyNumber) && (model.callingPartyNumber !== '')) {
-        devicesQuery.push(deviceQuery(callingNumber, model.callingPartyNumber));
-      }
-      if (angular.isDefined(model.calledPartyNumber) && (model.calledPartyNumber !== '')) {
-        devicesQuery.push(deviceQuery(calledNumber, model.calledPartyNumber));
-      }
-
-      //finalize the JSON Query
-      var jsQuery = '{"query": {"filtered": {"query": {"bool": {"should": [' + generateHosts() + ']}},"filter": {"bool": {"must": [{"range": {"@timestamp":{' + timeStamp + '}}}]';
-
-      if (devicesQuery.length > 0) {
-        jsQuery += ',"should":[' + devicesQuery + ']';
-      }
-      jsQuery += '}}} },"size": ' + model.hitSize + ',"sort": [{"@timestamp": {"order": "desc"}}]}';
-
-      var results = [];
-      return proxy(jsQuery).then(function (response) {
-          if (!angular.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
-            for (var i = 0; i < response.hits.hits.length; i++) {
-              results.push(response.hits.hits[i]._source);
-            }
-            return recursiveQuery(results).then(function (response) {
-              if (response !== ABORT) {
-                return proxyData;
-              } else {
-                return response;
-              }
-            }, function (response) {
-              if (response !== ABORT) {
-                return;
-              } else {
-                return response;
-              }
-            });
-          }
-          return;
-        },
-        function (response) {
-          if (response.status === -1) {
-            return ABORT;
-          } else if (response.status === 401) {
-            Log.debug('User unauthorized to retrieve cdr data from server. Status: ' + response.status);
-            Notification.notify([$translate.instant('cdrLogs.cdr401Unauthorized')], 'error');
-            return;
+        var callingUserPromse = convertUuid(model.callingUser, $translate.instant('cdrLogs.callingParty')).then(function (callingUUID) {
+          if (callingUUID !== null) {
+            devicesQuery.push(deviceQuery(callingUser, callingUUID));
+            secondaryDevicesQuery.push(deviceQuery(callingUser, callingUUID));
           } else {
-            Log.debug('Failed to retrieve cdr data from server. Status: ' + response.status);
-            Notification.notify([$translate.instant('cdrLogs.cdrRetrievalError')], 'error');
-            return;
+            userUuidRetrieved = false;
           }
         });
+        promises.push(callingUserPromse);
+      }
+      if (angular.isDefined(model.calledUser) && (model.calledUser !== '')) {
+        var calledUserPromse = convertUuid(model.calledUser, $translate.instant('cdrLogs.calledParty')).then(function (calledUUID) {
+          if (calledUUID !== null) {
+            devicesQuery.push(deviceQuery(calledUser, calledUUID));
+            secondaryDevicesQuery.push(deviceQuery(calledUser, calledUUID));
+          } else {
+            userUuidRetrieved = false;
+          }
+        });
+        promises.push(calledUserPromse);
+      }
+
+      return $q.all(promises).then(function () {
+        var queryPromises = [];
+
+        if (userUuidRetrieved) {
+          if (angular.isDefined(model.callingPartyDevice) && (model.callingPartyDevice !== '')) {
+            devicesQuery.push(deviceQuery(callingDevice, model.callingPartyDevice));
+            secondaryDevicesQuery.push(deviceQuery(callingDevice, model.callingPartyDevice));
+          }
+          if (angular.isDefined(model.calledPartyDevice) && (model.calledPartyDevice !== '')) {
+            devicesQuery.push(deviceQuery(calledDevice, model.calledPartyDevice));
+            secondaryDevicesQuery.push(deviceQuery(calledDevice, model.calledPartyDevice));
+          }
+          if (angular.isDefined(model.callingPartyNumber) && (model.callingPartyNumber !== '')) {
+            devicesQuery.push(deviceQuery(callingNumber, model.callingPartyNumber));
+            secondaryDevicesQuery.push(deviceQuery(callingNumber, model.callingPartyNumber));
+          }
+          if (angular.isDefined(model.calledPartyNumber) && (model.calledPartyNumber !== '')) {
+            devicesQuery.push(deviceQuery(calledNumber, model.calledPartyNumber));
+            secondaryDevicesQuery.push(deviceQuery(calledNumber, model.calledPartyNumber));
+          }
+
+          //finalize the JSON Query
+          var jsQuery = '{"query": {"filtered": {"query": {"bool": {"should": [' + generateHosts() + ']}},"filter": {"bool": {"must": [{"range": {"@timestamp":{' + timeStamp + '}}}]';
+          var secondaryJsQuery = '{"query": {"filtered": {"query": {"bool": {"should": [' + generateHosts() + ']}},"filter": {"bool": {"must": [{"range": {"@timestamp":{' + timeStamp + '}}}]';
+
+          if (devicesQuery.length > 0) {
+            jsQuery += ',"should":[' + devicesQuery + ']';
+            secondaryJsQuery += ',"should":[' + secondaryDevicesQuery + ']';
+          }
+          jsQuery += '}}} },"size": ' + model.hitSize + ',"sort": [{"@timestamp": {"order": "desc"}}]}';
+          secondaryJsQuery += '}}} },"size": ' + model.hitSize + ',"sort": [{"@timestamp": {"order": "desc"}}]}';
+          var results = [];
+
+          var callingPromise = proxy(jsQuery, angular.copy(thisJob)).then(function (response) {
+              if (!angular.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
+                for (var i = 0; i < response.hits.hits.length; i++) {
+                  results.push(response.hits.hits[i]._source);
+                }
+                return recursiveQuery(results, thisJob).then(function (response) {
+                  if (response !== ABORT) {
+                    return proxyData;
+                  } else {
+                    return response;
+                  }
+                }, function (response) {
+                  if (response !== ABORT) {
+                    return;
+                  } else {
+                    return response;
+                  }
+                });
+              }
+              return;
+            },
+            function (response) {
+              if (response.status === -1) {
+                return ABORT;
+              } else if (response.status === 401) {
+                Log.debug('User unauthorized to retrieve cdr data from server. Status: ' + response.status);
+                Notification.notify([$translate.instant('cdrLogs.cdr401Unauthorized')], 'error');
+                return;
+              } else {
+                Log.debug('Failed to retrieve cdr data from server. Status: ' + response.status);
+                Notification.notify([$translate.instant('cdrLogs.cdrRetrievalError')], 'error');
+                return;
+              }
+            });
+          queryPromises.push(callingPromise);
+
+          var calledPromise = proxy(jsQuery, angular.copy(thisJob)).then(function (response) {
+              if (!angular.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
+                for (var i = 0; i < response.hits.hits.length; i++) {
+                  results.push(response.hits.hits[i]._source);
+                }
+                return recursiveQuery(results, thisJob).then(function (response) {
+                  if (response !== ABORT) {
+                    return proxyData;
+                  } else {
+                    return response;
+                  }
+                }, function (response) {
+                  if (response !== ABORT) {
+                    return;
+                  } else {
+                    return response;
+                  }
+                });
+              }
+              return;
+            },
+            function (response) {
+              if (response.status === -1) {
+                return ABORT;
+              } else if (response.status === 401) {
+                Log.debug('User unauthorized to retrieve cdr data from server. Status: ' + response.status);
+                Notification.notify([$translate.instant('cdrLogs.cdr401Unauthorized')], 'error');
+                return;
+              } else {
+                Log.debug('Failed to retrieve cdr data from server. Status: ' + response.status);
+                Notification.notify([$translate.instant('cdrLogs.cdrRetrievalError')], 'error');
+                return;
+              }
+            });
+          queryPromises.push(calledPromise);
+        }
+
+        return $q.all(queryPromises).then(function () {
+          if (thisJob === currentJob) {
+            return proxyData;
+          } else {
+            return ABORT;
+          }
+        });
+      });
+    }
+
+    function convertUuid(uuid, calltype) {
+      var defer = $q.defer();
+      getUser(uuid, calltype).then(function (response) {
+        if ((response === null) && (uuid.length === 36) && /^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$/.test(uuid)) {
+          defer.resolve(uuid);
+        } else {
+          defer.resolve(response);
+        }
+      }, function (response) {
+        defer.resolve(response);
+      });
+
+      return defer.promise;
     }
 
     function generateHosts() {
@@ -157,7 +283,7 @@
       return '{"fquery":{"query":{"query_string":{"query":"dataParam.' + callType + ':(\\"' + item + '\\")"}},"_cache":true}}';
     }
 
-    function recursiveQuery(cdrArray) {
+    function recursiveQuery(cdrArray, thisJob) {
       var sessionIds = extractUniqueIds(cdrArray);
       var queries = [];
       var x = 0;
@@ -180,11 +306,11 @@
         }
       }
 
-      return secondaryQuery(queries).then(function (newCdrArray) {
+      return secondaryQuery(queries, thisJob).then(function (newCdrArray) {
         if (newCdrArray !== ABORT) {
           var newSessionIds = extractUniqueIds(newCdrArray);
           if (newSessionIds.sort().join(',') !== sessionIds.sort().join(',')) {
-            return recursiveQuery(newCdrArray);
+            return recursiveQuery(newCdrArray, thisJob);
           } else {
             groupCdrsIntoCalls(newCdrArray);
             return;
@@ -195,12 +321,12 @@
       });
     }
 
-    function secondaryQuery(queryArray) {
+    function secondaryQuery(queryArray, thisJob) {
       var cdrArray = [];
       var item = queryArray.shift() + '"}},"_cache":true}}';
       var jsQuery = '{"query": {"filtered": {"query": {"bool": {"should": [' + generateHosts() + ']} },"filter": {"bool": {"should":[' + item + ']}}}},"size": 2000,"sort": [{"@timestamp": {"order": "desc"}}]}';
 
-      return proxy(jsQuery).then(function (response) {
+      return proxy(jsQuery, thisJob).then(function (response) {
           if (!angular.isUndefined(response.hits.hits) && (response.hits.hits.length > 0)) {
             for (var i = 0; i < response.hits.hits.length; i++) {
               cdrArray.push(response.hits.hits[i]._source);
@@ -208,7 +334,7 @@
           }
 
           if (queryArray.length > 0) {
-            return secondaryQuery(queryArray).then(function (newCdrArray) {
+            return secondaryQuery(queryArray, thisJob).then(function (newCdrArray) {
               if (angular.isDefined(newCdrArray)) {
                 cdrArray.concat(newCdrArray);
               }
@@ -247,7 +373,6 @@
     }
 
     function groupCdrsIntoCalls(cdrArray) {
-      proxyData = [];
       var x = 0;
       while (cdrArray.length > 0) {
         var call = [];
@@ -308,38 +433,45 @@
       return callLegs;
     }
 
-    function proxy(query) {
+    function proxy(query, thisJob) {
       var defer = $q.defer();
-      $http({
-        method: "POST",
-        url: getCdrUrl(),
-        data: query,
-        timeout: cancelPromise.promise
-      }).success(function (response) {
-        defer.resolve(response);
-      }).error(function (response, status) {
-        // if this specific error is received, retry once; error cause unknown
-        if (status === 500 && response === retryError) {
-          $http({
-            method: "POST",
-            url: getCdrUrl(),
-            data: query,
-            timeout: cancelPromise.promise
-          }).success(function (secondaryResponse) {
-            defer.resolve(secondaryResponse);
-          }).error(function (secondaryResponse, secondaryStatus) {
-            defer.reject({
-              'response': secondaryResponse,
-              'status': secondaryStatus
+      if (thisJob === currentJob) {
+        $http({
+          method: "POST",
+          url: getCdrUrl(),
+          data: query,
+          timeout: cancelPromise.promise
+        }).success(function (response) {
+          defer.resolve(response);
+        }).error(function (response, status) {
+          // if this specific error is received, retry once; error cause unknown
+          if (status === 500 && response === retryError) {
+            $http({
+              method: "POST",
+              url: getCdrUrl(),
+              data: query,
+              timeout: cancelPromise.promise
+            }).success(function (secondaryResponse) {
+              defer.resolve(secondaryResponse);
+            }).error(function (secondaryResponse, secondaryStatus) {
+              defer.reject({
+                'response': secondaryResponse,
+                'status': secondaryStatus
+              });
             });
-          });
-        } else {
-          defer.reject({
-            'response': response,
-            'status': status
-          });
-        }
-      });
+          } else {
+            defer.reject({
+              'response': response,
+              'status': status
+            });
+          }
+        });
+      } else {
+        defer.reject({
+          'response': "",
+          'status': -1
+        });
+      }
 
       return defer.promise;
     }

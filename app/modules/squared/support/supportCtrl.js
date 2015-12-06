@@ -494,13 +494,13 @@ angular.module('Squared')
 
       var clientLogTemplate = '<div class="ngCellText"><a ng-click="downloadLog(row.entity.fullFilename)"><span id="download-icon"><i class="fa fa-download"></i></a></div>';
 
-      var callFlowTemplate = '<div class="ngCellText"><button class="support_download btn btn-primary pull-center" ng-click="getCallflowCharts(row.entity.orgId, row.entity.userId, row.entity.locusId, row.entity.callStart, row.entity.fullFilename, false, getRowIndex(row.entity))" id="charts-{{getRowIndex(row.entity)}}" data-loading-text="<i class=\'icon icon-spinner icon-spin\'></i>"><span id="download-callflowCharts-icon"><i class="fa fa-download"></i></button></div>';
+      var callFlowTemplate = '<div class="ngCellText"><button class="support_download btn btn--primary pull-center" ng-click="getCallflowCharts(row.entity.orgId, row.entity.userId, row.entity.locusId, row.entity.callStart, row.entity.fullFilename, false, getRowIndex(row.entity))" id="charts-{{getRowIndex(row.entity)}}" data-loading-text="<i class=\'icon icon-spinner icon-spin\'></i>"><span id="download-callflowCharts-icon"><i class="fa fa-download"></i></button></div>';
 
-      var callFlowLogsTemplate = '<div class="ngCellText"><button class="support_download btn btn-primary pull-center" ng-click="getCallflowCharts(row.entity.orgId, row.entity.userId, row.entity.locusId, row.entity.callStart, row.entity.fullFilename, true, getRowIndex(row.entity))" id="logs-{{getRowIndex(row.entity)}}" data-loading-text="<i class=\'icon icon-spinner icon-spin\'></i>"><span id="download-callflowCharts-icon"><i class="fa fa-download"></i></button></div>';
+      var callFlowLogsTemplate = '<div class="ngCellText"><button class="support_download btn btn--primary pull-center" ng-click="getCallflowCharts(row.entity.orgId, row.entity.userId, row.entity.locusId, row.entity.callStart, row.entity.fullFilename, true, getRowIndex(row.entity))" id="logs-{{getRowIndex(row.entity)}}" data-loading-text="<i class=\'icon icon-spinner icon-spin\'></i>"><span id="download-callflowCharts-icon"><i class="fa fa-download"></i></button></div>';
 
       var callInfoTemplate = '<div class="ngCellText"><a ng-click="showCallInfo(row.entity.emailAddress, row.entity.locusId, row.entity.callStart)"><span id="callInfo-icon"><i class="fa fa-info"></i></span></a></div>';
 
-      var callSummaryTemplate = '<div class="ngCellText"><button class="support_download btn btn-primary pull-center" ng-click="showCallSummary(row.entity.locusId, row.entity.callStart, getRowIndex(row.entity))" id="summary-{{getRowIndex(row.entity)}}" data-loading-text="<i class=\'icon icon-spinner icon-spin\'></i>"><span id="callInfo-icon"><i class="fa fa-info"></i></button></div>';
+      var callSummaryTemplate = '<div class="ngCellText"><button class="support_download btn btn--primary pull-center" ng-click="showCallSummary(row.entity.locusId, row.entity.callStart, getRowIndex(row.entity))" id="summary-{{getRowIndex(row.entity)}}" data-loading-text="<i class=\'icon icon-spinner icon-spin\'></i>"><span id="callInfo-icon"><i class="fa fa-info"></i></button></div>';
 
       $scope.gridOptions = {
         data: 'userLogs',

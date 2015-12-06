@@ -13,3 +13,7 @@
     background-color: transparent;
   }
 }
+
+.webex-reports {
+  @extend %content-header;
+}

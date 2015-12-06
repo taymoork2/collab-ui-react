@@ -1,73 +1,114 @@
-<div class="helpdesk-details">
-  <h2>{{helpdeskOrgCtrl.org.displayName}} <span style="margin-left: 3rem;"><i class="icon icon-search"></i><a
-    ui-sref="helpdesk.search" translate="helpdesk.goToSearch"></a></span></h2>
+<div id="detailsDiv" class="helpdesk-details">
+  <div class="row head full">
+    <div class="columns large-12">
+      <a id="backToSearchLink" ui-sref="helpdesk.search">
+        <i class="icon icon-back icon-lg"></i>
+        <span translate="helpdesk.backToSearchResults"></span>
+      </a>
+    </div>
+  </div>
 
-  <div class="medium-6 columns">
-    <table class="table">
-      <tbody>
-      <tr>
-        <td>
-          <span translate="common.id"></span>
-        </td>
-        <td>
+  <div class="row full">
+    <div class="columns large-4 medium-5">
+
+      <h3>{{helpdeskOrgCtrl.org.displayName}}</h3>
+
+      <div class="customer-or-partner">
+        <span ng-if="!helpdeskOrgCtrl.org.isPartner" translate="helpdesk.customer"></span>
+        <span ng-if="helpdeskOrgCtrl.org.isPartner" translate="helpdesk.partner"></span>
+        <span ng-if="helpdeskOrgCtrl.delegatedAdministration"> ({{helpdeskOrgCtrl.delegatedAdministration}})</span>
+      </div>
+      <div class="row">
+        <div class="medium-5 columns details-heading">
+          <span>{{'common.id' | translate}}:</span>
+        </div>
+        <div class="medium-7 columns details-value">
           <span>{{helpdeskOrgCtrl.org.id}}</span>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <span translate="helpdesk.type"></span>
-        </td>
-        <td>
-          <span ng-if="helpdeskOrgCtrl.org.manages && helpdeskOrgCtrl.org.manages.length > 0"
-                translate="helpdesk.partner"></span>
-          <span ng-if="!helpdeskOrgCtrl.org.manages || helpdeskOrgCtrl.org.manages.length == 0"
-                translate="helpdesk.customer"></span>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+        </div>
+      </div>
+
+      <div class="row" ng-if="helpdeskOrgCtrl.org.email">
+        <div class="large-5 columns details-heading">
+          <span>{{'helpdesk.contact' | translate}}:</span>
+        </div>
+        <div class="large-7 columns details-value">
+          <span><a ng-href="mailto:{{helpdeskOrgCtrl.org.email}}">{{helpdeskOrgCtrl.org.email}}</a></span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="large-5 columns details-heading">
+          <span>{{'helpdesk.claimedDomain' | translate}}:</span>
+        </div>
+        <div class="large-7 columns details-value">
+          <span ng-repeat="domain in helpdeskOrgCtrl.org.domains">
+            {{domain}}{{$last ? '' : ', '}}
+          </span>
+          <span ng-if="!helpdeskOrgCtrl.org.domains" translate="helpdesk.none"></span>
+        </div>
+      </div>
+
+      <div class="row" ng-if="helpdeskOrgCtrl.org.webExSites">
+        <div class="large-5 columns details-heading">
+          <span>{{'helpdesk.webexsites' | translate}}:</span>
+        </div>
+        <div class="large-7 columns details-value">
+          <span ng-repeat="site in helpdeskOrgCtrl.org.webExSites">
+            {{site.siteUrl}}{{$last ? '' : ', '}}
+          </span>
+          <span ng-if="helpdeskOrgCtrl.org.webExSites.length == 0" translate="helpdesk.none"></span>
+        </div>
+      </div>
+
+      <div class="row" ng-if="helpdeskOrgCtrl.org.managedByOrgs && helpdeskOrgCtrl.org.managedByOrgs.length > 0">
+        <div class="medium-5 columns details-heading">
+          <span>{{'helpdesk.managedBy' | translate}}:</span>
+        </div>
+        <div class="medium-7 columns details-value">
+          <div ng-repeat="managingOrg in helpdeskOrgCtrl.org.managedByOrgs">
+            <span>
+              <a ui-sref="helpdesk.org({org:managingOrg, id:managingOrg.id})">
+                {{managingOrg.displayName}}
+              </a>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" ng-if="helpdeskOrgCtrl.adminUsers && helpdeskOrgCtrl.adminUsers.length > 0">
+        <div class="medium-12 columns">
+          <h4 translate="helpdesk.adminUsers"></h4>
+
+          <div ng-repeat="user in helpdeskOrgCtrl.adminUsers | limitTo:helpdeskOrgCtrl.adminUserLimit">
+            <span>
+              <a ui-sref="helpdesk.user({user:user, id:user.id, orgId:user.organization.id})">
+                {{user.displayName | limitTo: 40}}{{user.displayName.length > 40 ? '...' : ''}}
+              </a>
+            </span>
+          </div>
+
+          <div ng-if="helpdeskOrgCtrl.adminUsers.length > helpdeskOrgCtrl.adminUserLimit" style="margin-top: 1.0rem;">
+            <span><a href
+                     ng-click="helpdeskOrgCtrl.showAllAdminUsers()">{{helpdeskOrgCtrl.showAllAdminUsersText}}</a></span>
+          </div>
+
+          <div ng-if="helpdeskOrgCtrl.adminUserLimit > helpdeskOrgCtrl.initialAdminUserLimit"
+               style="margin-top: 1.0rem;">
+            <span><a href
+                     ng-click="helpdeskOrgCtrl.hideAllAdminUsers()"
+                     translate="helpdesk.hideAllAdminUsers"></a></span>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <div class="columns large-8 medium-7 card-panel" ng-include
+         src="'modules/squared/helpdesk/org-cards.html'">
+    </div>
+
   </div>
 
-  <div class="medium-6 columns">
-    <table class="table">
-      <tbody>
-      <tr>
-        <td>
-          <i class="icon icon-circle"
-             ng-class="helpdeskOrgCtrl.org.ssoEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
-          <span translate="helpdesk.sso"></span>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <i class="icon icon-circle"
-             ng-class="helpdeskOrgCtrl.org.dirsyncEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
-          <span translate="helpdesk.dirSync"></span>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <cs-card class="large header-bar">
-    <article>
-      <header>
-        <h4 translate="cloudExtensions.cloudExtensions"></h4>
-      </header>
-      <section>
-        <div ng-if="!helpdeskOrgCtrl.hybridServicesEntitled" class="card-list">
-          <span class="helpdesk-yellow"><i
-            class="icon icon-warning helpdesk-yellow"></i>Not entitled to this service</span>
-        </div>
-        <div class="card-list"
-             ng-repeat="service in helpdeskOrgCtrl.hybridServices"
-             ng-if="helpdeskOrgCtrl.hybridServicesEntitled">
-          <span translate="hercules.serviceNames.{{service.id}}"></span>
-          <span ng-if="service.enabled" class="helpdesk-green">(Enabled)</span>
-          <span ng-if="!service.enabled" class="helpdesk-yellow">(Disabled)</span>
-        </div>
-      </section>
-    </article>
-  </cs-card>
 
 </div>

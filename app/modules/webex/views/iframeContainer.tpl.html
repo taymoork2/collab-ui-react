@@ -1,10 +1,39 @@
-<iframe i-frame-resizable 
-		ng-style="{'width': '100%', 'height': iframeHeight }"
-		name="webexIframeContainer"
-        id="webexIframeContainer"
-        frameborder="0"
-        title="{{siteSettingLabel}}">
-</iframe>
+
+<div ng-if="showLoading && showSpinner" 
+     align="center">
+     
+  <i class="icon icon-spinner icon-2x"></i>
+</div>
+
+<div ng-if="showLoading && !showSpinner" 
+     align="center">
+     
+  <br><br>
+</div>
+    
+<div id="iframeContainer"
+     name="iframeContainer">
+
+  <iframe ng-if="showLoading"
+          class="iframeContainerShifted"
+          i-frame-resizable="iframeContainer"
+          ng-style="{'width': '100%', 'height': iframeHeight }"
+          name="webexIframeContainer"
+          id="webexIframeContainer"
+          frameborder="0"
+          title="{{siteSettingLabel}}">
+  </iframe>
+
+  <iframe ng-if="!showLoading"
+          i-frame-resizable="iframeContainer"
+          ng-style="{'width': '100%', 'height': iframeHeight }"
+          name="webexIframeContainer"
+          id="webexIframeContainer"
+          frameborder="0"
+          title="{{siteSettingLabel}}">
+  </iframe>
+</div>
+
 <form name="iframeForm"
       id="iframeForm"
       action={{trustIframeUrl}}
@@ -30,6 +59,11 @@
          name="ngxsiteurl"
          type="hidden"
          value={{siteName}} />
+
+  <input id="ngxfullsparkdns"
+         name="ngxfullsparkdns"
+         type="hidden"
+         value={{fullSparkDNS}} />
   
   <button id="submitFormBtn"
           type="submit"
