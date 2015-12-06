@@ -7,6 +7,9 @@
   .indentedCheckbox {
     margin: 0;
     padding-left: rem-calc(28);
+    .cs-checkbox {
+      padding-right: 1.5rem;
+    }
   }
   .flex-row {
     @extend .row;
