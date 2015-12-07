@@ -1,124 +1,110 @@
 <div>
-    <div class="license-wrapper">
-
-        <div class="flex-row">
-            <div class="col-sm-4 col-free">
-                <div class="bucket-row-header">
-                    <i class="icon icon-circle-message"></i>
-                    <h3 ng-if="isStormBranding" translate="onboardModal.message"></h3>
-                    <h3 ng-if="!isStormBranding" translate="onboardModal.messaging"></h3>
-                </div>
-            </div>
-            <div class="col-sm-4 col-free">
-                <div class="bucket-row-header">
-                    <i class="icon icon-circle-group"></i>
-                    <h3 ng-if="isStormBranding" translate="onboardModal.meeting"></h3>
-                    <h3 ng-if="!isStormBranding" translate="onboardModal.conferencing"></h3>
-                </div>
-            </div>
-            <div class="col-sm-4 col-free">
-                <div class="bucket-row-header">
-                    <i class="icon icon-circle-call"></i>
-                    <h3 ng-if="isStormBranding" translate="onboardModal.call"></h3>
-                    <h3 ng-if="!isStormBranding" translate="onboardModal.communications"></h3>
-                </div>
-            </div>
+  <div class="license-wrapper">
+    <div class="flex-row">
+      <div class="small-4 columns column-title">
+        <div class="column-header">
+          <i class="icon icon-circle-message"></i>
+          <h3 ng-if="isStormBranding" translate="onboardModal.message"></h3>
+          <h3 ng-if="!isStormBranding" translate="onboardModal.messaging"></h3>
         </div>
-
-        <div class="row">
-            <div class="column-title">
-                <h5 class="free"><small translate="onboardModal.freeCollab"></small></h5>
-            </div>
+      </div>
+      <div class="small-4 columns column-title">
+        <div class="column-header">
+          <i class="icon icon-circle-group"></i>
+          <h3 ng-if="isStormBranding" translate="onboardModal.meeting"></h3>
+          <h3 ng-if="!isStormBranding" translate="onboardModal.conferencing"></h3>
         </div>
-
-        <div class="flex-row">
-            <div class="col-sm-4 col-free">
-                <div ng-if="isStormBranding" translate="onboardModal.msgFree"></div>
-                <div ng-if="!isStormBranding" translate="onboardModal.freeMsg"></div>
-            </div>
-            <div class="col-sm-4 col-free">
-                <div ng-if="isStormBranding" translate="onboardModal.mtgFree"></div>
-                <div ng-if="!isStormBranding" translate="onboardModal.freeConf"></div>
-            </div>
-            <div class="col-sm-4 col-free">
-                <div ng-if="isStormBranding" translate="onboardModal.callFree"></div>
-                <div ng-if="!isStormBranding" translate="onboardModal.freeComm"></div>
-            </div>
+      </div>
+      <div class="small-4 columns column-title">
+        <div class="column-header">
+          <i class="icon icon-circle-call"></i>
+          <h3 ng-if="isStormBranding" translate="onboardModal.call"></h3>
+          <h3 ng-if="!isStormBranding" translate="onboardModal.communications"></h3>
         </div>
-
-        <div class="row">
-            <div class="column-title">
-                <h5 class="paid"><small translate="firstTimeWizard.paidColumnHeader"></small></h5>
+      </div>
+    </div>
+    <div class="row">
+      <div class="column-subsription-header free" translate="onboardModal.freeCollab"></div>
+    </div>
+    <div class="flex-row">
+      <div class="small-4 columns column-free">
+        <div ng-if="isStormBranding" translate="onboardModal.msgFree"></div>
+        <div ng-if="!isStormBranding" translate="onboardModal.freeMsg"></div>
+      </div>
+      <div class="small-4 columns column-free">
+        <div ng-if="isStormBranding" translate="onboardModal.mtgFree"></div>
+        <div ng-if="!isStormBranding" translate="onboardModal.freeConf"></div>
+      </div>
+      <div class="small-4 columns column-free">
+        <div ng-if="isStormBranding" translate="onboardModal.callFree"></div>
+        <div ng-if="!isStormBranding" translate="onboardModal.freeComm"></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="column-subsription-header paid" translate="firstTimeWizard.paidColumnHeader"></div>
+    </div>
+    <div class="flex-row row-licenses">
+      <div id="messaging" class="small-4 columns column-paid">
+        <div class="entitle-check-grp" ng-repeat="msgFeature in messageFeatures">
+          <div ng-if="msgFeature.licenses">
+            <div ng-if="isStormBranding" class="item-license" translate="onboardModal.message"></div>
+            <div ng-if="!isStormBranding" class="item-license" translate="onboardModal.messaging"></div>
+            <div class="ckbx" ng-if="msgFeature.licenses.length === 1">
+              <cs-checkbox ckid="paid-msg" ng-model="radioStates.msgRadio" label="{{msgFeature.label}}">
+              </cs-checkbox>
             </div>
+            <div ng-if="msgFeature.licenses.length > 1">
+              <div class="ckbx" for="{{license.licenseId}}" ng-repeat="license in msgFeature.licenses | filter:isSubscribeable | orderBy:'billingServiceId'">
+                <cs-checkbox ckid="{{license.licenseId}}" ng-model="checkboxMsg" label="{{license.billingServiceId}} ({{license.volume}})"></cs-checkbox>
+              </div>
+            </div>
+          </div>
         </div>
-
-        <div class="flex-row row-licenses">
-            <div id="messaging" class="col-sm-4 col-paid">
-                <div class="entitle-check-grp" ng-repeat="msgFeature in messageFeatures">
-                    <div ng-if="msgFeature.licenses">
-                         <div ng-if="isStormBranding" class="item-paid" translate="onboardModal.message"></div>
-                        <div ng-if="!isStormBranding" class="item-paid" translate="onboardModal.messaging"></div>
-                        <div class="ckbx" ng-if="msgFeature.licenses.length === 1">
-                            <cs-checkbox ckid="paid-msg"
-                                ng-model="radioStates.msgRadio"
-                                label="{{msgFeature.label}}">
-                            </cs-checkbox>
-                        </div>
-                        <div ng-if="msgFeature.licenses.length > 1">
-                            <div class="ckbx" for="{{license.licenseId}}" ng-repeat="license in msgFeature.licenses | filter:isSubscribeable | orderBy:'billingServiceId'">
-                                <cs-checkbox ckid="{{license.licenseId}}" ng-model="checkboxMsg" label="{{license.billingServiceId}} ({{license.volume}})"></cs-checkbox>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+      </div>
+      <div id="conference" class="small-4 columns column-paid">
+        <div ng-if="isStormBranding && confChk" class="item-license" translate="onboardModal.meeting"></div>
+        <div ng-if="!isStormBranding && confChk" class="item-license" translate="onboardModal.conferencing"></div>
+        <div class="entitle-check-grp" ng-repeat="cf in confChk | orderBy:'confFeature.license.siteUrl':true">
+          <div class="ckbx" ng-if="cf.confFeature.license.licenseType !== 'freeConferencing'">
+            <div ng-if="!cf.confFeature.license.siteUrl">
+              <cs-checkbox ckid="{{cf.confFeature.license.licenseId}}" ng-model="cf.confModel" label="{{cf.confFeature.label}}"></cs-checkbox>
             </div>
-
-            <div id="conference" class="col-sm-4 col-paid">
-                <div ng-if="isStormBranding && confChk" class="item-paid" translate="onboardModal.meeting"></div>
-                <div ng-if="!isStormBranding && confChk" class="item-paid" translate="onboardModal.conferencing"></div>
-                <div class="entitle-check-grp" ng-repeat="cf in confChk | orderBy:'confFeature.license.siteUrl':true">
-                    <div class="ckbx" ng-if="cf.confFeature.license.licenseType !== 'freeConferencing'">
-                        <div ng-if="!cf.confFeature.license.siteUrl">
-                            <cs-checkbox ckid="{{cf.confFeature.license.licenseId}}" ng-model="cf.confModel" label="{{cf.confFeature.label}}"></cs-checkbox>
-                        </div>
-                        <div ng-if="cf.confFeature.license.siteUrl">
-                            <div class="sub-line"></div>
-                            {{cf.confFeature.license.siteUrl}}
-                            <cs-checkbox ckid="{{cf.confFeature.license.licenseId}}" ng-model="cf.confModel" label="WebEx {{cf.confFeature.label}}"></cs-checkbox>
-                        </div>  
-                        <div ng-if="cf.cmrFeature">
-                            <cs-checkbox ckid="{{cf.cmrId}}" class="indentedCheckbox" ng-click="licenseHandler(cf.cmrFeature.license.licenseId); cf.confModel = true; cf.cmrModel = !cf.cmrModel" ng-model="cf.cmrModel" label="WebEx {{cf.cmrFeature.label}}" isdisabled="false"><cs-checkbox>
-                        </div>
-                    </div>
-                </div>
+            <div ng-if="cf.confFeature.license.siteUrl" class="item-mtg">
+              <div class="sub-line"></div>
+              {{cf.confFeature.license.siteUrl}}
+              <cs-checkbox ckid="{{cf.confFeature.license.licenseId}}" ng-model="cf.confModel" label="WebEx {{cf.confFeature.label}}"></cs-checkbox>
             </div>
-
-            <div id="communication" class="col-sm-4 col-paid">
-                <div class="entitle-check-grp" ng-repeat="commFeature in communicationFeatures">
-                    <div class="ckbx" ng-if="commFeature.license.licenseType !== 'advancedCommunication'">
-                        <div ng-if="isStormBranding" class="item-paid" translate="onboardModal.call"></div>
-                        <div ng-if="!isStormBranding" class="item-paid" translate="onboardModal.communications"></div>
-                        <cs-checkbox ckid="{{commFeature.license.licenseId}}" ng-if="!disableCommFeatureAssignment()" ng-model="radioStates.commRadio" label="{{commFeature.label}}"></cs-checkbox>
-                        <div ng-if="disableCommFeatureAssignment()">
-                            <div>
-                                <span class="warning-icon"></span>
-                                <span class="service-label" translate="usersPage.addtionalServiceSetupText"></span>
-                            </div>
-                            <div>
-                                <a href ng-click="ConfirmAdditionalServiceSetup()" translate="usersPage.setUpThisService"></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div ng-if="cf.cmrFeature">
+              <cs-checkbox ckid="{{cf.cmrId}}" class="indentedCheckbox" ng-click="licenseHandler(cf.cmrFeature.license.licenseId); cf.confModel = true; cf.cmrModel = !cf.cmrModel" ng-model="cf.cmrModel" label="WebEx {{cf.cmrFeature.label}}" isdisabled="false">
+                <cs-checkbox>
             </div>
+          </div>
         </div>
-
-        <!-- <div class="row row-hybrid">
+      </div>
+      <div id="communication" class="small-4 columns column-paid">
+        <div class="entitle-check-grp" ng-repeat="commFeature in communicationFeatures" ng-if="commFeature.license.licenseType !== 'advancedCommunication'">
+          <div ng-if="isStormBranding" class="item-license" translate="onboardModal.call"></div>
+          <div ng-if="!isStormBranding" class="item-license" translate="onboardModal.communications"></div>
+          <div class="ckbx">
+            <cs-checkbox ckid="{{commFeature.license.licenseId}}" ng-if="!disableCommFeatureAssignment()" ng-model="radioStates.commRadio" label="{{commFeature.label}}"></cs-checkbox>
+            <div ng-if="disableCommFeatureAssignment()">
+              <div>
+                <span class="warning-icon"></span>
+                <span class="service-label" translate="usersPage.addtionalServiceSetupText"></span>
+              </div>
+              <div>
+                <a href ng-click="ConfirmAdditionalServiceSetup()" translate="usersPage.setUpThisService"></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="row row-hybrid">
             <div id="hybrid" class="column-header">
                 <i class="icon icon-circle-world"></i>
                 <h3 translate="onboardModal.hybridServices"></h3>
             </div>
         </div> -->
-    </div>
-
+  </div>
 </div>

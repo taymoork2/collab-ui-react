@@ -434,8 +434,8 @@ describe('Config', function () {
       //expect(Config.serviceStates['squared-fusion-mgmt'][1]).toBe('cluster-details');
     });
 
-    it('spark-device-mgmt should contain devices state', function () {
-      expect(Config.serviceStates['spark-device-mgmt'][0]).toBe('devices');
+    it('spark-room-system should contain devices state', function () {
+      expect(Config.serviceStates['spark-room-system'][0]).toBe('devices');
     });
   });
 

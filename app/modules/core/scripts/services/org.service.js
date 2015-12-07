@@ -110,13 +110,6 @@
             "subscriptionId": usageLicenses[index].subscriptionId ? usageLicenses[index].subscriptionId : 'undefined',
             "licenses": licenses
           };
-
-          // result.push(_.filter(usageLicenses[index].licenses, function (license) {
-          //   var match = _.find(statusLicenses, {
-          //     'licenseId': license.licenseId
-          //   });
-          //   return !(match.status === 'CANCELLED' || match.status === 'SUSPENDED');
-          // }));
           result.push(subscription);
         }
         return result;
