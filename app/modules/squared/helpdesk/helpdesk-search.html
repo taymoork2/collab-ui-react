@@ -42,7 +42,7 @@
           <p translate="helpdesk.searchingPleaseWait"></p>
         </div>
         <div ng-if="helpdeskCtrl.currentSearch.userSearchFailure">
-          <p class="helpdesk-red">{{helpdeskCtrl.currentSearch.userSearchFailure}}</p>
+          <p>{{helpdeskCtrl.currentSearch.userSearchFailure}}</p>
         </div>
         <div
           ng-if="!helpdeskCtrl.searchingForUsers && helpdeskCtrl.currentSearch.userSearchResults.length == 0">
@@ -88,7 +88,7 @@
           <p translate="helpdesk.searchingPleaseWait"></p>
         </div>
         <div ng-if="helpdeskCtrl.currentSearch.orgSearchFailure">
-          <p class="helpdesk-red">{{helpdeskCtrl.currentSearch.orgSearchFailure}}</p>
+          <p>{{helpdeskCtrl.currentSearch.orgSearchFailure}}</p>
         </div>
         <div
           ng-if="!helpdeskCtrl.searchingForOrgs && helpdeskCtrl.currentSearch.orgSearchResults.length == 0">
@@ -138,7 +138,7 @@
         </div>
 
         <div ng-if="helpdeskCtrl.currentSearch.deviceSearchFailure">
-          <p class="helpdesk-red">{{helpdeskCtrl.currentSearch.deviceSearchFailure}}</p>
+          <p>{{helpdeskCtrl.currentSearch.deviceSearchFailure}}</p>
         </div>
 
         <div
