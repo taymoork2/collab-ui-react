@@ -341,10 +341,6 @@
 
     // TODO: Ugh...refactor this.
     function configureGrid() {
-      var rowTemplate = '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}" ng-click="showUserDetails(row.entity)">' +
-        '<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }">&nbsp;</div>' +
-        '<div ng-cell></div>' +
-        '</div>';
 
       var photoCellTemplate = '<img ng-if="row.entity.photos" class="user-img" ng-src="{{getUserPhoto(row.entity)}}"/>' +
         '<span ng-if="!row.entity.photos" class="user-img">' +
@@ -364,13 +360,20 @@
       $scope.gridOptions = {
         data: 'gridData',
         multiSelect: false,
-        showFilter: false,
         rowHeight: 44,
-        rowTemplate: rowTemplate,
-        headerRowHeight: 44,
+        enableRowSelection: true,
+        enableRowHeaderSelection: false,
+        modifierKeysToMultiSelect: false,
         useExternalSorting: false,
         enableColumnResize: true,
-
+        enableColumnMenus: false,
+        noUnselect: true,
+        onRegisterApi: function (gridApi) {
+          $scope.gridApi = gridApi;
+          gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+            $scope.showUserDetails(row.entity);
+          });
+        },
         columnDefs: [{
           field: 'photos',
           displayName: '',
@@ -434,6 +437,10 @@
       }
       return $scope.currentUserPhoto;
     }
+
+    $scope.$on('rowSelectionChanged', function () {
+      showUserDetails($scope.gridApi.selection.getSelectedGridRow());
+    });
 
     // TODO: If using states should be be able to trigger this log elsewhere?
     if ($state.current.name === "users.list") {

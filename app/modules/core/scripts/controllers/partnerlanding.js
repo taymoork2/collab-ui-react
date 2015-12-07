@@ -170,6 +170,7 @@ angular.module('Core')
         }]
       };
 
+
       var rowTemplate = $templateCache.get('modules/core/partnerLanding/grid/row.tpl.html');
       var actionTemplate = $templateCache.get('modules/core/partnerLanding/grid/actionColumn.tpl.html');
       var nameTemplate = $templateCache.get('modules/core/partnerLanding/grid/nameColumn.tpl.html');
@@ -182,52 +183,68 @@ angular.module('Core')
         showFilter: false,
         rowHeight: 44,
         rowTemplate: rowTemplate,
-        headerRowHeight: 44,
+        enableRowSelection: true,
+        enableRowHeaderSelection: false,
+        modifierKeysToMultiSelect: false,
         useExternalSorting: false,
         enableColumnResize: true,
-        sortInfo: {
-          fields: ['customerName'],
-          directions: ['asc']
+        enableColumnMenus: false,
+        noUnselect: true,
+        onRegisterApi: function (gridApi) {
+          $scope.gridApi = gridApi;
         },
-
         columnDefs: [{
           field: 'customerName',
           displayName: $translate.instant('customerPage.customerNameHeader'),
           width: '25%',
           cellTemplate: nameTemplate,
-          sortFn: partnerAtTopSort
+          sortingAlgorithm: partnerAtTopSort,
+          sort: {
+            direction: 'asc',
+            priority: 0,
+          },
         }, {
           field: 'messaging',
           displayName: $translate.instant('customerPage.messaging'),
           width: '12%',
           cellTemplate: serviceTemplate,
           headerClass: 'align-center',
-          sortFn: serviceSort
+          sortingAlgorithm: serviceSort
         }, {
           field: 'conferencing',
           displayName: $translate.instant('customerPage.conferencing'),
           width: '12%',
           cellTemplate: serviceTemplate,
           headerClass: 'align-center',
-          sortFn: serviceSort
+          sortingAlgorithm: serviceSort
         }, {
           field: 'communications',
           displayName: $translate.instant('customerPage.communications'),
           width: '12%',
           cellTemplate: serviceTemplate,
           headerClass: 'align-center',
-          sortFn: serviceSort
+          sortingAlgorithm: serviceSort
         }, {
           field: 'notes',
           displayName: $translate.instant('customerPage.notes'),
+<<<<<<< HEAD
           cellTemplate: noteTemplate,
           sortFn: notesSort
+=======
+          cellTemplate: notesTemplate,
+          sortingAlgorithm: notesSort
+>>>>>>> first attempt
         }, {
           field: 'action',
           displayName: $translate.instant('customerPage.actionHeader'),
           sortable: false,
+<<<<<<< HEAD
           cellTemplate: actionTemplate,
           width: '90px'
+=======
+          cellTemplate: actionsTemplate,
+          width: '90'
+>>>>>>> first attempt
         }]
       };
 

@@ -1527,7 +1527,7 @@ angular.module('Core')
       };
 
       $scope.saveConvertList = function () {
-        $scope.convertSelectedList = $scope.convertGridOptions.$gridScope.selectedItems;
+        $scope.convertSelectedList = $scope.gridApi.selection.getSelectedRows();
         convertUsersCount = $scope.convertSelectedList.length;
         $scope.convertUsersFlow = true;
         convertPending = false;
@@ -1637,8 +1637,8 @@ angular.module('Core')
             if (data.totalResults) {
               $scope.unlicensed = data.totalResults;
               $scope.unlicensedUsersList = data.resources;
-              $('.ngViewport').mouseover(function () {
-                $('.ngViewport').getNiceScroll().resize();
+              $('.ui-grid-viewport').mouseover(function () {
+                $('.ui-grid-viewport').getNiceScroll().resize();
               });
             }
           }
@@ -1646,37 +1646,49 @@ angular.module('Core')
       };
 
       $scope.convertDisabled = function () {
-        return ($scope.convertGridOptions.$gridScope.selectedItems.length === 0) ? true : false;
+        return ($scope.gridApi.selection.getSelectedRows().length === 0) ? true : false;
       };
 
       getUnlicensedUsers();
 
-      var displayNameTemplate = '<div class="ngCellText"><p class="hoverStyle" title="{{row.entity.displayName}}">{{row.entity.displayName}}</p></div>';
-      var emailTemplate = '<div class="ngCellText"><p class="hoverStyle" title="{{row.entity.userName}}">{{row.entity.userName}}</p></div>';
+      //  var displayNameTemplate = '<div class="ngCellText"><p class="hoverStyle" title="{{row.entity.displayName}}">{{row.entity.displayName}}</p></div>';
+      //   var emailTemplate = '<div class="ngCellText"><p class="hoverStyle" title="{{row.entity.userName}}">{{row.entity.userName}}</p></div>';
 
       $scope.convertGridOptions = {
         data: 'unlicensedUsersList',
         rowHeight: 45,
-        headerRowHeight: 45,
-        enableHorizontalScrollbar: 0,
-        enableVerticalScrollbar: 2,
+        //enableHorizontalScrollbar: 'never',
+        // enableVerticalScrollbar: 'always',
+        selectionRowHeaderWidth: 40,
         showSelectionCheckbox: true,
-        sortInfo: {
-          fields: ['userName'],
-          directions: ['desc']
+        enableRowSelection: true,
+        enableRowHeaderSelection: true,
+        enableFullRowSelection: true,
+        modifierKeysToMultiSelect: false,
+        useExternalSorting: false,
+        enableColumnMenus: false,
+        showFilter: false,
+        multiSelect: true,
+        onRegisterApi: function (gridApi) {
+          $scope.gridApi = gridApi;
         },
-        selectedItems: [],
         columnDefs: [{
+
           field: 'displayName',
           displayName: $translate.instant('usersPage.displayNameHeader'),
-          cellTemplate: displayNameTemplate,
+          //    cellTemplate: displayNameTemplate,
           resizable: false,
           sortable: true
         }, {
           field: 'userName',
           displayName: $translate.instant('homePage.emailAddress'),
-          cellTemplate: emailTemplate,
+          //     cellTemplate: emailTemplate,
           resizable: false,
+          sort: {
+            direction: 'desc',
+            priority: 0
+          },
+          sortCellFiltered: true
         }]
       };
 

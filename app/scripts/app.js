@@ -29,6 +29,8 @@ angular.module('Core', [
   'ct.ui.router.extras.future',
   'ct.ui.router.extras.previous',
   'ngGrid',
+  'ui.grid',
+  'ui.grid.selection',
   'mgo-angular-wizard',
   'ngClipboard',
   'csDonut',
