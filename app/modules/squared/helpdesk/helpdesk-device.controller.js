@@ -27,6 +27,7 @@
           vm.org = displayName;
         }, XhrNotificationService.notify);
       }
+      angular.element(".helpdesk-details").focus();
     }
 
     function keyPressHandler(event) {
