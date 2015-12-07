@@ -54,8 +54,8 @@
         padding-left: 1rem !important;
       }
       footer.footer-menu {
-        // position: absolute;
-        // bottom: 0;
+        position: absolute;
+        bottom: 0;
         height: 42px;
         max-height: 42px;
         border-radius: 0px 0px 3px 3px;
@@ -73,7 +73,7 @@
       }
     }
     .disabled-section {
-      padding: 1.5rem 1rem;
+      padding: 1rem 2.5rem;
       text-align: left;
       line-height: 1.5rem;
     }
@@ -102,7 +102,7 @@
     }
   }
   .menu-card {
-    min-height: 250px;
+    height: 296px;
   }
   .cta-base {
     header:after {
@@ -110,21 +110,21 @@
     }
   }
   .user-card {
-    /*height:auto;*/
+    // height: auto !important;
     header {
       text-align: left;
-      .overview-users-header {
-        @extend .h4;
+      .icon-circle-user {
+        top: auto;
       }
     }
     section {
-      padding: 0 1.5rem;
+      padding: 1rem 1.5rem 0;
       font-size: .875rem;
       line-height: 1.5rem;
       .convert-block {
         padding: 0 1.5rem 1rem;
         .convert-nr {
-          @extend .h2;
+          @extend .h4;
           color: $color-attention-base;
         }
         .btn {
@@ -184,7 +184,7 @@
 @media only screen and (max-width: 1345px) {
   .overview-page {
     .menu-card {
-      // height: 300px;
+      height: 316px;
     }
   }
 }
@@ -216,7 +216,7 @@
       display: -ms-flexbox !important;
     }
     .menu-card {
-      // height: 260px;
+      height: 304px;
     }
     .fourth {
       //position: absolute;
