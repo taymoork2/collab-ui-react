@@ -123,11 +123,12 @@
     function keyPressHandler(event) {
       var newTabIndex = 0;
       switch (event.keyCode) {
-        case 27: // Esc
-          window.history.back();
+      case 27: // Esc
+        window.history.back();
         break;
       }
     }
+
     function daysLeftText(license) {
       return $translate.instant('helpdesk.numDaysLeft', {
         days: license.trialExpiresInDays

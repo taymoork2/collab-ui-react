@@ -18,25 +18,31 @@ describe('Service: HelpdeskHealthStatusService', function () {
       "success": true
     };
 
-    beforeEach(function(){
+    beforeEach(function () {
       sinon.stub(ReportsService, 'healthMonitor');
       ReportsService.healthMonitor.yields(healthReport);
-    })
+    });
 
     it("'Mobile Clients' maps to 'message'", function () {
-      healthReport.components = [{"name":"Mobile Clients", "status":"operational"}];
-      Service.getHealthStatuses().then(function(res){
-      expect(res.message).toEqual("operational");
-      expect(res.meeting).toEqual("error");
-      expect(res.call).toEqual("error");
-      expect(res.room).toEqual("error");
-      expect(res.hybrid).toEqual("error");
+      healthReport.components = [{
+        "name": "Mobile Clients",
+        "status": "operational"
+      }];
+      Service.getHealthStatuses().then(function (res) {
+        expect(res.message).toEqual("operational");
+        expect(res.meeting).toEqual("error");
+        expect(res.call).toEqual("error");
+        expect(res.room).toEqual("error");
+        expect(res.hybrid).toEqual("error");
       });
     });
 
     it("'Rooms' maps to 'message' and 'room'", function () {
-      healthReport.components = [{"name":"Rooms", "status":"operational"}];
-      Service.getHealthStatuses().then(function(res){
+      healthReport.components = [{
+        "name": "Rooms",
+        "status": "operational"
+      }];
+      Service.getHealthStatuses().then(function (res) {
         expect(res.message).toEqual("operational");
         expect(res.meeting).toEqual("error");
         expect(res.call).toEqual("error");
@@ -46,8 +52,11 @@ describe('Service: HelpdeskHealthStatusService', function () {
     });
 
     it("'Web and Desktop Clients' maps to 'message'", function () {
-      healthReport.components = [{"name":"Web and Desktop Clients", "status":"operational"}]
-      Service.getHealthStatuses().then(function(res){
+      healthReport.components = [{
+        "name": "Web and Desktop Clients",
+        "status": "operational"
+      }];
+      Service.getHealthStatuses().then(function (res) {
         expect(res.message).toEqual("operational");
         expect(res.meeting).toEqual("error");
         expect(res.call).toEqual("error");
@@ -57,8 +66,11 @@ describe('Service: HelpdeskHealthStatusService', function () {
     });
 
     it("'Media/Calling' maps to 'meeting' and 'call'", function () {
-      healthReport.components = [{"name":"Media/Calling", "status":"operational"}];
-      Service.getHealthStatuses().then(function(res){
+      healthReport.components = [{
+        "name": "Media/Calling",
+        "status": "operational"
+      }];
+      Service.getHealthStatuses().then(function (res) {
         expect(res.message).toEqual("error");
         expect(res.meeting).toEqual("operational");
         expect(res.call).toEqual("operational");
@@ -68,8 +80,11 @@ describe('Service: HelpdeskHealthStatusService', function () {
     });
 
     it("'Cloud Hybrid Services Management' maps to 'hybrid'", function () {
-      healthReport.components = [{"name":"Cloud Hybrid Services Management", "status":"operational"}];
-      Service.getHealthStatuses().then(function(res){
+      healthReport.components = [{
+        "name": "Cloud Hybrid Services Management",
+        "status": "operational"
+      }];
+      Service.getHealthStatuses().then(function (res) {
         expect(res.message).toEqual("error");
         expect(res.meeting).toEqual("error");
         expect(res.call).toEqual("error");
@@ -79,8 +94,11 @@ describe('Service: HelpdeskHealthStatusService', function () {
     });
 
     it("'Calendar Service' maps to 'hybrid'", function () {
-      healthReport.components = [{"name":"Calendar Service", "status":"operational"}];
-      Service.getHealthStatuses().then(function(res){
+      healthReport.components = [{
+        "name": "Calendar Service",
+        "status": "operational"
+      }];
+      Service.getHealthStatuses().then(function (res) {
         expect(res.message).toEqual("error");
         expect(res.meeting).toEqual("error");
         expect(res.call).toEqual("error");
@@ -89,34 +107,49 @@ describe('Service: HelpdeskHealthStatusService', function () {
       });
     });
 
-    it("Status reported with the following priorities: 'error', 'warning', 'partial_outtage', 'operational'", function(){
-      healthReport.components = [
-        {"name":"Mobile Clients", "status":"error"},
-        {"name":"Rooms", "status":"warning"},
-        {"name":"Web and Desktop Clients", "status":"partial_outage"},
-      ]
-      Service.getHealthStatuses().then(function(res){
+    it("Status reported with the following priorities: 'error', 'warning', 'partial_outtage', 'operational'", function () {
+      healthReport.components = [{
+        "name": "Mobile Clients",
+        "status": "error"
+      }, {
+        "name": "Rooms",
+        "status": "warning"
+      }, {
+        "name": "Web and Desktop Clients",
+        "status": "partial_outage"
+      }];
+      Service.getHealthStatuses().then(function (res) {
         expect(res.message).toEqual("error");
       });
 
-      healthReport.components = [
-        {"name":"Mobile Clients", "status":"warning"},
-        {"name":"Rooms", "status":"partial_outage"},
-        {"name":"Web and Desktop Clients", "status":"operational"},
-      ]
-      Service.getHealthStatuses().then(function(res){
+      healthReport.components = [{
+        "name": "Mobile Clients",
+        "status": "warning"
+      }, {
+        "name": "Rooms",
+        "status": "partial_outage"
+      }, {
+        "name": "Web and Desktop Clients",
+        "status": "operational"
+      }];
+      Service.getHealthStatuses().then(function (res) {
         expect(res.message).toEqual("warning");
       });
 
-      healthReport.components = [
-        {"name":"Mobile Clients", "status":"operational"},
-        {"name":"Rooms", "status":"operational"},
-        {"name":"Web and Desktop Clients", "status":"partial_outage"},
-      ]
-      Service.getHealthStatuses().then(function(res){
+      healthReport.components = [{
+        "name": "Mobile Clients",
+        "status": "operational"
+      }, {
+        "name": "Rooms",
+        "status": "operational"
+      }, {
+        "name": "Web and Desktop Clients",
+        "status": "partial_outage"
+      }];
+      Service.getHealthStatuses().then(function (res) {
         expect(res.message).toEqual("partial_outage");
       });
-    })
+    });
 
   });
 
