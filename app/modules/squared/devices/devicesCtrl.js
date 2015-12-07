@@ -53,6 +53,7 @@ angular.module('Squared')
         showFilter: false,
         multiSelect: false,
         headerRowHeight: 44,
+        enableColumnResize: true,
         sortInfo: {
           directions: ['asc'],
           fields: ['displayName']

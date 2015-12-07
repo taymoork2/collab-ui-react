@@ -10,6 +10,7 @@
  */
 
 angular.module('Core', [
+  'core.trial',
   'pascalprecht.translate',
   'templates-app',
   'ngAnimate',
@@ -38,7 +39,7 @@ angular.module('Core', [
   'angular-nicescroll',
   'cwill747.phonenumber',
   'toaster',
-  'angular-cache'
+  'angular-cache',
 ]).constant('pako', window.pako);
 
 angular.module('Squared', ['Core']);

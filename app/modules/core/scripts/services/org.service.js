@@ -100,12 +100,17 @@
 
         var result = [];
         for (var index in usageLicenses) {
-          result.push(_.filter(usageLicenses[index].licenses, function (license) {
+          var licenses = _.filter(usageLicenses[index].licenses, function (license) {
             var match = _.find(statusLicenses, {
               'licenseId': license.licenseId
             });
             return !(match.status === 'CANCELLED' || match.status === 'SUSPENDED');
-          }));
+          });
+          var subscription = {
+            "subscriptionId": usageLicenses[index].subscriptionId ? usageLicenses[index].subscriptionId : 'undefined',
+            "licenses": licenses
+          };
+          result.push(subscription);
         }
         return result;
       }).catch(function (err) {

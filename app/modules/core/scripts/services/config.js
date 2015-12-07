@@ -122,6 +122,8 @@ angular.module('Core')
 
         ciscoMockOrgId: 'd30a6828-dc35-4753-bab4-f9b468828688',
 
+        consumerOrgId: 'consumer',
+
         logoutUrl: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=',
 
         oauthDeleteTokenUrl: 'https://idbroker.webex.com/idb/oauth2/v1/revoke',
@@ -415,6 +417,11 @@ angular.module('Core')
             desc: 'tabs.eventsTabDesc',
             state: 'events',
             link: '#events'
+          }, {
+            title: 'tabs.reportTab',
+            desc: 'reportsPage.devReports',
+            state: 'devReports',
+            link: '#devReports'
           }]
         }],
 
@@ -430,10 +437,10 @@ angular.module('Core')
         },
 
         trials: {
-          collab: 'COLLAB',
-          squaredUC: 'SQUAREDUC',
-          webex: 'WEBEXTRIALS',
-          cloudberry: 'ROOMSYSTEMS',
+          message: 'COLLAB',
+          meeting: 'WEBEXTRIALS',
+          call: 'SQUAREDUC',
+          roomSystems: 'ROOMSYSTEMS',
         },
 
         organizations: {
@@ -974,6 +981,7 @@ angular.module('Core')
           'huronnewfeature',
           'huronHuntGroup',
           'huntgroupedit',
+          'devReports',
           'cdrsupport',
           'cdr-overview'
         ],
@@ -1023,6 +1031,7 @@ angular.module('Core')
         'partner': [
           'overview',
           'reports',
+          'devReports',
           'devices',
           'fusion',
           'mediafusionconnector',

@@ -23,7 +23,7 @@
       <div ng-if="helpdeskCtrl.currentSearch.orgFilter" class="helpdesk-tile">
         <span translate="helpdesk.searchingOrg"
               translate-value-name="{{helpdeskCtrl.currentSearch.orgFilter.displayName}}"></span>
-        <i class="icon icon-close" ng-click="helpdeskCtrl.clearOrgFilter()"></i>
+        <i class="icon icon-close" ng-click="helpdeskCtrl.initSearchWithoutOrgFilter()"></i>
       </div>
     </div>
   </div>
@@ -101,7 +101,7 @@
               <header>
                 <h5>
                   {{org.displayName}}
-                  <a tabindex="-1" href class="right" ng-click="helpdeskCtrl.setOrgFilter(org)"><i
+                  <a tabindex="-1" href class="right" ng-click="helpdeskCtrl.initSearchWithOrgFilter(org)"><i
                     class="icon icon-search"></i></a>
                 </h5>
               </header>

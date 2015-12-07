@@ -4,7 +4,8 @@ angular.module('Core')
   .controller('leaderBoardCtrl', ['$scope', 'Log', 'Orgservice', '$filter', 'Authinfo', 'TrialService', 'FeatureToggleService', '$translate',
     function ($scope, Log, Orgservice, $filter, Authinfo, TrialService, FeatureToggleService, $translate) {
 
-      $scope.buckets = [];
+      $scope.label = $filter('translate')('leaderBoard.licenseUsage');
+      $scope.state = 'license'; // Possible values are license, warning or error
 
       $scope.bucketKeys = [
         'messaging',
@@ -23,9 +24,11 @@ angular.module('Core')
 
       var getLicenses = function () {
         Orgservice.getLicensesUsage().then(function (subscriptions) {
+          $scope.buckets = [];
           for (var index in subscriptions) {
-            var licenses = subscriptions[index];
+            var licenses = subscriptions[index]['licenses'];
             var subscription = {};
+            subscription['subscriptionId'] = subscriptions[index]['subscriptionId'];
             if (licenses.length === 0) {
               $scope.bucketKeys.forEach(function (bucket) {
                 subscription[bucket] = {};
@@ -65,9 +68,8 @@ angular.module('Core')
           }
         });
       };
-      $scope.init = function () {
-        getLicenses();
-      };
+
+      getLicenses();
 
       $scope.$on('Userservice::updateUsers', function () {
         getLicenses();

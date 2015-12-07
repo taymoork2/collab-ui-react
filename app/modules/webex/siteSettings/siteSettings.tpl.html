@@ -1,6 +1,5 @@
-<div id="webexSiteSettings" name="webexSiteSettings">
+<div id="webexSiteSettings" name="webexSiteSettings" class="webex-site-settings">
   <cs-page-header title="{{::siteSettingsObj.pageTitle}}"></cs-page-header>
-  
   <cs-page-sub-header ng-if="siteSettingsObj.viewReady">
     <!-- start of breadcrumbs -->
     <cs-page-sub-header-left>
@@ -15,13 +14,11 @@
       </ul>
     </cs-page-sub-header-left>
     <!-- end of breadcrumbs -->
-    
     <cs-page-sub-header-right>
-      <button id={{siteSettingsObj.emailAllHostsBtnObj.id}} name={{siteSettingsObj.emailAllHostsBtnObj.id}} ui-sref={{siteSettingsObj.emailAllHostsBtnObj.pageObj.uiSref}} class="btn btn--people" translate="webexSiteSettingsLabels.emailAllHostsBtnTitle">
+      <button id="{{siteSettingsObj.emailAllHostsBtnObj.id}}" name="{{siteSettingsObj.emailAllHostsBtnObj.id}}" ui-sref="{{siteSettingsObj.emailAllHostsBtnObj.pageObj.uiSref}}" class="btn btn--people" translate="webexSiteSettingsLabels.emailAllHostsBtnTitle">
       </button>
     </cs-page-sub-header-right>
   </cs-page-sub-header>
-  
   <div class="content-container">
     <!-- start of loading info -->
     <div ng-if="!siteSettingsObj.viewReady" id="loadingSection" name="loadingSection" align="center">
@@ -31,12 +28,10 @@
         <br>
         <i class="icon icon-spinner icon-2x"></i>
       </div>
-      
       <div id="loadErrSection" name="loadErrSection" ng-if="siteSettingsObj.hasLoadError">
         <div class="nodata-icon">
           <i class="icon icon-circle-clock"></i>
         </div>
-        
         <div class="nodata-message">
           <span translate="webexUserSettingsAccessErrors.defaultAccessError"></span>
           <br>
@@ -45,7 +40,6 @@
       </div>
     </div>
     <!-- end of loading info -->
-    
     <!-- start of card containers -->
     <div ng-if="siteSettingsObj.viewReady" id="cardsSection" name="cardsSection">
       <div ng-include="'modules/webex/views/infoCard.tpl.html'"></div>

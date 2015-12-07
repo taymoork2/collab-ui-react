@@ -80,6 +80,13 @@
       padding-right: 0;
       padding-left: 0.5rem;
     }
+    .text-align-center {
+      text-align:center;
+    }
+    .large-number {
+      font-size:2rem;
+      color: $color-primary-base;
+    }
   }
 }
 

@@ -815,7 +815,18 @@ angular
           end: devices redux prototypes
         */
 
-      .state('partneroverview', {
+      .state('devReports', {
+          url: '/devReports',
+          templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
+          controller: 'CustomerReportsCtrl',
+          controllerAs: 'nav',
+          parent: 'main',
+          params: {
+            tab: null,
+            siteUrl: null
+          }
+        })
+        .state('partneroverview', {
           parent: 'partner',
           url: '/overview',
           templateUrl: 'modules/core/views/partnerlanding.html',
@@ -1216,19 +1227,18 @@ angular
         .state('trialAdd.info', {
           templateUrl: 'modules/core/trials/trialAdd.tpl.html'
         })
-        .state('trialAdd.addNumbers', {
-          templateUrl: 'modules/core/trials/addNumbers.tpl.html',
-          controller: 'DidAddCtrl',
-          controllerAs: 'didAdd',
-          params: {
-            currentTrial: {},
-            currentOrg: {}
-          }
+        .state('trialAdd.finishSetup', {
+          templateUrl: 'modules/core/trials/trialFinishSetup.tpl.html',
         })
-        .state('trialAdd.nextSteps', {
-          templateUrl: 'modules/core/trials/nextStep.tpl.html',
-          controller: 'DidAddCtrl',
-          controllerAs: 'didAdd'
+        .state('trialAdd.meeting', {
+          templateUrl: 'modules/core/trials/trialMeeting.tpl.html',
+          controller: 'TrialMeetingCtrl',
+          controllerAs: 'meetingTrial'
+        })
+        .state('trialAdd.call', {
+          templateUrl: 'modules/core/trials/trialCall.tpl.html',
+          controller: 'TrialCallCtrl',
+          controllerAs: 'callTrial'
         })
         .state('trialEdit', {
           abstract: true,

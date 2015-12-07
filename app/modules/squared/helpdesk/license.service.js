@@ -57,16 +57,23 @@
       });
     }
 
-    function filterLicensesAndSetDisplayName(licenses, type) {
+    function filterAndExtendLicenses(licenses, type) {
       var matchingLicenses = _.filter(licenses, {
         type: type
       });
       _.each(matchingLicenses, function (l) {
-        l.displayName = $translate.instant('helpdesk.licenseTypes.' + type, {
+        l.displayName = $translate.instant('helpdesk.licenseDisplayNames.' + l.offerCode, {
           volume: l.volume
         });
+        l.usagePrecentage = _.round(((l.usage * 100) / l.volume) || 0);
       });
       return matchingLicenses;
+    }
+
+    function getUnlicensedUsersCount(orgId) {
+      return $http
+        .get(urlBase + 'helpdesk/unlicenseduserscount/' + encodeURIComponent(orgId))
+        .then(extractData);
     }
 
     function useMock() {
@@ -77,9 +84,10 @@
       userIsEntitledTo: userIsEntitledTo,
       userIsLicensedFor: userIsLicensedFor,
       orgIsEntitledTo: orgIsEntitledTo,
-      filterLicensesAndSetDisplayName: filterLicensesAndSetDisplayName,
+      filterAndExtendLicenses: filterAndExtendLicenses,
       UserLicense: UserLicense,
-      getLicensesInOrg: getLicensesInOrg
+      getLicensesInOrg: getLicensesInOrg,
+      getUnlicensedUsersCount: getUnlicensedUsersCount
     };
   }
 

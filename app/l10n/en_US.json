@@ -89,6 +89,7 @@
     "noExtensionInPool": "No Extension in pool.",
     "noExternalNumberAvail": "No DID available for mapping.",
     "noExtMappingAvail": "No DID mapping available.",
+    "steeringDigitOverlapWarning": "The first digit of the Internal Extension overlaps with the Outbound Dial Digit ({{steeringDigitInTranslation}}).",
     "tooManyResultsError": "Search returned too many results.  Please narrow your search criteria.",
     "userExistsError": "User {{email}} already exists.  Please use the Convert option on the Overview page to bring the user into your organization.  If this user is not available for conversion, please submit a problem report."
   },
@@ -140,7 +141,7 @@
     "callFree": "Call Free",
     "freeContactCenter": "Free Chat, Email, Voice",
     "paidMsg": "Standard Team Rooms",
-    "paidConf": "25 Party Meetings",
+    "paidConf": "Meeting 25 Party",
     "paidConfWebEx": "WebEx Meetings",
     "paidComm": "Advanced Spark Call",
     "paidContactCenter": "Chat, Email, Voice",
@@ -152,7 +153,7 @@
     "eventCenter": "Event Center {{capacity}}",
     "communication": "Communication",
     "cloudExtensions": "Hybrid Services",
-    "cmr": "Collaboration Meeting Rooms"
+    "cmr": "Collaboration Meeting Room"
   },
   "usersPreview": {
     "groupPreview": "Group:",
@@ -240,11 +241,11 @@
     "eventsTabDesc": "Event Management",
     "messengerTab": "Webex Messenger",
     "messengerTabDesc": "Webex Messenger Administration",
-    "calendarServiceTab": "Calendar",
+    "calendarServiceTab": "Hybrid Services: Calendar",
     "calendarServiceTabDesc": "Calendar Service",
-    "callServiceTab": "Call",
+    "callServiceTab": "Hybrid Services: Call",
     "callServiceTabDesc": "Call Service",
-    "expresswayManagementServiceTab": "Management Service",
+    "expresswayManagementServiceTab": "Hybrid Services: Management",
     "expresswayManagementServiceTabDesc": "Expressway Management Service"
   },
   "index": {
@@ -349,7 +350,9 @@
     "leastQuality": "5 Lowest Quality",
     "customerLoadError": "There was an error while loading the customer list.",
     "unauthorizedError": "User is not authorized to access the customer reports.",
-    "webex": "Webex Reports"
+    "webex": "Webex Reports",
+    "devReports": "Development Customer Reports",
+    "sparkReports": "Spark Reports"
   },
   "activeUsers": {
     "active": "Active",
@@ -551,7 +554,8 @@
     "ladderDiagram": "Ladder Diagram",
     "cdrSave": "Save Call",
     "element": "Element",
-    "value": "Value"
+    "value": "Value",
+    "sparkCall": "(Spark Call)"
   },
   "billingPage": {
     "title": "Order Provisioning",
@@ -1077,7 +1081,7 @@
     "downloadSub": "Download CSV template",
     "downloadCSVTemplate": "Download CSV Template",
     "advancedSub": "Synchronize users from Active Directory.",
-    "needHelp": "Need help? ",
+    "needHelp": "Need help - ",
     "needHelpExplain": "Search the knowledge base.",
     "planReview": "Plan Review",
     "spark": "Spark",
@@ -1095,6 +1099,7 @@
     "conferencing": "Conferencing",
     "communications": "Communications",
     "roomSystems": "Room Systems",
+    "sparkRoomSystem": "Spark Room System",
     "freeMsg": "Message Free",
     "freeMtg": "Meeting Free 3 Party",
     "freeCall": "Call Free",
@@ -1507,7 +1512,8 @@
     "internalNumberExtension": "Extension",
     "internalNumberExtensionTooltip": "Use the internal extension to reach this line from within the company at the same site.",
     "internalNumberPoolError": "Internal extensions failed to load.",
-    "steeringDigitOverlapWarning": "First digit of Internal Extension overlaps with Outbound Dial Digit ({{steeringDigitInTranslation}}).",
+    "siteError": "Failed to load site information.",
+    "steeringDigitOverlapWarning": "The first digit of the Internal Extension overlaps with the Outbound Dial Digit ({{steeringDigitInTranslation}}).",
     "enterpriseSiteNumberLabel": "If your company uses site-to-site dialing:",
     "externalNumberLabel": "Phone Number",
     "externalNumberTooltip": "Use the direct line to reach this line from outside of the company.",
@@ -1708,21 +1714,51 @@
     "call": "Call"
   },
   "trialModal": {
-    "trialSuccess": "You have set up your trial successfully.",
-    "nextStep": "Next Step",
-    "sendWelcome": "Send Welcome Message",
-    "sendWelcomePrompt": "If you want the customer to set up the service:",
-    "launchPortal": "Launch Company Portal",
-    "launchPortalPrompt": "If you want to set up the service for the customer:",
-    "or": "or",
-    "squareducError": "Created trial, but unable to provision Spark UC.",
+    "addTrial": {
+      "title": "Start New Trial"
+    },
+    "meeting": {
+      "title": "Setup Trial - Meeting and WebEx",
+      "webexHeader": "WebEx License Type",
+      "webexDetails": "Meeting and WebEx trials enable Enterprise Edition WebEx licenses.",
+      "siteUrl": "Site URL",
+      "timezone": "Time Zone",
+      "default": "Set as default",
+      "timezonePlaceholder": "Select a timezone"
+    },
+    "call": {
+      "title": "Setup Trial – Add Devices",
+      "selectDevicesHeader": "Select Devices",
+      "meetingRoomCamera": "Spark Room System",
+      "deskPhones": "Personal and Shared Desk Phones",
+      "sx10": "SX10",
+      "phone8865": "8865",
+      "phone8845": "8845",
+      "phone7861": "7861",
+      "phone7841": "7841",
+      "quantity": "Qty",
+      "shippingInfo": "Shipping Information",
+      "address": "John Q. Partner\n555 Main St.\nSan Francisco, CA 43211",
+      "recipient": "Where will the devices be shipped?",
+      "customer": "Customer",
+      "partner": "Partner"
+    },
+    "trialSuccess": "Your trial is ready.",
+    "nextStepPrompt": "Do you want to setup services for the customer?",
+    "setupLater": "No thanks",
+    "setupNow": "Yes, setup the services",
+    "squareducError": "Created trial, but unable to provision Spark UC",
     "addSuccess": "A trial was successfully started for {{customerName}} with {{licenseCount}} licenses for {{licenseDuration}} days.",
     "editSuccess": "You have successfully edited a trial for {{customerName}} with {{licenseCount}} licenses for {{licenseDuration}} days."
   },
   "trials": {
     "collab": "Standard Team Rooms + 25 Party Meetings",
     "squaredUC": "Advanced Spark Call",
-    "meet": "Meeting and WebEx"
+    "licenses": "Licenses",
+    "meet": "Meeting and WebEx",
+    "message": "Message",
+    "meeting": "Meeting and WebEx",
+    "call": "Call"
   },
   "status": {
     "noResults": "No results available.",
@@ -2942,11 +2978,18 @@
     "showMore": "Show more results",
     "delegatedAdministration": "manages {{numManages}} organizations",
     "licenses": "Licenses",
-    "licenseTypes": {
-      "MESSAGING": "{{volume}} x Standard Team Rooms",
-      "CONFERENCING": "{{volume}} x 25 Party Meetings",
-      "COMMUNICATIONS": "{{volume}} x Advanced Spark Call",
-      "SHARED_DEVICES": "{{volume}} x Room Devices"
+    "licenseDisplayNames": {
+      "MC": "{{volume}} x Meeting Center {{capacity}}",
+      "TC": "{{volume}} x Training Center {{capacity}}",
+      "MS": "{{volume}} x Standard Team Rooms",
+      "CF": "{{volume}} x 25 Party Meetings",
+      "EE": "{{volume}} x Enterprise Edition {{capacity}}",
+      "SC": "{{volume}} x Support Center {{capacity}}",
+      "EC": "{{volume}} x Event Center {{capacity}}",
+      "CO": "{{volume}} x Advanced Spark Call",
+      "CMR": "{{volume}} x Collaboration Meeting Rooms",
+      "SD": "{{volume}} x Room Devices",
+      "ST": "{{volume}} x Storage"
     },
     "trial": "Trial",
     "adminUsers": "Administrators",
@@ -2958,6 +3001,8 @@
       "cancelled": "Cancelled",
       "suspended": "Suspended",
       "pending": "Pending"
-    }
+    },
+    "consumerOrg": "Consumer",
+    "unlicensedUsers": "Unlicensed Users"
   }
 }
