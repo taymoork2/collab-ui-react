@@ -6,6 +6,7 @@
   margin-bottom: 40px;
 }
 
+
 .leader-board {
   padding: 30px, 0px, 30px, 0px;
 
@@ -125,9 +126,10 @@
   margin-right: 15px;
 }
 
-.quantity-badge{
-  font-size: 13px;
-  padding: 0px, 12px, 0px, 12px;
+.bucket-info .text-center .quantity-badge{
+  font-size: 12px;
+  padding-top: 3px;
+  padding-bottom: 3px;
   margin-right: 8px;
   margin-left: 8px;
 }
@@ -162,4 +164,20 @@
 .text-center.trial{
   padding-bottom: 0px;
   padding-top: 12px;
+}
+
+.leader-board .subscriptionId{
+  padding-top: 32px;
+  padding-left: 8px;
+  font-size: 14px;
+  color: $gray-dark-1;
+}
+
+.subscription{
+  overflow: hidden;
+  font-size: 12px;
+}
+
+.subscription .cs-card{
+  margin-top: 12px;
 }

@@ -4,18 +4,20 @@
       <cs-searchfilter filters="linesListCtrl.filters" set-filter-fn="linesListCtrl.setFilter(filter.filterValue)" ng-model="linesListCtrl.placeholder.count" search-item-fn="linesListCtrl.filterList(searchStr)" placeholder-text="{{linesListCtrl.placeholder.name}}">
       </cs-searchfilter>
     </cs-page-sub-header-left>
-    <cs-page-sub-header-right>
-      <div ng-if="!lineExportCtrl.exportBusy">
-        <a id="export-btn" ng-csv="lineExportCtrl.exportCSV()" filename="{{'linesPage.csvFilename' | translate}}">
-          <span id="export-icon" class="export export-lines icon-export" tooltip-placement="top" tooltip="{{'linesPage.csvBtnTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true">
+    <cs-page-sub-header-right ng-show="Utils.isAdminPage()">
+      <div class="page-option-buttons" ng-controller="LineExportCtrl as lineExportCtrl">
+        <div ng-if="!lineExportCtrl.exportBusy">
+          <a id="export-btn" ng-csv="lineExportCtrl.exportCSV()" filename="{{'linesPage.csvFilename' | translate}}">
+            <span id="export-icon" class="export export-lines icon-export" tooltip-placement="top" tooltip="{{'linesPage.csvBtnTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true">
             <i class="icon icon-content-share"></i>
           </span>
-        </a>
-      </div>
-      <div ng-if="lineExportCtrl.exportBusy" ng-show="Utils.isAdminPage()" ng-controller="LineExportCtrl as lineExportCtrl">
-        <span id="export-icon" class="export-lines icon-export">
+          </a>
+        </div>
+        <div ng-if="lineExportCtrl.exportBusy" ng-show="Utils.isAdminPage()" ng-controller="LineExportCtrl as lineExportCtrl">
+          <span id="export-icon" class="export-lines icon-export">
           <i class="icon icon-spinner"></i>
         </span>
+        </div>
       </div>
     </cs-page-sub-header-right>
   </cs-page-sub-header>

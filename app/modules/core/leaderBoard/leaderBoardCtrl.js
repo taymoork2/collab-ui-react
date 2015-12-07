@@ -3,54 +3,10 @@
 angular.module('Core')
   .controller('leaderBoardCtrl', ['$scope', 'Log', 'Orgservice', '$filter', 'Authinfo', 'TrialService', 'FeatureToggleService', '$translate',
     function ($scope, Log, Orgservice, $filter, Authinfo, TrialService, FeatureToggleService, $translate) {
-      $scope.buckets = {
-        messaging: {
-          title: $filter('translate')('leaderBoard.messagingTitle'),
-          subtitle: $filter('translate')('leaderBoard.messagingSubtitle'),
-          unlimited: false,
-          visible: false,
-          isNewTrial: false,
-          services: []
-        },
-        cf: {
-          title: $filter('translate')('leaderBoard.conferencingTitle'),
-          subtitle: $filter('translate')('leaderBoard.conferencingSubtitle'),
-          unlimited: false,
-          visible: false,
-          isNewTrial: false,
-          services: []
-        },
-        communication: {
-          title: $filter('translate')('leaderBoard.communicationTitle'),
-          subtitle: $filter('translate')('leaderBoard.communicationSubtitle'),
-          unlimited: false,
-          visible: false,
-          isNewTrial: false,
-          services: []
-        },
-        conferencing: {
-          title: $filter('translate')('leaderBoard.conferencingTitle'),
-          subtitle: $filter('translate')('leaderBoard.conferencingSubtitle'),
-          unlimited: false,
-          visible: false,
-          isNewTrial: false,
-          services: []
-        },
-        shared_devices: {
-          title: $filter('translate')('leaderBoard.shared_devicesTitle'),
-          subtitle: $filter('translate')('leaderBoard.shared_devicesSubtitle'),
-          unlimited: false,
-          visible: false,
-          isNewTrial: false,
-          services: []
-        },
-        storage: {
-          services: []
-        },
-        sites: {}
-      };
 
-      // for explicit ordering:
+      $scope.label = $filter('translate')('leaderBoard.licenseUsage');
+      $scope.state = 'license'; // Possible values are license, warning or error
+
       $scope.bucketKeys = [
         'messaging',
         'cf',
@@ -67,36 +23,53 @@ angular.module('Core')
       });
 
       var getLicenses = function () {
-        Orgservice.getLicensesUsage().then(function (licenses) {
-          if (licenses.length === 0) {
-            $scope.bucketKeys.forEach(function (bucket) {
-              $scope.buckets[bucket].unlimited = true;
-            });
-          } else {
-            licenses.forEach(function (license) {
-              var bucket = license.licenseType.toLowerCase();
-              if (license.offerName !== "CF") {
-                if (license.siteUrl) {
-                  if (!$scope.buckets.sites[license.siteUrl]) {
-                    $scope.buckets.sites[license.siteUrl] = [];
-                  }
-                  $scope.buckets.sites[license.siteUrl].push(license);
-                  $scope.buckets.licensesCount = $scope.buckets.sites[license.siteUrl].length;
-                } else {
-                  $scope.buckets[bucket].services.push(license);
+        Orgservice.getLicensesUsage().then(function (subscriptions) {
+          $scope.buckets = [];
+          for (var index in subscriptions) {
+            var licenses = subscriptions[index]['licenses'];
+            var subscription = {};
+            subscription['subscriptionId'] = subscriptions[index]['subscriptionId'];
+            if (licenses.length === 0) {
+              $scope.bucketKeys.forEach(function (bucket) {
+                subscription[bucket] = {};
+                subscription[bucket].unlimited = true;
+              });
+            } else {
+              licenses.forEach(function (license) {
+                var bucket = license.licenseType.toLowerCase();
+                if (!(bucket === "cmr" || bucket === "conferencing")) {
+                  subscription[bucket] = {};
+                  var a = subscription[bucket];
+                  a["services"] = [];
                 }
-              } else {
-                $scope.buckets.cf.services.push(license);
-              }
-            });
-            $scope.buckets.count = Object.keys($scope.buckets.sites).length;
+                if (license.offerName !== "CF") {
+                  if (license.siteUrl) {
+                    if (!subscription["sites"]) {
+                      subscription["sites"] = {};
+                    }
+                    if (!subscription["sites"][license.siteUrl]) {
+                      subscription["sites"][license.siteUrl] = [];
+                    }
+                    subscription["sites"][license.siteUrl].push(license);
+                    subscription["licensesCount"] = subscription.sites[license.siteUrl].length;
+                    subscription.count = Object.keys(subscription["sites"]).length;
+                  } else {
+                    subscription[bucket]["services"].push(license);
+                  }
+                } else {
+                  subscription["cf"] = {
+                    "services": []
+                  };
+                  subscription["cf"]["services"].push(license);
+                }
+              });
+            }
+            $scope.buckets.push(subscription);
           }
         });
       };
 
-      $scope.init = function () {
-        getLicenses();
-      };
+      getLicenses();
 
       $scope.$on('Userservice::updateUsers', function () {
         getLicenses();

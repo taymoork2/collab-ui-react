@@ -1,6 +1,9 @@
+.huronlines-state {
+  @extend %page-background-white;
+}
+
 .line-list {
   @extend %grid-subheader;
-  @extend %page-background-white;
 
   & .ngGrid {
     & .internalNumberColumn {

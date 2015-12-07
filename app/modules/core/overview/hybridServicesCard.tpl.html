@@ -1,40 +1,39 @@
 <header>
   <div class="overview-header">
-    <i class="icon" ng-class="card.icon"></i>{{ 'overview.cards.hybrid.title' | translate}}
+    <i class="icon" ng-class="card.icon"></i>
+    <span translate="overview.cards.hybrid.title"></span>
   </div>
 </header>
 <section ng-if="card.enabled">
-  <h6>Active:</h6>
-  <ul>
-    <li ng-repeat="service in card.services">
-      <!--<i class="icon icon-circle" ng-class="service.healthStatus || 'disabled'"></i>-->
-      <i class="icon icon-circle" ng-class="service.healthStatus || 'error'"></i>
-      <span>{{ 'hercules.serviceNames.'+ service.id | translate}}</span>
-    </li>
-  </ul>
+  <div class="overview-info">
+    <div>Active</div>
+    <ul>
+      <li ng-repeat="service in card.services">
+        <!--<i class="icon icon-circle" ng-class="service.healthStatus || 'disabled'"></i>-->
+        <i class="icon icon-circle" ng-class="service.healthStatus || 'error'"></i>
+        <span>{{ 'hercules.serviceNames.'+ service.id | translate}}</span>
+      </li>
+    </ul>
+  </div>
 </section>
-<footer class="footer-menu ng-isolate-scope overview-footer-content-trial"
-        ng-class="{'overview-footer-content-trial' : card.trial ,  'overview-footer-content'  : !card.trial }"
-        ng-if="card.enabled">
-            <span class="footer-content">
-              <span class="label warning ng-scope" ng-if="card.trial">Trial</span>
-              <a ng-href="{{overview.statusPageUrl}}" target="_blank" class="monitoring-cell">
-                <i class="icon icon-circle" ng-class="card.healthStatus || 'disabled'"></i>
-                <span>{{card.levelText}}</span>
-              </a>
-            </span>
-            <span class="footer-icons">
-              <a ng-href="{{card.settingsUrl}}" ng-click="cm.menuOpen = true">
-                &nbsp;<i class="icon icon-tools"></i>
-              </a>
-            </span>
+<footer class="footer-menu ng-isolate-scope overview-footer-content-trial" ng-class="{'overview-footer-content-trial' : card.trial ,  'overview-footer-content'  : !card.trial }" ng-if="card.enabled">
+  <span class="footer-content">
+    <span class="label warning ng-scope" ng-if="card.trial">Trial</span>
+    <a ng-href="{{overview.statusPageUrl}}" target="_blank" class="monitoring-cell">
+      <i class="icon icon-circle" ng-class="card.healthStatus || 'disabled'"></i>
+      <span>{{card.levelText}}</span>
+    </a>
+  </span>
+  <span class="footer-icons">
+<a ng-href="{{card.settingsUrl}}" ng-click="cm.menuOpen = true">
+&nbsp;<i class="icon icon-tools"></i>
+</a>
+</span>
 </footer>
-<section class="card-menu ng-isolate-scope" ng-class="{ open: cm.menuOpen === true }"
-         menutitle="card.name">
+<section class="card-menu ng-isolate-scope" ng-class="{ open: cm.menuOpen === true }" menutitle="card.name">
   <div class="card-menu-heading">
     <span class="ng-binding">SETTINGS</span>
-    <button type="button" class="close" ng-click="cm.toggleSettings(); cm.menuOpen = false;"><span
-      class="sr-only">Close</span>
+    <button type="button" class="close" ng-click="cm.toggleSettings(); cm.menuOpen = false;"><span class="sr-only">Close</span>
     </button>
   </div>
   <div>
@@ -45,18 +44,19 @@
       <li><a href="">Item3</a></li>
       <li><a href="">Item4</a></li>
       <!-- Placeholder: End -->
-
-
       <!-- ngRepeat: item in cd.CallMenuItems -->
       <li ng-repeat="item in cd.CallMenuItems" class="ng-scope">
         <a class="service-menu-item ng-binding" href="">item 1</a>
-      </li><!-- end ngRepeat: item in cd.CallMenuItems -->
+      </li>
+      <!-- end ngRepeat: item in cd.CallMenuItems -->
       <li ng-repeat="item in cd.CallMenuItems" class="ng-scope">
         <a class="service-menu-item ng-binding" href="">item 2</a>
-      </li><!-- end ngRepeat: item in cd.CallMenuItems -->
+      </li>
+      <!-- end ngRepeat: item in cd.CallMenuItems -->
       <li ng-repeat="item in cd.CallMenuItems" class="ng-scope">
         <a class="service-menu-item ng-binding" href="">item 3</a>
-      </li><!-- end ngRepeat: item in cd.CallMenuItems -->
+      </li>
+      <!-- end ngRepeat: item in cd.CallMenuItems -->
     </ul>
   </div>
 </section>

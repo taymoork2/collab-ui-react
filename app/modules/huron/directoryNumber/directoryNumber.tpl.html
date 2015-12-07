@@ -17,12 +17,12 @@
     labelfield="pattern"
     valuefield="uuid"
     required="true"
-    ng-class="{'warning': lineSettings.checkDnOverlapsSteeringDigit()}"
+    is-warn="{{lineSettings.checkDnOverlapsSteeringDigit()}}"
+    warn-msg="{{'directoryNumberPanel.steeringDigitOverlapWarning' | translate: { steeringDigitInTranslation: lineSettings.telephonyInfo.steeringDigit } }}"
     on-change-fn="lineSettings.syncDidDn('internalNumber')"
     filter="true">
   </cs-select>
-  <div ng-if="lineSettings.checkDnOverlapsSteeringDigit()" class="dn-warning-text">{{'directoryNumberPanel.steeringDigitOverlapWarning' | translate: { steeringDigitInTranslation: lineSettings.telephonyInfo.steeringDigit } }}</div>
-  <div class="esn-number-field">
+<div class="esn-number-field" ng-class="{'steeringDigitOverlap': lineSettings.checkDnOverlapsSteeringDigit()}">
     <p ng-if="lineSettings.showExtensions">
       {{'directoryNumberPanel.enterpriseSiteNumberLabel' | translate }}&nbsp;
       {{lineSettings.telephonyInfo.siteSteeringDigit}}{{lineSettings.telephonyInfo.siteCode}}<strong class="esn-extension" id="esnTail">{{lineSettings.assignedInternalNumber.pattern}}</strong>

@@ -27,8 +27,6 @@
 
     return service;
 
-    ////////////////
-
     function getOrg(callback, oid, disableCache) {
       var scomUrl = null;
       if (oid) {
@@ -95,15 +93,26 @@
 
     function getLicensesUsage() {
       return getAdminOrgUsage().then(function (response) {
-        var usageLicenses = response.data[0].licenses || [];
+
+        var usageLicenses = [];
+        usageLicenses = response.data || [];
         var statusLicenses = Authinfo.getLicenses();
 
-        return _.filter(usageLicenses, function (license) {
-          var match = _.find(statusLicenses, {
-            'licenseId': license.licenseId
+        var result = [];
+        for (var index in usageLicenses) {
+          var licenses = _.filter(usageLicenses[index].licenses, function (license) {
+            var match = _.find(statusLicenses, {
+              'licenseId': license.licenseId
+            });
+            return !(match.status === 'CANCELLED' || match.status === 'SUSPENDED');
           });
-          return !(match.status === 'CANCELLED' || match.status === 'SUSPENDED');
-        });
+          var subscription = {
+            "subscriptionId": usageLicenses[index].subscriptionId ? usageLicenses[index].subscriptionId : 'undefined',
+            "licenses": licenses
+          };
+          result.push(subscription);
+        }
+        return result;
       }).catch(function (err) {
         Log.debug('Get existing admin org failed. Status: ' + err);
         throw err;

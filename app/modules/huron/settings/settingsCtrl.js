@@ -158,6 +158,15 @@
       }
     };
 
+    vm.steerDigitOverLapValidation = function ($viewValue, $modelValue, scope) {
+      if (_.get(vm, 'model.site.steeringDigit.length') > 0 &&
+        ((_.startsWith(_.get(scope, 'model.beginNumber'), _.get(vm, 'model.site.steeringDigit'))) ||
+          (_.startsWith(_.get(scope, 'model.endNumber'), _.get(vm, 'model.site.steeringDigit'))))) {
+        return true;
+      }
+      return false;
+    };
+
     vm.leftPanelFields = [{
       model: vm.model.site,
       className: 'service-setup',
@@ -248,12 +257,16 @@
             templateOptions: {
               required: true,
               maxlength: 4,
-              minlength: 4
+              minlength: 4,
+              warnMsg: $translate.instant('directoryNumberPanel.steeringDigitOverlapWarning', {
+                steeringDigitInTranslation: vm.model.site.steeringDigit
+              })
             },
             expressionProperties: {
               'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
                 return angular.isDefined(scope.model.uuid);
-              }
+              },
+              'templateOptions.isWarn': vm.steerDigitOverLapValidation
             }
           }, {
             className: 'form-inline formly-field service-setup-extension-range-to',
@@ -301,7 +314,10 @@
             templateOptions: {
               required: true,
               maxlength: 4,
-              minlength: 4
+              minlength: 4,
+              warnMsg: $translate.instant('directoryNumberPanel.steeringDigitOverlapWarning', {
+                steeringDigitInTranslation: vm.model.site.steeringDigit
+              })
             },
             expressionProperties: {
               'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
@@ -309,7 +325,8 @@
               },
               'data.validate': function (viewValue, modelValue, scope) {
                 return scope.fc && scope.fc.$validate();
-              }
+              },
+              'templateOptions.isWarn': vm.steerDigitOverLapValidation
             }
           }, {
             type: 'icon-button',
