@@ -1,9 +1,10 @@
-<div class="helpdesk-search centered" tabindex="1" ng-keyup="helpdeskCtrl.keyPressHandler($event,'search')">
+<div class="helpdesk-search centered" tabindex="0" ng-keyup="helpdeskCtrl.keyPressHandler($event,'search')">
 
   <h1 translate="helpdesk.helpdesk"></h1>
 
   <div class="typeahead-large" style="text-align: left;">
     <input id="searchInput" type="text"
+           tabindex="1"
            placeholder=""
            ng-model="helpdeskCtrl.searchString" ,
            ng-keypress="($event.which === 13) ? helpdeskCtrl.search() : 0" autofocus="true" />

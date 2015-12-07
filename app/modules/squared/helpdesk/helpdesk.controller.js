@@ -157,7 +157,11 @@
 
     function keyPressHandler(event, page) {
       var activeCard = angular.element(document.activeElement)[0]["tabIndex"];
-      var newTabIndex = activeCard;
+      var newTabIndex = -1;
+      var inputFieldHasFocus = angular.element(document.activeElement)[0]["id"] === "searchInput";
+      if (inputFieldHasFocus && !(event.keyCode === 27 || event.keyCode === 13)) {
+        return; // if not escape and enter, nothing to do
+      }
       switch (event.keyCode) {
       case 37: // Left arrow
         newTabIndex = parseInt(activeCard) - 1;
@@ -176,20 +180,24 @@
         break;
 
       case 27: // Esc
-        newTabIndex = "-1";
-        vm.searchString = '';
-        vm.currentSearch.initSearch('');
+        if (inputFieldHasFocus) {
+          vm.searchString = '';
+          vm.currentSearch.initSearch('');
+        } else {
+          angular.element('#searchInput').focus().select();
+          newTabIndex = -1;
+        }
         break;
 
       case 13: // Enter
-        if (angular.element(document.activeElement)[0]["id"] === "searchInput") {
-          newTabIndex = 1;
+        if (inputFieldHasFocus) {
+          //newTabIndex = 1;
         } else {
           angular.element(document.activeElement).click();
         }
         break;
       }
-      if (newTabIndex != "-1") {
+      if (newTabIndex != -1) {
         $('[tabindex=' + newTabIndex + ']').focus();
       }
     }
