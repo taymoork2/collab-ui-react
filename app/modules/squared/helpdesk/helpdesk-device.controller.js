@@ -7,6 +7,7 @@
     vm.deviceId = $stateParams.id;
     vm.orgId = $stateParams.orgId;
     vm.device = $stateParams.device;
+    vm.keyPressHandler = keyPressHandler;
     if ($stateParams.device && $stateParams.device.organization) {
       vm.org = $stateParams.device.organization;
     } else {
@@ -16,6 +17,14 @@
     }
 
     HelpdeskService.getCloudberryDevice(vm.orgId, vm.deviceId).then(initDeviceView, XhrNotificationService.notify);
+
+    function keyPressHandler(event) {
+      switch (event.keyCode) {
+      case 27: // Esc
+        window.history.back();
+        break;
+      }
+    }
 
     function initDeviceView(device) {
       vm.device = device;
