@@ -82,6 +82,51 @@ describe('Configuring services per-user', function () {
     utils.clickUser(testUser);
     utils.click(users.messagingService);
     utils.expectCheckbox(users.messengerInteropCheckbox, true);
+    utils.click(users.closeSidePanel);
+  });
+
+  it('should add user with NO hybrid services selected', function() {
+    navigation.clickUsers();
+    utils.deleteUser(testUser);
+
+    utils.click(users.addUsers);
+    utils.expectIsDisplayed(users.manageDialog);
+    utils.sendKeys(users.addUsersField, testUser);
+    utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
+    utils.click(users.nextButton);
+
+    utils.click(users.onboardButton);
+    notifications.assertSuccess('onboarded successfully');
+    utils.expectIsNotDisplayed(users.manageDialog);
+
+    utils.searchAndClick(testUser);
+    utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'Off');
+    utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'Off');
+    utils.click(users.closeSidePanel);
+  });
+
+  it('should add user with ALL hybrid services selected', function() {
+    navigation.clickUsers();
+    utils.deleteUser(testUser);
+
+    utils.click(users.addUsers);
+    utils.expectIsDisplayed(users.manageDialog);
+    utils.sendKeys(users.addUsersField, testUser);
+    utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
+    utils.click(users.nextButton);
+
+    // Select hybrid services
+    utils.click(users.hybridServices_Cal);
+    utils.click(users.hybridServices_UC);
+
+    utils.click(users.onboardButton);
+    notifications.assertSuccess('onboarded successfully');
+    utils.expectIsNotDisplayed(users.manageDialog);
+
+    utils.searchAndClick(testUser);
+    utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
+    utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
+    utils.click(users.closeSidePanel);
   });
 
   afterAll(function () {
