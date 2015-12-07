@@ -80,7 +80,19 @@
         "allLabels": createLabels,
         "dataProvider": createDisplayData,
         "labelsEnabled": labelsEnabled,
-        "startDuration": 0
+        "startDuration": 0,
+        'export': {
+          "enabled": true,
+          "menu": [{
+            "class": "export-main",
+            "label": "Download Options",
+            "menu": [{
+              "label": "Save As",
+              "title": "Save As",
+              "menu": ["PNG", "JPG", "PDF"]
+            }, 'PRINT']
+          }]
+        }
       });
     }
 

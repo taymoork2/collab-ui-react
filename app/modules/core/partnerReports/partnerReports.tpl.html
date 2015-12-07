@@ -18,8 +18,8 @@
       </span>
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>
-      <cs-select id="timeFilter" name="timeFilter" ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.updateReports()" is-disabled="nav.customersSet()"></cs-select>
-      <cs-select id="customerFilter" name="customerFilter" ng-model="nav.customerSelected" options="nav.customerOptions" on-change-fn="nav.updateReports()" is-disabled="nav.customersSet()" filter="true"></cs-select>
+      <cs-select id="timeFilter" name="timeFilter" class="report-select-filters" ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.updateReports()" is-disabled="nav.customersSet()"></cs-select>
+      <cs-select id="customerFilter" name="customerFilter" class="report-select-filters" ng-model="nav.customerSelected" options="nav.customerOptions" on-change-fn="nav.updateReports()" is-disabled="nav.customersSet()" filter="true"></cs-select>
     </cs-page-sub-header-right>
   </cs-page-sub-header>
   <div class="content-container row">

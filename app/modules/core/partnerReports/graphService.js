@@ -103,7 +103,19 @@
         }, {
           number: 1e+12,
           prefix: "T"
-        }]
+        }],
+        'export': {
+          "enabled": true,
+          "menu": [{
+            "class": "export-main",
+            "label": "Download Options",
+            "menu": [{
+              "label": "Save As",
+              "title": "Save As",
+              "menu": ["PNG", "JPG", "PDF"]
+            }, 'PRINT']
+          }]
+        }
       };
 
       if (angular.isDefined(legend) && legend !== null) {

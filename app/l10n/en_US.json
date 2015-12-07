@@ -141,7 +141,7 @@
     "callFree": "Call Free",
     "freeContactCenter": "Free Chat, Email, Voice",
     "paidMsg": "Standard Team Rooms",
-    "paidConf": "Meeting 25 Party",
+    "paidConf": "25 Party Meetings",
     "paidConfWebEx": "WebEx Meetings",
     "paidComm": "Advanced Spark Call",
     "paidContactCenter": "Chat, Email, Voice",
@@ -153,7 +153,7 @@
     "eventCenter": "Event Center {{capacity}}",
     "communication": "Communication",
     "cloudExtensions": "Hybrid Services",
-    "cmr": "Collaboration Meeting Room"
+    "cmr": "Collaboration Meeting Rooms"
   },
   "usersPreview": {
     "groupPreview": "Group:",
@@ -241,11 +241,11 @@
     "eventsTabDesc": "Event Management",
     "messengerTab": "Webex Messenger",
     "messengerTabDesc": "Webex Messenger Administration",
-    "calendarServiceTab": "Hybrid Services: Calendar",
+    "calendarServiceTab": "Calendar",
     "calendarServiceTabDesc": "Calendar Service",
-    "callServiceTab": "Hybrid Services: Call",
+    "callServiceTab": "Call",
     "callServiceTabDesc": "Call Service",
-    "expresswayManagementServiceTab": "Hybrid Services: Management",
+    "expresswayManagementServiceTab": "Management Service",
     "expresswayManagementServiceTabDesc": "Expressway Management Service"
   },
   "index": {
@@ -359,7 +359,6 @@
     "activeUsers": "Active Users",
     "overallActiveUserGraphError": "There was an error while loading detailed active user data.",
     "activeUserTableError": "There was an error while loading most active user data for {{customer}}.",
-    "customerActiveError": "There was an error while loading the detailed activeuser data.",
     "calls": "Calls",
     "customer": "Customer",
     "hideActiveUsers": "Hide Most Active Users",
@@ -1084,7 +1083,7 @@
     "downloadSub": "Download CSV template",
     "downloadCSVTemplate": "Download CSV Template",
     "advancedSub": "Synchronize users from Active Directory.",
-    "needHelp": "Need help - ",
+    "needHelp": "Need help? ",
     "needHelpExplain": "Search the knowledge base.",
     "planReview": "Plan Review",
     "spark": "Spark",
@@ -1102,7 +1101,6 @@
     "conferencing": "Conferencing",
     "communications": "Communications",
     "roomSystems": "Room Systems",
-    "sparkRoomSystem": "Spark Room System",
     "freeMsg": "Message Free",
     "freeMtg": "Meeting Free 3 Party",
     "freeCall": "Call Free",
@@ -1717,51 +1715,21 @@
     "call": "Call"
   },
   "trialModal": {
-    "addTrial": {
-      "title": "Start New Trial"
-    },
-    "meeting": {
-      "title": "Setup Trial - Meeting and WebEx",
-      "webexHeader": "WebEx License Type",
-      "webexDetails": "Meeting and WebEx trials enable Enterprise Edition WebEx licenses.",
-      "siteUrl": "Site URL",
-      "timezone": "Time Zone",
-      "default": "Set as default",
-      "timezonePlaceholder": "Select a timezone"
-    },
-    "call": {
-      "title": "Setup Trial – Add Devices",
-      "selectDevicesHeader": "Select Devices",
-      "meetingRoomCamera": "Spark Room System",
-      "deskPhones": "Personal and Shared Desk Phones",
-      "sx10": "SX10",
-      "phone8865": "8865",
-      "phone8845": "8845",
-      "phone7861": "7861",
-      "phone7841": "7841",
-      "quantity": "Qty",
-      "shippingInfo": "Shipping Information",
-      "address": "John Q. Partner\n555 Main St.\nSan Francisco, CA 43211",
-      "recipient": "Where will the devices be shipped?",
-      "customer": "Customer",
-      "partner": "Partner"
-    },
-    "trialSuccess": "Your trial is ready.",
-    "nextStepPrompt": "Do you want to setup services for the customer?",
-    "setupLater": "No thanks",
-    "setupNow": "Yes, setup the services",
-    "squareducError": "Created trial, but unable to provision Spark UC",
+    "trialSuccess": "You have set up your trial successfully.",
+    "nextStep": "Next Step",
+    "sendWelcome": "Send Welcome Message",
+    "sendWelcomePrompt": "If you want the customer to set up the service:",
+    "launchPortal": "Launch Company Portal",
+    "launchPortalPrompt": "If you want to set up the service for the customer:",
+    "or": "or",
+    "squareducError": "Created trial, but unable to provision Spark UC.",
     "addSuccess": "A trial was successfully started for {{customerName}} with {{licenseCount}} licenses for {{licenseDuration}} days.",
     "editSuccess": "You have successfully edited a trial for {{customerName}} with {{licenseCount}} licenses for {{licenseDuration}} days."
   },
   "trials": {
     "collab": "Standard Team Rooms + 25 Party Meetings",
     "squaredUC": "Advanced Spark Call",
-    "licenses": "Licenses",
-    "meet": "Meeting and WebEx",
-    "message": "Message",
-    "meeting": "Meeting and WebEx",
-    "call": "Call"
+    "meet": "Meeting and WebEx"
   },
   "status": {
     "noResults": "No results available.",
@@ -2981,18 +2949,11 @@
     "showMore": "Show more results",
     "delegatedAdministration": "manages {{numManages}} organizations",
     "licenses": "Licenses",
-    "licenseDisplayNames": {
-      "MC": "{{volume}} x Meeting Center {{capacity}}",
-      "TC": "{{volume}} x Training Center {{capacity}}",
-      "MS": "{{volume}} x Standard Team Rooms",
-      "CF": "{{volume}} x 25 Party Meetings",
-      "EE": "{{volume}} x Enterprise Edition {{capacity}}",
-      "SC": "{{volume}} x Support Center {{capacity}}",
-      "EC": "{{volume}} x Event Center {{capacity}}",
-      "CO": "{{volume}} x Advanced Spark Call",
-      "CMR": "{{volume}} x Collaboration Meeting Rooms",
-      "SD": "{{volume}} x Room Devices",
-      "ST": "{{volume}} x Storage"
+    "licenseTypes": {
+      "MESSAGING": "{{volume}} x Standard Team Rooms",
+      "CONFERENCING": "{{volume}} x 25 Party Meetings",
+      "COMMUNICATIONS": "{{volume}} x Advanced Spark Call",
+      "SHARED_DEVICES": "{{volume}} x Room Devices"
     },
     "trial": "Trial",
     "adminUsers": "Administrators",
@@ -3005,7 +2966,6 @@
       "suspended": "Suspended",
       "pending": "Pending"
     },
-    "consumerOrg": "Consumer",
-    "unlicensedUsers": "Unlicensed Users"
+    "consumerOrg": "Consumer"
   }
 }
