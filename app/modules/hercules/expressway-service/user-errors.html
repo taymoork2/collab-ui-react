@@ -1,6 +1,6 @@
 <div>
   <div class="modal-header">
-    <button id="convertModalClose" type="button" class="close" ng-click="$parent.modal.close()">
+    <button id="convertModalClose" type="button" class="close" ng-click="modal.close()">
       <span class="sr-only">Close</span>
     </button>
     <h5 class="modal-title">
@@ -16,7 +16,7 @@
         out of {{userErrorsCtrl.totalCount}} errors.
         <span
           ng-if="userErrorsCtrl.totalCount > userErrorsCtrl.limit">The
-          <a href ng-click="$parent.modal.close();exp.openUserStatusReportModal(exp.currentServiceId);">user status
+          <a href ng-click="modal.close();exp.openUserStatusReportModal(exp.currentServiceId);">user status
             report</a> has more information.</span>
       </p>
 
@@ -32,10 +32,10 @@
   </div>
   <div class="modal-footer">
     <button id="openUserStatusReport" class="btn pull-right"
-            ng-click="$parent.modal.close();exp.openUserStatusReportModal(exp.currentServiceId);">
+            ng-click="modal.close();exp.openUserStatusReportModal(exp.currentServiceId);">
       <span>Open User Status Report</span>
     </button>
-    <button id="convertCancelButton" class="btn btn--primary pull-right" ng-click="$parent.modal.close()"
+    <button id="convertCancelButton" class="btn btn--primary pull-right" ng-click="modal.close()"
             style="margin-right: 10px">
       <span>Close</span>
     </button>

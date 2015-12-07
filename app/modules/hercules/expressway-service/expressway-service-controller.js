@@ -152,6 +152,9 @@
         resolve: {
           serviceId: function () {
             return vm.currentServiceId;
+          },
+          exp: function () {
+            return $scope.exp;
           }
         }
       });
@@ -267,11 +270,13 @@
   }
 
   /* @ngInject */
-  function UserErrorsController(serviceId, USSService, XhrNotificationService, Userservice, ClusterService) {
+  function UserErrorsController($scope, exp, serviceId, USSService, XhrNotificationService, Userservice, ClusterService) {
     var vm = this;
     vm.loading = true;
     vm.limit = 5;
     vm.serviceId = serviceId;
+
+    $scope.exp = exp;
 
     USSService.getStatuses(function (error, statuses) {
       if (error) {

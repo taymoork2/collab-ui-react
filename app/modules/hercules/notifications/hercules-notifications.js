@@ -57,6 +57,9 @@
         resolve: {
           serviceId: function () {
             return $scope.selectedServiceId;
+          },
+          exp: function () {
+            return $scope.$parent.exp;
           }
         }
       });
