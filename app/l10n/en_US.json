@@ -2903,10 +2903,12 @@
     }
   },
   "roles": {
-    "atlas-portal.support": "Billing Administrator",
-    "atlas-portal.reports": "Support Administrator",
+    "atlas-portal.support": "Support",
+    "atlas-portal.reports": "Reports",
+    "atlas-portal.billing": "Billing",
     "atlas-portal.partner.helpdesk": "Help Desk Support",
     "atlas-portal.application": "Application",
+    "atlas-portal.partner.salesadmin": "Sales Administrator",
     "id_full_admin": "Full Administrator",
     "user": "User"
   },
