@@ -55,6 +55,8 @@
             Notification.error('autoAttendant.errorResetCMI');
           });
 
+        AANumberAssignmentService.deleteAANumberAssignments(Authinfo.getOrgId(), vm.featureId);
+
         AutoAttendantCeService.deleteCe(ceInfoToDelete.getCeUrl()).then(
           function (data) {
             aaModel.ceInfos.splice(delPosition, 1);
