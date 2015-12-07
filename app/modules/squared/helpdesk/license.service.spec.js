@@ -31,7 +31,7 @@ describe('LicenseService', function () {
         "type": "CONFERENCING",
         "name": "Conferencing",
         "status": "ACTIVE",
-        "volume": 100,
+        "volume": 99,
         "isTrial": true,
         "trialExpiresInDays": 49
       }];
@@ -42,7 +42,8 @@ describe('LicenseService', function () {
 
       LicenseService.getLicensesInOrg('1234').then(function (res) {
         expect(res.length).toBe(2);
-        expect(res[0].capacity).toBe(100);
+        expect(res[0].volume).toBe(100);
+        expect(res[1].volume).toBe(99);
       });
 
     });
