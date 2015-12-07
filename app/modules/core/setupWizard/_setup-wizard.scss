@@ -1,65 +1,78 @@
-.wizard-plan-review {
+// TODO: Move this to a common location (Shared by Plan review and Assign Services)
+%plan-container {
   min-height: 515px;
   display: flex;
   flex-direction: column;
   flex: 1;
+  .indentedCheckbox {
+    margin: 0;
+    padding-left: rem-calc(28);
+    .cs-checkbox {
+      padding-right: 1.5rem;
+    }
+  }
   .flex-row {
     @extend .row;
     display: flex;
-    .col-sm-4 {
-      padding-bottom: 10px;
-      &:not(:last-of-type){
+    .columns {
+      padding: 1.5rem;
+    }
+    .small-4 {
+      &:not(:last-of-type) {
         margin-right: 3px;
       }
     }
-    .col-title {
+    .column-title {
       background: $gray-light-4;
-      padding: 12px 0px 14px 0px;
+      padding: 12px 0 14px 0;
       line-height: 30px;
     }
-    .col-free {
+    .column-free {
       background: $gray-light-4;
       min-height: 50px;
-      padding: 20px 0px 14px 24px;
       line-height: 24px;
       font-size: 14px;
     }
-    .col-paid {
+    .column-paid,
+    .column-mtg {
       background: $gray-light-4;
-      padding: 0;
       font-size: 14px;
     }
-    .col-mtg{
+    .column-mtg {
+      padding-bottom: 0;
+    }
+    .column-trial {
       background: $gray-light-4;
-      padding: 0;
-      font-size: 14px;
     }
-    .col-trial {
-      background: $brand-warning;
-      padding: 0;
+    .column-trial-header {
+      @extend .h4;
+      padding: 1rem 0;
+      background: $color-attention;
+      color: $white;
     }
-    .col-trial-header {
-      padding: 20px 15px 0 15px;
-      background: $brand-warning-dark;
-      height: 100px;
-      font-family: $brand-font-cisco-TT-Extra-Light;
-      font-size: 26px;
-      line-height: 32px;
-      color: $brand-white;
-    }
-    
     &.row-licenses {
       flex: 1;
     }
   }
   .row-room {
-    margin-top: 3px; 
+    margin-top: 3px;
     background: $gray-light-4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .column-header {
+      padding: 0;
+      border-right: solid 1px $gray-light-2;
+    }
   }
-  .col-room {
+  .column-room {
     padding-top: 12px;
     line-height: 32px;
     text-align: center;
+  }
+  .room-systems {
+    text-align: left;
+    padding: 1.5rem;
   }
   .item-sparkRoom {
     color: $color-primary-base;
@@ -68,41 +81,38 @@
     line-height: 24px;
   }
   .spark-quantity {
-    text-align: center;
     font-size: 14px;
     font-family: $brand-font-light;
     color: $gray-base;
     line-height: 24px;
-    padding-bottom: 16px;
   }
   .badge-trial {
     @extend .badge.badge-warning;
     display: inline-block;
   }
   .column-header {
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     h3 {
-      font-family: $brand-font-extra-light;
-      font-size: 26px;
       color: $gray-dark-2;
-      display: inline-block;
+      margin-top: 2px;
     }
     .icon {
       font-size: 32px;
-      display: inline-block;
+      margin-right: .75rem;
     }
   }
-  .column-title {
-    h5 { 
-      font-family: $brand-font-regular;
-      font-size: 12px;
-      color: $gray-dark-1;
-      text-align: center;
-    }
-    .free {
+  .column-subsription-header {
+    font-family: $brand-font-regular;
+    font-size: 12px;
+    color: $gray-dark-1;
+    text-align: center;
+    padding: 4px 0 2px;
+    &.free {
       background-color: $color-cta-lighter;
     }
-    .paid {
+    &.paid {
       background-color: $color-primary-lighter;
     }
   }
@@ -112,7 +122,7 @@
     line-height: 24px;
   }
   .item-paid {
-    padding: 0px 0px 24px 24px;
+    padding: 0 0 24px 0;
     line-height: 24px;
     .sub-item {
       font-family: $brand-font-light;
@@ -125,7 +135,7 @@
       color: $gray-base;
       display: inline-block;
       .quantity-padding {
-        padding-right: 0px;
+        padding-right: 0;
         font-size: 14px;
         color: $gray-base;
       }
@@ -141,32 +151,23 @@
     color: $color-primary-base;
     font-family: $brand-font-light;
     font-size: 14px;
-    padding: 20px 0px 0px 0px;
     line-height: 24px;
-    margin-left: 24px;
   }
-  .item-mtg{
+  .item-mtg {
     color: $color-primary-base;
     font-family: $brand-font-light;
     font-size: 14px;
     line-height: 24px;
-    margin: 0px 24px 0px 24px;
-
     .sub-item {
       padding-bottom: 24px;
       font-family: $brand-font-light;
       font-size: 14px;
       color: $gray-base;
-      margin-bottom: 0px;
+      margin-bottom: 0;
     }
     .item-webex {
       color: $gray-dark-2;
       margin-right: 24px;
-    }
-    .sub-line {
-      border-bottom: 1px solid #ccc;
-      padding-top: 5px;
-      margin-bottom: 20px;
     }
     .quantity-mtg {
       font-family: $brand-font-light;
@@ -181,10 +182,19 @@
       }
     }
   }
+  .sub-line {
+    border-bottom: 1px solid #ccc;
+    padding-top: 5px;
+    margin-bottom: 20px;
+  }
+}
+
+.wizard-plan-review {
+  @extend %plan-container;
 }
 
 .wizard-trial-progress {
-  .col-sm-12 {
+  .column-sm-12 {
     margin-top: 3px;
     padding-left: 1px;
     padding-right: 4px;
@@ -198,7 +208,8 @@
 }
 
 .wizard-trial-progress-text {
-  font-family: Arial;
+  font-family: $brand-font-regular;
+  color: $gray-dark-1;
   font-size: 12px;
 }
 
@@ -286,66 +297,53 @@
 
 .service-setup-container {
   padding-left: 20px;
-
   .form-group {
     margin-left: 0;
     margin-right: 0;
   }
-
   .service-setup {
     label {
       font-size: 24px;
     }
-
     .hide-delete {
       visibility: hidden;
     }
-
     .service-setup-timezone {
       .formly-input-wrapper {
         width: 50%
       }
     }
-
     .service-setup-steering-digit {
       .formly-input-wrapper {
         width: 100px;
       }
     }
-
     .service-setup-site-code {
       .formly-input-wrapper {
         width: 100px;
       }
     }
-
     &.service-setup-extension {
       .formly-field-group {
         margin-bottom: 10px;
       }
-
     }
-
     .service-setup-extension-range {
       width: 375px;
-        input {
-          width: 100%;
-        }
+      input {
+        width: 100%;
+      }
     }
-
     .service-setup-extension-range-to {
       margin-right: 30px;
       margin-left: 30px;
     }
-
     .service-setup-company-voicemail {
       margin-top: 15px;
-
       .select-dropdown {
         width: 230px;
       }
     }
-
     .service-setup-moh {
       width: 50%;
     }
@@ -362,17 +360,15 @@
   }
   .file-drop {
     border: 1px dashed $gray-light;
-    height : 300px;
+    height: 300px;
     display: flex;
     align-content: center;
     justify-content: center;
-
     &.dragover {
       border-color: $link-hover-color;
       background: $gray-lightest;
     }
   }
-
   .file-drop-content {
     align-self: center;
     .icon-circle-attachment {
@@ -381,11 +377,9 @@
       color: $gray-light;
     }
   }
-
   .file-drop-inactive {
     @extend .file-drop;
     border: 1px solid $gray-light;
-
     .file-drop-content {
       width: 50%;
     }
@@ -397,11 +391,9 @@
       margin-top: -15px;
     }
   }
-
   .download-link {
     margin-top: 10px;
   }
-
   input {
     display: none;
   }
@@ -413,17 +405,14 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
   .icon-circle-group {
     font-size: 100px;
     margin-bottom: 100px;
     color: $gray-light;
   }
-
   .users-process-content {
     width: 50%;
     display: flex;
-
     .progressbar {
       flex: 1;
     }
@@ -432,7 +421,6 @@
       margin-left: 5px;
     }
   }
-
   .time-duration {
     margin-top: -15px;
   }
@@ -502,10 +490,9 @@
     align-self: center;
     margin: 20px 0;
   }
-
   .table-header {
     border: $gray-light solid 1px;
-    border-bottom: 0px;
+    border-bottom: 0;
     .table {
       border-color: $gray-lightest;
     }
@@ -520,11 +507,11 @@
   }
   .table-body {
     border: $gray-light solid 1px;
-    border-top: 0px;
+    border-top: 0;
     position: relative;
     top: -1px;
     .table {
-      border-width: 0px;
+      border-width: 0;
     }
     .center {
       text-align: center;
@@ -551,21 +538,27 @@
     .table {
       margin-bottom: 0;
     }
-    .table-bordered > thead > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > th, .table-bordered > tbody > tr > td {
+    .table-bordered > thead > tr > th,
+    .table-bordered > thead > tr > td,
+    .table-bordered > tbody > tr > th,
+    .table-bordered > tbody > tr > td {
       border-bottom-width: 1px;
       border-right: $gray-light solid 1px;
       font-size: 15px;
     }
-    .table-bordered > thead > tr > th:last-of-type, .table-bordered > tbody > tr > td:last-of-type {
-        border-right: none;
-      }
-    .table-bordered > thead > tr:last-of-type > th, .table-bordered > tbody > tr:last-of-type > td {
-        border-bottom-width: 0px;
-      }
-    .table-bordered > thead > tr > th, .table-bordered > tbody > tr > td {
-        border-right: $gray-light solid 1px;
-        border-left: none;
-        border-top: none;
-      }
+    .table-bordered > thead > tr > th:last-of-type,
+    .table-bordered > tbody > tr > td:last-of-type {
+      border-right: none;
+    }
+    .table-bordered > thead > tr:last-of-type > th,
+    .table-bordered > tbody > tr:last-of-type > td {
+      border-bottom-width: 0;
+    }
+    .table-bordered > thead > tr > th,
+    .table-bordered > tbody > tr > td {
+      border-right: $gray-light solid 1px;
+      border-left: none;
+      border-top: none;
+    }
   }
 }

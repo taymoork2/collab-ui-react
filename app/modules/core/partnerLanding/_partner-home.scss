@@ -1,11 +1,8 @@
 /*** PARTNERS ***/
 
-.partneroverview-state {
-  @extend %page-content-padding;
-}
-
 .partner-container {
   @extend %content-header;
+  @extend %page-content-padding;
 
   .tab-reports {
     background-color: transparent;

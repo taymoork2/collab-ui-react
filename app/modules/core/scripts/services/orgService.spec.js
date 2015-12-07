@@ -34,7 +34,7 @@ describe('orgService', function () {
           fusion_cal: 'squared-fusion-cal',
           mediafusion: 'squared-fusion-media',
           fusion_mgmt: 'squared-fusion-mgmt',
-          device_mgmt: 'spark-device-mgmt',
+          room_system: 'spark-room-system',
           fusion_ec: 'squared-fusion-ec'
         }
       };

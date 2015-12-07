@@ -195,10 +195,10 @@
               continue;
             }
             switch (offer.id) {
-            case Config.trials.collab:
+            case Config.trials.message:
               offerNames.push($translate.instant('trials.collab'));
               break;
-            case Config.trials.squaredUC:
+            case Config.trials.call:
               dataObj.isSquaredUcOffer = true;
               offerNames.push($translate.instant('trials.squaredUC'));
               break;

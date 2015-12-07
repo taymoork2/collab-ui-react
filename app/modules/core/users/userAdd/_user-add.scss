@@ -197,8 +197,12 @@
 }
 
 .warning-icon {
-  display: inline-block;
-  vertical-align: middle;
+  @extend .icon;
+  @extend .icon-warning;
+  margin-right: 12px;
+  font-size: 15px;
+  color: $brand-warning;
+  float: left;
 }
 
 .service-link-span-box {
@@ -217,7 +221,6 @@
   float: left;
   min-height: 135px;
   min-width: 250px;
-
   label {
     margin-bottom: 0px;
   }
@@ -253,32 +256,25 @@
 .user-name-email-input {
   display: flex;
   align-items: center;
-
   .flex1 {
     flex: 1;
     margin-right: 5px;
   }
-
   .flex2 {
     flex: 2;
     margin-right: 5px;
   }
-
   .plus-icon {
     @extend .icon;
-
     @extend .icon-plus;
-
     border-radius: 50%;
     font-size: 25px;
     margin-left: 10px;
   }
-
   .plus-icon-inactive {
     color: $gray-lighter;
     background-color: $gray-lightest;
   }
-
   .plus-icon-active {
     cursor: pointer;
     color: $brand-white;
@@ -286,41 +282,33 @@
   }
 }
 
+
 /*-------------------------------------------------------------------
   US196818 | Atlas - Add User Modal Update
 -------------------------------------------------------------------*/
 
-.add-users, .edit-services {
+.add-users,
+.edit-services {
   .modal-body {
     background-color: $brand-white;
     margin-bottom: 0;
     padding: 0;
-
     .loading {
       width: 100%;
       text-align: center;
       margin: 40px auto;
-
-      &.ng-enter, &.ng-leave {
+      &.ng-enter,
+      &.ng-leave {
         transition: none;
       }
-
       /* starting animations for enter */
-
       &.ng-enter {}
-
       /* terminal animations for enter */
-
       &.ng-enter.ng-enter-active {}
-
       /* starting animations for leave */
-
       &.ng-leave {}
-
       /* terminal animations for leave */
-
       &.ng-leave.ng-leave-active {}
-
       .icon {
         font-size: 75px;
       }
@@ -329,20 +317,18 @@
 }
 
 .onboard-users {
-  .tokenfield.form-control, .tokenfield.form-control-static {
+  .tokenfield.form-control,
+  .tokenfield.form-control-static {
     width: 100% !important;
-
     input.token-input {
       margin-top: 0;
       padding: 6px;
     }
   }
-
   .wizard-main & {
     margin-left: 2px;
     margin-right: 2px;
   }
-
   .msgrsync-desc-adduser {
     padding: 6px;
     background-color: $brand-warning-light;
@@ -366,108 +352,20 @@
 }
 
 .license-wrapper {
-  min-height: 515px;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  .flex-row {
-    @extend .row;
-    display: inline-flex;
-    text-align: center;
-
-    .col-sm-4 {
-      padding-bottom: 10px;
-      &:not(:last-of-type){
-        margin-right: 3px;
-      }
-    }
-
-    .col-free {
-      background: $gray-lightest;
-      min-height: 50px;
-      padding-top: 15px;
-    }
-
-    .bucket-row-header {
-      background: $gray-lightest;
-      display: inline-flex;
-      h3 {
-        font-family: $brand-font-cisco-TT-Extra-Light;
-        padding-left: 5px;
-      }
-      .icon {
-        font-size: 35px;
-        display: inline-block;
-      }
-    }
-    
-    .col-paid {
-      background: $gray-lightest;
-      padding: 0;
-      font-size: 14px;
-    }
-
-    &.row-licenses {
-      flex: 1;
-    }
-  }
-
-  .column-title {
-    h5 { 
-      font-family: Arial;
-      text-align: center;
-    }
-    .free {
-      background-color: $color-cta-lighter;
-    }
-    .paid {
-      background-color: $color-primary-lighter;
-    }
-  }
-
-  .item-paid {
-    padding: 15px 15px 0px 15px;
-  }
-
-  .column-header {
-    text-align: center;
-
-    h3 {
-      margin-top: 10px;
-      font-family: $brand-font-cisco-TT-Extra-Light;
-      display: inline-block;
-    }
-    .icon {
-      font-size: 35px;
-      display: inline-block;
-    }
-  }
-
-  .ckbx {
-    padding: 20px 15px 0px 15px;
-  }
-
-  .sub-line {
-    border-bottom: 1px solid #ccc;
-    padding-top: 5px;
-    margin: 0px 20px 20px 20px;
-  }
+  @extend %plan-container;
 }
 
 .wizard-main {
   .title-separator-pipe {
     color: $gray-light;
   }
-
   .onboard-label {
     margin-bottom: 20px;
     margin-top: 10px;
   }
-
   #usersfield-tokenfield {
     font-family: $brand-font-cisco-TT-Extra-Light;
   }
-
   .wizard-main-title {
     color: $gray-darkest;
   }
@@ -498,61 +396,48 @@
     padding-right: 0px;
     height: calc(100vh - 370px);
     width: 100%;
-
     .ngTopPanel {
       width: 100% !important;
       background-color: $gray-lightest;
       border-bottom: 1px solid $gray-light;
       box-sizing: content-box;
     }
-
     .ngHeaderContainer {
       width: 100% !important;
     }
-
     .ngHeaderRow {
       width: 100%;
     }
-
     .ngHeaderCell {
       width: 100%;
     }
-
     .ngHeaderText {
       padding-left: 20px;
     }
-
     .ngViewport {
       width: 100% !important;
     }
-
     .ngCanvas {
       margin-top: 10px;
       width: 100% !important;
     }
-
     .ngRow {
       border-width: 0px;
-
       /* affects borders around grid rows */
       width: 100%;
     }
-
     .ngRow:hover {
       background-color: transparent;
     }
-
     .ngCell {
       padding-top: 10px;
       padding-bottom: 10px;
     }
-
     .ngCellText {
       padding-top: 0px;
       padding-bottom: 0px;
       padding-left: 20px;
     }
-
     .name-display-style {
       font-size: 14px;
       color: $gray-darkest;
@@ -562,7 +447,6 @@
       margin-top: 0px;
       margin-bottom: 0px;
     }
-
     .email-display-style {
       font-family: Arial;
       font-size: 12px;
@@ -571,47 +455,39 @@
       margin-top: 0px;
       margin-bottom: 0px;
     }
-
-    .error, .warning {
+    .error,
+    .warning {
       font-family: Arial;
       font-size: 12px;
       text-align: left;
     }
   }
-
   .select-list {
     padding-top: 0px;
     padding-left: 0px;
   }
-
   .select-list.colt1 {
     width: 200px;
   }
-
   .select-list.colt2 {
     width: 90px;
     margin-left: auto;
     margin-right: auto;
   }
-
   .selected {
     a {
       background-color: transparent;
     }
-
     a .icon {
       background-color: transparent;
     }
   }
-
   .form-control.select-toggle {
     padding-top: 8px;
   }
-
   .form-control[disabled].select-toggle {
     border: 1px solid $brand-danger;
     background-color: transparent;
-
     .icon-arrow-down {
       &:after {
         /*this is the X icon that appears when no DNs are available*/
@@ -627,11 +503,9 @@
       }
     }
   }
-
   .select-warning .select-toggle {
     border: 1px solid $brand-warning-dark;
     background-color: transparent;
-
     .icon-arrow-down {
       &:after {
         /*this is the X icon that appears when no DNs are available*/
@@ -647,30 +521,24 @@
       }
     }
   }
-
   .icon-arrow-down {
     padding-top: 0;
   }
-
   .ngHeaderText.colt2 {
     text-align: center;
   }
-
   .ngCell.colt2 {
     overflow: visible;
     padding-left: 20px;
-
     .dropdown-menu {
       right: 25px;
       left: auto;
       top: 70%;
     }
   }
-
   .ngCell.colt1 {
     overflow: visible;
     padding-left: 20px;
-
     .dropdown-menu {
       top: 70%;
     }
