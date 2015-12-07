@@ -30,7 +30,6 @@
     }
 
     function keyPressHandler(event) {
-      console.log('device');
       if (event.keyCode === 27) { // Esc
         window.history.back();
       }
