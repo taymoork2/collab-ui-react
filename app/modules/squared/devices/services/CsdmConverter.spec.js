@@ -344,4 +344,63 @@ describe('CsdmConverterSpec', function () {
       expect(converter.convertDevices([{}]).rsuKey).toBeFalsy();
     });
   });
+
+  describe("Non-existing devices", function () {
+    it('should have a url', function () {
+      var arr = [{
+        url: "foo"
+      }];
+      expect(converter.convertAccounts(arr)[0].url).toBe('foo');
+    });
+
+    it('should have a cisUuid', function () {
+      var arr = [{
+        id: "foo"
+      }];
+      expect(converter.convertAccounts(arr)[0].cisUuid).toBe('foo');
+    });
+
+    it('should have a displayName', function () {
+      var arr = [{
+        displayName: "foo"
+      }];
+      expect(converter.convertAccounts(arr)[0].displayName).toBe('foo');
+    });
+
+    it('should have a isUnused', function () {
+      var arr = [{
+        url: "foo"
+      }];
+      expect(converter.convertAccounts(arr)[0].isUnused).toBeTruthy();
+    });
+
+    it('should have a canDelete', function () {
+      var arr = [{
+        url: "foo"
+      }];
+      expect(converter.convertAccounts(arr)[0].canDelete).toBeTruthy();
+    });
+
+    it('should set Product to Account', function () {
+      var arr = [{
+        url: "foo"
+      }];
+      expect(converter.convertAccounts(arr)[0].product).toBe('Account');
+    });
+
+    it('should set state to Non existent', function () {
+      var arr = [{
+        url: "foo"
+      }];
+      expect(converter.convertAccounts(arr)[0].readableState).toBe('Non existent');
+    });
+
+    it('should have issues', function () {
+      var arr = [{
+        url: "foo"
+      }];
+      expect(converter.convertAccounts(arr)[0].hasIssues).toBeTruthy();
+    });
+
+  });
 });
