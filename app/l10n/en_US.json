@@ -2245,7 +2245,7 @@
   "webexSiteSettingsLabels": {
     "siteSettingsIndexPageTitle": "Configure",
     "siteSettingsIndexPageTitleFull": "Configure {{siteUrl}}",
-    "hostAccountsTitle": "HOST ACCOUNTS",
+    "hostAccountsTitle": "Host Accounts",
     "activeTitle": "Active",
     "availableTitle": "Available",
     "emailAllHostsBtnTitle": "Email All Hosts",
