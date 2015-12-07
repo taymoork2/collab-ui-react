@@ -6,11 +6,28 @@
     .controller('CustomerReportsCtrl', CustomerReportsCtrl);
 
   /* @ngInject */
-  function CustomerReportsCtrl($scope, $stateParams, $q, $log, $translate, Log, Authinfo, Config, WebexReportService, Userservice, WebExUtilsFact, Storage) {
+  function CustomerReportsCtrl($scope, $stateParams, $q, $log, $timeout, $translate, Log, Authinfo, Config, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, Userservice, WebExUtilsFact, Storage) {
     var vm = this;
+    var ABORT = 'ABORT';
+    var REFRESH = 'refresh';
+    var SET = 'set';
+    var EMPTY = 'empty';
 
     vm.pageTitle = 'reportsPage.pageTitle';
     vm.showWebexTab = false;
+
+    var activeUsersSort = ['userName', 'numCalls', 'totalActivity'];
+    var activeUsersChart = null;
+    vm.activeUserDescription = "";
+    vm.mostActiveTitle = "";
+    vm.activeUserStatus = REFRESH;
+    vm.displayMostActive = true;
+    vm.mostActiveUsers = [];
+    vm.activeUserReverse = true;
+    vm.activeUsersTotalPages = 0;
+    vm.activeUserCurrentPage = 0;
+    vm.activeUserPredicate = activeUsersSort[2];
+    vm.activeButton = [1, 2, 3];
 
     vm.headerTabs = [{
       title: $translate.instant('reportsPage.sparkReports'),
@@ -31,6 +48,109 @@
       description: $translate.instant('reportsPage.threeMonths2')
     }];
     vm.timeSelected = vm.timeOptions[0];
+
+    vm.timeUpdate = timeUpdate;
+
+    vm.isRefresh = function (tab) {
+      return tab === REFRESH;
+    };
+
+    vm.isEmpty = function (tab) {
+      return tab === EMPTY;
+    };
+
+    vm.activePage = function (num) {
+      return vm.activeUserCurrentPage === Math.ceil((num + 1) / 5);
+    };
+
+    vm.changePage = function (num) {
+      vm.activeUserCurrentPage = num;
+    };
+
+    vm.mostActiveSort = function (num) {
+      if (vm.activeUserPredicate === activeUsersSort[num]) {
+        vm.activeUserReverse = !vm.activeUserReverse;
+      } else {
+        if (num >= 1) {
+          vm.activeUserReverse = true;
+        } else {
+          vm.activeUserReverse = false;
+        }
+        vm.activeUserPredicate = activeUsersSort[num];
+      }
+    };
+
+    vm.pageForward = function () {
+      if ((vm.activeUserCurrentPage === vm.activeButton[2]) && (vm.activeButton[2] !== vm.activeUsersTotalPages)) {
+        vm.activeButton[0] += 1;
+        vm.activeButton[1] += 1;
+        vm.activeButton[2] += 1;
+      }
+      if (vm.activeUserCurrentPage !== vm.activeUsersTotalPages) {
+        vm.changePage(vm.activeUserCurrentPage + 1);
+      }
+    };
+
+    vm.pageBackward = function () {
+      if ((vm.activeUserCurrentPage === vm.activeButton[0]) && (vm.activeButton[0] !== 1)) {
+        vm.activeButton[0] -= 1;
+        vm.activeButton[1] -= 1;
+        vm.activeButton[2] -= 1;
+      }
+      if (vm.activeUserCurrentPage !== 1) {
+        vm.changePage(vm.activeUserCurrentPage - 1);
+      }
+    };
+
+    function init() {
+      setFilterBasedText();
+      $timeout(function () {
+        setDummyData();
+      }, 30);
+
+      setActiveUserData();
+    }
+
+    function setFilterBasedText() {
+      vm.activeUserDescription = $translate.instant('activeUsers.customerPortalDescription', {
+        time: vm.timeSelected.description
+      });
+
+      vm.mostActiveTitle = $translate.instant("activeUsers.mostActiveUsers", {
+        time: vm.timeSelected.label
+      });
+    }
+
+    function setDummyData() {
+      var activeUserData = DummyCustomerReportService.dummyActiveUserData(vm.timeSelected);
+      var tempActiveUserChart = CustomerGraphService.setActiveUsersGraph(activeUserData, activeUsersChart);
+      if (tempActiveUserChart !== null && angular.isDefined(tempActiveUserChart)) {
+        activeUsersChart = tempActiveUserChart;
+      }
+    }
+
+    function timeUpdate() {
+      vm.activeUserStatus = REFRESH;
+
+      setFilterBasedText();
+      setDummyData();
+
+      setActiveUserData();
+    }
+
+    function setActiveUserData() {
+      CustomerReportService.getActiveUserData(vm.timeSelected).then(function (response) {
+        window.console.log(response);
+        if (response === ABORT) {
+          return;
+        } else if (response.activeUserGraph.length === 0) {
+          vm.activeUserStatus = EMPTY;
+        } else {
+          // TODO: add data handling to update the active user graph and table with the data in response
+          vm.activeUserStatus = SET;
+        }
+      });
+    }
 
     // TODO WEBEX side of the page has been copied from the existing reports page (needs converting from $scope to vm)
     vm.show = show;
@@ -173,5 +293,7 @@
         Storage.put('webexReportsSiteUrl', scopeWebexSelected);
       }
     };
+
+    init();
   }
 })();

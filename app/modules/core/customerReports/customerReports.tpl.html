@@ -2,7 +2,7 @@
 <cs-page-header id="reportsPanel" title="{{::nav.pageTitle}}" back="false" tabs="nav.headerTabs"></cs-page-header>
 <cs-page-sub-header ng-if="!nav.showWebexReports">
   <cs-page-sub-header-right>
-    <cs-select id="timeFilter" name="timeFilter" class='customer-report-filter' ng-model="nav.timeSelected" options="nav.timeOptions"></cs-select>
+    <cs-select id="timeFilter" name="timeFilter" class='customer-report-filter' ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.timeUpdate()"></cs-select>
   </cs-page-sub-header-right>
 </cs-page-sub-header>
 <div class="content-container customer-reports">
