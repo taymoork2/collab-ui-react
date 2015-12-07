@@ -78,7 +78,8 @@
       <div class="row">
         <div class="medium-12 columns details-value">
           <span>
-              <a ui-sref="helpdesk.search({orgFilter:helpdeskOrgCtrl.org})" translate="helpdesk.searchUsersDevices"></a>
+              <a href ng-click="helpdeskOrgCtrl.gotoSearchUsersAndDevices()"
+                 translate="helpdesk.searchUsersDevices"></a>
             </span>
         </div>
       </div>

@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskController(HelpdeskService, $translate, $scope, $stateParams) {
+  function HelpdeskController(HelpdeskService, $translate, $scope) {
     $('body').css('background', 'white');
     $scope.$on('$viewContentLoaded', function () {
       angular.element('#searchInput').focus();
@@ -46,10 +46,6 @@
         angular.element('#searchInput').focus();
       }
     };
-
-    if ($stateParams.orgFilter) {
-      initSearchWithOrgFilter($stateParams.orgFilter);
-    }
 
     function search() {
       if (!vm.searchString) return;
@@ -155,28 +151,29 @@
       });
     }
 
-    function keyPressHandler(event, page) {
-      var activeCard = angular.element(document.activeElement)[0]["tabIndex"];
-      var newTabIndex = -1;
-      var inputFieldHasFocus = angular.element(document.activeElement)[0]["id"] === "searchInput";
+    function keyPressHandler(event) {
+      var activeElement = angular.element(document.activeElement);
+      var inputFieldHasFocus = activeElement[0]["id"] === "searchInput";
       if (inputFieldHasFocus && !(event.keyCode === 27 || event.keyCode === 13)) {
         return; // if not escape and enter, nothing to do
       }
+      var activeTabIndex = activeElement[0]["tabIndex"];
+      var newTabIndex = -1;
       switch (event.keyCode) {
       case 37: // Left arrow
-        newTabIndex = parseInt(activeCard) - 1;
+        newTabIndex = activeTabIndex - 1;
         break;
 
       case 38: // Up arrow
-        newTabIndex = parseInt(activeCard) - 10;
+        newTabIndex = activeTabIndex - 10;
         break;
 
       case 39: // Right arrow
-        newTabIndex = parseInt(activeCard) + 1;
+        newTabIndex = activeTabIndex + 1;
         break;
 
       case 40: // Down arrow
-        newTabIndex = parseInt(activeCard) + 10;
+        newTabIndex = activeTabIndex + 10;
         break;
 
       case 27: // Esc
@@ -190,10 +187,8 @@
         break;
 
       case 13: // Enter
-        if (inputFieldHasFocus) {
-          //newTabIndex = 1;
-        } else {
-          angular.element(document.activeElement).click();
+        if (!inputFieldHasFocus) {
+          activeElement.click();
         }
         break;
       }

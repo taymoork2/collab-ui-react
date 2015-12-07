@@ -1016,17 +1016,14 @@ angular
         .state('helpdesk', {
           url: '/helpdesk',
           template: '<div ui-view></div>',
+          controller: 'HelpdeskController',
+          controllerAs: 'helpdeskCtrl',
           abstract: true,
           parent: 'helpdesk-main'
         })
         .state('helpdesk.search', {
           url: '/',
-          controller: 'HelpdeskController',
-          controllerAs: 'helpdeskCtrl',
-          templateUrl: 'modules/squared/helpdesk/helpdesk-search.html',
-          params: {
-            orgFilter: null
-          }
+          templateUrl: 'modules/squared/helpdesk/helpdesk-search.html'
         })
         .state('helpdesk.user', {
           url: '/user/:orgId/:id',

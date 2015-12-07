@@ -3,7 +3,7 @@
 
   /* @ngInject */
   function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsOrgService, Config,
-    $translate, LicenseService, HelpdeskHealthStatusService) {
+    $translate, LicenseService, HelpdeskHealthStatusService, $scope, $state) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.org) {
@@ -25,14 +25,15 @@
       room: 'unknown',
       hybrid: 'unknown'
     };
-    vm.statusPageUrl = Config.getStatusPageUrl();
     vm.initialAdminUserLimit = 3;
     vm.adminUserLimit = vm.initialAdminUserLimit;
+    vm.licenseUsageReady = false;
+    vm.statusPageUrl = Config.getStatusPageUrl();
     vm.showAllAdminUsers = showAllAdminUsers;
     vm.hideAllAdminUsers = hideAllAdminUsers;
     vm.keyPressHandler = keyPressHandler;
     vm.daysLeftText = daysLeftText;
-    vm.licenseUsageReady = false;
+    vm.gotoSearchUsersAndDevices = gotoSearchUsersAndDevices;
 
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
     HelpdeskHealthStatusService.getHealthStatuses().then(initHealth, angular.noop);
@@ -133,6 +134,11 @@
       return $translate.instant('helpdesk.numDaysLeft', {
         days: license.trialExpiresInDays
       });
+    }
+
+    function gotoSearchUsersAndDevices() {
+      $scope.$parent.helpdeskCtrl.initSearchWithOrgFilter(vm.org);
+      $state.go('helpdesk.search');
     }
   }
 
