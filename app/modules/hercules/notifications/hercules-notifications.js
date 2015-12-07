@@ -51,8 +51,14 @@
       $scope.selectedServiceId = serviceId;
       $scope.modal = $modal.open({
         scope: $scope,
-        controller: 'UserStatusesController',
-        templateUrl: 'modules/hercules/dashboard-info-panel/user-errors.html'
+        controller: 'UserErrorsController',
+        controllerAs: 'userErrorsCtrl',
+        templateUrl: 'modules/hercules/expressway-service/user-errors.html',
+        resolve: {
+          serviceId: function () {
+            return $scope.selectedServiceId;
+          }
+        }
       });
     };
 
