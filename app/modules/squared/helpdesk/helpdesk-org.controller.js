@@ -123,10 +123,8 @@
     }
 
     function keyPressHandler(event) {
-      switch (event.keyCode) {
-      case 27: // Esc
+      if (event.keyCode === 27) { // Esc
         window.history.back();
-        break;
       }
     }
 

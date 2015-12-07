@@ -18,7 +18,6 @@
     vm.searchingForDevices = false;
     vm.searchString = '';
     vm.keyPressHandler = keyPressHandler;
-    vm.focusFirstCard = focusFirstCard;
     vm.showMoreResults = showMoreResults;
     vm.currentSearch = {
       searchString: '',
@@ -195,11 +194,6 @@
       if (newTabIndex != -1) {
         $('[tabindex=' + newTabIndex + ']').focus();
       }
-    }
-
-    function focusFirstCard() {
-      //angular.element('.cs-card:first-child article').focus();
-      angular.element('#user-card-0 article').focus();
     }
   }
 

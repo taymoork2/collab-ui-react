@@ -70,15 +70,8 @@
   }
 
   function keyPressHandler(event) {
-    var newTabIndex = 0;
-    switch (event.keyCode) {
-    case 27: // Esc
-      newTabIndex = "-1";
+    if (event.keyCode === 27) { // Esc
       window.history.back();
-      break;
-    }
-    if (newTabIndex != "-1") {
-      $('[tabindex=' + newTabIndex + ']').focus();
     }
   }
 

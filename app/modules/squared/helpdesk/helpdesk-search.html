@@ -1,4 +1,4 @@
-<div class="helpdesk-search centered" tabindex="0" ng-keyup="helpdeskCtrl.keyPressHandler($event,'search')">
+<div class="helpdesk-search centered" tabindex="0" ng-keyup="helpdeskCtrl.keyPressHandler($event)">
 
   <h1 translate="helpdesk.helpdesk"></h1>
 
@@ -49,7 +49,7 @@
           <p translate="helpdesk.noSearchHits"></p>
         </div>
 
-        <div ng-if="helpdeskCtrl.currentSearch.userSearchResults.length > 0" ng-init="helpdeskCtrl.focusFirstCard()">
+        <div ng-if="helpdeskCtrl.currentSearch.userSearchResults.length > 0">
           <cs-card class="full pointer"
                    ng-repeat="user in helpdeskCtrl.currentSearch.userSearchResults | limitTo:helpdeskCtrl.currentSearch.userLimit" id="user-card-{{$index}}" >
             <article tabindex="{{$index * 10 + 1}}"

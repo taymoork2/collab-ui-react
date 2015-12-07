@@ -3,6 +3,7 @@
 
   /* @ngInject */
   function HelpdeskDeviceController($stateParams, HelpdeskService, XhrNotificationService) {
+    $('body').css('background', 'white');
     var vm = this;
     vm.deviceId = $stateParams.id;
     vm.orgId = $stateParams.orgId;
@@ -18,22 +19,20 @@
 
     HelpdeskService.getCloudberryDevice(vm.orgId, vm.deviceId).then(initDeviceView, XhrNotificationService.notify);
 
-    function keyPressHandler(event) {
-      switch (event.keyCode) {
-      case 27: // Esc
-        window.history.back();
-        break;
-      }
-    }
-
     function initDeviceView(device) {
       vm.device = device;
-
       if (!vm.org.displayName) {
         // Only if there is no displayName. If set, the org name has already been read (on the search page)
         HelpdeskService.getOrgDisplayName(vm.orgId).then(function (displayName) {
           vm.org = displayName;
         }, XhrNotificationService.notify);
+      }
+    }
+
+    function keyPressHandler(event) {
+      console.log('device');
+      if (event.keyCode === 27) { // Esc
+        window.history.back();
       }
     }
   }
