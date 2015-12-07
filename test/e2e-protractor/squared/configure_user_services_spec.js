@@ -85,7 +85,7 @@ describe('Configuring services per-user', function () {
     utils.click(users.closeSidePanel);
   });
 
-  it('should add user with NO hybrid services selected', function() {
+  it('should add user with NO hybrid services selected', function () {
     navigation.clickUsers();
     utils.deleteUser(testUser);
 
@@ -105,7 +105,7 @@ describe('Configuring services per-user', function () {
     utils.click(users.closeSidePanel);
   });
 
-  it('should add user with ALL hybrid services selected', function() {
+  it('should add user with ALL hybrid services selected', function () {
     navigation.clickUsers();
     utils.deleteUser(testUser);
 
