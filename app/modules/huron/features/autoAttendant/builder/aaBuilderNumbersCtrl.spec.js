@@ -77,7 +77,7 @@ describe('Controller: AABuilderNumbersCtrl', function () {
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
     spyOn(AANumberAssignmentService, 'checkAANumberAssignments').and.returnValue($q.when("{}"));
 
-    $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?order=pattern').respond(200, [{
+    $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&order=pattern').respond(200, [{
       'pattern': '+9999999991',
       'uuid': '9999999991-id'
     }, {
