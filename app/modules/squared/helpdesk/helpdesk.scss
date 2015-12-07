@@ -19,11 +19,14 @@
   }
   .circle-status-icon {
     font-size: 0.575rem;
+    margin-right: 0.5rem;
   }
   .helpdesk-details {
     h3 {
       color: $gray-dark-4;
       margin-bottom: 1rem;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
     }
     h4 {
       margin-top: 1rem;
@@ -79,6 +82,14 @@
     .cs-card-layout.cs-card-block {
       padding-right: 0;
       padding-left: 0.5rem;
+    }
+    .text-align-center {
+      text-align:center;
+    }
+    .large-number {
+      font-size:2rem;
+      color: $color-primary-base;
+      margin-top: 0.4rem;
     }
   }
 }
@@ -271,7 +282,6 @@
   .label {
     margin-bottom: 0;
     padding: 0.1rem 0.5rem 0.1rem;
-    margin-right: 0.5rem;
   }
   .cs-donut-svg {
     margin-top: 1rem;

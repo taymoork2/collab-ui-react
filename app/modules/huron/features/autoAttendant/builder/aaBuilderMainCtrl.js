@@ -231,7 +231,7 @@
       var aaName = $stateParams.aaName;
       vm.aaModel = AAModelService.getAAModel();
       vm.aaModel.aaRecord = undefined;
-      vm.aaModel.ceInfos = [];
+
       AAUiModelService.initUiModel();
       vm.ui = AAUiModelService.getUiModel();
       vm.ui.ceInfo = {};

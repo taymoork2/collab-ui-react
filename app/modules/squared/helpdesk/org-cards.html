@@ -11,16 +11,18 @@
         <span ng-if="helpdeskOrgCtrl.messageCard.licenses.length === 0" translate="helpdesk.none"></span>
 
         <div ng-repeat="license in helpdeskOrgCtrl.messageCard.licenses">
-          <span class="label warning" ng-if="license.isTrial" translate="helpdesk.trial"></span>
           <span>{{license.displayName}}</span>
-          <span ng-if="license.isTrial || license.status !== 'ACTIVE'">| </span>
+          <span ng-if="license.isTrial">| </span>
+          <span class="label warning" ng-if="license.isTrial" translate="helpdesk.trial"></span>
           <span
             ng-if="license.isTrial && license.trialExpiresInDays > 0">{{helpdeskOrgCtrl.daysLeftText(license)}}</span>
           <span ng-if="license.isTrial && license.trialExpiresInDays == 0"
                 class="red">{{'helpdesk.licenseStatus.expired' |  translate}}</span>
+          <span ng-if="license.status && license.status !== 'ACTIVE'">| </span>
           <span ng-if="license.status && license.status !== 'ACTIVE'"
                 class="red">{{'helpdesk.licenseStatus.' + (license.status | lowercase) | translate}}</span>
-          <span ng-if="helpdeskOrgCtrl.licenseUsageReady">| Using {{license.usage || 0}} ({{(license.usage*100)/license.volume || 0}}%)</span>
+          <span
+            ng-if="helpdeskOrgCtrl.licenseUsageReady">| Using {{license.usage || 0}} ({{license.usagePrecentage}}%)</span>
         </div>
       </section>
       <footer class="org-card-footer">
@@ -45,16 +47,19 @@
         <span ng-if="helpdeskOrgCtrl.meetingCard.licenses.length === 0" translate="helpdesk.none"></span>
 
         <div ng-repeat="license in helpdeskOrgCtrl.meetingCard.licenses">
-          <span class="label warning" ng-if="license.isTrial" translate="helpdesk.trial"></span>
           <span>{{license.displayName}}</span>
-          <span ng-if="license.isTrial || license.status !== 'ACTIVE'">| </span>
+          <span ng-if="license.siteUrl">({{license.siteUrl}})</span>
+          <span ng-if="license.isTrial">| </span>
+          <span class="label warning" ng-if="license.isTrial" translate="helpdesk.trial"></span>
           <span
             ng-if="license.isTrial && license.trialExpiresInDays > 0">{{helpdeskOrgCtrl.daysLeftText(license)}}</span>
           <span ng-if="license.isTrial && license.trialExpiresInDays == 0"
                 class="red">{{'helpdesk.licenseStatus.expired' |  translate}}</span>
+          <span ng-if="license.status && license.status !== 'ACTIVE'">| </span>
           <span ng-if="license.status && license.status !== 'ACTIVE'"
                 class="red">{{'helpdesk.licenseStatus.' + (license.status | lowercase)| translate}}</span>
-          <span ng-if="helpdeskOrgCtrl.licenseUsageReady">| Using {{license.usage || 0}} ({{(license.usage*100)/license.volume || 0}}%)</span>
+          <span
+            ng-if="helpdeskOrgCtrl.licenseUsageReady">| Using {{license.usage || 0}} ({{license.usagePrecentage}}%)</span>
         </div>
       </section>
       <footer class="org-card-footer">
@@ -79,16 +84,18 @@
         <span ng-if="helpdeskOrgCtrl.callCard.licenses.length === 0" translate="helpdesk.none"></span>
 
         <div ng-repeat="license in helpdeskOrgCtrl.callCard.licenses">
-          <span class="label warning" ng-if="license.isTrial" translate="helpdesk.trial"></span>
           <span>{{license.displayName}}</span>
-          <span ng-if="license.isTrial || license.status !== 'ACTIVE'">| </span>
+          <span ng-if="license.isTrial">| </span>
+          <span class="label warning" ng-if="license.isTrial" translate="helpdesk.trial"></span>
           <span
             ng-if="license.isTrial && license.trialExpiresInDays > 0">{{helpdeskOrgCtrl.daysLeftText(license)}}</span>
           <span ng-if="license.isTrial && license.trialExpiresInDays == 0"
                 class="red">{{'helpdesk.licenseStatus.expired' |  translate}}</span>
+          <span ng-if="license.status && license.status !== 'ACTIVE'">| </span>
           <span ng-if="license.status && license.status !== 'ACTIVE'"
                 class="red">{{'helpdesk.licenseStatus.' + (license.status | lowercase) | translate}}</span>
-          <span ng-if="helpdeskOrgCtrl.licenseUsageReady">| Using {{license.usage || 0}} ({{(license.usage*100)/license.volume || 0}}%)</span>
+          <span
+            ng-if="helpdeskOrgCtrl.licenseUsageReady">| Using {{license.usage || 0}} ({{license.usagePrecentage}}%)</span>
         </div>
       </section>
       <footer class="org-card-footer">
@@ -113,16 +120,18 @@
         <span ng-if="helpdeskOrgCtrl.roomSystemsCard.licenses.length === 0" translate="helpdesk.none"></span>
 
         <div ng-repeat="license in helpdeskOrgCtrl.roomSystemsCard.licenses">
-          <span class="label warning" ng-if="license.isTrial" translate="helpdesk.trial"></span>
           <span>{{license.displayName}}</span>
-          <span ng-if="license.isTrial || license.status !== 'ACTIVE'">| </span>
+          <span ng-if="license.isTrial">| </span>
+          <span class="label warning" ng-if="license.isTrial" translate="helpdesk.trial"></span>
           <span
             ng-if="license.isTrial && license.trialExpiresInDays > 0">{{helpdeskOrgCtrl.daysLeftText(license)}}</span>
           <span ng-if="license.isTrial && license.trialExpiresInDays == 0"
                 class="red">{{'helpdesk.licenseStatus.expired' |  translate}}</span>
+          <span ng-if="license.status && license.status !== 'ACTIVE'">| </span>
           <span ng-if="license.status && license.status !== 'ACTIVE'"
                 class="red">{{'helpdesk.licenseStatus.' + (license.status | lowercase) | translate}}</span>
-          <span ng-if="helpdeskOrgCtrl.licenseUsageReady">| Using {{license.usage || 0}} ({{(license.usage*100)/license.volume || 0}}%)</span>
+          <span
+            ng-if="helpdeskOrgCtrl.licenseUsageReady">| Using {{license.usage || 0}} ({{license.usagePrecentage}}%)</span>
         </div>
       </section>
       <footer class="org-card-footer">
@@ -194,16 +203,21 @@
       </header>
       <section>
         <div>
+          <div class="text-align-center large-number">{{helpdeskOrgCtrl.userCard.unlicensedUserCount}}</div>
+          <div ng-if="helpdeskOrgCtrl.userCard.unlicensedUserCount != null" class="text-align-center">
+            <span translate="helpdesk.unlicensedUsers"></span>
+          </div>
+          <hr>
           <span>
             <i class="icon icon-circle circle-status-icon"
-               ng-class="helpdeskOrgCtrl.org.dirsyncEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
+               ng-class="helpdeskOrgCtrl.userCard.dirsyncEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
           </span>
           <span translate="helpdesk.dirSync"></span>
         </div>
         <div>
           <span>
             <i class="icon icon-circle circle-status-icon"
-               ng-class="helpdeskOrgCtrl.org.ssoEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
+               ng-class="helpdeskOrgCtrl.userCard.ssoEnabled ? 'helpdesk-green' : 'helpdesk-grey'"></i>
           </span>
           <span translate="helpdesk.sso"></span>
         </div>

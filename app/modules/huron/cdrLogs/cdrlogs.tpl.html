@@ -17,7 +17,7 @@
         <span class="cdr-no-data" translate="cdrLogs.noData"></span>
       </div>
       <cs-accordion close-others="true">
-        <cs-accordion-group ng-repeat="call in cdr.gridData" display-status="{{cdr.statusAvalibility(call)}}" show-caret="true">
+        <cs-accordion-group ng-repeat="call in cdr.gridData" display-status="{{cdr.statusAvalibility(call)}}" show-caret="true" ng-click="cdr.accordionClicked('cdrtable' + $index)">
           <cs-accordion-heading>
             <span ng-click="cdr.resize()">
               <span class="icon " ng-class="{ 'icon-error' : cdr.statusAvalibility(call) == 'danger'}"></span> {{cdr.getAccordionHeader(call)}}

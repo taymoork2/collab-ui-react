@@ -86,7 +86,7 @@
         {{siteUrl}}
         <div class="sub-item" ng-repeat="service in services">
           <div ng-class="{'': 'quantity', 'CMR': 'item-cmr'}[service.license.offerName]">
-            Webex {{service.label}}
+            {{'firstTimeWizard.webex' | translate}} {{service.label}}
           </div>
           <div ng-if="service.license.isTrial || planReview.confServices.isNewTrial" class="badge badge-trial" translate="firstTimeWizard.trial"></div>
           <div class="quantity">
@@ -114,11 +114,12 @@
     </div>
   </div>
 
-  <div ng-if="vm.roomServices.services">
+  <div ng-if="planReview.roomSystemsExist">
     <div class="row row-room" ng-class="{'col-paid' : !planReview.roomServices.isNewTrial, 'col-trial' : planReview.roomServices.isNewTrial}">
       <div class="column-header">
         <i class="icon icon-circle-telepresence"></i>
         <h3 translate="firstTimeWizard.roomSystems"></h3>
+        <div translate="firstTimeWizard.sparkRoomSystem"></div>
         <div class="item-paid" ng-repeat="service in planReview.roomServices.services" ng-hide="service.licenseType !== 'SHARED_DEVICES'">
           <div ng-if="service.isTrial || planReview.roomServices.isNewTrial" class="badge badge-trial" translate="firstTimeWizard.trial"></div>
           <div class="quantity">

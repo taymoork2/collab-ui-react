@@ -89,6 +89,7 @@
     "noExtensionInPool": "No Extension in pool.",
     "noExternalNumberAvail": "No DID available for mapping.",
     "noExtMappingAvail": "No DID mapping available.",
+    "steeringDigitOverlapWarning": "The first digit of the Internal Extension overlaps with the Outbound Dial Digit ({{steeringDigitInTranslation}}).",
     "tooManyResultsError": "Search returned too many results.  Please narrow your search criteria.",
     "userExistsError": "User {{email}} already exists.  Please use the Convert option on the Overview page to bring the user into your organization.  If this user is not available for conversion, please submit a problem report."
   },
@@ -140,7 +141,7 @@
     "callFree": "Call Free",
     "freeContactCenter": "Free Chat, Email, Voice",
     "paidMsg": "Standard Team Rooms",
-    "paidConf": "25 Party Meetings",
+    "paidConf": "Meeting 25 Party",
     "paidConfWebEx": "WebEx Meetings",
     "paidComm": "Advanced Spark Call",
     "paidContactCenter": "Chat, Email, Voice",
@@ -152,7 +153,7 @@
     "eventCenter": "Event Center {{capacity}}",
     "communication": "Communication",
     "cloudExtensions": "Hybrid Services",
-    "cmr": "Collaboration Meeting Rooms"
+    "cmr": "Collaboration Meeting Room"
   },
   "usersPreview": {
     "groupPreview": "Group:",
@@ -242,7 +243,7 @@
     "messengerTabDesc": "Webex Messenger Administration",
     "calendarServiceTab": "Calendar",
     "calendarServiceTabDesc": "Calendar Service",
-    "callServiceTab": "Call",
+    "callServiceTab": "Call Service",
     "callServiceTabDesc": "Call Service",
     "expresswayManagementServiceTab": "Management Service",
     "expresswayManagementServiceTabDesc": "Expressway Management Service"
@@ -349,7 +350,9 @@
     "leastQuality": "5 Lowest Quality",
     "customerLoadError": "There was an error while loading the customer list.",
     "unauthorizedError": "User is not authorized to access the customer reports.",
-    "webex": "Webex Reports"
+    "webex": "Webex Reports",
+    "devReports": "Development Customer Reports",
+    "sparkReports": "Spark Reports"
   },
   "activeUsers": {
     "active": "Active",
@@ -551,7 +554,8 @@
     "ladderDiagram": "Ladder Diagram",
     "cdrSave": "Save Call",
     "element": "Element",
-    "value": "Value"
+    "value": "Value",
+    "sparkCall": "(Spark Call)"
   },
   "billingPage": {
     "title": "Order Provisioning",
@@ -1095,6 +1099,7 @@
     "conferencing": "Conferencing",
     "communications": "Communications",
     "roomSystems": "Room Systems",
+    "sparkRoomSystem": "Spark Room System",
     "freeMsg": "Message Free",
     "freeMtg": "Meeting Free 3 Party",
     "freeCall": "Call Free",
@@ -1507,7 +1512,8 @@
     "internalNumberExtension": "Extension",
     "internalNumberExtensionTooltip": "Use the internal extension to reach this line from within the company at the same site.",
     "internalNumberPoolError": "Internal extensions failed to load.",
-    "steeringDigitOverlapWarning": "First digit of Internal Extension overlaps with Outbound Dial Digit ({{steeringDigitInTranslation}}).",
+    "siteError": "Failed to load site information.",
+    "steeringDigitOverlapWarning": "The first digit of the Internal Extension overlaps with the Outbound Dial Digit ({{steeringDigitInTranslation}}).",
     "enterpriseSiteNumberLabel": "If your company uses site-to-site dialing:",
     "externalNumberLabel": "Phone Number",
     "externalNumberTooltip": "Use the direct line to reach this line from outside of the company.",
@@ -2870,6 +2876,7 @@
     "atlas-portal.support": "Billing Administrator",
     "atlas-portal.reports": "Support Administrator",
     "atlas-portal.partner.helpdesk": "Help Desk Support",
+    "atlas-portal.application": "Application",
     "id_full_admin": "Full Administrator",
     "user": "User"
   },
@@ -2942,11 +2949,18 @@
     "showMore": "Show more results",
     "delegatedAdministration": "manages {{numManages}} organizations",
     "licenses": "Licenses",
-    "licenseTypes": {
-      "MESSAGING": "{{volume}} x Standard Team Rooms",
-      "CONFERENCING": "{{volume}} x 25 Party Meetings",
-      "COMMUNICATIONS": "{{volume}} x Advanced Spark Call",
-      "SHARED_DEVICES": "{{volume}} x Room Devices"
+    "licenseDisplayNames": {
+      "MC": "{{volume}} x Meeting Center {{capacity}}",
+      "TC": "{{volume}} x Training Center {{capacity}}",
+      "MS": "{{volume}} x Standard Team Rooms",
+      "CF": "{{volume}} x 25 Party Meetings",
+      "EE": "{{volume}} x Enterprise Edition {{capacity}}",
+      "SC": "{{volume}} x Support Center {{capacity}}",
+      "EC": "{{volume}} x Event Center {{capacity}}",
+      "CO": "{{volume}} x Advanced Spark Call",
+      "CMR": "{{volume}} x Collaboration Meeting Rooms",
+      "SD": "{{volume}} x Room Devices",
+      "ST": "{{volume}} x Storage"
     },
     "trial": "Trial",
     "adminUsers": "Administrators",
@@ -2959,6 +2973,7 @@
       "suspended": "Suspended",
       "pending": "Pending"
     },
-    "consumerOrg": "Consumer"
+    "consumerOrg": "Consumer",
+    "unlicensedUsers": "Unlicensed Users"
   }
 }

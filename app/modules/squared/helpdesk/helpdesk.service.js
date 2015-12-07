@@ -82,7 +82,7 @@
 
     function searchOrgs(searchString, limit) {
       if (useMock()) {
-        deferredResolve(HelpdeskMockData.orgs);
+        return deferredResolve(HelpdeskMockData.orgs);
       }
       return $http
         .get(urlBase + 'helpdesk/search/organizations?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit)

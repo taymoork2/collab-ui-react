@@ -4,7 +4,7 @@ describe('LicenseService', function () {
 
   var LicenseService;
 
-  beforeEach(inject(function (_LicenseService_, _$q_) {
+  beforeEach(inject(function (_LicenseService_) {
     LicenseService = _LicenseService_;
   }));
 
@@ -42,7 +42,7 @@ describe('LicenseService', function () {
 
       LicenseService.getLicensesInOrg('1234').then(function (res) {
         expect(res.length).toBe(2);
-        expect(res[0].volume).toBe(100);
+        expect(res[0].capacity).toBe(100);
       });
 
     });
@@ -115,18 +115,20 @@ describe('LicenseService', function () {
     expect(license.offerCode).toEqual('MC');
     expect(license.id).toEqual('f36c1a2c-20d6-460d-9f55-01fc85d52e04');
     expect(license.displayName).toEqual('onboardModal.meetingCenter');
-    expect(license.volume).toEqual('100');
+    expect(license.capacity).toEqual('100');
     expect(license.webExSite).toEqual('t30citest.webex.com');
   });
 
-  it('Should filterLicensesAndSetDisplayName correctly', function () {
+  it('Should filterAndExtendLicenses correctly', function () {
     var licenses = [{
+      "offerCode": "MS",
       "type": "MESSAGING",
       "name": "Messaging",
       "status": "ACTIVE",
       "volume": 10,
       "isTrial": false
     }, {
+      "offerCode": "CF",
       "type": "CONFERENCING",
       "name": "Conferencing",
       "status": "ACTIVE",
@@ -134,6 +136,7 @@ describe('LicenseService', function () {
       "isTrial": true,
       "trialExpiresInDays": 49
     }, {
+      "offerCode": "CO",
       "type": "COMMUNICATIONS",
       "name": "Communications",
       "status": "ACTIVE",
@@ -147,15 +150,20 @@ describe('LicenseService', function () {
       "volume": 50,
       "isTrial": false
     }];
-    var filtered = LicenseService.filterLicensesAndSetDisplayName(licenses, 'MESSAGING');
+    var filtered = LicenseService.filterAndExtendLicenses(licenses, 'MESSAGING');
     expect(filtered.length).toEqual(1);
     expect(filtered[0].volume).toEqual(10);
-    expect(filtered[0].displayName).toEqual('helpdesk.licenseTypes.MESSAGING');
+    expect(filtered[0].displayName).toEqual('helpdesk.licenseDisplayNames.MS');
 
-    filtered = LicenseService.filterLicensesAndSetDisplayName(licenses, 'CONFERENCING');
+    filtered = LicenseService.filterAndExtendLicenses(licenses, 'CONFERENCING');
     expect(filtered.length).toEqual(1);
     expect(filtered[0].volume).toEqual(100);
-    expect(filtered[0].displayName).toEqual('helpdesk.licenseTypes.CONFERENCING');
+    expect(filtered[0].displayName).toEqual('helpdesk.licenseDisplayNames.CF');
+
+    filtered = LicenseService.filterAndExtendLicenses(licenses, 'COMMUNICATIONS');
+    expect(filtered.length).toEqual(1);
+    expect(filtered[0].volume).toEqual(1000);
+    expect(filtered[0].displayName).toEqual('helpdesk.licenseDisplayNames.CO');
   });
 
 });

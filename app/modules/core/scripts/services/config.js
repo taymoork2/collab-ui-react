@@ -417,6 +417,11 @@ angular.module('Core')
             desc: 'tabs.eventsTabDesc',
             state: 'events',
             link: '#events'
+          }, {
+            title: 'tabs.reportTab',
+            desc: 'reportsPage.devReports',
+            state: 'devReports',
+            link: '#devReports'
           }]
         }],
 
@@ -976,6 +981,7 @@ angular.module('Core')
           'huronnewfeature',
           'huronHuntGroup',
           'huntgroupedit',
+          'devReports',
           'cdrsupport',
           'cdr-overview'
         ],
@@ -1028,6 +1034,7 @@ angular.module('Core')
         'partner': [
           'overview',
           'reports',
+          'devReports',
           'devices',
           'fusion',
           'mediafusionconnector',

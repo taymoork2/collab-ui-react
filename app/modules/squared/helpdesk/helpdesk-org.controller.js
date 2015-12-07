@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsService, Config, $translate, LicenseService) {
+  function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsOrgService, Config, $translate, LicenseService, HelpdeskHealthStatusService) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.org) {
@@ -16,6 +16,7 @@
     vm.callCard = {};
     vm.hybridServicesCard = {};
     vm.roomSystemsCard = {};
+    vm.userCard = {};
     vm.healthStatuses = {
       message: 'unknown',
       meeting: 'unknown',
@@ -33,7 +34,7 @@
     vm.licenseUsageReady = false;
 
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
-    HelpdeskCardsService.getHealthStatuses().then(initHealth, angular.noop);
+    HelpdeskHealthStatusService.getHealthStatuses().then(initHealth, angular.noop);
 
     function initOrgView(org) {
       vm.org = org;
@@ -53,11 +54,12 @@
     }
 
     function initCards(licenses) {
-      vm.messageCard = HelpdeskCardsService.getMessageCardForOrg(vm.org, licenses);
-      vm.meetingCard = HelpdeskCardsService.getMeetingCardForOrg(vm.org, licenses);
-      vm.callCard = HelpdeskCardsService.getCallCardForOrg(vm.org, licenses);
-      vm.hybridServicesCard = HelpdeskCardsService.getHybridServicesCardForOrg(vm.org);
-      vm.roomSystemsCard = HelpdeskCardsService.getRoomSystemsCardForOrg(vm.org, licenses);
+      vm.messageCard = HelpdeskCardsOrgService.getMessageCardForOrg(vm.org, licenses);
+      vm.meetingCard = HelpdeskCardsOrgService.getMeetingCardForOrg(vm.org, licenses);
+      vm.callCard = HelpdeskCardsOrgService.getCallCardForOrg(vm.org, licenses);
+      vm.hybridServicesCard = HelpdeskCardsOrgService.getHybridServicesCardForOrg(vm.org);
+      vm.roomSystemsCard = HelpdeskCardsOrgService.getRoomSystemsCardForOrg(vm.org, licenses);
+      vm.userCard = HelpdeskCardsOrgService.getUserCardForOrg(vm.org);
     }
 
     function initHealth(healthStatuses) {
@@ -100,7 +102,11 @@
     function findLicenseUsage() {
       if (vm.orgId != Config.ciscoOrgId) {
         LicenseService.getLicensesInOrg(vm.orgId, true).then(function (licenses) {
-          initCards(licenses);
+          // Update the relevant cards with licenses that  includes usage
+          vm.messageCard = HelpdeskCardsOrgService.getMessageCardForOrg(vm.org, licenses);
+          vm.meetingCard = HelpdeskCardsOrgService.getMeetingCardForOrg(vm.org, licenses);
+          vm.callCard = HelpdeskCardsOrgService.getCallCardForOrg(vm.org, licenses);
+          vm.roomSystemsCard = HelpdeskCardsOrgService.getRoomSystemsCardForOrg(vm.org, licenses);
           vm.licenseUsageReady = true;
         }, XhrNotificationService.notify);
       }
