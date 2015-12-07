@@ -169,11 +169,6 @@
       color: $gray-dark-2;
       margin-right: 24px;
     }
-    .sub-line {
-      border-bottom: 1px solid #ccc;
-      padding-top: 5px;
-      margin-bottom: 20px;
-    }
     .quantity-mtg {
       font-family: $brand-font-light;
       font-size: 14px;
@@ -186,6 +181,11 @@
         background: $brand-warning-dark;
       }
     }
+  }
+  .sub-line {
+    border-bottom: 1px solid #ccc;
+    padding-top: 5px;
+    margin-bottom: 20px;
   }
 }
 
