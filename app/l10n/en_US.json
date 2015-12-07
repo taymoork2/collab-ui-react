@@ -1717,14 +1717,13 @@
   },
   "trialModal": {
     "addTrial": {
-        "title": "Start New Trial"
+      "title": "Start New Trial"
     },
     "meeting": {
-    "title": "Setup Trial   Meeting and WebEx",
-    "webexHeader": "WebEx License Type",
-    "webexDetails": "Meeting and WebEx trials enable Enterprise Edition WebEx licenses.",
-    "siteUrl": "Site URL",
-    "squareducError": "Created trial, but unable to provision Spark UC.",
+      "title": "Setup Trial - Meeting and WebEx",
+      "webexHeader": "WebEx License Type",
+      "webexDetails": "Meeting and WebEx trials enable Enterprise Edition WebEx licenses.",
+      "siteUrl": "Site URL",
       "timezone": "Time Zone",
       "default": "Set as default",
       "timezonePlaceholder": "Select a timezone"
