@@ -1,8 +1,10 @@
 /******** Home page styles ********/
 
+.overview-state {
+  @extend %page-content-padding;
+}
 .customer-landing {
   @extend %content-header;
-  @extend %page-content-padding;
 }
 
 // Analytics Charts
@@ -144,8 +146,6 @@
 
 .monitoring-panel {
   .badge {
-    width: 50px;
-    font-size: 13px;
     font-weight: normal;
 
     @include text-overflow;

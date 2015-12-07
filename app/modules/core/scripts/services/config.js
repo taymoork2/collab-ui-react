@@ -432,15 +432,15 @@ angular.module('Core')
           fusion_cal: 'squared-fusion-cal',
           mediafusion: 'squared-fusion-media',
           fusion_mgmt: 'squared-fusion-mgmt',
-          device_mgmt: 'spark-device-mgmt',
+          room_system: 'spark-room-system',
           fusion_ec: 'squared-fusion-ec'
         },
 
         trials: {
-          collab: 'COLLAB',
-          squaredUC: 'SQUAREDUC',
-          webex: 'WEBEXTRIALS',
-          cloudberry: 'ROOMSYSTEMS',
+          message: 'COLLAB',
+          meeting: 'WEBEXTRIALS',
+          call: 'SQUAREDUC',
+          roomSystems: 'ROOMSYSTEMS',
         },
 
         organizations: {
@@ -990,15 +990,12 @@ angular.module('Core')
           'cluster-details-new',
           'management-service',
         ],
-        'spark-device-mgmt': [
+        'spark-room-system': [
           'devices',
           'device-overview',
           'devices-redux'
         ],
         'squared-fusion-uc': [
-          'devices',
-          'device-overview',
-          'devices-redux',
           'call-service'
         ],
         'squared-fusion-cal': [

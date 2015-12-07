@@ -40,7 +40,7 @@
           $scope.width = 85;
         }
 
-        $scope.radius = 3;
+        $scope.radius = 2;
         $scope.dataset = [];
         $scope.text = {
           size: 36,

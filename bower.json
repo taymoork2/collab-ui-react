@@ -26,7 +26,7 @@
     "angular-formly": "~6.11.0",
     "api-check": "~7.0.0",
     "cisco-formly": "=1.0.21",
-    "cisco-ui": "~2.8.3",
+    "cisco-ui": "~2.8.9",
     "bootstrap-tokenfield": "~0.12.x",
     "components-font-awesome": "~4.0.3",
     "draggable": "~1.0.0",
@@ -71,6 +71,7 @@
     "angular-sanitize": "~1.3.0",
     "bootstrap": "~3.1.1",
     "angular-translate": "~2.7.2",
-    "lodash": "~3.10.1"
+    "lodash": "~3.10.1",
+    "moment": "~2.10.6"
   }
 }

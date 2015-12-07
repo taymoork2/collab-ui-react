@@ -99,11 +99,12 @@ var PartnerHomePage = function () {
   this.allFilter = element(by.cssContainingText('.filter', 'All'));
   this.partnerEmail = element.all(by.binding('userName'));
   this.squaredTrialCheckbox = element(by.css('label[for="squaredTrial"]'));
-  this.roomSystemsCheckbox = element(by.css('label[for="trialRoomSystemsChecked"]'));
+  this.roomSystemsCheckbox = element(by.css('label[for="trialRoomSystem"]'));
   this.squaredUCTrialCheckbox = element(by.css('label[for="squaredUCTrial"]'));
   this.customerNameHeader = element(by.cssContainingText('.ngHeaderText ', 'Customer Name'));
   this.myOrganization = element(by.id('partner'));
   this.launchButton = element(by.id('launchPartner'));
+  this.skipCustomerSetup = element(by.id('trialNotifyCustomer'));
 
   this.viewAllLink = element(by.id('viewAllLink'));
   this.customerList = element(by.id('customerListPanel'));
