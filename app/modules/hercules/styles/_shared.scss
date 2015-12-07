@@ -145,16 +145,6 @@
     color:black !important;
   }
 
-/**
- Work around the extra col-md-12 class in views/main.tpl.html
- */
-.hercules {
-  margin: {
-    right: -0.5rem;
-    left: -0.5rem;
-  };
-}
-
 /* Fix alert crap */
 .fix-alert-margins {
   margin-right: 0px;

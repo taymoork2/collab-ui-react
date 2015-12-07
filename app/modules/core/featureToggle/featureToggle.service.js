@@ -113,12 +113,8 @@
           supportsDirSync().then(function (enabled) {
             resolve(enabled);
           });
-        } else if (feature === features.atlasCloudberryTrials) {
-          if (Authinfo.getOrgId() === 'c054027f-c5bd-4598-8cd8-07c08163e8cd') {
-            resolve(true);
-          } else {
-            resolve(false);
-          }
+        } else if (feature === features.atlasCloudberryTrials && Authinfo.getOrgId() === 'c054027f-c5bd-4598-8cd8-07c08163e8cd') {
+          resolve(true);
         } else {
           var orgId = Authinfo.getOrgId();
 

@@ -23,7 +23,8 @@
           </div>
         </section>
         <footer>
-          <button class="btn btn--people" ng-click="pstnProviders.selectProvider(provider);provider.selectFn()" translate="common.select"></button>
+          <button type="button" class="btn btn--people" ng-click="pstnProviders.selectProvider(provider);provider.selectFn()" translate="common.select"></button>
+          <a ng-if="provider.docSrc" class="icon icon-content-share" ng-href="{{::provider.docSrc}}" download="{{::provider.title}}" title="{{::'common.download' | translate}}"></a>
         </footer>
         </article>
       </cs-card>

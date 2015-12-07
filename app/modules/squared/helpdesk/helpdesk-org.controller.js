@@ -29,6 +29,8 @@
     vm.showAllAdminUsers = showAllAdminUsers;
     vm.hideAllAdminUsers = hideAllAdminUsers;
     vm.keyPressHandler = keyPressHandler;
+    vm.daysLeftText = daysLeftText;
+    vm.licenseUsageReady = false;
 
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
     HelpdeskCardsService.getHealthStatuses().then(initHealth, angular.noop);
@@ -38,7 +40,12 @@
       vm.delegatedAdministration = org.delegatedAdministration ? $translate.instant('helpdesk.delegatedAdministration', {
         numManages: org.manages ? org.manages.length : 0
       }) : null;
-      LicenseService.getLicensesInOrg(vm.orgId).then(initCards, XhrNotificationService.notify);
+
+      LicenseService.getLicensesInOrg(vm.orgId).then(function (licenses) {
+        initCards(licenses);
+        findLicenseUsage();
+      }, XhrNotificationService.notify);
+
       findManagedByOrgs(org);
       findWebExSites(org);
       findAdminUsers(org);
@@ -90,6 +97,15 @@
       }, XhrNotificationService.notify);
     }
 
+    function findLicenseUsage() {
+      if (vm.orgId != Config.ciscoOrgId) {
+        LicenseService.getLicensesInOrg(vm.orgId, true).then(function (licenses) {
+          initCards(licenses);
+          vm.licenseUsageReady = true;
+        }, XhrNotificationService.notify);
+      }
+    }
+
     function showAllAdminUsers() {
       vm.adminUserLimit = vm.adminUsers.length;
     }
@@ -101,10 +117,15 @@
     function keyPressHandler(event) {
       var newTabIndex = 0;
       switch (event.keyCode) {
-      case 27: // Esc
-        window.history.back();
+        case 27: // Esc
+          window.history.back();
         break;
       }
+    }
+    function daysLeftText(license) {
+      return $translate.instant('helpdesk.numDaysLeft', {
+        days: license.trialExpiresInDays
+      });
     }
   }
 

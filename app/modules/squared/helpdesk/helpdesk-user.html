@@ -79,11 +79,12 @@
           <span>{{'helpdesk.organization' | translate}}:</span>
         </div>
         <div class="medium-7 columns details-value">
-          <span>
+          <span ng-if="!helpdeskUserCtrl.user.isConsumerUser">
             <a ui-sref="helpdesk.org({org:helpdeskUserCtrl.org, id:helpdeskUserCtrl.org.id})">
               {{helpdeskUserCtrl.org.displayName}}
             </a>
           </span>
+          <span ng-if="helpdeskUserCtrl.user.isConsumerUser" translate="helpdesk.consumerOrg"></span>
         </div>
       </div>
 
