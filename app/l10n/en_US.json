@@ -3004,6 +3004,7 @@
       "pending": "Pending"
     },
     "consumerOrg": "Consumer",
-    "unlicensedUsers": "Unlicensed Users"
+    "unlicensedUsers": "Unlicensed Users",
+    "searchUsersDevices": "Search users and devices"
   }
 }

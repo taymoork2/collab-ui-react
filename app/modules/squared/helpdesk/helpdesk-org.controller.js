@@ -2,7 +2,8 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsOrgService, Config, $translate, LicenseService, HelpdeskHealthStatusService) {
+  function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsOrgService, Config,
+                                 $translate, LicenseService, HelpdeskHealthStatusService) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.org) {
@@ -121,7 +122,6 @@
     }
 
     function keyPressHandler(event) {
-      var newTabIndex = 0;
       switch (event.keyCode) {
       case 27: // Esc
         window.history.back();

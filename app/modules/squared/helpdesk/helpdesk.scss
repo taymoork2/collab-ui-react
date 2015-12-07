@@ -162,8 +162,7 @@
     }
     .helpdesk-tile {
       height: 2.25rem;
-      padding: 0.5rem;
-      margin: 0.125rem 0.5rem 0.125rem 0;
+      padding: 0.25rem;
       border: 1px solid $gray-lighter;
       border-radius: 0.25rem;
       color: $brand-white;
@@ -178,6 +177,7 @@
         float: right;
         font-size: 1rem;
         margin-left: 0.5rem;
+        margin-top: 0.4rem;
       }
     }
   }
@@ -190,10 +190,8 @@
     }
     .cs-card {
       header {
-        h5,
-        h5 a {
+        h5 {
           color: $gray-dark-3;
-          padding-left: 0.5rem;
           font-size: 0.875rem;
           font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
         }

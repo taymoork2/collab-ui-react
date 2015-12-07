@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskController(HelpdeskService, $translate, $scope) {
+  function HelpdeskController(HelpdeskService, $translate, $scope, $stateParams) {
     $('body').css('background', 'white');
     $scope.$on('$viewContentLoaded', function () {
       angular.element('#searchInput').focus();
@@ -46,6 +46,10 @@
         angular.element('#searchInput').focus();
       }
     };
+
+    if ($stateParams.orgFilter) {
+      initSearchWithOrgFilter($stateParams.orgFilter);
+    }
 
     function search() {
       if (!vm.searchString) return;
