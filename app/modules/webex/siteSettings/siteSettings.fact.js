@@ -218,17 +218,6 @@
                 licenseInfo,
                 _this.webExSiteSettingsObj.siteInfoCardObj
               );
-              /*
-              _this.webExSiteSettingsObj.siteInfoCardObj.licensesTotal.count = licenseInfo.volume;
-              _this.webExSiteSettingsObj.siteInfoCardObj.licensesUsage.count = licenseInfo.usage;
-
-              if (0 <= licenseInfo.available) {
-                _this.webExSiteSettingsObj.siteInfoCardObj.licensesAvailable.count = licenseInfo.available;
-              } else {
-                _this.webExSiteSettingsObj.siteInfoCardObj.isLicensesOverage = true;
-                _this.webExSiteSettingsObj.siteInfoCardObj.licensesAvailable.count = licenseInfo.available * -1;
-              }
-              */
 
               logMsg = funcName + ": " + "\n" +
                 "siteInfoCardObj=" + JSON.stringify(_this.webExSiteSettingsObj.siteInfoCardObj);
