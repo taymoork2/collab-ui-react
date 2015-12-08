@@ -5,7 +5,11 @@
   function HelpdeskController(HelpdeskService, $translate, $scope) {
     $('body').css('background', 'white');
     $scope.$on('$viewContentLoaded', function () {
-      angular.element('#searchInput').focus();
+      if(isMobile.all()) {
+        angular.element('#searchInput').blur();
+      }else{
+        angular.element('#searchInput').focus();
+      }
     });
     var vm = this;
     var searchResultsPageSize = 5;
@@ -18,6 +22,7 @@
     vm.searchingForDevices = false;
     vm.searchString = '';
     vm.keyPressHandler = keyPressHandler;
+    vm.focusFirstCard = focusFirstCard;
     vm.showMoreResults = showMoreResults;
     vm.currentSearch = {
       searchString: '',
@@ -42,7 +47,31 @@
         this.orgLimit = searchResultsPageSize;
         this.userLimit = searchResultsPageSize;
         this.deviceLimit = searchResultsPageSize;
-        angular.element('#searchInput').focus();
+        if(isMobile.all()) {
+          angular.element('#searchInput').blur();
+        }else{
+          angular.element('#searchInput').focus();
+        }
+      }
+    };
+    var isMobile = {
+      Android: function() {
+        return navigator.userAgent.match(/Android/i);
+      },
+      BlackBerry: function() {
+        return navigator.userAgent.match(/BlackBerry/i);
+      },
+      iOS: function() {
+        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+      },
+      Opera: function() {
+        return navigator.userAgent.match(/Opera Mini/i);
+      },
+      Windows: function() {
+        return navigator.userAgent.match(/IEMobile/i) || navigator.userAgent.match(/WPDesktop/i);
+      },
+      all: function() {
+        return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
       }
     };
 
@@ -181,7 +210,11 @@
           vm.searchString = '';
           vm.currentSearch.initSearch('');
         } else {
-          angular.element('#searchInput').focus().select();
+          if(isMobile.all()) {
+            angular.element('#searchInput').blur();
+          }else{
+            angular.element('#searchInput').focus();
+          }
           newTabIndex = -1;
         }
         break;
@@ -201,6 +234,11 @@
       if (newTabIndex != -1) {
         $('[tabindex=' + newTabIndex + ']').focus();
       }
+    }
+
+    function focusFirstCard() {
+      //angular.element('.cs-card:first-child article').focus();
+      angular.element('#user-card-0 article').focus();
     }
   }
 
