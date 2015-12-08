@@ -1,8 +1,8 @@
 /*** PARTNERS ***/
 
 .partner-container {
-  @extend %content-header;
-  @extend %page-content-padding;
+  @extend %card-container-padding;
+
   .tab-content {
     border-color: $gray-light-2;
   }
@@ -33,7 +33,7 @@
     bottom: 150px;
     float: left;
   }
-  .full section {
+  .large section {
     padding: 0 1.5rem;
     .onboarded {
       margin-top: 2rem;
@@ -79,6 +79,7 @@
     padding-right: 0;
     .icon {
       font-size: 1.5rem;
+      line-height: 1rem;
     }
   }
 }
