@@ -56,11 +56,7 @@ angular
         .state('sidepanel', {
           abstract: true,
           onEnter: /* @ngInject */ function ($modal, $state, $previousState) {
-            if ($state.sidepanel) {
-              $state.sidepanel.stopPreviousState = true;
-            } else {
-              $previousState.memo(sidepanelMemo);
-            }
+            $previousState.memo(sidepanelMemo);
             $state.sidepanel = $modal.open({
               template: '<cs-sidepanel></cs-sidepanel>',
               windowTemplateUrl: 'sidepanel/sidepanel-modal.tpl.html',
@@ -68,21 +64,16 @@ angular
               keyboard: false
             });
             $state.sidepanel.result.finally(function () {
-              if (!this.stopPreviousState && !$state.modal) {
-                $state.sidepanel = null;
-                var previousState = $previousState.get(sidepanelMemo);
-                if (previousState) {
-                  if ($state.current.parent === 'sidepanel' || angular.isUndefined($state.current.parent)) {
-                    return $previousState.go(sidepanelMemo).then(function () {
-                      $previousState.forget(sidepanelMemo);
-                    });
-                  }
-                }
+              $state.sidepanel = null;
+              var previousState = $previousState.get(sidepanelMemo);
+              if (previousState) {
+                return $previousState.go(sidepanelMemo);
               }
-            }.bind($state.sidepanel));
+            });
           },
           onExit: /* @ngInject */ function ($state, $previousState) {
             if ($state.sidepanel) {
+              $previousState.forget(sidepanelMemo);
               $state.sidepanel.dismiss();
             }
           }
