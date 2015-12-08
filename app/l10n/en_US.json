@@ -350,7 +350,7 @@
     "leastQuality": "5 Lowest Quality",
     "customerLoadError": "There was an error while loading the customer list.",
     "unauthorizedError": "User is not authorized to access the customer reports.",
-    "webex": "Webex Reports",
+    "webex": "WebEx Reports",
     "devReports": "Development Customer Reports",
     "sparkReports": "Spark Reports"
   },
@@ -2245,7 +2245,7 @@
   "webexSiteSettingsLabels": {
     "siteSettingsIndexPageTitle": "Configure",
     "siteSettingsIndexPageTitleFull": "Configure {{siteUrl}}",
-    "hostAccountsTitle": "HOST ACCOUNTS",
+    "hostAccountsTitle": "Host Accounts",
     "activeTitle": "Active",
     "availableTitle": "Available",
     "emailAllHostsBtnTitle": "Email All Hosts",
