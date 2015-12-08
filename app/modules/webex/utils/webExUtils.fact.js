@@ -261,6 +261,23 @@
         return deferredGetWebexLicenseInfo.promise;
       }; // getWebexLicenseInfo()
 
+      obj.setInfoCardLicenseInfo = function (
+        licenseInfo,
+        infoCardObj
+      ) {
+
+        infoCardObj.licensesTotal.count = licenseInfo.volume;
+        infoCardObj.licensesUsage.count = licenseInfo.usage;
+        infoCardObj.licensesAvailable.count = licenseInfo.available;
+
+        if (0 <= licenseInfo.available) {
+          infoCardObj.licensesAvailable.count = licenseInfo.available;
+        } else {
+          infoCardObj.isLicensesOverage = true;
+          infoCardObj.licensesAvailable.count = licenseInfo.available * -1;
+        }
+      }; // setInfoCardLicenseInfo();
+
       obj.isSiteSupportsIframe = function (siteUrl) {
         var deferredIsSiteSupportsIframe = $q.defer();
 

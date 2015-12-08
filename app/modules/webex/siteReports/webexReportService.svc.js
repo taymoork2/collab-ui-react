@@ -384,6 +384,11 @@ angular.module('WebExReports').service('WebexReportService', [
           var funcName = "getWebexLicenseInfoSuccess()";
           var logMsg = "";
 
+          WebExUtilsFact.setInfoCardLicenseInfo(
+            licenseInfo,
+            reportsObject.infoCardObj
+          );
+          /*
           reportsObject.infoCardObj.licensesTotal.count = licenseInfo.volume;
           reportsObject.infoCardObj.licensesUsage.count = licenseInfo.usage;
           reportsObject.infoCardObj.licensesAvailable.count = licenseInfo.available;
@@ -394,10 +399,11 @@ angular.module('WebExReports').service('WebexReportService', [
             reportsObject.infoCardObj.isLicensesOverage = true;
             reportsObject.infoCardObj.licensesAvailable.count = licenseInfo.available * -1;
           }
+          */
 
           logMsg = funcName + ": " + "\n" +
             "reportInfoCardObj=" + JSON.stringify(reportsObject.siteInfoCardObj);
-          $log.log(logMsg);
+          // $log.log(logMsg);
         }, // getWebexLicenseInfoSuccess()
 
         function getWebexLicenseInfoError(result) {
