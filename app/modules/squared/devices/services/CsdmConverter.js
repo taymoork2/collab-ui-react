@@ -60,16 +60,16 @@ angular.module('Squared').service('CsdmConverter',
       this.url = obj.url;
       this.cisUuid = obj.id;
       this.displayName = obj.displayName;
-      this.product = "Account";
+      this.product = 'NA';
       this.cssColorClass = 'device-status-red';
-      this.readableState = 'Non existent';
+      this.readableState = t('CsdmStatus.Inactive');
       this.isOnline = false;
       this.isUnused = true;
       this.canDelete = true;
       this.hasIssues = true;
       this.diagnosticsEvents = [{
-        type: translateOrDefault('CsdmStatus.errorCodes.nonexisting.type', 'Account with no device'),
-        message: translateOrDefault('CsdmStatus.errorCodes.nonexisting.message', 'There exists an account for a ' +
+        type: translateOrDefault('CsdmStatus.errorCodes.inactive.type', 'Account with no device'),
+        message: translateOrDefault('CsdmStatus.errorCodes.inactive.message', 'There exists an account for a ' +
           'device, but no corresponding device or activation code. You can probably delete this account.')
       }];
     }

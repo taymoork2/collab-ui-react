@@ -385,14 +385,14 @@ describe('CsdmConverterSpec', function () {
       var arr = [{
         url: "foo"
       }];
-      expect(converter.convertAccounts(arr)[0].product).toBe('Account');
+      expect(converter.convertAccounts(arr)[0].product).toBe('NA');
     });
 
     it('should set state to Non existent', function () {
       var arr = [{
         url: "foo"
       }];
-      expect(converter.convertAccounts(arr)[0].readableState).toBe('Non existent');
+      expect(converter.convertAccounts(arr)[0].readableState).toBe('CsdmStatus.Inactive');
     });
 
     it('should have issues', function () {
