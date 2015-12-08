@@ -5,9 +5,10 @@
   function HelpdeskController(HelpdeskService, $translate, $scope) {
     $('body').css('background', 'white');
     $scope.$on('$viewContentLoaded', function () {
-      if(isMobile.all()) {
+
+      if (HelpdeskService.checkIfMobile()) {
         angular.element('#searchInput').blur();
-      }else{
+      } else {
         angular.element('#searchInput').focus();
       }
     });
@@ -46,35 +47,15 @@
         this.orgLimit = searchResultsPageSize;
         this.userLimit = searchResultsPageSize;
         this.deviceLimit = searchResultsPageSize;
-        if(isMobile.all()) {
+        if (HelpdeskService.checkIfMobile()) {
           angular.element('#searchInput').blur();
-        }else{
+        } else {
           angular.element('#searchInput').focus();
         }
       },
       clear: function () {
         this.initSearch('');
         this.orgFilter = null;
-      }
-    };
-    var isMobile = {
-      Android: function() {
-        return navigator.userAgent.match(/Android/i);
-      },
-      BlackBerry: function() {
-        return navigator.userAgent.match(/BlackBerry/i);
-      },
-      iOS: function() {
-        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
-      },
-      Opera: function() {
-        return navigator.userAgent.match(/Opera Mini/i);
-      },
-      Windows: function() {
-        return navigator.userAgent.match(/IEMobile/i) || navigator.userAgent.match(/WPDesktop/i);
-      },
-      all: function() {
-        return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
       }
     };
 
@@ -211,11 +192,10 @@
         if (inputFieldHasFocus) {
           initSearchWithoutOrgFilter();
         } else {
-          if(isMobile.all()) {
+          if (HelpdeskService.checkIfMobile()) {
             angular.element('#searchInput').blur();
-          }else{
+          } else {
             angular.element('#searchInput').focus().select();
-            ;
           }
           newTabIndex = -1;
         }
@@ -229,7 +209,9 @@
 
       case 83: // S
         var orgLink = JSON.parse(activeElement.find("a")[0]["name"]);
-        if(orgLink){ initSearchWithOrgFilter(orgLink); }
+        if (orgLink) {
+          initSearchWithOrgFilter(orgLink);
+        }
         break;
       }
 
