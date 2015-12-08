@@ -1469,8 +1469,8 @@
     "errorRemoveCMI": "Unable to remove assigned phone number(s).",
     "errorResetCMI": "Unable to reset to previously assigned phone number(s).",
     "errorFailedToAssignNumbers": "Unable to assign number(s): {{phoneNumbers}}",
-    "errorNumbersCMIOnly": "Number(s) are assigned but not in AA: {{phoneNumbers}}",
-    "errorNumbersCESOnly": "Number(s) are in AA but are not assigned: {{phoneNumbers}}"
+    "errorNumbersCMIOnly": "Number(s) are assigned but not in Auto Attendant: {{phoneNumbers}}",
+    "errorNumbersCESOnly": "Number(s) are in Auto Attendant but are not assigned: {{phoneNumbers}}"
   },
   "callPark": {
     "code": "CP",
