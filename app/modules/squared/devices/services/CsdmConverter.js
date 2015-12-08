@@ -63,6 +63,7 @@ angular.module('Squared').service('CsdmConverter',
       this.product = "Account";
       this.cssColorClass = 'device-status-red';
       this.readableState = 'Non existent';
+      this.isOnline = false;
       this.isUnused = true;
       this.canDelete = true;
       this.hasIssues = true;
