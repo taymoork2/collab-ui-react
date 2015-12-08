@@ -6,7 +6,7 @@
         <textarea class="aa-message-textarea" ng-blur="aaSay.saveUiModel()" ng-model="aaSay.messageInput" type="text" id="sayMessageInput{{ schedule + index }}" name="sayMessageInput" placeholder="{{ :: aaSay.messageInputPlaceholder }}" cols="50" rows="4" maxlength="2000"></textarea>
       </div>
     </div>
-    <div class="row">
+    <div class="row" ng-if="!aaSay.isMenAction">
       <div class="large-6 small-12 columns aa-message-select-list">
         <label for="languageSelect{{ schedule + index }}" translate="common.language"></label>
         <cs-select id="languageSelect{{ schedule + index }}" name="languageSelect" ng-model="aaSay.languageOption" options="aaSay.languageOptions" icon="icon-chevron-down" labelfield="label" valuefield="value" placeholder="aaSay.languagePlaceholder" ng-change="aaSay.setVoiceOptions(); aaSay.saveUiModel()">
@@ -19,7 +19,7 @@
       </div>
     </div>
   </form>
-    <div class="row" >
+    <div class="row" ng-if="!aaSay.isMenAction">
       <div class="small-12 columns">
         <h6 class="small aa-message-footer" translate="{{ :: aaSay.isMenuHeader ? 'autoAttendant.phoneMenuListening' : 'autoAttendant.sayMessageUninterrupt' }}"></h6>
       </div>

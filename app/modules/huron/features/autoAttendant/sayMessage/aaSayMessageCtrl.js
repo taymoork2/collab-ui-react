@@ -23,6 +23,7 @@
     vm.menuEntry = {};
     vm.actionEntry = {};
     vm.isMenuHeader = false;
+    vm.isMenuKey = false;
 
     vm.messageInput = messageInput;
     vm.messageInputPlaceholder = $translate.instant('autoAttendant.sayMessagePlaceholder');
@@ -73,34 +74,62 @@
       vm.actionEntry.setVoice(vm.voiceOption.value);
 
       if (vm.isMenuHeader) {
-        // also set values to be used for service invalid/timeout messages
+        // set values to be used for service invalid/timeout messages
         vm.menuEntry.headers[0].setLanguage(AALanguageService.getLanguageCode(vm.languageOption));
         vm.menuEntry.headers[0].setVoice(vm.voiceOption.value);
+
+        // set values for any say messages mapped to phone menu keys
+        if (vm.menuEntry.entries) {
+          _.each(vm.menuEntry.entries, function (entry) {
+            if (entry.name && entry.name === 'say') {
+              entry.voice = vm.voiceOption.value;
+            }
+          });
+        }
       }
+    }
+
+    function getNewMenuEntry() {
+      var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+      var sayAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
+      menuEntry.addAction(sayAction);
+      return menuEntry;
     }
 
     function setActionEntry() {
       if (vm.isMenuHeader) {
-        for (var k = 0; k < vm.menuEntry.headers.length; k++) {
-          var header = vm.menuEntry.headers[k];
-          if (angular.isDefined(header.actions) && header.actions.length > 0) {
-            if (header.type === "MENU_OPTION_ANNOUNCEMENT") {
+        // say message as phone menu header
+        _.find(vm.menuEntry.headers, function (header) {
+          if (header.type && header.type === "MENU_OPTION_ANNOUNCEMENT") {
+            if (angular.isDefined(header.actions) && header.actions.length > 0) {
               vm.actionEntry = header.actions[0];
-              break;
+              return;
             }
           }
-        }
+        });
 
-        if (vm.actionEntry.name != 'say') {
-          var headerEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          headerEntry.setType("MENU_OPTION_ANNOUNCEMENT");
-          var headerSayAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
-          headerEntry.addAction(headerSayAction);
-          vm.menuEntry.headers.push(headerEntry);
-          vm.actionEntry = headerSayAction;
+       if (!vm.actionEntry || vm.actionEntry.name != 'say') {
+         var headerEntry = getNewMenuEntry();
+         headerEntry.setType("MENU_OPTION_ANNOUNCEMENT");
+         vm.menuEntry.headers.push(headerEntry);
+
+         vm.actionEntry = headerEntry.actions[0];
+       }
+     } else if (vm.isMenuKey) {
+        // say message mapped to phone menu key
+        if (vm.menuEntry.entries.length > vm.menuKeyIndex && vm.menuEntry.entries[$scope.menuKeyIndex]) {
+
+          vm.actionEntry = vm.menuEntry.entries[$scope.menuKeyIndex];
+        } else {
+          vm.menuEntry.entries[0] = AutoAttendantCeMenuModelService.newCeMenuEntry();
+          var action = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
+          action.setVoice(vm.menuEntry.headers[0].getVoice());
+          vm.menuEntry.entries[0].addAction(action);
+          vm.actionEntry = action;
         }
 
       } else {
+        // say message as top level action
         if (vm.menuEntry.actions.length === 0) {
           var sayAction = AutoAttendantCeMenuModelService.newCeActionEntry('say', '');
           vm.menuEntry.addAction(sayAction);
@@ -116,6 +145,10 @@
 
       if ($scope.isMenuHeader) {
         vm.isMenuHeader = $scope.isMenuHeader;
+      }
+
+      if ($scope.menuKeyIndex && $scope.menuKeyIndex > 0) {
+        vm.isMenuKey = true;
       }
 
       setActionEntry();

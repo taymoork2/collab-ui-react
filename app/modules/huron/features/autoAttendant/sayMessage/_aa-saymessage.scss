@@ -6,11 +6,11 @@
 
 .aa-message-textarea {
   @include vr-spacing(mb, 1);
-  line-height: 1.5rem;
+  line-height: 1.25rem;
   @include vr-spacing(pt, .75);
   @include vr-spacing(pb, .75);
-  @include vr-spacing(pl, 1);
-  @include vr-spacing(pr, 1);
+  @include vr-spacing(pl, .75);
+  @include vr-spacing(pr, .75);
   resize: none;
 }
 
@@ -21,7 +21,6 @@
     @include vr-spacing(pr, 1.75);
   }
   .select-toggle > i {
-    right: -0.25rem;
     @include vr-spacing(mr, 0);
     @include vr-spacing(ml, -0.5);
   }

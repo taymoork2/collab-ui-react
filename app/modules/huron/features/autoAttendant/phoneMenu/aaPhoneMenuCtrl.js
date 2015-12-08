@@ -85,6 +85,10 @@
         name: 'phoneMenuRepeatMenu',
         action: 'repeatActionsOnInput'
       }, {
+        label: $translate.instant('autoAttendant.actionSayMessage'),
+        name: 'phoneMenuSayMessage',
+        action: 'say'
+      }, {
         label: $translate.instant('autoAttendant.phoneMenuDialExt'),
         name: 'phoneMenuDialExt',
         action: 'runActionsOnInput',

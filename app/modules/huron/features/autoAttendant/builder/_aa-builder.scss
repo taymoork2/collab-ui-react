@@ -5,7 +5,7 @@
 }
 
 $aa-builder-header-height: 54px;
-$aa-builder-border-color: $gray-light;
+$aa-builder-border-color: $gray-light-1;
 $aa-builder-border-size: 1px;
 $aa-builder-icon-color: $gray-base;
 
@@ -27,9 +27,9 @@ $aa-builder-icon-color: $gray-base;
   $frame-border-size: 0.075rem;
 
   border-top: $frame-border-size solid $aa-builder-border-color;
-  box-shadow: inset 0 0.25rem 0.25rem 0.25rem $gray-lighter;
-  border-bottom: $frame-border-size solid $gray-lightest;
-  border-left: $frame-border-size solid $gray-lightest;
+  box-shadow: inset 0 0.25rem 0.25rem 0.25rem $gray-light-2;
+  border-bottom: $frame-border-size solid $gray-light-3;
+  border-left: $frame-border-size solid $gray-light-3;
   margin-top: 0;
   margin-bottom: $frame-margin-size;
   margin-left: $frame-margin-size;
