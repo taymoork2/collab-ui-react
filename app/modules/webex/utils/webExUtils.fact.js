@@ -34,6 +34,7 @@
         var infoCardObj = {
           id: "SiteInfo",
           label: label,
+          isLicensesOverage: false,
 
           licensesTotal: {
             id: "licensesTotal",
@@ -229,9 +230,12 @@
 
                   var licenseVolume = license.volume;
                   var licenseUsage = license.usage;
+                  var licensesAvailable = licenseVolume - licenseUsage;
+                  /*
                   var licensesAvailable = (
                     (licenseVolume - licenseUsage) < 0
                   ) ? 0 : licenseVolume - licenseUsage;
+                  */
 
                   licenseInfo = {
                     volume: licenseVolume,

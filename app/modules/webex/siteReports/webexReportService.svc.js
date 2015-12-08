@@ -388,6 +388,13 @@ angular.module('WebExReports').service('WebexReportService', [
           reportsObject.infoCardObj.licensesUsage.count = licenseInfo.usage;
           reportsObject.infoCardObj.licensesAvailable.count = licenseInfo.available;
 
+          if (0 <= licenseInfo.available) {
+            reportsObject.infoCardObj.licensesAvailable.count = licenseInfo.available;
+          } else {
+            reportsObject.infoCardObj.isLicensesOverage = true;
+            reportsObject.infoCardObj.licensesAvailable.count = licenseInfo.available * -1;
+          }
+
           logMsg = funcName + ": " + "\n" +
             "reportInfoCardObj=" + JSON.stringify(reportsObject.siteInfoCardObj);
           $log.log(logMsg);
