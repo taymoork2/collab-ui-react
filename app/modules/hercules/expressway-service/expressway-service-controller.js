@@ -117,11 +117,15 @@
     }
 
     function openUserStatusReportModal(serviceId) {
-      $scope.selectedServiceId = serviceId; //TODO: Fix. Currently compatible with "old" concept...
       $scope.modal = $modal.open({
-        scope: $scope,
         controller: 'ExportUserStatusesController',
-        templateUrl: 'modules/hercules/export/export-user-statuses.html'
+        controllerAs: 'exportUserStatusesCtrl',
+        templateUrl: 'modules/hercules/export/export-user-statuses.html',
+        resolve: {
+          serviceId: function () {
+            return vm.currentServiceId;
+          }
+        }
       });
     }
 
@@ -145,16 +149,12 @@
 
     function openUserErrorsModal() {
       $scope.modal = $modal.open({
-        scope: $scope,
         controller: 'UserErrorsController',
         controllerAs: 'userErrorsCtrl',
         templateUrl: 'modules/hercules/expressway-service/user-errors.html',
         resolve: {
           serviceId: function () {
             return vm.currentServiceId;
-          },
-          exp: function () {
-            return $scope.exp;
           }
         }
       });
@@ -270,13 +270,29 @@
   }
 
   /* @ngInject */
-  function UserErrorsController($scope, exp, serviceId, USSService, XhrNotificationService, Userservice, ClusterService) {
+  function UserErrorsController($modal, $scope, serviceId, USSService, XhrNotificationService, Userservice, ClusterService) {
     var vm = this;
     vm.loading = true;
     vm.limit = 5;
     vm.serviceId = serviceId;
 
-    $scope.exp = exp;
+    vm.openUserStatusReportModal = function (serviceId) {
+      // $scope.modal.close();
+      $scope.close = function () {
+        $scope.$parent.modal.close();
+      };
+      $scope.modal = $modal.open({
+        scope: $scope,
+        controller: 'ExportUserStatusesController',
+        controllerAs: 'exportUserStatusesCtrl',
+        templateUrl: 'modules/hercules/export/export-user-statuses.html',
+        resolve: {
+          serviceId: function () {
+            return vm.serviceId;
+          }
+        }
+      });
+    };
 
     USSService.getStatuses(function (error, statuses) {
       if (error) {

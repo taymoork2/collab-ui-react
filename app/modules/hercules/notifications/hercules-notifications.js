@@ -48,18 +48,13 @@
     };
 
     vm.showUserErrorsDialog = function (serviceId) {
-      $scope.selectedServiceId = serviceId;
       $scope.modal = $modal.open({
-        scope: $scope,
         controller: 'UserErrorsController',
         controllerAs: 'userErrorsCtrl',
         templateUrl: 'modules/hercules/expressway-service/user-errors.html',
         resolve: {
           serviceId: function () {
-            return $scope.selectedServiceId;
-          },
-          exp: function () {
-            return $scope.$parent.exp;
+            return serviceId;
           }
         }
       });
