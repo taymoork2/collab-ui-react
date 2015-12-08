@@ -102,10 +102,10 @@
       // CMI seems to correctly remove numbers from the number pool when the number is formatted as it came from CMI
       // So save to CMI with the original CMI format for external numbers (internal extensions have no formatting)
       var formattedResources = _.map(resources, function (res) {
-        if (res.getType() === "externalNumber") {
+        if (res.getType() === AANumberAssignmentService.EXTERNAL_NUMBER) {
           var fmtRes = angular.copy(res);
           var extNum = _.find(vm.externalNumberList, function (n) {
-            return n.number.replace(/\D/g, '') == res.number;
+            return n.number.replace(/\D/g, '') === res.number;
           });
           if (extNum) {
             fmtRes.number = extNum.number;
@@ -173,8 +173,7 @@
 
       // Un-Assign the number in CMI by setting with resource removed
       saveAANumberAssignments(Authinfo.getOrgId(),
-        vm.aaModel.aaRecordUUID, resources).then(
-        function (response) {},
+        vm.aaModel.aaRecordUUID, resources).catch(
         function (response) {
           Notification.error('autoAttendant.errorRemoveCMI');
         });
@@ -224,7 +223,7 @@
         return a.localeCompare(b);
       }
       // else if a is an internal extension, it comes after
-      else if (vm.numberTypeList[a] === "directoryNumber") {
+      else if (vm.numberTypeList[a] === AANumberAssignmentService.DIRECTORY_NUMBER) {
         return 1;
         // else a must be an externalNumber, which comes first
       } else {
@@ -258,7 +257,7 @@
 
           var number = intPool[i].pattern.replace(/\D/g, '');
 
-          vm.numberTypeList[number] = "directoryNumber";
+          vm.numberTypeList[number] = AANumberAssignmentService.DIRECTORY_NUMBER;
 
           // Add to the available phone number list if not already used
           if (!getDupeNumberAnyAA(number)) {
@@ -290,7 +289,7 @@
 
             var number = extPool[i].pattern.replace(/\D/g, '');
 
-            vm.numberTypeList[number] = "externalNumber";
+            vm.numberTypeList[number] = AANumberAssignmentService.EXTERNAL_NUMBER;
 
             // Add to the available phone number list if not already used
             if (!getDupeNumberAnyAA(number)) {

@@ -78,6 +78,71 @@ describe('Controller: AABuilderMainCtrl', function () {
 
   });
 
+  describe('areAssignedResourcesDifferent', function () {
+    it('should show no differences', function () {
+      var a1 = [{
+        id: "408792221"
+      }, {
+        id: "4087963542"
+      }, {
+        id: "40872655"
+      }];
+      var a2 = [{
+        id: "408792221"
+      }, {
+        id: "4087963542"
+      }, {
+        id: "40872655"
+      }];
+
+
+      var ret = controller.areAssignedResourcesDifferent(a1, a2, "id");
+
+      $scope.$apply();
+
+      expect(ret).toBe(false);
+
+    });
+
+    it('should show a difference', function () {
+      var a1 = [{
+        id: "40892221"
+      }, {
+        id: "4087963542"
+      }, {
+        id: "40872655"
+      }];
+      var a2 = [{
+        id: "408792221"
+      }, {
+        id: "4087963542"
+      }, {
+        id: "40872655"
+      }];
+
+
+      var ret = controller.areAssignedResourcesDifferent(a1, a2, "id");
+
+      $scope.$apply();
+
+      expect(ret).toBe(true);
+
+    });
+  });
+
+  describe('saveAANumberAssignmentWithErrorDetail', function () {
+    it('should show error message when assigning number', function () {
+      spyOn(Notification, 'error');
+      spyOn(AANumberAssignmentService, 'setAANumberAssignmentWithErrorDetail').and.returnValue($q.reject());
+
+      controller.saveAANumberAssignmentWithErrorDetail();
+      $scope.$apply();
+
+      expect(Notification.error).toHaveBeenCalledWith('autoAttendant.errorFailedToAssignNumbers', jasmine.any(Object));
+
+    });
+  });
+
   describe('saveAARecords', function () {
 
     var createCeSpy;

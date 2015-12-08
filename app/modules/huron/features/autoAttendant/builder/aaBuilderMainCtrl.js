@@ -6,7 +6,7 @@
     .controller('AABuilderMainCtrl', AABuilderMainCtrl); /* was AutoAttendantMainCtrl */
 
   /* @ngInject */
-  function AABuilderMainCtrl($scope, $translate, $state, $stateParams, AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService, AAValidationService, AANumberAssignmentService, Notification, Authinfo) {
+  function AABuilderMainCtrl($scope, $translate, $state, $stateParams, $q, AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService, AAValidationService, AANumberAssignmentService, Notification, Authinfo) {
     var vm = this;
     vm.overlayTitle = $translate.instant('autoAttendant.builderTitle');
     vm.aaModel = {};
@@ -22,6 +22,8 @@
     vm.selectAA = selectAA;
     vm.populateUiModel = populateUiModel;
     vm.saveUiModel = saveUiModel;
+    vm.saveAANumberAssignmentWithErrorDetail = saveAANumberAssignmentWithErrorDetail;
+    vm.areAssignedResourcesDifferent = areAssignedResourcesDifferent;
 
     $scope.saveAARecords = saveAARecords;
 
@@ -51,19 +53,28 @@
       // check to see if the local assigned list of resources is different than in CE info
       if (areAssignedResourcesDifferent(vm.aaModel.aaRecord.assignedResources, vm.ui.ceInfo.getResources(), 'id')) {
         var ceInfo = AutoAttendantCeInfoModelService.getCeInfo(vm.aaModel.aaRecord);
-        AANumberAssignmentService.setAANumberAssignment(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, ceInfo.getResources()).then(
-          function (response) {},
+        return AANumberAssignmentService.setAANumberAssignment(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, ceInfo.getResources()).then(
+          function (response) {
+            return response;
+          },
           function (response) {
             Notification.error('autoAttendant.errorResetCMI');
+            return $q.reject(response);
           }
         );
+      } else {
+        // no unassignment necessary - just return fulfilled promise
+        var deferred = $q.defer();
+        deferred.resolve([]);
+        return deferred.promise;
       }
     }
 
     function closePanel() {
-      unAssignAssigned();
+      unAssignAssigned().finally(function () {
+        $state.go('huronfeatures');
+      });
 
-      $state.go('huronfeatures');
     }
 
     function removeNumberAttribute(resources) {
@@ -131,9 +142,7 @@
     // Notify the user of any numbers that failed
     function saveAANumberAssignmentWithErrorDetail(resources, workingResources, failedResources) {
 
-      AANumberAssignmentService.setAANumberAssignmentWithErrorDetail(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources, workingResources, failedResources).then(
-
-        function (response) {},
+      AANumberAssignmentService.setAANumberAssignmentWithErrorDetail(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources, workingResources, failedResources).catch(
         function (response) {
           Notification.error('autoAttendant.errorFailedToAssignNumbers', {
             phoneNumbers: failedResources

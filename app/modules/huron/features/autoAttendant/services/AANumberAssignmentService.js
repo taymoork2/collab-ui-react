@@ -20,7 +20,11 @@
       getAANumberAssignments: getAANumberAssignments,
       deleteAANumberAssignments: deleteAANumberAssignments,
       setAANumberAssignmentWithErrorDetail: setAANumberAssignmentWithErrorDetail,
-      checkAANumberAssignments: checkAANumberAssignments
+      checkAANumberAssignments: checkAANumberAssignments,
+      NUMBER_FORMAT_DIRECT_LINE: "NUMBER_FORMAT_DIRECT_LINE",
+      NUMBER_FORMAT_EXTENSION: "NUMBER_FORMAT_EXTENSION",
+      DIRECTORY_NUMBER: "directoryNumber",
+      EXTERNAL_NUMBER: "externalNumber"
     };
 
     return service;
@@ -38,7 +42,7 @@
         },
         function (response) {
           // failure
-          return response;
+          return $q.reject(response);
         }
       );
 
@@ -92,11 +96,11 @@
 
       for (var i = 0; i < resources.length; i++) {
 
-        var numType = "NUMBER_FORMAT_DIRECT_LINE";
-        if (resources[i].getType() === "directoryNumber") {
-          numType = "NUMBER_FORMAT_EXTENSION";
-        } else if (resources[i].getType() === "externalNumber") {
-          numType = "NUMBER_FORMAT_DIRECT_LINE";
+        var numType = service.NUMBER_FORMAT_DIRECT_LINE;
+        if (resources[i].getType() === service.DIRECTORY_NUMBER) {
+          numType = service.NUMBER_FORMAT_EXTENSION;
+        } else if (resources[i].getType() === service.EXTERNAL_NUMBER) {
+          numType = service.NUMBER_FORMAT_DIRECT_LINE;
         }
 
         var numObj = {
