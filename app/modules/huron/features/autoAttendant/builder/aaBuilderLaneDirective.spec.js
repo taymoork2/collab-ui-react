@@ -23,7 +23,7 @@ describe('Directive: aaBuilderLane', function () {
     var element = $compile("<aa-builder-lane aa-schedule='openHours'></aa-builder-lane>")($rootScope);
     $rootScope.$digest();
 
-    expect(element.html()).toContain("aa-add-step-icon");
+    expect(element.html()).not.toContain("aa-add-step-icon");
     expect(element.html()).not.toContain("aa-builder-actions");
   });
 
@@ -40,7 +40,7 @@ describe('Directive: aaBuilderLane', function () {
 
     $rootScope.$digest();
 
-    expect(element.html()).toContain("aa-add-step-icon");
+    expect(element.html()).not.toContain("aa-add-step-icon");
     expect(element.html()).toContain("aa-builder-actions");
   });
 });
