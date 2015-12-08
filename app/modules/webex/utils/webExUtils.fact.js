@@ -34,6 +34,7 @@
         var infoCardObj = {
           id: "SiteInfo",
           label: label,
+          isLicensesOverage: false,
 
           licensesTotal: {
             id: "licensesTotal",
@@ -229,9 +230,7 @@
 
                   var licenseVolume = license.volume;
                   var licenseUsage = license.usage;
-                  var licensesAvailable = (
-                    (licenseVolume - licenseUsage) < 0
-                  ) ? 0 : licenseVolume - licenseUsage;
+                  var licensesAvailable = licenseVolume - licenseUsage;
 
                   licenseInfo = {
                     volume: licenseVolume,
@@ -261,6 +260,23 @@
 
         return deferredGetWebexLicenseInfo.promise;
       }; // getWebexLicenseInfo()
+
+      obj.setInfoCardLicenseInfo = function (
+        licenseInfo,
+        infoCardObj
+      ) {
+
+        infoCardObj.licensesTotal.count = licenseInfo.volume;
+        infoCardObj.licensesUsage.count = licenseInfo.usage;
+        infoCardObj.licensesAvailable.count = licenseInfo.available;
+
+        if (0 <= licenseInfo.available) {
+          infoCardObj.licensesAvailable.count = licenseInfo.available;
+        } else {
+          infoCardObj.isLicensesOverage = true;
+          infoCardObj.licensesAvailable.count = licenseInfo.available * -1;
+        }
+      }; // setInfoCardLicenseInfo();
 
       obj.isSiteSupportsIframe = function (siteUrl) {
         var deferredIsSiteSupportsIframe = $q.defer();
