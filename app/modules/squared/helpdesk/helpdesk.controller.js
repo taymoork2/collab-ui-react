@@ -5,7 +5,6 @@
   function HelpdeskController(HelpdeskService, $translate, $scope) {
     $('body').css('background', 'white');
     $scope.$on('$viewContentLoaded', function () {
-
       if (HelpdeskService.checkIfMobile()) {
         angular.element('#searchInput').blur();
       } else {
