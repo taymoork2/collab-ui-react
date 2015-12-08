@@ -323,7 +323,7 @@ angular.module('Squared').service('CsdmConverter',
       convertDevices: convertDevices,
       convertHuronDevice: convertHuronDevice,
       convertHuronDevices: convertHuronDevices,
-      onvertAccount: convertAccount,
+      convertAccount: convertAccount,
       convertAccounts: convertAccounts
     };
 
