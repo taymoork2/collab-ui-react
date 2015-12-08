@@ -32,9 +32,8 @@
   </div>
 
   <div class="row full">
-    <div class="medium-12 xlarge-10 xxlarge-8 centered columns no-top-margin search-results">
+    <div class="large-offset-2 medium-12 xlarge-10 xxlarge-8 centered columns no-top-margin search-results">
       <div class="medium-6 large-4 columns"
-           ng-class="helpdeskCtrl.currentSearch.orgFilter ? 'large-offset-2' : ''"
            ng-if="helpdeskCtrl.searchingForUsers || helpdeskCtrl.currentSearch.userSearchResults || helpdeskCtrl.currentSearch.userSearchFailure">
         <h4 translate="helpdesk.users"></h4>
 
@@ -79,7 +78,7 @@
 
       </div>
 
-      <div class="medium-6 large-4 columns"
+      <div class="medium-6 large-4 columns end"
            ng-if="helpdeskCtrl.searchingForOrgs || helpdeskCtrl.currentSearch.orgSearchResults || helpdeskCtrl.currentSearch.orgSearchFailure">
 
         <h4 translate="helpdesk.customers"></h4>
@@ -122,21 +121,14 @@
 
       </div>
 
-      <div class="medium-6 large-4 columns"
-           ng-class="(helpdeskCtrl.currentSearch.orgFilter) ? 'end' : ''"
-           ng-if="(helpdeskCtrl.currentSearch.orgFilter && (helpdeskCtrl.searchingForDevices || helpdeskCtrl.currentSearch.deviceSearchResults || helpdeskCtrl.currentSearch.deviceSearchFailure)) || (helpdeskCtrl.searchingForOrgs || helpdeskCtrl.currentSearch.orgSearchResults || helpdeskCtrl.currentSearch.orgSearchFailurehelpdeskCtrl.searchingForOrgs || helpdeskCtrl.currentSearch.orgSearchResults || helpdeskCtrl.currentSearch.orgSearchFailurehelpdeskCtrl.searchingForOrgs || helpdeskCtrl.currentSearch.orgSearchResults || helpdeskCtrl.currentSearch.orgSearchFailure)">
+      <div class="medium-6 large-4 columns end"
+           ng-if="helpdeskCtrl.currentSearch.orgFilter && (helpdeskCtrl.searchingForDevices || helpdeskCtrl.currentSearch.deviceSearchResults || helpdeskCtrl.currentSearch.deviceSearchFailure)">
         <h4 translate="helpdesk.devices"></h4>
 
         <div ng-if="helpdeskCtrl.searchingForDevices">
           <span><i class="icon icon-spinner icon-2x"></i></span>
 
           <p translate="helpdesk.searchingPleaseWait"></p>
-        </div>
-
-        <div ng-if="!helpdeskCtrl.currentSearch.orgFilter">
-          <p>Global device search is not supported yet.</p>
-
-          <p>Find the customer first, click the search icon and then search for devices.</p>
         </div>
 
         <div ng-if="helpdeskCtrl.currentSearch.deviceSearchFailure">

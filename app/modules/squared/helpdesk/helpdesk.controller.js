@@ -22,7 +22,6 @@
     vm.searchingForDevices = false;
     vm.searchString = '';
     vm.keyPressHandler = keyPressHandler;
-    vm.focusFirstCard = focusFirstCard;
     vm.showMoreResults = showMoreResults;
     vm.currentSearch = {
       searchString: '',
@@ -52,6 +51,10 @@
         }else{
           angular.element('#searchInput').focus();
         }
+      },
+      clear: function () {
+        this.initSearch('');
+        this.orgFilter = null;
       }
     };
     var isMobile = {
@@ -142,14 +145,13 @@
 
     function initSearchWithOrgFilter(org) {
       vm.searchString = '';
-      vm.currentSearch.initSearch('');
+      vm.currentSearch.clear();
       vm.currentSearch.orgFilter = org;
     }
 
     function initSearchWithoutOrgFilter() {
       vm.searchString = '';
-      vm.currentSearch.initSearch('');
-      vm.currentSearch.orgFilter = null;
+      vm.currentSearch.clear();
     }
 
     function showMoreResults(type) {
@@ -208,7 +210,7 @@
       case 27: // Esc
         if (inputFieldHasFocus) {
           vm.searchString = '';
-          vm.currentSearch.initSearch('');
+          initSearchWithoutOrgFilter();
         } else {
           if(isMobile.all()) {
             angular.element('#searchInput').blur();
@@ -234,11 +236,6 @@
       if (newTabIndex != -1) {
         $('[tabindex=' + newTabIndex + ']').focus();
       }
-    }
-
-    function focusFirstCard() {
-      //angular.element('.cs-card:first-child article').focus();
-      angular.element('#user-card-0 article').focus();
     }
   }
 
