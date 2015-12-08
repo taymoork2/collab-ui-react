@@ -209,13 +209,13 @@
 
       case 27: // Esc
         if (inputFieldHasFocus) {
-          vm.searchString = '';
           initSearchWithoutOrgFilter();
         } else {
           if(isMobile.all()) {
             angular.element('#searchInput').blur();
           }else{
-            angular.element('#searchInput').focus();
+            angular.element('#searchInput').focus().select();
+            ;
           }
           newTabIndex = -1;
         }
