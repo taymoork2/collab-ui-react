@@ -158,6 +158,7 @@
       }
       var activeTabIndex = activeElement[0]["tabIndex"];
       var newTabIndex = -1;
+
       switch (event.keyCode) {
       case 37: // Left arrow
         newTabIndex = activeTabIndex - 1;
@@ -190,7 +191,13 @@
           activeElement.click();
         }
         break;
+
+      case 83: // S
+        var orgLink = JSON.parse(activeElement.find("a")[0]["name"]);
+        if(orgLink){ initSearchWithOrgFilter(orgLink); }
+        break;
       }
+
       if (newTabIndex != -1) {
         $('[tabindex=' + newTabIndex + ']').focus();
       }

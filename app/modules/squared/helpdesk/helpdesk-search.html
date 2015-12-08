@@ -3,14 +3,16 @@
   <h1 translate="helpdesk.helpdesk"></h1>
 
   <div class="typeahead-large" style="text-align: left;">
-    <input id="searchInput" type="text"
-           tabindex="1"
-           placeholder=""
-           ng-model="helpdeskCtrl.searchString" ,
-           ng-keypress="($event.which === 13) ? helpdeskCtrl.search() : 0" autofocus="true" />
+    <form>
+      <input id="searchInput" type="text"
+             tabindex="1"
+             placeholder=""
+             ng-model="helpdeskCtrl.searchString" ,
+             ng-keypress="($event.which === 13) ? helpdeskCtrl.search() : 0" autofocus="true" />
 
-    <button type="button" tabindex="-1" class="btn btn--circle btn--primary icon icon-search"
-            ng-click="helpdeskCtrl.search()" ng-disabled="helpdeskCtrl.searchString == ''"></button>
+      <button type="button" tabindex="-1" class="btn btn--circle btn--primary icon icon-search"
+              ng-click="helpdeskCtrl.search()" ng-disabled="helpdeskCtrl.searchString == ''"></button>
+    </form>
 
     <div class="input-description">
       <p>
@@ -102,7 +104,7 @@
               <header>
                 <h5>
                   {{org.displayName}}
-                  <a tabindex="-1" href class="right" ng-click="helpdeskCtrl.initSearchWithOrgFilter(org)"><i
+                  <a tabindex="-1" href class="right" ng-click="helpdeskCtrl.initSearchWithOrgFilter(org)" name="{{org}}"><i
                     class="icon icon-search"></i></a>
                 </h5>
               </header>
