@@ -67,6 +67,11 @@ angular.module('Squared').service('CsdmConverter',
       this.isUnused = true;
       this.canDelete = true;
       this.hasIssues = true;
+      this.diagnosticsEvents = [{
+        type: translateOrDefault('CsdmStatus.errorCodes.nonexisting.type', 'Account with no device'),
+        message: translateOrDefault('CsdmStatus.errorCodes.nonexisting.message', 'There exists an account for a ' +
+          'device, but no corresponding device or activation code. You can probably delete this account.')
+      }];
     }
 
     function Code(obj) {

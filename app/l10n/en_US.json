@@ -2658,6 +2658,10 @@
         "type": "Automatic Updates Disabled",
         "message": "System software will not be updated."
       },
+      "nonexisting": {
+        "type": "Account with no device",
+        "message": "There exists an account for a device, but no corresponding device or activation code. You can probably delete this account."
+      },
       "unknown": {
         "type": "Unknown Error Occurred",
         "message": "The device reported an unknown error and there is no description available. Error code is: {{errorCode}}",
