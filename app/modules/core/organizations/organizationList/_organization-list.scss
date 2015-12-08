@@ -1,4 +1,7 @@
 .org-list {
+  @extend %grid-subheader;
+  @extend %page-background-white;
+
   .ngCell.col0 .ngVerticalBar, .ngHeaderCell.col0 .ngVerticalBar {
     display: none;
   }
@@ -12,11 +15,6 @@
       left: auto;
       top: 70%;
     }
-  }
-
-  /** todo: remove once Paul gives the ok */
-  .searchbox {
-    float:none;
   }
 }
 

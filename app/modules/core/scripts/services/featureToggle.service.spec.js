@@ -12,6 +12,7 @@ describe('FeatureToggleService', function () {
   var getUserMe;
   var getUserFeatureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
   var userRegex = /.*\/locus\/api\/v1\/features\/users\.*/;
+  var orgRegex = /.*\/features\/rules\.*/;
 
   beforeEach(inject(function (_$httpBackend_, _$q_, _Config_, _Authinfo_, _Userservice_, _FeatureToggleService_) {
     httpBackend = _$httpBackend_;
@@ -78,6 +79,12 @@ describe('FeatureToggleService', function () {
     FeatureToggleService.getFeatureForUser(userId, 'android-add-guest-release').then(function (data) {
       expect(data).toBe(true);
     });
+    httpBackend.flush();
+  });
+
+  it('should toggle a service when to for an org', function () {
+    httpBackend.whenPOST(orgRegex).respond(204);
+    FeatureToggleService.setFeatureToggle(forOrg, orgId, 'feature-toggle-test', true);
     httpBackend.flush();
   });
 

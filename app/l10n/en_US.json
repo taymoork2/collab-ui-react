@@ -320,6 +320,7 @@
     "addSuccess": "An organization was successfully started for {{customerOrgName}} with {{licenseCount}} licenses for {{duration}} days.",
     "manageBetaFeatures": "Manage Beta Features",
     "betaFeatures": "Beta Features",
+    "errorGettingToggles": "There was a problem getting the selected organizations feature toggles",
     "startSearching": "To begin, search for an organization",
     "noSearchResults": "Search yielded no results"
   },
