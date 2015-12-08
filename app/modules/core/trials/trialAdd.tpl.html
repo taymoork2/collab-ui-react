@@ -1,51 +1,47 @@
 <!-- Add Trial Modal -->
-<form novalidate name="trialForm" id="addTrialForm" class="form-horizontal">
+<form id="addTrialForm" class="form-horizontal trial-modal" name="trialForm" novalidate>
+  <!-- header -->
   <div class="modal-header">
     <button type="button" class="close" ng-click="$dismiss()">
       <span class="sr-only" translate="common.close"></span>
     </button>
-    <h3 class="modal-title" translate="partnerHomePage.dialogTitle"></h3>
+    <h3 class="modal-title" translate="trialModal.addTrial.title"></h3>
   </div>
-  <section class="modal-body">
-    <h4 translate="partnerHomePage.customerInformation"></h4>
-    <formly-form model="trial.model" fields="trial.custInfoFields">
+
+  <!-- body -->
+  <section class="modal-body collapse-fields row">
+    <h5 translate="partnerHomePage.customerInformation"></h5>
+    <formly-form model="trial.details" fields="trial.custInfoFields" class="small-11 small-offset-1 columns">
     </formly-form>
   </section>
-  <section class="modal-body">
-    <h4 translate="partnerHomePage.trialServices"></h4>
-    <section>
-      <h5 translate="partnerHomePage.individualUserServices"></h5>
-      <formly-form model="trial.model" fields="trial.individualServices">
+  <section class="modal-body collapse-fields">
+    <h5 translate="partnerHomePage.trialServices"></h5>
+    <section class="row">
+      <h6 translate="partnerHomePage.individualUserServices" class="small-11 small-offset-1 columns"></h6>
+      <formly-form model="trial.trialData.trials" fields="trial.individualServices" hide-directive="ng-show" class="small-10 small-offset-2 columns">
       </formly-form>
     </section>
-    <section ng-if="trial.showRoomSystems" class="row">
-      <h5 translate="partnerHomePage.deviceBasedServices"></h5>
-      <div class="columns small-offset-1 small-11">
-        <div class="row">
-          <cs-checkbox class="columns small-5" ckid="trialRoomSystemsChecked" ng-click="trial.roomSystemsChecked()" ng-model="trial.model.roomSystemsEnabled" label="{{'partnerHomePage.sparkRoomSystem' | translate}}"></cs-checkbox>
-          <div class="columns small-6">
-            <cs-select id="trialRoomSystemsAmount" ng-model="trial.model.roomSystems" options="trial.roomSystemOptions" placeholder="0" is-disabled="!trial.model.roomSystemsEnabled" secondary-label="{{::'common.devices' | translate}}">
-            </cs-select>
-          </div>
-        </div>
-      </div>
+    <section class="row" ng-if="trial.showRoomSystems">
+      <h6 translate="partnerHomePage.deviceBasedServices" class="small-11 small-offset-1 columns"></h6>
+      <formly-form model="trial.roomSystemTrial" fields="trial.roomSystemFields" hide-directive="ng-show" class="small-10 small-offset-2 columns">
+      </formly-form>
     </section>
   </section>
-  <section class="modal-body">
-    <h4 translate="partnerHomePage.termsOfTrial"></h4>
-    <formly-form model="trial.model" fields="trial.trialTermsFields">
+  <section class="modal-body row">
+    <h5 translate="partnerHomePage.termsOfTrial"></h5>
+    <formly-form model="trial.details" fields="trial.trialTermsFields" class="small-11 small-offset-1 columns">
     </formly-form>
   </section>
+
+  <!-- footer -->
   <div class="modal-footer">
-    <button id="cancelNewTrialButton" class="btn" ng-click="$dismiss()">
+    <button id="cancelNewTrialButton" class="btn" ng-click="$dismiss()" ng-disabled="trial.startTrialButtonLoad">
       <span translate="partnerHomePage.cancel"></span>
     </button>
-    <button type="button" id="startTrialButton" cs-btn loading="trial.startTrialButtonLoad" class="btn btn--primary" ng-click="trialForm.$setPristine(true); trial.clickStartTrial();" ng-disabled="trialForm.$invalid || trial.isOffersEmpty()">
-      <span ng-if="!trial.isSquaredUCEnabled()" translate="partnerHomePage.startTrial"></span>
-      <span ng-if="trial.isSquaredUCEnabled()">
-        <span cr-feature-toggle feature-show="pstnSetup" translate="partnerHomePage.startTrial"></span>
-        <span cr-feature-toggle feature-hide="pstnSetup" translate="common.next"></span>
-      </span>
+    <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn loading="trial.startTrialButtonLoad"
+      ng-click="trialForm.$setPristine(true); trial.nextStep()" ng-disabled="trialForm.$invalid || !trial.hasTrial()">
+        <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
+        <span ng-if="trial.hasNextStep()" translate="common.next"></span>
     </button>
   </div>
 </form>

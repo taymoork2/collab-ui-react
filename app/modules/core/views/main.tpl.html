@@ -4,8 +4,8 @@
       <div class="top-bar-orgname" ng-controller="UserInfoController" ng-if="Utils.isAdminPage()"><div class="top-bar-title" title="{{orgname}}">{{orgname}}</div></div>
     </cs-header-left>
     <cs-header-right>
-      <div class="leaderboard-push-trigger" ng-controller="HeaderPushCtrl" ng-if="Utils.isAdminPage()">
-        <cs-header-push-trigger state="state" label="label"></cs-header-push-trigger>
+      <div ng-show = "buckets && buckets.length > 0" class="leaderboard-push-trigger" ng-controller="leaderBoardCtrl" ng-if="Utils.isAdminPage()">
+        <cs-header-push-trigger  state="state" label="label"></cs-header-push-trigger>
       </div>
       <div class="settings-menu dropdown" ng-controller="SetupWizardCtrl" ng-if="Utils.isAdminPage()">
         <button class="btn btn--header dropdown-toggle"><i class="icon-settings icon"></i>

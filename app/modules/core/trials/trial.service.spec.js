@@ -3,6 +3,7 @@
 describe('Service: Trial Service', function () {
   var $httpBackend, TrialService, Config;
 
+  beforeEach(module('core.trial'));
   beforeEach(module('Core'));
 
   var trialAddResponse = getJSONFixture('core/json/trials/trialAddResponse.json');
@@ -26,6 +27,7 @@ describe('Service: Trial Service', function () {
     $httpBackend = _$httpBackend_;
     TrialService = _TrialService_;
     Config = _Config_;
+    var data = TrialService.getData();
   }));
 
   afterEach(function () {
@@ -41,7 +43,7 @@ describe('Service: Trial Service', function () {
 
     it('should start a new trial', function () {
       $httpBackend.whenPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials').respond(trialAddResponse);
-      TrialService.startTrial('', '', '', '', '', ['COLLAB']).then(function (response) {
+      TrialService.startTrial().then(function (response) {
         expect(response.data).toEqual(trialAddResponse);
         expect(LogMetricsService.logMetrics).toHaveBeenCalled();
       });
