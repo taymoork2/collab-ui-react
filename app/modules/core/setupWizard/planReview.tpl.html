@@ -48,59 +48,64 @@
   <div class="flex-row row-licenses">
     <div class="small-4 columns" ng-class="{'column-paid' : !planReview.messagingServices.isNewTrial, 'column-trial' : planReview.messagingServices.isNewTrial}">
       <div ng-if="planReview.messagingServices.isNewTrial" class="column-trial-header" translate="firstTimeWizard.startYourTrial" translate-values="{days: planReview.trial.trialPeriod}"></div>
-      <div ng-if="planReview.messagingServices.services.length > 0" class="item-license">
-        <span ng-if="planReview.isStormBranding" translate="firstTimeWizard.message"></span>
-        <span ng-if="!planReview.isStormBranding" translate="firstTimeWizard.messaging"></span>
-      </div>
-      <div class="item-paid" ng-repeat="service in planReview.messagingServices.services">
-        <div ng-if="service.license.isTrial || planReview.messagingServices.isNewTrial" class="badge badge-trial" translate="firstTimeWizard.trial"></div>
-        <div class="quantity">
-          <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
-          <span>{{service.license.volume}}</span>
+      <div class="license-column">
+        <div ng-if="planReview.messagingServices.services.length > 0" class="item-license">
+          <span ng-if="planReview.isStormBranding" translate="firstTimeWizard.message"></span>
+          <span ng-if="!planReview.isStormBranding" translate="firstTimeWizard.messaging"></span>
+        </div>
+        <div class="item-paid" ng-repeat="service in planReview.messagingServices.services">
+          <div ng-if="service.license.isTrial || planReview.messagingServices.isNewTrial" class="badge badge-trial" translate="firstTimeWizard.trial"></div>
+          <div class="quantity">
+            <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
+            <span>{{service.license.volume}}</span>
+          </div>
         </div>
       </div>
     </div>
     <div class="small-4 columns" ng-class="{'column-mtg' : !planReview.confServices.isNewTrial, 'column-trial' : planReview.confServices.isNewTrial}">
       <div ng-if="planReview.confServices.isNewTrial" class="column-trial-header" translate="firstTimeWizard.startYourTrial" translate-values="{days: planReview.trial.trialPeriod}">
       </div>
-      <div ng-if="planReview.confServices.services.length > 0" class="item-license">
-        <span ng-if="planReview.isStormBranding" translate="firstTimeWizard.meeting"></span>
-        <span ng-if="!planReview.isStormBranding" translate="firstTimeWizard.conferencing"></span>
-      </div>
-      <div class="item-paid" ng-repeat="service in planReview.confServices.services" ng-hide="service.license.offerName !== 'CF'">
-        <div ng-if="service.license.isTrial || planReview.confServices.isNewTrial" class="badge badge-trial" translate="firstTimeWizard.trial"></div>
-        <div class="quantity">
-          <span translate="firstTimeWizard.quantity"></span>
-          <span>{{service.license.volume}}</span>
+      <div class="license-column">
+        <div ng-if="planReview.confServices.services.length > 0" class="item-license">
+          <span ng-if="planReview.isStormBranding" translate="firstTimeWizard.meeting"></span>
+          <span ng-if="!planReview.isStormBranding" translate="firstTimeWizard.conferencing"></span>
         </div>
-      </div>
-      <div class="sub-line"></div>
-      <div class="item-mtg" ng-repeat="(siteUrl,services) in planReview.sites">
-        {{siteUrl}}
-        <div class="sub-item" ng-repeat="service in services">
-          <div class="item-webex">
-            {{'firstTimeWizard.webex' | translate}} {{service.label}}
-          </div>
+        <div class="item-paid" ng-repeat="service in planReview.confServices.services" ng-hide="service.license.offerName !== 'CF'">
           <div ng-if="service.license.isTrial || planReview.confServices.isNewTrial" class="badge badge-trial" translate="firstTimeWizard.trial"></div>
-          <div class="quantity-mtg">
+          <div class="quantity">
             <span translate="firstTimeWizard.quantity"></span>
             <span>{{service.license.volume}}</span>
           </div>
         </div>
-        <div ng-class="{'sub-line':!$last}"></div>
+        <div class="item-mtg" ng-repeat="(siteUrl,services) in planReview.sites">
+          <div class="sub-line"></div>
+          {{siteUrl}}
+          <div class="sub-item" ng-repeat="service in services">
+            <div class="item-webex">
+              {{'firstTimeWizard.webex' | translate}} {{service.label}}
+            </div>
+            <div ng-if="service.license.isTrial || planReview.confServices.isNewTrial" class="badge badge-trial" translate="firstTimeWizard.trial"></div>
+            <div class="quantity-mtg">
+              <span translate="firstTimeWizard.quantity"></span>
+              <span>{{service.license.volume}}</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="small-4 columns" ng-class="{'column-paid' : !planReview.commServices.isNewTrial, 'column-trial' : planReview.commServices.isNewTrial}">
       <div ng-if="planReview.commServices.isNewTrial" class="column-trial-header" translate="firstTimeWizard.startYourTrial" translate-values="{days: planReview.trial.trialPeriod}"></div>
-      <div ng-if="planReview.commServices.services.length > 0" class="item-license">
-        <span ng-if="planReview.isStormBranding" translate="firstTimeWizard.call"></span>
-        <span ng-if="!planReview.isStormBranding" translate="firstTimeWizard.communications"></span>
-      </div>
-      <div class="item-paid" ng-repeat="service in planReview.commServices.services">
-        <div ng-if="service.license.isTrial || planReview.commServices.isNewTrial" class="badge badge-trial" translate="firstTimeWizard.trial"></div>
-        <div class="quantity">
-          <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
-          <span>{{service.license.volume}}</span>
+      <div class="license-column">
+        <div ng-if="planReview.commServices.services.length > 0" class="item-license">
+          <span ng-if="planReview.isStormBranding" translate="firstTimeWizard.call"></span>
+          <span ng-if="!planReview.isStormBranding" translate="firstTimeWizard.communications"></span>
+        </div>
+        <div class="item-paid" ng-repeat="service in planReview.commServices.services">
+          <div ng-if="service.license.isTrial || planReview.commServices.isNewTrial" class="badge badge-trial" translate="firstTimeWizard.trial"></div>
+          <div class="quantity">
+            <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
+            <span>{{service.license.volume}}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -124,10 +129,10 @@
     </div>
   </div>
   <div ng-if="planReview.trialExists && !planReview.processing" class="wizard-trial-progress container-fluid">
-    <div class="row">
+    <div class="row collapse">
       <div class="small-12 columns">
         <progressbar class="progress" value="planReview.trialUsedPercentage" type="warning"></progressbar>
-        <div class="wizard-trial-progress-text" translate="firstTimeWizard.trialDaysRemaining" translate-values="{days: planReview.trialDaysRemaining}">
+        <div class="wizard-trial-progress-text p" translate="firstTimeWizard.trialDaysRemaining" translate-values="{days: planReview.trialDaysRemaining}">
         </div>
       </div>
     </div>
