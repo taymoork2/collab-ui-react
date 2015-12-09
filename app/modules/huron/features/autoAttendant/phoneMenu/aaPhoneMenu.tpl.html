@@ -4,7 +4,7 @@
     <div ng-if="aaPhoneMenu.selectedActions.length">
       <div class="row aa-pm-vertical-line" ng-repeat="keyAction in aaPhoneMenu.selectedActions">
         <div class="small-3 columns">
-          <cs-select ng-model="keyAction.key" options="keyAction.keys" placeholder="aaPhoneMenu.selectPlaceholder" on-change-fn="aaPhoneMenu.keyChanged($index, keyAction.key)" class="aa-pm-key-select" icon="icon-chevron-down">
+          <cs-select ng-model="keyAction.key" options="keyAction.keys" placeholder="aaPhoneMenu.selectPlaceholder" on-change-fn="aaPhoneMenu.keyChanged($index, keyAction.key)" class="aa-pm-key-select" icon="icon-chevron-down" ng-class="{'not-selected':!keyAction.key}">
           </cs-select>
         </div>
         <div class="small-8 columns">

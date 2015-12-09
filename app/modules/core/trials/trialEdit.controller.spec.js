@@ -3,6 +3,7 @@
 describe('Controller: TrialEditCtrl', function () {
   var controller, $scope, $state, $q, $translate, Notification, TrialService, HuronCustomer, FeatureToggleService;
 
+  beforeEach(module('core.trial'));
   beforeEach(module('Core'));
   beforeEach(module('Huron'));
   var stateParams = {

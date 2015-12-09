@@ -11,6 +11,7 @@
         adc.showAdd = true;
         adc.deviceName = '';
         adc.activationCode = '';
+        adc.expiryTime = '';
 
         $scope.$watch('adc.showAdd', function (shown) {
           if (shown) {
@@ -40,6 +41,7 @@
 
             if (code.activationCode && code.activationCode.length > 0) {
               adc.activationCode = formatActivationCode(code.activationCode);
+              adc.expiryTime = code.expiryTime;
             }
 
             if (!code.emailConfCode && !code.conversationId) {

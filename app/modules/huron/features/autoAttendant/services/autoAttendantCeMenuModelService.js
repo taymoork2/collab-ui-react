@@ -257,6 +257,10 @@
     this.entries.splice(index, 0, entry);
   };
 
+  CeMenu.prototype.appendEntry = function (entry) {
+    this.entries.push(entry);
+  };
+
   CeMenu.prototype.deleteEntryAt = function (index) {
     this.entries.splice(index, 1);
   };
@@ -494,7 +498,7 @@
         var announcementMenuEntry = new CeMenuEntry();
         announcementMenuEntry.setType('MENU_OPTION_ANNOUNCEMENT');
         menu.addHeader(announcementMenuEntry);
-        if (angular.isDefined(ceActionsOnInput.prompts)) {
+        if (angular.isDefined(ceActionsOnInput) && angular.isDefined(ceActionsOnInput.prompts)) {
           if (angular.isDefined(ceActionsOnInput.prompts.description)) {
             announcementMenuEntry.setDescription(ceActionsOnInput.prompts.description);
           }

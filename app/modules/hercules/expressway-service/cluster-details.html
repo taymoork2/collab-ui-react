@@ -65,7 +65,5 @@
 </cs-sp-container>
 
 <cs-sp-container class="hercules-fix-paragraphs" ng-if="expresswayClusterDetails.serviceNotInstalled()">
-  <p>
-    The <span translate="hercules.serviceNames.{{expresswayClusterDetails.serviceId}}"></span> is not installed on this cluster.
-  </p>
+  <p translate="hercules.clusters.notInstalled" translate-values="{serviceName: expresswayClusterDetails.serviceName}"></p>
 </cs-sp-container>

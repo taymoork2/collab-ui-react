@@ -1,21 +1,21 @@
 <!--<header><h4 translate="overview.cards.users.title"></h4></header>-->
 <header>
   <div class="overview-header">
-    <i class="icon" ng-class="card.icon"></i>{{ 'overview.cards.users.title' | translate}}
+  <i class="icon" ng-class="card.icon"></i>
+  <span>{{card.name | translate}}</span>
   </div>
 </header>
 <section>
   <!--<h4>{{(card.usersToConvert | number) || 'N/A'}}</h4>-->
-
-  <div class="convert-block"><span class="convert-nr">{{(card.usersToConvert | number) || 'N/A'}}</span> <span translate="overview.cards.users.convertText" id="convertText"></span></div>
-  <button
-    class="btn btn--cta"
-    translate="overview.cards.users.convertButton"
-    ng-click="card.openConvertModal()"
-    ng-disabled="!card.usersToConvert">
-  </button>
-  <hr/>
-  <div class="bottom">
+  <div class="convert-block">
+    <div class="convert-text">
+      <span class="convert-nr">{{(card.usersToConvert | number) || 'N/A'}}</span>&nbsp;
+      <span translate="overview.cards.users.convertText" id="convertText"></span>
+    </div>
+    <button class="btn btn--cta" translate="overview.cards.users.convertButton" ng-click="card.openConvertModal()" ng-disabled="!card.usersToConvert">
+    </button>
+  </div>
+  <div class="status-block">
     <ul>
       <li>
         <i class="icon icon-circle" ng-class="card.dirsyncEnabled ? 'success' : 'disabled'"></i>

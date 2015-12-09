@@ -3,22 +3,37 @@
  */
 'use strict';
 
-angular.module('WebExUtils').directive('iFrameResizable', function ($window) {
-  return function ($scope) {
-    $scope.initializeWindowSize = function () {
-      var innerHeight = $window.innerHeight;
-      // var iframeTopMargin = 200;
-      var iframeTopMargin = 214;
+angular.module('WebExUtils').directive(
+  'iFrameResizable',
+  function iFrameResizableDirective($window) {
+    return function iFrameResizable(
+      $scope,
+      element,
+      attributes
+    ) {
 
-      $scope.iframeHeight = (iframeTopMargin >= innerHeight) ? 0 : innerHeight - iframeTopMargin;
+      $scope.initializeWindowSize = function () {
+        var innerHeight = $window.innerHeight;
+        var targetElementId = attributes["iFrameResizable"];
+        var targetElement = document.getElementById(targetElementId).getBoundingClientRect();
+        var targetElementLocation = {
+          left: targetElement.left + window.pageXOffset,
+          top: targetElement.top + window.pageYOffset
+        };
 
-      return $scope.iframeHeight;
-    };
+        var iframeTopMargin = targetElementLocation.top;
+        var iframeBottomMargin = 14;
+        var iframeTotalMargin = iframeTopMargin + iframeBottomMargin;
 
-    $scope.initializeWindowSize();
-    return angular.element($window).bind('resize', function () {
+        $scope.iframeHeight = (iframeTotalMargin >= innerHeight) ? 0 : innerHeight - iframeTotalMargin;
+      };
+
       $scope.initializeWindowSize();
-      return $scope.$apply();
-    });
-  };
-});
+
+      return angular.element($window).bind('resize', function () {
+        $scope.initializeWindowSize();
+        return $scope.$apply();
+      });
+    }; // iFrameResizable()
+  } // iFrameResizableDirective ()
+);

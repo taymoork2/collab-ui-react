@@ -11,10 +11,11 @@
     '$stateParams',
     '$sce',
     '$timeout',
+    '$window',
     'Authinfo',
     'Notification',
     'Config',
-    function (
+    function reportsIframeCtrl(
       $scope,
       $rootScope,
       $log,
@@ -24,6 +25,7 @@
       $stateParams,
       $sce,
       $timeout,
+      $window,
       Authinfo,
       Notification,
       Config
@@ -34,18 +36,7 @@
       _this.funcName = "ReportsIframeCtrl()";
       _this.logMsg = "";
 
-      /*
-      $scope.showSpinner = (
-        ("storage_utilization" == $stateParams.reportPageId) ||
-        ("support_center_support_sessions" == $stateParams.reportPageId) ||
-        ("support_center_allocation_queue" == $stateParams.reportPageId) ||
-        ("support_center_call_volume" == $stateParams.reportPageId) ||
-        ("support_center_csr_activity" == $stateParams.reportPageId) ||
-        ("support_center_url_referral" == $stateParams.reportPageId)
-      ) ? false : true;
-      */
-      $scope.showSpinner = false;
-
+      $scope.isIframeLoaded = false;
       $scope.siteUrl = $stateParams.siteUrl;
       $scope.indexPageSref = "webex-reports({siteUrl:'" + $stateParams.siteUrl + "'})";
       $scope.reportPageId = $stateParams.reportPageId;
@@ -73,14 +64,30 @@
       $log.log(_this.logMsg);
 
       $timeout(
-        function () {
+        function loadIframe() {
           var submitFormBtn = document.getElementById('submitFormBtn');
           submitFormBtn.click();
-        },
+        }, // loadIframe()
 
         0
       );
 
-    } // function()
+      $window.iframeLoaded = function (iframeId) {
+        var funcName = "iframeLoaded()";
+        var logMsg = funcName;
+
+        logMsg = funcName + "\n" +
+          'iframeId=' + iframeId;
+        $log.log(logMsg);
+
+        var currScope = angular.element(iframeId).scope();
+
+        currScope.$apply(
+          function updateScope() {
+            currScope.isIframeLoaded = true;
+          }
+        );
+      }; // iframeLoaded()
+    } // reportsIframeCtrl()
   ]); // angular.module().controller()
 })(); // function()

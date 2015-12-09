@@ -1,8 +1,16 @@
 %aa-pm-vertical-line {
-  background-image: linear-gradient(180deg, transparent, $aa-builder-border-color, transparent);
-  background-position: 2rem 50%;
-  background-repeat: repeat-y;
-  background-size: $aa-builder-border-size $aa-builder-border-size;
+  position: relative;
+
+  &:before {
+    top: 0;
+    left: 0;
+    position: absolute;
+    display: inline-block;
+    content: '';
+    transform: translateX(2rem);
+    border-left: $aa-builder-border-size solid $aa-builder-border-color;
+    height: 100%;
+  }
 }
 
 .aa-phone-menu {
@@ -31,8 +39,6 @@
     }
 
     .aa-pm-vertical-line {
-      @include vr-spacing(pb, 1);
-
       @extend %aa-pm-vertical-line;
     }
   }
@@ -96,23 +102,25 @@
       @include vr-spacing(pl, 1.25);
     }
 
-    // angular selected
-    &[class*="ng-valid-parse"] {
-      & .select-toggle {
-        color: $color-white;
+    // selected option
+    &:not(.not-selected) {
+      a {
+        &.select-toggle {
+          color: $color-white;
 
-        &:after {
-          position: absolute;
-          display: inline-block;
-          content: " ";
-          width: calc(1.75em + 1px);
-          top: 0.15em;
-          left: 0.75em;
-          height: calc(1.75em + 1px);
-          background-color: $color-cta-base;
-          z-index: -1;
+          &:after {
+            position: absolute;
+            display: inline-block;
+            content: " ";
+            width: calc(1.75em + 1px);
+            top: 0.15em;
+            left: 0.75em;
+            height: calc(1.75em + 1px);
+            background-color: $color-cta-base;
+            z-index: -1;
 
-          @include radius(1em);
+            @include radius(1em);
+          }
         }
       }
     }
@@ -181,6 +189,12 @@
 
 .aa-pm-vertical-line {
   @include vr-spacing(pb, 1);
+
+  &:nth-child(n+12) {
+    @include vr-spacing(pb, 0);
+
+    @include vr-spacing(mb, 1);
+  }
 
   &.aa-pm-primary-text {
     @include vr-spacing(pb, 0);

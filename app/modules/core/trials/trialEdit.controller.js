@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('Core')
+  angular.module('core.trial')
     .controller('TrialEditCtrl', TrialEditCtrl);
 
   /* @ngInject */
@@ -17,7 +17,7 @@
     vm.showWebex = false;
     vm.showRoomSystems = false;
     vm.model = {
-      roomSystems: 0,
+      roomSystems: 0
     };
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials).then(function (result) {
@@ -38,13 +38,13 @@
       templateOptions: {
         label: $translate.instant('trials.meet'),
         id: 'webexTrialCB',
-        class: 'small-offset-1 columns',
+        class: 'columns medium-12 checkbox-group'
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
           return vm.isSquaredUCEnabled() || vm.isRoomSystemsTrialsEnabled();
-        },
-      },
+        }
+      }
     };
 
     vm.roomSystemOptions = [5, 10, 15, 20, 25];
@@ -54,10 +54,10 @@
       defaultValue: vm.currentTrial.licenses,
       templateOptions: {
         label: $translate.instant('siteList.licenseCount'),
-        labelClass: 'small-4 columns',
-        inputClass: 'small-4 columns left',
+        labelClass: 'columns medium-5',
+        inputClass: 'columns medium-3',
         type: 'number',
-        required: true,
+        required: true
       },
       validators: {
         count: {
@@ -66,9 +66,9 @@
           },
           message: function () {
             return $translate.instant('partnerHomePage.invalidTrialLicenseCount');
-          },
-        },
-      },
+          }
+        }
+      }
     }, {
       key: 'COLLAB',
       type: 'checkbox',
@@ -77,7 +77,7 @@
       templateOptions: {
         label: $translate.instant('trials.collab'),
         id: 'squaredTrial',
-        class: 'small-offset-1 columns'
+        class: 'columns medium-12 checkbox-group',
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
@@ -87,8 +87,8 @@
           return FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
             return result ? $translate.instant('partnerHomePage.message') : $translate.instant('trials.collab');
           });
-        },
-      },
+        }
+      }
     }, {
       key: 'SQUAREDUC',
       type: 'checkbox',
@@ -96,9 +96,12 @@
       templateOptions: {
         label: $translate.instant('trials.squaredUC'),
         id: 'squaredUCTrial',
-        class: 'small-offset-1 columns'
+        class: 'columns medium-12 checkbox-group',
       },
       expressionProperties: {
+        'templateOptions.disabled': function () {
+          return vm.disableSquaredUCCheckBox;
+        },
         'hide': function () {
           return !vm.isSquaredUC();
         },
@@ -106,8 +109,8 @@
           return FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
             return result ? $translate.instant('partnerHomePage.call') : $translate.instant('trials.squaredUC');
           });
-        },
-      },
+        }
+      }
     }];
 
     vm.trialTermsFields = [{
@@ -119,16 +122,16 @@
         required: true,
         label: $translate.instant('partnerHomePage.duration'),
         secondaryLabel: $translate.instant('partnerHomePage.durationHelp'),
-        labelClass: 'small-4 columns',
-        inputClass: 'small-4 columns left',
-        options: [30, 60, 90],
-      },
+        labelClass: 'columns medium-4',
+        inputClass: 'columns medium-4',
+        options: [30, 60, 90]
+      }
     }];
 
     vm.isSquaredUC = Authinfo.isSquaredUC;
     vm.getDaysLeft = getDaysLeft;
     vm.editTrial = editTrial;
-    vm.squaredUCOfferID = Config.trials.squaredUC;
+    vm.squaredUCOfferID = Config.trials.call;
     vm.isSquaredUCEnabled = isSquaredUCEnabled;
     vm.isRoomSystemsTrialsEnabled = isRoomSystemsTrialsEnabled;
     vm.gotoAddNumber = gotoAddNumber;
@@ -162,7 +165,7 @@
     }
 
     function isSquaredUCEnabled() {
-      return $scope.offers[Config.trials.squaredUC] || false;
+      return $scope.offers[Config.trials.call] || false;
     }
 
     function isRoomSystemsTrialsEnabled() {
@@ -223,12 +226,12 @@
         })
         .then(function (response) {
           vm.customerOrgId = response.data.customerOrgId;
-          if ((offersList.indexOf(Config.trials.squaredUC) !== -1) && !vm.disableSquaredUCCheckBox) {
+          if ((offersList.indexOf(Config.trials.call) !== -1) && !vm.disableSquaredUCCheckBox) {
             return HuronCustomer.create(response.data.customerOrgId, response.data.customerName, response.data.customerEmail)
-              .catch(function () {
+              .catch(function (response) {
                 vm.saveUpdateButtonLoad = false;
                 Notification.errorResponse(response, 'trialModal.squareducError');
-                return $q.reject();
+                return $q.reject(response);
               });
           }
         })

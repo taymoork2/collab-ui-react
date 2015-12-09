@@ -27,11 +27,6 @@ auth =
     pass: 'C1sc0123!'
     org:  '7e268021-dc11-4728-b39d-9ba0e0abb5e0'
 
-  'partner-squc-admin':
-    user: 'admin@ucpartner.e2e.huronalpha.com'
-    pass: 'Cisco123!!'
-    org:  '666a7b2f-f82e-4582-9672-7f22829e728d'
-
   'pbr-admin-test':
     user: 'pbr-org-admin-test@wx2.example.com'
     pass: 'C1sco123!'
@@ -51,6 +46,11 @@ auth =
     user: 'admin@uc.e2e.huron-alpha.com'
     pass: 'Cisco123!'
     org:  '30fdb01e-0bb2-4ed4-97f4-84a2289bdc79'
+
+  'huron-e2e-partner':
+    user: 'admin@ucpartner.e2e.huronalpha.com'
+    pass: 'Cisco123!!'
+    org:  '666a7b2f-f82e-4582-9672-7f22829e728d'
 
   'account-admin':
     user: 'phtest77+acc2@gmail.com'

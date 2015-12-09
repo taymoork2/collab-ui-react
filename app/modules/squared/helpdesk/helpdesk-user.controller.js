@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskUserController($stateParams, HelpdeskService, XhrNotificationService, USSService2, HelpdeskCardsService, Config) {
+  function HelpdeskUserController($stateParams, HelpdeskService, XhrNotificationService, USSService2, HelpdeskCardsUserService, Config) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.user) {
@@ -23,6 +23,7 @@
     vm.meetingCard = {};
     vm.callCard = {};
     vm.hybridServicesCard = {};
+    vm.keyPressHandler = keyPressHandler;
 
     HelpdeskService.getUser(vm.orgId, vm.userId).then(initUserView, XhrNotificationService.notify);
 
@@ -33,10 +34,10 @@
     function initUserView(user) {
       vm.user = user;
       vm.resendInviteEnabled = _.includes(user.statuses, 'helpdesk.userStatuses.pending');
-      vm.messageCard = HelpdeskCardsService.getMessageCardForUser(user);
-      vm.meetingCard = HelpdeskCardsService.getMeetingCardForUser(user);
-      vm.callCard = HelpdeskCardsService.getCallCardForUser(user);
-      vm.hybridServicesCard = HelpdeskCardsService.getHybridServicesCardForUser(user);
+      vm.messageCard = HelpdeskCardsUserService.getMessageCardForUser(user);
+      vm.meetingCard = HelpdeskCardsUserService.getMeetingCardForUser(user);
+      vm.callCard = HelpdeskCardsUserService.getCallCardForUser(user);
+      vm.hybridServicesCard = HelpdeskCardsUserService.getHybridServicesCardForUser(user);
 
       if (vm.hybridServicesCard.entitled) {
         USSService2.getStatusesForUserInOrg(vm.userId, vm.orgId).then(function (statuses) {
@@ -63,6 +64,14 @@
           vm.org.displayName = displayName;
         }, XhrNotificationService.notify);
       }
+
+      angular.element(".helpdesk-details").focus();
+    }
+  }
+
+  function keyPressHandler(event) {
+    if (event.keyCode === 27) { // Esc
+      window.history.back();
     }
   }
 
