@@ -350,7 +350,7 @@
     "leastQuality": "5 Lowest Quality",
     "customerLoadError": "There was an error while loading the customer list.",
     "unauthorizedError": "User is not authorized to access the customer reports.",
-    "webex": "Webex Reports",
+    "webex": "WebEx Reports",
     "devReports": "Development Customer Reports",
     "sparkReports": "Spark Reports"
   },
@@ -612,7 +612,9 @@
     "or": "or",
     "search": "Search",
     "edit": "Edit",
+    "remove": "Remove",
     "confirm": "Confirm",
+    "deactivate": "Deactivate",
     "firstName": "First Name",
     "lastName": "Last Name",
     "email": "Email",
@@ -762,6 +764,7 @@
     "customerGetError": "Failed to get customer services.",
     "customerPutError": "Failed to update customer services.",
     "customerDialPlanDetailsGetError": "Failed to get customer dial plan details.",
+    "carrierCountryGetError": "Failed to get phone carrier information.",
     "voicemailGetError": "Failed to get company voicemail number.",
     "voicemailUpdateError": "Failed to update company voicemail number.",
     "timezoneUpdateError": "Failed to update company timezone.",
@@ -897,6 +900,15 @@
       "goToHost": "Go to Host",
       "remove": "Remove"
     },
+    "overview": {
+      "activated": "{{number}} activated",
+      "pending": "{{number}} pending",
+      "error": "{number, plural, one{# error} other{# errors}}",
+      "loading": "Loading, please wait…",
+      "upgrade-available": "Upgrade available",
+      "clusters-title": "Expressway Clusters",
+      "status-title": "Service Status"
+    },
     "activateService": {
       "ingress": "Extend the Cloud to Your On-Premises Environment",
       "serviceNames": {
@@ -923,7 +935,11 @@
       "deregisterCausesListItem2": "All connectors and related configuration will be removed from {{clusterName}}.",
       "deregisterCausesListItem3": "If the system is in a cluster, you do not need to deregister the other peers. This will happen automatically.",
       "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}",
-      "deregisterErrorNoDeregisterSupport": "Unable to deregister {{clusterName}}. The management connector software version does not support deregistration from the Cloud. Upgrade the connector, or deregister from the Cisco Expressway web interface."
+      "deregisterErrorNoDeregisterSupport": "Unable to deregister {{clusterName}}. The management connector software version does not support deregistration from the Cloud. Upgrade the connector, or deregister from the Cisco Expressway web interface.",
+      "notInstalled": "The {{serviceName}} is not installed on this cluster.",
+      "activeActiveHeading": "Active-Active Mode (High Availability)",
+      "activeActiveNotPossible": "Not available as Active-Active Mode requires a cluster with more than 1 host",
+      "activeActivePossible": "Turn on Active-Active Mode to enable high availability for this service. When enabled, users are assigned to two nodes in the cluster for redundancy."
     },
     "status": {
       "unknown": "Status unknown",
@@ -1002,24 +1018,41 @@
       "softwareUpgrade": "Software Upgrade",
       "currentVersion": "Current Version",
       "newVersion": "New Version",
+      "explanation": "You are about to upgrade the software for the {{serviceName}} on all hosts in the selected Cisco Expressway Cluster:",
       "upgrade": "Upgrade"
     },
     "settings": {
       "deactivateServiceHeading": "Deactivate Service",
       "deactivateService": "Your users will no longer be able to use this service. You should also remove the connector from your on-premises environment.",
+      "visitHelpCentral": "Visit <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Help Central</a> whenever you need further information about Hybrid Services.",
       "deactivate": "Deactivate",
       "emailNotificationsHeading": "Email Notifications",
       "emailNotifications": "Enter a list of email addresses for people  who need to be notified about service-specific alarms and upgrades.",
+      "emailNotificationsSaving": "Saving.",
+      "documentationHeading": "Documentation and software",
+      "documentationHelpLink": "Visit <a href=\"http://www.cisco.com/go/hybrid-services\" target=\"_blank\">Help Central</a> whenever you need further information about Hybrid Services.",
+      "documentationDownloadLink": "Download Cisco Expressway software from <a href=\"https://software.cisco.com/download/find.html?q=expressway&task=default&psaMode=AP\" target=\"_blank\">software.cisco.com</a>.",
+      "documentationSaving": "Saving.",
       "call": {
         "featureHeading": "Feature Settings",
         "feature": "Enable or disable Call Service features.",
         "awareHeading": "Aware",
         "aware": "Users can share their desktops from Cisco Spark clients while they are on their work phones.",
+        "on": "On by default",
         "connectHeading": "Connect",
         "connect": "Users can answer their work phone or call colleagues from Cisco Spark.",
         "certificatesHeading": "Certificates",
         "certificates": "Use certificates provided from the Cisco Collaboration default trust list for encrypted SIP calls, or upload your own certificates.",
         "certificatesUpload": "Upload",
+        "certificatesModalHeading": "Remove Certificate",
+        "certificatesModalText": "Are you sure you want to remove the following certificate?",
+        "sipDomainHeading": "SIP Domain",
+        "disableConfirmDialogText1": "You are about to remove the following Hybrid Service for your organization:",
+        "disableConfirmDialogText2": "If you click Confirm:",
+        "disableConfirmDialogText3": "All of your users will have the service deactivated.",
+        "disableConfirmDialogText4": "Your Cisco Expressway will uninstall the service connector.",
+        "disableConfirmDialogText5": "Data for the service connector will be deleted.",
+        "disableConfirmDialogText6": "If your Cisco Expressway has no other services installed, you will need to deregister it. Log in and deregister from Applications > Hybrid Services > Connector Management.",
         "sipDomainHeading": "SIP Domain",
         "sipDomain": "Enter the SRV domain of your Expressway edge server(s) so that calls route correctly to and from there.",
         "sipDomainPlaceholder": "Enter a single domain or subdomain"
@@ -1466,7 +1499,9 @@
     "sayMessageHelp": "Select the desired language and voice which is used to speak the phrase to the caller. Say message is optional. If no message is entered, the conversation will continue to the next step.",
     "errorAddCMI": "Unable to assign phone number {{phoneNumber}}: {{statusText}} ({{status}}).",
     "errorRemoveCMI": "Unable to remove assigned phone number(s).",
-    "errorResetCMI": "Unable to reset to previously assigned phone number(s)."
+    "errorResetCMI": "Unable to reset to previously assigned phone number(s).",
+    "errorInvalidTemplate": "Failed to load template: {{template}}.",
+    "errorInvalidTemplateDef": "Invalid template definition for template: {{template}}."
   },
   "callPark": {
     "code": "CP",
@@ -1890,7 +1925,8 @@
     "serial": "Serial",
     "ipAddr": "IP Address",
     "macAddr": "MAC Address",
-    "issues": "Issues"
+    "issues": "Issues",
+    "expires": "expires"
   },
   "deviceUpgradeChannelEditPage": {
     "instructions": "Choose which channel you want this device to automatically upgrade with:",
@@ -2248,9 +2284,11 @@
   "webexSiteSettingsLabels": {
     "siteSettingsIndexPageTitle": "Configure",
     "siteSettingsIndexPageTitleFull": "Configure {{siteUrl}}",
-    "hostAccountsTitle": "HOST ACCOUNTS",
+    "hostAccountsTitle": "Host Accounts",
     "activeTitle": "Active",
     "availableTitle": "Available",
+    "overLimitTitle": "Over Limit:",
+    "upgradeNowTitle": "Upgrade Now ",
     "emailAllHostsBtnTitle": "Email All Hosts",
     "commonSettingsCardTitle": "Common Settings",
     "commonSettingsCardNote": "These settings apply across centers.",
@@ -2906,9 +2944,12 @@
     }
   },
   "roles": {
-    "atlas-portal.support": "Billing Administrator",
-    "atlas-portal.reports": "Support Administrator",
+    "atlas-portal.support": "Support",
+    "atlas-portal.reports": "Reports",
+    "atlas-portal.billing": "Billing",
     "atlas-portal.partner.helpdesk": "Help Desk Support",
+    "atlas-portal.application": "Application",
+    "atlas-portal.partner.salesadmin": "Sales Administrator",
     "id_full_admin": "Full Administrator",
     "user": "User"
   },
@@ -2921,7 +2962,6 @@
     "unexpectedError": "An unexpected error occurred",
     "searchingPleaseWait": "Searching, please wait...",
     "noSearchHits": "No matches found. Try to narrow your search...",
-    "searchInputDescription": "Search and view a user or a customer.",
     "roles": "Roles",
     "backToSearchResults": "Back to search results",
     "sso": "Single Sign On (SSO)",
@@ -2929,8 +2969,7 @@
     "type": "Type",
     "partner": "Partner",
     "customer": "Customer",
-    "searchCriteriaLink": "Show supported search criteria.",
-    "searchInfo": "Search users by Email, Phone Number or Display Name (two words required). Search company by Display Name. Search devices by Display Name, Serial or MAC Address (Note: device search is supported only when searching a specific customer).",
+    "searchCriteriaLink": "Search help",
     "devices": "Devices",
     "mobile": "mobile",
     "work": "work",
@@ -3006,6 +3045,19 @@
       "pending": "Pending"
     },
     "consumerOrg": "Consumer",
-    "unlicensedUsers": "Unlicensed Users"
+    "unlicensedUsers": "Unlicensed Users",
+    "searchUsersDevices": "Go to user and device search",
+    "help": {
+      "title": "Search Help",
+      "navigation-title": "Keyboard Navigation",
+      "navigation-info": "Press \u21B5 to select, <strong>tab</strong> or \u2191 \u2193 \u2190 \u2192 keys to navigate results, <strong>esc</strong> button to go back to results or clear",
+      "search-criterias-title": "Search Criterias",
+      "search-criterias-users": "Users: Email. Phone Number or Display Name (two words required)",
+      "search-criterias-customers": "Customers: Display Name",
+      "search-criterias-devices": "Devices: Display Name, Serial or MAC Address",
+      "search-criterias-note": "Note: Devices are only supported when search is narrowed to one costumer (see below)",
+      "narrow-title": "Narrow Search",
+      "narrow-info": "To narrow your search to one costumer only, tap <i class='icon icon-search'></i> in the customer result card or hit the <strong>s</strong> key when the card is focused. Alternatively, tap <i class='icon icon-search'></i> from the customer view page"
+    }
   }
 }

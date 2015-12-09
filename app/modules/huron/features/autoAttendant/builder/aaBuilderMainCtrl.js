@@ -22,6 +22,16 @@
     vm.selectAA = selectAA;
     vm.populateUiModel = populateUiModel;
     vm.saveUiModel = saveUiModel;
+    vm.setupTemplate = setupTemplate;
+    vm.templateName = $stateParams.aaTemplate;
+
+    vm.templateDefinitions = [{
+      tname: "template1",
+      actions: [{
+        lane: 'openHours',
+        actionset: ['say', 'runActionsOnInput']
+      }]
+    }];
 
     $scope.saveAARecords = saveAARecords;
 
@@ -206,6 +216,58 @@
       return messages;
     }
 
+    function setupTemplate() {
+
+      if (!vm.templateName) {
+        return;
+      }
+
+      var specifiedTemplate = _.find(vm.templateDefinitions, {
+        tname: vm.templateName
+      });
+
+      if (angular.isUndefined(specifiedTemplate) || angular.isUndefined(specifiedTemplate.tname) || specifiedTemplate.tname.length === 0) {
+        Notification.error('autoAttendant.errorInvalidTemplate', {
+          template: vm.templateName
+        });
+        return;
+      }
+
+      if (angular.isUndefined(specifiedTemplate.actions) || specifiedTemplate.actions.length === 0) {
+        Notification.error('autoAttendant.errorInvalidTemplateDef', {
+          template: vm.templateName
+        });
+        return;
+      }
+
+      _.forEach(specifiedTemplate.actions, function (action) {
+        var uiMenu = vm.ui[action.lane];
+
+        if (action.lane === "holidays") {
+          vm.ui.isHolidays = true;
+        }
+
+        if (action.lane === "closedHours") {
+          vm.ui.isClosedHours = true;
+        }
+
+        if (angular.isUndefined(action.actionset) || action.actionset.length === 0) {
+          Notification.error('autoAttendant.errorInvalidTemplateDef', {
+            template: vm.templateName
+          });
+          return;
+        }
+
+        _.forEach(action.actionset, function (actionset) {
+          var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+          var menuAction = AutoAttendantCeMenuModelService.newCeActionEntry(actionset, '');
+          menuEntry.isConfigured = false;
+          menuEntry.addAction(menuAction);
+          uiMenu.appendEntry(menuEntry);
+        });
+      });
+    }
+
     function selectAA(aaName) {
       vm.aaModel.aaName = aaName;
       if (angular.isUndefined(vm.aaModel.aaRecord)) {
@@ -213,33 +275,36 @@
           vm.aaModel.aaRecord = AAModelService.getNewAARecord();
           vm.aaModel.aaRecordUUID = "";
         } else {
-          for (var i = 0; i < vm.aaModel.aaRecords.length; i++) {
-            if (vm.aaModel.aaRecords[i].callExperienceName === aaName) {
-              // vm.aaModel.aaRecord = angular.copy(vm.aaModel.aaRecords[i]);
-              AutoAttendantCeService.readCe(vm.aaModel.aaRecords[i].callExperienceURL).then(
-                function (data) {
-                  vm.aaModel.aaRecord = data;
-                  // Workaround for reading the dn number: by copying it from aaRecords[i], until
-                  // dn number is officialy stored in ceDefintion.
-                  vm.aaModel.aaRecord.assignedResources = angular.copy(vm.aaModel.aaRecords[i].assignedResources);
-                  vm.aaModel.aaRecordUUID = AutoAttendantCeInfoModelService.extractUUID(vm.aaModel.aaRecords[i].callExperienceURL);
-                  //
-                  vm.populateUiModel();
-                },
-                function (response) {
-                  Notification.error('autoAttendant.errorReadCe', {
-                    name: aaName,
-                    statusText: response.statusText,
-                    status: response.status
-                  });
-                }
-              );
-              return;
-            }
+
+          var aaRecord = _.find(vm.aaModel.aaRecords, {
+            callExperienceName: aaName
+          });
+
+          if (angular.isDefined(aaRecord)) {
+            AutoAttendantCeService.readCe(aaRecord.callExperienceURL).then(
+              function (data) {
+                vm.aaModel.aaRecord = data;
+                // Workaround for reading the dn number: by copying it from aaRecords[i], until
+                // dn number is officialy stored in ceDefintion.
+                vm.aaModel.aaRecord.assignedResources = angular.copy(aaRecord.assignedResources);
+                vm.aaModel.aaRecordUUID = AutoAttendantCeInfoModelService.extractUUID(aaRecord.callExperienceURL);
+
+                vm.populateUiModel();
+              },
+              function (response) {
+                Notification.error('autoAttendant.errorReadCe', {
+                  name: aaName,
+                  statusText: response.statusText,
+                  status: response.status
+                });
+              }
+            );
+            return;
           }
         }
       }
       vm.populateUiModel();
+      vm.setupTemplate();
     }
 
     function activate() {
@@ -247,8 +312,8 @@
       var aaName = $stateParams.aaName;
       vm.aaModel = AAModelService.getAAModel();
       vm.aaModel.aaRecord = undefined;
-
       AAUiModelService.initUiModel();
+      var aaTemplate = $stateParams.aaTemplate;
       vm.ui = AAUiModelService.getUiModel();
       vm.ui.ceInfo = {};
       vm.ui.ceInfo.name = aaName;
@@ -257,9 +322,9 @@
       vm.ui.builder.ceInfo_name = angular.copy(vm.ui.ceInfo.name);
 
       AutoAttendantCeInfoModelService.getCeInfosList().then(function (data) {
-        selectAA(aaName);
+        vm.selectAA(aaName);
       }, function (data) {
-        selectAA(aaName);
+        vm.selectAA(aaName);
       });
     }
 

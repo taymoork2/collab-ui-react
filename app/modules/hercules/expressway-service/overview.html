@@ -8,10 +8,10 @@
         </div>
         <div ng-if="exp.currentServiceId !== 'squared-fusion-mgmt'">
           <i class="icon icon-circle-user" />
-          <span>{{exp.userStatusSummary.activated || 0}} activated</span>
-          <span ng-if="exp.userStatusSummary.notActivated > 0">| {{exp.userStatusSummary.notActivated}} pending</span>
+          <span translate="hercules.overview.activated" translate-values="{number: exp.userStatusSummary.activated || 0}"></span>
+          <span ng-if="exp.userStatusSummary.notActivated > 0">| <span translate="hercules.overview.pending" translate-values="{number: exp.userStatusSummary.notActivated}"></span></span>
           <span ng-if="exp.userStatusSummary.error > 0">|
-            <a href ng-click="exp.openUserErrorsModal()"><span class="red">{{exp.userStatusSummary.error}} error</span></a>
+            <a href ng-click="exp.openUserErrorsModal()"><span class="red" translate="hercules.overview.error" translate-values="{number: exp.userStatusSummary.error}" translate-interpolation="messageformat"></span></a>
           </span>
           <span ng-show="exp.userStatusSummary.notActivated > 0 || exp.userStatusSummary.activated > 0 || exp.userStatusSummary.error > 0" class="export-users-statuses-icon" tooltip-placement="top" tooltip="User Status Report" tooltip-animation="false" tooltip-append-to-body="true">
             <i class="icon icon-content-share" ng-click="exp.openUserStatusReportModal(exp.currentServiceId)"></i>
@@ -34,7 +34,7 @@
   <div class="hercules content-container">
     <div class="centered-info-pane full-height">
       <i class="icon icon-spinner icon-2x"></i>
-      <p>Loading, please wait...</p>
+      <p translate="hercules.overview.loading"></p>
     </div>
   </div>
 </div>

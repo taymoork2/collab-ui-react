@@ -37,6 +37,8 @@
     vm.getTemplateUrl = getTemplateUrl;
     vm.removeAction = removeAction;
 
+    vm.allowStepAddsDeletes = false;
+
     /////////////////////
 
     function getTemplateUrl() {

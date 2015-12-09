@@ -378,7 +378,7 @@ angular.module('Core')
           return isEntitled(Config.entitlements.fusion_cal);
         },
         isDeviceMgmt: function () {
-          return isEntitled(Config.entitlements.device_mgmt);
+          return isEntitled(Config.entitlements.room_system);
         },
         isFusionEC: function () {
           return isEntitled(Config.entitlements.fusion_ec);
