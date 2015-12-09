@@ -223,8 +223,8 @@
     function showSearchHelp() {
       $modal.open({
         templateUrl: "modules/squared/helpdesk/helpdesk-search-help-dialog.html",
-      })
-    };
+      });
+    }
 
   }
 

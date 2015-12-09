@@ -3012,7 +3012,7 @@
     "unlicensedUsers": "Unlicensed Users",
     "searchUsersDevices": "Go to user and device search",
     "help": {
-      "title":"Search Help",
+      "title": "Search Help",
       "navigation-title": "Keyboard Navigation",
       "navigation-info": "Press \u21B5 to select, <strong>tab</strong> or \u2191 \u2193 \u2190 \u2192 keys to navigate results, <strong>esc</strong> button to go back to results or clear",
       "search-criterias-title": "Search Criterias",
