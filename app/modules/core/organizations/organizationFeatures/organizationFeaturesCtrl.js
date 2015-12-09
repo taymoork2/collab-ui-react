@@ -6,7 +6,7 @@
     .controller('OrganizationFeaturesCtrl', OrganizationFeaturesCtrl);
 
   /* @ngInject */
-  function OrganizationFeaturesCtrl($stateParams, $scope, $state, FeatureToggleService, Notification) {
+  function OrganizationFeaturesCtrl($stateParams, $scope, FeatureToggleService, Notification) {
     var vm = this;
     vm.currentOrganization = $stateParams.currentOrganization;
     vm.defaults = [];
@@ -16,7 +16,7 @@
     vm.updateToggles = updateToggles;
 
     init();
-    ////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
 
     function init() {
       getOrgFeatureToggles();
@@ -51,13 +51,17 @@
     }
 
     function updateToggles() {
-      var keyLessToggles = _.chain(vm.toggles)
+      var changedToggles = findDifference();
+    }
+
+    function findDifference() {
+      var keyLessToggles = _.chain(angular.copy(vm.toggles))
         .map(function (value) {
           delete value.key;
           return value;
         })
         .value();
-      var changed = _.filter(keyLessToggles, function (val, ind) {
+      return _.filter(keyLessToggles, function (val, ind) {
         if (!_.eq(val, vm.defaults[ind])) {
           return val;
         }
