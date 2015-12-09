@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskController(HelpdeskService, $translate, $scope) {
+  function HelpdeskController(HelpdeskService, $translate, $scope, $modal) {
     $('body').css('background', 'white');
     $scope.$on('$viewContentLoaded', function () {
       if (HelpdeskService.checkIfMobile()) {
@@ -23,6 +23,7 @@
     vm.searchString = '';
     vm.keyPressHandler = keyPressHandler;
     vm.showMoreResults = showMoreResults;
+    vm.showSearchHelp = showSearchHelp;
     vm.currentSearch = {
       searchString: '',
       userSearchResults: null,
@@ -218,6 +219,13 @@
         $('[tabindex=' + newTabIndex + ']').focus();
       }
     }
+
+    function showSearchHelp() {
+      $modal.open({
+        templateUrl: "modules/squared/helpdesk/helpdesk-search-help-dialog.html",
+      });
+    }
+
   }
 
   angular
