@@ -1890,7 +1890,8 @@
     "serial": "Serial",
     "ipAddr": "IP Address",
     "macAddr": "MAC Address",
-    "issues": "Issues"
+    "issues": "Issues",
+    "expires": "expires"
   },
   "deviceUpgradeChannelEditPage": {
     "instructions": "Choose which channel you want this device to automatically upgrade with:",

@@ -62,7 +62,7 @@ angular.module('Squared').service('CsdmConverter',
       this.url = obj.url;
       this.cisUuid = obj.id;
       this.tags = getTags(obj);
-      this.expiryTime = obj.expiryTime;
+      this.expiryTime = convertExpiryTime(obj.expiryTime);
       this.tagString = getTagString(obj);
       this.displayName = obj.displayName;
       this.activationCode = obj.activationCode;
@@ -75,6 +75,14 @@ angular.module('Squared').service('CsdmConverter',
       this.updateName = function (newName) {
         this.displayName = newName;
       };
+    }
+
+    function convertExpiryTime(expiryTime) {
+      var timezone = jstz.determine().name();
+      if (timezone === null || angular.isUndefined(timezone)) {
+        timezone = 'UTC';
+      }
+      return moment(expiryTime).local().tz(timezone).format('lll');
     }
 
     function convertCodes(data) {
