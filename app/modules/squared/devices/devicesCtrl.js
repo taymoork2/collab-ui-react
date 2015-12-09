@@ -34,8 +34,7 @@ angular.module('Squared')
       vm.shouldShowList = function () {
         return vm.codesListSubscription.eventCount !== 0 &&
           vm.huronDeviceListSubscription.eventCount !== 0 &&
-          (vm.deviceListSubscription.eventCount !== 0 || CsdmDeviceService.getDeviceList().length > 0) &&
-          CsdmUnusedAccountsService.dataLoaded();
+          (vm.deviceListSubscription.eventCount !== 0 || CsdmDeviceService.getDeviceList().length > 0);
       };
 
       vm.updateListAndFilter = function () {
