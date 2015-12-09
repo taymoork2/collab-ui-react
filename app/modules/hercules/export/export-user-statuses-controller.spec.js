@@ -241,22 +241,25 @@ describe('ExportUserStatusesController', function () {
     $httpBackend.flush();
     promise.then(handler);
 
-    expect(handler).toHaveBeenCalledWith([{
-      userName: 'sparkuser1@gmail.com',
-      connector: '?',
-      state: 'whatever1',
-      message: '-'
-    }, {
-      userName: 'sparkuser2@gmail.com',
-      connector: '?',
-      state: 'Pending Activation',
-      message: '-'
-    }, {
-      userName: 'sparkuser3@gmail.com',
-      connector: 'myExpressway2.cisco.com',
-      state: 'whatever3',
-      message: '-'
-    }]);
+    expect(handler).toHaveBeenCalledWith([
+      ['sep=,'],
+      controller.getHeader(), {
+        userName: 'sparkuser1@gmail.com',
+        connector: '?',
+        state: 'whatever1',
+        message: '-'
+      }, {
+        userName: 'sparkuser2@gmail.com',
+        connector: '?',
+        state: 'Pending Activation',
+        message: '-'
+      }, {
+        userName: 'sparkuser3@gmail.com',
+        connector: 'myExpressway2.cisco.com',
+        state: 'whatever3',
+        message: '-'
+      }
+    ]);
 
     $httpBackend.verifyNoOutstandingExpectation();
     $httpBackend.verifyNoOutstandingRequest();
