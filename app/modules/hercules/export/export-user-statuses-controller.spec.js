@@ -45,7 +45,7 @@ describe('ExportUserStatusesController', function () {
     controller.selectedServiceId = "squared-fusion-cal";
     controller.getHeader();
     expect(controller.loading).toBe(true);
-    expect(controller.getHeader()).toEqual(["Id", "Username", "Connector", "myService State", "Message"]);
+    expect(controller.getHeader()).toEqual(["Id", "User", "Connector", "myService State", "Message"]);
   });
 
   it('export multiple users', function () {

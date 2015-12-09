@@ -8,9 +8,9 @@ angular.module('Hercules').service('UserDetails',
     var multipleUserFilter = function (userIds) {
       var filter = "";
       $.each(userIds, function (index, elem) {
-        filter += "id eq " + '"' + elem + '"' + " and ";
+        filter += "id eq " + "\"" + elem + "\"" + " or ";
       });
-      filter = filter.slice(0, -5);
+      filter = filter.slice(0, -4);
       return filter;
     };
 
@@ -19,7 +19,7 @@ angular.module('Hercules').service('UserDetails',
     };
 
     var getCSVColumnHeaders = function (serviceName) {
-      return ["Id", "Username", "Connector", serviceName + " State", "Message"];
+      return ["Id", "User", "Connector", serviceName + " State", "Message"];
     };
 
     var getUsers = function (stateInfos, orgId, callback) {
