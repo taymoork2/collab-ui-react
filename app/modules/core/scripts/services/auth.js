@@ -10,6 +10,8 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
     oauthUrl: Config.getOauth2Url()
   };
 
+  var authDeferred;
+
   var loginMarker = false;
 
   auth.getAccount = function (org) {
@@ -20,6 +22,10 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
   };
 
   auth.authorize = function (token) {
+    if (authDeferred) return authDeferred.promise;
+
+    authDeferred = $q.defer();
+
     var authorizeUrl = Config.getAdminServiceUrl();
     var $http = $injector.get('$http');
     $http.defaults.headers.common.Authorization = 'Bearer ' + token;
@@ -114,19 +120,22 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
         });
     };
 
-    return getAuthData().then(function (authData) {
+    getAuthData().then(function (authData) {
       Authinfo.initialize(authData);
       if (Authinfo.isAdmin()) {
-        return auth.getAccount(Authinfo.getOrgId())
+        auth.getAccount(Authinfo.getOrgId())
           .success(function (data, status) {
             Authinfo.updateAccountInfo(data, status);
             Authinfo.initializeTabs();
-          });
+          })
+          .finally(authDeferred.resolve);
       } else {
-        return Authinfo.initializeTabs();
+        Authinfo.initializeTabs();
+        authDeferred.resolve();
       }
     });
 
+    return authDeferred.promise;
   };
 
   auth.getFromGetParams = function (url) {
