@@ -253,6 +253,11 @@
   .show-more-results {
     margin-bottom: 1rem;
   }
+  .icon-search-help {
+    font-size:1.2rem;
+    top:0.24rem;
+    padding-left:0.5rem;
+  }
 }
 .helpdesk-cards {
   .cs-card section {
@@ -288,6 +293,14 @@
   }
   .cs-donut-text {
     font-size: 4rem;
+  }
+}
+.helpdesk-help {
+  p {
+    margin-bottom: 0;
+  }
+  p~h4 {
+    padding-top: 1rem;
   }
 }
 .helpdesk-red {
