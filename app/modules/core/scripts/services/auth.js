@@ -260,7 +260,7 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
         $window.location.href = Config.getLogoutUrl();
       })
       .error(function (data, status) {
-        Log.error('Failed to delete the oAuth token.  Status: ' + status + ' Error: ' + data.error);
+        Log.error('Failed to delete the oAuth token.  Status: ' + status + ' Error: ' + (data.error || 'unknown'));
         // Call CI logout even if delete oAuth token operation fails. This is consistent with other spark clients.
         $window.location.href = Config.getLogoutUrl();
       });

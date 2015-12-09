@@ -1385,7 +1385,8 @@ angular
         .state('huronfeatures.aabuilder', {
           parent: 'hurondetails',
           params: {
-            aaName: ''
+            aaName: '',
+            aaTemplate: ''
           },
           templateUrl: 'modules/huron/features/autoAttendant/builder/aaBuilderMain.tpl.html',
           controller: 'AABuilderMainCtrl',

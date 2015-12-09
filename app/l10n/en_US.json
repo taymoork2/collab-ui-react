@@ -350,7 +350,7 @@
     "leastQuality": "5 Lowest Quality",
     "customerLoadError": "There was an error while loading the customer list.",
     "unauthorizedError": "User is not authorized to access the customer reports.",
-    "webex": "Webex Reports",
+    "webex": "WebEx Reports",
     "devReports": "Development Customer Reports",
     "sparkReports": "Spark Reports"
   },
@@ -762,6 +762,7 @@
     "customerGetError": "Failed to get customer services.",
     "customerPutError": "Failed to update customer services.",
     "customerDialPlanDetailsGetError": "Failed to get customer dial plan details.",
+    "carrierCountryGetError": "Failed to get phone carrier information.",
     "voicemailGetError": "Failed to get company voicemail number.",
     "voicemailUpdateError": "Failed to update company voicemail number.",
     "timezoneUpdateError": "Failed to update company timezone.",
@@ -1463,7 +1464,9 @@
       "sven": "Sven",
       "empar": "Empar"
     },
-    "sayMessageHelp": "Select the desired language and voice which is used to speak the phrase to the caller. Say message is optional. If no message is entered, the conversation will continue to the next step."
+    "sayMessageHelp": "Select the desired language and voice which is used to speak the phrase to the caller. Say message is optional. If no message is entered, the conversation will continue to the next step.",
+    "errorInvalidTemplate": "Failed to load template: {{template}}.",
+    "errorInvalidTemplateDef": "Invalid template definition for template: {{template}}."
   },
   "callPark": {
     "code": "CP",
@@ -2245,9 +2248,11 @@
   "webexSiteSettingsLabels": {
     "siteSettingsIndexPageTitle": "Configure",
     "siteSettingsIndexPageTitleFull": "Configure {{siteUrl}}",
-    "hostAccountsTitle": "HOST ACCOUNTS",
+    "hostAccountsTitle": "Host Accounts",
     "activeTitle": "Active",
     "availableTitle": "Available",
+    "overLimitTitle": "Over Limit:",
+    "upgradeNowTitle": "Upgrade Now ",
     "emailAllHostsBtnTitle": "Email All Hosts",
     "commonSettingsCardTitle": "Common Settings",
     "commonSettingsCardNote": "These settings apply across centers.",
@@ -2903,9 +2908,12 @@
     }
   },
   "roles": {
-    "atlas-portal.support": "Billing Administrator",
-    "atlas-portal.reports": "Support Administrator",
+    "atlas-portal.support": "Support",
+    "atlas-portal.reports": "Reports",
+    "atlas-portal.billing": "Billing",
     "atlas-portal.partner.helpdesk": "Help Desk Support",
+    "atlas-portal.application": "Application",
+    "atlas-portal.partner.salesadmin": "Sales Administrator",
     "id_full_admin": "Full Administrator",
     "user": "User"
   },
@@ -3003,6 +3011,7 @@
       "pending": "Pending"
     },
     "consumerOrg": "Consumer",
-    "unlicensedUsers": "Unlicensed Users"
+    "unlicensedUsers": "Unlicensed Users",
+    "searchUsersDevices": "Go to user and device search"
   }
 }

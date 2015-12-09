@@ -23,6 +23,7 @@
     vm.meetingCard = {};
     vm.callCard = {};
     vm.hybridServicesCard = {};
+    vm.keyPressHandler = keyPressHandler;
 
     HelpdeskService.getUser(vm.orgId, vm.userId).then(initUserView, XhrNotificationService.notify);
 
@@ -63,6 +64,14 @@
           vm.org.displayName = displayName;
         }, XhrNotificationService.notify);
       }
+
+      angular.element(".helpdesk-details").focus();
+    }
+  }
+
+  function keyPressHandler(event) {
+    if (event.keyCode === 27) { // Esc
+      window.history.back();
     }
   }
 

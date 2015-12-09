@@ -38,9 +38,34 @@ describe('Huron Auto Attendant', function () {
       utils.wait(autoattendant.addAANumbers, 12000);
       utils.expectIsDisplayed(autoattendant.addAANumbers);
 
+      notifications.assertSuccess(deleteUtils.testAAName + ' created successfully');
+
     });
 
     it('should add a single phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+
+      utils.click(autoattendant.numberDropDownArrow);
+
+      // we are going to arbitrarily select the first one
+      utils.click(autoattendant.numberDropDownOptions.get(0));
+
+      utils.click(autoattendant.saveButton);
+
+      notifications.assertSuccess(deleteUtils.testAAName + ' updated successfully');
+
+    });
+
+    it('should delete a phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+
+      utils.click(autoattendant.numberIconClose);
+
+      utils.click(autoattendant.saveButton);
+
+      notifications.assertSuccess(deleteUtils.testAAName + ' updated successfully');
+
+    });
+
+    it('should add a second phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       utils.click(autoattendant.numberDropDownArrow);
 

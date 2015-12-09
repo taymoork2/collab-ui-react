@@ -1,15 +1,18 @@
-<div class="helpdesk-search centered" tabindex="1" ng-keyup="helpdeskCtrl.keyPressHandler($event)">
+<div class="helpdesk-search centered" tabindex="0" ng-keyup="helpdeskCtrl.keyPressHandler($event)">
 
   <h1 translate="helpdesk.helpdesk"></h1>
 
   <div class="typeahead-large" style="text-align: left;">
-    <input id="searchInput" type="text"
-           placeholder=""
-           ng-model="helpdeskCtrl.searchString" ,
-           ng-keypress="($event.which === 13) ? helpdeskCtrl.search() : 0" autofocus="true" />
+    <form>
+      <input id="searchInput" type="text"
+             tabindex="1"
+             placeholder=""
+             ng-model="helpdeskCtrl.searchString"
+             autofocus="true"/>
 
-    <button type="button" tabindex="-1" class="btn btn--circle btn--primary icon icon-search"
-            ng-click="helpdeskCtrl.search()" ng-disabled="helpdeskCtrl.searchString == ''"></button>
+      <button type="submit" tabindex="-1" class="btn btn--circle btn--primary icon icon-search"
+              ng-click="helpdeskCtrl.search()" ng-disabled="helpdeskCtrl.searchString == ''"></button>
+    </form>
 
     <div class="input-description">
       <p>
@@ -23,15 +26,14 @@
       <div ng-if="helpdeskCtrl.currentSearch.orgFilter" class="helpdesk-tile">
         <span translate="helpdesk.searchingOrg"
               translate-value-name="{{helpdeskCtrl.currentSearch.orgFilter.displayName}}"></span>
-        <i class="icon icon-close" ng-click="helpdeskCtrl.initSearchWithoutOrgFilter()"></i>
+        <i class="icon icon-close pointer" ng-click="helpdeskCtrl.initSearchWithoutOrgFilter()"></i>
       </div>
     </div>
   </div>
 
   <div class="row full">
-    <div class="medium-12 xlarge-10 xxlarge-8 centered columns no-top-margin search-results">
+    <div class="large-offset-2 medium-12 xlarge-10 xxlarge-8 centered columns no-top-margin search-results">
       <div class="medium-6 large-4 columns"
-           ng-class="helpdeskCtrl.currentSearch.orgFilter ? 'large-offset-2' : ''"
            ng-if="helpdeskCtrl.searchingForUsers || helpdeskCtrl.currentSearch.userSearchResults || helpdeskCtrl.currentSearch.userSearchFailure">
         <h4 translate="helpdesk.users"></h4>
 
@@ -41,7 +43,7 @@
           <p translate="helpdesk.searchingPleaseWait"></p>
         </div>
         <div ng-if="helpdeskCtrl.currentSearch.userSearchFailure">
-          <p class="helpdesk-red">{{helpdeskCtrl.currentSearch.userSearchFailure}}</p>
+          <p>{{helpdeskCtrl.currentSearch.userSearchFailure}}</p>
         </div>
         <div
           ng-if="!helpdeskCtrl.searchingForUsers && helpdeskCtrl.currentSearch.userSearchResults.length == 0">
@@ -50,7 +52,7 @@
 
         <div ng-if="helpdeskCtrl.currentSearch.userSearchResults.length > 0">
           <cs-card class="full pointer"
-                   ng-repeat="user in helpdeskCtrl.currentSearch.userSearchResults | limitTo:helpdeskCtrl.currentSearch.userLimit">
+                   ng-repeat="user in helpdeskCtrl.currentSearch.userSearchResults | limitTo:helpdeskCtrl.currentSearch.userLimit" id="user-card-{{$index}}" >
             <article tabindex="{{$index * 10 + 1}}"
                      ui-sref="helpdesk.user({user:user, id:user.id, orgId:user.organization.id})">
               <header>
@@ -76,7 +78,7 @@
 
       </div>
 
-      <div class="medium-6 large-4 columns"
+      <div class="medium-6 large-4 columns end"
            ng-if="helpdeskCtrl.searchingForOrgs || helpdeskCtrl.currentSearch.orgSearchResults || helpdeskCtrl.currentSearch.orgSearchFailure">
 
         <h4 translate="helpdesk.customers"></h4>
@@ -87,7 +89,7 @@
           <p translate="helpdesk.searchingPleaseWait"></p>
         </div>
         <div ng-if="helpdeskCtrl.currentSearch.orgSearchFailure">
-          <p class="helpdesk-red">{{helpdeskCtrl.currentSearch.orgSearchFailure}}</p>
+          <p>{{helpdeskCtrl.currentSearch.orgSearchFailure}}</p>
         </div>
         <div
           ng-if="!helpdeskCtrl.searchingForOrgs && helpdeskCtrl.currentSearch.orgSearchResults.length == 0">
@@ -101,7 +103,7 @@
               <header>
                 <h5>
                   {{org.displayName}}
-                  <a tabindex="-1" href class="right" ng-click="helpdeskCtrl.initSearchWithOrgFilter(org)"><i
+                  <a tabindex="-1" href class="right" ng-click="helpdeskCtrl.initSearchWithOrgFilter(org)" name="{{org}}"><i
                     class="icon icon-search"></i></a>
                 </h5>
               </header>
@@ -119,9 +121,8 @@
 
       </div>
 
-      <div class="medium-6 large-4 columns"
-           ng-class="(helpdeskCtrl.currentSearch.orgFilter) ? 'end' : ''"
-           ng-if="(helpdeskCtrl.currentSearch.orgFilter && (helpdeskCtrl.searchingForDevices || helpdeskCtrl.currentSearch.deviceSearchResults || helpdeskCtrl.currentSearch.deviceSearchFailure)) || (helpdeskCtrl.searchingForOrgs || helpdeskCtrl.currentSearch.orgSearchResults || helpdeskCtrl.currentSearch.orgSearchFailurehelpdeskCtrl.searchingForOrgs || helpdeskCtrl.currentSearch.orgSearchResults || helpdeskCtrl.currentSearch.orgSearchFailurehelpdeskCtrl.searchingForOrgs || helpdeskCtrl.currentSearch.orgSearchResults || helpdeskCtrl.currentSearch.orgSearchFailure)">
+      <div class="medium-6 large-4 columns end"
+           ng-if="helpdeskCtrl.currentSearch.orgFilter && (helpdeskCtrl.searchingForDevices || helpdeskCtrl.currentSearch.deviceSearchResults || helpdeskCtrl.currentSearch.deviceSearchFailure)">
         <h4 translate="helpdesk.devices"></h4>
 
         <div ng-if="helpdeskCtrl.searchingForDevices">
@@ -130,14 +131,8 @@
           <p translate="helpdesk.searchingPleaseWait"></p>
         </div>
 
-        <div ng-if="!helpdeskCtrl.currentSearch.orgFilter">
-          <p>Global device search is not supported yet.</p>
-
-          <p>Find the customer first, click the search icon and then search for devices.</p>
-        </div>
-
         <div ng-if="helpdeskCtrl.currentSearch.deviceSearchFailure">
-          <p class="helpdesk-red">{{helpdeskCtrl.currentSearch.deviceSearchFailure}}</p>
+          <p>{{helpdeskCtrl.currentSearch.deviceSearchFailure}}</p>
         </div>
 
         <div
