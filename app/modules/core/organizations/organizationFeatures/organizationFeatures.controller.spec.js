@@ -29,6 +29,7 @@ describe('Controller: OrganizationFeaturesCtrl', function () {
     controller = $controller('OrganizationFeaturesCtrl', {
       $stateParams: $stateParams,
       $scope: $scope,
+      $q: $q,
       FeatureToggleService: FeatureToggleService,
       Notification: Notification,
     });

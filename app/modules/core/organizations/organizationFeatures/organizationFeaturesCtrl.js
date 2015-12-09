@@ -6,7 +6,7 @@
     .controller('OrganizationFeaturesCtrl', OrganizationFeaturesCtrl);
 
   /* @ngInject */
-  function OrganizationFeaturesCtrl($stateParams, $scope, FeatureToggleService, Notification) {
+  function OrganizationFeaturesCtrl($stateParams, $scope, $q, FeatureToggleService, Notification) {
     var vm = this;
     vm.currentOrganization = $stateParams.currentOrganization;
     vm.defaults = [];
@@ -47,6 +47,7 @@
     }
 
     function updateToggles() {
+      var deferred = $q.defer();
       var changedToggles = findDifference();
       var successfulToggles = 0;
       _.map(changedToggles, function (toggle) {
@@ -56,15 +57,19 @@
             Notification.error('organizationsPage.errorSettingToggle', {
               key: toggle.key
             });
+            deferred.reject();
           })
           .then(function () {
             successfulToggles++;
+            if (successfulToggles === changedToggles.length) {
+              deferred.resolve();
+            }
           });
       });
 
-      if (successfulToggles === changedToggles.length) {
+      deferred.promise.then(function () {
         Notification.success('organizationsPage.toggleModSuccess');
-      }
+      });
     }
 
     function findDifference() {
