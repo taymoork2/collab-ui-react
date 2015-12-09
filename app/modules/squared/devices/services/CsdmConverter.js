@@ -78,10 +78,7 @@ angular.module('Squared').service('CsdmConverter',
     }
 
     function convertExpiryTime(expiryTime) {
-      var timezone = jstz.determine().name();
-      if (timezone === null || angular.isUndefined(timezone)) {
-        timezone = 'UTC';
-      }
+      var timezone = jstz.determine().name() || 'UTC';
       return moment(expiryTime).local().tz(timezone).format('lll');
     }
 
