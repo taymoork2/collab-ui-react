@@ -53,7 +53,21 @@ angular.module('Squared').service('CsdmConverter',
       this.displayName = obj.description;
       this.cssColorClass = getHuronCssColorClass(obj);
       this.readableState = getHuronReadableState(obj);
-      this.image = "images/devices-hi/unknown.png";
+      this.isHuronDevice = true;
+    }
+
+    function HuronDeviceDetailed(obj, huronDevice) {
+      this.url = huronDevice.url;
+      this.mac = huronDevice.mac;
+      this.ip = huronDevice.ipAddress;
+      this.cisUuid = huronDevice.userUuid;
+      this.product = huronDevice.model;
+      this.isOnline = getIsHuronOnline(huronDevice);
+      this.displayName = angular.isDefined(obj.registrationStatus) && angular.lowercase(obj.registrationStatus) === 'registered';
+      this.cssColorClass = getHuronCssColorClass(obj);
+      this.readableState = getHuronReadableState(obj);
+      this.isHuronDevice = true;
+      this.image = "images/devices/" + (device.model.trim().replace(/ /g, '_') + '.png').toLowerCase();
     }
 
     function Code(obj) {
@@ -95,6 +109,10 @@ angular.module('Squared').service('CsdmConverter',
 
     function convertHuronDevice(data) {
       return new HuronDevice(data);
+    }
+
+    function convertHuronDeviceDetailed(data, huronDevice) {
+      return new HuronDevice(data, huronDevice);
     }
 
     function convertCode(data) {
@@ -297,6 +315,7 @@ angular.module('Squared').service('CsdmConverter',
       convertDevices: convertDevices,
       convertHuronDevice: convertHuronDevice,
       convertHuronDevices: convertHuronDevices,
+      convertHuronDeviceDetailed: convertHuronDeviceDetailed,
     };
 
   }

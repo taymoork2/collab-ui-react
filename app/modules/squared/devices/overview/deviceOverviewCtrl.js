@@ -6,10 +6,14 @@
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, XhrNotificationService, $stateParams, Authinfo, FeedbackService, CsdmCodeService, CsdmDeviceService, Utils, $window, RemDeviceModal, channels, RemoteSupportModal) {
+  function DeviceOverviewCtrl($q, $state, $scope, XhrNotificationService, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmCodeService, CsdmDeviceService, CsdmHuronDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, channels, RemoteSupportModal) {
     var deviceOverview = this;
 
     deviceOverview.currentDevice = $stateParams.currentDevice;
+
+    //if (deviceOverview.currentDevice.isHuronDevice) {
+    //  deviceOverview.currentDevice = CsdmHuronDeviceService.getDeviceDetails(deviceOverview.currentDevice);
+    //}
 
     deviceOverview.save = function (newName) {
       if (deviceOverview.currentDevice.needsActivation) {
@@ -48,5 +52,55 @@
     };
 
     deviceOverview.canChangeUpgradeChannel = channels.length > 1 && deviceOverview.currentDevice.isOnline;
+
+    deviceOverview.upgradeChannelOptions = _.map(channels, function (channel, index) {
+      return {
+        label: $translate.instant('CsdmStatus.upgradeChannels.' + channel),
+        value: channel
+      };
+    });
+
+    deviceOverview.selectedUpgradeChannel = {
+      label: $translate.instant('CsdmStatus.upgradeChannels.' + deviceOverview.currentDevice.upgradeChannel),
+      value: deviceOverview.currentDevice.upgradeChannel
+    };
+
+    deviceOverview.saveUpgradeChannelAndWait = function() {
+      var newValue = deviceOverview.selectedUpgradeChannel.value;
+      if (newValue != deviceOverview.currentDevice.upgradeChannel) {
+        deviceOverview.updatingUpgradeChannel = true;
+        saveUpgradeChannel(newValue)
+          .then(waitForDeviceToUpdateUpgradeChannel(newValue))
+          .catch(XhrNotificationService.notify)
+          .finally(function () {
+            deviceOverview.updatingUpgradeChannel = false;
+          });
+      }
+    };
+
+    function saveUpgradeChannel(newValue) {
+      return CsdmUpgradeChannelService.updateUpgradeChannel(deviceOverview.currentDevice.url, newValue);
+    }
+
+    function waitForDeviceToUpdateUpgradeChannel(newValue) {
+      var deferred = $q.defer();
+      pollDeviceForNewChannel(newValue, new Date().getTime() + 5000, deferred);
+      return deferred.promise;
+    }
+
+    function pollDeviceForNewChannel(newValue, endTime, deferred) {
+      CsdmDeviceService.getDevice(deviceOverview.currentDevice.url).then(function (device) {
+        if (device.upgradeChannel == newValue) {
+          Notification.success($translate.instant('deviceUpgradeChannelEditPage.deviceUpdated'));
+          return deferred.resolve();
+        }
+        if (new Date().getTime() > endTime) {
+          return deferred.reject($translate.instant('deviceUpgradeChannelEditPage.updateFailed'));
+        }
+        $timeout(function () {
+          pollDeviceForNewChannel(endTime, deferred);
+        }, 1000);
+      });
+    }
   }
 })();

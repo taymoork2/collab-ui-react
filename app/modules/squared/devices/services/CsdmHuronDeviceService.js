@@ -22,9 +22,16 @@
       return deviceCache.list();
     }
 
+    function getDeviceDetails(huronDevice) {
+      $http.get(huronDevice.url + "?status=true").then(function (res) {
+        return CsdmConverter.convertHuronDeviceDetailed(res, huronDevice);
+      })
+    }
+
     return {
       on: deviceCache.on,
-      getDeviceList: getDeviceList
+      getDeviceList: getDeviceList,
+      getDeviceDetails: getDeviceDetails
     };
   }
 

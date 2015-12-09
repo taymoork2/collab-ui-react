@@ -753,22 +753,6 @@ angular
             displayName: 'Device Overview'
           }
         })
-        .state('device-overview.edit', {
-          templateUrl: 'modules/squared/devices/overview/deviceUpgradeChannelEdit.tpl.html',
-          controller: 'DeviceUpgradeChannelEditCtrl',
-          controllerAs: 'deviceUpgradeChannelEdit',
-          resolve: {
-            channels: /* @ngInject */ function (CsdmUpgradeChannelService) {
-              return CsdmUpgradeChannelService.getUpgradeChannelsPromise();
-            }
-          },
-          params: {
-            currentDevice: {}
-          },
-          data: {
-            displayName: 'Software Update Channel'
-          }
-        })
 
       /*
        devices
