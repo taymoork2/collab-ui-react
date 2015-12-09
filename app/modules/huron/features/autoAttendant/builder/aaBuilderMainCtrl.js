@@ -24,6 +24,8 @@
     vm.saveUiModel = saveUiModel;
     vm.setupTemplate = setupTemplate;
     vm.templateName = $stateParams.aaTemplate;
+    vm.saveAANumberAssignmentWithErrorDetail = saveAANumberAssignmentWithErrorDetail;
+    vm.areAssignedResourcesDifferent = areAssignedResourcesDifferent;
 
     vm.templateDefinitions = [{
       tname: "template1",
