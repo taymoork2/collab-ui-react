@@ -60,7 +60,7 @@ describe('OnboardCtrl: Ctrl', function () {
     spyOn(TelephonyInfoService, 'loadInternalNumberPool').and.returnValue($q.when(internalNumbers));
     spyOn(TelephonyInfoService, 'getExternalNumberPool').and.returnValue(externalNumbers);
     spyOn(DialPlanService, 'getCustomerDialPlanDetails').and.returnValue($q.when({
-      extensionGenerated: true
+      extensionGenerated: 'false'
     }));
     spyOn(TelephonyInfoService, 'loadExternalNumberPool').and.returnValue($q.when(externalNumbers));
     spyOn(TelephonyInfoService, 'loadExtPoolWithMapping').and.returnValue($q.when(externalNumberPoolMap));

@@ -45,9 +45,9 @@
     <div class="row collapse">
       <div class="small-12 columns background-white">
 
-        <section class="monitoring-panel small-3 medium-12 column" ng-show="setupNotDone || !(isCalendarAcknowledged && isCallAwareAcknowledged && isCallConnectAcknowledged)">
+        <section class="monitoring-panel small-3 medium-12 column" ng-show="setupNotDone() || !(isCalendarAcknowledged && isCallAwareAcknowledged && isCallConnectAcknowledged)">
           <h4 class="monitoring-section" translate="homePage.notifications"></h4>
-          <div class="notification-style" ng-show="setupNotDone">
+          <div class="notification-style" ng-show="setupNotDone()">
             <span class="badge badge-warning" translate="homePage.todo"></span>
             <span class="notification-spacing">
               <span translate="homePage.setUpYourTrial"></span>
