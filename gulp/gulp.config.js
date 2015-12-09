@@ -89,7 +89,7 @@ module.exports = function() {
         test + '/global.spec.js',
       ],
       spec: [
-        app + '/modules/**/*.spec.js',
+        app + '/**/*.spec.js',
       ],
       e2e: {
         hercules: e2e + '/hercules/**/*_spec.js',
