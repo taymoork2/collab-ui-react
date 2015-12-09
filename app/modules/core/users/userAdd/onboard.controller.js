@@ -1169,18 +1169,13 @@ angular.module('Core')
               var userStatus = response.status;
               var msg;
 
-              if (userStatus === 200) {
-                // Success message redundant (since one is generated for being onboarded)
-                /*msg = response.email + '\'s entitlements were updated successfully.';
-                successResponses.push(msg);*/
-                msg = ''; // avoid lint errors
-              } else if (userStatus === 404) {
+              if (userStatus === 404) {
                 msg = 'Entitlements for ' + response.email + ' do not exist.';
                 failureResponses.push(msg);
               } else if (userStatus === 409) {
                 msg = 'Entitlement(s) previously updated.';
                 failureResponses.push(msg);
-              } else {
+              } else if (userStatus != 200) {
                 msg = response.email + '\'s entitlements were not updated, status: ' + userStatus;
                 failureResponses.push(msg);
               }

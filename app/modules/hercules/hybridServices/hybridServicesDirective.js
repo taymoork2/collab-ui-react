@@ -11,7 +11,9 @@ angular
 
       var hasEntitlement = function (entitlement) {
         if (!angular.isDefined($scope.currentUser))
+        {
           return false;
+        }
 
         return $scope.currentUser.entitlements && $scope.currentUser.entitlements.indexOf(entitlement) > -1;
       };

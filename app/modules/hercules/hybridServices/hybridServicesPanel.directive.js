@@ -62,9 +62,13 @@
         })
         .value();
 
-      vm.updateEntitlements({
-        'entitlements': vm.entitlements
-      });
+      // Check before calling.
+      if ( angular.isDefined(vm.updateEntitlements) )
+      {
+        vm.updateEntitlements({
+          'entitlements': vm.entitlements
+        });
+      }
     }
   }
 })();
