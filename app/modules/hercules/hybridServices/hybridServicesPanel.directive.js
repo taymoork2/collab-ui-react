@@ -63,8 +63,7 @@
         .value();
 
       // Check before calling.
-      if ( angular.isDefined(vm.updateEntitlements) )
-      {
+      if (angular.isDefined(vm.updateEntitlements)) {
         vm.updateEntitlements({
           'entitlements': vm.entitlements
         });

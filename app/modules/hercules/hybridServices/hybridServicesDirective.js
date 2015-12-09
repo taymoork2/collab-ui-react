@@ -10,8 +10,7 @@ angular
       $scope.extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-uc'];
 
       var hasEntitlement = function (entitlement) {
-        if (!angular.isDefined($scope.currentUser))
-        {
+        if (!angular.isDefined($scope.currentUser)) {
           return false;
         }
 
