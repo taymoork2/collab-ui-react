@@ -9,6 +9,7 @@ var AutoAttendantPage = function () {
   this.numberDropDownArrow = element(by.linkText('Search or Select a Number'));
   this.numberDropDownOptions = element(by.css('.select-options')).all(by.tagName('li'));
   this.saveButton = element(by.name('saveButton'));
+  this.numberIconClose = element.all(by.css('.icon-close')).last();
 };
 
 module.exports = AutoAttendantPage;
