@@ -1,14 +1,8 @@
-<h5 translate="{{'hercules.settings.call.certificatesHeading'}}">
-</h5>
-
-<p translate="{{'hercules.settings.call.certificates'}}">
-</p>
-<p>
-
+<h5 translate="hercules.settings.call.certificatesHeading"></h5>
+<p translate="hercules.settings.call.certificates"></p>
 <div ng-if="expresswayServiceSettings.certificates.length == 0">
   <p><em>No certificates uploaded. Using the default trust list.</em></p>
 </div>
-
 <div ng-if="expresswayServiceSettings.certificates.length > 0" class="hercules-certificates-table">
   <p>Uploaded Certificates:</p>
   <hr>
@@ -33,9 +27,11 @@
   </table>
   <hr>
 </div>
-<button class="btn btn--primary" name="file" accept="application/x-x509-ca-cert"
-     ngf-select="expresswayServiceSettings.uploadCert($file, $event)"
-     ng-model="certFile"
-     loading="expresswayServiceSettings.uploadingCert"
-     translate="{{'hercules.settings.call.certificatesUpload'}}">
+<button class="btn btn--primary"
+        name="file"
+        accept="application/x-x509-ca-cert"
+        ngf-select="expresswayServiceSettings.uploadCert($file, $event)"
+        ng-model="certFile"
+        loading="expresswayServiceSettings.uploadingCert"
+        translate="{{'hercules.settings.call.certificatesUpload'}}">
 </button>

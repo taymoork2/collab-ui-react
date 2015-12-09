@@ -57,11 +57,11 @@
       headerRowHeight: 44,
       columnDefs: [{
         field: 'name',
-        displayName: 'Expressway Clusters',
+        displayName: $translate.instant('hercules.overview.clusters-title'),
         cellTemplate: 'modules/hercules/expressway-service/cluster-list-display-name.html',
         width: '35%'
       }, {
-        displayName: 'Service Status',
+        displayName: $translate.instant('hercules.overview.status-title'),
         cellTemplate: 'modules/hercules/expressway-service/cluster-list-status.html',
         width: '65%'
       }]

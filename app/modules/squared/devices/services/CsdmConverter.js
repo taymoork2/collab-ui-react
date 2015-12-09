@@ -44,15 +44,15 @@ angular.module('Squared').service('CsdmConverter',
     }
 
     function HuronDevice(obj) {
-      this.url = getHuronUrl(obj);
+      this.url = obj.url;
       this.mac = obj.mac;
-      this.ip = obj.ipAddress;
-      this.cisUuid = obj.userUuid;
-      this.product = obj.model;
-      this.isOnline = getIsHuronOnline(obj);
-      this.displayName = obj.description;
-      this.cssColorClass = getHuronCssColorClass(obj);
-      this.readableState = getHuronReadableState(obj);
+      this.ip = getIp(obj);
+      this.cisUuid = obj.cisUuid;
+      this.product = getProduct(obj);
+      this.isOnline = getIsOnline(obj);
+      this.displayName = obj.displayName;
+      this.cssColorClass = getCssColorClass(obj);
+      this.readableState = getReadableState(obj);
       this.image = "images/devices-hi/unknown.png";
     }
 
@@ -62,7 +62,7 @@ angular.module('Squared').service('CsdmConverter',
       this.url = obj.url;
       this.cisUuid = obj.id;
       this.tags = getTags(obj);
-      this.expiryTime = obj.expiryTime;
+      this.expiryTime = convertExpiryTime(obj.expiryTime);
       this.tagString = getTagString(obj);
       this.displayName = obj.displayName;
       this.activationCode = obj.activationCode;
@@ -75,6 +75,14 @@ angular.module('Squared').service('CsdmConverter',
       this.updateName = function (newName) {
         this.displayName = newName;
       };
+    }
+
+    function convertExpiryTime(expiryTime) {
+      var timezone = jstz.determine().name();
+      if (timezone === null || angular.isUndefined(timezone)) {
+        timezone = 'UTC';
+      }
+      return moment(expiryTime).local().tz(timezone).format('lll');
     }
 
     function convertCodes(data) {
@@ -216,7 +224,7 @@ angular.module('Squared').service('CsdmConverter',
       switch (obj.state) {
       case 'UNCLAIMED':
         return t('CsdmStatus.NeedsActivation');
-      case 'CLAIMED':
+      default:
         switch ((obj.status || {}).connectionStatus) {
         case 'CONNECTED':
           return t('CsdmStatus.Online');
@@ -224,7 +232,6 @@ angular.module('Squared').service('CsdmConverter',
           return t('CsdmStatus.Offline');
         }
       }
-      return t('CsdmStatus.Unknown');
     }
 
     function getCssColorClass(obj) {
@@ -234,7 +241,7 @@ angular.module('Squared').service('CsdmConverter',
       switch (obj.state) {
       case 'UNCLAIMED':
         return 'device-status-yellow';
-      case 'CLAIMED':
+      default:
         switch ((obj.status || {}).connectionStatus) {
         case 'CONNECTED':
           return 'device-status-green';
@@ -242,7 +249,6 @@ angular.module('Squared').service('CsdmConverter',
           return 'device-status-gray';
         }
       }
-      return 'device-status-yellow';
     }
 
     function t(key) {
