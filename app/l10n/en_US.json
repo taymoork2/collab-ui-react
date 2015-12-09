@@ -640,7 +640,8 @@
     "users": "Users",
     "settings": "Settings",
     "resources": "Resources",
-    "download": "Download"
+    "download": "Download",
+    "quantity": "Qty"
   },
   "notifications": {
     "success": "Success notifications",
@@ -1752,6 +1753,7 @@
     "customerInformation": "Customer Information",
     "termsOfTrial": "Terms of Trial",
     "trialServices": "Trial Services",
+    "sparkRoomSystem": "Spark Room System",
     "trialButton": "Add Trial Customer",
     "dialogTitle": "Add New Trial",
     "customerName": "Company Name",
@@ -1768,6 +1770,8 @@
     "errGetPhoneNumberCount": "Failed to retrieve phone number count.",
     "invalidTrialLicenseCount": "Number of Licenses should be greater than 0 and less than 1000.",
     "individualUserServices": "Individual User Services",
+    "roomSystems": "Room Systems",
+    "roomSystem": "Room System",
     "deviceBasedServices": "Device-based Services",
     "call": "Call"
   },
@@ -1806,8 +1810,8 @@
     "setupLater": "No thanks",
     "setupNow": "Yes, setup the services",
     "squareducError": "Created trial, but unable to provision Spark UC",
-    "addSuccess": "A trial was successfully started for {{customerName}}.",
-    "editSuccess": "You have successfully edited a trial for {{customerName}}."
+    "addSuccess": "A trial was successfully started for {{customerName}} with {{licenseCount}} licenses for {{licenseDuration}} days.",
+    "editSuccess": "You have successfully edited a trial for {{customerName}} with {{licenseCount}} licenses for {{licenseDuration}} days."
   },
   "trials": {
     "collab": "Standard Team Rooms + 25 Party Meetings",
@@ -1889,7 +1893,8 @@
     "message": "Message",
     "meeting": "Meeting 25 Party",
     "call": "Call",
-    "roomSystem": "Spark Room System"
+    "roomSystem": "Spark Room System",
+    "branding": "Customer Branding"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
