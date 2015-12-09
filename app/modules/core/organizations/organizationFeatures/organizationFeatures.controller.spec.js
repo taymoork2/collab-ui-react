@@ -4,11 +4,11 @@ describe('Controller: OrganizationFeaturesCtrl', function () {
   var controller, $scope, $stateParams, $q, FeatureToggleService, Notification;
   var featureToggles = [{
     key: 'feature-toggle',
-    val: true
+    val: true,
   }];
 
   var currentOrg = {
-    id: '1'
+    id: 1,
   };
 
   beforeEach(module('Core'));
@@ -30,7 +30,7 @@ describe('Controller: OrganizationFeaturesCtrl', function () {
       $stateParams: $stateParams,
       $scope: $scope,
       FeatureToggleService: FeatureToggleService,
-      Notification: Notification
+      Notification: Notification,
     });
     $scope.$apply();
   }));

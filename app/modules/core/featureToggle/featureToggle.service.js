@@ -160,7 +160,7 @@
 
     function setFeatureToggle(isUser, id, key, val) {
       if (isUser) {
-        return $q.reject('User level toggles are not changable in the web app');
+        return $q.reject('User level toggles are not changeable in the web app');
       }
 
       var toggle = isUser ? undefined : generateFeatureToggleRule(id, key, val);

@@ -29,8 +29,7 @@ angular.module('Core')
       $scope.filterList = filterList;
 
       init();
-
-      ////////////////////////////////////////////////////////////
+      ////////////////
 
       function init() {
         initializeListeners();

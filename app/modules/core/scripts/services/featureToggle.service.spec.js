@@ -81,11 +81,4 @@ describe('FeatureToggleService', function () {
     });
     httpBackend.flush();
   });
-
-  it('should toggle a service when to for an org', function () {
-    httpBackend.whenPOST(orgRegex).respond(204);
-    FeatureToggleService.setFeatureToggle(forOrg, orgId, 'feature-toggle-test', true);
-    httpBackend.flush();
-  });
-
 });
