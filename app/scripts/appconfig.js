@@ -159,7 +159,7 @@ angular
 
       $futureStateProvider.stateFactory(futureOverviewState.type, function ($q, $timeout, Storage, futureState, FeatureToggleService, Auth) {
         var token = Storage.get('accessToken');
-        return Auth.authorize(token).then(function() {
+        return Auth.authorize(token).then(function () {
           return FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (useStormBranding) {
             if (document.URL.indexOf('newoverview=1') > 0) {
               useStormBranding = true;
