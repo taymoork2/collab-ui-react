@@ -6,6 +6,6 @@
   <span ng-if="!exp.serviceNotInstalled(row.entity)">
     <i class="fa fa-circle hercules-state-{{exp.selectedClusterAggregatedStatus(row.entity)}}"/>
     <span translate="{{'hercules.status.' + exp.selectedClusterAggregatedStatus(row.entity)}}"></span>
-    <span ng-if="exp.softwareUpgradeAvailable(row.entity)">   |  Upgrade available</span>
+    <span ng-if="exp.softwareUpgradeAvailable(row.entity)"> | <span translate="hercules.overview.upgrade-available"></span></span>
   </span>
 </div>
