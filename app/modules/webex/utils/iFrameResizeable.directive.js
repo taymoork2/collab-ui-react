@@ -17,8 +17,8 @@ angular.module('WebExUtils').directive(
         var targetElementId = attributes["iFrameResizable"];
         var targetElement = document.getElementById(targetElementId).getBoundingClientRect();
         var targetElementLocation = {
-          left: targetElement.left + window.scrollX,
-          top: targetElement.top + window.scrollY
+          left: targetElement.left + window.pageXOffset,
+          top: targetElement.top + window.pageYOffset
         };
 
         var iframeTopMargin = targetElementLocation.top;

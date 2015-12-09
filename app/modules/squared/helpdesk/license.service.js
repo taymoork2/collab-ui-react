@@ -49,11 +49,11 @@
       this.offerCode = parts[0]; // See Config.offerCodes
       this.id = parts[1];
       if (this.offerCode === Config.offerCodes.MC || this.offerCode === Config.offerCodes.SC || this.offerCode === Config.offerCodes.TC || this.offerCode === Config.offerCodes.EC || this.offerCode === Config.offerCodes.EE) {
-        this.volume = parts[2];
+        this.capacity = parts[2];
         this.webExSite = parts[3];
       }
       this.displayName = $translate.instant(Config.confMap[this.offerCode], {
-        capacity: this.volume
+        capacity: this.capacity
       });
     }
 
@@ -63,7 +63,8 @@
       });
       _.each(matchingLicenses, function (l) {
         l.displayName = $translate.instant('helpdesk.licenseDisplayNames.' + l.offerCode, {
-          volume: l.volume
+          volume: l.volume,
+          capacity: l.capacity
         });
         l.usagePrecentage = _.round(((l.usage * 100) / l.volume) || 0);
       });
@@ -71,6 +72,11 @@
     }
 
     function getUnlicensedUsersCount(orgId) {
+      if (useMock()) {
+        var deferred = $q.defer();
+        deferred.resolve(HelpdeskMockData.unlicenseduserscount);
+        return deferred.promise;
+      }
       return $http
         .get(urlBase + 'helpdesk/unlicenseduserscount/' + encodeURIComponent(orgId))
         .then(extractData);

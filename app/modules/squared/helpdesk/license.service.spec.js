@@ -31,7 +31,7 @@ describe('LicenseService', function () {
         "type": "CONFERENCING",
         "name": "Conferencing",
         "status": "ACTIVE",
-        "volume": 100,
+        "volume": 99,
         "isTrial": true,
         "trialExpiresInDays": 49
       }];
@@ -43,6 +43,7 @@ describe('LicenseService', function () {
       LicenseService.getLicensesInOrg('1234').then(function (res) {
         expect(res.length).toBe(2);
         expect(res[0].volume).toBe(100);
+        expect(res[1].volume).toBe(99);
       });
 
     });
@@ -115,7 +116,7 @@ describe('LicenseService', function () {
     expect(license.offerCode).toEqual('MC');
     expect(license.id).toEqual('f36c1a2c-20d6-460d-9f55-01fc85d52e04');
     expect(license.displayName).toEqual('onboardModal.meetingCenter');
-    expect(license.volume).toEqual('100');
+    expect(license.capacity).toEqual('100');
     expect(license.webExSite).toEqual('t30citest.webex.com');
   });
 
