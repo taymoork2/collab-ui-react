@@ -1011,3 +1011,9 @@ a:active.ftwNavLink {
   color: #888 !important;
   border: 1px solid #3086BA !important;
 }
+
+.modal-title {
+  span {
+    font-size: inherit;
+  }
+}

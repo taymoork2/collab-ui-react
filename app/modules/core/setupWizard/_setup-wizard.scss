@@ -1,46 +1,52 @@
-.wizard-plan-review {
+// TODO: Move this to a common location (Shared by Plan review and Assign Services)
+%plan-container {
   min-height: 515px;
   display: flex;
   flex-direction: column;
   flex: 1;
+  .indentedCheckbox {
+    margin: 0;
+    padding-left: rem-calc(28);
+    .cs-checkbox {
+      padding-right: 1.5rem;
+    }
+  }
   .flex-row {
     @extend .row;
     display: flex;
+    .columns {
+      padding: 1.5rem;
+    }
     .small-4 {
-      padding-bottom: 10px;
       &:not(:last-of-type) {
         margin-right: 3px;
       }
     }
     .column-title {
       background: $gray-light-4;
-      padding: 12px 0px 14px 0px;
+      padding: 12px 0 14px 0;
       line-height: 30px;
     }
     .column-free {
       background: $gray-light-4;
       min-height: 50px;
-      padding: 20px 0px 14px 24px;
       line-height: 24px;
       font-size: 14px;
     }
-    .column-paid {
+    .column-paid,
+    .column-mtg {
       background: $gray-light-4;
-      padding: 0;
       font-size: 14px;
     }
     .column-mtg {
-      background: $gray-light-4;
-      padding: 0;
-      font-size: 14px;
+      padding-bottom: 0;
     }
     .column-trial {
       background: $gray-light-4;
-      padding: 0;
     }
     .column-trial-header {
       @extend .h4;
-      padding: 1rem 1.5rem;
+      padding: 1rem 0;
       background: $color-attention;
       color: $white;
     }
@@ -116,7 +122,7 @@
     line-height: 24px;
   }
   .item-paid {
-    padding: 0px 0px 24px 24px;
+    padding: 0 0 24px 0;
     line-height: 24px;
     .sub-item {
       font-family: $brand-font-light;
@@ -129,7 +135,7 @@
       color: $gray-base;
       display: inline-block;
       .quantity-padding {
-        padding-right: 0px;
+        padding-right: 0;
         font-size: 14px;
         color: $gray-base;
       }
@@ -145,31 +151,23 @@
     color: $color-primary-base;
     font-family: $brand-font-light;
     font-size: 14px;
-    padding: 20px 0px 0px 0px;
     line-height: 24px;
-    margin-left: 24px;
   }
   .item-mtg {
     color: $color-primary-base;
     font-family: $brand-font-light;
     font-size: 14px;
     line-height: 24px;
-    margin: 0px 24px 0px 24px;
     .sub-item {
       padding-bottom: 24px;
       font-family: $brand-font-light;
       font-size: 14px;
       color: $gray-base;
-      margin-bottom: 0px;
+      margin-bottom: 0;
     }
     .item-webex {
       color: $gray-dark-2;
       margin-right: 24px;
-    }
-    .sub-line {
-      border-bottom: 1px solid #ccc;
-      padding-top: 5px;
-      margin-bottom: 20px;
     }
     .quantity-mtg {
       font-family: $brand-font-light;
@@ -184,6 +182,15 @@
       }
     }
   }
+  .sub-line {
+    border-bottom: 1px solid #ccc;
+    padding-top: 5px;
+    margin-bottom: 20px;
+  }
+}
+
+.wizard-plan-review {
+  @extend %plan-container;
 }
 
 .wizard-trial-progress {
@@ -485,7 +492,7 @@
   }
   .table-header {
     border: $gray-light solid 1px;
-    border-bottom: 0px;
+    border-bottom: 0;
     .table {
       border-color: $gray-lightest;
     }
@@ -500,11 +507,11 @@
   }
   .table-body {
     border: $gray-light solid 1px;
-    border-top: 0px;
+    border-top: 0;
     position: relative;
     top: -1px;
     .table {
-      border-width: 0px;
+      border-width: 0;
     }
     .center {
       text-align: center;
@@ -545,7 +552,7 @@
     }
     .table-bordered > thead > tr:last-of-type > th,
     .table-bordered > tbody > tr:last-of-type > td {
-      border-bottom-width: 0px;
+      border-bottom-width: 0;
     }
     .table-bordered > thead > tr > th,
     .table-bordered > tbody > tr > td {

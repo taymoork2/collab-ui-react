@@ -1,7 +1,7 @@
 {
   "userName": "CurrentUser",
   "displayName": "Display Name",
-  "entitlements": ["squared-call-initiation", "squared-fusion-mgmt", "webex-squared", "spark-device-mgmt"],
+  "entitlements": ["squared-call-initiation", "squared-fusion-mgmt", "webex-squared", "spark-room-system"],
   "id": "111",
   "meta": {
     "organizationID": "222"

@@ -1,7 +1,7 @@
 <div class="loading" ng-if="!planReview.isInitialized">
   <i class="icon icon-spinner"></i>
 </div>
-<div class="wizard-plan-review container-fluid" ng-if="planReview.isInitialized">
+<div class="wizard-plan-review" ng-if="planReview.isInitialized">
   <div class="flex-row">
     <div class="small-4 columns column-title">
       <div class="column-header">
@@ -45,7 +45,7 @@
   <div class="row">
     <div class="column-subsription-header paid" translate="firstTimeWizard.paidColumnHeader"></div>
   </div>
-  <div class="flex-row row-licenses ">
+  <div class="flex-row row-licenses">
     <div class="small-4 columns" ng-class="{'column-paid' : !planReview.messagingServices.isNewTrial, 'column-trial' : planReview.messagingServices.isNewTrial}">
       <div ng-if="planReview.messagingServices.isNewTrial" class="column-trial-header" translate="firstTimeWizard.startYourTrial" translate-values="{days: planReview.trial.trialPeriod}"></div>
       <div ng-if="planReview.messagingServices.services.length > 0" class="item-license">
@@ -74,6 +74,7 @@
           <span>{{service.license.volume}}</span>
         </div>
       </div>
+      <div class="sub-line"></div>
       <div class="item-mtg" ng-repeat="(siteUrl,services) in planReview.sites">
         {{siteUrl}}
         <div class="sub-item" ng-repeat="service in services">
