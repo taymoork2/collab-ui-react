@@ -37,7 +37,8 @@
         $state.go('huronHuntGroup');
       } else if (featureCode === 'AA') {
         $state.go('huronfeatures.aabuilder', {
-          aaName: ''
+          aaName: '',
+          aaTemplate: 'template1'
         });
       }
       $modalInstance.close(featureCode);

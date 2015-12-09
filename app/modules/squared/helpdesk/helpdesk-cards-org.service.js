@@ -70,8 +70,8 @@
         ssoEnabled: org.ssoEnabled,
         dirsyncEnabled: org.dirsyncEnabled
       };
-      LicenseService.getUnlicensedUsersCount(org.id).then(function (licenses) {
-        userCard.unlicensedUserCount = licenses;
+      LicenseService.getUnlicensedUsersCount(org.id).then(function (count) {
+        userCard.unlicensedUserCount = count;
       }, XhrNotificationService.notify);
 
       return userCard;

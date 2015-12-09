@@ -1,12 +1,17 @@
 <!--<header><h4 translate="overview.cards.users.title"></h4></header>-->
 <header>
-  <span class="overview-users-header" translate="overview.cards.users.title"></span>
+  <div class="overview-header">
+  <i class="icon" ng-class="card.icon"></i>
+  <span>{{card.name | translate}}</span>
+  </div>
 </header>
 <section>
   <!--<h4>{{(card.usersToConvert | number) || 'N/A'}}</h4>-->
   <div class="convert-block">
-    <div class="convert-nr">{{(card.usersToConvert | number) || 'N/A'}}</div>
-    <div translate="overview.cards.users.convertText" id="convertText"></div>
+    <div class="convert-text">
+      <span class="convert-nr">{{(card.usersToConvert | number) || 'N/A'}}</span>&nbsp;
+      <span translate="overview.cards.users.convertText" id="convertText"></span>
+    </div>
     <button class="btn btn--cta" translate="overview.cards.users.convertButton" ng-click="card.openConvertModal()" ng-disabled="!card.usersToConvert">
     </button>
   </div>

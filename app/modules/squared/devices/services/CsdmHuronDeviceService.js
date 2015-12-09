@@ -2,14 +2,14 @@
   'use strict';
 
   /* @ngInject  */
-  function CsdmHuronDeviceService($http, $q, Authinfo, HuronConfig, CsdmConverter, CsdmCacheFactory, $window) {
-    var devicesUrl = HuronConfig.getCmiV2Url() + '/lists/customers/' + Authinfo.getOrgId() + '/phones/';
+  function CsdmHuronDeviceService($http, $q, Authinfo, CsdmConfigService, CsdmConverter, CsdmCacheFactory, $window) {
+    var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/huronDevices';
 
     var deviceCache = CsdmCacheFactory.create({
       fetch: function () {
         if ($window.location.search.indexOf("showHuronDevices=true") > -1) {
           return $http.get(devicesUrl).then(function (res) {
-            return CsdmConverter.convertHuronDevices(res.data[0].phones);
+            return CsdmConverter.convertHuronDevices(res.data);
           });
         }
         return $q(function (resolve) {

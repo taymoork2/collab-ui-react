@@ -2,7 +2,8 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsOrgService, Config, $translate, LicenseService, HelpdeskHealthStatusService) {
+  function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsOrgService, Config,
+    $translate, LicenseService, HelpdeskHealthStatusService, $scope, $state) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.org) {
@@ -16,7 +17,7 @@
     vm.callCard = {};
     vm.hybridServicesCard = {};
     vm.roomSystemsCard = {};
-    vm.usercard = {};
+    vm.userCard = {};
     vm.healthStatuses = {
       message: 'unknown',
       meeting: 'unknown',
@@ -24,13 +25,15 @@
       room: 'unknown',
       hybrid: 'unknown'
     };
-    vm.statusPageUrl = Config.getStatusPageUrl();
     vm.initialAdminUserLimit = 3;
     vm.adminUserLimit = vm.initialAdminUserLimit;
+    vm.licenseUsageReady = false;
+    vm.statusPageUrl = Config.getStatusPageUrl();
     vm.showAllAdminUsers = showAllAdminUsers;
     vm.hideAllAdminUsers = hideAllAdminUsers;
+    vm.keyPressHandler = keyPressHandler;
     vm.daysLeftText = daysLeftText;
-    vm.licenseUsageReady = false;
+    vm.gotoSearchUsersAndDevices = gotoSearchUsersAndDevices;
 
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
     HelpdeskHealthStatusService.getHealthStatuses().then(initHealth, angular.noop);
@@ -49,6 +52,7 @@
       findManagedByOrgs(org);
       findWebExSites(org);
       findAdminUsers(org);
+      angular.element(".helpdesk-details").focus();
     }
 
     function initCards(licenses) {
@@ -100,7 +104,11 @@
     function findLicenseUsage() {
       if (vm.orgId != Config.ciscoOrgId) {
         LicenseService.getLicensesInOrg(vm.orgId, true).then(function (licenses) {
-          initCards(licenses);
+          // Update the relevant cards with licenses that  includes usage
+          vm.messageCard = HelpdeskCardsOrgService.getMessageCardForOrg(vm.org, licenses);
+          vm.meetingCard = HelpdeskCardsOrgService.getMeetingCardForOrg(vm.org, licenses);
+          vm.callCard = HelpdeskCardsOrgService.getCallCardForOrg(vm.org, licenses);
+          vm.roomSystemsCard = HelpdeskCardsOrgService.getRoomSystemsCardForOrg(vm.org, licenses);
           vm.licenseUsageReady = true;
         }, XhrNotificationService.notify);
       }
@@ -114,10 +122,21 @@
       vm.adminUserLimit = vm.initialAdminUserLimit;
     }
 
+    function keyPressHandler(event) {
+      if (event.keyCode === 27) { // Esc
+        window.history.back();
+      }
+    }
+
     function daysLeftText(license) {
       return $translate.instant('helpdesk.numDaysLeft', {
         days: license.trialExpiresInDays
       });
+    }
+
+    function gotoSearchUsersAndDevices() {
+      $scope.$parent.helpdeskCtrl.initSearchWithOrgFilter(vm.org);
+      $state.go('helpdesk.search');
     }
   }
 

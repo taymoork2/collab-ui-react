@@ -19,11 +19,14 @@
   }
   .circle-status-icon {
     font-size: 0.575rem;
+    margin-right: 0.5rem;
   }
   .helpdesk-details {
     h3 {
       color: $gray-dark-4;
       margin-bottom: 1rem;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
     }
     h4 {
       margin-top: 1rem;
@@ -86,6 +89,7 @@
     .large-number {
       font-size:2rem;
       color: $color-primary-base;
+      margin-top: 0.4rem;
     }
   }
 }
@@ -158,8 +162,7 @@
     }
     .helpdesk-tile {
       height: 2.25rem;
-      padding: 0.5rem;
-      margin: 0.125rem 0.5rem 0.125rem 0;
+      padding: 0.25rem;
       border: 1px solid $gray-lighter;
       border-radius: 0.25rem;
       color: $brand-white;
@@ -174,6 +177,7 @@
         float: right;
         font-size: 1rem;
         margin-left: 0.5rem;
+        margin-top: 0.4rem;
       }
     }
   }
@@ -186,10 +190,8 @@
     }
     .cs-card {
       header {
-        h5,
-        h5 a {
+        h5 {
           color: $gray-dark-3;
-          padding-left: 0.5rem;
           font-size: 0.875rem;
           font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
         }
@@ -278,7 +280,6 @@
   .label {
     margin-bottom: 0;
     padding: 0.1rem 0.5rem 0.1rem;
-    margin-right: 0.5rem;
   }
   .cs-donut-svg {
     margin-top: 1rem;
@@ -309,7 +310,7 @@
 .helpdesk-warning {
   color: $color-attention-base;
 }
-.helpdesk-search:focus {
+.helpdesk-search:focus, .helpdesk-details:focus {
   outline: none !important;
   outline: 0 !important;
   border: 0 !important;
