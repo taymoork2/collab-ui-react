@@ -430,7 +430,6 @@ describe('Config', function () {
 
     it('squared-fusion-mgmt should contain fusion states', function () {
       // Preliminary removed until new fusion menues are in place in both integration and production
-      //expect(Config.serviceStates['squared-fusion-mgmt'][0]).toBe('fusion');
       //expect(Config.serviceStates['squared-fusion-mgmt'][1]).toBe('cluster-details');
     });
 

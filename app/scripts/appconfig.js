@@ -47,13 +47,6 @@ angular
           abstract: true,
           sticky: true
         })
-        .state('example', {
-          url: '/example',
-          templateUrl: 'modules/squared/example/example.html',
-          controller: 'ExampleCtrl',
-          controllerAs: 'ex',
-          parent: 'main'
-        })
         .state('partner', {
           template: '<div ui-view></div>',
           url: '/partner',
@@ -1436,12 +1429,6 @@ angular
   .config(['$stateProvider',
     function ($stateProvider) {
       $stateProvider
-        .state('fusion', {
-          url: '/fusion',
-          templateUrl: 'modules/hercules/dashboard/dashboard-next.html',
-          controller: 'DashboardNextController',
-          parent: 'main'
-        })
         .state('calendar-service', {
           templateUrl: 'modules/hercules/expressway-service/overview.html',
           controller: 'ExpresswayServiceController',
@@ -1589,46 +1576,6 @@ angular
             host: null,
             clusterId: null,
             serviceType: null
-          }
-        })
-        .state('cluster-details', {
-          parent: 'sidepanel',
-          views: {
-            'sidepanel@': {
-              controller: 'ClusterDetailsController',
-              templateUrl: 'modules/hercules/dashboard/cluster-details.html'
-            },
-            'header@cluster-details': {
-              templateUrl: 'modules/hercules/dashboard/cluster-header.html'
-            }
-          },
-          data: {
-            displayName: 'Overview'
-          },
-          params: {
-            clusterId: undefined
-          }
-        })
-        .state('cluster-details.hosts', {
-          templateUrl: 'modules/hercules/dashboard/host-details.html',
-          controller: 'HostDetailsController',
-          data: {
-            displayName: 'Hosts'
-          },
-          params: {
-            clusterId: undefined,
-            hostSerial: undefined
-          }
-        })
-        .state('cluster-details.service', {
-          templateUrl: 'modules/hercules/dashboard/service-details.html',
-          controller: 'ServiceDetailsController',
-          data: {
-            displayName: 'Connectors'
-          },
-          params: {
-            clusterId: undefined,
-            serviceType: undefined
           }
         });
     }
