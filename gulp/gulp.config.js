@@ -214,9 +214,16 @@ module.exports = function() {
       ' * <%= pkg.name %> v<%= pkg.version %> (<%= pkg.homepage %>)\n' +
       ' * Copyright ' + year + ' <%= pkg.author %>\n' +
       ' */\n' +
-      ''
+      '',
 
+    isJenkins: isJenkins,
   };
 
   return config;
+
+  ////////////////
+
+  function isJenkins() {
+    return process.env.BUILD_NUMBER && process.env.JOB_NAME && process.env.JENKINS_URL;
+  }
 };
