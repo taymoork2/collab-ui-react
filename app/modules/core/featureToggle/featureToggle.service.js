@@ -22,6 +22,7 @@
       getFeaturesForUser: getFeaturesForUser,
       getFeatureForOrg: getFeatureForOrg,
       getFeaturesForOrg: getFeaturesForOrg,
+      setFeatureToggle: setFeatureToggle,
       supports: supports,
       supportsPstnSetup: supportsPstnSetup,
       supportsCsvUpload: supportsCsvUpload,
@@ -155,6 +156,19 @@
         cache: true
       });
       return deferred.promise;
+    }
+
+    function setFeatureToggle(isUser, id, key, val) {
+      if (isUser) {
+        return $q.reject('User level toggles are not changeable in the web app');
+      }
+
+      var toggle = isUser ? undefined : generateFeatureToggleRule(id, key, val);
+      var usingId = isUser ? undefined : '';
+
+      return getUrl(isUser).save({
+        id: usingId
+      }, toggle).$promise;
     }
 
     /**

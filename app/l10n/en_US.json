@@ -320,6 +320,9 @@
     "addSuccess": "An organization was successfully started for {{customerOrgName}} with {{licenseCount}} licenses for {{duration}} days.",
     "manageBetaFeatures": "Manage Beta Features",
     "betaFeatures": "Beta Features",
+    "errorGettingToggles": "There was a problem getting the selected organizations feature toggles",
+    "errorSettingToggle": "There was a problem setting {{key}} for the selected organization",
+    "toggleModSuccess": "All modified toggles were updated",
     "startSearching": "To begin, search for an organization",
     "noSearchResults": "Search yielded no results"
   },
@@ -359,6 +362,7 @@
     "activeUsers": "Active Users",
     "overallActiveUserGraphError": "There was an error while loading detailed active user data.",
     "activeUserTableError": "There was an error while loading most active user data for {{customer}}.",
+    "mostActiveError": "There was an error while loading the data for Most Active Users.",
     "calls": "Calls",
     "customer": "Customer",
     "hideActiveUsers": "Hide Most Active Users",
@@ -369,7 +373,19 @@
     "user": "User",
     "users": "Users",
     "description": "An active user is defined as someone who has made or received a call using a device or has used the Spark application.  In this report you can compare the total number of registered users to the number of active users in the selected customer(s) over the {{time}}.",
-    "mostActiveDescription": "During the {{time}}, these are the most active users for {{customer}}."
+    "mostActiveDescription": "During the {{time}}, these are the most active users for {{customer}}.",
+    "customerPortalDescription": "An active user is defined as someone who has made or received a call using a device or has used the Spark application.  In this report you can compare the total number of registered users to the number of active users over the {{time}}.",
+    "customerMostActiveDescription": "The table below displays the user activity for all users.  It can be sorted by the user's name, total calls, and total activity.  Additionally, the search field "
+  },
+  "avgRooms": {
+    "avgRooms": "Total Rooms",
+    "avgRoomsDescription": "The graph depicts the total number of spark rooms used for messaging and/or file sharing during the {{time}}.  Hover over the columns for a breakdown of the total number of group rooms and 1:1 rooms as well as the average number of rooms per user.",
+    "groupError": "There was an error while loading the Group Rooms data.",
+    "oneToOneError": "There was an error while loading the One to One Rooms data.",
+    "avgError": "There was an error while loading the Average Rooms per Users data.",
+    "group": "Total Group Rooms",
+    "oneToOne": "Total 1:1 Rooms",
+    "avgTotal": "Avg Rooms per User"
   },
   "mediaQuality": {
     "mediaQuality": "Device Media Quality",
@@ -1423,6 +1439,7 @@
     "numberInfoPopover": "If you don’t enter a number here, it’s okay. Calls may still come through from another Auto Attendant.",
     "selectPlaceHolder": "Search or Select a Number",
     "inputPlaceHolder": "Start typing here",
+    "selectAAPlaceHolder": "Search or Select an Auto Attendant",
     "sayMessage": "Message",
     "sayMessagePlaceholder": "Enter your message here.",
     "sayMessageUninterrupt": "Message playback will be uninterruptable.",
@@ -2666,6 +2683,7 @@
     "Online": "Online",
     "Offline": "Offline",
     "Unknown": "Unknown",
+    "Inactive": "Inactive Account",
     "NeedsActivation": "Needs Activation",
     "issuesDetected": "Issues Detected",
     "upgradeChannels": {
@@ -2698,6 +2716,10 @@
       "noupgrade": {
         "type": "Automatic Updates Disabled",
         "message": "System software will not be updated."
+      },
+      "inactive": {
+        "type": "Inactive Account",
+        "message": "There exists an account for a device, but no corresponding device or activation code. You can probably delete this account."
       },
       "unknown": {
         "type": "Unknown Error Occurred",
@@ -3058,6 +3080,9 @@
       "search-criterias-note": "Note: Devices are only supported when search is narrowed to one costumer (see below)",
       "narrow-title": "Narrow Search",
       "narrow-info": "To narrow your search to one costumer only, tap <i class='icon icon-search'></i> in the customer result card or hit the <strong>s</strong> key when the card is focused. Alternatively, tap <i class='icon icon-search'></i> from the customer view page"
-    }
+    },
+    "verification": "Verification",
+    "resend": "Re-send",
+    "sendCode": "Send Code"
   }
 }

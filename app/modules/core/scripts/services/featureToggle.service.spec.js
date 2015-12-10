@@ -12,6 +12,7 @@ describe('FeatureToggleService', function () {
   var getUserMe;
   var getUserFeatureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
   var userRegex = /.*\/locus\/api\/v1\/features\/users\.*/;
+  var orgRegex = /.*\/features\/rules\.*/;
 
   beforeEach(inject(function (_$httpBackend_, _$q_, _Config_, _Authinfo_, _Userservice_, _FeatureToggleService_) {
     httpBackend = _$httpBackend_;
@@ -80,5 +81,4 @@ describe('FeatureToggleService', function () {
     });
     httpBackend.flush();
   });
-
 });
