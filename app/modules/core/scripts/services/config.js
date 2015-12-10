@@ -494,6 +494,8 @@ angular.module('Core')
           brandDanger: '#f05d3b',
           brandWarning: '#f7c100',
           dummyGray: '#ECECEC',
+          primaryColorLight: '#66C5E8',
+          primaryColorDarker: '#0387B8',
           dummyGrayLight: '#F3F3F3',
           dummyGrayLighter: '#FAFAFA'
         },
@@ -628,7 +630,14 @@ angular.module('Core')
         },
 
         getFeatureToggleUrl: function () {
-          return this.locusServiceUrl.prod;
+          var locusServiceUrl = {
+            'dev': this.locusServiceUrl.prod,
+            'cfe': this.locusServiceUrl.cfe,
+            'integration': this.locusServiceUrl.prod,
+            'prod': this.locusServiceUrl.prod
+          };
+
+          return locusServiceUrl[this.getEnv()];
         },
 
         getEnrollmentServiceUrl: function () {
@@ -996,7 +1005,10 @@ angular.module('Core')
           'devices-redux'
         ],
         'squared-fusion-uc': [
-          'call-service'
+          'call-service',
+          'devices',
+          'device-overview',
+          'devices-redux'
         ],
         'squared-fusion-cal': [
           'calendar-service'

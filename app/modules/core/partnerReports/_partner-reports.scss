@@ -40,6 +40,10 @@
       cursor: pointer;
     }
   }
+  .report-select-filters {
+    width: rem-calc(250);
+    margin-left: rem-calc(20);
+  }
   .not-selected {
     color: $brand-primary;
   }
@@ -134,6 +138,9 @@
       margin-left: auto;
       margin-right: auto;
       z-index: 50;
+    }
+    .amExportButton {
+      top: rem-calc(30);
     }
     .horizontal-center {
       text-align: center;
