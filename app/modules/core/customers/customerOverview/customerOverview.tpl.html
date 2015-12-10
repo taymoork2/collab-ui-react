@@ -54,11 +54,11 @@
       <div class="feature-list">
         <ul>
           <li class="feature">
-            <span class="feature-name" translate="customerPage.licenses"></span>
+            <span class="feature-name">{{customerOverview.licenses}}</span>
             <span class="feature-details">{{customerOverview.currentCustomer.licenses}}</span>
           </li>
-          <li class="feature" ng-if="customerOverview.isRoomSystems">
-            <span class="feature-name" translate="customerPage.deviceLicenses"></span>
+          <li class="feature" ng-if="customerOverview.showRoomSystems">
+            <span class="feature-name" translate="customerPage.deviceBasedLicenses"></span>
             <span class="feature-details">{{customerOverview.currentCustomer.deviceLicenses}}</span>
           </li>
           <li class="feature">

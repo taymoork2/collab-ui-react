@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: PartnerHomeCtrl', function () {
-  var $scope, controller, $httpBackend, Config;
+  var $scope, $q, controller, $httpBackend, Config, FeatureToggleService;
 
   var Orgservice;
   var adminJSONFixture = getJSONFixture('core/json/organizations/adminServices.json');
@@ -21,16 +21,20 @@ describe('Controller: PartnerHomeCtrl', function () {
     $provide.value("Authinfo", authInfo);
   }));
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _Config_, _Orgservice_) {
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$q_, _Config_, _Orgservice_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
     $rootScope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
+    $q = _$q_;
     Config = _Config_;
     Orgservice = _Orgservice_;
+    FeatureToggleService = _FeatureToggleService_;
 
     spyOn(Orgservice, 'getAdminOrg').and.callFake(function (callback, status) {
       callback(adminJSONFixture.getAdminOrg, 200);
     });
+
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
 
     $rootScope.typeOfExport = {
       USER: 1,

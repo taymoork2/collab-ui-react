@@ -28,7 +28,7 @@ var UsersPage = function () {
   this.editServicesButton = element(by.cssContainingText('a', 'Edit services'));
   this.editServicesModal = element(by.css('.edit-services'));
 
-  this.servicesPanelCommunicationsCheckbox = element(by.css('.bucket-row-inner .indentedCheckbox'));
+  this.servicesPanelCommunicationsCheckbox = element(by.css('.indentedCheckbox'));
   this.listPanel = element(by.id('userslistpanel'));
   this.manageDialog = element(by.id('modalContent'));
   this.deleteUserModal = element(by.id('deleteUserModal'));

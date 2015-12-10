@@ -52,7 +52,7 @@
 
       // Since Atlas backend does not support WebEx trials, webex offer is removed from trial data.
       editTrialData.offers = _.filter(editTrialData.offers, function (offer) {
-        if (offer.id !== Config.trials.webex) {
+        if (offer.id !== Config.trials.meeting) {
           return offer;
         }
       });

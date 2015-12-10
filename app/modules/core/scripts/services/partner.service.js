@@ -5,7 +5,7 @@
     .service('PartnerService', PartnerService);
 
   /* @ngInject */
-  function PartnerService($http, $rootScope, $q, $translate, $filter, Config, Log, Authinfo, Auth) {
+  function PartnerService($http, $rootScope, $q, $translate, $filter, Config, Log, Authinfo, Auth, FeatureToggleService) {
 
     var trialsUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials';
     var managedOrgsUrl = Config.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
@@ -159,6 +159,12 @@
     function loadRetrievedDataToList(retrievedData, basicList, isTrialData) {
       var list = basicList || [];
 
+      var isAtlasStormBranding = false;
+
+      FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
+        isAtlasStormBranding = result;
+      });
+
       for (var index in retrievedData) {
         var data = retrievedData[index];
         var edate = moment(data.startDate).add(data.trialPeriod, 'days').format('MMM D, YYYY');
@@ -199,14 +205,22 @@
             }
             switch (offer.id) {
             case Config.trials.message:
-              offerNames.push($translate.instant('trials.collab'));
+              if (isAtlasStormBranding) {
+                offerNames.push($translate.instant('customerPage.message'));
+              } else {
+                offerNames.push($translate.instant('trials.collab'));
+              }
               break;
             case Config.trials.call:
               dataObj.isSquaredUcOffer = true;
-              offerNames.push($translate.instant('trials.squaredUC'));
+              if (isAtlasStormBranding) {
+                offerNames.push($translate.instant('customerPage.call'));
+              } else {
+                offerNames.push($translate.instant('trials.squaredUC'));
+              }
               break;
             case Config.trials.roomSystems:
-              offerNames.push($translate.instant('trials.roomSystem'));
+              offerNames.push($translate.instant('customerPage.roomSystem'));
               break;
             }
             dataObj.usage = offer.usageCount;
@@ -216,7 +230,7 @@
               dataObj.licenses = offer.licenseCount;
             }
           }
-          dataObj.offer = offerNames.join(', ');
+          dataObj.offer = offerNames.sort().join(', ');
         }
 
         dataObj.unmodifiedLicenses = _.cloneDeep(data.licenses);

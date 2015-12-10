@@ -17,7 +17,7 @@
     vm.openEditTrialModal = openEditTrialModal;
     vm.getDaysLeft = getDaysLeft;
     vm.isSquaredUC = isSquaredUC();
-    vm.isRoomSystems = false;
+    vm.showRoomSystems = false;
     vm.usePartnerLogo = true;
     vm.allowCustomerLogos = false;
     vm.logoOverride = false;
@@ -25,14 +25,23 @@
     vm.isOwnOrg = isOwnOrg;
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.partnerOrgName = Authinfo.getOrgName();
+    vm.licenses = $translate.instant("customerPage.licenses");
 
-    if (_.find(vm.currentCustomer.offers, {
-        id: Config.trials.roomSystems
-      })) {
-      FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials).then(function (result) {
-        vm.isRoomSystems = result;
-      });
-    }
+    FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
+      if (result) {
+        vm.licenses = $translate.instant("customerPage.userLicenses");
+      }
+    });
+
+    FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials).then(function (result) {
+      if (result) {
+        if (_.find(vm.currentCustomer.offers, {
+            id: Config.trials.roomSystems
+          })) {
+          vm.showRoomSystems = result;
+        }
+      }
+    });
 
     initCustomer();
     getLogoSettings();

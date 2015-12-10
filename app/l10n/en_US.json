@@ -1866,8 +1866,9 @@
     "edit": "Edit Terms of Trial",
     "trialTerms": "Terms of Trial",
     "trialOverview": "Trial",
-    "licenses": "Number of User Licenses",
-    "deviceLicenses": "Number of Device Licenses",
+    "licenses": "Number of Licenses",
+    "userLicenses": "Number of User Licenses",
+    "deviceBasedLicenses": "Number of Device-based Licenses",
     "duration": "Duration",
     "days": "Days",
     "dayTrial": "Day Trial",
@@ -1884,7 +1885,11 @@
     "partnerLogo": "Partner Logo",
     "logoOverride": "Customer Logo Override",
     "allowCustomerLogo": "Enable Customer Logo for {{customer}}",
-    "myOrganization": "My Organization"
+    "myOrganization": "My Organization",
+    "message": "Message",
+    "meeting": "Meeting 25 Party",
+    "call": "Call",
+    "roomSystem": "Spark Room System"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"

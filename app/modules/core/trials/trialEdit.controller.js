@@ -32,7 +32,7 @@
     });
 
     var webexField = {
-      key: Config.trials.webex,
+      key: Config.trials.meeting,
       type: 'checkbox',
       model: $scope.offers,
       templateOptions: {
@@ -70,7 +70,7 @@
         }
       }
     }, {
-      key: Config.trials.collab,
+      key: Config.trials.message,
       type: 'checkbox',
       model: $scope.offers,
       defaultValue: _.get(vm, 'currentTrial.communications.status') === 'ACTIVE',
@@ -90,7 +90,7 @@
         }
       }
     }, {
-      key: Config.trials.squaredUC,
+      key: Config.trials.call,
       type: 'checkbox',
       model: $scope.offers,
       templateOptions: {
@@ -139,10 +139,10 @@
     vm.clickUpdateButton = clickUpdateButton;
 
     $scope.$watchCollection('offers', function (newOffers) {
-      if (newOffers[Config.trials.roomSystems] || newOffers[Config.trials.squaredUC]) {
-        $scope.offers[Config.trials.collab] = true;
+      if (newOffers[Config.trials.roomSystems] || newOffers[Config.trials.call]) {
+        $scope.offers[Config.trials.message] = true;
         if (vm.showWebex) {
-          $scope.offers[Config.trials.webex] = true;
+          $scope.offers[Config.trials.meeting] = true;
         }
       }
     });
