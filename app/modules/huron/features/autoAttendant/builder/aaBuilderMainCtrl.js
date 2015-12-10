@@ -172,6 +172,10 @@
         return;
       }
 
+      if (vm.ui.isOpenHours && !AAValidationService.isPhoneMenuValidationSuccess(vm.ui.openHours)) {
+        return;
+      }
+
       vm.saveUiModel();
 
       var i = 0;

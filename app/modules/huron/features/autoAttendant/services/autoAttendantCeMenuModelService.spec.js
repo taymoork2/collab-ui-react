@@ -36,6 +36,7 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
   // Option menu
   var omenu = getJSONFixture('huron/json/autoAttendant/optionMenu.json');
   var ceOption = omenu.ceOption;
+  var ceOptionUnsorted = omenu.ceOptionUnsorted;
   var optionMenu = omenu.optionMenu;
 
   // Custom menu
@@ -121,6 +122,21 @@ describe('Service: AutoAttendantCeMenuModelService', function () {
       _welcomeMenu.entries.splice(1, 2);
       var welcomeMenuSuccess = AutoAttendantCeMenuModelService.updateMenu(_ceRecord, 'regularOpenActions', _welcomeMenu);
       var _optionMenu = AutoAttendantCeMenuModelService.getOptionMenu(ceOption, 'regularOpenActions');
+      var optionMenuSuccess = AutoAttendantCeMenuModelService.updateMenu(_ceRecord, 'regularOpenActions', _optionMenu);
+      expect(welcomeMenuSuccess).toBe(true);
+      expect(optionMenuSuccess).toBe(true);
+      expect(angular.equals(_ceRecord, ceOption)).toBe(true);
+    });
+  });
+
+  describe('updateMenu', function () {
+    it('should be able to update a ceRecord with sorted keys in optionMenu', function () {
+      var _ceRecord = angular.copy(ceInfos[0]);
+      _ceRecord.callExperienceName = 'AA Option';
+      var _welcomeMenu = AutoAttendantCeMenuModelService.getWelcomeMenu(ceWelcome, 'regularOpenActions');
+      _welcomeMenu.entries.splice(1, 2);
+      var welcomeMenuSuccess = AutoAttendantCeMenuModelService.updateMenu(_ceRecord, 'regularOpenActions', _welcomeMenu);
+      var _optionMenu = AutoAttendantCeMenuModelService.getOptionMenu(ceOptionUnsorted, 'regularOpenActions');
       var optionMenuSuccess = AutoAttendantCeMenuModelService.updateMenu(_ceRecord, 'regularOpenActions', _optionMenu);
       expect(welcomeMenuSuccess).toBe(true);
       expect(optionMenuSuccess).toBe(true);
