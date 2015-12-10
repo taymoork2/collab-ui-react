@@ -24,11 +24,19 @@
     vm.callCard = {};
     vm.hybridServicesCard = {};
     vm.keyPressHandler = keyPressHandler;
+    vm.sendCode = sendCode;
 
     HelpdeskService.getUser(vm.orgId, vm.userId).then(initUserView, XhrNotificationService.notify);
 
     function resendInviteEmail() {
       HelpdeskService.resendInviteEmail(vm.user.displayName, vm.user.userName).then(angular.noop, XhrNotificationService.notify);
+    }
+
+    function sendCode() {
+      HelpdeskService.sendVerificationCode(vm.user.displayName, vm.user.userName).then(function (code) {
+        vm.verificationCode = code;
+        vm.sendingVerificationCode = false;
+      }, XhrNotificationService.notify);
     }
 
     function initUserView(user) {

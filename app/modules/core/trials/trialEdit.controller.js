@@ -17,7 +17,7 @@
     vm.showWebex = false;
     vm.showRoomSystems = false;
     vm.model = {
-      roomSystems: 0,
+      roomSystems: 0
     };
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials).then(function (result) {
@@ -38,13 +38,13 @@
       templateOptions: {
         label: $translate.instant('trials.meet'),
         id: 'webexTrialCB',
-        class: 'columns medium-12 checkbox-group',
+        class: 'columns medium-12 checkbox-group'
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
           return vm.isSquaredUCEnabled() || vm.isRoomSystemsTrialsEnabled();
-        },
-      },
+        }
+      }
     };
 
     vm.roomSystemOptions = [5, 10, 15, 20, 25];
@@ -57,7 +57,7 @@
         labelClass: 'columns medium-5',
         inputClass: 'columns medium-3',
         type: 'number',
-        required: true,
+        required: true
       },
       validators: {
         count: {
@@ -66,9 +66,9 @@
           },
           message: function () {
             return $translate.instant('partnerHomePage.invalidTrialLicenseCount');
-          },
-        },
-      },
+          }
+        }
+      }
     }, {
       key: 'COLLAB',
       type: 'checkbox',
@@ -87,8 +87,8 @@
           return FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
             return result ? $translate.instant('partnerHomePage.message') : $translate.instant('trials.collab');
           });
-        },
-      },
+        }
+      }
     }, {
       key: 'SQUAREDUC',
       type: 'checkbox',
@@ -99,6 +99,9 @@
         class: 'columns medium-12 checkbox-group',
       },
       expressionProperties: {
+        'templateOptions.disabled': function () {
+          return vm.disableSquaredUCCheckBox;
+        },
         'hide': function () {
           return !vm.isSquaredUC();
         },
@@ -106,8 +109,8 @@
           return FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
             return result ? $translate.instant('partnerHomePage.call') : $translate.instant('trials.squaredUC');
           });
-        },
-      },
+        }
+      }
     }];
 
     vm.trialTermsFields = [{
@@ -121,8 +124,8 @@
         secondaryLabel: $translate.instant('partnerHomePage.durationHelp'),
         labelClass: 'columns medium-4',
         inputClass: 'columns medium-4',
-        options: [30, 60, 90],
-      },
+        options: [30, 60, 90]
+      }
     }];
 
     vm.isSquaredUC = Authinfo.isSquaredUC;
@@ -225,10 +228,10 @@
           vm.customerOrgId = response.data.customerOrgId;
           if ((offersList.indexOf(Config.trials.call) !== -1) && !vm.disableSquaredUCCheckBox) {
             return HuronCustomer.create(response.data.customerOrgId, response.data.customerName, response.data.customerEmail)
-              .catch(function () {
+              .catch(function (response) {
                 vm.saveUpdateButtonLoad = false;
                 Notification.errorResponse(response, 'trialModal.squareducError');
-                return $q.reject();
+                return $q.reject(response);
               });
           }
         })

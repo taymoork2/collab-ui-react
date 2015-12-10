@@ -996,7 +996,10 @@ angular.module('Core')
           'devices-redux'
         ],
         'squared-fusion-uc': [
-          'call-service'
+          'call-service',
+          'devices',
+          'device-overview',
+          'devices-redux'
         ],
         'squared-fusion-cal': [
           'calendar-service'

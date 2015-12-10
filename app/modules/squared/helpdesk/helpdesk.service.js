@@ -277,6 +277,17 @@
         .then(extractData);
     }
 
+    function sendVerificationCode(displayName, email) {
+      return $http
+        .post(urlBase + 'helpdesk/actions/sendverificationcode/invoke', {
+          inviteList: [{
+            displayName: displayName,
+            email: email
+          }]
+        })
+        .then(extractData);
+    }
+
     function getWebExSites(orgId) {
       if (useMock()) {
         var deferred = $q.defer();
@@ -306,7 +317,8 @@
       getCloudberryDevice: getCloudberryDevice,
       getOrgDisplayName: getOrgDisplayName,
       findAndResolveOrgsForUserResults: findAndResolveOrgsForUserResults,
-      checkIfMobile: checkIfMobile
+      checkIfMobile: checkIfMobile,
+      sendVerificationCode: sendVerificationCode
     };
   }
 

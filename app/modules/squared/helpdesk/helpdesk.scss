@@ -91,6 +91,20 @@
       color: $color-primary-base;
       margin-top: 0.4rem;
     }
+    button {
+      padding-top: 0.1rem;
+      padding-bottom: 0.1rem;
+    }
+    .user-img {
+      height: 35px;
+      width: 35px;
+    }
+    .icon-user {
+      color: white;
+      font-size: 30px;
+      line-height: 35px;
+      bottom: -5px;
+    }
   }
 }
 
