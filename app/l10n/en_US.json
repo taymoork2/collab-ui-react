@@ -3055,6 +3055,9 @@
       "search-criterias-note": "Note: Devices are only supported when search is narrowed to one costumer (see below)",
       "narrow-title": "Narrow Search",
       "narrow-info": "To narrow your search to one costumer only, tap <i class='icon icon-search'></i> in the customer result card or hit the <strong>s</strong> key when the card is focused. Alternatively, tap <i class='icon icon-search'></i> from the customer view page"
-    }
+    },
+    "verification": "Verification",
+    "resend": "Re-send",
+    "sendCode": "Send Code"
   }
 }
