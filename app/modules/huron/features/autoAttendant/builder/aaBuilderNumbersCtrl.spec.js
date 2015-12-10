@@ -26,6 +26,8 @@ describe('Controller: AABuilderNumbersCtrl', function () {
   var listCesSpy;
   var saveCeSpy;
 
+  var errorSpy;
+
   function ce2CeInfo(rawCeInfo) {
     var _ceInfo = AutoAttendantCeInfoModelService.newCeInfo();
     for (var j = 0; j < rawCeInfo.assignedResources.length; j++) {
@@ -75,7 +77,6 @@ describe('Controller: AABuilderNumbersCtrl', function () {
     Notification = _Notification_;
 
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
-    spyOn(AANumberAssignmentService, 'checkAANumberAssignments').and.returnValue($q.when("{}"));
 
     $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?directorynumber=&order=pattern').respond(200, [{
       'pattern': '+9999999991',
@@ -395,6 +396,71 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       $scope.$apply();
 
       expect(controller.availablePhoneNums.length > 0);
+
+    });
+
+  });
+
+  describe('warnOnAssignedNumberDiscrepancies', function () {
+
+    beforeEach(function () {
+
+      aaModel.ceInfos = [];
+      aaModel.aaRecords = cesWithNumber;
+      aaModel.aaRecord = aCe;
+
+      // controller.name = rawCeInfo.callExperienceName;
+      controller.ui = {};
+      controller.ui.ceInfo = ce2CeInfo(rawCeInfo);
+
+      errorSpy = jasmine.createSpy('error');
+      Notification.error = errorSpy;
+
+    });
+
+    it('should not warn when assignments return no error', function () {
+
+      spyOn(AANumberAssignmentService, 'checkAANumberAssignments').and.returnValue($q.when("{}"));
+
+      var ret = controller.warnOnAssignedNumberDiscrepancies();
+
+      $httpBackend.flush();
+
+      $scope.$apply();
+
+      expect(errorSpy).not.toHaveBeenCalled();
+
+    });
+
+    it('should warn when assignments return error', function () {
+
+      spyOn(AANumberAssignmentService, 'checkAANumberAssignments').and.callFake(function (customerId, cesId, resources, onlyResources, onlyCMI) {
+        onlyCMI.push('5551212');
+        onlyResources.push('5552323');
+        return $q.when("{}");
+      });
+
+      var ret = controller.warnOnAssignedNumberDiscrepancies();
+
+      $httpBackend.flush();
+
+      $scope.$apply();
+
+      expect(errorSpy).toHaveBeenCalled();
+
+    });
+
+    it('should warn when CMI call fails', function () {
+
+      spyOn(AANumberAssignmentService, 'checkAANumberAssignments').and.returnValue($q.reject("bad"));
+
+      var ret = controller.warnOnAssignedNumberDiscrepancies();
+
+      $httpBackend.flush();
+
+      $scope.$apply();
+
+      expect(errorSpy).toHaveBeenCalled();
 
     });
 

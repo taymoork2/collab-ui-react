@@ -19,6 +19,7 @@
     vm.getDupeNumberAnyAA = getDupeNumberAnyAA;
     vm.addToAvailableNumberList = addToAvailableNumberList;
     vm.compareNumbersExternalThenInternal = compareNumbersExternalThenInternal;
+    vm.warnOnAssignedNumberDiscrepancies = warnOnAssignedNumberDiscrepancies;
 
     // a mapping of numbers to their type (internal or external)
     vm.numberTypeList = {};
