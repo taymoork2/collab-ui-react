@@ -19,7 +19,7 @@ angular.module('Hercules').service('UserDetails',
     };
 
     var getCSVColumnHeaders = function (serviceName) {
-      return ["User", "Connector", serviceName + " State", "Message"];
+      return ["User", "Host", serviceName + " State", "Message"];
     };
 
     var getUsers = function (stateInfos, orgId, callback) {
