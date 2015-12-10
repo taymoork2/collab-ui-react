@@ -14,6 +14,7 @@
     var groupUrl = '/conversations';
     var oneToOneUrl = '/convOneOnOne';
     var avgUrl = '/avgConversations';
+    var customerView = '&isCustomerView=true';
     var dateFormat = "MMM DD, YYYY";
     var dayFormat = "MMM DD";
     var monthFormat = "MMMM";
@@ -110,9 +111,9 @@
 
       var promises = [];
       var query = getQuery(filter);
-      var groupRoomsUrl = urlBase + timechart + groupUrl + query;
-      var oneToOneRoomsUrl = urlBase + timechart + oneToOneUrl + query;
-      var avgRoomsUrl = urlBase + timechart + avgUrl + query;
+      var groupRoomsUrl = urlBase + timechart + groupUrl + query + customerView;
+      var oneToOneRoomsUrl = urlBase + timechart + oneToOneUrl + query + customerView;
+      var avgRoomsUrl = urlBase + timechart + avgUrl + query + customerView;
 
       var groupData = [];
       var groupPromise = getService(groupRoomsUrl, groupCancelPromise).success(function (response, status) {
@@ -261,11 +262,11 @@
 
     function getQuery(filter) {
       if (filter.value === 0) {
-        return '?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue + '&isCustomerView=true';
+        return '?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
       } else if (filter.value === 1) {
-        return '?&intervalCount=31&intervalType=day&spanCount=7&spanType=day&cache=' + cacheValue + '&isCustomerView=true';
+        return '?&intervalCount=31&intervalType=day&spanCount=7&spanType=day&cache=' + cacheValue;
       } else {
-        return '?&intervalCount=3&intervalType=month&spanCount=1&spanType=month&cache=' + cacheValue + '&isCustomerView=true';
+        return '?&intervalCount=3&intervalType=month&spanCount=1&spanType=month&cache=' + cacheValue;
       }
     }
 

@@ -160,7 +160,7 @@
     function setActiveUsersGraph(data, activeUsersChart) {
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
-      } else if (activeUsersChart !== null) {
+      } else if (activeUsersChart !== null && angular.isDefined(activeUsersChart)) {
         var startDuration = 1;
         if (data[0].colorOne === Config.chartColors.dummyGrayLight) {
           startDuration = 0;
@@ -180,7 +180,7 @@
     function setAvgRoomsGraph(data, avgRoomsChart) {
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
-      } else if (avgRoomsChart !== null) {
+      } else if (avgRoomsChart !== null && angular.isDefined(avgRoomsChart)) {
         var startDuration = 1;
         if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
           startDuration = 0;
