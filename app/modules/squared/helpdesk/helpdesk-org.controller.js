@@ -123,8 +123,13 @@
     }
 
     function keyPressHandler(event) {
-      if (event.keyCode === 27) { // Esc
+      switch (event.keyCode) {
+      case 27: // Esc
         window.history.back();
+        break;
+      case 83: // S
+        gotoSearchUsersAndDevices();
+        break;
       }
     }
 

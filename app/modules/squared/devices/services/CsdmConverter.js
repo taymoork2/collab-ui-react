@@ -80,7 +80,7 @@ angular.module('Squared').service('CsdmConverter',
       this.url = obj.url;
       this.cisUuid = obj.id;
       this.tags = getTags(obj);
-      this.expiryTime = obj.expiryTime;
+      this.expiryTime = convertExpiryTime(obj.expiryTime);
       this.tagString = getTagString(obj);
       this.displayName = obj.displayName;
       this.activationCode = obj.activationCode;
@@ -93,6 +93,10 @@ angular.module('Squared').service('CsdmConverter',
       this.updateName = function (newName) {
         this.displayName = newName;
       };
+    }
+
+    function convertExpiryTime(expiryTime) {
+      return moment().to(expiryTime);
     }
 
     function convertCodes(data) {
