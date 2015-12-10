@@ -320,6 +320,9 @@
     "addSuccess": "An organization was successfully started for {{customerOrgName}} with {{licenseCount}} licenses for {{duration}} days.",
     "manageBetaFeatures": "Manage Beta Features",
     "betaFeatures": "Beta Features",
+    "errorGettingToggles": "There was a problem getting the selected organizations feature toggles",
+    "errorSettingToggle": "There was a problem setting {{key}} for the selected organization",
+    "toggleModSuccess": "All modified toggles were updated",
     "startSearching": "To begin, search for an organization",
     "noSearchResults": "Search yielded no results"
   },
@@ -1423,6 +1426,7 @@
     "numberInfoPopover": "If you don’t enter a number here, it’s okay. Calls may still come through from another Auto Attendant.",
     "selectPlaceHolder": "Search or Select a Number",
     "inputPlaceHolder": "Start typing here",
+    "selectAAPlaceHolder": "Search or Select an Auto Attendant",
     "sayMessage": "Message",
     "sayMessagePlaceholder": "Enter your message here.",
     "sayMessageUninterrupt": "Message playback will be uninterruptable.",
@@ -2663,6 +2667,7 @@
     "Online": "Online",
     "Offline": "Offline",
     "Unknown": "Unknown",
+    "Inactive": "Inactive Account",
     "NeedsActivation": "Needs Activation",
     "issuesDetected": "Issues Detected",
     "upgradeChannels": {
@@ -2695,6 +2700,10 @@
       "noupgrade": {
         "type": "Automatic Updates Disabled",
         "message": "System software will not be updated."
+      },
+      "inactive": {
+        "type": "Inactive Account",
+        "message": "There exists an account for a device, but no corresponding device or activation code. You can probably delete this account."
       },
       "unknown": {
         "type": "Unknown Error Occurred",

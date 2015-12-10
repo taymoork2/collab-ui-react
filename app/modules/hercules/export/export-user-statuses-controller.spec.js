@@ -33,6 +33,7 @@ describe('ExportUserStatusesController', function () {
     UiStats = _UiStats_;
 
     controller = _$controller_('ExportUserStatusesController', {
+      serviceId: 'squared-fusion-cal',
       Authinfo: Authinfo,
       UiStats: UiStats,
       UssService: UssService,
@@ -41,15 +42,15 @@ describe('ExportUserStatusesController', function () {
   }));
 
   it('column title for service name is based on authinfo displayname', function () {
-    $scope.selectedServiceId = "squared-fusion-cal";
-    $scope.getHeader();
-    expect($scope.loading).toBe(true);
-    expect($scope.getHeader()).toEqual(["Id", "Username", "Connector", "myService State", "Message"]);
+    controller.selectedServiceId = "squared-fusion-cal";
+    controller.getHeader();
+    expect(controller.loading).toBe(true);
+    expect(controller.getHeader()).toEqual(["User", "Host", "myService State", "Message"]);
   });
 
   it('export multiple users', function () {
 
-    $scope.selectedServiceId = "squared-fusion-cal";
+    controller.selectedServiceId = "squared-fusion-cal";
 
     var uss_request = "https://uss-integration.wbx2.com/uss/api/v1/userStatuses/summary?orgId=5632-f806-org";
     $httpBackend
@@ -207,7 +208,7 @@ describe('ExportUserStatusesController', function () {
         "provisioning": {}
       });
 
-    var ciUserFirstRequest = 'https://identity.webex.com/identity/scim/5632-f806-org/v1/Users?filter=id eq "111" and id eq "222"';
+    var ciUserFirstRequest = 'https://identity.webex.com/identity/scim/5632-f806-org/v1/Users?filter=id eq "111" or id eq "222"';
     $httpBackend
       .when('GET', ciUserFirstRequest)
       .respond({
@@ -231,34 +232,34 @@ describe('ExportUserStatusesController', function () {
       });
 
     var handler = jasmine.createSpy('success');
-    $scope.numberOfUsersPrCiRequest = 2;
+    controller.numberOfUsersPrCiRequest = 2;
 
-    $scope.test = true; // TODO: Remove special handling for unit test !!!
+    controller.test = true; // TODO: Remove special handling for unit test !!!
 
-    var promise = $scope.exportCSV();
+    var promise = controller.exportCSV();
 
     $httpBackend.flush();
     promise.then(handler);
 
-    expect(handler).toHaveBeenCalledWith([{
-      id: '111',
-      userName: 'sparkuser1@gmail.com',
-      connector: '?',
-      state: 'whatever1',
-      message: '-'
-    }, {
-      id: '222',
-      userName: 'sparkuser2@gmail.com',
-      connector: '?',
-      state: 'Pending Activation',
-      message: '-'
-    }, {
-      id: '333',
-      userName: 'sparkuser3@gmail.com',
-      connector: 'myExpressway2.cisco.com',
-      state: 'whatever3',
-      message: '-'
-    }]);
+    expect(handler).toHaveBeenCalledWith([
+      ['sep=,'],
+      controller.getHeader(), {
+        userName: 'sparkuser1@gmail.com',
+        connector: '?',
+        state: 'whatever1',
+        message: '-'
+      }, {
+        userName: 'sparkuser2@gmail.com',
+        connector: '?',
+        state: 'Pending Activation',
+        message: '-'
+      }, {
+        userName: 'sparkuser3@gmail.com',
+        connector: 'myExpressway2.cisco.com',
+        state: 'whatever3',
+        message: '-'
+      }
+    ]);
 
     $httpBackend.verifyNoOutstandingExpectation();
     $httpBackend.verifyNoOutstandingRequest();

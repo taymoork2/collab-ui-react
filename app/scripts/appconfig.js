@@ -1,9 +1,12 @@
 'use strict';
 angular
   .module('wx2AdminWebClientApp')
-  .config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$translateProvider',
-    function ($httpProvider, $stateProvider, $urlRouterProvider, $translateProvider) {
+  .config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$translateProvider', '$compileProvider',
+    function ($httpProvider, $stateProvider, $urlRouterProvider, $translateProvider, $compileProvider) {
       var sidepanelMemo = 'sidepanelMemo';
+
+      //Add blob to the default angular whitelist
+      $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|tel|file|blob):/);
 
       $urlRouterProvider.otherwise('login');
       $stateProvider

@@ -230,11 +230,5 @@
 
   angular
     .module('Squared')
-    .controller('HelpdeskController', HelpdeskController)
-    .config([
-      '$compileProvider',
-      function ($compileProvider) {
-        $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|mailto):/);
-      }
-    ]);
+    .controller('HelpdeskController', HelpdeskController);
 }());
