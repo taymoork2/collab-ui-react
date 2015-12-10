@@ -494,6 +494,8 @@ angular.module('Core')
           brandDanger: '#f05d3b',
           brandWarning: '#f7c100',
           dummyGray: '#ECECEC',
+          primaryColorLight: '#66C5E8',
+          primaryColorDarker: '#0387B8',
           dummyGrayLight: '#F3F3F3',
           dummyGrayLighter: '#FAFAFA'
         },

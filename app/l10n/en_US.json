@@ -362,6 +362,7 @@
     "activeUsers": "Active Users",
     "overallActiveUserGraphError": "There was an error while loading detailed active user data.",
     "activeUserTableError": "There was an error while loading most active user data for {{customer}}.",
+    "mostActiveError": "There was an error while loading the data for Most Active Users.",
     "calls": "Calls",
     "customer": "Customer",
     "hideActiveUsers": "Hide Most Active Users",
@@ -372,7 +373,19 @@
     "user": "User",
     "users": "Users",
     "description": "An active user is defined as someone who has made or received a call using a device or has used the Spark application.  In this report you can compare the total number of registered users to the number of active users in the selected customer(s) over the {{time}}.",
-    "mostActiveDescription": "During the {{time}}, these are the most active users for {{customer}}."
+    "mostActiveDescription": "During the {{time}}, these are the most active users for {{customer}}.",
+    "customerPortalDescription": "An active user is defined as someone who has made or received a call using a device or has used the Spark application.  In this report you can compare the total number of registered users to the number of active users over the {{time}}.",
+    "customerMostActiveDescription": "The table below displays the user activity for all users.  It can be sorted by the user's name, total calls, and total activity.  Additionally, the search field "
+  },
+  "avgRooms": {
+    "avgRooms": "Total Rooms",
+    "avgRoomsDescription": "The graph depicts the total number of spark rooms used for messaging and/or file sharing during the {{time}}.  Hover over the columns for a breakdown of the total number of group rooms and 1:1 rooms as well as the average number of rooms per user.",
+    "groupError": "There was an error while loading the Group Rooms data.",
+    "oneToOneError": "There was an error while loading the One to One Rooms data.",
+    "avgError": "There was an error while loading the Average Rooms per Users data.",
+    "group": "Total Group Rooms",
+    "oneToOne": "Total 1:1 Rooms",
+    "avgTotal": "Avg Rooms per User"
   },
   "mediaQuality": {
     "mediaQuality": "Device Media Quality",
