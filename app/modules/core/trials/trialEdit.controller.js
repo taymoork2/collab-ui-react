@@ -17,7 +17,7 @@
     vm.showWebex = false;
     vm.showRoomSystems = false;
     vm.model = {
-      roomSystems: 0
+      roomSystems: 0,
     };
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials).then(function (result) {
