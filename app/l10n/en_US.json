@@ -2667,6 +2667,7 @@
     "Online": "Online",
     "Offline": "Offline",
     "Unknown": "Unknown",
+    "Inactive": "Inactive Account",
     "NeedsActivation": "Needs Activation",
     "issuesDetected": "Issues Detected",
     "upgradeChannels": {
@@ -2699,6 +2700,10 @@
       "noupgrade": {
         "type": "Automatic Updates Disabled",
         "message": "System software will not be updated."
+      },
+      "inactive": {
+        "type": "Inactive Account",
+        "message": "There exists an account for a device, but no corresponding device or activation code. You can probably delete this account."
       },
       "unknown": {
         "type": "Unknown Error Occurred",

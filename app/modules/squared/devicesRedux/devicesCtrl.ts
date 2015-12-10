@@ -40,7 +40,8 @@ namespace devicesRedux {
                 private AddDeviceModal,
                 private CsdmCodeService,
                 private CsdmDeviceService,
-                private CsdmHuronDeviceService) {
+                private CsdmHuronDeviceService,
+                private CsdmUnusedAccountsService) {
 
       // hack until toolkit supports #fff background
       $('body').css('background', 'white');
@@ -80,6 +81,7 @@ namespace devicesRedux {
         .extend(this.CsdmDeviceService.getDeviceList())
         .extend(this.CsdmCodeService.getCodeList())
         .extend(this.CsdmHuronDeviceService.getDeviceList())
+        .extend(this.CsdmUnusedAccountsService.getAccountList())
         .values()
         .filter(this.filterOnSearchQuery.bind(this))
         .sortBy(this.displayNameSorter.bind(this))
