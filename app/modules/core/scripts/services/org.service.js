@@ -230,10 +230,9 @@
       });
     }
 
-    function listOrgs(filter, callback) {
+    function listOrgs(filter) {
       if (!filter || filter.length <= 3) {
-        callback('error', 100);
-        return;
+        return $q.reject('filter does not match requirements');
       }
       var orgUrl = Config.getProdAdminServiceUrl() + 'organizations?displayName=' + filter;
 

@@ -56,6 +56,24 @@ angular.module('Squared').service('CsdmConverter',
       this.image = "images/devices-hi/unknown.png";
     }
 
+    function UnusedAccount(obj) {
+      this.url = obj.url;
+      this.cisUuid = obj.id;
+      this.displayName = obj.displayName;
+      this.product = 'NA';
+      this.cssColorClass = 'device-status-red';
+      this.readableState = t('CsdmStatus.Inactive');
+      this.isOnline = false;
+      this.isUnused = true;
+      this.canDelete = true;
+      this.hasIssues = true;
+      this.diagnosticsEvents = [{
+        type: translateOrDefault('CsdmStatus.errorCodes.inactive.type', 'Account with no device'),
+        message: translateOrDefault('CsdmStatus.errorCodes.inactive.message', 'There exists an account for a ' +
+          'device, but no corresponding device or activation code. You can probably delete this account.')
+      }];
+    }
+
     function Code(obj) {
       obj.state = obj.status;
 
@@ -93,12 +111,20 @@ angular.module('Squared').service('CsdmConverter',
       return _.mapValues(data, convertHuronDevice);
     }
 
+    function convertAccounts(data) {
+      return _.mapValues(data, convertAccount);
+    }
+
     function convertDevice(data) {
       return new Device(data);
     }
 
     function convertHuronDevice(data) {
       return new HuronDevice(data);
+    }
+
+    function convertAccount(data) {
+      return new UnusedAccount(data);
     }
 
     function convertCode(data) {
@@ -299,6 +325,8 @@ angular.module('Squared').service('CsdmConverter',
       convertDevices: convertDevices,
       convertHuronDevice: convertHuronDevice,
       convertHuronDevices: convertHuronDevices,
+      convertAccount: convertAccount,
+      convertAccounts: convertAccounts
     };
 
   }

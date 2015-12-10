@@ -4,7 +4,7 @@ angular.module('Squared')
   .controller('DevicesCtrl',
 
     /* @ngInject */
-    function ($scope, $state, $translate, $templateCache, DeviceFilter, CsdmCodeService, CsdmHuronDeviceService, CsdmDeviceService, AddDeviceModal, Authinfo, AccountOrgService) {
+    function ($scope, $state, $translate, $templateCache, DeviceFilter, CsdmCodeService, CsdmUnusedAccountsService, CsdmHuronDeviceService, CsdmDeviceService, AddDeviceModal, Authinfo, AccountOrgService) {
       var vm = this;
 
       AccountOrgService.getAccount(Authinfo.getOrgId()).success(function (data) {
@@ -41,6 +41,7 @@ angular.module('Squared')
           .extend(CsdmDeviceService.getDeviceList())
           .extend(CsdmHuronDeviceService.getDeviceList())
           .extend(CsdmCodeService.getCodeList())
+          .extend(CsdmUnusedAccountsService.getAccountList())
           .values()
           .value();
         return DeviceFilter.getFilteredList(filtered);
