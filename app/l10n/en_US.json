@@ -372,7 +372,9 @@
     "user": "User",
     "users": "Users",
     "description": "An active user is defined as someone who has made or received a call using a device or has used the Spark application.  In this report you can compare the total number of registered users to the number of active users in the selected customer(s) over the {{time}}.",
-    "mostActiveDescription": "During the {{time}}, these are the most active users for {{customer}}."
+    "mostActiveDescription": "During the {{time}}, these are the most active users for {{customer}}.",
+    "customerPortalDescription": "An active user is defined as someone who has made or received a call using a device or has used the Spark application.  In this report you can compare the total number of registered users to the number of active users over the {{time}}.",
+    "customerMostActiveDescription": "The table below displays the user activity for all users.  It can be sorted by the user's name, total calls, and total activity.  Additionally, the search field "
   },
   "mediaQuality": {
     "mediaQuality": "Device Media Quality",
