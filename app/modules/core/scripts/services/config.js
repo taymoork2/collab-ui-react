@@ -630,7 +630,14 @@ angular.module('Core')
         },
 
         getFeatureToggleUrl: function () {
-          return this.locusServiceUrl.prod;
+          var locusServiceUrl = {
+            'dev': this.locusServiceUrl.prod,
+            'cfe': this.locusServiceUrl.cfe,
+            'integration': this.locusServiceUrl.prod,
+            'prod': this.locusServiceUrl.prod
+          };
+
+          return locusServiceUrl[this.getEnv()];
         },
 
         getEnrollmentServiceUrl: function () {
