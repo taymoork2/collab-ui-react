@@ -50,8 +50,6 @@
     "jquery-csv": "",
     "angular-timer": "~1.3.3",
     "humanize-duration": "~2.8.0",
-    "foundation": "~5.5.2",
-    "bootstrap-sass": "~3.3.5",
     "angular-nicescroll": "~0.0.5",
     "angularjs-toaster": "~0.4.16",
     "ng-file-upload": "~7.2.1",

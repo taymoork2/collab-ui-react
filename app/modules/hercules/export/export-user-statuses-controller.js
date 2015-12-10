@@ -41,7 +41,7 @@
               var totalIndex = index + ind;
               if (totalIndex < userStatuses.length) {
                 UiStats.updateProgress(userStatuses[totalIndex].state);
-                vm.userStatusResult.push(d.details);
+                vm.result.push(d.details);
               }
             });
 
@@ -50,7 +50,7 @@
               vm.getUsersBatch(userStatuses, index, dfd);
             } else {
               vm.exportingUserStatusReport = false;
-              dfd.resolve(vm.userStatusResult);
+              dfd.resolve(vm.result);
             }
             return false;
           });
@@ -59,12 +59,17 @@
         vm.exportCSV = function () {
           UiStats.initStats();
           vm.exportingUserStatusReport = true;
-          vm.userStatusResult = [];
+          vm.result = [];
 
           vm.loading = true;
           var serviceId = vm.selectedServiceId;
           var dfd = $.Deferred();
 
+          // Improve formatting in all versions of Excel even if it means
+          // not being 100%  CSV-valid
+          // See https://github.com/asafdav/ng-csv/issues/28
+          vm.result.push(['sep=,']);
+          vm.result.push(vm.getHeader());
           USSService.getStatuses(
             function (err, statuses) {
               //console.log("statuses before:", statuses.userStatuses);
