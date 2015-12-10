@@ -84,7 +84,7 @@
         }, function (err) {
           vm.searchingForUsers = false;
           vm.currentSearch.userSearchResults = null;
-          if (err.status === 400) {
+          if (err.status === 400 || err.status === -1) {
             vm.currentSearch.userSearchFailure = $translate.instant('helpdesk.badUserSearchInput');
           } else {
             vm.currentSearch.userSearchFailure = $translate.instant('helpdesk.unexpectedError');
