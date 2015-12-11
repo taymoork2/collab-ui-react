@@ -1,26 +1,23 @@
-<div class="active-user">
-  <div class="row header">
-    <h4 class="pull-left section-title" translate="activeUsers.activeUsers"></h4>
-  </div>
-  <hr class="title-break pull-left"/>
-  <div class="row">
-    <br>
-    <p class="report-description graph-match">{{nav.activeUserDescription}}</p>
+<cs-card id="activeUser" class="large report-box active-user">
+<article>
+  <header>
+    <h4 translate="activeUsers.activeUsers"></h4>
+  </header>
+  <section>
+    <p>{{nav.activeUserDescription}}</p>
     <div id="activeUsersdiv" class="barchart"></div>
     <div id="activeUsersRefreshDiv" class="spinner-position" ng-if="nav.isRefresh(nav.activeUsersRefresh)">
       <i class='icon icon-spinner icon-2x'></i>
     </div>
     <div class="no-data-center" ng-if="nav.isEmpty(nav.activeUsersRefresh)">
-      <h3 class="no-data"> 
+      <h3 class="no-data">
         <i class='icon icon-warning no-data-warning'></i>
         <span translate='reportsPage.noCustomerData'></span>
       </h3>
     </div>
-  </div>
-  <div ng-show="!nav.isRefresh(nav.activeUsersRefresh) && !nav.isEmpty(nav.activeUsersRefresh) && nav.displayMostActive">
-    <div class="active-table" ng-show="nav.showMostActiveUsers">
-      <h4 class="sub-section-title graph-match">{{nav.mostActiveTitle}}</h4>
-      <div class="graph-match">
+  <div class="card-section-content" ng-show="!nav.isRefresh(nav.activeUsersRefresh) && !nav.isEmpty(nav.activeUsersRefresh) && nav.displayMostActive">
+    <div ng-show="nav.showMostActiveUsers">
+      <h4 >{{nav.mostActiveTitle}}</h4>
         <p class="report-description">{{nav.mostActiveDescription}}</p>
         <table class="table table-bordered active-users-table">
           <thead>
@@ -41,9 +38,8 @@
           </tbody>
         </table>
       </div>
-    </div>
-    <div class="graph-match box-match">
-      <a class="most-active" ng-click="nav.showMostActiveUsers = !nav.showMostActiveUsers">
+    <div class="card-section-content">
+      <a  ng-click="nav.showMostActiveUsers = !nav.showMostActiveUsers; nav.resizeCards();">
         <span ng-if="!nav.showMostActiveUsers" translate="activeUsers.showActiveUsers"></span>
         <span ng-if="nav.showMostActiveUsers" translate="activeUsers.hideActiveUsers"></span>
       </a>
@@ -66,4 +62,6 @@
       </div>
     </div>
   </div>
-</div>
+  </section>
+  </article>
+</cs-card>

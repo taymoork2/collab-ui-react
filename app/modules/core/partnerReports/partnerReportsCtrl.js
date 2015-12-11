@@ -51,6 +51,53 @@
     vm.endpointDescription = "";
     vm.trend = "";
     vm.devices = "";
+    vm.resizeCards = resizeCards;
+    vm.showHideCards = showHideCards;
+    vm.activeUsers = null;
+    vm.regEndpoints = null;
+    vm.userPopulation = null;
+    vm.callMetrics = null;
+    vm.mediaQuality = null;
+
+    function resizeCards() {
+      setTimeout(function () {
+        $('.cs-card-layout').masonry('layout');
+      }, 300);
+    }
+
+    function showHideCards(filter) {
+      var engagementElems = [vm.activeUsers, vm.regEndpoints, vm.userPopulation];
+      var qualityElems = [vm.callMetrics, vm.mediaQuality];
+      if (filter === 'all') {
+        if (!vm.showEngagement) {
+          $('.cs-card-layout').prepend(engagementElems).masonry('prepended', engagementElems);
+          vm.showEngagement = true;
+        }
+        if (!vm.showQuality) {
+          $('.cs-card-layout').append(qualityElems).masonry('appended', qualityElems);
+          vm.showQuility = true;
+        }
+      } else if (filter === 'engagement') {
+        if (vm.showQuality === true) {
+          $('.cs-card-layout').masonry('remove', qualityElems);
+          vm.showQuality = false;
+        }
+        if (vm.showEngagement === false) {
+          $('.cs-card-layout').append(engagementElems).masonry('appended', engagementElems);
+          vm.showEngagement = true;
+        }
+      } else if (filter === 'quality') {
+        if (vm.showQuality === false) {
+          $('.cs-card-layout').append(qualityElems).masonry('appended', qualityElems);
+          vm.showQuality = true;
+        }
+        if (vm.showEngagement === true) {
+          $('.cs-card-layout').masonry('remove', engagementElems);
+          vm.showEngagement = false;
+        }
+      }
+      vm.resizeCards();
+    }
 
     vm.timeOptions = [{
       value: 0,
@@ -143,6 +190,7 @@
       } else {
         setAllNoData();
       }
+      vm.resizeCards();
     };
 
     init();
@@ -199,6 +247,8 @@
           isAllowedToManage: false
         };
       }
+      vm.resizeCards();
+
     }
 
     function setAllDummyData() {
@@ -229,6 +279,7 @@
       } else {
         GraphService.updateActiveUserPopulationGraph(data, activeUserPopulationChart, overallPopulation);
       }
+      vm.userPopulation = document.getElementById('userPopulation');
     }
 
     function getActiveUserReports() {
@@ -272,6 +323,7 @@
             vm.activeUserPopulationRefresh = SET;
           }
         }
+        vm.activeUsers = document.getElementById('activeUser');
         return;
       });
     }
@@ -282,6 +334,7 @@
       } else {
         GraphService.updateMediaQualityGraph(data, mediaQualityChart);
       }
+      vm.mediaQuality = document.getElementById('mediaQuality');
     }
 
     function getMediaQualityReports() {
@@ -305,6 +358,7 @@
       } else {
         DonutChartService.updateCallMetricsDonutChart(data, callMetricsDonutChart);
       }
+      vm.callMetrics = document.getElementById('callMetrics');
     }
 
     function getCallMetricsReports() {
@@ -334,6 +388,7 @@
           }
         }
       });
+      vm.regEndpoints = document.getElementById('reg-endpoints');
     }
 
     function setTimeBasedText() {

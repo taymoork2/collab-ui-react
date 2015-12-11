@@ -52,6 +52,7 @@
   color: $gray-dark;
   text-align: left;
   width: 100%;
+  background-color: transparent;
 }
 
 .adduser-input-desc {
@@ -290,9 +291,6 @@
 .add-users,
 .edit-services {
   .modal-body {
-    background-color: $brand-white;
-    margin-bottom: 0;
-    padding: 0;
     .loading {
       width: 100%;
       text-align: center;
@@ -333,8 +331,29 @@
     padding: 6px;
     background-color: $brand-warning-light;
   }
+  .tokenfield .token {
+    border: none;
+    color: $color-people-darker;
+    background-color: $color-people-lighter;
+    padding-right: 12px;
+    padding-left: 12px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 2px;
+    margin: 0;
+    // &:hover {
+    //   background-color:$color-people-base;
+    // }
+    .close {
+      color: $color-people-darker;
+      position: relative;
+      top: 1px;
+    }
+    .token-label {
+     padding: 7px 5px 5px 0px;
+    }
+  }
 }
-
 .collab-options {
   padding-bottom: 20px;
 }
@@ -367,7 +386,7 @@
     font-family: $brand-font-cisco-TT-Extra-Light;
   }
   .wizard-main-title {
-    color: $gray-darkest;
+    color: $gray-dark-1;
   }
 }
 

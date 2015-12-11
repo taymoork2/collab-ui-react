@@ -1,6 +1,4 @@
 .active-user-population {
-  position: relative;
-  padding: 0 15px;
   .percent-large {
     font-size: 25px;
     font-family: $brand-font-cisco-TT-Light;
@@ -16,24 +14,20 @@
     text-align: left;
   }
 }
-#activeUserPopulationDiv{
-  position: relative;
-  top: 2px;
-}
 #activeUserPopulationChart{
   overflow: visible !important;
-  position: relative;
-  top: -50px;
-  height: 350px;
+   position: relative;
+   top: -20px;
+   height: 350px;
+   left: 18px;
   .amcharts-chart-div{
     overflow: visible !important;
     svg {
-      top: 20px !important;
-      overflow: visible !important;
-      position: relative !important;
+     overflow: visible !important;
+     position: relative !important;
     }
-  } 
+  }
   .amcharts-balloon-div {
-    margin-top: 20px !important;
+    margin-top: 5px !important;
   }
 }

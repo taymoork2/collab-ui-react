@@ -711,15 +711,7 @@ a:active.ftwNavLink {
   white-space: pre-wrap;
 }
 
-.ftwdirgridStyle {
-  margin-top: 10px;
-  width: 550px;
-  height: 200px;
-  border: 1px solid lightgray;
-  & >:nth-child(2) {
-    overflow-x: hidden;
-  }
-}
+
 
 .syncStatusText {
   margin-left: 170px;
@@ -727,9 +719,7 @@ a:active.ftwNavLink {
   height: 30px;
 }
 
-.sync-dirsync-refresh-button {
-  margin-left: 53%;
-}
+
 
 #syncNumUsers {
   margin-left: 230px;
