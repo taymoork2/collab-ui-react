@@ -26,10 +26,12 @@
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.partnerOrgName = Authinfo.getOrgName();
     vm.licenses = $translate.instant("customerPage.licenses");
+    vm.offer = vm.currentCustomer.offer;
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
       if (result) {
         vm.licenses = $translate.instant("customerPage.userLicenses");
+        vm.offer = getAtlasStormBrandingOffer();
       }
     });
 
@@ -166,6 +168,29 @@
 
     function isOwnOrg() {
       return vm.currentCustomer.customerName === Authinfo.getOrgName();
+    }
+
+    function getAtlasStormBrandingOffer() {
+      var offerNames = [];
+      var offers = _.pluck(vm.currentCustomer.offers, 'id');
+      for (var cnt in offers) {
+        var offer = offers[cnt];
+        if (!offer) {
+          continue;
+        }
+        switch (offer) {
+        case Config.trials.message:
+          offerNames.push($translate.instant('customerPage.message'));
+          break;
+        case Config.trials.call:
+          offerNames.push($translate.instant('customerPage.call'));
+          break;
+        case Config.trials.roomSystems:
+          offerNames.push($translate.instant('customerPage.roomSystem'));
+          break;
+        }
+      }
+      return offerNames.sort().join(', ');
     }
   }
 })();
