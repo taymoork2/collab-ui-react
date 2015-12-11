@@ -293,6 +293,23 @@
   .wizard-inline-block {
     display: inline-block;
   }
+  .installStepHead {
+    margin-top: rem(15);
+    margin-bottom: rem(15);
+  }
+  .installStep {
+    margin-bottom: rem(1);
+  }
+  .installStepLast {
+    margin-bottom: rem(25);
+  }
+  .installStepWarning {
+    margin-bottom: rem(25);
+    .alert-text {
+      color: $color-alerts-base;
+      font-weight: bold;
+    }
+  }
 }
 
 .service-setup-container {

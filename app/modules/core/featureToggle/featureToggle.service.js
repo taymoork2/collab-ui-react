@@ -148,7 +148,7 @@
       var deferred = $q.defer();
       Orgservice.getOrgCacheOption(function (data, status) {
         if (data.success) {
-          deferred.resolve(data.dirsyncEnabled && Authinfo.getOrgId() === '151d02da-33a2-45aa-9467-bdaebbaeee76');
+          deferred.resolve(data.dirsyncEnabled);
         } else {
           deferred.reject(status);
         }
