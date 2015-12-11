@@ -59,10 +59,8 @@
         height: 42px;
         max-height: 42px;
         border-radius: 0px 0px 3px 3px;
-        .badge.warning {
-          border-radius: 2px;
-          padding-bottom: 0;
-          margin-top: 10px;
+        .badge {
+          margin: 0;
         }
         .icon-tools {
           font-size: 0.875em;

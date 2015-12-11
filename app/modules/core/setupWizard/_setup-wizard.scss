@@ -33,11 +33,6 @@
       line-height: 24px;
       font-size: 14px;
     }
-    .column-paid,
-    .column-mtg {
-      background: $gray-light-4;
-      font-size: 14px;
-    }
     .column-mtg {
       padding-bottom: 0;
     }
@@ -52,10 +47,14 @@
     }
     &.row-licenses {
       flex: 1;
-      .column-trial {
+      .columns {
         padding: 0;
+        background: $gray-light-4;
+        font-size: 14px;
       }
-      .license-column {
+      .column-trial,
+      .column-paid,
+      .column-mtg {
         padding: 1.5rem;
       }
     }
