@@ -167,7 +167,10 @@
         for (var i = 7; i >= 1; i--) {
           returnGraph.push({
             modifiedDate: moment().tz(timezone).subtract(i, 'day').format(dayFormat),
-            balloon: true
+            balloon: true,
+            groupRooms: 0,
+            oneToOneRooms: 0,
+            avgRooms: 0
           });
         }
       } else if (filter.value === 1) {
@@ -186,14 +189,20 @@
         for (var x = 3; x >= 0; x--) {
           returnGraph.push({
             modifiedDate: moment().tz(timezone).startOf('week').subtract(dayOffset + (x * 7), 'day').format(dayFormat),
-            balloon: true
+            balloon: true,
+            groupRooms: 0,
+            oneToOneRooms: 0,
+            avgRooms: 0
           });
         }
       } else {
         for (var y = 2; y >= 0; y--) {
           returnGraph.push({
             modifiedDate: moment().tz(timezone).subtract(y, 'month').format(monthFormat),
-            balloon: true
+            balloon: true,
+            groupRooms: 0,
+            oneToOneRooms: 0,
+            avgRooms: 0
           });
         }
       }
