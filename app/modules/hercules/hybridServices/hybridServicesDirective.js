@@ -10,6 +10,10 @@ angular
       $scope.extensionEntitlements = ['squared-fusion-cal', 'squared-fusion-uc'];
 
       var hasEntitlement = function (entitlement) {
+        if (!angular.isDefined($scope.currentUser)) {
+          return false;
+        }
+
         return $scope.currentUser.entitlements && $scope.currentUser.entitlements.indexOf(entitlement) > -1;
       };
 
@@ -49,16 +53,18 @@ angular
 
       // Periodically update the user statuses from USS
       function updateStatusForUser() {
-        USSService.getStatusesForUser($scope.currentUser.id, function (err, activationStatus) {
-          if (activationStatus && activationStatus.userStatuses) {
-            _.forEach($scope.extensions, function (extension) {
-              extension.status = _.find(activationStatus.userStatuses, function (status) {
-                return extension.id === status.serviceId;
+        if (angular.isDefined($scope.currentUser)) {
+          USSService.getStatusesForUser($scope.currentUser.id, function (err, activationStatus) {
+            if (activationStatus && activationStatus.userStatuses) {
+              _.forEach($scope.extensions, function (extension) {
+                extension.status = _.find(activationStatus.userStatuses, function (status) {
+                  return extension.id === status.serviceId;
+                });
               });
-            });
-          }
-          delayedUpdateStatusForUser();
-        });
+            }
+            delayedUpdateStatusForUser();
+          });
+        }
       }
 
       function delayedUpdateStatusForUser() {
@@ -92,7 +98,7 @@ angular
         restrict: 'E',
         scope: false,
         controller: 'HybridServicesCtrl',
-        templateUrl: 'modules/hercules/userPreview/hybridServices.tpl.html'
+        templateUrl: 'modules/hercules/hybridServices/hybridServices.tpl.html'
       };
     }
   ]);
