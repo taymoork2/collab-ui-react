@@ -1521,7 +1521,7 @@ angular
             serviceType: "c_mgmt"
           }
         })
-        .state('cluster-details-new', {
+        .state('cluster-details', {
           parent: 'sidepanel',
           views: {
             'sidepanel@': {
@@ -1529,7 +1529,7 @@ angular
               controller: 'ExpresswayServiceClusterController',
               templateUrl: 'modules/hercules/expressway-service/cluster-details.html'
             },
-            'header@cluster-details-new': {
+            'header@cluster-details': {
               templateUrl: 'modules/hercules/expressway-service/cluster-header.html'
             }
           },
@@ -1541,7 +1541,7 @@ angular
             serviceType: undefined
           }
         })
-        .state('cluster-details-new.cluster-settings', {
+        .state('cluster-details.cluster-settings', {
           templateUrl: 'modules/hercules/expressway-service/cluster-settings.html',
           controller: 'ExpresswayClusterSettingsController',
           controllerAs: 'expresswayClusterSettingsCtrl',
@@ -1553,7 +1553,7 @@ angular
             serviceType: null
           }
         })
-        .state('cluster-details-new.alarm-details', {
+        .state('cluster-details.alarm-details', {
           templateUrl: 'modules/hercules/expressway-service/alarm-details.html',
           controller: 'AlarmController',
           controllerAs: 'alarmCtrl',
@@ -1565,7 +1565,7 @@ angular
             host: null
           }
         })
-        .state('cluster-details-new.host-details', {
+        .state('cluster-details.host-details', {
           templateUrl: 'modules/hercules/expressway-service/host-details.html',
           controller: 'ExpresswayHostDetailsController',
           controllerAs: 'hostDetailsCtrl',
