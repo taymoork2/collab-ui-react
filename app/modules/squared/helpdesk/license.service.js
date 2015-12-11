@@ -16,7 +16,7 @@
         return deferred.promise;
       }
       return $http
-        .get(urlBase + 'helpdesk/licenses/' + encodeURIComponent(orgId) + "/?collapse=false" + (includeUsage ? '&includeUsage=true' : ''))
+        .get(urlBase + 'helpdesk/licenses/' + encodeURIComponent(orgId) + (includeUsage ? '?includeUsage=true' : ''))
         .then(extractData);
     }
 
