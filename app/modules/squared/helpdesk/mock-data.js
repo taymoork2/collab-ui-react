@@ -61,7 +61,7 @@
         "squared-fusion-ec",
         "ciscouc",
         "cloudMeetings",
-        "spark-room-system"
+        "spark-device-mgmt"
       ],
       "contact": "tywin.lannister@kingslanding.com",
       "domains": ["kingslanding.com", "kingslanding2.com"],
@@ -221,8 +221,27 @@
       "name": "Messaging",
       "status": "ACTIVE",
       "volume": 100,
-      "isTrial": false,
-      "usage": 10
+      "isTrial": true,
+      "usage": 10,
+      "trialExpiresInDays": 200
+    }, {
+      "offerCode": "MS",
+      "type": "MESSAGING",
+      "name": "Messaging",
+      "status": "SUSPENDED",
+      "volume": 1000,
+      "isTrial": true,
+      "usage": 300,
+      "trialExpiresInDays": 0
+    }, {
+      "offerCode": "MS",
+      "type": "MESSAGING",
+      "name": "Messaging",
+      "status": "ACTIVE",
+      "volume": 50,
+      "isTrial": true,
+      "usage": 10,
+      "trialExpiresInDays": 100
     }, {
       "offerCode": "MC",
       "type": "CONFERENCING",
@@ -239,6 +258,16 @@
       "name": "Training Center",
       "status": "ACTIVE",
       "volume": 250,
+      "isTrial": false,
+      "usage": 250,
+      "capacity": 25,
+      "siteUrl": "mock.webex.com"
+    }, {
+      "offerCode": "TC",
+      "type": "CONFERENCING",
+      "name": "Training Center",
+      "status": "PENDING",
+      "volume": 1000,
       "isTrial": false,
       "usage": 250,
       "capacity": 25,
@@ -275,7 +304,16 @@
       "name": "Shared Devices",
       "status": "ACTIVE",
       "volume": 50,
-      "isTrial": false
+      "isTrial": false,
+      "usage": 40
+    }, {
+      "offerCode": "SD",
+      "type": "SHARED_DEVICES",
+      "name": "Shared Devices",
+      "status": "SUSPENDED",
+      "volume": 100,
+      "isTrial": false,
+      "usage": 0
     }],
     hybridServices: [{
       "id": "squared-fusion-mgmt",

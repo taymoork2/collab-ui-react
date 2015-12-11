@@ -3053,17 +3053,17 @@
     "delegatedAdministration": "manages {{numManages}} organizations",
     "licenses": "Licenses",
     "licenseDisplayNames": {
-      "MC": "{{volume}} x Meeting Center {{capacity}}",
-      "TC": "{{volume}} x Training Center {{capacity}}",
-      "MS": "{{volume}} x Standard Team Rooms",
-      "CF": "{{volume}} x 25 Party Meetings",
-      "EE": "{{volume}} x Enterprise Edition {{capacity}}",
-      "SC": "{{volume}} x Support Center {{capacity}}",
-      "EC": "{{volume}} x Event Center {{capacity}}",
-      "CO": "{{volume}} x Advanced Spark Call",
-      "CMR": "{{volume}} x Collaboration Meeting Rooms",
-      "SD": "{{volume}} x Room Devices",
-      "ST": "{{volume}} x Storage"
+      "MC": "Meeting Center {{capacity}}",
+      "TC": "Training Center {{capacity}}",
+      "MS": "Standard Team Rooms",
+      "CF": "25 Party Meetings",
+      "EE": "Enterprise Edition {{capacity}}",
+      "SC": "Support Center {{capacity}}",
+      "EC": "Event Center {{capacity}}",
+      "CO": "Advanced Spark Call",
+      "CMR": "Collaboration Meeting Rooms",
+      "SD": "Room Devices",
+      "ST": "Storage"
     },
     "trial": "Trial",
     "adminUsers": "Administrators",
@@ -3071,6 +3071,7 @@
     "hideAllAdminUsers": "Hide administrators",
     "numDaysLeft": "{{days}} day(s) left",
     "licenseStatus": {
+      "active": "Active",
       "expired": "Expired",
       "cancelled": "Cancelled",
       "suspended": "Suspended",
@@ -3093,6 +3094,7 @@
     },
     "verification": "Verification",
     "resend": "Re-send",
-    "sendCode": "Send Code"
+    "sendCode": "Send Code",
+    "more": "More"
   }
 }
