@@ -98,7 +98,7 @@ $features-header-height : 83px;
     width : 2rem;
     border-radius: 50%;
     background-color: $gray-lightest;
-    @include vr-spacing(pt, 0.5);
+    @include vr-spacing(pt, 0.3);
     padding-left: 0.4rem;
   }
 }
