@@ -46,6 +46,8 @@ describe('Controller: Partner Reports', function () {
 
   beforeEach(module('Core'));
 
+  beforeEach(module('Huron'));
+
   describe('PartnerReportCtrl - Expected Responses', function () {
     beforeEach(inject(function ($rootScope, $controller, _$q_, _$translate_, _PartnerReportService_, _GraphService_, _DonutChartService_, _DummyReportService_) {
       $scope = $rootScope.$new();

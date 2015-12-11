@@ -362,6 +362,7 @@
     "activeUsers": "Active Users",
     "overallActiveUserGraphError": "There was an error while loading detailed active user data.",
     "activeUserTableError": "There was an error while loading most active user data for {{customer}}.",
+    "mostActiveError": "There was an error while loading the data for Most Active Users.",
     "calls": "Calls",
     "customer": "Customer",
     "hideActiveUsers": "Hide Most Active Users",
@@ -375,6 +376,16 @@
     "mostActiveDescription": "During the {{time}}, these are the most active users for {{customer}}.",
     "customerPortalDescription": "An active user is defined as someone who has made or received a call using a device or has used the Spark application.  In this report you can compare the total number of registered users to the number of active users over the {{time}}.",
     "customerMostActiveDescription": "The table below displays the user activity for all users.  It can be sorted by the user's name, total calls, and total activity.  Additionally, the search field "
+  },
+  "avgRooms": {
+    "avgRooms": "Total Rooms",
+    "avgRoomsDescription": "The graph depicts the total number of spark rooms used for messaging and/or file sharing during the {{time}}.  Hover over the columns for a breakdown of the total number of group rooms and 1:1 rooms as well as the average number of rooms per user.",
+    "groupError": "There was an error while loading the Group Rooms data.",
+    "oneToOneError": "There was an error while loading the One to One Rooms data.",
+    "avgError": "There was an error while loading the Average Rooms per Users data.",
+    "group": "Total Group Rooms",
+    "oneToOne": "Total 1:1 Rooms",
+    "avgTotal": "Avg Rooms per User"
   },
   "mediaQuality": {
     "mediaQuality": "Device Media Quality",
@@ -886,7 +897,7 @@
     "noDevices": "No devices found...",
     "licenseWarningTitle": "License",
     "licenseWarningHeader": "There is a problem with the license for this service.",
-    "licenseSuspendedWarning": "Your cloudberry license is suspended."
+    "licenseSuspendedWarning": "Your room systems license is suspended."
   },
   "hercules": {
     "page_title": "Connector Management",
@@ -973,12 +984,12 @@
       "error": "Error"
     },
     "serviceNames": {
-      "squared-fusion-uc": "Call Service",
+      "squared-fusion-uc": "Call Service: Aware",
       "squared-fusion-uc.full": "Call Service Aware",
       "squared-fusion-cal": "Calendar Service",
       "squared-fusion-media": "Media Service",
       "contact-center-context": "Context Center Service",
-      "squared-fusion-ec": "Call Service Connect",
+      "squared-fusion-ec": "Call Service: Connect",
       "squared-fusion-mgmt": "Expressway Management Service"
     },
     "serviceDescriptions": {
@@ -1190,7 +1201,9 @@
     "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Download </a> and Install the Cisco Cloud Connector in your enterprise.",
     "installStep2": "2. Configure the Active Directory synchronization agreement.",
     "installStep3": "3. Test the synchronization agreement.",
-    "nextSteps": "Press the Next button when you're ready to verify that identity information is being synchronized.",
+    "installWarning": "Warning:",
+    "installWarningDescription": "If you have already added users manually, performing an Active Directory synchronization may cause previously added users to be removed. Please check the Cisco Cloud Connector Dry Run Reports to verify that all expected users are present.",
+    "nextSteps": "Press Next when you're ready to verify that identity information is being synchronized.",
     "results": "Results",
     "syncNotConfigured": "Directory Sync is not enabled. See previous step for setup instructions.",
     "syncAgreementText": "users in sync agreement",
@@ -1503,6 +1516,13 @@
       "empar": "Empar"
     },
     "sayMessageHelp": "Select the desired language and voice which is used to speak the phrase to the caller. Say message is optional. If no message is entered, the conversation will continue to the next step.",
+    "errorReadCMI": "Unable to load assigned phone numbers",
+    "errorAddCMI": "Unable to assign phone number {{phoneNumber}}: {{statusText}} ({{status}}).",
+    "errorRemoveCMI": "Unable to remove assigned phone number(s).",
+    "errorResetCMI": "Unable to reset to previously assigned phone number(s).",
+    "errorFailedToAssignNumbers": "Unable to assign number(s): {{phoneNumbers}}",
+    "errorNumbersCMIOnly": "Number(s) are assigned but not in Auto Attendant: {{phoneNumbers}}",
+    "errorNumbersCESOnly": "Number(s) are in Auto Attendant but are not assigned: {{phoneNumbers}}",
     "errorInvalidTemplate": "Failed to load template: {{template}}.",
     "errorInvalidTemplateDef": "Invalid template definition for template: {{template}}."
   },
@@ -1732,7 +1752,6 @@
     "customerInformation": "Customer Information",
     "termsOfTrial": "Terms of Trial",
     "trialServices": "Trial Services",
-    "sparkRoomSystem": "Spark Room System",
     "trialButton": "Add Trial Customer",
     "dialogTitle": "Add New Trial",
     "customerName": "Company Name",
@@ -1749,8 +1768,6 @@
     "errGetPhoneNumberCount": "Failed to retrieve phone number count.",
     "invalidTrialLicenseCount": "Number of Licenses should be greater than 0 and less than 1000.",
     "individualUserServices": "Individual User Services",
-    "roomSystems": "Room Systems",
-    "roomSystem": "Room System",
     "deviceBasedServices": "Device-based Services",
     "call": "Call"
   },
@@ -1789,8 +1806,8 @@
     "setupLater": "No thanks",
     "setupNow": "Yes, setup the services",
     "squareducError": "Created trial, but unable to provision Spark UC",
-    "addSuccess": "A trial was successfully started for {{customerName}} with {{licenseCount}} licenses for {{licenseDuration}} days.",
-    "editSuccess": "You have successfully edited a trial for {{customerName}} with {{licenseCount}} licenses for {{licenseDuration}} days."
+    "addSuccess": "A trial was successfully started for {{customerName}}.",
+    "editSuccess": "You have successfully edited a trial for {{customerName}}."
   },
   "trials": {
     "collab": "Standard Team Rooms + 25 Party Meetings",
@@ -1799,7 +1816,8 @@
     "meet": "Meeting and WebEx",
     "message": "Message",
     "meeting": "Meeting and WebEx",
-    "call": "Call"
+    "call": "Call",
+    "roomSystem": "Spark Room System"
   },
   "status": {
     "noResults": "No results available.",
@@ -1837,6 +1855,7 @@
     "csvHeaderMessagingEntitlements": "Messaging Entitlements",
     "csvHeaderConferencingEntitlements": "Conferencing Entitlements",
     "csvHeaderCommunicationsEntitlements": "Communications Entitlements",
+    "csvHeaderRoomSystemsEntitlements": "Room Systems Entitlements",
     "custDetail": "Customer Detail",
     "contactName": "Contact Name",
     "contactEmail": "Email",
@@ -1848,6 +1867,8 @@
     "trialTerms": "Terms of Trial",
     "trialOverview": "Trial",
     "licenses": "Number of Licenses",
+    "userLicenses": "Number of User Licenses",
+    "deviceBasedLicenses": "Number of Device-based Licenses",
     "duration": "Duration",
     "days": "Days",
     "dayTrial": "Day Trial",
@@ -1864,7 +1885,11 @@
     "partnerLogo": "Partner Logo",
     "logoOverride": "Customer Logo Override",
     "allowCustomerLogo": "Enable Customer Logo for {{customer}}",
-    "myOrganization": "My Organization"
+    "myOrganization": "My Organization",
+    "message": "Message",
+    "meeting": "Meeting 25 Party",
+    "call": "Call",
+    "roomSystem": "Spark Room System"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"

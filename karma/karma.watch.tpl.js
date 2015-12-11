@@ -23,7 +23,7 @@ module.exports = function (karma) {
     plugins: [
       'karma-jasmine',
       'karma-sinon',
-      'karma-phantomjs-launcher'
+      'karma-phantomjs2-launcher'
     ],
 
     /**
@@ -51,8 +51,8 @@ module.exports = function (karma) {
     /**
      * The list of browsers to launch to test on. This includes only "Firefox" by
      * default, but other browser names include:
-     * Chrome, ChromeCanary, Firefox, Opera, Safari, PhantomJS
+     * Chrome, ChromeCanary, Firefox, Opera, Safari, PhantomJS2
      */
-     browsers: [process.env.atlas_karma_browser || 'PhantomJS'],
+     browsers: [process.env.atlas_karma_browser || 'PhantomJS2'],
   });
 };

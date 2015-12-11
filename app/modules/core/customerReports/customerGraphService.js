@@ -50,11 +50,16 @@
     var usersTitle = $translate.instant('activeUsers.users');
     var activeUsersTitle = $translate.instant('activeUsers.activeUsers');
 
+    // variables for the average rooms section
+    var avgRoomsdiv = 'avgRoomsdiv';
+    var avgRoomsBalloon = '<span class="graph-text">' + $translate.instant('avgRooms.group') + ': [[groupRooms]]<br>' + $translate.instant('avgRooms.oneToOne') + ': [[oneToOneRooms]]<br>' + $translate.instant('avgRooms.avgTotal') + ': [[avgRooms]]%</span>';
+
     return {
-      setActiveUsersGraph: setActiveUsersGraph
+      setActiveUsersGraph: setActiveUsersGraph,
+      setAvgRoomsGraph: setAvgRoomsGraph
     };
 
-    function createGraph(data, div, graphs, valueAxes, catAxis, categoryField, legend, numFormat, chartCursor, startDuration) {
+    function createGraph(data, div, graphs, valueAxes, catAxis, categoryField, legend, numFormat, startDuration) {
       var chartData = {
         'startDuration': startDuration,
         'startEffect': 'easeOutSine',
@@ -99,10 +104,6 @@
       }
       if (angular.isDefined(numFormat) && numFormat !== null) {
         chartData.numberFormatter = numFormat;
-      }
-
-      if (angular.isDefined(chartCursor) && chartCursor !== null) {
-        chartData.chartCursor = chartCursor;
       }
 
       return AmCharts.makeChart(div, chartData);
@@ -159,7 +160,7 @@
     function setActiveUsersGraph(data, activeUsersChart) {
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
-      } else if (activeUsersChart !== null) {
+      } else if (activeUsersChart !== null && angular.isDefined(activeUsersChart)) {
         var startDuration = 1;
         if (data[0].colorOne === Config.chartColors.dummyGrayLight) {
           startDuration = 0;
@@ -176,5 +177,77 @@
       }
     }
 
+    function setAvgRoomsGraph(data, avgRoomsChart) {
+      if (data === null || data === 'undefined' || data.length === 0) {
+        return;
+      } else if (avgRoomsChart !== null && angular.isDefined(avgRoomsChart)) {
+        var startDuration = 1;
+        if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
+          startDuration = 0;
+        }
+
+        avgRoomsChart.dataProvider = data;
+        avgRoomsChart.graphs = avgRoomsGraphs(data);
+        avgRoomsChart.startDuration = startDuration;
+        avgRoomsChart.validateData();
+      } else {
+        avgRoomsChart = createAvgRoomsGraph(data);
+      }
+      return avgRoomsChart;
+    }
+
+    function createAvgRoomsGraph(data) {
+      if (data.length === 0) {
+        return;
+      }
+
+      var graphs = avgRoomsGraphs(data);
+      var catAxis = angular.copy(axis);
+      catAxis.gridPosition = 'start';
+
+      var valueAxes = [angular.copy(axis)];
+      valueAxes[0].totalColor = Config.chartColors.brandWhite;
+      valueAxes[0].stackType = 'regular';
+      valueAxes[0].integersOnly = true;
+      valueAxes[0].minimum = 0;
+
+      var legend = angular.copy(legendBase);
+      legend.reversedOrder = true;
+
+      var startDuration = 1;
+      if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
+        startDuration = 0;
+      }
+
+      var numFormat = angular.copy(numFormatBase);
+      return createGraph(data, avgRoomsdiv, graphs, valueAxes, catAxis, 'modifiedDate', legend, numFormat, startDuration);
+    }
+
+    function avgRoomsGraphs(data) {
+      var titles = ['avgRooms.oneToOne', 'avgRooms.group'];
+      var values = ['oneToOneRooms', 'groupRooms'];
+      var colors = [Config.chartColors.primaryColorDarker, Config.chartColors.primaryColorLight];
+      if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
+        colors = [data[0].colorOne, data[0].colorTwo];
+      }
+      var graphs = [];
+
+      for (var i = 0; i < values.length; i++) {
+        graphs.push(angular.copy(columnBase));
+        graphs[i].title = $translate.instant(titles[i]);
+        graphs[i].fillColors = colors[i];
+        graphs[i].colorField = colors[i];
+        graphs[i].valueField = values[i];
+        graphs[i].fontSize = 14;
+        graphs[i].legendColor = colors[i];
+        graphs[i].showBalloon = data[0].balloon;
+        graphs[i].balloonText = avgRoomsBalloon;
+        if (i) {
+          graphs[i].clustered = false;
+        }
+      }
+
+      return graphs;
+    }
   }
 })();

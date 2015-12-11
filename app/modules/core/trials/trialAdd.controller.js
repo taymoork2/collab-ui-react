@@ -155,7 +155,7 @@
       type: 'checkbox',
       className: "columns medium-5",
       templateOptions: {
-        label: $translate.instant('partnerHomePage.roomSystem'),
+        label: $translate.instant('trials.roomSystem'),
         id: 'trialRoomSystem',
         class: 'columns medium-10',
       },
@@ -373,9 +373,7 @@
           vm.startTrialButtonLoad = false;
 
           var successMessage = [$translate.instant('trialModal.addSuccess', {
-            customerName: vm.details.customerName,
-            licenseCount: vm.details.licenseCount,
-            licenseDuration: vm.details.licenseDuration
+            customerName: vm.details.customerName
           })];
           Notification.notify(successMessage, 'success');
 

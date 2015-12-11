@@ -49,7 +49,7 @@
       <div class="row">
         <div class="columns medium-offset-1 medium-11">
           <div class="row">
-            <cs-checkbox class="columns medium-5" ckid="trialRoomSystemsChecked" ng-click="trial.roomSystemsChecked()" ng-model="trial.model.roomSystemsEnabled" label="{{'partnerHomePage.roomSystem' | translate}}"></cs-checkbox>
+            <cs-checkbox class="columns medium-5" ckid="trialRoomSystemsChecked" ng-click="trial.roomSystemsChecked()" ng-model="trial.model.roomSystemsEnabled" label="{{'trials.roomSystem' | translate}}"></cs-checkbox>
             <div class="columns medium-5 end">
               <cs-select id="trialRoomSystemsAmount" ng-model="trial.model.roomSystems" options="trial.roomSystemOptions" placeholder="0" is-disabled="!trial.model.roomSystemsEnabled" secondary-label="{{::'common.devices' | translate}}">
               </cs-select>
@@ -83,11 +83,11 @@
       <button id="cancelTrialButton" class="btn" ng-click="$dismiss()">
         <span translate="partnerHomePage.cancel"></span>
       </button>
-      <button id="saveUpdateButton" cs-btn loading="trial.saveUpdateButtonLoad" class="btn btn--primary" ng-click="trialForm.$setPristine(true); trial.clickUpdateButton();" ng-disabled="trialForm.$invalid">
+      <button id="saveUpdateButton" cs-btn loading="trial.saveUpdateButtonLoad" class="btn btn--primary" ng-click="trialForm.$setPristine(true); trial.clickUpdateButton();" ng-disabled="trialForm.$pristine || trialForm.$invalid">
         <span ng-if="trial.disableSquaredUCCheckBox || !trial.isSquaredUCEnabled()" translate="common.save"></span>
         <span ng-if="!trial.disableSquaredUCCheckBox && trial.isSquaredUCEnabled()">
           <span cr-feature-toggle feature-show="pstnSetup" translate="common.save"></span>
-        <span cr-feature-toggle feature-hide="pstnSetup" translate="common.next"></span>
+          <span cr-feature-toggle feature-hide="pstnSetup" translate="common.next"></span>
         </span>
       </button>
     </div>

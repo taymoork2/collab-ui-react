@@ -11,6 +11,7 @@ describe('Controller: Dummy Customer Reports', function () {
   }];
   var dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
   var activeUser = angular.copy(dummyData.activeUser);
+  var avgRooms = angular.copy(dummyData.avgRooms);
 
   var updateDates = function (data, filter) {
     var dayFormat = "MMM DD";
@@ -46,6 +47,16 @@ describe('Controller: Dummy Customer Reports', function () {
       expect(DummyCustomerReportService.dummyActiveUserData(timeFilter[0])).toEqual(activeUser.one);
       expect(DummyCustomerReportService.dummyActiveUserData(timeFilter[1])).toEqual(activeUser.two);
       expect(DummyCustomerReportService.dummyActiveUserData(timeFilter[2])).toEqual(activeUser.three);
+    });
+
+    it('dummyAvgRoomData should return the expected responses', function () {
+      avgRooms.one = updateDates(avgRooms.one, timeFilter[0]);
+      avgRooms.two = updateDates(avgRooms.two, timeFilter[1]);
+      avgRooms.three = updateDates(avgRooms.three, timeFilter[2]);
+
+      expect(DummyCustomerReportService.dummyAvgRoomData(timeFilter[0])).toEqual(avgRooms.one);
+      expect(DummyCustomerReportService.dummyAvgRoomData(timeFilter[1])).toEqual(avgRooms.two);
+      expect(DummyCustomerReportService.dummyAvgRoomData(timeFilter[2])).toEqual(avgRooms.three);
     });
   });
 });

@@ -1,12 +1,13 @@
 @import 'activeUsers/_active-users';
+@import 'avgRooms/_avg-rooms';
 
 .customer-report-filter {
   width: rem-calc(250);
 }
 .customer-reports {
   .report-card {
-    padding-left: rem-calc(30);
-    padding-right: rem-calc(30);
+    padding-left: rem-calc(15);
+    padding-right: rem-calc(15);
     article {
       min-height: vr-adjust(570);
       min-width: rem-calc(650);
@@ -22,7 +23,10 @@
       margin: 0;
     }
     .report-description {
-      padding: 0.95238rem;
+      padding-top: 0.95238rem;
+      padding-bottom: 0.95238rem;
+      position: relative;
+      z-index: 100;
     }
     .barchart {
       font-size: rem-calc(11);
@@ -31,9 +35,23 @@
       margin-left: auto;
       margin-right: auto;
       z-index: 50;
+      overflow: visible !important;
+      .amcharts-chart-div{
+        overflow: visible !important;
+        svg {
+          overflow: visible !important;
+        }
+      }
     }
     .amExportButton {
       top: rem-calc(30);
+    }
+    .graph-text {
+      font-family: $brand-font-cisco-TT-Regular;
+      font-size: rem-calc(15);
+      color: $gray-darkest;
+      text-align: left;
+      float: left;
     }
     .spinner-position {
       position: absolute;
@@ -56,6 +74,7 @@
       position: absolute;
       z-index: 100;
       height: 0;
+      left: 0;
       top: rem-calc(235);
       width: 100%;
       .no-data {

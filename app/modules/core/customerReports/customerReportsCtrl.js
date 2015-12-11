@@ -6,7 +6,7 @@
     .controller('CustomerReportsCtrl', CustomerReportsCtrl);
 
   /* @ngInject */
-  function CustomerReportsCtrl($scope, $stateParams, $q, $log, $timeout, $translate, Log, Authinfo, Config, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, Userservice, WebExUtilsFact, Storage) {
+  function CustomerReportsCtrl($scope, $stateParams, $q, $timeout, $translate, Log, Authinfo, Config, CustomerReportService, DummyCustomerReportService, CustomerGraphService, WebexReportService, Userservice, WebExUtilsFact, Storage) {
     var vm = this;
     var ABORT = 'ABORT';
     var REFRESH = 'refresh';
@@ -28,6 +28,11 @@
     vm.activeUserCurrentPage = 0;
     vm.activeUserPredicate = activeUsersSort[2];
     vm.activeButton = [1, 2, 3];
+
+    var avgRoomsChart = null;
+    vm.avgRoomTitle = "";
+    vm.avgRoomsDescription = "";
+    vm.avgRoomStatus = REFRESH;
 
     vm.headerTabs = [{
       title: $translate.instant('reportsPage.sparkReports'),
@@ -106,9 +111,10 @@
       setFilterBasedText();
       $timeout(function () {
         setDummyData();
-      }, 30);
 
-      setActiveUserData();
+        setActiveUserData();
+        setAvgRoomData();
+      }, 30);
     }
 
     function setFilterBasedText() {
@@ -119,6 +125,10 @@
       vm.mostActiveTitle = $translate.instant("activeUsers.mostActiveUsers", {
         time: vm.timeSelected.label
       });
+
+      vm.avgRoomsDescription = $translate.instant("avgRooms.avgRoomsDescription", {
+        time: vm.timeSelected.description
+      });
     }
 
     function setDummyData() {
@@ -127,20 +137,27 @@
       if (tempActiveUserChart !== null && angular.isDefined(tempActiveUserChart)) {
         activeUsersChart = tempActiveUserChart;
       }
+
+      var avgRoomData = DummyCustomerReportService.dummyAvgRoomData(vm.timeSelected);
+      var tempAvgRoomsChart = CustomerGraphService.setAvgRoomsGraph(avgRoomData, avgRoomsChart);
+      if (tempAvgRoomsChart !== null && angular.isDefined(tempAvgRoomsChart)) {
+        avgRoomsChart = tempAvgRoomsChart;
+      }
     }
 
     function timeUpdate() {
       vm.activeUserStatus = REFRESH;
+      vm.avgRoomStatus = REFRESH;
 
       setFilterBasedText();
       setDummyData();
 
       setActiveUserData();
+      setAvgRoomData();
     }
 
     function setActiveUserData() {
       CustomerReportService.getActiveUserData(vm.timeSelected).then(function (response) {
-        window.console.log(response);
         if (response === ABORT) {
           return;
         } else if (response.activeUserGraph.length === 0) {
@@ -148,6 +165,22 @@
         } else {
           // TODO: add data handling to update the active user graph and table with the data in response
           vm.activeUserStatus = SET;
+        }
+      });
+    }
+
+    function setAvgRoomData() {
+      CustomerReportService.getAvgRoomData(vm.timeSelected).then(function (response) {
+        if (response === ABORT) {
+          return;
+        } else if (response.length === 0) {
+          vm.avgRoomStatus = EMPTY;
+        } else {
+          var tempAvgRoomsChart = CustomerGraphService.setAvgRoomsGraph(response, avgRoomsChart);
+          if (tempAvgRoomsChart !== null && angular.isDefined(tempAvgRoomsChart)) {
+            avgRoomsChart = tempAvgRoomsChart;
+          }
+          vm.avgRoomStatus = SET;
         }
       });
     }
@@ -252,7 +285,7 @@
               "storageReportsSiteUrl=" + storageReportsSiteUrl + "\n" +
               "storageReportsSiteUrlIndex=" + storageReportsSiteUrlIndex + "\n" +
               "webexSelected=" + webexSelected;
-            $log.log(logMsg);
+            Log.debug(logMsg);
 
             $scope.webexSelected = webexSelected;
             $scope.updateWebexReports();
@@ -284,7 +317,7 @@
       var logMsg = "updateWebexReports(): " + "\n" +
         "scopeWebexSelected=" + scopeWebexSelected + "\n" +
         "storageReportsSiteUrl=" + storageReportsSiteUrl;
-      $log.log(logMsg);
+      Log.debug(logMsg);
 
       $scope.webexReportsObject = WebexReportService.initReportsObject(scopeWebexSelected);
       $scope.infoCardObj = $scope.webexReportsObject.infoCardObj;
