@@ -19,6 +19,7 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
     return $http.get(url);
   };
 
+
   auth.authorize = function (token) {
     var authorizeUrl = Config.getAdminServiceUrl();
     var $http = $injector.get('$http');
@@ -46,12 +47,16 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
     //the "isConfigurable" flag in objects that appear in the /services API response.
     var getAuthData = function () {
       var result;
+      // A flag indicates whether exception/error if any happened during Msgr service call
+      var inMsgrServiceCall = false; 
+
       return $http.get(authUrl).then(function (authResponse) {
 
           //We'll need to explicitly use values from the response instead of
           //using Authinfo, since Authinfo.initialize() hasn't been called yet
 
           result = angular.copy(authResponse.data);
+          Log.info('userauthinfo result:' + result); 
 
           //Figure out whether this user is allowed to access the /services API
           var doServicesRequest = (result.roles && _.isArray(result.roles)) ?
@@ -73,7 +78,7 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
 
           //If we received data from the /services API (not null)...
           if (servicesResponse) {
-
+      
             //Replace the value of the "services" field in the /userauthinfo API response
             //with the related/more detailed data provided by the /services API
             result.services = angular.copy(servicesResponse.data.entitlements);
@@ -97,10 +102,44 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
               return service;
             });
           }
+          
+          // A temp workaround to bring Messenger Service Tab back with webex-messenger service/entitlemetn removed from backend.
+          // Better put the config in common file, just duplicate once here since it's temp workaround.  
+          var msgrServiceApi = '/admin-service/messenger/admin/api/v1/orgs/' + result.orgId + '/cisync/';
+          var msgrServiceUrl = 'https://msgr-admin.webexconnect.com:443' +  msgrServiceApi;
+       
+          inMsgrServiceCall = true;
+          return $http.get(msgrServiceUrl);
 
-          return result;
+        })
+        .then(function (msgrResponse) {
+
+          var isMsgrOrg = msgrResponse.data && msgrResponse.data.orgName && msgrResponse.data.orgID;
+          if(isMsgrOrg)
+          {
+            // Better get from CI or backend, hard code now since it's workaround and content is stable
+            var msgr_service = {
+              "serviceId": "jabberMessenger",
+              "displayName": "Messenger",
+              "ciName": "webex-messenger",
+              "type": "PAID",
+              "isBeta": false,
+              "isConfigurable": false
+            };
+
+            result.services.push(msgr_service);
+          }
+
+          return result; 
         })
         .catch(function (response) {
+          // just use the flag to indicate error from Msgr service call w/o another error handling func
+          if (inMsgrServiceCall)
+          {
+            Log.error('Ignore error from Msgr service check: error code = ' + response.status);
+            return result;
+          }
+
           Authinfo.clear();
           var error = $translate.instant('errors.serverDown');
           if (response) {
