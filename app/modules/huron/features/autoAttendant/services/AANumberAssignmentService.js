@@ -64,7 +64,7 @@
           for (i = 0; i < resources.length; i++) {
             // check to see if it's in the CMI assigned list
             var cmiObj = cmiAssignedNumbers.filter(function (obj) {
-              return obj.number == resources[i].getNumber();
+              return obj.number.replace(/\D/g, '') == resources[i].getNumber();
             });
             if (!angular.isDefined(cmiObj) || cmiObj == null || cmiObj.length === 0) {
               onlyResources.push(resources[i].getNumber());
@@ -74,7 +74,7 @@
           for (i = 0; i < cmiAssignedNumbers.length; i++) {
             // check to see if it's in the CMI assigned list
             var rscObj = resources.filter(function (obj) {
-              return obj.getNumber() == cmiAssignedNumbers[i].number;
+              return obj.getNumber() == cmiAssignedNumbers[i].number.replace(/\D/g, '');
             });
             if (!angular.isDefined(rscObj) || rscObj == null || rscObj.length === 0) {
               onlyCMI.push(cmiAssignedNumbers[i].number);
