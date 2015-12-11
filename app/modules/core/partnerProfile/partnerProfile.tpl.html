@@ -7,8 +7,8 @@
     <div class="save-section clearfix" ng-class="{invisible: isBtnDisabled()}">
         <p class="left" translate="callerIdPanel.saveConfirmation"></p>
         <div class="right">
-          <button translate="common.cancel" ng-disabled="isBtnDisabled()" ng-click="init()"></button>
-          <button class="btn btn--primary" cs-btn loading="orgProfileSaveLoad" ng-click="validation()" ng-disabled="isBtnDisabled()" translate="common.save"></button>
+          <button translate="common.cancel" ng-disabled="isBtnDisabled()" ng-click="init()" id="orgProfileCancelBtn"></button>
+          <button class="btn btn--primary" cs-btn loading="orgProfileSaveLoad" ng-click="validation()" ng-disabled="isBtnDisabled()" translate="common.save" id="orgProfileSaveBtn"></button>
         </div>
     </div>
     <div class="profile-content-container row collapse-both">
