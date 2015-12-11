@@ -71,6 +71,43 @@
       return matchingLicenses;
     }
 
+    function aggregatedLicenses(licenses, type) {
+      var matchingLicenses = _.clone(_.filter(licenses, {
+        type: type
+      }));
+      var aggregatedLics = [];
+      _.each(matchingLicenses, function (l) {
+        var displayName = $translate.instant('helpdesk.licenseDisplayNames.' + l.offerCode, {
+          capacity: l.capacity
+        });
+        var key = l.offerCode + '#' + l.capacity + "#" + l.siteUrl;
+        var aggregate = _.find(aggregatedLics, {
+          key: key
+        });
+        if (aggregate) {
+          aggregate.totalVolume += l.volume;
+          aggregate.totalUsage += l.usage;
+          aggregate.licenses.push(l);
+        } else {
+          aggregate = {
+            key: key,
+            displayName: displayName,
+            totalUsage: l.usage,
+            totalVolume: l.volume,
+            licenses: [l],
+            siteUrl: l.siteUrl
+          };
+          aggregatedLics.push(aggregate);
+        }
+        aggregate.isTrial = _.all(aggregate.licenses, {
+          isTrial: true
+        });
+        aggregate.trialExpiresInDays = _.max(aggregate.licenses, 'trialExpiresInDays').trialExpiresInDays;
+        aggregate.usagePercentage = _.round((aggregate.totalUsage || 0) * 100 / aggregate.totalVolume);
+      });
+      return aggregatedLics;
+    }
+
     function getUnlicensedUsersCount(orgId) {
       if (useMock()) {
         var deferred = $q.defer();
@@ -91,6 +128,7 @@
       userIsLicensedFor: userIsLicensedFor,
       orgIsEntitledTo: orgIsEntitledTo,
       filterAndExtendLicenses: filterAndExtendLicenses,
+      aggregatedLicenses: aggregatedLicenses,
       UserLicense: UserLicense,
       getLicensesInOrg: getLicensesInOrg,
       getUnlicensedUsersCount: getUnlicensedUsersCount

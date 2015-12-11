@@ -28,6 +28,7 @@
     vm.initialAdminUserLimit = 3;
     vm.adminUserLimit = vm.initialAdminUserLimit;
     vm.licenseUsageReady = false;
+    vm.showLicenseToggles = [];
     vm.statusPageUrl = Config.getStatusPageUrl();
     vm.showAllAdminUsers = showAllAdminUsers;
     vm.hideAllAdminUsers = hideAllAdminUsers;

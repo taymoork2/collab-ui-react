@@ -12,7 +12,8 @@
           <span class="feature-status" ng-class="extension.status ? 'status-' + extension.status.state : ''"
                 ng-show="extension.status && extension.entitled"
                 translate="hercules.activationStatus.{{getStatus(extension.status)}}"></span>
-          <span class="feature-status" ng-hide="extension.status && extension.entitled" translate="common.{{extension.entitled ? 'on' : 'off'}}"></span>
+          <span class="feature-status" ng-hide="extension.status && extension.entitled"
+                id="{{extension.id}}-status" translate="common.{{extension.entitled ? 'on' : 'off'}}"></span>
           <i class="feature-arrow"></i>
         </a>
       </li>

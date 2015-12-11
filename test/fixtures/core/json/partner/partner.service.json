@@ -697,36 +697,42 @@
     "adminEmail": "customerPage.csvHeaderAdminEmail",
     "messagingEntitlements": "customerPage.csvHeaderMessagingEntitlements",
     "conferencingEntitlements": "customerPage.csvHeaderConferencingEntitlements",
-    "communicationsEntitlements": "customerPage.csvHeaderCommunicationsEntitlements"
+    "communicationsEntitlements": "customerPage.csvHeaderCommunicationsEntitlements",
+    "roomSystemsEntitlements": "customerPage.csvHeaderRoomSystemsEntitlements"
   }, {
     "customerName": "Atlas_Test_Trial_vt453w4p8d",
     "adminEmail": "collabctg+Atlas_Test_Trial_vt453w4p8d@gmail.com",
     "messagingEntitlements": "webex-squared squared-call-initiation webex-messenger squared-room-moderation",
     "conferenceEntitlements": "webex-squared squared-call-initiation squared-syncup",
-    "communicationsEntitlements": ""
+    "communicationsEntitlements": "",
+    "roomSystemsEntitlements": ""
   }, {
     "customerName": "Atlas_Test_Trial_t81tts9by9",
     "adminEmail": "collabctg+Atlas_Test_Trial_t81tts9by9@gmail.com",
     "messagingEntitlements": "webex-squared squared-call-initiation webex-messenger squared-room-moderation",
     "conferenceEntitlements": "webex-squared squared-call-initiation squared-syncup",
-    "communicationsEntitlements": ""
+    "communicationsEntitlements": "",
+    "roomSystemsEntitlements": ""
   }, {
     "customerName": "Atlas_Test_Trial_jpgjhf6or",
     "adminEmail": "collabctg+Atlas_Test_Trial_jpgjhf6or@gmail.com",
     "messagingEntitlements": "webex-squared squared-call-initiation webex-messenger squared-room-moderation",
     "conferenceEntitlements": "webex-squared squared-call-initiation squared-syncup",
-    "communicationsEntitlements": ""
+    "communicationsEntitlements": "",
+    "roomSystemsEntitlements": ""
   }, {
     "customerName": "Atlas_Test_Trial_0cjwm62e20",
     "adminEmail": "collabctg+Atlas_Test_Trial_0cjwm62e20@gmail.com",
     "messagingEntitlements": "webex-squared squared-call-initiation webex-messenger squared-room-moderation",
     "conferenceEntitlements": "webex-squared squared-call-initiation squared-syncup",
-    "communicationsEntitlements": ""
+    "communicationsEntitlements": "",
+    "roomSystemsEntitlements": ""
   }, {
     "customerName": "Atlas_Test_Trial_u1j5gzrz5g",
     "adminEmail": "collabctg+Atlas_Test_Trial_u1j5gzrz5g@gmail.com",
     "messagingEntitlements": "webex-squared squared-call-initiation webex-messenger squared-room-moderation",
     "conferenceEntitlements": "webex-squared squared-call-initiation squared-syncup",
-    "communicationsEntitlements": ""
+    "communicationsEntitlements": "",
+    "roomSystemsEntitlements": ""
   }]
 }

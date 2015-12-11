@@ -6,7 +6,7 @@
     .factory('HuronCustomer', HuronCustomer);
 
   /* @ngInject */
-  function HuronCustomer(Authinfo, CustomerCommonService, $q) {
+  function HuronCustomer(Authinfo, CustomerCommonService, CustomerVoiceCmiService, PstnSetupService, $q) {
 
     var customerPayload = {
       'uuid': null,
@@ -48,7 +48,41 @@
           }
           // Otherwise return original error
           return $q.reject(response);
+        })
+        // get the carrier name if reseller has a single carrier
+        .then(getResellerCarrierName)
+        // update the voice customer with carrier if found
+        .then(function (carrierName) {
+          updateVoiceCustomerCarrier(uuid, carrierName);
         });
+    }
+
+    function getResellerCarrierName() {
+      return PstnSetupService.listResellerCarriers()
+        .then(function (carriers) {
+          if (_.isArray(carriers) && _.size(carriers) === 1) {
+            return carriers[0].name;
+          }
+        })
+        .catch(function (response) {
+          // ignore error if reseller is not found
+          if (response.status !== 404) {
+            return $q.reject(response);
+          }
+        });
+    }
+
+    function updateVoiceCustomerCarrier(uuid, carrierName) {
+      if (carrierName) {
+        var payload = {
+          carrier: {
+            name: carrierName
+          }
+        };
+        return CustomerVoiceCmiService.update({
+          customerId: uuid
+        }, payload).$promise;
+      }
     }
 
     function getCustomer(uuid) {

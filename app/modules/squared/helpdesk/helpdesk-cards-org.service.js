@@ -26,21 +26,7 @@
 
     function OrgCard(entitled, licenses, licenseType) {
       this.entitled = entitled;
-      this.licenses = LicenseService.filterAndExtendLicenses(licenses, licenseType);
-      this.isTrial = _.any(this.licenses, {
-        'isTrial': true
-      });
-      this.totalUsage = _.sum(this.licenses, function (license) {
-        return license.usage;
-      });
-      this.totalVolume = _.sum(this.licenses, function (license) {
-        return license.volume;
-      });
-      if (this.totalVolume !== 0) {
-        this.usagePercentage = (this.totalUsage * 100) / this.totalVolume;
-      } else {
-        this.usagePercentage = 0;
-      }
+      this.aggregatedLicenses = LicenseService.aggregatedLicenses(licenses, licenseType);
     }
 
     function getHybridServicesCardForOrg(org) {

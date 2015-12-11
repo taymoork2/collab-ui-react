@@ -455,7 +455,7 @@ angular
           }
         })
         .state('user-overview.hybrid-services-squared-fusion-cal', {
-          templateUrl: 'modules/hercules/userPreview/hybridServicesPreview.tpl.html',
+          templateUrl: 'modules/hercules/hybridServices/hybridServicesPreview.tpl.html',
           controller: 'HybridServicesPreviewCtrl',
           data: {
             displayName: 'Calendar Service'
@@ -465,7 +465,7 @@ angular
           }
         })
         .state('user-overview.hybrid-services-squared-fusion-uc', {
-          templateUrl: 'modules/hercules/userPreview/callServicePreview.tpl.html',
+          templateUrl: 'modules/hercules/hybridServices/callServicePreview.tpl.html',
           controller: 'CallServicePreviewCtrl',
           data: {
             displayName: 'Call Service'
