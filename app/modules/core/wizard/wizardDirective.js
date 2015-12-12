@@ -324,8 +324,8 @@
     function setNextText() {
       if ((isFirstTab() && isFirstTime() && !isCustomerPartner() && !isFromPartnerLaunch()) || (isFirstTab() && isFirstStep())) {
         vm.nextText = $translate.instant('firstTimeWizard.getStarted');
-      } else if  (isFirstTime() && isLastTab() && isLastStep()) {
-          vm.nextText = $translate.instant('common.finish');
+      } else if (isFirstTime() && isLastTab() && isLastStep()) {
+        vm.nextText = $translate.instant('common.finish');
       } else if (isLastStep()) {
         vm.nextText = $translate.instant('common.save');
       } else {
