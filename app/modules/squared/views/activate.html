@@ -1,22 +1,31 @@
 <div id="webDiv" ng-show="Utils.isWeb()">
-	<div id="provisionSuccess" ng-show="result.provisionSuccess">
-		<p>Thank you for verifying your account. You can now return to the Project Squared app on your mobile device and complete the registration.</p>
-	</div>
-
-	<div id="codeExpired" ng-show="result.codeExpired">
-		<p class="activate-error">The link/code to activate {{deviceName}} to Squared has expired!</p>
-		<p>You can request a new code to activate Squared on {{deviceName}} for {{userEmail}} account by clicking on the link below:</p>
-		<div id="sendCodeLink" class="btn--link pull-left" ng-click="resendCode()">Send me a new activation code</div>
-	</div>
-
-	<div id="resendSuccess" ng-show="result.resendSuccess">
-		<p>A new confirmation code has been sent to your work email address: {{userEmail}}</p>
-		<p>Please use this last code we sent you to activate Squared.</p>
-		<div id="testdata" eqp={{eqp}}>
-	</div>
-
-	<div id="exception" ng-show="result.errmsg">
-	  <br>
-		<p>Unexpected error processing request. {{result.errmsg}}</p>
-	</div>
+  <div class="messagebox-backdrop">
+    <div class="message-box">
+      <section id="provisionSuccess" ng-show="result.provisionSuccess">
+        <i class="message-box__icon icon-circle-check"></i>
+        <h3 class="message-box__title message-box__title--success" translate="activation.verificationComplete"></h3>
+        <h5 class="message-box__details" translate="activation.returnToApp"></h5>
+      </section>
+      <section id="codeExpired" ng-show="result.codeExpired">
+        <i class="message-box__icon icon-circle-comp-neg"></i>
+        <h3 class="message-box__title message-box__title--alert activate-error" translate="activation.codeExpired" translate-values="{ deviceName: deviceName }"></h3>
+        <h5 class="message-box__details" translate="activation.requestNewCode" translate-values="{ deviceName: deviceName, userEmail:userEmail }"></h5>
+        <button id="sendCodeLink" class="btn btn--people btn--expand" ng-click="resendCode()" translate="activation.sendCodeLink"></button>
+      </section>
+      <section id="resendSuccess" ng-show="result.resendSuccess">
+        <i class="message-box__icon icon-circle-check"></i>
+        <h3 class="message-box__title message-box__title--success" translate="activation.newCodeSent"></h3>
+        <h5 class="message-box__details" translate="activation.useLatestCode" translate-values="{ userEmail: userEmail }"></h5>
+        <div id="testdata" eqp={{eqp}}></div>
+      </section>
+      <section id="exception" ng-show="result.errmsg">
+        <i class="message-box__icon icon-circle-comp-neg"></i>
+        <h3 class="message-box__title message-box__title--alert" translate="activation.unexpectedError"></h3>
+        <h5 class="message-box__details">{{result.errmsg}}</h5>
+      </section>
+      <footer class="message-box__footer">
+        <i class="icon icon-cisco-logo icon-2x"></i>
+      </footer>
+    </div>
+  </div>
 </div>
