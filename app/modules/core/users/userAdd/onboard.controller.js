@@ -222,9 +222,7 @@ angular.module('Core')
           activateDID();
           $state.go('users.add.services.dn');
         } else {
-          onboardUsers(true);/*.then(function () {
-            assignHybridServices($scope.extensionEntitlements);
-          });*/
+          onboardUsers(true);
         }
       };
 
@@ -1000,6 +998,7 @@ angular.module('Core')
             Log.info('User onboard request returned:', data);
             $rootScope.$broadcast('USER_LIST_UPDATED');
             var numAddedUsers = 0;
+            var addedUsersList = [];
 
             for (var num = 0; num < data.userResponse.length; num++) {
               if (data.userResponse[num].status === 200) {
@@ -1023,6 +1022,12 @@ angular.module('Core')
               if (userStatus === 200) {
                 userResult.message = $translate.instant('usersPage.onboardSuccess', userResult);
                 userResult.alertType = 'success';
+                // Make list of successfully onboarded users
+                var addItem = { address: data.userResponse[i].email };
+                if ( addItem.address.length > 0 )
+                {
+                  addedUsersList.push( addItem );
+                }
               } else if (userStatus === 409) {
                 userResult.message = userResult.email + ' ' + data.userResponse[i].message;
                 userResult.alertType = 'danger';
@@ -1042,8 +1047,12 @@ angular.module('Core')
                 userResult.alertType = 'danger';
                 isComplete = false;
               }
+
               $scope.results.resultList.push(userResult);
             }
+
+            // Hybrid Service entitlements must be added after onboarding
+            assignHybridServices($scope.extensionEntitlements, addedUsersList);
 
             //concatenating the results in an array of strings for notify function
             var successes = [];
@@ -1126,9 +1135,7 @@ angular.module('Core')
           }
           for (i = 0; i < usersList.length; i += chunk) {
             tempUserArray = usersList.slice(i, i + chunk);
-            Userservice.onboardUsers(tempUserArray, entitleList, licenseList, callback).then( function () {
-              assignHybridServices($scope.extensionEntitlements, tempUserArray);
-            });
+            Userservice.onboardUsers(tempUserArray, entitleList, licenseList, callback);
           }
         } else if (!optionalOnboard) {
           Log.debug('No users entered.');
@@ -1149,7 +1156,7 @@ angular.module('Core')
       function assignHybridServices(entitlements, usersList) {
         //var usersList = getUsersList();
 
-        if ( angular.isArray(usersList) && usersList.length && _.isArray(entitlements) && entitlements.length) {
+        if (angular.isArray(usersList) && usersList.length && _.isArray(entitlements) && entitlements.length) {
           Userservice.updateUsers(usersList, null, entitlements, 'updateEntitlement', callback);
         }
 
@@ -1790,6 +1797,8 @@ angular.module('Core')
           var params = this;
           if (data.success) {
             if (angular.isArray(data.userResponse)) {
+              var addedUsersList = [];
+
               angular.forEach(data.userResponse, function (user, index) {
                 if (user.status === 200) {
                   if (user.message === 'User Patched') {
@@ -1797,10 +1806,19 @@ angular.module('Core')
                   } else {
                     $scope.model.numNewUsers++;
                   }
+                  // Build list of successful onboards and patches
+                  var addItem = { address: user.email };
+                  if ( addItem.address.length > 0 )
+                  {
+                    addedUsersList.push( addItem );
+                  }
                 } else {
                   addUserErrorWithTrackingID(params.startIndex + index + 1, getErrorResponse(user.message, user.status));
                 }
               });
+
+              // Hybrid Service entitlements must be added after onboarding
+              assignHybridServices($scope.extensionEntitlements, addedUsersList);
             } else {
               for (var i = 0; i < params.length; i++) {
                 addUserErrorWithTrackingID(params.startIndex + i + 1, $translate.instant('firstTimeWizard.processBulkResponseError'));
