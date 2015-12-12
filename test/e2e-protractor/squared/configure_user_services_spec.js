@@ -5,6 +5,22 @@
 describe('Configuring services per-user', function () {
   var testUser = utils.randomTestGmail();
 
+  var file = './../data/DELETE_DO_NOT_CHECKIN_configure_user_service_test_file.csv';
+  var absolutePath = utils.resolvePath(file);
+  var fileText = 'First Name,Last Name,Display Name,User ID/Email,Directory Number,Direct Line\r\n';
+
+  var i;
+
+  // User array
+  var userList = [];
+  for (i = 0; i < 3; i++) {
+    userList[i] = utils.randomTestGmail();
+    fileText += 'Test,User,Test User,' + userList[i] + ',500'+i+',\r\n';
+  }
+
+  // Make file
+  utils.writeFile(absolutePath, fileText);
+
   afterEach(function () {
     utils.dumpConsoleErrors();
   });
@@ -129,8 +145,64 @@ describe('Configuring services per-user', function () {
     utils.click(users.closeSidePanel);
   });
 
-  afterAll(function () {
-    deleteUtils.deleteUser(testUser);
+  ///////////////////////////////////////////////////////////////
+  // Onboard CSV with hybrid services (onboard-csv_spec.js uses non-hybrid-service enabled account)
+  //
+  it('should open invite users dialog', function () {
+    utils.click(landing.serviceSetup);
+    utils.click(navigation.addUsers);
+    utils.expectTextToBeSet(wizard.mainviewTitle, 'Invite Users');
+    utils.wait(inviteusers.submenuCSV);
+    utils.click(inviteusers.bulkUpload);
+    utils.click(inviteusers.nextButton);
   });
 
+  it('should land to the upload csv section', function () {
+    utils.expectTextToBeSet(wizard.mainviewTitle, 'Upload CSV');
+    utils.fileSendKeys(inviteusers.fileElem, absolutePath);
+    utils.expectTextToBeSet(inviteusers.progress, '100%');
+    utils.click(inviteusers.nextButton);
+  });
+
+  it('should land to assign services section', function () {
+    utils.expectTextToBeSet(wizard.mainviewTitle, 'Assign Services');
+    // Select hybrid services
+    utils.click(users.hybridServices_UC);
+    utils.click(inviteusers.nextButton);
+  });
+
+  it('should land to upload processing page', function () {
+    utils.expectTextToBeSet(wizard.mainviewTitle, 'Processing CSV');
+  });
+
+  it('should land to upload result page', function () {
+    utils.expectTextToBeSet(wizard.mainviewTitle, 'Upload Result');
+    utils.click(inviteusers.finishButton);
+  });
+
+  it('should find all ' + userList.length + ' users created', function () {
+    for (i = 0; i < userList.length; i++) {
+      utils.searchAndClick(userList[i]);
+      utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'Off');
+      utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
+      utils.click(users.closeSidePanel);
+    }
+  }, LONG_TIMEOUT);
+
+  it('should delete all ' + userList.length + ' users created', function () {
+    for (i = 0; i < userList.length; i++) {
+      utils.deleteUser(userList[i]);
+    }
+  }, LONG_TIMEOUT);
+  ////////////////////////////////////
+  
+  afterAll(function () {
+    // Delete file
+    utils.deleteFile(absolutePath);
+
+    deleteUtils.deleteUser(testUser);
+    for (i = 0; i < userList.length; i++) {
+      deleteUtils.deleteUser(userList[i]);
+    }
+  });
 });

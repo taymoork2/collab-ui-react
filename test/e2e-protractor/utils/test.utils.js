@@ -7,9 +7,20 @@ var request = require('request');
 var EC = protractor.ExpectedConditions;
 var path = require('path');
 var remote = require('../../../node_modules/gulp-protractor/node_modules/protractor/node_modules/selenium-webdriver/remote');
+var fs = require('fs');
 
 exports.resolvePath = function (filePath) {
   return path.resolve(__dirname, filePath);
+};
+
+exports.writeFile = function(file, text)
+{
+  return fs.writeFile(file, text);
+};
+
+exports.deleteFile = function(file)
+{
+  return fs.unlink(file);
 };
 
 exports.searchField = element(by.id('searchFilter'));
