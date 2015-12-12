@@ -1,12 +1,11 @@
-<div class="registeredEndpoints">
-  <div class="row">
-    <div class="endpointTable">
-      <h4 class="pull-left section-title" translate="registeredEndpoints.registeredEndpoints"></h4>
-      <hr class="title-break pull-left"/>
-    </div>
-    <div class="endpointTable">
-      <br><br>
-      <p class="report-description">{{nav.endpointDescription}}</p>
+<cs-card id="reg-endpoints" class="large report-box registeredEndpoints">
+<article>
+    <header>
+      <h4  translate="registeredEndpoints.registeredEndpoints"></h4>
+    </header>
+    <section>
+      <p>{{nav.endpointDescription}}</p>
+      <div class="card-section-content ">
       <table class="table table-bordered" ng-class="{'dummyTable': nav.dummyTable}">
         <thead>
           <tr>
@@ -28,15 +27,16 @@
           </tr>
         </tbody>
       </table>
+      </div>
       <div id="endpointRefreshDiv" class="spinner-position" ng-if="nav.isRefresh(nav.endpointRefresh)">
         <i class='icon icon-spinner icon-2x'></i>
       </div>
       <div class="no-data-center" ng-if="nav.isEmpty(nav.endpointRefresh)">
-        <h3 class="no-data"> 
+        <h3 class="no-data">
           <i class='icon icon-warning no-data-warning'></i>
           <span translate='reportsPage.noCustomerData'></span>
         </h3>
       </div>
-    </div>
-  </div>
-</div>
+    </section>
+    </article>
+</cs-card>

@@ -276,7 +276,7 @@ angular.module('Core')
           link: '/users'
         }, {
           tab: 'servicesTab',
-          icon: 'icon-settings',
+          icon: 'icon-cloud',
           title: 'tabs.servicesTab',
           subPages: [{
             title: 'tabs.conferencing',
