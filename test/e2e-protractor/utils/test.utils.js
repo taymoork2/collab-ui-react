@@ -13,13 +13,11 @@ exports.resolvePath = function (filePath) {
   return path.resolve(__dirname, filePath);
 };
 
-exports.writeFile = function(file, text)
-{
+exports.writeFile = function (file, text) {
   return fs.writeFile(file, text);
 };
 
-exports.deleteFile = function(file)
-{
+exports.deleteFile = function (file) {
   return fs.unlink(file);
 };
 
@@ -40,6 +38,10 @@ exports.randomTestRoom = function () {
 
 exports.randomTestGmail = function () {
   return 'collabctg+' + this.randomId() + '@gmail.com';
+};
+
+exports.randomTestGmailwithSalt = function (salt) {
+  return 'collabctg+' + salt + '_' + this.randomId() + '@gmail.com';
 };
 
 exports.sendRequest = function (options) {

@@ -1023,10 +1023,11 @@ angular.module('Core')
                 userResult.message = $translate.instant('usersPage.onboardSuccess', userResult);
                 userResult.alertType = 'success';
                 // Make list of successfully onboarded users
-                var addItem = { address: data.userResponse[i].email };
-                if ( addItem.address.length > 0 )
-                {
-                  addedUsersList.push( addItem );
+                var addItem = {
+                  address: data.userResponse[i].email
+                };
+                if (addItem.address.length > 0) {
+                  addedUsersList.push(addItem);
                 }
               } else if (userStatus === 409) {
                 userResult.message = userResult.email + ' ' + data.userResponse[i].message;
@@ -1807,10 +1808,11 @@ angular.module('Core')
                     $scope.model.numNewUsers++;
                   }
                   // Build list of successful onboards and patches
-                  var addItem = { address: user.email };
-                  if ( addItem.address.length > 0 )
-                  {
-                    addedUsersList.push( addItem );
+                  var addItem = {
+                    address: user.email
+                  };
+                  if (addItem.address.length > 0) {
+                    addedUsersList.push(addItem);
                   }
                 } else {
                   addUserErrorWithTrackingID(params.startIndex + index + 1, getErrorResponse(user.message, user.status));

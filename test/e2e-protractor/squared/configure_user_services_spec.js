@@ -1,6 +1,6 @@
 'use strict';
 /*jshint loopfunc: true */
-/* global describe, it */
+/* global describe, it, LONG_TIMEOUT */
 
 describe('Configuring services per-user', function () {
   var testUser = utils.randomTestGmail();
@@ -13,9 +13,10 @@ describe('Configuring services per-user', function () {
 
   // User array
   var userList = [];
-  for (i = 0; i < 3; i++) {
-    userList[i] = utils.randomTestGmail();
-    fileText += 'Test,User,Test User,' + userList[i] + ',500'+i+',\r\n';
+  var numUsers = 101;
+  for (i = 0; i < numUsers; i++) {
+    userList[i] = utils.randomTestGmailwithSalt('config_user');
+    fileText += 'Test,User_' + (1000 + i) + ',Test User,' + userList[i] + ',' + (1000 + i) + ',\r\n';
   }
 
   // Make file
@@ -99,12 +100,10 @@ describe('Configuring services per-user', function () {
     utils.click(users.messagingService);
     utils.expectCheckbox(users.messengerInteropCheckbox, true);
     utils.click(users.closeSidePanel);
+    utils.deleteUser(testUser);
   });
 
   it('should add user with NO hybrid services selected', function () {
-    navigation.clickUsers();
-    utils.deleteUser(testUser);
-
     utils.click(users.addUsers);
     utils.expectIsDisplayed(users.manageDialog);
     utils.sendKeys(users.addUsersField, testUser);
@@ -119,12 +118,10 @@ describe('Configuring services per-user', function () {
     utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'Off');
     utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'Off');
     utils.click(users.closeSidePanel);
+    utils.deleteUser(testUser);
   });
 
   it('should add user with ALL hybrid services selected', function () {
-    navigation.clickUsers();
-    utils.deleteUser(testUser);
-
     utils.click(users.addUsers);
     utils.expectIsDisplayed(users.manageDialog);
     utils.sendKeys(users.addUsersField, testUser);
@@ -143,12 +140,44 @@ describe('Configuring services per-user', function () {
     utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
     utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
     utils.click(users.closeSidePanel);
+    utils.deleteUser(testUser);
+  });
+
+  ////////////////////////////////////////////////////////////
+  // Manual Invite with Hybrid Services
+  //
+  it('should Manually Invite user', function () {
+    // Select Invite from setup menu
+    utils.click(landing.serviceSetup);
+    utils.click(navigation.addUsers);
+    utils.expectTextToBeSet(wizard.mainviewTitle, 'Invite Users');
+
+    // Manual import is default
+    utils.click(inviteusers.nextButton);
+
+    // Enter test user name into input box
+    utils.sendKeys(users.addUsersField, testUser);
+    utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
+    utils.click(users.nextButton);
+
+    // Enable a hybrid service
+    utils.click(users.hybridServices_UC);
+    utils.click(inviteusers.finishButton);
+    notifications.assertSuccess('onboarded successfully');
+  });
+
+  it('should confirm hybrid services set', function () {
+    utils.searchAndClick(testUser);
+    utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'Off');
+    utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
+    utils.click(users.closeSidePanel);
+    utils.deleteUser(testUser);
   });
 
   ///////////////////////////////////////////////////////////////
-  // Onboard CSV with hybrid services (onboard-csv_spec.js uses non-hybrid-service enabled account)
+  // CSV Invite with hybrid services (onboard-csv_spec.js uses non-hybrid-service compatible account)
   //
-  it('should open invite users dialog', function () {
+  it('should open CSV import dialog', function () {
     utils.click(landing.serviceSetup);
     utils.click(navigation.addUsers);
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Invite Users');
@@ -180,27 +209,37 @@ describe('Configuring services per-user', function () {
     utils.click(inviteusers.finishButton);
   });
 
-  it('should find all ' + userList.length + ' users created', function () {
-    for (i = 0; i < userList.length; i++) {
-      utils.searchAndClick(userList[i]);
+  it('should find some of the ' + userList.length + ' users created', function () {
+    var ind;
+    for (i = 0; i < 3; i++) {
+      switch (i) {
+      case 0:
+        ind = 0; // first
+        break;
+      case 1:
+        ind = (userList.length > 2) ? Math.round(userList.length / 2) : 1; // middle
+        break;
+      case 2:
+        ind = userList.length - 1; // last
+        break;
+      }
+
+      utils.searchAndClick(userList[ind]);
       utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'Off');
       utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
       utils.click(users.closeSidePanel);
     }
   }, LONG_TIMEOUT);
 
-  it('should delete all ' + userList.length + ' users created', function () {
-    for (i = 0; i < userList.length; i++) {
-      utils.deleteUser(userList[i]);
-    }
-  }, LONG_TIMEOUT);
   ////////////////////////////////////
-  
+
   afterAll(function () {
     // Delete file
     utils.deleteFile(absolutePath);
 
     deleteUtils.deleteUser(testUser);
+
+    console.log('Deleting all ' + userList.length + ' test users.');
     for (i = 0; i < userList.length; i++) {
       deleteUtils.deleteUser(userList[i]);
     }
