@@ -13,9 +13,9 @@
       </span>
     </div>
 
-    <tabset class="center">
+    <tabset justified="true">
       <tab heading="{{::externalNumbers.allText}}">
-        <div class="tab-content">
+        <div class="tab-content center">
           <div class="total-count">
             <span translate="externalNumberPanel.allNumbers" translate-values="{count: externalNumbers.allNumbers.length}" translate-interpolation="messageformat"></span><i class="icon icon-refresh" ng-click="externalNumbers.listPhoneNumbers()" ng-if="!externalNumbers.refresh"></i><i class="icon icon-spinner" ng-if="externalNumbers.refresh"></i>
           </div>
@@ -31,7 +31,7 @@
         </div>
       </tab>
       <tab heading="{{::externalNumbers.pendingText}}">
-        <div class="tab-content">
+        <div class="tab-content center">
           <div class="total-count">
             <span translate="externalNumberPanel.pendingNumbers" translate-values="{count: externalNumbers.pendingNumbers.length}" translate-interpolation="messageformat"></span><i class="icon icon-refresh" ng-click="externalNumbers.listPhoneNumbers()" ng-if="!externalNumbers.refresh"></i><i class="icon icon-spinner" ng-if="externalNumbers.refresh"></i>
           </div>
@@ -47,7 +47,7 @@
         </div>
       </tab>
       <tab heading="{{::externalNumbers.unassignedText}}">
-        <div class="tab-content">
+        <div class="tab-content center">
           <div class="total-count">
             <span translate="externalNumberPanel.unassignedNumbers" translate-values="{count: externalNumbers.unassignedNumbers.length}" translate-interpolation="messageformat"></span><i class="icon icon-refresh" ng-click="externalNumbers.listPhoneNumbers()" ng-if="!externalNumbers.refresh"></i><i class="icon icon-spinner" ng-if="externalNumbers.refresh"></i>
           </div>

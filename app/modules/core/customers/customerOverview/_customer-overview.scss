@@ -1,18 +1,14 @@
 .customer-overview {
 
-  #trial-info {
-    margin-top: 6px;
-  }
-
   .trial-bar {
-    margin-top: 20px;
+    margin-bottom: 1.5rem;
   }
 
   .trial-status {
-    font-family: $font-family-sans-serif;
-    font-size: 1.2rem;
-    color: $gray-dark;
-    margin-bottom: 7px;
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+      font-family: $brand-font-light;
   }
 
   .trial-danger {
@@ -21,16 +17,16 @@
     color: $brand-danger;
   }
 
-  .progress {
-    margin-bottom: auto;
-  }
+  // .progress {
+  //   margin-bottom: auto;
+  // }
 
   .progress-bar {
     max-width: 100%;
   }
 
   #launchCustomer, #launchPartner {
-    margin: 2rem 0;
+    margin: 1rem 0;
     position: relative;
     left: 50%;
     transform: translateX(-50%);
@@ -41,6 +37,17 @@
       margin-bottom: 0;
       margin-top: 8px;
       vertical-align: middle;
+    }
+  }
+
+  .trials-list {
+    .feature {
+        display: block;
+        margin-bottom: 16px;
+    }
+    .feature-details.ng-binding {
+        padding: 0;
+        line-height: 1rem;
     }
   }
 }

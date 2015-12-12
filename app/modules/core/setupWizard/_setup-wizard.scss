@@ -33,11 +33,6 @@
       line-height: 24px;
       font-size: 14px;
     }
-    .column-paid,
-    .column-mtg {
-      background: $gray-light-4;
-      font-size: 14px;
-    }
     .column-mtg {
       padding-bottom: 0;
     }
@@ -45,13 +40,23 @@
       background: $gray-light-4;
     }
     .column-trial-header {
-      @extend .h4;
-      padding: 1rem 0;
+      @extend .h5;
+      padding: 1.5rem;
       background: $color-attention;
       color: $white;
     }
     &.row-licenses {
       flex: 1;
+      .columns {
+        padding: 0;
+        background: $gray-light-4;
+        font-size: 14px;
+      }
+      .column-trial,
+      .column-paid,
+      .column-mtg {
+        padding: 1.5rem;
+      }
     }
   }
   .row-room {
@@ -109,11 +114,17 @@
     color: $gray-dark-1;
     text-align: center;
     padding: 4px 0 2px;
+    border-top: 1px solid $white;
+    border-bottom: 1px solid $white;
+
     &.free {
       background-color: $color-cta-lighter;
     }
     &.paid {
       background-color: $color-primary-lighter;
+    }
+    &.trial {
+      background-color: $color-attention-lighter;
     }
   }
   .item-free {
@@ -194,10 +205,8 @@
 }
 
 .wizard-trial-progress {
-  .column-sm-12 {
-    margin-top: 3px;
-    padding-left: 1px;
-    padding-right: 4px;
+  .small-12 {
+    @include vr-spacing(mv, .25);
   }
   .progress {
     margin-bottom: 5px;
@@ -205,12 +214,6 @@
   .progress-bar-warning {
     background-color: $brand-warning-dark;
   }
-}
-
-.wizard-trial-progress-text {
-  font-family: $brand-font-regular;
-  color: $gray-dark-1;
-  font-size: 12px;
 }
 
 .onboard-label {
