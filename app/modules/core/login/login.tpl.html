@@ -5,9 +5,8 @@
     <div ng-show="result">
       <div class="results alert alert-danger" ng-bind-html="result"></div>
     </div>
-    <button ng-class="{'btn--people': !loading, 'loading-icon': loading}" class="btn btn--large btn--expand messagebox-btn" role="button" ng-click="login()" >
-      <span ng-hide="loading" translate="loginPage.login"></span>
-      <span ng-show="loading" class="icon icon-spinner"></span>
+    <button cs-btn class="btn btn--people btn--large btn--expand messagebox-btn" role="button" ng-click="login()" loading="loading">
+      <span translate="loginPage.login"></span>
     </button>
   </div>
 </div>

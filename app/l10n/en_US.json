@@ -1824,7 +1824,8 @@
     "meet": "Meeting and WebEx",
     "message": "Message",
     "meeting": "Meeting and WebEx",
-    "call": "Call"
+    "call": "Call",
+    "roomSystem": "Spark Room System"
   },
   "status": {
     "noResults": "No results available.",
@@ -3010,6 +3011,7 @@
     "type": "Type",
     "partner": "Partner",
     "customer": "Customer",
+    "helpLink": "Help",
     "devices": "Devices",
     "mobile": "mobile",
     "work": "work",
@@ -3105,5 +3107,15 @@
     "sendCode": "Send Code",
     "more": "More",
     "usage": "{{usage}} of {{volume}} in use"
+  },
+  "activation": {
+    "verificationComplete": "Verification Complete",
+    "returnToApp": "Return to Spark on your mobile device and complete the registration.",
+    "codeExpired": "Activation Code Expired",
+    "requestNewCode": "The Spark activation code sent to {{userEmail}} for {{deviceName}} has expired! To request a new code, click below.",
+    "sendCodeLink": "Send new activation code",
+    "newCodeSent": "Confirmation Code Sent",
+    "useLatestCode": "A new code has been sent to {{userEmail}}",
+    "unexpectedError": "Unexpected error processing request."
   }
 }
