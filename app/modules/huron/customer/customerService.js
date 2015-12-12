@@ -11,10 +11,7 @@
     var customerPayload = {
       'uuid': null,
       'name': null,
-      'servicePackage': 'DEMO_STANDARD',
-      'voicemail': {
-        'pilotNumber': ''
-      }
+      'servicePackage': 'VOICE_ONLY'
     };
 
     var service = {
@@ -30,9 +27,6 @@
       customer.uuid = uuid;
       customer.name = name;
 
-      // Set customer.voicemail.pilotNumber to customer's uuid, so that it is unique.
-      // The pilot number will be set in service setup.
-      customer.voicemail.pilotNumber = uuid;
       return CustomerCommonService.save({}, customer).$promise
         .catch(function (response) {
           // If we have a conflict on create

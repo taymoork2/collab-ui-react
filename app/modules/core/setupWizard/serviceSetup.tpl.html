@@ -5,24 +5,5 @@
 <div class="container-fluid service-setup-container" ng-if="!squaredUcSetup.processing">
   <form novalidate>
     <formly-form model="squaredUcSetup.model" fields="squaredUcSetup.fields" form="squaredUcSetup.form"></formly-form>
-    <div class="form-group service-setup" ng-hide="!squaredUcSetup.hasVoicemailService">
-      <label for="companyVoicemail" translate="serviceSetupModal.companyVoicemail"></label>
-      <p translate="serviceSetupModal.companyVoicemailDescription"></p>
-      <div class="service-setup-company-voicemail row full">
-        <cs-select class="select-dropdown"
-          id="companyVoicemail"
-          name="companyVoicemail"
-          ng-model="squaredUcSetup.pilotNumberSelected"
-          options="squaredUcSetup.externalNumberPoolBeautified"
-          wait-time="0"
-          input-placeholder="squaredUcSetup.inputPlaceholder"
-          labelfield="pattern"
-          valuefield="uuid"
-          required="true"
-          filter="true">
-        </cs-select>
-      </div>
-    </div>
-    <formly-form model="squaredUcSetup.model" fields="squaredUcSetup.additionalFields" form="squaredUcSetup.form"></formly-form>
   </form>    
 </div>
