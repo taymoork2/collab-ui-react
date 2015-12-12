@@ -222,9 +222,9 @@ angular.module('Core')
           activateDID();
           $state.go('users.add.services.dn');
         } else {
-          onboardUsers(true).then(function () {
+          onboardUsers(true);/*.then(function () {
             assignHybridServices($scope.extensionEntitlements);
-          });
+          });*/
         }
       };
 
@@ -1126,7 +1126,9 @@ angular.module('Core')
           }
           for (i = 0; i < usersList.length; i += chunk) {
             tempUserArray = usersList.slice(i, i + chunk);
-            Userservice.onboardUsers(tempUserArray, entitleList, licenseList, callback);
+            Userservice.onboardUsers(tempUserArray, entitleList, licenseList, callback).then( function () {
+              assignHybridServices($scope.extensionEntitlements, tempUserArray);
+            });
           }
         } else if (!optionalOnboard) {
           Log.debug('No users entered.');
@@ -1144,17 +1146,11 @@ angular.module('Core')
         $scope.extensionEntitlements = entitlements;
       };
 
-      function assignHybridServices(entitlements) {
-        var usersList = getUsersList();
+      function assignHybridServices(entitlements, usersList) {
+        //var usersList = getUsersList();
 
-        // TODO: Similar chunking logic is used throughout. Refactor!
-        if (angular.isArray(usersList) && usersList.length &&
-          _.isArray(entitlements) && entitlements.length) {
-          var i, len, tempUsersList, chunk = Config.batchSize;
-          for (i = 0, len = usersList.length; i < len; i += chunk) {
-            tempUsersList = usersList.slice(i, i + chunk);
-            Userservice.updateUsers(tempUsersList, null, entitlements, 'updateEntitlement', callback);
-          }
+        if ( angular.isArray(usersList) && usersList.length && _.isArray(entitlements) && entitlements.length) {
+          Userservice.updateUsers(usersList, null, entitlements, 'updateEntitlement', callback);
         }
 
         // TODO: Similar callback logic is used throughout this controller.
