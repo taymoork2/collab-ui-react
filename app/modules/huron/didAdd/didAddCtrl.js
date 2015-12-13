@@ -154,10 +154,14 @@
             // if customer carrier info could not be obtained from CMI, try getting partner carrier info from Terminus
             return getCarrierInfoFromTerminus(Authinfo.getOrgId()).then(setDidValidationCountry)
               .catch(function (response) {
+                if (response.status !== 404) {
+                  // Terminus didn't have corresponding reseller records for existing partners.
+                  // A 404 error was expected for many partners while looking up their carriers.
+                  Notification.errorResponse(response, 'serviceSetupModal.carrierCountryGetError');
+                }
                 setDidValidationCountry({
                   country: "us"
                 });
-                Notification.errorResponse(response, 'serviceSetupModal.carrierCountryGetError');
               });
           }).then(function () {
             return ExternalNumberPool.getAll(customerOrgId);

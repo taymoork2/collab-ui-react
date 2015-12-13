@@ -46,7 +46,7 @@
               enabled: false,
               quantity: 0
             },
-            'phone7861': {
+            'phone8841': {
               enabled: false,
               quantity: 0
             },

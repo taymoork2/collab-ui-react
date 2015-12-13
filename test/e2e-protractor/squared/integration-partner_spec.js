@@ -106,6 +106,9 @@ describe('Partner flow', function () {
         utils.expectIsDisplayed(partner.editTrialForm);
         utils.expectClass(partner.squaredTrialCheckbox, 'disabled');
 
+        partner.assertDisabled('saveUpdateButton');
+        utils.clear(partner.licenseCountInput);
+        utils.sendKeys(partner.licenseCountInput, partner.editTrial.licenseCount);
         utils.click(partner.saveUpdateButton);
         notifications.assertSuccess(partner.newTrial.customerName, 'You have successfully edited a trial for');
         utils.click(partner.trialFilter);

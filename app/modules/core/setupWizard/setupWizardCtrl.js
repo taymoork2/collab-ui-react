@@ -192,6 +192,37 @@ angular.module('Core')
             }]
           };
           userTab.subTabs.splice(0, 0, simpleSubTab);
+
+          if ($scope.csvUploadSupport) {
+            var csvSubTab = {
+              name: 'csv',
+              title: 'firstTimeWizard.uploadStep',
+              controller: 'OnboardCtrl',
+              steps: [{
+                name: 'init',
+                template: 'modules/core/setupWizard/addUsers.init.tpl.html'
+              }, {
+                name: 'csvUpload',
+                template: 'modules/core/setupWizard/addUsers.uploadCsv.tpl.html',
+                title: 'firstTimeWizard.uploadStep'
+              }, {
+                name: 'csvServices',
+                template: 'modules/core/setupWizard/addUsers.assignServices.tpl.html',
+                title: 'firstTimeWizard.assignServicesStep'
+              }, {
+                name: 'csvProcessing',
+                template: 'modules/core/setupWizard/addUsers.processCsv.tpl.html',
+                title: 'firstTimeWizard.processCsvStep',
+                buttons: false
+              }, {
+                name: 'csvResult',
+                template: 'modules/core/setupWizard/addUsers.uploadResult.tpl.html',
+                title: 'firstTimeWizard.uploadResultStep',
+                buttons: 'modules/core/setupWizard/addUsers.csvResultButtons.tpl.html'
+              }]
+            };
+            userTab.subTabs.splice(1, 0, csvSubTab);
+          }
         } else {
           var advancedSubTab = _.findWhere(userTab.subTabs, {
             name: 'advanced'
@@ -214,36 +245,6 @@ angular.module('Core')
           advancedSubTab.steps = advancedSubTab.steps.concat(advancedSubTabSteps);
         }
 
-        if ($scope.csvUploadSupport) {
-          var csvSubTab = {
-            name: 'csv',
-            title: 'firstTimeWizard.uploadStep',
-            controller: 'OnboardCtrl',
-            steps: [{
-              name: 'init',
-              template: 'modules/core/setupWizard/addUsers.init.tpl.html'
-            }, {
-              name: 'csvUpload',
-              template: 'modules/core/setupWizard/addUsers.uploadCsv.tpl.html',
-              title: 'firstTimeWizard.uploadStep'
-            }, {
-              name: 'csvServices',
-              template: 'modules/core/setupWizard/addUsers.assignServices.tpl.html',
-              title: 'firstTimeWizard.assignServicesStep'
-            }, {
-              name: 'csvProcessing',
-              template: 'modules/core/setupWizard/addUsers.processCsv.tpl.html',
-              title: 'firstTimeWizard.processCsvStep',
-              buttons: false
-            }, {
-              name: 'csvResult',
-              template: 'modules/core/setupWizard/addUsers.uploadResult.tpl.html',
-              title: 'firstTimeWizard.uploadResultStep',
-              buttons: 'modules/core/setupWizard/addUsers.csvResultButtons.tpl.html'
-            }]
-          };
-          userTab.subTabs.splice(1, 0, csvSubTab);
-        }
       }
     }
   ]);

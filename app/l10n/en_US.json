@@ -640,7 +640,8 @@
     "users": "Users",
     "settings": "Settings",
     "resources": "Resources",
-    "download": "Download"
+    "download": "Download",
+    "quantity": "Qty"
   },
   "notifications": {
     "success": "Success notifications",
@@ -783,6 +784,7 @@
     "carrierCountryGetError": "Failed to get phone carrier information.",
     "voicemailGetError": "Failed to get company voicemail number.",
     "voicemailUpdateError": "Failed to update company voicemail number.",
+    "voicemailNoExternalNumbersError": "You must have unassigned direct lines to turn on voicemail. Please contact your partner or administrator.",
     "timezoneUpdateError": "Failed to update company timezone.",
     "extensionDeleteSuccess": "Successfully deleted extension {{extension}}.",
     "extensionDeleteError": "Failed to delete extension {{extension}}.",
@@ -792,7 +794,8 @@
     "rangeOverlap": "Extension Ranges must not overlap.",
     "rangeDuplicate": "Extension Ranges cannot have duplicates.",
     "fieldValidationFailed": "Errors exist on the page.  Please correct and try again.",
-    "singleNumberRangeError": "Extension Ranges cannot begin and end with the same number."
+    "singleNumberRangeError": "Extension Ranges cannot begin and end with the same number.",
+    "mapCompanyVoicemailToExternalNumberError": "Existing company voicemail number was not found in list of company direct lines."
   },
   "dirsyncModal": {
     "chooseSync": "Choose Sync",
@@ -897,7 +900,7 @@
     "noDevices": "No devices found...",
     "licenseWarningTitle": "License",
     "licenseWarningHeader": "There is a problem with the license for this service.",
-    "licenseSuspendedWarning": "Your cloudberry license is suspended."
+    "licenseSuspendedWarning": "Your room systems license is suspended."
   },
   "hercules": {
     "page_title": "Connector Management",
@@ -984,12 +987,12 @@
       "error": "Error"
     },
     "serviceNames": {
-      "squared-fusion-uc": "Call Service",
+      "squared-fusion-uc": "Call Service: Aware",
       "squared-fusion-uc.full": "Call Service Aware",
       "squared-fusion-cal": "Calendar Service",
       "squared-fusion-media": "Media Service",
       "contact-center-context": "Context Center Service",
-      "squared-fusion-ec": "Call Service Connect",
+      "squared-fusion-ec": "Call Service: Connect",
       "squared-fusion-mgmt": "Expressway Management Service"
     },
     "serviceDescriptions": {
@@ -1201,7 +1204,9 @@
     "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Download </a> and Install the Cisco Cloud Connector in your enterprise.",
     "installStep2": "2. Configure the Active Directory synchronization agreement.",
     "installStep3": "3. Test the synchronization agreement.",
-    "nextSteps": "Press the Next button when you're ready to verify that identity information is being synchronized.",
+    "installWarning": "Warning:",
+    "installWarningDescription": "If you have already added users manually, performing an Active Directory synchronization may cause previously added users to be removed. Please check the Cisco Cloud Connector Dry Run Reports to verify that all expected users are present.",
+    "nextSteps": "Press Next when you're ready to verify that identity information is being synchronized.",
     "results": "Results",
     "syncNotConfigured": "Directory Sync is not enabled. See previous step for setup instructions.",
     "syncAgreementText": "users in sync agreement",
@@ -1793,7 +1798,7 @@
       "sx10": "SX10",
       "phone8865": "8865",
       "phone8845": "8845",
-      "phone7861": "7861",
+      "phone8841": "8841",
       "phone7841": "7841",
       "quantity": "Qty",
       "shippingInfo": "Shipping Information",
@@ -1817,7 +1822,8 @@
     "meet": "Meeting and WebEx",
     "message": "Message",
     "meeting": "Meeting and WebEx",
-    "call": "Call"
+    "call": "Call",
+    "roomSystem": "Spark Room System"
   },
   "status": {
     "noResults": "No results available.",
@@ -1855,6 +1861,7 @@
     "csvHeaderMessagingEntitlements": "Messaging Entitlements",
     "csvHeaderConferencingEntitlements": "Conferencing Entitlements",
     "csvHeaderCommunicationsEntitlements": "Communications Entitlements",
+    "csvHeaderRoomSystemsEntitlements": "Room Systems Entitlements",
     "custDetail": "Customer Detail",
     "contactName": "Contact Name",
     "contactEmail": "Email",
@@ -1866,6 +1873,8 @@
     "trialTerms": "Terms of Trial",
     "trialOverview": "Trial",
     "licenses": "Number of Licenses",
+    "userLicenses": "Number of User Licenses",
+    "deviceBasedLicenses": "Number of Device-based Licenses",
     "duration": "Duration",
     "days": "Days",
     "dayTrial": "Day Trial",
@@ -1882,7 +1891,12 @@
     "partnerLogo": "Partner Logo",
     "logoOverride": "Customer Logo Override",
     "allowCustomerLogo": "Enable Customer Logo for {{customer}}",
-    "myOrganization": "My Organization"
+    "myOrganization": "My Organization",
+    "message": "Message",
+    "meeting": "Meeting 25 Party",
+    "call": "Call",
+    "roomSystem": "Spark Room System",
+    "branding": "Customer Branding"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
@@ -2995,7 +3009,7 @@
     "type": "Type",
     "partner": "Partner",
     "customer": "Customer",
-    "searchCriteriaLink": "Search help",
+    "helpLink": "Help",
     "devices": "Devices",
     "mobile": "mobile",
     "work": "work",
@@ -3032,7 +3046,6 @@
       "fraud": "Fraud",
       "compliance": "Compliance"
     },
-    "entitlementsHeading": "Entitlements",
     "enabledServices": "Active",
     "availableServices": "Available",
     "none": "None",
@@ -3047,17 +3060,17 @@
     "delegatedAdministration": "manages {{numManages}} organizations",
     "licenses": "Licenses",
     "licenseDisplayNames": {
-      "MC": "{{volume}} x Meeting Center {{capacity}}",
-      "TC": "{{volume}} x Training Center {{capacity}}",
-      "MS": "{{volume}} x Standard Team Rooms",
-      "CF": "{{volume}} x 25 Party Meetings",
-      "EE": "{{volume}} x Enterprise Edition {{capacity}}",
-      "SC": "{{volume}} x Support Center {{capacity}}",
-      "EC": "{{volume}} x Event Center {{capacity}}",
-      "CO": "{{volume}} x Advanced Spark Call",
-      "CMR": "{{volume}} x Collaboration Meeting Rooms",
-      "SD": "{{volume}} x Room Devices",
-      "ST": "{{volume}} x Storage"
+      "MC": "Meeting Center {{capacity}}",
+      "TC": "Training Center {{capacity}}",
+      "MS": "Standard Team Rooms",
+      "CF": "25 Party Meetings",
+      "EE": "Enterprise Edition {{capacity}}",
+      "SC": "Support Center {{capacity}}",
+      "EC": "Event Center {{capacity}}",
+      "CO": "Advanced Spark Call",
+      "CMR": "Collaboration Meeting Rooms",
+      "SD": "Room Devices",
+      "ST": "Storage"
     },
     "trial": "Trial",
     "adminUsers": "Administrators",
@@ -3065,6 +3078,7 @@
     "hideAllAdminUsers": "Hide administrators",
     "numDaysLeft": "{{days}} day(s) left",
     "licenseStatus": {
+      "active": "Active",
       "expired": "Expired",
       "cancelled": "Cancelled",
       "suspended": "Suspended",
@@ -3074,19 +3088,20 @@
     "unlicensedUsers": "Unlicensed Users",
     "searchUsersDevices": "Go to user and device search",
     "help": {
-      "title": "Search Help",
+      "title": "Help",
       "navigation-title": "Keyboard Navigation",
-      "navigation-info": "Press \u21B5 to select, <strong>tab</strong> or \u2191 \u2193 \u2190 \u2192 keys to navigate results, <strong>esc</strong> button to go back to results or clear",
-      "search-criterias-title": "Search Criterias",
-      "search-criterias-users": "Users: Email. Phone Number or Display Name (two words required)",
-      "search-criterias-customers": "Customers: Display Name",
-      "search-criterias-devices": "Devices: Display Name, Serial or MAC Address",
-      "search-criterias-note": "Note: Devices are only supported when search is narrowed to one costumer (see below)",
+      "navigation-info": "Press \u21B5 to select, <strong>tab</strong> or \u2191 \u2193 \u2190 \u2192 keys to navigate results, <strong>esc</strong> button to go back to results or clear.",
+      "search-criterias-title": "Search Criteria",
+      "search-criterias-users": "<strong>Users</strong>: Email, Name (First, Last), Phone Number and Display Name (two words required)",
+      "search-criterias-customers": "<strong>Customers</strong>: Display Name",
+      "search-criterias-devices": "<strong>Devices</strong>: Display Name, Serial or MAC Address",
+      "search-criterias-note": "Note: Devices are only supported when search is narrowed to one customer.",
       "narrow-title": "Narrow Search",
-      "narrow-info": "To narrow your search to one costumer only, tap <i class='icon icon-search'></i> in the customer result card or hit the <strong>s</strong> key when the card is focused. Alternatively, tap <i class='icon icon-search'></i> from the customer view page"
+      "narrow-info": "To narrow your search to one customer only, select <i class='icon icon-search'></i> in the customer search result card or select the <strong>s</strong> key on your keyboard from the customer view page. Alternatively, select <i class='icon icon-search'></i> from the customer view page."
     },
     "verification": "Verification",
     "resend": "Re-send",
-    "sendCode": "Send Code"
+    "sendCode": "Send Code",
+    "more": "More"
   }
 }

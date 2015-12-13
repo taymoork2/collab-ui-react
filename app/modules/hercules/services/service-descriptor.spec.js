@@ -45,12 +45,20 @@ describe('ServiceDescriptor', function () {
           emailSubscribers: "alvar@example.org",
         }]
       });
+    /*
     Service.services(function (error, services) {
       expect(services.length).toEqual(2);
       expect(services[0].id).toEqual('squared-fusion-cal');
       expect(services[0].emailSubscribers).toEqual('aalto@example.org');
       done();
     });
+    */
+    Service.getServices().then(function (services) {
+      expect(services.length).toEqual(2);
+      expect(services[0].id).toEqual('squared-fusion-cal');
+      done();
+    });
+
     $httpBackend.flush();
   });
 
