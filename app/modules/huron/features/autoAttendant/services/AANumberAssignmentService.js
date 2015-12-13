@@ -160,7 +160,7 @@
         return setAANumberAssignmentWithErrorDetail(customerId, cesId, myResourceList, workingResources, failedResources).then(
           function (restOfListResponse) {
             // and when it's done, try to save with the element we popped, but without the failed ones
-            myResourceList = _.difference(myResourceList, failedResources);
+            myResourceList = angular.copy(workingResources);
             myResourceList.push(myResource);
             return setAANumberAssignment(customerId, cesId, myResourceList).then(
               function (response) {
