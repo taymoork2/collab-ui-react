@@ -155,10 +155,10 @@
     "cloudExtensions": "Hybrid Services",
     "cmr": "Collaboration Meeting Room",
     "result": {
-        "200":"entitled successfully",
-        "404":"does not exist",
-        "409":"entitlement previously updated",
-        "other":"not entitled, status: {{status}}"
+      "200": "entitled successfully",
+      "404": "does not exist",
+      "409": "entitlement previously updated",
+      "other": "not entitled, status: {{status}}"
     }
   },
   "usersPreview": {
@@ -1084,9 +1084,9 @@
       }
     },
     "hybridServices": {
-        "result404":"Entitlements for {{email}} do not exist.",
-        "result409":"Entitlement(s) previously updated.",
-        "resultOther":"Entitlements for {{email}} were not updated. Status: {{status}}."
+      "result404": "Entitlements for {{email}} do not exist.",
+      "result409": "Entitlement(s) previously updated.",
+      "resultOther": "Entitlements for {{email}} were not updated. Status: {{status}}."
     }
   },
   "firstTimeWizard": {

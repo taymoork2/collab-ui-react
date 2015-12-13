@@ -1175,15 +1175,17 @@ angular.module('Core')
 
               if (userStatus === 404) {
                 msg = $translate.instant('hercules.hybridServices.result404', {
-                          email: response.email });
+                  email: response.email
+                });
                 failureResponses.push(msg);
               } else if (userStatus === 409) {
                 msg = $translate.instant('hercules.hybridServices.result409');
                 failureResponses.push(msg);
               } else if (userStatus != 200) {
                 msg = $translate.instant('hercules.hybridServices.resultOther', {
-                          email: response.email,
-                          status: userStatus });
+                  email: response.email,
+                  status: userStatus
+                });
                 failureResponses.push(msg);
               }
             });
@@ -1229,7 +1231,9 @@ angular.module('Core')
               userResult.alertType = 'danger';
               isComplete = false;
             } else {
-              userResult.message = $translate.instant('onboardModal.result.other', { status: userStatus });
+              userResult.message = $translate.instant('onboardModal.result.other', {
+                status: userStatus
+              });
               userResult.alertType = 'danger';
               isComplete = false;
             }

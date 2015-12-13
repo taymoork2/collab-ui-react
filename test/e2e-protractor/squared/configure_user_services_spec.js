@@ -62,7 +62,7 @@ describe('Configuring services per-user', function () {
     utils.click(users.closeSidePanel);
   });
 
-  it('should confirm hybrid services ADDITIVE case', function() {
+  it('should confirm hybrid services ADDITIVE case', function () {
     utils.click(users.addUsers);
     utils.expectIsDisplayed(users.manageDialog);
     utils.sendKeys(users.addUsersField, testUser);
@@ -78,7 +78,7 @@ describe('Configuring services per-user', function () {
 
     utils.searchForSingleAndClick(testUser);
     utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
-    utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');    
+    utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
   });
 
   it('should add standard team rooms service', function () {
@@ -89,12 +89,10 @@ describe('Configuring services per-user', function () {
       utils.click(users.standardTeamRooms);
       utils.expectCheckbox(users.standardTeamRooms, true);
       utils.click(users.saveButton);
-
       /* $TODO - note these hybrid settings should be preserved, but are not (existing $BUG)
       utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
-      utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');  
+      utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
       */
-     
       notifications.assertSuccess('entitled successfully');
     });
   });
@@ -215,7 +213,7 @@ describe('Configuring services per-user', function () {
   it('should land to the upload csv section', function () {
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Upload CSV');
     utils.fileSendKeys(inviteusers.fileElem, absolutePath);
-    bImportUsers = true;  // Optimize whether we clean these users up
+    bImportUsers = true; // Optimize whether we clean these users up
     utils.expectTextToBeSet(inviteusers.progress, '100%');
     utils.click(inviteusers.nextButton);
   });
@@ -265,8 +263,7 @@ describe('Configuring services per-user', function () {
     utils.deleteFile(absolutePath);
     deleteUtils.deleteUser(testUser);
 
-    if ( bImportUsers )
-    {
+    if (bImportUsers) {
       for (i = 0; i < userList.length; i++) {
         deleteUtils.deleteUser(userList[i], true);
       }
