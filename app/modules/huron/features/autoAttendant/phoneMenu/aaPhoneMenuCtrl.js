@@ -156,9 +156,9 @@
         var phoneMenuEntry = vm.menuEntry.entries[index];
         var action = phoneMenuEntry.actions[0];
         action.name = keyAction.action;
-        if (angular.isDefined(keyAction.value)) {
-          action.value = keyAction.value;
-        }
+        // When switch between action, the action value is set to empty string,
+        // simplest way to handle action switching.
+        action.value = '';
         delete action.inputType;
         if (angular.isDefined(_keyAction.inputType)) {
           // some action names are overloaded and are distinguished
@@ -259,7 +259,6 @@
                 keyAction.action.name = "";
                 keyAction.action.label = "";
               }
-              keyAction.value = menuEntry.actions[0].value;
               vm.selectedActions.push(keyAction);
             }
           }
