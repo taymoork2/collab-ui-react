@@ -520,6 +520,11 @@ exports.searchAndClick = function (query) {
   return this.clickUser(query);
 };
 
+exports.searchForSingleAndClick = function (query) {
+  this.searchForSingleResult(query);
+  return this.clickUser(query);
+};
+
 exports.expectRowIsNotDisplayed = function (text) {
   this.expectIsNotDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', text)));
 };
@@ -664,8 +669,7 @@ exports.deleteIfUserExists = function (name) {
 };
 
 exports.quickDeleteUser = function (bFirst, name) {
-  if ( bFirst )
-  {
+  if (bFirst) {
     this.click(this.searchbox);
     this.clear(this.searchField);
     this.sendKeys(this.searchField, name);
@@ -673,7 +677,7 @@ exports.quickDeleteUser = function (bFirst, name) {
     utils.expectIsPresent(element(by.css('.icon-spinner')));
     utils.expectIsNotPresent(element(by.css('.icon-spinner')));
   }
-  
+
   return waitUntilElemIsPresent(users.userListAction, 2000).then(function () {
     exports.click(users.userListAction);
     exports.click(users.deleteUserOption);
@@ -681,7 +685,7 @@ exports.quickDeleteUser = function (bFirst, name) {
     exports.click(users.deleteUserButton);
     notifications.assertSuccess(name, 'deleted successfully');
     return true;
-  }, function() {
+  }, function () {
     log('user is not preset');
     return false;
   });

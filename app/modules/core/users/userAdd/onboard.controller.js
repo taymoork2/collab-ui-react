@@ -1174,13 +1174,16 @@ angular.module('Core')
               var msg;
 
               if (userStatus === 404) {
-                msg = 'Entitlements for ' + response.email + ' do not exist.';
+                msg = $translate.instant('hercules.hybridServices.result404', {
+                          email: response.email });
                 failureResponses.push(msg);
               } else if (userStatus === 409) {
-                msg = 'Entitlement(s) previously updated.';
+                msg = $translate.instant('hercules.hybridServices.result409');
                 failureResponses.push(msg);
               } else if (userStatus != 200) {
-                msg = response.email + '\'s entitlements were not updated, status: ' + userStatus;
+                msg = $translate.instant('hercules.hybridServices.resultOther', {
+                          email: response.email,
+                          status: userStatus });
                 failureResponses.push(msg);
               }
             });
@@ -1215,18 +1218,18 @@ angular.module('Core')
             var userStatus = data.userResponse[i].status;
 
             if (userStatus === 200) {
-              userResult.message = 'entitled successfully';
+              userResult.message = $translate.instant('onboardModal.result.200');
               userResult.alertType = 'success';
             } else if (userStatus === 404) {
-              userResult.message = 'does not exist';
+              userResult.message = $translate.instant('onboardModal.result.404');
               userResult.alertType = 'danger';
               isComplete = false;
             } else if (userStatus === 409) {
-              userResult.message = 'entitlement previously updated';
+              userResult.message = $translate.instant('onboardModal.result.409');
               userResult.alertType = 'danger';
               isComplete = false;
             } else {
-              userResult.message = 'not entitled, status: ' + userStatus;
+              userResult.message = $translate.instant('onboardModal.result.other', { status: userStatus });
               userResult.alertType = 'danger';
               isComplete = false;
             }

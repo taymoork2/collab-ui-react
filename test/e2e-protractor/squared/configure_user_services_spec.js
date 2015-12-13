@@ -10,10 +10,11 @@ describe('Configuring services per-user', function () {
   var fileText = 'First Name,Last Name,Display Name,User ID/Email,Directory Number,Direct Line\r\n';
 
   var i;
+  var bImportUsers = false;
 
   // User array
   var userList = [];
-  var numUsers = 101;
+  var numUsers = 10 * 3; // batch size is 10
   for (i = 0; i < numUsers; i++) {
     userList[i] = utils.randomTestGmailwithSalt('config_user');
     fileText += 'Test,User_' + (1000 + i) + ',Test User,' + userList[i] + ',' + (1000 + i) + ',\r\n';
@@ -54,14 +55,33 @@ describe('Configuring services per-user', function () {
     utils.expectIsNotDisplayed(users.manageDialog);
   });
 
-  it('should confirm hybrid services set', function () {
-    utils.searchAndClick(testUser);
+  it('should confirm hybrid services case', function () {
+    utils.searchForSingleAndClick(testUser);
     utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
     utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'Off');
+    utils.click(users.closeSidePanel);
+  });
+
+  it('should confirm hybrid services ADDITIVE case', function() {
+    utils.click(users.addUsers);
+    utils.expectIsDisplayed(users.manageDialog);
+    utils.sendKeys(users.addUsersField, testUser);
+    utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
+    utils.click(users.nextButton);
+
+    // Select hybrid services
+    utils.click(users.hybridServices_UC);
+
+    utils.click(users.onboardButton);
+    notifications.assertSuccess('onboarded successfully');
+    utils.expectIsNotDisplayed(users.manageDialog);
+
+    utils.searchForSingleAndClick(testUser);
+    utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
+    utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');    
   });
 
   it('should add standard team rooms service', function () {
-    utils.searchAndClick(testUser);
     utils.click(users.servicesActionButton);
     utils.click(users.editServicesButton);
     utils.waitForModal().then(function () {
@@ -69,6 +89,12 @@ describe('Configuring services per-user', function () {
       utils.click(users.standardTeamRooms);
       utils.expectCheckbox(users.standardTeamRooms, true);
       utils.click(users.saveButton);
+
+      /* $TODO - note these hybrid settings should be preserved, but are not (existing $BUG)
+      utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
+      utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');  
+      */
+     
       notifications.assertSuccess('entitled successfully');
     });
   });
@@ -114,7 +140,7 @@ describe('Configuring services per-user', function () {
     notifications.assertSuccess('onboarded successfully');
     utils.expectIsNotDisplayed(users.manageDialog);
 
-    utils.searchAndClick(testUser);
+    utils.searchForSingleAndClick(testUser);
     utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'Off');
     utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'Off');
     utils.click(users.closeSidePanel);
@@ -136,7 +162,7 @@ describe('Configuring services per-user', function () {
     notifications.assertSuccess('onboarded successfully');
     utils.expectIsNotDisplayed(users.manageDialog);
 
-    utils.searchAndClick(testUser);
+    utils.searchForSingleAndClick(testUser);
     utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
     utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
     utils.click(users.closeSidePanel);
@@ -167,7 +193,7 @@ describe('Configuring services per-user', function () {
   });
 
   it('should confirm hybrid services set', function () {
-    utils.searchAndClick(testUser);
+    utils.searchForSingleAndClick(testUser);
     utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'Off');
     utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
     utils.click(users.closeSidePanel);
@@ -189,6 +215,7 @@ describe('Configuring services per-user', function () {
   it('should land to the upload csv section', function () {
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Upload CSV');
     utils.fileSendKeys(inviteusers.fileElem, absolutePath);
+    bImportUsers = true;  // Optimize whether we clean these users up
     utils.expectTextToBeSet(inviteusers.progress, '100%');
     utils.click(inviteusers.nextButton);
   });
@@ -210,21 +237,21 @@ describe('Configuring services per-user', function () {
   });
 
   it('should find some of the ' + userList.length + ' users created', function () {
-    var ind;
+    var nInd;
     for (i = 0; i < 3; i++) {
       switch (i) {
       case 0:
-        ind = 0; // first
+        nInd = 0; // first
         break;
       case 1:
-        ind = (userList.length > 2) ? Math.round(userList.length / 2) : 1; // middle
+        nInd = (userList.length > 2) ? Math.round(userList.length / 2) : 1; // middle
         break;
       case 2:
-        ind = userList.length - 1; // last
+        nInd = userList.length - 1; // last
         break;
       }
 
-      utils.searchAndClick(userList[ind]);
+      utils.searchForSingleAndClick(userList[nInd]);
       utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'Off');
       utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
       utils.click(users.closeSidePanel);
@@ -237,8 +264,12 @@ describe('Configuring services per-user', function () {
     // Delete file
     utils.deleteFile(absolutePath);
     deleteUtils.deleteUser(testUser);
-    for (i = 0; i < userList.length; i++) {
-      deleteUtils.deleteUser(userList[i]);
+
+    if ( bImportUsers )
+    {
+      for (i = 0; i < userList.length; i++) {
+        deleteUtils.deleteUser(userList[i], true);
+      }
     }
-  }, 60000 * 4);  // 4 minutes -- give it time to delete the imports
+  }, 60000 * 4); // 4 minutes -- give it time to delete the imports
 });

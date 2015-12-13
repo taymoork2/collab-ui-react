@@ -11,9 +11,8 @@ describe('Remove bulk created accounts from Admin account', function () {
     // Uncomment below if you want everything collabctg related.
     name = 'collabctg+';
     var removeCount = 0;
-    for ( var i = 0; i < 500; i++ )
-    {
-      utils.quickDeleteUser((i === 0), name).then( function() {
+    for (var i = 0; i < 500; i++) {
+      utils.quickDeleteUser((i === 0), name).then(function () {
         removeCount++;
       });
     }
