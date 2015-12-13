@@ -236,12 +236,9 @@ describe('Configuring services per-user', function () {
   afterAll(function () {
     // Delete file
     utils.deleteFile(absolutePath);
-
     deleteUtils.deleteUser(testUser);
-
-    console.log('Deleting all ' + userList.length + ' test users.');
     for (i = 0; i < userList.length; i++) {
       deleteUtils.deleteUser(userList[i]);
     }
-  });
+  }, 60000 * 4);  // 4 minutes -- give it time to delete the imports
 });

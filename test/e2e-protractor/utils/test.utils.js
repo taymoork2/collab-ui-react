@@ -663,6 +663,36 @@ exports.deleteIfUserExists = function (name) {
   }
 };
 
+exports.quickDeleteUser = function (bFirst, name) {
+  if ( bFirst )
+  {
+    this.click(this.searchbox);
+    this.clear(this.searchField);
+    this.sendKeys(this.searchField, name);
+
+    utils.expectIsPresent(element(by.css('.icon-spinner')));
+    utils.expectIsNotPresent(element(by.css('.icon-spinner')));
+  }
+  
+  return waitUntilElemIsPresent(users.userListAction, 2000).then(function () {
+    exports.click(users.userListAction);
+    exports.click(users.deleteUserOption);
+    exports.expectIsDisplayed(users.deleteUserModal);
+    exports.click(users.deleteUserButton);
+    notifications.assertSuccess(name, 'deleted successfully');
+    return true;
+  }, function() {
+    log('user is not preset');
+    return false;
+  });
+
+  function waitUntilElemIsPresent(elem, timeout) {
+    return exports.wait(elem, timeout).then(function () {
+      return elem.isDisplayed();
+    })
+  }
+};
+
 exports.waitForModal = function () {
   return this.wait(element(by.css('.modal-dialog')));
 };
