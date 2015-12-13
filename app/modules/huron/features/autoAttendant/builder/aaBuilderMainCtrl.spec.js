@@ -2,7 +2,7 @@
 
 describe('Controller: AABuilderMainCtrl', function () {
   var controller, Notification, AutoAttendantCeService;
-  var AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAValidationService, AANumberAssignmentService;
+  var AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAValidationService, AANumberAssignmentService, HuronConfig, $httpBackend;
   var $rootScope, $scope, $q, $translate, $stateParams, $compile;
 
   var ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
@@ -46,7 +46,7 @@ describe('Controller: AABuilderMainCtrl', function () {
   beforeEach(module('Huron'));
 
   beforeEach(inject(function (_$rootScope_, _$q_, $injector, _$compile_, _$stateParams_, $controller, _$translate_, _Notification_,
-    _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAUiModelService_, _AAModelService_, _AANumberAssignmentService_, _AutoAttendantCeService_, _AAValidationService_) {
+    _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAUiModelService_, _AAModelService_, _AANumberAssignmentService_, _AutoAttendantCeService_, _AAValidationService_, _HuronConfig_, _$httpBackend_) {
     $rootScope = _$rootScope_;
     $q = _$q_;
     $compile = _$compile_;
@@ -64,6 +64,8 @@ describe('Controller: AABuilderMainCtrl', function () {
     AutoAttendantCeService = _AutoAttendantCeService_;
     AANumberAssignmentService = _AANumberAssignmentService_;
     Notification = _Notification_;
+    HuronConfig = _HuronConfig_;
+    $httpBackend = _$httpBackend_;
 
     // aaModel.dataReadyPromise = $q(function () {});
     $stateParams.aaName = '';
@@ -132,6 +134,42 @@ describe('Controller: AABuilderMainCtrl', function () {
       expect(ret).toBe(true);
 
     });
+  });
+
+  describe('close', function () {
+    it('should warn on CMI assignment failure on close', function () {
+
+      // CMI assignment will fail when there is any bad number in the list
+      $httpBackend.when('PUT', HuronConfig.getCmiV2Url() + '/customers/features/autoattendants/uuid/numbers').respond(function (method, url, data, headers) {
+        if (JSON.stringify(data).indexOf("bad") > -1) {
+          return [500, 'bad'];
+        } else {
+          return [200, 'good'];
+        }
+      });
+
+      var resource = AutoAttendantCeInfoModelService.newResource();
+      resource.setType(aCe.assignedResources.type);
+      resource.setId("bad");
+      resource.setNumber("bad");
+
+      aaModel.aaRecord = angular.copy(aCe);
+      aaModel.aaRecord.assignedResources.push(resource);
+      aaModel.aaRecordUUID = "uuid";
+
+      var errorSpy = jasmine.createSpy('error');
+      Notification.error = errorSpy;
+
+      controller.close();
+
+      $httpBackend.flush();
+
+      $scope.$apply();
+
+      expect(errorSpy).toHaveBeenCalled();
+
+    });
+
   });
 
   describe('saveAANumberAssignmentWithErrorDetail', function () {
