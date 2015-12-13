@@ -73,6 +73,23 @@ describe('Service: ServiceSetup', function () {
     });
   });
 
+  describe('updateSite', function () {
+    var site = {
+      uuid: '1234567890',
+      steeringDigit: '5',
+      siteSteeringDigit: '6'
+    };
+
+    beforeEach(function () {
+      $httpBackend.expectPUT(HuronConfig.getCmiUrl() + '/voice/customers/1/sites/' + site.uuid).respond(204);
+    });
+
+    it('should update site', function () {
+      ServiceSetup.updateSite(site.uuid, site);
+      $httpBackend.flush();
+    });
+  });
+
   describe('loadExternalNumberPool', function () {
     var extNumPool = [{
       uuid: '777-888-666',
@@ -91,7 +108,7 @@ describe('Service: ServiceSetup', function () {
     });
   });
 
-  describe('updateCustomerVoicemailPilotNumber', function () {
+  describe('updateCustomer', function () {
     var customer = [{
       uuid: '1234567890',
       voicemail: {
@@ -104,7 +121,22 @@ describe('Service: ServiceSetup', function () {
     });
 
     it('should save customer', function () {
-      ServiceSetup.updateCustomerVoicemailPilotNumber(customer);
+      ServiceSetup.updateCustomer(customer);
+      $httpBackend.flush();
+    });
+  });
+
+  describe('updateVoicemailTimezone', function () {
+    var usertemplate = [{
+      timeZone: '20',
+      objectId: 'fd87d99c-98a4-45db-af59-ebb9a6f18fdd'
+    }];
+    beforeEach(function () {
+      $httpBackend.expectPUT(HuronConfig.getCmiUrl() + '/voicemail/customers/1/usertemplates').respond(204);
+    });
+
+    it('should update timezone', function () {
+      ServiceSetup.updateVoicemailTimezone(usertemplate.timeZone, usertemplate.objectId);
       $httpBackend.flush();
     });
   });

@@ -790,6 +790,7 @@
     "carrierCountryGetError": "Failed to get phone carrier information.",
     "voicemailGetError": "Failed to get company voicemail number.",
     "voicemailUpdateError": "Failed to update company voicemail number.",
+    "voicemailNoExternalNumbersError": "You must have unassigned direct lines to turn on voicemail. Please contact your partner or administrator.",
     "timezoneUpdateError": "Failed to update company timezone.",
     "extensionDeleteSuccess": "Successfully deleted extension {{extension}}.",
     "extensionDeleteError": "Failed to delete extension {{extension}}.",
@@ -799,7 +800,8 @@
     "rangeOverlap": "Extension Ranges must not overlap.",
     "rangeDuplicate": "Extension Ranges cannot have duplicates.",
     "fieldValidationFailed": "Errors exist on the page.  Please correct and try again.",
-    "singleNumberRangeError": "Extension Ranges cannot begin and end with the same number."
+    "singleNumberRangeError": "Extension Ranges cannot begin and end with the same number.",
+    "mapCompanyVoicemailToExternalNumberError": "Existing company voicemail number was not found in list of company direct lines."
   },
   "dirsyncModal": {
     "chooseSync": "Choose Sync",
