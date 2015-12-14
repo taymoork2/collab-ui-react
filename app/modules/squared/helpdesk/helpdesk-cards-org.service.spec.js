@@ -55,7 +55,6 @@ describe('HelpdeskCardsService', function () {
 
     beforeEach(function () {
       spyOn(LicenseService, 'orgIsEntitledTo').and.callThrough();
-      spyOn(LicenseService, 'filterAndExtendLicenses').and.callThrough();
     });
 
     it('should return correct message card for org', function () {

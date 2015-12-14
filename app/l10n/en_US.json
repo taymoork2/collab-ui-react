@@ -3095,6 +3095,7 @@
     "verification": "Verification",
     "resend": "Re-send",
     "sendCode": "Send Code",
-    "more": "More"
+    "more": "More",
+    "usage": "{{usage}} of {{volume}} in use"
   }
 }

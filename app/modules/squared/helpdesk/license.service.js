@@ -57,20 +57,6 @@
       });
     }
 
-    function filterAndExtendLicenses(licenses, type) {
-      var matchingLicenses = _.filter(licenses, {
-        type: type
-      });
-      _.each(matchingLicenses, function (l) {
-        l.displayName = $translate.instant('helpdesk.licenseDisplayNames.' + l.offerCode, {
-          volume: l.volume,
-          capacity: l.capacity
-        });
-        l.usagePrecentage = _.round(((l.usage * 100) / l.volume) || 0);
-      });
-      return matchingLicenses;
-    }
-
     function aggregatedLicenses(licenses, type) {
       var matchingLicenses = _.clone(_.filter(licenses, {
         type: type
@@ -80,19 +66,19 @@
         var displayName = $translate.instant('helpdesk.licenseDisplayNames.' + l.offerCode, {
           capacity: l.capacity
         });
-        var key = l.offerCode + '#' + l.capacity + "#" + l.siteUrl;
+        var key = l.offerCode + '#' + (l.capacity || 0) + (l.siteUrl ? "#" + l.siteUrl : '');
         var aggregate = _.find(aggregatedLics, {
           key: key
         });
         if (aggregate) {
           aggregate.totalVolume += l.volume;
-          aggregate.totalUsage += l.usage;
+          aggregate.totalUsage += (l.usage || 0);
           aggregate.licenses.push(l);
         } else {
           aggregate = {
             key: key,
             displayName: displayName,
-            totalUsage: l.usage,
+            totalUsage: (l.usage || 0),
             totalVolume: l.volume,
             licenses: [l],
             siteUrl: l.siteUrl
@@ -127,7 +113,6 @@
       userIsEntitledTo: userIsEntitledTo,
       userIsLicensedFor: userIsLicensedFor,
       orgIsEntitledTo: orgIsEntitledTo,
-      filterAndExtendLicenses: filterAndExtendLicenses,
       aggregatedLicenses: aggregatedLicenses,
       UserLicense: UserLicense,
       getLicensesInOrg: getLicensesInOrg,
