@@ -996,7 +996,6 @@ angular.module('Core')
         ],
         'squared-fusion-mgmt': [
           'cluster-details',
-          'cluster-details-new',
           'management-service',
         ],
         'spark-room-system': [

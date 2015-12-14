@@ -3,6 +3,14 @@
     <cs-header-left>
     </cs-header-left>
     <cs-header-right>
+      <div class="user-info dropdown">
+        <button class="btn--user">
+          <a href ng-click="helpdeskHelpCtrl.showSearchHelp()" tabindex="-1">
+            <!-- TODO: should avoid inline css -->
+            <i class="icon icon-help" style="font-size:2rem;color:lightgrey;"></i>
+          </a>
+        </button>
+      </div>
       <cr-user-info></cr-user-info>
     </cs-header-right>
   </cs-header>
