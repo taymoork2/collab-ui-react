@@ -27,6 +27,8 @@
         deleteOnExpire: 'aggressive'
       });
     }
+
+    //TODO: Useragent detection a probably not a reliable way to detect mobile device...
     var isMobile = {
       Android: function () {
         return navigator.userAgent.match(/Android/i);
