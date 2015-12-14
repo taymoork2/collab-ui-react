@@ -640,7 +640,8 @@
     "users": "Users",
     "settings": "Settings",
     "resources": "Resources",
-    "download": "Download"
+    "download": "Download",
+    "quantity": "Qty"
   },
   "notifications": {
     "success": "Success notifications",
@@ -783,6 +784,7 @@
     "carrierCountryGetError": "Failed to get phone carrier information.",
     "voicemailGetError": "Failed to get company voicemail number.",
     "voicemailUpdateError": "Failed to update company voicemail number.",
+    "voicemailNoExternalNumbersError": "You must have unassigned direct lines to turn on voicemail. Please contact your partner or administrator.",
     "timezoneUpdateError": "Failed to update company timezone.",
     "extensionDeleteSuccess": "Successfully deleted extension {{extension}}.",
     "extensionDeleteError": "Failed to delete extension {{extension}}.",
@@ -792,7 +794,8 @@
     "rangeOverlap": "Extension Ranges must not overlap.",
     "rangeDuplicate": "Extension Ranges cannot have duplicates.",
     "fieldValidationFailed": "Errors exist on the page.  Please correct and try again.",
-    "singleNumberRangeError": "Extension Ranges cannot begin and end with the same number."
+    "singleNumberRangeError": "Extension Ranges cannot begin and end with the same number.",
+    "mapCompanyVoicemailToExternalNumberError": "Existing company voicemail number was not found in list of company direct lines."
   },
   "dirsyncModal": {
     "chooseSync": "Choose Sync",
@@ -1752,6 +1755,7 @@
     "customerInformation": "Customer Information",
     "termsOfTrial": "Terms of Trial",
     "trialServices": "Trial Services",
+    "sparkRoomSystem": "Spark Room System",
     "trialButton": "Add Trial Customer",
     "dialogTitle": "Add New Trial",
     "customerName": "Company Name",
@@ -1768,6 +1772,8 @@
     "errGetPhoneNumberCount": "Failed to retrieve phone number count.",
     "invalidTrialLicenseCount": "Number of Licenses should be greater than 0 and less than 1000.",
     "individualUserServices": "Individual User Services",
+    "roomSystems": "Room Systems",
+    "roomSystem": "Room System",
     "deviceBasedServices": "Device-based Services",
     "call": "Call"
   },
@@ -1806,8 +1812,8 @@
     "setupLater": "No thanks",
     "setupNow": "Yes, setup the services",
     "squareducError": "Created trial, but unable to provision Spark UC",
-    "addSuccess": "A trial was successfully started for {{customerName}}.",
-    "editSuccess": "You have successfully edited a trial for {{customerName}}."
+    "addSuccess": "A trial was successfully started for {{customerName}} with {{licenseCount}} licenses for {{licenseDuration}} days.",
+    "editSuccess": "You have successfully edited a trial for {{customerName}} with {{licenseCount}} licenses for {{licenseDuration}} days."
   },
   "trials": {
     "collab": "Standard Team Rooms + 25 Party Meetings",
@@ -1889,7 +1895,8 @@
     "message": "Message",
     "meeting": "Meeting 25 Party",
     "call": "Call",
-    "roomSystem": "Spark Room System"
+    "roomSystem": "Spark Room System",
+    "branding": "Customer Branding"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
@@ -3002,7 +3009,6 @@
     "type": "Type",
     "partner": "Partner",
     "customer": "Customer",
-    "helpLink": "Help",
     "devices": "Devices",
     "mobile": "mobile",
     "work": "work",
@@ -3090,11 +3096,13 @@
       "search-criterias-devices": "<strong>Devices</strong>: Display Name, Serial or MAC Address",
       "search-criterias-note": "Note: Devices are only supported when search is narrowed to one customer.",
       "narrow-title": "Narrow Search",
-      "narrow-info": "To narrow your search to one customer only, select <i class='icon icon-search'></i> in the customer search result card or select the <strong>s</strong> key on your keyboard from the customer view page. Alternatively, select <i class='icon icon-search'></i> from the customer view page."
+      "narrow-info": "To narrow your search to one customer only, select <i class='icon icon-search'></i> in the customer search result card or select the <strong>s</strong> key on your keyboard from the customer view page. Alternatively, select <i class='icon icon-search'></i> from the customer view page.",
+      "narrow-info-on-mobile": "To narrow your search to one customer only, select <i class='icon icon-search'></i> in the customer search result card. Alternatively, select <i class='icon icon-search'></i> from the customer view page."
     },
     "verification": "Verification",
     "resend": "Re-send",
     "sendCode": "Send Code",
-    "more": "More"
+    "more": "More",
+    "usage": "{{usage}} of {{volume}} in use"
   }
 }

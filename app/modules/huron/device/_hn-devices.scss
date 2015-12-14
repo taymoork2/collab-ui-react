@@ -28,7 +28,7 @@
   display: inline-block;
   background-color: $brand-default;
   border-radius: 50%;
-  margin-right: 4px;
+  @include vr-spacing(mr, .5);
 }
 
 .online-status::before {

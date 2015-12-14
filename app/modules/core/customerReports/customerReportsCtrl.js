@@ -30,7 +30,6 @@
     vm.activeButton = [1, 2, 3];
 
     var avgRoomsChart = null;
-    vm.avgRoomTitle = "";
     vm.avgRoomsDescription = "";
     vm.avgRoomStatus = REFRESH;
 
@@ -65,7 +64,7 @@
     };
 
     vm.activePage = function (num) {
-      return vm.activeUserCurrentPage === Math.ceil((num + 1) / 5);
+      return vm.activeUserCurrentPage === Math.floor((num + 1) / 5);
     };
 
     vm.changePage = function (num) {
