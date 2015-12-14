@@ -28,6 +28,7 @@ if [ $# -lt 3 ]; then
     echo "'`basename $0`' options:"
     echo "  '--print-only',  Print the command that would be run instead of actually running it."
     echo "  '--pretty-print-json',  Pretty-print JSON response (error if the response is not JSON-formatted)"
+    echo "  '--json-req-mode',  Force 'Content-Type: application/json'"
     echo ""
     echo "'curl-options':"
     echo "  Any valid option that can be passed to 'curl'. See curl(1)."
@@ -60,6 +61,7 @@ unset -v curl_opts[$last_position]
 # iterate through remaining args, look for special options only meaningful to this script
 print_only="false"
 pretty_print_json="false"
+json_req_mode="false"
 i=0
 for arg in "${curl_opts[@]}"; do
     case "${arg}" in
@@ -71,6 +73,18 @@ for arg in "${curl_opts[@]}"; do
             pretty_print_json="true"
             unset -v curl_opts[$(( 2 + $i ))]
             ;;
+        "--json-req-mode" )
+            json_req_mode="true"
+            unset -v curl_opts[$(( 2 + $i ))]
+            ;;
+        "--data" )
+            # if a '--data' arg is present, see if the next arg specifies a *.json filename payload
+            next_arg="${curl_opts[$(( 2 + $i + 1 ))]}"
+            if [[ "$next_arg" =~ @.*.json$ ]]; then
+                json_req_mode="true"
+            fi
+            ;;
+
     esac
     let "i += 1"
 done
@@ -85,9 +99,16 @@ bearer_token="`${top_dir}/bin/curl-get-bearer-token.sh ${usr_label}`"
 is_safe_atlas_operation "${method}" "${atlas_uri}"
 [ $? -eq 0 ] || abort
 
+# add an override header to force content-type to json as appropriate
+content_type_override=""
+if [ "${json_req_mode}" = "true" ]; then
+    content_type_override="-H 'Content-Type: application/json'"
+fi
+
 # final command to run
 cmd="curl --request ${method} \
     -H 'Authorization: Bearer ${bearer_token}' \
+    ${content_type_override} \
     ${curl_opts[@]} \
     '${atlas_api_url}${atlas_uri}'"
 
