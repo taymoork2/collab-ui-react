@@ -1635,8 +1635,7 @@ angular.module('Core')
 
       getUnlicensedUsers();
 
-      var givenNameTemplate = '<div class="ngCellText"><p class="hoverStyle" title="{{row.entity.name.givenName}}">{{row.entity.name.givenName}}</p></div>';
-      var familyNameTemplate = '<div class="ngCellText"><p class="hoverStyle" title="{{row.entity.name.familyName}}">{{row.entity.name.familyName}}</p></div>';
+      var displayNameTemplate = '<div class="ngCellText"><p class="hoverStyle" title="{{row.entity.displayName}}">{{row.entity.displayName}}</p></div>';
       var emailTemplate = '<div class="ngCellText"><p class="hoverStyle" title="{{row.entity.userName}}">{{row.entity.userName}}</p></div>';
 
       $scope.convertGridOptions = {
@@ -1652,15 +1651,9 @@ angular.module('Core')
         },
         selectedItems: [],
         columnDefs: [{
-          field: 'name.givenName',
-          displayName: $translate.instant('usersPage.firstnameHeader'),
-          cellTemplate: givenNameTemplate,
-          resizable: false,
-          sortable: true
-        }, {
-          field: 'name.familyName',
-          displayName: $translate.instant('usersPage.lastnameHeader'),
-          cellTemplate: familyNameTemplate,
+          field: 'displayName',
+          displayName: $translate.instant('usersPage.displayNameHeader'),
+          cellTemplate: displayNameTemplate,
           resizable: false,
           sortable: true
         }, {

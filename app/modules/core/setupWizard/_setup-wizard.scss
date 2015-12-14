@@ -579,3 +579,42 @@
     }
   }
 }
+ input#dirDomainText {
+    width: 25%;
+    left: 2px;
+    position: relative;
+  }
+.dirsync-info {
+  margin-top: 16px;
+  width: 550px;
+  display: flex;
+  flex-direction: column;
+  .ftwdirgridStyle {
+    margin-top: 10px;
+    height: 200px;
+    border: 1px solid lightgray;
+    & >:nth-child(2) {
+      overflow-x: hidden;
+    }
+  }
+  .sync-dirsync-refresh-button {
+      font-size: 12px;
+     //font-size: $body-small-font-size;
+  }
+}
+.finish-page {
+    text-align: center;
+    width: 25rem;
+    margin: 0 auto;
+    margin-top: 10rem;
+    i {
+      font-size: 8rem;
+      color: $color-cta-base;
+    }
+    h3, p {
+      margin-top: 1.5rem
+    }
+    p {
+      font-size: 1rem
+    }
+}

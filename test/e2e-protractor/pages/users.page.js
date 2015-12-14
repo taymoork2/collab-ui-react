@@ -82,8 +82,8 @@ var UsersPage = function () {
   this.closePreview = element(by.id('exitPreviewButton'));
   this.closeDetails = element(by.id('exit-details-btn'));
 
-  this.standardTeamRooms = element(by.cssContainingText('label', 'Standard Team Rooms'));
-  this.advancedCommunications = element(by.cssContainingText('label', 'Advanced Spark Call'));
+  this.standardTeamRooms = element(by.cssContainingText('label', 'Spark Message'));
+  this.advancedCommunications = element(by.cssContainingText('label', 'Spark Call'));
 
   this.subTitleAdd = element(by.id('subTitleAdd'));
   this.subTitleEnable = element(by.id('subTitleEnable'));
