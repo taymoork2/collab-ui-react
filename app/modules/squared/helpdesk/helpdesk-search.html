@@ -16,12 +16,6 @@
     </form>
 
     <div class="input-description">
-      <p>
-        <a href ng-click="helpdeskCtrl.showSearchHelp()" tabindex="-1">
-          <span translate="helpdesk.helpLink"></span><i class="icon icon-help icon-search-help"></i>
-        </a>
-      </p>
-
       <div ng-if="helpdeskCtrl.currentSearch.orgFilter" class="helpdesk-tile">
         <span translate="helpdesk.searchingOrg"
               translate-value-name="{{helpdeskCtrl.currentSearch.orgFilter.displayName}}"></span>

@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskController(HelpdeskService, $translate, $scope, $modal) {
+  function HelpdeskController(HelpdeskService, $translate, $scope) {
     $('body').css('background', 'white');
     $scope.$on('$viewContentLoaded', function () {
       if (HelpdeskService.checkIfMobile()) {
@@ -23,7 +23,6 @@
     vm.searchString = '';
     vm.keyPressHandler = keyPressHandler;
     vm.showMoreResults = showMoreResults;
-    vm.showSearchHelp = showSearchHelp;
     vm.showDeviceResultPane = showDeviceResultPane;
     vm.showUsersResultPane = showUsersResultPane;
     vm.showOrgsResultPane = showOrgsResultPane;
@@ -245,14 +244,6 @@
       if (newTabIndex != -1) {
         $('[tabindex=' + newTabIndex + ']').focus();
       }
-    }
-
-    function showSearchHelp() {
-      var searchHelpUrl = "modules/squared/helpdesk/helpdesk-search-help-dialog.html";
-      var searchHelpMobileUrl = "modules/squared/helpdesk/helpdesk-search-help-dialog-mobile.html";
-      $modal.open({
-        templateUrl: HelpdeskService.checkIfMobile() ? searchHelpMobileUrl : searchHelpUrl
-      });
     }
 
   }
