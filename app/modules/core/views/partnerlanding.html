@@ -1,153 +1,159 @@
 <!-- Main View -->
 <div id="trialsPanel" class="container partner-container">
-  <div class="row">
-    <section class="columns small-12 medium-7 large-8" ng-controller="PartnerReportsCtrl" >
-    <div class="row collapse">
-      <div class="columns small-12">
-        <div class="row collapse">
-            <span ng-click="reloadReports(false)" class="overview-updated" id="time-click-div">
-              <cr-reload-data id="partnerRefreshData" last-updated-time="refreshTime"></cr-reload-data>
-            </span>
-            <div class="columns small-6 right" dropdown is-open="db.isOpen">
-              <button id="customerDropdown" type="button" class="btn btn--white dropdown-toggle pull-right" ng-disabled="db.disabled">
-              <span>{{currentSelection | translate}}</span><span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu reports-customer-dropdown" role="menu">
-                <li ng-click="reloadReports(true)"><a href="#"><span translate="reports.allCustomers"></span></a></li>
-                <li class="divider"></li>
-                <li ng-repeat="orgs in totalOrgsData" ng-click="getCustomerReports(true, orgs)"><a href="#">{{orgs.customerName}}</a></li>
-              </ul>
-            </div>
-        </div>
-      </div>
-    </div>
-      <section class="background-white">
-        <h3 id="entitlementTitle"><span translate="partnerHomePage.entitlementsTitle"></span> {{counts.entitlements}}</h3>
-        <div id="entitlementsLegend"></div>
-        <div id="avgEntitlementsdiv" class="report"></div>
-        <div class="report-status-partner" id="avg-entitlements-refresh" ng-if="isRefresh('entitlements')">
-          <i class='icon icon-spinner icon-2x'></i>
-          <span translate="status.noResults" ng-if="isEmpty('entitlements')"></span>
-          <span translate="status.errorProcessing" ng-if="hasError('entitlements')"></span>
-        </div>
-      </section>
-      <section class="tab-reports" id="tab-reports">
-        <cs-tabset justified="true" large="true">
-          <cs-tab select="resizeActiveUsersChart()">
-            <cs-tab-heading>
-              <span translate="partnerHomePage.activeUsersTitle"></span>
-              <div class="total">{{counts.activeUsers}}</div>
-            </cs-tab-heading>
-            <div id="activeUsersdiv" class="tab-report"></div>
-            <div id='active-users-refresh' class="report-status-partner" ng-if="isRefresh('activeUsers')">
-              <i class='icon icon-spinner icon-2x'></i>
-              <span translate="status.noResults" ng-if="isEmpty('activeUsers')"></span>
-              <span translate="status.errorProcessing" ng-if="hasError('activeUsers')"></span>
-            </div>
-          </cs-tab>
-          <cs-tab select="resizeAverageCallsChart()">
-            <cs-tab-heading>
-              <span translate="partnerHomePage.averageCallsTitle"></span>
-              <div class="total">{{counts.averageCalls}}</div>
-            </cs-tab-heading>
-            <div id="avgCallsdiv" class="tab-report"></div>
-            <div id="calls-refresh" class="report-status-partner" ng-if="isRefresh('avgCalls')">
-              <i class='icon icon-spinner icon-2x'></i>
-              <span translate="status.noResults" ng-if="isEmpty('avgCalls')"></span>
-              <span translate="status.errorProcessing" ng-if="hasError('avgCalls')"></span>
-            </div>
-          </cs-tab>
-          <cs-tab select="resizeContentSharedChart()">
-            <cs-tab-heading>
-              <span translate="partnerHomePage.contentSharedTitle"></span>
-              <div class="total">{{counts.contentShared}}</div>
-            </cs-tab-heading>
-            <div id="contentShareddiv" class="tab-report"></div>
-            <div id="content-shared-refresh" class="report-status-partner" ng-if="isRefresh('contentShared')">
-              <i class='icon icon-spinner icon-2x'></i>
-              <span translate="status.noResults" ng-if="isEmpty('contentShared')"></span>
-              <span translate="status.errorProcessing" ng-if="hasError('contentShared')"></span>
-            </div>
-          </cs-tab>
-        </cs-tabset>
-      </section>
-      <!-- end -->
-    </section>
-
-    <section class = "columns small-12 medium-5 large-4">
-      <section id="activeTrials" class="trialTitle">
-          <span class="h4">{{'partnerHomePage.trialsHeading' | translate}}</span>
-          <button id="trialAddButton" class="btn btn--people btn right" translate="partnerHomePage.addTrial" ng-click="openAddTrialModal()"></button>
-      </section>
-
-      <section class="trialsPanel">
-        <div id="trialHeader" class="row collapse">
-          <div class="columns small-7 trialHeading">
-            <span class="small" translate="partnerHomePage.trialsCustomerName"></span>
-          </div>
-          <div class="columns small-3 trialHeading trials-heading-spacing">
-            <span class="small" translate="partnerHomePage.trialsEndDate"></span>
-          </div>
-          <div class="columns small-2 trialHeading trials-heading-spacing">
-            <span class="small" translate="partnerHomePage.trialsNumUsers"></span>
-          </div>
-        </div>
-        <div id="trials-refresh" class="trials-refresh" ng-show="showTrialsRefresh">
-          <i class='icon icon-spinner'></i>
-        </div>
-        <div class="trial" ng-repeat="trial in activeList | orderBy: 'daysLeft' | limitTo: displayRows">
-          <div class="row">
-            <div class="columns small-12">
-              <div class="trialCustomer ellipsis-trials" id="{{trial.customerName}}" ng-click="setTrial(trial); openEditTrialModal();" orgId="{{trial.customerOrgId}}" trialId="{{trial.trialId}}">
-                <a href="">
-                  <span>{{trial.customerName}}</span>
-                </a>
+  <cs-page-header title="{{::'overview.pageTitle' | translate}}"></cs-page-header>
+  <div class="content-container row collapse cs-card-container">
+    <section class="columns medium-12">
+      <cs-card-layout>
+        <cs-card class="large">
+          <article class="trials-card">
+            <header id="activeTrials" class="trialTitle">
+              <span class="h4">{{'partnerHomePage.trialsHeading' | translate}}</span>
+              <button id="trialAddButton" class="btn btn--people btn right" translate="partnerHomePage.addTrial" ng-click="openAddTrialModal()"></button>
+            </header>
+            <section class="trialsPanel">
+              <div id="trialHeader" class="row collapse">
+                <div class="columns small-8 trialHeading trialHeading--customer">
+                  <span class="small" translate="partnerHomePage.trialsCustomerName"></span>
+                </div>
+                <div class="columns small-2 trialHeading trials-heading-spacing">
+                  <span class="small" translate="partnerHomePage.trialsEndDate"></span>
+                </div>
+                <div class="columns small-2 trialHeading trials-heading-spacing">
+                  <span class="small" translate="partnerHomePage.trialsNumUsers"></span>
+                </div>
               </div>
-            </div>
-          </div>
-          <div class="row trialRow collapse">
-            <div class="columns small-9">
-              <div class="trialbar">
-                <progressbar max="trial.duration" value="trial.daysUsed" type="{{getProgressStatus(trial)}}"></progressbar>
+              <div id="trials-refresh" class="trials-refresh" ng-show="showTrialsRefresh">
+                <i class='icon icon-spinner'></i>
               </div>
-            </div>
-            <div class="columns small-1 trialDays">
-              <span ng-class="{'trial-danger-text': trial.daysLeft <= 5}">{{trial.daysLeft}}</span>
-            </div>
-            <div class="columns small-2 trialLicense">
-              <span>{{trial.usage}}</span>/<span>{{trial.licenses}}</span>
-            </div>
-          </div>
-        </div>
-
-        <div id="viewAll" class="row trials-all">
-          <div class="col-xs-6 col-sm-6 col-md-6">
-            <span ng-click="setFilter('trials')"><a id="viewAllLink" ui-sref="partnercustomers.list({filter: 'trials'})">{{'partnerHomePage.viewAll' | translate}}</a></span>
-          </div>
-        </div>
-
-        <div ng-show="showExpired">
-          <div id="expiredTrials" class="row">
-            <div class="col-xs-10 col-sm-10 col-md-10">
-              <span class="trialTitle h5">{{'partnerHomePage.expiredHeading' | translate}}</span>
-            </div>
-          </div>
-
-          <div class="row trialRow" ng-repeat="trial in expiredList | orderBy: 'daysLeft' | limitTo: expiredRows">
-            <div class="col-xs-5 col-sm-5 col-md-5 expiredCustomer">
-              <div>
-                <span>{{trial.customerName}}</span>
+              <div class="trial" ng-repeat="trial in activeList | orderBy: 'daysLeft' | limitTo: displayRows">
+                <div class="row collapse">
+                  <div class="columns small-12">
+                    <div class="trialCustomer ellipsis-trials" id="{{trial.customerName}}" ng-click="setTrial(trial); openEditTrialModal();" orgId="{{trial.customerOrgId}}" trialId="{{trial.trialId}}">
+                      <a href="">
+                        <span>{{trial.customerName}}</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="row trialRow collapse">
+                  <div class="columns small-8">
+                    <div class="trialbar">
+                      <progressbar max="trial.duration" value="trial.daysUsed" type="{{getProgressStatus(trial)}}"></progressbar>
+                    </div>
+                  </div>
+                  <div class="columns small-2 trialDays">
+                    <span ng-class="{'trial-danger-text': trial.daysLeft <= 5}">{{trial.daysLeft}}</span>
+                  </div>
+                  <div class="columns small-2 trialLicense">
+                    <span>{{trial.usage}}</span>/<span>{{trial.licenses}}</span>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div class="col-xs-4 col-sm-4 col-md-4  expired">
-              <span translate="partnerHomePage.daysAgo" translate-values="{ days: getDaysAgo(trial.daysLeft) }"></span>
-            </div>
-            <div class="col-xs-3 col-sm-3 col-md-3  expired">
-              <span>{{trial.usage}}</span>/<span>{{trial.licenses}}</span>
-            </div>
-          </div>
-        </div>
-      </section>
+              <div ng-show="showExpired">
+                <div id="expiredTrials" class="row">
+                  <div class="col-xs-10 col-sm-10 col-md-10">
+                    <span class="trialTitle h5">{{'partnerHomePage.expiredHeading' | translate}}</span>
+                  </div>
+                </div>
+                <div class="row trialRow" ng-repeat="trial in expiredList | orderBy: 'daysLeft' | limitTo: expiredRows">
+                  <div class="col-xs-5 col-sm-5 col-md-5 expiredCustomer">
+                    <div>
+                      <span>{{trial.customerName}}</span>
+                    </div>
+                  </div>
+                  <div class="col-xs-4 col-sm-4 col-md-4  expired">
+                    <span translate="partnerHomePage.daysAgo" translate-values="{ days: getDaysAgo(trial.daysLeft) }"></span>
+                  </div>
+                  <div class="col-xs-3 col-sm-3 col-md-3  expired">
+                    <span>{{trial.usage}}</span>/<span>{{trial.licenses}}</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <footer>
+              <div id="viewAll" class="row collapse trials-all">
+                <div class="col-xs-6 col-sm-6 col-md-6">
+                  <span ng-click="setFilter('trials')"><a id="viewAllLink" ui-sref="partnercustomers.list({filter: 'trials'})">{{'partnerHomePage.viewAll' | translate}}</a></span>
+                </div>
+              </div>
+            </footer>
+          </article>
+        </cs-card>
+        <cs-card class="large">
+          <article ng-controller="PartnerReportsCtrl">
+            <header>
+              <div class="row collapse">
+                <div class="columns small-12" dropdown is-open="db.isOpen">
+                  <button id="customerDropdown" type="button" class="btn btn--white dropdown-toggle right" ng-disabled="db.disabled">
+                    <span>{{currentSelection | translate}}</span><span class="icon icon-arrow-down"></span>
+                  </button>
+                  <ul class="dropdown-menu reports-customer-dropdown" role="menu">
+                    <li ng-click="reloadReports(true)"><a href="#"><span translate="reports.allCustomers"></span></a></li>
+                    <li class="divider"></li>
+                    <li ng-repeat="orgs in totalOrgsData" ng-click="getCustomerReports(true, orgs)"><a href="#">{{orgs.customerName}}</a></li>
+                  </ul>
+                </div>
+              </div>
+            </header>
+            <section class="onboarded">
+              <div class="onboarded">
+                <div id="entitlementTitle"><span translate="partnerHomePage.entitlementsTitle"></span> <span class="total">{{counts.entitlements}}</span></div>
+                <div id="avgEntitlementsdiv" class="report"></div>
+                <div class="report-status-partner" id="avg-entitlements-refresh" ng-if="isRefresh('entitlements')">
+                  <i class='icon icon-spinner icon-2x'></i>
+                  <span translate="status.noResults" ng-if="isEmpty('entitlements')"></span>
+                  <span translate="status.errorProcessing" ng-if="hasError('entitlements')"></span>
+                </div>
+              </div>
+            </section>
+            <section class="tab-reports" id="tab-reports">
+              <cs-tabset justified="true" large="true" class="tabcontainer">
+                <cs-tab select="resizeActiveUsersChart()">
+                  <cs-tab-heading>
+                    <span translate="partnerHomePage.activeUsersTitle"></span>
+                    <div class="total">{{counts.activeUsers}}</div>
+                  </cs-tab-heading>
+                  <div id="activeUsersdiv" class="tab-report"></div>
+                  <div id='active-users-refresh' class="report-status-partner" ng-if="isRefresh('activeUsers')">
+                    <i class='icon icon-spinner icon-2x'></i>
+                    <span translate="status.noResults" ng-if="isEmpty('activeUsers')"></span>
+                    <span translate="status.errorProcessing" ng-if="hasError('activeUsers')"></span>
+                  </div>
+                </cs-tab>
+                <cs-tab select="resizeAverageCallsChart()">
+                  <cs-tab-heading>
+                    <span translate="partnerHomePage.averageCallsTitle"></span>
+                    <div class="total">{{counts.averageCalls}}</div>
+                  </cs-tab-heading>
+                  <div id="avgCallsdiv" class="tab-report"></div>
+                  <div id="calls-refresh" class="report-status-partner" ng-if="isRefresh('avgCalls')">
+                    <i class='icon icon-spinner icon-2x'></i>
+                    <span translate="status.noResults" ng-if="isEmpty('avgCalls')"></span>
+                    <span translate="status.errorProcessing" ng-if="hasError('avgCalls')"></span>
+                  </div>
+                </cs-tab>
+                <cs-tab select="resizeContentSharedChart()">
+                  <cs-tab-heading>
+                    <span translate="partnerHomePage.contentSharedTitle"></span>
+                    <div class="total">{{counts.contentShared}}</div>
+                  </cs-tab-heading>
+                  <div id="contentShareddiv" class="tab-report"></div>
+                  <div id="content-shared-refresh" class="report-status-partner" ng-if="isRefresh('contentShared')">
+                    <i class='icon icon-spinner icon-2x'></i>
+                    <span translate="status.noResults" ng-if="isEmpty('contentShared')"></span>
+                    <span translate="status.errorProcessing" ng-if="hasError('contentShared')"></span>
+                  </div>
+                </cs-tab>
+              </cs-tabset>
+            </section>
+            <footer>
+              <span ng-click="reloadReports(false)" class="overview-updated right" id="time-click-div">
+                  <cr-reload-data id="partnerRefreshData" last-updated-time="refreshTime"></cr-reload-data>
+                </span>
+            </footer>
+          </article>
+        </cs-card>
+      </cs-card-layout>
     </section>
   </div>
 </div>

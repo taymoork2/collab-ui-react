@@ -3,7 +3,9 @@
 describe('Partner Service', function () {
   beforeEach(module('Core'));
 
-  var $httpBackend, $rootScope, PartnerService, Authinfo, Config;
+  beforeEach(module('Huron'));
+
+  var $httpBackend, $rootScope, $q, PartnerService, Authinfo, Config, FeatureToggleService;
 
   var testData;
 
@@ -19,14 +21,18 @@ describe('Partner Service', function () {
     });
   });
 
-  beforeEach(inject(function (_$httpBackend_, _$rootScope_, _PartnerService_, _Config_, _Authinfo_) {
+  beforeEach(inject(function (_$httpBackend_, _$rootScope_, _$q_, _PartnerService_, _Config_, _Authinfo_, _FeatureToggleService_) {
     $httpBackend = _$httpBackend_;
     PartnerService = _PartnerService_;
     Config = _Config_;
     Authinfo = _Authinfo_;
     $rootScope = _$rootScope_;
+    $q = _$q_;
+    FeatureToggleService = _FeatureToggleService_;
 
     testData = getJSONFixture('core/json/partner/partner.service.json');
+
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
   }));
 
   afterEach(function () {
@@ -97,7 +103,7 @@ describe('Partner Service', function () {
 
   it('should successfully return a boolean on whether or not a license is available from calling isLicenseInfoAvailable', function () {
     var licenses = [];
-    expect(PartnerService.isLicenseInfoAvailable(licenses)).toBe(false);
+    expect(PartnerService.isLicenseInfoAvailable(licenses)).toBe(true);
     expect(PartnerService.isLicenseInfoAvailable(testData.licenses)).toBe(true);
   });
 
@@ -169,7 +175,7 @@ describe('Partner Service', function () {
   });
 
   it('should successfully return an array of customers with additional properties from calling loadRetrievedDataToList', function () {
-    var returnList = PartnerService.loadRetrievedDataToList(testData.managedOrgsResponse.data.organizations, true);
+    var returnList = PartnerService.loadRetrievedDataToList(testData.managedOrgsResponse.data.organizations, [], true);
     var activeList = _.filter(returnList, {
       state: "ACTIVE"
     });

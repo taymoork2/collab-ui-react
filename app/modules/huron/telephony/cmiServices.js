@@ -137,6 +137,25 @@
     });
   })
 
+  .factory('AssignAutoAttendantService', function ($resource, HuronConfig) {
+    var baseUrl = HuronConfig.getCmiV2Url();
+    return $resource(baseUrl + '/customers/:customerId/features/autoattendants/:cesId/numbers', {
+      customerId: '@customerId',
+      cesId: '@cesId'
+    }, {
+      query: {
+        method: 'GET',
+        isArray: true
+      },
+      update: {
+        method: 'PUT'
+      },
+      delete: {
+        method: 'DELETE'
+      }
+    });
+  })
+
   .factory('UserServiceVoice', function ($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/users/:userId', {
       customerId: '@customerId',
@@ -245,6 +264,10 @@
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/sites/:siteId', {
       customerId: '@customerId',
       siteId: '@siteId'
+    }, {
+      update: {
+        method: 'PUT'
+      }
     });
   })
 
@@ -339,12 +362,22 @@
   .factory('ClusterCommonCmiService', function ($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/common/clusters/:clusterId', {
       clusterId: '@clusterId',
+    }, {
+      query: {
+        method: 'GET',
+        isArray: true,
+        cache: true
+      }
     });
   })
 
   .factory('CustomerVoiceCmiService', function ($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId', {
       customerId: '@customerId'
+    }, {
+      update: {
+        method: 'PUT'
+      }
     });
   })
 

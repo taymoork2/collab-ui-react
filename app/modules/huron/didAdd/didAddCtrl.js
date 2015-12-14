@@ -6,7 +6,7 @@
     .controller('DidAddCtrl', DidAddCtrl);
 
   /* @ngInject */
-  function DidAddCtrl($rootScope, $scope, $state, $stateParams, $q, $translate, $window, ExternalNumberPool, EmailService, DidAddEmailService, Notification, Authinfo, $timeout, Log, LogMetricsService, Config, DidService, TelephoneNumberService, DialPlanService) {
+  function DidAddCtrl($rootScope, $scope, $state, $stateParams, $q, $translate, $window, ExternalNumberPool, EmailService, DidAddEmailService, Notification, Authinfo, $timeout, Log, LogMetricsService, Config, DidService, TelephoneNumberService, DialPlanService, PstnSetupService) {
     var vm = this;
     var firstValidDid = false;
     var editMode = false;
@@ -38,6 +38,7 @@
     vm.tokenplaceholder = $translate.instant('didManageModal.inputPlacehoder');
     vm.fromEditTrial = $stateParams.fromEditTrial;
     vm.currentTrial = angular.copy($stateParams.currentTrial);
+    vm.getExampleNumbers = TelephoneNumberService.getExampleNumbers;
 
     vm.tokenoptions = {
       delimiter: [',', ';'],
@@ -120,46 +121,81 @@
       editMode = $stateParams.editMode;
     }
 
-    function activate(customerId) {
-      if (angular.isUndefined(customerId) && angular.isDefined($stateParams.currentOrg) && angular.isDefined($stateParams.currentOrg.customerOrgId)) {
-        customerId = $stateParams.currentOrg.customerOrgId;
+    function setDidValidationCountry(carrierOrDialPlanInfo) {
+      var country = _.get(carrierOrDialPlanInfo, 'country');
+      var countryCode = _.get(carrierOrDialPlanInfo, 'countryCode');
+      if (country) {
+        // check if two-digit alphabetical country identifier is available, i.e. "us"
+        TelephoneNumberService.setRegionCode(country.toLowerCase());
+      } else if (countryCode) {
+        TelephoneNumberService.setCountryCode(countryCode);
+      } else {
+        // if country and countryCode are not available, assume "us"
+        TelephoneNumberService.setRegionCode("us");
       }
-      if (angular.isDefined(customerId)) {
-        DialPlanService.getCustomerDialPlanDetails($stateParams.currentOrg.customerOrgId).then(function (response) {
-          var countryCode = response.countryCode;
-          if (_.startsWith(countryCode, '+')) {
-            countryCode = countryCode.substr(1); // remove first character, i.e. the '+' sign
-          }
-          // TODO: Find an alternative method for determining the country to validate phone numbers agains.
-          if (countryCode === "1") {
-            // country code "1" is shared by Canada, Dominica Republic, and US. Set to US.
-            TelephoneNumberService.setRegionCode("us");
-          } else {
-            TelephoneNumberService.setCountryCode(countryCode);
-          }
-        }).catch(function (response) {
-          Notification.errorResponse(response, 'serviceSetupModal.customerDialPlanDetailsGetError');
-        }).then(function () {
-          return ExternalNumberPool.getAll(customerId);
-        }).then(function (results) {
-          if (angular.isArray(results)) {
-            $timeout(function () {
-              angular.forEach(results, function (did) {
-                addToTokenField(did.pattern);
-              });
-              vm.didObjectsFromCmi = results;
-            });
+    }
+
+    function getCarrierInfoFromTerminus() {
+      return PstnSetupService.listResellerCarriers()
+        .then(function (resellerCarriers) {
+          // this may need revisiting once multiple carriers are supported by a partner/reseller
+          if (resellerCarriers.length > 0) {
+            return resellerCarriers[0];
           }
         });
-      } else {
-        var dids = DidService.getDidList();
-        $timeout(function () {
-          angular.forEach(dids, function (did) {
-            addToTokenField(did);
-          });
-        }, 100);
-      }
+    }
 
+    function activate() {
+      var customerOrgId = _.get($stateParams, 'currentOrg.customerOrgId');
+      if (customerOrgId) {
+        DialPlanService.getCustomerDialPlanCountryCode(customerOrgId)
+          .then(TelephoneNumberService.setCountryCode)
+          .catch(function (response) {
+            // if customer carrier info could not be obtained from CMI, try getting partner carrier info from Terminus
+            return getCarrierInfoFromTerminus(Authinfo.getOrgId()).then(setDidValidationCountry)
+              .catch(function (response) {
+                if (response.status !== 404) {
+                  // Terminus didn't have corresponding reseller records for existing partners.
+                  // A 404 error was expected for many partners while looking up their carriers.
+                  Notification.errorResponse(response, 'serviceSetupModal.carrierCountryGetError');
+                }
+                setDidValidationCountry({
+                  country: "us"
+                });
+              });
+          }).then(function () {
+            return ExternalNumberPool.getAll(customerOrgId);
+          }).then(function (results) {
+            if (angular.isArray(results)) {
+              $timeout(function () {
+                angular.forEach(results, function (did) {
+                  addToTokenField(did.pattern);
+                });
+                vm.didObjectsFromCmi = results;
+              });
+            }
+          });
+      } else {
+        // if customerId is not defined, get country info from partner/reseller carrier(s)
+        getCarrierInfoFromTerminus(Authinfo.getOrgId()).then(setDidValidationCountry)
+          .catch(function (response) {
+            if (response.status !== 404) {
+              // Terminus didn't have corresponding reseller records for existing partners.
+              // A 404 error was expected for many partners while looking up their carriers.
+              Notification.errorResponse(response, 'serviceSetupModal.carrierCountryGetError');
+            }
+            setDidValidationCountry({
+              country: "us"
+            });
+          }).then(function () {
+            var dids = DidService.getDidList();
+            $timeout(function () {
+              angular.forEach(dids, function (did) {
+                addToTokenField(did);
+              });
+            }, 100);
+          });
+      }
     }
 
     activate();

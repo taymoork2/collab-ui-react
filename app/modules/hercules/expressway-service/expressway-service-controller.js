@@ -3,7 +3,7 @@
 
   /* @ngInject */
   function ExpresswayServiceController(XhrNotificationService, ServiceStateChecker, ServiceDescriptor, $state,
-    $modal, $scope, ClusterService, USSService2, ServiceStatusSummaryService, HelperNuggetsService) {
+    $modal, $scope, $translate, ClusterService, USSService2, ServiceStatusSummaryService, HelperNuggetsService) {
 
     ClusterService.subscribe('data', clustersUpdated, {
       scope: $scope
@@ -22,6 +22,16 @@
 
     //TODO: Don't like this linking to routes...
     vm.route = HelperNuggetsService.serviceType2RouteName(vm.currentServiceType);
+
+    // Added for cs-page-header
+    vm.pageTitle = $translate.instant('hercules.serviceNames.' + vm.currentServiceId);
+    vm.tabs = [{
+      title: $translate.instant('common.resources'),
+      state: vm.route + '.list',
+    }, {
+      title: $translate.instant('common.settings'),
+      state: vm.route + '.settings({serviceType:vm.currentServiceType})',
+    }];
 
     vm.notificationTag = vm.currentServiceId;
     vm.clusters = _.values(ClusterService.getClusters());
@@ -47,11 +57,11 @@
       headerRowHeight: 44,
       columnDefs: [{
         field: 'name',
-        displayName: 'Expressway Clusters',
+        displayName: $translate.instant('hercules.overview.clusters-title'),
         cellTemplate: 'modules/hercules/expressway-service/cluster-list-display-name.html',
         width: '35%'
       }, {
-        displayName: 'Service Status',
+        displayName: $translate.instant('hercules.overview.status-title'),
         cellTemplate: 'modules/hercules/expressway-service/cluster-list-status.html',
         width: '65%'
       }]
@@ -107,11 +117,15 @@
     }
 
     function openUserStatusReportModal(serviceId) {
-      $scope.selectedServiceId = serviceId; //TODO: Fix. Currently compatible with "old" concept...
       $scope.modal = $modal.open({
-        scope: $scope,
         controller: 'ExportUserStatusesController',
-        templateUrl: 'modules/hercules/export/export-user-statuses.html'
+        controllerAs: 'exportUserStatusesCtrl',
+        templateUrl: 'modules/hercules/export/export-user-statuses.html',
+        resolve: {
+          serviceId: function () {
+            return vm.currentServiceId;
+          }
+        }
       });
     }
 
@@ -127,7 +141,7 @@
     }
 
     function showClusterDetails(cluster) {
-      $state.go('cluster-details-new', {
+      $state.go('cluster-details', {
         cluster: cluster,
         serviceType: vm.currentServiceType
       });
@@ -135,7 +149,6 @@
 
     function openUserErrorsModal() {
       $scope.modal = $modal.open({
-        scope: $scope,
         controller: 'UserErrorsController',
         controllerAs: 'userErrorsCtrl',
         templateUrl: 'modules/hercules/expressway-service/user-errors.html',
@@ -156,7 +169,7 @@
   }
 
   /* @ngInject */
-  function HostDetailsController($stateParams, $state, ClusterService, XhrNotificationService) {
+  function ExpresswayHostDetailsController($stateParams, $state, ClusterService, XhrNotificationService) {
     var vm = this;
     vm.host = $stateParams.host;
     vm.cluster = ClusterService.getClusters()[$stateParams.clusterId];
@@ -257,11 +270,29 @@
   }
 
   /* @ngInject */
-  function UserErrorsController(serviceId, USSService, XhrNotificationService, Userservice, ClusterService) {
+  function UserErrorsController($modal, $scope, serviceId, USSService, XhrNotificationService, Userservice, ClusterService) {
     var vm = this;
     vm.loading = true;
     vm.limit = 5;
     vm.serviceId = serviceId;
+
+    vm.openUserStatusReportModal = function (serviceId) {
+      // $scope.modal.close();
+      $scope.close = function () {
+        $scope.$parent.modal.close();
+      };
+      $scope.modal = $modal.open({
+        scope: $scope,
+        controller: 'ExportUserStatusesController',
+        controllerAs: 'exportUserStatusesCtrl',
+        templateUrl: 'modules/hercules/export/export-user-statuses.html',
+        resolve: {
+          serviceId: function () {
+            return vm.serviceId;
+          }
+        }
+      });
+    };
 
     USSService.getStatuses(function (error, statuses) {
       if (error) {
@@ -311,6 +342,6 @@
     .controller('ExpresswayServiceController', ExpresswayServiceController)
     .controller('ExpresswayClusterSettingsController', ExpresswayClusterSettingsController)
     .controller('AlarmController', AlarmController)
-    .controller('HostDetailsController', HostDetailsController)
+    .controller('ExpresswayHostDetailsController', ExpresswayHostDetailsController)
     .controller('UserErrorsController', UserErrorsController);
 }());

@@ -1,21 +1,10 @@
+.customer-list {
+  @extend %grid-subheader;
+  @extend %page-background-white;
 
-.btn--icon {
-  background: none;
-  border: none;
-  box-shadow: none;
-
-  &:hover,
-  &:focus,
-  &.active:focus {
-    border: none;
-    box-shadow: none;
-    outline: 0;
+  .grid-filter {
+    margin-left: 0;
   }
-}
-
-.btn--actions {
-  float: right;
-  padding: 15px 30px;
 }
 
 .ngHeaderText.colt4 {

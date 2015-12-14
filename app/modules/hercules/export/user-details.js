@@ -8,9 +8,9 @@ angular.module('Hercules').service('UserDetails',
     var multipleUserFilter = function (userIds) {
       var filter = "";
       $.each(userIds, function (index, elem) {
-        filter += "id eq " + '"' + elem + '"' + " and ";
+        filter += "id eq " + "\"" + elem + "\"" + " or ";
       });
-      filter = filter.slice(0, -5);
+      filter = filter.slice(0, -4);
       return filter;
     };
 
@@ -19,7 +19,7 @@ angular.module('Hercules').service('UserDetails',
     };
 
     var getCSVColumnHeaders = function (serviceName) {
-      return ["Id", "Username", "Connector", serviceName + " State", "Message"];
+      return ["User", "Host", serviceName + " State", "Message"];
     };
 
     var getUsers = function (stateInfos, orgId, callback) {
@@ -42,7 +42,6 @@ angular.module('Hercules').service('UserDetails',
             if (foundUser.length > 0) {
               result.success = true;
               result.details = {
-                id: userIds[index],
                 userName: foundUser[0].userName,
                 connector: stateInfos[index].connector || "not found(id=" + stateInfos[index].connectorId + ")",
                 state: stateInfos[index].state == "notActivated" ? "Pending Activation" : stateInfos[index].state,
@@ -51,7 +50,6 @@ angular.module('Hercules').service('UserDetails',
             } else {
               result.success = false;
               result.details = {
-                id: userIds[index],
                 userName: "Not found",
                 connector: stateInfos[index].connector || "not found(id=" + stateInfos[index].connectorId + ")",
                 state: stateInfos[index].state == "notActivated" ? "Pending Activation" : stateInfos[index].state,

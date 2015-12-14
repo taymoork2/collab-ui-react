@@ -17,7 +17,9 @@ describe('Org Entitlement flow', function () {
   });
 
   it('should launch partner organization portal', function () {
-    navigation.launchPartnerOrgPortal();
+    navigation.clickCustomers();
+    utils.click(partner.myOrganization);
+    utils.click(partner.launchButton);
     utils.switchToNewWindow().then(function () {
       // backend services are slow to check userauthinfo/accounts
       utils.wait(navigation.tabs, LONG_TIMEOUT);

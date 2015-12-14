@@ -2,16 +2,28 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskController(HelpdeskService, $translate) {
+  function HelpdeskController(HelpdeskService, $translate, $scope, $modal) {
+    $('body').css('background', 'white');
+    $scope.$on('$viewContentLoaded', function () {
+      if (HelpdeskService.checkIfMobile()) {
+        angular.element('#searchInput').blur();
+      } else {
+        angular.element('#searchInput').focus();
+      }
+    });
     var vm = this;
+    var searchResultsPageSize = 5;
+    var searchResultsLimit = 20;
     vm.search = search;
-    vm.setOrgFilter = setOrgFilter;
-    vm.clearOrgFilter = clearOrgFilter;
+    vm.initSearchWithOrgFilter = initSearchWithOrgFilter;
+    vm.initSearchWithoutOrgFilter = initSearchWithoutOrgFilter;
     vm.searchingForUsers = false;
     vm.searchingForOrgs = false;
     vm.searchingForDevices = false;
     vm.searchString = '';
-    vm.keypressValidation = keypressValidation;
+    vm.keyPressHandler = keyPressHandler;
+    vm.showMoreResults = showMoreResults;
+    vm.showSearchHelp = showSearchHelp;
     vm.currentSearch = {
       searchString: '',
       userSearchResults: null,
@@ -21,6 +33,9 @@
       orgSearchFailure: null,
       deviceSearchFailure: null,
       orgFilter: null,
+      orgLimit: searchResultsPageSize,
+      userLimit: searchResultsPageSize,
+      deviceLimit: searchResultsPageSize,
       initSearch: function (searchString) {
         this.searchString = searchString;
         this.userSearchResults = null;
@@ -29,24 +44,47 @@
         this.userSearchFailure = null;
         this.orgSearchFailure = null;
         this.deviceSearchFailure = null;
+        this.orgLimit = searchResultsPageSize;
+        this.userLimit = searchResultsPageSize;
+        this.deviceLimit = searchResultsPageSize;
+        if (HelpdeskService.checkIfMobile()) {
+          angular.element('#searchInput').blur();
+        } else {
+          angular.element('#searchInput').focus();
+        }
+      },
+      clear: function () {
+        this.initSearch('');
+        this.orgFilter = null;
       }
     };
-    angular.element('#searchInput').focus();
 
     function search() {
       if (!vm.searchString) return;
       vm.currentSearch.initSearch(vm.searchString);
       var orgFilterId = vm.currentSearch.orgFilter ? vm.currentSearch.orgFilter.id : null;
+      searchUsers(vm.searchString, orgFilterId);
+      if (!orgFilterId) {
+        searchOrgs(vm.searchString);
+      } else {
+        searchDevices(vm.searchString, orgFilterId);
+      }
+    }
 
-      if (vm.searchString.length >= 3) {
+    function searchUsers(searchString, orgId) {
+      if (searchString.length >= 3) {
         vm.searchingForUsers = true;
-        HelpdeskService.searchUsers(vm.searchString, orgFilterId).then(function (res) {
+        HelpdeskService.searchUsers(searchString, orgId, searchResultsLimit, null, true).then(function (res) {
           vm.currentSearch.userSearchResults = res;
           vm.searchingForUsers = false;
+          HelpdeskService.findAndResolveOrgsForUserResults(
+            vm.currentSearch.userSearchResults,
+            vm.currentSearch.orgFilter,
+            vm.currentSearch.userLimit);
         }, function (err) {
           vm.searchingForUsers = false;
           vm.currentSearch.userSearchResults = null;
-          if (err.status === 400) {
+          if (err.status === 400 || err.status === -1) {
             vm.currentSearch.userSearchFailure = $translate.instant('helpdesk.badUserSearchInput');
           } else {
             vm.currentSearch.userSearchFailure = $translate.instant('helpdesk.unexpectedError');
@@ -55,89 +93,139 @@
       } else {
         vm.currentSearch.userSearchFailure = $translate.instant('helpdesk.badUserSearchInput');
       }
+    }
 
-      if (!orgFilterId) {
-        if (vm.searchString.length >= 3) {
-          vm.searchingForOrgs = true;
-          HelpdeskService.searchOrgs(vm.searchString).then(function (res) {
-            vm.currentSearch.orgSearchResults = res;
-            vm.searchingForOrgs = false;
-          }, function (err) {
-            vm.searchingForOrgs = false;
-            vm.currentSearch.orgSearchResults = null;
-            vm.currentSearch.orgSearchFailure = $translate.instant('helpdesk.unexpectedError');
-          });
-        } else {
-          vm.currentSearch.orgSearchFailure = $translate.instant('helpdesk.badOrgSearchInput');
-        }
-      } else {
-        vm.searchingForDevices = true;
-        HelpdeskService.searchCloudberryDevices(vm.searchString, orgFilterId).then(function (res) {
-          vm.currentSearch.deviceSearchResults = res;
-          vm.searchingForDevices = false;
+    function searchOrgs(searchString) {
+      if (searchString.length >= 3) {
+        vm.searchingForOrgs = true;
+        HelpdeskService.searchOrgs(searchString, searchResultsLimit).then(function (res) {
+          vm.currentSearch.orgSearchResults = res;
+          vm.searchingForOrgs = false;
         }, function (err) {
-          vm.searchingForDevices = false;
-          vm.currentSearch.deviceSearchResults = null;
-          vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
+          vm.searchingForOrgs = false;
+          vm.currentSearch.orgSearchResults = null;
+          vm.currentSearch.orgSearchFailure = $translate.instant('helpdesk.unexpectedError');
         });
+      } else {
+        vm.currentSearch.orgSearchFailure = $translate.instant('helpdesk.badOrgSearchInput');
       }
     }
 
-    function setOrgFilter(org) {
+    function searchDevices(searchString, orgId) {
+      vm.searchingForDevices = true;
+      HelpdeskService.searchCloudberryDevices(searchString, orgId, searchResultsLimit).then(function (res) {
+        vm.currentSearch.deviceSearchResults = res;
+        vm.searchingForDevices = false;
+        setOrgOnDeviceSearchResults(vm.currentSearch.deviceSearchResults);
+      }, function (err) {
+        vm.searchingForDevices = false;
+        vm.currentSearch.deviceSearchResults = null;
+        vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
+      });
+    }
+
+    function initSearchWithOrgFilter(org) {
       vm.searchString = '';
-      vm.currentSearch.initSearch('');
+      vm.currentSearch.clear();
       vm.currentSearch.orgFilter = org;
-      angular.element('#searchInput').focus();
     }
 
-    function clearOrgFilter() {
+    function initSearchWithoutOrgFilter() {
       vm.searchString = '';
-      vm.currentSearch.initSearch('');
-      vm.currentSearch.orgFilter = null;
-      angular.element('#searchInput').focus();
+      vm.currentSearch.clear();
     }
 
-    function keypressValidation(event) {
-      var activeCard = angular.element(document.activeElement)[0]["tabIndex"];
-      var newTabIndex = activeCard;
-      switch (event.keyCode.toString()) {
-      case "37":
-        newTabIndex = parseInt(activeCard) - 1;
+    function showMoreResults(type) {
+      switch (type) {
+      case 'user':
+        vm.currentSearch.userLimit += searchResultsPageSize;
+        HelpdeskService.findAndResolveOrgsForUserResults(
+          vm.currentSearch.userSearchResults,
+          vm.currentSearch.orgFilter,
+          vm.currentSearch.userLimit);
+        break;
+      case 'org':
+        vm.currentSearch.orgLimit += searchResultsPageSize;
+        break;
+      case 'device':
+        vm.currentSearch.deviceLimit += searchResultsPageSize;
+        break;
+      }
+    }
+
+    function setOrgOnDeviceSearchResults(deviceSearchResults) {
+      _.each(deviceSearchResults, function (device) {
+        device.organization = {
+          id: vm.currentSearch.orgFilter.id,
+          displayName: vm.currentSearch.orgFilter.displayName
+        };
+      });
+    }
+
+    function keyPressHandler(event) {
+      var activeElement = angular.element(document.activeElement);
+      var inputFieldHasFocus = activeElement[0]["id"] === "searchInput";
+      if (inputFieldHasFocus && !(event.keyCode === 27 || event.keyCode === 13)) {
+        return; // if not escape and enter, nothing to do
+      }
+      var activeTabIndex = activeElement[0]["tabIndex"];
+      var newTabIndex = -1;
+
+      switch (event.keyCode) {
+      case 37: // Left arrow
+        newTabIndex = activeTabIndex - 1;
         break;
 
-      case "38":
-        newTabIndex = parseInt(activeCard) - 10;
+      case 38: // Up arrow
+        newTabIndex = activeTabIndex - 10;
         break;
 
-      case "39":
-        newTabIndex = parseInt(activeCard) + 1;
+      case 39: // Right arrow
+        newTabIndex = activeTabIndex + 1;
         break;
 
-      case "40":
-        newTabIndex = parseInt(activeCard) + 10;
+      case 40: // Down arrow
+        newTabIndex = activeTabIndex + 10;
         break;
 
-      case "27":
-        if (angular.element(document.activeElement)[0]["id"] == "searchInput") {
-          angular.element('#searchInput').val("");
+      case 27: // Esc
+        if (inputFieldHasFocus) {
+          initSearchWithoutOrgFilter();
         } else {
-          angular.element('#searchInput').focus().select();
-          newTabIndex = "-1";
+          if (HelpdeskService.checkIfMobile()) {
+            angular.element('#searchInput').blur();
+          } else {
+            angular.element('#searchInput').focus().select();
+          }
+          newTabIndex = -1;
         }
         break;
 
-      case "13":
-        if (angular.element(document.activeElement)[0]["id"] == "searchInput") {
-          newTabIndex = 1;
-        } else {
-          angular.element(document.activeElement).click();
+      case 13: // Enter
+        if (!inputFieldHasFocus) {
+          activeElement.click();
+        }
+        break;
+
+      case 83: // S
+        var orgLink = JSON.parse(activeElement.find("a")[0]["name"]);
+        if (orgLink) {
+          initSearchWithOrgFilter(orgLink);
         }
         break;
       }
-      if (newTabIndex != "-1") {
+
+      if (newTabIndex != -1) {
         $('[tabindex=' + newTabIndex + ']').focus();
       }
     }
+
+    function showSearchHelp() {
+      $modal.open({
+        templateUrl: "modules/squared/helpdesk/helpdesk-search-help-dialog.html",
+      });
+    }
+
   }
 
   angular

@@ -11,6 +11,7 @@
     vm.hasCarriers = PstnSetup.isCarrierExists;
     vm.singleCarrierReseller = PstnSetup.isSingleCarrierReseller;
     vm.validateSwivelNumbers = validateSwivelNumbers;
+    vm.getExampleNumbers = TelephoneNumberService.getExampleNumbers;
 
     vm.tokenfieldid = 'swivelAddNumbers';
     vm.tokenplaceholder = $translate.instant('didManageModal.inputPlacehoder');

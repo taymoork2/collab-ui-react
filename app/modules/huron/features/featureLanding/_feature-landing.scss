@@ -1,15 +1,9 @@
-
 $page-header-height: 95px;
 $features-header-height : 83px;
 
-.features{
-
-  .features-content {
-    height: calc(100vh - #{($top-bar-height + $page-header-height + $features-header-height)});
-    overflow: auto;
-    background-color: $brand-white;
-    @include vr-spacing(pt, 0);
-  }
+.huron-features{
+  @extend %content-subheader;
+  @extend %card-container-padding;
 }
 
 .features-reload {
@@ -17,7 +11,7 @@ $features-header-height : 83px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: calc(100vh - #{($top-bar-height + $page-header-height + $features-header-height)});
+  // height: calc(100vh - #{($top-bar-height + $page-header-height + $features-header-height)});
    >p {
      color: $gray-dark;
    }
@@ -36,16 +30,14 @@ $features-header-height : 83px;
   @include vr-spacing(ph, 1.5);
   @include vr-spacing(pv, 1);
   border-bottom: 1px solid $gray-light-3;
+  color: $gray-dark-2;
 }
 
 .new-feature-button {
   @include vr-spacing(mr, 0.25)
 }
 
-.cards-block{
-
-  @include vr-spacing(pv, 1);
-  @include vr-spacing(ph, 0.5);
+.features-content {
 
   .cs-card article {
     height : rem-calc(170);
@@ -56,6 +48,10 @@ $features-header-height : 83px;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: baseline;
+  }
+
+  .cs-card > article header {
+    @include vr-spacing(pt, 1);
   }
 
   .card-body{
@@ -71,7 +67,7 @@ $features-header-height : 83px;
 
   .card-section-num {
     display : block;
-    color : $gray-darkest;
+    color : $gray-base;
     font-family: $brand-font-light;
     font-size: $font-size-large;
     @include vr-spacing(pb, 0.2);
@@ -82,8 +78,6 @@ $features-header-height : 83px;
     color : $gray-dark;
     font-family: $brand-font-light;
     font-size: $font-size-base;
-    @include vr-spacing(pl, 0.9);
-    @include vr-spacing(pb, 0.75);
   }
 
   .card-footer {
@@ -93,11 +87,17 @@ $features-header-height : 83px;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: flex-end;
-  }
+    @include vr-spacing(ph, 1);
+    @include vr-spacing(pv, .5);
 
-  .card-icon-div {
-    @include vr-spacing(pr, 1);
-    @include vr-spacing(pb, 0.75);
+    a {
+      font-size: rem-calc(24);
+      color: $gray-light-2;
+      &:hover,
+      &:focus {
+        color: $color-primary;
+      }
+    }
   }
 
 
@@ -105,10 +105,11 @@ $features-header-height : 83px;
     display : block;
     height : 2rem;
     width : 2rem;
+    line-height: 2rem;
     border-radius: 50%;
-    background-color: $gray-lightest;
-    @include vr-spacing(pt, 0.5);
-    padding-left: 0.4rem;
+    background-color: $gray-light-4;
+    text-align: center;
+    @include vr-spacing(ml, .5);
   }
 }
 

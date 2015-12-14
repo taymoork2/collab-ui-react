@@ -257,6 +257,10 @@
     this.entries.splice(index, 0, entry);
   };
 
+  CeMenu.prototype.appendEntry = function (entry) {
+    this.entries.push(entry);
+  };
+
   CeMenu.prototype.deleteEntryAt = function (index) {
     this.entries.splice(index, 1);
   };
@@ -407,6 +411,12 @@
           action.inputType = inAction.runActionsOnInput.inputType;
         }
         menuEntry.addAction(action);
+      } else if (angular.isDefined(inAction.goto)) {
+        action = new Action('goto', inAction.goto.ceid);
+        if (angular.isDefined(inAction.goto.description)) {
+          setDescription(action, inAction.goto.description);
+        }
+        menuEntry.addAction(action);
       } else {
         // insert an empty action
         action = new Action('', '');
@@ -488,7 +498,7 @@
         var announcementMenuEntry = new CeMenuEntry();
         announcementMenuEntry.setType('MENU_OPTION_ANNOUNCEMENT');
         menu.addHeader(announcementMenuEntry);
-        if (angular.isDefined(ceActionsOnInput.prompts)) {
+        if (angular.isDefined(ceActionsOnInput) && angular.isDefined(ceActionsOnInput.prompts)) {
           if (angular.isDefined(ceActionsOnInput.prompts.description)) {
             announcementMenuEntry.setDescription(ceActionsOnInput.prompts.description);
           }
@@ -813,6 +823,8 @@
           newActionArray[i][actionName].destination = val;
         } else if (actionName === 'routeToMailbox') {
           newActionArray[i][actionName].mailbox = val;
+        } else if (actionName === 'goto') {
+          newActionArray[i][actionName].ceid = val;
         } else if (actionName === 'disconnect') {
           if (val && val !== 'none') {
             newActionArray[i][actionName].treatment = val;

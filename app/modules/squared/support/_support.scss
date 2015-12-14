@@ -1,3 +1,8 @@
+.support {
+  @extend %content-header;
+  @extend %page-content-padding;
+}
+
 .support-row{
   margin-left: 15px;
   margin-right: 0px;
@@ -103,18 +108,6 @@
       right: 315px;
       left: auto;
       top: 70%;
-    }
-  }
-  .btn--icon {
-    background: none;
-    border: none;
-    box-shadow: none;
-    width: 100%;
-    text-align: center;
-    &:hover, &:focus, &.active:focus {
-      border: none;
-      box-shadow: none;
-      outline: 0;
     }
   }
 }

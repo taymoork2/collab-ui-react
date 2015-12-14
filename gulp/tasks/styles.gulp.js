@@ -21,7 +21,12 @@ gulp.task('scss:build', ['clean:css'], function() {
     .pipe($.sourcemaps.init())
     .pipe($.plumber(function(error) {
       log(colors.red(error));
-      this.emit('end');
+      if (config.isJenkins()) {
+        console.log('Environment is jenkins, aborting...');
+        process.exit(1);
+      } else {
+        this.emit('end');
+      }
     }))
     .pipe($.sass({
       outputStyle: 'compact',

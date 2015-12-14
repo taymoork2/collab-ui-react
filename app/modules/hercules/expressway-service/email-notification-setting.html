@@ -1,9 +1,5 @@
-<h5 translate="{{'hercules.settings.emailNotificationsHeading'}}">
-</h5>
-
-<p translate="{{'hercules.settings.emailNotifications'}}">
-</p>
-
+<h5 translate="{{'hercules.settings.emailNotificationsHeading'}}"></h5>
+<p translate="{{'hercules.settings.emailNotifications'}}"></p>
 <tags-input add-on-blur="false"
             on-tag-added="expresswayServiceSettings.writeConfig()"
             on-tag-removed="expresswayServiceSettings.writeConfig()"
@@ -13,9 +9,4 @@
             ng-model="expresswayServiceSettings.emailSubscribers"
             type="email"
             allowed-tags-pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"></tags-input>
-
-<span class="right" ng-show="expresswayServiceSettings.savingEmail">
-  Saving <i class="icon icon-spinner"/>
-</span>
-
-
+<span class="right" ng-show="expresswayServiceSettings.savingEmail"><span translate="hercules.settings.emailNotificationsSaving"></span> <i class="icon icon-spinner"/></span>

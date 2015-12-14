@@ -8,7 +8,7 @@
     <div class="feature-list" ng-if="expresswayClusterDetails.selectedService().alarm_count > 0">
       <ul>
         <li class="feature" ng-repeat="alarm in expresswayClusterDetails.alarms2hosts()" ng-class="{'list-item': !$first}">
-          <a ui-sref="cluster-details-new.alarm-details({alarm: alarm})">
+          <a ui-sref="cluster-details.alarm-details({alarm: alarm})">
             <i class="icon icon-error hercules-alarm status-icon"/>
             <span class="feature-name">{{alarm.alarm.title}}</span>
             <i class="feature-arrow"></i>
@@ -47,7 +47,7 @@
         <li class="feature" ng-repeat="connector in expresswayClusterDetails.selectedService().connectors"
             ng-class="{'list-item': !$first}">
           <a
-            ui-sref="cluster-details-new.host-details({host: connector.host, clusterId: expresswayClusterDetails.clusterId, serviceType: expresswayClusterDetails.serviceType})">
+            ui-sref="cluster-details.host-details({host: connector.host, clusterId: expresswayClusterDetails.clusterId, serviceType: expresswayClusterDetails.serviceType})">
             <i class="fa fa-circle status-icon"
                ng-class="connector.alarms.length > 0 ? 'hercules-state-alarm' : 'hercules-state-'+connector.state"></i>
             <span class="feature-name">{{connector.host.host_name}}</span>
@@ -65,7 +65,5 @@
 </cs-sp-container>
 
 <cs-sp-container class="hercules-fix-paragraphs" ng-if="expresswayClusterDetails.serviceNotInstalled()">
-  <p>
-    The <span translate="hercules.serviceNames.{{expresswayClusterDetails.serviceId}}"></span> is not installed on this cluster.
-  </p>
+  <p translate="hercules.clusters.notInstalled" translate-values="{serviceName: expresswayClusterDetails.serviceName}"></p>
 </cs-sp-container>

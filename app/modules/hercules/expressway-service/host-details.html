@@ -47,7 +47,7 @@
       <ul>
         <li class="feature" ng-repeat="alarm in hostDetailsCtrl.connector().alarms" ng-class="{'list-item': !$first}">
           <a
-            ui-sref="cluster-details-new.alarm-details({alarm: alarm, host: hostDetailsCtrl.connector().host.host_name})">
+            ui-sref="cluster-details.alarm-details({alarm: alarm, host: hostDetailsCtrl.connector().host.host_name})">
             <i class="icon icon-error hercules-alarm status-icon"/>
             <span class="feature-name">{{alarm.title}}</span>
             <i class="feature-arrow"></i>

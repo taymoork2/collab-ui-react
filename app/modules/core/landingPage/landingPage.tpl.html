@@ -1,4 +1,6 @@
-  <div class="landing-content">
+<div class="customer-landing"></div>
+  <cs-page-header title="{{::'overview.pageTitle' | translate}}"></cs-page-header>
+  <div class="landing-content content-container row">
     <section class="analytics-charts small-12 medium-7 large-8 column">
       <span ng-click="reloadReports(false)" class="overview-updated" id="time-click-div">
         <cr-reload-data id="homeRefreshData" last-updated-time="refreshTime"></cr-reload-data>
@@ -43,9 +45,9 @@
     <div class="row collapse">
       <div class="small-12 columns background-white">
 
-        <section class="monitoring-panel small-3 medium-12 column" ng-show="setupNotDone || !(isCalendarAcknowledged && isCallAwareAcknowledged && isCallConnectAcknowledged)">
+        <section class="monitoring-panel small-3 medium-12 column" ng-show="setupNotDone() || !(isCalendarAcknowledged && isCallAwareAcknowledged && isCallConnectAcknowledged)">
           <h4 class="monitoring-section" translate="homePage.notifications"></h4>
-          <div class="notification-style" ng-show="setupNotDone">
+          <div class="notification-style" ng-show="setupNotDone()">
             <span class="badge badge-warning" translate="homePage.todo"></span>
             <span class="notification-spacing">
               <span translate="homePage.setUpYourTrial"></span>

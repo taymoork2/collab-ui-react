@@ -2,13 +2,12 @@
   <cs-card class="large header-bar primary" ng-if="helpdeskUserCtrl.messageCard.entitled">
     <article>
       <header class="align-center">
-        <h4>
-          <i class="icon icon-circle-message icon-lg"></i>
-          {{'helpdesk.message' | translate}}
-        </h4>
+        <div class="overview-header">
+          <i class="icon icon-circle-message icon-lg"></i>{{'helpdesk.message' | translate}}
+        </div>
       </header>
       <section>
-        <h5 translate="helpdesk.entitlementsHeading"></h5>
+        <h5 translate="helpdesk.licenses"></h5>
 
         <div ng-repeat="entitlement in helpdeskUserCtrl.messageCard.entitlements">
           <span translate="{{entitlement}}"></span>
@@ -20,23 +19,23 @@
   <cs-card class="large header-bar meetings" ng-if="helpdeskUserCtrl.meetingCard.entitled">
     <article>
       <header class="align-center">
-        <h4>
-          <i class="icon icon-circle-group icon-lg"></i>
-          {{'helpdesk.meeting' | translate}}
-        </h4>
+        <div class="overview-header">
+          <i class="icon icon-circle-group icon-lg"></i>{{'helpdesk.meeting' | translate}}
+        </div>
       </header>
       <section>
-        <h5 translate="helpdesk.entitlementsHeading"></h5>
+        <h5 translate="helpdesk.licenses"></h5>
 
         <div ng-repeat="entitlement in helpdeskUserCtrl.meetingCard.entitlements">
           <span translate="{{entitlement}}"></span>
         </div>
 
         <div ng-if="helpdeskUserCtrl.user.trainSiteNames && helpdeskUserCtrl.user.trainSiteNames.length > 0">
-          <h5 translate="helpdesk.webexsites"></h5>
-
           <div ng-repeat="webExSiteName in helpdeskUserCtrl.user.trainSiteNames">
-            <span>{{webExSiteName}}</span>
+            <span>{{webExSiteName}}:</span>
+            <span ng-repeat="license in helpdeskUserCtrl.meetingCard.licensesByWebExSite[webExSiteName]">{{license.displayName}}{{$last ? '' : ', '}}</span>
+            <span ng-if="!helpdeskUserCtrl.meetingCard.licensesByWebExSite[webExSiteName]"
+                  translate="helpdesk.none"></span>
           </div>
         </div>
       </section>
@@ -46,13 +45,12 @@
   <cs-card class="large header-bar people" ng-if="helpdeskUserCtrl.callCard.entitled">
     <article>
       <header class="align-center">
-        <h4>
-          <i class="icon icon-circle-call icon-lg"></i>
-          {{'helpdesk.call' | translate}}
-        </h4>
+        <div class="overview-header">
+          <i class="icon icon-circle-call icon-lg"></i>{{'helpdesk.call' | translate}}
+        </div>
       </header>
       <section>
-        <h5 translate="helpdesk.entitlementsHeading"></h5>
+        <h5 translate="helpdesk.licenses"></h5>
 
         <div ng-repeat="entitlement in helpdeskUserCtrl.callCard.entitlements">
           <span translate="{{entitlement}}"></span>
@@ -64,10 +62,9 @@
   <cs-card class="large header-bar cta" ng-if="helpdeskUserCtrl.hybridServicesCard.entitled">
     <article>
       <header class="align-center">
-        <h4 tranlate="helpdesk.hybridServices">
-          <i class="icon icon-circle-data icon-lg"></i>
-          {{'helpdesk.hybridServices' | translate}}
-        </h4>
+        <div class="overview-header">
+          <i class="icon icon-circle-data icon-lg"></i>{{'helpdesk.hybridServices' | translate}}
+        </div>
       </header>
       <section>
         <div ng-if="helpdeskUserCtrl.hybridServicesCard.cal.entitled">

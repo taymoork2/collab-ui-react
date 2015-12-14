@@ -9,6 +9,10 @@ var PartnerHomePage = function () {
     customerEmail: 'collabctg+Atlas_Test_UI_' + randomNumber + '@gmail.com'
   };
 
+  this.editTrial = {
+    licenseCount: '90'
+  };
+
   this.newSqUCTrial = {
     customerName: 'Atlas_Test_UC_' + randomNumber.slice(0, 5),
     customerEmail: 'collabctg+Atlas' + randomNumber.slice(0, 5) + '@gmail.com'
@@ -48,7 +52,7 @@ var PartnerHomePage = function () {
   this.startTrialButton = element(by.id('startTrialButton'));
   this.startTrialWithSqUCButton = element(by.id('startTrial'));
   this.trialDoneButton = element(by.id('trialDone'));
-  this.customerNameInput = element(by.id('customerName'));
+  this.customerNameInput = element(by.id('input_customerName'));
   this.didAddModal = element(by.id('didAddModal'));
   this.addDidButton = element(by.id('addDidButton'));
   this.removeDidPanel = element(by.id('removeDidPanel'));
@@ -57,8 +61,9 @@ var PartnerHomePage = function () {
   this.notifyCustLaterLink = element(by.id('notifyCustLaterLink'));
   this.customerDidAdd = element(by.css('.did-input .tokenfield'));
   this.customerDidInput = element(by.id('didAddField-tokenfield'));
-  this.customerEmailInput = element(by.id('customerEmail'));
+  this.customerEmailInput = element(by.id('input_customerEmail'));
   this.licenseCount = element(by.id('licenseCount'));
+  this.licenseCountInput = element(by.id('input_licenseCount'));
   this.trialRoomSystemsAmount = element(by.id('trialRoomSystemsAmount'));
   this.licenseDuration = element(by.id('licenseDuration'));
   this.editTrialButton = element(by.id('editTrialButton'));
@@ -96,11 +101,16 @@ var PartnerHomePage = function () {
   this.exitPreviewButton = element(by.css('.panel-close'));
   this.partnerFilter = element(by.id('partnerFilter'));
   this.trialFilter = element(by.cssContainingText('.filter', 'Trial'));
+  this.allFilter = element(by.cssContainingText('.filter', 'All'));
   this.partnerEmail = element.all(by.binding('userName'));
   this.squaredTrialCheckbox = element(by.css('label[for="squaredTrial"]'));
-  this.roomSystemsCheckbox = element(by.css('label[for="trialRoomSystemsChecked"]'));
+  this.roomSystemsCheckbox = element(by.css('label[for="trialRoomSystem"]'));
+  this.roomSystemsCheckboxChecked = element(by.css('label[for="trialRoomSystemsChecked"]'));
   this.squaredUCTrialCheckbox = element(by.css('label[for="squaredUCTrial"]'));
   this.customerNameHeader = element(by.cssContainingText('.ngHeaderText ', 'Customer Name'));
+  this.myOrganization = element(by.id('partner'));
+  this.launchButton = element(by.id('launchPartner'));
+  this.skipCustomerSetup = element(by.id('trialNotifyCustomer'));
 
   this.viewAllLink = element(by.id('viewAllLink'));
   this.customerList = element(by.id('customerListPanel'));

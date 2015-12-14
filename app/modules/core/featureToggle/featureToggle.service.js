@@ -13,6 +13,7 @@
       atlasCloudberryTrials: 'atlas-cloudberry-trials',
       atlasStormBranding: 'atlas-2015-storm-launch',
       atlasSipUriDomain: 'atlas-sip-uri-domain',
+      atlasWebexTrials: 'atlas-webex-trials',
     };
 
     var service = {
@@ -21,6 +22,7 @@
       getFeaturesForUser: getFeaturesForUser,
       getFeatureForOrg: getFeatureForOrg,
       getFeaturesForOrg: getFeaturesForOrg,
+      setFeatureToggle: setFeatureToggle,
       supports: supports,
       supportsPstnSetup: supportsPstnSetup,
       supportsCsvUpload: supportsCsvUpload,
@@ -110,14 +112,10 @@
           resolve(true);
         } else if (feature === features.dirSync) {
           supportsDirSync().then(function (enabled) {
-            resolve(enabled && Authinfo.getOrgId() === '4e2befa3-9d82-4fdf-ad31-bb862133f078');
+            resolve(enabled);
           });
-        } else if (feature === features.atlasCloudberryTrials) {
-          if (Authinfo.getOrgId() === 'c054027f-c5bd-4598-8cd8-07c08163e8cd') {
-            resolve(true);
-          } else {
-            resolve(false);
-          }
+        } else if (feature === features.atlasCloudberryTrials && Authinfo.getOrgId() === 'c054027f-c5bd-4598-8cd8-07c08163e8cd') {
+          resolve(true);
         } else {
           var orgId = Authinfo.getOrgId();
 
@@ -158,6 +156,19 @@
         cache: true
       });
       return deferred.promise;
+    }
+
+    function setFeatureToggle(isUser, id, key, val) {
+      if (isUser) {
+        return $q.reject('User level toggles are not changeable in the web app');
+      }
+
+      var toggle = isUser ? undefined : generateFeatureToggleRule(id, key, val);
+      var usingId = isUser ? undefined : '';
+
+      return getUrl(isUser).save({
+        id: usingId
+      }, toggle).$promise;
     }
 
     /**

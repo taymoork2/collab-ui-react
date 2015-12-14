@@ -1,4 +1,4 @@
-<div class="user-view">
+<div class="helpdesk-details" ng-keyup="helpdeskDeviceCtrl.keyPressHandler($event)" tabindex="1">
   <div class="row head full">
     <div class="columns large-12">
       <a ui-sref="helpdesk.search">
@@ -9,54 +9,89 @@
   </div>
 
   <div class="row full">
-    <div class="columns medium-12 info-panel">
+    <div class="columns medium-12">
       <h3 class="display-name ellipsis">{{helpdeskDeviceCtrl.device.displayName}}</h3>
 
-      <div class="user-info">
-        <span class="user-infotitle"><span translate="common.id"></span>:</span>
-        <span class="user-value">{{helpdeskDeviceCtrl.deviceId}}</span>
+      <div class="row">
+        <div class="small-4 medium-3 large-2 columns details-heading">
+          <span>{{'common.id' | translate}}:</span>
+        </div>
+        <div class="small-8 medium-9 large-10 columns details-value-device">
+          <span>{{helpdeskDeviceCtrl.deviceId}}</span>
+        </div>
       </div>
-      <div class="user-info">
-        <span class="user-infotitle"><span translate="helpdesk.type"></span>:</span>
-        <span class="user-value">
-          <img
+
+      <div class="row">
+        <div class="small-4 medium-3 large-2 columns details-heading">
+          <span>{{'helpdesk.type' | translate}}:</span>
+        </div>
+        <div class="small-8 medium-9 large-10 columns details-value-device">
+          <span>
+            <img
             ng-if="helpdeskDeviceCtrl.device.image"
             ng-src="{{helpdeskDeviceCtrl.device.image}}"
             style="width: 50px;"
             /> {{helpdeskDeviceCtrl.device.product}}
-        </span>
+          </span>
+        </div>
       </div>
-      <div class="user-info">
-        <span class="user-infotitle"><span translate="helpdesk.status"></span>:</span>
-        <span class="user-value">
-          <i class="icon icon-circle circle-status-icon" ng-class="helpdeskDeviceCtrl.device.cssColorClass"></i>{{helpdeskDeviceCtrl.device.readableState}}
-        </span>
+
+      <div class="row">
+        <div class="small-4 medium-3 large-2 columns details-heading">
+          <span>{{'helpdesk.status' | translate}}:</span>
+        </div>
+        <div class="small-8 medium-9 large-10 columns details-value-device">
+          <span><i class="icon icon-circle circle-status-icon" ng-class="helpdeskDeviceCtrl.device.cssColorClass"></i>{{helpdeskDeviceCtrl.device.readableState}}</span>
+        </div>
       </div>
-      <div class="user-info">
-        <span class="user-infotitle"><span translate="helpdesk.software"></span>:</span>
-        <span class="user-value"
-              ng-if="helpdeskDeviceCtrl.device.software">{{helpdeskDeviceCtrl.device.software}}</span>
-        <span class="user-value" ng-if="!helpdeskDeviceCtrl.device.software" translate="helpdesk.unknown"></span>
+
+      <div class="row">
+        <div class="small-4 medium-3 large-2 columns details-heading">
+          <span>{{'helpdesk.software' | translate}}:</span>
+        </div>
+        <div class="small-8 medium-9 large-10 columns details-value-device">
+          <span ng-if="helpdeskDeviceCtrl.device.software">{{helpdeskDeviceCtrl.device.software}}</span>
+          <span ng-if="!helpdeskDeviceCtrl.device.software" translate="helpdesk.unknown"></span>
+        </div>
       </div>
-      <div class="user-info">
-        <span class="user-infotitle"><span translate="helpdesk.serial"></span>:</span>
-        <span class="user-value">{{helpdeskDeviceCtrl.device.serial}}</span>
+
+      <div class="row">
+        <div class="small-4 medium-3 large-2 columns details-heading">
+          <span>{{'helpdesk.serial' | translate}}:</span>
+        </div>
+        <div class="small-8 medium-9 large-10 columns details-value-device">
+          <span>{{helpdeskDeviceCtrl.device.serial}}</span>
+        </div>
       </div>
-      <div class="user-info">
-        <span class="user-infotitle"><span translate="helpdesk.macAddress"></span>:</span>
-        <span class="user-value">{{helpdeskDeviceCtrl.device.mac}}</span>
+
+      <div class="row">
+        <div class="small-4 medium-3 large-2 columns details-heading">
+          <span>{{'helpdesk.macAddress' | translate}}:</span>
+        </div>
+        <div class="small-8 medium-9 large-10 columns details-value-device">
+          <span>{{helpdeskDeviceCtrl.device.mac}}</span>
+        </div>
       </div>
-      <div class="user-info">
-        <span class="user-infotitle"><span translate="helpdesk.organization"></span>:</span>
-        <span class="user-value">
-          <a ui-sref="helpdesk.org({org:helpdeskDeviceCtrl.org, id:helpdeskDeviceCtrl.org.id})">
-            {{helpdeskDeviceCtrl.org.displayName}}
-          </a>
-        </span>
+
+      <div class="row">
+        <div class="small-4 medium-3 large-2 columns details-heading">
+          <span>{{'helpdesk.organization' | translate}}:</span>
+        </div>
+        <div class="small-8 medium-9 large-10 columns details-value-device">
+          <span>
+            <a ui-sref="helpdesk.org({org:helpdeskDeviceCtrl.org, id:helpdeskDeviceCtrl.org.id})">
+              {{helpdeskDeviceCtrl.org.displayName}}
+            </a>
+          </span>
+        </div>
       </div>
-      <div class="user-info" ng-if="helpdeskDeviceCtrl.device.hasIssues">
-        <span class="user-infotitle"><span translate="deviceOverviewPage.issues"></span>:</span>
+
+      <div class="row" ng-if="helpdeskDeviceCtrl.device.hasIssues">
+        <div class="small-4 medium-3 large-2 columns details-heading">
+          <span>{{'deviceOverviewPage.issues' | translate}}:</span>
+        </div>
       </div>
+
     </div>
   </div>
 

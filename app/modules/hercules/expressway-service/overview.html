@@ -1,68 +1,40 @@
 <div ng-if="!exp.loading && exp.serviceEnabled || exp.startSetupClicked">
-
-  <div class="hercules hercules-fix-paragraphs">
-
-    <div class="page-header">
-      <div class="page-title">
-
-        <span translate="hercules.serviceNames.{{exp.currentServiceId}}" class="title-heading">
-        </span>
-
-        <!-- TODO: Seems to be problems with positioning with narrow screen
-             TODO: Remove relative div quick hack !           -->
+  <div class="expressway-service hercules hercules-fix-paragraphs">
+    <cs-page-header title="{{exp.pageTitle}}" tabs="exp.tabs"></cs-page-header>
+    <cs-page-sub-header>
+      <cs-page-sub-header-left>
         <div style="position:relative">
           <hercules-notifications filter-tag="exp.notificationTag"></hercules-notifications>
         </div>
-
         <div ng-if="exp.currentServiceId !== 'squared-fusion-mgmt'">
-          <i class="icon icon-circle-user"/>
-          <span>{{exp.userStatusSummary.activated || 0}} activated</span>
-          <span ng-if="exp.userStatusSummary.notActivated > 0">| {{exp.userStatusSummary.notActivated}} pending</span>
+          <i class="icon icon-circle-user" />
+          <span translate="hercules.overview.activated" translate-values="{number: exp.userStatusSummary.activated || 0}"></span>
+          <span ng-if="exp.userStatusSummary.notActivated > 0">| <span translate="hercules.overview.pending" translate-values="{number: exp.userStatusSummary.notActivated}"></span></span>
           <span ng-if="exp.userStatusSummary.error > 0">|
-            <a href ng-click="exp.openUserErrorsModal()"><span class="red">{{exp.userStatusSummary.error}} error</span></a>
+            <a href ng-click="exp.openUserErrorsModal()"><span class="red" translate="hercules.overview.error" translate-values="{number: exp.userStatusSummary.error}" translate-interpolation="messageformat"></span></a>
           </span>
-          <span
-            ng-show="exp.userStatusSummary.notActivated > 0 || exp.userStatusSummary.activated > 0 || exp.userStatusSummary.error > 0"
-            class="export-users-statuses-icon"
-            tooltip-placement="top"
-            tooltip="User Status Report"
-            tooltip-animation="false"
-            tooltip-append-to-body="true">
+          <span ng-show="exp.userStatusSummary.notActivated > 0 || exp.userStatusSummary.activated > 0 || exp.userStatusSummary.error > 0" class="export-users-statuses-icon" tooltip-placement="top" tooltip="User Status Report" tooltip-animation="false" tooltip-append-to-body="true">
             <i class="icon icon-content-share" ng-click="exp.openUserStatusReportModal(exp.currentServiceId)"></i>
           </span>
         </div>
-
-        <div class="menu">
-          <a ui-sref-active="active" ui-sref="{{exp.route}}.list">Resources</a>
-          <a ui-sref-active="active" ui-sref="{{exp.route}}.settings({serviceType:exp.currentServiceType})">Settings</a>
-        </div>
-
-      </div>
+      </cs-page-sub-header-left>
+    </cs-page-sub-header>
+    <div ui-view="fullPane" class="small-padding-top content-container">
     </div>
-
-    <div ui-view="fullPane" class="small-padding-top">
-    </div>
-
   </div>
 </div>
-
-
 <div ng-if="!exp.loading && !exp.serviceEnabled">
-  <div class="hercules">
+  <div class="hercules content-container">
     <div class="centered-info-pane full-height">
       <div ng-include src="'modules/hercules/expressway-service/activate-service.html'"></div>
     </div>
   </div>
 </div>
-
 <div ng-if="exp.loading">
-  <div class="hercules">
+  <div class="hercules content-container">
     <div class="centered-info-pane full-height">
       <i class="icon icon-spinner icon-2x"></i>
-
-      <p>Loading, please wait...</p>
+      <p translate="hercules.overview.loading"></p>
     </div>
   </div>
 </div>
-
-

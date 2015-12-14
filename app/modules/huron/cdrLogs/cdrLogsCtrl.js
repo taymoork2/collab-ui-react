@@ -11,6 +11,9 @@
     var ABORT = 'ABORT';
     var SEARCH = "SEARCH";
     var UPLOAD = "UPLOAD";
+    var SPARKTRUNK = 'COMMON_TO_SQUARED_TRUNK';
+    var SPARKINTTRUNK = 'COMMON_TO_SQUARED_INT_TRUNK';
+
     var timeFormat = 'hh:mm:ss A';
     var dateFormat = 'YYYY-MM-DD';
     var filetype = "text/json, application/json";
@@ -43,11 +46,13 @@
           scope.model.callingUser = value;
           scope.fields[3].formControl.$validate();
         }
-        return /^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$/.test(value) || /^[0-9a-fA-F]{32}$/.test(value) || (value === undefined) || (value === "");
+        // name/uuid are now verified only once the search button is clicked and a notification is thrown
+        return true;
       },
       calledUser: function (viewValue, modelValue, scope) {
         var value = viewValue || modelValue;
-        return ((/^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$/.test(value) || /^[0-9a-fA-F]{32}$/.test(value)) && (value !== scope.model.callingUser)) || (value === undefined) || (value === "");
+        // name/uuid are now verified only once the search button is clicked and a notification is thrown
+        return (value !== scope.model.callingUser) || angular.isUndefined(value) || value === "";
       },
       callingNumber: function (viewValue, modelValue, scope) {
         var value = viewValue || modelValue;
@@ -503,11 +508,13 @@
           label: $translate.instant('cdrLogs.upload'),
           onClick: function (options, scope) {
             vm.selectedCDR = null;
+            vm.dataState = 1;
             try {
               var jsonData = JSON.parse(scope.model.uploadFile);
               vm.gridData = [];
-              vm.gridData.push(jsonData.cdrs);
+              vm.gridData.push(addNames(jsonData.cdrs));
             } catch (SyntaxError) {
+              vm.dataState = 0;
               Notification.notify($translate.instant('cdrLogs.jsonSyntaxError'), 'error');
             }
           }
@@ -522,6 +529,19 @@
     vm.statusAvalibility = statusAvalibility;
     vm.getAccordionHeader = getAccordionHeader;
     vm.selectCDR = selectCDR;
+    vm.accordionClicked = accordionClicked;
+
+    function addNames(cdrArray) {
+      var x = 0;
+      angular.forEach(cdrArray, function (cdr, index, array) {
+        angular.forEach(cdr, function (item, itemIndex, itemArray) {
+          item.name = "call0CDR" + x;
+          x++;
+        });
+      });
+
+      return cdrArray;
+    }
 
     function statusAvalibility(cdrArray) {
       // returns danger if both the calling and called cause codes for each cdr in the array is in the errorStatus array
@@ -535,24 +555,42 @@
       return 'primary';
     }
 
+    function isSparkCall(cdrDataParam) {
+      if (cdrDataParam.called_deviceName === SPARKTRUNK || cdrDataParam.called_deviceName === SPARKINTTRUNK) {
+        return true;
+      } else if (cdrDataParam.calling_deviceName === SPARKTRUNK || cdrDataParam.calling_deviceName === SPARKINTTRUNK) {
+        return true;
+      }
+      return false;
+    }
+
     function getAccordionHeader(cdrArray) {
       var firstTimestamp = cdrArray[0][0]['@timestamp'];
       var numberOfCdrs = 0;
       var totalDuration = 0;
+      var sparkCall = false;
+      var header = '';
       for (var callSeg = 0; callSeg < cdrArray.length; callSeg++) {
         for (var i = 0; i < cdrArray[callSeg].length; i++) {
           totalDuration += cdrArray[callSeg][i].dataParam.duration;
           if (cdrArray[callSeg][i]['@timestamp'] < firstTimestamp) {
             firstTimestamp = cdrArray[callSeg][i]['@timestamp'];
           }
+          if (!sparkCall) {
+            sparkCall = isSparkCall(cdrArray[callSeg][i]['dataParam']);
+          }
           numberOfCdrs++;
         }
       }
-      return $translate.instant("cdrLogs.cdrAccordionHeader", {
+      header = $translate.instant("cdrLogs.cdrAccordionHeader", {
         firstTimestamp: firstTimestamp,
         numberOfCdrs: numberOfCdrs,
         totalDuration: totalDuration
       });
+      if (sparkCall) {
+        header += ' ' + $translate.instant("cdrLogs.sparkCall");
+      }
+      return header;
     }
 
     function setupScrolling(gridData) {
@@ -594,6 +632,10 @@
         cdrData: vm.selectedCDR,
         call: callCopy
       });
+    }
+
+    function accordionClicked(tableName) {
+      $('#' + tableName).getNiceScroll().resize();
     }
   }
 })();

@@ -1,32 +1,166 @@
+%aa-pm-vertical-line {
+  position: relative;
+
+  &:before {
+    top: 0;
+    left: 0;
+    position: absolute;
+    display: inline-block;
+    content: '';
+    transform: translateX(2rem);
+    border-left: $aa-builder-border-size solid $aa-builder-border-color;
+    height: 100%;
+  }
+}
+
 .aa-phone-menu {
   min-width: vr-adjust(340);
+
   > .row:first-child {
     @include vr-spacing(mt, 0.5);
   }
+
   & select {
     color: $input-font-color;
     background-color: $color-white;
   }
+
   .panel {
     @include vr-spacing(m, 0);
+
     @include vr-spacing(p, 1);
+
     @include vr-spacing(pb, 0);
+
     background-color: $gray-light-3;
+
     & ~ .panel {
       @include vr-spacing(mt, 0.5);
     }
+
+    .aa-pm-vertical-line {
+      @extend %aa-pm-vertical-line;
+    }
   }
+
+  & .select-list {
+    .dropdown-menu {
+      width: 100%;
+    }
+  }
+
+  & .select-toggle {
+    width: auto;
+
+    @include vr-spacing(pr, 1.75);
+
+    & > i {
+      &.icon {
+        right: -0.25rem;
+      }
+    }
+  }
+
+  & .aa-trash-icon {
+    padding-left: 0;
+    padding-top: 0;
+    top: 0.25rem;
+  }
+
+  & .aa-route-to-aa {
+    & .csSelect-container {
+      @include vr-spacing(pt, 1);
+    }
+  }
+
+  .aa-pm-timeout {
+    @include vr-spacing(pb, 1);
+  }
+
+  .aa-pm-key-select, .aa-pm-action-select {
+    & .select-options, & .dropdown-menu {
+      height: inherit;
+      max-height: inherit;
+    }
+
+    & .select-toggle {
+      position: relative;
+      z-index: 1;
+
+      & > i {
+        right: 0;
+
+        @include vr-spacing(mr, 0);
+
+        @include vr-spacing(ml, -0.5);
+      }
+    }
+  }
+
+  .aa-pm-key-select {
+    & .select-toggle {
+      @include vr-spacing(pl, 1.25);
+    }
+
+    // selected option
+    &:not(.not-selected) {
+      a {
+        &.select-toggle {
+          color: $color-white;
+
+          &:after {
+            position: absolute;
+            display: inline-block;
+            content: " ";
+            width: calc(1.75em + 1px);
+            top: 0.15em;
+            left: 0.75em;
+            height: calc(1.75em + 1px);
+            background-color: $color-cta-base;
+            z-index: -1;
+
+            @include radius(1em);
+          }
+        }
+      }
+    }
+  }
+
+  .aa-pm-add {
+    @include vr-spacing(ml, 1);
+
+    line-height: 1em;
+
+    @include vr-spacing(mt, -0.25);
+
+    .icon {
+      @include vr-spacing(mr, 0.5);
+
+      top: 2px;
+
+      &:before {
+        background-color: $gray-light-3;
+      }
+
+      font-size: 1.25em;
+    }
+  }
+
   .aa-pm-primary-text {
     display: inline-block;
+
     @include vr-spacing(mb, 1);
   }
+
   .aa-pm-add-key-icon {
     &:before {
       line-height: 1rem;
       content: '+';
     }
+
     &.aa-pm-vertical-line {
       position: relative;
+
       &:after {
         content: '';
         position: absolute;
@@ -34,20 +168,37 @@
         left: 0;
         width: 100%;
         height: 1.05rem;
-        background-image: linear-gradient(180deg, transparent, #ccc, transparent);
-        background-position: 50%;
-        background-repeat: repeat-y;
-        background-size: 1px 1px;
+
+        @extend %aa-pm-vertical-line;
       }
     }
   }
+
   .control-label {
     @include vr-spacing(mv, 0.25);
+
     &[disabled] {
       cursor: default;
     }
   }
+
   .control-text {
+    @include vr-spacing(mb, 1);
+  }
+}
+
+.aa-pm-vertical-line {
+  @include vr-spacing(pb, 1);
+
+  &:nth-child(n+12) {
+    @include vr-spacing(pb, 0);
+
+    @include vr-spacing(mb, 1);
+  }
+
+  &.aa-pm-primary-text {
+    @include vr-spacing(pb, 0);
+
     @include vr-spacing(mb, 1);
   }
 }

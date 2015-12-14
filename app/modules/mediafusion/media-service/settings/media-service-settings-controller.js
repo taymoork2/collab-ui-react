@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function MediaServiceSettingsController($state, $modal, MediaServiceDescriptor, Authinfo, $stateParams, NotificationConfigService, $log, MailValidatorService, XhrNotificationService, Notification) {
+  function MediaServiceSettingsController($state, $modal, MediaServiceActivation, Authinfo, $stateParams, $translate, EmailNotificationConfigService, $log, EmailValidatorService, XhrNotificationService, Notification) {
     var vm = this;
     vm.config = "";
     vm.wx2users = "";
@@ -11,9 +11,10 @@
     vm.cluster = $stateParams.cluster;
 
     vm.disableMediaService = function (serviceId) {
-      MediaServiceDescriptor.setServiceEnabled(serviceId, false).then(
+      MediaServiceActivation.setServiceEnabled(vm.serviceId, false).then(
         function success() {
-          $state.go("mediafusion.list", {
+          vm.disableOrpheusForMediaFusion();
+          $state.go("media-service.list", {
             serviceType: "mf_mgmt"
           }, {
             reload: true
@@ -25,9 +26,7 @@
     };
 
     vm.confirmDisable = function (serviceId) {
-      $log.log("inside");
       $modal.open({
-        // TODO: update correct disable-dialog html
         templateUrl: "modules/mediafusion/media-service/settings/confirm-disable-dialog.html",
         controller: DisableConfirmController,
         controllerAs: "disableConfirmDialog",
@@ -36,7 +35,44 @@
       });
     };
 
-    NotificationConfigService.read(function (err, config) {
+    vm.disableOrpheusForMediaFusion = function () {
+      //$log.log("Entered disableOrpheusForMediaFusion");
+      MediaServiceActivation.getUserIdentityOrgToMediaAgentOrgMapping().then(
+        function success(response) {
+          var mediaAgentOrgIdsArray = [];
+          var orgId = Authinfo.getOrgId();
+          var updateMediaAgentOrgId = false;
+          mediaAgentOrgIdsArray = response.data.mediaAgentOrgIds;
+          //$log.log("Media Agent Org Ids Array:", mediaAgentOrgIdsArray);
+
+          var index = mediaAgentOrgIdsArray.indexOf(orgId);
+          mediaAgentOrgIdsArray.splice(index, 1);
+
+          index = mediaAgentOrgIdsArray.indexOf("squared");
+          mediaAgentOrgIdsArray.splice(index, 1);
+
+          if (mediaAgentOrgIdsArray.length > 0) {
+            //$log.log("Updated Media Agent Org Ids Array:", mediaAgentOrgIdsArray);
+            MediaServiceActivation.setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
+              function success(response) {},
+              function error(errorResponse, status) {
+                Notification.notify([$translate.instant('mediaFusion.mediaAgentOrgMappingFailure', {
+                  failureMessage: errorResponse.message
+                })], 'error');
+              });
+          } else {
+            MediaServiceActivation.deleteUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
+              function success(response) {},
+              function error(errorResponse, status) {
+                Notification.notify([$translate.instant('mediaFusion.mediaAgentOrgMappingFailure', {
+                  failureMessage: errorResponse.message
+                })], 'error');
+              });
+          }
+        });
+    };
+
+    EmailNotificationConfigService.read(function (err, config) {
       vm.loading = false;
       if (err) {
         return XhrNotificationService.notify(err);
@@ -57,11 +93,11 @@
       vm.config.wx2users = _.map(vm.wx2users, function (data) {
         return data.text;
       }).toString();
-      if (vm.config.wx2users && !MailValidatorService.isValidEmailCsv(vm.config.wx2users)) {
+      if (vm.config.wx2users && !EmailValidatorService.isValidEmailCsv(vm.config.wx2users)) {
         Notification.error("hercules.errors.invalidEmail");
       } else {
         vm.savingEmail = true;
-        NotificationConfigService.write(vm.config, function (err) {
+        EmailNotificationConfigService.write(vm.config, function (err) {
           vm.savingEmail = false;
           if (err) {
             return XhrNotificationService.notify(err);
@@ -76,11 +112,8 @@
   }
 
   /* @ngInject */
-  function DisableConfirmController(MediaServiceDescriptor, $modalInstance) {
+  function DisableConfirmController(MediaServiceActivation, $modalInstance) {
     var modalVm = this;
-    //TODO:check this
-    // modalVm.serviceIconClass = MediaServiceDescriptor.serviceIcon();
-
     modalVm.ok = function () {
       $modalInstance.close();
     };

@@ -9,20 +9,25 @@
   function DialPlanService($q, Authinfo, ClusterCommonCmiService, CustomerVoiceCmiService, DialPlanCmiService, DialPlanDetailsCmiService) {
 
     var service = {
-      getVoiceClusters: getVoiceClusters,
+      getVoiceCluster: getVoiceCluster,
       getCustomerVoice: getCustomerVoice,
       getDialPlans: getDialPlans,
-      getCustomerDialPlanDetails: getCustomerDialPlanDetails
+      getCustomerDialPlanDetails: getCustomerDialPlanDetails,
+      getCustomerDialPlanCountryCode: getCustomerDialPlanCountryCode
     };
 
     return service;
 
     // get a list of voice clusters in the deployment
-    function getVoiceClusters() {
+    function getVoiceCluster() {
       var queryString = {
         'type': 'APPLICATION_VOICE'
       };
-      return ClusterCommonCmiService.query(queryString).$promise;
+      return ClusterCommonCmiService.query(queryString).$promise
+        .then(function (response) {
+          // return the first cluster uuid
+          return _.get(response, '[0].uuid');
+        });
     }
 
     // get the customer's voice service profile
@@ -35,25 +40,31 @@
 
     // get a list of dial plans from the voice cluster the customer is on
     function getDialPlans() {
-      return getVoiceClusters().then(function (response) {
+      return getVoiceCluster().then(function (voiceClusterId) {
         var queryString = {
-          clusterId: undefined
+          clusterId: voiceClusterId
         };
-        queryString.clusterId = response[0].uuid; // this must be revisited once a customer's actual cluster can be identified
         return DialPlanCmiService.query(queryString).$promise;
       });
     }
 
+    function getCustomerDialPlanCountryCode(customerId) {
+      return getCustomerDialPlanDetails(customerId)
+        .then(function (response) {
+          return _.trimLeft(response.countryCode, '+');
+        });
+    }
+
     // get dial plan details corresponding to the customer's dial plan
     function getCustomerDialPlanDetails(customerId) {
-      return $q.all([getVoiceClusters(), getDialPlans(), getCustomerVoice(customerId)]).then(function (responses) {
+      return $q.all([getVoiceCluster(), getDialPlans(), getCustomerVoice(customerId)]).then(function (responses) {
         // wait until all promises in $q are resolved, then...
-        var voiceClusters = responses[0];
+        var voiceClusterId = responses[0];
         var clusterDialPlans = responses[1];
         var customerVoice = responses[2];
 
         if (customerVoice.dialPlan === null) {
-          // if customer's dialPlan attribute is defined but null, assume the customer is on the 
+          // if customer's dialPlan attribute is defined but null, assume the customer is on the
           // North American Dial Plan. Look up uuid for NANP and insert it into customer dialPlan.
           var northAmericanDialPlan = _.find(clusterDialPlans, {
             'name': 'NANP'
@@ -64,11 +75,9 @@
         }
 
         var queryString = {
-          clusterId: undefined,
-          'dialplan': undefined
+          clusterId: voiceClusterId,
+          dialplan: _.get(customerVoice, 'dialPlan.uuid')
         };
-        queryString.clusterId = voiceClusters[0].uuid; // this must be revisited once a customer's actual cluster can be identified
-        queryString.dialplan = customerVoice.dialPlan.uuid;
 
         return DialPlanDetailsCmiService.query(queryString).$promise
           .then(function (response) {
@@ -77,7 +86,7 @@
             // TODO: Remove this section when dialPlanDetails for North America becomes available in UPDM.
             // When this section is removed, didAdd.spec.js must be updated to not expect a 404 for NADP.
             // Ask Ken Nakano (kennakan) for any questions.
-            if (response.length < 1) {
+            if (response.length === 0) {
               var northAmericanDialPlanData = {
                 countryCode: "+1",
                 extensionGenerated: "false",

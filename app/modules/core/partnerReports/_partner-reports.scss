@@ -5,9 +5,13 @@
 @import 'activeUserPopulation/_active-user-population';
 
 .partner-reports {
-  padding: 0;
-  height: auto;
-  overflow: hidden;
+  @extend %content-subheader;
+  // @extend %page-content-padding;
+  // TODO: remove when page is made responsive
+  .content-container {
+    padding: 1.5rem 0;
+  }
+
   .reports-header {
     @extend .row;
     @extend .page-header;
@@ -32,9 +36,13 @@
       font-family: $brand-font-cisco-TT-Light;
       font-size: rem-calc(14);
       padding: 0;
-      margin:0;
+      margin: 0;
       cursor: pointer;
     }
+  }
+  .report-select-filters {
+    width: rem-calc(250);
+    margin-left: rem-calc(20);
   }
   .not-selected {
     color: $brand-primary;
@@ -130,6 +138,9 @@
       margin-left: auto;
       margin-right: auto;
       z-index: 50;
+    }
+    .amExportButton {
+      top: rem-calc(30);
     }
     .horizontal-center {
       text-align: center;

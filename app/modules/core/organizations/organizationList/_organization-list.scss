@@ -1,4 +1,7 @@
 .org-list {
+  @extend %grid-subheader;
+  @extend %page-background-white;
+
   .ngCell.col0 .ngVerticalBar, .ngHeaderCell.col0 .ngVerticalBar {
     display: none;
   }
@@ -12,11 +15,6 @@
       left: auto;
       top: 70%;
     }
-  }
-
-  /** todo: remove once Paul gives the ok */
-  .searchbox {
-    float:none;
   }
 }
 
@@ -34,12 +32,6 @@
   font-family: $brand-font-cisco-TT-Extra-Light;
   font-size: 16px;
   line-height: 1;
-}
-
-.btn--actions {
-  float: right;
-  padding: 15px 30px;
-  text-align: center;
 }
 
 .filter {

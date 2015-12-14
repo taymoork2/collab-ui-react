@@ -1,101 +1,154 @@
-.wizard-plan-review {
+// TODO: Move this to a common location (Shared by Plan review and Assign Services)
+%plan-container {
   min-height: 515px;
   display: flex;
   flex-direction: column;
   flex: 1;
+  .indentedCheckbox {
+    margin: 0;
+    padding-left: rem-calc(28);
+    .cs-checkbox {
+      padding-right: 1.5rem;
+    }
+  }
   .flex-row {
     @extend .row;
     display: flex;
-    .col-sm-4 {
-      padding-bottom: 10px;
-      &:not(:last-of-type){
+    .columns {
+      padding: 1.5rem;
+    }
+    .small-4 {
+      &:not(:last-of-type) {
         margin-right: 3px;
       }
     }
-    .col-free {
-      background: $gray-lightest;
+    .column-title {
+      background: $gray-light-4;
+      padding: 12px 0 14px 0;
+      line-height: 30px;
+    }
+    .column-free {
+      background: $gray-light-4;
       min-height: 50px;
-      padding-top: 15px;
-    }
-    .col-paid {
-      background: $gray-lightest;
-      padding: 0;
+      line-height: 24px;
       font-size: 14px;
     }
-    .col-mtg{
-      background: $gray-lightest;
-      padding: 0;
-      font-size: 14px;
+    .column-mtg {
+      padding-bottom: 0;
     }
-    .col-trial {
-      background: $brand-warning;
-      padding: 0;
+    .column-trial {
+      background: $gray-light-4;
     }
-    .col-trial-header {
-      padding: 20px 15px 0 15px;
-      background: $brand-warning-dark;
-      height: 100px;
-      font-family: $brand-font-cisco-TT-Extra-Light;
-      font-size: 26px;
-      line-height: 32px;
-      color: $brand-white;
+    .column-trial-header {
+      @extend .h5;
+      padding: 1.5rem;
+      background: $color-attention;
+      color: $white;
     }
-    
     &.row-licenses {
       flex: 1;
+      .columns {
+        padding: 0;
+        background: $gray-light-4;
+        font-size: 14px;
+      }
+      .column-trial,
+      .column-paid,
+      .column-mtg {
+        padding: 1.5rem;
+      }
     }
   }
   .row-room {
-    margin-top: 3px; 
-    background: $gray-lightest;
+    margin-top: 3px;
+    background: $gray-light-4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .column-header {
+      padding: 0;
+      border-right: solid 1px $gray-light-2;
+    }
+  }
+  .column-room {
+    padding-top: 12px;
+    line-height: 32px;
+    text-align: center;
+  }
+  .room-systems {
+    text-align: left;
+    padding: 1.5rem;
+  }
+  .item-sparkRoom {
+    color: $color-primary-base;
+    font-family: $brand-font-light;
+    font-size: 14px;
+    line-height: 24px;
+  }
+  .spark-quantity {
+    font-size: 14px;
+    font-family: $brand-font-light;
+    color: $gray-base;
+    line-height: 24px;
   }
   .badge-trial {
     @extend .badge.badge-warning;
     display: inline-block;
   }
   .column-header {
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     h3 {
-      margin-top: 10px;
-      font-family: $brand-font-cisco-TT-Extra-Light;
-      display: inline-block;
+      color: $gray-dark-2;
+      margin-top: 2px;
     }
     .icon {
-      font-size: 35px;
-      display: inline-block;
+      font-size: 32px;
+      margin-right: .75rem;
     }
   }
-  .column-title {
-    h5 { 
-      font-family: Arial;
-      text-align: center;
-    }
-    .free {
+  .column-subsription-header {
+    font-family: $brand-font-regular;
+    font-size: 12px;
+    color: $gray-dark-1;
+    text-align: center;
+    padding: 4px 0 2px;
+    border-top: 1px solid $white;
+    border-bottom: 1px solid $white;
+
+    &.free {
       background-color: $color-cta-lighter;
     }
-    .paid {
+    &.paid {
       background-color: $color-primary-lighter;
+    }
+    &.trial {
+      background-color: $color-attention-lighter;
     }
   }
   .item-free {
     color: $text-color;
+    font-family: $brand-font-light;
+    line-height: 24px;
   }
   .item-paid {
-    color: $text-color;
-    padding: 0px 15px 20px 15px;
+    padding: 0 0 24px 0;
+    line-height: 24px;
     .sub-item {
-      padding-top: 5px;
-      font-family: Arial;
-      font-size: 13px;
+      font-family: $brand-font-light;
+      font-size: 14px;
       color: $gray-darker;
     }
     .quantity {
-      font-family: Arial;
-      font-size: 13px;
-      color: $gray-darker;
+      font-family: $brand-font-light;
+      font-size: 14px;
+      color: $gray-base;
       display: inline-block;
       .quantity-padding {
-        padding-right: 0px;
+        padding-right: 0;
+        font-size: 14px;
+        color: $gray-base;
       }
       .badge {
         padding: 3px 9px 3px;
@@ -105,40 +158,33 @@
       }
     }
   }
-  .item-cf {
-    color: $color-primary-dark;
-    padding: 20px 15px 0px 15px;
+  .item-license {
+    color: $color-primary-base;
+    font-family: $brand-font-light;
+    font-size: 14px;
+    line-height: 24px;
   }
-  .item-msg {
-    color: $color-primary-dark;
-    padding: 20px 0px 0px 0px;
-    margin-left: 15px;
-  }
-  .item-mtg{
-    color: $color-primary-dark;
-    padding: 0px;
-    margin-left: 15px;
-    margin-right: 15px;
-
+  .item-mtg {
+    color: $color-primary-base;
+    font-family: $brand-font-light;
+    font-size: 14px;
+    line-height: 24px;
     .sub-item {
-      padding-top: 5px;
-      padding-bottom: 15px;
-      font-family: Arial;
-      font-size: 13px;
-      color: $gray-darker;
+      padding-bottom: 24px;
+      font-family: $brand-font-light;
+      font-size: 14px;
+      color: $gray-base;
+      margin-bottom: 0;
     }
-    .sub-line {
-      border-bottom: 1px solid #ccc;
-      padding-top: 5px;
-      margin-bottom: 20px;
+    .item-webex {
+      color: $gray-dark-2;
+      margin-right: 24px;
     }
-    .quantity {
-      font-family: Arial;
-      font-size: 13px;
-      color: $gray-darker;
-      .quantity-padding {
-        padding-right: 0px;
-      }
+    .quantity-mtg {
+      font-family: $brand-font-light;
+      font-size: 14px;
+      color: $gray-base;
+      display: inline-block;
       .badge {
         padding: 3px 9px 3px;
       }
@@ -147,22 +193,20 @@
       }
     }
   }
-  .item-call {
-    color: $color-primary-dark;
-    padding: 20px 0px 0px 0px;
-    margin-left: 15px;
-  }
-  .item-cmr {
-    padding: 0px;
-    margin-left: 30px;
+  .sub-line {
+    border-bottom: 1px solid #ccc;
+    padding-top: 5px;
+    margin-bottom: 20px;
   }
 }
 
+.wizard-plan-review {
+  @extend %plan-container;
+}
+
 .wizard-trial-progress {
-  .col-sm-12 {
-    margin-top: 3px;
-    padding-left: 1px;
-    padding-right: 4px;
+  .small-12 {
+    @include vr-spacing(mv, .25);
   }
   .progress {
     margin-bottom: 5px;
@@ -170,11 +214,6 @@
   .progress-bar-warning {
     background-color: $brand-warning-dark;
   }
-}
-
-.wizard-trial-progress-text {
-  font-family: Arial;
-  font-size: 12px;
 }
 
 .onboard-label {
@@ -257,70 +296,71 @@
   .wizard-inline-block {
     display: inline-block;
   }
+  .installStepHead {
+    margin-top: rem(15);
+    margin-bottom: rem(15);
+  }
+  .installStep {
+    margin-bottom: rem(1);
+  }
+  .installStepLast {
+    margin-bottom: rem(25);
+  }
+  .installStepWarning {
+    margin-bottom: rem(25);
+    .alert-text {
+      color: $color-alerts-base;
+      font-weight: bold;
+    }
+  }
 }
 
 .service-setup-container {
   padding-left: 20px;
-
   .form-group {
     margin-left: 0;
     margin-right: 0;
   }
-
-  .has-feedback .form-control-feedback {
-    right: 0;
-  }
-
   .service-setup {
     label {
       font-size: 24px;
     }
-
     .hide-delete {
       visibility: hidden;
     }
-
     .service-setup-timezone {
       .formly-input-wrapper {
         width: 50%
       }
     }
-
     .service-setup-steering-digit {
       .formly-input-wrapper {
         width: 100px;
       }
     }
-
     .service-setup-site-code {
       .formly-input-wrapper {
         width: 100px;
       }
     }
-
     &.service-setup-extension {
       .formly-field-group {
         margin-bottom: 10px;
       }
-
     }
-
     .service-setup-extension-range {
       width: 375px;
-    }
-
-    .service-setup-extension-range-to {
-      margin-right: 30px;
-    }
-
-    .service-setup-company-voicemail {
-      margin-top: 15px;
-
-      .select-dropdown {
-        width: 230px;
+      input {
+        width: 100%;
       }
     }
-
+    .service-setup-extension-range-to {
+      margin-right: 30px;
+      margin-left: 30px;
+    }
+    .service-setup-company-voicemail-number {
+      width: 20rem;
+    }
     .service-setup-moh {
       width: 50%;
     }
@@ -337,17 +377,15 @@
   }
   .file-drop {
     border: 1px dashed $gray-light;
-    height : 300px;
+    height: 300px;
     display: flex;
     align-content: center;
     justify-content: center;
-
     &.dragover {
       border-color: $link-hover-color;
       background: $gray-lightest;
     }
   }
-
   .file-drop-content {
     align-self: center;
     .icon-circle-attachment {
@@ -356,11 +394,9 @@
       color: $gray-light;
     }
   }
-
   .file-drop-inactive {
     @extend .file-drop;
     border: 1px solid $gray-light;
-
     .file-drop-content {
       width: 50%;
     }
@@ -372,11 +408,9 @@
       margin-top: -15px;
     }
   }
-
   .download-link {
     margin-top: 10px;
   }
-
   input {
     display: none;
   }
@@ -388,17 +422,14 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
   .icon-circle-group {
     font-size: 100px;
     margin-bottom: 100px;
     color: $gray-light;
   }
-
   .users-process-content {
     width: 50%;
     display: flex;
-
     .progressbar {
       flex: 1;
     }
@@ -407,7 +438,6 @@
       margin-left: 5px;
     }
   }
-
   .time-duration {
     margin-top: -15px;
   }
@@ -477,10 +507,9 @@
     align-self: center;
     margin: 20px 0;
   }
-
   .table-header {
     border: $gray-light solid 1px;
-    border-bottom: 0px;
+    border-bottom: 0;
     .table {
       border-color: $gray-lightest;
     }
@@ -495,11 +524,11 @@
   }
   .table-body {
     border: $gray-light solid 1px;
-    border-top: 0px;
+    border-top: 0;
     position: relative;
     top: -1px;
     .table {
-      border-width: 0px;
+      border-width: 0;
     }
     .center {
       text-align: center;
@@ -526,21 +555,27 @@
     .table {
       margin-bottom: 0;
     }
-    .table-bordered > thead > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > th, .table-bordered > tbody > tr > td {
+    .table-bordered > thead > tr > th,
+    .table-bordered > thead > tr > td,
+    .table-bordered > tbody > tr > th,
+    .table-bordered > tbody > tr > td {
       border-bottom-width: 1px;
       border-right: $gray-light solid 1px;
       font-size: 15px;
     }
-    .table-bordered > thead > tr > th:last-of-type, .table-bordered > tbody > tr > td:last-of-type {
-        border-right: none;
-      }
-    .table-bordered > thead > tr:last-of-type > th, .table-bordered > tbody > tr:last-of-type > td {
-        border-bottom-width: 0px;
-      }
-    .table-bordered > thead > tr > th, .table-bordered > tbody > tr > td {
-        border-right: $gray-light solid 1px;
-        border-left: none;
-        border-top: none;
-      }
+    .table-bordered > thead > tr > th:last-of-type,
+    .table-bordered > tbody > tr > td:last-of-type {
+      border-right: none;
+    }
+    .table-bordered > thead > tr:last-of-type > th,
+    .table-bordered > tbody > tr:last-of-type > td {
+      border-bottom-width: 0;
+    }
+    .table-bordered > thead > tr > th,
+    .table-bordered > tbody > tr > td {
+      border-right: $gray-light solid 1px;
+      border-left: none;
+      border-top: none;
+    }
   }
 }

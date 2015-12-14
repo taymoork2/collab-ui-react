@@ -37,7 +37,6 @@
             viewReady: false,
             hasLoadError: false,
             sessionTicketError: false,
-            allowRetry: false,
             errMsg: "",
             pageTitle: pageTitle,
             pageTitleFull: pageTitleFull,
@@ -215,13 +214,14 @@
               var funcName = "getWebexLicenseInfoSuccess()";
               var logMsg = "";
 
-              _this.webExSiteSettingsObj.siteInfoCardObj.licensesTotal.count = licenseInfo.volume;
-              _this.webExSiteSettingsObj.siteInfoCardObj.licensesUsage.count = licenseInfo.usage;
-              _this.webExSiteSettingsObj.siteInfoCardObj.licensesAvailable.count = licenseInfo.available;
+              WebExUtilsFact.setInfoCardLicenseInfo(
+                licenseInfo,
+                _this.webExSiteSettingsObj.siteInfoCardObj
+              );
 
               logMsg = funcName + ": " + "\n" +
                 "siteInfoCardObj=" + JSON.stringify(_this.webExSiteSettingsObj.siteInfoCardObj);
-              $log.log(logMsg);
+              // $log.log(logMsg);
             }, // getWebexLicenseInfoSuccess()
 
             function getWebexLicenseInfoError(result) {
