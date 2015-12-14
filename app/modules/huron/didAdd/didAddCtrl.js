@@ -394,18 +394,9 @@
       return formattedDids;
     }
 
-    function startTrial() {
-      if ($scope.trial && angular.isFunction($scope.trial.startTrial)) {
-        vm.startTrialLoad = true;
-        $q.when($scope.trial.startTrial(true)).then(function (customerId) {
-          populateDidArrays();
-          return submit(customerId);
-        }).then(function () {
-          return $state.go('trialAdd.nextSteps');
-        }).catch(function () {
-          vm.startTrialLoad = false;
-        });
-      }
+    function startTrial(customerOrgId) {
+      populateDidArrays();
+      return submit(customerOrgId);
     }
 
     function editTrial() {

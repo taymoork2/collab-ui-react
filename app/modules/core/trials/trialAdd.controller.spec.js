@@ -49,6 +49,14 @@ describe('Controller: TrialAddCtrl', function () {
     expect(controller.callTrial.enabled).toBeFalsy();
   });
 
+  it('should start in trialAdd.info state', function () {
+    expect(controller.navStates).toEqual(['trialAdd.info']);
+  });
+
+  it('should have correct navigation state order', function () {
+    expect(controller.navOrder).toEqual(['trialAdd.info', 'trialAdd.meeting', 'trialAdd.call', 'trialAdd.addNumbers']);
+  });
+
   it('should transition state', function () {
     expect(controller.hasNextStep()).toBeTruthy();
     controller.nextStep();
@@ -59,31 +67,19 @@ describe('Controller: TrialAddCtrl', function () {
     expect(controller.roomSystemFields[1].model.quantity).toBe(0);
   });
 
+  it('should close the modal', function () {
+    controller.closeDialogBox();
+    expect($state.modal.close).toHaveBeenCalled();
+  });
+
   describe('Start a new trial', function () {
+    var callback;
     beforeEach(function () {
-      spyOn(TrialService, "startTrial").and.returnValue($q.when(getJSONFixture('core/json/trials/trialAddResponse.json')));
+      callback = jasmine.createSpy('addNumbersCallback').and.returnValue($q.when());
+      spyOn(TrialService, 'startTrial').and.returnValue($q.when(getJSONFixture('core/json/trials/trialAddResponse.json')));
     });
 
-    describe('With optional flag', function () {
-      beforeEach(function () {
-        controller.startTrial(true);
-        $scope.$apply();
-      });
-
-      it('should notify success', function () {
-        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
-      });
-
-      it('should not have closed the modal', function () {
-        expect($state.modal.close).not.toHaveBeenCalled();
-      });
-
-      it('should send an email', function () {
-        expect(EmailService.emailNotifyTrialCustomer).toHaveBeenCalled();
-      });
-    });
-
-    describe('Without optional flag', function () {
+    describe('basic behavior', function () {
       beforeEach(function () {
         controller.startTrial();
         $scope.$apply();
@@ -93,8 +89,38 @@ describe('Controller: TrialAddCtrl', function () {
         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
       });
 
-      it('should close the modal', function () {
-        expect($state.modal.close).toHaveBeenCalled();
+      it('should send an email', function () {
+        expect(EmailService.emailNotifyTrialCustomer).toHaveBeenCalled();
+      });
+    });
+
+    describe('with addNumbers callback', function () {
+      beforeEach(function () {
+        controller.startTrial(callback);
+        $scope.$apply();
+      });
+
+      it('should call with customerOrgId', function () {
+        expect(callback).toHaveBeenCalledWith('123');
+      });
+
+      it('should go to finish page', function () {
+        expect($state.go).toHaveBeenCalledWith('trialAdd.finishSetup');
+      });
+    });
+
+    describe('without addNumbers callback', function () {
+      beforeEach(function () {
+        controller.startTrial();
+        $scope.$apply();
+      });
+
+      it('should not call callback', function () {
+        expect(callback).not.toHaveBeenCalled();
+      });
+
+      it('should go to finish page', function () {
+        expect($state.go).toHaveBeenCalledWith('trialAdd.finishSetup');
       });
     });
 
