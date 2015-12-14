@@ -14,7 +14,7 @@
           <span>{{aggregatedLicense.displayName}}: </span>
           <span ng-if="!helpdeskOrgCtrl.licenseUsageReady">{{aggregatedLicense.totalVolume}} licenses</span>
           <span
-            ng-if="helpdeskOrgCtrl.licenseUsageReady">{{aggregatedLicense.totalUsage || 0}} of {{aggregatedLicense.totalVolume}} in use ({{aggregatedLicense.usagePercentage}}%)</span>
+            ng-if="helpdeskOrgCtrl.licenseUsageReady">{{helpdeskOrgCtrl.usageText(aggregatedLicense.totalUsage || 0, aggregatedLicense.totalVolume)}} ({{aggregatedLicense.usagePercentage}}%)</span>
           <span ng-if="aggregatedLicense.isTrial">| </span>
           <span class="badge badge-warning" ng-if="aggregatedLicense.isTrial" translate="helpdesk.trial"></span>
           <span ng-if="aggregatedLicense.isTrial && aggregatedLicense.trialExpiresInDays > 0">{{helpdeskOrgCtrl.daysLeftText(aggregatedLicense)}}</span>
@@ -30,7 +30,7 @@
                collapse="!helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key]">
             <span>{{'helpdesk.licenseStatus.' + (license.status | lowercase) | translate}}:</span>
             <span
-              ng-if="helpdeskOrgCtrl.licenseUsageReady">{{license.usage || 0}} of {{license.volume}} in use</span>
+              ng-if="helpdeskOrgCtrl.licenseUsageReady">{{helpdeskOrgCtrl.usageText(license.usage || 0, license.volume)}}</span>
             <span ng-if="!helpdeskOrgCtrl.licenseUsageReady">{{license.volume}} licenses</span>
             <span ng-if="license.isTrial">| </span>
             <span class="badge badge-warning" ng-if="license.isTrial" translate="helpdesk.trial"></span>
@@ -68,7 +68,7 @@
             ng-if="aggregatedLicense.siteUrl">{{aggregatedLicense.displayName}} ({{aggregatedLicense.siteUrl}}): </span>
           <span ng-if="!helpdeskOrgCtrl.licenseUsageReady">{{aggregatedLicense.totalVolume}} licenses</span>
           <span
-            ng-if="helpdeskOrgCtrl.licenseUsageReady">{{aggregatedLicense.totalUsage || 0}} of {{aggregatedLicense.totalVolume}} in use ({{aggregatedLicense.usagePercentage}}%)</span>
+            ng-if="helpdeskOrgCtrl.licenseUsageReady">{{helpdeskOrgCtrl.usageText(aggregatedLicense.totalUsage || 0, aggregatedLicense.totalVolume)}} ({{aggregatedLicense.usagePercentage}}%)</span>
           <span ng-if="aggregatedLicense.isTrial">| </span>
           <span class="badge badge-warning" ng-if="aggregatedLicense.isTrial" translate="helpdesk.trial"></span>
           <span ng-if="aggregatedLicense.isTrial && aggregatedLicense.trialExpiresInDays > 0">{{helpdeskOrgCtrl.daysLeftText(aggregatedLicense)}}</span>
@@ -84,7 +84,7 @@
                collapse="!helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key]">
             <span>{{'helpdesk.licenseStatus.' + (license.status | lowercase) | translate}}:</span>
             <span
-              ng-if="helpdeskOrgCtrl.licenseUsageReady">{{license.usage || 0}} of {{license.volume}} in use</span>
+              ng-if="helpdeskOrgCtrl.licenseUsageReady">{{helpdeskOrgCtrl.usageText(license.usage || 0, license.volume)}}</span>
             <span ng-if="!helpdeskOrgCtrl.licenseUsageReady">{{license.volume}} licenses</span>
             <span ng-if="license.isTrial">| </span>
             <span class="badge badge-warning" ng-if="license.isTrial" translate="helpdesk.trial"></span>
@@ -120,7 +120,7 @@
           <span>{{aggregatedLicense.displayName}}: </span>
           <span ng-if="!helpdeskOrgCtrl.licenseUsageReady">{{aggregatedLicense.totalVolume}} licenses</span>
           <span
-            ng-if="helpdeskOrgCtrl.licenseUsageReady">{{aggregatedLicense.totalUsage || 0}} of {{aggregatedLicense.totalVolume}} in use ({{aggregatedLicense.usagePercentage}}%)</span>
+            ng-if="helpdeskOrgCtrl.licenseUsageReady">{{helpdeskOrgCtrl.usageText(aggregatedLicense.totalUsage || 0, aggregatedLicense.totalVolume)}} ({{aggregatedLicense.usagePercentage}}%)</span>
           <span ng-if="aggregatedLicense.isTrial">| </span>
           <span class="badge badge-warning" ng-if="aggregatedLicense.isTrial" translate="helpdesk.trial"></span>
           <span ng-if="aggregatedLicense.isTrial && aggregatedLicense.trialExpiresInDays > 0">{{helpdeskOrgCtrl.daysLeftText(aggregatedLicense)}}</span>
@@ -136,7 +136,7 @@
                collapse="!helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key]">
             <span>{{'helpdesk.licenseStatus.' + (license.status | lowercase) | translate}}:</span>
             <span
-              ng-if="helpdeskOrgCtrl.licenseUsageReady">{{license.usage || 0}} of {{license.volume}} in use</span>
+              ng-if="helpdeskOrgCtrl.licenseUsageReady">{{helpdeskOrgCtrl.usageText(license.usage || 0, license.volume)}}</span>
             <span ng-if="!helpdeskOrgCtrl.licenseUsageReady">{{license.volume}} licenses</span>
             <span ng-if="license.isTrial">| </span>
             <span class="badge badge-warning" ng-if="license.isTrial" translate="helpdesk.trial"></span>
@@ -172,7 +172,7 @@
           <span>{{aggregatedLicense.displayName}}: </span>
           <span ng-if="!helpdeskOrgCtrl.licenseUsageReady">{{aggregatedLicense.totalVolume}} licenses</span>
           <span
-            ng-if="helpdeskOrgCtrl.licenseUsageReady">{{aggregatedLicense.totalUsage || 0}} of {{aggregatedLicense.totalVolume}} in use ({{aggregatedLicense.usagePercentage}}%)</span>
+            ng-if="helpdeskOrgCtrl.licenseUsageReady">{{helpdeskOrgCtrl.usageText(aggregatedLicense.totalUsage || 0, aggregatedLicense.totalVolume)}} ({{aggregatedLicense.usagePercentage}}%)</span>
           <span ng-if="aggregatedLicense.isTrial">| </span>
           <span class="badge badge-warning" ng-if="aggregatedLicense.isTrial" translate="helpdesk.trial"></span>
           <span ng-if="aggregatedLicense.isTrial && aggregatedLicense.trialExpiresInDays > 0">{{helpdeskOrgCtrl.daysLeftText(aggregatedLicense)}}</span>
@@ -188,7 +188,7 @@
                collapse="!helpdeskOrgCtrl.showLicenseToggles[aggregatedLicense.key]">
             <span>{{'helpdesk.licenseStatus.' + (license.status | lowercase) | translate}}:</span>
             <span
-              ng-if="helpdeskOrgCtrl.licenseUsageReady">{{license.usage || 0}} of {{license.volume}} in use</span>
+              ng-if="helpdeskOrgCtrl.licenseUsageReady">{{helpdeskOrgCtrl.usageText(license.usage || 0, license.volume)}}</span>
             <span ng-if="!helpdeskOrgCtrl.licenseUsageReady">{{license.volume}} licenses</span>
             <span ng-if="license.isTrial">| </span>
             <span class="badge badge-warning" ng-if="license.isTrial" translate="helpdesk.trial"></span>

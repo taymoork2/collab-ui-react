@@ -36,7 +36,7 @@ var ReportsPage = function () {
 
   // active user
   this.showmostActiveButton = element(by.id('showActiveUsers'));
-  this.hidemostActiveButton =  element(by.id('hideActiveUsrs'));
+  this.hidemostActiveButton = element(by.id('hideActiveUsrs'));
   this.activeUsersTable = element(by.css('.active-users-table'));
   this.activeUsersTableContent = element.all(by.repeater('user in nav.mostActiveUsers'));
   this.activeCarousel = element(by.id('activeCarousel')).all(by.css('button'));
