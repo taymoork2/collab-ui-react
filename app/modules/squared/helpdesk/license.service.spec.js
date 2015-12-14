@@ -250,11 +250,13 @@ describe('LicenseService', function () {
 
     // CONFERENCING
     // The conferencing ones should be aggregated into 4: MC-mock.webex.com (2), MC-ladidadi.webex.com (1), TC (2), CMR (1), CF (2)
-    var aggregated = LicenseService.aggregatedLicenses(licenses, 'CONFERENCING');
+    aggregated = LicenseService.aggregatedLicenses(licenses, 'CONFERENCING');
     expect(aggregated.length).toEqual(5);
 
     // MC-mock.webex.com
-    var aggregate = _.find(aggregated, {key: 'MC#25#mock.webex.com'});
+    aggregate = _.find(aggregated, {
+      key: 'MC#25#mock.webex.com'
+    });
     expect(aggregate.totalVolume).toEqual(2000);
     expect(aggregate.totalUsage).toEqual(200);
     expect(aggregate.usagePercentage).toEqual(10);
@@ -263,7 +265,9 @@ describe('LicenseService', function () {
     expect(aggregate.licenses.length).toEqual(2);
 
     // MC-ladidadi.webex.com
-    var aggregate = _.find(aggregated, {key: 'MC#200#ladidadi.webex.com'});
+    aggregate = _.find(aggregated, {
+      key: 'MC#200#ladidadi.webex.com'
+    });
     expect(aggregate.totalVolume).toEqual(300);
     expect(aggregate.totalUsage).toEqual(15);
     expect(aggregate.usagePercentage).toEqual(5);
@@ -272,7 +276,9 @@ describe('LicenseService', function () {
     expect(aggregate.licenses.length).toEqual(1);
 
     // TC
-    var aggregate = _.find(aggregated, {key: 'TC#25#mock.webex.com'});
+    aggregate = _.find(aggregated, {
+      key: 'TC#25#mock.webex.com'
+    });
     expect(aggregate.totalVolume).toEqual(1250);
     expect(aggregate.totalUsage).toEqual(500);
     expect(aggregate.usagePercentage).toEqual(40);
@@ -281,7 +287,9 @@ describe('LicenseService', function () {
     expect(aggregate.licenses.length).toEqual(2);
 
     // CMR
-    var aggregate = _.find(aggregated, {key: 'CMR#25#mock.webex.com'});
+    aggregate = _.find(aggregated, {
+      key: 'CMR#25#mock.webex.com'
+    });
     expect(aggregate.totalVolume).toEqual(250);
     expect(aggregate.totalUsage).toEqual(250);
     expect(aggregate.usagePercentage).toEqual(100);
@@ -290,7 +298,9 @@ describe('LicenseService', function () {
     expect(aggregate.licenses.length).toEqual(1);
 
     // CF
-    var aggregate = _.find(aggregated, {key: 'CF#0'});
+    aggregate = _.find(aggregated, {
+      key: 'CF#0'
+    });
     expect(aggregate.totalVolume).toEqual(600);
     expect(aggregate.totalUsage).toEqual(0);
     expect(aggregate.usagePercentage).toEqual(0);

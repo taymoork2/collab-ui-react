@@ -33,7 +33,7 @@
   <div class="row full">
     <div class="large-offset-2 medium-12 xlarge-10 xxlarge-8 centered columns no-top-margin search-results">
       <div class="medium-6 large-4 columns"
-           ng-if="helpdeskCtrl.searchingForUsers || helpdeskCtrl.currentSearch.userSearchResults || helpdeskCtrl.currentSearch.userSearchFailure">
+           ng-if="helpdeskCtrl.showUsersResultPane()">
         <h4 translate="helpdesk.users"></h4>
 
         <div ng-if="helpdeskCtrl.searchingForUsers">
@@ -78,7 +78,7 @@
       </div>
 
       <div class="medium-6 large-4 columns end"
-           ng-if="helpdeskCtrl.searchingForOrgs || helpdeskCtrl.currentSearch.orgSearchResults || helpdeskCtrl.currentSearch.orgSearchFailure">
+           ng-if="helpdeskCtrl.showOrgsResultPane()">
 
         <h4 translate="helpdesk.customers"></h4>
 
@@ -121,7 +121,7 @@
       </div>
 
       <div class="medium-6 large-4 columns end"
-           ng-if="helpdeskCtrl.currentSearch.orgFilter && (helpdeskCtrl.searchingForDevices || helpdeskCtrl.currentSearch.deviceSearchResults || helpdeskCtrl.currentSearch.deviceSearchFailure)">
+           ng-if="helpdeskCtrl.showDeviceResultPane()">
         <h4 translate="helpdesk.devices"></h4>
 
         <div ng-if="helpdeskCtrl.searchingForDevices">

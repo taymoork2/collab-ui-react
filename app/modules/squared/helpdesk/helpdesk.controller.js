@@ -24,6 +24,10 @@
     vm.keyPressHandler = keyPressHandler;
     vm.showMoreResults = showMoreResults;
     vm.showSearchHelp = showSearchHelp;
+    vm.showDeviceResultPane = showDeviceResultPane;
+    vm.showUsersResultPane = showUsersResultPane;
+    vm.showOrgsResultPane = showOrgsResultPane;
+
     vm.currentSearch = {
       searchString: '',
       userSearchResults: null,
@@ -135,6 +139,18 @@
       vm.currentSearch.clear();
     }
 
+    function showUsersResultPane() {
+      return vm.searchingForUsers || vm.currentSearch.userSearchResults || vm.currentSearch.userSearchFailure;
+    }
+
+    function showOrgsResultPane() {
+      return vm.searchingForOrgs || vm.currentSearch.orgSearchResults || vm.currentSearch.orgSearchFailure;
+    }
+
+    function showDeviceResultPane() {
+      return vm.currentSearch.orgFilter && (vm.searchingForDevices || vm.currentSearch.deviceSearchResults || vm.currentSearch.deviceSearchFailure);
+    }
+
     function showMoreResults(type) {
       switch (type) {
       case 'user':
@@ -163,6 +179,14 @@
     }
 
     function keyPressHandler(event) {
+      var LEFT_ARROW = 37;
+      var UP_ARROW = 38;
+      var RIGHT_ARROW = 39;
+      var DOWN_ARROW = 40;
+      var ESC = 27;
+      var ENTER = 13;
+      var S = 83;
+
       var activeElement = angular.element(document.activeElement);
       var inputFieldHasFocus = activeElement[0]["id"] === "searchInput";
       if (inputFieldHasFocus && !(event.keyCode === 27 || event.keyCode === 13)) {
@@ -172,43 +196,46 @@
       var newTabIndex = -1;
 
       switch (event.keyCode) {
-      case 37: // Left arrow
+      case LEFT_ARROW:
         newTabIndex = activeTabIndex - 1;
         break;
 
-      case 38: // Up arrow
+      case UP_ARROW:
         newTabIndex = activeTabIndex - 10;
         break;
 
-      case 39: // Right arrow
+      case RIGHT_ARROW:
         newTabIndex = activeTabIndex + 1;
         break;
 
-      case 40: // Down arrow
+      case DOWN_ARROW:
         newTabIndex = activeTabIndex + 10;
         break;
 
-      case 27: // Esc
+      case ESC:
         if (inputFieldHasFocus) {
           initSearchWithoutOrgFilter();
         } else {
           if (HelpdeskService.checkIfMobile()) {
+            // TODO: Why is mobile relevant here ?
             angular.element('#searchInput').blur();
           } else {
+            // TODO: Why .select ?
             angular.element('#searchInput').focus().select();
           }
           newTabIndex = -1;
         }
         break;
 
-      case 13: // Enter
+      case ENTER:
         if (!inputFieldHasFocus) {
           activeElement.click();
         }
         break;
 
-      case 83: // S
+      case S:
         var orgLink = JSON.parse(activeElement.find("a")[0]["name"]);
+        // TODO: Avoid throwing console error when element not found !
         if (orgLink) {
           initSearchWithOrgFilter(orgLink);
         }
@@ -221,8 +248,10 @@
     }
 
     function showSearchHelp() {
+      var searchHelpUrl = "modules/squared/helpdesk/helpdesk-search-help-dialog.html";
+      var searchHelpMobileUrl = "modules/squared/helpdesk/helpdesk-search-help-dialog-mobile.html";
       $modal.open({
-        templateUrl: "modules/squared/helpdesk/helpdesk-search-help-dialog.html",
+        templateUrl: HelpdeskService.checkIfMobile() ? searchHelpMobileUrl : searchHelpUrl
       });
     }
 
