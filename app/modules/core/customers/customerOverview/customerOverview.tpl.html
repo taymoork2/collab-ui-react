@@ -49,11 +49,11 @@
       <div class="feature-list trials-list">
         <ul>
           <li class="feature">
-            <div class="feature-name" id="trial-info">{{customerOverview.offer}}</div>
+            <div class="feature-name" id="trial-info">{{customerOverview.offer.userServices}}</div>
             <div class="feature-details">{{::'common.quantity' | translate}}:&nbsp;{{customerOverview.currentCustomer.licenses}}</div>
           </li>
           <li class="feature" ng-if="customerOverview.showRoomSystems">
-            <div class="feature-name" translate="customerPage.deviceBasedLicenses"></div>
+            <div class="feature-name" translate={{customerOverview.offer.deviceBasedServices}}></div>
             <div class="feature-details">{{::'common.quantity' | translate}}:&nbsp;{{customerOverview.currentCustomer.deviceLicenses}}</div>
           </li>
         </ul>
