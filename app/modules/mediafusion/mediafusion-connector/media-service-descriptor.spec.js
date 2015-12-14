@@ -33,7 +33,7 @@ describe('MediaServiceDescriptor', function () {
 
   it('should return the service enabled status', function (done) {
     $httpBackend
-      .when('GET', 'https://hercules-integration.wbx2.com/v1/organizations/12345/services')
+      .expect('GET', 'https://hercules-integration.wbx2.com/v1/organizations/12345/services')
       .respond({
         items: [{
           id: extensionEntitlements[0],
@@ -52,9 +52,9 @@ describe('MediaServiceDescriptor', function () {
     var data = {
       "enabled": true
     };
-    $httpBackend.when('PATCH', 'https://hercules-integration.wbx2.com/v1/organizations/12345/services/' + extensionEntitlements[0], data).respond(200, {});
+    $httpBackend.expect('PATCH', 'https://hercules-integration.wbx2.com/v1/organizations/12345/services/' + extensionEntitlements[0], data).respond(200, {});
     Service.setServiceEnabled(extensionEntitlements[0], true);
-    expect($httpBackend.flush).not.toThrow();
+    $httpBackend.flush();
   });
 
   it('should set user identity org to media agent org id mapping', function () {
@@ -62,21 +62,20 @@ describe('MediaServiceDescriptor', function () {
       "identityOrgId": "12345",
       "mediaAgentOrgIds": mediaAgentOrgIds
     };
-    $httpBackend.when('PUT', 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1/identity2agent', data).respond(204, {});
+    $httpBackend.expect('PUT', 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1/identity2agent', data).respond(204, {});
     Service.setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIds);
-    expect($httpBackend.flush).not.toThrow();
+    $httpBackend.flush();
   });
 
-  it('should return the user identity org to media agent org id mapping', function (done) {
+  it('should return the user identity org to media agent org id mapping', function () {
     $httpBackend
-      .when('GET', 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1/identity2agent/' + authinfo.getOrgId)
+      .expect('GET', 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1/identity2agent/' + authinfo.getOrgId())
       .respond(200, {
         statusCode: 0,
         identityOrgId: authinfo.getOrgId,
         mediaAgentOrgIds: mediaAgentOrgIds
       });
     Service.getUserIdentityOrgToMediaAgentOrgMapping();
-    done();
     //expect(response.data.mediaAgentOrgIds).toEqual(mediaAgentOrgIds);
     $httpBackend.flush();
   });

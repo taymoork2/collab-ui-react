@@ -15,7 +15,7 @@
     vm.sx10 = vm.details.cameras.sx10;
     vm.phone8865 = vm.details.phones.phone8865;
     vm.phone8845 = vm.details.phones.phone8845;
-    vm.phone7861 = vm.details.phones.phone7861;
+    vm.phone8841 = vm.details.phones.phone8841;
     vm.phone7841 = vm.details.phones.phone7841;
     vm.shippingInfo = vm.details.shippingInfo;
 
@@ -109,17 +109,17 @@
         }
       },
     }, {
-      model: vm.phone7861,
+      model: vm.phone8841,
       key: 'enabled',
       type: 'checkbox',
       className: "columns medium-6",
       templateOptions: {
-        label: $translate.instant('trialModal.call.phone7861'),
-        id: 'phone7861',
+        label: $translate.instant('trialModal.call.phone8841'),
+        id: 'phone8841',
         class: 'columns medium-offset-1',
       },
     }, {
-      model: vm.phone7861,
+      model: vm.phone8841,
       key: 'quantity',
       type: 'input',
       className: "columns medium-6",
@@ -134,7 +134,7 @@
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
-          return !vm.phone7861.enabled;
+          return !vm.phone8841.enabled;
         }
       },
     }, {

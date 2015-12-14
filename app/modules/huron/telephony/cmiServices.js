@@ -264,6 +264,10 @@
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/sites/:siteId', {
       customerId: '@customerId',
       siteId: '@siteId'
+    }, {
+      update: {
+        method: 'PUT'
+      }
     });
   })
 
@@ -370,6 +374,10 @@
   .factory('CustomerVoiceCmiService', function ($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId', {
       customerId: '@customerId'
+    }, {
+      update: {
+        method: 'PUT'
+      }
     });
   })
 
