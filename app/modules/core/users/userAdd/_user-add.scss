@@ -314,6 +314,14 @@
   }
 }
 
+.edit-services {
+  .modal-body {
+    background-color: $brand-white;
+    margin-bottom: 0;
+    padding: 0;
+  }
+}
+
 .onboard-users {
   .tokenfield.form-control,
   .tokenfield.form-control-static {

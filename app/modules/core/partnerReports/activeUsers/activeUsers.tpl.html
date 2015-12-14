@@ -4,7 +4,7 @@
     <h4 translate="activeUsers.activeUsers"></h4>
   </header>
   <section>
-    <p>{{nav.activeUserDescription}}</p>
+    <p >{{nav.activeUserDescription}}</p>
     <div id="activeUsersdiv" class="barchart"></div>
     <div id="activeUsersRefreshDiv" class="spinner-position" ng-if="nav.isRefresh(nav.activeUsersRefresh)">
       <i class='icon icon-spinner icon-2x'></i>
@@ -18,7 +18,7 @@
   <div class="card-section-content" ng-show="!nav.isRefresh(nav.activeUsersRefresh) && !nav.isEmpty(nav.activeUsersRefresh) && nav.displayMostActive">
     <div ng-show="nav.showMostActiveUsers">
       <h4 >{{nav.mostActiveTitle}}</h4>
-        <p class="report-description">{{nav.mostActiveDescription}}</p>
+        <p>{{nav.mostActiveDescription}}</p>
         <table class="table table-bordered active-users-table">
           <thead>
             <tr>
@@ -40,8 +40,8 @@
       </div>
     <div class="card-section-content">
       <a  ng-click="nav.showMostActiveUsers = !nav.showMostActiveUsers; nav.resizeCards();">
-        <span ng-if="!nav.showMostActiveUsers" translate="activeUsers.showActiveUsers"></span>
-        <span ng-if="nav.showMostActiveUsers" translate="activeUsers.hideActiveUsers"></span>
+        <span id="showActiveUsers" ng-if="!nav.showMostActiveUsers" translate="activeUsers.showActiveUsers"></span>
+        <span id="hideActiveUsrs" ng-if="nav.showMostActiveUsers" translate="activeUsers.hideActiveUsers"></span>
       </a>
       <div id="activeCarousel" class="pull-right" ng-show="nav.displayMostActive && (nav.activeUsersTotalPages > 1)">
         <button type="button" class="actions-button btn--none" ng-click="nav.pageBackward()" ng-show="nav.activeUsersTotalPages > 3">
