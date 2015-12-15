@@ -152,6 +152,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     var createCeSpy;
     var updateCeSpy;
     var nameValidationSpy;
+    var phoneMenuValidationSpy;
 
     beforeEach(function () {
       createCeSpy = spyOn(AutoAttendantCeService, 'createCe').and.returnValue($q.when(angular.copy(rawCeInfo)));
@@ -162,6 +163,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       spyOn(AANumberAssignmentService, 'setAANumberAssignment').and.returnValue($q.when());
 
       nameValidationSpy = spyOn(AAValidationService, 'isNameValidationSuccess').and.returnValue(true);
+      phoneMenuValidationSpy = spyOn(AAValidationService, 'isPhoneMenuValidationSuccess').and.returnValue(true);
       aaModel.ceInfos = [];
       aaModel.aaRecords = [];
       aaModel.aaRecord = aCe;

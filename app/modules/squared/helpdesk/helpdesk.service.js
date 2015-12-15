@@ -87,7 +87,8 @@
     function getCorrectedDisplayName(user) {
       var displayName = '';
       if (user.name != null) {
-        displayName = user.name.givenName + ' ' + user.name.familyName;
+        displayName = user.name.givenName ? user.name.givenName : '';
+        displayName += user.name.familyName ? ' ' + user.name.familyName : '';
       }
       if (!displayName) {
         return user.displayName;
