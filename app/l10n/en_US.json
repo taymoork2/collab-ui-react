@@ -1810,6 +1810,9 @@
       "customer": "Customer",
       "partner": "Partner"
     },
+    "numbers": {
+      "title": "Setup Trial – Add Numbers"
+    },
     "trialSuccess": "Your trial is ready.",
     "nextStepPrompt": "Do you want to setup services for the customer?",
     "setupLater": "No thanks",
