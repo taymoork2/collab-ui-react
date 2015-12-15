@@ -100,13 +100,11 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
           }
 
           // A temp workaround to bring Messenger Service Tab back with webex-messenger service/entitlement removed from backend.
-          // Better put the config in common file, just duplicate once here since it's temp workaround.  
-          var msgrServiceApi = '/admin-service/messenger/admin/api/v1/orgs/' + result.orgId + '/cisync/';
-          var msgrServiceUrl = 'https://msgr-admin.webexconnect.com:443' + msgrServiceApi;
+          var msgrServiceUrl = Config.getMessengerServiceUrl() + '/orgs/' + result.orgId + '/cisync/';
 
           return $http.get(msgrServiceUrl).then(function (msgrResponse) {
 
-            var isMsgrOrg = msgrResponse.data && msgrResponse.data.orgName && msgrResponse.data.orgID;
+            var isMsgrOrg = _.has(msgrResponse, 'data.orgName') && _.has(msgrResponse, 'data.orgID');
             if (isMsgrOrg) {
               // Better get from CI or backend, hard code now since it's workaround and content is stable
               var msgr_service = {
