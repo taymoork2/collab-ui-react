@@ -174,10 +174,30 @@ describe('Controller: AABuilderMainCtrl', function () {
 
   describe('saveAANumberAssignmentWithErrorDetail', function () {
     it('should show error message when assigning number', function () {
+
+      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/externalnumberpools?order=pattern').respond(200, [{
+        'pattern': '+9999999991',
+        'uuid': '9999999991-id'
+      }, {
+        'pattern': '+8888888881',
+        'uuid': '8888888881-id'
+      }]);
+
       spyOn(Notification, 'error');
-      spyOn(AANumberAssignmentService, 'setAANumberAssignmentWithErrorDetail').and.returnValue($q.reject());
+      spyOn(AANumberAssignmentService, 'setAANumberAssignmentWithErrorDetail').and.callFake(
+        function setAANumberAssignmentWithErrorDetail(customerId, cesId, myResourceList) {
+          var deferred = $q.defer();
+          deferred.resolve({
+            workingResources: [],
+            failedResources: ["9999999991"]
+          });
+          return deferred.promise;
+        });
 
       controller.saveAANumberAssignmentWithErrorDetail();
+
+      $httpBackend.flush();
+
       $scope.$apply();
 
       expect(Notification.error).toHaveBeenCalledWith('autoAttendant.errorFailedToAssignNumbers', jasmine.any(Object));
