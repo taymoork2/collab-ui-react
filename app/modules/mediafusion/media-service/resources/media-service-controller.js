@@ -18,9 +18,18 @@
     vm.deleteSerial = null;
     vm.showPreview = true;
     vm.deleteConnectorName = null;
-    vm.serviceEnabled = false;
+    vm.serviceEnabled = true;
     vm.currentServiceType = "mf_mgmt";
     vm.currentServiceId = "squared-fusion-media";
+    // Added for cs-page-header
+    vm.pageTitle = $translate.instant('mediaFusion.page_title');
+    vm.tabs = [{
+      title: $translate.instant('common.resources'),
+      state: 'media-service.list',
+    }, {
+      title: $translate.instant('common.settings'),
+      state: 'media-service.settings',
+    }];
     vm.clusters = _.values(MediaClusterService.getClusters());
     vm.aggregatedClusters = _.values(MediaClusterService.getAggegatedClusters());
     vm.clusterLength = clusterLength;
@@ -53,7 +62,7 @@
 
     if (vm.currentServiceId == "squared-fusion-media") {
       $log.log("checking isServiceEnabled");
-      vm.serviceEnabled = false;
+      //vm.serviceEnabled = false;
       MediaServiceActivation.isServiceEnabled(vm.currentServiceId, function (a, b) {
         vm.serviceEnabled = b;
         vm.loading = false;
@@ -84,7 +93,10 @@
         $state.go('connector-details', {
           connectorId: vm.connector.id,
           groupName: group.groupName,
-          roleSelected: vm.connector.properties["mf.role"]
+          roleSelected: vm.connector.properties["mf.role"],
+          connector: vm.connector,
+          selectedClusters: group.clusters
+
         });
       }
       vm.showPreview = true;
@@ -165,7 +177,7 @@
     vm.host = $stateParams.host;
   }
 
-  /* @ngInject */
+  /* @ngInject 
   function HostDetailsController($stateParams, $state, MediaClusterService, XhrNotificationService) {
     var vm = this;
     vm.host = $stateParams.host;
@@ -191,7 +203,7 @@
         }
       }, XhrNotificationService.notify);
     };
-  }
+  } */
 
   /* @ngInject */
   function MediaClusterSettingsController($modal, $stateParams, MediaClusterService, $scope, XhrNotificationService) {
@@ -229,6 +241,6 @@
     .module('Mediafusion')
     .controller('MediaServiceController', MediaServiceController)
     .controller('MediaClusterSettingsController', MediaClusterSettingsController)
-    .controller('AlarmController', AlarmController)
-    .controller('HostDetailsController', HostDetailsController);
+    .controller('AlarmController', AlarmController);
+  //.controller('HostDetailsController', HostDetailsController);
 }());

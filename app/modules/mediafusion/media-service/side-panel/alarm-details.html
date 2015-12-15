@@ -1,0 +1,69 @@
+<cs-sp-container class="hercules-settings-table">
+  <cs-sp-section ng-if="alarmCtrl.alarm.alarm">
+    <div class="section-title-row section-name">
+      {{alarmCtrl.alarm.alarm.title}}
+    </div>
+    <table>
+      <tbody>
+      <tr>
+        <td translate="hercules.alarms.severity"></td>
+        <td><span
+          ng-class="alarmCtrl.alarm.alarm.severity == 'warning' ? 'hercules-state-disabled' : 'hercules-state-alarm'">{{'hercules.alarms.' + alarmCtrl.alarm.alarm.severity | translate}}</span>
+        </td>
+      </tr>
+      <tr>
+        <td translate="hercules.alarms.firstReported"></td>
+        <td><span>{{alarmCtrl.alarm.alarm.first_reported | date : 'medium'}}</span></td>
+      </tr>
+      <tr>
+        <td translate="hercules.alarms.lastReported"></td>
+        <td><span>{{alarmCtrl.alarm.alarm.last_reported | date : 'medium'}}</span></td>
+      </tr>
+      </tbody>
+    </table>
+  </cs-sp-section>
+
+  <cs-sp-section ng-if="!alarmCtrl.alarm.alarm">
+    <div class="section-title-row section-name">
+      {{alarmCtrl.alarm.title}}
+    </div>
+    <table>
+      <tbody>
+      <tr>
+        <td translate="hercules.alarms.severity"></td>
+        <td><span ng-class="alarmCtrl.alarm.alarm.severity == 'warning' ? 'hercules-state-disabled' : 'hercules-state-alarm'">{{'hercules.alarms.' + alarmCtrl.alarm.severity | translate}}</span></td>
+      </tr>
+      <tr>
+        <td translate="hercules.alarms.firstReported"></td>
+        <td><span>{{alarmCtrl.alarm.first_reported | date : 'medium'}}</span></td>
+      </tr>
+      <tr>
+        <td translate="hercules.alarms.lastReported"></td>
+        <td><span>{{alarmCtrl.alarm.last_reported | date : 'medium'}}</span></td>
+      </tr>
+      </tbody>
+    </table>
+  </cs-sp-section>
+
+  <cs-sp-section>
+    <div class="section-title-row section-name" translate="hercules.alarms.description"></div>
+    <p ng-if="alarmCtrl.alarm.alarm">
+      {{alarmCtrl.alarm.alarm.description}}
+    </p>
+    <p ng-if="!alarmCtrl.alarm.alarm">
+      {{alarmCtrl.alarm.description}}
+    </p>
+  </cs-sp-section>
+
+  <cs-sp-section ng-if="alarmCtrl.alarm.alarm">
+    <div class="section-title-row section-name" translate="hercules.connectors.hosts"></div>
+    <div>
+      <ul>
+        <li ng-repeat="host in alarmCtrl.alarm.hosts">
+          {{host.host_name}}
+        </li>
+      </ul>
+    </div>
+  </cs-sp-section>
+
+</cs-sp-container>

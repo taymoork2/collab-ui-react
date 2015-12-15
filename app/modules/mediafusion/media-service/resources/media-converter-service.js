@@ -251,6 +251,19 @@
         return connectorsInState;
       }
 
+      function alarmSummary(clusters) {
+        var connectorsInState = 0;
+        _.each(clusters, function (cluster) {
+          if (cluster.hosts[0].alarms.length !== 0) {
+            _.each(cluster.hosts[0].alarms, function (alarm) {
+
+            });
+          }
+        });
+
+        return connectorsInState;
+      }
+
       function numberOfConnectorsWithAlarm(group) {
         var connectorsWithAlarms = 0;
         _.each(group.clusters, function (cluster) {

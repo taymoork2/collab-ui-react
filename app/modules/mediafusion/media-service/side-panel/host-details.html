@@ -1,0 +1,93 @@
+<cs-sp-container class="hercules-settings-table">
+
+  <cs-sp-section>
+    <div class="section-title-row section-name">
+      {{hostDetails.connector().host.host_name}}
+    </div>
+    <table>
+      <tbody>
+      <tr>
+        <td translate="mediaFusion.connectors.status"></td>
+        <td>
+          <i class="fa fa-circle status-icon"
+             ng-class="hostDetails.connector().alarms.length > 0 ? 'hercules-state-alarm' : 'hercules-state-'+hostDetails.connector().state"></i>
+          <span ng-if="hostDetails.connector().alarms.length == 0"
+                translate="{{'hercules.status.' + (hostDetails.connector().state || 'unknown') }}"></span>
+          <span ng-if="hostDetails.connector().alarms.length > 0"
+                translate="hercules.status.alarm"></span>
+        </td>
+      </tr>
+      <tr>
+        <td translate="mediaFusion.ipAddr"></td>
+        <td><span>{{hostDetails.connector().host.host_name}}</span></td>
+      </tr>
+      <tr>
+        <td translate="mediaFusion.connectors.software">Software</td>
+        <td><span>{{hostDetails.connector().version}}</span></td>
+      </tr>
+      <tr>
+        <td translate="mediaFusion.connectors.serial"></td>
+        <td><span>{{hostDetails.connector().host.serial}}</span></td>
+      </tr> 
+
+      <tr>
+        <td translate="mediaFusion.role"></td>
+        <td>
+          <div class="col-sm-6 columns medium-5">
+            <select name="roleSelect" ng-model="roleSelected" ng-change="groupDetails.changeRole(roleSelected, hostDetails.clusterId)">
+              <option value="Switching">{{'mediaFusion.switching' | translate}}</option>
+              <option value="Transcoding">{{'mediaFusion.transcoding' | translate}}</option>
+            </select>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </cs-sp-section>
+
+  <cs-sp-section>
+    <div class="section-title-row section-name" translate="mediaFusion.actionsHeader"></div>
+    <div>
+      <table>
+        <tbody>
+          <tr>
+            <td translate="mediaFusion.connectors.goToHost"></td>
+            <td>
+            <a target="_blank" ng-href="https://{{hostDetails.connector().host.host_name}}/">
+            {{hostDetails.connector().host.host_name}}</a>
+            </td>
+          </tr>
+        <tbody>
+      </table>
+    </div>
+  </cs-sp-section>
+
+  
+  <cs-sp-section>
+    <div class="section-title-row section-name" translate="hercules.alarms.alarms"></div>
+    <div class="feature-list" ng-if="hostDetails.connector().alarms.length > 0">
+      <ul>
+        <li class="feature" ng-repeat="alarm in hostDetails.connector().alarms" ng-class="{'list-item': !$first}">
+          <a
+            ui-sref="connector-details.alarm-details({alarm: alarm, host: hostDetails.connector().host.host_name})">
+            <i class="icon icon-error hercules-alarm status-icon"/>
+            <span class="feature-name">{{alarm.title}}</span>
+            <i class="feature-arrow"></i>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <p ng-if="hostDetailsCtrl.connector().alarms.length == 0" translate="hercules.alarms.noAlarms"></p>
+  </cs-sp-section>
+
+  <cs-sp-section>
+    <div class="section-title-row section-name" translate=""></div>
+    <div>
+      <a href
+         class="btn btn--negative"
+         sq-click-promise="hostDetails.deleteHost()"
+         translate="mediaFusion.connectors.deregister_host"></a>
+    </div>
+  </cs-sp-section>
+
+</cs-sp-container>
