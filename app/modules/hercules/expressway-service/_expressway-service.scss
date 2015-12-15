@@ -8,10 +8,16 @@
   @extend %page-background-white;
 }
 
-.export-users-statuses-icon {
-  padding-left:10px;
+.export-users-statuses-icon i {
+  display: inline-block;
+  color: $gray;
+  font-size: 1.5rem;
   cursor: pointer;
-  color: $gray-light;
+
+  &:hover {
+    color: $brand-primary;
+    text-decoration: none;
+  }
 }
 
 .icon-circle-user {
@@ -169,5 +175,34 @@ Special stuff currently used for out own mail input field...
   .status-icon {
     margin-right: 10px;
     line-height: $feature-line-height;
+  }
+}
+
+.hercules-numbers-list {
+  display: inline-block;
+  vertical-align: bottom;
+  margin-left: 0.5rem;
+
+  .numbers-item {
+    display: block;
+    float: left;
+    margin-right: 1rem;
+    display: block;
+    line-height: 1;
+
+    &:last-child {
+      margin-right: 0.5rem;
+    }
+  }
+
+  .numbers-label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+  }
+
+  .numbers-value {
+    display: block;
+    font-size: 18px;
   }
 }

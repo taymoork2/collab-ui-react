@@ -944,9 +944,9 @@
       "remove": "Remove"
     },
     "overview": {
-      "activated": "{{number}} activated",
-      "pending": "{{number}} pending",
-      "error": "{number, plural, one{# error} other{# errors}}",
+      "activated": "Activated",
+      "pending": "Pending",
+      "error": "Errors",
       "loading": "Loading, please wait…",
       "upgrade-available": "Upgrade available",
       "clusters-title": "Expressway Clusters",
