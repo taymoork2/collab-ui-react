@@ -6,7 +6,7 @@
     .factory('SyncService', SyncService);
 
   /** @ngInject */
-  function SyncService($http, $q, $translate, Authinfo, Log) {
+  function SyncService($http, $q, $translate, Config, Authinfo, Log) {
     // Interface ---------------------------------------------------------------
 
     // Internal data
@@ -45,14 +45,7 @@
       syncMode: syncModes.messenger.off
     };
 
-    var msgrService = {
-      protocol: 'https://',
-      host: 'msgr-admin.webexconnect.com',
-      port: 443,
-      api: '/admin-service/messenger/admin/api/v1/orgs/' + Authinfo.getOrgId() + '/cisync/'
-    };
-
-    var serviceUrl = msgrService.protocol + msgrService.host + ':' + msgrService.port + msgrService.api;
+    var serviceUrl = Config.getMessengerServiceUrl() + '/orgs/' + Authinfo.getOrgId() + '/cisync/';
 
     var service = {
       getSyncStatus: getSyncStatus,
