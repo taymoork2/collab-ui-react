@@ -247,17 +247,17 @@ describe('ExportUserStatusesController', function () {
         userName: 'sparkuser1@gmail.com',
         connector: '?',
         state: 'whatever1',
-        message: '-'
+        message: ''
       }, {
         userName: 'sparkuser2@gmail.com',
         connector: '?',
         state: 'Pending Activation',
-        message: '-'
+        message: ''
       }, {
         userName: 'sparkuser3@gmail.com',
         connector: 'myExpressway2.cisco.com',
         state: 'whatever3',
-        message: '-'
+        message: ''
       }
     ]);
 

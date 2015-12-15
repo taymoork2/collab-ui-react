@@ -45,7 +45,7 @@ angular.module('Hercules').service('UserDetails',
                 userName: foundUser[0].userName,
                 connector: stateInfos[index].connector || "not found(id=" + stateInfos[index].connectorId + ")",
                 state: stateInfos[index].state == "notActivated" ? "Pending Activation" : stateInfos[index].state,
-                message: stateInfos[index].state == "error" ? stateInfos[index].description.defaultMessage : "-"
+                message: stateInfos[index].state == "error" ? stateInfos[index].description.defaultMessage : ""
               };
             } else {
               result.success = false;
@@ -53,7 +53,7 @@ angular.module('Hercules').service('UserDetails',
                 userName: "Not found",
                 connector: stateInfos[index].connector || "not found(id=" + stateInfos[index].connectorId + ")",
                 state: stateInfos[index].state == "notActivated" ? "Pending Activation" : stateInfos[index].state,
-                message: stateInfos[index].state == "error" ? stateInfos[index].description.defaultMessage : "-"
+                message: stateInfos[index].state == "error" ? stateInfos[index].description.defaultMessage : ""
               };
             }
 
