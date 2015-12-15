@@ -12,8 +12,8 @@ describe('Customer Profile Page', function () {
   it('should display customer profile page', function () {
     utils.expectIsDisplayed(orgprofile.supportForm);
     utils.expectIsDisplayed(orgprofile.orgProfilePageTitle);
-    utils.expectIsDisplayed(orgprofile.orgProfileSaveBtn);
-    utils.expectIsDisplayed(orgprofile.orgProfileCancelBtn);
+    //utils.expectIsDisplayed(orgprofile.orgProfileSaveBtn);
+    //utils.expectIsDisplayed(orgprofile.orgProfileCancelBtn);
     utils.expectIsDisplayed(orgprofile.companyInfoPanel);
     // utils.expectIsDisplayed(orgprofile.ciscoRepPanel);
     utils.expectIsDisplayed(orgprofile.troubleReportingPanel);

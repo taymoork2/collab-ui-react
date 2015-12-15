@@ -34,6 +34,13 @@
         }).$promise;
       },
 
+      updateSite: function (siteUuid, site) {
+        return SiteService.update({
+          customerId: Authinfo.getOrgId(),
+          siteId: siteUuid
+        }, site).$promise;
+      },
+
       loadExternalNumberPool: function (pattern) {
         var extNumPool = [];
         var patternQuery = pattern ? '%' + pattern + '%' : undefined;
@@ -75,7 +82,7 @@
         }).$promise;
       },
 
-      updateCustomerVoicemailPilotNumber: function (customer) {
+      updateCustomer: function (customer) {
         return CustomerCommonService.update({
           customerId: Authinfo.getOrgId()
         }, customer).$promise;

@@ -264,6 +264,10 @@
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/sites/:siteId', {
       customerId: '@customerId',
       siteId: '@siteId'
+    }, {
+      update: {
+        method: 'PUT'
+      }
     });
   })
 

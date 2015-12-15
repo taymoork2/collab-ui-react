@@ -3,8 +3,7 @@
     <div class="wizard-menu-text">
       <div class="wizard-menu-title" translate="{{tab.label}}"></div>
       <div class="wizard-menu-subtitle">
-        <span ng-hide="tab.subTabs" translate="{{tab.description}}"></span>
-        <span ng-show="tab.subTabs" class="wizard-menu-subtitle" ng-repeat="subTab in tab.subTabs"><span ng-hide="$first"> | </span><span translate="{{subTab.title}}" ng-click="$event.stopPropagation();wizard.isFirstTime() || wizard.setTab(tab,subTab,1);" ng-class="{'wizard-subtitle-active': wizard.current.subTab === subTab}"></span></span>
+        <span translate="{{tab.description}}"></span>
       </div>
     </div>
     <div class="icon {{tab.icon}}"></div>

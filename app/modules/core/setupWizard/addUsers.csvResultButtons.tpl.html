@@ -1,2 +1,4 @@
-<button type="button" class="btn" ng-click="wizard.resetSubTab()" translate="firstTimeWizard.addMoreUsers" ng-if="!wizard.hasErrors"></button>
-<button type="button" id="wizardNext" cs-btn loading="wizard.wizardNextLoad" class="btn btn--primary pull-right" ng-click="wizard.nextStep()"><span ng-if="wizard.hasErrors" translate="firstTimeWizard.skipAndFinish"></span><span ng-if="!wizard.hasErrors" translate="common.finish"></span></button>
+ <div class="pull-right">
+  <button type="button" class="btn" ng-click="wizard.resetSubTab()" translate="firstTimeWizard.addMoreUsers" ng-if="!wizard.hasErrors"></button>
+  <button type="button" id="wizardNext" cs-btn loading="wizard.wizardNextLoad" class="btn btn--primary pull-right" ng-click="wizard.nextStep()"><span ng-if="wizard.hasErrors" translate="firstTimeWizard.skipAndFinish"></span><span ng-if="!wizard.hasErrors" translate="common.finish"></span></button>
+</div>

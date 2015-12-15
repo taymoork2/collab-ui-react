@@ -385,9 +385,7 @@ li.monitoring-cell {
     }
 
     .badge {
-      width: 60px;
-
-      @include text-overflow;
+      min-width: rem-calc(60);
     }
 
     .align-center {
@@ -416,8 +414,8 @@ li.monitoring-cell {
       color: $gray-lighter;
     }
 
-    .label-managed {     
-      margin-left: 12px; 
+    .badge--managed {
+      margin-left: 12px;
     }
 
     .inactive {

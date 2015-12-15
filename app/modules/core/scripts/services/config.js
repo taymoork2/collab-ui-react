@@ -276,7 +276,7 @@ angular.module('Core')
           link: '/users'
         }, {
           tab: 'servicesTab',
-          icon: 'icon-settings',
+          icon: 'icon-cloud',
           title: 'tabs.servicesTab',
           subPages: [{
             title: 'tabs.conferencing',
@@ -996,7 +996,6 @@ angular.module('Core')
         ],
         'squared-fusion-mgmt': [
           'cluster-details',
-          'cluster-details-new',
           'management-service',
         ],
         'spark-room-system': [

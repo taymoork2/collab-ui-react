@@ -141,7 +141,7 @@
     }
 
     function showClusterDetails(cluster) {
-      $state.go('cluster-details-new', {
+      $state.go('cluster-details', {
         cluster: cluster,
         serviceType: vm.currentServiceType
       });

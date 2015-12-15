@@ -17,23 +17,6 @@
       </div>
       <div class="column service-setup-container">
         <formly-form model="settings.model" fields="settings.rightPanelFields" form="settings.form"></formly-form>
-        <div class="form-group service-setup company-voicemail" ng-hide="!settings.hasVoicemailService">
-          <label for="companyVoicemail" translate="serviceSetupModal.companyVoicemail"></label>
-          <p translate="serviceSetupModal.companyVoicemailDescription"></p>
-          <div class="service-setup-company-voicemail row full">
-            <cs-select class="select-dropdown"
-              id="companyVoicemail"
-              name="companyVoicemail"
-              ng-model="settings.pilotNumberSelected"
-              options="settings.externalNumberPoolBeautified"
-              wait-time="0"
-              input-placeholder="settings.inputPlaceholder"
-              labelfield="pattern"
-              valuefield="uuid"
-              filter="true">
-            </cs-select>
-          </div>
-        </div>
       </div>
     </div>
   </form>
