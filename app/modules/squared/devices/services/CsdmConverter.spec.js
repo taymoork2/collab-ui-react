@@ -36,6 +36,7 @@ describe('CsdmConverterSpec', function () {
       product: 'UNKNOWN'
     }];
     expect(converter.convertDevices(arr)[0].product).toBe('');
+    expect(converter.convertHuronDevices(arr)[0].product).toBe('');
   });
 
   it('should set isOnline when status is CONNECTED', function () {
@@ -45,6 +46,7 @@ describe('CsdmConverterSpec', function () {
       }
     }];
     expect(converter.convertDevices(arr)[0].isOnline).toBeTruthy();
+    expect(converter.convertHuronDevices(arr)[0].isOnline).toBeTruthy();
   });
 
   it('should not set isOnline when status isnt CONNECTED', function () {
@@ -54,31 +56,7 @@ describe('CsdmConverterSpec', function () {
       }
     }];
     expect(converter.convertDevices(arr)[0].isOnline).toBeFalsy();
-  });
-
-  it('should set isOnline when Huron state is Registered', function () {
-    var arr = [{
-      state: 'Registered'
-    }];
-    expect(converter.convertHuronDevices(arr)[0].isOnline).toBeTruthy();
-  });
-
-  it('should not set isOnline when Huron state isnt Registered', function () {
-    var arr = [{
-      status: {
-        connectionStatus: 'foo'
-      }
-    }];
     expect(converter.convertHuronDevices(arr)[0].isOnline).toBeFalsy();
-  });
-
-  it('should not parse url from actions', function () {
-    var arr = [{
-      actions: {
-        href: 'foo'
-      }
-    }];
-    expect(converter.convertHuronDevices(arr)[0].url).toBe('foo');
   });
 
   describe('pass thru fields', function () {
@@ -88,6 +66,7 @@ describe('CsdmConverterSpec', function () {
         displayName: 'bar'
       }];
       expect(converter.convertDevices(arr)[0].displayName).toBe('bar');
+      expect(converter.convertHuronDevices(arr)[0].displayName).toBe('bar');
     });
 
     it('mac', function () {
@@ -98,24 +77,11 @@ describe('CsdmConverterSpec', function () {
       expect(converter.convertHuronDevices(arr)[0].mac).toBe('bar');
     });
 
-    it('ipAddress', function () {
-      var arr = [{
-        ipAddress: 'bar'
-      }];
-      expect(converter.convertHuronDevices(arr)[0].ip).toBe('bar');
-    });
-
     it('product', function () {
       var arr = [{
         product: 'bar'
       }];
       expect(converter.convertDevices(arr)[0].product).toBe('bar');
-    });
-
-    it('huronProduct', function () {
-      var arr = [{
-        model: 'bar'
-      }];
       expect(converter.convertHuronDevices(arr)[0].product).toBe('bar');
     });
 
@@ -131,6 +97,7 @@ describe('CsdmConverterSpec', function () {
         url: 'foo'
       }];
       expect(converter.convertDevices(arr)[0].url).toBe('foo');
+      expect(converter.convertHuronDevices(arr)[0].url).toBe('foo');
     });
 
     it('cisUuid', function () {
@@ -138,12 +105,6 @@ describe('CsdmConverterSpec', function () {
         cisUuid: 'foo'
       }];
       expect(converter.convertDevices(arr)[0].cisUuid).toBe('foo');
-    });
-
-    it('cisUuid', function () {
-      var arr = [{
-        userUuid: 'foo'
-      }];
       expect(converter.convertHuronDevices(arr)[0].cisUuid).toBe('foo');
     });
 
@@ -160,6 +121,19 @@ describe('CsdmConverterSpec', function () {
       }];
       expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.Online');
       expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-red');
+    });
+
+    it('should convert device with issues red color but keep status', function () {
+      var arr = [{
+        status: {
+          level: "error",
+          connectionStatus: 'CONNECTED'
+        }
+      }];
+      expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.Online');
+      expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-red');
+      expect(converter.convertHuronDevices(arr)[0].readableState).toBe('CsdmStatus.Online');
+      expect(converter.convertHuronDevices(arr)[0].cssColorClass).toBe('device-status-red');
     });
 
     it('should convert state UNCLAIMED to Needs Activation and yellow', function () {
@@ -179,12 +153,18 @@ describe('CsdmConverterSpec', function () {
       }];
       expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.Online');
       expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-green');
+      expect(converter.convertHuronDevices(arr)[0].readableState).toBe('CsdmStatus.Online');
+      expect(converter.convertHuronDevices(arr)[0].cssColorClass).toBe('device-status-green');
     });
 
-    it('should convert state Registered to Online and green', function () {
+    it('should convert connection status CONNECTED to Online and green', function () {
       var arr = [{
-        state: 'Registered'
+        status: {
+          connectionStatus: 'CONNECTED'
+        }
       }];
+      expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.Online');
+      expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-green');
       expect(converter.convertHuronDevices(arr)[0].readableState).toBe('CsdmStatus.Online');
       expect(converter.convertHuronDevices(arr)[0].cssColorClass).toBe('device-status-green');
     });
@@ -200,28 +180,24 @@ describe('CsdmConverterSpec', function () {
       expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-gray');
     });
 
+    it('should convert connection status UNKNOWN to Offline and gray', function () {
+      var arr = [{
+        status: {
+          connectionStatus: 'UNKNOWN'
+        }
+      }];
+      expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.Offline');
+      expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-gray');
+      expect(converter.convertHuronDevices(arr)[0].readableState).toBe('CsdmStatus.Offline');
+      expect(converter.convertHuronDevices(arr)[0].cssColorClass).toBe('device-status-gray');
+    });
+
     it('should convert state CLAIMED and no connection status to Offline and gray', function () {
       var arr = [{
         state: 'CLAIMED'
       }];
       expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.Offline');
       expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-gray');
-    });
-
-    it('should convert state Unregistered to Offline and gray', function () {
-      var arr = [{
-        state: 'Unregistered'
-      }];
-      expect(converter.convertHuronDevices(arr)[0].readableState).toBe('CsdmStatus.Offline');
-      expect(converter.convertHuronDevices(arr)[0].cssColorClass).toBe('device-status-gray');
-    });
-
-    it('should convert null state and null connection status to Unknown and yellow', function () {
-      var arr = [{}];
-      expect(converter.convertDevices(arr)[0].readableState).toBe('CsdmStatus.Unknown');
-      expect(converter.convertDevices(arr)[0].cssColorClass).toBe('device-status-yellow');
-      expect(converter.convertHuronDevices(arr)[0].readableState).toBe('CsdmStatus.Unknown');
-      expect(converter.convertHuronDevices(arr)[0].cssColorClass).toBe('device-status-yellow');
     });
 
   }); // aggregatedState & cssColorClass
@@ -343,5 +319,64 @@ describe('CsdmConverterSpec', function () {
     it('no remoteSupportUser means no rsuKey, no nullReferences', function () {
       expect(converter.convertDevices([{}]).rsuKey).toBeFalsy();
     });
+  });
+
+  describe("Non-existing devices", function () {
+    it('should have a url', function () {
+      var arr = [{
+        url: "foo"
+      }];
+      expect(converter.convertAccounts(arr)[0].url).toBe('foo');
+    });
+
+    it('should have a cisUuid', function () {
+      var arr = [{
+        id: "foo"
+      }];
+      expect(converter.convertAccounts(arr)[0].cisUuid).toBe('foo');
+    });
+
+    it('should have a displayName', function () {
+      var arr = [{
+        displayName: "foo"
+      }];
+      expect(converter.convertAccounts(arr)[0].displayName).toBe('foo');
+    });
+
+    it('should have a isUnused', function () {
+      var arr = [{
+        url: "foo"
+      }];
+      expect(converter.convertAccounts(arr)[0].isUnused).toBeTruthy();
+    });
+
+    it('should have a canDelete', function () {
+      var arr = [{
+        url: "foo"
+      }];
+      expect(converter.convertAccounts(arr)[0].canDelete).toBeTruthy();
+    });
+
+    it('should set Product to Account', function () {
+      var arr = [{
+        url: "foo"
+      }];
+      expect(converter.convertAccounts(arr)[0].product).toBe('NA');
+    });
+
+    it('should set state to Non existent', function () {
+      var arr = [{
+        url: "foo"
+      }];
+      expect(converter.convertAccounts(arr)[0].readableState).toBe('CsdmStatus.Inactive');
+    });
+
+    it('should have issues', function () {
+      var arr = [{
+        url: "foo"
+      }];
+      expect(converter.convertAccounts(arr)[0].hasIssues).toBeTruthy();
+    });
+
   });
 });

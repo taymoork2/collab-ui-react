@@ -2,9 +2,11 @@
   'use strict';
 
   /*ngInject*/
-  function HelpdeskService(ServiceDescriptor, $location, $http, Config, $q, HelpdeskMockData, CsdmConfigService, CsdmConverter, CacheFactory) {
+  function HelpdeskService(ServiceDescriptor, $location, $http, Config, $q, HelpdeskMockData, CsdmConfigService, CsdmConverter, CacheFactory,
+    $translate, $timeout) {
     var urlBase = Config.getAdminServiceUrl(); //"http://localhost:8080/admin/api/v1/"
     var orgCache = CacheFactory.get('helpdeskOrgCache');
+    var searchTimeout = 30000;
     if (!orgCache) {
       orgCache = new CacheFactory('helpdeskOrgCache', {
         maxAge: 120 * 1000,
@@ -24,6 +26,32 @@
         maxAge: 180 * 1000,
         deleteOnExpire: 'aggressive'
       });
+    }
+
+    //TODO: Useragent detection a probably not a reliable way to detect mobile device...
+    var isMobile = {
+      Android: function () {
+        return navigator.userAgent.match(/Android/i);
+      },
+      BlackBerry: function () {
+        return navigator.userAgent.match(/BlackBerry/i);
+      },
+      iOS: function () {
+        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+      },
+      Opera: function () {
+        return navigator.userAgent.match(/Opera Mini/i);
+      },
+      Windows: function () {
+        return navigator.userAgent.match(/IEMobile/i) || navigator.userAgent.match(/WPDesktop/i);
+      },
+      all: function () {
+        return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+      }
+    };
+
+    function checkIfMobile() {
+      return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
     }
 
     function extractItems(res) {
@@ -49,6 +77,9 @@
       var users = res.data.items;
       _.each(users, function (user) {
         user.displayName = getCorrectedDisplayName(user);
+        if (user.organization) {
+          user.isConsumerUser = user.organization.id === Config.consumerOrgId;
+        }
       });
       return users;
     }
@@ -68,18 +99,28 @@
       return $location.absUrl().match(/helpdesk-backend=mock/);
     }
 
-    function searchUsers(searchString, orgId, limit, role) {
+    function searchUsers(searchString, orgId, limit, role, includeUnlicensed) {
       if (useMock()) {
         return deferredResolve(HelpdeskMockData.users);
       }
+      var deferred = $q.defer();
+      var config = {
+        timeout: deferred.promise
+      };
+      $timeout(function () {
+        deferred.resolve();
+      }, searchTimeout);
+
       return $http
-        .get(urlBase + 'helpdesk/search/users?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit + (orgId ? '&orgId=' + encodeURIComponent(orgId) : '') + (role ? '&role=' + encodeURIComponent(role) : ''))
+        .get(urlBase + 'helpdesk/search/users?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit + (orgId ? '&orgId=' +
+            encodeURIComponent(orgId) : (includeUnlicensed ? '&includeUnlicensed=true' : '')) + (role ? '&role=' + encodeURIComponent(role) : ''),
+          config)
         .then(extractUsers);
     }
 
     function searchOrgs(searchString, limit) {
       if (useMock()) {
-        deferredResolve(HelpdeskMockData.orgs);
+        return deferredResolve(HelpdeskMockData.orgs);
       }
       return $http
         .get(urlBase + 'helpdesk/search/organizations?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit)
@@ -89,7 +130,7 @@
     function getUser(orgId, userId) {
       return $http
         .get(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId) + '/users/' + encodeURIComponent(userId))
-        .then(extractUserAndSetUserStatuses);
+        .then(extractAndMassageUser);
     }
 
     function getOrg(orgId) {
@@ -133,7 +174,8 @@
 
     var filterRelevantServices = function (services) {
       return _.filter(services, function (service) {
-        return service.id === 'squared-fusion-cal' || service.id === 'squared-fusion-uc' || service.id === 'squared-fusion-ec' || service.id === 'squared-fusion-mgmt';
+        return service.id === 'squared-fusion-cal' || service.id === 'squared-fusion-uc' || service.id === 'squared-fusion-ec' || service.id ===
+          'squared-fusion-mgmt';
       });
     };
 
@@ -164,7 +206,8 @@
       searchString = searchString.toLowerCase();
       var filteredDevices = [];
       _.each(devices, function (device) {
-        if ((device.displayName || '').toLowerCase().indexOf(searchString) != -1 || (device.mac || '').toLowerCase().indexOf(searchString) != -1 || (device.serial || '').toLowerCase().indexOf(searchString) != -1) {
+        if ((device.displayName || '').toLowerCase().indexOf(searchString) != -1 || (device.mac || '').toLowerCase().indexOf(searchString) != -
+          1 || (device.serial || '').toLowerCase().indexOf(searchString) != -1) {
           if (_.size(filteredDevices) < limit) {
             device.id = device.url.split('/').pop();
             filteredDevices.push(device);
@@ -176,9 +219,10 @@
       return _.sortBy(filteredDevices, 'displayName');
     }
 
-    function extractUserAndSetUserStatuses(res) {
+    function extractAndMassageUser(res) {
       var user = res.data;
       user.displayName = getCorrectedDisplayName(user);
+      user.isConsumerUser = user.orgId === Config.consumerOrgId;
       if (!user.accountStatus) {
         user.statuses = [];
         if (user.active) {
@@ -204,7 +248,9 @@
           var orgs = [];
           var currentResults = _.take(userSearchResults, userLimit);
           _.each(currentResults, function (user) {
-            if (!user.organization.displayName) {
+            if (user.organization.id === Config.consumerOrgId) {
+              user.organization.displayName = $translate.instant('helpdesk.consumerOrg');
+            } else if (!user.organization.displayName) {
               orgs.push(user.organization.id);
             }
           });
@@ -225,6 +271,17 @@
     function resendInviteEmail(displayName, email) {
       return $http
         .post(urlBase + 'helpdesk/actions/resendinvitation/invoke', {
+          inviteList: [{
+            displayName: displayName,
+            email: email
+          }]
+        })
+        .then(extractData);
+    }
+
+    function sendVerificationCode(displayName, email) {
+      return $http
+        .post(urlBase + 'helpdesk/actions/sendverificationcode/invoke', {
           inviteList: [{
             displayName: displayName,
             email: email
@@ -261,7 +318,9 @@
       getWebExSites: getWebExSites,
       getCloudberryDevice: getCloudberryDevice,
       getOrgDisplayName: getOrgDisplayName,
-      findAndResolveOrgsForUserResults: findAndResolveOrgsForUserResults
+      findAndResolveOrgsForUserResults: findAndResolveOrgsForUserResults,
+      checkIfMobile: checkIfMobile,
+      sendVerificationCode: sendVerificationCode
     };
   }
 

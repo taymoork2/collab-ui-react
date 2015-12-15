@@ -1,9 +1,4 @@
 .media-quality {
-  min-width: rem-calc(520);
-  position: relative;
-  .graph-align {
-    padding: 0 rem-calc(15);
-  }
   .graph-text-balloon {
     font-family: $brand-font-cisco-TT-Regular;
     font-size: rem-calc(15);
@@ -20,7 +15,7 @@
   #mediaQualityDiv{
     overflow: visible !important;
     position: relative;
-    top: rem-calc(-25);
+    top: 25px;
     .amcharts-chart-div{
       overflow: visible !important;
       svg {

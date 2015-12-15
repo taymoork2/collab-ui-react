@@ -4,7 +4,7 @@ angular.module('Squared')
   .controller('DevicesCtrl',
 
     /* @ngInject */
-    function ($scope, $state, $translate, $templateCache, DeviceFilter, CsdmCodeService, CsdmHuronDeviceService, CsdmDeviceService, AddDeviceModal, Authinfo, AccountOrgService) {
+    function ($scope, $state, $translate, $templateCache, DeviceFilter, CsdmCodeService, CsdmUnusedAccountsService, CsdmHuronDeviceService, CsdmDeviceService, AddDeviceModal, Authinfo, AccountOrgService) {
       var vm = this;
 
       AccountOrgService.getAccount(Authinfo.getOrgId()).success(function (data) {
@@ -33,7 +33,6 @@ angular.module('Squared')
 
       vm.shouldShowList = function () {
         return vm.codesListSubscription.eventCount !== 0 &&
-          vm.huronDeviceListSubscription.eventCount !== 0 &&
           (vm.deviceListSubscription.eventCount !== 0 || CsdmDeviceService.getDeviceList().length > 0);
       };
 
@@ -42,6 +41,7 @@ angular.module('Squared')
           .extend(CsdmDeviceService.getDeviceList())
           .extend(CsdmHuronDeviceService.getDeviceList())
           .extend(CsdmCodeService.getCodeList())
+          .extend(CsdmUnusedAccountsService.getAccountList())
           .values()
           .value();
         return DeviceFilter.getFilteredList(filtered);
@@ -53,6 +53,7 @@ angular.module('Squared')
         showFilter: false,
         multiSelect: false,
         headerRowHeight: 44,
+        enableColumnResize: true,
         sortInfo: {
           directions: ['asc'],
           fields: ['displayName']

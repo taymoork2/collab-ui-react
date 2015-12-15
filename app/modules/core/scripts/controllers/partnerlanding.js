@@ -190,7 +190,7 @@ angular.module('Core')
 
       var nameTemplate = '<div class="ngCellText" ng-click="partnerClicked(row.entity.customerOrgId)">' +
         '<span translate="{{row.entity.customerName}}"></span>' +
-        '<span ng-if="isPartnerOrg(row.entity.customerOrgId)" id="partner" class="label label-managed" ng-class="activeBadge ? \'active\' : \'inactive\'" translate="customerPage.myOrganization"></span>' +
+        '<span ng-if="isPartnerOrg(row.entity.customerOrgId)" id="partner" class="badge badge--managed" ng-class="activeBadge ? \'active\' : \'inactive\'" translate="customerPage.myOrganization"></span>' +
         '</div>';
 
       var serviceTemplate = '<div class="ngCellText align-center">' +
@@ -222,6 +222,7 @@ angular.module('Core')
         rowTemplate: rowTemplate,
         headerRowHeight: 44,
         useExternalSorting: false,
+        enableColumnResize: true,
         sortInfo: {
           fields: ['customerName'],
           directions: ['asc']

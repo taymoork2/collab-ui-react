@@ -22,6 +22,7 @@
       getFeaturesForUser: getFeaturesForUser,
       getFeatureForOrg: getFeatureForOrg,
       getFeaturesForOrg: getFeaturesForOrg,
+      setFeatureToggle: setFeatureToggle,
       supports: supports,
       supportsPstnSetup: supportsPstnSetup,
       supportsCsvUpload: supportsCsvUpload,
@@ -147,7 +148,7 @@
       var deferred = $q.defer();
       Orgservice.getOrgCacheOption(function (data, status) {
         if (data.success) {
-          deferred.resolve(data.dirsyncEnabled && Authinfo.getOrgId() === '151d02da-33a2-45aa-9467-bdaebbaeee76');
+          deferred.resolve(data.dirsyncEnabled);
         } else {
           deferred.reject(status);
         }
@@ -155,6 +156,19 @@
         cache: true
       });
       return deferred.promise;
+    }
+
+    function setFeatureToggle(isUser, id, key, val) {
+      if (isUser) {
+        return $q.reject('User level toggles are not changeable in the web app');
+      }
+
+      var toggle = isUser ? undefined : generateFeatureToggleRule(id, key, val);
+      var usingId = isUser ? undefined : '';
+
+      return getUrl(isUser).save({
+        id: usingId
+      }, toggle).$promise;
     }
 
     /**

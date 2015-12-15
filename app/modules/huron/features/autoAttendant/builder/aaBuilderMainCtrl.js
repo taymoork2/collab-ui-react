@@ -6,7 +6,7 @@
     .controller('AABuilderMainCtrl', AABuilderMainCtrl); /* was AutoAttendantMainCtrl */
 
   /* @ngInject */
-  function AABuilderMainCtrl($scope, $translate, $state, $stateParams, AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService, AAValidationService, Notification) {
+  function AABuilderMainCtrl($scope, $translate, $state, $stateParams, $q, AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService, AAValidationService, AANumberAssignmentService, Notification, Authinfo) {
     var vm = this;
     vm.overlayTitle = $translate.instant('autoAttendant.builderTitle');
     vm.aaModel = {};
@@ -22,6 +22,18 @@
     vm.selectAA = selectAA;
     vm.populateUiModel = populateUiModel;
     vm.saveUiModel = saveUiModel;
+    vm.setupTemplate = setupTemplate;
+    vm.templateName = $stateParams.aaTemplate;
+    vm.saveAANumberAssignmentWithErrorDetail = saveAANumberAssignmentWithErrorDetail;
+    vm.areAssignedResourcesDifferent = areAssignedResourcesDifferent;
+
+    vm.templateDefinitions = [{
+      tname: "template1",
+      actions: [{
+        lane: 'openHours',
+        actionset: ['say', 'runActionsOnInput']
+      }]
+    }];
 
     $scope.saveAARecords = saveAARecords;
 
@@ -31,8 +43,48 @@
       vm.aaNameFocus = true;
     }
 
+    // Returns true if the provided assigned resources are different in size or in the passed-in field
+    function areAssignedResourcesDifferent(aa1, aa2, tag) {
+
+      // if we have a different number of resources, we definitely have a difference
+      if (aa1.length !== aa2.length) {
+        return true;
+      } else {
+        // otherwise, filter on the passed-in field and compare
+        var a1 = _.pluck(aa1, tag);
+        var a2 = _.pluck(aa2, tag);
+        return (_.difference(a1, a2).length > 0 || _.difference(a2, a1).length > 0);
+      }
+
+    }
+
+    // Save the phone number resources originally in the CE (used on exit with no save, and on save error)
+    function unAssignAssigned() {
+      // check to see if the local assigned list of resources is different than in CE info
+      if (areAssignedResourcesDifferent(vm.aaModel.aaRecord.assignedResources, vm.ui.ceInfo.getResources(), 'id')) {
+        var ceInfo = AutoAttendantCeInfoModelService.getCeInfo(vm.aaModel.aaRecord);
+        return AANumberAssignmentService.setAANumberAssignment(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, ceInfo.getResources()).then(
+          function (response) {
+            return response;
+          },
+          function (response) {
+            Notification.error('autoAttendant.errorResetCMI');
+            return $q.reject(response);
+          }
+        );
+      } else {
+        // no unassignment necessary - just return fulfilled promise
+        var deferred = $q.defer();
+        deferred.resolve([]);
+        return deferred.promise;
+      }
+    }
+
     function closePanel() {
-      $state.go('huronfeatures');
+      unAssignAssigned().finally(function () {
+        $state.go('huronfeatures');
+      });
+
     }
 
     function removeNumberAttribute(resources) {
@@ -96,6 +148,19 @@
       }
     }
 
+    // Set the numbers in CMI with error details (involves multiple saves in the AANumberAssignmentService service)
+    // Notify the user of any numbers that failed
+    function saveAANumberAssignmentWithErrorDetail(resources, workingResources, failedResources) {
+
+      AANumberAssignmentService.setAANumberAssignmentWithErrorDetail(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources, workingResources, failedResources).catch(
+        function (response) {
+          Notification.error('autoAttendant.errorFailedToAssignNumbers', {
+            phoneNumbers: failedResources
+          });
+        });
+
+    }
+
     function saveAARecords() {
 
       var aaRecords = vm.aaModel.aaRecords;
@@ -149,9 +214,19 @@
               statusText: response.statusText,
               status: response.status
             });
+            unAssignAssigned();
           }
         );
       } else {
+
+        // If a possible discrepancy was found between the phone number list in CE and the one stored in CMI
+        // Try a complete save here and report error details
+        if (vm.aaModel.possibleNumberDiscrepancy) {
+          var workingResources = [];
+          var failedResources = [];
+          saveAANumberAssignmentWithErrorDetail(vm.aaModel.ceInfos[i].getResources(), workingResources, failedResources);
+        }
+
         var updateResponsePromise = AutoAttendantCeService.updateCe(
           aaRecords[i].callExperienceURL,
           _aaRecord);
@@ -173,6 +248,7 @@
               statusText: response.statusText,
               status: response.status
             });
+            unAssignAssigned();
           }
         );
       }
@@ -190,6 +266,58 @@
       return messages;
     }
 
+    function setupTemplate() {
+
+      if (!vm.templateName) {
+        return;
+      }
+
+      var specifiedTemplate = _.find(vm.templateDefinitions, {
+        tname: vm.templateName
+      });
+
+      if (angular.isUndefined(specifiedTemplate) || angular.isUndefined(specifiedTemplate.tname) || specifiedTemplate.tname.length === 0) {
+        Notification.error('autoAttendant.errorInvalidTemplate', {
+          template: vm.templateName
+        });
+        return;
+      }
+
+      if (angular.isUndefined(specifiedTemplate.actions) || specifiedTemplate.actions.length === 0) {
+        Notification.error('autoAttendant.errorInvalidTemplateDef', {
+          template: vm.templateName
+        });
+        return;
+      }
+
+      _.forEach(specifiedTemplate.actions, function (action) {
+        var uiMenu = vm.ui[action.lane];
+
+        if (action.lane === "holidays") {
+          vm.ui.isHolidays = true;
+        }
+
+        if (action.lane === "closedHours") {
+          vm.ui.isClosedHours = true;
+        }
+
+        if (angular.isUndefined(action.actionset) || action.actionset.length === 0) {
+          Notification.error('autoAttendant.errorInvalidTemplateDef', {
+            template: vm.templateName
+          });
+          return;
+        }
+
+        _.forEach(action.actionset, function (actionset) {
+          var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+          var menuAction = AutoAttendantCeMenuModelService.newCeActionEntry(actionset, '');
+          menuEntry.isConfigured = false;
+          menuEntry.addAction(menuAction);
+          uiMenu.appendEntry(menuEntry);
+        });
+      });
+    }
+
     function selectAA(aaName) {
       vm.aaModel.aaName = aaName;
       if (angular.isUndefined(vm.aaModel.aaRecord)) {
@@ -197,33 +325,36 @@
           vm.aaModel.aaRecord = AAModelService.getNewAARecord();
           vm.aaModel.aaRecordUUID = "";
         } else {
-          for (var i = 0; i < vm.aaModel.aaRecords.length; i++) {
-            if (vm.aaModel.aaRecords[i].callExperienceName === aaName) {
-              // vm.aaModel.aaRecord = angular.copy(vm.aaModel.aaRecords[i]);
-              AutoAttendantCeService.readCe(vm.aaModel.aaRecords[i].callExperienceURL).then(
-                function (data) {
-                  vm.aaModel.aaRecord = data;
-                  // Workaround for reading the dn number: by copying it from aaRecords[i], until
-                  // dn number is officialy stored in ceDefintion.
-                  vm.aaModel.aaRecord.assignedResources = angular.copy(vm.aaModel.aaRecords[i].assignedResources);
-                  vm.aaModel.aaRecordUUID = AutoAttendantCeInfoModelService.extractUUID(vm.aaModel.aaRecords[i].callExperienceURL);
-                  //
-                  vm.populateUiModel();
-                },
-                function (response) {
-                  Notification.error('autoAttendant.errorReadCe', {
-                    name: aaName,
-                    statusText: response.statusText,
-                    status: response.status
-                  });
-                }
-              );
-              return;
-            }
+
+          var aaRecord = _.find(vm.aaModel.aaRecords, {
+            callExperienceName: aaName
+          });
+
+          if (angular.isDefined(aaRecord)) {
+            AutoAttendantCeService.readCe(aaRecord.callExperienceURL).then(
+              function (data) {
+                vm.aaModel.aaRecord = data;
+                // Workaround for reading the dn number: by copying it from aaRecords[i], until
+                // dn number is officialy stored in ceDefintion.
+                vm.aaModel.aaRecord.assignedResources = angular.copy(aaRecord.assignedResources);
+                vm.aaModel.aaRecordUUID = AutoAttendantCeInfoModelService.extractUUID(aaRecord.callExperienceURL);
+
+                vm.populateUiModel();
+              },
+              function (response) {
+                Notification.error('autoAttendant.errorReadCe', {
+                  name: aaName,
+                  statusText: response.statusText,
+                  status: response.status
+                });
+              }
+            );
+            return;
           }
         }
       }
       vm.populateUiModel();
+      vm.setupTemplate();
     }
 
     function activate() {
@@ -231,8 +362,8 @@
       var aaName = $stateParams.aaName;
       vm.aaModel = AAModelService.getAAModel();
       vm.aaModel.aaRecord = undefined;
-      vm.aaModel.ceInfos = [];
       AAUiModelService.initUiModel();
+      var aaTemplate = $stateParams.aaTemplate;
       vm.ui = AAUiModelService.getUiModel();
       vm.ui.ceInfo = {};
       vm.ui.ceInfo.name = aaName;
@@ -241,9 +372,9 @@
       vm.ui.builder.ceInfo_name = angular.copy(vm.ui.ceInfo.name);
 
       AutoAttendantCeInfoModelService.getCeInfosList().then(function (data) {
-        selectAA(aaName);
+        vm.selectAA(aaName);
       }, function (data) {
-        selectAA(aaName);
+        vm.selectAA(aaName);
       });
     }
 

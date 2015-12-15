@@ -1,28 +1,29 @@
 .aa-message-panel {
-  width: 22.5rem;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  width: 100%;
+  @include vr-spacing(mt, 1);
+  @include vr-spacing(mb, 1);
 }
 
 .aa-message-textarea {
-  margin-bottom: 1rem;
+  @include vr-spacing(mb, 1);
   line-height: 1.5rem;
-  padding-top: .75rem;
-  padding-bottom: .75rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  @include vr-spacing(pt, .75);
+  @include vr-spacing(pb, .75);
+  @include vr-spacing(pl, 1);
+  @include vr-spacing(pr, 1);
+  resize: none;
 }
 
 .aa-message-select-list {
-  margin-bottom: 1.5rem;
-  div.select-list {
-    width: 12.75rem ;
-  }
+  @include vr-spacing(mb, 1.5);
   .select-toggle {
     width: 100%;
+    @include vr-spacing(pr, 1.75);
   }
   .select-toggle > i {
-    right: 0;
+    right: -0.25rem;
+    @include vr-spacing(mr, 0);
+    @include vr-spacing(ml, -0.5);
   }
   .dropdown-menu {
     width: 100%;

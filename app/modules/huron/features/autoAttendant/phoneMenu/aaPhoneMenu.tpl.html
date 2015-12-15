@@ -2,21 +2,24 @@
 <div class="aa-phone-menu">
   <div class="panel">
     <div ng-if="aaPhoneMenu.selectedActions.length">
-      <div class="row collapse-left aa-pm-vertical-line" ng-repeat="keyAction in aaPhoneMenu.selectedActions">
+      <div class="row aa-pm-vertical-line" ng-repeat="keyAction in aaPhoneMenu.selectedActions">
         <div class="small-3 columns">
-          <cs-select ng-model="keyAction.key" options="keyAction.keys" placeholder="aaPhoneMenu.selectPlaceholder" on-change-fn="aaPhoneMenu.keyChanged($index, keyAction.key)" class="aa-pm-key-select" icon="icon-chevron-down">
+          <cs-select ng-model="keyAction.key" options="keyAction.keys" placeholder="aaPhoneMenu.selectPlaceholder" on-change-fn="aaPhoneMenu.keyChanged($index, keyAction.key)" class="aa-pm-key-select" icon="icon-chevron-down" ng-class="{'not-selected':!keyAction.key}">
           </cs-select>
         </div>
         <div class="small-8 columns">
           <cs-select ng-model="keyAction.action" options="aaPhoneMenu.keyActions" placeholder="aaPhoneMenu.actionPlaceholder" on-change-fn="aaPhoneMenu.keyActionChanged($index, keyAction.action)" class="aa-pm-action-select" icon="icon-chevron-down">
           </cs-select>
+          <div ng-switch="keyAction.action.name" class="aa-route-to-aa">
+            <aa-route-to-aa ng-switch-when="phoneMenuRouteAA" aa-schedule="{{schedule}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-aa>
+          </div>
         </div>
         <div class="text-right small-1 columns">
           <span class="aa-trash-icon" aria-label="common.delete" ng-click="aaPhoneMenu.deleteKeyAction($index); $event.stopPropagation();"></span>
         </div>
       </div>
     </div>
-    <div class="row collapse-both">
+    <div class="row">
       <div ng-show="aaPhoneMenu.selectedActions.length < 12" class="small-12 columns">
         <a class="aa-pm-primary-text aa-pm-add" ng-click="aaPhoneMenu.addKeyAction()">
           <span class="icon icon-plus-circle"></span>{{ :: 'autoAttendant.phoneMenuAddDigit' | translate }}</a>

@@ -122,6 +122,8 @@ angular.module('Core')
 
         ciscoMockOrgId: 'd30a6828-dc35-4753-bab4-f9b468828688',
 
+        consumerOrgId: 'consumer',
+
         logoutUrl: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=',
 
         oauthDeleteTokenUrl: 'https://idbroker.webex.com/idb/oauth2/v1/revoke',
@@ -274,7 +276,7 @@ angular.module('Core')
           link: '/users'
         }, {
           tab: 'servicesTab',
-          icon: 'icon-settings',
+          icon: 'icon-cloud',
           title: 'tabs.servicesTab',
           subPages: [{
             title: 'tabs.conferencing',
@@ -415,6 +417,11 @@ angular.module('Core')
             desc: 'tabs.eventsTabDesc',
             state: 'events',
             link: '#events'
+          }, {
+            title: 'tabs.reportTab',
+            desc: 'reportsPage.devReports',
+            state: 'devReports',
+            link: '#devReports'
           }]
         }],
 
@@ -425,15 +432,15 @@ angular.module('Core')
           fusion_cal: 'squared-fusion-cal',
           mediafusion: 'squared-fusion-media',
           fusion_mgmt: 'squared-fusion-mgmt',
-          device_mgmt: 'spark-device-mgmt',
+          room_system: 'spark-room-system',
           fusion_ec: 'squared-fusion-ec'
         },
 
         trials: {
-          collab: 'COLLAB',
-          squaredUC: 'SQUAREDUC',
-          webex: 'WEBEXTRIALS',
-          cloudberry: 'ROOMSYSTEMS',
+          message: 'COLLAB',
+          meeting: 'WEBEXTRIALS',
+          call: 'SQUAREDUC',
+          roomSystems: 'ROOMSYSTEMS',
         },
 
         organizations: {
@@ -487,6 +494,8 @@ angular.module('Core')
           brandDanger: '#f05d3b',
           brandWarning: '#f7c100',
           dummyGray: '#ECECEC',
+          primaryColorLight: '#66C5E8',
+          primaryColorDarker: '#0387B8',
           dummyGrayLight: '#F3F3F3',
           dummyGrayLighter: '#FAFAFA'
         },
@@ -621,7 +630,14 @@ angular.module('Core')
         },
 
         getFeatureToggleUrl: function () {
-          return this.locusServiceUrl.prod;
+          var locusServiceUrl = {
+            'dev': this.locusServiceUrl.prod,
+            'cfe': this.locusServiceUrl.cfe,
+            'integration': this.locusServiceUrl.prod,
+            'prod': this.locusServiceUrl.prod
+          };
+
+          return locusServiceUrl[this.getEnv()];
         },
 
         getEnrollmentServiceUrl: function () {
@@ -974,24 +990,24 @@ angular.module('Core')
           'huronnewfeature',
           'huronHuntGroup',
           'huntgroupedit',
+          'devReports',
           'cdrsupport',
           'cdr-overview'
         ],
         'squared-fusion-mgmt': [
           'cluster-details',
-          'cluster-details-new',
           'management-service',
         ],
-        'spark-device-mgmt': [
+        'spark-room-system': [
           'devices',
           'device-overview',
           'devices-redux'
         ],
         'squared-fusion-uc': [
+          'call-service',
           'devices',
           'device-overview',
-          'devices-redux',
-          'call-service'
+          'devices-redux'
         ],
         'squared-fusion-cal': [
           'calendar-service'
@@ -1026,6 +1042,7 @@ angular.module('Core')
         'partner': [
           'overview',
           'reports',
+          'devReports',
           'devices',
           'fusion',
           'mediafusionconnector',

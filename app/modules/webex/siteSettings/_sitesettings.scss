@@ -4,12 +4,15 @@
     vertical-align:text-bottom;
 }
 
-.site-settings,
-.site-settings-site-setting {
-  @extend %content-subheader;
-}
-
-.iframeContainer {
-  position: relative;
-  top: -42px;
+.webex {
+  &-site-reports,
+  &-site-report-iframe,
+  &-site-settings,
+  &-site-setting {
+    @extend %content-subheader;
+  }
+  &-site-setting,
+  &-site-report-iframe {
+    @extend %page-background-white;
+  }
 }

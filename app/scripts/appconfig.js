@@ -1,9 +1,12 @@
 'use strict';
 angular
   .module('wx2AdminWebClientApp')
-  .config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$translateProvider',
-    function ($httpProvider, $stateProvider, $urlRouterProvider, $translateProvider) {
+  .config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$translateProvider', '$compileProvider',
+    function ($httpProvider, $stateProvider, $urlRouterProvider, $translateProvider, $compileProvider) {
       var sidepanelMemo = 'sidepanelMemo';
+
+      //Add blob to the default angular whitelist
+      $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|tel|file|blob):/);
 
       $urlRouterProvider.otherwise('login');
       $stateProvider
@@ -43,13 +46,6 @@ angular
           },
           abstract: true,
           sticky: true
-        })
-        .state('example', {
-          url: '/example',
-          templateUrl: 'modules/squared/example/example.html',
-          controller: 'ExampleCtrl',
-          controllerAs: 'ex',
-          parent: 'main'
         })
         .state('partner', {
           template: '<div ui-view></div>',
@@ -157,23 +153,24 @@ angular
 
       $futureStateProvider.futureState(futureOverviewState);
 
-      $futureStateProvider.stateFactory(futureOverviewState.type, function ($q, $timeout, futureState, FeatureToggleService) {
-        return FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (useStormBranding) {
-
-          if (document.URL.indexOf('newoverview=1') > 0) {
-            useStormBranding = true;
-          } else if (document.URL.indexOf('newoverview=0') > 0) {
-            useStormBranding = false;
-          }
-
-          return {
-            name: futureState.stateName,
-            url: futureState.url,
-            templateUrl: useStormBranding ? 'modules/core/overview/overview.tpl.html' : 'modules/core/landingPage/landingPage.tpl.html',
-            controller: useStormBranding ? 'OverviewCtrl' : 'LandingPageCtrl',
-            controllerAs: 'overview',
-            parent: 'main'
-          };
+      $futureStateProvider.stateFactory(futureOverviewState.type, function ($q, $timeout, Storage, futureState, FeatureToggleService, Auth) {
+        var token = Storage.get('accessToken');
+        return Auth.authorize(token).then(function () {
+          return FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (useStormBranding) {
+            if (document.URL.indexOf('newoverview=1') > 0) {
+              useStormBranding = true;
+            } else if (document.URL.indexOf('newoverview=0') > 0) {
+              useStormBranding = false;
+            }
+            return {
+              name: futureState.stateName,
+              url: futureState.url,
+              templateUrl: useStormBranding ? 'modules/core/overview/overview.tpl.html' : 'modules/core/landingPage/landingPage.tpl.html',
+              controller: useStormBranding ? 'OverviewCtrl' : 'LandingPageCtrl',
+              controllerAs: 'overview',
+              parent: 'main'
+            };
+          });
         });
       });
 
@@ -187,9 +184,12 @@ angular
       $stateProvider
         .state('activate', {
           url: '/activate',
-          templateUrl: 'modules/squared/views/activate.html',
-          controller: 'ActivateCtrl',
-          parent: 'main',
+          views: {
+            'main@': {
+              templateUrl: 'modules/squared/views/activate.html',
+              controller: 'ActivateCtrl'
+            }
+          },
           authenticate: false
         })
         .state('csadmin', {
@@ -213,9 +213,12 @@ angular
         })
         .state('invite', {
           url: '/invite',
-          templateUrl: 'modules/squared/views/invite.html',
-          controller: 'InviteCtrl',
-          parent: 'main',
+          views: {
+            'main@': {
+              templateUrl: 'modules/squared/views/invite.html',
+              controller: 'InviteCtrl'
+            }
+          },
           authenticate: false
         })
         .state('invitelauncher', {
@@ -451,7 +454,7 @@ angular
           }
         })
         .state('user-overview.hybrid-services-squared-fusion-cal', {
-          templateUrl: 'modules/hercules/userPreview/hybridServicesPreview.tpl.html',
+          templateUrl: 'modules/hercules/hybridServices/hybridServicesPreview.tpl.html',
           controller: 'HybridServicesPreviewCtrl',
           data: {
             displayName: 'Calendar Service'
@@ -461,7 +464,7 @@ angular
           }
         })
         .state('user-overview.hybrid-services-squared-fusion-uc', {
-          templateUrl: 'modules/hercules/userPreview/callServicePreview.tpl.html',
+          templateUrl: 'modules/hercules/hybridServices/callServicePreview.tpl.html',
           controller: 'CallServicePreviewCtrl',
           data: {
             displayName: 'Call Service'
@@ -815,7 +818,18 @@ angular
           end: devices redux prototypes
         */
 
-      .state('partneroverview', {
+      .state('devReports', {
+          url: '/devReports',
+          templateUrl: 'modules/core/customerReports/customerReports.tpl.html',
+          controller: 'CustomerReportsCtrl',
+          controllerAs: 'nav',
+          parent: 'main',
+          params: {
+            tab: null,
+            siteUrl: null
+          }
+        })
+        .state('partneroverview', {
           parent: 'partner',
           url: '/overview',
           templateUrl: 'modules/core/views/partnerlanding.html',
@@ -996,7 +1010,9 @@ angular
         .state('helpdesk-main', {
           views: {
             'main@': {
-              templateUrl: 'modules/squared/views/helpdesk.tpl.html'
+              controller: 'HelpdeskHelpController',
+              controllerAs: 'helpdeskHelpCtrl',
+              templateUrl: 'modules/squared/helpdesk/helpdesk.tpl.html'
             }
           },
           abstract: true,
@@ -1216,19 +1232,18 @@ angular
         .state('trialAdd.info', {
           templateUrl: 'modules/core/trials/trialAdd.tpl.html'
         })
-        .state('trialAdd.addNumbers', {
-          templateUrl: 'modules/core/trials/addNumbers.tpl.html',
-          controller: 'DidAddCtrl',
-          controllerAs: 'didAdd',
-          params: {
-            currentTrial: {},
-            currentOrg: {}
-          }
+        .state('trialAdd.finishSetup', {
+          templateUrl: 'modules/core/trials/trialFinishSetup.tpl.html',
         })
-        .state('trialAdd.nextSteps', {
-          templateUrl: 'modules/core/trials/nextStep.tpl.html',
-          controller: 'DidAddCtrl',
-          controllerAs: 'didAdd'
+        .state('trialAdd.meeting', {
+          templateUrl: 'modules/core/trials/trialMeeting.tpl.html',
+          controller: 'TrialMeetingCtrl',
+          controllerAs: 'meetingTrial'
+        })
+        .state('trialAdd.call', {
+          templateUrl: 'modules/core/trials/trialCall.tpl.html',
+          controller: 'TrialCallCtrl',
+          controllerAs: 'callTrial'
         })
         .state('trialEdit', {
           abstract: true,
@@ -1375,7 +1390,8 @@ angular
         .state('huronfeatures.aabuilder', {
           parent: 'hurondetails',
           params: {
-            aaName: ''
+            aaName: '',
+            aaTemplate: ''
           },
           templateUrl: 'modules/huron/features/autoAttendant/builder/aaBuilderMain.tpl.html',
           controller: 'AABuilderMainCtrl',
@@ -1421,12 +1437,6 @@ angular
   .config(['$stateProvider',
     function ($stateProvider) {
       $stateProvider
-        .state('fusion', {
-          url: '/fusion',
-          templateUrl: 'modules/hercules/dashboard/dashboard-next.html',
-          controller: 'DashboardNextController',
-          parent: 'main'
-        })
         .state('calendar-service', {
           templateUrl: 'modules/hercules/expressway-service/overview.html',
           controller: 'ExpresswayServiceController',
@@ -1519,7 +1529,7 @@ angular
             serviceType: "c_mgmt"
           }
         })
-        .state('cluster-details-new', {
+        .state('cluster-details', {
           parent: 'sidepanel',
           views: {
             'sidepanel@': {
@@ -1527,7 +1537,7 @@ angular
               controller: 'ExpresswayServiceClusterController',
               templateUrl: 'modules/hercules/expressway-service/cluster-details.html'
             },
-            'header@cluster-details-new': {
+            'header@cluster-details': {
               templateUrl: 'modules/hercules/expressway-service/cluster-header.html'
             }
           },
@@ -1539,7 +1549,7 @@ angular
             serviceType: undefined
           }
         })
-        .state('cluster-details-new.cluster-settings', {
+        .state('cluster-details.cluster-settings', {
           templateUrl: 'modules/hercules/expressway-service/cluster-settings.html',
           controller: 'ExpresswayClusterSettingsController',
           controllerAs: 'expresswayClusterSettingsCtrl',
@@ -1551,7 +1561,7 @@ angular
             serviceType: null
           }
         })
-        .state('cluster-details-new.alarm-details', {
+        .state('cluster-details.alarm-details', {
           templateUrl: 'modules/hercules/expressway-service/alarm-details.html',
           controller: 'AlarmController',
           controllerAs: 'alarmCtrl',
@@ -1563,7 +1573,7 @@ angular
             host: null
           }
         })
-        .state('cluster-details-new.host-details', {
+        .state('cluster-details.host-details', {
           templateUrl: 'modules/hercules/expressway-service/host-details.html',
           controller: 'ExpresswayHostDetailsController',
           controllerAs: 'hostDetailsCtrl',
@@ -1574,46 +1584,6 @@ angular
             host: null,
             clusterId: null,
             serviceType: null
-          }
-        })
-        .state('cluster-details', {
-          parent: 'sidepanel',
-          views: {
-            'sidepanel@': {
-              controller: 'ClusterDetailsController',
-              templateUrl: 'modules/hercules/dashboard/cluster-details.html'
-            },
-            'header@cluster-details': {
-              templateUrl: 'modules/hercules/dashboard/cluster-header.html'
-            }
-          },
-          data: {
-            displayName: 'Overview'
-          },
-          params: {
-            clusterId: undefined
-          }
-        })
-        .state('cluster-details.hosts', {
-          templateUrl: 'modules/hercules/dashboard/host-details.html',
-          controller: 'HostDetailsController',
-          data: {
-            displayName: 'Hosts'
-          },
-          params: {
-            clusterId: undefined,
-            hostSerial: undefined
-          }
-        })
-        .state('cluster-details.service', {
-          templateUrl: 'modules/hercules/dashboard/service-details.html',
-          controller: 'ServiceDetailsController',
-          data: {
-            displayName: 'Connectors'
-          },
-          params: {
-            clusterId: undefined,
-            serviceType: undefined
           }
         });
     }

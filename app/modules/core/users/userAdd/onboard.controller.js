@@ -9,10 +9,12 @@ angular.module('Core')
       $scope.internalNumberPool = [];
       $scope.externalNumberPool = [];
       $scope.isMsgrSyncEnabled = false;
+      $scope.telephonyInfo = {};
 
       $scope.getMessengerSyncStatus = getMessengerSyncStatus;
       $scope.loadInternalNumberPool = loadInternalNumberPool;
       $scope.loadExternalNumberPool = loadExternalNumberPool;
+      $scope.checkDnOverlapsSteeringDigit = checkDnOverlapsSteeringDigit;
       $scope.assignDNForUserList = assignDNForUserList;
       $scope.assignMapUserList = assignMapUserList;
       $scope.checkDidDnDupes = checkDidDnDupes;
@@ -61,7 +63,7 @@ angular.module('Core')
       //***********************************************************************************/
 
       function activateDID() {
-        $q.all([loadInternalNumberPool(), loadExternalNumberPool(), toggleShowExtensions()])
+        $q.all([loadInternalNumberPool(), loadExternalNumberPool(), toggleShowExtensions(), loadPrimarySiteInfo()])
           .finally(function () {
             if ($scope.showExtensions === true) {
               assignDNForUserList();
@@ -70,6 +72,22 @@ angular.module('Core')
             }
             $scope.processing = false;
           });
+      }
+
+      function loadPrimarySiteInfo() {
+        return TelephonyInfoService.getPrimarySiteInfo().then(function (telephonyInfo) {
+          $scope.telephonyInfo = telephonyInfo;
+        }).catch(function (response) {
+          Notification.errorResponse(response, 'directoryNumberPanel.siteError');
+        });
+      }
+
+      // Check to see if the currently selected directory number's first digit is
+      // the same as the company steering digit.
+      function checkDnOverlapsSteeringDigit(userEntity) {
+        var dnFirstCharacter = "";
+        var steeringDigit = $scope.telephonyInfo.steeringDigit;
+        return _.startsWith(_.get(userEntity, 'assignedDn.pattern'), steeringDigit);
       }
 
       function returnInternalNumberlist(pattern) {
@@ -204,7 +222,9 @@ angular.module('Core')
           activateDID();
           $state.go('users.add.services.dn');
         } else {
-          onboardUsers(true);
+          onboardUsers(true).then(function () {
+            assignHybridServices($scope.extensionEntitlements);
+          });
         }
       };
 
@@ -533,7 +553,8 @@ angular.module('Core')
         'refresh-data-fn="returnInternalNumberlist(filter)" wait-time="0" ' +
         'placeholder="placeholder" input-placeholder="inputPlaceholder" ' +
         'on-change-fn="syncGridDidDn(row.entity, \'internalNumber\')"' +
-        'labelfield="pattern" valuefield="uuid" required="true" filter="true"> </cs-select></div>' +
+        'labelfield="pattern" valuefield="uuid" required="true" filter="true"' +
+        ' is-warn="{{checkDnOverlapsSteeringDigit(row.entity)}}" warn-msg="{{\'usersPage.steeringDigitOverlapWarning\' | translate: { steeringDigitInTranslation: telephonyInfo.steeringDigit } }}" > </cs-select></div>' +
         '<div ng-show="row.entity.assignedDn === undefined"> ' +
         '<cs-select name="noInternalNumber" ' +
         'ng-model="noExtInPool" labelfield="noExtInPool" is-disabled="true" > </cs-select>' +
@@ -642,7 +663,7 @@ angular.module('Core')
         enableRowSelection: false,
         multiSelect: false,
         showFilter: false,
-        rowHeight: 55,
+        rowHeight: 64,
         rowTemplate: rowTemplate,
         headerRowHeight: 44,
         headerRowTemplate: headerRowTemplate, // this is needed to get rid of vertical bars in header
@@ -1118,6 +1139,58 @@ angular.module('Core')
         return deferred.promise;
       }
 
+      $scope.extensionEntitlements = [];
+      $scope.updateExtensionEntitlements = function (entitlements) {
+        $scope.extensionEntitlements = entitlements;
+      };
+
+      function assignHybridServices(entitlements) {
+        var usersList = getUsersList();
+
+        // TODO: Similar chunking logic is used throughout. Refactor!
+        if (angular.isArray(usersList) && usersList.length &&
+          _.isArray(entitlements) && entitlements.length) {
+          var i, len, tempUsersList, chunk = Config.batchSize;
+          for (i = 0, len = usersList.length; i < len; i += chunk) {
+            tempUsersList = usersList.slice(i, i + chunk);
+            Userservice.updateUsers(tempUsersList, null, entitlements, 'updateEntitlement', callback);
+          }
+        }
+
+        // TODO: Similar callback logic is used throughout this controller.
+        // Make abstracting it part of refactor work.
+        function callback(data) {
+          if (data.success) {
+            var successResponses = [];
+            var failureResponses = [];
+            var userResponses = data.userResponse;
+
+            _.each(userResponses, function (response) {
+              var userStatus = response.status;
+              var msg;
+
+              if (userStatus === 404) {
+                msg = 'Entitlements for ' + response.email + ' do not exist.';
+                failureResponses.push(msg);
+              } else if (userStatus === 409) {
+                msg = 'Entitlement(s) previously updated.';
+                failureResponses.push(msg);
+              } else if (userStatus != 200) {
+                msg = response.email + '\'s entitlements were not updated, status: ' + userStatus;
+                failureResponses.push(msg);
+              }
+            });
+
+            Notification.notify(successResponses, 'success');
+            Notification.notify(failureResponses, 'error');
+          } else {
+            Log.error('Failed updating users with entitlements.');
+            Log.error(data);
+            Notification.notify('Failed to update entitlements.', 'error');
+          }
+        }
+      }
+
       function entitleUserCallback(data, status, method) {
         $scope.results = {
           resultList: []
@@ -1562,8 +1635,7 @@ angular.module('Core')
 
       getUnlicensedUsers();
 
-      var givenNameTemplate = '<div class="ngCellText"><p class="hoverStyle" title="{{row.entity.name.givenName}}">{{row.entity.name.givenName}}</p></div>';
-      var familyNameTemplate = '<div class="ngCellText"><p class="hoverStyle" title="{{row.entity.name.familyName}}">{{row.entity.name.familyName}}</p></div>';
+      var displayNameTemplate = '<div class="ngCellText"><p class="hoverStyle" title="{{row.entity.displayName}}">{{row.entity.displayName}}</p></div>';
       var emailTemplate = '<div class="ngCellText"><p class="hoverStyle" title="{{row.entity.userName}}">{{row.entity.userName}}</p></div>';
 
       $scope.convertGridOptions = {
@@ -1579,15 +1651,9 @@ angular.module('Core')
         },
         selectedItems: [],
         columnDefs: [{
-          field: 'name.givenName',
-          displayName: $translate.instant('usersPage.firstnameHeader'),
-          cellTemplate: givenNameTemplate,
-          resizable: false,
-          sortable: true
-        }, {
-          field: 'name.familyName',
-          displayName: $translate.instant('usersPage.lastnameHeader'),
-          cellTemplate: familyNameTemplate,
+          field: 'displayName',
+          displayName: $translate.instant('usersPage.displayNameHeader'),
+          cellTemplate: displayNameTemplate,
           resizable: false,
           sortable: true
         }, {

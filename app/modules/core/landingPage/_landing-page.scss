@@ -1,8 +1,10 @@
 /******** Home page styles ********/
 
-.overview {
-  @extend %content-header;
+.overview-state {
   @extend %page-content-padding;
+}
+.customer-landing {
+  @extend %content-header;
 }
 
 // Analytics Charts
@@ -144,8 +146,6 @@
 
 .monitoring-panel {
   .badge {
-    width: 50px;
-    font-size: 13px;
     font-weight: normal;
 
     @include text-overflow;
@@ -199,7 +199,6 @@
 }
 
 i {
-  margin-right: 5px;
   .green & {
     color: $brand-success;
   }
@@ -386,9 +385,7 @@ li.monitoring-cell {
     }
 
     .badge {
-      width: 60px;
-
-      @include text-overflow;
+      min-width: rem-calc(60);
     }
 
     .align-center {
@@ -417,8 +414,8 @@ li.monitoring-cell {
       color: $gray-lighter;
     }
 
-    .label-managed {     
-      margin-left: 12px; 
+    .badge--managed {
+      margin-left: 12px;
     }
 
     .inactive {

@@ -15,6 +15,7 @@
 .bower-registry
 .e2e-fail-notify
 .oauth_token_metadata
+.vscode
 
 build
 coverage
@@ -28,7 +29,7 @@ node_modules
 npm-debug.log
 
 test/e2e-protractor/reports
-test/karma-unit.js
+test/karma-unit-*
 test/karma-watch.js
 test/unit-test-results.html
 test/unit-test-results.xml

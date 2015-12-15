@@ -1,17 +1,8 @@
 <div class="modal-header">
-  <div class="modal-title">
-    Software Upgrade
-  </div>
+  <div class="modal-title" translate="hercules.softwareUpgrade.softwareUpgrade"></div>
 </div>
-
 <div class="modal-body hercules-fix-paragraphs hercules-settings-table">
-
-  <p>
-    You are about to upgrade the software for the <span
-    translate="hercules.serviceNames.{{softwareUpgrade.serviceId}}"></span> on all
-    hosts in the selected Cisco Expressway Cluster:
-  </p>
-
+  <p translate="hercules.softwareUpgrade.explanation" translate-values="{serviceName: softwareUpgrade.serviceName}"></p>
   <table>
     <tbody>
     <tr>
@@ -23,16 +14,13 @@
       <td><span>{{softwareUpgrade.oldVersion}}</span></td>
     </tr>
     <tr>
-      <td translate="hercules.softwareUpgrade.newVersion">New Version</td>
+      <td translate="hercules.softwareUpgrade.newVersion"></td>
       <td><span>{{softwareUpgrade.newVersion}}</span></td>
     </tr>
     </tbody>
   </table>
-
 </div>
-
-
 <div class="modal-footer">
-  <button ng-click="softwareUpgrade.cancel()">{{'common.cancel' | translate}}</button>
-  <button class="btn btn--primary" ng-click="softwareUpgrade.ok()">{{'common.confirm' | translate}}</button>
+  <button ng-click="softwareUpgrade.cancel()" translate="common.cancel"></button>
+  <button class="btn btn--primary" ng-click="softwareUpgrade.ok()"translate="common.confirm"></button>
 </div>

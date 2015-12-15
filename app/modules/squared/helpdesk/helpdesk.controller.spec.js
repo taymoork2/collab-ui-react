@@ -25,6 +25,12 @@ describe('Controller: HelpdeskController', function () {
     };
   };
 
+  var expectToShowOnlyUserAndOrgsResult = function () {
+    expect(controller.showUsersResultPane()).toBeTruthy();
+    expect(controller.showOrgsResultPane()).toBeTruthy();
+    expect(controller.showDeviceResultPane()).toBeFalsy();
+  };
+
   var validSearchString = "bill gates";
   var lessThanThreeCharacterSearchString = "bi";
 
@@ -78,6 +84,7 @@ describe('Controller: HelpdeskController', function () {
     beforeEach(function () {
       sinon.stub(HelpdeskService, 'searchUsers');
       sinon.stub(HelpdeskService, 'searchOrgs');
+      sinon.stub(HelpdeskService, 'searchCloudberryDevices');
       sinon.stub(HelpdeskService, 'findAndResolveOrgsForUserResults');
 
       var deferredUserResult = q.defer();
@@ -88,6 +95,10 @@ describe('Controller: HelpdeskController', function () {
       deferredOrgsResult.resolve(orgSearchResult);
       HelpdeskService.searchOrgs.returns(deferredOrgsResult.promise);
 
+      var deferredDeviceResult = q.defer();
+      deferredDeviceResult.resolve([{}]);
+      HelpdeskService.searchCloudberryDevices.returns(deferredDeviceResult.promise);
+
       HelpdeskService.findAndResolveOrgsForUserResults.returns(deferredUserResult.promise);
 
       controller = $controller('HelpdeskController', {
@@ -96,13 +107,22 @@ describe('Controller: HelpdeskController', function () {
         $scope: $scope
       });
 
-      controller.setOrgFilter(null);
+      controller.initSearchWithoutOrgFilter();
 
     });
 
-    it('simple search with single hits', function () {
+    it('simple search with single hits shows search result for users and orgs', function () {
+
+      expect(controller.showUsersResultPane()).toBeFalsy();
+      expect(controller.showOrgsResultPane()).toBeFalsy();
+      expect(controller.showDeviceResultPane()).toBeFalsy();
+
+      expect(controller.searchingForUsers).toBeFalsy();
+      expect(controller.searchingForOrgs).toBeFalsy();
+
       controller.searchString = "bill gates";
       controller.search();
+
       expect(controller.searchingForUsers).toBeTruthy();
       expect(controller.searchingForOrgs).toBeTruthy();
       $scope.$apply();
@@ -110,18 +130,55 @@ describe('Controller: HelpdeskController', function () {
       expect(controller.searchingForOrgs).toBeFalsy();
       expect(controller.currentSearch.userSearchResults[0].displayName).toEqual("Bill Gates");
       expect(controller.currentSearch.orgSearchResults[0].displayName).toEqual("Bill Gates Foundation");
+
+      expectToShowOnlyUserAndOrgsResult();
     });
 
-    it('simple search with less than three characters gives search failure directly', function () {
+    it('only a search within org searches for devices and shows device result', function () {
+      controller.initSearchWithoutOrgFilter();
+      expect(controller.showDeviceResultPane()).toBeFalsy();
+      controller.searchString = "Whatever";
+      controller.search();
+      expect(controller.searchingForDevices).toBeFalsy();
+      expect(controller.showDeviceResultPane()).toBeFalsy();
+
+      $scope.$apply();
+      expect(controller.searchingForDevices).toBeFalsy();
+      expect(controller.showDeviceResultPane()).toBeFalsy();
+
+      controller.initSearchWithOrgFilter({
+        "id": "1276387"
+      });
+
+      expect(controller.showDeviceResultPane()).toBeFalsy();
+      controller.searchString = "Whatever";
+      controller.search();
+      expect(controller.searchingForDevices).toBeTruthy();
+      expect(controller.showDeviceResultPane()).toBeTruthy();
+
+      $scope.$apply();
+      expect(controller.searchingForDevices).toBeFalsy();
+      expect(controller.showDeviceResultPane()).toBeTruthy();
+      expect(controller.currentSearch.orgFilter.id).toEqual("1276387");
+    });
+
+    it('simple search with less than three characters shows search failure directly', function () {
       controller.searchString = lessThanThreeCharacterSearchString;
       controller.search();
       expect(controller.searchingForUsers).toBeFalsy();
       expect(controller.searchingForOrgs).toBeFalsy();
+
+      expect(controller.showUsersResultPane()).toBeTruthy();
+      expect(controller.showOrgsResultPane()).toBeTruthy();
+      expect(controller.showDeviceResultPane()).toBeFalsy();
+
       expect(controller.currentSearch.userSearchFailure).toEqual("helpdesk.badUserSearchInput");
       expect(controller.currentSearch.orgSearchFailure).toEqual("helpdesk.badOrgSearchInput");
+
+      expectToShowOnlyUserAndOrgsResult();
     });
 
-    it('multiple search results', function () {
+    it('multiple search results are shown', function () {
       userSearchResult.push(createUserMockData("bill.gate", "11ac8f0b-6cea-492d-875d-8edf159a844c"));
       userSearchResult.push(createUserMockData("bill.gator", "22ac8f0b-6cea-492d-875d-8edf159a844c"));
       userSearchResult.push(createUserMockData("bill.gattar", "33ac8f0b-6cea-492d-875d-8edf159a844c"));
@@ -129,7 +186,7 @@ describe('Controller: HelpdeskController', function () {
 
       orgSearchResult.push(createOrgMockData("Bill Gate Foundation", "11ac8f0b-6cea-492d-875d-8edf159a844c"));
       orgSearchResult.push(createOrgMockData("Bill Gator Foundation", "22ac8f0b-6cea-492d-875d-8edf159a844c"));
-      orgSearchResult.push(createOrgMockData("Bill Gat Helthcare", "66ac8f0b-6cea-492d-875d-8edf159a844c"));
+      orgSearchResult.push(createOrgMockData("Bill Gat Healthcare", "66ac8f0b-6cea-492d-875d-8edf159a844c"));
       controller.searchString = validSearchString;
       controller.search();
 
@@ -170,7 +227,7 @@ describe('Controller: HelpdeskController', function () {
       expect(controller.currentSearch.userSearchFailure).toEqual("helpdesk.badUserSearchInput");
       expect(controller.searchingForUsers).toBeFalsy();
       expect(controller.searchingForOrgs).toBeFalsy();
-
+      expectToShowOnlyUserAndOrgsResult();
     });
 
     it('error codes other that 400 gives unexpectedError message', function () {
@@ -198,7 +255,7 @@ describe('Controller: HelpdeskController', function () {
       expect(controller.currentSearch.userSearchFailure).toEqual("helpdesk.unexpectedError");
       expect(controller.searchingForUsers).toBeFalsy();
       expect(controller.searchingForOrgs).toBeFalsy();
-
+      expectToShowOnlyUserAndOrgsResult();
     });
 
   });

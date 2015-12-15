@@ -33,6 +33,7 @@
     return service;
 
     function setCountryCode(value) {
+      value = _.trimLeft(value, '+'); // remove the '+' sign if it exists
       if (value === '1' || value === 1) {
         // Default to US due to shared codes
         setRegionCode('us');

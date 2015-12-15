@@ -216,13 +216,73 @@
       "siteUrl": "mock2.webex.com"
     }],
     licenses: [{
+      "offerCode": "MS",
       "type": "MESSAGING",
       "name": "Messaging",
       "status": "ACTIVE",
       "volume": 100,
-      "isTrial": false,
-      "usage": 10
+      "isTrial": true,
+      "usage": 10,
+      "trialExpiresInDays": 200
     }, {
+      "offerCode": "MS",
+      "type": "MESSAGING",
+      "name": "Messaging",
+      "status": "SUSPENDED",
+      "volume": 1000,
+      "isTrial": true,
+      "usage": 300,
+      "trialExpiresInDays": 0
+    }, {
+      "offerCode": "MS",
+      "type": "MESSAGING",
+      "name": "Messaging",
+      "status": "ACTIVE",
+      "volume": 50,
+      "isTrial": true,
+      "usage": 10,
+      "trialExpiresInDays": 100
+    }, {
+      "offerCode": "MC",
+      "type": "CONFERENCING",
+      "name": "Meeting Center",
+      "status": "ACTIVE",
+      "volume": 150,
+      "isTrial": false,
+      "usage": 10,
+      "capacity": 25,
+      "siteUrl": "mock.webex.com"
+    }, {
+      "offerCode": "TC",
+      "type": "CONFERENCING",
+      "name": "Training Center",
+      "status": "ACTIVE",
+      "volume": 250,
+      "isTrial": false,
+      "usage": 250,
+      "capacity": 25,
+      "siteUrl": "mock.webex.com"
+    }, {
+      "offerCode": "TC",
+      "type": "CONFERENCING",
+      "name": "Training Center",
+      "status": "PENDING",
+      "volume": 1000,
+      "isTrial": false,
+      "usage": 250,
+      "capacity": 25,
+      "siteUrl": "mock.webex.com"
+    }, {
+      "offerCode": "CMR",
+      "type": "CONFERENCING",
+      "name": "Training Center",
+      "status": "ACTIVE",
+      "volume": 250,
+      "isTrial": false,
+      "usage": 250,
+      "siteUrl": "mock.webex.com"
+    }, {
+      "offerCode": "CF",
       "type": "CONFERENCING",
       "name": "Conferencing",
       "status": "ACTIVE",
@@ -230,18 +290,30 @@
       "isTrial": true,
       "trialExpiresInDays": 49
     }, {
+      "offerCode": "CO",
       "type": "COMMUNICATIONS",
       "name": "Communications",
       "status": "SUSPENDED",
       "volume": 1000,
       "trialExpiresInDays": 100,
+      "isTrial": true,
       "usage": "950"
     }, {
+      "offerCode": "SD",
       "type": "SHARED_DEVICES",
       "name": "Shared Devices",
       "status": "ACTIVE",
       "volume": 50,
-      "isTrial": false
+      "isTrial": false,
+      "usage": 40
+    }, {
+      "offerCode": "SD",
+      "type": "SHARED_DEVICES",
+      "name": "Shared Devices",
+      "status": "SUSPENDED",
+      "volume": 100,
+      "isTrial": false,
+      "usage": 0
     }],
     hybridServices: [{
       "id": "squared-fusion-mgmt",
@@ -258,7 +330,8 @@
     }, {
       "id": "squared-fusion-ec",
       "enabled": false
-    }]
+    }],
+    unlicenseduserscount: 50
   };
   angular.module('Squared').constant('HelpdeskMockData', mockData);
 }());

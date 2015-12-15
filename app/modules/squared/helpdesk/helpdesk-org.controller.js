@@ -2,7 +2,8 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsService, Config, $translate, LicenseService) {
+  function HelpdeskOrgController($stateParams, HelpdeskService, XhrNotificationService, HelpdeskCardsOrgService, Config,
+    $translate, LicenseService, HelpdeskHealthStatusService, $scope, $state) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.org) {
@@ -16,6 +17,7 @@
     vm.callCard = {};
     vm.hybridServicesCard = {};
     vm.roomSystemsCard = {};
+    vm.userCard = {};
     vm.healthStatuses = {
       message: 'unknown',
       meeting: 'unknown',
@@ -23,16 +25,20 @@
       room: 'unknown',
       hybrid: 'unknown'
     };
-    vm.statusPageUrl = Config.getStatusPageUrl();
     vm.initialAdminUserLimit = 3;
     vm.adminUserLimit = vm.initialAdminUserLimit;
+    vm.licenseUsageReady = false;
+    vm.showLicenseToggles = [];
+    vm.statusPageUrl = Config.getStatusPageUrl();
     vm.showAllAdminUsers = showAllAdminUsers;
     vm.hideAllAdminUsers = hideAllAdminUsers;
+    vm.keyPressHandler = keyPressHandler;
     vm.daysLeftText = daysLeftText;
-    vm.licenseUsageReady = false;
+    vm.gotoSearchUsersAndDevices = gotoSearchUsersAndDevices;
+    vm.usageText = usageText;
 
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
-    HelpdeskCardsService.getHealthStatuses().then(initHealth, angular.noop);
+    HelpdeskHealthStatusService.getHealthStatuses().then(initHealth, angular.noop);
 
     function initOrgView(org) {
       vm.org = org;
@@ -48,14 +54,16 @@
       findManagedByOrgs(org);
       findWebExSites(org);
       findAdminUsers(org);
+      angular.element(".helpdesk-details").focus();
     }
 
     function initCards(licenses) {
-      vm.messageCard = HelpdeskCardsService.getMessageCardForOrg(vm.org, licenses);
-      vm.meetingCard = HelpdeskCardsService.getMeetingCardForOrg(vm.org, licenses);
-      vm.callCard = HelpdeskCardsService.getCallCardForOrg(vm.org, licenses);
-      vm.hybridServicesCard = HelpdeskCardsService.getHybridServicesCardForOrg(vm.org);
-      vm.roomSystemsCard = HelpdeskCardsService.getRoomSystemsCardForOrg(vm.org, licenses);
+      vm.messageCard = HelpdeskCardsOrgService.getMessageCardForOrg(vm.org, licenses);
+      vm.meetingCard = HelpdeskCardsOrgService.getMeetingCardForOrg(vm.org, licenses);
+      vm.callCard = HelpdeskCardsOrgService.getCallCardForOrg(vm.org, licenses);
+      vm.hybridServicesCard = HelpdeskCardsOrgService.getHybridServicesCardForOrg(vm.org);
+      vm.roomSystemsCard = HelpdeskCardsOrgService.getRoomSystemsCardForOrg(vm.org, licenses);
+      vm.userCard = HelpdeskCardsOrgService.getUserCardForOrg(vm.org);
     }
 
     function initHealth(healthStatuses) {
@@ -98,7 +106,11 @@
     function findLicenseUsage() {
       if (vm.orgId != Config.ciscoOrgId) {
         LicenseService.getLicensesInOrg(vm.orgId, true).then(function (licenses) {
-          initCards(licenses);
+          // Update the relevant cards with licenses that  includes usage
+          vm.messageCard = HelpdeskCardsOrgService.getMessageCardForOrg(vm.org, licenses);
+          vm.meetingCard = HelpdeskCardsOrgService.getMeetingCardForOrg(vm.org, licenses);
+          vm.callCard = HelpdeskCardsOrgService.getCallCardForOrg(vm.org, licenses);
+          vm.roomSystemsCard = HelpdeskCardsOrgService.getRoomSystemsCardForOrg(vm.org, licenses);
           vm.licenseUsageReady = true;
         }, XhrNotificationService.notify);
       }
@@ -112,10 +124,33 @@
       vm.adminUserLimit = vm.initialAdminUserLimit;
     }
 
+    function keyPressHandler(event) {
+      switch (event.keyCode) {
+      case 27: // Esc
+        window.history.back();
+        break;
+      case 83: // S
+        gotoSearchUsersAndDevices();
+        break;
+      }
+    }
+
     function daysLeftText(license) {
       return $translate.instant('helpdesk.numDaysLeft', {
         days: license.trialExpiresInDays
       });
+    }
+
+    function usageText(usage, volume) {
+      return $translate.instant('helpdesk.usage', {
+        usage: usage,
+        volume: volume
+      });
+    }
+
+    function gotoSearchUsersAndDevices() {
+      $scope.$parent.helpdeskCtrl.initSearchWithOrgFilter(vm.org);
+      $state.go('helpdesk.search');
     }
   }
 

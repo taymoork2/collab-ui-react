@@ -1,6 +1,9 @@
-.management-service-list,
-.calendar-service-list,
-.call-service-list {
+.management-service-list-state,
+.call-service-list-state,
+.calendar-service-list-state {
+  @extend %page-background-white;
+}
+.expressway-service {
   @extend %grid-subheader;
   @extend %page-background-white;
 }
@@ -159,5 +162,12 @@ Special stuff currently used for out own mail input field...
         border-top: transparent;
       }
     }
+  }
+}
+
+.feature-list {
+  .status-icon {
+    margin-right: 10px;
+    line-height: $feature-line-height;
   }
 }

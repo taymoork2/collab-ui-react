@@ -1,0 +1,135 @@
+{
+  "avgRooms": {
+    "type": "avgConversations",
+    "spanCount": 1,
+    "spanType": "day",
+    "intervalCount": 7,
+    "intervalType": "day",
+    "data": [{
+      "date": "2015-12-03T00:00:00.000Z",
+      "count": 0.0
+    }, {
+      "date": "2015-12-04T00:00:00.000Z",
+      "count": 0.0
+    }, {
+      "date": "2015-12-05T00:00:00.000Z",
+      "count": 0.0
+    }, {
+      "date": "2015-12-06T00:00:00.000Z",
+      "count": 0.0
+    }, {
+      "date": "2015-12-07T00:00:00.000Z",
+      "count": 0.0
+    }, {
+      "date": "2015-12-08T00:00:00.000Z",
+      "count": 1.1457286
+    }, {
+      "date": "2015-12-09T00:00:00.000Z",
+      "count": 0.0
+    }],
+    "date": "2015-12-10T17:52:47.416Z"
+  },
+  "groupRooms": {
+    "type": "conversations",
+    "spanCount": 1,
+    "spanType": "day",
+    "intervalCount": 7,
+    "intervalType": "day",
+    "data": [{
+      "date": "2015-12-03T00:00:00.000Z",
+      "count": 0.0
+    }, {
+      "date": "2015-12-04T00:00:00.000Z",
+      "count": 0.0
+    }, {
+      "date": "2015-12-05T00:00:00.000Z",
+      "count": 0.0
+    }, {
+      "date": "2015-12-06T00:00:00.000Z",
+      "count": 0.0
+    }, {
+      "date": "2015-12-07T00:00:00.000Z",
+      "count": 0.0
+    }, {
+      "date": "2015-12-08T00:00:00.000Z",
+      "count": 394.0
+    }, {
+      "date": "2015-12-09T00:00:00.000Z",
+      "count": 0.0
+    }],
+    "date": "2015-12-10T17:52:47.411Z"
+  },
+  "oneTwoOneRooms": {
+    "type": "convOneOnOne",
+    "spanCount": 1,
+    "spanType": "day",
+    "intervalCount": 7,
+    "intervalType": "day",
+    "data": [{
+      "date": "2015-12-03T00:00:00.000Z",
+      "count": 0.0
+    }, {
+      "date": "2015-12-04T00:00:00.000Z",
+      "count": 0.0
+    }, {
+      "date": "2015-12-05T00:00:00.000Z",
+      "count": 0.0
+    }, {
+      "date": "2015-12-06T00:00:00.000Z",
+      "count": 0.0
+    }, {
+      "date": "2015-12-07T00:00:00.000Z",
+      "count": 0.0
+    }, {
+      "date": "2015-12-08T00:00:00.000Z",
+      "count": 0.0
+    }, {
+      "date": "2015-12-09T00:00:00.000Z",
+      "count": 0.0
+    }],
+    "date": "2015-12-10T17:52:47.411Z"
+  },
+  "response": [{
+    "modifiedDate": "Dec 03",
+    "balloon": true,
+    "groupRooms": 0,
+    "oneToOneRooms": 0,
+    "avgRooms": "0.00"
+  }, {
+    "modifiedDate": "Dec 04",
+    "balloon": true,
+    "groupRooms": 0,
+    "oneToOneRooms": 0,
+    "avgRooms": "0.00"
+  }, {
+    "modifiedDate": "Dec 05",
+    "balloon": true,
+    "groupRooms": 0,
+    "oneToOneRooms": 0,
+    "avgRooms": "0.00"
+  }, {
+    "modifiedDate": "Dec 06",
+    "balloon": true,
+    "groupRooms": 0,
+    "oneToOneRooms": 0,
+    "avgRooms": "0.00"
+  }, {
+    "modifiedDate": "Dec 07",
+    "balloon": true,
+    "groupRooms": 0,
+    "oneToOneRooms": 0,
+    "avgRooms": "0.00"
+  }, {
+    "modifiedDate": "Dec 08",
+    "balloon": true,
+    "groupRooms": 394,
+    "oneToOneRooms": 0,
+    "avgRooms": "1.15"
+  }, {
+    "modifiedDate": "Dec 09",
+    "balloon": true,
+    "groupRooms": 0,
+    "oneToOneRooms": 0,
+    "avgRooms": "0.00"
+  }]
+}

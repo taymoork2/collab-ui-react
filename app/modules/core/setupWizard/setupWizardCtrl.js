@@ -4,7 +4,8 @@ angular.module('Core')
   .controller('SetupWizardCtrl', ['$scope', 'Authinfo', '$q', 'FeatureToggleService',
     function ($scope, Authinfo, $q, FeatureToggleService) {
 
-      $scope.tabs = [{
+      $scope.tabs = [];
+      var tabs = [{
         name: 'planReview',
         label: 'firstTimeWizard.planReview',
         description: 'firstTimeWizard.planReviewSub',
@@ -49,6 +50,7 @@ angular.module('Core')
       }, {
         name: 'addUsers',
         label: 'firstTimeWizard.addUsers',
+        description: 'firstTimeWizard.addUsersSubDescription',
         icon: 'icon-add-users',
         title: 'firstTimeWizard.addUsers',
         controller: 'AddUserCtrl',
@@ -77,19 +79,22 @@ angular.module('Core')
       $scope.addClaimSipUrl = false;
       $scope.csvUploadSupport = false;
 
-      $q.all([FeatureToggleService.supportsDirSync(),
-          FeatureToggleService.supports(FeatureToggleService.features.atlasSipUriDomain),
-          FeatureToggleService.supportsCsvUpload(),
-        ])
-        .then(function (results) {
-          $scope.isDirSyncEnabled = results[0];
-          $scope.addClaimSipUrl = results[1];
-          $scope.csvUploadSupport = results[2];
-        }).finally(function () {
-          init();
-        });
+      if (Authinfo.isCustomerAdmin()) {
+        $q.all([FeatureToggleService.supportsDirSync(),
+            FeatureToggleService.supports(FeatureToggleService.features.atlasSipUriDomain),
+            FeatureToggleService.supportsCsvUpload(),
+          ])
+          .then(function (results) {
+            $scope.isDirSyncEnabled = results[0];
+            $scope.addClaimSipUrl = results[1];
+            $scope.csvUploadSupport = results[2];
+          }).finally(function () {
+            init();
+          });
+      }
 
       function init() {
+        $scope.tabs = tabs;
         setupAddUserSubTabs();
 
         if (Authinfo.isSquaredUC()) {
@@ -188,6 +193,37 @@ angular.module('Core')
             }]
           };
           userTab.subTabs.splice(0, 0, simpleSubTab);
+
+          if ($scope.csvUploadSupport) {
+            var csvSubTab = {
+              name: 'csv',
+              title: 'firstTimeWizard.uploadStep',
+              controller: 'OnboardCtrl',
+              steps: [{
+                name: 'init',
+                template: 'modules/core/setupWizard/addUsers.init.tpl.html'
+              }, {
+                name: 'csvUpload',
+                template: 'modules/core/setupWizard/addUsers.uploadCsv.tpl.html',
+                title: 'firstTimeWizard.uploadStep'
+              }, {
+                name: 'csvServices',
+                template: 'modules/core/setupWizard/addUsers.assignServices.tpl.html',
+                title: 'firstTimeWizard.assignServicesStep'
+              }, {
+                name: 'csvProcessing',
+                template: 'modules/core/setupWizard/addUsers.processCsv.tpl.html',
+                title: 'firstTimeWizard.processCsvStep',
+                buttons: false
+              }, {
+                name: 'csvResult',
+                template: 'modules/core/setupWizard/addUsers.uploadResult.tpl.html',
+                title: 'firstTimeWizard.uploadResultStep',
+                buttons: 'modules/core/setupWizard/addUsers.csvResultButtons.tpl.html'
+              }]
+            };
+            userTab.subTabs.splice(1, 0, csvSubTab);
+          }
         } else {
           var advancedSubTab = _.findWhere(userTab.subTabs, {
             name: 'advanced'
@@ -210,36 +246,6 @@ angular.module('Core')
           advancedSubTab.steps = advancedSubTab.steps.concat(advancedSubTabSteps);
         }
 
-        if ($scope.csvUploadSupport) {
-          var csvSubTab = {
-            name: 'csv',
-            title: 'firstTimeWizard.uploadStep',
-            controller: 'OnboardCtrl',
-            steps: [{
-              name: 'init',
-              template: 'modules/core/setupWizard/addUsers.init.tpl.html'
-            }, {
-              name: 'csvUpload',
-              template: 'modules/core/setupWizard/addUsers.uploadCsv.tpl.html',
-              title: 'firstTimeWizard.uploadStep'
-            }, {
-              name: 'csvServices',
-              template: 'modules/core/setupWizard/addUsers.assignServices.tpl.html',
-              title: 'firstTimeWizard.assignServicesStep'
-            }, {
-              name: 'csvProcessing',
-              template: 'modules/core/setupWizard/addUsers.processCsv.tpl.html',
-              title: 'firstTimeWizard.processCsvStep',
-              buttons: false
-            }, {
-              name: 'csvResult',
-              template: 'modules/core/setupWizard/addUsers.uploadResult.tpl.html',
-              title: 'firstTimeWizard.uploadResultStep',
-              buttons: 'modules/core/setupWizard/addUsers.csvResultButtons.tpl.html'
-            }]
-          };
-          userTab.subTabs.splice(1, 0, csvSubTab);
-        }
       }
     }
   ]);

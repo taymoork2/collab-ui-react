@@ -1,31 +1,29 @@
-
-<div ng-if="showSpinner">
-  <div align="center">
-    <i class="icon icon-spinner icon-2x"></i>
-  </div>
-
-  <iframe class="iframeContainer"
-          i-frame-resizable 
-		      ng-style="{'width': '100%', 'height': iframeHeight }"
-		      name="webexIframeContainer"
-          id="webexIframeContainer"
-          frameborder="0"
-          title="{{siteSettingLabel}}">
-  </iframe>
+<div ng-if="!isIframeLoaded"
+     id="webexIframeLoading"
+     name="webexIframeLoading"
+     align="center">
+     
+  <br>
+  <i class="icon icon-spinner icon-2x"></i>
 </div>
+    
+<div ng-show="isIframeLoaded"
+     id="iframeContainer"
+     name="iframeContainer">
 
-<div ng-if="!showSpinner">
-  <iframe i-frame-resizable 
-          ng-style="{'width': '100%', 'height': iframeHeight }"
+  <iframe id="webexIframeContainer"
           name="webexIframeContainer"
-          id="webexIframeContainer"
+          onLoad="iframeLoaded('#webexIframeContainer')"
+          i-frame-resizable="iframeContainer"
+          ng-style="{'width': '100%', 'height': iframeHeight }"
           frameborder="0"
-          title="{{siteSettingLabel}}">
+          title="{{siteSettingLabel}}"
+          >
   </iframe>
 </div>
 
-<form name="iframeForm"
-      id="iframeForm"
+<form id="iframeForm"
+      name="iframeForm"
       action={{trustIframeUrl}}
       method="post"
       target="webexIframeContainer">
@@ -57,7 +55,7 @@
   
   <button id="submitFormBtn"
           type="submit"
-          style="background-color:#ff00ff;cursor:pointer;width:100px;display:none;"
+          hidden
           onclick="this.parentElement.submit();">
   </button>
 </form>

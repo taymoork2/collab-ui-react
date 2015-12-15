@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskUserController($stateParams, HelpdeskService, XhrNotificationService, USSService2, HelpdeskCardsService) {
+  function HelpdeskUserController($stateParams, HelpdeskService, XhrNotificationService, USSService2, HelpdeskCardsUserService, Config) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.user) {
@@ -23,6 +23,8 @@
     vm.meetingCard = {};
     vm.callCard = {};
     vm.hybridServicesCard = {};
+    vm.keyPressHandler = keyPressHandler;
+    vm.sendCode = sendCode;
 
     HelpdeskService.getUser(vm.orgId, vm.userId).then(initUserView, XhrNotificationService.notify);
 
@@ -30,13 +32,20 @@
       HelpdeskService.resendInviteEmail(vm.user.displayName, vm.user.userName).then(angular.noop, XhrNotificationService.notify);
     }
 
+    function sendCode() {
+      HelpdeskService.sendVerificationCode(vm.user.displayName, vm.user.userName).then(function (code) {
+        vm.verificationCode = code;
+        vm.sendingVerificationCode = false;
+      }, XhrNotificationService.notify);
+    }
+
     function initUserView(user) {
       vm.user = user;
       vm.resendInviteEnabled = _.includes(user.statuses, 'helpdesk.userStatuses.pending');
-      vm.messageCard = HelpdeskCardsService.getMessageCardForUser(user);
-      vm.meetingCard = HelpdeskCardsService.getMeetingCardForUser(user);
-      vm.callCard = HelpdeskCardsService.getCallCardForUser(user);
-      vm.hybridServicesCard = HelpdeskCardsService.getHybridServicesCardForUser(user);
+      vm.messageCard = HelpdeskCardsUserService.getMessageCardForUser(user);
+      vm.meetingCard = HelpdeskCardsUserService.getMeetingCardForUser(user);
+      vm.callCard = HelpdeskCardsUserService.getCallCardForUser(user);
+      vm.hybridServicesCard = HelpdeskCardsUserService.getHybridServicesCardForUser(user);
 
       if (vm.hybridServicesCard.entitled) {
         USSService2.getStatusesForUserInOrg(vm.userId, vm.orgId).then(function (statuses) {
@@ -57,12 +66,20 @@
         }, XhrNotificationService.notify);
       }
 
-      if (!vm.org.displayName) {
+      if (!vm.org.displayName && vm.org.id !== Config.consumerOrgId) {
         // Only if there is no displayName. If set, the org name has already been read (on the search page)
         HelpdeskService.getOrgDisplayName(vm.orgId).then(function (displayName) {
           vm.org.displayName = displayName;
         }, XhrNotificationService.notify);
       }
+
+      angular.element(".helpdesk-details").focus();
+    }
+  }
+
+  function keyPressHandler(event) {
+    if (event.keyCode === 27) { // Esc
+      window.history.back();
     }
   }
 
