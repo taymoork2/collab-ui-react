@@ -112,7 +112,7 @@
       return formattedResources;
     }
 
-    // Format AA resources based on entries in CMI
+    // Format AA resources based on entries in CMI external number list
     function formatAAResourcesBasedOnCMI(resources) {
 
       return ExternalNumberPoolService.query({
@@ -220,13 +220,11 @@
               function (response) {
                 // successfully saved with the added one, add to working
                 restOfListResponse.workingResources.push(myResource);
-                // and return the successful response we got with the additional element
                 return restOfListResponse;
               },
               function (response) {
                 // failed to save with the added one, add to failed
                 restOfListResponse.failedResources.push(myResource);
-                // and return the response we had without the additional element
                 return restOfListResponse;
               });
 
