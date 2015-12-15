@@ -3,9 +3,7 @@
 describe('Partner Service', function () {
   beforeEach(module('Core'));
 
-  beforeEach(module('Huron'));
-
-  var $httpBackend, $rootScope, $q, PartnerService, Authinfo, Config, FeatureToggleService;
+  var $httpBackend, $rootScope, PartnerService, Authinfo, Config;
 
   var testData;
 
@@ -21,18 +19,14 @@ describe('Partner Service', function () {
     });
   });
 
-  beforeEach(inject(function (_$httpBackend_, _$rootScope_, _$q_, _PartnerService_, _Config_, _Authinfo_, _FeatureToggleService_) {
+  beforeEach(inject(function (_$httpBackend_, _$rootScope_, _PartnerService_, _Config_, _Authinfo_) {
     $httpBackend = _$httpBackend_;
     PartnerService = _PartnerService_;
     Config = _Config_;
     Authinfo = _Authinfo_;
     $rootScope = _$rootScope_;
-    $q = _$q_;
-    FeatureToggleService = _FeatureToggleService_;
 
     testData = getJSONFixture('core/json/partner/partner.service.json');
-
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
   }));
 
   afterEach(function () {
