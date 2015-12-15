@@ -12,7 +12,8 @@
       'fillAlphas': 1,
       'lineAlpha': 0,
       'balloonColor': Config.chartColors.grayLight,
-      'columnWidth': 0.6
+      'columnWidth': 0.6,
+      'fontSize': 14,
     };
     var axis = {
       'axisColor': Config.chartColors.grayLight,
@@ -54,9 +55,13 @@
     var avgRoomsdiv = 'avgRoomsdiv';
     var avgRoomsBalloon = '<span class="graph-text">' + $translate.instant('avgRooms.group') + ': [[groupRooms]]<br>' + $translate.instant('avgRooms.oneToOne') + ': [[oneToOneRooms]]<br>' + $translate.instant('avgRooms.avgTotal') + ': [[avgRooms]]%</span>';
 
+    // variables for the files shared section
+    var filesSharedDiv = 'filesSharedDiv';
+
     return {
       setActiveUsersGraph: setActiveUsersGraph,
-      setAvgRoomsGraph: setAvgRoomsGraph
+      setAvgRoomsGraph: setAvgRoomsGraph,
+      setFilesSharedGraph: setFilesSharedGraph
     };
 
     function createGraph(data, div, graphs, valueAxes, catAxis, categoryField, legend, numFormat, startDuration) {
@@ -238,7 +243,6 @@
         graphs[i].fillColors = colors[i];
         graphs[i].colorField = colors[i];
         graphs[i].valueField = values[i];
-        graphs[i].fontSize = 14;
         graphs[i].legendColor = colors[i];
         graphs[i].showBalloon = data[0].balloon;
         graphs[i].balloonText = avgRoomsBalloon;
@@ -248,6 +252,62 @@
       }
 
       return graphs;
+    }
+
+    function setFilesSharedGraph(data, filesSharedChart) {
+      if (data === null || data === 'undefined' || data.length === 0) {
+        return;
+      } else if (filesSharedChart !== null && angular.isDefined(filesSharedChart)) {
+        var startDuration = 1;
+        if (data[0].color !== undefined && data[0].color !== null) {
+          startDuration = 0;
+        }
+
+        filesSharedChart.dataProvider = data;
+        filesSharedChart.graphs = filesSharedGraphs(data);
+        filesSharedChart.startDuration = startDuration;
+        filesSharedChart.validateData();
+      } else {
+        filesSharedChart = createFilesSharedGraph(data);
+      }
+      return filesSharedChart;
+    }
+
+    function createFilesSharedGraph(data) {
+      if (data.length === 0) {
+        return;
+      }
+
+      var graphs = filesSharedGraphs(data);
+      var catAxis = angular.copy(axis);
+      catAxis.gridPosition = 'start';
+
+      var valueAxes = [angular.copy(axis)];
+      valueAxes[0].totalColor = Config.chartColors.brandWhite;
+      valueAxes[0].stackType = 'regular';
+      valueAxes[0].integersOnly = true;
+      valueAxes[0].minimum = 0;
+
+      var startDuration = 1;
+      if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
+        startDuration = 0;
+      }
+
+      var numFormat = angular.copy(numFormatBase);
+      return createGraph(data, filesSharedDiv, graphs, valueAxes, catAxis, 'modifiedDate', angular.copy(legendBase), numFormat, startDuration);
+    }
+
+    function filesSharedGraphs(data) {
+      var graph = angular.copy(columnBase);
+      graph.title = $translate.instant('filesShared.contentShared');
+      graph.fillColors = data[0].color;
+      graph.colorField = data[0].color;
+      graph.valueField = 'contentShared';
+      graph.legendColor = data[0].color;
+      graph.showBalloon = data[0].balloon;
+      graph.balloonText = "filler balloon";
+
+      return [graph];
     }
   }
 })();

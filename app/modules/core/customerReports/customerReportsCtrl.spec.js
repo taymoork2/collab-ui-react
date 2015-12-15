@@ -10,6 +10,8 @@ describe('Controller: Customer Reports Ctrl', function () {
 
   var dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
   var roomData = getJSONFixture('core/json/customerReports/roomData.json');
+  var fileData = getJSONFixture('core/json/customerReports/fileData.json');
+
   var headerTabs = [{
     title: 'reportsPage.sparkReports',
     state: 'devReports'
@@ -47,15 +49,19 @@ describe('Controller: Customer Reports Ctrl', function () {
       spyOn(CustomerGraphService, 'setActiveUsersGraph').and.returnValue({
         'dataProvider': dummyData.activeUser.one
       });
-
       spyOn(CustomerGraphService, 'setAvgRoomsGraph').and.returnValue({
         'dataProvider': roomData.response
       });
+      spyOn(CustomerGraphService, 'setFilesSharedGraph').and.returnValue({
+        'dataProvider': fileData.response
+      });
 
       spyOn(DummyCustomerReportService, 'dummyActiveUserData').and.returnValue(dummyData.activeUser.one);
-      spyOn(DummyCustomerReportService, 'dummyAvgRoomData').and.returnValue(roomData.response);
+      spyOn(DummyCustomerReportService, 'dummyAvgRoomData').and.returnValue(dummyData.avgRooms.one);
+      spyOn(DummyCustomerReportService, 'dummyFilesSharedData').and.returnValue(dummyData.filesShared.one);
 
       spyOn(CustomerReportService, 'getAvgRoomData').and.returnValue($q.when(roomData.response));
+      spyOn(CustomerReportService, 'getFilesSharedData').and.returnValue($q.when(fileData.response));
       spyOn(CustomerReportService, 'getActiveUserData').and.returnValue($q.when({
         activeUserGraph: [],
         mostActiveUserData: []
@@ -149,7 +155,7 @@ describe('Controller: Customer Reports Ctrl', function () {
         expect(controller.activeUserDescription).toEqual('activeUsers.customerPortalDescription');
         expect(controller.mostActiveTitle).toEqual('activeUsers.mostActiveUsers');
         expect(controller.activeUserStatus).toEqual(REFRESH);
-        expect(controller.displayMostActive).toBeTruthy();
+        expect(controller.displayMostActive).toBeFalsy();
         expect(controller.mostActiveUsers).toEqual([]);
         expect(controller.activeUserReverse).toBeTruthy();
         expect(controller.activeUsersTotalPages).toEqual(0);

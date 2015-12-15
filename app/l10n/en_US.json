@@ -388,6 +388,14 @@
     "oneToOne": "Total 1:1 Rooms",
     "avgTotal": "Avg Rooms per User"
   },
+  "filesShared": {
+    "filesShared": "Files Shared",
+    "filesSharedDescription": "The graph depicts the number of files and gigabytes shared during the {{time}}.",
+    "contentSharedError": "There was an error while loading the data for the Files Shared.",
+    "contentShareSizesDataError": "There was an error while loading the data for the File Sizes Shared.",
+    "contentShared": "Files Shared",
+    "fileSizes": "Gigabytes Shared"
+  },
   "mediaQuality": {
     "mediaQuality": "Device Media Quality",
     "totalCalls": "Total Minutes",

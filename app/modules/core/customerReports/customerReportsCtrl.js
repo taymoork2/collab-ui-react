@@ -18,10 +18,11 @@
 
     var activeUsersSort = ['userName', 'numCalls', 'totalActivity'];
     var activeUsersChart = null;
+    var activeUserCard = null;
     vm.activeUserDescription = "";
     vm.mostActiveTitle = "";
     vm.activeUserStatus = REFRESH;
-    vm.displayMostActive = true;
+    vm.displayMostActive = false;
     vm.mostActiveUsers = [];
     vm.activeUserReverse = true;
     vm.activeUsersTotalPages = 0;
@@ -30,8 +31,14 @@
     vm.activeButton = [1, 2, 3];
 
     var avgRoomsChart = null;
+    var avgRoomsCard = null;
     vm.avgRoomsDescription = "";
     vm.avgRoomStatus = REFRESH;
+
+    var filesSharedChart = null;
+    var filesSharedCard = null;
+    vm.filesSharedDescription = '';
+    vm.filesSharedStatus = REFRESH;
 
     vm.headerTabs = [{
       title: $translate.instant('reportsPage.sparkReports'),
@@ -54,6 +61,7 @@
     vm.timeSelected = vm.timeOptions[0];
 
     vm.timeUpdate = timeUpdate;
+    vm.mostActiveUserSwitch = mostActiveUserSwitch;
 
     vm.isRefresh = function (tab) {
       return tab === REFRESH;
@@ -113,7 +121,32 @@
 
         setActiveUserData();
         setAvgRoomData();
+        setFilesSharedData();
       }, 30);
+    }
+
+    function resizeCards() {
+      setTimeout(function () {
+        $('.cs-card-layout').masonry('layout');
+      }, 300);
+    }
+
+    function mostActiveUserSwitch() {
+      vm.showMostActiveUsers = !vm.showMostActiveUsers;
+      resetCards();
+    }
+
+    function resetCards() {
+      var engagementElems = [activeUserCard, avgRoomsCard, filesSharedCard];
+      var qualityElems = [];
+
+      // $('.cs-card-layout').masonry('remove', engagementElems);
+      // $('.cs-card-layout').masonry('remove', qualityElems);
+      // resizeCards();
+
+      // $('.cs-card-layout').append(engagementElems).masonry('appended', engagementElems);
+      // $('.cs-card-layout').append(qualityElems).masonry('appended', qualityElems);
+      resizeCards();
     }
 
     function setFilterBasedText() {
@@ -126,6 +159,10 @@
       });
 
       vm.avgRoomsDescription = $translate.instant("avgRooms.avgRoomsDescription", {
+        time: vm.timeSelected.description
+      });
+
+      vm.filesSharedDescription = $translate.instant("filesShared.filesSharedDescription", {
         time: vm.timeSelected.description
       });
     }
@@ -142,17 +179,25 @@
       if (tempAvgRoomsChart !== null && angular.isDefined(tempAvgRoomsChart)) {
         avgRoomsChart = tempAvgRoomsChart;
       }
+
+      var filesSharedData = DummyCustomerReportService.dummyFilesSharedData(vm.timeSelected);
+      var tempFilesSharedChart = CustomerGraphService.setFilesSharedGraph(filesSharedData, filesSharedChart);
+      if (tempFilesSharedChart !== null && angular.isDefined(tempFilesSharedChart)) {
+        filesSharedChart = tempFilesSharedChart;
+      }
     }
 
     function timeUpdate() {
       vm.activeUserStatus = REFRESH;
       vm.avgRoomStatus = REFRESH;
+      vm.filesSharedStatus = REFRESH;
 
       setFilterBasedText();
       setDummyData();
 
       setActiveUserData();
       setAvgRoomData();
+      setFilesSharedData();
     }
 
     function setActiveUserData() {
@@ -163,8 +208,14 @@
           vm.activeUserStatus = EMPTY;
         } else {
           // TODO: add data handling to update the active user graph and table with the data in response
+          var tempActiveUserChart = CustomerGraphService.setActiveUsersGraph(response.activeUserGraph, activeUsersChart);
+          if (tempActiveUserChart !== null && angular.isDefined(tempActiveUserChart)) {
+            activeUsersChart = tempActiveUserChart;
+          }
+
           vm.activeUserStatus = SET;
         }
+        activeUserCard = document.getElementById('active-user-card');
       });
     }
 
@@ -181,6 +232,24 @@
           }
           vm.avgRoomStatus = SET;
         }
+        avgRoomsCard = document.getElementById('avg-room-card');
+      });
+    }
+
+    function setFilesSharedData() {
+      CustomerReportService.getFilesSharedData(vm.timeSelected).then(function (response) {
+        if (response === ABORT) {
+          return;
+        } else if (response.length === 0) {
+          vm.filesSharedStatus = EMPTY;
+        } else {
+          var tempFilesSharedChart = CustomerGraphService.setAvgRoomsGraph(response, filesSharedChart);
+          if (tempFilesSharedChart !== null && angular.isDefined(tempFilesSharedChart)) {
+            filesSharedChart = tempFilesSharedChart;
+          }
+          vm.filesSharedStatus = SET;
+        }
+        filesSharedCard = document.getElementById('files-shared-card');
       });
     }
 
