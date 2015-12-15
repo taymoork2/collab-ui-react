@@ -30,7 +30,7 @@
 </a>
 </span>
 </footer>
-<section class="card-menu ng-isolate-scope" ng-class="{ open: cm.menuOpen === true }" menutitle="card.name">
+<section ng-if="card.enabled" class="card-menu ng-isolate-scope" ng-class="{ open: cm.menuOpen === true }" menutitle="card.name">
   <div class="card-menu-heading">
     <span class="ng-binding">SETTINGS</span>
     <button type="button" class="close" ng-click="cm.toggleSettings(); cm.menuOpen = false;"><span class="sr-only">Close</span>
@@ -60,10 +60,10 @@
     </ul>
   </div>
 </section>
-<section ng-if="!card.enabled">
+<section ng-if="!card.enabled" class="disabled-section">
   <span>{{(card.notEnabledText || 'overview.notEnabledText') | translate}}</span>
   <a ng-href="card.notEnabledAction" ng-if="card.notEnabledAction">{{card.notEnabledActionText | translate}}</a>
 </section>
-<footer ng-if="!card.enabled && card.notEnabledFooter">
+<footer ng-if="!card.enabled"><!-- && card.notEnabledFooter">-->
   <span>{{card.notEnabledFooter | translate}}</span>
 </footer>
