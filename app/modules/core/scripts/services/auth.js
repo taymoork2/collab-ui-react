@@ -106,6 +106,9 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
 
             var isMsgrOrg = _.has(msgrResponse, 'data.orgName') && _.has(msgrResponse, 'data.orgID');
             if (isMsgrOrg) {
+              
+              Log.debug('This Org is migrated from Messenger, add webex-messenger service to Auth data');
+
               // Better get from CI or backend, hard code now since it's workaround and content is stable
               var msgr_service = {
                 "serviceId": "jabberMessenger",

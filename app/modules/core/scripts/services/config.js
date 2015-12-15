@@ -438,7 +438,8 @@ angular.module('Core')
           mediafusion: 'squared-fusion-media',
           fusion_mgmt: 'squared-fusion-mgmt',
           device_mgmt: 'spark-device-mgmt',
-          fusion_ec: 'squared-fusion-ec'
+          fusion_ec: 'squared-fusion-ec',
+          messenger: 'webex-messenger'
         },
 
         trials: {

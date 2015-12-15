@@ -228,14 +228,26 @@
     }
 
     function isMessengerSyncEnabled() {
+   
       var defer = $q.defer();
 
-      getSyncStatus()
-        .then(function () {
-          defer.resolve(isMessengerSyncRaw() && isSyncEnabledRaw());
-        }, function (errorObj) {
-          defer.reject(errorObj.message);
+      // This function is called by core/wizard about inviting users w/o checking entitlement
+      // Will check webex-messenger here to prevent unnecessary call to msgr admin service.      
+      if (!Authinfo.isEntitled(Config.entitlements.messenger))  
+      {
+        Log.info('isMessengerSyncEnabled: The Org is not Messenger migrated one, return false.'); 
+        defer.resolve(false);
+      }
+      else {
+        Log.info('isMessengerSyncEnabled: The Org is Messenger migrated one, call Messenger admin service to check');
+
+        getSyncStatus()
+          .then(function () {
+            defer.resolve(isMessengerSyncRaw() && isSyncEnabledRaw());
+          }, function (errorObj) {
+            defer.reject(errorObj.message);
         });
+      }
 
       return defer.promise;
     }
