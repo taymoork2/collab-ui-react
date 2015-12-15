@@ -18,11 +18,12 @@
   }
 }
 
+
 .export-users i {
   color: $gray;
-  font-size: 1.25rem;
-  padding-left: 1rem;
-  margin-left: 1rem;
+  font-size: 1.5rem;
+  padding-right: .5rem;
+  margin-right: .5rem;
   cursor: pointer;
   &:hover {
     color: $brand-primary;

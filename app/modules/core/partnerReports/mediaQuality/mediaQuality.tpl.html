@@ -1,23 +1,21 @@
-<div class="media-quality">
-  <div class="row header">
-    <div class="graph-align">
-      <h4 class="pull-left section-title" translate="mediaQuality.mediaQuality"></h4>
-      <hr class="title-break pull-left"/>
-    </div>
-  </div>
-  <div class="row ">
-    <div class="graph-align">
-      <div class="report-description" translate="mediaQuality.description"></div>
+<cs-card id="mediaQuality" class="large report-box media-quality">
+<article>
+    <header>
+      <h4 translate="mediaQuality.mediaQuality"></h4>
+    </header>
+  <section>
+      <p translate="mediaQuality.description"></p>
       <div id="mediaQualityDiv" class="barchart"></div>
       <div id="mediaQualityRefreshDiv" class="spinner-position" ng-if="nav.isRefresh(nav.mediaQualityRefresh)">
         <i class='icon icon-spinner icon-2x'></i>
       </div>
       <div class="no-data-center" ng-if="nav.isEmpty(nav.mediaQualityRefresh)">
-        <h3 class="no-data"> 
+        <h3 class="no-data">
           <i class='icon icon-warning no-data-warning'></i>
           <span translate='reportsPage.noCustomerData'></span>
         </h3>
       </div>
-    </div>
-  </div> 
-</div>
+  </section>
+  <footer></footer>
+  </article>
+</cs-card>
