@@ -69,10 +69,14 @@
       }
 
       // iframe request variables
+      if (iframeUrl.indexOf("cibtsgsbt31.webex.com") > 0)
+        iframeUrl = iframeUrl.replace($stateParams.siteUrl, "wbxbts.admin.ciscospark.com");
       $scope.trustIframeUrl = $sce.trustAsResourceUrl(iframeUrl);
       $scope.adminEmail = Authinfo.getPrimaryEmail();
       $scope.authToken = $rootScope.token;
       $scope.siteName = $stateParams.siteUrl;
+      var index = $stateParams.siteUrl.indexOf(".");
+      $scope.siteName2 = $stateParams.siteUrl.slice(0, index);
       $scope.fullSparkDNS = window.location.origin;
 
       $scope.locale = (
