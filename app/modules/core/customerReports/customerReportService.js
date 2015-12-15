@@ -111,7 +111,8 @@
             activeUsers: 0,
             percentage: 0,
             colorOne: Config.chartColors.brandSuccessLight,
-            colorTwo: Config.chartColors.brandSuccessDark
+            colorTwo: Config.chartColors.brandSuccessDark,
+            balloon: true
           });
         }
       } else if (filter.value === 1) {
@@ -129,7 +130,8 @@
             activeUsers: 0,
             percentage: 0,
             colorOne: Config.chartColors.brandSuccessLight,
-            colorTwo: Config.chartColors.brandSuccessDark
+            colorTwo: Config.chartColors.brandSuccessDark,
+            balloon: true
           });
         }
       } else {
@@ -140,7 +142,8 @@
             activeUsers: 0,
             percentage: 0,
             colorOne: Config.chartColors.brandSuccessLight,
-            colorTwo: Config.chartColors.brandSuccessDark
+            colorTwo: Config.chartColors.brandSuccessDark,
+            balloon: true
           });
         }
       }

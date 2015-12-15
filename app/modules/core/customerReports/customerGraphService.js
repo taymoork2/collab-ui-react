@@ -53,10 +53,11 @@
 
     // variables for the average rooms section
     var avgRoomsdiv = 'avgRoomsdiv';
-    var avgRoomsBalloon = '<span class="graph-text">' + $translate.instant('avgRooms.group') + ': [[groupRooms]]<br>' + $translate.instant('avgRooms.oneToOne') + ': [[oneToOneRooms]]<br>' + $translate.instant('avgRooms.avgTotal') + ': [[avgRooms]]%</span>';
+    var avgRoomsBalloon = '<span class="graph-text">' + $translate.instant('avgRooms.group') + ' <span class="room-number">[[groupRooms]]</span><br>' + $translate.instant('avgRooms.oneToOne') + ' <span class="room-number">[[oneToOneRooms]]</span><br>' + $translate.instant('avgRooms.avgTotal') + ' <span class="room-number">[[avgRooms]]</span></span>';
 
     // variables for the files shared section
     var filesSharedDiv = 'filesSharedDiv';
+    var filesBalloon = '<span class="graph-text">' + $translate.instant('filesShared.contentShared') + ' [[contentShared]]<br>' + $translate.instant('filesShared.fileSizes') + ' [[contentShareSizes]]</span>';
 
     return {
       setActiveUsersGraph: setActiveUsersGraph,
@@ -305,7 +306,7 @@
       graph.valueField = 'contentShared';
       graph.legendColor = data[0].color;
       graph.showBalloon = data[0].balloon;
-      graph.balloonText = "filler balloon";
+      graph.balloonText = filesBalloon;
 
       return [graph];
     }
