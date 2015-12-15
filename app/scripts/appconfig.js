@@ -184,9 +184,12 @@ angular
       $stateProvider
         .state('activate', {
           url: '/activate',
-          templateUrl: 'modules/squared/views/activate.html',
-          controller: 'ActivateCtrl',
-          parent: 'main',
+          views: {
+            'main@': {
+              templateUrl: 'modules/squared/views/activate.html',
+              controller: 'ActivateCtrl'
+            }
+          },
           authenticate: false
         })
         .state('csadmin', {
@@ -210,9 +213,12 @@ angular
         })
         .state('invite', {
           url: '/invite',
-          templateUrl: 'modules/squared/views/invite.html',
-          controller: 'InviteCtrl',
-          parent: 'main',
+          views: {
+            'main@': {
+              templateUrl: 'modules/squared/views/invite.html',
+              controller: 'InviteCtrl'
+            }
+          },
           authenticate: false
         })
         .state('invitelauncher', {
