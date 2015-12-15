@@ -9,6 +9,15 @@
   function PlanReviewCtrl(Authinfo, TrialService, Log, $translate, $scope, FeatureToggleService, Userservice) {
     /*jshint validthis: true */
     var vm = this;
+
+    vm.multSubscriptions = {
+      selectPlaceholder: '',
+      oneBilling: false,
+      selected: '',
+      options: [],
+      billings: []
+    };
+
     vm.messagingServices = {
       isNewTrial: false,
       services: []
@@ -50,6 +59,17 @@
     });
 
     function init() {
+      vm.multSubscriptions.billings = Authinfo.getLicenses() || [];
+      angular.forEach(vm.multSubscriptions.billings, function (billing) {
+        vm.multSubscriptions.options.push(billing.billingServiceId);
+        vm.multSubscriptions.options = _.uniq(vm.multSubscriptions.options);
+        vm.multSubscriptions.selectPlaceholder = vm.multSubscriptions.options[0];
+      });
+
+      if (vm.multSubscriptions.options.length === 1) {
+        vm.multSubscriptions.oneBilling = true;
+      }
+
       vm.messagingServices.services = Authinfo.getMessageServices() || [];
       angular.forEach(vm.messagingServices.services, function (service) {
         if (service.license.isTrial) {
