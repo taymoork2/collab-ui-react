@@ -10,17 +10,11 @@
         <div class="small-8 columns">
           <cs-select ng-model="keyAction.action" options="aaPhoneMenu.keyActions" placeholder="aaPhoneMenu.actionPlaceholder" on-change-fn="aaPhoneMenu.keyActionChanged($index, keyAction.action)" class="aa-pm-action-select" icon="icon-chevron-down">
           </cs-select>
-          <div ng-switch="keyAction.action.name" class="aa-route-to-aa">
+          <div ng-switch="keyAction.action.name" class="aa-key-action">
             <aa-route-to-aa ng-switch-when="phoneMenuRouteAA" aa-schedule="{{schedule}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-aa>
-          </div>
-          <div ng-switch="keyAction.action.name" class="aa-route-to-hg">
             <aa-route-to-hg ng-switch-when="phoneMenuRouteHunt"  aa-schedule="{{schedule}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-hg>
-          </div>
-          <div ng-switch="keyAction.action.name" class="aa-dial-by-ext">
             <aa-dial-by-ext ng-switch-when="phoneMenuDialExt" aa-schedule="{{schedule}}" aa-index="index" aa-key-index="{{$index}}"></aa-dial-by-ext>
-          </div>
-          <div ng-switch="keyAction.action.name">
-            <aa-say-message ng-switch-when="phoneMenuSayMessage" aa-schedule="{{schedule}}" aa-index="index" aa-key-index="{{$index}}"><aa-say-messsage>
+            <aa-say-message ng-switch-when="phoneMenuSayMessage" aa-schedule="{{schedule}}" aa-index="index" aa-key-index="{{$index}}"></aa-say-messsage>
          </div>
         </div>
         <div class="text-right small-1 columns">

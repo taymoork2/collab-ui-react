@@ -251,7 +251,7 @@
           // add the key/action pairs
           for (var j = 0; j < entries.length; j++) {
             var menuEntry = entries[j];
-            if (menuEntry.actions.length == 1 && menuEntry.type == "MENU_OPTION") {
+            if (menuEntry.actions.length > 0 && menuEntry.type == "MENU_OPTION") {
               var keyAction = new KeyAction();
               keyAction.key = menuEntry.key;
               if (angular.isDefined(menuEntry.actions[0].name) && menuEntry.actions[0].name.length > 0) {

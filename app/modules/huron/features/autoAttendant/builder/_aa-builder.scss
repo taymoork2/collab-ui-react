@@ -24,12 +24,11 @@ $aa-builder-icon-color: $gray-base;
 
 .aa-builder-frame {
   $frame-margin-size: 2rem;
-  $frame-border-size: 0.075rem;
 
-  border-top: $frame-border-size solid $aa-builder-border-color;
+  border-top: $aa-builder-border-size solid $aa-builder-border-color;
   box-shadow: inset 0 0.25rem 0.25rem 0.25rem $gray-light-2;
-  border-bottom: $frame-border-size solid $gray-light-3;
-  border-left: $frame-border-size solid $gray-light-3;
+  border-bottom: $aa-builder-border-size solid $gray-light-3;
+  border-left: $aa-builder-border-size solid $gray-light-3;
   margin-top: 0;
   margin-bottom: $frame-margin-size;
   margin-left: $frame-margin-size;
@@ -45,7 +44,7 @@ $aa-builder-icon-color: $gray-base;
     margin-top: $margin-top;
 
     /* allows aa-builder-frame box-shadow to show */
-    @include aa-builder-height($frame-margin-size + 2 * $frame-border-size + $margin-top);
+    @include aa-builder-height($frame-margin-size + 2 * rem($aa-builder-border-size) + $margin-top);
   }
 }
 
@@ -117,7 +116,7 @@ $aa-builder-icon-color: $gray-base;
   color: $aa-builder-icon-color;
   padding-left: .25rem;
   padding-top: .25rem;
-  margin-bottom: 1rem;
+  margin-bottom: .75rem;
 
   &:hover {
     cursor: pointer;
@@ -160,7 +159,6 @@ $aa-builder-icon-color: $gray-base;
   color: $aa-builder-icon-color;
   padding-left: .25rem;
   padding-top: .25rem;
-  margin-top: .25rem;
 
   &:hover {
     cursor: pointer;
