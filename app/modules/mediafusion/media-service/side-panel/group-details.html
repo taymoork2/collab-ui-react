@@ -1,45 +1,24 @@
 <div ui-view="header"></div>
 
-<cs-sp-container class="hercules-fix-paragraphs hercules-settings-table"
-                 ng-if="!expresswayClusterDetails.serviceNotInstalled()">
+<cs-sp-container class="mediafusion-fix-paragraphs mediafusion-settings-table">
 
   <cs-sp-section>
-    <div class="section-title-row section-name" translate="hercules.alarms.alarms"></div>
-    <!--div class="feature-list" ng-if="groupDetails.alarmsSummary.size() > 0"-->
+    <div class="section-title-row section-name" translate="mediaFusion.alarms.alarms"></div>
       <ul>
         <li class="feature" ng-repeat="alarm in groupDetails.alarms">
-            <i class="icon icon-error hercules-alarm status-icon"/>
+            <a ui-sref="connector-details.alarm-details({alarm: alarm})">
+            <i class="icon icon-error status-icon"/>
             <span class="feature-name">{{alarm.alarm.title}}</span>
             <i class="feature-arrow"></i>
+          </a>
         </li>
       </ul>
-    <!--/div>
-    <p ng-if="expresswayClusterDetails.selectedService().alarm_count == 0" translate="hercules.alarms.noAlarms"></p-->
+    </div>
+    <p ng-if="groupDetails.alarms.length == 0" translate="mediaFusion.alarms.noAlarms"></p>
   </cs-sp-section>
 
-  <!--cs-sp-section>
-    <div class="section-title-row section-name" translate="hercules.softwareUpgrade.softwareUpgrade"></div>
-    <table>
-      <tbody>
-      <tr>
-        <td translate="hercules.softwareUpgrade.currentVersion"></td>
-        <td><span>{{expresswayClusterDetails.selectedService().connectors[0].version}}</span></td>
-      </tr>
-      <tr ng-if="expresswayClusterDetails.selectedService().software_upgrade_available">
-        <td translate="hercules.softwareUpgrade.newVersion">New Version</td>
-        <td><span>{{expresswayClusterDetails.selectedService().not_approved_package.version}}</span></td>
-      </tr>
-      </tbody>
-    </table>
-    <button class="btn btn--primary"
-            ng-click="expresswayClusterDetails.upgrade()"
-            ng-if="expresswayClusterDetails.selectedService().software_upgrade_available"
-            translate="hercules.softwareUpgrade.upgrade">
-    </button>
-  </cs-sp-section-->
-
   <cs-sp-section>
-
+    <!-- FIX IT, REMOVE TABLE -->
     <table>
       <thead>
         <tr>
@@ -48,66 +27,33 @@
           <th></th>
         </tr>
       </thead>
-      <!--
-      <tbody>
-        <tr ng-repeat="ecp in groupDetails.clusterList ">
-          <a ui-sref="connector-details.host-details({host: ecp.hosts[0], clusterId: ecp.id, serviceType: ecp.cluster_type, role: groupDetails.roleSelected})">
-          <td class="vertical-center">{{ecp.hosts[0].host_name}}</td>
-          <td class="vertical-center">{{ecp.properties["mf.role"]}}</td>
-          <td class="vertical-center horizontal-center">
+    </table> 
+
+    <div class="feature-list">
+      <ul>
+        <li class="feature" ng-repeat="ecp in groupDetails.clusterList" ng-class="{'list-item': !$first}">
+          <a
+            ui-sref="connector-details.host-details({host: ecp.hosts[0], clusterId: ecp.id, serviceType: ecp.cluster_type, properties: ecp.properties})">
+
+            <span class="feature-name">{{ecp.hosts[0].host_name}}</span>
+
+            <span class="feature-name">{{ecp.properties["mf.role"]}}</span>
+
             {{cluster.needs_attention}}{{cluster.alarms_present}}
-            <span ng-show="ecp.needs_attention" class="red">
+            <span ng-if="ecp.needs_attention &&  ecp.services[0].alarm_count > 0" class="yellow">
+            <i class="fa fa-circle" />
+            <span class="hidden-xs">{{'mediaFusion.connectors.alarms' | translate}} </span>
+            </span>
+            <span ng-if="ecp.needs_attention &&  ecp.services[0].alarm_count == 0" class="red">
             <i class="fa fa-circle" />
             <span class="hidden-xs">{{'mediaFusion.offline' | translate}} </span>
             </span>
-            <span ng-show="!ecp.needs_attention &&  !ecp.alarms_present" class="green">
+            <span ng-if="!ecp.needs_attention &&  !ecp.alarms_present" class="green">
             <i class="fa fa-circle" />
             <span class="hidden-xs">{{'mediaFusion.active' | translate}} </span>
-            </span>
-            <span ng-show="!ecp.needs_attention &&  ecp.alarms_present" class="yellow">
-            <i class="fa fa-circle" />
-            <span class="hidden-xs">{{'mediaFusion.connectors.alarms' | translate}} </span>
             </span>
 
             <i class="feature-arrow"></i>
-          </td>
-          </a>
-        </tr>
-      </tbody> -->
-    </table> 
-
-    <!--div class="section-title-row section-name" translate="hercules.connectors.hosts"></div-->
-    <div class="feature-list">
-      <ul>
-        <li class="feature" ng-repeat="connector in groupDetails.clusterList"
-            ng-class="{'list-item': !$first}">
-          <a
-            ui-sref="connector-details.host-details({host: connector.hosts[0], clusterId: connector.id, serviceType: connector.cluster_type})">
-            <i class="fa fa-circle status-icon"
-               ng-class="connector.alarms.length > 0 ? 'hercules-state-alarm' : 'hercules-state-'+connector.state"></i>
-            <span class="feature-name">{{connector.hosts[0].host_name}}</span>
-            <!--
-            <span class="feature-status" ng-if="connector.alarms.length == 0"
-                  translate="{{'hercules.status.' + (connector.state || 'unknown') }}"></span>
-            <span class="feature-status" ng-if="connector.alarms.length > 0"
-                  translate="hercules.status.alarm"></span> -->
-
-<span class="feature-name">{{connector.properties["mf.role"]}}</span>
-
-{{cluster.needs_attention}}{{cluster.alarms_present}}
-            <span ng-show="connector.needs_attention" class="red">
-            <i class="fa fa-circle" />
-            <span class="hidden-xs">{{'mediaFusion.offline' | translate}} </span>
-            </span>
-            <span ng-show="!connector.needs_attention &&  !connector.alarms_present" class="green">
-            <i class="fa fa-circle" />
-            <span class="hidden-xs">{{'mediaFusion.active' | translate}} </span>
-            </span>
-            <span ng-show="!connector.needs_attention &&  connector.alarms_present" class="yellow">
-            <i class="fa fa-circle" />
-            <span class="hidden-xs">{{'mediaFusion.connectors.alarms' | translate}} </span>
-            </span>
-            <i class="feature-arrow"> </i>
           </a>
         </li>
       </ul>
@@ -116,8 +62,3 @@
 
 </cs-sp-container>
 
-<cs-sp-container class="hercules-fix-paragraphs" ng-if="expresswayClusterDetails.serviceNotInstalled()">
-  <p>
-    The <span translate="hercules.serviceNames.{{expresswayClusterDetails.serviceId}}"></span> is not installed on this cluster.
-  </p>
-</cs-sp-container>

@@ -4,13 +4,13 @@ angular.module('Mediafusion')
   .controller('HostDetailsController',
 
     /* @ngInject */
-    function ($stateParams, $state, MediaClusterService, XhrNotificationService) {
+    function ($stateParams, $state, MediaClusterService, XhrNotificationService, Notification, $translate) {
       var vm = this;
       vm.host = $stateParams.host;
       vm.cluster = MediaClusterService.getClusters()[$stateParams.clusterId];
       vm.clusterId = $stateParams.clusterId;
       vm.serviceType = $stateParams.serviceType;
-      vm.roleSelected = $stateParams.role;
+      vm.role = $stateParams.properties["mf.role"];
 
       vm.connector = function () {
         var service = _.find(vm.cluster.services, {
@@ -31,6 +31,20 @@ angular.module('Mediafusion')
             $state.sidepanel.close();
           }
         }, XhrNotificationService.notify);
+      };
+
+      vm.changeRole = function ($selectedRole, $clusterId) {
+        // $log.log("The new value is ", $selectedRole);
+        // $log.log("The value of selectedCluster is", $scope.selectedCluster);
+        MediaClusterService.changeRole($selectedRole, $clusterId)
+          .success(function (data) {
+            Notification.notify([$translate.instant('mediaFusion.roleAssignmentSuccess')], 'success');
+          })
+          .error(function (data, status) {
+            Notification.notify([$translate.instant('mediaFusion.roleAssignmentFailure', {
+              failureMessage: data.message
+            })], 'error');
+          });
       };
     }
   );

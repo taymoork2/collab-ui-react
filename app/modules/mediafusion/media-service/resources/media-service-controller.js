@@ -87,16 +87,10 @@
     }
 
     function showClusterDetails(group) {
-      vm.connector = group.clusters[0];
-      vm.connectorId = group.clusters[0].id;
       if (vm.showPreview) {
         $state.go('connector-details', {
-          connectorId: vm.connector.id,
           groupName: group.groupName,
-          roleSelected: vm.connector.properties["mf.role"],
-          connector: vm.connector,
           selectedClusters: group.clusters
-
         });
       }
       vm.showPreview = true;

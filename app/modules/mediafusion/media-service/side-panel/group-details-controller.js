@@ -19,7 +19,6 @@ angular.module('Mediafusion')
       vm.newPropertySet = '';
       vm.currentPropertySet = '';
       vm.oldClusterVal = '';
-      vm.roleSelected = '';
       vm.displayName1 = "Initial";
 
       if (!angular.equals($stateParams.groupName, {})) {
@@ -79,20 +78,6 @@ angular.module('Mediafusion')
       vm.resetCluster = function () {
         vm.displayName = vm.oldClusterVal;
         vm.showbutton = false;
-      };
-
-      vm.changeRole = function ($selectedRole, $selectedHost) {
-        // $log.log("The new value is ", $selectedRole);
-        // $log.log("The value of selectedCluster is", $scope.selectedCluster);
-        MediaClusterService.changeRole($selectedRole, $selectedHost)
-          .success(function (data) {
-            Notification.notify([$translate.instant('mediaFusion.roleAssignmentSuccess')], 'success');
-          })
-          .error(function (data, status) {
-            Notification.notify([$translate.instant('mediaFusion.roleAssignmentFailure', {
-              failureMessage: data.message
-            })], 'error');
-          });
       };
 
       vm.updateCluster = function ($name, $event) {
