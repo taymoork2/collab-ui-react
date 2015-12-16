@@ -134,6 +134,17 @@
       useExternalSorting: false,
       enableColumnMenus: false,
       noUnselect: true,
+      onRegisterApi: function (gridApi) {
+        $scope.gridApi = gridApi;
+        gridApi.infiniteScroll.on.needLoadMoreData($scope, function () {
+          if (vm.load) {
+            vm.currentDataPosition++;
+            vm.load = false;
+            getLineList(vm.currentDataPosition * Config.usersperpage + 1);
+            $scope.gridApi.infiniteScroll.dataLoaded();
+          }
+        });
+      },
       columnDefs: [{
         field: 'internalNumber',
         displayName: $translate.instant('linesPage.internalNumberHeader'),
@@ -155,14 +166,6 @@
         sortCellFiltered: true
       }]
     };
-
-    $scope.$on('ngGridEventScroll', function () {
-      if (vm.load) {
-        vm.currentDataPosition++;
-        vm.load = false;
-        getLineList(vm.currentDataPosition * Config.usersperpage + 1);
-      }
-    });
 
     $scope.$on('ngGridEventSorted', function (event, data) {
       // assume event data will always contain sort fields and directions

@@ -86,17 +86,9 @@
       $rootScope.$on('$stateChangeSuccess', function () {
         if ($state.includes('users.list')) {
           $scope.currentUser = null;
-          if ($scope.gridOptions.$gridScope) {
-            $scope.gridOptions.$gridScope.toggleSelectAll(false, true);
+          if ($scope.gridApi.selection) {
+            $scope.gridApi.selection.clearSelectedRows();
           }
-        }
-      });
-
-      $scope.$on('ngGridEventScroll', function () {
-        if ($scope.load) {
-          $scope.currentDataPosition++;
-          $scope.load = false;
-          getUserList($scope.currentDataPosition * Config.usersperpage + 1);
         }
       });
 
@@ -339,10 +331,9 @@
       });
     }
 
-    // TODO: Ugh...refactor this.
     function configureGrid() {
 
-      var photoCellTemplate = '<img ng-if="row.entity.photos" class="user-img" ng-src="{{getUserPhoto(row.entity)}}"/>' +
+      var photoCellTemplate = '<img ng-if="row.entity.photos" class="user-img" ng-src="{{grid.appScope.getUserPhoto(row.entity)}}"/>' +
         '<span ng-if="!row.entity.photos" class="user-img">' +
         '<i class="icon icon-user"></i>' +
         '</span>';
@@ -352,26 +343,30 @@
         '<i class="icon icon-three-dots"></i>' +
         '</button>' +
         '<ul class="dropdown-menu dropdown-primary" role="menu">' +
-        '<li ng-if="row.entity.userStatus === \'pending\' || isHuronUser(row.entity.entitlements)" id="resendInviteOption"><a ng-click="$event.stopPropagation(); resendInvitation(row.entity.userName, row.entity.name.givenName, row.entity.id, row.entity.userStatus, org.dirsyncEnabled, row.entity.entitlements); "><span translate="usersPage.resend"></span></a></li>' +
-        '<li ng-if="!org.dirsyncEnabled && row.entity.displayName !== userName" id="deleteUserOption"><a data-toggle="modal" ng-click="$event.stopPropagation(); setDeactivateUser(row.entity.meta.organizationID, row.entity.id, row.entity.userName); "><span translate="usersPage.deleteUser"></span></a></li>' +
-        '<li ng-if="!org.dirsyncEnabled && row.entity.displayName === userName" id="deleteUserOption"><a data-toggle="modal" ng-click="$event.stopPropagation(); setDeactivateSelf(row.entity.meta.organizationID, row.entity.id, row.entity.userName); "><span translate="usersPage.deleteUser"></span></a></li>' +
+        '<li ng-if="row.entity.userStatus === \'pending\' || grid.appScope.isHuronUser(row.entity.entitlements)" id="resendInviteOption"><a ng-click="$event.stopPropagation(); grid.appScope.resendInvitation(row.entity.userName, row.entity.name.givenName, row.entity.id, row.entity.userStatus, org.dirsyncEnabled, row.entity.entitlements); "><span translate="usersPage.resend"></span></a></li>' +
+        '<li ng-if="!org.dirsyncEnabled && row.entity.displayName !== userName" id="deleteUserOption"><a data-toggle="modal" ng-click="$event.stopPropagation(); grid.appScope.setDeactivateUser(row.entity.meta.organizationID, row.entity.id, row.entity.userName); "><span translate="usersPage.deleteUser"></span></a></li>' +
+        '<li ng-if="!org.dirsyncEnabled && row.entity.displayName === userName" id="deleteUserOption"><a data-toggle="modal" ng-click="$event.stopPropagation(); grid.appScope.setDeactivateSelf(row.entity.meta.organizationID, row.entity.id, row.entity.userName); "><span translate="usersPage.deleteUser"></span></a></li>' +
         '</ul>' +
         '</span>';
       $scope.gridOptions = {
         data: 'gridData',
         multiSelect: false,
-        rowHeight: 44,
-        enableRowSelection: true,
+        rowHeight: 45,
         enableRowHeaderSelection: false,
-        modifierKeysToMultiSelect: false,
-        useExternalSorting: false,
         enableColumnResize: true,
         enableColumnMenus: false,
-        noUnselect: true,
         onRegisterApi: function (gridApi) {
           $scope.gridApi = gridApi;
           gridApi.selection.on.rowSelectionChanged($scope, function (row) {
             $scope.showUserDetails(row.entity);
+          });
+          gridApi.infiniteScroll.on.needLoadMoreData($scope, function () {
+            if ($scope.load) {
+              $scope.currentDataPosition++;
+              $scope.load = false;
+              getUserList($scope.currentDataPosition * Config.usersperpage + 1);
+              $scope.gridApi.infiniteScroll.dataLoaded();
+            }
           });
         },
         columnDefs: [{
@@ -437,10 +432,6 @@
       }
       return $scope.currentUserPhoto;
     }
-
-    $scope.$on('rowSelectionChanged', function () {
-      showUserDetails($scope.gridApi.selection.getSelectedGridRow());
-    });
 
     // TODO: If using states should be be able to trigger this log elsewhere?
     if ($state.current.name === "users.list") {

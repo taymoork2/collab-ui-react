@@ -57,14 +57,8 @@ angular.module('Squared')
       vm.gridOptions = {
         data: 'sc.updateListAndFilter()',
         rowHeight: 75,
-        showFilter: false,
-        multiSelect: false,
-        enableRowSelection: true,
         enableRowHeaderSelection: false,
-        modifierKeysToMultiSelect: false,
-        useExternalSorting: false,
         enableColumnMenus: false,
-        noUnselect: true,
         onRegisterApi: function (gridApi) {
           $scope.gridApi = gridApi;
           gridApi.selection.on.rowSelectionChanged($scope, function (row) {

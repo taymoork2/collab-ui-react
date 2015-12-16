@@ -146,32 +146,30 @@ angular.module('Core')
       }
 
       $scope.newTrialName = null;
-      $scope.trialsGrid = {
-        data: 'activeList',
-        multiSelect: false,
-        showFilter: true,
-        rowHeight: 38,
-        headerRowHeight: 38,
-        selectedItems: [],
-        sortInfo: {
-          fields: ['endDate', 'customerName', 'numUsers'],
-          directions: ['asc']
-        },
+      // $scope.trialsGrid = {
+      //   data: 'activeList',
+      //   multiSelect: false,
+      //   showFilter: true,
+      //   rowHeight: 38,
+      //   headerRowHeight: 38,
+      //   selectedItems: [],
+      //   sortInfo: {
+      //     fields: ['endDate', 'customerName', 'numUsers'],
+      //     directions: ['asc']
+      //   },
 
-        columnDefs: [{
-          field: 'customerName',
-          displayName: $translate.instant('partnerHomePage.trialsCustomerName')
-        }, {
-          field: 'endDate',
-          displayName: $translate.instant('partnerHomePage.trialsEndDate')
-        }, {
-          field: 'numUsers',
-          displayName: $translate.instant('partnerHomePage.trialsNumUsers')
-        }]
-      };
+      //   columnDefs: [{
+      //     field: 'customerName',
+      //     displayName: $translate.instant('partnerHomePage.trialsCustomerName')
+      //   }, {
+      //     field: 'endDate',
+      //     displayName: $translate.instant('partnerHomePage.trialsEndDate')
+      //   }, {
+      //     field: 'numUsers',
+      //     displayName: $translate.instant('partnerHomePage.trialsNumUsers')
+      //   }]
+      // };
 
-
-      var rowTemplate = $templateCache.get('modules/core/partnerLanding/grid/row.tpl.html');
       var actionTemplate = $templateCache.get('modules/core/partnerLanding/grid/actionColumn.tpl.html');
       var nameTemplate = $templateCache.get('modules/core/partnerLanding/grid/nameColumn.tpl.html');
       var serviceTemplate = $templateCache.get('modules/core/partnerLanding/grid/serviceColumn.tpl.html');
@@ -180,18 +178,23 @@ angular.module('Core')
       $scope.gridOptions = {
         data: 'gridData',
         multiSelect: false,
-        showFilter: false,
         rowHeight: 44,
-        rowTemplate: rowTemplate,
-        enableRowSelection: true,
         enableRowHeaderSelection: false,
-        modifierKeysToMultiSelect: false,
-        useExternalSorting: false,
         enableColumnResize: true,
         enableColumnMenus: false,
-        noUnselect: true,
         onRegisterApi: function (gridApi) {
           $scope.gridApi = gridApi;
+          gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+            $scope.showCustomerDetails(row.entity);
+          });
+          gridApi.infiniteScroll.on.needLoadMoreData($scope, function () {
+            if ($scope.load) {
+              $scope.currentDataPosition++;
+              $scope.load = false;
+              getTrialsList($scope.currentDataPosition * Config.usersperpage + 1);
+              $scope.gridApi.infiniteScroll.dataLoaded();
+            }
+          });
         },
         columnDefs: [{
           field: 'customerName',
@@ -227,24 +230,14 @@ angular.module('Core')
         }, {
           field: 'notes',
           displayName: $translate.instant('customerPage.notes'),
-<<<<<<< HEAD
           cellTemplate: noteTemplate,
-          sortFn: notesSort
-=======
-          cellTemplate: notesTemplate,
           sortingAlgorithm: notesSort
->>>>>>> first attempt
         }, {
           field: 'action',
           displayName: $translate.instant('customerPage.actionHeader'),
           sortable: false,
-<<<<<<< HEAD
           cellTemplate: actionTemplate,
-          width: '90px'
-=======
-          cellTemplate: actionsTemplate,
           width: '90'
->>>>>>> first attempt
         }]
       };
 
@@ -339,14 +332,6 @@ angular.module('Core')
       $scope.exportBtn = {
         disabled: true
       };
-
-      $scope.$on('ngGridEventScroll', function () {
-        if ($scope.load) {
-          $scope.currentDataPosition++;
-          $scope.load = false;
-          getTrialsList($scope.currentDataPosition * Config.usersperpage + 1);
-        }
-      });
 
       $scope.filterList = function (filterBy) {
         $scope.filter = filterBy;

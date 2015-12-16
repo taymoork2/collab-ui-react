@@ -229,20 +229,20 @@ angular.module('Core')
 
       function toggleShowExtensions() {
         return DialPlanService.getCustomerDialPlanDetails().then(function (response) {
-          var indexOfDidColumn = _.findIndex($scope.addDnGridColDef, {
+          var indexOfDidColumn = _.findIndex($scope.addDnGridOptions.columnDefs, {
             field: 'externalNumber'
           });
-          var indexOfDnColumn = _.findIndex($scope.addDnGridColDef, {
+          var indexOfDnColumn = _.findIndex($scope.addDnGridOptions.columnDefs, {
             field: 'internalExtension'
           });
           if (response.extensionGenerated === "true") {
             $scope.showExtensions = false;
-            $scope.addDnGridColDef[indexOfDidColumn].visible = false;
-            $scope.addDnGridColDef[indexOfDnColumn].displayName = $translate.instant('usersPage.directLineHeader');
+            $scope.addDnGridOptions.columnDefs[indexOfDidColumn].visible = false;
+            $scope.addDnGridOptions.columnDefs[indexOfDnColumn].displayName = $translate.instant('usersPage.directLineHeader');
           } else {
             $scope.showExtensions = true;
-            $scope.addDnGridColDef[indexOfDidColumn].visible = true;
-            $scope.addDnGridColDef[indexOfDnColumn].displayName = $translate.instant('usersPage.extensionHeader');
+            $scope.addDnGridOptions.columnDefs[indexOfDidColumn].visible = true;
+            $scope.addDnGridOptions.columnDefs[indexOfDnColumn].displayName = $translate.instant('usersPage.extensionHeader');
           }
         }).catch(function (response) {
           Notification.errorResponse(response, 'serviceSetupModal.customerDialPlanDetailsGetError');
@@ -536,39 +536,32 @@ angular.module('Core')
         }
       });
 
-      var rowTemplate = '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}">' +
-        '<div ng-cell></div>' +
-        '</div>';
-
-      var headerRowTemplate = '<div ng-style="{ height: col.headerRowHeight }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngHeaderCell">' +
-        '<div ng-header-cell></div>';
-
-      var nameTemplate = '<div class="ngCellText"><span class="name-display-style">{{row.getProperty(col.field)}}</span>' +
-        '<span class="email-display-style">{{row.getProperty(\'address\')}}</span></div>';
+      var nameTemplate = '<div class="ui-grid-cell-contents"><span class="name-display-style">{{row.entity.name}}</span>' +
+        '<span class="email-display-style">{{row.entity.address}}</span></div>';
 
       var internalExtensionTemplate = '<div ng-show="row.entity.assignedDn !== undefined"> ' +
         '<cs-select name="internalNumber" ' +
-        'ng-model="row.entity.assignedDn" options="internalNumberPool" ' +
-        'refresh-data-fn="returnInternalNumberlist(filter)" wait-time="0" ' +
+        'ng-model="row.entity.assignedDn" options="grid.appScope.internalNumberPool" ' +
+        'refresh-data-fn="grid.appScope.returnInternalNumberlist(filter)" wait-time="0" ' +
         'placeholder="placeholder" input-placeholder="inputPlaceholder" ' +
-        'on-change-fn="syncGridDidDn(row.entity, \'internalNumber\')"' +
+        'on-change-fn="grid.appScope.syncGridDidDn(row.entity, \'internalNumber\')"' +
         'labelfield="pattern" valuefield="uuid" required="true" filter="true"' +
-        ' is-warn="{{checkDnOverlapsSteeringDigit(row.entity)}}" warn-msg="{{\'usersPage.steeringDigitOverlapWarning\' | translate: { steeringDigitInTranslation: telephonyInfo.steeringDigit } }}" > </cs-select></div>' +
+        ' is-warn="{{grid.appScope.checkDnOverlapsSteeringDigit(row.entity)}}" warn-msg="{{\'usersPage.steeringDigitOverlapWarning\' | translate: { steeringDigitInTranslation: telephonyInfo.steeringDigit } }}" > </cs-select></div>' +
         '<div ng-show="row.entity.assignedDn === undefined"> ' +
         '<cs-select name="noInternalNumber" ' +
-        'ng-model="noExtInPool" labelfield="noExtInPool" is-disabled="true" > </cs-select>' +
+        'ng-model="grid.appScope.noExtInPool" labelfield="grid.appScope.noExtInPool" is-disabled="true" > </cs-select>' +
         '<span class="error">{{\'usersPage.noExtensionInPool\' | translate }}</span> </div> ';
 
       var externalExtensionTemplate = '<div ng-show="row.entity.didDnMapMsg === undefined"> ' +
         '<cs-select name="externalNumber" ' +
-        'ng-model="row.entity.externalNumber" options="externalNumberPool" ' +
-        'refresh-data-fn="loadExternalNumberPool(filter)" wait-time="0" ' +
+        'ng-model="row.entity.externalNumber" options="grid.appScope.externalNumberPool" ' +
+        'refresh-data-fn="grid.appScope.loadExternalNumberPool(filter)" wait-time="0" ' +
         'placeholder= "placeholder" input-placeholder="inputPlaceholder" ' +
-        'on-change-fn="syncGridDidDn(row.entity, \'externalNumber\')"' +
+        'on-change-fn="grid.appScope.syncGridDidDn(row.entity, \'externalNumber\')"' +
         'labelfield="pattern" valuefield="uuid" required="true" filter="true"> </cs-select></div> ' +
         '<div ng-show="row.entity.didDnMapMsg !== undefined"> ' +
-        '<cs-select name="noExternalNumber" ' +
-        'ng-model="row.entity.externalNumber" options="externalNumberPool" class="select-warning"' +
+        '<cs-select name="grid.appScope.noExternalNumber" ' +
+        'ng-model="row.entity.externalNumber" options="grid.appScope.externalNumberPool" class="select-warning"' +
         'labelfield="pattern" valuefield="uuid" required="true" filter="true"> </cs-select>' +
         '<span class="warning did-map-error">{{row.entity.didDnMapMsg | translate }}</span> </div> ';
 
@@ -634,40 +627,36 @@ angular.module('Core')
       $scope.isResetEnabled = false;
       $scope.validateDnForUser();
 
-      $scope.addDnGridColDef = [{
-        field: 'name',
-        displayName: $translate.instant('usersPage.nameHeader'),
-        sortable: false,
-        cellTemplate: nameTemplate,
-        width: '42%',
-        height: 35
-      }, {
-        field: 'externalNumber',
-        displayName: $translate.instant('usersPage.directLineHeader'),
-        sortable: false,
-        cellTemplate: externalExtensionTemplate,
-        width: '33%',
-        height: 35
-      }, {
-        field: 'internalExtension',
-        displayName: $translate.instant('usersPage.extensionHeader'),
-        sortable: false,
-        cellTemplate: internalExtensionTemplate,
-        width: '25%',
-        height: 35
-      }];
-
       $scope.addDnGridOptions = {
         data: 'usrlist',
         enableRowSelection: false,
         multiSelect: false,
-        showFilter: false,
-        rowHeight: 64,
-        rowTemplate: rowTemplate,
-        headerRowHeight: 44,
-        headerRowTemplate: headerRowTemplate, // this is needed to get rid of vertical bars in header
-        useExternalSorting: false,
-        columnDefs: 'addDnGridColDef'
+        rowHeight: 45,
+        enableRowHeaderSelection: false,
+        enableColumnResize: true,
+        enableColumnMenus: false,
+        columnDefs: [{
+          field: 'name',
+          displayName: $translate.instant('usersPage.nameHeader'),
+          sortable: false,
+          cellTemplate: nameTemplate,
+          width: '42%',
+          height: 35
+        }, {
+          field: 'externalNumber',
+          displayName: $translate.instant('usersPage.directLineHeader'),
+          sortable: false,
+          cellTemplate: externalExtensionTemplate,
+          width: '33%',
+          height: 35
+        }, {
+          field: 'internalExtension',
+          displayName: $translate.instant('usersPage.extensionHeader'),
+          sortable: false,
+          cellTemplate: internalExtensionTemplate,
+          width: '25%',
+          height: 35
+        }]
       };
       $scope.collabRadio = 1;
 
@@ -1527,7 +1516,6 @@ angular.module('Core')
       };
 
       $scope.saveConvertList = function () {
-        $scope.convertSelectedList = $scope.gridApi.selection.getSelectedRows();
         convertUsersCount = $scope.convertSelectedList.length;
         $scope.convertUsersFlow = true;
         convertPending = false;
@@ -1657,26 +1645,29 @@ angular.module('Core')
       $scope.convertGridOptions = {
         data: 'unlicensedUsersList',
         rowHeight: 45,
-        //enableHorizontalScrollbar: 'never',
+        enableHorizontalScrollbar: 0,
         // enableVerticalScrollbar: 'always',
         selectionRowHeaderWidth: 40,
-        showSelectionCheckbox: true,
-        enableRowSelection: true,
         enableRowHeaderSelection: true,
         enableFullRowSelection: true,
-        modifierKeysToMultiSelect: false,
         useExternalSorting: false,
         enableColumnMenus: false,
         showFilter: false,
-        multiSelect: true,
         onRegisterApi: function (gridApi) {
           $scope.gridApi = gridApi;
+          gridApi.selection.on.rowSelectionChanged($scope, function(rows){
+            $scope.convertSelectedList = gridApi.selection.getSelectedRows();
+          })
+       //   $scope.gridApi.grid.modifyRows($scope.gridOptions.data);
+          angular.forEach($scope.convertSelectedList, function (value) {
+            $scope.gridApi.selection.selectRow(value);
+          });
         },
         columnDefs: [{
 
           field: 'displayName',
           displayName: $translate.instant('usersPage.displayNameHeader'),
-          //    cellTemplate: displayNameTemplate,
+          //   cellTemplate: displayNameTemplate,
           resizable: false,
           sortable: true
         }, {

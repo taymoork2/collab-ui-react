@@ -497,12 +497,17 @@ exports.search = function (query) {
   this.click(this.searchbox);
   this.clear(this.searchField);
   if (query) {
+<<<<<<< HEAD
     this.sendKeys(this.searchField, query + protractor.Key.ENTER);
     this.wait(spinner, 500).then(function () {
       waitSpinner();
     }, function () {
       waitSpinner()
     });
+=======
+    this.sendKeys(this.searchField, query);
+    this.expectIsDisplayed(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)));
+>>>>>>> Change ng-grid to ui-grid
   }
 };
 
@@ -516,6 +521,7 @@ exports.searchForSingleResult = function (query) {
   }
   this.search(query);
   browser.wait(logAndWait, TIMEOUT, 'Waiting for a single search result');
+<<<<<<< HEAD
   return this.expectIsDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', query)));
 }
 
@@ -524,6 +530,9 @@ exports.searchAndClickSingleResult = function (query) {
   return this.searchForSingleResult(query).then(function () {
     return exports.clickUser(query);
   });
+=======
+  this.expectIsDisplayed(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)));
+>>>>>>> Change ng-grid to ui-grid
 }
 
 exports.clickUser = function (query) {

@@ -59,11 +59,6 @@ angular.module('Squared')
         });
       };
 
-      var rowTemplate = '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}" ng-click="showUserDetails(row.entity)">' +
-        '<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }">&nbsp;</div>' +
-        '<div ng-cell></div>' +
-        '</div>';
-
       var actionsTemplate = '<span dropdown>' +
         '<button id="actionsButton" class="btn--none dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
         '<i class="icon icon-three-dots"></i>' +
@@ -79,18 +74,19 @@ angular.module('Squared')
         multiSelect: false,
         showFilter: false,
         rowHeight: 44,
-        rowTemplate: rowTemplate,
-        headerRowHeight: 44,
-        useExternalSorting: false,
-        sortInfo: {
-          fields: ['sbpOrderId'],
-          directions: ['asc']
+        enableRowHeaderSelection: false,
+        enableColumnResize: true,
+        enableColumnMenus: false,
+        onRegisterApi: function (gridApi) {
+          $scope.gridApi = gridApi;
         },
-
         columnDefs: [{
           field: 'sbpOrderId',
           displayName: $filter('translate')('billingPage.sbpOrderId'),
-          sortable: true
+          sort: {
+            direction: 'asc',
+            priority: 0,
+          },
         }, {
           field: 'action',
           displayName: $filter('translate')('billingPage.action'),

@@ -50,17 +50,23 @@
       data: 'exp.clusters',
       enableSorting: false,
       multiSelect: false,
-      showFilter: false,
-      showFooter: false,
+      enableRowHeaderSelection: false,
+      enableColumnResize: true,
+      enableColumnMenus: false,
       rowHeight: 75,
-      rowTemplate: 'modules/hercules/expressway-service/cluster-list-row-template.html',
-      headerRowHeight: 44,
+      onRegisterApi: function (gridApi) {
+        $scope.gridApi = gridApi;
+        gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+          $scope.exp.showClusterDetails(row.entity);
+        });
+      },
       columnDefs: [{
         field: 'name',
         displayName: $translate.instant('hercules.overview.clusters-title'),
         cellTemplate: 'modules/hercules/expressway-service/cluster-list-display-name.html',
         width: '35%'
       }, {
+        field: 'serviceStatus',
         displayName: $translate.instant('hercules.overview.status-title'),
         cellTemplate: 'modules/hercules/expressway-service/cluster-list-status.html',
         width: '65%'
