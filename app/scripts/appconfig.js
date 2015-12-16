@@ -1245,6 +1245,15 @@ angular
           controller: 'TrialCallCtrl',
           controllerAs: 'callTrial'
         })
+        .state('trialAdd.addNumbers', {
+          templateUrl: 'modules/core/trials/addNumbers.tpl.html',
+          controller: 'DidAddCtrl',
+          controllerAs: 'didAdd',
+          params: {
+            currentTrial: {},
+            currentOrg: {},
+          }
+        })
         .state('trialEdit', {
           abstract: true,
           parent: 'modal',
