@@ -32,8 +32,29 @@
         formattedCard.id = aa.ceUrl.substr(aa.ceUrl.lastIndexOf('/') + 1);
         formattedCard.featureName = 'huronFeatureDetails.aa';
         formattedCard.filterValue = 'AA';
+        formattedCard.hasDepends = false;
+        formattedCard.dependsNames = [];
         formattedList.push(formattedCard);
         formattedCard = {};
+      });
+
+      _.forEach(data.dependsIds, function (ceid) {
+        var cardToUpdateIndex = 0;
+        _.forEach(formattedList, function (card, index) {
+          if (ceid.aaID === card.id)
+            cardToUpdateIndex = index;
+        });
+        _.forEach(ceid.dependants, function (dependant) {
+          formattedList[cardToUpdateIndex].hasDepends = true;
+          var dependName = '';
+          _.forEach(formattedList, function (card) {
+            if (card.id === dependant.refAaID) {
+              dependName = card.cardName;
+            }
+          });
+          formattedList[cardToUpdateIndex].dependsNames.push(dependName);
+
+        });
       });
       return orderByCardName(formattedList);
     }

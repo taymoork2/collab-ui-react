@@ -1429,6 +1429,22 @@ angular
             deleteFeatureType: null
           }
         })
+        .state('huronfeatures.aaListDepends', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'HuronFeatureAADependsCtrl',
+              controllerAs: 'huronFeatureAADepends',
+              templateUrl: 'modules/huron/features/featureLanding/featureAADependsModal.tpl.html'
+            }
+          },
+          params: {
+            detailsFeatureName: null,
+            detailsFeatureId: null,
+            detailsFeatureType: null,
+            detailsDependsList: null
+          }
+        })
         .state('huronHuntGroup', {
           url: '/huronHuntGroup',
           parent: 'hurondetails',

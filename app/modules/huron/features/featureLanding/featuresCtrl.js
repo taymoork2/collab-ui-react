@@ -45,6 +45,8 @@
      *  3. Add the Object for the feature in the format of the Features Array Object (features)
      *  4. Define the formatter
      * */
+
+    // AA uses getCeInfosList to get data for landing page
     var features = [{
       name: 'AA',
       getFeature: AutoAttendantCeInfoModelService.getCeInfosList,
@@ -163,11 +165,27 @@
     };
 
     vm.deleteHuronFeature = function (feature) {
+      if (feature.hasDepends) {
+        Notification.error('huronFeatureDetails.aaDeleteBlocked', {
+          aaNames: feature.dependsNames.join(", ")
+        });
+        return;
+      }
+
       featureToBeDeleted = feature;
       $state.go('huronfeatures.deleteFeature', {
         deleteFeatureName: feature.cardName,
         deleteFeatureId: feature.id,
         deleteFeatureType: feature.filterValue
+      });
+    };
+
+    vm.detailsHuronFeature = function (feature) {
+      $state.go('huronfeatures.aaListDepends', {
+        detailsFeatureName: feature.cardName,
+        detailsFeatureId: feature.id,
+        detailsFeatureType: feature.filterValue,
+        detailsDependsList: feature.dependsNames
       });
     };
 
