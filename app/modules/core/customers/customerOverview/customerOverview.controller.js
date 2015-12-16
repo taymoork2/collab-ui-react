@@ -6,7 +6,7 @@
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($stateParams, $state, $window, $translate, $log, $http, identityCustomer, Config, Userservice, Authinfo, AccountOrgService, BrandService) {
+  function CustomerOverviewCtrl($stateParams, $state, $window, $translate, $log, $http, identityCustomer, Config, Userservice, Authinfo, AccountOrgService, BrandService, FeatureToggleService) {
     /*jshint validthis: true */
     var vm = this;
     var customerOrgId = $stateParams.currentCustomer.customerOrgId;
@@ -17,10 +17,31 @@
     vm.openEditTrialModal = openEditTrialModal;
     vm.getDaysLeft = getDaysLeft;
     vm.isSquaredUC = isSquaredUC();
+    vm.showRoomSystems = false;
     vm.usePartnerLogo = true;
     vm.allowCustomerLogos = false;
     vm.logoOverride = false;
     vm.isOrgSetup = isOrgSetup;
+    vm.isOwnOrg = isOwnOrg;
+    vm.partnerOrgId = Authinfo.getOrgId();
+    vm.partnerOrgName = Authinfo.getOrgName();
+    vm.offer = vm.currentCustomer.offer;
+
+    FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
+      if (result) {
+        vm.offer = getAtlasStormBrandingOffer();
+      }
+    });
+
+    FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials).then(function (result) {
+      if (result) {
+        if (_.find(vm.currentCustomer.offers, {
+            id: Config.trials.roomSystems
+          })) {
+          vm.showRoomSystems = result;
+        }
+      }
+    });
 
     initCustomer();
     getLogoSettings();
@@ -141,6 +162,38 @@
       return _.every(vm.currentCustomer.unmodifiedLicenses, {
         status: 'ACTIVE'
       });
+    }
+
+    function isOwnOrg() {
+      return vm.currentCustomer.customerName === Authinfo.getOrgName();
+    }
+
+    function getAtlasStormBrandingOffer() {
+      var offerUserServices = [];
+      var offerDeviceBasedServices = [];
+      var offers = _.pluck(vm.currentCustomer.offers, 'id');
+      for (var cnt in offers) {
+        var offer = offers[cnt];
+        if (!offer) {
+          continue;
+        }
+        switch (offer) {
+        case Config.trials.message:
+          offerUserServices.push($translate.instant('customerPage.message'));
+          break;
+        case Config.trials.call:
+          offerUserServices.push($translate.instant('customerPage.call'));
+          break;
+        case Config.trials.roomSystems:
+          offerDeviceBasedServices.push($translate.instant('customerPage.roomSystem'));
+          break;
+        }
+      }
+
+      return {
+        'userServices': offerUserServices.sort().join(', '),
+        'deviceBasedServices': offerDeviceBasedServices.sort().join(', ')
+      };
     }
   }
 })();

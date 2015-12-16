@@ -4,7 +4,7 @@ describe('Controller: CdrService', function () {
   beforeEach(module('uc.cdrlogsupport'));
   beforeEach(module('Huron'));
 
-  var $httpBackend, $q, CdrService, Notification;
+  var $httpBackend, $q, CdrService, Notification, Authinfo;
   var proxyResponse = getJSONFixture('huron/json/cdrLogs/proxyResponse.json');
   var proxyUrl = 'https://hades.huron-int.com/api/v1/elasticsearch/_all/_search?pretty';
   var name = 'call0CDR0';
@@ -30,13 +30,15 @@ describe('Controller: CdrService', function () {
     return returnDate.utc().format();
   };
 
-  beforeEach(inject(function (_$httpBackend_, _$q_, _CdrService_, _Notification_) {
+  beforeEach(inject(function (_$httpBackend_, _$q_, _CdrService_, _Notification_, _Authinfo_) {
     CdrService = _CdrService_;
     Notification = _Notification_;
     $q = _$q_;
     $httpBackend = _$httpBackend_;
+    Authinfo = _Authinfo_;
 
     spyOn(Notification, 'notify');
+    spyOn(Authinfo, 'getOrgId').and.returnValue('1');
   }));
 
   afterEach(function () {

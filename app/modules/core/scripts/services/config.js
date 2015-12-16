@@ -129,6 +129,8 @@ angular.module('Core')
 
         ciscoMockOrgId: 'd30a6828-dc35-4753-bab4-f9b468828688',
 
+        consumerOrgId: 'consumer',
+
         logoutUrl: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&service=webex-squared&goto=',
 
         oauthDeleteTokenUrl: 'https://idbroker.webex.com/idb/oauth2/v1/revoke',
@@ -281,7 +283,7 @@ angular.module('Core')
           link: '/users'
         }, {
           tab: 'servicesTab',
-          icon: 'icon-settings',
+          icon: 'icon-cloud',
           title: 'tabs.servicesTab',
           subPages: [{
             title: 'tabs.conferencing',
@@ -356,6 +358,11 @@ angular.module('Core')
             desc: 'tabs.billingTabDesc',
             state: 'billing',
             link: '#orderprovisioning'
+          }, {
+            title: 'tabs.helpdesk',
+            desc: 'tabs.helpdesk',
+            state: 'helpdesklaunch',
+            link: '#helpdesklaunch'
           }]
         }, {
           tab: 'accountTab',
@@ -403,11 +410,6 @@ angular.module('Core')
             state: 'vts',
             link: '#vts'
           }, {
-            title: 'tabs.reportTab',
-            desc: 'New Reports',
-            state: 'newpartnerreports',
-            link: '#partner/newreports'
-          }, {
             title: 'tabs.cdrTab',
             desc: 'tabs.cdrLogsTabDesc',
             state: 'cdrsupport',
@@ -427,6 +429,11 @@ angular.module('Core')
             desc: 'tabs.eventsTabDesc',
             state: 'events',
             link: '#events'
+          }, {
+            title: 'tabs.reportTab',
+            desc: 'reportsPage.devReports',
+            state: 'devReports',
+            link: '#devReports'
           }]
         }],
 
@@ -437,14 +444,16 @@ angular.module('Core')
           fusion_cal: 'squared-fusion-cal',
           mediafusion: 'squared-fusion-media',
           fusion_mgmt: 'squared-fusion-mgmt',
-          device_mgmt: 'spark-device-mgmt',
+          room_system: 'spark-room-system',
           fusion_ec: 'squared-fusion-ec',
           messenger: 'webex-messenger'
         },
 
         trials: {
-          collab: 'COLLAB',
-          squaredUC: 'SQUAREDUC'
+          message: 'COLLAB',
+          meeting: 'WEBEXTRIALS',
+          call: 'SQUAREDUC',
+          roomSystems: 'ROOMSYSTEMS'
         },
 
         organizations: {
@@ -498,11 +507,15 @@ angular.module('Core')
           brandDanger: '#f05d3b',
           brandWarning: '#f7c100',
           dummyGray: '#ECECEC',
+          primaryColorLight: '#66C5E8',
+          primaryColorBase: '#049FD9',
+          primaryColorDarker: '#0387B8',
           dummyGrayLight: '#F3F3F3',
           dummyGrayLighter: '#FAFAFA'
         },
 
         confMap: {
+          MS: 'onboardModal.paidMsg',
           CF: 'onboardModal.paidConf',
           EE: 'onboardModal.enterpriseEdition',
           MC: 'onboardModal.meetingCenter',
@@ -510,6 +523,26 @@ angular.module('Core')
           TC: 'onboardModal.trainingCenter',
           EC: 'onboardModal.eventCenter',
           CO: 'onboardModal.communication'
+        },
+
+        offerCodes: {
+          MS: 'MS', // Messaging
+          CF: 'CF', // Conferencing
+          EE: 'EE', // Enterprise Edition (WebEx)
+          MC: 'MC', // Meeting Center (WebEx)
+          SC: 'SC', // Support Center (WebEx)
+          TC: 'TC', // Training Center (WebEx)
+          EC: 'EC', // Event Center (WebEx)
+          CO: 'CO' // Communication
+        },
+
+        licenseTypes: {
+          MESSAGING: 'MESSAGING',
+          CONFERENCING: 'CONFERENCING',
+          COMMUNICATIONS: 'COMMUNICATIONS',
+          STORAGE: 'STORAGE',
+          SHARED_DEVICES: 'SHARED_DEVICES',
+          CMR: 'CMR'
         },
 
         defaultEntitlements: ['webex-squared', 'squared-call-initiation'],
@@ -622,7 +655,14 @@ angular.module('Core')
         },
 
         getFeatureToggleUrl: function () {
-          return this.locusServiceUrl.prod;
+          var locusServiceUrl = {
+            'dev': this.locusServiceUrl.prod,
+            'cfe': this.locusServiceUrl.cfe,
+            'integration': this.locusServiceUrl.prod,
+            'prod': this.locusServiceUrl.prod
+          };
+
+          return locusServiceUrl[this.getEnv()];
         },
 
         getEnrollmentServiceUrl: function () {
@@ -940,7 +980,7 @@ angular.module('Core')
         WX2_Support: ['overview', 'reports', 'support'],
         WX2_SquaredInviter: [],
         PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup'],
-        PARTNER_USER: ['partnercustomers', 'customer-overview', 'trialAdd', 'trialEdit'],
+        PARTNER_SALES_ADMIN: ['partnerreports'],
         CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
         User: [],
         Site_Admin: [
@@ -952,7 +992,7 @@ angular.module('Core')
           'example'
         ],
         Application: ['organizations', 'organization-overview'],
-        Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org']
+        Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org', 'helpdesklaunch']
       };
 
       config.serviceStates = {
@@ -967,7 +1007,6 @@ angular.module('Core')
           'paginggroups',
           'huntgroups',
           'didadd',
-          'newpartnerreports',
           'hurondetails',
           'huronlines',
           'huronsettings',
@@ -975,24 +1014,24 @@ angular.module('Core')
           'huronnewfeature',
           'huronHuntGroup',
           'huntgroupedit',
+          'devReports',
           'cdrsupport',
           'cdr-overview'
         ],
         'squared-fusion-mgmt': [
           'cluster-details',
-          'cluster-details-new',
           'management-service',
         ],
-        'spark-device-mgmt': [
+        'spark-room-system': [
           'devices',
           'device-overview',
           'devices-redux'
         ],
         'squared-fusion-uc': [
+          'call-service',
           'devices',
           'device-overview',
-          'devices-redux',
-          'call-service'
+          'devices-redux'
         ],
         'squared-fusion-cal': [
           'calendar-service'
@@ -1022,12 +1061,12 @@ angular.module('Core')
       config.restrictedStates = {
         'customer': [
           'partneroverview',
-          'partnerreports',
-          'newpartnerreports'
+          'partnerreports'
         ],
         'partner': [
           'overview',
           'reports',
+          'devReports',
           'devices',
           'fusion',
           'mediafusionconnector',

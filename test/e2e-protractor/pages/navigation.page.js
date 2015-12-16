@@ -14,7 +14,6 @@ var Navigation = function () {
   this.autoAttendantPage = element(by.css('a[href="#/callrouting/autoattendant"]'));
   this.fusionTab = element(by.css('a[href="#fusion"]'));
   this.reportsTab = element(by.css('li.reportTab > a'));
-  this.devReports = element(by.css('a[href="#partner/newreports"]'));
   this.supportTab = element(by.css('li.supportTab > a'));
   this.cdrTab = element(by.css('a[href="#cdrsupport"]'));
   this.logsTab = element(by.css('a[href="#support"]'));
@@ -27,6 +26,14 @@ var Navigation = function () {
   this.mediaFusionMgmtTab = element(by.css('a[href="#mediafusionconnector"]'));
   this.enterpriseResourcesTab = element(by.css('a[href="#vts"]'));
   this.utilizationTab = element(by.css('a[href="#utilization"]'));
+
+  // hybrid services
+  this.activateService = element(by.id('activateService'));
+  this.deactivateService = element(by.id('deactivateService'));
+  this.calendarServicePage = element(by.css('a[href="#/services/calendar"]'));
+  this.callServicePage = element(by.css('a[href="#/services/call"]'));
+  this.serviceResources = element(by.cssContainingText('.nav-link', 'Resources'));
+  this.serviceSettings = element(by.cssContainingText('.nav-link', 'Settings'));
 
   this.settings = element(by.id('setting-bar'));
   this.feedbackLink = element(by.id('feedback-lnk'));
@@ -47,11 +54,6 @@ var Navigation = function () {
   this.clickDevelopmentTab = function () {
     utils.click(this.developmentTab);
   };
-
-  this.clickDevReports = function () {
-    this.clickDevelopmentTab();
-    utils.click(this.devReports);
-  }
 
   this.clickCDRSupport = function () {
     this.clickDevelopmentTab();
@@ -219,6 +221,21 @@ var Navigation = function () {
     utils.click(this.userInfoButton);
     utils.click(this.launchPartnerButton);
   };
+
+  this.ensureHybridService = function (page) {
+    this.clickServicesTab();
+    utils.click(page);
+    utils.wait(navigation.serviceSettings).then(function () {
+      console.log('\tSettings page should show "Deactivate" button');
+      utils.click(navigation.serviceSettings);
+      utils.expectIsDisplayed(navigation.deactivateService);
+    }, function () {
+      console.log('\tSevice disabled, enabling it...');
+      utils.click(navigation.activateService);
+      utils.click(navigation.serviceSettings);
+      utils.expectIsDisplayed(navigation.deactivateService);
+    });
+  }
 };
 
 module.exports = Navigation;

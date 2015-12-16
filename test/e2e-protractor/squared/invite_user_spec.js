@@ -76,6 +76,7 @@ describe('Squared Invite User Flow', function () {
 
     it('should open the Add Users wizard', function () {
       navigation.clickAddUsers();
+      //    utils.expectIsDisplayed(wizard.manualSubtitle);
       utils.click(wizard.nextBtn);
     });
 

@@ -24,16 +24,17 @@
         </li>
       </ul>
     </div>
-    </cs-sp-section>
-    <cs-sp-section ng-if="userOverview.features.length && false">
+  </cs-sp-section>
+  <hercules-cloud-extensions></hercules-cloud-extensions>
+  <cs-sp-section ng-if="userOverview.features.length && false">
     <div class="section-title-row">
       <span class="section-name" translate="usersPreview.enabledBetaFeatures"></span>
     </div>
     <div class="feature-list">
       <ul>
         <li class="feature" ng-repeat="feature in userOverview.features | orderBy:'key'">
-            <span class="feature-name">{{feature.key}}</span>
-            <span class="feature-status">{{feature.val}}</span>
+          <span class="feature-name">{{feature.key}}</span>
+          <span class="feature-status">{{feature.val}}</span>
         </li>
       </ul>
     </div>
@@ -52,5 +53,4 @@
     </div>
     <uc-devices></uc-devices>
   </cs-sp-section>
-  <hercules-cloud-extensions></hercules-cloud-extensions>
 </cs-sp-container>

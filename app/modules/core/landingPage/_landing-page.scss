@@ -1,14 +1,18 @@
 /******** Home page styles ********/
 
+.overview-state {
+  @extend %page-content-padding;
+}
+.customer-landing {
+  @extend %content-header;
+}
+
 // Analytics Charts
 .overview-updated {
   cursor: pointer;
   font-family: Arial;
   color: $gray-darker;
   line-height: 40px;
-
-  @extend %ui-pl;
-
   display: inline-block;
 
   .icon-refresh {
@@ -142,8 +146,6 @@
 
 .monitoring-panel {
   .badge {
-    width: 50px;
-    font-size: 13px;
     font-weight: normal;
 
     @include text-overflow;
@@ -197,7 +199,6 @@
 }
 
 i {
-  margin-right: 5px;
   .green & {
     color: $brand-success;
   }
@@ -384,9 +385,7 @@ li.monitoring-cell {
     }
 
     .badge {
-      width: 60px;
-
-      @include text-overflow;
+      min-width: rem-calc(60);
     }
 
     .align-center {
@@ -413,6 +412,20 @@ li.monitoring-cell {
     @mixin badge-disabled-darker {
       background-color: $gray-lighter;
       color: $gray-lighter;
+    }
+
+    .badge--managed {
+      margin-left: 12px;
+    }
+
+    .inactive {
+      background-color: $gray-light-3;
+      color: $gray-dark-1;
+    }
+
+    .active {
+      background-color: $color-primary-darker;
+      color: $brand-white;
     }
 
     .free {

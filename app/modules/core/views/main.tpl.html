@@ -4,21 +4,21 @@
       <div class="top-bar-orgname" ng-controller="UserInfoController" ng-if="Utils.isAdminPage()"><div class="top-bar-title" title="{{orgname}}">{{orgname}}</div></div>
     </cs-header-left>
     <cs-header-right>
-      <div class="leaderboard-push-trigger" ng-controller="HeaderPushCtrl" ng-if="Utils.isAdminPage()">
-        <cs-header-push-trigger state="state" label="label"></cs-header-push-trigger>
+      <div ng-show = "buckets && buckets.length > 0" class="leaderboard-push-trigger" ng-controller="leaderBoardCtrl" ng-if="Utils.isAdminPage()">
+        <cs-header-push-trigger  state="state" label="label"></cs-header-push-trigger>
       </div>
-      <div class="settings-menu dropdown" ng-controller="SettingsMenuCtrl as settings" ng-if="Utils.isAdminPage()">
+      <div class="settings-menu dropdown" ng-controller="SetupWizardCtrl" ng-if="Utils.isAdminPage()">
         <button class="btn btn--header dropdown-toggle"><i class="icon-settings icon"></i>
-        <span class="header-label">{{settings.label}}</span></button>
+        <span class="header-label">{{::'settings.title' | translate}}</span></button>
         <ul class="dropdown-menu" role="menu">
-          <li ng-repeat="item in menuItems">
-            <a ng-click="doAction(item.link)">{{item.title}}</a>
+          <li ng-repeat="item in tabs">
+            <a ui-sref="setupwizardmodal({currentTab:item.name})">{{::item.label | translate}}</a>
           </li>
-          <li>
+          <li ng-controller="SettingsMenuCtrl as langSettings">
             <a><span | translate="common.language"></span>
               <br>
-              <select id="languageSelector" ng-options="item.label for item in settings.options track by item.value"
-                      ng-model="settings.selected" ng-change="updateLanguage()" onclick="event.stopPropagation();">
+              <select id="languageSelector" ng-options="item.label for item in langSettings.options track by item.value"
+                      ng-model="langSettings.selected" ng-change="updateLanguage()" onclick="event.stopPropagation();">
               </select>
             </a>
           </li>
@@ -32,14 +32,14 @@
     <cs-left-nav pages="tabs" ng-controller="TabsCtrl" ng-if="Utils.isAdminPage()"></cs-left-nav>
     <div class="page-content-wrapper container-fluid">
       <div class="row full">
-        <div class="col-md-12">
+        <div class="medium-12 columns">
           <cs-header-push-container ng-if="Utils.isAdminPage()">
             <leader-board-bucket></leader-board-bucket>
           </cs-header-push-container>
         </div>
       </div>
-      <div class="row full">
-        <div class="col-md-12 content-view" ui-view="">
+      <div class="row full collapse">
+        <div class="medium-12 columns content-view" ui-view="">
         </div>
       </div>
     </div>

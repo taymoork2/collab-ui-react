@@ -11,6 +11,7 @@
     '$stateParams',
     '$sce',
     '$timeout',
+    '$window',
     'Authinfo',
     'Config',
     function webexSiteSettingCtrl(
@@ -23,6 +24,7 @@
       $stateParams,
       $sce,
       $timeout,
+      $window,
       Authinfo,
       Config
     ) {
@@ -35,11 +37,12 @@
       var translateUse = $translate.use();
       var iframeUrl = $stateParams.settingPageIframeUrl;
 
-      _this.logMsg = _this.funcName + ": " + "\n" +
+      _this.logMsg = _this.funcName + "\n" +
         "translateUse=" + translateUse + "\n" +
         "stateParams=" + JSON.stringify($stateParams);
       $log.log(_this.logMsg);
 
+      $scope.isIframeLoaded = false;
       $scope.siteSettingId = $stateParams.webexPageId;
       $scope.siteSettingLabel = $translate.instant("webexSiteSettingsLabels.settingPageLabel_" + $stateParams.webexPageId);
 
@@ -51,30 +54,36 @@
       );
 
       if (
-        (null == iframeUrl) ||
-        ("null" === iframeUrl) ||
-        ("" === iframeUrl)
+        (null != iframeUrl) &&
+        ("null" !== iframeUrl) &&
+        ("" !== iframeUrl)
       ) {
-
-        _this.logMsg = _this.funcName + ": " + "ERROR!!! Iframe URL is empty";
+        $scope.iframeUrlType = "validIframeUrl";
+      } else {
+        _this.logMsg = _this.funcName + "\n" +
+          "ERROR!!! Iframe URL is empty";
         $log.log(_this.logMsg);
 
         $scope.iframeUrlType = "invalidIframeUrl";
         iframeUrl = "https://" + $stateParams.siteUrl + "/igotnuthin";
-      } else {
-        $scope.iframeUrlType = "validIframeUrl";
       }
 
       // iframe request variables
+      if (iframeUrl.indexOf("cibtsgsbt31.webex.com") > 0)
+        iframeUrl = iframeUrl.replace($stateParams.siteUrl, "wbxbts.admin.ciscospark.com");
       $scope.trustIframeUrl = $sce.trustAsResourceUrl(iframeUrl);
       $scope.adminEmail = Authinfo.getPrimaryEmail();
       $scope.authToken = $rootScope.token;
       $scope.siteName = $stateParams.siteUrl;
+      var index = $stateParams.siteUrl.indexOf(".");
+      $scope.siteName2 = $stateParams.siteUrl.slice(0, index);
+      $scope.fullSparkDNS = window.location.origin;
+
       $scope.locale = (
         "es_LA" == translateUse
       ) ? "es_MX" : translateUse;
 
-      _this.logMsg = _this.funcName + ": " + "\n" +
+      _this.logMsg = _this.funcName + "\n" +
         "scope.siteSettingLabel=" + $scope.siteSettingLabel + "\n" +
         "scope.trustIframeUrl=" + $scope.trustIframeUrl + "\n" +
         "scope.adminEmail=" + $scope.adminEmail + "\n" +
@@ -85,13 +94,30 @@
       // $log.log(_this.logMsg);
 
       $timeout(
-        function () {
+        function loadIframe() {
           var submitFormBtn = document.getElementById('submitFormBtn');
           submitFormBtn.click();
-        },
+        }, // loadIframe()
 
         0
       );
+
+      $window.iframeLoaded = function (iframeId) {
+        var funcName = "iframeLoaded()";
+        var logMsg = funcName;
+
+        logMsg = funcName + "\n" +
+          'iframeId=' + iframeId;
+        $log.log(logMsg);
+
+        var currScope = angular.element(iframeId).scope();
+
+        currScope.$apply(
+          function updateScope() {
+            currScope.isIframeLoaded = true;
+          }
+        );
+      }; // iframeLoaded()
     } // webexSiteSettingCtrl()
   ]); // angular.module().controller()
 })(); // function()

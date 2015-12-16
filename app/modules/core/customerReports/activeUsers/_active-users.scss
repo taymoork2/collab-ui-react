@@ -1,0 +1,19 @@
+.customer-active-user {
+  .report-sides {
+    margin: 0 rem-calc(25);
+  }
+  .graph-number {
+    font-family: $brand-font-cisco-TT-Regular;
+    font-size: rem-calc(18);
+    color: $brand-success;
+    text-align: left;
+  }
+  .barchart {
+    position: relative;
+    top: -35px;
+  }
+  .active-users-table {
+    margin-bottom: rem-calc(25);
+    width: 95%
+  }
+}

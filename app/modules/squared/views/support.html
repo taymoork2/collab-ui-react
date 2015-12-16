@@ -1,8 +1,4 @@
-<div class="row support-row">
-  <div class="page-title col-xs-12">
-    <span class="title-heading">{{'supportPage.title' | translate}}</span>
-  </div>
-</div>
+ <cs-page-header title="{{::'spacesPage.title' | translate}}"></cs-page-header>
 <div class="row support-row">
   <div class="panel panel-default col-xs-6">
     <div class="panel-heading panel-heading-default">
@@ -33,7 +29,7 @@
 
 <div id="logs-panel" class="col-md-12 col-sm-12" ng-hide="callInfoActive">
   <div id="userSupport" class="customer-list">
-    <div class="page-header row">
+    <div class="row">
       <label ng-show="userLogs.length === 0 || !userLogs"><span id="noResults" translate="supportPage.noResults"></label>
       <div id="supportTable" gridscrollbar class="gridStyle col-md-12" ng-grid="gridOptions"></div>
     </div>

@@ -61,11 +61,6 @@ describe('Partner flow', function () {
         utils.expectIsDisplayed(partner.addTrialForm);
       });
 
-      it('should check the Room Systems Checkbox', function () {
-        utils.click(partner.roomSystemsCheckbox);
-        utils.expectIsEnabled(partner.trialRoomSystemsAmount);
-      });
-
       afterEach(function () {
         utils.click(partner.cancelTrialButton);
       });
@@ -83,10 +78,11 @@ describe('Partner flow', function () {
 
       utils.sendKeys(partner.customerNameInput, partner.newTrial.customerName);
       utils.sendKeys(partner.customerEmailInput, partner.newTrial.customerEmail);
-      utils.click(partner.squaredTrialCheckbox);
+      utils.click(partner.roomSystemsCheckbox);
 
       utils.click(partner.startTrialButton);
       notifications.assertSuccess(partner.newTrial.customerName, 'A trial was successfully started');
+      utils.clickEscape();
     }, LONG_TIMEOUT);
 
     it('should find new trial', function (done) {
@@ -110,9 +106,11 @@ describe('Partner flow', function () {
         utils.expectIsDisplayed(partner.editTrialForm);
         utils.expectClass(partner.squaredTrialCheckbox, 'disabled');
 
+        partner.assertDisabled('saveUpdateButton');
+        utils.clear(partner.licenseCountInput);
+        utils.sendKeys(partner.licenseCountInput, partner.editTrial.licenseCount);
         utils.click(partner.saveUpdateButton);
         notifications.assertSuccess(partner.newTrial.customerName, 'You have successfully edited a trial for');
-
         utils.click(partner.trialFilter);
         utils.expectIsDisplayed(partner.newTrialRow);
       });
@@ -191,7 +189,9 @@ describe('Partner flow', function () {
       appWindow = browser.getWindowHandle();
 
       utils.expectIsDisplayed(navigation.userInfoButton);
-      navigation.launchPartnerOrgPortal();
+      utils.click(partner.allFilter);
+      utils.click(partner.myOrganization);
+      utils.click(partner.launchButton);
 
       utils.switchToNewWindow().then(function () {
 

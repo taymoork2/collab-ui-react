@@ -44,7 +44,7 @@ gulp.task('analyze:jshint', function () {
   var files = [].concat(
     config.appFiles.js,
     config.unsupportedDir + '/' + config.unsupported.file,
-    config.testFiles.spec,
+    config.testFiles.spec.all,
     'gulpfile.js'
   );
   messageLogger('Running JSHint on JavaScript files', files);

@@ -12,18 +12,9 @@ body {
   margin: 0;
 }
 
-.page-content-wrapper {
-  padding-left: 0;
-}
-
 .page-header {
   margin: 0;
   padding: 0;
-}
-
-.page-option-buttons {
-  padding-top: 27px;
-  float: right;
 }
 
 .page-options-bar {}
@@ -49,25 +40,11 @@ body {
   }
 }
 
-.icon {
-  .icon-export & {
-    @include vr-spacing(mr, 1.875);
-    line-height: 2.813rem;
-    color: $brand-info;
-  }
-}
-
 // Common ngGrid Styles
-
-div[gridscrollbar] {
-  height: calc(100vh - 150px);
-}
-
-.ngCellText,
-.ngHeaderText {
-  &.colt0 {
-    padding-left: 30px;
-  }
+.grid-refresh {
+  position: absolute;
+  top: 20rem;
+  left: 50%;
 }
 
 @media screen {
@@ -126,6 +103,7 @@ a[href="http://www.amcharts.com/javascript-charts/"] {
   transform: translateY(-50%);
 }
 
-.messagebox {
+.messagebox,
+.messagebox-backdrop {
   background-image: url(../images/bg_3515.jpg);
 }

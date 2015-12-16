@@ -4,14 +4,15 @@
     vertical-align:text-bottom;
 }
 
-#webexSiteSettings {
-  .page-option-buttons {
-      padding-right: $page-side-padding;
+.webex {
+  &-site-reports,
+  &-site-report-iframe,
+  &-site-settings,
+  &-site-setting {
+    @extend %content-subheader;
+  }
+  &-site-setting,
+  &-site-report-iframe {
+    @extend %page-background-white;
   }
 }
-
-.webexPage {
-  padding-left: $page-side-padding;
-  padding-top: 0px;
-}
-

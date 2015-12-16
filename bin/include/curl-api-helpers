@@ -1,0 +1,343 @@
+# TODO: get these static urls from common source that can be shared with other nodejs scripts
+atlas_api_url=${atlas_api_url:-https://atlas-integration.wbx2.com/admin/api/v1}
+wdm_api_url=${wdm_api_url:-https://wdm-integration.wbx2.com/wdm/api/v1}
+ci_api_url=https://idbroker.webex.com
+
+ci_cookie_name=cisPRODiPlanetDirectoryPro
+client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec
+client_secret=c10c371b4641010a750073b3c8e65a7fff0567400d316055828d3c74925b0857
+oauth_token_metadata_dir=.oauth_token_metadata
+tmp_file=/tmp/http-header.$$
+top_dir=${top_dir}
+auth_src=
+
+if [ -z "$top_dir" ]; then
+    cwd=`pwd`
+
+    # get project top-level dir (look for 'fabfile.py')
+    while [ ! -r fabfile.py -a "`pwd`" != "/" ]; do
+        cd ..
+    done
+    top_dir=`pwd`
+    cd $cwd
+    if [ "${top_dir}" = "/" ]; then
+        >&2 echo "Error: traversed to '/' while trying to find top-level dir"
+        exit 1
+    fi
+fi
+
+auth_src=${top_dir}/test/api_sanity/test_helper.coffee
+
+# get list of org ids reflecting the list of orgs that we should *never* delete.
+function get_blacklisted_orgs {
+    local blacklist_src=${1:-${auth_src}}
+    if [ -f ${blacklist_src} ]; then
+        grep org:\  $blacklist_src | get_field "org" | uniq
+    fi
+}
+
+# grep org id against list of blacklist org ids, return the result of grep
+function is_blacklisted_org {
+    local org_id=${1}
+    local blacklist_src=${2:-${auth_src}}
+    get_blacklisted_orgs ${blacklist_src} | grep -q ${org_id}
+    return $?
+}
+
+# grep out first matching auth-related fields for $grep_key
+function get_auth_info {
+    local grep_key=${1}
+    local auth_src=${2:-${auth_src}}
+    local results=
+    if [ -z "${grep_key}" ]; then
+        >&2 echo "Error: no grep_key provided"
+        return 1
+    fi
+    if [ -f ${auth_src} ]; then
+        results="`grep -w -A3 "'${grep_key}'" ${auth_src}`"
+        if [ -n "`echo \"$results\" | grep -- ^--`" ]; then
+            >&2 echo "Error: multiple matches found for grep key: $grep_key"
+            return 1
+        fi
+        if [ -z "${results}" ]; then
+            >&2 echo "Error: no matches found for grep key: $grep_key"
+            return 1
+        fi
+        echo "$results"
+    fi
+}
+
+# grep out username value (used with 'get_auth_info()')
+function get_login {
+    get_field "user"
+}
+
+# grep out password value (used with 'get_auth_info()')
+function get_passwd {
+    get_field "pass"
+}
+
+# grep out org id value (used with 'get_auth_info()')
+function get_org_id {
+    get_field "org"
+}
+
+# grep out a given dict value, given a key (used with 'get_auth_info()')
+function get_field {
+    local field_key="${1}:"
+    grep ${field_key} | awk '{print $2;}' | cut -d\' -f2
+}
+
+# grep out SSO token from a special cookie header field (see: $ci_cookie_name)
+function get_sso_token_from_header_dump {
+    # ex. raw cookie header line:
+    # ```
+    # Set-Cookie: cisPRODiPlanetDirectoryPro=AQIC5wM2LY4SfcxprP1ShL6_dHuJVM5JvUAd3iqMPv0cDog.*AAJTSQACMDYAAlNLABM2MzkzMDA0NTgzMDI0NTA5NjUyAAJTMQACMTI.*; Domain=.webex.com; Path=/; Secure
+    # ```
+    local header_dump_file=${1}
+    local set_ci_cookie=`grep -m1 "^Set-Cookie: ${ci_cookie_name}" ${header_dump_file}`
+    echo ${set_ci_cookie} | sed -e "s/^Set-Cookie: ${ci_cookie_name}=\(.*\); Domain=.*/\1/g"
+}
+
+# curl a login end-point using standard username/passwd credentials to get an SSO token
+function curl_get_sso_token {
+    local user_id=${1}
+    local passwd=${2}
+    local org_id=${3}
+    local sso_token=
+
+    # ex. raw header-dump file:
+    # ```
+    # HTTP/1.1 302 Found
+    # Set-Cookie: JSESSIONID=FCD19B5CE580485BDFAE793EACF65C9B; Path=/idb/; Secure; HttpOnly
+    # TrackingID: NA_83df74b1-7ba7-4703-9c6d-64daf01cb31a
+    # Cache-Control: private
+    # Pragma: no-cache
+    # Expires: 0
+    # X-DSAMEVersion: Cisco Identity Broker
+    # AM_CLIENT_TYPE: genericHTML
+    # Set-Cookie: cisPRODAMAuthCookie=AQIC5wM2LY4Sfcw8Dl2UC-PacsTn9J4H01znQQhoDbZp_KI.*AAJTSQACMDYAAlNLABMtNjQ1MDg5MjMyMjIwMDUxMTQwAAJTMQACMDg.*; Domain=.webex.com; Path=/; Secure
+    # Set-Cookie: cisPRODAMAuthCookie=AQIC5wM2LY4Sfcw8Dl2UC-PacsTn9J4H01znQQhoDbZp_KI.*AAJTSQACMDYAAlNLABMtNjQ1MDg5MjMyMjIwMDUxMTQwAAJTMQACMDg.*; Domain=.cisco.com; Path=/; Secure
+    # Set-Cookie: amlbcookie=08; Domain=.webex.com; Path=/; Secure
+    # Set-Cookie: amlbcookie=08; Domain=.cisco.com; Path=/; Secure
+    # Set-Cookie: cisRememberMyEmail=LOGOUT; Domain=.webex.com; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/; Secure
+    # Set-Cookie: cisRememberMyEmail=LOGOUT; Domain=.cisco.com; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/; Secure
+    # X-AuthErrorCode: 0
+    # Set-Cookie: cisPRODiPlanetDirectoryPro=AQIC5wM2LY4Sfcw8Dl2UC-PacsTn9J4H01znQQhoDbZp_KI.*AAJTSQACMDYAAlNLABMtNjQ1MDg5MjMyMjIwMDUxMTQwAAJTMQACMDg.*; Domain=.webex.com; Path=/; Secure
+    # Set-Cookie: cisPRODiPlanetDirectoryPro=AQIC5wM2LY4Sfcw8Dl2UC-PacsTn9J4H01znQQhoDbZp_KI.*AAJTSQACMDYAAlNLABMtNjQ1MDg5MjMyMjIwMDUxMTQwAAJTMQACMDg.*; Domain=.cisco.com; Path=/; Secure
+    # Set-Cookie: cisPRODAMAuthCookie=LOGOUT; Domain=.webex.com; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/; Secure
+    # Set-Cookie: cisPRODAMAuthCookie=LOGOUT; Domain=.cisco.com; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/; Secure
+    # Location: https://idbroker.webex.com/idb/config/auth/default/login_success.jsp
+    # Content-Length: 0
+    # Date: Wed, 25 Nov 2015 06:01:15 GMT
+    # Server:
+    # ```
+    curl -s -k \
+      --data-urlencode "IDToken1=${user_id}" \
+      --data-urlencode "IDToken2=${passwd}" \
+      ${ci_api_url}/idb/UI/Login?org=${org_id} \
+      -D ${tmp_file} > /dev/null
+
+    sso_token="`get_sso_token_from_header_dump ${tmp_file}`"
+    if [ -z "${sso_token}" ]; then
+        >&2 echo "Error: Null CI SSO token"
+        exit 1
+    fi
+
+    rm -f $tmp_file
+    echo ${sso_token}
+}
+
+# curl an authorization end-point using an SSO token to get an authorization token
+function curl_get_authz_token {
+    local sso_token=${1}
+    local scope="${2:-webexsquare:admin ciscouc:admin Identity:SCIM Identity:Config Identity:Organization ccc_config:admin}"
+    local cmd=
+    local randstr="`openssl rand -base64 32`"
+    local authz_code=
+
+    # ex. raw response
+    # ```
+    # <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+    # <html xmlns="http://www.w3.org/1999/xhtml">
+    # <head>
+    # <title>OTJmNWNmYzctNmM4Mi00ZjY0LTg1MTQtM2Y3OTU2OThjNTZhMTVhNDZmOWMtZDNi</title>
+    # </head>
+    # <body>
+    # code=OTJmNWNmYzctNmM4Mi00ZjY0LTg1MTQtM2Y3OTU2OThjNTZhMTVhNDZmOWMtZDNi</body>
+    # </html>
+    # ```
+    cmd="curl -k \
+      --cookie '${ci_cookie_name}=${sso_token}' \
+      --data-urlencode 'response_type=code' \
+      --data-urlencode 'redirect_uri=urn:ietf:wg:oauth:2.0:oob' \
+      --data-urlencode 'client_id=${client_id}' \
+      --data-urlencode 'scope=${scope}' \
+      --data-urlencode 'realm=/${org_id}' \
+      --data-urlencode 'state=${randstr}' \
+      ${ci_api_url}/idb/oauth2/v1/authorize 2>/dev/null"
+
+    # parse out authorization token from the 'title' element
+    authz_code=`eval ${cmd} | grep '<title>' | cut -d'>' -f2 | cut -d'<' -f1`
+    echo ${authz_code}
+}
+
+# curl an authorization end-point using an authorization token to get an authorization token
+# - CI currently allows up to 1500 active bearer tokens
+# - this limit will eventually be reduced to 100 (no scheduled deadline currently)
+function curl_get_bearer_token {
+    local usr_label=${1}
+    local authz_code=${2}
+    local cmd=
+    local bearer_token=
+    local oauth_token_metadata_file=`mk_token_metadata_file "${usr_label}" "payload-for-authz-code-${authz_code}.json"`
+
+    # ex. raw response body
+    # ```
+    # {"expires_in":7199,"token_type":"Bearer","refresh_token":"MjllNDgyODktZjhiYy00ZmMxLWFiYzYtOGViNDkzZjM5ZTcwMWJlNDQzMWYtMTY5","refresh_token_expires_in":5183999,"access_token":"MjJmODY0MzktMWNkYS00NWRkLTk5MTItNTkwNjY3YWJlMWM2NzZlZGU0OTktZmY1"}
+    # ```
+    # curl, but also save the JSON payload to a metadata file
+    cmd="curl -k \
+      --user '${client_id}:${client_secret}' \
+      --data-urlencode 'grant_type=authorization_code' \
+      --data-urlencode 'code=${authz_code}' \
+      --data-urlencode 'redirect_uri=urn:ietf:wg:oauth:2.0:oob' \
+      ${ci_api_url}/idb/oauth2/v1/access_token 2>/dev/null | tee ${oauth_token_metadata_file}"
+
+    bearer_token=`eval ${cmd} | parse_json_print_access_token`
+    echo ${bearer_token}
+}
+
+# parse JSON payload, print out the 'access_token' property
+function parse_json_print_access_token {
+    python -c 'import json,sys; data=json.load(sys.stdin); print data["access_token"]'
+}
+
+# delete dirs containing tokens older than 7 days
+function rm_old_token_metadata_dirs {
+    local target_dir=
+    target_dir=${top_dir}/${oauth_token_metadata_dir}
+    find ${target_dir} -mindepth 1 -type d -mtime +7 2>/dev/null | xargs rm -rf
+}
+
+# create a new empty file for persisting metadata about an oauth token
+function mk_token_metadata_file {
+    local usr_label=${1}
+    local target_basename=${2}
+    local target_dir=
+    local today_dir=`date '+%F'`
+
+    if [ -z "${usr_label}" ]; then
+        >&2 echo "Error: no usr_label passed to mk_token_metadata_file"
+        exit 1
+    fi
+    if [ -z "${target_basename}" ]; then
+        >&2 echo "Error: no filename passed to mk_token_metadata_file"
+        exit 1
+    fi
+
+    # create the dir if necessary, touch the file and output the path
+    target_dir=${top_dir}/${oauth_token_metadata_dir}/${usr_label}/${today_dir}
+    mkdir -p ${target_dir}
+    touch ${target_dir}/${target_basename}
+    echo ${target_dir}/${target_basename}
+}
+
+# search for a JSON payload still within expiration window (<120-ish min.)
+# - if one exists, print its bearer token
+function get_last_active_bearer_token {
+    local usr_label=${1}
+    local expiration_in_min=119  # expiration is 7199 sec., but err on conservative side
+    local payloads_list="`mktemp tmp.XXXXX`"
+    find ${top_dir}/${oauth_token_metadata_dir}/${usr_label} -type f -iname \*.json -mmin -${expiration_in_min} > ${payloads_list} 2>/dev/null
+    local last_active_payload=
+    if [ -s "${payloads_list}" ]; then
+        last_active_payload=`cat ${payloads_list} | xargs ls -1tr | tail -1`
+        cat $last_active_payload | parse_json_print_access_token
+    fi
+    rm -f ${payloads_list}
+}
+
+# remove querystring component from input string
+function strip_querystring {
+    sed -e 's/\?.*//'
+}
+
+function strip_location_hash {
+    sed -e 's/#.*//'
+}
+
+# remove everything up to and including '.../api/v1/' from input string
+function strip_api_v1_prefix {
+    sed -e 's,.*/api/v1/,/,'
+}
+
+# print only the head-component of an url path
+function get_url_path_head {
+    local input="`cat -`"
+    local url_path_head=
+    if [[ "${input}" =~ / ]]; then
+        # - strip out querystring
+        # - strip out location hash
+        # - strip out prefix '/' char(s)
+        # - split remaining string by '/' chars, take the first element
+        url_path_head=`echo "${input}" | strip_querystring | strip_location_hash | sed -e 's,//*,,' | cut -d'/' -f1`
+        echo "/${url_path_head}"
+    fi
+}
+
+# print only the tail-component of an url path
+function get_url_path_tail {
+    local input="`cat -`"
+    if [[ "${input}" =~ / ]]; then
+        echo "${input}" | strip_querystring | strip_location_hash | sed -e 's,//*[^/]*,,'
+    fi
+}
+
+# return 1 if method and url indicate an operation that would harm the test system
+# note:
+# - when e2e tests can pre-generate their own test data, and predefined state is no longer required
+#   this will no longer be needed
+function is_safe_atlas_operation {
+    local method=${1}
+    local url_path="`echo ${2} | strip_api_v1_prefix`"
+    local url_path_head="`echo ${url_path} | get_url_path_head`"
+    local org_id=
+
+    # DELETE '/organizations/{org_id}'
+    if [ "${method}" = "DELETE" ]; then
+        case "${url_path_head}" in
+            "/organizations" )
+                url_path_head=`echo ${url_path} | get_url_path_tail | get_url_path_head`
+                org_id=${url_path_head:1}
+                if is_blacklisted_org ${org_id}; then
+                    >&2 echo "Error: unsafe operation - $@"
+                    return 1
+                fi
+                ;;
+        esac
+    fi
+}
+
+# print the endpoint url prefix based on the script-name invoked
+# - ex. 'curl-atlas' => prints the default atlas api url prefix
+# - ex. 'curl-wdm' => prints the default wdm api url prefix
+# - ex. 'curl-ci' => prints the default CI api url prefix
+function get_url_endpoint_prefix {
+    local cmd_basename=${1}
+    case "${cmd_basename}" in
+        "curl-atlas" )
+            echo "${atlas_api_url}"
+            ;;
+        "curl-wdm" )
+            echo "${wdm_api_url}"
+            ;;
+        "curl-ci" )
+            echo "${ci_api_url}"
+            ;;
+        *)
+            >&2 echo "Error: unrecognized command: ${cmd_basename}"
+            exit 1
+            ;;
+    esac
+}

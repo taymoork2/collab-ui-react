@@ -16,10 +16,16 @@
       setRegionCode: setRegionCode,
       validateDID: validateDID,
       getDIDValue: getDIDValue,
-      getDIDLabel: getDIDLabel
+      getDIDLabel: getDIDLabel,
+      getExampleNumbers: getExampleNumbers
     };
     var TOLL_FREE = 'TOLL_FREE';
     var PREMIUM_RATE = 'PREMIUM_RATE';
+
+    var exampleNumbers = {
+      us: '15556667777, +15556667777, 1-555-666-7777, +1 (555) 666-7777',
+      au: '61255566777, +61255566777, +61 2 5556 6777'
+    };
 
     // Default
     setRegionCode('us');
@@ -27,10 +33,16 @@
     return service;
 
     function setCountryCode(value) {
-      countryCode = value;
-      regionCode = _.result(_.findWhere(CountryCodes, {
-        number: countryCode
-      }), 'code');
+      value = _.trimLeft(value, '+'); // remove the '+' sign if it exists
+      if (value === '1' || value === 1) {
+        // Default to US due to shared codes
+        setRegionCode('us');
+      } else {
+        countryCode = value;
+        regionCode = _.result(_.findWhere(CountryCodes, {
+          number: countryCode
+        }), 'code');
+      }
     }
 
     function getCountryCode() {
@@ -85,6 +97,10 @@
       } else {
         return number;
       }
+    }
+
+    function getExampleNumbers() {
+      return exampleNumbers[regionCode];
     }
   }
 })();

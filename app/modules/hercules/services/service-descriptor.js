@@ -3,9 +3,9 @@
 angular.module('Hercules')
   .service('ServiceDescriptor', ['$http', 'ConfigService', 'Authinfo',
     function ServiceDescriptor($http, config, Authinfo) {
-      var services = function (callback) {
+      var services = function (callback, includeStatus) {
         $http
-          .get(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services')
+          .get(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services' + (includeStatus ? '?fields=status' : ''))
           .success(function (data) {
             callback(null, data.items || []);
           })
@@ -14,13 +14,20 @@ angular.module('Hercules')
           });
       };
 
+      function getServices() {
+        return $http.get(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services')
+          .then(function (response) {
+            return response.data.items || [];
+          });
+      }
+
       function extractData(res) {
         return res.data.items;
       }
 
-      var servicesInOrg = function (orgId) {
+      var servicesInOrg = function (orgId, includeStatus) {
         return $http
-          .get(config.getUrl() + '/organizations/' + orgId + '/services')
+          .get(config.getUrl() + '/organizations/' + orgId + '/services' + (includeStatus ? '?fields=status' : ''))
           .then(extractData);
       };
 
@@ -142,9 +149,10 @@ angular.module('Hercules')
         setServiceEnabled: setServiceEnabled,
         serviceIcon: serviceIcon,
         acknowledgeService: acknowledgeService,
+        getServices: getServices,
         servicesInOrg: servicesInOrg,
         getEmailSubscribers: getEmailSubscribers,
-        setEmailSubscribers: setEmailSubscribers,
+        setEmailSubscribers: setEmailSubscribers
       };
     }
   ]);

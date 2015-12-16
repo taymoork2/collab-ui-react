@@ -14,9 +14,9 @@
   function NotificationService() {
     var notifications = [];
 
-    function addNotification(type, id, priority, template, tags, opts) {
+    function addNotification(type, id, priority, template, tags, data) {
       removeNotification(id);
-      notifications.push(new Notification(type, id, priority, template, tags, (opts || {}).data));
+      notifications.push(new Notification(type, id, priority, template, tags, (data || {})));
     }
 
     function removeNotification(id) {

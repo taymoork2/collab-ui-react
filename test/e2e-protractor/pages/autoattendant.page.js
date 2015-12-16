@@ -9,6 +9,13 @@ var AutoAttendantPage = function () {
   this.numberDropDownArrow = element(by.linkText('Search or Select a Number'));
   this.numberDropDownOptions = element(by.css('.select-options')).all(by.tagName('li'));
   this.saveButton = element(by.name('saveButton'));
+  this.numberIconClose = element.all(by.css('.icon-close')).last();
+  this.sayMessage = element(by.cssContainingText('.aa-message-panel', 'Say Message'));
+  this.sayMessageInput = element(by.name('sayMessageInput'));
+  this.sayMessageLanguage = element(by.css('select[name="languageSelect"] + div a.select-toggle'));
+  this.languageDropDownOptions = element(by.css('select[name="languageSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
+  this.sayMessageVoice = element(by.css('select[name="voiceSelect"] + div a.select-toggle'));
+  this.sayMessageVoiceOptions = element(by.css('select[name="voiceSelect"] + div div.dropdown-menu')).all(by.tagName('li')).first();
 };
 
 module.exports = AutoAttendantPage;

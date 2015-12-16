@@ -3,76 +3,8 @@
 angular.module('Core')
   .controller('SettingsMenuCtrl', ['$scope', '$location', '$state', '$translate', 'Authinfo', 'Utils', '$rootScope', '$log',
     function ($scope, $location, $state, $translate, Authinfo, Utils, $rootScope, $log) {
-      $scope.menuItems = [];
-
-      var planReviewText = $translate.instant('firstTimeWizard.planReview');
-      var enterpriseSettingsText = $translate.instant('firstTimeWizard.enterpriseSettings');
-      var addUsersText = $translate.instant('firstTimeWizard.addUsers');
-      var serviceSetupText = $translate.instant('firstTimeWizard.serviceSetup');
-      var messagingSetupText = $translate.instant('firstTimeWizard.messaging');
-
-      var getAuthinfoData = function () {
-        if (Authinfo.isCustomerAdmin()) {
-          $scope.menuItems.push({
-            link: '/planreview',
-            title: planReviewText
-          }, {
-            link: '/messagingsetup',
-            title: messagingSetupText
-          }, {
-            link: '/enterprisesettings',
-            title: enterpriseSettingsText
-          }, {
-            link: '/addusers',
-            title: addUsersText
-          });
-
-          if (Authinfo.isSquaredUC()) {
-            $scope.menuItems.splice(1, 0, {
-              link: '/servicesetup',
-              title: serviceSetupText
-            });
-          }
-        }
-      };
-
-      if (Utils.isAdminPage()) {
-        getAuthinfoData();
-      }
-      //update the scope when Authinfo data has been populated.
-      $scope.$on('AuthinfoUpdated', function () {
-        getAuthinfoData();
-      });
-
-      $scope.doAction = function (path) {
-        if (path === '/planreview') {
-          $state.go('setupwizardmodal', {
-            currentTab: 'planReview'
-          });
-        } else if (path === '/enterprisesettings') {
-          $state.go('setupwizardmodal', {
-            currentTab: 'enterpriseSettings'
-          });
-        } else if (path === '/messagingsetup') {
-          $state.go('setupwizardmodal', {
-            currentTab: 'messagingSetup'
-          });
-        } else if (path === '/addusers') {
-          $state.go('setupwizardmodal', {
-            currentTab: 'addUsers'
-          });
-        } else if (path === '/servicesetup') {
-          $state.go('setupwizardmodal', {
-            currentTab: 'serviceSetup'
-          });
-        } else {
-          $location.path(path);
-        }
-      };
 
       var vm = this;
-      vm.options = [];
-      vm.label = $translate.instant('settings.title');
       vm.filterPlaceholder = $translate.instant('common.select');
       vm.selectPlaceholder = $translate.instant('common.selectLanguage');
       vm.selected = {};

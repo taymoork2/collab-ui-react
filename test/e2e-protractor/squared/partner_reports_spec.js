@@ -1,10 +1,8 @@
 'use strict';
 
-// Waiting for page refactor to complete before turning tests back on
-// TODO re-enable when a partner org is restored
-xdescribe('Partner Reports', function () {
-  var customer = 'Huron Int Test 2';
-  var sampleCustomer = 'Sample Customer Data';
+describe('Partner Reports', function () {
+  var customer = 'Spark UC Reports Functional Tests';
+  var e2eCustomer = 'Spark UC Reports E2E Tests';
   var time = 'Last Month';
 
   afterEach(function () {
@@ -19,7 +17,7 @@ xdescribe('Partner Reports', function () {
 
   describe('Reports Page', function () {
     it('should navigate to partner reports page', function () {
-      navigation.clickDevReports();
+      navigation.clickReports();
       utils.expectIsPresent(reports.pageTitle);
     });
 
@@ -47,34 +45,25 @@ xdescribe('Partner Reports', function () {
 
     it('should show all reports', function () {
       // active users
-      reports.verifyDescription(time, reports.activeDescription, false);
       utils.expectIsDisplayed(reports.activeUserGraph);
-      reports.verifyLegend('activeUsersdiv', 'Users');
+      utils.expectIsDisplayed(reports.activeUsers);
       reports.verifyLegend('activeUsersdiv', 'Active Users');
-      utils.expectIsNotDisplayed(reports.mostActiveButton);
       utils.expectIsNotDisplayed(reports.activeUsersTable);
-      reports.verifyNoData(reports.activeDescription);
 
       // active user population
       utils.expectIsDisplayed(reports.activePopulationGraph);
-      reports.verifyNoData(reports.activePopulationDescription);
 
       // registered endpoints
       reports.scrollToElement(reports.registeredEndpointsTable);
-      reports.verifyDescription(time, reports.endpointDescription, false);
-      reports.confirmCustomerInTable(sampleCustomer, reports.registeredEndpointsTable, true);
+      reports.confirmCustomerInTable(e2eCustomer, reports.registeredEndpointsTable, true);
       utils.expectIsDisplayed(reports.registeredEndpointsTable);
-      reports.verifyNoData(reports.endpointDescription);
 
       // call metrics
-      reports.verifyDescription(time, reports.metricsDescription, false);
       utils.expectIsDisplayed(reports.callMetricsGraph);
-      reports.verifyNoData(reports.metricsDescription);
 
       // device media quality
       reports.scrollToElement(reports.mediaQualityGraph);
       utils.expectIsDisplayed(reports.mediaQualityGraph);
-      reports.verifyNoData(reports.mediaDescription);
     });
 
     it('should be able to change customers', function () {
@@ -89,28 +78,19 @@ xdescribe('Partner Reports', function () {
       utils.click(reports.getOption(reports.timeSelect, time));
     });
 
-    // deactivating test until detailed response is fixed
-    xit('should be able to show/hide most active users', function () {
-      utils.expectIsDisplayed(reports.mostActiveButton);
-      utils.expectText(reports.mostActiveButton, 'Show Most Active Users');
+    it('should be able to show/hide most active users', function () {
+      reports.clickFilter(reports.customerSelect);
+      utils.click(reports.getOption(reports.customerSelect, e2eCustomer));
+      utils.expectIsDisplayed(reports.showmostActiveButton);
       utils.expectIsNotDisplayed(reports.activeUsersTable);
-      utils.click(reports.mostActiveButton);
+      utils.click(reports.showmostActiveButton);
 
       utils.expectIsDisplayed(reports.activeUsersTable);
       utils.expectCountToBeGreater(reports.activeUsersTableContent, 0);
-      utils.expectText(reports.mostActiveButton, 'Hide Most Active Users');
-      utils.click(reports.mostActiveButton);
+      utils.click(reports.hidemostActiveButton);
 
-      utils.expectIsDisplayed(reports.mostActiveButton);
-      utils.expectText(reports.mostActiveButton, 'Show Most Active Users');
+      utils.expectIsDisplayed(reports.showmostActiveButton);
       utils.expectIsNotDisplayed(reports.activeUsersTable);
-    });
-
-    it('should display new time and customer in engagement descriptions', function () {
-      reports.verifyDescription(time, reports.activeDescription, true);
-      reports.verifyDescription(time, reports.endpointDescription, true);
-      reports.verifyDescription(time, reports.metricsDescription, true);
-      reports.confirmCustomerInTable(customer, reports.registeredEndpointsTable, false);
     });
 
     it('should change to display only engagement reports', function () {

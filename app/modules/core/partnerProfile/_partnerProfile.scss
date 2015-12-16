@@ -1,7 +1,82 @@
+.profile-state {
+  @extend %page-background-white;
+}
+
+.profile {
+  @extend %content-subheader;
+
+  @extend %page-background-white;
+
+  @extend %page-content-padding;
+
+  & .save-section {
+    display: flex;
+    align-items: center;
+
+    @include vr-spacing(ph, 2);
+
+    & .right button:first-child {
+      @include vr-spacing(mr, 0);
+    }
+  }
+
+  & .profile-content-container {
+    @include vr-spacing(ph, 1.5);
+
+    @include vr-spacing(pt, 3.75);
+  }
+}
+
 .partner-profile {
-  padding-left: 40px;
-  .partner-page-title {
-    margin-bottom: 30px;
+  & label {
+    @include vr-spacing(mb, 0.25);
+  }
+
+  & h5 {
+    @include vr-spacing(pb, 0.5);
+  }
+
+  background: $white;
+
+  & .form-section {
+    @include vr-spacing(pb, 1);
+  }
+
+  & .float-radio {
+    width: 2rem;
+    min-height: rem-calc(24);
+    display: inline-block;
+    float: left;
+
+    & + div {
+      display: inline-block;
+      float: left;
+      width: calc(100% - 2rem);
+    }
+
+    & .problem-reports {
+      display: inline-block;
+      float: left;
+      width: calc(100% - 2rem);
+    }
+  }
+
+  input[type="radio"], input[type="checkbox"] {
+    & + span {
+      @include vr-spacing(mb, 0.5);
+
+      display: flex;
+
+      & > div {
+        display: inline-block;
+        float: left;
+        width: calc(100% - 2rem);
+      }
+    }
+  }
+
+  &:first-child {
+    @include vr-spacing(pb, 1);
   }
 
   .nav {
@@ -25,7 +100,7 @@
   }
 
   .form-spacing {
-    margin-top: 10px;
+    @include vr-spacing(pb, 1);
   }
 
   .title {
@@ -40,12 +115,8 @@
     }
   }
 
-  .save-row {
-    margin-top: 25px;
-  }
-
   .add-link {
-    margin-top: 10px;
+    @include vr-spacing(mt, 0.5);
   }
 
   .input-group {
@@ -60,42 +131,38 @@
     border-bottom: $gray-light;
     border-width: 1px;
     border-bottom-style: solid;
-    padding: 10px;
+
+    @include vr-spacing(p, 0.5);
   }
 
   .support-content {
-    padding: 10px;
+    @include vr-spacing(p, 0.5);
   }
 
   .custom-url {
     display: inline-flex;
-    padding-right: 50px;
-  }
 
-  .save-button {
-    padding: 20px;
-  }
-
-  .page-title {
-    padding: 28px 0 28px 0px;
+    @include vr-spacing(pr, 3);
   }
 
   .grant-row {
-    padding-top: 20px;
+    @include vr-spacing(pt, 1);
   }
 
   .description-url {
-    padding-top: 20px;
-    padding-left: 25px;
+    @include vr-spacing(pt, 1.5);
+
+    @include vr-spacing(pl, 1.5);
   }
 
   .radio-column {
     width: 10px;
-    padding-right: 40px;
+
+    @include vr-spacing(pr, 1);
   }
 
   .optional-row {
-    margin-top: 10px;
+    @include vr-spacing(mt, 0.5);
   }
 
   .admin-options {
@@ -107,62 +174,55 @@
   }
 
   .default-link-row {
-    padding-top: 10px;
+    @include vr-spacing(pt, 0.5);
   }
 
   .input-row {
-    padding-top: 5px;
+    @include vr-spacing(pt, 0.5);
   }
 
-  .partner-link {
-    display: block;
-  }
-
-  .partner-text {
-    padding-bottom: 20px;
-  }
-
-  .form-section {
-    padding-top: 40px;
-  }
-
-  .form-section-last {
-    padding-top: 40px;
-    padding-bottom: 30px;
-  }
-
-  .support-setup {
-    margin-top: 50px;
-  }
-
-  .main-section {
-    padding-top: 20px;
+  .account-link {
+    display: flex;
   }
 
   .left-btn {
-    margin-right: 15px;
+    @include vr-spacing(mr, 1);
   }
 
   .cisco-rep-panel {
-    margin-bottom: 40px;
+    @include vr-spacing(mb, 1);
+  }
+
+  & input[type="radio"] {
+    & + span {
+      & + .btn {
+        @include vr-spacing(ml, 2);
+      }
+    }
   }
 
   .drop-box {
-      padding: 5px;
-      height: 150px;
-      background-color: $brand-white;
-      border: 1px solid $gray-light;
-      border-radius: 3px;
-      color: $gray-light;
+    display: inline-block;
+    width: calc(100% - 2rem);
 
-      &.dragover {
-        border-color: $brand-primary;
-      }
+    @include vr-spacing(mb, 0.25);
 
-      &.dragover-error {
-        border-color: $brand-danger;
-      }
+    @include vr-spacing(p, 0.25);
+
+    height: 150px;
+    background-color: $brand-white;
+    border: 1px solid $gray-light;
+    border-radius: 3px;
+    color: $gray-light;
+
+    &.dragover {
+      border-color: $brand-primary;
     }
+
+    &.dragover-error {
+      border-color: $brand-danger;
+    }
+  }
 
   .thumbnail {
     float: left;

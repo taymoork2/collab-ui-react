@@ -204,10 +204,14 @@ describe('Service: AutoAttendantCeService', function () {
   describe('deleteCe', function () {
     it('should notify on success', function () {
       $httpBackend.whenDELETE(callExperienceURL).respond(204);
+
+      $httpBackend.whenDELETE(HuronConfig.getCmiV2Url() + '/customers/1/features/autoattendants/004/numbers').respond(200);
+
       AutoAttendantCeService.deleteCe(callExperienceURL).then(
         successSpy,
         failureSpy
       );
+
       $httpBackend.flush();
       expect(successSpy).toHaveBeenCalled();
       expect(failureSpy).not.toHaveBeenCalled();

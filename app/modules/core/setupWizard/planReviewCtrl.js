@@ -41,6 +41,7 @@
     vm.trialUsedPercentage = 0;
     vm.isInitialized = false; // invert the logic and initialize to false so the template doesn't flicker before spinner
     vm.isStormBranding = false;
+    vm.roomSystemsExist = false;
 
     init();
 
@@ -64,7 +65,7 @@
       vm.confServices.services = Authinfo.getConferenceServices() || [];
       angular.forEach(vm.confServices.services, function (service) {
         if (service.label.indexOf('Meeting Center') != -1) {
-          service.label = 'Meeting Center';
+          service.label = $translate.instant('onboardModal.meetingCenter') + ' ' + service.license.capacity;
         }
         if (service.license.isTrial) {
           vm.trialExists = true;
@@ -90,6 +91,7 @@
       vm.roomServices.services = Authinfo.getLicenses() || [];
       angular.forEach(vm.roomServices.services, function (service) {
         if (service.licenseType === "SHARED_DEVICES") {
+          vm.roomSystemsExist = true;
           if (service.isTrial) {
             vm.trialExists = true;
             vm.trialId = service.license.trialId;
@@ -133,7 +135,7 @@
               if (!vm.sites[service.license.siteUrl]) {
                 vm.sites[service.license.siteUrl] = [];
               }
-              service.label = $translate.instant('onboardModal.cmr');
+              service.label = $translate.instant('onboardModal.cmr') + ' ' + service.license.capacity;
               vm.sites[service.license.siteUrl].push(service);
             }
           }
@@ -144,7 +146,7 @@
           if (!vm.sites[cmrService.license.siteUrl]) {
             vm.sites[cmrService.license.siteUrl] = [];
           }
-          cmrService.label = $translate.instant('onboardModal.cmr');
+          cmrService.label = $translate.instant('onboardModal.cmr') + ' ' + cmrService.license.capacity;
           vm.sites[cmrService.license.siteUrl].push(cmrService);
         }
       }

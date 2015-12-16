@@ -1,3 +1,11 @@
+.devices-page {
+  @extend %page-background-white;
+}
+
+.sq-devices-page {
+  @extend %grid-subheader;
+}
+
 .sq-devices-page-overview {
   table {
     td {
@@ -17,10 +25,6 @@
   .activation-code-pane h3 {
     color: #00c1aa;
   }
-
-}
-
-.sq-devices-page {
   .message-container {
     position: absolute;
     left: 0;
@@ -42,19 +46,6 @@
     display: none;
   }
 
-  .title {
-    display: inline-block;
-    vertical-align: middle;
-    height: 60px;
-    line-height: 60px;
-  }
-
-  .add-button {
-    position: absolute;
-    top: 25px;
-    right: 10px
-  }
-
   .error-spinner {
     position: fixed;
     bottom: 20px;
@@ -66,9 +57,6 @@
     padding: 9px 10px 6px 10px;
   }
 
-}
-
-.sq-devices-page-overview {
   .panel-buttons {
     margin-top: 10px;
   }
@@ -95,7 +83,6 @@
 }
 
 /* widgets */
-
 .editable-input {
   padding-top: 5px;
   &, .read-only-value, form {
@@ -162,4 +149,8 @@
 }
 .device-status-gray {
   color: $gray;
+}
+
+.accordion {
+  margin-bottom: 10px;
 }

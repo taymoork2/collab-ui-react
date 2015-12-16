@@ -11,10 +11,11 @@
     '$stateParams',
     '$sce',
     '$timeout',
+    '$window',
     'Authinfo',
     'Notification',
     'Config',
-    function (
+    function reportsIframeCtrl(
       $scope,
       $rootScope,
       $log,
@@ -24,6 +25,7 @@
       $stateParams,
       $sce,
       $timeout,
+      $window,
       Authinfo,
       Notification,
       Config
@@ -34,6 +36,7 @@
       _this.funcName = "ReportsIframeCtrl()";
       _this.logMsg = "";
 
+      $scope.isIframeLoaded = false;
       $scope.siteUrl = $stateParams.siteUrl;
       $scope.indexPageSref = "webex-reports({siteUrl:'" + $stateParams.siteUrl + "'})";
       $scope.reportPageId = $stateParams.reportPageId;
@@ -41,14 +44,17 @@
       $scope.reportPageIframeUrl = $stateParams.reportPageIframeUrl;
       $scope.iframeUrl = $stateParams.reportPageIframeUrl;
 
-      $scope.webexAdvancedUrl = Config.getWebexAdvancedEditUrl($stateParams.siteUrl);
-
       // for iframe request
+      if ($scope.iframeUrl.indexOf("cibtsgsbt31.webex.com") > 0)
+        $scope.iframeUrl = $scope.iframeUrl.replace($stateParams.siteUrl, "wbxbts.admin.ciscospark.com");
       $scope.trustIframeUrl = $sce.trustAsResourceUrl($scope.iframeUrl);
       $scope.adminEmail = Authinfo.getPrimaryEmail();
       $scope.authToken = $rootScope.token;
       $scope.locale = ("es_LA" == $translate.use()) ? "es_MX" : $translate.use();
       $scope.siteName = $stateParams.siteUrl;
+      var index = $stateParams.siteUrl.indexOf(".");
+      $scope.siteName2 = $stateParams.siteUrl.slice(0, index);
+      $scope.fullSparkDNS = window.location.origin;
 
       _this.logMsg = _this.funcName + ": " + "\n" +
         "siteUrl=" + $scope.siteUrl + "\n" +
@@ -62,14 +68,30 @@
       $log.log(_this.logMsg);
 
       $timeout(
-        function () {
+        function loadIframe() {
           var submitFormBtn = document.getElementById('submitFormBtn');
           submitFormBtn.click();
-        },
+        }, // loadIframe()
 
         0
       );
 
-    } // function()
+      $window.iframeLoaded = function (iframeId) {
+        var funcName = "iframeLoaded()";
+        var logMsg = funcName;
+
+        logMsg = funcName + "\n" +
+          'iframeId=' + iframeId;
+        $log.log(logMsg);
+
+        var currScope = angular.element(iframeId).scope();
+
+        currScope.$apply(
+          function updateScope() {
+            currScope.isIframeLoaded = true;
+          }
+        );
+      }; // iframeLoaded()
+    } // reportsIframeCtrl()
   ]); // angular.module().controller()
 })(); // function()

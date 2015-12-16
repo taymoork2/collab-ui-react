@@ -4,33 +4,36 @@
     .module('Hercules')
     .controller('ExportUserStatusesController',
       /* @ngInject */
-      function (Authinfo, UiStats, UserDetails, $scope, $rootScope, USSService, ClusterService, Log) {
-        $scope.numberOfUsersPrCiRequest = 25; // can probably go higher, depending on the CI backend...
-        $scope.loading = true;
-        $scope.exportError = false;
-        $scope.nothingToExport = true;
+      function (serviceId, Authinfo, UiStats, UserDetails, USSService, ClusterService, Log) {
+        var vm = this;
+        vm.selectedServiceId = serviceId;
+        vm.numberOfUsersPrCiRequest = 25; // can probably go higher, depending on the CI backend...
+        vm.loading = true;
+        vm.exportError = false;
+        vm.nothingToExport = true;
+        vm.exportingUserStatusReport = false;
         USSService.getStatusesSummary(function (err, userStatusesSummary) {
           userStatusesSummary = userStatusesSummary.summary;
           var serviceInfo = $.grep(userStatusesSummary, function (service) {
-            return service.serviceId == $scope.selectedServiceId;
+            return service.serviceId == vm.selectedServiceId;
           });
-          $scope.statusTypes = UiStats.insertServiceInfo(serviceInfo[0]);
-          $scope.loading = false;
+          vm.statusTypes = UiStats.insertServiceInfo(serviceInfo[0]);
+          vm.loading = false;
         });
 
-        $scope.getHeader = function () {
+        vm.getHeader = function () {
           var service = $.grep(Authinfo.getServices(), function (s) {
-            return s.ciName === $scope.selectedServiceId;
+            return s.ciName === vm.selectedServiceId;
           });
           return UserDetails.getCSVColumnHeaders(service[0].displayName);
         };
 
-        $scope.selectedStateChanged = function () {
-          $scope.nothingToExport = UiStats.noneSelected();
+        vm.selectedStateChanged = function () {
+          vm.nothingToExport = UiStats.noneSelected();
         };
 
-        $scope.getUsersBatch = function (userStatuses, index, dfd) {
-          var usersPrRequest = $scope.numberOfUsersPrCiRequest;
+        vm.getUsersBatch = function (userStatuses, index, dfd) {
+          var usersPrRequest = vm.numberOfUsersPrCiRequest;
           var orgId = Authinfo.getOrgId();
           UserDetails.getUsers(userStatuses.slice(index, index + usersPrRequest), orgId, function (data, status) {
 
@@ -38,36 +41,41 @@
               var totalIndex = index + ind;
               if (totalIndex < userStatuses.length) {
                 UiStats.updateProgress(userStatuses[totalIndex].state);
-                $scope.userStatusResult.push(d.details);
+                vm.result.push(d.details);
               }
             });
 
             index += usersPrRequest;
             if (index < userStatuses.length) {
-              $scope.getUsersBatch(userStatuses, index, dfd);
+              vm.getUsersBatch(userStatuses, index, dfd);
             } else {
-              $scope.exportingUserStatusReport = false;
-              dfd.resolve($scope.userStatusResult);
+              vm.exportingUserStatusReport = false;
+              dfd.resolve(vm.result);
             }
             return false;
           });
         };
 
-        $scope.exportCSV = function () {
+        vm.exportCSV = function () {
           UiStats.initStats();
-          $scope.exportingUserStatusReport = true;
-          $scope.userStatusResult = [];
+          vm.exportingUserStatusReport = true;
+          vm.result = [];
 
-          $scope.loading = true;
-          var serviceId = $scope.selectedServiceId;
+          vm.loading = true;
+          var serviceId = vm.selectedServiceId;
           var dfd = $.Deferred();
 
+          // Improve formatting in all versions of Excel even if it means
+          // not being 100%  CSV-valid
+          // See https://github.com/asafdav/ng-csv/issues/28
+          vm.result.push(['sep=,']);
+          vm.result.push(vm.getHeader());
           USSService.getStatuses(
             function (err, statuses) {
               //console.log("statuses before:", statuses.userStatuses);
 
               // TODO: REMOVE SPECIAL HANDLING FOR UNIT TEST !!!!!
-              if (!$scope.test) {
+              if (!vm.test) {
                 //remove user statuses if its status is not among the selected ones
                 statuses.userStatuses = $.grep(statuses.userStatuses, function (userStateInfo) {
                   if (UiStats.isSelected(userStateInfo.state)) {
@@ -85,8 +93,8 @@
               });
 
               if (connectorIds.length === 0) {
-                $scope.getUsersBatch(statuses.userStatuses, 0, dfd);
-                $scope.loading = false;
+                vm.getUsersBatch(statuses.userStatuses, 0, dfd);
+                vm.loading = false;
               }
               $.each(connectorIds, function (ind, connectorId) {
                 ClusterService.getConnector(connectorId).then(function (connector) {
@@ -100,25 +108,22 @@
                     });
                   }
                   if (ind + 1 == connectorIds.length) {
-                    $scope.getUsersBatch(statuses.userStatuses, 0, dfd);
-                    $scope.loading = false;
+                    vm.getUsersBatch(statuses.userStatuses, 0, dfd);
+                    vm.loading = false;
                   }
                 }).catch(function (error) {
                   // connector i.e. found... collect potential user info anyway...?
                   if (ind + 1 == connectorIds.length) {
-                    $scope.getUsersBatch(statuses.userStatuses, 0, dfd);
-                    $scope.loading = false;
+                    vm.getUsersBatch(statuses.userStatuses, 0, dfd);
+                    vm.loading = false;
                   }
                 });
               });
 
             }, serviceId, null, 100000); // TODO: should be paged? How does this scale ?
 
-          $scope.loading = false;
+          vm.loading = false;
           return dfd.promise();
-
         };
-
       });
-
 })();

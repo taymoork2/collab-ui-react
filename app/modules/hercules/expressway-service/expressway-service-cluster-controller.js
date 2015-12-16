@@ -2,12 +2,13 @@
   'use strict';
 
   /* @ngInject */
-  function ExpresswayServiceClusterController(XhrNotificationService, ServiceStatusSummaryService, $state, $modal, $stateParams, ClusterService, HelperNuggetsService) {
+  function ExpresswayServiceClusterController(XhrNotificationService, ServiceStatusSummaryService, $state, $modal, $stateParams, $translate, ClusterService, HelperNuggetsService) {
     var vm = this;
     vm.state = $state;
     vm.clusterId = $stateParams.cluster.id;
     vm.serviceType = $stateParams.serviceType;
     vm.serviceId = HelperNuggetsService.serviceType2ServiceId(vm.serviceType);
+    vm.serviceName = $translate.instant('hercules.serviceNames.' + vm.serviceId);
 
     vm.cluster = ClusterService.getClusters()[vm.clusterId];
 
@@ -60,11 +61,12 @@
     };
 
     /* @ngInject */
-    function SoftwareUpgradeController(serviceId, $modalInstance) {
+    function SoftwareUpgradeController(serviceId, $translate, $modalInstance) {
       var modalVm = this;
       modalVm.newVersion = vm.selectedService().not_approved_package.version;
       modalVm.oldVersion = vm.selectedService().connectors[0].version;
       modalVm.serviceId = serviceId;
+      modalVm.serviceName = $translate.instant('hercules.serviceNames.' + modalVm.serviceId);
       modalVm.ok = function () {
         $modalInstance.close();
       };

@@ -7,9 +7,12 @@
 
   function KeyAction() {
     this.key = '';
-    this.name = '';
     this.value = '';
     this.keys = [];
+    this.action = {
+      name: '',
+      label: ''
+    };
   }
 
   /* @ngInject */
@@ -30,8 +33,9 @@
     vm.deleteKeyAction = deleteKeyAction;
     vm.keyChanged = keyChanged;
     vm.keyActionChanged = keyActionChanged;
-    vm.saveUIModel = saveUIModel;
+    vm.timeoutInvalidChanged = timeoutInvalidChanged;
     vm.populateOptionMenu = populateOptionMenu;
+    vm.createOptionMenu = createOptionMenu;
 
     vm.repeatOptions = [{
       label: $translate.instant('autoAttendant.phoneMenuRepeatOnce'),
@@ -69,37 +73,44 @@
     }];
 
     // TBD means the action isn't supported in the backend yet
-    vm.keyActions = [{
-      label: $translate.instant('autoAttendant.phoneMenuPlaySubmenu'),
-      name: 'phoneMenuPlaySubmenu',
-      action: 'runActionsOnInput',
-      inputType: 1
-    }, {
-      label: $translate.instant('autoAttendant.phoneMenuRepeatMenu'),
-      name: 'phoneMenuRepeatMenu',
-      action: 'repeatActionsOnInput'
-    }, {
-      label: $translate.instant('autoAttendant.phoneMenuDialExt'),
-      name: 'phoneMenuDialExt',
-      action: 'runActionsOnInput',
-      inputType: '2'
-    }, {
-      label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
-      name: 'phoneMenuRouteUser',
-      action: 'TBD'
-    }, {
-      label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
-      name: 'phoneMenuRouteHunt',
-      action: 'routeToHuntGroup'
-    }, {
-      label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
-      name: 'phoneMenuRouteVM',
-      action: 'TBD'
-    }, {
-      label: $translate.instant('autoAttendant.phoneMenuRouteAA'),
-      name: 'phoneMenuRouteAA',
-      action: 'goto'
-    }];
+    vm.keyActions = [
+      // {
+      //   label: $translate.instant('autoAttendant.phoneMenuPlaySubmenu'),
+      //   name: 'phoneMenuPlaySubmenu',
+      //   action: 'runActionsOnInput',
+      //   inputType: 1
+      // },
+      {
+        label: $translate.instant('autoAttendant.phoneMenuRepeatMenu'),
+        name: 'phoneMenuRepeatMenu',
+        action: 'repeatActionsOnInput'
+      }, {
+        label: $translate.instant('autoAttendant.phoneMenuDialExt'),
+        name: 'phoneMenuDialExt',
+        action: 'runActionsOnInput',
+        inputType: '2'
+      },
+      // {
+      //   label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
+      //   name: 'phoneMenuRouteUser',
+      //   action: 'TBD'
+      // },
+      {
+        label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
+        name: 'phoneMenuRouteHunt',
+        action: 'routeToHuntGroup'
+      },
+      // {
+      //   label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
+      //   name: 'phoneMenuRouteVM',
+      //   action: 'TBD'
+      // },
+      {
+        label: $translate.instant('autoAttendant.phoneMenuRouteAA'),
+        name: 'phoneMenuRouteAA',
+        action: 'goto'
+      }
+    ];
 
     // search for a key action by its name
     function findKeyAction(name) {
@@ -115,24 +126,46 @@
       var keyAction = new KeyAction();
       keyAction.keys = getAvailableKeys('');
       vm.selectedActions.push(keyAction);
+
+      // update global UI Model
+      var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+      var action = AutoAttendantCeMenuModelService.newCeActionEntry('', '');
+      menuEntry.addAction(action);
+      menuEntry.setType('MENU_OPTION');
+      vm.menuEntry.entries.push(menuEntry);
     }
 
     // the user has pressed the trash can icon for a key/action pair
     function deleteKeyAction(index) {
       vm.selectedActions.splice(index, 1);
-      saveUIModel();
+      vm.menuEntry.entries.splice(index, 1);
+      setAvailableKeys();
     }
 
     // the user has changed the key for an existing action
     function keyChanged(index, keyValue) {
       vm.selectedActions[index].key = keyValue;
-      saveUIModel();
+      vm.menuEntry.entries[index].key = keyValue;
+      setAvailableKeys();
     }
 
     // the user has changed the action for an existing key
     function keyActionChanged(index, keyAction) {
-      vm.selectedActions[index].value = keyAction;
-      saveUIModel();
+      var _keyAction = findKeyAction(keyAction.name);
+      if (angular.isDefined(_keyAction)) {
+        var phoneMenuEntry = vm.menuEntry.entries[index];
+        var action = phoneMenuEntry.actions[0];
+        action.name = keyAction.action;
+        // When switch between action, the action value is set to empty string,
+        // simplest way to handle action switching.
+        action.value = '';
+        delete action.inputType;
+        if (angular.isDefined(_keyAction.inputType)) {
+          // some action names are overloaded and are distinguished
+          // by inputType
+          action.inputType = _keyAction.inputType;
+        }
+      }
     }
 
     // determine which keys are still available.
@@ -175,10 +208,9 @@
       }
     }
 
-    function saveUIModel() {
+    function timeoutInvalidChanged() {
       var entry = vm.menuEntry;
       if (entry.type == "MENU_OPTION") {
-        // Todo: validate this is a mandatory input.
         // this is number of times to repeat the timeout/invalid menu
         if (vm.selectedTimeout.value === 1) {
           entry.attempts = vm.selectedTimeout.value;
@@ -187,31 +219,6 @@
             entry.attempts = vm.selectedTimeout.selectedChild.value;
           }
         }
-
-        //TODO set language and voice here
-        entry.entries = [];
-        // add each key/action pair
-        for (var j = 0; j < vm.selectedActions.length; j++) {
-          var selectedAction = vm.selectedActions[j];
-          var keyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          keyEntry.type = "MENU_OPTION";
-          var keyAction = AutoAttendantCeMenuModelService.newCeActionEntry();
-          var action = findKeyAction(selectedAction.name);
-          if (angular.isDefined(action) && selectedAction.key !== '') {
-            keyAction.name = action.action;
-            keyAction.value = selectedAction.value;
-            if (angular.isDefined(action.inputType)) {
-              // some action names are overloaded and are distinguished
-              // by inputType
-              keyAction.inputType = action.inputType;
-            }
-            keyEntry.key = selectedAction.key;
-            keyEntry.description = selectedAction.name;
-            keyEntry.addAction(keyAction);
-            entry.entries.push(keyEntry);
-          }
-        }
-        setAvailableKeys();
       }
     }
 
@@ -236,7 +243,6 @@
           }
         }
         var entries = entry.entries;
-        var headers = entry.headers;
         if (entries.length > 0) {
           // add the key/action pairs
           for (var j = 0; j < entries.length; j++) {
@@ -244,8 +250,15 @@
             if (menuEntry.actions.length == 1 && menuEntry.type == "MENU_OPTION") {
               var keyAction = new KeyAction();
               keyAction.key = menuEntry.key;
-              keyAction.name = menuEntry.description;
-              keyAction.value = menuEntry.actions[0].value;
+              if (angular.isDefined(menuEntry.actions[0].name) && menuEntry.actions[0].name.length > 0) {
+                keyAction.action = _.find(vm.keyActions, function (keyAction) {
+                  return this === keyAction.action;
+                }, menuEntry.actions[0].name);
+              } else {
+                keyAction.action = {};
+                keyAction.action.name = "";
+                keyAction.action.label = "";
+              }
               vm.selectedActions.push(keyAction);
             }
           }
@@ -266,6 +279,11 @@
       var emptyAction = AutoAttendantCeMenuModelService.newCeActionEntry();
       keyEntry.addAction(emptyAction);
       menu.entries.push(keyEntry);
+
+      menu.attempts = 4;
+      vm.selectedTimeout = angular.copy(vm.timeoutActions[0]);
+      vm.selectedTimeout.childOptions = angular.copy(vm.repeatOptions);
+      vm.selectedTimeout.selectedChild = angular.copy(vm.repeatOptions[2]);
     }
 
     /////////////////////

@@ -94,6 +94,8 @@
         offerNames = ['MC', 'CF', 'EE', 'TC', 'SC'];
       } else if (licenseTypeField === 'communications') {
         offerNames = ['CO'];
+      } else if (licenseTypeField === 'shared_devices') {
+        offerNames = ['SD'];
       }
 
       if (angular.isDefined(licenses) && angular.isDefined(licenses.length)) {
@@ -105,7 +107,7 @@
     }
 
     function isLicenseInfoAvailable(licenses) {
-      return angular.isArray(licenses) && licenses.length > 0;
+      return angular.isArray(licenses);
     }
 
     function setServiceSortOrder(license) {
@@ -154,22 +156,23 @@
       }
     }
 
-    function loadRetrievedDataToList(retrievedData, isTrialData) {
-      var list = [];
+    function loadRetrievedDataToList(retrievedData, basicList, isTrialData) {
+      var list = basicList || [];
 
       for (var index in retrievedData) {
         var data = retrievedData[index];
         var edate = moment(data.startDate).add(data.trialPeriod, 'days').format('MMM D, YYYY');
         var dataObj = {
           trialId: data.trialId,
-          customerOrgId: data.customerOrgId,
-          customerName: data.customerName,
-          customerEmail: data.customerEmail,
+          customerOrgId: data.customerOrgId || data.id,
+          customerName: data.customerName || data.displayName,
+          customerEmail: data.customerEmail || data.email,
           endDate: edate,
           numUsers: data.licenseCount,
           daysLeft: 0,
           usage: 0,
           licenses: 0,
+          deviceLicenses: 0,
           licenseList: [],
           messaging: null,
           conferencing: null,
@@ -177,7 +180,7 @@
           daysUsed: 0,
           percentUsed: 0,
           duration: data.trialPeriod,
-          offer: '',
+          offer: {},
           status: data.state,
           state: data.state,
           isAllowedToManage: true,
@@ -188,25 +191,34 @@
 
         if (data.offers) {
           dataObj.offers = data.offers;
-          var offerNames = [];
+          var offerUserServices = [];
+          var offerDeviceBasedServices = [];
           for (var cnt in data.offers) {
             var offer = data.offers[cnt];
             if (!offer) {
               continue;
             }
             switch (offer.id) {
-            case Config.trials.collab:
-              offerNames.push($translate.instant('trials.collab'));
+            case Config.trials.message:
+              offerUserServices.push($translate.instant('trials.collab'));
               break;
-            case Config.trials.squaredUC:
+            case Config.trials.call:
               dataObj.isSquaredUcOffer = true;
-              offerNames.push($translate.instant('trials.squaredUC'));
+              offerUserServices.push($translate.instant('trials.squaredUC'));
+              break;
+            case Config.trials.roomSystems:
+              offerDeviceBasedServices.push($translate.instant('customerPage.roomSystem'));
               break;
             }
             dataObj.usage = offer.usageCount;
-            dataObj.licenses = offer.licenseCount;
+            if (offer.id === Config.trials.roomSystems) {
+              dataObj.deviceLicenses = offer.licenseCount;
+            } else {
+              dataObj.licenses = offer.licenseCount;
+            }
           }
-          dataObj.offer = offerNames.join(', ');
+          dataObj.offer.userServices = offerUserServices.sort().join(', ');
+          dataObj.offer.deviceBasedServices = offerDeviceBasedServices.sort().join(', ');
         }
 
         dataObj.unmodifiedLicenses = _.cloneDeep(data.licenses);
@@ -214,6 +226,7 @@
         dataObj.messaging = getLicense(data.licenses, 'messaging');
         dataObj.conferencing = getLicense(data.licenses, 'conferencing');
         dataObj.communications = getLicense(data.licenses, 'communications');
+        dataObj.roomSystems = getLicense(data.licenses, 'shared_devices');
 
         var now = moment().format('MMM D, YYYY');
         var then = edate;
@@ -240,9 +253,11 @@
         angular.extend(dataObj.messaging, tmpServiceObj);
         angular.extend(dataObj.conferencing, tmpServiceObj);
         angular.extend(dataObj.communications, tmpServiceObj);
+        angular.extend(dataObj.roomSystems, tmpServiceObj);
         setServiceSortOrder(dataObj.messaging);
         setServiceSortOrder(dataObj.conferencing);
         setServiceSortOrder(dataObj.communications);
+        setServiceSortOrder(dataObj.roomSystems);
 
         dataObj.notes = {};
         setNotesSortOrder(dataObj);
@@ -282,6 +297,7 @@
             header.messagingEntitlements = $translate.instant('customerPage.csvHeaderMessagingEntitlements');
             header.conferencingEntitlements = $translate.instant('customerPage.csvHeaderConferencingEntitlements');
             header.communicationsEntitlements = $translate.instant('customerPage.csvHeaderCommunicationsEntitlements');
+            header.roomSystemsEntitlements = $translate.instant('customerPage.csvHeaderRoomSystemsEntitlements');
             exportedCustomers.push(header);
 
             // data to export for CSV file customer.conferencing.features[j]
@@ -293,6 +309,7 @@
               exportedCustomer.messagingEntitlements = '';
               exportedCustomer.conferenceEntitlements = '';
               exportedCustomer.communicationsEntitlements = '';
+              exportedCustomer.roomSystemsEntitlements = '';
 
               var messagingLicense = _.find(customers[i].licenses, {
                 licenseType: "MESSAGING"
@@ -303,6 +320,9 @@
               var communicationsLicense = _.find(customers[i].licenses, {
                 licenseType: "COMMUNICATIONS"
               });
+              var roomSystemsLicense = _.find(customers[i].licenses, {
+                licenseType: "SHARED_DEVICES"
+              });
               if (messagingLicense && angular.isArray(messagingLicense.features)) {
                 exportedCustomer.messagingEntitlements = messagingLicense.features.join(' ');
               }
@@ -311,6 +331,9 @@
               }
               if (communicationsLicense && angular.isArray(communicationsLicense.features)) {
                 exportedCustomer.communicationsEntitlements = communicationsLicense.features.join(' ');
+              }
+              if (roomSystemsLicense && angular.isArray(roomSystemsLicense.features)) {
+                exportedCustomer.roomSystemsEntitlements = roomSystemsLicense.features.join(' ');
               }
               exportedCustomers.push(exportedCustomer);
             }

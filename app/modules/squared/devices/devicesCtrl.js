@@ -4,8 +4,18 @@ angular.module('Squared')
   .controller('DevicesCtrl',
 
     /* @ngInject */
-    function ($scope, $state, $templateCache, DeviceFilter, CsdmCodeService, CsdmDeviceService, AddDeviceModal) {
+    function ($scope, $state, $translate, $templateCache, DeviceFilter, CsdmCodeService, CsdmUnusedAccountsService, CsdmHuronDeviceService, CsdmDeviceService, AddDeviceModal, Authinfo, AccountOrgService) {
       var vm = this;
+
+      AccountOrgService.getAccount(Authinfo.getOrgId()).success(function (data) {
+        vm.showLicenseWarning = !!_.find(data.accounts, {
+          licenses: [{
+            offerName: "SD",
+            status: "SUSPENDED"
+          }]
+        });
+        vm.licenseError = vm.showLicenseWarning ? $translate.instant('spacesPage.licenseSuspendedWarning') : "";
+      });
 
       vm.deviceFilter = DeviceFilter;
 
@@ -17,10 +27,21 @@ angular.module('Squared')
         scope: $scope
       });
 
+      vm.huronDeviceListSubscription = CsdmHuronDeviceService.on('data', angular.noop, {
+        scope: $scope
+      });
+
+      vm.shouldShowList = function () {
+        return vm.codesListSubscription.eventCount !== 0 &&
+          (vm.deviceListSubscription.eventCount !== 0 || CsdmDeviceService.getDeviceList().length > 0);
+      };
+
       vm.updateListAndFilter = function () {
         var filtered = _.chain({})
           .extend(CsdmDeviceService.getDeviceList())
+          .extend(CsdmHuronDeviceService.getDeviceList())
           .extend(CsdmCodeService.getCodeList())
+          .extend(CsdmUnusedAccountsService.getAccountList())
           .values()
           .value();
         return DeviceFilter.getFilteredList(filtered);
@@ -32,6 +53,7 @@ angular.module('Squared')
         showFilter: false,
         multiSelect: false,
         headerRowHeight: 44,
+        enableColumnResize: true,
         sortInfo: {
           directions: ['asc'],
           fields: ['displayName']

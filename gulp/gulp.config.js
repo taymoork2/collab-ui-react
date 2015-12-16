@@ -7,6 +7,7 @@ module.exports = function() {
   var build = 'build';
   var dist = 'dist';
   var app = 'app';
+  var appModules = 'app/modules';
   var test = 'test';
   var e2e = test + '/e2e-protractor';
   var vendor = 'bower_components';
@@ -26,6 +27,7 @@ module.exports = function() {
     fonts: 'fonts',
     images: 'images',
     css: 'styles',
+    docs: 'docs',
     cssName: 'main',
     jsIndexName: 'index.scripts',
     jsUnsupportedName: 'unsupported.scripts',
@@ -38,6 +40,7 @@ module.exports = function() {
       ts: [app + '/**/*.ts'],
       json: [app + '/**/*.json'],
       csv: [app + '/**/*.csv'],
+      docs: [app + '/docs/**/*'],
       tpl: [app + '/modules/**/*.html'],
       html: [app + '/*.html'],
       scss: ['styles/app.scss'],
@@ -86,9 +89,17 @@ module.exports = function() {
       global: [
         test + '/global.spec.js',
       ],
-      spec: [
-        app + '/modules/**/*.spec.js',
-      ],
+      spec: {
+        all: app + '/**/*.spec.js',
+        core: appModules + '/core/**/*.spec.js',
+        hercules: appModules + '/hercules/**/*.spec.js',
+        huron: appModules + '/huron/**/*.spec.js',
+        mediafusion: appModules + '/mediafusion/**/*.spec.js',
+        messenger: appModules + '/messenger/**/*.spec.js',
+        squared: appModules + '/squared/**/*.spec.js',
+        sunlight: appModules + '/sunlight/**/*.spec.js',
+        webex: appModules + '/webex/**/*.spec.js',
+      },
       e2e: {
         hercules: e2e + '/hercules/**/*_spec.js',
         huron: e2e + '/huron/**/*_spec.js',
@@ -171,6 +182,7 @@ module.exports = function() {
         vendor + '/imagesloaded/imagesloaded.pkgd.js',
         vendor + '/ng-tags-input/ng-tags-input.min.js',
         vendor + '/pako/dist/pako.js',
+        vendor + '/angular-cache/dist/angular-cache.js',
       ],
       scss: {
         paths: [
@@ -202,9 +214,16 @@ module.exports = function() {
       ' * <%= pkg.name %> v<%= pkg.version %> (<%= pkg.homepage %>)\n' +
       ' * Copyright ' + year + ' <%= pkg.author %>\n' +
       ' */\n' +
-      ''
+      '',
 
+    isJenkins: isJenkins,
   };
 
   return config;
+
+  ////////////////
+
+  function isJenkins() {
+    return process.env.BUILD_NUMBER && process.env.JOB_NAME && process.env.JENKINS_URL;
+  }
 };

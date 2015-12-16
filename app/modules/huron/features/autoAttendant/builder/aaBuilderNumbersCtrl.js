@@ -6,7 +6,7 @@
     .controller('AABuilderNumbersCtrl', AABuilderNumbersCtrl); /* was AutoAttendantGeneralCtrl */
 
   /* @ngInject */
-  function AABuilderNumbersCtrl($scope, $q, $stateParams, AAUiModelService, AutoAttendantCeInfoModelService,
+  function AABuilderNumbersCtrl($scope, $q, $stateParams, AAUiModelService, AutoAttendantCeInfoModelService, AANumberAssignmentService,
     AAModelService, ExternalNumberPoolService, InternalNumberPoolService, Authinfo, Notification, $translate, telephoneNumberFilter) {
     var vm = this;
 
@@ -19,9 +19,15 @@
     vm.getDupeNumberAnyAA = getDupeNumberAnyAA;
     vm.addToAvailableNumberList = addToAvailableNumberList;
     vm.compareNumbersExternalThenInternal = compareNumbersExternalThenInternal;
+    vm.warnOnAssignedNumberDiscrepancies = warnOnAssignedNumberDiscrepancies;
 
+    // a mapping of numbers to their type (internal or external)
     vm.numberTypeList = {};
 
+    // a list of external numbers as they came from CMI
+    vm.externalNumberList = [];
+
+    // available number list offered in GUI
     vm.availablePhoneNums = [];
 
     vm.selectPlaceHolder = $translate.instant('autoAttendant.selectPlaceHolder');
@@ -92,6 +98,15 @@
 
     }
 
+    // Save the AA Number Assignments in CMI
+    function saveAANumberAssignments(customerId, aaRecordUUID, resources) {
+      // CMI seems to correctly remove numbers from the number pool when the number is formatted as it came from CMI
+      // So save to CMI with the original CMI format for external numbers (internal extensions have no formatting)
+      var formattedResources = AANumberAssignmentService.formatAAResourcesBasedOnList(resources, vm.externalNumberList);
+
+      return AANumberAssignmentService.setAANumberAssignment(customerId, aaRecordUUID, formattedResources);
+    }
+
     // Add the number to the CE Info resource list
     function addAAResource(number) {
 
@@ -107,29 +122,28 @@
       resource.setType(vm.numberTypeList[number]);
 
       // add to the resource list
-      var resources = vm.ui.ceInfo.getResources();
+      var resources;
+
+      resources = vm.ui.ceInfo.getResources();
+
       resources.push(resource);
 
-      // if it's longer than 2, we sort it
-      if (resources.length > 2) {
+      // Assign the number in CMI
+      saveAANumberAssignments(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources).then(
 
-        // but we don't change the first top-line number, which is also shown in the header, so
-        // get a temp list without that first number
+        function (response) {
+          sortAssignedResources(resources);
+        },
+        function (response) {
+          Notification.error('autoAttendant.errorAddCMI', {
+            phoneNumber: number,
+            statusText: response.statusText,
+            status: response.status
+          });
 
-        var tmp = _.rest(resources);
+          resources.pop();
 
-        // and sort it
-        tmp.sort(function (a, b) {
-          return compareNumbersExternalThenInternal(a.number, b.number);
         });
-
-        // we have a sorted list, take out the old unsorted ones, put in the sorted ones
-        resources.length = 1;
-
-        _.forEach(tmp, function (n) {
-          resources.push(n);
-        });
-      }
 
     }
 
@@ -137,12 +151,20 @@
     function deleteAAResource(number) {
       var i = 0;
 
+      // remove number from resources list
       var resources = vm.ui.ceInfo.getResources();
       for (i = 0; i < resources.length; i++) {
         if (resources[i].getNumber() === number) {
           resources.splice(i, 1);
         }
       }
+
+      // Un-Assign the number in CMI by setting with resource removed
+      saveAANumberAssignments(Authinfo.getOrgId(),
+        vm.aaModel.aaRecordUUID, resources).catch(
+        function (response) {
+          Notification.error('autoAttendant.errorRemoveCMI');
+        });
 
     }
 
@@ -157,6 +179,30 @@
 
     }
 
+    function sortAssignedResources(resources) {
+
+      // We don't change the top-line "preferred" number in the header
+      // Further the first number after that would be "sorted", since it can't swap with the "preferred" number
+      // so if it's longer than 2, we sort it
+      if (resources.length > 2) {
+
+        // but we don't change the first top-line number, which is also shown in the header, so
+        // get a temp list without that first number
+        var tmp = _.rest(resources);
+
+        // and sort it
+        tmp.sort(function (a, b) {
+          return compareNumbersExternalThenInternal(a.number, b.number);
+        });
+
+        // we have a sorted list, take out the old unsorted ones, put in the sorted ones
+        resources.splice(1, resources.length - 1);
+        _.forEach(tmp, function (n) {
+          resources.push(n);
+        });
+      }
+    }
+
     // A comparison method used in sorting to make external numbers first, internal numbers last
     function compareNumbersExternalThenInternal(a, b) {
 
@@ -165,7 +211,7 @@
         return a.localeCompare(b);
       }
       // else if a is an internal extension, it comes after
-      else if (vm.numberTypeList[a] === "directoryNumber") {
+      else if (vm.numberTypeList[a] === AANumberAssignmentService.DIRECTORY_NUMBER) {
         return 1;
         // else a must be an externalNumber, which comes first
       } else {
@@ -199,7 +245,7 @@
 
           var number = intPool[i].pattern.replace(/\D/g, '');
 
-          vm.numberTypeList[number] = "directoryNumber";
+          vm.numberTypeList[number] = AANumberAssignmentService.DIRECTORY_NUMBER;
 
           // Add to the available phone number list if not already used
           if (!getDupeNumberAnyAA(number)) {
@@ -215,14 +261,23 @@
 
       return ExternalNumberPoolService.query({
           customerId: Authinfo.getOrgId(),
+          directorynumber: '',
           order: 'pattern'
         }).$promise
         .then(function (extPool) {
           for (var i = 0; i < extPool.length; i++) {
 
+            var dn = {
+              id: extPool[i].uuid,
+              number: extPool[i].pattern
+            };
+
+            // the externalNumberList will contain the info as it came from CMI
+            vm.externalNumberList.push(dn);
+
             var number = extPool[i].pattern.replace(/\D/g, '');
 
-            vm.numberTypeList[number] = "externalNumber";
+            vm.numberTypeList[number] = AANumberAssignmentService.EXTERNAL_NUMBER;
 
             // Add to the available phone number list if not already used
             if (!getDupeNumberAnyAA(number)) {
@@ -236,6 +291,37 @@
         });
     }
 
+    // Warn the user when discrepancies are found between CMI and CES number assignment
+    function warnOnAssignedNumberDiscrepancies() {
+      var onlyResources = [];
+      var onlyCMI = [];
+
+      if (_.get(vm, 'ui.ceInfo.resources.length', 0) === 0) {
+        return;
+      }
+
+      AANumberAssignmentService.checkAANumberAssignments(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, vm.ui.ceInfo.getResources(), onlyResources, onlyCMI).then(
+        function (response) {
+          if (onlyCMI.length > 0) {
+            vm.aaModel.possibleNumberDiscrepancy = true;
+            Notification.error('autoAttendant.errorNumbersCMIOnly', {
+              phoneNumbers: onlyCMI
+            });
+          }
+          if (onlyResources.length > 0) {
+            vm.aaModel.possibleNumberDiscrepancy = true;
+            Notification.error('autoAttendant.errorNumbersCESOnly', {
+              phoneNumbers: onlyResources
+            });
+          }
+        },
+        function (response) {
+          // if we failed to read CMI, we might have discrepancy, and should warn user
+          vm.aaModel.possibleNumberDiscrepancy = true;
+          Notification.error('autoAttendant.errorReadCMI');
+        });
+    }
+
     function activate() {
 
       vm.aaModel = AAModelService.getAAModel();
@@ -243,6 +329,9 @@
       vm.ui = AAUiModelService.getUiModel();
 
       loadNums();
+
+      vm.aaModel.possibleNumberDiscrepancy = false;
+      warnOnAssignedNumberDiscrepancies();
 
     }
 

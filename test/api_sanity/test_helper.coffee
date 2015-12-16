@@ -18,19 +18,14 @@ auth =
     org:  'c054027f-c5bd-4598-8cd8-07c08163e8cd'
 
   'partner-reports':
-    user: 'partner-admin@huron-int.com'
+    user: 'admin@sparkucreports-testpartner.com'
     pass: 'Cisco123!'
-    org:  '21e30827-4c16-4fed-b025-e1342508c380'
+    org:  'd71b4d69-721a-41b1-ae4b-6e0305eab12b'
 
   'partner-sales-user':
     user: 'phtest77+salesadmin@gmail.com'
     pass: 'C1sc0123!'
     org:  '7e268021-dc11-4728-b39d-9ba0e0abb5e0'
-
-  'partner-squc-admin':
-    user: 'admin@ucpartner.e2e.huronalpha.com'
-    pass: 'Cisco123!!'
-    org:  '666a7b2f-f82e-4582-9672-7f22829e728d'
 
   'pbr-admin-test':
     user: 'pbr-org-admin-test@wx2.example.com'
@@ -51,6 +46,11 @@ auth =
     user: 'admin@uc.e2e.huron-alpha.com'
     pass: 'Cisco123!'
     org:  '30fdb01e-0bb2-4ed4-97f4-84a2289bdc79'
+
+  'huron-e2e-partner':
+    user: 'admin@ucpartner.e2e.huronalpha.com'
+    pass: 'Cisco123!!'
+    org:  '666a7b2f-f82e-4582-9672-7f22829e728d'
 
   'account-admin':
     user: 'phtest77+acc2@gmail.com'

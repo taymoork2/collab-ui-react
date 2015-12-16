@@ -1,3 +1,8 @@
+.support {
+  @extend %content-header;
+  @extend %page-content-padding;
+}
+
 .support-row{
   margin-left: 15px;
   margin-right: 0px;
@@ -5,29 +10,17 @@
 
 .search-panel{
   margin-bottom: 30px;
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding: 20px;
   border-color: #999999;
   background-color: #ffffff;
 }
 
-.search-title{
-  font-family:$brand-font-extra-light;
-  font-size: 20px;
-
-  color: #444;
-  padding-left: 20px;
-  padding-top: 20px
-}
-
 .search-panel-input{
-  padding-left: 10px;
-  padding-right: 10px;
   padding-top: 20px;
 }
 
 .search-button-log{
-  padding-right: 20px;
+  padding-right: 10px;
 }
 
 .support-card{
@@ -103,18 +96,6 @@
       right: 315px;
       left: auto;
       top: 70%;
-    }
-  }
-  .btn--icon {
-    background: none;
-    border: none;
-    box-shadow: none;
-    width: 100%;
-    text-align: center;
-    &:hover, &:focus, &.active:focus {
-      border: none;
-      box-shadow: none;
-      outline: 0;
     }
   }
 }

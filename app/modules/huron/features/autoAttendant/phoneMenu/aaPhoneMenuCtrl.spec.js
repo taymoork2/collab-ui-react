@@ -59,14 +59,18 @@ describe('Controller: AAPhoneMenuCtrl', function () {
     it('should add a new keyAction object into selectedActions array', function () {
       var keys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '#', '*'];
       controller.selectedActions = [];
+      controller.menuEntry = AutoAttendantCeMenuModelService.newCeMenu();
       controller.addKeyAction();
       expect(controller.selectedActions.length).toEqual(1);
       expect(controller.selectedActions[0].keys.join()).toEqual(keys.join());
+
+      expect(controller.menuEntry.entries.length).toEqual(1);
     });
 
     it('should add a new keyAction object into selectedActions array without the key already in use', function () {
       var keys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '#', '*'];
       var keysWithout3 = ['0', '1', '2', '4', '5', '6', '7', '8', '9', '#', '*'];
+      controller.menuEntry = AutoAttendantCeMenuModelService.newCeMenu();
       // phone menu without a key row
       controller.selectedActions = [];
       // add a new key row
@@ -85,9 +89,10 @@ describe('Controller: AAPhoneMenuCtrl', function () {
   describe('deleteKeyAction', function () {
     it('should delete an existing keyAction object from the selectedActions array', function () {
       controller.selectedActions = angular.copy(data.selectedActions);
+      controller.menuEntry = angular.copy(data.ceMenu);
       controller.deleteKeyAction(0);
       expect(controller.selectedActions.length).toEqual(1);
-      expect(controller.selectedActions[0]).toEqual(data.selectedActions[1]);
+      expect(controller.selectedActions[0]).toEqual(data.oneSelectedAction);
     });
   });
 
@@ -102,12 +107,57 @@ describe('Controller: AAPhoneMenuCtrl', function () {
   });
 
   describe('keyActionChanged', function () {
-    it('should change the action for an existing key', function () {
-      controller.menuEntry = angular.copy(data.ceMenu);
-      controller.selectedActions = angular.copy(data.selectedActions);
-      var newAction = data.selectedActionsHuntGroup;
-      controller.keyActionChanged(0, newAction);
-      expect(controller.selectedActions[0].value).toEqual(newAction);
+    it('should write Repeat-this-Menu action to the model', function () {
+      var ceMenu = angular.copy(data.ceMenu);
+      var expectEntry = raw2MenuEntry(ceMenu.entries[0]);
+      var phoneMenu = {
+        "type": "MENU_OPTION",
+        "entries": [],
+        "headers": []
+      };
+      controller.menuEntry = phoneMenu;
+      controller.selectedActions = [];
+      controller.addKeyAction();
+      controller.keyChanged(0, '1');
+
+      controller.keyActionChanged(0, data.selectedActionsRepeatMenu[0].action);
+
+      expect(angular.equals(expectEntry, controller.menuEntry.entries[0])).toEqual(true);
+    });
+
+    it('should change Repeat-Menu to Dial-by-Extension action in the model', function () {
+      var ceMenu = angular.copy(data.ceMenu);
+      var expectEntry = raw2MenuEntry(ceMenu.entries[0]);
+      var expectEntry2 = raw2MenuEntry(ceMenu.entries[1]);
+      var phoneMenu = {
+        "type": "MENU_OPTION",
+        "entries": [],
+        "headers": []
+      };
+      controller.menuEntry = phoneMenu;
+      controller.selectedActions = [];
+      controller.addKeyAction();
+      controller.keyChanged(0, '1');
+
+      controller.keyActionChanged(0, data.selectedActionsRepeatMenu[0].action);
+      expect(angular.equals(expectEntry, controller.menuEntry.entries[0])).toEqual(true);
+
+      controller.keyChanged(0, '2');
+      controller.keyActionChanged(0, data.selectedActionsDialExt[0].action);
+      expect(angular.equals(expectEntry2, controller.menuEntry.entries[0])).toEqual(true);
+    });
+
+  });
+
+  describe('createOptionMenu', function () {
+    it('should initialize CeMenu Timeout/Invalid input with repeat-menu-3 times', function () {
+      controller.createOptionMenu();
+
+      var expectedActions = angular.copy(controller.timeoutActions[0]);
+      expectedActions.childOptions = angular.copy(controller.repeatOptions);
+      expectedActions.selectedChild = angular.copy(controller.repeatOptions[2]);
+
+      expect(angular.equals(expectedActions, controller.selectedTimeout)).toEqual(true);
     });
   });
 
@@ -160,7 +210,7 @@ describe('Controller: AAPhoneMenuCtrl', function () {
     });
   });
 
-  describe('saveUiModel', function () {
+  describe('timeoutInvalidChanged', function () {
 
     it('should write Continue-To-Next-Step (Timeout/Invalid action) to the model', function () {
       var ceMenu = angular.copy(data.ceMenu);
@@ -174,7 +224,7 @@ describe('Controller: AAPhoneMenuCtrl', function () {
       $scope.index = 0;
       controller.menuEntry = controller.uiMenu.entries[$scope.index];
       controller.selectedTimeout = angular.copy(controller.timeoutActions[0]);
-      controller.saveUIModel();
+      controller.timeoutInvalidChanged();
       expect(controller.uiMenu.entries[0].attempts).toEqual(1);
     });
 
@@ -193,7 +243,7 @@ describe('Controller: AAPhoneMenuCtrl', function () {
       controller.selectedTimeout.childOptions = angular.copy(controller.repeatOptions);
       controller.selectedTimeout.selectedChild = angular.copy(controller.repeatOptions[0]);
 
-      controller.saveUIModel();
+      controller.timeoutInvalidChanged();
       expect(controller.uiMenu.entries[0].attempts).toEqual(2);
     });
 
@@ -212,42 +262,8 @@ describe('Controller: AAPhoneMenuCtrl', function () {
       controller.selectedTimeout.childOptions = angular.copy(controller.repeatOptions);
       controller.selectedTimeout.selectedChild = angular.copy(controller.repeatOptions[4]);
 
-      controller.saveUIModel();
+      controller.timeoutInvalidChanged();
       expect(controller.uiMenu.entries[0].attempts).toEqual(6);
-    });
-
-    it('should write Repeat-this-Menu action to the model', function () {
-      var ceMenu = angular.copy(data.ceMenu);
-      // phone menu at entry 0
-      controller.uiMenu = {};
-      controller.uiMenu.entries = [{
-        "type": "MENU_OPTION",
-        "entries": [],
-        "headers": []
-      }];
-      $scope.index = 0;
-      controller.menuEntry = controller.uiMenu.entries[$scope.index];
-      controller.selectedActions = data.selectedActionsRepeatMenu;
-      controller.saveUIModel();
-      var expectEntry = raw2MenuEntry(ceMenu.entries[0]);
-      expect(angular.equals(expectEntry, controller.uiMenu.entries[0].entries[0])).toEqual(true);
-    });
-
-    it('should write Dial-by-Extension action to the model', function () {
-      var ceMenu = angular.copy(data.ceMenu);
-      // phone menu at entry 0
-      controller.uiMenu = {};
-      controller.uiMenu.entries = [{
-        "type": "MENU_OPTION",
-        "entries": [],
-        "headers": []
-      }];
-      $scope.index = 0;
-      controller.menuEntry = controller.uiMenu.entries[$scope.index];
-      controller.selectedActions = data.selectedActionsDialExt;
-      controller.saveUIModel();
-      var expectEntry = raw2MenuEntry(ceMenu.entries[1]);
-      expect(angular.equals(expectEntry, controller.uiMenu.entries[0].entries[0])).toEqual(true);
     });
 
   });
