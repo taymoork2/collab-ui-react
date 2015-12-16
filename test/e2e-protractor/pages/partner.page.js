@@ -118,9 +118,9 @@ var PartnerHomePage = function () {
   this.adminCustomerOrgId = element(by.css('div[orgid="' + this.csrole.adminOrgId + '"]'));
   this.regularCustomerOrgId = element(by.css('div[orgid="' + this.csrole.regularOrgId + '"]'));
 
-  this.termsOfTrialSection = element(by.cssContainingText('.section-title-row', 'Terms of Trial'));
+  this.termsOfTrialSection = element(by.cssContainingText('.section-title-row', 'Trial'));
   this.termsActionButton = this.termsOfTrialSection.element(by.css('button.actions-button'));
-  this.editTermsButton = this.termsOfTrialSection.element(by.cssContainingText('a', 'Edit Terms of Trial'));
+  this.editTermsButton = this.termsOfTrialSection.element(by.cssContainingText('a', 'Edit Trial'));
 
   this.communicationSection = element(by.css('.external-number-overview .side-panel-section'));
   this.communicationPhoneNumbers = element(by.cssContainingText('.feature', 'Phone Numbers'));

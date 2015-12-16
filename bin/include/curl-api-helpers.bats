@@ -88,3 +88,9 @@ source ./curl-api-helpers
     run is_safe_atlas_operation "DELETE" "https://example.com/admin/api/v1/organizations/d71b4d69-721a-41b1-ae4b-6e0305eab12b" && [ "$status" -eq 1 ]
     run is_safe_atlas_operation "DELETE" "https://example.com/admin/api/v1/organizations/e9e33cac-eb07-4c34-8240-d08a43d0adce" && [ "$status" -eq 1 ]
 }
+
+@test "get_url_endpoint_prefix - should output appropriate endpoint url prefixes given the script-name" {
+    run get_url_endpoint_prefix "curl-atlas" && [ "$output" = "https://atlas-integration.wbx2.com/admin/api/v1" ]
+    run get_url_endpoint_prefix "curl-wdm"   && [ "$output" = "https://wdm-integration.wbx2.com/wdm/api/v1" ]
+    run get_url_endpoint_prefix "curl-ci"    && [ "$output" = "https://idbroker.webex.com" ]
+}

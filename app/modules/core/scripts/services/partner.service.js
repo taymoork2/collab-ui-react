@@ -5,7 +5,7 @@
     .service('PartnerService', PartnerService);
 
   /* @ngInject */
-  function PartnerService($http, $rootScope, $q, $translate, $filter, Config, Log, Authinfo, Auth, FeatureToggleService) {
+  function PartnerService($http, $rootScope, $q, $translate, $filter, Config, Log, Authinfo, Auth) {
 
     var trialsUrl = Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials';
     var managedOrgsUrl = Config.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/managedOrgs';
@@ -159,12 +159,6 @@
     function loadRetrievedDataToList(retrievedData, basicList, isTrialData) {
       var list = basicList || [];
 
-      var isAtlasStormBranding = false;
-
-      FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
-        isAtlasStormBranding = result;
-      });
-
       for (var index in retrievedData) {
         var data = retrievedData[index];
         var edate = moment(data.startDate).add(data.trialPeriod, 'days').format('MMM D, YYYY');
@@ -186,7 +180,7 @@
           daysUsed: 0,
           percentUsed: 0,
           duration: data.trialPeriod,
-          offer: '',
+          offer: {},
           status: data.state,
           state: data.state,
           isAllowedToManage: true,
@@ -197,7 +191,8 @@
 
         if (data.offers) {
           dataObj.offers = data.offers;
-          var offerNames = [];
+          var offerUserServices = [];
+          var offerDeviceBasedServices = [];
           for (var cnt in data.offers) {
             var offer = data.offers[cnt];
             if (!offer) {
@@ -205,22 +200,14 @@
             }
             switch (offer.id) {
             case Config.trials.message:
-              if (isAtlasStormBranding) {
-                offerNames.push($translate.instant('customerPage.message'));
-              } else {
-                offerNames.push($translate.instant('trials.collab'));
-              }
+              offerUserServices.push($translate.instant('trials.collab'));
               break;
             case Config.trials.call:
               dataObj.isSquaredUcOffer = true;
-              if (isAtlasStormBranding) {
-                offerNames.push($translate.instant('customerPage.call'));
-              } else {
-                offerNames.push($translate.instant('trials.squaredUC'));
-              }
+              offerUserServices.push($translate.instant('trials.squaredUC'));
               break;
             case Config.trials.roomSystems:
-              offerNames.push($translate.instant('customerPage.roomSystem'));
+              offerDeviceBasedServices.push($translate.instant('customerPage.roomSystem'));
               break;
             }
             dataObj.usage = offer.usageCount;
@@ -230,7 +217,8 @@
               dataObj.licenses = offer.licenseCount;
             }
           }
-          dataObj.offer = offerNames.sort().join(', ');
+          dataObj.offer.userServices = offerUserServices.sort().join(', ');
+          dataObj.offer.deviceBasedServices = offerDeviceBasedServices.sort().join(', ');
         }
 
         dataObj.unmodifiedLicenses = _.cloneDeep(data.licenses);

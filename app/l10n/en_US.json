@@ -1442,6 +1442,7 @@
     "phoneMenuRepeatFour": "Four Times",
     "phoneMenuRepeatFive": "Five Times",
     "phoneMenuHelp": "Select the desired language and voice which is used to speak the phrase to the caller. Say message is optional. If no message is entered, we will still listen for the caller's input.",
+    "phoneMenuErrorRouteToAATargetMissing": "Key {{key}} is missing a Route To Auto Attendant target.",
     "addNumberMsg": "This auto attendant will answer all calls to the following numbers. You can add or remove numbers at any time.",
     "numberInfoPopover": "If you don’t enter a number here, it’s okay. Calls may still come through from another Auto Attendant.",
     "selectPlaceHolder": "Search or Select a Number",
@@ -1809,6 +1810,9 @@
       "customer": "Customer",
       "partner": "Partner"
     },
+    "numbers": {
+      "title": "Setup Trial – Add Numbers"
+    },
     "trialSuccess": "Your trial is ready.",
     "nextStepPrompt": "Do you want to setup services for the customer?",
     "setupLater": "No thanks",
@@ -1871,12 +1875,10 @@
     "launchButton": "View Customer",
     "setupButton": "Setup Customer",
     "myOrgButton": "View My Organization",
-    "edit": "Edit Terms of Trial",
+    "edit": "Edit Trial",
     "trialTerms": "Terms of Trial",
     "trialOverview": "Trial",
     "licenses": "Number of Licenses",
-    "userLicenses": "Number of User Licenses",
-    "deviceBasedLicenses": "Number of Device-based Licenses",
     "duration": "Duration",
     "days": "Days",
     "dayTrial": "Day Trial",

@@ -9,7 +9,8 @@
   function AAValidationService(AAModelService, AutoAttendantCeInfoModelService, Notification) {
 
     var service = {
-      isNameValidationSuccess: isNameValidationSuccess
+      isNameValidationSuccess: isNameValidationSuccess,
+      isPhoneMenuValidationSuccess: isPhoneMenuValidationSuccess
     };
 
     return service;
@@ -35,6 +36,25 @@
         }
       }
 
+      return true;
+    }
+
+    function isPhoneMenuValidationSuccess(uiCombinedMenu) {
+      var optionMenu = _.find(uiCombinedMenu.entries, function (entry) {
+        return this === entry.type;
+      }, 'MENU_OPTION');
+
+      if (angular.isDefined(optionMenu) && angular.isDefined(optionMenu.entries)) {
+        var entry = _.find(optionMenu.entries, function (entry) {
+          return entry.key && 'goto' === entry.actions[0].name && !entry.actions[0].value;
+        });
+        if (angular.isDefined(entry)) {
+          Notification.error('autoAttendant.phoneMenuErrorRouteToAATargetMissing', {
+            key: entry.key
+          });
+          return false;
+        }
+      }
       return true;
     }
   }
