@@ -2,12 +2,13 @@
 @import 'avgRooms/_avg-rooms';
 
 .customer-report-filter {
-  width: rem-calc(250);
+  width: rem-calc(200);
 }
 .customer-reports {
+  .cs-card-layout {
+    margin-bottom: rem-calc(15);
+  }
   .report-card {
-    padding-left: rem-calc(15);
-    padding-right: rem-calc(15);
     article {
       min-height: vr-adjust(570);
       min-width: rem-calc(650);

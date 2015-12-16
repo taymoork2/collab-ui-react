@@ -243,7 +243,7 @@
         } else if (response.length === 0) {
           vm.filesSharedStatus = EMPTY;
         } else {
-          var tempFilesSharedChart = CustomerGraphService.setAvgRoomsGraph(response, filesSharedChart);
+          var tempFilesSharedChart = CustomerGraphService.setFilesSharedGraph(response, filesSharedChart);
           if (tempFilesSharedChart !== null && angular.isDefined(tempFilesSharedChart)) {
             filesSharedChart = tempFilesSharedChart;
           }
