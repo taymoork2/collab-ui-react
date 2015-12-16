@@ -73,8 +73,11 @@
       }
     }
 
-    .company-voicemail {
-      margin-top: 3rem;
+    .company-voicemail-id ng-form {
+      width: 100%;
+      .company-voicemail-number {
+        width: 40%;
+      }
     }
   }
 
