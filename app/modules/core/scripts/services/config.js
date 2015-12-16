@@ -500,6 +500,7 @@ angular.module('Core')
           brandWarning: '#f7c100',
           dummyGray: '#ECECEC',
           primaryColorLight: '#66C5E8',
+          primaryColorBase: '#049FD9',
           primaryColorDarker: '#0387B8',
           dummyGrayLight: '#F3F3F3',
           dummyGrayLighter: '#FAFAFA'

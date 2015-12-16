@@ -200,9 +200,12 @@ angular
         })
         .state('downloads', {
           url: '/downloads',
-          templateUrl: 'modules/squared/views/downloads.html',
-          controller: 'DownloadsCtrl',
-          parent: 'main',
+          views: {
+            'main@': {
+              templateUrl: 'modules/squared/views/downloads.html',
+              controller: 'DownloadsCtrl'
+            }
+          },
           authenticate: false
         })
         .state('profile', {

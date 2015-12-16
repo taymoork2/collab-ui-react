@@ -358,8 +358,11 @@
       margin-right: 30px;
       margin-left: 30px;
     }
+    .service-setup-company-voicemail ng-form {
+      width: 100%
+    }
     .service-setup-company-voicemail-number {
-      width: 20rem;
+        width: 50%
     }
     .service-setup-moh {
       width: 50%;
