@@ -156,7 +156,7 @@
 
         AANumberAssignmentService.setAANumberAssignmentWithErrorDetail(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, fmtResources).then(
           function (response) {
-            if (angular.isDefined(response.failedResources) && response.failedResources.length > 0) {
+            if (_.get(response, 'failedResources.length', false)) {
               Notification.error('autoAttendant.errorFailedToAssignNumbers', {
                 phoneNumbers: _.pluck(response.failedResources, 'id')
               });

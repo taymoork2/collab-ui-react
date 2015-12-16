@@ -296,7 +296,7 @@
       var onlyResources = [];
       var onlyCMI = [];
 
-      if (angular.isUndefined(vm.ui.ceInfo) || angular.isUndefined(vm.ui.ceInfo.resources) || vm.ui.ceInfo.resources.length === 0) {
+      if (_.get(vm, 'ui.ceInfo.resources.length', 0) === 0) {
         return;
       }
 

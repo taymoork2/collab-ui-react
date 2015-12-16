@@ -184,15 +184,11 @@ describe('Controller: AABuilderMainCtrl', function () {
       }]);
 
       spyOn(Notification, 'error');
-      spyOn(AANumberAssignmentService, 'setAANumberAssignmentWithErrorDetail').and.callFake(
-        function setAANumberAssignmentWithErrorDetail(customerId, cesId, myResourceList) {
-          var deferred = $q.defer();
-          deferred.resolve({
-            workingResources: [],
-            failedResources: ["9999999991"]
-          });
-          return deferred.promise;
-        });
+      var resources = {
+        workingResources: [],
+        failedResources: ["9999999991"]
+      };
+      spyOn(AANumberAssignmentService, 'setAANumberAssignmentWithErrorDetail').and.returnValue($q.when(resources));
 
       controller.saveAANumberAssignmentWithErrorDetail();
 

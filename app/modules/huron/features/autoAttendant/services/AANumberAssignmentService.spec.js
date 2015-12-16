@@ -177,54 +177,32 @@ describe('Service: AANumberAssignmentService', function () {
 
     it('should set mix of working and failed', function () {
 
-      // a good one
-      var resource = AutoAttendantCeInfoModelService.newResource();
-      resource.setType(aCe.assignedResources.type);
-      resource.setId("1111111111");
-      resource.setNumber("1111111111");
-
+      function addResource(resources, val) {
+        var resource = AutoAttendantCeInfoModelService.newResource();
+        resource.setType(aCe.assignedResources.type);
+        resource.setId(val);
+        resource.setNumber(val);
+        resources.push(resource);
+      }
       var resources = [];
-      resources.push(resource);
-
-      // a bad one
-      resource = AutoAttendantCeInfoModelService.newResource();
-      resource.setType(aCe.assignedResources.type);
-      resource.setId("bad");
-      resource.setNumber("bad");
-
-      resources.push(resource);
 
       // a good one
-      resource = AutoAttendantCeInfoModelService.newResource();
-      resource.setType(aCe.assignedResources.type);
-      resource.setId("2222222222");
-      resource.setNumber("2222222222");
-
-      resources.push(resource);
+      addResource(resources, "1111111111");
 
       // a bad one
-      resource = AutoAttendantCeInfoModelService.newResource();
-      resource.setType(aCe.assignedResources.type);
-      resource.setId("bad");
-      resource.setNumber("bad");
-
-      resources.push(resource);
-
-      // a bad one
-      resource = AutoAttendantCeInfoModelService.newResource();
-      resource.setType(aCe.assignedResources.type);
-      resource.setId("bad");
-      resource.setNumber("bad");
-
-      resources.push(resource);
+      addResource(resources, "bad");
 
       // a good one
-      resource = AutoAttendantCeInfoModelService.newResource();
-      resource.setType(aCe.assignedResources.type);
-      resource.setId("3333333333");
-      resource.setNumber("3333333333");
+      addResource(resources, "2222222222");
 
-      resources.push(resource);
+      // a bad one
+      addResource(resources, "bad");
+
+      // a bad one
+      addResource(resources, "bad");
+
+      // a good one
+      addResource(resources, "3333333333");
 
       // CMI assignment will fail when there is any bad number in the list
       $httpBackend.when('PUT', cmiAAAsignmentURL).respond(function (method, url, data, headers) {
