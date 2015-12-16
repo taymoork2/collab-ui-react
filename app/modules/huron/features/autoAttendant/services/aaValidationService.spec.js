@@ -14,6 +14,7 @@ describe('Service: AAValidationService', function () {
   };
 
   var aaModel = {};
+  var data = getJSONFixture('huron/json/autoAttendant/aaPhoneMenuCtrl.json');
 
   function ce2CeInfo(rawCeInfo) {
     var _ceInfo = AutoAttendantCeInfoModelService.newCeInfo();
@@ -98,4 +99,44 @@ describe('Service: AAValidationService', function () {
       expect(valid).toEqual(true);
     });
   });
+
+  describe('isPhoneMenuValidationSuccess', function () {
+    beforeEach(function () {
+      spyOn(Notification, 'error');
+      aaModel.ceInfos = [];
+      aaModel.aaRecords = [];
+    });
+
+    it('report validation success for a normal Route to Auto Attendant configuration', function () {
+      var uiCombinedMenu = angular.copy(data.combinedMenu);
+      var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
+
+      expect(valid).toEqual(true);
+      expect(Notification.error).not.toHaveBeenCalled();
+    });
+
+    it('report validation error for an empty Route to Auto Attendant target', function () {
+      var uiCombinedMenu = angular.copy(data.combinedMenu);
+      var uiPhoneMenu = uiCombinedMenu.entries[0];
+      var uiKey2 = uiPhoneMenu.entries[1];
+      uiKey2.actions[0].value = "";
+      var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
+
+      expect(valid).toEqual(false);
+      expect(Notification.error).toHaveBeenCalled();
+    });
+
+    it('should not report validation error for an empty Route to Auto Attendant target if key is not initialized', function () {
+      var uiCombinedMenu = angular.copy(data.combinedMenu);
+      var uiPhoneMenu = uiCombinedMenu.entries[0];
+      var uiKey2 = uiPhoneMenu.entries[1];
+      uiKey2.key = "";
+      uiKey2.actions[0].value = "";
+      var valid = AAValidationService.isPhoneMenuValidationSuccess(uiCombinedMenu);
+
+      expect(valid).toEqual(true);
+      expect(Notification.error).not.toHaveBeenCalled();
+    });
+  });
+
 });

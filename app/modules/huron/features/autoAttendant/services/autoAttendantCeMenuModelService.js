@@ -852,11 +852,20 @@
 
       for (var i = 0; i < aaMenu.entries.length; i++) {
         menuEntry = aaMenu.entries[i];
-        newOptionArray[i] = {};
-        newOptionArray[i].description = menuEntry.description;
-        newOptionArray[i].input = menuEntry.key;
-        newOptionArray[i].actions = createActionArray(menuEntry.actions);
+        // skip incomplete key/action definition
+        if (menuEntry.key && menuEntry.actions.length > 0 && menuEntry.actions[0].name) {
+          var newOption = {};
+          newOption.description = menuEntry.description;
+          newOption.input = menuEntry.key;
+          newOption.actions = createActionArray(menuEntry.actions);
+          newOptionArray.push(newOption);
+        }
       }
+
+      // sort menu keys in ascending order
+      newOptionArray.sort(function (a, b) {
+        return a.input.localeCompare(b.input);
+      });
 
       // create prompts section
       if (aaMenu.headers.length > 0) {
