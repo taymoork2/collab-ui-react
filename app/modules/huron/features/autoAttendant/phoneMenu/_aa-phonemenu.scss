@@ -73,6 +73,12 @@
     }
   }
 
+  & .aa-route-to-hg {
+    & .csSelect-container {
+      @include vr-spacing(pt, 1);
+    }
+  }
+
   .aa-pm-timeout {
     @include vr-spacing(pb, 1);
   }

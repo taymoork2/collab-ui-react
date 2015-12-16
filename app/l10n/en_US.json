@@ -1447,6 +1447,7 @@
     "numberInfoPopover": "If you don’t enter a number here, it’s okay. Calls may still come through from another Auto Attendant.",
     "selectPlaceHolder": "Search or Select a Number",
     "inputPlaceHolder": "Start typing here",
+    "selectHGPlaceHolder": "Search or Select a Hunt Group",
     "selectAAPlaceHolder": "Search or Select an Auto Attendant",
     "sayMessage": "Message",
     "sayMessagePlaceholder": "Enter your message here.",
