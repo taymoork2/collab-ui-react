@@ -1018,6 +1018,11 @@ angular
           abstract: true,
           sticky: true
         })
+        .state('helpdesklaunch', {
+          url: '/helpdesklaunch',
+          templateUrl: 'modules/squared/helpdesk/helpdesk-launch.html',
+          parent: 'main'
+        })
         .state('helpdesk', {
           url: '/helpdesk',
           template: '<div ui-view></div>',

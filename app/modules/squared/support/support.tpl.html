@@ -4,8 +4,7 @@
     <div class="columns small-12 medium-8">
       <div class="search-panel columns small-12">
         <div id="listLogs">
-          <span class="search-title" id="subtitleLogs" translate="supportPage.subtitleLogs">
-          </span>
+          <h4 id="subtitleLogs" translate="supportPage.subtitleLogs"></h4>
         </div>
         <div class="search-panel-input">
           <form role="form">
@@ -40,7 +39,7 @@
         </section>
       </div>
       <div class="columns small-12 support-card">
-        <span class="support-info" translate="supportPage.supportResources"></span>
+        <h4 translate="supportPage.supportResources"></h4>
         <div class="display-link" ng-click="toggleSupport()" ng-show="showSupportDetails === false" href="">
           <span translate="supportPage.showDetails"></span>
         </div>
@@ -50,9 +49,13 @@
         <div ng-show="showSupportDetails === true">
           <p class="bucket-header support-header header-section" translate="supportPage.problemReports"></p>
           <p class="support-dsc">{{problemContent | translate}} {{problemHandler | translate}}.</p>
-          <span class="support-dsc" translate="supportPage.reportingUrl"></span>
-          <a ng-show="reportingUrl === null" href="" translate="supportPage.sendFeedback" ng-click="sendFeedback()"></a>
-          <a ng-show="reportingUrl !== null" href="{{reportingUrl}}" target="_blank">{{reportingUrl}}</a>
+
+          <p class="support-dsc">
+            <span class="support-dsc" translate="supportPage.reportingUrl"></span>
+            <a ng-show="reportingUrl === null" href="" translate="supportPage.sendFeedback"
+               ng-click="sendFeedback()"></a>
+            <a ng-show="reportingUrl !== null" href="{{reportingUrl}}" target="_blank">{{reportingUrl}}</a>
+          </p>
           <p class="bucket-header support-header-help header-section" translate="supportPage.help"></p>
           <p class="support-dsc">{{helpContent | translate }} {{helpHandler | translate}}.</p>
           <p class="support-dsc">{{'supportPage.helpUrl' | translate}} <a href="{{helpUrl}}" target="_blank">{{helpUrl}}</a></p>
