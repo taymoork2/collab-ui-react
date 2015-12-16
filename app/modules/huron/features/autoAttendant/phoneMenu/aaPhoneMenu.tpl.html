@@ -14,6 +14,9 @@
             <aa-route-to-aa ng-switch-when="phoneMenuRouteAA" aa-schedule="{{schedule}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-aa>
           </div>
         </div>
+        <div ng-switch="keyAction.action.name">
+          <aa-route-to-hg ng-switch-when="phoneMenuRouteHunt"  aa-schedule="{{schedule}}" aa-index="index" aa-key-index="{{$index}}"></aa-route-to-hg>
+        </div>
         <div class="text-right small-1 columns">
           <span class="aa-trash-icon" aria-label="common.delete" ng-click="aaPhoneMenu.deleteKeyAction($index); $event.stopPropagation();"></span>
         </div>
