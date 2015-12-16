@@ -33,9 +33,6 @@
     vm.clusters = _.values(MediaClusterService.getClusters());
     vm.aggregatedClusters = _.values(MediaClusterService.getAggegatedClusters());
     vm.clusterLength = clusterLength;
-    //vm.serviceNotInstalled = serviceNotInstalled;
-    //vm.selectedClusterAggregatedStatus = selectedClusterAggregatedStatus;
-    //vm.enableService = enableService;
     vm.showClusterDetails = showClusterDetails;
 
     vm.clusterListGridOptions = {
@@ -171,34 +168,6 @@
     vm.host = $stateParams.host;
   }
 
-  /* @ngInject 
-  function HostDetailsController($stateParams, $state, MediaClusterService, XhrNotificationService) {
-    var vm = this;
-    vm.host = $stateParams.host;
-    vm.cluster = MediaClusterService.getClusters()[$stateParams.clusterId];
-    vm.serviceType = $stateParams.serviceType;
-    vm.connector = function () {
-      var service = _.find(vm.cluster.services, {
-        service_type: vm.serviceType
-      });
-      return _.find(service.connectors, function (connector) {
-        return connector.host.serial == vm.host.serial;
-      });
-    };
-
-    vm.deleteHost = function () {
-      return MediaClusterService.deleteHost(vm.cluster.id, vm.connector().host.serial).then(function () {
-        if (MediaClusterService.getClusters()[vm.cluster.id]) {
-          $state.go('cluster-details', {
-            clusterId: vm.cluster.id
-          });
-        } else {
-          $state.sidepanel.close();
-        }
-      }, XhrNotificationService.notify);
-    };
-  } */
-
   /* @ngInject */
   function MediaClusterSettingsController($modal, $stateParams, MediaClusterService, $scope, XhrNotificationService) {
     var vm = this;
@@ -212,10 +181,6 @@
         service_type: vm.serviceType
       });
     };
-    /*
-        vm.serviceNotInstalled = function () {
-          return ServiceStatusSummaryService.serviceNotInstalled(vm.serviceType, vm.cluster);
-        };*/
 
     vm.showDeregisterDialog = function () {
       $modal.open({
@@ -236,5 +201,4 @@
     .controller('MediaServiceController', MediaServiceController)
     .controller('MediaClusterSettingsController', MediaClusterSettingsController)
     .controller('AlarmController', AlarmController);
-  //.controller('HostDetailsController', HostDetailsController);
 }());
