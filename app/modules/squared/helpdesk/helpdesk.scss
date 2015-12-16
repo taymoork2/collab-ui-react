@@ -91,6 +91,20 @@
       color: $color-primary-base;
       margin-top: 0.4rem;
     }
+    button {
+      padding-top: 0.1rem;
+      padding-bottom: 0.1rem;
+    }
+    .user-img {
+      height: 35px;
+      width: 35px;
+    }
+    .icon-user {
+      color: white;
+      font-size: 30px;
+      line-height: 35px;
+      bottom: -5px;
+    }
   }
 }
 
@@ -183,6 +197,18 @@
     }
   }
   .search-results {
+    .icon-org-search {
+      font-size: 1rem;
+      border:1px solid;
+      border-radius: 100%;
+      border:1px solid;
+      border-color:transparent;
+      padding:0.4rem;
+      &:hover {
+        border-color:$gray-lighter;
+        color:$gray-darker;
+      }
+    }
     .cs-card:first-child {
       margin-top: 0;
     }
@@ -253,11 +279,6 @@
   .show-more-results {
     margin-bottom: 1rem;
   }
-  .icon-search-help {
-    font-size:1.2rem;
-    top:0.24rem;
-    padding-left:0.5rem;
-  }
 }
 .helpdesk-cards {
   .cs-card section {
@@ -283,7 +304,7 @@
     margin-top: 0.5rem;
     color: black;
   }
-  .label {
+  .badge {
     margin-bottom: 0;
     padding: 0.1rem 0.5rem 0.1rem;
   }

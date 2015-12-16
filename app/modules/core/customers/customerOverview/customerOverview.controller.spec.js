@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: CustomerOverviewCtrl', function () {
-  var controller, $scope, $stateParams, $state, $window, $q, currentCustomer, identityCustomer, Userservice, Authinfo, BrandService;
+  var controller, $scope, $stateParams, $state, $window, $q, currentCustomer, identityCustomer, Userservice, Authinfo, BrandService, FeatureToggleService;
 
   function LicenseFeature(name, state) {
     this['id'] = name.toString();
@@ -13,7 +13,9 @@ describe('Controller: CustomerOverviewCtrl', function () {
 
   beforeEach(module('Core'));
 
-  beforeEach(inject(function ($rootScope, $controller, _$stateParams_, _$state_, _$window_, _$q_) {
+  beforeEach(module('Huron'));
+
+  beforeEach(inject(function ($rootScope, $controller, _$stateParams_, _$state_, _$window_, _$q_, _FeatureToggleService_) {
     $scope = $rootScope.$new();
     currentCustomer = {
       customerEmail: 'testuser@gmail.com',
@@ -50,6 +52,7 @@ describe('Controller: CustomerOverviewCtrl', function () {
     BrandService = {
       getSettings: function () {}
     };
+    FeatureToggleService = _FeatureToggleService_;
 
     $stateParams = _$stateParams_;
     $stateParams.currentCustomer = currentCustomer;
@@ -65,13 +68,15 @@ describe('Controller: CustomerOverviewCtrl', function () {
     spyOn($window, 'open');
     spyOn(Userservice, 'updateUsers');
     spyOn(BrandService, 'getSettings').and.returnValue($q.when({}));
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
 
     controller = $controller('CustomerOverviewCtrl', {
       $scope: $scope,
       identityCustomer: identityCustomer,
       Userservice: Userservice,
       Authinfo: Authinfo,
-      BrandService: BrandService
+      BrandService: BrandService,
+      FeatureToggleService: FeatureToggleService
     });
 
     $scope.$apply();

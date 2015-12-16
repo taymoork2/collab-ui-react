@@ -17,7 +17,7 @@
     vm.showWebex = false;
     vm.showRoomSystems = false;
     vm.model = {
-      roomSystems: 0
+      roomSystems: 0,
     };
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials).then(function (result) {
@@ -32,7 +32,7 @@
     });
 
     var webexField = {
-      key: 'WEBEXTRIALS',
+      key: Config.trials.meeting,
       type: 'checkbox',
       model: $scope.offers,
       templateOptions: {
@@ -70,7 +70,7 @@
         }
       }
     }, {
-      key: 'COLLAB',
+      key: Config.trials.message,
       type: 'checkbox',
       model: $scope.offers,
       defaultValue: _.get(vm, 'currentTrial.communications.status') === 'ACTIVE',
@@ -90,7 +90,7 @@
         }
       }
     }, {
-      key: 'SQUAREDUC',
+      key: Config.trials.call,
       type: 'checkbox',
       model: $scope.offers,
       templateOptions: {
@@ -116,7 +116,7 @@
     vm.trialTermsFields = [{
       key: 'licenseDuration',
       type: 'select',
-      defaultValue: 30,
+      defaultValue: vm.currentTrial.duration,
       templateOptions: {
         labelfield: 'label',
         required: true,
@@ -132,16 +132,17 @@
     vm.getDaysLeft = getDaysLeft;
     vm.editTrial = editTrial;
     vm.squaredUCOfferID = Config.trials.call;
+    vm.roomSystemsOfferID = Config.trials.roomSystems;
     vm.isSquaredUCEnabled = isSquaredUCEnabled;
     vm.isRoomSystemsTrialsEnabled = isRoomSystemsTrialsEnabled;
     vm.gotoAddNumber = gotoAddNumber;
     vm.clickUpdateButton = clickUpdateButton;
 
     $scope.$watchCollection('offers', function (newOffers) {
-      if (newOffers[Config.trials.cloudberry] || newOffers[Config.trials.squaredUC]) {
-        $scope.offers[Config.trials.collab] = true;
+      if (newOffers[Config.trials.roomSystems] || newOffers[Config.trials.call]) {
+        $scope.offers[Config.trials.message] = true;
         if (vm.showWebex) {
-          $scope.offers[Config.trials.webex] = true;
+          $scope.offers[Config.trials.meeting] = true;
         }
       }
     });
@@ -158,6 +159,9 @@
             $scope.offers[offer.id] = true;
             if (offer.id === vm.squaredUCOfferID) {
               vm.disableSquaredUCCheckBox = true;
+            } else if (offer.id === vm.roomSystemsOfferID) {
+              vm.model.roomSystemsEnabled = true;
+              vm.model.roomSystems = offer.licenseCount;
             }
           }
         }
@@ -169,12 +173,12 @@
     }
 
     function isRoomSystemsTrialsEnabled() {
-      return $scope.offers[Config.trials.cloudberry] || false;
+      return $scope.offers[Config.trials.roomSystems] || false;
     }
 
     vm.roomSystemsChecked = function () {
       vm.model.roomSystems = vm.model.roomSystemsEnabled ? vm.roomSystemOptions[0] : 0;
-      $scope.offers[Config.trials.cloudberry] = vm.model.roomSystemsEnabled;
+      $scope.offers[Config.trials.roomSystems] = vm.model.roomSystemsEnabled;
     };
 
     function clickUpdateButton() {
@@ -218,7 +222,7 @@
         }
       }
 
-      return TrialService.editTrial(vm.currentTrial.trialId, vm.currentTrial.duration, vm.currentTrial.licenses, vm.currentTrial.usage, vm.model.roomSystems, vm.currentTrial.customerOrgId, offersList)
+      return TrialService.editTrial(vm.currentTrial.trialId, vm.model.licenseDuration, vm.model.licenseCount, vm.currentTrial.usage, vm.model.roomSystems, vm.currentTrial.customerOrgId, offersList)
         .catch(function (response) {
           vm.saveUpdateButtonLoad = false;
           Notification.notify([response.data.message], 'error');
@@ -239,9 +243,7 @@
           vm.saveUpdateButtonLoad = false;
           angular.extend($stateParams.currentTrial, vm.currentTrial);
           var successMessage = [$translate.instant('trialModal.editSuccess', {
-            customerName: vm.currentTrial.customerName,
-            licenseCount: vm.currentTrial.licenses,
-            licenseDuration: vm.currentTrial.duration
+            customerName: vm.currentTrial.customerName
           })];
           Notification.notify(successMessage, 'success');
           if (!keepModal) {

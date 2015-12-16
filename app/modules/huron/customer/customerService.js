@@ -6,15 +6,12 @@
     .factory('HuronCustomer', HuronCustomer);
 
   /* @ngInject */
-  function HuronCustomer(Authinfo, CustomerCommonService, $q) {
+  function HuronCustomer(Authinfo, CustomerCommonService, CustomerVoiceCmiService, PstnSetupService, $q) {
 
     var customerPayload = {
       'uuid': null,
       'name': null,
-      'servicePackage': 'DEMO_STANDARD',
-      'voicemail': {
-        'pilotNumber': ''
-      }
+      'servicePackage': 'VOICE_ONLY'
     };
 
     var service = {
@@ -30,9 +27,6 @@
       customer.uuid = uuid;
       customer.name = name;
 
-      // Set customer.voicemail.pilotNumber to customer's uuid, so that it is unique.
-      // The pilot number will be set in service setup.
-      customer.voicemail.pilotNumber = uuid;
       return CustomerCommonService.save({}, customer).$promise
         .catch(function (response) {
           // If we have a conflict on create
@@ -48,7 +42,41 @@
           }
           // Otherwise return original error
           return $q.reject(response);
+        })
+        // get the carrier name if reseller has a single carrier
+        .then(getResellerCarrierName)
+        // update the voice customer with carrier if found
+        .then(function (carrierName) {
+          updateVoiceCustomerCarrier(uuid, carrierName);
         });
+    }
+
+    function getResellerCarrierName() {
+      return PstnSetupService.listResellerCarriers()
+        .then(function (carriers) {
+          if (_.isArray(carriers) && _.size(carriers) === 1) {
+            return carriers[0].name;
+          }
+        })
+        .catch(function (response) {
+          // ignore error if reseller is not found
+          if (response.status !== 404) {
+            return $q.reject(response);
+          }
+        });
+    }
+
+    function updateVoiceCustomerCarrier(uuid, carrierName) {
+      if (carrierName) {
+        var payload = {
+          carrier: {
+            name: carrierName
+          }
+        };
+        return CustomerVoiceCmiService.update({
+          customerId: uuid
+        }, payload).$promise;
+      }
     }
 
     function getCustomer(uuid) {

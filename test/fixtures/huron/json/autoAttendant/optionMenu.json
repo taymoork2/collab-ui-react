@@ -81,6 +81,88 @@
       }]
     }]
   },
+  "ceOptionUnsorted": {
+    "callExperienceName": "AA Option",
+    "assignedResources": [{
+      "trigger": "incomingCall",
+      "type": "directoryNumber",
+      "id": "e7d68d8c-9e92-4330-a881-5fc9ace1f7d3"
+    }],
+    "actionSets": [{
+      "name": "regularOpenActions",
+      "actions": [{
+        "play": {
+          "description": "Welcome prompt",
+          "url": "file1.avi"
+        }
+      }, {
+        "runActionsOnInput": {
+          "description": "",
+          "prompts": {
+            "description": "",
+            "sayList": [{
+              "value": "file2.avi",
+              "voice": "menu instruction"
+            }]
+          },
+          "timeoutInSeconds": 30,
+          "language": "",
+          "voice": "",
+          "inputs": [{
+            "description": "Repeat instruction",
+            "input": "3",
+            "actions": [{
+              "repeatActionsOnInput": {}
+            }]
+          }, {
+            "description": "Play office hours",
+            "input": "0",
+            "actions": [{
+              "play": {
+                "url": "file3.avi"
+              }
+            }]
+          }, {
+            "description": "Call dialed number",
+            "input": "4",
+            "actions": [{
+              "routeToDialed": {}
+            }]
+          }, {
+            "description": "Operator",
+            "input": "1",
+            "actions": [{
+              "route": {
+                "destination": "1111"
+              }
+            }]
+          }, {
+            "description": "Call dialed mailbox",
+            "input": "5",
+            "actions": [{
+              "routeToDialedMailbox": {}
+            }]
+          }, {
+            "description": "Leave voicemail",
+            "input": "2",
+            "actions": [{
+              "routeToMailbox": {
+                "mailbox": "1111"
+              }
+            }]
+          }, {
+            "description": "",
+            "input": "default",
+            "actions": [{
+              "repeatActionsOnInput": {
+                "description": "Invalid input action"
+              }
+            }]
+          }]
+        }
+      }]
+    }]
+  },
   "optionMenu": {
     "type": "MENU_OPTION",
     "headers": [{

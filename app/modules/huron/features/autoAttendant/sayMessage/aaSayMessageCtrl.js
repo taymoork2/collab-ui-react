@@ -42,19 +42,20 @@
     /////////////////////
 
     function setVoiceOptions() {
-      vm.voiceOptions = AALanguageService.getVoiceOptions(vm.languageOption);
+      vm.voiceOptions = _.sortBy(AALanguageService.getVoiceOptions(vm.languageOption), "label");
+      setVoiceOption();
+    }
 
+    function setVoiceOption() {
       if (vm.voiceBackup && _.findWhere(vm.voiceOptions, {
           "value": vm.voiceBackup.value
         })) {
         vm.voiceOption = vm.voiceBackup;
-        return;
+      } else if (_.findWhere(vm.voiceOptions, AALanguageService.getVoiceOption())) {
+        vm.voiceOption = AALanguageService.getVoiceOption();
+      } else {
+        vm.voiceOption = vm.voiceOptions[0];
       }
-
-      vm.voiceOption = {
-        label: '',
-        value: ''
-      };
     }
 
     function populateUiModel() {
@@ -70,7 +71,6 @@
     function saveUiModel() {
       vm.actionEntry.setValue(vm.messageInput);
       vm.actionEntry.setVoice(vm.voiceOption.value);
-      vm.voiceBackup = vm.voiceOption;
 
       if (vm.isMenuHeader) {
         // also set values to be used for service invalid/timeout messages

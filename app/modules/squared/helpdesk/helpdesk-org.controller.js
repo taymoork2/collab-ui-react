@@ -28,12 +28,14 @@
     vm.initialAdminUserLimit = 3;
     vm.adminUserLimit = vm.initialAdminUserLimit;
     vm.licenseUsageReady = false;
+    vm.showLicenseToggles = [];
     vm.statusPageUrl = Config.getStatusPageUrl();
     vm.showAllAdminUsers = showAllAdminUsers;
     vm.hideAllAdminUsers = hideAllAdminUsers;
     vm.keyPressHandler = keyPressHandler;
     vm.daysLeftText = daysLeftText;
     vm.gotoSearchUsersAndDevices = gotoSearchUsersAndDevices;
+    vm.usageText = usageText;
 
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
     HelpdeskHealthStatusService.getHealthStatuses().then(initHealth, angular.noop);
@@ -136,6 +138,13 @@
     function daysLeftText(license) {
       return $translate.instant('helpdesk.numDaysLeft', {
         days: license.trialExpiresInDays
+      });
+    }
+
+    function usageText(usage, volume) {
+      return $translate.instant('helpdesk.usage', {
+        usage: usage,
+        volume: volume
       });
     }
 

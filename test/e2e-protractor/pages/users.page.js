@@ -28,7 +28,7 @@ var UsersPage = function () {
   this.editServicesButton = element(by.cssContainingText('a', 'Edit services'));
   this.editServicesModal = element(by.css('.edit-services'));
 
-  this.servicesPanelCommunicationsCheckbox = element(by.css('.bucket-row-inner .indentedCheckbox'));
+  this.servicesPanelCommunicationsCheckbox = element(by.css('.indentedCheckbox'));
   this.listPanel = element(by.id('userslistpanel'));
   this.manageDialog = element(by.id('modalContent'));
   this.deleteUserModal = element(by.id('deleteUserModal'));
@@ -82,8 +82,8 @@ var UsersPage = function () {
   this.closePreview = element(by.id('exitPreviewButton'));
   this.closeDetails = element(by.id('exit-details-btn'));
 
-  this.standardTeamRooms = element(by.cssContainingText('label', 'Standard Team Rooms'));
-  this.advancedCommunications = element(by.cssContainingText('label', 'Advanced Spark Call'));
+  this.standardTeamRooms = element(by.cssContainingText('label', 'Spark Message'));
+  this.advancedCommunications = element(by.cssContainingText('label', 'Spark Call'));
 
   this.subTitleAdd = element(by.id('subTitleAdd'));
   this.subTitleEnable = element(by.id('subTitleEnable'));
@@ -151,6 +151,13 @@ var UsersPage = function () {
   this.addDnAndExtToUser = element(by.id('addDnAndExtToUserOptionButtons'));
 
   this.selectedRow = element(by.css('[ng-repeat="row in renderedRows"].selected'));
+
+  // Hybrid Services
+  this.hybridServices_Cal = element(by.css('label[for="squared-fusion-cal"]'));
+  this.hybridServices_UC = element(by.css('label[for="squared-fusion-uc"]'));
+
+  this.hybridServices_sidePanel_Calendar = element(by.id('squared-fusion-cal-status'));
+  this.hybridServices_sidePanel_UC = element(by.id('squared-fusion-uc-status'));
 
   this.assertSorting = function (nameToSort) {
     this.queryResults.getAttribute('value').then(function (value) {

@@ -164,3 +164,10 @@ Special stuff currently used for out own mail input field...
     }
   }
 }
+
+.feature-list {
+  .status-icon {
+    margin-right: 10px;
+    line-height: $feature-line-height;
+  }
+}

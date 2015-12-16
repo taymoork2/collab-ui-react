@@ -204,7 +204,7 @@ describe('Config', function () {
   it('should always return locus prod service url', function () {
     whenCalling('getFeatureToggleUrl').expectUrlToBe({
       dev: 'https://locus-a.wbx2.com',
-      cfe: 'https://locus-a.wbx2.com',
+      cfe: 'https://locus-e.wbx2.com',
       integration: 'https://locus-a.wbx2.com',
       prod: 'https://locus-a.wbx2.com'
     });
@@ -430,7 +430,6 @@ describe('Config', function () {
 
     it('squared-fusion-mgmt should contain fusion states', function () {
       // Preliminary removed until new fusion menues are in place in both integration and production
-      //expect(Config.serviceStates['squared-fusion-mgmt'][0]).toBe('fusion');
       //expect(Config.serviceStates['squared-fusion-mgmt'][1]).toBe('cluster-details');
     });
 

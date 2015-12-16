@@ -16,12 +16,6 @@
     </form>
 
     <div class="input-description">
-      <p>
-        <a href ng-click="helpdeskCtrl.showSearchHelp()" tabindex="-1">
-          <span translate="helpdesk.searchCriteriaLink"></span><i class="icon icon-help icon-search-help"></i>
-        </a>
-      </p>
-
       <div ng-if="helpdeskCtrl.currentSearch.orgFilter" class="helpdesk-tile">
         <span translate="helpdesk.searchingOrg"
               translate-value-name="{{helpdeskCtrl.currentSearch.orgFilter.displayName}}"></span>
@@ -33,7 +27,7 @@
   <div class="row full">
     <div class="large-offset-2 medium-12 xlarge-10 xxlarge-8 centered columns no-top-margin search-results">
       <div class="medium-6 large-4 columns"
-           ng-if="helpdeskCtrl.searchingForUsers || helpdeskCtrl.currentSearch.userSearchResults || helpdeskCtrl.currentSearch.userSearchFailure">
+           ng-if="helpdeskCtrl.showUsersResultPane()">
         <h4 translate="helpdesk.users"></h4>
 
         <div ng-if="helpdeskCtrl.searchingForUsers">
@@ -78,7 +72,7 @@
       </div>
 
       <div class="medium-6 large-4 columns end"
-           ng-if="helpdeskCtrl.searchingForOrgs || helpdeskCtrl.currentSearch.orgSearchResults || helpdeskCtrl.currentSearch.orgSearchFailure">
+           ng-if="helpdeskCtrl.showOrgsResultPane()">
 
         <h4 translate="helpdesk.customers"></h4>
 
@@ -103,7 +97,7 @@
                 <h5>
                   {{org.displayName}}
                   <a tabindex="-1" href class="right" ng-click="helpdeskCtrl.initSearchWithOrgFilter(org)" name="{{org}}"><i
-                    class="icon icon-search"></i></a>
+                    class="icon icon-search icon-org-search"></i></a>
                 </h5>
               </header>
               <section>
@@ -121,7 +115,7 @@
       </div>
 
       <div class="medium-6 large-4 columns end"
-           ng-if="helpdeskCtrl.currentSearch.orgFilter && (helpdeskCtrl.searchingForDevices || helpdeskCtrl.currentSearch.deviceSearchResults || helpdeskCtrl.currentSearch.deviceSearchFailure)">
+           ng-if="helpdeskCtrl.showDeviceResultPane()">
         <h4 translate="helpdesk.devices"></h4>
 
         <div ng-if="helpdeskCtrl.searchingForDevices">

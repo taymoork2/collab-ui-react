@@ -14,6 +14,13 @@ angular.module('Hercules')
           });
       };
 
+      function getServices() {
+        return $http.get(config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/services')
+          .then(function (response) {
+            return response.data.items || [];
+          });
+      }
+
       function extractData(res) {
         return res.data.items;
       }
@@ -142,9 +149,10 @@ angular.module('Hercules')
         setServiceEnabled: setServiceEnabled,
         serviceIcon: serviceIcon,
         acknowledgeService: acknowledgeService,
+        getServices: getServices,
         servicesInOrg: servicesInOrg,
         getEmailSubscribers: getEmailSubscribers,
-        setEmailSubscribers: setEmailSubscribers,
+        setEmailSubscribers: setEmailSubscribers
       };
     }
   ]);

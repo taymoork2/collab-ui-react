@@ -246,7 +246,6 @@ $aa-builder-icon-color: $gray-base;
 
 .aa-selected-phones {
   margin-top: 1rem;
-  width: 17.9rem;
 }
 
 .aa-panel-numbers {
@@ -281,8 +280,8 @@ $aa-builder-icon-color: $gray-base;
 
   display: inline-block;
   margin: 0;
-  padding-left: 2rem;
-  padding-right: 2rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
   box-shadow: none;
 
   .text-info {

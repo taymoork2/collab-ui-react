@@ -96,7 +96,7 @@
               name: data.name,
               code: data.code,
               number: data.number,
-              phoneNumber: snrInfo.destination
+              phoneNumber: "+" + data.number + snrInfo.destination
             };
           });
       } else {
