@@ -487,11 +487,22 @@ exports.findDirectoryNumber = function (message, lineNumber) {
 };
 
 exports.search = function (query) {
+  var spinner = element(by.css('.icon-spinner'));
+
+  function waitSpinner() {
+    utils.expectIsNotDisplayed(spinner);
+    utils.expectIsDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', query)));
+  }
+
   this.click(this.searchbox);
   this.clear(this.searchField);
   if (query) {
-    this.sendKeys(this.searchField, query);
-    this.expectIsDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', query)));
+    this.sendKeys(this.searchField, query + protractor.Key.ENTER);
+    this.wait(spinner, 500).then(function () {
+      waitSpinner();
+    }, function () {
+      waitSpinner()
+    });
   }
 };
 
@@ -503,10 +514,7 @@ exports.searchForSingleResult = function (query) {
       return false;
     });;
   }
-  this.expectIsNotDisplayed(element(by.css('.icon-spinner')));
-  this.click(this.searchbox);
-  this.clear(this.searchField);
-  this.sendKeys(this.searchField, query);
+  this.search(query);
   browser.wait(logAndWait, TIMEOUT, 'Waiting for a single search result');
   this.expectIsDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', query)));
 }
@@ -586,11 +594,9 @@ exports.createHuronUser = function (name, name2) {
   navigation.clickUsers();
   this.click(users.addUsers);
   this.click(users.addUsersField);
-  this.sendKeys(users.addUsersField, name);
-  this.sendKeys(users.addUsersField, protractor.Key.ENTER);
+  this.sendKeys(users.addUsersField, name + protractor.Key.ENTER);
   if (name2) {
-    this.sendKeys(users.addUsersField, name2);
-    this.sendKeys(users.addUsersField, protractor.Key.ENTER);
+    this.sendKeys(users.addUsersField, name2 + protractor.Key.ENTER);
   }
   this.click(users.nextButton);
   this.click(users.advancedCommunications);
@@ -612,8 +618,7 @@ exports.getUserWithDn = function (name) {
   navigation.clickUsers();
   this.click(users.addUsers);
   this.click(users.addUsersField);
-  this.sendKeys(users.addUsersField, name);
-  this.sendKeys(users.addUsersField, protractor.Key.ENTER);
+  this.sendKeys(users.addUsersField, name + protractor.Key.ENTER);
   this.click(users.nextButton);
 
 };
@@ -644,12 +649,8 @@ exports.deleteUser = function (name, name2) {
 exports.deleteIfUserExists = function (name) {
   this.clickEscape();
   navigation.clickUsers();
-  this.click(this.searchbox);
-  this.clear(this.searchField);
+  this.search(name);
   if (name) {
-    this.sendKeys(this.searchField, name);
-    utils.expectIsPresent(element(by.css('.icon-spinner')));
-    utils.expectIsNotPresent(element(by.css('.icon-spinner')));
     waitUntilElemIsPresent(users.userListAction, 2000).then(function () {
       exports.click(users.userListAction);
       exports.click(users.deleteUserOption);
@@ -670,12 +671,7 @@ exports.deleteIfUserExists = function (name) {
 
 exports.quickDeleteUser = function (bFirst, name) {
   if (bFirst) {
-    this.click(this.searchbox);
-    this.clear(this.searchField);
-    this.sendKeys(this.searchField, name);
-
-    utils.expectIsPresent(element(by.css('.icon-spinner')));
-    utils.expectIsNotPresent(element(by.css('.icon-spinner')));
+    this.search(name);
   }
 
   return waitUntilElemIsPresent(users.userListAction, 2000).then(function () {
