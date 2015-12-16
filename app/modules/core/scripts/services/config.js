@@ -351,6 +351,11 @@ angular.module('Core')
             desc: 'tabs.billingTabDesc',
             state: 'billing',
             link: '#orderprovisioning'
+          }, {
+            title: 'tabs.helpdesk',
+            desc: 'tabs.helpdesk',
+            state: 'helpdesklaunch',
+            link: '#helpdesklaunch'
           }]
         }, {
           tab: 'accountTab',
@@ -440,7 +445,7 @@ angular.module('Core')
           message: 'COLLAB',
           meeting: 'WEBEXTRIALS',
           call: 'SQUAREDUC',
-          roomSystems: 'ROOMSYSTEMS',
+          roomSystems: 'ROOMSYSTEMS'
         },
 
         organizations: {
@@ -956,7 +961,6 @@ angular.module('Core')
         WX2_Support: ['overview', 'reports', 'support'],
         WX2_SquaredInviter: [],
         PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup'],
-        PARTNER_USER: ['partnercustomers', 'customer-overview', 'trialAdd', 'trialEdit'],
         PARTNER_SALES_ADMIN: ['partnerreports'],
         CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
         User: [],
@@ -969,7 +973,7 @@ angular.module('Core')
           'example'
         ],
         Application: ['organizations', 'organization-overview'],
-        Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org']
+        Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org', 'helpdesklaunch']
       };
 
       config.serviceStates = {

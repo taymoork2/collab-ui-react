@@ -106,13 +106,13 @@
     function findLicenseUsage() {
       if (vm.orgId != Config.ciscoOrgId) {
         LicenseService.getLicensesInOrg(vm.orgId, true).then(function (licenses) {
-          // Update the relevant cards with licenses that  includes usage
+          // Update the relevant cards with licenses that includes usage
           vm.messageCard = HelpdeskCardsOrgService.getMessageCardForOrg(vm.org, licenses);
           vm.meetingCard = HelpdeskCardsOrgService.getMeetingCardForOrg(vm.org, licenses);
           vm.callCard = HelpdeskCardsOrgService.getCallCardForOrg(vm.org, licenses);
           vm.roomSystemsCard = HelpdeskCardsOrgService.getRoomSystemsCardForOrg(vm.org, licenses);
           vm.licenseUsageReady = true;
-        }, XhrNotificationService.notify);
+        }, angular.noop);
       }
     }
 

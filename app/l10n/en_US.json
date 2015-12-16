@@ -247,7 +247,8 @@
     "callServiceTab": "Hybrid Services: Call",
     "callServiceTabDesc": "Call Service",
     "expresswayManagementServiceTab": "Hybrid Services: Management",
-    "expresswayManagementServiceTabDesc": "Expressway Management Service"
+    "expresswayManagementServiceTabDesc": "Expressway Management Service",
+    "helpdesk": "Help Desk"
   },
   "index": {
     "welcome": "Welcome!",
@@ -2015,7 +2016,7 @@
     "supportAdmin": "Support Administrator",
     "save": "Save",
     "roles": "Roles",
-    "helpdesk": "Help Desk Support"
+    "helpdesk": "Help Desk"
   },
   "mohManagement": {
     "title": "Media On Hold",
@@ -3012,19 +3013,36 @@
       }
     }
   },
-  "roles": {
+  "ciRoles": {
     "atlas-portal.support": "Support",
     "atlas-portal.reports": "Reports",
     "atlas-portal.billing": "Billing",
     "atlas-portal.partner.helpdesk": "Help Desk Support",
     "atlas-portal.application": "Application",
-    "atlas-portal.partner.salesadmin": "Sales Administrator",
-    "id_full_admin": "Full Administrator",
+    "atlas-portal.partner.salesadmin": "Sales Admin",
+    "id_full_admin": "Full Admin",
+    "id_readonly_admin": "Readonly Admin",
     "user": "User"
+  },
+  "atlasRoles": {
+    "Full_Admin": "Full Admin",
+    "Support": "Support",
+    "Reports": "Reports",
+    "Billing": "Billing",
+    "Help_Desk": "Help Desk",
+    "Application": "Application",
+    "Sales_Admin": "Sales Admin",
+    "User": "User",
+    "PARTNER_USER": "User",
+    "PARTNER_ADMIN": "Partner Admin",
+    "PARTNER_SALES_ADMIN": "Partner Sales Admin",
+    "CUSTOMER_PARTNER": "Customer Partner",
+    "Site_Admin": "Site Admin"
   },
   "helpdesk": {
     "navHeaderTitle": "Cloud Collaboration Help Desk",
-    "helpdesk": "Help Desk Support",
+    "helpdesk": "Help Desk",
+    "searchHeading": "Help Desk Support",
     "users": "Users",
     "customers": "Customers",
     "badUserSearchInput": "Searching for users requires a minimum of three characters. Name and email searches requires a minimum of two words, e.g. john.doe or John Doe.",
@@ -3047,7 +3065,7 @@
     "status": "Status",
     "organization": "Customer",
     "accountCreated": "Account Created",
-    "customerPortalLaunch": "Launch Customer Portal",
+    "customerPortalLaunch": "View Customer Portal",
     "contact": "Contact",
     "claimedDomain": "Claimed Domain",
     "managedBy": "Managed By",
@@ -3133,7 +3151,9 @@
     "resend": "Re-send",
     "sendCode": "Send Code",
     "more": "More",
-    "usage": "{{usage}} of {{volume}} in use"
+    "usage": "{{usage}} of {{volume}} in use",
+    "launchHelpdesk": "Help Desk",
+    "launchHelpdeskDesc": "Open the Help Desk portal in a new tab"
   },
   "activation": {
     "verificationComplete": "Verification Complete",
@@ -3143,6 +3163,7 @@
     "sendCodeLink": "Send new activation code",
     "newCodeSent": "Confirmation Code Sent",
     "useLatestCode": "A new code has been sent to {{userEmail}}",
-    "unexpectedError": "Unexpected error processing request."
+    "unexpectedError": "Unexpected error processing request.",
+    "usage": "{{usage}} of {{volume}} in use"
   }
 }
