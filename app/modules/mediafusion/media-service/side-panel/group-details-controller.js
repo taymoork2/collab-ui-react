@@ -4,7 +4,7 @@ angular.module('Mediafusion')
   .controller('GroupDetailsController',
 
     /* @ngInject */
-    function ($scope, $state, $stateParams, MediaClusterService, $log, Notification, $translate) {
+    function ($stateParams) {
 
       var vm = this;
       vm.displayName = null;

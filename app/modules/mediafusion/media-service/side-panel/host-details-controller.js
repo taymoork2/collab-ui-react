@@ -6,26 +6,15 @@ angular.module('Mediafusion')
     /* @ngInject */
     function ($stateParams, $state, MediaClusterService, XhrNotificationService, Notification, $translate) {
       var vm = this;
-      vm.host = $stateParams.host;
-      vm.cluster = MediaClusterService.getClusters()[$stateParams.clusterId];
       vm.clusterId = $stateParams.clusterId;
-      vm.serviceType = $stateParams.serviceType;
       vm.role = $stateParams.properties["mf.role"];
-
-      vm.connector = function () {
-        var service = _.find(vm.cluster.services, {
-          service_type: vm.serviceType
-        });
-        return _.find(service.connectors, function (connector) {
-          return connector.host.serial == vm.host.serial;
-        });
-      };
+      vm.connector = $stateParams.connector;
 
       vm.deleteHost = function () {
-        return MediaClusterService.deleteHost(vm.cluster.id, vm.connector().host.serial).then(function () {
-          if (MediaClusterService.getClusters()[vm.cluster.id]) {
+        return MediaClusterService.deleteHost(vm.clusterId, vm.connector.host.serial).then(function () {
+          if (MediaClusterService.getClusters()[vm.clusterId]) {
             $state.go('connector-details', {
-              clusterId: vm.cluster.id
+              clusterId: vm.clusterId
             });
           } else {
             $state.sidepanel.close();

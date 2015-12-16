@@ -33,7 +33,7 @@
       <ul>
         <li class="feature" ng-repeat="ecp in groupDetails.clusterList" ng-class="{'list-item': !$first}">
           <a
-            ui-sref="connector-details.host-details({host: ecp.hosts[0], clusterId: ecp.id, serviceType: ecp.cluster_type, properties: ecp.properties})">
+            ui-sref="connector-details.host-details({clusterId: ecp.id, properties: ecp.properties, connector: ecp.services[0].connectors[0]})">
 
             <span class="feature-name">{{ecp.hosts[0].host_name}}</span>
 
