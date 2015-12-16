@@ -22,7 +22,7 @@
         <td><span>{{hostDetails.connector().host.host_name}}</span></td>
       </tr>
       <tr>
-        <td translate="mediaFusion.connectors.software">Software</td>
+        <td translate="mediaFusion.connectors.software"></td>
         <td><span>{{hostDetails.connector().version}}</span></td>
       </tr>
       <tr>
@@ -83,10 +83,10 @@
   <cs-sp-section>
     <div class="section-title-row section-name" translate=""></div>
     <div>
-      <a href
+        <a href
          class="btn btn--negative"
          sq-click-promise="hostDetails.deleteHost()"
-         translate="mediaFusion.connectors.deregister_host"></a>
+         translate="mediaFusion.connectors.deregister_host"></a>  
     </div>
   </cs-sp-section>
 

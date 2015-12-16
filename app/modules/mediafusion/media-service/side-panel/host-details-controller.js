@@ -34,8 +34,6 @@ angular.module('Mediafusion')
       };
 
       vm.changeRole = function ($selectedRole, $clusterId) {
-        // $log.log("The new value is ", $selectedRole);
-        // $log.log("The value of selectedCluster is", $scope.selectedCluster);
         MediaClusterService.changeRole($selectedRole, $clusterId)
           .success(function (data) {
             Notification.notify([$translate.instant('mediaFusion.roleAssignmentSuccess')], 'success');
