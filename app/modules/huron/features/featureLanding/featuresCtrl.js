@@ -46,7 +46,6 @@
      *  4. Define the formatter
      * */
 
-    // AA uses getCeInfosList to get data for landing page
     var features = [{
       name: 'AA',
       getFeature: AutoAttendantCeInfoModelService.getCeInfosList,
