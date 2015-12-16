@@ -458,7 +458,7 @@
     }, {
       key: 'companyVoicemail',
       type: 'nested',
-      className: 'service-setup',
+      className: 'company-voicemail-id',
       templateOptions: {
         label: $translate.instant('serviceSetupModal.companyVoicemail'),
         description: $translate.instant('serviceSetupModal.companyVoicemailDescription')
@@ -475,7 +475,7 @@
         }, {
           key: 'companyVoicemailNumber',
           type: 'select',
-          className: 'service-setup-company-voicemail-number',
+          className: 'company-voicemail-number',
           templateOptions: {
             options: [],
             inputPlaceholder: $translate.instant('directoryNumberPanel.searchNumber'),
@@ -594,9 +594,6 @@
               vm.model.companyVoicemail.companyVoicemailNumber = getBeautifiedExternalNumber(_.get(vm, 'model.site.voicemailPilotNumber'));
             }
             vm.hideCompanyVoicemail = false;
-          } else {
-            // No direct lines exist for company
-            Notification.error('serviceSetupModal.voicemailNoExternalNumbersError');
           }
         });
       }));

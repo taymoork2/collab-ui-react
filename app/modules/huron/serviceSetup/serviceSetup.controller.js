@@ -437,6 +437,7 @@
       type: 'nested',
       className: 'service-setup',
       templateOptions: {
+        inputClass: 'service-setup-company-voicemail',
         label: $translate.instant('serviceSetupModal.companyVoicemail'),
         description: $translate.instant('serviceSetupModal.companyVoicemailDescription')
       },
@@ -599,9 +600,6 @@
               vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = getBeautifiedExternalNumber(_.get(vm, 'model.site.voicemailPilotNumber'));
             }
             vm.hideCompanyVoicemail = false;
-          } else {
-            // No direct lines exist for company
-            Notification.error('serviceSetupModal.voicemailNoExternalNumbersError');
           }
         });
       });

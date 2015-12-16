@@ -340,7 +340,7 @@ describe('Controller: AABuilderMainCtrl', function () {
 
     });
 
-    it('should set up a say say open hours template using real template1', function () {
+    it('should set up a say PhoneMenu open hours template using real template1', function () {
 
       $scope.vm.templateName = 'template1';
       controller.setupTemplate();
@@ -451,6 +451,8 @@ describe('Controller: AABuilderMainCtrl', function () {
 
       $rootScope.$digest();
       expect(element.find('aa-panel').hasClass('ng-show')).toBe(false);
+      expect(element.find('aa-new-step-info').hasClass('ng-show')).toBe(false);
+
     });
 
     it('should NOT display add step icons on aa-builder-actions', function () {
@@ -460,6 +462,8 @@ describe('Controller: AABuilderMainCtrl', function () {
 
       $rootScope.$digest();
       expect(element.find('aa-panel').hasClass('ng-show')).toBe(false);
+      expect(element.find('aa-panel-body').hasClass('ng-show')).toBe(false);
+      expect(element.find('aa-action-delete').hasClass('ng-show')).toBe(false);
     });
 
     // TODO:SIMPLETEMPLATE Should also verify that delete steps are not shown

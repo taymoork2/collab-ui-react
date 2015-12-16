@@ -10,13 +10,10 @@
     var loadedData = false;
 
     function fetch() {
-      if ($window.location.search.indexOf("showNonExistingDevices=true") > -1) {
-        return $http.get(accountsUrl).then(function (res) {
-          loadedData = true;
-          accountList = CsdmConverter.convertAccounts(res.data);
-        });
-      }
-      loadedData = true;
+      return $http.get(accountsUrl).then(function (res) {
+        loadedData = true;
+        accountList = CsdmConverter.convertAccounts(res.data);
+      });
     }
 
     fetch();

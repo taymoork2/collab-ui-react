@@ -212,7 +212,9 @@
         } else {
           setAllNoData();
         }
+        vm.resizeCards();
       });
+
     }
 
     function setAllNoData() {
@@ -324,6 +326,7 @@
           }
         }
         vm.activeUsers = document.getElementById('activeUser');
+        vm.resizeCards();
         return;
       });
     }

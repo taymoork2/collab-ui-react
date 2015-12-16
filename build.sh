@@ -43,7 +43,7 @@ else
 
     if [ $? -ne 0 ]; then
         # setup failed, cleanup checksums file and abort
-        rm $manifest_checksums_file
+        rm -f $manifest_checksums_file
         exit 1
     else
         # setup succeeded, update checksums file and timestamp of last refresh
