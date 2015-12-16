@@ -10,8 +10,7 @@
     /*jshint validthis: true */
     var vm = this;
 
-    vm.multSubscriptions = {
-      selectPlaceholder: '',
+    vm.multiSubscriptions = {
       oneBilling: false,
       selected: '',
       options: [],
@@ -51,6 +50,7 @@
     vm.isInitialized = false; // invert the logic and initialize to false so the template doesn't flicker before spinner
     vm.isStormBranding = false;
     vm.roomSystemsExist = false;
+    vm.showMultiSubscriptions = showMultiSubscriptions;
 
     init();
 
@@ -59,15 +59,15 @@
     });
 
     function init() {
-      vm.multSubscriptions.billings = Authinfo.getLicenses() || [];
-      angular.forEach(vm.multSubscriptions.billings, function (billing) {
-        vm.multSubscriptions.options.push(billing.billingServiceId);
-        vm.multSubscriptions.options = _.uniq(vm.multSubscriptions.options);
-        vm.multSubscriptions.selectPlaceholder = vm.multSubscriptions.options[0];
+      vm.multiSubscriptions.billings = Authinfo.getLicenses() || [];
+      angular.forEach(vm.multiSubscriptions.billings, function (billing) {
+        vm.multiSubscriptions.options.push(billing.billingServiceId);
       });
 
-      if (vm.multSubscriptions.options.length === 1) {
-        vm.multSubscriptions.oneBilling = true;
+      vm.multiSubscriptions.options = _.uniq(_.pluck(vm.multiSubscriptions.billings, 'billingServiceId'));
+      vm.multiSubscriptions.selected = vm.multiSubscriptions.options[0];
+      if (vm.multiSubscriptions.options.length === 1) {
+        vm.multiSubscriptions.oneBilling = true;
       }
 
       vm.messagingServices.services = Authinfo.getMessageServices() || [];
@@ -179,6 +179,11 @@
       }
     }
     /////////////////
+
+    function showMultiSubscriptions(billingServiceId) {
+      return (vm.multiSubscriptions.selected === billingServiceId || (vm.multiSubscriptions.selected === billingServiceId && 
+        vm.multiSubscriptions.selected === '') || vm.multiSubscriptions.oneBilling);
+    }
 
     function populateTrialData(trial) {
       vm.trial = trial;
