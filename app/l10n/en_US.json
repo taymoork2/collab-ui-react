@@ -270,7 +270,8 @@
     "install": "Please install Spark by following",
     "link": "this link.",
     "using": "Please start using",
-    "squared": "Spark."
+    "squared": "Spark.",
+    "active": "Account active"
   },
   "invitePage": {
     "redirect": "Redirecting...",

@@ -1,21 +1,27 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-<br/>
-<p>{{'downloadPage.thank' | translate}}  </p>
-<p id="account">{{'downloadPage.account' | translate: tlData}}</p>
-
-<div id="iosTxt" ng-show="Utils.isIPhone()">
-<p>{{'downloadPage.install' | translate}} <a ng-href="{{iPhoneURL}}">{{'downloadPage.link' | translate}}</a></p>
+<div class="messagebox-backdrop">
+  <div class="message-box">
+    <section>
+      <i class="message-box__icon icon-circle-check"></i>
+      <h3 class="message-box__title message-box__title--success" translate="downloadPage.active"></h3>
+      <h5 id="account" class="message-box__details">
+        {{'downloadPage.thank' | translate}} {{'downloadPage.account' | translate: tlData}}
+      </h5>
+      <span id="iosTxt" ng-show="Utils.isIPhone()">
+        <h5 class="message-box__details">{{'downloadPage.install' | translate}} <a ng-href="{{iPhoneURL}}">{{'downloadPage.link' | translate}}</a></h5>
+      </span>
+      <span id="androidTxt" ng-show="Utils.isAndroid()">
+        <h5 class="message-box__details">{{'downloadPage.install' | translate}} <a ng-href="{{androidURL}}">{{'downloadPage.link' | translate}}</a></h5>
+      </span>
+      <span id="webTxt" ng-show="Utils.isWeb()">
+        <h5 class="message-box__details">{{'downloadPage.using' | translate}} <a ng-href="{{webClientURL}}"> {{'downloadPage.squared' | translate}}</a></h5>
+      </span>
+      <h5 class="message-box__details" id="sendStatus" mailStatus='{{sendStatus}}'></h5>
+    </section>
+    <footer class="message-box__footer">
+      <i class="icon icon-cisco-logo icon-2x"></i>
+    </footer>
+  </div>
 </div>
-
-<div id="androidTxt" ng-show="Utils.isAndroid()">
-<p>{{'downloadPage.install' | translate}} <a ng-href="{{androidURL}}">{{'downloadPage.link' | translate}}</a></p>
-</div>
-
-<div id="webTxt" ng-show="Utils.isWeb()">
-<p>{{'downloadPage.using' | translate}} <a ng-href="{{webClientURL}}"> {{'downloadPage.squared' | translate}}</a></p>
-</div>
-
-<div id="sendStatus" mailStatus='{{sendStatus}}' />
-
