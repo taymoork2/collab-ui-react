@@ -80,7 +80,7 @@
               }, []);
               if (connectorIds.length === 0) {
                 vm.loading = false;
-                return vm.getUsersBatch(statuses.userStatuses, 0);
+                return vm.getUsersBatch(statuses, 0);
               }
 
               // Get more information about the connector IDs we collected
