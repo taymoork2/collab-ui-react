@@ -77,6 +77,8 @@
                 "attempts": 3,
                 "minNumberOfCharacters": 4,
                 "maxNumberOfCharacters": 4,
+                "language": "",
+                "voice": "",
                 "prompts": {
                   "sayList": [{
                     "value": "Enter the extension now."
@@ -84,7 +86,7 @@
                 },
                 "rawInputActions": [{
                   "routeToExtension": {
-                    "description": "Route call by entered extension",
+                    "description": "",
                     "destination": "$Input"
                   }
                 }],
@@ -168,6 +170,8 @@
                 "attempts": 3,
                 "minNumberOfCharacters": 4,
                 "maxNumberOfCharacters": 4,
+                "language": "",
+                "voice": "",
                 "prompts": {
                   "sayList": [{
                     "value": "Enter the extension now."
@@ -175,7 +179,7 @@
                 },
                 "rawInputActions": [{
                   "routeToExtension": {
-                    "description": "Route call by entered extension",
+                    "description": "",
                     "destination": "$Input"
                   }
                 }],

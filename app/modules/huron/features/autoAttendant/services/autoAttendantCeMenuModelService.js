@@ -865,7 +865,7 @@
           var rawInputAction = {};
           var routeToExtension = {};
           routeToExtension.destination = '$Input';
-          routeToExtension.description = 'Route call by entered extension';
+          routeToExtension.description = '';
           rawInputAction.routeToExtension = routeToExtension;
           newAction.rawInputActions = [];
           newAction.rawInputActions[0] = rawInputAction;
@@ -913,13 +913,13 @@
         inputAction.language = menuEntry.getLanguage();
         inputAction.voice = menuEntry.getVoice();
         // for Dial by Extension we need to copy the Phone Menu voice & language
-        var phoneMenuDialExt = _.findWhere(newOptionArray, {
-          'description': 'phoneMenuDialExt'
+        _.each(newOptionArray, function (obj) {
+          if (obj.actions[0].runActionsOnInput &&
+            obj.actions[0].runActionsOnInput.inputType === 2) {
+            obj.actions[0].runActionsOnInput.voice = inputAction.voice;
+            obj.actions[0].runActionsOnInput.language = inputAction.language;
+          }
         });
-        if (angular.isDefined(phoneMenuDialExt)) {
-          phoneMenuDialExt.actions[0].runActionsOnInput.voice = inputAction.voice;
-          phoneMenuDialExt.actions[0].runActionsOnInput.language = inputAction.language;
-        }
       }
 
       if (aaMenu.headers.length > 1) {
