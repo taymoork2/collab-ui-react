@@ -1,9 +1,9 @@
 'use strict';
 
 describe('Controller: HuronSettingsCtrl', function () {
-  var controller, $controller, $scope, $q, CallerId, ExternalNumberService, Notification, DialPlanService;
+  var controller, $controller, $scope, $q, CallerId, ExternalNumberService, Notification, DialPlanService, FeatureToggleService;
   var HuronCustomer, ServiceSetup;
-  var customer, timezones, timezone, voicemailCustomer, internalNumberRanges, sites, site, companyNumbers, FeatureToggleService;
+  var customer, timezones, timezone, voicemailCustomer, internalNumberRanges, sites, site, companyNumbers, cosRestrictions;
   var getDeferred;
 
   beforeEach(module('Huron'));
@@ -30,6 +30,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     site = sites[0];
     companyNumbers = getJSONFixture('huron/json/settings/companyNumbers.json');
     voicemailCustomer = getJSONFixture('huron/json/settings/voicemailCustomer.json');
+    cosRestrictions = getJSONFixture('huron/json/settings/cosRestrictions.json');
 
     //create mock deferred object which will be used to return promises
     getDeferred = $q.defer();
@@ -57,6 +58,8 @@ describe('Controller: HuronSettingsCtrl', function () {
     spyOn(CallerId, 'saveCompanyNumber').and.returnValue($q.when());
     spyOn(CallerId, 'updateCompanyNumber').and.returnValue($q.when());
     spyOn(CallerId, 'deleteCompanyNumber').and.returnValue($q.when());
+    spyOn(ServiceSetup, 'listCosRestrictions').and.returnValue($q.when(cosRestrictions));
+    spyOn(ServiceSetup, 'updateCosRestriction').and.returnValue($q.when());
 
     spyOn(Notification, 'notify');
     spyOn(Notification, 'processErrorResponse');
@@ -69,6 +72,8 @@ describe('Controller: HuronSettingsCtrl', function () {
   }));
 
   it('should initialize the Settings page', function () {
+    controller.CosFeatureEnabled = true;
+
     controller.init();
     $scope.$apply();
     expect(HuronCustomer.get).toHaveBeenCalled();
@@ -77,6 +82,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     expect(ServiceSetup.listSites).toHaveBeenCalled();
     expect(CallerId.listCompanyNumbers).toHaveBeenCalled();
     expect(ServiceSetup.getVoicemailPilotNumber).toHaveBeenCalled();
+    expect(ServiceSetup.listCosRestrictions).toHaveBeenCalled();
     expect(controller.model.callerId.callerIdName).toBe('Cisco');
   });
 
@@ -317,6 +323,19 @@ describe('Controller: HuronSettingsCtrl', function () {
     expect(ServiceSetup.updateCustomer).not.toHaveBeenCalled();
     expect(ServiceSetup.updateSite).not.toHaveBeenCalled();
     expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
+    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+  });
+
+  it('should disable international dialing when toggle is OFF', function () {
+    controller.CosFeatureEnabled = true;
+
+    controller.save();
+    $scope.$apply();
+
+    expect(ServiceSetup.updateCosRestriction).toHaveBeenCalled();
+    expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
+    expect(ServiceSetup.updateSite).toHaveBeenCalled();
+    expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
     expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
   });
 
