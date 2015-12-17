@@ -50,6 +50,8 @@ angular.module('Squared').service('CsdmConverter',
       this.cisUuid = obj.cisUuid;
       this.product = getProduct(obj);
       this.isOnline = getIsOnline(obj);
+      this.canReset = true;
+      this.canDelete = true;
       this.displayName = obj.displayName;
       this.cssColorClass = getCssColorClass(obj);
       this.readableState = getReadableState(obj);
