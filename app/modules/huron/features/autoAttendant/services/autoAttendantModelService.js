@@ -37,12 +37,11 @@
   function AAModel() {
     this.aaRecord = new AARecord();
     this.aaRecords = [];
-    this.ceInfos = [];
   }
 
   function AAModelService() {
 
-    var aaModel = new AAModel();
+    var aaModel = {};
 
     var service = {
       getAAModel: getAAModel,

@@ -45,13 +45,12 @@
     function getHuntGroups() {
 
       return HuntGroupService.getListOfHuntGroups().then(function (hgPool) {
-        for (var i = 0; i < hgPool.length; i++) {
-          var hg = {
-            description: hgPool[i].name.concat(' (').concat(hgPool[i].numbers[0]).concat(')'),
-            id: hgPool[i].uuid
-          };
-          vm.huntGroups.push(hg);
-        }
+        _.each(hgPool, function (aHuntGroup) {
+          vm.huntGroups.push({
+            description: aHuntGroup.name.concat(' (').concat(aHuntGroup.numbers[0]).concat(')'),
+            id: aHuntGroup.uuid
+          });
+        });
       });
 
     }
