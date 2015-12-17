@@ -943,6 +943,9 @@
       "goToHost": "Go to Host",
       "remove": "Remove"
     },
+    "export": {
+      "csvFilename": "user_status_report.csv"
+    },
     "overview": {
       "activated": "Activated",
       "pending": "Pending",

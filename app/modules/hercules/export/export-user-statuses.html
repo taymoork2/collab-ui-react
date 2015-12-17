@@ -21,7 +21,7 @@
     <p>Note: The more users included, the longer the report takes to generate.</p>
   </div>
   <div class="modal-footer">
-    <button ng-csv="exportUserStatusesCtrl.exportCSV()" filename="{{'user_status_report' | translate}}" ng-disabled="exportUserStatusesCtrl.loading || exportUserStatusesCtrl.exportingUserStatusReport || exportUserStatusesCtrl.nothingToExport" id="convertActionButton" class="btn btn--primary pull-right">
+    <button ng-csv="exportUserStatusesCtrl.exportCSV()" filename="{{'hercules.export.csvFilename' | translate}}" ng-disabled="exportUserStatusesCtrl.loading || exportUserStatusesCtrl.exportingUserStatusReport || exportUserStatusesCtrl.nothingToExport" id="convertActionButton" class="btn btn--primary pull-right">
       <span ng-hide="exportUserStatusesCtrl.exportingUserStatusReport">Export to CSV</span>
       <span ng-show="exportUserStatusesCtrl.exportingUserStatusReport">
         <i class="icon icon-spinner"></i>
