@@ -998,13 +998,13 @@
       "error": "Error"
     },
     "serviceNames": {
-      "squared-fusion-uc": "Call Service: Aware",
-      "squared-fusion-uc.full": "Call Service Aware",
+      "squared-fusion-uc": "Call Service",
+      "squared-fusion-uc.full": "Call Service: Aware",
       "squared-fusion-cal": "Calendar Service",
       "squared-fusion-media": "Media Service",
       "contact-center-context": "Context Center Service",
       "squared-fusion-ec": "Call Service: Connect",
-      "squared-fusion-mgmt": "Expressway Management Service"
+      "squared-fusion-mgmt": "Expressway Management Service  "
     },
     "serviceDescriptions": {
       "squared-fusion-uc": "Call Service Aware lets your users instantly share their desktops from their Cisco Spark clients while on a call. Call Service Connect lets users answer calls to their work phones on their  Cisco Spark client, and place calls to others' work phones from their Cisco Spark client.",
