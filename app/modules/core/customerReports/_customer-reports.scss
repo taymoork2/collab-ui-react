@@ -2,12 +2,13 @@
 @import 'avgRooms/_avg-rooms';
 
 .customer-report-filter {
-  width: rem-calc(250);
+  width: rem-calc(200);
 }
 .customer-reports {
+  .cs-card-layout {
+    margin-bottom: rem-calc(15);
+  }
   .report-card {
-    padding-left: rem-calc(15);
-    padding-right: rem-calc(15);
     article {
       min-height: vr-adjust(570);
       min-width: rem-calc(650);
@@ -16,15 +17,9 @@
     .report-section-header {
       font-family: $brand-font-cisco-TT-Light;
       font-size: rem-calc(22);
-      color: $brand-primary;
       text-align: left;
     }
-    .titlebreak {
-      margin: 0;
-    }
     .report-description {
-      padding-top: 0.95238rem;
-      padding-bottom: 0.95238rem;
       position: relative;
       z-index: 100;
     }
@@ -49,7 +44,7 @@
     .graph-text {
       font-family: $brand-font-cisco-TT-Regular;
       font-size: rem-calc(15);
-      color: $gray-darkest;
+      color: $gray-dark-1;
       text-align: left;
       float: left;
     }

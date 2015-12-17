@@ -35,6 +35,7 @@
     vm.keyPressHandler = keyPressHandler;
     vm.daysLeftText = daysLeftText;
     vm.gotoSearchUsersAndDevices = gotoSearchUsersAndDevices;
+    vm.usageText = usageText;
 
     HelpdeskService.getOrg(vm.orgId).then(initOrgView, XhrNotificationService.notify);
     HelpdeskHealthStatusService.getHealthStatuses().then(initHealth, angular.noop);
@@ -105,13 +106,13 @@
     function findLicenseUsage() {
       if (vm.orgId != Config.ciscoOrgId) {
         LicenseService.getLicensesInOrg(vm.orgId, true).then(function (licenses) {
-          // Update the relevant cards with licenses that  includes usage
+          // Update the relevant cards with licenses that includes usage
           vm.messageCard = HelpdeskCardsOrgService.getMessageCardForOrg(vm.org, licenses);
           vm.meetingCard = HelpdeskCardsOrgService.getMeetingCardForOrg(vm.org, licenses);
           vm.callCard = HelpdeskCardsOrgService.getCallCardForOrg(vm.org, licenses);
           vm.roomSystemsCard = HelpdeskCardsOrgService.getRoomSystemsCardForOrg(vm.org, licenses);
           vm.licenseUsageReady = true;
-        }, XhrNotificationService.notify);
+        }, angular.noop);
       }
     }
 
@@ -137,6 +138,13 @@
     function daysLeftText(license) {
       return $translate.instant('helpdesk.numDaysLeft', {
         days: license.trialExpiresInDays
+      });
+    }
+
+    function usageText(usage, volume) {
+      return $translate.instant('helpdesk.usage', {
+        usage: usage,
+        volume: volume
       });
     }
 

@@ -1,7 +1,7 @@
 .registeredEndpoints {
   .endpointTable {
-    padding: 0 15px;
-    position: relative;
+    margin-left: 16px;
+    width: 96%;
   }
   .no-data {
     margin-right: 32px;
@@ -22,42 +22,44 @@
     padding-top: 10px;
   }
   td, th {
-    border-color: $gray-dark;
-    border-right: 1px solid $gray-dark;
+    border-color: $gray-light-1;
+    border: 1px solid $gray-light-1;
     color: $gray-dark;
-    .table-half:first-of-type {
-      border-right: 1px solid $gray-dark;
+      .table-half:first-of-type {
+      border-right: 1px solid$gray-light-1;
     }
     .positive {
-      color: $gray-dark;
+      color: $gray-light-1;
     }
     .negative {
-      color: $gray-dark;
+      color: $gray-light-1;
     }
   }
   .td:last-of-type, th:last-of-type {
     border-right: none;
+
   }
+
   .customer-data {
     text-overflow: ellipsis;
     overflow: hidden;
     padding-left: 20px;
   }
   .dummyTable {
-    border-color: #ECECEC;
+    border-color:$gray-light-2;
     td, th {
-      border-color: #ECECEC;
-      border-right: 1px solid #ECECEC;
-      border-top: 1px solid #ECECEC;
-      color: #ECECEC;
+      border-color: $gray-light-2;
+      border-right: 1px solid$gray-light-2;
+      border-top: 1px solid $gray-light-2;
+      color:$gray-light-2;
       .table-half:first-of-type {
-        border-right: 1px solid #ECECEC;
+        border-right: 1px solid $gray-light-2;
       }
       .positive {
-        color: #ECECEC;
+        color: $gray-light-2;
       }
       .negative {
-        color: #ECECEC;
+        color: $gray-light-2;
       }
     }
     th {

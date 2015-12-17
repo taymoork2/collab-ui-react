@@ -12,7 +12,8 @@
       'fillAlphas': 1,
       'lineAlpha': 0,
       'balloonColor': Config.chartColors.grayLight,
-      'columnWidth': 0.6
+      'columnWidth': 0.6,
+      'fontSize': 14,
     };
     var axis = {
       'axisColor': Config.chartColors.grayLight,
@@ -52,11 +53,16 @@
 
     // variables for the average rooms section
     var avgRoomsdiv = 'avgRoomsdiv';
-    var avgRoomsBalloon = '<span class="graph-text">' + $translate.instant('avgRooms.group') + ': [[groupRooms]]<br>' + $translate.instant('avgRooms.oneToOne') + ': [[oneToOneRooms]]<br>' + $translate.instant('avgRooms.avgTotal') + ': [[avgRooms]]%</span>';
+    var avgRoomsBalloon = '<span class="graph-text">' + $translate.instant('avgRooms.group') + ' <span class="room-number">[[groupRooms]]</span><br>' + $translate.instant('avgRooms.oneToOne') + ' <span class="room-number">[[oneToOneRooms]]</span><br>' + $translate.instant('avgRooms.avgTotal') + ' <span class="room-number">[[avgRooms]]</span></span>';
+
+    // variables for the files shared section
+    var filesSharedDiv = 'filesSharedDiv';
+    var filesBalloon = '<span class="graph-text">' + $translate.instant('filesShared.contentShared') + ' [[contentShared]]<br>' + $translate.instant('filesShared.fileSizes') + ' [[contentShareSizes]]</span>';
 
     return {
       setActiveUsersGraph: setActiveUsersGraph,
-      setAvgRoomsGraph: setAvgRoomsGraph
+      setAvgRoomsGraph: setAvgRoomsGraph,
+      setFilesSharedGraph: setFilesSharedGraph
     };
 
     function createGraph(data, div, graphs, valueAxes, catAxis, categoryField, legend, numFormat, startDuration) {
@@ -207,7 +213,6 @@
 
       var valueAxes = [angular.copy(axis)];
       valueAxes[0].totalColor = Config.chartColors.brandWhite;
-      valueAxes[0].stackType = 'regular';
       valueAxes[0].integersOnly = true;
       valueAxes[0].minimum = 0;
 
@@ -224,9 +229,9 @@
     }
 
     function avgRoomsGraphs(data) {
-      var titles = ['avgRooms.oneToOne', 'avgRooms.group'];
-      var values = ['oneToOneRooms', 'groupRooms'];
-      var colors = [Config.chartColors.primaryColorDarker, Config.chartColors.primaryColorLight];
+      var titles = ['avgRooms.group', 'avgRooms.oneToOne'];
+      var values = ['totalRooms', 'oneToOneRooms'];
+      var colors = [Config.chartColors.primaryColorLight, Config.chartColors.primaryColorDarker];
       if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
         colors = [data[0].colorOne, data[0].colorTwo];
       }
@@ -238,16 +243,69 @@
         graphs[i].fillColors = colors[i];
         graphs[i].colorField = colors[i];
         graphs[i].valueField = values[i];
-        graphs[i].fontSize = 14;
         graphs[i].legendColor = colors[i];
         graphs[i].showBalloon = data[0].balloon;
         graphs[i].balloonText = avgRoomsBalloon;
-        if (i) {
+        if (i === 0) {
           graphs[i].clustered = false;
         }
       }
 
       return graphs;
+    }
+
+    function setFilesSharedGraph(data, filesSharedChart) {
+      if (data === null || data === 'undefined' || data.length === 0) {
+        return;
+      } else if (filesSharedChart !== null && angular.isDefined(filesSharedChart)) {
+        var startDuration = 1;
+        if (data[0].color === Config.chartColors.dummyGray) {
+          startDuration = 0;
+        }
+
+        filesSharedChart.dataProvider = data;
+        filesSharedChart.graphs = filesSharedGraphs(data);
+        filesSharedChart.startDuration = startDuration;
+        filesSharedChart.validateData();
+      } else {
+        filesSharedChart = createFilesSharedGraph(data);
+      }
+      return filesSharedChart;
+    }
+
+    function createFilesSharedGraph(data) {
+      if (data.length === 0) {
+        return;
+      }
+
+      var graphs = filesSharedGraphs(data);
+      var catAxis = angular.copy(axis);
+      catAxis.gridPosition = 'start';
+
+      var valueAxes = [angular.copy(axis)];
+      valueAxes[0].totalColor = Config.chartColors.brandWhite;
+      valueAxes[0].integersOnly = true;
+      valueAxes[0].minimum = 0;
+
+      var startDuration = 1;
+      if (data[0].color === Config.chartColors.dummyGray) {
+        startDuration = 0;
+      }
+
+      var numFormat = angular.copy(numFormatBase);
+      return createGraph(data, filesSharedDiv, graphs, valueAxes, catAxis, 'modifiedDate', null, numFormat, startDuration);
+    }
+
+    function filesSharedGraphs(data) {
+      var graph = angular.copy(columnBase);
+      graph.title = $translate.instant('filesShared.contentShared');
+      graph.fillColors = data[0].color;
+      graph.colorField = data[0].color;
+      graph.valueField = 'contentShared';
+      graph.showBalloon = data[0].balloon;
+      graph.balloonText = filesBalloon;
+
+      return [graph];
     }
   }
 })();

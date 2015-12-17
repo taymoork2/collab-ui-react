@@ -91,7 +91,14 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       "uuid": "3f51ef5b-584f-42db-9ad8-8810b5e9e9ea"
     }]);
 
-    $httpBackend.whenPUT(HuronConfig.getCmiV2Url() + '/customers/1/features/autoattendants/2/numbers').respond(200);
+    // CMI assignment will fail when there is any bad number in the list
+    $httpBackend.when('PUT', HuronConfig.getCmiV2Url() + '/customers/1/features/autoattendants/2/numbers').respond(function (method, url, data, headers) {
+      if (JSON.stringify(data).indexOf("bad") > -1) {
+        return [500, 'bad'];
+      } else {
+        return [200, 'good'];
+      }
+    });
 
     // listCesSpy = spyOn(AutoAttendantCeService, 'listCes').and.returnValue($q.when(angular.copy(ces)));
 
@@ -250,6 +257,28 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
     });
 
+    it('should not move a number that fails to assign in CMI', function () {
+      aaModel.ceInfos.push({
+        name: rawCeInfo.callExperienceName
+      });
+
+      controller.availablePhoneNums[0] = {
+        label: "bad",
+        value: "bad"
+      };
+
+      controller.addNumber('bad');
+
+      $httpBackend.flush();
+
+      $scope.$apply();
+
+      var resources = controller.ui.ceInfo.getResources();
+
+      expect(resources.length === 1);
+
+    });
+
   });
 
   describe('removeNumber', function () {
@@ -307,6 +336,30 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
     });
 
+    it('should warn when fail to assign to CMI on remove', function () {
+
+      controller.aaModel.aaRecordUUID = '2';
+
+      errorSpy = jasmine.createSpy('error');
+      Notification.error = errorSpy;
+
+      var resource = AutoAttendantCeInfoModelService.newResource();
+      resource.setType(aCe.assignedResources.type);
+      resource.setId("bad");
+      resource.setNumber("bad");
+
+      var resources = controller.ui.ceInfo.getResources();
+
+      resources.push(resource);
+
+      controller.removeNumber(rawCeInfo.assignedResources[0].number);
+
+      $scope.$apply();
+      $httpBackend.flush();
+
+      expect(errorSpy).toHaveBeenCalled();
+
+    });
   });
 
   describe('getDupeNumberAnyAA', function () {

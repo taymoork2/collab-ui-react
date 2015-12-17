@@ -27,6 +27,8 @@
         deleteOnExpire: 'aggressive'
       });
     }
+
+    //TODO: Useragent detection a probably not a reliable way to detect mobile device...
     var isMobile = {
       Android: function () {
         return navigator.userAgent.match(/Android/i);
@@ -85,7 +87,8 @@
     function getCorrectedDisplayName(user) {
       var displayName = '';
       if (user.name != null) {
-        displayName = user.name.givenName + ' ' + user.name.familyName;
+        displayName = user.name.givenName ? user.name.givenName : '';
+        displayName += user.name.familyName ? ' ' + user.name.familyName : '';
       }
       if (!displayName) {
         return user.displayName;
@@ -203,9 +206,9 @@
     function filterDevices(searchString, devices, limit) {
       searchString = searchString.toLowerCase();
       var filteredDevices = [];
+      var macSearchString = searchString.replace(/[:/.-]/g, '');
       _.each(devices, function (device) {
-        if ((device.displayName || '').toLowerCase().indexOf(searchString) != -1 || (device.mac || '').toLowerCase().indexOf(searchString) != -
-          1 || (device.serial || '').toLowerCase().indexOf(searchString) != -1) {
+        if ((device.displayName || '').toLowerCase().indexOf(searchString) != -1 || (device.mac || '').toLowerCase().replace(/[:]/g, '').indexOf(macSearchString) != -1 || (device.serial || '').toLowerCase().indexOf(searchString) != -1) {
           if (_.size(filteredDevices) < limit) {
             device.id = device.url.split('/').pop();
             filteredDevices.push(device);
@@ -318,7 +321,8 @@
       getOrgDisplayName: getOrgDisplayName,
       findAndResolveOrgsForUserResults: findAndResolveOrgsForUserResults,
       checkIfMobile: checkIfMobile,
-      sendVerificationCode: sendVerificationCode
+      sendVerificationCode: sendVerificationCode,
+      filterDevices: filterDevices
     };
   }
 

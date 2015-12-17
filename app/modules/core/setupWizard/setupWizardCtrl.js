@@ -50,6 +50,7 @@ angular.module('Core')
       }, {
         name: 'addUsers',
         label: 'firstTimeWizard.addUsers',
+        description: 'firstTimeWizard.addUsersSubDescription',
         icon: 'icon-add-users',
         title: 'firstTimeWizard.addUsers',
         controller: 'AddUserCtrl',

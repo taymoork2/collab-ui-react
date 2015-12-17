@@ -2,7 +2,7 @@
 
 describe('Controller: AABuilderMainCtrl', function () {
   var controller, Notification, AutoAttendantCeService;
-  var AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAValidationService, AANumberAssignmentService;
+  var AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAValidationService, AANumberAssignmentService, HuronConfig, $httpBackend;
   var $rootScope, $scope, $q, $translate, $stateParams, $compile;
 
   var ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
@@ -46,7 +46,7 @@ describe('Controller: AABuilderMainCtrl', function () {
   beforeEach(module('Huron'));
 
   beforeEach(inject(function (_$rootScope_, _$q_, $injector, _$compile_, _$stateParams_, $controller, _$translate_, _Notification_,
-    _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAUiModelService_, _AAModelService_, _AANumberAssignmentService_, _AutoAttendantCeService_, _AAValidationService_) {
+    _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAUiModelService_, _AAModelService_, _AANumberAssignmentService_, _AutoAttendantCeService_, _AAValidationService_, _HuronConfig_, _$httpBackend_) {
     $rootScope = _$rootScope_;
     $q = _$q_;
     $compile = _$compile_;
@@ -64,6 +64,8 @@ describe('Controller: AABuilderMainCtrl', function () {
     AutoAttendantCeService = _AutoAttendantCeService_;
     AANumberAssignmentService = _AANumberAssignmentService_;
     Notification = _Notification_;
+    HuronConfig = _HuronConfig_;
+    $httpBackend = _$httpBackend_;
 
     // aaModel.dataReadyPromise = $q(function () {});
     $stateParams.aaName = '';
@@ -134,12 +136,64 @@ describe('Controller: AABuilderMainCtrl', function () {
     });
   });
 
+  describe('close', function () {
+    it('should warn on CMI assignment failure on close', function () {
+
+      // CMI assignment will fail when there is any bad number in the list
+      $httpBackend.when('PUT', HuronConfig.getCmiV2Url() + '/customers/features/autoattendants/uuid/numbers').respond(function (method, url, data, headers) {
+        if (JSON.stringify(data).indexOf("bad") > -1) {
+          return [500, 'bad'];
+        } else {
+          return [200, 'good'];
+        }
+      });
+
+      var resource = AutoAttendantCeInfoModelService.newResource();
+      resource.setType(aCe.assignedResources.type);
+      resource.setId("bad");
+      resource.setNumber("bad");
+
+      aaModel.aaRecord = angular.copy(aCe);
+      aaModel.aaRecord.assignedResources.push(resource);
+      aaModel.aaRecordUUID = "uuid";
+
+      var errorSpy = jasmine.createSpy('error');
+      Notification.error = errorSpy;
+
+      controller.close();
+
+      $httpBackend.flush();
+
+      $scope.$apply();
+
+      expect(errorSpy).toHaveBeenCalled();
+
+    });
+
+  });
+
   describe('saveAANumberAssignmentWithErrorDetail', function () {
     it('should show error message when assigning number', function () {
+
+      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/externalnumberpools?order=pattern').respond(200, [{
+        'pattern': '+9999999991',
+        'uuid': '9999999991-id'
+      }, {
+        'pattern': '+8888888881',
+        'uuid': '8888888881-id'
+      }]);
+
       spyOn(Notification, 'error');
-      spyOn(AANumberAssignmentService, 'setAANumberAssignmentWithErrorDetail').and.returnValue($q.reject());
+      var resources = {
+        workingResources: [],
+        failedResources: ["9999999991"]
+      };
+      spyOn(AANumberAssignmentService, 'setAANumberAssignmentWithErrorDetail').and.returnValue($q.when(resources));
 
       controller.saveAANumberAssignmentWithErrorDetail();
+
+      $httpBackend.flush();
+
       $scope.$apply();
 
       expect(Notification.error).toHaveBeenCalledWith('autoAttendant.errorFailedToAssignNumbers', jasmine.any(Object));
@@ -152,6 +206,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     var createCeSpy;
     var updateCeSpy;
     var nameValidationSpy;
+    var phoneMenuValidationSpy;
 
     beforeEach(function () {
       createCeSpy = spyOn(AutoAttendantCeService, 'createCe').and.returnValue($q.when(angular.copy(rawCeInfo)));
@@ -162,6 +217,7 @@ describe('Controller: AABuilderMainCtrl', function () {
       spyOn(AANumberAssignmentService, 'setAANumberAssignment').and.returnValue($q.when());
 
       nameValidationSpy = spyOn(AAValidationService, 'isNameValidationSuccess').and.returnValue(true);
+      phoneMenuValidationSpy = spyOn(AAValidationService, 'isPhoneMenuValidationSuccess').and.returnValue(true);
       aaModel.ceInfos = [];
       aaModel.aaRecords = [];
       aaModel.aaRecord = aCe;
@@ -338,7 +394,7 @@ describe('Controller: AABuilderMainCtrl', function () {
 
     });
 
-    it('should set up a say say open hours template using real template1', function () {
+    it('should set up a say PhoneMenu open hours template using real template1', function () {
 
       $scope.vm.templateName = 'template1';
       controller.setupTemplate();
@@ -449,6 +505,8 @@ describe('Controller: AABuilderMainCtrl', function () {
 
       $rootScope.$digest();
       expect(element.find('aa-panel').hasClass('ng-show')).toBe(false);
+      expect(element.find('aa-new-step-info').hasClass('ng-show')).toBe(false);
+
     });
 
     it('should NOT display add step icons on aa-builder-actions', function () {
@@ -458,6 +516,8 @@ describe('Controller: AABuilderMainCtrl', function () {
 
       $rootScope.$digest();
       expect(element.find('aa-panel').hasClass('ng-show')).toBe(false);
+      expect(element.find('aa-panel-body').hasClass('ng-show')).toBe(false);
+      expect(element.find('aa-action-delete').hasClass('ng-show')).toBe(false);
     });
 
     // TODO:SIMPLETEMPLATE Should also verify that delete steps are not shown

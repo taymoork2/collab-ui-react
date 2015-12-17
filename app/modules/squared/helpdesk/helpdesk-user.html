@@ -66,9 +66,9 @@
         </div>
         <div class="medium-7 columns details-value">
           <span ng-if="helpdeskUserCtrl.user.roles.length > 0"
-                ng-repeat="role in helpdeskUserCtrl.user.roles">{{'roles.' + role | translate }}{{$last ? '' : ', '}}</span>
+                ng-repeat="role in helpdeskUserCtrl.user.roles | orderBy">{{'ciRoles.' + role | translate }}{{$last ? '' : ', '}}</span>
         <span ng-if="!helpdeskUserCtrl.user.roles || helpdeskUserCtrl.user.roles.length == 0"
-              translate="roles.user"></span>
+              translate="ciRoles.user"></span>
         </div>
       </div>
 
