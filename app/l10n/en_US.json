@@ -2164,7 +2164,15 @@
       "listing": {
         "no_clusters_heading": "No Media Service clusters registered",
         "no_clusters_text": "See required actions above and documentation to get started."
-      }
+      },
+      "deregister": "Deregister",
+      "deregisterCancel": "Cancel",
+      "deregisterConfirm": "Confirm",
+      "deregisterHeader": "Confirm Deregistration",
+      "deregisterAreYouSure": "You are about to deregister {{clusterName}} from Cisco Collaboration Cloud.",
+      "deregisterCausesListItem1": "This system will no longer be accepting any new calls.",
+      "deregisterCausesListItem2": "The pre-existing calls will continue.",
+      "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}"
     },
     "alarms": {
       "alarms": "Alarms",
