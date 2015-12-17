@@ -24,6 +24,7 @@
               <span class="numbers-value">{{exp.userStatusSummary.error}}</span>
             </li>
           </ul>
+          <!-- TODO: add an id attribute and tests -->
           <a ng-show="exp.userStatusSummary.notActivated > 0 || exp.userStatusSummary.activated > 0 || exp.userStatusSummary.error > 0" ng-click="exp.openUserStatusReportModal(exp.currentServiceId)" class="export-users-statuses-icon">
             <span id="export-icon" class="icon-export" tooltip-placement="top" tooltip="{{'usersPage.csvBtnTitle' | translate}}" tooltip-animation="false" tooltip-append-to-body="true"><i class="icon icon-content-share icon-lg"></i></span>
           </a>

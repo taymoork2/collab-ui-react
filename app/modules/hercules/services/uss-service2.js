@@ -7,7 +7,7 @@
 
     var fetchStatusesSummary = function () {
       return $http
-        .get(ConfigService.getUSSUrl() + '/userStatuses/summary?orgId=' + Authinfo.getOrgId())
+        .get(ConfigService.getUSSUrl() + '/userStatuses/summary?orgId=' + Authinfo.getOrgId() + '&entitled=true')
         .then(function (res) {
           cachedUserStatusSummary = res.data.summary;
         });
@@ -18,7 +18,7 @@
 
     var statusesParameterRequestString = function (serviceId, state, limit) {
       var statefilter = state ? "&state=" + state : "";
-      return 'serviceId=' + serviceId + statefilter + '&limit=' + limit + '&orgId=' + Authinfo.getOrgId();
+      return 'serviceId=' + serviceId + statefilter + '&limit=' + limit + '&orgId=' + Authinfo.getOrgId() + '&entitled=true';
     };
 
     function extractData(res) {
