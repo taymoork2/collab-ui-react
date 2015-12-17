@@ -213,7 +213,6 @@
 
       var valueAxes = [angular.copy(axis)];
       valueAxes[0].totalColor = Config.chartColors.brandWhite;
-      valueAxes[0].stackType = 'regular';
       valueAxes[0].integersOnly = true;
       valueAxes[0].minimum = 0;
 
@@ -230,9 +229,9 @@
     }
 
     function avgRoomsGraphs(data) {
-      var titles = ['avgRooms.oneToOne', 'avgRooms.group'];
-      var values = ['oneToOneRooms', 'groupRooms'];
-      var colors = [Config.chartColors.primaryColorDarker, Config.chartColors.primaryColorLight];
+      var titles = ['avgRooms.group', 'avgRooms.oneToOne'];
+      var values = ['totalRooms', 'oneToOneRooms'];
+      var colors = [Config.chartColors.primaryColorLight, Config.chartColors.primaryColorDarker];
       if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
         colors = [data[0].colorOne, data[0].colorTwo];
       }
@@ -247,7 +246,7 @@
         graphs[i].legendColor = colors[i];
         graphs[i].showBalloon = data[0].balloon;
         graphs[i].balloonText = avgRoomsBalloon;
-        if (i) {
+        if (i === 0) {
           graphs[i].clustered = false;
         }
       }
@@ -260,7 +259,7 @@
         return;
       } else if (filesSharedChart !== null && angular.isDefined(filesSharedChart)) {
         var startDuration = 1;
-        if (data[0].color !== undefined && data[0].color !== null) {
+        if (data[0].color === Config.chartColors.dummyGray) {
           startDuration = 0;
         }
 
@@ -285,17 +284,16 @@
 
       var valueAxes = [angular.copy(axis)];
       valueAxes[0].totalColor = Config.chartColors.brandWhite;
-      valueAxes[0].stackType = 'regular';
       valueAxes[0].integersOnly = true;
       valueAxes[0].minimum = 0;
 
       var startDuration = 1;
-      if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
+      if (data[0].color === Config.chartColors.dummyGray) {
         startDuration = 0;
       }
 
       var numFormat = angular.copy(numFormatBase);
-      return createGraph(data, filesSharedDiv, graphs, valueAxes, catAxis, 'modifiedDate', angular.copy(legendBase), numFormat, startDuration);
+      return createGraph(data, filesSharedDiv, graphs, valueAxes, catAxis, 'modifiedDate', null, numFormat, startDuration);
     }
 
     function filesSharedGraphs(data) {
@@ -304,7 +302,6 @@
       graph.fillColors = data[0].color;
       graph.colorField = data[0].color;
       graph.valueField = 'contentShared';
-      graph.legendColor = data[0].color;
       graph.showBalloon = data[0].balloon;
       graph.balloonText = filesBalloon;
 

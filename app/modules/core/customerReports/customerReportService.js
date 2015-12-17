@@ -273,6 +273,7 @@
             balloon: true,
             groupRooms: 0,
             oneToOneRooms: 0,
+            totalRooms: 0,
             avgRooms: 0
           });
         }
@@ -295,6 +296,7 @@
             balloon: true,
             groupRooms: 0,
             oneToOneRooms: 0,
+            totalRooms: 0,
             avgRooms: 0
           });
         }
@@ -305,6 +307,7 @@
             balloon: true,
             groupRooms: 0,
             oneToOneRooms: 0,
+            totalRooms: 0,
             avgRooms: 0
           });
         }
@@ -321,6 +324,8 @@
 
           if (returnItem.modifiedDate === modDate) {
             returnItem.groupRooms = parseInt(groupItem.count);
+            returnItem.totalRooms += parseInt(groupItem.count);
+
             if (returnItem.groupRooms !== 0) {
               emptyGraph = false;
             }
@@ -340,6 +345,7 @@
 
           if (returnItem.modifiedDate === modDate) {
             returnItem.oneToOneRooms = parseInt(oneToOneItem.count);
+            returnItem.totalRooms += parseInt(oneToOneItem.count);
             if (returnItem.oneToOneRooms !== 0) {
               emptyGraph = false;
             }

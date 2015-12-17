@@ -102,20 +102,7 @@
     function saveAANumberAssignments(customerId, aaRecordUUID, resources) {
       // CMI seems to correctly remove numbers from the number pool when the number is formatted as it came from CMI
       // So save to CMI with the original CMI format for external numbers (internal extensions have no formatting)
-      var formattedResources = _.map(resources, function (res) {
-        if (res.getType() === AANumberAssignmentService.EXTERNAL_NUMBER) {
-          var fmtRes = angular.copy(res);
-          var extNum = _.find(vm.externalNumberList, function (n) {
-            return n.number.replace(/\D/g, '') === res.number;
-          });
-          if (extNum) {
-            fmtRes.number = extNum.number;
-          }
-          return fmtRes;
-        } else {
-          return res;
-        }
-      });
+      var formattedResources = AANumberAssignmentService.formatAAResourcesBasedOnList(resources, vm.externalNumberList);
 
       return AANumberAssignmentService.setAANumberAssignment(customerId, aaRecordUUID, formattedResources);
     }
@@ -309,7 +296,7 @@
       var onlyResources = [];
       var onlyCMI = [];
 
-      if (angular.isUndefined(vm.ui.ceInfo) || angular.isUndefined(vm.ui.ceInfo.resources)) {
+      if (_.get(vm, 'ui.ceInfo.resources.length', 0) === 0) {
         return;
       }
 

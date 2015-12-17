@@ -74,8 +74,9 @@
           abs = 7 - i;
           dummyGraph.push({
             modifiedDate: moment().subtract(i, 'day').format(dayFormat),
-            groupRooms: 10 + (10 * abs),
+            totalRooms: 10 + (10 * abs),
             oneToOneRooms: 10 * abs,
+            groupRooms: 0,
             avgRooms: 0,
             colorOne: Config.chartColors.dummyGrayLight,
             colorTwo: Config.chartColors.dummyGray,
@@ -87,9 +88,10 @@
           abs = 3 - x;
           dummyGraph.push({
             modifiedDate: moment().startOf('week').subtract(1 + (x * 7), 'day').format(dayFormat),
-            groupRooms: 10 + (10 * abs),
+            totalRooms: 10 + (10 * abs),
             oneToOneRooms: 10 * abs,
             avgRooms: 0,
+            groupRooms: 0,
             colorOne: Config.chartColors.dummyGrayLight,
             colorTwo: Config.chartColors.dummyGray,
             balloon: false
@@ -100,9 +102,10 @@
           abs = 2 - y;
           dummyGraph.push({
             modifiedDate: moment().subtract(y, 'month').format(monthFormat),
-            groupRooms: 10 + (10 * abs),
+            totalRooms: 10 + (10 * abs),
             oneToOneRooms: 10 * abs,
             avgRooms: 0,
+            groupRooms: 0,
             colorOne: Config.chartColors.dummyGrayLight,
             colorTwo: Config.chartColors.dummyGray,
             balloon: false
