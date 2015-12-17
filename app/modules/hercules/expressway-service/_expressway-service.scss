@@ -206,3 +206,11 @@ Special stuff currently used for out own mail input field...
     font-size: 18px;
   }
 }
+
+// This class is used when a button has a spinner inside
+// The following prevents the button from looking weird
+.hercules-button-exporting {
+  padding-top: 0.45rem;
+  padding-bottom: 0.45rem;
+  height: 36px;
+}
