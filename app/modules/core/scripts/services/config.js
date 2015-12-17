@@ -443,7 +443,7 @@ angular.module('Core')
 
         trials: {
           message: 'COLLAB',
-          meeting: 'WEBEXTRIALS',
+          meeting: 'WEBEX',
           call: 'SQUAREDUC',
           roomSystems: 'ROOMSYSTEMS'
         },
@@ -525,7 +525,9 @@ angular.module('Core')
           SC: 'SC', // Support Center (WebEx)
           TC: 'TC', // Training Center (WebEx)
           EC: 'EC', // Event Center (WebEx)
-          CO: 'CO' // Communication
+          CO: 'CO', // Communication
+          SD: 'SD', // Spark Room System
+          CMR: 'CMR', // Collaboration Meeting Room (WebEx)
         },
 
         licenseTypes: {

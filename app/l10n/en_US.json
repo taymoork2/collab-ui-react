@@ -1837,7 +1837,6 @@
     "collab": "Standard Team Rooms + 25 Party Meetings",
     "squaredUC": "Advanced Spark Call",
     "licenses": "Licenses",
-    "meet": "Meeting and WebEx",
     "message": "Message",
     "meeting": "Meeting and WebEx",
     "call": "Call",
@@ -1912,7 +1911,19 @@
     "meeting": "Meeting 25 Party",
     "call": "Call",
     "roomSystem": "Spark Room System",
-    "branding": "Customer Branding"
+    "branding": "Customer Branding",
+    "MS": "Message",
+    "CF": "Meeting 25 Party",
+    "MC": "Meeting 25 Party",
+    "WebExMC": "WebEx Meeting Center",
+    "SC": "WebEx Support Center",
+    "TC": "WebEx Training Center",
+    "EC": "WebEx Event Center",
+    "EE": "WebEx Enterprise Edition",
+    "CMR": "WebEx Collaboration Meeting Room",
+    "CO": "Call",
+    "ST": "Storage",
+    "SD": "Spark Room System"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
@@ -2585,7 +2596,7 @@
     "SC": "WebEx Support Center",
     "TC": "WebEx Training Center",
     "EC": "WebEx Event Center",
-    "EE": "Meeting 25 Party with Webex Enterprise Edition",
+    "EE": "Webex Enterprise Edition",
     "CMR": "WebEx Collaboration Meeting Room",
     "CO": "Call",
     "ST": "Storage",
