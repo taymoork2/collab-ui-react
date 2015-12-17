@@ -11,7 +11,8 @@
       <li ng-repeat="service in card.services">
         <!--<i class="icon icon-circle" ng-class="service.healthStatus || 'disabled'"></i>-->
         <i class="icon icon-circle" ng-class="service.healthStatus || 'error'"></i>
-        <span>{{ 'hercules.serviceNames.'+ service.id | translate}}</span>
+        <span ng-if="service.id == 'squared-fusion-uc'" translate="hercules.serviceNames.squared-fusion-uc.full"></span>
+        <span ng-if="service.id !== 'squared-fusion-uc'">{{ 'hercules.serviceNames.'+ service.id | translate}}</span>
       </li>
     </ul>
   </div>

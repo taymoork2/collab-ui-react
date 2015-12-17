@@ -3,9 +3,7 @@
     <button id="convertModalClose" type="button" class="close" ng-click="$close()">
       <span class="sr-only">Close</span>
     </button>
-    <h5 class="modal-title">
-      {{ 'hercules.serviceNames.' + userErrorsCtrl.serviceId | translate }}: Activation Errors
-    </h5>
+    <h5 class="modal-title">Activation Errors</h5>
   </div>
   <div class="modal-body">
     <div ng-show="loading" style="text-align: center; padding: 60px;">
@@ -21,11 +19,14 @@
       </p>
 
       <p ng-repeat="status in userErrorsCtrl.userStatuses" style="padding-top:10px;">
-        <span class="small">
-        <span style="font-weight:bold;" class="small">{{status.displayName}}</span> on <a
-          href="https://{{status.connector.host_name}}" target="_blank" style="color: #3ca8e8">{{status.connector.host_name}}</a>
-        <br/>
-        {{status.description.defaultMessage}}
+        <span>
+          <span style="font-weight:bold;">{{status.displayName}}</span>
+          <span ng-if="status.connector">
+            on <a href="https://{{status.connector.host_name}}"
+                  target="_blank" style="color: #3ca8e8">{{status.connector.host_name}}</a>
+          </span>
+          <br/>
+          {{status.description.defaultMessage}}
         </span>
       </p>
     </div>

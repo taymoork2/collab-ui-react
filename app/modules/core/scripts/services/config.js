@@ -632,7 +632,14 @@ angular.module('Core')
         },
 
         getLocusServiceUrl: function () {
-          return this.locusServiceUrl.integration;
+          var locusServiceUrl = {
+            'dev': this.locusServiceUrl.integration,
+            'cfe': this.locusServiceUrl.integration,
+            'integration': this.locusServiceUrl.integration,
+            'prod': this.locusServiceUrl.integration
+          };
+
+          return locusServiceUrl[this.getEnv()];
         },
 
         getFeatureToggleUrl: function () {
@@ -867,23 +874,58 @@ angular.module('Core')
         },
 
         getHerculesUrl: function () {
-          return this.herculesUrl[this.getEnv()];
+          var herculesUrl = {
+            'dev': this.herculesUrl.dev,
+            'cfe': this.herculesUrl.cfe,
+            'integration': this.herculesUrl.integration,
+            'prod': this.herculesUrl.prod
+          };
+
+          return herculesUrl[this.getEnv()];
         },
 
         getUssUrl: function () {
-          return this.ussUrl[this.getEnv()];
+          var ussUrl = {
+            'dev': this.ussUrl.dev,
+            'cfe': this.ussUrl.cfe,
+            'integration': this.ussUrl.integration,
+            'prod': this.ussUrl.prod
+          };
+
+          return ussUrl[this.getEnv()];
         },
 
         getCalliopeUrl: function () {
-          return this.calliopeUrl[this.getEnv()];
+          var calliopeUrl = {
+            'dev': this.calliopeUrl.dev,
+            'cfe': this.calliopeUrl.cfe,
+            'integration': this.calliopeUrl.integration,
+            'prod': this.calliopeUrl.prod
+          };
+
+          return calliopeUrl[this.getEnv()];
         },
 
         getCertsUrl: function () {
-          return this.certsUrl[this.getEnv()];
+          var certsUrl = {
+            'dev': this.certsUrl.dev,
+            'cfe': this.certsUrl.cfe,
+            'integration': this.certsUrl.integration,
+            'prod': this.certsUrl.prod
+          };
+
+          return certsUrl[this.getEnv()];
         },
 
         getWdmUrl: function () {
-          return this.wdmUrl.dev;
+          var wdmUrl = {
+            'dev': this.wdmUrl.dev,
+            'cfe': this.wdmUrl.cfe,
+            'integration': this.wdmUrl.dev,
+            'prod': this.wdmUrl.dev
+          };
+
+          return wdmUrl[this.getEnv()];
         },
 
         getDefaultEntitlements: function () {

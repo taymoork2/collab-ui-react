@@ -998,13 +998,13 @@
       "error": "Error"
     },
     "serviceNames": {
-      "squared-fusion-uc": "Call Service: Aware",
-      "squared-fusion-uc.full": "Call Service Aware",
+      "squared-fusion-uc": "Call Service",
+      "squared-fusion-uc.full": "Call Service: Aware",
       "squared-fusion-cal": "Calendar Service",
       "squared-fusion-media": "Media Service",
       "contact-center-context": "Context Center Service",
       "squared-fusion-ec": "Call Service: Connect",
-      "squared-fusion-mgmt": "Expressway Management Service"
+      "squared-fusion-mgmt": "Expressway Management Service  "
     },
     "serviceDescriptions": {
       "squared-fusion-uc": "Call Service Aware lets your users instantly share their desktops from their Cisco Spark clients while on a call. Call Service Connect lets users answer calls to their work phones on their  Cisco Spark client, and place calls to others' work phones from their Cisco Spark client.",
@@ -3045,10 +3045,10 @@
     "searchHeading": "Help Desk Support",
     "users": "Users",
     "customers": "Customers",
-    "badUserSearchInput": "Searching for users requires a minimum of three characters. Name and email searches requires a minimum of two words, e.g. john.doe or John Doe.",
+    "badUserSearchInput": "Enter at least three characters. To search by name or email, enter two words, for example John Doe or john.doe.",
     "unexpectedError": "An unexpected error occurred",
     "searchingPleaseWait": "Searching, please wait...",
-    "noSearchHits": "No matches found. Try to narrow your search...",
+    "noSearchHits": "No matches found. Try a different search.",
     "roles": "Roles",
     "backToSearchResults": "Back to search results",
     "sso": "Single Sign On (SSO)",
@@ -3101,7 +3101,7 @@
     "software": "Software",
     "serial": "Serial",
     "macAddress": "MAC Address",
-    "badOrgSearchInput": "Searching for customers requires a minimum of three characters.",
+    "badOrgSearchInput": "Enter at least three characters.",
     "unknown": "Unknown",
     "showMore": "Show more results",
     "delegatedAdministration": "manages {{numManages}} organizations",
@@ -3136,16 +3136,15 @@
     "searchUsersDevices": "Go to user and device search",
     "help": {
       "title": "Help",
-      "navigation-title": "Keyboard Navigation",
-      "navigation-info": "Press \u21B5 to select, <strong>tab</strong> or \u2191 \u2193 \u2190 \u2192 keys to navigate results, <strong>esc</strong> button to go back to results or clear.",
+      "navigation-title": "Navigating by Keyboard",
+      "navigation-info": "Press <strong>Tab</strong> or \u2191 \u2193 \u2190 \u2192 keys to navigate results, \u21B5 to select, and <strong>Esc</strong> to go back to results or to clear search terms. Press <strong>s</strong> after you select a customer (or from the customer view page) to filter your search to that customer only. ",
       "search-criterias-title": "Search Criteria",
       "search-criterias-users": "<strong>Users</strong>: Email, Name (First, Last), Phone Number and Display Name (two words required)",
       "search-criterias-customers": "<strong>Customers</strong>: Display Name",
       "search-criterias-devices": "<strong>Devices</strong>: Display Name, Serial or MAC Address",
-      "search-criterias-note": "Note: Devices are only supported when search is narrowed to one customer.",
-      "narrow-title": "Narrow Search",
-      "narrow-info": "To narrow your search to one customer only, select <i class='icon icon-search'></i> in the customer search result card or select the <strong>s</strong> key on your keyboard from the customer view page. Alternatively, select <i class='icon icon-search'></i> from the customer view page.",
-      "narrow-info-on-mobile": "To narrow your search to one customer only, select <i class='icon icon-search'></i> in the customer search result card. Alternatively, select <i class='icon icon-search'></i> from the customer view page."
+      "search-criterias-note": "Note: To search for a device, you must first select a customer.",
+      "narrow-title": "Select a Customer",
+      "narrow-info": "To filter a search to one customer only, start at the main search tool page and search for the customer by display name. Then click <i class='icon icon-search'></i> in the customer's search result card."
     },
     "verification": "Verification",
     "resend": "Re-send",

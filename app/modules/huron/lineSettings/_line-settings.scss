@@ -58,7 +58,7 @@
       & .icon-arrow-down {
         &:after {
           /*this is the X icon that appears when no DNs are available*/
-          content: $icon-warning;
+          content: char-from-code($icon-warning);
           top: 0.125rem;
           left: -23px;
           position: absolute;
