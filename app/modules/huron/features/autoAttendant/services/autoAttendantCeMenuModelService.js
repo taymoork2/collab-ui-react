@@ -865,7 +865,7 @@
           var rawInputAction = {};
           var routeToExtension = {};
           routeToExtension.destination = '$Input';
-          routeToExtension.description = '';
+          routeToExtension.description = action.description;
           rawInputAction.routeToExtension = routeToExtension;
           newAction.rawInputActions = [];
           newAction.rawInputActions[0] = rawInputAction;

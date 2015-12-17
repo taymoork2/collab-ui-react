@@ -20,7 +20,7 @@
     /////////////////////
 
     function populateUiModel() {
-      vm.message = (vm.menuEntry.actions[0].value === 'phoneMenuDialExt' ? '' : vm.menuEntry.actions[0].value);
+      vm.message = vm.menuEntry.actions[0].value;
     }
 
     function saveUiModel() {
