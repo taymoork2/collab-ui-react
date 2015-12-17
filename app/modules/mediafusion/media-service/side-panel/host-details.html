@@ -83,10 +83,13 @@
   <cs-sp-section>
     <div class="section-title-row section-name" translate=""></div>
     <div>
-        <a href
-         class="btn btn--negative"
-         sq-click-promise="hostDetails.deleteHost()"
-         translate="mediaFusion.connectors.deregister_host"></a>  
+      <button id="btn--primary"
+              ng-disabled="saving"
+              class="btn btn--negative"
+              style="margin-top: 15px;"
+              ng-click="sp.close(); hostDetails.showDeregisterHostDialog();"
+              translate="mediaFusion.connectors.deregister_host">
+      </button>
     </div>
   </cs-sp-section>
 
