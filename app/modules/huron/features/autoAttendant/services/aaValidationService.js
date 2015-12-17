@@ -54,6 +54,15 @@
           });
           return false;
         }
+        entry = _.find(optionMenu.entries, function (entry) {
+          return entry.key && 'runActionsOnInput' === entry.actions[0].name && 2 === entry.actions[0].inputType && !entry.actions[0].value;
+        });
+        if (angular.isDefined(entry)) {
+          Notification.error('autoAttendant.phoneMenuErrorDialByExtMessageMissing', {
+            key: entry.key
+          });
+          return false;
+        }
       }
       return true;
     }
