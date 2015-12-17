@@ -55,6 +55,13 @@
           formattedList[cardToUpdateIndex].dependsNames.push(dependName);
 
         });
+        formattedList[cardToUpdateIndex].dependsNames.sort(function(a, b) {
+          return a.localeCompare(b);
+        });
+
+        //options.sort(function (a, b) {
+        //return a.localeCompare(b);
+      //});
       });
       return orderByCardName(formattedList);
     }
