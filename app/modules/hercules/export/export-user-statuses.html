@@ -11,13 +11,8 @@
     <p>The exported report will be a comma separated list of users, their state, and related details.</p>
     <p>Select the type of information that you want included in the report:</p>
     <div ng-repeat="item in exportUserStatusesCtrl.statusTypes" ng-hide="item.unselectable" style="margin-top: 15px;">
-      <span><cs-checkbox ng-click="console.log('oue');exportUserStatusesCtrl.selectedStateChanged()" ckid="{{item.stateType}}" ng-model="item.selected" label=""></cs-checkbox></span>
-      <span ng-show="item.progress && exportUserStatusesCtrl.exportingUserStatusReport">(<i class="icon icon-spinner" style="top:4px"/>Processing {{item.progress}} of {{item.count}}) users</span>
-      <span ng-hide="item.progress && exportUserStatusesCtrl.exportingUserStatusReport">{{item.count}} </span>
-      <span translate="{{item.text}}"/>
+      <cs-checkbox ng-click="console.log('oue');exportUserStatusesCtrl.selectedStateChanged()" ckid="{{item.stateType}}" ng-model="item.selected" label="{{item.count + ' ' + item.text}}"></cs-checkbox>
     </div>
-    <div ng-show="exportUserStatusesCtrl.exportError"><div>Problems</div><div>{{exportUserStatusesCtrl.exportError}}</div></div>
-    <br>
     <p>Note: The more users included, the longer the report takes to generate.</p>
   </div>
   <div class="modal-footer">

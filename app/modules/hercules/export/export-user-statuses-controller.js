@@ -8,7 +8,6 @@
         var vm = this;
         vm.selectedServiceId = serviceId;
         vm.numberOfUsersPrCiRequest = 25; // can probably go higher, depending on the CI backend...
-        vm.exportError = false;
         vm.nothingToExport = true;
         vm.exportingUserStatusReport = false;
         var serviceInfo = _.find(USSService2.getStatusesSummary(), {
