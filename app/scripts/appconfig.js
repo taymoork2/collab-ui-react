@@ -200,9 +200,12 @@ angular
         })
         .state('downloads', {
           url: '/downloads',
-          templateUrl: 'modules/squared/views/downloads.html',
-          controller: 'DownloadsCtrl',
-          parent: 'main',
+          views: {
+            'main@': {
+              templateUrl: 'modules/squared/views/downloads.html',
+              controller: 'DownloadsCtrl'
+            }
+          },
           authenticate: false
         })
         .state('profile', {
@@ -1017,6 +1020,11 @@ angular
           },
           abstract: true,
           sticky: true
+        })
+        .state('helpdesklaunch', {
+          url: '/helpdesklaunch',
+          templateUrl: 'modules/squared/helpdesk/helpdesk-launch.html',
+          parent: 'main'
         })
         .state('helpdesk', {
           url: '/helpdesk',

@@ -247,7 +247,8 @@
     "callServiceTab": "Hybrid Services: Call",
     "callServiceTabDesc": "Call Service",
     "expresswayManagementServiceTab": "Hybrid Services: Management",
-    "expresswayManagementServiceTabDesc": "Expressway Management Service"
+    "expresswayManagementServiceTabDesc": "Expressway Management Service",
+    "helpdesk": "Help Desk"
   },
   "index": {
     "welcome": "Welcome!",
@@ -270,7 +271,8 @@
     "install": "Please install Spark by following",
     "link": "this link.",
     "using": "Please start using",
-    "squared": "Spark."
+    "squared": "Spark.",
+    "active": "Account active"
   },
   "invitePage": {
     "redirect": "Redirecting...",
@@ -387,6 +389,14 @@
     "group": "Total Group Rooms",
     "oneToOne": "Total 1:1 Rooms",
     "avgTotal": "Avg Rooms per User"
+  },
+  "filesShared": {
+    "filesShared": "Files Shared",
+    "filesSharedDescription": "The graph depicts the number of files and gigabytes shared during the {{time}}.",
+    "contentSharedError": "There was an error while loading the data for the Files Shared.",
+    "contentShareSizesDataError": "There was an error while loading the data for the File Sizes Shared.",
+    "contentShared": "Files Shared",
+    "fileSizes": "Gigabytes Shared"
   },
   "mediaQuality": {
     "mediaQuality": "Device Media Quality",
@@ -990,13 +1000,13 @@
       "error": "Error"
     },
     "serviceNames": {
-      "squared-fusion-uc": "Call Service: Aware",
-      "squared-fusion-uc.full": "Call Service Aware",
+      "squared-fusion-uc": "Call Service",
+      "squared-fusion-uc.full": "Call Service: Aware",
       "squared-fusion-cal": "Calendar Service",
       "squared-fusion-media": "Media Service",
       "contact-center-context": "Context Center Service",
       "squared-fusion-ec": "Call Service: Connect",
-      "squared-fusion-mgmt": "Expressway Management Service"
+      "squared-fusion-mgmt": "Expressway Management Service  "
     },
     "serviceDescriptions": {
       "squared-fusion-uc": "Call Service Aware lets your users instantly share their desktops from their Cisco Spark clients while on a call. Call Service Connect lets users answer calls to their work phones on their  Cisco Spark client, and place calls to others' work phones from their Cisco Spark client.",
@@ -2008,7 +2018,7 @@
     "supportAdmin": "Support Administrator",
     "save": "Save",
     "roles": "Roles",
-    "helpdesk": "Help Desk Support"
+    "helpdesk": "Help Desk"
   },
   "mohManagement": {
     "title": "Media On Hold",
@@ -2109,7 +2119,10 @@
       "status": "Status",
       "alarms": "Alarms",
       "reportAlarm": "reported alarm.",
-      "reportAlarms": "reported alarms."
+      "reportAlarms": "reported alarms.",
+      "software": "Software",
+      "deregister_host": "DEREGISTER HOST",
+      "goToHost": "Go to Host"
     },
     "activateService": {
       "ingress": "Extend the Cloud to Your On-Premises Environment",
@@ -2132,7 +2145,10 @@
       "deactivate": "DEACTIVATE",
       "cancelCaps": "CANCEL",
       "deactivateBody_1": "You are about to remove the following Hybrid Service for your organization:",
-      "deactivateBody_2": "Deaactivating a service will remove any service-related activity from your users. Additional steps are required to remove the service from your on-premises resources."
+      "deactivateBody_2": "Deaactivating a service will remove any service-related activity from your users. Additional steps are required to remove the service from your on-premises resources.",
+      "removeCluster": "REMOVE CLUSTER",
+      "schedule": "Set a Schedule",
+      "scheduleText": "Choose a release channel you want this cluster to update with:"
     },
     "serviceStatus": {
       "unknown": "Status unknown",
@@ -2153,7 +2169,28 @@
       "listing": {
         "no_clusters_heading": "No Media Service clusters registered",
         "no_clusters_text": "See required actions above and documentation to get started."
-      }
+      },
+      "deregister": "Deregister",
+      "deregisterCancel": "Cancel",
+      "deregisterConfirm": "Confirm",
+      "deregisterHeader": "Confirm Deregistration",
+      "deregisterAreYouSure": "You are about to deregister {{clusterName}} from Cisco Collaboration Cloud.",
+      "deregisterCausesListItem1": "This system will no longer be accepting any new calls.",
+      "deregisterCausesListItem2": "The pre-existing calls will continue.",
+      "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}"
+    },
+    "alarms": {
+      "alarms": "Alarms",
+      "critical": "Critical",
+      "error": "Error",
+      "warning": "Warning",
+      "alert": "Alert",
+      "severity": "Severity",
+      "firstReported": "First Reported",
+      "lastReported": "Last Reported",
+      "description": "Description",
+      "noAlarms": "No alarms reported",
+      "hostImpact": "Host Impacted"
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
     "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
@@ -2179,7 +2216,7 @@
     "confirmCluster": "Please press save to confirm cluster change.",
     "disconnect": "Disconnected. Trying to reconnect...",
     "name": "Name",
-    "ipAddr": "Host Name / IP Address",
+    "ipAddr": "IP Address",
     "status": "Status",
     "actions": "Actions",
     "offline": "Offline",
@@ -2989,25 +3026,42 @@
       }
     }
   },
-  "roles": {
+  "ciRoles": {
     "atlas-portal.support": "Support",
     "atlas-portal.reports": "Reports",
     "atlas-portal.billing": "Billing",
     "atlas-portal.partner.helpdesk": "Help Desk Support",
     "atlas-portal.application": "Application",
-    "atlas-portal.partner.salesadmin": "Sales Administrator",
-    "id_full_admin": "Full Administrator",
+    "atlas-portal.partner.salesadmin": "Sales Admin",
+    "id_full_admin": "Full Admin",
+    "id_readonly_admin": "Readonly Admin",
     "user": "User"
+  },
+  "atlasRoles": {
+    "Full_Admin": "Full Admin",
+    "Support": "Support",
+    "Reports": "Reports",
+    "Billing": "Billing",
+    "Help_Desk": "Help Desk",
+    "Application": "Application",
+    "Sales_Admin": "Sales Admin",
+    "User": "User",
+    "PARTNER_USER": "User",
+    "PARTNER_ADMIN": "Partner Admin",
+    "PARTNER_SALES_ADMIN": "Partner Sales Admin",
+    "CUSTOMER_PARTNER": "Customer Partner",
+    "Site_Admin": "Site Admin"
   },
   "helpdesk": {
     "navHeaderTitle": "Cloud Collaboration Help Desk",
-    "helpdesk": "Help Desk Support",
+    "helpdesk": "Help Desk",
+    "searchHeading": "Help Desk Support",
     "users": "Users",
     "customers": "Customers",
-    "badUserSearchInput": "Searching for users requires a minimum of three characters. Name and email searches requires a minimum of two words, e.g. john.doe or John Doe.",
+    "badUserSearchInput": "Enter at least three characters. To search by name or email, enter two words, for example John Doe or john.doe.",
     "unexpectedError": "An unexpected error occurred",
     "searchingPleaseWait": "Searching, please wait...",
-    "noSearchHits": "No matches found. Try to narrow your search...",
+    "noSearchHits": "No matches found. Try a different search.",
     "roles": "Roles",
     "backToSearchResults": "Back to search results",
     "sso": "Single Sign On (SSO)",
@@ -3024,7 +3078,7 @@
     "status": "Status",
     "organization": "Customer",
     "accountCreated": "Account Created",
-    "customerPortalLaunch": "Launch Customer Portal",
+    "customerPortalLaunch": "View Customer Portal",
     "contact": "Contact",
     "claimedDomain": "Claimed Domain",
     "managedBy": "Managed By",
@@ -3060,7 +3114,7 @@
     "software": "Software",
     "serial": "Serial",
     "macAddress": "MAC Address",
-    "badOrgSearchInput": "Searching for customers requires a minimum of three characters.",
+    "badOrgSearchInput": "Enter at least three characters.",
     "unknown": "Unknown",
     "showMore": "Show more results",
     "delegatedAdministration": "manages {{numManages}} organizations",
@@ -3095,22 +3149,23 @@
     "searchUsersDevices": "Go to user and device search",
     "help": {
       "title": "Help",
-      "navigation-title": "Keyboard Navigation",
-      "navigation-info": "Press \u21B5 to select, <strong>tab</strong> or \u2191 \u2193 \u2190 \u2192 keys to navigate results, <strong>esc</strong> button to go back to results or clear.",
+      "navigation-title": "Navigating by Keyboard",
+      "navigation-info": "Press <strong>Tab</strong> or \u2191 \u2193 \u2190 \u2192 keys to navigate results, \u21B5 to select, and <strong>Esc</strong> to go back to results or to clear search terms. Press <strong>s</strong> after you select a customer (or from the customer view page) to filter your search to that customer only. ",
       "search-criterias-title": "Search Criteria",
       "search-criterias-users": "<strong>Users</strong>: Email, Name (First, Last), Phone Number and Display Name (two words required)",
       "search-criterias-customers": "<strong>Customers</strong>: Display Name",
       "search-criterias-devices": "<strong>Devices</strong>: Display Name, Serial or MAC Address",
-      "search-criterias-note": "Note: Devices are only supported when search is narrowed to one customer.",
-      "narrow-title": "Narrow Search",
-      "narrow-info": "To narrow your search to one customer only, select <i class='icon icon-search'></i> in the customer search result card or select the <strong>s</strong> key on your keyboard from the customer view page. Alternatively, select <i class='icon icon-search'></i> from the customer view page.",
-      "narrow-info-on-mobile": "To narrow your search to one customer only, select <i class='icon icon-search'></i> in the customer search result card. Alternatively, select <i class='icon icon-search'></i> from the customer view page."
+      "search-criterias-note": "Note: To search for a device, you must first select a customer.",
+      "narrow-title": "Select a Customer",
+      "narrow-info": "To filter a search to one customer only, start at the main search tool page and search for the customer by display name. Then click <i class='icon icon-search'></i> in the customer's search result card."
     },
     "verification": "Verification",
     "resend": "Re-send",
     "sendCode": "Send Code",
     "more": "More",
-    "usage": "{{usage}} of {{volume}} in use"
+    "usage": "{{usage}} of {{volume}} in use",
+    "launchHelpdesk": "Help Desk",
+    "launchHelpdeskDesc": "Open the Help Desk portal in a new tab"
   },
   "activation": {
     "verificationComplete": "Verification Complete",
@@ -3120,6 +3175,7 @@
     "sendCodeLink": "Send new activation code",
     "newCodeSent": "Confirmation Code Sent",
     "useLatestCode": "A new code has been sent to {{userEmail}}",
-    "unexpectedError": "Unexpected error processing request."
+    "unexpectedError": "Unexpected error processing request.",
+    "usage": "{{usage}} of {{volume}} in use"
   }
 }

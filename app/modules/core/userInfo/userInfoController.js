@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('UserInfoController', ['$scope', 'Authinfo', 'Auth', 'Log', 'Config', '$window', '$location', 'Userservice', '$modal', 'Notification', '$filter', 'FeedbackService', 'Utils',
-    function ($scope, Authinfo, Auth, Log, Config, $window, $location, Userservice, $modal, Notification, $filter, FeedbackService, Utils) {
+  .controller('UserInfoController', ['$scope', 'Authinfo', 'Auth', 'Log', 'Config', '$window', '$location', 'Userservice', '$modal', 'Notification', '$filter', 'FeedbackService', 'Utils', '$translate',
+    function ($scope, Authinfo, Auth, Log, Config, $window, $location, Userservice, $modal, Notification, $filter, FeedbackService, Utils, $translate) {
       var getAuthinfoData = function () {
         $scope.username = Authinfo.getUserName();
         $scope.orgname = Authinfo.getOrgName();
@@ -10,11 +10,12 @@ angular.module('Core')
         if (!roles || roles.length === 0) {
           roles = ['User'];
         }
-        var roleList = roles.sort().join(', ');
         $scope.roles = roles;
-        $scope.roleList = roleList;
         $scope.orgId = Authinfo.getOrgId();
         $scope.isPartner = Authinfo.isPartnerAdmin();
+        $scope.roleList = _.map(roles, function (role) {
+          return $translate.instant('atlasRoles.' + role);
+        }).sort().join(', ');
       };
       getAuthinfoData();
       //update the scope when Authinfo data has been populated.

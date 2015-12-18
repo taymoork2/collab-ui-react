@@ -2,13 +2,18 @@
 
 describe('Service: Customer Reports Service', function () {
   var $httpBackend, CustomerReportService, Config, Notification;
-  var avgRoomsUrl, groupRoomsUrl, oneToOneRoomsUrl;
+  var avgRoomsUrl, groupRoomsUrl, oneToOneRoomsUrl, contentUrl, contentSizeUrl;
 
   var roomData = getJSONFixture('core/json/customerReports/roomData.json');
   var groupRoomData = roomData.groupRooms;
   var avgRoomData = roomData.avgRooms;
   var oneToOneRoomData = roomData.oneTwoOneRooms;
   var responseRoomData = roomData.response;
+
+  var fileData = getJSONFixture('core/json/customerReports/fileData.json');
+  var contentData = fileData.content;
+  var contentSizeData = fileData.contentSize;
+  var responseFileData = fileData.response;
 
   beforeEach(module('Core'));
 
@@ -54,11 +59,17 @@ describe('Service: Customer Reports Service', function () {
     groupRoomsUrl = baseUrl + 'timeCharts/conversations?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue + customerView;
     avgRoomsUrl = baseUrl + 'timeCharts/avgConversations?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue + customerView;
     oneToOneRoomsUrl = baseUrl + 'timeCharts/convOneOnOne?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue + customerView;
+    contentUrl = baseUrl + 'timeCharts/contentShared?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue + customerView;
+    contentSizeUrl = baseUrl + 'timeCharts/contentShareSizes?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue + customerView;
 
     groupRoomData.data = updateDates(groupRoomData.data);
     avgRoomData.data = updateDates(avgRoomData.data);
     oneToOneRoomData.data = updateDates(oneToOneRoomData.data);
     responseRoomData = updateDates(responseRoomData, dayFormat);
+
+    contentData.data = updateDates(contentData.data);
+    contentSizeData.data = updateDates(contentSizeData.data);
+    responseFileData = updateDates(responseFileData, dayFormat);
   }));
 
   afterEach(function () {
@@ -89,6 +100,31 @@ describe('Service: Customer Reports Service', function () {
       $httpBackend.whenGET(oneToOneRoomsUrl).respond(500, error);
 
       CustomerReportService.getAvgRoomData(timeFilter).then(function (response) {
+        expect(response).toEqual([]);
+        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+      });
+
+      $httpBackend.flush();
+    });
+  });
+
+  describe('File Service', function () {
+    it('should getFilesSharedData', function () {
+      $httpBackend.whenGET(contentUrl).respond(contentData);
+      $httpBackend.whenGET(contentSizeUrl).respond(contentSizeData);
+
+      CustomerReportService.getFilesSharedData(timeFilter).then(function (response) {
+        expect(response).toEqual(responseFileData);
+      });
+
+      $httpBackend.flush();
+    });
+
+    it('should notify an error for getFilesSharedData', function () {
+      $httpBackend.whenGET(contentUrl).respond(500, error);
+      $httpBackend.whenGET(contentSizeUrl).respond(500, error);
+
+      CustomerReportService.getFilesSharedData(timeFilter).then(function (response) {
         expect(response).toEqual([]);
         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
       });

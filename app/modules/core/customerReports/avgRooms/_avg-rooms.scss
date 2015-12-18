@@ -3,4 +3,9 @@
     position: relative;
     top: -35px;
   }
+  .room-number {
+    font-size: rem-calc(18);
+    color: $color-primary-base;
+    text-align: left;
+  }
 }

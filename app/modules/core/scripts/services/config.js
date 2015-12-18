@@ -351,6 +351,11 @@ angular.module('Core')
             desc: 'tabs.billingTabDesc',
             state: 'billing',
             link: '#orderprovisioning'
+          }, {
+            title: 'tabs.helpdesk',
+            desc: 'tabs.helpdesk',
+            state: 'helpdesklaunch',
+            link: '#helpdesklaunch'
           }]
         }, {
           tab: 'accountTab',
@@ -440,7 +445,7 @@ angular.module('Core')
           message: 'COLLAB',
           meeting: 'WEBEXTRIALS',
           call: 'SQUAREDUC',
-          roomSystems: 'ROOMSYSTEMS',
+          roomSystems: 'ROOMSYSTEMS'
         },
 
         organizations: {
@@ -495,6 +500,7 @@ angular.module('Core')
           brandWarning: '#f7c100',
           dummyGray: '#ECECEC',
           primaryColorLight: '#66C5E8',
+          primaryColorBase: '#049FD9',
           primaryColorDarker: '#0387B8',
           dummyGrayLight: '#F3F3F3',
           dummyGrayLighter: '#FAFAFA'
@@ -626,7 +632,14 @@ angular.module('Core')
         },
 
         getLocusServiceUrl: function () {
-          return this.locusServiceUrl.integration;
+          var locusServiceUrl = {
+            'dev': this.locusServiceUrl.integration,
+            'cfe': this.locusServiceUrl.integration,
+            'integration': this.locusServiceUrl.integration,
+            'prod': this.locusServiceUrl.integration
+          };
+
+          return locusServiceUrl[this.getEnv()];
         },
 
         getFeatureToggleUrl: function () {
@@ -861,23 +874,58 @@ angular.module('Core')
         },
 
         getHerculesUrl: function () {
-          return this.herculesUrl[this.getEnv()];
+          var herculesUrl = {
+            'dev': this.herculesUrl.dev,
+            'cfe': this.herculesUrl.cfe,
+            'integration': this.herculesUrl.integration,
+            'prod': this.herculesUrl.prod
+          };
+
+          return herculesUrl[this.getEnv()];
         },
 
         getUssUrl: function () {
-          return this.ussUrl[this.getEnv()];
+          var ussUrl = {
+            'dev': this.ussUrl.dev,
+            'cfe': this.ussUrl.cfe,
+            'integration': this.ussUrl.integration,
+            'prod': this.ussUrl.prod
+          };
+
+          return ussUrl[this.getEnv()];
         },
 
         getCalliopeUrl: function () {
-          return this.calliopeUrl[this.getEnv()];
+          var calliopeUrl = {
+            'dev': this.calliopeUrl.dev,
+            'cfe': this.calliopeUrl.cfe,
+            'integration': this.calliopeUrl.integration,
+            'prod': this.calliopeUrl.prod
+          };
+
+          return calliopeUrl[this.getEnv()];
         },
 
         getCertsUrl: function () {
-          return this.certsUrl[this.getEnv()];
+          var certsUrl = {
+            'dev': this.certsUrl.dev,
+            'cfe': this.certsUrl.cfe,
+            'integration': this.certsUrl.integration,
+            'prod': this.certsUrl.prod
+          };
+
+          return certsUrl[this.getEnv()];
         },
 
         getWdmUrl: function () {
-          return this.wdmUrl.dev;
+          var wdmUrl = {
+            'dev': this.wdmUrl.dev,
+            'cfe': this.wdmUrl.cfe,
+            'integration': this.wdmUrl.dev,
+            'prod': this.wdmUrl.dev
+          };
+
+          return wdmUrl[this.getEnv()];
         },
 
         getDefaultEntitlements: function () {
@@ -955,7 +1003,6 @@ angular.module('Core')
         WX2_Support: ['overview', 'reports', 'support'],
         WX2_SquaredInviter: [],
         PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'customer-overview', 'partnerreports', 'trialAdd', 'trialEdit', 'profile', 'pstnSetup'],
-        PARTNER_USER: ['partnercustomers', 'customer-overview', 'trialAdd', 'trialEdit'],
         PARTNER_SALES_ADMIN: ['partnerreports'],
         CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
         User: [],
@@ -968,7 +1015,7 @@ angular.module('Core')
           'example'
         ],
         Application: ['organizations', 'organization-overview'],
-        Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org']
+        Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org', 'helpdesklaunch']
       };
 
       config.serviceStates = {

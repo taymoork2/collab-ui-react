@@ -12,6 +12,7 @@ describe('Controller: Dummy Customer Reports', function () {
   var dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
   var activeUser = angular.copy(dummyData.activeUser);
   var avgRooms = angular.copy(dummyData.avgRooms);
+  var filesShared = angular.copy(dummyData.filesShared);
 
   var updateDates = function (data, filter) {
     var dayFormat = "MMM DD";
@@ -57,6 +58,16 @@ describe('Controller: Dummy Customer Reports', function () {
       expect(DummyCustomerReportService.dummyAvgRoomData(timeFilter[0])).toEqual(avgRooms.one);
       expect(DummyCustomerReportService.dummyAvgRoomData(timeFilter[1])).toEqual(avgRooms.two);
       expect(DummyCustomerReportService.dummyAvgRoomData(timeFilter[2])).toEqual(avgRooms.three);
+    });
+
+    it('dummyFilesSharedData should return the expected responses', function () {
+      filesShared.one = updateDates(filesShared.one, timeFilter[0]);
+      filesShared.two = updateDates(filesShared.two, timeFilter[1]);
+      filesShared.three = updateDates(filesShared.three, timeFilter[2]);
+
+      expect(DummyCustomerReportService.dummyFilesSharedData(timeFilter[0])).toEqual(filesShared.one);
+      expect(DummyCustomerReportService.dummyFilesSharedData(timeFilter[1])).toEqual(filesShared.two);
+      expect(DummyCustomerReportService.dummyFilesSharedData(timeFilter[2])).toEqual(filesShared.three);
     });
   });
 });

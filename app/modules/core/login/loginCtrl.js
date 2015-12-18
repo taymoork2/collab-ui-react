@@ -56,12 +56,13 @@ angular.module('Core')
                   Auth.clearLoginMarker();
                 }
                 state = 'partneroverview';
-              } else if (Authinfo.isHelpDeskUser()) {
+
+              } else if (Authinfo.isSupportUser()) {
+                state = 'support';
+              } else if (Authinfo.isHelpDeskUserOnly()) {
                 state = 'helpdesk.search';
               } else if (Authinfo.isPartnerUser()) {
                 state = 'partnercustomers.list';
-              } else if (Authinfo.isSupportUser()) {
-                state = 'support';
               }
               $rootScope.services = Authinfo.getServices();
 
