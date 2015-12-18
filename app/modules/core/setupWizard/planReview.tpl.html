@@ -5,8 +5,7 @@
   <div ng-hide="planReview.multiSubscriptions.oneBilling" class="flex-row">
     <div class="small-4 multiSub">
       <span class="multiText" translate="firstTimeWizard.subscriptionId"></span>
-      <cs-select class="multiSelect" ng-model="planReview.multiSubscriptions.selected" placeholder="planReview.multiSubscriptions.selected" 
-        options="planReview.multiSubscriptions.options">
+      <cs-select class="multiSelect" ng-model="planReview.multiSubscriptions.selected" options="planReview.multiSubscriptions.options">
       </cs-select>
     </div>
   </div>
@@ -123,7 +122,7 @@
       </div>
     </div>
   </div>
-  <div ng-if="planReview.roomSystemsExist">
+  <div ng-if="planReview.roomSystemsExist && planReview.licenseExists">
     <div class="row row-room" ng-class="{'column-paid' : !planReview.roomServices.isNewTrial, 'column-trial' : planReview.roomServices.isNewTrial}">
       <div class="column-header column-room small-6 columns">
         <i class="icon icon-circle-telepresence"></i>

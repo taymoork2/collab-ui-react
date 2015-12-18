@@ -51,6 +51,7 @@
     vm.isStormBranding = false;
     vm.roomSystemsExist = false;
     vm.showMultiSubscriptions = showMultiSubscriptions;
+    vm.licenseExists = false;
 
     init();
 
@@ -60,9 +61,6 @@
 
     function init() {
       vm.multiSubscriptions.billings = Authinfo.getLicenses() || [];
-      angular.forEach(vm.multiSubscriptions.billings, function (billing) {
-        vm.multiSubscriptions.options.push(billing.billingServiceId);
-      });
 
       vm.multiSubscriptions.options = _.uniq(_.pluck(vm.multiSubscriptions.billings, 'billingServiceId'));
       vm.multiSubscriptions.selected = vm.multiSubscriptions.options[0];
@@ -181,8 +179,11 @@
     /////////////////
 
     function showMultiSubscriptions(billingServiceId) {
-      return (vm.multiSubscriptions.selected === billingServiceId || (vm.multiSubscriptions.selected === billingServiceId && 
-        vm.multiSubscriptions.selected === '') || vm.multiSubscriptions.oneBilling);
+      var isSelected = vm.multiSubscriptions.selected === billingServiceId;
+      var isOneBilling = vm.multiSubscriptions.oneBilling;
+
+      vm.licenseExists = isSelected;
+      return isOneBilling || isSelected;
     }
 
     function populateTrialData(trial) {
