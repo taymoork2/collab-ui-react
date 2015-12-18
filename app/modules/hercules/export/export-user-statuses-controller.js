@@ -19,13 +19,6 @@
           vm.statusTypes = [];
         }
 
-        vm.getHeader = function () {
-          var service = $.grep(Authinfo.getServices(), function (s) {
-            return s.ciName === vm.selectedServiceId;
-          });
-          return UserDetails.getCSVColumnHeaders(service[0].displayName);
-        };
-
         vm.selectedStateChanged = function () {
           vm.nothingToExport = UiStats.noneSelected();
         };
@@ -63,7 +56,7 @@
           // not being 100%  CSV-valid
           // See https://github.com/asafdav/ng-csv/issues/28
           vm.result.push(['sep=,']);
-          vm.result.push(vm.getHeader());
+          vm.result.push(UserDetails.getCSVColumnHeaders());
 
           // TODO: should probably be paged
           return USSService2.getStatuses(vm.selectedServiceId, null, 100000)

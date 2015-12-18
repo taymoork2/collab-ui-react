@@ -55,11 +55,9 @@ describe('ExportUserStatusesController', function () {
     });
   }));
 
-  it('column title for service name is based on authinfo displayname', function () {
+  it('default state is set to not exporting', function () {
     controller.selectedServiceId = "squared-fusion-cal";
-    controller.getHeader();
     expect(controller.exportingUserStatusReport).toBe(false);
-    expect(controller.getHeader()).toEqual(["User", "Host", "myService State", "Message"]);
   });
 
   // it('export multiple users', function () {

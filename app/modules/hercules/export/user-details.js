@@ -18,8 +18,8 @@ angular.module('Hercules').service('UserDetails',
       return Config.getScimUrl(orgId) + "?filter=" + multipleUserFilter(userIds);
     };
 
-    var getCSVColumnHeaders = function (serviceName) {
-      return ["User", "Host", serviceName + " State", "Message"];
+    var getCSVColumnHeaders = function () {
+      return ["User", "Host", "State", "Message", "User ID"];
     };
 
     var getUsers = function (stateInfos, orgId, callback) {
@@ -45,7 +45,8 @@ angular.module('Hercules').service('UserDetails',
                 userName: foundUser[0].userName,
                 connector: stateInfos[index].connector || "not found(id=" + stateInfos[index].connectorId + ")",
                 state: stateInfos[index].state == "notActivated" ? "Pending Activation" : stateInfos[index].state,
-                message: stateInfos[index].state == "error" ? stateInfos[index].description.defaultMessage : ""
+                message: stateInfos[index].state == "error" ? stateInfos[index].description.defaultMessage : "",
+                extras: userIds[index]
               };
             } else {
               result.success = false;
@@ -53,7 +54,8 @@ angular.module('Hercules').service('UserDetails',
                 userName: "Not found",
                 connector: stateInfos[index].connector || "not found(id=" + stateInfos[index].connectorId + ")",
                 state: stateInfos[index].state == "notActivated" ? "Pending Activation" : stateInfos[index].state,
-                message: stateInfos[index].state == "error" ? stateInfos[index].description.defaultMessage : ""
+                message: stateInfos[index].state == "error" ? stateInfos[index].description.defaultMessage : "",
+                extras: userIds[index]
               };
             }
 
