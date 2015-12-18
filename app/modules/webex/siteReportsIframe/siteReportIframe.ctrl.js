@@ -63,6 +63,14 @@
         "trustIframeUrl=" + $scope.trustIframeUrl;
       $log.log(_this.logMsg);
 
+      $rootScope.lastSite = $stateParams.siteUrl;
+      $log.log("last site " + $rootScope.lastSite);
+
+      var parser = document.createElement('a');
+      parser.href = iframeUrl;
+      $rootScope.nginxHost = parser.hostname;
+      $log.log("nginxHost " + $rootScope.nginxHost);
+      
       $timeout(
         function loadIframe() {
           var submitFormBtn = document.getElementById('submitFormBtn');
