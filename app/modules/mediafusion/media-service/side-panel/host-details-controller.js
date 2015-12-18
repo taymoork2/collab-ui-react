@@ -4,11 +4,12 @@ angular.module('Mediafusion')
   .controller('HostDetailsController',
 
     /* @ngInject */
-    function ($stateParams, $state, MediaClusterService, XhrNotificationService, Notification, $translate) {
+    function ($stateParams, $state, MediaClusterService, XhrNotificationService, Notification, $translate, $modal) {
       var vm = this;
       vm.clusterId = $stateParams.clusterId;
       vm.role = $stateParams.properties["mf.role"];
       vm.connector = $stateParams.connector;
+      vm.cluster = MediaClusterService.getClusters()[vm.clusterId];
 
       vm.deleteHost = function () {
         return MediaClusterService.deleteHost(vm.clusterId, vm.connector.host.serial).then(function () {
@@ -33,5 +34,19 @@ angular.module('Mediafusion')
             })], 'error');
           });
       };
+
+      vm.showDeregisterHostDialog = function () {
+        $modal.open({
+          resolve: {
+            cluster: function () {
+              return vm.cluster;
+            }
+          },
+          controller: 'HostDeregisterController',
+          controllerAs: "hostDeregister",
+          templateUrl: 'modules/mediafusion/media-service/side-panel/host-deregister-dialog.html'
+        });
+      };
+
     }
   );

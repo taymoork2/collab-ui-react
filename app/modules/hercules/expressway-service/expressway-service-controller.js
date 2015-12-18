@@ -27,14 +27,14 @@
     vm.pageTitle = $translate.instant('hercules.serviceNames.' + vm.currentServiceId);
     vm.tabs = [{
       title: $translate.instant('common.resources'),
-      state: vm.route + '.list',
+      state: vm.route + '.list'
     }, {
       title: $translate.instant('common.settings'),
-      state: vm.route + '.settings({serviceType:vm.currentServiceType})',
+      state: vm.route + '.settings({serviceType:vm.currentServiceType})'
     }];
 
     vm.notificationTag = vm.currentServiceId;
-    vm.clusters = _.values(ClusterService.getClusters());
+    vm.clusters = ClusterService.getExpresswayClusters();
     vm.serviceIconClass = ServiceDescriptor.serviceIcon(vm.currentServiceId);
     vm.clusterLength = clusterLength;
     vm.serviceNotInstalled = serviceNotInstalled;
@@ -107,7 +107,7 @@
 
     function clustersUpdated() {
       ServiceStateChecker.checkState(vm.currentServiceType, vm.currentServiceId);
-      vm.clusters = _.values(ClusterService.getClusters());
+      vm.clusters = ClusterService.getExpresswayClusters();
     }
 
     function extractSummaryForAService() {

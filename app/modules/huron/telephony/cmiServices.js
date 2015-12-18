@@ -359,18 +359,6 @@
     });
   })
 
-  .factory('ClusterCommonCmiService', function ($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiUrl() + '/common/clusters/:clusterId', {
-      clusterId: '@clusterId',
-    }, {
-      query: {
-        method: 'GET',
-        isArray: true,
-        cache: true
-      }
-    });
-  })
-
   .factory('CustomerVoiceCmiService', function ($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId', {
       customerId: '@customerId'
@@ -378,20 +366,6 @@
       update: {
         method: 'PUT'
       }
-    });
-  })
-
-  .factory('DialPlanCmiService', function ($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiUrl() + '/voice/clusters/:clusterId/dialplans/:dialPlanId', {
-      clusterId: '@clusterId',
-      dialPlanId: '@dialPlanId'
-    });
-  })
-
-  .factory('DialPlanDetailsCmiService', function ($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiUrl() + '/voice/clusters/:clusterId/dialplandetails/:dialPlanId', {
-      clusterId: '@clusterId',
-      dialPlanId: '@dialPlanId'
     });
   });
 

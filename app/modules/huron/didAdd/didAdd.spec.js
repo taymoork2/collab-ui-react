@@ -3,6 +3,12 @@
 describe('Controller: DidAddCtrl', function () {
   var controller, $q, $scope, $state, $httpBackend, $window, HuronConfig, Notification, Config, EmailService, DialPlanService;
 
+  var customerVoiceNorthAmerica = getJSONFixture('huron/json/dialPlans/customervoice-nanp.json');
+
+  var Authinfo = {
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
+  };
+
   beforeEach(module('Huron'));
 
   var authInfo = {
@@ -28,25 +34,6 @@ describe('Controller: DidAddCtrl', function () {
       licenseDuration: '90',
       customerOrgId: '0000000000000001'
     }
-  };
-
-  var voiceClusters = _.filter(getJSONFixture('huron/json/dialPlans/clusters.json'), {
-    name: 'CLUSTER_APPLICATION_VOICE'
-  });
-  var customerVoiceAustalia = getJSONFixture('huron/json/dialPlans/customervoice-aunp.json');
-  var customerVoiceNorthAmerica = getJSONFixture('huron/json/dialPlans/customervoice-nanp.json');
-  var dialPlans = getJSONFixture('huron/json/dialPlans/dialplans.json');
-  var dialPlanDetailsAustralia = getJSONFixture('huron/json/dialPlans/dialplandetails-aunp.json');
-  var dialPlanDetailsNorthAmerica = [{
-    countryCode: "+1",
-    extensionGenerated: "false",
-    steeringDigitRequired: "true"
-  }];
-  var uuids = {
-    orgId: '1',
-    clusterId: '00000000-0000-0000-0000-000000000003',
-    dialPlanIdAudp: '00000000-0000-0000-0000-000000000009',
-    dialPlanIdNadp: '00000000-0000-0000-0000-000000000010',
   };
 
   beforeEach(inject(function (_$q_, $rootScope, $controller, _$httpBackend_, _HuronConfig_, _Notification_, _Config_, _EmailService_, $timeout, _$window_, _$state_, _DialPlanService_, _PstnSetupService_) {
@@ -75,10 +62,7 @@ describe('Controller: DidAddCtrl', function () {
       'uuid': '12145558881-id'
     }]);
 
-    $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/common/clusters?type=APPLICATION_VOICE').respond(voiceClusters);
-    $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + uuids.orgId).respond(customerVoiceNorthAmerica);
-    $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/clusters/' + uuids.clusterId + '/dialplans').respond(dialPlans);
-    $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/clusters/' + uuids.clusterId + '/dialplandetails?dialplan=' + uuids.dialPlanIdNadp).respond(dialPlanDetailsNorthAmerica);
+    $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId()).respond(customerVoiceNorthAmerica);
 
     controller = $controller('DidAddCtrl', {
       $scope: $scope,
