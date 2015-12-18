@@ -99,6 +99,7 @@
     return {
       "id": opts.id,
       "name": opts.clusterName,
+      "cluster_type": 'c_mgmt',
       "provisioning_data": {
         "approved_packages": _.map(opts.approved, function (pkg) {
           return pkg;
