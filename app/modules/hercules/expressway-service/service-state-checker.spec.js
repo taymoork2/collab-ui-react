@@ -31,7 +31,7 @@ describe('ServiceStateChecker', function () {
 
   beforeEach(module(function ($provide) {
     ClusterService = {
-      getClusters: sinon.stub()
+      getExpresswayClusters: sinon.stub()
     };
     AuthInfo = {
       getOrgId: sinon.stub()
@@ -52,25 +52,25 @@ describe('ServiceStateChecker', function () {
   }));
 
   it("No clusters should raise the 'fuseNotPerformed' message", function () {
-    ClusterService.getClusters.returns([]);
+    ClusterService.getExpresswayClusters.returns([]);
     ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('fuseNotPerformed');
   });
 
   it("No configured connectors should raise the 'fuseNotPerformed' message", function () {
-    ClusterService.getClusters.returns([notConfiguredClusterMockData]);
+    ClusterService.getExpresswayClusters.returns([notConfiguredClusterMockData]);
     ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('configureConnectors');
   });
 
   it("Fusing a cluster should clear the 'fuseNotPerformed' message", function () {
-    ClusterService.getClusters.returns([]);
+    ClusterService.getExpresswayClusters.returns([]);
     ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('fuseNotPerformed');
-    ClusterService.getClusters.returns([notConfiguredClusterMockData]);
+    ClusterService.getExpresswayClusters.returns([notConfiguredClusterMockData]);
     ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('configureConnectors');
@@ -83,7 +83,7 @@ describe('ServiceStateChecker', function () {
       error: 0,
       notActivated: 0
     }]);
-    ClusterService.getClusters.returns([okClusterMockData]);
+    ClusterService.getExpresswayClusters.returns([okClusterMockData]);
     ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('squared-fusion-cal:noUsersActivated');
@@ -102,7 +102,7 @@ describe('ServiceStateChecker', function () {
       error: 5,
       notActivated: 0
     }]);
-    ClusterService.getClusters.returns([okClusterMockData]);
+    ClusterService.getExpresswayClusters.returns([okClusterMockData]);
     ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('squared-fusion-cal:userErrors');
