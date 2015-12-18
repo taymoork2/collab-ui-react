@@ -19,9 +19,9 @@
           vm.saving = false;
         }, function (err) {
           vm.error = $translate.instant('mediaFusion.clusters.deregisterErrorGeneric', {
-              clusterName: cluster.name,
-              errorMessage: XhrNotificationService.getMessages(err).join(', ')
-            });
+            clusterName: cluster.name,
+            errorMessage: XhrNotificationService.getMessages(err).join(', ')
+          });
           vm.saving = false;
         });
       return false;
