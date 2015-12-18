@@ -2143,7 +2143,10 @@
       "deactivate": "DEACTIVATE",
       "cancelCaps": "CANCEL",
       "deactivateBody_1": "You are about to remove the following Hybrid Service for your organization:",
-      "deactivateBody_2": "Deaactivating a service will remove any service-related activity from your users. Additional steps are required to remove the service from your on-premises resources."
+      "deactivateBody_2": "Deaactivating a service will remove any service-related activity from your users. Additional steps are required to remove the service from your on-premises resources.",
+      "removeCluster": "REMOVE CLUSTER",
+      "schedule": "Set a Schedule",
+      "scheduleText": "Choose a release channel you want this cluster to update with:"
     },
     "serviceStatus": {
       "unknown": "Status unknown",
@@ -2164,7 +2167,15 @@
       "listing": {
         "no_clusters_heading": "No Media Service clusters registered",
         "no_clusters_text": "See required actions above and documentation to get started."
-      }
+      },
+      "deregister": "Deregister",
+      "deregisterCancel": "Cancel",
+      "deregisterConfirm": "Confirm",
+      "deregisterHeader": "Confirm Deregistration",
+      "deregisterAreYouSure": "You are about to deregister {{clusterName}} from Cisco Collaboration Cloud.",
+      "deregisterCausesListItem1": "This system will no longer be accepting any new calls.",
+      "deregisterCausesListItem2": "The pre-existing calls will continue.",
+      "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}"
     },
     "alarms": {
       "alarms": "Alarms",
