@@ -2,14 +2,16 @@
 describe('HelpdeskService', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var $httpBackend, Service, urlBase, ServiceDescriptor, $scope, q;
+  var $httpBackend, Service, urlBase, ServiceDescriptor, $scope, q, HelpdeskMockData, CsdmConverter;
 
-  beforeEach(inject(function (_Config_, _$rootScope_, _$httpBackend_, _HelpdeskService_, _ServiceDescriptor_, _$q_) {
+  beforeEach(inject(function (_Config_, _$rootScope_, _$httpBackend_, _HelpdeskService_, _ServiceDescriptor_, _$q_, _HelpdeskMockData_, _CsdmConverter_) {
     Service = _HelpdeskService_;
     ServiceDescriptor = _ServiceDescriptor_;
     $scope = _$rootScope_.$new();
     q = _$q_;
     urlBase = _Config_.getAdminServiceUrl();
+    HelpdeskMockData = _HelpdeskMockData_;
+    CsdmConverter = _CsdmConverter_;
 
     $httpBackend = _$httpBackend_;
     $httpBackend
@@ -109,27 +111,27 @@ describe('HelpdeskService', function () {
       "acknowledged": false,
       "emailSubscribers": "",
       "enabled": false,
-      "id": "squared-not-fusion",
+      "id": "squared-not-fusion"
     }, {
       "acknowledged": false,
       "emailSubscribers": "",
       "enabled": false,
-      "id": "squared-fusion-uc",
+      "id": "squared-fusion-uc"
     }, {
       "acknowledged": false,
       "emailSubscribers": "",
       "enabled": false,
-      "id": "squared-fusion-cal",
+      "id": "squared-fusion-cal"
     }, {
       "acknowledged": false,
       "emailSubscribers": "",
       "enabled": false,
-      "id": "squared-fusion-mgmt",
+      "id": "squared-fusion-mgmt"
     }, {
       "acknowledged": false,
       "emailSubscribers": "",
       "enabled": false,
-      "id": "squared-a-cool-service",
+      "id": "squared-a-cool-service"
     }];
 
     sinon.stub(ServiceDescriptor, 'servicesInOrg');
@@ -149,4 +151,59 @@ describe('HelpdeskService', function () {
     expect(result[2].id).toEqual("squared-fusion-mgmt");
   });
 
+  it('finds cloudberry devices by display name', function () {
+    var result = Service.filterDevices('Testing DR', CsdmConverter.convertDevices(HelpdeskMockData.devices), 5);
+    expect(result.length).toBe(1);
+    expect(result[0].id).toEqual('94b3e13c-b1dd-5e2a-9b64-e3ca02de51d3');
+    expect(result[0].displayName).toEqual('Testing DR');
+
+    result = Service.filterDevices('test', CsdmConverter.convertDevices(HelpdeskMockData.devices), 5);
+    expect(result.length).toBe(2);
+    expect(result[0].id).toEqual('94b3e13c-b1dd-5e2a-9b64-e3ca02de51d3');
+    expect(result[0].displayName).toEqual('Testing DR');
+    expect(result[1].id).toEqual('7cdf6cbe-6f84-5338-9064-87a20ec6f9c8');
+    expect(result[1].displayName).toEqual('schnappi test');
+
+    result = Service.filterDevices('balle', CsdmConverter.convertDevices(HelpdeskMockData.devices), 5);
+    expect(result.length).toBe(0);
+  });
+
+  it('finds cloudberry devices by serial', function () {
+    var result = Service.filterDevices('FTT1927036B', CsdmConverter.convertDevices(HelpdeskMockData.devices), 5);
+    expect(result.length).toBe(1);
+    expect(result[0].id).toEqual('c1641e38-4782-52ad-8953-e3e3f3aee5c0');
+    expect(result[0].displayName).toEqual('Ellie');
+
+    result = Service.filterDevices('FTT', CsdmConverter.convertDevices(HelpdeskMockData.devices), 10);
+    expect(result.length).toBe(6);
+  });
+
+  it('finds cloudberry devices by MAC address', function () {
+    // E8:ED:F3:B5:DB:8F should match when removing ':' or using any of '.','-' or no separator
+    var result = Service.filterDevices('E8:ED:F3:B5:DB:8F', CsdmConverter.convertDevices(HelpdeskMockData.devices), 5);
+    expect(result.length).toBe(1);
+    expect(result[0].id).toEqual('56c6a1f4-1e9d-50fc-b560-21496452ba72');
+    expect(result[0].displayName).toEqual('manyhus-sx20');
+
+    result = Service.filterDevices('E8EDF3B5DB8F', CsdmConverter.convertDevices(HelpdeskMockData.devices), 5);
+    expect(result.length).toBe(1);
+    expect(result[0].id).toEqual('56c6a1f4-1e9d-50fc-b560-21496452ba72');
+
+    result = Service.filterDevices('E8-ED-F3-B5-DB-8F', CsdmConverter.convertDevices(HelpdeskMockData.devices), 5);
+    expect(result.length).toBe(1);
+    expect(result[0].id).toEqual('56c6a1f4-1e9d-50fc-b560-21496452ba72');
+
+    result = Service.filterDevices('E8.ED.F3.B5.DB.8F', CsdmConverter.convertDevices(HelpdeskMockData.devices), 5);
+    expect(result.length).toBe(1);
+    expect(result[0].id).toEqual('56c6a1f4-1e9d-50fc-b560-21496452ba72');
+
+    result = Service.filterDevices('DC:EB', CsdmConverter.convertDevices(HelpdeskMockData.devices), 10);
+    expect(result.length).toBe(1);
+    expect(result[0].id).toEqual('7cdf6cbe-6f84-5338-9064-87a20ec6f9c8');
+    expect(result[0].displayName).toEqual('schnappi test');
+
+    result = Service.filterDevices('DCEB', CsdmConverter.convertDevices(HelpdeskMockData.devices), 10);
+    expect(result.length).toBe(1);
+    expect(result[0].id).toEqual('7cdf6cbe-6f84-5338-9064-87a20ec6f9c8');
+  });
 });

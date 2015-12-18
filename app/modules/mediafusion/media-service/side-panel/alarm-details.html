@@ -1,5 +1,35 @@
 <cs-sp-container class="mediafusion-settings-table">
-  <cs-sp-section>
+  <cs-sp-section ng-if="alarmCtrl.alarm.alarm">
+    <div class="section-title-row section-name">
+      {{alarmCtrl.alarm.alarm.title}}
+    </div>
+    <table>
+      <tbody>
+      <tr>
+        <td translate="mediaFusion.alarms.severity"></td>
+        <td><span
+          ng-class="alarmCtrl.alarm.alarm.severity == 'warning' ? 'hercules-state-disabled' : 'hercules-state-alarm'">{{'mediaFusion.alarms.' + alarmCtrl.alarm.alarm.severity | translate}}</span>
+        </td>
+      </tr>
+      <tr>
+        <td translate="mediaFusion.alarms.firstReported"></td>
+        <td><span>{{alarmCtrl.alarm.alarm.first_reported | date : 'medium'}}</span></td>
+      </tr>
+      <tr>
+        <td translate="mediaFusion.alarms.lastReported"></td>
+        <td><span>{{alarmCtrl.alarm.alarm.last_reported | date : 'medium'}}</span></td>
+      </tr>
+      <tr>
+        <td translate="mediaFusion.alarms.hostImpact"></td>
+        <td>
+          <span data-ng-repeat="host in alarmCtrl.alarm.hosts">{{host}}<span ng-show=" !$last ">,</span></span>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </cs-sp-section>
+
+  <cs-sp-section ng-if="!alarmCtrl.alarm.alarm">
     <div class="section-title-row section-name">
       {{alarmCtrl.alarm.title}}
     </div>

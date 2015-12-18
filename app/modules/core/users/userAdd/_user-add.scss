@@ -518,7 +518,7 @@
     .icon-arrow-down {
       &:after {
         /*this is the X icon that appears when no DNs are available*/
-        content: $icon-error;
+        content: char-from-code($icon-error);
         top: 0;
         left: -12px;
         position: absolute;
@@ -536,7 +536,7 @@
     .icon-arrow-down {
       &:after {
         /*this is the X icon that appears when no DNs are available*/
-        content: $icon-warning;
+        content: char-from-code($icon-warning);
         top: 0;
         left: -12px;
         position: absolute;
