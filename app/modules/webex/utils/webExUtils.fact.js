@@ -464,12 +464,14 @@
             xhrFields: {
               withCredentials: true
             },
+
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
             },
             timeout: 250
           });
           promise = $q.when(jqpromise); //convert into angularjs promise
+
         }
         return promise;
       };

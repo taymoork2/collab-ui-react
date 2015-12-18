@@ -74,7 +74,6 @@
       parser.href = $scope.iframeUrl;
       $rootScope.nginxHost = parser.hostname;
       $log.log("nginxHost " + $rootScope.nginxHost);
-
       $timeout(
         function loadIframe() {
           var submitFormBtn = document.getElementById('submitFormBtn');
