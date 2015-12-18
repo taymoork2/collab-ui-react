@@ -25,8 +25,8 @@ describe('Controller: AARouteToHGCtrl', function () {
   }];
 
   var schedule = 'openHours';
-  var index = '0';
-  var keyIndex = '0';
+  var index = 0;
+  var keyIndex = 0;
 
   var rawCeInfos = getJSONFixture('huron/json/autoAttendant/callExperiencesWithNumber.json');
 

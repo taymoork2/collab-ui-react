@@ -33,13 +33,15 @@
     /////////////////////
 
     function populateUiModel() {
-      vm.hgSelected.description = vm.menuKeyEntry.actions[0].getDescription();
       vm.hgSelected.id = vm.menuKeyEntry.actions[0].getValue();
+      vm.hgSelected.description = _.result(_.find(vm.huntGroups, {
+        'id': vm.hgSelected.id
+      }), 'description', '');
+
     }
 
     function saveUiModel() {
       vm.menuKeyEntry.actions[0].setValue(vm.hgSelected.id);
-      vm.menuKeyEntry.actions[0].setDescription(vm.hgSelected.description);
     }
 
     function getHuntGroups() {
