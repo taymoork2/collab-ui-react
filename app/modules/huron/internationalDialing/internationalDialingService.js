@@ -7,20 +7,9 @@
 
   /* @ngInject */
   function InternationalDialing(Authinfo, $q, $translate, UserCosRestrictionServiceV2) {
-    var cbUseGlobal = {
-      opt: $translate.instant('internationalDialingPanel.useGlobal'),
-      val: '-1'
-    };
-    var cbAlwaysAllow = {
-      opt: $translate.instant('internationalDialingPanel.alwaysAllow'),
-      val: '1'
-    };
-    var cbNeverAllow = {
-      opt: $translate.instant('internationalDialingPanel.neverAllow'),
-      val: '0'
-    };
-
     return {
+      INTERNATIONAL_DIALING: 'DIALINGCOSTAG_INTERNATIONAL',
+
       listCosRestrictions: function (curUserId) {
         return UserCosRestrictionServiceV2.query({
           customerId: Authinfo.getOrgId(),

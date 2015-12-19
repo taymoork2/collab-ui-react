@@ -9,7 +9,6 @@
   function InternationalDialingInfoCtrl($scope, $stateParams, $translate, $modal, $q, UserServiceCommon, Notification, HttpUtils, InternationalDialing) {
     var vm = this;
 
-    var INTERNATIONAL_DIALING = 'DIALINGCOSTAG_INTERNATIONAL';
     var cbUseGlobal = {
       opt: $translate.instant('internationalDialingPanel.useGlobal'),
       val: '-1'
@@ -24,7 +23,8 @@
     };
 
     vm.currentUser = $stateParams.currentUser;
-    vm.saveInternationalDialing = saveInternationalDialing;
+    vm.save = save;
+    vm.init = init;
     vm.reset = reset;
     vm.saveInProcess = false;
     vm.validInternationalDialingOptions = [];
@@ -61,11 +61,11 @@
         var custRestriction = null;
         var cosRestriction = null;
 
-        for (var i = 0; i < cosRestrictions.length; i++) {
-          cosRestriction = cosRestrictions[i];
+        angular.forEach(cosRestrictions, function (restriction) {
+          cosRestriction = restriction;
           if (cosRestriction.user.length > 0) {
             for (var j = 0; j < cosRestriction.user.length; j++) {
-              if (cosRestriction.user[j].restriction === INTERNATIONAL_DIALING) {
+              if (cosRestriction.user[j].restriction === InternationalDialing.INTERNATIONAL_DIALING) {
                 overRide = true;
                 break;
               }
@@ -73,14 +73,13 @@
           }
           if (cosRestriction.customer.length > 0) {
             for (var k = 0; k < cosRestriction.customer.length; k++) {
-              if (cosRestriction.customer[k].restriction === INTERNATIONAL_DIALING) {
+              if (cosRestriction.customer[k].restriction === InternationalDialing.INTERNATIONAL_DIALING) {
                 custRestriction = true;
                 break;
               }
             }
           }
-
-        }
+        });
         if (overRide) {
           if (cosRestriction.user[0].blocked) {
             vm.model.internationalDialingEnabled = cbNeverAllow;
@@ -89,7 +88,6 @@
           }
           vm.model.internationalDialingUuid = cosRestriction.user[0].uuid;
         }
-        var globalText;
         if (custRestriction) {
           cbUseGlobal.opt = $translate.instant('internationalDialingPanel.useGlobal') + "(" + $translate.instant('internationalDialingPanel.off') + ")";
         } else {
@@ -114,9 +112,9 @@
       init();
     }
 
-    function saveInternationalDialing() {
+    function save() {
       var cosType = {
-        restriction: INTERNATIONAL_DIALING,
+        restriction: InternationalDialing.INTERNATIONAL_DIALING,
         blocked: false
       };
       var result = {

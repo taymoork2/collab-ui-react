@@ -326,16 +326,13 @@ describe('Controller: HuronSettingsCtrl', function () {
     expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
   });
 
-  it('should disable international dialing when toggle is OFF', function () {
+  it('should show international dialing when feature toggle is ON', function () {
     controller.CosFeatureEnabled = true;
 
     controller.save();
     $scope.$apply();
 
     expect(ServiceSetup.updateCosRestriction).toHaveBeenCalled();
-    expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
-    expect(ServiceSetup.updateSite).toHaveBeenCalled();
-    expect(ServiceSetup.updateCustomer).toHaveBeenCalled();
     expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
   });
 

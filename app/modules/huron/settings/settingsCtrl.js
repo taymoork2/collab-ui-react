@@ -638,11 +638,6 @@
           site.disableVoicemail = true;
         }
 
-        // Company Caller ID
-        promises.push(saveCompanyCallerId().catch(function (response) {
-          errors.push(Notification.processErrorResponse(response, 'huronSettings.companyCallerIdsaveError'));
-        }));
-
         return ServiceSetup.updateSite(ServiceSetup.sites[0].uuid, site)
           .then(function () {
             // Set the new site voicemail pilot number
@@ -1079,8 +1074,7 @@
       var cosType = {
         restriction: INTERNATIONAL_DIALING
       };
-      return ServiceSetup.updateCosRestriction(vm.model.internationalDialingEnabled,
-        vm.model.internationalDialingUuid, cosType).then(function () {
+      return ServiceSetup.updateCosRestriction(vm.model.internationalDialingEnabled, vm.model.internationalDialingUuid, cosType).then(function () {
         getInternationalDialing();
       });
     }

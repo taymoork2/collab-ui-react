@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: TelephonyInfoService', function () {
-  var $httpBackend, $q, HuronConfig, TelephonyInfoService, ServiceSetup, DirectoryNumber, HuronCustomer, InternationalDialing, FeatureToggleService;
+  var $httpBackend, $q, HuronConfig, TelephonyInfoService, ServiceSetup, DirectoryNumber, HuronCustomer, InternationalDialing;
 
   var internalNumbers, externalNumbers, getExternalNumberPool;
 

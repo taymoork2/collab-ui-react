@@ -39,7 +39,7 @@ describe('Controller: InternationalDialingInfoCtrl', function () {
   }));
 
   it('should update international dialing when toggle is OFF', function () {
-    controller.saveInternationalDialing();
+    controller.save();
     $scope.$apply();
 
     expect(InternationalDialing.updateCosRestriction).toHaveBeenCalled();

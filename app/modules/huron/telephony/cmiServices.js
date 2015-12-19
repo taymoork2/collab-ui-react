@@ -384,10 +384,8 @@
   })
 
   .factory('UserCosRestrictionServiceV2', function ($resource, HuronConfig) {
-    //var baseUrl = HuronConfig.getMockHgUrl();
     var baseUrl = HuronConfig.getCmiV2Url();
     return $resource(baseUrl + '/customers/:customerId/users/:userId/features/restrictions/:restrictionId', {
-      //secret: 'sunlight', // TODO: Remove this parameter when Mock is replaced with CmiV2.
       customerId: '@customerId',
       userId: '@userId',
       restrictionId: '@restrictionId'
@@ -399,10 +397,8 @@
   })
 
   .factory('CustomerCosRestrictionServiceV2', function ($resource, HuronConfig) {
-    //var baseUrl = HuronConfig.getMockHgUrl();
     var baseUrl = HuronConfig.getCmiV2Url();
     return $resource(baseUrl + '/customers/:customerId/features/restrictions/:restrictionId', {
-      //secret: 'sunlight', // TODO: Remove this parameter when Mock is replaced with CmiV2.
       customerId: '@customerId',
       restrictionId: '@restrictionId'
     });
