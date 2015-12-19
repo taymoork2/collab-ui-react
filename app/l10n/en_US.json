@@ -1580,7 +1580,8 @@
     "features": "Features",
     "or": "or",
     "voicemail": "Voicemail",
-    "singleNumberReach": "Single Number Reach"
+    "singleNumberReach": "Single Number Reach",
+    "internationalDialing": "International Dialing"
   },
   "directoryNumberPanel": {
     "title": "Line Configuration",
@@ -1665,6 +1666,19 @@
     "error": "Single Number Reach configuration failed.",
     "unitedStates": "United States of America",
     "austrailia": "Austrailia"
+  },
+  "internationalDialingPanel": {
+    "success": "International Dialing configuration saved successfully",
+    "error": "International Dialing configuration failed. ",
+    "title": "International Dialing",
+    "toggle": "International Dialing",
+    "disableInternationalDialingTitle": "Disable International Dialing",
+    "disableInternationalDialingDialogue": "Disabling International Dialing will prevent user from making international calls.  Do you want to disable this user's Interrnational Dialing?",
+    "useGlobal": "Global Settings",
+    "alwaysAllow": "Always Allow",
+    "neverAllow": "Never Allow",
+    "on": "ON",
+    "off": "OFF"
   },
   "voicemailPanel": {
     "success": "Voicemail configuration saved successfully",
@@ -1934,9 +1948,14 @@
     "callerIdName": "Caller ID Name",
     "callerIdNumber": "Caller ID Number"
   },
+  "internationalDialing": {
+    "internationalDialing": "International Dialing",
+    "internationalDialingDesc": "Users inherit this setting by default.  Exception can be made at the individual user's settings."
+  },
   "huronSettings": {
     "saveSuccess": "Settings successfully saved.",
-    "companyCallerIdsaveError": "Company Caller ID failed to save."
+    "companyCallerIdsaveError": "Company Caller ID failed to save.",
+    "internationalDialingSaveError": "International Dialing failed to save."
   },
   "didManageModal": {
     "title": "Manage Phone Numbers",

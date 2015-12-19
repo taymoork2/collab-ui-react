@@ -3,12 +3,13 @@
 describe('Controller: HuronSettingsCtrl', function () {
   var controller, $controller, $scope, $q, CallerId, ExternalNumberService, Notification, DialPlanService;
   var HuronCustomer, ServiceSetup;
-  var customer, timezones, timezone, voicemailCustomer, internalNumberRanges, sites, site, companyNumbers;
+  var customer, timezones, timezone, voicemailCustomer, internalNumberRanges, sites, site, companyNumbers, FeatureToggleService;
+  var getDeferred;
 
   beforeEach(module('Huron'));
 
   beforeEach(inject(function ($rootScope, _$controller_, _$q_, _CallerId_, _ExternalNumberService_, _DialPlanService_,
-    _Notification_, _HuronCustomer_, _ServiceSetup_) {
+    _Notification_, _HuronCustomer_, _ServiceSetup_, _FeatureToggleService_) {
 
     $scope = $rootScope.$new();
     $controller = _$controller_;
@@ -18,6 +19,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     HuronCustomer = _HuronCustomer_;
     DialPlanService = _DialPlanService_;
     ServiceSetup = _ServiceSetup_;
+    FeatureToggleService = _FeatureToggleService_;
     $q = _$q_;
 
     customer = getJSONFixture('huron/json/settings/customer.json');
@@ -28,6 +30,9 @@ describe('Controller: HuronSettingsCtrl', function () {
     site = sites[0];
     companyNumbers = getJSONFixture('huron/json/settings/companyNumbers.json');
     voicemailCustomer = getJSONFixture('huron/json/settings/voicemailCustomer.json');
+
+    //create mock deferred object which will be used to return promises
+    getDeferred = $q.defer();
 
     spyOn(HuronCustomer, 'get').and.returnValue($q.when(customer));
     spyOn(ServiceSetup, 'updateVoicemailTimezone').and.returnValue($q.when());
@@ -42,6 +47,7 @@ describe('Controller: HuronSettingsCtrl', function () {
       ServiceSetup.sites = sites;
       return $q.when();
     });
+    spyOn(FeatureToggleService, 'supports').and.returnValue(getDeferred.promise);
     spyOn(ServiceSetup, 'getSite').and.returnValue($q.when(site));
     spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.when(voicemailCustomer));
     spyOn(ServiceSetup, 'updateSite').and.returnValue($q.when());
