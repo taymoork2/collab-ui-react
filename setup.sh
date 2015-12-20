@@ -87,7 +87,9 @@ time_start=$(date +"%s")
 
 # Install dependecies
 # bundle install
+COMMIT_ID=`git log -n1 --pretty=format:'%h'`
 npm install
+npm shrinkwrap --dev && mv npm-shrinkwrap.json ./.cache/npm-shrinkwrap-for-${COMMIT_ID}.json
 npm update -g bower
 
 time_npm=$(date +"%s")
