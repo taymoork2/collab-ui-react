@@ -200,9 +200,12 @@ angular
         })
         .state('downloads', {
           url: '/downloads',
-          templateUrl: 'modules/squared/views/downloads.html',
-          controller: 'DownloadsCtrl',
-          parent: 'main',
+          views: {
+            'main@': {
+              templateUrl: 'modules/squared/views/downloads.html',
+              controller: 'DownloadsCtrl'
+            }
+          },
           authenticate: false
         })
         .state('profile', {
@@ -441,6 +444,14 @@ angular
           template: '<div uc-single-number-reach></div>',
           data: {
             displayName: 'Single Number Reach'
+          }
+        })
+        .state('user-overview.communication.internationalDialing', {
+          controller: 'InternationalDialingInfoCtrl',
+          controllerAs: 'internationalDialing',
+          template: '<div uc-international-dialing></div>',
+          data: {
+            displayName: 'International Dialing'
           }
         })
         .state('user-overview.messaging', {
@@ -1018,6 +1029,11 @@ angular
           abstract: true,
           sticky: true
         })
+        .state('helpdesklaunch', {
+          url: '/helpdesklaunch',
+          templateUrl: 'modules/squared/helpdesk/helpdesk-launch.html',
+          parent: 'main'
+        })
         .state('helpdesk', {
           url: '/helpdesk',
           template: '<div ui-view></div>',
@@ -1244,6 +1260,15 @@ angular
           templateUrl: 'modules/core/trials/trialCall.tpl.html',
           controller: 'TrialCallCtrl',
           controllerAs: 'callTrial'
+        })
+        .state('trialAdd.addNumbers', {
+          templateUrl: 'modules/core/trials/addNumbers.tpl.html',
+          controller: 'DidAddCtrl',
+          controllerAs: 'didAdd',
+          params: {
+            currentTrial: {},
+            currentOrg: {},
+          }
         })
         .state('trialEdit', {
           abstract: true,

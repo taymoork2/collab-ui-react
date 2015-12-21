@@ -409,6 +409,14 @@
         action = new Action('runActionsOnInput', '');
         if (angular.isDefined(inAction.runActionsOnInput.inputType)) {
           action.inputType = inAction.runActionsOnInput.inputType;
+          // check if this dial-by-extension
+          if (action.inputType === 2 &&
+            angular.isDefined(inAction.runActionsOnInput.prompts.sayList)) {
+            var sayList = inAction.runActionsOnInput.prompts.sayList;
+            if (sayList.length > 0 && angular.isDefined(sayList[0].value)) {
+              action.value = inAction.runActionsOnInput.prompts.sayList[0].value;
+            }
+          }
         }
         menuEntry.addAction(action);
       } else if (angular.isDefined(inAction.goto)) {
@@ -832,9 +840,7 @@
             newActionArray[i][actionName].treatment = val;
           }
         } else if (actionName === 'runActionsOnInput') {
-          if (actions[i].inputType) {
-            newActionArray[i][actionName].inputType = actions[i].inputType;
-          }
+          newActionArray[i][actionName] = populateRunActionsOnInput(actions[i]);
         }
         if (angular.isDefined(actions[i].description) && actions[i].description.length > 0) {
           newActionArray[i][actionName].description = actions[i].description;
@@ -843,6 +849,36 @@
       return newActionArray;
     }
 
+    /*
+     * Set the defaults for Dial by Extension
+     */
+    function populateRunActionsOnInput(action) {
+      var newAction = {};
+      if (angular.isDefined(action.inputType)) {
+        newAction.inputType = action.inputType;
+        if (newAction.inputType == 2 && angular.isDefined(action.value)) {
+          var prompts = {};
+          var sayListArr = [];
+          var sayList = {};
+          sayList.value = action.value;
+          sayListArr[0] = sayList;
+          prompts.sayList = sayListArr;
+          newAction.prompts = prompts;
+          var rawInputAction = {};
+          var routeToExtension = {};
+          routeToExtension.destination = '$Input';
+          routeToExtension.description = action.description;
+          rawInputAction.routeToExtension = routeToExtension;
+          newAction.rawInputActions = [];
+          newAction.rawInputActions[0] = rawInputAction;
+          newAction.minNumberOfCharacters = 4;
+          newAction.maxNumberOfCharacters = 4;
+          newAction.attempts = 3;
+          newAction.repeats = 2;
+        }
+      }
+      return newAction;
+    }
     /*
      * Read aaMenu and populate mainMenu object
      */
@@ -878,6 +914,14 @@
         inputAction.attempts = aaMenu.attempts;
         inputAction.language = menuEntry.getLanguage();
         inputAction.voice = menuEntry.getVoice();
+        // for Dial by Extension we need to copy the Phone Menu voice & language
+        _.each(newOptionArray, function (obj) {
+          if (obj.actions[0].runActionsOnInput &&
+            obj.actions[0].runActionsOnInput.inputType === 2) {
+            obj.actions[0].runActionsOnInput.voice = inputAction.voice;
+            obj.actions[0].runActionsOnInput.language = inputAction.language;
+          }
+        });
       }
 
       if (aaMenu.headers.length > 1) {

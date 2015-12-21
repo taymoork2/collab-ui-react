@@ -90,9 +90,9 @@ describe('Partner Service', function () {
   });
 
   it('should successfully return the corresponding license object or an empty object from calling getLicense', function () {
-    expect(PartnerService.getLicense(testData.licenses, "messaging")).toEqual(testData.licenses[0]);
-    expect(PartnerService.getLicense(testData.licenses, "conferencing")).toEqual(testData.licenses[1]);
-    expect(PartnerService.getLicense(testData.licenses, "communications")).toEqual(testData.licenses[2]);
+    expect(PartnerService.getLicense(testData.licenses, Config.offerCodes.MS)).toEqual(testData.licenses[0]);
+    expect(PartnerService.getLicense(testData.licenses, Config.offerCodes.CF)).toEqual(testData.licenses[1]);
+    expect(PartnerService.getLicense(testData.licenses, Config.offerCodes.CO)).toEqual(testData.licenses[2]);
   });
 
   it('should successfully return a boolean on whether or not a license is available from calling isLicenseInfoAvailable', function () {

@@ -72,7 +72,6 @@
     vm.customer = undefined;
     vm.hideFieldInternalNumberRange = false;
     vm.hideFieldSteeringDigit = false;
-    vm.hideCompanyVoicemail = true;
 
     vm.validations = {
       greaterThan: function (viewValue, modelValue, scope) {
@@ -417,9 +416,6 @@
         }
       },
       expressionProperties: {
-        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-          return vm.form.$invalid;
-        },
         'hide': function () {
           if (vm.model.displayNumberRanges.length > 9) {
             return true;
@@ -427,23 +423,30 @@
             return vm.hideFieldInternalNumberRange;
           }
         }
+      },
+      controller: function ($scope) {
+        $scope.$watch(function () {
+          return vm.form.$invalid;
+        }, function () {
+          if (vm.form.$invalid) {
+            $scope.options.templateOptions.disabled = true;
+          } else {
+            $scope.options.templateOptions.disabled = false;
+          }
+        });
       }
     }, {
       // Since it is possible to have both the FTSW and
       // huron settings page in the DOM at the same time the id
-      // or key has to be unique. To avoid having the same id
+      // or key has to be unique to avoid having the same id
       // for these elements. See settingsCtrl.js
       key: 'ftswCompanyVoicemail',
       type: 'nested',
       className: 'service-setup',
       templateOptions: {
+        inputClass: 'service-setup-company-voicemail',
         label: $translate.instant('serviceSetupModal.companyVoicemail'),
         description: $translate.instant('serviceSetupModal.companyVoicemailDescription')
-      },
-      expressionProperties: {
-        'hide': function () {
-          return vm.hideCompanyVoicemail;
-        }
       },
       data: {
         fields: [{
@@ -458,7 +461,9 @@
             inputPlaceholder: $translate.instant('directoryNumberPanel.searchNumber'),
             labelfield: 'pattern',
             valuefield: 'uuid',
-            filter: true
+            filter: true,
+            warnMsg: $translate.instant('serviceSetupModal.voicemailNoExternalNumbersError'),
+            isWarn: false
           },
           expressionProperties: {
             'templateOptions.required': function () {
@@ -474,30 +479,14 @@
             }, function (externalNumberPoolBeautified) {
               $scope.to.options = externalNumberPoolBeautified;
             });
-
             $scope.$watch(function () {
               return vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled;
-            }, function (newValue) {
-              var existingSiteVoicemailPilotNumber = _.get(vm, 'model.site.voicemailPilotNumber');
-              // Toggle is ON
-              if (newValue) {
-                if (existingSiteVoicemailPilotNumber) {
-                  // If an existing site voicemail pilot number exists set dropdown value to existing number.
-                  var foundVoicemailNumber = getBeautifiedExternalNumber(existingSiteVoicemailPilotNumber);
-                  if (foundVoicemailNumber) {
-                    // If a matching external number was found, use that number.
-                    vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = foundVoicemailNumber;
-                  } else {
-                    // Create a psudeo pilot number and use it so we don't mess up customer voicemail settings.
-                    // TODO: Likely this is a real problem and should be addressed with more than just an error.
-                    Notification.error('serviceSetupModal.mapCompanyVoicemailToExternalNumberError');
-
-                    var psuedoPilotNumber = {};
-                    psuedoPilotNumber.pattern = TelephoneNumberService.getDIDLabel(existingSiteVoicemailPilotNumber);
-                    vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = psuedoPilotNumber;
-                  }
-                } else {
+            }, function (toggleValue) {
+              if (toggleValue && !vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber) {
+                if (vm.externalNumberPoolBeautified.length > 0) {
                   vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = vm.externalNumberPoolBeautified[0];
+                } else {
+                  $scope.options.templateOptions.isWarn = true;
                 }
               }
             });
@@ -586,24 +575,18 @@
               vm.model.site.voicemailPilotNumber = undefined;
             } else if (voicemail.pilotNumber) {
               vm.model.site.voicemailPilotNumber = voicemail.pilotNumber;
+              vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
+
+              var existingVoicemailNumber = {};
+              existingVoicemailNumber.pattern = TelephoneNumberService.getDIDLabel(voicemail.pilotNumber);
+              vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = existingVoicemailNumber;
             }
           }).catch(function (response) {
             Notification.errorResponse(response, 'serviceSetupModal.voicemailGetError');
           });
         }
       }).then(function () {
-        return loadExternalNumberPool().then(function () {
-          if (_.get(vm, 'externalNumberPoolBeautified.length') > 0) {
-            if (vm.model.site.voicemailPilotNumber) {
-              vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
-              vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = getBeautifiedExternalNumber(_.get(vm, 'model.site.voicemailPilotNumber'));
-            }
-            vm.hideCompanyVoicemail = false;
-          } else {
-            // No direct lines exist for company
-            Notification.error('serviceSetupModal.voicemailNoExternalNumbersError');
-          }
-        });
+        return loadExternalNumberPool();
       });
     }
 

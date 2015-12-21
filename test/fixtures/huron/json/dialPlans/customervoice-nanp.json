@@ -6,6 +6,17 @@
   "name": "Customer for Atlas Unit Test",
   "carrierIdCode": "",
   "dialPlan": null,
+  "dialPlanDetails": {
+    "regionCodeRequired": null,
+    "steeringDigitRequired": null,
+    "callingSearchSpace": null,
+    "supportMultipleRegions": null,
+    "steeringDigitPattern": null,
+    "supportSiteCode": null,
+    "supportSiteSteeringDigit": null,
+    "extensionGenerated": null,
+    "countryCode": null
+  },
   "callManagerGroup": {
     "name": "CMG-1-2",
     "uuid": "00000000-0000-0000-0000-000000000002"

@@ -88,7 +88,7 @@
         label: $translate.instant('autoAttendant.phoneMenuDialExt'),
         name: 'phoneMenuDialExt',
         action: 'runActionsOnInput',
-        inputType: '2'
+        inputType: 2
       },
       // {
       //   label: $translate.instant('autoAttendant.phoneMenuRouteUser'),

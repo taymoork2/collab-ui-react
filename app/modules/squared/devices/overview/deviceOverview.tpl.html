@@ -87,6 +87,15 @@
         </button>
 
         <button
+          ng-click="deviceOverview.resetDevice()"
+          class="btn btn--primary"
+          ng-if="deviceOverview.currentDevice.canReset">
+          <span
+            translate="spacesPage.reset">
+          </span>
+        </button>
+
+        <button
           class="btn btn--primary"
           sq-click-promise="deviceOverview.reportProblem()"
           ng-if="deviceOverview.currentDevice.canReportProblem">

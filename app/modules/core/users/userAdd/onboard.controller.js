@@ -67,6 +67,7 @@ angular.module('Core')
           .finally(function () {
             if ($scope.showExtensions === true) {
               assignDNForUserList();
+              $scope.validateDnForUser();
             } else {
               mapDidToDn();
             }

@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: TelephonyInfoService', function () {
-  var $httpBackend, $q, HuronConfig, TelephonyInfoService, ServiceSetup, DirectoryNumber, HuronCustomer;
+  var $httpBackend, $q, HuronConfig, TelephonyInfoService, ServiceSetup, DirectoryNumber, HuronCustomer, InternationalDialing;
 
   var internalNumbers, externalNumbers, getExternalNumberPool;
 
@@ -149,6 +149,15 @@ describe('Service: TelephonyInfoService', function () {
       $httpBackend.flush();
     });
 
+  });
+
+  describe('getInternationalDialing function', function () {
+    beforeEach(function () {
+      var cosRestrictions = getJSONFixture('huron/json/user/cosRestrictions.json');
+
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/1/users/2/features/restrictions').respond(cosRestrictions);
+      $httpBackend.flush();
+    });
   });
 
 });

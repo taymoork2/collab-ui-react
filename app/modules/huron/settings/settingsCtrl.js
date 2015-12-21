@@ -6,7 +6,7 @@
 
   /* @ngInject */
   function HuronSettingsCtrl($scope, Authinfo, $q, $translate, HttpUtils, Notification, ServiceSetup,
-    CallerId, ExternalNumberService, HuronCustomer, ValidationService, TelephoneNumberService, DialPlanService) {
+    CallerId, ExternalNumberService, HuronCustomer, ValidationService, TelephoneNumberService, DialPlanService, FeatureToggleService) {
 
     var vm = this;
     var DEFAULT_SITE_INDEX = '000001';
@@ -24,7 +24,11 @@
     var VOICE_ONLY = 'VOICE_ONLY';
     var DEMO_STANDARD = 'DEMO_STANDARD';
 
+    var INTERNATIONAL_DIALING = 'DIALINGCOSTAG_INTERNATIONAL';
+
     var companyCallerIdType = 'Company Caller ID';
+
+    vm.CosFeatureEnabled = false;
     vm.processing = false;
     vm.hideFieldSteeringDigit = undefined;
     vm.loading = true;
@@ -61,9 +65,10 @@
       companyVoicemail: {
         companyVoicemailEnabled: false,
         companyVoicemailNumber: undefined
-      }
+      },
+      internationalDialingEnabled: false,
+      internationalDialingUuid: null
     };
-    vm.hideCompanyVoicemail = true;
 
     var savedModel = null;
     vm.validations = {
@@ -387,6 +392,19 @@
           }
         }
       }
+    }, {
+      type: 'switch',
+      key: 'internationalDialingEnabled',
+      className: 'international-dialing',
+      templateOptions: {
+        label: $translate.instant('internationalDialing.internationalDialing'),
+        description: $translate.instant('internationalDialing.internationalDialingDesc')
+      },
+      expressionProperties: {
+        'hide': function () {
+          return !vm.CosFeatureEnabled;
+        }
+      }
     }];
 
     vm.rightPanelFields = [{
@@ -458,15 +476,10 @@
     }, {
       key: 'companyVoicemail',
       type: 'nested',
-      className: 'service-setup',
+      className: 'company-voicemail-id',
       templateOptions: {
         label: $translate.instant('serviceSetupModal.companyVoicemail'),
         description: $translate.instant('serviceSetupModal.companyVoicemailDescription')
-      },
-      expressionProperties: {
-        'hide': function () {
-          return vm.hideCompanyVoicemail;
-        }
       },
       data: {
         fields: [{
@@ -475,13 +488,15 @@
         }, {
           key: 'companyVoicemailNumber',
           type: 'select',
-          className: 'service-setup-company-voicemail-number',
+          className: 'company-voicemail-number',
           templateOptions: {
             options: [],
             inputPlaceholder: $translate.instant('directoryNumberPanel.searchNumber'),
             labelfield: 'pattern',
             valuefield: 'uuid',
-            filter: true
+            filter: true,
+            warnMsg: $translate.instant('serviceSetupModal.voicemailNoExternalNumbersError'),
+            isWarn: false
           },
           expressionProperties: {
             'templateOptions.required': function () {
@@ -497,30 +512,14 @@
             }, function (newExternalNumbers) {
               $scope.to.options = newExternalNumbers;
             });
-
             $scope.$watch(function () {
               return vm.model.companyVoicemail.companyVoicemailEnabled;
-            }, function (newValue) {
-              var existingSiteVoicemailPilotNumber = _.get(vm, 'model.site.voicemailPilotNumber');
-              // Toggle is ON
-              if (newValue) {
-                if (existingSiteVoicemailPilotNumber) {
-                  // If an existing site voicemail pilot number exists set dropdown value to existing number.
-                  var foundVoicemailNumber = getBeautifiedExternalNumber(existingSiteVoicemailPilotNumber);
-                  if (foundVoicemailNumber) {
-                    // If a matching external number was found, use that number.
-                    vm.model.companyVoicemail.companyVoicemailNumber = foundVoicemailNumber;
-                  } else {
-                    // Create a psudeo pilot number and use it so we don't screw up customer voicemail settings
-                    // TODO: Likely this is a real problem and should be addressed with more than just an error.
-                    Notification.error('serviceSetupModal.mapCompanyVoicemailToExternalNumberError');
-
-                    var psuedoPilotNumber = {};
-                    psuedoPilotNumber.pattern = TelephoneNumberService.getDIDLabel(existingSiteVoicemailPilotNumber);
-                    vm.model.companyVoicemail.companyVoicemailNumber = psuedoPilotNumber;
-                  }
-                } else {
+            }, function (toggleValue) {
+              if (toggleValue && !vm.model.companyVoicemail.companyVoicemailNumber) {
+                if (vm.externalNumberPoolBeautified.length > 0) {
                   vm.model.companyVoicemail.companyVoicemailNumber = vm.externalNumberPoolBeautified[0];
+                } else {
+                  $scope.options.templateOptions.isWarn = true;
                 }
               }
             });
@@ -541,6 +540,11 @@
       var promises = [];
       vm.loading = true;
       var errors = [];
+      var cosFeaturePromise = FeatureToggleService.supports(FeatureToggleService.features.huronClassOfService).then(function (toggle) {
+        if (toggle) {
+          vm.CosFeatureEnabled = true;
+        }
+      });
       promises.push(HuronCustomer.get().then(function (customer) {
         vm.customer = customer;
         angular.forEach(customer.links, function (service) {
@@ -556,6 +560,12 @@
         errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.customerGetError'));
       }).then(function () {
         return listInternalExtensionRanges();
+      }).then(function () {
+        if (vm.CosFeatureEnabled) {
+          return getInternationalDialing();
+        } else {
+          return;
+        }
       }).then(function () {
         return setServiceValues();
       }).then(function () {
@@ -576,29 +586,21 @@
             if (voicemail.pilotNumber === Authinfo.getOrgId()) {
               // There may be existing customers who have yet to set the company
               // voicemail number; likely they have it set to orgId.
-              // Remove this logic once we can confirm no existing customers are configured
-              // this way.
               vm.model.site.voicemailPilotNumber = undefined;
             } else if (voicemail.pilotNumber) {
               vm.model.site.voicemailPilotNumber = voicemail.pilotNumber;
+              vm.model.companyVoicemail.companyVoicemailEnabled = true;
+
+              var existingVoicemailNumber = {};
+              existingVoicemailNumber.pattern = TelephoneNumberService.getDIDLabel(voicemail.pilotNumber);
+              vm.model.companyVoicemail.companyVoicemailNumber = existingVoicemailNumber;
             }
           }).catch(function (response) {
             Notification.errorResponse(response, 'serviceSetupModal.voicemailGetError');
           });
         }
       }).then(function () {
-        return loadExternalNumberPool().then(function () {
-          if (_.get(vm, 'externalNumberPoolBeautified.length') > 0) {
-            if (vm.model.site.voicemailPilotNumber) {
-              vm.model.companyVoicemail.companyVoicemailEnabled = true;
-              vm.model.companyVoicemail.companyVoicemailNumber = getBeautifiedExternalNumber(_.get(vm, 'model.site.voicemailPilotNumber'));
-            }
-            vm.hideCompanyVoicemail = false;
-          } else {
-            // No direct lines exist for company
-            Notification.error('serviceSetupModal.voicemailNoExternalNumbersError');
-          }
-        });
+        return loadExternalNumberPool();
       }));
 
       // Caller ID
@@ -790,6 +792,11 @@
               }
               .bind(internalNumberRange)));
         });
+
+        // save International dialing
+        if (vm.CosFeatureEnabled) {
+          promises.push(saveInternationalDialing());
+        }
       }
 
       $q.all(promises)
@@ -1041,6 +1048,35 @@
         }
       }
       return deferred.promise;
+    }
+
+    function getInternationalDialing() {
+      return ServiceSetup.listCosRestrictions().then(function (cosRestrictions) {
+        var cosRestriction;
+        if (cosRestrictions.length > 0) {
+          cosRestriction = _.find(cosRestrictions, function (cosRestriction) {
+            if (cosRestriction.restrictions.length > 0) {
+              return cosRestriction.restrictions[0].restriction === INTERNATIONAL_DIALING;
+            }
+          });
+        }
+        if (cosRestriction) {
+          vm.model.internationalDialingEnabled = false;
+          vm.model.internationalDialingUuid = cosRestriction.restrictions[0].uuid;
+        } else {
+          vm.model.internationalDialingEnabled = true;
+          vm.model.internationalDialingUuid = null;
+        }
+      });
+    }
+
+    function saveInternationalDialing() {
+      var cosType = {
+        restriction: INTERNATIONAL_DIALING
+      };
+      return ServiceSetup.updateCosRestriction(vm.model.internationalDialingEnabled, vm.model.internationalDialingUuid, cosType).then(function () {
+        getInternationalDialing();
+      });
     }
 
     function resetForm() {
