@@ -2120,7 +2120,8 @@
       "reportAlarms": "reported alarms.",
       "software": "Software",
       "deregister_host": "DEREGISTER HOST",
-      "goToHost": "Go to Host"
+      "goToHost": "Go to Host",
+      "hosts": "Hosts"
     },
     "activateService": {
       "ingress": "Extend the Cloud to Your On-Premises Environment",
