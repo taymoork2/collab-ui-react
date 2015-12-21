@@ -83,6 +83,7 @@ angular.module('Squared').service('CsdmConverter',
       this.isUnused = true;
       this.canDelete = true;
       this.hasIssues = true;
+      this.image = "images/devices-hi/unknown.png";
       this.diagnosticsEvents = [{
         type: translateOrDefault('CsdmStatus.errorCodes.inactive.type', 'Account with no device'),
         message: translateOrDefault('CsdmStatus.errorCodes.inactive.message', 'There exists an account for a ' +
@@ -106,6 +107,7 @@ angular.module('Squared').service('CsdmConverter',
       this.readableActivationCode = getReadableActivationCode(obj);
       this.canDelete = true;
       this.canEditDisplayName = true;
+      this.image = "images/devices-hi/unknown.png";
       this.updateName = function (newName) {
         this.displayName = newName;
       };
