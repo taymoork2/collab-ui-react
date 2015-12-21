@@ -24,6 +24,7 @@
       TelephonyInfoService.getRemoteDestinationInfo(vm.currentUser.id);
       TelephonyInfoService.loadInternalNumberPool();
       TelephonyInfoService.loadExternalNumberPool();
+      TelephonyInfoService.getInternationalDialing(vm.currentUser.id);
       vm.telephonyInfo = TelephonyInfoService.getTelephonyInfoObject();
     }
   }

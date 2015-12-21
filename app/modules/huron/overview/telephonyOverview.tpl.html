@@ -45,6 +45,13 @@
             <i class="feature-arrow"></i>
           </a>
         </li>
+        <li class="feature" ng-if="telephonyOverview.telephonyInfo.CosFeatureEnabled">
+          <a ui-sref="user-overview.communication.internationalDialing">
+            <span class="feature-name" translate="telephonyPreview.internationalDialing"></span>
+            <span class="feature-status">{{telephonyOverview.telephonyInfo.internationalDialingEnabled}}</span>
+            <i class="feature-arrow"></i>
+          </a>
+        </li>
       </ul>
     </div>
   </cs-sp-section>

@@ -367,6 +367,41 @@
         method: 'PUT'
       }
     });
+  })
+
+  .factory('DialPlanCmiService', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiUrl() + '/voice/clusters/:clusterId/dialplans/:dialPlanId', {
+      clusterId: '@clusterId',
+      dialPlanId: '@dialPlanId'
+    });
+  })
+
+  .factory('DialPlanDetailsCmiService', function ($resource, HuronConfig) {
+    return $resource(HuronConfig.getCmiUrl() + '/voice/clusters/:clusterId/dialplandetails/:dialPlanId', {
+      clusterId: '@clusterId',
+      dialPlanId: '@dialPlanId'
+    });
+  })
+
+  .factory('UserCosRestrictionServiceV2', function ($resource, HuronConfig) {
+    var baseUrl = HuronConfig.getCmiV2Url();
+    return $resource(baseUrl + '/customers/:customerId/users/:userId/features/restrictions/:restrictionId', {
+      customerId: '@customerId',
+      userId: '@userId',
+      restrictionId: '@restrictionId'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  })
+
+  .factory('CustomerCosRestrictionServiceV2', function ($resource, HuronConfig) {
+    var baseUrl = HuronConfig.getCmiV2Url();
+    return $resource(baseUrl + '/customers/:customerId/features/restrictions/:restrictionId', {
+      customerId: '@customerId',
+      restrictionId: '@restrictionId'
+    });
   });
 
 })();

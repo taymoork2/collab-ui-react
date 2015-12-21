@@ -114,7 +114,6 @@
       model: vm.meetingTrial,
       key: 'enabled',
       type: 'checkbox',
-      hide: true,
       className: 'columns medium-12 checkbox-group',
       templateOptions: {
         label: $translate.instant('trials.meeting'),
@@ -122,7 +121,9 @@
         class: 'columns medium-12',
       },
       expressionProperties: {
-        'hide': '!vm.showMeeting',
+        'hide': function () {
+          return !vm.showMeeting;
+        },
         'templateOptions.disabled': function () {
           return !vm.canEditMeeting;
         },

@@ -1455,6 +1455,7 @@
     "phoneMenuRepeatFive": "Five Times",
     "phoneMenuHelp": "Select the desired language and voice which is used to speak the phrase to the caller. Say message is optional. If no message is entered, we will still listen for the caller's input.",
     "phoneMenuErrorRouteToAATargetMissing": "Key {{key}} is missing a Route To Auto Attendant target.",
+    "phoneMenuErrorDialByExtMessageMissing": "Key {{key}} is missing a Dial by Extension Message.",
     "addNumberMsg": "This auto attendant will answer all calls to the following numbers. You can add or remove numbers at any time.",
     "numberInfoPopover": "If you don’t enter a number here, it’s okay. Calls may still come through from another Auto Attendant.",
     "selectPlaceHolder": "Search or Select a Number",
@@ -1580,7 +1581,8 @@
     "features": "Features",
     "or": "or",
     "voicemail": "Voicemail",
-    "singleNumberReach": "Single Number Reach"
+    "singleNumberReach": "Single Number Reach",
+    "internationalDialing": "International Dialing"
   },
   "directoryNumberPanel": {
     "title": "Line Configuration",
@@ -1665,6 +1667,19 @@
     "error": "Single Number Reach configuration failed.",
     "unitedStates": "United States of America",
     "austrailia": "Austrailia"
+  },
+  "internationalDialingPanel": {
+    "success": "International Dialing configuration saved successfully",
+    "error": "International Dialing configuration failed. ",
+    "title": "International Dialing",
+    "toggle": "International Dialing",
+    "disableInternationalDialingTitle": "Disable International Dialing",
+    "disableInternationalDialingDialogue": "Disabling International Dialing will prevent user from making international calls.  Do you want to disable this user's Interrnational Dialing?",
+    "useGlobal": "Global Settings",
+    "alwaysAllow": "Always Allow",
+    "neverAllow": "Never Allow",
+    "on": "ON",
+    "off": "OFF"
   },
   "voicemailPanel": {
     "success": "Voicemail configuration saved successfully",
@@ -1837,7 +1852,6 @@
     "collab": "Standard Team Rooms + 25 Party Meetings",
     "squaredUC": "Advanced Spark Call",
     "licenses": "Licenses",
-    "meet": "Meeting and WebEx",
     "message": "Message",
     "meeting": "Meeting and WebEx",
     "call": "Call",
@@ -1912,7 +1926,19 @@
     "meeting": "Meeting 25 Party",
     "call": "Call",
     "roomSystem": "Spark Room System",
-    "branding": "Customer Branding"
+    "branding": "Customer Branding",
+    "MS": "Message",
+    "CF": "Meeting 25 Party",
+    "MC": "Meeting 25 Party",
+    "WebExMC": "WebEx Meeting Center",
+    "SC": "WebEx Support Center",
+    "TC": "WebEx Training Center",
+    "EC": "WebEx Event Center",
+    "EE": "WebEx Enterprise Edition",
+    "CMR": "WebEx Collaboration Meeting Room",
+    "CO": "Call",
+    "ST": "Storage",
+    "SD": "Spark Room System"
   },
   "didAddModal": {
     "title": "Add Phone Numbers (Optional)"
@@ -1923,9 +1949,14 @@
     "callerIdName": "Caller ID Name",
     "callerIdNumber": "Caller ID Number"
   },
+  "internationalDialing": {
+    "internationalDialing": "International Dialing",
+    "internationalDialingDesc": "Users inherit this setting by default.  Exception can be made at the individual user's settings."
+  },
   "huronSettings": {
     "saveSuccess": "Settings successfully saved.",
-    "companyCallerIdsaveError": "Company Caller ID failed to save."
+    "companyCallerIdsaveError": "Company Caller ID failed to save.",
+    "internationalDialingSaveError": "International Dialing failed to save."
   },
   "didManageModal": {
     "title": "Manage Phone Numbers",
@@ -2122,7 +2153,8 @@
       "reportAlarms": "reported alarms.",
       "software": "Software",
       "deregister_host": "DEREGISTER HOST",
-      "goToHost": "Go to Host"
+      "goToHost": "Go to Host",
+      "hosts": "Hosts"
     },
     "activateService": {
       "ingress": "Extend the Cloud to Your On-Premises Environment",
@@ -2585,7 +2617,7 @@
     "SC": "WebEx Support Center",
     "TC": "WebEx Training Center",
     "EC": "WebEx Event Center",
-    "EE": "Meeting 25 Party with Webex Enterprise Edition",
+    "EE": "Webex Enterprise Edition",
     "CMR": "WebEx Collaboration Meeting Room",
     "CO": "Call",
     "ST": "Storage",

@@ -50,11 +50,6 @@
         });
       }
 
-      // Since Atlas backend does not support WebEx trials, webex offer is removed from trial data.
-      editTrialData.offers = _.reject(editTrialData.offers, {
-        id: Config.trials.meeting
-      });
-
       var editTrialUrl = trialsUrl + '/' + id;
 
       function logEditTrialMetric(data, status) {
@@ -78,10 +73,6 @@
         'trialPeriod': data.details.licenseDuration,
         'startDate': new Date(),
         'offers': _(data.trials)
-          // TODO: Remove once meeting and room system trials are supported on backend
-          .reject({
-            type: Config.trials.meeting
-          })
           .filter({
             enabled: true
           })
