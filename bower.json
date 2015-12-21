@@ -24,7 +24,7 @@
     "base64": "~0.2.0",
     "angular-formly": "~6.11.0",
     "api-check": "~7.0.0",
-    "cisco-formly": "=1.0.21",
+    "cisco-formly": "=1.0.22",
     "cisco-ui": "~2.10.1",
     "bootstrap-tokenfield": "~0.12.x",
     "components-font-awesome": "~4.0.3",

@@ -95,7 +95,7 @@
     // Format AA resources based on a list of external numbers from CMI
     function formatAAResourcesBasedOnList(resources, externalNumberList) {
       var formattedResources = _.map(resources, function (res) {
-        if (res.getType() === AANumberAssignmentService.EXTERNAL_NUMBER) {
+        if (res.getType() === service.EXTERNAL_NUMBER) {
           var fmtRes = angular.copy(res);
           var extNum = _.find(externalNumberList, function (n) {
             return n.number.replace(/\D/g, '') === res.number;

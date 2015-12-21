@@ -171,21 +171,30 @@
     function getAtlasStormBrandingOffer() {
       var offerUserServices = [];
       var offerDeviceBasedServices = [];
-      var offers = _.pluck(vm.currentCustomer.offers, 'id');
-      for (var cnt in offers) {
-        var offer = offers[cnt];
-        if (!offer) {
+      var offerCodes = _.pluck(vm.currentCustomer.licenseList, 'offerName');
+      for (var index in offerCodes) {
+        var offerCode = offerCodes[index];
+        if (!offerCode) {
           continue;
         }
-        switch (offer) {
-        case Config.trials.message:
-          offerUserServices.push($translate.instant('customerPage.message'));
+        switch (offerCode) {
+        case Config.offerCodes.MS:
+          offerUserServices.push($translate.instant('customerPage.MS'));
           break;
-        case Config.trials.call:
-          offerUserServices.push($translate.instant('customerPage.call'));
+        case Config.offerCodes.CF:
+          offerUserServices.push($translate.instant('customerPage.CF'));
           break;
-        case Config.trials.roomSystems:
-          offerDeviceBasedServices.push($translate.instant('customerPage.roomSystem'));
+        case Config.offerCodes.CO:
+          offerUserServices.push($translate.instant('customerPage.CO'));
+          break;
+        case Config.offerCodes.EE:
+          offerUserServices.push($translate.instant('customerPage.EE'));
+          break;
+        case Config.offerCodes.CMR:
+          offerUserServices.push($translate.instant('customerPage.CMR'));
+          break;
+        case Config.offerCodes.SD:
+          offerDeviceBasedServices.push($translate.instant('customerPage.SD'));
           break;
         }
       }

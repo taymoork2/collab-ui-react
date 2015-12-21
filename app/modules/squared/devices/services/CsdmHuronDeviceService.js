@@ -22,9 +22,18 @@
       return deviceCache.list();
     }
 
+    function resetDevice(url) {
+      return $http.put(url, {
+        actions: {
+          reset: true
+        }
+      });
+    }
+
     return {
       on: deviceCache.on,
-      getDeviceList: getDeviceList
+      getDeviceList: getDeviceList,
+      resetDevice: resetDevice
     };
   }
 
