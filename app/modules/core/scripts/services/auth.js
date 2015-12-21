@@ -10,6 +10,8 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
     oauthUrl: Config.getOauth2Url()
   };
 
+  var authDeferred;
+
   var loginMarker = false;
 
   auth.getAccount = function (org) {
@@ -20,6 +22,10 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
   };
 
   auth.authorize = function (token) {
+    if (authDeferred) return authDeferred.promise;
+
+    authDeferred = $q.defer();
+
     var authorizeUrl = Config.getAdminServiceUrl();
     var $http = $injector.get('$http');
     $http.defaults.headers.common.Authorization = 'Bearer ' + token;
@@ -46,6 +52,7 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
     //the "isConfigurable" flag in objects that appear in the /services API response.
     var getAuthData = function () {
       var result;
+
       return $http.get(authUrl).then(function (authResponse) {
 
           //We'll need to explicitly use values from the response instead of
@@ -98,7 +105,36 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
             });
           }
 
-          return result;
+          // A temp workaround to bring Messenger Service Tab back with webex-messenger service/entitlement removed from backend.
+          var msgrServiceUrl = Config.getMessengerServiceUrl() + '/orgs/' + result.orgId + '/cisync/';
+
+          return $http.get(msgrServiceUrl).then(function (msgrResponse) {
+
+            var isMsgrOrg = _.has(msgrResponse, 'data.orgName') && _.has(msgrResponse, 'data.orgID');
+            if (isMsgrOrg) {
+
+              Log.debug('This Org is migrated from Messenger, add webex-messenger service to Auth data');
+
+              // Better get from CI or backend, hard code now since it's workaround and content is stable
+              var msgr_service = {
+                "serviceId": "jabberMessenger",
+                "displayName": "Messenger",
+                "ciName": "webex-messenger",
+                "type": "PAID",
+                "isBeta": false,
+                "isConfigurable": false
+              };
+
+              result.services.push(msgr_service);
+            }
+
+            return result;
+          }).catch(function (msgrErrResp) {
+
+            Log.error('Ignore error from Msgr service check: error code = ' + msgrErrResp.status);
+            return result;
+          });
+
         })
         .catch(function (response) {
           Authinfo.clear();
@@ -114,19 +150,22 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
         });
     };
 
-    return getAuthData().then(function (authData) {
+    getAuthData().then(function (authData) {
       Authinfo.initialize(authData);
       if (Authinfo.isAdmin()) {
-        return auth.getAccount(Authinfo.getOrgId())
+        auth.getAccount(Authinfo.getOrgId())
           .success(function (data, status) {
             Authinfo.updateAccountInfo(data, status);
             Authinfo.initializeTabs();
-          });
+          })
+          .finally(authDeferred.resolve);
       } else {
-        return Authinfo.initializeTabs();
+        Authinfo.initializeTabs();
+        authDeferred.resolve();
       }
     });
 
+    return authDeferred.promise;
   };
 
   auth.getFromGetParams = function (url) {

@@ -6,7 +6,7 @@
     .factory('AutoAttendantCeService', AutoAttendantCeService);
 
   /* @ngInject */
-  function AutoAttendantCeService(CeService, Authinfo) {
+  function AutoAttendantCeService(CeService, Authinfo, AANumberAssignmentService) {
 
     var service = {
       listCes: listCes,
@@ -54,10 +54,17 @@
 
     function deleteCe(ceUrl) {
       var aCeId = getCeId(ceUrl);
+
       return CeService.delete({
         customerId: Authinfo.getOrgId(),
         ceId: aCeId
-      }).$promise;
+      }).$promise.then(
+        function (response) {
+          // on successful delete of AA, delete the AA mapping in CMI
+          return AANumberAssignmentService.deleteAANumberAssignments(Authinfo.getOrgId(), aCeId);
+        }
+      );
+
     }
 
     /**

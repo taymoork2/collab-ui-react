@@ -1,12 +1,17 @@
 /*** PARTNERS ***/
 
 .partner-container {
-  @extend %content-header;
-  @extend %page-content-padding;
+  @extend %card-container-padding;
 
+  .tab-content {
+    border-color: $gray-light-2;
+  }
   .tab-reports {
-    background-color: transparent;
-    margin-top: 40px;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+  }
+  .tabcontainer {
+    background-color: $gray-light-4;
   }
   .report {
     height: 250px;
@@ -19,10 +24,6 @@
     float: left;
   }
   .tab-report {
-    background-color: rgba(255, 255, 255, 1);
-    padding-top: 15px;
-  }
-  .tab-report {
     height: 300px;
   }
   .tab-report + .report-status {
@@ -32,15 +33,59 @@
     bottom: 150px;
     float: left;
   }
+  .large section {
+    padding: 0 1.5rem;
+    .onboarded {
+      margin-top: 2rem;
+      border: 1px solid $gray-light-2;
+    }
+    .largetabs {
+      padding: 0;
+    }
+  }
+  .cstabs > li {
+    & > a {
+      border-color: $gray-light-2;
+      color: $gray-light-1;
+    }
+    &.active > a {
+      color: $gray-dark-1;
+    }
+  }
   #entitlementTitle {
-    color: $brand-primary;
-    margin-left: 55px;
-    padding-top: 20px;
+    margin-left: 60px;
+    font-size: 14px;
+    margin-top: 2rem;
+    margin-right: 1.5rem;
+    display: flex;
+    align-items: baseline;
+    justify-content: flex-end;
+    line-height: 1;
     span {
       font-size: inherit;
+    }
+    span.total {
+      font-size: 20px;
+      padding-left: 8px;
     }
   }
   .tab-reports .nav-tabs li .total {
     font-size: 24px;
+  }
+  #customerDropdown {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 0;
+    .icon {
+      font-size: 1.5rem;
+      line-height: 1rem;
+    }
+  }
+}
+
+.report-cards {
+  article {
+    padding: 1rem;
   }
 }

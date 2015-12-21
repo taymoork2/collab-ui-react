@@ -2,12 +2,13 @@
 
 describe('Controller: MediaServiceSettingsController', function () {
 
+  // load the service's module
+  beforeEach(module('wx2AdminWebClientApp'));
+
   var Authinfo, controller, httpMock, $q, $modal, log, $translate, $state, $stateParams;
-  var EmailNotificationConfigService, EmailValidatorService, Notification, XhrNotificationService, MediaServiceActivation;
+  var NotificationConfigService, MailValidatorService, Notification, XhrNotificationService, MediaServiceActivation;
   var mediaAgentOrgIds = ['mediafusion'];
   var serviceId = "squared-fusion-media";
-
-  beforeEach(module('Mediafusion'));
 
   var authInfo = {
     getOrgId: sinon.stub().returns('5632f806-ad09-4a26-a0c0-a49a13f38873')
@@ -17,7 +18,7 @@ describe('Controller: MediaServiceSettingsController', function () {
     $provide.value("Authinfo", authInfo);
   }));
 
-  beforeEach(inject(function ($state, $controller, $stateParams, $httpBackend, _$q_, _$modal_, $log, $translate, _MediaServiceActivation_, _EmailValidatorService_, _XhrNotificationService_, _EmailNotificationConfigService_, _Notification_) {
+  beforeEach(inject(function ($state, $controller, $stateParams, $httpBackend, _$q_, _$modal_, $log, $translate, _MediaServiceActivation_, _MailValidatorService_, _XhrNotificationService_, _NotificationConfigService_, _Notification_) {
     $state = $state;
     $stateParams = $stateParams;
     log = $log;
@@ -27,9 +28,9 @@ describe('Controller: MediaServiceSettingsController', function () {
     $modal = _$modal_;
 
     MediaServiceActivation = _MediaServiceActivation_;
-    EmailValidatorService = _EmailValidatorService_;
+    MailValidatorService = _MailValidatorService_;
     XhrNotificationService = _XhrNotificationService_;
-    EmailNotificationConfigService = _EmailNotificationConfigService_;
+    NotificationConfigService = _NotificationConfigService_;
     Notification = _Notification_;
 
     controller = $controller('MediaServiceSettingsController', {
@@ -42,9 +43,9 @@ describe('Controller: MediaServiceSettingsController', function () {
       $translate: $translate,
 
       MediaServiceActivation: MediaServiceActivation,
-      EmailValidatorService: EmailValidatorService,
+      MailValidatorService: MailValidatorService,
       XhrNotificationService: XhrNotificationService,
-      EmailNotificationConfigService: EmailNotificationConfigService,
+      NotificationConfigService: NotificationConfigService,
       Notification: Notification
     });
 

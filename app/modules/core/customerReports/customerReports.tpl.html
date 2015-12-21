@@ -1,36 +1,57 @@
 <!-- dont show if there is only one option, aka if webex does not show -->
-<cs-page-header id="reportsPanel" title="{{::nav.pageTitle}}" back="false" tabs="nav.headerTabs"></cs-page-header>
-<cs-page-sub-header ng-if="!nav.showWebexReports">
-  <cs-page-sub-header-right>
-    <cs-select id="timeFilter" name="timeFilter" class='customer-report-filter' ng-model="nav.timeSelected" options="nav.timeOptions"></cs-select>
-  </cs-page-sub-header-right>
-</cs-page-sub-header>
-<div class="content-container customer-reports">
-  <div class="row" ng-show="nav.showEngagement">
-    <cs-card-layout>
-      <cs-card class="large report-card">
-        <article>
-          <header>
-            <h4 class='report-section-header' translate='activeUsers.activeUsers'></h4>
-            <hr class='titlebreak'>
-          </header>
-          <section>
-            <uc-active-user-customer/>
-          </section>
-        </article>
-      </cs-card>
-    </cs-card-layout>
-  </div>
-  <!-- WebEx reports content -->
-  <div ng-show="nav.showWebexReports">
-    <!-- webex siteUrl dropdown list -->
-    <div class="row" ng-show="webexOptions.length > 1">
-      <div class="large-4 columns webexPage">
-        <cs-select ng-model="webexSelected" options="webexOptions" on-change-fn="updateWebexReports()">
-        </cs-select>
-      </div>
+<div class="customer-reports">
+  <cs-page-header id="reportsPanel" title="{{::nav.pageTitle}}" back="false" tabs="nav.headerTabs"></cs-page-header>
+  <cs-page-sub-header ng-if="!nav.showWebexReports">
+    <cs-page-sub-header-right>
+      <cs-select id="timeFilter" name="timeFilter" class='customer-report-filter' ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.timeUpdate()"></cs-select>
+    </cs-page-sub-header-right>
+  </cs-page-sub-header>
+  <div class="content-container">
+    <div class="row" ng-show="nav.showEngagement">
+      <cs-card-layout>
+        <cs-card id='active-user-card' class="large report-card">
+          <article>
+            <header>
+              <h4 class='report-section-header' translate='activeUsers.activeUsers'></h4>
+            </header>
+            <section>
+              <uc-active-user-customer/>
+            </section>
+          </article>
+        </cs-card>
+        <cs-card id='avg-room-card' class="large report-card">
+          <article>
+            <header>
+              <h4 class='report-section-header' translate='avgRooms.avgRooms'></h4>
+            </header>
+            <section>
+              <uc-avg-rooms/>
+            </section>
+          </article>
+        </cs-card>
+        <cs-card id='files-shared-card' class="large report-card">
+          <article>
+            <header>
+              <h4 class='report-section-header' translate='filesShared.filesShared'></h4>
+            </header>
+            <section>
+              <uc-files-shared/>
+            </section>
+          </article>
+        </cs-card>
+      </cs-card-layout>
     </div>
-    <!-- webex site reports index -->
-    <div ng-include="'modules/webex/siteReports/siteReports.tpl.html'"></div>
+    <!-- WebEx reports content -->
+    <div ng-show="nav.showWebexReports">
+      <!-- webex siteUrl dropdown list -->
+      <div class="row" ng-show="webexOptions.length > 1">
+        <div class="large-4 columns webexPage">
+          <cs-select ng-model="webexSelected" options="webexOptions" on-change-fn="updateWebexReports()">
+          </cs-select>
+        </div>
+      </div>
+      <!-- webex site reports index -->
+      <div ng-include="'modules/webex/siteReports/siteReports.tpl.html'"></div>
+    </div>
   </div>
 </div>

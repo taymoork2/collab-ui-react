@@ -6,7 +6,7 @@
     .factory('ServiceSetup', ServiceSetup);
 
   /* @ngInject */
-  function ServiceSetup($q, Log, Authinfo, Notification, SiteService, InternalNumberRangeService, TimeZoneService, ExternalNumberPoolService, VoicemailTimezoneService, VoicemailService, CustomerCommonService) {
+  function ServiceSetup($q, Log, Authinfo, Notification, SiteService, InternalNumberRangeService, TimeZoneService, ExternalNumberPoolService, VoicemailTimezoneService, VoicemailService, CustomerCommonService, CustomerCosRestrictionServiceV2) {
 
     return {
       internalNumberRanges: [],
@@ -32,6 +32,13 @@
           customerId: Authinfo.getOrgId(),
           siteId: siteUuid
         }).$promise;
+      },
+
+      updateSite: function (siteUuid, site) {
+        return SiteService.update({
+          customerId: Authinfo.getOrgId(),
+          siteId: siteUuid
+        }, site).$promise;
       },
 
       loadExternalNumberPool: function (pattern) {
@@ -75,7 +82,7 @@
         }).$promise;
       },
 
-      updateCustomerVoicemailPilotNumber: function (customer) {
+      updateCustomer: function (customer) {
         return CustomerCommonService.update({
           customerId: Authinfo.getOrgId()
         }, customer).$promise;
@@ -116,8 +123,31 @@
 
       isOverlapping: function (x1, x2, y1, y2) {
         return Math.max(x1, y1) <= Math.min(x2, y2);
-      }
+      },
 
+      listCosRestrictions: function () {
+        return CustomerCosRestrictionServiceV2.query({
+          customerId: Authinfo.getOrgId()
+        }, angular.bind(this, function (cosRestrictions) {
+          this.cosRestrictions = cosRestrictions;
+        })).$promise;
+      },
+
+      updateCosRestriction: function (cosEnabled, cosUuid, cosType) {
+        if ((cosUuid != null) && (cosEnabled)) {
+          return CustomerCosRestrictionServiceV2.delete({
+            customerId: Authinfo.getOrgId(),
+            restrictionId: cosUuid
+          }).$promise;
+        } else if ((cosUuid == null) && (!cosEnabled)) {
+          return CustomerCosRestrictionServiceV2.save({
+            customerId: Authinfo.getOrgId(),
+            restrictionId: cosUuid
+          }, cosType).$promise;
+        } else {
+          return $q.when();
+        }
+      }
     };
   }
 })();

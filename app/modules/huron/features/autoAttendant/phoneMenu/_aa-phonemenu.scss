@@ -67,6 +67,12 @@
     top: 0.25rem;
   }
 
+  & .aa-route-to-aa {
+    & .csSelect-container {
+      @include vr-spacing(pt, 1);
+    }
+  }
+
   .aa-pm-timeout {
     @include vr-spacing(pb, 1);
   }
@@ -82,7 +88,6 @@
       z-index: 1;
 
       & > i {
-        right: 0;
 
         @include vr-spacing(mr, 0);
 

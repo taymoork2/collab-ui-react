@@ -33,11 +33,6 @@
       line-height: 24px;
       font-size: 14px;
     }
-    .column-paid,
-    .column-mtg {
-      background: $gray-light-4;
-      font-size: 14px;
-    }
     .column-mtg {
       padding-bottom: 0;
     }
@@ -45,13 +40,23 @@
       background: $gray-light-4;
     }
     .column-trial-header {
-      @extend .h4;
-      padding: 1rem 0;
+      @extend .h5;
+      padding: 1.5rem;
       background: $color-attention;
       color: $white;
     }
     &.row-licenses {
       flex: 1;
+      .columns {
+        padding: 0;
+        background: $gray-light-4;
+        font-size: 14px;
+      }
+      .column-trial,
+      .column-paid,
+      .column-mtg {
+        padding: 1.5rem;
+      }
     }
   }
   .row-room {
@@ -109,11 +114,17 @@
     color: $gray-dark-1;
     text-align: center;
     padding: 4px 0 2px;
+    border-top: 1px solid $white;
+    border-bottom: 1px solid $white;
+
     &.free {
       background-color: $color-cta-lighter;
     }
     &.paid {
       background-color: $color-primary-lighter;
+    }
+    &.trial {
+      background-color: $color-attention-lighter;
     }
   }
   .item-free {
@@ -194,10 +205,8 @@
 }
 
 .wizard-trial-progress {
-  .column-sm-12 {
-    margin-top: 3px;
-    padding-left: 1px;
-    padding-right: 4px;
+  .small-12 {
+    @include vr-spacing(mv, .25);
   }
   .progress {
     margin-bottom: 5px;
@@ -205,12 +214,6 @@
   .progress-bar-warning {
     background-color: $brand-warning-dark;
   }
-}
-
-.wizard-trial-progress-text {
-  font-family: $brand-font-regular;
-  color: $gray-dark-1;
-  font-size: 12px;
 }
 
 .onboard-label {
@@ -293,6 +296,23 @@
   .wizard-inline-block {
     display: inline-block;
   }
+  .installStepHead {
+    margin-top: rem(15);
+    margin-bottom: rem(15);
+  }
+  .installStep {
+    margin-bottom: rem(1);
+  }
+  .installStepLast {
+    margin-bottom: rem(25);
+  }
+  .installStepWarning {
+    margin-bottom: rem(25);
+    .alert-text {
+      color: $color-alerts-base;
+      font-weight: bold;
+    }
+  }
 }
 
 .service-setup-container {
@@ -338,11 +358,11 @@
       margin-right: 30px;
       margin-left: 30px;
     }
-    .service-setup-company-voicemail {
-      margin-top: 15px;
-      .select-dropdown {
-        width: 230px;
-      }
+    .service-setup-company-voicemail ng-form {
+      width: 100%
+    }
+    .service-setup-company-voicemail-number {
+        width: 50%
     }
     .service-setup-moh {
       width: 50%;
@@ -561,4 +581,43 @@
       border-top: none;
     }
   }
+}
+ input#dirDomainText {
+    width: 25%;
+    left: 2px;
+    position: relative;
+  }
+.dirsync-info {
+  margin-top: 16px;
+  width: 550px;
+  display: flex;
+  flex-direction: column;
+  .ftwdirgridStyle {
+    margin-top: 10px;
+    height: 200px;
+    border: 1px solid lightgray;
+    & >:nth-child(2) {
+      overflow-x: hidden;
+    }
+  }
+  .sync-dirsync-refresh-button {
+      font-size: 12px;
+     //font-size: $body-small-font-size;
+  }
+}
+.finish-page {
+    text-align: center;
+    width: 25rem;
+    margin: 0 auto;
+    margin-top: 10rem;
+    i {
+      font-size: 8rem;
+      color: $color-cta-base;
+    }
+    h3, p {
+      margin-top: 1.5rem
+    }
+    p {
+      font-size: 1rem
+    }
 }

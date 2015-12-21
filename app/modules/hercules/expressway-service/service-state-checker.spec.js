@@ -3,7 +3,7 @@
 describe('ServiceStateChecker', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var ClusterService, NotificationService, ServiceStateChecker, DirSyncService, AuthInfo, USSService2;
+  var ClusterService, NotificationService, ServiceStateChecker, AuthInfo, USSService2;
 
   var notConfiguredClusterMockData = {
     id: 0,
@@ -29,23 +29,12 @@ describe('ServiceStateChecker', function () {
     }]
   };
 
-  var okUserStatusSummary = [{
-    serviceId: 'squared-fusion-cal',
-    activated: 10
-  }, {
-    serviceId: 'squared-fusion-uc',
-    activated: 10
-  }];
-
   beforeEach(module(function ($provide) {
     ClusterService = {
-      getClusters: sinon.stub()
+      getExpresswayClusters: sinon.stub()
     };
     AuthInfo = {
       getOrgId: sinon.stub()
-    };
-    DirSyncService = {
-      getDirSyncDomain: sinon.stub()
     };
     USSService2 = {
       getStatusesSummary: sinon.stub(),
@@ -54,7 +43,6 @@ describe('ServiceStateChecker', function () {
     AuthInfo.getOrgId.returns("orgId");
     $provide.value('ClusterService', ClusterService);
     $provide.value("Authinfo", AuthInfo);
-    $provide.value("DirSyncService", DirSyncService);
     $provide.value("USSService2", USSService2);
   }));
 
@@ -64,25 +52,25 @@ describe('ServiceStateChecker', function () {
   }));
 
   it("No clusters should raise the 'fuseNotPerformed' message", function () {
-    ClusterService.getClusters.returns([]);
+    ClusterService.getExpresswayClusters.returns([]);
     ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('fuseNotPerformed');
   });
 
   it("No configured connectors should raise the 'fuseNotPerformed' message", function () {
-    ClusterService.getClusters.returns([notConfiguredClusterMockData]);
+    ClusterService.getExpresswayClusters.returns([notConfiguredClusterMockData]);
     ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('configureConnectors');
   });
 
   it("Fusing a cluster should clear the 'fuseNotPerformed' message", function () {
-    ClusterService.getClusters.returns([]);
+    ClusterService.getExpresswayClusters.returns([]);
     ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('fuseNotPerformed');
-    ClusterService.getClusters.returns([notConfiguredClusterMockData]);
+    ClusterService.getExpresswayClusters.returns([notConfiguredClusterMockData]);
     ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('configureConnectors');
@@ -95,11 +83,7 @@ describe('ServiceStateChecker', function () {
       error: 0,
       notActivated: 0
     }]);
-    ClusterService.getClusters.returns([okClusterMockData]);
-    DirSyncService.getDirSyncDomain.callsArgWith(0, {
-      success: true,
-      serviceMode: 'ENABLED'
-    });
+    ClusterService.getExpresswayClusters.returns([okClusterMockData]);
     ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('squared-fusion-cal:noUsersActivated');
@@ -118,11 +102,7 @@ describe('ServiceStateChecker', function () {
       error: 5,
       notActivated: 0
     }]);
-    ClusterService.getClusters.returns([okClusterMockData]);
-    DirSyncService.getDirSyncDomain.callsArgWith(0, {
-      success: true,
-      serviceMode: 'ENABLED'
-    });
+    ClusterService.getExpresswayClusters.returns([okClusterMockData]);
     ServiceStateChecker.checkState('c_cal', 'squared-fusion-cal');
     expect(NotificationService.getNotificationLength()).toEqual(1);
     expect(NotificationService.getNotifications()[0].id).toEqual('squared-fusion-cal:userErrors');

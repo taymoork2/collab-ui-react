@@ -39,6 +39,15 @@
           ng-if="deviceOverview.currentDevice.canReportProblem">
           <span translate="spacesPage.reportProblem"></span>
         </button>
+
+        <button
+          ng-click="deviceOverview.resetDevice()"
+          class="btn btn--primary"
+          ng-if="deviceOverview.currentDevice.canReset">
+          <span
+            translate="spacesPage.reset">
+          </span>
+        </button>
       </div>
     </cs-sp-section>
     <cs-sp-section>
@@ -93,6 +102,7 @@
         ng-show="deviceOverview.currentDevice.needsActivation">
         <p translate="deviceOverviewPage.newDeviceActivation"></p>
         <h3>{{deviceOverview.currentDevice.readableActivationCode}}</h3>
+        <p>{{'deviceOverviewPage.expires' | translate}} {{deviceOverview.currentDevice.expiryTime}}</p>
       </div>
     </cs-sp-section>
 

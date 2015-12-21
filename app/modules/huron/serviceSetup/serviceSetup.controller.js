@@ -22,6 +22,9 @@
     var DEFAULT_FROM = '5000';
     var DEFAULT_TO = '5999';
 
+    var VOICE_ONLY = 'VOICE_ONLY';
+    var DEMO_STANDARD = 'DEMO_STANDARD';
+
     var mohOptions = [{
       label: $translate.instant('serviceSetupModal.ciscoDefault'),
       value: 'ciscoDefault'
@@ -34,7 +37,6 @@
     }];
 
     vm.processing = true;
-    vm.pilotNumberSelected = undefined;
     vm.externalNumberPool = [];
     vm.externalNumberPoolBeautified = [];
     vm.inputPlaceholder = $translate.instant('directoryNumberPanel.searchNumber');
@@ -49,13 +51,18 @@
         siteSteeringDigit: DEFAULT_SITE_SD,
         siteCode: DEFAULT_SITE_CODE,
         timeZone: DEFAULT_TZ,
-        voicemailPilotNumber: undefined
+        voicemailPilotNumber: undefined,
+        vmCluster: undefined
       },
       //var to hold ranges in sync with DB
       numberRanges: [],
       //var to hold ranges in view display
       displayNumberRanges: [],
-      globalMOH: mohOptions[0]
+      globalMOH: mohOptions[0],
+      ftswCompanyVoicemail: {
+        ftswCompanyVoicemailEnabled: false,
+        ftswCompanyVoicemailNumber: undefined
+      }
     };
 
     vm.firstTimeSetup = $state.current.data.firstTimeSetup;
@@ -409,9 +416,6 @@
         }
       },
       expressionProperties: {
-        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-          return vm.form.$invalid;
-        },
         'hide': function () {
           if (vm.model.displayNumberRanges.length > 9) {
             return true;
@@ -419,10 +423,77 @@
             return vm.hideFieldInternalNumberRange;
           }
         }
+      },
+      controller: function ($scope) {
+        $scope.$watch(function () {
+          return vm.form.$invalid;
+        }, function () {
+          if (vm.form.$invalid) {
+            $scope.options.templateOptions.disabled = true;
+          } else {
+            $scope.options.templateOptions.disabled = false;
+          }
+        });
       }
-    }];
-
-    vm.additionalFields = [{
+    }, {
+      // Since it is possible to have both the FTSW and
+      // huron settings page in the DOM at the same time the id
+      // or key has to be unique to avoid having the same id
+      // for these elements. See settingsCtrl.js
+      key: 'ftswCompanyVoicemail',
+      type: 'nested',
+      className: 'service-setup',
+      templateOptions: {
+        inputClass: 'service-setup-company-voicemail',
+        label: $translate.instant('serviceSetupModal.companyVoicemail'),
+        description: $translate.instant('serviceSetupModal.companyVoicemailDescription')
+      },
+      data: {
+        fields: [{
+          key: 'ftswCompanyVoicemailEnabled',
+          type: 'switch'
+        }, {
+          key: 'ftswCompanyVoicemailNumber',
+          type: 'select',
+          className: 'service-setup-company-voicemail-number',
+          templateOptions: {
+            options: [],
+            inputPlaceholder: $translate.instant('directoryNumberPanel.searchNumber'),
+            labelfield: 'pattern',
+            valuefield: 'uuid',
+            filter: true,
+            warnMsg: $translate.instant('serviceSetupModal.voicemailNoExternalNumbersError'),
+            isWarn: false
+          },
+          expressionProperties: {
+            'templateOptions.required': function () {
+              return vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled;
+            },
+            'hide': function () {
+              return !vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled;
+            }
+          },
+          controller: function ($scope) {
+            $scope.$watchCollection(function () {
+              return vm.externalNumberPoolBeautified;
+            }, function (externalNumberPoolBeautified) {
+              $scope.to.options = externalNumberPoolBeautified;
+            });
+            $scope.$watch(function () {
+              return vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled;
+            }, function (toggleValue) {
+              if (toggleValue && !vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber) {
+                if (vm.externalNumberPoolBeautified.length > 0) {
+                  vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = vm.externalNumberPoolBeautified[0];
+                } else {
+                  $scope.options.templateOptions.isWarn = true;
+                }
+              }
+            });
+          }
+        }]
+      }
+    }, {
       key: 'globalMOH',
       type: 'select',
       className: 'service-setup',
@@ -447,7 +518,16 @@
     vm.addInternalNumberRange = addInternalNumberRange;
     vm.deleteInternalNumberRange = deleteInternalNumberRange;
     vm.loadExternalNumberPool = loadExternalNumberPool;
+    vm.initServiceSetup = initServiceSetup;
     vm.initNext = initNext;
+
+    function getBeautifiedExternalNumber(pattern) {
+      var didLabel = TelephoneNumberService.getDIDLabel(pattern);
+      var externalNumber = _.findWhere(vm.externalNumberPoolBeautified, {
+        pattern: didLabel
+      });
+      return externalNumber;
+    }
 
     function initServiceSetup() {
       var errors = [];
@@ -480,42 +560,33 @@
               vm.model.site.steeringDigit = site.steeringDigit;
               vm.model.site.siteSteeringDigit = site.siteSteeringDigit;
               vm.model.site.siteCode = site.siteCode;
-
+              vm.model.site.vmCluster = site.vmCluster;
             });
-          } else {
-            vm.hasSites = false;
-          }
-        }).catch(function (response) {
-          if (response.status === 404) {
-            vm.hasSites = false;
           }
         });
       }).then(function () {
-        // get voicemail pilot number
         if (vm.hasVoicemailService) {
           return ServiceSetup.getVoicemailPilotNumber().then(function (voicemail) {
-            // if the pilotNumber == customer org uuid, then voicemail is not set
             if (voicemail.pilotNumber === Authinfo.getOrgId()) {
-              vm.externalNumberPool = [];
+              // There may be existing customers who have yet to set the company
+              // voicemail number; likely they have it set to orgId.
+              // Remove this logic once we can confirm no existing customers are configured
+              // this way.
               vm.model.site.voicemailPilotNumber = undefined;
-              vm.pilotNumberSelected = undefined;
-            } else {
+            } else if (voicemail.pilotNumber) {
               vm.model.site.voicemailPilotNumber = voicemail.pilotNumber;
-              vm.pilotNumberSelected = {
-                uuid: voicemail.name,
-                pattern: TelephoneNumberService.getDIDLabel(voicemail.pilotNumber)
-              };
+              vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled = true;
+
+              var existingVoicemailNumber = {};
+              existingVoicemailNumber.pattern = TelephoneNumberService.getDIDLabel(voicemail.pilotNumber);
+              vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber = existingVoicemailNumber;
             }
           }).catch(function (response) {
-            vm.externalNumberPool = [];
-            vm.pilotNumberSelected = undefined;
             Notification.errorResponse(response, 'serviceSetupModal.voicemailGetError');
           });
         }
       }).then(function () {
-        if (vm.hasVoicemailService) {
-          return loadExternalNumberPool();
-        }
+        return loadExternalNumberPool();
       });
     }
 
@@ -537,18 +608,22 @@
       return ServiceSetup.getTimeZones().then(function (timezones) {
         vm.timeZoneOptions = timezones;
         if (vm.hasVoicemailService) {
-          return ServiceSetup.listVoicemailTimezone().then(function (usertemplates) {
-            if ((angular.isArray(usertemplates)) && (usertemplates.length > 0)) {
-              vm.timeZone = '' + usertemplates[0].timeZone;
-              vm.objectId = usertemplates[0].objectId;
-              var currentTimeZone = timezones.filter(function (timezone) {
-                return timezone.timezoneid === vm.timeZone;
-              });
-              if (currentTimeZone.length > 0) {
-                vm.model.site.timeZone = currentTimeZone[0];
-              }
-            }
+          return listVoicemailTimezone(timezones);
+        }
+      });
+    }
+
+    function listVoicemailTimezone(timezones) {
+      return ServiceSetup.listVoicemailTimezone().then(function (usertemplates) {
+        if ((angular.isArray(usertemplates)) && (usertemplates.length > 0)) {
+          vm.timeZone = '' + usertemplates[0].timeZone;
+          vm.objectId = usertemplates[0].objectId;
+          var currentTimeZone = timezones.filter(function (timezone) {
+            return timezone.timezoneid === vm.timeZone;
           });
+          if (currentTimeZone.length > 0) {
+            vm.model.site.timeZone = currentTimeZone[0];
+          }
         }
       });
     }
@@ -647,110 +722,6 @@
       }
     }
 
-    function initNext() {
-      if (vm.form.$invalid) {
-        Notification.notify([$translate.instant('serviceSetupModal.fieldValidationFailed')], 'error');
-        return $q.reject('Field validation failed.');
-      } else {
-        var deferreds = [];
-        var errors = [];
-        var promise;
-        var currentSite;
-        var voicePromise = $q.when(true);
-
-        if (!vm.hasVoiceService) {
-          voicePromise = HuronCustomer.put(vm.customer.name)
-            .catch(function (response) {
-              vm.hasVoiceService = false;
-              errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.customerPutError'));
-            })
-            .then(function (customer) {
-              if (vm.model.site.voicemailPilotNumber) {
-                return ExternalNumberPool.create(Authinfo.getOrgId(), vm.model.site.voicemailPilotNumber).catch(function (response) {
-                  errors.push(Notification.processErrorResponse(response));
-                });
-              }
-            });
-        }
-
-        return voicePromise.then(function () {
-          if (!vm.hasSites) {
-            if (vm.pilotNumberSelected) {
-              vm.model.site.voicemailPilotNumber = TelephoneNumberService.getDIDValue(vm.pilotNumberSelected.pattern);
-            } else {
-              delete vm.model.site.voicemailPilotNumber;
-            }
-            currentSite = angular.copy(vm.model.site);
-            currentSite.timeZone = currentSite.timeZone.value;
-            promise = ServiceSetup.createSite(currentSite).then(function () {
-              var promises = [];
-              // Check for voicemailService before updating voicemailpilot number on common/customer
-              if (vm.hasVoicemailService && vm.model.site.voicemailPilotNumber) {
-                promises.push(ServiceSetup.updateCustomerVoicemailPilotNumber({
-                  voicemail: {
-                    pilotNumber: vm.model.site.voicemailPilotNumber
-                  }
-                }).catch(function (response) {
-                  errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.voicemailUpdateError'));
-                }));
-              }
-              if (vm.hasVoicemailService && vm.model.site.timeZone !== DEFAULT_TZ.value) {
-                promises.push(ServiceSetup.updateVoicemailTimezone(vm.model.site.timeZone.timezoneid, vm.objectId)
-                  .catch(function (response) {
-                    errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.timezoneUpdateError'));
-                  }));
-              }
-              return $q.all(promises);
-            }).catch(function (response) {
-              vm.hasSites = false;
-              errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.siteError'));
-            });
-            deferreds.push(promise);
-          } else {
-            var pilotNumberValue = null;
-            if (vm.pilotNumberSelected) {
-              pilotNumberValue = TelephoneNumberService.getDIDValue(vm.pilotNumberSelected.pattern);
-            }
-            if (vm.hasVoicemailService && vm.pilotNumberSelected && pilotNumberValue !== vm.model.site.voicemailPilotNumber) {
-              promise = ServiceSetup.updateCustomerVoicemailPilotNumber({
-                voicemail: {
-                  pilotNumber: pilotNumberValue
-                }
-              }).catch(function (response) {
-                errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.voicemailUpdateError'));
-              });
-              deferreds.push(promise);
-            }
-          }
-
-          if (angular.isArray(vm.model.displayNumberRanges) && (vm.hideFieldInternalNumberRange !== true)) {
-            angular.forEach(vm.model.displayNumberRanges, function (internalNumberRange) {
-              if (angular.isUndefined(internalNumberRange.uuid)) {
-                promise = ServiceSetup.createInternalNumberRange(internalNumberRange)
-                  .catch(function (response) {
-                    var error = Notification.processErrorResponse(response, 'serviceSetupModal.extensionAddError', {
-                      extension: this.name
-                    });
-                    errors.push(error);
-                  }.bind(internalNumberRange));
-                deferreds.push(promise);
-              }
-            });
-          }
-
-          return $q.all(deferreds).then(function () {
-            if (errors.length > 0) {
-              Notification.notify(errors, 'error');
-              return $q.reject('Site/extension create failed.');
-            } else {
-              Notification.notify([$translate.instant('serviceSetupModal.saveSuccess')], 'success');
-            }
-          });
-        });
-
-      }
-    }
-
     function setServiceValues() {
       DialPlanService.getCustomerDialPlanDetails(Authinfo.getOrgId()).then(function (response) {
         if (response.extensionGenerated === 'true') {
@@ -775,6 +746,232 @@
         vm.hideFieldSteeringDigit = false;
         Notification.errorResponse(response, 'serviceSetupModal.customerDialPlanDetailsGetError');
       });
+    }
+
+    function initNext() {
+      if (vm.form.$invalid) {
+        Notification.notify([$translate.instant('serviceSetupModal.fieldValidationFailed')], 'error');
+        return $q.reject('Field validation failed.');
+      }
+
+      var errors = [];
+      var voicemailToggleEnabled = false;
+      if (_.get(vm, 'model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled') && _.get(vm, 'model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber')) {
+        voicemailToggleEnabled = true;
+      }
+
+      var companyVoicemailNumber = TelephoneNumberService.getDIDValue(_.get(vm, 'model.ftswCompanyVoicemail.ftswCompanyVoicemailNumber.pattern'));
+
+      function updateCustomer(companyVoicemailNumber) {
+        var customer = {};
+        if (companyVoicemailNumber && _.get(vm, 'model.site.voicemailPilotNumber') !== companyVoicemailNumber) {
+          if (!vm.hasVoicemailService) {
+            customer.servicePackage = DEMO_STANDARD;
+          }
+
+          customer.voicemail = {
+            pilotNumber: companyVoicemailNumber
+          };
+        } else {
+          // Assume VOICE_ONLY when no pilot number is set
+          customer.servicePackage = VOICE_ONLY;
+        }
+
+        return ServiceSetup.updateCustomer(customer)
+          .catch(function (response) {
+            errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.voicemailUpdateError'));
+            return $q.reject(response);
+          });
+      }
+
+      function saveCustomer() {
+        if (voicemailToggleEnabled) {
+          // When the toggle is ON, update the customer if the site voicemail pilot number changed or wasn't set,
+          // otherwise, don't update customer since nothing changed.
+          if (_.get(vm, 'model.site.voicemailPilotNumber') !== companyVoicemailNumber) {
+            return updateCustomer(companyVoicemailNumber);
+          }
+        } else {
+          // When the toggle is OFF, update the customer if the customer has the voicemail service package
+          // to disable voicemail, otherwise they are already voice only and don't
+          // require an update.  
+          if (vm.hasVoicemailService) {
+            return updateCustomer();
+          }
+        }
+      }
+
+      function createSite(site) {
+        if (voicemailToggleEnabled) {
+          // Set the site voicemail pilot number when the
+          // toggle is ON, otherwise remove it from the site payload.
+          vm.model.site.voicemailPilotNumber = companyVoicemailNumber;
+        } else {
+          delete vm.model.site.voicemailPilotNumber;
+        }
+
+        var currentSite = angular.copy(site);
+        currentSite.timeZone = currentSite.timeZone.value;
+
+        return ServiceSetup.createSite(currentSite)
+          .catch(function (response) {
+            vm.hasSites = false;
+            errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.siteError'));
+            return $q.reject(response);
+          });
+      }
+
+      function updateSite(voicemailNumber) {
+        var site = {};
+        if (voicemailNumber) {
+          site.voicemailPilotNumber = voicemailNumber;
+        } else {
+          // Assume disable voicemail when no pilot number is set
+          site.disableVoicemail = true;
+        }
+
+        return ServiceSetup.updateSite(ServiceSetup.sites[0].uuid, site)
+          .catch(function (response) {
+            // unset the site voicemail pilot number
+            vm.model.site.voicemailPilotNumber = undefined;
+            errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.voicemailUpdateError'));
+            return $q.reject(response);
+          });
+      }
+
+      function saveSite() {
+        if (!vm.hasSites) {
+          // Always create the site if one doesn't exist.
+          return createSite(vm.model.site);
+        } else {
+          if (voicemailToggleEnabled) {
+            // When the toggle is ON, update the site if the pilot number changed or wasn't set,
+            // otherwise, don't update site since nothing changed.
+            if (_.get(vm, 'model.site.voicemailPilotNumber') !== companyVoicemailNumber) {
+              return updateSite(companyVoicemailNumber);
+            }
+          } else {
+            // When the toggle is OFF, update the site if the customer has voicemail service package
+            // to disable voicemail, otherwise they are already voice only and don't
+            // require an update.  
+            if (vm.hasVoicemailService) {
+              return updateSite();
+            }
+          }
+        }
+      }
+
+      function updateTimezone(timeZoneId) {
+        if (!timeZoneId) {
+          errors.push(Notification.error('serviceSetupModal.timezoneUpdateError'));
+          return $q.reject('No timezoneid set');
+        }
+
+        return ServiceSetup.updateVoicemailTimezone(timeZoneId, vm.objectId)
+          .catch(function (response) {
+            errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.timezoneUpdateError'));
+            return $q.reject(response);
+          });
+      }
+
+      function saveTimezone() {
+        if ((_.get(vm, 'model.site.timeZone.value') !== DEFAULT_TZ.value) && voicemailToggleEnabled) {
+          if (!vm.hasVoicemailService) {
+            // If the customer doesn't have voicemail service, then get the existing
+            // timezone first before updating since voicemail was just enabled.
+            return listVoicemailTimezone(vm.timeZoneOptions).then(function () {
+              return updateTimezone(_.get(vm, 'model.site.timeZone.timezoneid'));
+            });
+          } else {
+            return updateTimezone(_.get(vm, 'model.site.timeZone.timezoneid'));
+          }
+        }
+      }
+
+      function createInternalNumbers(internalNumberRange) {
+        return ServiceSetup.createInternalNumberRange(internalNumberRange)
+          .catch(function (response) {
+            errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.extensionAddError', {
+              extension: this.name
+            }));
+          }.bind(internalNumberRange));
+      }
+
+      function saveInternalNumbers() {
+        return $q.when(true).then(function () {
+          if (vm.hideFieldInternalNumberRange === false && (angular.isArray(_.get(vm, 'model.displayNumberRanges')))) {
+            angular.forEach(vm.model.displayNumberRanges, function (internalNumberRange) {
+              if (angular.isUndefined(internalNumberRange.uuid)) {
+                return createInternalNumbers(internalNumberRange);
+              }
+            });
+          }
+        });
+      }
+
+      function createExternalNumber(externalNumber) {
+        //TODO: Update the external number pool with the number that got added
+        return ExternalNumberPool.create(Authinfo.getOrgId(), externalNumber)
+          .catch(function (response) {
+            errors.push(Notification.processErrorResponse(response));
+          });
+      }
+
+      function setupVoiceService() {
+        if (!vm.hasVoiceService) {
+          return HuronCustomer.put(vm.customer.name)
+            .catch(function (response) {
+              vm.hasVoiceService = false;
+              errors.push(Notification.processErrorResponse(response, 'serviceSetupModal.customerPutError'));
+              return $q.reject(response);
+            }).then(function () {
+              vm.hasVoiceService = true;
+              if (_.get(vm, 'model.site.voicemailPilotNumber')) {
+                return createExternalNumber(vm.model.site.voicemailPilotNumber);
+              }
+            });
+        }
+      }
+
+      // Saving the company site has to be in done in a particular order
+      // and if one step fails we should prevent other steps from executing,
+      // hence the noop catch in the end to allow previous re-thrown rejections
+      // to be ignored after processing this promise chain.
+      function saveCompanySite() {
+        return $q.when(true)
+          .then(saveCustomer)
+          .then(saveSite)
+          .then(saveTimezone)
+          .catch(_.noop);
+      }
+
+      // Here the form can be processed in parallel,
+      // most new save actions should be added in this function.
+      function saveForm() {
+        var promises = [];
+        promises.push(saveInternalNumbers());
+        promises.push(saveCompanySite());
+
+        return $q.all(promises);
+      }
+
+      function processErrors() {
+        if (errors.length > 0) {
+          Notification.notify(errors, 'error');
+          return $q.reject('Site/extension create failed.');
+        } else {
+          Notification.notify([$translate.instant('serviceSetupModal.saveSuccess')], 'success');
+        }
+      }
+
+      // This is the main promise chain, the flow is to the ensure
+      // voice service is setup, then process the form.
+      // Errors are collected in an array and processed in the end.
+      return $q.when(true)
+        .then(setupVoiceService)
+        .then(saveForm)
+        .catch(_.noop)
+        .then(processErrors);
     }
 
     HttpUtils.setTrackingID().then(function () {

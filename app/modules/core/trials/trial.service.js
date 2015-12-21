@@ -46,17 +46,23 @@
       for (var i in offersList) {
         editTrialData.offers.push({
           'id': offersList[i],
-          'licenseCount': licenseCount
+          'licenseCount': offersList[i] === Config.trials.roomSystems ? roomSystemCount : licenseCount
         });
       }
 
       var editTrialUrl = trialsUrl + '/' + id;
 
+      function logEditTrialMetric(data, status) {
+        LogMetricsService.logMetrics('Edit Trial', LogMetricsService.getEventType('trialEdited'), LogMetricsService.getEventAction('buttonClick'), status, moment(), 1, editTrialData);
+      }
+
       return $http({
-        method: 'PATCH',
-        url: editTrialUrl,
-        data: editTrialData
-      });
+          method: 'PATCH',
+          url: editTrialUrl,
+          data: editTrialData
+        })
+        .success(logEditTrialMetric)
+        .error(logEditTrialMetric);
     }
 
     function startTrial() {
@@ -67,13 +73,6 @@
         'trialPeriod': data.details.licenseDuration,
         'startDate': new Date(),
         'offers': _(data.trials)
-          // TODO: Remove once meeting and room system trials are supported on backend
-          .reject({
-            type: Config.trials.meeting
-          })
-          .reject({
-            type: Config.trials.roomSystems
-          })
           .filter({
             enabled: true
           })
@@ -89,13 +88,16 @@
           .value()
       };
 
+      function logStartTrialMetric(data, status) {
+        // delete PII
+        delete trialData.customerName;
+        delete trialData.customerEmail;
+        LogMetricsService.logMetrics('Start Trial', LogMetricsService.getEventType('trialStarted'), LogMetricsService.getEventAction('buttonClick'), status, moment(), 1, trialData);
+      }
+
       return $http.post(trialsUrl, trialData)
-        .success(function (data, status) {
-          LogMetricsService.logMetrics('Start Trial', LogMetricsService.getEventType('trialStarted'), LogMetricsService.getEventAction('buttonClick'), status, moment(), 1, null);
-        })
-        .error(function (data, status) {
-          LogMetricsService.logMetrics('Start Trial', LogMetricsService.getEventType('trialStarted'), LogMetricsService.getEventAction('buttonClick'), status, moment(), 1, null);
-        });
+        .success(logStartTrialMetric)
+        .error(logStartTrialMetric);
     }
 
     function getData() {

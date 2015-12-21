@@ -6,22 +6,9 @@
 
 .partner-reports {
   @extend %content-subheader;
-  // @extend %page-content-padding;
-  // TODO: remove when page is made responsive
-  .content-container {
-    padding: 1.5rem 0;
-  }
+  @extend %page-content-padding;
 
-  .reports-header {
-    @extend .row;
-    @extend .page-header;
-    .sync {
-      padding-left: rem-calc(35);
-    }
-    .report-filters {
-      padding: rem-calc(25) 0 rem-calc(24);
-    }
-  }
+
   .report-filter-link:first-of-type {
     padding: rem-calc(3) rem-calc(16) rem-calc(3) 0;
   }
@@ -46,25 +33,9 @@
   .selected-link {
     color: $gray-darkest;
   }
-  .reports-container {
-    padding-left: rem-calc(30);
-    padding-right: rem-calc(15);
-  }
-  .report-space {
-    padding: 0 rem-calc(16);
-    min-width: rem-calc(650);
-  }
-  .report-space:last-of-type {
-    float: left;
-  }
   .report-box {
-    background-color: $brand-white;
-    min-height: vr-adjust(570);
-    min-width: rem-calc(650);
-    margin-bottom: rem-calc(32);
-    padding: rem-calc(32);
     .no-data-warning {
-      color: #f7c100;
+      color: $color-attention-base;
       padding-right: rem-calc(15);
     }
     .no-data-center {
@@ -94,34 +65,7 @@
         transform: translate(-50%, -50%);
       }
     }
-    .report-description {
-      margin-bottom: rem-calc(15);
-      font-family: $brand-font-cisco-TT-Light;
-      font-size: rem-calc(13);
-      line-height: rem-calc(18);
-      color: $gray-darkest;
-      z-index: 100;
-      position: relative;
-    }
-    .section-title {
-      font-family: $brand-font-cisco-TT-Light;
-      font-size: rem-calc(22);
-      color: $brand-primary;
-      text-align: left;
-      margin: 0 0 rem-calc(10);
-    }
-    .sub-section-title {
-      font-family: $brand-font-cisco-TT-Light;
-      font-size: rem-calc(18);
-      color: $gray-darkest;
-      text-align: left;
-      margin-top: rem-calc(40);
-      margin-bottom: rem-calc(15);
-    }
-    .title-break {
-      margin-top: 0;
-      width: 100%;
-    }
+
     .timechartDiv {
       font-size: rem-calc(11);
       height: vr-adjust(380);

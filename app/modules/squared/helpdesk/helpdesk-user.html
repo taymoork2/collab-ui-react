@@ -11,7 +11,12 @@
   <div class="row full">
     <div class="columns large-4 medium-5">
 
-      <h3>{{helpdeskUserCtrl.user.displayName}}</h3>
+      <h3>
+        <span ng-if="!helpdeskUserCtrl.user.photos" class="user-img"><i class="icon icon-user"></i></span>
+        <img class="user-img" ng-if="helpdeskUserCtrl.user.photos"
+             ng-src="{{helpdeskUserCtrl.user.photos[1].value}}"/>
+        {{helpdeskUserCtrl.user.displayName}}
+      </h3>
 
       <div class="customer-or-partner">
         <span translate="helpdesk.accountCreated"></span>:
@@ -20,10 +25,15 @@
 
       <div class="row">
         <div class="medium-5 columns details-heading">
-          <span>{{'common.id' | translate}}:</span>
+          <span>{{'helpdesk.verification' | translate}}:</span>
         </div>
         <div class="medium-7 columns details-value">
-          <span>{{helpdeskUserCtrl.user.id}}</span>
+          <span ng-if="helpdeskUserCtrl.verificationCode" style="padding-right: 1rem">{{helpdeskUserCtrl.verificationCode}}</span>
+          <button class="action secondary small" type="button"
+                  ng-click="helpdeskUserCtrl.sendCode()"
+                  translate="helpdesk.sendCode"
+                  ng-if="!helpdeskUserCtrl.verificationCode">
+          </button>
         </div>
       </div>
 
@@ -35,7 +45,8 @@
           <span ng-repeat="status in helpdeskUserCtrl.user.statuses">{{status | translate}}{{$last ? '' : ', '}}</span>
           <button class="action secondary small" type="button" ng-click="helpdeskUserCtrl.resendInviteEmail()"
                   style="margin-left: 1rem;"
-                  ng-if="helpdeskUserCtrl.resendInviteEnabled">Re-send
+                  ng-if="helpdeskUserCtrl.resendInviteEnabled"
+                  translate="helpdesk.resend">
           </button>
         </div>
       </div>
@@ -55,9 +66,9 @@
         </div>
         <div class="medium-7 columns details-value">
           <span ng-if="helpdeskUserCtrl.user.roles.length > 0"
-                ng-repeat="role in helpdeskUserCtrl.user.roles">{{'roles.' + role | translate }}{{$last ? '' : ', '}}</span>
+                ng-repeat="role in helpdeskUserCtrl.user.roles | orderBy">{{'ciRoles.' + role | translate }}{{$last ? '' : ', '}}</span>
         <span ng-if="!helpdeskUserCtrl.user.roles || helpdeskUserCtrl.user.roles.length == 0"
-              translate="roles.user"></span>
+              translate="ciRoles.user"></span>
         </div>
       </div>
 
@@ -76,6 +87,15 @@
 
       <div class="row">
         <div class="medium-5 columns details-heading">
+          <span>{{'common.id' | translate}}:</span>
+        </div>
+        <div class="medium-7 columns details-value">
+          <span>{{helpdeskUserCtrl.user.id}}</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="medium-5 columns details-heading">
           <span>{{'helpdesk.organization' | translate}}:</span>
         </div>
         <div class="medium-7 columns details-value">
@@ -87,6 +107,7 @@
           <span ng-if="helpdeskUserCtrl.user.isConsumerUser" translate="helpdesk.consumerOrg"></span>
         </div>
       </div>
+
 
     </div>
 

@@ -260,10 +260,4 @@ angular.module('Core')
         });
       };
     }
-  ])
-  .config([
-    '$compileProvider',
-    function ($compileProvider) {
-      $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|blob):/);
-    }
   ]);

@@ -35,13 +35,14 @@ var ReportsPage = function () {
   this.quality = element(by.id('qualityReports'));
 
   // active user
-  this.mostActiveButton = element(by.css('.most-active'));
+  this.showmostActiveButton = element(by.id('showActiveUsers'));
+  this.hidemostActiveButton = element(by.id('hideActiveUsrs'));
   this.activeUsersTable = element(by.css('.active-users-table'));
   this.activeUsersTableContent = element.all(by.repeater('user in nav.mostActiveUsers'));
   this.activeCarousel = element(by.id('activeCarousel')).all(by.css('button'));
   this.activeUserGraph = element(by.id('activeUsersdiv')).all(by.css('div')).first();
   this.activeUserRefresh = element(by.id('activeUsersRefreshDiv'));
-  this.activeDescription = '.active-user';
+  this.activeDescription = element(by.id('activeUserDesc'));
 
   // active user population
   this.activePopulationGraph = element(by.id('activeUserPopulationChart')).all(by.css('div')).first();
@@ -113,21 +114,6 @@ var ReportsPage = function () {
     return table.element(by.cssContainingText('.customer-data', customer)).isPresent(function (present) {
       expect(present).toBe(bool);
     });
-  };
-
-  this.verifyDescription = function (text, location, present) {
-    var div = element(by.css(location)).all(by.css('.report-description')).first();
-
-    return browser.wait(function () {
-      return div.getText().then(function (response) {
-        if (response.length > 0) {
-          expect(response.toLowerCase().indexOf(text.toLowerCase()) > -1).toBe(present);
-          return true;
-        } else {
-          return false;
-        }
-      });
-    }, TIMEOUT, 'Waiting for text');
   };
 };
 

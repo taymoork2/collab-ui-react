@@ -32,19 +32,19 @@
     });
 
     var webexField = {
-      key: 'WEBEXTRIALS',
+      key: Config.trials.meeting,
       type: 'checkbox',
       model: $scope.offers,
       templateOptions: {
-        label: $translate.instant('trials.meet'),
+        label: $translate.instant('trials.meeting'),
         id: 'webexTrialCB',
-        class: 'columns medium-12 checkbox-group',
+        class: 'columns medium-12 checkbox-group'
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
           return vm.isSquaredUCEnabled() || vm.isRoomSystemsTrialsEnabled();
-        },
-      },
+        }
+      }
     };
 
     vm.roomSystemOptions = [5, 10, 15, 20, 25];
@@ -57,7 +57,7 @@
         labelClass: 'columns medium-5',
         inputClass: 'columns medium-3',
         type: 'number',
-        required: true,
+        required: true
       },
       validators: {
         count: {
@@ -66,11 +66,11 @@
           },
           message: function () {
             return $translate.instant('partnerHomePage.invalidTrialLicenseCount');
-          },
-        },
-      },
+          }
+        }
+      }
     }, {
-      key: 'COLLAB',
+      key: Config.trials.message,
       type: 'checkbox',
       model: $scope.offers,
       defaultValue: _.get(vm, 'currentTrial.communications.status') === 'ACTIVE',
@@ -87,10 +87,10 @@
           return FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
             return result ? $translate.instant('partnerHomePage.message') : $translate.instant('trials.collab');
           });
-        },
-      },
+        }
+      }
     }, {
-      key: 'SQUAREDUC',
+      key: Config.trials.call,
       type: 'checkbox',
       model: $scope.offers,
       templateOptions: {
@@ -99,6 +99,9 @@
         class: 'columns medium-12 checkbox-group',
       },
       expressionProperties: {
+        'templateOptions.disabled': function () {
+          return vm.disableSquaredUCCheckBox;
+        },
         'hide': function () {
           return !vm.isSquaredUC();
         },
@@ -106,14 +109,14 @@
           return FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
             return result ? $translate.instant('partnerHomePage.call') : $translate.instant('trials.squaredUC');
           });
-        },
-      },
+        }
+      }
     }];
 
     vm.trialTermsFields = [{
       key: 'licenseDuration',
       type: 'select',
-      defaultValue: 30,
+      defaultValue: vm.currentTrial.duration,
       templateOptions: {
         labelfield: 'label',
         required: true,
@@ -121,24 +124,25 @@
         secondaryLabel: $translate.instant('partnerHomePage.durationHelp'),
         labelClass: 'columns medium-4',
         inputClass: 'columns medium-4',
-        options: [30, 60, 90],
-      },
+        options: [30, 60, 90]
+      }
     }];
 
     vm.isSquaredUC = Authinfo.isSquaredUC;
     vm.getDaysLeft = getDaysLeft;
     vm.editTrial = editTrial;
     vm.squaredUCOfferID = Config.trials.call;
+    vm.roomSystemsOfferID = Config.trials.roomSystems;
     vm.isSquaredUCEnabled = isSquaredUCEnabled;
     vm.isRoomSystemsTrialsEnabled = isRoomSystemsTrialsEnabled;
     vm.gotoAddNumber = gotoAddNumber;
     vm.clickUpdateButton = clickUpdateButton;
 
     $scope.$watchCollection('offers', function (newOffers) {
-      if (newOffers[Config.trials.cloudberry] || newOffers[Config.trials.squaredUC]) {
-        $scope.offers[Config.trials.collab] = true;
+      if (newOffers[Config.trials.roomSystems] || newOffers[Config.trials.call]) {
+        $scope.offers[Config.trials.message] = true;
         if (vm.showWebex) {
-          $scope.offers[Config.trials.webex] = true;
+          $scope.offers[Config.trials.meeting] = true;
         }
       }
     });
@@ -155,6 +159,9 @@
             $scope.offers[offer.id] = true;
             if (offer.id === vm.squaredUCOfferID) {
               vm.disableSquaredUCCheckBox = true;
+            } else if (offer.id === vm.roomSystemsOfferID) {
+              vm.model.roomSystemsEnabled = true;
+              vm.model.roomSystems = offer.licenseCount;
             }
           }
         }
@@ -166,12 +173,12 @@
     }
 
     function isRoomSystemsTrialsEnabled() {
-      return $scope.offers[Config.trials.cloudberry] || false;
+      return $scope.offers[Config.trials.roomSystems] || false;
     }
 
     vm.roomSystemsChecked = function () {
       vm.model.roomSystems = vm.model.roomSystemsEnabled ? vm.roomSystemOptions[0] : 0;
-      $scope.offers[Config.trials.cloudberry] = vm.model.roomSystemsEnabled;
+      $scope.offers[Config.trials.roomSystems] = vm.model.roomSystemsEnabled;
     };
 
     function clickUpdateButton() {
@@ -215,7 +222,7 @@
         }
       }
 
-      return TrialService.editTrial(vm.currentTrial.trialId, vm.currentTrial.duration, vm.currentTrial.licenses, vm.currentTrial.usage, vm.model.roomSystems, vm.currentTrial.customerOrgId, offersList)
+      return TrialService.editTrial(vm.currentTrial.trialId, vm.model.licenseDuration, vm.model.licenseCount, vm.currentTrial.usage, vm.model.roomSystems, vm.currentTrial.customerOrgId, offersList)
         .catch(function (response) {
           vm.saveUpdateButtonLoad = false;
           Notification.notify([response.data.message], 'error');
@@ -225,10 +232,10 @@
           vm.customerOrgId = response.data.customerOrgId;
           if ((offersList.indexOf(Config.trials.call) !== -1) && !vm.disableSquaredUCCheckBox) {
             return HuronCustomer.create(response.data.customerOrgId, response.data.customerName, response.data.customerEmail)
-              .catch(function () {
+              .catch(function (response) {
                 vm.saveUpdateButtonLoad = false;
                 Notification.errorResponse(response, 'trialModal.squareducError');
-                return $q.reject();
+                return $q.reject(response);
               });
           }
         })
@@ -236,9 +243,7 @@
           vm.saveUpdateButtonLoad = false;
           angular.extend($stateParams.currentTrial, vm.currentTrial);
           var successMessage = [$translate.instant('trialModal.editSuccess', {
-            customerName: vm.currentTrial.customerName,
-            licenseCount: vm.currentTrial.licenses,
-            licenseDuration: vm.currentTrial.duration
+            customerName: vm.currentTrial.customerName
           })];
           Notification.notify(successMessage, 'success');
           if (!keepModal) {
