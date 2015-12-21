@@ -10,6 +10,8 @@ angular.module('Mediafusion')
       vm.role = $stateParams.properties["mf.role"];
       vm.connector = $stateParams.connector;
       vm.cluster = MediaClusterService.getClusters()[vm.clusterId];
+      vm.options = ["Switching", "Transcoding"];
+      vm.selectPlaceholder = 'Select One';
 
       vm.deleteHost = function () {
         return MediaClusterService.deleteHost(vm.clusterId, vm.connector.host.serial).then(function () {

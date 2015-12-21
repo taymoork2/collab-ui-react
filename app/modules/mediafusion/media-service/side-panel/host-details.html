@@ -34,11 +34,15 @@
       <tr>
         <td translate="mediaFusion.role"></td>
         <td>
-          <div class="col-sm-6 columns medium-5">
-            <select name="roleSelect" ng-model="hostDetails.role" ng-change="hostDetails.changeRole(hostDetails.role, hostDetails.clusterId)">
-              <option value="Switching">{{'mediaFusion.switching' | translate}}</option>
-              <option value="Transcoding">{{'mediaFusion.transcoding' | translate}}</option>
-            </select>
+          <div class="row">
+            <div class="col-sm-6 columns medium-5">
+              <cs-select
+                ng-model="hostDetails.role"
+                options="hostDetails.options"
+                placeholder="hostDetails.selectPlaceholder"
+                on-change-fn="hostDetails.changeRole(hostDetails.role, hostDetails.clusterId)">
+              </cs-select>
+            </div>
           </div>
         </td>
       </tr>
