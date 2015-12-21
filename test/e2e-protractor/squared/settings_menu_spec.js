@@ -20,23 +20,23 @@ describe('Service Setup tests', function () {
       utils.expectTextToBeSet(wizard.mainviewTitle, 'Plan Review');
     });
 
-    it('should show the invite users flow', function(){
+    it('should show the invite users flow', function () {
       navigation.clickAddUsers();
       utils.expectTextToBeSet(wizard.mainviewTitle, 'Invite Users');
       utils.click(inviteusers.bulkUpload);
     });
 
-    it('should show the enterprise settings flow', function(){
+    it('should show the enterprise settings flow', function () {
       navigation.clickEnterpriseSettings();
       utils.expectTextToBeSet(wizard.mainviewTitle, 'Enterprise Settings');
     });
 
-    it('should show the communications flow', function(){
+    it('should show the communications flow', function () {
       navigation.clickCommunicationWizard();
       utils.expectTextToBeSet(wizard.mainviewTitle, 'Unified Communications');
     });
 
-    it('should show the messanging flow', function(){
+    it('should show the messanging flow', function () {
       navigation.clickMessagingSetup();
       utils.expectTextToBeSet(wizard.mainviewTitle, 'Messaging Setup');
     });
