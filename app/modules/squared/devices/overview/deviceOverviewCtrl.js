@@ -11,9 +11,11 @@
 
     deviceOverview.currentDevice = $stateParams.currentDevice;
 
-    //if (deviceOverview.currentDevice.isHuronDevice) {
-    //  deviceOverview.currentDevice = CsdmHuronDeviceService.getDeviceDetails(deviceOverview.currentDevice);
-    //}
+    if (deviceOverview.currentDevice.isHuronDevice) {
+      CsdmHuronDeviceService.getDeviceDetails(deviceOverview.currentDevice).then(function (result) {
+        deviceOverview.currentDevice = result;
+      });
+    }
 
     deviceOverview.save = function (newName) {
       if (deviceOverview.currentDevice.needsActivation) {
@@ -71,7 +73,7 @@
       value: deviceOverview.currentDevice.upgradeChannel
     };
 
-    deviceOverview.saveUpgradeChannelAndWait = function() {
+    deviceOverview.saveUpgradeChannelAndWait = function () {
       var newValue = deviceOverview.selectedUpgradeChannel.value;
       if (newValue != deviceOverview.currentDevice.upgradeChannel) {
         deviceOverview.updatingUpgradeChannel = true;

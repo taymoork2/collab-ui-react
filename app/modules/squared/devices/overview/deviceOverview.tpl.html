@@ -3,13 +3,13 @@
 
   <cs-sp-container>
     <cs-sp-section>
-      <div style="display: flex; align-items: center; justify-content: center">
+      <div id="overview">
         <img
+          id="overviewImage"
           ng-if="deviceOverview.currentDevice.image"
           ng-src="{{deviceOverview.currentDevice.image}}"
-          style="width: 144px; margin: 25px;"
         />
-        <div style="margin: 25px;">
+        <div id="overviewDescription">
           <p class="form-control-static">{{deviceOverview.currentDevice.product}}</p>
           <i
             class="fa fa-circle device-status device-status"
@@ -111,7 +111,7 @@
         <span class="section-name" translate="deviceOverviewPage.issues"></span>
       </div>
       <div>
-        <div ng-repeat="event in deviceOverview.currentDevice.diagnosticsEvents" style="padding-bottom: 10px">
+        <div class="deviceIssue" ng-repeat="event in deviceOverview.currentDevice.diagnosticsEvents">
           <p>
             <i
               class="fa fa-circle device-status device-status-red">

@@ -764,7 +764,7 @@ angular
             currentDevice: {}
           },
           data: {
-            displayName: 'Device Overview'
+            displayName: 'Overview'
           }
         })
 
