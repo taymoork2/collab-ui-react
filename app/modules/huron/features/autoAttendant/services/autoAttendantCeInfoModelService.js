@@ -140,6 +140,7 @@
     // New get method for Huron Features Page
     function getCeInfosList() {
       var aaModel = {};
+      aaModel.ceInfos = [];
       var promises = [];
 
       var listPromise = AutoAttendantCeService.listCes().then(function (aaRecords) {
