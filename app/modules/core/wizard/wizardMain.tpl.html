@@ -4,7 +4,7 @@
       <span class="sr-only" translate="common.close"></span>
     </button>
   </div>
-  <div class="wizard-main-content" ng-controller="wizard.getTabController">
+  <div class="wizard-main-content" ng-if="wizard.current.tab" ng-controller="wizard.getTabController">
     <div ng-include="wizard.current.step.template" class="wizard-main-wrapper" ng-controller="wizard.getSubTabController">
     </div>
   </div>
