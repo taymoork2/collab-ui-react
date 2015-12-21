@@ -1,6 +1,6 @@
 <div>
   <div class="modal-header">
-    <button id="convertModalClose" type="button" class="close" ng-click="$close()">
+    <button id="convertModalClose" type="button" class="close" ng-click="exportUserStatusesCtrl.cancelExport();$close()">
       <span class="sr-only">Close</span>
     </button>
     <h5 class="modal-title">
@@ -22,7 +22,7 @@
         <i class="icon icon-spinner"></i>
       </span>
     </button>
-    <button id="convertCancelButton" class="btn pull-right" ng-click="$close()" style="margin-right: 10px">
+    <button id="convertCancelButton" class="btn pull-right" ng-click="exportUserStatusesCtrl.cancelExport();$close()" style="margin-right: 10px">
       <span>Close</span>
     </button>
   </div>

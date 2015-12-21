@@ -4,12 +4,13 @@
     .module('Hercules')
     .controller('ExportUserStatusesController',
       /* @ngInject */
-      function ($q, serviceId, Authinfo, UiStats, UserDetails, USSService2, ClusterService) {
+      function ($q, $timeout, serviceId, Authinfo, UiStats, UserDetails, USSService2, ClusterService) {
         var vm = this;
         vm.selectedServiceId = serviceId;
         vm.numberOfUsersPrCiRequest = 25; // can probably go higher, depending on the CI backend...
         vm.nothingToExport = true;
         vm.exportingUserStatusReport = false;
+        vm.exportCanceled = false;
         var serviceInfo = _.find(USSService2.getStatusesSummary(), {
           serviceId: vm.selectedServiceId
         });
@@ -18,6 +19,10 @@
         } else {
           vm.statusTypes = [];
         }
+
+        vm.cancelExport = function () {
+          vm.exportCanceled = true;
+        };
 
         vm.selectedStateChanged = function () {
           vm.nothingToExport = UiStats.noneSelected();
@@ -97,6 +102,12 @@
                 })
                 .then(function (statuses) {
                   return vm.getUsersBatch(statuses, 0);
+                })
+                .then(function (statuses) {
+                  if (vm.exportCanceled) {
+                    throw new Error('User Status Report download canceled');
+                  }
+                  return statuses;
                 })
                 .finally(function () {
                   vm.loading = false;
