@@ -206,9 +206,9 @@
     function filterDevices(searchString, devices, limit) {
       searchString = searchString.toLowerCase();
       var filteredDevices = [];
+      var macSearchString = searchString.replace(/[:/.-]/g, '');
       _.each(devices, function (device) {
-        if ((device.displayName || '').toLowerCase().indexOf(searchString) != -1 || (device.mac || '').toLowerCase().indexOf(searchString) != -
-          1 || (device.serial || '').toLowerCase().indexOf(searchString) != -1) {
+        if ((device.displayName || '').toLowerCase().indexOf(searchString) != -1 || (device.mac || '').toLowerCase().replace(/[:]/g, '').indexOf(macSearchString) != -1 || (device.serial || '').toLowerCase().indexOf(searchString) != -1) {
           if (_.size(filteredDevices) < limit) {
             device.id = device.url.split('/').pop();
             filteredDevices.push(device);
@@ -321,7 +321,8 @@
       getOrgDisplayName: getOrgDisplayName,
       findAndResolveOrgsForUserResults: findAndResolveOrgsForUserResults,
       checkIfMobile: checkIfMobile,
-      sendVerificationCode: sendVerificationCode
+      sendVerificationCode: sendVerificationCode,
+      filterDevices: filterDevices
     };
   }
 

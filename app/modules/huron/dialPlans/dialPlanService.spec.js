@@ -3,31 +3,25 @@
 describe('Service: DialPlanService', function () {
   var $httpBackend, HuronConfig, DialPlanService;
 
-  var voiceClusters = _.filter(getJSONFixture('huron/json/dialPlans/clusters.json'), {
-    name: 'CLUSTER_APPLICATION_VOICE'
-  });
-  var customerVoiceAustalia = getJSONFixture('huron/json/dialPlans/customervoice-aunp.json');
+  var customerVoiceAustralia = getJSONFixture('huron/json/dialPlans/customervoice-aunp.json');
   var customerVoiceNorthAmerica = getJSONFixture('huron/json/dialPlans/customervoice-nanp.json');
-  var dialPlans = getJSONFixture('huron/json/dialPlans/dialplans.json');
-  var dialPlanDetailsAustralia = getJSONFixture('huron/json/dialPlans/dialplandetails-aunp.json');
-  var dialPlanDetailsNorthAmerica = [{
+  var hardcodedDialPlanDetailsNorthAmerica = {
     countryCode: "+1",
     extensionGenerated: "false",
-    steeringDigitRequired: "true"
-  }];
-
-  var uuids = {
-    orgId: '1',
-    clusterId: '00000000-0000-0000-0000-000000000003',
-    dialPlanIdAudp: '00000000-0000-0000-0000-000000000009',
-    dialPlanIdNadp: '00000000-0000-0000-0000-000000000010',
+    steeringDigitRequired: "true",
+    supportSiteCode: "true",
+    supportSiteSteeringDigit: "true"
   };
+
+  var Authinfo = {
+    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1')
+  };
+
+  beforeEach(module('Huron'));
 
   var authInfo = {
     getOrgId: sinon.stub().returns('1'),
   };
-
-  beforeEach(module('Huron'));
 
   beforeEach(module(function ($provide) {
     $provide.value('Authinfo', authInfo);
@@ -45,76 +39,64 @@ describe('Service: DialPlanService', function () {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  describe('getVoiceCluster', function () {
-    it('should return uuid of voice cluster', function () {
-      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/common/clusters?type=APPLICATION_VOICE').respond(voiceClusters);
-      DialPlanService.getVoiceCluster().then(function (response) {
-        expect(response).toEqual(voiceClusters[0].uuid);
-      });
-    });
-  });
-
   describe('getCustomerVoice', function () {
     it('should return voice profile for current Australian customer', function () {
-      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + uuids.orgId).respond(customerVoiceAustalia);
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId()).respond(customerVoiceAustralia);
       DialPlanService.getCustomerVoice().then(function (response) {
-        expect(angular.equals(response, customerVoiceAustalia)).toBe(true);
+        expect(angular.equals(response, customerVoiceAustralia)).toBe(true);
       });
     });
 
     it('should return voice profile for current North American customer', function () {
-      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + uuids.orgId).respond(customerVoiceNorthAmerica);
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId()).respond(customerVoiceNorthAmerica);
       DialPlanService.getCustomerVoice().then(function (response) {
         expect(angular.equals(response, customerVoiceNorthAmerica)).toBe(true);
       });
     });
 
     it('should return voice profile for customer in parameter', function () {
-      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + uuids.orgId).respond(customerVoiceNorthAmerica);
-      DialPlanService.getCustomerVoice(uuids.orgId).then(function (response) {
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId()).respond(customerVoiceNorthAmerica);
+      DialPlanService.getCustomerVoice(Authinfo.getOrgId()).then(function (response) {
         expect(angular.equals(response, customerVoiceNorthAmerica)).toBe(true);
       });
     });
   });
 
-  describe('getDialPlans', function () {
-    it('should return a list of dial plans', function () {
-      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/common/clusters?type=APPLICATION_VOICE').respond(voiceClusters);
-      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/clusters/' + uuids.clusterId + '/dialplans').respond(dialPlans);
-      DialPlanService.getDialPlans().then(function (response) {
-        expect(angular.equals(response, dialPlans)).toBe(true);
+  describe('getCustomerDialPlanCountryCode', function () {
+    it('should not return a plus sign in the country code', function () {
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId()).respond(customerVoiceAustralia);
+      DialPlanService.getCustomerDialPlanCountryCode().then(function (response) {
+        expect(response.indexOf('+') === -1).toBe(true);
+      });
+    });
+
+    it('should return 61 for Australian customer', function () {
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId()).respond(customerVoiceAustralia);
+      DialPlanService.getCustomerDialPlanCountryCode(Authinfo.getOrgId()).then(function (response) {
+        expect(angular.equals(response, "61")).toBe(true);
       });
     });
   });
 
   describe('getCustomerDialPlanDetails', function () {
     it('should return dialPlanDetails for Australia', function () {
-      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/common/clusters?type=APPLICATION_VOICE').respond(voiceClusters);
-      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + uuids.orgId).respond(customerVoiceAustalia);
-      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/clusters/' + uuids.clusterId + '/dialplans').respond(dialPlans);
-      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/clusters/' + uuids.clusterId + '/dialplandetails?dialplan=' + uuids.dialPlanIdAudp).respond(dialPlanDetailsAustralia);
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId()).respond(customerVoiceAustralia);
       DialPlanService.getCustomerDialPlanDetails().then(function (response) {
-        expect(angular.equals(response, dialPlanDetailsAustralia[0])).toBe(true);
+        expect(angular.equals(response, customerVoiceAustralia["dialPlanDetails"])).toBe(true);
       });
     });
 
     it('should return dialPlanDetails for North America', function () {
-      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/common/clusters?type=APPLICATION_VOICE').respond(voiceClusters);
-      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + uuids.orgId).respond(customerVoiceNorthAmerica);
-      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/clusters/' + uuids.clusterId + '/dialplans').respond(dialPlans);
-      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/clusters/' + uuids.clusterId + '/dialplandetails?dialplan=' + uuids.dialPlanIdNadp).respond(dialPlanDetailsNorthAmerica);
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId()).respond(customerVoiceNorthAmerica);
       DialPlanService.getCustomerDialPlanDetails().then(function (response) {
-        expect(angular.equals(response, dialPlanDetailsNorthAmerica[0])).toBe(true);
+        expect(angular.equals(response, hardcodedDialPlanDetailsNorthAmerica)).toBe(true);
       });
     });
 
     it('should return dialPlanDetails for customer in parameter', function () {
-      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/common/clusters?type=APPLICATION_VOICE').respond(voiceClusters);
-      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + uuids.orgId).respond(customerVoiceNorthAmerica);
-      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/clusters/' + uuids.clusterId + '/dialplans').respond(dialPlans);
-      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/clusters/' + uuids.clusterId + '/dialplandetails?dialplan=' + uuids.dialPlanIdNadp).respond(dialPlanDetailsNorthAmerica);
-      DialPlanService.getCustomerDialPlanDetails(uuids.orgId).then(function (response) {
-        expect(angular.equals(response, dialPlanDetailsNorthAmerica[0])).toBe(true);
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId()).respond(customerVoiceNorthAmerica);
+      DialPlanService.getCustomerDialPlanDetails(Authinfo.getOrgId()).then(function (response) {
+        expect(angular.equals(response, hardcodedDialPlanDetailsNorthAmerica)).toBe(true);
       });
     });
   });

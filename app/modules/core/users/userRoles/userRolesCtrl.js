@@ -20,7 +20,7 @@ function UserRolesCtrl($scope, $translate, $stateParams, SessionStorage, Userser
   $scope.dirsyncEnabled = false;
   $scope.isMsgrSyncEnabled = false;
   $scope.isPartner = SessionStorage.get('partnerOrgId');
-  $scope.isNotProd = !Config.isProd();
+  $scope.showHelpDeskRole = !Config.isProd() || Authinfo.isCisco();
   $scope.getMessengerSyncStatus = getMessengerSyncStatus;
   $scope.updateRoles = updateRoles;
   $scope.clearCheckboxes = clearCheckboxes;

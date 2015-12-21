@@ -94,7 +94,7 @@
           vm.roomSystemsExist = true;
           if (service.isTrial) {
             vm.trialExists = true;
-            vm.trialId = service.license.trialId;
+            vm.trialId = service.trialId;
 
             if (service.status === 'PENDING') {
               vm.roomServices.isNewTrial = true;

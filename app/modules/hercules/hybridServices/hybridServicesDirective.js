@@ -73,7 +73,7 @@ angular
         }
         $scope.delayedUpdateTimer = $timeout(function () {
           updateStatusForUser();
-        }, 3000);
+        }, 5000);
       }
 
       $scope.getStatus = function (status) {
