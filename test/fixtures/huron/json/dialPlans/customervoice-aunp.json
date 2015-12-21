@@ -9,6 +9,20 @@
     "name": "AUNP",
     "uuid": "00000000-0000-0000-0000-000000000009"
   },
+  "dialPlanDetails": {
+    "regionCodeRequired": "true",
+    "steeringDigitRequired": "false",
+    "callingSearchSpace": {
+      "uuid": "00000000-0000-0000-0000-000000000ea0",
+      "name": "COMMON_TO_PSTN_AUNP_CSS"
+    },
+    "supportMultipleRegions": "false",
+    "steeringDigitPattern": "#steeringDigit#.!",
+    "supportSiteCode": "false",
+    "supportSiteSteeringDigit": "false",
+    "extensionGenerated": "true",
+    "countryCode": "+61"
+  },
   "callManagerGroup": {
     "name": "CMG-1-2",
     "uuid": "00000000-0000-0000-0000-000000000002"

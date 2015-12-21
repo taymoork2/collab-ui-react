@@ -1,14 +1,15 @@
 'use strict';
 
 describe('Controller: HuronSettingsCtrl', function () {
-  var controller, $controller, $scope, $q, CallerId, ExternalNumberService, Notification, DialPlanService;
+  var controller, $controller, $scope, $q, CallerId, ExternalNumberService, Notification, DialPlanService, FeatureToggleService;
   var HuronCustomer, ServiceSetup;
-  var customer, timezones, timezone, voicemailCustomer, internalNumberRanges, sites, site, companyNumbers;
+  var customer, timezones, timezone, voicemailCustomer, internalNumberRanges, sites, site, companyNumbers, cosRestrictions;
+  var getDeferred;
 
   beforeEach(module('Huron'));
 
   beforeEach(inject(function ($rootScope, _$controller_, _$q_, _CallerId_, _ExternalNumberService_, _DialPlanService_,
-    _Notification_, _HuronCustomer_, _ServiceSetup_) {
+    _Notification_, _HuronCustomer_, _ServiceSetup_, _FeatureToggleService_) {
 
     $scope = $rootScope.$new();
     $controller = _$controller_;
@@ -18,6 +19,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     HuronCustomer = _HuronCustomer_;
     DialPlanService = _DialPlanService_;
     ServiceSetup = _ServiceSetup_;
+    FeatureToggleService = _FeatureToggleService_;
     $q = _$q_;
 
     customer = getJSONFixture('huron/json/settings/customer.json');
@@ -28,6 +30,10 @@ describe('Controller: HuronSettingsCtrl', function () {
     site = sites[0];
     companyNumbers = getJSONFixture('huron/json/settings/companyNumbers.json');
     voicemailCustomer = getJSONFixture('huron/json/settings/voicemailCustomer.json');
+    cosRestrictions = getJSONFixture('huron/json/settings/cosRestrictions.json');
+
+    //create mock deferred object which will be used to return promises
+    getDeferred = $q.defer();
 
     spyOn(HuronCustomer, 'get').and.returnValue($q.when(customer));
     spyOn(ServiceSetup, 'updateVoicemailTimezone').and.returnValue($q.when());
@@ -42,6 +48,7 @@ describe('Controller: HuronSettingsCtrl', function () {
       ServiceSetup.sites = sites;
       return $q.when();
     });
+    spyOn(FeatureToggleService, 'supports').and.returnValue(getDeferred.promise);
     spyOn(ServiceSetup, 'getSite').and.returnValue($q.when(site));
     spyOn(ServiceSetup, 'getVoicemailPilotNumber').and.returnValue($q.when(voicemailCustomer));
     spyOn(ServiceSetup, 'updateSite').and.returnValue($q.when());
@@ -51,6 +58,8 @@ describe('Controller: HuronSettingsCtrl', function () {
     spyOn(CallerId, 'saveCompanyNumber').and.returnValue($q.when());
     spyOn(CallerId, 'updateCompanyNumber').and.returnValue($q.when());
     spyOn(CallerId, 'deleteCompanyNumber').and.returnValue($q.when());
+    spyOn(ServiceSetup, 'listCosRestrictions').and.returnValue($q.when(cosRestrictions));
+    spyOn(ServiceSetup, 'updateCosRestriction').and.returnValue($q.when());
 
     spyOn(Notification, 'notify');
     spyOn(Notification, 'processErrorResponse');
@@ -63,6 +72,8 @@ describe('Controller: HuronSettingsCtrl', function () {
   }));
 
   it('should initialize the Settings page', function () {
+    controller.CosFeatureEnabled = true;
+
     controller.init();
     $scope.$apply();
     expect(HuronCustomer.get).toHaveBeenCalled();
@@ -71,6 +82,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     expect(ServiceSetup.listSites).toHaveBeenCalled();
     expect(CallerId.listCompanyNumbers).toHaveBeenCalled();
     expect(ServiceSetup.getVoicemailPilotNumber).toHaveBeenCalled();
+    expect(ServiceSetup.listCosRestrictions).toHaveBeenCalled();
     expect(controller.model.callerId.callerIdName).toBe('Cisco');
   });
 
@@ -311,6 +323,16 @@ describe('Controller: HuronSettingsCtrl', function () {
     expect(ServiceSetup.updateCustomer).not.toHaveBeenCalled();
     expect(ServiceSetup.updateSite).not.toHaveBeenCalled();
     expect(ServiceSetup.updateVoicemailTimezone).not.toHaveBeenCalled();
+    expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
+  });
+
+  it('should show international dialing when feature toggle is ON', function () {
+    controller.CosFeatureEnabled = true;
+
+    controller.save();
+    $scope.$apply();
+
+    expect(ServiceSetup.updateCosRestriction).toHaveBeenCalled();
     expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'success');
   });
 

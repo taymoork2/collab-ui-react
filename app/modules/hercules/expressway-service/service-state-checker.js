@@ -2,7 +2,7 @@
   'use strict';
 
   /*@ngInject*/
-  function ServiceStateChecker(NotificationService, ClusterService, DirSyncService, USSService2, ServiceDescriptor, Authinfo) {
+  function ServiceStateChecker(NotificationService, ClusterService, USSService2, ServiceDescriptor, Authinfo) {
 
     var allExpresswayServices = ['squared-fusion-uc', 'squared-fusion-cal', 'squared-fusion-mgmt'];
 
@@ -16,7 +16,7 @@
     }
 
     function checkIfFusePerformed() {
-      var clusters = ClusterService.getClusters();
+      var clusters = ClusterService.getExpresswayClusters();
       if (_.size(clusters) === 0) {
         NotificationService.addNotification(
           NotificationService.types.TODO,
@@ -31,7 +31,7 @@
     }
 
     function checkIfConnectorsConfigured(connectorType) {
-      var clusters = ClusterService.getClusters();
+      var clusters = ClusterService.getExpresswayClusters();
       var areAllConnectorsConfigured = _.all(clusters, function (cluster) {
         return allConnectorsConfigured(cluster, connectorType);
       });
@@ -120,6 +120,9 @@
       var service = _.find(cluster.services, {
         service_type: serviceType
       });
+      if (!service) {
+        return true;
+      }
       return _.all(service.connectors, function (connector) {
         return connector.state !== 'not_configured';
       });

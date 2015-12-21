@@ -83,6 +83,13 @@ angular.module('Core')
           prod: 'https://csdm-a.wbx2.com/csdm/api/v1'
         },
 
+        messengerServiceUrl: {
+          dev: 'http://localhost:8080/admin-service/messenger/admin/api/v1',
+          cfe: 'https://msgr-admin-bts.webexconnect.com:443/admin-service/messenger/admin/api/v1',
+          integration: 'https://msgr-admin-bts.webexconnect.com:443/admin-service/messenger/admin/api/v1',
+          prod: 'https://msgr-admin.webexconnect.com:443/admin-service/messenger/admin/api/v1'
+        },
+
         oauthClientRegistration: {
           atlas: {
             id: 'C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec',
@@ -438,12 +445,13 @@ angular.module('Core')
           mediafusion: 'squared-fusion-media',
           fusion_mgmt: 'squared-fusion-mgmt',
           room_system: 'spark-room-system',
-          fusion_ec: 'squared-fusion-ec'
+          fusion_ec: 'squared-fusion-ec',
+          messenger: 'webex-messenger'
         },
 
         trials: {
           message: 'COLLAB',
-          meeting: 'WEBEXTRIALS',
+          meeting: 'WEBEX',
           call: 'SQUAREDUC',
           roomSystems: 'ROOMSYSTEMS'
         },
@@ -525,7 +533,9 @@ angular.module('Core')
           SC: 'SC', // Support Center (WebEx)
           TC: 'TC', // Training Center (WebEx)
           EC: 'EC', // Event Center (WebEx)
-          CO: 'CO' // Communication
+          CO: 'CO', // Communication
+          SD: 'SD', // Spark Room System
+          CMR: 'CMR', // Collaboration Meeting Room (WebEx)
         },
 
         licenseTypes: {
@@ -629,6 +639,17 @@ angular.module('Core')
           };
 
           return csdmServiceUrl[this.getEnv()];
+        },
+
+        getMessengerServiceUrl: function () {
+          var msgrServiceUrl = {
+            'dev': this.messengerServiceUrl.integration,
+            'cfe': this.messengerServiceUrl.cfe,
+            'integration': this.messengerServiceUrl.integration,
+            'prod': this.messengerServiceUrl.prod
+          };
+
+          return msgrServiceUrl[this.getEnv()];
         },
 
         getLocusServiceUrl: function () {
