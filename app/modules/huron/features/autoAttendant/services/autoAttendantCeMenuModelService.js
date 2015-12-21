@@ -272,7 +272,6 @@
   function MainMenu() {
     this.description = '';
     this.prompts = {};
-    this.timeoutInSeconds = 30;
     this.inputs = [];
   }
 
