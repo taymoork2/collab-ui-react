@@ -27,6 +27,10 @@ angular.module('Squared').service('DeviceFilter',
       count: 0,
       name: 'Online',
       filterValue: 'online'
+    }, {
+      count: 0,
+      name: 'Inactive',
+      filterValue: 'inactive'
     }];
 
     var getFilters = function () {
@@ -63,6 +67,13 @@ angular.module('Squared').service('DeviceFilter',
         .value().length;
 
       _.find(filters, {
+          filterValue: 'inactive'
+        }).count = _.chain(list)
+        .filter(isUnused)
+        .filter(matchesSearch)
+        .value().length;
+
+      _.find(filters, {
         filterValue: 'all'
       }).count = _.filter(list, matchesSearch).length;
     };
@@ -81,6 +92,10 @@ angular.module('Squared').service('DeviceFilter',
 
     function isOffline(item) {
       return !item.isOnline && !item.needsActivation;
+    }
+
+    function isUnused(item) {
+      return item.isUnused;
     }
 
     function setCurrentSearch(search) {
@@ -105,7 +120,7 @@ angular.module('Squared').service('DeviceFilter',
     }
 
     function matchesSearch(item) {
-      return (item.displayName || '').toLowerCase().indexOf(currentSearch || '') != -1;
+      return (item.displayName || '').toLowerCase().indexOf(currentSearch || '') != -1 || (item.product || '').toLowerCase().indexOf(currentSearch || '') != -1 || (item.readableState || '').toLowerCase().indexOf(currentSearch || '') != -1 || (item.ip || '').toLowerCase().indexOf(currentSearch || '') != -1 || (item.mac || '').toLowerCase().indexOf(currentSearch || '') != -1 || (item.tagString || '').toLowerCase().indexOf(currentSearch || '') != -1 || (item.serial || '').toLowerCase().indexOf(currentSearch || '') != -1 || (item.upgradeChannel || '').toLowerCase().indexOf(currentSearch || '') != -1;
     }
 
     function matchesFilter(item) {
@@ -120,6 +135,8 @@ angular.module('Squared').service('DeviceFilter',
         return isOnline(item);
       case 'offline':
         return isOffline(item);
+      case 'inactive':
+        return isUnused(item);
       default:
         return true;
       }
