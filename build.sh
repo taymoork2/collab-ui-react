@@ -14,6 +14,9 @@ for i in $proc_names_to_scan; do
     fi
 done
 
+# - setup a .cache dir
+mkdir -p ./.cache
+
 # -----
 # Phase 2: Setup
 source ./bin/setup-helpers
@@ -56,7 +59,11 @@ fi
 # Phase 3: Build
 gulp clean || exit $?
 gulp jsb:verify || exit $?
-gulp e2e --sauce --production-backend --nolint || exit $?
+gulp e2e --sauce --production-backend --nolint | tee ./.cache/e2e-sauce-logs || exit $?
+
+# groom logs for cleaner sauce labs output
+source ./bin/include/sauce-results-helpers
+mk_test_report ./.cache/e2e-sauce-logs | tee ./.cache/e2e-report-for-${BUILD_TAG}
 
 # -----
 # Phase 4: Package

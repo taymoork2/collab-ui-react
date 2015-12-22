@@ -14,6 +14,7 @@
       atlasStormBranding: 'atlas-2015-storm-launch',
       atlasSipUriDomain: 'atlas-sip-uri-domain',
       atlasWebexTrials: 'atlas-webex-trials',
+      huronClassOfService: 'COS',
     };
 
     var service = {
@@ -115,6 +116,8 @@
             resolve(enabled);
           });
         } else if (feature === features.atlasCloudberryTrials && Authinfo.getOrgId() === 'c054027f-c5bd-4598-8cd8-07c08163e8cd') {
+          resolve(true);
+        } else if (feature === features.huronClassOfService && Authinfo.getOrgId() === 'bdeda0ba-b761-4f52-831a-2c20c41714f1') {
           resolve(true);
         } else {
           var orgId = Authinfo.getOrgId();

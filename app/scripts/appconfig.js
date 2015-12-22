@@ -446,6 +446,14 @@ angular
             displayName: 'Single Number Reach'
           }
         })
+        .state('user-overview.communication.internationalDialing', {
+          controller: 'InternationalDialingInfoCtrl',
+          controllerAs: 'internationalDialing',
+          template: '<div uc-international-dialing></div>',
+          data: {
+            displayName: 'International Dialing'
+          }
+        })
         .state('user-overview.messaging', {
           templateUrl: 'modules/core/users/userPreview/userPreview.tpl.html',
           controller: 'UserPreviewCtrl',

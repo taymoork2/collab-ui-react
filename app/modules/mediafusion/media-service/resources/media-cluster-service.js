@@ -145,6 +145,16 @@
       //.success(callback);
     };
 
+    var getPropertySet = function (propertySet) {
+      var url = MediaConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets/' + propertySet;
+      return $http.get(url).then(extractDataFromResponse);
+    };
+
+    var setPropertySet = function (propertySet, value) {
+      var url = MediaConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets/' + propertySet;
+      return $http.post(url, value);
+    };
+
     var hub = CsdmHubFactory.create();
     var clusterPoller = CsdmPoller.create(fetch, hub);
 
@@ -162,7 +172,9 @@
       createGroup: createGroup,
       changeRole: changeRole,
       subscribe: hub.on,
-      getAggegatedClusters: getAggegatedClusters
+      getAggegatedClusters: getAggegatedClusters,
+      getPropertySet: getPropertySet,
+      setPropertySet: setPropertySet
     };
   }
 

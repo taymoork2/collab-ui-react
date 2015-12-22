@@ -35,6 +35,12 @@
       return clusterCache;
     };
 
+    var getExpresswayClusters = function () {
+      return _.filter(clusterCache, {
+        cluster_type: 'c_mgmt'
+      });
+    };
+
     var setProperty = function (clusterId, property, value) {
       var url = ConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/properties';
       var payload = {};
@@ -79,7 +85,7 @@
     };
 
     var hub = CsdmHubFactory.create();
-    var clusterPoller = CsdmPoller.create(fetch, hub);
+    CsdmPoller.create(fetch, hub);
 
     return {
       fetch: fetch,
@@ -89,7 +95,8 @@
       upgradeSoftware: upgradeSoftware,
       deleteCluster: deleteCluster,
       setProperty: setProperty,
-      subscribe: hub.on
+      subscribe: hub.on,
+      getExpresswayClusters: getExpresswayClusters
     };
   }
 
