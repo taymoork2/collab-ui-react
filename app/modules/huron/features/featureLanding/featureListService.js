@@ -34,6 +34,8 @@
         formattedCard.filterValue = 'AA';
         formattedCard.hasDepends = false;
         formattedCard.dependsNames = [];
+        formattedCard.hasReferences = false;
+        formattedCard.referenceNames = [];
         formattedList.push(formattedCard);
         formattedCard = {};
       });
@@ -54,14 +56,20 @@
           });
           formattedList[cardToUpdateIndex].dependsNames.push(dependName);
 
+          var refCardIndex = 0;
+          _.forEach(formattedList, function (refcard, refindex) {
+            if (dependName === refcard.cardName)
+              refCardIndex = refindex;
+          });
+          formattedList[refCardIndex].referenceNames.push(formattedList[cardToUpdateIndex].cardName);
+          formattedList[refCardIndex].hasReferences = true;
+
         });
-        formattedList[cardToUpdateIndex].dependsNames.sort(function(a, b) {
+
+        formattedList[cardToUpdateIndex].dependsNames.sort(function (a, b) {
           return a.localeCompare(b);
         });
 
-        //options.sort(function (a, b) {
-        //return a.localeCompare(b);
-      //});
       });
       return orderByCardName(formattedList);
     }

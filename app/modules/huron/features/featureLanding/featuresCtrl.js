@@ -213,6 +213,21 @@
     $scope.$on('HURON_FEATURE_DELETED', function () {
       vm.listOfFeatures.splice(vm.listOfFeatures.indexOf(featureToBeDeleted), 1);
       listOfAllFeatures.splice(listOfAllFeatures.indexOf(featureToBeDeleted), 1);
+
+      if (featureToBeDeleted.filterValue === 'AA' && featureToBeDeleted.hasReferences) {
+        _.forEach(featureToBeDeleted.referenceNames, function (ref) {
+          var cardToRefresh = _.find(listOfAllFeatures, function (feature) {
+            return feature.cardName === ref;
+          });
+          if (angular.isDefined(cardToRefresh)) {
+            cardToRefresh.dependsNames.splice(cardToRefresh.dependsNames.indexOf(featureToBeDeleted.cardName), 1);
+            if (cardToRefresh.dependsNames.length === 0) {
+              cardToRefresh.hasDepends = false;
+            }
+          }
+        });
+      }
+
       featureToBeDeleted = {};
       if (listOfAllFeatures.length === 0) {
         vm.pageState = "NewFeature";
@@ -220,6 +235,7 @@
       if (vm.filterText) {
         searchData(vm.filterText);
       }
+
     });
 
     function openModal() {
