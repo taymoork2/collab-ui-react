@@ -69,6 +69,31 @@
               "routeToDialedMailbox": {}
             }]
           }, {
+            "description": "Dial by extension",
+            "input": "6",
+            "actions": [{
+              "runActionsOnInput": {
+                "inputType": 2,
+                "attempts": 3,
+                "minNumberOfCharacters": 4,
+                "maxNumberOfCharacters": 4,
+                "language": "",
+                "voice": "",
+                "prompts": {
+                  "sayList": [{
+                    "value": "Enter the extension now."
+                  }]
+                },
+                "rawInputActions": [{
+                  "routeToExtension": {
+                    "description": "",
+                    "destination": "$Input"
+                  }
+                }],
+                "repeats": 2
+              }
+            }]
+          }, {
             "description": "",
             "input": "default",
             "actions": [{
@@ -134,6 +159,31 @@
             "actions": [{
               "route": {
                 "destination": "1111"
+              }
+            }]
+          }, {
+            "description": "Dial by extension",
+            "input": "6",
+            "actions": [{
+              "runActionsOnInput": {
+                "inputType": 2,
+                "attempts": 3,
+                "minNumberOfCharacters": 4,
+                "maxNumberOfCharacters": 4,
+                "language": "",
+                "voice": "",
+                "prompts": {
+                  "sayList": [{
+                    "value": "Enter the extension now."
+                  }]
+                },
+                "rawInputActions": [{
+                  "routeToExtension": {
+                    "description": "",
+                    "destination": "$Input"
+                  }
+                }],
+                "repeats": 2
               }
             }]
           }, {
@@ -302,6 +352,25 @@
         "name": "routeToDialedMailbox",
         "value": "",
         "description": "",
+        "voice": ""
+      }],
+      "timeout": "",
+      "username": "",
+      "password": "",
+      "url": "",
+      "language": "",
+      "voice": ""
+    }, {
+      "description": "Dial by extension",
+      "isConfigured": true,
+      "type": "MENU_OPTION",
+      "isTouched": false,
+      "key": "6",
+      "actions": [{
+        "name": "runActionsOnInput",
+        "value": "Enter the extension now.",
+        "description": "",
+        "inputType": 2,
         "voice": ""
       }],
       "timeout": "",

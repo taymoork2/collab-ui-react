@@ -38,6 +38,17 @@
       <span class="section-name" translate="mediaFusion.settings.schedule"></span>
     </div>
     <p translate="mediaFusion.settings.scheduleText"></p>
+    <div class="row">
+      <div class="large-3">
+        <cs-select
+          ng-model="groupClusterSettingsCtrl.selected"
+          options="groupClusterSettingsCtrl.options"
+          placeholder="groupClusterSettingsCtrl.selectPlaceholder"
+          on-change-fn="groupClusterSettingsCtrl.changeReleaseChanel()"
+          >
+        </cs-select>
+      </div>
+    </div>
   </cs-sp-section>
 
 </cs-sp-container>
