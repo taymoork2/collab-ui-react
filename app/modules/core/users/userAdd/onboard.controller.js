@@ -393,7 +393,7 @@ angular.module('Core')
 
       var generateConfChk = function (confs, cmrs) {
         $scope.confChk = [];
-        $scope.confLicenses = [];
+        $scope.allLicenses = [];
 
         for (var i in confs) {
           var temp = {
@@ -409,8 +409,8 @@ angular.module('Core')
                 billing: conf.license.billingServiceId,
                 volume: conf.license.volume,
                 licenseId: conf.license.licenseId,
+                offerName: conf.license.offerName,
                 label: conf.label,
-                //change later
                 confModel: false
               };
             }
@@ -424,9 +424,8 @@ angular.module('Core')
                 volume: cmr.license.volume,
                 licenseId: cmr.license.licenseId,
                 label: cmr.label,
-                //change later
                 cmrModel: false
-              }
+              };
             }
           }).value();
 
@@ -435,13 +434,17 @@ angular.module('Core')
           });
           siteUrls = _.uniq(siteUrls);
 
-          $scope.confLicenses = _.map(siteUrls, function (site) {
-            var matches = _.filter(confFeatures, {
+          $scope.allLicenses = _.map(siteUrls, function (site) {
+            var confMatches = _.filter(confFeatures, {
+              siteUrl: site
+            });
+            var cmrMatches = _.filter(cmrFeatures, {
               siteUrl: site
             });
             return {
               site: site,
-              lic: matches
+              confLic: confMatches,
+              cmrLic: cmrMatches
             };
           });
 
