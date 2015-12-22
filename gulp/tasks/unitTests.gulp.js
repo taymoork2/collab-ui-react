@@ -11,6 +11,7 @@ var args = require('yargs').argv;
 var karma = require('karma').server;
 var runSeq = require('run-sequence');
 var log = $.util.log;
+var path = require('path')
 
 // Compile the karma template so that changes
 // to its file array aren't managed manually
@@ -59,11 +60,8 @@ gulp.task('karma-config', function (done) {
 gulp.task('karma', function (done) {
   if (!args.nounit) {
     var specs = args.specs || 'all';
-    var dirname = __dirname.split('/');
-    var removed = dirname.splice((dirname.length - 2), 2);
-    var directory = dirname.join('/');
     var options = {
-      configFile: directory + '/test/karma-unit-' + specs + '.js'
+      configFile: path.resolve(__dirname, '../../test/karma-unit-' + specs + '.js')
     };
     if (args.debug) {
       options.browsers = ['Chrome'];
@@ -80,12 +78,9 @@ gulp.task('karma', function (done) {
 });
 
 // Run test once and exit
-gulp.task('karma-watch', ['karma-config-watch'], function (done) {
-  var dirname = __dirname.split('/');
-  var removed = dirname.splice((dirname.length - 2), 2);
-  var directory = dirname.join('/');
+gulp.task('karma-watch', function (done) {
   karma.start({
-    configFile: directory + '/test/karma-watch.js',
+    configFile: path.resolve(__dirname, '../../test/karma-watch.js'),
     singleRun: true
   }, done);
 });
@@ -137,6 +132,11 @@ gulp.task('karma-all', function (done) {
     'karma-huron',
     'karma-mediafusion',
     'karma-messenger',
+    'karma-squared',
+    'karma-sunlight',
+    'karma-webex',
+    done);
+});
     'karma-squared',
     'karma-sunlight',
     'karma-webex',
