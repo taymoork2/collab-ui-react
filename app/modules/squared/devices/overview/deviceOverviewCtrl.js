@@ -70,22 +70,28 @@
       };
     });
 
-    deviceOverview.selectedUpgradeChannel = {
-      label: $translate.instant('CsdmStatus.upgradeChannels.' + deviceOverview.currentDevice.upgradeChannel),
-      value: deviceOverview.currentDevice.upgradeChannel
-    };
+    function resetSelectedChannel() {
+      deviceOverview.selectedUpgradeChannel = {
+        label: $translate.instant('CsdmStatus.upgradeChannels.' + deviceOverview.currentDevice.upgradeChannel),
+        value: deviceOverview.currentDevice.upgradeChannel
+      };
+    }
+
+    resetSelectedChannel();
 
     deviceOverview.saveUpgradeChannelAndWait = function () {
       var newValue = deviceOverview.selectedUpgradeChannel.value;
       if (newValue != deviceOverview.currentDevice.upgradeChannel) {
         deviceOverview.updatingUpgradeChannel = true;
         saveUpgradeChannel(newValue)
-          .then(waitForDeviceToUpdateUpgradeChannel(newValue)
-            .catch(XhrNotificationService.notify)
-            .finally(function () {
-              deviceOverview.updatingUpgradeChannel = false;
-            }))
-          .catch(XhrNotificationService.notify);
+          .then(_.partial(waitForDeviceToUpdateUpgradeChannel, newValue))
+          .catch(function (error) {
+            XhrNotificationService.notify(error);
+            resetSelectedChannel();
+          })
+          .finally(function () {
+            deviceOverview.updatingUpgradeChannel = false;
+          });
       }
     };
 
