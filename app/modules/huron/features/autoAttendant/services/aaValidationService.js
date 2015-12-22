@@ -39,32 +39,51 @@
       return true;
     }
 
+    function checkAllKeys(optionMenu) {
+      var outErrors = [];
+      var entry = _.forEach(optionMenu.entries, function (entry) {
+        if (entry.key && 'goto' === entry.actions[0].name && !entry.actions[0].value) {
+          outErrors.push({
+            msg: 'autoAttendant.phoneMenuErrorRouteToAATargetMissing',
+            key: entry.key
+          });
+        }
+        if (entry.key && 'routeToHuntGroup' === entry.actions[0].name && !entry.actions[0].value) {
+          outErrors.push({
+            msg: 'autoAttendant.phoneMenuErrorRouteToHGTargetMissing',
+            key: entry.key
+          });
+        }
+        if (entry.key && 'runActionsOnInput' === entry.actions[0].name && 2 === entry.actions[0].inputType && !entry.actions[0].value) {
+          outErrors.push({
+            msg: 'autoAttendant.phoneMenuErrorDialByExtMessageMissing',
+            key: entry.key
+          });
+        }
+      });
+
+      return outErrors;
+
+    }
+
     function isPhoneMenuValidationSuccess(uiCombinedMenu) {
       var optionMenu = _.find(uiCombinedMenu.entries, function (entry) {
         return this === entry.type;
       }, 'MENU_OPTION');
 
+      var errors = [];
+
       if (angular.isDefined(optionMenu) && angular.isDefined(optionMenu.entries)) {
-        var entry = _.find(optionMenu.entries, function (entry) {
-          return entry.key && 'goto' === entry.actions[0].name && !entry.actions[0].value;
-        });
-        if (angular.isDefined(entry)) {
-          Notification.error('autoAttendant.phoneMenuErrorRouteToAATargetMissing', {
-            key: entry.key
+        errors = checkAllKeys(optionMenu);
+
+        _.forEach(errors, function (err) {
+          Notification.error(err.msg, {
+            key: err.key
           });
-          return false;
-        }
-        entry = _.find(optionMenu.entries, function (entry) {
-          return entry.key && 'runActionsOnInput' === entry.actions[0].name && 2 === entry.actions[0].inputType && !entry.actions[0].value;
         });
-        if (angular.isDefined(entry)) {
-          Notification.error('autoAttendant.phoneMenuErrorDialByExtMessageMissing', {
-            key: entry.key
-          });
-          return false;
-        }
       }
-      return true;
+
+      return errors.length === 0;
     }
   }
 })();

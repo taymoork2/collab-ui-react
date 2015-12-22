@@ -9,6 +9,14 @@
   function PlanReviewCtrl(Authinfo, TrialService, Log, $translate, $scope, FeatureToggleService, Userservice) {
     /*jshint validthis: true */
     var vm = this;
+
+    vm.multiSubscriptions = {
+      oneBilling: false,
+      selected: '',
+      options: [],
+      billings: []
+    };
+
     vm.messagingServices = {
       isNewTrial: false,
       services: []
@@ -42,6 +50,8 @@
     vm.isInitialized = false; // invert the logic and initialize to false so the template doesn't flicker before spinner
     vm.isStormBranding = false;
     vm.roomSystemsExist = false;
+    vm.showMultiSubscriptions = showMultiSubscriptions;
+    vm.licenseExists = false;
 
     init();
 
@@ -50,6 +60,14 @@
     });
 
     function init() {
+      vm.multiSubscriptions.billings = Authinfo.getLicenses() || [];
+
+      vm.multiSubscriptions.options = _.uniq(_.pluck(vm.multiSubscriptions.billings, 'billingServiceId'));
+      vm.multiSubscriptions.selected = vm.multiSubscriptions.options[0];
+      if (vm.multiSubscriptions.options.length === 1) {
+        vm.multiSubscriptions.oneBilling = true;
+      }
+
       vm.messagingServices.services = Authinfo.getMessageServices() || [];
       angular.forEach(vm.messagingServices.services, function (service) {
         if (service.license.isTrial) {
@@ -159,6 +177,14 @@
       }
     }
     /////////////////
+
+    function showMultiSubscriptions(billingServiceId) {
+      var isSelected = vm.multiSubscriptions.selected === billingServiceId;
+      var isOneBilling = vm.multiSubscriptions.oneBilling;
+
+      vm.licenseExists = isSelected;
+      return isOneBilling || isSelected;
+    }
 
     function populateTrialData(trial) {
       vm.trial = trial;

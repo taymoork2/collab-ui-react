@@ -2,6 +2,13 @@
   <i class="icon icon-spinner"></i>
 </div>
 <div class="wizard-plan-review" ng-if="planReview.isInitialized">
+  <div ng-hide="planReview.multiSubscriptions.oneBilling" class="flex-row">
+    <div class="small-4 multiSub">
+      <span class="multiText" translate="firstTimeWizard.subscriptionId"></span>
+      <cs-select class="multiSelect" ng-model="planReview.multiSubscriptions.selected" options="planReview.multiSubscriptions.options">
+      </cs-select>
+    </div>
+  </div>
   <div class="flex-row">
     <div class="small-4 columns column-title">
       <div class="column-header">
@@ -53,7 +60,8 @@
           <span ng-if="planReview.isStormBranding" translate="firstTimeWizard.message"></span>
           <span ng-if="!planReview.isStormBranding" translate="firstTimeWizard.messaging"></span>
         </div>
-        <div class="item-paid" ng-repeat="service in planReview.messagingServices.services">
+        <div class="item-paid" ng-show="planReview.showMultiSubscriptions(service.license.billingServiceId)"
+          ng-repeat="service in planReview.messagingServices.services">
           <div ng-if="service.license.isTrial || planReview.messagingServices.isNewTrial" class="badge badge-trial" translate="firstTimeWizard.trial"></div>
           <div class="quantity">
             <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
@@ -70,14 +78,17 @@
           <span ng-if="planReview.isStormBranding" translate="firstTimeWizard.meeting"></span>
           <span ng-if="!planReview.isStormBranding" translate="firstTimeWizard.conferencing"></span>
         </div>
-        <div class="item-paid" ng-repeat="service in planReview.confServices.services" ng-hide="service.license.offerName !== 'CF'">
-          <div ng-if="service.license.isTrial || planReview.confServices.isNewTrial" class="badge badge-trial" translate="firstTimeWizard.trial"></div>
-          <div class="quantity">
-            <span translate="firstTimeWizard.quantity"></span>
-            <span>{{service.license.volume}}</span>
+        <div ng-repeat="service in planReview.confServices.services" ng-hide="service.license.offerName !== 'CF'">
+          <div class="item-paid" ng-show="planReview.showMultiSubscriptions(service.license.billingServiceId)">
+            <div ng-if="service.license.isTrial || planReview.confServices.isNewTrial" class="badge badge-trial" translate="firstTimeWizard.trial"></div>
+            <div class="quantity">
+              <span translate="firstTimeWizard.quantity"></span>
+              <span>{{service.license.volume}}</span>
+            </div>
           </div>
         </div>
-        <div class="item-mtg" ng-repeat="(siteUrl,services) in planReview.sites">
+        <div class="item-mtg" ng-show="planReview.showMultiSubscriptions(services[0].license.billingServiceId)"
+          ng-repeat="(siteUrl,services) in planReview.sites">
           <div class="sub-line"></div>
           {{siteUrl}}
           <div class="sub-item" ng-repeat="service in services">
@@ -100,7 +111,8 @@
           <span ng-if="planReview.isStormBranding" translate="firstTimeWizard.call"></span>
           <span ng-if="!planReview.isStormBranding" translate="firstTimeWizard.communications"></span>
         </div>
-        <div class="item-paid" ng-repeat="service in planReview.commServices.services">
+        <div class="item-paid" ng-show="planReview.showMultiSubscriptions(service.license.billingServiceId)"
+          ng-repeat="service in planReview.commServices.services">
           <div ng-if="service.license.isTrial || planReview.commServices.isNewTrial" class="badge badge-trial" translate="firstTimeWizard.trial"></div>
           <div class="quantity">
             <span class="quantity-padding" translate="firstTimeWizard.quantity"></span>
@@ -110,7 +122,7 @@
       </div>
     </div>
   </div>
-  <div ng-if="planReview.roomSystemsExist">
+  <div ng-if="planReview.roomSystemsExist && planReview.licenseExists">
     <div class="row row-room" ng-class="{'column-paid' : !planReview.roomServices.isNewTrial, 'column-trial' : planReview.roomServices.isNewTrial}">
       <div class="column-header column-room small-6 columns">
         <i class="icon icon-circle-telepresence"></i>
@@ -119,10 +131,12 @@
       <div class="room-systems small-6 columns">
         <div class="item-sparkRoom" translate="firstTimeWizard.sparkRoomSystem"></div>
         <div ng-repeat="service in planReview.roomServices.services" ng-hide="service.licenseType !== 'SHARED_DEVICES'">
-          <div ng-if="service.isTrial || planReview.roomServices.isNewTrial" class="badge badge-trial" translate="firstTimeWizard.trial"></div>
-          <div class="spark-quantity">
-            <span translate="firstTimeWizard.quantity"></span>
-            <span>{{service.volume}}</span>
+          <div ng-show="planReview.showMultiSubscriptions(service.billingServiceId)"> 
+            <div ng-if="service.isTrial || planReview.roomServices.isNewTrial" class="badge badge-trial" translate="firstTimeWizard.trial"></div>
+            <div class="spark-quantity">
+              <span translate="firstTimeWizard.quantity"></span>
+              <span>{{service.volume}}</span>
+            </div>
           </div>
         </div>
       </div>
