@@ -14,7 +14,10 @@
       priority: ngIf.priority - 1,
       terminal: ngIf.terminal,
       link: link,
-      scope: true
+      scope: {
+        featureShow: '@',
+        featureHide: '@'
+      }
     };
 
     return directive;
@@ -23,8 +26,8 @@
       // defaults not to show until FeatureToggleService returns the inverse
       scope.show = false;
       scope.hide = true;
-      var showFeature = attrs.featureShow;
-      var hideFeature = attrs.featureHide;
+      var showFeature = scope.featureShow;
+      var hideFeature = scope.featureHide;
 
       if (hideFeature) {
         FeatureToggleService.supports(hideFeature).then(function (value) {

@@ -22,6 +22,12 @@
       return deviceCache.list();
     }
 
+    function getDeviceDetails(huronDevice) {
+      return $http.get(huronDevice.url + "?status=true").then(function (res) {
+        return CsdmConverter.convertHuronDeviceDetailed(res.data, huronDevice);
+      });
+    }
+
     function resetDevice(url) {
       return $http.put(url, {
         actions: {
@@ -33,6 +39,7 @@
     return {
       on: deviceCache.on,
       getDeviceList: getDeviceList,
+      getDeviceDetails: getDeviceDetails,
       resetDevice: resetDevice
     };
   }

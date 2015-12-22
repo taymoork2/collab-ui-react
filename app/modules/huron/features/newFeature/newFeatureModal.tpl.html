@@ -4,8 +4,8 @@
   </button>
   <h3 class="modal-title" translate="huronHuntGroup.newFeatureModalTitle"></h3>
 </div>
-<div class="huron-new-feature-modal">
-  <button ng-repeat="feature in features" ng-click="ok((feature.code | translate))">
+<div class="huron-new-feature-modal" ng-if="!loading">
+  <button ng-repeat="feature in features" ng-click="ok((feature.code | translate))" ng-if="features.length !== 0">
     <div class="feature-icon-container">
       <label class="feature-icon-circle feature-icon-color-{{feature.cssClass}}">
           {{feature.code | translate}}
@@ -20,4 +20,10 @@
       {{feature.description | translate}}
     </p>
   </button>
+  <div ng-if="features.length === 0">
+    <h4 translate="huronHuntGroup.noFeatures"></h4>
+  </div>
+</div>
+<div class="loading" ng-if="loading">
+  <i class="icon icon-spinner"></i>
 </div>

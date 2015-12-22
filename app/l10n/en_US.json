@@ -887,6 +887,7 @@
     "actionsHeader": "Actions",
     "activationCodeHeader": "Activation Code",
     "activationDateHeader": "Activation Date",
+    "informationHeader": "Information",
     "addDeviceStep1": "Where will this device be installed?",
     "addDeviceStep1Desc": "It is recommended that you use the name of your conference room or shared space as it is shown in your company directory. The video address for this device will use this name. It will also be the easiest way to search for and find the device in the system later.",
     "addDeviceStep2": "Your activation code has been created",
@@ -895,7 +896,7 @@
     "emptyDevices2": "you'll see it listed here.",
     "deleteDevice": "Delete Device",
     "resetDevice": "Reset Device",
-    "reportProblem": "Report Problem",
+    "reportProblem": "Report Issue",
     "deleteDeviceConfText": "Are you sure you want to delete this device?",
     "resetDeviceConfText": "Are you sure you want to reset this device?",
     "videoQTitle": "Potential Loss of Video Quality",
@@ -904,7 +905,8 @@
     "active": "Active",
     "offline": "Offline",
     "issuesDetected": "Issues Detected",
-    "remoteSupport": "Remote Support",
+    "ciscoSupport": "Cisco Support",
+    "remoteAccessKey": "Remote Access Key",
     "rsuKey": "Share this key with Cisco Support by pasting it in a message.",
     "rsuKeyDesc": "This will give Cisco Support full access to your device. Use the 'Reset' button to create a new Remote Support Access Key and invalidate any previous key you may have shared with Cisco Support.",
     "reset": "Reset",
@@ -1149,6 +1151,7 @@
     "needHelp": "Need help - ",
     "needHelpExplain": "Search the knowledge base.",
     "planReview": "Plan Review",
+    "subscriptionId": "Subscription ID's",
     "spark": "Spark",
     "sparkMsg": "Free Spark Messaging",
     "sparkStub": "Set up Spark",
@@ -2010,12 +2013,9 @@
     "ipAddr": "IP Address",
     "macAddr": "MAC Address",
     "issues": "Issues",
-    "expires": "expires"
-  },
-  "deviceUpgradeChannelEditPage": {
-    "instructions": "Choose which channel you want this device to automatically upgrade with:",
-    "deviceUpdated": "Device updated",
-    "updateFailed": "Device did not update its Software Update Channel in time"
+    "expires": "expires",
+    "channelUpdated": "Software Update Channel updated",
+    "channelUpdateFailed": "Device did not update its Software Update Channel in time"
   },
   "generateActivationCodeModal": {
     "title": "Activation Code",
@@ -2869,6 +2869,8 @@
     "cp": "CP",
     "editAction": "Edit",
     "deleteAction": "Delete",
+    "aaDependsTitle": "{{featureName}} Auto Attendant Dependents",
+    "aaDeleteBlocked": "Operation cannot be completed because this auto-attendant is referenced by {{aaNames}}",
     "deleteFeature": "Delete {{ featureType }}",
     "deleteConfirmText": "Are you sure you want to delete the {{ featureName }} {{ featureType }}?",
     "deleteSuccessText": "{{ featureName }} {{ featureType }} has been deleted successfully",
@@ -2963,6 +2965,8 @@
     "numberFetchFailure": "Unable to get numbers.",
     "newFeatureButtonText": "New",
     "newFeatureModalTitle": "Create New Feature",
+    "noFeatures": "Features are not available for the current login",
+    "noFeature": "This feature is not enabled for the current login",
     "featuresNotYetConfiguredPage": {
       "nothingToSee": "Nothing here to see yet.",
       "letsCustomize": "Let's customize the calling experience"

@@ -8,7 +8,7 @@
   /* jshint validthis: true */
 
   /* @ngInject */
-  function HuronFeaturesCtrl($scope, $state, $filter, $timeout, $modal, $q, Authinfo, HuronFeaturesListService, HuntGroupService, AutoAttendantCeInfoModelService, AAModelService, Notification, Log) {
+  function HuronFeaturesCtrl($scope, $state, $filter, $timeout, $modal, $q, Authinfo, HuronFeaturesListService, HuntGroupService, AutoAttendantCeInfoModelService, AAModelService, Notification, Log, FeatureToggleService) {
 
     var vm = this;
     vm.searchData = searchData;
@@ -24,18 +24,14 @@
     vm.cardColor = {};
     vm.aaModel = {};
     var featureToBeDeleted = {};
+    vm.noFeatures = false;
+    vm.loading = true;
     vm.placeholder = {
       'name': 'Search'
     };
     vm.filters = [{
       name: 'All',
       filterValue: 'all'
-    }, {
-      name: 'Auto Attendant',
-      filterValue: 'AA'
-    }, {
-      name: 'Hunt Group',
-      filterValue: 'HG'
     }];
     /* LIST OF FEATURES
      *
@@ -45,38 +41,67 @@
      *  3. Add the Object for the feature in the format of the Features Array Object (features)
      *  4. Define the formatter
      * */
-    var features = [{
-      name: 'AA',
-      getFeature: AutoAttendantCeInfoModelService.getCeInfosList,
-      formatter: HuronFeaturesListService.autoAttendants,
-      isEmpty: false,
-      i18n: 'huronFeatureDetails.aaName',
-      color: 'primary'
-    }, {
-      name: 'HG',
-      getFeature: HuntGroupService.getListOfHuntGroups,
-      formatter: HuronFeaturesListService.huntGroups,
-      isEmpty: false,
-      i18n: 'huronFeatureDetails.hgName',
-      color: 'alerts'
-    }];
-
-    _.forEach(features, function (feature) {
-      vm.cardColor[feature.name] = feature.color;
-    });
+    vm.features = [];
 
     init();
 
     function init() {
 
-      vm.pageState = 'Loading';
-      var featuresPromises = getListOfFeatures();
+      var aaPromise = FeatureToggleService.supports(FeatureToggleService.features.huronAutoAttendant);
 
-      handleFeaturePromises(featuresPromises);
+      var hgPromise = FeatureToggleService.supports(FeatureToggleService.features.huronHuntGroup);
 
-      $q.all(featuresPromises).then(function (responses) {
-        showNewFeaturePageIfNeeded();
+      $q.all([aaPromise, hgPromise]).then(function (toggles) {
+        vm.loading = false;
+
+        if (toggles[0]) {
+          vm.filters.push({
+            name: 'Auto Attendant',
+            filterValue: 'AA'
+          });
+          vm.features.push({
+            name: 'AA',
+            getFeature: AutoAttendantCeInfoModelService.getCeInfosList,
+            formatter: HuronFeaturesListService.autoAttendants,
+            isEmpty: false,
+            i18n: 'huronFeatureDetails.aaName',
+            color: 'primary'
+          });
+        }
+
+        if (toggles[1]) {
+          vm.filters.push({
+            name: 'Hunt Group',
+            filterValue: 'HG'
+          });
+          vm.features.push({
+            name: 'HG',
+            getFeature: HuntGroupService.getListOfHuntGroups,
+            formatter: HuronFeaturesListService.huntGroups,
+            isEmpty: false,
+            i18n: 'huronFeatureDetails.hgName',
+            color: 'alerts'
+          });
+        }
+
+        if (!toggles[0] && !toggles[1]) {
+          vm.noFeatures = true;
+        }
+
+        _.forEach(vm.features, function (feature) {
+          vm.cardColor[feature.name] = feature.color;
+        });
+
+        vm.pageState = 'Loading';
+        var featuresPromises = getListOfFeatures();
+
+        handleFeaturePromises(featuresPromises);
+
+        $q.all(featuresPromises).then(function (responses) {
+          showNewFeaturePageIfNeeded();
+        });
       });
+
     }
 
     //Switches Data that populates the Features tab
@@ -96,14 +121,14 @@
 
     function getListOfFeatures() {
       var promises = [];
-      features.forEach(function (value) {
+      vm.features.forEach(function (value) {
         promises.push(value.getFeature());
       });
       return promises;
     }
 
     function handleFeaturePromises(promises) {
-      _.forEach(features, function (feature, index) {
+      _.forEach(vm.features, function (feature, index) {
         promises[index].then(function (data) {
           handleFeatureData(data, feature);
         }, function (response) {
@@ -176,6 +201,13 @@
     };
 
     vm.deleteHuronFeature = function (feature) {
+      if (feature.hasDepends) {
+        Notification.error('huronFeatureDetails.aaDeleteBlocked', {
+          aaNames: feature.dependsNames.join(", ")
+        });
+        return;
+      }
+
       featureToBeDeleted = feature;
       $state.go('huronfeatures.deleteFeature', {
         deleteFeatureName: feature.cardName,
@@ -184,9 +216,18 @@
       });
     };
 
+    vm.detailsHuronFeature = function (feature) {
+      $state.go('huronfeatures.aaListDepends', {
+        detailsFeatureName: feature.cardName,
+        detailsFeatureId: feature.id,
+        detailsFeatureType: feature.filterValue,
+        detailsDependsList: feature.dependsNames
+      });
+    };
+
     function areFeaturesEmpty() {
       var isEmpty = true;
-      _.forEach(features, function (feature) {
+      _.forEach(vm.features, function (feature) {
         isEmpty = isEmpty && feature.isEmpty;
       });
       return isEmpty;
@@ -209,6 +250,21 @@
     $scope.$on('HURON_FEATURE_DELETED', function () {
       vm.listOfFeatures.splice(vm.listOfFeatures.indexOf(featureToBeDeleted), 1);
       listOfAllFeatures.splice(listOfAllFeatures.indexOf(featureToBeDeleted), 1);
+
+      if (featureToBeDeleted.filterValue === 'AA' && featureToBeDeleted.hasReferences) {
+        _.forEach(featureToBeDeleted.referenceNames, function (ref) {
+          var cardToRefresh = _.find(listOfAllFeatures, function (feature) {
+            return feature.cardName === ref;
+          });
+          if (angular.isDefined(cardToRefresh)) {
+            cardToRefresh.dependsNames.splice(cardToRefresh.dependsNames.indexOf(featureToBeDeleted.cardName), 1);
+            if (cardToRefresh.dependsNames.length === 0) {
+              cardToRefresh.hasDepends = false;
+            }
+          }
+        });
+      }
+
       featureToBeDeleted = {};
       if (listOfAllFeatures.length === 0) {
         vm.pageState = "NewFeature";
@@ -216,6 +272,7 @@
       if (vm.filterText) {
         searchData(vm.filterText);
       }
+
     });
 
     function openModal() {
