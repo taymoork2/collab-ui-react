@@ -393,12 +393,57 @@ angular.module('Core')
 
       var generateConfChk = function (confs, cmrs) {
         $scope.confChk = [];
+        $scope.confLicenses = [];
+
         for (var i in confs) {
           var temp = {
             confFeature: confs[i],
             confModel: false,
             confId: 'conf-' + i
           };
+
+          var confFeatures = _.chain(confs).map(function (conf) {
+            if (_.has(conf, 'license.siteUrl')) {
+              return {
+                siteUrl: conf.license.siteUrl,
+                billing: conf.license.billingServiceId,
+                volume: conf.license.volume,
+                licenseId: conf.license.licenseId,
+                label: conf.label,
+                //change later
+                confModel: false
+              };
+            }
+          }).remove(undefined).value();
+
+          var cmrFeatures = _.chain(cmrs).map(function (cmr) {
+            if (_.has(cmr, 'license.siteUrl')) {
+              return {
+                siteUrl: cmr.license.siteUrl,
+                billing: cmr.license.billingServiceId,
+                volume: cmr.license.volume,
+                licenseId: cmr.license.licenseId,
+                label: cmr.label,
+                //change later
+                cmrModel: false
+              }
+            }
+          }).value();
+
+          var siteUrls = _.map(confFeatures, function (lic) {
+            return lic.siteUrl;
+          });
+          siteUrls = _.uniq(siteUrls);
+
+          $scope.confLicenses = _.map(siteUrls, function (site) {
+            var matches = _.filter(confFeatures, {
+              siteUrl: site
+            });
+            return {
+              site: site,
+              lic: matches
+            };
+          });
 
           for (var j in cmrs) {
             if (!_.isUndefined(cmrs[j]) && !_.isNull(cmrs[j]) && !_.isUndefined(confs[i].license.siteUrl)) {
