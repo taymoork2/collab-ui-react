@@ -764,23 +764,7 @@ angular
             currentDevice: {}
           },
           data: {
-            displayName: 'Device Overview'
-          }
-        })
-        .state('device-overview.edit', {
-          templateUrl: 'modules/squared/devices/overview/deviceUpgradeChannelEdit.tpl.html',
-          controller: 'DeviceUpgradeChannelEditCtrl',
-          controllerAs: 'deviceUpgradeChannelEdit',
-          resolve: {
-            channels: /* @ngInject */ function (CsdmUpgradeChannelService) {
-              return CsdmUpgradeChannelService.getUpgradeChannelsPromise();
-            }
-          },
-          params: {
-            currentDevice: {}
-          },
-          data: {
-            displayName: 'Software Update Channel'
+            displayName: 'Overview'
           }
         })
 
@@ -1435,6 +1419,22 @@ angular
             deleteFeatureName: null,
             deleteFeatureId: null,
             deleteFeatureType: null
+          }
+        })
+        .state('huronfeatures.aaListDepends', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'HuronFeatureAADependsCtrl',
+              controllerAs: 'huronFeatureAADepends',
+              templateUrl: 'modules/huron/features/featureLanding/featureAADependsModal.tpl.html'
+            }
+          },
+          params: {
+            detailsFeatureName: null,
+            detailsFeatureId: null,
+            detailsFeatureType: null,
+            detailsDependsList: null
           }
         })
         .state('huronHuntGroup', {
