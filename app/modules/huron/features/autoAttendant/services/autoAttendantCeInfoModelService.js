@@ -104,7 +104,7 @@
   };
 
   /* @ngInject */
-  function AutoAttendantCeInfoModelService($q, AutoAttendantCeService) {
+  function AutoAttendantCeInfoModelService($q, AutoAttendantCeService, AACeDependenciesService) {
 
     var service = {
       getAllCeInfos: getAllCeInfos,
@@ -140,7 +140,10 @@
     // New get method for Huron Features Page
     function getCeInfosList() {
       var aaModel = {};
-      return AutoAttendantCeService.listCes().then(function (aaRecords) {
+      aaModel.ceInfos = [];
+      var promises = [];
+
+      var listPromise = AutoAttendantCeService.listCes().then(function (aaRecords) {
         if (angular.isArray(aaRecords)) {
           aaModel.aaRecords = aaRecords;
           _.forEach(aaModel.aaRecords, function (aaRecord) {
@@ -149,20 +152,28 @@
             });
           });
           aaModel.ceInfos = getAllCeInfos(aaModel.aaRecords);
-
-          // aaModel.ceInfos.sort(function (a, b) {
-          //   return a.callExperienceName.localeCompare(b.callExperienceName);
-          // });
         }
+      }).catch(function (response) {
+        aaModel = {};
+        return $q.reject(response);
+      });
+      promises.push(listPromise);
 
-        // aaModel.ceInfos = aaModel.ceInfos.sort(function (a, b) {
-        //   return a.callExperienceName.localeCompare(b.callExperienceName);
-        // });
+      var dependsPromise = AACeDependenciesService.readCeDependencies().then(function (depends) {
+        aaModel.dependsIds = depends.dependencies;
+      }).catch(function (response) {
+        aaModel = {};
+        return $q.reject(response);
+      });
+      promises.push(dependsPromise);
+
+      return $q.all(promises).then(function () {
         return aaModel;
       }).catch(function (response) {
         aaModel = {};
         return $q.reject(response);
       });
+
     }
 
     /*

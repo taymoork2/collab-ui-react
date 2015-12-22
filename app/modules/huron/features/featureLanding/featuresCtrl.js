@@ -45,6 +45,7 @@
      *  3. Add the Object for the feature in the format of the Features Array Object (features)
      *  4. Define the formatter
      * */
+
     var features = [{
       name: 'AA',
       getFeature: AutoAttendantCeInfoModelService.getCeInfosList,
@@ -163,11 +164,27 @@
     };
 
     vm.deleteHuronFeature = function (feature) {
+      if (feature.hasDepends) {
+        Notification.error('huronFeatureDetails.aaDeleteBlocked', {
+          aaNames: feature.dependsNames.join(", ")
+        });
+        return;
+      }
+
       featureToBeDeleted = feature;
       $state.go('huronfeatures.deleteFeature', {
         deleteFeatureName: feature.cardName,
         deleteFeatureId: feature.id,
         deleteFeatureType: feature.filterValue
+      });
+    };
+
+    vm.detailsHuronFeature = function (feature) {
+      $state.go('huronfeatures.aaListDepends', {
+        detailsFeatureName: feature.cardName,
+        detailsFeatureId: feature.id,
+        detailsFeatureType: feature.filterValue,
+        detailsDependsList: feature.dependsNames
       });
     };
 
@@ -196,6 +213,21 @@
     $scope.$on('HURON_FEATURE_DELETED', function () {
       vm.listOfFeatures.splice(vm.listOfFeatures.indexOf(featureToBeDeleted), 1);
       listOfAllFeatures.splice(listOfAllFeatures.indexOf(featureToBeDeleted), 1);
+
+      if (featureToBeDeleted.filterValue === 'AA' && featureToBeDeleted.hasReferences) {
+        _.forEach(featureToBeDeleted.referenceNames, function (ref) {
+          var cardToRefresh = _.find(listOfAllFeatures, function (feature) {
+            return feature.cardName === ref;
+          });
+          if (angular.isDefined(cardToRefresh)) {
+            cardToRefresh.dependsNames.splice(cardToRefresh.dependsNames.indexOf(featureToBeDeleted.cardName), 1);
+            if (cardToRefresh.dependsNames.length === 0) {
+              cardToRefresh.hasDepends = false;
+            }
+          }
+        });
+      }
+
       featureToBeDeleted = {};
       if (listOfAllFeatures.length === 0) {
         vm.pageState = "NewFeature";
@@ -203,6 +235,7 @@
       if (vm.filterText) {
         searchData(vm.filterText);
       }
+
     });
 
     function openModal() {
