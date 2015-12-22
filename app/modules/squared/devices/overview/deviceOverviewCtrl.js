@@ -6,7 +6,7 @@
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, $scope, XhrNotificationService, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmCodeService, CsdmDeviceService, CsdmHuronDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, channels, RemoteSupportModal) {
+  function DeviceOverviewCtrl($q, $state, $scope, XhrNotificationService, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmCodeService, CsdmDeviceService, CsdmHuronDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, channels, RemoteSupportModal) {
     var deviceOverview = this;
 
     deviceOverview.currentDevice = $stateParams.currentDevice;
@@ -80,11 +80,12 @@
       if (newValue != deviceOverview.currentDevice.upgradeChannel) {
         deviceOverview.updatingUpgradeChannel = true;
         saveUpgradeChannel(newValue)
-          .then(waitForDeviceToUpdateUpgradeChannel(newValue))
-          .catch(XhrNotificationService.notify)
-          .finally(function () {
-            deviceOverview.updatingUpgradeChannel = false;
-          });
+          .then(waitForDeviceToUpdateUpgradeChannel(newValue)
+            .catch(XhrNotificationService.notify)
+            .finally(function () {
+              deviceOverview.updatingUpgradeChannel = false;
+            }))
+          .catch(XhrNotificationService.notify);
       }
     };
 
@@ -101,14 +102,14 @@
     function pollDeviceForNewChannel(newValue, endTime, deferred) {
       CsdmDeviceService.getDevice(deviceOverview.currentDevice.url).then(function (device) {
         if (device.upgradeChannel == newValue) {
-          Notification.success($translate.instant('deviceUpgradeChannelEditPage.deviceUpdated'));
+          Notification.success($translate.instant('deviceOverviewPage.channelUpdated'));
           return deferred.resolve();
         }
         if (new Date().getTime() > endTime) {
-          return deferred.reject($translate.instant('deviceUpgradeChannelEditPage.updateFailed'));
+          return deferred.reject($translate.instant('deviceOverviewPage.channelUpdateFailed'));
         }
         $timeout(function () {
-          pollDeviceForNewChannel(endTime, deferred);
+          pollDeviceForNewChannel(newValue, endTime, deferred);
         }, 1000);
       });
     }

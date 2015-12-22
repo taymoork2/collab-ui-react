@@ -74,7 +74,7 @@
       </div>
       <div class="form-group" ng-show="deviceOverview.currentDevice.software">
         <label class="col-sm-4 control-label" translate="deviceOverviewPage.software"></label>
-        <div class="col-sm-8">
+        <div class="col-sm-3">
           <cs-select
             ng-model="deviceOverview.selectedUpgradeChannel"
             options="deviceOverview.upgradeChannelOptions"
@@ -85,9 +85,11 @@
             filter="false"
           >
           </cs-select>
-          <div ng-show="deviceOverview.updatingUpgradeChannel">
-            <i class="icon icon-2x icon-spinner"></i>
-          </div>
+        </div>
+        <div class="col-sm-4" ng-show="deviceOverview.updatingUpgradeChannel">
+          <div cs-loader class="loader-example--small"></div>
+        </div>
+        <div class="col-sm-8">
           <p class="form-control-static">{{deviceOverview.currentDevice.software}}</p>
         </div>
       </div>
