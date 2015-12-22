@@ -5,6 +5,14 @@ angular
     function ($httpProvider, $stateProvider, $urlRouterProvider, $translateProvider, $compileProvider) {
       var sidepanelMemo = 'sidepanelMemo';
 
+      // sidepanel helper
+      function isStateInSidepanel($state) {
+        var rootStateName = $state.current.name.split('.')[0];
+        var rootState = $state.get(rootStateName);
+        var rootStateIsSidepanel = rootState.parent === 'sidepanel';
+        return $state.current.parent === 'sidepanel' || (rootStateIsSidepanel && $state.includes(rootState));
+      }
+
       //Add blob to the default angular whitelist
       $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|tel|file|blob):/);
 
@@ -72,7 +80,7 @@ angular
                 $state.sidepanel = null;
                 var previousState = $previousState.get(sidepanelMemo);
                 if (previousState) {
-                  if ($state.current.parent === 'sidepanel') {
+                  if (isStateInSidepanel($state)) {
                     return $previousState.go(sidepanelMemo).then(function () {
                       $previousState.forget(sidepanelMemo);
                     });
