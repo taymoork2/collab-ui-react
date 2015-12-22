@@ -85,6 +85,7 @@ module.exports = function() {
         vendor + '/es5-shim/es5-shim.js',
         node_modules + '/jasmine-promise-matchers/dist/jasmine-promise-matchers.js',
         vendor + '/bardjs/dist/bard.js',
+        vendor + '/jasmine-sinon/lib/jasmine-sinon.js',
       ],
       global: [
         test + '/global.spec.js',
