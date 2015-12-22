@@ -137,8 +137,3 @@ gulp.task('karma-all', function (done) {
     'karma-webex',
     done);
 });
-    'karma-squared',
-    'karma-sunlight',
-    'karma-webex',
-    done);
-});
