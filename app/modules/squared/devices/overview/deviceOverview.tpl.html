@@ -25,11 +25,11 @@
       </div>
       <div class="form-group">
         <button
-          ng-click="deviceOverview.deleteDevice()"
+          ng-click="deviceOverview.resetDevice()"
           class="btn"
-          ng-if="deviceOverview.currentDevice.canDelete">
+          ng-if="deviceOverview.currentDevice.canReset">
           <span
-            translate="spacesPage.delete">
+            translate="spacesPage.reset">
           </span>
         </button>
 
@@ -41,16 +41,16 @@
         </button>
 
         <button
-          ng-click="deviceOverview.resetDevice()"
+          ng-click="deviceOverview.deleteDevice()"
           class="btn"
-          ng-if="deviceOverview.currentDevice.canReset">
+          ng-if="deviceOverview.currentDevice.canDelete">
           <span
-            translate="spacesPage.reset">
+            translate="spacesPage.delete">
           </span>
         </button>
       </div>
     </cs-sp-section>
-    <cs-sp-section>
+    <cs-sp-section ng-show="deviceOverview.deviceHasInformation">
       <div class="section-title-row">
         <span class="section-name" translate="spacesPage.informationHeader"></span>
       </div>

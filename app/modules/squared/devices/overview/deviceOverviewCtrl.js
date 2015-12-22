@@ -59,6 +59,8 @@
       RemoteSupportModal.open(deviceOverview.currentDevice);
     };
 
+    deviceOverview.deviceHasInformation = deviceOverview.currentDevice.ip || deviceOverview.currentDevice.mac || deviceOverview.currentDevice.serial || deviceOverview.currentDevice.software || deviceOverview.currentDevice.hasRemoteSupport || deviceOverview.currentDevice.needsActivation;
+
     deviceOverview.canChangeUpgradeChannel = channels.length > 1 && deviceOverview.currentDevice.isOnline;
 
     deviceOverview.upgradeChannelOptions = _.map(channels, function (channel, index) {
