@@ -205,17 +205,19 @@
             </b>
           </p>
 
-        <div id="pmr"
-             name="pmrenabled"
-             ng-if="WebExUserSettings2.userSettingsModel.pmr.isSiteEnabled">
+        <div ng-if="WebExUserSettings.userSettingsModel.meetingCenter.isSiteEnabled">
+          <div id="pmr"
+               name="pmrenabled"
+               ng-if="WebExUserSettings2.userSettingsModel.pmr.isSiteEnabled">
 
-                <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.pmr.id}}
-                         name={{WebExUserSettings2.userSettingsModel.pmr.id}}
-                         label={{WebExUserSettings2.userSettingsModel.pmr.label}}
-                         ng-model="WebExUserSettings2.userSettingsModel.pmr.value"
-                         >
-            </cs-checkbox>
+                  <cs-checkbox ckid={{WebExUserSettings2.userSettingsModel.pmr.id}}
+                           name={{WebExUserSettings2.userSettingsModel.pmr.id}}
+                           label={{WebExUserSettings2.userSettingsModel.pmr.label}}
+                           ng-model="WebExUserSettings2.userSettingsModel.pmr.value"
+                           >
+              </cs-checkbox>
 
+          </div>
         </div>
 
         <div id="videoPrivileges"
