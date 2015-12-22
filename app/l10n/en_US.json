@@ -2870,6 +2870,8 @@
     "cp": "CP",
     "editAction": "Edit",
     "deleteAction": "Delete",
+    "aaDependsTitle": "{{featureName}} Auto Attendant Dependents",
+    "aaDeleteBlocked": "Operation cannot be completed because this auto-attendant is referenced by {{aaNames}}",
     "deleteFeature": "Delete {{ featureType }}",
     "deleteConfirmText": "Are you sure you want to delete the {{ featureName }} {{ featureType }}?",
     "deleteSuccessText": "{{ featureName }} {{ featureType }} has been deleted successfully",
