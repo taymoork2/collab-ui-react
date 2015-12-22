@@ -371,7 +371,7 @@
         setDescription(action, inAction.routeToExtension);
         menuEntry.addAction(action);
       } else if (angular.isDefined(inAction.routeToHuntGroup)) {
-        action = new Action('routeToHuntGroup', inAction.routeToHuntGroup.destination);
+        action = new Action('routeToHuntGroup', inAction.routeToHuntGroup.id);
         setDescription(action, inAction.routeToHuntGroup);
         menuEntry.addAction(action);
       } else if (angular.isDefined(inAction.routeToMailbox)) {
@@ -831,6 +831,8 @@
           newActionArray[i][actionName].destination = val;
         } else if (actionName === 'routeToMailbox') {
           newActionArray[i][actionName].mailbox = val;
+        } else if (actionName === 'routeToHuntGroup') {
+          newActionArray[i][actionName].id = val;
         } else if (actionName === 'goto') {
           newActionArray[i][actionName].ceid = val;
         } else if (actionName === 'disconnect') {

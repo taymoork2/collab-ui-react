@@ -516,7 +516,14 @@ exports.searchForSingleResult = function (query) {
   }
   this.search(query);
   browser.wait(logAndWait, TIMEOUT, 'Waiting for a single search result');
-  this.expectIsDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', query)));
+  return this.expectIsDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', query)));
+}
+
+//TODO replace original search and click functionality with single result?
+exports.searchAndClickSingleResult = function (query) {
+  return this.searchForSingleResult(query).then(function () {
+    return exports.clickUser(query);
+  });
 }
 
 exports.clickUser = function (query) {

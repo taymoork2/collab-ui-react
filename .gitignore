@@ -23,6 +23,7 @@ dist
 screenshots
 plato
 typings
+.cache
 
 bower_components
 node_modules

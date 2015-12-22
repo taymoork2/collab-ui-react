@@ -49,14 +49,18 @@
           <div ng-if="msgFeature.licenses">
             <div ng-if="isStormBranding" class="item-license" translate="onboardModal.message"></div>
             <div ng-if="!isStormBranding" class="item-license" translate="onboardModal.messaging"></div>
-            <div class="ckbx" ng-if="msgFeature.licenses.length === 1">
+            <div class="ckbx" id="paidMsg" ng-if="msgFeature.licenses.length === 1">
               <cs-checkbox ckid="paid-msg" ng-model="radioStates.msgRadio" label="{{msgFeature.label}}">
               </cs-checkbox>
             </div>
             <div ng-if="msgFeature.licenses.length > 1">
-              <div class="ckbx" for="{{license.licenseId}}" ng-repeat="license in msgFeature.licenses | filter:isSubscribeable | orderBy:'billingServiceId'">
-                <cs-checkbox ckid="{{license.licenseId}}" ng-model="checkboxMsg" label="{{license.billingServiceId}} ({{license.volume}})"></cs-checkbox>
-              </div>
+                <fieldset class="onboard-fieldset">
+                    <label class="cs-radio" for="{{license.licenseId}}" ng-repeat="license in msgFeature.licenses | filter:isSubscribeable | orderBy:'billingServiceId'">                                 
+                        <input id="{{license.licenseId}}" name="{{license.licenseType}}" type="radio"
+                        ng-model="$parent.$parent.radioStates.subLicense" ng-value="license" />
+                        <span>{{license.billingServiceId}} ({{license.volume}})</span>
+                    </label>
+                </fieldset>
             </div>
           </div>
         </div>
@@ -75,8 +79,8 @@
               <cs-checkbox ckid="{{cf.confFeature.license.licenseId}}" ng-model="cf.confModel" label="WebEx {{cf.confFeature.label}}"></cs-checkbox>
             </div>
             <div ng-if="cf.cmrFeature">
-              <cs-checkbox ckid="{{cf.cmrId}}" class="indentedCheckbox" ng-click="licenseHandler(cf.cmrFeature.license.licenseId); cf.confModel = true; cf.cmrModel = !cf.cmrModel" ng-model="cf.cmrModel" label="WebEx {{cf.cmrFeature.label}}" isdisabled="false">
-                <cs-checkbox>
+                <cs-checkbox ckid="{{cf.cmrId}}" class="indentedCheckbox" ng-click="licenseHandler(cf.cmrFeature.license.licenseId); cf.confModel = true; cf.cmrModel = !cf.cmrModel" ng-model="cf.cmrModel" label="WebEx {{cf.cmrFeature.label}}" isdisabled="false">
+                </cs-checkbox>
             </div>
           </div>
         </div>
