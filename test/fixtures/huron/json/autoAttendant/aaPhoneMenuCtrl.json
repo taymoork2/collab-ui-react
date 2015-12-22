@@ -21,7 +21,7 @@
       "label": "autoAttendant.phoneMenuDialExt",
       "name": "phoneMenuDialExt",
       "action": "runActionsOnInput",
-      "inputType": "2"
+      "inputType": 2
     }
   }],
   "selectedActionsHuntGroup": {
@@ -46,7 +46,7 @@
       "label": "autoAttendant.phoneMenuDialExt",
       "name": "phoneMenuDialExt",
       "action": "runActionsOnInput",
-      "inputType": "2"
+      "inputType": 2
     }
   },
   "selectedActions": [{
@@ -70,7 +70,7 @@
       "label": "autoAttendant.phoneMenuDialExt",
       "name": "phoneMenuDialExt",
       "action": "runActionsOnInput",
-      "inputType": "2"
+      "inputType": 2
     }
   }],
   "selectedTimeout": {
@@ -105,7 +105,7 @@
       "actions": [{
         "name": "runActionsOnInput",
         "value": "",
-        "inputType": "2",
+        "inputType": 2,
         "description": ""
       }],
       "timeout": "",

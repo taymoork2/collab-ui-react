@@ -38,13 +38,21 @@
     <table>
       <thead>
         <tr>
-          <td class="vertical-center col-md-4 bold pointer" translate="mediaFusion.name"></td>
-          <td class="vertical-center col-md-4 bold pointer" translate="mediaFusion.role"></td>
+          <td class="col-md-4 bold pointer" translate="mediaFusion.connectors.hosts"></td>
+          <td class="col-md-4 bold pointer">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'mediaFusion.role' | translate}}</td>
           <td></td>
         </tr>
       </thead>
     </table> 
-
+<!--
+    <div class="feature-list">
+      <ul>
+        <li>
+          <span class="bold pointer" translate="mediaFusion.connectors.hosts"></span>
+          <span class="bold pointer" translate="mediaFusion.role"></span> 
+        </li> 
+      </ul>
+    </div> -->
     <div class="feature-list">
       <ul>
         <li class="feature" ng-repeat="ecp in groupDetails.clusterList" ng-class="{'list-item': !$first}">

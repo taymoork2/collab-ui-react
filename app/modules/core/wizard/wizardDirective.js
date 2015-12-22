@@ -81,9 +81,6 @@
     vm.showDoItLater = false;
     vm.wizardNextLoad = false;
 
-    // initialize tab for ng-controller
-    init();
-
     // If tabs change (feature support in SetupWizard) and a step is not defined, re-initialize
     $scope.$watchCollection('tabs', function (tabs) {
       if (tabs && tabs.length > 0 && angular.isUndefined(vm.current.step)) {

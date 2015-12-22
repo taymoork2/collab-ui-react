@@ -1,0 +1,201 @@
+if [ -z "${WX2_ADMIN_WEB_CLIENT_HOME}" ]; then
+    >&2 echo "Error: WX2_ADMIN_WEB_CLIENT_HOME is not set, please export this environment variable first."
+    exit 1
+fi
+
+# keep around scratch files when processing sauce labs results
+sauce_results_workspace_dir=${WX2_ADMIN_WEB_CLIENT_HOME}/.cache/sauce-results-workspace
+mkdir -p ${sauce_results_workspace_dir}
+test_results_file=${sauce_results_workspace_dir}/test-results
+test_urls_file=${sauce_results_workspace_dir}/test-urls
+test_summary_file=${sauce_results_workspace_dir}/test-summary
+> ${test_results_file}
+> ${test_urls_file}
+> ${test_summary_file}
+
+# compatibility shim for osx - we need 'sort -V ...'
+SORT_CMD=sort
+if [ `$SORT_CMD --help | grep -- -V | wc -l` -eq 0 ]; then
+    SORT_CMD=gsort
+    if [ `which $SORT_CMD | wc -l` -eq 0 ]; then
+        >&2 echo "Error: need \`sort\` with \`-V\` option support. On OSX, this can be installed via \`brew install coreutils\`."
+    fi
+fi
+
+SED_CMD=sed
+if [ "`uname`" = "Darwin" ]; then
+    SED_CMD=gsed
+    if [ `which $SED_CMD | wc -l` -eq 0 ]; then
+        >&2 echo "Error: need \`sed\` with enhanced extended regex support. On OSX, this can be installed via \`brew install gnu-sed\`."
+    fi
+fi
+
+function grep_for_sauce_link_lines {
+    grep saucelabs.com\/jobs | ${SORT_CMD} -V -u
+}
+
+function grep_for_test_result_lines {
+    grep \\[launcher | grep -e passed -e failed | grep -v overall | ${SORT_CMD} -V -u
+}
+
+function grep_for_test_summary {
+    grep \\[launcher | grep overall
+}
+
+# grep out more details for a given test id
+function grep_for_test_id {
+    local test_id=${1}
+    if [ -z "${test_id}" ]; then
+      >&2 echo "Error: no test_id passed to grep_for_test_id"
+      exit 1
+    fi
+    grep "#${test_id}\\b"
+}
+
+function cut_url {
+    ${SED_CMD} -e 's/.*http/http/'
+}
+
+function cut_everything_but_url {
+    ${SED_CMD} -E 's/(.*) (http.*)/\1/'
+}
+
+function cut_sauce_job_id {
+    ${SED_CMD} -e 's/.*saucelabs.com\/jobs//' | cut -d'/' -f2
+}
+
+function cut_spec_file_for_test_id {
+    local test_id=${1}
+    if [ -z "${test_id}" ]; then
+      >&2 echo "Error: no test_id passed to cut_spec_file_for_test_id"
+      exit 1
+    fi
+    grep_for_test_id ${test_id} | grep Specs: | ${SED_CMD} -e 's,.*test/e2e-protractor/,.../,'
+}
+
+function trim_out_launcher_prefix {
+    ${SED_CMD} -e 's/\[launcher. //'
+}
+
+function get_sauce_property {
+    local sauce_property=${1}
+    local sauce_config_file=${2:-${WX2_ADMIN_WEB_CLIENT_HOME}/test/env/sauce.json}
+    if [ -z "${sauce_property}" ]; then
+      >&2 echo "Error: no sauce_property passed to get_sauce_property"
+      exit 1
+    elif [ ! -r ${sauce_config_file} ]; then
+      >&2 echo "Error: sauce_config_file not found: ${sauce_config_file}"
+      exit 1
+    fi
+    cat $sauce_config_file | python -c "import json,sys; data=json.load(sys.stdin); print data['${sauce_property}']"
+}
+
+function md5_hmac {
+    local sauce_username=`get_sauce_property SAUCE_USERNAME`
+    local sauce_access_key=`get_sauce_property SAUCE_ACCESS_KEY`
+    openssl md5 -hmac "${sauce_username}:${sauce_access_key}" | ${SED_CMD} -e 's/^.* //'
+}
+
+function mk_proper_sauce_link {
+    local url=${1}
+    local sauce_id=`echo ${url} | cut_sauce_job_id`
+    local sauce_access_code="`echo -n ${sauce_id} | md5_hmac`"
+    echo "${url}?auth=${sauce_access_code}"
+}
+
+function filter_out_test_ids_and_urls {
+    grep_for_sauce_link_lines | ${SED_CMD} -E 's/^.*#//' | ${SED_CMD} -E 's/SauceLabs.* http/http/' | ${SED_CMD} -E 's/]//'
+}
+
+function filter_out_raw_urls {
+    grep_for_sauce_link_lines | cut_url
+}
+
+function transform_to_proper_urls {
+    local url
+    local prefix
+    while read line; do
+      prefix="`echo $line | cut_everything_but_url`"
+      url="`echo $line | cut_url`"
+      url="`mk_proper_sauce_link ${url}`"
+      echo "$prefix $url"
+    done
+}
+
+function edit_line_to_add_spec_file {
+    local test_id=${1}
+    local spec_file=${2}
+    local test_results_file=${3}
+    if [ -z "${test_id}" ]; then
+        >&2 echo "Error: no test_id passed to edit_line_to_add_spec_file"
+        exit 1
+    fi
+    if [ -z "${spec_file}" ]; then
+        >&2 echo "Error: no spec_file passed to edit_line_to_add_spec_file"
+        exit 1
+    fi
+    if [ -z "${test_results_file}" ]; then
+        >&2 echo "Error: no test_results_file passed to edit_line_to_add_spec_file"
+        exit 1
+    fi
+
+    ${SED_CMD} -i -E "s,(.*#${test_id}\> .*),\1 | ${spec_file}," ${test_results_file}
+}
+
+function edit_line_to_add_url {
+    local test_id=${1}
+    local url=${2}
+    local test_results_file=${3}
+    if [ -z "${test_id}" ]; then
+        >&2 echo "Error: no test_id passed to edit_line_to_add_url"
+        exit 1
+    fi
+    if [ -z "${url}" ]; then
+        >&2 echo "Error: no url passed to"
+        exit 1
+    fi
+    if [ -z "${test_results_file}" ]; then
+        >&2 echo "Error: no test_results_file passed to edit_line_to_add_url"
+        exit 1
+    fi
+
+    ${SED_CMD} -i -E "s,(.*#${test_id}\b .*),\1 | ${url}," ${test_results_file}
+}
+
+function filter_out_test_results {
+    grep_for_test_result_lines | trim_out_launcher_prefix
+}
+
+function filter_out_test_summary {
+    grep_for_test_summary | trim_out_launcher_prefix
+}
+
+function mk_test_report {
+    local input_file=${1}
+    if [ -z "${input_file}" ]; then
+        >&2 echo "Error: no input_file passed to mk_test_report_files"
+        exit 1
+    fi
+
+    # run this block in a subshell to suppress the process-background-ing notifications
+    (
+        cat ${input_file} | filter_out_test_results > ${test_results_file} &
+        cat ${input_file} | filter_out_test_ids_and_urls | transform_to_proper_urls > ${test_urls_file} &
+        cat ${input_file} | filter_out_test_summary > ${test_summary_file} &
+        wait
+    )
+
+    # edit the test results file in-place (add urls to lines with test_ids)
+    local test_id
+    local url
+    while read line; do
+        test_id="`echo $line | awk '{print $1;}'`"
+        url="`echo $line | awk '{print $2;}'`"
+        spec_file="`cat ${input_file} | cut_spec_file_for_test_id ${test_id}`"
+        edit_line_to_add_spec_file "${test_id}" "${spec_file}" "${test_results_file}"
+        edit_line_to_add_url "${test_id}" "${url}" "${test_results_file}"
+    done < ${test_urls_file}
+
+    # print results and summary
+    cat ${test_results_file} ${test_summary_file}
+}
