@@ -29,7 +29,6 @@ describe('Onboard Users using uploading CSV File', function () {
   it('should open invite users tab', function () {
     navigation.clickAddUsers();
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Invite Users');
-    // utils.wait(inviteusers.submenuCSV);
     utils.click(inviteusers.bulkUpload);
     utils.click(inviteusers.nextButton);
   });

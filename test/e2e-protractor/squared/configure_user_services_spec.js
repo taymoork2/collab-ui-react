@@ -182,11 +182,11 @@ describe('Configuring services per-user', function () {
     // Enter test user name into input box
     utils.sendKeys(users.addUsersField, testUser);
     utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
-    utils.click(users.nextButton);
+    utils.click(inviteusers.nextButton);
 
     // Enable a hybrid service
     utils.click(users.hybridServices_UC);
-    utils.click(inviteusers.finishButton);
+    utils.click(inviteusers.nextButton);
     notifications.assertSuccess('onboarded successfully');
   });
 
@@ -205,7 +205,6 @@ describe('Configuring services per-user', function () {
     utils.click(landing.serviceSetup);
     utils.click(navigation.addUsers);
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Invite Users');
-    utils.wait(inviteusers.submenuCSV);
     utils.click(inviteusers.bulkUpload);
     utils.click(inviteusers.nextButton);
   });
