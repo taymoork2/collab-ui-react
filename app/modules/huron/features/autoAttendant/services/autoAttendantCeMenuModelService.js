@@ -529,7 +529,7 @@
         // Collect timeout handling actions
         var timeoutMenuEntry = new CeMenuEntry();
         timeoutMenuEntry.setType('MENU_OPTION_TIMEOUT');
-        timeoutMenuEntry.setTimeout(ceActionsOnInput.timeoutInSeconds || 10);
+        timeoutMenuEntry.setTimeout(ceActionsOnInput.timeoutInSeconds || 5);
 
         if (angular.isDefined(ceActionsOnInput.attempts)) {
           menu.attempts = ceActionsOnInput.attempts;
