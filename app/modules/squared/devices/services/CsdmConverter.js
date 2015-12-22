@@ -78,7 +78,7 @@ angular.module('Squared').service('CsdmConverter',
       this.url = obj.url;
       this.cisUuid = obj.id;
       this.displayName = obj.displayName;
-      this.product = 'NA';
+      this.product = 'Account';
       this.cssColorClass = 'device-status-red';
       this.readableState = t('CsdmStatus.Inactive');
       this.isOnline = false;
@@ -100,6 +100,7 @@ angular.module('Squared').service('CsdmConverter',
       this.cisUuid = obj.id;
       this.tags = getTags(obj);
       this.expiryTime = convertExpiryTime(obj.expiryTime);
+      this.product = 'Activation Code';
       this.tagString = getTagString(obj);
       this.displayName = obj.displayName;
       this.activationCode = obj.activationCode;
