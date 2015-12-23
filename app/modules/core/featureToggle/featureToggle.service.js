@@ -15,6 +15,7 @@
       atlasSipUriDomain: 'atlas-sip-uri-domain',
       atlasWebexTrials: 'atlas-webex-trials',
       huronClassOfService: 'COS',
+      csdmHuron: 'csdm-huron'
     };
 
     var service = {

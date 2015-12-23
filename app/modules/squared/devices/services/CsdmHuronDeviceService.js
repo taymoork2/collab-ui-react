@@ -6,32 +6,18 @@
     var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/huronDevices';
 
     function huronEnabled() {
-      return FeatureToggleService.getFeaturesForUser(Authinfo.getUserId()).then(function (features) {
-        var feature = _.find(features.user, {
-          key: "csdm-huron"
-        });
-        if (angular.isUndefined(feature)) {
-          return false;
-        }
-        return feature.val;
-      });
+      if ($window.location.search.indexOf("showHuronDevices=true") > -1) {
+        return $q.when(true);
+      } else {
+        return FeatureToggleService.supports(FeatureToggleService.features.csdmHuron);
+      }
     }
 
     var deviceCache = CsdmCacheFactory.create({
       fetch: function () {
         return huronEnabled().then(function (enabled) {
-          if (enabled) {
-            return $http.get(devicesUrl).then(function (res) {
-              return CsdmConverter.convertHuronDevices(res.data);
-            });
-          } else {
-            return $q(function (resolve) {
-              resolve([]);
-            });
-          }
-        }).catch(function (err) {
-          return $q(function (resolve) {
-            resolve([]);
+          return !enabled ? $q.when([]) : $http.get(devicesUrl).then(function (res) {
+            return CsdmConverter.convertHuronDevices(res.data);
           });
         });
       }
