@@ -1825,7 +1825,7 @@ angular.module('Core')
               });
 
               // Hybrid Service entitlements must be added after onboarding
-              assignHybridServices($scope.extensionEntitlements, addedUsersList).then( function() {
+              assignHybridServices($scope.extensionEntitlements, addedUsersList).then(function () {
 
               });
 
