@@ -227,7 +227,7 @@ var UsersPage = function () {
     });
   };
 
-  this.createUser = function( userName ) {
+  this.createUser = function (userName) {
     navigation.clickUsers();
     utils.click(this.addUsers);
     utils.expectIsDisplayed(this.manageDialog);
