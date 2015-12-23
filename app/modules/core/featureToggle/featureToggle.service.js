@@ -19,6 +19,7 @@
       huronHuntGroup: 'huronHuntGroup',
       huronAutoAttendant: 'huronAutoAttendant',
       huronClassOfService: 'COS',
+      csdmHuron: 'csdm-huron'
     };
 
     var service = {

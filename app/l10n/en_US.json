@@ -153,7 +153,13 @@
     "eventCenter": "Event Center {{capacity}}",
     "communication": "Communication",
     "cloudExtensions": "Hybrid Services",
-    "cmr": "Collaboration Meeting Room"
+    "cmr": "Collaboration Meeting Room",
+    "result": {
+      "200": "entitled successfully",
+      "404": "does not exist",
+      "409": "entitlement previously updated",
+      "other": "not entitled, status: {{status}}"
+    }
   },
   "usersPreview": {
     "groupPreview": "Group:",
@@ -888,6 +894,8 @@
     "activationCodeHeader": "Activation Code",
     "activationDateHeader": "Activation Date",
     "informationHeader": "Information",
+    "customTagsHeader": "Custom Tags",
+    "newCustomTagPlaceholder": "Enter tag...",
     "addDeviceStep1": "Where will this device be installed?",
     "addDeviceStep1Desc": "It is recommended that you use the name of your conference room or shared space as it is shown in your company directory. The video address for this device will use this name. It will also be the easiest way to search for and find the device in the system later.",
     "addDeviceStep2": "Your activation code has been created",
@@ -1091,6 +1099,11 @@
         "sipDomain": "Enter the SRV domain of your Expressway edge server(s) so that calls route correctly to and from there.",
         "sipDomainPlaceholder": "Enter a single domain or subdomain"
       }
+    },
+    "hybridServices": {
+      "result404": "Entitlements for {{email}} do not exist.",
+      "result409": "Entitlement(s) previously updated.",
+      "resultOther": "Entitlements for {{email}} were not updated. Status: {{status}}."
     }
   },
   "firstTimeWizard": {

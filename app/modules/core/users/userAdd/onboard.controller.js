@@ -223,9 +223,7 @@ angular.module('Core')
           activateDID();
           $state.go('users.add.services.dn');
         } else {
-          onboardUsers(true).then(function () {
-            assignHybridServices($scope.extensionEntitlements);
-          });
+          onboardUsers(true);
         }
       };
 
@@ -1001,6 +999,7 @@ angular.module('Core')
             Log.info('User onboard request returned:', data);
             $rootScope.$broadcast('USER_LIST_UPDATED');
             var numAddedUsers = 0;
+            var addedUsersList = [];
 
             for (var num = 0; num < data.userResponse.length; num++) {
               if (data.userResponse[num].status === 200) {
@@ -1024,6 +1023,13 @@ angular.module('Core')
               if (userStatus === 200) {
                 userResult.message = $translate.instant('usersPage.onboardSuccess', userResult);
                 userResult.alertType = 'success';
+                // Make list of successfully onboarded users
+                var addItem = {
+                  address: data.userResponse[i].email
+                };
+                if (addItem.address.length > 0) {
+                  addedUsersList.push(addItem);
+                }
               } else if (userStatus === 409) {
                 userResult.message = userResult.email + ' ' + data.userResponse[i].message;
                 userResult.alertType = 'danger';
@@ -1043,34 +1049,38 @@ angular.module('Core')
                 userResult.alertType = 'danger';
                 isComplete = false;
               }
+
               $scope.results.resultList.push(userResult);
             }
 
-            //concatenating the results in an array of strings for notify function
-            var successes = [];
-            var errors = [];
-            var count_s = 0;
-            var count_e = 0;
-            for (var idx in $scope.results.resultList) {
-              if ($scope.results.resultList[idx].alertType === 'success') {
-                successes[count_s] = $scope.results.resultList[idx].message;
-                count_s++;
-              } else {
-                errors[count_e] = $scope.results.resultList[idx].message;
-                count_e++;
+            // Hybrid Service entitlements must be added after onboarding
+            assignHybridServices($scope.extensionEntitlements, addedUsersList).then(function () {
+              //concatenating the results in an array of strings for notify function
+              var successes = [];
+              var errors = [];
+              var count_s = 0;
+              var count_e = 0;
+              for (var idx in $scope.results.resultList) {
+                if ($scope.results.resultList[idx].alertType === 'success') {
+                  successes[count_s] = $scope.results.resultList[idx].message;
+                  count_s++;
+                } else {
+                  errors[count_e] = $scope.results.resultList[idx].message;
+                  count_e++;
+                }
               }
-            }
-            //Displaying notifications
-            if (successes.length + errors.length === usersList.length) {
-              $scope.btnOnboardLoading = false;
-              Notification.notify(successes, 'success');
-              Notification.notify(errors, 'error');
-              deferred.resolve();
-            }
-            if (angular.isFunction($scope.$dismiss) && successes.length === usersList.length) {
-              $scope.$dismiss();
-            }
+              //Displaying notifications
+              if (successes.length + errors.length === usersList.length) {
+                $scope.btnOnboardLoading = false;
+                Notification.notify(successes, 'success');
+                Notification.notify(errors, 'error');
+                deferred.resolve();
+              }
 
+              if (angular.isFunction($scope.$dismiss) && successes.length === usersList.length) {
+                $scope.$dismiss();
+              }
+            });
           } else {
             Log.warn('Could not onboard the user', data);
             var error = null;
@@ -1145,21 +1155,16 @@ angular.module('Core')
         $scope.extensionEntitlements = entitlements;
       };
 
-      function assignHybridServices(entitlements) {
-        var usersList = getUsersList();
+      function assignHybridServices(entitlements, usersList) {
+        var deferred = $q.defer();
 
-        // TODO: Similar chunking logic is used throughout. Refactor!
-        if (angular.isArray(usersList) && usersList.length &&
-          _.isArray(entitlements) && entitlements.length) {
-          var i, len, tempUsersList, chunk = Config.batchSize;
-          for (i = 0, len = usersList.length; i < len; i += chunk) {
-            tempUsersList = usersList.slice(i, i + chunk);
-            Userservice.updateUsers(tempUsersList, null, entitlements, 'updateEntitlement', callback);
-          }
+        if (angular.isArray(usersList) && usersList.length && _.isArray(entitlements) && entitlements.length) {
+          Userservice.updateUsers(usersList, null, entitlements, 'updateEntitlement', callback);
+        } else {
+          // No hybrid services to assign
+          deferred.resolve();
         }
 
-        // TODO: Similar callback logic is used throughout this controller.
-        // Make abstracting it part of refactor work.
         function callback(data) {
           if (data.success) {
             var successResponses = [];
@@ -1171,13 +1176,18 @@ angular.module('Core')
               var msg;
 
               if (userStatus === 404) {
-                msg = 'Entitlements for ' + response.email + ' do not exist.';
+                msg = $translate.instant('hercules.hybridServices.result404', {
+                  email: response.email
+                });
                 failureResponses.push(msg);
               } else if (userStatus === 409) {
-                msg = 'Entitlement(s) previously updated.';
+                msg = $translate.instant('hercules.hybridServices.result409');
                 failureResponses.push(msg);
               } else if (userStatus != 200) {
-                msg = response.email + '\'s entitlements were not updated, status: ' + userStatus;
+                msg = $translate.instant('hercules.hybridServices.resultOther', {
+                  email: response.email,
+                  status: userStatus
+                });
                 failureResponses.push(msg);
               }
             });
@@ -1189,7 +1199,10 @@ angular.module('Core')
             Log.error(data);
             Notification.notify('Failed to update entitlements.', 'error');
           }
+          deferred.resolve();
         }
+
+        return deferred.promise;
       }
 
       function entitleUserCallback(data, status, method) {
@@ -1212,18 +1225,20 @@ angular.module('Core')
             var userStatus = data.userResponse[i].status;
 
             if (userStatus === 200) {
-              userResult.message = 'entitled successfully';
+              userResult.message = $translate.instant('onboardModal.result.200');
               userResult.alertType = 'success';
             } else if (userStatus === 404) {
-              userResult.message = 'does not exist';
+              userResult.message = $translate.instant('onboardModal.result.404');
               userResult.alertType = 'danger';
               isComplete = false;
             } else if (userStatus === 409) {
-              userResult.message = 'entitlement previously updated';
+              userResult.message = $translate.instant('onboardModal.result.409');
               userResult.alertType = 'danger';
               isComplete = false;
             } else {
-              userResult.message = 'not entitled, status: ' + userStatus;
+              userResult.message = $translate.instant('onboardModal.result.other', {
+                status: userStatus
+              });
               userResult.alertType = 'danger';
               isComplete = false;
             }
@@ -1788,6 +1803,8 @@ angular.module('Core')
           var params = this;
           if (data.success) {
             if (angular.isArray(data.userResponse)) {
+              var addedUsersList = [];
+
               angular.forEach(data.userResponse, function (user, index) {
                 if (user.status === 200) {
                   if (user.message === 'User Patched') {
@@ -1795,10 +1812,23 @@ angular.module('Core')
                   } else {
                     $scope.model.numNewUsers++;
                   }
+                  // Build list of successful onboards and patches
+                  var addItem = {
+                    address: user.email
+                  };
+                  if (addItem.address.length > 0) {
+                    addedUsersList.push(addItem);
+                  }
                 } else {
                   addUserErrorWithTrackingID(params.startIndex + index + 1, getErrorResponse(user.message, user.status));
                 }
               });
+
+              // Hybrid Service entitlements must be added after onboarding
+              assignHybridServices($scope.extensionEntitlements, addedUsersList).then(function () {
+
+              });
+
             } else {
               for (var i = 0; i < params.length; i++) {
                 addUserErrorWithTrackingID(params.startIndex + i + 1, $translate.instant('firstTimeWizard.processBulkResponseError'));
