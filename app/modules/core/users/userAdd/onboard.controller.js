@@ -352,25 +352,22 @@ angular.module('Core')
       var populateConf = function () {
         if (userLicenseIds) {
 
-          for (var ids in userLicenseIds) {
-            var currentId = userLicenseIds[ids];
-
-            for (var conf in $scope.confChk) {
-              var currentConf = $scope.confChk[conf];
-
-              if (currentConf.confFeature) {
-                if (currentConf.confFeature.license.licenseId === currentId) {
-                  currentConf.confModel = true;
+          _.forEach(userLicenseIds, function (userLicenseId) {
+            _.forEach($scope.allLicenses, function (siteObj) {
+              siteObj.confLic = _.map(siteObj.confLic, function (conf) {
+                if (!conf.confModel) {
+                  conf.confModel = conf.licenseId === userLicenseId;
                 }
-              }
-
-              if (currentConf.cmrFeature) {
-                if (currentConf.cmrFeature.license.licenseId === currentId) {
-                  currentConf.cmrModel = true;
+                return conf;
+              });
+              siteObj.cmrLic = _.map(siteObj.cmrLic, function (cmr) {
+                if (!cmr.cmrModel) {
+                  cmr.cmrModel = cmr.licenseId === userLicenseId;
                 }
-              }
-            }
-          }
+                return cmr;
+              });
+            });
+          });
         }
       };
 
@@ -402,31 +399,44 @@ angular.module('Core')
             confId: 'conf-' + i
           };
 
-          var confFeatures = _.chain(confs).map(function (conf) {
-            if (_.has(conf, 'license.siteUrl')) {
-              return {
-                siteUrl: conf.license.siteUrl,
-                billing: conf.license.billingServiceId,
-                volume: conf.license.volume,
-                licenseId: conf.license.licenseId,
-                offerName: conf.license.offerName,
-                label: conf.label,
-                confModel: false
-              };
+          var confNoUrl = _.map(confs, function (conf) {
+            if(conf.license.licenseType !== 'freeConferencing') {
+              if(!_.has(conf, 'license.siteUrl')) {
+                return {
+                  billing: conf.license.billingServiceId,
+                  volume: conf.license.volume,
+                  licenseId: conf.license.licenseId,
+                  label: conf.label,
+                  confModel: false
+                };
+              }
             }
-          }).remove(undefined).value();
+          });
+          confNoUrl = _.remove(confNoUrl, undefined);
 
-          var cmrFeatures = _.chain(cmrs).map(function (cmr) {
-            if (_.has(cmr, 'license.siteUrl')) {
-              return {
-                siteUrl: cmr.license.siteUrl,
-                billing: cmr.license.billingServiceId,
-                volume: cmr.license.volume,
-                licenseId: cmr.license.licenseId,
-                label: cmr.label,
-                cmrModel: false
-              };
-            }
+          var confFeatures = _.chain(confs).filter('license.siteUrl')
+          .map(function (conf) {
+            return {
+              siteUrl: conf.license.siteUrl,
+              billing: conf.license.billingServiceId,
+              volume: conf.license.volume,
+              licenseId: conf.license.licenseId,
+              offerName: conf.license.offerName,
+              label: conf.label,
+              confModel: false
+            };
+          }).value();
+
+          var cmrFeatures = _.chain(cmrs).filter('license.siteUrl')
+          .map(function (cmr) {
+            return {
+              siteUrl: cmr.license.siteUrl,
+              billing: cmr.license.billingServiceId,
+              volume: cmr.license.volume,
+              licenseId: cmr.license.licenseId,
+              label: cmr.label,
+              cmrModel: false
+            };
           }).value();
 
           var siteUrls = _.map(confFeatures, function (lic) {
@@ -447,6 +457,7 @@ angular.module('Core')
               cmrLic: cmrMatches
             };
           });
+          $scope.allLicenses = _.union(confNoUrl, $scope.allLicenses);
 
           for (var j in cmrs) {
             if (!_.isUndefined(cmrs[j]) && !_.isNull(cmrs[j]) && !_.isUndefined(confs[i].license.siteUrl)) {
@@ -715,16 +726,20 @@ angular.module('Core')
        */
       var getConfIdList = function (state) {
         var confId = [];
-        for (var cf in $scope.confChk) {
-          var current = $scope.confChk[cf];
-          if ((current.confModel === state) && angular.isDefined(_.get(current, 'confFeature.license.licenseId'))) {
-            confId.push(current.confFeature.license.licenseId);
-          }
-          if ((current.cmrModel === state) && angular.isDefined(_.get(current, 'cmrFeature.license.licenseId'))) {
-            confId.push(current.cmrFeature.license.licenseId);
-          }
-        }
-        return confId;
+        var cmrId = [];
+
+        _.forEach($scope.allLicenses, function (license) {
+          confId = confId.concat(_(license.confLic).filter({
+            confModel: state
+          }).pluck('licenseId').value());
+
+          cmrId = cmrId.concat(_(license.cmrLic).filter({
+            cmrModel: state
+          }).pluck('licenseId').value());
+
+        });
+
+        return confId.concat(cmrId);
       };
 
       /**
