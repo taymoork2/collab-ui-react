@@ -30,6 +30,7 @@ angular.module('Squared').service('CsdmConverter',
       this.canReportProblem = true;
       this.hasRemoteSupport = true;
       this.canEditDisplayName = true;
+      this.supportsCustomTags = true;
       this.update = function (updated) {
         this.displayName = updated.displayName;
       };
@@ -111,6 +112,7 @@ angular.module('Squared').service('CsdmConverter',
       this.canDelete = true;
       this.canEditDisplayName = true;
       this.image = "images/devices-hi/unknown.png";
+      this.supportsCustomTags = true;
       this.updateName = function (newName) {
         this.displayName = newName;
       };

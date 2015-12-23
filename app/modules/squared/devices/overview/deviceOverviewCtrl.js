@@ -59,6 +59,23 @@
       RemoteSupportModal.open(deviceOverview.currentDevice);
     };
 
+    deviceOverview.addTag = function ($event) {
+      var tag = _.trim(deviceOverview.newTag);
+      if ($event.keyCode == 13 && tag && !_.contains(deviceOverview.currentDevice.tags, tag)) {
+        deviceOverview.newTag = undefined;
+        return (deviceOverview.currentDevice.needsActivation ? CsdmCodeService : CsdmDeviceService)
+          .updateTags(deviceOverview.currentDevice.url, deviceOverview.currentDevice.tags.concat(tag))
+          .catch(XhrNotificationService.notify);
+      }
+    };
+
+    deviceOverview.removeTag = function (tag) {
+      var tags = _.without(deviceOverview.currentDevice.tags, tag);
+      return (deviceOverview.currentDevice.needsActivation ? CsdmCodeService : CsdmDeviceService)
+        .updateTags(deviceOverview.currentDevice.url, tags)
+        .catch(XhrNotificationService.notify);
+    };
+
     deviceOverview.deviceHasInformation = deviceOverview.currentDevice.ip || deviceOverview.currentDevice.mac || deviceOverview.currentDevice.serial || deviceOverview.currentDevice.software || deviceOverview.currentDevice.hasRemoteSupport || deviceOverview.currentDevice.needsActivation;
 
     deviceOverview.canChangeUpgradeChannel = channels.length > 1 && deviceOverview.currentDevice.isOnline;

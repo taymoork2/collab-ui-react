@@ -91,7 +91,7 @@ angular.module('Squared').service('DeviceFilter',
     }
 
     function isOffline(item) {
-      return !item.isOnline && !item.needsActivation;
+      return !item.isOnline && !item.needsActivation && !item.isUnused;
     }
 
     function isUnused(item) {

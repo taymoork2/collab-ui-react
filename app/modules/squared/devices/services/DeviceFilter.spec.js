@@ -10,7 +10,7 @@ describe('Service: DeviceFilter', function () {
   }));
 
   it('should return a list of filters', function () {
-    expect(DeviceFilter.getFilters().length).toBe(5);
+    expect(DeviceFilter.getFilters().length).toBe(6);
   });
 
   it('should return a list of filters with correct count', function () {
@@ -24,12 +24,14 @@ describe('Service: DeviceFilter', function () {
     }, {
       isOnline: false,
       needsActivation: false
-    }, ]);
+    }, {
+      isUnused: true
+    }]);
     var filters = DeviceFilter.getFilters();
 
     expect(_.find(filters, {
       filterValue: 'all'
-    }).count).toBe(4);
+    }).count).toBe(5);
     expect(_.find(filters, {
       filterValue: 'codes'
     }).count).toBe(1);
@@ -41,6 +43,9 @@ describe('Service: DeviceFilter', function () {
     }).count).toBe(2);
     expect(_.find(filters, {
       filterValue: 'offline'
+    }).count).toBe(1);
+    expect(_.find(filters, {
+      filterValue: 'inactive'
     }).count).toBe(1);
   });
 
@@ -56,7 +61,9 @@ describe('Service: DeviceFilter', function () {
     }, {
       isOnline: false,
       needsActivation: false
-    }, ]);
+    }, {
+      isUnused: true
+    }]);
     var filters = DeviceFilter.getFilters();
 
     expect(_.find(filters, {
@@ -73,6 +80,9 @@ describe('Service: DeviceFilter', function () {
     }).count).toBe(0);
     expect(_.find(filters, {
       filterValue: 'offline'
+    }).count).toBe(0);
+    expect(_.find(filters, {
+      filterValue: 'inactive'
     }).count).toBe(0);
   });
 
