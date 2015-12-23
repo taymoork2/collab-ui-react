@@ -29,7 +29,6 @@
       var defaults = {
         'type': Config.trials.roomSystems,
         'enabled': false,
-        'readonly': false,
         'details': {
           'quantity': 0,
         },

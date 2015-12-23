@@ -658,7 +658,8 @@
     "settings": "Settings",
     "resources": "Resources",
     "download": "Download",
-    "quantity": "Qty"
+    "quantity": "Qty",
+    "modify": "Modify"
   },
   "notifications": {
     "success": "Success notifications",
@@ -1721,6 +1722,13 @@
     "unassignedNumbers": "{count, plural, one{# Unassigned Number} other{# Unassigned Numbers}}",
     "searchResults": "{count, plural, one{# search result} other{# search results}}"
   },
+  "serviceAddress": {
+    "streetAddress": "Street Address",
+    "unit": "Unit",
+    "city": "City",
+    "state": "State",
+    "zipCode": "Zip Code"
+  },
   "pstnSetup": {
     "setupPstn": "Setup PSTN",
     "setupService": "Set Up PSTN Service",
@@ -1748,6 +1756,7 @@
     "checkOrderStatus": "Check Order Status",
     "launchPortal": "Launch Company Portal",
     "carrierListError": "Failed to retrieve carrier list for this customer.",
+    "listSiteError": "Failed to retrieve the site list for this customer.",
     "orderNumbersPrompt": "Must add numbers to proceed.",
     "invalidNumberPrompt": "Please fix invalid number(s) before proceeding.",
     "duplicateNumber": "{{number}} is a duplicate number.",
@@ -1757,8 +1766,22 @@
     "swivelDuplicateError": "Failed to add {{number}}. Number already exists.",
     "customerCreateError": "Failed to create customer with the carrier.",
     "customerUpdateError": "Failed to update customer with the carrier.",
+    "siteCreateError": "Failed to create the service address.",
     "searchResults": "Search Results",
-    "noSearchResults": "No Search Results"
+    "noSearchResults": "No Search Results",
+    "emergencyAcknowledge": "Customer acknowledges dialing emergency numbers may not work on an enterprise class IP telephony network.",
+    "serviceAddress": "Service Address",
+    "serviceAddressPrompt": "In the case of an emergency call, local emergency response crew would use this address to locate the caller.",
+    "serviceAddressConfirmation": "Is this the address?",
+    "serviceAddressNotFound": "Unable to find address. Please update and try again."
+  },
+  "pstnContractInformation": {
+    "title": "PSTN Contract Information",
+    "prompt": "This information will be used to populate the PSTN contract between the customer and PSTN provider.",
+    "companyName": "Legal Company Name",
+    "firstName": "Signee's First Name",
+    "lastName": "Signee's Last Name",
+    "emailAddress": "Signee's Email Address"
   },
   "intelepeerFeatures": {
     "feature1": "Unlimited inbound/outbound calling to U.S. 50 states + Canada",

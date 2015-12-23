@@ -1,0 +1,13 @@
+<div class="ngCellText align-center">
+  <span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && isLicenseTypeActive(row.entity, col.field)"
+    class="badge"
+    ng-class="{'badge-active': row.entity.status != 'CANCELED', 'badge-disabled': row.entity.status === 'CANCELED'}"
+    translate="customerPage.active"></span>
+  <span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && isLicenseTypeATrial(row.entity, col.field)"
+    class="badge"
+    ng-class="{'badge-trial': row.entity.status != 'CANCELED', 'badge-disabled': row.entity.status === 'CANCELED'}"
+    translate="customerPage.trial"></span>
+  <span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && isLicenseTypeFree(row.entity, col.field)"
+    ng-class="{'free': row.entity.status != 'CANCELED', 'free-disabled': row.entity.status === 'CANCELED'}"
+    translate="customerPage.free"></span>
+</div>

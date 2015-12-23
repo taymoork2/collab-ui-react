@@ -7,19 +7,6 @@
   /* @ngInject */
   function TrialAddCtrl($q, $scope, $state, $translate, $window, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialService, ValidationService) {
     var vm = this;
-    // navigate trial modal in this order
-    // TODO: addNumbers must be last page for now due to controller destroy.
-    // This page "should" be refactored or become obsolete with PSTN
-    var configurableTrialTypes = [{
-      'type': Config.trials.meeting,
-      'states': ['trialAdd.meeting'],
-    }, {
-      'type': Config.trials.call,
-      'states': ['trialAdd.call', 'trialAdd.addNumbers'],
-    }, {
-      'type': Config.trials.roomSystems,
-      'states': ['trialAdd.call'],
-    }];
 
     vm.trialData = TrialService.getData();
 
@@ -32,6 +19,19 @@
     vm.meetingTrial = vm.trialData.trials.meetingTrial;
     vm.callTrial = vm.trialData.trials.callTrial;
     vm.roomSystemTrial = vm.trialData.trials.roomSystemTrial;
+    vm.trialStates = [{
+      'name': 'trialAdd.meeting',
+      'trials': [vm.meetingTrial]
+    }, {
+      'name': 'trialAdd.call',
+      'trials': [vm.callTrial, vm.roomSystemTrial]
+    }, {
+      'name': 'trialAdd.addNumbers',
+      'trials': [vm.callTrial]
+    }];
+    // Navigate trial modal in this order
+    // TODO: addNumbers must be last page for now due to controller destroy.
+    // This page "should" be refactored or become obsolete with PSTN
     vm.navOrder = ['trialAdd.info', 'trialAdd.meeting', 'trialAdd.call', 'trialAdd.addNumbers'];
     vm.navStates = ['trialAdd.info'];
     vm.roomSystemOptions = [5, 10, 15, 20, 25];
@@ -266,14 +266,17 @@
         vm.canEditMessage = true;
         vm.canEditMeeting = true;
       }
-      _.forEach(vm.trialData.trials, function (trial) {
-        var states = _.get(_.find(configurableTrialTypes, {
-          type: trial.type
-        }), 'states');
-        if (trial.enabled) {
-          addNavState(states);
+      addRemoveStates();
+    }
+
+    function addRemoveStates() {
+      _.forEach(vm.trialStates, function (state) {
+        if (_.every(state.trials, {
+            enabled: false
+          })) {
+          removeNavState(state.name);
         } else {
-          removeNavState(states);
+          addNavState(state.name);
         }
       });
     }
@@ -331,17 +334,13 @@
         .value();
     }
 
-    function addNavState(states) {
-      _.forEach(states, function (state) {
-        vm.navStates[_.indexOf(vm.navOrder, state)] = state;
-      });
+    function addNavState(state) {
+      vm.navStates[_.indexOf(vm.navOrder, state)] = state;
     }
 
-    function removeNavState(states) {
-      _.forEach(states, function (state) {
-        // just null out the position in array
-        delete vm.navStates[_.indexOf(vm.navStates, state)];
-      });
+    function removeNavState(state) {
+      // just null out the position in array
+      delete vm.navStates[_.indexOf(vm.navStates, state)];
     }
 
     function startTrial(addNumbersCallback) {
