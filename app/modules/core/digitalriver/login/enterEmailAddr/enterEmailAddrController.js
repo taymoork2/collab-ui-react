@@ -12,6 +12,7 @@ angular.module('Core')
         		$log.error("getUserFromEmail failed. Status: " + status);
         		// alert("error: " + data + " " + status);
             } else {
+            	$log.info($scope.email + (data.message == "true" ? " exists" : " does not exist"));
             	// alert($scope.email + (data.message == "true" ? " exists" : " does not exist"));
             }
           });
