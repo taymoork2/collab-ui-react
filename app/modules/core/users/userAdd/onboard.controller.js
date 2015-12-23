@@ -1054,33 +1054,33 @@ angular.module('Core')
             }
 
             // Hybrid Service entitlements must be added after onboarding
-            assignHybridServices($scope.extensionEntitlements, addedUsersList);
-
-            //concatenating the results in an array of strings for notify function
-            var successes = [];
-            var errors = [];
-            var count_s = 0;
-            var count_e = 0;
-            for (var idx in $scope.results.resultList) {
-              if ($scope.results.resultList[idx].alertType === 'success') {
-                successes[count_s] = $scope.results.resultList[idx].message;
-                count_s++;
-              } else {
-                errors[count_e] = $scope.results.resultList[idx].message;
-                count_e++;
+            assignHybridServices($scope.extensionEntitlements, addedUsersList).then(function () {
+              //concatenating the results in an array of strings for notify function
+              var successes = [];
+              var errors = [];
+              var count_s = 0;
+              var count_e = 0;
+              for (var idx in $scope.results.resultList) {
+                if ($scope.results.resultList[idx].alertType === 'success') {
+                  successes[count_s] = $scope.results.resultList[idx].message;
+                  count_s++;
+                } else {
+                  errors[count_e] = $scope.results.resultList[idx].message;
+                  count_e++;
+                }
               }
-            }
-            //Displaying notifications
-            if (successes.length + errors.length === usersList.length) {
-              $scope.btnOnboardLoading = false;
-              Notification.notify(successes, 'success');
-              Notification.notify(errors, 'error');
-              deferred.resolve();
-            }
-            if (angular.isFunction($scope.$dismiss) && successes.length === usersList.length) {
-              $scope.$dismiss();
-            }
+              //Displaying notifications
+              if (successes.length + errors.length === usersList.length) {
+                $scope.btnOnboardLoading = false;
+                Notification.notify(successes, 'success');
+                Notification.notify(errors, 'error');
+                deferred.resolve();
+              }
 
+              if (angular.isFunction($scope.$dismiss) && successes.length === usersList.length) {
+                $scope.$dismiss();
+              }
+            });
           } else {
             Log.warn('Could not onboard the user', data);
             var error = null;
@@ -1156,14 +1156,15 @@ angular.module('Core')
       };
 
       function assignHybridServices(entitlements, usersList) {
-        //var usersList = getUsersList();
+        var deferred = $q.defer();
 
         if (angular.isArray(usersList) && usersList.length && _.isArray(entitlements) && entitlements.length) {
           Userservice.updateUsers(usersList, null, entitlements, 'updateEntitlement', callback);
+        } else {
+          // No hybrid services to assign
+          deferred.resolve();
         }
 
-        // TODO: Similar callback logic is used throughout this controller.
-        // Make abstracting it part of refactor work.
         function callback(data) {
           if (data.success) {
             var successResponses = [];
@@ -1198,7 +1199,10 @@ angular.module('Core')
             Log.error(data);
             Notification.notify('Failed to update entitlements.', 'error');
           }
+          deferred.resolve();
         }
+
+        return deferred.promise;
       }
 
       function entitleUserCallback(data, status, method) {
@@ -1821,7 +1825,10 @@ angular.module('Core')
               });
 
               // Hybrid Service entitlements must be added after onboarding
-              assignHybridServices($scope.extensionEntitlements, addedUsersList);
+              assignHybridServices($scope.extensionEntitlements, addedUsersList).then( function() {
+
+              });
+
             } else {
               for (var i = 0; i < params.length; i++) {
                 addUserErrorWithTrackingID(params.startIndex + i + 1, $translate.instant('firstTimeWizard.processBulkResponseError'));
