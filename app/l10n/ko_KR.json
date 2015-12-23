@@ -1149,7 +1149,7 @@
     "domain": "도메인",
     "defaultPlaceholder": "기본값",
     "domainDesc": "동기화할 Active Directory 도메인을 식별하십시오.",
-    "installStep1": "1. 귀사에서 Cisco Cloud Connector를 <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'>다운로드</a>하고 설치합니다.",
+    "installStep1": "1. 귀사에서 Cisco Cloud Connector를 <a href='{{download}}' download>다운로드</a>하고 설치합니다.",
     "installStep2": "2. Active Directory 동기화 동의를 구성합니다.",
     "installStep3": "3. 동기화 동의를 테스트합니다.",
     "nextSteps": "ID 정보가 동기화되고 있는지 확인할 준비가 되면 다음 버튼을 누릅니다.",

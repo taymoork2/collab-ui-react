@@ -1149,7 +1149,7 @@
     "domain": "Domena",
     "defaultPlaceholder": "Domyślne",
     "domainDesc": "Określ domenę Active Directory, którą będziesz synchronizować.",
-    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Pobierz </a> i zainstaluj w przedsiębiorstwie program Cisco Directory Connector.",
+    "installStep1": "1. <a href='{{download}}' download> Pobierz </a> i zainstaluj w przedsiębiorstwie program Cisco Directory Connector.",
     "installStep2": "2. Skonfiguruj uzgodnienie synchronizacji Active Directory.",
     "installStep3": "3. Przetestuj uzgodnienie synchronizacji.",
     "nextSteps": "Naciśnij przycisk Dalej, kiedy będzie można zweryfikować, że informacje o tożsamości są synchronizowane.",

@@ -1149,7 +1149,7 @@
     "domain": "Домен",
     "defaultPlaceholder": "По умолчанию",
     "domainDesc": "Определите домен Active Directory, который вы будете синхронизировать.",
-    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Скачайте </a> и установите Cisco Directory Connector в своей организации.",
+    "installStep1": "1. <a href='{{download}}' download> Скачайте </a> и установите Cisco Directory Connector в своей организации.",
     "installStep2": "2. Настройте соглашение о синхронизации Active Directory.",
     "installStep3": "3. Проверьте соглашение о синхронизации.",
     "nextSteps": "Нажмите кнопку \"Далее\", когда будете готовы подтвердить, что идентификационная информация синхронизируется.",

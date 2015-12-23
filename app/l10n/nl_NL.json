@@ -1149,7 +1149,7 @@
     "domain": "Domein",
     "defaultPlaceholder": "Standaard",
     "domainDesc": "Geef op met welk Active Directory-domein u wilt synchroniseren.",
-    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Download </a> en installeer de Cisco Cloud Connector voor uw organisatie.",
+    "installStep1": "1. <a href='{{download}}' download> Download </a> en installeer de Cisco Cloud Connector voor uw organisatie.",
     "installStep2": "2. Configureer de synchronisatieovereenkomst voor Active Directory.",
     "installStep3": "3. Test de synchronisatieovereenkomst.",
     "nextSteps": "Druk op Volgende wanneer u klaar bent om te controleren of de identiteitsgegevens worden gesynchroniseerd.",

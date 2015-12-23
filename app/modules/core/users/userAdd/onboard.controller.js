@@ -28,6 +28,7 @@ angular.module('Core')
       $scope.isMapEnabled = true;
       $scope.processing = false;
       $scope.PATTERN_LIMIT = 50;
+      $scope.dirSyncConnectorDownload = "https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/DirectoryConnector.zip";
 
       $scope.isReset = false;
       $scope.showExtensions = true;
