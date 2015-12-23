@@ -2,9 +2,9 @@
 /* global moment */
 
 angular.module('Core')
-  .controller('PartnerHomeCtrl', ['$scope', '$rootScope', '$stateParams', 'Notification', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'PartnerService', 'Orgservice', '$filter', '$state', 'ExternalNumberPool', 'LogMetricsService', '$log',
+  .controller('PartnerHomeCtrl', ['$templateCache', '$scope', '$rootScope', '$stateParams', 'Notification', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'PartnerService', 'Orgservice', '$filter', '$state', 'ExternalNumberPool', 'LogMetricsService', '$log',
 
-    function ($scope, $rootScope, $stateParams, Notification, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, PartnerService, Orgservice, $filter, $state, ExternalNumberPool, LogMetricsService, $log) {
+    function ($templateCache, $scope, $rootScope, $stateParams, Notification, $timeout, ReportsService, Log, Auth, Authinfo, $dialogs, Config, $translate, PartnerService, Orgservice, $filter, $state, ExternalNumberPool, LogMetricsService, $log) {
 
       $scope.load = true;
       $scope.currentDataPosition = 0;
@@ -170,49 +170,11 @@ angular.module('Core')
         }]
       };
 
-      var actionsTemplate = '<span dropdown>' +
-        '<button id="{{row.entity.customerName}}ActionsButton" class="btn--none dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
-        '<i class="icon icon-three-dots"></i>' +
-        '</button>' +
-        '<ul class="dropdown-menu dropdown-primary" role="menu">' +
-        '<li ng-show="row.entity.isAllowedToManage" id="{{row.entity.customerName}}LaunchCustomerButton"><a href="" ng-click="$event.stopPropagation(); closeActionsDropdown();" ui-sref="login_swap({customerOrgId: row.entity.customerOrgId, customerOrgName: row.entity.customerName})" target="_blank"><span translate="customerPage.launchButton"></span></a></li>' +
-        '<li cr-feature-toggle feature-show="pstnSetup" ng-show="row.entity.isSquaredUcOffer" id="{{row.entity.customerName}}PstnSetup"><a href="" ng-click="$event.stopPropagation(); closeActionsDropdown();" ui-sref="pstnSetup({customerId: row.entity.customerOrgId, customerName: row.entity.customerName})"><span translate="pstnSetup.setupPstn"></span></a></li>' +
-        '<li cr-feature-toggle feature-hide="pstnSetup" ng-show="row.entity.isSquaredUcOffer" id="{{row.entity.customerName}}UploadNumbers"><a href="" ng-click="$event.stopPropagation(); closeActionsDropdown();" ui-sref="didadd({currentOrg: row.entity})"><span translate="customerPage.uploadNumbers"></span></a></li>' +
-        '</ul>' +
-        '</span>';
-
-      var rowTemplate = '<div id="{{row.entity.customerName}}" orgId="{{row.entity.customerOrgId}}" ng-style="{ \'cursor\': row.cursor }"' +
-        ' ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}"' +
-        ' ng-click="showCustomerDetails(row.entity)">' +
-        '<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }">&nbsp;</div>' +
-        '<div ng-cell></div>' +
-        '</div>';
-
-      var nameTemplate = '<div class="ngCellText" ng-click="partnerClicked(row.entity.customerOrgId)">' +
-        '<span translate="{{row.entity.customerName}}"></span>' +
-        '<span ng-if="isPartnerOrg(row.entity.customerOrgId)" id="partner" class="badge badge--managed" ng-class="activeBadge ? \'active\' : \'inactive\'" translate="customerPage.myOrganization"></span>' +
-        '</div>';
-
-      var serviceTemplate = '<div class="ngCellText align-center">' +
-        '<span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && isLicenseTypeActive(row.entity, col.field)"' +
-        ' class="badge" ng-class="{\'badge-active\': row.entity.status != \'CANCELED\', \'badge-disabled\': row.entity.status === \'CANCELED\'}"' +
-        ' translate="customerPage.active"></span>' +
-        '<span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && isLicenseTypeATrial(row.entity, col.field)"' +
-        ' class="badge" ng-class="{\'badge-trial\': row.entity.status != \'CANCELED\', \'badge-disabled\': row.entity.status === \'CANCELED\'}" translate="customerPage.trial"></span>' +
-        '<span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && isLicenseTypeFree(row.entity, col.field)"' +
-        ' ng-class="{\'free\': row.entity.status != \'CANCELED\', \'free-disabled\': row.entity.status === \'CANCELED\'}" translate="customerPage.free"></span></div>';
-
-      var notesTemplate = '<div class="ngCellText">' +
-        '<span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && row.entity.status === \'ACTIVE\' && row.entity.daysLeft > 0"' +
-        ' translate="customerPage.daysRemaining" translate-values="{count: row.entity.daysLeft}"></span>' +
-        '<span ng-if="row.entity.isTrial && isLicenseInfoAvailable(row.entity.licenseList) && row.entity.status === \'ACTIVE\' && row.entity.daysLeft === 0"' +
-        ' class="red" translate="customerPage.expiringToday"></span>' +
-        '<span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && row.entity.status === \'ACTIVE\' && row.entity.daysLeft < 0"' +
-        ' class="red" translate="customerPage.expired"></span>' +
-        '<span ng-if="isLicenseInfoAvailable(row.entity.licenseList) && row.entity.status === \'CANCELED\'"' +
-        ' translate="customerPage.suspended"> </span>' +
-        '<span ng-if="!isLicenseInfoAvailable(row.entity.licenseList)"' +
-        ' class="red" translate="customerPage.licenseInfoNotAvailable"></span></div>';
+      var rowTemplate = $templateCache.get('modules/core/partnerLanding/grid/row.tpl.html');
+      var actionTemplate = $templateCache.get('modules/core/partnerLanding/grid/actionColumn.tpl.html');
+      var nameTemplate = $templateCache.get('modules/core/partnerLanding/grid/nameColumn.tpl.html');
+      var serviceTemplate = $templateCache.get('modules/core/partnerLanding/grid/serviceColumn.tpl.html');
+      var noteTemplate = $templateCache.get('modules/core/partnerLanding/grid/noteColumn.tpl.html');
 
       $scope.gridOptions = {
         data: 'gridData',
@@ -258,13 +220,13 @@ angular.module('Core')
         }, {
           field: 'notes',
           displayName: $translate.instant('customerPage.notes'),
-          cellTemplate: notesTemplate,
+          cellTemplate: noteTemplate,
           sortFn: notesSort
         }, {
           field: 'action',
           displayName: $translate.instant('customerPage.actionHeader'),
           sortable: false,
-          cellTemplate: actionsTemplate,
+          cellTemplate: actionTemplate,
           width: '90px'
         }]
       };

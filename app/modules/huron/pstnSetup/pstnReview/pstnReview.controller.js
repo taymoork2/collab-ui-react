@@ -5,14 +5,14 @@
     .controller('PstnReviewCtrl', PstnReviewCtrl);
 
   /* @ngInject */
-  function PstnReviewCtrl($q, $translate, $state, PstnSetup, PstnSetupService, Notification, ExternalNumberPool) {
+  function PstnReviewCtrl($q, $translate, $state, PstnSetup, PstnSetupService, PstnServiceAddressService, Notification, ExternalNumberPool) {
     var vm = this;
 
     vm.goToNumbers = goToNumbers;
     vm.placeOrder = placeOrder;
 
     vm.provider = PstnSetup.getProvider();
-    vm.numbers = _.flatten(PstnSetup.getNumbers());
+    vm.numbers = initNumbers();
 
     ////////////////////////
 
@@ -37,13 +37,20 @@
     }
 
     function createCustomer() {
-      return PstnSetupService.createCustomer(PstnSetup.getCustomerId(), PstnSetup.getCustomerName(), PstnSetup.getProviderId())
-        .then(function () {
-          PstnSetup.setCustomerExists(true);
-        }).catch(function (response) {
-          Notification.errorResponse(response, 'pstnSetup.customerCreateError');
-          return $q.reject(response);
-        });
+      return PstnSetupService.createCustomer(
+        PstnSetup.getCustomerId(),
+        PstnSetup.getCustomerName(),
+        PstnSetup.getCustomerFirstName(),
+        PstnSetup.getCustomerLastName(),
+        PstnSetup.getCustomerEmail(),
+        PstnSetup.getProviderId(),
+        vm.numbers
+      ).then(function () {
+        PstnSetup.setCustomerExists(true);
+      }).catch(function (response) {
+        Notification.errorResponse(response, 'pstnSetup.customerCreateError');
+        return $q.reject(response);
+      });
     }
 
     function updateCustomerCarrier() {
@@ -56,20 +63,34 @@
         });
     }
 
+    function createSite() {
+      // Only create site for API providers
+      if (vm.provider.apiExists && !PstnSetup.isSiteExists()) {
+        return PstnServiceAddressService.createCustomerSite(PstnSetup.getCustomerId(), PstnSetup.getCustomerName(), PstnSetup.getServiceAddress())
+          .then(function () {
+            PstnSetup.setSiteExists(true);
+          }).catch(function (response) {
+            Notification.errorResponse(response, 'pstnSetup.siteCreateError');
+            return $q.reject(response);
+          });
+      }
+    }
+
+    function initNumbers() {
+      var numbers = _.flatten(PstnSetup.getNumbers());
+
+      if (vm.provider.apiExists) {
+        return numbers;
+      } else {
+        return _.map(numbers, 'value');
+      }
+    }
+
     function createNumbers() {
       var promises = [];
       var errors = [];
-      var numbers = [];
 
-      if (vm.provider.apiExists) {
-        numbers = vm.numbers;
-      } else {
-        _.forEach(vm.numbers, function (numberToken) {
-          numbers.push(numberToken.value);
-        });
-      }
-
-      var promise = PstnSetupService.orderNumbers(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), numbers)
+      var promise = PstnSetupService.orderNumbers(PstnSetup.getCustomerId(), PstnSetup.getProviderId(), vm.numbers)
         .catch(function (response) {
           errors.push(Notification.processErrorResponse(response, 'pstnSetup.orderNumbersError'));
         });
@@ -89,7 +110,9 @@
       } else if (!PstnSetup.isCarrierExists()) {
         promise = promise.then(updateCustomerCarrier);
       }
-      promise.then(createNumbers)
+      promise
+        .then(createSite)
+        .then(createNumbers)
         .then(goToNextSteps)
         .finally(function () {
           vm.placeOrderLoad = false;
