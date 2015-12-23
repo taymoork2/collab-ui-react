@@ -23,6 +23,11 @@
   }
 }
 
+.feature-modal-loading{
+  font-size: 3rem;
+  text-align: center;
+}
+
 .feature-icon-container {
   @include vr-spacing(pt, 2.5);
 }

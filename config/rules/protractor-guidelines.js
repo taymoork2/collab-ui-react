@@ -6,7 +6,7 @@ module.exports = function(context) {
   'utils', 'deleteUtils', 'deleteTrialUtils',
   // page objects
   'notifications', 'landing', 'login', 'navigation', 'users', 'reports', 'support', 'roles', 'partner', 'wizard', 'invite', 'activate',
-  'callrouting', 'autoattendant', 'servicesetup', 'telephony', 'huronFeatures', 'huntGroup'
+  'callrouting', 'autoattendant', 'servicesetup', 'telephony', 'huronFeatures', 'huntGroup',
   ];
 
   var allowedPageElementMethods = ['first', 'last', 'then'];
@@ -62,6 +62,9 @@ module.exports = function(context) {
 
       // Disallow page element functions
       if (node.callee.type == 'MemberExpression') {
+
+        if (node.callee.object.name == 'Math')
+          return;
 
         // Allow specific page element functions
         if (node.callee.property.type == 'Identifier' &&
