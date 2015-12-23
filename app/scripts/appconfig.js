@@ -20,6 +20,16 @@ angular
           },
           authenticate: false
         })
+        .state('enterEmailAddr', {
+          url: '/enterEmailAddr',
+          views: {
+            'main@': {
+              templateUrl: 'modules/core/digitalriver/login/enterEmailAddr/enterEmailAddr.tpl.html',
+              controller: 'enterEmailAddrController'
+            }
+          },
+          authenticate: false
+        })
         .state('unauthorized', {
           url: '/unauthorized',
           views: {
