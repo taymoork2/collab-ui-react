@@ -40,7 +40,7 @@
       if (Config.getEnv() === 'integration' || Config.getEnv() === 'dev') {
         for (var i = 0; i < vm.tabs.length; i++) {
           if (vm.tabs[i].title === 'callRouting.autoAttendantTitle') {
-            vm.tabs[i].state = 'autoattendant.landing';
+            vm.tabs[i].state = 'huronfeatures';
             return;
           }
         }
