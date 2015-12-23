@@ -8,12 +8,10 @@ angular.module('Core')
         Userservice.getUserFromEmail(
           $scope.email,
           function (data, status) {
-          	if (status != 200 || !data.success) {
-        		$log.error("getUserFromEmail failed. Status: " + status);
-        		// alert("error: " + data + " " + status);
+            if (status != 200 || !data.success) {
+              $log.error("getUserFromEmail failed. Status: " + status);
             } else {
-            	$log.info($scope.email + (data.message == "true" ? " exists" : " does not exist"));
-            	// alert($scope.email + (data.message == "true" ? " exists" : " does not exist"));
+              $window.location.href = (data.message == "true" ? "/#/drLoginForward" : "/#/createAccount") + "?email=" + $scope.email;
             }
           });
       };

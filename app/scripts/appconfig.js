@@ -30,6 +30,16 @@ angular
           },
           authenticate: false
         })
+        .state('createAccount', {
+          url: '/createAccount',
+          views: {
+            'main@': {
+              templateUrl: 'modules/core/digitalriver/login/createAccount/createAccount.tpl.html',
+              controller: 'createAccountController'
+            }
+          },
+          authenticate: false
+        })
         .state('unauthorized', {
           url: '/unauthorized',
           views: {
