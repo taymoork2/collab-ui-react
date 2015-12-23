@@ -91,10 +91,12 @@ describe('OnboardCtrl: Ctrl', function () {
           success: successFlag,
           userResponse: [{
             status: statusCode,
-            message: responseMessage
+            message: responseMessage,
+            email: 'blah@example.com'
           }, {
             status: statusCode,
-            message: responseMessage
+            message: responseMessage,
+            email: 'blah@example.com'
           }]
         };
         callback(data);

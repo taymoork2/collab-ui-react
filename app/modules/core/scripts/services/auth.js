@@ -122,7 +122,8 @@ function Auth($injector, $translate, $location, $timeout, $window, $q, Log, Conf
                 "ciName": "webex-messenger",
                 "type": "PAID",
                 "isBeta": false,
-                "isConfigurable": false
+                "isConfigurable": false,
+                "isIgnored": true
               };
 
               result.services.push(msgr_service);

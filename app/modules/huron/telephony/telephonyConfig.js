@@ -42,6 +42,12 @@
             prod: 'https://hermes.huron-dev.com/api/v1'
           },
 
+          minervaUrl: {
+            dev: 'https://minerva.huron-int.com/api/v1',
+            integration: 'https://minerva.huron-int.com/api/v1',
+            prod: 'https://minerva.huron-dev.com/api/v1'
+          },
+
           // TODO: Remove this when CMIv2 URl is ready.
           getMockHgUrl: function () {
             return 'https://mock-hg.de-ams.thunderhead.io/api/v2';
@@ -104,6 +110,16 @@
               return this.ocelotUrl.integration;
             } else {
               return this.ocelotUrl.prod;
+            }
+          },
+
+          getMinervaUrl: function () {
+            if (Config.isDev()) {
+              return this.minervaUrl.dev;
+            } else if (Config.isIntegration()) {
+              return this.minervaUrl.integration;
+            } else {
+              return this.minervaUrl.prod;
             }
           }
 
