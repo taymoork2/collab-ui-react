@@ -140,7 +140,6 @@
     function handleFailures(response, feature) {
 
       Log.warn('Could fetch features for customer with Id:', Authinfo.getOrgId());
-      
       Notification.errorResponse(response, 'huronFeatureDetails.failedToLoad', {
         featureType: $filter('translate')(feature.i18n)
       });
