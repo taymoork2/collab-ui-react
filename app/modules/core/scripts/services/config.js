@@ -617,7 +617,7 @@ angular.module('Core')
 
         getAdminServiceUrl: function () {
           var adminServiceUrl = {
-            'dev': this.adminServiceUrl.dev,
+            'dev': this.adminServiceUrl.integration,
             'cfe': this.adminServiceUrl.cfe,
             'integration': this.adminServiceUrl.integration,
             'prod': this.adminServiceUrl.prod
