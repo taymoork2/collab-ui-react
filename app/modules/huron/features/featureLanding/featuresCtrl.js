@@ -139,23 +139,11 @@
 
     function handleFailures(response, feature) {
 
-      if ((response.status === 404) && (feature.name === 'AA')) {
-        // ok if no AAs present. Initialize model for no AAs
-
-        vm.aaModel = AAModelService.newAAModel();
-        vm.aaModel.ceInfos = [];
-        AAModelService.setAAModel(vm.aaModel);
-        vm.pageState = 'NewFeature';
-      } else {
-
-        Log.warn('Could fetch features for customer with Id:', Authinfo.getOrgId());
-
-        feature.isEmpty = true;
-
-        Notification.errorResponse(response, 'huronFeatureDetails.failedToLoad', {
-          featureType: $filter('translate')(feature.i18n)
-        });
-      }
+      Log.warn('Could fetch features for customer with Id:', Authinfo.getOrgId());
+      
+      Notification.errorResponse(response, 'huronFeatureDetails.failedToLoad', {
+        featureType: $filter('translate')(feature.i18n)
+      });
 
       feature.isEmpty = true;
 
@@ -165,16 +153,12 @@
     function handleFeatureData(data, feature) {
 
       if (feature.name === 'AA') {
-        vm.aaModel = AAModelService.newAAModel();
         vm.aaModel = data;
+        AAModelService.setAAModel(vm.aaModel);
       }
 
       var list = feature.formatter(data);
       if (list.length > 0) {
-
-        if (feature.name === 'AA') {
-          AAModelService.setAAModel(vm.aaModel);
-        }
 
         vm.pageState = 'showFeatures';
         feature.isEmpty = false;
