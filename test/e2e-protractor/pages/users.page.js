@@ -64,8 +64,8 @@ var UsersPage = function () {
   this.invalid = element(by.css('.invalid'));
   this.close = element(by.css('.close'));
 
-  this.emailAddressRadio = element(by.cssContainingText("span", "Email address"));
-  this.nameAndEmailRadio = element(by.cssContainingText("span", "Names and Email address"));
+  this.emailAddressRadio = element(by.css('label[for="radioEmail"]'));
+  this.nameAndEmailRadio = element(by.css('label[for="radioNamesAndEmail"]'));
   this.firstName = element(by.id('firstName'));
   this.lastName = element(by.id('lastName'));
   this.emailAddress = element(by.id('emailAddress'));
@@ -227,6 +227,17 @@ var UsersPage = function () {
     });
   };
 
+  this.createUser = function( userName ) {
+    navigation.clickUsers();
+    utils.click(this.addUsers);
+    utils.expectIsDisplayed(this.manageDialog);
+    utils.click(this.nameAndEmailRadio);
+    utils.sendKeys(this.firstName, 'Test');
+    utils.sendKeys(this.lastName, 'User');
+    utils.sendKeys(this.emailAddress, userName);
+    utils.click(this.plusIcon);
+    utils.click(this.nextButton);
+  };
 };
 
 module.exports = UsersPage;
