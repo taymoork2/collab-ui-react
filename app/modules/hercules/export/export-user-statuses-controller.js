@@ -6,11 +6,12 @@
       /* @ngInject */
       function ($q, $timeout, serviceId, Authinfo, UiStats, UserDetails, USSService2, ClusterService) {
         var vm = this;
+        var numberOfUsersPrCiRequest = 25; // can probably go higher, depending on the CI backend...
         vm.selectedServiceId = serviceId;
-        vm.numberOfUsersPrCiRequest = 25; // can probably go higher, depending on the CI backend...
         vm.nothingToExport = true;
         vm.exportingUserStatusReport = false;
         vm.exportCanceled = false;
+        vm.result = [];
         var serviceInfo = _.find(USSService2.getStatusesSummary(), {
           serviceId: vm.selectedServiceId
         });
@@ -29,10 +30,9 @@
         };
 
         vm.getUsersBatch = function (userStatuses, index) {
-          var usersPrRequest = vm.numberOfUsersPrCiRequest;
           var orgId = Authinfo.getOrgId();
           return $q(function (resolve, reject) {
-            UserDetails.getUsers(userStatuses.slice(index, index + usersPrRequest), orgId, function (data) {
+            UserDetails.getUsers(userStatuses.slice(index, index + numberOfUsersPrCiRequest), orgId, function (data) {
               _.forEach(data, function (d, ind) {
                 var totalIndex = index + ind;
                 if (totalIndex < userStatuses.length) {
@@ -40,7 +40,7 @@
                   vm.result.push(d.details);
                 }
               });
-              index += usersPrRequest;
+              index += numberOfUsersPrCiRequest;
               if (index < userStatuses.length) {
                 return vm.getUsersBatch(userStatuses, index);
               } else {
@@ -55,7 +55,6 @@
           UiStats.initStats();
           vm.exportingUserStatusReport = true;
           vm.loading = true;
-          vm.result = [];
 
           // Improve formatting in all versions of Excel even if it means
           // not being 100%  CSV-valid

@@ -3,15 +3,15 @@
 describe('ExportUserStatusesController', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var Authinfo, service, controller, $scope, $httpBackend, UiStats;
+  var vm, Authinfo, scope, $httpBackend, $rootScope, UiStats, UserDetails;
 
   beforeEach(function () {
     module(function ($provide) {
       Authinfo = {
         getServices: function () {
           return [{
-            "ciName": "squared-fusion-cal",
-            "displayName": "myService"
+            ciName: "squared-fusion-cal",
+            displayName: "myService"
           }];
         },
         getOrgId: sinon.stub().returns("5632-f806-org")
@@ -20,44 +20,93 @@ describe('ExportUserStatusesController', function () {
     });
   });
 
-  beforeEach(inject(function (_$controller_, _$httpBackend_, _UiStats_) {
+  beforeEach(inject(function ($controller, _$rootScope_, _$httpBackend_) {
     $httpBackend = _$httpBackend_;
     $httpBackend
       .when('GET', 'l10n/en_US.json')
       .respond({});
 
-    $scope = {
-      $watch: sinon.stub()
-    };
+    $rootScope = _$rootScope_;
+    scope = $rootScope.$new();
 
     var USSService2 = {
       getStatusesSummary: function () {
         return [{
-          "serviceId": "squared-fusion-cal",
-          "total": 14,
-          "notActivated": 2,
-          "activated": 0,
-          "error": 12,
-          "deactivated": 0,
-          "notEntitled": 0
+          serviceId: "squared-fusion-cal",
+          total: 14,
+          notActivated: 2,
+          activated: 0,
+          error: 12,
+          deactivated: 0,
+          notEntitled: 0
         }];
       }
     };
 
-    UiStats = _UiStats_;
+    UiStats = {
+      insertServiceInfo: sinon.stub(),
+      updateProgress: sinon.stub(),
+      noneSelected: sinon.stub()
+    };
+    spyOn(UiStats, 'noneSelected');
 
-    controller = _$controller_('ExportUserStatusesController', {
+    UserDetails = {
+      getUsers: function (stateInfos, orgId, callback) {
+        callback(stateInfos);
+      }
+    };
+    spyOn(UserDetails, 'getUsers').and.callThrough();
+
+    vm = $controller('ExportUserStatusesController', {
       serviceId: 'squared-fusion-cal',
       Authinfo: Authinfo,
       UiStats: UiStats,
       USSService2: USSService2,
-      $scope: $scope
+      UserDetails: UserDetails,
+      $scope: scope
     });
+
+    sinon.spy(vm, 'getUsersBatch');
   }));
 
-  it('default state is set to not exporting', function () {
-    controller.selectedServiceId = "squared-fusion-cal";
-    expect(controller.exportingUserStatusReport).toBe(false);
+  it('should have sane default on init', function () {
+    vm.selectedServiceId = "squared-fusion-cal";
+    expect(vm.nothingToExport).toBe(true);
+    expect(vm.exportingUserStatusReport).toBe(false);
+    expect(vm.exportCanceled).toBe(false);
+  });
+
+  it('should cancel exporting when calling cancelExport()', function () {
+    vm.selectedServiceId = "squared-fusion-cal";
+    vm.cancelExport();
+    expect(vm.exportCanceled).toBe(true);
+  });
+
+  it('should call UiStats.noneSelected() when selectedStateChanged() is called', function () {
+    vm.selectedServiceId = "squared-fusion-cal";
+    vm.selectedStateChanged();
+    expect(UiStats.noneSelected).toHaveBeenCalled();
+  });
+
+  describe('getUsersBatch', function () {
+    it('should call UserDetails.getUsers', function () {
+      vm.getUsersBatch([], 0);
+      $rootScope.$apply();
+      expect(UserDetails.getUsers).toHaveBeenCalled();
+    });
+
+    it('should call itself when userStatuses.length is bigger than numberOfUsersPrCiRequest', function () {
+      // default numberOfUsersPrCiRequest should be 25
+      var minimumValidArray = _.range(40).map(function () {
+        return {
+          state: 'null',
+          details: 'details'
+        };
+      });
+      vm.getUsersBatch(minimumValidArray, 0);
+      $rootScope.$apply();
+      expect(vm.getUsersBatch.callCount).toEqual(2);
+    });
   });
 
   // it('export multiple users', function () {
