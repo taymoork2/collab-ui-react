@@ -894,6 +894,8 @@
     "activationCodeHeader": "Activation Code",
     "activationDateHeader": "Activation Date",
     "informationHeader": "Information",
+    "customTagsHeader": "Custom Tags",
+    "newCustomTagPlaceholder": "Enter tag...",
     "addDeviceStep1": "Where will this device be installed?",
     "addDeviceStep1Desc": "It is recommended that you use the name of your conference room or shared space as it is shown in your company directory. The video address for this device will use this name. It will also be the easiest way to search for and find the device in the system later.",
     "addDeviceStep2": "Your activation code has been created",

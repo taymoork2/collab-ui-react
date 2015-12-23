@@ -124,5 +124,32 @@
         </div>
       </div>
     </cs-sp-section>
+
+    <cs-sp-section ng-show="deviceOverview.currentDevice.supportsCustomTags">
+      <div class="section-title-row">
+        <span class="section-name" translate="spacesPage.customTagsHeader"></span>
+      </div>
+      <div class="tag-container" ng-show="deviceOverview.currentDevice.tagString">
+        <span class="tag" ng-repeat="tag in deviceOverview.currentDevice.tags">
+          <span ng-bind-html="tag"></span>
+          <i class="icon icon-close" ng-click="deviceOverview.removeTag(tag)"></i>
+        </span>
+      </div>
+      <div class="tag-container">
+        <span class="tag add-tag" ng-hide="deviceOverview.isAddingTag" ng-click="deviceOverview.isAddingTag = true">
+          <span translate="common.add"></span>
+          <i class="icon icon-plus"></i>
+        </span>
+        <input
+          type="text"
+          placeholder="{{'spacesPage.newCustomTagPlaceholder' | translate}}"
+          ng-model="deviceOverview.newTag"
+          ng-show="deviceOverview.isAddingTag"
+          focus-on="deviceOverview.isAddingTag"
+          ng-blur="deviceOverview.isAddingTag = false"
+          ng-keyup="deviceOverview.addTag($event)"
+        />
+      </div>
+    </cs-sp-section>
   </cs-sp-container>
 </div>

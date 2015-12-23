@@ -10,7 +10,7 @@ describe('Service: DeviceFilter', function () {
   }));
 
   it('should return a list of filters', function () {
-    expect(DeviceFilter.getFilters().length).toBe(5);
+    expect(DeviceFilter.getFilters().length).toBe(6);
   });
 
   it('should return a list of filters with correct count', function () {
@@ -24,12 +24,14 @@ describe('Service: DeviceFilter', function () {
     }, {
       isOnline: false,
       needsActivation: false
-    }, ]);
+    }, {
+      isUnused: true
+    }]);
     var filters = DeviceFilter.getFilters();
 
     expect(_.find(filters, {
       filterValue: 'all'
-    }).count).toBe(4);
+    }).count).toBe(5);
     expect(_.find(filters, {
       filterValue: 'codes'
     }).count).toBe(1);
@@ -41,6 +43,9 @@ describe('Service: DeviceFilter', function () {
     }).count).toBe(2);
     expect(_.find(filters, {
       filterValue: 'offline'
+    }).count).toBe(1);
+    expect(_.find(filters, {
+      filterValue: 'inactive'
     }).count).toBe(1);
   });
 
@@ -56,7 +61,9 @@ describe('Service: DeviceFilter', function () {
     }, {
       isOnline: false,
       needsActivation: false
-    }, ]);
+    }, {
+      isUnused: true
+    }]);
     var filters = DeviceFilter.getFilters();
 
     expect(_.find(filters, {
@@ -73,6 +80,9 @@ describe('Service: DeviceFilter', function () {
     }).count).toBe(0);
     expect(_.find(filters, {
       filterValue: 'offline'
+    }).count).toBe(0);
+    expect(_.find(filters, {
+      filterValue: 'inactive'
     }).count).toBe(0);
   });
 
@@ -92,6 +102,83 @@ describe('Service: DeviceFilter', function () {
 
       expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
       expect(DeviceFilter.getFilteredList(arr)[0].displayName).toBe('xfoox');
+    });
+
+    it('should search on product', function () {
+      var arr = [{
+        product: 'xfoox'
+      }, {}];
+
+      DeviceFilter.setCurrentSearch('foo');
+
+      expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
+      expect(DeviceFilter.getFilteredList(arr)[0].product).toBe('xfoox');
+    });
+
+    it('should search on status', function () {
+      var arr = [{
+        readableState: 'xfoox'
+      }, {}];
+
+      DeviceFilter.setCurrentSearch('foo');
+
+      expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
+      expect(DeviceFilter.getFilteredList(arr)[0].readableState).toBe('xfoox');
+    });
+
+    it('should search on ip', function () {
+      var arr = [{
+        ip: '192.168.0.5'
+      }, {}];
+
+      DeviceFilter.setCurrentSearch('168');
+
+      expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
+      expect(DeviceFilter.getFilteredList(arr)[0].ip).toBe('192.168.0.5');
+    });
+
+    it('should search on mac', function () {
+      var arr = [{
+        mac: '1A:2B:3C:4D:5E:6F'
+      }, {}];
+
+      DeviceFilter.setCurrentSearch('2B:3C');
+
+      expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
+      expect(DeviceFilter.getFilteredList(arr)[0].mac).toBe('1A:2B:3C:4D:5E:6F');
+    });
+
+    it('should search on tags', function () {
+      var arr = [{
+        tagString: 'foo, bar, oof'
+      }, {}];
+
+      DeviceFilter.setCurrentSearch('bar');
+
+      expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
+      expect(DeviceFilter.getFilteredList(arr)[0].tagString).toBe('foo, bar, oof');
+    });
+
+    it('should search on serial', function () {
+      var arr = [{
+        serial: 'xfoox'
+      }, {}];
+
+      DeviceFilter.setCurrentSearch('foo');
+
+      expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
+      expect(DeviceFilter.getFilteredList(arr)[0].serial).toBe('xfoox');
+    });
+
+    it('should search on upgrade channel', function () {
+      var arr = [{
+        upgradeChannel: 'xfoox'
+      }, {}];
+
+      DeviceFilter.setCurrentSearch('foo');
+
+      expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
+      expect(DeviceFilter.getFilteredList(arr)[0].upgradeChannel).toBe('xfoox');
     });
 
     it('should return all when all filter', function () {
