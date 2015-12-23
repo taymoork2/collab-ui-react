@@ -104,7 +104,7 @@
   };
 
   /* @ngInject */
-  function AutoAttendantCeInfoModelService($q, AutoAttendantCeService, AACeDependenciesService) {
+  function AutoAttendantCeInfoModelService($q, AutoAttendantCeService, AACeDependenciesService, AAModelService) {
 
     var service = {
       getAllCeInfos: getAllCeInfos,
@@ -153,24 +153,24 @@
           });
           aaModel.ceInfos = getAllCeInfos(aaModel.aaRecords);
         }
-      }).catch(function (response) {
-        aaModel = {};
-        return $q.reject(response);
-      });
-      promises.push(listPromise);
-
-      var dependsPromise = AACeDependenciesService.readCeDependencies().then(function (depends) {
+      }).then(AACeDependenciesService.readCeDependencies().then(function (depends) {
         aaModel.dependsIds = depends.dependencies;
-      }).catch(function (response) {
-        aaModel = {};
-        return $q.reject(response);
-      });
-      promises.push(dependsPromise);
+      }));
+
+      promises.push(listPromise);
 
       return $q.all(promises).then(function () {
         return aaModel;
       }).catch(function (response) {
-        aaModel = {};
+        aaModel = AAModelService.newAAModel();
+        aaModel.ceInfos = [];
+
+        if (response.status === 404) {
+          return aaModel;
+        }
+
+        AAModelService.setAAModel(aaModel);
+
         return $q.reject(response);
       });
 
