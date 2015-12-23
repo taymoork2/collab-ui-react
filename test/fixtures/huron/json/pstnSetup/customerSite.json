@@ -1,0 +1,15 @@
+{
+  "uuid": "29c63c1f-83b0-42b9-98ee-85624e4c9234",
+  "name": "Test Customer Site",
+  "serviceAddress": {
+    "serviceName": "",
+    "serviceStreetNumber": "123",
+    "serviceStreetDirection": "",
+    "serviceStreetName": "My Street",
+    "serviceStreetSuffix": "Drive",
+    "serviceAddressSub": "Apt 100",
+    "serviceCity": "Richardson",
+    "serviceState": "TX",
+    "serviceZip": "75082"
+  }
+}

@@ -12,18 +12,30 @@
     var _trialData = TrialCallService.getData();
 
     vm.details = _trialData.details;
-    vm.sx10 = vm.details.cameras.sx10;
-    vm.phone8865 = vm.details.phones.phone8865;
-    vm.phone8845 = vm.details.phones.phone8845;
-    vm.phone8841 = vm.details.phones.phone8841;
-    vm.phone7841 = vm.details.phones.phone7841;
-    vm.shippingInfo = vm.details.shippingInfo;
+    vm.sx10 = _.find(vm.details.roomSystems, {
+      model: 'sx10'
+    });
+    vm.phone8865 = _.find(vm.details.phones, {
+      model: '8865'
+    });
+    vm.phone8845 = _.find(vm.details.phones, {
+      model: '8845'
+    });
+    vm.phone8841 = _.find(vm.details.phones, {
+      model: '8841'
+    });
+    vm.phone7841 = _.find(vm.details.phones, {
+      model: '7841'
+    });
+    vm.shippingInfo = _.find(vm.details.shippingInfo, {
+      isPrimary: true
+    });
 
-    vm.cameraFields = [{
+    vm.roomSystemFields = [{
       model: vm.sx10,
       key: 'enabled',
       type: 'checkbox',
-      className: "columns medium-6",
+      className: 'columns medium-6',
       templateOptions: {
         label: $translate.instant('trialModal.call.sx10'),
         id: 'cameraSX10',
@@ -33,7 +45,7 @@
       model: vm.sx10,
       key: 'quantity',
       type: 'input',
-      className: "columns medium-6",
+      className: 'columns medium-6',
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
@@ -54,7 +66,7 @@
       model: vm.phone8865,
       key: 'enabled',
       type: 'checkbox',
-      className: "columns medium-6",
+      className: 'columns medium-6',
       templateOptions: {
         label: $translate.instant('trialModal.call.phone8865'),
         id: 'phone8865',
@@ -64,7 +76,7 @@
       model: vm.phone8865,
       key: 'quantity',
       type: 'input',
-      className: "columns medium-6",
+      className: 'columns medium-6',
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
@@ -83,7 +95,7 @@
       model: vm.phone8845,
       key: 'enabled',
       type: 'checkbox',
-      className: "columns medium-6",
+      className: 'columns medium-6',
       templateOptions: {
         label: $translate.instant('trialModal.call.phone8845'),
         id: 'phone8845',
@@ -93,7 +105,7 @@
       model: vm.phone8845,
       key: 'quantity',
       type: 'input',
-      className: "columns medium-6",
+      className: 'columns medium-6',
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
@@ -112,7 +124,7 @@
       model: vm.phone8841,
       key: 'enabled',
       type: 'checkbox',
-      className: "columns medium-6",
+      className: 'columns medium-6',
       templateOptions: {
         label: $translate.instant('trialModal.call.phone8841'),
         id: 'phone8841',
@@ -122,7 +134,7 @@
       model: vm.phone8841,
       key: 'quantity',
       type: 'input',
-      className: "columns medium-6",
+      className: 'columns medium-6',
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
@@ -141,7 +153,7 @@
       model: vm.phone7841,
       key: 'enabled',
       type: 'checkbox',
-      className: "columns medium-6",
+      className: 'columns medium-6',
       templateOptions: {
         label: $translate.instant('trialModal.call.phone7841'),
         id: 'phone7841',
@@ -151,7 +163,7 @@
       model: vm.phone7841,
       key: 'quantity',
       type: 'input',
-      className: "columns medium-6",
+      className: 'columns medium-6',
       templateOptions: {
         labelfield: 'label',
         label: $translate.instant('trialModal.call.quantity'),
@@ -170,12 +182,11 @@
     }];
 
     vm.shippingFields = [{
-      model: vm.details,
+      model: vm.shippingInfo,
       key: 'address',
       type: 'textarea',
       templateOptions: {
         inputClass: 'columns medium-11 noresize',
-        // labelClass: 'medium-4 columns',
         placeholder: $translate.instant('trialModal.call.address'),
         required: true,
       },
