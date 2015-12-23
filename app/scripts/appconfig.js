@@ -663,7 +663,7 @@ angular
           parent: 'main'
         })
         .state('site-settings', {
-          url: 'site_settings',
+          url: '/site_settings',
           templateUrl: 'modules/webex/siteSettings/siteSettings.tpl.html',
           controller: 'WebExSiteSettingsCtrl',
           controllerAs: 'WebExSiteSettings',
@@ -684,7 +684,7 @@ angular
           }
         })
         .state('webex-reports.webex-reports-iframe', {
-          url: 'reports/webex/i',
+          url: '/reports/webex/i',
           templateUrl: 'modules/webex/siteReportsIframe/siteReportIframe.tpl.html',
           controller: 'ReportsIframeCtrl',
           controllerAs: 'reportsIframe',
