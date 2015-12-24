@@ -16,6 +16,7 @@
       atlasStormBranding: 'atlas-2015-storm-launch',
       atlasSipUriDomain: 'atlas-sip-uri-domain',
       atlasWebexTrials: 'atlas-webex-trials',
+      atlasDeviceTrials: 'atlas-device-trials',
       huronHuntGroup: 'huronHuntGroup',
       huronAutoAttendant: 'huronAutoAttendant',
       huronClassOfService: 'COS',
@@ -127,13 +128,10 @@
       }
 
       var atlasToggle = getFeatures(isUser, id).then(function (features) {
-        var key = _.find(features.developer, {
+        // find the toggle, then get the val, default to false
+        return _.get(_.find(features.developer, {
           key: feature
-        });
-        if (angular.isUndefined(key)) {
-          return false;
-        }
-        return key.val;
+        }), 'val', false);
       }).catch(function (err) {
         return false;
       });

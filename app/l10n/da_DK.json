@@ -1149,7 +1149,7 @@
     "domain": "Domæne",
     "defaultPlaceholder": "Standard",
     "domainDesc": "Identificer det Active Directory-domæne, du vil synkronisere.",
-    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Download </a>, og installer Cisco Cloud Connector i din virksomhed.",
+    "installStep1": "1. <a href='{{download}}' download>Download</a>, og installer Cisco Cloud Connector i din virksomhed.",
     "installStep2": "2. Konfigurer Active Directory-synkroniseringsaftalen.",
     "installStep3": "3. Test synkroniseringsaftalen.",
     "nextSteps": "Tryk på knappen Næste, når du er klar til at verificere, at identitetsoplysninger bliver synkroniseret.",

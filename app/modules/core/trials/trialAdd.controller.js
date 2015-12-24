@@ -21,13 +21,16 @@
     vm.roomSystemTrial = vm.trialData.trials.roomSystemTrial;
     vm.trialStates = [{
       'name': 'trialAdd.meeting',
-      'trials': [vm.meetingTrial]
+      'trials': [vm.meetingTrial],
+      'enabled': true,
     }, {
       'name': 'trialAdd.call',
-      'trials': [vm.callTrial, vm.roomSystemTrial]
+      'trials': [vm.callTrial, vm.roomSystemTrial],
+      'enabled': true,
     }, {
       'name': 'trialAdd.addNumbers',
-      'trials': [vm.callTrial]
+      'trials': [vm.callTrial],
+      'enabled': true,
     }];
     // Navigate trial modal in this order
     // TODO: addNumbers must be last page for now due to controller destroy.
@@ -214,7 +217,8 @@
     $q.all([
       FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials),
       FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
-      FeatureToggleService.supportsPstnSetup()
+      FeatureToggleService.supportsPstnSetup(),
+      FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials)
     ]).then(function (results) {
       vm.showRoomSystems = results[0];
       vm.roomSystemTrial.enabled = results[0];
@@ -224,10 +228,18 @@
       vm.messageTrial.enabled = true;
       if (vm.meetingTrial.enabled) {
         vm.showMeeting = true;
-      } else {
-        // Don't allow navigating to other trial views
-        vm.navOrder = ['trialAdd.info', 'trialAdd.addNumbers'];
       }
+
+      var devicesModal = _.find(vm.trialStates, {
+        'name': 'trialAdd.call'
+      });
+      var meetingModal = _.find(vm.trialStates, {
+        'name': 'trialAdd.meeting'
+      });
+
+      devicesModal.enabled = results[3] && results[1];
+      meetingModal.enabled = results[1];
+
     }).finally(function () {
       init();
       vm.roomSystemFields[1].model.quantity = vm.roomSystemTrial.enabled ? vm.roomSystemOptions[0] : 0;
@@ -271,7 +283,7 @@
 
     function addRemoveStates() {
       _.forEach(vm.trialStates, function (state) {
-        if (_.every(state.trials, {
+        if (!state.enabled || _.every(state.trials, {
             enabled: false
           })) {
           removeNavState(state.name);

@@ -1149,7 +1149,7 @@
     "domain": "Dominio",
     "defaultPlaceholder": "Predeterminado",
     "domainDesc": "Identifique el dominio de Active Directory que sincronizará.",
-    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Descargue </a> e instale el conector de la Nube de Cisco en su empresa.",
+    "installStep1": "1. <a href='{{download}}' download> Descargue </a> e instale el conector de la Nube de Cisco en su empresa.",
     "installStep2": "2. Configure el acuerdo de sincronización de Active Directory.",
     "installStep3": "3. Pruebe el acuerdo de sincronización.",
     "nextSteps": "Presione el botón Siguiente cuando esté listo para comprobar que se esté sincronizando la información de identidad.",

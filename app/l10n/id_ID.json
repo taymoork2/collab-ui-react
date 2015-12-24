@@ -1149,7 +1149,7 @@
     "domain": "Domain",
     "defaultPlaceholder": "Standar",
     "domainDesc": "Identifikasi domain Direktori Aktif yang akan diselaraskan.",
-    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Unduh </a> dan Instal Konektor Awan Cisco di perusahaan Anda.",
+    "installStep1": "1. <a href='{{download}}' download> Unduh </a> dan Instal Konektor Awan Cisco di perusahaan Anda.",
     "installStep2": "2. Konfigurasikan perjanjian penyelarasan Direktori Aktif.",
     "installStep3": "3. Tes perjanjian penyelarasan.",
     "nextSteps": "Tekan tombol Selanjutnya setelah Anda siap memverifikasi bahwa informasi identitas sedang diselaraskan.",

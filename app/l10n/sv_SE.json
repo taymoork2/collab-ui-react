@@ -1149,7 +1149,7 @@
     "domain": "Domän",
     "defaultPlaceholder": "Standard",
     "domainDesc": "Identifiera den Active Directory-domän som ska synkroniseras.",
-    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Hämta </a> och installera Cisco Directory Connector i ditt företag.",
+    "installStep1": "1. <a href='{{download}}' download> Hämta </a> och installera Cisco Directory Connector i ditt företag.",
     "installStep2": "2. Konfigurera synkroniseringsavtalet för Active Directory.",
     "installStep3": "3. Testa synkroniseringsavtalet.",
     "nextSteps": "Tryck på Nästa när du är redo att verifiera att identitetsinformationen synkroniseras.",

@@ -1149,7 +1149,7 @@
     "domain": "域",
     "defaultPlaceholder": "缺省值",
     "domainDesc": "识别要同步的 Active Directory 域。",
-    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> 在企业中下载 </a> 和安装 Cisco Cloud Connector。",
+    "installStep1": "1. <a href='{{download}}' download> 在企业中下载 </a> 和安装 Cisco Cloud Connector。",
     "installStep2": "2. 配置 Active Directory 同步协议。",
     "installStep3": "3. 测试同步协议。",
     "nextSteps": "准备好验证要同步的身份信息后，请按“下一步”按钮。",
