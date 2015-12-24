@@ -7,20 +7,6 @@
 </cs-sp-buttons>
 <cs-sp-container>
 
-  <cs-sp-section class="hercules-cluster-settings hercules-fix-paragraphs"
-                 ng-if="expresswayClusterSettingsCtrl.activeActiveApplicable">
-    <div class="section-title-row">
-      <span class="section-name" translate="hercules.clusters.activeActiveHeading"></span>
-      <cs-toggle-switch class="right"
-                        toggle-id="activeActiveEnabledToggle"
-                        ng-model="expresswayClusterSettingsCtrl.activeActiveEnabled"
-                        ng-if="expresswayClusterSettingsCtrl.activeActivePossible"
-                        size="small"></cs-toggle-switch>
-    </div>
-    <p ng-if="!expresswayClusterSettingsCtrl.activeActivePossible" translate="hercules.clusters.activeActiveNotPossible"></p>
-    <p ng-if="expresswayClusterSettingsCtrl.activeActivePossible" translate="hercules.clusters.activeActivePossible"></p>
-  </cs-sp-section>
-
   <cs-sp-section>
     <div>
       <button id="btn--primary"
@@ -33,7 +19,7 @@
     </div>
   </cs-sp-section>
 
-  <cs-sp-section class="hercules-cluster-settings hercules-fix-paragraphs">
+  <cs-sp-section class="mediafusion-cluster-settings mediafusion-fix-paragraphs">
     <div class="section-title-row">
       <span class="section-name" translate="mediaFusion.settings.schedule"></span>
     </div>
