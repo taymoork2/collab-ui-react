@@ -455,17 +455,21 @@
 
           var logoutUrl = "https://" + $rootScope.nginxHost + "/wbxadmin/clearcookie.do?proxyfrom=atlas&siteurl=" + siteName;
 
-          promise = $http({
-            method: 'POST',
+          var jqpromise = $.ajax({
+            type: 'POST',
             url: logoutUrl,
             data: $.param({
               ngxsiteurl: siteUrl
             }),
+            xhrFields: {
+              withCredentials: true
+            },
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
             },
             timeout: 250
           });
+          promise = $q.when(jqpromise); //convert into angularjs promise
         }
         return promise;
       };
