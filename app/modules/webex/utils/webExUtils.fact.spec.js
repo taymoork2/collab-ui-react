@@ -213,7 +213,7 @@ describe('WebExUtilsFact', function () {
       var result = $q.defer();
       result.resolve();
       return result;
-    })
+    });
 
     var promise = WebExUtilsFact.logoutSite();
 =======
