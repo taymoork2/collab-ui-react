@@ -64,6 +64,7 @@ gulp.task('analyze:jscs', function () {
     .src(config.appFiles.js)
     .pipe($.if(args.verbose, $.print()))
     .pipe($.jscs())
+    .pipe($.jscs.reporter())
     .on('error', errorLogger);
 });
 
