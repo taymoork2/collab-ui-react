@@ -15,7 +15,7 @@
       CsdmHuronDeviceService.getDeviceDetails(deviceOverview.currentDevice).then(function (result) {
         deviceOverview.currentDevice = result;
       });
-      Userservice.getUser(deviceOverview.currentDevice.cisUuid, function(user) {
+      Userservice.getUser(deviceOverview.currentDevice.cisUuid, function (user) {
         deviceOverview.currentDeviceOwner = user;
       });
     }
