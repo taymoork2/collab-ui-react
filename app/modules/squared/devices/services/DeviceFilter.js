@@ -122,9 +122,15 @@ angular.module('Squared').service('DeviceFilter',
     function matchesSearch(item) {
       var terms = (currentSearch || '').split(/[\s,]+/);
       return terms.every(function (term) {
-        return (item.displayName || '').toLowerCase().indexOf(term || '') != -1 || (item.product || '').toLowerCase().indexOf(term || '') != -1 || (item.readableState || '').toLowerCase().indexOf(term || '') != -1 || (item.ip || '').toLowerCase().indexOf(term || '') != -1 || (item.mac || '').toLowerCase().indexOf(term || '') != -1 || (item.tags || []).some(function (tag) {
+        return termMatchesAnyFieldOfItem(term, item, ['displayName', 'product', 'readableState', 'ip', 'mac', 'serial', 'upgradeChannel']) || (item.tags || []).some(function (tag) {
           return (tag || '').toLowerCase().indexOf(term || '') != -1;
-        }) || (item.serial || '').toLowerCase().indexOf(term || '') != -1 || (item.upgradeChannel || '').toLowerCase().indexOf(term || '') != -1;
+        });
+      });
+    }
+
+    function termMatchesAnyFieldOfItem(term, item, fields) {
+      return (fields || []).some(function (field) {
+        return item && (item[field] || '').toLowerCase().indexOf(term || '') != -1;
       });
     }
 
