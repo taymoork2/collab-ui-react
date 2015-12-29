@@ -120,7 +120,12 @@ angular.module('Squared').service('DeviceFilter',
     }
 
     function matchesSearch(item) {
-      return (item.displayName || '').toLowerCase().indexOf(currentSearch || '') != -1 || (item.product || '').toLowerCase().indexOf(currentSearch || '') != -1 || (item.readableState || '').toLowerCase().indexOf(currentSearch || '') != -1 || (item.ip || '').toLowerCase().indexOf(currentSearch || '') != -1 || (item.mac || '').toLowerCase().indexOf(currentSearch || '') != -1 || (item.tagString || '').toLowerCase().indexOf(currentSearch || '') != -1 || (item.serial || '').toLowerCase().indexOf(currentSearch || '') != -1 || (item.upgradeChannel || '').toLowerCase().indexOf(currentSearch || '') != -1;
+      var terms = (currentSearch || '').split(/[\s,]+/);
+      return terms.every(function (term) {
+        return (item.displayName || '').toLowerCase().indexOf(term || '') != -1 || (item.product || '').toLowerCase().indexOf(term || '') != -1 || (item.readableState || '').toLowerCase().indexOf(term || '') != -1 || (item.ip || '').toLowerCase().indexOf(term || '') != -1 || (item.mac || '').toLowerCase().indexOf(term || '') != -1 || (item.tags || []).some(function (tag) {
+          return (tag || '').toLowerCase().indexOf(term || '') != -1;
+        }) || (item.serial || '').toLowerCase().indexOf(term || '') != -1 || (item.upgradeChannel || '').toLowerCase().indexOf(term || '') != -1;
+      });
     }
 
     function matchesFilter(item) {
