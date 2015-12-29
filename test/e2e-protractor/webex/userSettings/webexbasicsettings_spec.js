@@ -39,7 +39,7 @@ describe('WebEx user settings', function () {
     expect(usersettings.errorPanel.isPresent()).toBeFalsy();
   });
 
-  it('should allow navigation to the 4th panel', function () {
+  xit('should allow navigation to the 4th panel', function () {
     utils.click(usersettings.userPrivilegesLink);
     utils.wait(usersettings.userPrivilegesPanel);
     expect(usersettings.userPrivilegesPanel.isPresent()).toBeTruthy();
