@@ -27,7 +27,8 @@
         <button
           ng-click="deviceOverview.resetDevice()"
           class="btn"
-          ng-if="deviceOverview.currentDevice.canReset">
+          ng-if="deviceOverview.currentDevice.canReset"
+          ng-disabled="!deviceOverview.currentDevice.isOnline">
           <span
             translate="spacesPage.reboot">
           </span>
@@ -36,7 +37,8 @@
         <button
           class="btn"
           sq-click-promise="deviceOverview.reportProblem()"
-          ng-if="deviceOverview.currentDevice.canReportProblem">
+          ng-if="deviceOverview.currentDevice.canReportProblem"
+          ng-disabled="!deviceOverview.currentDevice.isOnline">
           <span translate="spacesPage.reportProblem"></span>
         </button>
 
