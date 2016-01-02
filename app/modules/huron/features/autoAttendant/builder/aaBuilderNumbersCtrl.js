@@ -296,11 +296,12 @@
       var onlyResources = [];
       var onlyCMI = [];
 
-      if (_.get(vm, 'ui.ceInfo.resources.length', 0) === 0) {
-        return;
+      var currentResources = [];
+      if (angular.isDefined(vm.ui.ceInfo) && angular.isDefined(vm.ui.ceInfo.resources)) {
+        currentResources = vm.ui.ceInfo.getResources();
       }
 
-      AANumberAssignmentService.checkAANumberAssignments(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, vm.ui.ceInfo.getResources(), onlyResources, onlyCMI).then(
+      AANumberAssignmentService.checkAANumberAssignments(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, currentResources, onlyResources, onlyCMI).then(
         function (response) {
           if (onlyCMI.length > 0) {
             vm.aaModel.possibleNumberDiscrepancy = true;
@@ -316,9 +317,11 @@
           }
         },
         function (response) {
-          // if we failed to read CMI, we might have discrepancy, and should warn user
-          vm.aaModel.possibleNumberDiscrepancy = true;
-          Notification.error('autoAttendant.errorReadCMI');
+          // if we failed to read CMI, we might have discrepancy, and should warn user, unless we have no numbers in CE, and thus no entry in CMI is OK
+          if (currentResources.length > 0) {
+            vm.aaModel.possibleNumberDiscrepancy = true;
+            Notification.error('autoAttendant.errorReadCMI');
+          }
         });
     }
 
