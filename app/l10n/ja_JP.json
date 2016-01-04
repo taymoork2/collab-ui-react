@@ -1149,7 +1149,7 @@
     "domain": "ドメイン",
     "defaultPlaceholder": "デフォルト",
     "domainDesc": "同期の対象とする Active Directory のドメインを識別します。",
-    "installStep1": "1. Cisco Cloud Connector を<a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'>ダウンロード</a>して、エンタープライズにインストールします。",
+    "installStep1": "1. Cisco Cloud Connector を<a href='{{download}}' download>ダウンロード</a>して、エンタープライズにインストールします。",
     "installStep2": "2. Active Directory の同期の合意を設定します。",
     "installStep3": "3. 同期の合意をテストします。",
     "nextSteps": "ID 情報が同期中であることを確認する準備ができたら [次へ] ボタンをクリックします。",

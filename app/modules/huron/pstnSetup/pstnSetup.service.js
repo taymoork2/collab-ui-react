@@ -5,7 +5,7 @@
     .factory('PstnSetupService', PstnSetupService);
 
   /* @ngInject */
-  function PstnSetupService($q, Authinfo, TerminusCarrierService, TerminusCustomerService, TerminusCustomerCarrierService, TerminusBlockOrderService, TerminusOrderService, TerminusCarrierInventoryCount, TerminusNumberService, TerminusCarrierInventorySearch, TerminusCarrierInventoryReserve, TerminusCarrierInventoryRelease, TerminusNumberOrderService, TerminusResellerCarrierService) {
+  function PstnSetupService($q, Authinfo, PstnServiceAddressService, TerminusCarrierService, TerminusCustomerService, TerminusCustomerCarrierService, TerminusBlockOrderService, TerminusOrderService, TerminusCarrierInventoryCount, TerminusNumberService, TerminusCarrierInventorySearch, TerminusCarrierInventoryReserve, TerminusCarrierInventoryRelease, TerminusCustomerCarrierInventoryReserve, TerminusCustomerCarrierInventoryRelease, TerminusNumberOrderService, TerminusResellerCarrierService) {
     var INTELEPEER = "INTELEPEER";
     var TATA = "TATA";
     var TELSTRA = "TELSTRA";
@@ -50,26 +50,19 @@
       "billingZip": "75082"
     };
 
-    var blockOrderPayload = {
-      "serviceName": "Cisco Systems",
-      "serviceStreetNumber": "2200",
-      "serviceStreetDirectional": "E",
-      "serviceStreetName": "President George Bush",
-      "serviceStreetSuffix": "Hwy",
-      "serviceCity": "Richardson",
-      "serviceState": "TX",
-      "serviceZip": "75082"
-    };
-
     return service;
 
-    function createCustomer(uuid, name, pstnCarrierId, partnerUuid) {
+    function createCustomer(uuid, name, firstName, lastName, email, pstnCarrierId, numbers) {
       var payload = {
         "uuid": uuid,
         "name": name,
+        "firstName": firstName,
+        "lastName": lastName,
+        "email": email,
         "pstnCarrierId": pstnCarrierId,
-        "resellerId": partnerUuid || Authinfo.getOrgId(),
-        "billingAddress": billingAddress
+        "resellerId": Authinfo.getOrgId(),
+        "billingAddress": billingAddress,
+        "numbers": numbers
       };
       return TerminusCustomerService.save({}, payload).$promise;
     }
@@ -141,26 +134,49 @@
         });
     }
 
-    function reserveCarrierInventory(carrierId, numbers) {
+    function reserveCarrierInventory(customerId, carrierId, numbers, isCustomerExists) {
       if (!angular.isArray(numbers)) {
         numbers = [numbers];
       }
-      return TerminusCarrierInventoryReserve.save({
-        carrierId: carrierId
-      }, {
-        numbers: numbers
-      }).$promise;
+
+      if (isCustomerExists) {
+        // If a customer exists, reserve with the customer
+        return TerminusCustomerCarrierInventoryReserve.save({
+          customerId: customerId,
+          carrierId: carrierId
+        }, {
+          numbers: numbers
+        }).$promise;
+      } else {
+        // Otherwise reserve with carrier
+        return TerminusCarrierInventoryReserve.save({
+          carrierId: carrierId
+        }, {
+          numbers: numbers
+        }).$promise;
+      }
     }
 
-    function releaseCarrierInventory(carrierId, numbers) {
+    function releaseCarrierInventory(customerId, carrierId, numbers, isCustomerExists) {
       if (!angular.isArray(numbers)) {
         numbers = [numbers];
       }
-      return TerminusCarrierInventoryRelease.save({
-        carrierId: carrierId
-      }, {
-        numbers: numbers
-      }).$promise;
+      if (isCustomerExists) {
+        // If a customer exists, release with the customer
+        return TerminusCustomerCarrierInventoryRelease.save({
+          customerId: customerId,
+          carrierId: carrierId
+        }, {
+          numbers: numbers
+        }).$promise;
+      } else {
+        // Otherwise release with carrier
+        return TerminusCarrierInventoryRelease.save({
+          carrierId: carrierId
+        }, {
+          numbers: numbers
+        }).$promise;
+      }
     }
 
     function isCarrierSwivel(customerId) {
@@ -178,9 +194,10 @@
     }
 
     function orderBlock(customerId, carrierId, npa, quantity) {
-      var payload = angular.copy(blockOrderPayload);
-      payload.npa = npa;
-      payload.quantity = quantity;
+      var payload = {
+        npa: npa,
+        quantity: quantity
+      };
 
       return TerminusBlockOrderService.save({
         customerId: customerId,
@@ -189,8 +206,9 @@
     }
 
     function orderNumbers(customerId, carrierId, numbers) {
-      var payload = angular.copy(blockOrderPayload);
-      payload.numbers = numbers;
+      var payload = {
+        numbers: numbers
+      };
 
       return TerminusNumberOrderService.save({
         customerId: customerId,

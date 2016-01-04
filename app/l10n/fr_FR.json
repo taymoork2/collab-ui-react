@@ -1149,7 +1149,7 @@
     "domain": "Domaine",
     "defaultPlaceholder": "Par défaut",
     "domainDesc": "Identifiez le domaine du répertoire actif que vous allez synchroniser.",
-    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Téléchargez  </a> et Installez le connecteur du répertoire Cisco ( Cisco Directory Connector) dans votre entreprise.",
+    "installStep1": "1. <a href='{{download}}' download> Téléchargez  </a> et Installez le connecteur du répertoire Cisco ( Cisco Directory Connector) dans votre entreprise.",
     "installStep2": "2. Configurez l'accord de synchronisation du répertoire actif.",
     "installStep3": "3. Testez l'accord de synchronisation.",
     "nextSteps": "Appuyez sur le bouton Suivant lorsque vous êtes prêt(e) à vérifier que les informations d'identité sont synchronisées.",

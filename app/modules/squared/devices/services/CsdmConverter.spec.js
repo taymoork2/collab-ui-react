@@ -361,7 +361,7 @@ describe('CsdmConverterSpec', function () {
       var arr = [{
         url: "foo"
       }];
-      expect(converter.convertAccounts(arr)[0].product).toBe('NA');
+      expect(converter.convertAccounts(arr)[0].product).toBe('Account');
     });
 
     it('should set state to Non existent', function () {

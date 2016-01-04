@@ -1149,7 +1149,7 @@
     "domain": "Etki Alanı",
     "defaultPlaceholder": "Varsayılan",
     "domainDesc": "Senkronize edeceğiniz Active Directory etki alanını belirleyin.",
-    "installStep1": "1. Cisco Cloud Connector'ı kuruluşunuza <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'>indirin</a> ve yükleyin.",
+    "installStep1": "1. Cisco Cloud Connector'ı kuruluşunuza <a href='{{download}}' download>indirin</a> ve yükleyin.",
     "installStep2": "2. Active Directory senkronizasyon anlaşmasını yapılandırın.",
     "installStep3": "3. Senkronizasyon anlaşmasını test edin.",
     "nextSteps": "Kimlik bilgilerinin senkronize edildiğini doğrulamak için hazır olduğunuzda İleri düğmesine basın.",

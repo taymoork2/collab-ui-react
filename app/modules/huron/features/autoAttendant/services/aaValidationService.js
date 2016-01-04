@@ -54,12 +54,6 @@
             key: entry.key
           });
         }
-        if (entry.key && 'runActionsOnInput' === entry.actions[0].name && 2 === entry.actions[0].inputType && !entry.actions[0].value) {
-          outErrors.push({
-            msg: 'autoAttendant.phoneMenuErrorDialByExtMessageMissing',
-            key: entry.key
-          });
-        }
       });
 
       return outErrors;

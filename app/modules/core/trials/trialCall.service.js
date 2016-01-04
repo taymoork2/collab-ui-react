@@ -29,43 +29,37 @@
       var defaults = {
         'type': Config.trials.call,
         'enabled': false,
-        'readonly': false,
         'details': {
-          'cameras': {
-            'sx10': {
-              enabled: false,
-              quantity: 0
-            },
-          },
-          'phones': {
-            'phone8865': {
-              enabled: false,
-              quantity: 0
-            },
-            'phone8845': {
-              enabled: false,
-              quantity: 0
-            },
-            'phone8841': {
-              enabled: false,
-              quantity: 0
-            },
-            'phone7841': {
-              enabled: false,
-              quantity: 0
-            },
-          },
-          'address': '',
-          'shippingInfo': {
-            'country': '',
+          'roomSystems': [{
+            model: 'sx10',
+            enabled: false,
+            quantity: 0
+          }],
+          'phones': [{
+            model: '8865',
+            enabled: false,
+            quantity: 0
+          }, {
+            model: '8845',
+            enabled: false,
+            quantity: 0
+          }, {
+            model: '8841',
+            enabled: false,
+            quantity: 0
+          }, {
+            model: '7841',
+            enabled: false,
+            quantity: 0
+          }],
+          'shippingInfo': [{
+            'isPrimary': true,
             'name': '',
-            'phone': '',
-            'street': '',
-            'city': '',
-            'state': '',
-            'zip': '',
-          },
-        },
+            'phoneNumber': '',
+            'address': '',
+            'recipientType': ''
+          }]
+        }
       };
 
       _trialData = angular.copy(defaults);

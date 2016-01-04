@@ -7,9 +7,18 @@ var request = require('request');
 var EC = protractor.ExpectedConditions;
 var path = require('path');
 var remote = require('../../../node_modules/gulp-protractor/node_modules/protractor/node_modules/selenium-webdriver/remote');
+var fs = require('fs');
 
 exports.resolvePath = function (filePath) {
   return path.resolve(__dirname, filePath);
+};
+
+exports.writeFile = function (file, text) {
+  return fs.writeFile(file, text);
+};
+
+exports.deleteFile = function (file) {
+  return fs.unlink(file);
 };
 
 exports.searchField = element(by.id('searchFilter'));
@@ -29,6 +38,10 @@ exports.randomTestRoom = function () {
 
 exports.randomTestGmail = function () {
   return 'collabctg+' + this.randomId() + '@gmail.com';
+};
+
+exports.randomTestGmailwithSalt = function (salt) {
+  return 'collabctg+' + salt + '_' + this.randomId() + '@gmail.com';
 };
 
 exports.sendRequest = function (options) {
@@ -474,11 +487,22 @@ exports.findDirectoryNumber = function (message, lineNumber) {
 };
 
 exports.search = function (query) {
+  var spinner = element(by.css('.icon-spinner'));
+
+  function waitSpinner() {
+    utils.expectIsNotDisplayed(spinner);
+    utils.expectIsDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', query)));
+  }
+
   this.click(this.searchbox);
   this.clear(this.searchField);
   if (query) {
-    this.sendKeys(this.searchField, query);
-    this.expectIsDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', query)));
+    this.sendKeys(this.searchField, query + protractor.Key.ENTER);
+    this.wait(spinner, 500).then(function () {
+      waitSpinner();
+    }, function () {
+      waitSpinner()
+    });
   }
 };
 
@@ -490,12 +514,16 @@ exports.searchForSingleResult = function (query) {
       return false;
     });;
   }
-  this.expectIsNotDisplayed(element(by.css('.icon-spinner')));
-  this.click(this.searchbox);
-  this.clear(this.searchField);
-  this.sendKeys(this.searchField, query);
+  this.search(query);
   browser.wait(logAndWait, TIMEOUT, 'Waiting for a single search result');
-  this.expectIsDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', query)));
+  return this.expectIsDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', query)));
+}
+
+//TODO replace original search and click functionality with single result?
+exports.searchAndClickSingleResult = function (query) {
+  return this.searchForSingleResult(query).then(function () {
+    return exports.clickUser(query);
+  });
 }
 
 exports.clickUser = function (query) {
@@ -504,6 +532,11 @@ exports.clickUser = function (query) {
 
 exports.searchAndClick = function (query) {
   this.search(query);
+  return this.clickUser(query);
+};
+
+exports.searchForSingleAndClick = function (query) {
+  this.searchForSingleResult(query);
   return this.clickUser(query);
 };
 
@@ -568,11 +601,9 @@ exports.createHuronUser = function (name, name2) {
   navigation.clickUsers();
   this.click(users.addUsers);
   this.click(users.addUsersField);
-  this.sendKeys(users.addUsersField, name);
-  this.sendKeys(users.addUsersField, protractor.Key.ENTER);
+  this.sendKeys(users.addUsersField, name + protractor.Key.ENTER);
   if (name2) {
-    this.sendKeys(users.addUsersField, name2);
-    this.sendKeys(users.addUsersField, protractor.Key.ENTER);
+    this.sendKeys(users.addUsersField, name2 + protractor.Key.ENTER);
   }
   this.click(users.nextButton);
   this.click(users.advancedCommunications);
@@ -594,8 +625,7 @@ exports.getUserWithDn = function (name) {
   navigation.clickUsers();
   this.click(users.addUsers);
   this.click(users.addUsersField);
-  this.sendKeys(users.addUsersField, name);
-  this.sendKeys(users.addUsersField, protractor.Key.ENTER);
+  this.sendKeys(users.addUsersField, name + protractor.Key.ENTER);
   this.click(users.nextButton);
 
 };
@@ -626,12 +656,8 @@ exports.deleteUser = function (name, name2) {
 exports.deleteIfUserExists = function (name) {
   this.clickEscape();
   navigation.clickUsers();
-  this.click(this.searchbox);
-  this.clear(this.searchField);
+  this.search(name);
   if (name) {
-    this.sendKeys(this.searchField, name);
-    utils.expectIsPresent(element(by.css('.icon-spinner')));
-    utils.expectIsNotPresent(element(by.css('.icon-spinner')));
     waitUntilElemIsPresent(users.userListAction, 2000).then(function () {
       exports.click(users.userListAction);
       exports.click(users.deleteUserOption);
@@ -642,6 +668,30 @@ exports.deleteIfUserExists = function (name) {
       log('user is not present');
     });
   }
+
+  function waitUntilElemIsPresent(elem, timeout) {
+    return exports.wait(elem, timeout).then(function () {
+      return elem.isDisplayed();
+    })
+  }
+};
+
+exports.quickDeleteUser = function (bFirst, name) {
+  if (bFirst) {
+    this.search(name);
+  }
+
+  return waitUntilElemIsPresent(users.userListAction, 2000).then(function () {
+    exports.click(users.userListAction);
+    exports.click(users.deleteUserOption);
+    exports.expectIsDisplayed(users.deleteUserModal);
+    exports.click(users.deleteUserButton);
+    notifications.assertSuccess(name, 'deleted successfully');
+    return true;
+  }, function () {
+    log('user is not preset');
+    return false;
+  });
 
   function waitUntilElemIsPresent(elem, timeout) {
     return exports.wait(elem, timeout).then(function () {

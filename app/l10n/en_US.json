@@ -153,7 +153,13 @@
     "eventCenter": "Event Center {{capacity}}",
     "communication": "Communication",
     "cloudExtensions": "Hybrid Services",
-    "cmr": "Collaboration Meeting Room"
+    "cmr": "Collaboration Meeting Room",
+    "result": {
+      "200": "entitled successfully",
+      "404": "does not exist",
+      "409": "entitlement previously updated",
+      "other": "not entitled, status: {{status}}"
+    }
   },
   "usersPreview": {
     "groupPreview": "Group:",
@@ -652,7 +658,8 @@
     "settings": "Settings",
     "resources": "Resources",
     "download": "Download",
-    "quantity": "Qty"
+    "quantity": "Qty",
+    "modify": "Modify"
   },
   "notifications": {
     "success": "Success notifications",
@@ -887,6 +894,9 @@
     "actionsHeader": "Actions",
     "activationCodeHeader": "Activation Code",
     "activationDateHeader": "Activation Date",
+    "informationHeader": "Information",
+    "customTagsHeader": "Custom Tags",
+    "newCustomTagPlaceholder": "Enter tag...",
     "addDeviceStep1": "Where will this device be installed?",
     "addDeviceStep1Desc": "It is recommended that you use the name of your conference room or shared space as it is shown in your company directory. The video address for this device will use this name. It will also be the easiest way to search for and find the device in the system later.",
     "addDeviceStep2": "Your activation code has been created",
@@ -895,7 +905,7 @@
     "emptyDevices2": "you'll see it listed here.",
     "deleteDevice": "Delete Device",
     "resetDevice": "Reset Device",
-    "reportProblem": "Report Problem",
+    "reportProblem": "Report Issue",
     "deleteDeviceConfText": "Are you sure you want to delete this device?",
     "resetDeviceConfText": "Are you sure you want to reset this device?",
     "videoQTitle": "Potential Loss of Video Quality",
@@ -904,7 +914,8 @@
     "active": "Active",
     "offline": "Offline",
     "issuesDetected": "Issues Detected",
-    "remoteSupport": "Remote Support",
+    "ciscoSupport": "Cisco Support",
+    "remoteAccessKey": "Remote Access Key",
     "rsuKey": "Share this key with Cisco Support by pasting it in a message.",
     "rsuKeyDesc": "This will give Cisco Support full access to your device. Use the 'Reset' button to create a new Remote Support Access Key and invalidate any previous key you may have shared with Cisco Support.",
     "reset": "Reset",
@@ -1089,6 +1100,11 @@
         "sipDomain": "Enter the SRV domain of your Expressway edge server(s) so that calls route correctly to and from there.",
         "sipDomainPlaceholder": "Enter a single domain or subdomain"
       }
+    },
+    "hybridServices": {
+      "result404": "Entitlements for {{email}} do not exist.",
+      "result409": "Entitlement(s) previously updated.",
+      "resultOther": "Entitlements for {{email}} were not updated. Status: {{status}}."
     }
   },
   "firstTimeWizard": {
@@ -1216,7 +1232,7 @@
     "domain": "Domain",
     "defaultPlaceholder": "Default",
     "domainDesc": "Identify the Active Directory domain you will be syncing.",
-    "installStep1": "1. <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/CloudConnectorManager/CloudConnector.zip' target='_blank'> Download </a> and Install the Cisco Cloud Connector in your enterprise.",
+    "installStep1": "1. <a href='{{download}}' download> Download </a> and Install the Cisco Cloud Connector in your enterprise.",
     "installStep2": "2. Configure the Active Directory synchronization agreement.",
     "installStep3": "3. Test the synchronization agreement.",
     "installWarning": "Warning:",
@@ -1706,6 +1722,13 @@
     "unassignedNumbers": "{count, plural, one{# Unassigned Number} other{# Unassigned Numbers}}",
     "searchResults": "{count, plural, one{# search result} other{# search results}}"
   },
+  "serviceAddress": {
+    "streetAddress": "Street Address",
+    "unit": "Unit",
+    "city": "City",
+    "state": "State",
+    "zipCode": "Zip Code"
+  },
   "pstnSetup": {
     "setupPstn": "Setup PSTN",
     "setupService": "Set Up PSTN Service",
@@ -1733,6 +1756,7 @@
     "checkOrderStatus": "Check Order Status",
     "launchPortal": "Launch Company Portal",
     "carrierListError": "Failed to retrieve carrier list for this customer.",
+    "listSiteError": "Failed to retrieve the site list for this customer.",
     "orderNumbersPrompt": "Must add numbers to proceed.",
     "invalidNumberPrompt": "Please fix invalid number(s) before proceeding.",
     "duplicateNumber": "{{number}} is a duplicate number.",
@@ -1742,8 +1766,22 @@
     "swivelDuplicateError": "Failed to add {{number}}. Number already exists.",
     "customerCreateError": "Failed to create customer with the carrier.",
     "customerUpdateError": "Failed to update customer with the carrier.",
+    "siteCreateError": "Failed to create the service address.",
     "searchResults": "Search Results",
-    "noSearchResults": "No Search Results"
+    "noSearchResults": "No Search Results",
+    "emergencyAcknowledge": "Customer acknowledges dialing emergency numbers may not work on an enterprise class IP telephony network.",
+    "serviceAddress": "Service Address",
+    "serviceAddressPrompt": "In the case of an emergency call, local emergency response crew would use this address to locate the caller.",
+    "serviceAddressConfirmation": "Is this the address?",
+    "serviceAddressNotFound": "Unable to find address. Please update and try again."
+  },
+  "pstnContractInformation": {
+    "title": "PSTN Contract Information",
+    "prompt": "This information will be used to populate the PSTN contract between the customer and PSTN provider.",
+    "companyName": "Legal Company Name",
+    "firstName": "Signee's First Name",
+    "lastName": "Signee's Last Name",
+    "emailAddress": "Signee's Email Address"
   },
   "intelepeerFeatures": {
     "feature1": "Unlimited inbound/outbound calling to U.S. 50 states + Canada",
@@ -2011,12 +2049,9 @@
     "ipAddr": "IP Address",
     "macAddr": "MAC Address",
     "issues": "Issues",
-    "expires": "expires"
-  },
-  "deviceUpgradeChannelEditPage": {
-    "instructions": "Choose which channel you want this device to automatically upgrade with:",
-    "deviceUpdated": "Device updated",
-    "updateFailed": "Device did not update its Software Update Channel in time"
+    "expires": "expires",
+    "channelUpdated": "Software Update Channel updated",
+    "channelUpdateFailed": "Device did not update its Software Update Channel in time"
   },
   "generateActivationCodeModal": {
     "title": "Activation Code",
@@ -2870,6 +2905,8 @@
     "cp": "CP",
     "editAction": "Edit",
     "deleteAction": "Delete",
+    "aaDependsTitle": "{{featureName}} Auto Attendant Dependents",
+    "aaDeleteBlocked": "Operation cannot be completed because this auto-attendant is referenced by {{aaNames}}",
     "deleteFeature": "Delete {{ featureType }}",
     "deleteConfirmText": "Are you sure you want to delete the {{ featureName }} {{ featureType }}?",
     "deleteSuccessText": "{{ featureName }} {{ featureType }} has been deleted successfully",
@@ -2964,6 +3001,8 @@
     "numberFetchFailure": "Unable to get numbers.",
     "newFeatureButtonText": "New",
     "newFeatureModalTitle": "Create New Feature",
+    "noFeatures": "Features are not available for the current login",
+    "noFeature": "This feature is not enabled for the current login",
     "featuresNotYetConfiguredPage": {
       "nothingToSee": "Nothing here to see yet.",
       "letsCustomize": "Let's customize the calling experience"

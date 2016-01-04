@@ -85,6 +85,7 @@ module.exports = function() {
         vendor + '/es5-shim/es5-shim.js',
         node_modules + '/jasmine-promise-matchers/dist/jasmine-promise-matchers.js',
         vendor + '/bardjs/dist/bard.js',
+        vendor + '/jasmine-sinon/lib/jasmine-sinon.js',
       ],
       global: [
         test + '/global.spec.js',
@@ -183,6 +184,7 @@ module.exports = function() {
         vendor + '/ng-tags-input/ng-tags-input.min.js',
         vendor + '/pako/dist/pako.js',
         vendor + '/angular-cache/dist/angular-cache.js',
+        vendor + '/parse-address-bobbr/parse-address.min.js'
       ],
       scss: {
         paths: [

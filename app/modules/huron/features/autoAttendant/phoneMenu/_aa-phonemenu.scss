@@ -28,8 +28,9 @@
   .panel {
     @include vr-spacing(m, 0);
 
-    @include vr-spacing(p, 1);
-
+    @include vr-spacing(pt, 1);
+    @include vr-spacing(pl, .5);
+    @include vr-spacing(pr, .5);
     @include vr-spacing(pb, 0);
 
     background-color: $gray-light-3;
@@ -67,21 +68,24 @@
     top: 0.25rem;
   }
 
-  & .aa-route-to-aa {
+  & .aa-key-action {
     & .csSelect-container {
       @include vr-spacing(pt, 1);
     }
-  }
 
-  & .aa-route-to-hg {
-    & .csSelect-container {
-      @include vr-spacing(pt, 1);
+    & textarea {
+      line-height: 1.25rem;
+      @include vr-spacing(pt, .50);
+      @include vr-spacing(pb, .50);
+      @include vr-spacing(pl, .75);
+      @include vr-spacing(pr, .75);
+      resize: none;
     }
-  }
 
-  & .aa-dial-by-ext {
-    & .csSelect-container {
-      @include vr-spacing(pt, 1);
+    & .control-label {;
+      @include vr-spacing(pl, .25);
+      @include vr-spacing(mt, .25);
+      @include vr-spacing(mb, 0);
     }
   }
 

@@ -2,9 +2,10 @@
 
   <div class="header-image">
     <div class="device-img">
-      <i style="top: 15px"
+      <i ng-hide="deviceOverview.currentDeviceOwner.photos.length > 1"
          class="icon icon-3x icon-circle-telepresence"
          ng-class="{'needs-activation': deviceOverview.currentDevice.needsActivation}"></i>
+      <img ng-show="deviceOverview.currentDeviceOwner.photos.length > 1" ng-src="{{deviceOverview.currentDeviceOwner.photos[1].value}}" />
     </div>
   </div>
 

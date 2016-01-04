@@ -10,7 +10,7 @@ angular
           schedule: '@aaSchedule',
           index: '=aaIndex',
           isMenuHeader: '=aaHeader',
-          menuOptionKey: '=aaKey'
+          menuKeyIndex: '@aaKeyIndex'
         },
         controller: 'AASayMessageCtrl',
         controllerAs: 'aaSay',
