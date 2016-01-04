@@ -76,6 +76,9 @@
               }, []);
               if (connectorIds.length === 0) {
                 vm.loading = false;
+                if (vm.exportCanceled) {
+                  return cancelExport();
+                }
                 return vm.getUsersBatch(statuses, 0);
               }
 
@@ -104,7 +107,7 @@
                 })
                 .then(function (statuses) {
                   if (vm.exportCanceled) {
-                    throw new Error('User Status Report download canceled');
+                    return cancelExport();
                   }
                   return statuses;
                 })
@@ -113,5 +116,9 @@
                 });
             });
         };
+
+        function cancelExport () {
+          return $q.reject('User Status Report download canceled');
+        }
       });
 })();
