@@ -7,14 +7,19 @@ angular.module('Core')
       $scope.email1 = $location.search().email;
 
       $scope.handleCreateAccount = function () {
+        if ($scope.email1 != $scope.email2) {
+          $scope.error = "Emails do not match";
+          return;
+        } else if ($scope.password1 != $scope.password2) {
+          $scope.error = "Passwords do not match";
+          return;
+        }
         Userservice.addDrUser(
           $scope.email1, $scope.password1,
           function (data, status) {
             if (status != 200 || !data.success) {
-              $log.error("addDrUser failed. Status: " + status);
-              // alert("addDrUser failed. Status: " + status);
+              $scope.error = data.message;
             } else {
-              // alert($scope.email1 + " created w/ token: " + data.message);
               $cookies.atlasDrCookie = data.message;
               $window.location.href = "https://www.digitalriver.com/";
             }
