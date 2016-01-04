@@ -5,6 +5,10 @@ angular.module('Core')
     function ($scope, $rootScope, $filter, $location, $window, $http, Storage, SessionStorage, Config, Utils, Auth, Authinfo, PageParam, $state, $timeout, $stateParams, LogMetricsService, $log, Userservice) {
 
       $scope.handleEnterEmailAddr = function () {
+        if (!$scope.email || 0 === $scope.email.trim()) {
+          $scope.error = "The email address cannot be blank";
+          return;
+        }
         Userservice.getUserFromEmail(
           $scope.email,
           function (data, status) {
