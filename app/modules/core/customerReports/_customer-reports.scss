@@ -23,6 +23,11 @@
       position: relative;
       z-index: 100;
     }
+    .timechartDiv {
+      font-size: rem-calc(11);
+      height: vr-adjust(380);
+      width: 100%;
+    }
     .barchart {
       font-size: rem-calc(11);
       height: vr-adjust(375);
@@ -47,6 +52,11 @@
       color: $gray-dark-1;
       text-align: left;
       float: left;
+      .graph-number {
+        font-size: rem-calc(18);
+        color: $brand-success;
+        text-align: left;
+      }
     }
     .spinner-position {
       position: absolute;

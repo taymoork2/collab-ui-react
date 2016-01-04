@@ -57,7 +57,7 @@
 
     // variables for the files shared section
     var filesSharedDiv = 'filesSharedDiv';
-    var filesBalloon = '<span class="graph-text">' + $translate.instant('filesShared.contentShared') + ' [[contentShared]]<br>' + $translate.instant('filesShared.fileSizes') + ' [[contentShareSizes]]</span>';
+    var filesBalloon = '<span class="graph-text">' + $translate.instant('filesShared.contentShared') + ' <span class="graph-number">[[contentShared]]</span><br>' + $translate.instant('filesShared.fileSizes') + ' <span class="graph-number">[[contentShareSizes]] ' + $translate.instant('filesShared.gb ') + '</span></span>';
 
     return {
       setActiveUsersGraph: setActiveUsersGraph,
