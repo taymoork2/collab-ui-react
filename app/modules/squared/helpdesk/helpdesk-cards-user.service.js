@@ -44,6 +44,10 @@
             .value();
         }
       }
+      if (LicenseService.userIsEntitledTo(user, 'meetings')) {
+        meetingCard.entitled = true;
+        meetingCard.entitlements.push('helpdesk.entitlements.meetings');
+      }
       return meetingCard;
     }
 

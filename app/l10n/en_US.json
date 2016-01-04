@@ -3133,7 +3133,8 @@
       "squared-room-moderation.paid": "Standard Team Rooms",
       "squared-room-moderation.free": "Free Spark Messaging",
       "ciscouc.paid": "Advanced Spark Call",
-      "ciscouc.free": "Free 1:1 Spark Call"
+      "ciscouc.free": "Free 1:1 Spark Call",
+      "meetings": "WebEx Meetings (WebEx 11)"
     },
     "userStatuses": {
       "active": "Active",
