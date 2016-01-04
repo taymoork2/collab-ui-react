@@ -1,7 +1,7 @@
 <div ui-view="header"></div>
 
 <cs-sp-container class="mediafusion-fix-paragraphs mediafusion-settings-table">
-
+<!--
   <cs-sp-section>
     <div class="section-title-row section-name" translate="mediaFusion.alarms.alarms"></div>
       <ul>
@@ -15,6 +15,22 @@
       </ul>
     </div>
     <p ng-if="groupDetails.alarms.length == 0" translate="mediaFusion.alarms.noAlarms"></p>
+  </cs-sp-section> -->
+
+  <cs-sp-section>
+    <div class="section-title-row section-name" translate="mediaFusion.alarms.alarms"></div>
+    <div class="feature-list" ng-if="groupDetails.alarms.length > 0">
+      <ul>
+        <li class="feature" ng-repeat="alarm in groupDetails.alarms">
+          <a ui-sref="connector-details.alarm-details({alarm: alarm})">
+            <i class="icon icon-error hercules-alarm status-icon"/>
+            <span class="feature-name">{{alarm.alarm.title}}</span>
+            <i class="feature-arrow"></i>
+          </a>  
+        </li>
+      </ul>
+    </div>
+    <p ng-if="groupDetails.alarmsList.length == 0" translate="mediaFusion.alarms.noAlarms"></p>
   </cs-sp-section>
 
   <cs-sp-section>
@@ -22,13 +38,21 @@
     <table>
       <thead>
         <tr>
-          <td class="vertical-center col-md-4 bold pointer" translate="mediaFusion.name"></td>
-          <td class="vertical-center col-md-4 bold pointer" translate="mediaFusion.role"></td>
+          <td class="col-md-4 bold pointer" translate="mediaFusion.connectors.hosts"></td>
+          <td class="col-md-4 bold pointer">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{'mediaFusion.role' | translate}}</td>
           <td></td>
         </tr>
       </thead>
     </table> 
-
+<!--
+    <div class="feature-list">
+      <ul>
+        <li>
+          <span class="bold pointer" translate="mediaFusion.connectors.hosts"></span>
+          <span class="bold pointer" translate="mediaFusion.role"></span> 
+        </li> 
+      </ul>
+    </div> -->
     <div class="feature-list">
       <ul>
         <li class="feature" ng-repeat="ecp in groupDetails.clusterList" ng-class="{'list-item': !$first}">

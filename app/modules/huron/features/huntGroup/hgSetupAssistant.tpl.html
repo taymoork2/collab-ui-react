@@ -1,25 +1,30 @@
-<cs-overlay-panel class="huntgroup overlay-panel typeahead-group" overlay-title="{{::'huronHuntGroup.createTitle' | translate}}" close="huntGroupSA.cancelModal()"  ng-keyup="huntGroupSA.evalKeyPress($event.keyCode)">
-  <cs-setup-assistant previous="huntGroupSA.previousButton(huntGroupSA.getPageIndex())" next="huntGroupSA.nextButton(huntGroupSA.getPageIndex())" previous-fn="huntGroupSA.previousPage()" next-fn="huntGroupSA.nextPage()">
+<div cr-feature-toggle feature-show="huronHuntGroup">
+  <cs-overlay-panel class="huntgroup overlay-panel typeahead-group" overlay-title="{{::'huronHuntGroup.createTitle' | translate}}" close="huntGroupSA.cancelModal()"  ng-keyup="huntGroupSA.evalKeyPress($event.keyCode)">
+    <cs-setup-assistant previous="huntGroupSA.previousButton(huntGroupSA.getPageIndex())" next="huntGroupSA.nextButton(huntGroupSA.getPageIndex())" previous-fn="huntGroupSA.previousPage()" next-fn="huntGroupSA.nextPage()">
 
-    <div hg-name
-         ng-if="huntGroupSA.getPageIndex() == 0"
-         ng-class="huntGroupSA.animation"></div>
+      <div hg-name
+          ng-if="huntGroupSA.getPageIndex() == 0"
+          ng-class="huntGroupSA.animation"></div>
 
-    <div hg-pilot-lookup
-         ng-if="huntGroupSA.getPageIndex() == 1"
-         ng-class="huntGroupSA.animation"></div>
+      <div hg-pilot-lookup
+          ng-if="huntGroupSA.getPageIndex() == 1"
+          ng-class="huntGroupSA.animation"></div>
 
-    <div hg-method
-         ng-if="huntGroupSA.getPageIndex() == 2"
-         ng-class="huntGroupSA.animation"></div>
+      <div hg-method
+          ng-if="huntGroupSA.getPageIndex() == 2"
+          ng-class="huntGroupSA.animation"></div>
 
-    <div hg-member-lookup
-         ng-if="huntGroupSA.getPageIndex() == 3"
-         ng-class="huntGroupSA.animation"></div>
+      <div hg-member-lookup
+          ng-if="huntGroupSA.getPageIndex() == 3"
+          ng-class="huntGroupSA.animation"></div>
 
-    <div hg-fallback-destination
-         ng-if="huntGroupSA.getPageIndex() == 4"
-         ng-class="huntGroupSA.animation"></div>
+      <div hg-fallback-destination
+          ng-if="huntGroupSA.getPageIndex() == 4"
+          ng-class="huntGroupSA.animation"></div>
 
-  </cs-setup-assistant>
-</cs-overlay-panel>
+    </cs-setup-assistant>
+  </cs-overlay-panel>
+</div>
+<div class="no-features-available" cr-feature-toggle feature-hide="huronHuntGroup">
+  <span class="h1 gray-base" translate="huronHuntGroup.noFeature"></span>
+</div>

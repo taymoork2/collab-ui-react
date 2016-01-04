@@ -1,4 +1,9 @@
-.pstn-providers, .pstn-numbers, .pstn-swivel-numbers, .pstn-review, .pstn-next-steps {
+.pstn-providers,
+.pstn-service-address,
+.pstn-numbers,
+.pstn-swivel-numbers,
+.pstn-review,
+.pstn-next-steps {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
@@ -63,6 +68,17 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
+
+  .modal-footer {
+    display: flex;
+    align-items: center;
+    label {
+      margin-bottom: 0;
+    }
+    .buttons {
+      flex: 1;
+    }
   }
 }
 

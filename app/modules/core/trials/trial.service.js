@@ -50,11 +50,6 @@
         });
       }
 
-      // Since Atlas backend does not support WebEx trials, webex offer is removed from trial data.
-      editTrialData.offers = _.reject(editTrialData.offers, {
-        id: Config.trials.meeting
-      });
-
       var editTrialUrl = trialsUrl + '/' + id;
 
       function logEditTrialMetric(data, status) {
@@ -77,24 +72,8 @@
         'customerEmail': data.details.customerEmail,
         'trialPeriod': data.details.licenseDuration,
         'startDate': new Date(),
-        'offers': _(data.trials)
-          // TODO: Remove once meeting and room system trials are supported on backend
-          .reject({
-            type: Config.trials.meeting
-          })
-          .filter({
-            enabled: true
-          })
-          .map(function (trial) {
-            var licenseCount = trial.type === Config.trials.roomSystems ?
-              trial.details.quantity : data.details.licenseCount;
-            return {
-              'id': trial.type,
-              'licenseCount': licenseCount,
-              'details': trial.details
-            };
-          })
-          .value()
+        'details': _getDetails(data),
+        'offers': _getOffers(data)
       };
 
       function logStartTrialMetric(data, status) {
@@ -115,6 +94,53 @@
 
     function reset() {
       _makeTrial();
+    }
+
+    function _getDetails(data) {
+      var details = {};
+
+      _(data.trials)
+        .filter({
+          enabled: true
+        })
+        .forEach(function (trial) {
+          if (trial.type === Config.trials.call) {
+            details.shippingInfo = trial.details.shippingInfo;
+            details.devices = _(trial.details.roomSystems)
+              .concat(trial.details.phones)
+              .filter({
+                enabled: true
+              })
+              .map(function (device) {
+                return _.pick(device, ['model', 'quantity']);
+              })
+              .value();
+          }
+
+          if (trial.type === Config.trials.meeting) {
+            details.siteUrl = trial.details.siteUrl;
+            details.timeZoneId = trial.details.timeZoneId;
+          }
+        })
+        .value();
+
+      return details;
+    }
+
+    function _getOffers(data) {
+      return _(data.trials)
+        .filter({
+          enabled: true
+        })
+        .map(function (trial) {
+          var licenseCount = trial.type === Config.trials.roomSystems ?
+            trial.details.quantity : data.details.licenseCount;
+          return {
+            'id': trial.type,
+            'licenseCount': licenseCount,
+          };
+        })
+        .value();
     }
 
     function _makeTrial() {

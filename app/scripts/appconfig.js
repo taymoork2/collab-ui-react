@@ -5,6 +5,14 @@ angular
     function ($httpProvider, $stateProvider, $urlRouterProvider, $translateProvider, $compileProvider) {
       var sidepanelMemo = 'sidepanelMemo';
 
+      // sidepanel helper
+      function isStateInSidepanel($state) {
+        var rootStateName = $state.current.name.split('.')[0];
+        var rootState = $state.get(rootStateName);
+        var rootStateIsSidepanel = rootState.parent === 'sidepanel';
+        return $state.current.parent === 'sidepanel' || (rootStateIsSidepanel && $state.includes(rootState));
+      }
+
       //Add blob to the default angular whitelist
       $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|tel|file|blob):/);
 
@@ -72,7 +80,7 @@ angular
                 $state.sidepanel = null;
                 var previousState = $previousState.get(sidepanelMemo);
                 if (previousState) {
-                  if ($state.current.parent === 'sidepanel' || angular.isUndefined($state.current.parent)) {
+                  if (isStateInSidepanel($state)) {
                     return $previousState.go(sidepanelMemo).then(function () {
                       $previousState.forget(sidepanelMemo);
                     });
@@ -446,6 +454,14 @@ angular
             displayName: 'Single Number Reach'
           }
         })
+        .state('user-overview.communication.internationalDialing', {
+          controller: 'InternationalDialingInfoCtrl',
+          controllerAs: 'internationalDialing',
+          template: '<div uc-international-dialing></div>',
+          data: {
+            displayName: 'International Dialing'
+          }
+        })
         .state('user-overview.messaging', {
           templateUrl: 'modules/core/users/userPreview/userPreview.tpl.html',
           controller: 'UserPreviewCtrl',
@@ -647,7 +663,7 @@ angular
           parent: 'main'
         })
         .state('site-settings', {
-          url: 'site_settings',
+          url: '/site_settings',
           templateUrl: 'modules/webex/siteSettings/siteSettings.tpl.html',
           controller: 'WebExSiteSettingsCtrl',
           controllerAs: 'WebExSiteSettings',
@@ -668,7 +684,7 @@ angular
           }
         })
         .state('webex-reports.webex-reports-iframe', {
-          url: 'reports/webex/i',
+          url: '/reports/webex/i',
           templateUrl: 'modules/webex/siteReportsIframe/siteReportIframe.tpl.html',
           controller: 'ReportsIframeCtrl',
           controllerAs: 'reportsIframe',
@@ -756,23 +772,7 @@ angular
             currentDevice: {}
           },
           data: {
-            displayName: 'Device Overview'
-          }
-        })
-        .state('device-overview.edit', {
-          templateUrl: 'modules/squared/devices/overview/deviceUpgradeChannelEdit.tpl.html',
-          controller: 'DeviceUpgradeChannelEditCtrl',
-          controllerAs: 'deviceUpgradeChannelEdit',
-          resolve: {
-            channels: /* @ngInject */ function (CsdmUpgradeChannelService) {
-              return CsdmUpgradeChannelService.getUpgradeChannelsPromise();
-            }
-          },
-          params: {
-            currentDevice: {}
-          },
-          data: {
-            displayName: 'Software Update Channel'
+            displayName: 'Overview'
           }
         })
 
@@ -1322,7 +1322,8 @@ angular
           parent: 'modalFull',
           params: {
             customerId: {},
-            customerName: {}
+            customerName: {},
+            customerEmail: {}
           },
           views: {
             'modal@': {
@@ -1336,6 +1337,16 @@ angular
               controllerAs: 'pstnProviders'
             }
           }
+        })
+        .state('pstnSetup.contractInfo', {
+          templateUrl: 'modules/huron/pstnSetup/pstnContractInfo/pstnContractInfo.tpl.html',
+          controller: 'PstnContractInfoCtrl',
+          controllerAs: 'pstnContractInfo'
+        })
+        .state('pstnSetup.serviceAddress', {
+          templateUrl: 'modules/huron/pstnSetup/pstnServiceAddress/pstnServiceAddress.tpl.html',
+          controller: 'PstnServiceAddressCtrl',
+          controllerAs: 'pstnServiceAddress'
         })
         .state('pstnSetup.orderNumbers', {
           templateUrl: 'modules/huron/pstnSetup/pstnNumbers/pstnNumbers.tpl.html',
@@ -1427,6 +1438,22 @@ angular
             deleteFeatureName: null,
             deleteFeatureId: null,
             deleteFeatureType: null
+          }
+        })
+        .state('huronfeatures.aaListDepends', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'HuronFeatureAADependsCtrl',
+              controllerAs: 'huronFeatureAADepends',
+              templateUrl: 'modules/huron/features/featureLanding/featureAADependsModal.tpl.html'
+            }
+          },
+          params: {
+            detailsFeatureName: null,
+            detailsFeatureId: null,
+            detailsFeatureType: null,
+            detailsDependsList: null
           }
         })
         .state('huronHuntGroup', {

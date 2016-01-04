@@ -9,6 +9,7 @@
 
     PstnSetup.setCustomerId($stateParams.customerId);
     PstnSetup.setCustomerName($stateParams.customerName);
+    PstnSetup.setCustomerEmail($stateParams.customerEmail);
 
     if ($state.modal && $state.modal.result) {
       $state.modal.result.finally(PstnSetup.clear);

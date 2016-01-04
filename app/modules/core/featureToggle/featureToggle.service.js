@@ -2,10 +2,12 @@
   'use strict';
 
   angular.module('Core')
+    .factory('HuronCustomerFeatureToggleService', HuronCustomerFeatureToggleService)
+    .factory('HuronUserFeatureToggleService', HuronUserFeatureToggleService)
     .service('FeatureToggleService', FeatureToggleService);
 
   /* @ngInject */
-  function FeatureToggleService($resource, $q, Config, Authinfo, Orgservice, Userservice) {
+  function FeatureToggleService($resource, $q, Config, Authinfo, Orgservice, Userservice, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService) {
     var features = {
       pstnSetup: 'pstnSetup',
       csvUpload: 'csvUpload',
@@ -14,6 +16,11 @@
       atlasStormBranding: 'atlas-2015-storm-launch',
       atlasSipUriDomain: 'atlas-sip-uri-domain',
       atlasWebexTrials: 'atlas-webex-trials',
+      atlasDeviceTrials: 'atlas-device-trials',
+      huronHuntGroup: 'huronHuntGroup',
+      huronAutoAttendant: 'huronAutoAttendant',
+      huronClassOfService: 'COS',
+      csdmHuron: 'csdm-huron'
     };
 
     var service = {
@@ -29,6 +36,8 @@
       supportsDirSync: supportsDirSync,
       features: features,
     };
+
+    var toggles = {};
 
     var orgResource = $resource(Config.getWdmUrl() + '/features/rules/:id', {
       id: '@id'
@@ -85,21 +94,54 @@
       });
     }
 
+    function getHuronToggle(isUser, id, feature) {
+      if (Authinfo.isSquaredUC()) {
+        if (isUser) {
+          return HuronUserFeatureToggleService.get({
+            userId: id,
+            featureName: feature
+          }).$promise.then(function (data) {
+            toggles[feature] = data.val;
+            return data.val;
+          }).catch(function (err) {
+            return false;
+          });
+        } else {
+          return HuronCustomerFeatureToggleService.get({
+            customerId: id,
+            featureName: feature
+          }).$promise.then(function (data) {
+            toggles[feature] = data.val;
+            return data.val;
+          }).catch(function (err) {
+            return false;
+          });
+        }
+      } else {
+        return $q.when(false);
+      }
+    }
+
     function getFeature(isUser, id, feature) {
       if (!feature) {
         return $q.reject('feature is undefined');
       }
 
-      return getFeatures(isUser, id).then(function (features) {
-        var key = _.find(features.developer, {
+      var atlasToggle = getFeatures(isUser, id).then(function (features) {
+        // find the toggle, then get the val, default to false
+        return _.get(_.find(features.developer, {
           key: feature
-        });
-        if (angular.isUndefined(key)) {
-          return false;
-        }
-        return key.val;
+        }), 'val', false);
       }).catch(function (err) {
         return false;
+      });
+
+      return atlasToggle.then(function (toggle) {
+        if (!toggle) {
+          return getHuronToggle(isUser, id, feature);
+        } else {
+          return toggle;
+        }
       });
     }
 
@@ -116,6 +158,10 @@
           });
         } else if (feature === features.atlasCloudberryTrials && Authinfo.getOrgId() === 'c054027f-c5bd-4598-8cd8-07c08163e8cd') {
           resolve(true);
+        } else if (feature === features.huronClassOfService && Authinfo.getOrgId() === 'bdeda0ba-b761-4f52-831a-2c20c41714f1') {
+          resolve(true);
+        } else if (angular.isDefined(toggles[feature])) {
+          resolve(toggles[feature]);
         } else {
           var orgId = Authinfo.getOrgId();
 
@@ -200,5 +246,31 @@
         feature.val = false;
       }
     }
+  }
+
+  /* @ngInject */
+  function HuronUserFeatureToggleService($resource, HuronConfig) {
+    return $resource(HuronConfig.getMinervaUrl() + '/features/users/:userId/developer/:featureName', {
+      userId: '@userId',
+      featureName: '@featureName'
+    }, {
+      get: {
+        method: 'GET',
+        cache: true
+      }
+    });
+  }
+
+  /* @ngInject */
+  function HuronCustomerFeatureToggleService($resource, HuronConfig) {
+    return $resource(HuronConfig.getMinervaUrl() + '/features/customers/:customerId/developer/:featureName', {
+      customerId: '@customerId',
+      featureName: '@featureName'
+    }, {
+      get: {
+        method: 'GET',
+        cache: true
+      }
+    });
   }
 })();

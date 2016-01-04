@@ -201,7 +201,7 @@ describe('Config', function () {
     });
   });
 
-  it('should always return locus prod service url', function () {
+  it('should return correct feature toggle service url', function () {
     whenCalling('getFeatureToggleUrl').expectUrlToBe({
       dev: 'https://locus-a.wbx2.com',
       cfe: 'https://locus-e.wbx2.com',
@@ -390,12 +390,39 @@ describe('Config', function () {
     });
   });
 
+  it('should return correct calliope url', function () {
+    whenCalling('getCalliopeUrl').expectUrlToBe({
+      dev: 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1',
+      cfe: 'https://calliope-e.wbx2.com/calliope/api/authorization/v1',
+      integration: 'https://calliope-integration.wbx2.com/calliope/api/authorization/v1',
+      prod: 'https://calliope-a.wbx2.com/calliope/api/authorization/v1'
+    });
+  });
+
   it('should return correct certs url', function () {
     whenCalling('getCertsUrl').expectUrlToBe({
       dev: 'https://certs-integration.wbx2.com/',
       cfe: 'https://certs-e.wbx2.com/',
       integration: 'https://certs-integration.wbx2.com/',
       prod: 'https://certs-a.wbx2.com/'
+    });
+  });
+
+  it('should return correct wdm url', function () {
+    whenCalling('getWdmUrl').expectUrlToBe({
+      dev: 'https://wdm-a.wbx2.com/wdm/api/v1',
+      cfe: 'http://wdm.cfe.wbx2.com/wdm/api/v1',
+      integration: 'https://wdm-a.wbx2.com/wdm/api/v1',
+      prod: 'https://wdm-a.wbx2.com/wdm/api/v1'
+    });
+  });
+
+  it('should return correct utilization url', function () {
+    whenCalling('getUtilizationServiceUrl').expectUrlToBe({
+      dev: 'http://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
+      cfe: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
+      integration: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1',
+      prod: 'https://mf-meeting-service.mb-lab.huron.uno/admin/api/v1'
     });
   });
 

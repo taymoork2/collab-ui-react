@@ -53,6 +53,59 @@ describe('Service: AANumberAssignmentService', function () {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
+  describe('formatAAResourcesBasedOnList', function () {
+    it('should correctly format resources based on passed-in list', function () {
+
+      var resource = AutoAttendantCeInfoModelService.newResource();
+      resource.setType(aCe.assignedResources.type);
+      resource.setId("14084744458");
+      resource.setNumber("14084744458");
+      var resources = [];
+      resources.push(resource);
+
+      var externalNumberList = [];
+      externalNumberList.push({
+        id: "268CD1E7-432E-60E2-4342-1DAF1B52C856",
+        number: "+14084744458"
+      });
+
+      var formattedResources = AANumberAssignmentService.formatAAResourcesBasedOnList(resources, externalNumberList);
+    });
+
+  });
+
+  describe('formatAAResourcesBasedOnCMI', function () {
+    it('should correctly format resources based on CMI call', function () {
+
+      var resource = AutoAttendantCeInfoModelService.newResource();
+      resource.setType("externalNumber");
+      resource.setId("14084744458");
+      resource.setNumber("14084744458");
+      var resources = [];
+      resources.push(resource);
+
+      $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/1/externalnumberpools?order=pattern').respond(200, [{
+        'pattern': '+14084744458',
+        'uuid': '9999999991-id'
+      }, {
+        'pattern': '+8888888881',
+        'uuid': '8888888881-id'
+      }]);
+
+      AANumberAssignmentService.formatAAResourcesBasedOnCMI(resources).then(
+        successSpy,
+        failureSpy
+      );
+
+      $httpBackend.flush();
+
+      var formattedResources = successSpy.calls.mostRecent().args[0];
+      expect(angular.equals(formattedResources[0].number, '+14084744458')).toEqual(true);
+      expect(failureSpy).not.toHaveBeenCalled();
+    });
+
+  });
+
   describe('checkAANumberAssignments', function () {
     it('should check all CMI Assigned Auto Attendants', function () {
 
@@ -86,20 +139,16 @@ describe('Service: AANumberAssignmentService', function () {
       var resources = [];
       resources.push(resource);
 
-      var working = [];
-
-      var failed = [];
-
       $httpBackend.whenPUT(cmiAAAsignmentURL).respond(200);
 
-      AANumberAssignmentService.setAANumberAssignmentWithErrorDetail(Authinfo.getOrgId(), '004', resources, working, failed).then(
+      AANumberAssignmentService.setAANumberAssignmentWithErrorDetail(Authinfo.getOrgId(), '004', resources).then(
         successSpy,
         failureSpy
       );
       $httpBackend.flush();
 
       var args = successSpy.calls.mostRecent().args;
-      expect(working.length).toEqual(1);
+      expect(args[0].workingResources.length).toEqual(1);
       expect(failureSpy).not.toHaveBeenCalled();
     });
 
@@ -113,23 +162,75 @@ describe('Service: AANumberAssignmentService', function () {
       var resources = [];
       resources.push(resource);
 
-      var working = [];
-
-      var failed = [];
-
       $httpBackend.whenPUT(cmiAAAsignmentURL).respond(500);
 
-      AANumberAssignmentService.setAANumberAssignmentWithErrorDetail(Authinfo.getOrgId(), '004', resources, working, failed).then(
+      AANumberAssignmentService.setAANumberAssignmentWithErrorDetail(Authinfo.getOrgId(), '004', resources).then(
         successSpy,
         failureSpy
       );
       $httpBackend.flush();
 
       var args = successSpy.calls.mostRecent().args;
-      expect(working.length).toEqual(0);
+      expect(args[0].workingResources.length).toEqual(0);
       expect(failureSpy).not.toHaveBeenCalled();
     });
 
+    it('should set mix of working and failed', function () {
+
+      function addResource(resources, val) {
+        var resource = AutoAttendantCeInfoModelService.newResource();
+        resource.setType(aCe.assignedResources.type);
+        resource.setId(val);
+        resource.setNumber(val);
+        resources.push(resource);
+      }
+      var resources = [];
+
+      // a good one
+      addResource(resources, "1111111111");
+
+      // a bad one
+      addResource(resources, "bad");
+
+      // a good one
+      addResource(resources, "2222222222");
+
+      // a bad one
+      addResource(resources, "bad");
+
+      // a bad one
+      addResource(resources, "bad");
+
+      // a good one
+      addResource(resources, "3333333333");
+
+      // CMI assignment will fail when there is any bad number in the list
+      $httpBackend.when('PUT', cmiAAAsignmentURL).respond(function (method, url, data, headers) {
+        if (JSON.stringify(data).indexOf("bad") > -1) {
+          return [500, 'bad'];
+        } else {
+          return [200, 'good'];
+        }
+      });
+
+      AANumberAssignmentService.setAANumberAssignmentWithErrorDetail(Authinfo.getOrgId(), '004', resources).then(
+        successSpy,
+        failureSpy
+      );
+      $httpBackend.flush();
+
+      var args = successSpy.calls.mostRecent().args;
+
+      expect(args[0].workingResources.length).toEqual(3);
+      expect(args[0].workingResources[0].id).not.toEqual("bad");
+      expect(args[0].workingResources[1].id).not.toEqual("bad");
+      expect(args[0].workingResources[2].id).not.toEqual("bad");
+
+      expect(args[0].failedResources.length).toEqual(3);
+      expect(args[0].failedResources[0].id).toEqual("bad");
+      expect(args[0].failedResources[1].id).toEqual("bad");
+      expect(args[0].failedResources[2].id).toEqual("bad");
+    });
   });
 
   describe('setAANumberAssignment', function () {

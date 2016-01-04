@@ -29,10 +29,10 @@
       var defaults = {
         'type': Config.trials.meeting,
         'enabled': false,
-        'readonly': false,
         'details': {
           'siteUrl': '',
-          'timezone': '',
+          'timeZoneId': '',
+          // TODO: defaultTimezone
           'setDefault': true
         },
       };

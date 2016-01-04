@@ -358,6 +358,15 @@ angular.module('Core')
         isHelpDeskUser: function () {
           return this.hasRole(Config.roles.helpdesk);
         },
+        isHelpDeskUserOnly: function () {
+          var roles = this.getRoles();
+          if (roles && this.isHelpDeskUser()) {
+            return _.all(roles, function (role) {
+              return role == Config.roles.helpdesk || role == 'PARTNER_USER' || role == 'User';
+            });
+          }
+          return false;
+        },
         isServiceAllowed: function (service) {
           if (service === 'squaredTeamMember' && !this.isSquaredTeamMember()) {
             return false;

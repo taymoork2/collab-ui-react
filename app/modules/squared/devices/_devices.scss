@@ -7,17 +7,6 @@
 }
 
 .sq-devices-page-overview {
-  table {
-    td {
-      padding: 10px 10px 10px 0;
-    }
-    tbody {
-      tr {
-        border-top: transparent;
-      }
-    }
-  }
-
   .activation-code-pane {
     padding-top: 10px;
   }
@@ -57,8 +46,38 @@
     padding: 9px 10px 6px 10px;
   }
 
-  .panel-buttons {
-    margin-top: 10px;
+  .form-group button {
+    width: 141px;
+  }
+
+  #overview {
+    display: flex;
+    align-items: center;
+    justify-content: center
+  }
+
+  #overviewImage {
+    width: 144px;
+    margin: 0 25px 0 0;
+  }
+
+  #overviewDescription {
+    margin: 0 0 0 25px;
+  }
+
+  .deviceIssue {
+    padding-bottom: 10px
+  }
+}
+
+.device-img {
+  img {
+    border-radius: 50%;
+    overflow: hidden;
+  }
+
+  i {
+    top: 15px;
   }
 }
 
@@ -80,6 +99,58 @@
 
 .modal-warning {
   background-color: $color-attention-base;
+}
+
+.tag-container {
+  padding-top: 10px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  .tag {
+    margin-right: 8px;
+    margin-bottom: 5px;
+    border-radius: 3px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    padding: 8px 8px 8px 12px;
+    background-color: #c5e9f7;
+    color: #0387b8;
+  }
+  .add-tag {
+    background-color: white;
+    border: 1px solid #d7d7d8;
+    padding: 7px 7px 7px 11px;
+  }
+  .add-tag:hover {
+    cursor: pointer;
+    color: $link-color;
+  }
+  i {
+    padding-left: 10px;
+    font-size: 20px;
+  }
+  i:hover {
+    cursor: pointer;
+    color: $link-color;
+  }
+  input[type=text] {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    display: inline;
+    border-bottom: 1px solid $brand-primary;
+    width: 100px;
+    border-radius: 0;
+    transition: initial;
+    font-size: 14px;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+  a {
+    font-size: .7rem;
+  }
 }
 
 /* widgets */
