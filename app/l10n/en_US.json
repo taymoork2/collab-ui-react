@@ -952,9 +952,9 @@
       "csvFilename": "user_status_report.csv"
     },
     "overview": {
-      "activated": "Activated",
-      "pending": "Pending",
-      "error": "Errors",
+      "activated": "{{number}} activated",
+      "pending": "{{number}} pending",
+      "error": "{number, plural, one{# error} other{# errors}}",
       "loading": "Loading, please wait…",
       "upgrade-available": "Upgrade available",
       "clusters-title": "Expressway Clusters",

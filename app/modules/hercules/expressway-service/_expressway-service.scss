@@ -178,32 +178,18 @@ Special stuff currently used for out own mail input field...
   }
 }
 
-.hercules-numbers-list {
+.export-list {
+  .icon {
+    vertical-align: middle;
+  }
+}
+
+.export-number {
   display: inline-block;
-  vertical-align: bottom;
-  margin-left: 0.5rem;
+  vertical-align: -2px;
 
-  .numbers-item {
-    display: block;
-    float: left;
-    margin-right: 1rem;
-    display: block;
-    line-height: 1;
-
-    &:last-child {
-      margin-right: 0.5rem;
-    }
-  }
-
-  .numbers-label {
-    display: block;
-    font-size: 12px;
-    text-transform: uppercase;
-  }
-
-  .numbers-value {
-    display: block;
-    font-size: 18px;
+  &:last-of-type {
+    margin-right: 5px;
   }
 }
 
