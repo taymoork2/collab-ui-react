@@ -65,7 +65,7 @@
           // TODO: should probably be paged
           return USSService2.getStatuses(vm.selectedServiceId, null, 100000)
             .then(function (response) {
-              return response.data.userStatuses;
+              return response.userStatuses;
             })
             .then(function (statuses) {
               var connectorIds = _.reduce(statuses, function (result, userStatus) {
@@ -117,7 +117,7 @@
             });
         };
 
-        function cancelExport () {
+        function cancelExport() {
           return $q.reject('User Status Report download canceled');
         }
       });

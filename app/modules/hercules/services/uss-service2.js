@@ -77,7 +77,8 @@
 
     function getStatuses(serviceId, state, limit) {
       return $http
-        .get(ConfigService.getUSSUrl() + '/userStatuses?' + statusesParameterRequestString(serviceId, state, limit));
+        .get(ConfigService.getUSSUrl() + '/userStatuses?' + statusesParameterRequestString(serviceId, state, limit))
+        .then(extractData);
     }
 
     return {
