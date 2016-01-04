@@ -1,15 +1,4 @@
 .active-user {
-  min-width: 520px;
-  position: relative;
-  .header {
-    margin: 0;
-  }
-  .graph-match {
-    margin: 0 15px;
-  }
-  .active-table {
-    margin-bottom: 34px;
-  }
   .most-active {
     font-family: $brand-font-cisco-TT-Regular;
     font-size: 13px;
@@ -18,12 +7,9 @@
     padding: 0;
     color: $brand-primary;
   }
-  .table-bordered > thead > tr > th, .table-bordered > tbody > tr > td {
-    border-bottom-width: rem-calc(1);
-    border-right: rem-calc(1) solid $gray-dark;
-  }
-  .table-bordered > thead > tr > th:last-of-type, .table-bordered > tbody > tr > td:last-of-type {
-    border-right: none;
+  td, th {
+      border: 1px solid $gray-light-1;
+      color: $gray-dark;
   }
   .box-match {
     top: -14px;
@@ -36,13 +22,14 @@
     margin-bottom: 0;
   }
   .carousel-btn {
-    border-color: #878787;
-    color: #878787;
+    border-color: $gray-dark-1;
+    color: $gray-dark-1;
   }
   .carousel-btn:hover, .btn--none:focus, .btn--none:hover {
     border-color: transparent;
   }
   #activeUsersdiv{
+    margin-top: 16px;
     position: relative;
     overflow: visible !important;
     top: -25px;

@@ -73,7 +73,14 @@
       }
     }
 
-    .company-voicemail {
+    .company-voicemail-id ng-form {
+      width: 100%;
+      .company-voicemail-number {
+        width: 40%;
+      }
+    }
+
+    .international-dialing {
       margin-top: 3rem;
     }
   }

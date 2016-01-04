@@ -1,7 +1,6 @@
 .customer-active-user {
   .report-sides {
-    margin-left: 0.95238rem;
-    margin-right: 0.95238rem;
+    margin: 0 rem-calc(25);
   }
   .graph-number {
     font-family: $brand-font-cisco-TT-Regular;
@@ -12,5 +11,9 @@
   .barchart {
     position: relative;
     top: -35px;
+  }
+  .active-users-table {
+    margin-bottom: rem-calc(25);
+    width: 95%
   }
 }

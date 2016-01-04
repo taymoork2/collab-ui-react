@@ -81,9 +81,6 @@
     vm.showDoItLater = false;
     vm.wizardNextLoad = false;
 
-    // initialize tab for ng-controller
-    init();
-
     // If tabs change (feature support in SetupWizard) and a step is not defined, re-initialize
     $scope.$watchCollection('tabs', function (tabs) {
       if (tabs && tabs.length > 0 && angular.isUndefined(vm.current.step)) {
@@ -324,9 +321,9 @@
     function setNextText() {
       if ((isFirstTab() && isFirstTime() && !isCustomerPartner() && !isFromPartnerLaunch()) || (isFirstTab() && isFirstStep())) {
         vm.nextText = $translate.instant('firstTimeWizard.getStarted');
-      } else if ((isLastStep() && !isFirstStep()) || (isFirstTime() && isLastTab() && isLastStep())) {
+      } else if (isFirstTime() && isLastTab() && isLastStep()) {
         vm.nextText = $translate.instant('common.finish');
-      } else if (isLastStep() && isFirstStep()) {
+      } else if (isLastStep()) {
         vm.nextText = $translate.instant('common.save');
       } else {
         vm.nextText = $translate.instant('common.next');
@@ -359,7 +356,7 @@
       if (action == 'next') {
         vm.nextText = $translate.instant('common.next');
       } else if (action == 'finish') {
-        vm.nextText = $translate.instant('common.finish');
+        vm.nextText = $translate.instant('common.save');
       }
     });
 

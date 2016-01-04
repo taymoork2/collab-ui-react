@@ -9,7 +9,7 @@
 
   /* @ngInject */
 
-  function AANumberAssignmentService($q, AssignAutoAttendantService, Authinfo, $http) {
+  function AANumberAssignmentService($q, AssignAutoAttendantService, Authinfo, $http, ExternalNumberPoolService) {
 
     /* jshint validthis: true */
 
@@ -21,6 +21,8 @@
       deleteAANumberAssignments: deleteAANumberAssignments,
       setAANumberAssignmentWithErrorDetail: setAANumberAssignmentWithErrorDetail,
       checkAANumberAssignments: checkAANumberAssignments,
+      formatAAResourcesBasedOnList: formatAAResourcesBasedOnList,
+      formatAAResourcesBasedOnCMI: formatAAResourcesBasedOnCMI,
       NUMBER_FORMAT_DIRECT_LINE: "NUMBER_FORMAT_DIRECT_LINE",
       NUMBER_FORMAT_EXTENSION: "NUMBER_FORMAT_EXTENSION",
       DIRECTORY_NUMBER: "directoryNumber",
@@ -90,6 +92,54 @@
 
     }
 
+    // Format AA resources based on a list of external numbers from CMI
+    function formatAAResourcesBasedOnList(resources, externalNumberList) {
+      var formattedResources = _.map(resources, function (res) {
+        if (res.getType() === service.EXTERNAL_NUMBER) {
+          var fmtRes = angular.copy(res);
+          var extNum = _.find(externalNumberList, function (n) {
+            return n.number.replace(/\D/g, '') === res.number;
+          });
+          if (extNum) {
+            fmtRes.number = extNum.number;
+          }
+          return fmtRes;
+        } else {
+          return res;
+        }
+      });
+
+      return formattedResources;
+    }
+
+    // Format AA resources based on entries in CMI external number list
+    function formatAAResourcesBasedOnCMI(resources) {
+
+      return ExternalNumberPoolService.query({
+          customerId: Authinfo.getOrgId(),
+          order: 'pattern'
+        }).$promise
+        .then(function (extPool) {
+
+          var externalNumberList = [];
+
+          for (var i = 0; i < extPool.length; i++) {
+
+            var dn = {
+              id: extPool[i].uuid,
+              number: extPool[i].pattern
+            };
+
+            // the externalNumberList will contain the info as it came from CMI
+            externalNumberList.push(dn);
+
+          }
+
+          return formatAAResourcesBasedOnList(resources, externalNumberList);
+        });
+
+    }
+
     // Set the numbers for an AA
     function setAANumberAssignment(customerId, cesId, resources) {
       var numObjList = [];
@@ -115,6 +165,7 @@
       var data = {
         numbers: numObjList
       };
+
       return AssignAutoAttendantService.update({
         customerId: customerId,
         cesId: cesId
@@ -134,13 +185,16 @@
     // Set the numbers for an AA and return a list of the working and failed resources
     // Note this method does multiple saves to determine good and bad numbers
     // This also means it resolves promises sequentially and will take a little more time
-    function setAANumberAssignmentWithErrorDetail(customerId, cesId, resources, workingResources, failedResources) {
+    function setAANumberAssignmentWithErrorDetail(customerId, cesId, resources) {
 
       // For an empty list, we're done, just return a successful promise
       if (resources.length === 0) {
 
         var deferred = $q.defer();
-        deferred.resolve([]);
+        deferred.resolve({
+          workingResources: [],
+          failedResources: []
+        });
         return deferred.promise;
 
       } else {
@@ -157,22 +211,20 @@
         var myResource = myResourceList.pop();
 
         // Recursively save the rest of the list...
-        return setAANumberAssignmentWithErrorDetail(customerId, cesId, myResourceList, workingResources, failedResources).then(
+        return setAANumberAssignmentWithErrorDetail(customerId, cesId, myResourceList).then(
           function (restOfListResponse) {
             // and when it's done, try to save with the element we popped, but without the failed ones
-            myResourceList = _.difference(myResourceList, failedResources);
+            myResourceList = angular.copy(restOfListResponse.workingResources);
             myResourceList.push(myResource);
             return setAANumberAssignment(customerId, cesId, myResourceList).then(
               function (response) {
                 // successfully saved with the added one, add to working
-                workingResources.push(myResource);
-                // and return the successful response we got with the additional element
-                return response;
+                restOfListResponse.workingResources.push(myResource);
+                return restOfListResponse;
               },
               function (response) {
                 // failed to save with the added one, add to failed
-                failedResources.push(myResource);
-                // and return the response we had without the additional element
+                restOfListResponse.failedResources.push(myResource);
                 return restOfListResponse;
               });
 

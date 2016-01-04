@@ -30,6 +30,7 @@ angular.module('Squared').service('CsdmConverter',
       this.canReportProblem = true;
       this.hasRemoteSupport = true;
       this.canEditDisplayName = true;
+      this.supportsCustomTags = true;
       this.update = function (updated) {
         this.displayName = updated.displayName;
       };
@@ -50,23 +51,42 @@ angular.module('Squared').service('CsdmConverter',
       this.cisUuid = obj.cisUuid;
       this.product = getProduct(obj);
       this.isOnline = getIsOnline(obj);
+      this.canReset = true;
+      this.canDelete = true;
       this.displayName = obj.displayName;
       this.cssColorClass = getCssColorClass(obj);
       this.readableState = getReadableState(obj);
-      this.image = "images/devices-hi/unknown.png";
+      this.isHuronDevice = true;
+    }
+
+    function HuronDeviceDetailed(obj, huronDevice) {
+      this.url = huronDevice.url;
+      this.mac = huronDevice.mac;
+      this.ip = huronDevice.ip;
+      this.cisUuid = huronDevice.userUuid;
+      this.product = obj.model;
+      this.isOnline = getIsHuronOnline(obj);
+      this.canReset = true;
+      this.canDelete = true;
+      this.displayName = huronDevice.displayName;
+      this.cssColorClass = getHuronCssColorClass(obj);
+      this.readableState = getHuronReadableState(obj);
+      this.isHuronDevice = true;
+      this.image = "images/devices/" + (obj.model.trim().replace(/ /g, '_') + '.png').toLowerCase();
     }
 
     function UnusedAccount(obj) {
       this.url = obj.url;
       this.cisUuid = obj.id;
       this.displayName = obj.displayName;
-      this.product = 'NA';
+      this.product = 'Account';
       this.cssColorClass = 'device-status-red';
       this.readableState = t('CsdmStatus.Inactive');
       this.isOnline = false;
       this.isUnused = true;
       this.canDelete = true;
       this.hasIssues = true;
+      this.image = "images/devices-hi/unknown.png";
       this.diagnosticsEvents = [{
         type: translateOrDefault('CsdmStatus.errorCodes.inactive.type', 'Account with no device'),
         message: translateOrDefault('CsdmStatus.errorCodes.inactive.message', 'There exists an account for a ' +
@@ -81,6 +101,7 @@ angular.module('Squared').service('CsdmConverter',
       this.cisUuid = obj.id;
       this.tags = getTags(obj);
       this.expiryTime = convertExpiryTime(obj.expiryTime);
+      this.product = 'Activation Code';
       this.tagString = getTagString(obj);
       this.displayName = obj.displayName;
       this.activationCode = obj.activationCode;
@@ -90,6 +111,8 @@ angular.module('Squared').service('CsdmConverter',
       this.readableActivationCode = getReadableActivationCode(obj);
       this.canDelete = true;
       this.canEditDisplayName = true;
+      this.image = "images/devices-hi/unknown.png";
+      this.supportsCustomTags = true;
       this.updateName = function (newName) {
         this.displayName = newName;
       };
@@ -125,6 +148,10 @@ angular.module('Squared').service('CsdmConverter',
 
     function convertAccount(data) {
       return new UnusedAccount(data);
+    }
+
+    function convertHuronDeviceDetailed(data, huronDevice) {
+      return new HuronDeviceDetailed(data, huronDevice);
     }
 
     function convertCode(data) {
@@ -296,23 +323,23 @@ angular.module('Squared').service('CsdmConverter',
     }
 
     function getIsHuronOnline(obj) {
-      return obj.state == 'Registered';
+      return obj.registrationStatus == 'registered';
     }
 
     function getHuronCssColorClass(obj) {
-      if (obj.state == 'Registered') {
+      if (obj.registrationStatus == 'registered') {
         return 'device-status-green';
-      } else if (obj.state == 'Unregistered') {
+      } else if (obj.state == 'unregistered') {
         return 'device-status-gray';
       }
       return 'device-status-yellow';
     }
 
     var getHuronReadableState = function (obj) {
-      switch (obj.state) {
-      case 'Registered':
+      switch (obj.registrationStatus) {
+      case 'registered':
         return t('CsdmStatus.Online');
-      case 'Unregistered':
+      case 'unregistered':
         return t('CsdmStatus.Offline');
       }
       return t('CsdmStatus.Unknown');
@@ -326,7 +353,8 @@ angular.module('Squared').service('CsdmConverter',
       convertHuronDevice: convertHuronDevice,
       convertHuronDevices: convertHuronDevices,
       convertAccount: convertAccount,
-      convertAccounts: convertAccounts
+      convertAccounts: convertAccounts,
+      convertHuronDeviceDetailed: convertHuronDeviceDetailed,
     };
 
   }

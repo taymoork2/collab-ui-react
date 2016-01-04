@@ -33,7 +33,7 @@
     vm.deleteKeyAction = deleteKeyAction;
     vm.keyChanged = keyChanged;
     vm.keyActionChanged = keyActionChanged;
-    vm.saveUIModel = saveUIModel;
+    vm.timeoutInvalidChanged = timeoutInvalidChanged;
     vm.populateOptionMenu = populateOptionMenu;
     vm.createOptionMenu = createOptionMenu;
 
@@ -85,10 +85,14 @@
         name: 'phoneMenuRepeatMenu',
         action: 'repeatActionsOnInput'
       }, {
+        label: $translate.instant('autoAttendant.actionSayMessage'),
+        name: 'phoneMenuSayMessage',
+        action: 'say'
+      }, {
         label: $translate.instant('autoAttendant.phoneMenuDialExt'),
         name: 'phoneMenuDialExt',
         action: 'runActionsOnInput',
-        inputType: '2'
+        inputType: 2
       },
       // {
       //   label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
@@ -126,24 +130,46 @@
       var keyAction = new KeyAction();
       keyAction.keys = getAvailableKeys('');
       vm.selectedActions.push(keyAction);
+
+      // update global UI Model
+      var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+      var action = AutoAttendantCeMenuModelService.newCeActionEntry('', '');
+      menuEntry.addAction(action);
+      menuEntry.setType('MENU_OPTION');
+      vm.menuEntry.entries.push(menuEntry);
     }
 
     // the user has pressed the trash can icon for a key/action pair
     function deleteKeyAction(index) {
       vm.selectedActions.splice(index, 1);
-      saveUIModel();
+      vm.menuEntry.entries.splice(index, 1);
+      setAvailableKeys();
     }
 
     // the user has changed the key for an existing action
     function keyChanged(index, keyValue) {
       vm.selectedActions[index].key = keyValue;
-      saveUIModel();
+      vm.menuEntry.entries[index].key = keyValue;
+      setAvailableKeys();
     }
 
     // the user has changed the action for an existing key
     function keyActionChanged(index, keyAction) {
-      vm.selectedActions[index].value = keyAction.name;
-      saveUIModel();
+      var _keyAction = findKeyAction(keyAction.name);
+      if (angular.isDefined(_keyAction)) {
+        var phoneMenuEntry = vm.menuEntry.entries[index];
+        var action = phoneMenuEntry.actions[0];
+        action.name = keyAction.action;
+        // When switch between action, the action value is set to empty string,
+        // simplest way to handle action switching.
+        action.value = '';
+        delete action.inputType;
+        if (angular.isDefined(_keyAction.inputType)) {
+          // some action names are overloaded and are distinguished
+          // by inputType
+          action.inputType = _keyAction.inputType;
+        }
+      }
     }
 
     // determine which keys are still available.
@@ -186,10 +212,9 @@
       }
     }
 
-    function saveUIModel() {
+    function timeoutInvalidChanged() {
       var entry = vm.menuEntry;
       if (entry.type == "MENU_OPTION") {
-        // Todo: validate this is a mandatory input.
         // this is number of times to repeat the timeout/invalid menu
         if (vm.selectedTimeout.value === 1) {
           entry.attempts = vm.selectedTimeout.value;
@@ -198,31 +223,6 @@
             entry.attempts = vm.selectedTimeout.selectedChild.value;
           }
         }
-
-        //TODO set language and voice here
-        entry.entries = [];
-        // add each key/action pair
-        for (var j = 0; j < vm.selectedActions.length; j++) {
-          var selectedAction = vm.selectedActions[j];
-          var keyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-          keyEntry.type = "MENU_OPTION";
-          var keyAction = AutoAttendantCeMenuModelService.newCeActionEntry();
-          var action = findKeyAction(selectedAction.action.name);
-          if (angular.isDefined(action) && selectedAction.key !== '') {
-            keyAction.name = action.action;
-            keyAction.value = selectedAction.value;
-            if (angular.isDefined(action.inputType)) {
-              // some action names are overloaded and are distinguished
-              // by inputType
-              keyAction.inputType = action.inputType;
-            }
-            keyEntry.key = selectedAction.key;
-            keyEntry.description = selectedAction.action.name;
-            keyEntry.addAction(keyAction);
-            entry.entries.push(keyEntry);
-          }
-        }
-        setAvailableKeys();
       }
     }
 
@@ -251,7 +251,7 @@
           // add the key/action pairs
           for (var j = 0; j < entries.length; j++) {
             var menuEntry = entries[j];
-            if (menuEntry.actions.length == 1 && menuEntry.type == "MENU_OPTION") {
+            if (menuEntry.actions.length > 0 && menuEntry.type == "MENU_OPTION") {
               var keyAction = new KeyAction();
               keyAction.key = menuEntry.key;
               if (angular.isDefined(menuEntry.actions[0].name) && menuEntry.actions[0].name.length > 0) {
@@ -263,7 +263,6 @@
                 keyAction.action.name = "";
                 keyAction.action.label = "";
               }
-              keyAction.value = menuEntry.actions[0].value;
               vm.selectedActions.push(keyAction);
             }
           }
@@ -271,28 +270,6 @@
         // remove keys that are in use from the selection widget
         setAvailableKeys();
       }
-      //
-      // Workaround for Problem I: A save failure is seen when phone menu is first created without any further inputs and save
-      // button is clicked.
-      //
-      // This is a result of Problem II: createOptionMenu always initializes the menu with an emtpy key VIA the global UI model.
-      // The right way to do this is to initializes the menu with an emtpy key VIA vm.selectedActions, the local UI model.
-      // However, this problem cannot be fixed because of the following bigger combinedMenu infrastructure problem,
-      // welcomeMenu contains optionMenu:
-      //
-      // Problem III: A combinedMenu is a welcomeMenu which contains an array of ceMenuEntry with one of ceMenu.
-      // Such mixture of array elements results into two AAPhoneMenuCtrl creation when defining a new phone menu:
-      //
-      // 1) AAPhoneMenuCtrl is instantiated and invoke creatOptionMenu(), creating an empty menu in the UI model
-      // 2) vm.entries[$scope.index] is assigned new ceMenu object (third line in creatOptionMenu())
-      // 3) AAPhoneMenuCtrl is instantiated again and invoke populateOptionMenu(), because it sees a menu defined in UI model.
-      //
-      // Problem II cannot be fixed without fixing Problem III first which requires more time.  The proper fix for Problem III is to
-      // store the reference to the optionMenu in a ceMenu entry in welcomeMenu.
-      //
-      // The following workaround (writing local UI model into the global UI model) will erase the invalid empty key entry in the global
-      // UI model.
-      vm.saveUIModel();
     }
 
     function createOptionMenu() {

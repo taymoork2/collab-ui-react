@@ -11,6 +11,18 @@
       padding-right: 1.5rem;
     }
   }
+  .multiSub {
+    margin: 0px 0px 0px auto;
+    padding-bottom: 16px;
+    .multiText {
+      float: left;
+      padding-top: 5px;
+    }
+    .multiSelect {
+      width: 60%;
+      float: right;
+    }
+  }
   .flex-row {
     @extend .row;
     display: flex;
@@ -358,8 +370,11 @@
       margin-right: 30px;
       margin-left: 30px;
     }
+    .service-setup-company-voicemail ng-form {
+      width: 100%
+    }
     .service-setup-company-voicemail-number {
-      width: 20rem;
+        width: 50%
     }
     .service-setup-moh {
       width: 50%;
@@ -578,4 +593,43 @@
       border-top: none;
     }
   }
+}
+ input#dirDomainText {
+    width: 25%;
+    left: 2px;
+    position: relative;
+  }
+.dirsync-info {
+  margin-top: 16px;
+  width: 550px;
+  display: flex;
+  flex-direction: column;
+  .ftwdirgridStyle {
+    margin-top: 10px;
+    height: 200px;
+    border: 1px solid lightgray;
+    & >:nth-child(2) {
+      overflow-x: hidden;
+    }
+  }
+  .sync-dirsync-refresh-button {
+      font-size: 12px;
+     //font-size: $body-small-font-size;
+  }
+}
+.finish-page {
+    text-align: center;
+    width: 25rem;
+    margin: 0 auto;
+    margin-top: 10rem;
+    i {
+      font-size: 8rem;
+      color: $color-cta-base;
+    }
+    h3, p {
+      margin-top: 1.5rem
+    }
+    p {
+      font-size: 1rem
+    }
 }

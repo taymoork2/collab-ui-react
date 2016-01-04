@@ -359,18 +359,6 @@
     });
   })
 
-  .factory('ClusterCommonCmiService', function ($resource, HuronConfig) {
-    return $resource(HuronConfig.getCmiUrl() + '/common/clusters/:clusterId', {
-      clusterId: '@clusterId',
-    }, {
-      query: {
-        method: 'GET',
-        isArray: true,
-        cache: true
-      }
-    });
-  })
-
   .factory('CustomerVoiceCmiService', function ($resource, HuronConfig) {
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId', {
       customerId: '@customerId'
@@ -392,6 +380,27 @@
     return $resource(HuronConfig.getCmiUrl() + '/voice/clusters/:clusterId/dialplandetails/:dialPlanId', {
       clusterId: '@clusterId',
       dialPlanId: '@dialPlanId'
+    });
+  })
+
+  .factory('UserCosRestrictionServiceV2', function ($resource, HuronConfig) {
+    var baseUrl = HuronConfig.getCmiV2Url();
+    return $resource(baseUrl + '/customers/:customerId/users/:userId/features/restrictions/:restrictionId', {
+      customerId: '@customerId',
+      userId: '@userId',
+      restrictionId: '@restrictionId'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  })
+
+  .factory('CustomerCosRestrictionServiceV2', function ($resource, HuronConfig) {
+    var baseUrl = HuronConfig.getCmiV2Url();
+    return $resource(baseUrl + '/customers/:customerId/features/restrictions/:restrictionId', {
+      customerId: '@customerId',
+      restrictionId: '@restrictionId'
     });
   });
 

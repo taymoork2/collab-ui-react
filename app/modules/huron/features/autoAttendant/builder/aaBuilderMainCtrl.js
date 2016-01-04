@@ -150,15 +150,21 @@
 
     // Set the numbers in CMI with error details (involves multiple saves in the AANumberAssignmentService service)
     // Notify the user of any numbers that failed
-    function saveAANumberAssignmentWithErrorDetail(resources, workingResources, failedResources) {
+    function saveAANumberAssignmentWithErrorDetail(resources) {
 
-      AANumberAssignmentService.setAANumberAssignmentWithErrorDetail(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources, workingResources, failedResources).catch(
-        function (response) {
-          Notification.error('autoAttendant.errorFailedToAssignNumbers', {
-            phoneNumbers: failedResources
-          });
-        });
+      return AANumberAssignmentService.formatAAResourcesBasedOnCMI(resources).then(function (fmtResources) {
 
+        AANumberAssignmentService.setAANumberAssignmentWithErrorDetail(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, fmtResources).then(
+          function (response) {
+            if (_.get(response, 'failedResources.length', false)) {
+              Notification.error('autoAttendant.errorFailedToAssignNumbers', {
+                phoneNumbers: _.pluck(response.failedResources, 'id')
+              });
+            }
+            return response;
+          }
+        );
+      });
     }
 
     function saveAARecords() {
@@ -169,6 +175,10 @@
       var aaRecordUUID = vm.aaModel.aaRecordUUID;
       vm.ui.builder.ceInfo_name = vm.ui.builder.ceInfo_name.trim();
       if (!AAValidationService.isNameValidationSuccess(vm.ui.builder.ceInfo_name, aaRecordUUID)) {
+        return;
+      }
+
+      if (vm.ui.isOpenHours && !AAValidationService.isPhoneMenuValidationSuccess(vm.ui.openHours)) {
         return;
       }
 
@@ -222,9 +232,7 @@
         // If a possible discrepancy was found between the phone number list in CE and the one stored in CMI
         // Try a complete save here and report error details
         if (vm.aaModel.possibleNumberDiscrepancy) {
-          var workingResources = [];
-          var failedResources = [];
-          saveAANumberAssignmentWithErrorDetail(vm.aaModel.ceInfos[i].getResources(), workingResources, failedResources);
+          saveAANumberAssignmentWithErrorDetail(vm.aaModel.ceInfos[i].getResources());
         }
 
         var updateResponsePromise = AutoAttendantCeService.updateCe(

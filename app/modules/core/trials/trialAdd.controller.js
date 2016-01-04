@@ -7,15 +7,6 @@
   /* @ngInject */
   function TrialAddCtrl($q, $scope, $state, $translate, $window, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialService, ValidationService) {
     var vm = this;
-    // navigate trial modal in this order
-    var navOrder = ['trialAdd.info', 'trialAdd.meeting', 'trialAdd.call'];
-    var configurableTrialTypes = [{
-      'type': Config.trials.meeting,
-      'state': 'trialAdd.meeting',
-    }, {
-      'type': Config.trials.call,
-      'state': 'trialAdd.call',
-    }];
 
     vm.trialData = TrialService.getData();
 
@@ -28,6 +19,23 @@
     vm.meetingTrial = vm.trialData.trials.meetingTrial;
     vm.callTrial = vm.trialData.trials.callTrial;
     vm.roomSystemTrial = vm.trialData.trials.roomSystemTrial;
+    vm.trialStates = [{
+      'name': 'trialAdd.meeting',
+      'trials': [vm.meetingTrial],
+      'enabled': true,
+    }, {
+      'name': 'trialAdd.call',
+      'trials': [vm.callTrial, vm.roomSystemTrial],
+      'enabled': true,
+    }, {
+      'name': 'trialAdd.addNumbers',
+      'trials': [vm.callTrial],
+      'enabled': true,
+    }];
+    // Navigate trial modal in this order
+    // TODO: addNumbers must be last page for now due to controller destroy.
+    // This page "should" be refactored or become obsolete with PSTN
+    vm.navOrder = ['trialAdd.info', 'trialAdd.meeting', 'trialAdd.call', 'trialAdd.addNumbers'];
     vm.navStates = ['trialAdd.info'];
     vm.roomSystemOptions = [5, 10, 15, 20, 25];
     vm.showMeeting = false;
@@ -68,7 +76,7 @@
       className: 'columns medium-12 license-count',
       templateOptions: {
         label: $translate.instant('siteList.licenseCount'),
-        labelClass: 'columns medium-5',
+        labelClass: 'columns medium-6',
         inputClass: 'columns medium-3',
         type: 'number',
         required: true,
@@ -109,7 +117,6 @@
       model: vm.meetingTrial,
       key: 'enabled',
       type: 'checkbox',
-      hide: true,
       className: 'columns medium-12 checkbox-group',
       templateOptions: {
         label: $translate.instant('trials.meeting'),
@@ -118,9 +125,7 @@
       },
       expressionProperties: {
         'hide': function () {
-          return FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials).then(function (result) {
-            return !result;
-          });
+          return !vm.showMeeting;
         },
         'templateOptions.disabled': function () {
           return !vm.canEditMeeting;
@@ -153,11 +158,11 @@
       model: vm.roomSystemTrial,
       key: 'enabled',
       type: 'checkbox',
-      className: "columns medium-5",
+      className: "columns medium-6",
       templateOptions: {
         label: $translate.instant('trials.roomSystem'),
         id: 'trialRoomSystem',
-        class: 'columns medium-10',
+        class: 'columns medium-12',
       },
       watcher: {
         listener: function (field, newValue, oldValue, scope, stopWatching) {
@@ -170,10 +175,10 @@
       model: vm.roomSystemTrial.details,
       key: 'quantity',
       type: 'select',
-      className: "columns medium-7",
+      className: "columns medium-6",
       templateOptions: {
         id: 'trialRoomSystemsAmount',
-        inputClass: 'columns medium-9',
+        inputClass: 'columns medium-10',
         secondaryLabel: $translate.instant('trials.licenses'),
         options: vm.roomSystemOptions,
       },
@@ -205,24 +210,36 @@
     vm.hasNextStep = hasNextStep;
     vm.previousStep = previousStep;
     vm.nextStep = nextStep;
+    vm.finishSetup = finishSetup;
     vm.closeDialogBox = closeDialogBox;
     vm.launchCustomerPortal = launchCustomerPortal;
 
     $q.all([
       FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials),
-      FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials)
+      FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
+      FeatureToggleService.supportsPstnSetup(),
+      FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials)
     ]).then(function (results) {
       vm.showRoomSystems = results[0];
       vm.roomSystemTrial.enabled = results[0];
       vm.meetingTrial.enabled = results[1];
+      vm.supportsPstnSetup = results[2];
       vm.callTrial.enabled = vm.hasCallEntitlement();
       vm.messageTrial.enabled = true;
       if (vm.meetingTrial.enabled) {
         vm.showMeeting = true;
-        // Don't allow navigating to other views
-      } else {
-        navOrder = ['trialAdd.info'];
       }
+
+      var devicesModal = _.find(vm.trialStates, {
+        'name': 'trialAdd.call'
+      });
+      var meetingModal = _.find(vm.trialStates, {
+        'name': 'trialAdd.meeting'
+      });
+
+      devicesModal.enabled = results[3] && results[1];
+      meetingModal.enabled = results[1];
+
     }).finally(function () {
       init();
       vm.roomSystemFields[1].model.quantity = vm.roomSystemTrial.enabled ? vm.roomSystemOptions[0] : 0;
@@ -261,14 +278,17 @@
         vm.canEditMessage = true;
         vm.canEditMeeting = true;
       }
-      _.forEach(vm.trialData.trials, function (trial) {
-        var state = _.get(_.find(configurableTrialTypes, {
-          type: trial.type
-        }), 'state');
-        if (trial.enabled) {
-          addNavState(state);
+      addRemoveStates();
+    }
+
+    function addRemoveStates() {
+      _.forEach(vm.trialStates, function (state) {
+        if (!state.enabled || _.every(state.trials, {
+            enabled: false
+          })) {
+          removeNavState(state.name);
         } else {
-          removeNavState(state);
+          addNavState(state.name);
         }
       });
     }
@@ -306,11 +326,11 @@
         .value();
     }
 
-    function nextStep() {
+    function nextStep(callback) {
       if (!hasNextStep()) {
-        startTrial(true);
+        return startTrial(callback);
       } else {
-        $state.go(getNextState());
+        return $state.go(getNextState());
       }
     }
 
@@ -327,7 +347,7 @@
     }
 
     function addNavState(state) {
-      vm.navStates[_.indexOf(navOrder, state)] = state;
+      vm.navStates[_.indexOf(vm.navOrder, state)] = state;
     }
 
     function removeNavState(state) {
@@ -335,7 +355,7 @@
       delete vm.navStates[_.indexOf(vm.navStates, state)];
     }
 
-    function startTrial(keepModal) {
+    function startTrial(addNumbersCallback) {
       vm.nameError = false;
       vm.emailError = false;
       vm.startTrialButtonLoad = true;
@@ -370,18 +390,24 @@
             });
         })
         .then(function () {
-          vm.startTrialButtonLoad = false;
-
           var successMessage = [$translate.instant('trialModal.addSuccess', {
             customerName: vm.details.customerName
           })];
           Notification.notify(successMessage, 'success');
 
-          if (keepModal) {
-            finishSetup();
+          if (addNumbersCallback) {
+            addNumbersCallback(vm.customerOrgId).finally(function () {
+              vm.startTrialButtonLoad = false;
+              vm.finishSetup();
+            });
           } else {
-            $state.modal.close();
+            vm.startTrialButtonLoad = false;
+            vm.finishSetup();
           }
+
+          return {
+            'customerOrgId': vm.customerOrgId
+          };
         });
     }
 

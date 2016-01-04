@@ -15,9 +15,14 @@ describe('Service: PstnSetupService', function () {
   var carrierIntelepeer = getJSONFixture('huron/json/pstnSetup/carrierIntelepeer.json');
   var resellerCarrierList = getJSONFixture('huron/json/pstnSetup/resellerCarrierList.json');
 
+  var numbers = ['123', '456'];
+
   var customerPayload = {
     uuid: customerId,
     name: "myCustomer",
+    firstName: "myFirstName",
+    lastName: "myLastName",
+    email: "myEmail",
     pstnCarrierId: carrierId,
     resellerId: partnerId,
     billingAddress: {
@@ -30,7 +35,8 @@ describe('Service: PstnSetupService', function () {
       "billingCity": "Richardson",
       "billingState": "TX",
       "billingZip": "75082"
-    }
+    },
+    numbers: numbers
   };
 
   var updatePayload = {
@@ -39,15 +45,11 @@ describe('Service: PstnSetupService', function () {
 
   var blockOrderPayload = {
     "npa": "555",
-    "quantity": "20",
-    "serviceName": "Cisco Systems",
-    "serviceStreetNumber": "2200",
-    "serviceStreetDirectional": "E",
-    "serviceStreetName": "President George Bush",
-    "serviceStreetSuffix": "Hwy",
-    "serviceCity": "Richardson",
-    "serviceState": "TX",
-    "serviceZip": "75082"
+    "quantity": "20"
+  };
+
+  var orderPayload = {
+    numbers: numbers
   };
 
   var Authinfo = {
@@ -74,7 +76,15 @@ describe('Service: PstnSetupService', function () {
   it('should create a customer', function () {
     $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/customers', customerPayload).respond(201);
 
-    PstnSetupService.createCustomer(customerPayload.uuid, customerPayload.name, customerPayload.pstnCarrierId, customerPayload.resellerId);
+    PstnSetupService.createCustomer(
+      customerPayload.uuid,
+      customerPayload.name,
+      customerPayload.firstName,
+      customerPayload.lastName,
+      customerPayload.email,
+      customerPayload.pstnCarrierId,
+      customerPayload.numbers
+    );
     $httpBackend.flush();
   });
 
@@ -126,6 +136,12 @@ describe('Service: PstnSetupService', function () {
   it('should make a block order', function () {
     $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/carriers/' + carrierId + '/did/block', blockOrderPayload).respond(201);
     PstnSetupService.orderBlock(customerId, carrierId, blockOrderPayload.npa, blockOrderPayload.quantity);
+    $httpBackend.flush();
+  });
+
+  it('should make a number order', function () {
+    $httpBackend.expectPOST(HuronConfig.getTerminusUrl() + '/customers/' + customerId + '/carriers/' + carrierId + '/did/order', orderPayload).respond(201);
+    PstnSetupService.orderNumbers(customerId, carrierId, orderPayload.numbers);
     $httpBackend.flush();
   });
 

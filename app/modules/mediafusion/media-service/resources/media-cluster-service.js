@@ -79,7 +79,7 @@
     };
 
     var defuseConnector = function (clusterId, callback) {
-      var url = config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
+      var url = MediaConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId;
       $http
         .delete(url)
         .success(callback)
@@ -100,7 +100,7 @@
     }
 
     var getGroups = function () {
-      var url = config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets' + '?' + 'type=' + 'mf.group';
+      var url = MediaConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets' + '?' + 'type=' + 'mf.group';
       return $http.get(url).then(extractDataFromResponse);
     };
 
@@ -109,12 +109,12 @@
         'property_set_id': propertySetId
       };
 
-      var url = config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/assigned_property_sets';
+      var url = MediaConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/assigned_property_sets';
       return $http.post(url, clusterAssignedPropertySet);
     };
 
     var removeGroupAssignment = function (clusterId, propertySetId) {
-      var url = config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/assigned_property_sets/' + propertySetId;
+      var url = MediaConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/assigned_property_sets/' + propertySetId;
       return $http.delete(url);
     };
 
@@ -128,7 +128,7 @@
         }
       };
 
-      var url = config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets';
+      var url = MediaConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets';
       return $http
         .post(url, grp);
       //.success(callback);
@@ -139,10 +139,20 @@
         'mf.role': role
       };
 
-      var url = config.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/properties';
+      var url = MediaConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/clusters/' + clusterId + '/properties';
       return $http
         .post(url, grp);
       //.success(callback);
+    };
+
+    var getPropertySet = function (propertySet) {
+      var url = MediaConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets/' + propertySet;
+      return $http.get(url).then(extractDataFromResponse);
+    };
+
+    var setPropertySet = function (propertySet, value) {
+      var url = MediaConfigService.getUrl() + '/organizations/' + Authinfo.getOrgId() + '/property_sets/' + propertySet;
+      return $http.post(url, value);
     };
 
     var hub = CsdmHubFactory.create();
@@ -162,7 +172,9 @@
       createGroup: createGroup,
       changeRole: changeRole,
       subscribe: hub.on,
-      getAggegatedClusters: getAggegatedClusters
+      getAggegatedClusters: getAggegatedClusters,
+      getPropertySet: getPropertySet,
+      setPropertySet: setPropertySet
     };
   }
 

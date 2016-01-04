@@ -36,7 +36,7 @@
       type: 'checkbox',
       model: $scope.offers,
       templateOptions: {
-        label: $translate.instant('trials.meet'),
+        label: $translate.instant('trials.meeting'),
         id: 'webexTrialCB',
         class: 'columns medium-12 checkbox-group'
       },

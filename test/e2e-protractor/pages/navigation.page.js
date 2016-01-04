@@ -11,7 +11,7 @@ var Navigation = function () {
   this.orgTab = element(by.css('a[href="#organizations"]'));
   this.orgAddTab = element(by.css('#addOrganizations'));
   this.callRoutingTab = element(by.css('a[href="#callrouting"]'));
-  this.autoAttendantPage = element(by.css('a[href="#/callrouting/autoattendant"]'));
+  this.autoAttendantPage = element(by.css('a[href="#/hurondetails/features"]'));
   this.fusionTab = element(by.css('a[href="#fusion"]'));
   this.reportsTab = element(by.css('li.reportTab > a'));
   this.supportTab = element(by.css('li.supportTab > a'));
@@ -48,6 +48,8 @@ var Navigation = function () {
   this.planReview = element(by.cssContainingText('.settings-menu .dropdown-menu a', 'Plan Review'));
   this.addUsers = element(by.cssContainingText('.settings-menu .dropdown-menu a', 'Invite Users'));
   this.communication = element(by.cssContainingText('.settings-menu .dropdown-menu a', 'Communication'));
+  this.messaging = element(by.cssContainingText('.settings-menu .dropdown-menu a', 'Messaging'));
+  this.enterpriseSettings = element(by.cssContainingText('.settings-menu .dropdown-menu a', 'Enterprise Settings'));
   this.userInfo = element(by.css('.user-info'));
   this.launchPartnerButton = element(by.css('#launch-partner-btn a'));
 
@@ -106,8 +108,7 @@ var Navigation = function () {
     this.clickDevelopmentTab();
     utils.click(this.callRoutingTab);
     utils.click(this.autoAttendantPage);
-    this.expectCurrentUrl('/autoattendant');
-    utils.click(autoattendant.autoAttendantDevLink);
+    this.expectCurrentUrl('/features');
     utils.expectIsDisplayed(autoattendant.newFeatureButton);
   };
 
@@ -158,6 +159,16 @@ var Navigation = function () {
   this.clickCommunicationWizard = function () {
     utils.click(this.settingsMenu);
     utils.click(this.communication);
+  };
+
+  this.clickMessagingSetup = function () {
+    utils.click(this.settingsMenu);
+    utils.click(this.messaging);
+  };
+
+  this.clickEnterpriseSettings = function () {
+    utils.click(this.settingsMenu);
+    utils.click(this.enterpriseSettings);
   };
 
   this.clickOrgProfile = function () {

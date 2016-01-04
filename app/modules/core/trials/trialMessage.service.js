@@ -29,7 +29,6 @@
       var defaults = {
         'type': Config.trials.message,
         'enabled': false,
-        'readonly': false,
         'details': {},
       };
 

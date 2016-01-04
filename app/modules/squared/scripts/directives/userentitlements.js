@@ -40,13 +40,18 @@ angular.module('Squared')
       };
 
       var getUserEntitlementList = function () {
-        return $rootScope.services.map(function (service) {
-          var serviceId = service.serviceId;
-          return {
-            entitlementName: serviceId,
-            entitlementState: $scope.entitlements[serviceId] ? 'ACTIVE' : 'INACTIVE'
-          };
-        });
+        return _.chain($rootScope.services)
+          .filter(function (service) {
+            return !service.isIgnored;
+          })
+          .map(function (service) {
+            var serviceId = service.serviceId;
+            return {
+              entitlementName: serviceId,
+              entitlementState: $scope.entitlements[serviceId] ? 'ACTIVE' : 'INACTIVE'
+            };
+          })
+          .value();
       };
 
       var watchCheckboxes = function () {

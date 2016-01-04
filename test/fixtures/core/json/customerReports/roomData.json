@@ -82,7 +82,7 @@
       "count": 0.0
     }, {
       "date": "2015-12-08T00:00:00.000Z",
-      "count": 0.0
+      "count": 52.0
     }, {
       "date": "2015-12-09T00:00:00.000Z",
       "count": 0.0
@@ -92,42 +92,49 @@
   "response": [{
     "modifiedDate": "Dec 03",
     "balloon": true,
+    "totalRooms": 0,
     "groupRooms": 0,
     "oneToOneRooms": 0,
     "avgRooms": "0.00"
   }, {
     "modifiedDate": "Dec 04",
     "balloon": true,
+    "totalRooms": 0,
     "groupRooms": 0,
     "oneToOneRooms": 0,
     "avgRooms": "0.00"
   }, {
     "modifiedDate": "Dec 05",
     "balloon": true,
+    "totalRooms": 0,
     "groupRooms": 0,
     "oneToOneRooms": 0,
     "avgRooms": "0.00"
   }, {
     "modifiedDate": "Dec 06",
     "balloon": true,
+    "totalRooms": 0,
     "groupRooms": 0,
     "oneToOneRooms": 0,
     "avgRooms": "0.00"
   }, {
     "modifiedDate": "Dec 07",
     "balloon": true,
+    "totalRooms": 0,
     "groupRooms": 0,
     "oneToOneRooms": 0,
     "avgRooms": "0.00"
   }, {
     "modifiedDate": "Dec 08",
     "balloon": true,
+    "totalRooms": 446,
     "groupRooms": 394,
-    "oneToOneRooms": 0,
+    "oneToOneRooms": 52,
     "avgRooms": "1.15"
   }, {
     "modifiedDate": "Dec 09",
     "balloon": true,
+    "totalRooms": 0,
     "groupRooms": 0,
     "oneToOneRooms": 0,
     "avgRooms": "0.00"
