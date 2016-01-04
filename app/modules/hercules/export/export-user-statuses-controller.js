@@ -7,19 +7,18 @@
       function ($q, $timeout, serviceId, Authinfo, UiStats, UserDetails, USSService2, ClusterService) {
         var vm = this;
         var numberOfUsersPrCiRequest = 25; // can probably go higher, depending on the CI backend...
+        var getStatusTypes = function () {
+          var serviceInfo = _.find(USSService2.getStatusesSummary(), {
+            serviceId: vm.selectedServiceId
+          });
+          return serviceInfo ? UiStats.insertServiceInfo(serviceInfo) : [];
+        };
         vm.selectedServiceId = serviceId;
         vm.nothingToExport = true;
         vm.exportingUserStatusReport = false;
         vm.exportCanceled = false;
         vm.result = [];
-        var serviceInfo = _.find(USSService2.getStatusesSummary(), {
-          serviceId: vm.selectedServiceId
-        });
-        if (serviceInfo) {
-          vm.statusTypes = UiStats.insertServiceInfo(serviceInfo);
-        } else {
-          vm.statusTypes = [];
-        }
+        vm.statusTypes = getStatusTypes();
 
         vm.cancelExport = function () {
           vm.exportCanceled = true;
