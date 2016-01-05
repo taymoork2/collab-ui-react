@@ -48,7 +48,7 @@ describe('Partner flow', function () {
     });
   });
 
-  describe('Add Partner Trial', function () {
+  xdescribe('Add Partner Trial', function () {
 
     it('should view all trials', function () {
       navigation.clickCustomers();
@@ -85,7 +85,7 @@ describe('Partner flow', function () {
       utils.clickEscape();
     }, LONG_TIMEOUT);
 
-    xit('should find new trial', function (done) {
+    it('should find new trial', function (done) {
       utils.click(partner.trialFilter);
       utils.expectIsDisplayed(partner.newTrialRow);
 
