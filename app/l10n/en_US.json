@@ -949,6 +949,14 @@
       "goToHost": "Go to Host",
       "remove": "Remove"
     },
+    "export": {
+      "modalTitle": "User Status Report",
+      "modalText1": "The exported report will be a comma separated list of users, their state, and related details.",
+      "modalText2": "Select the type of information that you want included in the report:",
+      "modalNote": "Note: The more users included, the longer the report takes to generate.",
+      "modalCTA": "Export to CSV",
+      "csvFilename": "user_status_report.csv"
+    },
     "overview": {
       "activated": "{{number}} activated",
       "pending": "{{number}} pending",
@@ -3178,7 +3186,8 @@
       "squared-room-moderation.paid": "Standard Team Rooms",
       "squared-room-moderation.free": "Free Spark Messaging",
       "ciscouc.paid": "Advanced Spark Call",
-      "ciscouc.free": "Free 1:1 Spark Call"
+      "ciscouc.free": "Free 1:1 Spark Call",
+      "meetings": "WebEx Meetings (WebEx 11)"
     },
     "userStatuses": {
       "active": "Active",

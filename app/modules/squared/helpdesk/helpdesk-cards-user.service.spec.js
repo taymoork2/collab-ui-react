@@ -94,6 +94,44 @@ describe('HelpdeskCardsService', function () {
       expect(card.entitlements.length).toEqual(1);
       expect(card.entitlements[0]).toEqual('helpdesk.entitlements.squared-room-moderation.paid');
     });
+
+    it('Should return correct meeting card for user', function () {
+      var card = HelpdeskCardsUserService.getMeetingCardForUser({});
+      expect(card.entitled).toBeFalsy();
+      expect(card.entitlements.length).toEqual(0);
+
+      card = HelpdeskCardsUserService.getMeetingCardForUser({
+        entitlements: []
+      });
+      expect(card.entitled).toBeFalsy();
+      expect(card.entitlements.length).toEqual(0);
+
+      // Entitled, but no license (free)
+      card = HelpdeskCardsUserService.getMeetingCardForUser({
+        entitlements: ['squared-syncup']
+      });
+      expect(card.entitled).toBeTruthy();
+      expect(card.entitlements.length).toEqual(1);
+      expect(card.entitlements[0]).toEqual('helpdesk.entitlements.squared-syncup.free');
+
+      // Entitled and with license (Paid)
+      card = HelpdeskCardsUserService.getMeetingCardForUser({
+        entitlements: ['squared-syncup'],
+        licenseID: ['CF_56b343df-bdd5-463b-8895-d07fc3a94877']
+      });
+      expect(card.entitled).toBeTruthy();
+      expect(card.entitlements.length).toEqual(1);
+      expect(card.entitlements[0]).toEqual('helpdesk.entitlements.squared-syncup.paid');
+
+      // Meetings (WebEx 11)
+      card = HelpdeskCardsUserService.getMeetingCardForUser({
+        entitlements: ['meetings']
+      });
+      expect(card.entitled).toBeTruthy();
+      expect(card.entitlements.length).toEqual(1);
+      expect(card.entitlements[0]).toEqual('helpdesk.entitlements.meetings');
+    });
+
   });
 
 });
