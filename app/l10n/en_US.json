@@ -3144,6 +3144,7 @@
     "customers": "Customers",
     "badUserSearchInput": "Enter at least three characters. To search by name or email, enter two words, for example John Doe or john.doe.",
     "unexpectedError": "An unexpected error occurred",
+    "cancelled": "Search was cancelled",
     "searchingPleaseWait": "Searching, please wait...",
     "noSearchHits": "No matches found. Try a different search.",
     "roles": "Roles",

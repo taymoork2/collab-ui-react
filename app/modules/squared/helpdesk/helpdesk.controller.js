@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskController(HelpdeskService, $translate, $scope) {
+  function HelpdeskController(HelpdeskService, $translate, $scope, HelpdeskHttpRequestCanceller) {
     $('body').css('background', 'white');
     $scope.$on('$viewContentLoaded', function () {
       if (HelpdeskService.checkIfMobile()) {
@@ -64,6 +64,14 @@
 
     function search() {
       if (!vm.searchString) return;
+      if (HelpdeskHttpRequestCanceller.empty()) {
+        doSearch();
+      } else {
+        HelpdeskHttpRequestCanceller.cancelAll().then(doSearch);
+      }
+    }
+
+    function doSearch() {
       vm.currentSearch.initSearch(vm.searchString);
       var orgFilterId = vm.currentSearch.orgFilter ? vm.currentSearch.orgFilter.id : null;
       searchUsers(vm.searchString, orgFilterId);
@@ -79,6 +87,7 @@
         vm.searchingForUsers = true;
         HelpdeskService.searchUsers(searchString, orgId, searchResultsLimit, null, true).then(function (res) {
           vm.currentSearch.userSearchResults = res;
+          vm.currentSearch.userSearchFailure = null;
           vm.searchingForUsers = false;
           HelpdeskService.findAndResolveOrgsForUserResults(
             vm.currentSearch.userSearchResults,
@@ -87,8 +96,10 @@
         }, function (err) {
           vm.searchingForUsers = false;
           vm.currentSearch.userSearchResults = null;
-          if (err.status === 400 || err.status === -1) {
+          if (err.status === 400) {
             vm.currentSearch.userSearchFailure = $translate.instant('helpdesk.badUserSearchInput');
+          } else if (err.cancelled === true || err.timedout === true) {
+            vm.currentSearch.userSearchFailure = $translate.instant('helpdesk.cancelled');
           } else {
             vm.currentSearch.userSearchFailure = $translate.instant('helpdesk.unexpectedError');
           }
@@ -104,10 +115,19 @@
         HelpdeskService.searchOrgs(searchString, searchResultsLimit).then(function (res) {
           vm.currentSearch.orgSearchResults = res;
           vm.searchingForOrgs = false;
-        }, function (err) {
+          vm.currentSearch.orgSearchFailure = null;
+
+        }, function (err, status) {
           vm.searchingForOrgs = false;
           vm.currentSearch.orgSearchResults = null;
-          vm.currentSearch.orgSearchFailure = $translate.instant('helpdesk.unexpectedError');
+          vm.currentSearch.orgSearchFailure = null;
+          if (err.status === 400) {
+            vm.currentSearch.orgSearchFailure = $translate.instant('helpdesk.badOrgSearchInput');
+          } else if (err.cancelled === true || err.timedout === true) {
+            vm.currentSearch.orgSearchFailure = $translate.instant('helpdesk.cancelled');
+          } else {
+            vm.currentSearch.orgSearchFailure = $translate.instant('helpdesk.unexpectedError');
+          }
         });
       } else {
         vm.currentSearch.orgSearchFailure = $translate.instant('helpdesk.badOrgSearchInput');
@@ -128,9 +148,18 @@
     }
 
     function initSearchWithOrgFilter(org) {
-      vm.searchString = '';
-      vm.currentSearch.clear();
-      vm.currentSearch.orgFilter = org;
+      if (HelpdeskHttpRequestCanceller.empty()) {
+        vm.searchString = '';
+        vm.currentSearch.clear();
+        vm.currentSearch.orgFilter = org;
+      } else {
+        HelpdeskHttpRequestCanceller.cancelAll().then(function () {
+          vm.searchString = '';
+          vm.currentSearch.clear();
+          vm.currentSearch.orgFilter = org;
+        });
+      }
+
     }
 
     function initSearchWithoutOrgFilter() {

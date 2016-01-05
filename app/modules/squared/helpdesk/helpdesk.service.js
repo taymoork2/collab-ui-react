@@ -2,7 +2,7 @@
   'use strict';
 
   /*ngInject*/
-  function HelpdeskService(ServiceDescriptor, $location, $http, Config, $q, HelpdeskMockData, CsdmConfigService, CsdmConverter, CacheFactory,
+  function HelpdeskService(ServiceDescriptor, $location, $http, Config, $q, HelpdeskHttpRequestCanceller, HelpdeskMockData, CsdmConfigService, CsdmConverter, CacheFactory,
     $translate, $timeout) {
     var urlBase = Config.getAdminServiceUrl(); //"http://localhost:8080/admin/api/v1/"
     var orgCache = CacheFactory.get('helpdeskOrgCache');
@@ -104,28 +104,48 @@
       if (useMock()) {
         return deferredResolve(HelpdeskMockData.users);
       }
-      var deferred = $q.defer();
       var config = {
-        timeout: deferred.promise
+        timeout: HelpdeskHttpRequestCanceller.newCancelableTimeout()
       };
-      $timeout(function () {
-        deferred.resolve();
-      }, searchTimeout);
 
       return $http
         .get(urlBase + 'helpdesk/search/users?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit + (orgId ? '&orgId=' +
             encodeURIComponent(orgId) : (includeUnlicensed ? '&includeUnlicensed=true' : '')) + (role ? '&role=' + encodeURIComponent(role) : ''),
           config)
-        .then(extractUsers);
+        .then(extractUsers)
+        .catch(function (error) {
+          if (error.config.timeout.cancelled) {
+            error.cancelled = true;
+            error.timedout = false;
+          } else if (error.config.timeout.timedout) {
+            error.timedout = true;
+            error.cancelled = false;
+          }
+          return $q.reject(error);
+        });
     }
 
     function searchOrgs(searchString, limit) {
       if (useMock()) {
         return deferredResolve(HelpdeskMockData.orgs);
       }
+      var config = {
+        timeout: HelpdeskHttpRequestCanceller.newCancelableTimeout()
+      };
       return $http
-        .get(urlBase + 'helpdesk/search/organizations?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit)
-        .then(extractItems);
+        .get(urlBase + 'helpdesk/search/organizations?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit,
+          config)
+        .then(extractItems)
+        .catch(function (error) {
+          if (error.config.timeout.cancelled) {
+            error.cancelled = true;
+            error.timedout = false;
+          } else if (error.config.timeout.timedout) {
+            error.timedout = true;
+            error.cancelled = false;
+          }
+          return $q.reject(error);
+        });
     }
 
     function getUser(orgId, userId) {
