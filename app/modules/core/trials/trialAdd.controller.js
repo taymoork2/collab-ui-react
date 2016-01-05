@@ -105,7 +105,7 @@
       expressionProperties: {
         'templateOptions.label': function () {
           return FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
-            return result ? $translate.instant('trials.message') : $translate.instant('trials.collab');
+            return result ? $translate.instant('trials.messageAndMeeting') : $translate.instant('trials.collab');
           });
         },
         'templateOptions.disabled': function () {
