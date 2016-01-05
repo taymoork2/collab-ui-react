@@ -48,7 +48,7 @@
       },
       refresh: {
         method: 'GET',
-        cache:false
+        cache: false
       }
     });
 
@@ -75,8 +75,8 @@
       return getFeature(false, id, feature);
     }
 
-    function getFeaturesForOrg(id,clearCache) {
-      return getFeatures(false, id,clearCache);
+    function getFeaturesForOrg(id, clearCache) {
+      return getFeatures(false, id, clearCache);
     }
 
     function getUrl(isUser) {
@@ -88,11 +88,13 @@
         return $q.reject('id is undefined');
       }
       clearCache = clearCache || false;
-      var info = {id:id};
+      var info = {
+        id: id
+      };
       var url = getUrl(isUser);
 
       var response;
-      if(!isUser && clearCache){
+      if (!isUser && clearCache) {
         response = url.refresh(info);
       } else {
         response = url.get(info);

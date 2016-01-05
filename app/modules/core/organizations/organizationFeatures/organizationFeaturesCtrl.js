@@ -31,7 +31,7 @@
         };
       }
 
-      FeatureToggleService.getFeaturesForOrg(vm.currentOrganization.id,true)
+      FeatureToggleService.getFeaturesForOrg(vm.currentOrganization.id, true)
         .then(function (result) {
           var stdFeatures = _.map(FeatureToggleService.features, convertToTogglable);
           var dbFeatures = _.map(result.featureToggles, convertToTogglable);
