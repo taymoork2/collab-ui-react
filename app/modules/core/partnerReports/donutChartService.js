@@ -80,7 +80,23 @@
         "allLabels": createLabels,
         "dataProvider": createDisplayData,
         "labelsEnabled": labelsEnabled,
-        "startDuration": 0
+        "startDuration": 0,
+        "export": {
+          "enabled": true,
+          "libs": {
+            "autoLoad": false
+          },
+          "menu": [{
+            "class": "export-main",
+            "label": $translate.instant('reportsPage.downloadOptions'),
+            "menu": [{
+              "label": $translate.instant('reportsPage.saveAs'),
+              "title": $translate.instant('reportsPage.saveAs'),
+              "class": "export-list",
+              "menu": ["PNG", "JPG", "PDF"]
+            }, 'PRINT']
+          }]
+        }
       });
     }
 
