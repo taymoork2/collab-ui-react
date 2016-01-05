@@ -10,7 +10,7 @@
 /* global deleteTrialUtils */
 /* global LONG_TIMEOUT */
 
-describe('Partner flow', function () {
+xdescribe('Partner flow', function () {
   var orgId;
   var accessToken;
   var appWindow;
