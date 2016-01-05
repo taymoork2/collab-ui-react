@@ -302,25 +302,25 @@
         .get(urlBase + 'helpdesk/webexsites/' + encodeURIComponent(orgId))
         .then(extractItems);
     }
-    
+
     function getHuronDevices(orgId, userId) {
       if (useMock()) {
         return deferredResolve(massageHuronDevices(HelpdeskMockData.huronDevicesForUser));
       }
       return deferredResolve([]); //TODO: When Huron works with help desk role: DeviceService.loadDevices(userId, orgId).then(massageHuronDevices);
     }
-    
+
     function massageHuronDevices(devices) {
       _.each(devices, function (device) {
         device.image = device.model ? 'images/devices/' + (device.model.trim().replace(/ /g, '_') + '.png').toLowerCase() : 'images/devices-hi/unknown.png';
         device.deviceStatus.cssColorClass = device.deviceStatus.status === 'Online' ? 'device-status-green' : 'device-status-red';
         if (!device.deviceStatus.status) {
           device.deviceStatus.status = 'Unknown';
-        }     
+        }
       });
       return devices;
     }
-    
+
     function getHybridStatusesForUser(userId, orgId) {
       if (useMock()) {
         return deferredResolve(HelpdeskMockData.userStatuses);
@@ -350,7 +350,7 @@
       sendVerificationCode: sendVerificationCode,
       filterDevices: filterDevices,
       getHuronDevices: getHuronDevices,
-      getHybridStatusesForUser: getHybridStatusesForUser 
+      getHybridStatusesForUser: getHybridStatusesForUser
     };
   }
 

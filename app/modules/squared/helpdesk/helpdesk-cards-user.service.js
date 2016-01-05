@@ -34,7 +34,7 @@
         meetingCard.entitlements.push('helpdesk.entitlements.squared-syncup.' + paidOrFree);
       }
       if (LicenseService.userIsEntitledTo(user, 'cloudmeetings')) {
-        meetingCard.entitled = true;      
+        meetingCard.entitled = true;
         if (user.licenseID) {
           meetingCard.licensesByWebExSite = _.chain(user.licenseID)
             .map(function (license) {

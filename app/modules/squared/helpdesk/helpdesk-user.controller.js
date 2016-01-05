@@ -72,9 +72,9 @@
           vm.org.displayName = displayName;
         }, XhrNotificationService.notify);
       }
-      
+
       if (LicenseService.userIsEntitledTo(user, Config.entitlements.huron)) {
-        HelpdeskService.getHuronDevices(vm.userId, vm.orgId).then(function (devices) {      
+        HelpdeskService.getHuronDevices(vm.userId, vm.orgId).then(function (devices) {
           vm.huronDevices = devices;
         }, XhrNotificationService.notify);
       }
