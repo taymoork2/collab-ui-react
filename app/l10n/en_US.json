@@ -667,7 +667,8 @@
     "resources": "Resources",
     "download": "Download",
     "quantity": "Qty",
-    "modify": "Modify"
+    "modify": "Modify",
+    "submit": "Submit"
   },
   "notifications": {
     "success": "Success notifications",
@@ -2021,6 +2022,13 @@
     "saveSuccess": "Settings successfully saved.",
     "companyCallerIdsaveError": "Company Caller ID failed to save.",
     "internationalDialingSaveError": "International Dialing failed to save."
+  },
+  "settingsServiceAddress": {
+    "label": "Emergency Service Address",
+    "description": "In the case of an emergency, local emergency response crew would use this address to locate the caller.",
+    "savePrompt": "Save this address?",
+    "saveSuccess": "Emergency Service Address updated successfully.",
+    "saveError": "Error occurred updating Emergency Service Address."
   },
   "didManageModal": {
     "title": "Manage Phone Numbers",
