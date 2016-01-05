@@ -364,7 +364,9 @@
     "unauthorizedError": "User is not authorized to access the customer reports.",
     "webex": "WebEx Reports",
     "devReports": "Development Customer Reports",
-    "sparkReports": "Spark Reports"
+    "sparkReports": "Spark Reports",
+    "downloadOptions": "Download Options",
+    "saveAs": "Save As"
   },
   "activeUsers": {
     "active": "Active",

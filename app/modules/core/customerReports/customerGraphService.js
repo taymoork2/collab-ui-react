@@ -110,10 +110,10 @@
           },
           "menu": [{
             "class": "export-main",
-            "label": "Download Options",
+            "label": $translate.instant('reportsPage.downloadOptions'),
             "menu": [{
-              "label": "Save As",
-              "title": "Save As",
+              "label": $translate.instant('reportsPage.saveAs'),
+              "title": $translate.instant('reportsPage.saveAs'),
               "class": "export-list",
               "menu": ["PNG", "JPG", "PDF"]
             }, 'PRINT']
