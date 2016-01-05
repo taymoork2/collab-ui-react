@@ -3249,7 +3249,7 @@
     "more": "More",
     "usage": "{{usage}} of {{volume}} in use",
     "launchHelpdesk": "Help Desk",
-    "launchHelpdeskDesc": "Open the Help Desk portal in a new tab",
+    "launchHelpdeskDesc": "Open the Help Desk portal in a new tab"
   },
   "activation": {
     "verificationComplete": "Verification Complete",
