@@ -451,9 +451,9 @@
           promise = deferred.promise;
         } else {
           var siteName = obj.getSiteName(siteUrl);
-          $log.log('Logout from WebEx site ' + siteName);
 
           var logoutUrl = "https://" + $rootScope.nginxHost + "/wbxadmin/clearcookie.do?proxyfrom=atlas&siteurl=" + siteName;
+          $log.log('Logout from WebEx site ' + siteName + ", " + logoutUrl);
 
           var jqpromise = $.ajax({
             type: 'POST',
