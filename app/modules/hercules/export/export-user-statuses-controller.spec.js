@@ -47,16 +47,14 @@ describe('ExportUserStatusesController', function () {
       },
       getStatuses: function () {
         return $q.when({
-          data: {
-            userStatuses: [{
-              userId: 'DEADBEEF',
-              orgId: '0FF1CE',
-              connectorId: 'c_cal@aaa',
-              serviceId: 'squared-fusion-uc',
-              entitled: false,
-              state: 'notActivated'
-            }]
-          }
+          userStatuses: [{
+            userId: 'DEADBEEF',
+            orgId: '0FF1CE',
+            connectorId: 'c_cal@aaa',
+            serviceId: 'squared-fusion-uc',
+            entitled: false,
+            state: 'notActivated'
+          }]
         });
       }
     };
