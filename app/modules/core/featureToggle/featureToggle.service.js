@@ -45,6 +45,10 @@
       get: {
         method: 'GET',
         cache: true
+      },
+      refresh: {
+        method: 'GET',
+        cache:false
       }
     });
 
@@ -71,22 +75,30 @@
       return getFeature(false, id, feature);
     }
 
-    function getFeaturesForOrg(id) {
-      return getFeatures(false, id);
+    function getFeaturesForOrg(id,clearCache) {
+      return getFeatures(false, id,clearCache);
     }
 
     function getUrl(isUser) {
       return isUser ? userResource : orgResource;
     }
 
-    function getFeatures(isUser, id) {
+    function getFeatures(isUser, id, clearCache) {
       if (!id) {
         return $q.reject('id is undefined');
       }
+      clearCache = clearCache || false;
+      var info = {id:id};
+      var url = getUrl(isUser);
 
-      return getUrl(isUser).get({
-        id: id
-      }).$promise.then(function (response) {
+      var response;
+      if(!isUser && clearCache){
+        response = url.refresh(info);
+      } else {
+        response = url.get(info);
+      }
+
+      return response.$promise.then(function (response) {
         if (isUser) {
           _.forEach(response.developer, fixVal);
           _.forEach(response.entitlement, fixVal);
@@ -167,18 +179,10 @@
         } else if (angular.isDefined(toggles[feature])) {
           resolve(toggles[feature]);
         } else {
-          var orgId = Authinfo.getOrgId();
-
           Userservice.getUser('me', function (data, status) {
             var userId = data.id;
             getFeatureForUser(userId, feature).then(function (userResult) {
-              if (!userResult) {
-                getFeatureForOrg(orgId, feature).then(function (orgResult) {
-                  resolve(orgResult);
-                });
-              } else {
-                resolve(userResult);
-              }
+              resolve(userResult);
             });
           });
         }
