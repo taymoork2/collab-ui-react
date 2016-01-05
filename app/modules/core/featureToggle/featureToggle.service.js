@@ -9,7 +9,7 @@
   /* @ngInject */
   function FeatureToggleService($resource, $q, Config, Authinfo, Orgservice, Userservice, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService) {
     var features = {
-      pstnSetup: 'pstnSetup',
+      pstnSetup: 'huron-pstn-setup',
       csvUpload: 'csvUpload',
       dirSync: 'dirSync',
       atlasCloudberryTrials: 'atlas-cloudberry-trials',
@@ -166,9 +166,7 @@
     function supports(feature) {
       return $q(function (resolve, reject) {
         //TODO temporary hardcoded checks for huron
-        if (feature === features.pstnSetup) {
-          return resolve(Authinfo.getOrgId() === '666a7b2f-f82e-4582-9672-7f22829e728d' || Authinfo.getOrgId() === 'a28c73de-8ebe-46b1-867a-a4d8bdac8c3f');
-        } else if (feature === features.csvUpload) {
+        if (feature === features.csvUpload) {
           resolve(true);
         } else if (feature === features.dirSync) {
           supportsDirSync().then(function (enabled) {
@@ -180,13 +178,17 @@
           resolve(toggles[feature]);
         } else {
           Userservice.getUser('me', function (data, status) {
-            getFeatureForUser(data.id, feature).then(function (result) {
-              if (!result) {
-                resolve(getHuronToggle(false, Authinfo.getOrgId(), feature));
-              } else {
-                resolve(result);
-              }
-            });
+            getFeatureForUser(data.id, feature)
+              .then(function (result) {
+                if (!result) {
+                  return getHuronToggle(false, Authinfo.getOrgId(), feature);
+                } else {
+                  return result;
+                }
+              }).then(function (toggleValue) {
+                toggles[feature] = toggleValue;
+                resolve(toggleValue);
+              });
           });
         }
       });
