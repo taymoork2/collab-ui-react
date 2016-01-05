@@ -33,17 +33,24 @@
 
         //helpdesk.service.js and modified to concatenate call services.
         card.filterRelevantServices = function (services) {
-          var callServices = _.filter(services, function (service) {return service.id === 'squared-fusion-uc' || service.id === 'squared-fusion-ec'; });
-          var filteredServices = _.filter(services, function (service) {return service.id === 'squared-fusion-cal' || service.id === 'squared-fusion-mgmt';});
+          var callServices = _.filter(services, function (service) {
+            return service.id === 'squared-fusion-uc' || service.id === 'squared-fusion-ec';
+          });
+          var filteredServices = _.filter(services, function (service) {
+            return service.id === 'squared-fusion-cal' || service.id === 'squared-fusion-mgmt';
+          });
           if (callServices.length > 0) {
             var callService = {
               id: "squared-fusion-uc",
-              enabled: _.all(services, {enabled: true}),
-              status: _.reduce(services, function (result, serv) {return card.serviceStatusWeight[serv.status] > card.serviceStatusWeight[result] ? serv.status : result;}, "ok")
+              enabled: _.all(services, {
+                enabled: true
+              }),
+              status: _.reduce(services, function (result, serv) {
+                return card.serviceStatusWeight[serv.status] > card.serviceStatusWeight[result] ? serv.status : result;
+              }, "ok")
             };
             filteredServices.push(callService);
           }
-
 
           return filteredServices;
         };
@@ -76,7 +83,12 @@
           error: 'danger',
           undefined: 'warning'
         };
-        card.serviceStatusWeight = {ok:1,warn:2,error:3,undefined:0};
+        card.serviceStatusWeight = {
+          ok: 1,
+          warn: 2,
+          error: 3,
+          undefined: 0
+        };
 
         return card;
       }
