@@ -2866,12 +2866,12 @@
     "pageTitle": "Overview",
     "thisMonth": "This month",
     "lastMonth": "Last month:",
-    "contactPartner": "Contact your partner or Cisco Sales for more information",
+    "contactPartner": "Contact your partner or Cisco Sales for more information.",
     "cards": {
       "users": {
         "title": "Users",
         "directorySynchronization": "Directory Synchronisation",
-        "singleSignOn": "Single Sign On",
+        "singleSignOn": "Single Sign-On",
         "convertButton": "Convert",
         "convertText": "Users who may belong to your organisation"
       },
@@ -2897,8 +2897,8 @@
       },
       "hybrid": {
         "title": "Hybrid Services",
-        "notEnabledText": "Hybrid Services allow you to integrate on-premise systems to the Cisco Collaboration Platform.",
-        "notEnabledActionText": "Learn More"
+        "notEnabledText": "Hybrid Services allows you to integrate your on-premises systems with the Cisco Collaboration Platform.",
+        "notEnabledActionText": "Learn More."
       }
     }
   },

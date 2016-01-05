@@ -16,7 +16,7 @@
         card.icon = 'icon-circle-data';
         card.enabled = false;
         card.notEnabledText = 'overview.cards.hybrid.notEnabledText';
-        card.notEnabledAction = '#overview';
+        card.notEnabledAction = 'https://www.cisco.com/go/hybrid-services';
         card.notEnabledActionText = 'overview.cards.hybrid.notEnabledActionText';
         card.helper = OverviewHelper;
 
