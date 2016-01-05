@@ -174,7 +174,7 @@
           supportsDirSync().then(function (enabled) {
             resolve(enabled);
           });
-        } else if (feature === features.atlasCloudberryTrials && Authinfo.getOrgId() === 'c054027f-c5bd-4598-8cd8-07c08163e8cd') {
+        } else if (feature === features.atlasCloudberryTrials) {
           resolve(true);
         } else if (feature === features.huronClassOfService && Authinfo.getOrgId() === 'bdeda0ba-b761-4f52-831a-2c20c41714f1') {
           resolve(true);
@@ -182,9 +182,12 @@
           resolve(toggles[feature]);
         } else {
           Userservice.getUser('me', function (data, status) {
-            var userId = data.id;
-            getFeatureForUser(userId, feature).then(function (userResult) {
-              resolve(userResult);
+            getFeatureForUser(data.id, feature).then(function (result) {
+              if (!result) {
+                resolve(getHuronToggle(false, Authinfo.getOrgId(), feature));
+              } else {
+                resolve(result);
+              }
             });
           });
         }
