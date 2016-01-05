@@ -1,9 +1,4 @@
 'use strict';
-/*jshint loopfunc: true */
-
-/* global describe */
-/* global it */
-/* global browser */
 
 // commenting out until backend is fixed
 xdescribe('Org Entitlement flow', function () {

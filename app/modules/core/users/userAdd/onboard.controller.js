@@ -1800,7 +1800,6 @@ angular.module('Core')
         }
 
         function callback(data, status) {
-          /*jshint validthis:true */
           var params = this;
           if (data.success) {
             if (angular.isArray(data.userResponse)) {

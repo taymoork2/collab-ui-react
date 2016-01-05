@@ -1,9 +1,5 @@
 'use strict';
 
-// Allow //console.log in this file only
-// jshint devel:true
-// jshint undef:false
-
 /**
  * Disable logging by appending ?disableLogging=true *after* the hash fragment.
  */

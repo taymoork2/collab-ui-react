@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function UserOverviewCtrl($scope, $stateParams, $translate, $http, Authinfo, Config, Utils, FeatureToggleService, Userservice) {
-    /*jshint validthis: true */
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;

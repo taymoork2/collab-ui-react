@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function CustomerOverviewCtrl($stateParams, $state, $window, $translate, $log, $http, identityCustomer, Config, Userservice, Authinfo, AccountOrgService, BrandService, FeatureToggleService) {
-    /*jshint validthis: true */
     var vm = this;
     var customerOrgId = $stateParams.currentCustomer.customerOrgId;
 

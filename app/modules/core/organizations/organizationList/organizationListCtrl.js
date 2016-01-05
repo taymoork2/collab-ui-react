@@ -1,5 +1,4 @@
 'use strict';
-/* global $ */
 
 angular.module('Core')
   .controller('ListOrganizationsCtrl', ['$scope', '$rootScope', '$state', '$dialogs', '$timeout', '$translate', 'Log', 'Config', 'Orgservice',
