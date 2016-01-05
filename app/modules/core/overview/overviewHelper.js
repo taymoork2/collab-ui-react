@@ -18,6 +18,15 @@
         }
 
         var statusIds = {
+          //Spark
+          SparkMessage: '4z5sdybd2jxy',
+          SparkCall: 'gfg7cvjszyw0',
+          CCMAdministration: '7v9ds0q2zfsy',
+          SparkHybridServices: 'f8tnkxbzs12q',
+          DeveloperApi: 'vn0b18kjj7nf',
+          SparkAccount: 'kq245y682023',
+
+          //old broken spark
           AdministrationPortal: 'j76kyrpvqt0z',
           ExternalNetworks: 'qlnmz8l9gpj1',
           HelpAndFeedback: 'f9l0kdsmtxdh',
