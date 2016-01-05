@@ -1,17 +1,11 @@
 #!/bin/bash
 
+source ./bin/include/setup-helpers
+
 # Check NPM local path
-function set_local_npm_path {
-    export PATH="$PATH:./node_modules/.bin"
-    echo "export PATH=\"\$PATH:./node_modules/.bin\"" >> ~/.bashrc
-}
 echo "$PATH" | grep -q './node_modules/.bin' && echo "Local NPM path is set" || set_local_npm_path
 
 # Check NPM global path
-function set_global_npm_path {
-    export PATH="$PATH:/usr/local/bin"
-    echo "export PATH=\"\$PATH:/usr/local/bin\"" >> ~/.bashrc
-}
 echo "$PATH" | grep -q '/usr/local/bin' && echo "Global NPM path is set" || set_global_npm_path
 
 # Check if rvm is installed, otherwise install it
@@ -90,6 +84,7 @@ time_start=$(date +"%s")
 COMMIT_ID=`git log -n1 --pretty=format:'%h'`
 npm install
 npm shrinkwrap --dev && mv npm-shrinkwrap.json ./.cache/npm-shrinkwrap-for-${COMMIT_ID}.json
+rm_all_but_last 1 ./.cache/npm-shrinkwrap-for-*.json
 npm update -g bower
 
 time_npm=$(date +"%s")

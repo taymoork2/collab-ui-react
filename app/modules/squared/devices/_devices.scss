@@ -70,6 +70,17 @@
   }
 }
 
+.device-img {
+  img {
+    border-radius: 50%;
+    overflow: hidden;
+  }
+
+  i {
+    top: 15px;
+  }
+}
+
 .modal-success, .modal-warning {
   padding: 10px 20px;
   margin: 0 30px;

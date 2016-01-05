@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # import helper functions
-source ./bin/pid-helpers
+source ./bin/include/pid-helpers
 
 # -----
 # Phase 1: Pre-setup
@@ -19,7 +19,7 @@ mkdir -p ./.cache
 
 # -----
 # Phase 2: Setup
-source ./bin/setup-helpers
+source ./bin/include/setup-helpers
 
 # ex.
 echo "Inspecting checksums of $manifest_files from last successful build... "

@@ -1,3 +1,8 @@
+# early out if this file has already been sourced
+if type set_local_npm_path >/dev/null 2>&1; then
+    return
+fi
+
 last_refreshed_file=".last-refreshed"
 manifest_checksums_file=".manifest-checksums"
 manifest_files="package.json bower.json config/tsd.json"
@@ -60,4 +65,21 @@ function dirs_exist {
         fi
     done
     return 0
+}
+
+function set_local_npm_path {
+    export PATH="$PATH:./node_modules/.bin"
+    echo "export PATH=\"\$PATH:./node_modules/.bin\"" >> ~/.bashrc
+}
+
+function set_global_npm_path {
+    export PATH="$PATH:/usr/local/bin"
+    echo "export PATH=\"\$PATH:/usr/local/bin\"" >> ~/.bashrc
+}
+
+# clean up all files, but leave most recently modified <num_to_leave> files
+# usage: rm_all_but_last <num_to_leave> <file_glob>
+function rm_all_but_last {
+    local count=${1} && shift
+    echo $@ | xargs ls -t | awk "NR>${count}" | sed -e 's/.*/"&"/g' | xargs rm
 }
