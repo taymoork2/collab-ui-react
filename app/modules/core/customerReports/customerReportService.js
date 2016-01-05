@@ -527,7 +527,6 @@
       var callMetricsUrl = urlBase + detailed + callMetrics + getAltQuery(filter);
 
       return getService(callMetricsUrl, metricsCancelPromise).success(function (response, status) {
-        window.console.log(response.data);
         return {
           audio: [],
           video: []

@@ -271,7 +271,6 @@
 
     function setCallMetricsData() {
       CustomerReportService.getCallMetricsData(vm.timeSelected).then(function (response) {
-        window.console.log(response);
         if (response === ABORT) {
           return;
         } else if (response.length === 0) {
