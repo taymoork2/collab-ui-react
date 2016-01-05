@@ -1,5 +1,7 @@
 'use strict';
 
+/* eslint no-console:0 */
+
 /**
  * Disable logging by appending ?disableLogging=true *after* the hash fragment.
  */
