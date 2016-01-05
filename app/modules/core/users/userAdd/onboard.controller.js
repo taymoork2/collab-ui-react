@@ -327,6 +327,7 @@ angular.module('Core')
       $scope.conferenceFeatures = [];
       $scope.communicationFeatures = [];
       $scope.licenses = [];
+      $scope.populateConf = populateConf;
       var convertSuccess = [];
       var convertFailures = [];
       var convertUsersCount = 0;
@@ -415,29 +416,29 @@ angular.module('Core')
           confNoUrl = _.remove(confNoUrl, undefined);
 
           var confFeatures = _.chain(confs).filter('license.siteUrl')
-          .map(function (conf) {
-            return {
-              siteUrl: conf.license.siteUrl,
-              billing: conf.license.billingServiceId,
-              volume: conf.license.volume,
-              licenseId: conf.license.licenseId,
-              offerName: conf.license.offerName,
-              label: conf.label,
-              confModel: false
-            };
-          }).value();
+            .map(function (conf) {
+              return {
+                siteUrl: conf.license.siteUrl,
+                billing: conf.license.billingServiceId,
+                volume: conf.license.volume,
+                licenseId: conf.license.licenseId,
+                offerName: conf.license.offerName,
+                label: conf.label,
+                confModel: false
+              };
+            }).value();
 
           var cmrFeatures = _.chain(cmrs).filter('license.siteUrl')
-          .map(function (cmr) {
-            return {
-              siteUrl: cmr.license.siteUrl,
-              billing: cmr.license.billingServiceId,
-              volume: cmr.license.volume,
-              licenseId: cmr.license.licenseId,
-              label: cmr.label,
-              cmrModel: false
-            };
-          }).value();
+            .map(function (cmr) {
+              return {
+                siteUrl: cmr.license.siteUrl,
+                billing: cmr.license.billingServiceId,
+                volume: cmr.license.volume,
+                licenseId: cmr.license.licenseId,
+                label: cmr.label,
+                cmrModel: false
+              };
+            }).value();
 
           var siteUrls = _.map(confFeatures, function (lic) {
             return lic.siteUrl;

@@ -245,6 +245,41 @@ describe('OnboardCtrl: Ctrl', function () {
     });
   });
 
+  describe('With Assigning Users', function () {
+    beforeEach(function () {
+      $scope.allLicenses = [{
+        billing: 'testOrg1',
+        confModel: false,
+        label: 'test org',
+        licenseId: 'testABC',
+        offerName: 'CS',
+        siteUrl: 'testOrg1@webex.com',
+        volume: 100
+      }, {
+        billing: 'testOrg2',
+        confModel: false,
+        label: 'test org',
+        licenseId: 'testDEF',
+        offerName: 'CS',
+        siteUrl: 'testOrg2@webex.com',
+        volume: 100
+      }];
+    });
+    it('should initialize allLicenses correctly', function () {
+      $scope.populateConf();
+      expect($scope.allLicenses[0].confModel).toEqual(false);
+      expect($scope.allLicenses[0].label).toEqual('test org');
+      expect($scope.allLicenses[1].billing).toEqual('testOrg2');
+      expect($scope.allLicenses[1].offerName).toEqual('CS');
+    });
+    it('should verify userLicenseIds and licenseId are the same', function () {
+      var userLicenseIds ='testABC';
+      $scope.populateConf();   
+      expect($scope.allLicenses[0].licenseId).toEqual(userLicenseIds);
+      expect($scope.allLicenses[1].licenseId).not.toEqual(userLicenseIds);
+    });
+  });
+
   describe('UserAdd DID and DN assignment', function () {
     beforeEach(function () {
       $scope.usrlist = [{
