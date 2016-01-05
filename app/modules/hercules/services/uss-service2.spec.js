@@ -270,10 +270,10 @@ describe('Service: USSService2', function () {
             connectorId: 'c_cal@0A5E3DE8',
             description: {
               key: 'c_cal.DiscoveryScoreException',
-              defaultMessage: 'Failed to get score for the user:  MailServer Error:  User folder bind error'},
-              clusterId: 'f61e9340-928e-11e5-9965-005056b12db1'
-            }
-          ]
+              defaultMessage: 'Failed to get score for the user:  MailServer Error:  User folder bind error'
+            },
+            clusterId: 'f61e9340-928e-11e5-9965-005056b12db1'
+          }]
         });
 
       USSService2.getStatuses('squared-fusion-cal', null, 100)
@@ -281,7 +281,7 @@ describe('Service: USSService2', function () {
           expect(response.userStatuses.length).toEqual(2);
         });
       $httpBackend.flush();
-    })
+    });
   });
 
   describe('subscribeStatusesSummary', function () {
