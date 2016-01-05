@@ -7,7 +7,7 @@
 
   /* @ngInject */
   function AABuilderNumbersCtrl($scope, $q, $stateParams, AAUiModelService, AutoAttendantCeInfoModelService, AANumberAssignmentService,
-    AAModelService, ExternalNumberPoolService, InternalNumberPoolService, Authinfo, Notification, $translate, telephoneNumberFilter) {
+    AAModelService, ExternalNumberPoolService, InternalNumberPoolService, Authinfo, Notification, $translate, telephoneNumberFilter, TelephoneNumberService) {
     var vm = this;
 
     vm.addNumber = addNumber;
@@ -128,6 +128,20 @@
 
       resources.push(resource);
 
+      // find first e164 number, move to array[0] if not already there
+      _.find(resources, function (resource) {
+        if (TelephoneNumberService.validateDID(resource.number)) {
+          var index = _.indexOf(resources, resource);
+
+          // if e164 number is already the 0th element, all done
+
+          if (index >= 1) {
+            resources.splice(0, 0, _.pullAt(resources, index)[0]);
+          }
+          return resource;
+        }
+      });
+
       // Assign the number in CMI
       saveAANumberAssignments(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources).then(
 
@@ -141,7 +155,7 @@
             status: response.status
           });
 
-          resources.pop();
+          _.pull(resources, resource);
 
         });
 
