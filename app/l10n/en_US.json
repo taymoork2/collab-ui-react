@@ -943,6 +943,14 @@
       "goToHost": "Go to Host",
       "remove": "Remove"
     },
+    "export": {
+      "modalTitle": "User Status Report",
+      "modalText1": "The exported report will be a comma separated list of users, their state, and related details.",
+      "modalText2": "Select the type of information that you want included in the report:",
+      "modalNote": "Note: The more users included, the longer the report takes to generate.",
+      "modalCTA": "Export to CSV",
+      "csvFilename": "user_status_report.csv"
+    },
     "overview": {
       "activated": "{{number}} activated",
       "pending": "{{number}} pending",
