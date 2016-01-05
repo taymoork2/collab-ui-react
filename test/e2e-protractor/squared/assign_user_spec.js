@@ -43,13 +43,12 @@ describe('Squared Invite User and Assign Services User Flow', function () {
       utils.expectIsNotDisplayed(wizard.wizard);
     });
 
-    //it('should show invite pending status on new user', function () {
-    //  utils.searchForSingleResult(inviteEmail);
-    //  utils.expectText(users.userListStatus, 'Invite Pending');
-    //});
+    it('should show invite pending status on new user', function () {
+      utils.searchForSingleAndClick(inviteEmail);
+      utils.expectTextToBeSet(users.userListSelStatus, 'Invite Pending');
+    });
 
     it('expect edit services is showing', function () {
-      utils.clickUser(inviteEmail);
       utils.click(users.servicesActionButton);
       utils.click(users.editServicesButton);
     });

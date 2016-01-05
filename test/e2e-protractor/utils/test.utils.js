@@ -11,7 +11,7 @@ var fs = require('fs');
 
 exports.getDateTimeString = function () {
   var now = new Date();
-  var year = now.getFullYear();
+  var year = now.getYear() - 100;
   var month = now.getMonth() + 1;
   var day = now.getDate();
   var hour = now.getHours();
@@ -32,7 +32,7 @@ exports.getDateTimeString = function () {
   if (second.toString().length == 1) {
     var second = '0' + second;
   }
-  var dateTime = year + '_' + month + '_' + day + '_' + hour + '_' + minute + '_' + second;
+  var dateTime = year.toString() + month.toString() + day.toString() + '_' + hour.toString() + minute.toString() + second.toString();
   return dateTime;
 };
 
@@ -52,7 +52,7 @@ exports.searchField = element(by.id('searchFilter'));
 exports.searchbox = element(by.css('.searchbox'));
 
 exports.randomId = function () {
-  return (Math.random() + 1).toString(36).slice(2, 11);
+  return (Math.random() + 1).toString(36).slice(2, 7);
 };
 
 exports.randomDid = function () {
@@ -518,7 +518,7 @@ exports.search = function (query) {
 
   function waitSpinner() {
     utils.expectIsNotDisplayed(spinner);
-    utils.expectIsDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', query)));
+    utils.expectIsDisplayed(element.all(by.cssContainingText('.ngGrid .ngRow span', query)).first());
   }
 
   this.click(this.searchbox);
@@ -543,18 +543,11 @@ exports.searchForSingleResult = function (query) {
   }
   this.search(query);
   browser.wait(logAndWait, TIMEOUT, 'Waiting for a single search result');
-  return this.expectIsDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', query)));
-}
-
-//TODO replace original search and click functionality with single result?
-exports.searchAndClickSingleResult = function (query) {
-  return this.searchForSingleResult(query).then(function () {
-    return exports.clickUser(query);
-  });
+  return this.expectIsDisplayed(element.all(by.cssContainingText('.ngGrid .ngRow span', query)).first());
 }
 
 exports.clickUser = function (query) {
-  return this.click(element(by.cssContainingText('.ngGrid .ngRow span', query)));
+  return this.click(element.all(by.cssContainingText('.ngGrid .ngRow span', query)).first());
 };
 
 exports.searchAndClick = function (query) {
@@ -568,7 +561,7 @@ exports.searchForSingleAndClick = function (query) {
 };
 
 exports.expectRowIsNotDisplayed = function (text) {
-  this.expectIsNotDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', text)));
+  this.expectIsNotDisplayed(element.all(by.cssContainingText('.ngGrid .ngRow span', text)).first());
 };
 
 exports.dumpConsoleErrors = function () {

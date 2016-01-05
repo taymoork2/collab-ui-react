@@ -23,7 +23,7 @@ var UsersPage = function () {
     password: 'C1sc0123!',
   };
 
-  this.servicesPanel = element(by.cssContainingText('.section-title-row', 'Services'));
+  this.servicesPanel = element.all(by.cssContainingText('.section-title-row', 'Services')).first();
   this.servicesActionButton = this.servicesPanel.element(by.css('button.actions-button'));
   this.editServicesButton = element(by.cssContainingText('a', 'Edit services'));
   this.editServicesModal = element(by.css('.edit-services'));
@@ -44,7 +44,7 @@ var UsersPage = function () {
   this.rolesPanel = element(by.id('roles-panel'));
   this.closeRolesPanel = element(by.id('close-roles'));
   this.closeSidePanel = element(by.css('.panel-close'));
-  this.messagingService = element(by.css('#Messaging .feature-arrow'));
+  this.messagingService = element.all(by.css('#Messaging .feature-arrow')).first();
   this.communicationsService = element(by.css('#Communications .feature-arrow'));
   this.conferencingService = element(by.css('#Conferencing .feature-arrow'));
   this.contactCenterService = element(by.css('#ContactCenter .feature-arrow'));
@@ -117,6 +117,8 @@ var UsersPage = function () {
   this.iconSearch = element(by.id('icon-search'));
   this.userListEnts = element.all(by.binding('userName'));
   this.userListStatus = element.all(by.binding('userStatus'));
+  this.userListSelStatus = element.all(by.css('.col5')).last().element(by.tagName('span'));
+  //.(by.css('.ngCellText .col5')).first().element(by.tagName('span'));
   this.userListDisplayName = element.all(by.binding('displayName'));
   this.userListAction = element(by.id('actionsButton'));
   this.actionDropdown = element(by.css('.dropdown-menu'));
