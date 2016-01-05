@@ -85,7 +85,7 @@ describe('Partner flow', function () {
       utils.clickEscape();
     }, LONG_TIMEOUT);
 
-    it('should find new trial', function (done) {
+    xit('should find new trial', function (done) {
       utils.click(partner.trialFilter);
       utils.expectIsDisplayed(partner.newTrialRow);
 
