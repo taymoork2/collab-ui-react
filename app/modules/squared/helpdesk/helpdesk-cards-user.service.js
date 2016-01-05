@@ -32,6 +32,9 @@
         meetingCard.entitled = true;
         var paidOrFree = LicenseService.userIsLicensedFor(user, Config.offerCodes.CF) ? 'paid' : 'free';
         meetingCard.entitlements.push('helpdesk.entitlements.squared-syncup.' + paidOrFree);
+      }
+      if (LicenseService.userIsEntitledTo(user, 'cloudmeetings')) {
+        meetingCard.entitled = true;      
         if (user.licenseID) {
           meetingCard.licensesByWebExSite = _.chain(user.licenseID)
             .map(function (license) {
