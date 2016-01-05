@@ -87,9 +87,13 @@
       return getUrl(isUser).get({
         id: id
       }).$promise.then(function (response) {
-        _.forEach(response.developer, fixVal);
-        _.forEach(response.entitlement, fixVal);
-        _.forEach(response.user, fixVal);
+        if (isUser) {
+          _.forEach(response.developer, fixVal);
+          _.forEach(response.entitlement, fixVal);
+          _.forEach(response.user, fixVal);
+        } else {
+          _.forEach(response.featureToggles, fixVal);
+        }
         return response;
       });
     }

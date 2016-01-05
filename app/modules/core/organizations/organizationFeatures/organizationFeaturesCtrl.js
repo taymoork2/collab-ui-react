@@ -26,7 +26,7 @@
       // TODO complete once the feature toggle api is smoothened out
       FeatureToggleService.getFeaturesForOrg(vm.currentOrganization.id)
         .then(function (result) {
-          vm.defaults = _.map(result.data.featureToggles, function (value) {
+          vm.defaults = _.map(result.featureToggles, function (value) {
             return {
               toggleId: value.key,
               name: value.key,
@@ -52,7 +52,7 @@
       var successfulToggles = 0;
       _.map(changedToggles, function (toggle) {
         // The toggle service API only accepts one toggle at a time
-        FeatureToggleService.setFeatureToggle(false, vm.currentOrganization.id, toggle.key, toggle.val)
+        FeatureToggleService.setFeatureToggle(false, vm.currentOrganization.id, toggle.name, toggle.model)
           .catch(function () {
             Notification.error('organizationsPage.errorSettingToggle', {
               key: toggle.key
