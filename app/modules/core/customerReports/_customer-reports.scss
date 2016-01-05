@@ -44,7 +44,15 @@
       }
     }
     .amExportButton {
-      top: rem-calc(30);
+      ul, .export-main, .export-list {
+        overflow: visible;
+      }
+      .export-main {
+        padding-bottom: rem-calc(5);
+        ul {
+          padding: 0;
+        }
+      }
     }
     .graph-text {
       font-family: $brand-font-cisco-TT-Regular;
