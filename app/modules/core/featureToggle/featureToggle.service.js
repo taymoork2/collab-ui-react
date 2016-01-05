@@ -45,6 +45,10 @@
       get: {
         method: 'GET',
         cache: true
+      },
+      refresh: {
+        method: 'GET',
+        cache: false
       }
     });
 
@@ -71,22 +75,32 @@
       return getFeature(false, id, feature);
     }
 
-    function getFeaturesForOrg(id) {
-      return getFeatures(false, id);
+    function getFeaturesForOrg(id, clearCache) {
+      return getFeatures(false, id, clearCache);
     }
 
     function getUrl(isUser) {
       return isUser ? userResource : orgResource;
     }
 
-    function getFeatures(isUser, id) {
+    function getFeatures(isUser, id, clearCache) {
       if (!id) {
         return $q.reject('id is undefined');
       }
-
-      return getUrl(isUser).get({
+      clearCache = clearCache || false;
+      var info = {
         id: id
-      }).$promise.then(function (response) {
+      };
+      var url = getUrl(isUser);
+
+      var response;
+      if (!isUser && clearCache) {
+        response = url.refresh(info);
+      } else {
+        response = url.get(info);
+      }
+
+      return response.$promise.then(function (response) {
         if (isUser) {
           _.forEach(response.developer, fixVal);
           _.forEach(response.entitlement, fixVal);
@@ -160,24 +174,19 @@
           supportsDirSync().then(function (enabled) {
             resolve(enabled);
           });
-        } else if (feature === features.atlasCloudberryTrials && Authinfo.getOrgId() === 'c054027f-c5bd-4598-8cd8-07c08163e8cd') {
+        } else if (feature === features.atlasCloudberryTrials) {
           resolve(true);
         } else if (feature === features.huronClassOfService && Authinfo.getOrgId() === 'bdeda0ba-b761-4f52-831a-2c20c41714f1') {
           resolve(true);
         } else if (angular.isDefined(toggles[feature])) {
           resolve(toggles[feature]);
         } else {
-          var orgId = Authinfo.getOrgId();
-
           Userservice.getUser('me', function (data, status) {
-            var userId = data.id;
-            getFeatureForUser(userId, feature).then(function (userResult) {
-              if (!userResult) {
-                getFeatureForOrg(orgId, feature).then(function (orgResult) {
-                  resolve(orgResult);
-                });
+            getFeatureForUser(data.id, feature).then(function (result) {
+              if (!result) {
+                resolve(getHuronToggle(false, Authinfo.getOrgId(), feature));
               } else {
-                resolve(userResult);
+                resolve(result);
               }
             });
           });
