@@ -10,7 +10,7 @@
 /* global deleteTrialUtils */
 /* global LONG_TIMEOUT */
 
-describe('Partner flow', function () {
+xdescribe('Partner flow', function () {
   var orgId;
   var accessToken;
   var appWindow;
@@ -48,7 +48,7 @@ describe('Partner flow', function () {
     });
   });
 
-  xdescribe('Add Partner Trial', function () {
+  describe('Add Partner Trial', function () {
 
     it('should view all trials', function () {
       navigation.clickCustomers();
