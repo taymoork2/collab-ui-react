@@ -381,8 +381,3 @@ List of All Optional Arguments
 
 * `gulp serve` specific.
 * When running 'gulp serve', use `--safari` to open Safari
-
-Grunt Tasks:
-------------
-
-#### GRUNT HAS BEEN DEPRECIATED FROM THE PROJECT. PLEASE USE GULP INSTEAD.

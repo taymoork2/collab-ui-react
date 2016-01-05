@@ -68,6 +68,23 @@ gulp.task('analyze:jscs', function () {
     .on('error', errorLogger);
 });
 
+// legacy, used but the build task
+gulp.task('jsb', function (done) {
+  runSeq(
+    'jsBeautifier:beautify',
+    'analyze:jshint',
+    done
+  );
+});
+
+gulp.task('jsb:verify', function (done) {
+  runSeq(
+    'jsBeautifier:verify',
+    'analyze:jshint',
+    done
+  );
+});
+
 // Create a visualizer report
 gulp.task('plato', function (done) {
   messageLogger('Analyzing source with Plato');
