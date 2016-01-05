@@ -561,7 +561,7 @@ exports.searchForSingleAndClick = function (query) {
 };
 
 exports.expectRowIsNotDisplayed = function (text) {
-  this.expectIsNotDisplayed(element.all(by.cssContainingText('.ngGrid .ngRow span', text)).first());
+  this.expectIsNotDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', text)));
 };
 
 exports.dumpConsoleErrors = function () {
