@@ -17,7 +17,6 @@
     "sinon": true
   },
   "rules": {
-    "AmCharts": 0,
     "block-scoped-var": 0,
     "brace-style": 0,
     "camelcase": 0,
