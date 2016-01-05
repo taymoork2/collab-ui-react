@@ -491,7 +491,7 @@ exports.search = function (query) {
 
   function waitSpinner() {
     utils.expectIsNotDisplayed(spinner);
-    utils.expectIsDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', query)));
+    utils.expectIsDisplayed(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)));
   }
 
   this.click(this.searchbox);
@@ -516,9 +516,8 @@ exports.searchForSingleResult = function (query) {
   }
   this.search(query);
   browser.wait(logAndWait, TIMEOUT, 'Waiting for a single search result');
-  return this.expectIsDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', query)));
+  return this.expectIsDisplayed(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)));
 }
-
 //TODO replace original search and click functionality with single result?
 exports.searchAndClickSingleResult = function (query) {
   return this.searchForSingleResult(query).then(function () {

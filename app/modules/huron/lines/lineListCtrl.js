@@ -121,11 +121,6 @@
         });
     } // End of function getLineList
 
-    var rowTemplate = '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}" ng-click="showUserDetails(row.entity)">' +
-      '<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }"></div>' +
-      '<div ng-cell></div>' +
-      '</div>';
-
     var gridRowHeight = 44;
 
     vm.gridOptions = {
@@ -133,15 +128,23 @@
       multiSelect: false,
       showFilter: false,
       rowHeight: gridRowHeight,
-      rowTemplate: rowTemplate,
-      headerRowHeight: gridRowHeight,
-      useExternalSorting: false,
       enableRowSelection: false,
-      sortInfo: { // make the sort arrow appear at grid load time
-        fields: ['userId'],
-        directions: ['asc']
+      enableRowHeaderSelection: false,
+      modifierKeysToMultiSelect: false,
+      useExternalSorting: false,
+      enableColumnMenus: false,
+      noUnselect: true,
+      onRegisterApi: function (gridApi) {
+        $scope.gridApi = gridApi;
+        gridApi.infiniteScroll.on.needLoadMoreData($scope, function () {
+          if (vm.load) {
+            vm.currentDataPosition++;
+            vm.load = false;
+            getLineList(vm.currentDataPosition * Config.usersperpage + 1);
+            $scope.gridApi.infiniteScroll.dataLoaded();
+          }
+        });
       },
-
       columnDefs: [{
         field: 'internalNumber',
         displayName: $translate.instant('linesPage.internalNumberHeader'),
@@ -155,18 +158,14 @@
       }, {
         field: 'userId',
         displayName: $translate.instant('linesPage.userEmailHeader'),
-        sortable: true
-
+        sortable: true,
+        sort: {
+          direction: 'asc',
+          priority: 0
+        },
+        sortCellFiltered: true
       }]
     };
-
-    $scope.$on('ngGridEventScroll', function () {
-      if (vm.load) {
-        vm.currentDataPosition++;
-        vm.load = false;
-        getLineList(vm.currentDataPosition * Config.usersperpage + 1);
-      }
-    });
 
     $scope.$on('ngGridEventSorted', function (event, data) {
       // assume event data will always contain sort fields and directions
