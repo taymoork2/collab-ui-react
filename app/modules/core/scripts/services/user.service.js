@@ -179,6 +179,38 @@ angular.module('Core')
             });
         },
 
+        getUserFromEmail: function (email, callback) {
+          $http.get(Config.getAdminServiceUrl() + "digitalriver/nologin/userexists?email=" + email, {
+              cache: false
+            })
+            .success(function (data, status) {
+              data = data || {};
+              data.success = true;
+              callback(data, status);
+            })
+            .error(function (data, status) {
+              data = data || {};
+              data.success = false;
+              data.status = status;
+              callback(data, status);
+            });
+        },
+
+        addDrUser: function (email, password, callback) {
+          $http.post(Config.getAdminServiceUrl() + "digitalriver/nologin/user?email=" + email + "&password=" + password)
+            .success(function (data, status) {
+              data = data || {};
+              data.success = true;
+              callback(data, status);
+            })
+            .error(function (data, status) {
+              data = data || {};
+              data.success = false;
+              data.status = status;
+              callback(data, status);
+            });
+        },
+
         updateUserProfile: function (userid, userData, callback) {
           var scimUrl = Config.getScimUrl(Authinfo.getOrgId()) + '/' + userid;
 
