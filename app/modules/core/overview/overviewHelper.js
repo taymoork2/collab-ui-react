@@ -26,18 +26,6 @@
           DeveloperApi: 'vn0b18kjj7nf',
           SparkAccount: 'kq245y682023',
 
-          //old broken spark
-          AdministrationPortal: 'j76kyrpvqt0z',
-          ExternalNetworks: 'qlnmz8l9gpj1',
-          HelpAndFeedback: 'f9l0kdsmtxdh',
-          MediaCalling: 'bn5g1kfrkn9z',
-          MobileClients: '3jt3mznmj93f',
-          Rooms: 'g2pw271l0wdx',
-          WebAndDesktopClients: 'nnpr95kck99p',
-          CalendarService: 'kwyx8ylxsbvb',
-          CloudHybridServicesManagement: '46zcdvc5cxcd',
-          SparkDeveloperAPI: 'vn0b18kjj7nf',
-
           //huron status ids:
           huronAdministrationPortal: '7wsvlx8l1jrt',
           huronExternalNetworks: 's74l4c9767vr',
