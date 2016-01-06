@@ -1858,6 +1858,7 @@
     "contentSharedTitle": "Files Shared",
     "errGetPhoneNumberCount": "Failed to retrieve phone number count.",
     "invalidTrialLicenseCount": "Number of Licenses should be greater than 0 and less than 1000.",
+    "invalidTrialRoomSystemQuantity": "Number of Licenses should be between 1 and 20.",
     "individualUserServices": "Individual User Services",
     "roomSystems": "Room Systems",
     "roomSystem": "Room System",
@@ -1866,19 +1867,23 @@
   },
   "trialModal": {
     "addTrial": {
-      "title": "Start Trial"
+      "title": "Start New Trial"
     },
     "meeting": {
-      "title": "Setup Trial - Meeting and WebEx",
-      "webexHeader": "WebEx License Type",
-      "webexDetails": "Meeting and WebEx trials enable Enterprise Edition WebEx licenses.",
+      "title": "Start New Trial - Meeting and WebEx Setup",
+      "webexHeader": "Meeting and WebEx License Type",
+      "meetingDetails": "Meeting 25 party",
+      "webexDetails": "WebEx Enterprise Edition with Collaboration Meeting Room",
       "siteUrl": "Site URL",
       "timezone": "Time Zone",
+      "webexSiteUrl": "WebEx Site URL",
+      "webexTimezone": "WebEx Time Zone",
       "default": "Set as default",
-      "timezonePlaceholder": "Select a timezone"
+      "tzDescription": "Select the time zone closest to your customer. This will ensure their WebEx site is deployed in the appropriate data center.",
+      "timezonePlaceholder": "Search for a time zone..."
     },
     "call": {
-      "title": "Setup Trial – Add Devices",
+      "title": "Start New Trial - Ship Devices",
       "selectDevicesHeader": "Select Devices",
       "meetingRoomCamera": "Spark Room System",
       "deskPhones": "Personal and Shared Desk Phones",
@@ -1895,7 +1900,7 @@
       "partner": "Partner"
     },
     "numbers": {
-      "title": "Setup Trial – Add Numbers"
+      "title": "Start New Trial - Add Numbers"
     },
     "trialSuccess": "Your trial is ready.",
     "nextStepPrompt": "Do you want to setup services for the customer?",
