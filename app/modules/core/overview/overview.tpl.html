@@ -12,8 +12,9 @@
           <header>
             <div translate="homePage.notifications" />
           </header>
+
           <section class="monitoring-panel small-3 medium-12 column"
-                   ng-show="true || setupNotDone() || !(overview.isCalendarAcknowledged && overview.isCallAwareAcknowledged && overview.isCallConnectAcknowledged)">
+                   ng-show="setupNotDone() || !(overview.isCalendarAcknowledged && overview.isCallAwareAcknowledged && overview.isCallConnectAcknowledged)">
 
             <div class="notification-style" ng-show="overview.setupNotDone()">
               <span class="badge badge-warning" translate="homePage.todo"></span>
