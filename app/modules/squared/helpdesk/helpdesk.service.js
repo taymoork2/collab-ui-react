@@ -101,52 +101,37 @@
       return $location.absUrl().match(/helpdesk-backend=mock/);
     }
 
-    function searchUsers(searchString, orgId, limit, role, includeUnlicensed) {
-      if (useMock()) {
-        return deferredResolve(HelpdeskMockData.users);
-      }
+    function cancelableHttpGET(url) {
       var config = {
         timeout: HelpdeskHttpRequestCanceller.newCancelableTimeout()
       };
 
       return $http
-        .get(urlBase + 'helpdesk/search/users?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit + (orgId ? '&orgId=' +
-            encodeURIComponent(orgId) : (includeUnlicensed ? '&includeUnlicensed=true' : '')) + (role ? '&role=' + encodeURIComponent(role) : ''),
-          config)
-        .then(extractUsers)
+        .get(url, config)
         .catch(function (error) {
-          if (error.config.timeout.cancelled) {
-            error.cancelled = true;
-            error.timedout = false;
-          } else if (error.config.timeout.timedout) {
-            error.timedout = true;
-            error.cancelled = false;
-          }
+          error.cancelled = error.config.timeout.cancelled;
+          error.timedout = error.config.timeout.timedout;
           return $q.reject(error);
         });
+    }
+
+    function searchUsers(searchString, orgId, limit, role, includeUnlicensed) {
+      if (useMock()) {
+        return deferredResolve(HelpdeskMockData.users);
+      }
+
+      return cancelableHttpGET(urlBase + 'helpdesk/search/users?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit + (orgId ? '&orgId=' +
+          encodeURIComponent(orgId) : (includeUnlicensed ? '&includeUnlicensed=true' : '')) + (role ? '&role=' + encodeURIComponent(role) : ''))
+        .then(extractUsers);
     }
 
     function searchOrgs(searchString, limit) {
       if (useMock()) {
         return deferredResolve(HelpdeskMockData.orgs);
       }
-      var config = {
-        timeout: HelpdeskHttpRequestCanceller.newCancelableTimeout()
-      };
-      return $http
-        .get(urlBase + 'helpdesk/search/organizations?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit,
-          config)
-        .then(extractItems)
-        .catch(function (error) {
-          if (error.config.timeout.cancelled) {
-            error.cancelled = true;
-            error.timedout = false;
-          } else if (error.config.timeout.timedout) {
-            error.timedout = true;
-            error.cancelled = false;
-          }
-          return $q.reject(error);
-        });
+
+      return cancelableHttpGET(urlBase + 'helpdesk/search/organizations?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit)
+        .then(extractItems);
     }
 
     function getUser(orgId, userId) {
@@ -355,6 +340,14 @@
       return deferred.promise;
     }
 
+    function cancelAllRequests() {
+      return HelpdeskHttpRequestCanceller.cancelAll();
+    }
+
+    function noOutstandingRequests() {
+      return HelpdeskHttpRequestCanceller.empty();
+    }
+
     return {
       searchUsers: searchUsers,
       searchOrgs: searchOrgs,
@@ -371,7 +364,9 @@
       sendVerificationCode: sendVerificationCode,
       filterDevices: filterDevices,
       getHuronDevices: getHuronDevices,
-      getHybridStatusesForUser: getHybridStatusesForUser
+      getHybridStatusesForUser: getHybridStatusesForUser,
+      cancelAllRequests: cancelAllRequests,
+      noOutstandingRequests: noOutstandingRequests
     };
   }
 

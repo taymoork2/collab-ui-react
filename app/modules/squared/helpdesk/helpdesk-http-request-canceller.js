@@ -3,10 +3,9 @@
 
   /*ngInject*/
   function HelpdeskHttpRequestCanceller($q, $timeout) {
-    var promiseId = 0;
 
     var cancelPromises = [];
-    var defaultTimeout = 10000;
+    var defaultTimeout = 30000;
 
     function newCancelableTimeout(searchTimeout) {
       searchTimeout = searchTimeout || defaultTimeout;

@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskController(HelpdeskService, $translate, $scope, HelpdeskHttpRequestCanceller) {
+  function HelpdeskController(HelpdeskService, $translate, $scope) {
     $('body').css('background', 'white');
     $scope.$on('$viewContentLoaded', function () {
       if (HelpdeskService.checkIfMobile()) {
@@ -64,10 +64,10 @@
 
     function search() {
       if (!vm.searchString) return;
-      if (HelpdeskHttpRequestCanceller.empty()) {
+      if (HelpdeskService.noOutstandingRequests()) {
         doSearch();
       } else {
-        HelpdeskHttpRequestCanceller.cancelAll().then(doSearch);
+        HelpdeskService.cancelAllRequests().then(doSearch);
       }
     }
 
@@ -148,12 +148,12 @@
     }
 
     function initSearchWithOrgFilter(org) {
-      if (HelpdeskHttpRequestCanceller.empty()) {
+      if (HelpdeskService.noOutstandingRequests()) {
         vm.searchString = '';
         vm.currentSearch.clear();
         vm.currentSearch.orgFilter = org;
       } else {
-        HelpdeskHttpRequestCanceller.cancelAll().then(function () {
+        HelpdeskService.cancelAllRequests().then(function () {
           vm.searchString = '';
           vm.currentSearch.clear();
           vm.currentSearch.orgFilter = org;
