@@ -1,10 +1,5 @@
 'use strict';
 
-/* global isProductionBackend */
-/* global describe */
-/* global it */
-/* global login,navigation,users,utils,notifications, protractor, deleteUtils */
-
 describe('CMR shown under Enterprise Edition', function () {
   //TODO this is specific to integration account, need to fix for prod
   if (isProductionBackend) {

@@ -1,13 +1,4 @@
 'use strict';
-/*jshint loopfunc: true */
-
-/* global describe */
-/* global it */
-/* global browser */
-/* global expect */
-/* global navigation */
-/* global management */
-/* global utils */
 
 xdescribe('List Media Fusion Servers', function () {
   //var searchStr = 'Cloud';

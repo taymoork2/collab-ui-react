@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function PlanReviewCtrl(Authinfo, TrialService, Log, $translate, $scope, FeatureToggleService, Userservice) {
-    /*jshint validthis: true */
     var vm = this;
 
     vm.multiSubscriptions = {

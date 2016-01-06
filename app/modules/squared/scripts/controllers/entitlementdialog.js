@@ -1,7 +1,5 @@
 'use strict';
 
-/* global $ */
-
 angular.module('Squared')
   .controller('entitlementDialogCtrl', ['$scope', '$modalInstance', 'data', '$rootScope',
     function ($scope, $modalInstance, data, $rootScope) {

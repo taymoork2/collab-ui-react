@@ -1004,7 +1004,8 @@ angular.module('Core')
       }
 
       config.roleStates = {
-        Full_Admin: [ // Customer Admin
+        // Customer Admin
+        Full_Admin: [
           'overview',
           'users',
           'user-overview',

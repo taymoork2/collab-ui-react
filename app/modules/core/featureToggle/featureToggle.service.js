@@ -176,8 +176,6 @@
           });
         } else if (feature === features.atlasCloudberryTrials) {
           resolve(true);
-        } else if (feature === features.huronClassOfService && Authinfo.getOrgId() === 'bdeda0ba-b761-4f52-831a-2c20c41714f1') {
-          resolve(true);
         } else if (angular.isDefined(toggles[feature])) {
           resolve(toggles[feature]);
         } else {

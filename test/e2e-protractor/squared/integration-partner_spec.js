@@ -1,12 +1,5 @@
 'use strict';
 
-/* global describe */
-/* global expect */
-/* global partner */
-/* global navigation */
-/* global utils */
-/* global login */
-/* global notifications */
 /* global deleteTrialUtils */
 /* global LONG_TIMEOUT */
 

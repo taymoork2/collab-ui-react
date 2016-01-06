@@ -1,8 +1,5 @@
 'use strict';
 
-/* global describe */
-/* global it */
-
 describe('Advanced Spark Call Add User flow', function () {
 
   var inputEmail = utils.randomTestGmail();
