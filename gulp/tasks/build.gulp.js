@@ -17,7 +17,7 @@ gulp.task('build', ['clean'], function (done) {
         'ts:build'
       ];
   if(!args.nolint){
-    tasks.push('jsb');
+    tasks.push('analyze');
   }
   tasks.push(runInParallel);
   tasks.push('processHtml:build');

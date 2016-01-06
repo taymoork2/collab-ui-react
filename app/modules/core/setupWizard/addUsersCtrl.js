@@ -1,5 +1,4 @@
 'use strict';
-/* global moment, $:false */
 
 angular.module('Core')
   .controller('AddUserCtrl', ['$scope', '$q', '$location', 'DirSyncService', 'Log', '$translate', 'Notification', 'UserListService', 'Storage', 'Utils', '$filter', 'Userservice', 'LogMetricsService', '$window', 'Config', 'SyncService', 'FeatureToggleService',

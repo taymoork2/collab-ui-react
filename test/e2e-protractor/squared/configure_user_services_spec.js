@@ -1,6 +1,6 @@
 'use strict';
-/*jshint loopfunc: true */
-/* global describe, it, LONG_TIMEOUT */
+
+/* global LONG_TIMEOUT */
 
 describe('Configuring services per-user', function () {
   var testUser = utils.randomTestGmailwithSalt('config_solo');

@@ -1,9 +1,5 @@
 'use strict';
 
-/* global describe */
-/* global it */
-/* global login,navigation,users,utils,notifications, protractor, deleteUtils */
-
 describe('Squared Invite User and Assign Services User Flow', function () {
 
   var inviteEmail;

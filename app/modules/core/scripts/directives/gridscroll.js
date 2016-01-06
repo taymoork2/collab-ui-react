@@ -1,7 +1,5 @@
 'use strict';
 
-/* global $ */
-
 angular.module('Core')
   .directive('gridscrollbar', ['$timeout',
     function ($timeout) {

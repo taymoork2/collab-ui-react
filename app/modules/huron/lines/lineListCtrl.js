@@ -1,6 +1,5 @@
 (function () {
   'use strict';
-  /* global $ */
 
   angular
     .module('Huron')

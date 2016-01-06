@@ -123,13 +123,29 @@ describe('HelpdeskCardsService', function () {
       expect(card.entitlements.length).toEqual(1);
       expect(card.entitlements[0]).toEqual('helpdesk.entitlements.squared-syncup.paid');
 
-      // Meetings (WebEx 11)
+      // WebEx 11 (meetings)
       card = HelpdeskCardsUserService.getMeetingCardForUser({
         entitlements: ['meetings']
       });
       expect(card.entitled).toBeTruthy();
       expect(card.entitlements.length).toEqual(1);
       expect(card.entitlements[0]).toEqual('helpdesk.entitlements.meetings');
+
+      // WebEx no licenses (cloudmeetings)
+      card = HelpdeskCardsUserService.getMeetingCardForUser({
+        entitlements: ['cloudmeetings']
+      });
+      expect(card.entitled).toBeTruthy();
+      expect(card.entitlements.length).toEqual(0);
+
+      // WebEx with licenses (cloudmeetings)
+      card = HelpdeskCardsUserService.getMeetingCardForUser({
+        entitlements: ['cloudmeetings'],
+        licenseID: ['MC_56b343df-bdd5-463b-8895-d07fc3a94877_100_testing.webex.com']
+      });
+      expect(card.entitled).toBeTruthy();
+      expect(_.size(card.licensesByWebExSite)).toEqual(1);
+      expect(_.size(card.licensesByWebExSite['testing.webex.com'])).toEqual(1);
     });
 
   });
