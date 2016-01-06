@@ -1,0 +1,53 @@
+<div class="content-container row">
+  <div class="columns small-12 medium-4">
+    <div class="columns small-12 support-card">
+      <div class="health-card" ng-show="healthyStatus === true" ng-click="toggleSystem()">
+        <span class="icon icon-check healthy-check"></span>
+        <span class="healthy" translate="supportPage.operational"></span>
+      </div>
+      <div class="health-card" ng-show="healthyStatus === false" ng-click="toggleSystem()">
+        <span class="icon icon-close error-check"></span>
+        <span class="error-msg" translate="supportPage.error"></span>
+      </div>
+      <section class="monitoring-panel systems-detail" ng-show="showSystemDetails">
+        <div ng-repeat="health in healthMetrics">
+          <a ng-href="{{statusPageUrl}}" target="_blank">
+            <div ng-class="{true:'green', false:'red'}[health.status==='operational']" class="monitoring-cell" id="{{health.name}}">
+              <i class="fa fa-circle"></i>&nbsp;&nbsp;<span>{{health.name}}</span>
+            </div>
+          </a>
+        </div>
+      </section>
+    </div>
+    <div class="columns small-12 support-card">
+      <h4 translate="supportPage.supportResources"></h4>
+      <div class="display-link" ng-click="toggleSupport()" ng-show="showSupportDetails === false" href="">
+        <span translate="supportPage.showDetails"></span>
+      </div>
+      <div class="display-link" ng-click="toggleSupport()" ng-show="showSupportDetails === true" href="">
+        <span translate="supportPage.hideDetails"></span>
+      </div>
+      <div ng-show="showSupportDetails === true">
+        <p class="bucket-header support-header header-section" translate="supportPage.problemReports"></p>
+        <p class="support-dsc">{{problemContent | translate}} {{problemHandler | translate}}.</p>
+
+        <p class="support-dsc">
+          <span class="support-dsc" translate="supportPage.reportingUrl"></span>
+          <a ng-show="reportingUrl === null" href="" translate="supportPage.sendFeedback"
+             ng-click="sendFeedback()"></a>
+          <a ng-show="reportingUrl !== null" href="{{reportingUrl}}" target="_blank">{{reportingUrl}}</a>
+        </p>
+        <p class="bucket-header support-header-help header-section" translate="supportPage.help"></p>
+        <p class="support-dsc">{{helpContent | translate }} {{helpHandler | translate}}.</p>
+        <p class="support-dsc">{{'supportPage.helpUrl' | translate}} <a href="{{helpUrl}}" target="_blank">{{helpUrl}}</a></p>
+        <p class="bucket-header support-header-help header-section" translate="supportPage.faqs"></p>
+        <p class="support-dsc">
+          <a href="{{ssoUrl}}" target="_blank" translate="supportPage.sso"></a>
+        </p>
+        <p class="support-dsc">
+          <a href="{{rolesUrl}}" target="_blank" translate="supportPage.roles"></a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
