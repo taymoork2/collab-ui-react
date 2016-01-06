@@ -1,6 +1,5 @@
 'use strict';
 
-
 describe('Self Registration Activation Page', function () {
 
   beforeEach(function () {
