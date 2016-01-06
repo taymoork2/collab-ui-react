@@ -436,7 +436,7 @@
         progressStatus: false,
         isValid: true
       }
-    }, ]
+    }]
   };
   angular.module('Squared').constant('HelpdeskMockData', mockData);
 }());
