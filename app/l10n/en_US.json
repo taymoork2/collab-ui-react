@@ -943,6 +943,14 @@
       "goToHost": "Go to Host",
       "remove": "Remove"
     },
+    "export": {
+      "modalTitle": "User Status Report",
+      "modalText1": "The exported report will be a comma separated list of users, their state, and related details.",
+      "modalText2": "Select the type of information that you want included in the report:",
+      "modalNote": "Note: The more users included, the longer the report takes to generate.",
+      "modalCTA": "Export to CSV",
+      "csvFilename": "user_status_report.csv"
+    },
     "overview": {
       "activated": "{{number}} activated",
       "pending": "{{number}} pending",
@@ -1886,14 +1894,15 @@
     "setupLater": "No thanks",
     "setupNow": "Yes, setup the services",
     "squareducError": "Created trial, but unable to provision Spark UC",
-    "addSuccess": "A trial was successfully started for {{customerName}} with {{licenseCount}} licenses for {{licenseDuration}} days.",
-    "editSuccess": "You have successfully edited a trial for {{customerName}} with {{licenseCount}} licenses for {{licenseDuration}} days."
+    "addSuccess": "A trial was successfully started for {{customerName}}.",
+    "editSuccess": "You have successfully edited a trial for {{customerName}}."
   },
   "trials": {
     "collab": "Standard Team Rooms + 25 Party Meetings",
     "squaredUC": "Advanced Spark Call",
     "licenses": "Licenses",
     "message": "Message",
+    "messageAndMeeting": "Message and Meeting",
     "meeting": "Meeting and WebEx",
     "call": "Call",
     "roomSystem": "Spark Room System"
@@ -3146,7 +3155,6 @@
     "partner": "Partner",
     "customer": "Customer",
     "helpLink": "Help",
-    "devices": "Devices",
     "mobile": "mobile",
     "work": "work",
     "fax": "fax",
@@ -3172,7 +3180,8 @@
       "squared-room-moderation.paid": "Standard Team Rooms",
       "squared-room-moderation.free": "Free Spark Messaging",
       "ciscouc.paid": "Advanced Spark Call",
-      "ciscouc.free": "Free 1:1 Spark Call"
+      "ciscouc.free": "Free 1:1 Spark Call",
+      "meetings": "WebEx Meetings (WebEx 11)"
     },
     "userStatuses": {
       "active": "Active",

@@ -17,7 +17,7 @@ angular.module('Hercules').service('UiStats',
         "progress": 0
       }, {
         "stateType": "error",
-        "text": "in error",
+        "text": "errors",
         "count": serviceInfo.error.toString(),
         "selected": false,
         "unselectable": serviceInfo.error === 0 ? true : false,

@@ -1,6 +1,4 @@
 'use strict';
-/* global element */
-/* global by */
 
 var LandingPage = function () {
   this.nontrialadmin = {

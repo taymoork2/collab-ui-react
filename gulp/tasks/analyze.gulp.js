@@ -32,30 +32,28 @@ gulp.task('eslint:e2e', function () {
 
 // vet JS files and create coverage report
 gulp.task('analyze', ['jsBeautifier:beautify'], function (done) {
-  messageLogger('Analyzing source with JSHint, JSCS, and Plato');
+  messageLogger('Analyzing source with ESLint, JSCS, and Plato');
   runSeq([
     'analyze:jscs',
-    'analyze:jshint',
+    'analyze:eslint',
     'plato',
   ], done);
 });
 
-gulp.task('analyze:jshint', function () {
+gulp.task('analyze:eslint', function () {
   var files = [].concat(
     config.appFiles.js,
     config.unsupportedDir + '/' + config.unsupported.file,
     config.testFiles.spec.all,
     'gulpfile.js'
   );
-  messageLogger('Running JSHint on JavaScript files', files);
+  messageLogger('Running ESLint on JS files', files);
   return gulp
     .src(files)
     .pipe($.if(args.verbose, $.print()))
-    .pipe($.jshint())
-    .pipe($.jshint.reporter('jshint-stylish', {
-      verbose: true
-    }))
-    .pipe($.jshint.reporter('fail'));
+    .pipe($.eslint())
+    .pipe($.eslint.format())
+    .pipe($.eslint.failOnError());
 });
 
 gulp.task('analyze:jscs', function () {
@@ -64,7 +62,25 @@ gulp.task('analyze:jscs', function () {
     .src(config.appFiles.js)
     .pipe($.if(args.verbose, $.print()))
     .pipe($.jscs())
+    .pipe($.jscs.reporter())
     .on('error', errorLogger);
+});
+
+// legacy, used but the build task
+gulp.task('jsb', function (done) {
+  runSeq(
+    'jsBeautifier:beautify',
+    'analyze:eslint',
+    done
+  );
+});
+
+gulp.task('jsb:verify', function (done) {
+  runSeq(
+    'jsBeautifier:verify',
+    'analyze:eslint',
+    done
+  );
 });
 
 // Create a visualizer report
