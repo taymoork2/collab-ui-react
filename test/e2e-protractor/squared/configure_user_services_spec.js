@@ -212,12 +212,12 @@ describe('Configuring services per-user', function () {
 
   it('should land to upload processing page', function () {
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Processing CSV');
-  });
+  }, 60000 * 2);
 
   it('should land to upload result page', function () {
-    utils.expectTextToBeSet(wizard.mainviewTitle, 'Upload Result');
+    utils.expectTextToBeSet(wizard.mainviewTitle, 'Upload Result', 60000 * 2);
     utils.click(inviteusers.finishButton);
-  });
+  }, 60000 * 2 + 5000);
 
   it('should find some of the ' + userList.length + ' users created', function () {
     var nInd;

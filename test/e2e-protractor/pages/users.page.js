@@ -118,7 +118,6 @@ var UsersPage = function () {
   this.userListEnts = element.all(by.binding('userName'));
   this.userListStatus = element.all(by.binding('userStatus'));
   this.userListSelStatus = element.all(by.css('.col5')).last().element(by.tagName('span'));
-  //.(by.css('.ngCellText .col5')).first().element(by.tagName('span'));
   this.userListDisplayName = element.all(by.binding('displayName'));
   this.userListAction = element(by.id('actionsButton'));
   this.actionDropdown = element(by.css('.dropdown-menu'));
