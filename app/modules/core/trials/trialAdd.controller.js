@@ -98,16 +98,11 @@
       type: 'checkbox',
       className: 'columns medium-12',
       templateOptions: {
-        label: $translate.instant('trials.collab'),
+        label: $translate.instant('trials.messageAndMeeting'),
         id: 'squaredTrial',
         class: 'columns medium-12 checkbox-group',
       },
       expressionProperties: {
-        'templateOptions.label': function () {
-          return FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
-            return result ? $translate.instant('trials.messageAndMeeting') : $translate.instant('trials.collab');
-          });
-        },
         'templateOptions.disabled': function () {
           return !vm.canEditMessage;
         },
@@ -138,19 +133,14 @@
       type: 'checkbox',
       className: 'columns medium-12 checkbox-group',
       templateOptions: {
-        label: $translate.instant('trials.squaredUC'),
+        label: $translate.instant('trials.call'),
         id: 'squaredUCTrial',
         class: 'columns medium-12',
       },
       expressionProperties: {
         'hide': function () {
           return !vm.hasCallEntitlement();
-        },
-        'templateOptions.label': function () {
-          return FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
-            return result ? $translate.instant('trials.call') : $translate.instant('trials.squaredUC');
-          });
-        },
+        }
       },
     }];
 
