@@ -1,10 +1,5 @@
 'use strict';
 
-/* global describe */
-/* global it */
-/* global browser */
-/* global expect */
-/* global protractor */
 
 describe('Self Registration Activation Page', function () {
 

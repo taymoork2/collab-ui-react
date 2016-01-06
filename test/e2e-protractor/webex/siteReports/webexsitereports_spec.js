@@ -1,7 +1,5 @@
 'use strict';
 
-/* global describe, it, expect, login */
-
 describe('WebEx site reports cross-launch', function () {
   it('should login as t30citestprov9@mailinator.com', function () {
     login.loginThroughGui(sitereports.testAdmin2.username, sitesettings.testAdmin2.password);

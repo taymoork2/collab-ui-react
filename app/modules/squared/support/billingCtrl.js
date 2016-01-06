@@ -1,5 +1,4 @@
 'use strict';
-/* global $, Bloodhound, moment */
 angular.module('Squared')
   .controller('BillingCtrl', ['$scope', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Authinfo', '$translate', 'PageParam', '$stateParams', '$window', 'BillingService', '$log',
     function ($scope, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Authinfo, $translate, PageParam, $stateParams, $window, BillingService, $log) {

@@ -1,6 +1,5 @@
 'use strict';
 
-/*jshint bitwise: false*/
 angular.module('Core')
   .factory('Utils', ['$rootScope', '$location',
     function ($rootScope, $location) {

@@ -1,11 +1,5 @@
 'use strict';
 
-/* global it */
-/* global by */
-/* global browser */
-/* global element */
-/* global describe */
-
 describe('Fusion Page', function () {
   afterEach(function () {
     utils.dumpConsoleErrors();

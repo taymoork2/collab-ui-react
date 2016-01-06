@@ -1,10 +1,4 @@
 'use strict';
-/*jshint loopfunc: true */
-
-/* global describe */
-/* global it */
-/* global browser */
-/* global expect */
 
 xdescribe('utilization flow', function () {
   beforeEach(function () {

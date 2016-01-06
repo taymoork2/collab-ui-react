@@ -1,9 +1,4 @@
 'use strict';
-/*jshint loopfunc: true */
-
-/* global describe */
-/* global it */
-/* global browser */
 
 describe('Service Setup tests', function () {
   afterEach(function () {
