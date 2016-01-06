@@ -1,9 +1,4 @@
 'use strict';
-/*jshint loopfunc: true */
-
-/* global describe */
-/* global it */
-/* global browser */
 
 describe('List users flow', function () {
   afterEach(function () {

@@ -679,7 +679,7 @@ angular.module('Core')
       /**
        * get the current license settings for the CF_ licenses
        *
-       * @param state - return license list based on matching state (checked = true)
+       * @param {string[]} state - return license list based on matching state (checked = true)
        */
       var getConfIdList = function (state) {
         var confId = [];
@@ -698,7 +698,7 @@ angular.module('Core')
       /**
        * get the list of selected account licenses on the dialog
        *
-       * @param action - 'additive' - add new licenses only, 'patch' - remove any licenses not specified
+       * @param {null|Object[]} action - 'additive' - add new licenses only, 'patch' - remove any licenses not specified
        */
       var getAccountLicenses = function (action) {
         var licenseList = [];
@@ -1800,7 +1800,6 @@ angular.module('Core')
         }
 
         function callback(data, status) {
-          /*jshint validthis:true */
           var params = this;
           if (data.success) {
             if (angular.isArray(data.userResponse)) {

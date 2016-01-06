@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function MessagingSetupCtrl($log, $scope, $translate, AccountOrgService, Authinfo, Notification) {
-    /*jshint validthis: true */
     var vm = this;
     var msgIntFlag = false;
     var CurrentDataRetentionPeriod = null;

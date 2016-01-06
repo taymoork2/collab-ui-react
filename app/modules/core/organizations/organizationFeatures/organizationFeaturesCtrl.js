@@ -23,16 +23,26 @@
     }
 
     function getOrgFeatureToggles() {
-      // TODO complete once the feature toggle api is smoothened out
-      FeatureToggleService.getFeaturesForOrg(vm.currentOrganization.id)
+      function convertToTogglable(value) {
+        return {
+          toggleId: value.key || value,
+          name: value.key || value,
+          model: value.val || false,
+        };
+      }
+
+      FeatureToggleService.getFeaturesForOrg(vm.currentOrganization.id, true)
         .then(function (result) {
-          vm.defaults = _.map(result.featureToggles, function (value) {
-            return {
-              toggleId: value.key,
-              name: value.key,
-              model: value.val,
-            };
+          var stdFeatures = _.map(FeatureToggleService.features, convertToTogglable);
+          var dbFeatures = _.map(result.featureToggles, convertToTogglable);
+
+          _.remove(stdFeatures, function (obj) {
+            return _.filter(dbFeatures, {
+              name: obj.name
+            })[0];
           });
+
+          vm.defaults = dbFeatures.concat(stdFeatures);
         })
         .catch(function (err) {
           Notification.error('organizationsPage.errorGettingToggles');

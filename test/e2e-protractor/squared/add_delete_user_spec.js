@@ -1,9 +1,5 @@
 'use strict';
 
-/* global describe */
-/* global it */
-/* global login,navigation,users,utils,notifications, protractor, deleteUtils */
-
 describe('Squared Add & Entitle User Flows', function () {
   var inputEmail = utils.randomTestGmail();
   var adminEmail = 'atlasmapservice+ll1@gmail.com';
