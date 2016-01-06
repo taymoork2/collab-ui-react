@@ -2,13 +2,9 @@
   'use strict';
 
   /*ngInject*/
-<<<<<<< HEAD
-  function HelpdeskService(ServiceDescriptor, $location, $http, Config, $q, HelpdeskHttpRequestCanceller, HelpdeskMockData, CsdmConfigService, CsdmConverter, CacheFactory,
-    $translate, $timeout) {
-=======
+
   function HelpdeskService(ServiceDescriptor, $location, $http, Config, $q, HelpdeskMockData, CsdmConfigService, CsdmConverter, CacheFactory,
-    $translate, $timeout, USSService2, DeviceService) {
->>>>>>> c62684530bb761280d35e74e5e7da377a22014f3
+    $translate, $timeout, USSService2, DeviceService, HelpdeskHttpRequestCanceller) {
     var urlBase = Config.getAdminServiceUrl(); //"http://localhost:8080/admin/api/v1/"
     var orgCache = CacheFactory.get('helpdeskOrgCache');
     var searchTimeout = 30000;
