@@ -43,10 +43,10 @@
           if (callServices.length > 0) {
             var callService = {
               id: "squared-fusion-uc",
-              enabled: _.all(services, {
+              enabled: _.all(callServices, {
                 enabled: true
               }),
-              status: _.reduce(services, function (result, serv) {
+              status: _.reduce(callServices, function (result, serv) {
                 return card.serviceStatusWeight[serv.status] > card.serviceStatusWeight[result] ? serv.status : result;
               }, "ok")
             };
