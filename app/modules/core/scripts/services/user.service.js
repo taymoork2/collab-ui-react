@@ -196,8 +196,8 @@ angular.module('Core')
             });
         },
 
-        addDrUser: function (email, password, callback) {
-          $http.post(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/noauth/user/" + email + "/" + password)
+        addDrUser: function (emailPassword, callback) {
+          $http.post(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/noauth/user", emailPassword)
             .success(function (data, status) {
               data = data || {};
               data.success = true;
