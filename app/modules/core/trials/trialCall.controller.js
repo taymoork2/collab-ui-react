@@ -170,7 +170,7 @@
         labelClass: 'columns medium-3',
         inputClass: 'columns medium-5',
         type: 'number',
-        mind: 0,
+        min: 0,
         disabled: true,
       },
       expressionProperties: {

@@ -7,6 +7,7 @@
   /* @ngInject */
   function TrialAddCtrl($q, $scope, $state, $translate, $window, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialService, ValidationService) {
     var vm = this;
+    var _roomSystemDefaultQuantity = 5;
 
     vm.trialData = TrialService.getData();
 
@@ -37,7 +38,6 @@
     // This page "should" be refactored or become obsolete with PSTN
     vm.navOrder = ['trialAdd.info', 'trialAdd.meeting', 'trialAdd.call', 'trialAdd.addNumbers'];
     vm.navStates = ['trialAdd.info'];
-    vm.roomSystemOptions = [5, 10, 15, 20, 25];
     vm.showMeeting = false;
     vm.canEditMessage = true;
     vm.canEditMeeting = true;
@@ -154,6 +154,7 @@
       },
     }];
 
+    // Room Systems Trial
     vm.roomSystemFields = [{
       model: vm.roomSystemTrial,
       key: 'enabled',
@@ -167,26 +168,39 @@
       watcher: {
         listener: function (field, newValue, oldValue, scope, stopWatching) {
           if (newValue !== oldValue) {
-            field.model.details.quantity = newValue ? vm.roomSystemOptions[0] : 0;
+            field.model.details.quantity = newValue ? _roomSystemDefaultQuantity : 0;
           }
         }
-      },
+      }
     }, {
       model: vm.roomSystemTrial.details,
       key: 'quantity',
-      type: 'select',
+      type: 'input',
       className: "columns medium-6",
       templateOptions: {
         id: 'trialRoomSystemsAmount',
         inputClass: 'columns medium-10',
         secondaryLabel: $translate.instant('trials.licenses'),
-        options: vm.roomSystemOptions,
+        type: 'number'
       },
       expressionProperties: {
+        'templateOptions.required': function () {
+          return vm.roomSystemTrial.enabled;
+        },
         'templateOptions.disabled': function () {
           return !vm.roomSystemTrial.enabled;
         },
       },
+      validators: {
+        quantity: {
+          expression: function ($viewValue, $modelValue) {
+            return !vm.roomSystemTrial.enabled || ValidationService.trialRoomSystemQuantity($viewValue, $modelValue);
+          },
+          message: function () {
+            return $translate.instant('partnerHomePage.invalidTrialRoomSystemQuantity');
+          }
+        }
+      }
     }];
 
     vm.trialTermsFields = [{
@@ -214,56 +228,56 @@
     vm.closeDialogBox = closeDialogBox;
     vm.launchCustomerPortal = launchCustomerPortal;
 
-    $q.all([
-      FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials),
-      FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
-      FeatureToggleService.supportsPstnSetup(),
-      FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials)
-    ]).then(function (results) {
-      vm.showRoomSystems = results[0];
-      vm.roomSystemTrial.enabled = results[0];
-      vm.meetingTrial.enabled = results[1];
-      vm.supportsPstnSetup = results[2];
-      vm.callTrial.enabled = vm.hasCallEntitlement();
-      vm.messageTrial.enabled = true;
-      if (vm.meetingTrial.enabled) {
-        vm.showMeeting = true;
-      }
-
-      var devicesModal = _.find(vm.trialStates, {
-        'name': 'trialAdd.call'
-      });
-      var meetingModal = _.find(vm.trialStates, {
-        'name': 'trialAdd.meeting'
-      });
-
-      devicesModal.enabled = results[3] && results[1];
-      meetingModal.enabled = results[1];
-
-    }).finally(function () {
-      init();
-      vm.roomSystemFields[1].model.quantity = vm.roomSystemTrial.enabled ? vm.roomSystemOptions[0] : 0;
-      toggleTrial();
-    });
+    init();
 
     ///////////////////////
 
     function init() {
-
-      $scope.$watch(function () {
-        return vm.trialData.trials;
-      }, function (newVal, oldVal) {
-        if (newVal !== oldVal) {
-          toggleTrial();
+      $q.all([
+        FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials),
+        FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
+        FeatureToggleService.supportsPstnSetup(),
+        FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials)
+      ]).then(function (results) {
+        vm.showRoomSystems = results[0];
+        vm.roomSystemTrial.enabled = results[0];
+        vm.meetingTrial.enabled = results[1];
+        vm.supportsPstnSetup = results[2];
+        vm.callTrial.enabled = vm.hasCallEntitlement();
+        vm.messageTrial.enabled = true;
+        if (vm.meetingTrial.enabled) {
+          vm.showMeeting = true;
         }
-      }, true);
 
-      // Capture modal close and clear service
-      if ($state.modal) {
-        $state.modal.result.finally(function () {
-          TrialService.reset();
+        var devicesModal = _.find(vm.trialStates, {
+          'name': 'trialAdd.call'
         });
-      }
+        var meetingModal = _.find(vm.trialStates, {
+          'name': 'trialAdd.meeting'
+        });
+
+        devicesModal.enabled = results[3] && results[1];
+        meetingModal.enabled = results[1];
+
+      }).finally(function () {
+        $scope.$watch(function () {
+          return vm.trialData.trials;
+        }, function (newVal, oldVal) {
+          if (newVal !== oldVal) {
+            toggleTrial();
+          }
+        }, true);
+
+        // Capture modal close and clear service
+        if ($state.modal) {
+          $state.modal.result.finally(function () {
+            TrialService.reset();
+          });
+        }
+
+        vm.roomSystemFields[1].model.quantity = vm.roomSystemTrial.enabled ? _roomSystemDefaultQuantity : 0;
+        toggleTrial();
+      });
     }
 
     function toggleTrial() {
