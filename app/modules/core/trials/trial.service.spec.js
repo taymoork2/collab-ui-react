@@ -1,4 +1,4 @@
-/* globals $httpBackend, $q, Config, Authinfo, LogMetricsService, TrialCallService, TrialMeetingService, TrialMessageService, TrialResource, TrialRoomSystemService, TrialService*/
+/* globals $httpBackend, $q, Config, Authinfo, LogMetricsService, TrialCallService, TrialMeetingService, TrialMessageService, TrialResource, TrialRoomSystemService, TrialService, WebexTimeZoneService*/
 'use strict';
 
 describe('Service: Trial Service', function () {
@@ -12,7 +12,8 @@ describe('Service: Trial Service', function () {
 
   beforeEach(function () {
     bard.inject(this, '$httpBackend', '$q', '$rootScope', 'Config', 'Authinfo', 'LogMetricsService',
-      'TrialCallService', 'TrialMeetingService', 'TrialMessageService', 'TrialResource', 'TrialRoomSystemService');
+      'TrialCallService', 'TrialMeetingService', 'TrialMessageService', 'TrialResource', 'TrialRoomSystemService',
+      'WebexTimeZoneService');
 
     bard.mockService(LogMetricsService, {});
     bard.mockService(Authinfo, {
@@ -88,7 +89,7 @@ describe('Service: Trial Service', function () {
     it('should have meeting settings', function () {
       $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
         var details = angular.fromJson(data).details;
-        return details.siteUrl === 'now.istomorrow.org' && details.timeZoneId === 4;
+        return details.siteUrl === 'now.istomorrow.org' && details.timeZoneId === '4';
       }).respond(200);
 
       TrialService.startTrial();
