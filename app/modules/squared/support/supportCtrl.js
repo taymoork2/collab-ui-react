@@ -396,19 +396,11 @@ angular.module('Squared')
       };
 
       $scope.getCallflowCharts = function (orgId, userId, locusId, callStart, filename, isGetCallLogs) {
-        // var elementId = '#';
-        // if (isGetCallLogs === true) {
-        //   elementId += 'logs-' + id;
-        // } else {
-        //   elementId += 'charts-' + id;
-        // }
-        // angular.element(elementId).button('loading');
 
         var output = $filter('translate')('supportPage.downloading');
         var downloadDialog = window.confirm(output);
         if (downloadDialog === true) {
           CallflowService.getCallflowCharts(orgId, userId, locusId, callStart, filename, isGetCallLogs, function (data, status) {
-            //  angular.element(elementId).button('reset');
             if (data.success) {
               window.location.assign(data.resultsUrl);
             } else {
@@ -417,9 +409,6 @@ angular.module('Squared')
             }
           });
         }
-        // else {
-        //  // angular.element(elementId).button('reset');
-        // }
       };
 
       $scope.downloadFlow = function (downloadUrl) {
@@ -443,9 +432,7 @@ angular.module('Squared')
       };
 
       $scope.showCallSummary = function (locusId, startTime) {
-        //  angular.element('#' + 'summary-' + id).button('loading');
         ReportsService.getCallSummary(locusId, startTime, function (data, status) {
-          //  angular.element('#' + 'summary-' + id).button('reset');
           if (data.success) {
             var myWindow = window.open("", "Call Summary", "width=800, height=400");
             setTimeout(function () {

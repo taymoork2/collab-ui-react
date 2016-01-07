@@ -28,7 +28,6 @@ angular.module('Core', [
   'ct.ui.router.extras.sticky',
   'ct.ui.router.extras.future',
   'ct.ui.router.extras.previous',
-  'ngGrid',
   'ui.grid',
   'ui.grid.selection',
   'ui.grid.saveState',
