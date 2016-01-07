@@ -4,8 +4,7 @@
     <cs-card class="small header-bar" ng-show="subscription.messaging && subscription.messaging.services.length !== 0">
     <article>
       <header class="header-section align-center title">
-        <span ng-if="leaderBoard.isStormBranding" class="bucket-header" translate="firstTimeWizard.message"></span>
-        <span ng-if="!leaderBoard.isStormBranding" class="bucket-header" translate="firstTimeWizard.messaging"></span>
+        <span class="bucket-header" translate="firstTimeWizard.message"></span>
       </header>
       <section class="bucket-info">
         <div class="text-center" class="item-paid" ng-repeat="service in subscription.messaging.services">
@@ -24,8 +23,7 @@
       <cs-card class="small header-bar meetings" ng-show="(subscription.cf && subscription.cf.services.length !== 0) || (subscription.count && subscription.count > 0)" >
       <article>
         <header class="header-section align-center">
-          <span ng-if="leaderBoard.isStormBranding" class="bucket-header" translate="firstTimeWizard.meeting"></span>
-          <span ng-if="!leaderBoard.isStormBranding" class="bucket-header" translate="firstTimeWizard.conferencing"></span>
+          <span class="bucket-header" translate="firstTimeWizard.meeting"></span>
         </header>
         <section ng-show="subscription.cf && subscription.cf.services.length !== 0"class="bucket-info">
           <div class="text-center" class="item-paid" ng-repeat="service in subscription.cf.services">
@@ -81,8 +79,7 @@
           <cs-card class="small header-bar people" ng-show="subscription.communication && subscription.communication.services.length !== 0">
           <article>
             <header class="header-section align-center">
-              <span ng-if="leaderBoard.isStormBranding" class="bucket-header" translate="firstTimeWizard.call"></span>
-              <span ng-if="!leaderBoard.isStormBranding" class="bucket-header" translate="firstTimeWizard.communications"></span>
+              <span class="bucket-header" translate="firstTimeWizard.call"></span>
             </header>
             <section class="bucket-info">
               <div class="text-center" class="item-paid" ng-repeat="service in subscription.communication.services">

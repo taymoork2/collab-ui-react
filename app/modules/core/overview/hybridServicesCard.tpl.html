@@ -6,13 +6,12 @@
 </header>
 <section ng-if="card.enabled">
   <div class="overview-info">
-    <div>Active</div>
-    <ul>
+    <div>{{'overview.cards.hybrid.serviceHeader' | translate }}</div>
+    <ul class="hybrid-ul">
       <li ng-repeat="service in card.services">
         <!--<i class="icon icon-circle" ng-class="service.healthStatus || 'disabled'"></i>-->
         <i class="icon icon-circle" ng-class="service.healthStatus || 'error'"></i>
-        <span ng-if="service.id == 'squared-fusion-uc'" translate="hercules.serviceNames.squared-fusion-uc.full"></span>
-        <span ng-if="service.id !== 'squared-fusion-uc'">{{ 'hercules.serviceNames.'+ service.id | translate}}</span>
+        <span>{{ 'overview.cards.hybrid.services.'+ service.id | translate}}</span>
       </li>
     </ul>
   </div>
@@ -20,7 +19,7 @@
 <footer class="footer-menu ng-isolate-scope overview-footer-content-trial" ng-class="{'overview-footer-content-trial' : card.trial ,  'overview-footer-content'  : !card.trial }" ng-if="card.enabled">
   <span class="footer-content">
     <span class="badge warning ng-scope" ng-if="card.trial">Trial</span>
-    <a ng-href="{{overview.statusPageUrl}}" target="_blank" class="monitoring-cell">
+    <a ng-href="{{overview.statusPageUrl}}" target="_blank" class="monitoring-cell" ng-show="card.showHealth">
       <i class="icon icon-circle" ng-class="card.healthStatus || 'disabled'"></i>
       <span>{{card.levelText}}</span>
     </a>
@@ -31,7 +30,7 @@
 </a>
 </span>
 </footer>
-<section class="card-menu ng-isolate-scope" ng-class="{ open: cm.menuOpen === true }" menutitle="card.name">
+<section ng-if="card.enabled" class="card-menu ng-isolate-scope" ng-class="{ open: cm.menuOpen === true }" menutitle="card.name">
   <div class="card-menu-heading">
     <span class="ng-binding">SETTINGS</span>
     <button type="button" class="close" ng-click="cm.toggleSettings(); cm.menuOpen = false;"><span class="sr-only">Close</span>
@@ -61,10 +60,10 @@
     </ul>
   </div>
 </section>
-<section ng-if="!card.enabled">
+<section ng-if="!card.enabled" class="disabled-section">
   <span>{{(card.notEnabledText || 'overview.notEnabledText') | translate}}</span>
-  <a ng-href="card.notEnabledAction" ng-if="card.notEnabledAction">{{card.notEnabledActionText | translate}}</a>
+  <a ng-href="{{card.notEnabledAction}}" ng-if="card.notEnabledAction">{{card.notEnabledActionText | translate}}</a>
 </section>
-<footer ng-if="!card.enabled && card.notEnabledFooter">
+<footer ng-if="!card.enabled"><!-- && card.notEnabledFooter">-->
   <span>{{card.notEnabledFooter | translate}}</span>
 </footer>

@@ -119,7 +119,7 @@
 
           if (trial.type === Config.trials.meeting) {
             details.siteUrl = trial.details.siteUrl;
-            details.timeZoneId = trial.details.timeZoneId;
+            details.timeZoneId = trial.details.timeZone.timeZoneId;
           }
         })
         .value();

@@ -464,7 +464,7 @@ li.monitoring-cell {
 
     &:hover {
       .badge-disabled {
-        @incluce badge-disabled-darker;
+        @include badge-disabled-darker;
       }
 
       .free-disabled {

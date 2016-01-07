@@ -327,7 +327,6 @@ angular.module('Core')
       $scope.conferenceFeatures = [];
       $scope.communicationFeatures = [];
       $scope.licenses = [];
-      $scope.isStormBranding = false;
       var convertSuccess = [];
       var convertFailures = [];
       var convertUsersCount = 0;
@@ -349,10 +348,6 @@ angular.module('Core')
       if (null !== Authinfo.getOrgId()) {
         getMessengerSyncStatus();
       }
-
-      FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
-        $scope.isStormBranding = result;
-      });
 
       var populateConf = function () {
         if (userLicenseIds) {

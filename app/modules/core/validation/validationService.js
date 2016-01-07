@@ -10,6 +10,7 @@
 
     var factory = {
       trialLicenseCount: trialLicenseCount,
+      trialRoomSystemQuantity: trialRoomSystemQuantity,
       nonPrintable: nonPrintable,
       alertingName: alertingName,
       callForward: callForward,
@@ -22,6 +23,11 @@
     function trialLicenseCount(viewValue, modelValue) {
       var value = modelValue || viewValue;
       return /^[1-9][0-9]{0,2}$/.test(value);
+    }
+
+    function trialRoomSystemQuantity(viewValue, modelValue) {
+      var value = modelValue || viewValue;
+      return /^(2[0]|1[0-9]|[1-9])$/.test(value);
     }
 
     function nonPrintable(viewValue, modelValue) {

@@ -47,16 +47,11 @@
     vm.trialDaysRemaining = 0;
     vm.trialUsedPercentage = 0;
     vm.isInitialized = false; // invert the logic and initialize to false so the template doesn't flicker before spinner
-    vm.isStormBranding = false;
     vm.roomSystemsExist = false;
     vm.showMultiSubscriptions = showMultiSubscriptions;
     vm.licenseExists = false;
 
     init();
-
-    FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
-      vm.isStormBranding = result;
-    });
 
     function init() {
       vm.multiSubscriptions.billings = Authinfo.getLicenses() || [];
