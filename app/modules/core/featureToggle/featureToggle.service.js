@@ -9,7 +9,7 @@
   /* @ngInject */
   function FeatureToggleService($resource, $q, Config, Authinfo, Orgservice, Userservice, HuronCustomerFeatureToggleService, HuronUserFeatureToggleService) {
     var features = {
-      pstnSetup: 'pstnSetup',
+      pstnSetup: 'huron-pstn-setup',
       csvUpload: 'csvUpload',
       dirSync: 'dirSync',
       atlasCloudberryTrials: 'atlas-cloudberry-trials',
@@ -20,7 +20,101 @@
       huronHuntGroup: 'huronHuntGroup',
       huronAutoAttendant: 'huronAutoAttendant',
       huronClassOfService: 'COS',
-      csdmHuron: 'csdm-huron'
+      csdmHuron: 'csdm-huron',
+      androidAddGuestRelease: 'android-add-guest-release',
+      androidCallsTab: 'android-calls-tab',
+      androidDirectUpload: 'android-direct-upload',
+      androidKmsMessagingApiV2: 'android-kms-messaging-api-v2',
+      androidMentions: 'android-mentions',
+      androidMessageSearch: 'android-message-search',
+      androidModernTokenRefresh: 'android-modern-token-refresh',
+      androidOutboundDialing: 'android-outbound-dialing',
+      androidTeams: 'android-teams',
+      androidUltrasoundProximity: 'android-ultrasound-proximity',
+      androidUltrasoundProximityR1: 'android-ultrasound-proximity-r1',
+      atMentions: 'at-mentions',
+      audioPairing: 'audio-pairing',
+      bridgeMaxConvParticipants: 'bridge-max-conv-participants',
+      callMultiDevice: 'call-multi-device',
+      calliopeDiscovery: 'calliope-discovery',
+      callsTab: 'calls-tab',
+      console: 'console',
+      deleteContent: 'delete-content',
+      dialOut: 'dial-out',
+      disableCacheForFeatures: 'disableCacheForFeatures',
+      enforceSparkContentEncryption: 'enforce-spark-content-encryption',
+      featureToggleRules: 'feature-toggle-rules',
+      feedbackViaEmail: 'feedback-via-email',
+      filterBadges: 'filter-badges',
+      flagMsg: 'flag-msg',
+      geoHintEnabled: 'geo-hint-enabled',
+      iosActionBar: 'ios-action-bar',
+      iosAecType: 'ios-aec-type',
+      iosCallsTab: 'ios-calls-tab',
+      iosCameraview: 'ios-cameraview',
+      iosCoBranding: 'ios-co-branding',
+      iosFilterBadges: 'ios-filter-badges',
+      iosFiltering: 'ios-filtering',
+      iosImportantFilter: 'ios-important-filter',
+      iosKmsMessagingApi3: 'ios-kms-messaging-api3',
+      iosKmsMessagingApi4: 'ios-kms-messaging-api4',
+      iosLocalNotification2: 'ios-local-notification2',
+      iosMentions: 'ios-mentions',
+      iosMentionsFilter: 'ios-mentions-filter',
+      iosOutboundDialing: 'ios-outbound-dialing',
+      iosSearchService: 'ios-search-service',
+      iosSearchService2: 'ios-search-service2',
+      iosTeams: 'ios-teams',
+      iosTeams2: 'ios-teams2',
+      iosUltrasoundProximity: 'ios-ultrasound-proximity',
+      iosUltrasoundProximityR1: 'ios-ultrasound-proximity-r1',
+      joinhubCreateARoom: 'joinhub-create-a-room',
+      l2sipAllowSipForward: 'l2sip-allow-sip-forward',
+      l2sipAllowSipTransfer: 'l2sip-allow-sip-transfer',
+      locusMaxRosterParticipants: 'locus-max-roster-participants',
+      manyCalls: 'many-calls',
+      mediaEnableFilmstripOsx: 'media-enable-filmstrip-osx',
+      mediaEnableFilmstripWin: 'media-enable-filmstrip-win',
+      mediaEnableMultistreamCrown: 'media-enable-multistream-crown',
+      mediaEnableSimulcast: 'media-enable-simulcast',
+      mediaMariFecAudioEnabled: 'media-mari-fec-audio-enabled',
+      mediaMariFecEnabled: 'media-mari-fec-enabled',
+      mediaMariFecVideoEnabled: 'media-mari-fec-video-enabled',
+      mediaMariRateAdaptation: 'media-mari-rate-adaptation',
+      mentionsNotif: 'mentions-notif',
+      mentionsTab: 'mentions-tab',
+      mercurySingletonConnection: 'mercury-singleton-connection',
+      mercury51: 'mercury5.1',
+      modifyConvoActivityLimits: 'modify-convo-activity-limits',
+      multigetCi: 'multiget-ci',
+      muteByDefault: 'mute-by-default',
+      newMessageBanner: 'new-message-banner',
+      newMessageBannerAndroid: 'new-message-banner-android',
+      newMessagesIndicator: 'new-messages-indicator',
+      persistenceForFeatures: 'persistenceForFeatures',
+      relevantRooms: 'relevant-rooms',
+      sanitizeactivityOptimization: 'sanitizeactivity-optimization',
+      searchRemote: 'search-remote',
+      searchTab: 'search-tab',
+      sendStickies: 'send-stickies',
+      sendStickies2: 'send-stickies2',
+      sparkJsSdkEcdh3: 'spark-js-sdk-ecdh-3',
+      squrls: 'squrls',
+      stickiesSend: 'stickies.send',
+      titleEncryption: 'title-encryption',
+      uploadCallLogs: 'upload-call-logs',
+      userPresence: 'user-presence',
+      webGuestCall: 'web-guest-call',
+      webManualPairing: 'web-manual-pairing',
+      webMentionsTab: 'web-mentions-tab',
+      webTeams: 'web-teams',
+      winGuestCall: 'win-guest-call',
+      winMentionsList: 'win-mentions-list',
+      winMentionsTab: 'win-mentions-tab',
+      winProximityDeviceSelection: 'win-proximity-device-selection',
+      winTeams: 'win-teams',
+      zeroTouchMeeting: 'zero-touch-meeting',
+      locationSharing: 'location-sharing',
     };
 
     var service = {
@@ -45,6 +139,10 @@
       get: {
         method: 'GET',
         cache: true
+      },
+      refresh: {
+        method: 'GET',
+        cache: false
       }
     });
 
@@ -71,25 +169,39 @@
       return getFeature(false, id, feature);
     }
 
-    function getFeaturesForOrg(id) {
-      return getFeatures(false, id);
+    function getFeaturesForOrg(id, clearCache) {
+      return getFeatures(false, id, clearCache);
     }
 
     function getUrl(isUser) {
       return isUser ? userResource : orgResource;
     }
 
-    function getFeatures(isUser, id) {
+    function getFeatures(isUser, id, clearCache) {
       if (!id) {
         return $q.reject('id is undefined');
       }
-
-      return getUrl(isUser).get({
+      clearCache = clearCache || false;
+      var info = {
         id: id
-      }).$promise.then(function (response) {
-        _.forEach(response.developer, fixVal);
-        _.forEach(response.entitlement, fixVal);
-        _.forEach(response.user, fixVal);
+      };
+      var url = getUrl(isUser);
+
+      var response;
+      if (!isUser && clearCache) {
+        response = url.refresh(info);
+      } else {
+        response = url.get(info);
+      }
+
+      return response.$promise.then(function (response) {
+        if (isUser) {
+          _.forEach(response.developer, fixVal);
+          _.forEach(response.entitlement, fixVal);
+          _.forEach(response.user, fixVal);
+        } else {
+          _.forEach(response.featureToggles, fixVal);
+        }
         return response;
       });
     }
@@ -148,34 +260,29 @@
     function supports(feature) {
       return $q(function (resolve, reject) {
         //TODO temporary hardcoded checks for huron
-        if (feature === features.pstnSetup) {
-          return resolve(Authinfo.getOrgId() === '666a7b2f-f82e-4582-9672-7f22829e728d' || Authinfo.getOrgId() === 'a28c73de-8ebe-46b1-867a-a4d8bdac8c3f');
-        } else if (feature === features.csvUpload) {
+        if (feature === features.csvUpload) {
           resolve(true);
         } else if (feature === features.dirSync) {
           supportsDirSync().then(function (enabled) {
             resolve(enabled);
           });
-        } else if (feature === features.atlasCloudberryTrials && Authinfo.getOrgId() === 'c054027f-c5bd-4598-8cd8-07c08163e8cd') {
-          resolve(true);
-        } else if (feature === features.huronClassOfService && Authinfo.getOrgId() === 'bdeda0ba-b761-4f52-831a-2c20c41714f1') {
+        } else if (feature === features.atlasCloudberryTrials) {
           resolve(true);
         } else if (angular.isDefined(toggles[feature])) {
           resolve(toggles[feature]);
         } else {
-          var orgId = Authinfo.getOrgId();
-
           Userservice.getUser('me', function (data, status) {
-            var userId = data.id;
-            getFeatureForUser(userId, feature).then(function (userResult) {
-              if (!userResult) {
-                getFeatureForOrg(orgId, feature).then(function (orgResult) {
-                  resolve(orgResult);
-                });
-              } else {
-                resolve(userResult);
-              }
-            });
+            getFeatureForUser(data.id, feature)
+              .then(function (result) {
+                if (!result) {
+                  return getHuronToggle(false, Authinfo.getOrgId(), feature);
+                } else {
+                  return result;
+                }
+              }).then(function (toggleValue) {
+                toggles[feature] = toggleValue;
+                resolve(toggleValue);
+              });
           });
         }
       });

@@ -9,7 +9,6 @@
   function CommunicationsCtrl($log, $scope, $translate, AccountOrgService, Authinfo, Notification, Orgservice) {
     var vm = this;
     vm.cloudSipFlag = false;
-    /*jshint validthis: true */
 
     var orgId = Authinfo.getOrgId();
     AccountOrgService.getOrgSettings(orgId)

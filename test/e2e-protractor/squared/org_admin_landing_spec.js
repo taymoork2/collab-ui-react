@@ -1,12 +1,4 @@
 'use strict';
-/*jshint loopfunc: true */
-
-/* global describe */
-/* global it */
-/* global navigation */
-/* global login */
-/* global landing */
-/* global utils */
 
 xdescribe('Customer Admin Landing Page License Info', function () {
   afterEach(function () {

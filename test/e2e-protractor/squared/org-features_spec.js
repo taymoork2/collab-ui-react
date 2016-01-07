@@ -1,5 +1,4 @@
 'use strict';
-/*jshint loopfunc: true */
 
 /* global describe */
 /* global it */

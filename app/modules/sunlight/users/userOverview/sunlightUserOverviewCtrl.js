@@ -7,8 +7,6 @@
   /* @ngInject */
   function SunlightUserOverviewCtrl($state, $stateParams, SunlightConfigService, Notification, $translate, formlyValidationMessages, Log) {
 
-    /* jshint validthis: true */
-
     var vm = this;
 
     vm.currentUser = $stateParams.currentUser;

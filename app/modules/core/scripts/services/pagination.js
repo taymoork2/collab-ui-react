@@ -1,7 +1,5 @@
 'use strict';
 
-/* global $ */
-
 angular.module('Core')
   .service('Pagination', ['Log', 'UserListService', '$rootScope',
     function Pagination(Log, UserListService, $rootScope) {

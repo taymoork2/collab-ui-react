@@ -14,6 +14,9 @@
       margin: 0;
     }
   }
+  .secondary-label {
+    margin-left: 10px;
+  }
   h6 {
     @include vr-spacing(mv, 0.5);
   }

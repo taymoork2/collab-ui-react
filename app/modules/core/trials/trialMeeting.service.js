@@ -31,10 +31,14 @@
         'enabled': false,
         'details': {
           'siteUrl': '',
-          'timeZoneId': '',
-          // TODO: defaultTimezone
-          'setDefault': true
-        },
+          'timeZone': {
+            "label": "(GMT -8:00) San Francisco",
+            "timeZoneId": "4",
+            "timeZoneName": "San Francisco",
+            "DCName": "SJC",
+            "DCID": "PM"
+          }
+        }
       };
 
       _trialData = angular.copy(defaults);
