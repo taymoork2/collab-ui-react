@@ -95,7 +95,7 @@ describe('Partner flow', function () {
       });
     }, LONG_TIMEOUT);
 
-    xit('should edit an exisiting trial', function () {
+    it('should edit an exisiting trial', function () {
       utils.click(partner.newTrialRow);
 
       utils.expectIsDisplayed(partner.previewPanel);
