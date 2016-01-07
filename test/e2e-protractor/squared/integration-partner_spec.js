@@ -136,7 +136,7 @@ describe('Partner flow', function () {
       });
     }, LONG_TIMEOUT);
 
-    xit('should navigate first time wizard', function () {
+    it('should navigate first time wizard', function () {
       utils.expectTextToBeSet(wizard.mainviewTitle, 'Plan Review');
       utils.click(wizard.beginBtn);
       utils.click(wizard.saveBtn);
