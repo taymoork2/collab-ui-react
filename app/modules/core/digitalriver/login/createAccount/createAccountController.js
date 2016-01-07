@@ -23,7 +23,7 @@ angular.module('Core')
             if (status != 200 || !data.success) {
               $scope.error = data.message;
             } else {
-              $cookies.atlasDrCookie = data.message;
+              $cookies.atlasDrCookie = data.data;
               $window.location.href = "https://www.digitalriver.com/";
             }
           });

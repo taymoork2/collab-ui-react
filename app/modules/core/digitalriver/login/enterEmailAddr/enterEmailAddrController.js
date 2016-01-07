@@ -15,7 +15,7 @@ angular.module('Core')
             if (status != 200 || !data.success) {
               $log.error("getUserFromEmail failed. Status: " + status);
             } else {
-              $window.location.href = (data.message == "true" ? "/#/drLoginForward" : "/#/createAccount") + "?email=" + $scope.email;
+              $window.location.href = (data.data == "true" ? "/#/drLoginForward" : "/#/createAccount") + "?email=" + $scope.email;
             }
           });
       };
