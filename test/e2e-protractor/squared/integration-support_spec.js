@@ -45,7 +45,7 @@ describe('Support flow', function () {
 
         utils.expectIsDisplayed(support.supportTable);
         utils.expectIsDisplayed(support.emailAddress);
-        utils.expectText(support.emailAddress, support.searchValidEmail);
+        utils.expectText(support.rowContents, support.searchValidEmail);
 
         utils.click(support.locusIdSort);
         utils.click(support.locusIdSort);
@@ -60,7 +60,7 @@ describe('Support flow', function () {
 
         utils.expectIsDisplayed(support.supportTable);
         utils.expectIsDisplayed(support.emailAddress);
-        utils.expectText(support.emailAddress, support.searchValidEmail);
+        utils.expectText(support.rowContents, support.searchValidEmail);
       });
 
       xit('should search for logs by valid locusId', function () {

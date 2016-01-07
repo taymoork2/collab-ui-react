@@ -504,6 +504,9 @@ angular.module('Squared')
         enableRowHeaderSelection: false,
         enableColumnResize: true,
         enableColumnMenus: false,
+        onRegisterApi: function (gridApi) {
+          $scope.gridApi = gridApi;
+        },
         columnDefs: [{
           field: 'emailAddress',
           displayName: $filter('translate')('supportPage.logEmailAddress'),

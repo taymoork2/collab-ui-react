@@ -1517,6 +1517,8 @@ angular.module('Core')
       };
 
       $scope.saveConvertList = function () {
+        $scope.selectedState = $scope.gridApi.saveState.save();
+        $scope.convertSelectedList = $scope.gridApi.selection.getSelectedRows();
         convertUsersCount = $scope.convertSelectedList.length;
         $scope.convertUsersFlow = true;
         convertPending = false;
@@ -1640,41 +1642,34 @@ angular.module('Core')
 
       getUnlicensedUsers();
 
-      //  var displayNameTemplate = '<div class="ngCellText"><p class="hoverStyle" title="{{row.entity.displayName}}">{{row.entity.displayName}}</p></div>';
-      //   var emailTemplate = '<div class="ngCellText"><p class="hoverStyle" title="{{row.entity.userName}}">{{row.entity.userName}}</p></div>';
-
       $scope.convertGridOptions = {
         data: 'unlicensedUsersList',
         rowHeight: 45,
         enableHorizontalScrollbar: 0,
-        // enableVerticalScrollbar: 'always',
         selectionRowHeaderWidth: 40,
         enableRowHeaderSelection: true,
         enableFullRowSelection: true,
         useExternalSorting: false,
         enableColumnMenus: false,
         showFilter: false,
+        saveSelection: true,
         onRegisterApi: function (gridApi) {
           $scope.gridApi = gridApi;
-          gridApi.selection.on.rowSelectionChanged($scope, function (rows) {
-            $scope.convertSelectedList = gridApi.selection.getSelectedRows();
-          });
-          //   $scope.gridApi.grid.modifyRows($scope.gridOptions.data);
-          angular.forEach($scope.convertSelectedList, function (value) {
-            $scope.gridApi.selection.selectRow(value);
-          });
+          if ($scope.selectedState) {
+            $timeout(function () {
+              gridApi.saveState.restore($scope, $scope.selectedState);
+            }, 100);
+          }
         },
         columnDefs: [{
 
           field: 'displayName',
           displayName: $translate.instant('usersPage.displayNameHeader'),
-          //   cellTemplate: displayNameTemplate,
           resizable: false,
           sortable: true
         }, {
           field: 'userName',
           displayName: $translate.instant('homePage.emailAddress'),
-          //     cellTemplate: emailTemplate,
           resizable: false,
           sort: {
             direction: 'desc',

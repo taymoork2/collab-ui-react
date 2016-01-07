@@ -31,6 +31,7 @@ angular.module('Core', [
   'ngGrid',
   'ui.grid',
   'ui.grid.selection',
+  'ui.grid.saveState',
   'ui.grid.infiniteScroll',
   'mgo-angular-wizard',
   'ngClipboard',

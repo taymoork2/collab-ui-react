@@ -74,7 +74,7 @@
           <label ng-show="searchInput !== 'none' && (userLogs.length === 0 || !userLogs)">
               <span id="noResults" translate="supportPage.noResults">{{searchInput}}howdy</span>
           </label>
-          <div gridscrollbar ng-hide="callInfoActive" class="gridStyle" ui-grid="gridOptions"></div>
+          <div id="supportTable" gridscrollbar ng-hide="callInfoActive" class="gridStyle" ui-grid="gridOptions"></div>
       </div>
     </div>
     <div class="panel panel-default call-info-panel" id="call-info-panel" ng-show="callInfoActive">
