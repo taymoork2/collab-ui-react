@@ -164,7 +164,7 @@
       var colors = ['colorOne', 'colorTwo'];
       var secondaryColors = [data[0].colorOne, data[0].colorTwo];
       var values = ['totalRegisteredUsers', 'activeUsers'];
-      var titles = [usersTitle, activeUsersTitle]
+      var titles = [usersTitle, activeUsersTitle];
       var graphs = [];
 
       for (var i = 0; i < values.length; i++) {
