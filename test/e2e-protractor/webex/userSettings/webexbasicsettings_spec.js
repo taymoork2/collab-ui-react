@@ -29,7 +29,7 @@ describe('WebEx user settings', function () {
     utils.click(usersettings.testSiteElement);
   });
 
-  xit('should display basic WebEx settigns page', function () {
+  it('should display basic WebEx settigns page', function () {
     utils.wait(usersettings.userSettingsPanel);
     expect(usersettings.userSettingsPanel.isPresent()).toBeTruthy();
     expect(usersettings.userSettingsPanel.isDisplayed()).toBeTruthy();
@@ -67,7 +67,7 @@ describe('WebEx user settings', function () {
     //    expect(usersettings.alertSuccess.isDisplayed()).toBeTruthy();
   });
 
-  /**
+  /**  
     xit('should allow edit in 4th panel', function () {
       utils.click(usersettings.userPrivilegesLink);
       utils.wait(usersettings.userPrivilegesPanel);
@@ -102,7 +102,7 @@ describe('WebEx user settings', function () {
     });
   **/
 
-  /**
+  /**  
     it('should pause', function () {
       browser.pause();
     });
