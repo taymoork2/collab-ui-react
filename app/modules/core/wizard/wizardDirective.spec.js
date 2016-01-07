@@ -21,7 +21,7 @@ describe('Controller: WizardCtrl', function () {
     }]
   }, {
     name: 'messagingSetup',
-    label: 'firstTimeWizard.messaging',
+    label: 'firstTimeWizard.message',
     description: 'firstTimeWizard.messagingSetupSub',
     icon: 'icon-convo',
     title: 'firstTimeWizard.messagingSetup',
@@ -32,7 +32,7 @@ describe('Controller: WizardCtrl', function () {
     }]
   }, {
     name: 'communications',
-    label: 'firstTimeWizard.communications',
+    label: 'firstTimeWizard.call',
     description: 'firstTimeWizard.communicationsSub',
     icon: 'icon-phone',
     title: 'firstTimeWizard.claimSipUrl',
