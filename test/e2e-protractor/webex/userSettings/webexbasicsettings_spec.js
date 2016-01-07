@@ -35,7 +35,7 @@ describe('WebEx user settings', function () {
     expect(usersettings.userSettingsPanel.isDisplayed()).toBeTruthy();
   });
 
-  xit('should not display WebEx error page', function () {
+  it('should not display WebEx error page', function () {
     expect(usersettings.errorPanel.isPresent()).toBeFalsy();
   });
 
