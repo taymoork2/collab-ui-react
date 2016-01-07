@@ -1883,7 +1883,12 @@
       "webexTimezone": "WebEx Time Zone",
       "default": "Set as default",
       "tzDescription": "Select the time zone closest to your customer. This will ensure their WebEx site is deployed in the appropriate data center.",
-      "timezonePlaceholder": "Search for a time zone..."
+      "siteUrlPlaceholder": "acmecorp.webex.com",
+      "timezonePlaceholder": "Search for a time zone...",
+      "invalidSite": "SiteUrl is invalid.",
+      "duplicateSite": "SiteUrl is already in use.",
+      "domainInvalid": "SiteUrl must contain the webex.com domain name.",
+      "validationHttpError": "Could not reach server to validate siteUrl. Try again."
     },
     "call": {
       "title": "Start New Trial - Ship Devices",
