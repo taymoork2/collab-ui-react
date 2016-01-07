@@ -17,8 +17,13 @@
         "enabled": false,
         "details": {
           "siteUrl": "now.istomorrow.org",
-          "timeZoneId": "America/Los_Angeles",
-          "setDefault": true
+          "timeZone": {
+            "label": "(GMT -8:00) Los Angeles",
+            "timeZoneId": "4",
+            "timeZoneName": "Los Angeles",
+            "DCName": "SJC",
+            "DCID": "PM"
+          }
         }
       },
       "callTrial": {
@@ -83,8 +88,13 @@
         "enabled": true,
         "details": {
           "siteUrl": "now.istomorrow.org",
-          "timeZoneId": 4,
-          "setDefault": true
+          "timeZone": {
+            "label": "(GMT -8:00) Los Angeles",
+            "timeZoneId": "4",
+            "timeZoneName": "Los Angeles",
+            "DCName": "SJC",
+            "DCID": "PM"
+          }
         }
       },
       "callTrial": {
