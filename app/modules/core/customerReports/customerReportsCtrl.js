@@ -205,6 +205,12 @@
       if (tempFilesSharedChart !== null && angular.isDefined(tempFilesSharedChart)) {
         filesSharedChart = tempFilesSharedChart;
       }
+
+      var mediaData = DummyCustomerReportService.dummyMediaData(vm.timeSelected);
+      var tempMediaChart = CustomerGraphService.setMediaQualityGraph(mediaData, mediaChart);
+      if (tempMediaChart !== null && angular.isDefined(tempMediaChart)) {
+        mediaChart = tempMediaChart;
+      }
     }
 
     function timeUpdate() {

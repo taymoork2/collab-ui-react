@@ -164,11 +164,12 @@
       var colors = ['colorOne', 'colorTwo'];
       var secondaryColors = [data[0].colorOne, data[0].colorTwo];
       var values = ['totalRegisteredUsers', 'activeUsers'];
+      var titles = [usersTitle, activeUsersTitle]
       var graphs = [];
 
       for (var i = 0; i < values.length; i++) {
         graphs.push(angular.copy(columnBase));
-        graphs[i].title = usersTitle;
+        graphs[i].title = titles[i];
         graphs[i].fillColors = colors[i];
         graphs[i].colorField = colors[i];
         graphs[i].legendColor = secondaryColors[i];
@@ -234,16 +235,13 @@
       valueAxes[0].integersOnly = true;
       valueAxes[0].minimum = 0;
 
-      var legend = angular.copy(legendBase);
-      legend.reversedOrder = true;
-
       var startDuration = 1;
       if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
         startDuration = 0;
       }
 
       var numFormat = angular.copy(numFormatBase);
-      return createGraph(data, avgRoomsdiv, graphs, valueAxes, catAxis, 'modifiedDate', legend, numFormat, startDuration);
+      return createGraph(data, avgRoomsdiv, graphs, valueAxes, catAxis, 'modifiedDate', angular.copy(legendBase), numFormat, startDuration);
     }
 
     function avgRoomsGraphs(data) {
