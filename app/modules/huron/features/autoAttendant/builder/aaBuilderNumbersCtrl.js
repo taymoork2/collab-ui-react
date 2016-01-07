@@ -6,7 +6,7 @@
     .controller('AABuilderNumbersCtrl', AABuilderNumbersCtrl); /* was AutoAttendantGeneralCtrl */
 
   /* @ngInject */
-  function AABuilderNumbersCtrl($scope, $q, $stateParams, AAUiModelService, AutoAttendantCeInfoModelService, AANumberAssignmentService,
+  function AABuilderNumbersCtrl(AAUiModelService, AutoAttendantCeInfoModelService, AANumberAssignmentService,
     AAModelService, ExternalNumberPoolService, InternalNumberPoolService, Authinfo, Notification, $translate, telephoneNumberFilter, TelephoneNumberService) {
     var vm = this;
 
@@ -128,25 +128,27 @@
 
       resources.push(resource);
 
-      // find first e164 number, move to array[0] if not already there
-      _.find(resources, function (resource) {
-        if (TelephoneNumberService.validateDID(resource.number)) {
-          var index = _.indexOf(resources, resource);
-
-          // if e164 number is already the 0th element, all done
-
-          if (index >= 1) {
-            resources.splice(0, 0, _.pullAt(resources, index)[0]);
-          }
-          return resource;
-        }
-      });
-
       // Assign the number in CMI
       saveAANumberAssignments(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources).then(
 
         function (response) {
+          // find first e164 number, move to array[0] if not already there
+          var r = _.find(resources, function (resource) {
+            return (TelephoneNumberService.validateDID(resource.number));
+          });
+
+          if (angular.isDefined(r)) {
+            var index = _.indexOf(resources, r);
+
+            // if e164 number is already the 0th element, all done
+
+            if (index >= 1) {
+              resources.splice(0, 0, _.pullAt(resources, index)[0]);
+            }
+          }
+
           sortAssignedResources(resources);
+
         },
         function (response) {
           Notification.error('autoAttendant.errorAddCMI', {
@@ -155,7 +157,7 @@
             status: response.status
           });
 
-          _.pull(resources, resource);
+          resources.pop();
 
         });
 
@@ -255,6 +257,7 @@
         directorynumber: '',
         order: 'pattern'
       }).$promise.then(function (intPool) {
+
         for (var i = 0; i < intPool.length; i++) {
 
           var number = intPool[i].pattern.replace(/\D/g, '');
