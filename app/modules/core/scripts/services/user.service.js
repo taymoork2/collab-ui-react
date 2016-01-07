@@ -180,7 +180,7 @@ angular.module('Core')
         },
 
         getUserFromEmail: function (email, callback) {
-          $http.get(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/noauth/userexists?email=" + email, {
+          $http.get(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/noauth/userexists/" + email, {
               cache: false
             })
             .success(function (data, status) {
@@ -196,8 +196,8 @@ angular.module('Core')
             });
         },
 
-        addDrUser: function (email, password, callback) {
-          $http.post(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/noauth/user?email=" + email + "&password=" + password)
+        addDrUser: function (emailPassword, callback) {
+          $http.post(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/noauth/user", emailPassword)
             .success(function (data, status) {
               data = data || {};
               data.success = true;

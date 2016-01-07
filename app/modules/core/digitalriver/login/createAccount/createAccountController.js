@@ -15,12 +15,15 @@ angular.module('Core')
           return;
         }
         Userservice.addDrUser(
-          $scope.email1, $scope.password1,
+          {
+            'email': $scope.email1,
+            'password': $scope.password1
+          },
           function (data, status) {
             if (status != 200 || !data.success) {
               $scope.error = data.message;
             } else {
-              $cookies.atlasDrCookie = data.message;
+              $cookies.atlasDrCookie = data.data;
               $window.location.href = "https://www.digitalriver.com/";
             }
           });
