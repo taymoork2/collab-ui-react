@@ -178,7 +178,17 @@ Adding a simple page ("Hello World")
   * **+**`.../hello-world/say-hello`
 * create a html template file to write `<span>{{hello}}</span>`:
   * **+**`.../say-hello/say-hello.tpl.html`
-* create the controller that writes "Hello World" to the scope: `$scope.hello = 'Hello World!';`
+* create the controller that writes "Hello World" to the scope:
+  `(function () {
+    'use strict';
+
+    angular
+      .module('hello-world')
+      .controller('HelloWorldController', ['$scope', function ($scope) {
+        $scope.hello = 'Hello world';
+      }]);
+
+  }());`
   * **+**`.../say-hello/say-hello.controller.js`
 * add an entry for the module for the app to bootstrap in: `app/scripts/app.js`
 * add a state for the route to your page in: `app/scripts/appconfig.js`
