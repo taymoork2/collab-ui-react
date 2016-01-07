@@ -24,10 +24,11 @@
         card.previousTitle = 'overview.cards.roomSystem.previousTitle';
         card.settingsUrl = '#/devices';
         card.helper = OverviewHelper;
+        card.showHealth = false;
 
         card.healthStatusUpdatedHandler = function (data) {
           var room = _.find(data.components, {
-            id: card.helper.statusIds.Rooms
+            id: 'notavailyet'//card.helper.statusIds.Rooms
           });
           if (room) {
             card.healthStatus = card.helper.mapStatus(card.healthStatus, room.status);

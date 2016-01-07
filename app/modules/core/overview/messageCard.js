@@ -23,6 +23,7 @@
         card.enabled = false;
         card.cardClass = 'cs-card header-bar';
         card.helper = OverviewHelper;
+        card.showHealth = true;
 
         card.reportDataEventHandler = function (event, response) {
 

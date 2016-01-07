@@ -21,6 +21,7 @@
         card.enabled = false;
         card.settingsUrl = '';
         card.helper = OverviewHelper;
+        card.showHealth = true;
 
         card.healthStatusUpdatedHandler = function messageHealthEventHandler(data) {
           _.each(data.components, function (component) {

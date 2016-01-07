@@ -20,6 +20,7 @@
         card.notEnabledAction = 'https://www.cisco.com/go/hybrid-services';
         card.notEnabledActionText = 'overview.cards.hybrid.notEnabledActionText';
         card.helper = OverviewHelper;
+        card.showHealth = true;
 
         card.hybridStatusEventHandler = function (err, services) {
           card.services = card.filterEnabledServices(card.filterRelevantServices(services));
