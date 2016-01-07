@@ -273,8 +273,8 @@ describe('OnboardCtrl: Ctrl', function () {
       expect($scope.allLicenses[1].offerName).toEqual('CS');
     });
     it('should verify userLicenseIds and licenseId are the same', function () {
-      var userLicenseIds ='testABC';
-      $scope.populateConf();   
+      var userLicenseIds = 'testABC';
+      $scope.populateConf();
       expect($scope.allLicenses[0].licenseId).toEqual(userLicenseIds);
       expect($scope.allLicenses[1].licenseId).not.toEqual(userLicenseIds);
     });
