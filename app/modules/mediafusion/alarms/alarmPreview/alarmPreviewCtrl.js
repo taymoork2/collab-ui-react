@@ -1,7 +1,5 @@
 'use strict';
 
-/* global $ */
-
 angular.module('Mediafusion')
   .controller('AlarmPreviewCtrl', ['$scope', '$state',
     function ($scope, $state) {

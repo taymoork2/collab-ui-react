@@ -1,42 +1,42 @@
 <div>
   <!-- header -->
   <div class="modal-header">
-    <button 
-      type="button" 
-      class="close" 
+    <button
+      type="button"
+      class="close"
       ng-click="$dismiss()">
     </button>
     <h3
       class="modal-title"
-      translate="spacesPage.resetDevice">
+      translate="spacesPage.rebootDevice">
     </h3>
   </div>
 
   <!-- body -->
-  <div 
+  <div
     class="modal-body">
     <p>
-      <span 
-        translate="spacesPage.resetDeviceConfText">
+      <span
+        translate="spacesPage.rebootDeviceConfText">
       </span>
     </p>
   </div>
 
   <!-- footer -->
-  <div 
+  <div
     class="modal-footer">
-    <button 
-      class="btn" 
+    <button
+      class="btn"
       ng-click="$dismiss()">
-      <span 
+      <span
         translate="spacesPage.cancel">
       </span>
     </button>
-    <button 
-      class="btn btn--negative" 
+    <button
+      class="btn btn--negative"
       sq-click-promise="rdc.resetDevice(sc.currentDevice)" >
-      <span 
-        translate="spacesPage.resetDevice">
+      <span
+        translate="spacesPage.rebootDevice">
       </span>
     </button>
   </div>

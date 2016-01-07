@@ -1,7 +1,5 @@
 'use strict';
 
-/* global $ */
-
 angular.module('Mediafusion')
   .controller('MetricsPreviewCtrl', ['$scope', '$state',
     function ($scope, $state) {

@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function UserOverviewCtrl($scope, $stateParams, $translate, $http, Authinfo, Config, Utils, FeatureToggleService, Userservice) {
-    /*jshint validthis: true */
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;
@@ -29,21 +28,21 @@
       vm.services = [];
 
       var msgState = {
-        name: $translate.instant('onboardModal.messaging'),
+        name: $translate.instant('onboardModal.message'),
         icon: $translate.instant('onboardModal.messaging'),
         state: 'user-overview.messaging',
         detail: $translate.instant('onboardModal.freeMsg')
       };
 
       var commState = {
-        name: $translate.instant('onboardModal.communications'),
+        name: $translate.instant('onboardModal.call'),
         icon: $translate.instant('onboardModal.communications'),
         state: 'user-overview.communication',
         detail: $translate.instant('onboardModal.freeComm')
       };
 
       var confState = {
-        name: $translate.instant('onboardModal.conferencing'),
+        name: $translate.instant('onboardModal.meeting'),
         icon: $translate.instant('onboardModal.conferencing'),
         state: 'user-overview.conferencing',
         detail: $translate.instant('onboardModal.freeConf')
@@ -55,14 +54,6 @@
         state: 'user-overview.contactCenter',
         detail: $translate.instant('onboardModal.freeContactCenter')
       };
-
-      FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
-        if (result) {
-          msgState.name = $translate.instant('onboardModal.message');
-          commState.name = $translate.instant('onboardModal.call');
-          confState.name = $translate.instant('onboardModal.meeting');
-        }
-      });
 
       if (hasEntitlement('squared-room-moderation') || !vm.hasAccount) {
         if (getServiceDetails('MS')) {

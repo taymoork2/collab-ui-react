@@ -1,11 +1,13 @@
 .hercules-notifications{
   z-index: 999;
-  padding-right:0.5rem;
-  padding-top:0.75rem;
+  margin-top: 0.5rem;
 
   .notification-bell {
+    position: relative;
     cursor: pointer;
     color: $gray-light;
+    margin-right: 2rem;
+    display: block;
   }
 
   .notification-dismiss {
@@ -24,7 +26,6 @@
 
   .fa-bell {
     font-size: 20px;
-    margin-right: 2rem;
   }
 
   .container {
@@ -50,7 +51,8 @@
     top: 30px;
     border: 1px solid #C6C7CA;
     margin-left: 0px;
-    padding-top: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
 
   .notif {
@@ -74,11 +76,17 @@
     .badge-wrapper {
       display: block;
       width: 55px;
+      text-align: center;
+      color: #fff;
     }
 
     .notif-wrapper {
       width: 320px;
       margin-left: 20px;
+
+      p {
+        margin-bottom: 0;
+      }
     }
 
     span {
@@ -115,23 +123,21 @@
     }
   }
   .amountBubble {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+
     span {
       display: block;
-      width: 11px;
-      height: 11px;
+      width: 14px;
+      height: 14px;
       text-align: center;
-
-      padding-top: 1px;
-
       font-size: 8px;
       font-weight: bold;
       border-radius: 50%;
-
       color: white;
-
-      position: relative;
-      top: -25px;
-      left: 12px;
+      border: 1px solid #fff;
+      line-height: 14px;
     }
   }
 }

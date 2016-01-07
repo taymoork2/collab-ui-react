@@ -4,6 +4,9 @@
   angular.module('WebExUtils').factory('WebExUtilsFact', [
     '$q',
     '$log',
+    '$rootScope',
+    '$http',
+    '$timeout',
     'Authinfo',
     'Orgservice',
     'WebExXmlApiFact',
@@ -11,6 +14,9 @@
     function webexUtilsFact(
       $q,
       $log,
+      $rootScope,
+      $http,
+      $timeout,
       Authinfo,
       Orgservice,
       WebExXmlApiFact,
@@ -433,6 +439,40 @@
 
         return deferredIsSiteSupportsIframe.promise;
       }; // isSiteSupportsIframe()
+
+      obj.logoutSite = function () {
+        var siteUrl = $rootScope.lastSite;
+
+        var promise;
+        if (!angular.isDefined(siteUrl)) {
+          $log.log('No WebEx site visited.');
+          var deferred = $q.defer();
+          deferred.resolve('OK');
+          promise = deferred.promise;
+        } else {
+          var siteName = obj.getSiteName(siteUrl);
+
+          var logoutUrl = "https://" + $rootScope.nginxHost + "/wbxadmin/clearcookie.do?proxyfrom=atlas&siteurl=" + siteName;
+          $log.log('Logout from WebEx site ' + siteName + ", " + logoutUrl);
+
+          var jqpromise = $.ajax({
+            type: 'POST',
+            url: logoutUrl,
+            data: $.param({
+              ngxsiteurl: siteUrl
+            }),
+            xhrFields: {
+              withCredentials: true
+            },
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            timeout: 250
+          });
+          promise = $q.when(jqpromise); //convert into angularjs promise
+        }
+        return promise;
+      };
 
       return obj;
     } // webexUtilsFact()
