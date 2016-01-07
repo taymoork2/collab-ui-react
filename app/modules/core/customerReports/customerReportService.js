@@ -247,12 +247,23 @@
         totalRooms: 0,
         avgRooms: 0
       };
-      var dayOffset = parseInt(moment.tz(groupData[groupData.length - 1].date, timezone).format('e'));
-      if (groupData[groupData.length - 1] < oneToOneData[oneToOneData.length - 1]) {
+      var dayOffset = 0;
+      if (groupData.length > 0) {
+        dayOffset = parseInt(moment.tz(groupData[groupData.length - 1].date, timezone).format('e'));
+        if ((oneToOneData.length > 0) && (groupData[groupData.length - 1] < oneToOneData[oneToOneData.length - 1])) {
+          dayOffset = parseInt(moment.tz(oneToOneData[oneToOneData.length - 1].date, timezone).format('e'));
+        } else if ((avgData.length > 0) && (groupData[groupData.length - 1] < avgData[avgData.length - 1])) {
+          dayOffset = parseInt(moment.tz(avgData[avgData.length - 1].date, timezone).format('e'));
+        }
+      } else if (oneToOneData.length > 0) {
         dayOffset = parseInt(moment.tz(oneToOneData[oneToOneData.length - 1].date, timezone).format('e'));
-      } else if (groupData[groupData.length - 1] < avgData[avgData.length - 1]) {
+        if ((avgData.length > 0) && (groupData[groupData.length - 1] < avgData[avgData.length - 1])) {
+          dayOffset = parseInt(moment.tz(avgData[avgData.length - 1].date, timezone).format('e'));
+        }
+      } else if (avgData.length > 0) {
         dayOffset = parseInt(moment.tz(avgData[avgData.length - 1].date, timezone).format('e'));
       }
+
       if (dayOffset >= 4) {
         dayOffset = 7 - dayOffset;
       } else {
@@ -383,10 +394,17 @@
         contentShareSizes: 0,
         color: Config.chartColors.brandSuccess
       };
-      var dayOffset = parseInt(moment.tz(contentSharedData[contentSharedData.length - 1].date, timezone).format('e'));
-      if (contentSharedData[contentSharedData.length - 1] < contentShareSizesData[contentShareSizesData.length - 1]) {
+
+      var dayOffset = 0;
+      if (contentSharedData.length > 0) {
+        dayOffset = parseInt(moment.tz(contentSharedData[contentSharedData.length - 1].date, timezone).format('e'));
+        if ((contentShareSizesData.length > 0) && (contentSharedData[contentSharedData.length - 1] < contentShareSizesData[contentShareSizesData.length - 1])) {
+          dayOffset = parseInt(moment.tz(contentShareSizesData[contentShareSizesData.length - 1].date, timezone).format('e'));
+        }
+      } else if (contentShareSizesData.length > 0) {
         dayOffset = parseInt(moment.tz(contentShareSizesData[contentShareSizesData.length - 1].date, timezone).format('e'));
       }
+
       if (dayOffset >= 4) {
         dayOffset = 7 - dayOffset;
       } else {
