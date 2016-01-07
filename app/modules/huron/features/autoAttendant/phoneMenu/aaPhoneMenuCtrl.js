@@ -93,6 +93,10 @@
         name: 'phoneMenuDialExt',
         action: 'runActionsOnInput',
         inputType: 2
+      }, {
+        label: $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
+        name: 'phoneMenuRouteToExtNum',
+        action: 'route'
       },
       // {
       //   label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
