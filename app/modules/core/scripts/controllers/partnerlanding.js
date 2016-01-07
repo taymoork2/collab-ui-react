@@ -145,30 +145,6 @@ angular.module('Core')
       }
 
       $scope.newTrialName = null;
-      // $scope.trialsGrid = {
-      //   data: 'activeList',
-      //   multiSelect: false,
-      //   showFilter: true,
-      //   rowHeight: 38,
-      //   headerRowHeight: 38,
-      //   selectedItems: [],
-      //   sortInfo: {
-      //     fields: ['endDate', 'customerName', 'numUsers'],
-      //     directions: ['asc']
-      //   },
-
-      //   columnDefs: [{
-      //     field: 'customerName',
-      //     displayName: $translate.instant('partnerHomePage.trialsCustomerName')
-      //   }, {
-      //     field: 'endDate',
-      //     displayName: $translate.instant('partnerHomePage.trialsEndDate')
-      //   }, {
-      //     field: 'numUsers',
-      //     displayName: $translate.instant('partnerHomePage.trialsNumUsers')
-      //   }]
-      // };
-
       var actionTemplate = $templateCache.get('modules/core/partnerLanding/grid/actionColumn.tpl.html');
       var nameTemplate = $templateCache.get('modules/core/partnerLanding/grid/nameColumn.tpl.html');
       var serviceTemplate = $templateCache.get('modules/core/partnerLanding/grid/serviceColumn.tpl.html');
