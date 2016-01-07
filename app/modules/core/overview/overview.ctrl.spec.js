@@ -93,12 +93,12 @@ describe('Controller: OverviewCtrl', function () {
         enabled: true
 
       }, {
-          id: 'squared-fusion-ec',
-          status: 'warn',
-          name: 'fake.service.warnstatus',
-          enabled: true
+        id: 'squared-fusion-ec',
+        status: 'warn',
+        name: 'fake.service.warnstatus',
+        enabled: true
 
-        }]);
+      }]);
 
       expect(hybridCard.services).toBeDefined();
       testService(hybridCard, 'squared-fusion-uc', 'warning');
@@ -163,7 +163,6 @@ describe('Controller: OverviewCtrl', function () {
 
       expect(hybridCard.services).toBeDefined();
 
-
       testService(hybridCard, 'squared-fusion-mgmt', 'success');
       testService(hybridCard, 'squared-fusion-uc', 'warning');
       testService(hybridCard, 'squared-fusion-cal', 'warning');
@@ -182,7 +181,7 @@ describe('Controller: OverviewCtrl', function () {
         name: 'fake.service',
         enabled: true,
         acknowledged: true
-        //status:'ok'  undefined status
+          //status:'ok'  undefined status
       }]);
 
       expect(hybridCard.services).toBeDefined();
