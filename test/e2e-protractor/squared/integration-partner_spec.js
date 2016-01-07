@@ -120,7 +120,7 @@ describe('Partner flow', function () {
 
   describe('Partner launches customer portal', function () {
 
-    xit('Launch customer portal via preview panel and display first time wizard', function () {
+    it('Launch customer portal via preview panel and display first time wizard', function () {
       appWindow = browser.getWindowHandle();
 
       utils.click(partner.newTrialRow);
