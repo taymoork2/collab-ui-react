@@ -46,7 +46,7 @@
       $scope.siteSettingId = $stateParams.webexPageId;
       $scope.siteSettingLabel = $translate.instant("webexSiteSettingsLabels.settingPageLabel_" + $stateParams.webexPageId);
 
-      $scope.siteSettingsBreadcrumbUiSref = "site-settings({siteUrl:" + "'" + $stateParams.siteUrl + "'" + "})";
+      $scope.siteSettingsBreadcrumbUiSref = "site-list.site-settings({siteUrl:" + "'" + $stateParams.siteUrl + "'" + "})";
       $scope.siteSettingsBreadcrumbLabel = $translate.instant(
         "webexSiteSettingsLabels.siteSettingsIndexPageTitleFull", {
           siteUrl: $stateParams.siteUrl

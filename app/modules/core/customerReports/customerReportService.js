@@ -534,8 +534,8 @@
           }
         }
         return graph;
-      }, function (response, status) {
-        return returnErrorCheck(status, 'Call quality data not returned for customer.', $translate.instant('mediaQuality.customerError'), []);
+      }, function (response) {
+        return returnErrorCheck(response, 'Call quality data not returned for customer.', $translate.instant('mediaQuality.customerError'), []);
       });
     }
 

@@ -20,7 +20,7 @@
     }
 
     function getRoomSystemsCardForOrg(org, licenses) {
-      var entitled = LicenseService.orgIsEntitledTo(org, 'spark-device-mgmt');
+      var entitled = LicenseService.orgIsEntitledTo(org, 'spark-room-system');
       return new OrgCard(entitled, licenses, Config.licenseTypes.SHARED_DEVICES);
     }
 

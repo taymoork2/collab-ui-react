@@ -69,7 +69,7 @@ angular.module('Core')
         '  <div ng-if="row.entity.isIframeSupported">' + '\n' +
         '    <a id="{{row.entity.license.siteUrl}}_webex-site-settings"' + '\n' +
         '       name="{{row.entity.license.siteUrl}}_webex-site-settings"' + '\n' +
-        '       ui-sref="site-settings({siteUrl:row.entity.license.siteUrl})">' + '\n' +
+        '       ui-sref="site-list.site-settings({siteUrl:row.entity.license.siteUrl})">' + '\n' +
         '      <p class="ui-grid-cell-contents">' + '\n' +
         '        <i class="icon-settings icon"></i>' + '\n' +
         '      </p>' + '\n' +

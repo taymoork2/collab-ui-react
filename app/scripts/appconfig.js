@@ -640,8 +640,7 @@ angular
           controllerAs: 'siteList',
           parent: 'main'
         })
-        .state('site-settings', {
-          url: '/site_settings',
+        .state('site-list.site-settings', {
           templateUrl: 'modules/webex/siteSettings/siteSettings.tpl.html',
           controller: 'WebExSiteSettingsCtrl',
           controllerAs: 'WebExSiteSettings',
@@ -650,7 +649,7 @@ angular
             siteUrl: null
           }
         })
-        .state('site-settings.site-setting', {
+        .state('site-list.site-setting', {
           templateUrl: 'modules/webex/siteSetting/siteSetting.tpl.html',
           controller: 'WebExSiteSettingCtrl',
           controllerAs: 'WebExSiteSetting',
@@ -659,21 +658,6 @@ angular
             siteUrl: null,
             webexPageId: null,
             settingPageIframeUrl: null
-          }
-        })
-        .state('webex-reports.webex-reports-iframe', {
-          url: '/reports/webex/i',
-          templateUrl: 'modules/webex/siteReportsIframe/siteReportIframe.tpl.html',
-          controller: 'ReportsIframeCtrl',
-          controllerAs: 'reportsIframe',
-          parent: 'main',
-          params: {
-            siteUrl: null,
-            reportPageId: null,
-            reportPageIframeUrl: null
-          },
-          data: {
-            displayName: 'Reports Page2'
           }
         })
         .state('reports', {
@@ -694,6 +678,20 @@ angular
           params: {
             tab: 'webex',
             siteUrl: null
+          }
+        })
+        .state('webex-reports.webex-reports-iframe', {
+          templateUrl: 'modules/webex/siteReportsIframe/siteReportIframe.tpl.html',
+          controller: 'ReportsIframeCtrl',
+          controllerAs: 'reportsIframe',
+          parent: 'main',
+          params: {
+            siteUrl: null,
+            reportPageId: null,
+            reportPageIframeUrl: null
+          },
+          data: {
+            displayName: 'Reports Page2'
           }
         })
         .state('userprofile', {
