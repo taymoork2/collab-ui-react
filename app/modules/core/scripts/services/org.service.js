@@ -1,8 +1,6 @@
 (function () {
   'use strict';
 
-  /* global lodash */
-
   angular
     .module('Core')
     .factory('Orgservice', Orgservice);

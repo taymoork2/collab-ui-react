@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function TelephonyOverviewCtrl($stateParams, $state, $rootScope, $translate, TelephonyInfoService, FeatureToggleService, Userservice) {
-    /*jshint validthis: true */
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
 

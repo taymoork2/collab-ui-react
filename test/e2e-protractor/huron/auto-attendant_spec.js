@@ -1,15 +1,6 @@
 'use strict';
 /*eslint-disable */
 
-/* global describe */
-/* global it */
-/* global browser */
-/* global utils */
-/* global login */
-/* global navigation */
-/* global notifications */
-/* global protractor */
-
 describe('Huron Auto Attendant', function () {
 
   beforeAll(function () {
@@ -112,7 +103,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.phoneMenuActionOptions.first().all(by.tagName('li')).first());
 
       utils.click(autoattendant.repeatPlus);
-      //Add Second Phone repeat Menu 
+      //Add Second Phone repeat Menu
       utils.click(autoattendant.phoneMenuKeys.last());
       utils.click(autoattendant.phoneMenuKeyOptions.last().all(by.tagName('li')).last());
       utils.click(autoattendant.phoneMenuAction.last());
