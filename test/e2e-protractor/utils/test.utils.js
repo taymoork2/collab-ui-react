@@ -540,7 +540,7 @@ exports.searchForSingleResult = function (query) {
     return EC.textToBePresentInElement(element(by.css('.searchfilter li:first-child .count')), "1")().thenCatch(function () {
       // handle a possible stale element
       return false;
-    });;
+    });
   }
   this.search(query);
   browser.wait(logAndWait, TIMEOUT, 'Waiting for a single search result');
@@ -548,7 +548,7 @@ exports.searchForSingleResult = function (query) {
 }
 
 exports.clickUser = function (query) {
-  return this.click(element.all(by.cssContainingText('.ngGrid .ngRow span', query)).first());
+  return this.click(element(by.cssContainingText('.ngGrid .ngRow span', query)));
 };
 
 exports.searchAndClick = function (query) {
