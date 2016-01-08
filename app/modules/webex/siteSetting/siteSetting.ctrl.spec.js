@@ -19,7 +19,7 @@ describe(
 
     // expected
     var scopeSiteSettingId = paramsWebexPageId;
-    var scopeSiteSettingsBreadcrumbUiSref = "site-settings({siteUrl:" + "'" + paramsSiteUrl + "'" + "})";
+    var scopeSiteSettingsBreadcrumbUiSref = "site-list.site-settings({siteUrl:" + "'" + paramsSiteUrl + "'" + "})";
     var scopeTrustIframeUrl = paramsSettingPageIframeUrl;
     var scopeAdminEmail = authPrimaryEmail;
     var scopeLocale = "es_MX";
