@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function NewFeatureModalCtrl($scope, $modalInstance, $translate, $state, $q, FeatureToggleService) {
-    /*jshint validthis: true */
     var vm = $scope;
 
     vm.features = [];

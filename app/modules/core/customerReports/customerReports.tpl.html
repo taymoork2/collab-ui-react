@@ -9,36 +9,10 @@
   <div class="content-container">
     <div class="row" ng-show="nav.showEngagement">
       <cs-card-layout>
-        <cs-card id='active-user-card' class="large report-card">
-          <article>
-            <header>
-              <h4 class='report-section-header' translate='activeUsers.activeUsers'></h4>
-            </header>
-            <section>
-              <uc-active-user-customer/>
-            </section>
-          </article>
-        </cs-card>
-        <cs-card id='avg-room-card' class="large report-card">
-          <article>
-            <header>
-              <h4 class='report-section-header' translate='avgRooms.avgRooms'></h4>
-            </header>
-            <section>
-              <uc-avg-rooms/>
-            </section>
-          </article>
-        </cs-card>
-        <cs-card id='files-shared-card' class="large report-card">
-          <article>
-            <header>
-              <h4 class='report-section-header' translate='filesShared.filesShared'></h4>
-            </header>
-            <section>
-              <uc-files-shared/>
-            </section>
-          </article>
-        </cs-card>
+        <uc-active-user-customer></uc-active-user-customer>
+        <uc-avg-rooms></uc-avg-rooms>
+        <uc-files-shared></uc-files-shared>
+        <uc-media-quality-customer></uc-media-quality-customer>
       </cs-card-layout>
     </div>
     <!-- WebEx reports content -->

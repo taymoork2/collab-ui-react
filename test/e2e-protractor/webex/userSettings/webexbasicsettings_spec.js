@@ -1,7 +1,5 @@
 'use strict';
 
-/* global describe, it, expect, login */
-
 describe('WebEx user settings', function () {
 
   it('should allow login as admin user', function () {
@@ -67,7 +65,7 @@ describe('WebEx user settings', function () {
     //    expect(usersettings.alertSuccess.isDisplayed()).toBeTruthy();
   });
 
-  /**  
+  /**
     xit('should allow edit in 4th panel', function () {
       utils.click(usersettings.userPrivilegesLink);
       utils.wait(usersettings.userPrivilegesPanel);
@@ -102,7 +100,7 @@ describe('WebEx user settings', function () {
     });
   **/
 
-  /**  
+  /**
     it('should pause', function () {
       browser.pause();
     });

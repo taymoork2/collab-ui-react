@@ -34,9 +34,9 @@ describe('Controller: OverviewCtrl', function () {
 
       callCard.healthStatusUpdatedHandler({
         components: [{
-          name: 'Media/Calling',
+          name: 'Spark Call',
           status: 'error',
-          id: 'bn5g1kfrkn9z'
+          id: 'gfg7cvjszyw0'
         }]
       });
 
@@ -51,7 +51,9 @@ describe('Controller: OverviewCtrl', function () {
       var hybridCard = getCard('overview.cards.hybrid.title');
 
       hybridCard.hybridStatusEventHandler('', [{
-        name: 'fake.service'
+        name: 'fake.service',
+        id: 'squared-fusion-cal',
+        enabled: true
       }]);
 
       expect(hybridCard.services).toBeDefined();
@@ -60,37 +62,111 @@ describe('Controller: OverviewCtrl', function () {
       })).toBeTruthy();
     });
 
+    var testService = function (hybridCard, id, expectedHealth) {
+      var serviceInTest = _(hybridCard.services).filter(function (service) {
+        return service.id == id;
+      }).first();
+      expect(serviceInTest).toBeDefined();
+      expect(serviceInTest.healthStatus).toEqual(expectedHealth);
+    };
+
+    it('with service calendar having error should report cal as danger', function () {
+      var hybridCard = getCard('overview.cards.hybrid.title');
+      hybridCard.hybridStatusEventHandler('', [{
+        id: 'squared-fusion-cal',
+        status: 'error',
+        name: 'fake.service.errorstatus',
+        enabled: true
+
+      }]);
+
+      expect(hybridCard.services).toBeDefined();
+      testService(hybridCard, 'squared-fusion-cal', 'danger');
+    });
+
+    it('with uc warning and ec ok should report uc as warning', function () {
+      var hybridCard = getCard('overview.cards.hybrid.title');
+      hybridCard.hybridStatusEventHandler('', [{
+        id: 'squared-fusion-uc',
+        status: 'ok',
+        name: 'fake.service.okstatus',
+        enabled: true
+
+      }, {
+        id: 'squared-fusion-ec',
+        status: 'warn',
+        name: 'fake.service.warnstatus',
+        enabled: true
+
+      }]);
+
+      expect(hybridCard.services).toBeDefined();
+      testService(hybridCard, 'squared-fusion-uc', 'warning');
+    });
+
+    it('with uc warning and ec error should report uc as danger', function () {
+      var hybridCard = getCard('overview.cards.hybrid.title');
+      hybridCard.hybridStatusEventHandler('', [{
+        id: 'squared-fusion-uc',
+        status: 'error',
+        name: 'fake.service.errorstatus',
+        enabled: true
+
+      }, {
+        id: 'squared-fusion-ec',
+        status: 'warn',
+        name: 'fake.service.warnstatus',
+        enabled: true
+
+      }]);
+
+      expect(hybridCard.services).toBeDefined();
+      testService(hybridCard, 'squared-fusion-uc', 'danger');
+    });
+
+    it('with uc ok and ec ok should report uc as success', function () {
+      var hybridCard = getCard('overview.cards.hybrid.title');
+      hybridCard.hybridStatusEventHandler('', [{
+        id: 'squared-fusion-uc',
+        status: 'ok',
+        name: 'fake.service.okstatus',
+        enabled: true
+
+      }, {
+        id: 'squared-fusion-ec',
+        status: 'ok',
+        name: 'fake.service.okec',
+        enabled: true
+
+      }]);
+
+      expect(hybridCard.services).toBeDefined();
+      testService(hybridCard, 'squared-fusion-uc', 'success');
+    });
+
     it('should set the serviceHealth on each service based on enabled and ack on each service', function () {
       var hybridCard = getCard('overview.cards.hybrid.title');
 
       hybridCard.hybridStatusEventHandler('', [{
         id: 'squared-fusion-mgmt',
-        status: 'ok'
+        status: 'ok',
+        enabled: true
       }, {
-        id: 'squared-fusion-media',
-        status: 'warn'
+        id: 'squared-fusion-uc',
+        status: 'warn',
+        enabled: true
       }, {
-        id: 'fake.service.nostatus'
-      }, {
-        id: 'fake.service.errorstatus',
-        status: 'error'
-
+        id: 'squared-fusion-cal',
+        enabled: true,
+        name: 'fake noe status'
       }]);
 
       expect(hybridCard.services).toBeDefined();
 
-      var testService = function (name, expectedHealth) {
-        var serviceInTest = _(hybridCard.services).filter(function (service) {
-          return service.id == name;
-        }).first();
-        expect(serviceInTest).toBeDefined();
-        expect(serviceInTest.healthStatus).toEqual(expectedHealth);
-      };
-
-      testService('squared-fusion-mgmt', 'success');
-      testService('squared-fusion-media', 'warning');
-      testService('fake.service.nostatus', 'warning');
-      testService('fake.service.errorstatus', 'danger');
+      testService(hybridCard, 'squared-fusion-mgmt', 'success');
+      testService(hybridCard, 'squared-fusion-uc', 'warning');
+      testService(hybridCard, 'squared-fusion-cal', 'warning');
+      //testService('fake.service.errorstatus', 'danger');
       //testService('fake.service', 'warning');
 
     });
@@ -101,7 +177,8 @@ describe('Controller: OverviewCtrl', function () {
     it('should update the list of services from an hybridStatusEvent', function () {
       var hybridCard = getCard('overview.cards.hybrid.title');
       hybridCard.hybridStatusEventHandler('', [{
-        id: 'fake.service',
+        id: 'squared-fusion-cal',
+        name: 'fake.service',
         enabled: true,
         acknowledged: true
           //status:'ok'  undefined status
@@ -109,7 +186,7 @@ describe('Controller: OverviewCtrl', function () {
 
       expect(hybridCard.services).toBeDefined();
       var fakeService = _(hybridCard.services).filter(function (service) {
-        return service.id == 'fake.service';
+        return service.id == 'squared-fusion-cal';
       }).first();
       expect(fakeService).toBeDefined();
       expect(fakeService.healthStatus).toBeDefined();
@@ -160,7 +237,8 @@ describe('Controller: OverviewCtrl', function () {
         return null;
       },
       getOverviewMetrics: function (backendCach) {},
-      healthMonitor: function (eventHandler) {}
+      healthMonitor: function (eventHandler) {},
+      huronHealthMonitor: function (eventHandler) {}
     };
 
     Authinfo = {

@@ -9,7 +9,6 @@
 
   function huntGroupService($q, HuntGroupServiceV2, UserSearchServiceV2, NumberSearchServiceV2, Authinfo, $http) {
 
-    /* jshint validthis: true */
     var customerId = Authinfo.getOrgId();
     var service = {
       getListOfHuntGroups: getListOfHuntGroups,

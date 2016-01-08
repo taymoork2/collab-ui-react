@@ -1,15 +1,6 @@
 'use strict';
 
-/* global LONG_TIMEOUT */
-/* global describe */
-/* global expect */
-/* global partner */
-/* global navigation */
-/* global utils */
-/* global login */
-/* global notifications */
-/* global deleteTrialUtils */
-/* global deleteUtils */
+/* global LONG_TIMEOUT, deleteTrialUtils */
 
 //TODO reenable after pstn change
 describe('Spark UC Partner flow', function () {

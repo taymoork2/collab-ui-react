@@ -1,5 +1,4 @@
 'use strict';
-/* global moment */
 
 angular.module('Core')
   .controller('setupDirSyncDialogCtrl', ['$scope', '$modalInstance', 'DirSyncService', 'Authinfo', 'Log', 'Notification', '$translate', '$window', 'Config', 'UserListService',

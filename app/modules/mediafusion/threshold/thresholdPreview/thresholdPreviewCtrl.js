@@ -1,7 +1,5 @@
 'use strict';
 
-/* global $ */
-
 angular.module('Mediafusion')
   .controller('ThresholdPreviewCtrl', ['$scope', '$state', 'ThresholdService',
     function ($scope, $state, ThresholdService) {

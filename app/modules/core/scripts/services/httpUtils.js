@@ -1,7 +1,6 @@
 (function () {
   'use strict';
 
-  /*jshint bitwise: false*/
   angular
     .module('Core')
     .factory('HttpUtils', HttpUtils);

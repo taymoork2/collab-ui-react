@@ -1,10 +1,5 @@
 'use strict';
 
-/* global describe */
-/* global it */
-/* global browser */
-/* global expect */
-
 describe('CS Admin flow', function () {
   afterEach(function () {
     utils.dumpConsoleErrors();

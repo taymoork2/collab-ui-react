@@ -2,7 +2,7 @@
 
 describe('Service: Customer Graph Service', function () {
   var CustomerGraphService;
-  var activeUsersChart, avgRoomsChart, filesSharedChart;
+  var activeUsersChart, avgRoomsChart, filesSharedChart, mediaChart;
   var validateService = {
     validate: function () {}
   };
@@ -11,6 +11,7 @@ describe('Service: Customer Graph Service', function () {
   var dummyActiveUserData = angular.copy(dummyData.activeUser.four);
   var dummyAvgRoomsData = angular.copy(dummyData.avgRooms.one);
   var dummyFilesSharedData = angular.copy(dummyData.filesShared.one);
+  var dummyMediaData = angular.copy(dummyData.mediaQuality.one);
 
   beforeEach(module('Core'));
 
@@ -80,6 +81,26 @@ describe('Service: Customer Graph Service', function () {
 
     it('should update graph when setFilesSharedGraph is called a second time', function () {
       CustomerGraphService.setFilesSharedGraph(dummyFilesSharedData, filesSharedChart);
+      expect(validateService.validate).toHaveBeenCalled();
+    });
+  });
+
+  describe('Media Quality graph services', function () {
+    beforeEach(function () {
+      spyOn(AmCharts, 'makeChart').and.returnValue({
+        'dataProvider': dummyMediaData,
+        validateData: validateService.validate
+      });
+      mediaChart = null;
+      mediaChart = CustomerGraphService.setMediaQualityGraph(dummyMediaData, mediaChart);
+    });
+
+    it('should have created a graph when setMediaQualityGraph is called the first time', function () {
+      expect(AmCharts.makeChart).toHaveBeenCalled();
+    });
+
+    it('should update graph when setMediaQualityGraph is called a second time', function () {
+      CustomerGraphService.setMediaQualityGraph(dummyMediaData, mediaChart);
       expect(validateService.validate).toHaveBeenCalled();
     });
   });

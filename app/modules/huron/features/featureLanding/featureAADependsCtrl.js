@@ -1,6 +1,5 @@
 (function () {
   'use strict';
-  /* jshint validthis: true */
   angular
     .module('Huron')
     .controller('HuronFeatureAADependsCtrl', HuronFeatureAADependsCtrl);
