@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function MohCtrl(mohService, $timeout, $state) {
-    /*jshint validthis: true */
     var vm = this;
     vm.title = 'Media on Hold';
     vm.playlists = [];

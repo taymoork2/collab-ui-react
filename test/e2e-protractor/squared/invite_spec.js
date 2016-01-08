@@ -1,12 +1,5 @@
 'use strict';
 
-/* global describe */
-/* global it */
-/* global by */
-/* global browser */
-/* global expect */
-/* global config */
-
 describe('invite spec', function () {
   var urlparams = '?test=test&another=another';
   // encrypted param from invitation email link for "Test User <phtest77+int1@gmail.com>"

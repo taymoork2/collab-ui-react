@@ -1,7 +1,5 @@
 'use strict';
 
-/* global isProductionBackend */
-
 var LoginPage = function () {
 
   this.setLoginUsername = function (username) {

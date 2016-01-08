@@ -1,7 +1,5 @@
 'use strict';
 
-/* global protractor, log */
-
 var config = require('./test.config.js');
 var request = require('request');
 var EC = protractor.ExpectedConditions;
@@ -545,7 +543,6 @@ exports.expectRowIsNotDisplayed = function (text) {
 };
 
 exports.dumpConsoleErrors = function () {
-  // jshint node:true
   browser.manage().logs().get('browser').then(function (browserLogs) {
     browserLogs.forEach(function (log) {
       if (log.level.value > 900) {

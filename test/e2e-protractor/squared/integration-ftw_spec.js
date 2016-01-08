@@ -1,12 +1,5 @@
 'use strict';
 
-/* global describe */
-/* global it */
-/* global browser */
-/* global by */
-/* global element */
-/* global wizard */
-/* global users */
 /* global LONG_TIMEOUT */
 
 describe('First Time Wizard', function () {

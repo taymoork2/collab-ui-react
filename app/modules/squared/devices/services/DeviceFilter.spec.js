@@ -150,13 +150,13 @@ describe('Service: DeviceFilter', function () {
 
     it('should search on tags', function () {
       var arr = [{
-        tagString: 'foo, bar, oof'
+        tags: ['foo', 'bar', 'oof']
       }, {}];
 
       DeviceFilter.setCurrentSearch('bar');
 
       expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
-      expect(DeviceFilter.getFilteredList(arr)[0].tagString).toBe('foo, bar, oof');
+      expect(DeviceFilter.getFilteredList(arr)[0].tags).toBe(arr[0].tags);
     });
 
     it('should search on serial', function () {
@@ -179,6 +179,33 @@ describe('Service: DeviceFilter', function () {
 
       expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
       expect(DeviceFilter.getFilteredList(arr)[0].upgradeChannel).toBe('xfoox');
+    });
+
+    it('should search on multiple terms', function () {
+      var arr = [{
+        displayName: 'xfoox',
+        product: 'xbarx'
+      }, {
+        displayName: 'xfoox'
+      }];
+
+      DeviceFilter.setCurrentSearch('foo,bar');
+
+      expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
+      expect(DeviceFilter.getFilteredList(arr)[0].displayName).toBe('xfoox');
+      expect(DeviceFilter.getFilteredList(arr)[0].product).toBe('xbarx');
+
+      DeviceFilter.setCurrentSearch('foo bar');
+
+      expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
+      expect(DeviceFilter.getFilteredList(arr)[0].displayName).toBe('xfoox');
+      expect(DeviceFilter.getFilteredList(arr)[0].product).toBe('xbarx');
+
+      DeviceFilter.setCurrentSearch('foo, bar');
+
+      expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
+      expect(DeviceFilter.getFilteredList(arr)[0].displayName).toBe('xfoox');
+      expect(DeviceFilter.getFilteredList(arr)[0].product).toBe('xbarx');
     });
 
     it('should return all when all filter', function () {

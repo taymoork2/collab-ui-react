@@ -16,6 +16,7 @@
     var avgUrl = '/avgConversations';
     var contentShared = '/contentShared';
     var contentShareSizes = '/contentShareSizes';
+    var callMetrics = '/callMetrics';
     var customerView = '&isCustomerView=true';
     var dateFormat = "MMM DD, YYYY";
     var dayFormat = "MMM DD";
@@ -35,11 +36,13 @@
     var avgCancelPromise = null;
     var contentSharedCancelPromise = null;
     var contentShareSizesCancelPromise = null;
+    var metricsCancelPromise = null;
 
     return {
       getActiveUserData: getActiveUserData,
       getAvgRoomData: getAvgRoomData,
-      getFilesSharedData: getFilesSharedData
+      getFilesSharedData: getFilesSharedData,
+      getCallMetricsData: getCallMetricsData
     };
 
     function getActiveUserData(filter) {
@@ -243,7 +246,7 @@
         avgData = response.data;
         return;
       }).error(function (response, status) {
-        avgData = returnErrorCheck(status, 'Average rooms per user data not returned for customer.', $translate.instant('avgRooms.avgError'), []);
+        avgData = returnErrorCheck(status, 'Average rooms data not returned for customer.', $translate.instant('avgRooms.avgError'), []);
         return;
       });
       promises.push(avgPromise);
@@ -515,6 +518,27 @@
       }
     }
 
+    function getCallMetricsData(filter) {
+      // cancel any currently running jobs
+      if (metricsCancelPromise !== null && angular.isDefined(groupCancelPromise)) {
+        metricsCancelPromise.resolve(ABORT);
+      }
+      metricsCancelPromise = $q.defer();
+      var callMetricsUrl = urlBase + detailed + callMetrics + getAltQuery(filter);
+
+      return getService(callMetricsUrl, metricsCancelPromise).success(function (response, status) {
+        return {
+          audio: [],
+          video: []
+        };
+      }).error(function (response, status) {
+        return returnErrorCheck(status, 'Call metrics data not returned for customer.', $translate.instant('callMetrics.customerError'), {
+          audio: [],
+          video: []
+        });
+      });
+    }
+
     function getQuery(filter) {
       if (filter.value === 0) {
         return '?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
@@ -522,6 +546,16 @@
         return '?&intervalCount=31&intervalType=day&spanCount=7&spanType=day&cache=' + cacheValue;
       } else {
         return '?&intervalCount=3&intervalType=month&spanCount=1&spanType=month&cache=' + cacheValue;
+      }
+    }
+
+    function getAltQuery(filter) {
+      if (filter.value === 0) {
+        return '?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=' + cacheValue;
+      } else if (filter.value === 1) {
+        return '?&intervalCount=31&intervalType=day&spanCount=31&spanType=day&cache=' + cacheValue;
+      } else {
+        return '?&intervalCount=93&intervalType=day&spanCount=93&spanType=day&cache=' + cacheValue;
       }
     }
 

@@ -75,18 +75,13 @@
       model: $scope.offers,
       defaultValue: _.get(vm, 'currentTrial.communications.status') === 'ACTIVE',
       templateOptions: {
-        label: $translate.instant('trials.collab'),
+        label: $translate.instant('trials.messageAndMeeting'),
         id: 'squaredTrial',
         class: 'columns medium-12 checkbox-group',
       },
       expressionProperties: {
         'templateOptions.disabled': function () {
           return vm.isSquaredUCEnabled() || vm.isRoomSystemsTrialsEnabled() || _.get(vm, 'currentTrial.communications.status') === 'ACTIVE';
-        },
-        'templateOptions.label': function () {
-          return FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
-            return result ? $translate.instant('trials.messageAndMeeting') : $translate.instant('trials.collab');
-          });
         }
       }
     }, {
@@ -94,7 +89,7 @@
       type: 'checkbox',
       model: $scope.offers,
       templateOptions: {
-        label: $translate.instant('trials.squaredUC'),
+        label: $translate.instant('trials.call'),
         id: 'squaredUCTrial',
         class: 'columns medium-12 checkbox-group',
       },
@@ -104,11 +99,6 @@
         },
         'hide': function () {
           return !vm.isSquaredUC();
-        },
-        'templateOptions.label': function () {
-          return FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
-            return result ? $translate.instant('partnerHomePage.call') : $translate.instant('trials.squaredUC');
-          });
         }
       }
     }];

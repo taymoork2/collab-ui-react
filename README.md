@@ -15,7 +15,7 @@ Adherence is mandatory. Please refactor non-compliant code.
 **Additional Conventions**
 * Indent using spaces not tabs
   * 2 space indentation - Javascript, HTML, and CSS
-* When using the bard.js test helper you need to add a jshint globals comment at the
+* When using the bard.js test helper you need to add a ESLint globals comment at the
     top of the file containing the dependencies in the spec, example:
       `/* globals $httpBackend, $rootScope, Authinfo, Userservice */`
 
@@ -276,13 +276,13 @@ There are several arguments that can be added to the gulp tasks. Arguments are l
 
 ### `gulp analyze`
 
-* Runs `gulp analyze:jshint, analyze:jslint` and `gulp plato tasks`
+* Runs `gulp analyze:eslint, analyze:jslint` and `gulp plato tasks`
 * Creates an analysis report of the JavaScript code using the plato analyzer tool
 * Creates an HTML report at `/report/plato/index.html` of the results
 
 ### `gulp jsb`
 
-* Runs `gulp analyze:jshint` and `gulp jsBeautifier:beautify` tasks
+* Runs `gulp analyze:eslint` and `gulp jsBeautifier:beautify` tasks
 
 Run the protractor e2e test:
 ----------------------------
@@ -381,8 +381,3 @@ List of All Optional Arguments
 
 * `gulp serve` specific.
 * When running 'gulp serve', use `--safari` to open Safari
-
-Grunt Tasks:
-------------
-
-#### GRUNT HAS BEEN DEPRECIATED FROM THE PROJECT. PLEASE USE GULP INSTEAD.
