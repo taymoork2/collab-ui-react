@@ -11,11 +11,11 @@
     <cs-sp-section>
       <div class="section-title-row">
         <span class="section-name" translate="directoryNumberPanel.title"></span>
-        <span class="actions-menu dropdown pull-right" ng-if="lineSettings.additionalBtn.show">
-          <button class="actions-button btn--none dropdown-toggle">
+        <span cs-dropdown class="actions-menu dropdown pull-right" ng-if="lineSettings.additionalBtn.show">
+          <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
             <i class="icon icon-three-dots"></i>
           </button>
-          <ul class="dropdown-menu dropdown-primary actions-services">
+          <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
             <li><a ng-click="lineSettings.deleteLineSettings()" translate="directoryNumberPanel.removeNumber"></a></li>
           </ul>
         </span>

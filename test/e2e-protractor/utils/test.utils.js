@@ -505,18 +505,19 @@ exports.search = function (query) {
 };
 
 exports.searchForSingleResult = function (query) {
-    function logAndWait() {
-      log('Waiting for a single search result');
-      return EC.textToBePresentInElement(element(by.css('.searchfilter li:first-child .count')), "1")().thenCatch(function () {
-        // handle a possible stale element
-        return false;
-      });;
-    }
-    this.search(query);
-    browser.wait(logAndWait, TIMEOUT, 'Waiting for a single search result');
-    return this.expectIsDisplayed(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)));
+  function logAndWait() {
+    log('Waiting for a single search result');
+    return EC.textToBePresentInElement(element(by.css('.searchfilter li:first-child .count')), "1")().thenCatch(function () {
+      // handle a possible stale element
+      return false;
+    });
   }
-  //TODO replace original search and click functionality with single result?
+  this.search(query);
+  browser.wait(logAndWait, TIMEOUT, 'Waiting for a single search result');
+  return this.expectIsDisplayed(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)));
+};
+
+//TODO replace original search and click functionality with single result?
 exports.searchAndClickSingleResult = function (query) {
   return this.searchForSingleResult(query).then(function () {
     return exports.clickUser(query);
@@ -633,7 +634,7 @@ exports.loginToOnboardUsers = function (loginName, userName) {
 exports.deleteUser = function (name, name2) {
   this.clickEscape();
   navigation.clickUsers();
-  this.searchForSingleResult(name);
+  this.search(name);
   this.click(users.userListAction);
   this.click(users.deleteUserOption);
   this.expectIsDisplayed(users.deleteUserModal);
