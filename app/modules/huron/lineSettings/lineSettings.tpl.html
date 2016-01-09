@@ -1,7 +1,11 @@
 <form novalidate name="lineSettings.form" role="form">
   <cs-sp-buttons ng-show="lineSettings.form.$dirty" ng-init="lineSettings.initNewForm()">
-    <button cs-btn loading="lineSettings.saveInProcess" class="btn btn--primary" translate="common.save" ng-click="lineSettings.saveLineSettings()" ng-disabled="lineSettings.form.$invalid || lineSettings.saveDisabled() || lineSettings.saveInProcess" type="submit"></button>
-    <button cs-btn translate="common.cancel" ng-click="lineSettings.resetLineSettings()"></button>
+    <button cs-btn loading="lineSettings.saveInProcess" class="btn btn--primary" ng-click="lineSettings.saveLineSettings()" ng-disabled="lineSettings.form.$invalid || lineSettings.saveDisabled() || lineSettings.saveInProcess" type="submit">
+      <span translate="common.save"></span>
+    </button>
+    <button cs-btn ng-click="lineSettings.resetLineSettings()">
+      <span translate="common.cancel"></span>
+    </button>
   </cs-sp-buttons>
   <cs-sp-container>
     <cs-sp-section>

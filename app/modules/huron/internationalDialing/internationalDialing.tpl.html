@@ -1,6 +1,8 @@
 <form name="internationalDialing.form" novalidate role="form">
   <cs-sp-buttons ng-show="internationalDialing.form.$dirty">
-    <button cs-btn loading="internationalDialing.saveInProcess" class="btn-primary" translate="common.save" ng-click="internationalDialing.save()" type="submit"></button>
+    <button cs-btn loading="internationalDialing.saveInProcess" class="btn-primary" ng-click="internationalDialing.save()" type="submit">
+      <span translate="common.save"></span>
+    </button>
     <button class="btn-default" translate="common.cancel" ng-click="internationalDialing.reset()"></button>
   </cs-sp-buttons>
   <cs-sp-container>
