@@ -24,7 +24,7 @@ describe('HelpdeskCardsService', function () {
 
   describe('Org Cards', function () {
     var org = {
-      services: ['spark-device-mgmt', 'ciscouc', 'webex-squared', 'rubbish']
+      services: ['spark-room-system', 'ciscouc', 'webex-squared', 'rubbish']
     };
     var licenses = [{
       offerCode: 'MS',

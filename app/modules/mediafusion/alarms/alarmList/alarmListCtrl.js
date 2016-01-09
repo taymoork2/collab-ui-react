@@ -14,21 +14,29 @@ angular.module('Mediafusion')
       $scope.currentDataPosition = 1;
       $scope.lastScrollPosition = 0;
 
-      var rowTemplate = '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}" ng-click="showAlarmDetails(row.entity)">' +
-        '<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }">&nbsp;</div>' +
-        '<div ng-cell></div>' +
-        '</div>';
-
-      var severityTemplate = '<div class="ngCellText col-xs-30" ><img  ng-src="modules/mediafusion/images/{{row.getProperty(col.field)}}.png" title="{{row.getProperty(col.field)}}"/>';
+      var severityTemplate = '<div class="ui-grid-cell-contents col-xs-30" ><img  ng-src="modules/mediafusion/images/{{row.getProperty(col.field)}}.png" title="{{row.getProperty(col.field)}}"/></div>';
 
       $scope.gridOptions = {
         data: 'queryAlarmList',
         multiSelect: false,
-        showFilter: true,
         rowHeight: 44,
-        rowTemplate: rowTemplate,
-        headerRowHeight: 40,
-        useExternalSorting: false,
+        enableSelectAll: false,
+        enableFullRowSelection: true,
+        enableColumnMenus: false,
+        onRegisterApi: function (gridApi) {
+          $scope.gridApi = gridApi;
+          gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+            $scope.showAlarmDetails(row.entity);
+          });
+          gridApi.infiniteScroll.on.needLoadMoreData($scope, function () {
+            if ($scope.load) {
+              $scope.load = false;
+              $scope.currentDataPosition++;
+              getAlarmList($scope.currentDataPosition);
+              $scope.gridApi.infiniteScroll.dataLoaded();
+            }
+          });
+        },
 
         columnDefs: [{
           field: 'severity',
@@ -130,19 +138,6 @@ angular.module('Mediafusion')
           getAlarmList($scope.currentDataPosition);
         }
       };
-      $scope.$on('ngGridEventScroll', function () {
-        if ($scope.load) {
-          $scope.load = false;
-          var ngGridView = $scope.gridOptions.ngGrid.$viewport[0];
-          var scrollTop = ngGridView.scrollTop;
-          var scrollHeight = ngGridView.scrollHeight;
-          //console.log(scrollTop);
-          //console.log(scrollHeight);
-          $scope.currentDataPosition++;
-          getAlarmList($scope.currentDataPosition);
-          //console.log('Scrolled .. ');
-        }
-      });
 
       $rootScope.$on('$stateChangeSuccess', function () {
         //console.log("entering stateChangeSuccess");

@@ -245,9 +245,13 @@
         var meetingModal = _.find(vm.trialStates, {
           'name': 'trialAdd.meeting'
         });
+        var addNumbersModal = _.find(vm.trialStates, {
+          'name': 'trialAdd.addNumbers'
+        });
 
         devicesModal.enabled = results[3] && results[1];
         meetingModal.enabled = results[1];
+        addNumbersModal.enabled = !vm.supportsPstnSetup;
 
       }).finally(function () {
         $scope.$watch(function () {
@@ -400,15 +404,13 @@
           Notification.notify(successMessage, 'success');
 
           if (addNumbersCallback) {
-            addNumbersCallback(vm.customerOrgId).finally(function () {
-              vm.startTrialButtonLoad = false;
-              vm.finishSetup();
-            });
-          } else {
-            vm.startTrialButtonLoad = false;
-            vm.finishSetup();
+            return addNumbersCallback(vm.customerOrgId)
+              .catch(_.noop); //don't throw an error
           }
-
+        })
+        .then(function () {
+          vm.startTrialButtonLoad = false;
+          vm.finishSetup();
           return {
             'customerOrgId': vm.customerOrgId
           };

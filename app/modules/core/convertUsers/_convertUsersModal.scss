@@ -3,13 +3,8 @@
     margin-right: 10px;
   }
   .gridStyle {
-    width: 826px;
+    width: 795px;
     height: 271px;
-  }
-
-  .hoverStyle {
-	text-overflow : ellipsis !important;
-	white-space   : nowrap !important;
-	overflow      : hidden !important;
+    background-color: $brand-white;
   }
 }
