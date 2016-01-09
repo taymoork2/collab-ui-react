@@ -105,7 +105,10 @@ angular.module('Core')
       $scope.dirsyncStatus = '';
       $scope.gridOptions = {
         data: 'userList',
-        multiSelect: false
+        multiSelect: false,
+        enableRowHeaderSelection: false,
+        enableColumnResize: true,
+        enableColumnMenus: false,
       };
 
       $scope.setupTokenfield = function () {

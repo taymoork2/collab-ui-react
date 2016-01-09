@@ -116,14 +116,12 @@ var UsersPage = function () {
   this.checkBoxEnts = element.all(by.repeater('key in entitlementsKeys'));
   this.iconSearch = element(by.id('icon-search'));
   this.userListEnts = element.all(by.binding('userName'));
-  this.userListStatus = element.all(by.binding('userStatus'));
-  this.userListSelStatus = element.all(by.css('.col5')).last().element(by.tagName('span'));
+  this.userListStatus = element(by.css('.ui-grid-row'));
   this.userListDisplayName = element.all(by.binding('displayName'));
   this.userListAction = element(by.id('actionsButton'));
   this.actionDropdown = element(by.css('.dropdown-menu'));
   this.resendInviteOption = element(by.css('#resendInviteOption a'));
   this.deleteUserOption = element(by.css('#deleteUserOption a'));
-  this.gridCell = element(by.css('.ngCell'));
   this.userLink = element(by.id('user-profile'));
 
   this.fnameField = element(by.id('fnameField'));
@@ -194,7 +192,7 @@ var UsersPage = function () {
   };
 
   this.clickOnUser = function () {
-    utils.click(element.all(by.repeater('row in renderedRows')).first().all(by.repeater('col in renderedColumns')).first());
+    utils.click(element(by.css('.ui-grid-row')));
   };
 
   this.assertPage = function (page) {

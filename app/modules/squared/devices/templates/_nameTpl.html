@@ -1,10 +1,10 @@
-<div class="ngCellText">
-  <i 
+<div class="ui-grid-cell-contents">
+  <i
     style="top: 8px; padding-right: 10px"
-    class="icon icon-2x icon-circle-telepresence" 
-    ng-class="{'needs-activation': row.getProperty('needsActivation')}"
+    class="icon icon-2x icon-circle-telepresence"
+    ng-class="{'needs-activation': row.entity.needsActivation}"
   />
 	<span>
-    {{row.getProperty('displayName')}}
+    {{row.entity.displayName}}
   </span>
 </div>

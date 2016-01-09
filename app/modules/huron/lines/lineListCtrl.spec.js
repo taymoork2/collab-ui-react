@@ -111,16 +111,6 @@ describe('Controller: LineListCtrl', function () {
     });
   });
 
-  describe('getLineList scroll event', function () {
-    it('should get next set of records', function () {
-      LineListService.getLineList.calls.reset();
-      $scope.$emit('ngGridEventScroll', {});
-
-      expect(LineListService.getLineList.calls.count()).toEqual(1);
-      expect(LineListService.getLineList).toHaveBeenCalledWith(101, 100, 'userid', '-asc', '', 'all');
-    });
-  });
-
   describe('getLineList lineListUpdate event', function () {
     it('should update line list', function () {
       LineListService.getLineList.calls.reset();

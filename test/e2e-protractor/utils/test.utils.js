@@ -516,7 +516,7 @@ exports.search = function (query) {
 
   function waitSpinner() {
     utils.expectIsNotDisplayed(spinner);
-    utils.expectIsDisplayed(element.all(by.cssContainingText('.ngGrid .ngRow span', query)).first());
+    utils.expectIsDisplayed(element.all(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)).first());
   }
 
   this.click(this.searchbox);
@@ -532,20 +532,21 @@ exports.search = function (query) {
 };
 
 exports.searchForSingleResult = function (query) {
-  function logAndWait() {
-    log('Waiting for a single search result');
-    return EC.textToBePresentInElement(element(by.css('.searchfilter li:first-child .count')), "1")().thenCatch(function () {
-      // handle a possible stale element
-      return false;
-    });
+    function logAndWait() {
+      log('Waiting for a single search result');
+      return EC.textToBePresentInElement(element(by.css('.searchfilter li:first-child .count')), "1")().thenCatch(function () {
+        // handle a possible stale element
+        return false;
+      });
+    }
+    this.search(query);
+    browser.wait(logAndWait, TIMEOUT, 'Waiting for a single search result');
+    return this.expectIsDisplayed(element.all(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)).first());
   }
-  this.search(query);
-  browser.wait(logAndWait, TIMEOUT, 'Waiting for a single search result');
-  return this.expectIsDisplayed(element.all(by.cssContainingText('.ngGrid .ngRow span', query)).first());
 }
 
 exports.clickUser = function (query) {
-  return this.click(element(by.cssContainingText('.ngGrid .ngRow span', query)));
+  return this.click(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)));
 };
 
 exports.searchAndClick = function (query) {
@@ -559,7 +560,7 @@ exports.searchForSingleAndClick = function (query) {
 };
 
 exports.expectRowIsNotDisplayed = function (text) {
-  this.expectIsNotDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', text)));
+  this.expectIsNotDisplayed(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', text)));
 };
 
 exports.dumpConsoleErrors = function () {

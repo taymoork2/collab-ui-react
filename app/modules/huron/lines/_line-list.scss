@@ -5,9 +5,14 @@
 .line-list {
   @extend %grid-subheader;
 
-  & .ngGrid {
+  & .ui-grid {
     & .internalNumberColumn {
       text-align: center;
     }
   }
+  &.ui-grid-cell:first-child ,
+  .ui-grid-header-cell:first-child  {
+    text-align: center;
+  }
+
 }
