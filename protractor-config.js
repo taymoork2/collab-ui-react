@@ -83,8 +83,8 @@ exports.config = {
       })
     );
 
-    global.TIMEOUT = 60000;
-    global.LONG_TIMEOUT = 60000 * 2;
+    global.TIMEOUT = 30000;
+    global.LONG_TIMEOUT = 60000;
 
     global.baseUrl = exports.config.baseUrl;
 

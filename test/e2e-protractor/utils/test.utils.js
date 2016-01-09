@@ -268,8 +268,7 @@ exports.expectIsNotDisplayed = function (elem, timeout) {
   browser.wait(logAndWait, TIMEOUT, 'Waiting for element not to be visible: ' + elem.locator());
 };
 
-exports.expectTextToBeSet = function (elem, text, wait) {
-  var timeout = (wait != undefined) ? wait : TIMEOUT;
+exports.expectTextToBeSet = function (elem, text, timeout) {
   browser.wait(function () {
     return elem.getText().then(function (result) {
       log('Waiting for element to have text set: ' + elem.locator() + ' ' + text);
@@ -277,7 +276,7 @@ exports.expectTextToBeSet = function (elem, text, wait) {
     }, function () {
       return false;
     });
-  }, timeout, 'Waiting for Text to be set: ' + elem.locator() + ' ' + text);
+  }, timeout || TIMEOUT, 'Waiting for Text to be set: ' + elem.locator() + ' ' + text);
 };
 
 exports.expectValueToBeSet = function (elem, value) {
