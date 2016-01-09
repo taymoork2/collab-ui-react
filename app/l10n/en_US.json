@@ -182,9 +182,6 @@
     "enabledBetaFeatures": "Enabled Beta Features",
     "otpShareButton": "Share"
   },
-  "messagingPanel": {
-    "title": "Messaging"
-  },
   "settings": {
     "title": "Service Setup",
     "initialSetup": "Initial Setup"
