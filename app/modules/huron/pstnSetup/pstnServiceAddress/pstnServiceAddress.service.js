@@ -9,7 +9,8 @@
   function PstnServiceAddressService($q, TerminusLookupE911Service, TerminusCustomerSiteService) {
     var service = {
       lookupAddress: lookupAddress,
-      getServiceAddress: getServiceAddress,
+      getAddress: getAddress,
+      updateAddress: updateAddress,
       listCustomerSites: listCustomerSites,
       createCustomerSite: createCustomerSite
     };
@@ -38,7 +39,7 @@
 
     return service;
 
-    function getServiceAddress(_address) {
+    function formatServiceAddress(_address) {
       // copy address for manipulation
       var address = angular.copy(_address);
       // merge in parsed street address values
@@ -51,18 +52,33 @@
       return serviceAddress;
     }
 
-    function mapAddressKeys(address, keyMapping) {
+    function formatAddressFromServiceAddress(serviceAddress) {
+      // Convert terminus service address object to parsed huron address object
+      var parsedAddress = mapKeys(serviceAddress, serviceAddressMapping);
+      // Append the full street address // TODO better way to reconstruct?
+      var parsedStreetAddress = [parsedAddress.number, parsedAddress.prefix, parsedAddress.street, parsedAddress.type];
+      // Remove empty values and convert to string
+      parsedAddress.streetAddress = _.chain(parsedStreetAddress).reject(_.isEmpty).join(' ').value();
+      // Filter the parsedAddress for properties that should exist in the addressMapping
+      var address = _.pick(parsedAddress, function (val, key) {
+        // parsed address key should exist in addressMapping value
+        return _.contains(addressMapping, key);
+      });
+      return address;
+    }
+
+    function mapKeys(address, keyMapping) {
       return _.mapKeys(address, function (value, key) {
         return keyMapping[key];
       });
     }
 
     function getTerminusAddress(address) {
-      return mapAddressKeys(address, _.invert(addressMapping));
+      return mapKeys(address, _.invert(addressMapping));
     }
 
     function getHuronAddress(address) {
-      return mapAddressKeys(address, addressMapping);
+      return mapKeys(address, addressMapping);
     }
 
     function lookupAddress(address) {
@@ -78,6 +94,17 @@
             }
             // format response back to huron model
             return getHuronAddress(address);
+          }
+        });
+    }
+
+    function getAddress(customerId) {
+      return listCustomerSites(customerId)
+        .then(function (sites) {
+          // Get service address from site and format to huron address object
+          var serviceAddress = _.get(sites, '[0].serviceAddress');
+          if (serviceAddress) {
+            return formatAddressFromServiceAddress(serviceAddress);
           }
         });
     }
@@ -114,10 +141,32 @@
         serviceAddress: {}
       };
       address.name = name;
-      payload.serviceAddress = getServiceAddress(address);
+      payload.serviceAddress = formatServiceAddress(address);
       return TerminusCustomerSiteService.save({
         customerId: customerId
       }, payload).$promise;
+    }
+
+    function updateSite(customerId, siteId, site) {
+      return TerminusCustomerSiteService.update({
+        customerId: customerId,
+        siteId: siteId
+      }, site).$promise;
+    }
+
+    function updateAddress(customerId, address) {
+      var site = {
+        serviceAddress: formatServiceAddress(address)
+      };
+      return listCustomerSites(customerId)
+        .then(function (sites) {
+          var siteId = _.get(sites, '[0].uuid');
+          if (siteId) {
+            return updateSite(customerId, siteId, site);
+          } else {
+            return $q.reject('Site not found');
+          }
+        });
     }
 
   }

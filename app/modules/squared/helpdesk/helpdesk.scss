@@ -70,17 +70,23 @@
       margin-top: -0.5rem;
       margin-bottom: 1rem;
     }
+    .device {
+      margin-top: 1rem;
+      .device-name {
+        color: $gray-dark-4;
+        margin-left: 0.5rem;
+      }
+    }
     .details-heading {
+      color: $gray-dark-4;
       margin-bottom: 1rem;
     }
     .details-value {
       color: $gray-dark-1;
-      overflow-wrap: break-word;
       word-wrap: break-word;
     }
     .details-value-device {
       color: $gray-dark-1;
-      overflow-wrap: break-word;
       word-wrap: break-word;
     }
     .cs-card-layout.cs-card-block {
@@ -167,6 +173,7 @@
       margin-bottom: 0rem;
       max-width: 100%;
       display: block;
+      height: auto;
       position: relative;
       z-index: 1;
       padding: 0;

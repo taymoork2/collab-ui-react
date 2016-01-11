@@ -12,7 +12,6 @@ function errorLogger(error) {
   log($.util.colors.red('*** Start of Error ***'));
   log(error);
   log($.util.colors.red('*** End of Error ***'));
-  /* jshint validthis:true */
   this.emit('end');
 }
 

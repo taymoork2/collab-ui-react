@@ -1,6 +1,9 @@
 @import '../userSettings/usersettings';
 @import '../siteSettings/sitesettings';
 
+.site-list {
+  background-color: $white;
+}
 .popout-link {
   color: $link-color;
   cursor: pointer;
