@@ -1025,6 +1025,7 @@ angular.module('Core')
         // Customer Admin
         Full_Admin: [
           'overview',
+          'domainmanagement',
           'users',
           'user-overview',
           'userprofile',

@@ -3285,5 +3285,14 @@
     "useLatestCode": "A new code has been sent to {{userEmail}}",
     "unexpectedError": "Unexpected error processing request.",
     "usage": "{{usage}} of {{volume}} in use"
+  },
+  "domainManagement": {
+    "title": "Domain Management",
+    "description": "The description of domain verification.",
+    "list": {
+      "domainHeader": "Domain",
+      "statusHeader": "Status",
+      "actionsHeader": "Actions"
+    }
   }
 }

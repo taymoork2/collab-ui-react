@@ -1,0 +1,20 @@
+<article>
+  <header>
+    <div translate="domainManagement.title"/>
+  </header>
+  <section>
+    <span translate="domainManagement.description"></span>
+    <table>
+      <tr>
+        <th translate="domainManagement.list.domainHeader"></th>
+        <th translate="domainManagement.list.statusHeader"></th>
+        <th translate="domainManagement.list.actionsHeader"></th>
+      </tr>
+      <tr ng-repeat="domain in dv.domains">
+        <td>{{domain.text}}</td>
+        <td>{{domain.status}}</td>
+        <td>...</td>
+      </tr>
+    </table>
+  </section>
+</article>
