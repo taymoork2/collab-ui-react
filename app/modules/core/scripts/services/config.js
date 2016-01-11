@@ -458,6 +458,17 @@ angular.module('Core')
           messenger: 'webex-messenger'
         },
 
+        offerTypes: {
+          collab: 'COLLAB',
+          spark1: 'SPARK1', //to be depricated; use message
+          webex: 'WEBEX', // to be depricated; use Meetings
+          squaredUC: 'SQUAREDUC', // to be depricated; use call
+          message: 'MESSAGE',
+          meetings: 'MEETINGS',
+          call: 'CALL',
+          roomSystems: 'ROOMSYSTEMS'
+        },
+
         trials: {
           message: 'COLLAB',
           meeting: 'WEBEX',

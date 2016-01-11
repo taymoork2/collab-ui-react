@@ -104,7 +104,7 @@
           enabled: true
         })
         .forEach(function (trial) {
-          if (trial.type === Config.trials.call) {
+          if (trial.type === Config.offerTypes.call || trial.type === Config.offerTypes.squaredUC) {
             details.shippingInfo = trial.details.shippingInfo;
             details.devices = _(trial.details.roomSystems)
               .concat(trial.details.phones)
@@ -117,7 +117,7 @@
               .value();
           }
 
-          if (trial.type === Config.trials.meeting) {
+          if (trial.type === Config.offerTypes.meetings) {
             details.siteUrl = trial.details.siteUrl;
             details.timeZoneId = trial.details.timeZone.timeZoneId;
           }

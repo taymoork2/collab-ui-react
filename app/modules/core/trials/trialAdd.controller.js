@@ -103,6 +103,16 @@
         class: 'columns medium-12 checkbox-group',
       },
       expressionProperties: {
+        'templateOptions.label': function () {
+          return FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials).then(function (result) {
+            if (result) {
+              vm.trialData.trials.messageTrial.type = Config.offerTypes.message;
+              return $translate.instant('trials.message');
+            }
+            vm.trialData.trials.messageTrial.type = Config.offerTypes.collab;
+            return $translate.instant('trials.messageAndMeeting');
+          });
+        },
         'templateOptions.disabled': function () {
           return !vm.canEditMessage;
         },
