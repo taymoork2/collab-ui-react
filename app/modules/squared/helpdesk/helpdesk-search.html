@@ -97,7 +97,7 @@
                 <h5>
                   {{org.displayName}}
                   <a tabindex="-1"
-                     ng-click="helpdeskCtrl.initSearchWithOrgFilter(org)"
+                     ng-click="helpdeskCtrl.initSearchWithOrgFilter(org);$event.stopPropagation()"
                      name="{{org}}"
                      class="right">
                     <i class="icon icon-search icon-org-search"></i>
