@@ -14,13 +14,13 @@
         <th class="col-md-1"><!--placeholder--></th>
         <th class="col-md-8"><h5 translate="autoAttendant.mainMenu"></h5></th>
         <th class="col-md-2">
-          <div class="dropdown aa-menu-dropdown-icon">
+          <div cs-dropdown class="dropdown aa-menu-dropdown-icon">
             <span>
-              <a href class="dropdown-toggle">
+              <a cs-dropdown-toggle href class="dropdown-toggle">
                 <i class="menu-dropdown-icon"></i>
               </a>
             </span>
-            <ul class="dropdown-menu" role="menu">
+            <ul cs-dropdown-menu class="dropdown-menu" role="menu">
               <li ng-repeat="choice in aaOption.optionMenuDropdownItems">
                 <a href ng-click="aaOption.addMenuOption()">{{choice}}</a>
               </li>

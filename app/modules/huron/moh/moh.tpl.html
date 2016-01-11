@@ -14,11 +14,11 @@
         <ul>
           <li ng-repeat="playlist in moh.playlists" ng-class="{selected: playlist.uuid === moh.selectedUuid}" class="playlist-item" ng-click="moh.selectPlaylist(playlist.uuid, playlist.name)">
             <span class="playlist-name">{{playlist.name}}</span>
-            <span class="actions-menu dropdown">
-            <button class="actions-button btn--none dropdown-toggle" aria-haspopup="true" aria-expanded="false">
+            <span cs-dropdown class="actions-menu dropdown">
+            <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle" aria-haspopup="true" aria-expanded="false">
             <i class="icon icon-three-dots"></i>
             </button>
-            <ul class="dropdown-menu dropdown-primary actions-playlist">
+            <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-playlist">
               <li><a href="" translate="mohManagement.setActive"></a></li>
               <li ng-if="!playlist.systemOwned"><a href="" translate="common.rename"></a></li>
               <li ng-if="!playlist.systemOwned"><a href="" translate="common.delete"></a></li>

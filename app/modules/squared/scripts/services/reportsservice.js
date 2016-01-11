@@ -16,6 +16,7 @@ function ReportsService($http, $q, $rootScope, $location, Storage, Config, Log, 
 
   var logInfoBaseUrl = 'reports/tables/calls/';
   var healthUrl = Config.getHealthCheckUrlServiceUrl();
+  var huronHealthUrl = Config.getHuronHealthCheckUrlServiceUrl();
   var averageCallCount = 'reports/counts/avgCallsPerUser';
   var entitlementCount = 'reports/counts/entitlements';
   var contentSharedCount = 'reports/counts/contentShared';
@@ -58,6 +59,7 @@ function ReportsService($http, $q, $rootScope, $location, Storage, Config, Log, 
     getLogInfo: getLogInfo,
     getCallSummary: getCallSummary,
     healthMonitor: healthMonitor,
+    huronHealthMonitor: huronHealthMonitor,
     getHealthStatus: getHealthStatus,
     getOverviewMetrics: getOverviewMetrics
   };
@@ -292,6 +294,18 @@ function ReportsService($http, $q, $rootScope, $location, Storage, Config, Log, 
         data = data || {};
         data.success = true;
         Log.debug('Callback for healthMonitor');
+        callback(data, status);
+      })
+      .error(function (data, status) {
+        callback(data, status);
+      });
+  }
+
+  function huronHealthMonitor(callback) {
+    $http.get(huronHealthUrl)
+      .success(function (data, status) {
+        data = data || {};
+        data.success = true;
         callback(data, status);
       })
       .error(function (data, status) {

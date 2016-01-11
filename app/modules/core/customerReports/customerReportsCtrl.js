@@ -40,6 +40,10 @@
     vm.filesSharedDescription = '';
     vm.filesSharedStatus = REFRESH;
 
+    var mediaChart = null;
+    var mediaCard = null;
+    vm.mediaQualityStatus = REFRESH;
+
     var audioChart = null;
     var audioCard = null;
     vm.audioDescription = '';
@@ -128,6 +132,7 @@
         setActiveUserData();
         setAvgRoomData();
         setFilesSharedData();
+        setMediaData();
         setCallMetricsData();
       }, 30);
     }
@@ -200,12 +205,19 @@
       if (tempFilesSharedChart !== null && angular.isDefined(tempFilesSharedChart)) {
         filesSharedChart = tempFilesSharedChart;
       }
+
+      var mediaData = DummyCustomerReportService.dummyMediaData(vm.timeSelected);
+      var tempMediaChart = CustomerGraphService.setMediaQualityGraph(mediaData, mediaChart);
+      if (tempMediaChart !== null && angular.isDefined(tempMediaChart)) {
+        mediaChart = tempMediaChart;
+      }
     }
 
     function timeUpdate() {
       vm.activeUserStatus = REFRESH;
       vm.avgRoomStatus = REFRESH;
       vm.filesSharedStatus = REFRESH;
+      vm.mediaQualityStatus = REFRESH;
       vm.callMetricsStatus = REFRESH;
 
       setFilterBasedText();
@@ -214,6 +226,7 @@
       setActiveUserData();
       setAvgRoomData();
       setFilesSharedData();
+      setMediaData();
     }
 
     function setActiveUserData() {
@@ -264,6 +277,23 @@
             filesSharedChart = tempFilesSharedChart;
           }
           vm.filesSharedStatus = SET;
+        }
+        filesSharedCard = document.getElementById('files-shared-card');
+      });
+    }
+
+    function setMediaData() {
+      CustomerReportService.getMediaQualityData(vm.timeSelected).then(function (response) {
+        if (response === ABORT) {
+          return;
+        } else if (response.length === 0) {
+          vm.mediaQualityStatus = EMPTY;
+        } else {
+          var tempMediaChart = CustomerGraphService.setMediaQualityGraph(response, mediaChart);
+          if (tempMediaChart !== null && angular.isDefined(tempMediaChart)) {
+            mediaChart = tempMediaChart;
+          }
+          vm.mediaQualityStatus = SET;
         }
         filesSharedCard = document.getElementById('files-shared-card');
       });

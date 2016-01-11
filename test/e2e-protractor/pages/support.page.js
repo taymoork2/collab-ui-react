@@ -21,16 +21,17 @@ var SupportPage = function () {
 
   this.supportTable = element(by.id('supportTable'));
 
-  this.emailAddress = element(by.binding('emailAddress'));
-  this.locusId = element(by.binding('locusId'));
-  this.callStart = element(by.binding('callStart'));
+  this.emailAddress = element(by.cssContainingText('.ui-grid-header-cell-label', 'Email Address'));
+  this.locusId = element(by.cssContainingText('.ui-grid-header-cell-label', 'Locus ID'));
+  this.callStart = element(by.cssContainingText('.ui-grid-header-cell-label', 'Call Start Time'));
+  this.rowContents = element(by.css('.ui-grid-row'));
 
   this.callInfoIcon = element.all(by.repeater('row in renderedRows')).first().element(by.id('callInfo-icon'));
   this.downloadCallflowChartsIcon = element(by.id('download-callflowCharts-icon'));
   this.closeCallInfo = element(by.id('closeCallInfo'));
   this.closeCallFlow = element(by.id('closeCallFlow'));
 
-  this.locusIdSort = element(by.css('.colt1'));
+  this.locusIdSort = element(by.cssContainingText('.ui-grid-header-cell-label', 'Locus ID'));
 
   this.orderListAction = element(by.id('actionsButton'));
   this.resendCustomerEmail = element(by.css('#resendCustomerEmail a'));
@@ -53,7 +54,7 @@ var SupportPage = function () {
     utils.clear(support.logSearchField);
     utils.sendKeys(support.logSearchField, query);
     utils.click(support.logSearchBtn);
-    utils.expectIsDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', assertion)));
+    utils.expectIsDisplayed(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', assertion)));
   };
 
   this.retrieveLocusId = function () {

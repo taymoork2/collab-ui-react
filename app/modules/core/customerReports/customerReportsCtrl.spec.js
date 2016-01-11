@@ -11,6 +11,7 @@ describe('Controller: Customer Reports Ctrl', function () {
   var dummyData = getJSONFixture('core/json/partnerReports/dummyReportData.json');
   var roomData = getJSONFixture('core/json/customerReports/roomData.json');
   var fileData = getJSONFixture('core/json/customerReports/fileData.json');
+  var mediaData = getJSONFixture('core/json/customerReports/mediaQuality.json');
 
   var headerTabs = [{
     title: 'reportsPage.sparkReports',
@@ -59,9 +60,11 @@ describe('Controller: Customer Reports Ctrl', function () {
       spyOn(DummyCustomerReportService, 'dummyActiveUserData').and.returnValue(dummyData.activeUser.one);
       spyOn(DummyCustomerReportService, 'dummyAvgRoomData').and.returnValue(dummyData.avgRooms.one);
       spyOn(DummyCustomerReportService, 'dummyFilesSharedData').and.returnValue(dummyData.filesShared.one);
+      spyOn(DummyCustomerReportService, 'dummyMediaData').and.returnValue(dummyData.mediaQuality.one);
 
       spyOn(CustomerReportService, 'getAvgRoomData').and.returnValue($q.when(roomData.response));
       spyOn(CustomerReportService, 'getFilesSharedData').and.returnValue($q.when(fileData.response));
+      spyOn(CustomerReportService, 'getMediaQualityData').and.returnValue($q.when(mediaData.response));
       spyOn(CustomerReportService, 'getActiveUserData').and.returnValue($q.when({
         activeUserGraph: [],
         mostActiveUserData: []

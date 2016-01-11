@@ -1,53 +1,70 @@
-<div class="content-container row">
-  <div class="columns small-12 medium-4">
-    <div class="columns small-12 support-card">
-      <div class="health-card" ng-show="healthyStatus === true" ng-click="toggleSystem()">
-        <span class="icon icon-check healthy-check"></span>
-        <span class="healthy" translate="supportPage.operational"></span>
-      </div>
-      <div class="health-card" ng-show="healthyStatus === false" ng-click="toggleSystem()">
-        <span class="icon icon-close error-check"></span>
-        <span class="error-msg" translate="supportPage.error"></span>
-      </div>
-      <section class="monitoring-panel systems-detail" ng-show="showSystemDetails">
-        <div ng-repeat="health in healthMetrics">
-          <a ng-href="{{statusPageUrl}}" target="_blank">
-            <div ng-class="{true:'green', false:'red'}[health.status==='operational']" class="monitoring-cell" id="{{health.name}}">
-              <i class="fa fa-circle"></i>&nbsp;&nbsp;<span>{{health.name}}</span>
+<cs-card-layout class="status">
+  <cs-card class="medium">
+    <article>
+      <header>
+        <h4>System Status</h4>
+      </header>
+      <section class="indent">
+          <div>
+            <div ng-repeat="health in healthMetrics">
+              <a ng-href="{{statusPageUrl}}" target="_blank">
+                <div class="monitoring-cell" id="{{health.name}}" ng-class="{true:'green', false:'red'}[health.status==='operational']">
+                  <i class="fa fa-circle"></i>&nbsp;&nbsp;
+                  <span>{{health.name}}</span>
+                </div>
+              </a>
             </div>
+          </div>
+      </section>
+    </article>
+  </cs-card>
+
+  <cs-card class="medium">
+    <article>
+      <header>
+        <h4>Help Desk Support</h4>
+      </header>
+      <section class="indent">
+        <p class="content" translate="helpdesk.launchHelpdeskDesc"></p>
+        <div class="help-desk">
+          <a target="_blank" ui-sref="helpdesk.search">
+            <button class="btn btn--people btn--large" style="margin-top: 20px;" translate="helpdesk.launchHelpdesk"></button>
           </a>
         </div>
       </section>
-    </div>
-    <div class="columns small-12 support-card">
-      <h4 translate="supportPage.supportResources"></h4>
-      <div class="display-link" ng-click="toggleSupport()" ng-show="showSupportDetails === false" href="">
-        <span translate="supportPage.showDetails"></span>
-      </div>
-      <div class="display-link" ng-click="toggleSupport()" ng-show="showSupportDetails === true" href="">
-        <span translate="supportPage.hideDetails"></span>
-      </div>
-      <div ng-show="showSupportDetails === true">
-        <p class="bucket-header support-header header-section" translate="supportPage.problemReports"></p>
-        <p class="support-dsc">{{problemContent | translate}} {{problemHandler | translate}}.</p>
+    </article>
+  </cs-card>
 
-        <p class="support-dsc">
-          <span class="support-dsc" translate="supportPage.reportingUrl"></span>
-          <a ng-show="reportingUrl === null" href="" translate="supportPage.sendFeedback"
-             ng-click="sendFeedback()"></a>
-          <a ng-show="reportingUrl !== null" href="{{reportingUrl}}" target="_blank">{{reportingUrl}}</a>
+  <cs-card class="medium">
+    <article>
+      <header>
+        <h4>Support Resources</h4>
+      </header>
+      <section class="indent">
+        <h5 translate="supportPage.problemReports"></h5>
+        <p class="content">
+          {{problemContent | translate}}
+          {{problemHandler | translate}}.
         </p>
-        <p class="bucket-header support-header-help header-section" translate="supportPage.help"></p>
-        <p class="support-dsc">{{helpContent | translate }} {{helpHandler | translate}}.</p>
-        <p class="support-dsc">{{'supportPage.helpUrl' | translate}} <a href="{{helpUrl}}" target="_blank">{{helpUrl}}</a></p>
-        <p class="bucket-header support-header-help header-section" translate="supportPage.faqs"></p>
-        <p class="support-dsc">
+        <p class="content">
+          <span class="support-dsc" translate="supportPage.reportingUrl"></span>
+          <a href="" ng-click="sendFeedback()" ng-show="reportingUrl === null" translate="supportPage.sendFeedback"></a>
+          <a href="{{reportingUrl}}" ng-show="reportingUrl !== null" target="_blank">{{reportingUrl}}</a>
+        </p>
+        <h5 class="content-header" translate="supportPage.help"></h5>
+        <p class="content">{{helpContent | translate }}
+          {{helpHandler | translate}}.</p>
+        <p class="content">{{'supportPage.helpUrl' | translate}}
+          <a href="{{helpUrl}}" target="_blank">{{helpUrl}}</a>
+        </p>
+        <h5 class="content-header" translate="supportPage.faqs"></h5>
+        <p class="content">
           <a href="{{ssoUrl}}" target="_blank" translate="supportPage.sso"></a>
         </p>
-        <p class="support-dsc">
+        <p class="content">
           <a href="{{rolesUrl}}" target="_blank" translate="supportPage.roles"></a>
         </p>
-      </div>
-    </div>
-  </div>
-</div>
+      </section>
+    </article>
+  </cs-card>
+</cs-card-layout>

@@ -3,11 +3,11 @@
     <div class="title-row row">
       <div class="col-md-12">
         <div class="title pull-left" translate="usersPreview.servicesPreview"></div>
-        <div class="actions-menu dropdown pull-right" ng-show="isHuronEnabled()">
-          <button class="actions-button btn--none dropdown-toggle">
+        <div cs-dropdown class="actions-menu dropdown pull-right" ng-show="isHuronEnabled()">
+          <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
             <i class="icon icon-three-dots"></i>
           </button>
-          <ul class="dropdown-menu dropdown-primary actions-services">
+          <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
             <li><a ui-sref="users.list.preview.adddirectorynumber" translate="usersPreview.addNewLinePreview"></a></li>
           </ul>
         </div>
