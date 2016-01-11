@@ -9,6 +9,7 @@
     margin-bottom: rem-calc(15);
   }
   .report-card {
+    min-width: rem-calc(650);
     article {
       min-height: vr-adjust(570);
       min-width: rem-calc(650);
@@ -44,6 +45,7 @@
       }
     }
     .amExportButton {
+      left: calc(95% + .1rem);
       ul, .export-main, .export-list {
         overflow: visible;
       }
@@ -64,6 +66,9 @@
         font-size: rem-calc(18);
         color: $brand-success;
         text-align: left;
+      }
+      .graph-media {
+        font-size: rem-calc(18);
       }
     }
     .spinner-position {

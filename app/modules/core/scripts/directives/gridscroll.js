@@ -7,7 +7,7 @@ angular.module('Core')
         restrict: 'A',
         link: function () {
           $timeout(function () {
-            $('.ngViewport').niceScroll({
+            $('.ui-grid-viewport').niceScroll({
               cursoropacitymax: 0.5,
               cursorwidth: 10,
               horizrailenabled: false,

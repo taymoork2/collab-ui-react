@@ -2,7 +2,7 @@
 
 describe('Service: Customer Reports Service', function () {
   var $httpBackend, CustomerReportService, Config, Notification;
-  var avgRoomsUrl, groupRoomsUrl, oneToOneRoomsUrl, contentUrl, contentSizeUrl;
+  var avgRoomsUrl, groupRoomsUrl, oneToOneRoomsUrl, contentUrl, contentSizeUrl, mediaUrl;
 
   var roomData = getJSONFixture('core/json/customerReports/roomData.json');
   var groupRoomData = roomData.groupRooms;
@@ -14,6 +14,10 @@ describe('Service: Customer Reports Service', function () {
   var contentData = fileData.content;
   var contentSizeData = fileData.contentSize;
   var responseFileData = fileData.response;
+
+  var mediaData = getJSONFixture('core/json/customerReports/mediaQuality.json');
+  var mediaContent = mediaData.callQuality;
+  var mediaResponse = mediaData.response;
 
   beforeEach(module('Core'));
 
@@ -61,6 +65,7 @@ describe('Service: Customer Reports Service', function () {
     oneToOneRoomsUrl = baseUrl + 'timeCharts/convOneOnOne?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue + customerView;
     contentUrl = baseUrl + 'timeCharts/contentShared?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue + customerView;
     contentSizeUrl = baseUrl + 'timeCharts/contentShareSizes?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue + customerView;
+    mediaUrl = baseUrl + 'detailed/callQuality?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
 
     groupRoomData.data = updateDates(groupRoomData.data);
     avgRoomData.data = updateDates(avgRoomData.data);
@@ -70,6 +75,9 @@ describe('Service: Customer Reports Service', function () {
     contentData.data = updateDates(contentData.data);
     contentSizeData.data = updateDates(contentSizeData.data);
     responseFileData = updateDates(responseFileData, dayFormat);
+
+    mediaContent.data[0].data = updateDates(mediaContent.data[0].data);
+    mediaResponse = updateDates(mediaResponse, dayFormat);
   }));
 
   afterEach(function () {
@@ -125,6 +133,29 @@ describe('Service: Customer Reports Service', function () {
       $httpBackend.whenGET(contentSizeUrl).respond(500, error);
 
       CustomerReportService.getFilesSharedData(timeFilter).then(function (response) {
+        expect(response).toEqual([]);
+        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+      });
+
+      $httpBackend.flush();
+    });
+  });
+
+  describe('Media Service', function () {
+    it('should getMediaQualityData', function () {
+      $httpBackend.whenGET(mediaUrl).respond(mediaContent);
+
+      CustomerReportService.getMediaQualityData(timeFilter).then(function (response) {
+        expect(response).toEqual(mediaResponse);
+      });
+
+      $httpBackend.flush();
+    });
+
+    it('should notify an error for getMediaQualityData', function () {
+      $httpBackend.whenGET(mediaUrl).respond(500, error);
+
+      CustomerReportService.getMediaQualityData(timeFilter).then(function (response) {
         expect(response).toEqual([]);
         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
       });

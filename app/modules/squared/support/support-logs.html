@@ -16,12 +16,12 @@
       </div>
     </div>
   </div>
-  
+
   <div id="logs-panel" class="columns small-12">
     <div id="userSupport" class="customer-list">
       <div class="columns small-12">
         <label ng-show="userLogs.length === 0 || !userLogs"><span id="noResults" translate="supportPage.noResults"></span></label>
-        <div id="supportTable" gridscrollbar class="gridStyle col-md-12" ng-hide="callInfoActive" ng-grid="gridOptions"></div>
+          <div id="supportTable" gridscrollbar ng-hide="callInfoActive" class="gridStyle" ui-grid="gridOptions"></div>
       </div>
     </div>
   </div>

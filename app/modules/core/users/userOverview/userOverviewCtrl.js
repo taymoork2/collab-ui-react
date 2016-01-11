@@ -62,9 +62,7 @@
         vm.services.push(msgState);
       }
       if (hasEntitlement('cloudmeetings')) {
-        if (getServiceDetails('MC')) {
-          confState.detail = $translate.instant('onboardModal.paidConfWebEx');
-        }
+        confState.detail = $translate.instant('onboardModal.paidConfWebEx');
         vm.services.push(confState);
       } else if (hasEntitlement('squared-syncup')) {
         if (getServiceDetails('CF')) {
