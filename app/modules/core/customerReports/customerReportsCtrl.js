@@ -52,9 +52,7 @@
     var audioChart = null;
     var audioCard = null;
     vm.audioDescription = '';
-    vm.videoDescription = '';
-    vm.audioStatus = REFRESH;
-    vm.videoStatus = REFRESH;
+    vm.metricStatus = REFRESH;
 
     vm.headerTabs = [{
       title: $translate.instant('reportsPage.sparkReports'),
@@ -184,7 +182,7 @@
         time: vm.timeSelected.description
       });
 
-      vm.audioDescription = $translate.instant("callMetrics.audioDescription", {
+      vm.metricsDescription = $translate.instant("callMetrics.audioDescription", {
         time: vm.timeSelected.description
       });
 
@@ -229,8 +227,7 @@
       vm.filesSharedStatus = REFRESH;
       vm.mediaQualityStatus = REFRESH;
       vm.deviceStatus = REFRESH;
-      vm.audioStatus = REFRESH;
-      vm.videoStatus = REFRESH;
+      vm.metricStatus = REFRESH;
 
       setFilterBasedText();
       setDummyData();
@@ -317,13 +314,13 @@
         if (response === ABORT) {
           return;
         } else if (angular.isUndefined(response.audio.dataProvider)) {
-          vm.audioStatus = EMPTY;
+          vm.metricStatus = EMPTY;
         } else {
           var tempAudioChart = CustomerGraphService.setMetricsAudioGraph(response.audio, audioChart);
           if (tempAudioChart !== null && angular.isDefined(tempAudioChart)) {
             audioChart = tempAudioChart;
           }
-          vm.audioStatus = SET;
+          vm.metricStatus = SET;
         }
         filesSharedCard = document.getElementById('files-shared-card');
       });
