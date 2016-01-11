@@ -71,6 +71,11 @@
           })
           .then(function () {
             successfulToggles++;
+
+            _.find(vm.defaults, {
+              name: toggle.name
+            }).model = toggle.model;
+
             if (successfulToggles === changedToggles.length) {
               deferred.resolve();
             }
@@ -79,6 +84,8 @@
 
       deferred.promise.then(function () {
         Notification.success('organizationsPage.toggleModSuccess');
+      }).finally(function () {
+        resetForm();
       });
     }
 

@@ -1,12 +1,12 @@
 .feature-icon {
-  #Messaging & {
-   @extend .icon-circle-message;
+  #Message & {
+    @extend .icon-circle-message;
   }
-  #Communications & {
-   @extend .icon-circle-call;
+  #Call & {
+    @extend .icon-circle-call;
   }
-  #Conferencing & {
-   @extend .icon-circle-group;
+  #Meeting & {
+    @extend .icon-circle-group;
   }
   #ContactCenter & {
     /* This icon is used temporarily, will be changed later */

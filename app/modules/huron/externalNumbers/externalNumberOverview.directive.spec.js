@@ -15,6 +15,6 @@ describe('Directive: ucExternalNumberOverview', function () {
     $rootScope.$digest();
 
     expect(element.html()).toContain("cs-sp-section");
-    expect(element.html()).toContain("customerPage.communication");
+    expect(element.html()).toContain("customerPage.call");
   });
 });

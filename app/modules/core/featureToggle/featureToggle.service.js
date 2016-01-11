@@ -115,6 +115,7 @@
       winTeams: 'win-teams',
       zeroTouchMeeting: 'zero-touch-meeting',
       locationSharing: 'location-sharing',
+      ceAllowNolockdown: 'ce-allow-nolockdown',
     };
 
     var service = {
@@ -335,6 +336,7 @@
         key: key,
         orgId: orgId,
         group: 'ORG',
+        mutable: true,
       };
     }
 
