@@ -72,7 +72,7 @@ angular.module('Squared').service('CsdmConverter',
       this.cssColorClass = getHuronCssColorClass(obj);
       this.readableState = getHuronReadableState(obj);
       this.isHuronDevice = true;
-      this.image = "images/devices/" + (obj.model.trim().replace(/ /g, '_') + '.png').toLowerCase();
+      this.image = "images/devices-hi/" + (obj.model.trim().replace(/ /g, '_') + '.jpg').toLowerCase();
     }
 
     function UnusedAccount(obj) {

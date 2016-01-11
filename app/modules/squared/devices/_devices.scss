@@ -71,13 +71,15 @@
 }
 
 .device-img {
+  i {
+    top: 15px;
+  }
+}
+
+.hurondevice-img {
   img {
     border-radius: 50%;
     overflow: hidden;
-  }
-
-  i {
-    top: 15px;
   }
 }
 
