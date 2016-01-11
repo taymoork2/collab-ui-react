@@ -10,13 +10,13 @@
            <h5 ng-if="aaWelcome.ui.welcomeMenu.entries.length > 0 || aaWelcome.ui.showOptionMenu || aaWelcome.ui.showCustomMenu" class="text-muted" translate="autoAttendant.welcomeOngoingHelp"></h5>
         </th>
         <th class="col-md-2">
-          <div class="dropdown aa-menu-dropdown-icon">
+          <div cs-dropdown class="dropdown aa-menu-dropdown-icon">
             <span >
-              <a href class="dropdown-toggle">
+              <a cs-dropdown-toggle href class="dropdown-toggle">
                 <i class="menu-dropdown-icon"></i>
               </a>
             </span>
-            <ul class="dropdown-menu" role="menu">
+            <ul cs-dropdown-menu class="dropdown-menu" role="menu">
               <li ng-repeat="choice in aaWelcome.welcomeMenuDropdownItems">
                 <a href ng-click="choice.invoke()">
                   <span translate="{{ choice.title }}"></span>

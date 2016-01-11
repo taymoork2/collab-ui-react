@@ -1,15 +1,15 @@
 .feature-icon {
   #Messaging & {
-    @extend .icon-circle-message;
+   @extend .icon-circle-message;
   }
   #Communications & {
-    @extend .icon-circle-call;
+   @extend .icon-circle-call;
   }
   #Conferencing & {
-    @extend .icon-circle-group;
+   @extend .icon-circle-group;
   }
   #ContactCenter & {
-    @extend .icon-circle-contact-centre;
     /* This icon is used temporarily, will be changed later */
+   @extend .icon-circle-contact-centre;
   }
 }

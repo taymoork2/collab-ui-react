@@ -8,11 +8,11 @@
       </div>
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>
-      <div class="small-12 medium-6 columns" dropdown is-open="db.isOpen">
-        <button id="customerDropdown" type="button" class="btn btn--white dropdown-toggle right" ng-disabled="db.disabled">
+      <div class="small-12 medium-6 columns" cs-dropdown is-open="db.isOpen">
+        <button cs-dropdown-toggle id="customerDropdown" type="button" class="btn btn--white dropdown-toggle right" ng-disabled="db.disabled">
           <span>{{currentSelection | translate}}</span><span class="caret"></span>
         </button>
-        <ul class="dropdown-menu reports-customer-dropdown" role="menu">
+        <ul cs-dropdown-menu class="dropdown-menu reports-customer-dropdown" role="menu">
           <li ng-click="reloadReports(true)"><a href="#"><span translate="reports.allCustomers"></span></a></li>
           <li class="divider"></li>
           <li ng-repeat="orgs in totalOrgsData" ng-click="getCustomerReports(true, orgs)"><a href="#">{{orgs.customerName}}</a></li>

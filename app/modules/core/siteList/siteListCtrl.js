@@ -50,15 +50,9 @@ angular.module('Core')
       );
 
       // Start of grid set up
-      var rowTemplate =
-        '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell" ng-click="showUserDetails(row.entity)">' + '\n' +
-        '  <div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }">&nbsp;</div>' + '\n' +
-        '  <div ng-cell></div>' + '\n' +
-        '</div>' + '\n';
-
       var siteUrlTemplate =
         '<div ng-if="!row.entity.showSiteLinks">' + '\n' +
-        '  <p class="ngCellText">' + '\n' +
+        '  <p class="ui-grid-cell-contents">' + '\n' +
         '    <i class="icon-spinner icon"></i>' + '\n' +
         '  </p>' + '\n' +
         '</div>' + '\n' +
@@ -76,7 +70,7 @@ angular.module('Core')
         '    <a id="{{row.entity.license.siteUrl}}_webex-site-settings"' + '\n' +
         '       name="{{row.entity.license.siteUrl}}_webex-site-settings"' + '\n' +
         '       ui-sref="site-list.site-settings({siteUrl:row.entity.license.siteUrl})">' + '\n' +
-        '      <p class="ngCellText">' + '\n' +
+        '      <p class="ui-grid-cell-contents">' + '\n' +
         '        <i class="icon-settings icon"></i>' + '\n' +
         '      </p>' + '\n' +
         '    </a>' + '\n' +
@@ -85,7 +79,7 @@ angular.module('Core')
 
       var siteReportsTemplate =
         '<div ng-if="!row.entity.showSiteLinks">' + '\n' +
-        '  <p class="ngCellText">' + '\n' +
+        '  <p class="ui-grid-cell-contents">' + '\n' +
         '    <i class="icon-spinner icon"></i>' + '\n' +
         '  </p>' + '\n' +
         '</div>' + '\n' +
@@ -104,7 +98,7 @@ angular.module('Core')
         '       <a id="{{row.entity.license.siteUrl}}_webex-site-reports"' + '\n' +
         '          name="{{row.entity.license.siteUrl}}_webex-site-reports"' + '\n' +
         '          ui-sref="webex-reports({siteUrl:row.entity.license.siteUrl})"> ' + '\n' +
-        '        <p class="ngCellText">' + '\n' +
+        '        <p class="ui-grid-cell-contents">' + '\n' +
         '          <i class="icon-settings icon"></i>' + '\n' +
         '        </p>' + '\n' +
         '       </a>' + '\n' +
@@ -115,12 +109,9 @@ angular.module('Core')
       vm.gridOptions = {
         data: 'siteList.gridData',
         multiSelect: false,
-        showFilter: false,
         enableRowSelection: false,
+        enableColumnMenus: false,
         rowHeight: 44,
-        rowTemplate: rowTemplate,
-        headerRowHeight: 44,
-        useExternalSorting: true,
         columnDefs: [],
       };
 

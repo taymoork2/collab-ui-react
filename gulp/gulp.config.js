@@ -172,6 +172,7 @@ module.exports = function() {
         vendor + '/cisco-ui/dist/js/cisco-ui.js',
         vendor + '/angular-wizard/dist/angular-wizard.js',
         vendor + '/ng-grid/build/ng-grid.js',
+        vendor + '/angular-ui-grid/ui-grid.js',
         vendor + '/angular-nicescroll/angular-nicescroll.js',
         vendor + '/bootstrap-tokenfield/dist/bootstrap-tokenfield.js',
         vendor + '/moment-timezone/builds/moment-timezone-with-data-2010-2020.js',

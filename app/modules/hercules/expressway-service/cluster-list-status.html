@@ -1,11 +1,11 @@
-<div class="ngCellText" style="padding-top: 1.5rem">
-  <span ng-if="exp.serviceNotInstalled(row.entity)">
+<div class="ui-grid-cell-contents" style="padding-top: 1.5rem">
+  <span ng-if="grid.appScope.exp.serviceNotInstalled(row.entity)">
     <i class="fa fa-circle hercules-state-not_installed"/>
     <span translate="hercules.status.not_installed"></span>
   </span>
-  <span ng-if="!exp.serviceNotInstalled(row.entity)">
-    <i class="fa fa-circle hercules-state-{{exp.selectedClusterAggregatedStatus(row.entity)}}"/>
-    <span translate="{{'hercules.status.' + exp.selectedClusterAggregatedStatus(row.entity)}}"></span>
-    <span ng-if="exp.softwareUpgradeAvailable(row.entity)"> | <span translate="hercules.overview.upgrade-available"></span></span>
+  <span ng-if="!grid.appScope.exp.serviceNotInstalled(row.entity)">
+    <i class="fa fa-circle hercules-state-{{grid.appScope.exp.selectedClusterAggregatedStatus(row.entity)}}"/>
+    <span translate="{{'hercules.status.' + grid.appScope.exp.selectedClusterAggregatedStatus(row.entity)}}"></span>
+    <span ng-if="grid.appScope.exp.softwareUpgradeAvailable(row.entity)"> | <span translate="hercules.overview.upgrade-available"></span></span>
   </span>
 </div>

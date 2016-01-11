@@ -17,6 +17,7 @@ var runSeq = require('run-sequence');
 var uuid = require('uuid');
 var _uuid;
 var webdriverUpdate = require('gulp-protractor').webdriver_update;
+var compression = require('compression');
 
 /*******************************************************************
  * E2E testing task
@@ -236,6 +237,11 @@ gulp.task('connect', function () {
   $.connect.server({
     root: [config.test, rootDir],
     port: 8000,
+    middleware: function () {
+      return [
+        compression()
+      ];
+    },
     livereload: false
   });
 });
