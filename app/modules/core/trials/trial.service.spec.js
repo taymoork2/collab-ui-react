@@ -47,8 +47,9 @@ describe('Service: Trial Service', function () {
 
   it('should edit a trial', function () {
     $httpBackend.whenPATCH(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials/444').respond(trialEditResponse);
-    TrialService.editTrial('444', '', '', '', '', ['COLLAB']).then(function (response) {
+    TrialService.editTrial('123', '444').then(function (response) {
       expect(response.data).toEqual(trialEditResponse);
+      expect(LogMetricsService.logMetrics).toHaveBeenCalled();
     });
     $httpBackend.flush();
   });

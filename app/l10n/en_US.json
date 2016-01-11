@@ -1821,7 +1821,7 @@
       "title": "Trial Setup - Meeting and WebEx",
       "webexHeader": "Meeting and WebEx License Type",
       "meetingDetails": "Meeting 25 party",
-      "webexDetails": "WebEx Enterprise Edition with Collaboration Meeting Room",
+      "webexDetails": "WebEx Enterprise Edition",
       "siteUrl": "Site URL",
       "timezone": "Time Zone",
       "webexSiteUrl": "WebEx Site URL",
@@ -1956,7 +1956,6 @@
     "TC": "WebEx Training Center",
     "EC": "WebEx Event Center",
     "EE": "WebEx Enterprise Edition",
-    "CMR": "WebEx Collaboration Meeting Room",
     "CO": "Call",
     "ST": "Storage",
     "SD": "Spark Room System"
