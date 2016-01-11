@@ -3289,6 +3289,7 @@
   "domainManagement": {
     "title": "Domain Management",
     "description": "The description of domain verification.",
+    "addDomain": "Add",
     "list": {
       "domainHeader": "Domain",
       "statusHeader": "Status",

@@ -1,4 +1,4 @@
-namespace domainManagment {
+namespace domainManagement {
 
   class DomainManagementCtrl {
     private _check = 'dd';

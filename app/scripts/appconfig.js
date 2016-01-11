@@ -195,6 +195,17 @@ angular
           controllerAs: 'dv',
           parent: 'main'
         })
+        .state('domainmanagement.add', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'DomainManageAddCtrl',
+              controllerAs: 'dvadd',
+              templateUrl: 'modules/core/domainManagement/add.tpl.html'
+            }
+
+          }
+        })
         .state('profile', {
           url: '/profile',
           templateUrl: 'modules/core/partnerProfile/partnerProfile.tpl.html',
