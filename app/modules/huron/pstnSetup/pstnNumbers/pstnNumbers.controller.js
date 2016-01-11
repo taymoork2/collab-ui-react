@@ -205,7 +205,6 @@
     }
 
     function searchCarrierInventory() {
-      /*jshint validthis: true */
       var field = this;
       var params = {
         npa: vm.model.areaCode.code,

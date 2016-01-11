@@ -378,7 +378,7 @@
             var iframePageLabel = $translate.instant(iframePageLabelId);
 
             var uiSref =
-              "site-settings.site-setting({" +
+              "site-list.site-setting({" +
               "  siteUrl: " + "'" + _this.webExSiteSettingsObj.siteUrl + "'" + "," +
               "  webexPageId: " + "'" + webexPageId + "'" + "," +
               "  settingPageIframeUrl: " + "'" + iframeUrl + "'" +

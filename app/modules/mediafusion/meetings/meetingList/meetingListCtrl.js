@@ -56,21 +56,30 @@ angular.module('Mediafusion')
       $scope.hoverDay = false;
       $scope.hoverWeek = true;
 
-      var rowTemplate = '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}" ng-click="showMeetingsDetails(row.entity)">' +
-        '<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }">&nbsp;</div>' +
-        '<div ng-cell></div>' +
-        '</div>';
       //Gridoptions describes about table structure and behaviour.
 
       $scope.gridOptions = {
         data: 'queryMeetingsList',
         multiSelect: false,
-        showFilter: true,
-        rowHeight: 44,
-        rowTemplate: rowTemplate,
-        headerRowHeight: 40,
-        useExternalSorting: false,
-
+        rowHeight: 45,
+        enableRowHeaderSelection: false,
+        enableSelectAll: false,
+        enableColumnResize: true,
+        enableColumnMenus: false,
+        onRegisterApi: function (gridApi) {
+          $scope.gridApi = gridApi;
+          gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+            $scope.showMeetingsDetails(row.entity);
+          });
+          gridApi.infiniteScroll.on.needLoadMoreData($scope, function () {
+            if ($scope.load) {
+              $scope.load = false;
+              $scope.currentDataPosition++;
+              getMeetingList($scope.currentDataPosition);
+              $scope.gridApi.infiniteScroll.dataLoaded();
+            }
+          });
+        },
         columnDefs: [{
           field: 'webexMeetingId',
           displayName: $filter('translate')('meetingsPage.webexMeetingId')
@@ -601,20 +610,6 @@ angular.module('Mediafusion')
         } else {
           $scope.meetingsPreviewActive = false;
           //console.log("meetingsPreviewActive : " + $scope.meetingsPreviewActive);
-        }
-      });
-
-      $scope.$on('ngGridEventScroll', function () {
-        if ($scope.load) {
-          $scope.load = false;
-          var ngGridView = $scope.gridOptions.ngGrid.$viewport[0];
-          var scrollTop = ngGridView.scrollTop;
-          var scrollHeight = ngGridView.scrollHeight;
-          //console.log(scrollTop);
-          //console.log(scrollHeight);
-          $scope.currentDataPosition++;
-          getMeetingList($scope.currentDataPosition);
-          //console.log('Scrolled .. ');
         }
       });
 

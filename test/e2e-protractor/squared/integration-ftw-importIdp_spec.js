@@ -1,11 +1,5 @@
 'use strict';
 
-/* global describe */
-/* global it */
-/* global browser */
-/* global by */
-/* global element */
-
 describe('First Time Wizard EE selfsign-sso', function () {
   afterEach(function () {
     utils.dumpConsoleErrors();

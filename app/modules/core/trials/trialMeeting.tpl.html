@@ -12,6 +12,7 @@
   <!-- body -->
   <section class="modal-body row">
     <h5 translate="trialModal.meeting.webexHeader"></h5>
+    <div class="medium-11 medium-offset-1 columns" translate="trialModal.meeting.meetingDetails"></div>
     <div class="medium-11 medium-offset-1 columns" translate="trialModal.meeting.webexDetails"></div>
   </section>
   <section class="modal-body collapse-fields row">
@@ -25,6 +26,7 @@
     <h5 translate="trialModal.meeting.timezone"></h5>
     <formly-form model="meetingTrial.details" fields="meetingTrial.timezoneFields" class="medium-11 medium-offset-1 columns">
     </formly-form>
+    <div class="medium-11 medium-offset-1 columns" translate="trialModal.meeting.tzDescription"></div>
   </section>
 
   <!-- footer -->
@@ -32,7 +34,8 @@
     <button class="btn" ng-click="trial.previousStep()" ng-disabled="trial.startTrialButtonLoad"
       translate="common.back">
     </button>
-    <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn loading="trial.startTrialButtonLoad"
+    <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn
+      loading="trial.startTrialButtonLoad || meetingTrial.validatingUrl"
       ng-click="trialForm.$setPristine(true); trial.nextStep()" ng-disabled="trialForm.$invalid">
         <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
         <span ng-if="trial.hasNextStep()" translate="common.next"></span>

@@ -1,10 +1,5 @@
 'use strict';
 
-/* global describe */
-/* global it */
-/* global browser */
-/* global expect */
-
 //test link: http://127.0.0.1:8000/#/login?pp=support_search:5354d535-9aaf-5e22-a091-34de878d2200
 
 describe('Support flow', function () {
@@ -50,7 +45,7 @@ describe('Support flow', function () {
 
         utils.expectIsDisplayed(support.supportTable);
         utils.expectIsDisplayed(support.emailAddress);
-        utils.expectText(support.emailAddress, support.searchValidEmail);
+        utils.expectText(support.rowContents, support.searchValidEmail);
 
         utils.click(support.locusIdSort);
         utils.click(support.locusIdSort);
@@ -65,7 +60,7 @@ describe('Support flow', function () {
 
         utils.expectIsDisplayed(support.supportTable);
         utils.expectIsDisplayed(support.emailAddress);
-        utils.expectText(support.emailAddress, support.searchValidEmail);
+        utils.expectText(support.rowContents, support.searchValidEmail);
       });
 
       xit('should search for logs by valid locusId', function () {
@@ -126,7 +121,7 @@ describe('Support flow', function () {
     });
   });
 
-  describe('Billing page', function () {
+  xdescribe('Billing page', function () {
     //TODO this is environment specific order and needs to be fixed
     if (isProductionBackend) {
       return;

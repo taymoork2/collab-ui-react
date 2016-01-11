@@ -20,12 +20,6 @@
         <div ng-show="!loading && !pollHasFailed" style="padding-bottom: 60px">
           <mediafusion-dashboard-info-panel></mediafusion-dashboard-info-panel>
           <mediafusion-dashboard-header></mediafusion-dashboard-header>
-          <!-- Media fusion  List Table creation Starts
-        <div ng-show="clusters.length != 0">
-          <div class="connector-grid">
-              <div gridscrollbar class="gridStyle col-md-12 grid-align"  style="border: 1px solid rgb(212,212,212)" ng-grid="gridOptions" ></div>
-          </div>
-        </div> -->
           <div ng-show="clusters.length != 0">
             <div class="container-fluid grid" style="margin-right: -30px;">
               <div class="row">
@@ -83,7 +77,7 @@
                     <i class="icon icon-three-dots"></i>
                   </button>
                   <div class="dropdown" class="connector-align-ellipses">
-                  
+
                     <ul class="dropdown-menu dropdown-primary" role="menu">
                       <li id="deleteConnectorAction">
                           <a data-toggle="modal" data-target="#deleteConnectorModal" ng-click="setDeregisterConnector(cluster.id, cluster.hosts[0].host_name)">
@@ -100,7 +94,7 @@
       </div>
       <div ng-show="clusters.length == 0">
         <h3 style="text-align: center; padding: 20px 0; color: #ccc">
-            {{'mediaFusion.noCluster' | translate}} 
+            {{'mediaFusion.noCluster' | translate}}
           </h3>
       </div>
     </div>

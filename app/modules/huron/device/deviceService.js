@@ -28,9 +28,9 @@
       }).$promise;
     }
 
-    function loadDevices(userUuid) {
+    function loadDevices(userUuid, customerId) {
       return UserEndpointService.query({
-          customerId: Authinfo.getOrgId(),
+          customerId: customerId || Authinfo.getOrgId(),
           userId: userUuid
         }).$promise
         .then(function (devices) {

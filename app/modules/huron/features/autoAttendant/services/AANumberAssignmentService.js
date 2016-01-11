@@ -11,8 +11,6 @@
 
   function AANumberAssignmentService($q, AssignAutoAttendantService, Authinfo, $http, ExternalNumberPoolService) {
 
-    /* jshint validthis: true */
-
     var feature;
     var customerId = Authinfo.getOrgId();
     var service = {

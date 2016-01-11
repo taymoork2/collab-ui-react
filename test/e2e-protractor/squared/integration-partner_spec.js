@@ -1,16 +1,9 @@
 'use strict';
 
-/* global describe */
-/* global expect */
-/* global partner */
-/* global navigation */
-/* global utils */
-/* global login */
-/* global notifications */
 /* global deleteTrialUtils */
 /* global LONG_TIMEOUT */
 
-describe('Partner flow', function () {
+xdescribe('Partner flow', function () {
   var orgId;
   var accessToken;
   var appWindow;

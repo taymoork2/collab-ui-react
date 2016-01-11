@@ -1,7 +1,5 @@
 'use strict';
 
-/* global protractor, log */
-
 var config = require('./test.config.js');
 var request = require('request');
 var EC = protractor.ExpectedConditions;
@@ -491,7 +489,7 @@ exports.search = function (query) {
 
   function waitSpinner() {
     utils.expectIsNotDisplayed(spinner);
-    utils.expectIsDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', query)));
+    utils.expectIsDisplayed(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)));
   }
 
   this.click(this.searchbox);
@@ -507,19 +505,18 @@ exports.search = function (query) {
 };
 
 exports.searchForSingleResult = function (query) {
-  function logAndWait() {
-    log('Waiting for a single search result');
-    return EC.textToBePresentInElement(element(by.css('.searchfilter li:first-child .count')), "1")().thenCatch(function () {
-      // handle a possible stale element
-      return false;
-    });;
+    function logAndWait() {
+      log('Waiting for a single search result');
+      return EC.textToBePresentInElement(element(by.css('.searchfilter li:first-child .count')), "1")().thenCatch(function () {
+        // handle a possible stale element
+        return false;
+      });;
+    }
+    this.search(query);
+    browser.wait(logAndWait, TIMEOUT, 'Waiting for a single search result');
+    return this.expectIsDisplayed(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)));
   }
-  this.search(query);
-  browser.wait(logAndWait, TIMEOUT, 'Waiting for a single search result');
-  return this.expectIsDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', query)));
-}
-
-//TODO replace original search and click functionality with single result?
+  //TODO replace original search and click functionality with single result?
 exports.searchAndClickSingleResult = function (query) {
   return this.searchForSingleResult(query).then(function () {
     return exports.clickUser(query);
@@ -527,7 +524,7 @@ exports.searchAndClickSingleResult = function (query) {
 }
 
 exports.clickUser = function (query) {
-  return this.click(element(by.cssContainingText('.ngGrid .ngRow span', query)));
+  return this.click(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)));
 };
 
 exports.searchAndClick = function (query) {
@@ -541,11 +538,10 @@ exports.searchForSingleAndClick = function (query) {
 };
 
 exports.expectRowIsNotDisplayed = function (text) {
-  this.expectIsNotDisplayed(element(by.cssContainingText('.ngGrid .ngRow span', text)));
+  this.expectIsNotDisplayed(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', text)));
 };
 
 exports.dumpConsoleErrors = function () {
-  // jshint node:true
   browser.manage().logs().get('browser').then(function (browserLogs) {
     browserLogs.forEach(function (log) {
       if (log.level.value > 900) {
