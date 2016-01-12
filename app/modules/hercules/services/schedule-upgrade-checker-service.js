@@ -10,17 +10,17 @@
     function check(serviceType, serviceId, route) {
       ScheduleUpgradeService.get(Authinfo.getOrgId(), serviceType)
         .then(function (data) {
-          NotificationService.addNotification(
-            NotificationService.types.TODO,
-            'acknowledgeScheduleUpgrade',
-            2,
-            'modules/hercules/notifications/schedule-upgrade.html',
-            [serviceId],
-            {
-              settingsState: route,
-              serverData: data
-            }
-          );
+          if (!data.isAdminAcknowledged) {
+            NotificationService.addNotification(
+              NotificationService.types.TODO,
+              'acknowledgeScheduleUpgrade',
+              2,
+              'modules/hercules/notifications/schedule-upgrade.html', [serviceId], {
+                settingsState: route,
+                serverData: data
+              }
+            );
+          }
         });
     }
 

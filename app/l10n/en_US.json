@@ -605,6 +605,16 @@
     "errCustomerEmail": "Failed to resend welcome email to customer admin",
     "errPartnerEmail": "Failed to resend welcome email to partner admin"
   },
+  "weekDays": {
+    "everyDay": "Every {{day}}",
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday",
+    "sunday": "Sunday"
+  },
   "common": {
     "delete": "Delete",
     "disable": "Disable",
