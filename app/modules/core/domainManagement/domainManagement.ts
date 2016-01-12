@@ -26,10 +26,22 @@ namespace domainManagement {
     ];
 
     /* @ngInject */
-    constructor(private $route) {
+    constructor(private $route, Auth, Authinfo, DomainManagementService) {
       let ctrl = this;
       ctrl._check = 'dde';
-      console.log('domain ver');
+
+    /*
+    How to get admin account e-mail:
+     Auth.getAccount(Authinfo.getOrgId()).then(function (arg1) {
+
+        console.log('domain ver getAccount:', arg1.data.accounts[0].customerAdminEmail);
+        let emaildomain = arg1.data.accounts[0].customerAdminEmail.split('@')[1];
+        console.log('domain ver emaildomain::', emaildomain);
+      });*/
+
+      ctrl._domains = DomainManagementService.domainList;
+
+      DomainManagementService.refreshDomainList();
     }
 
     get check() {
