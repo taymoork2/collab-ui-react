@@ -49,10 +49,11 @@
     vm.deviceStatus = REFRESH;
     vm.deviceDescription = '';
 
-    var audioChart = null;
-    var audioCard = null;
-    vm.audioDescription = '';
+    var metricsChart = null;
+    var metricsCard = null;
+    vm.metricsDescription = '';
     vm.metricStatus = REFRESH;
+    vm.metrics = {};
 
     vm.headerTabs = [{
       title: $translate.instant('reportsPage.sparkReports'),
@@ -182,7 +183,7 @@
         time: vm.timeSelected.description
       });
 
-      vm.metricsDescription = $translate.instant("callMetrics.audioDescription", {
+      vm.metricsDescription = $translate.instant("callMetrics.customerDescription", {
         time: vm.timeSelected.description
       });
 
@@ -219,6 +220,12 @@
       if (tempMediaChart !== null && angular.isDefined(tempMediaChart)) {
         mediaChart = tempMediaChart;
       }
+
+      var metricsData = DummyCustomerReportService.dummyMetricsData(vm.timeSelected);
+      var tempMetricsChart = CustomerGraphService.setMetricsGraph(metricsData, metricsChart);
+      if (tempMetricsChart !== null && angular.isDefined(tempMetricsChart)) {
+        metricsChart = tempMetricsChart;
+      }
     }
 
     function timeUpdate() {
@@ -228,6 +235,7 @@
       vm.mediaQualityStatus = REFRESH;
       vm.deviceStatus = REFRESH;
       vm.metricStatus = REFRESH;
+      vm.metrics = {};
 
       setFilterBasedText();
       setDummyData();
@@ -313,13 +321,14 @@
       CustomerReportService.getCallMetricsData(vm.timeSelected).then(function (response) {
         if (response === ABORT) {
           return;
-        } else if (angular.isUndefined(response.audio.dataProvider)) {
+        } else if (response.dataProvider.length === 0) {
           vm.metricStatus = EMPTY;
         } else {
-          var tempAudioChart = CustomerGraphService.setMetricsAudioGraph(response.audio, audioChart);
-          if (tempAudioChart !== null && angular.isDefined(tempAudioChart)) {
-            audioChart = tempAudioChart;
+          var tempMetricsChart = CustomerGraphService.setMetricsGraph(response, metricsChart);
+          if (tempMetricsChart !== null && angular.isDefined(tempMetricsChart)) {
+            metricsChart = tempMetricsChart;
           }
+          vm.metrics = response.displayData;
           vm.metricStatus = SET;
         }
         filesSharedCard = document.getElementById('files-shared-card');
