@@ -3151,7 +3151,7 @@
     "atlas-portal.application": "Application",
     "atlas-portal.partner.salesadmin": "Sales Admin",
     "id_full_admin": "Full Admin",
-    "id_readonly_admin": "Readonly Admin",
+    "id_readonly_admin": "Read-only Admin",
     "user": "User"
   },
   "atlasRoles": {
@@ -3169,7 +3169,8 @@
     "CUSTOMER_PARTNER": "Customer Partner",
     "WX2_Support": "WX2 Support",
     "WX2_User": "WX2 User",
-    "Site_Admin": "Site Admin"
+    "Site_Admin": "Site Admin",
+    "ReadOnly_Admin": "Read-only Admin"
   },
   "helpdesk": {
     "navHeaderTitle": "Cloud Collaboration Help Desk",
@@ -3285,7 +3286,11 @@
     "more": "More",
     "usage": "{{usage}} of {{volume}} in use",
     "launchHelpdesk": "Help Desk",
-    "launchHelpdeskDesc": "Open the Help Desk portal in a new tab"
+    "launchHelpdeskDesc": "Open the Help Desk portal in a new tab",
+    "numbers": "Numbers",
+    "noDeviceEntitlements": "Device search not applicable. The customer is neither entitled to Cloudberry nor to Spark Call.",
+    "applyOrgFilterPleaseWait": "Applying customer filter, please wait...",
+    "noMoreResults": "Max results limit reached. Try a different search."
   },
   "activation": {
     "verificationComplete": "Verification Complete",
