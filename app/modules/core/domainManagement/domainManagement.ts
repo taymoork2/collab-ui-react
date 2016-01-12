@@ -2,7 +2,10 @@ namespace domainManagement {
 
   class DomainManagementCtrl {
     private _check = 'dd';
-    private _adminDomain = 'example.com';
+    private _adminDomain = {
+      text: 'example.com',
+      status: 'verified'
+    }
     private _domains = [
       {
         text: 'example.com',
@@ -10,6 +13,14 @@ namespace domainManagement {
       },
       {
         text: 'sales.example.com',
+        status: 'pending'
+      },
+      {
+        text: 'meet.example.com',
+        status: 'pending'
+      },
+      {
+        text: 'go.example.com',
         status: 'pending'
       }
     ];
@@ -27,6 +38,10 @@ namespace domainManagement {
 
     get domains() {
       return this._domains;
+    }
+
+    get adminDomain() {
+      return this._adminDomain;
     }
   }
   angular

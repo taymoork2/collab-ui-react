@@ -16,7 +16,7 @@
           <td>8374674GDYE</td>
           <td><i class="icon icon-circle {{domain.status}}"></i>{{domain.status}}</td>
           <td><i class="icon icon-email"></i><i class="icon icon-trash"></i></td>
-          <td><button ng-if="domain.status==='pending'" class="btn--cta" translate="domainManagement.verifyDomain"></button></td>
+          <td><button ng-if="domain.status==='pending'" ng-class="{ 'disabled' : dv.adminDomain.status === 'pending' && domain.text !== dv.adminDomain.text }" class="btn--cta" translate="domainManagement.verifyDomain"></button></td>
         </tr>
       </table>
       <button class="btn--primary" translate="domainManagement.addDomain" ui-sref="domainmanagement.add"></button>
