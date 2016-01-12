@@ -20,7 +20,7 @@
     return 'Every ' + weekday[day];
   }
 
-  function ScheduleUpgradeConfigurationCtrl($scope, Authinfo, ScheduleUpgradeService) {
+  function ScheduleUpgradeConfigurationCtrl($scope, Authinfo, ScheduleUpgradeService, NotificationService) {
     var vm = this;
     vm.data = {};
     vm.isAdminAcknowledged = true;
@@ -80,6 +80,7 @@
         vm.errorMessage = error.message;
       })
       .finally(function () {
+        NotificationService.removeNotification('acknowledgeScheduleUpgrade');
         vm.isAdminAcknowledged = true;
         vm.state = 'idle';
       });
