@@ -1,6 +1,6 @@
 <div class="customer-landing"></div>
   <cs-page-header title="{{::'overview.pageTitle' | translate}}"></cs-page-header>
-  <div class="landing-content content-container row">
+  <div class="landing-content content-container row" ng-nicescroll nice-option="scrollOptions">
     <section class="analytics-charts small-12 medium-7 large-8 column">
       <span ng-click="reloadReports(false)" class="overview-updated" id="time-click-div">
         <cr-reload-data id="homeRefreshData" last-updated-time="refreshTime"></cr-reload-data>

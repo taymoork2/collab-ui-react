@@ -1,6 +1,22 @@
 'use strict';
 angular
   .module('wx2AdminWebClientApp')
+  .run(['$rootScope', 'Config',
+    function($rootScope, Config) {
+      $rootScope.scrollOptions = {
+        cursorcolor: Config.chartColors.gray,
+        cursorminheight: 50,
+        cursorborder: "0px",
+        cursorwidth: "7px",
+        railpadding: {
+          top: 0,
+          right: 3,
+          left: 0,
+          bottom: 0
+        },
+        autohidemode: "leave"
+      };
+    }])
   .config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$translateProvider', '$compileProvider',
     function ($httpProvider, $stateProvider, $urlRouterProvider, $translateProvider, $compileProvider) {
       var sidepanelMemo = 'sidepanelMemo';

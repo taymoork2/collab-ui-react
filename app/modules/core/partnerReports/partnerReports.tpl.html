@@ -33,7 +33,7 @@
         <cs-select  class="small-2 medium-2 large-3  columns" id="customerFilter" name="customerFilter" ng-model="nav.customerSelected" options="nav.customerOptions" on-change-fn="nav.updateReports()" is-disabled="nav.customersSet()" filter="true"></cs-select>
     </cs-page-sub-header-right>
   </cs-page-sub-header>
-  <div class="cs-card-container content-container">
+  <div class="cs-card-container content-container" ng-nicescroll nice-option="scrollOptions">
   <cs-card-layout>
       <uc-active-user ></uc-active-user>
       <uc-registered-endpoints  ></uc-registered-endpoints>
