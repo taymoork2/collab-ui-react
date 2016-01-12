@@ -2,13 +2,27 @@ namespace domainManagement {
 
   class DomainManagementCtrl {
     private _check = 'dd';
+    private _adminDomain = {
+      text: 'example.com',
+      status: 'verified'
+    }
     private _domains = [
       {
         text: 'example.com',
-        status: 'pending'},
+        status: 'verified'
+      },
       {
         text: 'sales.example.com',
-        status: 'pending'}
+        status: 'pending'
+      },
+      {
+        text: 'meet.example.com',
+        status: 'pending'
+      },
+      {
+        text: 'go.example.com',
+        status: 'pending'
+      }
     ];
 
     /* @ngInject */
@@ -24,6 +38,10 @@ namespace domainManagement {
 
     get domains() {
       return this._domains;
+    }
+
+    get adminDomain() {
+      return this._adminDomain;
     }
   }
   angular

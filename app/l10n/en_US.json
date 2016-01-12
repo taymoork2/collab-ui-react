@@ -3287,9 +3287,10 @@
     "usage": "{{usage}} of {{volume}} in use"
   },
   "domainManagement": {
-    "title": "Domain Management",
-    "description": "The description of domain verification.",
-    "addDomain": "Add",
+    "title": "Domain Verification",
+    "description": "Add and verify your organisation domains. All DNS verification codes need to be entered into your DNS management interface for all domains. It’s highly recommended to verify all domains at the same time to avoid blockout of users.",
+    "addDomain": "Add domains",
+    "verifyDomain":"Verify",
     "list": {
       "domainHeader": "Domain",
       "statusHeader": "Status",
