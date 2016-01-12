@@ -141,7 +141,7 @@
             }
             return (scope.fc && scope.fc.$validate());
           },
-          'hide': function ($viewValue, $modelValue, scope) {
+          'hideExpression': function ($viewValue, $modelValue, scope) {
             return scope.model.patternOption !== 'range';
           }
         }
@@ -150,7 +150,7 @@
         noFormControl: true,
         template: '<div translate="callPark.to"></div>',
         expressionProperties: {
-          'hide': function ($viewValue, $modelValue, scope) {
+          'hideExpression': function ($viewValue, $modelValue, scope) {
             return scope.model.patternOption !== 'range';
           }
         }
@@ -194,7 +194,7 @@
             }
             return (scope.fc && scope.fc.$validate());
           },
-          'hide': function ($viewValue, $modelValue, scope) {
+          'hideExpression': function ($viewValue, $modelValue, scope) {
             return scope.model.patternOption !== 'range';
           }
         }
@@ -230,7 +230,7 @@
           }
         },
         expressionProperties: {
-          'hide': function ($viewValue, $modelValue, scope) {
+          'hideExpression': function ($viewValue, $modelValue, scope) {
             return scope.model.patternOption !== 'singleNumber';
           }
         }

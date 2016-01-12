@@ -194,4 +194,8 @@ function export_project_root_env_var {
     fi
 }
 
+# make sure WX2_ADMIN_WEB_CLIENT_HOME is set
 export_project_root_env_var
+
+# setup .cache subdir
+mkdir -p "${WX2_ADMIN_WEB_CLIENT_HOME}/.cache"

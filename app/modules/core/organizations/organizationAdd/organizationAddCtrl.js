@@ -60,7 +60,7 @@
         required: true
       },
       expressionProperties: {
-        'hide': '!model.isPartner'
+        'hideExpression': '!model.isPartner'
       }
     }, {
       key: 'begeoId',
@@ -73,7 +73,7 @@
         required: false
       },
       expressionProperties: {
-        'hide': '!model.isPartner'
+        'hideExpression': '!model.isPartner'
       }
     }, {
       key: 'COLLAB',
@@ -99,7 +99,7 @@
         class: 'col-xs-8 col-xs-offset-4'
       },
       expressionProperties: {
-        'hide': function () {
+        'hideExpression': function () {
           return !vm.isSquaredUC;
         }
       }
