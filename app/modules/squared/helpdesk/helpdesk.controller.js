@@ -138,18 +138,18 @@
     function searchDevices(searchString, org) {
       var orgIsEntitledToCloudBerry = LicenseService.orgIsEntitledTo(org, Config.entitlements.room_system);
       var orgIsEntitledToHuron = LicenseService.orgIsEntitledTo(org, Config.entitlements.huron);
-      vm.searchingForDevices = orgIsEntitledToCloudBerry || orgIsEntitledToHuron;    
+      vm.searchingForDevices = orgIsEntitledToCloudBerry || orgIsEntitledToHuron;
       if (!(orgIsEntitledToCloudBerry || orgIsEntitledToHuron)) {
         vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.noDeviceEntitlements');
       }
       if (orgIsEntitledToCloudBerry) {
-        vm.searchingForCloudberryDevices = true; 
+        vm.searchingForCloudberryDevices = true;
         HelpdeskService.searchCloudberryDevices(searchString, org.id, vm.searchResultsLimit).then(function (res) {
           if (vm.currentSearch.deviceSearchResults) {
             res = vm.currentSearch.deviceSearchResults.concat(res);
           }
-          vm.currentSearch.deviceSearchResults =  _.sortBy(res, function(device) {
-            return device.displayName.toLowerCase(); 
+          vm.currentSearch.deviceSearchResults = _.sortBy(res, function (device) {
+            return device.displayName.toLowerCase();
           });
           vm.searchingForCloudberryDevices = false;
           vm.searchingForDevices = vm.searchingForHuronDevices;
@@ -162,12 +162,12 @@
       }
       if (orgIsEntitledToHuron) {
         vm.searchingForHuronDevices = true;
-        HelpdeskHuronService.searchDevices(searchString, org.id, vm.searchResultsLimit).then(function (res) {       
+        HelpdeskHuronService.searchDevices(searchString, org.id, vm.searchResultsLimit).then(function (res) {
           if (vm.currentSearch.deviceSearchResults) {
-            res = vm.currentSearch.deviceSearchResults.concat(res);        
+            res = vm.currentSearch.deviceSearchResults.concat(res);
           }
-          vm.currentSearch.deviceSearchResults =  _.sortBy(res, function(device) {
-            return device.displayName.toLowerCase(); 
+          vm.currentSearch.deviceSearchResults = _.sortBy(res, function (device) {
+            return device.displayName.toLowerCase();
           });
           vm.searchingForHuronDevices = false;
           vm.searchingForDevices = vm.searchingForCloudberryDevices;
@@ -187,17 +187,17 @@
       if (HelpdeskService.noOutstandingRequests()) {
         vm.searchString = '';
         vm.currentSearch.clear();
-        HelpdeskService.getOrg(org.id).then(function(fullOrg) {
+        HelpdeskService.getOrg(org.id).then(function (fullOrg) {
           vm.lookingUpOrgFilter = false;
-          vm.currentSearch.orgFilter = fullOrg;  
+          vm.currentSearch.orgFilter = fullOrg;
         }, angular.noop);
       } else {
         HelpdeskService.cancelAllRequests().then(function () {
           vm.searchString = '';
           vm.currentSearch.clear();
-          HelpdeskService.getOrg(org.id).then(function(fullOrg) {
+          HelpdeskService.getOrg(org.id).then(function (fullOrg) {
             vm.lookingUpOrgFilter = false;
-            vm.currentSearch.orgFilter = fullOrg;          
+            vm.currentSearch.orgFilter = fullOrg;
           }, angular.noop);
         });
       }

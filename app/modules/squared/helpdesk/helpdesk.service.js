@@ -307,7 +307,7 @@
         .get(urlBase + 'helpdesk/webexsites/' + encodeURIComponent(orgId))
         .then(extractItems);
     }
-    
+
     function getHybridStatusesForUser(userId, orgId) {
       if (useMock()) {
         return deferredResolve(HelpdeskMockData.userStatuses);

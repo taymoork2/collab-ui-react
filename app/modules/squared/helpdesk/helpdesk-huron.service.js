@@ -9,7 +9,7 @@
         return deferredResolve(massageDevices(HelpdeskMockData.huronDevicesForUser));
       }
       // return DeviceService.loadDevices(userId, orgId).then(massageHuronDevices);
-      return deferredResolve([]); 
+      return deferredResolve([]);
     }
 
     function massageDevices(devices) {
@@ -28,28 +28,28 @@
         return deferredResolve(extractNumbers(HelpdeskMockData.huronUserNumbers));
       }
       //return UserServiceCommonV2.get({customerId: orgId, userId: userId}).$promise.then(extractNumbers);
-      return deferredResolve([]); 
+      return deferredResolve([]);
     }
-    
+
     function extractNumbers(res) {
       return res.data ? res.data.numbers : res.numbers;
     }
-    
+
     function searchDevices(searchString, orgId, limit) {
       if (HelpdeskService.useMock()) {
         return deferredResolve(extractDevices(HelpdeskMockData.huronDeviceSearchResult));
-      }   
+      }
       /*return $http
       .get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sipendpoints?name=' +  encodeURIComponent('%' + searchString + '%') + '&limit=' + limit)
       .then(extractDevices);*/
       return deferredResolve([]);
     }
-    
+
     function extractDevices(res) {
       var devices = res.data || res;
       // Massage to make it more similar to the cloudberry devices
-      _.each(devices, function(device) {
-          device.displayName = device.name;
+      _.each(devices, function (device) {
+        device.displayName = device.name;
       });
       return devices;
     }
