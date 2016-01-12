@@ -148,6 +148,17 @@ describe('Service: DeviceFilter', function () {
       expect(DeviceFilter.getFilteredList(arr)[0].mac).toBe('1A:2B:3C:4D:5E:6F');
     });
 
+    it('should search on mac without colon', function () {
+      var arr = [{
+        mac: '1A:2B:3C:4D:5E:6F'
+      }, {}];
+
+      DeviceFilter.setCurrentSearch('2B3C4D');
+
+      expect(DeviceFilter.getFilteredList(arr).length).toBe(1);
+      expect(DeviceFilter.getFilteredList(arr)[0].mac).toBe('1A:2B:3C:4D:5E:6F');
+    });
+
     it('should search on tags', function () {
       var arr = [{
         tags: ['foo', 'bar', 'oof']
