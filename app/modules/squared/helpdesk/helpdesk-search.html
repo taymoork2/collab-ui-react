@@ -74,7 +74,7 @@
           <span><a href ng-click="helpdeskCtrl.showMoreResults('user')" translate="helpdesk.showMore"></a></span>
         </div>
         
-        <div ng-if="helpdeskCtrl.currentSearch.userLimit === helpdeskCtrl.searchResultsLimit"
+        <div ng-if="helpdeskCtrl.currentSearch.userLimit === helpdeskCtrl.searchResultsLimit && helpdeskCtrl.currentSearch.userSearchResults.length >= helpdeskCtrl.searchResultsLimit"
              class="show-more-results">
           <span translate="helpdesk.noMoreResults"></span>
         </div>
@@ -124,7 +124,7 @@
           <span><a href ng-click="helpdeskCtrl.showMoreResults('org')" translate="helpdesk.showMore"></a></span>
         </div>
         
-        <div ng-if="helpdeskCtrl.currentSearch.orgLimit === helpdeskCtrl.searchResultsLimit"
+        <div ng-if="helpdeskCtrl.currentSearch.orgLimit === helpdeskCtrl.searchResultsLimit && helpdeskCtrl.currentSearch.orgSearchResults.length >= helpdeskCtrl.searchResultsLimit"
              class="show-more-results">
           <span translate="helpdesk.noMoreResults"></span>
         </div>
@@ -175,7 +175,7 @@
           <span><a href ng-click="helpdeskCtrl.showMoreResults('device')" translate="helpdesk.showMore"></a></span>
         </div>
         
-        <div ng-if="helpdeskCtrl.currentSearch.deviceLimit === helpdeskCtrl.searchResultsLimit"
+        <div ng-if="helpdeskCtrl.currentSearch.deviceLimit === helpdeskCtrl.searchResultsLimit && helpdeskCtrl.currentSearch.deviceSearchResults.length >= helpdeskCtrl.searchResultsLimit"
              class="show-more-results">
           <span translate="helpdesk.noMoreResults"></span>
         </div>
