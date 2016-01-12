@@ -2,46 +2,38 @@ namespace domainManagement {
 
   class DomainManagementCtrl {
     private _check = 'dd';
-    private _adminDomain = {
-      text: 'example.com',
-      status: 'verified'
-    }
+    private _adminDomain;
+    private _adminEmail;
     private _domains = [
-      {
-        text: 'example.com',
-        status: 'verified'
-      },
-      {
-        text: 'sales.example.com',
-        status: 'pending'
-      },
-      {
-        text: 'meet.example.com',
-        status: 'pending'
-      },
-      {
-        text: 'go.example.com',
-        status: 'pending'
-      }
+
     ];
 
     /* @ngInject */
-    constructor(private $route, Auth, Authinfo, DomainManagementService) {
+    constructor(private $route, Auth, Authinfo, private DomainManagementService) {
       let ctrl = this;
       ctrl._check = 'dde';
 
-    /*
-    How to get admin account e-mail:
-     Auth.getAccount(Authinfo.getOrgId()).then(function (arg1) {
+      DomainManagementService.refreshDomainList().then( function() {
 
-        console.log('domain ver getAccount:', arg1.data.accounts[0].customerAdminEmail);
-        let emaildomain = arg1.data.accounts[0].customerAdminEmail.split('@')[1];
-        console.log('domain ver emaildomain::', emaildomain);
-      });*/
+        if (!ctrl.DomainManagementService.domainList || ctrl.DomainManagementService.domainList.length == 0){
+          //no domain has been verified before!
 
-      ctrl._domains = DomainManagementService.domainList;
+          //demand we find admin before we show the list:
 
-      DomainManagementService.refreshDomainList();
+          Auth.getAccount(Authinfo.getOrgId()).then(function (arg1) {
+
+            ctrl._adminEmail = arg1.data.accounts[0].customerAdminEmail;
+            ctrl._adminDomain = ctrl._adminEmail.split('@')[1];
+
+            ctrl._domains = ctrl.DomainManagementService.domainList;
+
+          });
+
+        } else {
+          //domains already added, we don't need admin's e-mail to continue.
+          ctrl._domains = ctrl.DomainManagementService.domainList;
+        }
+      });
     }
 
     get check() {

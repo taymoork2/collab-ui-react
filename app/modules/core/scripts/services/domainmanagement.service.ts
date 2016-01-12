@@ -2,9 +2,9 @@
 class DomainManagementService {
 
   private _domainList = [
-    {
+   /* {
       text: 'initialDomain.com',
-      status: 'pending'}
+      status: 'pending'}*/
   ];
 
   constructor ($http, Config, Authinfo, private $q) {
@@ -21,33 +21,24 @@ class DomainManagementService {
   refreshDomainList() {
 
     var ctrl = this;
-
     var promises = [];
 
-    promises.push(ctrl.getVerifiedDomains);
+    promises.push(ctrl.getVerifiedDomains());
 
+    return this.$q.all(promises);
 
-    this.$q.all(promises).then(
-      function (data) {
-      ctrl._domainList.push({
-        text: 'allgetVerifiedDomainspromise.com',
-        status: 'pending'
-      });
-    }, function(errorGettingVerifiedDomains) {
-
-    }
-    );
   }
 
   addDomain(domainToAdd) {
 
     var ctrl = this;
-    var deferred = this.$q.defer();
+    let deferred = this.$q.defer();
 
     if (domainToAdd && domainToAdd.endsWith('.com')){
       ctrl._domainList.push({
         text: domainToAdd,
-        status: 'new'
+        code: '234SDSSFVD',
+        status: 'pending'
       });
 
       deferred.resolve();
@@ -58,16 +49,20 @@ class DomainManagementService {
     return deferred.promise;
   }
 
-  getVerifiedDomains(callback) {
+  getVerifiedDomains() {
 
-    var deferred = this.$q.defer();
+    let deferred = this.$q.defer();
 
-    console.log("getVerifiedDomains");
-
-    return deferred.resolve([{
+    this._domainList.push(
+    {
       text: 'getVerifiedDomainspromise.com',
-      status: 'pending'
-    }]).promise;
+      code: '',
+      status: 'verified'
+    });
+
+    deferred.resolve();
+
+    return deferred.promise;
 
     /*$http.get(dirsyncUrl)
      .success(function (data, status) {
