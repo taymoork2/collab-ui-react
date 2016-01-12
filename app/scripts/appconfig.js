@@ -386,7 +386,7 @@ angular
             reloadToggle: false
           },
           data: {
-            displayName: 'Communications'
+            displayName: 'Call'
           }
         })
         .state('user-overview.communication.directorynumber', {
@@ -444,7 +444,7 @@ angular
           templateUrl: 'modules/core/users/userPreview/userPreview.tpl.html',
           controller: 'UserPreviewCtrl',
           data: {
-            displayName: 'Messaging'
+            displayName: 'Message'
           },
           params: {
             service: 'MESSAGING'
@@ -475,7 +475,7 @@ angular
           controller: 'ConferencePreviewCtrl',
           controllerAs: 'confPreview',
           data: {
-            displayName: 'Conferencing'
+            displayName: 'Meeting'
           },
           params: {
             service: 'CONFERENCING'

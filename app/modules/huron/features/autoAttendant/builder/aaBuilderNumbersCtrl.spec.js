@@ -221,8 +221,8 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
       var resources = controller.ui.ceInfo.getResources();
 
-      // we don't sort the first top-line header number - it should have stayed put
-      expect(resources[0].number).toEqual("999999");
+      // top line header is used for preferred, e164 should be on top.
+      expect(resources[0].number).toEqual("2064261234");
 
       // and the 1234567 should have sorted first after that - even though we added it last
       expect(resources[1].number).toEqual("1234567");

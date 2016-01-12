@@ -234,7 +234,7 @@
           placeholder: $translate.instant('cdrLogs.callingParty')
         },
         expressionProperties: {
-          'hide': expression.hideSearch
+          'hideExpression': expression.hideSearch
         }
       }, {
         key: 'calledUser',
@@ -252,7 +252,7 @@
           placeholder: $translate.instant('cdrLogs.calledParty')
         },
         expressionProperties: {
-          'hide': expression.hideSearch
+          'hideExpression': expression.hideSearch
         }
       }, {
         key: 'callingPartyNumber',
@@ -271,7 +271,7 @@
           placeholder: $translate.instant('cdrLogs.callingParty')
         },
         expressionProperties: {
-          'hide': expression.hideSearch
+          'hideExpression': expression.hideSearch
         }
       }, {
         key: 'calledPartyNumber',
@@ -289,7 +289,7 @@
           placeholder: $translate.instant('cdrLogs.calledParty')
         },
         expressionProperties: {
-          'hide': expression.hideSearch
+          'hideExpression': expression.hideSearch
         }
       }, {
         key: 'callingPartyDevice',
@@ -307,7 +307,7 @@
           placeholder: $translate.instant('cdrLogs.callingParty')
         },
         expressionProperties: {
-          'hide': expression.hideSearch
+          'hideExpression': expression.hideSearch
         }
       }, {
         key: 'calledPartyDevice',
@@ -324,7 +324,7 @@
           placeholder: $translate.instant('cdrLogs.calledParty')
         },
         expressionProperties: {
-          'hide': expression.hideSearch
+          'hideExpression': expression.hideSearch
         }
       }, {
         key: 'startTime',
@@ -343,7 +343,7 @@
           placeholder: $translate.instant('cdrLogs.timeExample')
         },
         expressionProperties: {
-          'hide': expression.hideSearch
+          'hideExpression': expression.hideSearch
         }
       }, {
         key: 'endTime',
@@ -362,7 +362,7 @@
           placeholder: $translate.instant('cdrLogs.timeExample')
         },
         expressionProperties: {
-          'hide': expression.hideSearch
+          'hideExpression': expression.hideSearch
         }
       }, {
         key: 'startDate',
@@ -381,7 +381,7 @@
           placeholder: $translate.instant('cdrLogs.dateExample')
         },
         expressionProperties: {
-          'hide': expression.hideSearch
+          'hideExpression': expression.hideSearch
         }
       }, {
         key: 'endDate',
@@ -400,7 +400,7 @@
           placeholder: $translate.instant('cdrLogs.dateExample')
         },
         expressionProperties: {
-          'hide': expression.hideSearch
+          'hideExpression': expression.hideSearch
         }
       }, {
         key: 'hitSize',
@@ -418,7 +418,7 @@
           type: 'number'
         },
         expressionProperties: {
-          'hide': expression.hideSearch
+          'hideExpression': expression.hideSearch
         }
       }, {
         key: 'submit',
@@ -444,7 +444,7 @@
           }
         },
         expressionProperties: {
-          'hide': expression.hideSearch,
+          'hideExpression': expression.hideSearch,
           'templateOptions.disabled': expression.searchDisabled
         }
       }, {
@@ -473,7 +473,7 @@
           }
         },
         expressionProperties: {
-          'hide': expression.hideSearch
+          'hideExpression': expression.hideSearch
         }
       }, {
         key: 'uploadFile',
@@ -497,7 +497,7 @@
           fileSuffix: "json"
         },
         expressionProperties: {
-          'hide': expression.hideUpload
+          'hideExpression': expression.hideUpload
         }
       }, {
         key: 'uploadBtn',
@@ -520,7 +520,7 @@
           }
         },
         expressionProperties: {
-          'hide': expression.hideUpload,
+          'hideExpression': expression.hideUpload,
           'templateOptions.disabled': expression.uploadDisabled
         }
       }]

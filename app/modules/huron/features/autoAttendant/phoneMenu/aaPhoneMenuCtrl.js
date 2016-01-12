@@ -16,7 +16,7 @@
   }
 
   /* @ngInject */
-  function AAPhoneMenuCtrl($scope, $translate, $filter, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService) {
+  function AAPhoneMenuCtrl($scope, $translate, $filter, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AACommonService) {
 
     var vm = this;
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
@@ -137,6 +137,7 @@
       menuEntry.addAction(action);
       menuEntry.setType('MENU_OPTION');
       vm.menuEntry.entries.push(menuEntry);
+      setPhonemenuFormDirty();
     }
 
     // the user has pressed the trash can icon for a key/action pair
@@ -144,6 +145,7 @@
       vm.selectedActions.splice(index, 1);
       vm.menuEntry.entries.splice(index, 1);
       setAvailableKeys();
+      setPhonemenuFormDirty();
     }
 
     // the user has changed the key for an existing action
@@ -151,6 +153,7 @@
       vm.selectedActions[index].key = keyValue;
       vm.menuEntry.entries[index].key = keyValue;
       setAvailableKeys();
+      setPhonemenuFormDirty();
     }
 
     // the user has changed the action for an existing key
@@ -169,6 +172,7 @@
           // by inputType
           action.inputType = _keyAction.inputType;
         }
+        setPhonemenuFormDirty();
       }
     }
 
@@ -215,6 +219,7 @@
     function timeoutInvalidChanged() {
       var entry = vm.menuEntry;
       if (entry.type == "MENU_OPTION") {
+        setPhonemenuFormDirty();
         // this is number of times to repeat the timeout/invalid menu
         if (vm.selectedTimeout.value === 1) {
           entry.attempts = vm.selectedTimeout.value;
@@ -290,6 +295,9 @@
       vm.selectedTimeout.selectedChild = angular.copy(vm.repeatOptions[2]);
     }
 
+    function setPhonemenuFormDirty() {
+      AACommonService.setPhoneMenuStatus(true);
+    }
     /////////////////////
 
     function activate() {
