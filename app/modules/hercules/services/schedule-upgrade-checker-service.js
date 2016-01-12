@@ -15,10 +15,9 @@
               NotificationService.types.TODO,
               'acknowledgeScheduleUpgrade',
               2,
-              'modules/hercules/notifications/schedule-upgrade.html', [serviceId], {
-                settingsState: route,
-                serverData: data
-              }
+              'modules/hercules/notifications/schedule-upgrade.html',
+              [serviceId],
+              null
             );
           }
         });

@@ -1,7 +1,7 @@
 <div ng-if="scheduleUpgrade.featureEnabled">
-  <h5>Automatic Software Upgrade</h5>
-  <p>Edit the start time for available upgrades to occur on the connectors.</p>
-  <p ng-if="!scheduleUpgrade.isAdminAcknowledged">Those are the default values, you can edit them or <a ng-click="scheduleUpgrade.acknowledge(scheduleUpgrade.data)">accept them</a>.</p>
+  <h5 translate="hercules.settings.scheduleUpgrade.title"></h5>
+  <p translate="hercules.settings.scheduleUpgrade.description"></p>
+  <p ng-if="!scheduleUpgrade.isAdminAcknowledged" translate="hercules.settings.scheduleUpgrade.defaultWarning" translate-value-onclick="scheduleUpgrade.acknowledge(scheduleUpgrade.data)" translate-compile></p>
   <p ng-if="scheduleUpgrade.state === 'error'" class="red">{{scheduleUpgrade.errorMessage}}</p>
   <div class="schedule-upgrade-form">
     <cs-select

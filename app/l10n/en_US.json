@@ -1121,12 +1121,24 @@
         "sipDomainHeading": "SIP Domain",
         "sipDomain": "Enter the SRV domain of your Expressway edge server(s) so that calls route correctly to and from there.",
         "sipDomainPlaceholder": "Enter a single domain or subdomain"
+      },
+      "scheduleUpgrade": {
+        "title": "Automatic Software Upgrade",
+        "description": "Edit the start time for available upgrades to occur on the connectors.",
+        "defaultWarning": "Those are the default values, you can edit them or <a ng-click=\"{{onclick}}\">accept them</a>."
       }
     },
     "hybridServices": {
       "result404": "Entitlements for {{email}} do not exist.",
       "result409": "Entitlement(s) previously updated.",
       "resultOther": "Entitlements for {{email}} were not updated. Status: {{status}}."
+    },
+    "notifications": {
+      "scheduleUpgrade": {
+        "title": "Acknowledge the Schedule Upgrade",
+        "description": "The clusters for this service have a default schedule upgrade time set.",
+        "action": "You need to either <a ng-click=\"{{onclick}}\">change it or confirm it</a>."
+      }
     }
   },
   "firstTimeWizard": {
