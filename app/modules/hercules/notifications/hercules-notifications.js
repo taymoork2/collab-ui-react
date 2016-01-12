@@ -48,7 +48,7 @@
     };
 
     vm.navigateToCurrentServiceSettings = function () {
-      vm.handleClick();
+      vm.showNotifications = false;
       $state.go($state.current.name.split('.')[0] + '.settings');
     };
 

@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Schedule Upgrade Service', function () {
+describe('Service: Schedule Upgrade', function () {
   beforeEach(module('Core'));
 
   var $httpBackend, $rootScope, ScheduleUpgradeService, Authinfo;
@@ -24,7 +24,10 @@ describe('Schedule Upgrade Service', function () {
   }));
 
   afterEach(function () {
+    $httpBackend.flush();
     $httpBackend.verifyNoOutstandingExpectation();
     $httpBackend.verifyNoOutstandingRequest();
   });
+
+  // soon…
 });

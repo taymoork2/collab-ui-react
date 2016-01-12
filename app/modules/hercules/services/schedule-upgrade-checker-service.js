@@ -7,7 +7,7 @@
 
   /*@ngInject*/
   function ScheduleUpgradeChecker(ScheduleUpgradeService, NotificationService, Authinfo) {
-    function check(serviceType, serviceId, route) {
+    function check(serviceType, serviceId) {
       ScheduleUpgradeService.get(Authinfo.getOrgId(), serviceType)
         .then(function (data) {
           if (!data.isAdminAcknowledged) {
