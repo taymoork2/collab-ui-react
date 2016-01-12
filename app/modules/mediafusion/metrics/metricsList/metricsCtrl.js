@@ -10,19 +10,19 @@ angular.module('Mediafusion')
       $scope.querymetricscounters = [];
       $scope.counters = null;
 
-      var rowTemplate = '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}" ng-click="showMetricsDetails(row.entity)">' +
-        '<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }">&nbsp;</div>' +
-        '<div ng-cell></div>' +
-        '</div>';
-
       $scope.gridOptions = {
         data: 'queryMetricsList',
         multiSelect: false,
-        showFilter: true,
         rowHeight: 44,
-        rowTemplate: rowTemplate,
-        headerRowHeight: 40,
-        useExternalSorting: false,
+        enableSelectAll: false,
+        enableFullRowSelection: true,
+        enableColumnMenus: false,
+        onRegisterApi: function (gridApi) {
+          $scope.gridApi = gridApi;
+          gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+            $scope.showMetricsDetails(row.entity);
+          });
+        },
 
         columnDefs: [{
           field: 'metricsType',

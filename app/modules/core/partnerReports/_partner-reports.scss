@@ -92,6 +92,7 @@
       cursor: pointer;
     }
     .amExportButton {
+      left: calc(95% + .1rem);
       ul, .export-main, .export-list {
         overflow: visible;
       }

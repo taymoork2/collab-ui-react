@@ -5,7 +5,7 @@
     .controller('HuronSettingsCtrl', HuronSettingsCtrl);
 
   /* @ngInject */
-  function HuronSettingsCtrl($scope, Authinfo, $q, $translate, HttpUtils, Notification, ServiceSetup,
+  function HuronSettingsCtrl($scope, Authinfo, $q, $translate, HttpUtils, Notification, ServiceSetup, PstnSetupService,
     CallerId, ExternalNumberService, HuronCustomer, ValidationService, TelephoneNumberService, DialPlanService, FeatureToggleService) {
 
     var vm = this;
@@ -67,7 +67,8 @@
         companyVoicemailNumber: undefined
       },
       internationalDialingEnabled: false,
-      internationalDialingUuid: null
+      internationalDialingUuid: null,
+      showServiceAddress: false
     };
 
     var savedModel = null;
@@ -184,214 +185,214 @@
 
     vm.leftPanelFields = [{
       model: vm.model.site,
-      className: 'service-setup',
+      key: 'timeZone',
+      type: 'select',
+      templateOptions: {
+        inputClass: 'large-10',
+        label: $translate.instant('serviceSetupModal.timeZone'),
+        description: $translate.instant('serviceSetupModal.tzDescription'),
+        options: [],
+        labelfield: 'label',
+        valuefield: 'value',
+        inputPlaceholder: $translate.instant('serviceSetupModal.searchTimeZone'),
+        filter: true
+      },
+      controller: /* @ngInject */ function ($scope) {
+        $scope.to.options = vm.timeZoneOptions;
+      },
+      expressionProperties: {
+        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
+          return true;
+        }
+      }
+    }, {
+      model: vm.model.site,
+      key: 'steeringDigit',
+      type: 'select',
+      templateOptions: {
+        inputClass: 'medium-2',
+        label: $translate.instant('serviceSetupModal.steeringDigit'),
+        description: $translate.instant('serviceSetupModal.steeringDigitDescription'),
+        options: vm.steeringDigits
+      },
+      expressionProperties: {
+        'hideExpression': function () {
+          return vm.hideFieldSteeringDigit;
+        },
+        'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
+          return true;
+        }
+      }
+    }, {
+      className: 'service-setup service-setup-extension',
       fieldGroup: [{
-        key: 'timeZone',
-        type: 'select',
-        className: 'service-setup-timezone-column',
+        key: 'displayNumberRanges',
+        type: 'repeater',
+        hideExpression: function () {
+          return vm.hideFieldInternalNumberRange;
+        },
         templateOptions: {
-          label: $translate.instant('serviceSetupModal.timeZone'),
-          description: $translate.instant('serviceSetupModal.tzDescription'),
-          options: [],
-          labelfield: 'label',
-          valuefield: 'value',
-          inputPlaceholder: $translate.instant('serviceSetupModal.searchTimeZone'),
-          filter: true
-        },
-        controller: /* @ngInject */ function ($scope) {
-          $scope.to.options = vm.timeZoneOptions;
-        },
-        expressionProperties: {
-          'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-            return true;
-          }
+          label: $translate.instant('serviceSetupModal.internalExtensionRange'),
+          description: $translate.instant('serviceSetupModal.internalNumberRangeDescription'),
+          fields: [{
+            className: 'formly-field-inline',
+            fieldGroup: [{
+              className: 'form-inline formly-field formly-field-input',
+              type: 'input',
+              key: 'beginNumber',
+              validators: {
+                numeric: {
+                  expression: ValidationService.numeric,
+                  message: function () {
+                    return $translate.instant('validation.numeric');
+                  }
+                },
+                lessThan: {
+                  expression: vm.validations.lessThan,
+                  message: function ($viewValue, $modelValue, scope) {
+                    return $translate.instant('serviceSetupModal.lessThan', {
+                      'beginNumber': $viewValue,
+                      'endNumber': scope.model.endNumber
+                    });
+                  }
+                },
+                duplicate: {
+                  expression: vm.validations.duplicate,
+                  message: function () {
+                    return $translate.instant('serviceSetupModal.rangeDuplicate');
+                  }
+                },
+                singleNumberRangeCheck: {
+                  expression: vm.validations.singleNumberRangeCheck,
+                  message: function () {
+                    return $translate.instant('serviceSetupModal.singleNumberRangeError');
+                  }
+                }
+              },
+              templateOptions: {
+                required: true,
+                maxlength: 4,
+                minlength: 4,
+                warnMsg: $translate.instant('directoryNumberPanel.steeringDigitOverlapWarning', {
+                  steeringDigitInTranslation: vm.model.site.steeringDigit
+                })
+              },
+              expressionProperties: {
+                'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
+                  return angular.isDefined(scope.model.uuid);
+                },
+                'templateOptions.isWarn': vm.steerDigitOverLapValidation
+              }
+            }, {
+              className: 'form-inline formly-field service-setup-extension-range-to',
+              noFormControl: true,
+              template: '<span>' + $translate.instant('serviceSetupModal.to') + '</span>'
+            }, {
+              className: 'form-inline formly-field formly-field-input',
+              type: 'input',
+              key: 'endNumber',
+              validators: {
+                numeric: {
+                  expression: ValidationService.numeric,
+                  message: function () {
+                    return $translate.instant('validation.numeric');
+                  }
+                },
+                greaterThan: {
+                  expression: vm.validations.greaterThan,
+                  message: function ($viewValue, $modelValue, scope) {
+                    return $translate.instant('serviceSetupModal.greaterThan', {
+                      'beginNumber': scope.model.beginNumber,
+                      'endNumber': $viewValue
+                    });
+                  }
+                },
+                rangeOverlap: {
+                  expression: vm.validations.rangeOverlap,
+                  message: function () {
+                    return $translate.instant('serviceSetupModal.rangeOverlap');
+                  }
+                },
+                duplicate: {
+                  expression: vm.validations.duplicate,
+                  message: function () {
+                    return $translate.instant('serviceSetupModal.rangeDuplicate');
+                  }
+                },
+                singleNumberRangeCheck: {
+                  expression: vm.validations.singleNumberRangeCheck,
+                  message: function () {
+                    return $translate.instant('serviceSetupModal.singleNumberRangeError');
+                  }
+                }
+              },
+              templateOptions: {
+                required: true,
+                maxlength: 4,
+                minlength: 4,
+                warnMsg: $translate.instant('directoryNumberPanel.steeringDigitOverlapWarning', {
+                  steeringDigitInTranslation: vm.model.site.steeringDigit
+                })
+              },
+              expressionProperties: {
+                'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
+                  return angular.isDefined(scope.model.uuid);
+                },
+                'data.validate': function (viewValue, modelValue, scope) {
+                  return scope.fc && scope.fc.$validate();
+                },
+                'templateOptions.isWarn': vm.steerDigitOverLapValidation
+              }
+            }, {
+              type: 'icon-button',
+              key: 'deleteBtn',
+              className: 'icon-button-delete',
+              templateOptions: {
+                btnClass: 'icon trash-icon',
+                onClick: function (options, scope) {
+                  deleteInternalNumberRange(scope.model);
+                }
+              },
+              controller: /* @ngInject */ function ($scope) {
+                $scope.$watchCollection(function () {
+                  return vm.model.displayNumberRanges;
+                }, function (displayNumberRanges) {
+                  if (displayNumberRanges.length === 1) {
+                    $scope.to.btnClass = 'trash-icon hide-delete';
+                  } else if (displayNumberRanges.length > 1 && !vm.firstTimeSetup && angular.isUndefined($scope.model.uuid)) {
+                    $scope.to.btnClass = 'trash-icon';
+                  } else if (displayNumberRanges.length > 1 && vm.firstTimeSetup && angular.isUndefined($scope.model.uuid)) {
+                    $scope.to.btnClass = 'trash-icon';
+                  } else if (vm.model.numberRanges.length === 1 && displayNumberRanges.length !== 1) {
+                    if (angular.isDefined(vm.model.numberRanges[0].uuid)) {
+                      $scope.to.btnClass = 'trash-icon hide-delete';
+                    }
+                  }
+                });
+              }
+            }]
+          }]
         }
       }, {
-        key: 'steeringDigit',
-        type: 'select',
-        className: 'service-setup-steering-digit',
+        type: 'button',
+        key: 'addBtn',
         templateOptions: {
-          label: $translate.instant('serviceSetupModal.steeringDigit'),
-          description: $translate.instant('serviceSetupModal.steeringDigitDescription'),
-          options: vm.steeringDigits
+          btnClass: 'btn-sm btn-link',
+          label: $translate.instant('serviceSetupModal.addMoreExtensionRanges'),
+          onClick: function (options, scope) {
+            addInternalNumberRange();
+          }
         },
         expressionProperties: {
-          'hide': function () {
-            return vm.hideFieldSteeringDigit;
-          },
-          'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-            return true;
+          'hideExpression': function () {
+            if (vm.model.displayNumberRanges.length > 9) {
+              return true;
+            } else {
+              return vm.hideFieldInternalNumberRange;
+            }
           }
         }
       }]
-    }, {
-      key: 'displayNumberRanges',
-      type: 'repeater',
-      className: 'service-setup service-setup-extension',
-      hideExpression: function () {
-        return vm.hideFieldInternalNumberRange;
-      },
-      templateOptions: {
-        label: $translate.instant('serviceSetupModal.internalExtensionRange'),
-        description: $translate.instant('serviceSetupModal.internalNumberRangeDescription'),
-        fields: [{
-          className: 'formly-field-inline service-setup-extension-range',
-          fieldGroup: [{
-            className: 'form-inline formly-field formly-field-input',
-            type: 'input',
-            key: 'beginNumber',
-            validators: {
-              numeric: {
-                expression: ValidationService.numeric,
-                message: function () {
-                  return $translate.instant('validation.numeric');
-                }
-              },
-              lessThan: {
-                expression: vm.validations.lessThan,
-                message: function ($viewValue, $modelValue, scope) {
-                  return $translate.instant('serviceSetupModal.lessThan', {
-                    'beginNumber': $viewValue,
-                    'endNumber': scope.model.endNumber
-                  });
-                }
-              },
-              duplicate: {
-                expression: vm.validations.duplicate,
-                message: function () {
-                  return $translate.instant('serviceSetupModal.rangeDuplicate');
-                }
-              },
-              singleNumberRangeCheck: {
-                expression: vm.validations.singleNumberRangeCheck,
-                message: function () {
-                  return $translate.instant('serviceSetupModal.singleNumberRangeError');
-                }
-              }
-            },
-            templateOptions: {
-              required: true,
-              maxlength: 4,
-              minlength: 4,
-              warnMsg: $translate.instant('directoryNumberPanel.steeringDigitOverlapWarning', {
-                steeringDigitInTranslation: vm.model.site.steeringDigit
-              })
-            },
-            expressionProperties: {
-              'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-                return angular.isDefined(scope.model.uuid);
-              },
-              'templateOptions.isWarn': vm.steerDigitOverLapValidation
-            }
-          }, {
-            className: 'form-inline formly-field service-setup-extension-range-to',
-            noFormControl: true,
-            template: '<span>' + $translate.instant('serviceSetupModal.to') + '</span>'
-          }, {
-            className: 'form-inline formly-field formly-field-input',
-            type: 'input',
-            key: 'endNumber',
-            validators: {
-              numeric: {
-                expression: ValidationService.numeric,
-                message: function () {
-                  return $translate.instant('validation.numeric');
-                }
-              },
-              greaterThan: {
-                expression: vm.validations.greaterThan,
-                message: function ($viewValue, $modelValue, scope) {
-                  return $translate.instant('serviceSetupModal.greaterThan', {
-                    'beginNumber': scope.model.beginNumber,
-                    'endNumber': $viewValue
-                  });
-                }
-              },
-              rangeOverlap: {
-                expression: vm.validations.rangeOverlap,
-                message: function () {
-                  return $translate.instant('serviceSetupModal.rangeOverlap');
-                }
-              },
-              duplicate: {
-                expression: vm.validations.duplicate,
-                message: function () {
-                  return $translate.instant('serviceSetupModal.rangeDuplicate');
-                }
-              },
-              singleNumberRangeCheck: {
-                expression: vm.validations.singleNumberRangeCheck,
-                message: function () {
-                  return $translate.instant('serviceSetupModal.singleNumberRangeError');
-                }
-              }
-            },
-            templateOptions: {
-              required: true,
-              maxlength: 4,
-              minlength: 4,
-              warnMsg: $translate.instant('directoryNumberPanel.steeringDigitOverlapWarning', {
-                steeringDigitInTranslation: vm.model.site.steeringDigit
-              })
-            },
-            expressionProperties: {
-              'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-                return angular.isDefined(scope.model.uuid);
-              },
-              'data.validate': function (viewValue, modelValue, scope) {
-                return scope.fc && scope.fc.$validate();
-              },
-              'templateOptions.isWarn': vm.steerDigitOverLapValidation
-            }
-          }, {
-            type: 'icon-button',
-            key: 'deleteBtn',
-            className: 'icon-button-delete',
-            templateOptions: {
-              btnClass: 'icon trash-icon',
-              onClick: function (options, scope) {
-                deleteInternalNumberRange(scope.model);
-              }
-            },
-            controller: /* @ngInject */ function ($scope) {
-              $scope.$watchCollection(function () {
-                return vm.model.displayNumberRanges;
-              }, function (displayNumberRanges) {
-                if (displayNumberRanges.length === 1) {
-                  $scope.to.btnClass = 'trash-icon hide-delete';
-                } else if (displayNumberRanges.length > 1 && !vm.firstTimeSetup && angular.isUndefined($scope.model.uuid)) {
-                  $scope.to.btnClass = 'trash-icon';
-                } else if (displayNumberRanges.length > 1 && vm.firstTimeSetup && angular.isUndefined($scope.model.uuid)) {
-                  $scope.to.btnClass = 'trash-icon';
-                } else if (vm.model.numberRanges.length === 1 && displayNumberRanges.length !== 1) {
-                  if (angular.isDefined(vm.model.numberRanges[0].uuid)) {
-                    $scope.to.btnClass = 'trash-icon hide-delete';
-                  }
-                }
-              });
-            }
-          }]
-        }]
-      }
-    }, {
-      type: 'button',
-      key: 'addBtn',
-      templateOptions: {
-        btnClass: 'btn-sm btn-link',
-        label: $translate.instant('serviceSetupModal.addMoreExtensionRanges'),
-        onClick: function (options, scope) {
-          addInternalNumberRange();
-        }
-      },
-      expressionProperties: {
-        'hide': function () {
-          if (vm.model.displayNumberRanges.length > 9) {
-            return true;
-          } else {
-            return vm.hideFieldInternalNumberRange;
-          }
-        }
-      }
     }, {
       type: 'switch',
       key: 'internationalDialingEnabled',
@@ -401,16 +402,31 @@
         description: $translate.instant('internationalDialing.internationalDialingDesc')
       },
       expressionProperties: {
-        'hide': function () {
+        'hideExpression': function () {
           return !vm.CosFeatureEnabled;
         }
       }
     }];
 
     vm.rightPanelFields = [{
+      key: 'showServiceAddress',
+      type: 'nested',
+      className: 'max-width-form',
+      templateOptions: {
+        label: $translate.instant('settingsServiceAddress.label'),
+        description: $translate.instant('settingsServiceAddress.description')
+      },
+      hideExpression: '!model.showServiceAddress',
+      data: {
+        fields: [{
+          noFormControl: true,
+          template: '<hr-settings-service-address></hr-settings-service-address>'
+        }]
+      }
+    }, {
       key: 'callerId',
       type: 'nested',
-      className: 'caller-id',
+      className: 'max-width-form',
       templateOptions: {
         label: $translate.instant('companyCallerId.companyCallerId'),
         description: $translate.instant('companyCallerId.companyCallerIdDesc')
@@ -422,8 +438,8 @@
         }, {
           key: 'callerIdName',
           type: 'input',
-          className: 'caller-id-name',
           templateOptions: {
+            inputClass: 'large-7',
             label: $translate.instant('companyCallerId.callerIdName'),
             type: 'text'
           },
@@ -431,14 +447,13 @@
             'templateOptions.required': function () {
               return vm.model.callerId.callerIdEnabled;
             },
-            'hide': function () {
+            'hideExpression': function () {
               return !vm.model.callerId.callerIdEnabled;
             }
           }
         }, {
           key: 'callerIdNumber',
           type: 'select',
-          className: 'caller-id-number',
           validators: {
             phoneNumber: {
               expression: vm.validations.phoneNumber,
@@ -448,6 +463,7 @@
             }
           },
           templateOptions: {
+            inputClass: 'large-5',
             label: $translate.instant('companyCallerId.callerIdNumber'),
             combo: true,
             searchableCombo: true
@@ -458,7 +474,7 @@
                 return true;
               }
             },
-            'hide': function () {
+            'hideExpression': function () {
               return !vm.model.callerId.callerIdEnabled;
             }
           },
@@ -476,7 +492,7 @@
     }, {
       key: 'companyVoicemail',
       type: 'nested',
-      className: 'company-voicemail-id',
+      className: 'max-width-form',
       templateOptions: {
         label: $translate.instant('serviceSetupModal.companyVoicemail'),
         description: $translate.instant('serviceSetupModal.companyVoicemailDescription')
@@ -488,8 +504,8 @@
         }, {
           key: 'companyVoicemailNumber',
           type: 'select',
-          className: 'company-voicemail-number',
           templateOptions: {
+            inputClass: 'large-5',
             options: [],
             inputPlaceholder: $translate.instant('directoryNumberPanel.searchNumber'),
             labelfield: 'pattern',
@@ -502,7 +518,7 @@
             'templateOptions.required': function () {
               return vm.model.companyVoicemail.companyVoicemailEnabled;
             },
-            'hide': function () {
+            'hideExpression': function () {
               return !vm.model.companyVoicemail.companyVoicemailEnabled;
             }
           },
@@ -534,6 +550,23 @@
         pattern: didLabel
       });
       return externalNumber;
+    }
+
+    function initServiceAddress() {
+      return PstnSetupService.listCustomerCarriers(Authinfo.getOrgId())
+        .then(function (carriers) {
+          if (_.get(carriers, '[0].apiExists') === true) {
+            showServiceAddress();
+          }
+        })
+        .catch(_.noop);
+    }
+
+    function showServiceAddress() {
+      vm.model.showServiceAddress = true;
+      if (_.isObject(savedModel)) {
+        savedModel.showServiceAddress = true;
+      }
     }
 
     function init() {
@@ -606,6 +639,7 @@
       // Caller ID
       clearCallerIdFields();
       promises.push(getCompanyCallerId());
+      promises.push(initServiceAddress());
 
       $q.all(promises).finally(function () {
         if (errors.length > 0) {
@@ -667,7 +701,7 @@
         } else {
           // When the toggle is OFF, update the site if the customer has voicemail
           // to disable voicemail, otherwise they already have voice only and don't
-          // require an update.  
+          // require an update.
           if (vm.hasVoicemailService) {
             return updateSite();
           }
@@ -751,7 +785,7 @@
         } else {
           // When the toggle is OFF, update the customer if the customer has voicemail
           // to disable voicemail, otherwise they already have voice only and don't
-          // require an update.  
+          // require an update.
           if (vm.hasVoicemailService) {
             return updateCustomer();
           }

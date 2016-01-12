@@ -115,6 +115,7 @@
       winTeams: 'win-teams',
       zeroTouchMeeting: 'zero-touch-meeting',
       locationSharing: 'location-sharing',
+      ceAllowNolockdown: 'ce-allow-nolockdown',
     };
 
     var service = {
@@ -266,8 +267,6 @@
           supportsDirSync().then(function (enabled) {
             resolve(enabled);
           });
-        } else if (feature === features.atlasCloudberryTrials) {
-          resolve(true);
         } else if (angular.isDefined(toggles[feature])) {
           resolve(toggles[feature]);
         } else {
@@ -337,6 +336,7 @@
         key: key,
         orgId: orgId,
         group: 'ORG',
+        mutable: true,
       };
     }
 

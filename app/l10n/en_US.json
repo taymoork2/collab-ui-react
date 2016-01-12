@@ -117,9 +117,6 @@
     "howToInvite": "How would you like them to be invited?",
     "waitInvitation": "Send email invitations and wait until the user accepts before provisioning services.",
     "sendImmediate": "Immediately provision services for the user and send email notifications.",
-    "messaging": "Messaging",
-    "conferencing": "Conferencing",
-    "communications": "Communications",
     "message": "Message",
     "meeting": "Meeting",
     "call": "Call",
@@ -133,9 +130,6 @@
     "groupColHeader": "Group Name",
     "collabService": "Select the collaboration service licenses that should be given to the users in the group.",
     "addEntitleError": "insufficient priveledge to add or entitle a user.",
-    "freeMsg": "Free Spark Messaging",
-    "freeConf": "Free 3 Party Meetings",
-    "freeComm": "Free 1:1 Spark Call",
     "msgFree": "Message Free",
     "mtgFree": "Meeting Free 3 Party",
     "callFree": "Call Free",
@@ -415,6 +409,7 @@
     "poor": "Poor",
     "description": "Media quality is determined by measuring the amount of packet loss that is reported by the registered devices during all calls that are longer than fifteen seconds in duration.",
     "mediaQualityGraphError": "There was an error while loading call quality data for {{customer}}.",
+    "customerError": "There was an error while loading call quality data.",
     "minutes": "Minutes"
   },
   "callMetrics": {
@@ -423,8 +418,6 @@
     "callConditionPoorMedia": "Poor Media",
     "callConditionSuccessful": "Successful",
     "callMetrics": "Call Metrics",
-    "audioTitle": "Call Metrics - Audio",
-    "videoTitle": "Call Metrics - Video",
     "callMetricsChartError": "There was an error while loading call metrics data for {{customer}}.",
     "customerError": "There was an error while loading call metrics data.",
     "callMetricsDesc": "This chart displays the total number of calls made and the number of minutes spent on those calls over the {{time}}.  You are also able to determine the percentage of successful and failed calls for the selected customers.",
@@ -440,7 +433,8 @@
     "totalRegistered": "Yesterday's Total",
     "trend": "Trend Over {{time}}",
     "registeredEndpointsError": "There was an error while loading registered endpoints for {{customer}}.",
-    "description": "A registered endpoint is any device that is connected to the network in the {{time}}.  The data presented here will help you determine device adoption trends and usage at a high level."
+    "description": "A registered endpoint is any device that is connected to the network in the {{time}}.  The data presented here will help you determine device adoption trends and usage at a high level.",
+    "customerError": "There was an error while loading registered endpoints."
   },
   "activeUserPopulation": {
     "titleByCompany": "Active User Population by Company",
@@ -667,7 +661,8 @@
     "resources": "Resources",
     "download": "Download",
     "quantity": "Qty",
-    "modify": "Modify"
+    "modify": "Modify",
+    "submit": "Submit"
   },
   "notifications": {
     "success": "Success notifications",
@@ -1184,7 +1179,6 @@
     "planReview": "Plan Review",
     "subscriptionId": "Subscription ID's",
     "spark": "Spark",
-    "sparkMsg": "Free Spark Messaging",
     "sparkStub": "Set up Spark",
     "webex": "WebEx",
     "webexMsg": "Webex Conferencing",
@@ -1194,16 +1188,11 @@
     "message": "Message",
     "meeting": "Meeting",
     "call": "Call",
-    "messaging": "Messaging",
-    "conferencing": "Conferencing",
-    "communications": "Communications",
     "roomSystems": "Room Systems",
     "sparkRoomSystem": "Spark Room System",
     "freeMsg": "Message Free",
     "freeMtg": "Meeting Free 3 Party",
     "freeCall": "Call Free",
-    "confMsg": "Free 3 Party Meetings",
-    "commMsg": "Free 1:1 Spark Call",
     "communicationsSub": "Setup calling service",
     "claimSipUrl": "Customize SIP URI Domain",
     "claimSipUriTitle": "Customize your company’s SIP URI domain name. This domain will be used to create a universally reachable URI for each user in your company.",
@@ -1212,6 +1201,8 @@
     "claimSipUriDomainTitle": "SIP URI Domain",
     "claimSipUriDomain": ".ciscospark.com",
     "claimSipUriTestOrg": "This feature is currently available only for test orgs. Please proceed to next step.",
+    "messageSettings": "Message Settings",
+    "callSettings": "Call Settings",
     "enterpriseSettings": "Enterprise Settings",
     "messagingSetup": "Messaging Setup",
     "messagingSetupSub": "Setup messaging service",
@@ -1219,7 +1210,6 @@
     "enterpriseSettingsSub": "Set up global configurations",
     "planReviewDesc": "This setup wizard will enable you to quickly get collaboration services up and running for your organization. If you're not sure what to do in any given step, don't worry, you can always make changes later.",
     "accountReview": "Account Review",
-    "serviceSetup": "Communication",
     "serviceSetupSub": "Phone-related settings",
     "unifiedCommunication": "Unified Communications",
     "addUsers": "Invite Users",
@@ -1248,9 +1238,7 @@
     "syncStatus": "Sync Status",
     "domain": "Domain",
     "defaultPlaceholder": "Default",
-    "domainDesc": "Identify the Active Directory domain you will be syncing.",
     "installStep1": "1. <a href='{{download}}' download> Download </a> and Install the Cisco Cloud Connector in your enterprise.",
-    "installStep2": "2. Configure the Active Directory synchronization agreement.",
     "installStep3": "3. Test the synchronization agreement.",
     "installWarning": "Warning:",
     "installWarningDescription": "If you have already added users manually, performing an Active Directory synchronization may cause previously added users to be removed. Please check the Cisco Cloud Connector Dry Run Reports to verify that all expected users are present.",
@@ -1279,8 +1267,8 @@
     "setupSSODesc": "Please select the appropriate option for your SSO configuration.",
     "manualInvite": "Enter the email addresses of the people in your company that will receive Collaboration Services. They will receive an email invitation to sign up.",
     "assignServices": "Select the entitlements that you would like to grant users.",
-    "domainEntry": "Domain Entry",
-    "domainSubDesc": "Enter the AD domain to sync with:",
+    "domainEntry": "Active Directory",
+    "domainSubDesc": "Enter the Acive Directory domain:",
     "connectorSteps": "Follow these steps in order to install the Directory Connector:",
     "readyToGo": "You're ready to go!",
     "finishDesc": "You have completed the setup wizard. If you have skipped steps or need to change any of the settings, click the gear icon in the upper right hand corner of the page to access this panel again.",
@@ -1881,7 +1869,12 @@
       "webexTimezone": "WebEx Time Zone",
       "default": "Set as default",
       "tzDescription": "Select the time zone closest to your customer. This will ensure their WebEx site is deployed in the appropriate data center.",
-      "timezonePlaceholder": "Search for a time zone..."
+      "siteUrlPlaceholder": "acmecorp.webex.com",
+      "timezonePlaceholder": "Search for a time zone...",
+      "invalidSite": "SiteUrl is invalid.",
+      "duplicateSite": "SiteUrl is already in use.",
+      "domainInvalid": "SiteUrl must contain the webex.com domain name.",
+      "validationHttpError": "Could not reach server to validate siteUrl. Try again."
     },
     "call": {
       "title": "Start New Trial - Ship Devices",
@@ -1931,9 +1924,9 @@
     "title": "Customers",
     "customerNameHeader": "Customer Name",
     "service": "Service",
-    "messaging": "Messaging",
-    "conferencing": "Conferencing",
-    "communications": "Communications",
+    "message": "Message",
+    "call": "Call",
+    "meeting": "Meeting",
     "notes": "Notes",
     "active": "Active",
     "trial": "Trial",
@@ -1986,13 +1979,12 @@
     "logoOverride": "Customer Logo Override",
     "allowCustomerLogo": "Enable Customer Logo for {{customer}}",
     "myOrganization": "My Organization",
-    "message": "Message",
-    "meeting": "Meeting 25 Party",
+    "meetingParty": "Meeting 25 Party",
     "call": "Call",
     "roomSystem": "Spark Room System",
     "branding": "Customer Branding",
     "MS": "Message",
-    "CF": "Meeting 25 Party",
+    "CF": "Meeting",
     "MC": "Meeting 25 Party",
     "WebExMC": "WebEx Meeting Center",
     "SC": "WebEx Support Center",
@@ -2021,6 +2013,13 @@
     "saveSuccess": "Settings successfully saved.",
     "companyCallerIdsaveError": "Company Caller ID failed to save.",
     "internationalDialingSaveError": "International Dialing failed to save."
+  },
+  "settingsServiceAddress": {
+    "label": "Emergency Service Address",
+    "description": "In the case of an emergency, local emergency response crew would use this address to locate the caller.",
+    "savePrompt": "Save this address?",
+    "saveSuccess": "Emergency Service Address updated successfully.",
+    "saveError": "Error occurred updating Emergency Service Address."
   },
   "didManageModal": {
     "title": "Manage Phone Numbers",
@@ -3087,12 +3086,13 @@
     "pageTitle": "Overview",
     "thisMonth": "This month",
     "lastMonth": "Last month:",
-    "contactPartner": "Contact your partner or Cisco Sales for more information",
+    "contactPartner": "Contact your partner or Cisco Sales for more information.",
+    "nonotifications": "Currently, there are no notifications to display.",
     "cards": {
       "users": {
         "title": "Users",
         "directorySynchronization": "Directory Synchronization",
-        "singleSignOn": "Single Sign On",
+        "singleSignOn": "Single Sign-On",
         "convertButton": "Convert",
         "convertText": "Users who may belong to your organization"
       },
@@ -3118,8 +3118,15 @@
       },
       "hybrid": {
         "title": "Hybrid Services",
-        "notEnabledText": "Hybrid Services allow you to integrate on-premise systems to the Cisco Collaboration Platform.",
-        "notEnabledActionText": "Learn More"
+        "notEnabledText": "Hybrid Services allows you to integrate your on-premises systems with the Cisco Collaboration Platform.",
+        "notEnabledActionText": "Learn More.",
+        "serviceHeader": "On Premise Status",
+        "services": {
+          "squared-fusion-cal": "Calendar",
+          "squared-fusion-uc": "Call",
+          "squared-fusion-mgmt": "Managment"
+
+        }
       }
     }
   },

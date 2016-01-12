@@ -6,7 +6,7 @@
     .controller('TrialMeetingCtrl', TrialMeetingCtrl);
 
   /* @ngInject */
-  function TrialMeetingCtrl($translate, TrialMeetingService, WebexTimeZoneService) {
+  function TrialMeetingCtrl($q, $translate, TrialMeetingService, WebexTimeZoneService) {
     var vm = this;
 
     var _trialData = TrialMeetingService.getData();
@@ -15,18 +15,54 @@
     vm.siteUrl = _trialData.details.siteUrl;
     vm.timeZoneId = _trialData.details.timeZoneId;
     vm.timeZones = [];
+    vm.validatingUrl = false;
 
     vm.siteUrlFields = [{
       model: vm.details,
       key: 'siteUrl',
       type: 'input',
       templateOptions: {
-        label: $translate.instant('trialModal.meeting.webexSiteUrl'),
+        required: true,
         labelClass: 'small-4 columns',
         inputClass: 'small-7 columns left',
-        placeholder: 'http://',
-        type: 'url',
-        required: true,
+        label: $translate.instant('trialModal.meeting.webexSiteUrl'),
+        placeholder: $translate.instant('trialModal.meeting.siteUrlPlaceholder')
+      },
+      modelOptions: {
+        'updateOn': 'blur'
+      },
+      validators: {
+        validUrl: {
+          expression: function ($viewValue, $modelValue) {
+            var siteUrl = $modelValue || $viewValue;
+            vm.validatingUrl = true;
+            return $q(function (resolve, reject) {
+              WebexTimeZoneService.validateSiteUrl(siteUrl).then(function (site) {
+                  vm.siteUrlErrorCode = site.errorCode;
+                  if (site.isValid) {
+                    resolve();
+                  } else {
+                    reject();
+                  }
+                })
+                .catch(function () {
+                  reject();
+                })
+                .finally(function () {
+                  vm.validatingUrl = false;
+                });
+            });
+          },
+          message: function () {
+            var errors = {
+              'domainInvalid': $translate.instant('trialModal.meeting.domainInvalid'),
+              'duplicateSite': $translate.instant('trialModal.meeting.duplicateSite'),
+              'invalidSite': $translate.instant('trialModal.meeting.invalidSite')
+            };
+
+            return errors[vm.siteUrlErrorCode];
+          }
+        }
       },
     }];
 
