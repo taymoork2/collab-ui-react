@@ -156,7 +156,7 @@
           setOrgOnDeviceSearchResults(vm.currentSearch.deviceSearchResults);
         }, function (err) {
           vm.searchingForCloudberryDevices = false;
-          vm.searchingForDevices = vm.searchingForHuronDevices
+          vm.searchingForDevices = vm.searchingForHuronDevices;
           vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
         });
       }
