@@ -216,7 +216,7 @@
         options: vm.steeringDigits
       },
       expressionProperties: {
-        'hide': function () {
+        'hideExpression': function () {
           return vm.hideFieldSteeringDigit;
         },
         'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
@@ -384,7 +384,7 @@
           }
         },
         expressionProperties: {
-          'hide': function () {
+          'hideExpression': function () {
             if (vm.model.displayNumberRanges.length > 9) {
               return true;
             } else {
@@ -402,7 +402,7 @@
         description: $translate.instant('internationalDialing.internationalDialingDesc')
       },
       expressionProperties: {
-        'hide': function () {
+        'hideExpression': function () {
           return !vm.CosFeatureEnabled;
         }
       }
@@ -447,7 +447,7 @@
             'templateOptions.required': function () {
               return vm.model.callerId.callerIdEnabled;
             },
-            'hide': function () {
+            'hideExpression': function () {
               return !vm.model.callerId.callerIdEnabled;
             }
           }
@@ -474,7 +474,7 @@
                 return true;
               }
             },
-            'hide': function () {
+            'hideExpression': function () {
               return !vm.model.callerId.callerIdEnabled;
             }
           },
@@ -518,7 +518,7 @@
             'templateOptions.required': function () {
               return vm.model.companyVoicemail.companyVoicemailEnabled;
             },
-            'hide': function () {
+            'hideExpression': function () {
               return !vm.model.companyVoicemail.companyVoicemailEnabled;
             }
           },

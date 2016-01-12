@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskUserController($stateParams, HelpdeskService, XhrNotificationService, USSService2, HelpdeskCardsUserService, Config, LicenseService) {
+  function HelpdeskUserController($stateParams, HelpdeskService, XhrNotificationService, USSService2, HelpdeskCardsUserService, Config, LicenseService, HelpdeskHuronService) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.user) {
@@ -74,8 +74,11 @@
       }
 
       if (LicenseService.userIsEntitledTo(user, Config.entitlements.huron)) {
-        HelpdeskService.getHuronDevices(vm.userId, vm.orgId).then(function (devices) {
+        HelpdeskHuronService.getDevices(vm.userId, vm.orgId).then(function (devices) {
           vm.huronDevices = devices;
+        }, XhrNotificationService.notify);
+        HelpdeskHuronService.getUserNumbers(vm.userId, vm.orgId).then(function (numbers) {
+          vm.callCard.huronNumbers = numbers;
         }, XhrNotificationService.notify);
       }
 

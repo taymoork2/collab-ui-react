@@ -21,7 +21,7 @@ describe('Controller: WizardCtrl', function () {
     }]
   }, {
     name: 'messagingSetup',
-    label: 'firstTimeWizard.message',
+    label: 'firstTimeWizard.messageSettings',
     description: 'firstTimeWizard.messagingSetupSub',
     icon: 'icon-convo',
     title: 'firstTimeWizard.messagingSetup',

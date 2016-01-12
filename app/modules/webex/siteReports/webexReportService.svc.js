@@ -482,10 +482,7 @@ angular.module('WebExReports').service('WebexReportService', [
     }; //end initReportsObject
 
     this.getNaviationInfo = function () {
-      var reportPagesInfoXml = WebExXmlApiFact.getAdminPagesInfo(
-        false,
-        webExXmlApiInfoObj
-      );
+      var reportPagesInfoXml = WebExXmlApiFact.getReportPagesInfo(webExXmlApiInfoObj);
 
       return $q.all({
         // siteInfoXml: siteInfoXml,

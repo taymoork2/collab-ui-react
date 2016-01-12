@@ -59,7 +59,7 @@ angular.module('Core')
 
               } else if (Authinfo.isSupportUser()) {
                 state = 'support';
-              } else if (Authinfo.isHelpDeskUserOnly()) {
+              } else if (!$stateParams.customerOrgId && Authinfo.isHelpDeskUserOnly()) {
                 state = 'helpdesk.search';
               } else if (Authinfo.isPartnerUser()) {
                 state = 'partnercustomers.list';

@@ -97,7 +97,7 @@
         'templateOptions.disabled': function () {
           return vm.disableSquaredUCCheckBox;
         },
-        'hide': function () {
+        'hideExpression': function () {
           return !vm.isSquaredUC();
         }
       }

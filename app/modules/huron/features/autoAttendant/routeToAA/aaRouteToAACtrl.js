@@ -6,7 +6,7 @@
     .controller('AARouteToAACtrl', AARouteToAACtrl);
 
   /* @ngInject */
-  function AARouteToAACtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService) {
+  function AARouteToAACtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AACommonService) {
 
     var vm = this;
 
@@ -58,6 +58,7 @@
 
     function saveUiModel() {
       vm.menuEntry.actions[0].setValue(aaName2CeId(vm.aaName));
+      AACommonService.setPhoneMenuStatus(true);
     }
 
     function activate() {

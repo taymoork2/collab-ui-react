@@ -11,10 +11,10 @@
         }
 
         function mapStatus(oldStatus, componentStatus) {
-          if (oldStatus == 'error') return 'error';
+          if (oldStatus == 'danger') return 'danger';
           if (componentStatus == "partial_outage" || oldStatus == 'warning') return "warning";
           if (componentStatus == "operational") return "success";
-          return "error";
+          return "danger";
         }
 
         var statusIds = {
