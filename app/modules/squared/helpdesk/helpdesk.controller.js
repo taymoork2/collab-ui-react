@@ -149,7 +149,7 @@
             res = vm.currentSearch.deviceSearchResults.concat(res);
           }
           vm.currentSearch.deviceSearchResults = _.sortBy(res, function (device) {
-            return device.displayName.toLowerCase();
+            return device.displayName ? device.displayName.toLowerCase() : '';
           });
           vm.searchingForCloudberryDevices = false;
           vm.searchingForDevices = vm.searchingForHuronDevices;
@@ -167,7 +167,7 @@
             res = vm.currentSearch.deviceSearchResults.concat(res);
           }
           vm.currentSearch.deviceSearchResults = _.sortBy(res, function (device) {
-            return device.displayName.toLowerCase();
+            return device.displayName ? device.displayName.toLowerCase() : '';
           });
           vm.searchingForHuronDevices = false;
           vm.searchingForDevices = vm.searchingForCloudberryDevices;

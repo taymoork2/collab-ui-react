@@ -143,7 +143,7 @@
         "squared-fusion-ec",
         "ciscouc",
         "cloudMeetings",
-        "spark-device-mgmt"
+        "spark-room-system"
       ],
       "contact": "tywin.lannister@kingslanding.com",
       "domains": ["kingslanding.com", "kingslanding2.com"],
