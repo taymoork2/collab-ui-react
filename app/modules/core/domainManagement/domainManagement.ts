@@ -4,12 +4,12 @@ namespace domainManagement {
     private _check = 'dd';
     private _adminDomain = {
       text: 'example.com',
-      status: 'verified'
+      status: 'pending'
     }
     private _domains = [
       {
         text: 'example.com',
-        status: 'verified'
+        status: 'pending'
       },
       {
         text: 'sales.example.com',
