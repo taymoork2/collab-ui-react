@@ -3276,7 +3276,7 @@
     "launchHelpdeskDesc": "Open the Help Desk portal in a new tab",
     "numbers": "Numbers",
     "noDeviceEntitlements": "Device search not applicable. The customer is neither entitled to Cloudberry nor to Spark Call.",
-    "applyOrgFilterPleaseWait": "Applying customer filter, please wait...",
+    "applyOrgFilterPleaseWait": "Applying filter, please wait...",
     "noMoreResults": "Max results limit reached. Try a different search."
   },
   "activation": {
