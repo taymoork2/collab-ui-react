@@ -8,10 +8,10 @@
         <div ng-show = "buckets && buckets.length > 0" class="leaderboard-push-trigger" ng-controller="leaderBoardCtrl" ng-if="Utils.isAdminPage()">
           <cs-header-push-trigger  state="state" label="label"></cs-header-push-trigger>
         </div>
-        <div class="settings-menu dropdown" ng-controller="SetupWizardCtrl" ng-if="Utils.isAdminPage()">
-          <button class="btn btn--header dropdown-toggle"><i class="icon-settings icon"></i>
+        <div cs-dropdown class="settings-menu dropdown" ng-controller="SetupWizardCtrl" ng-if="Utils.isAdminPage()">
+          <button cs-dropdown-toggle class="btn btn--header dropdown-toggle"><i class="icon-settings icon"></i>
           <span class="header-label">{{::'settings.title' | translate}}</span></button>
-          <ul class="dropdown-menu" role="menu">
+          <ul cs-dropdown-menu class="dropdown-menu" role="menu">
             <li ng-repeat="item in tabs">
               <a ui-sref="setupwizardmodal({currentTab:item.name})">{{::item.label | translate}}</a>
             </li>

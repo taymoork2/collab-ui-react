@@ -25,7 +25,6 @@ describe('Huron Auto Attendant', function () {
       utils.sendKeys(autoattendant.newAAname, deleteUtils.testAAName);
       utils.sendKeys(autoattendant.newAAname, protractor.Key.ENTER);
 
-      utils.wait(autoattendant.addAANumbers, 12000);
       utils.expectIsDisplayed(autoattendant.addAANumbers);
 
       utils.expectIsDisplayed(autoattendant.sayMessage);
@@ -39,7 +38,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.numberDropDownArrow);
 
       // we are going to arbitrarily select the first one
-      utils.click(autoattendant.numberDropDownOptions.get(0));
+      utils.click(autoattendant.numberDropDownOptions.last());
 
       utils.click(autoattendant.saveButton);
 
@@ -52,6 +51,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.numberIconClose);
 
       utils.click(autoattendant.saveButton);
+      utils.expectIsDisabled(autoattendant.saveButton);
 
       notifications.assertSuccess(deleteUtils.testAAName + ' updated successfully');
 
@@ -62,7 +62,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.numberDropDownArrow);
 
       // we are going to arbitrarily select the first one
-      utils.click(autoattendant.numberDropDownOptions.get(0));
+      utils.click(autoattendant.numberDropDownOptions.last());
 
       utils.click(autoattendant.saveButton);
 
@@ -82,6 +82,9 @@ describe('Huron Auto Attendant', function () {
 
       utils.click(autoattendant.sayMessageVoice);
       utils.click(autoattendant.sayMessageVoiceOptions);
+      utils.expectIsEnabled(autoattendant.saveButton);
+      utils.click(autoattendant.saveButton);
+      utils.expectIsDisabled(autoattendant.saveButton);
     });
 
     it('should add Phone Menu to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
@@ -90,6 +93,7 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.phoneMenu);
       utils.click(autoattendant.phonesayMessageInput);
       utils.sendKeys(autoattendant.phonesayMessageInput, deleteUtils.testAAName);
+      utils.expectIsEnabled(autoattendant.saveButton);
 
       utils.click(autoattendant.phonesayMessageLanguage);
       utils.click(autoattendant.phonelanguageDropDownOptions);
@@ -115,9 +119,9 @@ describe('Huron Auto Attendant', function () {
 
       //Delete one repeatMenu
       utils.click(autoattendant.trash);
-
+      utils.expectIsEnabled(autoattendant.saveButton);
       utils.click(autoattendant.saveButton);
-
+      utils.expectIsDisabled(autoattendant.saveButton);
       notifications.assertSuccess(deleteUtils.testAAName + ' updated successfully');
 
     });

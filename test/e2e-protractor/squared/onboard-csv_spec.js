@@ -56,7 +56,7 @@ describe('Onboard Users using uploading CSV File', function () {
 
   it('should find all ' + userList.length + ' users created', function () {
     for (i = 0; i < userList.length; i++) {
-      utils.searchForSingleResult(userList[i]);
+      utils.search(userList[i]);
     }
   }, LONG_TIMEOUT);
 

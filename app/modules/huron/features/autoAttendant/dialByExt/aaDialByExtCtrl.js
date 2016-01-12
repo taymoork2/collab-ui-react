@@ -6,7 +6,7 @@
     .controller('AADialByExtCtrl', AADialByExtCtrl);
 
   /* @ngInject */
-  function AADialByExtCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService) {
+  function AADialByExtCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AACommonService) {
 
     var vm = this;
 
@@ -25,6 +25,7 @@
 
     function saveUiModel() {
       vm.menuEntry.actions[0].setValue(vm.message);
+      AACommonService.setPhoneMenuStatus(true);
     }
 
     function activate() {

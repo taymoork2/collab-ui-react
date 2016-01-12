@@ -4,6 +4,13 @@
   /* @ngInject  */
   function CsdmHuronDeviceService($http, $q, Authinfo, CsdmConfigService, CsdmConverter, CsdmCacheFactory, $window, FeatureToggleService) {
     var devicesUrl = CsdmConfigService.getUrl() + '/organization/' + Authinfo.getOrgId() + '/huronDevices';
+    var devicesFastUrl = devicesUrl + "?checkDisplayName=false";
+
+    var initialDataPromise = huronEnabled().then(function (enabled) {
+      return !enabled ? $q.when([]) : $http.get(devicesFastUrl).then(function (res) {
+        return CsdmConverter.convertHuronDevices(res.data);
+      });
+    });
 
     function huronEnabled() {
       if ($window.location.search.indexOf("showHuronDevices=true") > -1) {
@@ -20,7 +27,8 @@
             return CsdmConverter.convertHuronDevices(res.data);
           });
         });
-      }
+      },
+      initializeData: initialDataPromise
     });
 
     function getDeviceList() {
