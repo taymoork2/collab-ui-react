@@ -9,6 +9,7 @@
     var vm = this;
     vm.data = {}; // UI data
     vm.isAdminAcknowledged = true;
+    vm.featureEnabled = false; // feature not enabled by default
     vm.state = 'syncing'; // 'error' | 'idle'
     vm.errorMessage = '';
     vm.timeOptions = _.range(0, 24).map(function (time) {
@@ -36,6 +37,7 @@
         };
         vm.errorMessage = '';
         vm.isAdminAcknowledged = data.isAdminAcknowledged;
+        vm.featureEnabled = true;
       }, function (error) {
         vm.state = 'error';
         vm.errorMessage = error.message;

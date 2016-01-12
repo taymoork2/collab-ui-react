@@ -1,37 +1,36 @@
-<h5>Automatic Software Upgrade</h5>
-<div>Edit the start time for available upgrades to occur on the connectors.</div>
-<div class="toast toast-warning" ng-if="!scheduleUpgrade.isAdminAcknowledged">
-  <button type="button" class="toast-close-button" >&times;</button>
-  <div>Those are the default values, you can edit them or <a ng-click="scheduleUpgrade.acknowledge(scheduleUpgrade.data)">accept them</a>.</div>
-</div>
-<div ng-if="scheduleUpgrade.state === 'error'">{{scheduleUpgrade.errorMessage}}</div>
-<div class="schedule-upgrade-form">
-  <cs-select
-    class="schedule-upgrade-time"
-    is-disabled="scheduleUpgrade.state === 'syncing'"
-    ng-model="scheduleUpgrade.data.scheduleTime"
-    options="scheduleUpgrade.timeOptions"
-    placeholder="'Select a time'"
-    >
-  </cs-select>
-  <cs-select
-    class="schedule-upgrade-day"
-    is-disabled="scheduleUpgrade.state === 'syncing'"
-    labelfield="label"
-    valuefield="value"
-    input-placeholder="sel.inputPlaceholder"
-    ng-model="scheduleUpgrade.data.scheduleDay"
-    options="scheduleUpgrade.dayOptions"
-    placeholder="'Select a day'"
-    >
-  </cs-select>
-  <cs-select
-    class="schedule-upgrade-timezone"
-    is-disabled="scheduleUpgrade.state === 'syncing'"
-    filter="true"
-    ng-model="scheduleUpgrade.data.scheduleTimeZone"
-    options="scheduleUpgrade.timezoneOptions"
-    placeholder="'Select a timezone'"
-    >
-  </cs-select>
+<div ng-if="scheduleUpgrade.featureEnabled">
+  <h5>Automatic Software Upgrade</h5>
+  <p>Edit the start time for available upgrades to occur on the connectors.</p>
+  <p ng-if="!scheduleUpgrade.isAdminAcknowledged">Those are the default values, you can edit them or <a ng-click="scheduleUpgrade.acknowledge(scheduleUpgrade.data)">accept them</a>.</p>
+  <p ng-if="scheduleUpgrade.state === 'error'" class="red">{{scheduleUpgrade.errorMessage}}</p>
+  <div class="schedule-upgrade-form">
+    <cs-select
+      class="schedule-upgrade-time"
+      is-disabled="scheduleUpgrade.state === 'syncing'"
+      ng-model="scheduleUpgrade.data.scheduleTime"
+      options="scheduleUpgrade.timeOptions"
+      placeholder="'Select a time'"
+      >
+    </cs-select>
+    <cs-select
+      class="schedule-upgrade-day"
+      is-disabled="scheduleUpgrade.state === 'syncing'"
+      labelfield="label"
+      valuefield="value"
+      input-placeholder="sel.inputPlaceholder"
+      ng-model="scheduleUpgrade.data.scheduleDay"
+      options="scheduleUpgrade.dayOptions"
+      placeholder="'Select a day'"
+      >
+    </cs-select>
+    <cs-select
+      class="schedule-upgrade-timezone"
+      is-disabled="scheduleUpgrade.state === 'syncing'"
+      filter="true"
+      ng-model="scheduleUpgrade.data.scheduleTimeZone"
+      options="scheduleUpgrade.timezoneOptions"
+      placeholder="'Select a timezone'"
+      >
+    </cs-select>
+  </div>
 </div>
