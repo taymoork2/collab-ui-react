@@ -2,13 +2,16 @@ namespace domainManagement {
 
   class DomainManagementCtrl {
     private _check = 'dd';
+    private _adminDomain = 'example.com';
     private _domains = [
       {
         text: 'example.com',
-        status: 'pending'},
+        status: 'verified'
+      },
       {
         text: 'sales.example.com',
-        status: 'pending'}
+        status: 'pending'
+      }
     ];
 
     /* @ngInject */

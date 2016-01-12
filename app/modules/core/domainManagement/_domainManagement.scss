@@ -5,8 +5,9 @@
     padding-left: 2rem;
 
     table.table{
-      margin-top: 1.5rem;
+      margin-top: 1rem;
       margin-bottom: 1.5rem;
+
       .header{
         display: none;
       }
@@ -14,6 +15,8 @@
         border: none;
         td{
           padding-left: 0;
+          color:$gray-dark-2;
+
           .icon{
             margin-right: 0.5rem;
           }
@@ -22,6 +25,9 @@
           }
           .icon-circle.pending{
             color:$color-attention-base;
+          }
+          .icon-circle.verified{
+            color:$color-cta-base;
           }
           .icon-email{
             font-size: .7em;
@@ -42,14 +48,14 @@
           }
         }
       }
-      tr:last-child{
+      /*tr:last-child{
         td{
           button{
             background-color:$gray-light-2;
             color: $gray-base;
           }
         }
-      }
+      }*/
     }
   }
 }
