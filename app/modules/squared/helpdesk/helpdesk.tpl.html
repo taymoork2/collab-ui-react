@@ -4,7 +4,42 @@
     </cs-header-left>
     <cs-header-right>
       <div cs-dropdown class="user-info dropdown">
-        <button class="btn--user" ng-click="helpdeskHelpCtrl.showSearchHelp()" tabindex="-1">
+        <button cs-dropdown-toggle class="btn--user dropdown-toggle" ng-click="helpdeskCtrl.populateHistory()" tabindex="0">
+          <i class="icon icon-three-dots" style="font-size:2rem;color:lightgrey;"></i>
+        </button>
+        <ul cs-dropdown-menu class="dropdown-menu" role="menu">
+          <li ng-if="helpdeskCtrl.searchHistory.length <= 0">
+          <div>
+	          <small>
+	            <strong>No Search History</strong>
+	          </small>
+          </div>
+          </li>
+          <li ng-repeat="search in helpdeskCtrl.searchHistory track by $index" tabindex="{{$index + 1}}">
+            <div ng-click="helpdeskCtrl.loadSearch(search)">
+              <small>
+                <strong>{{search.searchString}}</strong>
+              </small>
+              <div ng-if="search.userSearchResults.length + search.orgSearchResults.length == 1">
+                <small>{{search.userSearchResults.length + search.orgSearchResults.length}} match</small>
+              </div>
+              <div ng-if="search.userSearchResults.length + search.orgSearchResults.length > 1">
+                <small>{{search.userSearchResults.length + search.orgSearchResults.length}} matches</small>
+              </div>
+            </div>
+          </li>
+          <li ng-if="helpdeskCtrl.searchHistory.length > 0">
+	        <div ng-click="helpdeskCtrl.clearSearchHistory()">
+	          <small>
+	            <strong>Clear History</strong>
+	          </small>
+	        </div>
+          </li>
+        </ul>
+
+      </div>
+      <div cs-dropdown class="user-info dropdown">
+        <button class="btn--user" ng-click="helpdeskCtrl.showSearchHelp()" tabindex="-1">
           <!-- TODO: should avoid inline css -->
           <i class="icon icon-help" style="font-size:2rem;color:lightgrey;"></i>
         </button>

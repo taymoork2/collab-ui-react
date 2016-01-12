@@ -989,8 +989,8 @@ angular
         .state('helpdesk-main', {
           views: {
             'main@': {
-              controller: 'HelpdeskHelpController',
-              controllerAs: 'helpdeskHelpCtrl',
+              controller: 'HelpdeskController',
+              controllerAs: 'helpdeskCtrl',
               templateUrl: 'modules/squared/helpdesk/helpdesk.tpl.html'
             }
           },
@@ -1005,8 +1005,6 @@ angular
         .state('helpdesk', {
           url: '/helpdesk',
           template: '<div ui-view></div>',
-          controller: 'HelpdeskController',
-          controllerAs: 'helpdeskCtrl',
           abstract: true,
           parent: 'helpdesk-main'
         })

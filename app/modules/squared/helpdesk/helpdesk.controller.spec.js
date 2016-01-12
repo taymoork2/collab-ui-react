@@ -2,7 +2,7 @@
 describe('Controller: HelpdeskController', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var HelpdeskService, $controller, q, $translate, $scope, httpBackend, controller;
+  var HelpdeskService, $controller, q, $translate, $scope, httpBackend, controller, HelpdeskSearchHistoryService;
 
   var createUserMockData = function (name, orgId) {
     return {
@@ -34,8 +34,9 @@ describe('Controller: HelpdeskController', function () {
   var validSearchString = "bill gates";
   var lessThanThreeCharacterSearchString = "bi";
 
-  beforeEach(inject(function (_$translate_, $httpBackend, _$rootScope_, _HelpdeskService_, _$controller_, _$q_) {
+  beforeEach(inject(function (_$translate_, $httpBackend, _$rootScope_, _HelpdeskService_, _HelpdeskSearchHistoryService_, _$controller_, _$q_) {
     HelpdeskService = _HelpdeskService_;
+    HelpdeskSearchHistoryService = _HelpdeskSearchHistoryService_;
     q = _$q_;
     $scope = _$rootScope_.$new();
     $controller = _$controller_;
@@ -104,7 +105,8 @@ describe('Controller: HelpdeskController', function () {
       controller = $controller('HelpdeskController', {
         HelpdeskService: HelpdeskService,
         $translate: $translate,
-        $scope: $scope
+        $scope: $scope,
+        HelpdeskSearchHistoryService: HelpdeskSearchHistoryService
       });
 
       controller.initSearchWithoutOrgFilter();
@@ -216,7 +218,8 @@ describe('Controller: HelpdeskController', function () {
       controller = $controller('HelpdeskController', {
         HelpdeskService: HelpdeskService,
         $translate: $translate,
-        $scope: $scope
+        $scope: $scope,
+        HelpdeskSearchHistoryService: HelpdeskSearchHistoryService
       });
 
       controller.searchString = validSearchString;
@@ -244,7 +247,8 @@ describe('Controller: HelpdeskController', function () {
       controller = $controller('HelpdeskController', {
         HelpdeskService: HelpdeskService,
         $translate: $translate,
-        $scope: $scope
+        $scope: $scope,
+        HelpdeskSearchHistoryService: HelpdeskSearchHistoryService
       });
 
       controller.searchString = validSearchString;
