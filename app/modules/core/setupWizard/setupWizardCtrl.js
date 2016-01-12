@@ -18,7 +18,7 @@ angular.module('Core')
         }]
       }, {
         name: 'messagingSetup',
-        label: 'firstTimeWizard.message',
+        label: 'firstTimeWizard.messageSettings',
         description: 'firstTimeWizard.messagingSetupSub',
         icon: 'icon-convo',
         title: 'firstTimeWizard.messagingSetup',
@@ -101,7 +101,7 @@ angular.module('Core')
           $scope.tabs.splice(1, 0, {
             name: 'serviceSetup',
             required: true,
-            label: 'firstTimeWizard.serviceSetup',
+            label: 'firstTimeWizard.callSettings',
             description: 'firstTimeWizard.serviceSetupSub',
             icon: 'icon-tools',
             title: 'firstTimeWizard.unifiedCommunication',
