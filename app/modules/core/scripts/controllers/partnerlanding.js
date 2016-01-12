@@ -183,21 +183,21 @@ angular.module('Core')
           },
         }, {
           field: 'messaging',
-          displayName: $translate.instant('customerPage.messaging'),
+          displayName: $translate.instant('customerPage.message'),
           width: '12%',
           cellTemplate: serviceTemplate,
           headerClass: 'align-center',
           sortingAlgorithm: serviceSort
         }, {
           field: 'conferencing',
-          displayName: $translate.instant('customerPage.conferencing'),
+          displayName: $translate.instant('customerPage.meeting'),
           width: '12%',
           cellTemplate: serviceTemplate,
           headerClass: 'align-center',
           sortingAlgorithm: serviceSort
         }, {
           field: 'communications',
-          displayName: $translate.instant('customerPage.communications'),
+          displayName: $translate.instant('customerPage.call'),
           width: '12%',
           cellTemplate: serviceTemplate,
           headerClass: 'align-center',

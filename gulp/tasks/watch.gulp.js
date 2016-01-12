@@ -10,8 +10,8 @@ var args = require('yargs').argv;
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
 var messageLogger = require('../utils/messageLogger.gulp')();
-var changedFiles;
-var testFiles;
+var changedFiles = [];
+var testFiles = [];
 var log = $.util.log;
 
 gulp.task('watch', [

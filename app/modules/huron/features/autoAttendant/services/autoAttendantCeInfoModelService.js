@@ -153,9 +153,9 @@
           });
           aaModel.ceInfos = getAllCeInfos(aaModel.aaRecords);
         }
-      }).then(AACeDependenciesService.readCeDependencies().then(function (depends) {
+      }).then(AACeDependenciesService.readCeDependencies).then(function (depends) {
         aaModel.dependsIds = depends.dependencies;
-      }));
+      });
 
       promises.push(listPromise);
 

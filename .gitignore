@@ -28,6 +28,7 @@ typings
 bower_components
 node_modules
 npm-debug.log
+npm-shrinkwrap.json
 
 test/e2e-protractor/reports
 test/karma-unit-*
