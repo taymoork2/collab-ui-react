@@ -40,7 +40,7 @@ describe('Controller: OverviewCtrl', function () {
         }]
       });
 
-      expect(callCard.healthStatus).toEqual('error');
+      expect(callCard.healthStatus).toEqual('danger');
     });
   });
 

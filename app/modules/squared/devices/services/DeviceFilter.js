@@ -124,7 +124,7 @@ angular.module('Squared').service('DeviceFilter',
       return terms.every(function (term) {
         return termMatchesAnyFieldOfItem(term, item, ['displayName', 'product', 'readableState', 'ip', 'mac', 'serial', 'upgradeChannel']) || (item.tags || []).some(function (tag) {
           return (tag || '').toLowerCase().indexOf(term || '') != -1;
-        });
+        }) || (item.mac || '').toLowerCase().replace(/:/g, '').indexOf((term || '')) != -1;
       });
     }
 
