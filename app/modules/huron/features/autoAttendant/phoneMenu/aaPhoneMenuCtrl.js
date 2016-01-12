@@ -93,13 +93,11 @@
         name: 'phoneMenuDialExt',
         action: 'runActionsOnInput',
         inputType: 2
-      },
-      // {
-      //   label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
-      //   name: 'phoneMenuRouteUser',
-      //   action: 'TBD'
-      // },
-      {
+      }, {
+        label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
+        name: 'phoneMenuRouteUser',
+        action: 'routeToUser'
+      }, {
         label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
         name: 'phoneMenuRouteHunt',
         action: 'routeToHuntGroup'
