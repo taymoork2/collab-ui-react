@@ -1,0 +1,11 @@
+<img
+  ng-if="!row.getProperty('isHuronDevice')"
+  class="space_avatar"
+  ng-src="images/devices-hi/space_avatar.png"/>
+<span ng-if="row.getProperty('isHuronDevice') && !row.getProperty('photos')" class="user-img">
+    <i class="icon icon-user"></i>
+  </span>
+<img
+  ng-if="row.getProperty('isHuronDevice') && row.getProperty('photos')"
+  class="user-img"
+  ng-src="{{row.getProperty('photos')[0].url}}"/>

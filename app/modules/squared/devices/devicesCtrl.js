@@ -49,7 +49,7 @@ angular.module('Squared')
 
       vm.gridOptions = {
         data: 'sc.updateListAndFilter()',
-        rowHeight: 75,
+        rowHeight: 45,
         showFilter: false,
         multiSelect: false,
         headerRowHeight: 44,
@@ -58,12 +58,19 @@ angular.module('Squared')
           directions: ['asc'],
           fields: ['displayName']
         },
+        headerRowTemplate: getTemplate('_headerRowTpl'),
         rowTemplate: getTemplate('_rowTpl'),
 
         columnDefs: [{
+          field: 'photos',
+          displayName: '',
+          cellTemplate: getTemplate('_imageTpl'),
+          sortable: false,
+          width: 70
+        }, {
           field: 'displayName',
           displayName: 'Belongs to',
-          cellTemplate: getTemplate('_nameTpl'),
+          sortable: true,
           sortFn: sortFn
         }, {
           field: 'readableState',

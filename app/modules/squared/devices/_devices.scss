@@ -190,6 +190,15 @@
   }
 }
 
+.ui-grid-header-cell:first-child, .ui-grid-cell:first-child {
+  border-right: 0;
+}
+
+.ngCell .space_avatar {
+  margin: 4px 5px 4px 30px;
+  width: 35px;
+}
+
 #addDeviceModal {
   .device-added {
     h3 {
