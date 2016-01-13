@@ -3,7 +3,6 @@
 
   /* @ngInject */
   function HelpdeskController(HelpdeskService, $translate, $scope, $state, $modal, HelpdeskSearchHistoryService, HelpdeskHuronService, LicenseService, Config) {
-    $('body').css('background', 'white');
     $scope.$on('$viewContentLoaded', function () {
       if (HelpdeskService.checkIfMobile()) {
         angular.element('#searchInput').blur();

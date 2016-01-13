@@ -3,15 +3,15 @@
     <cs-header-left>
     </cs-header-left>
     <cs-header-right>
-      <div cs-dropdown class="user-info dropdown">
+      <div ng-if="!Config.isProd()" cs-dropdown class="user-info dropdown">
         <button cs-dropdown-toggle class="btn--user dropdown-toggle" ng-click="helpdeskCtrl.populateHistory()" tabindex="0">
-          <i class="icon icon-three-dots" style="font-size:2rem;color:lightgrey;"></i>
+          <i class="icon icon-clock" style="font-size:1.5rem;color:lightgrey;"></i>
         </button>
-        <ul cs-dropdown-menu class="dropdown-menu" role="menu">
+        <ul cs-dropdown-menu class="helpdesk-history-dropdown-menu" role="menu">
           <li ng-if="helpdeskCtrl.searchHistory.length <= 0">
           <div>
 	          <small>
-	            <strong>No Search History</strong>
+	            <strong>{{'helpdesk.history.nohistory' | translate}}</strong>
 	          </small>
           </div>
           </li>
@@ -21,17 +21,17 @@
                 <strong>{{search.searchString}}</strong>
               </small>
               <div ng-if="search.userSearchResults.length + search.orgSearchResults.length == 1">
-                <small>{{search.userSearchResults.length + search.orgSearchResults.length}} match</small>
+                <small>{{search.userSearchResults.length + search.orgSearchResults.length}} {{'helpdesk.history.singlematch' | translate}}</small>
               </div>
               <div ng-if="search.userSearchResults.length + search.orgSearchResults.length > 1">
-                <small>{{search.userSearchResults.length + search.orgSearchResults.length}} matches</small>
+                <small>{{search.userSearchResults.length + search.orgSearchResults.length}} {{'helpdesk.history.matches' | translate}}</small>
               </div>
             </div>
           </li>
           <li ng-if="helpdeskCtrl.searchHistory.length > 0">
 	        <div ng-click="helpdeskCtrl.clearSearchHistory()">
 	          <small>
-	            <strong>Clear History</strong>
+	            <strong>{{'helpdesk.history.clear' | translate}}</strong>
 	          </small>
 	        </div>
           </li>
