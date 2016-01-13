@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskController(HelpdeskService, $translate, $scope, $state, $modal, HelpdeskSearchHistoryService) {
+  function HelpdeskController(HelpdeskService, $translate, $scope, $state, $modal, HelpdeskSearchHistoryService, HelpdeskHuronService, LicenseService, Config) {
     $('body').css('background', 'white');
     $scope.$on('$viewContentLoaded', function () {
       if (HelpdeskService.checkIfMobile()) {
@@ -12,14 +12,15 @@
       }
     });
     var vm = this;
-    var searchResultsPageSize = 5;
-    var searchResultsLimit = 20;
     vm.search = search;
+    vm.searchResultsPageSize = 5;
+    vm.searchResultsLimit = 20;
     vm.initSearchWithOrgFilter = initSearchWithOrgFilter;
     vm.initSearchWithoutOrgFilter = initSearchWithoutOrgFilter;
     vm.searchingForUsers = false;
     vm.searchingForOrgs = false;
     vm.searchingForDevices = false;
+    vm.lookingUpOrgFilter = false;
     vm.searchString = '';
     vm.keyPressHandler = keyPressHandler;
     vm.showMoreResults = showMoreResults;
@@ -64,9 +65,9 @@
       orgSearchFailure: null,
       deviceSearchFailure: null,
       orgFilter: null,
-      orgLimit: searchResultsPageSize,
-      userLimit: searchResultsPageSize,
-      deviceLimit: searchResultsPageSize,
+      orgLimit: vm.searchResultsPageSize,
+      userLimit: vm.searchResultsPageSize,
+      deviceLimit: vm.searchResultsPageSize,
       initSearch: function (searchString) {
         this.searchString = searchString;
         this.userSearchResults = null;
@@ -75,9 +76,9 @@
         this.userSearchFailure = null;
         this.orgSearchFailure = null;
         this.deviceSearchFailure = null;
-        this.orgLimit = searchResultsPageSize;
-        this.userLimit = searchResultsPageSize;
-        this.deviceLimit = searchResultsPageSize;
+        this.orgLimit = vm.searchResultsPageSize;
+        this.userLimit = vm.searchResultsPageSize;
+        this.deviceLimit = vm.searchResultsPageSize;
         if (HelpdeskService.checkIfMobile()) {
           angular.element('#searchInput').blur();
         } else {
@@ -106,14 +107,14 @@
       if (!orgFilterId) {
         searchOrgs(vm.searchString);
       } else {
-        searchDevices(vm.searchString, orgFilterId);
+        searchDevices(vm.searchString, vm.currentSearch.orgFilter);
       }
     }
 
     function searchUsers(searchString, orgId) {
       if (searchString.length >= 3) {
         vm.searchingForUsers = true;
-        HelpdeskService.searchUsers(searchString, orgId, searchResultsLimit, null, true).then(function (res) {
+        HelpdeskService.searchUsers(searchString, orgId, vm.searchResultsLimit, null, true).then(function (res) {
           vm.currentSearch.userSearchResults = res;
           vm.currentSearch.userSearchFailure = null;
           vm.searchingForUsers = false;
@@ -142,7 +143,7 @@
     function searchOrgs(searchString) {
       if (searchString.length >= 3) {
         vm.searchingForOrgs = true;
-        HelpdeskService.searchOrgs(searchString, searchResultsLimit).then(function (res) {
+        HelpdeskService.searchOrgs(searchString, vm.searchResultsLimit).then(function (res) {
           vm.currentSearch.orgSearchResults = res;
           vm.currentSearch.orgSearchFailure = null;
           vm.searchingForOrgs = false;
@@ -165,32 +166,72 @@
       }
     }
 
-    function searchDevices(searchString, orgId) {
-      vm.searchingForDevices = true;
-      HelpdeskService.searchCloudberryDevices(searchString, orgId, searchResultsLimit).then(function (res) {
-        vm.currentSearch.deviceSearchResults = res;
-        vm.searchingForDevices = false;
-        setOrgOnDeviceSearchResults(vm.currentSearch.deviceSearchResults);
-      }, function (err) {
-        vm.searchingForDevices = false;
-        vm.currentSearch.deviceSearchResults = null;
-        vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
-      });
+    function searchDevices(searchString, org) {
+      var orgIsEntitledToCloudBerry = LicenseService.orgIsEntitledTo(org, Config.entitlements.room_system);
+      var orgIsEntitledToHuron = LicenseService.orgIsEntitledTo(org, Config.entitlements.huron);
+      vm.searchingForDevices = orgIsEntitledToCloudBerry || orgIsEntitledToHuron;
+      if (!(orgIsEntitledToCloudBerry || orgIsEntitledToHuron)) {
+        vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.noDeviceEntitlements');
+      }
+      if (orgIsEntitledToCloudBerry) {
+        vm.searchingForCloudberryDevices = true;
+        HelpdeskService.searchCloudberryDevices(searchString, org.id, vm.searchResultsLimit).then(function (res) {
+          if (vm.currentSearch.deviceSearchResults) {
+            res = vm.currentSearch.deviceSearchResults.concat(res);
+          }
+          vm.currentSearch.deviceSearchResults = _.sortBy(res, function (device) {
+            return device.displayName ? device.displayName.toLowerCase() : '';
+          });
+          vm.searchingForCloudberryDevices = false;
+          vm.searchingForDevices = vm.searchingForHuronDevices;
+          setOrgOnDeviceSearchResults(vm.currentSearch.deviceSearchResults);
+        }, function (err) {
+          vm.searchingForCloudberryDevices = false;
+          vm.searchingForDevices = vm.searchingForHuronDevices;
+          vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
+        });
+      }
+      if (orgIsEntitledToHuron) {
+        vm.searchingForHuronDevices = true;
+        HelpdeskHuronService.searchDevices(searchString, org.id, vm.searchResultsLimit).then(function (res) {
+          if (vm.currentSearch.deviceSearchResults) {
+            res = vm.currentSearch.deviceSearchResults.concat(res);
+          }
+          vm.currentSearch.deviceSearchResults = _.sortBy(res, function (device) {
+            return device.displayName ? device.displayName.toLowerCase() : '';
+          });
+          vm.searchingForHuronDevices = false;
+          vm.searchingForDevices = vm.searchingForCloudberryDevices;
+          setOrgOnDeviceSearchResults(vm.currentSearch.deviceSearchResults);
+        }, function (err) {
+          vm.searchingForHuronDevices = false;
+          vm.searchingForDevices = vm.searchingForCloudberryDevices;
+          vm.currentSearch.deviceSearchFailure = $translate.instant('helpdesk.unexpectedError');
+        });
+      }
     }
 
     function initSearchWithOrgFilter(org) {
+      vm.lookingUpOrgFilter = true;
+      vm.searchingForDevices = false;
+      vm.searchingForUsers = false;
       if (HelpdeskService.noOutstandingRequests()) {
         vm.searchString = '';
         vm.currentSearch.clear();
-        vm.currentSearch.orgFilter = org;
+        HelpdeskService.getOrg(org.id).then(function (fullOrg) {
+          vm.lookingUpOrgFilter = false;
+          vm.currentSearch.orgFilter = fullOrg;
+        }, angular.noop);
       } else {
         HelpdeskService.cancelAllRequests().then(function () {
           vm.searchString = '';
           vm.currentSearch.clear();
-          vm.currentSearch.orgFilter = org;
+          HelpdeskService.getOrg(org.id).then(function (fullOrg) {
+            vm.lookingUpOrgFilter = false;
+            vm.currentSearch.orgFilter = fullOrg;
+          }, angular.noop);
         });
       }
-
     }
 
     function initSearchWithoutOrgFilter() {
@@ -213,17 +254,17 @@
     function showMoreResults(type) {
       switch (type) {
       case 'user':
-        vm.currentSearch.userLimit += searchResultsPageSize;
+        vm.currentSearch.userLimit += vm.searchResultsPageSize;
         HelpdeskService.findAndResolveOrgsForUserResults(
           vm.currentSearch.userSearchResults,
           vm.currentSearch.orgFilter,
           vm.currentSearch.userLimit);
         break;
       case 'org':
-        vm.currentSearch.orgLimit += searchResultsPageSize;
+        vm.currentSearch.orgLimit += vm.searchResultsPageSize;
         break;
       case 'device':
-        vm.currentSearch.deviceLimit += searchResultsPageSize;
+        vm.currentSearch.deviceLimit += vm.searchResultsPageSize;
         break;
       }
     }
