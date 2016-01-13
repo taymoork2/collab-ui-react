@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Service: Schedule Upgrade', function () {
+describe('Service: Schedule Upgrade', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
   var $httpBackend, ScheduleUpgradeService;
@@ -21,12 +21,7 @@ fdescribe('Service: Schedule Upgrade', function () {
   });
 
   it('ScheduleUpgradeService.get should query the server with the right params', function () {
-    $httpBackend.expectGET('https://uss-integration.wbx2.com/uss/api/v1/organizations/123/services/c_cal/upgrade_schedule').respond({
-      scheduleTime: '03:00',
-      scheduleDay: 4,
-      scheduleTimezone: 'Europe/Paris',
-      isAdminAcknowledged: true
-    });
+    $httpBackend.expectGET('https://uss-integration.wbx2.com/uss/api/v1/organizations/123/services/c_cal/upgrade_schedule').respond({});
     ScheduleUpgradeService.get('123', 'c_cal');
   });
 
@@ -35,13 +30,7 @@ fdescribe('Service: Schedule Upgrade', function () {
       scheduleTime: '03:00',
       scheduleDay: 4,
       scheduleTimezone: 'Europe/Paris'
-    })
-    .respond({
-      scheduleTime: '03:00',
-      scheduleDay: 4,
-      scheduleTimezone: 'Europe/Paris',
-      isAdminAcknowledged: true
-    });
+    }).respond({});
     ScheduleUpgradeService.patch('123', 'c_cal', {
       scheduleTime: '03:00',
       scheduleDay: 4,
