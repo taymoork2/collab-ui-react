@@ -99,7 +99,7 @@ describe('Controller: AARouteToExtNumCtrl', function () {
 
         $scope.$apply();
 
-        expect(controller.phoneNumber.phoneNumber).toEqual(phoneNumber);
+        expect(controller.model.phoneNumberInput.phoneNumber).toEqual(phoneNumber);
       });
     });
 
@@ -112,7 +112,8 @@ describe('Controller: AARouteToExtNumCtrl', function () {
 
         var phoneNumber = '+14084744088';
 
-        controller.phoneNumber.phoneNumber = phoneNumber;
+        controller.model.phoneNumberInput.phoneNumber = phoneNumber;
+
         controller.saveUiModel();
 
         $scope.$apply();
