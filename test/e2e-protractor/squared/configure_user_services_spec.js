@@ -2,7 +2,7 @@
 
 /* global LONG_TIMEOUT */
 
-describe('Configuring services per-user', function () {
+xdescribe('Configuring services per-user', function () {
   var testUser = utils.randomTestGmailwithSalt('config_solo');
 
   var file = './../data/DELETE_DO_NOT_CHECKIN_configure_user_service_test_file.csv';

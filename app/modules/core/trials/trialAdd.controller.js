@@ -8,6 +8,10 @@
   function TrialAddCtrl($q, $scope, $state, $translate, $window, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialService, ValidationService) {
     var vm = this;
     var _roomSystemDefaultQuantity = 5;
+    var messageTemplateOptionId = 'messageTrial';
+    var meetingTemplateOptionId = 'meetingTrial';
+    var callTemplateOptionId = 'callTrial';
+    var roomSystemsTemplateOptionId = 'roomSystemsTrial';
 
     vm.trialData = TrialService.getData();
 
@@ -99,7 +103,7 @@
       className: 'columns medium-12',
       templateOptions: {
         label: $translate.instant('trials.messageAndMeeting'),
-        id: 'squaredTrial',
+        id: messageTemplateOptionId,
         class: 'columns medium-12 checkbox-group',
       },
       expressionProperties: {
@@ -115,7 +119,7 @@
       className: 'columns medium-12 checkbox-group',
       templateOptions: {
         label: $translate.instant('trials.meeting'),
-        id: 'meetingTrial',
+        id: meetingTemplateOptionId,
         class: 'columns medium-12',
       },
       hideExpression: function () {
@@ -134,7 +138,7 @@
       className: 'columns medium-12 checkbox-group',
       templateOptions: {
         label: $translate.instant('trials.call'),
-        id: 'squaredUCTrial',
+        id: callTemplateOptionId,
         class: 'columns medium-12',
       },
       hideExpression: function () {
@@ -150,7 +154,7 @@
       className: "columns medium-6",
       templateOptions: {
         label: $translate.instant('trials.roomSystem'),
-        id: 'trialRoomSystem',
+        id: roomSystemsTemplateOptionId,
         class: 'columns medium-12',
       },
       watcher: {
@@ -235,6 +239,7 @@
         vm.messageTrial.enabled = true;
         if (vm.meetingTrial.enabled) {
           vm.showMeeting = true;
+          updateTrialService(messageTemplateOptionId);
         }
 
         var devicesModal = _.find(vm.trialStates, {
@@ -270,6 +275,21 @@
         vm.roomSystemFields[1].model.quantity = vm.roomSystemTrial.enabled ? _roomSystemDefaultQuantity : 0;
         toggleTrial();
       });
+    }
+
+    // Update offer and label for Meetings/WebEx trial.
+    function updateTrialService(templateOptionsId) {
+      var index = _.findIndex(vm.individualServices, function (individualService) {
+        return individualService.templateOptions.id === templateOptionsId;
+      });
+      if (index) {
+        switch (templateOptionsId) {
+        case messageTemplateOptionId:
+          vm.individualServices[index].model.type = Config.offerTypes.message;
+          vm.individualServices[index].templateOptions.label = $translate.instant('trials.message');
+          break;
+        }
+      }
     }
 
     function toggleTrial() {
