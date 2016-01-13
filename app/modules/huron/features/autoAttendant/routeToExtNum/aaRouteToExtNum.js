@@ -6,7 +6,7 @@
     .controller('AARouteToExtNumCtrl', AARouteToExtNumCtrl);
 
   /* @ngInject */
-  function AARouteToExtNumCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService) {
+  function AARouteToExtNumCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AACommonService) {
 
     var vm = this;
 
@@ -37,6 +37,7 @@
     vm.populateUiModel = populateUiModel;
     vm.saveUiModel = saveUiModel;
 
+    // the CE action verb is 'route'
     var rtExtNum = 'route';
 
     /////////////////////
@@ -47,8 +48,12 @@
 
     function saveUiModel() {
       vm.menuKeyEntry.actions[0].setValue(vm.model.phoneNumberInput.phoneNumber);
+      AACommonService.setPhoneMenuStatus(true);
     }
 
+    // when the phone number is changed in the UI, save to model
+    // the country select control doesn't offer a change element
+    // we tried ng-change and it errored and didn't work
     $scope.$watch(
       "aaRouteToExtNum.model.phoneNumberInput.phoneNumber",
       function handlePhoneNumberChange(newValue, oldValue) {
