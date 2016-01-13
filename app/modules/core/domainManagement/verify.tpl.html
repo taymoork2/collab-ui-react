@@ -1,0 +1,18 @@
+<article id="addOverlay">
+  <header><h3 translate="domainManagement.verify.header"/></header>
+  <section>
+    <p translate="domainManagement.verify.verifyThis"></p>
+    <span>{{dvverify.domainName}}</span>
+    <p translate="domainManagement.verify.beforeVerify"/>
+
+    <div>
+      <p translate="domainManagement.verify.warning"></p>
+      <input id="enableVerify" type="checkbox" ng-model="dvverify.enable">
+      <label class="cs-checkbox" for="enableVerify" translate="domainManagement.verify.enable"></label>
+    </div>
+  </section>
+  <footer>
+    <button ng-disabled="!dvverify.enable" ng-click="dvadd.add()" class="btn-primary"
+            translate="domainManagement.verify.verify"></button>
+  </footer>
+</article>

@@ -97,6 +97,20 @@ class DomainManagementService {
      callback(data, status);
      });*/
   }
+
+  public verifyDomain(domain){
+    let ctrl = this;
+    let deferred = this.$q.defer();
+    let domainInList = _.find(ctrl._domainList, {text: domain.text});
+    if(domainInList){
+      domainInList.status = "verified";
+      deferred.resolve()
+    } else {
+      deferred.reject("not a domain possible to verify");
+    }
+
+    return deferred.promise();
+  }
 }
 
 angular.module('Core')

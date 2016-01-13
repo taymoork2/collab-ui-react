@@ -3309,6 +3309,14 @@
       "description": "If you delete this domain, users with e-mail addresses in this domain will no longer be able to log on until they associate their users with e-mail addresses in validated domains.",
       "delete": "Delete",
       "cancel": "Cancel"
+    },
+    "verify": {
+      "header": "Verify domain",
+      "verifyThis": "You are about to verify the following domain:",
+      "beforeVerify": "Before verifying this domain, make sure that your NDS verification code is added in your DNS managment interface.",
+      "warning": "It is important to verify all domains. Users that don't belong to a verified domain will immediately be locked out not be able to log in and use spark services.  You will also not be able to add any new users that belongs to unverified domains.",
+      "verify": "Verify",
+      "enable": "I understand this."
     }
   }
 }

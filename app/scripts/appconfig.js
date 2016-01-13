@@ -220,6 +220,17 @@ angular
             adminDomain: null
           }
         })
+        .state('domainmanagement.verify', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'DomainManageVerifyCtrl',
+              controllerAs: 'dvverify',
+              templateUrl: 'modules/core/domainManagement/verify.tpl.html'
+            }
+          },
+          params: {domain: null}
+        })
         .state('profile', {
           url: '/profile',
           templateUrl: 'modules/core/partnerProfile/partnerProfile.tpl.html',

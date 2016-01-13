@@ -37,15 +37,21 @@ namespace domainManagement {
     public validate() {
       if (this._domain && this._domain.length > 0) {
 
-        if (/^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)+([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]){2,}$/g.test(this._domain)) {
+        if (/^(([^\.]+\.)+[^\.]{2,})$/g.test(this._domain)) {
           return {valid: true, empty: false};
-        } else {
+        }
+        //if (/^(([a-åA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)+([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]){2,}$/g.test(this._domain)) {
+        //  return {valid: true, empty: false};
+        //}
+        else {
           return {valid: false, empty: false};
         }
-      } else {
+      }
+      else {
         return {valid: false, empty: true};
       }
     }
+
     get isValid() {
       let validation = this.validate();
       return validation && validation.valid;
