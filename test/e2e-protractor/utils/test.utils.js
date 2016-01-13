@@ -7,6 +7,33 @@ var path = require('path');
 var remote = require('../../../node_modules/gulp-protractor/node_modules/protractor/node_modules/selenium-webdriver/remote');
 var fs = require('fs');
 
+exports.getDateTimeString = function () {
+  var now = new Date();
+  var year = now.getYear() - 100;
+  var month = now.getMonth() + 1;
+  var day = now.getDate();
+  var hour = now.getHours();
+  var minute = now.getMinutes();
+  var second = now.getSeconds();
+  if (month.toString().length == 1) {
+    var month = '0' + month;
+  }
+  if (day.toString().length == 1) {
+    var day = '0' + day;
+  }
+  if (hour.toString().length == 1) {
+    var hour = '0' + hour;
+  }
+  if (minute.toString().length == 1) {
+    var minute = '0' + minute;
+  }
+  if (second.toString().length == 1) {
+    var second = '0' + second;
+  }
+  var dateTime = year.toString() + month.toString() + day.toString() + '_' + hour.toString() + minute.toString() + second.toString();
+  return dateTime;
+};
+
 exports.resolvePath = function (filePath) {
   return path.resolve(__dirname, filePath);
 };
@@ -23,7 +50,7 @@ exports.searchField = element(by.id('searchFilter'));
 exports.searchbox = element(by.css('.searchbox'));
 
 exports.randomId = function () {
-  return (Math.random() + 1).toString(36).slice(2, 11);
+  return (Math.random() + 1).toString(36).slice(2, 7);
 };
 
 exports.randomDid = function () {
@@ -35,11 +62,11 @@ exports.randomTestRoom = function () {
 };
 
 exports.randomTestGmail = function () {
-  return 'collabctg+' + this.randomId() + '@gmail.com';
+  return 'collabctg+' + this.getDateTimeString() + '_' + this.randomId() + '@gmail.com';
 };
 
 exports.randomTestGmailwithSalt = function (salt) {
-  return 'collabctg+' + salt + '_' + this.randomId() + '@gmail.com';
+  return 'collabctg+' + salt + '_' + this.getDateTimeString() + '_' + this.randomId() + '@gmail.com';
 };
 
 exports.sendRequest = function (options) {
@@ -241,7 +268,7 @@ exports.expectIsNotDisplayed = function (elem, timeout) {
   browser.wait(logAndWait, TIMEOUT, 'Waiting for element not to be visible: ' + elem.locator());
 };
 
-exports.expectTextToBeSet = function (elem, text) {
+exports.expectTextToBeSet = function (elem, text, timeout) {
   browser.wait(function () {
     return elem.getText().then(function (result) {
       log('Waiting for element to have text set: ' + elem.locator() + ' ' + text);
@@ -249,7 +276,7 @@ exports.expectTextToBeSet = function (elem, text) {
     }, function () {
       return false;
     });
-  }, TIMEOUT, 'Waiting for Text to be set: ' + elem.locator() + ' ' + text);
+  }, timeout || TIMEOUT, 'Waiting for Text to be set: ' + elem.locator() + ' ' + text);
 };
 
 exports.expectValueToBeSet = function (elem, value) {
@@ -489,7 +516,7 @@ exports.search = function (query) {
 
   function waitSpinner() {
     utils.expectIsNotDisplayed(spinner);
-    utils.expectIsDisplayed(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)));
+    utils.expectIsDisplayed(element.all(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)).first());
   }
 
   this.click(this.searchbox);
@@ -516,13 +543,6 @@ exports.searchForSingleResult = function (query) {
   browser.wait(logAndWait, TIMEOUT, 'Waiting for a single search result');
   return this.expectIsDisplayed(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)));
 };
-
-//TODO replace original search and click functionality with single result?
-exports.searchAndClickSingleResult = function (query) {
-  return this.searchForSingleResult(query).then(function () {
-    return exports.clickUser(query);
-  });
-}
 
 exports.clickUser = function (query) {
   return this.click(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)));

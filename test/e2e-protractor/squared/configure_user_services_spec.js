@@ -41,11 +41,7 @@ describe('Configuring services per-user', function () {
 
   it('should add a user and select hybrid services', function () {
     navigation.clickUsers();
-    utils.click(users.addUsers);
-    utils.expectIsDisplayed(users.manageDialog);
-    utils.sendKeys(users.addUsersField, testUser);
-    utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
-    utils.click(users.nextButton);
+    users.createUser(testUser);
 
     // Select hybrid services
     utils.click(users.hybridServices_Cal);
@@ -64,11 +60,7 @@ describe('Configuring services per-user', function () {
   });
 
   it('should confirm hybrid services ADDITIVE case', function () {
-    utils.click(users.addUsers);
-    utils.expectIsDisplayed(users.manageDialog);
-    utils.sendKeys(users.addUsersField, testUser);
-    utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
-    utils.click(users.nextButton);
+    users.createUser(testUser);
 
     // Select hybrid services
     utils.click(users.hybridServices_UC);
@@ -130,11 +122,7 @@ describe('Configuring services per-user', function () {
   });
 
   it('should add user with NO hybrid services selected', function () {
-    utils.click(users.addUsers);
-    utils.expectIsDisplayed(users.manageDialog);
-    utils.sendKeys(users.addUsersField, testUser);
-    utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
-    utils.click(users.nextButton);
+    users.createUser(testUser);
 
     utils.click(users.onboardButton);
     notifications.assertSuccess('onboarded successfully');
@@ -149,11 +137,7 @@ describe('Configuring services per-user', function () {
   });
 
   it('should add user with ALL hybrid services selected', function () {
-    utils.click(users.addUsers);
-    utils.expectIsDisplayed(users.manageDialog);
-    utils.sendKeys(users.addUsersField, testUser);
-    utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
-    utils.click(users.nextButton);
+    users.createUser(testUser);
 
     // Select hybrid services
     utils.click(users.hybridServices_Cal);
@@ -180,10 +164,13 @@ describe('Configuring services per-user', function () {
     utils.click(navigation.addUsers);
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Invite Users');
 
-    // Manual import is default
+    // Manual import
+    utils.click(inviteusers.manualUpload);
     utils.click(inviteusers.nextButton);
 
-    // Enter test user name into input box
+    // Enter test email into edit box
+    // Note, this should NOT be changed to first/last/email so that we can test both cases
+    utils.click(users.emailAddressRadio);
     utils.sendKeys(users.addUsersField, testUser);
     utils.sendKeys(users.addUsersField, protractor.Key.ENTER);
     utils.click(inviteusers.nextButton);
@@ -231,12 +218,12 @@ describe('Configuring services per-user', function () {
 
   it('should land to upload processing page', function () {
     utils.expectTextToBeSet(wizard.mainviewTitle, 'Processing CSV');
-  });
+  }, 60000 * 2);
 
   it('should land to upload result page', function () {
-    utils.expectTextToBeSet(wizard.mainviewTitle, 'Upload Result');
+    utils.expectTextToBeSet(wizard.mainviewTitle, 'Upload Result', 60000 * 2);
     utils.click(inviteusers.finishButton);
-  });
+  }, 60000 * 2 + 5000);
 
   it('should find some of the ' + userList.length + ' users created', function () {
     var nInd;
