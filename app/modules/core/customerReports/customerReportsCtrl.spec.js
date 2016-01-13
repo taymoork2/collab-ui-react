@@ -12,6 +12,9 @@ describe('Controller: Customer Reports Ctrl', function () {
   var roomData = getJSONFixture('core/json/customerReports/roomData.json');
   var fileData = getJSONFixture('core/json/customerReports/fileData.json');
   var mediaData = getJSONFixture('core/json/customerReports/mediaQuality.json');
+  var metricsData = getJSONFixture('core/json/customerReports/callMetrics.json');
+  var dummyMetrics = angular.copy(metricsData);
+  dummyMetrics.dummy = true;
 
   var headerTabs = [{
     title: 'reportsPage.sparkReports',
@@ -56,15 +59,20 @@ describe('Controller: Customer Reports Ctrl', function () {
       spyOn(CustomerGraphService, 'setFilesSharedGraph').and.returnValue({
         'dataProvider': fileData.response
       });
+      spyOn(CustomerGraphService, 'setMetricsGraph').and.returnValue({
+        'dataProvider': metricsData.dataProvider
+      });
 
       spyOn(DummyCustomerReportService, 'dummyActiveUserData').and.returnValue(dummyData.activeUser.one);
       spyOn(DummyCustomerReportService, 'dummyAvgRoomData').and.returnValue(dummyData.avgRooms.one);
       spyOn(DummyCustomerReportService, 'dummyFilesSharedData').and.returnValue(dummyData.filesShared.one);
       spyOn(DummyCustomerReportService, 'dummyMediaData').and.returnValue(dummyData.mediaQuality.one);
+      spyOn(DummyCustomerReportService, 'dummyMetricsData').and.returnValue(dummyMetrics);
 
       spyOn(CustomerReportService, 'getAvgRoomData').and.returnValue($q.when(roomData.response));
       spyOn(CustomerReportService, 'getFilesSharedData').and.returnValue($q.when(fileData.response));
       spyOn(CustomerReportService, 'getMediaQualityData').and.returnValue($q.when(mediaData.response));
+      spyOn(CustomerReportService, 'getCallMetricsData').and.returnValue($q.when(metricsData));
       spyOn(CustomerReportService, 'getActiveUserData').and.returnValue($q.when({
         activeUserGraph: [],
         mostActiveUserData: []
@@ -143,11 +151,17 @@ describe('Controller: Customer Reports Ctrl', function () {
           expect(CustomerGraphService.setActiveUsersGraph).toHaveBeenCalled();
           expect(CustomerGraphService.setAvgRoomsGraph).toHaveBeenCalled();
 
-          expect(DummyCustomerReportService.dummyActiveUserData).toHaveBeenCalled();
-          expect(DummyCustomerReportService.dummyAvgRoomData).toHaveBeenCalled();
+          expect(DummyCustomerReportService.dummyActiveUserData).toHaveBeenCalledWith(timeOptions[0]);
+          expect(DummyCustomerReportService.dummyAvgRoomData).toHaveBeenCalledWith(timeOptions[0]);
+          expect(DummyCustomerReportService.dummyFilesSharedData).toHaveBeenCalledWith(timeOptions[0]);
+          expect(DummyCustomerReportService.dummyMediaData).toHaveBeenCalledWith(timeOptions[0]);
+          expect(DummyCustomerReportService.dummyMetricsData).toHaveBeenCalled();
 
-          expect(CustomerReportService.getActiveUserData).toHaveBeenCalled();
-          expect(CustomerReportService.getAvgRoomData).toHaveBeenCalled();
+          expect(CustomerReportService.getActiveUserData).toHaveBeenCalledWith(timeOptions[0]);
+          expect(CustomerReportService.getAvgRoomData).toHaveBeenCalledWith(timeOptions[0]);
+          expect(CustomerReportService.getFilesSharedData).toHaveBeenCalledWith(timeOptions[0]);
+          expect(CustomerReportService.getMediaQualityData).toHaveBeenCalledWith(timeOptions[0]);
+          expect(CustomerReportService.getCallMetricsData).toHaveBeenCalledWith(timeOptions[0]);
         }, 30);
       });
 
@@ -168,6 +182,14 @@ describe('Controller: Customer Reports Ctrl', function () {
 
         expect(controller.avgRoomsDescription).toEqual('avgRooms.avgRoomsDescription');
         expect(controller.avgRoomStatus).toEqual(REFRESH);
+        expect(controller.filesSharedDescription).toEqual('filesShared.filesSharedDescription');
+        expect(controller.filesSharedStatus).toEqual(REFRESH);
+        expect(controller.mediaQualityStatus).toEqual(REFRESH);
+        expect(controller.deviceDescription).toEqual('registeredEndpoints.description');
+        expect(controller.deviceStatus).toEqual(REFRESH);
+        expect(controller.metricsDescription).toEqual('callMetrics.customerDescription');
+        expect(controller.metricStatus).toEqual(REFRESH);
+        expect(controller.metrics).toEqual({});
 
         expect(controller.headerTabs).toEqual(headerTabs);
         expect(controller.timeOptions).toEqual(timeOptions);
@@ -183,9 +205,15 @@ describe('Controller: Customer Reports Ctrl', function () {
 
         expect(DummyCustomerReportService.dummyActiveUserData).toHaveBeenCalledWith(timeOptions[1]);
         expect(DummyCustomerReportService.dummyAvgRoomData).toHaveBeenCalledWith(timeOptions[1]);
+        expect(DummyCustomerReportService.dummyFilesSharedData).toHaveBeenCalledWith(timeOptions[1]);
+        expect(DummyCustomerReportService.dummyMediaData).toHaveBeenCalledWith(timeOptions[1]);
+        expect(DummyCustomerReportService.dummyMetricsData).toHaveBeenCalled();
 
         expect(CustomerReportService.getActiveUserData).toHaveBeenCalledWith(timeOptions[1]);
         expect(CustomerReportService.getAvgRoomData).toHaveBeenCalledWith(timeOptions[1]);
+        expect(CustomerReportService.getFilesSharedData).toHaveBeenCalledWith(timeOptions[1]);
+        expect(CustomerReportService.getMediaQualityData).toHaveBeenCalledWith(timeOptions[1]);
+        expect(CustomerReportService.getCallMetricsData).toHaveBeenCalledWith(timeOptions[1]);
       });
     });
 
