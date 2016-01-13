@@ -1,25 +1,19 @@
-<form role="form" name="orgFeatureToggles.form">
-  <cs-sp-buttons ng-show="orgFeatureToggles.form.$dirty">
-    <button id="saveButton" class="btn btn--primary" translate="common.save" ng-click="features.updateToggles()" type="submit" ></button>
-    <button id="cancelButton" translate="common.cancel" ng-click="features.resetForm()"></button>
-  </cs-sp-buttons>
-  <cs-sp-container>
-    <cs-sp-section>
-      <div>
-        <div class="form-group profile-text-input">
-          <label for="services" style="width: 150px; vertical-align: top" translate="organizationsPage.betaFeatures"></label>
-          <div class="profile-input org-overview-list">
-            <div class="row" ng-repeat="svc in features.toggles | orderBy:'name'">
-              <div class="small-10 columns">
-                <label for="{{svc.name}}">{{svc.name}}</label>
-              </div>
-              <div class="small-2 columns">
-                <cs-toggle-switch ng-model="svc.model" toggle-id="{{svc.toggleId}}" name="{{svc.name}}" size="small"></cs-toggle-switch>
-              </div>
+<cs-sp-container>
+  <cs-sp-section>
+    <div>
+      <div class="form-group profile-text-input">
+        <label for="services" style="width: 150px; vertical-align: top" translate="organizationsPage.betaFeatures"></label>
+        <div class="profile-input org-overview-list">
+          <div class="row" ng-repeat="svc in features.toggles | orderBy:'name'">
+            <div class="small-10 columns">
+              <label for="{{svc.name}}">{{svc.name}}</label>
+            </div>
+            <div class="small-2 columns">
+              <cs-toggle-switch ng-model="svc.model" toggle-id="{{svc.toggleId}}" name="{{svc.name}}" size="small" ng-click="features.clicked(svc.name,svc.model)"></cs-toggle-switch>
             </div>
           </div>
         </div>
       </div>
-    </cs-sp-section>
-  </cs-sp-container>
-</form>
+    </div>
+  </cs-sp-section>
+</cs-sp-container>
