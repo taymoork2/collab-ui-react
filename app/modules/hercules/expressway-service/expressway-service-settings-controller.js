@@ -2,8 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function ExpresswayServiceSettingsController($state, $modal, ServiceDescriptor, Authinfo, USSService2, $stateParams, NotificationConfigService,
-    MailValidatorService, XhrNotificationService, CertService, Notification, HelperNuggetsService) {
+  function ExpresswayServiceSettingsController($state, $modal, ServiceDescriptor, Authinfo, USSService2, $stateParams, MailValidatorService, XhrNotificationService, CertService, Notification, HelperNuggetsService) {
     var vm = this;
     vm.config = "";
     vm.emailSubscribers = "";
