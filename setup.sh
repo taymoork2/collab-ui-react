@@ -1,18 +1,22 @@
 #!/bin/bash
 
 source ./bin/include/setup-helpers
+quick=0
 
 # optional CLI switches
 if [ -n "$1" ]; then
     case "$1" in
         "-h"|"--help" )
-            echo "useage: `basename $0` [--restore]"
+            echo "useage: `basename $0` [--restore] [--quick]"
             echo ""
             echo "ex. Run with no args to build dependencies"
             echo "  `basename $0`"
             echo ""
             echo "ex. Use '--restore' to restore from the most recent previously built dependencies (if available)"
             echo "  `basename $0` --restore"
+            echo ""
+            echo "ex. Run with '--quick' to skip removing component directores and clearing bower cache"
+            echo ""
             exit 1
             ;;
         "--restore" )
@@ -28,6 +32,9 @@ if [ -n "$1" ]; then
                 # no deps exist yet from previous successful build
                 exit 1
             fi
+            ;;
+        "--quick" )
+            quick=1
             ;;
     esac
 fi
@@ -97,6 +104,15 @@ else
   echo "gulp is already installed"
 fi
 
+# Remove component directories and clear bower cache
+if [ $quick -eq 0 ]; then
+  echo "removing component directories..."
+  rm -rf bower_components
+  rm -rf node_modules
+  echo "clearing bower cache..."
+  bower cache clean
+fi
+
 # # Check for cleanup script and run
 # ls -al ./cleanUpManagedOrgs.sh > /dev/null 2>&1
 # CLEANUP_RET=$?
@@ -110,6 +126,7 @@ fi
 time_start=$(date +"%s")
 
 # Install dependecies
+echo "Install all dependencies..."
 npm install
 npm update -g bower
 npm prune
