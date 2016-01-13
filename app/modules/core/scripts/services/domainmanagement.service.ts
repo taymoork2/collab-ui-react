@@ -34,6 +34,9 @@ class DomainManagementService {
     var ctrl = this;
     let deferred = this.$q.defer();
 
+    //we always normalize to lowercase.
+    domainToAdd = domainToAdd || domainToAdd.toLowerCase();
+
     if (domainToAdd && domainToAdd.endsWith('.com')){
       ctrl._domainList.push({
         text: domainToAdd,
@@ -49,13 +52,29 @@ class DomainManagementService {
     return deferred.promise;
   }
 
+  deleteDomain(domainToDelete) {
+    var ctrl = this;
+    let deferred = this.$q.defer();
+
+    if (domainToDelete && domainToDelete.text && domainToDelete.text.endsWith('.com')){
+
+      _.remove(ctrl._domainList, { text: domainToDelete.text });
+
+      deferred.resolve();
+    } else {
+      deferred.reject("does not end with .com");
+    }
+
+    return deferred.promise;
+  }
+
   getVerifiedDomains() {
 
     let deferred = this.$q.defer();
 
     this._domainList.push(
     {
-      text: 'getVerifiedDomainspromise.com',
+      text: 'getVerifiedDomainspromise.com'.toLowerCase(),
       code: '',
       status: 'verified'
     });
