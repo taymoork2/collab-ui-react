@@ -3295,6 +3295,19 @@
       "domainHeader": "Domain",
       "statusHeader": "Status",
       "actionsHeader": "Actions"
+    },
+    "add": {
+      "header": "Add domains",
+      "description": "Add domains to verify for your organisation. If you have users in multiple domains add all of them. Adding and verifying your own domain is required before any other domains.",
+      "exampleDomain": "example.com",
+      "add": "Add",
+      "cancel": "Cancel"
+    },
+    "delete": {
+      "header": "Delete domain",
+      "description": "If you delete this domain, users with e-mail addresses in this domain will no longer be able to log on until they associate their users with e-mail addresses in validated domains.",
+      "delete": "Delete",
+      "cancel": "Cancel"
     }
   }
 }

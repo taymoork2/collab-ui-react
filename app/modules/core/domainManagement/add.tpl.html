@@ -1,17 +1,14 @@
 <article id="addOverlay">
-  <header><h3>Add domains</h3></header>
+  <header><h3 translate="domainManagement.add.header"/></header>
   <section>
     <span></span>
-    <p>
-      Add domains to verify for your organisation. If you have users in multiple domains add all of them. Adding and verifying your own domain is required before any other domains.
-    </p>
-    <input type="text" placeholder="{{'domainManagement.add.defaultDomain' | translate}}" ng-model="dvadd.domain"/>
-    <!--onchange="angular.element(this).scope().setDomainName(this)"/>-->
+    <p translate="domainManagement.add.description" />
+    <input type="text" placeholder="{{'domainManagement.add.exampleDomain' | translate}}" ng-model="dvadd.domain"/>
   </section>
   <footer>
     <div>
-      <button ng-click="dvadd.cancel()">Cancel</button>
-      <button ng-click="dvadd.add()" class="btn-primary">Add</button>
+      <button ng-click="dvadd.cancel()" translate="domainManagement.add.cancel"></button>
+      <button ng-click="dvadd.add()" class="btn-primary" translate="domainManagement.add.add"></button>
     </div>
   </footer>
 </article>
