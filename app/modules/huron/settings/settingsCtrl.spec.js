@@ -76,8 +76,6 @@ describe('Controller: HuronSettingsCtrl', function () {
   }));
 
   it('should initialize the Settings page', function () {
-    controller.CosFeatureEnabled = true;
-
     controller.init();
     $scope.$apply();
     expect(HuronCustomer.get).toHaveBeenCalled();
@@ -331,8 +329,6 @@ describe('Controller: HuronSettingsCtrl', function () {
   });
 
   it('should show international dialing when feature toggle is ON', function () {
-    controller.CosFeatureEnabled = true;
-
     controller.save();
     $scope.$apply();
 

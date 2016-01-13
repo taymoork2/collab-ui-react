@@ -55,6 +55,14 @@
         <div ng-repeat="entitlement in helpdeskUserCtrl.callCard.entitlements">
           <span translate="{{entitlement}}"></span>
         </div>
+        
+        <div ng-if="helpdeskUserCtrl.callCard.huronNumbers">
+          <h5 translate="helpdesk.numbers"></h5>
+          
+          <div ng-repeat="number in helpdeskUserCtrl.callCard.huronNumbers">
+            <span>{{number.internal}}</span> <span ng-if="number.external">({{number.external}})</span>
+          </div>
+        </div>
       </section>
     </article>
   </cs-card>
