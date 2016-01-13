@@ -360,7 +360,10 @@
     "devReports": "Development Customer Reports",
     "sparkReports": "Spark Reports",
     "downloadOptions": "Download Options",
-    "saveAs": "Save As"
+    "saveAs": "Save As",
+    "allCalls": "All Calls",
+    "videoCalls": "Video Calls",
+    "audioCalls": "Audio Only Calls"
   },
   "activeUsers": {
     "active": "Active",
@@ -408,6 +411,7 @@
     "fair": "Fair",
     "poor": "Poor",
     "description": "Media quality is determined by measuring the amount of packet loss that is reported by the registered devices during all calls that are longer than fifteen seconds in duration.",
+    "descriptionCustomer": "Media quality is determined by measuring the amount of packet loss that is reported by the registered devices during all calls that are longer than fifteen seconds in duration.  The data can be filtered by All Calls, Audio Only Calls, and Video Calls.",
     "mediaQualityGraphError": "There was an error while loading call quality data for {{customer}}.",
     "customerError": "There was an error while loading call quality data.",
     "minutes": "Minutes"
