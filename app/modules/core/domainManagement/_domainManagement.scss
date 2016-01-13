@@ -64,7 +64,25 @@
 #addOverlay{
   padding: 2rem;
   section{
+    margin-top: 1rem;
     padding: 1rem;
     background-color: $gray-light-3;
+    input{
+      margin-top: 1rem;
+    }
+  }
+  footer{
+    margin-top: 1rem;
+    padding-bottom: 1.5rem;
+    position: relative;
+    div{
+      display: block;
+      width: 170px;
+      position: absolute;
+      right: -5px;
+    }
+    button{
+
+    }
   }
 }
