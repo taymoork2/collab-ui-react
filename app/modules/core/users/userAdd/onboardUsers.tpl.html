@@ -3,7 +3,7 @@
   <div class="user-input-option-radio-group">
     <cs-radiolist options="userInputOptions" ng-model="model.userInputOption"></cs-radiolist>
   </div>
-  <div ng-if="model.userInputOption === 0">
+  <div ng-if="model.userInputOption === 0" class="inverse-token">
     <cs-token-field tokens="model.userList" tokenfieldid="tokenfieldid" tokenoptions="tokenoptions" tokenmethods="tokenmethods" tokenplaceholder="tokenplaceholder" ng-init="validateTokens()"></cs-token-field>
     <label class="adduser-input-desc" for="usersfield-tokenfield" translate="usersPage.userInputDescription"/>
   </div>
