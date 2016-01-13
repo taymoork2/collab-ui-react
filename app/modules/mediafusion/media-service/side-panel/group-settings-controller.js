@@ -21,7 +21,7 @@
     }
 
     vm.options = [
-      'GA'//,
+      'GA' //,
       //'DEV',
       //'ALPHA'
     ];
