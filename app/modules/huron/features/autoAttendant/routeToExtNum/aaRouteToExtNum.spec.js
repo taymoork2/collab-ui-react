@@ -121,6 +121,26 @@ describe('Controller: AARouteToExtNumCtrl', function () {
         expect(controller.menuKeyEntry.actions[0].value).toEqual(phoneNumber);
       });
 
+      it('should write UI entry back into UI model when phone number changes', function () {
+
+        var controller = $controller('AARouteToExtNumCtrl', {
+          $scope: $scope
+        });
+
+        $scope.vm = controller;
+
+        var phoneNumber1 = '+14084744088';
+        var phoneNumber2 = '+14084744089';
+
+        controller.phoneNumber.phoneNumber = phoneNumber1;
+        $scope.$apply('aaRouteToExtNum.phoneNumber.phoneNumber = ' + phoneNumber1);
+
+        controller.phoneNumber.phoneNumber = phoneNumber2;
+        $scope.$apply('aaRouteToExtNum.phoneNumber.phoneNumber = ' + phoneNumber2);
+
+        expect(controller.menuKeyEntry.actions[0].value).toEqual(phoneNumber2);
+      });
+
     });
 
   });
