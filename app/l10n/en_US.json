@@ -3268,6 +3268,12 @@
       "narrow-title": "Select a Customer",
       "narrow-info": "To filter a search to one customer only, start at the main search tool page and search for the customer by display name. Then click <i class='icon icon-search'></i> in the customer's search result card."
     },
+    "history": {
+      "clear": "Clear History",
+      "nohistory": "No Search History",
+      "singlematch": "match",
+      "matches": "matches"
+    },
     "verification": "Verification",
     "resend": "Re-send",
     "sendCode": "Send Code",
