@@ -2,18 +2,15 @@ namespace domainManagement {
 
   class DomainManageAddCtrl {
     private _domain;
-    private _domainManagementService;
 
     /* @ngInject */
-    constructor(private $state, DomainManagementService) {
-      this.$state = $state;
-      this._domainManagementService = DomainManagementService;
+    constructor(private $state, private DomainManagementService) {
     }
 
     public add() {
       let ctrl = this;
 
-      this._domainManagementService.addDomain(this._domain).then(
+      this.DomainManagementService.addDomain(this._domain).then(
         function () {
           ctrl.$state.go('domainmanagement');
         },
