@@ -1034,6 +1034,17 @@ angular
             org: null,
             id: null
           }
+        })
+        .state('helpdesk.device', {
+          url: '/device/:orgId/:id',
+          templateUrl: 'modules/squared/helpdesk/helpdesk-device.html',
+          controller: 'HelpdeskDeviceController',
+          controllerAs: 'helpdeskDeviceCtrl',
+          params: {
+            device: null,
+            id: null,
+            orgId: null
+          }
         });
     }
   ]);
