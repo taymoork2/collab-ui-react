@@ -2282,7 +2282,8 @@
       "lastReported": "Last Reported",
       "description": "Description",
       "noAlarms": "No alarms reported",
-      "hostImpact": "Host Impacted"
+      "hostImpact": "Host Impacted",
+      "raised": "Raised"
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
     "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
