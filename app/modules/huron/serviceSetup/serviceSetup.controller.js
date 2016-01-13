@@ -210,7 +210,7 @@
           'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
             return vm.hasSites;
           },
-          'hide': function () {
+          'hideExpression': function () {
             return vm.hideFieldSteeringDigit;
           }
         }
@@ -227,7 +227,7 @@
           'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
             return vm.hasSites;
           },
-          'hide': function ($viewValue, $modelValue, scope) {
+          'hideExpression': function ($viewValue, $modelValue, scope) {
             return true;
           }
         }
@@ -246,7 +246,7 @@
           'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
             return vm.hasSites;
           },
-          'hide': function ($viewValue, $modelValue, scope) {
+          'hideExpression': function ($viewValue, $modelValue, scope) {
             return true;
           }
         }
@@ -401,7 +401,7 @@
         }]
       },
       expressionProperties: {
-        'hide': function () {
+        'hideExpression': function () {
           return vm.hideFieldInternalNumberRange;
         }
       }
@@ -416,7 +416,7 @@
         }
       },
       expressionProperties: {
-        'hide': function () {
+        'hideExpression': function () {
           if (vm.model.displayNumberRanges.length > 9) {
             return true;
           } else {
@@ -469,7 +469,7 @@
             'templateOptions.required': function () {
               return vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled;
             },
-            'hide': function () {
+            'hideExpression': function () {
               return !vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled;
             }
           },
@@ -509,7 +509,7 @@
         'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
           return !vm.firstTimeSetup;
         },
-        'hide': function ($viewValue, $modelValue, scope) {
+        'hideExpression': function ($viewValue, $modelValue, scope) {
           return vm.firstTimeSetup;
         }
       }

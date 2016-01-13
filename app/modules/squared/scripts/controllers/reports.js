@@ -1,5 +1,4 @@
 'use strict';
-/* global AmCharts, $:false */
 
 angular.module('Squared').controller('ReportsCtrl', [
   '$scope',
@@ -106,7 +105,7 @@ angular.module('Squared').controller('ReportsCtrl', [
           var funcName = "promisChainDone()";
           var logMsg = "";
 
-          // if we are displaying the webex reports index page then go ahead with the rest of the code 
+          // if we are displaying the webex reports index page then go ahead with the rest of the code
           if ($scope.showWebexReports) {
             // TODO: add code to sort the siteUrls in the dropdown to be in alphabetical order
 

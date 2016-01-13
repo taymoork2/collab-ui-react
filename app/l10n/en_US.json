@@ -117,9 +117,6 @@
     "howToInvite": "How would you like them to be invited?",
     "waitInvitation": "Send email invitations and wait until the user accepts before provisioning services.",
     "sendImmediate": "Immediately provision services for the user and send email notifications.",
-    "messaging": "Messaging",
-    "conferencing": "Conferencing",
-    "communications": "Communications",
     "message": "Message",
     "meeting": "Meeting",
     "call": "Call",
@@ -133,9 +130,6 @@
     "groupColHeader": "Group Name",
     "collabService": "Select the collaboration service licenses that should be given to the users in the group.",
     "addEntitleError": "insufficient priveledge to add or entitle a user.",
-    "freeMsg": "Free Spark Messaging",
-    "freeConf": "Free 3 Party Meetings",
-    "freeComm": "Free 1:1 Spark Call",
     "msgFree": "Message Free",
     "mtgFree": "Meeting Free 3 Party",
     "callFree": "Call Free",
@@ -364,7 +358,9 @@
     "unauthorizedError": "User is not authorized to access the customer reports.",
     "webex": "WebEx Reports",
     "devReports": "Development Customer Reports",
-    "sparkReports": "Spark Reports"
+    "sparkReports": "Spark Reports",
+    "downloadOptions": "Download Options",
+    "saveAs": "Save As"
   },
   "activeUsers": {
     "active": "Active",
@@ -402,7 +398,8 @@
     "contentSharedError": "There was an error while loading the data for the Files Shared.",
     "contentShareSizesDataError": "There was an error while loading the data for the File Sizes Shared.",
     "contentShared": "Files Shared",
-    "fileSizes": "Gigabytes Shared"
+    "fileSizes": "Amount Shared",
+    "gb": "GB"
   },
   "mediaQuality": {
     "mediaQuality": "Device Media Quality",
@@ -412,6 +409,7 @@
     "poor": "Poor",
     "description": "Media quality is determined by measuring the amount of packet loss that is reported by the registered devices during all calls that are longer than fifteen seconds in duration.",
     "mediaQualityGraphError": "There was an error while loading call quality data for {{customer}}.",
+    "customerError": "There was an error while loading call quality data.",
     "minutes": "Minutes"
   },
   "callMetrics": {
@@ -421,7 +419,10 @@
     "callConditionSuccessful": "Successful",
     "callMetrics": "Call Metrics",
     "callMetricsChartError": "There was an error while loading call metrics data for {{customer}}.",
+    "customerError": "There was an error while loading call metrics data.",
     "callMetricsDesc": "This chart displays the total number of calls made and the number of minutes spent on those calls over the {{time}}.  You are also able to determine the percentage of successful and failed calls for the selected customers.",
+    "audioDescription": "This chart displays the total number of audio calls made, the number of minutes spent on those calls, and the percentage of successful and failed calls over the {{time}}.",
+    "videoDescription": "This chart displays the total number of video calls made, the number of minutes spent on those calls, and the percentage of successful and failed calls over the {{time}}.",
     "totalCalls": "Total Calls",
     "totalCallMinutes": "Total Call Minutes"
   },
@@ -432,7 +433,8 @@
     "totalRegistered": "Yesterday's Total",
     "trend": "Trend Over {{time}}",
     "registeredEndpointsError": "There was an error while loading registered endpoints for {{customer}}.",
-    "description": "A registered endpoint is any device that is connected to the network in the {{time}}.  The data presented here will help you determine device adoption trends and usage at a high level."
+    "description": "A registered endpoint is any device that is connected to the network in the {{time}}.  The data presented here will help you determine device adoption trends and usage at a high level.",
+    "customerError": "There was an error while loading registered endpoints."
   },
   "activeUserPopulation": {
     "titleByCompany": "Active User Population by Company",
@@ -659,7 +661,8 @@
     "resources": "Resources",
     "download": "Download",
     "quantity": "Qty",
-    "modify": "Modify"
+    "modify": "Modify",
+    "submit": "Submit"
   },
   "notifications": {
     "success": "Success notifications",
@@ -904,10 +907,11 @@
     "emptyDevices1": "Once you add a new device,",
     "emptyDevices2": "you'll see it listed here.",
     "deleteDevice": "Delete Device",
-    "resetDevice": "Reset Device",
+    "rebootDevice": "Reboot Device",
+    "reboot": "Reboot",
     "reportProblem": "Report Issue",
     "deleteDeviceConfText": "Are you sure you want to delete this device?",
-    "resetDeviceConfText": "Are you sure you want to reset this device?",
+    "rebootDeviceConfText": "Are you sure you want to reboot this device?",
     "videoQTitle": "Potential Loss of Video Quality",
     "videoQMsg": "This device is communicating via the TCP protocol, which could cause higher latency and therefore reduced media streaming experience. If you are experiencing issues with your media streaming, you can try to open UDP port 33434 on your local firewall to aid media streaming issues.",
     "needsActivation": "Needs Activation",
@@ -942,6 +946,14 @@
       "hosts": "Hosts",
       "goToHost": "Go to Host",
       "remove": "Remove"
+    },
+    "export": {
+      "modalTitle": "User Status Report",
+      "modalText1": "The exported report will be a comma separated list of users, their state, and related details.",
+      "modalText2": "Select the type of information that you want included in the report:",
+      "modalNote": "Note: The more users included, the longer the report takes to generate.",
+      "modalCTA": "Export to CSV",
+      "csvFilename": "user_status_report.csv"
     },
     "overview": {
       "activated": "{{number}} activated",
@@ -1167,7 +1179,6 @@
     "planReview": "Plan Review",
     "subscriptionId": "Subscription ID's",
     "spark": "Spark",
-    "sparkMsg": "Free Spark Messaging",
     "sparkStub": "Set up Spark",
     "webex": "WebEx",
     "webexMsg": "Webex Conferencing",
@@ -1177,16 +1188,11 @@
     "message": "Message",
     "meeting": "Meeting",
     "call": "Call",
-    "messaging": "Messaging",
-    "conferencing": "Conferencing",
-    "communications": "Communications",
     "roomSystems": "Room Systems",
     "sparkRoomSystem": "Spark Room System",
     "freeMsg": "Message Free",
     "freeMtg": "Meeting Free 3 Party",
     "freeCall": "Call Free",
-    "confMsg": "Free 3 Party Meetings",
-    "commMsg": "Free 1:1 Spark Call",
     "communicationsSub": "Setup calling service",
     "claimSipUrl": "Customize SIP URI Domain",
     "claimSipUriTitle": "Customize your company’s SIP URI domain name. This domain will be used to create a universally reachable URI for each user in your company.",
@@ -1195,6 +1201,8 @@
     "claimSipUriDomainTitle": "SIP URI Domain",
     "claimSipUriDomain": ".ciscospark.com",
     "claimSipUriTestOrg": "This feature is currently available only for test orgs. Please proceed to next step.",
+    "messageSettings": "Message Settings",
+    "callSettings": "Call Settings",
     "enterpriseSettings": "Enterprise Settings",
     "messagingSetup": "Messaging Setup",
     "messagingSetupSub": "Setup messaging service",
@@ -1202,7 +1210,6 @@
     "enterpriseSettingsSub": "Set up global configurations",
     "planReviewDesc": "This setup wizard will enable you to quickly get collaboration services up and running for your organization. If you're not sure what to do in any given step, don't worry, you can always make changes later.",
     "accountReview": "Account Review",
-    "serviceSetup": "Communication",
     "serviceSetupSub": "Phone-related settings",
     "unifiedCommunication": "Unified Communications",
     "addUsers": "Invite Users",
@@ -1231,9 +1238,7 @@
     "syncStatus": "Sync Status",
     "domain": "Domain",
     "defaultPlaceholder": "Default",
-    "domainDesc": "Identify the Active Directory domain you will be syncing.",
     "installStep1": "1. <a href='{{download}}' download> Download </a> and Install the Cisco Cloud Connector in your enterprise.",
-    "installStep2": "2. Configure the Active Directory synchronization agreement.",
     "installStep3": "3. Test the synchronization agreement.",
     "installWarning": "Warning:",
     "installWarningDescription": "If you have already added users manually, performing an Active Directory synchronization may cause previously added users to be removed. Please check the Cisco Cloud Connector Dry Run Reports to verify that all expected users are present.",
@@ -1262,8 +1267,8 @@
     "setupSSODesc": "Please select the appropriate option for your SSO configuration.",
     "manualInvite": "Enter the email addresses of the people in your company that will receive Collaboration Services. They will receive an email invitation to sign up.",
     "assignServices": "Select the entitlements that you would like to grant users.",
-    "domainEntry": "Domain Entry",
-    "domainSubDesc": "Enter the AD domain to sync with:",
+    "domainEntry": "Active Directory",
+    "domainSubDesc": "Enter the Acive Directory domain:",
     "connectorSteps": "Follow these steps in order to install the Directory Connector:",
     "readyToGo": "You're ready to go!",
     "finishDesc": "You have completed the setup wizard. If you have skipped steps or need to change any of the settings, click the gear icon in the upper right hand corner of the page to access this panel again.",
@@ -1844,6 +1849,7 @@
     "contentSharedTitle": "Files Shared",
     "errGetPhoneNumberCount": "Failed to retrieve phone number count.",
     "invalidTrialLicenseCount": "Number of Licenses should be greater than 0 and less than 1000.",
+    "invalidTrialRoomSystemQuantity": "Number of Licenses should be between 1 and 20.",
     "individualUserServices": "Individual User Services",
     "roomSystems": "Room Systems",
     "roomSystem": "Room System",
@@ -1852,19 +1858,28 @@
   },
   "trialModal": {
     "addTrial": {
-      "title": "Start Trial"
+      "title": "Start New Trial"
     },
     "meeting": {
-      "title": "Setup Trial - Meeting and WebEx",
-      "webexHeader": "WebEx License Type",
-      "webexDetails": "Meeting and WebEx trials enable Enterprise Edition WebEx licenses.",
+      "title": "Start New Trial - Meeting and WebEx Setup",
+      "webexHeader": "Meeting and WebEx License Type",
+      "meetingDetails": "Meeting 25 party",
+      "webexDetails": "WebEx Enterprise Edition with Collaboration Meeting Room",
       "siteUrl": "Site URL",
       "timezone": "Time Zone",
+      "webexSiteUrl": "WebEx Site URL",
+      "webexTimezone": "WebEx Time Zone",
       "default": "Set as default",
-      "timezonePlaceholder": "Select a timezone"
+      "tzDescription": "Select the time zone closest to your customer. This will ensure their WebEx site is deployed in the appropriate data center.",
+      "siteUrlPlaceholder": "acmecorp.webex.com",
+      "timezonePlaceholder": "Search for a time zone...",
+      "invalidSite": "SiteUrl is invalid.",
+      "duplicateSite": "SiteUrl is already in use.",
+      "domainInvalid": "SiteUrl must contain the webex.com domain name.",
+      "validationHttpError": "Could not reach server to validate siteUrl. Try again."
     },
     "call": {
-      "title": "Setup Trial – Add Devices",
+      "title": "Start New Trial - Ship Devices",
       "selectDevicesHeader": "Select Devices",
       "meetingRoomCamera": "Spark Room System",
       "deskPhones": "Personal and Shared Desk Phones",
@@ -1881,21 +1896,22 @@
       "partner": "Partner"
     },
     "numbers": {
-      "title": "Setup Trial – Add Numbers"
+      "title": "Start New Trial - Add Numbers"
     },
     "trialSuccess": "Your trial is ready.",
     "nextStepPrompt": "Do you want to setup services for the customer?",
     "setupLater": "No thanks",
     "setupNow": "Yes, setup the services",
     "squareducError": "Created trial, but unable to provision Spark UC",
-    "addSuccess": "A trial was successfully started for {{customerName}} with {{licenseCount}} licenses for {{licenseDuration}} days.",
-    "editSuccess": "You have successfully edited a trial for {{customerName}} with {{licenseCount}} licenses for {{licenseDuration}} days."
+    "addSuccess": "A trial was successfully started for {{customerName}}.",
+    "editSuccess": "You have successfully edited a trial for {{customerName}}."
   },
   "trials": {
     "collab": "Standard Team Rooms + 25 Party Meetings",
     "squaredUC": "Advanced Spark Call",
     "licenses": "Licenses",
     "message": "Message",
+    "messageAndMeeting": "Message and Meeting",
     "meeting": "Meeting and WebEx",
     "call": "Call",
     "roomSystem": "Spark Room System"
@@ -1910,9 +1926,9 @@
     "title": "Customers",
     "customerNameHeader": "Customer Name",
     "service": "Service",
-    "messaging": "Messaging",
-    "conferencing": "Conferencing",
-    "communications": "Communications",
+    "message": "Message",
+    "call": "Call",
+    "meeting": "Meeting",
     "notes": "Notes",
     "active": "Active",
     "trial": "Trial",
@@ -1965,13 +1981,12 @@
     "logoOverride": "Customer Logo Override",
     "allowCustomerLogo": "Enable Customer Logo for {{customer}}",
     "myOrganization": "My Organization",
-    "message": "Message",
-    "meeting": "Meeting 25 Party",
+    "meetingParty": "Meeting 25 Party",
     "call": "Call",
     "roomSystem": "Spark Room System",
     "branding": "Customer Branding",
     "MS": "Message",
-    "CF": "Meeting 25 Party",
+    "CF": "Meeting",
     "MC": "Meeting 25 Party",
     "WebExMC": "WebEx Meeting Center",
     "SC": "WebEx Support Center",
@@ -2000,6 +2015,13 @@
     "saveSuccess": "Settings successfully saved.",
     "companyCallerIdsaveError": "Company Caller ID failed to save.",
     "internationalDialingSaveError": "International Dialing failed to save."
+  },
+  "settingsServiceAddress": {
+    "label": "Emergency Service Address",
+    "description": "In the case of an emergency, local emergency response crew would use this address to locate the caller.",
+    "savePrompt": "Save this address?",
+    "saveSuccess": "Emergency Service Address updated successfully.",
+    "saveError": "Error occurred updating Emergency Service Address."
   },
   "didManageModal": {
     "title": "Manage Phone Numbers",
@@ -3066,12 +3088,13 @@
     "pageTitle": "Overview",
     "thisMonth": "This month",
     "lastMonth": "Last month:",
-    "contactPartner": "Contact your partner or Cisco Sales for more information",
+    "contactPartner": "Contact your partner or Cisco Sales for more information.",
+    "nonotifications": "Currently, there are no notifications to display.",
     "cards": {
       "users": {
         "title": "Users",
         "directorySynchronization": "Directory Synchronization",
-        "singleSignOn": "Single Sign On",
+        "singleSignOn": "Single Sign-On",
         "convertButton": "Convert",
         "convertText": "Users who may belong to your organization"
       },
@@ -3097,8 +3120,15 @@
       },
       "hybrid": {
         "title": "Hybrid Services",
-        "notEnabledText": "Hybrid Services allow you to integrate on-premise systems to the Cisco Collaboration Platform.",
-        "notEnabledActionText": "Learn More"
+        "notEnabledText": "Hybrid Services allows you to integrate your on-premises systems with the Cisco Collaboration Platform.",
+        "notEnabledActionText": "Learn More.",
+        "serviceHeader": "On Premise Status",
+        "services": {
+          "squared-fusion-cal": "Calendar",
+          "squared-fusion-uc": "Call",
+          "squared-fusion-mgmt": "Managment"
+
+        }
       }
     }
   },
@@ -3138,6 +3168,7 @@
     "customers": "Customers",
     "badUserSearchInput": "Enter at least three characters. To search by name or email, enter two words, for example John Doe or john.doe.",
     "unexpectedError": "An unexpected error occurred",
+    "cancelled": "Search was cancelled",
     "searchingPleaseWait": "Searching, please wait...",
     "noSearchHits": "No matches found. Try a different search.",
     "roles": "Roles",
@@ -3148,7 +3179,6 @@
     "partner": "Partner",
     "customer": "Customer",
     "helpLink": "Help",
-    "devices": "Devices",
     "mobile": "mobile",
     "work": "work",
     "fax": "fax",
@@ -3174,7 +3204,8 @@
       "squared-room-moderation.paid": "Standard Team Rooms",
       "squared-room-moderation.free": "Free Spark Messaging",
       "ciscouc.paid": "Advanced Spark Call",
-      "ciscouc.free": "Free 1:1 Spark Call"
+      "ciscouc.free": "Free 1:1 Spark Call",
+      "meetings": "WebEx Meetings (WebEx 11)"
     },
     "userStatuses": {
       "active": "Active",

@@ -5,11 +5,11 @@
   function HelpdeskHealthStatusService($q, ReportsService) {
 
     var healthComponentMapping = {
-      message: ['Mobile Clients', 'Rooms', 'Web and Desktop Clients'],
-      meeting: ['Media/Calling'],
-      call: ['Media/Calling'],
+      message: ['Spark message'],
+      meeting: ['Spark message'],
+      call: ['Spark call'],
       room: ['Rooms'],
-      hybrid: ['Cloud Hybrid Services Management', 'Calendar Service']
+      hybrid: ['Spark Hybrid Services']
     };
 
     function getHealthStatuses() {
@@ -38,7 +38,7 @@
         return status === 'operational';
       });
 
-      var status = error || warning || partialOutage || operational || 'error';
+      var status = error || warning || partialOutage || operational || 'unknown';
       return status;
     }
 

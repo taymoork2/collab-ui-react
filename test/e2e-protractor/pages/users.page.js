@@ -44,9 +44,9 @@ var UsersPage = function () {
   this.rolesPanel = element(by.id('roles-panel'));
   this.closeRolesPanel = element(by.id('close-roles'));
   this.closeSidePanel = element(by.css('.panel-close'));
-  this.messagingService = element(by.css('#Messaging .feature-arrow'));
-  this.communicationsService = element(by.css('#Communications .feature-arrow'));
-  this.conferencingService = element(by.css('#Conferencing .feature-arrow'));
+  this.messagingService = element(by.css('#Message .feature-arrow'));
+  this.communicationsService = element(by.css('#Call .feature-arrow'));
+  this.conferencingService = element(by.css('#Meeting .feature-arrow'));
   this.contactCenterService = element(by.css('#ContactCenter .feature-arrow'));
   this.sunlightUserPanel = element(by.cssContainingText('.section-title-row', 'Channels'));
   this.sunlightChatChannel = element(by.css('label[for="sunlight-chat"]'));
@@ -116,13 +116,12 @@ var UsersPage = function () {
   this.checkBoxEnts = element.all(by.repeater('key in entitlementsKeys'));
   this.iconSearch = element(by.id('icon-search'));
   this.userListEnts = element.all(by.binding('userName'));
-  this.userListStatus = element.all(by.binding('userStatus'));
+  this.userListStatus = element(by.css('.ui-grid-row'));
   this.userListDisplayName = element.all(by.binding('displayName'));
   this.userListAction = element(by.id('actionsButton'));
   this.actionDropdown = element(by.css('.dropdown-menu'));
   this.resendInviteOption = element(by.css('#resendInviteOption a'));
   this.deleteUserOption = element(by.css('#deleteUserOption a'));
-  this.gridCell = element(by.css('.ngCell'));
   this.userLink = element(by.id('user-profile'));
 
   this.fnameField = element(by.id('fnameField'));
@@ -160,7 +159,7 @@ var UsersPage = function () {
   this.hybridServices_sidePanel_UC = element(by.id('squared-fusion-uc-status'));
 
   this.msgRadio = element(by.repeater('license in msgFeature.licenses'));
-  this.messageService = element(by.id('Messaging'));
+  this.messageService = element(by.id('Message'));
   this.paidMsg = element(by.id('paidMsg'));
 
   this.assertSorting = function (nameToSort) {
@@ -193,7 +192,7 @@ var UsersPage = function () {
   };
 
   this.clickOnUser = function () {
-    utils.click(element.all(by.repeater('row in renderedRows')).first().all(by.repeater('col in renderedColumns')).first());
+    utils.click(element(by.css('.ui-grid-row')));
   };
 
   this.assertPage = function (page) {

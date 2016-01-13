@@ -85,10 +85,8 @@
       </button>
       <button id="saveUpdateButton" cs-btn loading="trial.saveUpdateButtonLoad" class="btn btn--primary" ng-click="trialForm.$setPristine(true); trial.clickUpdateButton();" ng-disabled="trialForm.$pristine || trialForm.$invalid">
         <span ng-if="trial.disableSquaredUCCheckBox || !trial.isSquaredUCEnabled()" translate="common.save"></span>
-        <span ng-if="!trial.disableSquaredUCCheckBox && trial.isSquaredUCEnabled()">
-          <span cr-feature-toggle feature-show="pstnSetup" translate="common.save"></span>
-          <span cr-feature-toggle feature-hide="pstnSetup" translate="common.next"></span>
-        </span>
+        <span ng-if="!trial.disableSquaredUCCheckBox && trial.isSquaredUCEnabled()" cr-feature-toggle feature-show="huron-pstn-setup" translate="common.save"></span>
+        <span ng-if="!trial.disableSquaredUCCheckBox && trial.isSquaredUCEnabled()" cr-feature-toggle feature-hide="huron-pstn-setup" translate="common.next"></span>
       </button>
     </div>
   </div>

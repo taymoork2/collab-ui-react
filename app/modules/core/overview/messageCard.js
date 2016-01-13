@@ -23,6 +23,7 @@
         card.enabled = false;
         card.cardClass = 'cs-card header-bar';
         card.helper = OverviewHelper;
+        card.showHealth = true;
 
         card.reportDataEventHandler = function (event, response) {
 
@@ -35,7 +36,7 @@
 
         card.healthStatusUpdatedHandler = function messageHealthEventHandler(data) {
           _.each(data.components, function (component) {
-            if (component.id === card.helper.statusIds.MobileClients || component.id === card.helper.statusIds.Rooms || component.id === card.helper.statusIds.WebAndDesktopClients) {
+            if (component.id === card.helper.statusIds.SparkMessage) {
               card.healthStatus = card.helper.mapStatus(card.healthStatus, component.status);
             }
           });

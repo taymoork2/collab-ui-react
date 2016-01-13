@@ -1,5 +1,5 @@
 <div ng-if="exp.clusterLength() > 0" class="hercules-clusters-list">
-  <div gridscrollbar class="gridStyle" ng-grid="exp.clusterListGridOptions"></div>
+  <div gridscrollbar class="gridStyle" ui-grid="exp.clusterListGridOptions" ui-grid-selection></div>
 </div>
 <div ng-if="exp.clusterLength() === 0">
   <div class="centered-info-pane">

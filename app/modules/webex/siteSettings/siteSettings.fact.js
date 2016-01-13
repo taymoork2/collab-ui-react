@@ -378,7 +378,7 @@
             var iframePageLabel = $translate.instant(iframePageLabelId);
 
             var uiSref =
-              "site-settings.site-setting({" +
+              "site-list.site-setting({" +
               "  siteUrl: " + "'" + _this.webExSiteSettingsObj.siteUrl + "'" + "," +
               "  webexPageId: " + "'" + webexPageId + "'" + "," +
               "  settingPageIframeUrl: " + "'" + iframeUrl + "'" +
@@ -610,10 +610,7 @@
         getSiteSettingsInfoXml: function () {
           // var siteInfoXml = WebExXmlApiFact.getSiteInfo(webExXmlApiInfoObj);
           // var meetingTypesInfoXml = WebExXmlApiFact.getMeetingTypeInfo(webExXmlApiInfoObj);
-          var settingPagesInfoXml = WebExXmlApiFact.getAdminPagesInfo(
-            true,
-            webExXmlApiInfoObj
-          );
+          var settingPagesInfoXml = WebExXmlApiFact.getSettingPagesInfo(webExXmlApiInfoObj);
 
           return $q.all({
             // siteInfoXml: siteInfoXml,

@@ -164,7 +164,7 @@
         label: $translate.instant('pstnSetup.consecutive')
       },
       expressionProperties: {
-        'hide': function () {
+        'hideExpression': function () {
           var shouldHide = angular.isUndefined(vm.model.quantity) || vm.model.quantity < 2;
           if (shouldHide) {
             // uncheck the consecutive checkbox
@@ -205,7 +205,6 @@
     }
 
     function searchCarrierInventory() {
-      /*jshint validthis: true */
       var field = this;
       var params = {
         npa: vm.model.areaCode.code,

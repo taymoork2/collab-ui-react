@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function UserOverviewCtrl($scope, $stateParams, $translate, $http, Authinfo, Config, Utils, FeatureToggleService, Userservice) {
-    /*jshint validthis: true */
     var vm = this;
     vm.currentUser = $stateParams.currentUser;
     vm.entitlements = $stateParams.entitlements;
@@ -29,24 +28,24 @@
       vm.services = [];
 
       var msgState = {
-        name: $translate.instant('onboardModal.messaging'),
-        icon: $translate.instant('onboardModal.messaging'),
+        name: $translate.instant('onboardModal.message'),
+        icon: $translate.instant('onboardModal.message'),
         state: 'user-overview.messaging',
-        detail: $translate.instant('onboardModal.freeMsg')
+        detail: $translate.instant('onboardModal.msgFree')
       };
 
       var commState = {
-        name: $translate.instant('onboardModal.communications'),
-        icon: $translate.instant('onboardModal.communications'),
+        name: $translate.instant('onboardModal.call'),
+        icon: $translate.instant('onboardModal.call'),
         state: 'user-overview.communication',
-        detail: $translate.instant('onboardModal.freeComm')
+        detail: $translate.instant('onboardModal.callFree')
       };
 
       var confState = {
-        name: $translate.instant('onboardModal.conferencing'),
-        icon: $translate.instant('onboardModal.conferencing'),
+        name: $translate.instant('onboardModal.meeting'),
+        icon: $translate.instant('onboardModal.meeting'),
         state: 'user-overview.conferencing',
-        detail: $translate.instant('onboardModal.freeConf')
+        detail: $translate.instant('onboardModal.mtgFree')
       };
 
       var contactCenterState = {
@@ -56,14 +55,6 @@
         detail: $translate.instant('onboardModal.freeContactCenter')
       };
 
-      FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
-        if (result) {
-          msgState.name = $translate.instant('onboardModal.message');
-          commState.name = $translate.instant('onboardModal.call');
-          confState.name = $translate.instant('onboardModal.meeting');
-        }
-      });
-
       if (hasEntitlement('squared-room-moderation') || !vm.hasAccount) {
         if (getServiceDetails('MS')) {
           msgState.detail = $translate.instant('onboardModal.paidMsg');
@@ -71,9 +62,7 @@
         vm.services.push(msgState);
       }
       if (hasEntitlement('cloudmeetings')) {
-        if (getServiceDetails('MC')) {
-          confState.detail = $translate.instant('onboardModal.paidConfWebEx');
-        }
+        confState.detail = $translate.instant('onboardModal.paidConfWebEx');
         vm.services.push(confState);
       } else if (hasEntitlement('squared-syncup')) {
         if (getServiceDetails('CF')) {

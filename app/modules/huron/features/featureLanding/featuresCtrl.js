@@ -5,8 +5,6 @@
     .module('Huron')
     .controller('HuronFeaturesCtrl', HuronFeaturesCtrl);
 
-  /* jshint validthis: true */
-
   /* @ngInject */
   function HuronFeaturesCtrl($scope, $state, $filter, $timeout, $modal, $q, Authinfo, HuronFeaturesListService, HuntGroupService, AutoAttendantCeInfoModelService, AAModelService, Notification, Log, FeatureToggleService) {
 

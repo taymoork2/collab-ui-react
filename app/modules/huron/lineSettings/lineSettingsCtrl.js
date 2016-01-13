@@ -132,7 +132,7 @@
         }
       },
       expressionProperties: {
-        'hide': function ($viewValue, $modelValue, scope) {
+        'hideExpression': function ($viewValue, $modelValue, scope) {
           return scope.model.forward !== 'all';
         }
       }
@@ -163,7 +163,7 @@
         }
       },
       expressionProperties: {
-        'hide': function ($viewValue, $modelValue, scope) {
+        'hideExpression': function ($viewValue, $modelValue, scope) {
           return scope.model.forward !== 'busy';
         },
         'templateOptions.label': function ($viewValue, $modelValue, scope) {
@@ -178,7 +178,7 @@
         id: 'ckForwardExternalCalls'
       },
       expressionProperties: {
-        'hide': function ($viewValue, $modelValue, scope) {
+        'hideExpression': function ($viewValue, $modelValue, scope) {
           return scope.model.forward !== 'busy';
         }
       }
@@ -200,7 +200,7 @@
         }
       },
       expressionProperties: {
-        'hide': function ($viewValue, $modelValue, scope) {
+        'hideExpression': function ($viewValue, $modelValue, scope) {
           return !scope.model.forwardExternalCalls || scope.model.forward !== 'busy';
         }
       }
@@ -225,7 +225,7 @@
         label: $translate.instant('callerIdPanel.customName')
       },
       expressionProperties: {
-        'hide': function ($viewValue, $modelValue, scope) {
+        'hideExpression': function ($viewValue, $modelValue, scope) {
           if (vm.callerIdInfo.callerIdSelection) {
             return vm.callerIdInfo.callerIdSelection.value.externalCallerIdType !== customCallerId_type;
           }
@@ -249,7 +249,7 @@
         }
       },
       expressionProperties: {
-        'hide': function ($viewValue, $modelValue, scope) {
+        'hideExpression': function ($viewValue, $modelValue, scope) {
           if (vm.callerIdInfo.callerIdSelection) {
             return vm.callerIdInfo.callerIdSelection.value.externalCallerIdType !== customCallerId_type;
           }

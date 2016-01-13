@@ -21,6 +21,7 @@
         card.notEnabledFooter = 'overview.contactPartner';
         card.settingsUrl = '#/hurondetails/settings';
         card.helper = OverviewHelper;
+        card.showHealth = true;
 
         card.reportDataEventHandler = function (event, response) {
           if (!response.data.success) return;
@@ -32,7 +33,7 @@
 
         card.healthStatusUpdatedHandler = function messageHealthEventHandler(data) {
           _.each(data.components, function (component) {
-            if (component.id === card.helper.statusIds.MediaCalling) {
+            if (component.id === card.helper.statusIds.SparkCall || component.id === card.helper.statusIds.huronPhoneCalls) {
               card.healthStatus = card.helper.mapStatus(card.healthStatus, component.status);
             }
           });

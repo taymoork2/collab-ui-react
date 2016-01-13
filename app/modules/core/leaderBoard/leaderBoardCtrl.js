@@ -17,11 +17,6 @@ angular.module('Core')
         'sites'
       ];
 
-      $scope.isStormBranding = false;
-      FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
-        $scope.isStormBranding = result;
-      });
-
       var getLicenses = function () {
         Orgservice.getLicensesUsage().then(function (subscriptions) {
           $scope.buckets = [];

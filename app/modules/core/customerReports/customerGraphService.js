@@ -57,14 +57,24 @@
 
     // variables for the files shared section
     var filesSharedDiv = 'filesSharedDiv';
-    var filesBalloon = '<span class="graph-text">' + $translate.instant('filesShared.contentShared') + ' [[contentShared]]<br>' + $translate.instant('filesShared.fileSizes') + ' [[contentShareSizes]]</span>';
+    var filesBalloon = '<span class="graph-text">' + $translate.instant('filesShared.contentShared') + ' <span class="graph-number">[[contentShared]]</span><br>' + $translate.instant('filesShared.fileSizes') + ' <span class="graph-number">[[contentShareSizes]] ' + $translate.instant('filesShared.gb ') + '</span></span>';
+
+    // variables for media Quality
+    var mediaQualityDiv = 'mediaQualityDiv';
+
+    // variables for Call Metrics
+    var audioGraphDiv = 'audioGraphDiv';
+    var audioBalloonText = '<div class="donut-hover-text">[[callCondition]]<br>[[numCalls]] ' + $translate.instant('callMetrics.calls') + ' ([[percents]]%)</div>';
 
     return {
       setActiveUsersGraph: setActiveUsersGraph,
       setAvgRoomsGraph: setAvgRoomsGraph,
-      setFilesSharedGraph: setFilesSharedGraph
+      setFilesSharedGraph: setFilesSharedGraph,
+      setMediaQualityGraph: setMediaQualityGraph,
+      setMetricsAudioGraph: setMetricsAudioGraph
     };
 
+    // bar charts
     function createGraph(data, div, graphs, valueAxes, catAxis, categoryField, legend, numFormat, startDuration) {
       var chartData = {
         'startDuration': startDuration,
@@ -102,7 +112,23 @@
         }, {
           number: 1e+12,
           prefix: "T"
-        }]
+        }],
+        'export': {
+          "enabled": true,
+          "libs": {
+            "autoLoad": false
+          },
+          "menu": [{
+            "class": "export-main",
+            "label": $translate.instant('reportsPage.downloadOptions'),
+            "menu": [{
+              "label": $translate.instant('reportsPage.saveAs'),
+              "title": $translate.instant('reportsPage.saveAs'),
+              "class": "export-list",
+              "menu": ["PNG", "JPG", "PDF"]
+            }, 'PRINT']
+          }]
+        }
       };
 
       if (angular.isDefined(legend) && legend !== null) {
@@ -141,26 +167,25 @@
     }
 
     function activeUserGraphs(data) {
-      var graphOne = angular.copy(columnBase);
-      graphOne.title = usersTitle;
-      graphOne.fillColors = 'colorOne';
-      graphOne.colorField = 'colorOne';
-      graphOne.legendColor = data[0].colorOne;
-      graphOne.valueField = 'totalRegisteredUsers';
-      graphOne.balloonText = activeUsersBalloonText;
-      graphOne.showBalloon = data[0].balloon;
+      var colors = ['colorOne', 'colorTwo'];
+      var secondaryColors = [data[0].colorOne, data[0].colorTwo];
+      var values = ['totalRegisteredUsers', 'activeUsers'];
+      var titles = [usersTitle, activeUsersTitle];
+      var graphs = [];
 
-      var graphTwo = angular.copy(columnBase);
-      graphTwo.title = activeUsersTitle;
-      graphTwo.fillColors = 'colorTwo';
-      graphTwo.colorField = 'colorTwo';
-      graphTwo.legendColor = data[0].colorTwo;
-      graphTwo.valueField = 'activeUsers';
-      graphTwo.balloonText = activeUsersBalloonText;
-      graphTwo.showBalloon = data[0].balloon;
-      graphTwo.clustered = false;
+      for (var i = 0; i < values.length; i++) {
+        graphs.push(angular.copy(columnBase));
+        graphs[i].title = titles[i];
+        graphs[i].fillColors = colors[i];
+        graphs[i].colorField = colors[i];
+        graphs[i].legendColor = secondaryColors[i];
+        graphs[i].valueField = values[i];
+        graphs[i].balloonText = activeUsersBalloonText;
+        graphs[i].showBalloon = data[0].balloon;
+        graphs[i].clustered = false;
+      }
 
-      return [graphOne, graphTwo];
+      return graphs;
     }
 
     function setActiveUsersGraph(data, activeUsersChart) {
@@ -216,16 +241,13 @@
       valueAxes[0].integersOnly = true;
       valueAxes[0].minimum = 0;
 
-      var legend = angular.copy(legendBase);
-      legend.reversedOrder = true;
-
       var startDuration = 1;
       if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
         startDuration = 0;
       }
 
       var numFormat = angular.copy(numFormatBase);
-      return createGraph(data, avgRoomsdiv, graphs, valueAxes, catAxis, 'modifiedDate', legend, numFormat, startDuration);
+      return createGraph(data, avgRoomsdiv, graphs, valueAxes, catAxis, 'modifiedDate', angular.copy(legendBase), numFormat, startDuration);
     }
 
     function avgRoomsGraphs(data) {
@@ -246,9 +268,7 @@
         graphs[i].legendColor = colors[i];
         graphs[i].showBalloon = data[0].balloon;
         graphs[i].balloonText = avgRoomsBalloon;
-        if (i === 0) {
-          graphs[i].clustered = false;
-        }
+        graphs[i].clustered = false;
       }
 
       return graphs;
@@ -306,6 +326,187 @@
       graph.balloonText = filesBalloon;
 
       return [graph];
+    }
+
+    function setMediaQualityGraph(data, mediaChart) {
+      if (data === null || data === 'undefined' || data.length === 0) {
+        return;
+      } else if (mediaChart !== null && angular.isDefined(mediaChart)) {
+        var startDuration = 1;
+        if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
+          startDuration = 0;
+        }
+
+        mediaChart.dataProvider = data;
+        mediaChart.graphs = mediaGraphs(data);
+        mediaChart.startDuration = startDuration;
+        mediaChart.validateData();
+      } else {
+        mediaChart = createMediaGraph(data);
+      }
+      return mediaChart;
+    }
+
+    function createMediaGraph(data) {
+      if (data.length === 0) {
+        return;
+      }
+
+      var graphs = mediaGraphs(data);
+      var catAxis = angular.copy(axis);
+      catAxis.gridPosition = 'start';
+
+      var valueAxes = [angular.copy(axis)];
+      valueAxes[0].integersOnly = true;
+      valueAxes[0].minimum = 0;
+      valueAxes[0].title = $translate.instant('mediaQuality.minutes');
+
+      var startDuration = 1;
+      if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
+        startDuration = 0;
+      }
+
+      return createGraph(data, mediaQualityDiv, graphs, valueAxes, catAxis, 'modifiedDate', angular.copy(legendBase), angular.copy(numFormatBase), startDuration);
+    }
+
+    function mediaGraphs(data) {
+      var titles = ['mediaQuality.good', 'mediaQuality.fair', 'mediaQuality.poor'];
+      var values = ['totalDurationSum', 'partialSum', 'poorQualityDurationSum'];
+      var balloonValues = ['goodQualityDurationSum', 'fairQualityDurationSum', 'poorQualityDurationSum'];
+      var colors = [Config.chartColors.blue, Config.chartColors.brandWarning, Config.chartColors.brandDanger];
+      if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
+        colors = [data[0].colorThree, data[0].colorTwo, data[0].colorOne];
+      }
+      var graphs = [];
+
+      for (var i = 0; i < values.length; i++) {
+        graphs.push(angular.copy(columnBase));
+        graphs[i].title = $translate.instant(titles[i]);
+        graphs[i].fillColors = colors[i];
+        graphs[i].colorField = colors[i];
+        graphs[i].valueField = values[i];
+        graphs[i].legendColor = colors[i];
+        graphs[i].showBalloon = data[0].balloon;
+        graphs[i].balloonText = '<span class="graph-text">' + $translate.instant('mediaQuality.totalCalls') + ': ' + ' <span class="graph-media">[[totalDurationSum]]</span><br>' + $translate.instant(titles[i]) + ': ' + '<span class="graph-media"> [[' + balloonValues[i] + ']]</span></span>';
+        graphs[i].clustered = false;
+      }
+
+      return graphs;
+    }
+
+    // donut charts
+    function createDonutChart(div, balloonText, labelText, textColor, colors, labels, labelsEnabled, dataProvider) {
+      return AmCharts.makeChart(div, {
+        "type": "pie",
+        "balloonText": balloonText,
+        "innerRadius": "75%",
+        "labelText": labelText,
+        "color": textColor,
+        "colors": colors,
+        "titleField": "callCondition",
+        "valueField": "numCalls",
+        "fontFamily": "Arial",
+        "fontSize": 14,
+        "percentPrecision": 0,
+        "labelRadius": 25,
+        "creditsPosition": "bottom-left",
+        "radius": "30%",
+        "outlineAlpha": 1,
+        "allLabels": labels,
+        "dataProvider": dataProvider,
+        "labelsEnabled": labelsEnabled,
+        "startDuration": 0,
+        "export": {
+          "enabled": true,
+          "libs": {
+            "autoLoad": false
+          },
+          "menu": [{
+            "class": "export-main",
+            "label": $translate.instant('reportsPage.downloadOptions'),
+            "menu": [{
+              "label": $translate.instant('reportsPage.saveAs'),
+              "title": $translate.instant('reportsPage.saveAs'),
+              "class": "export-list",
+              "menu": ["PNG", "JPG", "PDF"]
+            }, 'PRINT']
+          }]
+        }
+      });
+    }
+
+    function setMetricsAudioGraph(data, audioChart) {
+      if ((data === null || data === 'undefined' || data.length === 0) && (angular.isUndefined(data.dataProvider) || angular.isUndefined(data.labelData))) {
+        return;
+      } else if (audioChart !== null && angular.isDefined(audioChart)) {
+        var colors = [Config.chartColors.grayDarkest, Config.chartColors.brandInfo];
+        var textColor = Config.chartColors.grayDarkest;
+        var labelsEnabled = true;
+        var labelText = '[[percents]]%<br>[[callCondition]]';
+        var balloonText = audioBalloonText;
+
+        if (data.dummy) {
+          colors = [Config.chartColors.dummyGray, Config.chartColors.dummyGrayLight];
+          textColor = Config.chartColors.brandWhite;
+          balloonText = "";
+          labelsEnabled = false;
+        }
+
+        audioChart.dataProvider = data.dataProvider;
+        audioChart.allLabels = getLabels(data.labelData);
+        audioChart.color = textColor;
+        audioChart.colors = colors;
+        audioChart.balloonText = balloonText;
+        audioChart.labelsEnabled = labelsEnabled;
+        audioChart.validateData();
+      } else {
+        audioChart = createAudioGraph(data);
+      }
+      return audioChart;
+    }
+
+    function createAudioGraph(data) {
+      var dataProvider = data.dataProvider;
+      var labels = getLabels(data.labelData);
+      var colors = [Config.chartColors.grayDarkest, Config.chartColors.brandInfo];
+      var textColor = Config.chartColors.grayDarkest;
+      var labelsEnabled = true;
+      var labelText = '[[percents]]%<br>[[callCondition]]';
+      var balloonText = audioBalloonText;
+
+      if (data.dummy) {
+        colors = [Config.chartColors.dummyGray, Config.chartColors.dummyGrayLight];
+        textColor = Config.chartColors.brandWhite;
+        balloonText = "";
+        labelsEnabled = false;
+      }
+
+      return createDonutChart(audioGraphDiv, balloonText, labelText, textColor, colors, labels, labelsEnabled, dataProvider);
+    }
+
+    function getLabels(data) {
+      window.console.log(data);
+      return [{
+        "align": "center",
+        "size": "42",
+        "text": data.numTotalCalls,
+        "y": 112
+      }, {
+        "align": "center",
+        "size": "16",
+        "text": $translate.instant('callMetrics.totalCalls'),
+        "y": 162
+      }, {
+        "align": "center",
+        "size": "30",
+        "text": data.numTotalMinutes,
+        "y": 197
+      }, {
+        "align": "center",
+        "size": "16",
+        "text": $translate.instant('callMetrics.totalCallMinutes'),
+        "y": 232
+      }];
     }
   }
 })();

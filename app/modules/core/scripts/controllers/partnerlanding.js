@@ -1,5 +1,4 @@
 'use strict';
-/* global moment */
 
 angular.module('Core')
   .controller('PartnerHomeCtrl', ['$templateCache', '$scope', '$rootScope', '$stateParams', 'Notification', '$timeout', 'ReportsService', 'Log', 'Auth', 'Authinfo', '$dialogs', 'Config', '$translate', 'PartnerService', 'Orgservice', '$filter', '$state', 'ExternalNumberPool', 'LogMetricsService', '$log',
@@ -146,31 +145,6 @@ angular.module('Core')
       }
 
       $scope.newTrialName = null;
-      $scope.trialsGrid = {
-        data: 'activeList',
-        multiSelect: false,
-        showFilter: true,
-        rowHeight: 38,
-        headerRowHeight: 38,
-        selectedItems: [],
-        sortInfo: {
-          fields: ['endDate', 'customerName', 'numUsers'],
-          directions: ['asc']
-        },
-
-        columnDefs: [{
-          field: 'customerName',
-          displayName: $translate.instant('partnerHomePage.trialsCustomerName')
-        }, {
-          field: 'endDate',
-          displayName: $translate.instant('partnerHomePage.trialsEndDate')
-        }, {
-          field: 'numUsers',
-          displayName: $translate.instant('partnerHomePage.trialsNumUsers')
-        }]
-      };
-
-      var rowTemplate = $templateCache.get('modules/core/partnerLanding/grid/row.tpl.html');
       var actionTemplate = $templateCache.get('modules/core/partnerLanding/grid/actionColumn.tpl.html');
       var nameTemplate = $templateCache.get('modules/core/partnerLanding/grid/nameColumn.tpl.html');
       var serviceTemplate = $templateCache.get('modules/core/partnerLanding/grid/serviceColumn.tpl.html');
@@ -179,55 +153,66 @@ angular.module('Core')
       $scope.gridOptions = {
         data: 'gridData',
         multiSelect: false,
-        showFilter: false,
         rowHeight: 44,
-        rowTemplate: rowTemplate,
-        headerRowHeight: 44,
-        useExternalSorting: false,
+        enableRowHeaderSelection: false,
         enableColumnResize: true,
-        sortInfo: {
-          fields: ['customerName'],
-          directions: ['asc']
+        enableColumnMenus: false,
+        onRegisterApi: function (gridApi) {
+          $scope.gridApi = gridApi;
+          gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+            $scope.showCustomerDetails(row.entity);
+          });
+          gridApi.infiniteScroll.on.needLoadMoreData($scope, function () {
+            if ($scope.load) {
+              $scope.currentDataPosition++;
+              $scope.load = false;
+              getTrialsList($scope.currentDataPosition * Config.usersperpage + 1);
+              $scope.gridApi.infiniteScroll.dataLoaded();
+            }
+          });
         },
-
         columnDefs: [{
           field: 'customerName',
           displayName: $translate.instant('customerPage.customerNameHeader'),
           width: '25%',
           cellTemplate: nameTemplate,
-          sortFn: partnerAtTopSort
+          sortingAlgorithm: partnerAtTopSort,
+          sort: {
+            direction: 'asc',
+            priority: 0,
+          },
         }, {
           field: 'messaging',
-          displayName: $translate.instant('customerPage.messaging'),
+          displayName: $translate.instant('customerPage.message'),
           width: '12%',
           cellTemplate: serviceTemplate,
           headerClass: 'align-center',
-          sortFn: serviceSort
+          sortingAlgorithm: serviceSort
         }, {
           field: 'conferencing',
-          displayName: $translate.instant('customerPage.conferencing'),
+          displayName: $translate.instant('customerPage.meeting'),
           width: '12%',
           cellTemplate: serviceTemplate,
           headerClass: 'align-center',
-          sortFn: serviceSort
+          sortingAlgorithm: serviceSort
         }, {
           field: 'communications',
-          displayName: $translate.instant('customerPage.communications'),
+          displayName: $translate.instant('customerPage.call'),
           width: '12%',
           cellTemplate: serviceTemplate,
           headerClass: 'align-center',
-          sortFn: serviceSort
+          sortingAlgorithm: serviceSort
         }, {
           field: 'notes',
           displayName: $translate.instant('customerPage.notes'),
           cellTemplate: noteTemplate,
-          sortFn: notesSort
+          sortingAlgorithm: notesSort
         }, {
           field: 'action',
           displayName: $translate.instant('customerPage.actionHeader'),
           sortable: false,
           cellTemplate: actionTemplate,
-          width: '90px'
+          width: '90'
         }]
       };
 
@@ -322,14 +307,6 @@ angular.module('Core')
       $scope.exportBtn = {
         disabled: true
       };
-
-      $scope.$on('ngGridEventScroll', function () {
-        if ($scope.load) {
-          $scope.currentDataPosition++;
-          $scope.load = false;
-          getTrialsList($scope.currentDataPosition * Config.usersperpage + 1);
-        }
-      });
 
       $scope.filterList = function (filterBy) {
         $scope.filter = filterBy;

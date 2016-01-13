@@ -1,5 +1,5 @@
 # early out if this file has already been sourced
-if type set_local_npm_path >/dev/null 2>&1; then
+if type unset_setup_helpers >/dev/null 2>&1; then
     return
 fi
 
@@ -7,6 +7,12 @@ last_refreshed_file=".last-refreshed"
 manifest_checksums_file=".manifest-checksums"
 manifest_files="package.json bower.json config/tsd.json"
 dependency_dirs="./node_modules ./bower_components"
+project_root_env_var_name="WX2_ADMIN_WEB_CLIENT_HOME"
+
+# reset function (use this when needing to re-source this file)
+function unset_setup_helpers {
+    unset unset_setup_helpers
+}
 
 # generate a new timestamp file
 function mk_last_refreshed_file {
@@ -81,5 +87,115 @@ function set_global_npm_path {
 # usage: rm_all_but_last <num_to_leave> <file_glob>
 function rm_all_but_last {
     local count=${1} && shift
-    echo $@ | xargs ls -t | awk "NR>${count}" | sed -e 's/.*/"&"/g' | xargs rm
+
+    # early out if glob pattern matches no files
+    ls $@ >/dev/null 2>/dev/null
+    if [ $? -ne 0 ]; then
+        return 1
+    fi
+    echo $@ | xargs ls -t | awk "NR>${count}" | sed -e 's/.*/"&"/g' | xargs rm -f
 }
+
+function get_most_recent {
+    ls -1tr $@ 2>/dev/null | tail -1
+}
+
+function get_head_commit_id {
+    git log -n1 --pretty=format:'%h'
+}
+
+function get_npm_shrinkwrap_file {
+    local cache_dir="${WX2_ADMIN_WEB_CLIENT_HOME}/.cache"
+    local commit_id="${1:-`get_head_commit_id`}"
+    echo "${cache_dir}/npm-shrinkwrap-for-${commit_id}.json"
+}
+
+function mv_npm_shrinkwrap_file {
+    local commit_id="${1}"
+    local npm_shrinkwrap_file="`get_npm_shrinkwrap_file ${commit_id}`"
+    mv npm-shrinkwrap.json "${npm_shrinkwrap_file}"
+}
+
+function mk_npm_shrinkwrap_tar {
+    cd ${WX2_ADMIN_WEB_CLIENT_HOME}
+    local commit_id="${1:-`get_head_commit_id`}"
+    local npm_shrinkwrap_file="$( ls `get_npm_shrinkwrap_file ${commit_id}` 2>/dev/null )"
+
+    # only if an appropriate npm-shrink-*.json file exists
+    if [ -n "${npm_shrinkwrap_file}" ]; then
+        local target_files=".cache/`basename ${npm_shrinkwrap_file}`"
+        mk_deps_tar "npm-shrinkwrap" "${commit_id}" ${target_files}
+    fi
+    cd ~-
+}
+
+function mk_npm_deps_tar {
+    cd ${WX2_ADMIN_WEB_CLIENT_HOME}
+    local target_files="package.json node_modules"
+    local commit_id="${1:-`get_head_commit_id`}"
+    mk_deps_tar "npm-deps" "${commit_id}" ${target_files}
+    cd ~-
+}
+
+function mk_bower_deps_tar {
+    cd ${WX2_ADMIN_WEB_CLIENT_HOME}
+    local target_files="bower.json bower_components"
+    local commit_id="${1:-`get_head_commit_id`}"
+    mk_deps_tar "bower-deps" "${commit_id}" ${target_files}
+    cd ~-
+}
+
+function mk_deps_tar {
+    local cache_dir="${WX2_ADMIN_WEB_CLIENT_HOME}/.cache"
+    local archive_basename="${1}"
+    local commit_id="${2}"
+    archive_basename="${archive_basename}-for-${commit_id}.tar.gz"
+    shift 2
+    local files_to_archive=$@
+    tar -czf "${cache_dir}/${archive_basename}" ${files_to_archive}
+}
+
+function mk_workspace_tar {
+    tmp_dir=`mktemp -d -t atlas-web.XXXXX`
+    git clone --depth 1 file://${WX2_ADMIN_WEB_CLIENT_HOME} $tmp_dir
+    tar -czf workspace.tar.gz -C $tmp_dir .
+    rm -rf $tmp_dir
+}
+
+# define and export project root dir, and add it to bash config
+function get_bash_conf_file {
+    if [ "`uname`" = "Darwin" ]; then
+        echo ".bash_profile"
+    else
+        echo ".bashrc"
+    fi
+}
+
+function export_project_root_env_var {
+    local bash_conf_file="$HOME/`get_bash_conf_file`"
+
+    cwd=`pwd`
+    # get project top-level dir (look for 'fabfile.py')
+    while [ ! -r fabfile.py -a "`pwd`" != "/" ]; do
+      cd ..
+    done
+    top_dir=`pwd`
+    cd $cwd
+    if [ "${top_dir}" = "/" ]; then
+        >&2 echo "Error: traversed to '/' while trying to find top-level dir"
+        return 1
+    fi
+
+    entry_line="export ${project_root_env_var_name}=${top_dir}"
+    grep -q "${entry_line}" ${bash_conf_file}
+    if [ $? -ne 0 ]; then
+        eval "${entry_line}"
+        echo ${entry_line} >> ${bash_conf_file}
+    fi
+}
+
+# make sure WX2_ADMIN_WEB_CLIENT_HOME is set
+export_project_root_env_var
+
+# setup .cache subdir
+mkdir -p "${WX2_ADMIN_WEB_CLIENT_HOME}/.cache"

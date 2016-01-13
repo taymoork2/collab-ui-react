@@ -25,14 +25,14 @@
   </div>
 </div>
 <div ng-if="readOnly">
-  <div class="row full">
+  <div class="row collapse full">
     <div class="columns medium-12">
-      {{::address.streetAddress | uppercase}} {{::address.unit | uppercase}}
+      {{address.streetAddress | uppercase}} {{address.unit | uppercase}}
     </div>
   </div>
-  <div class="row full">
+  <div class="row collapse full">
     <div class="columns medium-12">
-      {{::address.city | uppercase}}<span ng-if="address.state">, {{::address.state}}</span>  {{::address.zip}}
+      {{address.city | uppercase}}<span ng-if="address.state">, {{address.state}}</span>  {{address.zip}}
     </div>
   </div>
 </div>
