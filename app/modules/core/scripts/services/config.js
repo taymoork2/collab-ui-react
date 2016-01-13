@@ -325,8 +325,10 @@ angular.module('Core')
           }, {
             title: 'tabs.MediafusionDetailsTab',
             desc: 'tabs.MediafusionDetailsTabDesc',
-            state: 'mediafusionconnector',
-            link: '#mediafusionconnector'
+            //state: 'mediafusionconnector',
+            //link: '#mediafusionconnector'
+            state: 'media-service',
+            link: '#mediaservice'
           }, {
             title: 'tabs.messengerTab',
             desc: 'tabs.messengerTabDesc',
@@ -1111,7 +1113,8 @@ angular.module('Core')
           'fault',
           'alarms',
           'events',
-          'mediafusionconnector',
+          //'mediafusionconnector',
+          'media-service',
           'connector-details'
         ],
         'webex-messenger': [
@@ -1132,7 +1135,8 @@ angular.module('Core')
           'devReports',
           'devices',
           'fusion',
-          'mediafusionconnector',
+          //'mediafusionconnector',
+          'media-service',
           'hurondetails',
           'huronsettings',
           'calendar-service',
