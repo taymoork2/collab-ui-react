@@ -18,6 +18,7 @@
     var contentShareSizes = '/contentShareSizes';
     var mediaQuality = '/callQuality';
     var callMetrics = '/callMetrics';
+    var registeredEndpoints = 'trend/registeredEndpoints';
     var customerView = '&isCustomerView=true';
     var dateFormat = "MMM DD, YYYY";
     var dayFormat = "MMM DD";
@@ -39,13 +40,15 @@
     var contentShareSizesCancelPromise = null;
     var metricsCancelPromise = null;
     var mediaCancelPromise = null;
+    var deviceCancelPromise = null;
 
     return {
       getActiveUserData: getActiveUserData,
       getAvgRoomData: getAvgRoomData,
       getFilesSharedData: getFilesSharedData,
       getCallMetricsData: getCallMetricsData,
-      getMediaQualityData: getMediaQualityData
+      getMediaQualityData: getMediaQualityData,
+      getDeviceData: getDeviceData
     };
 
     function getActiveUserData(filter) {
@@ -462,16 +465,32 @@
       metricsCancelPromise = $q.defer();
       var callMetricsUrl = urlBase + detailed + callMetrics + getAltQuery(filter);
 
-      return getService(callMetricsUrl, metricsCancelPromise).success(function (response, status) {
-        return {
-          audio: [],
-          video: []
-        };
-      }).error(function (response, status) {
-        return returnErrorCheck(status, 'Call metrics data not returned for customer.', $translate.instant('callMetrics.customerError'), {
-          audio: [],
-          video: []
-        });
+      var returnArray = {
+        audio: {},
+        video: {}
+      };
+
+      return getService(callMetricsUrl, metricsCancelPromise).then(function (response, status) {
+        if (response !== null && angular.isDefined(response) && angular.isDefined(response.data.data[0]) && angular.isArray(response.data.data) && angular.isDefined(response.data.data[0].data[0]) && angular.isArray(response.data.data[0].data)) {
+          var details = response.data.data[0].data[0].details;
+          var totalCalls = parseInt(details.totalCalls);
+          if (totalCalls > 0) {
+            returnArray.audio.dataProvider = [{
+              "callCondition": $translate.instant('callMetrics.callConditionFail'),
+              "numCalls": parseInt(details.totalFailedCalls)
+            }, {
+              "callCondition": $translate.instant('callMetrics.callConditionSuccessful'),
+              "numCalls": parseInt(details.totalSuccessfulCalls)
+            }];
+            returnArray.audio.labelData = {
+              "numTotalCalls": totalCalls,
+              "numTotalMinutes": Math.round(parseFloat(details.totalAudioDuration))
+            };
+          }
+        }
+        return returnArray;
+      }, function (response, status) {
+        return returnErrorCheck(response, 'Call metrics data not returned for customer.', $translate.instant('callMetrics.customerError'), returnArray);
       });
     }
 
@@ -536,6 +555,21 @@
         return graph;
       }, function (response) {
         return returnErrorCheck(response, 'Call quality data not returned for customer.', $translate.instant('mediaQuality.customerError'), []);
+      });
+    }
+
+    function getDeviceData(filter) {
+      // cancel any currently running jobs
+      if (deviceCancelPromise !== null && angular.isDefined(deviceCancelPromise)) {
+        deviceCancelPromise.resolve(ABORT);
+      }
+      deviceCancelPromise = $q.defer();
+      var deviceUrl = urlBase + registeredEndpoints + getQuery(filter);
+
+      return getService(deviceUrl, deviceCancelPromise).success(function (response, status) {
+        return [];
+      }).error(function (response, status) {
+        return returnErrorCheck(status, 'Registered Endpoints data not returned for customer.', $translate.instant('registeredEndpoints.customerError'), []);
       });
     }
 

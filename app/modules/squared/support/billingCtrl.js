@@ -58,11 +58,11 @@ angular.module('Squared')
         });
       };
 
-      var actionsTemplate = '<span dropdown>' +
-        '<button id="actionsButton" class="btn--none dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
+      var actionsTemplate = '<span cs-dropdown>' +
+        '<button cs-dropdown-toggle id="actionsButton" class="btn--none dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
         '<i class="icon icon-three-dots"></i>' +
         '</button>' +
-        '<ul class="dropdown-menu dropdown-primary" role="menu">' +
+        '<ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu">' +
         '<li id="resendCustomerEmail"><a ng-click="$event.stopPropagation(); grid.appScope.resendCustomerEmail(row.entity.orderId); "><span translate="billingPage.sendCustomer"></span></a></li>' +
         '<li ng-if="row.entity.partnerOrgId" id="resendPartnerEmail"><a ng-click="$event.stopPropagation(); grid.appScope.resendPartnerEmail(row.entity.orderId); "><span translate="billingPage.sendPartner"></span></a></li>' +
         '</ul>' +

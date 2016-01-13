@@ -72,13 +72,13 @@
                   {{cluster.properties["mf.role"]}}&nbsp;
                 </div>
                 <div class="col-sm-1 col-xs-1">
-                  <span dropdown>
-                  <button id="actionsButton" type="button" class="btn--none btn--none dropdown-toggle" ng-class="dropdown-toggle" ng-click="$event.stopPropagation()">
+                  <span cs-dropdown>
+                  <button cs-dropdown-toggle id="actionsButton" type="button" class="btn--none btn--none dropdown-toggle" ng-class="dropdown-toggle" ng-click="$event.stopPropagation()">
                     <i class="icon icon-three-dots"></i>
                   </button>
                   <div class="dropdown" class="connector-align-ellipses">
 
-                    <ul class="dropdown-menu dropdown-primary" role="menu">
+                    <ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu">
                       <li id="deleteConnectorAction">
                           <a data-toggle="modal" data-target="#deleteConnectorModal" ng-click="setDeregisterConnector(cluster.id, cluster.hosts[0].host_name)">
                             <span translate="mediaFusion.defuseConnector"></span>

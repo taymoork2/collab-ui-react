@@ -6,7 +6,7 @@
     .controller('AASayMessageCtrl', AASayMessageCtrl);
 
   /* @ngInject */
-  function AASayMessageCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AALanguageService) {
+  function AASayMessageCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AALanguageService, AACommonService) {
 
     var vm = this;
     var properties = {
@@ -118,6 +118,7 @@
     function saveUiModel() {
       vm.actionEntry.setValue(vm.messageInput);
       vm.actionEntry.setVoice(vm.voiceOption.value);
+      AACommonService.setSayMessageStatus(true);
 
       switch (vm.sayMessageType) {
       case sayMessageType.MENUHEADER:

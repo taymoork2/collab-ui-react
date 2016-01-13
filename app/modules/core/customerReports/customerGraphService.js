@@ -62,13 +62,19 @@
     // variables for media Quality
     var mediaQualityDiv = 'mediaQualityDiv';
 
+    // variables for Call Metrics
+    var audioGraphDiv = 'audioGraphDiv';
+    var audioBalloonText = '<div class="donut-hover-text">[[callCondition]]<br>[[numCalls]] ' + $translate.instant('callMetrics.calls') + ' ([[percents]]%)</div>';
+
     return {
       setActiveUsersGraph: setActiveUsersGraph,
       setAvgRoomsGraph: setAvgRoomsGraph,
       setFilesSharedGraph: setFilesSharedGraph,
-      setMediaQualityGraph: setMediaQualityGraph
+      setMediaQualityGraph: setMediaQualityGraph,
+      setMetricsAudioGraph: setMetricsAudioGraph
     };
 
+    // bar charts
     function createGraph(data, div, graphs, valueAxes, catAxis, categoryField, legend, numFormat, startDuration) {
       var chartData = {
         'startDuration': startDuration,
@@ -386,6 +392,121 @@
       }
 
       return graphs;
+    }
+
+    // donut charts
+    function createDonutChart(div, balloonText, labelText, textColor, colors, labels, labelsEnabled, dataProvider) {
+      return AmCharts.makeChart(div, {
+        "type": "pie",
+        "balloonText": balloonText,
+        "innerRadius": "75%",
+        "labelText": labelText,
+        "color": textColor,
+        "colors": colors,
+        "titleField": "callCondition",
+        "valueField": "numCalls",
+        "fontFamily": "Arial",
+        "fontSize": 14,
+        "percentPrecision": 0,
+        "labelRadius": 25,
+        "creditsPosition": "bottom-left",
+        "radius": "30%",
+        "outlineAlpha": 1,
+        "allLabels": labels,
+        "dataProvider": dataProvider,
+        "labelsEnabled": labelsEnabled,
+        "startDuration": 0,
+        "export": {
+          "enabled": true,
+          "libs": {
+            "autoLoad": false
+          },
+          "menu": [{
+            "class": "export-main",
+            "label": $translate.instant('reportsPage.downloadOptions'),
+            "menu": [{
+              "label": $translate.instant('reportsPage.saveAs'),
+              "title": $translate.instant('reportsPage.saveAs'),
+              "class": "export-list",
+              "menu": ["PNG", "JPG", "PDF"]
+            }, 'PRINT']
+          }]
+        }
+      });
+    }
+
+    function setMetricsAudioGraph(data, audioChart) {
+      if ((data === null || data === 'undefined' || data.length === 0) && (angular.isUndefined(data.dataProvider) || angular.isUndefined(data.labelData))) {
+        return;
+      } else if (audioChart !== null && angular.isDefined(audioChart)) {
+        var colors = [Config.chartColors.grayDarkest, Config.chartColors.brandInfo];
+        var textColor = Config.chartColors.grayDarkest;
+        var labelsEnabled = true;
+        var labelText = '[[percents]]%<br>[[callCondition]]';
+        var balloonText = audioBalloonText;
+
+        if (data.dummy) {
+          colors = [Config.chartColors.dummyGray, Config.chartColors.dummyGrayLight];
+          textColor = Config.chartColors.brandWhite;
+          balloonText = "";
+          labelsEnabled = false;
+        }
+
+        audioChart.dataProvider = data.dataProvider;
+        audioChart.allLabels = getLabels(data.labelData);
+        audioChart.color = textColor;
+        audioChart.colors = colors;
+        audioChart.balloonText = balloonText;
+        audioChart.labelsEnabled = labelsEnabled;
+        audioChart.validateData();
+      } else {
+        audioChart = createAudioGraph(data);
+      }
+      return audioChart;
+    }
+
+    function createAudioGraph(data) {
+      var dataProvider = data.dataProvider;
+      var labels = getLabels(data.labelData);
+      var colors = [Config.chartColors.grayDarkest, Config.chartColors.brandInfo];
+      var textColor = Config.chartColors.grayDarkest;
+      var labelsEnabled = true;
+      var labelText = '[[percents]]%<br>[[callCondition]]';
+      var balloonText = audioBalloonText;
+
+      if (data.dummy) {
+        colors = [Config.chartColors.dummyGray, Config.chartColors.dummyGrayLight];
+        textColor = Config.chartColors.brandWhite;
+        balloonText = "";
+        labelsEnabled = false;
+      }
+
+      return createDonutChart(audioGraphDiv, balloonText, labelText, textColor, colors, labels, labelsEnabled, dataProvider);
+    }
+
+    function getLabels(data) {
+      window.console.log(data);
+      return [{
+        "align": "center",
+        "size": "42",
+        "text": data.numTotalCalls,
+        "y": 112
+      }, {
+        "align": "center",
+        "size": "16",
+        "text": $translate.instant('callMetrics.totalCalls'),
+        "y": 162
+      }, {
+        "align": "center",
+        "size": "30",
+        "text": data.numTotalMinutes,
+        "y": 197
+      }, {
+        "align": "center",
+        "size": "16",
+        "text": $translate.instant('callMetrics.totalCallMinutes'),
+        "y": 232
+      }];
     }
   }
 })();

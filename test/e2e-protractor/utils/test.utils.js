@@ -516,7 +516,7 @@ exports.search = function (query) {
 
   function waitSpinner() {
     utils.expectIsNotDisplayed(spinner);
-    utils.expectIsDisplayed(element.all(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)).first());
+    utils.expectIsDisplayed(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)));
   }
 
   this.click(this.searchbox);
@@ -541,7 +541,7 @@ exports.searchForSingleResult = function (query) {
   }
   this.search(query);
   browser.wait(logAndWait, TIMEOUT, 'Waiting for a single search result');
-  return this.expectIsDisplayed(element.all(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)).first());
+  return this.expectIsDisplayed(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)));
 };
 
 exports.clickUser = function (query) {
@@ -654,7 +654,7 @@ exports.loginToOnboardUsers = function (loginName, userName) {
 exports.deleteUser = function (name, name2) {
   this.clickEscape();
   navigation.clickUsers();
-  this.searchForSingleResult(name);
+  this.search(name);
   this.click(users.userListAction);
   this.click(users.deleteUserOption);
   this.expectIsDisplayed(users.deleteUserModal);

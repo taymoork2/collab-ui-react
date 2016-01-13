@@ -610,10 +610,7 @@
         getSiteSettingsInfoXml: function () {
           // var siteInfoXml = WebExXmlApiFact.getSiteInfo(webExXmlApiInfoObj);
           // var meetingTypesInfoXml = WebExXmlApiFact.getMeetingTypeInfo(webExXmlApiInfoObj);
-          var settingPagesInfoXml = WebExXmlApiFact.getAdminPagesInfo(
-            true,
-            webExXmlApiInfoObj
-          );
+          var settingPagesInfoXml = WebExXmlApiFact.getSettingPagesInfo(webExXmlApiInfoObj);
 
           return $q.all({
             // siteInfoXml: siteInfoXml,

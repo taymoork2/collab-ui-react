@@ -173,6 +173,7 @@
       margin-bottom: 0rem;
       max-width: 100%;
       display: block;
+      height: auto;
       position: relative;
       z-index: 1;
       padding: 0;
@@ -191,7 +192,6 @@
       }
     }
   }
-
   .helpdesk-searching-org {
     margin-top: 1rem;
     height: 2.25rem;
@@ -215,6 +215,9 @@
         font-weight: bold;
       }
     }
+  }
+  .helpdesk-please-wait {
+    margin-top: 1rem;
   }
   .search-results {
     .icon-org-search {

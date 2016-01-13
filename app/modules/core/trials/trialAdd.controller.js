@@ -119,7 +119,7 @@
         class: 'columns medium-12',
       },
       expressionProperties: {
-        'hide': function () {
+        'hideExpression': function () {
           return !vm.showMeeting;
         },
         'templateOptions.disabled': function () {
@@ -138,7 +138,7 @@
         class: 'columns medium-12',
       },
       expressionProperties: {
-        'hide': function () {
+        'hideExpression': function () {
           return !vm.hasCallEntitlement();
         }
       },

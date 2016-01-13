@@ -29,23 +29,23 @@
 
       var msgState = {
         name: $translate.instant('onboardModal.message'),
-        icon: $translate.instant('onboardModal.messaging'),
+        icon: $translate.instant('onboardModal.message'),
         state: 'user-overview.messaging',
-        detail: $translate.instant('onboardModal.freeMsg')
+        detail: $translate.instant('onboardModal.msgFree')
       };
 
       var commState = {
         name: $translate.instant('onboardModal.call'),
-        icon: $translate.instant('onboardModal.communications'),
+        icon: $translate.instant('onboardModal.call'),
         state: 'user-overview.communication',
-        detail: $translate.instant('onboardModal.freeComm')
+        detail: $translate.instant('onboardModal.callFree')
       };
 
       var confState = {
         name: $translate.instant('onboardModal.meeting'),
-        icon: $translate.instant('onboardModal.conferencing'),
+        icon: $translate.instant('onboardModal.meeting'),
         state: 'user-overview.conferencing',
-        detail: $translate.instant('onboardModal.freeConf')
+        detail: $translate.instant('onboardModal.mtgFree')
       };
 
       var contactCenterState = {

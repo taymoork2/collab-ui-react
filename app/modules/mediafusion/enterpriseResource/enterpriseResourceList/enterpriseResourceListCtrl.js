@@ -112,11 +112,11 @@ angular.module('Mediafusion')
       var statusTemplate = '<i class="fa fa-circle device-status-icon ui-grid-cell-contents" ng-class="{\'device-status-green\': row.getProperty(col.field)===\'MANAGED\', \'device-status-red\': row.getProperty(col.field) !== \'MANAGED\'}"></i>' +
         '<div ng-class="\'device-status-nocode\'"><p>{{row.getProperty(col.field)|status}}</p></div>';
 
-      var actionsTemplate = '<span dropdown class="device-align-ellipses">' +
-        '<button id="actionlink" class="btn--none dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
+      var actionsTemplate = '<span cs-dropdown class="device-align-ellipses">' +
+        '<button cs-dropdown-toggle id="actionlink" class="btn--none dropdown-toggle" ng-click="$event.stopPropagation()" ng-class="dropdown-toggle">' +
         '<i class="icon icon-three-dots"></i>' +
         '</button>' +
-        '<ul class="dropdown-menu dropdown-primary" role="menu">' +
+        '<ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu">' +
         '<li id="setStateAction"><a ng-click="setState(row.entity.id,row.entity.mgmtStatus)"><span translate="{{row.entity.mgmtStatus|suspendResume}}"></span></a></li>' +
         '<li id="deleteDeviceAction"><a data-toggle="modal" data-target="#deleteDeviceModal" ng-click="setDeleteResource(row.entity.id)"><span translate="vtsPage.delete"></span></a></li>' +
         '</ul>' +
