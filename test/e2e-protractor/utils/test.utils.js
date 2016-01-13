@@ -516,7 +516,7 @@ exports.search = function (query) {
 
   function waitSpinner() {
     utils.expectIsNotDisplayed(spinner);
-    utils.expectIsDisplayed(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)));
+    utils.expectIsDisplayed(element.all(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)).first());
   }
 
   this.click(this.searchbox);
