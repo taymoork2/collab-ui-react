@@ -1,26 +1,17 @@
 'use strict';
 
-describe('Service: Schedule Upgrade', function () {
-  beforeEach(module('Core'));
+fdescribe('Service: Schedule Upgrade', function () {
+  beforeEach(module('wx2AdminWebClientApp'));
 
-  var $httpBackend, $rootScope, ScheduleUpgradeService, Authinfo;
+  var $httpBackend, ScheduleUpgradeService;
 
-  beforeEach(function () {
-    module(function ($provide) {
-      Authinfo = {
-        getOrgId: function () {
-          return '12345';
-        }
-      };
-
-      $provide.value('Authinfo', Authinfo);
-    });
-  });
-
-  beforeEach(inject(function (_$httpBackend_, _$rootScope_, _UserListService_, _Config_, _Authinfo_) {
+  beforeEach(inject(function (_$httpBackend_, _ScheduleUpgradeService_) {
     $httpBackend = _$httpBackend_;
-    Authinfo = _Authinfo_;
-    $rootScope = _$rootScope_;
+    ScheduleUpgradeService = _ScheduleUpgradeService_;
+
+    $httpBackend
+      .when('GET', 'l10n/en_US.json')
+      .respond({});
   }));
 
   afterEach(function () {
@@ -29,5 +20,32 @@ describe('Service: Schedule Upgrade', function () {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  // soon…
+  it('ScheduleUpgradeService.get should query the server with the right params', function () {
+    $httpBackend.expectGET('https://uss-integration.wbx2.com/uss/api/v1/organizations/123/services/c_cal/upgrade_schedule').respond({
+      scheduleTime: '03:00',
+      scheduleDay: 4,
+      scheduleTimezone: 'Europe/Paris',
+      isAdminAcknowledged: true
+    });
+    ScheduleUpgradeService.get('123', 'c_cal');
+  });
+
+  it('ScheduleUpgradeService.path should query the server with the right params', function () {
+    $httpBackend.expectPATCH('https://uss-integration.wbx2.com/uss/api/v1/organizations/123/services/c_cal/upgrade_schedule', {
+      scheduleTime: '03:00',
+      scheduleDay: 4,
+      scheduleTimezone: 'Europe/Paris'
+    })
+    .respond({
+      scheduleTime: '03:00',
+      scheduleDay: 4,
+      scheduleTimezone: 'Europe/Paris',
+      isAdminAcknowledged: true
+    });
+    ScheduleUpgradeService.patch('123', 'c_cal', {
+      scheduleTime: '03:00',
+      scheduleDay: 4,
+      scheduleTimezone: 'Europe/Paris'
+    });
+  });
 });
