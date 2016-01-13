@@ -10,15 +10,22 @@
 
     var vm = this;
 
-    vm.phoneNumber = {};
+    vm.model = {};
 
-    vm.disabled = false;
+    vm.model.phoneNumberInput = {
+      phoneNumber: ''
+    };
 
     // when country code options are undefined, the cs-country-select control will populate it with all countries
     // we must explicitly define and set it to undefined or we get exception Expression 'undefined' used with directive 'csCountrySelect' is non-assignable!
     vm.options = undefined;
-
-    vm.placeholder = $translate.instant('autoAttendant.routeExtNumPlaceHolder');
+    vm.countryList = [{
+      key: 'phoneNumberInput',
+      type: 'countrylist',
+      templateOptions: {
+        placeholder: $translate.instant('autoAttendant.routeExtNumPlaceHolder')
+      }
+    }];
 
     vm.aaModel = {};
     vm.uiMenu = {};
@@ -35,15 +42,15 @@
     /////////////////////
 
     function populateUiModel() {
-      vm.phoneNumber.phoneNumber = vm.menuKeyEntry.actions[0].getValue();
+      vm.model.phoneNumberInput.phoneNumber = vm.menuKeyEntry.actions[0].getValue();
     }
 
     function saveUiModel() {
-      vm.menuKeyEntry.actions[0].setValue(vm.phoneNumber.phoneNumber);
+      vm.menuKeyEntry.actions[0].setValue(vm.model.phoneNumberInput.phoneNumber);
     }
 
     $scope.$watch(
-      "aaRouteToExtNum.phoneNumber.phoneNumber",
+      "aaRouteToExtNum.model.phoneNumberInput.phoneNumber",
       function handlePhoneNumberChange(newValue, oldValue) {
         if (newValue != oldValue) {
           saveUiModel();
