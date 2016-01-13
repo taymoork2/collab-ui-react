@@ -328,6 +328,9 @@ angular.module('Core')
       $scope.communicationFeatures = [];
       $scope.licenses = [];
       $scope.populateConf = populateConf;
+      $scope.oneBilling = false;
+      $scope.selected = '';
+      $scope.options = [];
       var convertSuccess = [];
       var convertFailures = [];
       var convertUsersCount = 0;
@@ -349,6 +352,24 @@ angular.module('Core')
       if (null !== Authinfo.getOrgId()) {
         getMessengerSyncStatus();
       }
+
+      var getSubscriptions = function () {
+        Orgservice.getLicensesUsage().then(function (subscriptions) {
+          $scope.options = _.uniq(_.pluck(subscriptions, 'subscriptionId'));
+          $scope.selected = $scope.options[0];
+          if ($scope.options.length === 1) {
+            $scope.oneBilling = true;
+          }
+        });
+      };
+
+      $scope.showMultiSubscriptions = function (billingServiceId) {
+        var isSelected = $scope.selected === billingServiceId;
+        var isOneBilling = $scope.oneBilling;
+
+        $scope.licenseExists = isSelected;
+        return isOneBilling || isSelected;
+      };
 
       function populateConf() {
         if (userLicenseIds) {
@@ -524,6 +545,7 @@ angular.module('Core')
 
       if (Authinfo.isInitialized()) {
         getAccountServices();
+        getSubscriptions();
       }
 
       GroupService.getGroupList(function (data, status) {
