@@ -30,6 +30,15 @@ angular
           },
           authenticate: false
         })
+        .state('drLoginForward', {
+          url: '/drLoginForward',
+          views: {
+            'main@': {
+              templateUrl: 'modules/core/digitalriver/login/drLoginForward/drLoginForward.tpl.html',
+              controller: 'drLoginForwardController'
+            }
+          } 
+        })
         .state('createAccount', {
           url: '/createAccount',
           views: {
