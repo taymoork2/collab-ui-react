@@ -132,11 +132,11 @@ describe('Controller: AARouteToExtNumCtrl', function () {
         var phoneNumber1 = '+14084744088';
         var phoneNumber2 = '+14084744089';
 
-        controller.phoneNumber.phoneNumber = phoneNumber1;
-        $scope.$apply('aaRouteToExtNum.phoneNumber.phoneNumber = ' + phoneNumber1);
+        controller.model.phoneNumberInput.phoneNumber = phoneNumber1;
+        $scope.$apply('aaRouteToExtNum.model.phoneNumberInput.phoneNumber = ' + phoneNumber1);
 
-        controller.phoneNumber.phoneNumber = phoneNumber2;
-        $scope.$apply('aaRouteToExtNum.phoneNumber.phoneNumber = ' + phoneNumber2);
+        controller.model.phoneNumberInput.phoneNumber = phoneNumber2;
+        $scope.$apply('aaRouteToExtNum.model.phoneNumberInput.phoneNumber = ' + phoneNumber2);
 
         expect(controller.menuKeyEntry.actions[0].value).toEqual(phoneNumber2);
       });
