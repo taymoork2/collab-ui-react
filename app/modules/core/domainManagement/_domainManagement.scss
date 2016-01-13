@@ -76,13 +76,7 @@
     padding-bottom: 1.5rem;
     position: relative;
     div{
-      display: block;
-      width: 170px;
-      position: absolute;
-      right: -5px;
-    }
-    button{
-
+      float: right;
     }
   }
 }
