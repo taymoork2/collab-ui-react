@@ -46,7 +46,8 @@
       onRegisterApi: function (gridApi) {
         $scope.gridApi = gridApi;
         gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-          $scope.showClusterDetails(row.entity);
+          vm.showClusterDetails(row.entity);
+          $log.log("entity", row.entity);
         });
       },
       columnDefs: [{
