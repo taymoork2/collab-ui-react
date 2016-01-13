@@ -1,0 +1,15 @@
+<article>
+  <header><h3 translate="domainManagement.delete.header"/></header>
+  <section>
+    <span></span>
+    <p translate="domainManagement.delete.description" />
+    <span>{{dvdel.domain}}</span>
+  </section>
+  <footer>
+    <div>
+      <button ng-click="dvdel.cancel()" translate="domainManagement.delete.cancel"></button>
+      <button ng-disabled="!dvdel.isValid" ng-click="dvdel.delete()" class="btn-primary" translate="domainManagement.delete.delete"></button>
+    </div>
+  </footer>
+</article>
+

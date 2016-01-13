@@ -206,6 +206,20 @@ angular
 
           }
         })
+        .state('domainmanagement.delete', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'DomainManageDeleteCtrl',
+              controllerAs: 'dvdel',
+              templateUrl: 'modules/core/domainManagement/delete.tpl.html'
+            }
+          },
+          params: {
+            domain: null,
+            adminDomain: null
+          }
+        })
         .state('profile', {
           url: '/profile',
           templateUrl: 'modules/core/partnerProfile/partnerProfile.tpl.html',
