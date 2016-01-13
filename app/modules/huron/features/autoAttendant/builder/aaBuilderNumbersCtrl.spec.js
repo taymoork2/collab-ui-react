@@ -100,7 +100,12 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       }
     });
 
-    // listCesSpy = spyOn(AutoAttendantCeService, 'listCes').and.returnValue($q.when(angular.copy(ces)));
+    // By default CMI will just return happy code
+    $httpBackend.whenGET(HuronConfig.getCmiV2Url() + '/customers/1/features/autoattendants/2/numbers').respond([{
+      "numbers": []
+    }]);
+
+    aaModel.aaRecordUUID = '2';
 
     controller = $controller('AABuilderNumbersCtrl', {
       $scope: $scope
@@ -122,7 +127,6 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       aaModel.ceInfos = [];
       aaModel.aaRecords = [];
       aaModel.aaRecord = rawCeInfo;
-      controller.aaModel.aaRecordUUID = '2';
 
       controller.name = rawCeInfo.callExperienceName;
       controller.ui = {};
@@ -143,8 +147,6 @@ describe('Controller: AABuilderNumbersCtrl', function () {
       controller.addNumber("2064261234");
 
       $scope.$apply();
-
-      var resources = controller.ui.ceInfo.getResources();
 
       expect(controller.availablePhoneNums.length === 0);
 
@@ -338,8 +340,6 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
     it('should warn when fail to assign to CMI on remove', function () {
 
-      controller.aaModel.aaRecordUUID = '2';
-
       errorSpy = jasmine.createSpy('error');
       Notification.error = errorSpy;
 
@@ -485,13 +485,22 @@ describe('Controller: AABuilderNumbersCtrl', function () {
 
     });
 
-    it('should warn when assignments return error', function () {
+    it('should warn when assignments return error and we have numbers in CE', function () {
 
       spyOn(AANumberAssignmentService, 'checkAANumberAssignments').and.callFake(function (customerId, cesId, resources, onlyResources, onlyCMI) {
         onlyCMI.push('5551212');
         onlyResources.push('5552323');
         return $q.when("{}");
       });
+
+      var resource = AutoAttendantCeInfoModelService.newResource();
+      resource.setType(aCe.assignedResources.type);
+      resource.setId("1234567");
+      resource.setNumber("1234567");
+
+      var resources = controller.ui.ceInfo.getResources();
+
+      resources.push(resource);
 
       var ret = controller.warnOnAssignedNumberDiscrepancies();
 
