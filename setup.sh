@@ -1,7 +1,7 @@
 #!/bin/bash
 
 source ./bin/include/setup-helpers
-quick=0
+quick="false"
 
 # optional CLI switches
 if [ -n "$1" ]; then
@@ -34,7 +34,7 @@ if [ -n "$1" ]; then
             fi
             ;;
         "--quick" )
-            quick=1
+            quick="true"
             ;;
     esac
 fi
@@ -105,11 +105,11 @@ else
 fi
 
 # Remove component directories and clear bower cache
-if [ $quick -eq 0 ]; then
-  echo "removing component directories..."
+if [ $quick = "false" ]; then
+  echo "Removing component directories..."
   rm -rf bower_components
   rm -rf node_modules
-  echo "clearing bower cache..."
+  echo "Rlearing bower cache..."
   bower cache clean
 fi
 
