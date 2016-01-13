@@ -118,10 +118,10 @@
         id: 'meetingTrial',
         class: 'columns medium-12',
       },
+      hideExpression: function () {
+        return !vm.showMeeting;
+      },
       expressionProperties: {
-        'hideExpression': function () {
-          return !vm.showMeeting;
-        },
         'templateOptions.disabled': function () {
           return !vm.canEditMeeting;
         },
@@ -137,11 +137,9 @@
         id: 'squaredUCTrial',
         class: 'columns medium-12',
       },
-      expressionProperties: {
-        'hideExpression': function () {
-          return !vm.hasCallEntitlement();
-        }
-      },
+      hideExpression: function () {
+        return !vm.hasCallEntitlement();
+      }
     }];
 
     // Room Systems Trial
