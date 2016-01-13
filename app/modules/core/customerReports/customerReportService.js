@@ -471,7 +471,7 @@
       };
 
       return getService(callMetricsUrl, metricsCancelPromise).then(function (response, status) {
-        if (response !== null && angular.isDefined(response) && angular.isDefined(response.data.data[0]) && angular.isArray(response.data.data) && angular.isDefined(response.data.data[0].data[0]) && angular.isArray(response.data.data[0].data)) {
+        if (response !== null && angular.isDefined(response) && angular.isArray(response.data.data) && angular.isArray(response.data.data[0].data)) {
           var details = response.data.data[0].data[0].details;
           var totalCalls = parseInt(details.totalCalls);
           if (totalCalls > 0) {

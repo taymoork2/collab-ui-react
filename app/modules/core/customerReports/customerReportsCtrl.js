@@ -221,7 +221,7 @@
         mediaChart = tempMediaChart;
       }
 
-      var metricsData = DummyCustomerReportService.dummyMetricsData(vm.timeSelected);
+      var metricsData = DummyCustomerReportService.dummyMetricsData();
       var tempMetricsChart = CustomerGraphService.setMetricsGraph(metricsData, metricsChart);
       if (tempMetricsChart !== null && angular.isDefined(tempMetricsChart)) {
         metricsChart = tempMetricsChart;
