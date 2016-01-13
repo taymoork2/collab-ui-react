@@ -47,6 +47,10 @@ namespace domainManagement {
     get adminDomain() {
       return this._adminDomain;
     }
+
+    delete(domain) {
+      this.DomainManagementService.deleteDomain(domain);
+    }
   }
   angular
     .module('Core')
