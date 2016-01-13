@@ -6,7 +6,7 @@
     .controller('OrganizationFeaturesCtrl', OrganizationFeaturesCtrl);
 
   /* @ngInject */
-  function OrganizationFeaturesCtrl($stateParams, $scope, $q, FeatureToggleService, Notification) {
+  function OrganizationFeaturesCtrl($stateParams, FeatureToggleService, Notification) {
     var vm = this;
     vm.currentOrganization = $stateParams.currentOrganization;
     vm.defaults = [];
@@ -58,17 +58,17 @@
     function updateToggles() {
       var changedToggles = findDifference();
 
-      var featureToggleRules = _.map(changedToggles,function(toggle){
-        return FeatureToggleService.generateFeatureToggleRule(vm.currentOrganization.id,toggle.name,toggle.model);
+      var featureToggleRules = _.map(changedToggles, function (toggle) {
+        return FeatureToggleService.generateFeatureToggleRule(vm.currentOrganization.id, toggle.name, toggle.model);
       });
 
-      if(featureToggleRules.length){
-        FeatureToggleService.setFeatureToggles(false,featureToggleRules)
+      if (featureToggleRules.length) {
+        FeatureToggleService.setFeatureToggles(false, featureToggleRules)
           .catch(function () {
-              Notification.error('organizationsPage.errorSettingToggle');
+            Notification.error('organizationsPage.errorSettingToggle');
           })
           .then(function () {
-            _.forEach(featureToggleRules,function(ftr){
+            _.forEach(featureToggleRules, function (ftr) {
               _.find(vm.defaults, {
                 name: ftr.key
               }).model = ftr.val;
@@ -91,7 +91,7 @@
       });
     }
 
-    function clicked(name,model){
+    function clicked(name, model) {
       updateToggles();
     }
   }
