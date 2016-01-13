@@ -5,7 +5,7 @@
     .module('Hercules')
     .controller('ScheduleUpgradeConfigurationCtrl', ScheduleUpgradeConfigurationCtrl);
 
-  function ScheduleUpgradeConfigurationCtrl($scope, Authinfo, ScheduleUpgradeService, NotificationService, $translate) {
+  function ScheduleUpgradeConfigurationCtrl($scope, $translate, Authinfo, ScheduleUpgradeService, NotificationService) {
     var vm = this;
     vm.data = {}; // UI data
     vm.isAdminAcknowledged = true;
@@ -38,12 +38,10 @@
         vm.errorMessage = '';
         vm.isAdminAcknowledged = data.isAdminAcknowledged;
         vm.featureEnabled = true;
-      }, function (error) {
-        vm.state = 'error';
-        vm.errorMessage = error.message;
-      })
-      .finally(function () {
         vm.state = 'idle';
+      }, function (error) {
+        vm.errorMessage = error.message;
+        vm.state = 'error';
       });
 
     $scope.$watch(function () {
@@ -52,40 +50,31 @@
       if (newValue === oldValue || _.isEmpty(oldValue)) {
         return;
       }
-      vm.state = 'syncing';
       patch(newValue);
     }, true);
 
     function labelForDay(day) {
-      var weekdays = new Array(7);
-      weekdays[0] = '';
-      weekdays[1] = $translate.instant('weekDays.monday');
-      weekdays[2] = $translate.instant('weekDays.tuesday');
-      weekdays[3] = $translate.instant('weekDays.wednesday');
-      weekdays[4] = $translate.instant('weekDays.thursday');
-      weekdays[5] = $translate.instant('weekDays.friday');
-      weekdays[6] = $translate.instant('weekDays.saturday');
-      weekdays[7] = $translate.instant('weekDays.sunday');
-
+      var keys = ['', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
       return $translate.instant('weekDays.everyDay', {
-        day: weekdays[day]
+        day: $translate.instant('weekDays.' + keys[day])
       });
     }
 
     function patch(data) {
+      vm.state = 'syncing';
       return ScheduleUpgradeService.patch(Authinfo.getOrgId(), vm.serviceType, {
           scheduleTime: data.scheduleTime,
           scheduleTimeZone: data.scheduleTimeZone,
           scheduleDay: data.scheduleDay.value
         })
-        .catch(function (error) {
-          vm.state = 'error';
-          vm.errorMessage = error.message;
-        })
-        .finally(function () {
+        .then(function () {
           NotificationService.removeNotification('acknowledgeScheduleUpgrade');
           vm.isAdminAcknowledged = true;
+          vm.errorMessage = '';
           vm.state = 'idle';
+        }, function (error) {
+          vm.errorMessage = error.message;
+          vm.state = 'error';
         });
     }
   }
