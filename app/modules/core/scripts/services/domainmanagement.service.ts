@@ -109,7 +109,7 @@ class DomainManagementService {
       deferred.reject("not a domain possible to verify");
     }
 
-    return deferred.promise();
+    return deferred.promise;
   }
 }
 
