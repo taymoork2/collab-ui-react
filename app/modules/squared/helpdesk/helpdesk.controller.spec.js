@@ -2,7 +2,7 @@
 describe('Controller: HelpdeskController', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var HelpdeskService, HelpdeskHuronService, LicenseService, $controller, q, $translate, $scope, httpBackend, controller, Config;
+  var HelpdeskService, HelpdeskHuronService, LicenseService, $controller, q, $translate, $scope, httpBackend, controller, HelpdeskSearchHistoryService, Config;
 
   var createUserMockData = function (name, orgId) {
     return {
@@ -34,9 +34,10 @@ describe('Controller: HelpdeskController', function () {
   var validSearchString = "bill gates";
   var lessThanThreeCharacterSearchString = "bi";
 
-  beforeEach(inject(function (_$translate_, $httpBackend, _$rootScope_, _HelpdeskService_, _$controller_, $q, _HelpdeskHuronService_, _LicenseService_, _Config_) {
+  beforeEach(inject(function (_$translate_, $httpBackend, _$rootScope_, _HelpdeskService_, _HelpdeskSearchHistoryService_, _$controller_, _$q_, _HelpdeskHuronService_, _LicenseService_, _Config_) {
     HelpdeskService = _HelpdeskService_;
-    q = $q;
+    HelpdeskSearchHistoryService = _HelpdeskSearchHistoryService_;
+    q = _$q_;
     $scope = _$rootScope_.$new();
     $controller = _$controller_;
     httpBackend = $httpBackend;
@@ -168,6 +169,7 @@ describe('Controller: HelpdeskController', function () {
         HelpdeskService: HelpdeskService,
         $translate: $translate,
         $scope: $scope,
+        HelpdeskSearchHistoryService: HelpdeskSearchHistoryService,
         HelpdeskHuronService: HelpdeskHuronService,
         LicenseService: LicenseService,
         Config: Config
@@ -313,6 +315,7 @@ describe('Controller: HelpdeskController', function () {
         HelpdeskService: HelpdeskService,
         $translate: $translate,
         $scope: $scope,
+        HelpdeskSearchHistoryService: HelpdeskSearchHistoryService,
         HelpdeskHuronService: HelpdeskHuronService,
         LicenseService: LicenseService,
         Config: Config
@@ -344,6 +347,7 @@ describe('Controller: HelpdeskController', function () {
         HelpdeskService: HelpdeskService,
         $translate: $translate,
         $scope: $scope,
+        HelpdeskSearchHistoryService: HelpdeskSearchHistoryService,
         HelpdeskHuronService: HelpdeskHuronService,
         LicenseService: LicenseService,
         Config: Config

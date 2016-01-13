@@ -93,12 +93,12 @@
         id: 'squaredUCTrial',
         class: 'columns medium-12 checkbox-group',
       },
+      hideExpression: function () {
+        return !vm.isSquaredUC();
+      },
       expressionProperties: {
         'templateOptions.disabled': function () {
           return vm.disableSquaredUCCheckBox;
-        },
-        'hideExpression': function () {
-          return !vm.isSquaredUC();
         }
       }
     }];

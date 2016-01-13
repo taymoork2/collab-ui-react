@@ -12,13 +12,13 @@
         </td>
       </tr>
       <tr>
-        <td translate="mediaFusion.alarms.firstReported"></td>
+        <td translate="mediaFusion.alarms.raised"></td>
         <td><span>{{alarmCtrl.alarm.alarm.first_reported | date : 'medium'}}</span></td>
       </tr>
-      <tr>
+      <!--tr>
         <td translate="mediaFusion.alarms.lastReported"></td>
         <td><span>{{alarmCtrl.alarm.alarm.last_reported | date : 'medium'}}</span></td>
-      </tr>
+      </tr-->
       <tr>
         <td translate="mediaFusion.alarms.hostImpact"></td>
         <td>
@@ -40,13 +40,13 @@
         <td><span ng-class="alarmCtrl.alarm.alarm.severity == 'warning' ? 'mediafusion-state-disabled' : 'mediafusion-state-alarm'">{{'mediaFusion.alarms.' + alarmCtrl.alarm.severity | translate}}</span></td>
       </tr>
       <tr>
-        <td translate="mediaFusion.alarms.firstReported"></td>
+        <td translate="mediaFusion.alarms.raised"></td>
         <td><span>{{alarmCtrl.alarm.first_reported | date : 'medium'}}</span></td>
       </tr>
-      <tr>
+      <!--tr>
         <td translate="mediaFusion.alarms.lastReported"></td>
         <td><span>{{alarmCtrl.alarm.last_reported | date : 'medium'}}</span></td>
-      </tr>
+      </tr-->
       <tr>
         <td translate="mediaFusion.alarms.hostImpact"></td>
         <td>
