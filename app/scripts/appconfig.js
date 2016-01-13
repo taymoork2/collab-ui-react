@@ -510,7 +510,7 @@ angular
           controller: 'SunlightUserOverviewCtrl',
           controllerAs: 'SunlightUserOverview',
           data: {
-            displayName: 'Contact Center'
+            displayName: 'Care'
           },
           params: {
             service: 'CONTACTCENTER'

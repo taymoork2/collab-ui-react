@@ -123,7 +123,7 @@
     "hybridServices": "Hybrid Services",
     "freeCollab": "Free Public Collaboration Services",
     "licCollab": "Licensed Collaboration Services",
-    "contactCenter": "Contact Center",
+    "contactCenter": "Care",
     "entitlements": "User Entitlements",
     "saveBtn": "Save",
     "manageGroups": "Manage Groups",
@@ -2891,7 +2891,7 @@
   },
   "contactCenterUserConfig": {
     "channels": "Channels",
-    "contactCenterProfile": "Contact Center Profile",
+    "contactCenterProfile": "Care Profile",
     "chat": "Chat",
     "voice": "Voice",
     "email": "Email",

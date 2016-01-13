@@ -446,10 +446,10 @@ describe('Config', function () {
 
   it('should return correct customer care url', function () {
     whenCalling('getSunlightConfigServiceUrl').expectUrlToBe({
-      dev: 'https://config.integration-tx1.thunderhead.io/config/v1',
-      cfe: 'https://config.integration-tx1.thunderhead.io/config/v1',
-      integration: 'https://config.integration-tx1.thunderhead.io/config/v1',
-      prod: 'https://config.integration-tx1.thunderhead.io/config/v1'
+      dev: 'https://config.rciad.ciscoccservice.com/config/v1',
+      cfe: 'https://config.rciad.ciscoccservice.com/config/v1',
+      integration: 'https://config.rciad.ciscoccservice.com/config/v1',
+      prod: 'https://config.rciad.ciscoccservice.com/config/v1'
     });
   });
 
