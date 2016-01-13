@@ -3301,7 +3301,8 @@
       "description": "Add domains to verify for your organisation. If you have users in multiple domains add all of them. Adding and verifying your own domain is required before any other domains.",
       "exampleDomain": "example.com",
       "add": "Add",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "invalidDomain": "Invalid domain entered"
     },
     "delete": {
       "header": "Delete domain",
