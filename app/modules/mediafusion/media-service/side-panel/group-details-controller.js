@@ -28,7 +28,9 @@ angular.module('Mediafusion')
                 hosts: []
               };
             }
-            alarms[alarm.id].hosts.push(cluster.hosts[0].host_name);
+            if (alarms[alarm.id].hosts.indexOf(cluster.hosts[0].host_name) == -1) {
+              alarms[alarm.id].hosts.push(cluster.hosts[0].host_name);
+            }
           });
         });
         return _.toArray(alarms);

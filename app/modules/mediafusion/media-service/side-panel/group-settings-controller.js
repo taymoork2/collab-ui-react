@@ -21,7 +21,9 @@
     }
 
     vm.options = [
-      'GA'
+      'GA' //,
+      //'DEV',
+      //'ALPHA'
     ];
 
     vm.changeReleaseChanel = function () {
