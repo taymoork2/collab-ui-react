@@ -114,7 +114,7 @@
     }
 
     function reload() {
-      init();
+      $state.go($state.current, {}, {reload: true});
     }
 
     function getListOfFeatures() {
