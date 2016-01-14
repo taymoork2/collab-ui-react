@@ -27,7 +27,7 @@
 
     function _makeTrial() {
       var defaults = {
-        'type': Config.trials.call,
+        'type': Config.offerTypes.call,
         'enabled': false,
         'details': {
           'roomSystems': [{

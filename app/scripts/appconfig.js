@@ -433,8 +433,6 @@ angular
           }
         })
         .state('user-overview.communication.internationalDialing', {
-          controller: 'InternationalDialingInfoCtrl',
-          controllerAs: 'internationalDialing',
           template: '<div uc-international-dialing></div>',
           data: {
             displayName: 'International Dialing'
@@ -510,7 +508,7 @@ angular
           controller: 'SunlightUserOverviewCtrl',
           controllerAs: 'SunlightUserOverview',
           data: {
-            displayName: 'Contact Center'
+            displayName: 'Care'
           },
           params: {
             service: 'CONTACTCENTER'

@@ -20,7 +20,7 @@
       },
 
       updateCosRestriction: function (curUserId, cosEnabled, cosUuid, cosType) {
-        if ((cosUuid != null) && (cosEnabled.val === '-1')) {
+        if ((cosUuid != null) && (cosEnabled.value === '-1')) {
           return UserCosRestrictionServiceV2.delete({
             customerId: Authinfo.getOrgId(),
             userId: curUserId,

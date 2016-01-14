@@ -123,7 +123,7 @@
     "hybridServices": "Hybrid Services",
     "freeCollab": "Free Public Collaboration Services",
     "licCollab": "Licensed Collaboration Services",
-    "contactCenter": "Contact Center",
+    "contactCenter": "Care",
     "entitlements": "User Entitlements",
     "saveBtn": "Save",
     "manageGroups": "Manage Groups",
@@ -421,10 +421,13 @@
     "callMetricsChartError": "There was an error while loading call metrics data for {{customer}}.",
     "customerError": "There was an error while loading call metrics data.",
     "callMetricsDesc": "This chart displays the total number of calls made and the number of minutes spent on those calls over the {{time}}.  You are also able to determine the percentage of successful and failed calls for the selected customers.",
-    "audioDescription": "This chart displays the total number of audio calls made, the number of minutes spent on those calls, and the percentage of successful and failed calls over the {{time}}.",
-    "videoDescription": "This chart displays the total number of video calls made, the number of minutes spent on those calls, and the percentage of successful and failed calls over the {{time}}.",
+    "customerDescription": "This chart displays the total number of successful calls made during the {{time}}, split into video and audio only calls.  Below the chart is additional information regarding total calls, total minutes, and the overall failure rate.",
     "totalCalls": "Total Calls",
-    "totalCallMinutes": "Total Call Minutes"
+    "totalCallMinutes": "Total Call Minutes",
+    "callMinutes": "Call Minutes",
+    "failureRate": "Call Failure Rate",
+    "videoCalls": "Video Calls",
+    "audioCalls": "Audio Only Calls"
   },
   "registeredEndpoints": {
     "registeredEndpoints": "Registered Endpoints",
@@ -604,6 +607,16 @@
     "errOrderStatus": "Failed to retrieve order status",
     "errCustomerEmail": "Failed to resend welcome email to customer admin",
     "errPartnerEmail": "Failed to resend welcome email to partner admin"
+  },
+  "weekDays": {
+    "everyDay": "Every {{day}}",
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday",
+    "sunday": "Sunday"
   },
   "common": {
     "delete": "Delete",
@@ -1101,7 +1114,7 @@
         "certificatesUpload": "Upload",
         "certificatesModalHeading": "Remove Certificate",
         "certificatesModalText": "Are you sure you want to remove the following certificate?",
-        "sipDomainHeading": "SIP Domain",
+        "sipDomainHeading": "SIP Destination",
         "disableConfirmDialogText1": "You are about to remove the following Hybrid Service for your organization:",
         "disableConfirmDialogText2": "If you click Confirm:",
         "disableConfirmDialogText3": "All of your users will have the service deactivated.",
@@ -1111,12 +1124,24 @@
         "sipDomainHeading": "SIP Domain",
         "sipDomain": "Enter the SRV domain of your Expressway edge server(s) so that calls route correctly to and from there.",
         "sipDomainPlaceholder": "Enter a single domain or subdomain"
+      },
+      "scheduleUpgrade": {
+        "title": "Automatic Software Upgrades",
+        "description": "Edit the scheduled start time for automatic software upgrades of your Connectors.",
+        "defaultWarning": "<button class=\"btn btn--cta\" ng-click=\"{{onclick}}\">Confirm the default schedule</button>"
       }
     },
     "hybridServices": {
       "result404": "Entitlements for {{email}} do not exist.",
       "result409": "Entitlement(s) previously updated.",
       "resultOther": "Entitlements for {{email}} were not updated. Status: {{status}}."
+    },
+    "notifications": {
+      "scheduleUpgrade": {
+        "title": "Confirm the Schedule for Automatic Software Upgrades",
+        "description": "A schedule for automatic software upgrades of your Connectors has been set.",
+        "action": "Either <a ng-click=\"{{onclick}}\">confirm the default time or change it</a> for this Hybrid Service."
+      }
     }
   },
   "firstTimeWizard": {
@@ -1859,7 +1884,7 @@
       "title": "Start New Trial"
     },
     "meeting": {
-      "title": "Start New Trial - Meeting and WebEx Setup",
+      "title": "Trial Setup - Meeting and WebEx",
       "webexHeader": "Meeting and WebEx License Type",
       "meetingDetails": "Meeting 25 party",
       "webexDetails": "WebEx Enterprise Edition with Collaboration Meeting Room",
@@ -1868,6 +1893,7 @@
       "webexSiteUrl": "WebEx Site URL",
       "webexTimezone": "WebEx Time Zone",
       "default": "Set as default",
+      "siteUrlDescription": "For example: www.companyname.webex.com",
       "tzDescription": "Select the time zone closest to your customer. This will ensure their WebEx site is deployed in the appropriate data center.",
       "siteUrlPlaceholder": "acmecorp.webex.com",
       "timezonePlaceholder": "Search for a time zone...",
@@ -1877,7 +1903,7 @@
       "validationHttpError": "Could not reach server to validate siteUrl. Try again."
     },
     "call": {
-      "title": "Start New Trial - Ship Devices",
+      "title": "Trial Setup - Ship Devices",
       "selectDevicesHeader": "Select Devices",
       "meetingRoomCamera": "Spark Room System",
       "deskPhones": "Personal and Shared Desk Phones",
@@ -1908,12 +1934,15 @@
     "collab": "Standard Team Rooms + 25 Party Meetings",
     "squaredUC": "Advanced Spark Call",
     "licenses": "Licenses",
+    "licenseQuantity": "Licenses Quantity",
+    "users": "Users",
     "message": "Message",
     "messageAndMeeting": "Message and Meeting",
     "meeting": "Meeting and WebEx",
     "call": "Call",
     "roomSystem": "Spark Room System"
   },
+
   "status": {
     "noResults": "No results available.",
     "errorProcessing": "Error processing request."
@@ -2892,7 +2921,7 @@
   },
   "contactCenterUserConfig": {
     "channels": "Channels",
-    "contactCenterProfile": "Contact Center Profile",
+    "contactCenterProfile": "Care Profile",
     "chat": "Chat",
     "voice": "Voice",
     "email": "Email",
