@@ -10,12 +10,16 @@ describe('Huron Auto Attendant', function () {
   describe('Create AA', function () {
 
     // TEST CASES
-    it('should navigate to "Add new Auto Attendant" and create a new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+    it('should navigate to AA landing page', function () {
       // Cleanup the leftover (from last test run) auto-attendant
       var flow = protractor.promise.controlFlow();
       var result = flow.execute(deleteUtils.findAndDeleteTestAA);
 
       navigation.clickAutoAttendant();
+
+    });
+
+    it('should create a new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       utils.click(autoattendant.newFeatureButton);
 
@@ -25,13 +29,16 @@ describe('Huron Auto Attendant', function () {
       utils.sendKeys(autoattendant.newAAname, deleteUtils.testAAName);
       utils.sendKeys(autoattendant.newAAname, protractor.Key.ENTER);
 
+      //      notifications.assertSuccess(deleteUtils.testAAName + ' created successfully');
+      // waitForElementPresent(notifications.successAlert);
+      // expect(notifications.successAlert.getText()).toContain(deleteUtils.testAAName + ' updated successfully');
+      autoattendant.assertCreateSuccess();
+
       utils.expectIsDisplayed(autoattendant.addAANumbers);
 
       utils.expectIsDisplayed(autoattendant.sayMessage);
 
-      notifications.assertSuccess(deleteUtils.testAAName + ' created successfully');
-
-    });
+    }, 60000);
 
     it('should add a single phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
       utils.wait(autoattendant.addAANumbers, 12000);
@@ -42,9 +49,10 @@ describe('Huron Auto Attendant', function () {
 
       utils.click(autoattendant.saveButton);
 
-      notifications.assertSuccess(deleteUtils.testAAName + ' updated successfully');
+      //      notifications.assertSuccess(deleteUtils.testAAName + ' updated successfully');
+      autoattendant.assertUpdateSuccess();
 
-    });
+    }, 60000);
 
     it('should delete a phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
@@ -53,9 +61,11 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.saveButton);
       utils.expectIsDisabled(autoattendant.saveButton);
 
-      notifications.assertSuccess(deleteUtils.testAAName + ' updated successfully');
+      //      notifications.assertSuccess(deleteUtils.testAAName + ' updated successfully');
+      //      expect(notifications.successAlert.getText()).toContain(deleteUtils.testAAName + ' updated successfully');
+      autoattendant.assertUpdateSuccess();
 
-    });
+    }, 60000);
 
     it('should add a second phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
@@ -66,9 +76,12 @@ describe('Huron Auto Attendant', function () {
 
       utils.click(autoattendant.saveButton);
 
-      notifications.assertSuccess(deleteUtils.testAAName + ' updated successfully');
+      //      notifications.assertSuccess(deleteUtils.testAAName + ' updated successfully');
 
-    });
+      //      expect(notifications.successAlert.getText()).toContain(deleteUtils.testAAName + ' updated successfully');
+      autoattendant.assertUpdateSuccess();
+
+    }, 60000);
 
     it('should add SayMessage Message, select Language and Voice to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
@@ -85,9 +98,9 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsEnabled(autoattendant.saveButton);
       utils.click(autoattendant.saveButton);
       utils.expectIsDisabled(autoattendant.saveButton);
-    });
+    }, 60000);
 
-    it('should add Phone Menu to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+    it('should add Phone Menu Say to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       //Add Phone Menu Say Message
       utils.click(autoattendant.phoneMenu);
@@ -99,6 +112,10 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.phonelanguageDropDownOptions);
       utils.click(autoattendant.phonesayMessageVoice);
       utils.click(autoattendant.phonesayMessageVoiceOptions);
+
+    }, 60000);
+
+    it('should add Phone Menu Repeat to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       //Add first Phone repeat Menu
       utils.click(autoattendant.phoneMenuKeys.first());
@@ -112,17 +129,48 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.phoneMenuKeyOptions.last().all(by.tagName('li')).last());
       utils.click(autoattendant.phoneMenuAction.last());
       utils.click(autoattendant.phoneMenuActionOptions.last().all(by.tagName('li')).last());
+    }, 60000);
 
-      //Add Phone TimeOut Option
-      utils.click(autoattendant.phoneMenuTimeout);
-      utils.click(autoattendant.phoneMenuTimeoutOptions);
+    it('should delete one Phone Menu Repeat to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
       //Delete one repeatMenu
       utils.click(autoattendant.trash);
       utils.expectIsEnabled(autoattendant.saveButton);
       utils.click(autoattendant.saveButton);
       utils.expectIsDisabled(autoattendant.saveButton);
-      notifications.assertSuccess(deleteUtils.testAAName + ' updated successfully');
+      //      notifications.assertSuccess(deleteUtils.testAAName + ' updated successfully');
+      autoattendant.assertUpdateSuccess();
+
+    }, 60000);
+
+    it('should add Phone Menu Timeout to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+
+      //Add Phone TimeOut Option
+      utils.click(autoattendant.phoneMenuTimeout);
+      utils.click(autoattendant.phoneMenuTimeoutOptions);
+
+    });
+
+    it('should close edit', function () {
+
+      utils.click(autoattendant.closeEditButton);
+
+    });
+
+    it('should find new AA named "' + deleteUtils.testAAName + '" on the landing page', function () {
+
+      utils.expectIsEnabled(autoattendant.testCardName);
+
+    });
+
+    it('should delete new AA named "' + deleteUtils.testAAName + '" on the landing page', function () {
+
+      utils.click(autoattendant.testCardDelete);
+
+      utils.expectText(autoattendant.deleteModalConfirmText, 'Are you sure you want to delete the ' + deleteUtils.testAAName + ' Auto Attendant?').then(function () {
+        utils.click(autoattendant.deleteModalConfirmButton);
+
+      });
 
     });
 

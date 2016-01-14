@@ -9,6 +9,15 @@ var AutoAttendantPage = function () {
   this.numberDropDownArrow = element(by.linkText('Search or Select a Number'));
   this.numberDropDownOptions = element(by.css(' .aa-selected-phones .select-options')).all(by.tagName('li'));
   this.saveButton = element(by.name('saveButton'));
+  this.closeEditButton = element(by.css('button.close'));
+  this.testCardName = element(by.css('p[title="' + deleteUtils.testAAName + '"]'));
+
+  this.testCardDelete = this.testCardName.element(by.xpath('ancestor::article')).element(by.css('.icon-trash'));
+
+  this.deleteModalConfirmText = element(by.id('deleteHuronFeatureModal')).element(by.css('.modal-body')).element(by.css('span'));
+
+  this.deleteModalConfirmButton = element(by.id('deleteFeature'));
+
   this.numberIconClose = element.all(by.css('.icon-close')).last();
   this.sayMessageBody = element(by.css('div.aa-panel-body[name="Say Message"]'));
 
@@ -35,6 +44,46 @@ var AutoAttendantPage = function () {
   this.phoneMenuTimeoutOptions = element(by.css('div.aa-pm-timeout div.dropdown-menu')).all(by.tagName('li')).first();
 
   this.trash = element.all(by.css('.aa-trash-icon')).last();
+
+  this.assertUpdateSuccess = assertUpdateSuccess;
+  this.assertCreateSuccess = assertCreateSuccess;
+  this.waitForElementPresent = waitForElementPresent;
+
+  function waitForElementPresent(someElmFinder) {
+    var i = 0;
+    var _retryOnErr = function (err) {
+      console.log(' <<< warning: wait retrying iteration: ' + i + ' >>> ');
+      browser.sleep(500);
+      return false;
+    };
+
+    browser.driver.wait(function () {
+      i++;
+      return someElmFinder.isPresent().then(function (present) {
+        if (present) {
+          return true;
+        } else {
+          return _retryOnErr();
+        }
+      }, _retryOnErr);
+    }, 120 * 1000, 'Error waiting for element present: ').
+    then(function (waitRetValue) {
+      return waitRetValue; // usually just `true`
+    }, function (err) {
+      throw err + ' after ' + i + ' iterations.';
+    });
+  }
+
+  function assertUpdateSuccess() {
+    waitForElementPresent(notifications.successAlert);
+    expect(notifications.successAlert.getText()).toContain(deleteUtils.testAAName + ' updated successfully');
+  }
+
+  function assertCreateSuccess() {
+    waitForElementPresent(notifications.successAlert);
+    expect(notifications.successAlert.getText()).toContain(deleteUtils.testAAName + ' created successfully');
+  }
+
 };
 
 module.exports = AutoAttendantPage;
