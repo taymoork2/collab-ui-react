@@ -47,7 +47,7 @@ describe('Squared Invite User Flow', function () {
 
     it('should show invite pending status on new user 1', function () {
       utils.search(inviteEmail);
-      utils.expectText(users.userListStatus.first(), 'Invite Pending');
+      utils.expectText(users.userListStatus, 'Invite Pending');
     });
 
     it('should resend user invitation to pending user', function () {
@@ -58,7 +58,7 @@ describe('Squared Invite User Flow', function () {
 
     it('should show invite pending status on new user 2', function () {
       utils.search(inviteEmail2);
-      utils.expectText(users.userListStatus.first(), 'Invite Pending');
+      utils.expectText(users.userListStatus, 'Invite Pending');
     });
 
     afterAll(function () {
@@ -102,7 +102,7 @@ describe('Squared Invite User Flow', function () {
 
     it('should show invite pending status on new user 1', function () {
       utils.search(inviteEmail);
-      utils.expectText(users.userListStatus.first(), 'Invite Pending');
+      utils.expectText(users.userListStatus, 'Invite Pending');
     });
 
     it('should resend user invitation to pending user', function () {
@@ -113,7 +113,7 @@ describe('Squared Invite User Flow', function () {
 
     it('should show invite pending status on new user 2', function () {
       utils.search(inviteEmail2);
-      utils.expectText(users.userListStatus.first(), 'Invite Pending');
+      utils.expectText(users.userListStatus, 'Invite Pending');
     });
 
     afterAll(function () {

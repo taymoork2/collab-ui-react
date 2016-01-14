@@ -117,25 +117,19 @@
     "howToInvite": "How would you like them to be invited?",
     "waitInvitation": "Send email invitations and wait until the user accepts before provisioning services.",
     "sendImmediate": "Immediately provision services for the user and send email notifications.",
-    "messaging": "Messaging",
-    "conferencing": "Conferencing",
-    "communications": "Communications",
     "message": "Message",
     "meeting": "Meeting",
     "call": "Call",
     "hybridServices": "Hybrid Services",
     "freeCollab": "Free Public Collaboration Services",
     "licCollab": "Licensed Collaboration Services",
-    "contactCenter": "Contact Center",
+    "contactCenter": "Care",
     "entitlements": "User Entitlements",
     "saveBtn": "Save",
     "manageGroups": "Manage Groups",
     "groupColHeader": "Group Name",
     "collabService": "Select the collaboration service licenses that should be given to the users in the group.",
     "addEntitleError": "insufficient priveledge to add or entitle a user.",
-    "freeMsg": "Free Spark Messaging",
-    "freeConf": "Free 3 Party Meetings",
-    "freeComm": "Free 1:1 Spark Call",
     "msgFree": "Message Free",
     "mtgFree": "Meeting Free 3 Party",
     "callFree": "Call Free",
@@ -415,6 +409,7 @@
     "poor": "Poor",
     "description": "Media quality is determined by measuring the amount of packet loss that is reported by the registered devices during all calls that are longer than fifteen seconds in duration.",
     "mediaQualityGraphError": "There was an error while loading call quality data for {{customer}}.",
+    "customerError": "There was an error while loading call quality data.",
     "minutes": "Minutes"
   },
   "callMetrics": {
@@ -423,15 +418,16 @@
     "callConditionPoorMedia": "Poor Media",
     "callConditionSuccessful": "Successful",
     "callMetrics": "Call Metrics",
-    "audioTitle": "Call Metrics - Audio",
-    "videoTitle": "Call Metrics - Video",
     "callMetricsChartError": "There was an error while loading call metrics data for {{customer}}.",
     "customerError": "There was an error while loading call metrics data.",
     "callMetricsDesc": "This chart displays the total number of calls made and the number of minutes spent on those calls over the {{time}}.  You are also able to determine the percentage of successful and failed calls for the selected customers.",
-    "audioDescription": "This chart displays the total number of audio calls made, the number of minutes spent on those calls, and the percentage of successful and failed calls over the {{time}}.",
-    "videoDescription": "This chart displays the total number of video calls made, the number of minutes spent on those calls, and the percentage of successful and failed calls over the {{time}}.",
+    "customerDescription": "This chart displays the total number of successful calls made during the {{time}}, split into video and audio only calls.  Below the chart is additional information regarding total calls, total minutes, and the overall failure rate.",
     "totalCalls": "Total Calls",
-    "totalCallMinutes": "Total Call Minutes"
+    "totalCallMinutes": "Total Call Minutes",
+    "callMinutes": "Call Minutes",
+    "failureRate": "Call Failure Rate",
+    "videoCalls": "Video Calls",
+    "audioCalls": "Audio Only Calls"
   },
   "registeredEndpoints": {
     "registeredEndpoints": "Registered Endpoints",
@@ -440,7 +436,8 @@
     "totalRegistered": "Yesterday's Total",
     "trend": "Trend Over {{time}}",
     "registeredEndpointsError": "There was an error while loading registered endpoints for {{customer}}.",
-    "description": "A registered endpoint is any device that is connected to the network in the {{time}}.  The data presented here will help you determine device adoption trends and usage at a high level."
+    "description": "A registered endpoint is any device that is connected to the network in the {{time}}.  The data presented here will help you determine device adoption trends and usage at a high level.",
+    "customerError": "There was an error while loading registered endpoints."
   },
   "activeUserPopulation": {
     "titleByCompany": "Active User Population by Company",
@@ -611,6 +608,16 @@
     "errCustomerEmail": "Failed to resend welcome email to customer admin",
     "errPartnerEmail": "Failed to resend welcome email to partner admin"
   },
+  "weekDays": {
+    "everyDay": "Every {{day}}",
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday",
+    "sunday": "Sunday"
+  },
   "common": {
     "delete": "Delete",
     "disable": "Disable",
@@ -667,7 +674,8 @@
     "resources": "Resources",
     "download": "Download",
     "quantity": "Qty",
-    "modify": "Modify"
+    "modify": "Modify",
+    "submit": "Submit"
   },
   "notifications": {
     "success": "Success notifications",
@@ -1106,7 +1114,7 @@
         "certificatesUpload": "Upload",
         "certificatesModalHeading": "Remove Certificate",
         "certificatesModalText": "Are you sure you want to remove the following certificate?",
-        "sipDomainHeading": "SIP Domain",
+        "sipDomainHeading": "SIP Destination",
         "disableConfirmDialogText1": "You are about to remove the following Hybrid Service for your organization:",
         "disableConfirmDialogText2": "If you click Confirm:",
         "disableConfirmDialogText3": "All of your users will have the service deactivated.",
@@ -1116,12 +1124,24 @@
         "sipDomainHeading": "SIP Domain",
         "sipDomain": "Enter the SRV domain of your Expressway edge server(s) so that calls route correctly to and from there.",
         "sipDomainPlaceholder": "Enter a single domain or subdomain"
+      },
+      "scheduleUpgrade": {
+        "title": "Automatic Software Upgrades",
+        "description": "Edit the scheduled start time for automatic software upgrades of your Connectors.",
+        "defaultWarning": "<button class=\"btn btn--cta\" ng-click=\"{{onclick}}\">Confirm the default schedule</button>"
       }
     },
     "hybridServices": {
       "result404": "Entitlements for {{email}} do not exist.",
       "result409": "Entitlement(s) previously updated.",
       "resultOther": "Entitlements for {{email}} were not updated. Status: {{status}}."
+    },
+    "notifications": {
+      "scheduleUpgrade": {
+        "title": "Confirm the Schedule for Automatic Software Upgrades",
+        "description": "A schedule for automatic software upgrades of your Connectors has been set.",
+        "action": "Either <a ng-click=\"{{onclick}}\">confirm the default time or change it</a> for this Hybrid Service."
+      }
     }
   },
   "firstTimeWizard": {
@@ -1184,7 +1204,6 @@
     "planReview": "Plan Review",
     "subscriptionId": "Subscription ID's",
     "spark": "Spark",
-    "sparkMsg": "Free Spark Messaging",
     "sparkStub": "Set up Spark",
     "webex": "WebEx",
     "webexMsg": "Webex Conferencing",
@@ -1194,16 +1213,11 @@
     "message": "Message",
     "meeting": "Meeting",
     "call": "Call",
-    "messaging": "Messaging",
-    "conferencing": "Conferencing",
-    "communications": "Communications",
     "roomSystems": "Room Systems",
     "sparkRoomSystem": "Spark Room System",
     "freeMsg": "Message Free",
     "freeMtg": "Meeting Free 3 Party",
     "freeCall": "Call Free",
-    "confMsg": "Free 3 Party Meetings",
-    "commMsg": "Free 1:1 Spark Call",
     "communicationsSub": "Setup calling service",
     "claimSipUrl": "Customize SIP URI Domain",
     "claimSipUriTitle": "Customize your company’s SIP URI domain name. This domain will be used to create a universally reachable URI for each user in your company.",
@@ -1212,6 +1226,8 @@
     "claimSipUriDomainTitle": "SIP URI Domain",
     "claimSipUriDomain": ".ciscospark.com",
     "claimSipUriTestOrg": "This feature is currently available only for test orgs. Please proceed to next step.",
+    "messageSettings": "Message Settings",
+    "callSettings": "Call Settings",
     "enterpriseSettings": "Enterprise Settings",
     "messagingSetup": "Messaging Setup",
     "messagingSetupSub": "Setup messaging service",
@@ -1219,7 +1235,6 @@
     "enterpriseSettingsSub": "Set up global configurations",
     "planReviewDesc": "This setup wizard will enable you to quickly get collaboration services up and running for your organization. If you're not sure what to do in any given step, don't worry, you can always make changes later.",
     "accountReview": "Account Review",
-    "serviceSetup": "Communication",
     "serviceSetupSub": "Phone-related settings",
     "unifiedCommunication": "Unified Communications",
     "addUsers": "Invite Users",
@@ -1248,9 +1263,7 @@
     "syncStatus": "Sync Status",
     "domain": "Domain",
     "defaultPlaceholder": "Default",
-    "domainDesc": "Identify the Active Directory domain you will be syncing.",
     "installStep1": "1. <a href='{{download}}' download> Download </a> and Install the Cisco Cloud Connector in your enterprise.",
-    "installStep2": "2. Configure the Active Directory synchronization agreement.",
     "installStep3": "3. Test the synchronization agreement.",
     "installWarning": "Warning:",
     "installWarningDescription": "If you have already added users manually, performing an Active Directory synchronization may cause previously added users to be removed. Please check the Cisco Cloud Connector Dry Run Reports to verify that all expected users are present.",
@@ -1279,8 +1292,8 @@
     "setupSSODesc": "Please select the appropriate option for your SSO configuration.",
     "manualInvite": "Enter the email addresses of the people in your company that will receive Collaboration Services. They will receive an email invitation to sign up.",
     "assignServices": "Select the entitlements that you would like to grant users.",
-    "domainEntry": "Domain Entry",
-    "domainSubDesc": "Enter the AD domain to sync with:",
+    "domainEntry": "Active Directory",
+    "domainSubDesc": "Enter the Acive Directory domain:",
     "connectorSteps": "Follow these steps in order to install the Directory Connector:",
     "readyToGo": "You're ready to go!",
     "finishDesc": "You have completed the setup wizard. If you have skipped steps or need to change any of the settings, click the gear icon in the upper right hand corner of the page to access this panel again.",
@@ -1871,7 +1884,7 @@
       "title": "Start New Trial"
     },
     "meeting": {
-      "title": "Start New Trial - Meeting and WebEx Setup",
+      "title": "Trial Setup - Meeting and WebEx",
       "webexHeader": "Meeting and WebEx License Type",
       "meetingDetails": "Meeting 25 party",
       "webexDetails": "WebEx Enterprise Edition with Collaboration Meeting Room",
@@ -1880,11 +1893,17 @@
       "webexSiteUrl": "WebEx Site URL",
       "webexTimezone": "WebEx Time Zone",
       "default": "Set as default",
+      "siteUrlDescription": "For example: www.companyname.webex.com",
       "tzDescription": "Select the time zone closest to your customer. This will ensure their WebEx site is deployed in the appropriate data center.",
-      "timezonePlaceholder": "Search for a time zone..."
+      "siteUrlPlaceholder": "acmecorp.webex.com",
+      "timezonePlaceholder": "Search for a time zone...",
+      "invalidSite": "SiteUrl is invalid.",
+      "duplicateSite": "SiteUrl is already in use.",
+      "domainInvalid": "SiteUrl must contain the webex.com domain name.",
+      "validationHttpError": "Could not reach server to validate siteUrl. Try again."
     },
     "call": {
-      "title": "Start New Trial - Ship Devices",
+      "title": "Trial Setup - Ship Devices",
       "selectDevicesHeader": "Select Devices",
       "meetingRoomCamera": "Spark Room System",
       "deskPhones": "Personal and Shared Desk Phones",
@@ -1915,12 +1934,15 @@
     "collab": "Standard Team Rooms + 25 Party Meetings",
     "squaredUC": "Advanced Spark Call",
     "licenses": "Licenses",
+    "licenseQuantity": "Licenses Quantity",
+    "users": "Users",
     "message": "Message",
     "messageAndMeeting": "Message and Meeting",
     "meeting": "Meeting and WebEx",
     "call": "Call",
     "roomSystem": "Spark Room System"
   },
+
   "status": {
     "noResults": "No results available.",
     "errorProcessing": "Error processing request."
@@ -1931,9 +1953,9 @@
     "title": "Customers",
     "customerNameHeader": "Customer Name",
     "service": "Service",
-    "messaging": "Messaging",
-    "conferencing": "Conferencing",
-    "communications": "Communications",
+    "message": "Message",
+    "call": "Call",
+    "meeting": "Meeting",
     "notes": "Notes",
     "active": "Active",
     "trial": "Trial",
@@ -1986,13 +2008,12 @@
     "logoOverride": "Customer Logo Override",
     "allowCustomerLogo": "Enable Customer Logo for {{customer}}",
     "myOrganization": "My Organization",
-    "message": "Message",
-    "meeting": "Meeting 25 Party",
+    "meetingParty": "Meeting 25 Party",
     "call": "Call",
     "roomSystem": "Spark Room System",
     "branding": "Customer Branding",
     "MS": "Message",
-    "CF": "Meeting 25 Party",
+    "CF": "Meeting",
     "MC": "Meeting 25 Party",
     "WebExMC": "WebEx Meeting Center",
     "SC": "WebEx Support Center",
@@ -2021,6 +2042,13 @@
     "saveSuccess": "Settings successfully saved.",
     "companyCallerIdsaveError": "Company Caller ID failed to save.",
     "internationalDialingSaveError": "International Dialing failed to save."
+  },
+  "settingsServiceAddress": {
+    "label": "Emergency Service Address",
+    "description": "In the case of an emergency, local emergency response crew would use this address to locate the caller.",
+    "savePrompt": "Save this address?",
+    "saveSuccess": "Emergency Service Address updated successfully.",
+    "saveError": "Error occurred updating Emergency Service Address."
   },
   "didManageModal": {
     "title": "Manage Phone Numbers",
@@ -2283,7 +2311,8 @@
       "lastReported": "Last Reported",
       "description": "Description",
       "noAlarms": "No alarms reported",
-      "hostImpact": "Host Impacted"
+      "hostImpact": "Host Impacted",
+      "raised": "Raised"
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
     "mediaAgentOrgMappingFailure": "Problems enabling the Orpheus for MediaFusion",
@@ -2892,7 +2921,7 @@
   },
   "contactCenterUserConfig": {
     "channels": "Channels",
-    "contactCenterProfile": "Contact Center Profile",
+    "contactCenterProfile": "Care Profile",
     "chat": "Chat",
     "voice": "Voice",
     "email": "Email",
@@ -3139,7 +3168,7 @@
     "atlas-portal.application": "Application",
     "atlas-portal.partner.salesadmin": "Sales Admin",
     "id_full_admin": "Full Admin",
-    "id_readonly_admin": "Readonly Admin",
+    "id_readonly_admin": "Read-only Admin",
     "user": "User"
   },
   "atlasRoles": {
@@ -3157,7 +3186,8 @@
     "CUSTOMER_PARTNER": "Customer Partner",
     "WX2_Support": "WX2 Support",
     "WX2_User": "WX2 User",
-    "Site_Admin": "Site Admin"
+    "Site_Admin": "Site Admin",
+    "ReadOnly_Admin": "Read-only Admin"
   },
   "helpdesk": {
     "navHeaderTitle": "Cloud Collaboration Help Desk",
@@ -3267,13 +3297,23 @@
       "narrow-title": "Select a Customer",
       "narrow-info": "To filter a search to one customer only, start at the main search tool page and search for the customer by display name. Then click <i class='icon icon-search'></i> in the customer's search result card."
     },
+    "history": {
+      "clear": "Clear History",
+      "nohistory": "No Search History",
+      "singlematch": "match",
+      "matches": "matches"
+    },
     "verification": "Verification",
     "resend": "Re-send",
     "sendCode": "Send Code",
     "more": "More",
     "usage": "{{usage}} of {{volume}} in use",
     "launchHelpdesk": "Help Desk",
-    "launchHelpdeskDesc": "Open the Help Desk portal in a new tab"
+    "launchHelpdeskDesc": "Open the Help Desk portal in a new tab",
+    "numbers": "Numbers",
+    "noDeviceEntitlements": "Device search not applicable. The customer is neither entitled to Cloudberry nor to Spark Call.",
+    "applyOrgFilterPleaseWait": "Applying filter, please wait...",
+    "noMoreResults": "Max results limit reached. Try a different search."
   },
   "activation": {
     "verificationComplete": "Verification Complete",

@@ -27,7 +27,7 @@
 
     function _makeTrial() {
       var defaults = {
-        'type': Config.trials.message,
+        'type': Config.offerTypes.collab,
         'enabled': false,
         'details': {},
       };

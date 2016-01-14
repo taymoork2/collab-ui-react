@@ -16,7 +16,11 @@
       return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/carriers/:carrierId', {}, {});
     })
     .factory('TerminusCustomerSiteService', function ($resource, HuronConfig) {
-      return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/sites/:siteId');
+      return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/sites/:siteId', {}, {
+        update: {
+          method: 'PUT'
+        }
+      });
     })
     .factory('TerminusBlockOrderService', function ($resource, HuronConfig) {
       return $resource(HuronConfig.getTerminusUrl() + '/customers/:customerId/carriers/:carrierId/did/block', {}, {});

@@ -73,7 +73,7 @@ To summarize, this is the process:
     'git push origin'
     'gulp e2e --nofailfaist'
     Confirm all tests have passed and rerun any that didn't using the specs option
-    (e.g. 'gulp e2e --nounit --specs="test/e2e-protractor/squared/failedtest"'')    
+    (e.g. 'gulp e2e --nounit --specs="test/e2e-protractor/squared/failedtest"'')
 4. You create a pull request
 5. Someone reviews your code and gives you feedback
 6. Eventually, your code will get approved
@@ -100,7 +100,7 @@ Let's say you've been assigned to fix a defect (#123) where users aren't being s
     'git push -f origin'
     'gulp e2e --nofailfaist'
     Confirm all tests have passed and rerun any that didn't using the specs option
-    (e.g. 'gulp e2e --nounit --specs="test/e2e-protractor/squared/failedtest"'')    
+    (e.g. 'gulp e2e --nounit --specs="test/e2e-protractor/squared/failedtest"'')
 7. When your pull request gets accepted and you need to push to Jenkins, you'll want to push your specific branch: `git push jenkins de123:master`
   - Prior to pushing, repeat the sync steps outlined in step #6
 
@@ -114,10 +114,9 @@ When contributing, it's important to keep your fork up-to-date with the master. 
 Setup the environment (If necessary)
 ------------------------------------
 
-* Run `./setup.sh` (found in the root directory) or, if it fails:
-  * Install node.js version <= v0.12.x (for npm): http://nodejs.org/download/
-* Run package managers in the cloned project to pull dependencies:
-* `npm install && bower install`
+* Install node.js version <= v0.12.x (for npm): http://nodejs.org/download/
+* Run `./setup.sh` (found in the root directory)
+  * Use `./setup.sh --restore` if ever needing to restore 'node_modules' and 'bower_components' dirs from the most recently successfully built dependencies (requires at least 1 successful run)
 * Launch the app: `gulp serve`
 * Before pushing any code to jenkins, always use `git fetch upstream && git merge upstream/master`
 * After git pulls, run bower install and npm install to make sure to pull new dependencies.

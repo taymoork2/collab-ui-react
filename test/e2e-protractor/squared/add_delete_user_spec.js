@@ -44,7 +44,7 @@ describe('Squared Add & Entitle User Flows', function () {
   it('admin should type Yes to delete themselves', function () {
     // Need to search for a single search result first, otherwise
     // Stale element when trying to click a user already visible
-    utils.searchForSingleResult(adminEmail);
+    utils.search(adminEmail);
     utils.click(users.userListAction);
     utils.click(users.deleteUserOption);
     utils.waitForModal().then(function () {

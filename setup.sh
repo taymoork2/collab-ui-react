@@ -1,6 +1,43 @@
 #!/bin/bash
 
 source ./bin/include/setup-helpers
+quick="false"
+
+# optional CLI switches
+if [ -n "$1" ]; then
+    case "$1" in
+        "-h"|"--help" )
+            echo "useage: `basename $0` [--restore] [--quick]"
+            echo ""
+            echo "ex. Run with no args to build dependencies"
+            echo "  `basename $0`"
+            echo ""
+            echo "ex. Use '--restore' to restore from the most recent previously built dependencies (if available)"
+            echo "  `basename $0` --restore"
+            echo ""
+            echo "ex. Run with '--quick' to skip removing component directores and clearing bower cache"
+            echo ""
+            exit 1
+            ;;
+        "--restore" )
+            last_npm_deps_tar="`get_most_recent .cache/npm-deps-for-*`"
+            last_bower_deps_tar="`get_most_recent .cache/bower-deps-for-*`"
+            if [ -n "${last_npm_deps_tar}" -a -n "${last_bower_deps_tar}" ]; then
+                echo "Restoring previously built dependencies..."
+                rm -rf ./node_modules ./bower_components
+                tar zxf ${last_npm_deps_tar}
+                tar zxf ${last_bower_deps_tar}
+                exit
+            else
+                # no deps exist yet from previous successful build
+                exit 1
+            fi
+            ;;
+        "--quick" )
+            quick="true"
+            ;;
+    esac
+fi
 
 # Check NPM local path
 echo "$PATH" | grep -q './node_modules/.bin' && echo "Local NPM path is set" || set_local_npm_path
@@ -67,6 +104,15 @@ else
   echo "gulp is already installed"
 fi
 
+# Remove component directories and clear bower cache
+if [ $quick = "false" ]; then
+  echo "Removing component directories..."
+  rm -rf bower_components
+  rm -rf node_modules
+  echo "Clearing bower cache..."
+  bower cache clean
+fi
+
 # # Check for cleanup script and run
 # ls -al ./cleanUpManagedOrgs.sh > /dev/null 2>&1
 # CLEANUP_RET=$?
@@ -80,19 +126,33 @@ fi
 time_start=$(date +"%s")
 
 # Install dependecies
-# bundle install
-COMMIT_ID=`git log -n1 --pretty=format:'%h'`
+echo "Install all dependencies..."
 npm install
-npm prune
-npm shrinkwrap --dev && mv npm-shrinkwrap.json ./.cache/npm-shrinkwrap-for-${COMMIT_ID}.json
-rm_all_but_last 1 ./.cache/npm-shrinkwrap-for-*.json
 npm update -g bower
+npm prune
+
+# npm install succeeded
+# - make a tar archive of the npm-shrinkwrap.json file, and rm older versions
+npm shrinkwrap --dev
+mv_npm_shrinkwrap_file
+rm_all_but_last 1 .cache/npm-shrinkwrap-for-*.json
+mk_npm_shrinkwrap_tar
+rm_all_but_last 1 .cache/npm-shrinkwrap-for-*.tar.gz
+
+# - make a tar archive of the npm deps, and rm older versions
+mk_npm_deps_tar
+rm_all_but_last 1 .cache/npm-deps-for-*.tar.gz
 
 time_npm=$(date +"%s")
 npm_duration=$(($time_npm-$time_start))
 echo "npm completed after $(($npm_duration / 60)) minutes and $(($npm_duration % 60)) seconds."
 
+# bower install succeeded
 (bower install && bower update) || exit $?
+
+# - make a tar archive of the bower deps, and rm older versions
+mk_bower_deps_tar
+rm_all_but_last 1 .cache/bower-deps-for-*.tar.gz
 
 time_bower=$(date +"%s")
 bower_duration=$(($time_bower-$time_npm))
