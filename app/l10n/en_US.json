@@ -3322,8 +3322,7 @@
     },
     "delete": {
       "header": "Delete domain",
-      "description": "If you delete this domain, users with e-mail addresses in this domain will no longer be able to log on until they associate their users with e-mail addresses in validated domains.",
-      "delete": "Delete"
+      "description": "If you delete this domain, users with e-mail addresses in this domain will no longer be able to log on until they associate their users with e-mail addresses in validated domains."
     },
     "verify": {
       "header": "Verify domain",
