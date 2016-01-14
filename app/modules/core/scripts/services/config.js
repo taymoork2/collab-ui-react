@@ -224,10 +224,10 @@ angular.module('Core')
         },
 
         sunlightConfigServiceUrl: {
-          dev: 'https://config.integration-tx1.thunderhead.io/config/v1',
-          cfe: 'https://config.integration-tx1.thunderhead.io/config/v1',
-          integration: 'https://config.integration-tx1.thunderhead.io/config/v1',
-          prod: 'https://config.integration-tx1.thunderhead.io/config/v1' //This will change to prod later in future
+          dev: 'https://config.rciad.ciscoccservice.com/config/v1',
+          cfe: 'https://config.rciad.ciscoccservice.com/config/v1',
+          integration: 'https://config.rciad.ciscoccservice.com/config/v1',
+          prod: 'https://config.rciad.ciscoccservice.com/config/v1' //This will change to prod later in future
         },
 
         calliopeUrl: {

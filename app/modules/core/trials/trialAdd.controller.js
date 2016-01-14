@@ -79,11 +79,12 @@
       type: 'input',
       className: 'columns medium-12 license-count',
       templateOptions: {
-        label: $translate.instant('siteList.licenseCount'),
-        labelClass: 'columns medium-6',
-        inputClass: 'columns medium-3',
+        label: $translate.instant('trials.licenseQuantity'),
+        labelClass: 'columns medium-4',
+        inputClass: 'columns medium-4',
         type: 'number',
         required: true,
+        secondaryLabel: $translate.instant('trials.users'),
       },
       validators: {
         count: {
@@ -151,7 +152,7 @@
       model: vm.roomSystemTrial,
       key: 'enabled',
       type: 'checkbox',
-      className: "columns medium-6",
+      className: "columns medium-5 pad-top",
       templateOptions: {
         label: $translate.instant('trials.roomSystem'),
         id: roomSystemsTemplateOptionId,
@@ -171,7 +172,7 @@
       className: "columns medium-6",
       templateOptions: {
         id: 'trialRoomSystemsAmount',
-        inputClass: 'columns medium-10',
+        inputClass: 'columns medium-9',
         secondaryLabel: $translate.instant('trials.licenses'),
         type: 'number'
       },
