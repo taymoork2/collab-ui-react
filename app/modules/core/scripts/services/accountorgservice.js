@@ -7,6 +7,7 @@ angular
 /* @ngInject */
 function AccountOrgService($http, $rootScope, Config, Auth) {
   var accountUrl = Config.getAdminServiceUrl();
+  var scomUrl = Config.getScomUrl();
 
   var service = {
     getAccount: getAccount,
@@ -17,7 +18,8 @@ function AccountOrgService($http, $rootScope, Config, Auth) {
     addOrgDataRetentionPeriodDays: addOrgDataRetentionPeriodDays,
     modifyOrgDataRetentionPeriodDays: modifyOrgDataRetentionPeriodDays,
     deleteOrgSettings: deleteOrgSettings,
-    getOrgSettings: getOrgSettings
+    getOrgSettings: getOrgSettings,
+    getOrgInformation: getOrgInformation
   };
 
   return service;
@@ -97,6 +99,12 @@ function AccountOrgService($http, $rootScope, Config, Auth) {
 
   function getOrgSettings(org) {
     var url = accountUrl + 'organization/' + org + '/settings/' + org;
+
+    return $http.get(url);
+  }
+
+  function getOrgInformation(org) {
+    var url = scomUrl + '/' + org;
 
     return $http.get(url);
   }

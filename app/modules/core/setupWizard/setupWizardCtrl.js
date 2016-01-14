@@ -33,8 +33,11 @@ angular.module('Core')
         description: 'firstTimeWizard.enterpriseSettingsSub',
         icon: 'icon-settings',
         title: 'firstTimeWizard.enterpriseSettings',
-        controller: 'setupSSODialogCtrl',
+        controller: 'EnterpriseSettingsCtrl',
         steps: [{
+          name: 'setSipUri',
+          template: 'modules/core/setupWizard/enterprise.setSipUri.tpl.html'
+        }, {
           name: 'init',
           template: 'modules/core/setupWizard/enterprise.init.tpl.html'
         }, {
