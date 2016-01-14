@@ -109,7 +109,7 @@ if [ $quick = "false" ]; then
   echo "Removing component directories..."
   rm -rf bower_components
   rm -rf node_modules
-  echo "Rlearing bower cache..."
+  echo "Clearing bower cache..."
   bower cache clean
 fi
 
