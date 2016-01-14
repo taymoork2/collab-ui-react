@@ -121,7 +121,7 @@
             vm.currentSearch.userSearchResults,
             vm.currentSearch.orgFilter,
             vm.currentSearch.userLimit);
-          HelpdeskSearchHistoryService.saveUserSearch(vm.currentSearch);
+          HelpdeskSearchHistoryService.saveSearch(vm.currentSearch);
           vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches();
         }, function (err) {
           vm.searchingForUsers = false;
@@ -146,7 +146,7 @@
           vm.currentSearch.orgSearchResults = res;
           vm.currentSearch.orgSearchFailure = null;
           vm.searchingForOrgs = false;
-          HelpdeskSearchHistoryService.saveOrgSearch(vm.currentSearch);
+          HelpdeskSearchHistoryService.saveSearch(vm.currentSearch);
           vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches();
         }, function (err, status) {
           vm.searchingForOrgs = false;
@@ -184,6 +184,8 @@
           vm.searchingForCloudberryDevices = false;
           vm.searchingForDevices = vm.searchingForHuronDevices;
           setOrgOnDeviceSearchResults(vm.currentSearch.deviceSearchResults);
+          HelpdeskSearchHistoryService.saveSearch(vm.currentSearch);
+          vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches();
         }, function (err) {
           vm.searchingForCloudberryDevices = false;
           vm.searchingForDevices = vm.searchingForHuronDevices;
@@ -202,6 +204,8 @@
           vm.searchingForHuronDevices = false;
           vm.searchingForDevices = vm.searchingForCloudberryDevices;
           setOrgOnDeviceSearchResults(vm.currentSearch.deviceSearchResults);
+          HelpdeskSearchHistoryService.saveSearch(vm.currentSearch);
+          vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches();
         }, function (err) {
           vm.searchingForHuronDevices = false;
           vm.searchingForDevices = vm.searchingForCloudberryDevices;

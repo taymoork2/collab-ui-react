@@ -385,8 +385,22 @@
 }
 
 .helpdesk-history-dropdown-menu {
-  max-height: rem-calc(461);
-  width: 8rem;
+  max-height: none;
+  width: 10rem;
+  li {  
+    padding: 0.25rem 0.5rem 0.25rem 0.5rem !important;
+  } 
+  .clear-history {
+    color: $color-primary-base;
+  }
+}
+
+.helpdesk-history-dropdown-menu.dropdown-menu:before {
+  left: 80% !important;
+}
+
+.helpdesk-history-dropdown-menu.dropdown-menu:after {
+  left: 80% !important;
 }
 
 @media only screen and (max-width: 1024px) {
@@ -427,9 +441,15 @@
       .top-bar .right .dropdown-menu {
         position: fixed !important;
         right: 0.5rem;
-        top: 3.5rem;
+        top: 52px;
+      }      
+      .dropdown-menu:before {
+        left: 83% !important;
       }
-    }
+      .dropdown-menu:after {
+        left: 83% !important;
+      }
+    }  
   }
   .helpdesk-search {
     padding-top: 0;
