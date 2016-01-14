@@ -1862,7 +1862,7 @@
       "title": "Start New Trial"
     },
     "meeting": {
-      "title": "Start New Trial - Meeting and WebEx Setup",
+      "title": "Trial Setup - Meeting and WebEx",
       "webexHeader": "Meeting and WebEx License Type",
       "meetingDetails": "Meeting 25 party",
       "webexDetails": "WebEx Enterprise Edition with Collaboration Meeting Room",
@@ -1871,6 +1871,7 @@
       "webexSiteUrl": "WebEx Site URL",
       "webexTimezone": "WebEx Time Zone",
       "default": "Set as default",
+      "siteUrlDescription": "For example: www.companyname.webex.com",
       "tzDescription": "Select the time zone closest to your customer. This will ensure their WebEx site is deployed in the appropriate data center.",
       "siteUrlPlaceholder": "acmecorp.webex.com",
       "timezonePlaceholder": "Search for a time zone...",
@@ -1880,7 +1881,7 @@
       "validationHttpError": "Could not reach server to validate siteUrl. Try again."
     },
     "call": {
-      "title": "Start New Trial - Ship Devices",
+      "title": "Trial Setup - Ship Devices",
       "selectDevicesHeader": "Select Devices",
       "meetingRoomCamera": "Spark Room System",
       "deskPhones": "Personal and Shared Desk Phones",
@@ -1911,6 +1912,8 @@
     "collab": "Standard Team Rooms + 25 Party Meetings",
     "squaredUC": "Advanced Spark Call",
     "licenses": "Licenses",
+    "licenseQuantity": "Licenses Quantity",
+    "users": "Users",
     "message": "Message",
     "messageAndMeeting": "Message and Meeting",
     "meeting": "Meeting and WebEx",
