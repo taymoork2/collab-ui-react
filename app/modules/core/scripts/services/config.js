@@ -533,7 +533,8 @@ angular.module('Core')
           primaryColorBase: '#049FD9',
           primaryColorDarker: '#0387B8',
           dummyGrayLight: '#F3F3F3',
-          dummyGrayLighter: '#FAFAFA'
+          dummyGrayLighter: '#FAFAFA',
+          colorAttentionBase: '#F5A623'
         },
 
         confMap: {
