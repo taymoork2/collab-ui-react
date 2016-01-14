@@ -259,7 +259,7 @@ exports.expectIsNotDisplayed = function (elem, timeout) {
   }
 
   function logAndWait() {
-    log('Waiting for element not to be invisible: ' + elem.locator());
+    log('Waiting for element not to be visible: ' + elem.locator());
     return EC.invisibilityOf(elem)().thenCatch(function () {
       // Handle stale element reference
       return EC.stalenessOf(elem)();
@@ -511,37 +511,34 @@ exports.findDirectoryNumber = function (message, lineNumber) {
   return null;
 };
 
-exports.search = function (query) {
+// use _searchCount = -1 for unbounded search
+exports.search = function (query, _searchCount) {
   var spinner = element(by.css('.icon-spinner'));
+  var searchCount = _searchCount || 1;
 
-  function waitSpinner() {
-    utils.expectIsNotDisplayed(spinner);
-    utils.expectIsDisplayed(element.all(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)).first());
-  }
-
-  this.click(this.searchbox);
-  this.clear(this.searchField);
-  if (query) {
-    this.sendKeys(this.searchField, query + protractor.Key.ENTER);
-    this.wait(spinner, 500).then(function () {
-      waitSpinner();
-    }, function () {
-      waitSpinner()
-    });
-  }
-};
-
-exports.searchForSingleResult = function (query) {
   function logAndWait() {
-    log('Waiting for a single search result');
-    return EC.textToBePresentInElement(element(by.css('.searchfilter li:first-child .count')), "1")().thenCatch(function () {
+    log('Waiting for ' + searchCount + ' search result');
+    return EC.textToBePresentInElement(element(by.css('.searchfilter li:first-child .count')), searchCount)().thenCatch(function () {
       // handle a possible stale element
       return false;
     });
   }
-  this.search(query);
-  browser.wait(logAndWait, TIMEOUT, 'Waiting for a single search result');
-  return this.expectIsDisplayed(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)));
+
+  function waitSpinner() {
+    exports.expectIsNotDisplayed(spinner);
+  }
+
+  exports.click(exports.searchbox);
+  exports.clear(exports.searchField);
+  if (query) {
+    exports.sendKeys(exports.searchField, query + protractor.Key.ENTER);
+    exports.wait(spinner, 500).then(waitSpinner, waitSpinner);
+  }
+
+  if (searchCount > -1) {
+    browser.wait(logAndWait, TIMEOUT, 'Waiting for ' + searchCount + ' search result');
+  }
+  return exports.expectIsDisplayed(element(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)));
 };
 
 exports.clickUser = function (query) {
@@ -550,11 +547,6 @@ exports.clickUser = function (query) {
 
 exports.searchAndClick = function (query) {
   this.search(query);
-  return this.clickUser(query);
-};
-
-exports.searchForSingleAndClick = function (query) {
-  this.searchForSingleResult(query);
   return this.clickUser(query);
 };
 
@@ -695,7 +687,7 @@ exports.deleteIfUserExists = function (name) {
 
 exports.quickDeleteUser = function (bFirst, name) {
   if (bFirst) {
-    this.search(name);
+    this.search(name, -1);
   }
 
   return waitUntilElemIsPresent(users.userListAction, 2000).then(function () {

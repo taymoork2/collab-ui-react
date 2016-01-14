@@ -123,7 +123,7 @@
     "hybridServices": "Hybrid Services",
     "freeCollab": "Free Public Collaboration Services",
     "licCollab": "Licensed Collaboration Services",
-    "contactCenter": "Contact Center",
+    "contactCenter": "Care",
     "entitlements": "User Entitlements",
     "saveBtn": "Save",
     "manageGroups": "Manage Groups",
@@ -421,10 +421,13 @@
     "callMetricsChartError": "There was an error while loading call metrics data for {{customer}}.",
     "customerError": "There was an error while loading call metrics data.",
     "callMetricsDesc": "This chart displays the total number of calls made and the number of minutes spent on those calls over the {{time}}.  You are also able to determine the percentage of successful and failed calls for the selected customers.",
-    "audioDescription": "This chart displays the total number of audio calls made, the number of minutes spent on those calls, and the percentage of successful and failed calls over the {{time}}.",
-    "videoDescription": "This chart displays the total number of video calls made, the number of minutes spent on those calls, and the percentage of successful and failed calls over the {{time}}.",
+    "customerDescription": "This chart displays the total number of successful calls made during the {{time}}, split into video and audio only calls.  Below the chart is additional information regarding total calls, total minutes, and the overall failure rate.",
     "totalCalls": "Total Calls",
-    "totalCallMinutes": "Total Call Minutes"
+    "totalCallMinutes": "Total Call Minutes",
+    "callMinutes": "Call Minutes",
+    "failureRate": "Call Failure Rate",
+    "videoCalls": "Video Calls",
+    "audioCalls": "Audio Only Calls"
   },
   "registeredEndpoints": {
     "registeredEndpoints": "Registered Endpoints",
@@ -1859,7 +1862,7 @@
       "title": "Start New Trial"
     },
     "meeting": {
-      "title": "Start New Trial - Meeting and WebEx Setup",
+      "title": "Trial Setup - Meeting and WebEx",
       "webexHeader": "Meeting and WebEx License Type",
       "meetingDetails": "Meeting 25 party",
       "webexDetails": "WebEx Enterprise Edition with Collaboration Meeting Room",
@@ -1868,6 +1871,7 @@
       "webexSiteUrl": "WebEx Site URL",
       "webexTimezone": "WebEx Time Zone",
       "default": "Set as default",
+      "siteUrlDescription": "For example: www.companyname.webex.com",
       "tzDescription": "Select the time zone closest to your customer. This will ensure their WebEx site is deployed in the appropriate data center.",
       "siteUrlPlaceholder": "acmecorp.webex.com",
       "timezonePlaceholder": "Search for a time zone...",
@@ -1877,7 +1881,7 @@
       "validationHttpError": "Could not reach server to validate siteUrl. Try again."
     },
     "call": {
-      "title": "Start New Trial - Ship Devices",
+      "title": "Trial Setup - Ship Devices",
       "selectDevicesHeader": "Select Devices",
       "meetingRoomCamera": "Spark Room System",
       "deskPhones": "Personal and Shared Desk Phones",
@@ -1908,12 +1912,15 @@
     "collab": "Standard Team Rooms + 25 Party Meetings",
     "squaredUC": "Advanced Spark Call",
     "licenses": "Licenses",
+    "licenseQuantity": "Licenses Quantity",
+    "users": "Users",
     "message": "Message",
     "messageAndMeeting": "Message and Meeting",
     "meeting": "Meeting and WebEx",
     "call": "Call",
     "roomSystem": "Spark Room System"
   },
+
   "status": {
     "noResults": "No results available.",
     "errorProcessing": "Error processing request."
@@ -2892,7 +2899,7 @@
   },
   "contactCenterUserConfig": {
     "channels": "Channels",
-    "contactCenterProfile": "Contact Center Profile",
+    "contactCenterProfile": "Care Profile",
     "chat": "Chat",
     "voice": "Voice",
     "email": "Email",
@@ -3267,6 +3274,12 @@
       "search-criterias-note": "Note: To search for a device, you must first select a customer.",
       "narrow-title": "Select a Customer",
       "narrow-info": "To filter a search to one customer only, start at the main search tool page and search for the customer by display name. Then click <i class='icon icon-search'></i> in the customer's search result card."
+    },
+    "history": {
+      "clear": "Clear History",
+      "nohistory": "No Search History",
+      "singlematch": "match",
+      "matches": "matches"
     },
     "verification": "Verification",
     "resend": "Re-send",

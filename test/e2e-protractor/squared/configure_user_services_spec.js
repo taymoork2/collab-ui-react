@@ -2,7 +2,7 @@
 
 /* global LONG_TIMEOUT */
 
-describe('Configuring services per-user', function () {
+xdescribe('Configuring services per-user', function () {
   var testUser = utils.randomTestGmailwithSalt('config_solo');
 
   var file = './../data/DELETE_DO_NOT_CHECKIN_configure_user_service_test_file.csv';
@@ -52,8 +52,7 @@ describe('Configuring services per-user', function () {
   });
 
   it('should confirm hybrid services case', function () {
-    utils.search(testUser);
-    users.clickOnUser();
+    utils.searchAndClick(testUser);
     utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
     utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'Off');
     utils.click(users.closeSidePanel);
@@ -69,8 +68,7 @@ describe('Configuring services per-user', function () {
     notifications.assertSuccess('onboarded successfully');
     utils.expectIsNotDisplayed(users.manageDialog);
 
-    utils.search(testUser);
-    users.clickOnUser();
+    utils.searchAndClick(testUser);
     utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
     utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
   });
@@ -92,7 +90,7 @@ describe('Configuring services per-user', function () {
   });
 
   it('should disable the Messenger interop entitlement', function () {
-    users.clickOnUser();
+    utils.clickUser(testUser);
     utils.click(users.messagingService);
     utils.expectCheckbox(users.messengerInteropCheckbox, true);
     utils.click(users.messengerInteropCheckbox);
@@ -103,7 +101,7 @@ describe('Configuring services per-user', function () {
   });
 
   it('should re-enable the Messenger interop entitlement', function () {
-    users.clickOnUser();
+    utils.clickUser(testUser);
     utils.click(users.messagingService);
     utils.expectCheckbox(users.messengerInteropCheckbox, false);
     utils.click(users.messengerInteropCheckbox);
@@ -114,7 +112,7 @@ describe('Configuring services per-user', function () {
   });
 
   it('should verify that the Messenger interop entitlement was re-enabled', function () {
-    users.clickOnUser();
+    utils.clickUser(testUser);
     utils.click(users.messagingService);
     utils.expectCheckbox(users.messengerInteropCheckbox, true);
     utils.click(users.closeSidePanel);
@@ -128,8 +126,8 @@ describe('Configuring services per-user', function () {
     notifications.assertSuccess('onboarded successfully');
     utils.expectIsNotDisplayed(users.manageDialog);
 
-    utils.search(testUser);
-    users.clickOnUser();
+    utils.searchAndClick(testUser);
+
     utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'Off');
     utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'Off');
     utils.click(users.closeSidePanel);
@@ -147,8 +145,8 @@ describe('Configuring services per-user', function () {
     notifications.assertSuccess('onboarded successfully');
     utils.expectIsNotDisplayed(users.manageDialog);
 
-    utils.search(testUser);
-    users.clickOnUser();
+    utils.searchAndClick(testUser);
+
     utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'On');
     utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
     utils.click(users.closeSidePanel);
@@ -182,8 +180,7 @@ describe('Configuring services per-user', function () {
   });
 
   it('should confirm hybrid services set', function () {
-    utils.search(testUser);
-    users.clickOnUser();
+    utils.searchAndClick(testUser);
     utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'Off');
     utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
     utils.click(users.closeSidePanel);
@@ -239,8 +236,7 @@ describe('Configuring services per-user', function () {
         nInd = userList.length - 1; // last
         break;
       }
-      utils.search(userList[nInd]);
-      users.clickOnUser();
+      utils.searchAndClick(userList[nInd]);
       utils.expectTextToBeSet(users.hybridServices_sidePanel_Calendar, 'Off');
       utils.expectTextToBeSet(users.hybridServices_sidePanel_UC, 'On');
       utils.click(users.closeSidePanel);

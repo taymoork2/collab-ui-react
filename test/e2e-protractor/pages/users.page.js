@@ -191,10 +191,6 @@ var UsersPage = function () {
     return this.externalNumber.evaluate('csSelect.selected.pattern');
   };
 
-  this.clickOnUser = function () {
-    utils.click(element(by.css('.ui-grid-row')));
-  };
-
   this.assertPage = function (page) {
     utils.expectText(this.currentPage, page);
   };

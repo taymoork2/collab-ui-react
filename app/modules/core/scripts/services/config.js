@@ -224,10 +224,10 @@ angular.module('Core')
         },
 
         sunlightConfigServiceUrl: {
-          dev: 'https://config.integration-tx1.thunderhead.io/config/v1',
-          cfe: 'https://config.integration-tx1.thunderhead.io/config/v1',
-          integration: 'https://config.integration-tx1.thunderhead.io/config/v1',
-          prod: 'https://config.integration-tx1.thunderhead.io/config/v1' //This will change to prod later in future
+          dev: 'https://config.rciad.ciscoccservice.com/config/v1',
+          cfe: 'https://config.rciad.ciscoccservice.com/config/v1',
+          integration: 'https://config.rciad.ciscoccservice.com/config/v1',
+          prod: 'https://config.rciad.ciscoccservice.com/config/v1' //This will change to prod later in future
         },
 
         calliopeUrl: {
@@ -458,6 +458,18 @@ angular.module('Core')
           messenger: 'webex-messenger'
         },
 
+        offerTypes: {
+          collab: 'COLLAB',
+          spark1: 'SPARK1', //to be depricated; use message
+          webex: 'WEBEX', // to be depricated; use meetings
+          squaredUC: 'SQUAREDUC', // to be depricated; use call
+          message: 'MESSAGE',
+          meetings: 'MEETINGS',
+          call: 'CALL',
+          roomSystems: 'ROOMSYSTEMS'
+        },
+
+        //TODO: Revisit whether or not this is still needed or need to be modified now that there is offerTypes.
         trials: {
           message: 'COLLAB',
           meeting: 'WEBEX',
@@ -465,6 +477,7 @@ angular.module('Core')
           roomSystems: 'ROOMSYSTEMS'
         },
 
+        //TODO: Revisit whether or not this is still needed or need to be modified now that there is offerTypes.
         organizations: {
           collab: 'COLLAB',
           squaredUC: 'SQUAREDUC'
@@ -520,7 +533,8 @@ angular.module('Core')
           primaryColorBase: '#049FD9',
           primaryColorDarker: '#0387B8',
           dummyGrayLight: '#F3F3F3',
-          dummyGrayLighter: '#FAFAFA'
+          dummyGrayLighter: '#FAFAFA',
+          colorAttentionBase: '#F5A623'
         },
 
         confMap: {

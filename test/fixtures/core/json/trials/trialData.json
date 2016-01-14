@@ -13,7 +13,7 @@
         "details": {}
       },
       "meetingTrial": {
-        "type": "WEBEX",
+        "type": "MEETINGS",
         "enabled": false,
         "details": {
           "siteUrl": "now.istomorrow.org",
@@ -84,7 +84,7 @@
         "details": {}
       },
       "meetingTrial": {
-        "type": "WEBEX",
+        "type": "MEETINGS",
         "enabled": true,
         "details": {
           "siteUrl": "now.istomorrow.org",

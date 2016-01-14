@@ -15,7 +15,8 @@
       dummyActiveUserData: dummyActiveUserData,
       dummyAvgRoomData: dummyAvgRoomData,
       dummyFilesSharedData: dummyFilesSharedData,
-      dummyMediaData: dummyMediaData
+      dummyMediaData: dummyMediaData,
+      dummyMetricsData: dummyMetricsData
     };
 
     function dummyActiveUserData(filter) {
@@ -211,6 +212,23 @@
       }
 
       return dummyGraph;
+    }
+
+    function dummyMetricsData() {
+      return {
+        dataProvider: [{
+          "callCondition": $translate.instant('callMetrics.audioCalls'),
+          "numCalls": 1000,
+          "percentage": 10,
+          "color": Config.chartColors.dummyGrayLight
+        }, {
+          "callCondition": $translate.instant('callMetrics.videoCalls'),
+          "numCalls": 9000,
+          "percentage": 90,
+          "color": Config.chartColors.dummyGray
+        }],
+        dummy: true
+      };
     }
   }
 })();

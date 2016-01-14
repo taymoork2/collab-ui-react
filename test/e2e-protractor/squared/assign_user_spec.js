@@ -40,7 +40,7 @@ describe('Squared Invite User and Assign Services User Flow', function () {
     });
 
     xit('should show invite pending status on new user', function () {
-      utils.searchForSingleAndClick(inviteEmail);
+      utils.searchAndClick(inviteEmail);
       utils.expectTextToBeSet(users.userListSelStatus, 'Invite Pending');
     });
 
