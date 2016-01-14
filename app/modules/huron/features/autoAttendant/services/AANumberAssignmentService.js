@@ -185,15 +185,21 @@
     // This also means it resolves promises sequentially and will take a little more time
     function setAANumberAssignmentWithErrorDetail(customerId, cesId, resources) {
 
-      // For an empty list, we're done, just return a successful promise
+      // For an empty list, we're done, just ensure CMI has no numbers set
       if (resources.length === 0) {
 
-        var deferred = $q.defer();
-        deferred.resolve({
-          workingResources: [],
-          failedResources: []
-        });
-        return deferred.promise;
+        return setAANumberAssignment(customerId, cesId, resources).then(function (result) {
+            return {
+              workingResources: [],
+              failedResources: []
+            };
+          },
+          function (response) {
+            // failure
+            return $q.reject(response);
+          }
+
+        );
 
       } else {
 

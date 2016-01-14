@@ -2,7 +2,7 @@
 
 describe('Service: Customer Reports Service', function () {
   var $httpBackend, CustomerReportService, Config, Notification;
-  var avgRoomsUrl, groupRoomsUrl, oneToOneRoomsUrl, contentUrl, contentSizeUrl, mediaUrl;
+  var avgRoomsUrl, groupRoomsUrl, oneToOneRoomsUrl, contentUrl, contentSizeUrl, mediaUrl, metricsUrl;
 
   var roomData = getJSONFixture('core/json/customerReports/roomData.json');
   var groupRoomData = roomData.groupRooms;
@@ -18,6 +18,10 @@ describe('Service: Customer Reports Service', function () {
   var mediaData = getJSONFixture('core/json/customerReports/mediaQuality.json');
   var mediaContent = mediaData.callQuality;
   var mediaResponse = mediaData.response;
+
+  var metricsData = getJSONFixture('core/json/customerReports/callMetrics.json');
+  var metricsContent = metricsData.data;
+  var metricsResponse = metricsData.response;
 
   beforeEach(module('Core'));
 
@@ -66,6 +70,7 @@ describe('Service: Customer Reports Service', function () {
     contentUrl = baseUrl + 'timeCharts/contentShared?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue + customerView;
     contentSizeUrl = baseUrl + 'timeCharts/contentShareSizes?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue + customerView;
     mediaUrl = baseUrl + 'detailed/callQuality?&intervalCount=7&intervalType=day&spanCount=1&spanType=day&cache=' + cacheValue;
+    metricsUrl = baseUrl + 'detailed/callMetrics?&intervalCount=7&intervalType=day&spanCount=7&spanType=day&cache=' + cacheValue;
 
     groupRoomData.data = updateDates(groupRoomData.data);
     avgRoomData.data = updateDates(avgRoomData.data);
@@ -157,6 +162,29 @@ describe('Service: Customer Reports Service', function () {
 
       CustomerReportService.getMediaQualityData(timeFilter).then(function (response) {
         expect(response).toEqual([]);
+        expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
+      });
+
+      $httpBackend.flush();
+    });
+  });
+
+  describe('Call Metrics Service', function () {
+    it('should getCallMetricsData', function () {
+      $httpBackend.whenGET(metricsUrl).respond(metricsContent);
+
+      CustomerReportService.getCallMetricsData(timeFilter).then(function (response) {
+        expect(response).toEqual(metricsResponse);
+      });
+
+      $httpBackend.flush();
+    });
+
+    it('should notify an error for getCallMetricsData', function () {
+      $httpBackend.whenGET(metricsUrl).respond(500, error);
+
+      CustomerReportService.getCallMetricsData(timeFilter).then(function (response) {
+        expect(response.dataProvider).toEqual([]);
         expect(Notification.notify).toHaveBeenCalledWith(jasmine.any(Array), 'error');
       });
 

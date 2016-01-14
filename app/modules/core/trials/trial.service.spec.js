@@ -72,7 +72,7 @@ describe('Service: Trial Service', function () {
 
     it('should have offers list', function () {
       $httpBackend.expectPOST(Config.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials', function (data) {
-        var offerList = ['COLLAB', 'WEBEX', 'SQUAREDUC'];
+        var offerList = ['COLLAB', 'MEETINGS', 'SQUAREDUC'];
         var offers = angular.fromJson(data).offers;
         return _.every(offerList, function (offer) {
           return _.some(offers, {

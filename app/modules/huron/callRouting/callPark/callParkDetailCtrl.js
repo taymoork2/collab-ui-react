@@ -134,25 +134,23 @@
             }
           }
         },
+        hideExpression: function ($viewValue, $modelValue, scope) {
+          return scope.model.patternOption !== 'range';
+        },
         expressionProperties: {
           'data.validate': function (viewValue, modelValue, scope) {
             if (!scope.fc.$invalid) {
               return true;
             }
             return (scope.fc && scope.fc.$validate());
-          },
-          'hideExpression': function ($viewValue, $modelValue, scope) {
-            return scope.model.patternOption !== 'range';
           }
         }
       }, {
         className: 'col-xs-1 align-to',
         noFormControl: true,
         template: '<div translate="callPark.to"></div>',
-        expressionProperties: {
-          'hideExpression': function ($viewValue, $modelValue, scope) {
-            return scope.model.patternOption !== 'range';
-          }
+        hideExpression: function ($viewValue, $modelValue, scope) {
+          return scope.model.patternOption !== 'range';
         }
       }, {
         className: 'col-xs-3',
@@ -185,6 +183,9 @@
             }
           }
         },
+        hideExpression: function ($viewValue, $modelValue, scope) {
+          return scope.model.patternOption !== 'range';
+        },
         expressionProperties: {
           // this expressionProperty is here simply to be run, the property `data.validate` isn't actually used anywhere
           // it retriggers validation
@@ -193,9 +194,6 @@
               return true;
             }
             return (scope.fc && scope.fc.$validate());
-          },
-          'hideExpression': function ($viewValue, $modelValue, scope) {
-            return scope.model.patternOption !== 'range';
           }
         }
       }]
@@ -229,10 +227,8 @@
             }
           }
         },
-        expressionProperties: {
-          'hideExpression': function ($viewValue, $modelValue, scope) {
-            return scope.model.patternOption !== 'singleNumber';
-          }
+        hideExpression: function ($viewValue, $modelValue, scope) {
+          return scope.model.patternOption !== 'singleNumber';
         }
       }]
     }];

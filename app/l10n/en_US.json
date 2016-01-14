@@ -421,10 +421,13 @@
     "callMetricsChartError": "There was an error while loading call metrics data for {{customer}}.",
     "customerError": "There was an error while loading call metrics data.",
     "callMetricsDesc": "This chart displays the total number of calls made and the number of minutes spent on those calls over the {{time}}.  You are also able to determine the percentage of successful and failed calls for the selected customers.",
-    "audioDescription": "This chart displays the total number of audio calls made, the number of minutes spent on those calls, and the percentage of successful and failed calls over the {{time}}.",
-    "videoDescription": "This chart displays the total number of video calls made, the number of minutes spent on those calls, and the percentage of successful and failed calls over the {{time}}.",
+    "customerDescription": "This chart displays the total number of successful calls made during the {{time}}, split into video and audio only calls.  Below the chart is additional information regarding total calls, total minutes, and the overall failure rate.",
     "totalCalls": "Total Calls",
-    "totalCallMinutes": "Total Call Minutes"
+    "totalCallMinutes": "Total Call Minutes",
+    "callMinutes": "Call Minutes",
+    "failureRate": "Call Failure Rate",
+    "videoCalls": "Video Calls",
+    "audioCalls": "Audio Only Calls"
   },
   "registeredEndpoints": {
     "registeredEndpoints": "Registered Endpoints",
@@ -1914,6 +1917,7 @@
     "call": "Call",
     "roomSystem": "Spark Room System"
   },
+
   "status": {
     "noResults": "No results available.",
     "errorProcessing": "Error processing request."
