@@ -16,11 +16,11 @@
             <span translate='reportsPage.noCustomerData'></span>
           </h3>
         </div>
-        <div ng-show="!nav.isRefresh(nav.activeUserStatus) && !nav.isEmpty(nav.activeUserStatus) && nav.displayMostActive">
+        <div ng-show="!nav.isRefresh(nav.activeUserStatus) && !nav.isEmpty(nav.activeUserStatus)">
           <div class="active-table" ng-show="nav.showMostActiveUsers">
             <h4 class="report-section-header report-sides">{{nav.mostActiveTitle}}</h4>
             <p class="report-description" translate='activeUsers.customerMostActiveDescription'></p>
-            <table class="table table-bordered active-users-table report-sides">
+            <table class="table table-bordered active-users-table report-sides" ng-show="!nav.isRefresh(nav.mostActiveUserStatus) && !nav.isEmpty(nav.mostActiveUserStatus)">
               <thead>
                 <tr>
                   <th class="vertical-center col-md-4 bold pointer" ng-click="nav.mostActiveSort(0)" translate="activeUsers.user"></th>
@@ -36,12 +36,21 @@
                 </tr>
               </tbody>
             </table>
+            <div class="table-spinner" ng-if="nav.isRefresh(nav.mostActiveUserStatus)">
+              <i class='icon icon-spinner icon-2x'></i>
+            </div>
+            <div class="empty-table" ng-if="nav.isEmpty(nav.mostActiveUserStatus)">
+              <h3 class="no-data"> 
+                <i class='icon icon-warning no-data-warning'></i>
+                <span translate='reportsPage.noCustomerData'></span>
+              </h3>
+            </div>
           </div>
           <a class="report-sides" ng-click="nav.mostActiveUserSwitch()">
             <span ng-if="!nav.showMostActiveUsers" translate="activeUsers.showActiveUsers"></span>
             <span ng-if="nav.showMostActiveUsers" translate="activeUsers.hideActiveUsers"></span>
           </a>
-          <div id="activeCarousel" class="pull-right" ng-show="nav.displayMostActive && (nav.activeUsersTotalPages > 1)">
+          <div id="activeCarousel" class="pull-right" ng-show="(nav.activeUsersTotalPages > 1)">
             <button type="button" class="actions-button btn--none" ng-click="nav.pageBackward()" ng-show="nav.activeUsersTotalPages > 3">
               <i class='icon icon-chevron-left'></i>
             </button>

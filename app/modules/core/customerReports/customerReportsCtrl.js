@@ -22,7 +22,7 @@
     vm.activeUserDescription = "";
     vm.mostActiveTitle = "";
     vm.activeUserStatus = REFRESH;
-    vm.displayMostActive = false;
+    vm.mostActiveUserStatus = REFRESH;
     vm.mostActiveUsers = [];
     vm.activeUserReverse = true;
     vm.activeUsersTotalPages = 0;
@@ -244,6 +244,7 @@
 
     function timeUpdate() {
       vm.activeUserStatus = REFRESH;
+      vm.mostActiveUserStatus = REFRESH;
       vm.avgRoomStatus = REFRESH;
       vm.filesSharedStatus = REFRESH;
       vm.mediaQualityStatus = REFRESH;
@@ -280,18 +281,25 @@
       CustomerReportService.getActiveUserData(vm.timeSelected).then(function (response) {
         if (response === ABORT) {
           return;
-        } else if (response.activeUserGraph.length === 0) {
+        } else if (response.length === 0) {
           vm.activeUserStatus = EMPTY;
         } else {
-          // TODO: add data handling to update the active user graph and table with the data in response
-          var tempActiveUserChart = CustomerGraphService.setActiveUsersGraph(response.activeUserGraph, activeUsersChart);
+          var tempActiveUserChart = CustomerGraphService.setActiveUsersGraph(response, activeUsersChart);
           if (tempActiveUserChart !== null && angular.isDefined(tempActiveUserChart)) {
             activeUsersChart = tempActiveUserChart;
           }
-
           vm.activeUserStatus = SET;
         }
-        activeUserCard = document.getElementById('active-user-card');
+        CustomerReportService.getMostActiveUserData(vm.timeSelected).then(function (response) {
+          if (response === ABORT) {
+            return;
+          } else if (response.length === 0) {
+            vm.mostActiveUserStatus = EMPTY;
+          } else {
+            vm.mostActiveUserStatus = SET;
+          }
+          activeUserCard = document.getElementById('active-user-card');
+        });
       });
     }
 
