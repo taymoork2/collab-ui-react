@@ -3,7 +3,7 @@
     <cs-header-left>
     </cs-header-left>
     <cs-header-right>
-      <div ng-if="!Config.isProd()" cs-dropdown class="user-info dropdown">
+      <div ng-if="!helpdeskCtrl.isProd" cs-dropdown class="user-info dropdown">
         <button cs-dropdown-toggle class="btn--user dropdown-toggle" ng-click="helpdeskCtrl.populateHistory()" tabindex="0">
           <i class="icon icon-clock" style="font-size:1.5rem;color:lightgrey;"></i>
         </button>
