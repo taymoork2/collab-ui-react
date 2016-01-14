@@ -10,15 +10,20 @@ angular.module('Core')
       var oldSSOValue = 0;
 
       //SIP URI Domain Controller code
-      $scope.cloudSipUriField = 'someText';
-      $scope.cloudSipFlag = false;
-      $scope.cloudSipErrorFlag = false;
+      $scope.cloudSipUriField = {};
+      $scope.cloudSipUriField.inputValue = '';
+      $scope.cloudSipUriField.cloudSipFlag = false;
+      $scope.cloudSipUriField.isError = false;
+      $scope.cloudSipUriField.isDisabled = false;
+      
+      $scope.validateSipUri = function() {
+        var isError = $scope.cloudSipUriField.isError;
+        if ($scope.cloudSipUriField.inputValue.length > 40) {
+          isError = true;
+        }
 
-      var orgId = Authinfo.getOrgId();
-      AccountOrgService.getOrgSettings(orgId)
-        .success(function (data, status) {
-          return data;
-        });
+        return isError;
+      }
 
       $scope.options = {
         configureSSO: 1,
