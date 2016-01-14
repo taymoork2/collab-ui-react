@@ -2,6 +2,7 @@ namespace domainManagement {
 
   class DomainManageAddCtrl {
     private _domain;
+    private _error;
 
     /* @ngInject */
     constructor(private $state, private DomainManagementService) {
@@ -15,7 +16,7 @@ namespace domainManagement {
           ctrl.$state.go('domainmanagement');
         },
         function (err) {
-          console.log('could not add domain (example failure): ' + ctrl._domain + err);
+          ctrl._error = err;
         }
       )
     }
@@ -24,11 +25,19 @@ namespace domainManagement {
       this.$state.go('domainmanagement');
     }
 
+    get error() {
+      return this._error;
+    }
+
     get domain() {
       return this._domain;
     }
 
     set domain(domain) {
+      if (domain == this._domain)
+        return;
+
+      this._error = null;//reset error
       this._domain = domain;
     }
 
@@ -58,7 +67,7 @@ namespace domainManagement {
     }
 
     get addEnabled() {
-      return this._domain && this._domain.length > 0 && this.isValid;
+      return this.isValid;
     }
   }
   angular

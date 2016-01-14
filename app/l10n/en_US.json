@@ -3307,7 +3307,7 @@
   "domainManagement": {
     "title": "Domain Verification",
     "description": "Add and verify your organisation domains. All DNS verification codes need to be entered into your DNS management interface for all domains. It’s highly recommended to verify all domains at the same time to avoid blockout of users.",
-    "addDomain": "Add domains",
+    "addDomain": "Add domain",
     "verifyDomain":"Verify",
     "list": {
       "domainHeader": "Domain",

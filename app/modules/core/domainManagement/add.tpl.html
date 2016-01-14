@@ -1,16 +1,15 @@
 <article class="domainVerifyPopupOverlay">
   <header><h3 translate="domainManagement.add.header"/></header>
   <section>
-    <span></span>
     <p translate="domainManagement.add.description" />
     <input type="text" placeholder="{{'domainManagement.add.exampleDomain' | translate}}" ng-model="dvadd.domain"/>
-    <span ng-if="!dvadd.validate().valid && !dvadd.validate().empty" translate="domainManagement.add.invalidDomain"></span>
-    <!--onchange="angular.element(this).scope().setDomainName(this)"/>-->
+    <b><p ng-if="!dvadd.validate().valid && !dvadd.validate().empty" translate="domainManagement.add.invalidDomain"></p>
+    <p ng-if="dvadd.error">{{dvadd.error}}</p></b>
   </section>
   <footer>
     <div>
       <button ng-click="dvadd.cancel()" translate="common.cancel"></button>
-      <button ng-disabled="!dvadd.isValid" ng-click="dvadd.add()" class="btn-primary" translate="common.add"></button>
+      <button ng-disabled="!dvadd.addEnabled" ng-click="dvadd.add()" class="btn-primary" translate="common.add"></button>
     </div>
   </footer>
 </article>
