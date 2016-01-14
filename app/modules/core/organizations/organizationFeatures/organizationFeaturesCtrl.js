@@ -14,7 +14,7 @@
 
     vm.resetForm = resetForm;
     vm.updateToggles = updateToggles;
-    vm.clicked = clicked;
+    vm.handleClick = handleClick;
 
     init();
     ////////////////
@@ -91,7 +91,7 @@
       });
     }
 
-    function clicked(name, model) {
+    function handleClick() {
       updateToggles();
     }
   }

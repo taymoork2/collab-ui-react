@@ -55,7 +55,7 @@ describe('Controller: OrganizationFeaturesCtrl', function () {
     toggle.model = !toggle.model;
 
     // invoke click callback
-    controller.clicked();
+    controller.handleClick();
     expect(FeatureToggleService.generateFeatureToggleRule).toHaveBeenCalledWith(currentOrg.id, toggle.name, toggle.model);
     expect(FeatureToggleService.setFeatureToggles).toHaveBeenCalled();
   });
