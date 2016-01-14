@@ -18,14 +18,14 @@
       var search = _.clone(s, true);
       if (_.size(search.userSearchResults) > 0 || _.size(search.orgSearchResults) > 0 || _.size(search.deviceSearchResults) > 0) {
         removeSearch(search);
-        if (self.searchHistory.length === self.limit) {        
+        if (self.searchHistory.length === self.limit) {
           self.searchHistory.pop();
         }
         self.searchHistory.splice(0, 0, search);
         Storage.putObject(self.searchHistoryStorageKey, self.searchHistory);
       }
     }
-    
+
     function getAllSearches() {
       return self.searchHistory;
     }
