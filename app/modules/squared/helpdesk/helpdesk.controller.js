@@ -31,7 +31,6 @@
     vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches() || [];
     vm.showSearchHelp = showSearchHelp;
     vm.populateHistory = populateHistory;
-    vm.isProd = Config.isProd();
 
     function populateHistory() {
       vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches() || [];
