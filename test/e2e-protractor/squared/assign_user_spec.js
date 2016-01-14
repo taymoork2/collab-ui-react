@@ -1,9 +1,5 @@
 'use strict';
 
-/* global describe */
-/* global it */
-/* global login,navigation,users,utils,notifications, protractor, deleteUtils */
-
 describe('Squared Invite User and Assign Services User Flow', function () {
 
   var inviteEmail;
@@ -43,10 +39,10 @@ describe('Squared Invite User and Assign Services User Flow', function () {
       utils.expectIsNotDisplayed(wizard.wizard);
     });
 
-    //it('should show invite pending status on new user', function () {
-    //  utils.searchForSingleResult(inviteEmail);
-    //  utils.expectText(users.userListStatus, 'Invite Pending');
-    //});
+    xit('should show invite pending status on new user', function () {
+      utils.searchAndClick(inviteEmail);
+      utils.expectTextToBeSet(users.userListSelStatus, 'Invite Pending');
+    });
 
     it('expect edit services is showing', function () {
       utils.clickUser(inviteEmail);

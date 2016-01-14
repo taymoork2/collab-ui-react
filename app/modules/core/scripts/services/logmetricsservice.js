@@ -1,5 +1,4 @@
 'use strict';
-/* global moment */
 
 angular.module('Core')
   .service('LogMetricsService', ['$rootScope', '$http', 'Authinfo', 'Config', 'Log', 'Storage', 'Auth',

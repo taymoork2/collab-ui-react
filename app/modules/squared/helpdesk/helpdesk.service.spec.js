@@ -2,13 +2,15 @@
 describe('HelpdeskService', function () {
   beforeEach(module('wx2AdminWebClientApp'));
 
-  var $httpBackend, Service, urlBase, ServiceDescriptor, $scope, q, HelpdeskMockData, CsdmConverter;
+  var $timeout, $httpBackend, Service, urlBase, ServiceDescriptor, $scope, q, HelpdeskMockData, CsdmConverter, HelpdeskHttpRequestCanceller;
 
-  beforeEach(inject(function (_Config_, _$rootScope_, _$httpBackend_, _HelpdeskService_, _ServiceDescriptor_, _$q_, _HelpdeskMockData_, _CsdmConverter_) {
+  beforeEach(inject(function (_$timeout_, _Config_, _$rootScope_, _$httpBackend_, _HelpdeskService_, _ServiceDescriptor_, _$q_, _HelpdeskMockData_, _CsdmConverter_, _HelpdeskHttpRequestCanceller_) {
     Service = _HelpdeskService_;
     ServiceDescriptor = _ServiceDescriptor_;
+    HelpdeskHttpRequestCanceller = _HelpdeskHttpRequestCanceller_;
     $scope = _$rootScope_.$new();
     q = _$q_;
+    $timeout = _$timeout_;
     urlBase = _Config_.getAdminServiceUrl();
     HelpdeskMockData = _HelpdeskMockData_;
     CsdmConverter = _CsdmConverter_;
@@ -104,6 +106,94 @@ describe('HelpdeskService', function () {
 
     $httpBackend.verifyNoOutstandingExpectation();
     $httpBackend.verifyNoOutstandingRequest();
+  });
+
+  it('user search times out', function () {
+
+    var orgSearchResponseMock = {
+      "items": [{
+        "id": "2222",
+        "displayName": "Bill Gates Foundation"
+      }]
+    };
+
+    var userSearchResult = [{
+      "active": true,
+      "id": "1111",
+      "organization": {
+        id: "2222"
+      },
+      "userName": "bill.gates",
+      "displayName": "Bill Gates"
+    }];
+
+    $httpBackend
+      .when('GET', urlBase + 'helpdesk/search/users?phrase=whatever&limit=30&orgId=1111')
+      .respond(orgSearchResponseMock);
+
+    var result;
+    var error;
+
+    var x = Service.searchUsers("whatever", "1111", 30, null, null).then(function (res) {
+      result = res;
+    }).catch(function (err) {
+      error = err;
+    });
+
+    $timeout.flush();
+
+    $timeout.verifyNoPendingTasks();
+
+    expect(error.cancelled).toBeFalsy();
+    expect(error.timedout).toBeTruthy();
+
+  });
+
+  it('user search cancelled', function () {
+
+    var orgSearchResponseMock = {
+      "items": [{
+        "id": "2222",
+        "displayName": "Bill Gates Foundation"
+      }]
+    };
+
+    var userSearchResult = [{
+      "active": true,
+      "id": "1111",
+      "organization": {
+        id: "2222"
+      },
+      "userName": "bill.gates",
+      "displayName": "Bill Gates"
+    }];
+
+    $httpBackend
+      .when('GET', urlBase + 'helpdesk/search/users?phrase=whatever&limit=30&orgId=1111')
+      .respond(orgSearchResponseMock);
+
+    var result;
+    var error;
+
+    var x = Service.searchUsers("whatever", "1111", 30, null, null).then(function (res) {
+      result = res;
+    }).catch(function (err) {
+      error = err;
+    });
+
+    $scope.$apply();
+    var cancelled = false;
+    HelpdeskHttpRequestCanceller.cancelAll().then(function () {
+      cancelled = true;
+    });
+
+    $timeout.flush();
+
+    expect(cancelled).toBeTruthy();
+
+    expect(error.cancelled).toBeTruthy();
+    expect(error.timedout).toBeFalsy();
+
   });
 
   it("get list of hybrid services relevant services in an org", function () {

@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskUserController($stateParams, HelpdeskService, XhrNotificationService, USSService2, HelpdeskCardsUserService, Config) {
+  function HelpdeskUserController($stateParams, HelpdeskService, XhrNotificationService, USSService2, HelpdeskCardsUserService, Config, LicenseService, HelpdeskHuronService) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.user) {
@@ -48,7 +48,7 @@
       vm.hybridServicesCard = HelpdeskCardsUserService.getHybridServicesCardForUser(user);
 
       if (vm.hybridServicesCard.entitled) {
-        USSService2.getStatusesForUserInOrg(vm.userId, vm.orgId).then(function (statuses) {
+        HelpdeskService.getHybridStatusesForUser(vm.userId, vm.orgId).then(function (statuses) {
           _.each(statuses, function (status) {
             status.collapsedState = USSService2.decorateWithStatus(status);
             switch (status.serviceId) {
@@ -70,6 +70,15 @@
         // Only if there is no displayName. If set, the org name has already been read (on the search page)
         HelpdeskService.getOrgDisplayName(vm.orgId).then(function (displayName) {
           vm.org.displayName = displayName;
+        }, XhrNotificationService.notify);
+      }
+
+      if (LicenseService.userIsEntitledTo(user, Config.entitlements.huron)) {
+        HelpdeskHuronService.getDevices(vm.userId, vm.orgId).then(function (devices) {
+          vm.huronDevices = devices;
+        }, XhrNotificationService.notify);
+        HelpdeskHuronService.getUserNumbers(vm.userId, vm.orgId).then(function (numbers) {
+          vm.callCard.huronNumbers = numbers;
         }, XhrNotificationService.notify);
       }
 

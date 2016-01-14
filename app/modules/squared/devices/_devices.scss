@@ -46,7 +46,7 @@
     padding: 9px 10px 6px 10px;
   }
 
-  .form-group button {
+  .btn-action {
     width: 141px;
   }
 
@@ -58,7 +58,7 @@
 
   #overviewImage {
     width: 144px;
-    margin: 0 25px 0 0;
+    margin: 15px 25px 15px 0;
   }
 
   #overviewDescription {
@@ -67,6 +67,17 @@
 
   .deviceIssue {
     padding-bottom: 10px
+  }
+}
+
+.device-img {
+  img {
+    border-radius: 50%;
+    overflow: hidden;
+  }
+
+  i {
+    top: 15px;
   }
 }
 

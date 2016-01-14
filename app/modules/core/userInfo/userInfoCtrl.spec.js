@@ -5,6 +5,9 @@ describe('UserInfoController', function () {
 
   var controller, $window, $scope, FeedbackService, Userservice, Utils, deferred, $rootScope;
 
+  beforeEach(module('WebExUtils'));
+  beforeEach(module('WebExXmlApi'));
+
   beforeEach(inject(function (_$rootScope_, $controller, $q) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
@@ -24,6 +27,7 @@ describe('UserInfoController', function () {
         userAgent: 'some useragent'
       }
     };
+
     controller = $controller('UserInfoController', {
       Utils: Utils,
       $scope: $scope,
@@ -54,4 +58,64 @@ describe('UserInfoController', function () {
     expect($window.open.args[0][1]).toBe('_blank');
   });
 
+});
+
+describe('UserInfoController WebEx logout', function () {
+  var Auth, deferredLogout, WebExUtilsFact, $timeout;
+  var $window, $scope, $rootScope;
+
+  beforeEach(module('WebExUtils'));
+  beforeEach(module('WebExXmlApi'));
+
+  beforeEach(inject(function (_$rootScope_, $controller, $q, _Auth_, _WebExUtilsFact_, _$timeout_) {
+    $rootScope = _$rootScope_;
+    $scope = $rootScope.$new();
+    Auth = _Auth_;
+    WebExUtilsFact = _WebExUtilsFact_;
+    $timeout = _$timeout_;
+
+    var Userservice = {
+      getUser: sinon.stub()
+    };
+
+    deferredLogout = $q.defer();
+    spyOn(WebExUtilsFact, "logoutSite").and.returnValue(deferredLogout.promise);
+    spyOn(Auth, "logout");
+
+    $controller('UserInfoController', {
+      $scope: $scope,
+      Userservice: Userservice,
+      Auth: Auth,
+      WebExUtilsFact: WebExUtilsFact
+    });
+
+  }));
+
+  it("should continue logout if WebEx logout does not resolve", function () {
+    $scope.logout();
+    $timeout.flush(); //trigger $timeout
+    expect(WebExUtilsFact.logoutSite).toHaveBeenCalled();
+    expect(Auth.logout).toHaveBeenCalled();
+  });
+
+  it("should continue if WebEx logout resolves with success", function () {
+    deferredLogout.resolve('OK');
+    $scope.logout();
+    $rootScope.$apply();
+    expect(WebExUtilsFact.logoutSite).toHaveBeenCalled();
+    expect(Auth.logout).toHaveBeenCalled();
+  });
+
+  it("should continue if WebEx logout resolves with error", function () {
+    deferredLogout.reject('ERROR');
+    $scope.logout();
+    $rootScope.$apply();
+    expect(WebExUtilsFact.logoutSite).toHaveBeenCalled();
+    expect(Auth.logout).toHaveBeenCalled();
+  });
+
+  afterEach(function () {
+    WebExUtilsFact.logoutSite.calls.reset();
+    Auth.logout.calls.reset();
+  });
 });

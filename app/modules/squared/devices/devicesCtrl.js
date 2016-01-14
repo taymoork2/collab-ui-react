@@ -33,7 +33,8 @@ angular.module('Squared')
 
       vm.shouldShowList = function () {
         return vm.codesListSubscription.eventCount !== 0 &&
-          (vm.deviceListSubscription.eventCount !== 0 || CsdmDeviceService.getDeviceList().length > 0);
+          (vm.deviceListSubscription.eventCount !== 0 || CsdmDeviceService.getDeviceList().length > 0) &&
+          (vm.huronDeviceListSubscription.eventCount !== 0 || CsdmHuronDeviceService.getDeviceList().length > 0);
       };
 
       vm.updateListAndFilter = function () {
@@ -47,24 +48,34 @@ angular.module('Squared')
         return DeviceFilter.getFilteredList(filtered);
       };
 
+      vm.showDeviceDetails = function (device) {
+        vm.currentDevice = device; // fixme: modals depend on state set here
+        $state.go('device-overview', {
+          currentDevice: device
+        });
+      };
+
       vm.gridOptions = {
         data: 'sc.updateListAndFilter()',
         rowHeight: 75,
-        showFilter: false,
-        multiSelect: false,
-        headerRowHeight: 44,
-        enableColumnResize: true,
-        sortInfo: {
-          directions: ['asc'],
-          fields: ['displayName']
+        enableRowHeaderSelection: false,
+        enableColumnMenus: false,
+        onRegisterApi: function (gridApi) {
+          $scope.gridApi = gridApi;
+          gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+            vm.showDeviceDetails(row.entity);
+          });
         },
-        rowTemplate: getTemplate('_rowTpl'),
-
         columnDefs: [{
           field: 'displayName',
           displayName: 'Belongs to',
           cellTemplate: getTemplate('_nameTpl'),
-          sortFn: sortFn
+          sortingAlgorithm: sortFn,
+          sort: {
+            direction: 'asc',
+            priority: 0
+          },
+          sortCellFiltered: true
         }, {
           field: 'readableState',
           displayName: 'Status',
@@ -76,13 +87,6 @@ angular.module('Squared')
           cellTemplate: getTemplate('_productTpl'),
           sortFn: sortFn
         }]
-      };
-
-      vm.showDeviceDetails = function (device) {
-        vm.currentDevice = device; // fixme: modals depend on state set here
-        $state.go('device-overview', {
-          currentDevice: device
-        });
       };
 
       vm.showAddDeviceDialog = function () {

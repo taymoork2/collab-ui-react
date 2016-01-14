@@ -59,9 +59,7 @@
         type: 'text',
         required: true
       },
-      expressionProperties: {
-        'hide': '!model.isPartner'
-      }
+      hideExpression: '!model.isPartner'
     }, {
       key: 'begeoId',
       type: 'input',
@@ -72,9 +70,7 @@
         type: 'text',
         required: false
       },
-      expressionProperties: {
-        'hide': '!model.isPartner'
-      }
+      hideExpression: '!model.isPartner'
     }, {
       key: 'COLLAB',
       type: 'checkbox',
@@ -98,10 +94,8 @@
         id: 'squaredUCOrganization',
         class: 'col-xs-8 col-xs-offset-4'
       },
-      expressionProperties: {
-        'hide': function () {
-          return !vm.isSquaredUC;
-        }
+      hideExpression: function () {
+        return !vm.isSquaredUC;
       }
     }, {
       key: 'duration',

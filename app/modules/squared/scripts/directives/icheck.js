@@ -1,8 +1,5 @@
 'use strict';
 
-//Setting it to false just for this file because it does not recognize jQuery's '$' symbol.
-/* global $ */
-
 angular.module('wx2AdminWebClientApp')
   .directive('icheck', function ($timeout) {
     return {

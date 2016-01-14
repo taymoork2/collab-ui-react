@@ -6,7 +6,7 @@
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, $scope, XhrNotificationService, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmCodeService, CsdmDeviceService, CsdmHuronDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, channels, RemoteSupportModal) {
+  function DeviceOverviewCtrl($q, $state, $scope, XhrNotificationService, Notification, $stateParams, $translate, $timeout, Authinfo, FeedbackService, CsdmCodeService, CsdmDeviceService, CsdmHuronDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal, ResetDeviceModal, channels, RemoteSupportModal, Userservice) {
     var deviceOverview = this;
 
     deviceOverview.currentDevice = $stateParams.currentDevice;
@@ -14,6 +14,9 @@
     if (deviceOverview.currentDevice.isHuronDevice) {
       CsdmHuronDeviceService.getDeviceDetails(deviceOverview.currentDevice).then(function (result) {
         deviceOverview.currentDevice = result;
+      });
+      Userservice.getUser(deviceOverview.currentDevice.cisUuid, function (user) {
+        deviceOverview.currentDeviceOwner = user;
       });
     }
 
@@ -80,21 +83,25 @@
 
     deviceOverview.canChangeUpgradeChannel = channels.length > 1 && deviceOverview.currentDevice.isOnline;
 
-    deviceOverview.upgradeChannelOptions = _.map(channels, function (channel, index) {
-      return {
-        label: $translate.instant('CsdmStatus.upgradeChannels.' + channel),
-        value: channel
-      };
-    });
+    deviceOverview.upgradeChannelOptions = _.map(channels, getUpgradeChannelObject);
 
     function resetSelectedChannel() {
-      deviceOverview.selectedUpgradeChannel = {
-        label: $translate.instant('CsdmStatus.upgradeChannels.' + deviceOverview.currentDevice.upgradeChannel),
-        value: deviceOverview.currentDevice.upgradeChannel
-      };
+      deviceOverview.selectedUpgradeChannel = getUpgradeChannelObject(deviceOverview.currentDevice.upgradeChannel);
     }
 
     resetSelectedChannel();
+
+    function getUpgradeChannelObject(channel) {
+      var labelKey = 'CsdmStatus.upgradeChannels.' + channel;
+      var label = $translate.instant('CsdmStatus.upgradeChannels.' + channel);
+      if (label === labelKey) {
+        label = channel;
+      }
+      return {
+        label: label,
+        value: channel
+      };
+    }
 
     deviceOverview.saveUpgradeChannelAndWait = function () {
       var newValue = deviceOverview.selectedUpgradeChannel.value;

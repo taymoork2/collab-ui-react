@@ -2,11 +2,11 @@
   'use strict';
 
   /*ngInject*/
+
   function HelpdeskService(ServiceDescriptor, $location, $http, Config, $q, HelpdeskMockData, CsdmConfigService, CsdmConverter, CacheFactory,
-    $translate, $timeout) {
+    $translate, $timeout, USSService2, DeviceService, HelpdeskHttpRequestCanceller) {
     var urlBase = Config.getAdminServiceUrl(); //"http://localhost:8080/admin/api/v1/"
     var orgCache = CacheFactory.get('helpdeskOrgCache');
-    var searchTimeout = 30000;
     if (!orgCache) {
       orgCache = new CacheFactory('helpdeskOrgCache', {
         maxAge: 120 * 1000,
@@ -100,22 +100,27 @@
       return $location.absUrl().match(/helpdesk-backend=mock/);
     }
 
+    function cancelableHttpGET(url) {
+      var config = {
+        timeout: HelpdeskHttpRequestCanceller.newCancelableTimeout()
+      };
+
+      return $http
+        .get(url, config)
+        .catch(function (error) {
+          error.cancelled = error.config.timeout.cancelled;
+          error.timedout = error.config.timeout.timedout;
+          return $q.reject(error);
+        });
+    }
+
     function searchUsers(searchString, orgId, limit, role, includeUnlicensed) {
       if (useMock()) {
         return deferredResolve(HelpdeskMockData.users);
       }
-      var deferred = $q.defer();
-      var config = {
-        timeout: deferred.promise
-      };
-      $timeout(function () {
-        deferred.resolve();
-      }, searchTimeout);
 
-      return $http
-        .get(urlBase + 'helpdesk/search/users?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit + (orgId ? '&orgId=' +
-            encodeURIComponent(orgId) : (includeUnlicensed ? '&includeUnlicensed=true' : '')) + (role ? '&role=' + encodeURIComponent(role) : ''),
-          config)
+      return cancelableHttpGET(urlBase + 'helpdesk/search/users?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit + (orgId ? '&orgId=' +
+          encodeURIComponent(orgId) : (includeUnlicensed ? '&includeUnlicensed=true' : '')) + (role ? '&role=' + encodeURIComponent(role) : ''))
         .then(extractUsers);
     }
 
@@ -123,12 +128,15 @@
       if (useMock()) {
         return deferredResolve(HelpdeskMockData.orgs);
       }
-      return $http
-        .get(urlBase + 'helpdesk/search/organizations?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit)
+
+      return cancelableHttpGET(urlBase + 'helpdesk/search/organizations?phrase=' + encodeURIComponent(searchString) + '&limit=' + limit)
         .then(extractItems);
     }
 
     function getUser(orgId, userId) {
+      if (useMock()) {
+        return deferredResolve(extractAndMassageUser(HelpdeskMockData.user));
+      }
       return $http
         .get(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId) + '/users/' + encodeURIComponent(userId))
         .then(extractAndMassageUser);
@@ -217,11 +225,11 @@
           }
         }
       });
-      return _.sortBy(filteredDevices, 'displayName');
+      return filteredDevices;
     }
 
     function extractAndMassageUser(res) {
-      var user = res.data;
+      var user = res.data || res;
       user.displayName = getCorrectedDisplayName(user);
       user.isConsumerUser = user.orgId === Config.consumerOrgId;
       if (!user.accountStatus) {
@@ -293,19 +301,32 @@
 
     function getWebExSites(orgId) {
       if (useMock()) {
-        var deferred = $q.defer();
-        deferred.resolve(HelpdeskMockData.webExSites);
-        return deferred.promise;
+        return deferredResolve(HelpdeskMockData.webExSites);
       }
       return $http
         .get(urlBase + 'helpdesk/webexsites/' + encodeURIComponent(orgId))
         .then(extractItems);
     }
 
+    function getHybridStatusesForUser(userId, orgId) {
+      if (useMock()) {
+        return deferredResolve(HelpdeskMockData.userStatuses);
+      }
+      return USSService2.getStatusesForUserInOrg(userId, orgId);
+    }
+
     function deferredResolve(resolved) {
       var deferred = $q.defer();
       deferred.resolve(resolved);
       return deferred.promise;
+    }
+
+    function cancelAllRequests() {
+      return HelpdeskHttpRequestCanceller.cancelAll();
+    }
+
+    function noOutstandingRequests() {
+      return HelpdeskHttpRequestCanceller.empty();
     }
 
     return {
@@ -322,7 +343,11 @@
       findAndResolveOrgsForUserResults: findAndResolveOrgsForUserResults,
       checkIfMobile: checkIfMobile,
       sendVerificationCode: sendVerificationCode,
-      filterDevices: filterDevices
+      filterDevices: filterDevices,
+      getHybridStatusesForUser: getHybridStatusesForUser,
+      cancelAllRequests: cancelAllRequests,
+      noOutstandingRequests: noOutstandingRequests,
+      useMock: useMock
     };
   }
 

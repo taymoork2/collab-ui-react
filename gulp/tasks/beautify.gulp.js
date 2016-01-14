@@ -55,4 +55,3 @@ gulp.task('jsBeautifier:beautify', function () {
     }))
     .pipe(gulp.dest('./'));
 });
-

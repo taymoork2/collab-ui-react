@@ -1,6 +1,4 @@
 'use strict';
-/* global element */
-/* global by */
 
 var LandingPage = function () {
   this.nontrialadmin = {
@@ -59,13 +57,13 @@ var LandingPage = function () {
   this.btnBack = element(by.id('btnBack'));
   this.closeAddUser = element(by.id('closeAddUser'));
   this.closeConvertUser = element(by.id('closeConvertUser'));
-  this.unlicensedUserRow = element(by.css('.ngRow'));
+  this.unlicensedUserRow = element(by.css('.ui-grid-selection-row-header-buttons'));
 
   this.serviceSetup = element(by.css('.settings-menu'));
   this.languageSelector = element(by.css('select#languageSelector'));
 
   function convertUsersSearch(query) {
-    return element.all(by.cssContainingText('.ngGrid .ngRow span', query)).first();
+    return element.all(by.cssContainingText('.ui-grid .ui-grid-row .ui-grid-cell-contents', query)).first();
   }
 
   var nMaxLangs = 20;

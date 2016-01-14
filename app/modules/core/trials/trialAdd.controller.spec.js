@@ -24,6 +24,7 @@ describe('Controller: TrialAddCtrl', function () {
     spyOn($state, 'go');
     spyOn(EmailService, 'emailNotifyTrialCustomer').and.returnValue($q.when());
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.when(true));
+    spyOn(FeatureToggleService, 'supportsPstnSetup').and.returnValue($q.when(true));
 
     controller = $controller('TrialAddCtrl', {
       $scope: $scope,

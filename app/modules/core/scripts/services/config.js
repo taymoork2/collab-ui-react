@@ -183,6 +183,13 @@ angular.module('Core')
           prod: 'https://ciscospark.statuspage.io/index.json'
         },
 
+        huronHealthCheckUrl: {
+          dev: 'https://squareduc.statuspage.io/index.json',
+          cfe: 'https://squareduc.statuspage.io/index.json',
+          integration: 'https://squareduc.statuspage.io/index.json',
+          prod: 'https://squareduc.statuspage.io/index.json'
+        },
+
         herculesUrl: {
           dev: 'https://hercules-integration.wbx2.com/v1',
           cfe: 'https://hercules-e.wbx2.com/v1',
@@ -217,10 +224,10 @@ angular.module('Core')
         },
 
         sunlightConfigServiceUrl: {
-          dev: 'https://config.integration-tx1.thunderhead.io/config/v1',
-          cfe: 'https://config.integration-tx1.thunderhead.io/config/v1',
-          integration: 'https://config.integration-tx1.thunderhead.io/config/v1',
-          prod: 'https://config.integration-tx1.thunderhead.io/config/v1' //This will change to prod later in future
+          dev: 'https://config.rciad.ciscoccservice.com/config/v1',
+          cfe: 'https://config.rciad.ciscoccservice.com/config/v1',
+          integration: 'https://config.rciad.ciscoccservice.com/config/v1',
+          prod: 'https://config.rciad.ciscoccservice.com/config/v1' //This will change to prod later in future
         },
 
         calliopeUrl: {
@@ -318,8 +325,10 @@ angular.module('Core')
           }, {
             title: 'tabs.MediafusionDetailsTab',
             desc: 'tabs.MediafusionDetailsTabDesc',
-            state: 'mediafusionconnector',
-            link: '#mediafusionconnector'
+            //state: 'mediafusionconnector',
+            //link: '#mediafusionconnector'
+            state: 'media-service',
+            link: '#mediaservice'
           }, {
             title: 'tabs.messengerTab',
             desc: 'tabs.messengerTabDesc',
@@ -449,6 +458,18 @@ angular.module('Core')
           messenger: 'webex-messenger'
         },
 
+        offerTypes: {
+          collab: 'COLLAB',
+          spark1: 'SPARK1', //to be depricated; use message
+          webex: 'WEBEX', // to be depricated; use meetings
+          squaredUC: 'SQUAREDUC', // to be depricated; use call
+          message: 'MESSAGE',
+          meetings: 'MEETINGS',
+          call: 'CALL',
+          roomSystems: 'ROOMSYSTEMS'
+        },
+
+        //TODO: Revisit whether or not this is still needed or need to be modified now that there is offerTypes.
         trials: {
           message: 'COLLAB',
           meeting: 'WEBEX',
@@ -456,6 +477,7 @@ angular.module('Core')
           roomSystems: 'ROOMSYSTEMS'
         },
 
+        //TODO: Revisit whether or not this is still needed or need to be modified now that there is offerTypes.
         organizations: {
           collab: 'COLLAB',
           squaredUC: 'SQUAREDUC'
@@ -511,7 +533,8 @@ angular.module('Core')
           primaryColorBase: '#049FD9',
           primaryColorDarker: '#0387B8',
           dummyGrayLight: '#F3F3F3',
-          dummyGrayLighter: '#FAFAFA'
+          dummyGrayLighter: '#FAFAFA',
+          colorAttentionBase: '#F5A623'
         },
 
         confMap: {
@@ -862,6 +885,17 @@ angular.module('Core')
           return healthCheckServiceUrl[this.getEnv()];
         },
 
+        getHuronHealthCheckUrlServiceUrl: function () {
+          var healthCheckServiceUrl = {
+            'dev': this.huronHealthCheckUrl.dev,
+            'cfe': this.huronHealthCheckUrl.cfe,
+            'integration': this.huronHealthCheckUrl.integration,
+            'prod': this.huronHealthCheckUrl.prod
+          };
+
+          return healthCheckServiceUrl[this.getEnv()];
+        },
+
         getLogMetricsUrl: function () {
           return this.logMetricUrl;
         },
@@ -1004,7 +1038,8 @@ angular.module('Core')
       }
 
       config.roleStates = {
-        Full_Admin: [ // Customer Admin
+        // Customer Admin
+        Full_Admin: [
           'overview',
           'users',
           'user-overview',
@@ -1092,7 +1127,8 @@ angular.module('Core')
           'fault',
           'alarms',
           'events',
-          'mediafusionconnector',
+          //'mediafusionconnector',
+          'media-service',
           'connector-details'
         ],
         'webex-messenger': [
@@ -1113,7 +1149,8 @@ angular.module('Core')
           'devReports',
           'devices',
           'fusion',
-          'mediafusionconnector',
+          //'mediafusionconnector',
+          'media-service',
           'hurondetails',
           'huronsettings',
           'calendar-service',

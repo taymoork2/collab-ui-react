@@ -4,22 +4,19 @@
       <div class="small-4 columns column-title">
         <div class="column-header">
           <i class="icon icon-circle-message"></i>
-          <h3 ng-if="isStormBranding" translate="onboardModal.message"></h3>
-          <h3 ng-if="!isStormBranding" translate="onboardModal.messaging"></h3>
+          <h3 translate="onboardModal.message"></h3>
         </div>
       </div>
       <div class="small-4 columns column-title">
         <div class="column-header">
           <i class="icon icon-circle-group"></i>
-          <h3 ng-if="isStormBranding" translate="onboardModal.meeting"></h3>
-          <h3 ng-if="!isStormBranding" translate="onboardModal.conferencing"></h3>
+          <h3 translate="onboardModal.meeting"></h3>
         </div>
       </div>
       <div class="small-4 columns column-title">
         <div class="column-header">
           <i class="icon icon-circle-call"></i>
-          <h3 ng-if="isStormBranding" translate="onboardModal.call"></h3>
-          <h3 ng-if="!isStormBranding" translate="onboardModal.communications"></h3>
+          <h3 translate="onboardModal.call"></h3>
         </div>
       </div>
     </div>
@@ -28,16 +25,13 @@
     </div>
     <div class="flex-row">
       <div class="small-4 columns column-free">
-        <div ng-if="isStormBranding" translate="onboardModal.msgFree"></div>
-        <div ng-if="!isStormBranding" translate="onboardModal.freeMsg"></div>
+        <div translate="onboardModal.msgFree"></div>
       </div>
       <div class="small-4 columns column-free">
-        <div ng-if="isStormBranding" translate="onboardModal.mtgFree"></div>
-        <div ng-if="!isStormBranding" translate="onboardModal.freeConf"></div>
+        <div translate="onboardModal.mtgFree"></div>
       </div>
       <div class="small-4 columns column-free">
-        <div ng-if="isStormBranding" translate="onboardModal.callFree"></div>
-        <div ng-if="!isStormBranding" translate="onboardModal.freeComm"></div>
+        <div translate="onboardModal.callFree"></div>
       </div>
     </div>
     <div class="row">
@@ -47,8 +41,7 @@
       <div id="messaging" class="small-4 columns column-paid">
         <div class="entitle-check-grp" ng-repeat="msgFeature in messageFeatures">
           <div ng-if="msgFeature.licenses">
-            <div ng-if="isStormBranding" class="item-license" translate="onboardModal.message"></div>
-            <div ng-if="!isStormBranding" class="item-license" translate="onboardModal.messaging"></div>
+            <div class="item-license" translate="onboardModal.message"></div>
             <div class="ckbx" id="paidMsg" ng-if="msgFeature.licenses.length === 1">
               <cs-checkbox ckid="paid-msg" ng-model="radioStates.msgRadio" label="{{msgFeature.label}}">
               </cs-checkbox>
@@ -66,23 +59,23 @@
         </div>
       </div>
       <div id="conference" class="small-4 columns column-paid">
-        <div ng-if="isStormBranding && confChk" class="item-license" translate="onboardModal.meeting"></div>
-        <div ng-if="!isStormBranding && confChk" class="item-license" translate="onboardModal.conferencing"></div>
-        <div class="entitle-check-grp" ng-repeat="cf in confChk | orderBy:'confFeature.license.siteUrl':true">
-          <div class="ckbx" ng-if="cf.confFeature.license.licenseType !== 'freeConferencing'">
-            <div ng-if="!cf.confFeature.license.siteUrl">
-              <cs-checkbox ckid="{{cf.confFeature.license.licenseId}}" ng-model="cf.confModel" label="{{cf.confFeature.label}}"></cs-checkbox>
-            </div>
-            <div ng-if="cf.confFeature.license.siteUrl" class="item-mtg">
-              <div class="sub-line"></div>
-              {{cf.confFeature.license.siteUrl}}
-              <cs-checkbox ckid="{{cf.confFeature.license.licenseId}}" ng-model="cf.confModel" label="WebEx {{cf.confFeature.label}}"></cs-checkbox>
-            </div>
-            <div ng-if="cf.cmrFeature">
-                <cs-checkbox ckid="{{cf.cmrId}}" class="indentedCheckbox" ng-click="licenseHandler(cf.cmrFeature.license.licenseId); cf.confModel = true; cf.cmrModel = !cf.cmrModel" ng-model="cf.cmrModel" label="WebEx {{cf.cmrFeature.label}}" isdisabled="false">
-                </cs-checkbox>
+        <div ng-if="confChk" class="item-license" translate="onboardModal.meeting"></div>
+        <div class="entitle-check-grp" ng-repeat="lic in allLicenses">
+          <div class="ckbx" ng-if="!lic.site">
+            <cs-checkbox ckid="{{lic.licenseId}}" ng-model="lic.confModel" label="{{lic.label}}"></cs-checkbox>
+          </div>
+          <div class="item-mtg">
+            {{lic.site}}
+            <div ng-repeat="cfLic in lic.confLic">
+              <cs-checkbox ckid="{{cfLic.licenseId}}" ng-model="cfLic.confModel" label="WebEx {{cfLic.label}}"></cs-checkbox>
+              <div ng-if="cfLic.offerName === 'MC' || cfLic.offerName === 'EE'">
+                <div ng-repeat="cmrLic in lic.cmrLic">
+                  <cs-checkbox ckid="{{cmrLic.licenseId}}" class="indentedCheckbox" ng-click="licenseHandler(cmrLic.licenseId); cfLic.confModel = true; cmrLic.cmrModel = !cmrLic.cmrModel" ng-model="cmrLic.cmrModel" label="WebEx {{cmrLic.label}}" isdisabled="false"></cs-checkbox>
+                </div>
+              </div>
             </div>
           </div>
+          <div ng-class="{'sub-line':!$last}"></div>
         </div>
       </div>
       <div id="communication" class="small-4 columns column-paid">
@@ -102,5 +95,6 @@
             </div>
           </div>
         </div>
+      </div>
     </div>
 </div>
