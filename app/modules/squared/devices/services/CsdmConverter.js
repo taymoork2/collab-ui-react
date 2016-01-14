@@ -36,16 +36,16 @@ angular.module('Squared').service('CsdmConverter',
       };
       this.image = (function () {
         switch (obj.product) {
-          case "Cisco TelePresence DX80":
-            return "images/devices-hi/dx80.png";
-          case "Cisco TelePresence DX70":
-            return "images/devices-hi/dx70.png";
-          case "Cisco TelePresence SX20":
-            return "images/devices-hi/sx20.png";
-          case "Cisco TelePresence SX20":
-            return "images/devices-hi/sx20.png";
-          default:
-            return "images/devices-hi/unknown.png";
+        case "Cisco TelePresence DX80":
+          return "images/devices-hi/dx80.png";
+        case "Cisco TelePresence DX70":
+          return "images/devices-hi/dx70.png";
+        case "Cisco TelePresence SX10":
+          return "images/devices-hi/sx10.png";
+        case "Cisco TelePresence SX20":
+          return "images/devices-hi/sx20.png";
+        default:
+          return "images/devices-hi/unknown.png";
         }
       }());
     }
@@ -62,7 +62,7 @@ angular.module('Squared').service('CsdmConverter',
       this.displayName = obj.displayName;
       this.cssColorClass = getCssColorClass(obj);
       this.readableState = getReadableState(obj);
-      this.photos = (obj.photos == null || obj.photos.length == 0 ) ? null : obj.photos;
+      this.photos = (obj.photos == null || obj.photos.length == 0) ? null : obj.photos;
       this.isHuronDevice = true;
     }
 
@@ -78,7 +78,7 @@ angular.module('Squared').service('CsdmConverter',
       this.displayName = huronDevice.displayName;
       this.cssColorClass = getHuronCssColorClass(obj);
       this.readableState = getHuronReadableState(obj);
-      this.photos = (obj.photos == null || obj.photos.length == 0 ) ? null : obj.photos;
+      this.photos = (huronDevice.photos == null || huronDevice.photos.length == 0) ? null : huronDevice.photos;
       this.isHuronDevice = true;
       this.image = "images/devices-hi/" + (obj.model.trim().replace(/ /g, '_') + '.png').toLowerCase();
     }

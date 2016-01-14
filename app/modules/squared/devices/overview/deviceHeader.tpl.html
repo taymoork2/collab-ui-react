@@ -5,10 +5,10 @@
       <img src="images/devices-hi/space_avatar.png" />
     </div>
     <div class="hurondevice-img" ng-if="deviceOverview.currentDevice.isHuronDevice">
-      <span ng-if="!deviceOverview.currentDevice.photos || deviceOverview.currentDevice.photos.length <= 1" class="user-img">
+      <span ng-if="!deviceOverview.currentDevice.photos" class="user-img">
         <i class="icon icon-user"></i>
       </span>
-      <img ng-if="deviceOverview.currentDevice.photos.length > 1"
+      <img ng-if="deviceOverview.currentDevice.photos"
            ng-src="{{deviceOverview.currentDevice.photos[1].url}}" />
     </div>
   </div>
