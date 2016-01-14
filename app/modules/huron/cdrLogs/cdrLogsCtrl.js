@@ -233,9 +233,7 @@
           maxlength: 36,
           placeholder: $translate.instant('cdrLogs.callingParty')
         },
-        expressionProperties: {
-          'hideExpression': expression.hideSearch
-        }
+        hideExpression: 'expression.hideSearch'
       }, {
         key: 'calledUser',
         type: 'input',
@@ -251,9 +249,7 @@
           maxlength: 36,
           placeholder: $translate.instant('cdrLogs.calledParty')
         },
-        expressionProperties: {
-          'hideExpression': expression.hideSearch
-        }
+        hideExpression: 'expression.hideSearch'
       }, {
         key: 'callingPartyNumber',
         type: 'input',
@@ -270,9 +266,7 @@
           maxlength: 10,
           placeholder: $translate.instant('cdrLogs.callingParty')
         },
-        expressionProperties: {
-          'hideExpression': expression.hideSearch
-        }
+        hideExpression: 'expression.hideSearch'
       }, {
         key: 'calledPartyNumber',
         type: 'input',
@@ -288,9 +282,7 @@
           maxlength: 10,
           placeholder: $translate.instant('cdrLogs.calledParty')
         },
-        expressionProperties: {
-          'hideExpression': expression.hideSearch
-        }
+        hideExpression: 'expression.hideSearch'
       }, {
         key: 'callingPartyDevice',
         type: 'input',
@@ -306,9 +298,7 @@
           type: 'text',
           placeholder: $translate.instant('cdrLogs.callingParty')
         },
-        expressionProperties: {
-          'hideExpression': expression.hideSearch
-        }
+        hideExpression: 'expression.hideSearch'
       }, {
         key: 'calledPartyDevice',
         type: 'input',
@@ -323,9 +313,7 @@
           type: 'text',
           placeholder: $translate.instant('cdrLogs.calledParty')
         },
-        expressionProperties: {
-          'hideExpression': expression.hideSearch
-        }
+        hideExpression: 'expression.hideSearch'
       }, {
         key: 'startTime',
         type: 'input',
@@ -342,9 +330,7 @@
           type: 'text',
           placeholder: $translate.instant('cdrLogs.timeExample')
         },
-        expressionProperties: {
-          'hideExpression': expression.hideSearch
-        }
+        hideExpression: 'expression.hideSearch'
       }, {
         key: 'endTime',
         type: 'input',
@@ -361,9 +347,7 @@
           type: 'text',
           placeholder: $translate.instant('cdrLogs.timeExample')
         },
-        expressionProperties: {
-          'hideExpression': expression.hideSearch
-        }
+        hideExpression: 'expression.hideSearch'
       }, {
         key: 'startDate',
         type: 'datepicker',
@@ -380,9 +364,7 @@
           required: true,
           placeholder: $translate.instant('cdrLogs.dateExample')
         },
-        expressionProperties: {
-          'hideExpression': expression.hideSearch
-        }
+        hideExpression: 'expression.hideSearch'
       }, {
         key: 'endDate',
         type: 'datepicker',
@@ -399,9 +381,7 @@
           required: true,
           placeholder: $translate.instant('cdrLogs.dateExample')
         },
-        expressionProperties: {
-          'hideExpression': expression.hideSearch
-        }
+        hideExpression: 'expression.hideSearch'
       }, {
         key: 'hitSize',
         type: 'input',
@@ -417,9 +397,7 @@
           required: true,
           type: 'number'
         },
-        expressionProperties: {
-          'hideExpression': expression.hideSearch
-        }
+        hideExpression: 'expression.hideSearch'
       }, {
         key: 'submit',
         type: 'button',
@@ -443,8 +421,8 @@
             });
           }
         },
+        hideExpression: 'expression.hideSearch',
         expressionProperties: {
-          'hideExpression': expression.hideSearch,
           'templateOptions.disabled': expression.searchDisabled
         }
       }, {
@@ -472,9 +450,7 @@
             vm.searchAndUploadForm.$setPristine();
           }
         },
-        expressionProperties: {
-          'hideExpression': expression.hideSearch
-        }
+        hideExpression: 'expression.hideSearch'
       }, {
         key: 'uploadFile',
         type: 'custom-file',
@@ -496,9 +472,7 @@
           },
           fileSuffix: "json"
         },
-        expressionProperties: {
-          'hideExpression': expression.hideUpload
-        }
+        hideExpression: 'expression.hideUpload'
       }, {
         key: 'uploadBtn',
         type: 'button',
@@ -519,8 +493,8 @@
             }
           }
         },
+        hideExpression: 'expression.hideUpload',
         expressionProperties: {
-          'hideExpression': expression.hideUpload,
           'templateOptions.disabled': expression.uploadDisabled
         }
       }]

@@ -214,10 +214,10 @@
         description: $translate.instant('serviceSetupModal.steeringDigitDescription'),
         options: vm.steeringDigits
       },
+      hideExpression: function () {
+        return vm.hideFieldSteeringDigit;
+      },
       expressionProperties: {
-        'hideExpression': function () {
-          return vm.hideFieldSteeringDigit;
-        },
         'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
           return true;
         }
@@ -382,13 +382,11 @@
             addInternalNumberRange();
           }
         },
-        expressionProperties: {
-          'hideExpression': function () {
-            if (vm.model.displayNumberRanges.length > 9) {
-              return true;
-            } else {
-              return vm.hideFieldInternalNumberRange;
-            }
+        hideExpression: function () {
+          if (vm.model.displayNumberRanges.length > 9) {
+            return true;
+          } else {
+            return vm.hideFieldInternalNumberRange;
           }
         }
       }]
@@ -437,12 +435,12 @@
             label: $translate.instant('companyCallerId.callerIdName'),
             type: 'text'
           },
+          hideExpression: function () {
+            return !vm.model.callerId.callerIdEnabled;
+          },
           expressionProperties: {
             'templateOptions.required': function () {
               return vm.model.callerId.callerIdEnabled;
-            },
-            'hideExpression': function () {
-              return !vm.model.callerId.callerIdEnabled;
             }
           }
         }, {
@@ -462,14 +460,14 @@
             combo: true,
             searchableCombo: true
           },
+          hideExpression: function () {
+            return !vm.model.callerId.callerIdEnabled;
+          },
           expressionProperties: {
             'templateOptions.required': function (newValue, oldValue) {
               if (vm.model.callerId.callerIdEnabled) {
                 return true;
               }
-            },
-            'hideExpression': function () {
-              return !vm.model.callerId.callerIdEnabled;
             }
           },
           controller: function ($scope) {
@@ -508,12 +506,12 @@
             warnMsg: $translate.instant('serviceSetupModal.voicemailNoExternalNumbersError'),
             isWarn: false
           },
+          hideExpression: function () {
+            return !vm.model.companyVoicemail.companyVoicemailEnabled;
+          },
           expressionProperties: {
             'templateOptions.required': function () {
               return vm.model.companyVoicemail.companyVoicemailEnabled;
-            },
-            'hideExpression': function () {
-              return !vm.model.companyVoicemail.companyVoicemailEnabled;
             }
           },
           controller: function ($scope) {

@@ -15,6 +15,21 @@ describe('Controller: Dummy Customer Reports', function () {
   var filesShared = angular.copy(dummyData.filesShared);
   var mediaQuality = angular.copy(dummyData.mediaQuality);
 
+  var metricsData = {
+    dataProvider: [{
+      callCondition: 'callMetrics.audioCalls',
+      numCalls: 1000,
+      percentage: 10,
+      color: '#F3F3F3'
+    }, {
+      callCondition: 'callMetrics.videoCalls',
+      numCalls: 9000,
+      percentage: 90,
+      color: '#ECECEC'
+    }],
+    dummy: true
+  };
+
   var updateDates = function (data, filter) {
     var dayFormat = "MMM DD";
     var monthFormat = "MMMM";
@@ -98,6 +113,10 @@ describe('Controller: Dummy Customer Reports', function () {
       expect(DummyCustomerReportService.dummyMediaData(timeFilter[0])).toEqual(mediaQuality.one);
       expect(DummyCustomerReportService.dummyMediaData(timeFilter[1])).toEqual(mediaQuality.two);
       expect(DummyCustomerReportService.dummyMediaData(timeFilter[2])).toEqual(mediaQuality.three);
+    });
+
+    it('dummyMetricsData should return the expected responses', function () {
+      expect(DummyCustomerReportService.dummyMetricsData()).toEqual(metricsData);
     });
   });
 });

@@ -2,8 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HelpdeskController(HelpdeskService, $translate, $scope, HelpdeskHuronService, LicenseService, Config) {
-    $('body').css('background', 'white');
+  function HelpdeskController(HelpdeskService, $translate, $scope, $state, $modal, HelpdeskSearchHistoryService, HelpdeskHuronService, LicenseService, Config) {
     $scope.$on('$viewContentLoaded', function () {
       if (HelpdeskService.checkIfMobile()) {
         angular.element('#searchInput').blur();
@@ -27,6 +26,34 @@
     vm.showDeviceResultPane = showDeviceResultPane;
     vm.showUsersResultPane = showUsersResultPane;
     vm.showOrgsResultPane = showOrgsResultPane;
+    vm.loadSearch = loadSearch;
+    vm.clearSearchHistory = clearSearchHistory;
+    vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches() || [];
+    vm.showSearchHelp = showSearchHelp;
+    vm.populateHistory = populateHistory;
+
+    function populateHistory() {
+      vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches() || [];
+    }
+
+    function showSearchHelp() {
+      var searchHelpUrl = "modules/squared/helpdesk/helpdesk-search-help-dialog.html";
+      var searchHelpMobileUrl = "modules/squared/helpdesk/helpdesk-search-help-dialog-mobile.html";
+      $modal.open({
+        templateUrl: HelpdeskService.checkIfMobile() ? searchHelpMobileUrl : searchHelpUrl
+      });
+    }
+
+    function loadSearch(search) {
+      _.assign(vm.currentSearch, search);
+      vm.searchString = search.searchString;
+      $state.go('helpdesk.search');
+    }
+
+    function clearSearchHistory() {
+      HelpdeskSearchHistoryService.clearSearchHistory();
+      vm.searchHistory = [];
+    }
 
     vm.currentSearch = {
       searchString: '',
@@ -94,6 +121,8 @@
             vm.currentSearch.userSearchResults,
             vm.currentSearch.orgFilter,
             vm.currentSearch.userLimit);
+          HelpdeskSearchHistoryService.saveUserSearch(vm.currentSearch);
+          vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches();
         }, function (err) {
           vm.searchingForUsers = false;
           vm.currentSearch.userSearchResults = null;
@@ -115,9 +144,10 @@
         vm.searchingForOrgs = true;
         HelpdeskService.searchOrgs(searchString, vm.searchResultsLimit).then(function (res) {
           vm.currentSearch.orgSearchResults = res;
-          vm.searchingForOrgs = false;
           vm.currentSearch.orgSearchFailure = null;
-
+          vm.searchingForOrgs = false;
+          HelpdeskSearchHistoryService.saveOrgSearch(vm.currentSearch);
+          vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches();
         }, function (err, status) {
           vm.searchingForOrgs = false;
           vm.currentSearch.orgSearchResults = null;

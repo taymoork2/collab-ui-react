@@ -27,7 +27,7 @@
 
     function _makeTrial() {
       var defaults = {
-        'type': Config.trials.meeting,
+        'type': Config.offerTypes.meetings,
         'enabled': false,
         'details': {
           'siteUrl': '',

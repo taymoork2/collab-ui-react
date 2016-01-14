@@ -206,12 +206,12 @@
           description: $translate.instant('serviceSetupModal.steeringDigitDescription'),
           options: vm.steeringDigits
         },
+        hideExpression: function () {
+          return vm.hideFieldSteeringDigit;
+        },
         expressionProperties: {
           'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
             return vm.hasSites;
-          },
-          'hideExpression': function () {
-            return vm.hideFieldSteeringDigit;
           }
         }
       }, {
@@ -223,12 +223,12 @@
           description: $translate.instant('serviceSetupModal.siteSteeringDigitDescription'),
           options: vm.steeringDigits
         },
+        hideExpression: function ($viewValue, $modelValue, scope) {
+          return true;
+        },
         expressionProperties: {
           'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
             return vm.hasSites;
-          },
-          'hideExpression': function ($viewValue, $modelValue, scope) {
-            return true;
           }
         }
       }, {
@@ -242,12 +242,12 @@
           required: true,
           maxlength: 5
         },
+        hideExpression: function ($viewValue, $modelValue, scope) {
+          return true;
+        },
         expressionProperties: {
           'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
             return vm.hasSites;
-          },
-          'hideExpression': function ($viewValue, $modelValue, scope) {
-            return true;
           }
         }
       }]
@@ -400,10 +400,8 @@
           }]
         }]
       },
-      expressionProperties: {
-        'hideExpression': function () {
-          return vm.hideFieldInternalNumberRange;
-        }
+      hideExpression: function () {
+        return vm.hideFieldInternalNumberRange;
       }
     }, {
       type: 'button',
@@ -415,13 +413,11 @@
           vm.addInternalNumberRange();
         }
       },
-      expressionProperties: {
-        'hideExpression': function () {
-          if (vm.model.displayNumberRanges.length > 9) {
-            return true;
-          } else {
-            return vm.hideFieldInternalNumberRange;
-          }
+      hideExpression: function () {
+        if (vm.model.displayNumberRanges.length > 9) {
+          return true;
+        } else {
+          return vm.hideFieldInternalNumberRange;
         }
       },
       controller: function ($scope) {
@@ -465,12 +461,12 @@
             warnMsg: $translate.instant('serviceSetupModal.voicemailNoExternalNumbersError'),
             isWarn: false
           },
+          hideExpression: function () {
+            return !vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled;
+          },
           expressionProperties: {
             'templateOptions.required': function () {
               return vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled;
-            },
-            'hideExpression': function () {
-              return !vm.model.ftswCompanyVoicemail.ftswCompanyVoicemailEnabled;
             }
           },
           controller: function ($scope) {
@@ -505,12 +501,12 @@
         labelfield: 'label',
         valuefield: 'value'
       },
+      hideExpression: function ($viewValue, $modelValue, scope) {
+        return vm.firstTimeSetup;
+      },
       expressionProperties: {
         'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
           return !vm.firstTimeSetup;
-        },
-        'hideExpression': function ($viewValue, $modelValue, scope) {
-          return vm.firstTimeSetup;
         }
       }
     }];

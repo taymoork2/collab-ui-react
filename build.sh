@@ -44,7 +44,8 @@ if [ "$checksums_ok"    = "true" -a \
     echo "Install manifests haven't changed, dependency dirs still exist, and not yet time to" \
         "refresh, skipping 'setup.sh'..."
 else
-    ./setup.sh
+    # use the '--quick' option to retain existing dependency dirs
+    ./setup.sh --quick
 
     # setup succeeded
     if [ $? -eq 0 ]; then

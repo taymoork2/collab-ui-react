@@ -11,8 +11,7 @@ describe('WebEx user settings', function () {
   });
 
   it('should allow search and click on user', function () {
-    utils.search(usersettings.testUser.username);
-    users.clickOnUser();
+    utils.searchAndClick(usersettings.testUser.username);
   });
 
   it('should allow click on conferencing', function () {

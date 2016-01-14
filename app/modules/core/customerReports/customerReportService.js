@@ -466,26 +466,30 @@
       var callMetricsUrl = urlBase + detailed + callMetrics + getAltQuery(filter);
 
       var returnArray = {
-        audio: {},
-        video: {}
+        dataProvider: [],
+        displayData: {}
       };
 
       return getService(callMetricsUrl, metricsCancelPromise).then(function (response, status) {
-        if (response !== null && angular.isDefined(response) && angular.isDefined(response.data.data[0]) && angular.isArray(response.data.data) && angular.isDefined(response.data.data[0].data[0]) && angular.isArray(response.data.data[0].data)) {
+        if (response !== null && angular.isDefined(response) && angular.isArray(response.data.data) && angular.isArray(response.data.data[0].data)) {
           var details = response.data.data[0].data[0].details;
           var totalCalls = parseInt(details.totalCalls);
           if (totalCalls > 0) {
-            returnArray.audio.dataProvider = [{
-              "callCondition": $translate.instant('callMetrics.callConditionFail'),
-              "numCalls": parseInt(details.totalFailedCalls)
+            returnArray.dataProvider = [{
+              "callCondition": $translate.instant('callMetrics.audioCalls'),
+              "numCalls": parseInt(details.sparkUcAudioCalls),
+              "percentage": Math.round((parseInt(details.sparkUcAudioCalls) / parseInt(details.totalSuccessfulCalls)) * 100),
+              "color": Config.chartColors.colorAttentionBase
             }, {
-              "callCondition": $translate.instant('callMetrics.callConditionSuccessful'),
-              "numCalls": parseInt(details.totalSuccessfulCalls)
+              "callCondition": $translate.instant('callMetrics.videoCalls'),
+              "numCalls": parseInt(details.sparkUcVideoCalls) + parseInt(details.sparkVideoCalls),
+              "percentage": Math.round(((parseInt(details.sparkUcVideoCalls) + parseInt(details.sparkVideoCalls)) / parseInt(details.totalSuccessfulCalls)) * 100),
+              "color": Config.chartColors.primaryColorBase
             }];
-            returnArray.audio.labelData = {
-              "numTotalCalls": totalCalls,
-              "numTotalMinutes": Math.round(parseFloat(details.totalAudioDuration))
-            };
+
+            returnArray.displayData.totalCalls = totalCalls;
+            returnArray.displayData.totalAudioDuration = parseInt(details.totalAudioDuration);
+            returnArray.displayData.totalFailedCalls = parseFloat((parseFloat(details.totalFailedCalls) / totalCalls) * 100).toFixed(2);
           }
         }
         return returnArray;

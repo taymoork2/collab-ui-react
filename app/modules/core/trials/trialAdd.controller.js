@@ -8,6 +8,10 @@
   function TrialAddCtrl($q, $scope, $state, $translate, $window, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialService, ValidationService) {
     var vm = this;
     var _roomSystemDefaultQuantity = 5;
+    var messageTemplateOptionId = 'messageTrial';
+    var meetingTemplateOptionId = 'meetingTrial';
+    var callTemplateOptionId = 'callTrial';
+    var roomSystemsTemplateOptionId = 'roomSystemsTrial';
 
     vm.trialData = TrialService.getData();
 
@@ -75,11 +79,12 @@
       type: 'input',
       className: 'columns medium-12 license-count',
       templateOptions: {
-        label: $translate.instant('siteList.licenseCount'),
-        labelClass: 'columns medium-6',
-        inputClass: 'columns medium-3',
+        label: $translate.instant('trials.licenseQuantity'),
+        labelClass: 'columns medium-4',
+        inputClass: 'columns medium-4',
         type: 'number',
         required: true,
+        secondaryLabel: $translate.instant('trials.users'),
       },
       validators: {
         count: {
@@ -99,7 +104,7 @@
       className: 'columns medium-12',
       templateOptions: {
         label: $translate.instant('trials.messageAndMeeting'),
-        id: 'squaredTrial',
+        id: messageTemplateOptionId,
         class: 'columns medium-12 checkbox-group',
       },
       expressionProperties: {
@@ -115,13 +120,13 @@
       className: 'columns medium-12 checkbox-group',
       templateOptions: {
         label: $translate.instant('trials.meeting'),
-        id: 'meetingTrial',
+        id: meetingTemplateOptionId,
         class: 'columns medium-12',
       },
+      hideExpression: function () {
+        return !vm.showMeeting;
+      },
       expressionProperties: {
-        'hideExpression': function () {
-          return !vm.showMeeting;
-        },
         'templateOptions.disabled': function () {
           return !vm.canEditMeeting;
         },
@@ -134,14 +139,12 @@
       className: 'columns medium-12 checkbox-group',
       templateOptions: {
         label: $translate.instant('trials.call'),
-        id: 'squaredUCTrial',
+        id: callTemplateOptionId,
         class: 'columns medium-12',
       },
-      expressionProperties: {
-        'hideExpression': function () {
-          return !vm.hasCallEntitlement();
-        }
-      },
+      hideExpression: function () {
+        return !vm.hasCallEntitlement();
+      }
     }];
 
     // Room Systems Trial
@@ -149,10 +152,10 @@
       model: vm.roomSystemTrial,
       key: 'enabled',
       type: 'checkbox',
-      className: "columns medium-6",
+      className: "columns medium-5 pad-top",
       templateOptions: {
         label: $translate.instant('trials.roomSystem'),
-        id: 'trialRoomSystem',
+        id: roomSystemsTemplateOptionId,
         class: 'columns medium-12',
       },
       watcher: {
@@ -169,7 +172,7 @@
       className: "columns medium-6",
       templateOptions: {
         id: 'trialRoomSystemsAmount',
-        inputClass: 'columns medium-10',
+        inputClass: 'columns medium-9',
         secondaryLabel: $translate.instant('trials.licenses'),
         type: 'number'
       },
@@ -237,6 +240,7 @@
         vm.messageTrial.enabled = true;
         if (vm.meetingTrial.enabled) {
           vm.showMeeting = true;
+          updateTrialService(messageTemplateOptionId);
         }
 
         var devicesModal = _.find(vm.trialStates, {
@@ -272,6 +276,21 @@
         vm.roomSystemFields[1].model.quantity = vm.roomSystemTrial.enabled ? _roomSystemDefaultQuantity : 0;
         toggleTrial();
       });
+    }
+
+    // Update offer and label for Meetings/WebEx trial.
+    function updateTrialService(templateOptionsId) {
+      var index = _.findIndex(vm.individualServices, function (individualService) {
+        return individualService.templateOptions.id === templateOptionsId;
+      });
+      if (index) {
+        switch (templateOptionsId) {
+        case messageTemplateOptionId:
+          vm.individualServices[index].model.type = Config.offerTypes.message;
+          vm.individualServices[index].templateOptions.label = $translate.instant('trials.message');
+          break;
+        }
+      }
     }
 
     function toggleTrial() {
