@@ -47,6 +47,10 @@
     function loadSearch(search) {
       _.assign(vm.currentSearch, search);
       vm.searchString = search.searchString;
+      HelpdeskService.findAndResolveOrgsForUserResults(
+        vm.currentSearch.userSearchResults,
+        vm.currentSearch.orgFilter,
+        vm.currentSearch.userLimit);
       $state.go('helpdesk.search');
     }
 
