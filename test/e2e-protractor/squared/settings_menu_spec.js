@@ -31,7 +31,7 @@ describe('Service Setup tests', function () {
       utils.expectTextToBeSet(wizard.mainviewTitle, 'Unified Communications');
     });
 
-    it('should show the messanging flow', function () {
+    it('should show the messaging flow', function () {
       navigation.clickMessagingSetup();
       utils.expectTextToBeSet(wizard.mainviewTitle, 'Messaging Setup');
     });

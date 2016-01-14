@@ -40,11 +40,20 @@
     vm.filesSharedDescription = '';
     vm.filesSharedStatus = REFRESH;
 
-    var audioChart = null;
-    var audioCard = null;
-    vm.audioDescription = '';
-    vm.videoDescription = '';
-    vm.callMetricsStatus = REFRESH;
+    var mediaChart = null;
+    var mediaCard = null;
+    vm.mediaQualityStatus = REFRESH;
+
+    var deviceChart = null;
+    var deviceCard = null;
+    vm.deviceStatus = REFRESH;
+    vm.deviceDescription = '';
+
+    var metricsChart = null;
+    var metricsCard = null;
+    vm.metricsDescription = '';
+    vm.metricStatus = REFRESH;
+    vm.metrics = {};
 
     vm.headerTabs = [{
       title: $translate.instant('reportsPage.sparkReports'),
@@ -128,6 +137,7 @@
         setActiveUserData();
         setAvgRoomData();
         setFilesSharedData();
+        setMediaData();
         setCallMetricsData();
       }, 30);
     }
@@ -173,11 +183,15 @@
         time: vm.timeSelected.description
       });
 
-      vm.audioDescription = $translate.instant("callMetrics.audioDescription", {
+      vm.metricsDescription = $translate.instant("callMetrics.customerDescription", {
         time: vm.timeSelected.description
       });
 
       vm.videoDescription = $translate.instant("callMetrics.videoDescription", {
+        time: vm.timeSelected.description
+      });
+
+      vm.deviceDescription = $translate.instant("registeredEndpoints.description", {
         time: vm.timeSelected.description
       });
     }
@@ -200,13 +214,28 @@
       if (tempFilesSharedChart !== null && angular.isDefined(tempFilesSharedChart)) {
         filesSharedChart = tempFilesSharedChart;
       }
+
+      var mediaData = DummyCustomerReportService.dummyMediaData(vm.timeSelected);
+      var tempMediaChart = CustomerGraphService.setMediaQualityGraph(mediaData, mediaChart);
+      if (tempMediaChart !== null && angular.isDefined(tempMediaChart)) {
+        mediaChart = tempMediaChart;
+      }
+
+      var metricsData = DummyCustomerReportService.dummyMetricsData();
+      var tempMetricsChart = CustomerGraphService.setMetricsGraph(metricsData, metricsChart);
+      if (tempMetricsChart !== null && angular.isDefined(tempMetricsChart)) {
+        metricsChart = tempMetricsChart;
+      }
     }
 
     function timeUpdate() {
       vm.activeUserStatus = REFRESH;
       vm.avgRoomStatus = REFRESH;
       vm.filesSharedStatus = REFRESH;
-      vm.callMetricsStatus = REFRESH;
+      vm.mediaQualityStatus = REFRESH;
+      vm.deviceStatus = REFRESH;
+      vm.metricStatus = REFRESH;
+      vm.metrics = {};
 
       setFilterBasedText();
       setDummyData();
@@ -214,6 +243,8 @@
       setActiveUserData();
       setAvgRoomData();
       setFilesSharedData();
+      setMediaData();
+      setCallMetricsData();
     }
 
     function setActiveUserData() {
@@ -269,18 +300,53 @@
       });
     }
 
+    function setMediaData() {
+      CustomerReportService.getMediaQualityData(vm.timeSelected).then(function (response) {
+        if (response === ABORT) {
+          return;
+        } else if (response.length === 0) {
+          vm.mediaQualityStatus = EMPTY;
+        } else {
+          var tempMediaChart = CustomerGraphService.setMediaQualityGraph(response, mediaChart);
+          if (tempMediaChart !== null && angular.isDefined(tempMediaChart)) {
+            mediaChart = tempMediaChart;
+          }
+          vm.mediaQualityStatus = SET;
+        }
+        filesSharedCard = document.getElementById('files-shared-card');
+      });
+    }
+
     function setCallMetricsData() {
       CustomerReportService.getCallMetricsData(vm.timeSelected).then(function (response) {
         if (response === ABORT) {
           return;
-        } else if (response.length === 0) {
-          vm.callMetricsStatus = EMPTY;
+        } else if (response.dataProvider.length === 0) {
+          vm.metricStatus = EMPTY;
         } else {
-          // var tempAudioChart = CustomerGraphService.setCallMetricsGraph(response.audio, audioChart);
-          // if (tempAudioChart !== null && angular.isDefined(tempAudioChart)) {
-          //   audioChart = tempAudioChart;
+          var tempMetricsChart = CustomerGraphService.setMetricsGraph(response, metricsChart);
+          if (tempMetricsChart !== null && angular.isDefined(tempMetricsChart)) {
+            metricsChart = tempMetricsChart;
+          }
+          vm.metrics = response.displayData;
+          vm.metricStatus = SET;
+        }
+        filesSharedCard = document.getElementById('files-shared-card');
+      });
+    }
+
+    function setDeviceData() {
+      CustomerReportService.getDeviceData(vm.timeSelected).then(function (response) {
+        if (response === ABORT) {
+          return;
+        } else if (response.length === 0) {
+          vm.deviceStatus = EMPTY;
+        } else {
+          // var tempDeviceChart = CustomerGraphService.setMediaQualityGraph(response, deviceChart);
+          // if (tempDeviceChart !== null && angular.isDefined(tempDeviceChart)) {
+          //   deviceChart = tempDeviceChart;
           // }
-          vm.callMetricsStatus = SET;
+          vm.deviceStatus = SET;
         }
         filesSharedCard = document.getElementById('files-shared-card');
       });

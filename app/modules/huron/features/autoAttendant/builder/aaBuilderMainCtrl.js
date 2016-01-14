@@ -6,13 +6,14 @@
     .controller('AABuilderMainCtrl', AABuilderMainCtrl); /* was AutoAttendantMainCtrl */
 
   /* @ngInject */
-  function AABuilderMainCtrl($scope, $translate, $state, $stateParams, $q, AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService, AAValidationService, AANumberAssignmentService, Notification, Authinfo) {
+  function AABuilderMainCtrl($scope, $translate, $state, $stateParams, $q, AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService, AAValidationService, AANumberAssignmentService, Notification, Authinfo, AACommonService) {
     var vm = this;
     vm.overlayTitle = $translate.instant('autoAttendant.builderTitle');
     vm.aaModel = {};
     vm.ui = {};
     vm.errorMessages = [];
     vm.aaNameFocus = false;
+    vm.canSave = false;
 
     vm.setAANameFocus = setAANameFocus;
     vm.close = closePanel;
@@ -41,6 +42,7 @@
 
     function setAANameFocus() {
       vm.aaNameFocus = true;
+      vm.canSave = true;
     }
 
     // Returns true if the provided assigned resources are different in size or in the passed-in field
@@ -186,15 +188,18 @@
 
       var i = 0;
       var isNewRecord = true;
+      vm.canSave = true;
+
       if (aaRecordUUID.length > 0) {
         for (i = 0; i < aaRecords.length; i++) {
           if (AutoAttendantCeInfoModelService.extractUUID(aaRecords[i].callExperienceURL) === aaRecordUUID) {
             isNewRecord = false;
+            vm.canSave = false;
             break;
           }
         }
       }
-
+      AACommonService.resetFormStatus();
       // Workaround: remove resource.number attribute before sending the ceDefinition to CES
       //
       var _aaRecord = angular.copy(aaRecord);
@@ -263,8 +268,12 @@
     }
 
     function canSaveAA() {
-      var canSave = true;
-      return canSave;
+      if (vm.aaModel.aaRecord.assignedResources.length !== vm.ui.ceInfo.getResources().length) {
+        vm.canSave = true;
+      } else if (AACommonService.isFormDirty()) {
+        vm.canSave = true;
+      }
+      return vm.canSave;
     }
 
     function getSaveErrorMessages() {
@@ -371,6 +380,7 @@
       vm.aaModel = AAModelService.getAAModel();
       vm.aaModel.aaRecord = undefined;
       AAUiModelService.initUiModel();
+      AACommonService.resetFormStatus();
       var aaTemplate = $stateParams.aaTemplate;
       vm.ui = AAUiModelService.getUiModel();
       vm.ui.ceInfo = {};

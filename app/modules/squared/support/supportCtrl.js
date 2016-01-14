@@ -15,6 +15,7 @@ angular.module('Squared')
       $scope.statusPageUrl = Config.getStatusPageUrl();
       $scope.problemContent = 'Problem reports are being handled';
       $scope.helpContent = 'Help content is provided';
+      $scope.searchInput = 'none';
 
       $scope.toggleSystem = function () {
         $scope.showSystemDetails = !$scope.showSystemDetails;
@@ -77,8 +78,6 @@ angular.module('Squared')
       };
 
       init();
-
-      $('#logs-panel').hide();
 
       $('#logsearchfield').attr('placeholder', $filter('translate')('supportPage.inputPlaceholder'));
 
@@ -191,9 +190,9 @@ angular.module('Squared')
         $scope.userLogs = [];
         $scope.logSearchBtnLoad = true;
         //check whether email address or uuid was enetered
-        var searchInput = $('#logsearchfield').val();
-        if (searchInput) {
-          searchLogs(searchInput);
+        $scope.searchInput = $('#logsearchfield').val();
+        if ($scope.searchInput) {
+          searchLogs($scope.searchInput);
           $('#noResults').text([$filter('translate')('supportPage.searching')]);
         } else {
           $('#noResults').text([$filter('translate')('supportPage.noResults')]);
@@ -396,20 +395,12 @@ angular.module('Squared')
         });
       };
 
-      $scope.getCallflowCharts = function (orgId, userId, locusId, callStart, filename, isGetCallLogs, id) {
-        var elementId = '#';
-        if (isGetCallLogs === true) {
-          elementId += 'logs-' + id;
-        } else {
-          elementId += 'charts-' + id;
-        }
-        angular.element(elementId).button('loading');
+      $scope.getCallflowCharts = function (orgId, userId, locusId, callStart, filename, isGetCallLogs) {
 
         var output = $filter('translate')('supportPage.downloading');
         var downloadDialog = window.confirm(output);
         if (downloadDialog === true) {
           CallflowService.getCallflowCharts(orgId, userId, locusId, callStart, filename, isGetCallLogs, function (data, status) {
-            angular.element(elementId).button('reset');
             if (data.success) {
               window.location.assign(data.resultsUrl);
             } else {
@@ -417,8 +408,6 @@ angular.module('Squared')
               Notification.notify([$translate.instant('supportPage.callflowResultsFailed') + ': ' + filename + '. Status: ' + status], 'error');
             }
           });
-        } else {
-          angular.element(elementId).button('reset');
         }
       };
 
@@ -442,10 +431,8 @@ angular.module('Squared')
         getLogInfo(locusId, startTime);
       };
 
-      $scope.showCallSummary = function (locusId, startTime, id) {
-        angular.element('#' + 'summary-' + id).button('loading');
+      $scope.showCallSummary = function (locusId, startTime) {
         ReportsService.getCallSummary(locusId, startTime, function (data, status) {
-          angular.element('#' + 'summary-' + id).button('reset');
           if (data.success) {
             var myWindow = window.open("", "Call Summary", "width=800, height=400");
             setTimeout(function () {
@@ -487,34 +474,26 @@ angular.module('Squared')
         return $scope.userLogs.indexOf(rowItem);
       };
 
-      var rowTemplate = '<div id="{{row.entity.customerName}}" ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}" ng-click="showCustomerDetails(row.entity)">' +
-        '<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }">&nbsp;</div>' +
-        '<div ng-cell></div>' +
-        '</div>';
+      var clientLogTemplate = '<div class="grid-icon ui-grid-cell-contents"><a ng-click="grid.appScope.downloadLog(row.entity.fullFilename)"><span><i class="icon icon-download"></i></a></div>';
 
-      var clientLogTemplate = '<div class="ngCellText"><a ng-click="downloadLog(row.entity.fullFilename)"><span id="download-icon"><i class="fa fa-download"></i></a></div>';
+      var callFlowTemplate = '<div class="grid-icon ui-grid-cell-contents"><a ng-click="grid.appScope.getCallflowCharts(row.entity.orgId, row.entity.userId, row.entity.locusId, row.entity.callStart, row.entity.fullFilename, false)"><span id="download-callflowCharts-icon"><i class="icon icon-download"></i></a></div>';
 
-      var callFlowTemplate = '<div class="ngCellText"><button class="support_download btn btn--primary pull-center" ng-click="getCallflowCharts(row.entity.orgId, row.entity.userId, row.entity.locusId, row.entity.callStart, row.entity.fullFilename, false, getRowIndex(row.entity))" id="charts-{{getRowIndex(row.entity)}}" data-loading-text="<i class=\'icon icon-spinner icon-spin\'></i>"><span id="download-callflowCharts-icon"><i class="fa fa-download"></i></button></div>';
+      var callFlowLogsTemplate = '<div class="grid-icon ui-grid-cell-contents"><a ng-click="grid.appScope.getCallflowCharts(row.entity.orgId, row.entity.userId, row.entity.locusId, row.entity.callStart, row.entity.fullFilename, true)"><span id="download-callflowCharts-icon"><i class="icon icon-download"></i></a></div>';
 
-      var callFlowLogsTemplate = '<div class="ngCellText"><button class="support_download btn btn--primary pull-center" ng-click="getCallflowCharts(row.entity.orgId, row.entity.userId, row.entity.locusId, row.entity.callStart, row.entity.fullFilename, true, getRowIndex(row.entity))" id="logs-{{getRowIndex(row.entity)}}" data-loading-text="<i class=\'icon icon-spinner icon-spin\'></i>"><span id="download-callflowCharts-icon"><i class="fa fa-download"></i></button></div>';
+      var callInfoTemplate = '<div class="grid-icon ui-grid-cell-contents"><a ng-click="grid.appScope.showCallInfo(row.entity.emailAddress, row.entity.locusId, row.entity.callStart)"><span><i class="icon icon-information"></i></span></a></div>';
 
-      var callInfoTemplate = '<div class="ngCellText"><a ng-click="showCallInfo(row.entity.emailAddress, row.entity.locusId, row.entity.callStart)"><span id="callInfo-icon"><i class="fa fa-info"></i></span></a></div>';
-
-      var callSummaryTemplate = '<div class="ngCellText"><button class="support_download btn btn--primary pull-center" ng-click="showCallSummary(row.entity.locusId, row.entity.callStart, getRowIndex(row.entity))" id="summary-{{getRowIndex(row.entity)}}" data-loading-text="<i class=\'icon icon-spinner icon-spin\'></i>"><span id="callInfo-icon"><i class="fa fa-info"></i></button></div>';
+      var callSummaryTemplate = '<div class="grid-icon ui-grid-cell-contents"><a ng-click="grid.appScope.showCallSummary(row.entity.locusId, row.entity.callStart)"><span><i class="icon icon-information"></i></a></div>';
 
       $scope.gridOptions = {
         data: 'userLogs',
         multiSelect: false,
-        showFilter: false,
-        rowHeight: 44,
-        rowTemplate: rowTemplate,
-        headerRowHeight: 44,
-        useExternalSorting: false,
-        sortInfo: {
-          fields: ['date'],
-          directions: ['asc']
+        rowHeight: 48,
+        enableRowHeaderSelection: false,
+        enableColumnResize: true,
+        enableColumnMenus: false,
+        onRegisterApi: function (gridApi) {
+          $scope.gridApi = gridApi;
         },
-
         columnDefs: [{
           field: 'emailAddress',
           displayName: $filter('translate')('supportPage.logEmailAddress'),

@@ -1,9 +1,8 @@
-<div ng-if="!aaSay.isMessageInputOnly()" class="panel aa-message-panel">
-  <form>
+<div ng-if="!aaSay.isMessageInputOnly()" id ="say" class="panel aa-message-panel">
     <div class="row">
       <div class="small-12 columns">
         <label for="sayMessageInput{{ schedule + index + menuKeyIndex }}" translate="{{ :: aaSay.getMessageLabel() }}"></label>
-        <textarea class="aa-message-textarea" ng-blur="aaSay.saveUiModel()" ng-model="aaSay.messageInput" type="text" id="sayMessageInput{{ schedule + index + menuKeyIndex }}" name="sayMessageInput" placeholder="{{ :: aaSay.messageInputPlaceholder }}" cols="50" rows="5" maxlength="2000"></textarea>
+        <textarea class="aa-message-textarea" ng-change="aaSay.saveUiModel()" ng-model="aaSay.messageInput" type="text" id="sayMessageInput{{ schedule + index + menuKeyIndex }}" name="sayMessageInput" placeholder="{{ :: aaSay.messageInputPlaceholder }}" cols="50" rows="5" maxlength="2000" ></textarea>
       </div>
     </div>
     <div class="row">
@@ -18,7 +17,7 @@
         </cs-select>
       </div>
     </div>
-  </form>
+  
     <div class="row">
       <div class="small-12 columns">
         <p class="body-small aa-message-footer" translate="{{ :: aaSay.getFooter() }}"></p>
@@ -27,5 +26,5 @@
 </div>
 <div ng-if="aaSay.isMessageInputOnly()">
     <label class="control-label" for="sayMessageInput{{ schedule + index + menuKeyIndex }}" translate="{{ :: aaSay.getMessageLabel() }}"></label>
-    <textarea ng-blur="aaSay.saveUiModel()" ng-model="aaSay.messageInput" type="text" id="sayMessageInput{{ schedule + index + menuKeyIndex }}" name="sayMessageInput" placeholder="{{ :: aaSay.messageInputPlaceholder }}" cols="50" rows="4" maxlength="2000"></textarea>
+    <textarea ng-change="aaSay.saveUiModel()" ng-model="aaSay.messageInput" type="text" id="sayMessageInput{{ schedule + index + menuKeyIndex }}" name="sayMessageInput" placeholder="{{ :: aaSay.messageInputPlaceholder }}" cols="50" rows="4" maxlength="2000"></textarea>
 </div>

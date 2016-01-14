@@ -2,14 +2,14 @@
 
 describe('Controller: HuronSettingsCtrl', function () {
   var controller, $controller, $scope, $q, CallerId, ExternalNumberService, Notification, DialPlanService, FeatureToggleService;
-  var HuronCustomer, ServiceSetup;
-  var customer, timezones, timezone, voicemailCustomer, internalNumberRanges, sites, site, companyNumbers, cosRestrictions;
+  var HuronCustomer, ServiceSetup, PstnSetupService;
+  var customer, timezones, timezone, voicemailCustomer, internalNumberRanges, sites, site, companyNumbers, cosRestrictions, customerCarriers;
   var getDeferred;
 
   beforeEach(module('Huron'));
 
   beforeEach(inject(function ($rootScope, _$controller_, _$q_, _CallerId_, _ExternalNumberService_, _DialPlanService_,
-    _Notification_, _HuronCustomer_, _ServiceSetup_, _FeatureToggleService_) {
+    _Notification_, _HuronCustomer_, _ServiceSetup_, _FeatureToggleService_, _PstnSetupService_) {
 
     $scope = $rootScope.$new();
     $controller = _$controller_;
@@ -20,6 +20,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     DialPlanService = _DialPlanService_;
     ServiceSetup = _ServiceSetup_;
     FeatureToggleService = _FeatureToggleService_;
+    PstnSetupService = _PstnSetupService_;
     $q = _$q_;
 
     customer = getJSONFixture('huron/json/settings/customer.json');
@@ -31,6 +32,7 @@ describe('Controller: HuronSettingsCtrl', function () {
     companyNumbers = getJSONFixture('huron/json/settings/companyNumbers.json');
     voicemailCustomer = getJSONFixture('huron/json/settings/voicemailCustomer.json');
     cosRestrictions = getJSONFixture('huron/json/settings/cosRestrictions.json');
+    customerCarriers = getJSONFixture('huron/json/pstnSetup/customerCarrierList.json');
 
     //create mock deferred object which will be used to return promises
     getDeferred = $q.defer();
@@ -61,6 +63,8 @@ describe('Controller: HuronSettingsCtrl', function () {
     spyOn(ServiceSetup, 'listCosRestrictions').and.returnValue($q.when(cosRestrictions));
     spyOn(ServiceSetup, 'updateCosRestriction').and.returnValue($q.when());
 
+    spyOn(PstnSetupService, 'listCustomerCarriers').and.returnValue($q.when(customerCarriers));
+
     spyOn(Notification, 'notify');
     spyOn(Notification, 'processErrorResponse');
 
@@ -72,8 +76,6 @@ describe('Controller: HuronSettingsCtrl', function () {
   }));
 
   it('should initialize the Settings page', function () {
-    controller.CosFeatureEnabled = true;
-
     controller.init();
     $scope.$apply();
     expect(HuronCustomer.get).toHaveBeenCalled();
@@ -327,8 +329,6 @@ describe('Controller: HuronSettingsCtrl', function () {
   });
 
   it('should show international dialing when feature toggle is ON', function () {
-    controller.CosFeatureEnabled = true;
-
     controller.save();
     $scope.$apply();
 

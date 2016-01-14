@@ -1,5 +1,5 @@
-<div class="ngCellText" style="padding-top: 30px">
-    <i class="fa fa-circle mediafusion-state-{{row.getProperty(col.field)}}"/>
-    <span translate="{{'mediaFusion.serviceStatus.' + row.getProperty(col.field)}}"></span>
+<div class="ui-grid-cell-contents" style="padding-top: 30px">
+    <i class="fa fa-circle mediafusion-state-{{row.entity.serviceStatus}}"/>
+    <span translate="{{'mediaFusion.serviceStatus.' + row.entity.serviceStatus}}"></span>
 </div>
 

@@ -13,6 +13,22 @@ describe('Controller: Dummy Customer Reports', function () {
   var activeUser = angular.copy(dummyData.activeUser);
   var avgRooms = angular.copy(dummyData.avgRooms);
   var filesShared = angular.copy(dummyData.filesShared);
+  var mediaQuality = angular.copy(dummyData.mediaQuality);
+
+  var metricsData = {
+    dataProvider: [{
+      callCondition: 'callMetrics.audioCalls',
+      numCalls: 1000,
+      percentage: 10,
+      color: '#F3F3F3'
+    }, {
+      callCondition: 'callMetrics.videoCalls',
+      numCalls: 9000,
+      percentage: 90,
+      color: '#ECECEC'
+    }],
+    dummy: true
+  };
 
   var updateDates = function (data, filter) {
     var dayFormat = "MMM DD";
@@ -20,6 +36,25 @@ describe('Controller: Dummy Customer Reports', function () {
     if (filter.value === 0) {
       for (var i = 6; i >= 0; i--) {
         data[i].modifiedDate = moment().subtract(7 - i, 'day').format(dayFormat);
+      }
+    } else if (filter.value === 1) {
+      for (var x = 0; x <= 3; x++) {
+        data[x].modifiedDate = moment().startOf('week').subtract(1 + (3 - x) * 7, 'day').format(dayFormat);
+      }
+    } else {
+      for (var y = 0; y <= 2; y++) {
+        data[y].modifiedDate = moment().subtract((2 - y), 'month').format(monthFormat);
+      }
+    }
+    return data;
+  };
+
+  var updateMediaDates = function (data, filter) {
+    var dayFormat = "MMM DD";
+    var monthFormat = "MMMM";
+    if (filter.value === 0) {
+      for (var i = 6; i >= 0; i--) {
+        data[i].modifiedDate = moment().subtract(8 - i, 'day').format(dayFormat);
       }
     } else if (filter.value === 1) {
       for (var x = 0; x <= 3; x++) {
@@ -68,6 +103,20 @@ describe('Controller: Dummy Customer Reports', function () {
       expect(DummyCustomerReportService.dummyFilesSharedData(timeFilter[0])).toEqual(filesShared.one);
       expect(DummyCustomerReportService.dummyFilesSharedData(timeFilter[1])).toEqual(filesShared.two);
       expect(DummyCustomerReportService.dummyFilesSharedData(timeFilter[2])).toEqual(filesShared.three);
+    });
+
+    it('dummyMediaData should return the expected responses', function () {
+      mediaQuality.one = updateMediaDates(mediaQuality.one, timeFilter[0]);
+      mediaQuality.two = updateMediaDates(mediaQuality.two, timeFilter[1]);
+      mediaQuality.three = updateMediaDates(mediaQuality.three, timeFilter[2]);
+
+      expect(DummyCustomerReportService.dummyMediaData(timeFilter[0])).toEqual(mediaQuality.one);
+      expect(DummyCustomerReportService.dummyMediaData(timeFilter[1])).toEqual(mediaQuality.two);
+      expect(DummyCustomerReportService.dummyMediaData(timeFilter[2])).toEqual(mediaQuality.three);
+    });
+
+    it('dummyMetricsData should return the expected responses', function () {
+      expect(DummyCustomerReportService.dummyMetricsData()).toEqual(metricsData);
     });
   });
 });

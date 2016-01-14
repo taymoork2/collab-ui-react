@@ -1,11 +1,11 @@
 <div>
   <div class="section-title-row">
     <span class="section-name" translate="deviceDetailPage.logTitle"></span>
-    <span class="actions-menu dropdown pull-right">
-      <button class="actions-button btn--none dropdown-toggle">
+    <span cs-dropdown class="actions-menu dropdown pull-right">
+      <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
         <i class="icon icon-three-dots"></i>
       </button>
-      <ul class="dropdown-menu dropdown-primary actions-services">
+      <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
         <li><a translate="deviceDetailPage.retrieveLogBttn" ng-click="ucDeviceLog.retrieveLog()"></a></li>
         <li><a translate="deviceDetailPage.viewPreviousLogBttn" ng-click="ucDeviceLog.viewPreviousLog()"></a></li>
       </ul>
