@@ -43,6 +43,17 @@
     var mediaChart = null;
     var mediaCard = null;
     vm.mediaQualityStatus = REFRESH;
+    vm.mediaOptions = [{
+      value: 0,
+      label: $translate.instant('reportsPage.allCalls')
+    }, {
+      value: 1,
+      label: $translate.instant('reportsPage.audioCalls')
+    }, {
+      value: 2,
+      label: $translate.instant('reportsPage.videoCalls')
+    }];
+    vm.mediaSelected = vm.mediaOptions[0];
 
     var deviceChart = null;
     var deviceCard = null;
@@ -76,6 +87,7 @@
     vm.timeSelected = vm.timeOptions[0];
 
     vm.timeUpdate = timeUpdate;
+    vm.mediaUpdate = mediaUpdate;
     vm.mostActiveUserSwitch = mostActiveUserSwitch;
 
     vm.isRefresh = function (tab) {
@@ -216,7 +228,9 @@
       }
 
       var mediaData = DummyCustomerReportService.dummyMediaData(vm.timeSelected);
-      var tempMediaChart = CustomerGraphService.setMediaQualityGraph(mediaData, mediaChart);
+      var tempMediaChart = CustomerGraphService.setMediaQualityGraph(mediaData, mediaChart, {
+        value: 0
+      });
       if (tempMediaChart !== null && angular.isDefined(tempMediaChart)) {
         mediaChart = tempMediaChart;
       }
@@ -236,6 +250,7 @@
       vm.deviceStatus = REFRESH;
       vm.metricStatus = REFRESH;
       vm.metrics = {};
+      vm.mediaSelected = vm.mediaOptions[0];
 
       setFilterBasedText();
       setDummyData();
@@ -245,6 +260,20 @@
       setFilesSharedData();
       setMediaData();
       setCallMetricsData();
+    }
+
+    function mediaUpdate() {
+      vm.mediaQualityStatus = REFRESH;
+
+      var mediaData = DummyCustomerReportService.dummyMediaData(vm.timeSelected);
+      var tempMediaChart = CustomerGraphService.setMediaQualityGraph(mediaData, mediaChart, {
+        value: 0
+      });
+      if (tempMediaChart !== null && angular.isDefined(tempMediaChart)) {
+        mediaChart = tempMediaChart;
+      }
+
+      setMediaData();
     }
 
     function setActiveUserData() {
@@ -307,7 +336,7 @@
         } else if (response.length === 0) {
           vm.mediaQualityStatus = EMPTY;
         } else {
-          var tempMediaChart = CustomerGraphService.setMediaQualityGraph(response, mediaChart);
+          var tempMediaChart = CustomerGraphService.setMediaQualityGraph(response, mediaChart, vm.mediaSelected);
           if (tempMediaChart !== null && angular.isDefined(tempMediaChart)) {
             mediaChart = tempMediaChart;
           }
@@ -342,7 +371,7 @@
         } else if (response.length === 0) {
           vm.deviceStatus = EMPTY;
         } else {
-          // var tempDeviceChart = CustomerGraphService.setMediaQualityGraph(response, deviceChart);
+          // var tempDeviceChart = CustomerGraphService.setDeviceGraph(response, deviceChart);
           // if (tempDeviceChart !== null && angular.isDefined(tempDeviceChart)) {
           //   deviceChart = tempDeviceChart;
           // }

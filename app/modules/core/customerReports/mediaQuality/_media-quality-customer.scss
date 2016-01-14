@@ -1,0 +1,11 @@
+.customer-media {
+  .media-filter {
+    left: 70%;
+    position: absolute;
+    top: rem-calc(160);
+    z-index: 1000;
+  }
+  .amExportButton {
+    top: rem-calc(40);
+  }
+}
