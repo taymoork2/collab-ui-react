@@ -1,14 +1,15 @@
-<article class="domainVerifyPopupOverlay">
+<article class="domainManagementPopupOverlay">
   <header><h3 translate="domainManagement.delete.header"/></header>
   <section>
     <p translate="domainManagement.delete.description" />
     <br>
-    <p><b>{{dvdel.domain}}</b></p>
+    <p><b>{{dmpopup.domain}}</b></p>
+    <b><p ng-if="dmpopup.error">{{dmpopup.error}}</p></b>
   </section>
   <footer>
     <div>
-      <button ng-click="dvdel.cancel()" translate="common.cancel"></button>
-      <button ng-disabled="!dvdel.isValid" ng-click="dvdel.delete()" class="btn-primary" translate="common.delete"></button>
+      <button ng-click="dmpopup.cancel()" translate="common.cancel"></button>
+      <button ng-disabled="!dmpopup.isValid" ng-click="dmpopup.delete()" class="btn-primary" translate="common.delete"></button>
     </div>
   </footer>
 </article>

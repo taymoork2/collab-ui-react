@@ -200,10 +200,12 @@ angular
           views: {
             'modal@': {
               controller: 'DomainManageAddCtrl',
-              controllerAs: 'dvadd',
+              controllerAs: 'dmpopup',
               templateUrl: 'modules/core/domainManagement/add.tpl.html'
             }
-
+          },
+          params: {
+            adminDomain: null
           }
         })
         .state('domainmanagement.delete', {
@@ -211,7 +213,7 @@ angular
           views: {
             'modal@': {
               controller: 'DomainManageDeleteCtrl',
-              controllerAs: 'dvdel',
+              controllerAs: 'dmpopup',
               templateUrl: 'modules/core/domainManagement/delete.tpl.html'
             }
           },
@@ -225,7 +227,7 @@ angular
           views: {
             'modal@': {
               controller: 'DomainManageVerifyCtrl',
-              controllerAs: 'dvverify',
+              controllerAs: 'dmpopup',
               templateUrl: 'modules/core/domainManagement/verify.tpl.html'
             }
           },

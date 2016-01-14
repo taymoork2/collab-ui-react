@@ -19,7 +19,7 @@
           <td><button ui-sref="domainmanagement.verify({domain: domain})" ng-if="domain.status==='pending'" ng-class="{ 'disabled' : dv.adminDomain.status === 'pending' && domain.text !== dv.adminDomain }" class="btn--cta" translate="domainManagement.verifyDomain"></button></td>
         </tr>
       </table>
-      <button class="btn--primary" translate="domainManagement.addDomain" ui-sref="domainmanagement.add"></button>
+      <button class="btn--primary" translate="domainManagement.addDomain" ui-sref="domainmanagement.add({adminDomain: dv.adminDomain})"></button>
     </section>
   </article>
 </div>

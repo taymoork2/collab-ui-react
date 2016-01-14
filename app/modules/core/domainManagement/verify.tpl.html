@@ -1,19 +1,19 @@
-<article class="domainVerifyPopupOverlay">
+<article class="domainManagementPopupOverlay">
   <header><h3 translate="domainManagement.verify.header"/></header>
   <section>
     <p translate="domainManagement.verify.verifyThis"></p>
-    <p>{{dvverify.domainName}}</p>
+    <p><b>{{dmpopup.domainName}}</b></p>
     <p translate="domainManagement.verify.beforeVerify"/>
 
     <div>
       <p translate="domainManagement.verify.warning"></p>
-      <input id="enableVerify" type="checkbox" ng-model="dvverify.enable">
+      <input id="enableVerify" type="checkbox" ng-model="dmpopup.enable">
       <label class="cs-checkbox" for="enableVerify" translate="domainManagement.verify.enable"></label>
     </div>
   </section>
   <footer>
     <button ui-sref="domainmanagement" translate="common.cancel"></button>
-    <button ng-disabled="!dvverify.enable" ng-click="dvverify.verify()" class="btn-primary"
+    <button ng-disabled="!dmpopup.enable" ng-click="dmpopup.verify()" class="btn-primary"
             translate="domainManagement.verify.verify"></button>
   </footer>
 </article>

@@ -1,11 +1,14 @@
 namespace domainManagement {
 
   class DomainManageAddCtrl {
+    private _adminDomain;
     private _domain;
     private _error;
 
     /* @ngInject */
-    constructor(private $state, private DomainManagementService) {
+    constructor($stateParams, private $state, private DomainManagementService) {
+
+      this._adminDomain = $stateParams.adminDomain;
     }
 
     public add() {
@@ -23,6 +26,13 @@ namespace domainManagement {
 
     public cancel() {
       this.$state.go('domainmanagement');
+    }
+
+    get exampleDomain() {
+      if (this.DomainManagementService.domainList.length == 0)
+        return this._adminDomain;
+      else
+        return null;
     }
 
     get error() {
