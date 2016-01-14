@@ -15,12 +15,14 @@
     vm.timeOptions = _.range(0, 24).map(function (time) {
       return _.padLeft(time, 2, '0') + ':00';
     });
-    vm.dayOptions = _.range(1, 8).map(function (day) {
+    var days = _.range(1, 8).map(function (day) {
       return {
         label: labelForDay(day),
         value: day
       };
     });
+    var sunday = days.pop();
+    vm.dayOptions = [sunday].concat(days);
     vm.timezoneOptions = moment.tz.names();
     vm.acknowledge = function (data) {
       return patch(data);

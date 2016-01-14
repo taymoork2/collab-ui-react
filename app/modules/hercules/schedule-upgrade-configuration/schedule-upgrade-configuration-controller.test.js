@@ -75,7 +75,7 @@ describe('Directive Controller: ScheduleUpgradeConfigurationCtrl', function () {
   });
 
   it('should have all the 7 day options', function () {
-    var valueOptions = [1, 2, 3, 4, 5, 6, 7];
+    var valueOptions = [7, 1, 2, 3, 4, 5, 6];
     expect(vm.dayOptions.length).toEqual(7);
     expect(vm.dayOptions.map(function (option) {
       return option.value;
