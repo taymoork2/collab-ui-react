@@ -45,7 +45,7 @@
   margin-bottom: 15px;
 }
 
-.onboard-tokens #usersfield-tokenfield {
+#usersfield-tokenfield {
   font-family: $brand-font-cisco-TT-Light;
   font-size: 18px;
   line-height: 20px;
@@ -53,20 +53,6 @@
   text-align: left;
   width: 100%;
   background-color: transparent;
-}
-
-.inverse-token .tokenfield {
-  &.focus {
-    box-shadow: none;
-  }
-  .token-input {
-    background: $brand-white;
-    width: 100%!important; // !important because width to token is being added by javascript
-    border: 1px solid $gray-light-2;
-    &:focus {
-      border-color: $color-primary-darker;
-    }
-  }
 }
 
 .adduser-input-desc {
