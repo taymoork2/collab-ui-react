@@ -433,8 +433,6 @@ angular
           }
         })
         .state('user-overview.communication.internationalDialing', {
-          controller: 'InternationalDialingInfoCtrl',
-          controllerAs: 'internationalDialing',
           template: '<div uc-international-dialing></div>',
           data: {
             displayName: 'International Dialing'
