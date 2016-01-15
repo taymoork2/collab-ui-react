@@ -324,7 +324,7 @@
     "manageBetaFeatures": "Manage Beta Features",
     "betaFeatures": "Beta Features",
     "errorGettingToggles": "There was a problem getting the selected organizations feature toggles",
-    "errorSettingToggle": "There was a problem setting {{key}} for the selected organization",
+    "errorSettingToggle": "There was a problem setting a toggle",
     "toggleModSuccess": "All modified toggles were updated",
     "startSearching": "To begin, search for an organization",
     "noSearchResults": "Search yielded no results"
@@ -360,7 +360,10 @@
     "devReports": "Development Customer Reports",
     "sparkReports": "Spark Reports",
     "downloadOptions": "Download Options",
-    "saveAs": "Save As"
+    "saveAs": "Save As",
+    "allCalls": "All Calls",
+    "videoCalls": "Video Calls",
+    "audioCalls": "Audio Only Calls"
   },
   "activeUsers": {
     "active": "Active",
@@ -408,6 +411,7 @@
     "fair": "Fair",
     "poor": "Poor",
     "description": "Media quality is determined by measuring the amount of packet loss that is reported by the registered devices during all calls that are longer than fifteen seconds in duration.",
+    "descriptionCustomer": "Media quality is determined by measuring the amount of packet loss that is reported by the registered devices during all calls that are longer than fifteen seconds in duration.  The data can be filtered by All Calls, Audio Only Calls, and Video Calls.",
     "mediaQualityGraphError": "There was an error while loading call quality data for {{customer}}.",
     "customerError": "There was an error while loading call quality data.",
     "minutes": "Minutes"
@@ -1893,9 +1897,9 @@
       "webexSiteUrl": "WebEx Site URL",
       "webexTimezone": "WebEx Time Zone",
       "default": "Set as default",
-      "siteUrlDescription": "For example: www.companyname.webex.com",
+      "siteUrlDescription": "For example: companyname.webex.com",
       "tzDescription": "Select the time zone closest to your customer. This will ensure their WebEx site is deployed in the appropriate data center.",
-      "siteUrlPlaceholder": "acmecorp.webex.com",
+      "siteUrlPlaceholder": "companyname.webex.com",
       "timezonePlaceholder": "Search for a time zone...",
       "invalidSite": "SiteUrl is invalid.",
       "duplicateSite": "SiteUrl is already in use.",
