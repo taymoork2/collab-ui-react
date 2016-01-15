@@ -311,17 +311,17 @@ angular.module('Core')
             title: 'tabs.expresswayManagementServiceTab',
             desc: 'tabs.expresswayManagementServiceTabDesc',
             state: 'management-service',
-            link: '#/services/expressway-management'
+            link: '#services/expressway-management'
           }, {
             title: 'tabs.calendarServiceTab',
             desc: 'tabs.calendarServiceTabDesc',
             state: 'calendar-service',
-            link: '#/services/calendar'
+            link: '#services/calendar'
           }, {
             title: 'tabs.callServiceTab',
             desc: 'tabs.callServiceTabDesc',
             state: 'call-service',
-            link: '#/services/call'
+            link: '#services/call'
           }, {
             title: 'tabs.MediafusionDetailsTab',
             desc: 'tabs.MediafusionDetailsTabDesc',
