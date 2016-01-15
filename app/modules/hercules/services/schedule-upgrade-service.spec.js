@@ -21,12 +21,12 @@ describe('Service: Schedule Upgrade', function () {
   });
 
   it('ScheduleUpgradeService.get should query the server with the right params', function () {
-    $httpBackend.expectGET('https://uss-integration.wbx2.com/uss/api/v1/organizations/123/services/c_cal/upgrade_schedule').respond({});
+    $httpBackend.expectGET('https://hercules-integration.wbx2.com/v1/organizations/123/services/c_cal/upgrade_schedule').respond({});
     ScheduleUpgradeService.get('123', 'c_cal');
   });
 
   it('ScheduleUpgradeService.path should query the server with the right params', function () {
-    $httpBackend.expectPATCH('https://uss-integration.wbx2.com/uss/api/v1/organizations/123/services/c_cal/upgrade_schedule', {
+    $httpBackend.expectPATCH('https://hercules-integration.wbx2.com/v1/organizations/123/services/c_cal/upgrade_schedule', {
       scheduleTime: '03:00',
       scheduleDay: 4,
       scheduleTimezone: 'Europe/Paris'
