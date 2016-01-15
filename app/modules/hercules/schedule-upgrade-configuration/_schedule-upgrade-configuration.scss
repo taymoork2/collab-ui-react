@@ -1,0 +1,27 @@
+schedule-upgrade-configuration {
+  display: block;
+
+  .btn--cta {
+    margin-top: 1rem;
+  }
+}
+
+.schedule-upgrade-form {
+  display: flex;
+  justify-content: space-between;
+}
+
+.schedule-upgrade-time {
+  flex: 0 1 auto;
+  width: 90px;
+}
+
+.schedule-upgrade-day {
+  flex: 0 1 auto;
+  width: 200px;
+}
+
+.schedule-upgrade-timezone {
+  flex: 0 1 auto;
+  width: 250px;
+}

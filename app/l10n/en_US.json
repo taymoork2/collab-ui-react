@@ -324,7 +324,7 @@
     "manageBetaFeatures": "Manage Beta Features",
     "betaFeatures": "Beta Features",
     "errorGettingToggles": "There was a problem getting the selected organizations feature toggles",
-    "errorSettingToggle": "There was a problem setting {{key}} for the selected organization",
+    "errorSettingToggle": "There was a problem setting a toggle",
     "toggleModSuccess": "All modified toggles were updated",
     "startSearching": "To begin, search for an organization",
     "noSearchResults": "Search yielded no results"
@@ -360,7 +360,10 @@
     "devReports": "Development Customer Reports",
     "sparkReports": "Spark Reports",
     "downloadOptions": "Download Options",
-    "saveAs": "Save As"
+    "saveAs": "Save As",
+    "allCalls": "All Calls",
+    "videoCalls": "Video Calls",
+    "audioCalls": "Audio Only Calls"
   },
   "activeUsers": {
     "active": "Active",
@@ -408,6 +411,7 @@
     "fair": "Fair",
     "poor": "Poor",
     "description": "Media quality is determined by measuring the amount of packet loss that is reported by the registered devices during all calls that are longer than fifteen seconds in duration.",
+    "descriptionCustomer": "Media quality is determined by measuring the amount of packet loss that is reported by the registered devices during all calls that are longer than fifteen seconds in duration.  The data can be filtered by All Calls, Audio Only Calls, and Video Calls.",
     "mediaQualityGraphError": "There was an error while loading call quality data for {{customer}}.",
     "customerError": "There was an error while loading call quality data.",
     "minutes": "Minutes"
@@ -607,6 +611,16 @@
     "errOrderStatus": "Failed to retrieve order status",
     "errCustomerEmail": "Failed to resend welcome email to customer admin",
     "errPartnerEmail": "Failed to resend welcome email to partner admin"
+  },
+  "weekDays": {
+    "everyDay": "Every {{day}}",
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday",
+    "sunday": "Sunday"
   },
   "common": {
     "delete": "Delete",
@@ -1104,7 +1118,7 @@
         "certificatesUpload": "Upload",
         "certificatesModalHeading": "Remove Certificate",
         "certificatesModalText": "Are you sure you want to remove the following certificate?",
-        "sipDomainHeading": "SIP Domain",
+        "sipDomainHeading": "SIP Destination",
         "disableConfirmDialogText1": "You are about to remove the following Hybrid Service for your organization:",
         "disableConfirmDialogText2": "If you click Confirm:",
         "disableConfirmDialogText3": "All of your users will have the service deactivated.",
@@ -1114,12 +1128,24 @@
         "sipDomainHeading": "SIP Domain",
         "sipDomain": "Enter the SRV domain of your Expressway edge server(s) so that calls route correctly to and from there.",
         "sipDomainPlaceholder": "Enter a single domain or subdomain"
+      },
+      "scheduleUpgrade": {
+        "title": "Automatic Software Upgrades",
+        "description": "Edit the scheduled start time for automatic software upgrades of your Connectors.",
+        "defaultWarning": "<button class=\"btn btn--cta\" ng-click=\"{{onclick}}\">Confirm the default schedule</button>"
       }
     },
     "hybridServices": {
       "result404": "Entitlements for {{email}} do not exist.",
       "result409": "Entitlement(s) previously updated.",
       "resultOther": "Entitlements for {{email}} were not updated. Status: {{status}}."
+    },
+    "notifications": {
+      "scheduleUpgrade": {
+        "title": "Confirm the Schedule for Automatic Software Upgrades",
+        "description": "A schedule for automatic software upgrades of your Connectors has been set.",
+        "action": "Either <a ng-click=\"{{onclick}}\">confirm the default time or change it</a> for this Hybrid Service."
+      }
     }
   },
   "firstTimeWizard": {
@@ -1871,9 +1897,9 @@
       "webexSiteUrl": "WebEx Site URL",
       "webexTimezone": "WebEx Time Zone",
       "default": "Set as default",
-      "siteUrlDescription": "For example: www.companyname.webex.com",
+      "siteUrlDescription": "For example: companyname.webex.com",
       "tzDescription": "Select the time zone closest to your customer. This will ensure their WebEx site is deployed in the appropriate data center.",
-      "siteUrlPlaceholder": "acmecorp.webex.com",
+      "siteUrlPlaceholder": "companyname.webex.com",
       "timezonePlaceholder": "Search for a time zone...",
       "invalidSite": "SiteUrl is invalid.",
       "duplicateSite": "SiteUrl is already in use.",
