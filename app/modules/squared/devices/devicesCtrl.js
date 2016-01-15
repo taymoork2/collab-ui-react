@@ -60,14 +60,13 @@ angular.module('Squared')
         rowHeight: 45,
         enableRowHeaderSelection: false,
         enableColumnMenus: false,
+        multiSelect: false,
         onRegisterApi: function (gridApi) {
           $scope.gridApi = gridApi;
           gridApi.selection.on.rowSelectionChanged($scope, function (row) {
             vm.showDeviceDetails(row.entity);
           });
         },
-        headerRowTemplate: getTemplate('_headerRowTpl'),
-        rowTemplate: getTemplate('_rowTpl'),
 
         columnDefs: [{
           field: 'photos',
