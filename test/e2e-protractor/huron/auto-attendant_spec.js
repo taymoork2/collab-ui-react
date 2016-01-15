@@ -31,7 +31,7 @@ describe('Huron Auto Attendant', function () {
 
       notifications.assertSuccess(deleteUtils.testAAName + ' created successfully');
 
-    });
+    }, 120000);
 
     it('should add a single phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
       utils.wait(autoattendant.addAANumbers, 12000);
@@ -44,7 +44,7 @@ describe('Huron Auto Attendant', function () {
 
       notifications.assertSuccess(deleteUtils.testAAName + ' updated successfully');
 
-    });
+    }, 120000);
 
     it('should delete a phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
@@ -55,7 +55,7 @@ describe('Huron Auto Attendant', function () {
 
       notifications.assertSuccess(deleteUtils.testAAName + ' updated successfully');
 
-    });
+    }, 120000);
 
     it('should add a second phone number to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
@@ -68,7 +68,7 @@ describe('Huron Auto Attendant', function () {
 
       notifications.assertSuccess(deleteUtils.testAAName + ' updated successfully');
 
-    });
+    }, 120000);
 
     it('should add SayMessage Message, select Language and Voice to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
@@ -85,7 +85,7 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsEnabled(autoattendant.saveButton);
       utils.click(autoattendant.saveButton);
       utils.expectIsDisabled(autoattendant.saveButton);
-    });
+    }, 120000);
 
     it('should add Phone Menu to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
 
@@ -107,15 +107,31 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.phoneMenuActionOptions.first().all(by.tagName('li')).first());
 
       utils.click(autoattendant.repeatPlus);
-      //Add Second Phone repeat Menu
+      //Add Say Message phone menu
       utils.click(autoattendant.phoneMenuKeys.last());
       utils.click(autoattendant.phoneMenuKeyOptions.last().all(by.tagName('li')).last());
       utils.click(autoattendant.phoneMenuAction.last());
-      utils.click(autoattendant.phoneMenuActionOptions.last().all(by.tagName('li')).last());
+      utils.click(autoattendant.phoneMenuActionOptions.last().element(by.linkText('Say Message')));
+      utils.click(autoattendant.phoneMenuActionTargets.last().element(by.tagName('textarea')));
+      utils.sendKeys(autoattendant.phoneMenuActionTargets.last().element(by.tagName('textarea')), "This is a phone menu say");
+
+      utils.click(autoattendant.repeatPlus);
+      //Add Route to Phone Number
+      utils.click(autoattendant.phoneMenuKeys.last());
+      utils.click(autoattendant.phoneMenuKeyOptions.last().all(by.tagName('li')).last());
+      utils.click(autoattendant.phoneMenuAction.last());
+      utils.click(autoattendant.phoneMenuActionOptions.last().element(by.linkText('Route to Phone Number')));
+      utils.click(autoattendant.phoneMenuActionTargets.last().element(by.css('input.phone-number')));
+      utils.sendKeys(autoattendant.phoneMenuActionTargets.last().element(by.css('input.phone-number')), "4084741234");
 
       //Add Phone TimeOut Option
       utils.click(autoattendant.phoneMenuTimeout);
       utils.click(autoattendant.phoneMenuTimeoutOptions);
+
+      utils.expectIsEnabled(autoattendant.saveButton);
+      utils.click(autoattendant.saveButton);
+      utils.expectIsDisabled(autoattendant.saveButton);
+      notifications.assertSuccess(deleteUtils.testAAName + ' updated successfully');
 
       //Delete one repeatMenu
       utils.click(autoattendant.trash);
@@ -124,7 +140,7 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsDisabled(autoattendant.saveButton);
       notifications.assertSuccess(deleteUtils.testAAName + ' updated successfully');
 
-    });
+    }, 180000);
 
   });
 
