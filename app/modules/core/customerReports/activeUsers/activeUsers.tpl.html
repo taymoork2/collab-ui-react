@@ -17,7 +17,7 @@
           </h3>
         </div>
         <div ng-show="!nav.isRefresh(nav.activeUserStatus) && !nav.isEmpty(nav.activeUserStatus)">
-          <div class="active-table" ng-show="nav.showMostActiveUsers">
+          <div class="active-table" ng-if="nav.showMostActiveUsers">
             <h4 class="report-section-header report-sides">{{nav.mostActiveTitle}}</h4>
             <p class="report-description" translate='activeUsers.customerMostActiveDescription'></p>
             <table class="table table-bordered active-users-table report-sides" ng-show="!nav.isRefresh(nav.mostActiveUserStatus) && !nav.isEmpty(nav.mostActiveUserStatus)">

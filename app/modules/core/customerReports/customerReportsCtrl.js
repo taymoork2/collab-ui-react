@@ -13,8 +13,15 @@
     var SET = 'set';
     var EMPTY = 'empty';
 
+    vm.allReports = 'all';
+    vm.engagement = 'engagement';
+    vm.quality = 'quality';
+    var currentFilter = vm.allReports;
+
     vm.pageTitle = 'reportsPage.pageTitle';
     vm.showWebexTab = false;
+    vm.showEngagement = true;
+    vm.showQuality = true;
 
     var activeUsersSort = ['userName', 'numCalls', 'totalActivity'];
     var activeUsersChart = null;
@@ -89,6 +96,7 @@
     vm.timeUpdate = timeUpdate;
     vm.mediaUpdate = mediaUpdate;
     vm.mostActiveUserSwitch = mostActiveUserSwitch;
+    vm.resetCards = resetCards;
 
     vm.isRefresh = function (tab) {
       return tab === REFRESH;
@@ -162,20 +170,46 @@
 
     function mostActiveUserSwitch() {
       vm.showMostActiveUsers = !vm.showMostActiveUsers;
-      resetCards();
+      resizeCards();
     }
 
-    function resetCards() {
-      var engagementElems = [activeUserCard, avgRoomsCard, filesSharedCard];
-      var qualityElems = [];
+    function resetCards(filter) {
+      if (currentFilter !== filter) {
+        var engagementElems = [avgRoomsCard, activeUserCard, filesSharedCard];
+        var qualityElems = [mediaCard, metricsCard];
 
-      // $('.cs-card-layout').masonry('remove', engagementElems);
-      // $('.cs-card-layout').masonry('remove', qualityElems);
-      // resizeCards();
+        if (filter === vm.allReports) {
+          if (!vm.showEngagement) {
+            $('.cs-card-layout').prepend(engagementElems).masonry('prepended', engagementElems);
+          }
+          if (!vm.showQuality) {
+            $('.cs-card-layout').append(qualityElems).masonry('appended', qualityElems);
+          }
+          vm.showEngagement = true;
+          vm.showQuality = true;
+        } else if (filter === vm.engagement) {
+          if (!vm.showEngagement) {
+            $('.cs-card-layout').append(engagementElems).masonry('appended', engagementElems);
+          }
+          if (vm.showQuality) {
+            $('.cs-card-layout').masonry('remove', qualityElems);
+          }
+          vm.showEngagement = true;
+          vm.showQuality = false;
+        } else if (filter ===  vm.quality) {
+          if (!vm.showQuality) {
+            $('.cs-card-layout').append(qualityElems).masonry('appended', qualityElems);
+          }
+          if (vm.showEngagement) {
+            $('.cs-card-layout').masonry('remove', engagementElems);
+          }
+          vm.showEngagement = false;
+          vm.showQuality = true;
+        }
 
-      // $('.cs-card-layout').append(engagementElems).masonry('appended', engagementElems);
-      // $('.cs-card-layout').append(qualityElems).masonry('appended', qualityElems);
-      resizeCards();
+        currentFilter = filter;
+        resizeCards();
+      }
     }
 
     function setFilterBasedText() {
@@ -240,6 +274,8 @@
       if (tempMetricsChart !== null && angular.isDefined(tempMetricsChart)) {
         metricsChart = tempMetricsChart;
       }
+
+      resizeCards();
     }
 
     function timeUpdate() {
@@ -289,17 +325,18 @@
             activeUsersChart = tempActiveUserChart;
           }
           vm.activeUserStatus = SET;
+          CustomerReportService.getMostActiveUserData(vm.timeSelected).then(function (response) {
+            if (response === ABORT) {
+              return;
+            } else if (response.length === 0) {
+              vm.mostActiveUserStatus = EMPTY;
+            } else {
+              vm.mostActiveUserStatus = SET;
+            }
+            activeUserCard = document.getElementById('active-user-card');
+          });
         }
-        CustomerReportService.getMostActiveUserData(vm.timeSelected).then(function (response) {
-          if (response === ABORT) {
-            return;
-          } else if (response.length === 0) {
-            vm.mostActiveUserStatus = EMPTY;
-          } else {
-            vm.mostActiveUserStatus = SET;
-          }
-          activeUserCard = document.getElementById('active-user-card');
-        });
+        resizeCards();
       });
     }
 
@@ -350,7 +387,7 @@
           }
           vm.mediaQualityStatus = SET;
         }
-        filesSharedCard = document.getElementById('files-shared-card');
+        mediaCard = document.getElementById('media-quality-card');
       });
     }
 
@@ -368,7 +405,7 @@
           vm.metrics = response.displayData;
           vm.metricStatus = SET;
         }
-        filesSharedCard = document.getElementById('files-shared-card');
+        metricsCard = document.getElementById('call-metrics-customer');
       });
     }
 
@@ -385,7 +422,7 @@
           // }
           vm.deviceStatus = SET;
         }
-        filesSharedCard = document.getElementById('files-shared-card');
+        deviceCard = document.getElementById('device-card');
       });
     }
 
