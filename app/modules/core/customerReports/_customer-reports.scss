@@ -1,6 +1,7 @@
 @import 'activeUsers/_active-users';
 @import 'avgRooms/_avg-rooms';
 @import 'callMetrics/_call-metrics-customer';
+@import 'mediaQuality/_media-quality-customer';
 
 .customer-report-filter {
   width: rem-calc(200);

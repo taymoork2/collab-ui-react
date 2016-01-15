@@ -329,7 +329,7 @@
       return [graph];
     }
 
-    function setMediaQualityGraph(data, mediaChart) {
+    function setMediaQualityGraph(data, mediaChart, mediaFilter) {
       if (data === null || data === 'undefined' || data.length === 0) {
         return;
       } else if (mediaChart !== null && angular.isDefined(mediaChart)) {
@@ -339,21 +339,21 @@
         }
 
         mediaChart.dataProvider = data;
-        mediaChart.graphs = mediaGraphs(data);
+        mediaChart.graphs = mediaGraphs(data, mediaFilter);
         mediaChart.startDuration = startDuration;
         mediaChart.validateData();
       } else {
-        mediaChart = createMediaGraph(data);
+        mediaChart = createMediaGraph(data, mediaFilter);
       }
       return mediaChart;
     }
 
-    function createMediaGraph(data) {
+    function createMediaGraph(data, mediaFilter) {
       if (data.length === 0) {
         return;
       }
 
-      var graphs = mediaGraphs(data);
+      var graphs = mediaGraphs(data, mediaFilter);
       var catAxis = angular.copy(axis);
       catAxis.gridPosition = 'start';
 
@@ -370,10 +370,18 @@
       return createGraph(data, mediaQualityDiv, graphs, valueAxes, catAxis, 'modifiedDate', angular.copy(legendBase), angular.copy(numFormatBase), startDuration);
     }
 
-    function mediaGraphs(data) {
+    function mediaGraphs(data, mediaFilter) {
+      var values = ['totalDurationSum', 'partialSum', 'poorAudioQualityDurationSum'];
+      var balloonValues = ['goodQualityDurationSum', 'fairQualityDurationSum', 'poorAudioQualityDurationSum'];
+      if (mediaFilter.value === 1) {
+        values = ['totalAudioDurationSum', 'partialAudioSum', 'poorQualityDurationSum'];
+        balloonValues = ['goodAudioQualityDurationSum', 'fairAudioQualityDurationSum', 'poorQualityDurationSum'];
+      } else if (mediaFilter.value === 2) {
+        values = ['totalVideoDurationSum', 'partialVideoSum', 'poorVideoQualityDurationSum'];
+        balloonValues = ['goodVideoQualityDurationSum', 'fairVideoQualityDurationSum', 'poorVideoQualityDurationSum'];
+      }
+
       var titles = ['mediaQuality.good', 'mediaQuality.fair', 'mediaQuality.poor'];
-      var values = ['totalDurationSum', 'partialSum', 'poorQualityDurationSum'];
-      var balloonValues = ['goodQualityDurationSum', 'fairQualityDurationSum', 'poorQualityDurationSum'];
       var colors = [Config.chartColors.blue, Config.chartColors.brandWarning, Config.chartColors.brandDanger];
       if (data[0].colorOne !== undefined && data[0].colorOne !== null) {
         colors = [data[0].colorThree, data[0].colorTwo, data[0].colorOne];
