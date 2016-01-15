@@ -43,8 +43,9 @@
     }
 
     function activate() {
+      vm.aaModel.aaRecord = AAModelService.getNewAARecord();
+      vm.aaModel.aaRecordUUID = "";
 
-      vm.aaModel = AAModelService.getAAModel();
       vm.ui = AAUiModelService.getUiModel();
 
       aaBuilderMainCtrl_saveAARecords = $scope.saveAARecords;
