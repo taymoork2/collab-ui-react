@@ -2904,6 +2904,18 @@
         "type": "Automatic Updates Disabled",
         "message": "System software will not be updated."
       },
+      "NTPStatus": {
+        "type": "Time Server Not Reachable",
+        "message": "The connection to an NTP server could not be established. The time displayed on your endpoint may be wrong."
+      },
+      "AudioPairingInterference": {
+        "type": "Signal interference from other devices",
+        "message": "There is an ultrasound signal interference in this room from other devices (ex: other video systems) that could prevent pairing with your phone and laptop."
+      },
+      "ECReferenceDelay": {
+        "type": "Audio Delay",
+        "message": "Your monitor settings are adding a delay to your audio. Change the monitor settings to a suitable mode (ex: Game mode)."
+      },
       "inactive": {
         "type": "Inactive Account",
         "message": "There exists an account for a device, but no corresponding device or activation code. You can probably delete this account."

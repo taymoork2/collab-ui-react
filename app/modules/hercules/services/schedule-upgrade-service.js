@@ -15,7 +15,7 @@
     return services;
 
     function get(orgId, service) {
-      return $http.get(ConfigService.getUSSUrl() + '/organizations/' + orgId + '/services/' + service + '/upgrade_schedule')
+      return $http.get(ConfigService.getUrl() + '/organizations/' + orgId + '/services/' + service + '/upgrade_schedule')
         .then(function (response) {
           return response.data;
         }, function (error) {
@@ -38,7 +38,7 @@
     }
 
     function patch(orgId, service, params) {
-      return $http.patch(ConfigService.getUSSUrl() + '/organizations/' + orgId + '/services/' + service + '/upgrade_schedule', params)
+      return $http.patch(ConfigService.getUrl() + '/organizations/' + orgId + '/services/' + service + '/upgrade_schedule', params)
         .then(function (response) {
           return response.data;
         }, function (error) {

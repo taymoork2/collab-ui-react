@@ -30,8 +30,8 @@ var Navigation = function () {
   // hybrid services
   this.activateService = element(by.id('activateService'));
   this.deactivateService = element(by.id('deactivateService'));
-  this.calendarServicePage = element(by.css('a[href="#/services/calendar"]'));
-  this.callServicePage = element(by.css('a[href="#/services/call"]'));
+  this.calendarServicePage = element(by.css('a[href="#services/calendar"]'));
+  this.callServicePage = element(by.css('a[href="#services/call"]'));
   this.serviceResources = element(by.cssContainingText('.nav-link', 'Resources'));
   this.serviceSettings = element(by.cssContainingText('.nav-link', 'Settings'));
 
