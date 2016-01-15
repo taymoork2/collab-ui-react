@@ -44,6 +44,12 @@ angular.module('Squared').service('CsdmConverter',
           return "images/devices-hi/sx10.png";
         case "Cisco TelePresence SX20":
           return "images/devices-hi/sx20.png";
+        case "Cisco TelePresence SX80":
+          return "images/devices-hi/sx80.png";
+        case "Cisco TelePresence MX200 G2":
+          return "images/devices-hi/mx200g2.png";
+        case "Cisco TelePresence MX300 G2":
+          return "images/devices-hi/mx300g2.png";
         default:
           return "images/devices-hi/unknown.png";
         }
