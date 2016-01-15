@@ -23,9 +23,9 @@
       type: 'input',
       templateOptions: {
         required: true,
-        labelClass: 'small-4 columns',
-        inputClass: 'small-7 columns left',
-        label: $translate.instant('trialModal.meeting.webexSiteUrl'),
+        labelClass: 'small-2 columns',
+        inputClass: 'small-9 columns left',
+        label: $translate.instant('trialModal.meeting.siteUrl'),
         placeholder: $translate.instant('trialModal.meeting.siteUrlPlaceholder')
       },
       modelOptions: {
@@ -35,6 +35,9 @@
         validUrl: {
           expression: function ($viewValue, $modelValue) {
             var siteUrl = $modelValue || $viewValue;
+            if (!siteUrl) {
+              return false;
+            }
             vm.validatingUrl = true;
             return $q(function (resolve, reject) {
               WebexTimeZoneService.validateSiteUrl(siteUrl).then(function (site) {
@@ -73,10 +76,10 @@
       templateOptions: {
         required: true,
         labelfield: 'label',
-        labelClass: 'small-4 columns',
-        inputClass: 'small-7 columns left',
+        labelClass: 'small-2 columns',
+        inputClass: 'small-9 columns left',
         filter: true,
-        label: $translate.instant('trialModal.meeting.webexTimezone'),
+        label: $translate.instant('trialModal.meeting.timezone'),
         inputPlaceholder: $translate.instant('trialModal.meeting.timezonePlaceholder')
       },
       expressionProperties: {

@@ -516,6 +516,16 @@
             fairQualityDurationSum: 0,
             poorQualityDurationSum: 0,
             partialSum: 0,
+            totalAudioDurationSum: 0,
+            goodAudioQualityDurationSum: 0,
+            fairAudioQualityDurationSum: 0,
+            poorAudioQualityDurationSum: 0,
+            partialAudioSum: 0,
+            totalVideoDurationSum: 0,
+            goodVideoQualityDurationSum: 0,
+            fairVideoQualityDurationSum: 0,
+            poorVideoQualityDurationSum: 0,
+            partialVideoSum: 0,
             balloon: true
           };
           var dayOffset = parseInt(moment.tz(data[(data.length - 1)].date, timezone).format('e'));
@@ -533,6 +543,18 @@
             var poorSum = parseInt(item.details.poorQualityDurationSum);
             var partialSum = fairSum + poorSum;
 
+            var goodVideoQualityDurationSum = parseInt(item.details.sparkGoodVideoDurationSum) + parseInt(item.details.sparkUcGoodVideoDurationSum);
+            var fairVideoQualityDurationSum = parseInt(item.details.sparkFairVideoDurationSum) + parseInt(item.details.sparkUcFairVideoDurationSum);
+            var poorVideoQualityDurationSum = parseInt(item.details.sparkPoorVideoDurationSum) + parseInt(item.details.sparkUcPoorVideoDurationSum);
+            var totalVideoDurationSum = goodVideoQualityDurationSum + fairVideoQualityDurationSum + poorVideoQualityDurationSum;
+            var partialVideoSum = fairVideoQualityDurationSum + poorVideoQualityDurationSum;
+
+            var goodAudioQualityDurationSum = goodSum - goodVideoQualityDurationSum;
+            var fairAudioQualityDurationSum = fairSum - fairVideoQualityDurationSum;
+            var poorAudioQualityDurationSum = poorSum - poorVideoQualityDurationSum;
+            var totalAudioDurationSum = goodAudioQualityDurationSum + fairAudioQualityDurationSum + poorAudioQualityDurationSum;
+            var partialAudioSum = fairAudioQualityDurationSum + poorAudioQualityDurationSum;
+
             if (totalSum > 0 || goodSum > 0 || fairSum > 0 || poorSum > 0) {
               var modifiedDate = moment.tz(item.date, timezone).format(monthFormat);
               if (filter.value === 0 || filter.value === 1) {
@@ -546,6 +568,19 @@
                   graph[i].fairQualityDurationSum = fairSum;
                   graph[i].poorQualityDurationSum = poorSum;
                   graph[i].partialSum = partialSum;
+
+                  graph[i].totalAudioDurationSum = totalAudioDurationSum;
+                  graph[i].goodAudioQualityDurationSum = goodAudioQualityDurationSum;
+                  graph[i].fairAudioQualityDurationSum = fairAudioQualityDurationSum;
+                  graph[i].poorAudioQualityDurationSum = poorAudioQualityDurationSum;
+                  graph[i].partialAudioSum = partialAudioSum;
+
+                  graph[i].totalVideoDurationSum = totalVideoDurationSum;
+                  graph[i].goodVideoQualityDurationSum = goodVideoQualityDurationSum;
+                  graph[i].fairVideoQualityDurationSum = fairVideoQualityDurationSum;
+                  graph[i].poorVideoQualityDurationSum = poorVideoQualityDurationSum;
+                  graph[i].partialVideoSum = partialVideoSum;
+
                   emptyGraph = false;
                   break;
                 }
