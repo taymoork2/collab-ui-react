@@ -123,12 +123,16 @@ describe('Huron Auto Attendant', function () {
       utils.click(autoattendant.phoneMenuAction.first());
       utils.click(autoattendant.phoneMenuActionOptions.first().all(by.tagName('li')).first());
 
+      //Add Say Message phone menu
       utils.click(autoattendant.repeatPlus);
-      //Add Second Phone repeat Menu
+
       utils.click(autoattendant.phoneMenuKeys.last());
       utils.click(autoattendant.phoneMenuKeyOptions.last().all(by.tagName('li')).last());
       utils.click(autoattendant.phoneMenuAction.last());
-      utils.click(autoattendant.phoneMenuActionOptions.last().all(by.tagName('li')).last());
+      utils.click(autoattendant.phoneMenuActionOptions.last().element(by.linkText('Say Message')));
+      utils.click(autoattendant.phoneMenuActionTargets.last().element(by.tagName('textarea')));
+      utils.sendKeys(autoattendant.phoneMenuActionTargets.last().element(by.tagName('textarea')), "This is a phone menu say");
+
     }, 60000);
 
     it('should delete one Phone Menu Repeat to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
