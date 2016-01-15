@@ -357,22 +357,8 @@ angular.module('Core')
           tab: 'supportTab',
           icon: 'icon-support',
           title: 'tabs.supportTab',
-          subPages: [{
-            title: 'tabs.logsTab',
-            desc: 'tabs.logsTabDesc',
-            state: 'support',
-            link: '#support'
-          }, {
-            title: 'tabs.billingTab',
-            desc: 'tabs.billingTabDesc',
-            state: 'billing',
-            link: '#orderprovisioning'
-          }, {
-            title: 'tabs.helpdesk',
-            desc: 'tabs.helpdesk',
-            state: 'helpdesklaunch',
-            link: '#helpdesklaunch'
-          }]
+          link: '/support/status',
+          state: 'support.status'
         }, {
           tab: 'accountTab',
           icon: 'icon-sliders',

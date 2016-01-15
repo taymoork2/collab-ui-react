@@ -535,7 +535,17 @@
     "roles": "Roles",
     "downloadLogFailed": "Failed to download log",
     "callflowResultsFailed": "Failed to download the callflow results corresponding to logFile",
-    "status": "Status"
+    "status": "Spark Status",
+    "tabs": {
+      "status": "Status",
+      "logs": "Logs",
+      "orderProvisioning": "Order Provisioning"
+    },
+    "cards": {
+      "sparkStatus": "Spark Status",
+      "helpDesk": "Help Desk Support",
+      "supportResources": "Support Resources"
+    }
   },
   "cdrLogs": {
     "title": "CDR Call Flow",
