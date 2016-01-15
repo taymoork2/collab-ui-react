@@ -3,7 +3,7 @@
     <div ng-hide="oneBilling" class="flex-row">
       <div class="small-4 multiSub">
         <span class="multiText" translate="firstTimeWizard.subscriptionId"></span>
-        <cs-select class="multiSelect" ng-model="selected" options="options">
+        <cs-select class="multiSelect" ng-model="selectedSubscription" options="subscriptionOptions" ng-change="modelChange()">
         </cs-select>
       </div>
     </div>
@@ -72,8 +72,11 @@
           <div class="ckbx" id="paidMtg" ng-show="showMultiSubscriptions(lic.billing)" ng-if="!lic.site">
             <cs-checkbox ckid="{{lic.licenseId}}" ng-model="lic.confModel" label="{{lic.label}}"></cs-checkbox>
           </div>
-          <div class="item-mtg">  
-            {{lic.site}}
+          <div class="item-mtg">
+            <div ng-show="showMultiSubscriptions(lic.billing)">
+              <div ng-class="{'sub-line':!$first}"></div>
+              {{lic.site}}
+            </div>
             <div ng-show="showMultiSubscriptions(cfLic.billing)" ng-repeat="cfLic in lic.confLic">
               <cs-checkbox ckid="{{cfLic.licenseId}}" ng-model="cfLic.confModel" label="WebEx {{cfLic.label}}"></cs-checkbox>
               <div ng-if="cfLic.offerName === 'MC' || cfLic.offerName === 'EE'">
@@ -83,7 +86,6 @@
               </div>
             </div>
           </div>
-          <div ng-class="{'sub-line':!$last}"></div>
         </div>
       </div>
       <div id="communication" class="small-4 columns column-paid">

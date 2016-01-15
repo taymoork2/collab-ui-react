@@ -329,8 +329,8 @@ angular.module('Core')
       $scope.licenses = [];
       $scope.populateConf = populateConf;
       $scope.oneBilling = false;
-      $scope.selected = '';
-      $scope.options = [];
+      $scope.selectedSubscription = '';
+      $scope.subscriptionOptions = [];
       var convertSuccess = [];
       var convertFailures = [];
       var convertUsersCount = 0;
@@ -355,16 +355,28 @@ angular.module('Core')
 
       var getSubscriptions = function () {
         Orgservice.getLicensesUsage().then(function (subscriptions) {
-          $scope.options = _.uniq(_.pluck(subscriptions, 'subscriptionId'));
-          $scope.selected = $scope.options[0];
-          if ($scope.options.length === 1) {
-            $scope.oneBilling = true;
-          }
+          $scope.subscriptionOptions = _.uniq(_.pluck(subscriptions, 'subscriptionId'));
+          $scope.selectedSubscription = $scope.subscriptionOptions[0];
+          $scope.oneBilling = $scope.subscriptionOptions.length === 1;
         });
       };
 
+      $scope.modelChange = function () {
+        $scope.selectedSubscription = this.selectedSubscription;
+      };
+
       $scope.showMultiSubscriptions = function (billingServiceId) {
-        var isSelected = $scope.selected === billingServiceId;
+        var isSelected = false;
+        if (_.isArray(billingServiceId)) {
+          for (var i in billingServiceId) {
+            if (_.eq(billingServiceId[i], $scope.selectedSubscription)) {
+              isSelected = true;
+              break;
+            }
+          }
+        } else {
+          isSelected = _.eq(billingServiceId, $scope.selectedSubscription);
+        }
         var isOneBilling = $scope.oneBilling;
 
         $scope.licenseExists = isSelected;
@@ -416,8 +428,8 @@ angular.module('Core')
       function createFeatures(obj) {
         return {
           siteUrl: _.get(obj, 'license.siteUrl', ''),
-          billing: obj.license.billingServiceId,
-          volume: obj.license.volume,
+          billing: _.get(obj, 'license.billingServiceId', ''),
+          volume: _.get(obj, 'license.volume', ''),
           licenseId: _.get(obj, 'license.licenseId', ''),
           offerName: _.get(obj, 'license.offerName', ''),
           label: obj.label,
@@ -462,6 +474,7 @@ angular.module('Core')
             });
             return {
               site: site,
+              billing: _.uniq(_.pluck(cmrMatches, 'billing').concat(_.pluck(confMatches, 'billing'))),
               confLic: confMatches,
               cmrLic: cmrMatches
             };
