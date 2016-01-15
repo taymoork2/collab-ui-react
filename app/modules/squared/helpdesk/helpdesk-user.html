@@ -117,7 +117,7 @@
               <img ng-if="device.image" ng-src="{{device.image}}" style="width: 50px;"/> <span class="device-name">{{device.model}}</span>
             </h5>             
             <div>
-              <span><i class="icon icon-circle circle-status-icon" ng-class="device.deviceStatus.cssColorClass"></i>{{device.deviceStatus.status}}</span>
+              <span><i class="icon icon-circle circle-status-icon" ng-class="device.deviceStatus.cssColorClass"></i>{{device.deviceStatus.statusKey | translate}}</span>
             </div>
             <div>
               <span>{{device.name}}</span>

@@ -11,16 +11,39 @@
       // return DeviceService.loadDevices(userId, orgId).then(massageHuronDevices);
       return deferredResolve([]);
     }
+    
+    function getDevice(orgId, deviceId) {
+      if (HelpdeskService.useMock()) {
+        return deferredResolve(massageDevice(HelpdeskMockData.huronDevice));
+      }
+       /*return $http
+      .get(HuronConfig.getCmiUrl() + '/voice/customers/' + orgId + '/sipendpoints/' + deviceId + '?status=true')
+      .then(extractDevices);*/
+      return deferredResolve([]);
+    }
 
     function massageDevices(devices) {
-      _.each(devices, function (device) {
-        device.image = device.model ? 'images/devices/' + (device.model.trim().replace(/ /g, '_') + '.png').toLowerCase() : 'images/devices-hi/unknown.png';
-        device.deviceStatus.cssColorClass = device.deviceStatus.status === 'Online' ? 'device-status-green' : 'device-status-red';
-        if (!device.deviceStatus.status) {
-          device.deviceStatus.status = 'Unknown';
-        }
-      });
+      _.each(devices, massageDevice);
+      console.log('massageDevices', devices);
       return devices;
+    }
+    
+    function massageDevice(device) {
+      device.displayName = device.name;
+      device.isHuronDevice = true;
+      device.image = device.model ? 'images/devices/' + (device.model.trim().replace(/ /g, '_') + '.png').toLowerCase() : 'images/devices-hi/unknown.png';
+      if (!device.deviceStatus) {      
+        if (device.registrationStatus) {
+          device.deviceStatus = { status: angular.lowercase(device.registrationStatus) === 'registered' ? 'Online' : 'Offline' };
+        } else {
+          device.deviceStatus = { status: 'Unknown' };
+        }
+      } else if (!device.deviceStatus.status) {
+        device.deviceStatus.status = 'Unknown';
+      }
+      device.deviceStatus.statusKey = 'common.' + angular.lowercase(device.deviceStatus.status);
+      device.deviceStatus.cssColorClass = device.deviceStatus.status === 'Online' ? 'device-status-green' : 'device-status-red';    
+      return device;
     }
 
     function getUserNumbers(userId, orgId) {
@@ -46,12 +69,7 @@
     }
 
     function extractDevices(res) {
-      var devices = res.data || res;
-      // Massage to make it more similar to the cloudberry devices
-      _.each(devices, function (device) {
-        device.displayName = device.name;
-      });
-      return devices;
+      return massageDevices(res.data || res);
     }
 
     function deferredResolve(resolved) {
@@ -63,7 +81,8 @@
     return {
       getDevices: getDevices,
       getUserNumbers: getUserNumbers,
-      searchDevices: searchDevices
+      searchDevices: searchDevices,
+      getDevice: getDevice
     };
   }
 

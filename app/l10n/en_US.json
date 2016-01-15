@@ -675,7 +675,10 @@
     "download": "Download",
     "quantity": "Qty",
     "modify": "Modify",
-    "submit": "Submit"
+    "submit": "Submit",
+    "online": "Online",
+    "offline": "Offline",
+    "unknown": "Unknown"
   },
   "notifications": {
     "success": "Success notifications",

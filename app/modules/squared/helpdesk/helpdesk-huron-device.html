@@ -1,0 +1,61 @@
+<div class="helpdesk-details" ng-keyup="helpdeskDeviceCtrl.keyPressHandler($event)" tabindex="1">
+  <div class="row head full">
+    <div class="columns large-12">
+      <a ui-sref="helpdesk.search">
+        <i class="icon icon-back icon-lg"></i>
+        <span translate="helpdesk.backToSearchResults"></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="row full">
+    <div class="columns medium-12">
+      <h3 class="display-name ellipsis">{{helpdeskDeviceCtrl.device.displayName}}</h3>
+
+      <div class="row">
+        <div class="small-4 medium-3 large-2 columns details-heading">
+          <span>{{'helpdesk.type' | translate}}:</span>
+        </div>
+        <div class="small-8 medium-9 large-10 columns details-value-device">
+          <span>
+            <img
+            ng-if="helpdeskDeviceCtrl.device.image"
+            ng-src="{{helpdeskDeviceCtrl.device.image}}"
+            style="width: 50px; margin-right: 0.5rem;"/> {{helpdeskDeviceCtrl.device.product}}
+          </span> 
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="small-4 medium-3 large-2 columns details-heading">
+          <span>{{'helpdesk.status' | translate}}:</span>
+        </div>
+        <div class="small-8 medium-9 large-10 columns details-value-device">
+          <span><i class="icon icon-circle circle-status-icon" ng-class="helpdeskDeviceCtrl.device.deviceStatus.cssColorClass"></i> {{helpdeskDeviceCtrl.device.deviceStatus.statusKey | translate}}</span>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="small-4 medium-3 large-2 columns details-heading">
+          <span>{{'common.id' | translate}}:</span>
+        </div>
+        <div class="small-8 medium-9 large-10 columns details-value-device">
+          <span>{{helpdeskDeviceCtrl.device.uuid}}</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="small-4 medium-3 large-2 columns details-heading">
+          <span>{{'helpdesk.organization' | translate}}:</span>
+        </div>
+        <div class="small-8 medium-9 large-10 columns details-value-device">
+          <span>
+            <a ui-sref="helpdesk.org({org:helpdeskDeviceCtrl.org, id:helpdeskDeviceCtrl.org.id})">
+              {{helpdeskDeviceCtrl.org.displayName}}
+            </a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
