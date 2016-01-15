@@ -1,5 +1,6 @@
 'use strict';
 
+/*
 describe('WebEx site reports cross-launch', function () {
   it('should login as t30citestprov9@mailinator.com', function () {
     login.loginThroughGui(sitereports.testAdmin2.username, sitesettings.testAdmin2.password);
@@ -16,6 +17,7 @@ describe('WebEx site reports cross-launch', function () {
     navigation.logout();
   });
 });
+*/
 
 describe('WebEx site reports iframe', function () {
   it('should login as sjsite14@mailinator.com and navigate to reports engagement', function () {
