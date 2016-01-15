@@ -196,7 +196,7 @@
           }
           vm.showEngagement = true;
           vm.showQuality = false;
-        } else if (filter ===  vm.quality) {
+        } else if (filter === vm.quality) {
           if (!vm.showQuality) {
             $('.cs-card-layout').append(qualityElems).masonry('appended', qualityElems);
           }
