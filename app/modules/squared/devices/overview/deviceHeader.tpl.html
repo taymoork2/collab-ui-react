@@ -4,8 +4,8 @@
     <div class="device-img" ng-if="!deviceOverview.currentDevice.isHuronDevice">
       <img src="images/devices-hi/space_avatar.png" />
     </div>
-    <div class="hurondevice-img" ng-if="deviceOverview.currentDevice.isHuronDevice">
-      <span ng-if="!deviceOverview.currentDevice.photos" class="user-img">
+    <div class="user-img" ng-if="deviceOverview.currentDevice.isHuronDevice">
+      <span ng-if="!deviceOverview.currentDevice.photos">
         <i class="icon icon-user"></i>
       </span>
       <img ng-if="deviceOverview.currentDevice.photos"
