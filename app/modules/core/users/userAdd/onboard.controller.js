@@ -388,7 +388,7 @@ angular.module('Core')
             $scope.radioStates.commRadio = true;
           } else if (userEnts[x] === 'squared-room-moderation') {
             $scope.radioStates.msgRadio = true;
-          }
+          } 
         }
       }
 
@@ -397,7 +397,7 @@ angular.module('Core')
           siteUrl: _.get(obj, 'license.siteUrl', ''),
           billing: obj.license.billingServiceId,
           volume: obj.license.volume,
-          licenseId: obj.license.licenseId,
+          licenseId: _.get(obj, 'license.licenseId', ''),
           offerName: _.get(obj, 'license.offerName', ''),
           label: obj.label,
           confModel: false,
