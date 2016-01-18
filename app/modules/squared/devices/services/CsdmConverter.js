@@ -50,6 +50,8 @@ angular.module('Squared').service('CsdmConverter',
           return "images/devices-hi/mx200g2.png";
         case "Cisco TelePresence MX300 G2":
           return "images/devices-hi/mx300g2.png";
+        case "Project Swedish Island":
+          return "images/devices-hi/swedish_island.png";
         default:
           return "images/devices-hi/unknown.png";
         }
