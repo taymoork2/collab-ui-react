@@ -29,11 +29,8 @@ describe('Support flow', function () {
       utils.expectIsNotDisplayed(navigation.billingTab);
     });
 
-    it('should not display results panel initially', function () {
-      utils.expectIsNotDisplayed(support.logsPanel);
-    });
-
     it('should display error for empty input', function () {
+      utils.click(navigation.logsPage);
       utils.click(support.logSearchBtn);
       notifications.assertError('Search input cannot be empty.');
     });
