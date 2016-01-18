@@ -336,6 +336,11 @@
     function populateHuntPilotNumbers(data) {
       data.numbers = [];
       vm.selectedPilotNumbers.forEach(function (number) {
+        if (number.type === 'internal') {
+          number.type = 'NUMBER_FORMAT_EXTENSION';
+        } else if (number.type === 'external') {
+          number.type = 'NUMBER_FORMAT_DIRECT_LINE';
+        }
         data.numbers.push({
           type: number.type,
           number: number.number
