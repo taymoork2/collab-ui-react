@@ -1,27 +1,26 @@
 <script type="text/ng-template" id="userTemplate.html">
   <div class="hunt-member-name" ng-if="match.label.displayUser">
-    <span ng-bind-html="match.label.user.firstName | typeaheadHighlight:query"></span>&nbsp;
-    <span ng-bind-html="match.label.user.lastName | typeaheadHighlight:query"></span>
-    <span ng-bind-html="' (' + match.label.user.userName + ')' | typeaheadHighlight:query"></span>
+    <span ng-if="match.label.user.firstName !== null" ng-bind-html="match.label.user.firstName | typeaheadHighlight:query"></span>&nbsp;
+    <span ng-if="match.label.user.lastName !== null" ng-bind-html="match.label.user.lastName | typeaheadHighlight:query"></span>
+    <span ng-if="match.label.user.firstName !== null || match.label.user.lastName !== null" ng-bind-html="' (' + match.label.user.userName + ')' | typeaheadHighlight:query"></span>
+    <span ng-if="match.label.user.firstName === null && match.label.user.lastName === null" ng-bind-html="match.label.user.userName | typeaheadHighlight:query"></span>
   </div>
   <a class="hunt-member-line">
     <span ng-bind-html="(match.label.selectableNumber | huntMemberTelephone) | typeaheadHighlight:query"></span>
   </a>
 </script>
-
 <div class="hunt-member-lookup">
   <div class="typeahead-large">
-    <input id="userInput" type="text" ng-model="huntGroupSA.userSelected"
+    <input id="userInput" ng-model="huntGroupSA.userSelected"
            ng-class="{'error': huntGroupSA.errorMemberInput}"
            typeahead="user for user in huntGroupSA.fetchHuntMembers($viewValue) | limitTo:10"
            typeahead-on-select="huntGroupSA.selectHuntGroupMember($item)"
            typeahead-template-url="userTemplate.html"
+           typeahead-min-length="3" typeahead-wait-ms="200"
            placeholder="{{:: 'huronHuntGroup.memberPlaceholder' | translate}}"
            ng-keypress="huntGroupSA.enterNextPage($event.keyCode)" focus-on/>
-
     <p class="input-description" translate="huronHuntGroup.memberHint"></p>
   </div>
-
   <cs-card-layout>
     <cs-card class="small header-background primary hunt-member-card"
              ng-repeat="member in huntGroupSA.selectedHuntMembers">

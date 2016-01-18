@@ -383,7 +383,7 @@
     "description": "An active user is defined as someone who has made or received a call using a device or has used the Spark application.  In this report you can compare the total number of registered users to the number of active users in the selected customer(s) over the {{time}}.",
     "mostActiveDescription": "During the {{time}}, these are the most active users for {{customer}}.",
     "customerPortalDescription": "An active user is defined as someone who has made or received a call using a device or has used the Spark application.  In this report you can compare the total number of registered users to the number of active users over the {{time}}.",
-    "customerMostActiveDescription": "The table below displays the user activity for all users.  It can be sorted by the user's name, total calls, and total activity.  Additionally, the search field "
+    "customerMostActiveDescription": "The table below displays the user activity for the top 500 most active users.  It can be sorted by the user name, total calls, or total activity and searched based on the user name."
   },
   "avgRooms": {
     "avgRooms": "Total Rooms",
@@ -2913,6 +2913,18 @@
       "noupgrade": {
         "type": "Automatic Updates Disabled",
         "message": "System software will not be updated."
+      },
+      "NTPStatus": {
+        "type": "Time Server Not Reachable",
+        "message": "The connection to an NTP server could not be established. The time displayed on your endpoint may be wrong."
+      },
+      "AudioPairingInterference": {
+        "type": "Signal interference from other devices",
+        "message": "There is an ultrasound signal interference in this room from other devices (ex: other video systems) that could prevent pairing with your phone and laptop."
+      },
+      "ECReferenceDelay": {
+        "type": "Audio Delay",
+        "message": "Your monitor settings are adding a delay to your audio. Change the monitor settings to a suitable mode (ex: Game mode)."
       },
       "inactive": {
         "type": "Inactive Account",

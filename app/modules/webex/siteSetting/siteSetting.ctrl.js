@@ -114,17 +114,20 @@
         var funcName = "iframeLoaded()";
         var logMsg = funcName;
 
+        var currScope = angular.element(iframeId).scope();
+        var phase = currScope.$$phase;
+
         logMsg = funcName + "\n" +
-          'iframeId=' + iframeId;
+          "phase=" + phase;
         $log.log(logMsg);
 
-        var currScope = angular.element(iframeId).scope();
-
-        currScope.$apply(
-          function updateScope() {
-            currScope.isIframeLoaded = true;
-          }
-        );
+        if (!phase) {
+          currScope.$apply(
+            function updateScope() {
+              currScope.isIframeLoaded = true;
+            }
+          );
+        }
       }; // iframeLoaded()
     } // webexSiteSettingCtrl()
   ]); // angular.module().controller()
