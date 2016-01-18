@@ -86,7 +86,34 @@ angular.module('Squared').service('CsdmConverter',
       this.readableState = getHuronReadableState(obj);
       this.photos = (huronDevice.photos == null || huronDevice.photos.length == 0) ? null : huronDevice.photos;
       this.isHuronDevice = true;
-      this.image = "images/devices-hi/" + (obj.model.trim().replace(/ /g, '_') + '.png').toLowerCase();
+      this.image = (function () {
+        switch ((obj.product || '').toLowerCase()) {
+        case "cisco 7811":
+          return "images/devices-hi/cisco_7811.png";
+        case "cisco 7821":
+          return "images/devices-hi/cisco_7821.png";
+        case "cisco 7841":
+          return "images/devices-hi/cisco_7841.png";
+        case "cisco 7861":
+          return "images/devices-hi/cisco_7861.png";
+        case "cisco 8811":
+          return "images/devices-hi/cisco_8811.png";
+        case "cisco 8841":
+          return "images/devices-hi/cisco_8841.png";
+        case "cisco 8845":
+          return "images/devices-hi/cisco_8845.png";
+        case "cisco 8851":
+          return "images/devices-hi/cisco_8851.png";
+        case "cisco 8861":
+          return "images/devices-hi/cisco_8861.png";
+        case "cisco 8865":
+          return "images/devices-hi/cisco_8865.png";
+        case "cisco dx650":
+          return "images/devices-hi/cisco_dx650.png";
+        default:
+          return "images/devices-hi/unknown.png";
+        }
+      }());
     }
 
     function UnusedAccount(obj) {
