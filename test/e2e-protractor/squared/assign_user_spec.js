@@ -48,7 +48,7 @@ describe('Squared Invite User and Assign Services User Flow', function () {
       utils.clickUser(inviteEmail);
       utils.click(users.servicesActionButton);
       utils.click(users.editServicesButton);
-      
+
       //click on license checkbox
       utils.click(users.paidMsg);
       utils.click(users.saveButton);
