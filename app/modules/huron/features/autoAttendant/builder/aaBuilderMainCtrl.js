@@ -234,12 +234,6 @@
         );
       } else {
 
-        // If a possible discrepancy was found between the phone number list in CE and the one stored in CMI
-        // Try a complete save here and report error details
-        if (vm.aaModel.possibleNumberDiscrepancy) {
-          saveAANumberAssignmentWithErrorDetail(vm.aaModel.ceInfos[i].getResources());
-        }
-
         var updateResponsePromise = AutoAttendantCeService.updateCe(
           aaRecords[i].callExperienceURL,
           _aaRecord);
@@ -250,6 +244,13 @@
             aaRecords[i].callExperienceName = aaRecord.callExperienceName;
             aaRecords[i].assignedResources = angular.copy(aaRecord.assignedResources);
             vm.aaModel.ceInfos[i] = AutoAttendantCeInfoModelService.getCeInfo(aaRecords[i]);
+
+            // If a possible discrepancy was found between the phone number list in CE and the one stored in CMI
+            // Try a complete save here and report error details
+            if (vm.aaModel.possibleNumberDiscrepancy) {
+              saveAANumberAssignmentWithErrorDetail(vm.aaModel.ceInfos[i].getResources());
+            }
+
             Notification.success('autoAttendant.successUpdateCe', {
               name: aaRecord.callExperienceName
             });
@@ -271,6 +272,8 @@
       if (vm.aaModel.aaRecord.assignedResources.length !== vm.ui.ceInfo.getResources().length) {
         vm.canSave = true;
       } else if (AACommonService.isFormDirty()) {
+        vm.canSave = true;
+      } else if (vm.aaModel.possibleNumberDiscrepancy) {
         vm.canSave = true;
       }
       return vm.canSave;

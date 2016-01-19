@@ -5,12 +5,14 @@
 </script>
 <div class="pilot-number-details">
   <div class="typeahead-large">
-    <input id="numberInput" type="text" ng-model="huntGroupSA.selectedPilotNumber"
+    <input id="numberInput" ng-model="huntGroupSA.selectedPilotNumber"
            ng-class="{'error': huntGroupSA.errorNumberInput}"
            typeahead="num for num in huntGroupSA.fetchNumbers($viewValue) | limitTo:10"
            typeahead-on-select="huntGroupSA.selectPilotNumber($item)"
-           typeahead-template-url="numberTemplate.html" placeholder="{{:: 'huronHuntGroup.numberPlaceholder' | translate}}"
-           ng-keypress="huntGroupSA.enterNextPage($event.keyCode)" focus-on/>
+           typeahead-template-url="numberTemplate.html"
+           placeholder="{{:: 'huronHuntGroup.numberPlaceholder' | translate}}"
+           ng-keypress="huntGroupSA.enterNextPage($event.keyCode)"
+           typeahead-min-length="3" typeahead-wait-ms="200" focus-on/>
     <p class="input-description" translate="huronHuntGroup.numberHint"></p>
   </div>
   <div class="pilot-number-container">

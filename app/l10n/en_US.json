@@ -383,7 +383,7 @@
     "description": "An active user is defined as someone who has made or received a call using a device or has used the Spark application.  In this report you can compare the total number of registered users to the number of active users in the selected customer(s) over the {{time}}.",
     "mostActiveDescription": "During the {{time}}, these are the most active users for {{customer}}.",
     "customerPortalDescription": "An active user is defined as someone who has made or received a call using a device or has used the Spark application.  In this report you can compare the total number of registered users to the number of active users over the {{time}}.",
-    "customerMostActiveDescription": "The table below displays the user activity for all users.  It can be sorted by the user's name, total calls, and total activity.  Additionally, the search field "
+    "customerMostActiveDescription": "The table below displays the user activity for the top 500 most active users.  It can be sorted by the user name, total calls, or total activity and searched based on the user name."
   },
   "avgRooms": {
     "avgRooms": "Total Rooms",
@@ -535,7 +535,17 @@
     "roles": "Roles",
     "downloadLogFailed": "Failed to download log",
     "callflowResultsFailed": "Failed to download the callflow results corresponding to logFile",
-    "status": "Status"
+    "status": "Spark Status",
+    "tabs": {
+      "status": "Status",
+      "logs": "Logs",
+      "orderProvisioning": "Order Provisioning"
+    },
+    "cards": {
+      "sparkStatus": "Spark Status",
+      "helpDesk": "Help Desk Support",
+      "supportResources": "Support Resources"
+    }
   },
   "cdrLogs": {
     "title": "CDR Call Flow",
@@ -2273,6 +2283,7 @@
       "deactivateBody_2": "Deaactivating a service will remove any service-related activity from your users. Additional steps are required to remove the service from your on-premises resources.",
       "removeCluster": "REMOVE CLUSTER",
       "schedule": "Set a Schedule",
+      "softwareUpgrade": "Software Upgrades",
       "scheduleText": "Choose a release channel you want this cluster to update with:"
     },
     "serviceStatus": {
