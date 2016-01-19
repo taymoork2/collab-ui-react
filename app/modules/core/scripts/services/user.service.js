@@ -179,36 +179,50 @@ angular.module('Core')
             });
         },
 
-        getUserFromEmail: function (email, callback) {
-          $http.get(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/noauth/userexists/" + email, {
-              cache: false
-            })
-            .success(function (data, status) {
-              data = data || {};
-              data.success = true;
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              data = data || {};
-              data.success = false;
-              data.status = status;
-              callback(data, status);
-            });
+        getUserFromEmail: function (obj, callback) {
+          Auth.setAccessToken().then(function () {
+            $http.get(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/user/" + obj.email + "/exists", {
+                cache: false,
+                headers: {
+                  'Content-Type': 'application/json'
+                }
+              })
+              .success(function (data, status) {
+                data = data || {};
+                data.success = true;
+                callback(data, status);
+              })
+              .error(function (data, status) {
+                data = data || {};
+                data.success = false;
+                data.status = status;
+                callback(data, status);
+              });
+          });
         },
 
-        addDrUser: function (emailPassword, callback) {
-          $http.post(Config.getAdminServiceUrl() + "ordertranslator/digitalriver/noauth/user", emailPassword)
-            .success(function (data, status) {
-              data = data || {};
-              data.success = true;
-              callback(data, status);
-            })
-            .error(function (data, status) {
-              data = data || {};
-              data.success = false;
-              data.status = status;
-              callback(data, status);
-            });
+        addDrUser: function (obj, callback) {
+          Auth.setAccessToken().then(function () {
+            $http({
+                url: Config.getAdminServiceUrl() + "ordertranslator/digitalriver/user",
+                method: "POST",
+                data: obj.emailPassword,
+                headers: {
+                  'Content-Type': 'application/json'
+                }
+              })
+              .success(function (data, status) {
+                data = data || {};
+                data.success = true;
+                callback(data, status);
+              })
+              .error(function (data, status) {
+                data = data || {};
+                data.success = false;
+                data.status = status;
+                callback(data, status);
+              });
+          });
         },
 
         updateUserProfile: function (userid, userData, callback) {

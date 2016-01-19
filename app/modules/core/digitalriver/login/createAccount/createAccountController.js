@@ -14,16 +14,17 @@ angular.module('Core')
           $scope.error = "Passwords do not match";
           return;
         }
-        Userservice.addDrUser(
-          {
-            'email': $scope.email1,
-            'password': $scope.password1
+        Userservice.addDrUser({
+            'emailPassword': {
+              'email': $scope.email1,
+              'password': $scope.password1
+            }
           },
-          function (data, status) {
-            if (status != 200 || !data.success) {
-              $scope.error = data.message;
+          function (result, status) {
+            if (status != 200 || !result.success) {
+              $scope.error = result.message;
             } else {
-              $cookies.atlasDrCookie = data.data;
+              $cookies.atlasDrCookie = result.data.token;
               $window.location.href = "https://www.digitalriver.com/";
             }
           });
