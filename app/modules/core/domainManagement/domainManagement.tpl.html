@@ -15,12 +15,13 @@
           <td>{{domain.text}}</td>
           <td>{{domain.code}}</td>
           <td><i class="icon icon-circle {{domain.status}}"></i>{{domain.status}}</td>
-          <td><i class="icon icon-email" ui-sref="domainmanagement.email({domain: domain, adminEmail: dv.adminEmail})" ng-show="domain.status==='pending'"></i><i class="icon icon-trash" ui-sref="domainmanagement.delete({domain: domain, adminDomain: dv.adminDomain})"></i></td>
+          <td class="tableMail"><i class="icon icon-email" ui-sref="domainmanagement.email({domain: domain, adminEmail: dv.adminEmail})" ng-show="domain.status==='pending'"></i></td>
+          <td><i class="icon icon-trash" ui-sref="domainmanagement.delete({domain: domain, adminDomain: dv.adminDomain})"></i></td>
           <td><button ui-sref="domainmanagement.verify({domain: domain})" ng-if="domain.status==='pending'" ng-class="{ 'disabled' : dv.adminDomain.status === 'pending' && domain.text !== dv.adminDomain }" class="btn--cta" translate="domainManagement.verifyDomain"></button></td>
         </tr>
       </table>
       <button class="btn--primary" translate="domainManagement.addDomain" ui-sref="domainmanagement.add({adminDomain: dv.adminDomain})"></button>
-      
+
     </section>
   </article>
 </div>

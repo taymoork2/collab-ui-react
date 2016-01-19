@@ -31,6 +31,7 @@
           }
           .icon-email{
             font-size: .7em;
+            top: 0.1rem;
           }
           .icon-trash{
             font-size: 1.2em;
@@ -47,6 +48,11 @@
             padding: 0 !important;
             padding-top: 2px !important;
           }
+        }
+        .tableMail{
+          display: block;
+          width: 1.2rem !important;
+
         }
       }
       /*tr:last-child{
