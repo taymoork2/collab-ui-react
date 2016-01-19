@@ -12,7 +12,7 @@
 
         function mapStatus(oldStatus, componentStatus) {
           if (oldStatus == 'danger') return 'danger';
-          if (componentStatus == "partial_outage" || oldStatus == 'warning') return "warning";
+          if (componentStatus == "partial_outage" || componentStatus == 'degraded_performance' || oldStatus == 'warning') return "warning";
           if (componentStatus == "operational") return "success";
           return "danger";
         }

@@ -535,7 +535,17 @@
     "roles": "Roles",
     "downloadLogFailed": "Failed to download log",
     "callflowResultsFailed": "Failed to download the callflow results corresponding to logFile",
-    "status": "Status"
+    "status": "Spark Status",
+    "tabs": {
+      "status": "Status",
+      "logs": "Logs",
+      "orderProvisioning": "Order Provisioning"
+    },
+    "cards": {
+      "sparkStatus": "Spark Status",
+      "helpDesk": "Help Desk Support",
+      "supportResources": "Support Resources"
+    }
   },
   "cdrLogs": {
     "title": "CDR Call Flow",
@@ -2273,6 +2283,7 @@
       "deactivateBody_2": "Deaactivating a service will remove any service-related activity from your users. Additional steps are required to remove the service from your on-premises resources.",
       "removeCluster": "REMOVE CLUSTER",
       "schedule": "Set a Schedule",
+      "softwareUpgrade": "Software Upgrades",
       "scheduleText": "Choose a release channel you want this cluster to update with:"
     },
     "serviceStatus": {

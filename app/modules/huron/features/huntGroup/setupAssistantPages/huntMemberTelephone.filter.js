@@ -30,7 +30,7 @@
     }
 
     function isNotEmpty(text) {
-      return (text !== undefined && text.trim() !== '');
+      return (text !== null && text.trim() !== '');
     }
   }
 })();

@@ -17,6 +17,8 @@ var Navigation = function () {
   this.supportTab = element(by.css('li.supportTab > a'));
   this.cdrTab = element(by.css('a[href="#cdrsupport"]'));
   this.logsTab = element(by.css('a[href="#support"]'));
+  this.logsPage = element(by.cssContainingText('.nav-link', 'Logs'));
+
   this.billingTab = element(by.css('a[href="#orderprovisioning"]'));
   this.devicesTab = element(by.css('li.deviceTab > a'));
   this.customersTab = element(by.css('li.customerTab > a'));
