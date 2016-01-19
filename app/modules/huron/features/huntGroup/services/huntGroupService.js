@@ -7,7 +7,7 @@
 
   /* @ngInject */
 
-  function huntGroupService($q, HuntGroupServiceV2, UserSearchServiceV2, NumberSearchServiceV2, Authinfo, $http) {
+  function huntGroupService($q, HuntGroupServiceV2, UserServiceCommonV2, UserSearchServiceV2, NumberSearchServiceV2, Authinfo, $http) {
 
     var customerId = Authinfo.getOrgId();
     var service = {
@@ -311,8 +311,7 @@
     }
 
     function getMemberInfo(customerId, userId) {
-      // TODO: Replace UserSearchServiceV2 with UserServiceCommonV2 when ready.
-      return UserSearchServiceV2.get({
+      return UserServiceCommonV2.get({
         customerId: customerId,
         userId: userId
       }).$promise;

@@ -231,7 +231,7 @@
 
             logMsg = funcName + ": " + "\n" +
               "licenses=" + JSON.stringify(licenses);
-            $log.log(logMsg);
+            // $log.log(logMsg);
 
             var licenseInfo = null;
 

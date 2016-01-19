@@ -2,7 +2,7 @@
   <cs-card class="medium">
     <article>
       <header>
-        <h4>System Status</h4>
+        <h4 translate="supportPage.cards.sparkStatus"></h4>
       </header>
       <section class="indent">
           <div>
@@ -19,10 +19,10 @@
     </article>
   </cs-card>
 
-  <cs-card class="medium">
+  <cs-card class="medium" ng-show="showHelpdeskCard">
     <article>
       <header>
-        <h4>Help Desk Support</h4>
+        <h4 translate="supportPage.cards.helpDesk"></h4>
       </header>
       <section class="indent">
         <p class="content" translate="helpdesk.launchHelpdeskDesc"></p>
@@ -38,7 +38,7 @@
   <cs-card class="medium">
     <article>
       <header>
-        <h4>Support Resources</h4>
+        <h4 translate="supportPage.cards.supportResources"></h4>
       </header>
       <section class="indent">
         <h5 translate="supportPage.problemReports"></h5>
