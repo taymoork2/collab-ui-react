@@ -1079,19 +1079,16 @@ angular.module('Core')
               } else if (userStatus === 403) {
                 if (data.userResponse[i].message === '400081') {
                   userResult.message = $translate.instant('usersPage.userExistsError', {
-                    email: userResult.email,
-                    status: userStatus
+                    email: userResult.email
                   });
-                } else if (data.userResponse[i].message === '400083') {
+                } else if (data.userResponse[i].message === '400084') {
                   userResult.message = $translate.instant('usersPage.claimedDomainError', {
                     email: userResult.email,
-                    domain: userResult.email.split('@')[1],
-                    status: userStatus
+                    domain: userResult.email.split('@')[1]
                   });
                 }
                 userResult.alertType = 'danger';
                 isComplete = false;
-
               } else {
                 userResult.message = $translate.instant('usersPage.onboardError', {
                   email: userResult.email,
