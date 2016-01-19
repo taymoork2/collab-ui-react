@@ -5,7 +5,7 @@ angular
   .service('AccountOrgService', AccountOrgService);
 
 /* @ngInject */
-function AccountOrgService($http, $rootScope, Config, Auth) {
+function AccountOrgService($http, $rootScope, Config, Auth, $q) {
   var accountUrl = Config.getAdminServiceUrl();
   var scomUrl = Config.getScomUrl();
 
@@ -104,6 +104,9 @@ function AccountOrgService($http, $rootScope, Config, Auth) {
   }
 
   function getOrgInformation(org) {
+    if (!org) {
+      return $q.reject('Org is not set');
+    }
     var url = scomUrl + '/' + org;
 
     return $http.get(url);

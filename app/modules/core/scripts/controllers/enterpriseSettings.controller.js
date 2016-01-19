@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('EnterpriseSettingsCtrl', ['$scope', '$rootScope', '$q', 'SSOService', 'Authinfo', 'AccountOrgService', 'Log', 'Notification', '$translate', '$window', 'Config',
-    function ($scope, $rootScope, $q, SSOService, Authinfo, AccountOrgService, Log, Notification, $translate, $window, Config) {
+  .controller('EnterpriseSettingsCtrl', ['$scope', '$rootScope', '$q', 'SSOService', 'Authinfo', 'AccountOrgService', 'Log', 'Notification', '$translate', '$window', 'Config', '$log',
+    function ($scope, $rootScope, $q, SSOService, Authinfo, AccountOrgService, Log, Notification, $translate, $window, Config, $log) {
 
       var strEntityDesc = '<EntityDescriptor ';
       var strEntityId = 'entityID="';
@@ -15,15 +15,15 @@ angular.module('Core')
       $scope.cloudSipUriField.cloudSipFlag = false;
       $scope.cloudSipUriField.isError = false;
       $scope.cloudSipUriField.isDisabled = false;
-      
-      $scope.validateSipUri = function() {
+
+      $scope.validateSipUri = function () {
         var isError = $scope.cloudSipUriField.isError;
         if ($scope.cloudSipUriField.inputValue.length > 40) {
           isError = true;
         }
 
         return isError;
-      }
+      };
 
       $scope.options = {
         configureSSO: 1,
