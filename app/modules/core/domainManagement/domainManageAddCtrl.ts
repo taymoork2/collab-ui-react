@@ -14,6 +14,10 @@ namespace domainManagement {
     public add() {
       let ctrl = this;
 
+      if(!this.addEnabled){
+        return;
+      }
+
       this.DomainManagementService.addDomain(this._domain).then(
         function () {
           ctrl.$state.go('domainmanagement');
@@ -22,6 +26,12 @@ namespace domainManagement {
           ctrl._error = err;
         }
       )
+    }
+
+    public keyPressInInputField(keyEvent) {
+      if (keyEvent.which === 13) {
+        this.add();
+      }
     }
 
     public cancel() {

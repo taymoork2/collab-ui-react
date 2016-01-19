@@ -2,7 +2,7 @@
   <header><h3 translate="domainManagement.add.header"/></header>
   <section>
     <p translate="domainManagement.add.description" />
-    <input type="text" placeholder="{{dmpopup.exampleDomain || ('domainManagement.add.exampleDomain' | translate)}}" ng-model="dmpopup.domain"/>
+    <input type="text" placeholder="{{dmpopup.exampleDomain || ('domainManagement.add.exampleDomain' | translate)}}" ng-model="dmpopup.domain" ng-keypress="dmpopup.keyPressInInputField($event)"/>
     <b><p ng-if="!dmpopup.validate().valid && !dmpopup.validate().empty" translate="domainManagement.add.invalidDomain"></p>
     <p ng-if="dmpopup.error">{{dmpopup.error}}</p></b>
   </section>
