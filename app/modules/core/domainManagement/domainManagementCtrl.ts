@@ -10,7 +10,6 @@ namespace domainManagement {
     /* @ngInject */
     constructor(private $route, Auth, Authinfo, private DomainManagementService) {
       let ctrl = this;
-      ctrl._check = 'dde';
 
       DomainManagementService.refreshDomainList().then( function() {
 
@@ -35,10 +34,6 @@ namespace domainManagement {
           });
         }
       });
-    }
-
-    get check() {
-      return this._check;
     }
 
     get domains() {
