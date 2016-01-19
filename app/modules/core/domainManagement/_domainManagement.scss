@@ -72,12 +72,26 @@
     }
     .domainInput{
       font-size: 1.5rem;
+      padding-bottom: 2rem !important;
     }
+  }
+  section.domainVerificationInfo{
+    padding-bottom: 3rem;
   }
   section.domWarning{
     background-color: $color-attention-base;
     margin-top: 0rem;
+    overflow: hidden;
     p{
+      width: 93%;
+    }
+    i{
+      display: block;
+      width: 7%;
+      padding-top: 0.3rem;
+    }
+    p,i{
+      float: left;
       color: white;
     }
   }
