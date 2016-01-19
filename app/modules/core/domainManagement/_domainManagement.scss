@@ -1,3 +1,4 @@
+/* Domain Management Page */
 #domainManagement{
   padding-top: 3rem;
   article{
@@ -57,39 +58,24 @@
 
         }
       }
-      /*tr:last-child{
-        td{
-          button{
-            background-color:$gray-light-2;
-            color: $gray-base;
-          }
-        }
-      }*/
     }
   }
 }
 
-.domainManagementPopupOverlay{
-  padding: 2rem;
-  section{
-    margin-top: 1rem;
-    padding: 1rem;
-    background-color: $gray-light-3;
-    input{
-      margin-top: 1rem;
-    }
-    .domainInput{
-      font-size: 1.5rem;
-      padding-bottom: 2rem !important;
-    }
+/* Domain Management New Popup */
+.domainModal{
+  .domainVerificationInfo{
+      padding-bottom: 3rem;
+      .domainInput{
+        font-size: 1.5rem;
+        padding-bottom: 2rem !important;
+      }
   }
-  section.domainVerificationInfo{
-    padding-bottom: 3rem;
-  }
-  section.domWarning{
+  .modal-body.domWarning{
     background-color: $color-attention-base;
-    margin-top: 0rem;
+    margin-top: -1rem;
     overflow: hidden;
+    padding-bottom: 0;
     p{
       width: 93%;
     }
@@ -103,6 +89,19 @@
       color: white;
     }
   }
+}
+
+/* Domain Management Old Popup */
+/*.domainManagementPopupOverlay{
+  padding: 2rem;
+  section{
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: $gray-light-3;
+    input{
+      margin-top: 1rem;
+    }
+  }
   footer{
     margin-top: 1rem;
     padding-bottom: 1.5rem;
@@ -111,4 +110,4 @@
       float: right;
     }
   }
-}
+}*/
