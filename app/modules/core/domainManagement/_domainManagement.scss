@@ -70,6 +70,16 @@
     input{
       margin-top: 1rem;
     }
+    .domainInput{
+      font-size: 1.5rem;
+    }
+  }
+  section.domWarning{
+    background-color: $color-attention-base;
+    margin-top: 0rem;
+    p{
+      color: white;
+    }
   }
   footer{
     margin-top: 1rem;
