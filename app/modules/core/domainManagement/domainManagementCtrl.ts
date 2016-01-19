@@ -4,16 +4,24 @@ namespace domainManagement {
     private _check = 'dd';
     private _adminDomain;
     private _adminEmail;
-    private _domains = [
-    ];
+    private _domains = [];
+    private _feature = false;
 
     /* @ngInject */
-    constructor(private $route, Auth, Authinfo, private DomainManagementService) {
+    constructor(private $state, Auth, Authinfo, private DomainManagementService, private FeatureToggleService) {
       let ctrl = this;
 
-      DomainManagementService.refreshDomainList().then( function() {
+      FeatureToggleService.supports(FeatureToggleService.features.domainManagement).then(function (dmEnabled) {
+          if (dmEnabled) {
+            ctrl._feature = true;
+          } else {
+            ctrl.$state.go('unauthorized');
+          }
+        }
+      );
+      DomainManagementService.refreshDomainList().then(function () {
 
-        if (!ctrl.DomainManagementService.domainList || ctrl.DomainManagementService.domainList.length == 0){
+        if (!ctrl.DomainManagementService.domainList || ctrl.DomainManagementService.domainList.length == 0) {
           //no domain has been verified before!
 
           //demand we find admin before we show the list:
@@ -48,8 +56,12 @@ namespace domainManagement {
       this.DomainManagementService.deleteDomain(domain);
     }
 
-    get adminEmail(){
+    get adminEmail() {
       return this._adminEmail;
+    }
+
+    get feature() {
+      return this._feature;
     }
   }
   angular
