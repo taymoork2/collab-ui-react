@@ -7,7 +7,6 @@ namespace domainManagement {
     private _adminEmail;
     private _progress;
 
-
     /* @ngInject */
     constructor($stateParams, private $state, private DomainManagementService) {
 
@@ -21,7 +20,7 @@ namespace domainManagement {
     }
 
     public sendEmail() {
-      if(this._progress){
+      if (this._progress) {
         return;
       } else {
         this._progress = true;

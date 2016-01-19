@@ -656,7 +656,6 @@ angular.module('Core')
           return domainManagementUrl[this.getEnv()];
         },
 
-
         getAdminServiceUrl: function () {
           var adminServiceUrl = {
             'dev': this.adminServiceUrl.integration,

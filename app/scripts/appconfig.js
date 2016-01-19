@@ -245,7 +245,9 @@ angular
               templateUrl: 'modules/core/domainManagement/verify.tpl.html'
             }
           },
-          params: {domain: null}
+          params: {
+            domain: null
+          }
         })
         .state('profile', {
           url: '/profile',
