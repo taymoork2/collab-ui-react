@@ -30,6 +30,15 @@ angular
           },
           authenticate: false
         })
+        .state('drLoginForward', {
+          url: '/drLoginForward',
+          views: {
+            'main@': {
+              templateUrl: 'modules/core/digitalriver/login/drLoginForward/drLoginForward.tpl.html',
+              controller: 'drLoginForwardController'
+            }
+          } 
+        })
         .state('createAccount', {
           url: '/createAccount',
           views: {
@@ -464,6 +473,14 @@ angular
           template: '<div uc-single-number-reach></div>',
           data: {
             displayName: 'Single Number Reach'
+          }
+        })
+        .state('user-overview.communication.internationalDialing', {
+          controller: 'InternationalDialingInfoCtrl',
+          controllerAs: 'internationalDialing',
+          template: '<div uc-international-dialing></div>',
+          data: {
+            displayName: 'International Dialing'
           }
         })
         .state('user-overview.messaging', {

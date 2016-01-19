@@ -78,7 +78,7 @@ describe('Service: AANumberAssignmentService', function () {
     it('should correctly format resources based on CMI call', function () {
 
       var resource = AutoAttendantCeInfoModelService.newResource();
-      resource.setType(aCe.assignedResources.type);
+      resource.setType("externalNumber");
       resource.setId("14084744458");
       resource.setNumber("14084744458");
       var resources = [];
