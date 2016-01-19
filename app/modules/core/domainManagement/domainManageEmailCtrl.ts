@@ -1,0 +1,66 @@
+namespace domainManagement {
+
+  class DomainManageEmailCtrl {
+    private _domain;
+    private _error;
+    private _email;
+    private _adminEmail;
+    private _progress;
+
+
+    /* @ngInject */
+    constructor($stateParams, private $state, private DomainManagementService) {
+
+      this._domain = $stateParams.domain;
+      this._adminEmail = $stateParams.adminEmail;
+      //this._email = this._adminEmail;  //wait with this.
+    }
+
+    public cancel() {
+      this.$state.go('domainmanagement');
+    }
+
+    public sendEmail() {
+      if(this._progress){
+        return;
+      } else {
+        this._progress = true;
+      }
+    }
+
+    public keyPressInInputField(keyEvent) {
+      if (keyEvent.which === 13) {
+        //separate with comma the emails,
+      }
+    }
+
+    public validate() {
+      if (this.email && this._email.length > 0) {
+        if (/^(([^@]+)@)+(([^\.]+\.)+[^\.]{2,})$/.test(this._email)) {
+          return {valid: true, empty: false};
+        } else {
+          return {valid: false, empty: false};
+        }
+      } else {
+        return {valid: false, empty: true};
+      }
+
+    }
+
+    get sendEnabled() {
+      return this.validate().valid && !this._progress;
+    }
+
+    public get email() {
+      return this._email;
+    }
+
+    public set email(email) {
+      this._email = email;
+    }
+
+  }
+  angular
+    .module('Core')
+    .controller('DomainManageEmailCtrl', DomainManageEmailCtrl);
+}

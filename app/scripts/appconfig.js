@@ -222,6 +222,20 @@ angular
             adminDomain: null
           }
         })
+        .state('domainmanagement.email', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'DomainManageEmailCtrl',
+              controllerAs: 'dmpopup',
+              templateUrl: 'modules/core/domainManagement/email.tpl.html'
+            }
+          },
+          params: {
+            domain: null,
+            adminEmail: null
+          }
+        })
         .state('domainmanagement.verify', {
           parent: 'modal',
           views: {
