@@ -27,12 +27,6 @@ namespace domainManagement {
       }
     }
 
-    public keyPressInInputField(keyEvent) {
-      if (keyEvent.which === 13) {
-        //separate with comma the emails,
-      }
-    }
-
     public validate() {
       if (this.email && this._email.length > 0) {
         if (/^(([^@]+)@)+(([^\.]+\.)+[^\.]{2,})$/.test(this._email)) {
