@@ -1057,10 +1057,7 @@
       "deregisterCausesListItem3": "If the system is in a cluster, you do not need to deregister the other peers. This will happen automatically.",
       "deregisterErrorGeneric": "Unable to deregister {{clusterName}}. {{errorMessage}}",
       "deregisterErrorNoDeregisterSupport": "Unable to deregister {{clusterName}}. The management connector software version does not support deregistration from the Cloud. Upgrade the connector, or deregister from the Cisco Expressway web interface.",
-      "notInstalled": "The {{serviceName}} is not installed on this cluster.",
-      "activeActiveHeading": "Active-Active Mode (High Availability)",
-      "activeActiveNotPossible": "Not available as Active-Active Mode requires a cluster with more than 1 host",
-      "activeActivePossible": "Turn on Active-Active Mode to enable high availability for this service. When enabled, users are assigned to two nodes in the cluster for redundancy."
+      "notInstalled": "The {{serviceName}} is not installed on this cluster."
     },
     "status": {
       "unknown": "Status unknown",
