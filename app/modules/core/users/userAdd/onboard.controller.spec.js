@@ -280,6 +280,28 @@ describe('OnboardCtrl: Ctrl', function () {
     });
   });
 
+  describe('Check if there are multiple subscriptions', function () {
+    beforeEach(function () {
+      $scope.subscriptionOptions = ['abcd', 'efgh', '12tyv'];
+      $scope.selectedSubscription = $scope.subscriptionOptions[0];
+      $scope.oneBilling = $scope.subscriptionOptions.length === 1;
+    });
+    it('should verify that there are multiple subscriptions', function () {
+      expect($scope.showMultiSubscriptions('abcd')).toEqual(true);
+      expect($scope.oneBilling).toEqual(false);
+    });
+    it('should verify correct subscription id', function () {
+      expect($scope.subscriptionOptions[1]).toEqual('efgh');
+      expect($scope.selectedSubscription).toEqual('abcd');
+    });
+    it('should verify that there is only one subscription id', function () {
+      $scope.subscriptionOptions = ['bb8'];
+      $scope.oneBilling = $scope.subscriptionOptions.length === 1;
+      expect($scope.subscriptionOptions.length).toEqual(1);
+      expect($scope.oneBilling).toEqual(true);
+    });
+  });
+
   describe('UserAdd DID and DN assignment', function () {
     beforeEach(function () {
       $scope.usrlist = [{

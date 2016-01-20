@@ -74,7 +74,7 @@
           </div>
           <div class="item-mtg">
             <div ng-show="showMultiSubscriptions(lic.billing)">
-              <div ng-class="{'sub-line':!$first}"></div>
+              <div class="sub-line" ng-if="lic.site"></div>
               {{lic.site}}
             </div>
             <div ng-show="showMultiSubscriptions(cfLic.billing)" ng-repeat="cfLic in lic.confLic">
