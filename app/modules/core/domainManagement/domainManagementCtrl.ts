@@ -20,21 +20,21 @@ namespace domainManagement {
         }
       );
 
-      CiService.getUser().then(function(curUser) {
+      CiService.getUser().then(function (curUser) {
 
-     /*   var myOrgId = Authinfo.getOrgId();
-          if (curUser.managedOrgs && _.some(curUser.managedOrgs, { orgId: myOrgId })) {
-            console.log("domain man: My partner is here!");
-        }*/
+        /*   var myOrgId = Authinfo.getOrgId();
+         if (curUser.managedOrgs && _.some(curUser.managedOrgs, { orgId: myOrgId })) {
+         console.log("domain man: My partner is here!");
+         }*/
 
         ctrl._adminEmail = curUser.userName;
-        if (ctrl._adminEmail){
+        if (ctrl._adminEmail) {
           ctrl._adminDomain = ctrl._adminEmail.split('@')[1];
         }
-      })
+      });
 
       DomainManagementService.refreshDomainList().then(function () {
-       // ctrl._domains = ctrl.DomainManagementService.domainList
+        // ctrl._domains = ctrl.DomainManagementService.domainList
       });
     }
 
