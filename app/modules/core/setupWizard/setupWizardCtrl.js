@@ -79,8 +79,6 @@ angular.module('Core')
       $scope.addClaimSipUrl = false;
       $scope.csvUploadSupport = false;
 
-      $log.log('here we are before the Promise for all the Feature toggle service calls');
-
       if (Authinfo.isCustomerAdmin()) {
         $q.all([FeatureToggleService.supportsDirSync(),
             FeatureToggleService.supports(FeatureToggleService.features.atlasSipUriDomain),
