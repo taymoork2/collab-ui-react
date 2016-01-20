@@ -2929,6 +2929,10 @@
         "type": "Audio Delay",
         "message": "Your monitor settings are adding a delay to your audio. Change the monitor settings to a suitable mode (ex: Game mode)."
       },
+      "UltrasoundSpeakerAvailability": {
+        "type": "No embedded ultrasound speaker",
+        "message": "This hardware version of the SX10 does not have an embedded ultrasound speaker."
+      },
       "inactive": {
         "type": "Inactive Account",
         "message": "There exists an account for a device, but no corresponding device or activation code. You can probably delete this account."
