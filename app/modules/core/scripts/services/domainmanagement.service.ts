@@ -75,8 +75,5 @@ class DomainManagementService {
     return deferred.promise;
   }
 }
-
 angular.module('Core')
   .service('DomainManagementService', DomainManagementService);
-
-
