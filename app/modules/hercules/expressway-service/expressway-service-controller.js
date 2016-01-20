@@ -31,18 +31,14 @@
       state: vm.route + '.settings({serviceType:vm.currentServiceType})'
     }];
 
-    vm.clusters = ClusterService.getExpresswayClusters();
+    vm.clusters = ClusterService.getClustersByConnectorType(vm.currentServiceType);
     vm.serviceIconClass = ServiceDescriptor.serviceIcon(vm.currentServiceId);
     vm.clusterLength = clusterLength;
-    vm.serviceNotInstalled = serviceNotInstalled;
-    vm.softwareUpgradeAvailable = softwareUpgradeAvailable;
-    vm.softwareVersionAvailable = softwareVersionAvailable;
-    vm.selectedClusterAggregatedStatus = selectedClusterAggregatedStatus;
     vm.openUserStatusReportModal = openUserStatusReportModal;
-    vm.enableService = enableService;
-    vm.showClusterDetails = showClusterDetails;
     vm.openUserErrorsModal = openUserErrorsModal;
     vm.addResourceButtonClicked = addResourceButtonClicked;
+    vm.showClusterDetails = showClusterDetails;
+    vm.enableService = enableService;
 
     vm.clusterListGridOptions = {
       data: 'exp.clusters',
@@ -73,7 +69,7 @@
 
     ScheduleUpgradeChecker.check(vm.currentServiceType, vm.currentServiceId, vm.route + '.settings({serviceType:vm.currentServiceType})');
 
-    if (vm.currentServiceId == "squared-fusion-mgmt") {
+    if (vm.currentServiceId == 'squared-fusion-mgmt') {
       ServiceDescriptor.services(function (error, services) {
         if (!error) {
           vm.serviceEnabled = _.any(ServiceDescriptor.filterAllExceptManagement(services), {
@@ -93,26 +89,9 @@
       return _.size(vm.clusters);
     }
 
-    function serviceNotInstalled(cluster) {
-      return ServiceStatusSummaryService.serviceNotInstalled(vm.currentServiceType, cluster);
-    }
-
-    function softwareUpgradeAvailable(cluster) {
-      return ServiceStatusSummaryService.softwareUpgradeAvailable(vm.currentServiceType, cluster);
-    }
-
-    function softwareVersionAvailable(cluster) {
-      return ServiceStatusSummaryService.serviceFromCluster(vm.currentServiceType, cluster).software_upgrade_available ?
-        ServiceStatusSummaryService.serviceFromCluster(vm.currentServiceType, cluster).not_approved_package.version : "?";
-    }
-
-    function selectedClusterAggregatedStatus(cluster) {
-      return ServiceStatusSummaryService.clusterAggregatedStatus(vm.currentServiceType, cluster);
-    }
-
     function clustersUpdated() {
       ServiceStateChecker.checkState(vm.currentServiceType, vm.currentServiceId);
-      vm.clusters = ClusterService.getExpresswayClusters();
+      vm.clusters = ClusterService.getClustersByConnectorType(vm.currentServiceType);
       vm.loadingClusters = false;
     }
 
@@ -139,7 +118,7 @@
       vm.waitForEnabled = true;
       ServiceDescriptor.setServiceEnabled(serviceId, true, function (error) {
         if (error !== null) {
-          XhrNotificationService.notify("Problems enabling the service");
+          XhrNotificationService.notify('Problems enabling the service');
         }
         vm.serviceEnabled = true;
         vm.waitForEnabled = false;
@@ -148,7 +127,7 @@
 
     function showClusterDetails(cluster) {
       $state.go('cluster-details', {
-        cluster: cluster,
+        clusterId: cluster.id,
         serviceType: vm.currentServiceType
       });
     }
@@ -236,7 +215,7 @@
           }
         },
         controller: 'ClusterDeregisterController',
-        controllerAs: "clusterDeregister",
+        controllerAs: 'clusterDeregister',
         templateUrl: 'modules/hercules/cluster-deregister/deregister-dialog.html'
       });
     };
@@ -269,7 +248,7 @@
 
     USSService.getStatuses(function (error, statuses) {
       if (error) {
-        XhrNotificationService.notify("Failed to fetch user statuses", error);
+        XhrNotificationService.notify('Failed to fetch user statuses', error);
         return;
       }
       if (statuses) {

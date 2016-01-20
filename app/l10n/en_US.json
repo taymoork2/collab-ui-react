@@ -1015,7 +1015,7 @@
       "pending": "{{number}} pending",
       "error": "{number, plural, one{# error} other{# errors}}",
       "loading": "Loading, please wait…",
-      "upgrade-available": "Upgrade available",
+      "upgrading": "Upgrading",
       "clusters-title": "Expressway Clusters",
       "status-title": "Service Status",
       "add-resource-button": "Add Resource",
@@ -1071,8 +1071,7 @@
       "downloading": "Downloading",
       "uninstalling": "Uninstalling",
       "running": "Running",
-      "needs_attention": "Needs attention",
-      "alarm": "Alarm"
+      "has_alarm": "Alarm"
     },
     "setup": {
       "label": "Connector Management",

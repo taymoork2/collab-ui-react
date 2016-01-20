@@ -16,7 +16,7 @@
     }
 
     function checkIfFusePerformed() {
-      var clusters = ClusterService.getExpresswayClusters();
+      var clusters = ClusterService.getClustersByConnectorType('c_mgmt');
       if (_.size(clusters) === 0) {
         NotificationService.addNotification(
           NotificationService.types.TODO,
@@ -31,7 +31,7 @@
     }
 
     function checkIfConnectorsConfigured(connectorType) {
-      var clusters = ClusterService.getExpresswayClusters();
+      var clusters = ClusterService.getClustersByConnectorType(connectorType);
       var areAllConnectorsConfigured = _.all(clusters, function (cluster) {
         return allConnectorsConfigured(cluster, connectorType);
       });

@@ -5,7 +5,7 @@
   function ExpresswayServiceClusterController(XhrNotificationService, ServiceStatusSummaryService, $state, $modal, $stateParams, $translate, ClusterService, HelperNuggetsService) {
     var vm = this;
     vm.state = $state;
-    vm.clusterId = $stateParams.cluster.id;
+    vm.clusterId = $stateParams.clusterId;
     vm.serviceType = $stateParams.serviceType;
     vm.serviceId = HelperNuggetsService.serviceType2ServiceId(vm.serviceType);
     vm.serviceName = $translate.instant('hercules.serviceNames.' + vm.serviceId);

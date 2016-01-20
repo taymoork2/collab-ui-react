@@ -1687,10 +1687,6 @@ angular
           },
           data: {
             displayName: 'Overview'
-          },
-          params: {
-            cluster: undefined,
-            serviceType: undefined
           }
         })
         .state('cluster-details.cluster-settings', {
