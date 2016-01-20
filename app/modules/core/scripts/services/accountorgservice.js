@@ -18,8 +18,7 @@ function AccountOrgService($http, $rootScope, Config, Auth, $q) {
     addOrgDataRetentionPeriodDays: addOrgDataRetentionPeriodDays,
     modifyOrgDataRetentionPeriodDays: modifyOrgDataRetentionPeriodDays,
     deleteOrgSettings: deleteOrgSettings,
-    getOrgSettings: getOrgSettings,
-    getOrgInformation: getOrgInformation
+    getOrgSettings: getOrgSettings
   };
 
   return service;
@@ -99,15 +98,6 @@ function AccountOrgService($http, $rootScope, Config, Auth, $q) {
 
   function getOrgSettings(org) {
     var url = accountUrl + 'organization/' + org + '/settings/' + org;
-
-    return $http.get(url);
-  }
-
-  function getOrgInformation(org) {
-    if (!org) {
-      return $q.reject('Org is not set');
-    }
-    var url = scomUrl + '/' + org;
 
     return $http.get(url);
   }
