@@ -4,6 +4,7 @@ angular.module('Squared')
   .controller('SupportCtrl', ['$scope', '$filter', '$rootScope', 'Notification', 'Log', 'Config', 'Utils', 'Storage', 'Authinfo', 'UserListService', 'LogService', 'ReportsService', 'CallflowService', '$translate', 'PageParam', '$stateParams', 'FeedbackService', '$window', 'Orgservice',
     function ($scope, $filter, $rootScope, Notification, Log, Config, Utils, Storage, Authinfo, UserListService, LogService, ReportsService, CallflowService, $translate, PageParam, $stateParams, FeedbackService, $window, Orgservice) {
 
+      $scope.showHelpdeskCard = Authinfo.isHelpDeskUser();
       $scope.showSupportDetails = false;
       $scope.showSystemDetails = false;
       $scope.problemHandler = ' by Cisco';
@@ -16,6 +17,17 @@ angular.module('Squared')
       $scope.problemContent = 'Problem reports are being handled';
       $scope.helpContent = 'Help content is provided';
       $scope.searchInput = 'none';
+
+      $scope.tabs = [{
+        title: $translate.instant('supportPage.tabs.status'),
+        state: "support.status"
+      }, {
+        title: $translate.instant('supportPage.tabs.logs'),
+        state: "support.logs"
+      }, {
+        title: $translate.instant('supportPage.tabs.orderProvisioning'),
+        state: "support.billing"
+      }];
 
       $scope.toggleSystem = function () {
         $scope.showSystemDetails = !$scope.showSystemDetails;

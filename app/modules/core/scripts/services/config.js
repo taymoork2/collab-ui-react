@@ -160,6 +160,13 @@ angular.module('Core')
           prod: 'https://identity.webex.com/organization/scim/v1/Orgs'
         },
 
+        domainManagementUrl: {
+          dev: 'https://identity.webex.com/organization/%s/v1/Domains',
+          cfe: 'https://identitybts.webex.com/organization/%s/v1/Domains',
+          integration: 'https://identity.webex.com/organization/%s/v1/Domains',
+          prod: 'https://identity.webex.com/organization/%s/v1/Domains'
+        },
+
         statusPageUrl: 'http://status.ciscospark.com/',
 
         logMetricUrl: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
@@ -311,17 +318,17 @@ angular.module('Core')
             title: 'tabs.expresswayManagementServiceTab',
             desc: 'tabs.expresswayManagementServiceTabDesc',
             state: 'management-service',
-            link: '#/services/expressway-management'
+            link: '#services/expressway-management'
           }, {
             title: 'tabs.calendarServiceTab',
             desc: 'tabs.calendarServiceTabDesc',
             state: 'calendar-service',
-            link: '#/services/calendar'
+            link: '#services/calendar'
           }, {
             title: 'tabs.callServiceTab',
             desc: 'tabs.callServiceTabDesc',
             state: 'call-service',
-            link: '#/services/call'
+            link: '#services/call'
           }, {
             title: 'tabs.MediafusionDetailsTab',
             desc: 'tabs.MediafusionDetailsTabDesc',
@@ -357,22 +364,8 @@ angular.module('Core')
           tab: 'supportTab',
           icon: 'icon-support',
           title: 'tabs.supportTab',
-          subPages: [{
-            title: 'tabs.logsTab',
-            desc: 'tabs.logsTabDesc',
-            state: 'support',
-            link: '#support'
-          }, {
-            title: 'tabs.billingTab',
-            desc: 'tabs.billingTabDesc',
-            state: 'billing',
-            link: '#orderprovisioning'
-          }, {
-            title: 'tabs.helpdesk',
-            desc: 'tabs.helpdesk',
-            state: 'helpdesklaunch',
-            link: '#helpdesklaunch'
-          }]
+          link: '/support/status',
+          state: 'support.status'
         }, {
           tab: 'accountTab',
           icon: 'icon-sliders',
@@ -636,6 +629,18 @@ angular.module('Core')
           };
 
           return scomUrl[this.getEnv()];
+        },
+
+        getDomainManagementUrl: function (orgId) {
+          var params = [orgId];
+          var domainManagementUrl = {
+            'dev': Utils.sprintf(this.domainManagementUrl.dev, params),
+            'cfe': Utils.sprintf(this.domainManagementUrl.cfe, params),
+            'integration': Utils.sprintf(this.domainManagementUrl.integration, params),
+            'prod': Utils.sprintf(this.domainManagementUrl.prod, params)
+          };
+
+          return domainManagementUrl[this.getEnv()];
         },
 
         getAdminServiceUrl: function () {
@@ -1041,6 +1046,7 @@ angular.module('Core')
         // Customer Admin
         Full_Admin: [
           'overview',
+          'domainmanagement',
           'users',
           'user-overview',
           'userprofile',

@@ -25,15 +25,12 @@ describe('Support flow', function () {
 
     it('should not display billing tab when support tab is clicked', function () {
       utils.click(navigation.supportTab);
-      utils.expectIsDisplayed(navigation.logsTab);
+      //utils.expectIsDisplayed(navigation.logsTab);
       utils.expectIsNotDisplayed(navigation.billingTab);
     });
 
-    it('should not display results panel initially', function () {
-      utils.expectIsNotDisplayed(support.logsPanel);
-    });
-
     it('should display error for empty input', function () {
+      utils.click(navigation.logsPage);
       utils.click(support.logSearchBtn);
       notifications.assertError('Search input cannot be empty.');
     });

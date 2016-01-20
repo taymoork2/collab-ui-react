@@ -187,6 +187,68 @@ angular
           },
           authenticate: false
         })
+        .state('domainmanagement', {
+          //abstract: true,
+          url: '/domainmanagement',
+          templateUrl: 'modules/core/domainManagement/domainManagement.tpl.html',
+          controller: 'DomainManagementCtrl',
+          controllerAs: 'dv',
+          parent: 'main'
+        })
+        .state('domainmanagement.add', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'DomainManageAddCtrl',
+              controllerAs: 'dmpopup',
+              templateUrl: 'modules/core/domainManagement/add.tpl.html'
+            }
+          },
+          params: {
+            adminDomain: null
+          }
+        })
+        .state('domainmanagement.delete', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'DomainManageDeleteCtrl',
+              controllerAs: 'dmpopup',
+              templateUrl: 'modules/core/domainManagement/delete.tpl.html'
+            }
+          },
+          params: {
+            domain: null,
+            adminDomain: null
+          }
+        })
+        .state('domainmanagement.email', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'DomainManageEmailCtrl',
+              controllerAs: 'dmpopup',
+              templateUrl: 'modules/core/domainManagement/email.tpl.html'
+            }
+          },
+          params: {
+            domain: null,
+            adminEmail: null
+          }
+        })
+        .state('domainmanagement.verify', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'DomainManageVerifyCtrl',
+              controllerAs: 'dmpopup',
+              templateUrl: 'modules/core/domainManagement/verify.tpl.html'
+            }
+          },
+          params: {
+            domain: null
+          }
+        })
         .state('profile', {
           url: '/profile',
           templateUrl: 'modules/core/partnerProfile/partnerProfile.tpl.html',
@@ -699,10 +761,40 @@ angular
           parent: 'main'
         })
         .state('support', {
-          url: '/support?search',
-          templateUrl: 'modules/squared/support/support.tpl.html',
+          url: '/support',
+          templateUrl: 'modules/squared/support/support.html',
           controller: 'SupportCtrl',
           parent: 'main'
+        })
+        .state('support.status', {
+          url: '/status',
+          views: {
+            'supportPane': {
+              templateUrl: 'modules/squared/support/support-status.html',
+              controller: 'SupportCtrl',
+              controllerAs: 'support'
+            }
+          }
+        })
+        .state('support.logs', {
+          url: '/logs?search',
+
+          views: {
+            'supportPane': {
+              templateUrl: 'modules/squared/support/support-logs.html',
+              controller: 'SupportCtrl',
+            }
+          }
+        })
+        .state('support.billing', {
+          url: '/billing?enc',
+          views: {
+            'supportPane': {
+              templateUrl: 'modules/squared/support/support-billing.html',
+              controller: 'BillingCtrl'
+            }
+          }
+
         })
         .state('billing', {
           url: '/orderprovisioning?enc',
