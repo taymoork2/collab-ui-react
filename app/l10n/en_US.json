@@ -1936,10 +1936,12 @@
     "numbers": {
       "title": "Start New Trial - Add Numbers"
     },
-    "trialSuccess": "Your trial is ready.",
-    "nextStepPrompt": "Do you want to setup services for the customer?",
-    "setupLater": "No thanks",
+    "trialSuccess": "Your trial is ready",
+    "nextStepPrompt": "Do you want to setup the services for the customer?",
+    "setupLater": "No, thanks",
     "setupNow": "Yes, setup the services",
+    "finishTrialAdded": "Your trial has been added",
+    "finishMeetingDescription": "We’re setting up the services. This may take about an hour. When everything’s ready, we’ll send the customer administrator an email invitation, and at that point, you can go to the Customer section to configure the services.",
     "squareducError": "Created trial, but unable to provision Spark UC",
     "addSuccess": "A trial was successfully started for {{customerName}}.",
     "editSuccess": "You have successfully edited a trial for {{customerName}}."
@@ -3352,5 +3354,41 @@
     "useLatestCode": "A new code has been sent to {{userEmail}}",
     "unexpectedError": "Unexpected error processing request.",
     "usage": "{{usage}} of {{volume}} in use"
+  },
+  "domainManagement": {
+    "title": "Domain Verification",
+    "description": "Add and verify your organisation domains. All DNS verification codes need to be entered into your DNS management interface for all domains. It’s highly recommended to verify all domains at the same time to avoid blockout of users.",
+    "addDomain": "Add domain",
+    "verifyDomain": "Verify",
+    "list": {
+      "domainHeader": "Domain",
+      "statusHeader": "Status",
+      "actionsHeader": "Actions"
+    },
+    "add": {
+      "header": "Add domains",
+      "description": "Add domains to verify for your organisation. If you have users in multiple domains add all of them. Adding and verifying your own domain is required before any other domains.",
+      "exampleDomain": "example.com",
+      "invalidDomain": "Invalid domain entered"
+    },
+    "delete": {
+      "header": "Delete domain",
+      "description": "If you delete this domain, users with e-mail addresses in this domain will no longer be able to log on until they associate their users with e-mail addresses in validated domains."
+    },
+    "email": {
+      "header": "Send email",
+      "description": "",
+      "exampleEmail": "admin@example.com",
+      "invalidEmail": "This is not an email address",
+      "sendEmail": "Send instructions"
+    },
+    "verify": {
+      "header": "Verify domain",
+      "verifyThis": "You are about to verify the following domain:",
+      "beforeVerify": "Before verifying this domain, make sure that your NDS verification code is added in your DNS managment interface.",
+      "warning": "It is important to verify all domains. Users that don't belong to a verified domain will immediately be locked out not be able to log in and use spark services.  You will also not be able to add any new users that belongs to unverified domains.",
+      "verify": "Verify",
+      "enable": "I understand this."
+    }
   }
 }
