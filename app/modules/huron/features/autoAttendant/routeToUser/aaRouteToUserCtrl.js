@@ -6,7 +6,7 @@
     .controller('AARouteToUserCtrl', AARouteToUserCtrl);
 
   /* @ngInject */
-  function AARouteToUserCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, $q, Authinfo, Userservice, UserListService, UserServiceVoice) {
+  function AARouteToUserCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, $q, Authinfo, Userservice, UserListService, UserServiceVoice, AACommonService) {
 
     var vm = this;
 
@@ -52,6 +52,7 @@
     }
 
     function saveUiModel() {
+      AACommonService.setPhoneMenuStatus(true);
       vm.menuKeyEntry.actions[0].setValue(vm.userSelected.id);
     }
 
