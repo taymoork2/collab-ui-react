@@ -6,7 +6,7 @@ namespace domainManagement {
     private _verifyError;
 
     /* @ngInject */
-    constructor(private $state, private DomainManagementService) {
+    constructor(private $state, private DomainManagementService, $translate) {
       this._domain = $state.params.domain;
       this._loggedOnUser = $state.params.loggedOnUser;
 
@@ -16,7 +16,7 @@ namespace domainManagement {
 
         //No domains have been verified (list empty or all pending). Only allow logged on user's domain:
         if (this.domainName != this._loggedOnUser.domain)
-          this._verifyError = "To prevent locking out your account, '" + this._loggedOnUser.domain + "' must be verified first.";
+          this._verifyError = $translate.instant('domainManagement.verify.preventLockoutError', { domain: this._loggedOnUser.domain});
       }
     }
 
