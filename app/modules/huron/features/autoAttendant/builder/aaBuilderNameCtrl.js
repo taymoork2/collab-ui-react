@@ -9,7 +9,7 @@
   function AutoAttendantNameBuilderCtrl($scope, AAUiModelService, AutoAttendantCeInfoModelService, AAModelService, AAValidationService, Notification) {
 
     var vm = this;
-    vm.aaModel = {};
+    vm.aaRecord = {};
 
     vm.ui = {};
     vm.saveAARecord = saveAARecord;
@@ -38,13 +38,12 @@
       vm.ui.ceInfo.name = vm.name;
       if (angular.isDefined(vm.ui.ceInfo) && angular.isDefined(vm.ui.ceInfo.getName()) && vm.ui.ceInfo.getName().length > 0) {
         vm.ui.builder.ceInfo_name = vm.ui.ceInfo.getName();
-        AutoAttendantCeInfoModelService.setCeInfo(vm.aaModel.aaRecord, vm.ui.ceInfo);
+        AutoAttendantCeInfoModelService.setCeInfo(vm.aaRecord, vm.ui.ceInfo);
       }
     }
 
     function activate() {
-      vm.aaModel.aaRecord = AAModelService.getNewAARecord();
-      vm.aaModel.aaRecordUUID = "";
+      vm.aaRecord = AAModelService.getNewAARecord();
 
       vm.ui = AAUiModelService.getUiModel();
 
