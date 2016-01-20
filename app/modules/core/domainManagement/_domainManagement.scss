@@ -68,6 +68,12 @@
  * Domain Management New Popup
  */
 .domainModal {
+  .error{
+    color: $color-negative-base !important;
+    span{
+      margin-left: 0.5rem;
+    }
+  }
   .domainVerificationInfo {
     padding-bottom: 3rem;
     .domainInput {
@@ -91,6 +97,14 @@
     p, i {
       float: left;
       color: white;
+    }
+  }
+}
+#domainModalAdd{
+  .modal-body{
+    height: 240px !important;
+    p{
+      margin-bottom: 2rem;
     }
   }
 }
