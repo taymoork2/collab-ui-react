@@ -132,7 +132,7 @@ angular.module('Core')
         }
 
         var enterpriseSipUrlStep = {
-          name: 'claimSipUrl',
+          name: 'enterpriseSipUrl',
           template: 'modules/core/setupWizard/enterprise.setSipUri.tpl.html',
         };
 

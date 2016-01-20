@@ -13,11 +13,10 @@ angular.module('Core')
       $scope.cloudSipUriField = {};
       $scope.cloudSipUriField.inputValue = '';
       $scope.cloudSipUriField.cloudSipFlag = false;
-      $scope.cloudSipUriField.isError = false;
       $scope.cloudSipUriField.isDisabled = false;
 
       $scope.validateSipUri = function () {
-        var isError = $scope.cloudSipUriField.isError;
+        var isError = false;
         if ($scope.cloudSipUriField.inputValue.length > 40) {
           isError = true;
         }
