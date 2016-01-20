@@ -3,11 +3,21 @@ class DomainManagementService {
   private _domainList = [
     /* {
      text: 'initialDomain.com',
-     status: 'pending'}*/
+     status: this.states.pending}*/
   ];
+
+  private _states = {
+    pending: 'pending',
+    verified: 'verified',
+    claimed: 'claimed'
+  }
 
   constructor($http, Config, Authinfo, private $q) {
     var _verifiedDomainsUrl = Config.getDomainManagementUrl(Authinfo.getOrgId());
+  }
+
+  get states() {
+    return this._states;
   }
 
   get domainList() {
@@ -15,22 +25,20 @@ class DomainManagementService {
   }
 
   refreshDomainList() {
-    var promises = [];
-    promises.push(this.getVerifiedDomains());
-    return this.$q.all(promises);
+    return this.getVerifiedDomains();
   }
 
   addDomain(domainToAdd) {
     let deferred = this.$q.defer();
 
     //we always normalize to lowercase.
-    domainToAdd = domainToAdd || domainToAdd.toLowerCase();
+    domainToAdd = domainToAdd ? domainToAdd.toLowerCase() : domainToAdd;
 
     if (domainToAdd && domainToAdd.endsWith('.com')) {
       this._domainList.push({
         text: domainToAdd,
         code: '234SDSSFVD',
-        status: 'pending'
+        status: this.states.pending
       });
 
       deferred.resolve();
@@ -58,7 +66,7 @@ class DomainManagementService {
       {
         text: 'getVerifiedDomainspromise.com'.toLowerCase(),
         code: '',
-        status: 'verified'
+        status: this.states.verified
       });
 
     deferred.resolve();
@@ -69,7 +77,7 @@ class DomainManagementService {
     let deferred = this.$q.defer();
     let domainInList = _.find(this._domainList, {text: domain.text});
     if (domainInList) {
-      domainInList.status = "verified";
+      domainInList.status = this.states.verified;
       deferred.resolve()
     } else {
       deferred.reject("not a domain possible to verify");
@@ -77,8 +85,5 @@ class DomainManagementService {
     return deferred.promise;
   }
 }
-
 angular.module('Core')
   .service('DomainManagementService', DomainManagementService);
-
-

@@ -231,7 +231,7 @@
 
             logMsg = funcName + ": " + "\n" +
               "licenses=" + JSON.stringify(licenses);
-            $log.log(logMsg);
+            // $log.log(logMsg);
 
             var licenseInfo = null;
 
@@ -332,46 +332,46 @@
                   // $log.log(logMsg);
 
                   deferredIsSiteSupportsIframe.resolve(isSiteSupportsIframeResult);
-                }
+                } else { // check iFrame support for T30 site
+                  getEnableT30UnifiedAdminData().then(
+                    function getEnableT30UnifiedAdminDataSuccess(response) {
+                      isIframeSupported = isIframeSupportedCheck2(
+                        obj.validateAdminPagesInfoXmlData(response.enableT30UnifiedAdminInfoXml)
+                      );
 
-                getEnableT30UnifiedAdminData().then(
-                  function getEnableT30UnifiedAdminDataSuccess(response) {
-                    isIframeSupported = isIframeSupportedCheck2(
-                      obj.validateAdminPagesInfoXmlData(response.enableT30UnifiedAdminInfoXml)
-                    );
+                      var isSiteSupportsIframeResult = {
+                        siteUrl: siteUrl,
+                        isIframeSupported: isIframeSupported,
+                        isAdminReportEnabled: isAdminReportEnabled
+                      };
 
-                    var isSiteSupportsIframeResult = {
-                      siteUrl: siteUrl,
-                      isIframeSupported: isIframeSupported,
-                      isAdminReportEnabled: isAdminReportEnabled
-                    };
+                      logMsg = funcName + ": " + "\n" +
+                        "siteUrl=" + siteUrl + "\n" +
+                        "isSiteSupportsIframeResult=" + JSON.stringify(isSiteSupportsIframeResult);
+                      // $log.log(logMsg);
 
-                    logMsg = funcName + ": " + "\n" +
-                      "siteUrl=" + siteUrl + "\n" +
-                      "isSiteSupportsIframeResult=" + JSON.stringify(isSiteSupportsIframeResult);
-                    // $log.log(logMsg);
+                      deferredIsSiteSupportsIframe.resolve(isSiteSupportsIframeResult);
+                    }, // getEnableT30UnifiedAdminDataSuccess()
 
-                    deferredIsSiteSupportsIframe.resolve(isSiteSupportsIframeResult);
-                  }, // getEnableT30UnifiedAdminDataSuccess()
+                    function getEnableT30UnifiedAdminDataError(response) {
+                      var funcName = "getEnableT30UnifiedAdminDataError()";
+                      var logMsg = "";
 
-                  function getEnableT30UnifiedAdminDataError(response) {
-                    var funcName = "getEnableT30UnifiedAdminDataError()";
-                    var logMsg = "";
+                      var isSiteSupportsIframeResult = {
+                        siteUrl: siteUrl,
+                        error: "getEnableT30UnifiedAdminDataError",
+                        response: response
+                      };
 
-                    var isSiteSupportsIframeResult = {
-                      siteUrl: siteUrl,
-                      error: "getEnableT30UnifiedAdminDataError",
-                      response: response
-                    };
+                      logMsg = funcName + ": " + "\n" +
+                        "siteUrl=" + siteUrl + "\n" +
+                        "isSiteSupportsIframeResult=" + JSON.stringify(isSiteSupportsIframeResult);
+                      $log.log(logMsg);
 
-                    logMsg = funcName + ": " + "\n" +
-                      "siteUrl=" + siteUrl + "\n" +
-                      "isSiteSupportsIframeResult=" + JSON.stringify(isSiteSupportsIframeResult);
-                    $log.log(logMsg);
-
-                    deferredIsSiteSupportsIframe.reject(isSiteSupportsIframeResult);
-                  } // getEnableT30UnifiedAdminDataError()
-                );
+                      deferredIsSiteSupportsIframe.reject(isSiteSupportsIframeResult);
+                    } // getEnableT30UnifiedAdminDataError()
+                  ); // getEnableT30UnifiedAdminData().then()
+                } // check iFrame support for T30 site
               }, // getSiteDataSuccess()
 
               function getSiteDataError(response) {

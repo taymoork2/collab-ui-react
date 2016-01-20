@@ -1,15 +1,18 @@
 namespace domainManagement {
 
   class DomainManagementCtrl {
-    private _adminDomain;
-    private _adminEmail;
+
+    private _loggedOnUser = {
+      domain: null,
+      email:null,
+      isLoaded:false,
+      isPartner:false
+  };
+
     private _feature = false;
 
     /* @ngInject */
-    constructor(private $state, CiService, private DomainManagementService, private FeatureToggleService) {
-
-
-      this._feature = true;
+    constructor(private $state, Authinfo, CiService, private DomainManagementService, private FeatureToggleService) {
 
       FeatureToggleService.supports(FeatureToggleService.features.domainManagement)
         .then(dmEnabled => {
@@ -23,36 +26,34 @@ namespace domainManagement {
 
       CiService.getUser().then(curUser => {
 
-        /*   var myOrgId = Authinfo.getOrgId();
-         if (curUser.managedOrgs && _.some(curUser.managedOrgs, { orgId: myOrgId })) {
-         console.log("domain man: My partner is here!");
-         }*/
+        let myOrgId = Authinfo.getOrgId();
 
-        this._adminEmail = curUser.userName;
-        if (this._adminEmail) {
-          this._adminDomain = this._adminEmail.split('@')[1];
+        if (curUser.managedOrgs && _.some(curUser.managedOrgs, {orgId: myOrgId})) {
+          //Partner is logged on, skip verification test
+          this._loggedOnUser.isPartner = true;
+        } else {
+          this._loggedOnUser.email = curUser.userName;
+          if (this._loggedOnUser.email && this._loggedOnUser.email.indexOf('@') > 0) {
+            this._loggedOnUser.domain = this._loggedOnUser.email.split('@')[1];
+          }
         }
+
+        this._loggedOnUser.isLoaded = true;
       });
 
-      DomainManagementService.refreshDomainList().then(() => {
-        // ctrl._domains = ctrl.DomainManagementService.domainList
-      });
+      this.DomainManagementService.refreshDomainList();
     }
 
     get domains() {
       return this.DomainManagementService.domainList;
     }
 
-    get adminDomain() {
-      return this._adminDomain;
+    get loggedOnUser() {
+      return this._loggedOnUser;
     }
 
     delete(domain) {
       this.DomainManagementService.deleteDomain(domain);
-    }
-
-    get adminEmail() {
-      return this._adminEmail;
     }
 
     get feature() {

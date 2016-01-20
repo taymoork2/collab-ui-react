@@ -2,25 +2,41 @@ namespace domainManagement {
 
   class DomainManageVerifyCtrl {
     private _domain;
-    private _domainManagementService;
-    private _enable = false;
+    private _loggedOnUser;
+    private _verifyError;
 
     /* @ngInject */
     constructor(private $state, private DomainManagementService) {
       this._domain = $state.params.domain;
+      this._loggedOnUser = $state.params.loggedOnUser;
 
+      //if any domain is already verified, it is safe to verify more:
+      if (DomainManagementService.domainList.length == 0
+        || _.all(DomainManagementService.domainList, {status: DomainManagementService.states.pending})){
+
+        //No domains have been verified (list empty or all pending). Only allow logged on user's domain:
+        if (this.domainName != this._loggedOnUser.domain)
+          this._verifyError = "To prevent locking out your account, '" + this._loggedOnUser.domain + "' must be verified first.";
+      }
     }
 
     get domainName() {
       return this._domain && this._domain.text;
     }
 
-    get enable() {
-      return this._enable;
+    get verifyError() {
+      return this._verifyError;
     }
 
-    set enable(enable) {
-      this._enable = enable;
+    get verifyAllowed() {
+      //input validation:
+      if (!(this.domainName && this._loggedOnUser && this._loggedOnUser.isLoaded))
+        return false;
+
+      if (this._verifyError)
+        return false;
+
+      return true;
     }
 
     public verify() {
@@ -28,7 +44,6 @@ namespace domainManagement {
         this.$state.go('domainmanagement');
       });
     }
-
   }
   angular
     .module('Core')

@@ -3,10 +3,10 @@
 
   angular
     .module('core.trial')
-    .factory('WebexTimeZoneService', WebexTimeZoneService);
+    .factory('WebexTrialService', WebexTrialService);
 
   /* @ngInject */
-  function WebexTimeZoneService($http, $translate, Config, Notification) {
+  function WebexTrialService($http, $translate, Config, Notification) {
     var service = {
       getTimeZones: getTimeZones,
       validateSiteUrl: validateSiteUrl

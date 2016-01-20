@@ -1,11 +1,14 @@
 @import 'activeUsers/_active-users';
 @import 'avgRooms/_avg-rooms';
 @import 'callMetrics/_call-metrics-customer';
+@import 'mediaQuality/_media-quality-customer';
 
-.customer-report-filter {
-  width: rem-calc(200);
-}
 .customer-reports {
+  @extend %content-subheader;
+  @extend %page-content-padding;
+  .customer-report-filter {
+    width: rem-calc(200);
+  }
   .cs-card-layout {
     margin-bottom: rem-calc(15);
   }

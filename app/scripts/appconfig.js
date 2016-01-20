@@ -205,7 +205,7 @@ angular
             }
           },
           params: {
-            adminDomain: null
+            loggedOnUser: null
           }
         })
         .state('domainmanagement.delete', {
@@ -219,7 +219,7 @@ angular
           },
           params: {
             domain: null,
-            adminDomain: null
+            loggedOnUser: null
           }
         })
         .state('domainmanagement.email', {
@@ -233,7 +233,7 @@ angular
           },
           params: {
             domain: null,
-            adminEmail: null
+            loggedOnUser: null
           }
         })
         .state('domainmanagement.verify', {
@@ -246,7 +246,8 @@ angular
             }
           },
           params: {
-            domain: null
+            domain: null,
+            loggedOnUser: null
           }
         })
         .state('profile', {
@@ -761,10 +762,40 @@ angular
           parent: 'main'
         })
         .state('support', {
-          url: '/support?search',
-          templateUrl: 'modules/squared/support/support.tpl.html',
+          url: '/support',
+          templateUrl: 'modules/squared/support/support.html',
           controller: 'SupportCtrl',
           parent: 'main'
+        })
+        .state('support.status', {
+          url: '/status',
+          views: {
+            'supportPane': {
+              templateUrl: 'modules/squared/support/support-status.html',
+              controller: 'SupportCtrl',
+              controllerAs: 'support'
+            }
+          }
+        })
+        .state('support.logs', {
+          url: '/logs?search',
+
+          views: {
+            'supportPane': {
+              templateUrl: 'modules/squared/support/support-logs.html',
+              controller: 'SupportCtrl',
+            }
+          }
+        })
+        .state('support.billing', {
+          url: '/billing?enc',
+          views: {
+            'supportPane': {
+              templateUrl: 'modules/squared/support/support-billing.html',
+              controller: 'BillingCtrl'
+            }
+          }
+
         })
         .state('billing', {
           url: '/orderprovisioning?enc',

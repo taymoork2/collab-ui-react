@@ -83,11 +83,12 @@
       <button id="cancelTrialButton" class="btn" ng-click="$dismiss()">
         <span translate="partnerHomePage.cancel"></span>
       </button>
-      <button id="saveUpdateButton" cs-btn loading="trial.saveUpdateButtonLoad" class="btn btn--primary" ng-click="trialForm.$setPristine(true); trial.clickUpdateButton();" ng-disabled="trialForm.$pristine || trialForm.$invalid">
-        <span ng-if="trial.disableSquaredUCCheckBox || !trial.isSquaredUCEnabled()" translate="common.save"></span>
-        <span ng-if="!trial.disableSquaredUCCheckBox && trial.isSquaredUCEnabled()" cr-feature-toggle feature-show="huron-pstn-setup" translate="common.save"></span>
-        <span ng-if="!trial.disableSquaredUCCheckBox && trial.isSquaredUCEnabled()" cr-feature-toggle feature-hide="huron-pstn-setup" translate="common.next"></span>
-      </button>
+    <button id="saveUpdateButton" cs-btn loading="trial.saveUpdateButtonLoad" class="btn btn--primary" ng-click="trialForm.$setPristine(true); trial.clickUpdateButton();" ng-disabled="trialForm.$pristine || trialForm.$invalid">
+      <span ng-if="trial.disableSquaredUCCheckBox || !trial.isSquaredUCEnabled()" translate="common.save"></span>
+      <span ng-if="!trial.disableSquaredUCCheckBox && trial.isSquaredUCEnabled()" cr-feature-toggle feature-show="huron-pstn-setup" translate="common.save"></span>
+      <span ng-if="!trial.disableSquaredUCCheckBox && trial.isSquaredUCEnabled()" cr-feature-toggle feature-hide="huron-pstn-setup" translate="common.next"></span>
+    </button>
     </div>
   </div>
+
 </form>
