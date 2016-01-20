@@ -12,11 +12,9 @@ namespace domainManagement {
     }
 
     public delete() {
-      let ctrl = this;
-
       this.DomainManagementService.deleteDomain(this._domainToDelete).then(
-        function () { ctrl.$state.go('domainmanagement');},
-        function (err) { console.log('could not add domain (example failure): ' + ctrl._domainToDelete.text + err);}
+        () => { this.$state.go('domainmanagement');},
+        err => { console.log('could not add domain (example failure): ' + this._domainToDelete.text + err);}
       )
     }
 

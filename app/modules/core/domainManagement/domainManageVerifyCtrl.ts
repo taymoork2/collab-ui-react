@@ -24,9 +24,8 @@ namespace domainManagement {
     }
 
     public verify() {
-      let ctrl = this;
-      this.DomainManagementService.verifyDomain(this._domain).then(function(res) {
-        ctrl.$state.go('domainmanagement');
+      this.DomainManagementService.verifyDomain(this._domain).then(res => {
+        this.$state.go('domainmanagement');
       });
     }
 

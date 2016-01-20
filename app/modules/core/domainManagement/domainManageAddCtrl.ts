@@ -12,18 +12,16 @@ namespace domainManagement {
     }
 
     public add() {
-      let ctrl = this;
-
-      if(!this.addEnabled){
+      if (!this.addEnabled) {
         return;
       }
 
       this.DomainManagementService.addDomain(this._domain).then(
-        function () {
-          ctrl.$state.go('domainmanagement');
+        ()=> {
+          this.$state.go('domainmanagement');
         },
-        function (err) {
-          ctrl._error = err;
+        err => {
+          this._error = err;
         }
       )
     }
