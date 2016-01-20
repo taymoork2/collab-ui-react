@@ -15,16 +15,14 @@ class DomainManagementService {
   }
 
   refreshDomainList() {
-    var promises = [];
-    promises.push(this.getVerifiedDomains());
-    return this.$q.all(promises);
+    return this.getVerifiedDomains();
   }
 
   addDomain(domainToAdd) {
     let deferred = this.$q.defer();
 
     //we always normalize to lowercase.
-    domainToAdd = domainToAdd || domainToAdd.toLowerCase();
+    domainToAdd = domainToAdd ? domainToAdd.toLowerCase() : domainToAdd;
 
     if (domainToAdd && domainToAdd.endsWith('.com')) {
       this._domainList.push({
