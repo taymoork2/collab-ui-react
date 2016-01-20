@@ -60,16 +60,9 @@
     "jasmine-sinon": "~0.4.0"
   },
   "resolutions": {
-    "angular-bootstrap": "~0.11.0",
-    "angular": "=1.4.5",
-    "angular-mocks": "=1.4.5",
     "angular-sanitize": "=1.4.5",
-    "bootstrap": "~3.1.1",
-    "angular-translate": "~2.7.2",
+    "angular": "=1.4.5",
     "lodash": "~3.10.1",
-    "moment": "~2.10.6",
-    "ui-router-extras": "=0.1.0",
-    "angular-formly": "~7.3.0",
-    "api-check": "~7.5.0"
+    "bootstrap": "~3.1.1"
   }
 }
