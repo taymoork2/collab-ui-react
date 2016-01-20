@@ -7,7 +7,7 @@ class DomainManagementService {
   ];
 
   constructor($http, Config, Authinfo, private $q) {
-    var _verifiedDomainsUrl = Config.getDomainManagementUrl() + '/' + Authinfo.getOrgId() + '/v1/Domains';
+    var _verifiedDomainsUrl = Config.getDomainManagementUrl(Authinfo.getOrgId());
   }
 
   get domainList() {

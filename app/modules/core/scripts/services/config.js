@@ -161,10 +161,10 @@ angular.module('Core')
         },
 
         domainManagementUrl: {
-          dev: 'https://identity.webex.com/organization',
-          cfe: 'https://identitybts.webex.com/organization',
-          integration: 'https://identity.webex.com/organization',
-          prod: 'https://identity.webex.com/organization'
+          dev: 'https://identity.webex.com/organization/%s/v1/Domains',
+          cfe: 'https://identitybts.webex.com/organization/%s/v1/Domains',
+          integration: 'https://identity.webex.com/organization/%s/v1/Domains',
+          prod: 'https://identity.webex.com/organization/%s/v1/Domains'
         },
 
         statusPageUrl: 'http://status.ciscospark.com/',
@@ -645,12 +645,13 @@ angular.module('Core')
           return scomUrl[this.getEnv()];
         },
 
-        getDomainManagementUrl: function () {
+        getDomainManagementUrl: function (orgId) {
+          var params = [orgId];
           var domainManagementUrl = {
-            'dev': this.domainManagementUrl.dev,
-            'cfe': this.domainManagementUrl.cfe,
-            'integration': this.domainManagementUrl.integration,
-            'prod': this.domainManagementUrl.prod
+            'dev': Utils.sprintf(this.domainManagementUrl.dev, params),
+            'cfe': Utils.sprintf(this.domainManagementUrl.cfe, params),
+            'integration': Utils.sprintf(this.domainManagementUrl.integration, params),
+            'prod': Utils.sprintf(this.domainManagementUrl.prod, params)
           };
 
           return domainManagementUrl[this.getEnv()];
