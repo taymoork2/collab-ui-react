@@ -2930,7 +2930,7 @@
         "message": "Your monitor settings are adding a delay to your audio. Change the monitor settings to a suitable mode (ex: Game mode)."
       },
       "UltrasoundSpeakerAvailability": {
-        "type": "No embedded ultrasound speaker",
+        "type": "No Embedded Ultrasound Speaker",
         "message": "This hardware version of the SX10 does not have an embedded ultrasound speaker."
       },
       "inactive": {
