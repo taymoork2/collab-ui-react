@@ -44,13 +44,11 @@ describe('Squared Invite User and Assign Services User Flow', function () {
       utils.expectTextToBeSet(users.userListSelStatus, 'Invite Pending');
     });
 
-    it('expect edit services is showing', function () {
+    it('should add licenses successfully', function () {
       utils.clickUser(inviteEmail);
       utils.click(users.servicesActionButton);
       utils.click(users.editServicesButton);
-    });
 
-    it('should add licenses successfully', function () {
       //click on license checkbox
       utils.click(users.paidMsg);
       utils.click(users.saveButton);
