@@ -4,13 +4,16 @@
     <h4 class="modal-title" translate="domainManagement.add.header"></h4>
   </div>
   <div class="modal-body">
-    <p translate="domainManagement.add.description" />
-    <input type="text" placeholder="{{dmpopup.exampleDomain || ('domainManagement.add.exampleDomain' | translate)}}" ng-model="dmpopup.domain" ng-keypress="dmpopup.keyPressInInputField($event)"/>
-    <b><p ng-if="!dmpopup.validate().valid && !dmpopup.validate().empty" translate="domainManagement.add.invalidDomain"></p>
-    <p ng-if="dmpopup.error">{{dmpopup.error}}</p></b>
+    <p translate="domainManagement.add.description"/>
+    <input type="text" placeholder="{{dmpopup.exampleDomain || ('domainManagement.add.exampleDomain' | translate)}}"
+           ng-model="dmpopup.domain" ng-keypress="dmpopup.keyPressInInputField($event)"/>
+    <b><p ng-if="!dmpopup.validate().valid && !dmpopup.validate().empty"
+          translate="domainManagement.add.invalidDomain"></p>
+      <p ng-if="dmpopup.error">{{dmpopup.error}}</p></b>
   </div>
   <div class="modal-footer">
     <button ng-click="dmpopup.cancel()" translate="common.cancel"></button>
-    <button ng-disabled="!dmpopup.addEnabled" ng-click="dmpopup.add()" class="btn-primary" translate="common.add"></button>
+    <button ng-disabled="!dmpopup.addEnabled" ng-click="dmpopup.add()" class="btn-primary"
+            translate="common.add"></button>
   </div>
 </div>

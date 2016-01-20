@@ -4,13 +4,16 @@
     <h4 class="modal-title" translate="domainManagement.email.header"></h4>
   </div>
   <div class="modal-body">
-    <p translate="domainManagement.email.description" />
-    <input type="text" placeholder="{{dmpopup.exampleDomain || ('domainManagement.email.exampleEmail' | translate)}}" ng-model="dmpopup.email" ng-keypress="dmpopup.keyPressInInputField($event)"/>
-    <b><p ng-if="!dmpopup.validate().valid && !dmpopup.validate().empty" translate="domainManagement.email.invalidEmail"></p>
+    <p translate="domainManagement.email.description"/>
+    <input type="text" placeholder="{{dmpopup.exampleDomain || ('domainManagement.email.exampleEmail' | translate)}}"
+           ng-model="dmpopup.email" ng-keypress="dmpopup.keyPressInInputField($event)"/>
+    <b><p ng-if="!dmpopup.validate().valid && !dmpopup.validate().empty"
+          translate="domainManagement.email.invalidEmail"></p>
       <p ng-if="dmpopup.error">{{dmpopup.error}}</p></b>
   </div>
   <div class="modal-footer">
     <button class="btn btn-default" ng-click="dmpopup.cancel()" translate="common.cancel"></button>
-    <button ng-disabled="!dmpopup.sendEnabled" ng-click="dmpopup.sendEmail()" class="btn-primary" translate="domainManagement.email.sendEmail"></button>
+    <button ng-disabled="!dmpopup.sendEnabled" ng-click="dmpopup.sendEmail()" class="btn-primary"
+            translate="domainManagement.email.sendEmail"></button>
   </div>
 </div>
