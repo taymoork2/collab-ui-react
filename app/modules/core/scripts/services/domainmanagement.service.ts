@@ -15,9 +15,8 @@ class DomainManagementService {
   }
 
   refreshDomainList() {
-    var ctrl = this;
     var promises = [];
-    promises.push(ctrl.getVerifiedDomains());
+    promises.push(this.getVerifiedDomains());
     return this.$q.all(promises);
   }
 
