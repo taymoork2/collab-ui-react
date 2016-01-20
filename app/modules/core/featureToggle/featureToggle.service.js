@@ -42,6 +42,7 @@
       deleteContent: 'delete-content',
       dialOut: 'dial-out',
       disableCacheForFeatures: 'disableCacheForFeatures',
+      domainManagement: 'domainManagement',
       enforceSparkContentEncryption: 'enforce-spark-content-encryption',
       featureToggleRules: 'feature-toggle-rules',
       feedbackViaEmail: 'feedback-via-email',

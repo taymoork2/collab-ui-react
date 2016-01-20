@@ -160,6 +160,13 @@ angular.module('Core')
           prod: 'https://identity.webex.com/organization/scim/v1/Orgs'
         },
 
+        domainManagementUrl: {
+          dev: 'https://identity.webex.com/organization/%s/v1/Domains',
+          cfe: 'https://identitybts.webex.com/organization/%s/v1/Domains',
+          integration: 'https://identity.webex.com/organization/%s/v1/Domains',
+          prod: 'https://identity.webex.com/organization/%s/v1/Domains'
+        },
+
         statusPageUrl: 'http://status.ciscospark.com/',
 
         logMetricUrl: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
@@ -624,6 +631,18 @@ angular.module('Core')
           return scomUrl[this.getEnv()];
         },
 
+        getDomainManagementUrl: function (orgId) {
+          var params = [orgId];
+          var domainManagementUrl = {
+            'dev': Utils.sprintf(this.domainManagementUrl.dev, params),
+            'cfe': Utils.sprintf(this.domainManagementUrl.cfe, params),
+            'integration': Utils.sprintf(this.domainManagementUrl.integration, params),
+            'prod': Utils.sprintf(this.domainManagementUrl.prod, params)
+          };
+
+          return domainManagementUrl[this.getEnv()];
+        },
+
         getAdminServiceUrl: function () {
           var adminServiceUrl = {
             'dev': this.adminServiceUrl.integration,
@@ -1027,6 +1046,7 @@ angular.module('Core')
         // Customer Admin
         Full_Admin: [
           'overview',
+          'domainmanagement',
           'users',
           'user-overview',
           'userprofile',
