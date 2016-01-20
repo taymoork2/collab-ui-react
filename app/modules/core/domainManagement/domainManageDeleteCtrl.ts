@@ -6,15 +6,18 @@ namespace domainManagement {
 
     /* @ngInject */
     constructor($stateParams, private $state, private DomainManagementService) {
-
-        this._adminDomain = $stateParams.adminDomain;
-        this._domainToDelete = $stateParams.domain ;
+      this._adminDomain = $stateParams.adminDomain;
+      this._domainToDelete = $stateParams.domain;
     }
 
     public delete() {
       this.DomainManagementService.deleteDomain(this._domainToDelete).then(
-        () => { this.$state.go('domainmanagement');},
-        err => { console.log('could not add domain (example failure): ' + this._domainToDelete.text + err);}
+        () => {
+          this.$state.go('domainmanagement');
+        },
+        err => {
+          console.log('could not add domain (example failure): ' + this._domainToDelete.text + err);
+        }
       )
     }
 
@@ -27,7 +30,7 @@ namespace domainManagement {
     }
 
     get isValid() {
-      return this._domainToDelete && this._domainToDelete.text && (this._adminDomain != this._domainToDelete.text);
+      return this.domain && (this._adminDomain != this._domainToDelete.text);
     }
   }
   angular
