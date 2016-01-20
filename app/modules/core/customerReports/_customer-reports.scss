@@ -1,14 +1,19 @@
 @import 'activeUsers/_active-users';
 @import 'avgRooms/_avg-rooms';
+@import 'callMetrics/_call-metrics-customer';
+@import 'mediaQuality/_media-quality-customer';
 
-.customer-report-filter {
-  width: rem-calc(200);
-}
 .customer-reports {
+  @extend %content-subheader;
+  @extend %page-content-padding;
+  .customer-report-filter {
+    width: rem-calc(200);
+  }
   .cs-card-layout {
     margin-bottom: rem-calc(15);
   }
   .report-card {
+    min-width: rem-calc(650);
     article {
       min-height: vr-adjust(570);
       min-width: rem-calc(650);
@@ -22,6 +27,15 @@
     .report-description {
       position: relative;
       z-index: 100;
+    }
+    .timechartDiv {
+      font-size: rem-calc(11);
+      height: vr-adjust(380);
+      width: 70%;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      top: rem-calc(-50);
     }
     .barchart {
       font-size: rem-calc(11);
@@ -39,7 +53,16 @@
       }
     }
     .amExportButton {
-      top: rem-calc(30);
+      left: calc(95% + .1rem);
+      ul, .export-main, .export-list {
+        overflow: visible;
+      }
+      .export-main {
+        padding-bottom: rem-calc(5);
+        ul {
+          padding: 0;
+        }
+      }
     }
     .graph-text {
       font-family: $brand-font-cisco-TT-Regular;
@@ -47,6 +70,14 @@
       color: $gray-dark-1;
       text-align: left;
       float: left;
+      .graph-number {
+        font-size: rem-calc(18);
+        color: $brand-success;
+        text-align: left;
+      }
+      .graph-media {
+        font-size: rem-calc(18);
+      }
     }
     .spinner-position {
       position: absolute;

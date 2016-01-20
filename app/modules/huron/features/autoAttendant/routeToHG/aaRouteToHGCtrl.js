@@ -6,7 +6,7 @@
     .controller('AARouteToHGCtrl', AARouteToHGCtrl);
 
   /* @ngInject */
-  function AARouteToHGCtrl($scope, $translate, HuntGroupService, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService) {
+  function AARouteToHGCtrl($scope, $translate, HuntGroupService, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AACommonService) {
 
     var vm = this;
 
@@ -42,6 +42,7 @@
 
     function saveUiModel() {
       vm.menuKeyEntry.actions[0].setValue(vm.hgSelected.id);
+      AACommonService.setPhoneMenuStatus(true);
     }
 
     function getHuntGroups() {

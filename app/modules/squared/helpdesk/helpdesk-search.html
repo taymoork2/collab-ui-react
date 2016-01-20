@@ -23,10 +23,15 @@
               translate-value-name="{{helpdeskCtrl.currentSearch.orgFilter.displayName}}"></span>
     <i class="icon icon-close pointer" ng-click="helpdeskCtrl.initSearchWithoutOrgFilter()"></i>
   </div>
-
+  
+  <div ng-if="helpdeskCtrl.lookingUpOrgFilter" class="helpdesk-please-wait">
+    <span><i class="icon icon-spinner icon-2x"></i></span>
+    <p translate="helpdesk.applyOrgFilterPleaseWait"></p>
+  </div>
+  
   <div class="row full">
-    <div class="large-offset-2 medium-12 xlarge-10 xxlarge-8 centered columns search-results">
-      <div class="medium-6 large-4 columns"
+    <div class="medium-12 xlarge-10 centered columns end search-results">
+      <div class="medium-6 large-5 xlarge-4 large-offset-1 xlarge-offset-2 columns"
            ng-if="helpdeskCtrl.showUsersResultPane()">
         <h4 translate="helpdesk.users"></h4>
 
@@ -68,10 +73,14 @@
              class="show-more-results">
           <span><a href ng-click="helpdeskCtrl.showMoreResults('user')" translate="helpdesk.showMore"></a></span>
         </div>
-
+        
+        <div ng-if="helpdeskCtrl.currentSearch.userLimit === helpdeskCtrl.searchResultsLimit && helpdeskCtrl.currentSearch.userSearchResults.length >= helpdeskCtrl.searchResultsLimit"
+             class="show-more-results">
+          <span translate="helpdesk.noMoreResults"></span>
+        </div>
       </div>
 
-      <div class="medium-6 large-4 columns end"
+      <div class="medium-6 large-5 xlarge-4 columns end"
            ng-if="helpdeskCtrl.showOrgsResultPane()">
 
         <h4 translate="helpdesk.customers"></h4>
@@ -97,7 +106,7 @@
                 <h5>
                   {{org.displayName}}
                   <a tabindex="-1"
-                     ng-click="helpdeskCtrl.initSearchWithOrgFilter(org)"
+                     ng-click="helpdeskCtrl.initSearchWithOrgFilter(org); $event.stopPropagation()"
                      name="{{org}}"
                      class="right">
                     <i class="icon icon-search icon-org-search"></i>
@@ -106,7 +115,6 @@
               </header>
               <section>
               </section>
-              <section class="clickable-area" ui-sref="helpdesk.org({org:org, id:org.id})"></section>
             </article>
           </cs-card>
         </div>
@@ -115,12 +123,17 @@
              class="show-more-results">
           <span><a href ng-click="helpdeskCtrl.showMoreResults('org')" translate="helpdesk.showMore"></a></span>
         </div>
+        
+        <div ng-if="helpdeskCtrl.currentSearch.orgLimit === helpdeskCtrl.searchResultsLimit && helpdeskCtrl.currentSearch.orgSearchResults.length >= helpdeskCtrl.searchResultsLimit"
+             class="show-more-results">
+          <span translate="helpdesk.noMoreResults"></span>
+        </div>
 
       </div>
 
-      <div class="medium-6 large-4 columns end"
+      <div class="medium-6 large-5 xlarge-4 columns end"
            ng-if="helpdeskCtrl.showDeviceResultPane()">
-        <h4 translate="helpdesk.devices"></h4>
+        <h4 translate="common.devices"></h4>
 
         <div ng-if="helpdeskCtrl.searchingForDevices">
           <span><i class="icon icon-spinner icon-2x"></i></span>
@@ -160,6 +173,11 @@
         <div ng-if="helpdeskCtrl.currentSearch.deviceSearchResults.length > helpdeskCtrl.currentSearch.deviceLimit"
              class="show-more-results">
           <span><a href ng-click="helpdeskCtrl.showMoreResults('device')" translate="helpdesk.showMore"></a></span>
+        </div>
+        
+        <div ng-if="helpdeskCtrl.currentSearch.deviceLimit === helpdeskCtrl.searchResultsLimit && helpdeskCtrl.currentSearch.deviceSearchResults.length >= helpdeskCtrl.searchResultsLimit"
+             class="show-more-results">
+          <span translate="helpdesk.noMoreResults"></span>
         </div>
 
       </div>

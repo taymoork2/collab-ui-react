@@ -8,8 +8,8 @@
       "organization": {
         id: "ce8d17f8-1734-4a54-8510-fae65acc505e"
       },
-      "userName": "tom.vasset+marvelhelpdesk@gmail.com",
-      "displayName": "Tom Vasset (mock)",
+      "userName": "tom.vasset@cisco.com",
+      "displayName": "Tom Vasset (tvasset)",
       "phoneNumbers": [{
         "type": "work",
         "value": "+47 67 51 14 67"
@@ -39,6 +39,88 @@
       "phoneNumbers": [],
       "url": "whatever.com"
     }],
+    user: {
+      "id": "b78903e2-39e6-45fa-af0f-5d31de45934f",
+      "userName": "tvasset@cisco.com",
+      "name": {
+        "givenName": "Tom",
+        "familyName": "Vasset"
+      },
+      "emails": [{
+        "value": "tvasset@cisco.com",
+        "type": "work",
+        "primary": true
+      }],
+      "displayName": "Tom Vasset (tvasset)",
+      "meta": {
+        "created": "2012-06-15T20:49:58.903Z",
+        "uri": "https://identity.webex.com/identity/scim/1eb65fdf-9643-417f-9974-ad72cae0e10f/v1/Users/b78903e2-39e6-45fa-af0f-5d31de45934f"
+      },
+      "schemas": ["urn:scim:schemas:core:1.0", "urn:scim:schemas:extension:cisco:commonidentity:1.0"],
+      "entitlements": ["squared-fusion-cal", "atlas-portal", "squared-fusion-ec", "webex-messenger", "webex-squared", "squared-call-initiation", "spark", "squared-fusion-uc", "squared-fusion-mgmt", "squared-syncup", "files", "squared-room-moderation", "cisco-knowledge", "meetings", "ciscouc", "cloudmeetings"],
+      "licenseID": ['EC_cc6c1a2c-20d6-460d-9f55-01fc85d52e04_25_go.webex.com', 'EE_fa6c1a2c-20d6-460d-9f55-01fc85d52e04_25_ciscosales.webex.com', 'MC_f36c1a2c-20d6-460d-9f55-01fc85d52e04_100_go.webex.com', 'SC_b36c1a2c-20d6-460d-9f55-01fc85d52e04_100_go.webex.com', 'MC_f36c1a2c-20d6-460d-9f55-01fc85d52e04_100_ciscosales.webex.com', 'TC_a36c1a2c-20d6-460d-9f55-01fc85d52e04_100_ciscosales.webex.com', 'MS_62b343df-bdd5-463b-8895-d07fc3a94832', 'CO_f36c1a2c-20d6-460d-9f55-01fc85d52e04', 'CF_a36c1a2c-20d6-460d-9f55-01fc85d52e04'],
+      "photos": [{
+        "type": "thumbnail",
+        "value": "https://1efa7a94ed216783e352-c62266528714497a17239ececf39e9e2.ssl.cf1.rackcdn.com/V1~b1403a2d9a639ca7700dae70fd5a18f8~NxFT-HKtSbK02T8H-kQZGg==~80"
+      }, {
+        "type": "photo",
+        "value": "https://1efa7a94ed216783e352-c62266528714497a17239ececf39e9e2.ssl.cf1.rackcdn.com/V1~b1403a2d9a639ca7700dae70fd5a18f8~NxFT-HKtSbK02T8H-kQZGg==~1600"
+      }],
+      "ims": [{
+        "type": "xmpp",
+        "value": "tvasset@cisco.com",
+        "primary": false
+      }, {
+        "type": "webex-squared-jid",
+        "value": "tvasset@cisco.com",
+        "primary": false
+      }, {
+        "type": "webex-messenger-jid",
+        "value": "tvasset@cisco.com",
+        "primary": false
+      }],
+      "phoneNumbers": [{
+        "type": "work",
+        "value": "+47 67 51 1463"
+      }],
+      "department": "554023321",
+      "roles": ["atlas-portal.partner.helpdesk", "id_full_admin"],
+      "trainSiteNames": ["ciscosales.webex.com", "go.webex.com"],
+      "sipAddresses": [{
+        "type": "enterprise",
+        "value": "tvasset@cisco.com",
+        "primary": false
+      }, {
+        "type": "cloud-calling",
+        "value": "tvasset@cisco.ciscospark.com",
+        "primary": false
+      }],
+      "active": true,
+      "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f"
+    },
+    userStatuses: [{
+      "userId": "b78903e2-39e6-45fa-af0f-5d31de45934f",
+      "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
+      "serviceId": "squared-fusion-cal",
+      "entitled": true,
+      "state": "notActivated"
+    }, {
+      "userId": "b78903e2-39e6-45fa-af0f-5d31de45934f",
+      "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
+      "serviceId": "squared-fusion-ec",
+      "entitled": true,
+      "state": "activated"
+    }, {
+      "userId": "b78903e2-39e6-45fa-af0f-5d31de45934f",
+      "orgId": "1eb65fdf-9643-417f-9974-ad72cae0e10f",
+      "serviceId": "squared-fusion-uc",
+      "entitled": true,
+      "state": "error",
+      "description": {
+        "key": "c_cal.0",
+        "defaultMessage": "Woops, this aint workin. Ya need ta help me out here man!"
+      }
+    }],
     orgs: [{
       "id": "ce8d17f8-1734-4a54-8510-fae65acc505e",
       "displayName": "Marvel Partners (Mock)",
@@ -61,7 +143,7 @@
         "squared-fusion-ec",
         "ciscouc",
         "cloudMeetings",
-        "spark-device-mgmt"
+        "spark-room-system"
       ],
       "contact": "tywin.lannister@kingslanding.com",
       "domains": ["kingslanding.com", "kingslanding2.com"],
@@ -331,7 +413,87 @@
       "id": "squared-fusion-ec",
       "enabled": false
     }],
-    unlicenseduserscount: 50
+    unlicenseduserscount: 50,
+    huronDevicesForUser: [{
+      uuid: "28236784-0f09-4daa-89d6-750f315a921d",
+      name: "SEP1122334455",
+      model: 'Cisco 7841',
+      description: 'This is a mock description',
+      deviceStatus: {
+        status: 'Online',
+        ipAddress: '10.47.10.1',
+        progressStatus: false,
+        isValid: true
+      }
+    }, {
+      uuid: "66236784-0f09-4daa-89d6-750f315a921d",
+      name: "SEP5566778899",
+      model: '',
+      description: '',
+      deviceStatus: {
+        status: '',
+        ipAddress: '',
+        progressStatus: false,
+        isValid: true
+      }
+    }],
+    huronUserNumbers: {
+      "uuid": "d2839ea3-6ad8-4d43-bfe7-cccaec09ef6f",
+      "url": "https://cmi.huron-int.com/api/v1/voice/customers/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/users/d2839ea3-6ad8-4d43-bfe7-cccaec09ef6f",
+      "firstName": "Tom",
+      "lastName": "Vasset",
+      "userName": "tvasset@cisco.com",
+      "numbers": [{
+        "url": "https://cmi.huron-int.com/api/v1/voice/customers/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/users/d2839ea3-6ad8-4d43-bfe7-cccaec09ef6f/directorynumbers/faa07921-6ed8-4e2b-99f9-08c457fe4c18",
+        "internal": "1234",
+        "external": "+14084744520",
+        "uuid": "faa07921-6ed8-4e2b-99f9-08c457fe4c18"
+      }, {
+        "url": "https://cmi.huron-int.com/api/v1/voice/customers/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/users/d2839ea3-6ad8-4d43-bfe7-cccaec09ef6f/directorynumbers/baa07921-6ed8-4e2b-99f9-08c457fe4c18",
+        "internal": "2345",
+        "external": null,
+        "uuid": "baa07921-6ed8-4e2b-99f9-08c457fe4c18"
+      }]
+    },
+    huronDeviceSearchResult: [{
+      "uuid": "17a6e2be-0e22-4ae9-8a29-f9ab05b5da09",
+      "url": null,
+      "name": "SEP1CDEA7DBF740",
+      "description": "373323613@qq.com (Cisco 8861 SIP)",
+      "product": "Cisco 8861",
+      "model": "Cisco 8861",
+      "ownerUser": {
+        "uuid": "74c2ca8d-99ca-4bdf-b6b9-a142d503f024",
+        "userId": "58852083@qq.com"
+      }
+    }, {
+      "uuid": "18a6e2be-0e22-4ae9-8a29-f9ab05b5da09",
+      "url": null,
+      "name": "SEP74A02FC0A15F",
+      "description": "58852083 (Cisco 8865 SIP)",
+      "product": "Cisco 8865",
+      "model": "Cisco 8865",
+      "ownerUser": {
+        "uuid": "74c2ca8d-99ca-4bdf-b6b9-a142d503f024",
+        "userId": "58852083@qq.com"
+      }
+    }],
+    huronNumbersSearchResult: {
+      "url": "https://cmi.huron-int.com/api/v2/customers/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/numbers?number=223",
+      "numbers": [{
+        "uuid": "5e33df41-2031-4a42-8870-b73ff7ba1dba",
+        "number": "2223",
+        "type": "internal"
+      }, {
+        "uuid": "62f90838-8169-4774-931b-c46e95529354",
+        "number": "2230",
+        "type": "internal"
+      }, {
+        "uuid": "9642ac0a-1795-47f5-bbab-e84e349e1c8f",
+        "number": "+14084744450",
+        "type": "external"
+      }]
+    }
   };
   angular.module('Squared').constant('HelpdeskMockData', mockData);
 }());

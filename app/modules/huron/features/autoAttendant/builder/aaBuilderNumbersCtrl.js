@@ -6,8 +6,8 @@
     .controller('AABuilderNumbersCtrl', AABuilderNumbersCtrl); /* was AutoAttendantGeneralCtrl */
 
   /* @ngInject */
-  function AABuilderNumbersCtrl($scope, $q, $stateParams, AAUiModelService, AutoAttendantCeInfoModelService, AANumberAssignmentService,
-    AAModelService, ExternalNumberPoolService, InternalNumberPoolService, Authinfo, Notification, $translate, telephoneNumberFilter) {
+  function AABuilderNumbersCtrl(AAUiModelService, AutoAttendantCeInfoModelService, AANumberAssignmentService,
+    AAModelService, ExternalNumberPoolService, InternalNumberPoolService, Authinfo, Notification, $translate, telephoneNumberFilter, TelephoneNumberService) {
     var vm = this;
 
     vm.addNumber = addNumber;
@@ -132,7 +132,23 @@
       saveAANumberAssignments(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, resources).then(
 
         function (response) {
+          // find first e164 number, move to array[0] if not already there
+          var r = _.find(resources, function (resource) {
+            return (TelephoneNumberService.validateDID(resource.number));
+          });
+
+          if (angular.isDefined(r)) {
+            var index = _.indexOf(resources, r);
+
+            // if e164 number is already the 0th element, all done
+
+            if (index >= 1) {
+              resources.splice(0, 0, _.pullAt(resources, index)[0]);
+            }
+          }
+
           sortAssignedResources(resources);
+
         },
         function (response) {
           Notification.error('autoAttendant.errorAddCMI', {
@@ -241,6 +257,7 @@
         directorynumber: '',
         order: 'pattern'
       }).$promise.then(function (intPool) {
+
         for (var i = 0; i < intPool.length; i++) {
 
           var number = intPool[i].pattern.replace(/\D/g, '');
@@ -296,11 +313,12 @@
       var onlyResources = [];
       var onlyCMI = [];
 
-      if (_.get(vm, 'ui.ceInfo.resources.length', 0) === 0) {
-        return;
+      var currentResources = [];
+      if (angular.isDefined(vm.ui.ceInfo) && angular.isDefined(vm.ui.ceInfo.resources)) {
+        currentResources = vm.ui.ceInfo.getResources();
       }
 
-      AANumberAssignmentService.checkAANumberAssignments(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, vm.ui.ceInfo.getResources(), onlyResources, onlyCMI).then(
+      AANumberAssignmentService.checkAANumberAssignments(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, currentResources, onlyResources, onlyCMI).then(
         function (response) {
           if (onlyCMI.length > 0) {
             vm.aaModel.possibleNumberDiscrepancy = true;
@@ -316,9 +334,11 @@
           }
         },
         function (response) {
-          // if we failed to read CMI, we might have discrepancy, and should warn user
-          vm.aaModel.possibleNumberDiscrepancy = true;
-          Notification.error('autoAttendant.errorReadCMI');
+          // if we failed to read CMI, we might have discrepancy, and should warn user, unless we have no numbers in CE, and thus no entry in CMI is OK
+          if (currentResources.length > 0) {
+            vm.aaModel.possibleNumberDiscrepancy = true;
+            Notification.error('autoAttendant.errorReadCMI');
+          }
         });
     }
 

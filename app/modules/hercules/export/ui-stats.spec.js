@@ -28,7 +28,7 @@ describe('Service: UiStats', function () {
         "progress": 0
       }, {
         "stateType": "error",
-        "text": "in error",
+        "text": "errors",
         "count": '0',
         "selected": false,
         "unselectable": true,

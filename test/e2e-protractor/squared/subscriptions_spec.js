@@ -1,7 +1,5 @@
 'use strict';
 
-/* global describe:false */
-
 describe('Leaderboard', function () {
   // TODO (tohagema): write cases for aggregate license counts w.r.t:
   // * proper licenseType "bucket"

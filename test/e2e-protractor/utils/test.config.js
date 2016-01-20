@@ -1,7 +1,5 @@
 'use strict';
 
-/* global isProductionBackend */
-
 exports.oauthClientRegistration = {
   id: 'C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec',
   secret: 'c10c371b4641010a750073b3c8e65a7fff0567400d316055828d3c74925b0857',

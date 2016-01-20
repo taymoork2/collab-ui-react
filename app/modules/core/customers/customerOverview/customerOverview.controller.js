@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function CustomerOverviewCtrl($stateParams, $state, $window, $translate, $log, $http, identityCustomer, Config, Userservice, Authinfo, AccountOrgService, BrandService, FeatureToggleService) {
-    /*jshint validthis: true */
     var vm = this;
     var customerOrgId = $stateParams.currentCustomer.customerOrgId;
 
@@ -25,13 +24,7 @@
     vm.isOwnOrg = isOwnOrg;
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.partnerOrgName = Authinfo.getOrgName();
-    vm.offer = vm.currentCustomer.offer;
-
-    FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
-      if (result) {
-        vm.offer = getAtlasStormBrandingOffer();
-      }
-    });
+    vm.offer = vm.currentCustomer.offer = getAtlasStormBrandingOffer();
 
     FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials).then(function (result) {
       if (result) {

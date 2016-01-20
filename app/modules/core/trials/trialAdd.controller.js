@@ -7,6 +7,11 @@
   /* @ngInject */
   function TrialAddCtrl($q, $scope, $state, $translate, $window, Authinfo, Config, EmailService, FeatureToggleService, HuronCustomer, Notification, TrialService, ValidationService) {
     var vm = this;
+    var _roomSystemDefaultQuantity = 5;
+    var messageTemplateOptionId = 'messageTrial';
+    var meetingTemplateOptionId = 'meetingTrial';
+    var callTemplateOptionId = 'callTrial';
+    var roomSystemsTemplateOptionId = 'roomSystemsTrial';
 
     vm.trialData = TrialService.getData();
 
@@ -37,7 +42,6 @@
     // This page "should" be refactored or become obsolete with PSTN
     vm.navOrder = ['trialAdd.info', 'trialAdd.meeting', 'trialAdd.call', 'trialAdd.addNumbers'];
     vm.navStates = ['trialAdd.info'];
-    vm.roomSystemOptions = [5, 10, 15, 20, 25];
     vm.showMeeting = false;
     vm.canEditMessage = true;
     vm.canEditMeeting = true;
@@ -75,11 +79,12 @@
       type: 'input',
       className: 'columns medium-12 license-count',
       templateOptions: {
-        label: $translate.instant('siteList.licenseCount'),
-        labelClass: 'columns medium-6',
-        inputClass: 'columns medium-3',
+        label: $translate.instant('trials.licenseQuantity'),
+        labelClass: 'columns medium-4',
+        inputClass: 'columns medium-4',
         type: 'number',
         required: true,
+        secondaryLabel: $translate.instant('trials.users'),
       },
       validators: {
         count: {
@@ -98,16 +103,11 @@
       type: 'checkbox',
       className: 'columns medium-12',
       templateOptions: {
-        label: $translate.instant('trials.collab'),
-        id: 'squaredTrial',
+        label: $translate.instant('trials.messageAndMeeting'),
+        id: messageTemplateOptionId,
         class: 'columns medium-12 checkbox-group',
       },
       expressionProperties: {
-        'templateOptions.label': function () {
-          return FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
-            return result ? $translate.instant('trials.message') : $translate.instant('trials.collab');
-          });
-        },
         'templateOptions.disabled': function () {
           return !vm.canEditMessage;
         },
@@ -120,13 +120,13 @@
       className: 'columns medium-12 checkbox-group',
       templateOptions: {
         label: $translate.instant('trials.meeting'),
-        id: 'meetingTrial',
+        id: meetingTemplateOptionId,
         class: 'columns medium-12',
       },
+      hideExpression: function () {
+        return !vm.showMeeting;
+      },
       expressionProperties: {
-        'hide': function () {
-          return !vm.showMeeting;
-        },
         'templateOptions.disabled': function () {
           return !vm.canEditMeeting;
         },
@@ -138,55 +138,62 @@
       type: 'checkbox',
       className: 'columns medium-12 checkbox-group',
       templateOptions: {
-        label: $translate.instant('trials.squaredUC'),
-        id: 'squaredUCTrial',
+        label: $translate.instant('trials.call'),
+        id: callTemplateOptionId,
         class: 'columns medium-12',
       },
-      expressionProperties: {
-        'hide': function () {
-          return !vm.hasCallEntitlement();
-        },
-        'templateOptions.label': function () {
-          return FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (result) {
-            return result ? $translate.instant('trials.call') : $translate.instant('trials.squaredUC');
-          });
-        },
-      },
+      hideExpression: function () {
+        return !vm.hasCallEntitlement();
+      }
     }];
 
+    // Room Systems Trial
     vm.roomSystemFields = [{
       model: vm.roomSystemTrial,
       key: 'enabled',
       type: 'checkbox',
-      className: "columns medium-6",
+      className: "columns medium-5 pad-top",
       templateOptions: {
         label: $translate.instant('trials.roomSystem'),
-        id: 'trialRoomSystem',
+        id: roomSystemsTemplateOptionId,
         class: 'columns medium-12',
       },
       watcher: {
         listener: function (field, newValue, oldValue, scope, stopWatching) {
           if (newValue !== oldValue) {
-            field.model.details.quantity = newValue ? vm.roomSystemOptions[0] : 0;
+            field.model.details.quantity = newValue ? _roomSystemDefaultQuantity : 0;
           }
         }
-      },
+      }
     }, {
       model: vm.roomSystemTrial.details,
       key: 'quantity',
-      type: 'select',
+      type: 'input',
       className: "columns medium-6",
       templateOptions: {
         id: 'trialRoomSystemsAmount',
-        inputClass: 'columns medium-10',
+        inputClass: 'columns medium-9',
         secondaryLabel: $translate.instant('trials.licenses'),
-        options: vm.roomSystemOptions,
+        type: 'number'
       },
       expressionProperties: {
+        'templateOptions.required': function () {
+          return vm.roomSystemTrial.enabled;
+        },
         'templateOptions.disabled': function () {
           return !vm.roomSystemTrial.enabled;
         },
       },
+      validators: {
+        quantity: {
+          expression: function ($viewValue, $modelValue) {
+            return !vm.roomSystemTrial.enabled || ValidationService.trialRoomSystemQuantity($viewValue, $modelValue);
+          },
+          message: function () {
+            return $translate.instant('partnerHomePage.invalidTrialRoomSystemQuantity');
+          }
+        }
+      }
     }];
 
     vm.trialTermsFields = [{
@@ -214,55 +221,75 @@
     vm.closeDialogBox = closeDialogBox;
     vm.launchCustomerPortal = launchCustomerPortal;
 
-    $q.all([
-      FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials),
-      FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
-      FeatureToggleService.supportsPstnSetup(),
-      FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials)
-    ]).then(function (results) {
-      vm.showRoomSystems = results[0];
-      vm.roomSystemTrial.enabled = results[0];
-      vm.meetingTrial.enabled = results[1];
-      vm.supportsPstnSetup = results[2];
-      vm.callTrial.enabled = vm.hasCallEntitlement();
-      vm.messageTrial.enabled = true;
-      if (vm.meetingTrial.enabled) {
-        vm.showMeeting = true;
-      }
-
-      var devicesModal = _.find(vm.trialStates, {
-        'name': 'trialAdd.call'
-      });
-      var meetingModal = _.find(vm.trialStates, {
-        'name': 'trialAdd.meeting'
-      });
-
-      devicesModal.enabled = results[3] && results[1];
-      meetingModal.enabled = results[1];
-
-    }).finally(function () {
-      init();
-      vm.roomSystemFields[1].model.quantity = vm.roomSystemTrial.enabled ? vm.roomSystemOptions[0] : 0;
-      toggleTrial();
-    });
+    init();
 
     ///////////////////////
 
     function init() {
-
-      $scope.$watch(function () {
-        return vm.trialData.trials;
-      }, function (newVal, oldVal) {
-        if (newVal !== oldVal) {
-          toggleTrial();
+      $q.all([
+        FeatureToggleService.supports(FeatureToggleService.features.atlasCloudberryTrials),
+        FeatureToggleService.supports(FeatureToggleService.features.atlasWebexTrials),
+        FeatureToggleService.supportsPstnSetup(),
+        FeatureToggleService.supports(FeatureToggleService.features.atlasDeviceTrials)
+      ]).then(function (results) {
+        vm.showRoomSystems = results[0];
+        vm.roomSystemTrial.enabled = results[0];
+        vm.meetingTrial.enabled = results[1];
+        vm.supportsPstnSetup = results[2];
+        vm.callTrial.enabled = vm.hasCallEntitlement();
+        vm.messageTrial.enabled = true;
+        if (vm.meetingTrial.enabled) {
+          vm.showMeeting = true;
+          updateTrialService(messageTemplateOptionId);
         }
-      }, true);
 
-      // Capture modal close and clear service
-      if ($state.modal) {
-        $state.modal.result.finally(function () {
-          TrialService.reset();
+        var devicesModal = _.find(vm.trialStates, {
+          'name': 'trialAdd.call'
         });
+        var meetingModal = _.find(vm.trialStates, {
+          'name': 'trialAdd.meeting'
+        });
+        var addNumbersModal = _.find(vm.trialStates, {
+          'name': 'trialAdd.addNumbers'
+        });
+
+        devicesModal.enabled = results[3] && results[1];
+        meetingModal.enabled = results[1];
+        addNumbersModal.enabled = !vm.supportsPstnSetup;
+
+      }).finally(function () {
+        $scope.$watch(function () {
+          return vm.trialData.trials;
+        }, function (newVal, oldVal) {
+          if (newVal !== oldVal) {
+            toggleTrial();
+          }
+        }, true);
+
+        // Capture modal close and clear service
+        if ($state.modal) {
+          $state.modal.result.finally(function () {
+            TrialService.reset();
+          });
+        }
+
+        vm.roomSystemFields[1].model.quantity = vm.roomSystemTrial.enabled ? _roomSystemDefaultQuantity : 0;
+        toggleTrial();
+      });
+    }
+
+    // Update offer and label for Meetings/WebEx trial.
+    function updateTrialService(templateOptionsId) {
+      var index = _.findIndex(vm.individualServices, function (individualService) {
+        return individualService.templateOptions.id === templateOptionsId;
+      });
+      if (index) {
+        switch (templateOptionsId) {
+        case messageTemplateOptionId:
+          vm.individualServices[index].model.type = Config.offerTypes.message;
+          vm.individualServices[index].templateOptions.label = $translate.instant('trials.message');
+          break;
+        }
       }
     }
 
@@ -396,15 +423,13 @@
           Notification.notify(successMessage, 'success');
 
           if (addNumbersCallback) {
-            addNumbersCallback(vm.customerOrgId).finally(function () {
-              vm.startTrialButtonLoad = false;
-              vm.finishSetup();
-            });
-          } else {
-            vm.startTrialButtonLoad = false;
-            vm.finishSetup();
+            return addNumbersCallback(vm.customerOrgId)
+              .catch(_.noop); //don't throw an error
           }
-
+        })
+        .then(function () {
+          vm.startTrialButtonLoad = false;
+          vm.finishSetup();
           return {
             'customerOrgId': vm.customerOrgId
           };

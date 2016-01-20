@@ -1,7 +1,7 @@
 <!-- Main View -->
 <div id="trialsPanel" class="container partner-container">
   <cs-page-header title="{{::'overview.pageTitle' | translate}}"></cs-page-header>
-  <div class="content-container row collapse cs-card-container">
+  <div class="content-container row collapse cs-card-container" cs-scroll>
     <section class="columns medium-12">
       <cs-card-layout>
         <cs-card class="large">
@@ -83,11 +83,11 @@
           <article ng-controller="PartnerReportsCtrl">
             <header>
               <div class="row collapse">
-                <div class="columns small-12" dropdown is-open="db.isOpen">
-                  <button id="customerDropdown" type="button" class="btn btn--white dropdown-toggle right" ng-disabled="db.disabled">
+                <div class="columns small-12" cs-dropdown is-open="db.isOpen">
+                  <button cs-dropdown-toggle id="customerDropdown" type="button" class="btn btn--white dropdown-toggle right" ng-disabled="db.disabled">
                     <span>{{currentSelection | translate}}</span><span class="icon icon-arrow-down"></span>
                   </button>
-                  <ul class="dropdown-menu reports-customer-dropdown" role="menu">
+                  <ul cs-dropdown-menu class="dropdown-menu reports-customer-dropdown" role="menu">
                     <li ng-click="reloadReports(true)"><a href="#"><span translate="reports.allCustomers"></span></a></li>
                     <li class="divider"></li>
                     <li ng-repeat="orgs in totalOrgsData" ng-click="getCustomerReports(true, orgs)"><a href="#">{{orgs.customerName}}</a></li>

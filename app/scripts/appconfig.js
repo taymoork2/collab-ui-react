@@ -153,35 +153,6 @@ angular
         };
       }
 
-      var futureOverviewState = {
-        type: 'futureOverview',
-        stateName: 'overview',
-        url: '/overview'
-      };
-
-      $futureStateProvider.futureState(futureOverviewState);
-
-      $futureStateProvider.stateFactory(futureOverviewState.type, function ($q, $timeout, Storage, futureState, FeatureToggleService, Auth) {
-        var token = Storage.get('accessToken');
-        return Auth.authorize(token).then(function () {
-          return FeatureToggleService.supports(FeatureToggleService.features.atlasStormBranding).then(function (useStormBranding) {
-            if (document.URL.indexOf('newoverview=1') > 0) {
-              useStormBranding = true;
-            } else if (document.URL.indexOf('newoverview=0') > 0) {
-              useStormBranding = false;
-            }
-            return {
-              name: futureState.stateName,
-              url: futureState.url,
-              templateUrl: useStormBranding ? 'modules/core/overview/overview.tpl.html' : 'modules/core/landingPage/landingPage.tpl.html',
-              controller: useStormBranding ? 'OverviewCtrl' : 'LandingPageCtrl',
-              controllerAs: 'overview',
-              parent: 'main'
-            };
-          });
-        });
-      });
-
       /* @ngInject */
       function modalOnExit($state, $previousState) {
         if ($state.modal) {
@@ -215,6 +186,68 @@ angular
             }
           },
           authenticate: false
+        })
+        .state('domainmanagement', {
+          //abstract: true,
+          url: '/domainmanagement',
+          templateUrl: 'modules/core/domainManagement/domainManagement.tpl.html',
+          controller: 'DomainManagementCtrl',
+          controllerAs: 'dv',
+          parent: 'main'
+        })
+        .state('domainmanagement.add', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'DomainManageAddCtrl',
+              controllerAs: 'dmpopup',
+              templateUrl: 'modules/core/domainManagement/add.tpl.html'
+            }
+          },
+          params: {
+            adminDomain: null
+          }
+        })
+        .state('domainmanagement.delete', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'DomainManageDeleteCtrl',
+              controllerAs: 'dmpopup',
+              templateUrl: 'modules/core/domainManagement/delete.tpl.html'
+            }
+          },
+          params: {
+            domain: null,
+            adminDomain: null
+          }
+        })
+        .state('domainmanagement.email', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'DomainManageEmailCtrl',
+              controllerAs: 'dmpopup',
+              templateUrl: 'modules/core/domainManagement/email.tpl.html'
+            }
+          },
+          params: {
+            domain: null,
+            adminEmail: null
+          }
+        })
+        .state('domainmanagement.verify', {
+          parent: 'modal',
+          views: {
+            'modal@': {
+              controller: 'DomainManageVerifyCtrl',
+              controllerAs: 'dmpopup',
+              templateUrl: 'modules/core/domainManagement/verify.tpl.html'
+            }
+          },
+          params: {
+            domain: null
+          }
         })
         .state('profile', {
           url: '/profile',
@@ -259,6 +292,13 @@ angular
           controller: 'ProcessorderCtrl',
           parent: 'main',
           authenticate: false
+        })
+        .state('overview', {
+          url: '/overview',
+          templateUrl: 'modules/core/overview/overview.tpl.html',
+          controller: 'OverviewCtrl',
+          controllerAs: 'overview',
+          parent: 'main'
         })
         .state('users', {
           abstract: true,
@@ -408,7 +448,7 @@ angular
             reloadToggle: false
           },
           data: {
-            displayName: 'Communications'
+            displayName: 'Call'
           }
         })
         .state('user-overview.communication.directorynumber', {
@@ -455,8 +495,6 @@ angular
           }
         })
         .state('user-overview.communication.internationalDialing', {
-          controller: 'InternationalDialingInfoCtrl',
-          controllerAs: 'internationalDialing',
           template: '<div uc-international-dialing></div>',
           data: {
             displayName: 'International Dialing'
@@ -466,7 +504,7 @@ angular
           templateUrl: 'modules/core/users/userPreview/userPreview.tpl.html',
           controller: 'UserPreviewCtrl',
           data: {
-            displayName: 'Messaging'
+            displayName: 'Message'
           },
           params: {
             service: 'MESSAGING'
@@ -497,7 +535,7 @@ angular
           controller: 'ConferencePreviewCtrl',
           controllerAs: 'confPreview',
           data: {
-            displayName: 'Conferencing'
+            displayName: 'Meeting'
           },
           params: {
             service: 'CONFERENCING'
@@ -532,7 +570,7 @@ angular
           controller: 'SunlightUserOverviewCtrl',
           controllerAs: 'SunlightUserOverview',
           data: {
-            displayName: 'Contact Center'
+            displayName: 'Care'
           },
           params: {
             service: 'CONTACTCENTER'
@@ -662,8 +700,7 @@ angular
           controllerAs: 'siteList',
           parent: 'main'
         })
-        .state('site-settings', {
-          url: '/site_settings',
+        .state('site-list.site-settings', {
           templateUrl: 'modules/webex/siteSettings/siteSettings.tpl.html',
           controller: 'WebExSiteSettingsCtrl',
           controllerAs: 'WebExSiteSettings',
@@ -672,7 +709,7 @@ angular
             siteUrl: null
           }
         })
-        .state('site-settings.site-setting', {
+        .state('site-list.site-setting', {
           templateUrl: 'modules/webex/siteSetting/siteSetting.tpl.html',
           controller: 'WebExSiteSettingCtrl',
           controllerAs: 'WebExSiteSetting',
@@ -681,21 +718,6 @@ angular
             siteUrl: null,
             webexPageId: null,
             settingPageIframeUrl: null
-          }
-        })
-        .state('webex-reports.webex-reports-iframe', {
-          url: '/reports/webex/i',
-          templateUrl: 'modules/webex/siteReportsIframe/siteReportIframe.tpl.html',
-          controller: 'ReportsIframeCtrl',
-          controllerAs: 'reportsIframe',
-          parent: 'main',
-          params: {
-            siteUrl: null,
-            reportPageId: null,
-            reportPageIframeUrl: null
-          },
-          data: {
-            displayName: 'Reports Page2'
           }
         })
         .state('reports', {
@@ -718,6 +740,20 @@ angular
             siteUrl: null
           }
         })
+        .state('webex-reports.webex-reports-iframe', {
+          templateUrl: 'modules/webex/siteReportsIframe/siteReportIframe.tpl.html',
+          controller: 'ReportsIframeCtrl',
+          controllerAs: 'reportsIframe',
+          parent: 'main',
+          params: {
+            siteUrl: null,
+            reportPageId: null,
+            reportPageIframeUrl: null
+          },
+          data: {
+            displayName: 'Reports Page2'
+          }
+        })
         .state('userprofile', {
           url: '/userprofile/:uid',
           templateUrl: 'modules/squared/views/userprofile.html',
@@ -725,10 +761,40 @@ angular
           parent: 'main'
         })
         .state('support', {
-          url: '/support?search',
-          templateUrl: 'modules/squared/support/support.tpl.html',
+          url: '/support',
+          templateUrl: 'modules/squared/support/support.html',
           controller: 'SupportCtrl',
           parent: 'main'
+        })
+        .state('support.status', {
+          url: '/status',
+          views: {
+            'supportPane': {
+              templateUrl: 'modules/squared/support/support-status.html',
+              controller: 'SupportCtrl',
+              controllerAs: 'support'
+            }
+          }
+        })
+        .state('support.logs', {
+          url: '/logs?search',
+
+          views: {
+            'supportPane': {
+              templateUrl: 'modules/squared/support/support-logs.html',
+              controller: 'SupportCtrl',
+            }
+          }
+        })
+        .state('support.billing', {
+          url: '/billing?enc',
+          views: {
+            'supportPane': {
+              templateUrl: 'modules/squared/support/support-billing.html',
+              controller: 'BillingCtrl'
+            }
+          }
+
         })
         .state('billing', {
           url: '/orderprovisioning?enc',
@@ -1013,8 +1079,8 @@ angular
         .state('helpdesk-main', {
           views: {
             'main@': {
-              controller: 'HelpdeskHelpController',
-              controllerAs: 'helpdeskHelpCtrl',
+              controller: 'HelpdeskController',
+              controllerAs: 'helpdeskCtrl',
               templateUrl: 'modules/squared/helpdesk/helpdesk.tpl.html'
             }
           },
@@ -1029,8 +1095,6 @@ angular
         .state('helpdesk', {
           url: '/helpdesk',
           template: '<div ui-view></div>',
-          controller: 'HelpdeskController',
-          controllerAs: 'helpdeskCtrl',
           abstract: true,
           parent: 'helpdesk-main'
         })
@@ -1724,40 +1788,84 @@ angular
           controller: 'UtilizationCtrl',
           parent: 'main'
         })
-        .state('mediafusionconnector', {
-          url: '/mediafusionconnector',
-          templateUrl: 'modules/mediafusion/mediafusion-connector/mediafusionConnector.tpl.html',
-          controller: 'mediafusionConnectorCtrl',
+        .state('media-service', {
+          templateUrl: 'modules/mediafusion/media-service/overview.html',
+          controller: 'MediaServiceController',
+          controllerAs: 'med',
           parent: 'main'
+        })
+        .state('media-service.list', {
+          url: '/mediaservice',
+          views: {
+            'fullPane': {
+              templateUrl: 'modules/mediafusion/media-service/resources/cluster-list.html'
+            }
+          }
+        })
+        .state('media-service.settings', {
+          url: '/mediaservice/settings',
+          views: {
+            'fullPane': {
+              controllerAs: 'mediaServiceSettings',
+              controller: 'MediaServiceSettingsController',
+              templateUrl: 'modules/mediafusion/media-service/settings/media-service-settings.html'
+            }
+          }
         })
         .state('connector-details', {
           parent: 'sidepanel',
           views: {
             'sidepanel@': {
-              controller: 'ConnectorDetailsController',
-              templateUrl: 'modules/mediafusion/mediafusion-connector/connector-details.html'
+              controllerAs: 'groupDetails',
+              controller: 'GroupDetailsController',
+              templateUrl: 'modules/mediafusion/media-service/side-panel/group-details.html'
             },
             'header@connector-details': {
-              templateUrl: 'modules/mediafusion/mediafusion-connector/connector-header.html'
+              templateUrl: 'modules/mediafusion/media-service/side-panel/group-header.html'
             }
           },
           data: {
             displayName: 'Overview'
           },
           params: {
-            connectorId: {},
             groupName: {},
-            roleSelected: {}
+            selectedClusters: {}
           }
         })
-        .state('connector-details.alarms', {
-          templateUrl: 'modules/mediafusion/mediafusion-connector/alarms-details.html',
-          controller: 'AlarmsDetailsController',
+        .state('connector-details.alarm-details', {
+          templateUrl: 'modules/mediafusion/media-service/side-panel/alarm-details.html',
+          controller: 'AlarmController',
+          controllerAs: 'alarmCtrl',
           data: {
-            displayName: 'Alarms'
+            displayName: 'Alarm Details'
           },
           params: {
-            cconnectorId: {}
+            alarm: null,
+            host: null
+          }
+        })
+        .state('connector-details.host-details', {
+          templateUrl: 'modules/mediafusion/media-service/side-panel/host-details.html',
+          controller: 'HostDetailsController',
+          controllerAs: 'hostDetails',
+          data: {
+            displayName: 'Host'
+          },
+          params: {
+            clusterId: null,
+            properties: null,
+            connector: null
+          }
+        })
+        .state('connector-details.group-settings', {
+          templateUrl: 'modules/mediafusion/media-service/side-panel/group-settings.html',
+          controller: 'GroupSettingsController',
+          controllerAs: 'groupClusterSettingsCtrl',
+          data: {
+            displayName: 'Settings'
+          },
+          params: {
+            clusterList: null
           }
         });
     }

@@ -152,7 +152,7 @@ describe('Service: AANumberAssignmentService', function () {
       expect(failureSpy).not.toHaveBeenCalled();
     });
 
-    it('should set AA Number Assignment to one in failed', function () {
+    it('should fail when no numbers can be set at all', function () {
 
       var resource = AutoAttendantCeInfoModelService.newResource();
       resource.setType(aCe.assignedResources.type);
@@ -170,9 +170,7 @@ describe('Service: AANumberAssignmentService', function () {
       );
       $httpBackend.flush();
 
-      var args = successSpy.calls.mostRecent().args;
-      expect(args[0].workingResources.length).toEqual(0);
-      expect(failureSpy).not.toHaveBeenCalled();
+      expect(failureSpy).toHaveBeenCalled();
     });
 
     it('should set mix of working and failed', function () {

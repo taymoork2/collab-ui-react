@@ -23,11 +23,11 @@
     <cs-sp-section ng-if="customerOverview.currentCustomer.trialId">
       <div class="section-title-row">
         <span class="section-name" translate="customerPage.trial"></span>
-        <span class="actions-menu dropdown pull-right">
-          <button class="actions-button btn--none dropdown-toggle">
+        <span cs-dropdown class="actions-menu dropdown pull-right">
+          <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
             <i class="icon icon-three-dots"></i>
           </button>
-          <ul class="dropdown-menu dropdown-primary actions-services">
+          <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
             <li><a href ng-click="customerOverview.openEditTrialModal()" translate="customerPage.edit"></a></li>
           </ul>
         </span>

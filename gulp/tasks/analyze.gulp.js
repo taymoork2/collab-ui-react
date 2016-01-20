@@ -5,7 +5,7 @@
 
 var gulp = require('gulp');
 var config = require('../gulp.config')();
-var $ = require('gulp-load-plugins')({lazy: true});
+var $ = require('gulp-load-plugins')({ lazy: true });
 var args = require('yargs').argv;
 var errorLogger = require('../utils/errorLogger.gulp');
 var glob = require('glob');
@@ -18,7 +18,7 @@ gulp.task('eslint:e2e', function () {
   var files = [].concat(
     config.test + '/e2e-protractor/squared/*_spec.js',
     config.test + '/e2e-protractor/huron/*_spec.js'
-  );
+    );
   messageLogger('Running eslint on E2E test files', files);
   return gulp
     .src(files)
@@ -32,30 +32,37 @@ gulp.task('eslint:e2e', function () {
 
 // vet JS files and create coverage report
 gulp.task('analyze', ['jsBeautifier:beautify'], function (done) {
-  messageLogger('Analyzing source with JSHint, JSCS, and Plato');
-  runSeq([
-    'analyze:jscs',
-    'analyze:jshint',
-    'plato',
-  ], done);
+  if (args.plato) {
+    messageLogger('Analyzing source with ESLint, JSCS, and Plato');
+    runSeq([
+      'analyze:jscs',
+      'analyze:eslint',
+      'plato',
+    ], done);
+  } else {
+    messageLogger('Analyzing source with ESLint and JSCS');
+    runSeq([
+      'analyze:jscs',
+      'analyze:eslint'
+    ], done);
+  }
+
 });
 
-gulp.task('analyze:jshint', function () {
+gulp.task('analyze:eslint', function () {
   var files = [].concat(
     config.appFiles.js,
     config.unsupportedDir + '/' + config.unsupported.file,
     config.testFiles.spec.all,
     'gulpfile.js'
-  );
-  messageLogger('Running JSHint on JavaScript files', files);
+    );
+  messageLogger('Running ESLint on JS files', files);
   return gulp
     .src(files)
     .pipe($.if(args.verbose, $.print()))
-    .pipe($.jshint())
-    .pipe($.jshint.reporter('jshint-stylish', {
-      verbose: true
-    }))
-    .pipe($.jshint.reporter('fail'));
+    .pipe($.eslint())
+    .pipe($.eslint.format())
+    .pipe($.eslint.failOnError());
 });
 
 gulp.task('analyze:jscs', function () {
@@ -64,7 +71,25 @@ gulp.task('analyze:jscs', function () {
     .src(config.appFiles.js)
     .pipe($.if(args.verbose, $.print()))
     .pipe($.jscs())
+    .pipe($.jscs.reporter())
     .on('error', errorLogger);
+});
+
+// legacy, used but the build task
+gulp.task('jsb', function (done) {
+  runSeq(
+    'jsBeautifier:beautify',
+    'analyze:eslint',
+    done
+    );
+});
+
+gulp.task('jsb:verify', function (done) {
+  runSeq(
+    'jsBeautifier:verify',
+    'analyze:eslint',
+    done
+    );
 });
 
 // Create a visualizer report

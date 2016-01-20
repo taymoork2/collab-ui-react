@@ -26,23 +26,25 @@
       <div class="form-group">
         <button
           ng-click="deviceOverview.resetDevice()"
-          class="btn"
-          ng-if="deviceOverview.currentDevice.canReset">
+          class="btn btn-action"
+          ng-if="deviceOverview.currentDevice.canReset"
+          ng-disabled="!deviceOverview.currentDevice.isOnline">
           <span
-            translate="spacesPage.reset">
+            translate="spacesPage.reboot">
           </span>
         </button>
 
         <button
-          class="btn"
+          class="btn btn-action"
           sq-click-promise="deviceOverview.reportProblem()"
-          ng-if="deviceOverview.currentDevice.canReportProblem">
+          ng-if="deviceOverview.currentDevice.canReportProblem"
+          ng-disabled="!deviceOverview.currentDevice.isOnline">
           <span translate="spacesPage.reportProblem"></span>
         </button>
 
         <button
           ng-click="deviceOverview.deleteDevice()"
-          class="btn"
+          class="btn btn-action"
           ng-if="deviceOverview.currentDevice.canDelete">
           <span
             translate="spacesPage.delete">
@@ -74,7 +76,7 @@
       </div>
       <div class="form-group" ng-show="deviceOverview.currentDevice.software">
         <label class="col-sm-4 control-label" translate="deviceOverviewPage.software"></label>
-        <div class="col-sm-3">
+        <div class="col-sm-3" ng-show="deviceOverview.canChangeUpgradeChannel">
           <cs-select
             ng-model="deviceOverview.selectedUpgradeChannel"
             options="deviceOverview.upgradeChannelOptions"
@@ -82,7 +84,6 @@
             labelfield="label"
             valuefield="value"
             on-change-fn="deviceOverview.saveUpgradeChannelAndWait()"
-            filter="false"
           >
           </cs-select>
         </div>
@@ -96,7 +97,7 @@
       <div class="form-group" ng-show="deviceOverview.currentDevice.hasRemoteSupport">
         <label class="col-sm-4 control-label" translate="spacesPage.ciscoSupport"></label>
         <div class="col-sm-8">
-          <a sq-click-promise="deviceOverview.showRemoteSupportDialog()"translate="spacesPage.remoteAccessKey"></a>
+          <a sq-click-promise="deviceOverview.showRemoteSupportDialog()" translate="spacesPage.remoteAccessKey"></a>
         </div>
       </div>
       <div

@@ -42,7 +42,6 @@
       siteSteeringDigit: '',
       siteCode: '',
       hasCustomerVoicemail: undefined,
-      CosFeatureEnabled: false,
       internationalDialingEnabled: cbUseGlobal
     };
 
@@ -120,12 +119,6 @@
         singleNumberReachEnabled: false
       };
       telephonyInfo.internationalDialingEnabled = cbUseGlobal;
-
-      var cosFeaturePromise = FeatureToggleService.supports(FeatureToggleService.features.huronClassOfService).then(function (toggle) {
-        if (toggle) {
-          telephonyInfo.CosFeatureEnabled = true;
-        }
-      });
     }
 
     /**

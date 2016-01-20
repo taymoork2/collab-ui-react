@@ -1,9 +1,5 @@
 'use strict';
 
-/* global describe */
-/* global it */
-/* global login,navigation,users,utils,notifications, protractor, deleteUtils */
-
 describe('Squared Invite User and Assign Services User Flow', function () {
 
   var inviteEmail;
@@ -43,18 +39,16 @@ describe('Squared Invite User and Assign Services User Flow', function () {
       utils.expectIsNotDisplayed(wizard.wizard);
     });
 
-    //it('should show invite pending status on new user', function () {
-    //  utils.searchForSingleResult(inviteEmail);
-    //  utils.expectText(users.userListStatus, 'Invite Pending');
-    //});
-
-    it('expect edit services is showing', function () {
-      utils.clickUser(inviteEmail);
-      utils.click(users.servicesActionButton);
-      utils.click(users.editServicesButton);
+    xit('should show invite pending status on new user', function () {
+      utils.searchAndClick(inviteEmail);
+      utils.expectTextToBeSet(users.userListSelStatus, 'Invite Pending');
     });
 
     it('should add licenses successfully', function () {
+      utils.clickUser(inviteEmail);
+      utils.click(users.servicesActionButton);
+      utils.click(users.editServicesButton);
+
       //click on license checkbox
       utils.click(users.paidMsg);
       utils.click(users.saveButton);

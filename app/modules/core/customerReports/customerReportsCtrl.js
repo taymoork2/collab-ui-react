@@ -13,8 +13,13 @@
     var SET = 'set';
     var EMPTY = 'empty';
 
-    vm.pageTitle = 'reportsPage.pageTitle';
-    vm.showWebexTab = false;
+    vm.allReports = 'all';
+    vm.engagement = 'engagement';
+    vm.quality = 'quality';
+    var currentFilter = vm.allReports;
+
+    vm.displayEngagement = true;
+    vm.displayQuality = true;
 
     var activeUsersSort = ['userName', 'numCalls', 'totalActivity'];
     var activeUsersChart = null;
@@ -22,7 +27,7 @@
     vm.activeUserDescription = "";
     vm.mostActiveTitle = "";
     vm.activeUserStatus = REFRESH;
-    vm.displayMostActive = false;
+    vm.mostActiveUserStatus = REFRESH;
     vm.mostActiveUsers = [];
     vm.activeUserReverse = true;
     vm.activeUsersTotalPages = 0;
@@ -39,6 +44,32 @@
     var filesSharedCard = null;
     vm.filesSharedDescription = '';
     vm.filesSharedStatus = REFRESH;
+
+    var mediaChart = null;
+    var mediaCard = null;
+    vm.mediaQualityStatus = REFRESH;
+    vm.mediaOptions = [{
+      value: 0,
+      label: $translate.instant('reportsPage.allCalls')
+    }, {
+      value: 1,
+      label: $translate.instant('reportsPage.audioCalls')
+    }, {
+      value: 2,
+      label: $translate.instant('reportsPage.videoCalls')
+    }];
+    vm.mediaSelected = vm.mediaOptions[0];
+
+    var deviceChart = null;
+    var deviceCard = null;
+    vm.deviceStatus = REFRESH;
+    vm.deviceDescription = '';
+
+    var metricsChart = null;
+    var metricsCard = null;
+    vm.metricsDescription = '';
+    vm.metricStatus = REFRESH;
+    vm.metrics = {};
 
     vm.headerTabs = [{
       title: $translate.instant('reportsPage.sparkReports'),
@@ -61,7 +92,9 @@
     vm.timeSelected = vm.timeOptions[0];
 
     vm.timeUpdate = timeUpdate;
+    vm.mediaUpdate = mediaUpdate;
     vm.mostActiveUserSwitch = mostActiveUserSwitch;
+    vm.resetCards = resetCards;
 
     vm.isRefresh = function (tab) {
       return tab === REFRESH;
@@ -115,14 +148,18 @@
     };
 
     function init() {
-      setFilterBasedText();
-      $timeout(function () {
-        setDummyData();
+      if (vm.showEngagement) {
+        setFilterBasedText();
+        $timeout(function () {
+          setDummyData();
 
-        setActiveUserData();
-        setAvgRoomData();
-        setFilesSharedData();
-      }, 30);
+          setActiveUserData();
+          setAvgRoomData();
+          setFilesSharedData();
+          setMediaData();
+          setCallMetricsData();
+        }, 30);
+      }
     }
 
     function resizeCards() {
@@ -133,20 +170,46 @@
 
     function mostActiveUserSwitch() {
       vm.showMostActiveUsers = !vm.showMostActiveUsers;
-      resetCards();
+      resizeCards();
     }
 
-    function resetCards() {
-      var engagementElems = [activeUserCard, avgRoomsCard, filesSharedCard];
-      var qualityElems = [];
+    function resetCards(filter) {
+      if (currentFilter !== filter) {
+        var engagementElems = [avgRoomsCard, activeUserCard, filesSharedCard];
+        var qualityElems = [mediaCard, metricsCard];
 
-      // $('.cs-card-layout').masonry('remove', engagementElems);
-      // $('.cs-card-layout').masonry('remove', qualityElems);
-      // resizeCards();
+        if (filter === vm.allReports) {
+          if (!vm.displayEngagement) {
+            $('.cs-card-layout').prepend(engagementElems).masonry('prepended', engagementElems);
+          }
+          if (!vm.displayQuality) {
+            $('.cs-card-layout').append(qualityElems).masonry('appended', qualityElems);
+          }
+          vm.displayEngagement = true;
+          vm.displayQuality = true;
+        } else if (filter === vm.engagement) {
+          if (!vm.displayEngagement) {
+            $('.cs-card-layout').append(engagementElems).masonry('appended', engagementElems);
+          }
+          if (vm.displayQuality) {
+            $('.cs-card-layout').masonry('remove', qualityElems);
+          }
+          vm.displayEngagement = true;
+          vm.displayQuality = false;
+        } else if (filter === vm.quality) {
+          if (!vm.displayQuality) {
+            $('.cs-card-layout').append(qualityElems).masonry('appended', qualityElems);
+          }
+          if (vm.displayEngagement) {
+            $('.cs-card-layout').masonry('remove', engagementElems);
+          }
+          vm.displayEngagement = false;
+          vm.displayQuality = true;
+        }
 
-      // $('.cs-card-layout').append(engagementElems).masonry('appended', engagementElems);
-      // $('.cs-card-layout').append(qualityElems).masonry('appended', qualityElems);
-      resizeCards();
+        currentFilter = filter;
+        resizeCards();
+      }
     }
 
     function setFilterBasedText() {
@@ -163,6 +226,18 @@
       });
 
       vm.filesSharedDescription = $translate.instant("filesShared.filesSharedDescription", {
+        time: vm.timeSelected.description
+      });
+
+      vm.metricsDescription = $translate.instant("callMetrics.customerDescription", {
+        time: vm.timeSelected.description
+      });
+
+      vm.videoDescription = $translate.instant("callMetrics.videoDescription", {
+        time: vm.timeSelected.description
+      });
+
+      vm.deviceDescription = $translate.instant("registeredEndpoints.description", {
         time: vm.timeSelected.description
       });
     }
@@ -185,12 +260,34 @@
       if (tempFilesSharedChart !== null && angular.isDefined(tempFilesSharedChart)) {
         filesSharedChart = tempFilesSharedChart;
       }
+
+      var mediaData = DummyCustomerReportService.dummyMediaData(vm.timeSelected);
+      var tempMediaChart = CustomerGraphService.setMediaQualityGraph(mediaData, mediaChart, {
+        value: 0
+      });
+      if (tempMediaChart !== null && angular.isDefined(tempMediaChart)) {
+        mediaChart = tempMediaChart;
+      }
+
+      var metricsData = DummyCustomerReportService.dummyMetricsData();
+      var tempMetricsChart = CustomerGraphService.setMetricsGraph(metricsData, metricsChart);
+      if (tempMetricsChart !== null && angular.isDefined(tempMetricsChart)) {
+        metricsChart = tempMetricsChart;
+      }
+
+      resizeCards();
     }
 
     function timeUpdate() {
       vm.activeUserStatus = REFRESH;
+      vm.mostActiveUserStatus = REFRESH;
       vm.avgRoomStatus = REFRESH;
       vm.filesSharedStatus = REFRESH;
+      vm.mediaQualityStatus = REFRESH;
+      vm.deviceStatus = REFRESH;
+      vm.metricStatus = REFRESH;
+      vm.metrics = {};
+      vm.mediaSelected = vm.mediaOptions[0];
 
       setFilterBasedText();
       setDummyData();
@@ -198,24 +295,48 @@
       setActiveUserData();
       setAvgRoomData();
       setFilesSharedData();
+      setMediaData();
+      setCallMetricsData();
+    }
+
+    function mediaUpdate() {
+      vm.mediaQualityStatus = REFRESH;
+
+      var mediaData = DummyCustomerReportService.dummyMediaData(vm.timeSelected);
+      var tempMediaChart = CustomerGraphService.setMediaQualityGraph(mediaData, mediaChart, {
+        value: 0
+      });
+      if (tempMediaChart !== null && angular.isDefined(tempMediaChart)) {
+        mediaChart = tempMediaChart;
+      }
+
+      setMediaData();
     }
 
     function setActiveUserData() {
       CustomerReportService.getActiveUserData(vm.timeSelected).then(function (response) {
         if (response === ABORT) {
           return;
-        } else if (response.activeUserGraph.length === 0) {
+        } else if (response.length === 0) {
           vm.activeUserStatus = EMPTY;
         } else {
-          // TODO: add data handling to update the active user graph and table with the data in response
-          var tempActiveUserChart = CustomerGraphService.setActiveUsersGraph(response.activeUserGraph, activeUsersChart);
+          var tempActiveUserChart = CustomerGraphService.setActiveUsersGraph(response, activeUsersChart);
           if (tempActiveUserChart !== null && angular.isDefined(tempActiveUserChart)) {
             activeUsersChart = tempActiveUserChart;
           }
-
           vm.activeUserStatus = SET;
+          CustomerReportService.getMostActiveUserData(vm.timeSelected).then(function (response) {
+            if (response === ABORT) {
+              return;
+            } else if (response.length === 0) {
+              vm.mostActiveUserStatus = EMPTY;
+            } else {
+              vm.mostActiveUserStatus = SET;
+            }
+            activeUserCard = document.getElementById('active-user-card');
+          });
         }
-        activeUserCard = document.getElementById('active-user-card');
+        resizeCards();
       });
     }
 
@@ -253,21 +374,66 @@
       });
     }
 
-    // TODO WEBEX side of the page has been copied from the existing reports page (needs converting from $scope to vm)
-    vm.show = show;
-
-    function show(showEngagement, showWebexReports) {
-      vm.showEngagement = showEngagement;
-      vm.showWebexReports = showWebexReports;
+    function setMediaData() {
+      CustomerReportService.getMediaQualityData(vm.timeSelected).then(function (response) {
+        if (response === ABORT) {
+          return;
+        } else if (response.length === 0) {
+          vm.mediaQualityStatus = EMPTY;
+        } else {
+          var tempMediaChart = CustomerGraphService.setMediaQualityGraph(response, mediaChart, vm.mediaSelected);
+          if (tempMediaChart !== null && angular.isDefined(tempMediaChart)) {
+            mediaChart = tempMediaChart;
+          }
+          vm.mediaQualityStatus = SET;
+        }
+        mediaCard = document.getElementById('media-quality-card');
+      });
     }
 
+    function setCallMetricsData() {
+      CustomerReportService.getCallMetricsData(vm.timeSelected).then(function (response) {
+        if (response === ABORT) {
+          return;
+        } else if (response.dataProvider.length === 0) {
+          vm.metricStatus = EMPTY;
+        } else {
+          var tempMetricsChart = CustomerGraphService.setMetricsGraph(response, metricsChart);
+          if (tempMetricsChart !== null && angular.isDefined(tempMetricsChart)) {
+            metricsChart = tempMetricsChart;
+          }
+          vm.metrics = response.displayData;
+          vm.metricStatus = SET;
+        }
+        metricsCard = document.getElementById('call-metrics-customer');
+      });
+    }
+
+    function setDeviceData() {
+      CustomerReportService.getDeviceData(vm.timeSelected).then(function (response) {
+        if (response === ABORT) {
+          return;
+        } else if (response.length === 0) {
+          vm.deviceStatus = EMPTY;
+        } else {
+          // var tempDeviceChart = CustomerGraphService.setDeviceGraph(response, deviceChart);
+          // if (tempDeviceChart !== null && angular.isDefined(tempDeviceChart)) {
+          //   deviceChart = tempDeviceChart;
+          // }
+          vm.deviceStatus = SET;
+        }
+        deviceCard = document.getElementById('device-card');
+      });
+    }
+
+    // WEBEX side of the page has been copied from the existing reports page
     $scope.webexReportsObject = {};
     $scope.webexOptions = [];
     $scope.webexSelected = null;
 
-    if ($stateParams.tab) {
+    if ($stateParams.tab === 'webex') {
       vm.showEngagement = false;
-      vm.showWebexReports = $stateParams.tab === 'webex';
+      vm.showWebexReports = true;
     } else {
       vm.showEngagement = true;
       vm.showWebexReports = false;

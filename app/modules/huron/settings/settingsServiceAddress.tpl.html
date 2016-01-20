@@ -1,0 +1,16 @@
+<div ng-if="settingsServiceAddress.loadingInit" class="loading-container">
+  <i class="icon icon-spinner"></i>
+</div>
+<div ng-if="!settingsServiceAddress.loadingInit">
+  <hr-service-address ng-form="settingsServiceAddress.form" isolate-form address="settingsServiceAddress.address" read-only="settingsServiceAddress.isValid"></hr-service-address>
+  <a ng-if="settingsServiceAddress.hasModify()" href ng-click="settingsServiceAddress.modify()" translate="common.modify"></a>
+  <div ng-if="settingsServiceAddress.hasValidate()" class="service-address-buttons">
+    <button ng-click="settingsServiceAddress.validate()" ng-disabled="settingsServiceAddress.form.$invalid" class="btn--primary" cs-btn loading="settingsServiceAddress.loadingValidate"><span translate="common.submit"></span></button>
+    <button ng-click="settingsServiceAddress.cancelEdit()"><span translate="common.cancel"></span></button>
+  </div>
+  <div ng-if="settingsServiceAddress.hasSave()" class="service-address-buttons">
+    <p translate="settingsServiceAddress.savePrompt"></p>
+    <button ng-click="settingsServiceAddress.save()" class="btn--primary" cs-btn loading="settingsServiceAddress.loadingSave"><span translate="common.save"></span></button>
+    <button ng-click="settingsServiceAddress.cancelSave()"><span translate="common.cancel"></span></button>
+  </div>
+</div>

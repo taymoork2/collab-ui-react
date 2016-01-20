@@ -1,6 +1,26 @@
 .support {
   @extend %content-header;
   @extend %page-content-padding;
+
+  .indent {
+    padding: 1rem 1.5rem ;
+  }
+
+  .status {
+    .help-desk {
+      text-align: center;
+    }
+    .content {
+      padding-left: 0rem;
+      padding-top: 0.5rem;
+      padding-right: 0rem;
+      padding-bottom: 0rem;
+      font-size: 0.875rem;
+    }
+    .content-header {
+      margin-top: 1rem;
+    }
+  }
 }
 
 .support-row{
@@ -87,6 +107,13 @@
 .health-card{
   cursor: pointer;
 }
+.grid-icon {
+    text-align: center;
+    .icon {
+      font-size: 20px;
+    }
+}
+
 
 //--------- billing ---------//
 .order-list {

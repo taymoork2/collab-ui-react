@@ -1,39 +1,27 @@
 <div>
   <div class="modal-header">
-    <button id="convertModalClose" type="button" class="close" ng-click="$close()">
-      <span class="sr-only">Close</span>
+    <button type="button" class="close" ng-click="exportUserStatusesCtrl.cancelExport();$close()">
+      <span class="sr-only" translate="common.close"></span>
     </button>
-    <h5 class="modal-title">
-      User Status Report
-    </h5>
+    <h5 class="modal-title" translate="hercules.export.modalTitle"></h5>
   </div>
   <div class="modal-body">
-    <div ng-show="exportUserStatusesCtrl.loading" style="text-align: center; padding: 60px;">
-      <i class="icon icon-spinner icon-2x"></i>
+    <p translate="hercules.export.modalText1"></p>
+    <p translate="hercules.export.modalText2"></p>
+    <div class="hercules-modal-checkboxes" ng-repeat="item in exportUserStatusesCtrl.statusTypes" ng-hide="item.unselectable">
+      <cs-checkbox ng-click="exportUserStatusesCtrl.selectedStateChanged()" ckid="{{item.stateType}}" ng-model="item.selected" label="{{item.count + ' ' + item.text}}"></cs-checkbox>
     </div>
-    <div ng-hide="exportUserStatusesCtrl.loading">
-      <p>The exported report will be a comma separated list of users, their state, and related details.</p>
-      <p>Select the type of information that you want included in the report:</p>
-      <div ng-repeat="item in exportUserStatusesCtrl.statusTypes" ng-hide="item.unselectable" style="margin-top: 15px;">
-        <span><cs-checkbox ng-click="console.log('oue');exportUserStatusesCtrl.selectedStateChanged()" ckid="{{item.stateType}}" ng-model="item.selected" label=""></cs-checkbox></span>
-        <span ng-show="item.progress && exportUserStatusesCtrl.exportingUserStatusReport">(<i class="icon icon-spinner" style="top:4px"/>Processing {{item.progress}} of {{item.count}}) users</span>
-        <span ng-hide="item.progress && exportUserStatusesCtrl.exportingUserStatusReport">{{item.count}} </span>
-        <span translate="{{item.text}}"/>
-      </div>
-      <div ng-show="exportUserStatusesCtrl.exportError"><div>Problems</div><div>{{exportUserStatusesCtrl.exportError}}</div></div>
-      <br>
-      <p>Note: The more users included, the longer the report takes to generate.</p>
-    </div>
+    <p translate="hercules.export.modalNote"></p>
   </div>
   <div class="modal-footer">
-    <button ng-csv="exportUserStatusesCtrl.exportCSV()" filename="{{'user_status_report' | translate}}" ng-disabled="exportUserStatusesCtrl.loading || exportUserStatusesCtrl.exportingUserStatusReport || exportUserStatusesCtrl.nothingToExport" id="convertActionButton" class="btn btn--primary pull-right">
-      <span ng-hide="exportUserStatusesCtrl.exportingUserStatusReport">Export to CSV</span>
+    <button ng-csv="exportUserStatusesCtrl.exportCSV()" filename="{{'hercules.export.csvFilename' | translate}}" ng-disabled="exportUserStatusesCtrl.loading || exportUserStatusesCtrl.exportingUserStatusReport || exportUserStatusesCtrl.nothingToExport" class="btn btn--primary pull-right" ng-class="{'hercules-button-exporting': exportUserStatusesCtrl.exportingUserStatusReport}">
+      <span ng-hide="exportUserStatusesCtrl.exportingUserStatusReport" translate="hercules.export.modalCTA"></span>
       <span ng-show="exportUserStatusesCtrl.exportingUserStatusReport">
-        <i class="icon icon-spinner" />
+        <i class="icon icon-spinner"></i>
       </span>
     </button>
-    <button id="convertCancelButton" class="btn pull-right" ng-click="$close()" style="margin-right: 10px">
-      <span>Close</span>
+    <button class="btn pull-right" ng-click="exportUserStatusesCtrl.cancelExport();$close()" style="margin-right: 10px">
+      <span translate="common.close"></span>
     </button>
   </div>
 </div>

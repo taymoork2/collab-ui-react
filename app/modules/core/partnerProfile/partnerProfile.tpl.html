@@ -8,10 +8,12 @@
         <p class="left" translate="callerIdPanel.saveConfirmation"></p>
         <div class="right">
           <button translate="common.cancel" ng-disabled="isBtnDisabled()" ng-click="init()" id="orgProfileCancelBtn"></button>
-          <button class="btn btn--primary" cs-btn loading="orgProfileSaveLoad" ng-click="validation()" ng-disabled="isBtnDisabled()" translate="common.save" id="orgProfileSaveBtn"></button>
+          <button class="btn btn--primary" cs-btn loading="orgProfileSaveLoad" ng-click="validation()" ng-disabled="isBtnDisabled()" id="orgProfileSaveBtn">
+            <span translate="common.save"></span>
+          </button>
         </div>
     </div>
-    <div class="profile-content-container row collapse-both">
+    <div class="profile-content-container row collapse-both" cs-scroll>
       <div class="partner-profile columns small-12 large-6 xlarge-5">
         <!-- company name / account number -->
         <div  id="companyInfoPanel" class="columns small-7 form-section">

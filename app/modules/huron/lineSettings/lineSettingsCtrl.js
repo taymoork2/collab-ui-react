@@ -131,10 +131,8 @@
           }
         }
       },
-      expressionProperties: {
-        'hide': function ($viewValue, $modelValue, scope) {
-          return scope.model.forward !== 'all';
-        }
+      hideExpression: function ($viewValue, $modelValue, scope) {
+        return scope.model.forward !== 'all';
       }
     }, {
       key: 'forwardBusyRadio',
@@ -162,10 +160,10 @@
           }
         }
       },
+      hideExpression: function ($viewValue, $modelValue, scope) {
+        return scope.model.forward !== 'busy';
+      },
       expressionProperties: {
-        'hide': function ($viewValue, $modelValue, scope) {
-          return scope.model.forward !== 'busy';
-        },
         'templateOptions.label': function ($viewValue, $modelValue, scope) {
           return scope.model.forwardExternalCalls ? $translate.instant('callForwardPanel.internalOnly') : $translate.instant('callForwardPanel.internalAndExternal');
         }
@@ -177,10 +175,8 @@
         label: $translate.instant('callForwardPanel.forwardExternal'),
         id: 'ckForwardExternalCalls'
       },
-      expressionProperties: {
-        'hide': function ($viewValue, $modelValue, scope) {
-          return scope.model.forward !== 'busy';
-        }
+      hideExpression: function ($viewValue, $modelValue, scope) {
+        return scope.model.forward !== 'busy';
       }
     }, {
       key: 'forwardExternalNABCalls',
@@ -199,10 +195,8 @@
           }
         }
       },
-      expressionProperties: {
-        'hide': function ($viewValue, $modelValue, scope) {
-          return !scope.model.forwardExternalCalls || scope.model.forward !== 'busy';
-        }
+      hideExpression: function ($viewValue, $modelValue, scope) {
+        return !scope.model.forwardExternalCalls || scope.model.forward !== 'busy';
       }
     }];
 
@@ -224,11 +218,9 @@
         maxlength: 30,
         label: $translate.instant('callerIdPanel.customName')
       },
-      expressionProperties: {
-        'hide': function ($viewValue, $modelValue, scope) {
-          if (vm.callerIdInfo.callerIdSelection) {
-            return vm.callerIdInfo.callerIdSelection.value.externalCallerIdType !== customCallerId_type;
-          }
+      hideExpression: function ($viewValue, $modelValue, scope) {
+        if (vm.callerIdInfo.callerIdSelection) {
+          return vm.callerIdInfo.callerIdSelection.value.externalCallerIdType !== customCallerId_type;
         }
       }
     }, {
@@ -248,11 +240,9 @@
           }
         }
       },
-      expressionProperties: {
-        'hide': function ($viewValue, $modelValue, scope) {
-          if (vm.callerIdInfo.callerIdSelection) {
-            return vm.callerIdInfo.callerIdSelection.value.externalCallerIdType !== customCallerId_type;
-          }
+      hideExpression: function ($viewValue, $modelValue, scope) {
+        if (vm.callerIdInfo.callerIdSelection) {
+          return vm.callerIdInfo.callerIdSelection.value.externalCallerIdType !== customCallerId_type;
         }
       }
     }];

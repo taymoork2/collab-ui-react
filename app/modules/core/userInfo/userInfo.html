@@ -1,5 +1,5 @@
-<div class="user-info dropdown" ng-show="Utils.isAdminPage()">
-  <button class="btn--user dropdown-toggle">
+<div cs-dropdown class="user-info dropdown" ng-show="Utils.isAdminPage()">
+  <button cs-dropdown-toggle class="btn--user dropdown-toggle">
     <img ng-if="image" class="user-img" ng-src="{{image}}" alt=""/>
     <span ng-if="!image" class="user-img">
       <i class="icon icon-user"></i>
@@ -9,7 +9,7 @@
       <li class="org-name" title="{{roleList}}">{{roleList}}</li>
     </ul>
   </button>
-  <ul class="dropdown-menu" role="menu">
+  <ul cs-dropdown-menu class="dropdown-menu" role="menu">
     <li class="user-name">{{username}}</li>
     <li class="org-name">{{orgname}}</li>
     <li class="divider"></li>

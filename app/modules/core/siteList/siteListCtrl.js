@@ -3,22 +3,13 @@
 angular.module('Core')
   .controller('SiteListCtrl', ['$translate', 'Authinfo', 'Config', '$log', 'Userservice', 'WebExUtilsFact',
     function ($translate, Authinfo, Config, $log, Userservice, WebExUtilsFact) {
-      var vm = this;
       var funcName = "siteListCtrl()";
       var logMsg = "";
 
-      vm.getWebexUrl = function (url) {
-        return Config.getWebexAdvancedHomeUrl(url);
-      };
-
-      vm.siteLaunch = {
-        adminEmailParam: Authinfo.getPrimaryEmail(),
-        advancedSettings: null,
-        userEmailParam: null,
-      };
+      var vm = this;
+      var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl();
 
       vm.gridData = [];
-      var conferenceServices = Authinfo.getConferenceServicesWithoutSiteUrl();
 
       conferenceServices.forEach(
         function checkConferenceService(conferenceService) {
@@ -44,58 +35,57 @@ angular.module('Core')
             conferenceService.isAdminReportEnabled = false;
             conferenceService.webExSessionTicket = null;
 
+            conferenceService.adminEmailParam = null;
+            conferenceService.advancedSettings = null;
+            conferenceService.userEmailParam = null;
+            conferenceService.webexAdvancedUrl = null;
+
             vm.gridData.push(conferenceService);
           }
         }
       );
 
       // Start of grid set up
-      var rowTemplate =
-        '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell" ng-click="showUserDetails(row.entity)">' + '\n' +
-        '  <div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }">&nbsp;</div>' + '\n' +
-        '  <div ng-cell></div>' + '\n' +
-        '</div>' + '\n';
-
-      var siteUrlTemplate =
+      var siteConfigColumn =
         '<div ng-if="!row.entity.showSiteLinks">' + '\n' +
-        '  <p class="ngCellText">' + '\n' +
+        '  <p class="ui-grid-cell-contents">' + '\n' +
         '    <i class="icon-spinner icon"></i>' + '\n' +
         '  </p>' + '\n' +
         '</div>' + '\n' +
         '<div ng-if="row.entity.showSiteLinks">' + '\n' +
         '  <div ng-if="!row.entity.isIframeSupported">' + '\n' +
-        '    <launch-site admin-email-param={{siteList.siteLaunch.adminEmailParam}}' + '\n' +
-        '                 advanced-settings={{siteList.siteLaunch.advancedSettings}}' + '\n' +
-        '                 user-email-param={{siteList.siteLaunch.userEmailParam}}' + '\n' +
-        '                 webex-advanced-url={{siteList.getWebexUrl(row.entity.license.siteUrl)}}' + '\n' +
-        '                 id = {{row.entity.license.siteUrl}}_xlaunch-webex-site-settings' + '\n ' +
+        '    <launch-site admin-email-param={{row.entity.adminEmailParam}}' + '\n' +
+        '                 advanced-settings={{row.entity.advancedSettings}}' + '\n' +
+        '                 user-email-param={{row.entity.userEmailParam}}' + '\n' +
+        '                 webex-advanced-url={{row.entity.webexAdvancedUrl}}' + '\n' +
+        '                 id = {{row.entity.license.siteUrl}}_xlaunch-webex-site-settings' + '\n' +
         '                 name={{row.entity.license.siteUrl}}_xlaunch-webex-site-settings>' + '\n' +
         '    </launch-site>' + '\n' +
         '  </div>' + '\n' +
         '  <div ng-if="row.entity.isIframeSupported">' + '\n' +
         '    <a id="{{row.entity.license.siteUrl}}_webex-site-settings"' + '\n' +
         '       name="{{row.entity.license.siteUrl}}_webex-site-settings"' + '\n' +
-        '       ui-sref="site-settings({siteUrl:row.entity.license.siteUrl})">' + '\n' +
-        '      <p class="ngCellText">' + '\n' +
+        '       ui-sref="site-list.site-settings({siteUrl:row.entity.license.siteUrl})">' + '\n' +
+        '      <p class="ui-grid-cell-contents">' + '\n' +
         '        <i class="icon-settings icon"></i>' + '\n' +
         '      </p>' + '\n' +
         '    </a>' + '\n' +
         '  </div>' + '\n' +
         '</div>' + '\n';
 
-      var siteReportsTemplate =
+      var siteReportsColumn =
         '<div ng-if="!row.entity.showSiteLinks">' + '\n' +
-        '  <p class="ngCellText">' + '\n' +
+        '  <p class="ui-grid-cell-contents">' + '\n' +
         '    <i class="icon-spinner icon"></i>' + '\n' +
         '  </p>' + '\n' +
         '</div>' + '\n' +
         '<div ng-if="row.entity.showSiteLinks">' + '\n' +
         '  <div ng-if="row.entity.isAdminReportEnabled">' + '\n' +
         '    <div ng-if="!row.entity.isIframeSupported">' + '\n' +
-        '      <launch-site admin-email-param={{siteList.siteLaunch.adminEmailParam}}' + '\n' +
-        '                   advanced-settings={{siteList.siteLaunch.advancedSettings}}' + '\n' +
-        '                   user-email-param={{siteList.siteLaunch.userEmailParam}}' + '\n' +
-        '                   webex-advanced-url={{siteList.getWebexUrl(row.entity.license.siteUrl)}}' + '\n' +
+        '      <launch-site admin-email-param={{row.entity.adminEmailParam}}' + '\n' +
+        '                   advanced-settings={{row.entity.advancedSettings}}' + '\n' +
+        '                   user-email-param={{row.entity.userEmailParam}}' + '\n' +
+        '                   webex-advanced-url={{row.entity.webexAdvancedUrl}}' + '\n' +
         '                   id={{row.entity.license.siteUrl}}_xlaunch-webex-site-reports' + '\n' +
         '                   name={{row.entity.license.siteUrl}}_xlaunch-webex-site-reports>' + '\n' +
         '      </launch-site>' + '\n' +
@@ -104,7 +94,7 @@ angular.module('Core')
         '       <a id="{{row.entity.license.siteUrl}}_webex-site-reports"' + '\n' +
         '          name="{{row.entity.license.siteUrl}}_webex-site-reports"' + '\n' +
         '          ui-sref="webex-reports({siteUrl:row.entity.license.siteUrl})"> ' + '\n' +
-        '        <p class="ngCellText">' + '\n' +
+        '        <p class="ui-grid-cell-contents">' + '\n' +
         '          <i class="icon-settings icon"></i>' + '\n' +
         '        </p>' + '\n' +
         '       </a>' + '\n' +
@@ -115,12 +105,9 @@ angular.module('Core')
       vm.gridOptions = {
         data: 'siteList.gridData',
         multiSelect: false,
-        showFilter: false,
         enableRowSelection: false,
+        enableColumnMenus: false,
         rowHeight: 44,
-        rowTemplate: rowTemplate,
-        headerRowHeight: 44,
-        useExternalSorting: true,
         columnDefs: [],
       };
 
@@ -146,39 +133,43 @@ angular.module('Core')
       vm.gridOptions.columnDefs.push({
         field: 'license.siteUrl',
         displayName: $translate.instant('siteList.siteSettings'),
-        cellTemplate: siteUrlTemplate,
+        cellTemplate: siteConfigColumn,
         sortable: false
       });
 
       vm.gridOptions.columnDefs.push({
         field: 'license.siteReports',
         displayName: $translate.instant('siteList.siteReports'),
-        cellTemplate: siteReportsTemplate,
+        cellTemplate: siteReportsColumn,
         sortable: false
       });
       // End of grid set up
 
       if (!_.isUndefined(Authinfo.getPrimaryEmail())) {
-        getInfoFromXmlApi();
+        initConfigAndReportColumns();
       } else {
         Userservice.getUser('me', function (data, status) {
           if (data.success) {
             if (data.emails) {
               Authinfo.setEmail(data.emails);
-              vm.siteLaunch.adminEmailParam = Authinfo.getPrimaryEmail();
-              getInfoFromXmlApi();
+              initConfigAndReportColumns();
             }
           }
         });
       }
 
-      function getInfoFromXmlApi() {
+      function initConfigAndReportColumns() {
         vm.gridData.forEach(
           function processGrid(grid) {
             var funcName = "processGrid()";
             var logMsg = "";
 
             var siteUrl = grid.license.siteUrl;
+
+            grid.adminEmailParam = Authinfo.getPrimaryEmail();
+            grid.userEmailParam = Authinfo.getPrimaryEmail();
+            grid.advancedSettings = Config.getWebexAdvancedEditUrl(siteUrl);
+            grid.webexAdvancedUrl = Config.getWebexAdvancedHomeUrl(siteUrl);
 
             WebExUtilsFact.isSiteSupportsIframe(siteUrl).then(
               function isSiteSupportsIframeSuccess(result) {
@@ -216,7 +207,7 @@ angular.module('Core')
             ); // WebExUtilsFact.isSiteSupportsIframe().then
           } // processGrid()
         ); // vm.gridData.forEach()
-      } // getInfoFromXmlApi()
+      } // initConfigAndReportColumns()
 
       // End of site links set up
     }
