@@ -6,7 +6,7 @@ namespace domainManagement {
     private _feature = false;
 
     /* @ngInject */
-    constructor(private $state, CiService, private DomainManagementService, private FeatureToggleService) {
+    constructor(private $state, Authinfo, CiService, private DomainManagementService, private FeatureToggleService) {
 
 
       this._feature = true;
@@ -23,19 +23,18 @@ namespace domainManagement {
 
       CiService.getUser().then(curUser => {
 
-        /*   var myOrgId = Authinfo.getOrgId();
-         if (curUser.managedOrgs && _.some(curUser.managedOrgs, { orgId: myOrgId })) {
-         console.log("domain man: My partner is here!");
-         }*/
+        let myOrgId = Authinfo.getOrgId();
 
-        this._adminEmail = curUser.userName;
-        if (this._adminEmail) {
-          this._adminDomain = this._adminEmail.split('@')[1];
+        if (curUser.managedOrgs && _.some(curUser.managedOrgs, {orgId: myOrgId})) {
+          //Partner is logged on, skip verification test
+          this._adminEmail = null;
+          this._adminDomain = null;
+        } else {
+          this._adminEmail = curUser.userName;
+          if (this._adminEmail) {
+            this._adminDomain = this._adminEmail.split('@')[1];
+          }
         }
-      });
-
-      DomainManagementService.refreshDomainList().then(() => {
-        // ctrl._domains = ctrl.DomainManagementService.domainList
       });
     }
 
