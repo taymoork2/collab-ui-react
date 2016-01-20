@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('SetupWizardCtrl', ['$scope', 'Authinfo', '$q', 'FeatureToggleService', '$log',
-    function ($scope, Authinfo, $q, FeatureToggleService, $log) {
+  .controller('SetupWizardCtrl', ['$scope', 'Authinfo', '$q', 'FeatureToggleService',
+    function ($scope, Authinfo, $q, FeatureToggleService) {
 
       $scope.tabs = [];
       var tabs = [{
@@ -78,6 +78,7 @@ angular.module('Core')
       $scope.isDirSyncEnabled = false;
       $scope.addClaimSipUrl = false;
       $scope.csvUploadSupport = false;
+      $scope.addEnterpriseSipUrl = false;
 
       if (Authinfo.isCustomerAdmin()) {
         $q.all([FeatureToggleService.supportsDirSync(),

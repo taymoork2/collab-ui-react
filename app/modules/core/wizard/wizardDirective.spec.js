@@ -49,7 +49,7 @@ describe('Controller: WizardCtrl', function () {
     title: 'firstTimeWizard.enterpriseSettings',
     controller: 'EnterpriseSettingsCtrl',
     steps: [{
-      name: 'setSipUri',
+      name: 'enterpriseSipUrl',
       template: 'modules/core/setupWizard/enterprise.setSipUri.tpl.html'
     }, {
       name: 'init',

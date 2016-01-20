@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('EnterpriseSettingsCtrl', ['$scope', '$rootScope', '$q', 'SSOService', 'Authinfo', 'Log', 'Notification', '$translate', '$window', 'Config', '$log',
-    function ($scope, $rootScope, $q, SSOService, Authinfo, Log, Notification, $translate, $window, Config, $log) {
+  .controller('EnterpriseSettingsCtrl', ['$scope', '$rootScope', '$q', 'SSOService', 'Authinfo', 'Log', 'Notification', '$translate', '$window', 'Config',
+    function ($scope, $rootScope, $q, SSOService, Authinfo, Log, Notification, $translate, $window, Config) {
 
       var strEntityDesc = '<EntityDescriptor ';
       var strEntityId = 'entityID="';
@@ -12,8 +12,7 @@ angular.module('Core')
       //SIP URI Domain Controller code
       $scope.cloudSipUriField = {};
       $scope.cloudSipUriField.inputValue = '';
-      $scope.cloudSipUriField.cloudSipFlag = false;
-      $scope.cloudSipUriField.isDisabled = false;
+      $scope.cloudSipUriField.errorMsg = $translate.instant('firstTimeWizard.setSipUriErrorMessage');
 
       $scope.validateSipUri = function () {
         var isError = false;

@@ -12,7 +12,7 @@
 		<div class="col-md-3">
 			<cs-input class="sip-uri-input" ng-model="cloudSipUriField.inputValue"
 			placeholder="{{'firstTimeWizard.setSipUriDomainPlaceholder' | translate}}"
-			is-error="{{validateSipUri()}}" error-msg="This SIP URI domain name is not available. Please check another" is-disabled="cloudSipUriField.isDisabled" is-required=""></cs-input>
+			is-error="{{validateSipUri()}}" error-msg="{{cloudSipUriField.errorMsg}}" is-disabled="cloudSipUriField.isDisabled" is-required=""></cs-input>
 		</div>
 		<div class="col-md-9">
 			<button class="space btn--cta" translate="firstTimeWizard.setSipUriDomainCheckAvailability"></button>

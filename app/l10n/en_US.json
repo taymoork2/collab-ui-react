@@ -1246,6 +1246,7 @@
     "setSipUriDomainCompNames": "Company's Domain Names",
     "setSipUriDomainCheckAvailability": "Check Availability",
     "setSipUriPlaceholder": "input a unique domain",
+    "setSipUriErrorMessage": "This SIP URI domain name is not available. Please check another",
     "messageSettings": "Message Settings",
     "callSettings": "Call Settings",
     "enterpriseSettings": "Enterprise Settings",
