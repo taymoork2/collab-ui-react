@@ -160,6 +160,11 @@
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/users/:userId', {
       customerId: '@customerId',
       userId: '@userId'
+    }, {
+      query: {
+        method: 'GET',
+        isArray: false
+      }
     });
   })
 

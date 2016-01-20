@@ -9,7 +9,8 @@ angular
         scope: {
           schedule: '@aaSchedule',
           index: '=aaIndex',
-          keyIndex: '@aaKeyIndex'
+          keyIndex: '@aaKeyIndex',
+          voicemail: '='
         },
         controller: 'AARouteToUserCtrl',
         controllerAs: 'aaRouteUser',

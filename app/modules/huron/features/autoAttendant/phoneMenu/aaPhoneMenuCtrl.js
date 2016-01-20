@@ -98,16 +98,14 @@
         name: 'phoneMenuRouteUser',
         action: 'routeToUser'
       }, {
+        label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
+        name: 'phoneMenuRouteMailbox',
+        action: 'routeToMailbox'
+      }, {
         label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
         name: 'phoneMenuRouteHunt',
         action: 'routeToHuntGroup'
-      },
-      // {
-      //   label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
-      //   name: 'phoneMenuRouteVM',
-      //   action: 'TBD'
-      // },
-      {
+      }, {
         label: $translate.instant('autoAttendant.phoneMenuRouteAA'),
         name: 'phoneMenuRouteAA',
         action: 'goto'

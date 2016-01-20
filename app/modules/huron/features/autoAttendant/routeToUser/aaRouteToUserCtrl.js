@@ -6,7 +6,7 @@
     .controller('AARouteToUserCtrl', AARouteToUserCtrl);
 
   /* @ngInject */
-  function AARouteToUserCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, $q, Userservice, UserListService) {
+  function AARouteToUserCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, $q, Authinfo, Userservice, UserListService, UserServiceVoice) {
 
     var vm = this;
 
@@ -23,7 +23,10 @@
       startAt: 0
     };
 
-    vm.selectPlaceholder = $translate.instant('autoAttendant.selectUserPlaceHolder');
+    if (angular.isDefined($scope.voicemail) && $scope.voicemail)
+      vm.selectPlaceholder = $translate.instant('autoAttendant.routeToMailboxPlaceholder');
+    else
+      vm.selectPlaceholder = $translate.instant('autoAttendant.selectUserPlaceHolder');
 
     vm.aaModel = {};
     vm.uiMenu = {};
@@ -37,14 +40,12 @@
     vm.getUser = getUser;
     vm.getUsers = getUsers;
 
-    var rtUser = 'routeToUser';
-
     /////////////////////
 
     function populateUiModel() {
       vm.userSelected.id = vm.menuKeyEntry.actions[0].getValue();
       if (vm.userSelected.id) {
-        getUser(vm.userSelected.id).then(function (userName) {
+        getFormattedUserAndExtension(vm.userSelected.id).then(function (userName) {
           vm.userSelected.description = userName;
         });
       }
@@ -54,24 +55,57 @@
       vm.menuKeyEntry.actions[0].setValue(vm.userSelected.id);
     }
 
-    function getUserName(name, userId) {
-      var userName = '';
-      userName = (name && name.givenName) ? name.givenName : '';
-      userName = (name && name.familyName) ? (userName + ' ' + name.familyName).trim() : userName;
-      userName = (userName) ? userName : userId;
-      return userName;
-    }
+    function formatName(user, extension) {
+      var name;
+      if (angular.isDefined(user.displayName))
+        name = user.displayName;
+      else
+        name = user.userName;
 
-    function formatName(user) {
-      return getUserName(user.name, user.userName) + ' (' + user.displayName + ')';
+      if (angular.isDefined(extension) && extension.length > 0)
+        return name + ' (' + extension + ')';
+      else
+        return name;
     }
 
     function getUser(uuid) {
       var deferred = $q.defer();
       Userservice.getUser(uuid, function (user) {
-        deferred.resolve(formatName(user));
+        return deferred.resolve(user);
       });
       return deferred.promise;
+    }
+
+    function getFormattedUserAndExtension(uuid) {
+      return getUser(uuid).then(function (user) {
+        var userObj = user;
+        return getUserExtension(user.id).then(
+
+          function (extension) {
+            return formatName(userObj, extension);
+          }
+
+        );
+      });
+    }
+
+    function getUserExtension(uuid) {
+      return UserServiceVoice.query({
+        customerId: Authinfo.getOrgId(),
+        userId: uuid
+      }).$promise.then(
+        function (response) {
+          // success
+          if (angular.isDefined(response.primaryDirectoryNumber) && response.primaryDirectoryNumber != null)
+            return response.primaryDirectoryNumber.pattern;
+          else
+            return "";
+        },
+        function (response) {
+          // failure
+          return $q.reject(response);
+        }
+      );
     }
 
     function getUsers(searchStr) {
@@ -82,15 +116,18 @@
         if (data.success) {
           vm.users = [];
           _.each(data.Resources, function (aUser) {
-            vm.users.push({
-              description: formatName(aUser),
-              id: aUser.id
+            getUserExtension(aUser.id).then(function (extension) {
+              vm.users.push({
+                description: formatName(aUser, extension),
+                id: aUser.id
+              });
             });
           });
           defer.resolve(data.Resources);
         } else {
           defer.reject();
         }
+
       }, searchStr, false);
 
       return defer.promise;
@@ -108,7 +145,11 @@
         vm.menuKeyEntry = vm.menuEntry.entries[$scope.keyIndex];
       } else {
         vm.menuKeyEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-        var action = AutoAttendantCeMenuModelService.newCeActionEntry(rtUser, 'phoneMenuRouteUser');
+        var action;
+        if (angular.isDefined($scope.voicemail) && $scope.voicemail)
+          action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToMailbox', '');
+        else
+          action = AutoAttendantCeMenuModelService.newCeActionEntry('routeToUser', '');
         vm.menuKeyEntry.addAction(action);
       }
 
