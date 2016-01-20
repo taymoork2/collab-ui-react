@@ -315,7 +315,7 @@ angular.module('Squared').service('CsdmConverter',
     function getReadableState(obj) {
       switch (obj.state) {
       case 'UNCLAIMED':
-        return t('CsdmStatus.NeedsActivation');
+        return t('CsdmStatus.RequiresActivation');
       default:
         switch ((obj.status || {}).connectionStatus) {
         case 'CONNECTED':

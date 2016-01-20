@@ -2883,7 +2883,7 @@
     "Offline": "Offline",
     "Unknown": "Unknown",
     "Inactive": "Inactive Account",
-    "NeedsActivation": "Needs Activation",
+    "RequiresActivation": "Requires Activation",
     "upgradeChannels": {
       "Stable": "Stable",
       "Latest": "Latest",
