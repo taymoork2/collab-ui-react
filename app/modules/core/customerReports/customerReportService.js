@@ -18,7 +18,7 @@
     var contentShareSizes = '/contentShareSizes';
     var mediaQuality = '/callQuality';
     var callMetrics = '/callMetrics';
-    var mostActiveUrl = 'reports/useractivity';
+    var mostActiveUrl = 'useractivity';
     var registeredEndpoints = 'trend/registeredEndpoints';
     var customerView = '&isCustomerView=true';
     var dateFormat = "MMM DD, YYYY";

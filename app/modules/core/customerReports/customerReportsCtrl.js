@@ -18,10 +18,8 @@
     vm.quality = 'quality';
     var currentFilter = vm.allReports;
 
-    vm.pageTitle = 'reportsPage.pageTitle';
-    vm.showWebexTab = false;
-    vm.showEngagement = true;
-    vm.showQuality = true;
+    vm.displayEngagement = true;
+    vm.displayQuality = true;
 
     var activeUsersSort = ['userName', 'numCalls', 'totalActivity'];
     var activeUsersChart = null;
@@ -150,16 +148,18 @@
     };
 
     function init() {
-      setFilterBasedText();
-      $timeout(function () {
-        setDummyData();
+      if (vm.showEngagement) {
+        setFilterBasedText();
+        $timeout(function () {
+          setDummyData();
 
-        setActiveUserData();
-        setAvgRoomData();
-        setFilesSharedData();
-        setMediaData();
-        setCallMetricsData();
-      }, 30);
+          setActiveUserData();
+          setAvgRoomData();
+          setFilesSharedData();
+          setMediaData();
+          setCallMetricsData();
+        }, 30);
+      }
     }
 
     function resizeCards() {
@@ -179,32 +179,32 @@
         var qualityElems = [mediaCard, metricsCard];
 
         if (filter === vm.allReports) {
-          if (!vm.showEngagement) {
+          if (!vm.displayEngagement) {
             $('.cs-card-layout').prepend(engagementElems).masonry('prepended', engagementElems);
           }
-          if (!vm.showQuality) {
+          if (!vm.displayQuality) {
             $('.cs-card-layout').append(qualityElems).masonry('appended', qualityElems);
           }
-          vm.showEngagement = true;
-          vm.showQuality = true;
+          vm.displayEngagement = true;
+          vm.displayQuality = true;
         } else if (filter === vm.engagement) {
-          if (!vm.showEngagement) {
+          if (!vm.displayEngagement) {
             $('.cs-card-layout').append(engagementElems).masonry('appended', engagementElems);
           }
-          if (vm.showQuality) {
+          if (vm.displayQuality) {
             $('.cs-card-layout').masonry('remove', qualityElems);
           }
-          vm.showEngagement = true;
-          vm.showQuality = false;
+          vm.displayEngagement = true;
+          vm.displayQuality = false;
         } else if (filter === vm.quality) {
-          if (!vm.showQuality) {
+          if (!vm.displayQuality) {
             $('.cs-card-layout').append(qualityElems).masonry('appended', qualityElems);
           }
-          if (vm.showEngagement) {
+          if (vm.displayEngagement) {
             $('.cs-card-layout').masonry('remove', engagementElems);
           }
-          vm.showEngagement = false;
-          vm.showQuality = true;
+          vm.displayEngagement = false;
+          vm.displayQuality = true;
         }
 
         currentFilter = filter;
@@ -426,21 +426,14 @@
       });
     }
 
-    // TODO WEBEX side of the page has been copied from the existing reports page (needs converting from $scope to vm)
-    vm.show = show;
-
-    function show(showEngagement, showWebexReports) {
-      vm.showEngagement = showEngagement;
-      vm.showWebexReports = showWebexReports;
-    }
-
+    // WEBEX side of the page has been copied from the existing reports page
     $scope.webexReportsObject = {};
     $scope.webexOptions = [];
     $scope.webexSelected = null;
 
-    if ($stateParams.tab) {
+    if ($stateParams.tab === 'webex') {
       vm.showEngagement = false;
-      vm.showWebexReports = $stateParams.tab === 'webex';
+      vm.showWebexReports = true;
     } else {
       vm.showEngagement = true;
       vm.showWebexReports = false;
