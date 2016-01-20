@@ -270,8 +270,6 @@
             supportsDirSync().then(function (enabled) {
               resolve(enabled);
             });
-          } else if (feature === features.atlasSipUriDomainEnterprise && Authinfo.getOrgId() === 'bcd7afcd-839d-4c61-a7a8-31c6c7f016d7') {
-            resolve(true);
           } else if (angular.isDefined(toggles[feature])) {
             resolve(toggles[feature]);
           } else {
