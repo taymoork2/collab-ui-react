@@ -16,7 +16,7 @@ namespace domainManagement {
         return;
       }
 
-      this.DomainManagementService.addDomain(this._domain).then(
+      this.DomainManagementService.addDomain(this.domainToAdd).then(
         ()=> {
           this.$state.go('domainmanagement');
         },
@@ -54,6 +54,13 @@ namespace domainManagement {
       return this._domain;
     }
 
+    get domainToAdd() {
+      if (this._domain || !this._loggedOnUser.domain || !this._loggedOnUser.isLoaded || this._loggedOnUser.isPartner)
+        return (this._domain + '').toLowerCase();
+
+      return this._loggedOnUser.domain.toLowerCase();
+    }
+
     set domain(domain) {
       if (domain == this._domain)
         return;
@@ -65,21 +72,24 @@ namespace domainManagement {
     //gui valid
 
     public validate() {
-      if (this._domain && this._domain.length > 0) {
+      let domain = this.domainToAdd;
 
-        if (/^(([^\.]+\.)+[^\.]{2,})$/g.test(this._domain)) {
-          return {valid: true, empty: false};
-        }
-        //if (/^(([a-åA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)+([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]){2,}$/g.test(this._domain)) {
-        //  return {valid: true, empty: false};
-        //}
-        else {
-          return {valid: false, empty: false};
-        }
+      if (domain.length < 3){
+        return {valid: false, empty: !this._domain};
       }
-      else {
-        return {valid: false, empty: true};
+
+      if (!(/^(([^\.]+\.)+[^\.]{2,})$/g.test(domain))) {
+        return {valid: false, empty: !this._domain};
       }
+      //if (/^(([a-åA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)+([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]){2,}$/g.test(this._domain)) {
+      //  return {valid: true, empty: false};
+      //}
+
+      if (_.some(this.DomainManagementService.domainList, {text: domain})){
+        return {valid: false, empty: !this._domain}; //already added!
+      }
+
+      return {valid: true, empty: false};
     }
 
     get isValid() {
