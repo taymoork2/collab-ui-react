@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('Core')
-  .controller('SetupWizardCtrl', ['$scope', 'Authinfo', '$q', 'FeatureToggleService','$log',
+  .controller('SetupWizardCtrl', ['$scope', 'Authinfo', '$q', 'FeatureToggleService', '$log',
     function ($scope, Authinfo, $q, FeatureToggleService, $log) {
 
       $scope.tabs = [];
