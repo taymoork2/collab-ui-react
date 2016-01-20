@@ -8,9 +8,6 @@ namespace domainManagement {
     /* @ngInject */
     constructor(private $state, Authinfo, CiService, private DomainManagementService, private FeatureToggleService) {
 
-
-      this._feature = true;
-
       FeatureToggleService.supports(FeatureToggleService.features.domainManagement)
         .then(dmEnabled => {
             if (dmEnabled) {
