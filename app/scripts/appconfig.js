@@ -205,7 +205,7 @@ angular
             }
           },
           params: {
-            adminDomain: null
+            loggedOnUser: null
           }
         })
         .state('domainmanagement.delete', {
@@ -219,7 +219,7 @@ angular
           },
           params: {
             domain: null,
-            adminDomain: null
+            loggedOnUser: null
           }
         })
         .state('domainmanagement.email', {
@@ -233,7 +233,7 @@ angular
           },
           params: {
             domain: null,
-            adminEmail: null
+            loggedOnUser: null
           }
         })
         .state('domainmanagement.verify', {
@@ -246,7 +246,8 @@ angular
             }
           },
           params: {
-            domain: null
+            domain: null,
+            loggedOnUser: null
           }
         })
         .state('profile', {

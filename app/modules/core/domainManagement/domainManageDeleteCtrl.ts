@@ -2,11 +2,11 @@ namespace domainManagement {
 
   class DomainManageDeleteCtrl {
     private _domainToDelete;
-    private _adminDomain;
+    private _loggedOnUser;
 
     /* @ngInject */
     constructor($stateParams, private $state, private DomainManagementService) {
-      this._adminDomain = $stateParams.adminDomain;
+      this._loggedOnUser = $stateParams.loggedOnUser;
       this._domainToDelete = $stateParams.domain;
     }
 
@@ -30,7 +30,7 @@ namespace domainManagement {
     }
 
     get isValid() {
-      return this.domain && (this._adminDomain != this._domainToDelete.text);
+      return this.domain && this._loggedOnUser && this._loggedOnUser.isLoaded && (this._loggedOnUser.isPartner || (this._loggedOnUser.domain != this._domainToDelete.text));
     }
   }
   angular

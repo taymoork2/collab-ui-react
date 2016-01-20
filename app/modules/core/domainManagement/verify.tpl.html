@@ -11,16 +11,23 @@
     </section>
   </div>
 
-  <div class="modal-body domWarning">
+  <div ng-if="!dmpopup.verifyError" class="modal-body domWarning">
     <section>
       <i class="icon icon-warning"></i>
       <p translate="domainManagement.verify.warning"></p>
     </section>
   </div>
 
+  <div ng-if="dmpopup.verifyError" class="modal-body domError">
+    <section>
+      <i class="icon icon-error"></i>
+      <p>{{dmpopup.verifyError}}</p>
+    </section>
+  </div>
+
   <div class="modal-footer">
     <button ui-sref="domainmanagement" translate="common.cancel"></button>
-    <button ng-click="dmpopup.verify()" class="btn--attention"
+    <button ng-click="dmpopup.verify()" ng-disabled="!dmpopup.verifyAllowed" class="btn--attention"
             translate="domainManagement.verify.verify"></button>
   </div>
 </div>

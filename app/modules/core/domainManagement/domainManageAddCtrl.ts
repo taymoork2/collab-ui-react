@@ -1,14 +1,14 @@
 namespace domainManagement {
 
   class DomainManageAddCtrl {
-    private _adminDomain;
+    private _loggedOnUser;
     private _domain;
     private _error;
 
     /* @ngInject */
     constructor($stateParams, private $state, private DomainManagementService) {
 
-      this._adminDomain = $stateParams.adminDomain;
+      this._loggedOnUser = $stateParams.loggedOnUser;
     }
 
     public add() {
@@ -37,8 +37,11 @@ namespace domainManagement {
     }
 
     get exampleDomain() {
-      if (this.DomainManagementService.domainList.length == 0)
-        return this._adminDomain;
+
+      //If the user is not a partner, and if not already added, suggest the logged on user's domain:
+      if (this._loggedOnUser.isLoaded && !this._loggedOnUser.isPartner
+        && !_.some(this.DomainManagementService.domainList, {text: this._loggedOnUser.domain}))
+        return this._loggedOnUser.domain;
       else
         return null;
     }
