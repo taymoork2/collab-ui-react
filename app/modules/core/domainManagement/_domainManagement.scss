@@ -1,46 +1,46 @@
 /*
  * Domain Management Page
  */
-#domainManagement{
+#domainManagement {
   padding-top: 3rem;
-  article{
+  article {
     width: 500px;
     padding-left: 2rem;
 
-    table.table{
+    table.table {
       margin-top: 1rem;
       margin-bottom: 1.5rem;
 
-      .header{
+      .header {
         display: none;
       }
-      tr{
+      tr {
         border: none;
-        td{
+        td {
           padding-left: 0;
-          color:$gray-dark-2;
+          color: $gray-dark-2;
 
-          .icon{
+          .icon {
             margin-right: 0.5rem;
           }
-          .icon-circle{
+          .icon-circle {
             font-size: .55em;
           }
-          .icon-circle.pending{
-            color:$color-attention-base;
+          .icon-circle.pending {
+            color: $color-attention-base;
           }
-          .icon-circle.verified{
-            color:$color-cta-base;
+          .icon-circle.verified {
+            color: $color-cta-base;
           }
-          .icon-email{
+          .icon-email {
             font-size: .7em;
           }
-          .icon-trash{
+          .icon-trash {
             font-size: 1.2em;
             position: relative;
             top: 0.1rem;
           }
-          button{
+          button {
             position: relative;
             top: -0.05rem;
             margin-left: -1rem;
@@ -54,7 +54,7 @@
 
           }
         }
-        .tableMail{
+        .tableMail {
           display: block;
           width: 1.2rem !important;
 
@@ -67,51 +67,30 @@
 /*
  * Domain Management New Popup
  */
-.domainModal{
-  .domainVerificationInfo{
-      padding-bottom: 3rem;
-      .domainInput{
-        font-size: 1.5rem;
-        padding-bottom: 2rem !important;
-      }
+.domainModal {
+  .domainVerificationInfo {
+    padding-bottom: 3rem;
+    .domainInput {
+      font-size: 1.5rem;
+      padding-bottom: 2rem !important;
+    }
   }
-  .modal-body.domWarning{
+  .modal-body.domWarning {
     background-color: $color-attention-base;
     margin-top: -1rem;
     overflow: hidden;
     padding-bottom: 0;
-    p{
+    p {
       width: 93%;
     }
-    i{
+    i {
       display: block;
       width: 7%;
       padding-top: 0.3rem;
     }
-    p,i{
+    p, i {
       float: left;
       color: white;
     }
   }
 }
-
-/* Domain Management Old Popup */
-/*.domainManagementPopupOverlay{
-  padding: 2rem;
-  section{
-    margin-top: 1rem;
-    padding: 1rem;
-    background-color: $gray-light-3;
-    input{
-      margin-top: 1rem;
-    }
-  }
-  footer{
-    margin-top: 1rem;
-    padding-bottom: 1.5rem;
-    position: relative;
-    div{
-      float: right;
-    }
-  }
-}*/
