@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('Core')
-  .controller('EnterpriseSettingsCtrl', ['$scope', '$rootScope', '$q', 'SSOService', 'Authinfo', 'AccountOrgService', 'Log', 'Notification', '$translate', '$window', 'Config', '$log',
-    function ($scope, $rootScope, $q, SSOService, Authinfo, AccountOrgService, Log, Notification, $translate, $window, Config, $log) {
+  .controller('EnterpriseSettingsCtrl', ['$scope', '$rootScope', '$q', 'SSOService', 'Authinfo', 'Log', 'Notification', '$translate', '$window', 'Config', '$log',
+    function ($scope, $rootScope, $q, SSOService, Authinfo, Log, Notification, $translate, $window, Config, $log) {
 
       var strEntityDesc = '<EntityDescriptor ';
       var strEntityId = 'entityID="';
