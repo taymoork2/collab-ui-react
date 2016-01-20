@@ -1936,10 +1936,12 @@
     "numbers": {
       "title": "Start New Trial - Add Numbers"
     },
-    "trialSuccess": "Your trial is ready.",
-    "nextStepPrompt": "Do you want to setup services for the customer?",
-    "setupLater": "No thanks",
+    "trialSuccess": "Your trial is ready",
+    "nextStepPrompt": "Do you want to setup the services for the customer?",
+    "setupLater": "No, thanks",
     "setupNow": "Yes, setup the services",
+    "finishTrialAdded": "Your trial has been added",
+    "finishMeetingDescription": "We’re setting up the services. This may take about an hour. When everything’s ready, we’ll send the customer administrator an email invitation, and at that point, you can go to the Customer section to configure the services.",
     "squareducError": "Created trial, but unable to provision Spark UC",
     "addSuccess": "A trial was successfully started for {{customerName}}.",
     "editSuccess": "You have successfully edited a trial for {{customerName}}."
