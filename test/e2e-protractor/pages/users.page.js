@@ -45,6 +45,8 @@ var UsersPage = function () {
   this.closeRolesPanel = element(by.id('close-roles'));
   this.closeSidePanel = element(by.css('.panel-close'));
   this.messagingService = element.all(by.css('#Message .feature-arrow')).first();
+  this.meeting25Party = element.all(by.id('CF_50de0558-2246-4a46-a87f-cfe477058fdb'));
+
   this.communicationsService = element(by.css('#Call .feature-arrow'));
   this.conferencingService = element(by.css('#Meeting .feature-arrow'));
   this.contactCenterService = element(by.css('#ContactCenter .feature-arrow'));

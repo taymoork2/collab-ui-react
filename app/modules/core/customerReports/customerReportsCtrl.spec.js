@@ -166,7 +166,6 @@ describe('Controller: Customer Reports Ctrl', function () {
       });
 
       it('should set all page variables', function () {
-        expect(controller.pageTitle).toEqual('reportsPage.pageTitle');
         expect(controller.showWebexTab).toBeFalsy();
 
         expect(controller.activeUserDescription).toEqual('activeUsers.customerPortalDescription');
