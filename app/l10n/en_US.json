@@ -2878,11 +2878,11 @@
   },
   "CsdmStatus": {
     "Online": "Online",
+    "OnlineWithIssues": "Online With Issues",
     "Offline": "Offline",
     "Unknown": "Unknown",
     "Inactive": "Inactive Account",
     "NeedsActivation": "Needs Activation",
-    "issuesDetected": "Issues Detected",
     "upgradeChannels": {
       "Stable": "Stable",
       "Latest": "Latest",

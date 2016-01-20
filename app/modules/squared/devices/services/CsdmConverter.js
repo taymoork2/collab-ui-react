@@ -319,6 +319,9 @@ angular.module('Squared').service('CsdmConverter',
       default:
         switch ((obj.status || {}).connectionStatus) {
         case 'CONNECTED':
+          if (hasIssues(obj)) {
+            return t('CsdmStatus.OnlineWithIssues');
+          }
           return t('CsdmStatus.Online');
         default:
           return t('CsdmStatus.Offline');
@@ -327,15 +330,15 @@ angular.module('Squared').service('CsdmConverter',
     }
 
     function getCssColorClass(obj) {
-      if (hasIssues(obj)) {
-        return 'device-status-yellow';
-      }
       switch (obj.state) {
       case 'UNCLAIMED':
         return 'device-status-gray';
       default:
         switch ((obj.status || {}).connectionStatus) {
         case 'CONNECTED':
+          if (hasIssues(obj)) {
+            return 'device-status-yellow';
+          }
           return 'device-status-green';
         default:
           return 'device-status-red';
