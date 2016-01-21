@@ -28,6 +28,8 @@
     vm.mostActiveTitle = "";
     vm.activeUserStatus = REFRESH;
     vm.mostActiveUserStatus = REFRESH;
+    vm.searchPlaceholder = $translate.instant('activeUsers.user');
+    vm.searchField = "";
     vm.mostActiveUsers = [];
     vm.activeUserReverse = true;
     vm.activeUsersTotalPages = 0;
@@ -95,6 +97,7 @@
     vm.mediaUpdate = mediaUpdate;
     vm.mostActiveUserSwitch = mostActiveUserSwitch;
     vm.resetCards = resetCards;
+    vm.searchMostActive = searchMostActive;
 
     vm.isRefresh = function (tab) {
       return tab === REFRESH;
@@ -105,11 +108,12 @@
     };
 
     vm.activePage = function (num) {
-      return vm.activeUserCurrentPage === Math.floor((num + 1) / 5);
+      return vm.activeUserCurrentPage === Math.ceil((num + 1) / 5);
     };
 
     vm.changePage = function (num) {
       vm.activeUserCurrentPage = num;
+      resizeCards();
     };
 
     vm.mostActiveSort = function (num) {
@@ -134,6 +138,7 @@
       if (vm.activeUserCurrentPage !== vm.activeUsersTotalPages) {
         vm.changePage(vm.activeUserCurrentPage + 1);
       }
+      resizeCards();
     };
 
     vm.pageBackward = function () {
@@ -145,6 +150,7 @@
       if (vm.activeUserCurrentPage !== 1) {
         vm.changePage(vm.activeUserCurrentPage - 1);
       }
+      resizeCards();
     };
 
     function init() {
@@ -314,6 +320,10 @@
     }
 
     function setActiveUserData() {
+      vm.activeUsersTotalPages = 0;
+      vm.activeUserCurrentPage = 0;
+      vm.searchField = "";
+      vm.showMostActiveUsers = false;
       CustomerReportService.getActiveUserData(vm.timeSelected).then(function (response) {
         if (response === ABORT) {
           return;
@@ -331,13 +341,28 @@
             } else if (response.length === 0) {
               vm.mostActiveUserStatus = EMPTY;
             } else {
+              vm.mostActiveUsers = response;
+              vm.activeUserCurrentPage = 1;
               vm.mostActiveUserStatus = SET;
             }
-            activeUserCard = document.getElementById('active-user-card');
+            resizeCards();
           });
         }
         resizeCards();
       });
+      activeUserCard = document.getElementById('active-user-card');
+    }
+
+    function searchMostActive() {
+      var returnArray = [];
+      angular.forEach(vm.mostActiveUsers, function (item, index, array) {
+        var userName = item.userName;
+        if (vm.searchField === undefined || vm.searchField === '' || (userName.toString().toLowerCase().replace(/_/g, ' ')).indexOf(vm.searchField.toLowerCase().replace(/_/g, ' ')) > -1) {
+          returnArray.push(item);
+        }
+      });
+      vm.activeUsersTotalPages = Math.ceil(returnArray.length / 5);
+      return returnArray;
     }
 
     function setAvgRoomData() {
