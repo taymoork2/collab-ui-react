@@ -63,7 +63,7 @@
     // Save the phone number resources originally in the CE (used on exit with no save, and on save error)
     function unAssignAssigned() {
       // check to see if the local assigned list of resources is different than in CE info
-      if (areAssignedResourcesDifferent(vm.aaModel.aaRecord.assignedResources, vm.ui.ceInfo.getResources(), 'id')) {
+      if (angular.isDefined(vm.aaModel.aaRecord) && areAssignedResourcesDifferent(vm.aaModel.aaRecord.assignedResources, vm.ui.ceInfo.getResources(), 'id')) {
         var ceInfo = AutoAttendantCeInfoModelService.getCeInfo(vm.aaModel.aaRecord);
         return AANumberAssignmentService.setAANumberAssignment(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, ceInfo.getResources()).then(
           function (response) {
@@ -370,6 +370,10 @@
               }
             );
             return;
+          } else {
+            Notification.error('autoAttendant.errorReadCe', {
+              name: aaName
+            });
           }
         }
       }
@@ -380,10 +384,9 @@
     function activate() {
 
       var aaName = $stateParams.aaName;
-      vm.aaModel = AAModelService.getAAModel();
-      vm.aaModel.aaRecord = undefined;
       AAUiModelService.initUiModel();
       AACommonService.resetFormStatus();
+
       var aaTemplate = $stateParams.aaTemplate;
       vm.ui = AAUiModelService.getUiModel();
       vm.ui.ceInfo = {};
@@ -392,9 +395,9 @@
       // Define vm.ui.builder.ceInfo_name for editing purpose.
       vm.ui.builder.ceInfo_name = angular.copy(vm.ui.ceInfo.name);
 
-      AutoAttendantCeInfoModelService.getCeInfosList().then(function (data) {
-        vm.selectAA(aaName);
-      }, function (data) {
+      AutoAttendantCeInfoModelService.getCeInfosList().finally(function () {
+        vm.aaModel = AAModelService.getAAModel();
+        vm.aaModel.aaRecord = undefined;
         vm.selectAA(aaName);
       });
     }

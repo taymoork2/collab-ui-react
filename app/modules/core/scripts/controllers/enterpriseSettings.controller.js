@@ -1,13 +1,27 @@
 'use strict';
 
 angular.module('Core')
-  .controller('setupSSODialogCtrl', ['$scope', '$rootScope', '$q', 'SSOService', 'Authinfo', 'Log', 'Notification', '$translate', '$window', 'Config',
+  .controller('EnterpriseSettingsCtrl', ['$scope', '$rootScope', '$q', 'SSOService', 'Authinfo', 'Log', 'Notification', '$translate', '$window', 'Config',
     function ($scope, $rootScope, $q, SSOService, Authinfo, Log, Notification, $translate, $window, Config) {
 
       var strEntityDesc = '<EntityDescriptor ';
       var strEntityId = 'entityID="';
       var strEntityIdEnd = '">';
       var oldSSOValue = 0;
+
+      //SIP URI Domain Controller code
+      $scope.cloudSipUriField = {};
+      $scope.cloudSipUriField.inputValue = '';
+      $scope.cloudSipUriField.errorMsg = $translate.instant('firstTimeWizard.setSipUriErrorMessage');
+
+      $scope.validateSipUri = function () {
+        var isError = false;
+        if ($scope.cloudSipUriField.inputValue.length > 40) {
+          isError = true;
+        }
+
+        return isError;
+      };
 
       $scope.options = {
         configureSSO: 1,
