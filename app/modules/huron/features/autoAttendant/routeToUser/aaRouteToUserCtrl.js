@@ -72,7 +72,12 @@
     function getUser(uuid) {
       var deferred = $q.defer();
       Userservice.getUser(uuid, function (user) {
-        return deferred.resolve(user);
+        if (user.success) {
+          return deferred.resolve(user);
+        } else {
+          return $q.reject();
+        }
+
       });
       return deferred.promise;
     }
@@ -84,8 +89,10 @@
 
           function (extension) {
             return formatName(userObj, extension);
+          },
+          function (error) {
+            return formatName(userObj, '');
           }
-
         );
       });
     }
@@ -122,6 +129,12 @@
                 description: formatName(aUser, extension),
                 id: aUser.id
               });
+            }, function (error) {
+              vm.users.push({
+                description: formatName(aUser, ''),
+                id: aUser.id
+              });
+
             });
           });
           defer.resolve(data.Resources);

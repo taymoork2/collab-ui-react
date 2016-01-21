@@ -16,8 +16,8 @@ describe('Controller: AARouteToUserCtrl', function () {
     }
   };
 
-  var userCisResponse = {
-    "userName": "admin@int1.huron-alpha.com",
+  var completeUserCisResponse = {
+    "userName": "dudette@gmail.com",
     "name": {
       "givenName": "Super",
       "familyName": "Admin"
@@ -27,6 +27,21 @@ describe('Controller: AARouteToUserCtrl', function () {
     "displayName": "Super Admin",
     "success": true
   };
+
+  var notSoCompleteUserCisResponse = {
+    "userName": "dude@gmail.com",
+    "name": {
+      "givenName": "inferior",
+      "familyName": "user"
+    },
+    "userStatus": "active",
+    "id": "5FCF9B4A-4A44-943B-4A4A-A397974E97D4",
+    "displayName": "",
+    "success": true
+  };
+
+  var cmiCompleteUserGet;
+  var cmiNotSoCompleteUserGet;
 
   var directoryCmiResponse = {
     "firstName": "firstName",
@@ -132,7 +147,7 @@ describe('Controller: AARouteToUserCtrl', function () {
         "location": "https://identity.webex.com/identity/scim/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/v1/Users/9ba7b358-6795-41d7-8b0a-c07b34d6715b",
         "organizationID": "7e88d491-d6ca-4786-82ed-cbe9efb02ad2"
       },
-      "displayName": "some user",
+      "displayName": "Super Admin",
       "active": true,
       "licenseID": [
         "CO_6a0254d2-37b7-4b01-a81b-41cd2cb91a32"
@@ -176,10 +191,20 @@ describe('Controller: AARouteToUserCtrl', function () {
     "sortOrder": "ascending",
   };
 
+  // we have two test users - one with all the properties like display name, extension, etc., and another without
   var users = [{
-    description: 'some user',
-    id: '47026507-4F83-0B5B-9C1D-8DBA89F2E01C'
-  }];
+      displayName: 'Super Admin',
+      userName: 'dudette@gmail.com',
+      id: '47026507-4F83-0B5B-9C1D-8DBA89F2E01C',
+      extension: '2252'
+    }, {
+      displayName: '',
+      userName: 'dude@gmail.com',
+      id: '5FCF9B4A-4A44-943B-4A4A-A397974E97D4',
+      extension: ''
+    }
+
+  ];
 
   var schedule = 'openHours';
   var index = 0;
@@ -248,11 +273,17 @@ describe('Controller: AARouteToUserCtrl', function () {
       '&sortOrder=' + listUsersProps.sortOrder;
     $httpBackend.whenGET(listUsersUrl).respond(200, userListCmiResponse);
 
-    var userCisUrl = Config.getScimUrl(Authinfo.getOrgId()) + '/47026507-4F83-0B5B-9C1D-8DBA89F2E01C';
-    $httpBackend.whenGET(userCisUrl).respond(200, userCisResponse);
+    // user with all props including display name and extension
+    var userCisUrl = Config.getScimUrl(Authinfo.getOrgId()) + '/' + users[0].id;
+    $httpBackend.whenGET(userCisUrl).respond(200, completeUserCisResponse);
+    cmiCompleteUserGet = $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/users/' + users[0].id);
+    cmiCompleteUserGet.respond(200, directoryCmiResponse);
 
-    $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/users/47026507-4F83-0B5B-9C1D-8DBA89F2E01C').respond(200, directoryCmiResponse);
-    $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/users/5FCF9B4A-4A44-943B-4A4A-A397974E97D4').respond(200, noDirectoryCmiResponse);
+    // user with missing displayname and without extension
+    userCisUrl = Config.getScimUrl(Authinfo.getOrgId()) + '/' + users[1].id;
+    $httpBackend.whenGET(userCisUrl).respond(200, notSoCompleteUserCisResponse);
+    cmiNotSoCompleteUserGet = $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/users/' + users[1].id);
+    cmiNotSoCompleteUserGet.respond(200, noDirectoryCmiResponse);
 
   }));
 
@@ -269,13 +300,17 @@ describe('Controller: AARouteToUserCtrl', function () {
 
     });
 
-    it('should initialize the options list', function () {
+    it('should initialize the options list and format them correctly', function () {
       var controller = $controller('AARouteToUserCtrl', {
         $scope: $scope
       });
 
-      var nameNumber = users[0].description.concat(' (')
-        .concat('2252').concat(')');
+      // user with both display name and extension should have both
+      var nameNumber1 = users[0].displayName.concat(' (')
+        .concat(users[0].extension).concat(')');
+
+      // when those are blank, they should be ommitted and fallback to username which should always be there
+      var nameNumber2 = users[1].userName;
 
       $httpBackend.flush();
 
@@ -283,13 +318,33 @@ describe('Controller: AARouteToUserCtrl', function () {
 
       expect(controller.users.length).toEqual(2);
 
+      expect(controller.users[0].description).toEqual(nameNumber1);
+      expect(controller.users[1].description).toEqual(nameNumber2);
+
+    });
+
+    it('should format name with error on extension correctly', function () {
+
+      cmiCompleteUserGet.respond(404);
+
+      var controller = $controller('AARouteToUserCtrl', {
+        $scope: $scope
+      });
+
+      // just the display name when no extension found (404)
+      var nameNumber = users[0].displayName;
+
+      $httpBackend.flush();
+
+      $scope.$apply();
+
       expect(controller.users[0].description).toEqual(nameNumber);
 
     });
 
     describe('activate', function () {
       it('should read and display an existing entry', function () {
-        var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('Some user', '47026507-4F83-0B5B-9C1D-8DBA89F2E01C');
+        var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('routeToUser', users[0].id);
 
         var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
         menuEntry.addAction(actionEntry);
@@ -298,12 +353,44 @@ describe('Controller: AARouteToUserCtrl', function () {
           $scope: $scope
         });
 
+        // user with both display name and extension should have both
+        var nameNumber1 = users[0].displayName.concat(' (')
+          .concat(users[0].extension).concat(')');
+
         $httpBackend.flush();
 
         $scope.$apply();
 
         expect(controller.userSelected.id).toEqual(users[0].id);
+        expect(controller.userSelected.description).toEqual(nameNumber1);
+
       });
+
+      it('should format selected name with error on extension correctly', function () {
+        var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('routeToUser', users[0].id);
+
+        var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        menuEntry.addAction(actionEntry);
+        aaUiModel[schedule].entries[0].addEntry(menuEntry);
+
+        cmiCompleteUserGet.respond(404);
+
+        var controller = $controller('AARouteToUserCtrl', {
+          $scope: $scope
+        });
+
+        // just the display name when no extension found (404)
+        var nameNumber = users[0].displayName;
+
+        $httpBackend.flush();
+
+        $scope.$apply();
+
+        expect(controller.userSelected.id).toEqual(users[0].id);
+        expect(controller.userSelected.description).toEqual(nameNumber);
+
+      });
+
     });
 
     describe('saveUiModel', function () {
@@ -314,14 +401,14 @@ describe('Controller: AARouteToUserCtrl', function () {
         });
 
         controller.userSelected = {
-          name: "Some user",
-          id: "47026507-4F83-0B5B-9C1D-8DBA89F2E01C"
+          name: users[0].displayName,
+          id: users[0].id
         };
         controller.saveUiModel();
 
         $scope.$apply();
 
-        expect(controller.menuKeyEntry.actions[0].value).toEqual('47026507-4F83-0B5B-9C1D-8DBA89F2E01C');
+        expect(controller.menuKeyEntry.actions[0].value).toEqual(users[0].id);
       });
     });
 
