@@ -6,12 +6,17 @@ namespace domainManagement {
     private _error;
 
     /* @ngInject */
-    constructor($stateParams, private $state, private DomainManagementService) {
+    constructor($stateParams, $translate, private $state, private DomainManagementService) {
       this._loggedOnUser = $stateParams.loggedOnUser;
       this._domainToDelete = $stateParams.domain;
 
       if (!this._loggedOnUser.isPartner && (this._domainToDelete.status != DomainManagementService.states.pending && this._loggedOnUser.domain == this._domainToDelete.text)){
-        this._error = 'You cannot delete your own domain. This will lock you out.';
+        this._error = $translate.instant('domainManagement.delete.preventLockoutError');
+      }
+
+      if (this.isValid && this._domainToDelete.status === DomainManagementService.states.pending) {
+        //Just delete it without confirmation!
+        this.delete();
       }
     }
 
@@ -21,7 +26,7 @@ namespace domainManagement {
           this.$state.go('domainmanagement');
         },
         err => {
-          console.log('could not add domain (example failure): ' + this._domainToDelete.text + err);
+          this._error = err;
         }
       )
     }
