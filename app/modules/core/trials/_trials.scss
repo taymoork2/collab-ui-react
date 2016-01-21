@@ -70,9 +70,15 @@
 }
 
 .trial-modal--complete {
+  .row {
+    margin-bottom: 14px;
+  }
   .icon {
     margin-bottom: 1rem;
     display: block;
+  }
+  h3 {
+    margin-bottom: 30px;
   }
 }
 

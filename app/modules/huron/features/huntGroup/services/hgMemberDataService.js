@@ -212,13 +212,20 @@
      * concatenated with a space.
      */
     function getDisplayName(user) {
-      if (!user || (!user.firstName && !user.lastName))
+      if (!user) {
         return;
+      }
 
-      if (user.lastName) {
-        return user.firstName + " " + user.lastName;
-      } else {
+      if (!user.firstName && !user.lastName) {
+        return user.userName;
+      } else if (user.firstName && user.lastName) {
+        return user.firstName + ' ' + user.lastName;
+      } else if (user.firstName) {
         return user.firstName;
+      } else if (user.lastName) {
+        return user.lastName;
+      } else {
+        return;
       }
     }
   }

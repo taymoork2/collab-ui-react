@@ -1,0 +1,96 @@
+/*
+ * Domain Management Page
+ */
+#domainManagement {
+  padding-top: 3rem;
+  article {
+    width: 500px;
+    padding-left: 2rem;
+
+    table.table {
+      margin-top: 1rem;
+      margin-bottom: 1.5rem;
+
+      .header {
+        display: none;
+      }
+      tr {
+        border: none;
+        td {
+          padding-left: 0;
+          color: $gray-dark-2;
+
+          .icon {
+            margin-right: 0.5rem;
+          }
+          .icon-circle {
+            font-size: .55em;
+          }
+          .icon-circle.pending {
+            color: $color-attention-base;
+          }
+          .icon-circle.verified {
+            color: $color-cta-base;
+          }
+          .icon-email {
+            font-size: .7em;
+          }
+          .icon-trash {
+            font-size: 1.2em;
+            position: relative;
+            top: 0.1rem;
+          }
+          button {
+            position: relative;
+            top: -0.05rem;
+            margin-left: -1rem;
+            text-transform: uppercase;
+            font-size: 0.625rem;
+            width: 50px !important;
+            max-width: 50px !important;
+            min-width: 50px !important;
+            padding: 0 !important;
+            padding-top: 2px !important;
+
+          }
+        }
+        .tableMail {
+          display: block;
+          width: 1.2rem !important;
+
+        }
+      }
+    }
+  }
+}
+
+/*
+ * Domain Management New Popup
+ */
+.domainModal {
+  .domainVerificationInfo {
+    padding-bottom: 3rem;
+    .domainInput {
+      font-size: 1.5rem;
+      padding-bottom: 2rem !important;
+    }
+  }
+  .modal-body.domWarning {
+    background-color: $color-attention-base;
+    margin-top: -1rem;
+    overflow: hidden;
+    padding-bottom: 0;
+    p {
+      width: 93%;
+    }
+    i {
+      display: block;
+      width: 7%;
+      padding-top: 0.3rem;
+    }
+    p, i {
+      float: left;
+      color: white;
+    }
+  }
+}

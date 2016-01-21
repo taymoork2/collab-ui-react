@@ -1,11 +1,15 @@
 <cs-sp-header>
 
   <div class="header-image">
-    <div class="device-img">
-      <i ng-hide="deviceOverview.currentDeviceOwner.photos.length > 1"
-         class="icon icon-3x icon-circle-telepresence"
-         ng-class="{'needs-activation': deviceOverview.currentDevice.needsActivation}"></i>
-      <img ng-show="deviceOverview.currentDeviceOwner.photos.length > 1" ng-src="{{deviceOverview.currentDeviceOwner.photos[1].value}}" />
+    <div class="device-img" ng-if="!deviceOverview.currentDevice.isHuronDevice">
+      <img src="images/devices-hi/space_avatar.png" />
+    </div>
+    <div class="user-img" ng-if="deviceOverview.currentDevice.isHuronDevice">
+      <span ng-if="!deviceOverview.currentDevice.photos">
+        <i class="icon icon-user"></i>
+      </span>
+      <img ng-if="deviceOverview.currentDevice.photos"
+           ng-src="{{deviceOverview.currentDevice.photos[1].url}}" />
     </div>
   </div>
 

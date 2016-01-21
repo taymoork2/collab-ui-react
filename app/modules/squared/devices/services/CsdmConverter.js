@@ -36,8 +36,22 @@ angular.module('Squared').service('CsdmConverter',
       };
       this.image = (function () {
         switch (obj.product) {
+        case "Cisco TelePresence DX80":
+          return "images/devices-hi/dx80.png";
+        case "Cisco TelePresence DX70":
+          return "images/devices-hi/dx70.png";
         case "Cisco TelePresence SX10":
           return "images/devices-hi/sx10.png";
+        case "Cisco TelePresence SX20":
+          return "images/devices-hi/sx20.png";
+        case "Cisco TelePresence SX80":
+          return "images/devices-hi/sx80.png";
+        case "Cisco TelePresence MX200 G2":
+          return "images/devices-hi/mx200g2.png";
+        case "Cisco TelePresence MX300 G2":
+          return "images/devices-hi/mx300g2.png";
+        case "Project Swedish Island":
+          return "images/devices-hi/swedish_island.png";
         default:
           return "images/devices-hi/unknown.png";
         }
@@ -56,6 +70,7 @@ angular.module('Squared').service('CsdmConverter',
       this.displayName = obj.displayName;
       this.cssColorClass = getCssColorClass(obj);
       this.readableState = getReadableState(obj);
+      this.photos = (obj.photos == null || obj.photos.length == 0) ? null : obj.photos;
       this.isHuronDevice = true;
     }
 
@@ -71,8 +86,36 @@ angular.module('Squared').service('CsdmConverter',
       this.displayName = huronDevice.displayName;
       this.cssColorClass = getHuronCssColorClass(obj);
       this.readableState = getHuronReadableState(obj);
+      this.photos = (huronDevice.photos == null || huronDevice.photos.length == 0) ? null : huronDevice.photos;
       this.isHuronDevice = true;
-      this.image = "images/devices/" + (obj.model.trim().replace(/ /g, '_') + '.png').toLowerCase();
+      this.image = (function () {
+        switch ((obj.product || '').toLowerCase()) {
+        case "cisco 7811":
+          return "images/devices-hi/cisco_7811.png";
+        case "cisco 7821":
+          return "images/devices-hi/cisco_7821.png";
+        case "cisco 7841":
+          return "images/devices-hi/cisco_7841.png";
+        case "cisco 7861":
+          return "images/devices-hi/cisco_7861.png";
+        case "cisco 8811":
+          return "images/devices-hi/cisco_8811.png";
+        case "cisco 8841":
+          return "images/devices-hi/cisco_8841.png";
+        case "cisco 8845":
+          return "images/devices-hi/cisco_8845.png";
+        case "cisco 8851":
+          return "images/devices-hi/cisco_8851.png";
+        case "cisco 8861":
+          return "images/devices-hi/cisco_8861.png";
+        case "cisco 8865":
+          return "images/devices-hi/cisco_8865.png";
+        case "cisco dx650":
+          return "images/devices-hi/cisco_dx650.png";
+        default:
+          return "images/devices-hi/unknown.png";
+        }
+      }());
     }
 
     function UnusedAccount(obj) {
@@ -80,7 +123,7 @@ angular.module('Squared').service('CsdmConverter',
       this.cisUuid = obj.id;
       this.displayName = obj.displayName;
       this.product = 'Account';
-      this.cssColorClass = 'device-status-red';
+      this.cssColorClass = 'device-status-gray';
       this.readableState = t('CsdmStatus.Inactive');
       this.isOnline = false;
       this.isUnused = true;
@@ -272,10 +315,13 @@ angular.module('Squared').service('CsdmConverter',
     function getReadableState(obj) {
       switch (obj.state) {
       case 'UNCLAIMED':
-        return t('CsdmStatus.NeedsActivation');
+        return t('CsdmStatus.RequiresActivation');
       default:
         switch ((obj.status || {}).connectionStatus) {
         case 'CONNECTED':
+          if (hasIssues(obj)) {
+            return t('CsdmStatus.OnlineWithIssues');
+          }
           return t('CsdmStatus.Online');
         default:
           return t('CsdmStatus.Offline');
@@ -284,18 +330,18 @@ angular.module('Squared').service('CsdmConverter',
     }
 
     function getCssColorClass(obj) {
-      if (hasIssues(obj)) {
-        return 'device-status-red';
-      }
       switch (obj.state) {
       case 'UNCLAIMED':
-        return 'device-status-yellow';
+        return 'device-status-gray';
       default:
         switch ((obj.status || {}).connectionStatus) {
         case 'CONNECTED':
+          if (hasIssues(obj)) {
+            return 'device-status-yellow';
+          }
           return 'device-status-green';
         default:
-          return 'device-status-gray';
+          return 'device-status-red';
         }
       }
     }
@@ -330,9 +376,9 @@ angular.module('Squared').service('CsdmConverter',
       if (obj.registrationStatus == 'registered') {
         return 'device-status-green';
       } else if (obj.state == 'unregistered') {
-        return 'device-status-gray';
+        return 'device-status-red';
       }
-      return 'device-status-yellow';
+      return 'device-status-red';
     }
 
     var getHuronReadableState = function (obj) {

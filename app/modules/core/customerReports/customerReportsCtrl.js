@@ -13,8 +13,13 @@
     var SET = 'set';
     var EMPTY = 'empty';
 
-    vm.pageTitle = 'reportsPage.pageTitle';
-    vm.showWebexTab = false;
+    vm.allReports = 'all';
+    vm.engagement = 'engagement';
+    vm.quality = 'quality';
+    var currentFilter = vm.allReports;
+
+    vm.displayEngagement = true;
+    vm.displayQuality = true;
 
     var activeUsersSort = ['userName', 'numCalls', 'totalActivity'];
     var activeUsersChart = null;
@@ -22,7 +27,7 @@
     vm.activeUserDescription = "";
     vm.mostActiveTitle = "";
     vm.activeUserStatus = REFRESH;
-    vm.displayMostActive = false;
+    vm.mostActiveUserStatus = REFRESH;
     vm.mostActiveUsers = [];
     vm.activeUserReverse = true;
     vm.activeUsersTotalPages = 0;
@@ -89,6 +94,7 @@
     vm.timeUpdate = timeUpdate;
     vm.mediaUpdate = mediaUpdate;
     vm.mostActiveUserSwitch = mostActiveUserSwitch;
+    vm.resetCards = resetCards;
 
     vm.isRefresh = function (tab) {
       return tab === REFRESH;
@@ -142,16 +148,18 @@
     };
 
     function init() {
-      setFilterBasedText();
-      $timeout(function () {
-        setDummyData();
+      if (vm.showEngagement) {
+        setFilterBasedText();
+        $timeout(function () {
+          setDummyData();
 
-        setActiveUserData();
-        setAvgRoomData();
-        setFilesSharedData();
-        setMediaData();
-        setCallMetricsData();
-      }, 30);
+          setActiveUserData();
+          setAvgRoomData();
+          setFilesSharedData();
+          setMediaData();
+          setCallMetricsData();
+        }, 30);
+      }
     }
 
     function resizeCards() {
@@ -162,20 +170,46 @@
 
     function mostActiveUserSwitch() {
       vm.showMostActiveUsers = !vm.showMostActiveUsers;
-      resetCards();
+      resizeCards();
     }
 
-    function resetCards() {
-      var engagementElems = [activeUserCard, avgRoomsCard, filesSharedCard];
-      var qualityElems = [];
+    function resetCards(filter) {
+      if (currentFilter !== filter) {
+        var engagementElems = [avgRoomsCard, activeUserCard, filesSharedCard];
+        var qualityElems = [mediaCard, metricsCard];
 
-      // $('.cs-card-layout').masonry('remove', engagementElems);
-      // $('.cs-card-layout').masonry('remove', qualityElems);
-      // resizeCards();
+        if (filter === vm.allReports) {
+          if (!vm.displayEngagement) {
+            $('.cs-card-layout').prepend(engagementElems).masonry('prepended', engagementElems);
+          }
+          if (!vm.displayQuality) {
+            $('.cs-card-layout').append(qualityElems).masonry('appended', qualityElems);
+          }
+          vm.displayEngagement = true;
+          vm.displayQuality = true;
+        } else if (filter === vm.engagement) {
+          if (!vm.displayEngagement) {
+            $('.cs-card-layout').append(engagementElems).masonry('appended', engagementElems);
+          }
+          if (vm.displayQuality) {
+            $('.cs-card-layout').masonry('remove', qualityElems);
+          }
+          vm.displayEngagement = true;
+          vm.displayQuality = false;
+        } else if (filter === vm.quality) {
+          if (!vm.displayQuality) {
+            $('.cs-card-layout').append(qualityElems).masonry('appended', qualityElems);
+          }
+          if (vm.displayEngagement) {
+            $('.cs-card-layout').masonry('remove', engagementElems);
+          }
+          vm.displayEngagement = false;
+          vm.displayQuality = true;
+        }
 
-      // $('.cs-card-layout').append(engagementElems).masonry('appended', engagementElems);
-      // $('.cs-card-layout').append(qualityElems).masonry('appended', qualityElems);
-      resizeCards();
+        currentFilter = filter;
+        resizeCards();
+      }
     }
 
     function setFilterBasedText() {
@@ -240,10 +274,13 @@
       if (tempMetricsChart !== null && angular.isDefined(tempMetricsChart)) {
         metricsChart = tempMetricsChart;
       }
+
+      resizeCards();
     }
 
     function timeUpdate() {
       vm.activeUserStatus = REFRESH;
+      vm.mostActiveUserStatus = REFRESH;
       vm.avgRoomStatus = REFRESH;
       vm.filesSharedStatus = REFRESH;
       vm.mediaQualityStatus = REFRESH;
@@ -280,18 +317,26 @@
       CustomerReportService.getActiveUserData(vm.timeSelected).then(function (response) {
         if (response === ABORT) {
           return;
-        } else if (response.activeUserGraph.length === 0) {
+        } else if (response.length === 0) {
           vm.activeUserStatus = EMPTY;
         } else {
-          // TODO: add data handling to update the active user graph and table with the data in response
-          var tempActiveUserChart = CustomerGraphService.setActiveUsersGraph(response.activeUserGraph, activeUsersChart);
+          var tempActiveUserChart = CustomerGraphService.setActiveUsersGraph(response, activeUsersChart);
           if (tempActiveUserChart !== null && angular.isDefined(tempActiveUserChart)) {
             activeUsersChart = tempActiveUserChart;
           }
-
           vm.activeUserStatus = SET;
+          CustomerReportService.getMostActiveUserData(vm.timeSelected).then(function (response) {
+            if (response === ABORT) {
+              return;
+            } else if (response.length === 0) {
+              vm.mostActiveUserStatus = EMPTY;
+            } else {
+              vm.mostActiveUserStatus = SET;
+            }
+            activeUserCard = document.getElementById('active-user-card');
+          });
         }
-        activeUserCard = document.getElementById('active-user-card');
+        resizeCards();
       });
     }
 
@@ -342,7 +387,7 @@
           }
           vm.mediaQualityStatus = SET;
         }
-        filesSharedCard = document.getElementById('files-shared-card');
+        mediaCard = document.getElementById('media-quality-card');
       });
     }
 
@@ -360,7 +405,7 @@
           vm.metrics = response.displayData;
           vm.metricStatus = SET;
         }
-        filesSharedCard = document.getElementById('files-shared-card');
+        metricsCard = document.getElementById('call-metrics-customer');
       });
     }
 
@@ -377,25 +422,18 @@
           // }
           vm.deviceStatus = SET;
         }
-        filesSharedCard = document.getElementById('files-shared-card');
+        deviceCard = document.getElementById('device-card');
       });
     }
 
-    // TODO WEBEX side of the page has been copied from the existing reports page (needs converting from $scope to vm)
-    vm.show = show;
-
-    function show(showEngagement, showWebexReports) {
-      vm.showEngagement = showEngagement;
-      vm.showWebexReports = showWebexReports;
-    }
-
+    // WEBEX side of the page has been copied from the existing reports page
     $scope.webexReportsObject = {};
     $scope.webexOptions = [];
     $scope.webexSelected = null;
 
-    if ($stateParams.tab) {
+    if ($stateParams.tab === 'webex') {
       vm.showEngagement = false;
-      vm.showWebexReports = $stateParams.tab === 'webex';
+      vm.showWebexReports = true;
     } else {
       vm.showEngagement = true;
       vm.showWebexReports = false;

@@ -18,6 +18,7 @@
     var contentShareSizes = '/contentShareSizes';
     var mediaQuality = '/callQuality';
     var callMetrics = '/callMetrics';
+    var mostActiveUrl = 'useractivity';
     var registeredEndpoints = 'trend/registeredEndpoints';
     var customerView = '&isCustomerView=true';
     var dateFormat = "MMM DD, YYYY";
@@ -44,6 +45,7 @@
 
     return {
       getActiveUserData: getActiveUserData,
+      getMostActiveUserData: getMostActiveUserData,
       getAvgRoomData: getAvgRoomData,
       getFilesSharedData: getFilesSharedData,
       getCallMetricsData: getCallMetricsData,
@@ -56,55 +58,44 @@
       if (activePromse !== null && angular.isDefined(activePromse)) {
         activePromse.resolve(ABORT);
       }
+      activePromse = $q.defer();
+
+      var query = getQuery(filter);
+      var activeUrl = urlBase + detailed + activeUserUrl + query;
+      return getService(activeUrl, activePromse).then(function (response) {
+        if (angular.isDefined(response) && angular.isDefined(response.data) && angular.isDefined(response.data.data) && angular.isArray(response.data.data) && angular.isDefined(response.data.data[0].data)) {
+          return adjustActiveUserData(response.data.data[0].data, filter);
+        } else {
+          return [];
+        }
+      }, function (response) {
+        return returnErrorCheck(response, 'Active user data not returned for customer.', $translate.instant('activeUsers.overallActiveUserGraphError'), []);
+      });
+    }
+
+    function getMostActiveUserData(filter) {
+      // cancel any currently running jobs
       if (mostActivePromise !== null && angular.isDefined(mostActivePromise)) {
         mostActivePromise.resolve(ABORT);
       }
-      activePromse = $q.defer();
       mostActivePromise = $q.defer();
 
-      var promises = [];
-      var query = getQuery(filter);
-      var activeUrl = urlBase + detailed + activeUserUrl + query;
-      var mostActiveUrl = urlBase + topn + activeUserUrl + query;
-
-      var activeUserData = [];
-      var activeUserPromise = getService(activeUrl, activePromse).success(function (response, status) {
-        activeUserData = adjustActiveUserData(response.data[0].data, filter);
-        return;
-      }).error(function (response, status) {
-        activeUserData = returnErrorCheck(status, 'Active user data not returned for customer.', $translate.instant('activeUsers.overallActiveUserGraphError'), []);
-        return;
-      });
-      promises.push(activeUserPromise);
-
-      var mostActiveUserData = [];
-      // var mostActiveUserPromise = getService(mostActiveUrl, mostActivePromise).success(function (response, status) {
-      //   // TODO: Fill in actions to parse the data in the response
-      //   return;
-      // }).error(function (response, status) {
-      //   mostActiveUserData = returnErrorCheck(status, 'Most active user data not returned for customer.', $translate.instant('activeUsers.mostActiveError'), []);
-      //   return;
-      // });
-      // promises.push(mostActiveUserPromise);
-
-      return $q.all(promises).then(function () {
-        if (activeUserData !== ABORT) {
-          return {
-            activeUserGraph: activeUserData,
-            mostActiveUserData: mostActiveUserData
-          };
+      var query = "?type=weeklyUsage&cache=";
+      if (filter.value === 1) {
+        query = "?type=monthlyUsage&cache=";
+      } else if (filter.value === 2) {
+        query = "?type=threeMonthUsage&cache=";
+      }
+      var url = urlBase + mostActiveUrl + query + cacheValue;
+      return getService(url, mostActivePromise).then(function (response) {
+        if (angular.isDefined(response) && angular.isDefined(response.data) && angular.isDefined(response.data.data) && angular.isArray(response.data.data) && angular.isDefined(response.data.data[0].data)) {
+          // TODO: update when API becomes available
+          return [];
         } else {
-          return ABORT;
+          return [];
         }
-      }, function () {
-        if (activeUserData !== ABORT) {
-          return {
-            activeUserGraph: activeUserData,
-            mostActiveUserData: mostActiveUserData
-          };
-        } else {
-          return ABORT;
-        }
+      }, function (response) {
+        return returnErrorCheck(response, 'Most active user data not returned for customer.', $translate.instant('activeUsers.mostActiveError'), []);
       });
     }
 
