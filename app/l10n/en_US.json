@@ -3377,7 +3377,7 @@
     },
     "email": {
       "header": "Send email",
-      "description": "",
+      "description": "Enter mail addresses to receive an email with the DNS verification code for your domain and instructions.",
       "exampleEmail": "admin@example.com",
       "invalidEmail": "This is not an email address",
       "sendEmail": "Send instructions"
