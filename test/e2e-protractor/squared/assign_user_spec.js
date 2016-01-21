@@ -49,13 +49,42 @@ describe('Squared Invite User and Assign Services User Flow', function () {
       utils.click(users.servicesActionButton);
       utils.click(users.editServicesButton);
       utils.waitForModal().then(function () {
-
         //click on license checkbox
         utils.click(users.paidMsgCheckbox);
+        utils.click(users.paidMtgCheckbox);
         utils.click(users.saveButton);
         notifications.assertSuccess('entitled successfully');
         utils.expectIsDisplayed(users.servicesPanel);
         utils.expectIsDisplayed(users.messageService);
+      });
+    });
+
+    it('should check if licenses saved successfully', function () {
+      utils.click(users.servicesActionButton);
+      utils.click(users.editServicesButton);
+      utils.waitForModal().then(function () {
+        utils.expectCheckbox(users.paidMsgCheckbox, true);
+        utils.expectCheckbox(users.paidMtgCheckbox, true);
+      });
+    });
+
+    it('should uncheck licenses successfully', function () {
+      utils.waitForModal().then(function () {
+        utils.click(users.paidMsgCheckbox);
+        utils.click(users.paidMtgCheckbox);
+        utils.click(users.saveButton);
+        utils.expectIsDisplayed(users.servicesPanel);
+      });
+    });
+
+    it('should check if licenses were saved successfully after being unchecked', function () {
+      utils.click(users.servicesActionButton);
+      utils.click(users.editServicesButton);
+
+      utils.waitForModal().then(function () {
+        utils.expectCheckbox(users.paidMsgCheckbox, false);
+        utils.expectCheckbox(users.paidMtgCheckbox, false);
+        utils.click(users.saveButton);
       });
     });
 

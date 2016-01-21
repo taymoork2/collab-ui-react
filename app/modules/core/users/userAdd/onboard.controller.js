@@ -388,7 +388,7 @@ angular.module('Core')
             $scope.radioStates.commRadio = true;
           } else if (userEnts[x] === 'squared-room-moderation') {
             $scope.radioStates.msgRadio = true;
-          } 
+          }
         }
       }
 

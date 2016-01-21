@@ -81,6 +81,9 @@ var UsersPage = function () {
   this.fusionCheckBox = element(by.css('label[for="chk_squaredFusionUC"]'));
   this.squaredCheckBox = element(by.css('label[for="chk_webExSquared"]'));
   this.squaredUCCheckBox = element(by.css('label[for="chk_ciscoUC"]'));
+  this.paidMsgCheckbox = element(by.css('label[for="paid-msg"]'));
+  this.paidMtgCheckbox = element(by.cssContainingText('cs-checkbox', 'Meeting 25 Party'));
+
   this.closePreview = element(by.id('exitPreviewButton'));
   this.closeDetails = element(by.id('exit-details-btn'));
 
@@ -162,7 +165,6 @@ var UsersPage = function () {
 
   this.msgRadio = element(by.repeater('license in msgFeature.licenses'));
   this.messageService = element(by.id('Message'));
-  this.paidMsgCheckbox = element(by.css('label[for="paid-msg"]'));
 
   this.assertSorting = function (nameToSort) {
     this.queryResults.getAttribute('value').then(function (value) {
