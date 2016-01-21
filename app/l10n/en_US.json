@@ -3367,7 +3367,7 @@
     },
     "add": {
       "header": "Add domains",
-      "description": "Add domains to verify for your organisation. If you have users in multiple domains add all of them. Adding and verifying your own domain is required before any other domains.",
+      "description": "Add domains to verify for your organization. If you have users in multiple domains, add all of them. Add you own domain before any others.",
       "exampleDomain": "example.com",
       "invalidDomain": "Invalid domain entered"
     },
@@ -3378,8 +3378,8 @@
     },
     "email": {
       "header": "Send email",
-      "description": "Enter mail addresses to receive an email with the DNS verification code for your domain and instructions.",
-      "exampleEmail": "admin@example.com",
+      "description": "Enter email addresses to receive an email with the DNS verification codes and instructions for your domain.",
+      "exampleEmail": "Enter email addresses separated by commas.",
       "invalidEmail": "This is not an email address",
       "sendEmail": "Send instructions"
     },
@@ -3387,7 +3387,7 @@
       "header": "Verify domain",
       "verifyThis": "You are about to verify the following domain:",
       "beforeVerify": "Before verifying this domain, make sure that your NDS verification code is added in your DNS managment interface.",
-      "warning": "It is important to verify all domains. Users that don't belong to a verified domain will immediately be locked out not be able to log in and use spark services.  You will also not be able to add any new users that belongs to unverified domains.",
+      "warning": "It is important to verify all domains.Users that don't belong to a verified domain will be locked out immediately. Those users will not be able to log in or use Spark services. Also, you will not be able to add any new users that belong to unverified domains.",
       "verify": "Verify",
       "preventLockoutError": "To prevent locking out your account, your domain '{{domain}}' must be verified first."
     }
