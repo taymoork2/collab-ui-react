@@ -314,14 +314,8 @@ angular.module('Squared').service('CsdmConverter',
     }
 
     function getLastConnectionTime(obj) {
-      moment.localeData(moment.locale())._calendar.sameElse = 'h:mm A, MMM D YYYY';
-      return (obj.status && obj.status.lastConnectionTime) ? lowerCaseExceptDateTimes(moment(obj.status.lastConnectionTime).calendar()) : null;
-    }
-
-    function lowerCaseExceptDateTimes(text) {
-      return text.toLowerCase().replace(" am", " AM").replace(" pm", " PM").replace(" jan", " Jan").replace(" feb", " Feb")
-          .replace(" mar", " Mar").replace(" apr", " Apr").replace(" may", " May").replace(" jun", " Jun").replace(" jul", " Jul")
-          .replace(" aug", " Aug").replace(" sep", " Sep").replace(" oct", " Oct").replace(" nov", " Nov").replace(" dec", " Dec");
+      moment.localeData(moment.locale())._calendar.sameElse = 'lll';
+      return (obj.status && obj.status.lastConnectionTime) ? moment(obj.status.lastConnectionTime).calendar() : null;
     }
 
     function getReadableState(obj) {

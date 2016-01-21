@@ -313,7 +313,7 @@ describe('CsdmConverterSpec', function () {
           connectionStatus: 'UNKNOWN'
         }
       }];
-      expect(converter.convertDevices(arr)[0].lastConnectionTime).toBe('9:00 AM, Jan 9 2015');
+      expect(converter.convertDevices(arr)[0].lastConnectionTime).toBe('Jan 9, 2015 9:00 AM');
     });
 
     it('when today', function () {
@@ -323,7 +323,7 @@ describe('CsdmConverterSpec', function () {
           connectionStatus: 'UNKNOWN'
         }
       }];
-      expect(converter.convertDevices(arr)[0].lastConnectionTime.substring(0, 8) == "today at").toBeTruthy();
+      expect(converter.convertDevices(arr)[0].lastConnectionTime.substring(0, 8) == "Today at").toBeTruthy();
     });
 
     it('when null', function () {
