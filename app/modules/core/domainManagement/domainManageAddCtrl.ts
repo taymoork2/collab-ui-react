@@ -4,6 +4,7 @@ namespace domainManagement {
     private _loggedOnUser;
     private _domain;
     private _error;
+    private _adding = false;
 
     /* @ngInject */
     constructor($stateParams, private $state, private DomainManagementService) {
@@ -16,12 +17,16 @@ namespace domainManagement {
         return;
       }
 
+      this._adding = true;
+
       this.DomainManagementService.addDomain(this.domainToAdd).then(
         ()=> {
           this.$state.go('domainmanagement');
+          this._adding = false;
         },
         err => {
           this._error = err;
+          this._adding = false;
         }
       )
     }
@@ -85,7 +90,7 @@ namespace domainManagement {
       //  return {valid: true, empty: false};
       //}
 
-      if (_.some(this.DomainManagementService.domainList, {text: domain})){
+      if (!this._adding && _.some(this.DomainManagementService.domainList, {text: domain})){
         return {valid: false, empty: !this._domain}; //already added!
       }
 

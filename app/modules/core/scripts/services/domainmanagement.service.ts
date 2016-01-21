@@ -3,6 +3,7 @@ class DomainManagementService {
   private _domainList = [
     /* {
      text: 'initialDomain.com',
+     token: 'hjkhk',
      status: this.states.pending}*/
   ];
 
@@ -13,13 +14,18 @@ class DomainManagementService {
   }
 
   private _scomUrl;
+  private _invokeGetTokenUrl;
 
   constructor(private $http, Config, Authinfo, private $q) {
 
+    // var _verifiedDomainsUrl = Config.getDomainManagementUrl(Authinfo.getOrgId()) + "Domain";  //not used anymore?
 
-    var _verifiedDomainsUrl = Config.getDomainManagementUrl(Authinfo.getOrgId());  //not used anymore?
+    let orgId = Authinfo.getOrgId();
 
-    this._scomUrl = Config.getScomUrl() + '/' + Authinfo.getOrgId();
+    this._scomUrl = Config.getScomUrl() + '/' + orgId;
+
+    //POST https://identity.webex.com/organization/{orgid}/v1/actions/DomainVerification/GetToken/invoke HTTP 1.1
+    this._invokeGetTokenUrl = Config.getDomainManagementUrl(orgId) + 'actions/DomainVerification/GetToken/invoke';
 
     //Unverify: http://wikicentral.cisco.com/display/IDENTITY/API+-+UnVerify+Domain+Ownership
     //POST https://identity.webex.com/organization/{orgid}/v1/actions/DomainVerification/Unverify/invoke
@@ -46,35 +52,36 @@ class DomainManagementService {
     //we always normalize to lowercase.
     domainToAdd = domainToAdd ? domainToAdd.toLowerCase() : domainToAdd;
 
-    if (domainToAdd && domainToAdd.endsWith('.com')) {
-      this._domainList.push({
-        text: domainToAdd,
-        code: '234SDSSFVD',
-        status: this.states.pending
-      });
+    let existingDomain = _.find(this._domainList, {text: domainToAdd});
 
-      deferred.resolve();
-    } else {
-      deferred.reject("does not end with .com");
+    if ((!domainToAdd) || existingDomain){
+      deferred.reject();
+      return deferred.promise;
     }
-    return deferred.promise;
+
+    this._domainList.push({
+      text: domainToAdd,
+      token: '',
+      status: this.states.pending
+    });
+
+    return this.getToken(domainToAdd);
   }
 
   deleteDomain(domainToDelete) {
     let deferred = this.$q.defer();
-    if (domainToDelete && domainToDelete.text && domainToDelete.text.endsWith('.com')) {
-      _.remove(this._domainList, {text: domainToDelete.text});
+    if (domainToDelete) {
+      _.remove(this._domainList, {text: domainToDelete});
       deferred.resolve();
     } else {
-      deferred.reject("does not end with .com");
+      deferred.reject();
     }
     return deferred.promise;
   }
 
   getVerifiedDomains(disableCache) {
     let deferred = this.$q.defer();
-
-    let scomUrl = this._scomUrl + disableCache ? '?disableCache=true' : '';
+    let scomUrl = this._scomUrl + (disableCache ? '?disableCache=true' : '');
 
     this.$http.get(scomUrl).then(data => {
 
@@ -110,6 +117,8 @@ class DomainManagementService {
 
       this.loadDomainlist(data.pendingDomains, this.states.pending, null);
 
+      this.getVerificationTokens();
+
       deferred.resolve(this._domainList);
     }, error => {
       deferred.reject(error);
@@ -137,19 +146,47 @@ class DomainManagementService {
         });
       }
     });
-
   }
-
 
   public verifyDomain(domain) {
     let deferred = this.$q.defer();
-    let domainInList = _.find(this._domainList, {text: domain.text});
+    let domainInList = _.find(this._domainList, {text: domain.text, status: this.states.pending});
     if (domainInList) {
       domainInList.status = this.states.verified;
       deferred.resolve()
     } else {
       deferred.reject("not a domain possible to verify");
     }
+    return deferred.promise;
+  }
+
+  private getVerificationTokens():void {
+
+    let pendingDomains = _.filter(this._domainList, {status: this.states.pending });
+
+    if (!pendingDomains || pendingDomains.length < 1)
+      return;
+
+    _.each(pendingDomains, domain => {
+      this.getToken(domain.text);
+    });
+  }
+
+  private getToken(domain) {
+    let deferred = this.$q.defer();
+
+    this.$http.post(this._invokeGetTokenUrl, {
+      'domain': domain
+    }).then(res => {
+
+     let pendingDomain = _.find(this._domainList, {text: domain, status: this.states.pending});
+     pendingDomain.token = res.data.token;
+
+      deferred.resolve(res.data.token);
+    }, error => {
+      deferred.reject(error);
+    });
+
     return deferred.promise;
   }
 }

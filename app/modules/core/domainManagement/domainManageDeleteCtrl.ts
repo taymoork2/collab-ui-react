@@ -21,7 +21,7 @@ namespace domainManagement {
     }
 
     public delete() {
-      this.DomainManagementService.deleteDomain(this._domainToDelete).then(
+      this.DomainManagementService.deleteDomain(this._domainToDelete.text).then(
         () => {
           this.$state.go('domainmanagement');
         },
