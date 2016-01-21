@@ -39,9 +39,9 @@ describe('Squared Invite User and Assign Services User Flow', function () {
       utils.expectIsNotDisplayed(wizard.wizard);
     });
 
-    xit('should show invite pending status on new user', function () {
-      utils.searchAndClick(inviteEmail);
-      utils.expectTextToBeSet(users.userListSelStatus, 'Invite Pending');
+    it('should show invite pending status on new user', function () {
+      utils.search(inviteEmail);
+      utils.expectTextToBeSet(users.userListStatus, 'Invite Pending');
     });
 
     it('should add licenses successfully', function () {
