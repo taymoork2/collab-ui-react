@@ -375,7 +375,6 @@ describe('OnboardCtrl: Ctrl', function () {
   describe('403 errors during onboarding', function () {
     function testOnboardUsers(successFlag, statusCode, responseMessage) {
       return function (userArray, entitleList, licenseList, callback) {
-        var userStatus = statusCode;
         var data = {
           success: successFlag,
           userResponse: [{
