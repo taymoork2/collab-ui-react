@@ -920,10 +920,14 @@ angular.module('Core')
       };
 
       function isEmailAlreadyPresent(input) {
-        var inputEmail = getEmailAddress(input);
+        var inputEmail = getEmailAddress(input).toLowerCase();
         if (inputEmail) {
           var userEmails = getTokenEmailArray();
-          return userEmails.indexOf(inputEmail) >= 0;
+          var userEmailsLower = [];
+          for (var i = 0; i < userEmails.length; i++) {
+            userEmailsLower[i] = userEmails[i].toLowerCase();
+          }
+          return userEmailsLower.indexOf(inputEmail) >= 0;
         } else {
           return false;
         }
